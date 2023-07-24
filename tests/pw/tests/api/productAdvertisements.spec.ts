@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
-import { ApiUtils } from '../../utils/apiUtils';
-import { endPoints } from '../../utils/apiEndPoints';
-import { payloads } from '../../utils/payloads';
+import { ApiUtils } from 'utils/apiUtils';
+import { endPoints } from 'utils/apiEndPoints';
+import { payloads } from 'utils/payloads';
 
 let apiUtils: ApiUtils;
 let productAdvertisementId: string;
@@ -27,7 +27,7 @@ test.describe('product advertisement api test', () => {
 	});
 
 	test('create a product advertisement @pro', async () => {
-		const [body, productId] = await apiUtils.createProduct(payloads.createProduct());
+		const [body, productId,] = await apiUtils.createProduct(payloads.createProduct());
 		const sellerId = body.store.id;
 		const [response, responseBody] = await apiUtils.post(endPoints.createProductAdvertisement, { data: { vendor_id: sellerId, product_id: productId } });
 		expect(response.ok()).toBeTruthy();

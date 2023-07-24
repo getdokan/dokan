@@ -24,6 +24,8 @@ export const helpers = {
 	// remove array element
 	removeItem: (arr: any[], removeItem: any) => arr.filter((item) => item !== removeItem),
 
+	isSubArray: (parentArray: any[], subArray: any[]) => subArray.every(el => parentArray.includes(el)),
+
 	// check if object is empty
 	isObjEmpty: ( obj: object ) => Object.keys( obj ).length === 0,
 
@@ -31,7 +33,7 @@ export const helpers = {
 	openUrl: (url: string) => open(url),
 
 	// opens test report in the default browser
-	openReport: () => open('./artifacts/jest-stare/index.html'), //TODO: update for playwright
+	openReport: () => open('playwright-report/html-report/index.html'),
 
 	// convert string to price format
 	price: (str: string) => parseFloat(str.replace(/[^\d\-.,]/g, '').replace(/,/g, '.').replace(/\.(?=.*\.)/g, '')),
@@ -64,9 +66,6 @@ export const helpers = {
 		result.setDate(result.getDate() + days);
 		return result.toLocaleDateString('en-CA');
 	},
-
-	// round to two decimal places
-	// roundToTwo(num: string | number) { return +(Math.round(num + 'e+2') + 'e-2') },  //TODO: update this number + string
 
 	roundToTwo(num: string | number) {
 		return Math.round((Number(num) + Number.EPSILON) * 100) / 100;

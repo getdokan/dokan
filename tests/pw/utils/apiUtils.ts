@@ -1,6 +1,7 @@
 import { expect, type APIRequestContext, APIResponse, Request } from '@playwright/test';
-import { endPoints } from './apiEndPoints';
-import { payloads } from './payloads';
+import { endPoints } from 'utils/apiEndPoints';
+import { payloads } from 'utils/payloads';
+import { helpers } from 'utils/helpers';
 import fs from 'fs';
 // import FormData from 'form-data';
 
@@ -207,7 +208,7 @@ export class ApiUtils {
 	// create store
 	async createStore(payload: any, auth? : auth): Promise<[responseBody, string]> {
 		const response = await this.request.post(endPoints.createStore, { data: payload, headers: auth });
-		const responseBody = await this.getResponseBody(response, false);   //TODO: covert to this.get , implement multiple optional function parameter to pass false to responsebody
+		const responseBody = await this.getResponseBody(response, false);   //TODO: convert to this.get , implement multiple optional function parameter to pass false to response-body
 		let sellerId :string;
 		if(responseBody.code){
 			expect(response.status()).toBe(500);
@@ -240,6 +241,7 @@ export class ApiUtils {
 	 * product api methods
 	 */
 
+
 	// get all products
 	async getAllProducts(auth? : auth): Promise<responseBody> {
 		const [, responseBody] = await this.get(endPoints.getAllProducts, { params: { per_page:100 }, headers: auth });
@@ -254,10 +256,11 @@ export class ApiUtils {
 	}
 
 	// create product
-	async createProduct(payload: object, auth? : auth): Promise<[responseBody, string]> {
+	async createProduct(payload: object, auth? : auth): Promise<[responseBody, string, string]> {
 		const [, responseBody] = await this.post(endPoints.createProduct, { data: payload, headers: auth });
 		const productId = responseBody.id;
-		return [responseBody, productId];
+		const productName = responseBody.name;
+		return [responseBody, productId, productName];
 	}
 
 	// delete product
@@ -267,7 +270,7 @@ export class ApiUtils {
 	}
 
 	// delete all products
-	async deleteAllProducts( productName = '', auth? : auth): Promise<responseBody> {
+	async deleteAllProducts( productName = '', auth? : auth): Promise<responseBody> { //TODO: update handle first parameter
 		const allProducts = await this.getAllProducts(auth);
 		let allProductIds: any;
 		// delete all products with same name
@@ -279,6 +282,13 @@ export class ApiUtils {
 		}
 		const [, responseBody] = await this.put(endPoints.wc.updateBatchProducts, { data: { delete: allProductIds }, headers: payloads.adminAuth });
 		return responseBody;
+	}
+
+	// get product exists or not
+	async productExistsOrNot(productName: string, auth? : auth): Promise<boolean> {
+		const allProducts = await this.getAllProducts(auth);
+		const res = allProducts.find((o: { name: unknown; }) => o.name === productName);
+		return res ? res.id : false;
 	}
 
 	/**
@@ -364,7 +374,7 @@ export class ApiUtils {
 	// create attribute term
 	async createAttributeTerm(attribute: any, attributeTerm: object, auth? : auth): Promise<[responseBody, string, string]> {
 		let attributeId: string;
-		typeof (attribute) === 'object' ? [, attributeId] = await this.createAttribute(attribute) : attributeId = attribute;
+		typeof (attribute) === 'object' ? [, attributeId] = await this.createAttribute(attribute, auth) : attributeId = attribute;
 		const [, responseBody] = await this.post(endPoints.createAttributeTerm(attributeId), { data: attributeTerm, headers: auth });
 		const attributeTermId = responseBody.id;
 		return [responseBody, attributeId, attributeTermId];
@@ -388,18 +398,48 @@ export class ApiUtils {
 	}
 
 	// create coupon
-	async createCoupon(productIds: string[], coupon: coupon, auth?: auth ): Promise<[responseBody, string]> { // TODO: need to update; handle productIds can be empty
+	async createCoupon(productIds: string[], coupon: coupon, auth?: auth ): Promise<[responseBody, string, string]> { // TODO: need to update; handle productIds can be empty
 		const response = await this.request.post(endPoints.createCoupon, { data: { ...coupon, product_ids: productIds }, headers: auth });
 		const responseBody = await this.getResponseBody(response, false);
 		let couponId: string;
+		let couponCode: string;
 		if (responseBody.code === 'woocommerce_rest_coupon_code_already_exists'){
 			expect(response.status()).toBe(400);
 			couponId = await this.getCouponId(coupon.code, auth);
+			couponCode = coupon.code;
 		} else {
 			expect(response.ok()).toBeTruthy();
 			couponId = responseBody.id;
+			couponCode = responseBody.code;
 		}
-		return [responseBody, couponId];
+		return [responseBody, couponId, couponCode];
+	}
+
+
+	// get market couponId
+	async getMarketPlaceCouponId(couponCode: string, auth? : auth): Promise<string> {
+		const [, allCoupons] = await this.get(endPoints.wc.getAllCoupons, { params: { per_page:100 }, headers: auth });
+		const couponId = couponCode ? (allCoupons.find((o: { code: unknown; }) => o.code === couponCode)).id : allCoupons[0].id;
+		return couponId;
+	}
+
+
+	// create market coupon
+	async createMarketPlaceCoupon(coupon: coupon, auth?: auth ): Promise<[responseBody, string, string]> {
+		const response = await this.request.post(endPoints.wc.createCoupon, { data: coupon, headers: payloads.adminAuth });
+		const responseBody = await this.getResponseBody(response, false);
+		let couponId: string;
+		let couponCode: string;
+		if (responseBody.code === 'woocommerce_rest_coupon_code_already_exists'){
+			expect(response.status()).toBe(400);
+			couponId = await this.getMarketPlaceCouponId(coupon.code, auth);
+			couponCode = coupon.code;
+		} else {
+			expect(response.ok()).toBeTruthy();
+			couponId = responseBody.id;
+			couponCode = responseBody.code;
+		}
+		return [responseBody, couponId, couponCode];
 	}
 
 	// update coupon
@@ -447,8 +487,8 @@ export class ApiUtils {
 	}
 
 	// cancel withdraw
-	async cancelWithdraw(withdrawId: string): Promise<responseBody> {
-		const [, responseBody] = await this.delete(endPoints.cancelWithdraw(withdrawId));
+	async cancelWithdraw(withdrawId: string, auth? : auth): Promise<responseBody> {
+		const [, responseBody] = await this.delete(endPoints.cancelWithdraw(withdrawId), { headers: auth });
 		return responseBody;
 	}
 
@@ -471,6 +511,7 @@ export class ApiUtils {
 	// get orderId
 	async getOrderId(auth? : auth): Promise<string> {
 		const allOrders = await this.getAllOrders(auth);
+		console.log(allOrders);
 		const orderId = allOrders[0].id;
 		return orderId;
 	}
@@ -496,6 +537,13 @@ export class ApiUtils {
 	/**
 	 * admin api methods
 	*/
+
+
+	// get admin report summary
+	async getAdminReportSummary(auth? : auth): Promise<responseBody> {
+		const [, responseBody] = await this.get(endPoints.getAdminReportSummary, { headers: auth });
+		return responseBody;
+	}
 
 	// get all order logs
 	async getAllOrderLogs(auth? : auth): Promise<responseBody> {
@@ -556,16 +604,20 @@ export class ApiUtils {
 	// get support ticket id
 	async getSupportTicketId(auth? : auth): Promise<[string, string]> {
 		const allSupportTickets = await this.getAllSupportTickets(auth);
+		console.log(allSupportTickets);
 		const supportTicketId = allSupportTickets[0].ID;
 		const sellerId = allSupportTickets[0].vendor_id;
 		return [supportTicketId, sellerId];
 	}
 
 	// create support ticket comment
-	async createSupportTicketComment(payload: object, auth? : auth): Promise<responseBody> {
-		const [supportTicketId] = await this.getSupportTicketId(auth);
+	async createSupportTicketComment( supportTicketId = '', payload: object, auth? : auth): Promise<responseBody> { //TODO: update handle first parameter
+		if(!supportTicketId){
+			[supportTicketId,] = await this.getSupportTicketId(auth);
+		}
 		const [, responseBody] = await this.post(endPoints.createSupportTicketComment(supportTicketId), { data: payload, headers: auth });
 		return responseBody;
+
 	}
 
 	// update support ticket status
@@ -575,7 +627,7 @@ export class ApiUtils {
 	}
 
 	async createSupportTicket(payload: object, auth? : auth): Promise<[responseBody, string]> {
-		const [, responseBody] = await this.post(endPoints.wp.createCustomPost('dokan_store_support'), { data: payload, headers: auth });
+		const [, responseBody] = await this.post(endPoints.wp.createCustomPost('dokan_store_support'), { data: payload, headers: auth }); // TODO: always admin
 		const supportTicketId = responseBody.id;
 		return [responseBody, supportTicketId];
 	}
@@ -700,8 +752,8 @@ export class ApiUtils {
 	// create a product advertisement
 	async createProductAdvertisement(product: object, auth? : auth): Promise<[responseBody, string]> {
 		const [body, productId] = await this.createProduct(product, auth);
-		const sellerId = body.store.id;
-		const [, responseBody] = await this.post(endPoints.createProductAdvertisement, { data: { vendor_id: sellerId, product_id: productId }, headers: auth });
+		const sellerId = body.store.id;									//TODO: hardcoding admin auth will hinder negative testing : test with invalid user
+		const [, responseBody] = await this.post(endPoints.createProductAdvertisement, { data: { vendor_id: sellerId, product_id: productId }, headers: payloads.adminAuth });
 		const productAdvertisementId = responseBody.id;
 		return [responseBody, productAdvertisementId];
 	}
@@ -802,6 +854,19 @@ export class ApiUtils {
 	 * store categories api methods
 	 */
 
+	// get all store categories
+	async getAllStoreCategories(auth? : auth): Promise<responseBody> {
+		const [, responseBody] = await this.get(endPoints.getAllStoreCategories, { params: { per_page:100 }, headers: auth });
+		return responseBody;
+	}
+
+	// get sellerId
+	async getStoreCategoryId(StoreCategoryName?: string, auth? : auth): Promise<string> {
+		const allStoreCategories = await this.getAllStoreCategories(auth);
+		const storeCategoryId = StoreCategoryName ? (allStoreCategories.find((o: { name: unknown; }) => o.name === StoreCategoryName)).id : allStoreCategories[0].id;
+		return storeCategoryId;
+	}
+
 	// create store category
 	async createStoreCategory(payload: object, auth? : auth): Promise<[responseBody, string]> {
 		const [, responseBody] = await this.post(endPoints.createStoreCategory, { data: payload, headers: auth });
@@ -816,8 +881,11 @@ export class ApiUtils {
 		return [responseBody, categoryId];
 	}
 
-	// get default store category
+	// set default store category
 	async setDefaultStoreCategory(categoryId: string, auth? : auth): Promise<responseBody> {
+		if (isNaN(Number(categoryId))){
+			categoryId = await this.getStoreCategoryId(categoryId, auth);
+		}
 		const [, responseBody] = await this.put(endPoints.setDefaultStoreCategory, { data: { id: categoryId }, headers: auth });
 		return responseBody;
 	}
@@ -845,9 +913,9 @@ export class ApiUtils {
 		return responseBody;
 	}
 
-	// delete store review
+	// delete all quote rules
 	async deleteAllQuoteRules(auth? : auth): Promise<responseBody> {
-		const allQuoteRuleIds = (await this.getAllQuoteRules()).map((o: { id: unknown; }) => o.id);
+		const allQuoteRuleIds = (await this.getAllQuoteRules(auth)).map((o: { id: unknown; }) => o.id);
 		const [, responseBody] = await this.put(endPoints.updateBatchQuoteRules, { data: { trash: allQuoteRuleIds }, headers : auth });
 		return responseBody;
 	}
@@ -875,6 +943,14 @@ export class ApiUtils {
 		const [, responseBody] = await this.delete(endPoints.deleteRequestQuote(quoteRuleId), { headers: auth });
 		return responseBody;
 	}
+
+	// delete all quotes
+	async deleteAllQuotes(auth? : auth): Promise<responseBody> {
+		const allQuoteIds = (await this.getAllRequestQuotes(auth)).map((o: { id: unknown; }) => o.id);
+		const [, responseBody] = await this.put(endPoints.updateBatchRequestQuotes, { data: { trash: allQuoteIds }, headers : auth });
+		return responseBody;
+	}
+
 	/**
 	 * order downloads  api methods
 	 */
@@ -911,9 +987,9 @@ export class ApiUtils {
 
 	// create seller badge
 	async createSellerBadge(payload: any, auth? : auth): Promise<[responseBody, string]> {
-		const response = await this.request.post(endPoints.createSellerBadge, { data: payload, headers: auth });
+		const response = await this.request.post(endPoints.createSellerBadge, { data: payload, headers: auth }); //TODO: remove this.request from everywhere
 		const responseBody = await this.getResponseBody(response, false);
-		const badgeId = responseBody.code === 'invalid-event-type' ? await this.getSellerBadgeId(payload.event_type) : responseBody.id;
+		const badgeId = responseBody.code === 'invalid-event-type' ? await this.getSellerBadgeId(payload.event_type, auth) : responseBody.id;
 		return [responseBody, badgeId];
 	}
 
@@ -925,7 +1001,10 @@ export class ApiUtils {
 
 	// delete all seller badges
 	async deleteAllSellerBadges(auth? : auth): Promise<void> {
-		const allBadgeIds = (await this.getAllSellerBadges()).map((o: { id: unknown; }) => o.id);
+		// const allBadges = await this.getAllSellerBadges(auth);
+		// if(!allBadges){return;} // TODO: return here if possible or use the later soln.
+
+		const allBadgeIds = (await this.getAllSellerBadges(auth)).map((o: { id: unknown; }) => o.id);
 		if(allBadgeIds.length < 1) return; //TODO: apply this to all batch update/ anywhere a action can be lessened
 		await this.updateBatchSellerBadges('delete', allBadgeIds, auth);
 	}
@@ -1018,6 +1097,15 @@ export class ApiUtils {
 		const [, responseBody] = await this.delete(endPoints.wp.deletePlugin(plugin), { headers: auth });
 		return responseBody;
 	}
+
+	// get plugin active or not
+	async pluginsActiveOrNot(plugins: string[], auth? : auth): Promise<boolean> {
+		const activePlugins = (await this.getAllPlugins({ status:'active' }, auth)).map((a: { plugin: string }) => (a.plugin).split('/')[1]);
+		return helpers.isSubArray(activePlugins, plugins );
+	}
+
+
+	// media
 
 	// upload media
 	async uploadMedia(filePath: string, auth?: auth): Promise<[responseBody, string]> { //TODO: handle different file upload, hardcoded: image
@@ -1158,7 +1246,7 @@ export class ApiUtils {
 
 	//create product review
 	async createProductReview(product: object, review: object, auth? : auth): Promise<[responseBody, string]> {
-		const [, productId] = await this.createProduct(product);
+		const [, productId] = await this.createProduct(product, auth);
 		const [, responseBody] = await this.post(endPoints.wc.createReview, { data: { ...review, product_id: productId }, headers: auth });
 		const reviewId = responseBody.id;
 		return [responseBody, reviewId];
@@ -1213,7 +1301,7 @@ export class ApiUtils {
 	// order
 
 	// create order
-	async createOrder(product: object | string, orderPayload: any, auth?: auth): Promise<[APIResponse, responseBody, string, string]> {
+	async createOrder(product: string | object, orderPayload: any, auth?: auth): Promise<[APIResponse, responseBody, string, string]> {
 		let productId: string;
 		if (typeof(product) != 'string'){
 			[, productId] = await this.createProduct(product, auth);
@@ -1224,12 +1312,12 @@ export class ApiUtils {
 		payload.line_items[0].product_id = productId;
 		const response = await this.request.post(endPoints.wc.createOrder, { data: payload, headers: payloads.adminAuth });
 		const responseBody = await this.getResponseBody(response);
-		const orderId = responseBody.id;
+		const orderId = String(responseBody.id); //TODO: need to cast everywhere [any values assigned from type any, here responseBody type is any, sending order-id as string, but actually it sending it as number], some test might need it to be number look for it and update accordingly
 		return [response, responseBody, orderId, productId];
 	}
 
 	// create complete order
-	async createOrderWithStatus(product: object, order: any, status: string, auth?: auth): Promise<[APIResponse, responseBody, string, string]> {
+	async createOrderWithStatus(product: string | object, order: any, status: string, auth?: auth): Promise<[APIResponse, responseBody, string, string]> {
 		//TODO: add feature for productID, creator of product(who will be the owner), create order auth, update order auth
 		const [response, responseBody, orderId, productId] = await this.createOrder(product, order, auth);
 		await this.updateOrderStatus(orderId, status, auth);
@@ -1266,18 +1354,18 @@ export class ApiUtils {
 	}
 
 	// setup tax
-	async setUpTaxRate(enableTaxPayload: object, taxPayload: taxRate): Promise<number> {
+	async setUpTaxRate(enableTaxPayload: object, taxPayload: taxRate, auth? : auth): Promise<number> {
 		// enable tax rate
-		await this.updateBatchWcSettingsOptions('general', enableTaxPayload);
+		await this.updateBatchWcSettingsOptions('general', enableTaxPayload, auth);
 
 		// delete previous tax rates
-		const allTaxRateIds = (await this.getAllTaxRates()).map((o: { id: unknown; }) => o.id);
+		const allTaxRateIds = (await this.getAllTaxRates(auth)).map((o: { id: unknown; }) => o.id);
 		if (allTaxRateIds.length) {
-			await this.updateBatchTaxRates('delete', allTaxRateIds);
+			await this.updateBatchTaxRates('delete', allTaxRateIds, auth);
 		}
 
 		// create tax rate
-		const taxRateResponse = await this.createTaxRate(taxPayload);
+		const taxRateResponse = await this.createTaxRate(taxPayload, auth);
 		expect(parseInt(taxRateResponse.rate)).toBe(parseInt(taxPayload.rate));
 		return Number(taxPayload.rate);
 	}
@@ -1293,7 +1381,7 @@ export class ApiUtils {
 	// get zoneId
 	async getZoneId(zoneName: string, auth? : auth): Promise<string> {
 		const allZones = await this.getAllShippingZones(auth);
-		const zoneId = (allZones.find((o: { name: unknown; }) => o.name === zoneName)).id;
+		const zoneId = ((allZones).find((o: { name: unknown; }) => o.name === zoneName)).id;
 		return zoneId;
 	}
 

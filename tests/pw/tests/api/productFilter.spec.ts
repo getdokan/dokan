@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
-import { ApiUtils } from '../../utils/apiUtils';
-import { endPoints } from '../../utils/apiEndPoints';
-import { payloads } from '../../utils/payloads';
+import { ApiUtils } from 'utils/apiUtils';
+import { endPoints } from 'utils/apiEndPoints';
+import { payloads } from 'utils/payloads';
 
 let apiUtils: ApiUtils;
 
@@ -12,7 +12,7 @@ test.beforeAll(async ({ request }) => {
 
 test.describe('product filter api test', () => {
 
-	test('get products filter by data @v2 @lite', async () => {
+	test('get products filter by data @v2 @lite @pro', async () => {
 		const [response, responseBody] = await apiUtils.get(endPoints.getProductsFilterByData);
 		expect(response.ok()).toBeTruthy();
 		expect(responseBody).toBeTruthy();

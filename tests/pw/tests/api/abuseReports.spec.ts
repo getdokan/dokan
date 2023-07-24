@@ -1,16 +1,17 @@
 import { test, expect } from '@playwright/test';
-import { ApiUtils } from '../../utils/apiUtils';
-import { endPoints } from '../../utils/apiEndPoints';
-import { payloads } from '../../utils/payloads';
-import { dbUtils } from '../../utils/dbUtils';
-import { dbData } from '../../utils/dbData';
+import { ApiUtils } from 'utils/apiUtils';
+import { endPoints } from 'utils/apiEndPoints';
+import { payloads } from 'utils/payloads';
+import { dbUtils } from 'utils/dbUtils';
+import { dbData } from 'utils/dbData';
+
 const { VENDOR_ID, CUSTOMER_ID } = process.env;
 
 let apiUtils: ApiUtils;
 
 test.beforeAll(async ({ request }) => {
 	apiUtils = new ApiUtils(request);
-	const[, productId] = await apiUtils.createProduct(payloads.createProduct(), payloads. vendorAuth);
+	const[, productId,] = await apiUtils.createProduct(payloads.createProduct(), payloads. vendorAuth);
 	//TODO: get vendorId and customerId in beforeAll
 	await dbUtils.createAbuseReport(dbData.dokan.createAbuseReport, productId, VENDOR_ID, CUSTOMER_ID);
 	await dbUtils.createAbuseReport(dbData.dokan.createAbuseReport, productId, VENDOR_ID, CUSTOMER_ID);

@@ -171,11 +171,11 @@ export const endPoints = {
 
 	// request quote rules
 	getAllQuoteRules: `${SERVER_URL}/dokan/v1/request-for-quote/quote-rule`,
-	getSingleQuoteRule: (quoteId: string) => `${SERVER_URL}/dokan/v1/request-for-quote/quote-rule/${quoteId}`,
+	getSingleQuoteRule: (quoteRuleId: string) => `${SERVER_URL}/dokan/v1/request-for-quote/quote-rule/${quoteRuleId}`,
 	createQuoteRule: `${SERVER_URL}/dokan/v1/request-for-quote/quote-rule`,
-	updateQuoteRule: (quoteId: string) => `${SERVER_URL}/dokan/v1/request-for-quote/quote-rule/${quoteId}`,
-	deleteQuoteRule: (quoteId: string) => `${SERVER_URL}/dokan/v1/request-for-quote/quote-rule/${quoteId}`,
-	restoreQuoteRule: (quoteId: string) => `${SERVER_URL}/dokan/v1/request-for-quote/quote-rule/${quoteId}/restore`, // put
+	updateQuoteRule: (quoteRuleId: string) => `${SERVER_URL}/dokan/v1/request-for-quote/quote-rule/${quoteRuleId}`,
+	deleteQuoteRule: (quoteRuleId: string) => `${SERVER_URL}/dokan/v1/request-for-quote/quote-rule/${quoteRuleId}`,
+	restoreQuoteRule: (quoteRuleId: string) => `${SERVER_URL}/dokan/v1/request-for-quote/quote-rule/${quoteRuleId}/restore`, // put
 	updateBatchQuoteRules: `${SERVER_URL}/dokan/v1/request-for-quote/quote-rule/batch`, // method: trash, delete, restore
 
 	// request quotes

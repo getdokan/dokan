@@ -116,18 +116,18 @@ jobs:
       - name: DB PORT
         run: |
           cd tests/pw 
-          echo "The value of TEST_DB_PORT is ${{ env.DB_PORT }}"
+          echo "The value of test DB_PORT is ${{ env.DB_PORT }}"
 
-      # - name: Activate theme:Storefront
-      #   run: |
-      #     cd tests/pw 
-      #     npm run activate:theme
+      - name: Activate theme:Storefront
+        run: |
+          cd tests/pw
+          npm run wp-env run tests-cli "wp theme activate storefront"
 
-      # - name: Set Permalink structure
-      #   run: |
-      #     cd tests/pw 
-      #     npm run wp-env run tests-cli 'wp rewrite structure /%postname%/'
-      #     # curl http://localhost:9999/wp-json/wp/v2 
+      - name: Set Permalink structure
+        run: |
+          cd tests/pw 
+          npm run wp-env run tests-cli "wp rewrite structure /%postname%/"
+          # curl http://localhost:9999/wp-json/wp/v2 
 
       # - name: Setup for e2e tests
       #   run: |
@@ -186,7 +186,7 @@ jobs:
       #  cd tests/pw && npm run test setup.spec.ts
       - name: 🧪 Running the api tests
         if: always()
-        timeout-minutes: 30
+        timeout-minutes: 5
         run: |
           cd tests/pw 
           npm run test:api

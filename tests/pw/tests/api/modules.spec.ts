@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
-import { ApiUtils } from '../../utils/apiUtils';
-import { endPoints } from '../../utils/apiEndPoints';
-import { helpers } from '../../utils/helpers';
+import { ApiUtils } from 'utils/apiUtils';
+import { endPoints } from 'utils/apiEndPoints';
+import { helpers } from 'utils/helpers';
 
 let apiUtils: ApiUtils;
 let randomModule: string;

@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
-import { ApiUtils } from '../../utils/apiUtils';
-import { endPoints } from '../../utils/apiEndPoints';
-import { payloads } from '../../utils/payloads';
+import { ApiUtils } from 'utils/apiUtils';
+import { endPoints } from 'utils/apiEndPoints';
+import { payloads } from 'utils/payloads';
 
 let apiUtils: ApiUtils;
 let announcementId: string;
@@ -43,7 +43,7 @@ test.describe('announcements api test', () => {
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('restore a deleted announcement  @pro', async () => {
+	test('restore a deleted announcement @pro', async () => {
 		const [response, responseBody] = await apiUtils.put(endPoints.restoreDeletedAnnouncement(announcementId));
 		expect(response.ok()).toBeTruthy();
 		expect(responseBody).toBeTruthy();

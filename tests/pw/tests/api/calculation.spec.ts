@@ -1,8 +1,8 @@
 import { test, expect } from '@playwright/test';
-import { ApiUtils } from '../../utils/apiUtils';
-import { helpers } from '../../utils/helpers';
-import { payloads } from '../../utils/payloads';
-import { dbUtils } from '../../utils/dbUtils';
+import { ApiUtils } from 'utils/apiUtils';
+import { helpers } from 'utils/helpers';
+import { payloads } from 'utils/payloads';
+import { dbUtils } from 'utils/dbUtils';
 
 let apiUtils: ApiUtils;
 let taxRate: number;

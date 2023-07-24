@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
-import { ApiUtils } from '../../utils/apiUtils';
-import { endPoints } from '../../utils/apiEndPoints';
-import { payloads } from '../../utils/payloads';
+import { ApiUtils } from 'utils/apiUtils';
+import { endPoints } from 'utils/apiEndPoints';
+import { payloads } from 'utils/payloads';
 
 let apiUtils: ApiUtils;
 let productId: string;
@@ -14,8 +14,8 @@ test.beforeAll(async ({ request }) => {
 
 test.describe('product block api test', () => {
 
-	test('get product block details @lite', async () => {
-		[, productId] = await apiUtils.createProduct(payloads.createDownloadableProduct());
+	test('get product block details @lite @pro', async () => {
+		[, productId,] = await apiUtils.createProduct(payloads.createDownloadableProduct());
 		const [response, responseBody] = await apiUtils.get(endPoints.getProductBlockDetails(productId));
 		expect(response.ok()).toBeTruthy();
 		expect(responseBody).toBeTruthy();

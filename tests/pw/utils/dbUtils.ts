@@ -1,8 +1,8 @@
 import { expect } from '@playwright/test';
 import { MySqlConnection, DbContext } from 'mysqlconnector';
 import { serialize, unserialize } from 'php-serialize';
-import { dbData } from './dbData';
-import { helpers } from './helpers';
+import { dbData } from 'utils/dbData';
+import { helpers } from 'utils/helpers';
 const { DB_HOST_NAME, DB_USER_NAME, DB_USER_PASSWORD, DATABASE, DB_PORT, DB_PREFIX  } = process.env;
 
 const mySql =  new MySqlConnection({
@@ -20,7 +20,7 @@ export const dbUtils = {
 	// execute db query
 	async dbQuery(query: string): Promise<any> {
 		const dbContext: DbContext = new DbContext(mySql);
-		return await dbContext.inTransactionAsync(async (dbContext) => {
+		return await dbContext.inTransactionAsync(async (dbContext) => { //TODO: grab connection failed actual reason, ambiguous error message
 			try{
 				const result = await dbContext.executeAsync(query);
 				const res = JSON.parse(JSON.stringify(result));

@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
-import { ApiUtils } from '../../utils/apiUtils';
-import { endPoints } from '../../utils/apiEndPoints';
-import { payloads } from '../../utils/payloads';
+import { ApiUtils } from 'utils/apiUtils';
+import { endPoints } from 'utils/apiEndPoints';
+import { payloads } from 'utils/payloads';
 
 let apiUtils: ApiUtils;
 let requestQuoteId: string;
@@ -9,7 +9,7 @@ const productId: string[] = [];
 
 test.beforeAll(async ({ request }) => {
 	apiUtils = new ApiUtils(request);
-	const [, pId] = await apiUtils.createProduct(payloads.createProduct());
+	const [, pId,] = await apiUtils.createProduct(payloads.createProduct());
 	productId.push(pId);
 	[, requestQuoteId] = await apiUtils.createRequestQuote({ ...payloads.createRequestQuote(), product_ids: productId });
 });

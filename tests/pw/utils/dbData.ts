@@ -36,7 +36,7 @@ export const dbData = {
 		generalSettings: {
 
 			//site settings
-			site_options: '', //TODO : WHY EMPTY
+			site_options: '', //TODO : WHY EMPTY , value exists find out what
 			admin_access: 'off',
 			custom_store_url: 'store',
 			setup_wizard_logo_url: '',
@@ -53,7 +53,7 @@ export const dbData = {
 			enabled_address_on_reg: 'off',
 			enable_tc_on_reg: 'on',
 			enable_single_seller_mode: 'off',
-			store_category_type: 'none'
+			store_category_type: 'multiple'  // none, multiple
 		},
 
 		sellingSettings:  {
@@ -410,7 +410,7 @@ export const dbData = {
 			time_slot_minutes: 30,
 			order_per_slot: 0,
 			delivery_box_info: 'This store needs %DAY% day(s) to process your delivery request',
-			selection_required: 'on',
+			selection_required: 'off',
 			delivery_day: '',
 			delivery_day_monday: {
 				delivery_status: 'monday',
@@ -478,7 +478,7 @@ export const dbData = {
 		},
 
 		productReportAbuseSettings: {
-			reported_by_logged_in_users_only: 'on',
+			reported_by_logged_in_users_only: 'off',
 			abuse_reasons: [
 				{
 					id: 'report_as_spam',
@@ -539,8 +539,6 @@ export const dbData = {
 			alert_email_subject: 'Subscription Ending Soon',
 			alert_email_body: 'Dear subscriber, Your subscription will be ending soon. Please renew your package in a timely'
 		},
-
-		//TODO:  vendorAnalyticsSettings:
 
 		//modules
 		modules: ['booking', 'color_scheme_customizer', 'delivery_time', 'elementor', 'export_import', 'follow_store', 'geolocation', 'germanized', 'live_chat', 'live_search', 'moip', 'dokan_paypal_ap', 'paypal_marketplace', 'product_addon', 'product_enquiry', 'report_abuse', 'rma', 'seller_vacation', 'shipstation', 'auction', 'spmv', 'store_reviews', 'store_support', 'stripe', 'product_advertising', 'product_subscription', 'vendor_analytics', 'vendor_staff', 'vsp', 'vendor_verification', 'wholesale', 'rank_math', 'table_rate_shipping', 'mangopay', 'order_min_max', 'razorpay', 'seller_badge', 'stripe_express', 'request_for_quotation'],

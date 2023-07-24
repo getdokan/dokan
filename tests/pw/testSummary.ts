@@ -25,7 +25,7 @@ const getTestResult = (suiteName, filePath) => {
 		const xmlFile = fs.readFileSync(filePath, 'utf8');
 		const jsonData = JSON.parse(convert.xml2json(xmlFile, { compact: true, spaces: 2 }));
 		const testResult = jsonData.testsuites._attributes;
-		const testSummary = [suiteName, testResult.tests, String( testResult.tests - testResult.failures), testResult.failures, testResult.skipped, getFormattedDuration(testResult.time)];
+		const testSummary = [suiteName, testResult.tests, String( testResult.tests - testResult.skipped - testResult.failures ), testResult.failures, testResult.skipped, getFormattedDuration(testResult.time)];
 		return testSummary;}
 	else {
 		return [];
@@ -38,7 +38,7 @@ const addSummaryHeadingAndTable = ( core ) => {
 		{ data: 'Total  :bar_chart:', header: true },
 		{ data: 'Passed  :white_check_mark:', header: true },
 		{ data: 'Failed  :rotating_light:', header: true },
-		// { data: 'Flaky :construction:', header: true }, //TODO: add flaky
+		// { data: 'Flaky :construction:', header: true }, //TODO: add flaky tests
 		{ data: 'Skipped  :next_track_button:', header: true },
 		{ data: 'Duration  :alarm_clock:', header: true },
 	];

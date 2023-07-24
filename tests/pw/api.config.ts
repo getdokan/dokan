@@ -7,10 +7,10 @@ export default defineConfig({
 	testDir: './tests/api',  /* test directory */
 	outputDir: 'playwright/api/test-artifacts/', 	/* Folder for test artifacts such as screenshots, videos, traces, etc. */
 	globalSetup: './global-setup', /* Path to the global setup file. This file will be required and run before all the tests. */
-	// globalTeardown: './global-teardown', /* Path to the global teardown file. This file will be required and run after all the tests. */
+	globalTeardown: './global-teardown', /* Path to the global teardown file. This file will be required and run after all the tests. */
 	globalTimeout: process.env.CI ? 20 * (60 * 1000) : 20 * (60 * 1000), /* Maximum time in milliseconds the whole test suite can run */
 	maxFailures: process.env.CI ? 30 : 30, /* The maximum number of test failures for the whole test suite run. After reaching this number, testing will stop and exit with an error. */
-	timeout: 40 * 1000, /* Maximum time one test can run for. */
+	timeout: process.env.CI ? 5 * 1000 : 10 * 1000, /* Maximum time one test can run for. */
 	expect: { timeout: 5 * 1000, /* Maximum time expect() should wait for the condition to be met.  For example in `await expect(locator).toHaveText();`*/
 	},  /* Configuration for the expect assertion library */
 	preserveOutput: 'always',  /* Whether to preserve test output in the testConfig.outputDir. Defaults to 'always'. */
@@ -22,11 +22,11 @@ export default defineConfig({
 	reportSlowTests: { max: 10, threshold: 20 },  /* Whether to report slow test files. Pass null to disable this feature. */
 	reporter: process.env.CI
 		? [
-			// ['html', { open: 'never', outputFolder: 'playwright-report/api/html/html-report-api' }],
+			['html', { open: 'never', outputFolder: 'playwright-report/api/html/html-report-api' }],
 			['junit', { outputFile: 'playwright-report/api/junit-report/api-results.xml' }],
 			['list', { printSteps: true }]]
 		: [
-			// ['html', { open: 'never', outputFolder: 'playwright-report/api/html/html-report-api' }],
+			['html', { open: 'never', outputFolder: 'playwright-report/api/html/html-report-api' }],
 			['junit', { outputFile: 'playwright-report/api/junit-report/api-results.xml' }],
 			['list', { printSteps: true }],
 			// ['allure-playwright',	{ detail: true, outputFolder: 'playwright-report/api/allure/allure-report', suiteTitle: false }]

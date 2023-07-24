@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
-import { ApiUtils } from '../../utils/apiUtils';
-import { endPoints } from '../../utils/apiEndPoints';
-import { payloads } from '../../utils/payloads';
+import { ApiUtils } from 'utils/apiUtils';
+import { endPoints } from 'utils/apiEndPoints';
+import { payloads } from 'utils/payloads';
 const { VENDOR_ID, CUSTOMER_ID } = process.env;
 
 let apiUtils: ApiUtils;
@@ -14,8 +14,6 @@ test.beforeAll(async ({ request }) => {
 });
 
 test.describe('support ticket api test', () => {
-	test.skip(!!process.env.CI, 'feature not merged yet');
-
 	test('get all support ticket customers @pro', async () => {
 		const [response, responseBody] = await apiUtils.get(endPoints.getAllSupportTicketCustomers);
 		expect(response.ok()).toBeTruthy();
@@ -40,7 +38,7 @@ test.describe('support ticket api test', () => {
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('update support ticket status @pro', async () => {
+	test('update a support ticket status @pro', async () => {
 		const [response, responseBody] = await apiUtils.post(endPoints.updateSupportTicketStatus(supportTicketId), { data: payloads.updateSupportTicketStatus });
 		expect(response.ok()).toBeTruthy();
 		expect(responseBody).toBeTruthy();
@@ -56,7 +54,8 @@ test.describe('support ticket api test', () => {
 	});
 
 	test('delete a support ticket comment @pro', async () => {
-		const supportTicketCommentId = await apiUtils.createSupportTicketComment(payloads.createSupportTicketComment);
+		// const supportTicketCommentId = await apiUtils.createSupportTicketComment('', payloads.createSupportTicketComment); //TODO: why failing for this
+		const supportTicketCommentId = await apiUtils.createSupportTicketComment(supportTicketId, payloads.createSupportTicketComment);
 		const [response, responseBody] = await apiUtils.delete(endPoints.deleteSupportTicketComment(supportTicketCommentId));
 		expect(response.ok()).toBeTruthy();
 		expect(responseBody).toBeTruthy();

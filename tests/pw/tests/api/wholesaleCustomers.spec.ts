@@ -1,14 +1,14 @@
 import { test, expect } from '@playwright/test';
-import { ApiUtils } from '../../utils/apiUtils';
-import { endPoints } from '../../utils/apiEndPoints';
-import { payloads } from '../../utils/payloads';
+import { ApiUtils } from 'utils/apiUtils';
+import { endPoints } from 'utils/apiEndPoints';
+import { payloads } from 'utils/payloads';
 
 let apiUtils: ApiUtils;
 let wholesaleCustomerId: string;
 
 test.beforeAll(async ({ request }) => {
 	apiUtils = new ApiUtils(request);
-	[, wholesaleCustomerId] = await apiUtils.createWholesaleCustomer(payloads.createCustomer());
+	[, wholesaleCustomerId] = await apiUtils.createWholesaleCustomer(payloads.createCustomer(), payloads.adminAuth);
 });
 
 test.describe('wholesale customers api test', () => {

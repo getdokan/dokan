@@ -1,12 +1,12 @@
 import { test  } from '@playwright/test';
-import { data } from '../../utils/testData';
-import { LoginPage } from '../../pages/loginPage';
-import { AdminPage } from '../../pages/adminPage';
-import { ApiUtils } from '../../utils/apiUtils';
-// import { apiEndpoints } from '../../utils/apiEndPoints';
-import { payloads } from '../../utils/payloads';
-import { dbUtils } from '../../utils/dbUtils';
-import { dbData } from '../../utils/dbData';
+import { data } from 'utils/testData';
+import { LoginPage } from 'pages/loginPage';
+import { LocalSetupPage } from 'pages/localSetupPage';
+import { ApiUtils } from 'utils/apiUtils';
+// import { apiEndpoints } from 'utils/apiEndPoints';
+import { payloads } from 'utils/payloads';
+import { dbUtils } from 'utils/dbUtils';
+import { dbData } from 'utils/dbData';
 
 
 test.describe('setup local site', () => {
@@ -23,16 +23,16 @@ test.describe('setup local site', () => {
 
 	// });
 
-	// test.only('delete database or all tables ', async ({ page }) => {
+	// test('delete database or all tables ', async ({ page }) => {
 	//  });
 
 
 	test('admin setup WP', async ({ page }) => {
 		const loginPage = new LoginPage(page);
-		const adminPage = new AdminPage(page);
-		await adminPage.setupWp();
+		const localSetupPage = new LocalSetupPage(page);
+		await localSetupPage.setupWp(data.installWp);
 		await loginPage.adminLogin(data.admin);
-		await adminPage.setPermalinkSettings(data.wpSettings.permalink);
+		await localSetupPage.setPermalinkSettings(data.wpSettings.permalink);
 	});
 
 	test('activate basic auth plugin', async () => {

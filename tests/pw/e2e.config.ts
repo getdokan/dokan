@@ -6,11 +6,11 @@ export default defineConfig({
 	testDir: './tests/e2e',  /* test directory */
 	outputDir: 'playwright/e2e/test-artifacts/', 	/* Folder for test artifacts such as screenshots, videos, traces, etc. */
 	globalSetup: './global-setup', /* Path to the global setup file. This file will be required and run before all the tests. */
-	// globalTeardown: './global-teardown', /* Path to the global teardown file. This file will be required and run after all the tests. */
+	globalTeardown: './global-teardown', /* Path to the global teardown file. This file will be required and run after all the tests. */
 	globalTimeout: process.env.CI ? 20 * (60 * 1000) : 20 * (60 * 1000), /* Maximum time in milliseconds the whole test suite can run */
-	maxFailures: process.env.CI ? 20 : 20, /* The maximum number of test failures for the whole test suite run. After reaching this number, testing will stop and exit with an error. */
-	timeout: 45 * 1000, /* Maximum time one test can run for. */
-	expect: { timeout: 10 * 1000, /* Maximum time expect() should wait for the condition to be met.  For example in `await expect(locator).toHaveText();`*/
+	maxFailures: process.env.CI ? 40 : 20, /* The maximum number of test failures for the whole test suite run. After reaching this number, testing will stop and exit with an error. */
+	timeout: process.env.CI ? 15 * 1000 : 20 * 1000, /* Maximum time one test can run for. */
+	expect: { timeout: 15 * 1000, /* Maximum time expect() should wait for the condition to be met.  For example in `await expect(locator).toHaveText();`*/
 	},  /* Configuration for the expect assertion library */
 	preserveOutput: 'always',  /* Whether to preserve test output in the testConfig.outputDir. Defaults to 'always'. */
 	// fullyParallel: true, 	/* Run tests in files in parallel */
@@ -21,11 +21,11 @@ export default defineConfig({
 	reportSlowTests: { max: 10, threshold: 20 },  /* Whether to report slow test files. Pass null to disable this feature. */
 	reporter: process.env.CI
 		? [
-			// ['html', { open: 'never', outputFolder: 'playwright-report/e2e/html/html-report-e2e' }],
+			['html', { open: 'never', outputFolder: 'playwright-report/e2e/html/html-report-e2e' }],
 			['junit', { outputFile: 'playwright-report/e2e/junit-report/e2e-results.xml' }],
 			['list', { printSteps: true }]]
 		: [
-			// ['html', { open: 'never', outputFolder: 'playwright-report/e2e/html/html-report-e2e' }],
+			['html', { open: 'never', outputFolder: 'playwright-report/e2e/html/html-report-e2e' }],
 			['junit', { outputFile: 'playwright-report/e2e/junit-report/e2e-results.xml' }],
 			['list', { printSteps: true }],
 			// ['allure-playwright',	{ detail: true, outputFolder: 'playwright-report/e2e/allure/allure-report', suiteTitle: false }]
@@ -42,9 +42,11 @@ export default defineConfig({
 		// colorScheme: 'dark', /* Emulates 'prefers-colors-scheme' media feature, supported values are 'light', 'dark', 'no-preference' */
 		headless: process.env.CI ? !! process.env.CI : false, /* Whether to run tests on headless or non-headless mode */
 		ignoreHTTPSErrors: true, /* Whether to ignore HTTPS errors during navigation. */
-		// trace: 'on-first-retry', /* Record trace only when retrying a test for the first time. */
-		// screenshot: 'only-on-failure', /* Capture screenshot after each test failure. */
-		// video: 'on-first-retry', /* Record video only when retrying a test for the first time. */
+		// trace: 'retain-on-failure', /* Record trace only when retrying a test for the first time. */
+		trace: 'on-first-retry', /* Record trace only when retrying a test for the first time. */
+		screenshot: 'only-on-failure', /* Capture screenshot after each test failure. */
+		// video: 'retain-on-failure', /* Record video only when retrying a test for the first time. */
+		video: 'on-first-retry', /* Record video only when retrying a test for the first time. */
 		// viewport: { width: 1280, height: 720 }, /* Size of viewport */
 		launchOptions: { slowMo: process.env.SLOWMO ? Number(process.env.SLOWMO) * 1000 : 0, /* whether to slow down test execution by provided seconds */
 		},

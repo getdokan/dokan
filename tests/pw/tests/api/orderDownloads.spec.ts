@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
-import { ApiUtils } from '../../utils/apiUtils';
-import { endPoints } from '../../utils/apiEndPoints';
-import { payloads } from '../../utils/payloads';
+import { ApiUtils } from 'utils/apiUtils';
+import { endPoints } from 'utils/apiEndPoints';
+import { payloads } from 'utils/payloads';
 
 let apiUtils: ApiUtils;
 let downloadableProductId: string;
@@ -16,7 +16,7 @@ test.beforeAll(async ({ request }) => {
 		name: responseBody.title.raw,
 		file: responseBody.source_url,
 	}];
-	[, downloadableProductId] = await apiUtils.createProduct({ ...payloads.createDownloadableProduct(), downloads });
+	[, downloadableProductId,] = await apiUtils.createProduct({ ...payloads.createDownloadableProduct(), downloads });
 	[,, orderId,] = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder);
 	[, downloadId] = await apiUtils.createOrderDownload(orderId, [downloadableProductId],);
 });
@@ -24,19 +24,19 @@ test.beforeAll(async ({ request }) => {
 
 test.describe('order downloads api test', () => {
 
-	test('get all order downloads @v2 @lite', async () => {
+	test('get all order downloads @v2 @lite @pro', async () => {
 		const [response, responseBody] = await apiUtils.get(endPoints.getAllOrderDownloads(orderId));
 		expect(response.ok()).toBeTruthy();
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('create order downloads @v2 @lite', async () => {
+	test('create order downloads @v2 @lite @pro', async () => {
 		const [response, responseBody] = await apiUtils.post(endPoints.createOrderDownload(orderId), { data: { ids: [downloadableProductId] } });
 		expect(response.ok()).toBeTruthy();
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('delete order downloads @v2 @lite', async () => {
+	test('delete order downloads @v2 @lite @pro', async () => {
 		const [response, responseBody] = await apiUtils.delete(endPoints.deleteOrderDownload(orderId), { data: { permission_id: downloadId } });
 		expect(response.ok()).toBeTruthy();
 		expect(responseBody).toBeTruthy();

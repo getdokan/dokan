@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { helpers } from './helpers';
+import { helpers } from 'utils/helpers';
 
 interface user {
 	username: string;
@@ -23,15 +23,27 @@ export const data = {
 		customerAuthFile:'playwright/.auth/customerStorageState.json'
 	},
 
-	//User
-	user: {
-		username: () => faker.person.firstName('male'),
-		userDetails: {
-			firstName: () => faker.person.firstName('male'),
-			lastName: () => faker.person.lastName('male'),
-			role: 'customer',
-		},
+	// keyboard key
+	key: {
+		arrowDown: 'ArrowDown',
+		enter: 'Enter',
+		home: 'Home',
+		end: 'End'
 	},
+
+	plugin: {
+		// PluginSlugList: ['dokan-lite', 'dokan-pro', 'woocommerce', 'woocommerce-bookings', 'woocommerce-product-add-ons', 'woocommerce-simple-auction', 'woocommerce-subscriptions', 'elementor', 'elementor-pro'],
+		plugins:['basic-auth', 'dokan', 'dokan-pro', 'woocommerce', 'woocommerce-bookings', 'woocommerce-product-addons', 'woocommerce-simple-auctions', 'woocommerce-subscriptions'],
+		// plugins: ['dokan/dokan', 'dokan-pro/dokan-pro', 'woocommerce/woocommerce'],
+		dokanPro: ['dokan-pro'],
+		activeClass: 'active',
+
+	},
+
+	woocommerce: {
+		saveSuccessMessage: 'Your settings have been saved.',
+	},
+
 
 	//Product
 	product: {
@@ -133,6 +145,7 @@ export const data = {
 			storeName: String(process.env.VENDOR) + 'store',
 			status: 'publish',
 			stockStatus: false,
+			editProduct: ''
 		},
 
 		variable: {
@@ -184,6 +197,7 @@ export const data = {
 			productType: 'variable-subscription',
 			productName: () => faker.commerce.productName() + (' (Variable Subscription)'),
 			category: 'Uncategorized',
+			regularPrice: () => (faker.finance.amount(100, 200, faker.helpers.arrayElement([1, 2]))).replace('.', ','),
 			subscriptionPrice: () => (faker.finance.amount(100, 200, faker.helpers.arrayElement([1, 2]))).replace('.', ','),
 			subscriptionPeriodInterval: '1',
 			subscriptionPeriod: 'month',
@@ -256,9 +270,7 @@ export const data = {
 
 		// Review
 		review: {
-			rating: faker.number.int({
-				min: 1, max: 5
-			}),
+			rating: String(faker.number.int({ min: 1, max: 5 })),
 			reviewMessage: () => faker.string.uuid(),
 		},
 
@@ -267,21 +279,44 @@ export const data = {
 			reportReason: faker.helpers.arrayElement(['This content is spam', 'This content should marked as adult', 'This content is abusive', 'This content is violent', 'This content suggests the author might be risk of hurting themselves', 'This content infringes upon my copyright', 'This content contains my private information', 'Other']),
 			reportReasonDescription: 'report reason description',
 			reportSubmitSuccessMessage: 'Your report has been submitted. Thank you for your response.',
+
+			// non logged user
+			username: String(process.env.CUSTOMER),
+			password: String(process.env.USER_PASSWORD),
+
+			// guest user
+			guestName: () => faker.person.firstName('male'),
+			guestEmail: () => faker.person.firstName('male') + '@email.com'
 		},
 
 		// Enquiry
 		enquiry: {
 			enquiryDetails: 'enquiry details',
 			enquirySubmitSuccessMessage: 'Email sent successfully!',
+
+			// guest user
+			guestName: () => faker.person.firstName('male'),
+			guestEmail: () => faker.person.firstName('male') + '@email.com'
 		},
 	},
 
+	// store
 	store: {
 		rating: faker.helpers.arrayElement(['width: 20%', 'width: 40%', 'width: 60%', 'width: 80%', 'width: 100%']),
 		reviewTitle: 'store review title',
 		reviewMessage: () => faker.string.uuid(),
 	},
 
+	// store list
+	storeList: {
+		sort: 'most_recent',
+		layout: {
+			grid: 'grid',
+			list: 'list'
+		}
+	},
+
+	//order
 	order: {
 		orderStatus: {
 			pending: 'wc-pending',
@@ -303,6 +338,8 @@ export const data = {
 		},
 	},
 
+
+	// card
 	card: {
 		strip: {
 			striptNon3D: '4242424242424242',
@@ -335,6 +372,7 @@ export const data = {
 		},
 	},
 
+	// coupon
 	coupon: {
 		// title: () => 'VC_' + faker.string.alpha({count: 5, casing: 'upper'},),
 		title: () => 'VC_' + faker.string.uuid(),
@@ -342,9 +380,23 @@ export const data = {
 			min: 1, max: 10
 		},).toString(),
 		discount_type: () => faker.helpers.arrayElement(['percent', 'fixed_product']),
+		discountType: 'percent',
+		description:'Coupon description',
 		existingCouponErrorMessage: 'Coupon title already exists',
+		editCoupon: '',
 	},
 
+	// address
+	address: {
+		street1: 'abc street',
+		street2: 'xyz street',
+		country: 'United States (US)',
+		countrySelectValue: 'US',
+		stateSelectValue: 'NY',
+		city: 'New York',
+		zipCode: '10006',
+		state: 'New York',
+	},
 
 	wpSettings: {
 		saveSuccessMessage: 'Your settings have been saved.',
@@ -517,160 +569,6 @@ export const data = {
 		},
 	},
 
-	dokanSettings: {
-
-		// General Settings
-		general: {
-			vendorStoreUrl: 'store',
-			sellingProductTypes: 'sell_both', // 'sell_both', 'sell_physical', 'sell_digital'
-			storeProductPerPage: '12',
-			storCategory: 'none',  // 'none', 'Single', 'Multiple'
-			saveSuccessMessage: 'Setting has been saved successfully.',
-		},
-
-		// Selling Options Settings
-		selling: {
-			commissionType: 'percentage', //'flat', 'percentage', 'combine'
-			adminCommission: '10',
-			shippingFeeRecipient: 'seller', //'seller', 'admin'
-			taxFeeRecipient: 'seller', //'seller', 'admin'
-			newProductStatus: 'publish', //'publish', 'pending'
-			productCategorySelection: 'single', //'single', 'multiple'
-			saveSuccessMessage: 'Setting has been saved successfully.',
-		},
-
-		// Withdraw
-		withdraw: {
-			customMethodName: 'Bksh',
-			customMethodType: 'Phone',
-			minimumWithdrawAmount: '5',
-			withdrawThreshold: '0',
-			quarterlyScheduleMonth: 'march', // 'january', 'february', 'march'
-			quarterlyScheduleWeek: '1', //'1', '2', '3', 'L'
-			quarterlyScheduleDay: 'monday', //'monday', 'tuesday', 'wednesday', 'thursday', 'friday'
-			monthlyScheduleWeek: '1', //'1', '2', '3', 'L'
-			monthlyScheduleDay: 'monday', // 'monday', 'tuesday', 'wednesday', 'thursday', 'friday'
-			biweeklyScheduleWeek: '1', //'1', '2'
-			biweeklyScheduleDay: 'monday', //'saturday', 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday'
-			weeklyScheduleDay: 'monday', // 'saturday', 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday'
-			saveSuccessMessage: 'Setting has been saved successfully.',
-		},
-
-		reverseWithdraw: {
-			billingType: 'by_amount', // 'by_month'
-			reverseBalanceThreshold: '21',
-			gracePeriod: '7',
-			saveSuccessMessage: 'Setting has been saved successfully.',
-		},
-
-		page: {
-			termsAndConditionsPage: 'Sample Page',
-			saveSuccessMessage: 'Setting has been saved successfully.',
-		},
-
-		appearance: {
-			googleMapApiKey: String(process.env.GMAP),
-			mapBoxApiKey: String(process.env.MAPBOX_API_KEY),
-			storeBannerWidth: '625',
-			storeBannerHeight: '300',
-			saveSuccessMessage: 'Setting has been saved successfully.',
-		},
-
-		privacyPolicy: {
-			privacyPage: '2', // '2', '3', '4', '5', '6', '7', '8', '9', '10'
-			privacyPolicyHtmlBody: 'Your personal data will be used to support your experience throughout this website, to manage access to your account, and for other purposes described in our [dokan_privacy_policy]',
-			saveSuccessMessage: 'Setting has been saved successfully.',
-		},
-
-		storeSupport: {
-			displayOnSingleProductPage: 'above_tab', // 'above_tab', 'inside_tab', 'dont_show'
-			supportButtonLabel: 'Get Support',
-			saveSuccessMessage: 'Setting has been saved successfully.',
-		},
-
-		// Rma Settings
-		rma: {
-			orderStatus: 'wc-processing', // 'wc-pending', 'wc-processing', 'wc-on-hold', 'wc-completed', 'wc-cancelled', 'wc-refunded', 'wc-failed'
-			rmaReasons: ['Defective', 'Wrong Product', 'Other'],
-			refundPolicyHtmlBody: 'Refund Policy',
-			saveSuccessMessage: 'Setting has been saved successfully.',
-		},
-
-		wholesale: {
-			whoCanSeeWholesalePrice: 'all_user',
-			saveSuccessMessage: 'Setting has been saved successfully.',
-		},
-
-		euCompliance: {
-			saveSuccessMessage: 'Setting has been saved successfully.',
-		},
-
-		deliveryTime: {
-			deliveryDateLabel: 'Delivery Date',
-			deliveryBlockedBuffer: '0',
-			deliveryBoxInfo: 'This store needs %DAY% day(s) to process your delivery request',
-			days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
-			openingTime: '6:00 am',
-			closingTime: '11:30 pm',
-			timeSlot: '30',
-			orderPerSlot: '90',
-			saveSuccessMessage: 'Setting has been saved successfully.',
-		},
-
-		productAdvertising: {
-			noOfAvailableSlot: '100',
-			expireAfterDays: '10',
-			advertisementCost: '15',
-			saveSuccessMessage: 'Setting has been saved successfully.',
-		},
-
-		// Geolocation Settings
-		geolocation: {
-			locationMapPosition: 'top', // 'top', 'left', 'right'
-			showMap: 'all', // 'all', 'store_listing', 'shop'
-			radiusSearchUnit: 'km', // 'km', 'miles'
-			radiusSearchMinimumDistance: '0',
-			radiusSearchMaximumDistance: '10',
-			mapZoomLevel: '11',
-			defaultLocation: 'New York',
-			saveSuccessMessage: 'Setting has been saved successfully.',
-		},
-
-		productReportAbuse: {
-			reasonsForAbuseReport: 'This product is fake',
-			saveSuccessMessage: 'Setting has been saved successfully.',
-		},
-
-		// Spmv Settings
-		spmv: {
-			sellItemButtonText: 'Sell This Item',
-			availableVendorDisplayAreaTitle: 'Other Available Vendor',
-			availableVendorSectionDisplayPosition: 'below_tabs', // 'below_tabs', 'inside_tabs', 'after_tabs'
-			showSpmvProducts: 'show_all', // 'show_all', 'min_price', 'max_price', 'top_rated_vendor'
-			saveSuccessMessage: 'Setting has been saved successfully.',
-		},
-
-		// Vendor Subscription Settings
-		vendorSubscription: {
-			displayPage: '2', // '2', '4', '5', '6', '8', '9', '10', '11', '15', '-1'
-			noOfDays: '2',
-			productStatus: 'draft', // 'publish', 'pending', 'draft'
-			cancellingEmailSubject: 'Subscription Package Cancel notification',
-			cancellingEmailBody: 'Dear subscriber, Your subscription has expired. Please renew your package to continue using it.',
-			alertEmailSubject: 'Subscription Ending Soon',
-			alertEmailBody: 'Dear subscriber, Your subscription will be ending soon. Please renew your package in a timely',
-			saveSuccessMessage: 'Setting has been saved successfully.',
-		},
-	},
-
-	module: {
-		noModuleMessage: 'No modules found.',
-		modules: [
-			'booking', 'color_scheme_customizer', 'delivery_time', 'elementor', 'export_import', 'follow_store', 'geolocation', 'germanized', 'live_chat', 'live_search',
-			'moip', 'dokan_paypal_ap', 'paypal_marketplace', 'product_addon', 'product_enquiry', 'report_abuse', 'rma', 'seller_vacation', 'shipstation', 'auction', 'spmv',
-			'store_reviews', 'stripe', 'product_advertising', 'product_subscription', 'vendor_analytics', 'vendor_staff', 'vsp', 'vendor_verification', 'wholesale',
-			'rank_math', 'table_rate_shipping', 'mangopay', 'order_min_max', 'razorpay', 'seller_badge', 'stripe_express', 'request_for_quotation' ]
-	},
 
 	// Dokan Setup Wizard
 	dokanSetupWizard: {
@@ -686,6 +584,8 @@ export const data = {
 		minimumWithdrawLimit: '5',
 	},
 
+
+	// Vendor Setup Wizard
 	vendorSetupWizard: {
 		choice: false,
 		storeProductsPerPage: '12',
@@ -708,41 +608,109 @@ export const data = {
 		skrill: faker.internet.email(),
 	},
 
+	storeShare: {
+		facebook:{
+			name: 'facebook',
+			url: 'facebook.com'
+		},
+		twitter: {
+			name: '.fa-twitter',
+		},
+		linked:{
+			name: '.fa-linkedin',
+		},
+		pinterest: {
+			name: '.fa-pinterest',
+		},
+		mail: '.fa-at',
+	},
+
 	subUrls: {
+
+		ajax: '/admin-ajax.php',
+		post: '/post.php',
+		gmap: '/maps/api',
+
 		backend: {
-			setupWP: 'wp-admin/install.php',
+
 			login: 'wp-login.php',
 			adminLogin: 'wp-admin',
 			adminLogout: 'wp-login.php?action=logout',
 			adminDashboard: 'wp-admin',
-			dokan: 'wp-admin/admin.php?page=dokan#/',
-			dokanWholeSaleCustomer: 'wp-admin/admin.php?page=dokan#/wholesale-customer',
-			dokanSettings: 'wp-admin/admin.php?page=dokan#/settings',
-			dokanWithdraw: 'wp-admin/admin.php?page=dokan#/withdraw',
-			dokanVendors: 'wp-admin/admin.php?page=dokan#/vendors',
-			dokanSetupWizard: 'wp-admin/admin.php?page=dokan-setup',
-			dokanLiteModules: 'wp-admin/admin.php?page=dokan#/pro-modules',
-			dokanProModules: 'wp-admin/admin.php?page=dokan#/modules',
-			dokanProFeatures: 'wp-admin/admin.php?page=dokan#/premium',
-			woocommerceSettings: 'wp-admin/admin.php?page=wc-settings',
-			wcAddNewProducts: 'wp-admin/post-new.php?post_type=product',
-			wcAddNewCategories: 'wp-admin/edit-tags.php?taxonomy=product_cat&post_type=product',
-			wcAddNewAttributes: 'wp-admin/edit.php?post_type=product&page=product_attributes',
-			permalinks: 'wp-admin/options-permalink.php',
+			user: 'wp-admin/user-edit.php',
+			setupWP: 'wp-admin/install.php',
 			general: 'wp-admin/options-general.php',
+			permalinks: 'wp-admin/options-permalink.php',
 			plugins: 'wp-admin/plugins.php',
-			stores: 'dokan/v1/stores',
-			withdraws: 'dokan/v1/withdraw',
+
+			dokan: {
+				setupWizard: 'wp-admin/admin.php?page=dokan-setup',
+				dokan: 'wp-admin/admin.php?page=dokan#',
+
+				// only lite
+				liteModules: 'wp-admin/admin.php?page=dokan#/pro-modules',
+				proFeatures: 'wp-admin/admin.php?page=dokan#/premium',
+
+				// lite and pro
+				withdraw: 'wp-admin/admin.php?page=dokan#/withdraw?status=pending',
+				reverseWithdraws: 'wp-admin/admin.php?page=dokan#/reverse-withdrawal',
+				vendors: 'wp-admin/admin.php?page=dokan#/vendors',
+				storeCategories: 'wp-admin/admin.php?page=dokan#/store-categories',
+				abuseReports: 'wp-admin/admin.php?page=dokan#/abuse-reports',
+				storeReviews: 'wp-admin/admin.php?page=dokan#/store-reviews',
+				storeSupport: 'wp-admin/admin.php?page=dokan#/admin-store-support',
+				requestForQuote: 'wp-admin/admin.php?page=dokan#/request-for-quote',
+				requestForQuoteRules: 'wp-admin/admin.php?page=dokan#/request-for-quote/quote-rules',
+				sellerBadge: 'wp-admin/admin.php?page=dokan#/dokan-seller-badge',
+				announcements: 'wp-admin/admin.php?page=dokan#/announcement',
+				refunds: 'wp-admin/admin.php?page=dokan#/refund?status=pending',
+				reports: 'wp-admin/admin.php?page=dokan#/reports',
+				allLogs: 'wp-admin/admin.php?page=dokan#/reports?tab=logs',
+				modules: 'wp-admin/admin.php?page=dokan#/modules',
+				tools: 'wp-admin/admin.php?page=dokan#/tools',
+				verifications: 'wp-admin/admin.php?page=dokan-seller-verifications',
+				productAdvertising: 'wp-admin/admin.php?page=dokan#/product-advertising',
+				wholeSaleCustomer: 'wp-admin/admin.php?page=dokan#/wholesale-customer',
+				help: 'wp-admin/admin.php?page=dokan#/help',
+				settings: 'wp-admin/admin.php?page=dokan#/settings',
+				license: 'wp-admin/admin.php?page=dokan_updates',
+
+				//others
+				downloadOrderLogs: 'wp-admin/admin.php?download-order-log-csv',
+				subscribe: 'https://api.getwemail.io/v1/embed/subscribe'
+			},
+
+			wc: {
+				addNewProducts: 'wp-admin/post-new.php?post_type=product',
+				addNewCategories: 'wp-admin/edit-tags.php?taxonomy=product_cat&post_type=product',
+				addNewAttributes: 'wp-admin/edit.php?post_type=product&page=product_attributes',
+				searchAttribute: 'wp-admin/admin-ajax.php?action=woocommerce_json_search_product_attributes',
+				term: 'wp-admin/admin-ajax.php?term',
+				taxonomyTerms: 'wp-admin/admin-ajax.php?action=woocommerce_json_search_taxonomy_terms',
+				taxonomy: 'wp-admin/edit-tags.php?taxonomy',
+				coupons: 'wp-admin/edit.php?post_type=shop_coupon',
+				addCoupon: 'wp-admin/post-new.php?post_type=shop_coupon',
+				orders: 'wp-admin/edit.php?post_type=shop_order',
+				settings: 'wp-admin/admin.php?page=wc-settings',
+			},
+
 		},
 
 		frontend: {
 		// customer
 			myAccount: 'my-account',
+			myOrders: 'my-orders',
+			orderCancel: 'cart/?cancel_order',
+			orderAgain: 'cart/?order_again',
+			orderPay: 'checkout/order-pay',
+			orderReceived: 'checkout/order-received',
 			customerLogout: 'my-account/customer-logout',
 			productCustomerPage: 'product',
 			ordersCustomerPage: 'orders',
 			shop: 'shop',
+			shopSort: 'shop/?orderby',
 			storeListing: 'store-listing',
+			storeListingSort: 'store-listing/?stores_orderby',
 			cart: 'cart',
 			checkout: 'checkout',
 			addToCart: '?wc-ajax=add_to_cart',
@@ -750,59 +718,116 @@ export const data = {
 			placeOrder: '?wc-ajax=checkout',
 			billingAddress: 'my-account/edit-address/billing',
 			shippingAddress: 'my-account/edit-address/shipping',
-			shippingAddressCheckout: '?wc-ajax=update_order_review',
+			shippingAddressCheckout: 'wc-ajax=update_order_review',
 			editAccountCustomer: 'my-account/edit-account',
 			becomeVendor: 'my-account/account-migration',
 			supportTickets: 'my-account/support-tickets',
 			productDetails: (productName: string) => `product/${productName}`,
 			vendorDetails: (storeName: string) => `store/${storeName}`,
+			myOrderDetails: (orderId: string) => `my-account/view-order/${orderId}`,
 			productReview: 'wp-comments-post.php',
 			submitSupport: 'wp-comments-post.php',
 
-			//vendor dashboard
-			vendorSetupWizard: '?page=dokan-seller-setup',
-			dashboard: 'dashboard',
-			product: 'dashboard/products',
-			productAuction: 'dashboard/new-auction-product',
-			productBooking: 'dashboard/booking/new-product',
-			order: 'dashboard/orders',
-			coupon: 'dashboard/coupons',
-			reviews: 'dashboard/reviews/',
-			withdraw: 'dashboard/withdraw/',
-			withdrawRequests: 'dashboard/withdraw-requests',
-			auction: 'dashboard/auction',
-			booking: 'dashboard/booking',
-			settingsStore: 'dashboard/settings/store',
-			settingsAddon: 'dashboard/settings/product-addon',
-			settingsPayment: 'dashboard/settings/payment',
-			settingsVerification: 'dashboard/settings/verification',
-			settingsDeliveryTime: 'dashboard/settings/delivery-time',
-			settingsShipping: 'dashboard/settings/shipping',
-			settingsSocialProfile: 'dashboard/settings/social',
-			settingsRma: 'dashboard/settings/rma',
-			settingsSeo: 'dashboard/settings/seo',
-			editAccountVendor: 'dashboard/edit-account',
-			paypal: 'dashboard/settings/payment-manage-paypal',
-			bankTransfer: 'dashboard/settings/payment-manage-bank',
-			customPayment: 'dashboard/settings/payment-manage-dokan_custom',
-			skrill: 'dashboard/settings/payment-manage-skrill',
+			// vendor dashboard
+			vDashboard:{
+				setupWizard: '?page=dokan-seller-setup',
+				dashboard: 'dashboard',
+				products: 'dashboard/products',
+				productSearch: 'products/?product_listing_search',
+				productAuction: 'dashboard/new-auction-product',
+				productBooking: 'dashboard/booking/new-product',
+				orders: 'dashboard/orders',
+				coupons: 'dashboard/coupons',
+				reviews: 'dashboard/reviews/',
+				withdraw: 'dashboard/withdraw/',
+				badges: 'dashboard/seller-badge/',
+				withdrawRequests: 'dashboard/withdraw-requests',
+				staff: 'dashboard/staffs',
+				followers: 'dashboard/followers',
+				tools: 'dashboard/tools',
+				csvExport: 'dashboard/tools/csv-export',
+				auction: 'dashboard/auction',
+				booking: 'dashboard/booking',
+				settingsStore: 'dashboard/settings/store',
+				settingsAddon: 'dashboard/settings/product-addon',
+				settingsPayment: 'dashboard/settings/payment',
+				settingsVerification: 'dashboard/settings/verification',
+				settingsDeliveryTime: 'dashboard/settings/delivery-time',
+				settingsShipping: 'dashboard/settings/shipping',
+				settingsSocialProfile: 'dashboard/settings/social',
+				settingsRma: 'dashboard/settings/rma',
+				settingsSeo: 'dashboard/settings/seo',
+				editAccountVendor: 'dashboard/edit-account',
+				paypal: 'dashboard/settings/payment-manage-paypal',
+				bankTransfer: 'dashboard/settings/payment-manage-bank',
+				customPayment: 'dashboard/settings/payment-manage-dokan_custom',
+				skrill: 'dashboard/settings/payment-manage-skrill',
+			},
 		},
 
-		ajax: '/admin-ajax.php',
-		post: '/post.php',
-		gmap: '/maps/api',
+		api: {
+			dokan:{
+				products: 'dokan/v1/products',
+				stores: 'dokan/v1/stores',
+				storeCategories: 'dokan/v1/store-categories',
+				withdraws: 'dokan/v1/withdraw',
+				reverseWithdraws: 'dokan/v1/reverse-withdrawal',
+				abuseReports: 'dokan/v1/abuse-reports',
+				logs: 'dokan/v1/admin/logs',
+				announcements: 'dokan/v1/announcement',
+				dummyData: 'dokan/v1/dummy-data',
+				refunds: 'dokan/v1/refunds',
+				modules: 'dokan/v1/admin/modules',
+				storeReviews: 'dokan/v1/store-reviews',
+				productAdvertising: 'dokan/v1/product_adv',
+				wholesaleRegister: 'dokan/v1/wholesale/register',
+				wholesaleCustomers: 'dokan/v1/wholesale/customers',
+				storeSupport: 'dokan/v1/admin/support-ticket',
+				quotes: 'dokan/v1/request-for-quote',
+				quoteRules: 'dokan/v1/request-for-quote/quote-rule',
+				sellerBadge: 'dokan/v1/seller-badge',
+				sellerBadgeEvent: 'dokan/v1/seller-badge/events',
+			},
+
+			wc: {
+				wcProducts: 'wc/v3/products',
+			},
+
+		},
+
 	},
 
+
+	// user
+	user: {
+		username: () => faker.person.firstName('male'),
+		userDetails: {
+			name: () => faker.person.firstName('male'),
+			firstName: () => faker.person.firstName('male'),
+			lastName: () => faker.person.lastName('male'),
+			email: () => faker.person.firstName('male') + '@email.com',
+			email1: faker.internet.email(),
+			role: 'customer',
+		},
+	},
+
+
+	// admin
 	admin: {
 		username: String(process.env.ADMIN),
 		password: String(process.env.ADMIN_PASSWORD),
 	},
 
+
+	// vendor
 	vendor: {
 		username: String(process.env.VENDOR),
 		password: String(process.env.USER_PASSWORD),
+		lastname: String(process.env.VENDOR)[0] + String(process.env.VENDOR)[String(process.env.VENDOR).length - 1], //TODO: add last-name to other users
+		storeName: String(process.env.VENDOR) + 'store',
 
 		vendorInfo: {
+
 			email: () => faker.internet.email(),
 			// emailDomain: '_' + faker.string.alphanumeric(5) + '@email.com',
 			emailDomain: '@email.com',
@@ -818,6 +843,7 @@ export const data = {
 			vatNumber: faker.string.alphanumeric(10),
 			bankIban: faker.finance.iban(),
 			phoneNumber: faker.phone.number('(###) ###-####'),
+			phone: '0123456789',
 			street1: 'abc street',
 			street2: 'xyz street',
 			country: 'United States (US)',
@@ -833,6 +859,7 @@ export const data = {
 			routingNumber: faker.string.alphanumeric(10),
 			swiftCode: faker.string.alphanumeric(10),
 			iban: faker.string.alphanumeric(10),
+			role: 'seller',
 
 			//shop details
 			banner: 'tests/e2e/utils/sampleData/banner.png',
@@ -879,6 +906,28 @@ export const data = {
 				category: 'Uncategorized',
 			},
 			storeSettingsSaveSuccessMessage: 'Your information has been saved successfully',
+
+			socialProfileUrls: {
+				facebook: 'https://www.facebook.com/',
+				twitter: 'https://www.twitter.com/',
+				pinterest: 'https://www.pinterest.com/',
+				linkedin: 'https://www.linkedin.com/',
+				youtube: 'https://www.youtube.com/',
+				instagram: 'https://www.instagram.com/',
+				flickr: 'https://www.flickr.com/',
+			},
+
+			payment: {
+				email: () => faker.internet.email(),
+				bankAccountName: 'accountName',
+				bankAccountType: faker.helpers.arrayElement(['personal', 'business']),
+				bankAccountNumber: faker.string.alphanumeric(10),
+				bankName: 'bankName',
+				bankAddress: 'bankAddress',
+				bankRoutingNumber: faker.string.alphanumeric(10),
+				bankIban: faker.string.alphanumeric(10),
+				bankSwiftCode: faker.string.alphanumeric(10),
+			},
 		},
 
 		shipping: {
@@ -999,8 +1048,8 @@ export const data = {
 		},
 
 		verification: {
-			// file: '../utils/sampleData/avatar.png',
-			// file2: './tests/e2e/utils/sampleData/avatar.png',
+			// file: 'utils/sampleData/avatar.png',
+			// file2: 'tests/e2e/utils/sampleData/avatar.png',
 			file: 'tests/avatar.png', //TODO : image path need to fixed
 			street1: 'abc street',
 			street2: 'xyz street',
@@ -1015,6 +1064,8 @@ export const data = {
 			companyRequestSubmitSuccessMessage: 'Your company verification request is sent and pending approval',
 			companyRequestSubmitCancel: 'Your company verification request is cancelled',
 		},
+
+		toc : 'test Vendor terms and conditions',
 
 		deliveryTime: {
 			deliveryBlockedBuffer: '0',
@@ -1090,9 +1141,24 @@ export const data = {
 		registrationErrorMessage: 'Error: An account is already registered with your email address. Please log in.',
 	},
 
+
+	staff: {
+		firstName: 'staff1',
+		lastName: 's1',
+		fullName:  'staff1 s1',
+		email: 'staff1@g.com',
+		phone: '0123456789',
+		password: String(process.env.USER_PASSWORD),
+
+	},
+
+
+	//customer
 	customer: {
 		username: String(process.env.CUSTOMER),
 		password: String(process.env.USER_PASSWORD),
+		lastname: String(process.env.CUSTOMER)[0] + String(process.env.CUSTOMER)[String(process.env.CUSTOMER).length-1], //TODO: add last-name to other users
+		// lastname1: ( name = process.env.CUSTOMER) => {  name[0] + name[name.length - 1]; },
 
 		customerInfo: {
 			// emailDomain: '_' + faker.string.alphanumeric(5) + '@email.com',
@@ -1104,6 +1170,7 @@ export const data = {
 			lastName: () => faker.person.lastName('male'),
 			// username: () => this.customer.customerInfo.firstName, //TODO: handel callback  & not works
 			// storename: () => this.customer.customerInfo.firstName + 'store',
+			role: 'customer',
 			username: () => faker.person.firstName('male'),
 			storename: () => faker.person.firstName('male') + 'store',
 			companyName: faker.company.name(),
@@ -1126,11 +1193,16 @@ export const data = {
 			routingNumber: faker.string.alphanumeric(10),
 			swiftCode: faker.string.alphanumeric(10),
 			iban: faker.string.alphanumeric(10),
+			biography: 'Customer biography',
 			addressChangeSuccessMessage: 'Address changed successfully.',
 			getSupport: {
 				subject: 'get Support Subject',
 				message: 'get Support Message',
 				supportSubmitSuccessMessage: 'Thank you. Your ticket has been submitted!',
+
+				username: String(process.env.CUSTOMER),
+				userPassword: String(process.env.USER_PASSWORD),
+
 			},
 		},
 
@@ -1152,52 +1224,452 @@ export const data = {
 		registrationErrorMessage: 'Error: An account is already registered with your email address. Please log in.',
 	},
 
-	key: {
-		arrowDown: 'ArrowDown',
-		enter: 'Enter',
+
+	// store category
+	storeCategory:{
+
+		create:{
+			name: 'test store category',
+			description: 'test store category description',
+		},
+
+		update:{
+			name: 'test store category',  // name should be same as create, cause search by title //TODO: updatedTitle:  can be added
+			description: 'updated test store category description',
+		},
+
 	},
 
-	plugin: {
-		// PluginSlugList: ['dokan-lite', 'dokan-pro', 'woocommerce', 'woocommerce-bookings', 'woocommerce-product-add-ons', 'woocommerce-simple-auction', 'woocommerce-subscriptions', 'elementor', 'elementor-pro'],
-		plugins:['basic-auth', 'dokan', 'dokan-pro', 'woocommerce', 'woocommerce-bookings', 'woocommerce-product-addons', 'woocommerce-simple-auctions', 'woocommerce-subscriptions'],
-		// plugins: ['dokan/dokan', 'dokan-pro/dokan-pro', 'woocommerce/woocommerce'],
-		activeClass: 'active',
+
+	// store review
+	storeReview:{
+
+		create:{
+			rating: '2',
+			title: 'test store review title',
+			content: 'test store review content',
+		},
+
+		update:{
+			rating: '4',
+			title: 'updated test store review title',
+			content: 'updated test store review content',
+		},
+
+		filter: {
+			byVendor: String(process.env.VENDOR) + 'store',
+		}
+
 	},
 
-	woocommerce: {
-		saveSuccessMessage: 'Your settings have been saved.',
+	// store support
+	storeSupport: {
+
+		title: 'test support ticket',
+		filter: {
+			byCustomer: String(process.env.CUSTOMER),
+			byVendor: String(process.env.VENDOR) + 'store',
+		},
+		chatReply: {
+			asAdmin: 'admin chat reply',
+			asVendor: 'vendor chat reply',
+		}
+
 	},
 
+
+	// request for quotation
+	requestForQuotation: {
+
+		userRole: {
+			administrator:'administrator',
+			editor:'editor',
+			author:'author',
+			contributor:'contributor',
+			subscriber:'subscriber',
+			customer:'customer',
+			shopManager: 'shop_manager',
+			vendor:'seller',
+			vendorStaff:'vendor_staff',
+			wholesaleCustomer:'dokan_wholesale_customer',
+			guest:'guest',
+		},
+
+		quoteRule: {
+			title: 'test quote rule',  //TODO: title can be used with uuid, tests has to update too
+			userRole: '',
+			product: 'p1_v1 (simple)',
+			category: 'Uncategorized',
+			hidePrice: '1',
+			hidePriceText: 'Price is hidden',
+			hideAddToCartButton: 'keep_and_add_new', // replace, keep_and_add_new
+			customButtonLabel: 'Add to quote',
+			order: '0',
+		},
+
+		updateQuoteRule: {
+			title: 'test quote rule', // title should be same as create, cause search by title //TODO: updatedTitle:  can be added
+			userRole: '',
+			product: 'p1_v1 (simple)',
+			category: 'Uncategorized',
+			hidePrice: '0',
+			hidePriceText: 'Price is hidden',
+			hideAddToCartButton: 'replace', // replace, keep_and_add_new
+			customButtonLabel: 'Add to quote',
+			order: '1',
+		},
+
+		trashedQuoteRule:{
+			title: 'trashed quote rule ',
+			status: 'trash'
+		},
+
+		quote:{
+			title: 'test quote',
+			user: 'customer1',
+			fullName: 'Jhon Doe',
+			email: 'customer1@g.com',
+			companyName: 'abc',
+			phoneNumber: '0123456789',
+			product: 'p1_v1 (simple)',
+			quantity: '5',
+			offerPrice: '80',
+			offerProductQuantity: '10',
+		},
+
+		updateQuote:{
+			title: 'test quote', // title should be same as create, cause search by title //TODO: updatedTitle:  can be added
+			user: 'customer1',
+			fullName: 'Jhon Doe',
+			email: 'customer1@g.com',
+			companyName: 'abc',
+			phoneNumber: '0123456789',
+			product: 'p1_v1 (simple)',
+			quantity: '', // TODO: because of interface, resolve interface issue
+			offerPrice: '70',
+			offerProductQuantity: '20',
+		},
+
+		trashedQuote:{
+			title: 'trashed quote',
+			status: 'trash'
+		},
+
+		convertedQuote:{
+			title: 'converted quote',
+		}
+
+	},
+
+
+	// seller badge
+	sellerBadge:{
+
+		eventName:{
+			// product related badges
+			productsPublished: 'Products Published',
+			numberOfItemsSold: 'Number of Items Sold',
+			featuredProducts: 'Featured Products',
+			trendingProduct: 'Trending Product',
+
+			// seller related badges
+			featuredSeller:'Featured Seller',
+			exclusiveToPlatform: 'Exclusive to Platform',
+			verifiedSeller: 'Verified Seller',
+			yearsActive: 'Years Active',
+
+			// Order Related Badges
+			numberOfOrders: 'Number of Orders',
+			// Sale Amount Related Badges
+			saleAmount: 'Sale Amount',
+
+			// Customer Related Badges
+			customerReview: 'Customer Review',
+			storeSupportCount: 'Store Support Count',
+
+		},
+
+		badgeName: '',
+		verificationMethod: '',
+		trendingProductPeriod: 'week', // week, month
+		trendingProductTopBestSellingProduct: '3',
+
+		startingLevelValue: '1',
+		maxLevel: 5,
+
+		verifiedSellerMethod: {
+			idVerification: 'id_verification',
+			companyVerification: 'company_verification',
+			addressVerification: 'address_verification',
+			phoneVerification: 'phone_verification',
+			socialProfiles: 'social_profiles',
+		},
+
+		badgeStatus: 'published' // published, draft
+	},
+
+
+	// announcement
+	announcement: {
+
+		receiver: {
+			allVendors: 'all_seller',
+			selectedVendors: 'selected_seller',
+			enabledVendors: 'enabled_seller',
+			disabledVendors: 'disabled_seller',
+			featuredVendors: 'featured_seller',
+		},
+
+		create:{
+			randomTitle: () => 'test announcement_' + faker.string.uuid(),
+			title: 'test announcement title',
+			content:  'test announcement Content',
+			receiver: ''
+		},
+
+		update:{
+			title: 'test announcement title',  // title should be same as create, cause search by title //TODO: updatedTitle:  can be added
+			content:  'update test announcement Content'
+		},
+
+
+	},
+
+	modules: {
+		noModuleMessage: 'No modules found.',
+		modules: [
+			'booking', 'color_scheme_customizer', 'delivery_time', 'elementor', 'export_import', 'follow_store', 'geolocation', 'germanized', 'live_chat', 'live_search',
+			'moip', 'dokan_paypal_ap', 'paypal_marketplace', 'product_addon', 'product_enquiry', 'report_abuse', 'rma', 'seller_vacation', 'shipstation', 'auction', 'spmv',
+			'store_reviews', 'stripe', 'product_advertising', 'product_subscription', 'vendor_analytics', 'vendor_staff', 'vsp', 'vendor_verification', 'wholesale',
+			'rank_math', 'table_rate_shipping', 'mangopay', 'order_min_max', 'razorpay', 'seller_badge', 'stripe_express', 'request_for_quotation' ],
+
+		modulesName: {
+			AuctionIntegration: 'Auction Integration',
+			ColorSchemeCustomize: 'Color Scheme Customize',
+			DeliveryTime: 'Delivery Time',
+			Elementor : 'Elementor',
+			EUComplianceFields: 'EU Compliance Fields',
+			FollowStore: 'Follow Store',
+		},
+
+		moduleCategory:{
+			productManagement:'Product Management',
+			integration: 'Integration',
+			uiUx: 'UI & UX',
+			shipping: 'Shipping',
+			storeManagement: 'Store Management',
+			payment: 'Payment',
+			orderManagement: 'Order Management',
+			vendorManagement: 'Vendor Management',
+		},
+
+		layout:{
+			grid:'my-modules grid-view',
+			list: 'my-modules list-view'
+		},
+
+
+	},
+
+
+	// tools
+	tools: {
+		distanceMatrixApi: {
+			address1: 'R9PG+W7 Dhaka',
+			address2: 'R9H7+HF Dhaka',
+			address3: 'P2J3+93 New York, USA',
+			address4: 'M2CP+FG New York, USA'
+		}
+	},
+
+
+	// product advertisement
+	productAdvertisement: {
+		advertisedProductStore: String(process.env.VENDOR) + 'store',
+		advertisedProduct: 'p1_v1 (simple)',
+
+		filter: {
+			byStore: String(process.env.VENDOR) + 'store',
+			createVia: {
+				admin: 'Admin',
+				order: 'Order',
+				subscription: 'Subscription',
+				freePurchase: 'Free Purchase',
+
+			},
+		},
+
+	},
+
+
+	// wholesale customers
 	wholesale: {
 		wholesaleRequestSendMessage: 'Your wholesale customer request send to the admin. Please wait for approval',
 		becomeWholesaleCustomerSuccessMessage: 'You are succefully converted as a wholesale customer',
 		wholesaleCapabilityActivate: 'Wholesale capability activate',
 	},
 
-	address: {
-		street1: 'abc street',
-		street2: 'xyz street',
-		country: 'United States (US)',
-		countrySelectValue: 'US',
-		stateSelectValue: 'NY',
-		city: 'New York',
-		zipCode: '10006',
-		state: 'New York',
+	// dokan settings
+	dokanSettings: {
+
+		// General Settings
+		general: {
+			vendorStoreUrl: 'store',
+			sellingProductTypes: 'sell_both', // 'sell_both', 'sell_physical', 'sell_digital'
+			storeProductPerPage: '12',
+			storCategory: 'multiple',  // 'none', 'single', 'multiple'
+			saveSuccessMessage: 'Setting has been saved successfully.',
+		},
+
+		// Selling Options Settings
+		selling: {
+			commissionType: 'percentage', //'flat', 'percentage', 'combine'
+			adminCommission: '10',
+			shippingFeeRecipient: 'seller', //'seller', 'admin'
+			taxFeeRecipient: 'seller', //'seller', 'admin'
+			newProductStatus: 'publish', //'publish', 'pending'
+			productCategorySelection: 'single', //'single', 'multiple'
+			saveSuccessMessage: 'Setting has been saved successfully.',
+		},
+
+		// Withdraw
+		withdraw: {
+			customMethodName: 'Bksh',
+			customMethodType: 'Phone',
+			minimumWithdrawAmount: '5',
+			withdrawThreshold: '0',
+			quarterlyScheduleMonth: 'march', // 'january', 'february', 'march'
+			quarterlyScheduleWeek: '1', //'1', '2', '3', 'L'
+			quarterlyScheduleDay: 'monday', //'monday', 'tuesday', 'wednesday', 'thursday', 'friday'
+			monthlyScheduleWeek: '1', //'1', '2', '3', 'L'
+			monthlyScheduleDay: 'monday', // 'monday', 'tuesday', 'wednesday', 'thursday', 'friday'
+			biweeklyScheduleWeek: '1', //'1', '2'
+			biweeklyScheduleDay: 'monday', //'saturday', 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday'
+			weeklyScheduleDay: 'monday', // 'saturday', 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday'
+			saveSuccessMessage: 'Setting has been saved successfully.',
+		},
+
+		// Reverse withdraw
+		reverseWithdraw: {
+			billingType: 'by_amount', // 'by_month'
+			reverseBalanceThreshold: '21',
+			gracePeriod: '7',
+			saveSuccessMessage: 'Setting has been saved successfully.',
+		},
+
+		// Pages
+		page: {
+			termsAndConditionsPage: 'Sample Page',
+			saveSuccessMessage: 'Setting has been saved successfully.',
+		},
+
+		// Appearance
+		appearance: {
+			googleMapApiKey: String(process.env.GMAP),
+			mapBoxApiKey: String(process.env.MAPBOX_API_KEY),
+			storeBannerWidth: '625',
+			storeBannerHeight: '300',
+			saveSuccessMessage: 'Setting has been saved successfully.',
+		},
+
+		// privacy policy
+		privacyPolicy: {
+			privacyPage: '2', // '2', '3', '4', '5', '6', '7', '8', '9', '10'
+			privacyPolicyHtmlBody: 'Your personal data will be used to support your experience throughout this website, to manage access to your account, and for other purposes described in our [dokan_privacy_policy]',
+			saveSuccessMessage: 'Setting has been saved successfully.',
+		},
+
+		// Store support
+		storeSupport: {
+			displayOnSingleProductPage: 'above_tab', // 'above_tab', 'inside_tab', 'dont_show'
+			supportButtonLabel: 'Get Support',
+			saveSuccessMessage: 'Setting has been saved successfully.',
+		},
+
+		// Rma Settings
+		rma: {
+			orderStatus: 'wc-processing', // 'wc-pending', 'wc-processing', 'wc-on-hold', 'wc-completed', 'wc-cancelled', 'wc-refunded', 'wc-failed'
+			rmaReasons: ['Defective', 'Wrong Product', 'Other'],
+			refundPolicyHtmlBody: 'Refund Policy',
+			saveSuccessMessage: 'Setting has been saved successfully.',
+		},
+
+		// Wholesale
+		wholesale: {
+			whoCanSeeWholesalePrice: 'all_user',
+			saveSuccessMessage: 'Setting has been saved successfully.',
+		},
+
+		// EuCompliance
+		euCompliance: {
+			saveSuccessMessage: 'Setting has been saved successfully.',
+		},
+
+		// delivery time
+		deliveryTime: {
+			deliveryDateLabel: 'Delivery Date',
+			deliveryBlockedBuffer: '0',
+			deliveryBoxInfo: 'This store needs %DAY% day(s) to process your delivery request',
+			days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+			openingTime: '6:00 am',
+			closingTime: '11:30 pm',
+			timeSlot: '30',
+			orderPerSlot: '90',
+			saveSuccessMessage: 'Setting has been saved successfully.',
+		},
+
+		// Product advertising
+		productAdvertising: {
+			noOfAvailableSlot: '100',
+			expireAfterDays: '10',
+			advertisementCost: '15',
+			saveSuccessMessage: 'Setting has been saved successfully.',
+		},
+
+		// Geolocation Settings
+		geolocation: {
+			locationMapPosition: 'top', // 'top', 'left', 'right'
+			showMap: 'all', // 'all', 'store_listing', 'shop'
+			radiusSearchUnit: 'km', // 'km', 'miles'
+			radiusSearchMinimumDistance: '0',
+			radiusSearchMaximumDistance: '10',
+			mapZoomLevel: '11',
+			defaultLocation: 'New York',
+			saveSuccessMessage: 'Setting has been saved successfully.',
+		},
+
+		// Product report abuse
+		productReportAbuse: {
+			reasonsForAbuseReport: 'This product is fake',
+			saveSuccessMessage: 'Setting has been saved successfully.',
+		},
+
+		// Spmv Settings
+		spmv: {
+			sellItemButtonText: 'Sell This Item',
+			availableVendorDisplayAreaTitle: 'Other Available Vendor',
+			availableVendorSectionDisplayPosition: 'below_tabs', // 'below_tabs', 'inside_tabs', 'after_tabs'
+			showSpmvProducts: 'show_all', // 'show_all', 'min_price', 'max_price', 'top_rated_vendor'
+			saveSuccessMessage: 'Setting has been saved successfully.',
+		},
+
+		// Vendor Subscription Settings
+		vendorSubscription: {
+			displayPage: '2', // '2', '4', '5', '6', '8', '9', '10', '11', '15', '-1'
+			noOfDays: '2',
+			productStatus: 'draft', // 'publish', 'pending', 'draft'
+			cancellingEmailSubject: 'Subscription Package Cancel notification',
+			cancellingEmailBody: 'Dear subscriber, Your subscription has expired. Please renew your package to continue using it.',
+			alertEmailSubject: 'Subscription Ending Soon',
+			alertEmailBody: 'Dear subscriber, Your subscription will be ending soon. Please renew your package in a timely',
+			saveSuccessMessage: 'Setting has been saved successfully.',
+		},
 	},
 
-	// install wordpress
-	installWp: {
-		// db info
-		dbHost: process.env.DB_HOST_NAME,
-		dbUserName: process.env.DB_USER_NAME,
-		dbPassword: process.env.DB_USER_PASSWORD,
-		dbName: process.env.DATABASE,
-		dbTablePrefix: process.env.DB_PREFIX,
-		// site info
-		siteTitle: process.env.DATABASE,
-		adminUserName: process.env.ADMIN,
-		adminPassword: process.env.USER_PASSWORD,
-		adminEmail: 'shashwata@wedevs.com',
+	// dokan license
+	dokanLicense: {
+		correctKey: String(process.env.LICENSE_KEY),
+		incorrectKey: 'ABC-123-DEF-456-GHI-789'
 
 	},
 
@@ -1258,8 +1730,8 @@ export const data = {
 		},
 
 		vendorStores: {
-			followFromShopPage: 'shopPage',
-			followFromStorePage: 'storePage',
+			followFromStoreListing: 'storeListing',
+			followFromSingleStore: 'singleStore',
 			vendor1: String(process.env.VENDOR) + 'store',
 			shopUrl: String(process.env.VENDOR) + 'store',
 		},
@@ -1268,6 +1740,23 @@ export const data = {
 			firstName: () => 'customer1',
 			lastName: () => 'c1',
 			username: () => 'customer1',
+			username1: 'customer1',
 		},
+	},
+
+	// install wordpress
+	installWp: {
+		// db info
+		dbHost: process.env.DB_HOST_NAME,
+		dbUserName: process.env.DB_USER_NAME,
+		dbPassword: process.env.DB_USER_PASSWORD,
+		dbName: process.env.DATABASE,
+		dbTablePrefix: process.env.DB_PREFIX,
+		// site info
+		siteTitle: process.env.DATABASE,
+		adminUserName: process.env.ADMIN,
+		adminPassword: process.env.USER_PASSWORD,
+		adminEmail: 'shashwata@wedevs.com',
+
 	},
 };

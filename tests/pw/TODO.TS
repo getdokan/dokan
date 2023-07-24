@@ -1,10 +1,10 @@
 
 //TODO ***** list all core tests and setup tests : plugins activated, wp settings, woocommerce settings, dokan modules activated , dokan settings for both e2e and api
+//TODO: make e2e tests independent specially admin tests
+//TODO: GRAB CONSOLE ERROR, And PHP ERROR *****************
 //TODO: slack integration
 //TODO: working-directory: ./path/to/tests
 //TODO: update auth if expired instead of every-time
-//TODO: solve reporter path conflict
-//TODO: add color on git action
 //TODO: separate two junit report showing on simple git-action summary
 //TODO: separate everything for local & CI like: global setup, env, playwright config
 //TODO: implement fixture for lite pro issue handle
@@ -29,18 +29,24 @@
 //TODO: theme is not activating fix this
 //TODO: test cli dont work
 //TODO: fix permalink issue 
+//TODO: replace click with check for all check fields all suite
+//TODO:
+//TODO: TODO: remove not needed env variables from yml file, like slowmo, setup .........
 //TODO:
 //TODO:
+//TODO: add wait for navigation to add wait for responses or build a new one merging both *****************
+//TODO: add more ui assertions to all tests
 //TODO:
 //TODO:
+//TODO: global setup & teardown can be converted to project setup
 //TODO:
 //TODO:
-//TODO:
-//TODO:
-//TODO:
-//TODO:
-//TODO:
-//TODO:
+//TODO: check data exists or not for all bulk actions
+
+//todo locator = selector.admin.dokan.settings; locator length can be shorten
+
+//TODO: make tests more independent where possible specially admin parts : use before-all , after-all, delete data in before-all or after-all to repeat each tests: test should be passed for repeat-each:5
+
 
 
 
@@ -263,20 +269,9 @@ const config = {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 //TODO: readme
+
+//TODO: add lite & pro config on readme
 //TODO: add emoji to readme
 //TODO: make readme follow readme guideline
 //TODO: use chatgpt to rephrase readme
@@ -294,4 +289,3 @@ const config = {
 
 
 //TODO: add os and browsers in env info
-lll

@@ -13,6 +13,7 @@
 
  -   [Prep for tests :construction:](#prep-for-tests)
         -   [Install Dependencies](#install-dependencies)
+        -   [Start Wordpress Environment](#start-wordpress-environment)
         -   [Create Env file](#create-env-file)
         
 <br/> 
@@ -71,6 +72,21 @@ npx playwright install chromium
 ```
 <br/>
 
+### :o: Start Wordpress Environment
+<br/>
+
+:radio_button: Go to project directory
+
+    cd tests/pw
+<br/>
+
+:radio_button: Start Environment
+
+    npm run wp-env start
+<br/>
+
+
+
 ### :o: Create Env file
 
 Environment (env) file is used for storing configuration settings and variables specific to the testing environment. It allows managing and customizing the testing environment settings easily without modifying the test code. It provides flexibility and enables seamless configuration changes between different testing environments, ensuring efficient and effective testing of the project.
@@ -90,6 +106,8 @@ VENDOR=David_Johnson                    [Vendor username]
 CUSTOMER=Michael_Williams               [Customer username]
 USER_PASSWORD=Passw0rd123               [Password for all other users]
 GMAP=ABCD1234EFGH5678                   [Google Maps API key]
+LICENSE_KEY=ABCD1234EFGH5678            [Dokan License key]
+DOKAN_PRO=true                          [Dokan pro active status]
 
 # Playwright Configuration              
 BASE_URL=https://example.com            [Base URL of the test site]
@@ -118,15 +136,27 @@ Running tests involves executing the predefined test cases or scripts to evaluat
 ### :o: How to run test projects
 <br/>
 
-:radio_button: Run E2E test project
+:radio_button: Run E2E test project Lite
 
-    npx playwright test --project=e2e_tests --config=e2e.config.ts
+    npx playwright test --project=e2e_tests --grep @lite --config=e2e.config.ts
 <br/>
 
-:radio_button: Run API test project
+:radio_button: Run API test project Lite
+
+    npx playwright test --project=api_tests --grep @lite --config=api.config.ts 
+<br/>
+
+
+:radio_button: Run API test project Pro
 
     npx playwright test --project=api_tests --config=api.config.ts 
 <br/>
+
+:radio_button: Run API test project Pro
+
+    npx playwright test --project=api_tests --grep @lite --config=api.config.ts 
+<br/>
+
 
 ### :o: How to run tests
 <br/>

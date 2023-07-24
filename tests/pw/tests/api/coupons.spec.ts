@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
-import { ApiUtils } from '../../utils/apiUtils';
-import { endPoints } from '../../utils/apiEndPoints';
-import { payloads } from '../../utils/payloads';
+import { ApiUtils } from 'utils/apiUtils';
+import { endPoints } from 'utils/apiEndPoints';
+import { payloads } from 'utils/payloads';
 
 let apiUtils: ApiUtils;
 let couponId: string;
@@ -9,8 +9,8 @@ let productId: string;
 
 test.beforeAll(async ({ request }) => {
 	apiUtils = new ApiUtils(request);
-	[, productId] = await apiUtils.createProduct(payloads.createProduct());
-	[, couponId] = await apiUtils.createCoupon([productId], payloads.createCoupon());
+	[, productId,] = await apiUtils.createProduct(payloads.createProduct());
+	[, couponId,] = await apiUtils.createCoupon([productId], payloads.createCoupon());
 });
 
 test.describe('coupon api test', () => {

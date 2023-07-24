@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
-import { ApiUtils } from '../../utils/apiUtils';
-import { endPoints } from '../../utils/apiEndPoints';
-import { payloads } from '../../utils/payloads';
+import { ApiUtils } from 'utils/apiUtils';
+import { endPoints } from 'utils/apiEndPoints';
+import { payloads } from 'utils/payloads';
 
 let apiUtils: ApiUtils;
 let sellerId: string;
@@ -14,62 +14,62 @@ test.beforeAll(async ({ request }) => {
 
 test.describe('stores api test', () => {
 
-	test('get all stores @lite', async () => {
+	test('get all stores @lite @pro', async () => {
 		const [response, responseBody] = await apiUtils.get(endPoints.getAllStores);
 		expect(response.ok()).toBeTruthy();
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('get single store @lite', async () => {
+	test('get single store @lite @pro', async () => {
 		const [response, responseBody] = await apiUtils.get(endPoints.getSingleStore(sellerId));
 		expect(response.ok()).toBeTruthy();
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('create a store @lite', async () => {
+	test('create a store @lite @pro', async () => {
 		const [response, responseBody] = await apiUtils.post(endPoints.createStore, { data: payloads.createStore() });
 		expect(response.ok()).toBeTruthy();
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('update a store @lite', async () => {
+	test('update a store @lite @pro', async () => {
 		const [response, responseBody] = await apiUtils.put(endPoints.updateStore(sellerId), { data: payloads.updateStore() });
 		expect(response.ok()).toBeTruthy();
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('delete a store @lite', async () => {
+	test('delete a store @lite @pro', async () => {
 		const [, sId] = await apiUtils.createStore(payloads.createStore());
 		const [response, responseBody] = await apiUtils.delete(endPoints.deleteStore(sId), { params: payloads.paramsDeleteStore });
 		expect(response.ok()).toBeTruthy();
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('get store current visitor @pro', async () => {
+	test('get store current visitor @lite @pro', async () => {
 		const [response, responseBody] = await apiUtils.get(endPoints.getStoreCurrentVisitor);
 		expect(response.ok()).toBeTruthy();
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('get store stats @pro', async () => {
+	test('get store stats @lite @pro', async () => {
 		const [response, responseBody] = await apiUtils.get(endPoints.getStoreStats(sellerId));
 		expect(response.ok()).toBeTruthy();
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('get store slug availability @lite', async () => {
+	test('get store slug availability @lite @pro', async () => {
 		const [response, responseBody] = await apiUtils.get(endPoints.getStoresSlugAvaility);
 		expect(response.ok()).toBeTruthy();
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('get store categories @lite', async () => {
+	test('get store categories @lite @pro', async () => {
 		const [response, responseBody] = await apiUtils.get(endPoints.getStoreCategories(sellerId));
 		expect(response.ok()).toBeTruthy();
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('get store products @lite', async () => {
+	test('get store products @lite @pro', async () => {
 		const [, sId] = await apiUtils.getCurrentUser();
 		await apiUtils.createProduct(payloads.createProduct());
 		const [response, responseBody] = await apiUtils.get(endPoints.getStoreProducts(sId));
@@ -77,13 +77,13 @@ test.describe('stores api test', () => {
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('update a store status @lite', async () => {
+	test('update a store status @lite @pro', async () => {
 		const [response, responseBody] = await apiUtils.put(endPoints.updateStoreStatus(sellerId), { data: payloads.updateStoreStatus });
 		expect(response.ok()).toBeTruthy();
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('client contact store @lite', async () => {
+	test('client contact store @lite @pro', async () => {
 		const [response, responseBody] = await apiUtils.post(endPoints.clientContactStore(sellerId), { data: payloads.clientContactStore });
 		expect(response.ok()).toBeTruthy();
 		expect(responseBody).toBeTruthy();
@@ -95,7 +95,7 @@ test.describe('stores api test', () => {
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('update batch stores @lite', async () => {
+	test('update batch stores @lite @pro', async () => {
 		const allStoreIds = (await apiUtils.getAllStores()).map((a: { id: unknown }) => a.id);
 		const [response, responseBody] = await apiUtils.put(endPoints.updateBatchStores, { data: { approved: allStoreIds } });
 		expect(response.ok()).toBeTruthy();

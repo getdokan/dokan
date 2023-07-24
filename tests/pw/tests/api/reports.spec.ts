@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
-import { ApiUtils } from '../../utils/apiUtils';
-import { endPoints } from '../../utils/apiEndPoints';
-import { payloads } from '../../utils/payloads';
+import { ApiUtils } from 'utils/apiUtils';
+import { endPoints } from 'utils/apiEndPoints';
+import { payloads } from 'utils/payloads';
 
 let apiUtils: ApiUtils;
 
@@ -30,7 +30,7 @@ test.describe('report api test', () => {
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('get top selling products report  @pro', async () => {
+	test('get top selling products report @pro', async () => {
 		const [response, responseBody] = await apiUtils.get(endPoints.getTopSellingProductsReport);
 		expect(response.ok()).toBeTruthy();
 		expect(responseBody).toBeTruthy();

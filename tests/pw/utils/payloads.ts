@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
-import { helpers } from './helpers';
-import { dbData } from './dbData';
+import { helpers } from 'utils/helpers';
+import { dbData } from 'utils/dbData';
 
 const basicAuth = (username: string, password: string) => 'Basic ' + Buffer.from(username + ':' + password).toString('base64');
 
@@ -85,6 +85,27 @@ export const payloads = {
 				// id: 48
 			},
 		],
+		featured: true,
+		description: '<p>test description</p>',
+		short_description: '<p>test short description</p>',
+		meta_data: [
+			{
+				key: 'dokan_geo_latitude',
+				value: '40.7127753'
+			},
+			{
+				key: 'dokan_geo_longitude',
+				value: '-74.0059728'
+			},
+			{
+				key: 'dokan_geo_public',
+				value: '1'
+			},
+			{
+				key: 'dokan_geo_address',
+				value: 'New York, NY, USA'
+			}
+		]
 
 	}),
 
@@ -181,10 +202,10 @@ export const payloads = {
 
 	createCoupon: () => ({
 		code: 'VC_' + faker.string.uuid(),
-		amount: faker.number.int({ min: 1, max: 10 }).toString(),
 		discount_type: faker.helpers.arrayElement(['percent', 'fixed_product']),
+		amount: faker.number.int({ min: 1, max: 10 }).toString(),
 		product_ids: [15],
-		individual_use: false, // TODO: why true in e2e
+		individual_use: false,
 		meta_data: [
 			{
 				key: 'apply_before_tax',
@@ -196,7 +217,33 @@ export const payloads = {
 			},
 			{
 				key: 'show_on_store',
-				value: 'no'
+				value: 'yes'
+			}
+		]
+	}),
+
+	createMarketPlaceCoupon: () => ({
+		code: 'VC_' + faker.string.uuid(),
+		discount_type: faker.helpers.arrayElement(['percent', 'fixed_product']),
+		amount: faker.number.int({ min: 1, max: 10 }).toString(),
+		product_ids: [],
+		individual_use: false,
+		meta_data: [
+			{
+				key: 'admin_coupons_enabled_for_vendor',
+				value: 'yes'
+			},
+			{
+				key: 'coupon_commissions_type',
+				value: 'default'
+			},
+			{
+				key: 'admin_coupons_show_on_stores',
+				value: 'yes'
+			},
+			{
+				key: 'admin_coupons_send_notify_to_vendors', // TODO: dont' work
+				value: 'yes'
 			}
 		]
 	}),
@@ -213,6 +260,7 @@ export const payloads = {
 		payment_method: 'bacs',
 		payment_method_title: 'Direct Bank Transfer',
 		set_paid: true,
+		customer_id: 0,
 		billing: {
 			first_name: 'customer1',
 			last_name: 'c1',
@@ -957,8 +1005,8 @@ export const payloads = {
 	// support ticket
 	createSupportTicket: {
 		author: 2,
-		title: 'support ticket subject',
-		content: 'support ticket message',
+		title: 'test support ticket',
+		content: 'test support ticket message',
 		status: 'open',
 		comment_status: 'open',
 		meta:  {
@@ -969,8 +1017,8 @@ export const payloads = {
 
 	createSupportTicketComment: {
 		replay: 'sp replay...1',
-		vendor_id: '1',
-		selected_user: 'vendor',
+		vendor_id: '1',  //TODO: it's admin id remove it, is admin id always one
+		selected_user: 'admin',
 	},
 
 	updateSupportTicketStatus: {
@@ -1274,7 +1322,7 @@ export const payloads = {
 			flickr: 'http://dokan.test',
 		},
 		phone: '0123456789',
-		show_email: false,
+		show_email: true, //TODO: don't work on lite
 		address: {
 			street_1: 'abc street',
 			street_2: 'xyz street',
@@ -1284,17 +1332,17 @@ export const payloads = {
 			country: 'US',
 		},
 		location: '40.7127753,-74.0059728',
-		banner: '',
+		banner: 0,
 		banner_id: 0,
-		gravatar: '',
+		gravatar: 0,
 		gravatar_id: 0,
 		products_per_page: 12,
 		show_more_product_tab: true,
-		toc_enabled: false,
-		store_toc: '',
+		toc_enabled: true,  //TODO: don't work on lite
+		store_toc: 'test Vendor terms and conditions',
 		featured: true,
 		rating: {
-			rating: '0.00',
+			rating: '4.00', //TODO: don't work on lite and how it works
 			count: 1,
 		},
 		enabled: true,
@@ -1316,11 +1364,53 @@ export const payloads = {
 			stripe: false,
 		},
 		trusted: true,
-		store_open_close: {
-			enabled: false,
-			time: [],
+		// store_open_close: {
+		// 	enabled: false,
+		// 	time: [],
+		// 	open_notice: 'Store is open',
+		// 	close_notice: 'Store is closed',
+		// },
+		store_open_close: {  //TODO: don't work on lite
+			enabled: true,
+			time: {
+				monday: {
+					status: 'open',  // 'close'
+					opening_time: ['12:00 am'], // []
+					closing_time: ['11:30 pm']  // []
+				},
+				tuesday: {
+					status: 'open',
+					opening_time: ['12:00 am'],
+					closing_time: ['11:30 pm']
+				},
+				wednesday: {
+					status: 'open',
+					opening_time: ['12:00 am'],
+					closing_time: ['11:30 pm']
+				},
+				thursday: {
+					status: 'open',
+					opening_time: ['12:00 am'],
+					closing_time: ['11:30 pm']
+				},
+				friday: {
+					status: 'open',
+					opening_time: ['12:00 am'],
+					closing_time: ['11:30 pm']
+				},
+				saturday: {
+					status: 'open',
+					opening_time: ['12:00 am'],
+					closing_time: ['11:30 pm']
+				},
+				sunday: {
+					status: 'open',
+					opening_time: ['12:00 am'],
+					closing_time: ['11:30 pm']
+				}
+			},
 			open_notice: 'Store is open',
-			close_notice: 'Store is closed',
+			close_notice: 'Store is closed'
 		},
 		company_name: '',
 		vat_number: '',
@@ -1342,13 +1432,13 @@ export const payloads = {
 	createCustomer1: {
 		email: process.env.CUSTOMER + '@yopmail.com',
 		first_name: 'customer1',
-		last_name: 'c1',
+		last_name: 'cus',
 		role: 'customer',
 		username: process.env.CUSTOMER,
 		password: process.env.USER_PASSWORD,
 		billing: {
 			first_name: process.env.CUSTOMER,
-			last_name: 'cus',
+			last_name: 'c1',
 			company: '',
 			address_1: 'abc street',
 			address_2: 'xyz street',
@@ -1413,6 +1503,7 @@ export const payloads = {
 		product_ids: [''],
 		offer_price: ['50'],
 		offer_product_quantity: ['10'],
+		// status: '' //TODO: status can be used to create direct pending, trashed quote
 	}),
 
 	updateRequestQuote: {
@@ -1468,10 +1559,23 @@ export const payloads = {
 
 	// seller badge
 
+	createSellerBadgeFeatureProducts:  {
+		event_type: 'featured_products',
+		badge_name: 'Featured Products',
+		badge_status: 'published',
+		levels: [
+			{
+				level: 0,
+				level_condition: '',
+				level_data: ''
+			}
+		],
+
+	},
+
 	createSellerBadgeExclusiveToPlatform: {
 		event_type: 'exclusive_to_platform',
 		badge_name: 'Exclusive to Platform',
-		badge_logo: 'http://dokan16.test/wp-content/plugins/dokan-pro/modules/seller-badge/assets/images/badges/sale-only-here.svg',
 		badge_status: 'published',
 		levels: [
 			{
@@ -1485,7 +1589,6 @@ export const payloads = {
 	createSellerBadgeProductPublished: {
 		event_type: 'product_published',
 		badge_name: 'Product Published',
-		badge_logo: 'http://dokan16.test/wp-content/plugins/dokan-pro/modules/seller-badge/assets/images/badges/sale-only-here.svg',
 		badge_status: 'published',
 		levels: [
 			{
