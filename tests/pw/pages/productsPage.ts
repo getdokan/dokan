@@ -395,10 +395,10 @@ export class ProductsPage extends AdminPage {
 		await this.hover(selector.vendor.product.productCell(product.editProduct));
 		await this.click(selector.vendor.product.quickEdit);
 
-		await this.clearAndType(selector.vendor.product.title, product.productName());
+		await this.clearAndType(selector.vendor.product.quickEditProduct.title, product.productName());
 		//TODO: add more fields
 
-		await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.product.saveProduct);
+		await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.product.quickEditProduct.update);
 
 	}
 

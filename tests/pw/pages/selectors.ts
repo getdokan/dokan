@@ -3390,6 +3390,7 @@ export const selector = {
 			updatedSuccessMessage: '.dokan-message',
 
 			quickEditProduct: {
+				// title : (productName: string) => `//fieldset//input[contains(@value, "${productName}")]`,
 				title: '(//tr[@class="dokan-product-list-inline-edit-form"]//input[@class="dokan-form-control"])[1]',
 				update: '(//button[@type="button"][normalize-space()="Update"])[1]',
 			},
