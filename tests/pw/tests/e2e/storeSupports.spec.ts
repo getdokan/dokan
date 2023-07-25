@@ -6,8 +6,6 @@ import { payloads } from 'utils/payloads';
 
 
 const { PRODUCT_ID, VENDOR_ID, CUSTOMER_ID } = process.env;
-// const  CUSTOMER_ID  = '2';
-// const VENDOR_ID = '3';
 
 
 let storeSupportsAdmin: StoreSupportsPage;
@@ -30,11 +28,8 @@ test.beforeAll(async ({ browser, request }) => {
 	guestUser =  new StoreSupportsPage(uPage);
 
 	apiUtils = new ApiUtils(request);
-	const[, supportTicketId1] = await apiUtils.createSupportTicket({ ...payloads.createSupportTicket, author: CUSTOMER_ID, store_id: VENDOR_ID }, payloads.adminAuth );
-	const[, supportTicketId2] = await apiUtils.createSupportTicket({ ...payloads.createSupportTicket, author: CUSTOMER_ID, store_id: VENDOR_ID }, payloads.adminAuth );
-	// console.log(supportTicketId1, supportTicketId2);
-	// const[,supportTicketId3,] = await apiUtils.updateSupportTicketStatus(supportTicketId2, 'close', payloads.adminAuth);
-	// console.log(supportTicketId3);
+	await apiUtils.createSupportTicket({ ...payloads.createSupportTicket, author: CUSTOMER_ID, meta: { store_id : VENDOR_ID } } );
+	await apiUtils.createSupportTicket({ ...payloads.createSupportTicket, status: 'closed', author: CUSTOMER_ID, meta: { store_id : VENDOR_ID } } );
 });
 
 test.afterAll(async ( ) => {

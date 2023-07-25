@@ -626,8 +626,8 @@ export class ApiUtils {
 		return responseBody;
 	}
 
-	async createSupportTicket(payload: object, auth? : auth): Promise<[responseBody, string]> {
-		const [, responseBody] = await this.post(endPoints.wp.createCustomPost('dokan_store_support'), { data: payload, headers: auth }); // TODO: always admin
+	async createSupportTicket(payload: object): Promise<[responseBody, string]> {
+		const [, responseBody] = await this.post(endPoints.wp.createCustomPost('dokan_store_support'), { data: payload, headers: payloads.adminAuth });
 		const supportTicketId = responseBody.id;
 		return [responseBody, supportTicketId];
 	}
