@@ -5301,9 +5301,12 @@ export const selector = {
 
 				// non logged User
 				nonLoggedUser:{
-					userName: '#login-name',
-					userPassword: '#login-password',
-					login: '#support-submit-btn',
+					// userName: '#login-name',
+					// userPassword: '#login-password',
+					// login: '#support-submit-btn',
+					userName: '#dokan-login-form-username',
+					userPassword: '#dokan-login-form-password',
+					login: '#dokan-login-form-submit-btn',
 					createAccount: '.dokan-btn.dokan-btn-theme',
 				},
 

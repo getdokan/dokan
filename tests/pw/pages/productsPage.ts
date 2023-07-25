@@ -378,7 +378,7 @@ export class ProductsPage extends AdminPage {
 	async editProduct(product: product['simple']): Promise<void> {
 		await this.searchProduct(product.editProduct);
 		await this.hover(selector.vendor.product.productCell(product.editProduct));
-		await this.clickAndWaitForNavigation(selector.vendor.product.editProduct);
+		await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.products, selector.vendor.product.editProduct);
 
 		await this.clearAndType(selector.vendor.product.title, product.productName());
 		await this.clearAndType(selector.vendor.product.price, product.regularPrice());

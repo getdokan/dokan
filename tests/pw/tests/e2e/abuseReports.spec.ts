@@ -30,7 +30,7 @@ test.beforeAll(async ({ browser, request }) => {
 
 	apiUtils = new ApiUtils(request);
 	const productId = await apiUtils.getProductId(data.predefined.simpleProduct.product1.name, payloads.vendorAuth);
-	await dbUtils.createAbuseReport(dbData.dokan.createAbuseReport, productId, VENDOR_ID, CUSTOMER_ID);
+	// await dbUtils.createAbuseReport(dbData.dokan.createAbuseReport, productId, VENDOR_ID, CUSTOMER_ID);
 });
 
 test.afterAll(async ( ) => {
@@ -66,6 +66,8 @@ test.describe('Abuse report test', () => {
 		await abuseReportsAdmin.abuseReportBulkAction('delete');
 	});
 
+	// customer
+
 	test('customer can report product @pro', async ( ) => {
 		await abuseReportsCustomer.reportProduct(data.predefined.simpleProduct.product1.name, data.product.report);
 	});
@@ -76,7 +78,7 @@ test.describe('Abuse report test', () => {
 
 	test('only logged-in customer can report product @pro', async ( ) => {
 		await dbUtils.setDokanSettings(dbData.dokan.optionName.productReportAbuse, { ...dbData.dokan.productReportAbuseSettings, reported_by_logged_in_users_only: 'on' });
-		await abuseReportsCustomer.reportProduct(data.predefined.simpleProduct.product1.name, data.product.report);
+		await guestUser.reportProduct(data.predefined.simpleProduct.product1.name, data.product.report);
 	});
 
 });

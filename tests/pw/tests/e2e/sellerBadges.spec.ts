@@ -25,10 +25,12 @@ test.beforeAll(async ({ browser, request }) => {
 
 });
 
+
 test.afterAll(async ( ) => {
 	await aPage.close();
 	await vPage.close();
 });
+
 
 test.describe('Seller badge test', () => {
 
