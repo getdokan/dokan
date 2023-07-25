@@ -45,38 +45,38 @@
 </template>
 
 <script>
-import SecretInput from './SecretInput.vue';
+    import SecretInput from './SecretInput.vue';
 
-export default {
-    components: {
-        SecretInput
-    },
-    props: {
-        fieldData: {
-            type: Object,
-            required: true,
+    export default {
+        components: {
+            SecretInput
+        },
+        props: {
+            fieldData: {
+                type: Object,
+                required: true,
+            },
+
+            fieldValue: {
+                type: Object,
+                required: true,
+            },
         },
 
-        fieldValue: {
-            type: Object,
-            required: true,
-        },
-    },
-
-    data() {
-        return {
-            copied: false,
-        }
-    },
-
-    methods: {
-        isSocialOptionChecked( optionKey ) {
-            if ( 'radio' === this.fieldData.type ) {
-                return this.fieldValue[this.fieldData.name] === optionKey ? true : false;
+        data() {
+            return {
+                copied: false,
             }
-
-            return false;
         },
-    },
-}
+
+        methods: {
+            isSocialOptionChecked( optionKey ) {
+                if ( 'radio' === this.fieldData.type ) {
+                    return this.fieldValue[this.fieldData.name] === optionKey ? true : false;
+                }
+
+                return false;
+            },
+        },
+    }
 </script>
