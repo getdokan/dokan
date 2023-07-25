@@ -758,17 +758,20 @@
                     .dokan-settings-fields {
                         .dokan-settings-field-type-sub_section,
                         .dokan-settings-field-type-disbursement_sub_section {
-                            border-bottom: 1px solid #b0a7a7;
+                            border-bottom: 1px solid #f3f4f6;
 
                             .sub-section-styles {
-                                margin-top: 50px;
+                                margin-top: 20px;
+                                margin-bottom:0;
+                                padding: 20px;
+                                background: #f9fafb;
                             }
                         }
 
                         div {
                             &:not(.dokan-settings-field-type-sub_section) {
                                 .field_contents {
-                                    border: 1px solid #b0a7a7;
+                                    border: 1px solid #f3f4f6;
                                     border-top: none;
                                 }
                             }
@@ -777,7 +780,7 @@
                         > div {
                             &:not(.dokan-settings-field-type-sub_section) {
                                 &:first-child {
-                                    border-top: 1px solid #b0a7a7;
+                                    border-top: 1px solid #f3f4f6;
                                 }
                             }
                         }

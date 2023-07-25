@@ -849,23 +849,27 @@
         margin-left: 10px;
     }
     .dokan-settings-sub-section {
-        margin-bottom: 30px;
+        padding: 20px;
+        border: 1px solid #f3f4f6;
+        border-bottom: 0;
+        background: #f9fafb;
 
         .sub-section-title {
             margin: 0;
-            font-size: 22px;
+            font-size: 14px;
             font-family: Roboto, sans-serif;
             font-weight: 600;
-            line-height: 26px;
+            line-height: 1.2;
             margin-bottom: 8px;
         }
 
         .sub-section-description {
             margin: 0;
-            font-size: 15px;
+            font-size: 13px;
             font-weight: 300;
             line-height: 21px;
             font-family: Roboto, sans-serif;
+            color: #6B7280;
 
             .learn-more-btn {
                 cursor: pointer;
@@ -882,10 +886,10 @@
         }
     }
     .field_contents {
-        border: 1px solid #B0A7A7;
-        padding: 14px 30px 18px 27px;
+        border: 1px solid #f3f4f6;
+        padding: 15px 20px 15px 20px;
         border-top: 0;
-        background: rgba(244, 246, 250, 0.17);
+        background: #fff;
 
         fieldset {
             display: flex;
@@ -895,17 +899,17 @@
                 flex: 2;
 
                 .field_heading {
-                    color: #000000;
+                    color: #111827;
                     margin: 0;
-                    font-size: 17px;
+                    font-size: 14px;
                     font-style: normal;
                     font-weight: 600;
-                    line-height: 35px;
+                    line-height: 1.25;
                     font-family: 'Roboto', sans-serif;
 
                     span {
                         i {
-                            margin: 5px 0 0 5px;
+                            margin: -3px 0 0 5px;
                         }
 
                         .tooltip {
@@ -915,12 +919,13 @@
                 }
 
                 .field_desc {
-                    color: #000;
+                    color: #6B7280;
                     margin: 0;
+                    margin-top: 5px;
                     font-size: 13px;
                     font-style: normal;
                     font-weight: 300;
-                    line-height: 17px;
+                    line-height: 1.2;
                     font-family: 'Roboto', sans-serif;
 
                     a {
@@ -989,7 +994,7 @@
 
         .radio_fields {
             label {
-                border: 0.882967px solid #B0A7A7;
+                border: 0.882967px solid #f3f4f6;
                 padding: 10px 15px;
                 display: inline-block;
                 overflow: hidden;
@@ -1006,7 +1011,7 @@
                 }
 
                 &:last-child {
-                    border-right: 0.882967px solid #B0A7A7;
+                    border-right: 0.882967px solid #f3f4f6;
                     border-top-right-radius: 5px;
                     border-bottom-right-radius: 5px;
                 }
@@ -1016,13 +1021,13 @@
                     background: rgba(182, 206, 254, 0.38);
                     box-sizing: border-box;
                     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.10);
-                    border-color: rgba(3, 58, 163, 0.81);
+                    border-color: rgba(3, 58, 163, 0.41);
                 }
             }
 
             .checked {
                 color: rgba(3, 58, 163, 0.85);
-                border: 1px solid rgba(3, 58, 163, 0.81);
+                border: 1px solid rgba(3, 58, 163, 0.21);
                 background: rgba(182, 206, 254, 0.38);
                 box-sizing: border-box;
                 box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.10);
@@ -1099,7 +1104,7 @@
             input[type='text'],
             input[type='number'],
             input[type='button'] {
-                border: 0.957434px solid #686666;
+                border: 0.957434px solid #E9E9E9;
                 min-height: 32px;
                 box-shadow: 0px 3.82974px 3.82974px rgba(0, 0, 0, 0.10);
                 border-radius: 5px;
@@ -1124,7 +1129,7 @@
 
             label.checked {
                 color: rgba(3, 58, 163, 0.85);
-                border: 1px solid rgba(3, 58, 163, 0.81);
+                border: 1px solid rgba(3, 58, 163, 0.41);
                 background: rgba(182, 206, 254, 0.38);
                 box-sizing: border-box;
                 box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.10);
