@@ -152,6 +152,7 @@ export class OrdersPage extends VendorPage {
 		await this.clearAndType(selector.vendor.orders.orderNote.orderNoteInput, orderNote.note);
 		await this.selectByLabel(selector.vendor.orders.orderNote.orderNoteType, orderNote.noteType);
 		await this.clickAndAcceptAndWaitForResponse(data.subUrls.ajax, selector.vendor.orders.orderNote.addNote);
+		//todo: also assert on my order details or add new test
 	}
 
 
@@ -179,7 +180,11 @@ export class OrdersPage extends VendorPage {
 		await this.clearAndType(selector.vendor.orders.shipment.comments, shipmentDetails.trackingNumber);
 		await this.click(selector.vendor.orders.shipment.notifyCustomer);
 		await this.clickAndAcceptAndWaitForResponse(data.subUrls.ajax, selector.vendor.orders.shipment.createShipment);
+		//todo: add more assertion, success message, or short shipment description div
+		//todo: also assert on my order details or add new test
 	}
+
+	//TODO: update shipment
 
 
 	// add Downloadable Product

@@ -3646,7 +3646,8 @@ export const selector = {
 
 			// Coupon Dashboard
 			createdCoupon: '.coupon-code.column-primary strong span',
-			couponSaveSuccessMessage: 'Coupon has been saved successfully!',
+			couponSaveSuccessMessage: 'Coupon has been saved successfully!', //TODO: move all success message to test data
+			couponUpdateSuccessMessage: 'Coupon has been updated successfully!',
 
 
 			dokanMessage: '.dokan-message',

@@ -15,7 +15,7 @@ test.describe('Coupons test', () => {
 	let couponsCustomer: CouponsPage;
 	let aPage: Page, vPage: Page, cPage: Page;
 	let apiUtils: ApiUtils;
-	let marketPlaceCouponCode: string;
+	// let marketPlaceCouponCode: string;
 	let couponCode: string;
 
 	test.beforeAll(async ({ browser, request }) => {
@@ -32,25 +32,26 @@ test.describe('Coupons test', () => {
 		couponsCustomer = new CouponsPage(cPage);
 
 		apiUtils = new ApiUtils(request);
-		[,, marketPlaceCouponCode] = await apiUtils.createMarketPlaceCoupon( payloads.createMarketPlaceCoupon());
-		[,, couponCode] = await apiUtils.createCoupon([PRODUCT_ID], payloads.createCoupon());
+		// [,, marketPlaceCouponCode] = await apiUtils.createMarketPlaceCoupon( payloads.createMarketPlaceCoupon());
+		[,, couponCode] = await apiUtils.createCoupon([PRODUCT_ID], payloads.createCoupon(), payloads.vendorAuth);
 	});
 
 	test.afterAll(async ( ) => {
 		await aPage.close();
 		await vPage.close();
+		await cPage.close();
 	});
 
-	// test('admin can add marketplace coupon @lite @pro', async ( ) => {
-	// 	await couponsAdmin.addMarketplaceCoupon(data.coupon);
-	// });
+	test('admin can add marketplace coupon @lite @pro', async ( ) => {
+		await couponsAdmin.addMarketplaceCoupon(data.coupon);
+	});
 
-	test('vendor product menu page is rendering properly @lite @pro @explo', async ( ) => {
+	test('vendor coupon menu page is rendering properly @lite @pro @explo', async ( ) => {
 		await couponsVendor.vendorCouponsRenderProperly();
 	});
 
-	test('vendor can view marketPlace coupon', async ( ) => {
-		await couponsVendor.viewMarketPlaceCoupon(data.coupon);
+	test.skip('vendor can view marketPlace coupon', async ( ) => {
+		// await couponsVendor.viewMarketPlaceCoupon(data.coupon);
 	});
 
 	test('vendor can add coupon', async ( ) => {

@@ -50,11 +50,11 @@ export class CouponsPage extends AdminPage {
 	}
 
 
-	// vendor view marketplace coupon
-	async viewMarketPlaceCoupon(coupon: coupon) {
+	// // vendor view marketplace coupon
+	// async viewMarketPlaceCoupon(coupon: coupon) {
 
 
-	}
+	// }
 
 
 	// vendor add coupon
@@ -64,8 +64,8 @@ export class CouponsPage extends AdminPage {
 		await this.type(selector.vendor.vCoupon.couponTitle, coupon.title());
 		await this.type(selector.vendor.vCoupon.amount, coupon.amount());
 		await this.click(selector.vendor.vCoupon.selectAll);
-		await this.click(selector.vendor.vCoupon.applyForNewProducts);
-		await this.click(selector.vendor.vCoupon.showOnStore);
+		await this.check(selector.vendor.vCoupon.applyForNewProducts);
+		await this.check(selector.vendor.vCoupon.showOnStore);
 		await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.coupons, selector.vendor.vCoupon.createCoupon, 302);
 		await expect(this.page.getByText(selector.vendor.vCoupon.couponSaveSuccessMessage)).toBeVisible();
 		//todo: add more fields
@@ -79,10 +79,10 @@ export class CouponsPage extends AdminPage {
 
 		await this.type(selector.vendor.vCoupon.amount, coupon.amount());
 		await this.click(selector.vendor.vCoupon.selectAll);
-		await this.click(selector.vendor.vCoupon.applyForNewProducts);
-		await this.click(selector.vendor.vCoupon.showOnStore);
+		await this.check(selector.vendor.vCoupon.applyForNewProducts);
+		await this.check(selector.vendor.vCoupon.showOnStore);
 		await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.coupons, selector.vendor.vCoupon.createCoupon, 302);
-		await expect(this.page.getByText(selector.vendor.vCoupon.couponSaveSuccessMessage)).toBeVisible();
+		await expect(this.page.getByText(selector.vendor.vCoupon.couponUpdateSuccessMessage)).toBeVisible();
 		//todo: add more fields and move edit fields in one function
 	}
 

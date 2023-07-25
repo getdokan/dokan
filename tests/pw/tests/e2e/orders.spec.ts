@@ -4,9 +4,8 @@ import { ApiUtils } from 'utils/apiUtils';
 import { data } from 'utils/testData';
 import { payloads } from 'utils/payloads';
 
-// const { CUSTOMER_ID, PRODUCT_ID } = process.env;
-const CUSTOMER_ID = '2';
-const PRODUCT_ID = '22';
+
+const { CUSTOMER_ID, PRODUCT_ID } = process.env;
 
 
 test.describe('Order functionality test', () => {
@@ -81,6 +80,8 @@ test.describe('Order functionality test', () => {
 	test('vendor can add shipment to order @pro', async ( ) => {
 		await ordersPage.addShipment(orderId, data.orderShipmentDetails);
 	});
+
+	// todo: update shipment
 
 	test.skip('vendor can add downloadable product permission to order @lite @pro', async ( ) => {
 		const [,, downloadableProductName] = await apiUtils.createProduct(payloads.createDownloadableProduct(), payloads.vendorAuth);
