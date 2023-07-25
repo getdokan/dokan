@@ -1390,7 +1390,7 @@ export const data = {
 		},
 
 		convertedQuote:{
-			title: 'converted quote',
+			title: 'converted quote ' + faker.string.uuid(),  //TODO: more test date need to be unique, apply this
 		}
 
 	},

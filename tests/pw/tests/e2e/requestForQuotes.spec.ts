@@ -52,8 +52,13 @@ test.describe('Request for quotation test', () => {
 		await requestForQuotationsPage.updateQuote(data.requestForQuotation.trashedQuote.title, 'permanently-delete');
 	});
 
-	test('admin can convert quote to order @pro', async ( ) => {
+	test('admin can approve quote @pro', async ( ) => {
 		await apiUtils.createRequestQuote({ ...payloads.createRequestQuote(), product_ids: productId, quote_title: data.requestForQuotation.convertedQuote.title }, payloads.adminAuth);
+		await requestForQuotationsPage.approveQuote(data.requestForQuotation.convertedQuote.title);
+	});
+
+	test('admin can convert quote to order @pro', async ( ) => {
+		await apiUtils.createRequestQuote({ ...payloads.createRequestQuote(), product_ids: productId, quote_title: data.requestForQuotation.convertedQuote.title, status: 'approve' }, payloads.adminAuth);
 		await requestForQuotationsPage.convertQuoteToOrder(data.requestForQuotation.convertedQuote.title);
 	});
 

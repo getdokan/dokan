@@ -255,11 +255,18 @@ export class RequestForQuotationsPage extends AdminPage {
 	}
 
 
+	// approve quote
+	async approveQuote(quoteTitle: string){
+		await this.goIfNotThere(data.subUrls.backend.dokan.requestForQuote);
+		await this.hover(selector.admin.dokan.requestForQuotation.quotesList.quoteCell(quoteTitle));
+		await this.clickAndWaitForResponse(data.subUrls.api.dokan.quotes, selector.admin.dokan.requestForQuotation.quotesList.quoteEdit(quoteTitle));
+		await this.clickAndWaitForResponse(data.subUrls.api.dokan.quotes, selector.admin.dokan.requestForQuotation.quotesList.approveQuote);
+	}
+
 	// convert quote to order
 	async convertQuoteToOrder(quoteTitle: string){
+		// await this.approveQuote(quoteTitle);
 		await this.goIfNotThere(data.subUrls.backend.dokan.requestForQuote);
-
-		await this.clickAndWaitForResponse(data.subUrls.api.dokan.quotes, selector.admin.dokan.requestForQuotation.quotesList.approveQuote);
 		await this.hover(selector.admin.dokan.requestForQuotation.quotesList.quoteCell(quoteTitle));
 		await this.clickAndWaitForResponse(data.subUrls.api.dokan.quotes, selector.admin.dokan.requestForQuotation.quotesList.quoteEdit(quoteTitle));
 		await this.clickAndWaitForResponse(data.subUrls.api.dokan.quotes, selector.admin.dokan.requestForQuotation.quotesList.convertToOrder);

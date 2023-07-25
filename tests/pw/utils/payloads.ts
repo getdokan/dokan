@@ -1503,7 +1503,7 @@ export const payloads = {
 		product_ids: [''],
 		offer_price: ['50'],
 		offer_product_quantity: ['10'],
-		// status: '' //TODO: status can be used to create direct pending, trashed quote
+		status: 'pending' //TODO: status can be used to create direct pending, trashed quote
 	}),
 
 	updateRequestQuote: {

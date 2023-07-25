@@ -112,7 +112,8 @@ export class ReportsPage extends AdminPage {
 		await this.goIfNotThere(data.subUrls.backend.dokan.allLogs);
 
 		await this.click(selector.admin.dokan.reports.allLogs.filters.filterByStatus);  //TODO: add multiselect option
-		await this.clearAndType( selector.admin.dokan.reports.allLogs.filters.filterByStatusInput, orderStatus);
+		// await this.click( selector.admin.dokan.reports.allLogs.filters.filterByStatusInput);
+		await this.type( selector.admin.dokan.reports.allLogs.filters.filterByStatusInput, orderStatus);
 		await this.pressAndWaitForResponse(data.subUrls.api.dokan.logs, data.key.enter);
 
 		const count = (await this.getElementText(selector.admin.dokan.reports.allLogs.numberOfRowsFound))?.split(' ')[0];

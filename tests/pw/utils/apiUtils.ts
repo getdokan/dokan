@@ -999,6 +999,8 @@ export class ApiUtils {
 		return responseBody;
 	}
 
+	// TODO: deleteSingleSellerBadge
+
 	// delete all seller badges
 	async deleteAllSellerBadges(auth? : auth): Promise<void> {
 		// const allBadges = await this.getAllSellerBadges(auth);
