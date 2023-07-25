@@ -4,20 +4,12 @@
             <h3 class="field_heading" scope="row">
                 {{ fieldData.label }}
                 <span v-if="fieldData.tooltip">
-                    <i
-                        class="dashicons dashicons-editor-help tips"
-                        :title="fieldData.tooltip"
-                        v-tooltip="fieldData.tooltip"
-                    ></i>
+                    <i class="dashicons dashicons-editor-help tips" :title="fieldData.tooltip" v-tooltip="fieldData.tooltip"></i>
                 </span>
             </h3>
             <p class="field_desc" v-html="fieldData.desc"></p>
         </div>
-        <div
-            class="fields"
-            v-bind:class="[ fieldData.type === 'radio' ? 'radio_fields' : '' ]"
-            v-if="fieldData.url || fieldData.type !== 'html'"
-        >
+        <div class="fields" v-bind:class="[fieldData.type === 'radio' ? 'radio_fields' : '']" v-if="fieldData.url || fieldData.type !== 'html'">
             <secret-input
                 v-model="fieldData.url"
                 :type="'text'"
@@ -27,48 +19,37 @@
                 :is-secret="false"
             />
             <secret-input
-                v-model="fieldValue[ fieldData.name ]"
-                :type="fieldData.type"
+                v-model="fieldValue[fieldData.name]"
+                :type='fieldData.type'
                 v-if="fieldData.type === 'text'"
             />
             <textarea
                 class="large"
-                v-model="fieldValue[ fieldData.name ]"
+                v-model="fieldValue[fieldData.name]"
                 v-if="fieldData.type === 'textarea'"
             ></textarea>
             <template v-if="fieldData.type === 'radio'">
-                <label
-                    v-for="(optionVal, optionKey) in fieldData.options"
-                    :class="isSocialOptionChecked( optionKey ) ? 'checked' : ''"
-                    :key="optionKey"
-                >
+                <label v-for="( optionVal, optionKey ) in fieldData.options" :class="isSocialOptionChecked( optionKey ) ? 'checked' : ''" :key="optionKey">
                     <span class="dashicons dashicons-yes"></span>
                     <input
                         class="radio"
                         :name="optionKey"
                         :value="optionKey"
                         :type="fieldData.type"
-                        v-model="fieldValue[ fieldData.name ]"
-                    />
+                        v-model="fieldValue[fieldData.name]" />
                     {{ optionVal }}
                 </label>
             </template>
-            <combine-input
-                v-model="getCombineData"
-                v-if="'combine-input' === fieldData.type"
-            />
         </div>
     </fieldset>
 </template>
 
 <script>
 import SecretInput from './SecretInput.vue';
-import CombineInput from 'admin/components/Fields/CombineInput.vue';
 
 export default {
     components: {
-        CombineInput,
-        SecretInput,
+        SecretInput
     },
     props: {
         fieldData: {
@@ -85,30 +66,17 @@ export default {
     data() {
         return {
             copied: false,
-        };
-    },
-
-    computed: {
-        getCombineData: {
-            get () {
-                return 'object' === typeof this.fieldValue[this.fieldData.name] ? this.fieldValue[this.fieldData.name] : { fixed: '', percentage: '' };
-            },
-            set (data) {
-                this.fieldValue[this.fieldData.name] = data;
-            }
-        },
+        }
     },
 
     methods: {
         isSocialOptionChecked( optionKey ) {
             if ( 'radio' === this.fieldData.type ) {
-                return this.fieldValue[ this.fieldData.name ] === optionKey
-                    ? true
-                    : false;
+                return this.fieldValue[this.fieldData.name] === optionKey ? true : false;
             }
 
             return false;
         },
     },
-};
+}
 </script>
