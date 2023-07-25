@@ -184,7 +184,7 @@ export class OrdersPage extends VendorPage {
 		//todo: also assert on my order details or add new test
 	}
 
-	//TODO: update shipment
+	//TODO: update shipment test, shipment updates timeline
 
 
 	// add Downloadable Product

@@ -16,9 +16,9 @@ test.describe('Product functionality test', () => {
 
 
 	test.beforeAll(async ({ browser, request }) => {
-		const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
-		aPage = await adminContext.newPage();
-		productsAdmin = new ProductsPage(aPage);
+		// const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
+		// aPage = await adminContext.newPage();
+		// productsAdmin = new ProductsPage(aPage);
 
 		const vendorContext = await browser.newContext({ storageState: data.auth.vendorAuthFile });
 		vPage = await vendorContext.newPage();
@@ -31,7 +31,7 @@ test.describe('Product functionality test', () => {
 
 
 	test.afterAll(async ( ) => {
-		await aPage.close();
+		// await aPage.close();
 		await vPage.close();
 	});
 
@@ -112,7 +112,7 @@ test.describe('Product functionality test', () => {
 		await productsVendor.viewProduct(data.predefined.simpleProduct.product1.name);
 	});
 
-	test('vendor can edit product @lite @pro', async ( ) => {
+	test.only('vendor can edit product @lite @pro', async ( ) => {
 		await productsVendor.editProduct({ ...data.product.simple, editProduct: productName });
 	});
 
