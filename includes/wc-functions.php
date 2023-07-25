@@ -1268,7 +1268,7 @@ add_filter( 'wp_count_posts', 'dokan_modify_vendor_order_counts', 10, 1 );
 
 
 /**
- * @since DOKAN_SINCE
+ * @since 3.7.24
  *
  * @param boolean $is_purchasable
  * @param object $product
@@ -1287,7 +1287,7 @@ add_filter( 'woocommerce_is_purchasable', 'dokan_vendor_own_product_purchase_res
 /**
  * Restricts vendor from reviewing own product
  *
- * @since DOKAN_SINCE
+ * @since 3.7.24
  *
  * @param array $data
  * @return array
