@@ -537,3 +537,27 @@ function dokan_is_withdraw_method_enabled( $method_id ) {
             && array_key_exists( $method_id, $payment_methods )
             && ! empty( $payment_methods[ $method_id ] );
 }
+
+function dokan_withdraw_get_method_charges() {
+    $charges     = dokan_get_option( 'withdraw_charges', 'dokan_withdraw', '' );
+    $methods     = array_keys( dokan_withdraw_get_methods() );
+    $default_val = [
+        'fixed'      => '',
+        'percentage' => '',
+    ];
+
+    if ( empty( $charges ) || ! is_array( $charges ) ) {
+        $charges = [];
+
+        foreach ( $methods as $method ) {
+            $charges[ $method ] = $default_val;
+        }
+    } else {
+        foreach ( $methods as $method ) {
+            $charges[ $method ]['fixed']      = ! empty( $charges[ $method ]['fixed'] ) ? wc_format_decimal( $charges[ $method ]['fixed'] ) : '';
+            $charges[ $method ]['percentage'] = ! empty( $charges[ $method ]['percentage'] ) ? wc_format_decimal( $charges[ $method ]['percentage'] ) : '';
+        }
+    }
+
+    return $charges;
+}

@@ -11,8 +11,10 @@
             />
             {{ '%' }}
         </div>
-        <div class="fixed_fee">
+        <div>
             {{ '+' }}
+        </div>
+        <div class="fixed_fee">
             <input
                 type="text"
                 class="wc_input_price regular-text medium"
@@ -21,6 +23,7 @@
                 v-model="fixed"
                 v-on:input="onInput"
             />
+            <span>{{ getCurrencySymbol }}</span>
         </div>
     </div>
 </template>
@@ -53,7 +56,7 @@
                     fixed: '',
                     percentage: ''
                 }
-            }
+            },
         },
         data() {
             return {
@@ -73,6 +76,11 @@
                 this.$emit('change', data);
             }
         },
+        computed:{
+            getCurrencySymbol() {
+                return window.dokan.currency.symbol;
+            }
+        }
     };
 </script>
 
@@ -80,6 +88,7 @@
     .combine_fields {
         display: flex;
         justify-content: right;
+        align-items: center;
 
         .percent_fee {
             padding-right: 10px;
