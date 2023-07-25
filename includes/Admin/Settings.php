@@ -442,7 +442,6 @@ class Settings {
                     'desc'    => __( 'Enable terms and conditions for vendor stores', 'dokan-lite' ),
                     'type'    => 'switcher',
                     'default' => 'off',
-                    'tooltip' => __( 'Prompt terms and condition check for vendors when creating store on your site', 'dokan-lite' ),
                 ],
                 'store_products_per_page'            => [
                     'name'    => 'store_products_per_page',
@@ -683,14 +682,26 @@ class Settings {
                     'label'   => __( 'Google Map API Key', 'dokan-lite' ),
                     'desc'    => __( '<a href="https://developers.google.com/maps/documentation/javascript/" target="_blank" rel="noopener noreferrer">API Key</a> is needed to display map on store page', 'dokan-lite' ),
                     'type'    => 'text',
+                    'secret_text' => true,
                     'tooltip' => __( 'Insert Google API Key (with hyperlink) to display store map.', 'dokan-lite' ),
+                    'show_if' => [
+                        'map_api_source' => [
+                            'equal' => 'google_maps',
+                        ],
+                    ],
                 ],
                 'mapbox_access_token'        => [
                     'name'    => 'mapbox_access_token',
                     'label'   => __( 'Mapbox Access Token', 'dokan-lite' ),
                     'desc'    => __( '<a href="https://docs.mapbox.com/help/how-mapbox-works/access-tokens/" target="_blank" rel="noopener noreferrer">Access Token</a> is needed to display map on store page', 'dokan-lite' ),
                     'type'    => 'text',
+                    'secret_text' => true,
                     'tooltip' => __( 'Insert Mapbox Access Token (with hyperlink) to display store map.', 'dokan-lite' ),
+                    'show_if' => [
+                        'map_api_source' => [
+                            'equal' => 'mapbox',
+                        ],
+                    ],
                 ],
                 'recaptcha_validation_label' => [
                     'name'                 => 'recaptcha_validation_label',
@@ -706,6 +717,10 @@ class Settings {
                     'label'                => __( 'Google reCAPTCHA Validation', 'dokan-lite' ),
                     'icon_url'             => DOKAN_PLUGIN_ASSEST . '/images/google.svg',
                     'social_desc'          => __( 'You can successfully connect to your Google reCaptcha account from here.', 'dokan-lite' ),
+                    'enable_status'        => [
+                        'name'    => 'recaptcha_enable_status',
+                        'default' => 'on',
+                    ],
                     'recaptcha_site_key'   => [
                         'name'         => 'recaptcha_site_key',
                         'type'         => 'text',

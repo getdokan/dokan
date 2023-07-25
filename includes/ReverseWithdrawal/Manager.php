@@ -522,7 +522,7 @@ class Manager {
         $args = wp_parse_args( $args, $default );
 
         // validate required fields
-        if ( empty( $args['trn_id'] ) ) {
+        if ( isset( $args['trn_id'] ) && ! is_numeric( $args['trn_id'] ) ) {
             return new WP_Error( 'insert_rw_invalid_transaction_id', esc_html__( 'Transaction id is required.', 'dokan-lite' ) );
         }
 

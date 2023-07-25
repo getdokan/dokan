@@ -435,12 +435,19 @@ class OrderController extends DokanRESTController {
             'limit'       => $request['per_page'],
             'paged'       => isset( $request['page'] ) ? absint( $request['page'] ) : 1,
             'customer_id' => $request['customer_id'],
-            'seller_id'   => dokan_get_current_user_id(),
             'date'        => [
                 'from' => isset( $request['after'] ) ? sanitize_text_field( wp_unslash( $request['after'] ) ) : '',
                 'to'   => isset( $request['before'] ) ? sanitize_text_field( wp_unslash( $request['before'] ) ) : '',
-            ]
+            ],
         ];
+
+        // Admin can get any vendor orders but vendor can't get other vendors orders.
+        $current_user = dokan_get_current_user_id();
+        if ( ! current_user_can( 'manage_options' ) ) {
+            $args['seller_id'] = $current_user;
+        } else {
+            $args['seller_id'] = isset( $request['seller_id'] ) && is_numeric( $request['seller_id'] ) ? sanitize_text_field( $request['seller_id'] ) : $current_user;
+        }
 
         if ( ! empty( $request['search'] ) ) {
             $args['search'] = absint( $request['search'] );
@@ -897,9 +904,10 @@ class OrderController extends DokanRESTController {
                     'context'     => array( 'view' ),
                 ),
                 'seller_id'            => array(
-                    'description' => __( 'Orders belongs to specific seller', 'dokan-lite' ),
-                    'type'        => 'integer',
-                    'context'     => array( 'view' ),
+                    'description'       => __( 'Orders belongs to specific seller', 'dokan-lite' ),
+                    'type'              => 'integer',
+                    'context'           => array( 'view' ),
+                    'sanitize_callback' => 'absint',
                 ),
                 'number'               => array(
                     'description' => __( 'Order number.', 'dokan-lite' ),
