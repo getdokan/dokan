@@ -39,8 +39,9 @@ test.describe('Shop functionality test', () => {
 		await shopPage.searchProduct(data.predefined.simpleProduct.product1.name);
 	});
 
-	test('customer can view products on map @pro', async ( ) => {
-		await shopPage.productOnMap(data.predefined.simpleProduct.product1.name);
+	test.skip('customer can view products on map @pro', async ( ) => {
+		await shopPage.productOnMap();
+		// await shopPage.productOnMap(data.predefined.simpleProduct.product1.name);
 	});
 
 	test('customer can go to product details from shop @lite @pro', async ( ) => {

@@ -30,7 +30,7 @@ test.beforeAll(async ({ browser, request }) => {
 
 	apiUtils = new ApiUtils(request);
 	const productId = await apiUtils.getProductId(data.predefined.simpleProduct.product1.name, payloads.vendorAuth);
-	// await dbUtils.createAbuseReport(dbData.dokan.createAbuseReport, productId, VENDOR_ID, CUSTOMER_ID);
+	await dbUtils.createAbuseReport(dbData.dokan.createAbuseReport, productId, VENDOR_ID, CUSTOMER_ID);
 });
 
 test.afterAll(async ( ) => {

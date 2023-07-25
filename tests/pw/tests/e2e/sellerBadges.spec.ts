@@ -21,7 +21,7 @@ test.beforeAll(async ({ browser, request }) => {
 	sellerBadgesVendor = new SellerBadgesPage(vPage);
 
 	apiUtils = new ApiUtils(request);
-	await apiUtils.createSellerBadge(payloads.createSellerBadgeProductPublished, payloads.adminAuth);
+	await apiUtils.createSellerBadge(payloads.createSellerBadgeProductsPublished, payloads.adminAuth);
 
 });
 

@@ -1277,6 +1277,17 @@ export class BasePage {
 	 */
 
 	// assert element to be visible
+	// any of them , out of all,
+	async toBeVisibleAnyOfThem(selectors: string[],){
+		const res = [];
+		for (const selector of selectors) {
+			res.push(await this.isVisible(selector));
+		}
+		const result = res.includes(true);
+		expect(result).toBeTruthy();
+	}
+
+	// assert element to be visible
 	async toBeVisible(selector: string,){
 		await expect(this.page.locator(selector)).toBeVisible();
 	}

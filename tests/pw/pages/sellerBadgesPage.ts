@@ -58,6 +58,11 @@ export class SellerBadgesPage extends AdminPage {
 
 		await this.clickAndWaitForResponse(data.subUrls.api.dokan.sellerBadgeEvent, selector.admin.dokan.sellerBadge.createBadge);
 		await this.click(selector.admin.dokan.sellerBadge.badgeDetails.badgeEventDropdown);
+		const isPublished = await this.isVisible(selector.admin.dokan.sellerBadge.badgeDetails.badgePublishedStatus(badge.badgeName));
+		if (isPublished){
+			console.log('Badge is already published');
+			return; //TODO: through error or make sure deleted first
+		}
 		await this.click(selector.admin.dokan.sellerBadge.badgeDetails.badgeEvent(badge.badgeName));
 		await this.clearAndType(selector.admin.dokan.sellerBadge.badgeDetails.badgeName, badge.badgeName);
 

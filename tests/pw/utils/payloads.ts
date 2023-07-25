@@ -1586,9 +1586,9 @@ export const payloads = {
 		]
 	},
 
-	createSellerBadgeProductPublished: {
+	createSellerBadgeProductsPublished: {
 		event_type: 'product_published',
-		badge_name: 'Product Published',
+		badge_name: 'Products Published',
 		badge_status: 'published',
 		levels: [
 			{

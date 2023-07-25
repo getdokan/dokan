@@ -996,6 +996,7 @@ export const selector = {
 				badgeDetails: {
 					badgeEventDropdown: '.seller-badge-event-dropdown',
 					badgeEvent: (name: string) => `//h3[normalize-space()="${name}"]/../..`,
+					badgePublishedStatus: (name: string) => `//h3[normalize-space()="${name}"]/..//i[contains(@class, "published")]`,
 					badgeName: '#title',
 					badgeLevel: '.badge-level',
 					startingLevelValue: '//span[normalize-space()="Level 1"]/..//input',
@@ -5125,7 +5126,10 @@ export const selector = {
 				zoomOut: '//button[@title="Zoom out"]',
 				productOnMap:{
 					productPin : '//div[@id="dokan-geolocation-locations-map"]//img[contains(@src, "maps.gstatic.com/mapfiles/transparent.png")]/../..//div[@role="button"]',
-					productListPopup: '.dokan-geo-map-info-window',
+					productCluster: '//div[@id="dokan-geolocation-locations-map"]//div[contains(@style, "dokan-pro/modules/geolocation/assets/images")]',
+					productOnMap: '//span[normalize-space()="To navigate, press the arrow keys."]/..//div',
+					productPopup: '.dokan-geo-map-info-window',
+					productListPopup: '.dokan-geo-map-info-windows-in-popup',
 					productOnList: (productName: string) => `//h3[@class="info-title"]//a[contains(text(),"${productName}")]`
 				},
 			},
