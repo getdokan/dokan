@@ -79,16 +79,14 @@ export class ReportsPage extends AdminPage {
 	// export all logs
 	async exportAllLogs(orderId: string){
 		await this.searchAllLogs(orderId);
-		// await this.goIfNotThere(data.subUrls.backend.dokan.allLogs);
-		// await this.clickAndWaitForResponse(data.subUrls.api.dokan.logs, selector.admin.dokan.reports.allLogs.exportLogs);
-		// await this.page.waitForResponse((resp) => resp.url().includes('wp-admin/admin.php?download-order-log-csv') && resp.status() === 200); //TODO: MERGE WITH PREVIOUS
-		// TODO: need to wait for multiple response
-		await Promise.all([
-			this.page.waitForResponse((resp) => resp.url().includes(data.subUrls.api.dokan.logs) && resp.status() === 200),
-			this.page.waitForResponse((resp) => resp.url().includes(data.subUrls.backend.dokan.downloadOrderLogs) && resp.status() === 200),
-			this.page.locator(selector.admin.dokan.reports.allLogs.exportLogs).click()
-		]);
-		//TODO: add wait for multiple different response on base-page
+		// await Promise.all([
+		// 	this.page.waitForResponse((resp) => resp.url().includes(data.subUrls.api.dokan.logs) && resp.status() === 200),
+		// 	this.page.waitForResponse((resp) => resp.url().includes(data.subUrls.backend.dokan.downloadOrderLogs) && resp.status() === 200),
+		// 	this.page.locator(selector.admin.dokan.reports.allLogs.exportLogs).click()
+		// ]);
+		// //TODO: add wait for multiple different response on base-page
+
+		await this.clickAndWaitForDownload(selector.admin.dokan.reports.allLogs.exportLogs);
 		//TODO: assert file download
 	}
 

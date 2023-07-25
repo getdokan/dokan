@@ -3612,6 +3612,10 @@ export const selector = {
 
 			},
 
+			marketPlaceCoupon: {
+				marketPlaceCoupon :'#marketplace-coupon',
+			},
+
 			// Table
 			table : {
 				couponsTable:  '#vendor-own-coupon .dokan-table',
@@ -5348,7 +5352,10 @@ export const selector = {
 				zoomOut: '//button[@title="Zoom out"]',
 				storeOnMap:{
 					storePin : '//div[@id="dokan-geolocation-locations-map"]//img[contains(@src, "maps.gstatic.com/mapfiles/transparent.png")]/../..//div[@role="button"]',
-					storeListPopup: '.dokan-geo-map-info-window',
+					storeCluster: '//div[@id="dokan-geolocation-locations-map"]//div[contains(@style, "dokan-pro/modules/geolocation/assets/images")]',
+					storeOnMap: '//span[normalize-space()="To navigate, press the arrow keys."]/..//div',
+					storePopup: '.dokan-geo-map-info-window',
+					storeListPopup: '.dokan-geo-map-info-windows-in-popup',
 					storeOnList: (storeName: string) => `//h3[@class="info-title"]//a[contains(text(),"${storeName}")]`
 				},
 			},

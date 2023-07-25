@@ -48,16 +48,19 @@ export class OrdersPage extends VendorPage {
 		switch(type){
 
 		case 'all' :
-			await this.clickAndAcceptAndWaitForResponse(data.subUrls.frontend.vDashboard.orders, selector.vendor.orders.export.exportAll );
+			// await this.clickAndAcceptAndWaitForResponse(data.subUrls.frontend.vDashboard.orders, selector.vendor.orders.export.exportAll );
+			await this.clickAndWaitForDownload(selector.vendor.orders.export.exportAll );
 			break;
 
 		case 'filtered' :
-			await this.clickAndAcceptAndWaitForResponse(data.subUrls.frontend.vDashboard.orders, selector.vendor.orders.export.exportFiltered );
+			// await this.clickAndAcceptAndWaitForResponse(data.subUrls.frontend.vDashboard.orders, selector.vendor.orders.export.exportFiltered );
+			await this.clickAndWaitForDownload(selector.vendor.orders.export.exportFiltered );
 			break;
 
 		default :
 			break;
 		}
+
 	}
 
 
@@ -92,7 +95,7 @@ export class OrdersPage extends VendorPage {
 		}
 
 		// await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.products, selector.vendor.product.filters.filter);
-		await this.clickAndWaitForNavigation( selector.vendor.orders.filters.filter);
+		await this.clickAndWaitForNavigation(selector.vendor.orders.filters.filter);
 		await this.notToHaveCount(selector.vendor.orders.numberOfRows, 0);
 
 	}

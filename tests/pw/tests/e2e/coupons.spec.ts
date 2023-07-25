@@ -50,8 +50,8 @@ test.describe('Coupons test', () => {
 		await couponsVendor.vendorCouponsRenderProperly();
 	});
 
-	test.skip('vendor can view marketPlace coupon', async ( ) => {
-		// await couponsVendor.viewMarketPlaceCoupon(data.coupon);
+	test('vendor can view marketPlace coupon', async ( ) => {
+		await couponsVendor.viewMarketPlaceCoupon();
 	});
 
 	test('vendor can add coupon', async ( ) => {

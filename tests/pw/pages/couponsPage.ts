@@ -50,11 +50,13 @@ export class CouponsPage extends AdminPage {
 	}
 
 
-	// // vendor view marketplace coupon
-	// async viewMarketPlaceCoupon(coupon: coupon) {
-
-
-	// }
+	// vendor view marketplace coupon
+	async viewMarketPlaceCoupon() {
+		await this.goIfNotThere(data.subUrls.frontend.vDashboard.coupons);
+		await this.click(selector.vendor.vCoupon.menus.marketplaceCoupons);
+		await this.toBeVisible(selector.vendor.vCoupon.marketPlaceCoupon.marketPlaceCoupon);
+		// todo: add more elements, can be split into multiple tests
+	}
 
 
 	// vendor add coupon

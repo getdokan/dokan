@@ -54,7 +54,7 @@ test.describe('seller badge api test', () => {
 	});
 
 	test('create a seller badge @pro', async () => {
-		const [response, responseBody] = await apiUtils.post(endPoints.createSellerBadge, { data: payloads.createSellerBadgeProductPublished });
+		const [response, responseBody] = await apiUtils.post(endPoints.createSellerBadge, { data: payloads.createSellerBadgeProductsPublished });
 		expect(response.ok()).toBeTruthy();
 		expect(responseBody).toBeTruthy();
 	});

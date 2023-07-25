@@ -999,15 +999,17 @@ export class ApiUtils {
 		return responseBody;
 	}
 
-	// TODO: deleteSingleSellerBadge
+	// delete seller badge
+	async deleteSellerBadge(badgeId: string, auth? : auth): Promise<responseBody>{
+		const [, responseBody] = await this.delete(endPoints.deleteSellerBadge(badgeId), { headers: auth });
+		return responseBody;
+	}
 
 	// delete all seller badges
 	async deleteAllSellerBadges(auth? : auth): Promise<void> {
-		// const allBadges = await this.getAllSellerBadges(auth);
-		// if(!allBadges){return;} // TODO: return here if possible or use the later soln.
-
+		const allBadges = await this.getAllSellerBadges(auth);
+		if(!allBadges?.length){return;} //TODO: apply this to all batch update/ anywhere a action can be lessened
 		const allBadgeIds = (await this.getAllSellerBadges(auth)).map((o: { id: unknown; }) => o.id);
-		if(allBadgeIds.length < 1) return; //TODO: apply this to all batch update/ anywhere a action can be lessened
 		await this.updateBatchSellerBadges('delete', allBadgeIds, auth);
 	}
 

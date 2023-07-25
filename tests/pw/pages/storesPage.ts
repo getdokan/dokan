@@ -309,11 +309,13 @@ export class StoresPage extends AdminPage {
 		switch(action){
 
 		case 'products' :
-			await this.clickAndWaitForNavigation(selector.admin.dokan.vendors.vendorProducts);
+			// await this.clickAndWaitForNavigation(selector.admin.dokan.vendors.vendorProducts);
+			await this.clickAndWaitForLoadState(selector.admin.dokan.vendors.vendorProducts); //TODO: replace waitfor navigation to waitfor loadstate
 			break;
 
 		case 'orders' :
-			await this.clickAndWaitForNavigation(selector.admin.dokan.vendors.vendorOrders);
+			// await this.clickAndWaitForNavigation(selector.admin.dokan.vendors.vendorOrders);
+			await this.clickAndWaitForLoadState(selector.admin.dokan.vendors.vendorOrders);
 			break;
 
 		default :

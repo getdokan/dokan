@@ -188,6 +188,17 @@ export class BasePage {
 			this.page.locator(selector).click(),
 		]);
 	}
+
+
+	// click & wait for load state to complete
+	async clickAndWaitForLoadState(selector: string): Promise<void> {
+		await Promise.all([
+			this.page.waitForLoadState( 'networkidle' ),
+			this.page.locator(selector).click()
+		]);
+	}
+
+
 	// click & wait for navigation to complete
 	async clickAndWaitForUrl(url: string, selector: string ): Promise<void> {
 		await Promise.all([
@@ -287,22 +298,25 @@ export class BasePage {
 	}
 
 	// click & wait for event
-	async clickAndWaitForEvent(event: any, selector: string): Promise<void> {
-		await Promise.all([
+	async clickAndWaitForEvent(event: any, selector: string): Promise<Page> {
+		const [res, ]= await Promise.all([
 			this.page.waitForEvent(event),
 			this.page.locator(selector).click()
 		]);
 		// const popupPromise = this.page.waitForEvent(event)
 		// this.page.locator(selector).click()
 		// const popup = await popupPromise
+		return res;
 	}
 
-	// click & wait for load state
-	async clickAndWaitForLoadState(url: string, selector: string): Promise<void> {
-		await Promise.all([
-			this.page.waitForLoadState(),
-			this.page.locator(selector).click()
-		]);
+	// click & wait for download event
+	async clickAndWaitForDownload(selector: string): Promise<void> {
+		await this.clickAndWaitForEvent('download', selector);
+		// const download = await Promise.all([
+		// 	this.page.waitForEvent('download'),
+		// 	this.page.locator(selector).click()
+		// ]);
+		// console.log(download);
 	}
 
 	// click if visible
@@ -349,7 +363,9 @@ export class BasePage {
 
 	// wait for selector
 	async waitForSelector(selector: string): Promise<void> {
-		await this.page.waitForSelector(selector);
+		// await this.page.waitForSelector(selector);
+		await this.page.locator(selector).waitFor();
+
 	}
 
 	// get locator

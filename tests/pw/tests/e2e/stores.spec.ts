@@ -53,6 +53,7 @@ test.describe('Stores test', () => {
 	test('admin can view vendor products @lite @pro', async ( ) => {
 		await storesPage.viewVendor(data.predefined.vendorStores.vendor1, 'products');
 	});
+
 	test('admin can view vendor orders @lite @pro', async ( ) => {
 		await storesPage.viewVendor(data.predefined.vendorStores.vendor1, 'orders');
 	});

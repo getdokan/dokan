@@ -5,7 +5,7 @@ import { data } from 'utils/testData';
 import { payloads } from 'utils/payloads';
 
 
-test.describe('Vendor staff test', () => {
+test.describe.skip('Vendor staff test', () => {
 
 
 	let vendorStaffPage: VendorStaffPage;

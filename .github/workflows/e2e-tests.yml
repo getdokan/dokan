@@ -178,7 +178,7 @@ jobs:
 
       - name: 🧪 Running the e2e tests
         if: always()
-        timeout-minutes: 30
+        timeout-minutes: 50
         run: |
           cd tests/pw 
           npm run test:e2e

@@ -52,6 +52,18 @@
 
 
 
+//TODO: this.page.waitForLoadState( 'domcontentloaded' ),  for every navigation check if any tests fail *****************************
+//TODO: this.page.waitForLoadState( 'networkidle' ), if any tests fail for domcontentloaded, but domcontentloaded doesn't wait for other things like images, subframes, and async scripts to finish loading.
+
+
+
+
+
+
+
+
+
+
 
 
 // TODO: woocommerce
