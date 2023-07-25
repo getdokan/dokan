@@ -1,23 +1,22 @@
 import { test, Page } from '@playwright/test';
 import { StoreListingPage } from 'pages/storeListingPage';
-import { ApiUtils } from 'utils/apiUtils';
+// import { ApiUtils } from 'utils/apiUtils';
 import { data } from 'utils/testData';
 // import { payloads } from 'utils/payloads';
 
 
 test.describe('Store listing functionality test', () => {
 
-	// test.use({ storageState: data.auth.customerAuthFile });
 
 	let storeListingPage: StoreListingPage;
 	let page: Page;
-	let apiUtils: ApiUtils;
+	// let apiUtils: ApiUtils;
 
-	test.beforeAll(async ({ browser, request }) => {
+	test.beforeAll(async ({ browser }) => {
 		const customerContext = await browser.newContext({ storageState: data.auth.customerAuthFile });
 		page = await customerContext.newPage();
 		storeListingPage = new StoreListingPage(page);
-		apiUtils = new ApiUtils(request);
+		// apiUtils = new ApiUtils(request);
 	});
 
 	test.afterAll(async () => {
@@ -45,7 +44,8 @@ test.describe('Store listing functionality test', () => {
 	});
 
 	test('customer can view stores on map @pro', async ( ) => {
-		await storeListingPage.storeOnMap(data.predefined.vendorStores.vendor1);
+		await storeListingPage.storeOnMap();
+		// await storeListingPage.storeOnMap(data.predefined.vendorStores.vendor1);
 	});
 
 	test('customer can go to single store from store list @lite @pro', async ( ) => {

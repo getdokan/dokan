@@ -9,7 +9,6 @@ const { CUSTOMER_ID, PRODUCT_ID } = process.env;
 
 test.describe('My Orders functionality test', () => {
 
-	// test.use({ storageState: data.auth.customerAuthFile });
 
 	let myOrdersPage: MyOrdersPage;
 	let page: Page;

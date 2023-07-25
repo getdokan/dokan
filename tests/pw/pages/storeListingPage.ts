@@ -113,7 +113,7 @@ export class StoreListingPage extends CustomerPage {
 		await this.goIfNotThere(data.subUrls.frontend.storeListing);
 		await this.click(selector.customer.cStoreList.map.storeOnMap.storePin);
 		await this.toBeVisible(selector.customer.cStoreList.map.storeOnMap.storeListPopup);
-		storeName && await this.toBeVisible(selector.customer.cStoreList.map.storeOnMap.storeOnList(storeName));
+		storeName && await this.toBeVisible(selector.customer.cStoreList.map.storeOnMap.storeOnList(storeName)); //TODO: need to update store settings to render on map for vendor1
 	}
 
 

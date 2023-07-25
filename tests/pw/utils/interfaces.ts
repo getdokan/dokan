@@ -552,6 +552,7 @@ export interface vendorSetupWizard {
 	city: string;
 	zipCode: string;
 	state: string;
+	mapLocation: string;
 	paypal: () => string;
 	bankAccountName: string;
 	bankAccountType: string;

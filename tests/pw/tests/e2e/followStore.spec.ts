@@ -7,7 +7,6 @@ import { data } from 'utils/testData';
 
 test.describe('Follow stores functionality test', () => {
 
-	// test.use({ storageState: data.auth.customerAuthFile });
 
 	let followStoreVendor: FollowStorePage;
 	let followStoreCustomer: FollowStorePage;

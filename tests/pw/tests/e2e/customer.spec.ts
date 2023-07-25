@@ -45,7 +45,6 @@ test.describe('Customer user functionality test', () => {
 
 test.describe('Customer functionality test', () => {
 
-	// test.use({ storageState: data.auth.customerAuthFile });
 
 	let customerPage: CustomerPage;
 	let page: Page;

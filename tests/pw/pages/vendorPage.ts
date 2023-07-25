@@ -104,6 +104,14 @@ export class VendorPage extends BasePage {
 			await this.press(data.key.enter);
 			await this.type(selector.vendor.vSetup.state, setupWizardData.state);
 			await this.press(data.key.enter);
+			// map
+			const geoLocationEnabled = await this.isVisible(selector.vendor.vSetup.map);
+			if (geoLocationEnabled) {
+				await this.typeAndWaitForResponse(data.subUrls.gmap, selector.vendor.vSetup.map, setupWizardData.mapLocation);
+				await this.press(data.key.arrowDown);
+				await this.press(data.key.enter);
+			}
+
 			await this.check(selector.vendor.vSetup.email); //ToDo: update every checkbox with check instead of click, check method , if checked remains checked
 			await this.click(selector.vendor.vSetup.continueStoreSetup);
 			// paypal

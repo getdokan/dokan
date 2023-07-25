@@ -407,7 +407,7 @@ export class ProductsPage extends AdminPage {
 	async duplicateProduct(productName: string): Promise<void> {
 		await this.searchProduct(productName);
 		await this.hover(selector.vendor.product.productCell(productName));
-		await this.clickAndWaitForNavigation(selector.vendor.product.duplicate);
+		await this.clickAndAcceptAndWaitForResponse(data.subUrls.frontend.vDashboard.products, selector.vendor.product.duplicate);
 		await this.toContainText(selector.vendor.product.dokanSuccessMessage, 'Product succesfully duplicated');
 
 	}

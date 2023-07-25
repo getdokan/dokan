@@ -619,7 +619,7 @@ export const data = {
 
 	// Vendor Setup Wizard
 	vendorSetupWizard: {
-		choice: false,
+		choice: true,
 		storeProductsPerPage: '12',
 		street1: 'abc street',
 		street2: 'xyz street',
@@ -627,6 +627,7 @@ export const data = {
 		city: 'New York',
 		zipCode: '10006',
 		state: 'New York',
+		mapLocation: 'New York',
 		paypal: () => faker.internet.email(),
 		bankAccountName: 'accountName',
 		bankAccountType: faker.helpers.arrayElement(['personal', 'business']),

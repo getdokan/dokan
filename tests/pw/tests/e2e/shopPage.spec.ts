@@ -7,7 +7,6 @@ import { data } from 'utils/testData';
 
 test.describe('Shop functionality test', () => {
 
-	// test.use({ storageState: data.auth.customerAuthFile });
 
 	let shopPage: ShopPage;
 	let page: Page;
