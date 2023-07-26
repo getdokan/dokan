@@ -453,10 +453,11 @@ export class ApiUtils {
 	 */
 
 	// get all withdraws
-	async getMinimumWithdrawLimit(auth? : auth): Promise<string> {
+	async getMinimumWithdrawLimit(auth? : auth): Promise<[string, string]> {
 		const [, responseBody] = await this.get(endPoints.getBalanceDetails, { headers: auth });
+		const currentBalance = String(Math.abs(responseBody.current_balance));
 		const minimumWithdrawLimit = String(Math.abs(responseBody.withdraw_limit));
-		return minimumWithdrawLimit;
+		return [currentBalance, minimumWithdrawLimit];
 	}
 
 	// get all withdraws
@@ -480,7 +481,7 @@ export class ApiUtils {
 
 	// create withdraw
 	async createWithdraw(payload: object, auth? : auth): Promise<[responseBody, string]> {
-		const response = await this.request.post(endPoints.createWithdraw, { data: payload, headers: auth });
+		const response = await this.request.post(endPoints.createWithdraw, { data: payload, headers: auth }); //todo: return withdrawid if already exists
 		const responseBody = await this.getResponseBody(response, false); //TODO: test if false is necessary there was false which is removed for testing
 		const withdrawId = responseBody.id;
 		return [responseBody, withdrawId];
@@ -488,7 +489,10 @@ export class ApiUtils {
 
 	// cancel withdraw
 	async cancelWithdraw(withdrawId: string, auth? : auth): Promise<responseBody> {
-		const [, responseBody] = await this.delete(endPoints.cancelWithdraw(withdrawId), { headers: auth });
+		if(!withdrawId){
+			withdrawId = await this.getWithdrawId(auth);
+		}
+		const [, responseBody] = await this.delete(endPoints.cancelWithdraw(withdrawId), { headers: payloads.adminAuth });
 		return responseBody;
 	}
 

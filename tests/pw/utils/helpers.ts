@@ -36,7 +36,7 @@ export const helpers = {
 	openReport: () => open('playwright-report/html-report/index.html'),
 
 	// convert string to price format
-	price: (str: string) => parseFloat(str.replace(/[^\d\-.,]/g, '').replace(/,/g, '.').replace(/\.(?=.*\.)/g, '')),
+	price: (str: string): number => parseFloat(str.replace(/[^\d\-.,]/g, '').replace(/,/g, '.').replace(/\.(?=.*\.)/g, '')),
 
 	// current year
 	currentYear: new Date().getFullYear(),

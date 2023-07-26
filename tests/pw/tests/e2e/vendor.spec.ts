@@ -44,6 +44,7 @@ test.describe('Vendor user functionality test1', () => {
 
 });
 
+
 test.describe('Vendor functionality test', () => {
 
 
@@ -163,31 +164,5 @@ test.describe('Vendor functionality test', () => {
 	test('vendor can visit own Store @lite @pro', async ( ) => {
 		await vendorPage.visitStore(data.predefined.vendorStores.vendor1);
 	});
-
-
-	// withdraw
-
-	test('vendor withdraw menu page is rendering properly @lite @pro @explo', async ( ) => {
-		await vendorPage.vendorWithdrawRenderProperly();
-	});
-
-	test('vendor can request withdraw @lite @pro', async ( ) => {
-		await vendorPage.requestWithdraw(data.vendor.withdraw);
-	});
-
-	test('vendor can cancel request withdraw @lite @pro', async ( ) => {
-		await vendorPage.cancelWithdrawRequest( data.vendor.withdraw );
-	});
-
-	test.skip('vendor can add auto withdraw disbursement schedule @pro', async ( ) => {
-		await vendorPage.addAutoWithdrawDisbursementSchedule(data.vendor.withdraw);
-	});
-
-	test('vendor can add default withdraw payment methods @lite @pro', async ( ) => {
-		await vendorPage.addDefaultWithdrawPaymentMethods(data.vendor.withdraw.defaultWithdrawMethod.bankTransfer);
-		// Cleanup
-		await vendorPage.addDefaultWithdrawPaymentMethods(data.vendor.withdraw.defaultWithdrawMethod.paypal);
-	});
-
 
 });

@@ -774,8 +774,8 @@ export const data = {
 				coupons: 'dashboard/coupons',
 				reviews: 'dashboard/reviews/',
 				withdraw: 'dashboard/withdraw/',
-				badges: 'dashboard/seller-badge/',
 				withdrawRequests: 'dashboard/withdraw-requests',
+				badges: 'dashboard/seller-badge/',
 				staff: 'dashboard/staffs',
 				followers: 'dashboard/followers',
 				tools: 'dashboard/tools',
@@ -1152,8 +1152,9 @@ export const data = {
 
 			preferredPaymentMethod: 'paypal',
 			preferredSchedule: 'weekly', // monthly,quarterly, biweekly,weekly
+			currentBalance: '',
 			minimumWithdrawAmount: '5', // '0', '5', '10', '15', '50', '100', '200', '300', '500', '1000', '2000', '3000', '5000', '10000'
-			reservedBalance: '15',
+			reservedBalance: '10',
 			scheduleMessageInitial: 'Please update your withdraw schedule selection to get payment automatically.'
 		},
 

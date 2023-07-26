@@ -918,6 +918,7 @@ export interface vendor {
 		}
 		preferredPaymentMethod: string;
 		preferredSchedule: string;
+		currentBalance: string;
 		minimumWithdrawAmount: string;
 		reservedBalance: string;
 		scheduleMessageInitial: string;

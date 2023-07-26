@@ -46,8 +46,8 @@ export class AdminDashboardPage extends AdminPage {
 		const netSales = await this.getElementText(selector.admin.dokan.dashboard.atAGlance.netSalesThisMonth) as string;
 		const commissionEarned = await this.getElementText(selector.admin.dokan.dashboard.atAGlance.commissionEarned) as string;
 
-		expect(helpers.roundToTwo(Number(helpers.price(netSales)))).toBe(helpers.roundToTwo(Number(atAGlanceValues.sales.this_month)));
-		expect(helpers.roundToTwo(Number(helpers.price(commissionEarned)))).toBe(helpers.roundToTwo(Number(atAGlanceValues.earning.this_month)));
+		expect(helpers.roundToTwo(helpers.price(netSales))).toBe(helpers.roundToTwo(atAGlanceValues.sales.this_month));
+		expect(helpers.roundToTwo(helpers.price(commissionEarned))).toBe(helpers.roundToTwo(atAGlanceValues.earning.this_month));
 		await this.toContainText(selector.admin.dokan.dashboard.atAGlance.signupThisMonth, atAGlanceValues.vendors.this_month + ' Vendor');
 		await this.toContainText(selector.admin.dokan.dashboard.atAGlance.vendorAwaitingApproval, atAGlanceValues.vendors.inactive + ' Vendor');
 		await this.toContainText(selector.admin.dokan.dashboard.atAGlance.productCreatedThisMonth, atAGlanceValues.products.this_month + ' Products');

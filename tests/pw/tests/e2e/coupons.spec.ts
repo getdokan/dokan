@@ -42,27 +42,27 @@ test.describe('Coupons test', () => {
 		await cPage.close();
 	});
 
-	test('admin can add marketplace coupon @lite @pro', async ( ) => {
+	test('admin can add marketplace coupon @pro', async ( ) => {
 		await couponsAdmin.addMarketplaceCoupon(data.coupon);
 	});
 
-	test('vendor coupon menu page is rendering properly @lite @pro @explo', async ( ) => {
+	test('vendor coupon menu page is rendering properly @pro @explo', async ( ) => {
 		await couponsVendor.vendorCouponsRenderProperly();
 	});
 
-	test('vendor can view marketPlace coupon', async ( ) => {
+	test('vendor can view marketPlace coupon @pro', async ( ) => {
 		await couponsVendor.viewMarketPlaceCoupon();
 	});
 
-	test('vendor can add coupon', async ( ) => {
+	test('vendor can add coupon @pro', async ( ) => {
 		await couponsVendor.addCoupon(data.coupon);
 	});
 
-	test('vendor can edit coupon', async ( ) => {
+	test('vendor can edit coupon @pro', async ( ) => {
 		await couponsVendor.editCoupon({ ...data.coupon, editCoupon: couponCode });
 	});
 
-	test('vendor can delete coupon', async ( ) => {
+	test('vendor can delete coupon @pro', async ( ) => {
 		await couponsVendor.deleteCoupon(couponCode);
 	});
 

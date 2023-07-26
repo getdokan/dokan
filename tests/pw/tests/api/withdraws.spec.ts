@@ -10,7 +10,7 @@ let minimumWithdrawLimit: string;
 
 test.beforeAll(async ({ request }) => {
 	apiUtils = new ApiUtils(request);
-	minimumWithdrawLimit = await apiUtils.getMinimumWithdrawLimit();
+	[, minimumWithdrawLimit] = await apiUtils.getMinimumWithdrawLimit();
 	await apiUtils.createOrderWithStatus(payloads.createProduct(), payloads.createOrder, 'wc-completed');
 	const [responseBody, id] = await apiUtils.createWithdraw({ ...payloads.createWithdraw, amount: minimumWithdrawLimit });
 	withdrawId = responseBody.message === 'You already have a pending withdraw request' ? await apiUtils.getWithdrawId() : id;

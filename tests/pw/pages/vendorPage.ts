@@ -620,7 +620,6 @@ export class VendorPage extends BasePage {
 	}
 
 
-
 	// vendor send id verification request
 	async sendIdVerificationRequest(verification: vendor['verification']): Promise<void> {
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsVerification);
@@ -1061,101 +1060,5 @@ export class VendorPage extends BasePage {
 		await this.toBeVisible(selector.vendor.product.productLink(productName));
 	}
 
-
-	// withdraw
-
-	// withdraw render properly
-	async vendorWithdrawRenderProperly(): Promise<void> {
-		await this.goIfNotThere(data.subUrls.frontend.vDashboard.orders);
-
-		// order nav menus are visible
-		await this.multipleElementVisible(selector.vendor.orders.menus);
-
-		// export elements are visible
-		await this.multipleElementVisible(selector.vendor.orders.export);
-
-		// order filters elements are visible
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		const { filterByCustomer,  ...filters } = selector.vendor.orders.filters;
-		await this.multipleElementVisible(filters); //todo: add dropdown selector
-
-		// order search elements are visible
-		await this.multipleElementVisible(selector.vendor.orders.search);
-
-		// bulk action elements are visible
-		await this.multipleElementVisible(selector.vendor.orders.bulkActions);
-
-		// table elements are visible
-		await this.multipleElementVisible(selector.vendor.orders.table);
-	}
-
-	// vendor request withdraw
-	async requestWithdraw(withdraw: vendor['withdraw']): Promise<void> {
-		await this.goIfNotThere(data.subUrls.frontend.vDashboard.withdraw);
-		const cancelRequestIsVisible = await this.isVisible(selector.vendor.vWithdraw.cancelRequest);
-		if (cancelRequestIsVisible) {
-			this.cancelWithdrawRequest(withdraw);
-			await this.clickAndWaitForNavigation(selector.vendor.vWithdraw.withdrawDashboard);
-		}
-
-		const minimumWithdrawAmount: number = helpers.price(await this.getElementText(selector.vendor.vWithdraw.minimumWithdrawAmount) as string);
-		const balance: number = helpers.price(await this.getElementText(selector.vendor.vWithdraw.balance) as string);
-
-		if (balance > minimumWithdrawAmount) {
-			await this.click(selector.vendor.vWithdraw.requestWithdraw);
-			await this.clearAndType(selector.vendor.vWithdraw.withdrawAmount, String(minimumWithdrawAmount));
-			await this.selectByValue(selector.vendor.vWithdraw.withdrawMethod, withdraw.withdrawMethod.default);
-			await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vWithdraw.submitRequest);
-			await expect(this.page.getByText(selector.vendor.vWithdraw.withdrawRequestSaveSuccessMessage)).toBeVisible();
-			await this.waitForNavigation(); // TODO: try to merge with above 2 line click and wait for response navigation and expect in between wait for response & navigation
-		} else {
-			// throw new Error("Vendor balance is less than minimum withdraw amount")
-			console.log('Vendor balance is less than minimum withdraw amount');
-			// TODO: Convert to expect error instead of console  log
-			// expect(addNewProduct)).to.eventually.throw(AppError).with.property('code', "InvalidInput");
-		}
-	}
-
-	// vendor cancel withdraw request
-	async cancelWithdrawRequest(withdraw: vendor['withdraw']): Promise<void> {
-		await this.goIfNotThere(data.subUrls.frontend.vDashboard.withdraw);
-		const cancelRequestIsVisible = await this.isVisible(selector.vendor.vWithdraw.cancelRequest);
-		if (!cancelRequestIsVisible) {
-			this.requestWithdraw(withdraw);
-		}
-		await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.withdrawRequests, selector.vendor.vWithdraw.cancelRequest, 302);
-		await expect(this.page.getByText(selector.vendor.vWithdraw.cancelWithdrawRequestSaveSuccessMessage)).toBeVisible();
-	}
-
-	// vendor add auto withdraw disbursement schedule
-	async addAutoWithdrawDisbursementSchedule(withdraw: vendor['withdraw']): Promise<void> {
-		await this.goIfNotThere(data.subUrls.frontend.vDashboard.withdraw);
-		await this.enableSwitcherDisbursement(selector.vendor.vWithdraw.enableSchedule);
-		await this.click(selector.vendor.vWithdraw.editSchedule);
-		await this.selectByValue(selector.vendor.vWithdraw.preferredPaymentMethod, withdraw.preferredPaymentMethod);
-		await this.click(selector.vendor.vWithdraw.preferredSchedule(withdraw.preferredSchedule));
-		await this.selectByValue(selector.vendor.vWithdraw.onlyWhenBalanceIs, withdraw.minimumWithdrawAmount);
-		await this.selectByValue(selector.vendor.vWithdraw.maintainAReserveBalance, withdraw.reservedBalance);
-		await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vWithdraw.changeSchedule);
-		// await expect(this.page.getByText(selector.vendor.vWithdraw.withdrawScheduleSaveSuccessMessage)).toBeVisible(); //TODO: find when invokes it
-		// await expect(this.page.locator(selector.vendor.vWithdraw.scheduleMessage).filter({ hasText: 'text in column 1' })).toBeVisible();
-		// let a = await this.page.locator(selector.vendor.vWithdraw.scheduleMessage).textContent();
-		// console.log(a);
-		// await expect(this.page.getByText(selector.vendor.vWithdraw.scheduleMessage)).not.toContainText(data.vendor.withdraw.scheduleMessageInitial);
-	}
-
-	// vendor add default withdraw payment methods
-	async addDefaultWithdrawPaymentMethods(preferredSchedule: string): Promise<void> {
-		await this.goIfNotThere(data.subUrls.frontend.vDashboard.withdraw);
-		const methodIsDefault = await this.isVisible(selector.vendor.vWithdraw.defaultMethod(preferredSchedule));
-		if (!methodIsDefault) {
-			// await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vWithdraw.customMethodMakeDefault(preferredSchedule));
-			// await expect(this.page.getByText(selector.vendor.vWithdraw.defaultPaymentMethodUpdateSuccessMessage)).toBeVisible();
-			// // await this.waitForNavigation()
-			// await this.waitForUrl(data.subUrls.frontend.vDashboard.withdraw);
-			await this.clickAndWaitForNavigation(selector.vendor.vWithdraw.customMethodMakeDefault(preferredSchedule)); //TODO: fix above soln
-			await this.toBeVisible(selector.vendor.vWithdraw.defaultMethod(preferredSchedule));
-		}
-	}
 
 }

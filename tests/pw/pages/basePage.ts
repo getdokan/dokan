@@ -31,7 +31,12 @@ export class BasePage {
 
 	// wait for load state
 	async waitForLoadState(): Promise<void> {
-		return await this.page.waitForLoadState( 'domcontentloaded');
+		await this.page.waitForLoadState( 'networkidle');
+	}
+
+	// wait for load state
+	async waitForLoadState1(): Promise<void> {
+		await this.page.waitForLoadState( 'domcontentloaded');
 	}
 
 	// wait for url to be loaded
@@ -216,8 +221,6 @@ export class BasePage {
 		]);
 	}
 
-	// TODO: urgent : update wait for multiple different response
-	// TODO: urgent : update wait for multiple same response
 	// click & wait for response
 	async clickAndWaitForResponse(subUrl: string, selector: string, code = 200): Promise<Response> {
 		const [response] = await Promise.all([
@@ -227,30 +230,29 @@ export class BasePage {
 		return response;
 	}
 
-	// click & wait for multiple responses
-	async clickAndWaitForResponses(subUrls:   string[][], selector: string, code = 200): Promise<void | Response[]> {
+	// TODO: urgent : update wait for multiple different response
+	// TODO: urgent : update wait for multiple same response
 
-		// 		// // const qrs: string[][] = [[data.subUrls.backend.quotes, '200'], [data.subUrls.backend.products, '200']];
-		// // const qrs: string[][] = [[data.subUrls.backend.quotes, '200']];
-		// await this.clickAndWaitForResponses(qrs, selector.admin.dokan.requestForQuotation.quoteRules.newQuoteRule);
-		const promises = [];
-		subUrls.forEach((subUrl) => {
-			console.log('subUls: ', subUrl[0], ' code: ', subUrl[1]);
-			// const promise = this.page.waitForResponse((resp) => resp.url().includes(subUrl[0] as string ) && resp.status() ===  (subUrl[1] ?? code));
-			const promise = this.page.waitForResponse((resp) => resp.url().includes(subUrl[0]) && resp.status() ===  (subUrl[1]));
-			promises.push(promise);
-		});
-
-		// promises.push(this.page.locator(selector).click());
-		// const response = await Promise.all(promises);
-		await Promise.all([
-			...promises,
-			this.page.locator(selector).click()
-		]);
-
-		return response;
-
-	}
+	// // click & wait for multiple responses
+	// async clickAndWaitForResponses(subUrls:   string[][], selector: string, code = 200): Promise<void | Response[]> {
+	// 	// 		// // const qrs: string[][] = [[data.subUrls.backend.quotes, '200'], [data.subUrls.backend.products, '200']];
+	// 	// // const qrs: string[][] = [[data.subUrls.backend.quotes, '200']];
+	// 	// await this.clickAndWaitForResponses(qrs, selector.admin.dokan.requestForQuotation.quoteRules.newQuoteRule);
+	// 	// const promises = [];
+	// 	// subUrls.forEach((subUrl) => {
+	// 	// 	console.log('subUls: ', subUrl[0], ' code: ', subUrl[1]);
+	// 	// 	// const promise = this.page.waitForResponse((resp) => resp.url().includes(subUrl[0] as string ) && resp.status() ===  (subUrl[1] ?? code));
+	// 	// 	const promise = this.page.waitForResponse((resp) => resp.url().includes(subUrl[0]) && resp.status() ===  (subUrl[1]));
+	// 	// 	promises.push(promise);
+	// 	// });
+	// 	// // promises.push(this.page.locator(selector).click());
+	// 	// // const response = await Promise.all(promises);
+	// 	// await Promise.all([
+	// 	// 	...promises,
+	// 	// 	this.page.locator(selector).click()
+	// 	// ]);
+	// 	// return response;
+	// }
 
 	// click & accept
 	async clickAndAccept(selector: string,): Promise<void> {
@@ -279,6 +281,7 @@ export class BasePage {
 		]);
 		return response;
 	}
+
 
 	// type & wait for navigation
 	async pressAndWaitForNavigation(key: string,): Promise<void> {
@@ -324,6 +327,14 @@ export class BasePage {
 		const isVisible = await this.isVisible(selector);
 		if (isVisible) {
 			await this.click(selector);
+		}
+	}
+
+	// click and wait for response if visible
+	async clickAndWaitForResponseIfVisible(subUrl: string, selector: string): Promise<void> {
+		const isVisible = await this.isVisible(selector);
+		if (isVisible) {
+			await this.clickAndWaitForResponse(subUrl, selector);
 		}
 	}
 
