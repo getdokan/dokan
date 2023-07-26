@@ -609,11 +609,9 @@
 
         div.nav-tab-wrapper {
             width: 340px;
-            //border: 1px solid #c8d7e1;
             padding: 14px 16px 30px 24px;
             overflow: hidden;
             background: #F9FAFB;
-            //box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
             box-sizing: border-box;
             margin-right: 12px;
             border-bottom: none;
@@ -684,15 +682,6 @@
                         top: 0;
                     }
 
-                    //&::after {
-                    //    content: '';
-                    //    position: absolute;
-                    //    width: 100%;
-                    //    height: 1px;
-                    //    background: #cecaca;
-                    //    left: 0;
-                    //    top: -1px;
-                    //}
                 }
 
                 &:last-child {
