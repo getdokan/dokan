@@ -609,11 +609,11 @@
 
         div.nav-tab-wrapper {
             width: 340px;
-            border: 1px solid #c8d7e1;
+            //border: 1px solid #c8d7e1;
             padding: 14px 16px 30px 24px;
             overflow: hidden;
-            background: #FAFBFF;
-            box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+            background: #F9FAFB;
+            //box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
             box-sizing: border-box;
             margin-right: 12px;
             border-bottom: none;
@@ -635,7 +635,7 @@
                 transition:none;
                 background: transparent;
                 font-weight: bold;
-                border-bottom: 1px solid #cecaca;
+                border-bottom: 1px solid #e9e9ea;
                 transition-property: none;
 
                 img {
@@ -671,7 +671,7 @@
                     position: relative;
                     transition: .3s linear;
                     background: #fff !important;
-                    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+                    //box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
                     transition-property: none;
 
                     &:before {
@@ -684,15 +684,15 @@
                         top: 0;
                     }
 
-                    &::after {
-                        content: '';
-                        position: absolute;
-                        width: 100%;
-                        height: 1px;
-                        background: #cecaca;
-                        left: 0;
-                        top: -1px;
-                    }
+                    //&::after {
+                    //    content: '';
+                    //    position: absolute;
+                    //    width: 100%;
+                    //    height: 1px;
+                    //    background: #cecaca;
+                    //    left: 0;
+                    //    top: -1px;
+                    //}
                 }
 
                 &:last-child {
@@ -820,7 +820,7 @@
                 height: 100%;
                 content: "";
                 position: absolute;
-                background: #E5E5E5;
+                background: #fff;
             }
         }
 

@@ -1162,7 +1162,7 @@
             border: 0.82px solid #E5E5E5;
             padding: 10px 25px;
             background: rgba(220, 232, 254, 0.38);
-            box-shadow: 0px 3.28px 3.28px rgba(0, 0, 0, 0.10);
+            //box-shadow: 0px 3.28px 3.28px rgba(0, 0, 0, 0.10);
             border-radius: 6.56px;
 
             .scl_header {
@@ -1237,7 +1237,7 @@
 
                 .scl_text,
                 .scl_html {
-                    border: 1px solid #b0a7a7;
+                    border: 1px solid #f3f4f6;
                     display: flex;
                     padding: 10px 30px 15px 27px;
                     border-top: 0;
@@ -1305,7 +1305,7 @@
 
                 &:nth-child(2) {
                     margin-top: 15px;
-                    border-top: 1px solid #b0a7a7;
+                    border-top: 1px solid #f3f4f6;
                 }
 
                 &:last-child {
