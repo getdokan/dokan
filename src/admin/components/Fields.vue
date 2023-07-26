@@ -662,7 +662,7 @@
                 /**
                  * If social field has enabled status saved return it or return the default value or return 'on'
                  *
-                 * @since DOKAN_SINCE
+                 * @since 3.7.24
                  */
                 if ( this.fieldData[ 'enable_status' ] && this.fieldData[ 'enable_status' ]['name'] && this.fieldValue[ this.fieldData[ 'enable_status' ]['name'] ] ) {
                     return this.fieldValue[ this.fieldData[ 'enable_status' ]['name'] ];
