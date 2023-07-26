@@ -37,7 +37,7 @@ export const dbData = {
 
 			//site settings
 			site_options: '', //TODO : WHY EMPTY , value exists find out what
-			admin_access: 'off',
+			admin_access: 'on', // vendor edit product test needs it to disable
 			custom_store_url: 'store',
 			setup_wizard_logo_url: '',
 			setup_wizard_message: '<p>Thank you for choosing The Marketplace to power your online store! This quick setup wizard will help you configure the basic settings. <strong>It&rsquo;s completely optional and shouldn&rsquo;t take longer than two minutes.<strong></p>',
