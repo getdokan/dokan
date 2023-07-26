@@ -15,6 +15,7 @@
             {{ '+' }}
         </div>
         <div class="fixed_fee">
+            <span>{{ getCurrencySymbol }}</span>
             <input
                 type="text"
                 class="wc_input_price regular-text medium"
@@ -23,7 +24,6 @@
                 v-model="fixed"
                 v-on:input="onInput"
             />
-            <span>{{ getCurrencySymbol }}</span>
         </div>
     </div>
 </template>
@@ -72,7 +72,6 @@
                         percentage: self.percentage
                     };
 
-                this.$emit('input', data);
                 this.$emit('change', data);
             }
         },

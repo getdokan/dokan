@@ -12,21 +12,15 @@
                     v-for="(optionVal, optionKey) in fieldData.options"
                     class="wm-methods-box"
                     :key="optionKey"
+                    v-if="showItems[optionKey] === optionKey"
                 >
                     <div class="wm-method">
-                        <div class='wm-method-switch'>
-                            <Switches
-                                @input="setCheckedValue"
-                                :enabled="isSwitchOptionChecked( optionKey )"
-                                :value="optionKey"
-                            />
-                        </div>
                         <h4 class="field_heading">{{ optionVal }}</h4>
                     </div>
                     <div class="wm-charges">
                         <combine-input
-                            v-model="charges[ optionKey ]"
-                            v-on:change='chargeChangeHandler'
+                            :value="charges[ optionKey ] ?? {}"
+                            v-on:change='data => chargeChangeHandler( data, optionKey )'
                         />
                     </div>
                 </div>
@@ -37,18 +31,19 @@
 
 <script>
 import Switches from 'admin/components/Switches.vue';
-import CombineInput from 'admin/components/Fields/CombineInput.vue';
+import CombineInput from 'admin/components/CombineInput.vue';
 import FieldHeading from 'admin/components/FieldHeading.vue';
 
 export default {
-    name: 'WithdrawMethods',
+    name: 'WithdrawCharges',
     data() {
         return {
             charges: {},
             defaultVal: {
                 fixed: '',
                 percentage: ''
-            }
+            },
+            showItems: {}
         };
     },
     components: { FieldHeading, CombineInput, Switches },
@@ -58,7 +53,7 @@ export default {
             return (
                 this.fieldValue[ this.fieldData.name ] &&
                 this.fieldValue[ this.fieldData.name ][ optionKey ] ===
-                    optionKey
+                optionKey
             );
         },
         setCheckedValue( checked, value ) {
@@ -66,9 +61,8 @@ export default {
                 ? value
                 : '';
         },
-        chargeChangeHandler() {
-            let options_inputs_key = this.fieldData.options_inputs_key ?? 'withdraw_charges';
-            this.fieldValue[ options_inputs_key ] = this.charges;
+        chargeChangeHandler( data, field ) {
+            this.fieldValue[ this.fieldData.name ][ field ] = data;
         },
         validateCombineInputData( data ) {
             if ( 'object' !== typeof data ) {
@@ -79,15 +73,46 @@ export default {
         },
         getDefaultDataSet() {
             let charges = {};
+
             Object.keys( this.fieldData.options ).forEach( item => {
-                self.charges[item] = this.defaultVal;
+                charges[item] = this.defaultVal;
             } );
 
             return charges;
         },
+
+        itemsShowIf() {
+            if ( ! this.fieldData['items_show_if'] || ! this.fieldData['items_show_if']['key'] || ! this.fieldData['items_show_if']['condition'] ) {
+                return true;
+            }
+
+            let showIf = this.fieldData.items_show_if;
+            let self = this;
+
+            switch ( showIf.condition ) {
+                case 'contains-key-value':
+                    let data = {};
+                    Object.keys( this.fieldData.options ).forEach(item => {
+                        data[item] = self.fieldValue[showIf.key][item] ?? false;
+                    });
+
+                    self.showItems = data;
+                    break
+            }
+        },
     },
+
+    watch: {
+        $props: {
+            handler() {
+                this.itemsShowIf();
+            },
+            deep: true,
+        }
+    },
+
     beforeMount() {
-        let options_inputs_key = this.fieldData.options_inputs_key ?? 'withdraw_charges';
+        let options_inputs_key = this.fieldData.name;
         let self = this;
 
         if ( this.fieldValue[ options_inputs_key ] ) {
@@ -95,6 +120,8 @@ export default {
         } else  {
             this.charges = this.getDefaultDataSet();
         }
+
+        this.itemsShowIf();
     },
 };
 </script>
@@ -108,22 +135,19 @@ export default {
         margin-top: 15px;
 
         .wm-methods-box {
-            border: 1px solid #b0a7a787;
+            border-bottom: 1px solid #b0a7a752;
             padding: 0 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
 
-            &:not( :last-child ) {
+            &:last-child {
                 border-bottom: 0;
             }
 
             .wm-method {
                 display: flex;
                 align-items: center;
-                .wm-method-switch {
-                    margin-right: 1em;
-                }
             }
             .wm-charges {
                 display: flex;
@@ -145,8 +169,6 @@ export default {
 
                 .wm-method {
 
-                    .wm-method-switch {
-                    }
                 }
                 .wm-charges {
                     margin-left: -20px;
