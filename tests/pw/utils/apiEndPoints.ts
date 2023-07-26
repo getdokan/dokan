@@ -306,7 +306,7 @@ export const endPoints = {
 		// coupons
 		getAllCoupons: `${SERVER_URL}/wc/v3/coupons`,
 		getSingleCoupon: (couponId: string) => `${SERVER_URL}/wc/v3/coupons/${couponId}`,
-		createCoupon: `${SERVER_URL}/wc/v3/customers/`,
+		createCoupon: `${SERVER_URL}/wc/v3/coupons`,
 		updateCoupon: (couponId: string) => `${SERVER_URL}/wc/v3/coupons/${couponId}`,
 		deleteCoupon: (couponId: string) => `${SERVER_URL}/wc/v3/coupons/${couponId}`,
 		updateBatchCoupons: `${SERVER_URL}/wc/v3/coupons/batch`,

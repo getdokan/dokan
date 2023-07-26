@@ -223,10 +223,9 @@ export const payloads = {
 	}),
 
 	createMarketPlaceCoupon: () => ({
-		code: 'VC_' + faker.string.uuid(),
-		discount_type: faker.helpers.arrayElement(['percent', 'fixed_product']),
+		code: 'AC_' + faker.string.uuid(),
+		discount_type: faker.helpers.arrayElement(['percent', 'fixed_product', 'fixed_cart']),
 		amount: faker.number.int({ min: 1, max: 10 }).toString(),
-		product_ids: [],
 		individual_use: false,
 		meta_data: [
 			{

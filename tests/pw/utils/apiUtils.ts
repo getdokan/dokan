@@ -43,6 +43,14 @@ interface coupon {
 		meta_data?: { key: string; value: string; }[]
 }
 
+interface marketPlaceCoupon {
+	code: string,
+	amount: string,
+	discount_type: string,
+	individual_use?: boolean,
+	meta_data?: { key: string; value: string; }[]
+}
+
 interface reqOptions {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	data?: any;
@@ -425,7 +433,7 @@ export class ApiUtils {
 
 
 	// create market coupon
-	async createMarketPlaceCoupon(coupon: coupon, auth?: auth ): Promise<[responseBody, string, string]> {
+	async createMarketPlaceCoupon(coupon: marketPlaceCoupon, auth?: auth ): Promise<[responseBody, string, string]> {
 		const response = await this.request.post(endPoints.wc.createCoupon, { data: coupon, headers: payloads.adminAuth });
 		const responseBody = await this.getResponseBody(response, false);
 		let couponId: string;

@@ -15,7 +15,6 @@ test.describe('Coupons test', () => {
 	let couponsCustomer: CouponsPage;
 	let aPage: Page, vPage: Page, cPage: Page;
 	let apiUtils: ApiUtils;
-	// let marketPlaceCouponCode: string;
 	let couponCode: string;
 
 	test.beforeAll(async ({ browser, request }) => {
@@ -32,7 +31,7 @@ test.describe('Coupons test', () => {
 		couponsCustomer = new CouponsPage(cPage);
 
 		apiUtils = new ApiUtils(request);
-		// [,, marketPlaceCouponCode] = await apiUtils.createMarketPlaceCoupon( payloads.createMarketPlaceCoupon());
+		await apiUtils.createMarketPlaceCoupon( payloads.createMarketPlaceCoupon(), payloads.adminAuth);
 		[,, couponCode] = await apiUtils.createCoupon([PRODUCT_ID], payloads.createCoupon(), payloads.vendorAuth);
 	});
 
@@ -69,6 +68,8 @@ test.describe('Coupons test', () => {
 	test('customer can view coupon on single store @pro', async ( ) => {
 		await couponsCustomer.storeCoupon(data.predefined.vendorStores.vendor1, 'c1_v1');
 	});
+
+	//todo: add more customer tests
 
 
 });
