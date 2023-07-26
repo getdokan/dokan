@@ -26,6 +26,10 @@
             $("input[name='withdraw-schedule']").on( 'change', (e) => {
                 Dokan_Withdraw.handleScheduleChange( e );
             });
+
+          $(document).on('opening', '#dokan-withdraw-request-popup', function (e) {
+            Dokan_Withdraw.calculateWithdrawCharges();
+          });
         },
         openRequestWithdrawWindow: () => {
             const withdrawTemplate = wp.template( 'withdraw-request-popup' ),
@@ -199,6 +203,14 @@
         handleScheduleChange: (e) => {
             const nextDate = $(e.target).data('next-schedule');
             $( '#dokan-withdraw-next-scheduled-date').html(nextDate);
+        },
+        calculateWithdrawCharges: () => {
+          let withdrawMethod                  = $("[name='withdraw_method'][id='withdraw-method']").val();
+          let withdrawAmount                  = $("[name='withdraw_amount'][id='withdraw-amount']").val();
+          withdrawAmount                      = accounting.unformat( withdrawAmount, dokan_refund.mon_decimal_point );
+          let {chargePercentage, chargeFixed} = $("select[name='withdraw_method'][id='withdraw-method'] option:selected").data();
+
+
         },
     };
 

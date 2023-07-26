@@ -538,6 +538,13 @@ function dokan_is_withdraw_method_enabled( $method_id ) {
             && ! empty( $payment_methods[ $method_id ] );
 }
 
+/**
+ * Returns all withdraw methods charges saved.
+ *
+ * @since DOKAN_SINCE
+ *
+ * @return array
+ */
 function dokan_withdraw_get_method_charges() {
     $charges     = dokan_get_option( 'withdraw_charges', 'dokan_withdraw', '' );
     $methods     = array_keys( dokan_withdraw_get_methods() );

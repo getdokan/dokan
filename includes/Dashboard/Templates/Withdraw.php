@@ -502,9 +502,10 @@ class Withdraw {
         $default_withdraw_method = dokan_withdraw_get_default_method( $current_user_id );
         dokan_get_template_part(
             'withdraw/request-form', '', array(
-				'amount'          => NumberUtil::round( $balance, wc_get_price_decimals(), PHP_ROUND_HALF_DOWN ), // we are setting 12.3456 to 12.34 not 12.35
-				'withdraw_method' => $default_withdraw_method,
-				'payment_methods' => $payment_methods,
+				'amount'           => NumberUtil::round( $balance, wc_get_price_decimals(), PHP_ROUND_HALF_DOWN ), // we are setting 12.3456 to 12.34 not 12.35
+				'withdraw_method'  => $default_withdraw_method,
+				'payment_methods'  => $payment_methods,
+                'withdraw_charges' => dokan_withdraw_get_method_charges(),
             )
         );
     }

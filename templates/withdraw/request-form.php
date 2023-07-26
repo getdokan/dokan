@@ -11,6 +11,30 @@
 <?php if ( ! empty( $payment_methods ) ) : ?>
     <div class="dokan-form-horizontal withdraw" id="dokan-handle-withdraw-request">
         <div class="dokan-form-group">
+            <label for="withdraw-method" class="dokan-w4 dokan-control-label">
+                <?php esc_html_e( 'Withdraw Method', 'dokan-lite' ); ?>
+            </label>
+            <div class="dokan-w5 dokan-text-left">
+                <select class="dokan-form-control" required name="withdraw_method" id="withdraw-method">
+                    <?php foreach ( $payment_methods as $method_name ) : ?>
+                        <?php
+                            $fixed_charge      = isset( $withdraw_charges[ $method_name ]['fixed'] ) ? $withdraw_charges[ $method_name ]['fixed'] : '';
+                            $percentage_charge = isset( $withdraw_charges[ $method_name ]['percentage'] ) ? $withdraw_charges[ $method_name ]['percentage'] : '';
+                        ?>
+                        <option
+                            data-charge-fixed="<?php echo esc_attr( $fixed_charge ); ?>"
+                            data-charge-percentage="<?php esc_attr( $percentage_charge ); ?>"
+                            value="<?php echo esc_attr( $method_name ); ?>"
+                            <?php selected( $withdraw_method, $method_name ); ?>
+                        >
+                            <?php echo esc_html( dokan_withdraw_get_method_title( $method_name ) ); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+        </div>
+
+        <div class="dokan-form-group">
             <label for="withdraw-amount" class="dokan-w4 dokan-control-label">
                 <?php esc_html_e( 'Withdraw Amount', 'dokan-lite' ); ?>
             </label>
@@ -23,16 +47,21 @@
             </div>
         </div>
 
-        <div class="dokan-form-group">
+        <div class="dokan-form-group" id="dokan-withdraw-charge-section">
             <label for="withdraw-method" class="dokan-w4 dokan-control-label">
-                <?php esc_html_e( 'Withdraw Method', 'dokan-lite' ); ?>
+                <?php esc_html_e( 'Withdraw Charge', 'dokan-lite' ); ?>
             </label>
             <div class="dokan-w5 dokan-text-left">
-                <select class="dokan-form-control" required name="withdraw_method" id="withdraw-method">
-                    <?php foreach ( $payment_methods as $method_name ) : ?>
-                        <option value="<?php echo esc_attr( $method_name ); ?>" <?php selected( $withdraw_method, $method_name ); ?>><?php echo esc_html( dokan_withdraw_get_method_title( $method_name ) ); ?></option>
-                    <?php endforeach; ?>
-                </select>
+                <span><?php echo esc_html( get_woocommerce_currency_symbol() ); ?> 100</span>
+            </div>
+        </div>
+
+        <div class="dokan-form-group" id="dokan-withdraw-revivable-section" style="display: none">
+            <label for="withdraw-method" class="dokan-w4 dokan-control-label">
+                <?php esc_html_e( 'Receivable amount', 'dokan-lite' ); ?>
+            </label>
+            <div class="dokan-w5 dokan-text-left">
+                <span><?php echo esc_html( get_woocommerce_currency_symbol() ); ?> 1200</span>
             </div>
         </div>
 
