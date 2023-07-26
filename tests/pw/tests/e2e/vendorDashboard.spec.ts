@@ -6,13 +6,13 @@ import { data } from 'utils/testData';
 test.describe('Vendor dashboard test', () => {
 
 
-	let vendorDashboardPage: VendorDashboardPage;
+	let vendor: VendorDashboardPage;
 	let vPage: Page;
 
 	test.beforeAll(async ({ browser }) => {
 		const adminContext = await browser.newContext({ storageState: data.auth.vendorAuthFile });
 		vPage = await adminContext.newPage();
-		vendorDashboardPage = new VendorDashboardPage(vPage);
+		vendor = new VendorDashboardPage(vPage);
 	});
 
 	test.afterAll(async ( ) => {
@@ -21,7 +21,7 @@ test.describe('Vendor dashboard test', () => {
 
 
 	test('vendor dashboard is rendering properly @lite @pro @explo', async ( ) => {
-		await vendorDashboardPage.vendorDashboardRenderProperly();
+		await vendor.vendorDashboardRenderProperly();
 	});
 
 

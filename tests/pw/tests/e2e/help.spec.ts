@@ -3,13 +3,13 @@ import { HelpPage } from 'pages/helpPage';
 import { data } from 'utils/testData';
 
 
-let helpPage: HelpPage;
+let admin: HelpPage;
 let page: Page;
 
 test.beforeAll(async ({ browser }) => {
 	const context = await browser.newContext({});
 	page = await context.newPage();
-	helpPage = new HelpPage(page);
+	admin = new HelpPage(page);
 });
 
 test.afterAll(async ( ) => {
@@ -21,11 +21,11 @@ test.describe('Dokan help test', () => {
 	test.use({ storageState: data.auth.adminAuthFile });
 
 	test('dokan help menu page is rendering properly @lite @pro @explo', async ( ) => {
-		await helpPage.adminHelpRenderProperly();
+		await admin.adminHelpRenderProperly();
 	});
 
 	test('dokan get help dropdown is rendering properly @lite @pro @explo', async ( ) => {
-		await helpPage.adminGetHelpDropdownRenderProperly();
+		await admin.adminGetHelpDropdownRenderProperly();
 	});
 
 });

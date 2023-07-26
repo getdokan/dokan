@@ -83,11 +83,9 @@ export class ReportsPage extends AdminPage {
 		// 	this.page.waitForResponse((resp) => resp.url().includes(data.subUrls.api.dokan.logs) && resp.status() === 200),
 		// 	this.page.waitForResponse((resp) => resp.url().includes(data.subUrls.backend.dokan.downloadOrderLogs) && resp.status() === 200),
 		// 	this.page.locator(selector.admin.dokan.reports.allLogs.exportLogs).click()
-		// ]);
-		// //TODO: add wait for multiple different response on base-page
+		// ]); //TODO: add wait for multiple different response on base-page
 
 		await this.clickAndWaitForDownload(selector.admin.dokan.reports.allLogs.exportLogs);
-		//TODO: assert file download
 	}
 
 

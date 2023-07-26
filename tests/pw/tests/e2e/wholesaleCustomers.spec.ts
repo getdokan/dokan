@@ -8,8 +8,8 @@ import { payloads } from 'utils/payloads';
 import { dbData } from 'utils/dbData';
 
 
-let wholesaleAdmin: WholesaleCustomersPage;
-let wholesaleCustomer: WholesaleCustomersPage;
+let admin: WholesaleCustomersPage;
+let customer: WholesaleCustomersPage;
 let customerPage: CustomerPage;
 let aPage: Page, cPage: Page;
 let apiUtils: ApiUtils;
@@ -18,13 +18,13 @@ let apiUtils: ApiUtils;
 test.beforeAll(async ({ browser, request }) => {
 	const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
 	aPage = await adminContext.newPage();
-	wholesaleAdmin = new WholesaleCustomersPage(aPage);
+	admin = new WholesaleCustomersPage(aPage);
 
 	// const customerContext = await browser.newContext({ storageState: data.auth.customerAuthFile });
 	const customerContext = await browser.newContext({ storageState: { cookies: [], origins: [] } });
 	cPage = await customerContext.newPage();
 	customerPage = new CustomerPage(cPage);
-	wholesaleCustomer = new WholesaleCustomersPage(cPage);
+	customer = new WholesaleCustomersPage(cPage);
 
 	apiUtils = new ApiUtils(request);
 	await apiUtils.createWholesaleCustomer(payloads.createCustomer(), payloads.adminAuth);
@@ -40,46 +40,46 @@ test.describe('Wholesale customers test', () => {
 
 
 	test('dokan wholesale customers menu page is rendering properly @pro @explo', async ( ) => {
-		await wholesaleAdmin.adminWholesaleCustomersRenderProperly();
+		await admin.adminWholesaleCustomersRenderProperly();
 	});
 
 	test('admin can search wholesale customer @pro', async ( ) => {
-		await wholesaleAdmin.searchWholesaleCustomer(data.predefined.customerInfo.username1);
+		await admin.searchWholesaleCustomer(data.predefined.customerInfo.username1);
 	});
 
 	test('admin can disable customer\'s wholesale capability @pro', async ( ) => {
-		await wholesaleAdmin.updateWholesaleCustomer(data.predefined.customerInfo.username1, 'disable');
+		await admin.updateWholesaleCustomer(data.predefined.customerInfo.username1, 'disable');
 	});
 
 	test('admin can enable customer\'s wholesale capability @pro', async ( ) => {
-		await wholesaleAdmin.updateWholesaleCustomer(data.predefined.customerInfo.username1, 'enable');
+		await admin.updateWholesaleCustomer(data.predefined.customerInfo.username1, 'enable');
 	});
 
 	test('admin can edit wholesale customer @pro', async ( ) => {
-		await wholesaleAdmin.editWholesaleCustomer(data.customer);
+		await admin.editWholesaleCustomer(data.customer);
 	});
 
 	test('admin can view wholesale customer orders @pro', async ( ) => {
-		await wholesaleAdmin.viewWholesaleCustomerOrders(data.predefined.customerInfo.username1);
+		await admin.viewWholesaleCustomerOrders(data.predefined.customerInfo.username1);
 	});
 
 	test('admin can delete wholesale customer @pro', async ( ) => {
-		await wholesaleAdmin.updateWholesaleCustomer(data.predefined.customerInfo.username1, 'delete');
+		await admin.updateWholesaleCustomer(data.predefined.customerInfo.username1, 'delete');
 	});
 
 	test('admin can perform wholesale customer bulk action @pro', async ( ) => {
-		await wholesaleAdmin.wholesaleCustomerBulkAction('activate');
+		await admin.wholesaleCustomerBulkAction('activate');
 	});
 
 	test('customer can become a wholesale customer', async () => {
 		await customerPage.customerRegister(data.customer.customerInfo);
-		await wholesaleCustomer.customerBecomeWholesaleCustomer();
+		await customer.customerBecomeWholesaleCustomer();
 	});
 
 	test('customer can request for become a wholesale customer', async () => {
 		await dbUtils.setDokanSettings(dbData.dokan.optionName.wholesale, { ...dbData.dokan.wholesaleSettings, need_approval_for_wholesale_customer: 'on' });
 		await customerPage.customerRegister(data.customer.customerInfo);
-		await wholesaleCustomer.customerRequestForBecomeWholesaleCustomer();
+		await customer.customerRequestForBecomeWholesaleCustomer();
 	});
 
 	// wholesale setting options tests

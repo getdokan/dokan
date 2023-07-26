@@ -10,9 +10,9 @@ const { PRODUCT_ID } = process.env;
 test.describe('Coupons test', () => {
 
 
-	let couponsAdmin: CouponsPage;
-	let couponsVendor: CouponsPage;
-	let couponsCustomer: CouponsPage;
+	let admin: CouponsPage;
+	let vendor: CouponsPage;
+	let customer: CouponsPage;
 	let aPage: Page, vPage: Page, cPage: Page;
 	let apiUtils: ApiUtils;
 	let couponCode: string;
@@ -21,15 +21,15 @@ test.describe('Coupons test', () => {
 	test.beforeAll(async ({ browser, request }) => {
 		const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
 		aPage = await adminContext.newPage();
-		couponsAdmin = new CouponsPage(aPage);
+		admin = new CouponsPage(aPage);
 
 		const vendorContext = await browser.newContext({ storageState: data.auth.vendorAuthFile });
 		vPage = await vendorContext.newPage();
-		couponsVendor = new CouponsPage(vPage);
+		vendor = new CouponsPage(vPage);
 
 		const customerContext = await browser.newContext({ storageState: data.auth.customerAuthFile });
 		cPage = await customerContext.newPage();
-		couponsCustomer = new CouponsPage(cPage);
+		customer = new CouponsPage(cPage);
 
 		apiUtils = new ApiUtils(request);
 		await apiUtils.createMarketPlaceCoupon( payloads.createMarketPlaceCoupon(), payloads.adminAuth);
@@ -43,31 +43,31 @@ test.describe('Coupons test', () => {
 	});
 
 	test('admin can add marketplace coupon @pro', async ( ) => {
-		await couponsAdmin.addMarketplaceCoupon(data.coupon);
+		await admin.addMarketplaceCoupon(data.coupon);
 	});
 
 	test('vendor coupon menu page is rendering properly @pro @explo', async ( ) => {
-		await couponsVendor.vendorCouponsRenderProperly();
+		await vendor.vendorCouponsRenderProperly();
 	});
 
 	test('vendor can view marketPlace coupon @pro', async ( ) => {
-		await couponsVendor.viewMarketPlaceCoupon();
+		await vendor.viewMarketPlaceCoupon();
 	});
 
 	test('vendor can add coupon @pro', async ( ) => {
-		await couponsVendor.addCoupon(data.coupon);
+		await vendor.addCoupon(data.coupon);
 	});
 
 	test('vendor can edit coupon @pro', async ( ) => {
-		await couponsVendor.editCoupon({ ...data.coupon, editCoupon: couponCode });
+		await vendor.editCoupon({ ...data.coupon, editCoupon: couponCode });
 	});
 
 	test('vendor can delete coupon @pro', async ( ) => {
-		await couponsVendor.deleteCoupon(couponCode);
+		await vendor.deleteCoupon(couponCode);
 	});
 
 	test('customer can view coupon on single store @pro', async ( ) => {
-		await couponsCustomer.storeCoupon(data.predefined.vendorStores.vendor1, 'c1_v1');
+		await customer.storeCoupon(data.predefined.vendorStores.vendor1, 'c1_v1');
 	});
 
 	//todo: add more customer tests

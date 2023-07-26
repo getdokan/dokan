@@ -8,14 +8,14 @@ import { payloads } from 'utils/payloads';
 test.describe.skip('Vendor staff test', () => {
 
 
-	let vendorStaffPage: VendorStaffPage;
+	let vendor: VendorStaffPage;
 	let vPage: Page;
 	let apiUtils: ApiUtils;
 
 	test.beforeAll(async ({ browser, request }) => {
 		const vendorContext = await browser.newContext({ storageState: data.auth.vendorAuthFile });
 		vPage = await vendorContext.newPage();
-		vendorStaffPage = new VendorStaffPage(vPage);
+		vendor = new VendorStaffPage(vPage);
 		apiUtils = new ApiUtils(request);
 		// const staff = {
 		// 	username: 'staff1',
@@ -41,23 +41,23 @@ test.describe.skip('Vendor staff test', () => {
 
 
 	test('vendor staff menu page is rendering properly @pro @explo', async ( ) => {
-		await vendorStaffPage.vendorStaffRenderProperly();
+		await vendor.vendorStaffRenderProperly();
 	});
 
 	test('vendor can add new staff @pro', async ( ) => {
-		await vendorStaffPage.addStaff(data.staff);
+		await vendor.addStaff(data.staff);
 	});
 
 	test('vendor can edit staff @pro', async ( ) => {
-		await vendorStaffPage.editStaff(data.staff);
+		await vendor.editStaff(data.staff);
 	});
 
 	test('vendor can manage staff permission @pro', async ( ) => {
-		await vendorStaffPage.manageStaffPermission(data.staff.firstName);
+		await vendor.manageStaffPermission(data.staff.firstName);
 	});
 
 	test('vendor can delete staff @pro', async ( ) => {
-		await vendorStaffPage.deleteStaff(data.staff.firstName);
+		await vendor.deleteStaff(data.staff.firstName);
 	});
 
 	//TODO: add tests for all permission group

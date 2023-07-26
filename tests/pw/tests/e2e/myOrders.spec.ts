@@ -10,14 +10,14 @@ const { CUSTOMER_ID, PRODUCT_ID } = process.env;
 test.describe('My Orders functionality test', () => {
 
 
-	let myOrdersPage: MyOrdersPage;
+	let customer: MyOrdersPage;
 	let page: Page;
 	let apiUtils: ApiUtils;
 
 	test.beforeAll(async ({ browser, request }) => {
 		const customerContext = await browser.newContext({ storageState: data.auth.customerAuthFile });
 		page = await customerContext.newPage();
-		myOrdersPage = new MyOrdersPage(page);
+		customer = new MyOrdersPage(page);
 		apiUtils = new ApiUtils(request);
 	});
 
@@ -27,27 +27,27 @@ test.describe('My Orders functionality test', () => {
 
 
 	test('dokan my orders page is rendering properly @lite @pro', async ( ) => {
-		await myOrdersPage.myOrdersRenderProperly();
+		await customer.myOrdersRenderProperly();
 	});
 
 	test('customer can view order details @lite @pro', async ( ) => {
 		const [,, orderId, ] = await apiUtils.createOrderWithStatus(PRODUCT_ID, { ...payloads.createOrder, customer_id: CUSTOMER_ID }, data.order.orderStatus.completed, payloads.vendorAuth);
-		await myOrdersPage.viewOrderDetails(orderId);
+		await customer.viewOrderDetails(orderId);
 	});
 
 	test('customer can pay pending payment order @lite @pro', async ( ) => {
 		const [,, orderId, ] = await apiUtils.createOrderWithStatus(PRODUCT_ID, { ...payloads.createOrder, customer_id: CUSTOMER_ID }, data.order.orderStatus.pending, payloads.vendorAuth);
-		await myOrdersPage.payPendingOrder(orderId, 'bank');
+		await customer.payPendingOrder(orderId, 'bank');
 	});
 
 	test('customer can cancel order @lite @pro', async ( ) => {
 		const [,, orderId, ] = await apiUtils.createOrderWithStatus(PRODUCT_ID, { ...payloads.createOrder, customer_id: CUSTOMER_ID }, data.order.orderStatus.pending, payloads.vendorAuth);
-		await myOrdersPage.cancelPendingOrder(orderId);
+		await customer.cancelPendingOrder(orderId);
 	});
 
 	test('customer can order again @lite @pro', async ( ) => {
 		const [,, orderId, ] = await apiUtils.createOrderWithStatus(PRODUCT_ID, { ...payloads.createOrder, customer_id: CUSTOMER_ID }, data.order.orderStatus.completed, payloads.vendorAuth);
-		await myOrdersPage.orderAgain(orderId);
+		await customer.orderAgain(orderId);
 	});
 
 });

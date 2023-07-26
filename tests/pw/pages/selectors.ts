@@ -4583,6 +4583,15 @@ export const selector = {
 
 		// Payment Settings
 		vPaymentSettings: {
+
+			paymentMethodText: '.dokan-dashboard-content.dokan-settings-content h1',
+
+			paymentMethods:{
+				paymentMethodsDiv: '.dokan-payment-settings-summary',
+				addPaymentMethodDropDown: '#toggle-vendor-payment-method-drop-down',
+				noOfPaymentMethods: '//button[contains(text(),"Manage")]',
+			},
+
 			// Paypal
 			paypal: '.payment-field-paypal .dokan-form-control',
 

@@ -8,8 +8,8 @@ import { payloads } from 'utils/payloads';
 test.describe('Product functionality test', () => {
 
 
-	let productsAdmin: ProductsPage;
-	let productsVendor: ProductsPage;
+	let admin: ProductsPage;
+	let vendor: ProductsPage;
 	let aPage: Page, vPage: Page;
 	let apiUtils: ApiUtils;
 	let productName: string;
@@ -18,11 +18,11 @@ test.describe('Product functionality test', () => {
 	test.beforeAll(async ({ browser, request }) => {
 		const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
 		aPage = await adminContext.newPage();
-		productsAdmin = new ProductsPage(aPage);
+		admin = new ProductsPage(aPage);
 
 		const vendorContext = await browser.newContext({ storageState: data.auth.vendorAuthFile });
 		vPage = await vendorContext.newPage();
-		productsVendor = new ProductsPage(vPage);
+		vendor = new ProductsPage(vPage);
 
 		apiUtils = new ApiUtils(request);
 		[,, productName] = await apiUtils.createProduct(payloads.createProduct(), payloads. vendorAuth);
@@ -37,43 +37,43 @@ test.describe('Product functionality test', () => {
 
 
 	test('admin can add product category @lite @pro', async ( ) => {
-		await productsAdmin.addCategory(data.product.category.randomCategory());
+		await admin.addCategory(data.product.category.randomCategory());
 	});
 
 	test('admin can add product attribute @lite @pro', async ( ) => {
-		await productsAdmin.addAttribute(data.product.attribute.randomAttribute());
+		await admin.addAttribute(data.product.attribute.randomAttribute());
 	});
 
 	test('admin can add simple product @lite @pro', async ( ) => {
-		await productsAdmin.addSimpleProduct(data.product.simple);
+		await admin.addSimpleProduct(data.product.simple);
 	});
 
 	// test.skip('admin can add variable product @pro', async ( )=> {
-	// 	await productsAdmin.addVariableProduct(data.product.variable);
+	// 	await admin.addVariableProduct(data.product.variable);
 	// });
 
 	test('admin can add simple subscription  @pro', async ( ) => {
-		await productsAdmin.addSimpleSubscription(data.product.simpleSubscription);
+		await admin.addSimpleSubscription(data.product.simpleSubscription);
 	});
 
 	// test.skip('admin can add variable subscription @pro', async ( )=> {
-	// 	await productsAdmin.addVariableSubscription(data.product.variableSubscription);
+	// 	await admin.addVariableSubscription(data.product.variableSubscription);
 	// });
 
 	test('admin can add external product @lite @pro', async ( ) => {
-		await productsAdmin.addExternalProduct(data.product.external);
+		await admin.addExternalProduct(data.product.external);
 	});
 
 	test('admin can add vendor subscription @pro', async ( ) => {
-		await productsAdmin.addDokanSubscription(data.product.vendorSubscription);
+		await admin.addDokanSubscription(data.product.vendorSubscription);
 	});
 
 	test('admin can add auction product @pro', async ( ) => {
-		await productsAdmin.addAuctionProduct(data.product.auction);
+		await admin.addAuctionProduct(data.product.auction);
 	});
 
 	test('admin can add booking product @pro', async ( ) => {
-		await productsAdmin.addBookingProduct(data.product.booking);
+		await admin.addBookingProduct(data.product.booking);
 	});
 
 
@@ -81,52 +81,52 @@ test.describe('Product functionality test', () => {
 
 
 	test('vendor product menu page is rendering properly @lite @pro @explo', async ( ) => {
-		await productsVendor.vendorProductsRenderProperly();
+		await vendor.vendorProductsRenderProperly();
 	});
 
 	test('vendor can export products @pro', async ( ) => {
-		await productsVendor.exportProducts();
+		await vendor.exportProducts();
 	});
 
 	test('vendor can search product @lite @pro', async ( ) => {
-		await productsVendor.searchProduct(data.predefined.simpleProduct.product1.name);
+		await vendor.searchProduct(data.predefined.simpleProduct.product1.name);
 	});
 
 	test('vendor can filter products by date @lite @pro', async ( ) => {
-		await productsVendor.filterProducts('by-date', '1');
+		await vendor.filterProducts('by-date', '1');
 	});
 
 	test('vendor can filter products by category @lite @pro', async ( ) => {
-		await productsVendor.filterProducts('by-category', 'Uncategorized');
+		await vendor.filterProducts('by-category', 'Uncategorized');
 	});
 
 	// test('vendor can filter products by type @lite @pro', async ( ) => { //TODO: dokan issue not fixed yet
-	// 	await productsVendor.filterProducts('by-other', 'simple');
+	// 	await vendor.filterProducts('by-other', 'simple');
 	// });
 
 	test('vendor can filter products by other @pro', async ( ) => {
-		await productsVendor.filterProducts('by-other', 'featured');
+		await vendor.filterProducts('by-other', 'featured');
 	});
 
 	test('vendor can view product @lite @pro', async ( ) => {
-		await productsVendor.viewProduct(data.predefined.simpleProduct.product1.name);
+		await vendor.viewProduct(data.predefined.simpleProduct.product1.name);
 	});
 
 	test('vendor can edit product @lite @pro', async ( ) => {
-		await productsVendor.editProduct({ ...data.product.simple, editProduct: productName });
+		await vendor.editProduct({ ...data.product.simple, editProduct: productName });
 	});
 
 	test('vendor can quick edit product @pro', async ( ) => {
-		await productsVendor.quickEditProduct({ ...data.product.simple, editProduct: productName });
+		await vendor.quickEditProduct({ ...data.product.simple, editProduct: productName });
 	});
 
 	test('vendor can duplicate product @pro', async ( ) => {
-		await productsVendor.duplicateProduct(productName);
+		await vendor.duplicateProduct(productName);
 	});
 
 	test('vendor can permanently delete product @lite @pro', async ( ) => {
 		const [,, productName] = await apiUtils.createProduct(payloads.createProduct(), payloads. vendorAuth);
-		await productsVendor.permanentlyDeleteProduct(productName);
+		await vendor.permanentlyDeleteProduct(productName);
 	});
 
 });

@@ -7,8 +7,8 @@ import { payloads } from 'utils/payloads';
 
 test.describe('Withdraw test', () => {
 
-	let withdrawsPageAdmin: WithdrawsPage;
-	let withdrawsPageVendor: WithdrawsPage;
+	let admin: WithdrawsPage;
+	let vendor: WithdrawsPage;
 	let aPage: Page, vPage: Page;
 	let apiUtils: ApiUtils;
 	let currentBalance: string;
@@ -17,11 +17,11 @@ test.describe('Withdraw test', () => {
 	test.beforeAll(async ({ browser, request }) => {
 		const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
 		aPage = await adminContext.newPage();
-		withdrawsPageAdmin = new WithdrawsPage(aPage);
+		admin = new WithdrawsPage(aPage);
 
 		const vendorContext = await browser.newContext({ storageState: data.auth.vendorAuthFile });
 		vPage = await vendorContext.newPage();
-		withdrawsPageVendor = new WithdrawsPage(vPage);
+		vendor = new WithdrawsPage(vPage);
 
 		apiUtils = new ApiUtils(request);
 		[currentBalance, minimumWithdrawLimit] = await apiUtils.getMinimumWithdrawLimit( payloads.vendorAuth);
@@ -36,70 +36,70 @@ test.describe('Withdraw test', () => {
 
 
 	test('admin withdraw menu page is rendering properly @lite @pro @explo', async ( ) => {
-		await withdrawsPageAdmin.adminWithdrawsRenderProperly();
+		await admin.adminWithdrawsRenderProperly();
 	});
 
 	test('admin can filter withdraws by vendor @lite @pro', async ( ) => {
-		await withdrawsPageAdmin.filterWithdraws(data.predefined.vendorStores.vendor1);
+		await admin.filterWithdraws(data.predefined.vendorStores.vendor1);
 	});
 
 	test('admin can add note to withdraw request @lite @pro', async ( ) => {
-		await withdrawsPageAdmin.addNoteWithdrawRequest(data.predefined.vendorStores.vendor1, 'test withdraw note');
+		await admin.addNoteWithdrawRequest(data.predefined.vendorStores.vendor1, 'test withdraw note');
 	});
 
 	test('admin can approve withdraw request @lite @pro', async ( ) => {
-		await withdrawsPageAdmin.updateWithdrawRequest(data.predefined.vendorStores.vendor1, 'approve');
+		await admin.updateWithdrawRequest(data.predefined.vendorStores.vendor1, 'approve');
 	});
 
 	test('admin can cancel withdraw request @lite @pro', async ( ) => {
 		await apiUtils.createWithdraw({ ...payloads.createWithdraw, amount: minimumWithdrawLimit }, payloads.vendorAuth);
-		await withdrawsPageAdmin.updateWithdrawRequest(data.predefined.vendorStores.vendor1, 'cancel');
+		await admin.updateWithdrawRequest(data.predefined.vendorStores.vendor1, 'cancel');
 	});
 
 	test('admin can delete withdraw request @lite @pro', async ( ) => {
 		await apiUtils.createWithdraw({ ...payloads.createWithdraw, amount: minimumWithdrawLimit }, payloads.vendorAuth);
-		await withdrawsPageAdmin.updateWithdrawRequest(data.predefined.vendorStores.vendor1, 'delete');
+		await admin.updateWithdrawRequest(data.predefined.vendorStores.vendor1, 'delete');
 	});
 
 	test('admin can perform withdraw bulk actions @lite @pro', async ( ) => {
 		await apiUtils.createWithdraw({ ...payloads.createWithdraw, amount: minimumWithdrawLimit }, payloads.vendorAuth);
-		await withdrawsPageAdmin.withdrawBulkAction('cancelled');
+		await admin.withdrawBulkAction('cancelled');
 	});
 
 
 	// vendor
 
 	test('vendor withdraw menu page is rendering properly @lite @pro @explo', async ( ) => {
-		await withdrawsPageVendor.vendorWithdrawRenderProperly();
+		await vendor.vendorWithdrawRenderProperly();
 	});
 
 	test('vendor withdraw requests page is rendering properly @lite @pro @explo', async ( ) => {
-		await withdrawsPageVendor.vendorWithdrawRequestsRenderProperly();
+		await vendor.vendorWithdrawRequestsRenderProperly();
 	});
 
 	test('vendor can request withdraw @lite @pro', async ( ) => {
 		await apiUtils.cancelWithdraw('', payloads.vendorAuth);
-		await withdrawsPageVendor.requestWithdraw({ ...data.vendor.withdraw, minimumWithdrawAmount: minimumWithdrawLimit, currentBalance: currentBalance });
+		await vendor.requestWithdraw({ ...data.vendor.withdraw, minimumWithdrawAmount: minimumWithdrawLimit, currentBalance: currentBalance });
 	});
 
 	test('vendor can\'t request withdraw when pending request exits @lite @pro', async ( ) => {
 		await apiUtils.createWithdraw({ ...payloads.createWithdraw, amount: minimumWithdrawLimit }, payloads.vendorAuth);
-		await withdrawsPageVendor.cantRequestWithdraw();
+		await vendor.cantRequestWithdraw();
 	});
 
 	test('vendor can cancel request withdraw @lite @pro', async ( ) => {
 		await apiUtils.createWithdraw({ ...payloads.createWithdraw, amount: minimumWithdrawLimit }, payloads.vendorAuth);
-		await withdrawsPageVendor.cancelWithdrawRequest();
+		await vendor.cancelWithdrawRequest();
 	});
 
 	test('vendor can add auto withdraw disbursement schedule @pro', async ( ) => {
-		await withdrawsPageVendor.addAutoWithdrawDisbursementSchedule({ ...data.vendor.withdraw, minimumWithdrawAmount: minimumWithdrawLimit });
+		await vendor.addAutoWithdrawDisbursementSchedule({ ...data.vendor.withdraw, minimumWithdrawAmount: minimumWithdrawLimit });
 	});
 
 	test('vendor can add default withdraw payment methods @lite @pro', async ( ) => {
-		await withdrawsPageVendor.addDefaultWithdrawPaymentMethods(data.vendor.withdraw.defaultWithdrawMethod.bankTransfer);
+		await vendor.addDefaultWithdrawPaymentMethods(data.vendor.withdraw.defaultWithdrawMethod.bankTransfer);
 		// Cleanup
-		await withdrawsPageVendor.addDefaultWithdrawPaymentMethods(data.vendor.withdraw.defaultWithdrawMethod.paypal);
+		await vendor.addDefaultWithdrawPaymentMethods(data.vendor.withdraw.defaultWithdrawMethod.paypal);
 	});
 
 });

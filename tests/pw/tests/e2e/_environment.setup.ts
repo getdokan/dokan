@@ -282,6 +282,7 @@ setup.describe('setup dokan settings e2e', () => {
 		const product = await apiUtils.productExistsOrNot('Reverse Withdrawal Payment',  payloads.adminAuth);
 		expect(product).toBeTruthy();
 	});
+	// TODO: can be implemented on api or db
 
 
 	// dokan settings

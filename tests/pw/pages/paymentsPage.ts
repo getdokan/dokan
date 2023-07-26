@@ -224,6 +224,23 @@ export class PaymentsPage extends AdminPage {
 	// TODO: payment render properly
 
 
+	// payment settings render properly
+	async vendorPaymentSettingsRenderProperly(): Promise<void> {
+		await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsPayment);
+
+		// paymentMethod text is visible
+		await this.toBeVisible(selector.vendor.vPaymentSettings.paymentMethodText);
+
+		// paymentMethods summary div is visible
+		await this.toBeVisible(selector.vendor.vPaymentSettings.paymentMethods.paymentMethodsDiv);
+		// paymentMethods dropdown is visible
+		await this.toBeVisible(selector.vendor.vPaymentSettings.paymentMethods.addPaymentMethodDropDown);
+
+		await this.notToHaveCount(selector.vendor.vPaymentSettings.paymentMethods.noOfPaymentMethods, 0);
+
+	}
+
+
 	// vendor set basic payment settings
 	async setBasicPaymentSettings(payment: vendor['payment']): Promise<void> {
 		await this.setBasicPayment({ ...data.vendor.payment, methodName: 'paypal' });

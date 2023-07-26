@@ -1312,6 +1312,7 @@ export class BasePage {
 		}
 		const result = res.includes(true);
 		expect(result).toBeTruthy();
+		//todo: which elements are true for further operation
 	}
 
 	// assert element to be visible

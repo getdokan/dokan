@@ -1,27 +1,27 @@
 import { test, Page } from '@playwright/test';
 import { PaymentsPage } from 'pages/paymentsPage';
-import { ApiUtils } from 'utils/apiUtils';
+// import { ApiUtils } from 'utils/apiUtils';
 import { data } from 'utils/testData';
 
 
 test.describe('Vendor functionality test', () => {
 
 
-	let paymentsPageAdmin: PaymentsPage;
-	let paymentsPageVendor: PaymentsPage;
+	let admin: PaymentsPage;
+	let vendor: PaymentsPage;
 	let aPage: Page, vPage: Page;
-	let apiUtils: ApiUtils;
+	// let apiUtils: ApiUtils;
 
-	test.beforeAll(async ({ browser, request }) => {
+	test.beforeAll(async ({ browser, }) => {
 		const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
 		aPage = await adminContext.newPage();
-		paymentsPageAdmin = new PaymentsPage(aPage);
+		admin = new PaymentsPage(aPage);
 
 		const vendorContext = await browser.newContext({ storageState: data.auth.vendorAuthFile });
 		vPage = await vendorContext.newPage();
-		paymentsPageVendor = new PaymentsPage(vPage);
+		vendor = new PaymentsPage(vPage);
 
-		apiUtils = new ApiUtils(request);
+		// apiUtils = new ApiUtils(request);
 
 	});
 
@@ -32,41 +32,39 @@ test.describe('Vendor functionality test', () => {
 
 
 	test('vendor payment menu is rendering properly @lite @pro @explo', async ( ) => {
-		// await paymentsPageVendor.vendorDashboardRenderProperly();
-		//TODO: payment render properly
+		await vendor.vendorPaymentSettingsRenderProperly();
 	});
 
-
 	test('vendor can add paypal payment method @lite @pro', async ( ) => {
-		await paymentsPageVendor.setBasicPayment({ ...data.vendor.payment, methodName: 'paypal' });
+		await vendor.setBasicPayment({ ...data.vendor.payment, methodName: 'paypal' });
 	});
 
 	test('vendor can add bank payment method @lite @pro', async ( ) => {
-		await paymentsPageVendor.setBankTransfer(data.vendor.payment);
+		await vendor.setBankTransfer(data.vendor.payment);
 	});
 
 	test('vendor can add skrill payment method @lite @pro', async ( ) => {
-		await paymentsPageVendor.setBasicPayment({ ...data.vendor.payment, methodName: 'skrill' });
+		await vendor.setBasicPayment({ ...data.vendor.payment, methodName: 'skrill' });
 	});
 
 	test('vendor can add custom payment method @lite @pro', async ( ) => {
-		await paymentsPageVendor.setBasicPayment({ ...data.vendor.payment, methodName: 'custom' });
+		await vendor.setBasicPayment({ ...data.vendor.payment, methodName: 'custom' });
 	});
 
 	test('vendor can disconnect paypal payment method @lite @pro', async ( ) => {
-		await paymentsPageVendor.disconnectBasicPayment({ ...data.vendor.payment, methodName: 'paypal' });
+		await vendor.disconnectBasicPayment({ ...data.vendor.payment, methodName: 'paypal' });
 	});
 
 	test('vendor can disconnect bank payment method @lite @pro', async ( ) => {
-		await paymentsPageVendor.disconnectBasicPayment({ ...data.vendor.payment, methodName: 'bank' });
+		await vendor.disconnectBasicPayment({ ...data.vendor.payment, methodName: 'bank' });
 	});
 
 	test('vendor can disconnect skrill payment method @lite @pro', async ( ) => {
-		await paymentsPageVendor.disconnectBasicPayment({ ...data.vendor.payment, methodName: 'skrill' });
+		await vendor.disconnectBasicPayment({ ...data.vendor.payment, methodName: 'skrill' });
 	});
 
 	test('vendor can disconnect custom payment method @lite @pro', async ( ) => {
-		await paymentsPageVendor.disconnectBasicPayment({ ...data.vendor.payment, methodName: 'custom' });
+		await vendor.disconnectBasicPayment({ ...data.vendor.payment, methodName: 'custom' });
 	});
 
 

@@ -9,24 +9,24 @@ import { payloads } from 'utils/payloads';
 
 const { VENDOR_ID, CUSTOMER_ID } = process.env;
 
-let abuseReportsAdmin: AbuseReportsPage;
-let abuseReportsCustomer: AbuseReportsPage;
-let guestUser: AbuseReportsPage;
+let admin: AbuseReportsPage;
+let customer: AbuseReportsPage;
+let guest: AbuseReportsPage;
 let aPage: Page, cPage: Page, uPage: Page;
 let apiUtils: ApiUtils;
 
 test.beforeAll(async ({ browser, request }) => {
 	const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
 	aPage = await adminContext.newPage();
-	abuseReportsAdmin = new AbuseReportsPage(aPage);
+	admin = new AbuseReportsPage(aPage);
 
 	const customerContext = await browser.newContext({ storageState: data.auth.customerAuthFile });
 	cPage = await customerContext.newPage();
-	abuseReportsCustomer = new AbuseReportsPage(cPage);
+	customer = new AbuseReportsPage(cPage);
 
 	const guestContext = await browser.newContext({ storageState: { cookies: [], origins: [] } });
 	uPage = await guestContext.newPage();
-	guestUser =  new AbuseReportsPage(uPage);
+	guest =  new AbuseReportsPage(uPage);
 
 	apiUtils = new ApiUtils(request);
 	const productId = await apiUtils.getProductId(data.predefined.simpleProduct.product1.name, payloads.vendorAuth);
@@ -43,42 +43,42 @@ test.describe('Abuse report test', () => {
 
 
 	test('dokan abuse report menu page is rendering properly @pro @explo', async ( ) => {
-		await abuseReportsAdmin.adminAbuseReportRenderProperly();
+		await admin.adminAbuseReportRenderProperly();
 	});
 
 	test('admin can view abuse report details @pro', async ( ) => {
-		await abuseReportsAdmin.abuseReportDetails();
+		await admin.abuseReportDetails();
 	});
 
 	test('admin can filter abuse reports by abuse reason @pro', async ( ) => {
-		await abuseReportsAdmin.filterAbuseReports('This content is spam', 'by-reason');
+		await admin.filterAbuseReports('This content is spam', 'by-reason');
 	});
 
 	test('admin can filter abuse reports by product @pro', async ( ) => {
-		await abuseReportsAdmin.filterAbuseReports(data.predefined.simpleProduct.product1.name, 'by-product');
+		await admin.filterAbuseReports(data.predefined.simpleProduct.product1.name, 'by-product');
 	});
 
 	test('admin can filter abuse reports by vendor @pro', async ( ) => {
-		await abuseReportsAdmin.filterAbuseReports(data.predefined.vendorStores.vendor1, 'by-vendor');
+		await admin.filterAbuseReports(data.predefined.vendorStores.vendor1, 'by-vendor');
 	});
 
 	test('admin can perform abuse report bulk action @pro', async ( ) => {
-		await abuseReportsAdmin.abuseReportBulkAction('delete');
+		await admin.abuseReportBulkAction('delete');
 	});
 
 	// customer
 
 	test('customer can report product @pro', async ( ) => {
-		await abuseReportsCustomer.reportProduct(data.predefined.simpleProduct.product1.name, data.product.report);
+		await customer.reportProduct(data.predefined.simpleProduct.product1.name, data.product.report);
 	});
 
 	test('guest customer can report product @pro', async ( ) => {
-		await guestUser.reportProduct(data.predefined.simpleProduct.product1.name, data.product.report);
+		await guest.reportProduct(data.predefined.simpleProduct.product1.name, data.product.report);
 	});
 
 	test('only logged-in customer can report product @pro', async ( ) => {
 		await dbUtils.setDokanSettings(dbData.dokan.optionName.productReportAbuse, { ...dbData.dokan.productReportAbuseSettings, reported_by_logged_in_users_only: 'on' });
-		await guestUser.reportProduct(data.predefined.simpleProduct.product1.name, data.product.report);
+		await guest.reportProduct(data.predefined.simpleProduct.product1.name, data.product.report);
 	});
 
 });
