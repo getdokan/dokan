@@ -354,11 +354,11 @@ class Manager {
             $vendor->set_show_email( 'no' );
         }
 
-        if ( ! empty( $data['gravatar_id'] ) && is_numeric( $data['gravatar_id'] ) ) {
+        if ( isset( $data['gravatar_id'] ) && is_numeric( $data['gravatar_id'] ) ) {
             $vendor->set_gravatar_id( $data['gravatar_id'] );
         }
 
-        if ( ! empty( $data['banner_id'] ) && is_numeric( $data['banner_id'] ) ) {
+        if ( isset( $data['banner_id'] ) && is_numeric( $data['banner_id'] ) ) {
             $vendor->set_banner_id( $data['banner_id'] );
         }
 
