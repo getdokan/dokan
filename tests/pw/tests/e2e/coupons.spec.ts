@@ -17,6 +17,7 @@ test.describe('Coupons test', () => {
 	let apiUtils: ApiUtils;
 	let couponCode: string;
 
+
 	test.beforeAll(async ({ browser, request }) => {
 		const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
 		aPage = await adminContext.newPage();

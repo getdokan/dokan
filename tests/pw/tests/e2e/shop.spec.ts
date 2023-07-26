@@ -39,7 +39,7 @@ test.describe('Shop functionality test', () => {
 		await shopPage.searchProduct(data.predefined.simpleProduct.product1.name);
 	});
 
-	test.skip('customer can view products on map @pro', async ( ) => {
+	test.only('customer can view products on map @pro', async ( ) => {
 		await shopPage.productOnMap();
 		// await shopPage.productOnMap(data.predefined.simpleProduct.product1.name);
 	});

@@ -111,9 +111,15 @@ export class StoreListingPage extends CustomerPage {
 	// stores on map
 	async storeOnMap(storeName?: string){
 		await this.goIfNotThere(data.subUrls.frontend.storeListing);
-		await this.click(selector.customer.cStoreList.map.storeOnMap.storePin);
-		await this.toBeVisible(selector.customer.cStoreList.map.storeOnMap.storeListPopup);
-		storeName && await this.toBeVisible(selector.customer.cStoreList.map.storeOnMap.storeOnList(storeName)); //TODO: need to update store settings to render on map for vendor1
+		const storePinIsVisible  = await this.isVisible(selector.customer.cStoreList.map.storeOnMap.storePin);
+		if(storePinIsVisible){
+			await this.click(selector.customer.cStoreList.map.storeOnMap.storePin);
+			await this.toBeVisible(selector.customer.cStoreList.map.storeOnMap.storePopup);
+		} else {
+			await this.click(selector.customer.cStoreList.map.storeOnMap.storeCluster);
+			await this.toBeVisible(selector.customer.cStoreList.map.storeOnMap.storeListPopup);
+		}
+		storeName && await this.toBeVisible(selector.customer.cStoreList.map.storeOnMap.storeOnList(storeName)); //TODO: need to update store settings via e2e to render on map for vendor1
 	}
 
 

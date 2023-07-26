@@ -44,7 +44,7 @@ test.describe('Store listing functionality test', () => {
 	});
 
 	test('customer can view stores on map @pro', async ( ) => {
-		await storeListingPage.storeOnMap(); //TODO: need to update based on vendor icon and popup is different
+		await storeListingPage.storeOnMap();
 		// await storeListingPage.storeOnMap(data.predefined.vendorStores.vendor1);
 	});
 
