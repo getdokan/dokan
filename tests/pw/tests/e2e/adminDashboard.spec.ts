@@ -12,12 +12,14 @@ test.describe('Admin dashboard test', () => {
 	let page: Page;
 	let apiUtils: ApiUtils;
 
+
 	test.beforeAll(async ({ browser, request }) => {
 		const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
 		page = await adminContext.newPage();
 		admin = new AdminDashboardPage(page);
 		apiUtils = new ApiUtils(request);
 	});
+
 
 	test.afterAll(async ( ) => {
 		await page.close();

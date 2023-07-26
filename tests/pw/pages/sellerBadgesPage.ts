@@ -240,7 +240,7 @@ export class SellerBadgesPage extends AdminPage {
 	// seller badge bulk action
 	async sellerBadgeBulkAction(action: string, badgeName?: string){
 		if(badgeName){
-			await this.searchSellerBadge(badgeName);  //TODO: use search like this for all
+			await this.searchSellerBadge(badgeName);
 		} else {
 			await this.goIfNotThere(data.subUrls.backend.dokan.sellerBadge);
 		}

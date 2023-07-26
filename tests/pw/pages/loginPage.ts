@@ -23,9 +23,7 @@ export class LoginPage extends BasePage {
 		const currentUser = await this.getCurrentUser();
 
 		// skip if user is already logged in
-		if (user.username === currentUser) {
-			return;
-		}
+		if (user.username === currentUser) { return; }
 
 		// logout if other user is already logged in
 		else if ( ( user.username !== currentUser ) && ( currentUser !== undefined ) ) { // TODO : got undefined for using storage.json
@@ -34,9 +32,9 @@ export class LoginPage extends BasePage {
 		}
 
 		// login user
-		await this.clearAndFill(selector.frontend.username, user.username);
-		await this.clearAndFill(selector.frontend.userPassword, user.password);
-		await this.clickAndWaitForResponse(data.subUrls.frontend.myAccount, selector.frontend.logIn, 302);
+		await this.clearAndType(selector.frontend.username, user.username);
+		await this.clearAndType(selector.frontend.userPassword, user.password);
+		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.myAccount, selector.frontend.logIn, 302); //todo: test this
 		if (storageState){
 			await this.page.context().storageState({ path: storageState });
 		}
@@ -50,11 +48,9 @@ export class LoginPage extends BasePage {
 		await this.goIfNotThere(url);
 		const emailField = await this.isVisible(selector.backend.email);
 		if (emailField) {
-			await this.clearAndFill(selector.backend.email, user.username);
-			await this.clearAndFill(selector.backend.password, user.password);
-			await this.clickAndWaitForResponse(data.subUrls.backend.login, selector.backend.login, 302);
-			// await this.waitForUrl(data.subUrls.backend.adminDashboard);
-			await this.waitForNavigation(); //TODO: remove this
+			await this.clearAndType(selector.backend.email, user.username);
+			await this.clearAndType(selector.backend.password, user.password);
+			await this.clickAndWaitForResponseAndLoadState(data.subUrls.backend.login, selector.backend.login, 302); //todo: test this
 			if (storageState){
 				await this.page.context().storageState({ path: storageState });
 			}
@@ -74,7 +70,8 @@ export class LoginPage extends BasePage {
 	async logoutFrontend(): Promise<void> {
 		await this.goIfNotThere(data.subUrls.frontend.myAccount);
 		// await this.clickAndWaitForResponse(data.subUrls.frontend.myAccount, selector.frontend.customerLogout, 200);
-		await this.clickAndWaitForNavigation(selector.frontend.customerLogout);
+		// await this.clickAndWaitForNavigation(selector.frontend.customerLogout);
+		await this.clickAndWaitForLoadState(selector.frontend.customerLogout); //todo: test this
 		const loggedInUser = await this.getCurrentUser();
 		expect(loggedInUser).toBeUndefined();
 	}
@@ -89,7 +86,7 @@ export class LoginPage extends BasePage {
 	// admin logout
 	async logoutBackend(): Promise<void> {
 		await this.hover(selector.backend.userMenu);
-		await this.clickAndWaitForResponse(data.subUrls.backend.adminLogout, selector.backend.logout, 302);
+		await this.clickAndWaitForResponseAndLoadState(data.subUrls.backend.adminLogout, selector.backend.logout, 302); //todo: test this
 		const loggedInUser = await this.getCurrentUser();
 		expect(loggedInUser).toBeUndefined();
 	}

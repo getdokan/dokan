@@ -14,12 +14,14 @@ test.describe('My Orders functionality test', () => {
 	let page: Page;
 	let apiUtils: ApiUtils;
 
+
 	test.beforeAll(async ({ browser, request }) => {
 		const customerContext = await browser.newContext({ storageState: data.auth.customerAuthFile });
 		page = await customerContext.newPage();
 		customer = new MyOrdersPage(page);
 		apiUtils = new ApiUtils(request);
 	});
+
 
 	test.afterAll(async () => {
 		await page.close();

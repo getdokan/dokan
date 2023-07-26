@@ -245,6 +245,7 @@ export class StoresPage extends AdminPage {
 			await this.clearAndType(selector.admin.dokan.vendors.editVendor.routingNumber, vendor.vendorInfo.payment.bankRoutingNumber);
 			await this.clearAndType(selector.admin.dokan.vendors.editVendor.iban, vendor.vendorInfo.payment.bankIban);
 			await this.clearAndType(selector.admin.dokan.vendors.editVendor.swift, vendor.vendorInfo.payment.bankSwiftCode);
+			
 			//paypal
 			await this.clearAndType(selector.admin.dokan.vendors.editVendor.payPalEmail, vendor.vendorInfo.payment.email());
 

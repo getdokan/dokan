@@ -13,6 +13,7 @@ test.describe('Follow stores functionality test', () => {
 	let vPage: Page, cPage: Page;
 	let apiUtils: ApiUtils;
 
+
 	test.beforeAll(async ({ browser, request }) => {
 		const vendorContext = await browser.newContext({ storageState: data.auth.vendorAuthFile });
 		vPage = await vendorContext.newPage();
@@ -24,6 +25,7 @@ test.describe('Follow stores functionality test', () => {
 		apiUtils = new ApiUtils(request);
 
 	});
+
 
 	test.afterAll(async () => {
 		await vPage.close();

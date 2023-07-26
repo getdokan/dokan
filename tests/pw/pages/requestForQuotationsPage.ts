@@ -63,8 +63,8 @@ export class RequestForQuotationsPage extends AdminPage {
 		await this.clearAndType(selector.admin.dokan.requestForQuotation.quoteRules.addNewQuoteRule.priorityOrder, rule.order);
 
 		// publish
-		await this.clickAndWaitForResponse(data.subUrls.api.dokan.quoteRules, selector.admin.dokan.requestForQuotation.quoteRules.addNewQuoteRule.publishRule);
-		// TODO: also wait for load for future tests
+		await this.clickAndWaitForResponseAndLoadState(data.subUrls.api.dokan.quoteRules, selector.admin.dokan.requestForQuotation.quoteRules.addNewQuoteRule.publishRule); //todo: test this
+		// TODO: also wait for load -> for future tests
 	}
 
 
@@ -72,7 +72,7 @@ export class RequestForQuotationsPage extends AdminPage {
 	async addQuoteRule(rule: requestForQuotation['quoteRule']){
 		await this.goIfNotThere(data.subUrls.backend.dokan.requestForQuoteRules);
 
-		// TODO: create a general function for below scenario on base page
+		// TODO: create a generic function for below scenario on base page
 		await Promise.all([
 			this.page.waitForResponse((resp) => resp.url().includes(data.subUrls.api.dokan.quotes) && resp.status() === 200),
 			this.page.waitForResponse((resp) => resp.url().includes(data.subUrls.api.dokan.products) && resp.status() === 200),
@@ -89,7 +89,7 @@ export class RequestForQuotationsPage extends AdminPage {
 		// await this.goIfNotThere(data.subUrls.backend.dokan.requestForQuoteRules);//Todo: fix and apply this
 
 		await this.hover(selector.admin.dokan.requestForQuotation.quoteRules.quoteRulesCell(rule.title));
-		// TODO: create a general function for below scenario on base page
+		// TODO: create a generic function for below scenario on base page
 		await Promise.all([
 			this.page.waitForResponse((resp) => resp.url().includes(data.subUrls.api.dokan.quotes) && resp.status() === 200),
 			this.page.waitForResponse((resp) => resp.url().includes(data.subUrls.api.dokan.products) && resp.status() === 200),
@@ -262,6 +262,7 @@ export class RequestForQuotationsPage extends AdminPage {
 		await this.clickAndWaitForResponse(data.subUrls.api.dokan.quotes, selector.admin.dokan.requestForQuotation.quotesList.quoteEdit(quoteTitle));
 		await this.clickAndWaitForResponse(data.subUrls.api.dokan.quotes, selector.admin.dokan.requestForQuotation.quotesList.approveQuote);
 	}
+
 
 	// convert quote to order
 	async convertQuoteToOrder(quoteTitle: string){

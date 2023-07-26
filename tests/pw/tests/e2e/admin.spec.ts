@@ -12,6 +12,7 @@ test.describe('Admin user functionality test', () => {
 	let loginPage: LoginPage;
 	let page: Page;
 
+
 	test.beforeAll(async ({ browser }) => {
 		const context = await browser.newContext();
 		page = await context.newPage();
@@ -21,6 +22,7 @@ test.describe('Admin user functionality test', () => {
 	test.afterAll(async () => {
 		await page.close();
 	});
+
 
 	test('admin can login @lite @pro', async ( ) => {
 		await loginPage.adminLogin(data.admin);

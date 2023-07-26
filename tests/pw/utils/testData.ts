@@ -411,9 +411,9 @@ export const data = {
 		amount: () => faker.number.int({
 			min: 1, max: 10
 		},).toString(),
-		discount_type: () => faker.helpers.arrayElement(['percent', 'fixed_product']),
+		discount_type: () => faker.helpers.arrayElement(['percent', 'fixed_product']), //percent, fixed_product, booking_person, sign_up_fee, sign_up_fee_percent, recurring_fee, recurring_percent
 		discountType: 'percent',
-		description:'Coupon description',
+		description:'test Coupon description',
 		existingCouponErrorMessage: 'Coupon title already exists',
 		editCoupon: '',
 	},
@@ -1315,6 +1315,18 @@ export const data = {
 	},
 
 
+	// Reverse withdraw
+	reverseWithdraw: {
+		store: String(process.env.VENDOR) + 'store',
+		transactionType: 'manual_product', //manual_product, manual_order, other
+		product: 'p1_v1',
+		withdrawalBalanceType: 'credit', //debit, credit
+		amount: '100',
+		note: 'test reverse withdraw note',
+		saveSuccessMessage: 'Reverse withdrawal created successfully.',
+	},
+
+
 	// request for quotation
 	requestForQuotation: {
 
@@ -1472,6 +1484,7 @@ export const data = {
 
 	},
 
+	//modules
 	modules: {
 		noModuleMessage: 'No modules found.',
 		modules: [

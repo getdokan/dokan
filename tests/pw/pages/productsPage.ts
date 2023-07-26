@@ -430,7 +430,7 @@ export class ProductsPage extends AdminPage {
 	// product bulk action
 	async productBulkAction(action: string, productName?: string): Promise<void> {
 		if(productName){
-			await this.searchProduct(productName);  //TODO: use search like this for all
+			await this.searchProduct(productName);
 		} else {
 			await this.goIfNotThere(data.subUrls.frontend.vDashboard.products);
 		}

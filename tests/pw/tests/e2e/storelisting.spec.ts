@@ -12,12 +12,14 @@ test.describe('Store listing functionality test', () => {
 	let page: Page;
 	// let apiUtils: ApiUtils;
 
+
 	test.beforeAll(async ({ browser }) => {
 		const customerContext = await browser.newContext({ storageState: data.auth.customerAuthFile });
 		page = await customerContext.newPage();
 		customer = new StoreListingPage(page);
 		// apiUtils = new ApiUtils(request);
 	});
+
 
 	test.afterAll(async () => {
 		await page.close();

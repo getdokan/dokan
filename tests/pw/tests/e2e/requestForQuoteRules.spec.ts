@@ -9,6 +9,7 @@ let admin: RequestForQuotationsPage;
 let aPage: Page;
 let apiUtils: ApiUtils;
 
+
 test.beforeAll(async ({ browser, request }) => {
 	const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
 	aPage = await adminContext.newPage();
@@ -16,9 +17,11 @@ test.beforeAll(async ({ browser, request }) => {
 	apiUtils = new ApiUtils(request);
 });
 
+
 test.afterAll(async ( ) => {
 	await aPage.close();
 });
+
 
 test.describe('Request for quotation test', () => {
 

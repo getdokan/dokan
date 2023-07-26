@@ -48,7 +48,12 @@ export class ProductAdvertisingPage extends AdminPage {
 		// product advertising table elements are visible
 		await this.multipleElementVisible(selector.admin.dokan.productAdvertising.table);
 
-		//TODO: modals can be added : for other tests too
+		// product advertising modal elements are visible
+		await this.click(selector.admin.dokan.productAdvertising.addNewProductAdvertising);
+		await this.toBeVisible(selector.admin.dokan.productAdvertising.addNewAdvertisement.selectStoreDropdown);
+		await this.toBeVisible(selector.admin.dokan.productAdvertising.addNewAdvertisement.selectProductDropdown);
+		await this.click(selector.admin.dokan.productAdvertising.addNewAdvertisement.closeModal);
+
 	}
 
 
@@ -146,10 +151,12 @@ export class ProductAdvertisingPage extends AdminPage {
 
 
 	// product advertising bulk action
-	async productAdvertisingBulkAction(action: string){
-		// await this.searchAdvertisedProduct(vendorName); //TODO: can be used to minimized number of rows to be affected
-		// await this.goto(data.subUrls.backend.dokan.productAdvertising);
-		await this.goIfNotThere(data.subUrls.backend.dokan.productAdvertising);
+	async productAdvertisingBulkAction(action: string, productName?: string){
+		if(productName){
+			await this.searchAdvertisedProduct(productName);
+		} else {
+			await this.goIfNotThere(data.subUrls.backend.dokan.productAdvertising);
+		}
 
 		// ensure row exists
 		await this.notToBeVisible(selector.admin.dokan.productAdvertising.noRowsFound);

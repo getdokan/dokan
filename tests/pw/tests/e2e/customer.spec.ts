@@ -12,6 +12,7 @@ test.describe('Customer user functionality test', () => {
 	let customerPage: CustomerPage;
 	let page: Page;
 
+
 	test.beforeAll(async ({ browser }) => {
 		const context = await browser.newContext();
 		page = await context.newPage();
@@ -19,9 +20,11 @@ test.describe('Customer user functionality test', () => {
 		customerPage = new CustomerPage(page);
 	});
 
+
 	test.afterAll(async () => {
 		await page.close();
 	});
+
 
 	test('customer can register @lite @pro', async () => {
 		await customerPage.customerRegister(data.customer.customerInfo);

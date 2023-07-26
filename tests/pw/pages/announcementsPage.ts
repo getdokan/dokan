@@ -45,9 +45,10 @@ export class AnnouncementsPage extends AdminPage {
 		await this.clearAndType(selector.admin.dokan.announcements.addAnnouncement.title, announcement.title);
 		await this.typeFrameSelector(selector.admin.dokan.announcements.addAnnouncement.contentIframe, selector.admin.dokan.announcements.addAnnouncement.contentHtmlBody, announcement.content);
 		await this.selectByValue(selector.admin.dokan.announcements.addAnnouncement.sendAnnouncementTo, announcement.receiver);
-		await this.clickAndWaitForResponse(data.subUrls.api.dokan.announcements, selector.admin.dokan.announcements.addAnnouncement.publish);
+		// await this.clickAndWaitForResponse(data.subUrls.api.dokan.announcements, selector.admin.dokan.announcements.addAnnouncement.publish);
+		await this.clickAndWaitForResponseAndLoadState(data.subUrls.api.dokan.announcements, selector.admin.dokan.announcements.addAnnouncement.publish); //todo: test this
 		//TODO: add wait for load then assert
-		// await this.toBeVisible(selector.admin.dokan.announcements.announcementCell(announcement.title));
+		await this.toBeVisible(selector.admin.dokan.announcements.announcementCell(announcement.title));
 	}
 
 
@@ -63,9 +64,10 @@ export class AnnouncementsPage extends AdminPage {
 		await this.clearAndType(selector.admin.dokan.announcements.addAnnouncement.title, announcement.title);
 		await this.typeFrameSelector(selector.admin.dokan.announcements.addAnnouncement.contentIframe, selector.admin.dokan.announcements.addAnnouncement.contentHtmlBody, announcement.content);
 		await this.selectByValue(selector.admin.dokan.announcements.addAnnouncement.sendAnnouncementTo, announcement.receiver);
-		await this.clickAndWaitForResponse(data.subUrls.api.dokan.announcements, selector.admin.dokan.announcements.addAnnouncement.publish);
+		// await this.clickAndWaitForResponse(data.subUrls.api.dokan.announcements, selector.admin.dokan.announcements.addAnnouncement.publish);
+		await this.clickAndWaitForResponseAndLoadState(data.subUrls.api.dokan.announcements, selector.admin.dokan.announcements.addAnnouncement.publish); //todo: test this
 		//TODO: add wait for load then assert
-		// await this.toBeVisible(selector.admin.dokan.announcements.announcementCell(announcement.title));
+		await this.toBeVisible(selector.admin.dokan.announcements.announcementCell(announcement.title));
 	}
 
 

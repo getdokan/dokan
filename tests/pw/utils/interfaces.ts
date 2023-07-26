@@ -1034,7 +1034,7 @@ export interface storeCategory {
 
 
 // store review
-export interface	storeReview {
+export interface storeReview {
 
 	create:{
 		rating: string;
@@ -1054,8 +1054,18 @@ export interface	storeReview {
 
 }
 
+export interface reverseWithdraw {
+	store: string;
+	transactionType: string;
+	product: string;
+	withdrawalBalanceType: string;
+	amount: string;
+	note: string;
+}
+
+
 // store support
-export interface	storeSupport {
+export interface storeSupport {
 
 	title: string;
 	filter: {

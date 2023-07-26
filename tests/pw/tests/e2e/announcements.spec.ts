@@ -16,9 +16,11 @@ test.beforeAll(async ({ browser, request }) => {
 	apiUtils = new ApiUtils(request);
 });
 
+
 test.afterAll(async ( ) => {
 	await aPage.close();
 });
+
 
 test.describe('Announcements test', () => {
 
@@ -27,7 +29,7 @@ test.describe('Announcements test', () => {
 		await admin.adminAnnouncementsRenderProperly();
 	});
 
-	test('admin can add announcement @pro', async ( ) => {
+	test.only('admin can add announcement @pro', async ( ) => {
 		await admin.addAnnouncement({ ...data.announcement.create, receiver: data.announcement.receiver.allVendors });
 	});
 

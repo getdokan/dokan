@@ -6,15 +6,18 @@ import { data } from 'utils/testData';
 let admin: VerificationsPage;
 let aPage: Page;
 
+
 test.beforeAll(async ({ browser }) => {
 	const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
 	aPage = await adminContext.newPage();
 	admin = new VerificationsPage(aPage);
 });
 
+
 test.afterAll(async ( ) => {
 	await aPage.close();
 });
+
 
 test.describe('Verifications test', () => {
 	//TODO: need multiple verification request via admin

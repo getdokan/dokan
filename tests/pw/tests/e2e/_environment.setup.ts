@@ -1,5 +1,4 @@
 import { test as setup, Page, expect } from '@playwright/test';
-// import { AdminPage } from 'pages/adminPage';
 import { ProductAdvertisingPage } from 'pages/productAdvertisingPage';
 import { ReverseWithdrawsPage } from 'pages/reverseWithdrawsPage';
 import { ApiUtils } from 'utils/apiUtils';
@@ -115,7 +114,9 @@ setup.describe('setup site & woocommerce & user settings', () => {
 
 });
 
+
 setup.describe('setup  user settings', () => {
+
 	setup.use({ extraHTTPHeaders: { Authorization: payloads.aAuth } });
 
 
@@ -160,6 +161,7 @@ setup.describe('setup  user settings', () => {
 	});
 
 });
+
 
 setup.describe('setup dokan settings', () => {
 
@@ -244,13 +246,13 @@ setup.describe('setup dokan settings', () => {
 
 setup.describe('setup dokan settings e2e', () => {
 
-	// setup.use({ storageState: data.auth.adminAuthFile });
 
 	// let adminPage: AdminPage;
 	let productAdvertisingPage: ProductAdvertisingPage;
 	let reverseWithdrawsPage: ReverseWithdrawsPage;
 	let aPage: Page;
 	let apiUtils: ApiUtils;
+
 
 	setup.beforeAll(async ({ browser, request }) => {
 		const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
@@ -261,9 +263,11 @@ setup.describe('setup dokan settings e2e', () => {
 		apiUtils = new ApiUtils(request);
 	});
 
+
 	setup.afterAll(async ( ) => {
 		await aPage.close();
 	});
+
 
 	setup('recreate product advertisement payment product via settings save @pro', async () => {
 		await productAdvertisingPage.recreateProductAdvertisementPaymentViaSettingsSave();
@@ -282,6 +286,7 @@ setup.describe('setup dokan settings e2e', () => {
 		const product = await apiUtils.productExistsOrNot('Reverse Withdrawal Payment',  payloads.adminAuth);
 		expect(product).toBeTruthy();
 	});
+
 	// TODO: can be implemented on api or db
 
 

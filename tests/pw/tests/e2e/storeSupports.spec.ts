@@ -14,6 +14,7 @@ let guest: StoreSupportsPage;
 let aPage: Page, cPage: Page, uPage: Page;
 let apiUtils: ApiUtils;
 
+
 test.beforeAll(async ({ browser, request }) => {
 	const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
 	aPage = await adminContext.newPage();
@@ -33,11 +34,13 @@ test.beforeAll(async ({ browser, request }) => {
 
 });
 
+
 test.afterAll(async ( ) => {
 	await aPage.close();
 	await cPage.close();
 	await uPage.close();
 });
+
 
 test.describe('Store Support test', () => {
 

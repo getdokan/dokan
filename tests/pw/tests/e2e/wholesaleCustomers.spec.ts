@@ -31,10 +31,12 @@ test.beforeAll(async ({ browser, request }) => {
 	await apiUtils.createWholesaleCustomer(payloads.createCustomer1, payloads.adminAuth);
 });
 
+
 test.afterAll(async ( ) => {
 	await aPage.close();  //TODO: close all pages at once
 	await cPage.close();
 });
+
 
 test.describe('Wholesale customers test', () => {
 

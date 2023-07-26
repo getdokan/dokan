@@ -6,15 +6,18 @@ import { data } from 'utils/testData';
 let admin: ModulesPage;
 let page: Page;
 
+
 test.beforeAll(async ({ browser }) => {
 	const context = await browser.newContext({});
 	page = await context.newPage();
 	admin = new ModulesPage(page);
 });
 
+
 test.afterAll(async ( ) => {
 	await page.close();
 });
+
 
 test.describe('Modules test', () => {
 

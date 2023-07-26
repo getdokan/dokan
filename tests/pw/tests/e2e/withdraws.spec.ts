@@ -14,6 +14,7 @@ test.describe('Withdraw test', () => {
 	let currentBalance: string;
 	let minimumWithdrawLimit: string;
 
+
 	test.beforeAll(async ({ browser, request }) => {
 		const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
 		aPage = await adminContext.newPage();
@@ -28,6 +29,7 @@ test.describe('Withdraw test', () => {
 		await apiUtils.createOrderWithStatus(payloads.createProduct(), { ...payloads.createOrder, line_items: [{ quantity: 10 }] }, 'wc-completed', payloads.vendorAuth);
 		await apiUtils.createWithdraw({ ...payloads.createWithdraw, amount: minimumWithdrawLimit }, payloads.vendorAuth);
 	});
+
 
 	test.afterAll(async ( ) => {
 		await aPage.close();

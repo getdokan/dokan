@@ -230,6 +230,16 @@ export class BasePage {
 		return response;
 	}
 
+	// click & wait for response
+	async clickAndWaitForResponseAndLoadState(subUrl: string, selector: string, code = 200): Promise<Response> {
+		const [response] = await Promise.all([
+			this.page.waitForResponse((resp) => resp.url().includes(subUrl) && resp.status() === code),
+			this.page.waitForLoadState( 'networkidle'),
+			this.page.locator(selector).click()
+		]);
+		return response;
+	}
+
 	// TODO: urgent : update wait for multiple different response
 	// TODO: urgent : update wait for multiple same response
 

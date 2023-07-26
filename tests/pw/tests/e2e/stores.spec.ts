@@ -9,13 +9,16 @@ let admin: StoresPage;
 let aPage: Page;
 // let apiUtils: ApiUtils;
 
+
 test.beforeAll(async ({ browser, }) => {
 	const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
 	aPage = await adminContext.newPage();
 	admin = new StoresPage(aPage);
 	// apiUtils = new ApiUtils(request);
 	// TODO: create store via api and use that vendor for all tests instead of vendor1
+
 });
+
 
 test.afterAll(async ( ) => {
 	await aPage.close();

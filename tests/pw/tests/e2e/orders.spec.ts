@@ -16,6 +16,7 @@ test.describe('Order functionality test', () => {
 	let apiUtils: ApiUtils;
 	let orderId: string;
 
+
 	test.beforeAll(async ({ browser, request }) => {
 		const vendorContext = await browser.newContext({ storageState: data.auth.vendorAuthFile });
 		vPage = await vendorContext.newPage();
@@ -24,6 +25,7 @@ test.describe('Order functionality test', () => {
 		apiUtils = new ApiUtils(request);
 		[,, orderId, ] = await apiUtils.createOrderWithStatus(PRODUCT_ID, { ...payloads.createOrder, customer_id: CUSTOMER_ID }, data.order.orderStatus.onhold, payloads.vendorAuth);
 	});
+
 
 	test.afterAll(async () => {
 		await vPage.close();

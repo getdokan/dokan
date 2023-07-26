@@ -221,8 +221,6 @@ export class PaymentsPage extends AdminPage {
 
 	// vendor
 
-	// TODO: payment render properly
-
 
 	// payment settings render properly
 	async vendorPaymentSettingsRenderProperly(): Promise<void> {

@@ -29,10 +29,12 @@ test.beforeAll(async ({ browser, request }) => {
 	await apiUtils.deleteStoreReview(reviewId, payloads.adminAuth);
 });
 
+
 test.afterAll(async ( ) => {
 	await aPage.close(); //TODO: close all pages at once instead of one by one
 	await cPage.close(); //TODO: close all pages at once instead of one by one
 });
+
 
 test.describe('Store Reviews test', () => {
 

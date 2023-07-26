@@ -12,6 +12,7 @@ test.describe.skip('Vendor staff test', () => {
 	let vPage: Page;
 	let apiUtils: ApiUtils;
 
+
 	test.beforeAll(async ({ browser, request }) => {
 		const vendorContext = await browser.newContext({ storageState: data.auth.vendorAuthFile });
 		vPage = await vendorContext.newPage();
@@ -34,6 +35,7 @@ test.describe.skip('Vendor staff test', () => {
 
 		// await apiUtils.createUser( staff, payloads.adminAuth);
 	});
+
 
 	test.afterAll(async ( ) => {
 		await vPage.close();

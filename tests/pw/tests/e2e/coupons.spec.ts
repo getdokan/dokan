@@ -15,6 +15,7 @@ test.describe('Coupons test', () => {
 	let customer: CouponsPage;
 	let aPage: Page, vPage: Page, cPage: Page;
 	let apiUtils: ApiUtils;
+	let marketplaceCouponCode: string;
 	let couponCode: string;
 
 
@@ -32,15 +33,17 @@ test.describe('Coupons test', () => {
 		customer = new CouponsPage(cPage);
 
 		apiUtils = new ApiUtils(request);
-		await apiUtils.createMarketPlaceCoupon( payloads.createMarketPlaceCoupon(), payloads.adminAuth);
+		[,, marketplaceCouponCode] = await apiUtils.createMarketPlaceCoupon( payloads.createMarketPlaceCoupon(), payloads.adminAuth);
 		[,, couponCode] = await apiUtils.createCoupon([PRODUCT_ID], payloads.createCoupon(), payloads.vendorAuth);
 	});
+
 
 	test.afterAll(async ( ) => {
 		await aPage.close();
 		await vPage.close();
 		await cPage.close();
 	});
+
 
 	test('admin can add marketplace coupon @pro', async ( ) => {
 		await admin.addMarketplaceCoupon(data.coupon);
@@ -51,7 +54,7 @@ test.describe('Coupons test', () => {
 	});
 
 	test('vendor can view marketPlace coupon @pro', async ( ) => {
-		await vendor.viewMarketPlaceCoupon();
+		await vendor.viewMarketPlaceCoupon(marketplaceCouponCode);
 	});
 
 	test('vendor can add coupon @pro', async ( ) => {

@@ -201,8 +201,8 @@ export class ApiUtils {
 	}
 
 	// get single store
-	async getSingleStore(orderId: string, auth? : auth): Promise<responseBody> {
-		const [, responseBody] = await this.get(endPoints.getSingleStore(orderId), { headers: auth });
+	async getSingleStore(sellerId: string, auth? : auth): Promise<responseBody> {
+		const [, responseBody] = await this.get(endPoints.getSingleStore(sellerId), { headers: auth });
 		return responseBody;
 	}
 

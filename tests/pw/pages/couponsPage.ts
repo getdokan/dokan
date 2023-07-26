@@ -27,8 +27,8 @@ export class CouponsPage extends AdminPage {
 		await this.check(selector.admin.marketing.addNewCoupon.enableForAllVendors);
 		await this.check(selector.admin.marketing.addNewCoupon.showOnStores);
 		await this.check(selector.admin.marketing.addNewCoupon.notifyVendors);
-		await this.clickAndWaitForResponse(data.subUrls.post, selector.admin.marketing.addNewCoupon.publish);
-		//Todo: add assertion
+		await this.clickAndWaitForResponseAndLoadState(data.subUrls.post, selector.admin.marketing.addNewCoupon.publish);
+		await this.toContainText(selector.admin.marketing.addNewCoupon.publishSuccessMessage, 'Coupon updated.');  //todo: test this
 	}
 
 	// vendor coupons render properly
@@ -51,11 +51,25 @@ export class CouponsPage extends AdminPage {
 
 
 	// vendor view marketplace coupon
-	async viewMarketPlaceCoupon() {
+	async viewMarketPlaceCoupon(marketplaceCoupon: string) {
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.coupons);
 		await this.click(selector.vendor.vCoupon.menus.marketplaceCoupons);
 		await this.toBeVisible(selector.vendor.vCoupon.marketPlaceCoupon.marketPlaceCoupon);
-		// todo: add more elements, can be split into multiple tests
+		marketplaceCoupon && await this.toBeVisible(selector.vendor.vCoupon.marketPlaceCoupon.couponCell(marketplaceCoupon));
+	}
+
+
+	async updateCouponFields(coupon: coupon){
+		await this.type(selector.vendor.vCoupon.couponTitle, coupon.title());
+		await this.type(selector.vendor.vCoupon.description, coupon.description); //todo: test this
+		await this.selectByValue(selector.vendor.vCoupon.discountType, coupon.discountType); //todo: test this
+		await this.type(selector.vendor.vCoupon.amount, coupon.amount());
+		await this.click(selector.vendor.vCoupon.selectAll);
+		await this.check(selector.vendor.vCoupon.applyForNewProducts);
+		await this.check(selector.vendor.vCoupon.showOnStore);
+		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.coupons, selector.vendor.vCoupon.createCoupon, 302); //todo: test this
+		await expect(this.page.getByText(selector.vendor.vCoupon.couponSaveSuccessMessage)).toBeVisible();
+
 	}
 
 
@@ -63,14 +77,8 @@ export class CouponsPage extends AdminPage {
 	async addCoupon(coupon: coupon) {
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.coupons);
 		await this.click(selector.vendor.vCoupon.addNewCoupon);
-		await this.type(selector.vendor.vCoupon.couponTitle, coupon.title());
-		await this.type(selector.vendor.vCoupon.amount, coupon.amount());
-		await this.click(selector.vendor.vCoupon.selectAll);
-		await this.check(selector.vendor.vCoupon.applyForNewProducts);
-		await this.check(selector.vendor.vCoupon.showOnStore);
-		await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.coupons, selector.vendor.vCoupon.createCoupon, 302);
-		await expect(this.page.getByText(selector.vendor.vCoupon.couponSaveSuccessMessage)).toBeVisible();
-		//todo: add more fields
+		await this.updateCouponFields(coupon);
+
 	}
 
 
@@ -79,14 +87,7 @@ export class CouponsPage extends AdminPage {
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.coupons);
 		// await this.clickAndWaitForNavigation(selector.vendor.vCoupon.couponLink(coupon.editCoupon));
 		await this.clickAndWaitForLoadState(selector.vendor.vCoupon.couponLink(coupon.editCoupon));
-
-		await this.type(selector.vendor.vCoupon.amount, coupon.amount());
-		await this.click(selector.vendor.vCoupon.selectAll);
-		await this.check(selector.vendor.vCoupon.applyForNewProducts);
-		await this.check(selector.vendor.vCoupon.showOnStore);
-		await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.coupons, selector.vendor.vCoupon.createCoupon, 302);
-		await expect(this.page.getByText(selector.vendor.vCoupon.couponUpdateSuccessMessage)).toBeVisible();
-		//todo: add more fields and move edit fields in one function
+		await this.updateCouponFields(coupon); //todo: test this
 	}
 
 

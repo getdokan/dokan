@@ -10,6 +10,7 @@ let aPage: Page;
 let apiUtils: ApiUtils;
 let orderId: string;
 
+
 test.beforeAll(async ({ browser, request }) => {
 	const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
 	aPage = await adminContext.newPage();
@@ -17,6 +18,7 @@ test.beforeAll(async ({ browser, request }) => {
 	apiUtils = new ApiUtils(request);
 	[,, orderId, ] = await apiUtils.createOrderWithStatus(payloads.createProduct(), payloads.createOrder, data.order.orderStatus.completed, payloads.vendorAuth);
 });
+
 
 test.afterAll(async ( ) => {
 	await aPage.close();

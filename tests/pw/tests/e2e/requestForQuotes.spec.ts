@@ -10,6 +10,7 @@ let aPage: Page;
 let apiUtils: ApiUtils;
 const productId: string[] = [];
 
+
 test.beforeAll(async ({ browser, request }) => {
 	const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
 	aPage = await adminContext.newPage();
@@ -19,9 +20,11 @@ test.beforeAll(async ({ browser, request }) => {
 	productId.push(pId);
 });
 
+
 test.afterAll(async ( ) => {
 	await aPage.close();
 });
+
 
 test.describe('Request for quotation test', () => {
 

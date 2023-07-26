@@ -57,10 +57,23 @@
 
 
 
+// TODO: add search option before bulk option to minimize the number of rows to be effected  for all bulk action
+// if(productName){
+// 	await this.searchAdvertisedProduct(productName);
+// } else {
+// 	await this.goIfNotThere(data.subUrls.backend.dokan.productAdvertising);
+// }
+
+//TODO: add modal or sub option on explotory tesing tests all
 
 
 
-
+//TODO: export log test keep this
+		// await Promise.all([
+		// 	this.page.waitForResponse((resp) => resp.url().includes(data.subUrls.api.dokan.logs) && resp.status() === 200),
+		// 	this.page.waitForResponse((resp) => resp.url().includes(data.subUrls.backend.dokan.downloadOrderLogs) && resp.status() === 200),
+		// 	this.page.locator(selector.admin.dokan.reports.allLogs.exportLogs).click()
+		// ]); //TODO: add wait for multiple different response on base-page
 
 
 

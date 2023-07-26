@@ -11,6 +11,7 @@ let admin: ReverseWithdrawsPage;
 let aPage: Page;
 let apiUtils: ApiUtils;
 
+
 test.beforeAll(async ({ browser, request }) => {
 	const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
 	aPage = await adminContext.newPage();
@@ -21,10 +22,12 @@ test.beforeAll(async ({ browser, request }) => {
 
 });
 
+
 test.afterAll(async ( ) => {
 	await dbUtils.setDokanSettings(dbData.dokan.optionName.reverseWithdraw, { ...dbData.dokan.reverseWithdrawSettings, enabled: 'off' });
 	await aPage.close();
 });
+
 
 test.describe('Reverse withdraw test', () => {
 
@@ -37,7 +40,11 @@ test.describe('Reverse withdraw test', () => {
 		await admin.filterReverseWithdraws(data.predefined.vendorStores.vendor1);
 	});
 
-	//todo: admin can add reverse withdraw
+	test.only('admin can crete reverse withdraws @lite @pro', async ( ) => {
+		await admin.addReverseWithdrawal(data.reverseWithdraw);
+	});
+
+
 	//todo: filter reverse withdraws by calendar
 	//TODO: add vendor tests
 

@@ -12,6 +12,7 @@ test.describe('Vendor functionality test', () => {
 	let aPage: Page, vPage: Page;
 	// let apiUtils: ApiUtils;
 
+	
 	test.beforeAll(async ({ browser, }) => {
 		const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
 		aPage = await adminContext.newPage();

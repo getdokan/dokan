@@ -329,6 +329,8 @@ export const selector = {
 
 				reverseWithdrawText: '.dokan-reverse-withdrawal h1',
 
+				addNewReverseWithdrawal: '.dokan-reverse-withdrawal button.page-title-action',
+
 				// Fact Cards
 				reverseWithdrawFactCards: {
 					totalCollectedCard: '//p[normalize-space()="Total Collected"]/../..',
@@ -361,6 +363,22 @@ export const selector = {
 				noRowsFound: '//td[normalize-space()="No transaction found."]',
 				revereWithdrawCell: (storeName: string) => `//td//a[contains(text(), '${storeName}')]/../..`,
 
+				addReverseWithdrawal:{
+					closeModal: '.modal-close.modal-close-link',
+					selectVendorDropdown: '//span[normalize-space()="Search vendor"]/../..//div[@class="multiselect__select"]',
+					selectVendorInput: '//input[@placeholder="Search vendor"]',
+					transactionType: (type: string) => `//input[@value="${type}"]/..`, //manual_product, manual_order, other
+					selectProductDropdown: '//span[normalize-space()="Search product"]/../..//div[@class="multiselect__select"]',
+					selectProductInput: '//input[@placeholder="Search product"]',
+					selectOrderDropdown: '//span[normalize-space()="Search order"]/../..//div[@class="multiselect__select"]',
+					selectOrderInput: '//input[@placeholder="Search order"]',
+					withdrawalBalanceType: (type: string) => `//input[@value="${type}"]/..`, //debit, credit
+					reverseWithdrawalAmount: 'input.regular-text.wc_input_decimal',
+					note: '//textarea[@placeholder="Write reverse withdrawal note"]',
+					save: 'button.dokan-rw-footer-btn',
+
+
+				}
 			},
 
 			// Vendors
@@ -806,7 +824,7 @@ export const selector = {
 
 					numberOfRowsFound: '.tablenav.top .displaying-num',
 					noRowsFound: '//td[normalize-space()="No quote found."]',
-					quoteCell:  (title: string) => `//strong[contains(text(),'${title}')]/../..//td[@class='column sl']`,
+					quoteCell:  (title: string) => `//strong[contains(text(),'${title}')]/../..//td[@class='column sl']`, //todo: flaky because of this
 					//TODO: uncomment after search added
 					// quoteRulesEdit: '.row-actions .edit',
 					// quoteRulesTrash: '.row-actions .trash',
@@ -2725,6 +2743,8 @@ export const selector = {
 				usageLimitPerUser: '#usage_limit_per_user',
 
 				publish: '#publish',
+				publishSuccessMessage: '#message',
+
 			},
 		},
 
@@ -3617,6 +3637,7 @@ export const selector = {
 
 			marketPlaceCoupon: {
 				marketPlaceCoupon :'#marketplace-coupon',
+				couponCell: (couponCode: string) => `//td[contains(@class, "coupon-code")]//span[contains(text(), "${couponCode}")]`,
 			},
 
 			// Table

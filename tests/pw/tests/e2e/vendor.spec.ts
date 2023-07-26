@@ -17,6 +17,7 @@ test.describe('Vendor user functionality test1', () => {
 	let vendorPage: VendorPage;
 	let page: Page;
 
+
 	test.beforeAll(async ({ browser }) => {
 		const context = await browser.newContext();
 		page = await context.newPage();
@@ -24,9 +25,11 @@ test.describe('Vendor user functionality test1', () => {
 		vendorPage = new VendorPage(page);
 	});
 
+
 	test.afterAll(async ( ) => {
 		await page.close();
 	});
+
 
 	test('vendor can register @lite @pro', async ( ) => {
 		await vendorPage.vendorRegister(data.vendor.vendorInfo, { ...data.vendorSetupWizard, choice:false });
@@ -52,6 +55,7 @@ test.describe('Vendor functionality test', () => {
 	let vPage: Page;
 	let apiUtils: ApiUtils;
 
+
 	test.beforeAll(async ({ browser, request }) => {
 		const vendorContext = await browser.newContext({ storageState: data.auth.vendorAuthFile });
 		vPage = await vendorContext.newPage();
@@ -59,9 +63,11 @@ test.describe('Vendor functionality test', () => {
 		apiUtils = new ApiUtils(request);
 	});
 
+
 	test.afterAll(async () => {
 		await vPage.close();
 	});
+
 
 	test('vendor can setup setup-wizard @lite @pro', async ( ) => {
 		await vendorPage.vendorSetupWizard(data.vendorSetupWizard);

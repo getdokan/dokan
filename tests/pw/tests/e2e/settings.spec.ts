@@ -6,15 +6,18 @@ import { data } from 'utils/testData';
 let settingsPage: SettingsPage;
 let page: Page;
 
+
 test.beforeAll(async ({ browser }) => {
 	const context = await browser.newContext({});
 	page = await context.newPage();
 	settingsPage = new SettingsPage(page);
 });
 
+
 test.afterAll(async ( ) => {
 	await page.close();
 });
+
 
 test.describe('Settings test', () => {
 
