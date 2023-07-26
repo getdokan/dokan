@@ -724,6 +724,7 @@ export const selector = {
 					filterByCustomers: '//select[@id="filter-customers"]/..//span[@class="select2-selection__arrow"]',
 					filterInput: '.select2-search.select2-search--dropdown .select2-search__field',
 					filterButton: '//button[normalize-space()="Filter"]',
+					result: 'li.select2-results__option.select2-results__option--highlighted',
 				},
 
 				searchTicket:'#post-search-input',
@@ -3806,6 +3807,7 @@ export const selector = {
 				maintainAReserveBalance: '#withdraw-remaining-amount',
 				changeSchedule: '#dokan-withdraw-schedule-request-submit',
 				scheduleMessage: '//div[@class="dokan-switch-container"]/..//p',
+				dokanBottomPopup: '#swal2-html-container', //TODO: make it global and use to assert every popup massage frontend
 				withdrawScheduleSaveSuccessMessage: 'Withdraw schedule changed successfully.',
 			},
 

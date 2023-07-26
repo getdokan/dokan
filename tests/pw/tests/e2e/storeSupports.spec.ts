@@ -30,6 +30,7 @@ test.beforeAll(async ({ browser, request }) => {
 	apiUtils = new ApiUtils(request);
 	await apiUtils.createSupportTicket({ ...payloads.createSupportTicket, author: CUSTOMER_ID, meta: { store_id : VENDOR_ID } } );
 	await apiUtils.createSupportTicket({ ...payloads.createSupportTicket, status: 'closed', author: CUSTOMER_ID, meta: { store_id : VENDOR_ID } } );
+
 });
 
 test.afterAll(async ( ) => {
@@ -82,6 +83,7 @@ test.describe('Store Support test', () => {
 	});
 
 	test('admin can perform store support bulk action @pro', async ( ) => {
+		await apiUtils.createSupportTicket({ ...payloads.createSupportTicket, author: CUSTOMER_ID, meta: { store_id : VENDOR_ID } } );
 		await admin.storeSupportBulkAction('close');
 	});
 

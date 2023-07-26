@@ -108,7 +108,8 @@ export class SettingsPage extends AdminPage {
 		// TODO: fix or delete
 		// await this.clickAndWaitForResponse(data.subUrls.ajax, selector.admin.dokan.settings.selling.sellingOptionsSaveChanges);
 		// await this.toContainText(selector.admin.dokan.settings.dokanUpdateSuccessMessage, selling.saveSuccessMessage );
-		await this.clickAndWaitForNavigation(selector.admin.dokan.settings.selling.sellingOptionsSaveChanges);
+		// await this.clickAndWaitForNavigation(selector.admin.dokan.settings.selling.sellingOptionsSaveChanges);
+		await this.clickAndWaitForLoadState(selector.admin.dokan.settings.selling.sellingOptionsSaveChanges);
 		await this.toHaveValue(selector.admin.dokan.settings.selling.adminCommission, selling.adminCommission);
 	}
 
@@ -183,7 +184,8 @@ export class SettingsPage extends AdminPage {
 		// TODO: fix or delete
 		// await this.clickAndWaitForResponse(data.subUrls.ajax, selector.admin.dokan.settings.reverseWithdraw.reverseWithdrawSaveChanges);
 		// await this.toContainText(selector.admin.dokan.settings.dokanUpdateSuccessMessage, reverseWithdraw.saveSuccessMessage );
-		await this.clickAndWaitForNavigation(selector.admin.dokan.settings.reverseWithdraw.reverseWithdrawSaveChanges);
+		// await this.clickAndWaitForNavigation(selector.admin.dokan.settings.reverseWithdraw.reverseWithdrawSaveChanges);
+		await this.clickAndWaitForLoadState(selector.admin.dokan.settings.reverseWithdraw.reverseWithdrawSaveChanges);
 		await this.toHaveValue(selector.admin.dokan.settings.reverseWithdraw.reverseBalanceThreshold, reverseWithdraw.reverseBalanceThreshold);
 	}
 

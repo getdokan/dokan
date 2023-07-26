@@ -122,7 +122,8 @@ export class StoreReviewsPage extends AdminPage {
 	async reviewStore(storeName: string, store: store): Promise<void> {
 		await this.goIfNotThere(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)));
 		const reviewMessage = store.reviewMessage();
-		await this.clickAndWaitForNavigation(selector.customer.cSingleStore.storeTabs.reviews);
+		// await this.clickAndWaitForNavigation(selector.customer.cSingleStore.storeTabs.reviews);
+		await this.clickAndWaitForLoadState(selector.customer.cSingleStore.storeTabs.reviews);
 
 		// write new or edit previous review
 		const writeAReviewIsVisible = await this.isVisible(selector.customer.cSingleStore.review.write);

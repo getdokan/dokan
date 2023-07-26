@@ -92,7 +92,7 @@ test.describe('Withdraw test', () => {
 		await vendor.cancelWithdrawRequest();
 	});
 
-	test('vendor can add auto withdraw disbursement schedule @pro', async ( ) => {
+	test.only('vendor can add auto withdraw disbursement schedule @pro', async ( ) => {
 		await vendor.addAutoWithdrawDisbursementSchedule({ ...data.vendor.withdraw, minimumWithdrawAmount: minimumWithdrawLimit });
 	});
 

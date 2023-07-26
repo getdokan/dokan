@@ -101,7 +101,8 @@ export class StoresPage extends AdminPage {
 		await this.searchVendor(vendor.storeName);
 
 		await this.hover(selector.admin.dokan.vendors.vendorCell(vendor.storeName));
-		await this.clickAndWaitForNavigation(selector.admin.dokan.vendors.vendorEdit);
+		// await this.clickAndWaitForNavigation(selector.admin.dokan.vendors.vendorEdit);
+		await this.clickAndWaitForLoadState(selector.admin.dokan.vendors.vendorEdit);
 
 		if (!DOKAN_PRO){
 

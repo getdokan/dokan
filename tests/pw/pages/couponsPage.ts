@@ -77,7 +77,8 @@ export class CouponsPage extends AdminPage {
 	// vendor edit coupon
 	async editCoupon(coupon: coupon) {
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.coupons);
-		await this.clickAndWaitForNavigation(selector.vendor.vCoupon.couponLink(coupon.editCoupon));
+		// await this.clickAndWaitForNavigation(selector.vendor.vCoupon.couponLink(coupon.editCoupon));
+		await this.clickAndWaitForLoadState(selector.vendor.vCoupon.couponLink(coupon.editCoupon));
 
 		await this.type(selector.vendor.vCoupon.amount, coupon.amount());
 		await this.click(selector.vendor.vCoupon.selectAll);

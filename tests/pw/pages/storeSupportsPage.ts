@@ -30,7 +30,7 @@ export class StoreSupportsPage extends AdminPage {
 
 		// filter elements are visible
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		const { filterInput, ...filters } = selector.admin.dokan.storeSupport.filters;
+		const { filterInput, result, ...filters } = selector.admin.dokan.storeSupport.filters;
 		await this.multipleElementVisible(filters);
 
 		// search store support is visible
@@ -63,6 +63,7 @@ export class StoreSupportsPage extends AdminPage {
 		case 'by-vendor' :
 			await this.click(selector.admin.dokan.storeSupport.filters.filterByVendors);
 			await this.typeAndWaitForResponse(data.subUrls.api.dokan.stores, selector.admin.dokan.storeSupport.filters.filterInput, input);
+			await this.toContainText(selector.admin.dokan.storeSupport.filters.result, input);
 			await this.press(data.key.enter);
 			await this.clickAndWaitForResponse(data.subUrls.api.dokan.storeSupport, selector.admin.dokan.storeSupport.filters.filterButton);
 			break;
@@ -70,6 +71,7 @@ export class StoreSupportsPage extends AdminPage {
 		case 'by-customer' :
 			await this.click(selector.admin.dokan.storeSupport.filters.filterByCustomers);
 			await this.typeAndWaitForResponse(data.subUrls.api.dokan.storeSupport, selector.admin.dokan.storeSupport.filters.filterInput, input);
+			await this.toContainText(selector.admin.dokan.storeSupport.filters.result, input);
 			await this.press(data.key.enter);
 			await this.clickAndWaitForResponse(data.subUrls.api.dokan.storeSupport, selector.admin.dokan.storeSupport.filters.filterButton);
 			break;
@@ -101,7 +103,8 @@ export class StoreSupportsPage extends AdminPage {
 	// update support ticket email notification
 	async updateSupportTicketEmailNotification(action: string){
 		await this.goIfNotThere(data.subUrls.backend.dokan.storeSupport);
-		await this.clickAndWaitForNavigation(selector.admin.dokan.storeSupport.supportTicketFirstCell);
+		// await this.clickAndWaitForNavigation(selector.admin.dokan.storeSupport.supportTicketFirstCell);
+		await this.clickAndWaitForLoadState(selector.admin.dokan.storeSupport.supportTicketFirstCell);
 
 		switch(action){
 
@@ -123,7 +126,8 @@ export class StoreSupportsPage extends AdminPage {
 	// close support ticket
 	async closeSupportTicket(){
 		await this.goIfNotThere(data.subUrls.backend.dokan.storeSupport);
-		await this.clickAndWaitForNavigation(selector.admin.dokan.storeSupport.supportTicketFirstCell);
+		// await this.clickAndWaitForNavigation(selector.admin.dokan.storeSupport.supportTicketFirstCell);
+		await this.clickAndWaitForLoadState(selector.admin.dokan.storeSupport.supportTicketFirstCell);
 		await this.clickAndWaitForResponse(data.subUrls.api.dokan.storeSupport, selector.admin.dokan.storeSupport.supportTicketDetails.closeTicket);
 	}
 
@@ -131,8 +135,10 @@ export class StoreSupportsPage extends AdminPage {
 	// reopen support ticket
 	async reopenSupportTicket(){
 		await this.goIfNotThere(data.subUrls.backend.dokan.storeSupport);
-		await this.clickAndWaitForNavigation(selector.admin.dokan.storeSupport.navTabs.closed);
-		await this.clickAndWaitForNavigation(selector.admin.dokan.storeSupport.supportTicketFirstCell);
+		// await this.clickAndWaitForNavigation(selector.admin.dokan.storeSupport.navTabs.closed);
+		await this.clickAndWaitForLoadState(selector.admin.dokan.storeSupport.navTabs.closed);
+		// await this.clickAndWaitForNavigation(selector.admin.dokan.storeSupport.supportTicketFirstCell);
+		await this.clickAndWaitForLoadState(selector.admin.dokan.storeSupport.supportTicketFirstCell);
 		await this.clickAndWaitForResponse(data.subUrls.api.dokan.storeSupport, selector.admin.dokan.storeSupport.supportTicketDetails.reopenTicket);
 	}
 

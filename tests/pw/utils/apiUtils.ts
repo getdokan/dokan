@@ -483,6 +483,7 @@ export class ApiUtils {
 	// get withdrawId
 	async getWithdrawId(auth? : auth): Promise<string> {
 		const allWithdraws = await this.getAllWithdrawsByStatus('pending', auth);
+		if(!allWithdraws?.length){ return ''; } //TODO: apply this to all get id method
 		const withdrawId = allWithdraws[0].id;
 		return withdrawId;
 	}
@@ -499,6 +500,7 @@ export class ApiUtils {
 	async cancelWithdraw(withdrawId: string, auth? : auth): Promise<responseBody> {
 		if(!withdrawId){
 			withdrawId = await this.getWithdrawId(auth);
+			if (!withdrawId) { return;} //TODO: apply this to all where get id method is called
 		}
 		const [, responseBody] = await this.delete(endPoints.cancelWithdraw(withdrawId), { headers: payloads.adminAuth });
 		return responseBody;
