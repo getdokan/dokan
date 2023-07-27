@@ -23,7 +23,8 @@
                 );
 
                 if ( 'pending' === dokan_get_new_post_status() && $post_status === 'auto-draft' ) {
-                    $post_statuses['publish'] = __( 'Pending Review', 'dokan-lite' );
+                    unset( $post_statuses['publish'] );
+                    $post_statuses['pending'] = __( 'Pending Review', 'dokan-lite' );
                 }
 
                 ?>

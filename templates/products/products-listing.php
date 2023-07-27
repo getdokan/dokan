@@ -264,7 +264,7 @@
 
                                 <span class="dokan-add-product-link">
                                     <?php if ( current_user_can( 'dokan_add_product' ) ) : ?>
-                                        <a href="<?php echo esc_url( $new_product_url ); ?>" class="dokan-btn dokan-btn-theme <?php echo $disable_product_popup ? '' : 'dokan-add-new-product'; ?>">
+                                        <a href="<?php echo esc_url( $new_product_url ); ?>" class="dokan-btn dokan-btn-theme">
                                             <i class="fas fa-briefcase">&nbsp;</i>
                                             <?php esc_html_e( 'Add new product', 'dokan-lite' ); ?>
                                         </a>
