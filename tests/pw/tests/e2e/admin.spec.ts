@@ -1,4 +1,4 @@
-import { test, Page } from '@playwright/test';
+import { test } from '@playwright/test';
 import { LoginPage } from 'pages/loginPage';
 import { AdminPage } from 'pages/adminPage';
 import { ApiUtils } from 'utils/apiUtils';
@@ -10,17 +10,17 @@ test.describe('Admin user functionality test', () => {
 	test.use({ storageState: { cookies: [], origins: [] } });
 
 	let loginPage: LoginPage;
-	let page: Page;
 
 
 	test.beforeAll(async ({ browser }) => {
 		const context = await browser.newContext();
-		page = await context.newPage();
+		const page = await context.newPage();
 		loginPage = new LoginPage(page);
 	});
 
-	test.afterAll(async () => {
-		await page.close();
+
+	test.afterAll(async ({ browser }) => {
+		await browser.close();
 	});
 
 
@@ -35,24 +35,27 @@ test.describe('Admin user functionality test', () => {
 
 });
 
+
 test.describe('Admin functionality test', () => {
 
 	test.use({ storageState: data.auth.adminAuthFile });
 
 	let adminPage: AdminPage;
 	let loginPage: LoginPage;
-	let page: Page;
+
 
 	test.beforeAll(async ({ browser }) => {
 		const context = await browser.newContext({});
-		page = await context.newPage();
+		const page = await context.newPage();
 		adminPage = new AdminPage(page);
 		loginPage = new LoginPage(page);
 	});
 
-	test.afterAll(async ( ) => {
-		await page.close();
+
+	test.afterAll(async ({ browser }) => {
+		await browser.close();
 	});
+
 
 	// test('admin can add simple product @lite @pro', async ( ) => {
 	// 	await adminPage.addSimpleProduct(data.product.simple);

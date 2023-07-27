@@ -1,4 +1,4 @@
-import { test, Page } from '@playwright/test';
+import { test } from '@playwright/test';
 import { WithdrawsPage } from 'pages/withdrawsPage';
 import { ApiUtils } from 'utils/apiUtils';
 import { data } from 'utils/testData';
@@ -9,7 +9,6 @@ test.describe('Withdraw test', () => {
 
 	let admin: WithdrawsPage;
 	let vendor: WithdrawsPage;
-	let aPage: Page, vPage: Page;
 	let apiUtils: ApiUtils;
 	let currentBalance: string;
 	let minimumWithdrawLimit: string;
@@ -17,11 +16,11 @@ test.describe('Withdraw test', () => {
 
 	test.beforeAll(async ({ browser, request }) => {
 		const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
-		aPage = await adminContext.newPage();
+		const aPage = await adminContext.newPage();
 		admin = new WithdrawsPage(aPage);
 
 		const vendorContext = await browser.newContext({ storageState: data.auth.vendorAuthFile });
-		vPage = await vendorContext.newPage();
+		const vPage = await vendorContext.newPage();
 		vendor = new WithdrawsPage(vPage);
 
 		apiUtils = new ApiUtils(request);
@@ -31,9 +30,8 @@ test.describe('Withdraw test', () => {
 	});
 
 
-	test.afterAll(async ( ) => {
-		await aPage.close();
-		await vPage.close();
+	test.afterAll(async ({ browser }) => {
+		await browser.close();
 	});
 
 

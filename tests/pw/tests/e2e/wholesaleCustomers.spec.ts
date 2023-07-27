@@ -1,4 +1,4 @@
-import { test, Page } from '@playwright/test';
+import { test } from '@playwright/test';
 import { WholesaleCustomersPage } from 'pages/wholesaleCustomersPage';
 import { CustomerPage } from 'pages/customerPage';
 import { ApiUtils } from 'utils/apiUtils';
@@ -11,18 +11,17 @@ import { dbData } from 'utils/dbData';
 let admin: WholesaleCustomersPage;
 let customer: WholesaleCustomersPage;
 let customerPage: CustomerPage;
-let aPage: Page, cPage: Page;
 let apiUtils: ApiUtils;
 
 
 test.beforeAll(async ({ browser, request }) => {
 	const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
-	aPage = await adminContext.newPage();
+	const aPage = await adminContext.newPage();
 	admin = new WholesaleCustomersPage(aPage);
 
 	// const customerContext = await browser.newContext({ storageState: data.auth.customerAuthFile });
 	const customerContext = await browser.newContext({ storageState: { cookies: [], origins: [] } });
-	cPage = await customerContext.newPage();
+	const cPage = await customerContext.newPage();
 	customerPage = new CustomerPage(cPage);
 	customer = new WholesaleCustomersPage(cPage);
 
@@ -32,9 +31,8 @@ test.beforeAll(async ({ browser, request }) => {
 });
 
 
-test.afterAll(async ( ) => {
-	await aPage.close();  //TODO: close all pages at once
-	await cPage.close();
+test.afterAll(async ({ browser }) => {
+	await browser.close();
 });
 
 

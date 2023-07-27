@@ -68,6 +68,7 @@ export class ReverseWithdrawsPage extends AdminPage {
 
 		await this.click(selector.admin.dokan.reverseWithdraw.addReverseWithdrawal.selectVendorDropdown);
 		await this.typeAndWaitForResponse(data.subUrls.api.dokan.stores, selector.admin.dokan.reverseWithdraw.addReverseWithdrawal.selectVendorInput, reverseWithdrawal.store);
+		await this.press(data.key.arrowDown);
 		await this.press(data.key.enter);
 
 		await this.click(selector.admin.dokan.reverseWithdraw.addReverseWithdrawal.transactionType(reverseWithdrawal.transactionType));

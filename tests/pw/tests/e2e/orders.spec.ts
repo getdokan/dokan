@@ -1,4 +1,4 @@
-import { test, Page } from '@playwright/test';
+import { test } from '@playwright/test';
 import { OrdersPage } from 'pages/ordersPage';
 import { ApiUtils } from 'utils/apiUtils';
 import { data } from 'utils/testData';
@@ -12,14 +12,13 @@ test.describe('Order functionality test', () => {
 
 
 	let vendor: OrdersPage;
-	let vPage: Page;
 	let apiUtils: ApiUtils;
 	let orderId: string;
 
 
 	test.beforeAll(async ({ browser, request }) => {
 		const vendorContext = await browser.newContext({ storageState: data.auth.vendorAuthFile });
-		vPage = await vendorContext.newPage();
+		const vPage = await vendorContext.newPage();
 		vendor = new OrdersPage(vPage);
 
 		apiUtils = new ApiUtils(request);
@@ -27,8 +26,8 @@ test.describe('Order functionality test', () => {
 	});
 
 
-	test.afterAll(async () => {
-		await vPage.close();
+	test.afterAll(async ({ browser }) => {
+		await browser.close();
 	});
 
 

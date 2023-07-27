@@ -1,4 +1,4 @@
-import { test, Page } from '@playwright/test';
+import { test } from '@playwright/test';
 import { StoresPage } from 'pages/storesPage';
 // import { ApiUtils } from 'utils/apiUtils';
 import { data } from 'utils/testData';
@@ -6,13 +6,12 @@ import { data } from 'utils/testData';
 
 
 let admin: StoresPage;
-let aPage: Page;
 // let apiUtils: ApiUtils;
 
 
 test.beforeAll(async ({ browser, }) => {
 	const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
-	aPage = await adminContext.newPage();
+	const aPage = await adminContext.newPage();
 	admin = new StoresPage(aPage);
 	// apiUtils = new ApiUtils(request);
 	// TODO: create store via api and use that vendor for all tests instead of vendor1
@@ -20,8 +19,8 @@ test.beforeAll(async ({ browser, }) => {
 });
 
 
-test.afterAll(async ( ) => {
-	await aPage.close();
+test.afterAll(async ({ browser }) => {
+	await browser.close();
 });
 
 

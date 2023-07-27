@@ -1,4 +1,4 @@
-import { test, Page } from '@playwright/test';
+import { test } from '@playwright/test';
 import { CouponsPage } from 'pages/couponsPage';
 import { ApiUtils } from 'utils/apiUtils';
 import { data } from 'utils/testData';
@@ -13,7 +13,6 @@ test.describe('Coupons test', () => {
 	let admin: CouponsPage;
 	let vendor: CouponsPage;
 	let customer: CouponsPage;
-	let aPage: Page, vPage: Page, cPage: Page;
 	let apiUtils: ApiUtils;
 	let marketplaceCouponCode: string;
 	let couponCode: string;
@@ -21,15 +20,15 @@ test.describe('Coupons test', () => {
 
 	test.beforeAll(async ({ browser, request }) => {
 		const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
-		aPage = await adminContext.newPage();
+		const aPage = await adminContext.newPage();
 		admin = new CouponsPage(aPage);
 
 		const vendorContext = await browser.newContext({ storageState: data.auth.vendorAuthFile });
-		vPage = await vendorContext.newPage();
+		const vPage = await vendorContext.newPage();
 		vendor = new CouponsPage(vPage);
 
 		const customerContext = await browser.newContext({ storageState: data.auth.customerAuthFile });
-		cPage = await customerContext.newPage();
+		const cPage = await customerContext.newPage();
 		customer = new CouponsPage(cPage);
 
 		apiUtils = new ApiUtils(request);
@@ -38,10 +37,8 @@ test.describe('Coupons test', () => {
 	});
 
 
-	test.afterAll(async ( ) => {
-		await aPage.close();
-		await vPage.close();
-		await cPage.close();
+	test.afterAll(async ({ browser }) => {
+		await browser.close();
 	});
 
 

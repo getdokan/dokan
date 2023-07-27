@@ -256,7 +256,7 @@ setup.describe('setup dokan settings e2e', () => {
 
 	setup.beforeAll(async ({ browser, request }) => {
 		const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
-		aPage = await adminContext.newPage();
+		const aPage = await adminContext.newPage();
 		// adminPage = new AdminPage(page);
 		productAdvertisingPage = new ProductAdvertisingPage(aPage);
 		reverseWithdrawsPage = new ReverseWithdrawsPage(aPage);

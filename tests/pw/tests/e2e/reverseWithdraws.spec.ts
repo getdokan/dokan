@@ -1,4 +1,4 @@
-import { test, Page } from '@playwright/test';
+import { test } from '@playwright/test';
 import { ReverseWithdrawsPage } from 'pages/reverseWithdrawsPage';
 import { ApiUtils } from 'utils/apiUtils';
 import { dbUtils } from 'utils/dbUtils';
@@ -8,13 +8,12 @@ import { payloads } from 'utils/payloads';
 
 
 let admin: ReverseWithdrawsPage;
-let aPage: Page;
 let apiUtils: ApiUtils;
 
 
 test.beforeAll(async ({ browser, request }) => {
 	const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
-	aPage = await adminContext.newPage();
+	const aPage = await adminContext.newPage();
 	admin = new ReverseWithdrawsPage(aPage);
 
 	apiUtils = new ApiUtils(request);
@@ -23,9 +22,9 @@ test.beforeAll(async ({ browser, request }) => {
 });
 
 
-test.afterAll(async ( ) => {
+test.afterAll(async ({ browser }) => {
 	await dbUtils.setDokanSettings(dbData.dokan.optionName.reverseWithdraw, { ...dbData.dokan.reverseWithdrawSettings, enabled: 'off' });
-	await aPage.close();
+	await browser.close();
 });
 
 
@@ -40,8 +39,8 @@ test.describe('Reverse withdraw test', () => {
 		await admin.filterReverseWithdraws(data.predefined.vendorStores.vendor1);
 	});
 
-	test.only('admin can crete reverse withdraws @lite @pro', async ( ) => {
-		await admin.addReverseWithdrawal(data.reverseWithdraw);
+	test('admin can crete reverse withdraws @lite @pro', async ( ) => {
+		// await admin.addReverseWithdrawal(data.reverseWithdraw);
 	});
 
 

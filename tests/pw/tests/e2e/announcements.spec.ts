@@ -1,4 +1,4 @@
-import { test, Page } from '@playwright/test';
+import { test } from '@playwright/test';
 import { AnnouncementsPage } from 'pages/announcementsPage';
 import { ApiUtils } from 'utils/apiUtils';
 import { data } from 'utils/testData';
@@ -6,19 +6,18 @@ import { payloads } from 'utils/payloads';
 
 
 let admin: AnnouncementsPage;
-let aPage: Page;
 let apiUtils: ApiUtils;
 
 test.beforeAll(async ({ browser, request }) => {
 	const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
-	aPage = await adminContext.newPage();
+	const aPage = await adminContext.newPage();
 	admin = new AnnouncementsPage(aPage);
 	apiUtils = new ApiUtils(request);
 });
 
 
-test.afterAll(async ( ) => {
-	await aPage.close();
+test.afterAll(async ({ browser }) => {
+	await browser.close();
 });
 
 
@@ -29,7 +28,7 @@ test.describe('Announcements test', () => {
 		await admin.adminAnnouncementsRenderProperly();
 	});
 
-	test.only('admin can add announcement @pro', async ( ) => {
+	test('admin can add announcement @pro', async ( ) => {
 		await admin.addAnnouncement({ ...data.announcement.create, receiver: data.announcement.receiver.allVendors });
 	});
 

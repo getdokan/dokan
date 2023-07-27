@@ -12,14 +12,14 @@ let apiUtils: ApiUtils;
 
 test.beforeAll(async ({ browser, request }) => {
 	const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
-	aPage = await adminContext.newPage();
+	const aPage = await adminContext.newPage();
 	admin = new RequestForQuotationsPage(aPage);
 	apiUtils = new ApiUtils(request);
 });
 
 
-test.afterAll(async ( ) => {
-	await aPage.close();
+test.afterAll(async ( { browser } ) => {
+	await browser.close();
 });
 
 

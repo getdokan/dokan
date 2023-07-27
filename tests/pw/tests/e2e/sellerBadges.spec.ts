@@ -1,4 +1,4 @@
-import { test, Page } from '@playwright/test';
+import { test } from '@playwright/test';
 import { SellerBadgesPage } from 'pages/sellerBadgesPage';
 import { ApiUtils } from 'utils/apiUtils';
 import { data } from 'utils/testData';
@@ -7,17 +7,16 @@ import { payloads } from 'utils/payloads';
 
 let admin: SellerBadgesPage;
 let vendor: SellerBadgesPage;
-let aPage: Page, vPage: Page;
 let apiUtils: ApiUtils;
 
 
 test.beforeAll(async ({ browser, request }) => {
 	const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
-	aPage = await adminContext.newPage();
+	const aPage = await adminContext.newPage();
 	admin = new SellerBadgesPage(aPage);
 
 	const vendorContext = await browser.newContext({ storageState: data.auth.vendorAuthFile });
-	vPage = await vendorContext.newPage();
+	const vPage = await vendorContext.newPage();
 	vendor = new SellerBadgesPage(vPage);
 
 	apiUtils = new ApiUtils(request);
@@ -26,9 +25,8 @@ test.beforeAll(async ({ browser, request }) => {
 });
 
 
-test.afterAll(async ( ) => {
-	await aPage.close();
-	await vPage.close();
+test.afterAll(async ({ browser }) => {
+	await browser.close();
 });
 
 

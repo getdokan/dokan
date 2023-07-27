@@ -1,4 +1,4 @@
-import { test, Page } from '@playwright/test';
+import { test } from '@playwright/test';
 import { LoginPage } from 'pages/loginPage';
 import { CustomerPage } from 'pages/customerPage';
 import { ApiUtils } from 'utils/apiUtils';
@@ -10,19 +10,18 @@ test.describe('Customer user functionality test', () => {
 
 	let loginPage: LoginPage;
 	let customerPage: CustomerPage;
-	let page: Page;
 
 
 	test.beforeAll(async ({ browser }) => {
 		const context = await browser.newContext();
-		page = await context.newPage();
+		const page = await context.newPage();
 		loginPage = new LoginPage(page);
 		customerPage = new CustomerPage(page);
 	});
 
 
-	test.afterAll(async () => {
-		await page.close();
+	test.afterAll(async ({ browser }) => {
+		await browser.close();
 	});
 
 
@@ -46,22 +45,22 @@ test.describe('Customer user functionality test', () => {
 
 });
 
+
 test.describe('Customer functionality test', () => {
 
 
 	let customerPage: CustomerPage;
-	let page: Page;
 	let apiUtils: ApiUtils;
 
 	test.beforeAll(async ({ browser, request }) => {
 		const customerContext = await browser.newContext({ storageState: data.auth.customerAuthFile });
-		page = await customerContext.newPage();
+		const page = await customerContext.newPage();
 		customerPage = new CustomerPage(page);
 		apiUtils = new ApiUtils(request);
 	});
 
-	test.afterAll(async () => {
-		await page.close();
+	test.afterAll(async ({ browser }) => {
+		await browser.close();
 	});
 
 	test('customer can add billing details @lite @pro', async ( ) => {

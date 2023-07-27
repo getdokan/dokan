@@ -1,12 +1,9 @@
-import { test, Page } from '@playwright/test';
+import { test } from '@playwright/test';
 import { LoginPage } from 'pages/loginPage';
 import { VendorPage } from 'pages/vendorPage';
 import { ApiUtils } from 'utils/apiUtils';
 import { data } from 'utils/testData';
 import { payloads } from 'utils/payloads';
-
-
-const { CUSTOMER_ID, PRODUCT_ID } = process.env;
 
 
 test.describe('Vendor user functionality test1', () => {
@@ -15,19 +12,18 @@ test.describe('Vendor user functionality test1', () => {
 
 	let loginPage: LoginPage;
 	let vendorPage: VendorPage;
-	let page: Page;
 
 
 	test.beforeAll(async ({ browser }) => {
 		const context = await browser.newContext();
-		page = await context.newPage();
+		const page = await context.newPage();
 		loginPage = new LoginPage(page);
 		vendorPage = new VendorPage(page);
 	});
 
 
-	test.afterAll(async ( ) => {
-		await page.close();
+	test.afterAll(async ({ browser }) => {
+		await browser.close();
 	});
 
 
@@ -52,20 +48,19 @@ test.describe('Vendor functionality test', () => {
 
 
 	let vendorPage: VendorPage;
-	let vPage: Page;
 	let apiUtils: ApiUtils;
 
 
 	test.beforeAll(async ({ browser, request }) => {
 		const vendorContext = await browser.newContext({ storageState: data.auth.vendorAuthFile });
-		vPage = await vendorContext.newPage();
+		const vPage = await vendorContext.newPage();
 		vendorPage = new VendorPage(vPage);
 		apiUtils = new ApiUtils(request);
 	});
 
 
-	test.afterAll(async () => {
-		await vPage.close();
+	test.afterAll(async ({ browser }) => {
+		await browser.close();
 	});
 
 

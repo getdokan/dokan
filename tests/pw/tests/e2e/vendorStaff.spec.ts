@@ -1,4 +1,4 @@
-import { test, Page } from '@playwright/test';
+import { test } from '@playwright/test';
 import { VendorStaffPage } from 'pages/vendorStaffPage';
 import { ApiUtils } from 'utils/apiUtils';
 import { data } from 'utils/testData';
@@ -9,13 +9,12 @@ test.describe.skip('Vendor staff test', () => {
 
 
 	let vendor: VendorStaffPage;
-	let vPage: Page;
 	let apiUtils: ApiUtils;
 
 
 	test.beforeAll(async ({ browser, request }) => {
 		const vendorContext = await browser.newContext({ storageState: data.auth.vendorAuthFile });
-		vPage = await vendorContext.newPage();
+		const vPage = await vendorContext.newPage();
 		vendor = new VendorStaffPage(vPage);
 		apiUtils = new ApiUtils(request);
 		// const staff = {
@@ -37,8 +36,8 @@ test.describe.skip('Vendor staff test', () => {
 	});
 
 
-	test.afterAll(async ( ) => {
-		await vPage.close();
+	test.afterAll(async ({ browser }) => {
+		await browser.close();
 	});
 
 

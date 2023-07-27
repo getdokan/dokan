@@ -1,4 +1,4 @@
-import { test, Page } from '@playwright/test';
+import { test } from '@playwright/test';
 import { SingleStorePage } from 'pages/singleStorePage';
 // import { ApiUtils } from 'utils/apiUtils';
 import { data } from 'utils/testData';
@@ -9,20 +9,19 @@ test.describe('Single store functionality test', () => {
 
 
 	let customer: SingleStorePage;
-	let page: Page;
 	// let apiUtils: ApiUtils;
 
 
 	test.beforeAll(async ({ browser }) => {
 		const customerContext = await browser.newContext({ storageState: data.auth.customerAuthFile });
-		page = await customerContext.newPage();
-		customer = new SingleStorePage(page);
+		const cPage = await customerContext.newPage();
+		customer = new SingleStorePage(cPage);
 		// apiUtils = new ApiUtils(request);
 	});
 
 
-	test.afterAll(async () => {
-		await page.close();
+	test.afterAll(async ({ browser }) => {
+		await browser.close();
 	});
 
 

@@ -1,21 +1,20 @@
-import { test, Page } from '@playwright/test';
+import { test } from '@playwright/test';
 import { VerificationsPage } from 'pages/verificationsPage';
 import { data } from 'utils/testData';
 
 
 let admin: VerificationsPage;
-let aPage: Page;
 
 
 test.beforeAll(async ({ browser }) => {
 	const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
-	aPage = await adminContext.newPage();
+	const aPage = await adminContext.newPage();
 	admin = new VerificationsPage(aPage);
 });
 
 
-test.afterAll(async ( ) => {
-	await aPage.close();
+test.afterAll(async ({ browser }) => {
+	await browser.close();
 });
 
 

@@ -1,4 +1,4 @@
-import { test, Page } from '@playwright/test';
+import { test } from '@playwright/test';
 import { VendorDashboardPage } from 'pages/vendorDashboardPage';
 import { data } from 'utils/testData';
 
@@ -7,18 +7,17 @@ test.describe('Vendor dashboard test', () => {
 
 
 	let vendor: VendorDashboardPage;
-	let vPage: Page;
 
 
 	test.beforeAll(async ({ browser }) => {
-		const adminContext = await browser.newContext({ storageState: data.auth.vendorAuthFile });
-		vPage = await adminContext.newPage();
+		const vendorContext = await browser.newContext({ storageState: data.auth.vendorAuthFile });
+		const vPage = await vendorContext.newPage();
 		vendor = new VendorDashboardPage(vPage);
 	});
 
 
-	test.afterAll(async ( ) => {
-		await vPage.close();
+	test.afterAll(async ({ browser }) => {
+		await browser.close();
 	});
 
 

@@ -1,4 +1,4 @@
-import { test, Page } from '@playwright/test';
+import { test } from '@playwright/test';
 import { AdminDashboardPage } from 'pages/adminDashboardPage';
 import { ApiUtils } from 'utils/apiUtils';
 import { data } from 'utils/testData';
@@ -9,20 +9,19 @@ test.describe('Admin dashboard test', () => {
 
 
 	let admin: AdminDashboardPage;
-	let page: Page;
 	let apiUtils: ApiUtils;
 
 
 	test.beforeAll(async ({ browser, request }) => {
 		const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
-		page = await adminContext.newPage();
+		const page = await adminContext.newPage();
 		admin = new AdminDashboardPage(page);
 		apiUtils = new ApiUtils(request);
 	});
 
 
-	test.afterAll(async ( ) => {
-		await page.close();
+	test.afterAll(async ({ browser }) => {
+		await browser.close();
 	});
 
 

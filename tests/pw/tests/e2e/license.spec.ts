@@ -1,20 +1,19 @@
-import { test, Page } from '@playwright/test';
+import { test, } from '@playwright/test';
 import { LicensePage } from 'pages/licensePage';
 import { data } from 'utils/testData';
 
 let admin: LicensePage;
-let page: Page;
 
 
 test.beforeAll(async ({ browser }) => {
 	const context = await browser.newContext({});
-	page = await context.newPage();
+	const page = await context.newPage();
 	admin = new LicensePage(page);
 });
 
 
-test.afterAll(async ( ) => {
-	await page.close();
+test.afterAll(async ({ browser }) => {
+	await browser.close();
 });
 
 

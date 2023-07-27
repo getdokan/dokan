@@ -10,6 +10,7 @@ test.beforeAll(async ({ request }) => {
 	apiUtils = new ApiUtils(request);
 });
 
+
 // test.afterAll(async () => {
 // TODO: remove after update setting cause disable selling fix
 // 	const [response, responseBody] = await apiUtils.put(endPoints.updateSettings, { data: payloads.setupStore });

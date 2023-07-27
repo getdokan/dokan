@@ -1,4 +1,4 @@
-import { test, Page } from '@playwright/test';
+import { test } from '@playwright/test';
 import { ProductsPage } from 'pages/productsPage';
 import { ApiUtils } from 'utils/apiUtils';
 import { data } from 'utils/testData';
@@ -10,18 +10,17 @@ test.describe('Product functionality test', () => {
 
 	let admin: ProductsPage;
 	let vendor: ProductsPage;
-	let aPage: Page, vPage: Page;
 	let apiUtils: ApiUtils;
 	let productName: string;
 
 
 	test.beforeAll(async ({ browser, request }) => {
 		const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
-		aPage = await adminContext.newPage();
+		const aPage = await adminContext.newPage();
 		admin = new ProductsPage(aPage);
 
 		const vendorContext = await browser.newContext({ storageState: data.auth.vendorAuthFile });
-		vPage = await vendorContext.newPage();
+		const vPage = await vendorContext.newPage();
 		vendor = new ProductsPage(vPage);
 
 		apiUtils = new ApiUtils(request);
@@ -30,9 +29,8 @@ test.describe('Product functionality test', () => {
 	});
 
 
-	test.afterAll(async ( ) => {
-		await aPage.close();
-		await vPage.close();
+	test.afterAll(async ({ browser }) => {
+		await browser.close();
 	});
 
 

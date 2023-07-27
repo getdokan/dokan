@@ -1,4 +1,4 @@
-import { test, Page } from '@playwright/test';
+import { test } from '@playwright/test';
 import { RefundsPage } from 'pages/refundsPage';
 import { ApiUtils } from 'utils/apiUtils';
 import { dbUtils } from 'utils/dbUtils';
@@ -7,7 +7,6 @@ import { payloads } from 'utils/payloads';
 
 
 let admin: RefundsPage;
-let aPage: Page;
 let apiUtils: ApiUtils;
 let orderResponseBody: any;
 let orderId: string;
@@ -15,16 +14,17 @@ let orderId: string;
 
 test.beforeAll(async ({ browser, request }) => {
 	const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
-	aPage = await adminContext.newPage();
+	const aPage = await adminContext.newPage();
 	admin = new RefundsPage(aPage);
+
 	apiUtils = new ApiUtils(request);
 	[, orderResponseBody, orderId, ] = await apiUtils.createOrderWithStatus(payloads.createProduct(), payloads.createOrder, data.order.orderStatus.processing, payloads.vendorAuth);
 	await dbUtils.createRefund(orderResponseBody);
 });
 
 
-test.afterAll(async ( ) => {
-	await aPage.close();
+test.afterAll(async ({ browser }) => {
+	await browser.close();
 });
 
 

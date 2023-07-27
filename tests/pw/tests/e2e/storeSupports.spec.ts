@@ -1,4 +1,4 @@
-import { test, Page } from '@playwright/test';
+import { test } from '@playwright/test';
 import { StoreSupportsPage } from 'pages/storeSupportsPage';
 import { ApiUtils } from 'utils/apiUtils';
 import { data } from 'utils/testData';
@@ -11,21 +11,20 @@ const { PRODUCT_ID, VENDOR_ID, CUSTOMER_ID } = process.env;
 let admin: StoreSupportsPage;
 let customer: StoreSupportsPage;
 let guest: StoreSupportsPage;
-let aPage: Page, cPage: Page, uPage: Page;
 let apiUtils: ApiUtils;
 
 
 test.beforeAll(async ({ browser, request }) => {
 	const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
-	aPage = await adminContext.newPage();
+	const aPage = await adminContext.newPage();
 	admin = new StoreSupportsPage(aPage);
 
 	const customerContext = await browser.newContext({ storageState: data.auth.customerAuthFile });
-	cPage = await customerContext.newPage();
+	const cPage = await customerContext.newPage();
 	customer = new StoreSupportsPage(cPage);
 
 	const guestContext = await browser.newContext({ storageState: { cookies: [], origins: [] } });
-	uPage = await guestContext.newPage();
+	const uPage = await guestContext.newPage();
 	guest =  new StoreSupportsPage(uPage);
 
 	apiUtils = new ApiUtils(request);
@@ -35,10 +34,8 @@ test.beforeAll(async ({ browser, request }) => {
 });
 
 
-test.afterAll(async ( ) => {
-	await aPage.close();
-	await cPage.close();
-	await uPage.close();
+test.afterAll(async ({ browser }) => {
+	await browser.close();
 });
 
 
