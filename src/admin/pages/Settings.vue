@@ -728,16 +728,20 @@
 
                     a.doc-link {
                         color: #033AA3D9;
-                        border: 0.82px solid #033AA3;
+                        border: 1px solid #f3f4f6;
                         padding: 10px 15px;
                         font-size: 12px;
                         background: #FFF;
                         box-sizing: border-box;
-                        box-shadow: 0px 3.28px 3.28px rgba(0, 0, 0, 0.25);
+                        box-shadow: 2px 2px 3px 0px rgba(0, 0, 0, 0.1);
                         font-family: Roboto, sans-serif;
                         line-height: 15px;
                         border-radius: 6.56px;
                         text-decoration: none;
+
+                        &:hover {
+                            background: #033aa30f;
+                        }
                     }
                 }
             }
