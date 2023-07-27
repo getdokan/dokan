@@ -212,10 +212,14 @@
             $( '#dokan-withdraw-next-scheduled-date').html(nextDate);
         },
         calculateWithdrawCharges: () => {
+            if ( $('#dokan-send-withdraw-request-popup-form > .dokan-alert-danger').length ) {
+              return;
+            }
+
             let withdrawAmount                  = $("[name='withdraw_amount'][id='withdraw-amount']").val();
             withdrawAmount                      = accounting.unformat( withdrawAmount, dokan_refund.mon_decimal_point );
             let {chargePercentage, chargeFixed} = $("select[name='withdraw_method'][id='withdraw-method'] option:selected").data();
-            let chargeAmount                    = 0;
+            let chargeAmount           = 0;
 
             let chargeText = "";
             if ( chargeFixed ) {
@@ -238,7 +242,6 @@
         showWithdrawChargeHtml( chargeText, chargeAmount, withdrawAmount ) {
           let chargeSection    = $( "#dokan-withdraw-charge-section" );
           let revivableSection = $( "#dokan-withdraw-revivable-section" );
-
           if ( ! withdrawAmount ) {
             chargeSection.hide();
             revivableSection.hide();

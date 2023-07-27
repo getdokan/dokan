@@ -22,15 +22,18 @@ class Withdraw {
      */
     public function __construct( $data = [] ) {
         $defaults = [
-            'id'      => 0,
-            'user_id' => 0,
-            'amount'  => 0,
-            'date'    => current_time( 'mysql' ),
-            'status'  => dokan()->withdraw->get_status_code( 'pending' ),
-            'method'  => 'paypal',
-            'note'    => '',
-            'details' => '',
-            'ip'      => '',
+            'id'          => 0,
+            'user_id'     => 0,
+            'amount'      => 0,
+            'date'        => current_time( 'mysql' ),
+            'status'      => dokan()->withdraw->get_status_code( 'pending' ),
+            'method'      => 'paypal',
+            'note'        => '',
+            'details'     => '',
+            'charge'      => 0,
+            'recivable'   => 0,
+            'charge_data' => [],
+            'ip'          => '',
         ];
 
         $data = wp_parse_args( $data, $defaults );
@@ -46,6 +49,19 @@ class Withdraw {
             'details' => $data['details'],
             'ip'      => $data['ip'],
         ];
+
+        $details     = maybe_unserialize( $data['details'] );
+        $charge      = isset( $details['charge'] ) ? wc_format_decimal( $details['charge'] ) : 0;
+        $receivable  = isset( $details['receivable'] ) ? wc_format_decimal( $details['receivable'] ) : $this->get_amount();
+        $charge_data = isset( $details['charge_data'] ) ? $details['charge_data'] : [
+			'fixed' => 0,
+			'percentage' => 0,
+		];
+
+        $this
+            ->set_charge( $charge )
+            ->set_recivable( $receivable )
+            ->set_charge_data( $charge_data );
     }
 
     /**
@@ -156,6 +172,39 @@ class Withdraw {
      */
     public function get_ip() {
         return $this->data['ip'];
+    }
+
+    /**
+     * Get withdraw charge
+     *
+     * @since DOKAN_SINCE
+     *
+     * @returns int|float
+     */
+    public function get_charge() {
+        return $this->data['charge'];
+    }
+
+    /**
+     * Get withdraw revivable amount after deducting the charge amount.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @returns int|float
+     */
+    public function get_receivable_amount() {
+        return $this->data['receivable'];
+    }
+
+    /**
+     * Get withdraw charge information.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @returns array
+     */
+    public function get_charge_data() {
+        return $this->data['charge_data'];
     }
 
     /**
@@ -271,6 +320,76 @@ class Withdraw {
     }
 
     /**
+     * Sets charge.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param $amount
+     *
+     * @return \WeDevs\Dokan\Withdraw\Withdraw
+     */
+    public function set_charge( $amount ) {
+        $this->data['charge'] = floatval( $amount );
+
+        return $this;
+    }
+
+    /**
+     * Set receivable amount
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param $receivable
+     *
+     * @return \WeDevs\Dokan\Withdraw\Withdraw
+     */
+    public function set_recivable( $receivable ) {
+        $this->data['receivable'] = floatval( $receivable );
+
+        return $this;
+    }
+
+    /**
+     * Sets charge data.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param $charge_data
+     *
+     * @return \WeDevs\Dokan\Withdraw\Withdraw
+     */
+    public function set_charge_data( $charge_data ) {
+        $this->data['charge_data'] = $charge_data;
+
+        return $this;
+    }
+
+    /**
+     * Calculate withdraw charge
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    private function calculate_charge() {
+        $charge_data = $this->get_charge_data();
+        $fixed       = $charge_data['fixed'];
+        $percentage  = $charge_data['percentage'];
+        $charge      = 0;
+
+        if ( ! empty( $fixed ) ) {
+            $charge += (int) $fixed;
+        }
+
+        if ( ! empty( $percentage ) ) {
+            $charge += $percentage / 100 * (float) $this->get_amount();
+        }
+
+        $this->set_charge( $charge );
+        $this->set_recivable( floatval( $this->get_amount() - floatval( $charge ) ) );
+    }
+
+    /**
      * Create or update a withdraw
      *
      * @since 3.0.0
@@ -295,13 +414,34 @@ class Withdraw {
     protected function create() {
         global $wpdb;
 
-        $this->data['details'] = maybe_serialize( dokan()->withdraw->get_formatted_details( $this->data['method'], absint( $this->data['user_id'] ) ) );
+        $all_charges = dokan_withdraw_get_method_charges();
+        $current_method_charge_data = $all_charges[ $this->get_method() ];
+
+        $this->set_charge_data( $current_method_charge_data );
+        $this->calculate_charge();
+
+        $details = dokan()->withdraw->get_formatted_details( $this->data['method'], absint( $this->data['user_id'] ) );
+
+        $details['charge']      = $this->get_charge();
+        $details['receivable']  = $this->get_receivable_amount();
+        $details['charge_data'] = $this->get_charge_data();
+
+        $this->data['details'] = maybe_serialize( apply_filters( 'dokan_withdraw_request_details_data', $details, $this ) );
 
         unset( $this->data['id'] );
 
         $inserted = $wpdb->insert(
             $wpdb->dokan_withdraw,
-            $this->data,
+            [
+                'user_id' => $this->get_user_id(),
+                'amount'  => $this->get_amount(),
+                'date'    => $this->get_date(),
+                'status'  => $this->get_status(),
+                'method'  => $this->get_method(),
+                'note'    => $this->get_note(),
+                'details' => $this->get_details(),
+                'ip'      => $this->get_ip(),
+            ],
             [ '%d', '%s', '%s', '%d', '%s', '%s', '%s', '%s' ]
         );
 
