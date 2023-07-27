@@ -206,7 +206,7 @@ class ReverseWithdrawalController extends WP_REST_Controller {
     /**
      * Checks if a given request has access to create items.
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.24
      *
      * @param WP_REST_Request $request Full details about the request.
      *
@@ -392,7 +392,7 @@ class ReverseWithdrawalController extends WP_REST_Controller {
     /**
      * Create manual reverse withdrawal transaction
      *
-     * @since DOKAN_SINCE
+     * @since 3.7.24
      *
      * @param WP_REST_Request $request
      *
