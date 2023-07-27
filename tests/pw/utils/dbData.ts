@@ -400,7 +400,7 @@ export const dbData = {
 		},
 
 		deliveryTimeSettings: {
-			allow_vendor_override_settings: 'off',
+			allow_vendor_override_settings: 'on',
 			delivery_support: {
 				'delivery': 'delivery',
 				'store-pickup': 'store-pickup'

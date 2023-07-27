@@ -1,4 +1,4 @@
-import { test as setup, Page, expect } from '@playwright/test';
+import { test as setup, expect } from '@playwright/test';
 import { ProductAdvertisingPage } from 'pages/productAdvertisingPage';
 import { ReverseWithdrawsPage } from 'pages/reverseWithdrawsPage';
 import { ApiUtils } from 'utils/apiUtils';
@@ -247,25 +247,22 @@ setup.describe('setup dokan settings', () => {
 setup.describe('setup dokan settings e2e', () => {
 
 
-	// let adminPage: AdminPage;
 	let productAdvertisingPage: ProductAdvertisingPage;
 	let reverseWithdrawsPage: ReverseWithdrawsPage;
-	let aPage: Page;
 	let apiUtils: ApiUtils;
 
 
 	setup.beforeAll(async ({ browser, request }) => {
 		const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
 		const aPage = await adminContext.newPage();
-		// adminPage = new AdminPage(page);
 		productAdvertisingPage = new ProductAdvertisingPage(aPage);
 		reverseWithdrawsPage = new ReverseWithdrawsPage(aPage);
 		apiUtils = new ApiUtils(request);
 	});
 
 
-	setup.afterAll(async ( ) => {
-		await aPage.close();
+	setup.afterAll(async ({ browser }) => {
+		await browser.close();
 	});
 
 
@@ -286,6 +283,7 @@ setup.describe('setup dokan settings e2e', () => {
 		const product = await apiUtils.productExistsOrNot('Reverse Withdrawal Payment',  payloads.adminAuth);
 		expect(product).toBeTruthy();
 	});
+
 
 	// TODO: can be implemented on api or db
 
