@@ -295,35 +295,8 @@ class Ajax {
         $order = dokan()->order->get( $order_id );
         $order->update_status( $order_status );
 
-        // Re-adjust product stock via parent order in-case the order has been cancelled.
-        if ( $order->get_parent_id() && 'wc-cancelled' === $order_status ) {
-            foreach ( $order->get_items( 'line_item' ) as $key => $line_item ) {
-                $item_id   = $line_item->get_variation_id() ? $line_item->get_variation_id() : $line_item->get_product_id();
-                $order_qty = $line_item->get_quantity();
-                $product   = wc_get_product( $item_id );
-
-                // If stock managing disabled for the product.
-                if ( empty( $product->get_manage_stock() ) ) {
-                    continue;
-                }
-
-                // Increase product stock qty based on order item qty.
-                wc_update_product_stock( $product, $order_qty, 'increase' );
-
-                // Add stock increasing note.
-                $new_stock_qty = $product->get_stock_quantity();
-                $old_stock_qty = $new_stock_qty - $order_qty;
-                $note_content  = sprintf(
-                    /* translators: 1: Formatted product name 2: Old stock qty 3: new stock qty */
-                    __( 'Stock levels increased: %1$s %2$d &rarr; %3$d', 'dokan-lite' ),
-                    $product->get_formatted_name(),
-                    $old_stock_qty,
-                    $new_stock_qty
-                );
-
-                $order->add_order_note( $note_content );
-            }
-        }
+        // Adjust product stock.
+        dokan_sub_order_adjust_product_stock( $order );
 
         // Get the new order status. This is needed since plugin/theme authors might
         // change the order status behind the scenes in certain cases.
