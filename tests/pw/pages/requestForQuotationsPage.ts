@@ -63,8 +63,7 @@ export class RequestForQuotationsPage extends AdminPage {
 		await this.clearAndType(selector.admin.dokan.requestForQuotation.quoteRules.addNewQuoteRule.priorityOrder, rule.order);
 
 		// publish
-		await this.clickAndWaitForResponseAndLoadState(data.subUrls.api.dokan.quoteRules, selector.admin.dokan.requestForQuotation.quoteRules.addNewQuoteRule.publishRule); //todo: test this
-		// TODO: also wait for load -> for future tests
+		await this.clickAndWaitForResponseAndLoadState(data.subUrls.api.dokan.quoteRules, selector.admin.dokan.requestForQuotation.quoteRules.addNewQuoteRule.publishRule);
 	}
 
 
@@ -86,9 +85,9 @@ export class RequestForQuotationsPage extends AdminPage {
 	// edit quote rule
 	async editQuoteRule(rule: requestForQuotation['quoteRule']){
 		await this.goto(data.subUrls.backend.dokan.requestForQuoteRules);
-		// await this.goIfNotThere(data.subUrls.backend.dokan.requestForQuoteRules);//Todo: fix and apply this
 
 		await this.hover(selector.admin.dokan.requestForQuotation.quoteRules.quoteRulesCell(rule.title));
+
 		// TODO: create a generic function for below scenario on base page
 		await Promise.all([
 			this.page.waitForResponse((resp) => resp.url().includes(data.subUrls.api.dokan.quotes) && resp.status() === 200),
@@ -103,7 +102,6 @@ export class RequestForQuotationsPage extends AdminPage {
 	// update quote rule
 	async updateQuoteRule(quoteTitle: string, action: string){
 		await this.goto(data.subUrls.backend.dokan.requestForQuoteRules);
-		// await this.goIfNotThere(data.subUrls.backend.dokan.requestForQuoteRules);//Todo: fix and apply this
 
 		switch (action) {
 
@@ -134,7 +132,6 @@ export class RequestForQuotationsPage extends AdminPage {
 	// quote rules bulk action
 	async quoteRulesBulkAction(action: string){
 		await this.goto(data.subUrls.backend.dokan.requestForQuoteRules);
-		// await this.goIfNotThere(data.subUrls.backend.dokan.requestForQuoteRules);//Todo: fix and apply this
 
 		// ensure row exists
 		await this.notToBeVisible(selector.admin.dokan.requestForQuotation.quoteRules.noRowsFound);

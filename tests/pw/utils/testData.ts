@@ -1346,7 +1346,7 @@ export const data = {
 		},
 
 		quoteRule: {
-			title: 'test quote rule',  //TODO: title can be used with uuid, tests has to update too
+			title: 'test quote rule',  //TODO: title must be  used with uuid, tests are failing because of that
 			userRole: '',
 			product: 'p1_v1 (simple)',
 			category: 'Uncategorized',

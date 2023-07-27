@@ -54,8 +54,7 @@ export class ReverseWithdrawsPage extends AdminPage {
 
 		await this.click(selector.admin.dokan.reverseWithdraw.filters.filterByStore);
 		await this.typeAndWaitForResponse(data.subUrls.api.dokan.reverseWithdraws, selector.admin.dokan.reverseWithdraw.filters.filterInput, vendorName);
-		await this.clickAndWaitForResponseAndLoadState(data.subUrls.api.dokan.reverseWithdraws, selector.admin.dokan.reverseWithdraw.filters.filteredResult(vendorName)); //TODO: test this
-		//TODO: wait for load then assert
+		await this.clickAndWaitForResponseAndLoadState(data.subUrls.api.dokan.reverseWithdraws, selector.admin.dokan.reverseWithdraw.filters.filteredResult(vendorName));
 		await this.toBeVisible(selector.admin.dokan.reverseWithdraw.revereWithdrawCell(vendorName));
 	}
 

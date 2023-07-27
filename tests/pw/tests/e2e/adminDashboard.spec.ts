@@ -25,7 +25,7 @@ test.describe('Admin dashboard test', () => {
 	});
 
 
-	test('dokan admin dashboard is rendering properly @lite @pro @explo', async ( ) => {
+	test.only('dokan admin dashboard is rendering properly @lite @pro @explo', async ( ) => {
 		await admin.adminDashboardRenderProperly();
 	});
 

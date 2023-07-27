@@ -1,4 +1,4 @@
-import { test, Page } from '@playwright/test';
+import { test } from '@playwright/test';
 import { RequestForQuotationsPage } from 'pages/requestForQuotationsPage';
 import { ApiUtils } from 'utils/apiUtils';
 import { data } from 'utils/testData';
@@ -6,7 +6,6 @@ import { payloads } from 'utils/payloads';
 
 
 let admin: RequestForQuotationsPage;
-let aPage: Page;
 let apiUtils: ApiUtils;
 
 

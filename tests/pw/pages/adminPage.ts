@@ -196,7 +196,7 @@ export class AdminPage extends BasePage {
 	async dokanNotice(){
 		await this.goto(data.subUrls.backend.dokan.dokan);
 
-		await this.toHaveCount(selector.admin.dokan.notice.noticeDiv, 2); // because of promo notice
+		await this.notToHaveCount(selector.admin.dokan.notice.noticeDiv, 0); // because of promo notice
 
 		// dokan notice elements are visible
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
