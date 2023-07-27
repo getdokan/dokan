@@ -13,7 +13,7 @@ test.beforeAll(async ({ request }) => {
 
 
 // test.afterAll(async () => {
-// TODO: remove after update setting cause disable selling fix
+//todo:  remove after update setting cause disable selling fix
 // 	const [response, responseBody] = await apiUtils.put(endPoints.updateSettings, { data: payloads.setupStore });
 // 	expect(response.ok()).toBeTruthy();
 // 	expect(responseBody).toBeTruthy();

@@ -166,7 +166,7 @@ export class VendorPage extends BasePage {
 		await this.waitForVisibleLocator(selector.vendor.product.productName);
 		await this.type(selector.vendor.product.productName, productName);
 		await this.type(selector.vendor.product.productPrice, product.regularPrice());
-		await this.addCategory(product.category); // TODO: split in separate test
+		await this.addCategory(product.category); //todo:  split in separate test
 		await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.product.createProduct);
 		const createdProduct = await this.getElementValue(selector.vendor.product.title);
 		expect(createdProduct.toLowerCase()).toBe(productName.toLowerCase());
@@ -635,7 +635,7 @@ export class VendorPage extends BasePage {
 		// remove previously uploaded image
 		const uploadPhotoBtnIsVisible = await this.isVisible(selector.vendor.vVerificationSettings.uploadPhoto);
 		if (!uploadPhotoBtnIsVisible) {
-			// await this.hover(selector.vendor.vVerificationSettings.previousUploadedPhoto); // TODO: not working, real user behavior
+			// await this.hover(selector.vendor.vVerificationSettings.previousUploadedPhoto); //todo:  not working, real user behavior
 			// await this.click(selector.vendor.vVerificationSettings.removePreviousUploadedPhoto);
 			await this.setAttributeValue('.gravatar-wrap', 'class', 'gravatar-wrap dokan-hide'); //todo:  remove this alternative soln.
 			await this.setAttributeValue('.gravatar-button-area.dokan-hide', 'class', 'gravatar-button-area');

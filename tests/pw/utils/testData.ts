@@ -1395,7 +1395,7 @@ export const data = {
 			companyName: 'abc',
 			phoneNumber: '0123456789',
 			product: 'p1_v1 (simple)',
-			quantity: '', // TODO: because of interface, resolve interface issue
+			quantity: '', //todo:  because of interface, resolve interface issue
 			offerPrice: '70',
 			offerProductQuantity: '20',
 		},

@@ -11,7 +11,7 @@ let supportTicketId: string;
 // eslint-disable-next-line require-await
 test.beforeAll(async ({ request }) => {
 	apiUtils = new ApiUtils(request);
-	[, supportTicketId] = await apiUtils.createSupportTicket({ ...payloads.createSupportTicket, author: CUSTOMER_ID, store_id: VENDOR_ID }, payloads.adminAuth );
+	[, supportTicketId] = await apiUtils.createSupportTicket({ ...payloads.createSupportTicket, author: CUSTOMER_ID, store_id: VENDOR_ID });
 });
 
 test.describe('support ticket api test', () => {
@@ -55,7 +55,6 @@ test.describe('support ticket api test', () => {
 	});
 
 	test('delete a support ticket comment @pro', async () => {
-		// const supportTicketCommentId = await apiUtils.createSupportTicketComment('', payloads.createSupportTicketComment); //todo:  why failing for this
 		const supportTicketCommentId = await apiUtils.createSupportTicketComment(supportTicketId, payloads.createSupportTicketComment);
 		const [response, responseBody] = await apiUtils.delete(endPoints.deleteSupportTicketComment(supportTicketCommentId));
 		expect(response.ok()).toBeTruthy();

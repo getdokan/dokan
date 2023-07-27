@@ -98,7 +98,7 @@ test.describe('Customer functionality test', () => {
 	});
 
 
-	// TODO:
+	//todo: 
 
 	// test('customer can download downloadables @lite @pro', async ( ) => {
 	// 	// pre: complete download product

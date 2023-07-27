@@ -168,7 +168,7 @@ export class ApiUtils {
 		catch (err: any) {
 			console.log('End-point: ', response.url());
 			console.log('Status Code: ', response.status());
-			console.log('Error: ', err.message);  // TODO: showing playwright error instead of api error
+			console.log('Error: ', err.message);  //todo:  showing playwright error instead of api error
 			console.log('Response text: ', await response.text());
 			return false; //todo:  WHY FALSE
 		}
@@ -406,7 +406,7 @@ export class ApiUtils {
 	}
 
 	// create coupon
-	async createCoupon(productIds: string[], coupon: coupon, auth?: auth ): Promise<[responseBody, string, string]> { // TODO: need to update; handle productIds can be empty
+	async createCoupon(productIds: string[], coupon: coupon, auth?: auth ): Promise<[responseBody, string, string]> { //todo:  need to update; handle productIds can be empty
 		const response = await this.request.post(endPoints.createCoupon, { data: { ...coupon, product_ids: productIds }, headers: auth });
 		const responseBody = await this.getResponseBody(response, false);
 		let couponId: string;

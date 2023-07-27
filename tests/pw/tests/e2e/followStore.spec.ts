@@ -49,7 +49,7 @@ test.describe('Follow stores functionality test', () => {
 		await vendor.vendorFollowersRenderProperly();
 	});
 
-	// TODO: vendor can see followers, need followers via api
+	//todo:  vendor can see followers, need followers via api
 
 
 });

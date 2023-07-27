@@ -241,7 +241,7 @@ export const payloads = {
 				value: 'yes'
 			},
 			{
-				key: 'admin_coupons_send_notify_to_vendors', // TODO: dont' work
+				key: 'admin_coupons_send_notify_to_vendors', //todo:  dont' work
 				value: 'yes'
 			}
 		]

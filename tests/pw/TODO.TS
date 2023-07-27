@@ -64,23 +64,6 @@
 // 	await this.goIfNotThere(data.subUrls.backend.dokan.productAdvertising);
 // }
 
-//todo:  HANDLE ERROR: throw new Error('Badge is already published');
-either throw error or just return or convert to playwright error
-
-//todo:  add modal or sub option on explotory tesing tests all
-
-
-
-//todo:  export log test keep this
-		// await Promise.all([
-		// 	this.page.waitForResponse((resp) => resp.url().includes(data.subUrls.api.dokan.logs) && resp.status() === 200),
-		// 	this.page.waitForResponse((resp) => resp.url().includes(data.subUrls.backend.dokan.downloadOrderLogs) && resp.status() === 200),
-		// 	this.page.locator(selector.admin.dokan.reports.allLogs.exportLogs).click()
-		// ]); //todo:  add wait for multiple different response on base-page
-
-
-
-//todo:  add tag @explo to every view test and remove "@pro" form "@lite @pro" tests
 
 
 
@@ -319,3 +302,29 @@ const config = {
 
 
 //todo:  add os and browsers in env info
+
+
+
+
+// <----------------------------------------------- NEW TODO ------------------------------------------------->
+
+
+
+
+//todo:  HANDLE ERROR: throw new Error('Badge is already published');
+// either throw error or just return or convert to playwright error
+
+//todo:  add modal or sub option on explotory tesing tests all
+		//TOdo: assert either this or that 
+		//todo: assert to have count more than , less than  used not-to-have-count
+
+//todo:  export log test keep this
+		// await Promise.all([
+		// 	this.page.waitForResponse((resp) => resp.url().includes(data.subUrls.api.dokan.logs) && resp.status() === 200),
+		// 	this.page.waitForResponse((resp) => resp.url().includes(data.subUrls.backend.dokan.downloadOrderLogs) && resp.status() === 200),
+		// 	this.page.locator(selector.admin.dokan.reports.allLogs.exportLogs).click()
+		// ]); //todo:  add wait for multiple different response on base-page
+//todo:  add tag @explo to every view test and remove "@pro" form "@lite @pro" tests
+
+//todo:  remove every eslint comment before push
+//todo: replace every goto with goIfNotThere

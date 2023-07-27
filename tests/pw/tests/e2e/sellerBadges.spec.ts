@@ -38,7 +38,7 @@ test.describe('Seller badge test', () => {
 		await admin.adminSellerBadgeRenderProperly();
 	});
 
-	test.only('admin can create seller badge @pro', async ( ) => {
+	test('admin can create seller badge @pro', async ( ) => {
 		await admin.createSellerBadge({ ...data.sellerBadge, badgeName: data.sellerBadge.eventName.numberOfItemsSold });
 	});
 

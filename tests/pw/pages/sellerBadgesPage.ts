@@ -179,8 +179,6 @@ export class SellerBadgesPage extends AdminPage {
 
 		const count = (await this.getElementText(selector.admin.dokan.vendors.numberOfRowsFound))?.split(' ')[0];
 		expect(Number(count)).not.toBe(0);
-		//TOdo: either this or that assertion
-		//todo: to have count more than
 	}
 
 
@@ -256,7 +254,7 @@ export class SellerBadgesPage extends AdminPage {
 	}
 
 
-	 //todo: vendor seller badge render properly
+	//todo: vendor seller badge render properly
 
 	// vendor achieved badges congrats popup
 	async sellerBadgeCongratsPopup(){

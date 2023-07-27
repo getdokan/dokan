@@ -105,7 +105,7 @@ export class SettingsPage extends AdminPage {
 		await this.enableSwitcher(selector.admin.dokan.settings.selling.enableMinMaxAmount);
 
 		// save settings
-		// TODO: fix or delete
+		//todo:  fix or delete
 		// await this.clickAndWaitForResponse(data.subUrls.ajax, selector.admin.dokan.settings.selling.sellingOptionsSaveChanges);
 		// await this.toContainText(selector.admin.dokan.settings.dokanUpdateSuccessMessage, selling.saveSuccessMessage );
 		// await this.clickAndWaitForLoadState(selector.admin.dokan.settings.selling.sellingOptionsSaveChanges);
@@ -182,7 +182,7 @@ export class SettingsPage extends AdminPage {
 		await this.enableSwitcher(selector.admin.dokan.settings.reverseWithdraw.sendAnnouncement);
 
 		// save settings
-		// TODO: fix or delete
+		//todo:  fix or delete
 		// await this.clickAndWaitForResponse(data.subUrls.ajax, selector.admin.dokan.settings.reverseWithdraw.reverseWithdrawSaveChanges);
 		// await this.toContainText(selector.admin.dokan.settings.dokanUpdateSuccessMessage, reverseWithdraw.saveSuccessMessage );
 		// await this.clickAndWaitForLoadState(selector.admin.dokan.settings.reverseWithdraw.reverseWithdrawSaveChanges);
@@ -222,7 +222,7 @@ export class SettingsPage extends AdminPage {
 		await this.enableSwitcher(selector.admin.dokan.settings.appearance.showVendorInfo);
 
 		// save settings
-		// TODO: fix or delete
+		//todo:  fix or delete
 		// await this.clickAndWaitForResponse(data.subUrls.ajax, selector.admin.dokan.settings.appearance.appearanceSaveChanges);
 		// await this.toContainText(selector.admin.dokan.settings.dokanUpdateSuccessMessage, appearance.saveSuccessMessage );
 
@@ -398,7 +398,7 @@ export class SettingsPage extends AdminPage {
 		await this.focus(selector.admin.dokan.settings.geolocation.defaultLocation);
 		await this.typeAndWaitForResponse(data.subUrls.gmap, selector.admin.dokan.settings.geolocation.defaultLocation, geolocation.defaultLocation);
 		await this.press(data.key.arrowDown);
-		await this.press(data.key.enter); // TODO: map not saving
+		await this.press(data.key.enter); //todo:  map not saving
 
 		// save settings
 		await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.admin.dokan.settings.geolocation.geolocationSaveChanges);

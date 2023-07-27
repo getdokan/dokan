@@ -16,7 +16,7 @@ require('dotenv').config();
 // 	},  /* Configuration for the expect assertion library */
 // 	// preserveOutput: 'always',  /* Whether to preserve test output in the testConfig.outputDir. Defaults to 'always'. */
 // 	// fullyParallel: true, 	/* Run tests in files in parallel */
-// 	// forbidOnly: !!process.env.CI, 	/* Fail the build on CI if you accidentally left test.only in the source code. */
+// 	// forbidOnly: !!process.env.CI, 	/* Fail the build on CI if you accidentally left testonly in the source code. */
 // 	repeatEach: 1, /* The number of times to repeat each test, useful for debugging flaky tests. */
 // 	// retries: process.env.CI ? 1 : 0,  	/* The maximum number of retry attempts given to failed tests.  */
 // 	// workers: process.env.CI ? 1 : 1, 	/* Opt out of parallel tests on CI. */
@@ -58,7 +58,7 @@ require('dotenv').config();
 // 	},  /* Configuration for the expect assertion library */
 // 	preserveOutput: 'always',  /* Whether to preserve test output in the testConfig.outputDir. Defaults to 'always'. */
 // 	fullyParallel: true, 	/* Run tests in files in parallel */
-// 	// forbidOnly: !!process.env.CI, 	/* Fail the build on CI if you accidentally left test.only in the source code. */
+// 	// forbidOnly: !!process.env.CI, 	/* Fail the build on CI if you accidentally left testonly in the source code. */
 // 	repeatEach: 1, /* The number of times to repeat each test, useful for debugging flaky tests. */
 // 	retries: process.env.CI ? 1 : 0,  	/* The maximum number of retry attempts given to failed tests.  */
 // 	workers: process.env.CI ? 1 : 1, 	/* Opt out of parallel tests on CI. */
@@ -108,7 +108,7 @@ export default defineConfig({
 	},  /* Configuration for the expect assertion library */
 	preserveOutput: 'always',  /* Whether to preserve test output in the testConfig.outputDir. Defaults to 'always'. */
 	// fullyParallel: true, 	/* Run tests in files in parallel */
-	// forbidOnly: !!process.env.CI, 	/* Fail the build on CI if you accidentally left test.only in the source code. */
+	// forbidOnly: !!process.env.CI, 	/* Fail the build on CI if you accidentally left testonly in the source code. */
 	// repeatEach: 1, /* The number of times to repeat each test, useful for debugging flaky tests. */
 	// retries: process.env.CI ? 1 : 0,  	/*The maximum number of retry attempts given to failed tests.  */
 	workers: process.env.CI ? 1 : 1, 	/* Opt out of parallel tests on CI. */
@@ -153,7 +153,7 @@ export default defineConfig({
 		// globalTimeout: process.env.CI ? 20 * (60 * 1000) : 20 * (60 * 1000), /* Maximum time in milliseconds the whole test suite can run */
 		// maxFailures: process.env.CI ? 30 : 30, /* The maximum number of test failures for the whole test suite run. After reaching this number, testing will stop and exit with an error. */
 		// preserveOutput: 'always',  /* Whether to preserve test output in the testConfig.outputDir. Defaults to 'always'. */
-		// forbidOnly: !!process.env.CI, 	/* Fail the build on CI if you accidentally left test.only in the source code. */
+		// forbidOnly: !!process.env.CI, 	/* Fail the build on CI if you accidentally left testonly in the source code. */
 		// workers: process.env.CI ? 1 : 1, 	/* Opt out of parallel tests on CI. */
 		// reportSlowTests: { max: 10, threshold: 20 },  /* Whether to report slow test files. Pass null to disable this feature. */
 		// reporter: process.env.CI

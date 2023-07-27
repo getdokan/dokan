@@ -74,13 +74,11 @@ export class StoreReviewsPage extends AdminPage {
 	// delete store review
 	async deleteStoreReview(){
 		await this.goto(data.subUrls.backend.dokan.storeReviews);
-		// await this.goIfNotThere(data.subUrls.backend.dokan.storeReviews);
 		await this.hover(selector.admin.dokan.storeReviews.storeReviewFirstCell);
-		await this.clickAndWaitForResponse(data.subUrls.api.dokan.storeReviews, selector.admin.dokan.storeReviews.storeReviewDelete);
-		//todo:  also wait for content to load
+		await this.clickAndWaitForResponseAndLoadState(data.subUrls.api.dokan.storeReviews, selector.admin.dokan.storeReviews.storeReviewDelete);
 	}
 
-	// TODO: delete, restore, and  permanently delete can be merged into one
+	//todo: delete, restore, and permanently delete can be merged into one
 
 	// restore store review
 	async restoreStoreReview(){
@@ -96,7 +94,6 @@ export class StoreReviewsPage extends AdminPage {
 	// permanently delete store review
 	async permanentlyDeleteStoreReview(){
 		await this.goto(data.subUrls.backend.dokan.storeReviews);
-		// await this.goIfNotThere(data.subUrls.backend.dokan.storeReviews);
 		await this.clickAndWaitForResponse(data.subUrls.api.dokan.storeReviews, selector.admin.dokan.storeReviews.navTabs.trash);
 
 		await this.hover(selector.admin.dokan.storeReviews.storeReviewFirstCell);
@@ -107,7 +104,6 @@ export class StoreReviewsPage extends AdminPage {
 	// store reviews bulk action
 	async storeReviewsBulkAction(action: string){
 		await this.goto(data.subUrls.backend.dokan.storeReviews);
-		// await this.goIfNotThere(data.subUrls.backend.dokan.storeReviews); //Todo: fix this
 
 		// ensure row exists
 		await this.notToBeVisible(selector.admin.dokan.storeReviews.noRowsFound);
@@ -122,7 +118,6 @@ export class StoreReviewsPage extends AdminPage {
 	async reviewStore(storeName: string, store: store): Promise<void> {
 		await this.goIfNotThere(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)));
 		const reviewMessage = store.reviewMessage();
-		// await this.clickAndWaitForNavigation(selector.customer.cSingleStore.storeTabs.reviews);
 		await this.clickAndWaitForLoadState(selector.customer.cSingleStore.storeTabs.reviews);
 
 		// write new or edit previous review

@@ -139,7 +139,7 @@ setup.describe('setup  user settings', () => {
 		const allProductIds = (await apiUtils.getAllProducts(payloads.vendorAuth)).map((o: { id: string }) => o.id);
 		const coupon = { ...payloads.createCoupon(), code: data.predefined.coupon.couponCode };
 		await apiUtils.createCoupon(allProductIds, coupon, payloads.vendorAuth);
-		// TODO: not needed anymore
+		//todo:  not needed anymore
 		// const [responseBody, couponId] = await apiUtils.createCoupon(allProductIds, coupon, payloads.vendorAuth);
 		// if(responseBody.code === 'woocommerce_rest_coupon_code_already_exists'){
 		// 	await apiUtils.updateCoupon(couponId, { product_ids: allProductIds }, payloads.vendorAuth);
@@ -286,7 +286,7 @@ setup.describe('setup dokan settings e2e', () => {
 	});
 
 
-	// TODO: can be implemented on api or db
+	//todo:  can be implemented on api or db
 
 
 	// dokan settings

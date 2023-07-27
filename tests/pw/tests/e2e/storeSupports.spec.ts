@@ -103,7 +103,7 @@ test.describe('Store Support test', () => {
 	});
 
 
-	// TODO:  ask for get support order received page
+	//todo:   ask for get support order received page
 
 	test('customer can ask for store support on single store @pro', async ( ) => {
 		await customer.storeSupport(data.predefined.vendorStores.vendor1, data.customer.customerInfo.getSupport, 'store');

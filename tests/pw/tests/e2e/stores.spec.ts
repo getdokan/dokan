@@ -17,7 +17,7 @@ test.describe('Stores test', () => {
 		aPage = await adminContext.newPage();
 		admin = new StoresPage(aPage);
 		// apiUtils = new ApiUtils(request);
-		// TODO: create store via api and use that vendor for all tests instead of vendor1
+		//todo:  create store via api and use that vendor for all tests instead of vendor1
 
 	});
 
