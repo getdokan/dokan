@@ -1,38 +1,40 @@
-import { test } from '@playwright/test';
+import { test, Page } from '@playwright/test';
 import { AnnouncementsPage } from 'pages/announcementsPage';
 import { ApiUtils } from 'utils/apiUtils';
 import { data } from 'utils/testData';
 import { payloads } from 'utils/payloads';
 
 
-let admin: AnnouncementsPage;
-let vendor: AnnouncementsPage;
-let apiUtils: ApiUtils;
-let announcementTitle: string;
-const announcement = payloads.createAnnouncement();
-
-test.beforeAll(async ({ browser, request }) => {
-	const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
-	const aPage = await adminContext.newPage();
-	admin = new AnnouncementsPage(aPage);
-
-	const vendorContext = await browser.newContext({ storageState: data.auth.vendorAuthFile });
-	const vPage = await vendorContext.newPage();
-	vendor = new AnnouncementsPage(vPage);
-
-
-	apiUtils = new ApiUtils(request);
-	[,, announcementTitle] = await apiUtils.createAnnouncement({ ...payloads.createAnnouncement(), status: 'draft' }, payloads.adminAuth);
-	await apiUtils.createAnnouncement(announcement, payloads.adminAuth);
-});
-
-
-test.afterAll(async ({ browser }) => {
-	await browser.close();
-});
-
-
 test.describe('Announcements test', () => {
+
+
+	let admin: AnnouncementsPage;
+	let vendor: AnnouncementsPage;
+	let aPage: Page, vPage: Page;
+	let apiUtils: ApiUtils;
+	let announcementTitle: string;
+	const announcement = payloads.createAnnouncement();
+
+	test.beforeAll(async ({ browser, request }) => {
+		const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
+		aPage = await adminContext.newPage();
+		admin = new AnnouncementsPage(aPage);
+
+		const vendorContext = await browser.newContext({ storageState: data.auth.vendorAuthFile });
+		const vPage = await vendorContext.newPage();
+		vendor = new AnnouncementsPage(vPage);
+
+
+		apiUtils = new ApiUtils(request);
+		[,, announcementTitle] = await apiUtils.createAnnouncement({ ...payloads.createAnnouncement(), status: 'draft' }, payloads.adminAuth);
+		await apiUtils.createAnnouncement(announcement, payloads.adminAuth);
+	});
+
+
+	test.afterAll(async () => {
+		await aPage.close();
+		await vPage.close();
+	});
 
 
 	test('dokan announcements menu page is rendering properly @pro @explo', async ( ) => {

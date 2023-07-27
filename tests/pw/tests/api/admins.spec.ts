@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test';
 import { ApiUtils } from 'utils/apiUtils';
 import { endPoints } from 'utils/apiEndPoints';
 
+let aPage: Page, vPage: Page, cPage: Page, uPage: Page;
 let apiUtils: ApiUtils;
 
 // eslint-disable-next-line require-await

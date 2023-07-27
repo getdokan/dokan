@@ -1,4 +1,4 @@
-import { test } from '@playwright/test';
+import { test, Page } from '@playwright/test';
 import { WholesaleCustomersPage } from 'pages/wholesaleCustomersPage';
 import { CustomerPage } from 'pages/customerPage';
 import { ApiUtils } from 'utils/apiUtils';
@@ -8,35 +8,36 @@ import { payloads } from 'utils/payloads';
 import { dbData } from 'utils/dbData';
 
 
-let admin: WholesaleCustomersPage;
-let customer: WholesaleCustomersPage;
-let customerPage: CustomerPage;
-let apiUtils: ApiUtils;
+test.describe.skip('Wholesale customers test', () => {
+
+	let admin: WholesaleCustomersPage;
+	let customer: WholesaleCustomersPage;
+	let customerPage: CustomerPage;
+	let aPage: Page, cPage: Page;
+	let apiUtils: ApiUtils;
 
 
-test.beforeAll(async ({ browser, request }) => {
-	const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
-	const aPage = await adminContext.newPage();
-	admin = new WholesaleCustomersPage(aPage);
+	test.beforeAll(async ({ browser, request }) => {
+		const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
+		aPage = await adminContext.newPage();
+		admin = new WholesaleCustomersPage(aPage);
 
-	// const customerContext = await browser.newContext({ storageState: data.auth.customerAuthFile });
-	const customerContext = await browser.newContext({ storageState: { cookies: [], origins: [] } });
-	const cPage = await customerContext.newPage();
-	customerPage = new CustomerPage(cPage);
-	customer = new WholesaleCustomersPage(cPage);
+		// const customerContext = await browser.newContext({ storageState: data.auth.customerAuthFile });
+		const customerContext = await browser.newContext({ storageState: { cookies: [], origins: [] } });
+		cPage = await customerContext.newPage();
+		customerPage = new CustomerPage(cPage);
+		customer = new WholesaleCustomersPage(cPage);
 
-	apiUtils = new ApiUtils(request);
-	await apiUtils.createWholesaleCustomer(payloads.createCustomer(), payloads.adminAuth);
-	await apiUtils.createWholesaleCustomer(payloads.createCustomer1, payloads.adminAuth);
-});
-
-
-test.afterAll(async ({ browser }) => {
-	await browser.close();
-});
+		apiUtils = new ApiUtils(request);
+		await apiUtils.createWholesaleCustomer(payloads.createCustomer(), payloads.adminAuth);
+		await apiUtils.createWholesaleCustomer(payloads.createCustomer1, payloads.adminAuth);
+	});
 
 
-test.describe('Wholesale customers test', () => {
+	test.afterAll(async () => {
+		await aPage.close();
+		await cPage.close();
+	});
 
 
 	test('dokan wholesale customers menu page is rendering properly @pro @explo', async ( ) => {

@@ -4,6 +4,7 @@ import { endPoints } from 'utils/apiEndPoints';
 import { payloads } from 'utils/payloads';
 import { helpers } from 'utils/helpers';
 
+let aPage: Page, vPage: Page, cPage: Page, uPage: Page;
 let apiUtils: ApiUtils;
 let withdrawId: string;
 let minimumWithdrawLimit: string;

@@ -1,4 +1,4 @@
-import { test } from '@playwright/test';
+import { test, Page } from '@playwright/test';
 import { VendorDashboardPage } from 'pages/vendorDashboardPage';
 import { data } from 'utils/testData';
 
@@ -7,6 +7,7 @@ test.describe('Vendor dashboard test', () => {
 
 
 	let vendor: VendorDashboardPage;
+	let vPage: Page;
 
 
 	test.beforeAll(async ({ browser }) => {
@@ -16,8 +17,8 @@ test.describe('Vendor dashboard test', () => {
 	});
 
 
-	test.afterAll(async ({ browser }) => {
-		await browser.close();
+	test.afterAll(async () => {
+		await vPage.close();
 	});
 
 

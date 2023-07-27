@@ -1,30 +1,30 @@
-import { test } from '@playwright/test';
+import { test, Page } from '@playwright/test';
 import { ProductAdvertisingPage } from 'pages/productAdvertisingPage';
 import { ApiUtils } from 'utils/apiUtils';
 import { data } from 'utils/testData';
 import { payloads } from 'utils/payloads';
 
 
-let admin: ProductAdvertisingPage;
-let apiUtils: ApiUtils;
-
-
-test.beforeAll(async ({ browser, request }) => {
-	const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
-	const aPage = await adminContext.newPage();
-	admin = new ProductAdvertisingPage(aPage);
-
-	apiUtils = new ApiUtils(request);
-	await apiUtils.createProductAdvertisement(payloads.createProduct(), payloads.vendorAuth);
-});
-
-
-test.afterAll(async ({ browser }) => {
-	await browser.close();
-});
-
-
 test.describe('Product Advertising test', () => {
+
+	let admin: ProductAdvertisingPage;
+	let aPage: Page;
+	let apiUtils: ApiUtils;
+
+
+	test.beforeAll(async ({ browser, request }) => {
+		const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
+		aPage = await adminContext.newPage();
+		admin = new ProductAdvertisingPage(aPage);
+
+		apiUtils = new ApiUtils(request);
+		await apiUtils.createProductAdvertisement(payloads.createProduct(), payloads.vendorAuth);
+	});
+
+
+	test.afterAll(async () => {
+		await aPage.close();
+	});
 
 
 	test('dokan product advertising menu page is rendering properly @pro @explo', async ( ) => {

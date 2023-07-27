@@ -1,26 +1,27 @@
-import { test } from '@playwright/test';
+import { test, Page } from '@playwright/test';
 import { ModulesPage } from 'pages/modulesPage';
 import { data } from 'utils/testData';
-
-
-let admin: ModulesPage;
-
-
-test.beforeAll(async ({ browser }) => {
-	const context = await browser.newContext({});
-	const page = await context.newPage();
-	admin = new ModulesPage(page);
-});
-
-
-test.afterAll(async ({ browser }) => {
-	await browser.close();
-});
 
 
 test.describe('Modules test', () => {
 
 	test.use({ storageState: data.auth.adminAuthFile });
+
+	let admin: ModulesPage;
+	let page: Page;
+
+
+	test.beforeAll(async ({ browser }) => {
+		const context = await browser.newContext({});
+		page = await context.newPage();
+		admin = new ModulesPage(page);
+	});
+
+
+	test.afterAll(async () => {
+		await page.close();
+	});
+
 
 	test('dokan modules menu page is rendering properly @pro @explo', async ( ) => {
 		await admin.adminModulesRenderProperly();

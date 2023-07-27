@@ -1,4 +1,4 @@
-import { test } from '@playwright/test';
+import { test, Page } from '@playwright/test';
 import { LoginPage } from 'pages/loginPage';
 import { VendorPage } from 'pages/vendorPage';
 import { ApiUtils } from 'utils/apiUtils';
@@ -12,18 +12,19 @@ test.describe('Vendor user functionality test1', () => {
 
 	let loginPage: LoginPage;
 	let vendorPage: VendorPage;
+	let page: Page;
 
 
 	test.beforeAll(async ({ browser }) => {
 		const context = await browser.newContext();
-		const page = await context.newPage();
+		page = await context.newPage();
 		loginPage = new LoginPage(page);
 		vendorPage = new VendorPage(page);
 	});
 
 
-	test.afterAll(async ({ browser }) => {
-		await browser.close();
+	test.afterAll(async () => {
+		await page.close();
 	});
 
 
@@ -48,6 +49,7 @@ test.describe('Vendor functionality test', () => {
 
 
 	let vendorPage: VendorPage;
+	let vPage: Page;
 	let apiUtils: ApiUtils;
 
 
@@ -59,8 +61,8 @@ test.describe('Vendor functionality test', () => {
 	});
 
 
-	test.afterAll(async ({ browser }) => {
-		await browser.close();
+	test.afterAll(async () => {
+		await vPage.close();
 	});
 
 

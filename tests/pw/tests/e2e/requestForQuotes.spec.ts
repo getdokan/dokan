@@ -1,31 +1,32 @@
-import { test } from '@playwright/test';
+import { test, Page } from '@playwright/test';
 import { RequestForQuotationsPage } from 'pages/requestForQuotationsPage';
 import { ApiUtils } from 'utils/apiUtils';
 import { data } from 'utils/testData';
 import { payloads } from 'utils/payloads';
 
 
-let admin: RequestForQuotationsPage;
-let apiUtils: ApiUtils;
-const productId: string[] = [];
-
-
-test.beforeAll(async ({ browser, request }) => {
-	const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
-	const aPage = await adminContext.newPage();
-	admin = new RequestForQuotationsPage(aPage);
-	apiUtils = new ApiUtils(request);
-	const [, pId,] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendorAuth);
-	productId.push(pId);
-});
-
-
-test.afterAll(async ({ browser }) => {
-	await browser.close();
-});
-
-
 test.describe('Request for quotation test', () => {
+
+
+	let admin: RequestForQuotationsPage;
+	let aPage: Page;
+	let apiUtils: ApiUtils;
+	const productId: string[] = [];
+
+
+	test.beforeAll(async ({ browser, request }) => {
+		const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
+		aPage = await adminContext.newPage();
+		admin = new RequestForQuotationsPage(aPage);
+		apiUtils = new ApiUtils(request);
+		const [, pId,] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendorAuth);
+		productId.push(pId);
+	});
+
+
+	test.afterAll(async () => {
+		await aPage.close();
+	});
 
 	// quotes
 

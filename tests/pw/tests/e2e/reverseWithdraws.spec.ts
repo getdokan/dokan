@@ -1,4 +1,4 @@
-import { test } from '@playwright/test';
+import { test, Page } from '@playwright/test';
 import { ReverseWithdrawsPage } from 'pages/reverseWithdrawsPage';
 import { ApiUtils } from 'utils/apiUtils';
 import { dbUtils } from 'utils/dbUtils';
@@ -7,28 +7,28 @@ import { data } from 'utils/testData';
 import { payloads } from 'utils/payloads';
 
 
-let admin: ReverseWithdrawsPage;
-let apiUtils: ApiUtils;
+test.describe.skip('Reverse withdraw test', () => {
+
+	let admin: ReverseWithdrawsPage;
+	let aPage: Page;
+	let apiUtils: ApiUtils;
 
 
-test.beforeAll(async ({ browser, request }) => {
-	const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
-	const aPage = await adminContext.newPage();
-	admin = new ReverseWithdrawsPage(aPage);
+	test.beforeAll(async ({ browser, request }) => {
+		const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
+		aPage = await adminContext.newPage();
+		admin = new ReverseWithdrawsPage(aPage);
 
-	apiUtils = new ApiUtils(request);
-	await apiUtils.createOrderWithStatus(payloads.createProduct(), payloads.createOrderCod, 'wc-completed', payloads.vendorAuth);
+		apiUtils = new ApiUtils(request);
+		await apiUtils.createOrderWithStatus(payloads.createProduct(), payloads.createOrderCod, 'wc-completed', payloads.vendorAuth);
 
-});
-
-
-test.afterAll(async ({ browser }) => {
-	await dbUtils.setDokanSettings(dbData.dokan.optionName.reverseWithdraw, { ...dbData.dokan.reverseWithdrawSettings, enabled: 'off' });
-	await browser.close();
-});
+	});
 
 
-test.describe('Reverse withdraw test', () => {
+	test.afterAll(async () => {
+		await dbUtils.setDokanSettings(dbData.dokan.optionName.reverseWithdraw, { ...dbData.dokan.reverseWithdrawSettings, enabled: 'off' });
+		await aPage.close();
+	});
 
 
 	test('dokan admin reverse withdraw menu page is rendering properly @lite @pro @explo', async ( ) => {

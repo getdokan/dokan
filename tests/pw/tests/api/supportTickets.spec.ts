@@ -4,6 +4,7 @@ import { endPoints } from 'utils/apiEndPoints';
 import { payloads } from 'utils/payloads';
 const { VENDOR_ID, CUSTOMER_ID } = process.env;
 
+let aPage: Page, vPage: Page, cPage: Page, uPage: Page;
 let apiUtils: ApiUtils;
 let supportTicketId: string;
 

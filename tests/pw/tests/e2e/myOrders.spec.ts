@@ -1,4 +1,4 @@
-import { test, } from '@playwright/test';
+import { test, Page } from '@playwright/test';
 import { MyOrdersPage } from 'pages/myOrdersPage';
 import { ApiUtils } from 'utils/apiUtils';
 import { data } from 'utils/testData';
@@ -11,6 +11,7 @@ test.describe('My Orders functionality test', () => {
 
 
 	let customer: MyOrdersPage;
+	let cPage: Page;
 	let apiUtils: ApiUtils;
 
 
@@ -22,8 +23,8 @@ test.describe('My Orders functionality test', () => {
 	});
 
 
-	test.afterAll(async ({ browser }) => {
-		await browser.close();
+	test.afterAll(async () => {
+		await cPage.close();
 	});
 
 

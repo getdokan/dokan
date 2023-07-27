@@ -1,27 +1,29 @@
-import { test } from '@playwright/test';
+import { test, Page } from '@playwright/test';
 import { LoginPage } from 'pages/loginPage';
 import { CustomerPage } from 'pages/customerPage';
-import { ApiUtils } from 'utils/apiUtils';
+// import { ApiUtils } from 'utils/apiUtils';
 import { data } from 'utils/testData';
-import { payloads } from 'utils/payloads';
+// import { payloads } from 'utils/payloads';
 
 test.describe('Customer user functionality test', () => {
+
 	test.use({ storageState: { cookies: [], origins: [] } });
 
 	let loginPage: LoginPage;
 	let customerPage: CustomerPage;
+	let page: Page;
 
 
 	test.beforeAll(async ({ browser }) => {
 		const context = await browser.newContext();
-		const page = await context.newPage();
+		page = await context.newPage();
 		loginPage = new LoginPage(page);
 		customerPage = new CustomerPage(page);
 	});
 
 
-	test.afterAll(async ({ browser }) => {
-		await browser.close();
+	test.afterAll(async () => {
+		await page.close();
 	});
 
 
@@ -50,17 +52,18 @@ test.describe('Customer functionality test', () => {
 
 
 	let customerPage: CustomerPage;
-	let apiUtils: ApiUtils;
+	let cPage: Page;
+	// let apiUtils: ApiUtils;
 
-	test.beforeAll(async ({ browser, request }) => {
+	test.beforeAll(async ({ browser,  }) => {
 		const customerContext = await browser.newContext({ storageState: data.auth.customerAuthFile });
 		const page = await customerContext.newPage();
 		customerPage = new CustomerPage(page);
-		apiUtils = new ApiUtils(request);
+		// apiUtils = new ApiUtils(request);
 	});
 
-	test.afterAll(async ({ browser }) => {
-		await browser.close();
+	test.afterAll(async () => {
+		await cPage.close();
 	});
 
 	test('customer can add billing details @lite @pro', async ( ) => {

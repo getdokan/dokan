@@ -1,4 +1,4 @@
-import { test } from '@playwright/test';
+import { test, Page } from '@playwright/test';
 import { VendorStaffPage } from 'pages/vendorStaffPage';
 import { ApiUtils } from 'utils/apiUtils';
 import { data } from 'utils/testData';
@@ -9,6 +9,7 @@ test.describe.skip('Vendor staff test', () => {
 
 
 	let vendor: VendorStaffPage;
+	let vPage: Page;
 	let apiUtils: ApiUtils;
 
 
@@ -36,8 +37,8 @@ test.describe.skip('Vendor staff test', () => {
 	});
 
 
-	test.afterAll(async ({ browser }) => {
-		await browser.close();
+	test.afterAll(async () => {
+		await vPage.close();
 	});
 
 

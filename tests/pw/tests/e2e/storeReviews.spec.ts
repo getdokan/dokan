@@ -1,40 +1,41 @@
-import { test } from '@playwright/test';
+import { test, Page } from '@playwright/test';
 import { StoreReviewsPage } from 'pages/storeReviewsPage';
 import { ApiUtils } from 'utils/apiUtils';
 import { data } from 'utils/testData';
 import { payloads } from 'utils/payloads';
 
 
-const { VENDOR_ID } = process.env;
-
-
-let admin: StoreReviewsPage;
-let customer: StoreReviewsPage;
-let apiUtils: ApiUtils;
-
-
-test.beforeAll(async ({ browser, request }) => {
-	const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
-	const aPage = await adminContext.newPage();
-	admin = new StoreReviewsPage(aPage);
-
-	const customerContext = await browser.newContext({ storageState: data.auth.customerAuthFile });
-	const cPage = await customerContext.newPage();
-	customer = new StoreReviewsPage(cPage);
-
-	apiUtils = new ApiUtils(request);
-	await apiUtils.createStoreReview(VENDOR_ID, payloads.createStoreReview, payloads.customerAuth);
-	const [, reviewId] = await apiUtils.createStoreReview(VENDOR_ID, { ...payloads.createStoreReview, title: 'trashed test review' }, payloads.customerAuth);
-	await apiUtils.deleteStoreReview(reviewId, payloads.adminAuth);
-});
-
-
-test.afterAll(async ({ browser }) => {
-	await browser.close();
-});
-
-
 test.describe('Store Reviews test', () => {
+
+	const { VENDOR_ID } = process.env;
+
+
+	let admin: StoreReviewsPage;
+	let customer: StoreReviewsPage;
+	let aPage: Page, cPage: Page;
+	let apiUtils: ApiUtils;
+
+
+	test.beforeAll(async ({ browser, request }) => {
+		const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
+		aPage = await adminContext.newPage();
+		admin = new StoreReviewsPage(aPage);
+
+		const customerContext = await browser.newContext({ storageState: data.auth.customerAuthFile });
+		cPage = await customerContext.newPage();
+		customer = new StoreReviewsPage(cPage);
+
+		apiUtils = new ApiUtils(request);
+		await apiUtils.createStoreReview(VENDOR_ID, payloads.createStoreReview, payloads.customerAuth);
+		const [, reviewId] = await apiUtils.createStoreReview(VENDOR_ID, { ...payloads.createStoreReview, title: 'trashed test review' }, payloads.customerAuth);
+		await apiUtils.deleteStoreReview(reviewId, payloads.adminAuth);
+	});
+
+
+	test.afterAll(async () => {
+		await aPage.close();
+		await cPage.close();
+	});
 
 
 	test('dokan store reviews menu page is rendering properly @pro @explo', async ( ) => {

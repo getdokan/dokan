@@ -1,25 +1,27 @@
-import { test, } from '@playwright/test';
+import { test, Page } from '@playwright/test';
 import { LicensePage } from 'pages/licensePage';
 import { data } from 'utils/testData';
-
-let admin: LicensePage;
-
-
-test.beforeAll(async ({ browser }) => {
-	const context = await browser.newContext({});
-	const page = await context.newPage();
-	admin = new LicensePage(page);
-});
-
-
-test.afterAll(async ({ browser }) => {
-	await browser.close();
-});
 
 
 test.describe('License test', () => {
 
 	test.use({ storageState: data.auth.adminAuthFile });
+
+	let admin: LicensePage;
+	let page: Page;
+
+
+	test.beforeAll(async ({ browser }) => {
+		const context = await browser.newContext({});
+		page = await context.newPage();
+		admin = new LicensePage(page);
+	});
+
+
+	test.afterAll(async () => {
+		await page.close();
+	});
+
 
 	test('dokan license menu page is rendering properly @pro @explo', async ( ) => {
 		await admin.adminLicenseRenderProperly();

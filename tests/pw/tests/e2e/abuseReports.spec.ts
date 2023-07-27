@@ -1,4 +1,4 @@
-import { test } from '@playwright/test';
+import { test, Page } from '@playwright/test';
 import { AbuseReportsPage } from 'pages/abuseReportsPage';
 import { ApiUtils } from 'utils/apiUtils';
 import { dbUtils } from 'utils/dbUtils';
@@ -9,40 +9,43 @@ import { payloads } from 'utils/payloads';
 
 const { VENDOR_ID, CUSTOMER_ID } = process.env;
 
-let admin: AbuseReportsPage;
-let customer: AbuseReportsPage;
-let guest: AbuseReportsPage;
-let apiUtils: ApiUtils;
 
-test.beforeAll(async ({ browser, request }) => {
-	const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
-	const aPage = await adminContext.newPage();
-	admin = new AbuseReportsPage(aPage);
+test.describe.skip('Abuse report test', () => {
 
-	const customerContext = await browser.newContext({ storageState: data.auth.customerAuthFile });
-	const cPage = await customerContext.newPage();
-	customer = new AbuseReportsPage(cPage);
+	let admin: AbuseReportsPage;
+	let customer: AbuseReportsPage;
+	let guest: AbuseReportsPage;
+	let aPage: Page, cPage: Page, uPage: Page;
+	let apiUtils: ApiUtils;
 
-	const guestContext = await browser.newContext({ storageState: { cookies: [], origins: [] } });
-	const uPage = await guestContext.newPage();
-	guest =  new AbuseReportsPage(uPage);
+	test.beforeAll(async ({ browser, request }) => {
+		const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
+		aPage = await adminContext.newPage();
+		admin = new AbuseReportsPage(aPage);
 
-	apiUtils = new ApiUtils(request);
-	const productId = await apiUtils.getProductId(data.predefined.simpleProduct.product1.name, payloads.vendorAuth);
-	await dbUtils.createAbuseReport(dbData.dokan.createAbuseReport, productId, VENDOR_ID, CUSTOMER_ID);
-});
+		const customerContext = await browser.newContext({ storageState: data.auth.customerAuthFile });
+		cPage = await customerContext.newPage();
+		customer = new AbuseReportsPage(cPage);
 
+		const guestContext = await browser.newContext({ storageState: { cookies: [], origins: [] } });
+		uPage = await guestContext.newPage();
+		guest =  new AbuseReportsPage(uPage);
 
-test.afterAll(async ( { browser } ) => {
-	await browser.close();
-});
-
-
-test.describe('Abuse report test', () => {
+		apiUtils = new ApiUtils(request);
+		const productId = await apiUtils.getProductId(data.predefined.simpleProduct.product1.name, payloads.vendorAuth);
+		await dbUtils.createAbuseReport(dbData.dokan.createAbuseReport, productId, VENDOR_ID, CUSTOMER_ID);
+	});
 
 
-	test.only('dokan abuse report menu page is rendering properly @pro @explo', async ( ) => {
-		// await admin.adminAbuseReportRenderProperly();
+	test.afterAll(async () => {
+		await aPage.close();
+		await cPage.close();
+		await uPage.close();
+	});
+
+
+	test('dokan abuse report menu page is rendering properly @pro @explo', async ( ) => {
+		await admin.adminAbuseReportRenderProperly();
 	});
 
 	test('admin can view abuse report details @pro', async ( ) => {

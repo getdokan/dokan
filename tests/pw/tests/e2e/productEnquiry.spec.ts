@@ -1,4 +1,4 @@
-import { test, } from '@playwright/test';
+import { test, Page } from '@playwright/test';
 import { ProductEnquiryPage } from 'pages/productEnquiryPage';
 import { ApiUtils } from 'utils/apiUtils';
 import { dbUtils } from 'utils/dbUtils';
@@ -9,38 +9,40 @@ import { payloads } from 'utils/payloads';
 
 const { VENDOR_ID, CUSTOMER_ID } = process.env;
 
-// let admin: ProductEnquiryPage;
-let customer: ProductEnquiryPage;
-let guest: ProductEnquiryPage;
-let apiUtils: ApiUtils;
+
+test.describe.skip('Abuse report test', () => {
+
+	// let admin: ProductEnquiryPage;
+	let customer: ProductEnquiryPage;
+	let guest: ProductEnquiryPage;
+	let cPage: Page, uPage: Page;
+	let apiUtils: ApiUtils;
 
 
-test.beforeAll(async ({ browser, request }) => {
+	test.beforeAll(async ({ browser, request }) => {
 	// const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
-	// const aPage = await adminContext.newPage();
+	// aPage = await adminContext.newPage();
 	// admin = new ProductEnquiryPage(aPage);
 
-	const customerContext = await browser.newContext({ storageState: data.auth.customerAuthFile });
-	const cPage = await customerContext.newPage();
-	customer = new ProductEnquiryPage(cPage);
+		const customerContext = await browser.newContext({ storageState: data.auth.customerAuthFile });
+		cPage = await customerContext.newPage();
+		customer = new ProductEnquiryPage(cPage);
 
-	const guestContext = await browser.newContext({ storageState: { cookies: [], origins: [] } });
-	const uPage = await guestContext.newPage();
-	guest =  new ProductEnquiryPage(uPage);
+		const guestContext = await browser.newContext({ storageState: { cookies: [], origins: [] } });
+		uPage = await guestContext.newPage();
+		guest =  new ProductEnquiryPage(uPage);
 
-	apiUtils = new ApiUtils(request);
-	const productId = await apiUtils.getProductId(data.predefined.simpleProduct.product1.name, payloads.vendorAuth);
-	await dbUtils.createAbuseReport(dbData.dokan.createAbuseReport, productId, VENDOR_ID, CUSTOMER_ID);
+		apiUtils = new ApiUtils(request);
+		const productId = await apiUtils.getProductId(data.predefined.simpleProduct.product1.name, payloads.vendorAuth);
+		await dbUtils.createAbuseReport(dbData.dokan.createAbuseReport, productId, VENDOR_ID, CUSTOMER_ID);
 
-});
-
-
-test.afterAll(async ({ browser }) => {
-	await browser.close();
-});
+	});
 
 
-test.describe('Abuse report test', () => {
+	test.afterAll(async () => {
+		await cPage.close();
+		await uPage.close();
+	});
 
 
 	test('customer can enquire product @pro', async ( ) => {

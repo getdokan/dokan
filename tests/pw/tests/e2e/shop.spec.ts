@@ -1,4 +1,4 @@
-import { test } from '@playwright/test';
+import { test, Page } from '@playwright/test';
 import { ShopPage } from 'pages/shopPage';
 // import { ApiUtils } from 'utils/apiUtils';
 import { data } from 'utils/testData';
@@ -9,20 +9,21 @@ test.describe('Shop functionality test', () => {
 
 
 	let customer: ShopPage;
+	let cPage: Page;
 	// let apiUtils: ApiUtils;
 
 
 	test.beforeAll(async ({ browser }) => {
 		const customerContext = await browser.newContext({ storageState: data.auth.customerAuthFile });
-		const cPage = await customerContext.newPage();
+		cPage = await customerContext.newPage();
 		customer = new ShopPage(cPage);
 
 		// apiUtils = new ApiUtils(request);
 	});
 
 
-	test.afterAll(async ({ browser }) => {
-		await browser.close();
+	test.afterAll(async () => {
+		await cPage.close();
 	});
 
 

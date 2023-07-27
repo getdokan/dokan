@@ -1,28 +1,29 @@
-import { test } from '@playwright/test';
+import { test, Page } from '@playwright/test';
 import { StoreCategoriesPage } from 'pages/storeCategoriesPage';
 import { ApiUtils } from 'utils/apiUtils';
 import { data } from 'utils/testData';
 import { payloads } from 'utils/payloads';
 
 
-let admin: StoreCategoriesPage;
-let apiUtils: ApiUtils;
-
-
-test.beforeAll(async ({ browser, request }) => {
-	const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
-	const aPage = await adminContext.newPage();
-	admin = new StoreCategoriesPage(aPage);
-	apiUtils = new ApiUtils(request);
-});
-
-
-test.afterAll(async ({ browser }) => {
-	await browser.close();
-});
-
-
 test.describe('Vendors test', () => {
+
+
+	let admin: StoreCategoriesPage;
+	let aPage: Page;
+	let apiUtils: ApiUtils;
+
+
+	test.beforeAll(async ({ browser, request }) => {
+		const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
+		aPage = await adminContext.newPage();
+		admin = new StoreCategoriesPage(aPage);
+		apiUtils = new ApiUtils(request);
+	});
+
+
+	test.afterAll(async () => {
+		await aPage.close();
+	});
 
 
 	// store categories

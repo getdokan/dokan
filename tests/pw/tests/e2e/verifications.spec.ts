@@ -1,25 +1,25 @@
-import { test } from '@playwright/test';
+import { test, Page } from '@playwright/test';
 import { VerificationsPage } from 'pages/verificationsPage';
 import { data } from 'utils/testData';
 
 
-let admin: VerificationsPage;
-
-
-test.beforeAll(async ({ browser }) => {
-	const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
-	const aPage = await adminContext.newPage();
-	admin = new VerificationsPage(aPage);
-});
-
-
-test.afterAll(async ({ browser }) => {
-	await browser.close();
-});
-
-
 test.describe('Verifications test', () => {
 	//TODO: need multiple verification request via admin
+
+	let admin: VerificationsPage;
+	let aPage: Page;
+
+
+	test.beforeAll(async ({ browser }) => {
+		const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
+		aPage = await adminContext.newPage();
+		admin = new VerificationsPage(aPage);
+	});
+
+
+	test.afterAll(async () => {
+		await aPage.close();
+	});
 
 
 	test('admin verifications menu page is rendering properly @pro @explo', async ( ) => {

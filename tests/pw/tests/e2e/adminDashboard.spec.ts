@@ -1,4 +1,4 @@
-import { test } from '@playwright/test';
+import { test, Page } from '@playwright/test';
 import { AdminDashboardPage } from 'pages/adminDashboardPage';
 import { ApiUtils } from 'utils/apiUtils';
 import { data } from 'utils/testData';
@@ -9,6 +9,7 @@ test.describe('Admin dashboard test', () => {
 
 
 	let admin: AdminDashboardPage;
+	let aPage: Page;
 	let apiUtils: ApiUtils;
 
 
@@ -20,17 +21,17 @@ test.describe('Admin dashboard test', () => {
 	});
 
 
-	test.afterAll(async ({ browser }) => {
-		await browser.close();
+	test.afterAll(async () => {
+		await aPage.close();
 	});
 
 
-	test.only('dokan admin dashboard is rendering properly @lite @pro @explo', async ( ) => {
+	test('dokan admin dashboard is rendering properly @lite @pro @explo', async ( ) => {
 		await admin.adminDashboardRenderProperly();
 	});
 
 	test('admin dashboard at a glance values are accurate @lite @pro', async ( ) => {
-		const summary = await apiUtils.getAdminReportSummary( payloads.adminAuth); //TODO: fix admin auth don't work if test use auth from storage json
+		const summary = await apiUtils.getAdminReportSummary( payloads.adminAuth);
 		await admin.dokanAtAGlanceValueAccuracy(summary);
 	});
 

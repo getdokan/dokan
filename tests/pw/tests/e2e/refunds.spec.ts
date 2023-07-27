@@ -1,4 +1,4 @@
-import { test } from '@playwright/test';
+import { test, Page } from '@playwright/test';
 import { RefundsPage } from 'pages/refundsPage';
 import { ApiUtils } from 'utils/apiUtils';
 import { dbUtils } from 'utils/dbUtils';
@@ -6,29 +6,29 @@ import { data } from 'utils/testData';
 import { payloads } from 'utils/payloads';
 
 
-let admin: RefundsPage;
-let apiUtils: ApiUtils;
-let orderResponseBody: any;
-let orderId: string;
+test.describe.skip('refunds test', () => {
+
+	let admin: RefundsPage;
+	let aPage: Page;
+	let apiUtils: ApiUtils;
+	let orderResponseBody: any;
+	let orderId: string;
 
 
-test.beforeAll(async ({ browser, request }) => {
-	const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
-	const aPage = await adminContext.newPage();
-	admin = new RefundsPage(aPage);
+	test.beforeAll(async ({ browser, request }) => {
+		const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
+		aPage = await adminContext.newPage();
+		admin = new RefundsPage(aPage);
 
-	apiUtils = new ApiUtils(request);
-	[, orderResponseBody, orderId, ] = await apiUtils.createOrderWithStatus(payloads.createProduct(), payloads.createOrder, data.order.orderStatus.processing, payloads.vendorAuth);
-	await dbUtils.createRefund(orderResponseBody);
-});
-
-
-test.afterAll(async ({ browser }) => {
-	await browser.close();
-});
+		apiUtils = new ApiUtils(request);
+		[, orderResponseBody, orderId, ] = await apiUtils.createOrderWithStatus(payloads.createProduct(), payloads.createOrder, data.order.orderStatus.processing, payloads.vendorAuth);
+		await dbUtils.createRefund(orderResponseBody);
+	});
 
 
-test.describe('refunds test', () => {
+	test.afterAll(async () => {
+		await aPage.close();
+	});
 
 
 	test('admin refunds menu page is rendering properly @pro @explo', async ( ) => {

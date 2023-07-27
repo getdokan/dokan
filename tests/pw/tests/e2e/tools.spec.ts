@@ -1,26 +1,27 @@
-import { test } from '@playwright/test';
+import { test, Page } from '@playwright/test';
 import { ToolsPage } from 'pages/toolsPage';
 import { data } from 'utils/testData';
-
-
-let admin: ToolsPage;
-
-
-test.beforeAll(async ({ browser }) => {
-	const context = await browser.newContext({});
-	const page = await context.newPage();
-	admin = new ToolsPage(page);
-});
-
-
-test.afterAll(async ({ browser }) => {
-	await browser.close();
-});
 
 
 test.describe('Tools test', () => {
 
 	test.use({ storageState: data.auth.adminAuthFile });
+
+
+	let admin: ToolsPage;
+	let page: Page;
+
+
+	test.beforeAll(async ({ browser }) => {
+		const context = await browser.newContext({});
+		page = await context.newPage();
+		admin = new ToolsPage(page);
+	});
+
+
+	test.afterAll(async () => {
+		await page.close();
+	});
 
 	test('dokan tools menu page is rendering properly @pro @explo', async ( ) => {
 		await admin.adminToolsRenderProperly();

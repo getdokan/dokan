@@ -1,26 +1,26 @@
-import { test } from '@playwright/test';
+import { test, Page } from '@playwright/test';
 import { SettingsPage } from 'pages/settingsPage';
 import { data } from 'utils/testData';
-
-
-let settingsPage: SettingsPage;
-
-
-test.beforeAll(async ({ browser }) => {
-	const context = await browser.newContext({});
-	const page = await context.newPage();
-	settingsPage = new SettingsPage(page);
-});
-
-
-test.afterAll(async ({ browser }) => {
-	await browser.close();
-});
 
 
 test.describe('Settings test', () => {
 
 	test.use({ storageState: data.auth.adminAuthFile });
+
+	let settingsPage: SettingsPage;
+	let page: Page;
+
+
+	test.beforeAll(async ({ browser }) => {
+		const context = await browser.newContext({});
+		page = await context.newPage();
+		settingsPage = new SettingsPage(page);
+	});
+
+
+	test.afterAll(async () => {
+		await page.close();
+	});
 
 	test('admin settings menu page is rendering properly @lite @pro @explo', async ( ) => {
 		await settingsPage.adminSettingsRenderProperly();

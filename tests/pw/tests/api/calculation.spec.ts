@@ -4,6 +4,7 @@ import { helpers } from 'utils/helpers';
 import { payloads } from 'utils/payloads';
 import { dbUtils } from 'utils/dbUtils';
 
+let aPage: Page, vPage: Page, cPage: Page, uPage: Page;
 let apiUtils: ApiUtils;
 let taxRate: number;
 

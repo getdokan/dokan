@@ -1,36 +1,37 @@
-import { test } from '@playwright/test';
+import { test, Page } from '@playwright/test';
 import { SellerBadgesPage } from 'pages/sellerBadgesPage';
 import { ApiUtils } from 'utils/apiUtils';
 import { data } from 'utils/testData';
 import { payloads } from 'utils/payloads';
 
 
-let admin: SellerBadgesPage;
-let vendor: SellerBadgesPage;
-let apiUtils: ApiUtils;
-
-
-test.beforeAll(async ({ browser, request }) => {
-	const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
-	const aPage = await adminContext.newPage();
-	admin = new SellerBadgesPage(aPage);
-
-	const vendorContext = await browser.newContext({ storageState: data.auth.vendorAuthFile });
-	const vPage = await vendorContext.newPage();
-	vendor = new SellerBadgesPage(vPage);
-
-	apiUtils = new ApiUtils(request);
-	await apiUtils.createSellerBadge(payloads.createSellerBadgeProductsPublished, payloads.adminAuth);
-
-});
-
-
-test.afterAll(async ({ browser }) => {
-	await browser.close();
-});
-
-
 test.describe('Seller badge test', () => {
+
+	let admin: SellerBadgesPage;
+	let vendor: SellerBadgesPage;
+	let aPage: Page, vPage: Page;
+	let apiUtils: ApiUtils;
+
+
+	test.beforeAll(async ({ browser, request }) => {
+		const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
+		aPage = await adminContext.newPage();
+		admin = new SellerBadgesPage(aPage);
+
+		const vendorContext = await browser.newContext({ storageState: data.auth.vendorAuthFile });
+		const vPage = await vendorContext.newPage();
+		vendor = new SellerBadgesPage(vPage);
+
+		apiUtils = new ApiUtils(request);
+		await apiUtils.createSellerBadge(payloads.createSellerBadgeProductsPublished, payloads.adminAuth);
+
+	});
+
+
+	test.afterAll(async () => {
+		await aPage.close();
+		await vPage.close();
+	});
 
 
 	test('dokan seller badge menu page is rendering properly @pro @explo', async ( ) => {

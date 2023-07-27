@@ -3,6 +3,7 @@ import { ApiUtils } from 'utils/apiUtils';
 import { endPoints } from 'utils/apiEndPoints';
 import { payloads } from 'utils/payloads';
 
+let aPage: Page, vPage: Page, cPage: Page, uPage: Page;
 let apiUtils: ApiUtils;
 let productId: string;
 let variationId: string;

@@ -1,28 +1,28 @@
-import { test } from '@playwright/test';
+import { test, Page } from '@playwright/test';
 import { RequestForQuotationsPage } from 'pages/requestForQuotationsPage';
 import { ApiUtils } from 'utils/apiUtils';
 import { data } from 'utils/testData';
 import { payloads } from 'utils/payloads';
 
 
-let admin: RequestForQuotationsPage;
-let apiUtils: ApiUtils;
-
-
-test.beforeAll(async ({ browser, request }) => {
-	const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
-	const aPage = await adminContext.newPage();
-	admin = new RequestForQuotationsPage(aPage);
-	apiUtils = new ApiUtils(request);
-});
-
-
-test.afterAll(async ( { browser } ) => {
-	await browser.close();
-});
-
-
 test.describe('Request for quotation test', () => {
+
+	let admin: RequestForQuotationsPage;
+	let aPage: Page;
+	let apiUtils: ApiUtils;
+
+
+	test.beforeAll(async ({ browser, request }) => {
+		const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
+		aPage = await adminContext.newPage();
+		admin = new RequestForQuotationsPage(aPage);
+		apiUtils = new ApiUtils(request);
+	});
+
+
+	test.afterAll(async () => {
+		await aPage.close();
+	});
 
 
 	// quote rules

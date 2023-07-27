@@ -1,4 +1,4 @@
-import { test } from '@playwright/test';
+import { test, Page } from '@playwright/test';
 import { FollowStorePage } from 'pages/followStorePage';
 import { ApiUtils } from 'utils/apiUtils';
 import { data } from 'utils/testData';
@@ -10,6 +10,7 @@ test.describe('Follow stores functionality test', () => {
 
 	let vendor: FollowStorePage;
 	let customer: FollowStorePage;
+	let aPage: Page, vPage: Page, cPage: Page, uPage: Page;
 	let apiUtils: ApiUtils;
 
 
@@ -19,7 +20,7 @@ test.describe('Follow stores functionality test', () => {
 		vendor = new FollowStorePage(vPage);
 
 		const customerContext = await browser.newContext({ storageState: data.auth.customerAuthFile });
-		const cPage = await customerContext.newPage();
+		cPage = await customerContext.newPage();
 		customer = new FollowStorePage(cPage);
 
 		apiUtils = new ApiUtils(request);
@@ -27,8 +28,11 @@ test.describe('Follow stores functionality test', () => {
 	});
 
 
-	test.afterAll(async ({ browser }) => {
-		await browser.close();
+	test.afterAll(async () => {
+		await aPage.close();
+		await vPage.close();
+		await cPage.close();
+		await uPage.close();
 	});
 
 

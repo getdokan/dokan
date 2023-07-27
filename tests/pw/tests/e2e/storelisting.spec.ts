@@ -1,4 +1,4 @@
-import { test } from '@playwright/test';
+import { test, Page } from '@playwright/test';
 import { StoreListingPage } from 'pages/storeListingPage';
 // import { ApiUtils } from 'utils/apiUtils';
 import { data } from 'utils/testData';
@@ -9,7 +9,8 @@ test.describe('Store listing functionality test', () => {
 
 
 	let customer: StoreListingPage;
-	// let apiUtils: ApiUtils;
+	let cPage: Page;
+	let apiUtils: ApiUtils;
 
 
 	test.beforeAll(async ({ browser }) => {
@@ -20,8 +21,8 @@ test.describe('Store listing functionality test', () => {
 	});
 
 
-	test.afterAll(async ({ browser }) => {
-		await browser.close();
+	test.afterAll(async () => {
+		await cPage.close();
 	});
 
 

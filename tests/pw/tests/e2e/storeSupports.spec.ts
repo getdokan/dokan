@@ -1,4 +1,4 @@
-import { test } from '@playwright/test';
+import { test, Page } from '@playwright/test';
 import { StoreSupportsPage } from 'pages/storeSupportsPage';
 import { ApiUtils } from 'utils/apiUtils';
 import { data } from 'utils/testData';
@@ -8,38 +8,40 @@ import { payloads } from 'utils/payloads';
 const { PRODUCT_ID, VENDOR_ID, CUSTOMER_ID } = process.env;
 
 
-let admin: StoreSupportsPage;
-let customer: StoreSupportsPage;
-let guest: StoreSupportsPage;
-let apiUtils: ApiUtils;
-
-
-test.beforeAll(async ({ browser, request }) => {
-	const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
-	const aPage = await adminContext.newPage();
-	admin = new StoreSupportsPage(aPage);
-
-	const customerContext = await browser.newContext({ storageState: data.auth.customerAuthFile });
-	const cPage = await customerContext.newPage();
-	customer = new StoreSupportsPage(cPage);
-
-	const guestContext = await browser.newContext({ storageState: { cookies: [], origins: [] } });
-	const uPage = await guestContext.newPage();
-	guest =  new StoreSupportsPage(uPage);
-
-	apiUtils = new ApiUtils(request);
-	await apiUtils.createSupportTicket({ ...payloads.createSupportTicket, author: CUSTOMER_ID, meta: { store_id : VENDOR_ID } } );
-	await apiUtils.createSupportTicket({ ...payloads.createSupportTicket, status: 'closed', author: CUSTOMER_ID, meta: { store_id : VENDOR_ID } } );
-
-});
-
-
-test.afterAll(async ({ browser }) => {
-	await browser.close();
-});
-
-
 test.describe('Store Support test', () => {
+
+	let admin: StoreSupportsPage;
+	let customer: StoreSupportsPage;
+	let guest: StoreSupportsPage;
+	let aPage: Page, cPage: Page, uPage: Page;
+	let apiUtils: ApiUtils;
+
+
+	test.beforeAll(async ({ browser, request }) => {
+		const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
+		aPage = await adminContext.newPage();
+		admin = new StoreSupportsPage(aPage);
+
+		const customerContext = await browser.newContext({ storageState: data.auth.customerAuthFile });
+		cPage = await customerContext.newPage();
+		customer = new StoreSupportsPage(cPage);
+
+		const guestContext = await browser.newContext({ storageState: { cookies: [], origins: [] } });
+		uPage = await guestContext.newPage();
+		guest =  new StoreSupportsPage(uPage);
+
+		apiUtils = new ApiUtils(request);
+		await apiUtils.createSupportTicket({ ...payloads.createSupportTicket, author: CUSTOMER_ID, meta: { store_id : VENDOR_ID } } );
+		await apiUtils.createSupportTicket({ ...payloads.createSupportTicket, status: 'closed', author: CUSTOMER_ID, meta: { store_id : VENDOR_ID } } );
+
+	});
+
+
+	test.afterAll(async () => {
+		await aPage.close();
+		await cPage.close();
+		await uPage.close();
+	});
 
 
 	test('dokan store support menu page is rendering properly @pro @explo', async ( ) => {

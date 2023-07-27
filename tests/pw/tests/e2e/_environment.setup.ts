@@ -1,4 +1,4 @@
-import { test as setup, expect } from '@playwright/test';
+import { test as setup, expect, Page } from '@playwright/test';
 import { ProductAdvertisingPage } from 'pages/productAdvertisingPage';
 import { ReverseWithdrawsPage } from 'pages/reverseWithdrawsPage';
 import { ApiUtils } from 'utils/apiUtils';
@@ -163,85 +163,85 @@ setup.describe('setup  user settings', () => {
 });
 
 
-// setup.describe('setup dokan settings', () => {
+setup.describe('setup dokan settings', () => {
 
-// 	setup('set dokan general settings @lite @pro', async () => {
-// 		await dbUtils.setDokanSettings(dbData.dokan.optionName.general, dbData.dokan.generalSettings);
-// 	});
+	setup('set dokan general settings @lite @pro', async () => {
+		await dbUtils.setDokanSettings(dbData.dokan.optionName.general, dbData.dokan.generalSettings);
+	});
 
-// 	setup('admin set dokan selling settings @lite @pro', async () => {
-// 		await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, dbData.dokan.sellingSettings);
-// 	});
+	setup('admin set dokan selling settings @lite @pro', async () => {
+		await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, dbData.dokan.sellingSettings);
+	});
 
-// 	setup('admin set dokan withdraw settings @lite @pro', async () => {
-// 		await dbUtils.setDokanSettings(dbData.dokan.optionName.withdraw, dbData.dokan.withdrawSettings);
-// 	});
+	setup('admin set dokan withdraw settings @lite @pro', async () => {
+		await dbUtils.setDokanSettings(dbData.dokan.optionName.withdraw, dbData.dokan.withdrawSettings);
+	});
 
-// 	setup('admin set dokan reverse withdraw settings @lite @pro', async () => {
-// 		await dbUtils.setDokanSettings(dbData.dokan.optionName.reverseWithdraw, dbData.dokan.reverseWithdrawSettings);
-// 	});
+	setup('admin set dokan reverse withdraw settings @lite @pro', async () => {
+		await dbUtils.setDokanSettings(dbData.dokan.optionName.reverseWithdraw, dbData.dokan.reverseWithdrawSettings);
+	});
 
-// 	setup('admin set dokan appearance settings @lite @pro', async () => {
-// 		await dbUtils.setDokanSettings(dbData.dokan.optionName.appearance, dbData.dokan.appearanceSettings);
-// 	});
+	setup('admin set dokan appearance settings @lite @pro', async () => {
+		await dbUtils.setDokanSettings(dbData.dokan.optionName.appearance, dbData.dokan.appearanceSettings);
+	});
 
-// 	setup('admin set dokan privacy policy settings @lite @pro', async () => {
-// 		await dbUtils.setDokanSettings(dbData.dokan.optionName.privacyPolicy, dbData.dokan.privacyPolicySettings);
-// 	});
+	setup('admin set dokan privacy policy settings @lite @pro', async () => {
+		await dbUtils.setDokanSettings(dbData.dokan.optionName.privacyPolicy, dbData.dokan.privacyPolicySettings);
+	});
 
-// 	setup('admin set dokan color settings @pro', async () => {
-// 		await dbUtils.setDokanSettings(dbData.dokan.optionName.colors, dbData.dokan.colorsSettings);
-// 	});
+	setup('admin set dokan color settings @pro', async () => {
+		await dbUtils.setDokanSettings(dbData.dokan.optionName.colors, dbData.dokan.colorsSettings);
+	});
 
-// 	setup('admin set dokan store support settings @pro', async () => {
-// 		await dbUtils.setDokanSettings(dbData.dokan.optionName.storeSupport, dbData.dokan.storeSupportSettings);
-// 	});
+	setup('admin set dokan store support settings @pro', async () => {
+		await dbUtils.setDokanSettings(dbData.dokan.optionName.storeSupport, dbData.dokan.storeSupportSettings);
+	});
 
-// 	setup('admin set dokan shipping settings @pro', async () => {
-// 		await dbUtils.setDokanSettings(dbData.dokan.optionName.shippingStatus, dbData.dokan.shippingStatusSettings);
-// 	});
+	setup('admin set dokan shipping settings @pro', async () => {
+		await dbUtils.setDokanSettings(dbData.dokan.optionName.shippingStatus, dbData.dokan.shippingStatusSettings);
+	});
 
-// 	setup('admin set dokan quote settings @pro', async () => {
-// 		await dbUtils.setDokanSettings(dbData.dokan.optionName.quote, dbData.dokan.quoteSettings);
-// 	});
+	setup('admin set dokan quote settings @pro', async () => {
+		await dbUtils.setDokanSettings(dbData.dokan.optionName.quote, dbData.dokan.quoteSettings);
+	});
 
-// 	setup('admin set dokan rma settings @pro', async () => {
-// 		await dbUtils.setDokanSettings(dbData.dokan.optionName.rma, dbData.dokan.rmaSettings);
-// 	});
+	setup('admin set dokan rma settings @pro', async () => {
+		await dbUtils.setDokanSettings(dbData.dokan.optionName.rma, dbData.dokan.rmaSettings);
+	});
 
-// 	setup('admin set dokan wholesale settings @pro', async () => {
-// 		await dbUtils.setDokanSettings(dbData.dokan.optionName.wholesale, dbData.dokan.wholesaleSettings);
-// 	});
+	setup('admin set dokan wholesale settings @pro', async () => {
+		await dbUtils.setDokanSettings(dbData.dokan.optionName.wholesale, dbData.dokan.wholesaleSettings);
+	});
 
-// 	setup('admin set dokan eu compliance settings @pro', async () => {
-// 		await dbUtils.setDokanSettings(dbData.dokan.optionName.euCompliance, dbData.dokan.euComplianceSettings);
-// 	});
+	setup('admin set dokan eu compliance settings @pro', async () => {
+		await dbUtils.setDokanSettings(dbData.dokan.optionName.euCompliance, dbData.dokan.euComplianceSettings);
+	});
 
-// 	// setup('admin set dokan delivery time settings @pro', async () => {
-// 	// 	await dbUtils.setDokanSettings(dbData.dokan.optionName.deliveryTime, dbData.dokan.deliveryTimeSettings);
-// 	// });
+	// setup('admin set dokan delivery time settings @pro', async () => {
+	// 	await dbUtils.setDokanSettings(dbData.dokan.optionName.deliveryTime, dbData.dokan.deliveryTimeSettings);
+	// });
 
-// 	setup('admin set dokan product advertising settings @pro', async () => {
-// 		await dbUtils.setDokanSettings(dbData.dokan.optionName.productAdvertising, dbData.dokan.productAdvertisingSettings);
-// 	});
+	setup('admin set dokan product advertising settings @pro', async () => {
+		await dbUtils.setDokanSettings(dbData.dokan.optionName.productAdvertising, dbData.dokan.productAdvertisingSettings);
+	});
 
-// 	setup('admin set dokan geolocation settings @pro', async () => {
-// 		await dbUtils.setDokanSettings(dbData.dokan.optionName.geolocation, dbData.dokan.geolocationSettings);
-// 	});
+	setup('admin set dokan geolocation settings @pro', async () => {
+		await dbUtils.setDokanSettings(dbData.dokan.optionName.geolocation, dbData.dokan.geolocationSettings);
+	});
 
-// 	setup('admin set dokan product report abuse settings @pro', async () => {
-// 		await dbUtils.setDokanSettings(dbData.dokan.optionName.productReportAbuse, dbData.dokan.productReportAbuseSettings);
-// 	});
+	setup('admin set dokan product report abuse settings @pro', async () => {
+		await dbUtils.setDokanSettings(dbData.dokan.optionName.productReportAbuse, dbData.dokan.productReportAbuseSettings);
+	});
 
-// 	setup('admin set dokan spmv settings @pro', async () => {
-// 		await dbUtils.setDokanSettings(dbData.dokan.optionName.spmv, dbData.dokan.spmvSettings);
-// 	});
+	setup('admin set dokan spmv settings @pro', async () => {
+		await dbUtils.setDokanSettings(dbData.dokan.optionName.spmv, dbData.dokan.spmvSettings);
+	});
 
-// 	setup('admin set dokan vendor subscription settings @pro', async () => {
-// 		await dbUtils.setDokanSettings(dbData.dokan.optionName.vendorSubscription, dbData.dokan.vendorSubscriptionSettings);
-// 	});
+	setup('admin set dokan vendor subscription settings @pro', async () => {
+		await dbUtils.setDokanSettings(dbData.dokan.optionName.vendorSubscription, dbData.dokan.vendorSubscriptionSettings);
+	});
 
-// });
+});
 
 
 setup.describe('setup dokan settings e2e', () => {
@@ -249,20 +249,21 @@ setup.describe('setup dokan settings e2e', () => {
 
 	let productAdvertisingPage: ProductAdvertisingPage;
 	let reverseWithdrawsPage: ReverseWithdrawsPage;
+	let aPage: Page;
 	let apiUtils: ApiUtils;
 
 
 	setup.beforeAll(async ({ browser, request }) => {
 		const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
-		const aPage = await adminContext.newPage();
+		aPage = await adminContext.newPage();
 		productAdvertisingPage = new ProductAdvertisingPage(aPage);
 		reverseWithdrawsPage = new ReverseWithdrawsPage(aPage);
 		apiUtils = new ApiUtils(request);
 	});
 
 
-	setup.afterAll(async ({ browser }) => {
-		await browser.close();
+	setup.afterAll(async () => {
+		await aPage.close();
 	});
 
 
