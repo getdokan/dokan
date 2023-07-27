@@ -757,9 +757,9 @@ function dokan_get_readable_seller_rating( $seller_id ) {
  *
  * @return void
  */
-function dokan_sub_order_adjust_product_stock( object $order ) {
+function dokan_sub_order_adjust_product_stock( $order ) {
     // Check if the order isn't a sub-order.
-    if ( empty ( $order->get_parent_id() ) ) {
+    if ( empty( $order->get_parent_id() ) ) {
         return;
     }
 
@@ -776,8 +776,8 @@ function dokan_sub_order_adjust_product_stock( object $order ) {
             continue;
         }
 
-        $stock_increased = $line_item->get_meta('_dokan_stock_increased');
-        $stock_decreased = $line_item->get_meta('_dokan_stock_decreased');
+        $stock_increased = $line_item->get_meta( '_dokan_stock_increased' );
+        $stock_decreased = $line_item->get_meta( '_dokan_stock_decreased' );
         $operation       = '';
         $status          = '';
 
@@ -787,7 +787,7 @@ function dokan_sub_order_adjust_product_stock( object $order ) {
 
             wc_update_order_item_meta( $line_item->get_id(), '_dokan_stock_increased', $item_order_qty );
             wc_update_order_item_meta( $line_item->get_id(), '_dokan_stock_decreased', 0 );
-        } elseif ( in_array( $order_status, [ 'completed', 'processing', 'on-hold' ] ) && '0' === $stock_decreased ) {
+        } elseif ( in_array( $order_status, [ 'completed', 'processing', 'on-hold' ], true ) && '0' === $stock_decreased ) {
             $operation = 'decrease';
             $status    = __( 'reduced', 'dokan-lite' );
 
