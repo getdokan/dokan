@@ -194,7 +194,7 @@ export const selector = {
 				// notice: '.dokan-admin-notices',
 				noticeDiv: '.dokan-admin-notice.dokan-alert',
 				closeNotice: '.close-notice',
-				// slider: '.slide-notice',
+				slider: '.slide-notice',
 				sliderPrev: '.slide-notice .prev',
 				sliderNext: '.slide-notice .next'
 			},

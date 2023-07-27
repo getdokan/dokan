@@ -9,7 +9,8 @@ test.describe('Vendor functionality test', () => {
 
 	// let admin: PaymentsPage;
 	let vendor: PaymentsPage;
-	let aPage: Page, vPage: Page;
+	// let aPage: Page, vPage: Page;
+	let vPage: Page;
 	// let apiUtils: ApiUtils;
 
 
@@ -28,7 +29,7 @@ test.describe('Vendor functionality test', () => {
 
 
 	test.afterAll(async () => {
-		await aPage.close();
+		// await aPage.close();
 		await vPage.close();
 	});
 

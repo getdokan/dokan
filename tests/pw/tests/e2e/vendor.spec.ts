@@ -1,9 +1,9 @@
 import { test, Page } from '@playwright/test';
 import { LoginPage } from 'pages/loginPage';
 import { VendorPage } from 'pages/vendorPage';
-import { ApiUtils } from 'utils/apiUtils';
+// import { ApiUtils } from 'utils/apiUtils';
 import { data } from 'utils/testData';
-import { payloads } from 'utils/payloads';
+// import { payloads } from 'utils/payloads';
 
 
 test.describe('Vendor user functionality test1', () => {
@@ -30,7 +30,6 @@ test.describe('Vendor user functionality test1', () => {
 
 	test('vendor can register @lite @pro', async ( ) => {
 		await vendorPage.vendorRegister(data.vendor.vendorInfo, { ...data.vendorSetupWizard, choice:false });
-		// await loginPage.logout();
 	});
 
 	test('vendor can login @lite @pro', async ( ) => {
@@ -50,14 +49,14 @@ test.describe('Vendor functionality test', () => {
 
 	let vendorPage: VendorPage;
 	let vPage: Page;
-	let apiUtils: ApiUtils;
+	// let apiUtils: ApiUtils;
 
 
-	test.beforeAll(async ({ browser, request }) => {
+	test.beforeAll(async ({ browser,  }) => {
 		const vendorContext = await browser.newContext({ storageState: data.auth.vendorAuthFile });
 		vPage = await vendorContext.newPage();
 		vendorPage = new VendorPage(vPage);
-		apiUtils = new ApiUtils(request);
+		// apiUtils = new ApiUtils(request);
 	});
 
 

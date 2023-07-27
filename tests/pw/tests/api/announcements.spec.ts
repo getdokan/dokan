@@ -9,7 +9,7 @@ let announcementId: string;
 
 test.beforeAll(async ({ request }) => {
 	apiUtils = new ApiUtils(request);
-	[, announcementId] = await apiUtils.createAnnouncement(payloads.createAnnouncement);
+	[, announcementId] = await apiUtils.createAnnouncement(payloads.createAnnouncement());
 });
 
 test.describe('announcements api test', () => {

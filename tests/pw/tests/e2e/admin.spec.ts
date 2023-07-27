@@ -28,10 +28,10 @@ test.describe('Admin user functionality test', () => {
 		await loginPage.adminLogin(data.admin);
 	});
 
-	// test('admin can logout @lite @pro', async ( ) => {
-	// 	await loginPage.adminLogin(data.admin);
-	// 	await loginPage.logoutBackend();
-	// });
+	test('admin can logout @lite @pro', async ( ) => {
+		await loginPage.adminLogin(data.admin);
+		await loginPage.logoutBackend();
+	});
 
 });
 
@@ -41,20 +41,18 @@ test.describe('Admin functionality test', () => {
 	test.use({ storageState: data.auth.adminAuthFile });
 
 	let adminPage: AdminPage;
-	// let loginPage: LoginPage;
-	let page: Page;
+	let aPage: Page;
 
 
 	test.beforeAll(async ({ browser }) => {
 		const context = await browser.newContext({});
-		page = await context.newPage();
-		adminPage = new AdminPage(page);
-		// loginPage = new LoginPage(page);
+		aPage = await context.newPage();
+		adminPage = new AdminPage(aPage);
 	});
 
 
 	test.afterAll(async () => {
-		await page.close();
+		await aPage.close();
 	});
 
 

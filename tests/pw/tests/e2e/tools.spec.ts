@@ -9,18 +9,18 @@ test.describe('Tools test', () => {
 
 
 	let admin: ToolsPage;
-	let page: Page;
+	let aPage: Page;
 
 
 	test.beforeAll(async ({ browser }) => {
 		const context = await browser.newContext({});
-		page = await context.newPage();
-		admin = new ToolsPage(page);
+		aPage = await context.newPage();
+		admin = new ToolsPage(aPage);
 	});
 
 
 	test.afterAll(async () => {
-		await page.close();
+		await aPage.close();
 	});
 
 	test('dokan tools menu page is rendering properly @pro @explo', async ( ) => {

@@ -8,18 +8,18 @@ test.describe('Modules test', () => {
 	test.use({ storageState: data.auth.adminAuthFile });
 
 	let admin: ModulesPage;
-	let page: Page;
+	let aPage: Page;
 
 
 	test.beforeAll(async ({ browser }) => {
 		const context = await browser.newContext({});
-		page = await context.newPage();
-		admin = new ModulesPage(page);
+		aPage = await context.newPage();
+		admin = new ModulesPage(aPage);
 	});
 
 
 	test.afterAll(async () => {
-		await page.close();
+		await aPage.close();
 	});
 
 

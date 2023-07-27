@@ -14,7 +14,7 @@ test.beforeAll(async ({ request }) => {
 });
 
 test.describe('calculation test', () => {
-	test('calculation test @lite @pro', async () => {
+	test('calculation test @pro', async () => {
 		//TODO: modify for lite as well if needed
 		const [commission, feeRecipient] = await dbUtils.getSellingInfo();
 

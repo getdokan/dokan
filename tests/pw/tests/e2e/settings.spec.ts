@@ -8,18 +8,18 @@ test.describe('Settings test', () => {
 	test.use({ storageState: data.auth.adminAuthFile });
 
 	let settingsPage: SettingsPage;
-	let page: Page;
+	let aPage: Page;
 
 
 	test.beforeAll(async ({ browser }) => {
 		const context = await browser.newContext({});
-		page = await context.newPage();
-		settingsPage = new SettingsPage(page);
+		aPage = await context.newPage();
+		settingsPage = new SettingsPage(aPage);
 	});
 
 
 	test.afterAll(async () => {
-		await page.close();
+		await aPage.close();
 	});
 
 	test('admin settings menu page is rendering properly @lite @pro @explo', async ( ) => {

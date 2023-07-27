@@ -9,18 +9,18 @@ test.describe('Dokan help test', () => {
 
 
 	let admin: HelpPage;
-	let page: Page;
+	let aPage: Page;
 
 
 	test.beforeAll(async ({ browser }) => {
 		const context = await browser.newContext({});
-		page = await context.newPage();
-		admin = new HelpPage(page);
+		aPage = await context.newPage();
+		admin = new HelpPage(aPage);
 	});
 
 
 	test.afterAll(async () => {
-		await page.close();
+		await aPage.close();
 	});
 
 	test('dokan help menu page is rendering properly @lite @pro @explo', async ( ) => {

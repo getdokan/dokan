@@ -4,6 +4,8 @@ import { selector } from 'pages/selectors';
 import { data } from 'utils/testData';
 import { payment, dokanSetupWizard, woocommerce } from 'utils/interfaces';
 
+const { DOKAN_PRO } = process.env;
+
 export class AdminPage extends BasePage {
 
 	constructor(page: Page) {
@@ -141,7 +143,7 @@ export class AdminPage extends BasePage {
 		await this.selectByValue(selector.admin.dokan.dokanSetupWizard.mapApiSource, dokanSetupWizard.mapApiSource);
 		await this.clearAndType(selector.admin.dokan.dokanSetupWizard.googleMapApiKey, dokanSetupWizard.googleMapApiKey);
 		await this.enableSwitcherSetupWizard(selector.admin.dokan.dokanSetupWizard.shareEssentialsOff);
-		await this.selectByValue(selector.admin.dokan.dokanSetupWizard.sellingProductTypes, dokanSetupWizard.sellingProductTypes);
+		DOKAN_PRO && await this.selectByValue(selector.admin.dokan.dokanSetupWizard.sellingProductTypes, dokanSetupWizard.sellingProductTypes);
 		await this.click(selector.admin.dokan.dokanSetupWizard.continue);
 		// await this.click(selector.admin.dokan.dokanSetupWizard.skipThisStep)
 
@@ -158,8 +160,8 @@ export class AdminPage extends BasePage {
 		await this.enableSwitcherSetupWizard(selector.admin.dokan.dokanSetupWizard.bankTransfer);
 		// await this.enableSwitcherSetupWizard(selector.admin.dokan.dokanSetupWizard.wirecard)
 		// await this.enableSwitcherSetupWizard(selector.admin.dokan.dokanSetupWizard.stripe)
-		await this.enableSwitcherSetupWizard(selector.admin.dokan.dokanSetupWizard.custom);
-		await this.enableSwitcherSetupWizard(selector.admin.dokan.dokanSetupWizard.skrill);
+		DOKAN_PRO && await this.enableSwitcherSetupWizard(selector.admin.dokan.dokanSetupWizard.custom);
+		DOKAN_PRO && await this.enableSwitcherSetupWizard(selector.admin.dokan.dokanSetupWizard.skrill);
 		await this.clearAndType(selector.admin.dokan.dokanSetupWizard.minimumWithdrawLimit, dokanSetupWizard.minimumWithdrawLimit);
 		await this.enableSwitcherSetupWizard(selector.admin.dokan.dokanSetupWizard.orderStatusForWithdrawCompleted);
 		await this.enableSwitcherSetupWizard(selector.admin.dokan.dokanSetupWizard.orderStatusForWithdrawProcessing);
@@ -170,9 +172,9 @@ export class AdminPage extends BasePage {
 		await this.disableSwitcherSetupWizard(selector.admin.dokan.dokanSetupWizard.weMail);
 		await this.disableSwitcherSetupWizard(selector.admin.dokan.dokanSetupWizard.texty);
 		await this.click(selector.admin.dokan.dokanSetupWizard.continueRecommended);
+
 		// Ready!
 		await this.click(selector.admin.dokan.dokanSetupWizard.visitDokanDashboard);
-
 		await this.toBeVisible(selector.admin.dokan.dashboard.dashboardText);
 	}
 
@@ -196,12 +198,11 @@ export class AdminPage extends BasePage {
 	async dokanNotice(){
 		await this.goto(data.subUrls.backend.dokan.dokan);
 
-		await this.notToHaveCount(selector.admin.dokan.notice.noticeDiv, 0); // because of promo notice
-
 		// dokan notice elements are visible
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		// const { noticeDiv, ...notice } = selector.admin.dokan.notice; // TODO: conflicting locator if promo notice exists
-		// await this.multipleElementVisible(notice);
+		await this.notToHaveCount(selector.admin.dokan.notice.noticeDiv, 0);
+		await this.notToHaveCount(selector.admin.dokan.notice.slider, 0);
+		await this.notToHaveCount(selector.admin.dokan.notice.sliderPrev, 0);
+		await this.notToHaveCount(selector.admin.dokan.notice.sliderNext, 0);
 	}
 
 }
