@@ -396,11 +396,29 @@ export default {
 
             dokan.api.put('/withdraw/' + id, { status: status })
             .done(response => {
-                // this.requests = response;
-                this.loading = false;
-                // this.updateItem(id, response);
                 this.fetchRequests();
-            });
+            }).catch( (response, status, xhr) => {
+                let message = dokan_handle_ajax_error(response);
+
+                dokan_sweetalert(
+                    '',
+                    {
+                        toast: true,
+                        icon: 'error',
+                        title: message,
+                        position: 'bottom-right',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true,
+                        didOpen: ( toast ) => {
+                            toast.addEventListener( 'mouseenter', Swal.stopTimer )
+                            toast.addEventListener( 'mouseleave', Swal.resumeTimer )
+                        }
+                    }
+                );
+            } ).always( () => {
+                this.loading = false;
+            } );
         },
 
         onActionClick(action, row) {
