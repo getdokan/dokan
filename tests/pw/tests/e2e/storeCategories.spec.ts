@@ -56,4 +56,9 @@ test.describe('Vendors test', () => {
 
 	//todo: add vendor tests
 
+	// test('vendor can edit own store category @pro', async ( ) => {
+	// 	const[,, categoryName] = await apiUtils.createStoreCategory(payloads.createStoreCategory());
+	// 	await vendor.editStoreCategory(categoryName);
+	// });
+
 });

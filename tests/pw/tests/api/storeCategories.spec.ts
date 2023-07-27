@@ -9,7 +9,7 @@ let categoryId: string;
 
 test.beforeAll(async ({ request }) => {
 	apiUtils = new ApiUtils(request);
-	[, categoryId] = await apiUtils.createStoreCategory(payloads.createStoreCategory());
+	[, categoryId,] = await apiUtils.createStoreCategory(payloads.createStoreCategory());
 });
 
 test.describe('store categories api test', () => {

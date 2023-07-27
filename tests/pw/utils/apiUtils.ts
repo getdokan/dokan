@@ -883,10 +883,11 @@ export class ApiUtils {
 	}
 
 	// create store category
-	async createStoreCategory(payload: object, auth? : auth): Promise<[responseBody, string]> {
+	async createStoreCategory(payload: object, auth? : auth): Promise<[responseBody, string, string]> {
 		const [, responseBody] = await this.post(endPoints.createStoreCategory, { data: payload, headers: auth });
 		const categoryId = responseBody.id;
-		return [responseBody, categoryId];
+		const categoryName = responseBody.name;
+		return [responseBody, categoryId, categoryName];
 	}
 
 	// get default store category

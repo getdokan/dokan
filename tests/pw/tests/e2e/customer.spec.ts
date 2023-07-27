@@ -98,11 +98,9 @@ test.describe('Customer functionality test', () => {
 	});
 
 
-	//todo: 
-
-	// test('customer can download downloadables @lite @pro', async ( ) => {
-	// 	// pre: complete download product
-	// });
+	test.skip('customer can download downloadables @lite @pro', async ( ) => {
+		// pre: complete download product
+	});
 
 
 });

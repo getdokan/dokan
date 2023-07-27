@@ -9,7 +9,7 @@ test.describe('Stores test', () => {
 
 	let admin: StoresPage;
 	let aPage: Page;
-	let apiUtils: ApiUtils;
+	// let apiUtils: ApiUtils;
 
 
 	test.beforeAll(async ({ browser, }) => {
@@ -17,8 +17,7 @@ test.describe('Stores test', () => {
 		aPage = await adminContext.newPage();
 		admin = new StoresPage(aPage);
 		// apiUtils = new ApiUtils(request);
-		//todo:  create store via api and use that vendor for all tests instead of vendor1
-
+		// [, sellerId] = await apiUtils.createStore(payloads.createStore()); //return seller name  //todo: user created seller instead of vendor1
 	});
 
 

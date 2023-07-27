@@ -163,7 +163,7 @@ export const helpers = {
 		// .replace(/\_/g, '-')           		// Replace _ with -
 			.replace(/--+/g, '-') 				// Replace multiple - with single -
 			.replace(/-$/g, ''); 					// Remove trailing -
-	}, //todo:  might fail sometimes, need to update with string-to-slug see google
+	},
 
 	// create env
 	createEnvVariable(key: string, value: string) {

@@ -11,7 +11,8 @@ let currentUserId: string;
 test.beforeAll(async ({ request }) => {
 	apiUtils = new ApiUtils(request);
 	// delete previous badges
-	await apiUtils.deleteAllSellerBadges(); //todo:  also apply this type of soln where it can be possible
+	await apiUtils.deleteAllSellerBadges(); //todo:  apply this type of soln where required
+
 	[, currentUserId] = await apiUtils.getCurrentUser();
 	[, badgeId] = await apiUtils.createSellerBadge(payloads.createSellerBadgeExclusiveToPlatform);
 });
