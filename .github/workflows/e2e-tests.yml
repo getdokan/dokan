@@ -7,7 +7,6 @@ on:
   push:
     branches:
       - develop
-      - e2e-pw
   workflow_dispatch:
 
   # Cancels all previous workflow runs for pull requests that have not completed.
@@ -67,9 +66,6 @@ jobs:
           token: ${{ secrets.ACCESS_TOKEN }}
           path: "plugins/dokan-pro"
           ref: "develop"
-
-      # node -v 
-      # npm  -v
 
       - name: Install latest npm
         run: |
@@ -178,7 +174,7 @@ jobs:
 
       - name: 🧪 Running the e2e tests
         if: always()
-        timeout-minutes: 50
+        timeout-minutes: 40
         run: |
           cd tests/pw 
           npm run test:e2e
