@@ -19,7 +19,7 @@ test.describe('Seller badge test', () => {
 		admin = new SellerBadgesPage(aPage);
 
 		const vendorContext = await browser.newContext({ storageState: data.auth.vendorAuthFile });
-		const vPage = await vendorContext.newPage();
+		vPage = await vendorContext.newPage();
 		vendor = new SellerBadgesPage(vPage);
 
 		apiUtils = new ApiUtils(request);

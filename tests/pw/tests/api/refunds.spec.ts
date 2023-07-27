@@ -4,7 +4,7 @@ import { dbUtils } from 'utils/dbUtils';
 import { endPoints } from 'utils/apiEndPoints';
 import { payloads } from 'utils/payloads';
 
-let aPage: Page, vPage: Page, cPage: Page, uPage: Page;
+
 let apiUtils: ApiUtils;
 // let orderId: string;
 let refundId: string;

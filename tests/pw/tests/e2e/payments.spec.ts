@@ -19,7 +19,7 @@ test.describe('Vendor functionality test', () => {
 		// admin = new PaymentsPage(aPage);
 
 		const vendorContext = await browser.newContext({ storageState: data.auth.vendorAuthFile });
-		const vPage = await vendorContext.newPage();
+		vPage = await vendorContext.newPage();
 		vendor = new PaymentsPage(vPage);
 
 		// apiUtils = new ApiUtils(request);

@@ -15,7 +15,7 @@ test.describe.skip('Vendor staff test', () => {
 
 	test.beforeAll(async ({ browser, request }) => {
 		const vendorContext = await browser.newContext({ storageState: data.auth.vendorAuthFile });
-		const vPage = await vendorContext.newPage();
+		vPage = await vendorContext.newPage();
 		vendor = new VendorStaffPage(vPage);
 		apiUtils = new ApiUtils(request);
 		// const staff = {

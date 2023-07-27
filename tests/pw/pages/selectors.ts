@@ -2742,7 +2742,8 @@ export const selector = {
 				usageLimitPerUser: '#usage_limit_per_user',
 
 				publish: '#publish',
-				publishSuccessMessage: '#message',
+				publishSuccessMessage: '#message.notice-success p',
+				publishSuccess: '//p[normalize-space()="Coupon updated."]',
 
 			},
 		},

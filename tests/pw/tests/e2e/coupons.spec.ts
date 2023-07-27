@@ -25,7 +25,7 @@ test.describe('Coupons test', () => {
 		admin = new CouponsPage(aPage);
 
 		const vendorContext = await browser.newContext({ storageState: data.auth.vendorAuthFile });
-		const vPage = await vendorContext.newPage();
+		vPage = await vendorContext.newPage();
 		vendor = new CouponsPage(vPage);
 
 		const customerContext = await browser.newContext({ storageState: data.auth.customerAuthFile });
@@ -39,7 +39,7 @@ test.describe('Coupons test', () => {
 
 
 	test.afterAll(async () => {
-		await aPage.close();
+		await aPage.close(); //ToDO: close multiple pages to base page
 		await vPage.close();
 		await cPage.close();
 	});

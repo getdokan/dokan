@@ -21,7 +21,7 @@ test.describe('Withdraw test', () => {
 		admin = new WithdrawsPage(aPage);
 
 		const vendorContext = await browser.newContext({ storageState: data.auth.vendorAuthFile });
-		const vPage = await vendorContext.newPage();
+		vPage = await vendorContext.newPage();
 		vendor = new WithdrawsPage(vPage);
 
 		apiUtils = new ApiUtils(request);

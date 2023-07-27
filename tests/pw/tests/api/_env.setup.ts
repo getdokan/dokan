@@ -6,7 +6,7 @@ import { dbUtils } from 'utils/dbUtils';
 import { dbData } from 'utils/dbData';
 import { helpers } from 'utils/helpers';
 
-let aPage: Page, vPage: Page, cPage: Page, uPage: Page;
+
 let apiUtils: ApiUtils;
 
 // eslint-disable-next-line require-await

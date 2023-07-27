@@ -17,8 +17,8 @@ test.describe('My Orders functionality test', () => {
 
 	test.beforeAll(async ({ browser, request }) => {
 		const customerContext = await browser.newContext({ storageState: data.auth.customerAuthFile });
-		const page = await customerContext.newPage();
-		customer = new MyOrdersPage(page);
+		cPage = await customerContext.newPage();
+		customer = new MyOrdersPage(cPage);
 		apiUtils = new ApiUtils(request);
 	});
 

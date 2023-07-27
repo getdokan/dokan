@@ -3,7 +3,7 @@ import { ApiUtils } from 'utils/apiUtils';
 import { endPoints } from 'utils/apiEndPoints';
 import { helpers } from 'utils/helpers';
 
-let aPage: Page, vPage: Page, cPage: Page, uPage: Page;
+
 let apiUtils: ApiUtils;
 let randomModule: string;
 

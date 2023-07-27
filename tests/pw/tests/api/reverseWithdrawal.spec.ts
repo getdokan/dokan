@@ -4,7 +4,6 @@ import { endPoints } from 'utils/apiEndPoints';
 import { payloads } from 'utils/payloads';
 
 
-let aPage: Page, vPage: Page, cPage: Page, uPage: Page;
 let apiUtils: ApiUtils;
 
 test.beforeAll(async ({ request }) => {

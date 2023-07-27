@@ -7,7 +7,7 @@ import { dbData } from 'utils/dbData';
 
 const { VENDOR_ID, CUSTOMER_ID } = process.env;
 
-let aPage: Page, vPage: Page, cPage: Page, uPage: Page;
+
 let apiUtils: ApiUtils;
 
 test.beforeAll(async ({ request }) => {

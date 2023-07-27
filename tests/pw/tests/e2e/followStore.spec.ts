@@ -10,13 +10,13 @@ test.describe('Follow stores functionality test', () => {
 
 	let vendor: FollowStorePage;
 	let customer: FollowStorePage;
-	let aPage: Page, vPage: Page, cPage: Page, uPage: Page;
+	let vPage: Page, cPage: Page;
 	let apiUtils: ApiUtils;
 
 
 	test.beforeAll(async ({ browser, request }) => {
 		const vendorContext = await browser.newContext({ storageState: data.auth.vendorAuthFile });
-		const vPage = await vendorContext.newPage();
+		vPage = await vendorContext.newPage();
 		vendor = new FollowStorePage(vPage);
 
 		const customerContext = await browser.newContext({ storageState: data.auth.customerAuthFile });
@@ -29,10 +29,8 @@ test.describe('Follow stores functionality test', () => {
 
 
 	test.afterAll(async () => {
-		await aPage.close();
 		await vPage.close();
 		await cPage.close();
-		await uPage.close();
 	});
 
 

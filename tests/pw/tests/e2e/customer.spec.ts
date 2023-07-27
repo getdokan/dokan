@@ -57,8 +57,8 @@ test.describe('Customer functionality test', () => {
 
 	test.beforeAll(async ({ browser,  }) => {
 		const customerContext = await browser.newContext({ storageState: data.auth.customerAuthFile });
-		const page = await customerContext.newPage();
-		customerPage = new CustomerPage(page);
+		cPage = await customerContext.newPage();
+		customerPage = new CustomerPage(cPage);
 		// apiUtils = new ApiUtils(request);
 	});
 
