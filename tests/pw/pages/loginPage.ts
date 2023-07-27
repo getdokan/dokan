@@ -34,7 +34,7 @@ export class LoginPage extends BasePage {
 		// login user
 		await this.clearAndType(selector.frontend.username, user.username);
 		await this.clearAndType(selector.frontend.userPassword, user.password);
-		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.myAccount, selector.frontend.logIn, 302); //todo: test this
+		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.myAccount, selector.frontend.logIn, 302);
 		if (storageState){
 			await this.page.context().storageState({ path: storageState });
 		}
@@ -50,7 +50,7 @@ export class LoginPage extends BasePage {
 		if (emailField) {
 			await this.clearAndType(selector.backend.email, user.username);
 			await this.clearAndType(selector.backend.password, user.password);
-			await this.clickAndWaitForResponseAndLoadState(data.subUrls.backend.login, selector.backend.login, 302); //todo: test this
+			await this.clickAndWaitForResponseAndLoadState(data.subUrls.backend.login, selector.backend.login, 302);
 			if (storageState){
 				await this.page.context().storageState({ path: storageState });
 			}
@@ -69,9 +69,7 @@ export class LoginPage extends BasePage {
 	// user logoutFrontend
 	async logoutFrontend(): Promise<void> {
 		await this.goIfNotThere(data.subUrls.frontend.myAccount);
-		// await this.clickAndWaitForResponse(data.subUrls.frontend.myAccount, selector.frontend.customerLogout, 200);
-		// await this.clickAndWaitForNavigation(selector.frontend.customerLogout);
-		await this.clickAndWaitForLoadState(selector.frontend.customerLogout); //todo: test this
+		await this.clickAndWaitForLoadState(selector.frontend.customerLogout);
 		const loggedInUser = await this.getCurrentUser();
 		expect(loggedInUser).toBeUndefined();
 	}
@@ -86,7 +84,7 @@ export class LoginPage extends BasePage {
 	// admin logout
 	async logoutBackend(): Promise<void> {
 		await this.hover(selector.backend.userMenu);
-		await this.clickAndWaitForResponseAndLoadState(data.subUrls.backend.adminLogout, selector.backend.logout, 302); //todo: test this
+		await this.clickAndWaitForResponseAndLoadState(data.subUrls.backend.adminLogout, selector.backend.logout, 302);
 		const loggedInUser = await this.getCurrentUser();
 		expect(loggedInUser).toBeUndefined();
 	}

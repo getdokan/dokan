@@ -31,8 +31,8 @@ export class BasePage {
 
 	// wait for load state
 	async waitForLoadState(): Promise<void> {
-		// await this.page.waitForLoadState( 'networkidle');
-		await this.page.waitForLoadState( 'domcontentloaded');
+		await this.page.waitForLoadState( 'networkidle');
+		// await this.page.waitForLoadState( 'domcontentloaded');
 	}
 
 	// wait for load state
@@ -50,8 +50,8 @@ export class BasePage {
 	async goto(subPath: string): Promise<void> {
 		// let subPath1: string = await this.createUrl(subPath)
 		// await this.page.goto(subPath);
-		// await this.page.goto(subPath, { waitUntil: 'networkidle' });
-		await this.page.goto(subPath, { waitUntil: 'domcontentloaded' });
+		await this.page.goto(subPath, { waitUntil: 'networkidle' });
+		// await this.page.goto(subPath, { waitUntil: 'domcontentloaded' });
 	}
 
 	// go forward
@@ -88,8 +88,8 @@ export class BasePage {
 	async goIfNotThere(subPath: string): Promise<void> {
 		if (!(this.isCurrentUrl(subPath))) {
 			const url = this.createUrl(subPath);
-			// await this.page.goto(url, { waitUntil: 'networkidle' });
-			await this.page.goto(url, { waitUntil: 'domcontentloaded' });
+			await this.page.goto(url, { waitUntil: 'networkidle' });
+			// await this.page.goto(url, { waitUntil: 'domcontentloaded' }); //don't work for backend
 			const currentUrl = this.getCurrentUrl();
 			expect(currentUrl).toMatch(subPath);
 		}
@@ -201,8 +201,8 @@ export class BasePage {
 	// click & wait for load state to complete
 	async clickAndWaitForLoadState(selector: string): Promise<void> {
 		await Promise.all([
-			// this.page.waitForLoadState( 'networkidle' ),
-			this.page.waitForLoadState( 'domcontentloaded' ),
+			this.page.waitForLoadState( 'networkidle' ),
+			// this.page.waitForLoadState( 'domcontentloaded' ),
 			this.page.locator(selector).click()
 		]);
 	}
@@ -211,8 +211,8 @@ export class BasePage {
 	// click & wait for navigation to complete
 	async clickAndWaitForUrl(url: string, selector: string ): Promise<void> {
 		await Promise.all([
-			// this.page.waitForURL(url, { waitUntil: 'networkidle' }),
-			this.page.waitForURL(url, { waitUntil: 'domcontentloaded' }),
+			this.page.waitForURL(url, { waitUntil: 'networkidle' }),
+			// this.page.waitForURL(url, { waitUntil: 'domcontentloaded' }),
 			this.page.locator(selector).click(),
 		]);
 	}
@@ -239,8 +239,8 @@ export class BasePage {
 	async clickAndWaitForResponseAndLoadState(subUrl: string, selector: string, code = 200): Promise<Response> {
 		const [response] = await Promise.all([
 			this.page.waitForResponse((resp) => resp.url().includes(subUrl) && resp.status() === code),
-			// this.page.waitForLoadState( 'networkidle'),
-			this.page.waitForLoadState( 'domcontentloaded'),
+			this.page.waitForLoadState( 'networkidle'),
+			// this.page.waitForLoadState( 'domcontentloaded'),
 			this.page.locator(selector).click()
 		]);
 		return response;
