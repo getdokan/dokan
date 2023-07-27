@@ -1101,9 +1101,8 @@ export const selector = {
 					sendAnnouncementTo: '#announcement_sender_type', // all_seller, selected_seller, enabled_seller, disabled_seller, featured_seller
 					saveAsDraft: '.draft-btn',
 					publish: '.publish-btn'
-
-
 				},
+
 			},
 
 			// Refunds
@@ -4287,11 +4286,28 @@ export const selector = {
 
 		// Announcements
 		vAnnouncement: {
-			seeMore: 'p > a',
-			backToAllNotice: '.dokan-btn',
-			deleteAnnouncement: '.remove_announcement .fas',
+
+			announcementText: '.dokan-notice-listing h1',
+
+			announcementDiv: '.dokan-announcement-wrapper-item',
+			announcementDate: '.dokan-annnouncement-date',
+			announcementHeading: '.dokan-announcement-heading',
+			announcementContent: '.dokan-announcement-content',
+			removeAnnouncement: '.remove_announcement',
+
+			announcementLink: (title: string) => `//div[@class="dokan-announcement-heading"]//h3[contains(text(),"${title}")]/..`,
+			deleteAnnouncement: (title: string) => `//div[@class="dokan-announcement-heading"]//h3[contains(text(),"${title}")]/../../../..//a[@class="remove_announcement"]`,
 			confirmDeleteAnnouncement: '.swal2-confirm',
 			cancelDeleteAnnouncement: '.swal2-cancel',
+
+			//announcement details
+			announcement:{
+				title: '.dokan-notice-single-notice-area .entry-title',
+				date: '.dokan-single-announcement-date',
+				content: '.dokan-notice-single-notice-area .entry-content',
+				backToAllNotice: '//a[normalize-space()="Back to all Notice"]',
+			}
+
 		},
 
 		// Tools

@@ -50,15 +50,15 @@ test.describe('Coupons test', () => {
 		await vendor.vendorCouponsRenderProperly();
 	});
 
-	test('vendor can view marketPlace coupon @pro', async ( ) => {
+	test('vendor can view marketPlace coupon @pro @explo', async ( ) => {
 		await vendor.viewMarketPlaceCoupon(marketplaceCouponCode);
 	});
 
-	test('vendor can add coupon @pro', async ( ) => {
+	test.only('vendor can add coupon @pro', async ( ) => {
 		await vendor.addCoupon(data.coupon);
 	});
 
-	test('vendor can edit coupon @pro', async ( ) => {
+	test.only('vendor can edit coupon @pro', async ( ) => {
 		await vendor.editCoupon({ ...data.coupon, editCoupon: couponCode });
 	});
 

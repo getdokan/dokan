@@ -256,6 +256,8 @@ export class SellerBadgesPage extends AdminPage {
 	}
 
 
+	 //todo: vendor seller badge render properly
+
 	// vendor achieved badges congrats popup
 	async sellerBadgeCongratsPopup(){
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.badges);

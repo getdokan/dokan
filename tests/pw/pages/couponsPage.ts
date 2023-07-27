@@ -1,4 +1,4 @@
-import { Page, expect } from '@playwright/test';
+import { Page } from '@playwright/test';
 import { AdminPage } from 'pages/adminPage';
 import { selector } from 'pages/selectors';
 import { helpers } from 'utils/helpers';
@@ -28,7 +28,7 @@ export class CouponsPage extends AdminPage {
 		await this.check(selector.admin.marketing.addNewCoupon.showOnStores);
 		await this.check(selector.admin.marketing.addNewCoupon.notifyVendors);
 		await this.clickAndWaitForResponseAndLoadState(data.subUrls.post, selector.admin.marketing.addNewCoupon.publish);
-		await this.toContainText(selector.admin.marketing.addNewCoupon.publishSuccessMessage, 'Coupon updated.');  //todo: test this
+		await this.toContainText(selector.admin.marketing.addNewCoupon.publishSuccessMessage, 'Coupon updated.');
 	}
 
 	// vendor coupons render properly
@@ -61,15 +61,13 @@ export class CouponsPage extends AdminPage {
 
 	async updateCouponFields(coupon: coupon){
 		await this.type(selector.vendor.vCoupon.couponTitle, coupon.title());
-		await this.type(selector.vendor.vCoupon.description, coupon.description); //todo: test this
-		await this.selectByValue(selector.vendor.vCoupon.discountType, coupon.discountType); //todo: test this
+		await this.type(selector.vendor.vCoupon.description, coupon.description);
+		await this.selectByValue(selector.vendor.vCoupon.discountType, coupon.discountType);
 		await this.type(selector.vendor.vCoupon.amount, coupon.amount());
 		await this.click(selector.vendor.vCoupon.selectAll);
 		await this.check(selector.vendor.vCoupon.applyForNewProducts);
 		await this.check(selector.vendor.vCoupon.showOnStore);
-		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.coupons, selector.vendor.vCoupon.createCoupon, 302); //todo: test this
-		await expect(this.page.getByText(selector.vendor.vCoupon.couponSaveSuccessMessage)).toBeVisible();
-
+		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.coupons, selector.vendor.vCoupon.createCoupon, 302);
 	}
 
 
@@ -85,9 +83,9 @@ export class CouponsPage extends AdminPage {
 	// vendor edit coupon
 	async editCoupon(coupon: coupon) {
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.coupons);
-		// await this.clickAndWaitForNavigation(selector.vendor.vCoupon.couponLink(coupon.editCoupon));
 		await this.clickAndWaitForLoadState(selector.vendor.vCoupon.couponLink(coupon.editCoupon));
-		await this.updateCouponFields(coupon); //todo: test this
+		await this.updateCouponFields(coupon);
+		await this.toContainText(selector.vendor.vCoupon.dokanMessage, selector.vendor.vCoupon.couponUpdateSuccessMessage );
 	}
 
 

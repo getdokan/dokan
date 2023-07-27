@@ -1213,28 +1213,10 @@ export interface sellerBadge {
 
 // announcement
 export interface announcement {
-
-	receiver: {
-		allVendors: string;
-		selectedVendors: string;
-		enabledVendors: string;
-		disabledVendors: string;
-		featuredVendors: string;
-	}
-
-	create:{
 		randomTitle: () => string;
 		title: string;
 		content:  string;
 		receiver: string;
-	}
-
-	update:{
-		title: string;
-		content:  string;
-		receiver: string;
-	}
-
 }
 
 export interface modules {

@@ -26,7 +26,7 @@ test.describe('announcements api test', () => {
 	});
 
 	test('create a announcement @pro', async () => {
-		const [response, responseBody] = await apiUtils.post(endPoints.createAnnouncement, { data: payloads.createAnnouncement });
+		const [response, responseBody] = await apiUtils.post(endPoints.createAnnouncement, { data: payloads.createAnnouncement() });
 		expect(response.ok()).toBeTruthy();
 		expect(responseBody).toBeTruthy();
 	});

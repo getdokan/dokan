@@ -1044,12 +1044,13 @@ export const payloads = {
 
 	// announcement
 
-	createAnnouncement: {
-		title: 'test announcement title',
+	createAnnouncement: () => ({
+		// title: 'test announcement title',
+		title: 'test announcement title_' + faker.string.uuid(),
 		content: '<p>This is announcement content</p>',
 		status: 'publish',
 		sender_type: 'all_seller',
-	},
+	}),
 
 	updateAnnouncement: {
 		title: 'updated test announcement title',

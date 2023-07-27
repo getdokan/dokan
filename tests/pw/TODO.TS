@@ -77,6 +77,8 @@
 
 
 
+//TODO: add tag @explo to every view test and remove "@pro" form "@lite @pro" tests
+
 
 
 // TODO: woocommerce

@@ -45,12 +45,12 @@ export const helpers = {
 	currentDate: new Date().toLocaleDateString('en-CA'),
 
 	// current date-time [2023-06-02, 00:33]
-	currentDateTime: new Date().toLocaleString('en-CA', {
-		year: 'numeric', month: 'numeric', day: 'numeric', hourCycle: 'h23', hour: 'numeric', minute: 'numeric', }),
+	currentDateTime: new Date().toLocaleString('en-CA', { year: 'numeric', month: 'numeric', day: 'numeric', hourCycle: 'h23', hour: 'numeric', minute: 'numeric', }),
 
 	// current date-time [2023-06-02 00:46:11]
-	currentDateTime1: new Date().toLocaleString('en-CA', {
-		year: 'numeric', month: 'numeric', day: 'numeric', hourCycle: 'h23', hour: 'numeric', minute: 'numeric', second: 'numeric', }).replace(',', ''),
+	currentDateTime1: new Date().toLocaleString('en-CA', { year: 'numeric', month: 'numeric', day: 'numeric', hourCycle: 'h23', hour: 'numeric', minute: 'numeric', second: 'numeric', }).replace(',', ''),
+
+	currentDateTime2: () =>  new Date().toLocaleString('en-CA', { year: 'numeric', month: 'numeric', day: 'numeric', hourCycle: 'h23', hour: 'numeric', minute: 'numeric', second: 'numeric', }).replace(',', ''),
 
 
 	// add two input days

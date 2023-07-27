@@ -16,6 +16,7 @@ export class AnnouncementsPage extends AdminPage {
 
 	// announcements render properly
 	async adminAnnouncementsRenderProperly(){
+
 		await this.goIfNotThere(data.subUrls.backend.dokan.announcements);
 
 		// announcement text is visible
@@ -33,41 +34,41 @@ export class AnnouncementsPage extends AdminPage {
 		// announcement table elements are visible
 		await this.multipleElementVisible(selector.admin.dokan.announcements.table);
 
+		// add announcement fields are visible
+		await this.click(selector.admin.dokan.announcements.addNewAnnouncement);
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		const { contentHtmlBody, ...addAnnouncement } = selector.admin.dokan.announcements.addAnnouncement;
+		await this.multipleElementVisible(addAnnouncement);
+		await this.goBack();
+
+	}
+
+
+	// update announcement fields
+	async updateAnnouncementFields(announcement: announcement){
+		await this.clearAndType(selector.admin.dokan.announcements.addAnnouncement.title, announcement.title);
+		await this.typeFrameSelector(selector.admin.dokan.announcements.addAnnouncement.contentIframe, selector.admin.dokan.announcements.addAnnouncement.contentHtmlBody, announcement.content);
+		await this.selectByValue(selector.admin.dokan.announcements.addAnnouncement.sendAnnouncementTo, announcement.receiver);
+		await this.clickAndWaitForResponseAndLoadState(data.subUrls.api.dokan.announcements, selector.admin.dokan.announcements.addAnnouncement.publish);
+		await this.toBeVisible(selector.admin.dokan.announcements.announcementCellPublished(announcement.title));
 	}
 
 
 	// add announcement
-	async addAnnouncement(announcement: announcement['create']){
+	async addAnnouncement(announcement: announcement){
 		await this.goIfNotThere(data.subUrls.backend.dokan.announcements);
-
 		await this.click(selector.admin.dokan.announcements.addNewAnnouncement);
-
-		await this.clearAndType(selector.admin.dokan.announcements.addAnnouncement.title, announcement.title);
-		await this.typeFrameSelector(selector.admin.dokan.announcements.addAnnouncement.contentIframe, selector.admin.dokan.announcements.addAnnouncement.contentHtmlBody, announcement.content);
-		await this.selectByValue(selector.admin.dokan.announcements.addAnnouncement.sendAnnouncementTo, announcement.receiver);
-		// await this.clickAndWaitForResponse(data.subUrls.api.dokan.announcements, selector.admin.dokan.announcements.addAnnouncement.publish);
-		await this.clickAndWaitForResponseAndLoadState(data.subUrls.api.dokan.announcements, selector.admin.dokan.announcements.addAnnouncement.publish); //todo: test this
-		//TODO: add wait for load then assert
-		await this.toBeVisible(selector.admin.dokan.announcements.announcementCell(announcement.title));
+		await this.updateAnnouncementFields(announcement);
 	}
 
 
 	// edit announcement
-	async editAnnouncement(announcement: announcement['update']){
+	async editAnnouncement(announcement: announcement){
 		await this.goto(data.subUrls.backend.dokan.announcements);
-		// await this.goIfNotThere(data.subUrls.backend.dokan.announcements);
-
-		// await this.clickAndWaitForResponse(data.subUrls.api.dokan.announcements, selector.admin.dokan.announcements.navTabs.draft);
 		await this.hover(selector.admin.dokan.announcements.announcementCell(announcement.title));
-		await this.clickAndWaitForResponse(data.subUrls.api.dokan.announcements, selector.admin.dokan.announcements.announcementEdit(announcement.title));
+		await this.clickAndWaitForResponseAndLoadState(data.subUrls.api.dokan.announcements, selector.admin.dokan.announcements.announcementEdit(announcement.title));
 
-		await this.clearAndType(selector.admin.dokan.announcements.addAnnouncement.title, announcement.title);
-		await this.typeFrameSelector(selector.admin.dokan.announcements.addAnnouncement.contentIframe, selector.admin.dokan.announcements.addAnnouncement.contentHtmlBody, announcement.content);
-		await this.selectByValue(selector.admin.dokan.announcements.addAnnouncement.sendAnnouncementTo, announcement.receiver);
-		// await this.clickAndWaitForResponse(data.subUrls.api.dokan.announcements, selector.admin.dokan.announcements.addAnnouncement.publish);
-		await this.clickAndWaitForResponseAndLoadState(data.subUrls.api.dokan.announcements, selector.admin.dokan.announcements.addAnnouncement.publish); //todo: test this
-		//TODO: add wait for load then assert
-		await this.toBeVisible(selector.admin.dokan.announcements.announcementCell(announcement.title));
+		await this.updateAnnouncementFields(announcement);
 	}
 
 
@@ -114,5 +115,38 @@ export class AnnouncementsPage extends AdminPage {
 		await this.selectByValue(selector.admin.dokan.announcements.bulkActions.selectAction, action);
 		await this.clickAndWaitForResponse(data.subUrls.api.dokan.announcements, selector.admin.dokan.announcements.bulkActions.applyAction);
 	}
+
+
+	// vendor
+
+	// vendor announcements render properly
+	async vendorAnnouncementsRenderProperly(){
+		await this.goIfNotThere(data.subUrls.frontend.vDashboard.announcements);
+		await this.notToHaveCount(selector.vendor.vAnnouncement.announcementDiv, 0);
+		await this.notToHaveCount(selector.vendor.vAnnouncement.announcementDate, 0);
+		await this.notToHaveCount(selector.vendor.vAnnouncement.announcementHeading, 0);
+		await this.notToHaveCount(selector.vendor.vAnnouncement.announcementContent, 0);
+		await this.notToHaveCount(selector.vendor.vAnnouncement.removeAnnouncement, 0);
+	}
+
+
+	// vendor view announcement
+	async vendorViewAnnouncement(announcement: announcement){
+		await this.goIfNotThere(data.subUrls.frontend.vDashboard.announcements);
+		await this.clickAndWaitForLoadState(selector.vendor.vAnnouncement.announcementLink(announcement.title));
+		await this.toContainText(selector.vendor.vAnnouncement.announcement.title, announcement.title);
+		await this.toContainText(selector.vendor.vAnnouncement.announcement.content, announcement.content);
+		await this.toBeVisible(selector.vendor.vAnnouncement.announcement.date);
+		await this.toBeVisible(selector.vendor.vAnnouncement.announcement.backToAllNotice);
+	}
+
+
+	// vendor delete announcement
+	async vendorDeleteAnnouncement(title: string){
+		await this.goIfNotThere(data.subUrls.frontend.vDashboard.announcements);
+		await this.click(selector.vendor.vAnnouncement.deleteAnnouncement(title));
+		await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vAnnouncement.confirmDeleteAnnouncement);
+	}
+
 
 }

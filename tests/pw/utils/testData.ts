@@ -778,6 +778,7 @@ export const data = {
 				badges: 'dashboard/seller-badge/',
 				staff: 'dashboard/staffs',
 				followers: 'dashboard/followers',
+				announcements: 'dashboard/announcement',
 				tools: 'dashboard/tools',
 				csvExport: 'dashboard/tools/csv-export',
 				auction: 'dashboard/auction',
@@ -1461,7 +1462,7 @@ export const data = {
 	// announcement
 	announcement: {
 
-		receiver: {
+		receiverType: {
 			allVendors: 'all_seller',
 			selectedVendors: 'selected_seller',
 			enabledVendors: 'enabled_seller',
@@ -1469,18 +1470,10 @@ export const data = {
 			featuredVendors: 'featured_seller',
 		},
 
-		create:{
-			randomTitle: () => 'test announcement_' + faker.string.uuid(),
-			title: 'test announcement title',
-			content:  'test announcement Content',
-			receiver: ''
-		},
-
-		update:{
-			title: 'test announcement title',  // title should be same as create, cause search by title //TODO: updatedTitle:  can be added
-			content:  'update test announcement Content'
-		},
-
+		randomTitle: () => 'test title_' + faker.string.uuid(),
+		title: 'test announcement title',
+		content:  'test announcement Content',
+		receiver: 'all_seller'
 
 	},
 

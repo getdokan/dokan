@@ -800,10 +800,11 @@ export class ApiUtils {
 	}
 
 	// create announcement
-	async createAnnouncement(payload: object, auth? : auth): Promise<[responseBody, string]> {
+	async createAnnouncement(payload: object, auth? : auth): Promise<[responseBody, string, string]> {
 		const [, responseBody] = await this.post(endPoints.createAnnouncement, { data: payload, headers: auth });
 		const announcementId = responseBody.id;
-		return [responseBody, announcementId];
+		const announcementTitle = responseBody.title;
+		return [responseBody, announcementId, announcementTitle];
 	}
 
 	// delete announcement
