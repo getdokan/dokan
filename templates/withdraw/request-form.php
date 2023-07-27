@@ -23,7 +23,7 @@
                         ?>
                         <option
                             data-charge-fixed="<?php echo esc_attr( $fixed_charge ); ?>"
-                            data-charge-percentage="<?php esc_attr( $percentage_charge ); ?>"
+                            data-charge-percentage="<?php echo esc_attr( $percentage_charge ); ?>"
                             value="<?php echo esc_attr( $method_name ); ?>"
                             <?php selected( $withdraw_method, $method_name ); ?>
                         >
@@ -47,12 +47,12 @@
             </div>
         </div>
 
-        <div class="dokan-form-group" id="dokan-withdraw-charge-section">
+        <div class="dokan-form-group" id="dokan-withdraw-charge-section" style="display: none">
             <label for="withdraw-method" class="dokan-w4 dokan-control-label">
                 <?php esc_html_e( 'Withdraw Charge', 'dokan-lite' ); ?>
             </label>
             <div class="dokan-w5 dokan-text-left">
-                <span><?php echo esc_html( get_woocommerce_currency_symbol() ); ?> 100</span>
+                <span  id="dokan-withdraw-charge-section-text"></span>
             </div>
         </div>
 
@@ -61,7 +61,7 @@
                 <?php esc_html_e( 'Receivable amount', 'dokan-lite' ); ?>
             </label>
             <div class="dokan-w5 dokan-text-left">
-                <span><?php echo esc_html( get_woocommerce_currency_symbol() ); ?> 1200</span>
+                <span  id="dokan-withdraw-revivable-section-text"></span>
             </div>
         </div>
 
