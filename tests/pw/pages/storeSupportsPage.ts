@@ -154,7 +154,7 @@ export class StoreSupportsPage extends AdminPage {
 		await this.click(selector.admin.dokan.storeSupport.bulkActions.selectAll);
 		await this.selectByValue(selector.admin.dokan.storeSupport.bulkActions.selectAction, action);
 		await this.clickAndWaitForResponse(data.subUrls.api.dokan.storeSupport, selector.admin.dokan.storeSupport.bulkActions.applyAction);
-		//TODO: add assertion
+		//todo:  add assertion
 	}
 
 

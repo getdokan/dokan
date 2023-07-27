@@ -56,6 +56,6 @@ test.describe('Reports test', () => {
 		await admin.filterAllLogsByStatus('completed');
 	});
 
-	//TODO: filter by calendar
+	//todo:  filter by calendar
 
 });

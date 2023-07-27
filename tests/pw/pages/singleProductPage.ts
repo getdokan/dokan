@@ -64,7 +64,7 @@ export class SingleProductPage extends CustomerPage {
 
 			// product shipping elements are visible
 			// await this.click(selector.customer.cSingleProduct.menus.shipping);
-			// await this.multipleElementVisible(selector.customer.cSingleProduct.shipping);  //TODO: need vendor shipping, also add new test
+			// await this.multipleElementVisible(selector.customer.cSingleProduct.shipping);  //todo:  need vendor shipping, also add new test
 
 
 			// product location elements are visible
@@ -74,7 +74,7 @@ export class SingleProductPage extends CustomerPage {
 
 			// // warranty policy is visible
 			// await this.click(selector.customer.cSingleProduct.menus.warrantyPolicy);
-			// await this.multipleElementVisible(selector.customer.cSingleProduct.warrantyPolicy); //TODO: need warranty policy
+			// await this.multipleElementVisible(selector.customer.cSingleProduct.warrantyPolicy); //todo:  need warranty policy
 
 
 			// product enquiry is visible
@@ -105,7 +105,7 @@ export class SingleProductPage extends CustomerPage {
 		await this.goIfNotThere(data.subUrls.frontend.productDetails(helpers.slugify(productName)));
 		await this.click(selector.customer.cSingleProduct.menus.vendorInfo);
 		await this.multipleElementVisible(selector.customer.cSingleProduct.vendorInfo);
-		//TODO: assert actual value i.e. vendor info
+		//todo:  assert actual value i.e. vendor info
 	}
 
 
@@ -114,7 +114,7 @@ export class SingleProductPage extends CustomerPage {
 		await this.goIfNotThere(data.subUrls.frontend.productDetails(helpers.slugify(productName)));
 		await this.click(selector.customer.cSingleProduct.menus.location);
 		await this.multipleElementVisible(selector.customer.cSingleProduct.location);
-		//TODO: assert actual value i.e. location
+		//todo:  assert actual value i.e. location
 	}
 
 	// product warranty policy
@@ -122,7 +122,7 @@ export class SingleProductPage extends CustomerPage {
 		await this.goIfNotThere(data.subUrls.frontend.productDetails(helpers.slugify(productName)));
 		await this.click(selector.customer.cSingleProduct.menus.warrantyPolicy);
 		await this.multipleElementVisible(selector.customer.cSingleProduct.warrantyPolicy);
-		//TODO: assert actual value i.e. warranty policy
+		//todo:  assert actual value i.e. warranty policy
 	}
 
 
@@ -145,7 +145,7 @@ export class SingleProductPage extends CustomerPage {
 	async viewHighlightedVendorInfo(productName: string){
 		await this.goIfNotThere(data.subUrls.frontend.productDetails(helpers.slugify(productName)));
 		await this.multipleElementVisible(selector.customer.cSingleProduct.vendorHighlightedInfo);
-		//TODO: assert actual value i.e. vendor info
+		//todo:  assert actual value i.e. vendor info
 	}
 
 

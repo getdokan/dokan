@@ -10,12 +10,12 @@ let taxRate: number;
 
 test.beforeAll(async ({ request }) => {
 	apiUtils = new ApiUtils(request);
-	taxRate = await apiUtils.setUpTaxRate(payloads.enableTaxRate, payloads.createTaxRate); //TODO: get tax rate instead of setup if possible, need to make faster
+	taxRate = await apiUtils.setUpTaxRate(payloads.enableTaxRate, payloads.createTaxRate); //todo:  get tax rate instead of setup if possible, need to make faster
 });
 
 test.describe('calculation test', () => {
 	test('calculation test @pro', async () => {
-		//TODO: modify for lite as well if needed
+		//todo:  modify for lite as well if needed
 		const [commission, feeRecipient] = await dbUtils.getSellingInfo();
 
 		const [, res, oid,] = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder);
@@ -39,9 +39,9 @@ test.describe('calculation test', () => {
 		const adminCommission = orderReport.commission;
 		const vendorEarning = orderReport.vendor_earning;
 		//ToDo: compare with all order total
-		//TODO: add discount scenario
+		//todo:  add discount scenario
 
-		const calculatedSubTotal = helpers.subtotal([productPrice], [productQuantity]); //TODO: update it for multiple products
+		const calculatedSubTotal = helpers.subtotal([productPrice], [productQuantity]); //todo:  update it for multiple products
 		const calculatedProductTax = helpers.productTax(taxRate, calculatedSubTotal);
 		const calculatedShippingTax = helpers.shippingTax(taxRate, shippingFee);
 		const calculatedTotalTax = helpers.roundToTwo(calculatedProductTax + calculatedShippingTax);

@@ -78,7 +78,7 @@ export class VendorPage extends BasePage {
 		if (registrationErrorIsVisible) {
 			const errorMessage = await this.hasText(selector.customer.cWooSelector.wooCommerceError, data.customer.registrationErrorMessage);
 			if (errorMessage) {
-				return; //TODO: Throw error message instead of return
+				return; //todo:  Throw error message instead of return
 			}
 		}
 		if (subscriptionPackIsVisible) {
@@ -152,7 +152,7 @@ export class VendorPage extends BasePage {
 			await this.click(selector.vendor.product.productCategoryAlreadySelectedPopup);
 			await this.click(selector.vendor.product.productCategoryModalClose);
 		}
-		//TODO: handle multiple category selection with assertion
+		//todo:  handle multiple category selection with assertion
 	}
 
 	// products
@@ -322,7 +322,7 @@ export class VendorPage extends BasePage {
 		await this.type(selector.vendor.vSearchSimilarProduct.search, productName);
 		await this.click(selector.vendor.vSearchSimilarProduct.search);
 		await this.click(selector.vendor.vSearchSimilarProduct.search);
-		//TODO: add assertion
+		//todo:  add assertion
 	}
 
 
@@ -375,7 +375,7 @@ export class VendorPage extends BasePage {
 	}
 
 	// vendor set banner and profile picture settings
-	// async bannerAndProfilePictureSettings(banner: string, profilePicture: string): Promise<void> { //TODO: fix
+	// async bannerAndProfilePictureSettings(banner: string, profilePicture: string): Promise<void> { //todo:  fix
 	// 	// upload banner and profile picture
 	// 	await this.removePreviouslyUploadedImage(selector.vendor.vStoreSettings.bannerImage, selector.vendor.vStoreSettings.removeBannerImage);
 	// 	await this.click(selector.vendor.vStoreSettings.banner);
@@ -454,7 +454,7 @@ export class VendorPage extends BasePage {
 	// vendor set vacation settings
 	async vacationSettings(vacation: vendor['vendorInfo']['vacation']['datewise']): Promise<void> {
 
-		// // delete pervious datewise vacation settings if any  //TODO: skip this not needed ,might use in delete test
+		// // delete pervious datewise vacation settings if any  //todo:  skip this not needed ,might use in delete test
 		// const noVacationIsSetIsVisible = await this.isVisible(selector.vendor.vStoreSettings.noVacationIsSet);
 		// if (!noVacationIsSetIsVisible) {
 		// 	await this.hover(selector.vendor.vStoreSettings.vacationRow);
@@ -637,7 +637,7 @@ export class VendorPage extends BasePage {
 		if (!uploadPhotoBtnIsVisible) {
 			// await this.hover(selector.vendor.vVerificationSettings.previousUploadedPhoto); // TODO: not working, real user behavior
 			// await this.click(selector.vendor.vVerificationSettings.removePreviousUploadedPhoto);
-			await this.setAttributeValue('.gravatar-wrap', 'class', 'gravatar-wrap dokan-hide'); //TODO: remove this alternative soln.
+			await this.setAttributeValue('.gravatar-wrap', 'class', 'gravatar-wrap dokan-hide'); //todo:  remove this alternative soln.
 			await this.setAttributeValue('.gravatar-button-area.dokan-hide', 'class', 'gravatar-button-area');
 		}
 		await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vVerificationSettings.uploadPhoto);
@@ -695,13 +695,13 @@ export class VendorPage extends BasePage {
 
 
 	// upload media
-	async uploadMedia(file: string) { //TODO: move uploadMedia to base page, try to make only one function for media upload for whole project
+	async uploadMedia(file: string) { //todo:  move uploadMedia to base page, try to make only one function for media upload for whole project
 		const uploadedMediaIsVisible = await this.isVisible(selector.wpMedia.uploadedMedia);
 		if (uploadedMediaIsVisible) {
 			await this.click(selector.wpMedia.uploadedMedia);
 		} else {
-			await this.uploadFile(selector.wpMedia.selectFilesInput, file); //TODO: image upload don't work , try on other site
-			await this.click(selector.wpMedia.selectUploadedMedia); //TODO: after fix this line not needed
+			await this.uploadFile(selector.wpMedia.selectFilesInput, file); //todo:  image upload don't work , try on other site
+			await this.click(selector.wpMedia.selectUploadedMedia); //todo:  after fix this line not needed
 			await this.click(selector.wpMedia.select);
 		}
 	}
@@ -857,7 +857,7 @@ export class VendorPage extends BasePage {
 		await this.clearAndType(selector.vendor.vSocialProfileSettings.youtube, urls.youtube);
 		await this.clearAndType(selector.vendor.vSocialProfileSettings.instagram, urls.instagram);
 		await this.clearAndType(selector.vendor.vSocialProfileSettings.flickr, urls.flickr);
-		// await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vSocialProfileSettings.updateSettings); //TODO: don't work, alternate soln. below line
+		// await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vSocialProfileSettings.updateSettings); //todo:  don't work, alternate soln. below line
 		await this.pressOnSelector(selector.vendor.vSocialProfileSettings.updateSettings, data.key.enter);
 		await this.toContainText(selector.vendor.vSocialProfileSettings.updateSettingsSuccessMessage, urls.saveSuccessMessage);
 	}
@@ -966,7 +966,7 @@ export class VendorPage extends BasePage {
 
 		const refundReasonIsVisible = await this.isVisible(selector.vendor.product.refundReasons);
 		if (refundReasonIsVisible) {
-			// await this.clickAndWaitMultiple(selector.vendor.product.refundReasons)//TODO: update this
+			// await this.clickAndWaitMultiple(selector.vendor.product.refundReasons)//todo:  update this
 		}
 		await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.products, selector.vendor.product.saveProduct, 302);
 		const productCreateSuccessMessage = await this.getElementText(selector.vendor.product.updatedSuccessMessage);

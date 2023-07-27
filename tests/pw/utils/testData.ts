@@ -356,7 +356,7 @@ export const data = {
 	orderTrackingDetails:{
 		shippingProvider: 'test shipping provider',
 		trackingNumber: '1234567890',
-		dateShipped: 'July 4, 2023' //TODO: f y, j
+		dateShipped: 'July 4, 2023' //todo:   f y, j
 	},
 
 	// order Shipment Details
@@ -365,7 +365,7 @@ export const data = {
 		shipmentOrderItemQty: '1',
 		shippingStatus: 'ss_proceccing', // ss_delivered, ss_cancelled, ss_proceccing, ss_ready_for_pickup, ss_pickedup, ss_on_the_way
 		shippingProvider: 'sp-dhl', // sp-dhl, sp-dpd, sp-fedex, sp-polish-shipping-providers, sp-ups, sp-usps, sp-other
-		dateShipped: 'July 4, 2023', //TODO: f y, j
+		dateShipped: 'July 4, 2023', //todo:   f y, j
 		trackingNumber: '1234567890',
 		comments: 'test shipment comment'
 	},
@@ -858,7 +858,7 @@ export const data = {
 	vendor: {
 		username: String(process.env.VENDOR),
 		password: String(process.env.USER_PASSWORD),
-		lastname: String(process.env.VENDOR)[0] + String(process.env.VENDOR)[String(process.env.VENDOR).length - 1], //TODO: add last-name to other users
+		lastname: String(process.env.VENDOR)[0] + String(process.env.VENDOR)[String(process.env.VENDOR).length - 1], //todo:  add last-name to other users
 		storeName: String(process.env.VENDOR) + 'store',
 
 		vendorInfo: {
@@ -1195,7 +1195,7 @@ export const data = {
 	customer: {
 		username: String(process.env.CUSTOMER),
 		password: String(process.env.USER_PASSWORD),
-		lastname: String(process.env.CUSTOMER)[0] + String(process.env.CUSTOMER)[String(process.env.CUSTOMER).length-1], //TODO: add last-name to other users
+		lastname: String(process.env.CUSTOMER)[0] + String(process.env.CUSTOMER)[String(process.env.CUSTOMER).length-1], //todo:  add last-name to other users
 		// lastname1: ( name = process.env.CUSTOMER) => {  name[0] + name[name.length - 1]; },
 
 		customerInfo: {
@@ -1206,7 +1206,7 @@ export const data = {
 			password1: String(process.env.USER_PASSWORD) + '1',
 			firstName: () => faker.person.firstName('male'),
 			lastName: () => faker.person.lastName('male'),
-			// username: () => this.customer.customerInfo.firstName, //TODO: handel callback  & not works
+			// username: () => this.customer.customerInfo.firstName, //todo:  handel callback  & not works
 			// storename: () => this.customer.customerInfo.firstName + 'store',
 			role: 'customer',
 			username: () => faker.person.firstName('male'),
@@ -1216,7 +1216,7 @@ export const data = {
 			vatNumber: faker.string.alphanumeric(10),
 			bankIban: faker.finance.iban(),
 			phone: faker.phone.number('(###) ###-####'),
-			street1: 'abc street', //TODO: address should be global or not
+			street1: 'abc street', //todo:  address should be global or not
 			street2: 'xyz street',
 			country: 'United States (US)',
 			countrySelectValue: 'US',
@@ -1272,7 +1272,7 @@ export const data = {
 		},
 
 		update:{
-			name: 'test store category',  // name should be same as create, cause search by title //TODO: updatedTitle:  can be added
+			name: 'test store category',  // name should be same as create, cause search by title //todo:  updatedTitle:  can be added
 			description: 'updated test store category description',
 		},
 
@@ -1346,7 +1346,7 @@ export const data = {
 		},
 
 		quoteRule: {
-			title: 'test quote rule',  //TODO: title must be  used with uuid, tests are failing because of that
+			title: 'test quote rule',  //todo:  title must be  used with uuid, tests are failing because of that
 			userRole: '',
 			product: 'p1_v1 (simple)',
 			category: 'Uncategorized',
@@ -1358,7 +1358,7 @@ export const data = {
 		},
 
 		updateQuoteRule: {
-			title: 'test quote rule', // title should be same as create, cause search by title //TODO: updatedTitle:  can be added
+			title: 'test quote rule', // title should be same as create, cause search by title //todo:  updatedTitle:  can be added
 			userRole: '',
 			product: 'p1_v1 (simple)',
 			category: 'Uncategorized',
@@ -1388,7 +1388,7 @@ export const data = {
 		},
 
 		updateQuote:{
-			title: 'test quote', // title should be same as create, cause search by title //TODO: updatedTitle:  can be added
+			title: 'test quote', // title should be same as create, cause search by title //todo:  updatedTitle:  can be added
 			user: 'customer1',
 			fullName: 'Jhon Doe',
 			email: 'customer1@g.com',
@@ -1406,7 +1406,7 @@ export const data = {
 		},
 
 		convertedQuote:{
-			title: 'converted quote ' + faker.string.uuid(),  //TODO: more test date need to be unique, apply this
+			title: 'converted quote ' + faker.string.uuid(),  //todo:  more test date need to be unique, apply this
 		}
 
 	},

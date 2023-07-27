@@ -105,6 +105,6 @@ test.describe('Settings test', () => {
 		await settingsPage.disableDokanVendorSubscription(data.dokanSettings.vendorSubscription);
 	});
 
-	//TODO: add more set settings live search, sms gateway, seller verification, email verification
+	//todo:  add more set settings live search, sms gateway, seller verification, email verification
 
 });

@@ -152,7 +152,7 @@ export class WholesaleCustomersPage extends AdminPage {
 
 	//  wholesale customers bulk action
 	async wholesaleCustomerBulkAction(action: string){
-		// await this.searchWholesaleCustomer(wholesaleCustomer); //TODO: can be used to minimized number of rows to be affected
+		// await this.searchWholesaleCustomer(wholesaleCustomer); //todo:  can be used to minimized number of rows to be affected
 		await this.goIfNotThere(data.subUrls.backend.dokan.wholeSaleCustomer);
 
 		// ensure row exists

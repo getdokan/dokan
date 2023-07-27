@@ -38,7 +38,7 @@ test.describe('Follow stores functionality test', () => {
 
 
 	test('customer can follow store on store listing @pro', async ( ) => {
-		await customer.followStore(data.predefined.vendorStores.vendor1, data.predefined.vendorStores.followFromStoreListing); //TODO: update parameter
+		await customer.followStore(data.predefined.vendorStores.vendor1, data.predefined.vendorStores.followFromStoreListing); //todo:  update parameter
 	});
 
 	test('customer can follow store on single store @pro', async ( ) => {

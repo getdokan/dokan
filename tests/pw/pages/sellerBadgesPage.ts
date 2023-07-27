@@ -1,4 +1,4 @@
-import { Page, expect } from '@playwright/test';
+import { Page, expect, test } from '@playwright/test';
 import { AdminPage } from 'pages/adminPage';
 import { StoresPage } from 'pages/storesPage';
 import { selector } from 'pages/selectors';
@@ -60,8 +60,8 @@ export class SellerBadgesPage extends AdminPage {
 		await this.click(selector.admin.dokan.sellerBadge.badgeDetails.badgeEventDropdown);
 		const isPublished = await this.isVisible(selector.admin.dokan.sellerBadge.badgeDetails.badgePublishedStatus(badge.badgeName));
 		if (isPublished){
-			console.log('Badge is already published');
-			return; //TODO: through error or make sure deleted first
+			test.skip();
+			// throw new Error('Badge is already published'); //todo: skip or fail test
 		}
 		await this.click(selector.admin.dokan.sellerBadge.badgeDetails.badgeEvent(badge.badgeName));
 		await this.clearAndType(selector.admin.dokan.sellerBadge.badgeDetails.badgeName, badge.badgeName);

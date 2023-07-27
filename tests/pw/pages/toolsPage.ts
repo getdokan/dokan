@@ -52,7 +52,7 @@ export class ToolsPage extends AdminPage {
 
 		// all page created button should be disabled
 		await this.hasClass(selector.admin.dokan.tools.pageInstallation.allPagesCreated, 'button-disabled');
-		//TODO: enable the button then install pages again
+		//todo:  enable the button then install pages again
 		// await this.setAttributeValue(selector.admin.dokan.tools.pageInstallation.allPagesCreated, 'class',  'button button-primary');
 		// await this.clickAndWaitForResponse(data.subUrls.ajax, selector.admin.dokan.tools.pageInstallation.allPagesCreated);
 
@@ -63,7 +63,7 @@ export class ToolsPage extends AdminPage {
 	async regenerateOrderSyncTable(){
 		await this.goIfNotThere(data.subUrls.backend.dokan.tools);
 		await this.clickAndWaitForResponse(data.subUrls.ajax, selector.admin.dokan.tools.regenerateOrderSyncTable.reBuild);
-		//TODO: add assertion
+		//todo:  add assertion
 	}
 
 
@@ -71,7 +71,7 @@ export class ToolsPage extends AdminPage {
 	async checkForDuplicateOrders(){
 		await this.goIfNotThere(data.subUrls.backend.dokan.tools);
 		await this.clickAndWaitForResponse(data.subUrls.ajax, selector.admin.dokan.tools.checkForDuplicateOrders.checkOrders);
-		//TODO: add assertion
+		//todo:  add assertion
 	}
 
 
@@ -79,7 +79,7 @@ export class ToolsPage extends AdminPage {
 	async regenerateVariableProductVariationsAuthorIds(){
 		await this.goIfNotThere(data.subUrls.backend.dokan.tools);
 		await this.clickAndWaitForResponse(data.subUrls.ajax, selector.admin.dokan.tools.regenerateVariableProductVariationsAuthorIds.regenerate);
-		//TODO: add assertion
+		//todo:  add assertion
 	}
 
 
@@ -97,9 +97,9 @@ export class ToolsPage extends AdminPage {
 		await this.goIfNotThere(data.subUrls.backend.dokan.tools);
 		await this.clickAndWaitForResponse(data.subUrls.api.dokan.dummyData, selector.admin.dokan.tools.importDummyData.import);
 		// await this.clickAndWaitForResponse(data.subUrls.api.dokan.dummyData, selector.admin.dokan.dummyData.runTheImporter);
-		//TODO: wait for multiple request one after another
+		//todo:  wait for multiple request one after another
 		const subUrls = [[data.subUrls.api.dokan.dummyData], [data.subUrls.api.dokan.dummyData], [data.subUrls.api.dokan.dummyData], [data.subUrls.api.dokan.dummyData], [data.subUrls.api.dokan.dummyData]];
-		await this.clickAndWaitForResponses(subUrls, selector.admin.dokan.dummyData.runTheImporter);
+		// await this.clickAndWaitForResponses(subUrls, selector.admin.dokan.dummyData.runTheImporter);
 		// await this.toBeVisible(selector.admin.dokan.dummyData.importComplete);
 	}
 

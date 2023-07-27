@@ -298,7 +298,7 @@ export class ProductsPage extends AdminPage {
 		DOKAN_PRO && await this.multipleElementVisible(selector.vendor.product.importExport);
 
 		// product filters elements are visible
-		// await this.multipleElementVisible(selector.vendor.product.filters); //TODO: issue not fixed yet
+		// await this.multipleElementVisible(selector.vendor.product.filters); //todo:  issue not fixed yet
 
 		// product search elements are visible
 		await this.multipleElementVisible(selector.vendor.product.search);
@@ -312,7 +312,7 @@ export class ProductsPage extends AdminPage {
 	}
 
 
-	//TODO: import product
+	//todo:  import product
 
 
 	// export product
@@ -385,7 +385,7 @@ export class ProductsPage extends AdminPage {
 
 		await this.clearAndType(selector.vendor.product.title, product.productName());
 		await this.clearAndType(selector.vendor.product.price, product.regularPrice());
-		//TODO: add more fields
+		//todo:  add more fields
 
 		await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.products, selector.vendor.product.saveProduct, 302);
 		await this.toContainText(selector.vendor.product.dokanMessage, 'The product has been saved successfully. ');
@@ -399,7 +399,7 @@ export class ProductsPage extends AdminPage {
 		await this.click(selector.vendor.product.quickEdit);
 
 		await this.clearAndType(selector.vendor.product.quickEditProduct.title, product.productName());
-		//TODO: add more fields
+		//todo:  add more fields
 
 		await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.product.quickEditProduct.update);
 
@@ -440,7 +440,7 @@ export class ProductsPage extends AdminPage {
 
 		case 'edit' :
 			await this.selectByValue(selector.vendor.product.bulkActions.selectAction, 'edit');
-			//TODO:
+			//todo: 
 			break;
 
 		case 'permanently-delete' :
@@ -456,7 +456,7 @@ export class ProductsPage extends AdminPage {
 		}
 
 		await this.clickAndAcceptAndWaitForResponse(data.subUrls.frontend.vDashboard.products, selector.vendor.product.bulkActions.applyAction);
-		//TODO:
+		//todo: 
 	}
 
 

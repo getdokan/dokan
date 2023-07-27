@@ -6,7 +6,7 @@ import { data } from 'utils/testData';
 import { payloads } from 'utils/payloads';
 
 
-test.describe.skip('refunds test', () => {
+test.describe('refunds test', () => {
 
 	let admin: RefundsPage;
 	let aPage: Page;
@@ -56,6 +56,6 @@ test.describe.skip('refunds test', () => {
 		await admin.refundRequestsBulkAction('completed');
 	});
 
-	//TODO: add vendor tests
+	//todo:  add vendor tests
 
 });

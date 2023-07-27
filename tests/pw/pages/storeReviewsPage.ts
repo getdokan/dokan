@@ -42,7 +42,7 @@ export class StoreReviewsPage extends AdminPage {
 	async filterStoreReviews(vendorName: string){
 		// await this.clickIfVisible(selector.admin.dokan.storeReviews.filters.filterClear);
 		await this.goto(data.subUrls.backend.dokan.storeReviews);
-		//TODO: fix this clear filter not works
+		//todo:  fix this clear filter not works
 		// await this.goIfNotThere(data.subUrls.backend.dokan.storeReviews);
 		// const clearIsVisible = await this.isVisible(selector.admin.dokan.storeReviews.filters.filterClear);
 		// if(clearIsVisible) {
@@ -77,7 +77,7 @@ export class StoreReviewsPage extends AdminPage {
 		// await this.goIfNotThere(data.subUrls.backend.dokan.storeReviews);
 		await this.hover(selector.admin.dokan.storeReviews.storeReviewFirstCell);
 		await this.clickAndWaitForResponse(data.subUrls.api.dokan.storeReviews, selector.admin.dokan.storeReviews.storeReviewDelete);
-		//TODO: also wait for content to load
+		//todo:  also wait for content to load
 	}
 
 	// TODO: delete, restore, and  permanently delete can be merged into one

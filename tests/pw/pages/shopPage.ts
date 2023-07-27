@@ -70,7 +70,7 @@ export class ShopPage extends CustomerPage {
 	async productOnMap(productName?: string){
 		await this.goIfNotThere(data.subUrls.frontend.shop);
 		// await this.click(selector.customer.cShop.map.productOnMap.productOnMap);
-		// await this.toBeVisibleAnyOfThem([selector.customer.cShop.map.productOnMap.productPopup, selector.customer.cShop.map.productOnMap.productListPopup]); //TODO: implement this
+		// await this.toBeVisibleAnyOfThem([selector.customer.cShop.map.productOnMap.productPopup, selector.customer.cShop.map.productOnMap.productListPopup]); //todo:  implement this
 		const storePinIsVisible  = await this.isVisible(selector.customer.cShop.map.productOnMap.productPin);
 		if(storePinIsVisible){
 			await this.click(selector.customer.cShop.map.productOnMap.productPin);

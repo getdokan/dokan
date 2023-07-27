@@ -38,7 +38,7 @@ test.describe('Seller badge test', () => {
 		await admin.adminSellerBadgeRenderProperly();
 	});
 
-	test('admin can create seller badge @pro', async ( ) => {
+	test.only('admin can create seller badge @pro', async ( ) => {
 		await admin.createSellerBadge({ ...data.sellerBadge, badgeName: data.sellerBadge.eventName.numberOfItemsSold });
 	});
 
@@ -55,12 +55,12 @@ test.describe('Seller badge test', () => {
 	});
 
 	test.skip('admin can filter vendors by seller badge  @pro', async ( ) => {
-		//TODO: need to wait 1 min after badge create ; run via background process; can background process can be automated
+		//todo:  need to wait 1 min after badge create ; run via background process; can background process can be automated
 		await admin.filterVendorsByBadge(data.sellerBadge.eventName.productsPublished);
 	});
 
 	test.skip('admin can view seller badge vendors @pro', async ( ) => {
-		//TODO: need to wait 1 min after badge create; run via background process ; can background process can be automated
+		//todo:  need to wait 1 min after badge create; run via background process ; can background process can be automated
 		await admin.sellerBadgeVendors(data.sellerBadge.eventName.productsPublished);
 	});
 

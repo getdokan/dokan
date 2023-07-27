@@ -111,7 +111,7 @@ export class CustomerPage extends BasePage {
 		await this.clearAndType(selector.customer.cAddress.billingStreetAddress, billingInfo.street1);
 		await this.clearAndType(selector.customer.cAddress.billingStreetAddress2, billingInfo.street2);
 		await this.clearAndType(selector.customer.cAddress.billingTownCity, billingInfo.city);
-		await this.focus(selector.customer.cAddress.billingZipCode); //TODO: remove if found alternative soln.
+		await this.focus(selector.customer.cAddress.billingZipCode); //todo:  remove if found alternative soln.
 		await this.click(selector.customer.cAddress.billingState);
 		await this.clearAndType(selector.customer.cAddress.billingStateInput, billingInfo.state);
 		await this.press(data.key.enter);
@@ -148,24 +148,24 @@ export class CustomerPage extends BasePage {
 	async sendRmaMessage(message: string): Promise<void> {
 		await this.click(selector.customer.cMyAccount.rmaRequests);
 		await this.clearAndType(selector.customer.cRma.message, message);
-		await this.click(selector.customer.cRma.sendMessage); //TODO: add ajax is exists soln. below line
-		// await this.clickAndWaitForResponse(data.subUrls.ajax, selector.customer.cRma.sendMessage); //TODO: add ajax is exists
+		await this.click(selector.customer.cRma.sendMessage); //todo:  add ajax is exists soln. below line
+		// await this.clickAndWaitForResponse(data.subUrls.ajax, selector.customer.cRma.sendMessage); //todo:  add ajax is exists
 		await this.toContainText(selector.customer.cWooSelector.wooCommerceSuccessMessage, data.customer.rma.sendMessage);
 	}
 
 
 	// customer add customer details
-	async addCustomerDetails(customerInfo: customer['customerInfo']): Promise<void> {
+	async addCustomerDetails(customer: customer): Promise<void> {
 		await this.goIfNotThere(data.subUrls.frontend.editAccountCustomer);
-		await this.clearAndType(selector.customer.cAccountDetails.firstName, customerInfo.firstName());
-		await this.clearAndType(selector.customer.cAccountDetails.lastName, customerInfo.lastName());
-		await this.clearAndType(selector.customer.cAccountDetails.displayName, customerInfo.firstName());
-		// await this.clearAndType(selector.customer.cAccountDetails.email, customerInfo.email())
+		await this.clearAndType(selector.customer.cAccountDetails.firstName, customer.username);
+		await this.clearAndType(selector.customer.cAccountDetails.lastName, customer.lastname);
+		await this.clearAndType(selector.customer.cAccountDetails.displayName, customer.username);
+		await this.clearAndType(selector.customer.cAccountDetails.email, customer.username + customer.customerInfo.emailDomain);
 		// await this.updatePassword(customerInfo.password, customerInfo.password1);
 		await this.clickAndWaitForResponse(data.subUrls.frontend.editAccountCustomer, selector.customer.cAccountDetails.saveChanges);
 		await this.toContainText(selector.customer.cWooSelector.wooCommerceSuccessMessage, data.customer.account.updateSuccessMessage);
 		// cleanup
-		// await this.updatePassword(customerInfo.password1, customerInfo.password, true);
+		// await this.updatePassword(customerInfo.password1, customerInfo.password, true); //todo: do it via api
 
 	}
 
@@ -287,7 +287,7 @@ export class CustomerPage extends BasePage {
 		await this.goIfNotThere(data.subUrls.frontend.checkout);
 		//todo: move shipping from here, make separate function for payment
 		if (billingDetails) {
-			await this.addBillingAddressInCheckout(data.customer.customerInfo); //TODO: fill if empty
+			await this.addBillingAddressInCheckout(data.customer.customerInfo); //todo:  fill if empty
 		}
 		if (shippingDetails) {
 			await this.addShippingAddressInCheckout(data.customer.customerInfo);
@@ -413,8 +413,8 @@ export class CustomerPage extends BasePage {
 	// 	cOrderDetails.orderNumber = await this.getElementText(selector.customer.cOrderReceived.orderNumber);
 	// 	cOrderDetails.subtotal = helpers.price(await this.getElementText(selector.customer.cOrderReceived.subTotal));
 
-	// 	// let onlyShippingIsVisible = await this.isVisible(selector.customer.cOrderReceived.shipping)//TODO:delete this line when shipping is fixed
-	// 	// if (onlyShippingIsVisible) cOrderDetails.shippingMethod = await this.getElementText(selector.customer.cOrderReceived.shipping)//TODO:delete this line when shipping is fixed
+	// 	// let onlyShippingIsVisible = await this.isVisible(selector.customer.cOrderReceived.shipping)//todo: delete this line when shipping is fixed
+	// 	// if (onlyShippingIsVisible) cOrderDetails.shippingMethod = await this.getElementText(selector.customer.cOrderReceived.shipping)//todo: delete this line when shipping is fixed
 
 	// 	const shippingIsVisible = await this.isVisible(selector.customer.cOrderReceived.shippingCost);
 	// 	if (shippingIsVisible) {
@@ -457,8 +457,8 @@ export class CustomerPage extends BasePage {
 	// 	cOrderDetails.orderStatus = await this.getElementText(selector.customer.cOrders.orderStatus);
 	// 	cOrderDetails.subtotal = helpers.price(await this.getElementText(selector.customer.cOrders.subTotal));
 
-	// 	// let onlyShippingIsVisible = await this.isVisible(selector.customer.cOrders.shipping)//TODO:delete this line when shipping is fixed
-	// 	// if (onlyShippingIsVisible) cOrderDetails.shippingMethod = await this.getElementText(selector.customer.cOrders.shippingMethod)//TODO:delete this line when shipping is fixed
+	// 	// let onlyShippingIsVisible = await this.isVisible(selector.customer.cOrders.shipping)//todo: delete this line when shipping is fixed
+	// 	// if (onlyShippingIsVisible) cOrderDetails.shippingMethod = await this.getElementText(selector.customer.cOrders.shippingMethod)//todo: delete this line when shipping is fixed
 
 	// 	const shippingIsVisible = await this.isVisible(selector.customer.cOrders.shippingCost);
 	// 	if (shippingIsVisible) {
@@ -507,7 +507,7 @@ export class CustomerPage extends BasePage {
 		await this.clearAndType(selector.customer.cAddress.billingStreetAddress, billingInfo.street1);
 		await this.clearAndType(selector.customer.cAddress.billingStreetAddress2, billingInfo.street2);
 		await this.clearAndType(selector.customer.cAddress.billingTownCity, billingInfo.city);
-		await this.focus(selector.customer.cAddress.billingZipCode); //TODO: remove if found alternative soln.
+		await this.focus(selector.customer.cAddress.billingZipCode); //todo:  remove if found alternative soln.
 		await this.click(selector.customer.cAddress.billingState);
 		await this.clearAndType(selector.customer.cAddress.billingStateInput, billingInfo.state);
 		await this.press(data.key.enter);
@@ -529,7 +529,7 @@ export class CustomerPage extends BasePage {
 		await this.clearAndType(selector.customer.cAddress.shippingStreetAddress, shippingInfo.street1);
 		await this.clearAndType(selector.customer.cAddress.shippingStreetAddress2, shippingInfo.street2);
 		await this.clearAndType(selector.customer.cAddress.shippingTownCity, shippingInfo.city);
-		await this.focus(selector.customer.cAddress.shippingZipCode); //TODO: remove if found alternative soln.
+		await this.focus(selector.customer.cAddress.shippingZipCode); //todo:  remove if found alternative soln.
 		await this.click(selector.customer.cAddress.shippingState);
 		await this.clearAndType(selector.customer.cAddress.shippingStateInput, shippingInfo.state);
 		await this.press(data.key.enter);

@@ -400,16 +400,16 @@ export class BasePage {
 		return this.page.locator(selector);
 	}
 
-	// get locators  //TODO: need to test
+	// get locators  //todo:  need to test
 	async getLocators(selector: string): Promise<Locator[]> {
-		return await this.page.locator(selector).all(); //TODO: keep which one is better ;
+		return await this.page.locator(selector).all(); //todo:  keep which one is better ;
 		// return this.page.locator(selector).elementHandles();
 		// return this.page.$$(selector);
 	}
 
 	// returns whether the element is visible
 	async isVisible(selector: string): Promise<boolean> {
-		// return await this.isVisibleViaPage(selector);  //TODO: keep which one is better ; also update every page method with locator
+		// return await this.isVisibleViaPage(selector);  //todo:  keep which one is better ; also update every page method with locator
 		return await this.isVisibleLocator(selector);
 	}
 
@@ -468,7 +468,7 @@ export class BasePage {
 
 	// get element text content
 	async getElementText(selector: string): Promise<string | null> {
-		return await this.textContentOfLocator(selector); //TODO: keep which one is better
+		return await this.textContentOfLocator(selector); //todo:  keep which one is better
 		// return await this.page.textContent(selector);
 	}
 	// get element text content
@@ -478,7 +478,7 @@ export class BasePage {
 
 	//get element has test or not
 	async hasText(selector: string, text: string): Promise<boolean> {
-		//TODO: implement all has methods hasText, hasClass, hasAttribute, hasColor
+		//todo:  implement all has methods hasText, hasClass, hasAttribute, hasColor
 		const elementText = await this.textContentOfLocator(selector);
 		return elementText?.trim() === text ? true : false;
 	}
@@ -634,7 +634,7 @@ export class BasePage {
 	}
 
 	// Or
-	// async clearInputField2(selector): Promise<void>  { //TODO: fix this method
+	// async clearInputField2(selector): Promise<void>  { //todo:  fix this method
 	// 	let element = await this.getElement(selector)
 	// 	await this.page.evaluate(element => element.value = '', element)
 	// }
@@ -642,7 +642,7 @@ export class BasePage {
 	// clear input field and type
 	async clearAndType(selector: string, text: string): Promise<void> {
 		// TODO: need to update
-		await this.fill(selector, text); //TODO: keep which one is better
+		await this.fill(selector, text); //todo:  keep which one is better
 		// await this.clearAndTypeViaPage(selector, text);
 	}
 
@@ -702,7 +702,7 @@ export class BasePage {
 
 	// check input fields [checkbox/radio]
 	async check(selector: string): Promise<void> {
-		// await this.checkViaPage(selector); //TODO: keep which one is better
+		// await this.checkViaPage(selector); //todo:  keep which one is better
 		await this.checkLocator(selector);
 	}
 
@@ -787,7 +787,7 @@ export class BasePage {
 	async uploadFile(selector: string, files: string | string[]): Promise<void> {
 		// await this.page.setInputFiles(selector, files, { noWaitAfter: true });
 		await this.page.setInputFiles(selector, files);
-		await this.wait(2); //TODO: need to handle wait gracefully
+		await this.wait(2); //todo:  need to handle wait gracefully
 	}
 
 	// upload file
@@ -1299,7 +1299,7 @@ export class BasePage {
 	async multipleElementVisible(selectors: any){
 
 		// TODO: can also be merge with isVisible method and this method should support single selector too
-		//TODO: implement for arrays
+		//todo:  implement for arrays
 		// selectors = Object.values(selectors);
 		// selectors.forEach( async (selector: string) => {
 		// 	// console.log(selector);
@@ -1338,7 +1338,7 @@ export class BasePage {
 
 	// assert element to contain text
 	async toContainText(selector: string, text: string){
-		await expect(this.page.locator(selector)).toContainText(text); //TODO: add lowercase for both expected and received
+		await expect(this.page.locator(selector)).toContainText(text); //todo:  add lowercase for both expected and received
 	}
 
 	// assert element to have count
@@ -1522,7 +1522,7 @@ export class BasePage {
 
 	// delete element if exist (only first will delete) : dokan rma,report abuse
 	async deleteIfExists(selector: string): Promise<void> {
-		//TODO: there may be alternative solution, this method might not needed
+		//todo:  there may be alternative solution, this method might not needed
 		const elementExists = await this.isVisible(selector);
 		if (elementExists) {
 			const element = this.page.locator(selector);

@@ -1139,7 +1139,7 @@ export interface requestForQuotation {
 		offerProductQuantity: string;
 	}
 
-	//TODO: interface should be one, only quote, merge, update fields, trashed files if any
+	//todo:  interface should be one, only quote, merge, update fields, trashed files if any
 
 	updateQuote:{
 		title: string;

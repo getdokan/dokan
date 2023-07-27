@@ -147,7 +147,7 @@ export default defineConfig({
 	/* Configure projects for major browsers */
 	projects: [
 
-		//TODO: this flags are not allowed in project
+		//todo:  this flags are not allowed in project
 		// globalSetup: './global-setup', /* Path to the global setup file. This file will be required and run before all the tests. */
 		// // globalTeardown: './global-teardown', /* Path to the global teardown file. This file will be required and run after all the tests. */
 		// globalTimeout: process.env.CI ? 20 * (60 * 1000) : 20 * (60 * 1000), /* Maximum time in milliseconds the whole test suite can run */
@@ -188,7 +188,7 @@ export default defineConfig({
 		// 	name: 'api_tests',
 		// 	testMatch: /.*\.spec\.ts/,
 		// 	dependencies: process.env.SETUP ? ['api_setup'] : [],    /* whether to run setup tests before running actual tests */
-		// 	//TODO: which fields are allowed, not all are allowed
+		// 	//todo:  which fields are allowed, not all are allowed
 		// },
 
 		// // E2e project

@@ -36,7 +36,7 @@ test.describe('Product Advertising test', () => {
 	});
 
 	test('admin can search advertised product @pro', async ( ) => {
-		await admin.searchAdvertisedProduct(data.productAdvertisement.advertisedProduct);  //TODO: add search by order
+		await admin.searchAdvertisedProduct(data.productAdvertisement.advertisedProduct);  //todo:  add search by order
 	});
 
 	test('admin can filter advertised product by stores @pro', async ( ) => {
@@ -61,10 +61,10 @@ test.describe('Product Advertising test', () => {
 	});
 
 	// test.skip('vendor can buy product advertising @pro', async ( ) => {
-	// 	// await vendorPage.buyProductAdvertising(data.productAdvertisement.advertisedProduct);
+	// await vendor.buyProductAdvertising(data.productAdvertisement.advertisedProduct);
 	// });
 
-	//TODO: filter by calendar
-	//TODO: add tests for every setting options
-	//TODO: add vendor tests
+	//todo:  filter by calendar
+	//todo:  add tests for every setting options
+	//todo:  add vendor tests
 });

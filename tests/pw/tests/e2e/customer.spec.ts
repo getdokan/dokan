@@ -75,7 +75,7 @@ test.describe('Customer functionality test', () => {
 	});
 
 	test('customer can add customer details @lite @pro', async ( ) => {
-		await customerPage.addCustomerDetails(data.customer.customerInfo);
+		await customerPage.addCustomerDetails(data.customer);
 	});
 
 	test('customer can buy product @lite @pro', async ( ) => {

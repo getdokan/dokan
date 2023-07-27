@@ -81,7 +81,7 @@ setup.describe('setup site & woocommerce & user settings', () => {
 		expect(distanceRateShippingResponseBody.enabled).toBe(true);
 		const dokanVendorShippingResponseBody = await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingZoneMethodDokanVendorShipping	);
 		expect(dokanVendorShippingResponseBody.enabled).toBe(true);
-		//TODO: separate lite pro shipping methods
+		//todo:  separate lite pro shipping methods
 	});
 
 	setup('set basic payments @lite @pro', async ({ request }) => {
@@ -155,7 +155,7 @@ setup.describe('setup  user settings', () => {
 	// 	await apiUtils.createProduct({ ...product, status: 'publish', in_stock: true }, payloads.vendorAuth);
 	// });
 
-	setup('add test vendor orders @pro', async ({ request }) => {  //TODO: required for which test, might be replaced with create order with status
+	setup('add test vendor orders @pro', async ({ request }) => {  //todo:  required for which test, might be replaced with create order with status
 		const apiUtils = new ApiUtils(request);
 		await apiUtils.createOrder(payloads.createProduct(), { ...payloads.createOrder, customer_id: CUSTOMER_ID }, payloads.vendorAuth);
 	});

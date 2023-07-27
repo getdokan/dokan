@@ -4,7 +4,7 @@ import { data } from 'utils/testData';
 
 
 test.describe('Verifications test', () => {
-	//TODO: need multiple verification request via admin
+	//todo:  need multiple verification request via admin
 
 	let admin: VerificationsPage;
 	let aPage: Page;
@@ -39,10 +39,10 @@ test.describe('Verifications test', () => {
 	});
 
 	test.skip('admin can approve phone verification request @pro', async ( ) => {
-		//TODO: await admin.phoneVerificationRequest(data.predefined.vendorInfo.username,'approve');
+		//todo:  await admin.phoneVerificationRequest(data.predefined.vendorInfo.username,'approve');
 	});
 
-	//TODO: admin can disapprove verification request
-	//TODO: add vendor tests
+	//todo:  admin can disapprove verification request
+	//todo:  add vendor tests
 
 });

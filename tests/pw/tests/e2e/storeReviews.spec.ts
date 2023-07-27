@@ -72,7 +72,7 @@ test.describe('Store Reviews test', () => {
 	});
 
 	test('customer can edit store review @pro', async ( ) => {
-		//TODO: need separate method or update locator, ensure previous review exits
+		//todo:  need separate method or update locator, ensure previous review exits
 		await customer.reviewStore(data.predefined.vendorStores.vendor1, data.store);
 	});
 

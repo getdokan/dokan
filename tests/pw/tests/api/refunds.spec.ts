@@ -14,7 +14,7 @@ test.beforeAll(async ({ request }) => {
 	apiUtils = new ApiUtils(request);
 	[, orderResponseBody,] = await apiUtils.createOrderWithStatus(payloads.createProduct(), payloads.createOrder, 'wc-processing', payloads.vendorAuth);
 	[, refundId] = await dbUtils.createRefund(orderResponseBody);
-	//TODO: dokan get all refunds dont recognize refunded by woocommerce, find out why & try to use refund by api instead of db
+	//todo:  dokan get all refunds dont recognize refunded by woocommerce, find out why & try to use refund by api instead of db
 	// [, refundId] = await apiUtils.createRefund(orderId, payloads.createRefund); // via woocommerce
 });
 

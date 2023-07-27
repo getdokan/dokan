@@ -825,7 +825,7 @@ export const selector = {
 					numberOfRowsFound: '.tablenav.top .displaying-num',
 					noRowsFound: '//td[normalize-space()="No quote found."]',
 					quoteCell:  (title: string) => `//strong[contains(text(),'${title}')]/../..//td[@class='column sl']`, //todo: flaky because of this
-					//TODO: uncomment after search added
+					//todo:  uncomment after search added
 					// quoteRulesEdit: '.row-actions .edit',
 					// quoteRulesTrash: '.row-actions .trash',
 					// quoteRulesPermanentlyDelete: '.row-actions .delete',
@@ -913,7 +913,7 @@ export const selector = {
 					noRowsFound: '//td[normalize-space()="No quote found."]',
 					quoteRulesCell:  (title: string) => `//a[contains(text(),'${title}')]/../..`,
 					trashedQuoteRulesCell:  (title: string) => `//strong[contains(text(),'${title}')]/../..`,
-					//TODO: uncomment after search added
+					//todo:  uncomment after search added
 					// quoteRulesEdit: '.row-actions .edit',
 					// quoteRulesTrash: '.row-actions .trash',
 					// quoteRulesPermanentlyDelete: '.row-actions .delete',
@@ -1528,7 +1528,7 @@ export const selector = {
 					filterByStoreInput: 'input[placeholder="Filter by store"]',
 					filterByCreatedVia: (createdVia: string) => `//li[@class="multiselect__element"]//span[contains(@class,"multiselect__option")]//span[contains(text(), "${createdVia}")]`,
 					clearFilter: '//button[normalize-space()="Clear"]',
-					//TODO: add date-range filter locator
+					//todo:  add date-range filter locator
 				},
 
 				// Search
@@ -1552,8 +1552,8 @@ export const selector = {
 				advertisedProductOrderIdCell: (orderId: number) => `//a[normalize-space()="${orderId}"]/../..`,
 				advertisedProductExpire: '.row-actions .expire',
 				advertisedProductDelete: '.row-actions .delete',
-				confirmAction: '.swal2-actions .swal2-confirm', //TODO: merge this type of locators
-				actionSuccessful: '.swal2-actions .swal2-confirm', //TODO: merge this type of locators
+				confirmAction: '.swal2-actions .swal2-confirm', //todo:  merge this type of locators
+				actionSuccessful: '.swal2-actions .swal2-confirm', //todo:  merge this type of locators
 
 				addNewAdvertisement: {
 					closeModal: '.modal-header button',
@@ -1715,7 +1715,7 @@ export const selector = {
 				// Site Options
 					adminAreaAccess: '.admin_access .switch',
 
-					vendorStoreUrl: '#dokan_general\\[custom_store_url\\]', //TODO: for CSS selector [ ] needs escaped with double back slash \\
+					vendorStoreUrl: '#dokan_general\\[custom_store_url\\]', //todo:  for CSS selector [ ] needs escaped with double back slash \\
 					vendorSetupWizardLogo: '#dokan_general\\[setup_wizard_logo_url\\]',
 					disableWelcomeWizard: '#dokan_general\\[disable_welcome_wizard\\]',
 					sellingProductTypes: (type: string) => `//label[@for='dokan_general[global_digital_mode][${type}]']`,
@@ -2800,7 +2800,7 @@ export const selector = {
 			},
 
 			// Edit User info
-			userInfo: { //TODO: userinfo/userDetails/editUser
+			userInfo: { //todo:  userinfo/userDetails/editUser
 
 				// Personal Info
 				role: '#role',
@@ -3532,7 +3532,7 @@ export const selector = {
 			refundProductQuantity: (productName: string) => `//td[@class='name' and @data-sort-value='${productName}']/..//td[@class='quantity']//div[@class='refund']//input`,
 			refundProductCostAmount: (productName: string) => `//td[@class='name' and @data-sort-value='${productName}']/..//input[@class='refund_line_total wc_input_price']`,
 			refundProductTaxAmount: (productName: string) => `//td[@class='name' and @data-sort-value='${productName}']/..//input[@class='refund_line_tax wc_input_price']`,
-			// shippingCost: (shippingName) => ``, //TODO:add locator
+			// shippingCost: (shippingName) => ``, //todo: add locator
 			refundShippingAmount: (shippingName: string) => `//div[@class='view' and contains(text(),'${shippingName}')]/../../..//input[@class='refund_line_total wc_input_price']`,
 			refundShippingTaxAmount: (shippingName: string) => `//div[@class='view' and contains(text(),'${shippingName}')]/../../..//input[@class='refund_line_tax wc_input_price']`,
 
@@ -3678,7 +3678,7 @@ export const selector = {
 
 			// Coupon Dashboard
 			createdCoupon: '.coupon-code.column-primary strong span',
-			couponSaveSuccessMessage: 'Coupon has been saved successfully!', //TODO: move all success message to test data
+			couponSaveSuccessMessage: 'Coupon has been saved successfully!', //todo:  move all success message to test data
 			couponUpdateSuccessMessage: 'Coupon has been updated successfully!',
 
 
@@ -3829,7 +3829,7 @@ export const selector = {
 				maintainAReserveBalance: '#withdraw-remaining-amount',
 				changeSchedule: '#dokan-withdraw-schedule-request-submit',
 				scheduleMessage: '//div[@class="dokan-switch-container"]/..//p',
-				dokanBottomPopup: '#swal2-html-container', //TODO: make it global and use to assert every popup massage frontend
+				dokanBottomPopup: '#swal2-html-container', //todo:  make it global and use to assert every popup massage frontend
 				withdrawScheduleSaveSuccessMessage: 'Withdraw schedule changed successfully.',
 			},
 
@@ -4021,9 +4021,9 @@ export const selector = {
 					viewShippingSettingsMenu:'#dokan_view_store_shipping_menu',
 					viewSocialSettingsMenu:'#dokan_view_store_social_menu',
 					viewSeoSettingsMenu:'#dokan_view_store_seo_menu',
-					// viewBookingMenu:'#dokan_view_booking_menu', //TODO: add booking check
+					// viewBookingMenu:'#dokan_view_booking_menu', //todo:  add booking check
 					viewToolsMenu:'#dokan_view_tools_menu',
-					// viewAuctionMenu:'#dokan_view_auction_menu', //TODO: add auction check
+					// viewAuctionMenu:'#dokan_view_auction_menu', //todo:  add auction check
 					viewVerificationSettingsMenu:'#dokan_view_store_verification_menu',
 
 				},
@@ -4810,7 +4810,7 @@ export const selector = {
 
 			// Company Verification
 			startCompanyVerification: '#dokan_v_company_click',
-			cancelCompanyVerificationRequest: 'button#dokan_v_company_cancel', //TODO: update every class locator with input field
+			cancelCompanyVerificationRequest: 'button#dokan_v_company_cancel', //todo:  update every class locator with input field
 			UploadedCompanyFileClose: '.dokan-btn.dokan-btn-danger',
 			uploadFiles: '.dokan-files-drag',
 			cancelSelectedInfo: '.fa-times',
@@ -5080,7 +5080,7 @@ export const selector = {
 			orderDiscount: '//th[contains(text(),"Order Discount:")]/..//span',
 			quantityDiscount: '//th[contains(text(),"Quantity Discount:")]/..//span',
 			discount: '//th[text()="Discount:"]/..//span',
-			shipping: '//th[contains(text(),"Shipping:")]/..//td', //TODO:delete this when shipping method is fixed
+			shipping: '//th[contains(text(),"Shipping:")]/..//td', //todo: delete this when shipping method is fixed
 			shippingCost: '//th[contains(text(),"Shipping:")]/..//span',
 			shippingMethod: '//th[contains(text(),"Shipping:")]/..//small',
 			tax: '//th[contains(text(),"Tax:")]/..//span',
@@ -5310,7 +5310,7 @@ export const selector = {
 
 			// Product description
 			description: {
-				// descriptionHeading: '//h2[normalize-space()="Description"]', //TODO: storefrontOnly
+				// descriptionHeading: '//h2[normalize-space()="Description"]', //todo:  storefrontOnly
 				content: 'div[id="tab-description"] p',
 			},
 
@@ -5322,7 +5322,7 @@ export const selector = {
 
 			// Product Reviews
 			reviews:{
-				// reviewsHeading: '//h2[normalize-space()="Reviews"]', //TODO: storefrontOnly
+				// reviewsHeading: '//h2[normalize-space()="Reviews"]', //todo:  storefrontOnly
 				noReviews: '.woocommerce-noreviews',
 				ratings: '.comment-form-rating .stars',
 				rating: (star: string) => `.star-${star}`,
@@ -5336,7 +5336,7 @@ export const selector = {
 
 			// Product vendor info
 			vendorInfo: {
-				// vendorInfoHeading:'//h2[normalize-space()="Vendor Information"]', //TODO: storefrontOnly
+				// vendorInfoHeading:'//h2[normalize-space()="Vendor Information"]', //todo:  storefrontOnly
 				storeName: '.store-name',
 				vendor: '.seller-name',
 				storeAddress: '.store-address',
@@ -5344,7 +5344,7 @@ export const selector = {
 
 			// Product Location
 			location: {
-				// locationHeading: '//h2[normalize-space()="Product Location"]', //TODO: storefrontOnly
+				// locationHeading: '//h2[normalize-space()="Product Location"]', //todo:  storefrontOnly
 				productLocation: 'div[id="tab-geolocation"] address',
 				map: '#dokan-geolocation-locations-map'
 
@@ -5621,7 +5621,7 @@ export const selector = {
 
 			// Get Support
 			getSupport: {
-				// close: '.mfp-close', //TODO: this locator don't exits delete this from all
+				// close: '.mfp-close', //todo:  this locator don't exits delete this from all
 				close: 'button.icon-close',
 				subject: '#dokan-support-subject',
 				orderId: '.dokan-select',

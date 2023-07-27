@@ -16,7 +16,7 @@ setup.beforeAll(async ({ request }) => {
 
 setup.describe(' setup environment', () => {
 
-	//TODO: remove this after : replacing admin as vendor
+	//todo:  remove this after : replacing admin as vendor
 	setup('setup store settings @lite @pro', async () => {
 		const [response, ] = await apiUtils.put(endPoints.updateSettings, { data: payloads.setupStore });
 		expect(response.ok()).toBeTruthy();
@@ -48,7 +48,7 @@ setup.describe(' setup environment', () => {
 		await dbUtils.setDokanSettings(dbData.dokan.optionName.reverseWithdraw, dbData.dokan.reverseWithdrawSettings);
 	});
 
-	// setup('get test environment info @lite @pro', async () => { //TODO: move to global teardown
+	// setup('get test environment info @lite @pro', async () => { //todo:  move to global teardown
 	// 	const [, summaryInfo] = await apiUtils.getSystemStatus();
 	// 	helpers.writeFile('systemInfo.json', JSON.stringify(summaryInfo));
 	// });

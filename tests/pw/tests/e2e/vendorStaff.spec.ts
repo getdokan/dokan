@@ -62,7 +62,7 @@ test.describe.skip('Vendor staff test', () => {
 		await vendor.deleteStaff(data.staff.firstName);
 	});
 
-	//TODO: add tests for all permission group
-	//TODL : add tests for email template
+	//todo:  add tests for all permission group
+	//todo : add tests for email template
 
 });

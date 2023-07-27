@@ -35,12 +35,12 @@
 
 
 
-      //TODO:  remove before push
+      //todo:   remove before push
       // disable no unused vars rule
       "no-unused-vars": "off",
       "@typescript-eslint/no-unused-vars": "error",
 
-     //TODO: test any un-comment any necessary
+     //todo:  test any un-comment any necessary
     // "node/exports-style": ["error", "module.exports"],
     //   "node/file-extension-in-import": ["error", "always"],
     //   "node/prefer-global/buffer": ["error", "always"],

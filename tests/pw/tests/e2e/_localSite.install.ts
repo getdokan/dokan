@@ -13,13 +13,13 @@ test.describe('setup local site', () => {
 	test.skip(!!process.env.CI, 'skip site setup on CI');
 
 	// test('download wordpress to desired folder', async ({ page }) => {
-	// 	//TODO: create everything using bash script if needed
-	// 	//TODO: get desired folder path
-	// 	//TODO: download wordpress zip and unzip it
-	// 	//TODO: clone desired plugins to wp-plugins
-	// 	//TODO: clone theme to theme folder
-	// 	//TODO:
-	// 	//TODO:
+	//todo:  create everything using bash script if needed
+	//todo:  get desired folder path
+	//todo:  download wordpress zip and unzip it
+	//todo:  clone desired plugins to wp-plugins
+	//todo:  clone theme to theme folder
+	//todo:
+	//todo:
 
 	// });
 
@@ -42,7 +42,7 @@ test.describe('setup local site', () => {
 
 	// test('install and activate theme', async ({ request }) => {} //TODO
 
-	//TODO: skip global setup for local_setup
+	//todo:  skip global setup for local_setup
 
 	test('activate dokan & woocommerce plugins', async ({ request }) => {
 		const apiUtils = new ApiUtils(request);

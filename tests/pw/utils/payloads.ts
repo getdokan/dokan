@@ -1016,7 +1016,7 @@ export const payloads = {
 
 	createSupportTicketComment: {
 		replay: 'sp replay...1',
-		vendor_id: '1',  //TODO: it's admin id remove it, is admin id always one
+		vendor_id: '1',  //todo:  it's admin id remove it, is admin id always one
 		selected_user: 'admin',
 	},
 
@@ -1322,7 +1322,7 @@ export const payloads = {
 			flickr: 'http://dokan.test',
 		},
 		phone: '0123456789',
-		show_email: true, //TODO: don't work on lite
+		show_email: true, //todo:  don't work on lite
 		address: {
 			street_1: 'abc street',
 			street_2: 'xyz street',
@@ -1338,11 +1338,11 @@ export const payloads = {
 		gravatar_id: 0,
 		products_per_page: 12,
 		show_more_product_tab: true,
-		toc_enabled: true,  //TODO: don't work on lite
+		toc_enabled: true,  //todo:  don't work on lite
 		store_toc: 'test Vendor terms and conditions',
 		featured: true,
 		rating: {
-			rating: '4.00', //TODO: don't work on lite and how it works
+			rating: '4.00', //todo:  don't work on lite and how it works
 			count: 1,
 		},
 		enabled: true,
@@ -1370,7 +1370,7 @@ export const payloads = {
 		// 	open_notice: 'Store is open',
 		// 	close_notice: 'Store is closed',
 		// },
-		store_open_close: {  //TODO: don't work on lite
+		store_open_close: {  //todo:  don't work on lite
 			enabled: true,
 			time: {
 				monday: {
@@ -1503,7 +1503,7 @@ export const payloads = {
 		product_ids: [''],
 		offer_price: ['50'],
 		offer_product_quantity: ['10'],
-		status: 'pending' //TODO: status can be used to create direct pending, trashed quote
+		status: 'pending' //todo:  status can be used to create direct pending, trashed quote
 	}),
 
 	updateRequestQuote: {

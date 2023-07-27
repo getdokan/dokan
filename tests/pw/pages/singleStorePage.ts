@@ -27,7 +27,7 @@ export class SingleStorePage extends CustomerPage {
 		// store tab elements are visible
 		if (!DOKAN_PRO){
 			await this.toBeVisible(selector.customer.cSingleStore.storeTabs.products);
-			await this.toBeVisible(selector.customer.cSingleStore.storeTabs.toc); //TODO: enable toc on setup , get page id via api then user db // also need vendor toc
+			await this.toBeVisible(selector.customer.cSingleStore.storeTabs.toc); //todo:  enable toc on setup , get page id via api then user db // also need vendor toc
 		} else {
 			await this.multipleElementVisible(selector.customer.cSingleStore.storeTabs);
 		}
@@ -94,7 +94,7 @@ export class SingleStorePage extends CustomerPage {
 	async storeShare(storeName: string, site: storeShare): Promise<void> {
 		await this.goIfNotThere(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)));
 		await this.click(selector.customer.cSingleStore.storeTabs.share);
-		// await this.clickAndWaitForUrl(site.url, selector.customer.cSingleStore.sharePlatForms[site.name]); //TODO: fix this
+		// await this.clickAndWaitForUrl(site.url, selector.customer.cSingleStore.sharePlatForms[site.name]); //todo:  fix this
 	}
 
 

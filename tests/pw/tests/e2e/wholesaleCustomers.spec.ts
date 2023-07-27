@@ -8,7 +8,7 @@ import { payloads } from 'utils/payloads';
 import { dbData } from 'utils/dbData';
 
 
-test.describe.skip('Wholesale customers test', () => {
+test.describe('Wholesale customers test', () => {
 
 	let admin: WholesaleCustomersPage;
 	let customer: WholesaleCustomersPage;
@@ -84,12 +84,12 @@ test.describe.skip('Wholesale customers test', () => {
 	});
 
 	// wholesale setting options tests
-	//TODO: customer need or don't need approval : re-modify above two tests
-	//TODO: only customer can see wholesale price
-	//TODO: all users can see wholesale price
-	//TODO: customer can purchase product at wholesale price
-	//TODO: vendor can see Wholesale Price on Shop Archive
-	//TODO: vendor can create wholesale product  via api
+	//todo:  customer need or don't need approval : re-modify above two tests
+	//todo:  only customer can see wholesale price
+	//todo:  all users can see wholesale price
+	//todo:  customer can purchase product at wholesale price
+	//todo:  vendor can see Wholesale Price on Shop Archive
+	//todo:  vendor can create wholesale product  via api
 
 
 });

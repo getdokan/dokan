@@ -6,7 +6,7 @@ import fs from 'fs';
 // import FormData from 'form-data';
 
 
-//TODO: gather all interfaces in one place
+//todo:  gather all interfaces in one place
 
 interface auth {
 	[key: string]: string;
@@ -170,7 +170,7 @@ export class ApiUtils {
 			console.log('Status Code: ', response.status());
 			console.log('Error: ', err.message);  // TODO: showing playwright error instead of api error
 			console.log('Response text: ', await response.text());
-			return false; //TODO: WHY FALSE
+			return false; //todo:  WHY FALSE
 		}
 	}
 
@@ -216,7 +216,7 @@ export class ApiUtils {
 	// create store
 	async createStore(payload: any, auth? : auth): Promise<[responseBody, string]> {
 		const response = await this.request.post(endPoints.createStore, { data: payload, headers: auth });
-		const responseBody = await this.getResponseBody(response, false);   //TODO: convert to this.get , implement multiple optional function parameter to pass false to response-body
+		const responseBody = await this.getResponseBody(response, false);   //todo:  convert to this.get , implement multiple optional function parameter to pass false to response-body
 		let sellerId :string;
 		if(responseBody.code){
 			expect(response.status()).toBe(500);
@@ -278,7 +278,7 @@ export class ApiUtils {
 	}
 
 	// delete all products
-	async deleteAllProducts( productName = '', auth? : auth): Promise<responseBody> { //TODO: update handle first parameter
+	async deleteAllProducts( productName = '', auth? : auth): Promise<responseBody> { //todo:  update handle first parameter
 		const allProducts = await this.getAllProducts(auth);
 		let allProductIds: any;
 		// delete all products with same name
@@ -483,7 +483,7 @@ export class ApiUtils {
 	// get withdrawId
 	async getWithdrawId(auth? : auth): Promise<string> {
 		const allWithdraws = await this.getAllWithdrawsByStatus('pending', auth);
-		if(!allWithdraws?.length){ return ''; } //TODO: apply this to all get id method
+		if(!allWithdraws?.length){ return ''; } //todo:  apply this to all get id method
 		const withdrawId = allWithdraws[0].id;
 		return withdrawId;
 	}
@@ -491,7 +491,7 @@ export class ApiUtils {
 	// create withdraw
 	async createWithdraw(payload: object, auth? : auth): Promise<[responseBody, string]> {
 		const response = await this.request.post(endPoints.createWithdraw, { data: payload, headers: auth }); //todo: return withdrawid if already exists
-		const responseBody = await this.getResponseBody(response, false); //TODO: test if false is necessary there was false which is removed for testing
+		const responseBody = await this.getResponseBody(response, false); //todo:  test if false is necessary there was false which is removed for testing
 		const withdrawId = responseBody.id;
 		return [responseBody, withdrawId];
 	}
@@ -500,7 +500,7 @@ export class ApiUtils {
 	async cancelWithdraw(withdrawId: string, auth? : auth): Promise<responseBody> {
 		if(!withdrawId){
 			withdrawId = await this.getWithdrawId(auth);
-			if (!withdrawId) { return;} //TODO: apply this to all where get id method is called
+			if (!withdrawId) { return;} //todo:  apply this to all where get id method is called
 		}
 		const [, responseBody] = await this.delete(endPoints.cancelWithdraw(withdrawId), { headers: payloads.adminAuth });
 		return responseBody;
@@ -625,7 +625,7 @@ export class ApiUtils {
 	}
 
 	// create support ticket comment
-	async createSupportTicketComment( supportTicketId = '', payload: object, auth? : auth): Promise<responseBody> { //TODO: update handle first parameter
+	async createSupportTicketComment( supportTicketId = '', payload: object, auth? : auth): Promise<responseBody> { //todo:  update handle first parameter
 		if(!supportTicketId){
 			[supportTicketId,] = await this.getSupportTicketId(auth);
 		}
@@ -766,7 +766,7 @@ export class ApiUtils {
 	// create a product advertisement
 	async createProductAdvertisement(product: object, auth? : auth): Promise<[responseBody, string]> {
 		const [body, productId] = await this.createProduct(product, auth);
-		const sellerId = body.store.id;									//TODO: hardcoding admin auth will hinder negative testing : test with invalid user
+		const sellerId = body.store.id;									//todo:  hardcoding admin auth will hinder negative testing : test with invalid user
 		const [, responseBody] = await this.post(endPoints.createProductAdvertisement, { data: { vendor_id: sellerId, product_id: productId }, headers: payloads.adminAuth });
 		const productAdvertisementId = responseBody.id;
 		return [responseBody, productAdvertisementId];
@@ -1002,7 +1002,7 @@ export class ApiUtils {
 
 	// create seller badge
 	async createSellerBadge(payload: any, auth? : auth): Promise<[responseBody, string]> {
-		const response = await this.request.post(endPoints.createSellerBadge, { data: payload, headers: auth }); //TODO: remove this.request from everywhere
+		const response = await this.request.post(endPoints.createSellerBadge, { data: payload, headers: auth }); //todo:  remove this.request from everywhere
 		const responseBody = await this.getResponseBody(response, false);
 		const badgeId = responseBody.code === 'invalid-event-type' ? await this.getSellerBadgeId(payload.event_type, auth) : responseBody.id;
 		return [responseBody, badgeId];
@@ -1023,7 +1023,7 @@ export class ApiUtils {
 	// delete all seller badges
 	async deleteAllSellerBadges(auth? : auth): Promise<void> {
 		const allBadges = await this.getAllSellerBadges(auth);
-		if(!allBadges?.length){return;} //TODO: apply this to all batch update/ anywhere a action can be lessened
+		if(!allBadges?.length){return;} //todo:  apply this to all batch update/ anywhere a action can be lessened
 		const allBadgeIds = (await this.getAllSellerBadges(auth)).map((o: { id: unknown; }) => o.id);
 		await this.updateBatchSellerBadges('delete', allBadgeIds, auth);
 	}
@@ -1094,7 +1094,7 @@ export class ApiUtils {
 	// plugins
 
 	// get all plugins
-	async getAllPlugins(params = {}, auth? : auth): Promise<responseBody> { //TODO: run loop & increment page to grab all plugins/products/...
+	async getAllPlugins(params = {}, auth? : auth): Promise<responseBody> { //todo:  run loop & increment page to grab all plugins/products/...
 		const [, responseBody] = await this.get(endPoints.wp.getAllPlugins, { params: { ...params, per_page:100 }, headers: auth });
 		return responseBody;
 	}
@@ -1127,19 +1127,19 @@ export class ApiUtils {
 	// media
 
 	// upload media
-	async uploadMedia(filePath: string, auth?: auth): Promise<[responseBody, string]> { //TODO: handle different file upload, hardcoded: image
+	async uploadMedia(filePath: string, auth?: auth): Promise<[responseBody, string]> { //todo:  handle different file upload, hardcoded: image
 		const payload = {
 			headers: {
 				Accept: '*/*',
 				ContentType: 'multipart/form-data',
-				// Authorization: auth.Authorization  //TODO: handle authorization
+				// Authorization: auth.Authorization  //todo:  handle authorization
 			},
 			multipart: {
 				file: {
 					name: String((filePath.split('/')).pop()),
 					mimeType: 'image/' + (filePath.split('.')).pop(),
 					buffer: fs.readFileSync(filePath),
-					// buffer: Buffer.from(filePath),  //TODO: test then use it instead of previous, not working debug why
+					// buffer: Buffer.from(filePath),  //todo:  test then use it instead of previous, not working debug why
 				},
 			},
 		};
@@ -1150,7 +1150,7 @@ export class ApiUtils {
 	}
 
 	// upload media
-	async uploadMedia2(filePath: string, attributes: any, auth?: auth): Promise<[responseBody, string]> { //TODO: handle different file upload, hardcoded: image
+	async uploadMedia2(filePath: string, attributes: any, auth?: auth): Promise<[responseBody, string]> { //todo:  handle different file upload, hardcoded: image
 		const form: any = new FormData();
 		// form.append("file", fs.createReadStream(filePath));
 		// const base64 = { 'base64': fs.readFileSync(filePath) }
@@ -1182,7 +1182,7 @@ export class ApiUtils {
 		// 		ContentType: 'multipart/form-data',
 		// 		// ContentType: 'image/png',
 		// 		'content-disposition': `attachment; filename=${String((filePath.split('/')).pop())}`
-		// 		// Authorization: auth.Authorization  //TODO: handle authorization
+		// 		// Authorization: auth.Authorization  //todo:  handle authorization
 		// 	},
 		// 	form: form
 		// }
@@ -1191,11 +1191,11 @@ export class ApiUtils {
 			ContentType: 'multipart/form-data',
 			// ContentType: 'image/png',
 			'content-disposition': `attachment; filename=${String((filePath.split('/')).pop())}`
-			// Authorization: auth.Authorization  //TODO: handle authorization
+			// Authorization: auth.Authorization  //todo:  handle authorization
 		};
 
 		// const response = await this.request.post(endPoints.wp.createMediaItem, payload);
-		const response = await this.request.post(endPoints.wp.createMediaItem, { form: form, headers: headers });  //TODO: update all request.post to this.post/get/put/delete
+		const response = await this.request.post(endPoints.wp.createMediaItem, { form: form, headers: headers });  //todo:  update all request.post to this.post/get/put/delete
 		const responseBody = await this.getResponseBody(response);
 		const mediaId = responseBody.id;
 		return [responseBody, mediaId];
@@ -1204,7 +1204,7 @@ export class ApiUtils {
 	// upload media
 	async uploadMedia3(filePath: string): Promise<[responseBody, string]> {
 		// const payload = fs.readFileSync(filePath);
-		const payload = Buffer.from(filePath);  //TODO: test then use it instead of previous , Add auth
+		const payload = Buffer.from(filePath);  //todo:  test then use it instead of previous , Add auth
 		const headers = { 'content-disposition': `attachment; filename=${String((filePath.split('/')).pop())}` };
 		const response = await this.request.post(endPoints.wp.createMediaItem, { data: payload, headers });
 		const responseBody = await this.getResponseBody(response);
@@ -1331,13 +1331,13 @@ export class ApiUtils {
 		payload.line_items[0].product_id = productId;
 		const response = await this.request.post(endPoints.wc.createOrder, { data: payload, headers: payloads.adminAuth });
 		const responseBody = await this.getResponseBody(response);
-		const orderId = String(responseBody.id); //TODO: need to cast everywhere [any values assigned from type any, here responseBody type is any, sending order-id as string, but actually it sending it as number], some test might need it to be number look for it and update accordingly
+		const orderId = String(responseBody.id); //todo:  need to cast everywhere [any values assigned from type any, here responseBody type is any, sending order-id as string, but actually it sending it as number], some test might need it to be number look for it and update accordingly
 		return [response, responseBody, orderId, productId];
 	}
 
 	// create complete order
 	async createOrderWithStatus(product: string | object, order: any, status: string, auth?: auth): Promise<[APIResponse, responseBody, string, string]> {
-		//TODO: add feature for productID, creator of product(who will be the owner), create order auth, update order auth
+		//todo:  add feature for productID, creator of product(who will be the owner), create order auth, update order auth
 		const [response, responseBody, orderId, productId] = await this.createOrder(product, order, auth);
 		await this.updateOrderStatus(orderId, status, auth);
 		return [response, responseBody, orderId, productId];

@@ -44,7 +44,7 @@ export class StoreListingPage extends CustomerPage {
 			await this.toBeVisible(selector.customer.cStoreList.filters.filterDetails.searchVendor);
 			await this.toBeVisible(selector.customer.cStoreList.filters.filterDetails.apply);
 		} else {
-			//TODO: remove every eslint comment before push
+			//todo:  remove every eslint comment before push
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			const { rating, ...filterDetails } = selector.customer.cStoreList.filters.filterDetails;
 			await this.multipleElementVisible(filterDetails);
@@ -119,7 +119,7 @@ export class StoreListingPage extends CustomerPage {
 			await this.click(selector.customer.cStoreList.map.storeOnMap.storeCluster);
 			await this.toBeVisible(selector.customer.cStoreList.map.storeOnMap.storeListPopup);
 		}
-		storeName && await this.toBeVisible(selector.customer.cStoreList.map.storeOnMap.storeOnList(storeName)); //TODO: need to update store settings via e2e to render on map for vendor1
+		storeName && await this.toBeVisible(selector.customer.cStoreList.map.storeOnMap.storeOnList(storeName)); //todo:  need to update store settings via e2e to render on map for vendor1
 	}
 
 

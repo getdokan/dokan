@@ -1,83 +1,86 @@
 
 //TODO ***** list all core tests and setup tests : plugins activated, wp settings, woocommerce settings, dokan modules activated , dokan settings for both e2e and api
-//TODO: make e2e tests independent specially admin tests
-//TODO: GRAB CONSOLE ERROR, And PHP ERROR *****************
-//TODO: slack integration
-//TODO: working-directory: ./path/to/tests
-//TODO: update auth if expired instead of every-time
-//TODO: separate two junit report showing on simple git-action summary
-//TODO: separate everything for local & CI like: global setup, env, playwright config
-//TODO: implement fixture for lite pro issue handle
-//TODO: separate globalSetup for local & CI , cant reg user every time for local site or find another soln.
-//TODO: #  // "no-unused-vars": "off" is enabled for now but remove before push
-//TODO: test basic auth can be used instead of cookies for authentication
-//TODO: # Configure projects for multiple environments : ci, local,
-//TODO: # convert waitForNavigation to waitForUrl
-//TODO: # why two pages are opening : fix that
-//TODO: # test should run parallely
-//TODO: # add fixture
-//TODO: use extrahttpheaders: for grab storage.json  // not possible
-//TODO: usr extrahttpheaders: for test describe and avoid storage.json all-together
-//TODO: convert all expect parameter to correct way: left side received and right part expected
-//TODO: convert all string assertion:
-//TODO: remove all single events like waitforNavigation, waitForUrl, 
+//todo:  make e2e tests independent specially admin tests
+//todo:  GRAB CONSOLE ERROR, And PHP ERROR *****************
+//todo:  slack integration
+//todo:  working-directory: ./path/to/tests
+//todo:  update auth if expired instead of every-time
+//todo:  separate two junit report showing on simple git-action summary
+//todo:  separate everything for local & CI like: global setup, env, playwright config
+//todo:  implement fixture for lite pro issue handle
+//todo:  separate globalSetup for local & CI , cant reg user every time for local site or find another soln.
+//todo:  #  // "no-unused-vars": "off" is enabled for now but remove before push
+//todo:  test basic auth can be used instead of cookies for authentication
+//todo:  # Configure projects for multiple environments : ci, local,
+//todo:  # convert waitForNavigation to waitForUrl
+//todo:  # why two pages are opening : fix that
+//todo:  # test should run parallely
+//todo:  # add fixture
+//todo:  use extrahttpheaders: for grab storage.json  // not possible
+//todo:  usr extrahttpheaders: for test describe and avoid storage.json all-together
+//todo:  convert all expect parameter to correct way: left side received and right part expected
+//todo:  convert all string assertion:
+//todo:  remove all single events like waitforNavigation, waitForUrl, 
 // filter received & expected test
 // trim if necessary
 // lowercase
-//TODO: add system info after git action info via system status function, current theme should be there
-//TODO: use only one password for every user FOR both suite e2e and api
-//TODO: theme is not activating fix this
-//TODO: test cli dont work
-//TODO: fix permalink issue 
-//TODO: replace click with check for all check fields all suite
-//TODO:
-//TODO: TODO: remove not needed env variables from yml file, like slowmo, setup .........
-//TODO:
-//TODO:
-//TODO: add wait for navigation to add wait for responses or build a new one merging both *****************
-//TODO: add more ui assertions to all tests
-//TODO:
-//TODO:
-//TODO: global setup & teardown can be converted to project setup
-//TODO:
-//TODO:
-//TODO: check data exists or not for all bulk actions
+//todo:  add system info after git action info via system status function, current theme should be there
+//todo:  use only one password for every user FOR both suite e2e and api
+//todo:  theme is not activating fix this
+//todo:  test cli dont work
+//todo:  fix permalink issue 
+//todo:  replace click with check for all check fields all suite
+//todo: 
+//todo:  TODO: remove not needed env variables from yml file, like slowmo, setup .........
+//todo: 
+//todo: 
+//todo:  add wait for navigation to add wait for responses or build a new one merging both *****************
+//todo:  add more ui assertions to all tests
+//todo: 
+//todo: 
+//todo:  global setup & teardown can be converted to project setup
+//todo: 
+//todo: 
+//todo:  check data exists or not for all bulk actions
 
 //todo locator = selector.admin.dokan.settings; locator length can be shorten
 
-//TODO: make tests more independent where possible specially admin parts : use before-all , after-all, delete data in before-all or after-all to repeat each tests: test should be passed for repeat-each:5
+//todo:  make tests more independent where possible specially admin parts : use before-all , after-all, delete data in before-all or after-all to repeat each tests: test should be passed for repeat-each:5
 
 
 
 
 
 
-//TODO: this.page.waitForLoadState( 'domcontentloaded' ),  for every navigation check if any tests fail *****************************
-//TODO: this.page.waitForLoadState( 'networkidle' ), if any tests fail for domcontentloaded, but domcontentloaded doesn't wait for other things like images, subframes, and async scripts to finish loading.
+//todo:  this.page.waitForLoadState( 'domcontentloaded' ),  for every navigation check if any tests fail *****************************
+//todo:  this.page.waitForLoadState( 'networkidle' ), if any tests fail for domcontentloaded, but domcontentloaded doesn't wait for other things like images, subframes, and async scripts to finish loading.
 
 
 
-// TODO: add search option before bulk option to minimize the number of rows to be effected  for all bulk action
+// TODO: BULK ACTION: add search option before bulk option to minimize the number of rows to be effected  for all bulk action
 // if(productName){
 // 	await this.searchAdvertisedProduct(productName);
 // } else {
 // 	await this.goIfNotThere(data.subUrls.backend.dokan.productAdvertising);
 // }
 
-//TODO: add modal or sub option on explotory tesing tests all
+//todo:  HANDLE ERROR: throw new Error('Badge is already published');
+either throw error or just return or convert to playwright error
+
+//todo:  add modal or sub option on explotory tesing tests all
 
 
 
-//TODO: export log test keep this
+//todo:  export log test keep this
 		// await Promise.all([
 		// 	this.page.waitForResponse((resp) => resp.url().includes(data.subUrls.api.dokan.logs) && resp.status() === 200),
 		// 	this.page.waitForResponse((resp) => resp.url().includes(data.subUrls.backend.dokan.downloadOrderLogs) && resp.status() === 200),
 		// 	this.page.locator(selector.admin.dokan.reports.allLogs.exportLogs).click()
-		// ]); //TODO: add wait for multiple different response on base-page
+		// ]); //todo:  add wait for multiple different response on base-page
 
 
 
-//TODO: add tag @explo to every view test and remove "@pro" form "@lite @pro" tests
+//todo:  add tag @explo to every view test and remove "@pro" form "@lite @pro" tests
 
 
 
@@ -99,20 +102,20 @@
 			page.locator( '#woocommerce_permalink_structure' )
 		).toHaveValue( '/product/' );
 
-//TODO: follow woocommerce project structure like global setup, teardown, ....
+//todo:  follow woocommerce project structure like global setup, teardown, ....
 
-//TODO: Grab stateDir, baseURL from config
+//todo:  Grab stateDir, baseURL from config
 const { stateDir, baseURL, userAgent } = config.projects[ 0 ].use;
 
 console.log( `State Dir: ${ stateDir }` );
 console.log( `Base URL: ${ baseURL }` );
 
 
-//TODO: try this for wait for navigation
+//todo:  try this for wait for navigation
 // await page.waitForLoadState( 'networkidle' );
 
 
-//TODO: file upload : plugin
+//todo:  file upload : plugin
 // const [ fileChooser ] = await Promise.all( [
 //     page.waitForEvent( 'filechooser' ),
 //     page.click( '#pluginzip' ),
@@ -120,7 +123,7 @@ console.log( `Base URL: ${ baseURL }` );
 // await fileChooser.setFiles( woocommerceZipPath );
 
 
-//TODO: can implement test.step
+//todo:  can implement test.step
 // test( `can update WooCommerce to "${ UPDATE_WC }"`, async ( {
 //     page,
 //     baseURL,
@@ -137,7 +140,7 @@ console.log( `Base URL: ${ baseURL }` );
 
 
 
-//TODO: what is expect.poll
+//todo:  what is expect.poll
 
 await expect
 					.poll(
@@ -155,7 +158,7 @@ await expect
 					)
 					.toEqual( true );
 
-//TODO: try error.response.data
+//todo:  try error.response.data
 
 response = await axios( options ).catch( ( error ) => {
     if ( error.response ) {
@@ -164,12 +167,12 @@ response = await axios( options ).catch( ( error ) => {
     throw new Error( error.message );
 } );
 
-//TODO: use this for plugin download and activate scenario
+//todo:  use this for plugin download and activate scenario
 response.data.pipe( fs.createWriteStream( zipFilePath ) );
 
 
 
-//TODO: use this for run command via code , built a utility function
+//todo:  use this for run command via code , built a utility function
 export const installPluginThruWpCli = async ( pluginPath ) => {
 	const runWpCliCommand = async ( command ) => {
 		const { stdout, stderr } = await execAsync(
@@ -192,7 +195,7 @@ export const installPluginThruWpCli = async ( pluginPath ) => {
 		await page.click( 'text=Recalculate' );
 
 
-    //TODO: what is page.dispatchEvent
+    //todo:  what is page.dispatchEvent
     await page.goto(
         'wp-admin/admin.php?page=wc-settings&tab=shipping&section=classes'
     );
@@ -209,13 +212,13 @@ export const installPluginThruWpCli = async ( pluginPath ) => {
 
 
 
-//TODO: why waitUntil on goto , what is the default value
+//todo:  why waitUntil on goto , what is the default value
     await page.goto(
         'wp-admin/admin.php?page=wc-settings&tab=shipping&zone_id=new',
         { waitUntil: 'networkidle' }
     );
 
-//TODO: ensure empty cart like this , try to use both clearCookies to clear cart & storagejson for authenticate user
+//todo:  ensure empty cart like this , try to use both clearCookies to clear cart & storagejson for authenticate user
 // check clearcookies clear storagejson or not
 	test.beforeEach( async ( { context, page } ) => {
 		// Shopping cart is very sensitive to cookies, so be explicit
@@ -226,52 +229,52 @@ export const installPluginThruWpCli = async ( pluginPath ) => {
 	} );
 
 
-	//TODO: use this instead of networkidle
+	//todo:  use this instead of networkidle
 	// Start test
 	await page.waitForLoadState( 'networkidle' );
 
 
 
-//TODO:
-//TODO:
-//TODO:
-//TODO:
-//TODO:
-//TODO:
-//TODO:
-//TODO:
-//TODO:
-//TODO:
-//TODO:
-//TODO:
-//TODO:
-//TODO:
-//TODO:
-//TODO:
+//todo: 
+//todo: 
+//todo: 
+//todo: 
+//todo: 
+//todo: 
+//todo: 
+//todo: 
+//todo: 
+//todo: 
+//todo: 
+//todo: 
+//todo: 
+//todo: 
+//todo: 
+//todo: 
 
 
 
 // TODO: ********************api suite******************
 
-//TODO: convert admin as vendor to vendor for whole suite
-//TODO: fix rank math api
-//TODO: create valid payload for every request : which doesn't cause php warning
-//TODO: how customerID, vendorId will be feed in tests , from env_setup, from payload (might be cause circular error, or empty value 
+//todo:  convert admin as vendor to vendor for whole suite
+//todo:  fix rank math api
+//todo:  create valid payload for every request : which doesn't cause php warning
+//todo:  how customerID, vendorId will be feed in tests , from env_setup, from payload (might be cause circular error, or empty value 
 // because import before call, on before-all)
-//TODO: run every test separately and update if necessary
-//TODO: run with parallel mode on , make tests independent if necessary
-//TODO:
-//TODO:
-//TODO:
-//TODO:
-//TODO:
-//TODO:
-//TODO:
-//TODO:
-//TODO:
-//TODO:
-//TODO:
-//TODO: USe this for global setup, reporter or use two separate file for both suite
+//todo:  run every test separately and update if necessary
+//todo:  run with parallel mode on , make tests independent if necessary
+//todo: 
+//todo: 
+//todo: 
+//todo: 
+//todo: 
+//todo: 
+//todo: 
+//todo: 
+//todo: 
+//todo: 
+//todo: 
+//todo:  USe this for global setup, reporter or use two separate file for both suite
 To expand on the process.env solution:
 
 // playwright.config.ts
@@ -286,23 +289,23 @@ const config = {
 
 
 
-//TODO: read every playwright github issue & playwright comment
+//todo:  read every playwright github issue & playwright comment
 
-//TODO: convert testSummary from commonjs module to ex module
-//TODO: implement new playwright settings 
-//TODO: ['json', { outputFile: 'results.json' }] add json reporter and try to replace junit, ust json report for test summary
-//TODO: fix npm run error without npx
-//TODO: add last updated time on test summary
+//todo:  convert testSummary from commonjs module to ex module
+//todo:  implement new playwright settings 
+//todo:  ['json', { outputFile: 'results.json' }] add json reporter and try to replace junit, ust json report for test summary
+//todo:  fix npm run error without npx
+//todo:  add last updated time on test summary
 
 
 
-//TODO: readme
+//todo:  readme
 
-//TODO: add lite & pro config on readme
-//TODO: add emoji to readme
-//TODO: make readme follow readme guideline
-//TODO: use chatgpt to rephrase readme
-//TODO: test test env to doc
+//todo:  add lite & pro config on readme
+//todo:  add emoji to readme
+//todo:  make readme follow readme guideline
+//todo:  use chatgpt to rephrase readme
+//todo:  test test env to doc
 // About the environment
 // The default values are:
 
@@ -315,4 +318,4 @@ const config = {
 
 
 
-//TODO: add os and browsers in env info
+//todo:  add os and browsers in env info

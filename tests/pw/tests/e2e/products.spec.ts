@@ -100,7 +100,7 @@ test.describe('Product functionality test', () => {
 		await vendor.filterProducts('by-category', 'Uncategorized');
 	});
 
-	// test('vendor can filter products by type @lite @pro', async ( ) => { //TODO: dokan issue not fixed yet
+	// test('vendor can filter products by type @lite @pro', async ( ) => { //todo:  dokan issue not fixed yet
 	// 	await vendor.filterProducts('by-other', 'simple');
 	// });
 

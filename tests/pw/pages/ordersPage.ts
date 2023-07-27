@@ -112,7 +112,7 @@ export class OrdersPage extends VendorPage {
 	// view order details
 	async viewOrderDetails(orderNumber: string): Promise<void> {
 		await this.goToOrderDetails(orderNumber);
-		//TODO: add more files to assert
+		//todo:  add more files to assert
 	}
 
 
@@ -155,7 +155,7 @@ export class OrdersPage extends VendorPage {
 		await this.clearAndType(selector.vendor.orders.orderNote.orderNoteInput, orderNote.note);
 		await this.selectByLabel(selector.vendor.orders.orderNote.orderNoteType, orderNote.noteType);
 		await this.clickAndAcceptAndWaitForResponse(data.subUrls.ajax, selector.vendor.orders.orderNote.addNote);
-		//todo: also assert on my order details or add new test
+		//todo:  add new test customer can view order note
 	}
 
 
@@ -165,7 +165,7 @@ export class OrdersPage extends VendorPage {
 		await this.click(selector.vendor.orders.trackingDetails.addTrackingNumber);
 		await this.clearAndType(selector.vendor.orders.trackingDetails.shippingProvider, orderTrackingDetails.shippingProvider);
 		await this.clearAndType(selector.vendor.orders.trackingDetails.trackingNumber, orderTrackingDetails.trackingNumber);
-		// await this.clearAndType(selector.vendor.orders.trackingDetails.dateShipped, orderTrackingDetails.dateShipped); //TODO: grab site date formate and based on that create date value
+		// await this.clearAndType(selector.vendor.orders.trackingDetails.dateShipped, orderTrackingDetails.dateShipped); //todo:  grab site date formate and based on that create date value
 		await this.clickAndAcceptAndWaitForResponse(data.subUrls.ajax, selector.vendor.orders.trackingDetails.addTrackingDetails);
 	}
 
@@ -178,7 +178,7 @@ export class OrdersPage extends VendorPage {
 		await this.clearAndType(selector.vendor.orders.shipment.shipmentOrderItemQty(shipmentDetails.shipmentOrderItem), shipmentDetails.shipmentOrderItemQty );
 		await this.selectByValue(selector.vendor.orders.shipment.shippingStatus, shipmentDetails.shippingStatus);
 		await this.selectByValue(selector.vendor.orders.shipment.shippingProvider, shipmentDetails.shippingProvider);
-		// await this.clearAndType(selector.vendor.orders.shipment.dateShipped, shipmentDetails.dateShipped); //TODO: grab site date formate and based on that create date value
+		// await this.clearAndType(selector.vendor.orders.shipment.dateShipped, shipmentDetails.dateShipped); //todo:  grab site date formate and based on that create date value
 		await this.clearAndType(selector.vendor.orders.shipment.trackingNumber, shipmentDetails.shippingProvider);
 		await this.clearAndType(selector.vendor.orders.shipment.comments, shipmentDetails.trackingNumber);
 		await this.click(selector.vendor.orders.shipment.notifyCustomer);
@@ -187,7 +187,7 @@ export class OrdersPage extends VendorPage {
 		//todo: also assert on my order details or add new test
 	}
 
-	//TODO: update shipment test, shipment updates timeline
+	//todo:  update shipment test, shipment updates timeline
 
 
 	// add Downloadable Product
@@ -195,7 +195,7 @@ export class OrdersPage extends VendorPage {
 		await this.goToOrderDetails(orderNumber);
 		await this.clearAndType(selector.vendor.orders.downloadableProductPermission.downloadableProductInput, downloadableProductName);
 		await this.press(data.key.enter);
-		await this.clickAndAcceptAndWaitForResponse(data.subUrls.ajax, selector.vendor.orders.downloadableProductPermission.grantAccess); //TODO: need to fix
+		await this.clickAndAcceptAndWaitForResponse(data.subUrls.ajax, selector.vendor.orders.downloadableProductPermission.grantAccess); //todo:  need to fix
 	}
 
 
@@ -210,7 +210,7 @@ export class OrdersPage extends VendorPage {
 	// order bulk action
 	async orderBulkAction(action: string, orderNumber?: string): Promise<void> {
 		if(orderNumber){
-			await this.searchOrder(orderNumber);  //TODO: use search like this for all
+			await this.searchOrder(orderNumber);
 		} else {
 			await this.goIfNotThere(data.subUrls.frontend.vDashboard.orders);
 		}
@@ -235,7 +235,7 @@ export class OrdersPage extends VendorPage {
 		}
 
 		await this.clickAndAcceptAndWaitForResponse(data.subUrls.frontend.vDashboard.orders, selector.vendor.orders.bulkActions.applyAction);
-		//TODO:
+		//todo: 
 	}
 
 

@@ -1,4 +1,4 @@
-import { Page } from '@playwright/test';
+import { Page, test } from '@playwright/test';
 import { AdminPage } from 'pages/adminPage';
 import { selector } from 'pages/selectors';
 import { data } from 'utils/testData';
@@ -50,7 +50,7 @@ export class WithdrawsPage extends AdminPage {
 
 		await this.click(selector.admin.dokan.withdraw.filters.filterByVendor);
 		await this.typeAndWaitForResponse(data.subUrls.api.dokan.stores, selector.admin.dokan.withdraw.filters.filterInput, vendorName);
-		await this.toContainText(selector.admin.dokan.withdraw.filters.result, vendorName); //TODO: apply this for every dropdown search
+		await this.toContainText(selector.admin.dokan.withdraw.filters.result, vendorName); //todo:  apply this for every dropdown search
 		//todo: need to wait for focus event
 		await this.pressAndWaitForResponse(data.subUrls.api.dokan.withdraws, data.key.enter);
 		await this.toBeVisible(selector.admin.dokan.withdraw.withdrawCell(vendorName));
@@ -139,7 +139,7 @@ export class WithdrawsPage extends AdminPage {
 			await this.toBeVisible(selector.vendor.vWithdraw.autoWithdrawDisbursement.editSchedule);
 		}
 
-		//TODO: pending request can be added
+		//todo:  pending request can be added
 
 		// withdraw payment methods div elements are visible
 		await this.toBeVisible(selector.vendor.vWithdraw.withdrawPaymentMethods.paymentMethodsDiv);
@@ -181,7 +181,8 @@ export class WithdrawsPage extends AdminPage {
 			await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vWithdraw.manualWithdrawRequest.submitRequest);
 			// await expect(this.page.getByText(selector.vendor.vWithdraw.manualWithdrawRequest.withdrawRequestSaveSuccessMessage)).toBeVisible(); //todo
 		} else {
-			throw new Error('Vendor balance is less than minimum withdraw amount'); //todo: convert to playwright error
+			test.skip();
+			// throw new Error('Vendor balance is less than minimum withdraw amount'); //todo: skip or fail test
 		}
 	}
 

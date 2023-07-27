@@ -29,12 +29,12 @@ test.describe('Single store functionality test', () => {
 	// single store page
 
 	test.skip('dokan single store page is rendering properly @lite @pro @explo', async ( ) => {
-		//TODO: need toc on store and admin settings
-		await customer.singleStoreRenderProperly(data.predefined.vendorStores.vendor1);  //TODO: compatible with all four layout
+		//todo:  need toc on store and admin settings
+		await customer.singleStoreRenderProperly(data.predefined.vendorStores.vendor1);  //todo:  compatible with all four layout
 	});
 
 	test.skip('customer can view store open-close time on single store @lite @pro', async ( ) => {
-		//TODO: need store open close
+		//todo:  need store open close
 		await customer.storeOpenCloseTime(data.predefined.vendorStores.vendor1);
 	});
 
@@ -47,7 +47,7 @@ test.describe('Single store functionality test', () => {
 	});
 
 	test.skip('customer can view store terms and conditions @lite @pro', async ( ) => {
-		//TODO: need toc on store and admin settings
+		//todo:  need toc on store and admin settings
 		await customer.storeTermsAndCondition(data.predefined.vendorStores.vendor1, data.vendor.toc);
 	});
 
