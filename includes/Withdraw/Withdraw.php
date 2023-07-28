@@ -354,7 +354,7 @@ class Withdraw {
      *
      * @since DOKAN_SINCE
      *
-     * @param $charge_data
+     * @param $charge_data array
      *
      * @return \WeDevs\Dokan\Withdraw\Withdraw
      */
@@ -369,9 +369,9 @@ class Withdraw {
      *
      * @since DOKAN_SINCE
      *
-     * @return void
+     * @return \WeDevs\Dokan\Withdraw\Withdraw
      */
-    private function calculate_charge() {
+    public function calculate_charge() {
         $charge_data = $this->get_charge_data();
         $fixed       = $charge_data['fixed'];
         $percentage  = $charge_data['percentage'];
@@ -387,6 +387,8 @@ class Withdraw {
 
         $this->set_charge( $charge );
         $this->set_recivable( floatval( $this->get_amount() - floatval( $charge ) ) );
+
+        return $this;
     }
 
     /**
@@ -417,8 +419,7 @@ class Withdraw {
         $all_charges = dokan_withdraw_get_method_charges();
         $current_method_charge_data = $all_charges[ $this->get_method() ];
 
-        $this->set_charge_data( $current_method_charge_data );
-        $this->calculate_charge();
+        $this->set_charge_data( $current_method_charge_data )->calculate_charge();
 
         $details = dokan()->withdraw->get_formatted_details( $this->data['method'], absint( $this->data['user_id'] ) );
 
