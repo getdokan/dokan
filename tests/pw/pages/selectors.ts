@@ -283,7 +283,7 @@ export const selector = {
 
 				// Bulk Actions
 				bulkActions: {
-					selectAll: 'thead .manage-column',
+					selectAll: 'thead .manage-column input',
 					selectAction: '.tablenav.top #bulk-action-selector-top',  // approved, cancelled, delete, paypal
 					applyAction: '.tablenav.top .button.action',
 				},
@@ -397,7 +397,7 @@ export const selector = {
 
 				// Bulk Actions
 				bulkActions: {
-					selectAll: 'thead .manage-column',
+					selectAll: 'thead .manage-column input',
 					selectAction: '.tablenav.top #bulk-action-selector-top',  // approved, cancelled, delete, paypal
 					applyAction: '.tablenav.top .button.action',
 
@@ -615,7 +615,7 @@ export const selector = {
 
 				// Bulk Actions
 				bulkActions: {
-					selectAll: 'thead .manage-column',
+					selectAll: 'thead .manage-column input',
 					selectAction: '.tablenav.top #bulk-action-selector-top',  // delete
 					applyAction: '.tablenav.top .button.action',
 				},
@@ -671,7 +671,7 @@ export const selector = {
 
 				// Bulk Actions
 				bulkActions: {
-					selectAll: 'thead .manage-column',
+					selectAll: 'thead .manage-column input',
 					selectAction: '.tablenav.top #bulk-action-selector-top',  // trash
 					applyAction: '.tablenav.top .button.action',
 				},
@@ -731,7 +731,7 @@ export const selector = {
 
 				// Bulk Actions
 				bulkActions: {
-					selectAll: 'thead .manage-column',
+					selectAll: 'thead .manage-column input',
 					selectAction: '.tablenav.top #bulk-action-selector-top',  // close
 					applyAction: '.tablenav.top .button.action',
 
@@ -806,7 +806,7 @@ export const selector = {
 
 					// Bulk Actions
 					bulkActions: {
-						selectAll: 'thead .manage-column',
+						selectAll: 'thead .manage-column input',
 						selectAction: '.tablenav.top #bulk-action-selector-top',  // trash
 						applyAction: '.tablenav.top .button.action',
 
@@ -891,7 +891,7 @@ export const selector = {
 
 					// Bulk Actions
 					bulkActions: {
-						selectAll: 'thead .manage-column',
+						selectAll: 'thead .manage-column input',
 						selectAction: '.tablenav.top #bulk-action-selector-top',  // trash
 						applyAction: '.tablenav.top .button.action',
 
@@ -971,7 +971,7 @@ export const selector = {
 
 				// Bulk Actions
 				bulkActions: {
-					selectAll: 'thead .manage-column',
+					selectAll: 'thead .manage-column input',
 					selectAction: '.tablenav.top #bulk-action-selector-top',  // delete
 					applyAction: '.tablenav.top .button.action',
 				},
@@ -989,14 +989,19 @@ export const selector = {
 
 				numberOfRowsFound: '.tablenav.top .displaying-num',
 				noRowsFound: '//td[normalize-space()="No badges found."]',
+				sellerBadgeRow: (name: string) => `//a[contains(text(),'${name}')]/../../..`,
 				sellerBadgeCell: (name: string) => `//a[contains(text(),'${name}')]/../..`,
 				sellerBadgeLevel: (name: string) => `//a[contains(text(),'${name}')]/../../..//span[@class="level_count"]//strong`,
+				sellerBadgePublish: (name: string) => `//a[contains(text(),'${name}')]/../..//div[@class="row-actions"]//span[@class="publish"]//a`,
+				sellerBadgeDraft: (name: string) => `//a[contains(text(),'${name}')]/../..//div[@class="row-actions"]//span[@class="draft"]//a`,
+				sellerBadgeDelete: (name: string) => `//a[contains(text(),'${name}')]/../..//div[@class="row-actions"]//span[@class="delete"]//a`,
+
 				sellerBadgeEdit: '.row-actions .edit',
 				sellerBadgePreview: '.row-actions .view',
 				sellerBadgeVendors: '.row-actions .show_vendors',
-				sellerBadgePublish: '.row-actions .publish',
-				sellerBadgeDraft: '.row-actions .draft',
-				sellerBadgeDelete: '.row-actions .delete',
+				// sellerBadgePublish: '.row-actions .publish',
+				// sellerBadgeDraft: '.row-actions .draft',
+				// sellerBadgeDelete: '.row-actions .delete',
 				confirmAction: '.swal2-actions .swal2-confirm',
 				cancelAction: '.swal2-actions .swal2-cancel',
 				successMessage: '.swal2-actions .swal2-confirm',
@@ -1066,7 +1071,7 @@ export const selector = {
 
 				// Bulk Actions
 				bulkActions: {
-					selectAll: 'thead .manage-column',
+					selectAll: 'thead .manage-column input',
 					selectAction: '.tablenav.top #bulk-action-selector-top',  // trash
 					applyAction: '.tablenav.top .button.action',
 				},
@@ -1119,7 +1124,7 @@ export const selector = {
 
 				// Bulk Actions
 				bulkActions: {
-					selectAll: 'thead .manage-column',
+					selectAll: 'thead .manage-column input',
 					selectAction: '.tablenav.top #bulk-action-selector-top',  // completed, cancelled
 					applyAction: '.tablenav.top .button.action',
 				},
@@ -1516,7 +1521,7 @@ export const selector = {
 
 				// Bulk Actions
 				bulkActions: {
-					selectAll: 'thead .manage-column',
+					selectAll: 'thead .manage-column input',
 					selectAction: '.tablenav.top #bulk-action-selector-top',  // delete
 					applyAction: '//div[@class="tablenav top"]//button[normalize-space()="Apply"]',
 				},
@@ -1581,7 +1586,7 @@ export const selector = {
 
 				// Bulk Actions
 				bulkActions: {
-					selectAll: 'thead .manage-column',
+					selectAll: 'thead .manage-column input',
 					selectAction: '.tablenav.top #bulk-action-selector-top',  // activate, deactivate
 					applyAction: '.tablenav.top .button.action',
 				},

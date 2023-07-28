@@ -99,7 +99,7 @@ export class SellerBadgesPage extends AdminPage {
 	async editSellerBadge(badge: sellerBadge){
 		await this.searchSellerBadge(badge.badgeName);
 
-		await this.hover(selector.admin.dokan.sellerBadge.sellerBadgeCell(badge.badgeName));
+		await this.hover(selector.admin.dokan.sellerBadge.sellerBadgeRow(badge.badgeName));
 		await this.clickAndWaitForResponse(data.subUrls.api.dokan.sellerBadge, selector.admin.dokan.sellerBadge.sellerBadgeEdit);
 
 		await this.clearAndType(selector.admin.dokan.sellerBadge.badgeDetails.badgeName, badge.badgeName);
@@ -155,7 +155,7 @@ export class SellerBadgesPage extends AdminPage {
 
 		const badgeLevel = await this.getElementText(selector.admin.dokan.sellerBadge.sellerBadgeLevel(badgeName));
 
-		await this.hover(selector.admin.dokan.sellerBadge.sellerBadgeCell(badgeName));
+		await this.hover(selector.admin.dokan.sellerBadge.sellerBadgeRow(badgeName));
 		await this.clickAndWaitForResponse(data.subUrls.api.dokan.sellerBadge, selector.admin.dokan.sellerBadge.sellerBadgePreview);
 
 		// badge preview modal is visible
@@ -186,7 +186,7 @@ export class SellerBadgesPage extends AdminPage {
 	async sellerBadgeVendors(badgeName: string){
 		await this.searchSellerBadge(badgeName);
 
-		await this.hover(selector.admin.dokan.sellerBadge.sellerBadgeCell(badgeName));
+		await this.hover(selector.admin.dokan.sellerBadge.sellerBadgeRow(badgeName));
 		await this.clickAndWaitForResponse(data.subUrls.api.dokan.sellerBadge, selector.admin.dokan.sellerBadge.sellerBadgeVendors);
 		// await this.toBeVisible(selector.admin.dokan.vendors.vendorCell(badgeName));
 		const count = (await this.getElementText(selector.admin.dokan.vendors.numberOfRowsFound))?.split(' ')[0];
@@ -210,20 +210,20 @@ export class SellerBadgesPage extends AdminPage {
 	async updateSellerBadge(badgeName: string, status: string){
 		await this.searchSellerBadge(badgeName);
 
-		await this.hover(selector.admin.dokan.sellerBadge.sellerBadgeCell(badgeName));
+		await this.hover(selector.admin.dokan.sellerBadge.sellerBadgeRow(badgeName));
 
 		switch (status) {
 
 		case 'publish' :
-			await this.click(selector.admin.dokan.sellerBadge.sellerBadgePublish);
+			await this.click(selector.admin.dokan.sellerBadge.sellerBadgePublish(badgeName));
 			break;
 
 		case 'draft' :
-			await this.click(selector.admin.dokan.sellerBadge.sellerBadgeDraft);
+			await this.click(selector.admin.dokan.sellerBadge.sellerBadgeDraft(badgeName));
 			break;
 
 		case 'delete' :
-			await this.click(selector.admin.dokan.sellerBadge.sellerBadgeDelete);
+			await this.click(selector.admin.dokan.sellerBadge.sellerBadgeDelete(badgeName));
 			break;
 
 		default :
@@ -277,7 +277,6 @@ export class SellerBadgesPage extends AdminPage {
 	// vendor search seller badge
 	async vendorSearchSellerBadge(badgeName: string){
 		await this.clickIfVisible(selector.vendor.vBadges.congratsModal.closeModal);
-
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.badges);
 		await this.clearAndType( selector.vendor.vBadges.search, badgeName);
 		await this.toBeVisible(selector.vendor.vBadges.sellerBadgeCell(badgeName));
