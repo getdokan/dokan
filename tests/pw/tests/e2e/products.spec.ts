@@ -100,7 +100,8 @@ test.describe('Product functionality test', () => {
 		await vendor.filterProducts('by-category', 'Uncategorized');
 	});
 
-	test.skip('vendor can filter products by type @lite @pro', async ( ) => { //todo:  dokan issue not fixed yet
+	test('vendor can filter products by type @lite @pro', async ( ) => {
+		test.skip(!!process.env.CI, 'Filter gets removed if booking module is enabled!');
 		await vendor.filterProducts('by-other', 'simple');
 	});
 

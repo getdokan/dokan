@@ -74,8 +74,7 @@ test.describe('Announcements test', () => {
 	});
 
 	test('admin can view announcement details  @pro', async ( ) => {
-		// await apiUtils.createAnnouncement(payloads.createAnnouncement(), payloads.adminAuth);
-		await vendor.vendorViewAnnouncement({ ...announcement, content: 'This is announcement content' }); //todo:  fix this
+		await vendor.vendorViewAnnouncement(announcement);
 	});
 
 	test('vendor can delete announcement @pro', async ( ) => {

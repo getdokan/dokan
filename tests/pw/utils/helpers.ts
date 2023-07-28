@@ -35,6 +35,12 @@ export const helpers = {
 	// opens test report in the default browser
 	openReport: () => open('playwright-report/html-report/index.html'),
 
+	// string between two tags
+	stringBetweenTags: (str: string): string =>  {
+		const res = str.split(/<p>(.*?)<\/p>/g);
+		return res[1] as string;
+	},
+
 	// convert string to price format
 	price: (str: string): number => parseFloat(str.replace(/[^\d\-.,]/g, '').replace(/,/g, '.').replace(/\.(?=.*\.)/g, '')),
 

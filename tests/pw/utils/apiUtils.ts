@@ -214,18 +214,21 @@ export class ApiUtils {
 	}
 
 	// create store
-	async createStore(payload: any, auth? : auth): Promise<[responseBody, string]> {
+	async createStore(payload: any, auth? : auth): Promise<[responseBody, string, string]> {
 		const response = await this.request.post(endPoints.createStore, { data: payload, headers: auth });
 		const responseBody = await this.getResponseBody(response, false);   //todo:  convert to this.get , implement multiple optional function parameter to pass false to response-body
 		let sellerId :string;
+		let storeName :string;
 		if(responseBody.code){
 			expect(response.status()).toBe(500);
 			sellerId = await this.getSellerId(payload.store_name, auth);
+			storeName = payload.store_name;
 		} else {
 			expect(response.ok()).toBeTruthy();
 			sellerId = responseBody.id;
+			storeName = responseBody.store_name;
 		}
-		return [responseBody, sellerId];
+		return [responseBody, sellerId, storeName];
 	}
 
 	// create store review

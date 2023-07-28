@@ -9,7 +9,7 @@ let sellerId: string;
 
 test.beforeAll(async ({ request }) => {
 	apiUtils = new ApiUtils(request);
-	[, sellerId] = await apiUtils.createStore(payloads.createStore());
+	[, sellerId,] = await apiUtils.createStore(payloads.createStore());
 	// let [, id] = await apiUtils.getCurrentUser()
 });
 
@@ -40,7 +40,7 @@ test.describe('stores api test', () => {
 	});
 
 	test('delete a store @lite @pro', async () => {
-		const [, sId] = await apiUtils.createStore(payloads.createStore());
+		const [, sId,] = await apiUtils.createStore(payloads.createStore());
 		const [response, responseBody] = await apiUtils.delete(endPoints.deleteStore(sId), { params: payloads.paramsDeleteStore });
 		expect(response.ok()).toBeTruthy();
 		expect(responseBody).toBeTruthy();

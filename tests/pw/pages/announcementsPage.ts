@@ -3,6 +3,7 @@ import { AdminPage } from 'pages/adminPage';
 import { selector } from 'pages/selectors';
 import { data } from 'utils/testData';
 import { announcement } from 'utils/interfaces';
+import { helpers } from 'utils/helpers';
 
 
 export class AnnouncementsPage extends AdminPage {
@@ -135,7 +136,7 @@ export class AnnouncementsPage extends AdminPage {
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.announcements);
 		await this.clickAndWaitForLoadState(selector.vendor.vAnnouncement.announcementLink(announcement.title));
 		await this.toContainText(selector.vendor.vAnnouncement.announcement.title, announcement.title);
-		await this.toContainText(selector.vendor.vAnnouncement.announcement.content, announcement.content);
+		await this.toContainText(selector.vendor.vAnnouncement.announcement.content, helpers.stringBetweenTags(announcement.content));
 		await this.toBeVisible(selector.vendor.vAnnouncement.announcement.date);
 		await this.toBeVisible(selector.vendor.vAnnouncement.announcement.backToAllNotice);
 	}

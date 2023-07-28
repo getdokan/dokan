@@ -27,7 +27,7 @@ setup.describe('authenticate users & set permalink', () => {
 
 	setup('add vendor @lite @pro', async ({ request }) => {
 		const apiUtils = new ApiUtils(request);
-		const [, sellerId] = await apiUtils.createStore (payloads.createStore1, payloads.adminAuth);
+		const [, sellerId,] = await apiUtils.createStore (payloads.createStore1, payloads.adminAuth);
 		process.env.VENDOR_ID = sellerId;
 	});
 

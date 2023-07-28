@@ -10,14 +10,15 @@ test.describe('Stores test', () => {
 	let admin: StoresPage;
 	let aPage: Page;
 	// let apiUtils: ApiUtils;
+	// let storeName: string;
 
 
-	test.beforeAll(async ({ browser, }) => {
+	test.beforeAll(async ({ browser,  }) => {
 		const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
 		aPage = await adminContext.newPage();
 		admin = new StoresPage(aPage);
 		// apiUtils = new ApiUtils(request);
-		// [, sellerId] = await apiUtils.createStore(payloads.createStore()); //return seller name  //todo: use created seller instead of vendor1
+		// [,, storeName] = await apiUtils.createStore(payloads.createStore()); 
 	});
 
 

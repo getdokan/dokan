@@ -28,7 +28,7 @@ setup.describe(' setup environment', () => {
 	});
 
 	setup('create vendor @lite @pro', async () => {
-		const [, sellerId] = await apiUtils.createStore (payloads.createStore1, payloads.adminAuth);
+		const [, sellerId,] = await apiUtils.createStore (payloads.createStore1, payloads.adminAuth);
 		process.env.VENDOR_ID = sellerId;
 	});
 

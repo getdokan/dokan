@@ -9,7 +9,7 @@ let sellerId: string;
 
 test.beforeAll(async ({ request }) => {
 	apiUtils = new ApiUtils(request);
-	// [, sellerId] = await apiUtils.createStore(payloads.createStore());
+	// [, sellerId,] = await apiUtils.createStore(payloads.createStore());
 	[, sellerId] = await apiUtils.getCurrentUser();
 	// await apiUtils.followUnfollowStore(sellerId);
 });

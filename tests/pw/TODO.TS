@@ -329,8 +329,8 @@ const config = {
 //todo:  remove every eslint comment before push
 //todo: replace every goto with goIfNotThere
 
-test.beforeAll(async ({ request }) => {
-	apiUtils = new ApiUtils(request);
+// test.beforeAll(async ({ request }) => {
+// 	apiUtils = new ApiUtils(request);
 	// delete previous badges
 //todo:	await apiUtils.deleteAllSellerBadges(); //todo:  apply this type of trick where possible
 //todo: clear data in beforeAll where necessary
@@ -381,9 +381,57 @@ reverse withdraw
 
 admin settings
 	//todo:  add more set settings live search, sms gateway, seller verification, email verification
+coupon
+	//todo: add more customer tests
+verifications
+	//todo:  need multiple verification request for admin, use db alteration
+	//todo:  admin can disapprove verification request
+	//todo:  add vendor tests
+	//todo: admin can approve phone verification request
+store review
+// test('customer can edit store review @pro', async ( ) => {
+// 	//todo:  need separate method or update locator, ensure previous review exits
+// 	await customer.reviewStore(data.predefined.vendorStores.vendor1, data.store);
+// });
+follow Store
+// test('customer can follow store on store listing @pro', async ( ) => {
+// 	await customer.followStore(data.predefined.vendorStores.vendor1, data.predefined.vendorStores.followFromStoreListing); //todo:  update parameter
+// });
+	//todo:  vendor can see followers, need followers via api
+seller badge
+	// test.fixme('admin can filter vendors by seller badge  @pro', async ( ) => {
+	// 	//todo:  need to wait 1 min after badge create ; run via background process; can background process can be automated
+	// 	await admin.filterVendorsByBadge(data.sellerBadge.eventName.productsPublished);
+	// });
+
+	// test.fixme('admin can view seller badge vendors @pro', async ( ) => {
+	// 	//todo:  need to wait 1 min after badge create; run via background process ; can background process can be automated
+	// 	await admin.sellerBadgeVendors(data.sellerBadge.eventName.productsPublished);
+	// });
+stores spec
+// test.beforeAll(async ({ browser,  }) => {
+// 	const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
+// 	aPage = await adminContext.newPage();
+// 	admin = new StoresPage(aPage);
+// 	// apiUtils = new ApiUtils(request);
+// 	// [,, storeName] = await apiUtils.createStore(payloads.createStore());  //todo: ues different store all stores
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 test Data
-	//todo: use unique value for create and update for store catefories, rfq name, rules.........baseURL..
+	//todo: use unique value for create and update for store categories, rfq name, rules.........baseURL..
 
 interface
 	//todo:  interface should be one, no separate for create, update ....

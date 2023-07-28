@@ -1213,7 +1213,7 @@ export interface sellerBadge {
 export interface announcement {
 		randomTitle: () => string;
 		title: string;
-		content:  string;
+		content: string;
 		receiver: string;
 }
 

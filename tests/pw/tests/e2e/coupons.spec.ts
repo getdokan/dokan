@@ -73,7 +73,5 @@ test.describe('Coupons test', () => {
 		await customer.storeCoupon(data.predefined.vendorStores.vendor1, 'c1_v1');
 	});
 
-	//todo: add more customer tests
-
 
 });

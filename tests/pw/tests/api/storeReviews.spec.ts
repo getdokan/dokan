@@ -10,7 +10,7 @@ let reviewId: string;
 
 test.beforeAll(async ({ request }) => {
 	apiUtils = new ApiUtils(request);
-	// let [, sId] = await apiUtils.createStore(payloads.createStore())
+	// let [, sId,] = await apiUtils.createStore(payloads.createStore())
 	[, sellerId] = await apiUtils.getCurrentUser();
 	[, reviewId] = await apiUtils.createStoreReview(sellerId, payloads.createStoreReview, payloads.customerAuth);
 });
