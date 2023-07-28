@@ -117,6 +117,7 @@ export class StoreListingPage extends CustomerPage {
 		} else {
 			await this.click(selector.customer.cStoreList.map.storeOnMap.storeCluster);
 			await this.toBeVisible(selector.customer.cStoreList.map.storeOnMap.storeListPopup);
+			await this.click(selector.customer.cStoreList.map.storeOnMap.closePopup);
 		}
 		storeName && await this.toBeVisible(selector.customer.cStoreList.map.storeOnMap.storeOnList(storeName));
 	}

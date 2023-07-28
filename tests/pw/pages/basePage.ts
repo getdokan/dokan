@@ -324,6 +324,7 @@ export class BasePage {
 		return response;
 	}
 
+
 	// type & wait for response and LoadState
 	async typeAndWaitForResponseAndLoadState(subUrl: string, selector: string, text: string, code = 200,): Promise<Response> {
 		const [response] = await Promise.all([

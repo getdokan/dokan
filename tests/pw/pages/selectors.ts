@@ -3651,7 +3651,8 @@ export const selector = {
 				expiryDateColumn: '//th[normalize-space()="Expiry date"]',
 			},
 
-			couponCell: (couponCode: string) => `//span[normalize-space()="${couponCode}"]/../../../../..`,
+			couponRow: (couponCode: string) => `//span[normalize-space()="${couponCode}"]/../../../../..`,
+			couponCell: (couponCode: string) => `//span[normalize-space()="${couponCode}"]/../../../..`,
 			couponLink: (couponCode: string) => `//span[normalize-space()="${couponCode}"]/..`,
 			couponEdit: (couponCode: string) => `//span[normalize-space()="${couponCode}"]/../../../..//div[@class="row-actions"]//span[@class="edit"]`,
 			couponDelete: (couponCode: string) => `//span[normalize-space()="${couponCode}"]/../../../..//div[@class="row-actions"]//span[@class="delete"]`,
@@ -5246,7 +5247,8 @@ export const selector = {
 					productOnMap: '//span[normalize-space()="To navigate, press the arrow keys."]/..//div',
 					productPopup: '.dokan-geo-map-info-window',
 					productListPopup: '.dokan-geo-map-info-windows-in-popup',
-					productOnList: (productName: string) => `//h3[@class="info-title"]//a[contains(text(),"${productName}")]`
+					productOnList: (productName: string) => `//h3[@class="info-title"]//a[contains(text(),"${productName}")]`,
+					closePopup: 'button.icon-close',
 				},
 			},
 
@@ -5468,7 +5470,8 @@ export const selector = {
 					storeOnMap: '//span[normalize-space()="To navigate, press the arrow keys."]/..//div',
 					storePopup: '.dokan-geo-map-info-window',
 					storeListPopup: '.dokan-geo-map-info-windows-in-popup',
-					storeOnList: (storeName: string) => `//h3[@class="info-title"]//a[contains(text(),"${storeName}")]`
+					storeOnList: (storeName: string) => `//h3[@class="info-title"]//a[contains(text(),"${storeName}")]`,
+					closePopup: 'button.icon-close',
 				},
 			},
 

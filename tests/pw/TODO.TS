@@ -309,7 +309,9 @@ const config = {
 // <----------------------------------------------- NEW TODO ------------------------------------------------->
 
 
-
+//todo: ************ DON"T USE goIfNotThere where we need to reflact any changes done via api call or db table modification ************
+ also after performing some test to load changes we need to skip goIfNotThere, also look for that
+ test order can be the culprit too
 
 //todo:  HANDLE ERROR: throw new Error('Badge is already published');
 // either throw error or just return or convert to playwright error

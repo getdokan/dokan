@@ -77,6 +77,7 @@ export class ShopPage extends CustomerPage {
 		} else {
 			await this.click(selector.customer.cShop.map.productOnMap.productCluster);
 			await this.toBeVisible(selector.customer.cShop.map.productOnMap.productListPopup);
+			await this.click(selector.customer.cShop.map.productOnMap.closePopup);
 		}
 		productName && await this.toBeVisible(selector.customer.cShop.map.productOnMap.productOnList(productName));
 	}

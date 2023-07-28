@@ -27,7 +27,6 @@ test.describe('Announcements test', () => {
 
 		apiUtils = new ApiUtils(request);
 		[,, announcementTitle] = await apiUtils.createAnnouncement({ ...payloads.createAnnouncement(), status: 'draft' }, payloads.adminAuth);
-		await apiUtils.createAnnouncement(announcement, payloads.adminAuth);
 	});
 
 
@@ -74,6 +73,7 @@ test.describe('Announcements test', () => {
 	});
 
 	test('admin can view announcement details  @pro', async ( ) => {
+		await apiUtils.createAnnouncement(announcement, payloads.adminAuth);
 		await vendor.vendorViewAnnouncement(announcement);
 	});
 

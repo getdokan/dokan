@@ -94,7 +94,8 @@ export class AbuseReportsPage extends AdminPage {
 
 	// customer report product
 	async reportProduct(productName: string, report: product['report']): Promise<void> {
-		await this.goIfNotThere(data.subUrls.frontend.productDetails(helpers.slugify(productName)));
+		// await this.goIfNotThere(data.subUrls.frontend.productDetails(helpers.slugify(productName)));
+		await this.goto(data.subUrls.frontend.productDetails(helpers.slugify(productName))); // for non logged user scenario, to load db changes
 		await this.clickAndWaitForResponse(data.subUrls.ajax, selector.customer.cSingleProduct.reportAbuse.reportAbuse);
 		// non logged user
 		const isNonLoggedUser = await this.isVisible(selector.customer.cSingleProduct.reportAbuse.nonLoggedUser.userName);

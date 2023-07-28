@@ -373,9 +373,9 @@ export class ProductsPage extends AdminPage {
 	async editProduct(product: product['simple']): Promise<void> {
 		await this.searchProduct(product.editProduct);
 		await this.hover(selector.vendor.product.productCell(product.editProduct));
-		await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.products, selector.vendor.product.editProduct);
+		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, selector.vendor.product.editProduct);
 
-		await this.clearAndType(selector.vendor.product.title, product.productName());
+		await this.clearAndType(selector.vendor.product.title, product.editProduct); // don't update name below test needs same product
 		await this.clearAndType(selector.vendor.product.price, product.regularPrice());
 		//todo:  add more fields
 
@@ -390,7 +390,7 @@ export class ProductsPage extends AdminPage {
 		await this.hover(selector.vendor.product.productCell(product.editProduct));
 		await this.click(selector.vendor.product.quickEdit);
 
-		await this.clearAndType(selector.vendor.product.quickEditProduct.title, product.productName());
+		await this.clearAndType(selector.vendor.product.quickEditProduct.title, product.editProduct);
 		//todo:  add more fields
 
 		await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.product.quickEditProduct.update);
@@ -402,9 +402,8 @@ export class ProductsPage extends AdminPage {
 	async duplicateProduct(productName: string): Promise<void> {
 		await this.searchProduct(productName);
 		await this.hover(selector.vendor.product.productCell(productName));
-		await this.clickAndAcceptAndWaitForResponse(data.subUrls.frontend.vDashboard.products, selector.vendor.product.duplicate);
+		await this.clickAndAcceptAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, selector.vendor.product.duplicate);
 		await this.toContainText(selector.vendor.product.dokanSuccessMessage, 'Product succesfully duplicated');
-
 	}
 
 
