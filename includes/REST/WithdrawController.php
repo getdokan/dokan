@@ -617,6 +617,9 @@ class WithdrawController extends WP_REST_Controller {
      *
      * @since 2.8.0
      *
+     * @param $withdraw \WeDevs\Dokan\Withdraw\Withdraw
+     * @param $request \WP_REST_Request
+     *
      * @return WP_REST_Response|WP_Error
      */
     public function prepare_item_for_response( $withdraw, $request ) {
@@ -645,6 +648,9 @@ class WithdrawController extends WP_REST_Controller {
             'note'         => $withdraw->get_note(),
             'details'      => $details,
             'ip'           => $withdraw->get_ip(),
+            'charge'       => $withdraw->get_charge(),
+            'receivable'   => $withdraw->get_receivable_amount(),
+            'charge_data'  => $withdraw->get_charge_data(),
         ];
 
         $response = rest_ensure_response( $data );

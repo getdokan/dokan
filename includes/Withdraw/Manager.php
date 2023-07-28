@@ -245,6 +245,14 @@ class Manager {
                 $result = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->dokan_withdraw} WHERE user_id = %d AND status = %d ORDER BY id DESC LIMIT %d, %d", $user_id, $status, $offset, $limit ) );
             }
 
+            $withdraws = [];
+
+            foreach ( $result as $withdraw ) {
+                $withdraws[] = new Withdraw( $withdraw );
+            }
+
+            $result = $withdraws;
+
             Cache::set( $cache_key, $result, $cache_group );
         }
 

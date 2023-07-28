@@ -34,7 +34,7 @@ class Hooks {
      *
      * @param string      $title
      * @param string      $method_key
-     * @param object|null $request
+     * @param Withdraw $request
      *
      * @return string
      */
@@ -45,8 +45,8 @@ class Hooks {
             if ( empty( $title ) ) {
                 $title = __( 'Custom', 'dokan-lite' );
             }
-            if ( null !== $request ) {
-                $details = maybe_unserialize( $request->details );
+            if ( null !== $request && null !== $request->get_details() ) {
+                $details = maybe_unserialize( $request->get_details() );
                 if ( isset( $details['value'] ) ) {
                     $title .= ' - ' . $details['value'];
                 }

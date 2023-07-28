@@ -70,6 +70,14 @@
                     <div class="method_title_inner" v-html="getPaymentTitle(data.row.method, data.row)"></div>
                 </template>
 
+                <template slot="charge" slot-scope="data">
+                    <currency :amount="data.row.charge"></currency>
+                </template>
+
+                <template slot="payable" slot-scope="data">
+                    <currency :amount="data.row.receivable"></currency>
+                </template>
+
                 <template slot="method_details" slot-scope="data">
                     <div class="method_details_inner" v-html="getPaymentDetails(data.row.method, data.row.details)"></div>
                 </template>
@@ -162,6 +170,8 @@ export default {
                 'amount': { label: this.__( 'Amount', 'dokan-lite' ) },
                 'status': { label: this.__( 'Status', 'dokan-lite' ) },
                 'method_title': { label: this.__( 'Method', 'dokan-lite' ) },
+                'charge': { label: this.__( 'Charge', 'dokan-lite' ) },
+                'payable': { label: this.__( 'Payable', 'dokan-lite' ) },
                 'method_details': { label: this.__( 'Details', 'dokan-lite' ) },
                 'note': { label: this.__( 'Note', 'dokan-lite' ) },
                 'created': { label: this.__( 'Date', 'dokan-lite' ) },
