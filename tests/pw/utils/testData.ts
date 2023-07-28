@@ -1646,10 +1646,11 @@ export const data = {
 			deliveryBlockedBuffer: '0',
 			deliveryBoxInfo: 'This store needs %DAY% day(s) to process your delivery request',
 			days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
-			openingTime: '6:00 am',
+			choice: 'full-day',
+			openingTime: '12:00 am',
 			closingTime: '11:30 pm',
 			timeSlot: '30',
-			orderPerSlot: '90',
+			orderPerSlot: '0',
 			saveSuccessMessage: 'Setting has been saved successfully.',
 		},
 

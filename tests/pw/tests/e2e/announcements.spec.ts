@@ -73,7 +73,7 @@ test.describe('Announcements test', () => {
 		await vendor.vendorAnnouncementsRenderProperly();
 	});
 
-	test('admin can view announcement details  @pro', async ( ) => {
+	test('vendor can view announcement details  @pro', async ( ) => {
 		await apiUtils.createAnnouncement(announcement, payloads.adminAuth);
 		await vendor.vendorViewAnnouncement(announcement);
 	});

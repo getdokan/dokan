@@ -80,7 +80,7 @@ test.describe('Settings test', () => {
 		await settingsPage.setDokanEuComplianceSettings(data.dokanSettings.euCompliance);
 	});
 
-	test.skip('admin can set dokan delivery time settings @pro', async ( ) => {
+	test('admin can set dokan delivery time settings @pro', async ( ) => {
 		await settingsPage.setDokanDeliveryTimeSettings(data.dokanSettings.deliveryTime);
 	});
 

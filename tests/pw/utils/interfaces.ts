@@ -1389,6 +1389,7 @@ export interface	dokanSettings {
 		deliveryBlockedBuffer:  string;
 		deliveryBoxInfo:  string;
 		days: string[];
+		choice: string,
 		openingTime:  string;
 		closingTime:  string;
 		timeSlot:  string;

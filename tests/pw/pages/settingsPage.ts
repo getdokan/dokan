@@ -332,12 +332,14 @@ export class SettingsPage extends AdminPage {
 		await this.disableSwitcher(selector.admin.dokan.settings.deliveryTime.requireDeliveryDateAndTime);
 		for (const day of deliveryTime.days) {
 			await this.enableSwitcher(selector.admin.dokan.settings.deliveryTime.deliveryDay(day));
-			await this.click(selector.admin.dokan.settings.deliveryTime.openingTime(day));
-			// await this.page.getByRole('listitem').filter({ hasText: 'Full day' }).click();
-			// comment below lines for full day
-			await this.page.getByRole('listitem').filter({ hasText: deliveryTime.openingTime }).click(); //todo:  convert by locator, also move this to base page
-			await this.click(selector.admin.dokan.settings.deliveryTime.closingTime(day));
-			await this.page.getByRole('listitem').filter({ hasText: deliveryTime.closingTime }).click();
+			if (deliveryTime.choice === 'full-day'){
+				await this.click(selector.admin.dokan.settings.deliveryTime.openingTime(day));
+				await this.page.getByRole('listitem').filter({ hasText: 'Full day' }).click();
+			} else{
+				await this.page.getByRole('listitem').filter({ hasText: deliveryTime.openingTime }).click(); //todo:  convert by locator, also move this to base page
+				await this.click(selector.admin.dokan.settings.deliveryTime.closingTime(day));
+				await this.page.getByRole('listitem').filter({ hasText: deliveryTime.closingTime }).click();
+			}
 		}
 
 		// save settings

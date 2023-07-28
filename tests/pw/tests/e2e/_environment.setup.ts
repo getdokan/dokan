@@ -221,9 +221,9 @@ setup.describe('setup dokan settings', () => {
 		await dbUtils.setDokanSettings(dbData.dokan.optionName.euCompliance, dbData.dokan.euComplianceSettings);
 	});
 
-	// setup('admin set dokan delivery time settings @pro', async () => {
-	// 	await dbUtils.setDokanSettings(dbData.dokan.optionName.deliveryTime, dbData.dokan.deliveryTimeSettings);
-	// });
+	setup('admin set dokan delivery time settings @pro', async () => {
+		await dbUtils.setDokanSettings(dbData.dokan.optionName.deliveryTime, dbData.dokan.deliveryTimeSettings);
+	});
 
 	setup('admin set dokan product advertising settings @pro', async () => {
 		await dbUtils.setDokanSettings(dbData.dokan.optionName.productAdvertising, dbData.dokan.productAdvertisingSettings);

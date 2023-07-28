@@ -399,6 +399,7 @@ export const dbData = {
 			override_invoice_number: 'on'
 		},
 
+
 		deliveryTimeSettings: {
 			allow_vendor_override_settings: 'on',
 			delivery_support: {
@@ -419,33 +420,33 @@ export const dbData = {
 			},
 			delivery_day_tuesday: {
 				delivery_status: 'tuesday',
-				opening_time: '1:00 pm',
-				closing_time: '2:00 pm'
+				opening_time: '12:00 am',
+				closing_time: '11:59 pm'
 			},
 			delivery_day_wednesday: {
 				delivery_status: '',
-				opening_time: '',
-				closing_time: ''
+				opening_time: '12:00 am',
+				closing_time: '11:59 pm'
 			},
 			delivery_day_thursday: {
 				delivery_status: '',
-				opening_time: '',
-				closing_time: ''
+				opening_time: '12:00 am',
+				closing_time: '11:59 pm'
 			},
 			delivery_day_friday: {
 				delivery_status: '',
-				opening_time: '',
-				closing_time: ''
+				opening_time: '12:00 am',
+				closing_time: '11:59 pm'
 			},
 			delivery_day_saturday: {
 				delivery_status: '',
-				opening_time: '',
-				closing_time: ''
+				opening_time: '12:00 am',
+				closing_time: '11:59 pm'
 			},
 			delivery_day_sunday: {
 				delivery_status: '',
 				opening_time: '',
-				closing_time: ''
+				closing_time: '11:59 pm'
 			}
 		},
 
