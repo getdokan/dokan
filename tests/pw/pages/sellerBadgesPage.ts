@@ -252,6 +252,28 @@ export class SellerBadgesPage extends AdminPage {
 
 	//todo: vendor seller badge render properly
 
+	// vendor seller badge render properly
+	async vendorSellerBadgeRenderProperly(){
+		await this.goIfNotThere(data.subUrls.frontend.vDashboard.badges);
+
+		// badges text is visible
+		await this.toBeVisible(selector.vendor.vBadges.badgesText);
+
+		// badge description text is visible
+		await this.toBeVisible(selector.vendor.vBadges.description);
+
+		// badge search is visible
+		await this.toBeVisible(selector.vendor.vBadges.search);
+
+		// badge filter  is visible
+		await this.toBeVisible(selector.vendor.vBadges.filterBadges);
+
+		//  seller badge table elements are visible
+		await this.multipleElementVisible(selector.vendor.vBadges.table);
+
+	}
+
+
 	// vendor achieved badges congrats popup
 	async sellerBadgeCongratsPopup(){
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.badges);

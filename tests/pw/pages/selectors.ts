@@ -3845,10 +3845,22 @@ export const selector = {
 
 		vBadges:{
 
+			badgesText: '#dokan-seller-badge .entry-title',
+
+			description: '//p[contains(text(), "Vendors with a good selling history on our marketplace are identified by seller badges")]',
+
 			search: '#post-search-input',
 
 			// filters
 			filterBadges: '.tablenav.top .actions select', // all, my_badges, available_badges
+
+			//table
+			table: {
+				table: '#dokan-seller-badge table',
+				acquiredBadgeColumn: 'thead th[class="column badge_logo"]',
+				descriptionColumn: 'thead th[class="column badge_description"]',
+				actionColumn: 'thead th[class="column badge_view"]',
+			},
 
 			sellerBadgeCell: (name: string) => `//strong[contains(text(),'${name}')]/../..`,
 			numberOfBadgesFound: '.tablenav.top .displaying-num',

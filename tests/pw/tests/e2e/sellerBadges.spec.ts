@@ -81,6 +81,10 @@ test.describe('Seller badge test', () => {
 		await admin.sellerBadgeBulkAction('delete', data.sellerBadge.eventName.featuredProducts);
 	});
 
+	test('vendor badges menu page is rendering properly @pro @explo', async ( ) => {
+		await vendor.vendorSellerBadgeRenderProperly();
+	});
+
 	test('vendor can view badge acquired congratulation popup message action @pro', async ( ) => {
 		await vendor.sellerBadgeCongratsPopup();
 	});
