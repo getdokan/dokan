@@ -91,10 +91,14 @@ export class SingleStorePage extends CustomerPage {
 
 
 	// store share
-	async storeShare(storeName: string, site: storeShare): Promise<void> {
+	async storeShare(storeName: string, site: string): Promise<void> {
 		await this.goIfNotThere(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)));
 		await this.click(selector.customer.cSingleStore.storeTabs.share);
-		// await this.clickAndWaitForUrl(site.url, selector.customer.cSingleStore.sharePlatForms[site.name]); //todo:  fix this
+		// ensure page suppose to open on new tab
+		await this.toHaveAttribute(selector.customer.cSingleStore.sharePlatForms[site], 'target', '_blank');
+		// force page to open on same tab
+		await this.setAttributeValue(selector.customer.cSingleStore.sharePlatForms[site], 'target', '_self' );
+		await this.clickAndWaitForUrl( new RegExp('.*' + site + '.*'), selector.customer.cSingleStore.sharePlatForms[site]);
 	}
 
 

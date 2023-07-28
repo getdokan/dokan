@@ -69,6 +69,7 @@ test.describe('Announcements test', () => {
 
 
 	test('vendor announcement menu page is rendering properly @pro @explo', async ( ) => {
+		await apiUtils.createAnnouncement(payloads.createAnnouncement(), payloads.adminAuth);
 		await vendor.vendorAnnouncementsRenderProperly();
 	});
 

@@ -148,11 +148,7 @@ export class WholesaleCustomersPage extends AdminPage {
 
 	//  wholesale customers bulk action
 	async wholesaleCustomerBulkAction(action: string, wholesaleCustomer: string){
-		if(wholesaleCustomer){
-			await this.searchWholesaleCustomer(wholesaleCustomer);
-		} else {
-			await this.goIfNotThere(data.subUrls.backend.dokan.wholeSaleCustomer);
-		}
+		wholesaleCustomer ? await this.searchWholesaleCustomer(wholesaleCustomer) : await this.goIfNotThere(data.subUrls.backend.dokan.wholeSaleCustomer);
 
 		// ensure row exists
 		await this.notToBeVisible(selector.admin.dokan.wholesaleCustomer.noRowsFound);

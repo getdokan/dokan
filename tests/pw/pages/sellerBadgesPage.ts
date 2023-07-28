@@ -237,11 +237,7 @@ export class SellerBadgesPage extends AdminPage {
 
 	// seller badge bulk action
 	async sellerBadgeBulkAction(action: string, badgeName?: string){
-		if(badgeName){
-			await this.searchSellerBadge(badgeName);
-		} else {
-			await this.goIfNotThere(data.subUrls.backend.dokan.sellerBadge);
-		}
+		badgeName ? await this.searchSellerBadge(badgeName) : await this.goIfNotThere(data.subUrls.backend.dokan.sellerBadge);
 
 		// ensure row exists
 		await this.notToBeVisible(selector.admin.dokan.sellerBadge.noRowsFound);

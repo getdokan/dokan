@@ -68,6 +68,8 @@ test.describe('Store Reviews test', () => {
 	});
 
 	test('customer can review store @pro', async ( ) => {
+		// remove any previous reviews
+		await apiUtils.updateBatchStoreReviews('trash', []);
 		await customer.reviewStore(data.predefined.vendorStores.vendor1, data.store);
 	});
 

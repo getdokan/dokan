@@ -52,9 +52,8 @@ test.describe('Single store functionality test', () => {
 		await customer.storeTermsAndCondition(data.predefined.vendorStores.vendor1, data.vendor.toc);
 	});
 
-	test.skip('customer can share store @pro', async ( ) => {
+	test('customer can share store @pro', async ( ) => {
 		await customer.storeShare(data.predefined.vendorStores.vendor1, data.storeShare.facebook);
-		//todo: fix parameter
 	});
 
 

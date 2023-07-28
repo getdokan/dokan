@@ -420,11 +420,7 @@ export class ProductsPage extends AdminPage {
 
 	// product bulk action
 	async productBulkAction(action: string, productName?: string): Promise<void> {
-		if(productName){
-			await this.searchProduct(productName);
-		} else {
-			await this.goIfNotThere(data.subUrls.frontend.vDashboard.products);
-		}
+		productName ? await this.searchProduct(productName) : await this.goIfNotThere(data.subUrls.frontend.vDashboard.products);
 
 		await this.click(selector.vendor.product.bulkActions.selectAll);
 		switch(action){

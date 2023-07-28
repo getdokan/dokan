@@ -861,6 +861,9 @@ export class ApiUtils {
 
 	// update batch store reviews
 	async updateBatchStoreReviews(action: string, allIds: string[], auth? : auth): Promise<responseBody> {
+		if(!allIds?.length) {
+			allIds = (await this.getAllStoreReviews()).map((a: { id: unknown }) => a.id);
+		}
 		const [, responseBody] = await this.put(endPoints.updateBatchStoreReviews, { data: { [action]: allIds }, headers: auth });
 		return responseBody;
 	}

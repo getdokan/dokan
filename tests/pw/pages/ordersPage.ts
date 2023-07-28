@@ -194,7 +194,7 @@ export class OrdersPage extends VendorPage {
 		await this.goToOrderDetails(orderNumber);
 		await this.clearAndType(selector.vendor.orders.downloadableProductPermission.downloadableProductInput, downloadableProductName);
 		await this.press(data.key.enter);
-		await this.clickAndAcceptAndWaitForResponse(data.subUrls.ajax, selector.vendor.orders.downloadableProductPermission.grantAccess); //todo:  need to fix
+		await this.clickAndAcceptAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.vendor.orders.downloadableProductPermission.grantAccess); //todo:  need to fix
 	}
 
 
@@ -208,11 +208,7 @@ export class OrdersPage extends VendorPage {
 
 	// order bulk action
 	async orderBulkAction(action: string, orderNumber?: string): Promise<void> {
-		if(orderNumber){
-			await this.searchOrder(orderNumber);
-		} else {
-			await this.goIfNotThere(data.subUrls.frontend.vDashboard.orders);
-		}
+		orderNumber ? await this.searchOrder(orderNumber) : await this.goIfNotThere(data.subUrls.frontend.vDashboard.orders);
 
 		await this.click(selector.vendor.orders.bulkActions.selectAll);
 		switch(action){
@@ -233,8 +229,7 @@ export class OrdersPage extends VendorPage {
 			break;
 		}
 
-		await this.clickAndAcceptAndWaitForResponse(data.subUrls.frontend.vDashboard.orders, selector.vendor.orders.bulkActions.applyAction);
-		//todo: 
+		await this.clickAndAcceptAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.orders, selector.vendor.orders.bulkActions.applyAction);
 	}
 
 

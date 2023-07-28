@@ -100,7 +100,7 @@ export class StoresPage extends AdminPage {
 	async editVendor(vendor: vendor ){
 		await this.searchVendor(vendor.storeName);
 
-		await this.hover(selector.admin.dokan.vendors.vendorCell(vendor.storeName));
+		await this.hover(selector.admin.dokan.vendors.vendorRow(vendor.storeName));
 		await this.clickAndWaitForLoadState(selector.admin.dokan.vendors.vendorEdit);
 
 		if (!DOKAN_PRO){
@@ -304,7 +304,7 @@ export class StoresPage extends AdminPage {
 	async viewVendor(vendorName: string, action: string ){
 		await this.searchVendor(vendorName);
 
-		await this.hover(selector.admin.dokan.vendors.vendorCell(vendorName));
+		await this.hover(selector.admin.dokan.vendors.vendorRow(vendorName));
 
 		switch(action){
 

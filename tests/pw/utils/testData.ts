@@ -643,20 +643,10 @@ export const data = {
 	},
 
 	storeShare: {
-		facebook:{
-			name: 'facebook',
-			url: 'facebook.com'
-		},
-		twitter: {
-			name: '.fa-twitter',
-		},
-		linked:{
-			name: '.fa-linkedin',
-		},
-		pinterest: {
-			name: '.fa-pinterest',
-		},
-		mail: '.fa-at',
+		facebook: 'facebook',
+		twitter: 'twitter',
+		linkedin: 'linkedin',
+		pinterest: 'pinterest',
 	},
 
 	subUrls: {

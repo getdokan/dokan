@@ -67,6 +67,7 @@ test.describe('store reviews api test', () => {
 		expect(responseBody).toBeTruthy();
 
 		// restore all store reviews
-		await apiUtils.updateBatchStoreReviews('restore', allStoreReviewIds);
+		// await apiUtils.updateBatchStoreReviews('restore', allStoreReviewIds);
+		await apiUtils.updateBatchStoreReviews('restore', []);
 	});
 });

@@ -5655,11 +5655,11 @@ export const selector = {
 
 			// Share Store
 			sharePlatForms:{
-				facebook: '.fa-facebook',
-				twitter: '.fa-twitter',
-				linked: '.fa-linkedin',
-				pinterest: '.fa-pinterest',
-				mail: '.fa-at',
+				facebook: '.jssocials-share-facebook a',
+				twitter: '.jssocials-share-twitter a',
+				linkedin: '.jssocials-share-linkedin a',
+				pinterest: '.jssocials-share-pinterest a',
+				mail: '.jssocials-share-email a',
 			},
 
 			// terms and conditions
