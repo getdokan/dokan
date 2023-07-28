@@ -1016,7 +1016,7 @@ export const payloads = {
 
 	createSupportTicketComment: {
 		replay: 'sp replay...1',
-		vendor_id: '1',  //todo:  it's admin id remove it, is admin id always one
+		vendor_id: '1',
 		selected_user: 'admin',
 	},
 
@@ -1342,7 +1342,7 @@ export const payloads = {
 		store_toc: 'test Vendor terms and conditions',
 		featured: true,
 		rating: {
-			rating: '4.00', //todo:  don't work on lite and how it works
+			rating: '4.00', //todo:  don't work on lite
 			count: 1,
 		},
 		enabled: true,
@@ -1503,7 +1503,7 @@ export const payloads = {
 		product_ids: [''],
 		offer_price: ['50'],
 		offer_product_quantity: ['10'],
-		status: 'pending' //todo:  status can be used to create direct pending, trashed quote
+		status: 'pending'
 	}),
 
 	updateRequestQuote: {

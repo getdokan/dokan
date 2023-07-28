@@ -88,7 +88,7 @@ export class StoreSupportsPage extends AdminPage {
 	// reply to support ticket
 	async replySupportTicket(replyMessage: string, replier = 'admin'){
 		await this.goIfNotThere(data.subUrls.backend.dokan.storeSupport);
-		await this.clickAndWaitForNavigation(selector.admin.dokan.storeSupport.supportTicketFirstCell);
+		await this.clickAndWaitForLoadState(selector.admin.dokan.storeSupport.supportTicketFirstCell);
 
 		if(replier === 'vendor'){
 			await this.selectByValue(selector.admin.dokan.storeSupport.supportTicketDetails.chatAuthor, 'vendor');
@@ -103,7 +103,6 @@ export class StoreSupportsPage extends AdminPage {
 	// update support ticket email notification
 	async updateSupportTicketEmailNotification(action: string){
 		await this.goIfNotThere(data.subUrls.backend.dokan.storeSupport);
-		// await this.clickAndWaitForNavigation(selector.admin.dokan.storeSupport.supportTicketFirstCell);
 		await this.clickAndWaitForLoadState(selector.admin.dokan.storeSupport.supportTicketFirstCell);
 
 		switch(action){

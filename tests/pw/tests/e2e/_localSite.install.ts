@@ -13,13 +13,16 @@ test.describe('setup local site', () => {
 	test.skip(!!process.env.CI, 'skip site setup on CI');
 
 	// test('download wordpress to desired folder', async ({ page }) => {
-	//todo:  create everything using bash script if needed
-	//todo:  get desired folder path
-	//todo:  download wordpress zip and unzip it
-	//todo:  clone desired plugins to wp-plugins
-	//todo:  clone theme to theme folder
+
 	//todo:
-	//todo:
+	/*
+	  1. create everything using bash script if needed
+	  2. get desired folder path
+	  3. download wordpress zip and unzip it
+	  4. clone desired plugins to wp-plugins
+	  5. clone theme to theme folder
+	*/
+
 
 	// });
 
@@ -40,7 +43,7 @@ test.describe('setup local site', () => {
 		// await dbUtils.UpdateWpOptionTable(dbData.dokan.optionName.dokanActiveModules, dbData.dokan.modules);
 	});
 
-	// test('install and activate theme', async ({ request }) => {} //TODO
+	// test('install and activate theme', async ({ request }) => {}
 
 	//todo:  skip global setup for local_setup
 

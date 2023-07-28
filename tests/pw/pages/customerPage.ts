@@ -210,7 +210,6 @@ export class CustomerPage extends BasePage {
 
 	// go to cart from shop page
 	async goToCartFromShop(): Promise<void> {
-		// await this.clickAndWaitForNavigation(selector.customer.cShop.productCard.viewCart);
 		await this.clickAndWaitForLoadState(selector.customer.cShop.productCard.viewCart);
 		const cartUrl = this.isCurrentUrl('cart');
 		expect(cartUrl).toBeTruthy();
@@ -219,7 +218,6 @@ export class CustomerPage extends BasePage {
 
 	// go to cart from product details page
 	async goToCartFromSingleProductPage(): Promise<void> {
-		// await this.clickAndWaitForNavigation(selector.customer.cSingleProduct.productDetails.viewCart);
 		await this.clickAndWaitForLoadState(selector.customer.cSingleProduct.productDetails.viewCart);
 		const cartUrl =  this.isCurrentUrl('cart');
 		expect(cartUrl).toBeTruthy();
@@ -228,7 +226,7 @@ export class CustomerPage extends BasePage {
 
 	// got to checkout from cart
 	async goToCheckoutFromCart(): Promise<void> {
-		await this.clickAndWaitForNavigation(selector.customer.cCart.proceedToCheckout);
+		await this.clickAndWaitForLoadState(selector.customer.cCart.proceedToCheckout);
 		const cartUrl = this.isCurrentUrl('checkout');
 		expect(cartUrl).toBeTruthy();
 	}

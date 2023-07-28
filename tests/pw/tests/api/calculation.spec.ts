@@ -10,12 +10,13 @@ let taxRate: number;
 
 test.beforeAll(async ({ request }) => {
 	apiUtils = new ApiUtils(request);
-	taxRate = await apiUtils.setUpTaxRate(payloads.enableTaxRate, payloads.createTaxRate); //todo:  get tax rate instead of setup if possible, need to make faster
+	taxRate = await apiUtils.setUpTaxRate(payloads.enableTaxRate, payloads.createTaxRate);
+	//todo:  get tax rate instead of setup if possible
 });
 
 test.describe('calculation test', () => {
 	test('calculation test @pro', async () => {
-		//todo:  modify for lite as well if needed
+		//todo:  modify for lite as well
 		const [commission, feeRecipient] = await dbUtils.getSellingInfo();
 
 		const [, res, oid,] = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder);

@@ -105,11 +105,6 @@ export class SettingsPage extends AdminPage {
 		await this.enableSwitcher(selector.admin.dokan.settings.selling.enableMinMaxAmount);
 
 		// save settings
-		//todo:  fix or delete
-		// await this.clickAndWaitForResponse(data.subUrls.ajax, selector.admin.dokan.settings.selling.sellingOptionsSaveChanges);
-		// await this.toContainText(selector.admin.dokan.settings.dokanUpdateSuccessMessage, selling.saveSuccessMessage );
-		// await this.clickAndWaitForLoadState(selector.admin.dokan.settings.selling.sellingOptionsSaveChanges);
-
 		await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.admin.dokan.settings.selling.sellingOptionsSaveChanges);
 		await this.toHaveValue(selector.admin.dokan.settings.selling.adminCommission, selling.adminCommission);
 	}
@@ -182,11 +177,6 @@ export class SettingsPage extends AdminPage {
 		await this.enableSwitcher(selector.admin.dokan.settings.reverseWithdraw.sendAnnouncement);
 
 		// save settings
-		//todo:  fix or delete
-		// await this.clickAndWaitForResponse(data.subUrls.ajax, selector.admin.dokan.settings.reverseWithdraw.reverseWithdrawSaveChanges);
-		// await this.toContainText(selector.admin.dokan.settings.dokanUpdateSuccessMessage, reverseWithdraw.saveSuccessMessage );
-		// await this.clickAndWaitForLoadState(selector.admin.dokan.settings.reverseWithdraw.reverseWithdrawSaveChanges);
-
 		await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.admin.dokan.settings.reverseWithdraw.reverseWithdrawSaveChanges);
 		await this.toHaveValue(selector.admin.dokan.settings.reverseWithdraw.reverseBalanceThreshold, reverseWithdraw.reverseBalanceThreshold);
 	}
@@ -222,10 +212,6 @@ export class SettingsPage extends AdminPage {
 		await this.enableSwitcher(selector.admin.dokan.settings.appearance.showVendorInfo);
 
 		// save settings
-		//todo:  fix or delete
-		// await this.clickAndWaitForResponse(data.subUrls.ajax, selector.admin.dokan.settings.appearance.appearanceSaveChanges);
-		// await this.toContainText(selector.admin.dokan.settings.dokanUpdateSuccessMessage, appearance.saveSuccessMessage );
-
 		await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.admin.dokan.settings.appearance.appearanceSaveChanges);
 		await this.toHaveValue(selector.admin.dokan.settings.appearance.googleMapApiKey, appearance.googleMapApiKey);
 	}

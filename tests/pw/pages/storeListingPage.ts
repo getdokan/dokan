@@ -125,7 +125,6 @@ export class StoreListingPage extends CustomerPage {
 	// go to single store from store listing
 	async goToSingleStoreFromStoreListing(storeName: string): Promise<void> {
 		await this.searchStore(storeName);
-		// await this.clickAndWaitForNavigation(selector.customer.cStoreList.storeCard.visitStore);
 		await this.clickAndWaitForLoadState(selector.customer.cStoreList.storeCard.visitStore);
 		const cartUrl =  this.isCurrentUrl(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)));
 		expect(cartUrl).toBeTruthy();

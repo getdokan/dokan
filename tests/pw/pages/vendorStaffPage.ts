@@ -43,7 +43,6 @@ export class VendorStaffPage extends VendorPage {
 	// add new staff
 	async addStaff(staff: staff){
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.staff);
-		// await this.clickAndWaitForNavigation(selector.vendor.vStaff.addStaff.addNewStaff);
 		await this.clickAndWaitForLoadState(selector.vendor.vStaff.addStaff.addNewStaff);
 		await this.clearAndType(selector.vendor.vStaff.addStaff.firstName, staff.firstName);
 		await this.clearAndType(selector.vendor.vStaff.addStaff.lastName, staff.lastName);
@@ -58,7 +57,6 @@ export class VendorStaffPage extends VendorPage {
 	async editStaff(staff: staff){
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.staff);
 		await this.hover(selector.vendor.vStaff.staffCell(staff.firstName));
-		// await this.clickAndWaitForNavigation(selector.vendor.vStaff.editStaff.editStaff);
 		await this.clickAndWaitForLoadState(selector.vendor.vStaff.editStaff.editStaff);
 
 		await this.clearAndType(selector.vendor.vStaff.addStaff.firstName, staff.firstName);
@@ -86,7 +84,6 @@ export class VendorStaffPage extends VendorPage {
 	async manageStaffPermission(staffName: string){
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.staff);
 		await this.hover(selector.vendor.vStaff.staffCell(staffName));
-		// await this.clickAndWaitForNavigation(selector.vendor.vStaff.managePermission.managePermission);
 		await this.clickAndWaitForLoadState(selector.vendor.vStaff.managePermission.managePermission);
 
 		// manage overview permission

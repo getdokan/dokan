@@ -64,7 +64,7 @@ export class SingleProductPage extends CustomerPage {
 
 			// product shipping elements are visible
 			// await this.click(selector.customer.cSingleProduct.menus.shipping);
-			// await this.multipleElementVisible(selector.customer.cSingleProduct.shipping);  //todo:  need vendor shipping, also add new test
+			// await this.multipleElementVisible(selector.customer.cSingleProduct.shipping);  //todo:  need vendor shipping
 
 
 			// product location elements are visible
@@ -105,7 +105,6 @@ export class SingleProductPage extends CustomerPage {
 		await this.goIfNotThere(data.subUrls.frontend.productDetails(helpers.slugify(productName)));
 		await this.click(selector.customer.cSingleProduct.menus.vendorInfo);
 		await this.multipleElementVisible(selector.customer.cSingleProduct.vendorInfo);
-		//todo:  assert actual value i.e. vendor info
 	}
 
 
@@ -114,7 +113,6 @@ export class SingleProductPage extends CustomerPage {
 		await this.goIfNotThere(data.subUrls.frontend.productDetails(helpers.slugify(productName)));
 		await this.click(selector.customer.cSingleProduct.menus.location);
 		await this.multipleElementVisible(selector.customer.cSingleProduct.location);
-		//todo:  assert actual value i.e. location
 	}
 
 	// product warranty policy
@@ -122,7 +120,6 @@ export class SingleProductPage extends CustomerPage {
 		await this.goIfNotThere(data.subUrls.frontend.productDetails(helpers.slugify(productName)));
 		await this.click(selector.customer.cSingleProduct.menus.warrantyPolicy);
 		await this.multipleElementVisible(selector.customer.cSingleProduct.warrantyPolicy);
-		//todo:  assert actual value i.e. warranty policy
 	}
 
 
@@ -145,7 +142,6 @@ export class SingleProductPage extends CustomerPage {
 	async viewHighlightedVendorInfo(productName: string){
 		await this.goIfNotThere(data.subUrls.frontend.productDetails(helpers.slugify(productName)));
 		await this.multipleElementVisible(selector.customer.cSingleProduct.vendorHighlightedInfo);
-		//todo:  assert actual value i.e. vendor info
 	}
 
 

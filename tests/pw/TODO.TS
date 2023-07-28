@@ -1,5 +1,5 @@
 
-//TODO ***** list all core tests and setup tests : plugins activated, wp settings, woocommerce settings, dokan modules activated , dokan settings for both e2e and api
+//todo ***** list all core tests and setup tests : plugins activated, wp settings, woocommerce settings, dokan modules activated , dokan settings for both e2e and api
 //todo:  make e2e tests independent specially admin tests
 //todo:  GRAB CONSOLE ERROR, And PHP ERROR *****************
 //todo:  slack integration
@@ -442,6 +442,117 @@ products
 	//todo:  import product
 
 
+single product
+
+
+	// product vendor info
+	async productVendorInfo(productName: string){
+		await this.goIfNotThere(data.subUrls.frontend.productDetails(helpers.slugify(productName)));
+		await this.click(selector.customer.cSingleProduct.menus.vendorInfo);
+		await this.multipleElementVisible(selector.customer.cSingleProduct.vendorInfo);
+		//todo:  assert actual value i.e. vendor info
+	}
+
+
+	// product location
+	async productLocation(productName: string){
+		await this.goIfNotThere(data.subUrls.frontend.productDetails(helpers.slugify(productName)));
+		await this.click(selector.customer.cSingleProduct.menus.location);
+		await this.multipleElementVisible(selector.customer.cSingleProduct.location);
+		//todo:  assert actual value i.e. location
+	}
+
+	// product warranty policy
+	async productWarrantyPolicy(productName: string){
+		await this.goIfNotThere(data.subUrls.frontend.productDetails(helpers.slugify(productName)));
+		await this.click(selector.customer.cSingleProduct.menus.warrantyPolicy);
+		await this.multipleElementVisible(selector.customer.cSingleProduct.warrantyPolicy);
+		//todo:  assert actual value i.e. warranty policy
+	}
+
+	async viewHighlightedVendorInfo(productName: string){
+		await this.goIfNotThere(data.subUrls.frontend.productDetails(helpers.slugify(productName)));
+		await this.multipleElementVisible(selector.customer.cSingleProduct.vendorHighlightedInfo);
+		//todo:  assert actual value i.e. vendor info
+	}
+
+stores page
+	// search vendor
+	async searchVendor(vendorName: string){
+		await this.goIfNotThere(data.subUrls.backend.dokan.vendors);
+
+		await this.clearInputField(selector.admin.dokan.vendors.search);
+
+		await this.typeAndWaitForResponse(data.subUrls.api.dokan.stores, selector.admin.dokan.vendors.search, vendorName);
+		await this.toBeVisible(selector.admin.dokan.vendors.vendorCell(vendorName));
+
+		// negative scenario //todo:  add this to all search also add flag to avoid this scenario
+		// await this.typeAndWaitForResponse(data.subUrls.api.dokan.stores, selector.admin.dokan.vendors.search, vendorName + 'abcdefgh');
+		// await this.toBeVisible(selector.admin.dokan.vendors.noRowsFound);
+
+	}
+
+seller badge
+
+// vendor filter seller badge
+async filterSellerBadges(option: string){
+	await this.clickIfVisible(selector.vendor.vBadges.congratsModal.closeModal);
+
+	await this.goIfNotThere(data.subUrls.frontend.vDashboard.badges);
+	await this.selectByValue( selector.vendor.vBadges.filterBadges, option);
+	const count = (await this.getElementText(selector.vendor.vBadges.numberOfBadgesFound))?.split(' ')[0];
+	expect(Number(count)).not.toBe(0);
+	//TOdo: either this or that assertion
+	//todo: to have count more than
+}
+
+
+Reports 
+
+
+	// search all logs
+	async searchAllLogs(orderId: string){
+		await this.goIfNotThere(data.subUrls.backend.dokan.allLogs);
+
+		await this.clearInputField(selector.admin.dokan.reports.allLogs.search);
+		await this.typeAndWaitForResponse(data.subUrls.api.dokan.logs, selector.admin.dokan.reports.allLogs.search, orderId);
+		await this.toBeVisible(selector.admin.dokan.reports.allLogs.orderIdCell(orderId));
+		// await this.clickAndWaitForResponse(data.subUrls.api.dokan.logs, selector.admin.dokan.reports.allLogs.filters.clear); //todo: why
+	}
+
+
+	// export all logs
+	async exportAllLogs(orderId: string){
+		await this.searchAllLogs(orderId);
+		await this.clickAndWaitForDownload(selector.admin.dokan.reports.allLogs.exportLogs);
+	}
+
+
+	// filter all logs by store
+	async filterAllLogsByStore(storeName: string){
+		await this.goIfNotThere(data.subUrls.backend.dokan.allLogs);
+
+		await this.click(selector.admin.dokan.reports.allLogs.filters.filterByStore);
+		await this.typeAndWaitForResponse(data.subUrls.api.dokan.stores, selector.admin.dokan.reports.allLogs.filters.filterByStoreInput, storeName);
+		await this.pressAndWaitForResponse(data.subUrls.api.dokan.logs, data.key.enter);
+
+		const count = (await this.getElementText(selector.admin.dokan.reports.allLogs.numberOfRowsFound))?.split(' ')[0];
+		expect(Number(count)).not.toBe(0);
+		// await this.clickAndWaitForResponse(data.subUrls.api.dokan.logs, selector.admin.dokan.reports.allLogs.filters.clear); //todo: why
+	}
+
+
+	// filter all logs by status
+	async filterAllLogsByStatus(orderStatus: string){
+		await this.goIfNotThere(data.subUrls.backend.dokan.allLogs);
+
+		await this.click(selector.admin.dokan.reports.allLogs.filters.filterByStatus);  //todo:  add multiselect option
+		await this.type( selector.admin.dokan.reports.allLogs.filters.filterByStatusInput, orderStatus);
+		await this.clickAndAcceptAndWaitForResponse(data.subUrls.api.dokan.logs, selector.admin.dokan.reports.allLogs.filters.searchedResult);
+		const count = (await this.getElementText(selector.admin.dokan.reports.allLogs.numberOfRowsFound))?.split(' ')[0];
+		expect(Number(count)).not.toBe(0);
+		// await this.clickAndWaitForResponse(data.subUrls.api.dokan.logs, selector.admin.dokan.reports.allLogs.filters.clear); //todo: why
+	}
 
 
 _environmentcheck
@@ -524,6 +635,45 @@ test.beforeAll(async ({ request }) => {
 	await apiUtils.createOrderWithStatus(payloads.createProduct(), payloads.createOrderCod, 'wc-completed', payloads.vendorAuth);
 });
 
+
+
+apiutils
+
+//todo:  gather all interfaces in one place
+
+interface auth {
+	[key: string]: string;
+ }
+
+ interface user {
+	username: string;
+	password: string;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 dbquery
 
 	// execute db query
@@ -542,3 +692,198 @@ dbquery
 			}
 		});
 	},
+
+dbdata
+generalSettings: {
+
+	//site settings
+	site_options: '', //todo: WHY EMPTY , value exists find out what
+
+	// vendor store settings
+	vendor_store_options: '', //todo: WHY EMPTY
+}
+
+
+
+basepage
+
+	// TODO: apply pseudo-style
+//TODo: add assertion to every base-page function
+//todo: update every page method with locator method
+	// returns whether the element is visible
+	async isVisible(selector: string): Promise<boolean> {
+		// return await this.isVisibleViaPage(selector);  //todo:  keep which one is better ; also update every page method with locator
+		return await this.isVisibleLocator(selector);
+	}
+
+	// upload file
+	async uploadFile(selector: string, files: string | string[]): Promise<void> {
+		// await this.page.setInputFiles(selector, files, { noWaitAfter: true });
+		await this.page.setInputFiles(selector, files);
+		await this.wait(2); //todo:  need to handle wait gracefully
+	}
+
+// assert element to contain text
+async toContainText(selector: string, text: string){
+	await expect(this.page.locator(selector)).toContainText(text); //todo:  add lowercase for both expected and received
+
+
+	// assert element to be visible
+	// any of them , out of all,	
+async toBeVisibleAnyOfThem(selectors: string[],){
+	const res = [];
+	for (const selector of selectors) {
+		res.push(await this.isVisible(selector));
+	}
+	const result = res.includes(true);
+	expect(result).toBeTruthy();
+	//todo: which elements are true for further operation
+}
+
+async multipleElementVisible(selectors: any){
+
+	// TODO: can also be merge with isVisible method and this method should support single selector too
+	//todo:  implement for arrays
+	// selectors = Object.values(selectors);
+	// selectors.forEach( async (selector: string) => {
+	// 	// console.log(selector);
+	// await expect(this.page.locator(selector)).toBeVisible();
+	// });
+
+	for (const selector in selectors ) {
+		// console.log(selectors[selector]);
+		// await expect(this.page.locator(selectors[selector])).toBeVisible();
+		await this.toBeVisible(selectors[selector]);
+	}
+
+}
+
+
+	// delete element if exist (only first will delete) : dokan rma,report abuse
+	async deleteIfExists(selector: string): Promise<void> {
+		//todo:  there may be alternative solution, this method might not needed
+		const elementExists = await this.isVisible(selector);
+		if (elementExists) {
+			const element = this.page.locator(selector);
+			await element.click();
+		}
+	}
+
+	// async clearInputField2(selector): Promise<void>  { //todo:  fix this method
+	// 	let element = await this.getElement(selector)
+	// 	await this.page.evaluate(element => element.value = '', element)
+	// }
+
+		// get element property value: background color
+		async getElementColor(selector: string): Promise<string> {
+			// TODO: All promise<string> should be Promise<string | null> , after refactor check for any conflict
+			const element = this.page.locator(selector);
+			const value = await element.evaluate((element) =>
+				window.getComputedStyle(element).getPropertyValue('color'),
+			);
+			// console.log(value)
+			return value;
+		}
+
+	// TODO: urgent : update wait for multiple different response
+	// TODO: urgent : update wait for multiple same response
+
+	// // click & wait for multiple responses
+	// async clickAndWaitForResponses(subUrls:   string[][], selector: string, code = 200): Promise<void | Response[]> {
+	// 	// 		// // const qrs: string[][] = [[data.subUrls.backend.quotes, '200'], [data.subUrls.backend.products, '200']];
+	// 	// // const qrs: string[][] = [[data.subUrls.backend.quotes, '200']];
+	// 	// await this.clickAndWaitForResponses(qrs, selector.admin.dokan.requestForQuotation.quoteRules.newQuoteRule);
+	// 	// const promises = [];
+	// 	// subUrls.forEach((subUrl) => {
+	// 	// 	console.log('subUls: ', subUrl[0], ' code: ', subUrl[1]);
+	// 	// 	// const promise = this.page.waitForResponse((resp) => resp.url().includes(subUrl[0] as string ) && resp.status() ===  (subUrl[1] ?? code));
+	// 	// 	const promise = this.page.waitForResponse((resp) => resp.url().includes(subUrl[0]) && resp.status() ===  (subUrl[1]));
+	// 	// 	promises.push(promise);
+	// 	// });
+	// 	// // promises.push(this.page.locator(selector).click());
+	// 	// // const response = await Promise.all(promises);
+	// 	// await Promise.all([
+	// 	// 	...promises,
+	// 	// 	this.page.locator(selector).click()
+	// 	// ]);
+	// 	// return response;
+	// }
+
+	// upload files when input file element is missing
+	async uploadFileViaListener(selector: string, files: string | string[]): Promise<void> {
+		this.page.on('filechooser', async (fileChooser) => { await fileChooser.setFiles(files); });
+		await this.page.locator(selector).click(); // invokes the filechooser  //todo: convert with pormise all
+	}
+
+
+// test data
+
+	customerInfo: {
+		// emailDomain: '_' + faker.string.alphanumeric(5) + '@email.com',
+		emailDomain: '@email.com',
+		email: () => faker.internet.email(),
+		password: String(process.env.USER_PASSWORD),
+		password1: String(process.env.USER_PASSWORD) + '1',
+		firstName: () => faker.person.firstName('male'),
+		lastName: () => faker.person.lastName('male'),
+		// username: () => this.customer.customerInfo.firstName, //todo:  handel callback  & not works
+		// storename: () => this.customer.customerInfo.firstName + 'store',
+
+
+
+		customerInfo: {
+			// emailDomain: '_' + faker.string.alphanumeric(5) + '@email.com',
+			emailDomain: '@email.com',
+			email: () => faker.internet.email(),
+			password: String(process.env.USER_PASSWORD),
+			password1: String(process.env.USER_PASSWORD) + '1',
+			firstName: () => faker.person.firstName('male'),
+			lastName: () => faker.person.lastName('male'),
+			// username: () => this.customer.customerInfo.firstName,
+			// storename: () => this.customer.customerInfo.firstName + 'store',
+			role: 'customer',
+			username: () => faker.person.firstName('male'),
+			storename: () => faker.person.firstName('male') + 'store',
+			companyName: faker.company.name(),
+			companyId: faker.string.alphanumeric(5),
+			vatNumber: faker.string.alphanumeric(10),
+			bankIban: faker.finance.iban(),
+			phone: faker.phone.number('(###) ###-####'),
+			street1: 'abc street', //todo:  address should be global or not
+			street2: 'xyz street',
+			country: 'United States (US)',
+			countrySelectValue: 'US',
+			stateSelectValue: 'NY',
+			city: 'New York',
+
+
+			quoteRule: {
+				title: 'test quote rule',  //todo:  title must be  used with uuid, tests are failing because of that
+				userRole: '',
+				product: 'p1_v1 (simple)',
+				category: 'Uncategorized',
+				hidePrice: '1',
+				hidePriceText: 'Price is hidden',
+				hideAddToCartButton: 'keep_and_add_new', // replace, keep_and_add_new
+				customButtonLabel: 'Add to quote',
+				order: '0',
+			},
+
+			updateQuote:{
+				title: 'test quote', // title should be same as create, cause search by title //todo:  updatedTitle:  can be added
+				user: 'customer1',
+				fullName: 'Jhon Doe',
+				email: 'customer1@g.com',
+				companyName: 'abc',
+				phoneNumber: '0123456789',
+				product: 'p1_v1 (simple)',
+				quantity: '', //todo:  because of interface, resolve interface issue
+				offerPrice: '70',
+				offerProductQuantity: '20',
+			},
+
+
+			convertedQuote:{
+				title: 'converted quote ' + faker.string.uuid(),  //todo:  more test date need to be unique, apply this
+			}
+	

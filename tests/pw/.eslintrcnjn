@@ -6,8 +6,8 @@
 //     },
 //     "extends": [
 //       "eslint:recommended",
-//       "plugin:@typescript-eslint/recommended", //TODO : recommend meaning Also ********* learn eslint
-//       "plugin:@typescript-eslint/recommended", //TODO : recommend meaning Also ********* learn eslint
+//       "plugin:@typescript-eslint/recommended", //todo: recommend meaning Also ********* learn eslint
+//       "plugin:@typescript-eslint/recommended", //todo: recommend meaning Also ********* learn eslint
 //       "plugin:playwright/playwright-test/recommended"
 //   ],
 //     "parserOptions": {

@@ -5,9 +5,6 @@ import { helpers } from 'utils/helpers';
 import fs from 'fs';
 // import FormData from 'form-data';
 
-
-//todo:  gather all interfaces in one place
-
 interface auth {
 	[key: string]: string;
  }

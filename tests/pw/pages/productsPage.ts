@@ -68,9 +68,7 @@ export class ProductsPage extends AdminPage {
 		switch (product.status) {
 
 		case 'publish' :
-			// await this.clickAndWaitForResponse(data.subUrls.ajax, selector.admin.products.product.publish);
-			// await this.clickAndWaitForNavigation(selector.admin.products.product.publish);
-			await this.clickAndWaitForLoadState(selector.admin.products.product.publish);
+			await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.admin.products.product.publish);
 			await this.toContainText(selector.admin.products.product.updatedSuccessMessage, data.product.publishSuccessMessage);
 			break;
 
@@ -356,9 +354,7 @@ export class ProductsPage extends AdminPage {
 			break;
 		}
 
-		// await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.products, selector.vendor.product.filters.filter);
-		// await this.clickAndWaitForNavigation( selector.vendor.product.filters.filter);
-		await this.clickAndWaitForLoadState( selector.vendor.product.filters.filter);
+		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products,  selector.vendor.product.filters.filter);
 		await this.notToHaveCount(selector.vendor.product.numberOfRows, 0);
 
 	}
@@ -368,7 +364,6 @@ export class ProductsPage extends AdminPage {
 	async viewProduct(productName: string): Promise<void> {
 		await this.searchProduct(productName);
 		await this.hover(selector.vendor.product.productCell(productName));
-		// await this.clickAndWaitForNavigation(selector.vendor.product.view);
 		await this.clickAndWaitForLoadState(selector.vendor.product.view);
 		await expect(this.page).toHaveURL(data.subUrls.frontend.productDetails(helpers.slugify(productName)) + '/');
 	}
@@ -418,7 +413,7 @@ export class ProductsPage extends AdminPage {
 		await this.searchProduct(productName);
 		await this.hover(selector.vendor.product.productCell(productName));
 		await this.click(selector.vendor.product.permanentlyDelete);
-		await this.clickAndWaitForNavigation(selector.vendor.product.confirmAction);
+		await this.clickAndWaitForLoadState(selector.vendor.product.confirmAction);
 		await this.toContainText(selector.vendor.product.dokanSuccessMessage, 'Product successfully deleted');
 
 	}

@@ -292,8 +292,6 @@ export class SellerBadgesPage extends AdminPage {
 		await this.selectByValue( selector.vendor.vBadges.filterBadges, option);
 		const count = (await this.getElementText(selector.vendor.vBadges.numberOfBadgesFound))?.split(' ')[0];
 		expect(Number(count)).not.toBe(0);
-		//TOdo: either this or that assertion
-		//todo: to have count more than
 	}
 
 }

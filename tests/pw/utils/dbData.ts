@@ -36,7 +36,7 @@ export const dbData = {
 		generalSettings: {
 
 			//site settings
-			site_options: '', //TODO : WHY EMPTY , value exists find out what
+			site_options: '',
 			admin_access: 'on', // vendor edit product test needs it to disable
 			custom_store_url: 'store',
 			setup_wizard_logo_url: '',
@@ -47,7 +47,7 @@ export const dbData = {
 			data_clear_on_uninstall: 'off',
 
 			// vendor store settings
-			vendor_store_options: '', //TODO : WHY EMPTY
+			vendor_store_options: '',
 			seller_enable_terms_and_conditions: 'on',
 			store_products_per_page: '12',
 			enabled_address_on_reg: 'off',

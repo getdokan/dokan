@@ -101,7 +101,6 @@ export class StoresPage extends AdminPage {
 		await this.searchVendor(vendor.storeName);
 
 		await this.hover(selector.admin.dokan.vendors.vendorCell(vendor.storeName));
-		// await this.clickAndWaitForNavigation(selector.admin.dokan.vendors.vendorEdit);
 		await this.clickAndWaitForLoadState(selector.admin.dokan.vendors.vendorEdit);
 
 		if (!DOKAN_PRO){
@@ -273,10 +272,9 @@ export class StoresPage extends AdminPage {
 		await this.typeAndWaitForResponse(data.subUrls.api.dokan.stores, selector.admin.dokan.vendors.search, vendorName);
 		await this.toBeVisible(selector.admin.dokan.vendors.vendorCell(vendorName));
 
-		// negative scenario //todo:  add this to all search also add flag to avoid this scenario
+		// negative scenario
 		// await this.typeAndWaitForResponse(data.subUrls.api.dokan.stores, selector.admin.dokan.vendors.search, vendorName + 'abcdefgh');
 		// await this.toBeVisible(selector.admin.dokan.vendors.noRowsFound);
-
 	}
 
 
@@ -311,12 +309,10 @@ export class StoresPage extends AdminPage {
 		switch(action){
 
 		case 'products' :
-			// await this.clickAndWaitForNavigation(selector.admin.dokan.vendors.vendorProducts);
-			await this.clickAndWaitForLoadState(selector.admin.dokan.vendors.vendorProducts); //todo:  replace waitfor navigation to waitfor loadstate
+			await this.clickAndWaitForLoadState(selector.admin.dokan.vendors.vendorProducts);
 			break;
 
 		case 'orders' :
-			// await this.clickAndWaitForNavigation(selector.admin.dokan.vendors.vendorOrders);
 			await this.clickAndWaitForLoadState(selector.admin.dokan.vendors.vendorOrders);
 			break;
 
@@ -332,9 +328,8 @@ export class StoresPage extends AdminPage {
 
 
 	// vendor bulk action
-	async vendorBulkAction(action: string){
-		// await this.searchVendor(vendorName); //todo:  can be used to minimized number of rows to be affected
-		await this.goIfNotThere(data.subUrls.backend.dokan.vendors);
+	async vendorBulkAction(action: string, vendorName?: string){
+		vendorName ? await this.searchVendor(vendorName) : await this.goIfNotThere(data.subUrls.backend.dokan.vendors);
 
 		// ensure row exists
 		await this.notToBeVisible(selector.admin.dokan.vendors.noRowsFound);

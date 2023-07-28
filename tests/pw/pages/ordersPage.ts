@@ -87,15 +87,14 @@ export class OrdersPage extends VendorPage {
 			break;
 
 		case 'by-date' :
-			// await this.selectByLabel(selector.vendor.orders.filters.filterByDate, value); //TODO
+			//todo:
 			break;
 
 		default :
 			break;
 		}
 
-		// await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.products, selector.vendor.product.filters.filter);
-		await this.clickAndWaitForNavigation(selector.vendor.orders.filters.filter);
+		await this.clickAndWaitForLoadState(selector.vendor.orders.filters.filter);
 		await this.notToHaveCount(selector.vendor.orders.numberOfRows, 0);
 
 	}
@@ -104,7 +103,7 @@ export class OrdersPage extends VendorPage {
 	// go to order details
 	async goToOrderDetails(orderNumber: string): Promise<void> {
 		await this.searchOrder(orderNumber);
-		await this.clickAndWaitForNavigation(selector.vendor.orders.view(orderNumber));
+		await this.clickAndWaitForLoadState(selector.vendor.orders.view(orderNumber));
 		await this.toContainText(selector.vendor.orders.orderNumber, orderNumber);
 	}
 

@@ -1212,10 +1212,10 @@ export const selector = {
 					// Filter
 					filters:{
 						filterByStore: '//span[@id="select2-filter-vendors-container"]/..//span[@class="select2-selection__arrow"]',
-						filterByStoreInput: '.select2-search__field',
+						filterByStoreInput: '//input[@class="select2-search__field" and @aria-owns="select2-filter-vendors-results"]',
 						// filterByStoreValues: '.select2-results ul li',
 						filterByStatus: '//span[@class="select2-selection select2-selection--multiple"]',
-						filterByStatusInput: '.select2-search__field',
+						filterByStatusInput: '//input[@class="select2-search__field" and @placeholder="Filter by status"]',
 						searchedResult: '.select2-results__option.select2-results__option--highlighted',
 						// filterByStatusValues: '.select2-results ul li',
 						filterByDate: '.form-control',

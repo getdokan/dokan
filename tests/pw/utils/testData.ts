@@ -859,7 +859,7 @@ export const data = {
 	vendor: {
 		username: String(process.env.VENDOR),
 		password: String(process.env.USER_PASSWORD),
-		lastname: String(process.env.VENDOR)[0] + String(process.env.VENDOR)[String(process.env.VENDOR).length - 1], //todo:  add last-name to other users
+		lastname: String(process.env.VENDOR)[0] as string + String(process.env.VENDOR)[String(process.env.VENDOR).length - 1],
 		storeName: String(process.env.VENDOR) + 'store',
 
 		vendorInfo: {
@@ -1087,7 +1087,7 @@ export const data = {
 		verification: {
 			// file: 'utils/sampleData/avatar.png',
 			// file2: 'tests/e2e/utils/sampleData/avatar.png',
-			file: 'tests/avatar.png', //TODO : image path need to fixed
+			file: 'tests/avatar.png', //todo: image path need to from project origin
 			street1: 'abc street',
 			street2: 'xyz street',
 			city: 'New York',
@@ -1196,8 +1196,7 @@ export const data = {
 	customer: {
 		username: String(process.env.CUSTOMER),
 		password: String(process.env.USER_PASSWORD),
-		lastname: String(process.env.CUSTOMER)[0] + String(process.env.CUSTOMER)[String(process.env.CUSTOMER).length-1], //todo:  add last-name to other users
-		// lastname1: ( name = process.env.CUSTOMER) => {  name[0] + name[name.length - 1]; },
+		lastname: String(process.env.CUSTOMER)[0] as string + String(process.env.CUSTOMER)[String(process.env.CUSTOMER).length-1], 		// lastname1: ( name = process.env.CUSTOMER) => {  name[0] + name[name.length - 1]; },
 
 		customerInfo: {
 			// emailDomain: '_' + faker.string.alphanumeric(5) + '@email.com',
@@ -1207,7 +1206,7 @@ export const data = {
 			password1: String(process.env.USER_PASSWORD) + '1',
 			firstName: () => faker.person.firstName('male'),
 			lastName: () => faker.person.lastName('male'),
-			// username: () => this.customer.customerInfo.firstName, //todo:  handel callback  & not works
+			// username: () => this.customer.customerInfo.firstName,
 			// storename: () => this.customer.customerInfo.firstName + 'store',
 			role: 'customer',
 			username: () => faker.person.firstName('male'),
@@ -1217,7 +1216,7 @@ export const data = {
 			vatNumber: faker.string.alphanumeric(10),
 			bankIban: faker.finance.iban(),
 			phone: faker.phone.number('(###) ###-####'),
-			street1: 'abc street', //todo:  address should be global or not
+			street1: 'abc street',
 			street2: 'xyz street',
 			country: 'United States (US)',
 			countrySelectValue: 'US',
@@ -1273,7 +1272,7 @@ export const data = {
 		},
 
 		update:{
-			name: 'test store category',  // name should be same as create, cause search by title //todo:  updatedTitle:  can be added
+			name: 'test store category',
 			description: 'updated test store category description',
 		},
 
@@ -1346,8 +1345,9 @@ export const data = {
 			guest:'guest',
 		},
 
+
 		quoteRule: {
-			title: 'test quote rule',  //todo:  title must be  used with uuid, tests are failing because of that
+			title: 'test quote rule',
 			userRole: '',
 			product: 'p1_v1 (simple)',
 			category: 'Uncategorized',
@@ -1358,8 +1358,9 @@ export const data = {
 			order: '0',
 		},
 
+
 		updateQuoteRule: {
-			title: 'test quote rule', // title should be same as create, cause search by title //todo:  updatedTitle:  can be added
+			title: 'test quote rule',
 			userRole: '',
 			product: 'p1_v1 (simple)',
 			category: 'Uncategorized',
@@ -1389,14 +1390,14 @@ export const data = {
 		},
 
 		updateQuote:{
-			title: 'test quote', // title should be same as create, cause search by title //todo:  updatedTitle:  can be added
+			title: 'test quote',
 			user: 'customer1',
 			fullName: 'Jhon Doe',
 			email: 'customer1@g.com',
 			companyName: 'abc',
 			phoneNumber: '0123456789',
 			product: 'p1_v1 (simple)',
-			quantity: '', //todo:  because of interface, resolve interface issue
+			quantity: '',
 			offerPrice: '70',
 			offerProductQuantity: '20',
 		},
@@ -1407,7 +1408,7 @@ export const data = {
 		},
 
 		convertedQuote:{
-			title: 'converted quote ' + faker.string.uuid(),  //todo:  more test date need to be unique, apply this
+			title: 'converted quote ' + faker.string.uuid(),
 		}
 
 	},

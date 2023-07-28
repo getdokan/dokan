@@ -188,7 +188,6 @@ export default defineConfig({
 		// 	name: 'api_tests',
 		// 	testMatch: /.*\.spec\.ts/,
 		// 	dependencies: process.env.SETUP ? ['api_setup'] : [],    /* whether to run setup tests before running actual tests */
-		// 	//todo:  which fields are allowed, not all are allowed
 		// },
 
 		// // E2e project
