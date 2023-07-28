@@ -20,11 +20,11 @@ export const dbUtils = {
 	// execute db query
 	async dbQuery(query: string): Promise<any> {
 		const dbContext: DbContext = new DbContext(mySql);
-		return await dbContext.inTransactionAsync(async (dbContext) => { //todo:  grab connection failed actual reason, ambiguous error message
+		return await dbContext.inTransactionAsync(async (dbContext) => {
 			try{
 				const result = await dbContext.executeAsync(query);
 				const res = JSON.parse(JSON.stringify(result));
-				expect(res).not.toHaveProperty('errno'); //todo:  ADD Actual ASSERT DB_QUERY IS SUCCESSES, update it
+				expect(res).not.toHaveProperty('errno');
 				return res;
 			}
 			catch(err: unknown){

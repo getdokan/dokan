@@ -179,6 +179,11 @@ export const helpers = {
 		});
 	},
 
+	// check file existence
+	fileExists (filePath: string){
+		return fs.existsSync(filePath);
+	},
+
 	// read file
 	readFile (filePath: string) {
 		return fs.readFileSync(filePath, 'utf8');

@@ -6,10 +6,14 @@ import { payloads } from 'utils/payloads';
 async function globalSetup() {
 	console.log('Global Teardown running....');
 
+	const systemInfo = 'systemInfo.json';
+
 	// get test environment info
-	const apiUtils = new ApiUtils(await request.newContext({ ignoreHTTPSErrors: true }));
-	const [, summaryInfo] = await apiUtils.getSystemStatus(payloads.adminAuth);
-	helpers.writeFile('systemInfo.json', JSON.stringify(summaryInfo));
+	if(!helpers.fileExists(systemInfo)) {
+		const apiUtils = new ApiUtils(await request.newContext({ ignoreHTTPSErrors: true }));
+		const [, summaryInfo] = await apiUtils.getSystemStatus(payloads.adminAuth);
+		helpers.writeFile(systemInfo, JSON.stringify(summaryInfo));
+	}
 
 	console.log('Global Teardown Finished!');
 }

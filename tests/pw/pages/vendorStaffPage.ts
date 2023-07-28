@@ -102,7 +102,7 @@ export class VendorStaffPage extends VendorPage {
 		await this.multipleElementCheck(selector.vendor.vStaff.managePermission.product);
 
 		// // manage booking permission
-		// await this.multipleElementCheck(selector.vendor.vStaff.managePermission.booking); //todo:  add booking check
+		// await this.multipleElementCheck(selector.vendor.vStaff.managePermission.booking); //todo:  add booking module+lplugin check
 
 		// manage store support permission
 		await this.multipleElementCheck(selector.vendor.vStaff.managePermission.storeSupport);
@@ -120,7 +120,7 @@ export class VendorStaffPage extends VendorPage {
 		await this.multipleElementCheck(selector.vendor.vStaff.managePermission.menu);
 
 		// // manage auction permission
-		// await this.multipleElementCheck(selector.vendor.vStaff.managePermission.auction); //todo:  add auction check
+		// await this.multipleElementCheck(selector.vendor.vStaff.managePermission.auction); //todo:  add auction module+plugin check
 	}
 
 }

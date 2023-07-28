@@ -71,7 +71,6 @@ export class RequestForQuotationsPage extends AdminPage {
 	async addQuoteRule(rule: requestForQuotation['quoteRule']){
 		await this.goIfNotThere(data.subUrls.backend.dokan.requestForQuoteRules);
 
-		//todo:  create a generic function for below scenario on base page
 		await Promise.all([
 			this.page.waitForResponse((resp) => resp.url().includes(data.subUrls.api.dokan.quotes) && resp.status() === 200),
 			this.page.waitForResponse((resp) => resp.url().includes(data.subUrls.api.dokan.products) && resp.status() === 200),
@@ -88,7 +87,6 @@ export class RequestForQuotationsPage extends AdminPage {
 
 		await this.hover(selector.admin.dokan.requestForQuotation.quoteRules.quoteRulesCell(rule.title));
 
-		//todo:  create a generic function for below scenario on base page
 		await Promise.all([
 			this.page.waitForResponse((resp) => resp.url().includes(data.subUrls.api.dokan.quotes) && resp.status() === 200),
 			this.page.waitForResponse((resp) => resp.url().includes(data.subUrls.api.dokan.products) && resp.status() === 200),

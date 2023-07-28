@@ -312,9 +312,6 @@ export class ProductsPage extends AdminPage {
 	}
 
 
-	//todo:  import product
-
-
 	// export product
 	async exportProducts(): Promise<void> {
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.products);
@@ -440,7 +437,7 @@ export class ProductsPage extends AdminPage {
 
 		case 'edit' :
 			await this.selectByValue(selector.vendor.product.bulkActions.selectAction, 'edit');
-			//todo: 
+			//todo:
 			break;
 
 		case 'permanently-delete' :
@@ -455,8 +452,7 @@ export class ProductsPage extends AdminPage {
 			break;
 		}
 
-		await this.clickAndAcceptAndWaitForResponse(data.subUrls.frontend.vDashboard.products, selector.vendor.product.bulkActions.applyAction);
-		//todo: 
+		await this.clickAndAcceptAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, selector.vendor.product.bulkActions.applyAction);
 	}
 
 

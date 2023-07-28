@@ -126,7 +126,6 @@ export class StoreSupportsPage extends AdminPage {
 	// close support ticket
 	async closeSupportTicket(){
 		await this.goIfNotThere(data.subUrls.backend.dokan.storeSupport);
-		// await this.clickAndWaitForNavigation(selector.admin.dokan.storeSupport.supportTicketFirstCell);
 		await this.clickAndWaitForLoadState(selector.admin.dokan.storeSupport.supportTicketFirstCell);
 		await this.clickAndWaitForResponse(data.subUrls.api.dokan.storeSupport, selector.admin.dokan.storeSupport.supportTicketDetails.closeTicket);
 	}
@@ -135,9 +134,7 @@ export class StoreSupportsPage extends AdminPage {
 	// reopen support ticket
 	async reopenSupportTicket(){
 		await this.goIfNotThere(data.subUrls.backend.dokan.storeSupport);
-		// await this.clickAndWaitForNavigation(selector.admin.dokan.storeSupport.navTabs.closed);
 		await this.clickAndWaitForLoadState(selector.admin.dokan.storeSupport.navTabs.closed);
-		// await this.clickAndWaitForNavigation(selector.admin.dokan.storeSupport.supportTicketFirstCell);
 		await this.clickAndWaitForLoadState(selector.admin.dokan.storeSupport.supportTicketFirstCell);
 		await this.clickAndWaitForResponse(data.subUrls.api.dokan.storeSupport, selector.admin.dokan.storeSupport.supportTicketDetails.reopenTicket);
 	}
@@ -145,7 +142,6 @@ export class StoreSupportsPage extends AdminPage {
 
 	// store support bulk action
 	async storeSupportBulkAction(action: string){
-		// await this.goIfNotThere(data.subUrls.backend.dokan.storeSupport);
 		await this.goto(data.subUrls.backend.dokan.storeSupport);
 
 		// ensure row exists
@@ -153,8 +149,7 @@ export class StoreSupportsPage extends AdminPage {
 
 		await this.click(selector.admin.dokan.storeSupport.bulkActions.selectAll);
 		await this.selectByValue(selector.admin.dokan.storeSupport.bulkActions.selectAction, action);
-		await this.clickAndWaitForResponse(data.subUrls.api.dokan.storeSupport, selector.admin.dokan.storeSupport.bulkActions.applyAction);
-		//todo:  add assertion
+		await this.clickAndWaitForResponseAndLoadState(data.subUrls.api.dokan.storeSupport, selector.admin.dokan.storeSupport.bulkActions.applyAction);
 	}
 
 

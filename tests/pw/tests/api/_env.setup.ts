@@ -4,7 +4,6 @@ import { endPoints } from 'utils/apiEndPoints';
 import { payloads } from 'utils/payloads';
 import { dbUtils } from 'utils/dbUtils';
 import { dbData } from 'utils/dbData';
-import { helpers } from 'utils/helpers';
 
 
 let apiUtils: ApiUtils;
@@ -16,7 +15,6 @@ setup.beforeAll(async ({ request }) => {
 
 setup.describe(' setup environment', () => {
 
-	//todo:  remove this after : replacing admin as vendor
 	setup('setup store settings @lite @pro', async () => {
 		const [response, ] = await apiUtils.put(endPoints.updateSettings, { data: payloads.setupStore });
 		expect(response.ok()).toBeTruthy();
@@ -48,7 +46,7 @@ setup.describe(' setup environment', () => {
 		await dbUtils.setDokanSettings(dbData.dokan.optionName.reverseWithdraw, dbData.dokan.reverseWithdrawSettings);
 	});
 
-	// setup('get test environment info @lite @pro', async () => { //todo:  move to global teardown
+	// setup('get test environment info @lite @pro', async () => {
 	// 	const [, summaryInfo] = await apiUtils.getSystemStatus();
 	// 	helpers.writeFile('systemInfo.json', JSON.stringify(summaryInfo));
 	// });

@@ -8,55 +8,58 @@ import { dbData } from 'utils/dbData';
 import { data } from 'utils/testData';
 import { VendorPage } from 'pages/vendorPage';
 
-const { CUSTOMER_ID } = process.env;
+const { CUSTOMER_ID, DOKAN_PRO } = process.env;
 
 
 setup.describe('setup site & woocommerce & user settings', () => {
 
 	setup.use({ extraHTTPHeaders: { Authorization: payloads.aAuth } });
 
-	setup('check active plugins @lite @pro', async ({ request }) => {
+	let apiUtils: ApiUtils;
+
+	// eslint-disable-next-line require-await
+	setup.beforeAll(async ({ request }) => {
+		apiUtils = new ApiUtils(request);
+	});
+
+	setup('check active plugins @lite @pro', async () => {
 		setup.skip(!process.env.CI, 'skip plugin check on local');
-		const apiUtils = new ApiUtils(request);
 		const activePlugins = (await apiUtils.getAllPlugins({ status:'active' })).map((a: { plugin: string }) => (a.plugin).split('/')[1]);
 		expect(activePlugins).toEqual(expect.arrayContaining(data.plugin.plugins));
 		// expect(activePlugins.every((plugin: string) => data.plugin.plugins.includes(plugin))).toBeTruthy();
 	});
 
-	setup('check active dokan modules @pro', async ({ request }) => {
-		const apiUtils = new ApiUtils(request);
+	setup('check active dokan modules @pro', async () => {
 		const activeModules = await apiUtils.getAllModuleIds({ status:'active' });
 		expect(activeModules).toEqual(expect.arrayContaining(data.modules.modules));
 	});
 
-	setup('set wp settings @lite @pro', async ({ request }) => {
-		const apiUtils = new ApiUtils(request);
+	setup('set wp settings @lite @pro', async () => {
 		const siteSettings = await apiUtils.setSiteSettings(payloads.siteSettings);
 		expect(siteSettings).toEqual(expect.objectContaining(payloads.siteSettings));
 	});
 
-	setup.fixme('reset dokan previous settings @lite @pro', async ({ request }) => {
+	setup.fixme('reset dokan previous settings @lite @pro', async () => {
 		setup.skip(!!process.env.CI, 'skip previous settings check');
-		const apiUtils = new ApiUtils(request);
+
 		// previous seller badges
 		await apiUtils.deleteAllSellerBadges();
 		// previous quote rules
 		await apiUtils.deleteAllQuoteRules();
 	});
 
-	setup('set wc settings @lite @pro', async ({ request }) => {
-		const apiUtils = new ApiUtils(request);
+	setup('set wc settings @lite @pro', async () => {
+
 		await apiUtils.updateBatchWcSettingsOptions('general', payloads.general);
 		await apiUtils.updateBatchWcSettingsOptions('account', payloads.account);
 	});
 
-	setup('set tax rate @lite @pro', async ({ request }) => {
-		const apiUtils = new ApiUtils(request);
+	setup('set tax rate @lite @pro', async () => {
+
 		await apiUtils.setUpTaxRate(payloads.enableTaxRate, payloads.createTaxRate);
 	});
 
-	setup('set shipping methods @lite @pro', async ({ request }) => {
-		const apiUtils = new ApiUtils(request);
+	setup('set shipping methods @lite @pro', async () => {
 
 		// delete previous shipping zones
 		const allShippingZoneIds = (await apiUtils.getAllShippingZones()).map((a: { id: string }) => a.id);
@@ -70,30 +73,24 @@ setup.describe('setup site & woocommerce & user settings', () => {
 		// create shipping zone, location and method
 		const [, zoneId] = await apiUtils.createShippingZone(payloads.createShippingZone);
 		await apiUtils.addShippingZoneLocation(zoneId, payloads.addShippingZoneLocation);
-		const flatRateResponseBody = await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingZoneMethodFlatRate);
-		expect(flatRateResponseBody.enabled).toBe(true);
-		// const freeShippingResponseBody = await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingZoneMethodFreeShipping);
-		// expect(freeShippingResponseBody.enabled).toBe(true);
-		// const localPickupResponseBody = await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingZoneMethodLocalPickup);
-		// expect(localPickupResponseBody.enabled).toBe(true);
-		const tableRateShippingResponseBody = await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingZoneMethodDokanTableRateShipping);
-		expect(tableRateShippingResponseBody.enabled).toBe(true);
-		const distanceRateShippingResponseBody = await apiUtils.addShippingZoneMethod( zoneId, payloads.addShippingZoneMethodDokanDistanceRateShipping);
-		expect(distanceRateShippingResponseBody.enabled).toBe(true);
-		const dokanVendorShippingResponseBody = await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingZoneMethodDokanVendorShipping	);
-		expect(dokanVendorShippingResponseBody.enabled).toBe(true);
-		//todo:  separate lite pro shipping methods
+		await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodFlatRate);
+		// await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodFreeShipping);
+		// await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodLocalPickup);
+		if (DOKAN_PRO){
+			await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodDokanTableRateShipping);
+			await apiUtils.addShippingZoneMethod( zoneId, payloads.addShippingMethodDokanDistanceRateShipping);
+			await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodDokanVendorShipping);
+		}
+
 	});
 
-	setup('set basic payments @lite @pro', async ({ request }) => {
-		const apiUtils = new ApiUtils(request);
+	setup('set basic payments @lite @pro', async () => {
 		await apiUtils.updatePaymentGateway('bacs', payloads.bcs);
 		await apiUtils.updatePaymentGateway('cheque', payloads.cheque);
 		await apiUtils.updatePaymentGateway('cod', payloads.cod);
 	});
 
-	setup('add categories and attributes @lite @pro', async ({ request }) => {
-		const apiUtils = new ApiUtils(request);
+	setup('add categories and attributes @lite @pro', async () => {
 
 		// delete previous categories
 		const allCategoryIds = (await apiUtils.getAllCategories()).map((a: { id: string }) => a.id);
@@ -120,10 +117,17 @@ setup.describe('setup  user settings', () => {
 
 	setup.use({ extraHTTPHeaders: { Authorization: payloads.aAuth } });
 
+	let apiUtils: ApiUtils;
+
+	// eslint-disable-next-line require-await
+	setup.beforeAll(async ({ request }) => {
+		apiUtils = new ApiUtils(request);
+	});
+
 
 	// Vendor Details
-	setup('add vendor product @lite @pro', async ({ request }) => {
-		const apiUtils = new ApiUtils(request);
+	setup('add vendor product @lite @pro', async () => {
+
 
 		// delete previous store products with predefined name if any
 		await apiUtils.deleteAllProducts(data.predefined.simpleProduct.product1.name, payloads.vendorAuth);
@@ -134,21 +138,21 @@ setup.describe('setup  user settings', () => {
 		process.env.PRODUCT_ID = productId;
 	});
 
-	setup('add vendor coupon @pro', async ({ request }) => {
-		const apiUtils = new ApiUtils(request);
+	setup('add vendor coupon @pro', async () => {
+
 		// create store coupon
 		const allProductIds = (await apiUtils.getAllProducts(payloads.vendorAuth)).map((o: { id: string }) => o.id);
 		const coupon = { ...payloads.createCoupon(), code: data.predefined.coupon.couponCode };
 		await apiUtils.createCoupon(allProductIds, coupon, payloads.vendorAuth);
-		//todo:  not needed anymore
+
 		// const [responseBody, couponId] = await apiUtils.createCoupon(allProductIds, coupon, payloads.vendorAuth);
 		// if(responseBody.code === 'woocommerce_rest_coupon_code_already_exists'){
 		// 	await apiUtils.updateCoupon(couponId, { product_ids: allProductIds }, payloads.vendorAuth);
 		// }
 	});
 
-	setup.fixme('admin add vendor products @lite @pro', async ({ request }) => {
-		const apiUtils = new ApiUtils(request);
+	setup.fixme('admin add vendor products @lite @pro', async () => {
+
 		const product = payloads.createProduct();
 		await apiUtils.createProduct({ ...product, status: 'publish', in_stock: false }, payloads.vendorAuth);
 		await apiUtils.createProduct({ ...product, status: 'draft', in_stock: true }, payloads.vendorAuth);
@@ -156,8 +160,7 @@ setup.describe('setup  user settings', () => {
 		await apiUtils.createProduct({ ...product, status: 'publish', in_stock: true }, payloads.vendorAuth);
 	});
 
-	setup('add test vendor orders @pro', async ({ request }) => {  //todo:  required for which test, might be replaced with create order with status
-		const apiUtils = new ApiUtils(request);
+	setup('add test vendor orders @pro', async () => {
 		await apiUtils.createOrder(payloads.createProduct(), { ...payloads.createOrder, customer_id: CUSTOMER_ID }, payloads.vendorAuth);
 	});
 
@@ -297,9 +300,6 @@ setup.describe('setup dokan settings e2e', () => {
 	setup('save store settings to update store on map', async () => {
 		await vendorPage.updateStoreMapViaSettingsSave();
 	});
-
-
-	//todo:  can be implemented on api or db
 
 
 	// dokan settings

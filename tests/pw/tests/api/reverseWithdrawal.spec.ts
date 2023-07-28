@@ -8,9 +8,6 @@ let apiUtils: ApiUtils;
 
 test.beforeAll(async ({ request }) => {
 	apiUtils = new ApiUtils(request);
-	// check reverse withdrawal payment product exists //todo: add reverse withdraw check on setup
-	// await apiUtils.getReverseWithdrawalProductId(); //todo:  failed on git action. payment product not created
-	//todo:  add create product via admin after feature merged with pro
 	await apiUtils.createOrderWithStatus(payloads.createProduct(), payloads.createOrderCod, 'wc-completed', payloads.vendorAuth);
 });
 

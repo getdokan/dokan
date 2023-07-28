@@ -32,7 +32,7 @@ export class LicensePage extends AdminPage {
 		await this.clearAndType(selector.admin.dokan.license.activateSection.licenseKeyInput, key);
 		await this.clickAndWaitForResponse(data.subUrls.backend.dokan.license, selector.admin.dokan.license.activateSection.activateLicense);
 		if(type === 'correct') {
-			//todo: 
+			//todo: add valid key scenario
 		} else {
 			await this.toContainText(selector.admin.dokan.license.errorNotice, 'Invalid License Key');
 		}

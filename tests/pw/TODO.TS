@@ -369,6 +369,13 @@ product advertisement
 	//todo:  add vendor tests
 rfq
 	//todo:  add vendor tests
+
+			//todo:  create a generic function for below scenario on base page
+			await Promise.all([
+				this.page.waitForResponse((resp) => resp.url().includes(data.subUrls.api.dokan.quotes) && resp.status() === 200),
+				this.page.waitForResponse((resp) => resp.url().includes(data.subUrls.api.dokan.products) && resp.status() === 200),
+				this.page.locator(selector.admin.dokan.requestForQuotation.quoteRules.newQuoteRule).click()
+			]);
 reports 
 	//todo:  filter by calendar
 vendor stuff
@@ -389,10 +396,20 @@ verifications
 	//todo:  add vendor tests
 	//todo: admin can approve phone verification request
 store review
-// test('customer can edit store review @pro', async ( ) => {
-// 	//todo:  need separate method or update locator, ensure previous review exits
-// 	await customer.reviewStore(data.predefined.vendorStores.vendor1, data.store);
-// });
+	// test('customer can edit store review @pro', async ( ) => {
+	// 	//todo:  need separate method or update locator, ensure previous review exits
+	// 	await customer.reviewStore(data.predefined.vendorStores.vendor1, data.store);
+	// });
+
+	//todo: delete, restore, and permanently delete can be merged into one
+
+	//todo:  fix this clear filter not works
+	// await this.goIfNotThere(data.subUrls.backend.dokan.storeReviews);
+	// const clearIsVisible = await this.isVisible(selector.admin.dokan.storeReviews.filters.filterClear);
+	// if(clearIsVisible) {
+	// 	await this.clickAndWaitForResponse(data.subUrls.api.dokan.storeReviews, selector.admin.dokan.storeReviews.filters.filterClear);
+	// }
+
 follow Store
 // test('customer can follow store on store listing @pro', async ( ) => {
 // 	await customer.followStore(data.predefined.vendorStores.vendor1, data.predefined.vendorStores.followFromStoreListing); //todo:  update parameter
@@ -417,6 +434,32 @@ stores spec
 // 	// [,, storeName] = await apiUtils.createStore(payloads.createStore());  //todo: ues different store all stores
 });
 
+stores page
+store on map
+// storeName && await this.toBeVisible(selector.customer.cStoreList.map.storeOnMap.storeOnList(storeName)); //todo:  need to update store settings via e2e to render on map for vendor1
+
+products
+	//todo:  import product
+
+
+
+
+_environmentcheck
+
+	//todo:  try to fix product advertisement product, reversewithdraw product, storemap save via api, currently e2e is used
+
+
+
+
+	setup('add test vendor orders @pro', async ({ request }) => {  //todo:  required for which test, might be replaced with create order with status
+		const apiUtils = new ApiUtils(request);
+		await apiUtils.createOrder(payloads.createProduct(), { ...payloads.createOrder, customer_id: CUSTOMER_ID }, payloads.vendorAuth);
+	});
+
+
+
+
+
 
 
 
@@ -433,5 +476,69 @@ stores spec
 test Data
 	//todo: use unique value for create and update for store categories, rfq name, rules.........baseURL..
 
-interface
+interface/
 	//todo:  interface should be one, no separate for create, update ....
+
+
+
+
+
+
+api Suite 
+
+api env
+// setup.describe(' setup environment', () => {
+
+// 	//todo:  remove this after : replacing admin as vendor
+// 	setup('setup store settings @lite @pro', async () => {
+// 		const [response, ] = await apiUtils.put(endPoints.updateSettings, { data: payloads.setupStore });
+// 		expect(response.ok()).toBeTruthy();
+// 	});
+
+
+settings 
+// test.afterAll(async () => {
+//todo:  remove after update setting cause disable selling fix
+// 	const [response, responseBody] = await apiUtils.put(endPoints.updateSettings, { data: payloads.setupStore });
+// 	expect(response.ok()).toBeTruthy();
+// 	expect(responseBody).toBeTruthy();
+// });
+
+
+refunds
+test.beforeAll(async ({ request }) => {
+	apiUtils = new ApiUtils(request);
+	[, orderResponseBody,] = await apiUtils.createOrderWithStatus(payloads.createProduct(), payloads.createOrder, 'wc-processing', payloads.vendorAuth);
+	[, refundId] = await dbUtils.createRefund(orderResponseBody);
+	//todo:  dokan get all refunds dont recognize refunded by woocommerce, find out why & try to use refund by api instead of db
+	// [, refundId] = await apiUtils.createRefund(orderId, payloads.createRefund); // via woocommerce
+});
+
+reversewithdrawal
+
+test.beforeAll(async ({ request }) => {
+	apiUtils = new ApiUtils(request);
+	// check reverse withdrawal payment product exists //todo: add reverse withdraw check on setup
+	// await apiUtils.getReverseWithdrawalProductId(); //todo:  failed on git action. payment product not created
+	//todo:  add create product via admin after feature merged with pro
+	await apiUtils.createOrderWithStatus(payloads.createProduct(), payloads.createOrderCod, 'wc-completed', payloads.vendorAuth);
+});
+
+dbquery
+
+	// execute db query
+	async dbQuery(query: string): Promise<any> {
+		const dbContext: DbContext = new DbContext(mySql);
+		return await dbContext.inTransactionAsync(async (dbContext) => { //todo:  grab connection failed actual reason, ambiguous error message
+			try{
+				const result = await dbContext.executeAsync(query);
+				const res = JSON.parse(JSON.stringify(result));
+				expect(res).not.toHaveProperty('errno'); //todo:  ADD Actual ASSERT DB_QUERY IS SUCCESSES, update it
+				return res;
+			}
+			catch(err: unknown){
+				// console.log('dbError:', err);
+				return err;
+			}
+		});
+	},

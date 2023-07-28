@@ -23,6 +23,7 @@ export const data = {
 		customerAuthFile:'playwright/.auth/customerStorageState.json'
 	},
 
+
 	// keyboard key
 	key: {
 		arrowDown: 'ArrowDown',

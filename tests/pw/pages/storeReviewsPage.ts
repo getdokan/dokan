@@ -40,14 +40,7 @@ export class StoreReviewsPage extends AdminPage {
 
 	// filter store reviews
 	async filterStoreReviews(vendorName: string){
-		// await this.clickIfVisible(selector.admin.dokan.storeReviews.filters.filterClear);
 		await this.goto(data.subUrls.backend.dokan.storeReviews);
-		//todo:  fix this clear filter not works
-		// await this.goIfNotThere(data.subUrls.backend.dokan.storeReviews);
-		// const clearIsVisible = await this.isVisible(selector.admin.dokan.storeReviews.filters.filterClear);
-		// if(clearIsVisible) {
-		// 	await this.clickAndWaitForResponse(data.subUrls.api.dokan.storeReviews, selector.admin.dokan.storeReviews.filters.filterClear);
-		// }
 
 		//filter by vendor
 		await this.click(selector.admin.dokan.storeReviews.filters.filterByVendor);
@@ -59,7 +52,6 @@ export class StoreReviewsPage extends AdminPage {
 	// edit store review
 	async editStoreReview(review: storeReview){
 		await this.goto(data.subUrls.backend.dokan.storeReviews);
-		// await this.goIfNotThere(data.subUrls.backend.dokan.storeReviews);
 		await this.hover(selector.admin.dokan.storeReviews.storeReviewFirstCell);
 		await this.click(selector.admin.dokan.storeReviews.storeReviewEdit);
 
@@ -78,7 +70,6 @@ export class StoreReviewsPage extends AdminPage {
 		await this.clickAndWaitForResponseAndLoadState(data.subUrls.api.dokan.storeReviews, selector.admin.dokan.storeReviews.storeReviewDelete);
 	}
 
-	//todo: delete, restore, and permanently delete can be merged into one
 
 	// restore store review
 	async restoreStoreReview(){

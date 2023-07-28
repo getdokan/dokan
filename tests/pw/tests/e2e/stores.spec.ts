@@ -18,7 +18,7 @@ test.describe('Stores test', () => {
 		aPage = await adminContext.newPage();
 		admin = new StoresPage(aPage);
 		// apiUtils = new ApiUtils(request);
-		// [,, storeName] = await apiUtils.createStore(payloads.createStore()); 
+		// [,, storeName] = await apiUtils.createStore(payloads.createStore());
 	});
 
 

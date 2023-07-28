@@ -12,13 +12,6 @@ test.beforeAll(async ({ request }) => {
 });
 
 
-// test.afterAll(async () => {
-//todo:  remove after update setting cause disable selling fix
-// 	const [response, responseBody] = await apiUtils.put(endPoints.updateSettings, { data: payloads.setupStore });
-// 	expect(response.ok()).toBeTruthy();
-// 	expect(responseBody).toBeTruthy();
-// });
-
 test.describe('new settings api test', () => {
 
 	test('get store settings @v2 @lite @pro', async () => {

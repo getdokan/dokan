@@ -584,27 +584,27 @@ export const payloads = {
 		},
 	],
 
-	addShippingZoneMethodFlatRate: {
+	addShippingMethodFlatRate: {
 		method_id: 'flat_rate',
 	},
 
-	addShippingZoneMethodFreeShipping: {
+	addShippingMethodFreeShipping: {
 		method_id: 'free_shipping',
 	},
 
-	addShippingZoneMethodLocalPickup: {
+	addShippingMethodLocalPickup: {
 		method_id: 'local_pickup',
 	},
 
-	addShippingZoneMethodDokanTableRateShipping: {
+	addShippingMethodDokanTableRateShipping: {
 		method_id: 'dokan_table_rate_shipping',
 	},
 
-	addShippingZoneMethodDokanDistanceRateShipping: {
+	addShippingMethodDokanDistanceRateShipping: {
 		method_id: 'dokan_distance_rate_shipping',
 	},
 
-	addShippingZoneMethodDokanVendorShipping: {
+	addShippingMethodDokanVendorShipping: {
 		method_id: 'dokan_vendor_shipping',
 	},
 
