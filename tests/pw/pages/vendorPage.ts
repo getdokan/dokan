@@ -353,6 +353,12 @@ export class VendorPage extends BasePage {
 
 	// vendor settings
 
+	async updateStoreMapViaSettingsSave() {
+		await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsStore);
+		await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.vendor.vStoreSettings.updateSettings);
+		await this.toContainText(selector.vendor.vStoreSettings.updateSettingsSuccessMessage, 'Your information has been saved successfully');
+	}
+
 	// vendor set store settings
 	async setStoreSettings(vendorInfo: any): Promise<void> {
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsStore);
@@ -369,7 +375,7 @@ export class VendorPage extends BasePage {
 		await this.storeSupportSettings(vendorInfo.supportButtonText);
 		await this.minMaxSettings(vendorInfo.minMax);
 		// update settings
-		await this.click(selector.vendor.vStoreSettings.updateSettings);
+		await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.vendor.vStoreSettings.updateSettings);
 		await this.toContainText(selector.vendor.vStoreSettings.updateSettingsSuccessMessage, vendorInfo.storeSettingsSaveSuccessMessage);
 
 	}
@@ -559,7 +565,7 @@ export class VendorPage extends BasePage {
 		await this.selectByValue(selector.vendor.vStoreSettings.country, vendorInfo.countrySelectValue);
 		await this.selectByValue(selector.vendor.vStoreSettings.state, vendorInfo.stateSelectValue);
 		// update settings
-		await this.click(selector.vendor.vStoreSettings.updateSettings);
+		await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.vendor.vStoreSettings.updateSettings);
 		await this.toContainText(selector.vendor.vStoreSettings.updateSettingsSuccessMessage, vendorInfo.storeSettingsSaveSuccessMessage);
 	}
 

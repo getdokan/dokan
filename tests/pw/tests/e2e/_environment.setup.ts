@@ -6,6 +6,7 @@ import { payloads } from 'utils/payloads';
 import { dbUtils } from 'utils/dbUtils';
 import { dbData } from 'utils/dbData';
 import { data } from 'utils/testData';
+import { VendorPage } from 'pages/vendorPage';
 
 const { CUSTOMER_ID } = process.env;
 
@@ -146,14 +147,14 @@ setup.describe('setup  user settings', () => {
 		// }
 	});
 
-	// setup.skip('admin add vendor products @lite @pro', async ({ request })=> {
-	// 	const apiUtils = new ApiUtils(request);
-	// 	const product = payloads.createProduct();
-	// 	await apiUtils.createProduct({ ...product, status: 'publish', in_stock: false }, payloads.vendorAuth);
-	// 	await apiUtils.createProduct({ ...product, status: 'draft', in_stock: true }, payloads.vendorAuth);
-	// 	await apiUtils.createProduct({ ...product, status: 'pending', in_stock: true }, payloads.vendorAuth);
-	// 	await apiUtils.createProduct({ ...product, status: 'publish', in_stock: true }, payloads.vendorAuth);
-	// });
+	setup.fixme('admin add vendor products @lite @pro', async ({ request }) => {
+		const apiUtils = new ApiUtils(request);
+		const product = payloads.createProduct();
+		await apiUtils.createProduct({ ...product, status: 'publish', in_stock: false }, payloads.vendorAuth);
+		await apiUtils.createProduct({ ...product, status: 'draft', in_stock: true }, payloads.vendorAuth);
+		await apiUtils.createProduct({ ...product, status: 'pending', in_stock: true }, payloads.vendorAuth);
+		await apiUtils.createProduct({ ...product, status: 'publish', in_stock: true }, payloads.vendorAuth);
+	});
 
 	setup('add test vendor orders @pro', async ({ request }) => {  //todo:  required for which test, might be replaced with create order with status
 		const apiUtils = new ApiUtils(request);
@@ -249,7 +250,8 @@ setup.describe('setup dokan settings e2e', () => {
 
 	let productAdvertisingPage: ProductAdvertisingPage;
 	let reverseWithdrawsPage: ReverseWithdrawsPage;
-	let aPage: Page;
+	let vendorPage: VendorPage;
+	let aPage: Page, vPage: Page;
 	let apiUtils: ApiUtils;
 
 
@@ -258,12 +260,19 @@ setup.describe('setup dokan settings e2e', () => {
 		aPage = await adminContext.newPage();
 		productAdvertisingPage = new ProductAdvertisingPage(aPage);
 		reverseWithdrawsPage = new ReverseWithdrawsPage(aPage);
+
+		const vendorContext = await browser.newContext({ storageState: data.auth.vendorAuthFile });
+		vPage = await vendorContext.newPage();
+		vendorPage = new VendorPage(vPage);
+
 		apiUtils = new ApiUtils(request);
+
 	});
 
 
 	setup.afterAll(async () => {
 		await aPage.close();
+		await vPage.close();
 	});
 
 
@@ -283,6 +292,10 @@ setup.describe('setup dokan settings e2e', () => {
 	setup('reverse Withdraw payment product exists @lite @pro', async ( ) => {
 		const product = await apiUtils.productExistsOrNot('Reverse Withdrawal Payment',  payloads.adminAuth);
 		expect(product).toBeTruthy();
+	});
+
+	setup('save store settings to update store on map', async () => {
+		await vendorPage.updateStoreMapViaSettingsSave();
 	});
 
 

@@ -17,7 +17,7 @@ test.describe('Stores test', () => {
 		aPage = await adminContext.newPage();
 		admin = new StoresPage(aPage);
 		// apiUtils = new ApiUtils(request);
-		// [, sellerId] = await apiUtils.createStore(payloads.createStore()); //return seller name  //todo: user created seller instead of vendor1
+		// [, sellerId] = await apiUtils.createStore(payloads.createStore()); //return seller name  //todo: use created seller instead of vendor1
 	});
 
 

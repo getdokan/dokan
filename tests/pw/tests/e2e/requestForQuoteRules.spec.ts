@@ -56,6 +56,4 @@ test.describe('Request for quotation test', () => {
 		await admin.quoteRulesBulkAction('trash');
 	});
 
-	//todo:  add vendor tests
-
 });

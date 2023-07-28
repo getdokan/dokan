@@ -48,17 +48,17 @@ test.describe('Product functionality test', () => {
 		await admin.addSimpleProduct(data.product.simple);
 	});
 
-	// test.skip('admin can add variable product @pro', async ( )=> {
-	// 	await admin.addVariableProduct(data.product.variable);
-	// });
+	test.fixme('admin can add variable product @pro', async ( ) => {
+		await admin.addVariableProduct(data.product.variable);
+	});
 
 	test('admin can add simple subscription  @pro', async ( ) => {
 		await admin.addSimpleSubscription(data.product.simpleSubscription);
 	});
 
-	// test.skip('admin can add variable subscription @pro', async ( )=> {
-	// 	await admin.addVariableSubscription(data.product.variableSubscription);
-	// });
+	test.fixme('admin can add variable subscription @pro', async ( ) => {
+		// await admin.addVariableSubscription(data.product.variableSubscription);
+	});
 
 	test('admin can add external product @lite @pro', async ( ) => {
 		await admin.addExternalProduct(data.product.external);
@@ -100,9 +100,9 @@ test.describe('Product functionality test', () => {
 		await vendor.filterProducts('by-category', 'Uncategorized');
 	});
 
-	// test('vendor can filter products by type @lite @pro', async ( ) => { //todo:  dokan issue not fixed yet
-	// 	await vendor.filterProducts('by-other', 'simple');
-	// });
+	test.skip('vendor can filter products by type @lite @pro', async ( ) => { //todo:  dokan issue not fixed yet
+		await vendor.filterProducts('by-other', 'simple');
+	});
 
 	test('vendor can filter products by other @pro', async ( ) => {
 		await vendor.filterProducts('by-other', 'featured');

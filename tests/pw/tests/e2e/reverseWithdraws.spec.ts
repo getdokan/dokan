@@ -43,8 +43,4 @@ test.describe.skip('Reverse withdraw test', () => {
 		// await admin.addReverseWithdrawal(data.reverseWithdraw);
 	});
 
-
-	//todo: filter reverse withdraws by calendar
-	//todo:  add vendor tests
-
 });

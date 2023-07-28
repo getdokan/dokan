@@ -9,7 +9,8 @@ test.describe('Vendors test', () => {
 
 
 	let admin: StoreCategoriesPage;
-	let aPage: Page;
+	let vendor: StoreCategoriesPage;
+	let aPage: Page, vPage: Page;
 	let apiUtils: ApiUtils;
 
 
@@ -17,12 +18,18 @@ test.describe('Vendors test', () => {
 		const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
 		aPage = await adminContext.newPage();
 		admin = new StoreCategoriesPage(aPage);
+
+		const vendorContext = await browser.newContext({ storageState: data.auth.vendorAuthFile });
+		vPage = await vendorContext.newPage();
+		vendor = new StoreCategoriesPage(vPage);
+
 		apiUtils = new ApiUtils(request);
 	});
 
 
 	test.afterAll(async () => {
 		await aPage.close();
+		await vPage.close();
 	});
 
 
@@ -54,11 +61,9 @@ test.describe('Vendors test', () => {
 		await admin.updateStoreCategory(data.storeCategory.create.name, 'delete');
 	});
 
-	//todo: add vendor tests
-
-	// test('vendor can edit own store category @pro', async ( ) => {
-	// 	const[,, categoryName] = await apiUtils.createStoreCategory(payloads.createStoreCategory());
-	// 	await vendor.editStoreCategory(categoryName);
-	// });
+	test('vendor can update own store category @pro', async ( ) => {
+		const[,, categoryName] = await apiUtils.createStoreCategory(payloads.createStoreCategory(), payloads.adminAuth);
+		await vendor.vendorUpdateStoreCategory(categoryName);
+	});
 
 });

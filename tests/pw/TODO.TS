@@ -328,3 +328,62 @@ const config = {
 
 //todo:  remove every eslint comment before push
 //todo: replace every goto with goIfNotThere
+
+test.beforeAll(async ({ request }) => {
+	apiUtils = new ApiUtils(request);
+	// delete previous badges
+//todo:	await apiUtils.deleteAllSellerBadges(); //todo:  apply this type of trick where possible
+//todo: clear data in beforeAll where necessary
+
+
+
+
+
+
+
+
+
+// tests to write
+
+Store support
+	//todo: filter store support by calendar
+	//todo:  ask for get support on order received page
+
+wholesale setting options tests
+	//todo:  customer need or don't need approval : re-modify above two tests
+	//todo:  only customer can see wholesale price
+	//todo:  all users can see wholesale price
+	//todo:  customer can purchase product at wholesale price
+	//todo:  vendor can see Wholesale Price on Shop Archive
+	//todo:  vendor can create wholesale product  via api
+
+search
+	//todo add new tests or multiple entry in same test for all search parameter, i.e : by-customer, by-product, but-store,..
+refunds
+ 	//todo:  add separate test or separate entry in same test for all search parameter
+	//todo:  add vendor tests
+product advertisement
+    //todo:  add search product advertisement by order
+	//todo:  filter by calendar
+	//todo:  add tests for every setting options
+	//todo:  add vendor tests
+rfq
+	//todo:  add vendor tests
+reports 
+	//todo:  filter by calendar
+vendor stuff
+	//todo:  add tests for all permission group
+	//todo : add tests for email template
+reverse withdraw
+
+	//todo: filter reverse withdraws by calendar
+	//todo:  add vendor tests
+
+admin settings
+	//todo:  add more set settings live search, sms gateway, seller verification, email verification
+
+test Data
+	//todo: use unique value for create and update for store catefories, rfq name, rules.........baseURL..
+
+interface
+	//todo:  interface should be one, no separate for create, update ....

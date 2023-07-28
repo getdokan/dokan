@@ -88,6 +88,19 @@ export class StoreCategoriesPage extends AdminPage {
 
 		}
 
+	}
+
+
+	// vendor
+
+	//vendor update store category
+	async vendorUpdateStoreCategory(category: string){
+		await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsStore);
+		await this.clearAndType(selector.vendor.vStoreSettings.storeCategories.storeCategoriesInput, category);
+		await this.toContainText(selector.vendor.vStoreSettings.storeCategories.result, category);
+		await this.press(data.key.enter);
+		await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.vendor.vStoreSettings.updateSettings);
+		await this.toContainText(selector.vendor.vStoreSettings.updateSettingsSuccessMessage, 'Your information has been saved successfully');
 
 	}
 

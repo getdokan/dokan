@@ -37,7 +37,7 @@ test.describe('refunds test', () => {
 
 	test('admin can search refund requests @pro', async ( ) => {
 		await admin.searchRefundRequests(orderId);
-		// await admin.searchRefundRequests(data.predefined.vendorStores.vendor1); //todo:  add separate test or separate entry in same test
+		// await admin.searchRefundRequests(data.predefined.vendorStores.vendor1);
 	});
 
 	test('admin can approve refund request @pro', async ( ) => {
@@ -56,6 +56,5 @@ test.describe('refunds test', () => {
 		await admin.refundRequestsBulkAction('completed');
 	});
 
-	//todo:  add vendor tests
 
 });

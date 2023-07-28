@@ -4496,6 +4496,13 @@ export const selector = {
 			phoneNo: '#setting_phone',
 			multipleLocation: '#multiple-store-location',
 			locationName: '#store-location-name-input',
+
+			// store categories
+			storeCategories:{
+				storeCategoriesInput: '//label[normalize-space()="Store Categories"]/..//input[@class="select2-search__field"]',
+				result: '.select2-results__option.select2-results__option--highlighted',
+			},
+
 			// Address
 			addLocation: '#show-add-store-location-section-btn',
 			editLocation: '.store-pickup-location-edit-btn',
@@ -4585,6 +4592,7 @@ export const selector = {
 			alreadySelectedOption: (option: string) => `//li[@class="select2-selection__choice" and @title="${option}"]`,
 
 			// Update Settings
+			updateSettingsTop: 'button.dokan-update-setting-top-button',
 			updateSettings: '//input[@name="dokan_update_store_settings"]',
 			updateSettingsSuccessMessage: '.dokan-alert.dokan-alert-success p',
 		},
