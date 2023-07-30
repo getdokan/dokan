@@ -163,19 +163,29 @@ class Hooks {
             wp_send_json_error( $validate_request->get_error_message(), $validate_request->get_error_code() );
         }
 
-        $data = [
-            'user_id' => $user_id,
-            'amount'  => $amount,
-            'status'  => dokan()->withdraw->get_status_code( 'pending' ),
-            'method'  => $method,
-            'ip'      => dokan_get_client_ip(),
-            'note'    => '',
-        ];
+        $withdraw = new Withdraw();
+        $all_withdraw_charges = dokan_withdraw_get_method_charges();
+        $charge_data = $all_withdraw_charges[ $method ];
 
-        $withdraw = dokan()->withdraw->create( $data );
+        $withdraw
+            ->set_user_id( $user_id )
+            ->set_amount( $amount )
+            ->set_date( current_time( 'mysql' ) )
+            ->set_status( dokan()->withdraw->get_status_code( 'pending' ) )
+            ->set_method( $method )
+            ->set_ip( dokan_get_client_ip() )
+            ->set_note( '' )
+            ->set_charge_data( $charge_data )
+            ->calculate_charge();
 
-        if ( is_wp_error( $withdraw ) ) {
-            wp_send_json_error( $withdraw->get_error_message(), $withdraw->get_error_code() );
+        if ( $withdraw->get_receivable_amount() < 0 ) {
+            wp_send_json_error( esc_html__( 'Withdraw amount is less then the withdraw charge.', 'dokan-lite' ) );
+        }
+
+        $result = $withdraw->save();
+
+        if ( is_wp_error( $result ) ) {
+            wp_send_json_error( $result->get_error_message(), $result->get_error_code() );
         }
 
         do_action( 'dokan_after_withdraw_request', $user_id, $amount, $method );
@@ -214,6 +224,13 @@ class Hooks {
         wp_send_json_success( esc_html__( 'Default method update successful.', 'dokan-lite' ) );
     }
 
+    /**
+     * Get withdraw method charge.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
     public function ajax_handle_get_withdraw_method_charge() {
         if ( ! isset( $_POST['dokan_withdraw_charge_nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['dokan_withdraw_charge_nonce'] ) ), 'dokan_withdraw_charge' ) ) {
             wp_send_json_error( esc_html__( 'Are you cheating?', 'dokan-lite' ) );
@@ -225,7 +242,7 @@ class Hooks {
         }
 
         if ( empty( $_POST['amount'] ) ) {
-            wp_send_json_error( esc_html__( 'Withdraw method is required.', 'dokan-lite' ) );
+            wp_send_json_error( esc_html__( 'Withdraw amount is required.', 'dokan-lite' ) );
         }
 
         if ( empty( sanitize_text_field( wp_unslash( $_POST['method'] ) ) ) || ! array_key_exists( sanitize_text_field( wp_unslash( $_POST['method'] ) ), dokan_withdraw_get_methods() ) ) {
@@ -240,21 +257,17 @@ class Hooks {
         $withdraw->set_method( $method )
                 ->set_amount( $amount )
                 ->set_charge_data( $all_charges[ $withdraw->get_method() ] )
-                ->calculate_charge()
-                ->get_charge();
-
-        $charge = $withdraw->get_charge();
-        $receivable = $withdraw->get_receivable_amount();
+                ->calculate_charge();
 
         $response = [
             'plain' => [
-                'charge'      => $charge,
-                'receivable'  => $receivable,
+                'charge'      => $withdraw->get_charge(),
+                'receivable'  => $withdraw->get_receivable_amount(),
                 'charge_data' => $all_charges[ $withdraw->get_method() ],
             ],
             'html'  => [
-                'charge'      => wc_price( $charge ),
-                'receivable'  => wc_price( $receivable ),
+                'charge'      => wc_price( $withdraw->get_charge() ),
+                'receivable'  => wc_price( $withdraw->get_receivable_amount() ),
                 'charge_data' => [
                     'fixed'      => wc_price( $all_charges[ $withdraw->get_method() ]['fixed'] ),
                     'percentage' => $all_charges[ $withdraw->get_method() ]['percentage'] . '%',

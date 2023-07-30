@@ -1,5 +1,7 @@
 <?php
 
+use WeDevs\Dokan\Withdraw\Withdraw;
+
 class WithdrawChargeTest extends WP_UnitTestCase {
 
     public function set_up() {
@@ -20,5 +22,93 @@ class WithdrawChargeTest extends WP_UnitTestCase {
         foreach ( array_keys( $all_methods ) as $method ) {
             $this->assertArrayHasKey( $method, $charges );
         }
+    }
+
+    public function test_that_all_needed_method_exists_for_wothdraw_charge() {
+        $withdraw = new Withdraw();
+
+        $this->assertTrue( method_exists( $withdraw, 'set_method' ) );
+        $this->assertTrue( method_exists( $withdraw, 'set_amount' ) );
+        $this->assertTrue( method_exists( $withdraw, 'set_charge' ) );
+        $this->assertTrue( method_exists( $withdraw, 'set_charge_data' ) );
+        $this->assertTrue( method_exists( $withdraw, 'calculate_charge' ) );
+        $this->assertTrue( method_exists( $withdraw, 'get_charge' ) );
+    }
+
+    public function test_that_we_can_set_and_get_charge_data() {
+        $withdraw = new Withdraw();
+
+        $charge_data = [
+            'fixed' => 0,
+            'percentage' => 10,
+        ];
+
+        $withdraw->set_charge_data( $charge_data );
+
+        $this->assertEquals( $charge_data, $withdraw->get_charge_data() );
+    }
+
+    public function charge_data_provider() {
+        return [
+            [
+                [
+                    'amount' => 100,
+                    'method' => 'paypal',
+                    'charge_data' => [
+                        'fixed' => 10,
+                        'percentage' => 10,
+                    ]
+                ],
+                20,
+            ],
+            [
+                [
+                    'amount' => 200,
+                    'method' => 'skrill',
+                    'charge_data' => [
+                        'fixed' => '',
+                        'percentage' => 20,
+                    ]
+                ],
+                40,
+            ],
+            [
+                [
+                    'amount' => 1250,
+                    'method' => 'dokan_custom',
+                    'charge_data' => [
+                        'fixed' => 5,
+                        'percentage' => 32,
+                    ]
+                ],
+                405,
+            ],
+            [
+                [
+                    'amount' => 1250,
+                    'method' => 'stripe',
+                    'charge_data' => [
+                        'fixed' => 50,
+                        'percentage' => '',
+                    ]
+                ],
+                50,
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider charge_data_provider
+     */
+    public function test_that_we_can_calculate_and_get_withdraw_charge_receivable( $input, $expected ) {
+        $withdraw = new Withdraw();
+        $amount = $input['amount'];
+        $method = $input['method'];
+        $charge_data = $input['charge_data'];
+
+        $withdraw->set_amount( $amount )->set_method( $method )->set_charge_data( $charge_data )->calculate_charge();
+
+        $this->assertEquals( $expected, $withdraw->get_charge(), 'Charge is' . $withdraw->get_charge() );
+        $this->assertEquals( $amount - $expected, $amount - $withdraw->get_charge() );
     }
 }

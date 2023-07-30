@@ -272,18 +272,11 @@
                     amount: withdrawAmount,
                 },
                 ( response ) => {
-                    Dokan_Withdraw.showWithdrawChargeHtml(
-                        response.data ?? {}
-                    );
+                  let data = response.data ? response.data : {};
+                    Dokan_Withdraw.showWithdrawChargeHtml( data );
+
+                    $( '#dokan-withdraw-request-submit' ).attr( 'disabled', ! response.success );
                 }
-            );
-
-            return;
-
-            Dokan_Withdraw.showWithdrawChargeHtml(
-                chargeText,
-                chargeAmount,
-                withdrawAmount
             );
         },
 
@@ -291,10 +284,7 @@
             let chargeSection = $( '#dokan-withdraw-charge-section' );
             let revivableSection = $( '#dokan-withdraw-revivable-section' );
 
-            if (
-                ! chargeData?.plain?.charge ||
-                0 > chargeData?.plain?.receivable
-            ) {
+            if ( ! chargeData.plain || ! chargeData.plain.charge ) {
                 chargeSection.hide();
                 revivableSection.hide();
 
@@ -303,14 +293,14 @@
 
             let chargeText = '';
 
-            if ( chargeData.plain.charge_data.fixed ) {
+            if ( chargeData.plain.charge_data && chargeData.plain.charge_data.fixed ) {
                 chargeText += `${ chargeData.html.charge_data.fixed }`;
             }
 
-            if ( chargeData.plain.charge_data.percentage ) {
+            if ( chargeData.plain.charge_data && chargeData.plain.charge_data.percentage ) {
                 chargeText += chargeText ? ' + ' : '';
                 chargeText += `${ chargeData.html.charge_data.percentage }`;
-                chargeText += ` = ${ chargeData.html.charge ?? '' }`;
+                chargeText += ` = ${ chargeData.html.charge }`;
             }
 
             $( '#dokan-withdraw-charge-section-text' ).html( chargeText );
