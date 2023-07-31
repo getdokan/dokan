@@ -1,44 +1,35 @@
-;(($) => {
+( ( $ ) => {
     const Dokan_Withdraw = {
         init: () => {
-            $( '#dokan-request-withdraw-button' ).on( 'click', ( e ) => {
+            $('#dokan-request-withdraw-button').on( 'click', (e) => {
                 e.preventDefault();
                 Dokan_Withdraw.openRequestWithdrawWindow();
             } );
 
-            $( '.dokan-withdraw-make-default-button' ).on( 'click', ( e ) => {
+            $('.dokan-withdraw-make-default-button').on( 'click', (e) => {
                 e.preventDefault();
                 Dokan_Withdraw.makeDefault( e );
             } );
 
-            $( '#dokan-withdraw-request-submit' ).on( 'click', ( e ) => {
+            $('#dokan-withdraw-request-submit').on( 'click', (e) => {
                 Dokan_Withdraw.handleWithdrawRequest( e );
             } );
 
-            $( '#dokan-withdraw-display-schedule-popup' ).on(
-                'click',
-                ( e ) => {
+            $('#dokan-withdraw-display-schedule-popup').on( 'click', (e) => {
                     Dokan_Withdraw.opensScheduleWindow( e );
-                }
-            );
+            } );
 
-            $( '#dokan-withdraw-schedule-request-submit' ).on(
-                'click',
-                ( e ) => {
+            $('#dokan-withdraw-schedule-request-submit').on( 'click', ( e ) => {
                     Dokan_Withdraw.handleScheduleChangeRequest( e );
-                }
-            );
+            } );
 
-            $( "input[name='withdraw-schedule']" ).on( 'change', ( e ) => {
+            $("input[name='withdraw-schedule']").on( 'change', (e) => {
                 Dokan_Withdraw.handleScheduleChange( e );
             } );
 
-            $( "[name='withdraw_method'][id='withdraw-method']" ).on(
-                'change',
-                ( e ) => {
+            $( "[name='withdraw_method'][id='withdraw-method']" ).on( 'change', ( e ) => {
                     Dokan_Withdraw.calculateWithdrawCharges();
-                }
-            );
+            } );
 
             $( 'input#withdraw-amount' ).on( 'keyup', Dokan_Withdraw.debounce( Dokan_Withdraw.calculateWithdrawCharges, 500 ) );
         },
@@ -61,10 +52,10 @@
         openRequestWithdrawWindow: () => {
             const withdrawTemplate = wp.template( 'withdraw-request-popup' ),
                 modal = $( '#dokan-withdraw-request-popup' ).iziModal( {
-                    width: 690,
+                    width       : 690,
                     overlayColor: 'rgba(0, 0, 0, 0.8)',
-                    headerColor: dokan.modal_header_color,
-                    onOpening: function ( modal ) {
+                    headerColor : dokan.modal_header_color,
+                    onOpening   : function ( modal ) {
                         Dokan_Withdraw.calculateWithdrawCharges();
                     },
                 } );
@@ -77,9 +68,9 @@
         opensScheduleWindow: () => {
             const scheduleTemplate = wp.template( 'withdraw-schedule-popup' ),
                 modal = $( '#dokan-withdraw-schedule-popup' ).iziModal( {
-                    width: 690,
+                    width       : 690,
                     overlayColor: 'rgba(0, 0, 0, 0.8)',
-                    headerColor: dokan.modal_header_color,
+                    headerColor : dokan.modal_header_color,
                 } );
 
             modal.iziModal( 'setContent', scheduleTemplate().trim() );
@@ -88,16 +79,16 @@
             Dokan_Withdraw.init();
         },
         makeDefault: ( e ) => {
-            const button = $( e.target );
+            const button      = $( e.target );
             const paymentArea = $( '#dokan-withdraw-payment-method-list' );
 
-            paymentArea.block( {
+            paymentArea.block({
                 message: null,
                 overlayCSS: {
                     background: '#fff',
-                    opacity: 0.6,
-                },
-            } );
+                    opacity: 0.6
+                }
+            });
 
             $.post(
                 dokan.ajaxurl,
@@ -135,17 +126,17 @@
         handleWithdrawRequest: ( e ) => {
             e.preventDefault();
             const amount = $( 'input#withdraw-amount' ).val();
-            const nonce = $( 'input#dokan_withdraw_nonce' ).val();
-            const form = $( '#withdraw-request-popup' );
+            const nonce  = $( 'input#dokan_withdraw_nonce' ).val();
+            const form   = $( '#withdraw-request-popup' );
             const method = $( '#withdraw-method' ).val();
 
-            form.block( {
+            form.block({
                 message: null,
                 overlayCSS: {
                     background: '#fff',
-                    opacity: 0.6,
-                },
-            } );
+                    opacity: 0.6
+                }
+            });
 
             $.post(
                 dokan.ajaxurl,
@@ -272,10 +263,13 @@
                     amount: withdrawAmount,
                 },
                 ( response ) => {
-                  let data = response.data ? response.data : {};
+                    let data = response.data ? response.data : {};
                     Dokan_Withdraw.showWithdrawChargeHtml( data );
 
-                    $( '#dokan-withdraw-request-submit' ).attr( 'disabled', ! response.success );
+                    $( '#dokan-withdraw-request-submit' ).attr(
+                        'disabled',
+                        ! response.success
+                    );
                 }
             );
         },
@@ -293,11 +287,17 @@
 
             let chargeText = '';
 
-            if ( chargeData.plain.charge_data && chargeData.plain.charge_data.fixed ) {
+            if (
+                chargeData.plain.charge_data &&
+                chargeData.plain.charge_data.fixed
+            ) {
                 chargeText += `${ chargeData.html.charge_data.fixed }`;
             }
 
-            if ( chargeData.plain.charge_data && chargeData.plain.charge_data.percentage ) {
+            if (
+                chargeData.plain.charge_data &&
+                chargeData.plain.charge_data.percentage
+            ) {
                 chargeText += chargeText ? ' + ' : '';
                 chargeText += `${ chargeData.html.charge_data.percentage }`;
                 chargeText += ` = ${ chargeData.html.charge }`;
@@ -314,7 +314,7 @@
         },
     };
 
-    $(document).ready(function() {
+    $( document ).ready( function () {
         Dokan_Withdraw.init();
-    });
-})(jQuery);
+    } );
+} )( jQuery );
