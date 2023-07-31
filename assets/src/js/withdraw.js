@@ -155,12 +155,12 @@
                             showConfirmButton: false,
                             timer: 2000,
                             timerProgressBar: true,
-                            didOpen: ( toast ) => {
+                            didOpen: (toast) => {
                               setTimeout( function () {
                                 form.unblock();
                                 window.location.reload();
                               }, 2000);
-                            },
+                            }
                         } );
                     } else {
                         dokan_sweetalert( '', {
@@ -175,7 +175,7 @@
         handleScheduleChangeRequest: ( e ) => {
             e.preventDefault();
             const schedule = $( "input[name='withdraw-schedule']:checked").val();
-            const nonce    = $( '#dokan-withdraw-schedule-request-submit' ).data('security');
+            const nonce    = $( '#dokan-withdraw-schedule-request-submit').data('security');
             const form     = $( '#withdraw-schedule-popup' );
             const reserve  = $( '#withdraw-remaining-amount' ).val();
             const minimum  = $( '#minimum-withdraw-amount' ).val();
@@ -222,8 +222,8 @@
             );
         },
         handleScheduleChange: (e) => {
-          const nextDate = $(e.target).data('next-schedule');
-          $( '#dokan-withdraw-next-scheduled-date').html(nextDate);
+            const nextDate = $(e.target).data('next-schedule');
+            $( '#dokan-withdraw-next-scheduled-date').html(nextDate);
         },
         calculateWithdrawCharges: () => {
             if (
