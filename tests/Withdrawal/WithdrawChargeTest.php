@@ -4,14 +4,29 @@ use WeDevs\Dokan\Withdraw\Withdraw;
 
 class WithdrawChargeTest extends WP_UnitTestCase {
 
+    /**
+     * Set up
+     *
+     * @return void
+     */
     public function set_up() {
         parent::set_up();
     }
 
+    /**
+     * Test get all charges function exists.
+     *
+     * @return void
+     */
     public function test_get_method_charges_function_exists() {
         $this->assertIsCallable( 'dokan_withdraw_get_method_charges' );
     }
 
+    /**
+     * Test we can get all withdraw charges data.
+     *
+     * @return void
+     */
     public function test_that_we_can_get_withdraw_charges() {
         $all_methods = dokan_withdraw_get_methods();
         $charges = dokan_withdraw_get_method_charges();
@@ -24,6 +39,11 @@ class WithdrawChargeTest extends WP_UnitTestCase {
         }
     }
 
+    /**
+     * Check all withdraw charge related methods exists in WeDevs\Dokan\Withdraw\Withdraw class
+     *
+     * @return void
+     */
     public function test_that_all_needed_method_exists_for_wothdraw_charge() {
         $withdraw = new Withdraw();
 
@@ -35,6 +55,11 @@ class WithdrawChargeTest extends WP_UnitTestCase {
         $this->assertTrue( method_exists( $withdraw, 'get_charge' ) );
     }
 
+    /**
+     * Testing for set and get charge data in WeDevs\Dokan\Withdraw\Withdraw class.
+     *
+     * @return void
+     */
     public function test_that_we_can_set_and_get_charge_data() {
         $withdraw = new Withdraw();
 
@@ -48,6 +73,11 @@ class WithdrawChargeTest extends WP_UnitTestCase {
         $this->assertEquals( $charge_data, $withdraw->get_charge_data() );
     }
 
+    /**
+     * Withdraw charge data provider.
+     *
+     * @return array[]
+     */
     public function charge_data_provider() {
         return [
             [
@@ -98,6 +128,8 @@ class WithdrawChargeTest extends WP_UnitTestCase {
     }
 
     /**
+     * Test withdraw charge.
+     *
      * @dataProvider charge_data_provider
      */
     public function test_that_we_can_calculate_and_get_withdraw_charge_receivable( $input, $expected ) {
