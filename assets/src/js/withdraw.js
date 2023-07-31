@@ -156,7 +156,7 @@
                             timer: 2000,
                             timerProgressBar: true,
                             didOpen: (toast) => {
-                              setTimeout( function () {
+                              setTimeout( function() {
                                 form.unblock();
                                 window.location.reload();
                               }, 2000);
