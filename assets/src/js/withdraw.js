@@ -1,4 +1,4 @@
-( ( $ ) => {
+;(($) => {
     const Dokan_Withdraw = {
         init: () => {
             $('#dokan-request-withdraw-button').on( 'click', (e) => {
@@ -16,19 +16,19 @@
             } );
 
             $('#dokan-withdraw-display-schedule-popup').on( 'click', (e) => {
-                    Dokan_Withdraw.opensScheduleWindow( e );
+                Dokan_Withdraw.opensScheduleWindow( e );
             } );
 
             $('#dokan-withdraw-schedule-request-submit').on( 'click', ( e ) => {
-                    Dokan_Withdraw.handleScheduleChangeRequest( e );
+                Dokan_Withdraw.handleScheduleChangeRequest( e );
             } );
 
             $("input[name='withdraw-schedule']").on( 'change', (e) => {
                 Dokan_Withdraw.handleScheduleChange( e );
-            } );
+            });
 
             $( "[name='withdraw_method'][id='withdraw-method']" ).on( 'change', ( e ) => {
-                    Dokan_Withdraw.calculateWithdrawCharges();
+                Dokan_Withdraw.calculateWithdrawCharges();
             } );
 
             $( 'input#withdraw-amount' ).on( 'keyup', Dokan_Withdraw.debounce( Dokan_Withdraw.calculateWithdrawCharges, 500 ) );
@@ -317,4 +317,4 @@
     $( document ).ready( function () {
         Dokan_Withdraw.init();
     } );
-} )( jQuery );
+})(jQuery);
