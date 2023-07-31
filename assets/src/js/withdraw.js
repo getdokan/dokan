@@ -19,7 +19,7 @@
                 Dokan_Withdraw.opensScheduleWindow( e );
             } );
 
-            $('#dokan-withdraw-schedule-request-submit').on( 'click', ( e ) => {
+            $('#dokan-withdraw-schedule-request-submit').on( 'click', (e) => {
                 Dokan_Withdraw.handleScheduleChangeRequest( e );
             } );
 
@@ -125,8 +125,8 @@
         },
         handleWithdrawRequest: ( e ) => {
             e.preventDefault();
-            const amount = $( 'input#withdraw-amount' ).val();
-            const nonce  = $( 'input#dokan_withdraw_nonce' ).val();
+            const amount = $( 'input#withdraw-amount').val();
+            const nonce  = $( 'input#dokan_withdraw_nonce').val();
             const form   = $( '#withdraw-request-popup' );
             const method = $( '#withdraw-method' ).val();
 
@@ -156,10 +156,10 @@
                             timer: 2000,
                             timerProgressBar: true,
                             didOpen: ( toast ) => {
-                                setTimeout( function () {
-                                    form.unblock();
-                                    window.location.reload();
-                                }, 2000 );
+                              setTimeout( function () {
+                                form.unblock();
+                                window.location.reload();
+                              }, 2000);
                             },
                         } );
                     } else {
@@ -174,24 +174,20 @@
         },
         handleScheduleChangeRequest: ( e ) => {
             e.preventDefault();
-            const schedule = $(
-                "input[name='withdraw-schedule']:checked"
-            ).val();
-            const nonce = $( '#dokan-withdraw-schedule-request-submit' ).data(
-                'security'
-            );
-            const form = $( '#withdraw-schedule-popup' );
-            const reserve = $( '#withdraw-remaining-amount' ).val();
-            const minimum = $( '#minimum-withdraw-amount' ).val();
-            const method = $( '#preferred-payment-method' ).val();
+            const schedule = $( "input[name='withdraw-schedule']:checked").val();
+            const nonce    = $( '#dokan-withdraw-schedule-request-submit' ).data('security');
+            const form     = $( '#withdraw-schedule-popup' );
+            const reserve  = $( '#withdraw-remaining-amount' ).val();
+            const minimum  = $( '#minimum-withdraw-amount' ).val();
+            const method   = $( '#preferred-payment-method' ).val();
 
-            form.block( {
+            form.block({
                 message: null,
                 overlayCSS: {
                     background: '#fff',
-                    opacity: 0.6,
-                },
-            } );
+                    opacity: 0.6
+                }
+            });
 
             $.post(
                 dokan.ajaxurl,
@@ -225,9 +221,9 @@
                 }
             );
         },
-        handleScheduleChange: ( e ) => {
-            const nextDate = $( e.target ).data( 'next-schedule' );
-            $( '#dokan-withdraw-next-scheduled-date' ).html( nextDate );
+        handleScheduleChange: (e) => {
+          const nextDate = $(e.target).data('next-schedule');
+          $( '#dokan-withdraw-next-scheduled-date').html(nextDate);
         },
         calculateWithdrawCharges: () => {
             if (
@@ -314,7 +310,7 @@
         },
     };
 
-    $( document ).ready( function () {
+    $(document).ready(function() {
         Dokan_Withdraw.init();
-    } );
+    });
 })(jQuery);
