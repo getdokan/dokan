@@ -166,11 +166,11 @@ class OrderUtil {
      *
      * @since DOKAN_SINCE
      *
-     * @param int|null $order_id
+     * @param int $order_id
      *
      * @return string
      */
-    public static function get_admin_order_edit_url( $order_id = null ): string {
+    public static function get_admin_order_edit_url( $order_id = 0 ): string {
         if ( ! self::is_hpos_enabled() ) {
             return admin_url( 'post.php?post=' . absint( $order_id ) ) . '&action=edit';
         }
