@@ -926,7 +926,8 @@ export interface vendor {
 
 	//addon
 	addon: {
-		name: () => string;
+		randomName: () => string;
+		name: string;
 		priority: string;
 		category: string;
 		type: string;
@@ -938,6 +939,7 @@ export interface vendor {
 		optionPriceType: string;
 		optionPriceInput: string;
 		saveSuccessMessage: string;
+		deleteSuccessMessage: string;
 
 	}
 

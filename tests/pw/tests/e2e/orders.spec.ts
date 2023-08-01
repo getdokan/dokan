@@ -85,11 +85,11 @@ test.describe('Order functionality test', () => {
 
 	// todo: update shipment
 
-	test.skip('vendor can add downloadable product permission to order @lite @pro', async ( ) => {
-		const [,, downloadableProductName] = await apiUtils.createProduct(payloads.createDownloadableProduct(), payloads.vendorAuth);
-		await vendor.addDownloadableProduct(orderId, downloadableProductName);
-		await vendor.removeDownloadableProduct(orderId, downloadableProductName);
-	});
+	// test.skip('vendor can add downloadable product permission to order @lite @pro', async ( ) => {
+	// 	const [,, downloadableProductName] = await apiUtils.createProduct(payloads.createDownloadableProduct(), payloads.vendorAuth);
+	// 	await vendor.addDownloadableProduct(orderId, downloadableProductName);
+	// 	await vendor.removeDownloadableProduct(orderId, downloadableProductName);
+	// });
 
 	test('vendor can perform order bulk action @lite @pro', async ( ) => {
 		await vendor.orderBulkAction('completed', orderId);

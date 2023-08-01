@@ -47,7 +47,7 @@ test.describe('Vendor user functionality test1', () => {
 test.describe('Vendor functionality test', () => {
 
 
-	let vendorPage: VendorPage;
+	let vendor: VendorPage;
 	let vPage: Page;
 	// let apiUtils: ApiUtils;
 
@@ -55,7 +55,7 @@ test.describe('Vendor functionality test', () => {
 	test.beforeAll(async ({ browser,  }) => {
 		const vendorContext = await browser.newContext({ storageState: data.auth.vendorAuthFile });
 		vPage = await vendorContext.newPage();
-		vendorPage = new VendorPage(vPage);
+		vendor = new VendorPage(vPage);
 		// apiUtils = new ApiUtils(request);
 	});
 
@@ -66,105 +66,134 @@ test.describe('Vendor functionality test', () => {
 
 
 	test('vendor can setup setup-wizard @lite @pro', async ( ) => {
-		await vendorPage.vendorSetupWizard(data.vendorSetupWizard);
+		await vendor.vendorSetupWizard(data.vendorSetupWizard);
 	});
 
 	test('vendor can add simple product @lite @pro', async ( ) => {
-		await vendorPage.addSimpleProduct(data.product.simple);
+		await vendor.addSimpleProduct(data.product.simple);
 	});
 
 	// test.skip('vendor can add variable product @pro', async ( ) => {
-	// 	await vendorPage.addVariableProduct(data.product.variable);
+	// 	await vendor.addVariableProduct(data.product.variable);
 	// });
 
 	test('vendor can add simple subscription product @pro', async ( ) => {
-		await vendorPage.addSimpleSubscription(data.product.simpleSubscription);
+		await vendor.addSimpleSubscription(data.product.simpleSubscription);
 	});
 
 	// test.skip('vendor can add variable subscription product @pro', async ( ) => {
-	// 	await vendorPage.addVariableSubscription(data.product.variableSubscription);
+	// 	await vendor.addVariableSubscription(data.product.variableSubscription);
 	// });
 
 	test('vendor can add external product @pro', async ( ) => {
-		await vendorPage.addExternalProduct(data.product.external);
+		await vendor.addExternalProduct(data.product.external);
 	});
 
 	test('vendor can add auction product @pro', async ( ) => {
-		await vendorPage.addAuctionProduct(data.product.auction);
+		await vendor.addAuctionProduct(data.product.auction);
 	});
 
 	test('vendor can add booking product @pro', async ( ) => {
-		await vendorPage.addBookingProduct(data.product.booking);
+		await vendor.addBookingProduct(data.product.booking);
 	});
 
 	test('vendor update account details @lite @pro', async ( ) => {
-		await vendorPage.setVendorDetails(data.vendor.vendorInfo);
+		await vendor.setVendorDetails(data.vendor.vendorInfo);
 	});
 
 	// store settings
 	test('vendor can set store settings @lite @pro', async ( ) => {
-		await vendorPage.setStoreSettings(data.vendor.vendorInfo);
-	});
-
-	test('vendor can add addons @pro', async ( ) => {
-		await vendorPage.addAddon(data.vendor.addon);
-	});
-
-	test.skip('vendor can edit addon @pro', async ( ) => {
-		const addonName = await vendorPage.addAddon(data.vendor.addon);
-		await vendorPage.editAddon(data.vendor.addon, addonName);
+		await vendor.setStoreSettings(data.vendor.vendorInfo);
 	});
 
 	// test.skip('vendor can send id verification request @pro', async ( )=> {
-	// 	await vendorPage.sendIdVerificationRequest(data.vendor.verification);
+	// 	await vendor.sendIdVerificationRequest(data.vendor.verification);
 	// });
 
 	// test.skip('vendor can send address verification request @pro', async ( )=> {
-	// 	await vendorPage.sendAddressVerificationRequest(data.vendor.verification);
+	// 	await vendor.sendAddressVerificationRequest(data.vendor.verification);
 	// });
 
 	// test.skip('vendor can send company verification request @pro', async ( )=> {
-	// 	await vendorPage.sendCompanyVerificationRequest(data.vendor.verification);
+	// 	await vendor.sendCompanyVerificationRequest(data.vendor.verification);
 	// });
 
 	// test.skip('vendor can set delivery time settings @pro', async ( )=> {
-	// 	await vendorPage.setDeliveryTimeSettings(data.vendor.deliveryTime);
+	// 	await vendor.setDeliveryTimeSettings(data.vendor.deliveryTime);
 	// });
 
 	test('vendor can set shipping policy @pro', async ( ) => {
-		await vendorPage.setShippingPolicies(data.vendor.shipping.shippingPolicy);
+		await vendor.setShippingPolicies(data.vendor.shipping.shippingPolicy);
 	});
 
 	test('vendor can set flat rate shipping @pro', async ( ) => {
-		await vendorPage.setShippingSettings(data.vendor.shipping.shippingMethods.flatRate);
+		await vendor.setShippingSettings(data.vendor.shipping.shippingMethods.flatRate);
 	});
 
 	test('vendor can set free shipping @pro', async ( ) => {
-		await vendorPage.setShippingSettings(data.vendor.shipping.shippingMethods.freeShipping);
+		await vendor.setShippingSettings(data.vendor.shipping.shippingMethods.freeShipping);
 	});
 
 	test('vendor can set local pickup shipping @pro', async ( ) => {
-		await vendorPage.setShippingSettings(data.vendor.shipping.shippingMethods.localPickup);
+		await vendor.setShippingSettings(data.vendor.shipping.shippingMethods.localPickup);
 	});
 
 	test('vendor can set table rate shipping shipping @pro', async ( ) => {
-		await vendorPage.setShippingSettings(data.vendor.shipping.shippingMethods.tableRateShipping);
+		await vendor.setShippingSettings(data.vendor.shipping.shippingMethods.tableRateShipping);
 	});
 
 	test('vendor can set dokan distance rate shipping @pro', async ( ) => {
-		await vendorPage.setShippingSettings(data.vendor.shipping.shippingMethods.distanceRateShipping);
+		await vendor.setShippingSettings(data.vendor.shipping.shippingMethods.distanceRateShipping);
 	});
 
 	test('vendor can set social profile settings @pro', async ( ) => {
-		await vendorPage.setSocialProfile(data.vendor.socialProfileUrls);
+		await vendor.setSocialProfile(data.vendor.socialProfileUrls);
 	});
 
 	test('vendor can set rma settings @pro', async ( ) => {
-		await vendorPage.setRmaSettings(data.vendor.rma);
+		await vendor.setRmaSettings(data.vendor.rma);
 	});
 
 	test('vendor can visit own Store @lite @pro', async ( ) => {
-		await vendorPage.visitStore(data.predefined.vendorStores.vendor1);
+		await vendor.visitStore(data.predefined.vendorStores.vendor1);
+	});
+
+	// todo: add tag for below tests
+
+	test('vendor settings menu page is rendering properly @pro @explo', async ( ) => {
+		await vendor.vendorSettingsRenderProperly();
+	});
+
+	test('vendor verifications menu page is rendering properly @pro @explo', async ( ) => {
+		await vendor.vendorVerificationsRenderProperly();
+	});
+
+	test('vendor delivery time menu page is rendering properly @pro @explo', async ( ) => {
+		await vendor.vendorDeliveryTimeRenderProperly();
+	});
+
+	test('vendor shipping menu page is rendering properly @pro @explo', async ( ) => {
+		await vendor.vendorShippingRenderProperly();
+	});
+
+	test('vendor shipstation menu page is rendering properly @pro @explo', async ( ) => {
+		await vendor.vendorShipstationRenderProperly();
+	});
+
+	test('vendor social profile menu page is rendering properly @pro @explo', async ( ) => {
+		await vendor.vendorSocialProfileRenderProperly();
+	});
+
+	test('vendor rma menu page is rendering properly @pro @explo', async ( ) => {
+		await vendor.vendorRmaRenderProperly();
+	});
+
+	test('vendor store seo menu page is rendering properly @pro @explo', async ( ) => {
+		await vendor.vendorStoreSeoRenderProperly();
+	});
+
+	test('vendor account details menu page is rendering properly @lite @pro @explo', async ( ) => {
+		await vendor.vendorAccountDetailsRenderProperly();
 	});
 
 });

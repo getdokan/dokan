@@ -771,6 +771,8 @@ export const data = {
 				followers: 'dashboard/followers',
 				announcements: 'dashboard/announcement',
 				tools: 'dashboard/tools',
+				export: 'dashboard/tools/#export',
+				csvImport: 'dashboard/tools/csv-import',
 				csvExport: 'dashboard/tools/csv-export',
 				auction: 'dashboard/auction',
 				booking: 'dashboard/booking',
@@ -780,6 +782,7 @@ export const data = {
 				settingsVerification: 'dashboard/settings/verification',
 				settingsDeliveryTime: 'dashboard/settings/delivery-time',
 				settingsShipping: 'dashboard/settings/shipping',
+				settingsShipstation: 'dashboard/settings/shipstation',
 				settingsSocialProfile: 'dashboard/settings/social',
 				settingsRma: 'dashboard/settings/rma',
 				settingsSeo: 'dashboard/settings/seo',
@@ -1152,18 +1155,21 @@ export const data = {
 
 		//addon
 		addon: {
-			name: () => 'Add-ons Group #' + helpers.randomNumber(),
+			randomName: () => 'Addons Group_' + faker.string.uuid(),
+			randomTitle: () =>  'Add-on Title_' + faker.string.uuid(),
+			name: 'Addons Group_',
 			priority: '10',
 			category: 'Uncategorized',
 			type: 'multiple_choice',  // 'multiple_choice', 'checkbox', 'custom_text', 'custom_textarea', 'file_upload', 'custom_price', 'input_multiplier', 'heading'
 			displayAs: 'select',  // 'select', 'radiobutton', 'images'
-			titleRequired: 'Add-on Title',
+			titleRequired: 'Add-on Title_',
 			formatTitle: 'label',  // 'label', 'heading', 'hide'
 			addDescription: 'Add-on description',
 			enterAnOption: 'Option 1',
 			optionPriceType: 'flat_fee', // 'flat_fee', 'quantity_based', 'percentage_based'
 			optionPriceInput: '30',
 			saveSuccessMessage: 'Add-on saved successfully',
+			deleteSuccessMessage: 'Add-on deleted successfully',
 
 		},
 

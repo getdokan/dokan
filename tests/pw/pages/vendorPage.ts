@@ -342,7 +342,7 @@ export class VendorPage extends BasePage {
 		// await this.clearAndType(selector.vendor.vAccountDetails.email, vendorInfo.email());
 		// await this.updatePassword(vendorInfo.password, vendorInfo.password1);
 		await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.editAccountVendor, selector.vendor.vAccountDetails.saveChanges, 302);
-		await expect(this.page.getByText(selector.vendor.vAccountDetails.editAccountSaveChangesSuccessMessage)).toBeVisible();
+		await expect(this.page.getByText(selector.vendor.vAccountDetails.saveSuccessMessage)).toBeVisible();
 
 		// cleanup
 		// await this.updatePassword(vendorInfo.password, vendorInfo.password1, true);
@@ -356,7 +356,7 @@ export class VendorPage extends BasePage {
 		await this.type(selector.vendor.vAccountDetails.confirmNewPassword, newPassword);
 		if (saveChanges){
 			await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.editAccountVendor, selector.vendor.vAccountDetails.saveChanges, 302);
-			await expect(this.page.getByText(selector.vendor.vAccountDetails.editAccountSaveChangesSuccessMessage)).toBeVisible();
+			await expect(this.page.getByText(selector.vendor.vAccountDetails.saveSuccessMessage)).toBeVisible();
 		}
 	}
 
@@ -412,18 +412,18 @@ export class VendorPage extends BasePage {
 		await this.clearAndType(selector.vendor.vStoreSettings.storeProductsPerPage, vendorInfo.productsPerPage);
 		await this.clearAndType(selector.vendor.vStoreSettings.phoneNo, vendorInfo.phoneNumber);
 		// address
-		await this.clearAndType(selector.vendor.vStoreSettings.street, vendorInfo.street1);
-		await this.clearAndType(selector.vendor.vStoreSettings.street2, vendorInfo.street2);
-		await this.clearAndType(selector.vendor.vStoreSettings.city, vendorInfo.city);
-		await this.clearAndType(selector.vendor.vStoreSettings.postOrZipCode, vendorInfo.zipCode);
-		await this.selectByValue(selector.vendor.vStoreSettings.country, vendorInfo.countrySelectValue);
-		await this.selectByValue(selector.vendor.vStoreSettings.state, vendorInfo.stateSelectValue);
+		await this.clearAndType(selector.vendor.vStoreSettings.address.street, vendorInfo.street1);
+		await this.clearAndType(selector.vendor.vStoreSettings.address.street2, vendorInfo.street2);
+		await this.clearAndType(selector.vendor.vStoreSettings.address.city, vendorInfo.city);
+		await this.clearAndType(selector.vendor.vStoreSettings.address.postOrZipCode, vendorInfo.zipCode);
+		await this.selectByValue(selector.vendor.vStoreSettings.address.country, vendorInfo.countrySelectValue);
+		await this.selectByValue(selector.vendor.vStoreSettings.address.state, vendorInfo.stateSelectValue);
 		// company info
-		await this.clearAndType(selector.vendor.vStoreSettings.companyName, vendorInfo.companyName);
-		await this.clearAndType(selector.vendor.vStoreSettings.companyId, vendorInfo.companyId);
-		await this.clearAndType(selector.vendor.vStoreSettings.vatOrTaxNumber, vendorInfo.vatNumber);
-		await this.clearAndType(selector.vendor.vStoreSettings.nameOfBank, vendorInfo.bankName);
-		await this.clearAndType(selector.vendor.vStoreSettings.bankIban, vendorInfo.bankIban);
+		await this.clearAndType(selector.vendor.vStoreSettings.companyInfo.companyName, vendorInfo.companyName);
+		await this.clearAndType(selector.vendor.vStoreSettings.companyInfo.companyId, vendorInfo.companyId);
+		await this.clearAndType(selector.vendor.vStoreSettings.companyInfo.vatOrTaxNumber, vendorInfo.vatNumber);
+		await this.clearAndType(selector.vendor.vStoreSettings.companyInfo.nameOfBank, vendorInfo.bankName);
+		await this.clearAndType(selector.vendor.vStoreSettings.companyInfo.bankIban, vendorInfo.bankIban);
 		// email
 		await this.check(selector.vendor.vStoreSettings.email);
 		// show more products
@@ -476,7 +476,7 @@ export class VendorPage extends BasePage {
 	// vendor set vacation settings
 	async vacationSettings(vacation: vendor['vendorInfo']['vacation']['datewise']): Promise<void> {
 
-		// // delete pervious datewise vacation settings if any  //todo:  skip this not needed ,might use in delete test
+		// delete pervious datewise vacation settings if any  //todo:  skip this not needed ,might use in delete test
 		// const noVacationIsSetIsVisible = await this.isVisible(selector.vendor.vStoreSettings.noVacationIsSet);
 		// if (!noVacationIsSetIsVisible) {
 		// 	await this.hover(selector.vendor.vStoreSettings.vacationRow);
@@ -580,73 +580,15 @@ export class VendorPage extends BasePage {
 	async setStoreAddress(vendorInfo: vendor['vendorInfo']): Promise<void> {
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsStore);
 		// store address
-		await this.clearAndType(selector.vendor.vStoreSettings.street, vendorInfo.street1);
-		await this.clearAndType(selector.vendor.vStoreSettings.street2, vendorInfo.street2);
-		await this.clearAndType(selector.vendor.vStoreSettings.city, vendorInfo.city);
-		await this.clearAndType(selector.vendor.vStoreSettings.postOrZipCode, vendorInfo.zipCode);
-		await this.selectByValue(selector.vendor.vStoreSettings.country, vendorInfo.countrySelectValue);
-		await this.selectByValue(selector.vendor.vStoreSettings.state, vendorInfo.stateSelectValue);
+		await this.clearAndType(selector.vendor.vStoreSettings.address.street, vendorInfo.street1);
+		await this.clearAndType(selector.vendor.vStoreSettings.address.street2, vendorInfo.street2);
+		await this.clearAndType(selector.vendor.vStoreSettings.address.city, vendorInfo.city);
+		await this.clearAndType(selector.vendor.vStoreSettings.address.postOrZipCode, vendorInfo.zipCode);
+		await this.selectByValue(selector.vendor.vStoreSettings.address.country, vendorInfo.countrySelectValue);
+		await this.selectByValue(selector.vendor.vStoreSettings.address.state, vendorInfo.stateSelectValue);
 		// update settings
 		await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.vendor.vStoreSettings.updateSettings);
 		await this.toContainText(selector.vendor.vStoreSettings.updateSettingsSuccessMessage, vendorInfo.storeSettingsSaveSuccessMessage);
-	}
-
-
-	// vendor add addons
-	async addAddon(addon: vendor['addon']): Promise<string> {
-		await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsAddon);
-
-		// add addon
-		const addonName = addon.name();
-		await this.click(selector.vendor.vAddonSettings.createNewAddon);
-		await this.clearAndType(selector.vendor.vAddonSettings.name, addonName);
-		await this.clearAndType(selector.vendor.vAddonSettings.priority, addon.priority);
-		// await this.click(selector.vendor.vAddonSettings.productCategories,); // commented for issue with buy product, or delete any previous addon before create one
-		// await this.type(selector.vendor.vAddonSettings.productCategories, addon.category);
-		// await this.press(data.key.enter);
-		// add-on fields
-		await this.click(selector.vendor.vAddonSettings.addField);
-		await this.selectByValue(selector.vendor.vAddonSettings.type, addon.type);
-		await this.selectByValue(selector.vendor.vAddonSettings.displayAs, addon.displayAs);
-		await this.clearAndType(selector.vendor.vAddonSettings.titleRequired, addon.titleRequired);
-		await this.selectByValue(selector.vendor.vAddonSettings.formatTitle, addon.formatTitle);
-		await this.click(selector.vendor.vAddonSettings.enableDescription);
-		await this.clearAndType(selector.vendor.vAddonSettings.addDescription, addon.addDescription);
-		await this.click(selector.vendor.vAddonSettings.requiredField);
-		await this.clearAndType(selector.vendor.vAddonSettings.enterAnOption, addon.enterAnOption);
-		await this.selectByValue(selector.vendor.vAddonSettings.optionPriceType, addon.optionPriceType);
-		await this.clearAndType(selector.vendor.vAddonSettings.optionPriceInput, addon.optionPriceInput);
-		await this.click(selector.vendor.vAddonSettings.publish);
-
-		await this.toContainText(selector.vendor.vAddonSettings.addonUpdateSuccessMessage, addon.saveSuccessMessage);
-		return addonName;
-	}
-
-
-	// vendor edit addons
-	async editAddon(addon: vendor['addon'], addonName: string): Promise<void> {
-		await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsAddon);
-		// add addon
-		await this.click(selector.vendor.vAddonSettings.editAddon(addonName));
-		// await this.click(selector.vendor.vAddonSettings.firstAddon)
-		await this.clearAndType(selector.vendor.vAddonSettings.name, addon.name());
-		await this.clearAndType(selector.vendor.vAddonSettings.priority, addon.priority);
-		await this.click(selector.vendor.vAddonSettings.productCategories,);
-		await this.type(selector.vendor.vAddonSettings.productCategories, addon.category);
-		await this.press(data.key.enter);
-		// add-on fields
-		await this.click(selector.vendor.vAddonSettings.addedFirstField);
-		await this.selectByValue(selector.vendor.vAddonSettings.type, addon.type);
-		await this.selectByValue(selector.vendor.vAddonSettings.displayAs, addon.displayAs);
-		await this.clearAndType(selector.vendor.vAddonSettings.titleRequired, addon.titleRequired);
-		await this.selectByValue(selector.vendor.vAddonSettings.formatTitle, addon.formatTitle);
-		await this.clearAndType(selector.vendor.vAddonSettings.addDescription, addon.addDescription);
-		await this.click(selector.vendor.vAddonSettings.requiredField);
-		await this.clearAndType(selector.vendor.vAddonSettings.enterAnOption, addon.enterAnOption);
-		await this.selectByValue(selector.vendor.vAddonSettings.optionPriceType, addon.optionPriceType);
-		await this.clearAndType(selector.vendor.vAddonSettings.optionPriceInput, addon.optionPriceInput);
-		await this.click(selector.vendor.vAddonSettings.update);
-		await this.toContainText(selector.vendor.vAddonSettings.addonUpdateSuccessMessage, addon.saveSuccessMessage);
 	}
 
 
@@ -655,25 +597,25 @@ export class VendorPage extends BasePage {
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsVerification);
 
 		// cancel previous verification request if any
-		const cancelRequestIsVisible = await this.isVisible(selector.vendor.vVerificationSettings.cancelIdVerificationRequest);
+		const cancelRequestIsVisible = await this.isVisible(selector.vendor.vVerificationSettings.id.cancelIdVerificationRequest);
 		if (cancelRequestIsVisible) {
-			await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vVerificationSettings.cancelIdVerificationRequest);
+			await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vVerificationSettings.id.cancelIdVerificationRequest);
 			await expect(this.page.getByText(verification.idRequestSubmitCancel)).toBeVisible();
 		}
 		// id verification
-		await this.click(selector.vendor.vVerificationSettings.startIdVerification);
+		await this.click(selector.vendor.vVerificationSettings.id.startIdVerification);
 		// remove previously uploaded image
-		const uploadPhotoBtnIsVisible = await this.isVisible(selector.vendor.vVerificationSettings.uploadPhoto);
+		const uploadPhotoBtnIsVisible = await this.isVisible(selector.vendor.vVerificationSettings.id.uploadPhoto);
 		if (!uploadPhotoBtnIsVisible) {
-			// await this.hover(selector.vendor.vVerificationSettings.previousUploadedPhoto); //todo:  not working, real user behavior
-			// await this.click(selector.vendor.vVerificationSettings.removePreviousUploadedPhoto);
+			// await this.hover(selector.vendor.vVerificationSettings.id.previousUploadedPhoto); //todo:  not working, real user behavior
+			// await this.click(selector.vendor.vVerificationSettings.id.removePreviousUploadedPhoto);
 			await this.setAttributeValue('.gravatar-wrap', 'class', 'gravatar-wrap dokan-hide'); //todo:  remove this alternative soln.
 			await this.setAttributeValue('.gravatar-button-area.dokan-hide', 'class', 'gravatar-button-area');
 		}
-		await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vVerificationSettings.uploadPhoto);
+		await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vVerificationSettings.id.uploadPhoto);
 		await this.uploadMedia(verification.file);
-		await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vVerificationSettings.submitId);
-		await this.toContainText(selector.vendor.vVerificationSettings.idUpdateSuccessMessage, verification.idRequestSubmitSuccessMessage);
+		await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vVerificationSettings.id.submitId);
+		await this.toContainText(selector.vendor.vVerificationSettings.id.idUpdateSuccessMessage, verification.idRequestSubmitSuccessMessage);
 	}
 
 
@@ -681,23 +623,23 @@ export class VendorPage extends BasePage {
 	async sendAddressVerificationRequest(verification: vendor['verification']): Promise<void> {
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsVerification);
 		// cancel previous verification request if any
-		const cancelRequestIsVisible = await this.isVisible(selector.vendor.vVerificationSettings.cancelAddressVerificationRequest);
+		const cancelRequestIsVisible = await this.isVisible(selector.vendor.vVerificationSettings.address.cancelAddressVerificationRequest);
 		if (cancelRequestIsVisible) {
-			await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vVerificationSettings.cancelAddressVerificationRequest);
+			await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vVerificationSettings.address.cancelAddressVerificationRequest);
 			await expect(this.page.getByText(verification.addressRequestSubmitCancel)).toBeVisible();
 		}
 		// address verification
-		await this.click(selector.vendor.vVerificationSettings.startAddressVerification);
-		await this.clearAndType(selector.vendor.vVerificationSettings.street, verification.street1);
-		await this.clearAndType(selector.vendor.vVerificationSettings.street2, verification.street2);
-		await this.clearAndType(selector.vendor.vVerificationSettings.city, verification.city);
-		await this.clearAndType(selector.vendor.vVerificationSettings.postOrZipCode, verification.zipCode);
-		await this.selectByValue(selector.vendor.vVerificationSettings.country, verification.country);
-		await this.selectByValue(selector.vendor.vVerificationSettings.state, verification.state);
-		await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vVerificationSettings.uploadResidenceProof);
+		await this.click(selector.vendor.vVerificationSettings.address.startAddressVerification);
+		await this.clearAndType(selector.vendor.vVerificationSettings.address.street, verification.street1);
+		await this.clearAndType(selector.vendor.vVerificationSettings.address.street2, verification.street2);
+		await this.clearAndType(selector.vendor.vVerificationSettings.address.city, verification.city);
+		await this.clearAndType(selector.vendor.vVerificationSettings.address.postOrZipCode, verification.zipCode);
+		await this.selectByValue(selector.vendor.vVerificationSettings.address.country, verification.country);
+		await this.selectByValue(selector.vendor.vVerificationSettings.address.state, verification.state);
+		await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vVerificationSettings.address.uploadResidenceProof);
 		await this.uploadMedia(verification.file);
-		await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vVerificationSettings.submitAddress);
-		await this.toContainText(selector.vendor.vVerificationSettings.addressUpdateSuccessMessage, verification.addressRequestSubmitSuccessMessage);
+		await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vVerificationSettings.address.submitAddress);
+		await this.toContainText(selector.vendor.vVerificationSettings.address.addressUpdateSuccessMessage, verification.addressRequestSubmitSuccessMessage);
 	}
 
 
@@ -705,22 +647,22 @@ export class VendorPage extends BasePage {
 	async sendCompanyVerificationRequest(verification: vendor['verification']): Promise<void> {
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsVerification);
 		// cancel previous verification request if any
-		const cancelRequestIsVisible = await this.isVisible(selector.vendor.vVerificationSettings.cancelCompanyVerificationRequest);
+		const cancelRequestIsVisible = await this.isVisible(selector.vendor.vVerificationSettings.company.cancelCompanyVerificationRequest);
 		if (cancelRequestIsVisible) {
-			await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vVerificationSettings.cancelCompanyVerificationRequest);
+			await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vVerificationSettings.company.cancelCompanyVerificationRequest);
 			await expect(this.page.getByText(verification.companyRequestSubmitCancel)).toBeVisible();
 		}
 		// company verification
-		await this.click(selector.vendor.vVerificationSettings.startCompanyVerification);
+		await this.click(selector.vendor.vVerificationSettings.company.startCompanyVerification);
 		// remove previously uploaded company file
-		const UploadedCompanyFileIsVisible = await this.isVisible(selector.vendor.vVerificationSettings.UploadedCompanyFileClose);
+		const UploadedCompanyFileIsVisible = await this.isVisible(selector.vendor.vVerificationSettings.company.uploadedCompanyFileClose);
 		if (UploadedCompanyFileIsVisible) {
-			await this.click(selector.vendor.vVerificationSettings.UploadedCompanyFileClose);
+			await this.click(selector.vendor.vVerificationSettings.company.uploadedCompanyFileClose);
 		}
-		await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vVerificationSettings.uploadFiles);
+		await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vVerificationSettings.company.uploadFiles);
 		await this.uploadMedia(verification.file);
-		await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vVerificationSettings.submitCompanyInfo);
-		await this.toContainText(selector.vendor.vVerificationSettings.companyInfoUpdateSuccessMessage, verification.companyRequestSubmitSuccessMessage);
+		await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vVerificationSettings.company.submitCompanyInfo);
+		await this.toContainText(selector.vendor.vVerificationSettings.company.companyInfoUpdateSuccessMessage, verification.companyRequestSubmitSuccessMessage);
 	}
 
 
@@ -762,8 +704,8 @@ export class VendorPage extends BasePage {
 			await this.setAttributeValue(selector.vendor.vDeliveryTimeSettings.closingTime(day), 'value', deliveryTime.closingTime);
 			await this.setAttributeValue(selector.vendor.vDeliveryTimeSettings.closingTimeHiddenInput(day), 'value', deliveryTime.closingTime);
 		}
-		await this.click(selector.vendor.vDeliveryTimeSettings.deliveryTimeUpdateSettings);
-		await this.toContainText(selector.vendor.vDeliveryTimeSettings.deliveryTimeUpdateSettingsSuccessMessage, deliveryTime.saveSuccessMessage);
+		await this.click(selector.vendor.vDeliveryTimeSettings.updateSettings);
+		await this.toContainText(selector.vendor.vDeliveryTimeSettings.settingsSuccessMessage, deliveryTime.saveSuccessMessage);
 	}
 
 
@@ -786,7 +728,7 @@ export class VendorPage extends BasePage {
 		await this.selectByValue(selector.vendor.vShippingSettings.shippingPolicies.processingTime, shippingPolicy.processingTime);
 		await this.clearAndType(selector.vendor.vShippingSettings.shippingPolicies.shippingPolicy, shippingPolicy.shippingPolicy);
 		await this.type(selector.vendor.vShippingSettings.shippingPolicies.refundPolicy, shippingPolicy.refundPolicy);
-		await this.click(selector.vendor.vShippingSettings.shippingPolicies.shippingPoliciesSaveSettings);
+		await this.click(selector.vendor.vShippingSettings.shippingPolicies.saveSettings);
 		await this.toContainText(selector.vendor.vShippingSettings.updateSettingsSuccessMessage, shippingPolicy.saveSuccessMessage);
 	}
 
@@ -883,13 +825,13 @@ export class VendorPage extends BasePage {
 	// vendor set social profile settings
 	async setSocialProfile(urls: vendor['socialProfileUrls']): Promise<void> {
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsSocialProfile);
-		await this.clearAndType(selector.vendor.vSocialProfileSettings.facebook, urls.facebook);
-		await this.clearAndType(selector.vendor.vSocialProfileSettings.twitter, urls.twitter);
-		await this.clearAndType(selector.vendor.vSocialProfileSettings.pinterest, urls.pinterest);
-		await this.clearAndType(selector.vendor.vSocialProfileSettings.linkedin, urls.linkedin);
-		await this.clearAndType(selector.vendor.vSocialProfileSettings.youtube, urls.youtube);
-		await this.clearAndType(selector.vendor.vSocialProfileSettings.instagram, urls.instagram);
-		await this.clearAndType(selector.vendor.vSocialProfileSettings.flickr, urls.flickr);
+		await this.clearAndType(selector.vendor.vSocialProfileSettings.platforms.facebook, urls.facebook);
+		await this.clearAndType(selector.vendor.vSocialProfileSettings.platforms.twitter, urls.twitter);
+		await this.clearAndType(selector.vendor.vSocialProfileSettings.platforms.pinterest, urls.pinterest);
+		await this.clearAndType(selector.vendor.vSocialProfileSettings.platforms.linkedin, urls.linkedin);
+		await this.clearAndType(selector.vendor.vSocialProfileSettings.platforms.youtube, urls.youtube);
+		await this.clearAndType(selector.vendor.vSocialProfileSettings.platforms.instagram, urls.instagram);
+		await this.clearAndType(selector.vendor.vSocialProfileSettings.platforms.flickr, urls.flickr);
 		// await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vSocialProfileSettings.updateSettings); //todo:  don't work, alternate soln. below line
 		await this.pressOnSelector(selector.vendor.vSocialProfileSettings.updateSettings, data.key.enter);
 		await this.toContainText(selector.vendor.vSocialProfileSettings.updateSettingsSuccessMessage, urls.saveSuccessMessage);
@@ -910,7 +852,7 @@ export class VendorPage extends BasePage {
 			await this.checkMultiple(selector.vendor.vRmaSettings.refundReasons);
 		}
 		await this.typeFrameSelector(selector.vendor.vRmaSettings.refundPolicyIframe, selector.vendor.vRmaSettings.refundPolicyHtmlBody, rma.refundPolicyHtmlBody);
-		await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.settingsRma, selector.vendor.vRmaSettings.rmaSaveChanges, 302);
+		await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.settingsRma, selector.vendor.vRmaSettings.saveChanges, 302);
 		await expect(this.page.getByText(rma.saveSuccessMessage)).toBeVisible();
 	}
 
@@ -1091,6 +1033,256 @@ export class VendorPage extends BasePage {
 		await this.clearAndType(selector.vendor.product.search.searchInput, productName);
 		await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.products, selector.vendor.product.search.searchBtn);
 		await this.toBeVisible(selector.vendor.product.productLink(productName));
+	}
+
+
+	// vendor settings render properly
+	async vendorSettingsRenderProperly(){
+		await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsStore);
+
+		// settings text is visible
+		await this.toBeVisible(selector.vendor.vStoreSettings.settingsText);
+
+		//todo: update for lite
+
+		// visit store link is visible
+		await this.toBeVisible(selector.vendor.vStoreSettings.banner);
+		await this.toBeVisible(selector.vendor.vStoreSettings.profilePicture);
+		await this.toBeVisible(selector.vendor.vStoreSettings.storeName);
+		await this.toBeVisible(selector.vendor.vStoreSettings.storeProductsPerPage);
+		await this.toBeVisible(selector.vendor.vStoreSettings.phoneNo);
+		DOKAN_PRO && await this.toBeVisible(selector.vendor.vStoreSettings.multipleLocation);
+
+		// store address location elements are visible
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		const { cancelSaveLocation, deleteSaveLocation,  ...address } = selector.vendor.vStoreSettings.address;
+		await this.multipleElementVisible(address);
+
+		// company info elements are visible
+		DOKAN_PRO && await this.multipleElementVisible(selector.vendor.vStoreSettings.companyInfo);
+
+		await this.toBeVisible(selector.vendor.vStoreSettings.email);
+		await this.toBeVisible(selector.vendor.vStoreSettings.moreProducts);
+
+		// map is visible
+		await this.toBeVisible(selector.vendor.vStoreSettings.map);
+
+		//todo: catalog, discount, vacation, open close, store category
+
+		// biography is visible
+		await this.toBeVisible(selector.vendor.vStoreSettings.biographyIframe);
+
+		//todo: min-max, store-support
+
+		// update settings are visible
+		await this.toBeVisible(selector.vendor.vStoreSettings.updateSettingsTop);
+		await this.toBeVisible(selector.vendor.vStoreSettings.updateSettings);
+	}
+
+
+	// vendor verifications render properly
+	async vendorVerificationsRenderProperly(){
+		await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsVerification);
+
+		// verification text is visible
+		await this.toBeVisible(selector.vendor.vVerificationSettings.verificationText);
+
+		// visit store link is visible
+		await this.toBeVisible(selector.vendor.vVerificationSettings.visitStore);
+
+		await this.toBeVisible(selector.vendor.vVerificationSettings.id.startIdVerification);
+		await this.toBeVisible(selector.vendor.vVerificationSettings.address.startAddressVerification);
+		await this.toBeVisible(selector.vendor.vVerificationSettings.company.startCompanyVerification);
+
+		await this.click(selector.vendor.vVerificationSettings.id.startIdVerification);
+		await this.click(selector.vendor.vVerificationSettings.address.startAddressVerification);
+		await this.click(selector.vendor.vVerificationSettings.company.startCompanyVerification);
+
+		// product addon fields elements are visible
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		const { startIdVerification, cancelIdVerificationRequest,  previousUploadedPhoto, removePreviousUploadedPhoto, idUpdateSuccessMessage,   ...idVerifications } = selector.vendor.vVerificationSettings.id;
+		await this.multipleElementVisible(idVerifications);
+
+		// product addon fields elements are visible
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		const { startAddressVerification, cancelAddressVerificationRequest, previousUploadedResidenceProof, removePreviousUploadedResidenceProof, addressUpdateSuccessMessage,  ...addressVerifications } = selector.vendor.vVerificationSettings.address;
+		await this.multipleElementVisible(addressVerifications);
+
+		// product addon fields elements are visible
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		const { startCompanyVerification, cancelCompanyVerificationRequest, uploadedCompanyFileClose, cancelSelectedInfo, companyInfoUpdateSuccessMessage,  ...companyVerifications } = selector.vendor.vVerificationSettings.company;
+		await this.multipleElementVisible(companyVerifications);
+
+	}
+
+
+	// vendor delivery time render properly
+	async vendorDeliveryTimeRenderProperly(){
+		await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsDeliveryTime);
+
+		// settings text is visible
+		await this.toBeVisible(selector.vendor.vDeliveryTimeSettings.settingsText);
+
+		// visit store link is visible
+		await this.toBeVisible(selector.vendor.vDeliveryTimeSettings.visitStore);
+
+		// delivery support elements are visible
+		await this.toBeVisible(selector.vendor.vDeliveryTimeSettings.homeDelivery);
+		await this.toBeVisible(selector.vendor.vDeliveryTimeSettings.storePickup);
+		await this.toBeVisible(selector.vendor.vDeliveryTimeSettings.deliveryBlockedBuffer);
+		await this.toBeVisible(selector.vendor.vDeliveryTimeSettings.timeSlot);
+		await this.toBeVisible(selector.vendor.vDeliveryTimeSettings.orderPerSlot);
+		await this.notToHaveCount(selector.vendor.vDeliveryTimeSettings.deliveryDaySwitches, 0);
+
+		// update settings is visible
+		await this.toBeVisible(selector.vendor.vDeliveryTimeSettings.updateSettings);
+	}
+
+
+	// vendor shipping render properly
+	async vendorShippingRenderProperly(){
+		await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsShipping);
+
+		// shipstation text is visible
+		await this.toBeVisible(selector.vendor.vShippingSettings.shippingSettingsText);
+
+		// visit store link is visible
+		await this.toBeVisible(selector.vendor.vShippingSettings.visitStore);
+
+		// add shipping policies is visible
+		await this.toBeVisible(selector.vendor.vShippingSettings.shippingPolicies.clickHereToAddShippingPolicies);
+
+		// previous shipping settings link is visible
+		await this.toBeVisible(selector.vendor.vShippingSettings.shippingPolicies.clickHereToAddShippingPolicies);
+
+		// shipping zone table elements are visible
+		await this.multipleElementVisible(selector.vendor.vShippingSettings.table);
+
+		await this.clickAndWaitForLoadState(selector.vendor.vShippingSettings.shippingPolicies.clickHereToAddShippingPolicies);
+
+		// shipping policy elements are visible
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		const { clickHereToAddShippingPolicies, ...companyVerifications } = selector.vendor.vShippingSettings.shippingPolicies;
+		await this.multipleElementVisible(companyVerifications);
+
+		await this.clickAndWaitForLoadState(selector.vendor.vShippingSettings.shippingPolicies.backToZoneList);
+
+		await this.clickAndWaitForLoadState(selector.vendor.vShippingSettings.previousShippingSettings.previousShippingSettings);
+
+		// previous shipping settings elements are visible
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		const { previousShippingSettings, ...previousShipping } = selector.vendor.vShippingSettings.previousShippingSettings;
+		await this.multipleElementVisible(previousShipping);
+
+		// await this.goBack();
+
+	}
+
+
+	// vendor shipstation render properly
+	async vendorShipstationRenderProperly(){
+		await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsShipstation);
+
+		// shipstation text is visible
+		await this.toBeVisible(selector.vendor.vShipStationSettings.shipStationText);
+
+		// visit store link is visible
+		await this.toBeVisible(selector.vendor.vShipStationSettings.visitStore);
+
+		// authentication key is visible
+		await this.toBeVisible(selector.vendor.vShipStationSettings.authenticationKey);
+
+		// export order statuses is visible
+		await this.toBeVisible(selector.vendor.vShipStationSettings.exportOrderStatuses);
+
+		// Shipped Order Status is visible
+		await this.toBeVisible(selector.vendor.vShipStationSettings.shippedOrderStatusDropdown);
+
+		// save changes is visible
+		await this.toBeVisible(selector.vendor.vShipStationSettings.saveChanges);
+	}
+
+
+	// vendor social profile render properly
+	async vendorSocialProfileRenderProperly(){
+		await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsSocialProfile);
+
+		// social profile text is visible
+		await this.toBeVisible(selector.vendor.vSocialProfileSettings.socialProfileText);
+
+		// visit store link is visible
+		await this.toBeVisible(selector.vendor.vSocialProfileSettings.visitStore);
+
+		// social platform elements are visible
+		await this.multipleElementVisible(selector.vendor.vSocialProfileSettings.platforms);
+
+		// update settings is visible
+		await this.toBeVisible(selector.vendor.vSocialProfileSettings.updateSettings);
+	}
+
+
+	// vendor rma render properly
+	async vendorRmaRenderProperly(){
+		await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsRma);
+
+		// return and warranty text is visible
+		await this.toBeVisible(selector.vendor.vRmaSettings.returnAndWarrantyText);
+
+		// visit store link is visible
+		await this.toBeVisible(selector.vendor.vRmaSettings.visitStore);
+
+		// rma label input is visible
+		await this.toBeVisible(selector.vendor.vRmaSettings.label);
+
+		// rma type input is visible
+		await this.toBeVisible(selector.vendor.vRmaSettings.type);
+
+		// rma policy input is visible
+		await this.toBeVisible(selector.vendor.vRmaSettings.refundPolicyIframe);
+
+		// save changes is visible
+		await this.toBeVisible(selector.vendor.vRmaSettings.saveChanges);
+	}
+
+
+	// vendor store seo render properly
+	async vendorStoreSeoRenderProperly(){
+		await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsSeo);
+
+		// store seo text is visible
+		await this.toBeVisible(selector.vendor.vStoreSeoSettings.storeSeoText);
+
+		// visit store link is visible
+		await this.toBeVisible(selector.vendor.vStoreSeoSettings.visitStore);
+
+		// seo title is visible
+		await this.toBeVisible(selector.vendor.vStoreSeoSettings.seoTitle);
+
+		// meta description is visible
+		await this.toBeVisible(selector.vendor.vStoreSeoSettings.metaDescription);
+
+		// meta keywords is visible
+		await this.toBeVisible(selector.vendor.vStoreSeoSettings.metaKeywords);
+
+		// store seo facebook elements are visible
+		await this.multipleElementVisible(selector.vendor.vStoreSeoSettings.facebook);
+
+		// store seo twitter elements are visible
+		await this.multipleElementVisible(selector.vendor.vStoreSeoSettings.twitter);
+
+		// save changes is visible
+		await this.toBeVisible(selector.vendor.vStoreSeoSettings.saveChanges);
+	}
+
+
+	// vendor store seo render properly
+	async vendorAccountDetailsRenderProperly(){
+		await this.goIfNotThere(data.subUrls.frontend.vDashboard.editAccountVendor);
+
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		const { saveSuccessMessage, ...accountDetails } = selector.vendor.vAccountDetails;
+		await this.multipleElementVisible(accountDetails);
+
 	}
 
 }

@@ -24,6 +24,7 @@
 // filter received & expected test
 // trim if necessary
 // lowercase
+
 //todo:  add system info after git action info via system status function, current theme should be there
 //todo:  use only one password for every user FOR both suite e2e and api
 //todo:  theme is not activating fix this
@@ -889,3 +890,13 @@ async multipleElementVisible(selectors: any){
 				title: 'converted quote ' + faker.string.uuid(),  //todo:  more test date need to be unique, apply this
 			}
 	
+
+
+
+
+
+
+
+
+			//TODO: LOCCATORS
+//todo:  update every class locator with input field
