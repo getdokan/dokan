@@ -65,6 +65,7 @@ export class CustomerPage extends BasePage {
 		expect(loggedInUser).toBe(username.toLowerCase());
 	}
 
+
 	// customer become vendor
 	async customerBecomeVendor(customerInfo: customer['customerInfo']): Promise<void> {
 		const firstName = customerInfo.firstName();
@@ -94,6 +95,7 @@ export class CustomerPage extends BasePage {
 		await this.toBeVisible(selector.vendor.vDashboard.menus.dashboard);
 	}
 
+
 	// customer add billing address
 	async addBillingAddress(billingInfo: customer['customerInfo']): Promise<void> {
 		await this.goIfNotThere(data.subUrls.frontend.billingAddress);
@@ -122,6 +124,7 @@ export class CustomerPage extends BasePage {
 		await this.toContainText(selector.customer.cWooSelector.wooCommerceSuccessMessage, data.customer.customerInfo.addressChangeSuccessMessage);
 	}
 
+
 	// customer add shipping address
 	async addShippingAddress(shippingInfo: customer['customerInfo']): Promise<void> {
 		await this.goIfNotThere(data.subUrls.frontend.shippingAddress);
@@ -143,6 +146,7 @@ export class CustomerPage extends BasePage {
 		await this.clickAndWaitForResponse(data.subUrls.frontend.shippingAddress, selector.customer.cAddress.shippingSaveAddress, 302);
 		await this.toContainText(selector.customer.cWooSelector.wooCommerceSuccessMessage, data.customer.customerInfo.addressChangeSuccessMessage );
 	}
+
 
 	// customer Send Rma Request
 	async sendRmaMessage(message: string): Promise<void> {
@@ -168,6 +172,7 @@ export class CustomerPage extends BasePage {
 		// await this.updatePassword(customerInfo.password1, customerInfo.password, true); //todo: do it via api
 
 	}
+
 
 	// customer update password
 	async updatePassword(currentPassword: string, newPassword: string, saveChanges = false): Promise<void> {
@@ -270,6 +275,7 @@ export class CustomerPage extends BasePage {
 	}
 
 
+	//buy product
 	async buyProduct(productName: string, couponCode: string, applyCoupon = false, getOrderDetails = false, paymentMethod = 'bank', paymentDetails: paymentDetails): Promise<void | object> {
 		// clear cart before buying
 		await this.clearCart();
@@ -295,18 +301,23 @@ export class CustomerPage extends BasePage {
 		case 'bank' :
 			await this.click(selector.customer.cCheckout.directBankTransfer);
 			break;
+
 		case 'check' :
 			await this.click(selector.customer.cCheckout.checkPayments);
 			break;
+
 		case 'cod' :
 			await this.click(selector.customer.cCheckout.cashOnDelivery);
 			break;
-			// case 'stripe':
-			//     await this.payWithStripe(paymentDetails)
-			//     break;
-			// case 'stripeExpress':
-			//     await this.payWithStripeExpress(paymentDetails)
-			//     break;
+
+			// case 'stripe' :
+			// 	    await this.payWithStripe(paymentDetails);
+			// 	    break;
+
+			// case 'stripeExpress' :
+			// 	    await this.payWithStripeExpress(paymentDetails);
+			// 	    break;
+
 		default :
 			break;
 		}
@@ -327,18 +338,23 @@ export class CustomerPage extends BasePage {
 		case 'bank' :
 			await this.click(selector.customer.cCheckout.directBankTransfer);
 			break;
+
 		case 'check' :
 			await this.click(selector.customer.cCheckout.checkPayments);
 			break;
+
 		case 'cod' :
 			await this.click(selector.customer.cCheckout.cashOnDelivery);
 			break;
-			// case 'stripe':
-			//     await this.payWithStripe(paymentDetails)
-			//     break;
-			// case 'stripeExpress':
-			//     await this.payWithStripeExpress(paymentDetails)
-			//     break;
+
+			// case 'stripe' :
+			// 	    await this.payWithStripe(paymentDetails);
+			// 	    break;
+
+			// case 'stripeExpress' :
+			// 	    await this.payWithStripeExpress(paymentDetails);
+			// 	    break;
+
 		default :
 			break;
 		}
@@ -348,56 +364,59 @@ export class CustomerPage extends BasePage {
 
 	}
 
-	// // pay with stripe connect
-	// async payWithStripe(paymentDetails): Promise<void> {
-	//     let cardInfo = paymentDetails.cardInfo
-	//     await this.click(selector.customer.cCheckout.stripeConnect)
-	//     let savedTestCardIsVisible = await this.isVisible(selector.customer.cPayWithStripe.savedTestCard4242)
-	//     if (!savedTestCardIsVisible) {
-	//         let stripeConnectIframe = await this.switchToIframe(selector.customer.cPayWithStripe.stripeConnectIframe)
-	//         await this.iframeClearAndType(stripeConnectIframe, selector.customer.cPayWithStripe.cardNumber, cardInfo.cardNumber)
-	//         await this.iframeClearAndType(stripeConnectIframe, selector.customer.cPayWithStripe.expDate, cardInfo.cardExpiryDate)
-	//         await this.iframeClearAndType(stripeConnectIframe, selector.customer.cPayWithStripe.cvc, cardInfo.cardCvc)
-	//         await this.click(selector.customer.cPayWithStripe.savePaymentInformation)
-	//     } else {
-	//         await this.click(selector.customer.cPayWithStripe.savedTestCard4242)
-	//     }
+
+	// 	// pay with stripe connect
+	// async payWithStripe(paymentDetails: any): Promise<void> {
+	// 	const cardInfo = paymentDetails.cardInfo;
+	// 	await this.click(selector.customer.cCheckout.stripeConnect);
+	// 	const savedTestCardIsVisible = await this.isVisible(selector.customer.cPayWithStripe.savedTestCard4242);
+	// 	if (!savedTestCardIsVisible) {
+	// 		const stripeConnectIframe = await this.switchToIframe(selector.customer.cPayWithStripe.stripeConnectIframe);
+	// 		await this.iframeClearAndType(stripeConnectIframe, selector.customer.cPayWithStripe.cardNumber, cardInfo.cardNumber);
+	// 		await this.iframeClearAndType(stripeConnectIframe, selector.customer.cPayWithStripe.expDate, cardInfo.cardExpiryDate);
+	// 		await this.iframeClearAndType(stripeConnectIframe, selector.customer.cPayWithStripe.cvc, cardInfo.cardCvc);
+	// 		await this.click(selector.customer.cPayWithStripe.savePaymentInformation);
+	// 	} else {
+	// 		await this.click(selector.customer.cPayWithStripe.savedTestCard4242);
+	// 	}
 	// }
+
 
 	// // pay with stripe express
 	// async payWithStripeExpress(paymentDetails): Promise<void> {
-	//     let paymentMethod = paymentDetails.paymentMethod
-	//     let cardInfo = paymentDetails.cardInfo
+	//     const paymentMethod = paymentDetails.paymentMethod;
+	//     const cardInfo = paymentDetails.cardInfo;
 
-	//     await this.click(selector.customer.cCheckout.stripeExpress)
+	//     await this.click(selector.customer.cCheckout.stripeExpress);
 
-	//     let savedTestCardIsVisible = await this.isVisible(selector.customer.cPayWithStripeExpress.savedTestCard4242)
+	//     const savedTestCardIsVisible = await this.isVisible(selector.customer.cPayWithStripeExpress.savedTestCard4242);
 	//     if (!savedTestCardIsVisible) {
-	//         let stripeExpressCardIframe = await this.switchToIframe(selector.customer.cPayWithStripeExpress.stripeExpressIframe)
+	//         const stripeExpressCardIframe = await this.switchToIframe(selector.customer.cPayWithStripeExpress.stripeExpressIframe);
 	//         switch (paymentMethod) {
-	//             case 'card':
-	//                 await this.iframeClick(stripeExpressCardIframe, selector.customer.cPayWithStripeExpress.creditCard)
-	//                 await this.iframeClearAndType(stripeExpressCardIframe, selector.customer.cPayWithStripeExpress.cardNumber, cardInfo.cardNumber)
-	//                 await this.iframeClearAndType(stripeExpressCardIframe, selector.customer.cPayWithStripeExpress.expDate, cardInfo.cardExpiryDate)
-	//                 await this.iframeClearAndType(stripeExpressCardIframe, selector.customer.cPayWithStripeExpress.cvc, cardInfo.cardCvc)
-	//                 await this.click(selector.customer.cPayWithStripeExpress.savePaymentInformation)
-	//                 break
-	//             case 'gPay':
-	//                 await this.iframeClick(stripeExpressCardIframe, selector.customer.cPayWithStripeExpress.gPay)
-	//                 return
-	//             case 'applePay':
-	//                 await this.iframeClick(stripeExpressCardIframe, selector.customer.cPayWithStripeExpress.gPay)
-	//                 return
-	//             case 'iDeal':
-	//                 await this.iframeClick(stripeExpressCardIframe, selector.customer.cPayWithStripeExpress.iDeal)
-	//                 break
-	//             default:
-	//                 break
+	//             case 'card' :
+	//                 await this.iframeClick(stripeExpressCardIframe, selector.customer.cPayWithStripeExpress.creditCard);
+	//                 await this.iframeClearAndType(stripeExpressCardIframe, selector.customer.cPayWithStripeExpress.cardNumber, cardInfo.cardNumber);
+	//                 await this.iframeClearAndType(stripeExpressCardIframe, selector.customer.cPayWithStripeExpress.expDate, cardInfo.cardExpiryDate);
+	//                 await this.iframeClearAndType(stripeExpressCardIframe, selector.customer.cPayWithStripeExpress.cvc, cardInfo.cardCvc);
+	//                 await this.click(selector.customer.cPayWithStripeExpress.savePaymentInformation);
+	//                 break;
+	//             case 'gPay' :
+	//                 await this.iframeClick(stripeExpressCardIframe, selector.customer.cPayWithStripeExpress.gPay);
+	//                 return;
+	//             case 'applePay' :
+	//                 await this.iframeClick(stripeExpressCardIframe, selector.customer.cPayWithStripeExpress.gPay);
+	//                 return;
+	//             case 'iDeal' :
+	//                 await this.iframeClick(stripeExpressCardIframe, selector.customer.cPayWithStripeExpress.iDeal);
+	//                 break;
+	//             default :
+	//                 break;
 	//         }
 	//     } else {
-	//         await this.click(selector.customer.cPayWithStripeExpress.savedTestCard4242)
+	//         await this.click(selector.customer.cPayWithStripeExpress.savedTestCard4242);
 	//     }
 	// }
+
 
 	// // get order details after purchase
 	// async getOrderDetailsAfterPlaceOrder(): Promise<object> {
@@ -489,6 +508,7 @@ export class CustomerPage extends BasePage {
 	// 	return cOrderDetails;
 	// }
 
+
 	// customer add billing address in checkout
 	async addBillingAddressInCheckout(billingInfo: customer['customerInfo']): Promise<void> {
 		// Billing Address
@@ -514,6 +534,7 @@ export class CustomerPage extends BasePage {
 		await this.clearAndType(selector.customer.cAddress.billingEmailAddress, billingInfo.email());
 	}
 
+
 	// customer add shipping address in checkout
 	async addShippingAddressInCheckout(shippingInfo: customer['customerInfo']): Promise<void> {
 		await this.clickAndWaitForResponse(data.subUrls.frontend.shippingAddressCheckout, selector.customer.cCheckout.shipToADifferentAddress);
@@ -533,6 +554,7 @@ export class CustomerPage extends BasePage {
 		await this.press(data.key.enter);
 		await this.clearAndType(selector.customer.cAddress.shippingZipCode, shippingInfo.zipCode);
 	}
+
 
 	// customer ask for warranty
 	async sendWarrantyRequest(orderNumber: string, productName: string, refund: order['refund']): Promise<void> {

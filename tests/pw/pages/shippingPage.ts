@@ -15,6 +15,20 @@ export class shippingPage extends AdminPage {
 
 	// Shipping Methods
 
+
+	// Admin Setup Woocommerce Settings
+	async setWoocommerceShippingSettings(data: any) {
+		await this.enablePasswordInputField(data);
+		await this.addShippingMethod(data.shipping.shippingMethods.flatRate);
+		await this.addShippingMethod(data.shipping.shippingMethods.freeShipping);
+		await this.addShippingMethod(data.shipping.shippingMethods.tableRateShipping);
+		await this.addShippingMethod(data.shipping.shippingMethods.distanceRateShipping);
+		await this.addShippingMethod(data.shipping.shippingMethods.vendorShipping);
+		await this.deleteShippingMethod(data.shipping.shippingMethods.flatRate);
+		await this.deleteShippingZone(data.shipping.shippingZone);
+	}
+
+
 	// Enable-Disable Shipping
 	async enableShipping(enable = true) {
 		await this.goToWooCommerceSettings();

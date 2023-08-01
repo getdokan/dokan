@@ -73,17 +73,17 @@ test.describe('Vendor functionality test', () => {
 		await vendorPage.addSimpleProduct(data.product.simple);
 	});
 
-	test.fixme('vendor can add variable product @pro', async ( ) => {
-		await vendorPage.addVariableProduct(data.product.variable);
-	});
+	// test.skip('vendor can add variable product @pro', async ( ) => {
+	// 	await vendorPage.addVariableProduct(data.product.variable);
+	// });
 
 	test('vendor can add simple subscription product @pro', async ( ) => {
 		await vendorPage.addSimpleSubscription(data.product.simpleSubscription);
 	});
 
-	test.fixme('vendor can add variable subscription product @pro', async ( ) => {
-		await vendorPage.addVariableSubscription(data.product.variableSubscription);
-	});
+	// test.skip('vendor can add variable subscription product @pro', async ( ) => {
+	// 	await vendorPage.addVariableSubscription(data.product.variableSubscription);
+	// });
 
 	test('vendor can add external product @pro', async ( ) => {
 		await vendorPage.addExternalProduct(data.product.external);
@@ -110,7 +110,7 @@ test.describe('Vendor functionality test', () => {
 		await vendorPage.addAddon(data.vendor.addon);
 	});
 
-	test.fixme('vendor can edit addon @pro', async ( ) => {
+	test.skip('vendor can edit addon @pro', async ( ) => {
 		const addonName = await vendorPage.addAddon(data.vendor.addon);
 		await vendorPage.editAddon(data.vendor.addon, addonName);
 	});

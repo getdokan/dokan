@@ -28,16 +28,16 @@ test.describe('Single store functionality test', () => {
 
 	// single store page
 
-	test.skip('dokan single store page is rendering properly @lite @pro @explo', async ( ) => {
-		//todo: pre: need toc on store and admin settings
-		await customer.singleStoreRenderProperly(data.predefined.vendorStores.vendor1);
-		//todo:  should be pass for all four layout
-	});
+	// test.skip('dokan single store page is rendering properly @lite @pro @explo', async ( ) => {
+	// 	//todo: pre: need toc on store and admin settings
+	// 	await customer.singleStoreRenderProperly(data.predefined.vendorStores.vendor1);
+	// 	//todo:  should be pass for all four layout
+	// });
 
-	test.skip('customer can view store open-close time on single store @lite @pro', async ( ) => {
-		//todo: pre: need store open close
-		await customer.storeOpenCloseTime(data.predefined.vendorStores.vendor1);
-	});
+	// test.skip('customer can view store open-close time on single store @lite @pro', async ( ) => {
+	// 	//todo: pre: need store open close
+	// 	await customer.storeOpenCloseTime(data.predefined.vendorStores.vendor1);
+	// });
 
 	test('customer can search product on single store @lite @pro', async ( ) => {
 		await customer.singleStoreSearchProduct(data.predefined.vendorStores.vendor1, data.predefined.simpleProduct.product1.name);
@@ -47,10 +47,10 @@ test.describe('Single store functionality test', () => {
 		await customer.singleStoreSortProducts(data.predefined.vendorStores.vendor1, 'price');
 	});
 
-	test.skip('customer can view store terms and conditions @lite @pro', async ( ) => {
-		//todo: pre need toc on store and admin settings
-		await customer.storeTermsAndCondition(data.predefined.vendorStores.vendor1, data.vendor.toc);
-	});
+	// test.skip('customer can view store terms and conditions @lite @pro', async ( ) => {
+	// 	//todo: pre need toc on store and admin settings
+	// 	await customer.storeTermsAndCondition(data.predefined.vendorStores.vendor1, data.vendor.toc);
+	// });
 
 	test('customer can share store @pro', async ( ) => {
 		await customer.storeShare(data.predefined.vendorStores.vendor1, data.storeShare.facebook);

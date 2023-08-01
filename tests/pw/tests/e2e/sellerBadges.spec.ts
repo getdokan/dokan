@@ -54,13 +54,13 @@ test.describe('Seller badge test', () => {
 		await admin.previewSellerBadge(data.sellerBadge.eventName.productsPublished);
 	});
 
-	test.fixme('admin can filter vendors by seller badge  @pro', async ( ) => {
-		await admin.filterVendorsByBadge(data.sellerBadge.eventName.productsPublished);
-	});
+	// test.skip('admin can filter vendors by seller badge  @pro', async ( ) => {
+	// 	await admin.filterVendorsByBadge(data.sellerBadge.eventName.productsPublished);
+	// });
 
-	test.fixme('admin can view seller badge vendors @pro', async ( ) => {
-		await admin.sellerBadgeVendors(data.sellerBadge.eventName.productsPublished);
-	});
+	// test.skip('admin can view seller badge vendors @pro', async ( ) => {
+	// 	await admin.sellerBadgeVendors(data.sellerBadge.eventName.productsPublished);
+	// });
 
 	test('admin can view seller badges acquired by vendor @pro', async ( ) => {
 		await admin.sellerBadgeAcquiredByVendor(data.predefined.vendorStores.vendor1);

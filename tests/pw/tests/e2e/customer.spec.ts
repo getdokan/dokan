@@ -98,9 +98,9 @@ test.describe('Customer functionality test', () => {
 	});
 
 
-	test.fixme('customer can download downloadables @lite @pro', async ( ) => {
-		// pre: complete download product
-	});
+	// test.skip('customer can download downloadables @lite @pro', async ( ) => {
+	// 	// pre: complete download product
+	// });
 
 
 });

@@ -60,9 +60,9 @@ test.describe('Product Advertising test', () => {
 		await admin.productAdvertisingBulkAction('delete');
 	});
 
-	test.fixme('vendor can buy product advertising @pro', async ( ) => {
-	// await vendor.buyProductAdvertising(data.productAdvertisement.advertisedProduct);
-	});
+	// test.skip('vendor can buy product advertising @pro', async ( ) => {
+	// // await vendor.buyProductAdvertising(data.productAdvertisement.advertisedProduct);
+	// });
 
 
 });

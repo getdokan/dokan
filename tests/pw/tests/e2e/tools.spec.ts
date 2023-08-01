@@ -47,13 +47,13 @@ test.describe('Tools test', () => {
 		await admin.regenerateVariableProductVariationsAuthorIds();
 	});
 
-	test.skip('admin can import dummy data @pro', async ( ) => {
-		await admin.importDummyData();
-	});
+	// test.skip('admin can import dummy data @pro', async ( ) => {
+	// 	await admin.importDummyData();
+	// });
 
-	test.skip('admin can clear dummy data @pro', async ( ) => {
-		await admin.clearDummyData();
-	});
+	// test.skip('admin can clear dummy data @pro', async ( ) => {
+	// 	await admin.clearDummyData();
+	// });
 
 	test('admin can test distance matrix API @pro', async ( ) => {
 		await admin.testDistanceMatrixApi(data.tools.distanceMatrixApi);

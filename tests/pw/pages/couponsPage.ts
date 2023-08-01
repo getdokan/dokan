@@ -31,6 +31,7 @@ export class CouponsPage extends AdminPage {
 		await this.toContainText(selector.admin.marketing.addNewCoupon.publishSuccessMessage, 'Coupon updated.');
 	}
 
+
 	// vendor coupons render properly
 	async vendorCouponsRenderProperly(): Promise<void> {
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.coupons);
@@ -59,6 +60,7 @@ export class CouponsPage extends AdminPage {
 	}
 
 
+	// update coupon fields
 	async updateCouponFields(coupon: coupon){
 		await this.type(selector.vendor.vCoupon.couponTitle, coupon.title());
 		await this.type(selector.vendor.vCoupon.description, coupon.description);

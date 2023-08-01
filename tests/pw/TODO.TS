@@ -217,7 +217,7 @@ export const installPluginThruWpCli = async ( pluginPath ) => {
 	await page.waitForLoadState( 'networkidle' );
 
 
-
+ //ToDo: update every checkbox with check instead of click, check method , if checked remains checked
 //todo: 
 //todo: 
 //todo: 
@@ -418,12 +418,12 @@ follow Store
 // });
 	//todo:  vendor can see followers, need followers via api
 seller badge
-	// test.fixme('admin can filter vendors by seller badge  @pro', async ( ) => {
+	// test.skip('admin can filter vendors by seller badge  @pro', async ( ) => {
 	// 	//todo:  need to wait 1 min after badge create ; run via background process; can background process can be automated
 	// 	await admin.filterVendorsByBadge(data.sellerBadge.eventName.productsPublished);
 	// });
 
-	// test.fixme('admin can view seller badge vendors @pro', async ( ) => {
+	// test.skip('admin can view seller badge vendors @pro', async ( ) => {
 	// 	//todo:  need to wait 1 min after badge create; run via background process ; can background process can be automated
 	// 	await admin.sellerBadgeVendors(data.sellerBadge.eventName.productsPublished);
 	// });

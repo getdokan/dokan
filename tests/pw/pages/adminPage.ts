@@ -3,6 +3,7 @@ import { BasePage } from 'pages/basePage';
 import { selector } from 'pages/selectors';
 import { data } from 'utils/testData';
 import { payment, dokanSetupWizard, woocommerce } from 'utils/interfaces';
+import { helpers } from 'utils/helpers';
 
 const { DOKAN_PRO } = process.env;
 
@@ -19,9 +20,11 @@ export class AdminPage extends BasePage {
 		await this.goIfNotThere(data.subUrls.backend.adminDashboard);
 	}
 
+
 	async goToDokanSettings() {
 		await this.goIfNotThere(data.subUrls.backend.dokan.settings);
 	}
+
 
 	async goToWooCommerceSettings() {
 		await this.goIfNotThere(data.subUrls.backend.wc.settings);
@@ -29,21 +32,6 @@ export class AdminPage extends BasePage {
 
 
 	// Woocommerce Settings
-
-	// Admin Setup Woocommerce Settings
-	// async setWoocommerceSettings(data: any) {
-	// await this.enablePasswordInputField(data);
-	// await this.addStandardTaxRate(data.tax);
-	// await this.setCurrencyOptions(data.currency);
-	// await this.addShippingMethod(data.shipping.shippingMethods.flatRate);
-	// await this.addShippingMethod(data.shipping.shippingMethods.flatRate);
-	// await this.addShippingMethod(data.shipping.shippingMethods.freeShipping);
-	// await this.addShippingMethod(data.shipping.shippingMethods.tableRateShipping);
-	// await this.addShippingMethod(data.shipping.shippingMethods.distanceRateShipping);
-	// await this.addShippingMethod(data.shipping.shippingMethods.vendorShipping);
-	// await this.deleteShippingMethod(data.shipping.shippingMethods.flatRate);
-	// await this.deleteShippingZone(data.shipping.shippingZone);
-	// }
 
 
 	// Enable Password Field
@@ -84,43 +72,35 @@ export class AdminPage extends BasePage {
 	}
 
 
-	// async getOrderDetails(orderNumber: any) {
-	// 	const subMenuOpened = await this.getClassValue(selector.admin.aDashboard.dokanMenu);
-	// 	if (subMenuOpened.includes('opensub')) {
-	// 		await this.hover(selector.admin.aDashboard.dokan);
-	// 		await this.click(selector.admin.dokan.menus.reports);
-	// 	} else {
-	// 		await this.click(selector.admin.dokan.menus.reports);
+	// get order details from allLog table
+	async getOrderDetails(orderNumber: string) {
+		await this.goIfNotThere(data.subUrls.backend.dokan.allLogs);
 
-	// 	}
-	// 	await this.click(selector.admin.dokan.reports.allLogs);
+		await this.clearAndType(selector.admin.dokan.reports.allLogs.search, orderNumber);
 
-	// 	await this.type(selector.admin.dokan.reports.searchByOrder, orderNumber);
+		const aOrderDetails = {
+			orderNumber: (await this.getElementText(selector.admin.dokan.reports.allLogs.orderDetails.orderId) as string ).split('#')[1],
+			store: await this.getElementText(selector.admin.dokan.reports.allLogs.orderDetails.store),
+			orderTotal: helpers.price(await this.getElementText(selector.admin.dokan.reports.allLogs.orderDetails.orderTotal) as string),
+			vendorEarning: helpers.price(await this.getElementText(selector.admin.dokan.reports.allLogs.orderDetails.vendorEarning)  as string ),
+			commission: helpers.price(await this.getElementText(selector.admin.dokan.reports.allLogs.orderDetails.commission)  as string),
+			gatewayFee: helpers.price(await this.getElementText(selector.admin.dokan.reports.allLogs.orderDetails.gatewayFee)  as string),
+			shippingCost: helpers.price(await this.getElementText(selector.admin.dokan.reports.allLogs.orderDetails.shippingCost)  as string),
+			tax: helpers.price(await this.getElementText(selector.admin.dokan.reports.allLogs.orderDetails.tax)  as string),
+			orderStatus: await this.getElementText(selector.admin.dokan.reports.allLogs.orderDetails.orderStatus),
+			orderDate: await this.getElementText(selector.admin.dokan.reports.allLogs.orderDetails.orderDate),
+		};
+
+		return aOrderDetails;
+	}
 
 
-	// 	const aOrderDetails = {
-	// 		orderNumber: (await this.getElementText(selector.admin.dokan.reports.orderId)).split('#')[1],
-	// 		store: await this.getElementText(selector.admin.dokan.reports.store),
-	// 		orderTotal: helpers.price(await this.getElementText(selector.admin.dokan.reports.orderTotal)),
-	// 		vendorEarning: helpers.price(await this.getElementText(selector.admin.dokan.reports.vendorEarning)),
-	// 		commission: helpers.price(await this.getElementText(selector.admin.dokan.reports.commission)),
-	// 		gatewayFee: helpers.price(await this.getElementText(selector.admin.dokan.reports.gatewayFee)),
-	// 		shippingCost: helpers.price(await this.getElementText(selector.admin.dokan.reports.shippingCost)),
-	// 		tax: helpers.price(await this.getElementText(selector.admin.dokan.reports.tax)),
-	// 		orderStatus: await this.getElementText(selector.admin.dokan.reports.orderStatus),
-	// 		orderDate: await this.getElementText(selector.admin.dokan.reports.orderDate),
-	// 	};
-	// 	return aOrderDetails;
-	// }
-
-	// // Get Total Admin Commission from Admin Dashboard
-	// async getTotalAdminCommission() {
-	// 	await this.hover(selector.admin.aDashboard.dokan);
-	// 	await this.click(selector.admin.dokan.menus.dashboard);
-
-	// 	const totalAdminCommission = helpers.price(await this.getElementText(selector.admin.dokan.dashboard.commissionEarned));
-	// 	return totalAdminCommission;
-	// }
+	// Get Total Admin Commission from Admin Dashboard
+	async getTotalAdminCommission() {
+		await this.goIfNotThere(data.subUrls.backend.dokan.dokan);
+		const totalAdminCommission = helpers.price(await this.getElementText(selector.admin.dokan.dashboard.atAGlance.commissionEarned) as string);
+		return totalAdminCommission;
+	}
 
 
 	// Dokan Setup Wizard
@@ -129,8 +109,6 @@ export class AdminPage extends BasePage {
 	async setDokanSetupWizard(dokanSetupWizard: dokanSetupWizard) {
 		// await this.hover(selector.admin.aDashboard.dokan)
 		// await this.click(selector.admin.dokan.toolsMenu)
-
-		// Open Dokan Setup Wizard
 		// await this.click(selector.admin.dokan.tools.openSetupWizard)
 
 		await this.goIfNotThere(data.subUrls.backend.dokan.setupWizard);

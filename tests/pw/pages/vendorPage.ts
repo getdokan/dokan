@@ -89,6 +89,7 @@ export class VendorPage extends BasePage {
 		}
 	}
 
+
 	// vendor setup wizard
 	async vendorSetupWizard(setupWizardData: vendorSetupWizard): Promise<void> {
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.setupWizard);
@@ -112,7 +113,7 @@ export class VendorPage extends BasePage {
 				await this.press(data.key.enter);
 			}
 
-			await this.check(selector.vendor.vSetup.email); //ToDo: update every checkbox with check instead of click, check method , if checked remains checked
+			await this.check(selector.vendor.vSetup.email);
 			await this.click(selector.vendor.vSetup.continueStoreSetup);
 			// paypal
 			await this.clearAndType(selector.vendor.vSetup.paypal, setupWizardData.paypal());
@@ -172,6 +173,7 @@ export class VendorPage extends BasePage {
 		expect(createdProduct.toLowerCase()).toBe(productName.toLowerCase());
 	}
 
+
 	// vendor add variable product
 	async addVariableProduct(product: product['variable'] ): Promise<void> {
 		await this.addSimpleProduct(product);
@@ -202,6 +204,7 @@ export class VendorPage extends BasePage {
 		expect(productCreateSuccessMessage?.replace(/\s+/g, ' ').trim()).toMatch(product.saveSuccessMessage);
 	}
 
+
 	// vendor add simple subscription product
 	async addSimpleSubscription(product: product['simpleSubscription']): Promise<void> {
 		await this.addSimpleProduct(product);
@@ -217,6 +220,7 @@ export class VendorPage extends BasePage {
 		const productCreateSuccessMessage = await this.getElementText(selector.vendor.product.updatedSuccessMessage);
 		expect(productCreateSuccessMessage?.replace(/\s+/g, ' ').trim()).toMatch(product.saveSuccessMessage);
 	}
+
 
 	// vendor add variable subscription product
 	async addVariableSubscription(product: product['variableSubscription']): Promise<void> {
@@ -249,12 +253,13 @@ export class VendorPage extends BasePage {
 		expect(productCreateSuccessMessage?.replace(/\s+/g, ' ').trim()).toMatch(product.saveSuccessMessage);
 	}
 
+
 	// vendor add external product
 	async addExternalProduct(product: product['external']): Promise<void> {
 		await this.addSimpleProduct(product);
 		// edit product
 		await this.selectByValue(selector.vendor.product.productType, product.productType);
-		await this.type(selector.vendor.product.productUrl, await this.getBaseUrl() + product.productUrl);
+		await this.type(selector.vendor.product.productUrl, this.getBaseUrl() + product.productUrl);
 		await this.type(selector.vendor.product.buttonText, product.buttonText);
 		await this.clearAndType(selector.vendor.product.price, product.regularPrice());
 
@@ -262,6 +267,7 @@ export class VendorPage extends BasePage {
 		const productCreateSuccessMessage = await this.getElementText(selector.vendor.product.updatedSuccessMessage);
 		expect(productCreateSuccessMessage?.replace(/\s+/g, ' ').trim()).toMatch(product.saveSuccessMessage);
 	}
+
 
 	// vendor add auction product
 	async addAuctionProduct(product: product['auction']): Promise<void> {
@@ -285,6 +291,7 @@ export class VendorPage extends BasePage {
 		const productCreateSuccessMessage = await this.getElementText(selector.vendor.product.updatedSuccessMessage);
 		expect(productCreateSuccessMessage?.replace(/\s+/g, ' ').trim()).toMatch(product.saveSuccessMessage);
 	}
+
 
 	// vendor add booking product
 	async addBookingProduct(product: product['booking']): Promise<void> {
@@ -316,6 +323,7 @@ export class VendorPage extends BasePage {
 		expect(createdProduct.toLowerCase()).toBe(productName.toLowerCase());
 	}
 
+
 	// vendor search similar product
 	async searchSimilarProduct(productName: string): Promise<void> {
 		await this.click(selector.vendor.vSearchSimilarProduct.search);
@@ -340,6 +348,7 @@ export class VendorPage extends BasePage {
 		// await this.updatePassword(vendorInfo.password, vendorInfo.password1, true);
 	}
 
+
 	// vendor update password
 	async updatePassword(currentPassword: string, newPassword: string, saveChanges = false): Promise<void> {
 		await this.type(selector.vendor.vAccountDetails.currentPassword, currentPassword);
@@ -351,6 +360,7 @@ export class VendorPage extends BasePage {
 		}
 	}
 
+
 	// vendor settings
 
 	async updateStoreMapViaSettingsSave() {
@@ -358,6 +368,7 @@ export class VendorPage extends BasePage {
 		await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.vendor.vStoreSettings.updateSettings);
 		await this.toContainText(selector.vendor.vStoreSettings.updateSettingsSuccessMessage, 'Your information has been saved successfully');
 	}
+
 
 	// vendor set store settings
 	async setStoreSettings(vendorInfo: any): Promise<void> {
@@ -379,6 +390,7 @@ export class VendorPage extends BasePage {
 		await this.toContainText(selector.vendor.vStoreSettings.updateSettingsSuccessMessage, vendorInfo.storeSettingsSaveSuccessMessage);
 
 	}
+
 
 	// vendor set banner and profile picture settings
 	// async bannerAndProfilePictureSettings(banner: string, profilePicture: string): Promise<void> { //todo:  fix
@@ -418,6 +430,7 @@ export class VendorPage extends BasePage {
 		await this.check(selector.vendor.vStoreSettings.moreProducts);
 	}
 
+
 	// vendor set map settings
 	async mapSettings(mapLocation: string): Promise<void> {
 		// map
@@ -429,6 +442,7 @@ export class VendorPage extends BasePage {
 		}
 	}
 
+
 	// vendor set terms and conditions settings
 	async termsAndConditionsSettings(termsAndConditions: string): Promise<void> {
 		// terms and conditions
@@ -438,6 +452,7 @@ export class VendorPage extends BasePage {
 			await this.typeFrameSelector(selector.vendor.vStoreSettings.termsAndConditionsIframe, selector.vendor.vStoreSettings.termsAndConditionsHtmlBody, termsAndConditions);
 		}
 	}
+
 
 	// vendor set opening closing time settings
 	async openingClosingTimeSettings(openingClosingTime: vendor['vendorInfo']['openingClosingTime']): Promise<void> {
@@ -456,6 +471,7 @@ export class VendorPage extends BasePage {
 			await this.clearAndType(selector.vendor.vStoreSettings.storeCloseNotice, openingClosingTime.storeCloseNotice);
 		}
 	}
+
 
 	// vendor set vacation settings
 	async vacationSettings(vacation: vendor['vendorInfo']['vacation']['datewise']): Promise<void> {
@@ -494,6 +510,7 @@ export class VendorPage extends BasePage {
 		}
 	}
 
+
 	// vendor set discount settings
 	async discountSettings(discount: vendor['vendorInfo']['discount']): Promise<void> {
 		// discount
@@ -505,6 +522,7 @@ export class VendorPage extends BasePage {
 		}
 	}
 
+
 	// vendor set catalog mode settings
 	async catalogModeSettings(): Promise<void> {
 		// catalog mode
@@ -515,11 +533,13 @@ export class VendorPage extends BasePage {
 		}
 	}
 
+
 	// vendor set biography settings
 	async biographySettings(biography: string): Promise<void> {
 		// biography
 		await this.typeFrameSelector(selector.vendor.vStoreSettings.biographyIframe, selector.vendor.vStoreSettings.biographyHtmlBody, biography);
 	}
+
 
 	// vendor set store support settings
 	async storeSupportSettings(supportButtonText: string): Promise<void> {
@@ -531,6 +551,7 @@ export class VendorPage extends BasePage {
 			await this.clearAndType(selector.vendor.vStoreSettings.supportButtonText, supportButtonText);
 		}
 	}
+
 
 	// vendor set minmax settings
 	async minMaxSettings(minMax: vendor['vendorInfo']['minMax']): Promise<void> {
@@ -554,6 +575,7 @@ export class VendorPage extends BasePage {
 		}
 	}
 
+
 	// vendor set store address
 	async setStoreAddress(vendorInfo: vendor['vendorInfo']): Promise<void> {
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsStore);
@@ -568,6 +590,7 @@ export class VendorPage extends BasePage {
 		await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.vendor.vStoreSettings.updateSettings);
 		await this.toContainText(selector.vendor.vStoreSettings.updateSettingsSuccessMessage, vendorInfo.storeSettingsSaveSuccessMessage);
 	}
+
 
 	// vendor add addons
 	async addAddon(addon: vendor['addon']): Promise<string> {
@@ -598,6 +621,7 @@ export class VendorPage extends BasePage {
 		await this.toContainText(selector.vendor.vAddonSettings.addonUpdateSuccessMessage, addon.saveSuccessMessage);
 		return addonName;
 	}
+
 
 	// vendor edit addons
 	async editAddon(addon: vendor['addon'], addonName: string): Promise<void> {
@@ -742,6 +766,7 @@ export class VendorPage extends BasePage {
 		await this.toContainText(selector.vendor.vDeliveryTimeSettings.deliveryTimeUpdateSettingsSuccessMessage, deliveryTime.saveSuccessMessage);
 	}
 
+
 	// vendor shipping settings
 
 	// vendor set all shipping settings
@@ -753,6 +778,7 @@ export class VendorPage extends BasePage {
 	// 	await this.setShippingSettings(data.vendor.shipping.shippingMethods.distanceRateShipping);
 	// }
 
+
 	// set shipping policies
 	async setShippingPolicies(shippingPolicy: vendor['shipping']['shippingPolicy']): Promise<void> {
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsShipping);
@@ -763,6 +789,7 @@ export class VendorPage extends BasePage {
 		await this.click(selector.vendor.vShippingSettings.shippingPolicies.shippingPoliciesSaveSettings);
 		await this.toContainText(selector.vendor.vShippingSettings.updateSettingsSuccessMessage, shippingPolicy.saveSuccessMessage);
 	}
+
 
 	// vendor set shipping settings
 	async setShippingSettings(shipping: any): Promise<void> {
@@ -1065,6 +1092,5 @@ export class VendorPage extends BasePage {
 		await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.products, selector.vendor.product.search.searchBtn);
 		await this.toBeVisible(selector.vendor.product.productLink(productName));
 	}
-
 
 }
