@@ -68,14 +68,6 @@ test.describe('Product functionality test', () => {
 		await admin.addDokanSubscription(data.product.vendorSubscription);
 	});
 
-	test('admin can add auction product @pro', async ( ) => {
-		await admin.addAuctionProduct(data.product.auction);
-	});
-
-	test('admin can add booking product @pro', async ( ) => {
-		await admin.addBookingProduct(data.product.booking);
-	});
-
 
 	//vendors
 
@@ -129,5 +121,9 @@ test.describe('Product functionality test', () => {
 		const [,, productName] = await apiUtils.createProduct(payloads.createProduct(), payloads. vendorAuth);
 		await vendor.permanentlyDeleteProduct(productName);
 	});
+
+	// test('vendor can\'t buy own product @pro', async ( ) => {
+	// 	await vendor.cantBuyOwnProduct(productName);
+	// });
 
 });

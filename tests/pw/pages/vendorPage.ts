@@ -269,61 +269,6 @@ export class VendorPage extends BasePage {
 	}
 
 
-	// vendor add auction product
-	async addAuctionProduct(product: product['auction']): Promise<void> {
-		await this.goIfNotThere(data.subUrls.frontend.vDashboard.auction);
-
-		// add new auction product
-		await this.click(selector.vendor.vAuction.addNewActionProduct);
-		await this.type(selector.vendor.vAuction.productName, product.productName());
-		// await this.addCategory(product.category)
-		await this.selectByValue(selector.vendor.vAuction.itemCondition, product.itemCondition);
-		await this.selectByValue(selector.vendor.vAuction.auctionType, product.auctionType);
-		await this.type(selector.vendor.vAuction.startPrice, product.regularPrice());
-		await this.type(selector.vendor.vAuction.bidIncrement, product.bidIncrement());
-		await this.type(selector.vendor.vAuction.reservedPrice, product.reservedPrice());
-		await this.type(selector.vendor.vAuction.buyItNowPrice, product.buyItNowPrice());
-		await this.removeAttribute(selector.vendor.vAuction.auctionStartDate, 'readonly');
-		await this.removeAttribute(selector.vendor.vAuction.auctionEndDate, 'readonly');
-		await this.type(selector.vendor.vAuction.auctionStartDate, product.startDate);
-		await this.type(selector.vendor.vAuction.auctionEndDate, product.endDate);
-		await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.productAuction, selector.vendor.vAuction.addAuctionProduct, 302);
-		const productCreateSuccessMessage = await this.getElementText(selector.vendor.product.updatedSuccessMessage);
-		expect(productCreateSuccessMessage?.replace(/\s+/g, ' ').trim()).toMatch(product.saveSuccessMessage);
-	}
-
-
-	// vendor add booking product
-	async addBookingProduct(product: product['booking']): Promise<void> {
-		await this.goIfNotThere(data.subUrls.frontend.vDashboard.booking);
-		const productName = product.productName();
-		await this.click(selector.vendor.vBooking.addNewBookingProduct);
-		// add new booking product
-		await this.type(selector.vendor.vBooking.productName, productName);
-		// await this.addCategory(product.category)
-		// general booking options
-		await this.selectByValue(selector.vendor.vBooking.bookingDurationType, product.bookingDurationType);
-		await this.clearAndType(selector.vendor.vBooking.bookingDurationMax, product.bookingDurationMax);
-		await this.selectByValue(selector.vendor.vBooking.bookingDurationUnit, product.bookingDurationUnit);
-		// calendar display mode
-		await this.selectByValue(selector.vendor.vBooking.calendarDisplayMode, product.calendarDisplayMode);
-		await this.check(selector.vendor.vBooking.enableCalendarRangePicker);
-		// availability
-		await this.clearAndType(selector.vendor.vBooking.maxBookingsPerBlock, product.maxBookingsPerBlock);
-		await this.clearAndType(selector.vendor.vBooking.minimumBookingWindowIntoTheFutureDate, product.minimumBookingWindowIntoTheFutureDate);
-		await this.selectByValue(selector.vendor.vBooking.minimumBookingWindowIntoTheFutureDateUnit, product.minimumBookingWindowIntoTheFutureDateUnit);
-		await this.clearAndType(selector.vendor.vBooking.maximumBookingWindowIntoTheFutureDate, product.maximumBookingWindowIntoTheFutureDate);
-		await this.selectByValue(selector.vendor.vBooking.maximumBookingWindowIntoTheFutureDateUnit, product.maximumBookingWindowIntoTheFutureDateUnit);
-		// costs
-		await this.type(selector.vendor.vBooking.baseCost, product.baseCost);
-		await this.type(selector.vendor.vBooking.blockCost, product.blockCost);
-		await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.productBooking, selector.vendor.vBooking.saveProduct, 302);
-		await this.waitForVisibleLocator(selector.vendor.vBooking.productName);
-		const createdProduct = await this.getElementValue(selector.vendor.vBooking.productName);
-		expect(createdProduct.toLowerCase()).toBe(productName.toLowerCase());
-	}
-
-
 	// vendor search similar product
 	async searchSimilarProduct(productName: string): Promise<void> {
 		await this.click(selector.vendor.vSearchSimilarProduct.search);
@@ -1034,11 +979,11 @@ export class VendorPage extends BasePage {
 		await this.toBeVisible(selector.vendor.product.productLink(productName));
 	}
 
-
 	// vendor return request render properly
 	async vendorUserSubscriptionsRenderProperly(){
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.userSubscriptions);
 
+		// filter
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const { filterByCustomerInput,  ...filters } = selector.vendor.vUserSubscriptions.filters;
 		await this.multipleElementVisible(filters);
@@ -1089,7 +1034,7 @@ export class VendorPage extends BasePage {
 		// analytics menu elements are visible
 		await this.multipleElementVisible(selector.vendor.vAnalytics.menus);
 
-		// date-picker  elements are visible
+		// date-picker elements are visible
 		await this.multipleElementVisible(selector.vendor.vAnalytics.datePicker);
 
 		await this.clickAndWaitForLoadState(selector.vendor.vAnalytics.menus.topPages);
@@ -1144,7 +1089,7 @@ export class VendorPage extends BasePage {
 		//todo: catalog, discount, vacation, open close, store category
 
 		// biography is visible
-		await this.toBeVisible(selector.vendor.vStoreSettings.biographyIframe);
+		DOKAN_PRO && await this.toBeVisible(selector.vendor.vStoreSettings.biographyIframe);
 
 		//todo: min-max, store-support
 

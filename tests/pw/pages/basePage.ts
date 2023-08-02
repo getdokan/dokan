@@ -1587,7 +1587,7 @@ export class BasePage {
 	// dokan select2
 	async select2ByText(selectSelector: string, optionSelector: string, text: string): Promise<void> {
 		await this.click(selectSelector);
-		await this.type(optionSelector, text);
+		await this.clearAndType(optionSelector, text);
 		await this.press('Enter');
 	}
 

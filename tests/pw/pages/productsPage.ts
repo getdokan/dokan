@@ -219,65 +219,7 @@ export class ProductsPage extends AdminPage {
 	}
 
 
-	// Admin Add Auction Product
-	async addAuctionProduct(product: product['auction']) {
-		await this.goIfNotThere(data.subUrls.backend.wc.addNewProducts);
-
-		// Name
-		await this.type(selector.admin.products.product.productName, product.productName());
-		await this.selectByValue(selector.admin.products.product.productType, product.productType);
-		await this.selectByValue(selector.admin.products.product.itemCondition, product.itemCondition);
-		await this.selectByValue(selector.admin.products.product.auctionType, product.auctionType);
-		await this.type(selector.admin.products.product.startPrice, product.regularPrice());
-		await this.type(selector.admin.products.product.bidIncrement, product.bidIncrement());
-		await this.type(selector.admin.products.product.reservedPrice, product.reservedPrice());
-		await this.type(selector.admin.products.product.buyItNowPrice, product.buyItNowPrice());
-		await this.type(selector.admin.products.product.auctionDatesFrom, product.startDate);
-		await this.type(selector.admin.products.product.auctionDatesTo, product.endDate);
-
-		// Category
-		await this.click(selector.admin.products.product.category(product.category));
-
-		// Vendor Store Name
-		await this.select2ByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameInput, product.storeName);
-		await this.scrollToTop();
-
-		// Publish
-		await this.clickAndWaitForResponse(data.subUrls.post, selector.admin.products.product.publish, 302);
-		await this.toContainText(selector.admin.products.product.updatedSuccessMessage, data.product.publishSuccessMessage);
-	}
-
-
-	// Admin Add Booking Product
-	async addBookingProduct(product: product['booking']) {
-		await this.goIfNotThere(data.subUrls.backend.wc.addNewProducts);
-
-		// Name
-		await this.type(selector.admin.products.product.productName, product.productName());
-		await this.selectByValue(selector.admin.products.product.productType, product.productType);
-		await this.selectByValue(selector.admin.products.product.bookingDurationType, product.bookingDurationType);
-		await this.clearAndType(selector.admin.products.product.bookingDurationMax, product.bookingDurationMax);
-		await this.selectByValue(selector.admin.products.product.calendarDisplayMode, product.calendarDisplayMode);
-
-		// Costs
-		await this.click(selector.admin.products.product.bookingCosts);
-		await this.clearAndType(selector.admin.products.product.baseCost, product.baseCost);
-		await this.clearAndType(selector.admin.products.product.blockCost, product.blockCost);
-
-		// Category
-		await this.click(selector.admin.products.product.category(product.category));
-
-		// Vendor Store Name
-		await this.select2ByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameInput, product.storeName);
-		await this.scrollToTop();
-
-		// Publish
-		await this.clickAndWaitForResponse(data.subUrls.post, selector.admin.products.product.publish, 302);
-		await this.toContainText(selector.admin.products.product.updatedSuccessMessage, data.product.publishSuccessMessage);
-	}
-
-
-	//products
+	// vendor
 
 
 	// products render properly

@@ -218,6 +218,7 @@ export interface product {
 	auction: {
 
 		productName: () => string;
+		name: string;
 		productType: string;
 		category: string;
 		itemCondition: string;

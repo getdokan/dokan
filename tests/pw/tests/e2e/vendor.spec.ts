@@ -89,14 +89,6 @@ test.describe('Vendor functionality test', () => {
 		await vendor.addExternalProduct(data.product.external);
 	});
 
-	test('vendor can add auction product @pro', async ( ) => {
-		await vendor.addAuctionProduct(data.product.auction);
-	});
-
-	test('vendor can add booking product @pro', async ( ) => {
-		await vendor.addBookingProduct(data.product.booking);
-	});
-
 	test('vendor update account details @lite @pro', async ( ) => {
 		await vendor.setVendorDetails(data.vendor.vendorInfo);
 	});

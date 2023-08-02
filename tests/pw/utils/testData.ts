@@ -253,8 +253,8 @@ export const data = {
 
 		// Auction
 		auction: {
-
 			productName: () => faker.commerce.productName() + (' (Auction)'),
+			name: '',
 			productType: 'auction',
 			category: 'Uncategorized',
 			itemCondition: 'new',  // 'new', 'used'
@@ -266,7 +266,8 @@ export const data = {
 			startDate: helpers.currentDateTime.replace(/,/g, ''),
 			endDate: helpers.addDays(helpers.currentDateTime, 1).replace(/,/g, ''),
 			storeName: String(process.env.VENDOR) + 'store',
-			saveSuccessMessage: '× Success! The product has been updated successfully. View Product →',
+			// saveSuccessMessage: '× Success! The product has been updated successfully. View Product →',
+			saveSuccessMessage: 'Success! The product has been updated successfully.',
 		},
 
 		// Review
@@ -779,6 +780,7 @@ export const data = {
 				csvImport: 'dashboard/tools/csv-import',
 				csvExport: 'dashboard/tools/csv-export',
 				auction: 'dashboard/auction',
+				auctionActivity: 'dashboard/auction-activity',
 				booking: 'dashboard/booking',
 				storeSupport: 'dashboard/support',
 				settingsStore: 'dashboard/settings/store',

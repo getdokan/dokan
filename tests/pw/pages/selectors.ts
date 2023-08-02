@@ -2495,17 +2495,18 @@ export const selector = {
 				productType: '#product-type',
 				virtual: '#\\_virtual',
 				downloadable: '#\\_downloadable',
+
 				// Add New Product Sub Menus
-				general: '.general_options > a',
-				inventory: '.inventory_options > a',
-				shipping: '.shipping_options > a',
-				linkedProducts: '.linked_product_options > a',
-				attributes: '.attribute_options > a',
-				variations: '.variations_options > a',
-				advanced: '.advanced_options > a',
-				auction: '.auction_tab_options > a',
-				bookingAvailability: '.bookings_availability_options > a',
-				bookingCosts: '.bookings_pricing_options > a',
+				general: '.general_options a',
+				inventory: '.inventory_options a',
+				shipping: '.shipping_options a',
+				linkedProducts: '.linked_product_options a',
+				attributes: '.attribute_options a',
+				variations: '.variations_options a',
+				advanced: '.advanced_options a',
+				auction: '.auction_tab_options a',
+				bookingAvailability: '.bookings_availability_options a',
+				bookingCosts: '.bookings_pricing_options a',
 
 				//General
 				regularPrice: '#\\_regular_price',
@@ -2530,9 +2531,11 @@ export const selector = {
 				maximumAmountToOrder: '#max_amount',
 				orderRules: '#\\_donot_count',
 				categoryRules: '#ignore_from_cat',
+
 				// External Product
 				productUrl: '#\\_product_url',
 				buttonText: '#\\_button_text',
+
 				// Simple Subscription
 				subscriptionPrice: '#\\_subscription_price',
 				subscriptionPeriodInterval: '#\\_subscription_period_interval',
@@ -2639,7 +2642,7 @@ export const selector = {
 				adminCommissionCombined: '.additional_fee > .input-text',
 				// Vendor
 				// storeName: '#dokan_product_author_override',
-				storeName: 'div#dokansellerdiv span.select2-selection__arrow',
+				storeName: 'div#sellerdiv span.select2-selection__arrow',
 				// storeNameOptions: '#dokan_product_author_override option',
 				storeNameInput: '.select2-search.select2-search--dropdown .select2-search__field',
 				storeNameOption: (text: string) => `//select[@id='dokan_product_author_override']//option[contains(text(),'${text}')]`, // Select Option by text
@@ -4468,63 +4471,157 @@ export const selector = {
 				draft: '//ul[contains(@class,"dokan-listing-filter")]//a[contains(text(),"Draft")]',
 			},
 
-			// Create Auction Product
 			addNewActionProduct: '.dokan-add-product-link .dokan-btn-theme',
-			productName: '#post-title',
-			productShortDescription: '#content > .col-full',
-			ProductImage: '.dokan-feat-image-btn',
-			uploadProductImage: '#\\__wp-uploader-id-1',
-			addGalleryImage: '.fa-plus',
-			uploadGalleryImage: '#\\__wp-uploader-id-4',
-			category: 'select2-product_cat-container',
-			categoryValues: '.select2-results ul li',
-			productTag: '.select2-search__field',
-			downloadable: '#\\_downloadable',
-			virtual: '#\\_virtual',
-			// General Options
-			itemCondition: '#\\_auction_item_condition',
-			auctionType: '#\\_auction_type',
-			enableProxyBiddingForThisAuctionProduct: '.dokan-form-group > .checkbox > label',
-			startPrice: '#\\_auction_start_price',
-			bidIncrement: '#\\_auction_bid_increment',
-			reservedPrice: '#\\_auction_reserved_price',
-			buyItNowPrice: '#\\_regular_price',
-			auctionStartDate: '#\\_auction_dates_from',
-			auctionEndDate: '#\\_auction_dates_to',
-			enableAutomaticRelistingForThisAuction: '#\\_auction_automatic_relist',
-			relistIfFailAfterNHours: '#\\_auction_relist_fail_time',
-			relistIfNotPaidAfterNHours: '#\\_auction_relist_not_paid_time',
-			relistAuctionDurationInH: '#\\_auction_relist_duration',
-			// Shipping
-			thisProductRequiresShipping: '#\\_disable_shipping',
-			weight: '#\\_weight',
-			length: '#\\_length',
-			width: '#\\_width',
-			height: '#\\_height',
-			shippingClass: '#product_shipping_class',
-			shippingSettings: '.help-block > a',
-			// Tax
-			taxStatus: '#\\_tax_status',
-			taxClass: '#\\_tax_class',
-			// Short Description
-			shortDescription: '#post-excerpt',
-			// Description
-			productDescriptionIframe: '.dokan-auction-post-content iframe',
-			productDescriptionHtmlBody: '#tinymce',
+			actionsActivity: '.button-ml .dokan-btn',
+
+			// Filter
+			filters:{
+				dateRange: 'input#auction_date_range',
+				filter: '//button[normalize-space()="Filter"]',
+				filterReset: '//a[normalize-space()="Reset"]',
+			},
+
+			// Search
+			search: 'input[name ="search"]',
+
+			//table
+			table: {
+				table: 'table.dokan-table.product-listing-table',
+				imageColumn: '//th[normalize-space()="Image"]',
+				nameColumn: '//th[normalize-space()="Name"]',
+				statusColumn: '//th[normalize-space()="Status"]',
+				sKUColumn: '//th[normalize-space()="SKU"]',
+				stockColumn: '//th[normalize-space()="Stock"]',
+				priceColumn: '//th[normalize-space()="Price"]',
+				typeColumn: '//th[normalize-space()="Type"]',
+				viewsColumn: '//th[normalize-space()="Views"]',
+				dateColumn: '//th[normalize-space()="Date"]',
+			},
+
+			noAuctionsFound: '//td[normalize-space()="No product found"]',
+			productCell: (name: string) =>  `//a[normalize-space()="${name}"]/../..`,
+			editProduct: (name: string) =>  `//a[normalize-space()="${name}"]/../..//span[@class="edit"]`,
+			deletePermanently:(name: string) =>   `//a[normalize-space()="${name}"]/../..//span[@class="delete"]`,
+			viewProduct: (name: string) =>  `//a[normalize-space()="${name}"]/../..//span[@class="view"]`,
+			edit: '.row-actions .edit',
+			permanentlyDelete: '.row-actions .delete',
+			view: '.row-actions .view',
+
+			confirmDelete: '.swal2-confirm',
+			cancelDelete: '.swal2-cancel',
+			dokanSuccessMessage: '.dokan-alert.dokan-alert-success',
+
+			// Create Auction Product
+			auction: {
+
+				// basic info
+				productName: '#post-title',
+				productShortDescription: '#post_excerpt',
+				ProductImage: '.dokan-feat-image-btn',
+				uploadProductImage: '#\\__wp-uploader-id-1',
+				addGalleryImage: '.fa-plus',
+				uploadGalleryImage: '#\\__wp-uploader-id-4',
+				category: 'select2-product_cat-container',
+				categoryValues: '.select2-results ul li',
+				productTag: '.select2-search__field',
+				downloadable: '#\\_downloadable',
+				virtual: '#\\_virtual',
+
+				// General Options
+				itemCondition: '#\\_auction_item_condition',
+				auctionType: '#\\_auction_type',
+				enableProxyBiddingForThisAuctionProduct: '.dokan-form-group > .checkbox > label',
+				startPrice: '#\\_auction_start_price',
+				bidIncrement: '#\\_auction_bid_increment',
+				reservedPrice: '#\\_auction_reserved_price',
+				buyItNowPrice: '#\\_regular_price',
+				auctionStartDate: '#\\_auction_dates_from',
+				auctionEndDate: '#\\_auction_dates_to',
+				enableAutomaticRelistingForThisAuction: '#\\_auction_automatic_relist',
+				relistIfFailAfterNHours: '#\\_auction_relist_fail_time',
+				relistIfNotPaidAfterNHours: '#\\_auction_relist_not_paid_time',
+				relistAuctionDurationInH: '#\\_auction_relist_duration',
+
+				// Shipping
+				thisProductRequiresShipping: '#\\_disable_shipping',
+				weight: '#\\_weight',
+				length: '#\\_length',
+				width: '#\\_width',
+				height: '#\\_height',
+				shippingClass: '#product_shipping_class',
+				shippingSettings: '.help-block a',
+
+				// Tax
+				taxStatus: '#\\_tax_status',
+				taxClass: '#\\_tax_class',
+
+				// Short Description
+				shortDescription: '#post-excerpt',
+
+				// Description
+				productDescriptionIframe: '.dokan-auction-post-content iframe',
+				productDescriptionHtmlBody: '#tinymce',
+
+				// Add Auction
+				addAuctionProduct: 'input[value="Add auction Product"]',
+				updateAuctionProduct: 'input[value="Update Product"]',
+			},
+
+			viewAuction: {
+				productImage: '.woocommerce-product-gallery__image--placeholder img.wp-post-image',
+				productName: '.product_title',
+				startingOrCurrentBid: '.summary .auction-price .amount',
+				itemCondition: '.curent-bid',
+				auctionTime: '#countdown.auction-time',
+				auctionEnd: '.auction-end',
+				reversePriceStatus: '.reserve.hold',
+
+				noBidOption: '//div[@class="woocommerce-info" and contains(text(), "You are not allowed to bid your own product.")]',
+				bidQuantity: 'div.quantity.buttons_added',
+				bidButton: '.bid_button',
+				buyNow: '.single_add_to_cart_button',
+				getSupport: '.dokan-store-support-btn',
+
+
+				auctionHistoryTab: '#tab-title-simle_auction_history',
+
+
+			},
 
 			// Auction Activity
-			actionActivity: '.button-ml > .dokan-btn',
-			backToActions: '.entry-title > #auction-clear-filter-button',
-			// Filter
-			filterDateFrom: '#\\_auction_dates_from',
-			filterDateTo: '#\\_auction_dates_to',
-			filter: '.dokan-btn-theme',
-			filterReset: 'div > #auction-clear-filter-button',
-			// Search
-			searchAuctionActivity: '.dokan-form-control',
-			search: '//button[contains(text(),"Search") and @class="dokan-btn"]',
-			// Add Auction
-			addAuctionProduct: '//input[@name="add_auction_product"]',
+			actionActivity:{
+
+				actionActivityText: '//h1[contains(text(), "Auctions Activity")]',
+				backToActions: '//a[normalize-space()="Auctions"]',
+
+				// Filter
+				filters:{
+					dateRange: 'input#auction-activity-datetime-range',
+					filter: 'button[name="auction_activity_date_filter"]',
+					filterReset: 'button#auction-clear-filter-button',
+				},
+
+				// Search
+				search:{
+					searchInput: 'input[name="auction_activity_search"]',
+					search: '.search-box .dokan-btn',
+				},
+
+				//table
+				table: {
+					table: 'table.dokan-table.product-listing-table',
+					auctionColumn: '//th[normalize-space()="Auction"]',
+					userNameColumn: '//th[normalize-space()="User Name"]',
+					userEmailColumn: '//th[normalize-space()="User Email"]',
+					bidColumn: '//th[normalize-space()="Bid"]',
+					dateColumn: '//th[normalize-space()="Date"]',
+					proxyColumn: '//th[normalize-space()="Proxy"]',
+				},
+
+				noActivityFound: '//td[normalize-space()="No Auctions Activity Found!"]',
+				rowsFound: '.dokan-table.product-listing-table tbody tr',
+			},
+
 		},
 
 		// Support
@@ -4656,10 +4753,10 @@ export const selector = {
 			multipleLocation: '#multiple-store-location',
 			addLocation: '#show-add-store-location-section-btn',
 			editLocation: '.store-pickup-location-edit-btn',
+			locationName: '#store-location-name-input',
 
 			// Address
 			address:{
-				locationName: '#store-location-name-input',
 				street: '#dokan_address\\[street_1\\]',
 				street2: '#dokan_address\\[street_2\\]',
 				city: '#dokan_address\\[city\\]',
@@ -4686,7 +4783,6 @@ export const selector = {
 
 			// Map
 			map: '#dokan-map-add',
-			mapFirstResult: '#ui-id-3',
 
 			// Terms and Conditions
 			termsAndConditions: '//label[contains(text(), "Terms and Conditions")]/..//input[@type="checkbox"]',
