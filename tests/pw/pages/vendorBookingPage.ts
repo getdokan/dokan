@@ -19,7 +19,7 @@ export class BookingPage extends VendorPage {
 		await this.goIfNotThere(data.subUrls.backend.wc.addNewProducts);
 
 		// Name
-		await this.type(selector.admin.products.product.productName, product.productName());
+		await this.clearAndType(selector.admin.products.product.productName, product.productName());
 		await this.selectByValue(selector.admin.products.product.productType, product.productType);
 		await this.selectByValue(selector.admin.products.product.bookingDurationType, product.bookingDurationType);
 		await this.clearAndType(selector.admin.products.product.bookingDurationMax, product.bookingDurationMax);
@@ -38,7 +38,7 @@ export class BookingPage extends VendorPage {
 		await this.scrollToTop();
 
 		// Publish
-		await this.clickAndWaitForResponse(data.subUrls.post, selector.admin.products.product.publish, 302);
+		await this.clickAndWaitForResponseAndLoadState(data.subUrls.post, selector.admin.products.product.publish, 302);
 		await this.toContainText(selector.admin.products.product.updatedSuccessMessage, data.product.publishSuccessMessage);
 	}
 
@@ -56,7 +56,7 @@ export class BookingPage extends VendorPage {
 		const productName = product.productName();
 		await this.click(selector.vendor.vBooking.addNewBookingProduct);
 		// add new booking product
-		await this.type(selector.vendor.vBooking.productName, productName);
+		await this.clearAndType(selector.vendor.vBooking.productName, productName);
 		// await this.addCategory(product.category)
 		// general booking options
 		await this.selectByValue(selector.vendor.vBooking.bookingDurationType, product.bookingDurationType);
@@ -72,8 +72,8 @@ export class BookingPage extends VendorPage {
 		await this.clearAndType(selector.vendor.vBooking.maximumBookingWindowIntoTheFutureDate, product.maximumBookingWindowIntoTheFutureDate);
 		await this.selectByValue(selector.vendor.vBooking.maximumBookingWindowIntoTheFutureDateUnit, product.maximumBookingWindowIntoTheFutureDateUnit);
 		// costs
-		await this.type(selector.vendor.vBooking.baseCost, product.baseCost);
-		await this.type(selector.vendor.vBooking.blockCost, product.blockCost);
+		await this.clearAndType(selector.vendor.vBooking.baseCost, product.baseCost);
+		await this.clearAndType(selector.vendor.vBooking.blockCost, product.blockCost);
 		await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.productBooking, selector.vendor.vBooking.saveProduct, 302);
 		await this.waitForVisibleLocator(selector.vendor.vBooking.productName);
 		// const createdProduct = await this.getElementValue(selector.vendor.vBooking.productName);
