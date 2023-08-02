@@ -762,13 +762,17 @@ export const data = {
 				productAuction: 'dashboard/new-auction-product',
 				productBooking: 'dashboard/booking/new-product',
 				orders: 'dashboard/orders',
+				userSubscriptions: 'dashboard/user-subscription',
 				coupons: 'dashboard/coupons',
+				deliveryTime: 'dashboard/delivery-time-dashboard',
 				reviews: 'dashboard/reviews/',
 				withdraw: 'dashboard/withdraw/',
 				withdrawRequests: 'dashboard/withdraw-requests',
 				badges: 'dashboard/seller-badge/',
+				returnRequest: 'dashboard/return-request',
 				staff: 'dashboard/staffs',
 				followers: 'dashboard/followers',
+				analytics: 'dashboard/analytics',
 				announcements: 'dashboard/announcement',
 				tools: 'dashboard/tools',
 				export: 'dashboard/tools/#export',
@@ -776,6 +780,7 @@ export const data = {
 				csvExport: 'dashboard/tools/csv-export',
 				auction: 'dashboard/auction',
 				booking: 'dashboard/booking',
+				storeSupport: 'dashboard/support',
 				settingsStore: 'dashboard/settings/store',
 				settingsAddon: 'dashboard/settings/product-addon',
 				settingsPayment: 'dashboard/settings/payment',
@@ -1300,11 +1305,14 @@ export const data = {
 	storeSupport: {
 
 		title: 'test support ticket',
+
 		filter: {
 			byCustomer: String(process.env.CUSTOMER),
 			byVendor: String(process.env.VENDOR) + 'store',
 		},
+
 		chatReply: {
+			reply: 'chat reply' + faker.string.uuid(),
 			asAdmin: 'admin chat reply',
 			asVendor: 'vendor chat reply',
 		}

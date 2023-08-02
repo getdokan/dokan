@@ -54,11 +54,11 @@ export class StoreSupportsPage extends AdminPage {
 
 
 	// filter store supports
-	async filterStoreSupports(input: string, action: string){
+	async filterSupportTickets(input: string, filterBy: string){
 		await this.goIfNotThere(data.subUrls.backend.dokan.storeSupport);
 		// await this.clickIfVisible(selector.admin.dokan.storeSupport.filters.filterClear);
 
-		switch(action){
+		switch(filterBy){
 
 		case 'by-vendor' :
 			await this.click(selector.admin.dokan.storeSupport.filters.filterByVendors);
@@ -88,7 +88,7 @@ export class StoreSupportsPage extends AdminPage {
 	// reply to support ticket
 	async replySupportTicket(replyMessage: string, replier = 'admin'){
 		await this.goIfNotThere(data.subUrls.backend.dokan.storeSupport);
-		await this.clickAndWaitForLoadState(selector.admin.dokan.storeSupport.supportTicketFirstCell);
+		await this.clickAndWaitForLoadState(selector.admin.dokan.storeSupport.supportTicketFirstCell); //todo: can replace with search ticket
 
 		if(replier === 'vendor'){
 			await this.selectByValue(selector.admin.dokan.storeSupport.supportTicketDetails.chatAuthor, 'vendor');
@@ -140,8 +140,8 @@ export class StoreSupportsPage extends AdminPage {
 
 
 	// store support bulk action
-	async storeSupportBulkAction(action: string){
-		await this.goto(data.subUrls.backend.dokan.storeSupport);
+	async storeSupportBulkAction(action: string, supportTicketId?: string){
+		supportTicketId ? await this.searchSupportTicket(supportTicketId) : await this.goto(data.subUrls.backend.dokan.storeSupport);
 
 		// ensure row exists
 		await this.notToBeVisible(selector.admin.dokan.storeSupport.noRowsFound);
@@ -150,6 +150,137 @@ export class StoreSupportsPage extends AdminPage {
 		await this.selectByValue(selector.admin.dokan.storeSupport.bulkActions.selectAction, action);
 		await this.clickAndWaitForResponseAndLoadState(data.subUrls.api.dokan.storeSupport, selector.admin.dokan.storeSupport.bulkActions.applyAction);
 	}
+
+
+	// vendor
+
+
+	// vendor store support render properly
+	async vendorStoreSupportRenderProperly(){
+		await this.goIfNotThere(data.subUrls.frontend.vDashboard.storeSupport);
+
+		// store support menu elements are visible
+		await this.multipleElementVisible(selector.vendor.vSupport.menus);
+
+
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		const { filterByCustomerInput, result,  ...filters } = selector.vendor.vSupport.filters;
+		await this.multipleElementVisible(filters);
+
+
+		const noSupportTicket =  await this.isVisible(selector.vendor.vSupport.noSupportTicketFound);
+		if (noSupportTicket) {
+			console.log('No Support Tickets Found!!');
+			return;
+		}
+
+		// store support table elements are visible
+		await this.multipleElementVisible(selector.vendor.vSupport.table);
+
+	}
+
+
+	// vendor filter support tickets
+	async vendorFilterSupportTickets(input: string, filterBy:string, ){
+		await this.goIfNotThere(data.subUrls.frontend.vDashboard.storeSupport);
+
+		switch(filterBy){
+
+		case 'by-customer' :
+			await this.click(selector.vendor.vSupport.filters.filterByCustomer);
+			// await this.clearAndType(selector.vendor.vSupport.filters.filterByCustomerInput, input);
+			await this.typeAndWaitForResponse(data.subUrls.ajax, selector.vendor.vSupport.filters.filterByCustomerInput, input);
+			await this.toContainText(selector.vendor.vSupport.filters.result, input);
+			await this.clickAndWaitForLoadState(selector.vendor.vSupport.filters.search);
+			await this.notToHaveCount(selector.vendor.vSupport.storeSupportsCellByCustomer(input), 0);
+			break;
+
+		case 'by-date' :
+			break;
+
+		default :
+			break;
+		}
+
+	}
+
+
+	// vendor search support ticket
+	async vendorSearchSupportTicket(searchBy:string, input: string, closed?: boolean){
+		await this.goIfNotThere(data.subUrls.frontend.vDashboard.storeSupport);
+		if (closed){
+			await this.clickAndWaitForLoadState(selector.vendor.vSupport.menus.closedTickets);
+		}
+
+		await this.clearAndType(selector.vendor.vSupport.filters.tickedIdOrKeyword, input);
+		await this.clickAndWaitForLoadState(selector.vendor.vSupport.filters.search);
+
+		switch(searchBy){
+
+		case 'id' :
+			await this.toBeVisible(selector.vendor.vSupport.storeSupportCellById(input));
+			break;
+
+		case 'title' :
+			await this.notToHaveCount(selector.vendor.vSupport.storeSupportCellByTitle(input), 0);
+			break;
+
+		default :
+			break;
+		}
+
+	}
+
+
+	// vendor reply to support ticket
+	async vendorReplySupportTicket(ticketId: string, replyMessage: string){
+		await this.vendorSearchSupportTicket('id', ticketId);
+		await this.clickAndWaitForLoadState(selector.vendor.vSupport.storeSupportLink(ticketId));
+		await this.clearAndType(selector.vendor.vSupport.chatReply, replyMessage );
+		// await this.click(selector.vendor.vSupport.submitReply);
+		await this.clickAndWaitForResponse('wp-comments-post.php', selector.vendor.vSupport.submitReply, 302); //todo: fix
+		// await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.storeSupport, selector.vendor.vSupport.submitReply);
+	}
+
+
+	// vendor close support ticket
+	async vendorCloseSupportTicket( ticketId: string){
+		await this.vendorSearchSupportTicket('id', ticketId);
+		await this.click(selector.vendor.vSupport.closeTicket);
+		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.storeSupport, selector.vendor.vSupport.confirmCloseTicket);
+	}
+
+
+	// vendor reopen support ticket
+	async vendorReopenSupportTicket(ticketId: string){
+		await this.vendorSearchSupportTicket('id', ticketId, true);
+		await this.click(selector.vendor.vSupport.reOpenTicket);
+		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.storeSupport, selector.vendor.vSupport.confirmCloseTicket);
+	}
+
+	// vendor close support ticket with a reply
+	async vendorCloseSupportTicketWithReply(ticketId: string, replyMessage: string){
+		await this.vendorSearchSupportTicket('id', ticketId);
+		await this.clickAndWaitForLoadState(selector.vendor.vSupport.storeSupportLink(ticketId));
+		await this.toContainText(selector.vendor.vSupport.ticketStatus, 'Open');
+		await this.selectByValue(selector.vendor.vSupport.changeStatus, '1');
+		await this.clearAndType(selector.vendor.vSupport.chatReply, replyMessage );
+		await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.storeSupport, selector.vendor.vSupport.submitReply);
+		await this.toContainText(selector.vendor.vSupport.ticketStatus, 'Closed');
+	}
+
+	// vendor reopen support ticket with a reply
+	async vendorReopenSupportTicketWithReply(ticketId: string, replyMessage: string){
+		await this.vendorSearchSupportTicket('id', ticketId, true);
+		await this.clickAndWaitForLoadState(selector.vendor.vSupport.storeSupportLink(ticketId));
+		await this.toContainText(selector.vendor.vSupport.ticketStatus, 'Closed');
+		await this.clearAndType(selector.vendor.vSupport.chatReply, replyMessage );
+		await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.storeSupport, selector.vendor.vSupport.submitReply);
+		await this.toContainText(selector.vendor.vSupport.ticketStatus, 'Open');
+	}
+
+
+	// customer
 
 
 	// customer ask for store support

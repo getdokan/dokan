@@ -3197,7 +3197,7 @@ export const selector = {
 			filters:{
 				filterByDate: '#filter-by-date',
 				filterByCategory: '#product_cat',
-				filterByType: '#filter-by-type', // simple, ... //tODO:
+				filterByType: '#filter-by-type', // simple, ... //todo:
 				filterByOther: '//select[@name="filter_by_other"]', // featured, top_rated, best_selling
 				filter: '//button[normalize-space()="Filter"]',
 			},
@@ -3599,8 +3599,15 @@ export const selector = {
 		// User Subscriptions
 		vUserSubscriptions: {
 			// Filter
-			filterByDate: '#order_date_filter',
-			filter: '.dokan-btn',
+			filters: {
+				filterByCustomer: '//select[@id="dokan-filter-customer"]/..//span[@class="select2-selection__arrow"]',
+				filterByCustomerInput: '.select2-search__field',
+				filterByDate: '#order_date_filter',
+				filter: '.dokan-btn',
+			},
+
+			noSubscriptionsFound: '//div[@class="dokan-error" and contains(text(), "No subscription found")]',
+
 			// Edit Subscription
 			subscription: 'td a strong',
 			// Edit Subscription Order Status
@@ -3630,6 +3637,9 @@ export const selector = {
 			addNoteContent: '#add-note-content',
 			orderNoteType: '#order_note_type',
 			addNote: '.btn',
+
+			dokanError: '.dokan-error',
+
 		},
 
 		// Coupons
@@ -3714,17 +3724,27 @@ export const selector = {
 
 		// Deliverytime
 		vDeliveryTime: {
+			deliveryTimeAndStorePickup: '//h1[normalize-space()="Delivery Time & Store Pickup"]',
+
 			// Filter
-			deliveryTimeFilter: '#delivery-type-filter',
-			filter: '.dokan-btn',
+			filter:{
+				deliveryTimeFilter: '#delivery-type-filter',
+				filter: '//button[normalize-space()="Filter"]',
+			},
+
 			// calendar Navigation
-			month: '.fc-dayGridMonth-button',
-			week: '.fc-timeGridWeek-button',
-			day: '.fc-timeGridDay-button',
-			list: '.fc-listWeek-button',
-			previous: '.fc-prev-button',
-			next: '.fc-next-button',
-			today: '.fc-today-button',
+			navigation: {
+				month: '.fc-dayGridMonth-button',
+				week: '.fc-timeGridWeek-button',
+				day: '.fc-timeGridDay-button',
+				list: '.fc-listWeek-button',
+				today: '.fc-today-button',
+				previous: '.fc-prev-button',
+				next: '.fc-next-button',
+			},
+
+
+			deliveryTimeCalender: 'div#delivery-time-calendar',
 		},
 
 		// Review
@@ -3883,9 +3903,25 @@ export const selector = {
 		// Return Request
 		vReturnRequest: {
 			// Menus
-			all: '//ul[contains(@class,"request-statuses-filter")]//a[contains(text(),"All")]',
-			completed: '//ul[contains(@class,"request-statuses-filter")]//a[contains(text(),"Completed")]',
-			processing: '//ul[contains(@class,"request-statuses-filter")]//a[contains(text(),"Processing")]',
+			menus:{
+				all: '//ul[contains(@class,"request-statuses-filter")]//a[contains(text(),"All")]',
+				completed: '//ul[contains(@class,"request-statuses-filter")]//a[contains(text(),"Completed")]',
+				processing: '//ul[contains(@class,"request-statuses-filter")]//a[contains(text(),"Processing")]',
+			},
+
+
+			// table
+			table:{
+				table: '.rma-request-listing-table',
+				detailsColumn: '//th[normalize-space()="Details"]',
+				productsColumn: '//th[normalize-space()="Products"]',
+				typeColumn: '//th[normalize-space()="Type"]',
+				statusColumn: '//th[normalize-space()="Status"]',
+				lastUpdatedColumn: '//th[normalize-space()="Last Updated"]',
+			},
+
+			noRowsFound: '//td[normalize-space()="No request found"]',
+
 
 			// Refund Request Actions
 			returnRequestCell: (orderNumber: string) => `//strong[contains(text(),'Order ${orderNumber}')]/../..`,
@@ -4306,6 +4342,29 @@ export const selector = {
 			saveResource: '.dokan-btn-lg',
 		},
 
+		// Analytics
+		vAnalytics: {
+
+			// Menus
+			menus: {
+				general: '//a[normalize-space()="General"]',
+				topPages: '//a[normalize-space()="Top pages"]',
+				location: '//a[normalize-space()="Location"]',
+				system: '//a[normalize-space()="System"]',
+				promotions: '//a[normalize-space()="Promotions"]',
+				keyword: '//a[normalize-space()="Keyword"]',
+			},
+
+			datePicker: {
+				from: '#from',
+				to: '#to',
+				show: 'input[value="Show"]',
+			},
+
+			noAnalytics:'//div[contains(text(), "There is no analytics found for your store.")]',
+
+		},
+
 		// Announcements
 		vAnnouncement: {
 
@@ -4396,10 +4455,12 @@ export const selector = {
 		// Auction
 		vAuction: {
 			// Menus
-			all: '//ul[contains(@class,"dokan-listing-filter")]//a[contains(text(),"All")]',
-			online: '//ul[contains(@class,"dokan-listing-filter")]//a[contains(text(),"Online")]',
-			pendingReview: '//ul[contains(@class,"dokan-listing-filter")]//a[contains(text(),"Pending Review")]',
-			draft: '//ul[contains(@class,"dokan-listing-filter")]//a[contains(text(),"Draft")]',
+			menus:{
+				all: '//ul[contains(@class,"dokan-listing-filter")]//a[contains(text(),"All")]',
+				online: '//ul[contains(@class,"dokan-listing-filter")]//a[contains(text(),"Online")]',
+				pendingReview: '//ul[contains(@class,"dokan-listing-filter")]//a[contains(text(),"Pending Review")]',
+				draft: '//ul[contains(@class,"dokan-listing-filter")]//a[contains(text(),"Draft")]',
+			},
 
 			// Create Auction Product
 			addNewActionProduct: '.dokan-add-product-link .dokan-btn-theme',
@@ -4462,29 +4523,57 @@ export const selector = {
 
 		// Support
 		vSupport: {
+
 			// Menus
-			allTickets: '//ul[contains(@class,"dokan-support-topic-counts")]//a[contains(text(), "All Tickets")]',
-			openTickets: '//ul[contains(@class,"dokan-support-topic-counts")]//a[contains(text(), "Open Tickets")]',
-			closedTickets: '//ul[contains(@class,"dokan-support-topic-counts")]//a[contains(text(), "Closed Tickets")]',
+			menus:{
+				allTickets: '//ul[contains(@class,"dokan-support-topic-counts")]//a[contains(text(), "All Tickets")]',
+				openTickets: '//ul[contains(@class,"dokan-support-topic-counts")]//a[contains(text(), "Open Tickets")]',
+				closedTickets: '//ul[contains(@class,"dokan-support-topic-counts")]//a[contains(text(), "Closed Tickets")]',
+			},
 
 			// Filter
-			selectCustomer: '.page-template-default',
-			ticketDateFilter: '#support_ticket_date_filter',
-			tickedIdOrKeyword: '#dokan-support-ticket-search-input',
-			search: '//input[@class="dokan-btn" and @value="Search"]',
+			filters: {
+				filterByCustomer: '//select[@id="dokan-search-support-customers"]/..//span[@class="select2-selection__arrow"]',
+				filterByCustomerInput: '.select2-search__field',
+				ticketDateFilter: '#support_ticket_date_filter',
+				tickedIdOrKeyword: '#dokan-support-ticket-search-input',
+				search: '//input[@class="dokan-btn" and @value="Search"]',
+				result: '.select2-results__option.select2-results__option--highlighted',
+			},
+
+			//table
+			table:{
+				table: '.dokan-support-table',
+				TopicColumn: '//th[normalize-space()="Topic"]',
+				TitleColumn: '//th[normalize-space()="Title"]',
+				CustomerColumn: '//th[normalize-space()="Customer"]',
+				StatusColumn: '//th[normalize-space()="Status"]',
+				DateColumn: '//th[normalize-space()="Date"]',
+				ActionColumn: '//th[normalize-space()="Action"]',
+			},
+
+			noSupportTicketFound: '//div[@class="dokan-error" and contains(text(), "No tickets found!")]',
+			storeSupportLink: (id: string) => `//strong[normalize-space()="#${id}"]/..`,
+			storeSupportCellById: (id: string) => `//strong[normalize-space()="#${id}"]/../..`,
+			storeSupportCellByTitle: (title: string) => `//a[normalize-space()="${title}"]/..`,
+			storeSupportsCellByCustomer: (customerName: string) => `//strong[contains(text(),'${customerName}')]/../..`,
 
 			// Manage Ticket
 			backToTickets: '.dokan-dashboard-content > a',
-			selectTicket: '.column-primary > a',
-			addReplyNote: '#comment',
-			changeStatus: '.dokan-support-topic-select',
+			ticketStatus: '.dokan-chat-status-box .dokan-chat-status',
+			chatReply: '#comment',
+			changeStatus: 'select.dokan-support-topic-select', //  1
 			submitReply: '#submit',
 			okEmptySubmit: '.swal2-confirm',
 
 			// Close Ticket
-			closeTopic: '.dokan-support-status-change',
-			confirmCloseTopic: '.swal2-confirm',
-			cancelCloseTopic: '.swal2-cancel',
+			closeTicket: '//td[@data-title="Action"]//a[contains(@class, "dokan-support-status-change") and  @data-original-title="Close Topic" ]',
+
+			// reOpen Ticket
+			reOpenTicket: '//td[@data-title="Action"]//a[contains(@class, "dokan-support-status-change") and  @data-original-title="Re-open Topic" ]',
+
+			confirmCloseTicket: '.swal2-confirm',
+			cancelCloseTicket: '.swal2-cancel',
 		},
 
 		// Vendor Account Details

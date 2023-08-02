@@ -160,6 +160,22 @@ test.describe('Vendor functionality test', () => {
 
 	// todo: add tag for below tests
 
+	test('vendor user subscriptions menu page is rendering properly @pro @explo', async ( ) => {
+		await vendor.vendorUserSubscriptionsRenderProperly();
+	});
+
+	test('vendor return request menu page is rendering properly @pro @explo', async ( ) => {
+		await vendor.vendorReturnRequestRenderProperly();
+	});
+
+	test('vendor delivery time menu page is rendering properly @pro @explo', async ( ) => {
+		await vendor.vendorDeliveryTimeRenderProperly();
+	});
+
+	test('vendor analytics menu page is rendering properly @pro @explo', async ( ) => {
+		await vendor.vendorAnalyticsRenderProperly();
+	});
+
 	test('vendor settings menu page is rendering properly @pro @explo', async ( ) => {
 		await vendor.vendorSettingsRenderProperly();
 	});
@@ -168,8 +184,8 @@ test.describe('Vendor functionality test', () => {
 		await vendor.vendorVerificationsRenderProperly();
 	});
 
-	test('vendor delivery time menu page is rendering properly @pro @explo', async ( ) => {
-		await vendor.vendorDeliveryTimeRenderProperly();
+	test('vendor delivery time settings menu page is rendering properly @pro @explo', async ( ) => {
+		await vendor.vendorDeliveryTimeSettingsRenderProperly();
 	});
 
 	test('vendor shipping menu page is rendering properly @pro @explo', async ( ) => {

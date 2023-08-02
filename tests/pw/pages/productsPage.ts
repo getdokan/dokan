@@ -314,7 +314,7 @@ export class ProductsPage extends AdminPage {
 	async exportProducts(): Promise<void> {
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.products);
 		await this.clickAndWaitForLoadState( selector.vendor.product.importExport.export );
-		await this.clickAndWaitForDownload( selector.vendor.vTools.generateCsv );
+		await this.clickAndWaitForDownload( selector.vendor.vTools.export.csv.generateCsv );
 	}
 
 

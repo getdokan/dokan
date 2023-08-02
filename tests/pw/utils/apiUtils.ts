@@ -642,7 +642,7 @@ export class ApiUtils {
 
 	async createSupportTicket(payload: object): Promise<[responseBody, string]> {
 		const [, responseBody] = await this.post(endPoints.wp.createCustomPost('dokan_store_support'), { data: payload, headers: payloads.adminAuth });
-		const supportTicketId = responseBody.id;
+		const supportTicketId = String(responseBody.id);
 		return [responseBody, supportTicketId];
 	}
 

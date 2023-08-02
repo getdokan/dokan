@@ -448,7 +448,7 @@ export class VendorPage extends BasePage {
 		// terms and conditions
 		const tocEnabled = await this.isVisible(selector.vendor.vStoreSettings.termsAndConditions);
 		if (tocEnabled) {
-			await this.check(selector.vendor.vStoreSettings.termsAndConditions);
+			await this.click(selector.vendor.vStoreSettings.termsAndConditions);
 			await this.typeFrameSelector(selector.vendor.vStoreSettings.termsAndConditionsIframe, selector.vendor.vStoreSettings.termsAndConditionsHtmlBody, termsAndConditions);
 		}
 	}
@@ -1036,6 +1036,81 @@ export class VendorPage extends BasePage {
 	}
 
 
+	// vendor return request render properly
+	async vendorUserSubscriptionsRenderProperly(){
+		await this.goIfNotThere(data.subUrls.frontend.vDashboard.userSubscriptions);
+
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		const { filterByCustomerInput,  ...filters } = selector.vendor.vUserSubscriptions.filters;
+		await this.multipleElementVisible(filters);
+
+		await this.toBeVisible(selector.vendor.vUserSubscriptions.noSubscriptionsFound);
+		//todo: add table data
+
+	}
+
+	// vendor return request render properly
+	async vendorReturnRequestRenderProperly(){
+		await this.goIfNotThere(data.subUrls.frontend.vDashboard.returnRequest);
+
+		// return request menu elements are visible
+		await this.multipleElementVisible(selector.vendor.vReturnRequest.menus.all); //todo: add all menus
+
+		// return request table elements are visible
+		await this.multipleElementVisible(selector.vendor.vReturnRequest.table);
+
+		await this.toBeVisible(selector.vendor.vReturnRequest.noRowsFound);
+		//todo: add more fields
+
+	}
+
+
+	// vendor delivery time render properly
+	async vendorDeliveryTimeRenderProperly(){
+		await this.goIfNotThere(data.subUrls.frontend.vDashboard.deliveryTime);
+
+		// delivery time and store pickup text is visible
+		await this.toBeVisible(selector.vendor.vDeliveryTime.deliveryTimeAndStorePickup);
+
+		// delivery time calendar is visible
+		await this.toBeVisible(selector.vendor.vDeliveryTime.deliveryTimeCalender);
+
+		// delivery time filter elements are visible
+		await this.multipleElementVisible(selector.vendor.vDeliveryTime.filter);
+
+		// delivery time navigation elements are visible
+		await this.multipleElementVisible(selector.vendor.vDeliveryTime.navigation);
+
+	}
+
+	// vendor analytics render properly
+	async vendorAnalyticsRenderProperly(){
+		await this.goIfNotThere(data.subUrls.frontend.vDashboard.analytics);
+
+		// analytics menu elements are visible
+		await this.multipleElementVisible(selector.vendor.vAnalytics.menus);
+
+		// date-picker  elements are visible
+		await this.multipleElementVisible(selector.vendor.vAnalytics.datePicker);
+
+		await this.clickAndWaitForLoadState(selector.vendor.vAnalytics.menus.topPages);
+		await this.toBeVisible(selector.vendor.vAnalytics.noAnalytics);
+
+		await this.clickAndWaitForLoadState(selector.vendor.vAnalytics.menus.location);
+		await this.toBeVisible(selector.vendor.vAnalytics.noAnalytics);
+
+		await this.clickAndWaitForLoadState(selector.vendor.vAnalytics.menus.system);
+		await this.toBeVisible(selector.vendor.vAnalytics.noAnalytics);
+
+		await this.clickAndWaitForLoadState(selector.vendor.vAnalytics.menus.promotions);
+		await this.toBeVisible(selector.vendor.vAnalytics.noAnalytics);
+
+		await this.clickAndWaitForLoadState(selector.vendor.vAnalytics.menus.keyword);
+		await this.toBeVisible(selector.vendor.vAnalytics.noAnalytics);
+
+	}
+
+
 	// vendor settings render properly
 	async vendorSettingsRenderProperly(){
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsStore);
@@ -1117,7 +1192,7 @@ export class VendorPage extends BasePage {
 
 
 	// vendor delivery time render properly
-	async vendorDeliveryTimeRenderProperly(){
+	async vendorDeliveryTimeSettingsRenderProperly(){
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsDeliveryTime);
 
 		// settings text is visible

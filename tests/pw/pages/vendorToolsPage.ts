@@ -72,11 +72,11 @@ export class VendorToolsPage extends VendorPage {
 
 		case 'xml' :
 			await this.uploadFile(selector.vendor.vTools.import.xml.chooseXmlFile, filePath);
-			await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.tools ,selector.vendor.vTools.import.xml.xml);
+			await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.tools, selector.vendor.vTools.import.xml.xml);
 			await this.toBeVisible(selector.vendor.vTools.import.xml.completionMessage);
 			break;
 
-		case 'csv' :
+		case 'csv' : //todo: add wait for uploading file, add api level assertion
 			await this.clickAndWaitForLoadState(selector.vendor.vTools.import.csv.csv);
 			await this.uploadFile(selector.vendor.vTools.import.csv.chooseCsv, filePath);
 			await this.click(selector.vendor.vTools.import.csv.updateExistingProducts);
