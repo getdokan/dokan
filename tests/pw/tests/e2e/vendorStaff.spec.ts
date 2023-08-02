@@ -1,39 +1,30 @@
 import { test, Page } from '@playwright/test';
 import { VendorStaffPage } from 'pages/vendorStaffPage';
-import { ApiUtils } from 'utils/apiUtils';
+// import { ApiUtils } from 'utils/apiUtils';
 import { data } from 'utils/testData';
 import { payloads } from 'utils/payloads';
+// import { faker } from '@faker-js/faker';
 
 
-test.describe.skip('Vendor staff test', () => {
+test.describe('Vendor staff test', () => {
 
 
 	let vendor: VendorStaffPage;
 	let vPage: Page;
-	let apiUtils: ApiUtils;
+	// let apiUtils: ApiUtils;
+	const staff = data.staff;
 
 
-	test.beforeAll(async ({ browser, request }) => {
+	test.beforeAll(async ({ browser }) => {
 		const vendorContext = await browser.newContext({ storageState: data.auth.vendorAuthFile });
 		vPage = await vendorContext.newPage();
 		vendor = new VendorStaffPage(vPage);
-		apiUtils = new ApiUtils(request);
-		// const staff = {
-		// 	username: 'staff1',
-		// 	first_name: 'staff1',
-		// 	last_name: 's1',
-		// 	email: 's1@g.c',
-		// 	roles: ['vendor_staff'],
-		// 	password: '01dokan01'
-		// 	meta:[
-		// 		{
-		// 			key: '_vendor_id'
-		// 			value:
-		// 		}
-		// 	]
-		// };
 
-		// await apiUtils.createUser( staff, payloads.adminAuth);
+		await vendor.addStaff(staff); //todo: replace with api
+
+		// apiUtils = new ApiUtils(request);
+		// await apiUtils.createUser( payloads.staff, payloads.adminAuth);
+
 	});
 
 
@@ -47,19 +38,19 @@ test.describe.skip('Vendor staff test', () => {
 	});
 
 	test('vendor can add new staff @pro', async ( ) => {
-		await vendor.addStaff(data.staff);
+		await vendor.addStaff(data.staff.create);
 	});
 
 	test('vendor can edit staff @pro', async ( ) => {
-		await vendor.editStaff(data.staff);
+		await vendor.editStaff(staff);
 	});
 
 	test('vendor can manage staff permission @pro', async ( ) => {
-		await vendor.manageStaffPermission(data.staff.firstName);
+		await vendor.manageStaffPermission(staff.firstName);
 	});
 
 	test('vendor can delete staff @pro', async ( ) => {
-		await vendor.deleteStaff(data.staff.firstName);
+		await vendor.deleteStaff(staff.firstName);
 	});
 
 });

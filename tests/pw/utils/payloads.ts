@@ -1655,5 +1655,18 @@ export const payloads = {
 		page : '1'
 	},
 
+	staff : {
+		username: 'staff1'+  faker.string.uuid(),
+		first_name: 'staff1'+  faker.string.uuid(),
+		last_name: 's1',
+		email: 's1'+  faker.string.uuid() + '@g.c',
+		roles: ['vendor_staff'],
+		password: '01dokan01',
+		'meta': {
+			'_vendor_id': '3',
+			'_staff_phone': '0123456789',
+		}
+	},
+
 
 };

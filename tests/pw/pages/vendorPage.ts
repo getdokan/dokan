@@ -832,8 +832,7 @@ export class VendorPage extends BasePage {
 		await this.clearAndType(selector.vendor.vSocialProfileSettings.platforms.youtube, urls.youtube);
 		await this.clearAndType(selector.vendor.vSocialProfileSettings.platforms.instagram, urls.instagram);
 		await this.clearAndType(selector.vendor.vSocialProfileSettings.platforms.flickr, urls.flickr);
-		// await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vSocialProfileSettings.updateSettings); //todo:  don't work, alternate soln. below line
-		await this.pressOnSelector(selector.vendor.vSocialProfileSettings.updateSettings, data.key.enter);
+		await this.keyPressOnLocator(selector.vendor.vSocialProfileSettings.updateSettings, data.key.enter);
 		await this.toContainText(selector.vendor.vSocialProfileSettings.updateSettingsSuccessMessage, urls.saveSuccessMessage);
 	}
 
@@ -1054,7 +1053,7 @@ export class VendorPage extends BasePage {
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.returnRequest);
 
 		// return request menu elements are visible
-		await this.multipleElementVisible(selector.vendor.vReturnRequest.menus.all); //todo: add all menus
+		await this.toBeVisible(selector.vendor.vReturnRequest.menus.all); //todo: add all menus
 
 		// return request table elements are visible
 		await this.multipleElementVisible(selector.vendor.vReturnRequest.table);

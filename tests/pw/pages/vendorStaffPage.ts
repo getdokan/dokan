@@ -48,7 +48,12 @@ export class VendorStaffPage extends VendorPage {
 		await this.clearAndType(selector.vendor.vStaff.addStaff.lastName, staff.lastName);
 		await this.clearAndType(selector.vendor.vStaff.addStaff.email, staff.email);
 		await this.clearAndType(selector.vendor.vStaff.addStaff.phone, staff.phone);
-		await this.click(selector.vendor.vStaff.addStaff.createStaff);
+		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.staff, selector.vendor.vStaff.addStaff.createStaff);
+		const userAlreadyExists = await this.isVisible(selector.vendor.vStaff.addStaff.userAlreadyExists);
+		if (userAlreadyExists){
+			console.log('Staff already exists!!');
+			return;
+		}
 		await this.toBeVisible(selector.vendor.vStaff.staffCell(staff.firstName));
 	}
 
@@ -57,15 +62,16 @@ export class VendorStaffPage extends VendorPage {
 	async editStaff(staff: staff){
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.staff);
 		await this.hover(selector.vendor.vStaff.staffCell(staff.firstName));
-		await this.clickAndWaitForLoadState(selector.vendor.vStaff.editStaff.editStaff);
+		await this.clickAndWaitForLoadState(selector.vendor.vStaff.editStaff.editStaff(staff.firstName));
 
 		await this.clearAndType(selector.vendor.vStaff.addStaff.firstName, staff.firstName);
 		await this.clearAndType(selector.vendor.vStaff.addStaff.lastName, staff.lastName);
 		await this.clearAndType(selector.vendor.vStaff.addStaff.email, staff.email);
 		await this.clearAndType(selector.vendor.vStaff.addStaff.phone, staff.phone);
 		await this.clearAndType(selector.vendor.vStaff.editStaff.password, staff.password);
-		await this.click(selector.vendor.vStaff.editStaff.updateStaff);
+		await this.pressOnLocatorAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.staff, selector.vendor.vStaff.editStaff.updateStaff, data.key.enter);
 		await this.toBeVisible(selector.vendor.vStaff.staffCell(staff.firstName));
+
 	}
 
 
@@ -73,8 +79,7 @@ export class VendorStaffPage extends VendorPage {
 	async deleteStaff(staffName: string){
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.staff);
 		await this.hover(selector.vendor.vStaff.staffCell(staffName));
-
-		await this.click(selector.vendor.vStaff.deleteStaff.deleteStaff);
+		await this.click(selector.vendor.vStaff.deleteStaff.deleteStaff(staffName));
 		await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.staff, selector.vendor.vStaff.deleteStaff.okDelete, 302);
 		await this.toContainText(selector.vendor.vStaff.deleteStaff.deleteSuccessMessage, 'Staff deleted successfully');
 	}
@@ -84,7 +89,7 @@ export class VendorStaffPage extends VendorPage {
 	async manageStaffPermission(staffName: string){
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.staff);
 		await this.hover(selector.vendor.vStaff.staffCell(staffName));
-		await this.clickAndWaitForLoadState(selector.vendor.vStaff.managePermission.managePermission);
+		await this.clickAndWaitForLoadState(selector.vendor.vStaff.managePermission.managePermission(staffName));
 
 		// manage overview permission
 		await this.multipleElementCheck(selector.vendor.vStaff.managePermission.overview);
@@ -98,8 +103,8 @@ export class VendorStaffPage extends VendorPage {
 		// manage product permission
 		await this.multipleElementCheck(selector.vendor.vStaff.managePermission.product);
 
-		// // manage booking permission
-		// await this.multipleElementCheck(selector.vendor.vStaff.managePermission.booking); //todo:  add booking module+lplugin check
+		// manage booking permission
+		// await this.multipleElementCheck(selector.vendor.vStaff.managePermission.booking); //todo:  add booking module + plugin check
 
 		// manage store support permission
 		await this.multipleElementCheck(selector.vendor.vStaff.managePermission.storeSupport);
@@ -116,8 +121,8 @@ export class VendorStaffPage extends VendorPage {
 		// manage menu permission
 		await this.multipleElementCheck(selector.vendor.vStaff.managePermission.menu);
 
-		// // manage auction permission
-		// await this.multipleElementCheck(selector.vendor.vStaff.managePermission.auction); //todo:  add auction module+plugin check
+		// manage auction permission
+		// await this.multipleElementCheck(selector.vendor.vStaff.managePermission.auction); //todo:  add auction module + plugin check
 	}
 
 }

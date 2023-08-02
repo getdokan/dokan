@@ -330,8 +330,18 @@ export class BasePage {
 		const [response] = await Promise.all([
 			this.page.waitForResponse((resp) => resp.url().includes(subUrl) && resp.status() === code),
 			// await this.page.type(selector, text),
-			this.page.waitForLoadState( 'load'),
+			this.page.waitForLoadState( 'networkidle'),
 			this.clearAndFill(selector, text),
+		]);
+		return response;
+	}
+
+	// type & wait for response and LoadState
+	async pressOnLocatorAndWaitForResponseAndLoadState(subUrl: string, selector: string, key: string , code = 200,): Promise<Response> {
+		const [response] = await Promise.all([
+			this.page.waitForResponse((resp) => resp.url().includes(subUrl) && resp.status() === code),
+			this.page.waitForLoadState( 'networkidle'),
+			this.keyPressOnLocator(selector, key)
 		]);
 		return response;
 	}

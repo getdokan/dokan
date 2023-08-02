@@ -1190,6 +1190,15 @@ export const data = {
 		phone: '0123456789',
 		password: String(process.env.USER_PASSWORD),
 
+		create:{
+			firstName: faker.person.firstName('male'),
+			lastName: faker.person.lastName('male'),
+			fullName:  '',
+			email:  faker.internet.email(),
+			phone: '0123456789',
+			password: ''
+		}
+
 	},
 
 

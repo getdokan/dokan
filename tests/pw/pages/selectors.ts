@@ -3971,17 +3971,22 @@ export const selector = {
 				email: '#email',
 				phone: '#phone',
 				createStaff: '.dokan-btn',
+
+				dokanAlert: '.dokan-alert-danger',
+				userAlreadyExists: '//strong[normalize-space()="Sorry, that username already exists!"]',
 			},
 
 			// Edit Staff
 			editStaff: {
-				editStaff: '.row-actions .edit',
+				editStaff: (staffName: string) => `//a[contains(text(), "${staffName}")]/..//span[@class="edit"]//a`,
+				// editStaff: '.row-actions .edit',
 				password: '#reg_password',
-				updateStaff: '//input[@name="staff_creation"]/..',
+				updateStaff: '//input[@name="staff_creation"]',
 			},
 
 			deleteStaff: {
-				deleteStaff: '.row-actions .delete ',
+				deleteStaff: (staffName: string) => `//a[contains(text(), "${staffName}")]/..//span[@class="delete"]//a`,
+				// deleteStaff: '.row-actions .delete ',
 				okDelete: '.swal2-confirm',
 				cancelDelete: '.swal2-cancel',
 				deleteSuccessMessage: '.dokan-alert.dokan-alert-success',
@@ -3989,7 +3994,8 @@ export const selector = {
 
 			// Manage Permission
 			managePermission: {
-				managePermission: '.row-actions .permission',
+				managePermission: (staffName: string) => `//a[contains(text(), "${staffName}")]/..//span[@class="permission"]//a`,
+				// managePermission: '.row-actions .permission',
 
 				// Overview
 				overview:{
