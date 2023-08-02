@@ -7,7 +7,7 @@ import { data } from 'utils/testData';
 import { payloads } from 'utils/payloads';
 
 
-test.describe.skip('Reverse withdraw test', () => {
+test.describe('Reverse withdraw test', () => {
 
 	let admin: ReverseWithdrawsPage;
 	let aPage: Page;
@@ -40,7 +40,7 @@ test.describe.skip('Reverse withdraw test', () => {
 	});
 
 	test('admin can crete reverse withdraws @lite @pro', async ( ) => {
-		// await admin.addReverseWithdrawal(data.reverseWithdraw);
+		await admin.addReverseWithdrawal(data.reverseWithdraw);
 	});
 
 });

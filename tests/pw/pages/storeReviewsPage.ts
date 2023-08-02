@@ -113,7 +113,6 @@ export class StoreReviewsPage extends AdminPage {
 
 		// write new or edit previous review
 		const writeAReviewIsVisible = await this.isVisible(selector.customer.cSingleStore.review.write);
-		console.log('REview button status: ', writeAReviewIsVisible);
 		writeAReviewIsVisible ? await this.click(selector.customer.cSingleStore.review.write) : await this.click(selector.customer.cSingleStore.review.edit);
 
 		await this.setAttributeValue(selector.customer.cSingleStore.review.rating, 'style', store.rating);

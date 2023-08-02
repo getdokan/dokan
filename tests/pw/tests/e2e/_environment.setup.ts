@@ -39,14 +39,14 @@ setup.describe('setup site & woocommerce & user settings', () => {
 		expect(siteSettings).toEqual(expect.objectContaining(payloads.siteSettings));
 	});
 
-	setup.fixme('reset dokan previous settings @lite @pro', async () => {
-		setup.skip(!!process.env.CI, 'skip previous settings check');
+	// setup.skip('reset dokan previous settings @lite @pro', async () => {
+	// 	setup.skip(!!process.env.CI, 'skip previous settings check');
 
-		// previous seller badges
-		await apiUtils.deleteAllSellerBadges();
-		// previous quote rules
-		await apiUtils.deleteAllQuoteRules();
-	});
+	// 	// previous seller badges
+	// 	await apiUtils.deleteAllSellerBadges();
+	// 	// previous quote rules
+	// 	await apiUtils.deleteAllQuoteRules();
+	// });
 
 	setup('set wc settings @lite @pro', async () => {
 
@@ -151,14 +151,14 @@ setup.describe('setup  user settings', () => {
 		// }
 	});
 
-	setup.fixme('admin add vendor products @lite @pro', async () => {
+	// setup.skip('admin add vendor products @lite @pro', async () => {
 
-		const product = payloads.createProduct();
-		await apiUtils.createProduct({ ...product, status: 'publish', in_stock: false }, payloads.vendorAuth);
-		await apiUtils.createProduct({ ...product, status: 'draft', in_stock: true }, payloads.vendorAuth);
-		await apiUtils.createProduct({ ...product, status: 'pending', in_stock: true }, payloads.vendorAuth);
-		await apiUtils.createProduct({ ...product, status: 'publish', in_stock: true }, payloads.vendorAuth);
-	});
+	// 	const product = payloads.createProduct();
+	// 	await apiUtils.createProduct({ ...product, status: 'publish', in_stock: false }, payloads.vendorAuth);
+	// 	await apiUtils.createProduct({ ...product, status: 'draft', in_stock: true }, payloads.vendorAuth);
+	// 	await apiUtils.createProduct({ ...product, status: 'pending', in_stock: true }, payloads.vendorAuth);
+	// 	await apiUtils.createProduct({ ...product, status: 'publish', in_stock: true }, payloads.vendorAuth);
+	// });
 
 	setup('add test vendor orders @pro', async () => {
 		await apiUtils.createOrder(payloads.createProduct(), { ...payloads.createOrder, customer_id: CUSTOMER_ID }, payloads.vendorAuth);
@@ -372,7 +372,7 @@ setup.describe('setup dokan settings e2e', () => {
 	// 		await adminPage.setDokanSpmvSettings(data.dokanSettings.spmv);
 	// 	});
 
-	// setup.fixme('admin set dokan vendor subscription settings @pro', async ()=> {
+	// setup.skip('admin set dokan vendor subscription settings @pro', async ()=> {
 	// 	await adminPage.setDokanVendorSubscriptionSettings(data.dokanSettings.vendorSubscription);
 	// });
 
