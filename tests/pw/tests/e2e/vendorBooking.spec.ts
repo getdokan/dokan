@@ -32,7 +32,7 @@ test.describe('Booking Product test', () => {
 		// cPage = await customerContext.newPage();
 		// customer = new BookingPage(cPage);
 
-		// await vendor.addBookingProduct({ ...data.product.booking, name: bookingProductName }); //todo: convert with api or db
+		await vendor.addBookingProduct({ ...data.product.booking, name: bookingProductName }); //todo: convert with api or db
 		await vendor.addBookingResource(bookingResourceName);
 		// apiUtils = new ApiUtils(request);
 

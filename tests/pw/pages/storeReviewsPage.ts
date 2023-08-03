@@ -113,9 +113,9 @@ export class StoreReviewsPage extends AdminPage {
 
 		// write new or edit previous review
 		await this.wait(0.5);//todo: if not wait below returns false
-		const noReviewsFound = await this.isVisible(selector.customer.cSingleStore.review.noReviewsFound);
+		const writeAReviewIsVisible = await this.isVisible(selector.customer.cSingleStore.review.write);
 
-		noReviewsFound ? await this.click(selector.customer.cSingleStore.review.write) : await this.click(selector.customer.cSingleStore.review.edit);
+		writeAReviewIsVisible ? await this.click(selector.customer.cSingleStore.review.write) : await this.click(selector.customer.cSingleStore.review.edit);
 		await this.setAttributeValue(selector.customer.cSingleStore.review.rating, 'style', store.rating);
 		await this.clearAndType(selector.customer.cSingleStore.review.title, store.reviewTitle);
 		await this.clearAndType(selector.customer.cSingleStore.review.message, reviewMessage);

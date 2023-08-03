@@ -163,8 +163,6 @@ export class BookingPage extends VendorPage {
 		await this.clearAndType(selector.vendor.vBooking.booking.baseCost, product.baseCost);
 		await this.clearAndType(selector.vendor.vBooking.booking.blockCost, product.blockCost);
 		//todo: add more fields
-		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.booking, selector.vendor.vBooking.booking.saveProduct, 302);
-		await this.toContainText(selector.vendor.product.updatedSuccessMessage, product.saveSuccessMessage);
 
 	}
 
@@ -174,6 +172,8 @@ export class BookingPage extends VendorPage {
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.booking);
 		await this.click(selector.vendor.vBooking.addNewBookingProduct);
 		await this.updateBookingProductFields(product);
+		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.productBooking, selector.vendor.vBooking.booking.saveProduct, 302);
+		await this.toContainText(selector.vendor.product.updatedSuccessMessage, product.saveSuccessMessage);
 	}
 
 
@@ -183,6 +183,8 @@ export class BookingPage extends VendorPage {
 		await this.hover(selector.vendor.vBooking.productCell(product.name));
 		await this.clickAndWaitForLoadState(selector.vendor.vBooking.edit);
 		await this.updateBookingProductFields(product);
+		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.booking, selector.vendor.vBooking.booking.saveProduct, 302);
+		await this.toContainText(selector.vendor.product.updatedSuccessMessage, product.saveSuccessMessage);
 	}
 
 

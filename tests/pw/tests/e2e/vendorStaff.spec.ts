@@ -2,7 +2,7 @@ import { test, Page } from '@playwright/test';
 import { VendorStaffPage } from 'pages/vendorStaffPage';
 // import { ApiUtils } from 'utils/apiUtils';
 import { data } from 'utils/testData';
-import { payloads } from 'utils/payloads';
+// import { payloads } from 'utils/payloads';
 // import { faker } from '@faker-js/faker';
 
 
@@ -21,7 +21,7 @@ test.describe('Vendor staff test', () => {
 		vendor = new VendorStaffPage(vPage);
 
 		await vendor.addStaff(staff); //todo: replace with api
-
+		//TODO: update test data , use different data for before all
 		// apiUtils = new ApiUtils(request);
 		// await apiUtils.createUser( payloads.staff, payloads.adminAuth);
 
