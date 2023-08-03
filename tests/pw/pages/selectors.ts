@@ -3753,16 +3753,35 @@ export const selector = {
 
 		// Review
 		vReviews: {
+
+			reviewsText: '//h1[normalize-space()="Reviews"]',
+
 			// Menus
-			approved: '//div[@id="dokan-comments_menu"]//a[contains(text(), "Approved")]',
-			pending: '//div[@id="dokan-comments_menu"]//a[contains(text(), "Pending")]',
-			spam: '//div[@id="dokan-comments_menu"]//a[contains(text(), "Spam")]',
-			trash: '//div[@id="dokan-comments_menu"]//a[contains(text(), "Trash")]',
+			menus:{
+				approved: '//div[@id="dokan-comments_menu"]//a[contains(text(), "Approved")]',
+				pending: '//div[@id="dokan-comments_menu"]//a[contains(text(), "Pending")]',
+				spam: '//div[@id="dokan-comments_menu"]//a[contains(text(), "Spam")]',
+				trash: '//div[@id="dokan-comments_menu"]//a[contains(text(), "Trash")]',
+			},
 
 			// Bulk Action
-			selectAll: '.dokan-check-all',
-			commentStatus: 'select',
-			commentStatusSubmit: '.dokan-btn',
+			bulkActions:{
+				selectAll: '.dokan-check-all',
+				selectAction: 'select[name="comment_status"]',
+				applyAction: 'input[value="Apply"]',
+			},
+
+			//table
+			table:{
+				table: '#dokan-comments-table',
+				authorColumn:'//th[normalize-space()="Author"]',
+				commentColumn:'//th[normalize-space()="Comment"]',
+				linkToColumn:'//th[normalize-space()="Link To"]',
+				ratingColumn:'//th[normalize-space()="Rating"]',
+			},
+
+			noReviewsFound: '//td[normalize-space()="No Results Found"]',
+
 
 			// Review Actions
 			viewReview: '//a[contains(text(),"View Comment")]',
@@ -3772,6 +3791,7 @@ export const selector = {
 			approveReview: (reviewMessage: string) => `//div[contains(text(),'${reviewMessage}')]/..//ul[@class='dokan-cmt-row-actions']//a[contains(text(),'Approve')]`,
 			spamReview: (reviewMessage: string) => `//div[contains(text(),'${reviewMessage}')]/..//ul[@class='dokan-cmt-row-actions']//a[contains(text(),'Spam')]`,
 			trashReview: (reviewMessage: string) => `//div[contains(text(),'${reviewMessage}')]/..//ul[@class='dokan-cmt-row-actions']//a[contains(text(),'Trash')]`,
+			reviewLink: (reviewMessage: string) => `//div[contains(text(),'${reviewMessage}')]/../..//td[@class="col-link"]//a`
 		},
 
 		// Withdraw

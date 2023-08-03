@@ -156,6 +156,10 @@ test.describe('Vendor functionality test', () => {
 		await vendor.vendorUserSubscriptionsRenderProperly();
 	});
 
+	test('vendor product reviews menu page is rendering properly @pro @explo', async ( ) => {
+		await vendor.vendorProductReviewsRenderProperly();
+	});
+
 	test('vendor return request menu page is rendering properly @pro @explo', async ( ) => {
 		await vendor.vendorReturnRequestRenderProperly();
 	});

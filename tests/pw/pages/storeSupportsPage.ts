@@ -258,6 +258,7 @@ export class StoreSupportsPage extends AdminPage {
 		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.storeSupport, selector.vendor.vSupport.confirmCloseTicket);
 	}
 
+
 	// vendor close support ticket with a reply
 	async vendorCloseSupportTicketWithReply(ticketId: string, replyMessage: string){
 		await this.vendorSearchSupportTicket('id', ticketId);
@@ -269,6 +270,7 @@ export class StoreSupportsPage extends AdminPage {
 		await this.toContainText(selector.vendor.vSupport.ticketStatus, 'Closed');
 	}
 
+	
 	// vendor reopen support ticket with a reply
 	async vendorReopenSupportTicketWithReply(ticketId: string, replyMessage: string){
 		await this.vendorSearchSupportTicket('id', ticketId, true);
