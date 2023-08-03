@@ -234,6 +234,7 @@ export const data = {
 
 		booking: {
 			productName: () => faker.commerce.productName() + (' (Booking)'),
+			name: '',
 			productType: 'booking',
 			category: 'Uncategorized',
 			bookingDurationType: 'customer',  // 'fixed', 'customer'
@@ -249,6 +250,7 @@ export const data = {
 			baseCost: '20',
 			blockCost: '10',
 			storeName: String(process.env.VENDOR) + 'store',
+			saveSuccessMessage: 'Success! The product has been saved successfully.',
 		},
 
 		// Auction
@@ -782,6 +784,9 @@ export const data = {
 				auction: 'dashboard/auction',
 				auctionActivity: 'dashboard/auction-activity',
 				booking: 'dashboard/booking',
+				manageBooking: 'dashboard/booking/my-bookings',
+				bookingCalendar: 'dashboard/booking/calendar',
+				manageResources: 'dashboard/booking/resources',
 				storeSupport: 'dashboard/support',
 				settingsStore: 'dashboard/settings/store',
 				settingsAddon: 'dashboard/settings/product-addon',

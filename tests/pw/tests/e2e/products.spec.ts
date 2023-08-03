@@ -105,6 +105,10 @@ test.describe('Product functionality test', () => {
 		await vendor.viewProduct(data.predefined.simpleProduct.product1.name);
 	});
 
+	test('vendor can\'t buy own product @pro', async ( ) => {
+		await vendor.cantBuyOwnProduct(productName);
+	});
+
 	test('vendor can edit product @lite @pro', async ( ) => {
 		await vendor.editProduct({ ...data.product.simple, editProduct: productName });
 	});
@@ -122,8 +126,5 @@ test.describe('Product functionality test', () => {
 		await vendor.permanentlyDeleteProduct(productName);
 	});
 
-	// test('vendor can\'t buy own product @pro', async ( ) => {
-	// 	await vendor.cantBuyOwnProduct(productName);
-	// });
 
 });

@@ -3236,7 +3236,7 @@ export const selector = {
 
 
 			// Product Sub Options
-			numberOfRows: '#dokan-product-list-table tbody tr th.dokan-product-select',
+			numberOfRows: '#dokan-product-list-table tbody tr',
 			productCell: (productName: string) => `//a[contains(text(),'${productName}')]/../..`,
 			productLink: (productName: string) => `//a[contains(text(),'${productName}')]`,
 			editProduct: '.row-actions .edit',
@@ -4120,6 +4120,12 @@ export const selector = {
 
 		// Booking
 		vBooking: {
+
+			allBookingProductText:'.dokan-dashboard-content h1',
+
+			addNewBookingProduct: '//a[contains(text(),"Add New Booking Product")]',
+			addBookingBtn: '//a[normalize-space()="Add Booking"]',
+
 			// Menus
 			menus: {
 				allBookingProduct: '//ul[@class="dokan_tabs"]//a[contains(text(),"All Booking Product")]',
@@ -4128,163 +4134,239 @@ export const selector = {
 				manageResources: '//ul[@class="dokan_tabs"]//a[contains(text(),"Manage Resources")]',
 			},
 
+			// Filter
+			filters: {
+				filterByDate: '#filter-by-date',
+				filterByCategory: '#product_cat',
+				filterByOther: 'select[name="filter_by_other"]',
+				filter: '//button[normalize-space()="Filter"]',
+			},
+
+			// Search product
+			search:{
+				searchInput: 'input[name="product_search_name"]',
+				search: 'button[name="product_listing_search"]',
+			},
+
+			// table
+			table: {
+				table:'table.dokan-table.product-listing-table',
+				imageColumn: '//th[normalize-space()="Image"]',
+				nameColumn: '//th[normalize-space()="Name"]',
+				statusColumn: '//th[normalize-space()="Status"]',
+				skuColumn: '//th[normalize-space()="SKU"]',
+				stockColumn: '//th[normalize-space()="Stock"]',
+				priceColumn: '//th[normalize-space()="Price"]',
+				typeColumn: '//th[normalize-space()="Type"]',
+				viewsColumn: '//th[normalize-space()="Views"]',
+				dateColumn: '//th[normalize-space()="Date"]',
+			},
+
+			noProductFound: '//td[normalize-space()="No product found"]',
+			numberOfRows: '.product-listing-table tbody tr',
+			productCell: (name: string) =>  `//a[normalize-space()="${name}"]/../..`,
+			editProduct: (name: string) =>  `//a[normalize-space()="${name}"]/../..//span[@class="edit"]`,
+			deletePermanently:(name: string) =>   `//a[normalize-space()="${name}"]/../..//span[@class="delete"]`,
+			duplicateProduct: (name: string) =>  `//a[normalize-space()="${name}"]/../..//span[@class="duplicate"]`,
+			viewProduct: (name: string) =>  `//a[normalize-space()="${name}"]/../..//span[@class="view"]`,
+			edit: '.row-actions .edit',
+			permanentlyDelete: '.row-actions .delete',
+			duplicate: '.row-actions .duplicate',
+			view: '.row-actions .view',
+
+			confirmDelete: '.swal2-confirm',
+			cancelDelete: '.swal2-cancel',
+			dokanSuccessMessage: '.dokan-alert.dokan-alert-success',
+
+
 			// Create Booking Product
-			viewProduct: '.view-product',
-			productName: '#post_title',
-			ProductImage: '.dokan-feat-image-btn',
-			virtual: '#\\_virtual',
-			accommodationBooking: '#\\_is_dokan_accommodation',
-			productCategory: '#select2-product_cat-container',
-			productCategoryInput: '.select2-search--dropdown > .select2-search__field',
-			tags: '.select2-search__field',
-			// Accommodation Booking Options
-			minimumNumberOfNightsAllowedInABooking: '#\\_wc_booking_min_duration',
-			maximumNumberOfNightsAllowedInABooking: '#\\_wc_booking_max_duration',
-			checkInTime: '#\\_dokan_accommodation_checkin_time',
-			checkOutTime: '#\\_dokan_accommodation_checkout_time',
-			// General Booking Options
-			bookingDurationType: '#\\_wc_booking_duration_type',
-			bookingDuration: '#\\_wc_booking_duration',
-			bookingDurationMax: '#_wc_booking_max_duration',
-			bookingDurationUnit: '#\\_wc_booking_duration_unit',
+			booking:{
+				viewProduct: '.view-product',
+				productName: '#post_title',
+				ProductImage: '.dokan-feat-image-btn',
+				virtual: '#\\_virtual',
+				accommodationBooking: '#\\_is_dokan_accommodation',
+				productCategory: '#select2-product_cat-container',
+				productCategoryInput: '.select2-search--dropdown > .select2-search__field',
+				tags: '.select2-search__field',
 
-			calendarDisplayMode: '#\\_wc_booking_calendar_display_mode',
-			// Checkboxes
-			enableCalendarRangePicker: '#\\_wc_booking_enable_range_picker',
-			requiresConfirmation: '#\\_wc_booking_requires_confirmation',
-			canBeCancelled: '#\\_wc_booking_user_can_cancel',
-			bookingCanBeCancelledLimit: '#\\_wc_booking_cancel_limit',
-			bookingCanBeCancelledLimitUnit: '#\\_wc_booking_cancel_limit_unit',
-			// Shipping
-			thisProductRequiresShipping: '#\\_disable_shipping',
-			weight: '#\\_weight',
-			length: '#\\_length',
-			width: '#\\_width',
-			height: '#\\_height',
-			shippingClass: '#product_shipping_class',
-			shippingSettings: '.help-block > a',
-			// Tax
-			taxStatus: '#\\_tax_status',
-			taxClass: '#\\_tax_class',
-			// Availability
-			maxBookingsPerBlock: '#\\_wc_booking_qty',
-			minimumBookingWindowIntoTheFutureDate: '#\\_wc_booking_min_date',
-			minimumBookingWindowIntoTheFutureDateUnit: '#\\_wc_booking_min_date_unit',
-			maximumBookingWindowIntoTheFutureDate: '#\\_wc_booking_max_date',
-			maximumBookingWindowIntoTheFutureDateUnit: '#\\_wc_booking_max_date_unit',
-			requireABufferPeriodOfMonthsBetweenBookings: '#\\_wc_booking_buffer_period',
-			adjacentBuffering: '#\\_wc_booking_apply_adjacent_buffer',
-			allDatesAre: '#\\_wc_booking_default_date_availability',
-			checkRulesAgainst: '#\\_wc_booking_check_availability_against',
-			restrictStartAndEndDays: '#dokan_booking_has_restricted_days_field',
-			sunday: '#\\_wc_booking_restricted_days\\[0\\]',
-			monday: '#\\_wc_booking_restricted_days\\[1\\]',
-			tuesday: '#\\_wc_booking_restricted_days\\[2\\]',
-			wednesday: '#\\_wc_booking_restricted_days\\[3\\]',
-			thursday: '#\\_wc_booking_restricted_days\\[4\\]',
-			friday: '#\\_wc_booking_restricted_days\\[5\\]',
-			saturday: '#\\_wc_booking_restricted_days\\[6\\]',
-			// Setavailabilityrange
-			addRangeAvailability: '//div[@id="bookings_availability"]//a[contains(text(),"Add Range")]',
-			rangeTypeAbility: '.wc_booking_availability_type > select',
-			rangeFromAbility: '.from_date > .date-picker ',
-			rangeToAbility: '.to_date > .date-picker ',
-			bookableAbility: '//select[@name="wc_booking_availability_bookable[]"]',
-			priorityAbility: '.priority > input',
-			cancelAbility: '#availability_rows .remove',
-			// Costs
-			baseCost: '#\\_wc_booking_cost',
-			blockCost: '#\\_wc_booking_block_cost',
-			displayCost: '#\\_wc_display_cost',
-			// Costrange
-			addRangeCost: 'dokan-booking-range-table > tfoot .button',
-			rangeTypeCostRange: '.wc_booking_pricing_type > select',
-			rangeFromCostRange: '.from_date > .date-picker',
-			rangeToCostRange: '.to_date > .date-picker ',
-			baseCostModifier: '//select[@name="wc_booking_pricing_base_cost_modifier[]"]',
-			baseCostRange: '//input[@name="wc_booking_pricing_base_cost[]"]',
-			blockCostModifier: '//select[@name="wc_booking_pricing_cost_modifier[]"]',
-			blockCostRange: '//input[@name="wc_booking_pricing_cost[]"]',
-			cancelCostRange: '#pricing_rows .remove',
-			// Extra Options
-			// Has Persons
-			hasPersons: '#\\_wc_booking_has_persons',
-			minPersons: '#\\_wc_booking_min_persons_group',
-			maxPersons: '#\\_wc_booking_max_persons_group',
-			multiplyAllCostsByPersonCount: '#\\_wc_booking_person_cost_multiplier',
-			countPersonsAsBookings: '#\\_wc_booking_person_qty_multiplier',
-			enablePersonTypes: '#\\_wc_booking_has_person_types',
-			// Add Person
-			addPersonType: '.add_person',
-			personTypeName: '//label[contains(text(),"Person Type Name:")]/..//input',
-			personBaseCost: '//label[contains(text(),"Base Cost:")]/..//input',
-			personBlockCost: '//label[contains(text(),"Block Cost:")]/..//input',
-			description: '.person_description',
-			min: '//label[contains(text(),"Min:")]/..//input',
-			max: '//label[contains(text(),"Max:")]/..//input',
-			unlink: '.unlink_booking_person', // invokes default js alert
-			// Has Resources
-			hasResources: '#\\_wc_booking_has_resources',
-			// Add Resource
-			label: '#\\_wc_booking_resource_label',
-			resourcesAre: '#\\_wc_booking_resources_assignment',
-			addResourceId: '.add_resource_id',
-			addResource: '.add_resource',
-			resourceBaseCost: '//label[contains(text(),"Base Cost:")]/..//input',
-			resourceBlockCost: '//label[contains(text(),"Block Cost:")]/..//input',
-			removeResource: '.remove_booking_resource.button', // invokes default js alert
-			// Short Description
-			shortDescriptionIframe: '.dokan-product-short-description iframe',
-			shortDescriptionHtmlBody: '#tinymce',
-			// Description
-			descriptionIframe: '.dokan-auction-post-content iframe',
-			descriptionHtmlBody: '#tinymce',
-			// Inventory
-			sku: '#\\_sku',
-			stockStatus: '#\\_stock_status',
-			enableProductStockManagement: '#\\_manage_stock',
-			stockQuantity: '//input[@name="_stock"]',
-			lowStockThreshold: '//input[@name="_low_stock_amount"]',
-			allowBackOrders: '#\\_backorders',
-			allowOnlyOneQuantityOfThisProductToBeBoughtInASingleOrder: '#\\_sold_individually',
-			// Geolocation
-			sameAsStore: '#\\_dokan_geolocation_use_store_settings',
-			productLocation: '#\\_dokan_geolocation_product_location',
-			//add-ons
-			addField: '.wc-pao-add-field',
-			type: '#wc-pao-addon-content-type-0',
-			displayAs: '#wc-pao-addon-content-display-0',
-			titleRequired: '#wc-pao-addon-content-name-0',
-			formatTitle: '#wc-pao-addon-content-title-format',
-			enableDescription: 'wc-pao-addon-description-enable-0',
-			addDescription: '#wc-pao-addon-description-0',
-			requiredField: '#wc-pao-addon-required-0',
-			bookingsMultiplyCostByPersonCount: '#addon_wc_booking_person_qty_multiplier_0',
-			bookingsMultiplyCostByBlockCount: '#addon_wc_booking_block_qty_multiplier_0',
-			import: '.wc-pao-import-addons',
-			export: '.wc-pao-export-addons',
-			excludeAddons: '#\\_product_addons_exclude_global',
-			expandAll: '.wc-pao-expand-all',
-			closeAll: '.wc-pao-close-all',
-			// Add-Ons Option
-			enterAnOption: '.wc-pao-addon-content-label > input',
-			optionPriceType: '.wc-pao-addon-option-price-type',
-			optionPrice: '.wc-pao-addon-content-price input',
-			addOption: '.wc-pao-add-option',
-			removeOptionCrossIcon: '.wc-pao-addon-content-remove > .button',
-			cancelRemoveOption: '.swal2-cancel',
-			okRemoveOption: '.swal2-confirm',
-			// Other Options
-			productStatus: '#post_status',
-			visibility: '#\\_visibility',
-			purchaseNote: '#\\_purchase_note',
-			enableProductReviews: '#\\_enable_reviews',
-			// Save Product
-			saveProduct: '.dokan-btn-lg',
+				// Accommodation Booking Options
+				minimumNumberOfNightsAllowedInABooking: '#\\_wc_booking_min_duration',
+				maximumNumberOfNightsAllowedInABooking: '#\\_wc_booking_max_duration',
+				checkInTime: '#\\_dokan_accommodation_checkin_time',
+				checkOutTime: '#\\_dokan_accommodation_checkout_time',
 
-			// All Booking Product
-			addNewBookingProduct: '.dokan-add-product-link .dokan-btn-theme',
-			addNewBooking: '.dokan-btn-theme',
+				// General Booking Options
+				bookingDurationType: '#\\_wc_booking_duration_type',
+				bookingDuration: '#\\_wc_booking_duration',
+				bookingDurationMax: '#_wc_booking_max_duration',
+				bookingDurationUnit: '#\\_wc_booking_duration_unit',
+
+				calendarDisplayMode: '#\\_wc_booking_calendar_display_mode',
+
+				// Checkboxes
+				enableCalendarRangePicker: '#\\_wc_booking_enable_range_picker',
+				requiresConfirmation: '#\\_wc_booking_requires_confirmation',
+				canBeCancelled: '#\\_wc_booking_user_can_cancel',
+				bookingCanBeCancelledLimit: '#\\_wc_booking_cancel_limit',
+				bookingCanBeCancelledLimitUnit: '#\\_wc_booking_cancel_limit_unit',
+
+				// Shipping
+				thisProductRequiresShipping: '#\\_disable_shipping',
+				weight: '#\\_weight',
+				length: '#\\_length',
+				width: '#\\_width',
+				height: '#\\_height',
+				shippingClass: '#product_shipping_class',
+				shippingSettings: '.help-block > a',
+
+				// Tax
+				taxStatus: '#\\_tax_status',
+				taxClass: '#\\_tax_class',
+
+				// Availability
+				maxBookingsPerBlock: '#\\_wc_booking_qty',
+				minimumBookingWindowIntoTheFutureDate: '#\\_wc_booking_min_date',
+				minimumBookingWindowIntoTheFutureDateUnit: '#\\_wc_booking_min_date_unit',
+				maximumBookingWindowIntoTheFutureDate: '#\\_wc_booking_max_date',
+				maximumBookingWindowIntoTheFutureDateUnit: '#\\_wc_booking_max_date_unit',
+				requireABufferPeriodOfMonthsBetweenBookings: '#\\_wc_booking_buffer_period',
+				adjacentBuffering: '#\\_wc_booking_apply_adjacent_buffer',
+				allDatesAre: '#\\_wc_booking_default_date_availability',
+				checkRulesAgainst: '#\\_wc_booking_check_availability_against',
+				restrictStartAndEndDays: '#dokan_booking_has_restricted_days_field',
+				sunday: '#\\_wc_booking_restricted_days\\[0\\]',
+				monday: '#\\_wc_booking_restricted_days\\[1\\]',
+				tuesday: '#\\_wc_booking_restricted_days\\[2\\]',
+				wednesday: '#\\_wc_booking_restricted_days\\[3\\]',
+				thursday: '#\\_wc_booking_restricted_days\\[4\\]',
+				friday: '#\\_wc_booking_restricted_days\\[5\\]',
+				saturday: '#\\_wc_booking_restricted_days\\[6\\]',
+
+				// Setavailabilityrange
+				addRangeAvailability: '//div[@id="bookings_availability"]//a[contains(text(),"Add Range")]',
+				rangeTypeAbility: '.wc_booking_availability_type > select',
+				rangeFromAbility: '.from_date > .date-picker ',
+				rangeToAbility: '.to_date > .date-picker ',
+				bookableAbility: '//select[@name="wc_booking_availability_bookable[]"]',
+				priorityAbility: '.priority > input',
+				cancelAbility: '#availability_rows .remove',
+
+				// Costs
+				baseCost: '#\\_wc_booking_cost',
+				blockCost: '#\\_wc_booking_block_cost',
+				displayCost: '#\\_wc_display_cost',
+
+				// Cost-range
+				addRangeCost: 'dokan-booking-range-table > tfoot .button',
+				rangeTypeCostRange: '.wc_booking_pricing_type > select',
+				rangeFromCostRange: '.from_date > .date-picker',
+				rangeToCostRange: '.to_date > .date-picker ',
+				baseCostModifier: '//select[@name="wc_booking_pricing_base_cost_modifier[]"]',
+				baseCostRange: '//input[@name="wc_booking_pricing_base_cost[]"]',
+				blockCostModifier: '//select[@name="wc_booking_pricing_cost_modifier[]"]',
+				blockCostRange: '//input[@name="wc_booking_pricing_cost[]"]',
+				cancelCostRange: '#pricing_rows .remove',
+
+				// Extra Options
+
+				// Has Persons
+				hasPersons: '#\\_wc_booking_has_persons',
+				minPersons: '#\\_wc_booking_min_persons_group',
+				maxPersons: '#\\_wc_booking_max_persons_group',
+				multiplyAllCostsByPersonCount: '#\\_wc_booking_person_cost_multiplier',
+				countPersonsAsBookings: '#\\_wc_booking_person_qty_multiplier',
+				enablePersonTypes: '#\\_wc_booking_has_person_types',
+
+				// Add Person
+				addPersonType: '.add_person',
+				personTypeName: '//label[contains(text(),"Person Type Name:")]/..//input',
+				personBaseCost: '//label[contains(text(),"Base Cost:")]/..//input',
+				personBlockCost: '//label[contains(text(),"Block Cost:")]/..//input',
+				description: '.person_description',
+				min: '//label[contains(text(),"Min:")]/..//input',
+				max: '//label[contains(text(),"Max:")]/..//input',
+				unlink: '.unlink_booking_person', // invokes default js alert
+
+				// Has Resources
+				hasResources: '#\\_wc_booking_has_resources',
+
+				// Add Resource
+				label: '#\\_wc_booking_resource_label',
+				resourcesAre: '#\\_wc_booking_resources_assignment',
+				addResourceId: '.add_resource_id',
+				addResource: '.add_resource',
+				resourceBaseCost: '//label[contains(text(),"Base Cost:")]/..//input',
+				resourceBlockCost: '//label[contains(text(),"Block Cost:")]/..//input',
+				removeResource: '.remove_booking_resource.button', // invokes default js alert
+
+				// Short Description
+				shortDescriptionIframe: '.dokan-product-short-description iframe',
+				shortDescriptionHtmlBody: '#tinymce',
+
+				// Description
+				descriptionIframe: '.dokan-auction-post-content iframe',
+				descriptionHtmlBody: '#tinymce',
+
+				// Inventory
+				sku: '#\\_sku',
+				stockStatus: '#\\_stock_status',
+				enableProductStockManagement: '#\\_manage_stock',
+				stockQuantity: '//input[@name="_stock"]',
+				lowStockThreshold: '//input[@name="_low_stock_amount"]',
+				allowBackOrders: '#\\_backorders',
+				allowOnlyOneQuantityOfThisProductToBeBoughtInASingleOrder: '#\\_sold_individually',
+
+				// Geolocation
+				sameAsStore: '#\\_dokan_geolocation_use_store_settings',
+				productLocation: '#\\_dokan_geolocation_product_location',
+
+				//add-ons
+				addField: '.wc-pao-add-field',
+				type: '#wc-pao-addon-content-type-0',
+				displayAs: '#wc-pao-addon-content-display-0',
+				titleRequired: '#wc-pao-addon-content-name-0',
+				formatTitle: '#wc-pao-addon-content-title-format',
+				enableDescription: 'wc-pao-addon-description-enable-0',
+				addDescription: '#wc-pao-addon-description-0',
+				requiredField: '#wc-pao-addon-required-0',
+				bookingsMultiplyCostByPersonCount: '#addon_wc_booking_person_qty_multiplier_0',
+				bookingsMultiplyCostByBlockCount: '#addon_wc_booking_block_qty_multiplier_0',
+				import: '.wc-pao-import-addons',
+				export: '.wc-pao-export-addons',
+				excludeAddons: '#\\_product_addons_exclude_global',
+				expandAll: '.wc-pao-expand-all',
+				closeAll: '.wc-pao-close-all',
+
+				// Add-Ons Option
+				enterAnOption: '.wc-pao-addon-content-label > input',
+				optionPriceType: '.wc-pao-addon-option-price-type',
+				optionPrice: '.wc-pao-addon-content-price input',
+				addOption: '.wc-pao-add-option',
+				removeOptionCrossIcon: '.wc-pao-addon-content-remove > .button',
+				cancelRemoveOption: '.swal2-cancel',
+				okRemoveOption: '.swal2-confirm',
+
+				// Other Options
+				productStatus: '#post_status',
+				visibility: '#\\_visibility',
+				purchaseNote: '#\\_purchase_note',
+				enableProductReviews: '#\\_enable_reviews',
+
+				// Save Product
+				saveProduct: '.dokan-btn-lg',
+			},
+
+			viewBooking: {
+				productImage: '.woocommerce-product-gallery__image--placeholder img.wp-post-image',
+				productName: '.product_title.entry-title',
+				price: '.summary .price',
+				bookingCalendar: 'div#wc-bookings-booking-form',
+				bookNow: '.single_add_to_cart_button',
+				getSupport: '.dokan-store-support-btn',
+			},
+
+
 			// Add Booking
 			addBooking: {
 				customerId: '#select2-customer_id-container',
@@ -4296,59 +4378,85 @@ export const selector = {
 				next: '.button-primary',
 			},
 
-			// Filter
-			filterByDate: '#filter-by-date',
-			filterByCategory: '#product_cat',
-			filterByType: '#filter-by-type',
-			filterByOther: '//select[@name="filter_by_other"]',
-			filter: '//button[@name="product_listing_filter"]',
-			// Search product
-			searchProduct: '.dokan-w5 .dokan-form-control',
-			search: '.dokan-w5 > .dokan-btn',
 
 			// Manage Booking
-			// Menus
-			all: '//ul[contains(@class,"order-statuses-filter")]//a[contains(text(),"All")]',
-			unPaid: '//ul[contains(@class,"order-statuses-filter")]//span[contains(text(),"Un-paid")]/..',
-			paidAndConfirmed: '//ul[contains(@class,"order-statuses-filter")]//span[contains(text(),"Paid & Confirmed")]/..',
-			completed: '//ul[contains(@class,"order-statuses-filter")]//span[contains(text(),"Complete")]/..',
+			manageBookings: {
 
-			view: '.dokan-btn',
-			editBookingStatus: '.dokan-edit-status',
-			selectOrderStatus: '#booking_order_status',
-			UpdateOrderStatus: '.dokan-btn-success',
-			cancelUpdateOrderStatus: 'dokan-btn-default',
+				manageBookingsText: '//h1[normalize-space()="Manage Bookings"]',
+
+				// Menus
+				menus: {
+					all: '//ul[contains(@class,"order-statuses-filter")]//a[contains(text(),"All")]',
+					unPaid: '//ul[contains(@class,"order-statuses-filter")]//span[contains(text(),"Un-paid")]/..',
+					paidAndConfirmed: '//ul[contains(@class,"order-statuses-filter")]//span[contains(text(),"Paid & Confirmed")]/..',
+					completed: '//ul[contains(@class,"order-statuses-filter")]//span[contains(text(),"Complete")]/..',
+				},
+
+				noBookingsFound: '//div[normalize-space()="No Bookings found"]',
+
+				view: '.dokan-btn',
+				editBookingStatus: '.dokan-edit-status',
+				selectOrderStatus: '#booking_order_status',
+				UpdateOrderStatus: '.dokan-btn-success',
+				cancelUpdateOrderStatus: 'dokan-btn-default',
+			},
 
 			// calendar
 			calendar: {
-				calendarBookingsFilter: '#calendar-bookings-filter',
-				month: '//select[@name="calendar_month"]',
-				year: '//select[@name="calendar_year"]',
-				previous: '.prev',
-				next: '.next',
-				calendarDay: '//input[@placeholder="yyyy-mm-dd"]',
-				dayView: '.day',
-				monthView: '.month',
+				calendarText: '//h1[normalize-space()="Calendar"]',
+				calendar: '.wc_bookings_calendar_form',
+
+				filterBookings: '#calendar-bookings-filter',
+
+				month:{
+					month: '//select[@name="calendar_month"]',
+					year: '//select[@name="calendar_year"]',
+					// previous: '.prev',
+					// next: '.next',
+					dayView: '.day',
+				},
+
+				day: {
+					calendarDay: '//input[@placeholder="yyyy-mm-dd"]',
+					monthView: '.month',
+				},
 			},
 
 			// Manage Resources
-			addNewResource: '.dokan-right',
-			resourceName: '.swal2-input',
-			cancelAddNewResource: '.swal2-cancel',
-			confirmAddNewResource: '.swal2-confirm',
-			editResource: (resourceName: string) => `//a[contains(text(),'${resourceName}')]/../..//a[contains(text(),'Edit')]`,
-			removeResourceButton: (resourceName: string) => `//a[contains(text(),'${resourceName}')]/../..//button[contains(text(),'Remove')]`,
+			manageResources: {
 
-			// Edit Resource
-			resourceTitle: '#post_title',
-			availableQuantity: '#\\_wc_booking_qty',
-			rangeTypeResource: '.wc_booking_availability_type > select',
-			rangeFromResource: '.from_date > .date-picker',
-			rangeToResource: '.to_date > .date-picker ',
-			bookableResource: '//select[contains(@name,"wc_booking_availability_type")]',
-			priorityResource: '.priority > input',
-			addRangeResource: '.button',
-			saveResource: '.dokan-btn-lg',
+				manageResourcesText: '.dokan-dashboard-content h1',
+
+				addNewResource: '.dokan-btn.dokan-right',
+
+				// table
+				table: {
+					table:'table.dokan-table.product-listing-table',
+					nameColumn: '//th[normalize-space()="Name"]',
+					parentColumn: '//th[normalize-space()="Parent"]',
+				},
+
+				noResourceFound: '//td[normalize-space()="No Resource found"]',
+
+				resource: {
+					resourceName: '.swal2-input',
+					cancelAddNewResource: '.swal2-cancel',
+					confirmAddNewResource: '.swal2-confirm',
+					editResource: (resourceName: string) => `//a[contains(text(),'${resourceName}')]/../..//a[contains(text(),'Edit')]`,
+					removeResourceButton: (resourceName: string) => `//a[contains(text(),'${resourceName}')]/../..//button[contains(text(),'Remove')]`,
+
+					// Edit Resource
+					resourceTitle: '#post_title',
+					availableQuantity: '#\\_wc_booking_qty',
+					rangeTypeResource: '.wc_booking_availability_type > select',
+					rangeFromResource: '.from_date > .date-picker',
+					rangeToResource: '.to_date > .date-picker ',
+					bookableResource: '//select[contains(@name,"wc_booking_availability_type")]',
+					priorityResource: '.priority > input',
+					addRangeResource: '.button',
+					saveResource: '.dokan-btn-lg',
+				}
+			},
 		},
 
 		// Analytics
@@ -4569,7 +4677,7 @@ export const selector = {
 
 			viewAuction: {
 				productImage: '.woocommerce-product-gallery__image--placeholder img.wp-post-image',
-				productName: '.product_title',
+				productName: '.product_title.entry-title',
 				startingOrCurrentBid: '.summary .auction-price .amount',
 				itemCondition: '.curent-bid',
 				auctionTime: '#countdown.auction-time',
@@ -5624,7 +5732,7 @@ export const selector = {
 
 			// Product Details
 			productDetails: {
-				productImage: '.woocommerce-product-gallery__wrapper .wp-post-image',
+				productImage: '.woocommerce-product-gallery__wrapper img.wp-post-image',
 				productTitle: '.product_title.entry-title',
 				quantity: '.quantity .qty',
 				addToCart: '.single_add_to_cart_button',

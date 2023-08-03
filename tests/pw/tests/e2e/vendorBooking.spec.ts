@@ -6,13 +6,15 @@ import { data } from 'utils/testData';
 // import { faker } from '@faker-js/faker';
 
 
-test.describe('Auction Product test', () => {
+test.describe('Booking Product test', () => {
 
 
 	let admin: BookingPage;
 	let vendor: BookingPage;
-	let aPage: Page, vPage: Page;
+	let customer: BookingPage;
+	let aPage: Page, vPage: Page, cPage: Page;
 	// let apiUtils: ApiUtils;
+	const bookingProductName = data.product.booking.productName();
 
 
 	test.beforeAll(async ({ browser }) => {
@@ -25,6 +27,11 @@ test.describe('Auction Product test', () => {
 		vPage = await vendorContext.newPage();
 		vendor = new BookingPage(vPage);
 
+		// const customerContext = await browser.newContext({ storageState: data.auth.customerAuthFile });
+		// cPage = await customerContext.newPage();
+		// customer = new BookingPage(cPage);
+
+		await vendor.addBookingProduct({ ...data.product.booking, name: bookingProductName }); //todo: convert with api
 
 		// apiUtils = new ApiUtils(request);
 
@@ -34,6 +41,7 @@ test.describe('Auction Product test', () => {
 	test.afterAll(async () => {
 		await aPage.close();
 		await vPage.close();
+		// await cPage.close();
 	});
 
 
@@ -41,12 +49,62 @@ test.describe('Auction Product test', () => {
 		await admin.adminAddBookingProduct(data.product.booking);
 	});
 
-	test.skip('vendor booking menu page is rendering properly @pro @explo', async ( ) => {
+	test('vendor booking menu page is rendering properly @pro @explo', async ( ) => {
 		await vendor.vendorBookingRenderProperly();
 	});
 
+	test('vendor manage booking page is rendering properly @pro @explo', async ( ) => {
+		await vendor.vendorManageBookingRenderProperly();
+	});
+
+	test('vendor booking calendar page is rendering properly @pro @explo', async ( ) => {
+		await vendor.vendorBookingCalendarRenderProperly();
+	});
+
+	test('vendor manage booking resource page is rendering properly @pro @explo', async ( ) => {
+		await vendor.vendorManageResourcesRenderProperly();
+	});
+
 	test('vendor can add booking product @pro', async ( ) => {
-		await vendor.addBookingProduct(data.product.booking);
+		await vendor.addBookingProduct({ ...data.product.booking, name: data.product.booking.productName() });
+	});
+
+	test('vendor can edit booking product @pro', async ( ) => {
+		await vendor.editBookingProduct({ ...data.product.booking, name: bookingProductName });
+	});
+
+	test('vendor can filter booking products by date @lite @pro', async ( ) => {
+		await vendor.filterBookingProducts('by-date', '1');
+	});
+
+	test('vendor can filter booking products by category @lite @pro', async ( ) => {
+		await vendor.filterBookingProducts('by-category', 'Uncategorized');
+	});
+
+	test('vendor can filter booking products by other @pro', async ( ) => {
+		await vendor.filterBookingProducts('by-other', 'featured');
+	});
+
+	test('vendor can view booking product @pro', async ( ) => {
+		await vendor.viewBookingProduct(bookingProductName);
+	});
+
+	test('vendor can\'t buy own booking product @pro', async ( ) => {
+		await vendor.cantBuyOwnBookingProduct(bookingProductName);
+	});
+
+	test('vendor can search booking product @pro', async ( ) => {
+		await vendor.searchBookingProduct(bookingProductName);
+	});
+
+	test('vendor can duplicate booking product @pro', async ( ) => {
+		await vendor.duplicateBookingProduct(bookingProductName);
+	});
+
+	test('vendor can permanently delete booking product @pro', async ( ) => {
+		const bookingProductName = data.product.booking.productName();
+		await vendor.addBookingProduct({ ...data.product.booking, name: bookingProductName });
+		await vendor.deleteBookingProduct(bookingProductName);
 	});
 
 });

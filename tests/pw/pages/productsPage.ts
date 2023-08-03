@@ -52,6 +52,7 @@ export class ProductsPage extends AdminPage {
 		// product basic info
 		await this.type(selector.admin.products.product.productName, product.productName());
 		await this.selectByValue(selector.admin.products.product.productType, product.productType);
+		await this.click(selector.admin.products.product.general);
 		await this.type(selector.admin.products.product.regularPrice, product.regularPrice());
 		await this.click(selector.admin.products.product.category(product.category));
 
@@ -97,6 +98,7 @@ export class ProductsPage extends AdminPage {
 		// name
 		await this.type(selector.admin.products.product.productName, product.productName());
 		await this.selectByValue(selector.admin.products.product.productType, product.productType);
+		await this.click(selector.admin.products.product.general);
 
 		// add attributes
 		await this.click(selector.admin.products.product.attributes);
@@ -145,6 +147,7 @@ export class ProductsPage extends AdminPage {
 		// Name
 		await this.type(selector.admin.products.product.productName, product.productName());
 		await this.selectByValue(selector.admin.products.product.productType, product.productType);
+		await this.click(selector.admin.products.product.general);
 		await this.type(selector.admin.products.product.subscriptionPrice, product.subscriptionPrice());
 		await this.selectByValue(selector.admin.products.product.subscriptionPeriodInterval, product.subscriptionPeriodInterval);
 		await this.selectByValue(selector.admin.products.product.subscriptionPeriod, product.subscriptionPeriod);
@@ -173,6 +176,7 @@ export class ProductsPage extends AdminPage {
 		// Name
 		await this.type(selector.admin.products.product.productName, product.productName());
 		await this.selectByValue(selector.admin.products.product.productType, product.productType);
+		await this.click(selector.admin.products.product.general);
 		await this.type(selector.admin.products.product.productUrl, this.getBaseUrl() + product.productUrl);
 		await this.type(selector.admin.products.product.buttonText, product.buttonText);
 		await this.type(selector.admin.products.product.regularPrice, product.regularPrice());
@@ -197,6 +201,7 @@ export class ProductsPage extends AdminPage {
 		// Name
 		await this.type(selector.admin.products.product.productName, product.productName());
 		await this.selectByValue(selector.admin.products.product.productType, product.productType);
+		await this.click(selector.admin.products.product.general);
 		await this.type(selector.admin.products.product.regularPrice, product.regularPrice());
 
 		// Category
@@ -308,6 +313,18 @@ export class ProductsPage extends AdminPage {
 		await this.hover(selector.vendor.product.productCell(productName));
 		await this.clickAndWaitForLoadState(selector.vendor.product.view);
 		await expect(this.page).toHaveURL(data.subUrls.frontend.productDetails(helpers.slugify(productName)) + '/');
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		const { viewCart, ...productDetails } = selector.customer.cSingleProduct.productDetails;
+		await this.multipleElementVisible(productDetails);
+		//todo: actual value can be asserted
+	}
+
+
+	// vendor can't buy own  product
+	async cantBuyOwnProduct(productName: string){
+		await this.goIfNotThere(data.subUrls.frontend.productDetails(helpers.slugify(productName)));
+		await this.notToBeVisible(selector.customer.cSingleProduct.productDetails.quantity);
+		await this.notToBeVisible(selector.customer.cSingleProduct.productDetails.addToCart);
 	}
 
 

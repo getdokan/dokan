@@ -75,7 +75,7 @@ export class AuctionsPage extends VendorPage {
 	// update auction product fields
 	async updateAuctionProductFields(product: product['auction']){
 		await this.clearAndType(selector.vendor.vAuction.auction.productName, product.name);
-		// await this.addCategory(product.category)
+		// await this.addCategory(product.category);
 		await this.selectByValue(selector.vendor.vAuction.auction.itemCondition, product.itemCondition);
 		await this.selectByValue(selector.vendor.vAuction.auction.auctionType, product.auctionType);
 		await this.clearAndType(selector.vendor.vAuction.auction.startPrice, product.regularPrice());
@@ -96,7 +96,7 @@ export class AuctionsPage extends VendorPage {
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.auction);
 		await this.clickAndWaitForLoadState(selector.vendor.vAuction.addNewActionProduct);
 		await this.updateAuctionProductFields(product);
-		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.productAuction, selector.vendor.vAuction.auction.addAuctionProduct, 302);
+		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.auction, selector.vendor.vAuction.auction.addAuctionProduct, 302);
 		await this.toContainText(selector.vendor.product.updatedSuccessMessage, product.saveSuccessMessage);
 
 	}
@@ -108,7 +108,7 @@ export class AuctionsPage extends VendorPage {
 		await this.hover(selector.vendor.vAuction.productCell(product.name));
 		await this.clickAndWaitForLoadState(selector.vendor.vAuction.edit);
 		await this.updateAuctionProductFields(product);
-		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.productAuction, selector.vendor.vAuction.auction.updateAuctionProduct, 302);
+		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.auction, selector.vendor.vAuction.auction.updateAuctionProduct, 302);
 		await this.toContainText(selector.vendor.product.updatedSuccessMessage, product.saveSuccessMessage);
 
 	}

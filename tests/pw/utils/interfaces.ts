@@ -197,6 +197,7 @@ export interface product {
 
 	booking: {
 		productName: () => string;
+		name: string;
 		productType: string;
 		category: string;
 		bookingDurationType: string;
@@ -212,6 +213,8 @@ export interface product {
 		baseCost: string;
 		blockCost: string;
 		storeName: string;
+		saveSuccessMessage: string;
+
 	}
 
 	// Auction
