@@ -343,7 +343,8 @@ export interface paymentDetails {
 
 // coupon
 export interface coupon {
-	title: () => string;
+	couponTitle: () => string;
+	title: string;
 	amount: () => string;
 	discountType: string;
 	description: string;

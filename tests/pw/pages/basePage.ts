@@ -337,7 +337,7 @@ export class BasePage {
 	}
 
 	// type & wait for response and LoadState
-	async pressOnLocatorAndWaitForResponseAndLoadState(subUrl: string, selector: string, key: string , code = 200,): Promise<Response> {
+	async pressOnLocatorAndWaitForResponseAndLoadState(subUrl: string, selector: string, key: string, code = 200,): Promise<Response> {
 		const [response] = await Promise.all([
 			this.page.waitForResponse((resp) => resp.url().includes(subUrl) && resp.status() === code),
 			this.page.waitForLoadState( 'networkidle'),
@@ -1587,7 +1587,8 @@ export class BasePage {
 	// dokan select2
 	async select2ByText(selectSelector: string, optionSelector: string, text: string): Promise<void> {
 		await this.click(selectSelector);
-		await this.clearAndType(optionSelector, text);
+		await this.typeAndWaitForResponse(data.subUrls.ajax, optionSelector, text);
+		await this.toContainText('.select2-results__option.select2-results__option--highlighted', text);
 		await this.press('Enter');
 	}
 
@@ -1598,6 +1599,7 @@ export class BasePage {
 		if (!isExists) {
 			await this.click(selectSelector);
 			await this.typeAndWaitForResponse(data.subUrls.ajax, optionSelector, text);
+			await this.toContainText('.select2-results__option.select2-results__option--highlighted', text);
 			await this.press('Enter');
 		}
 	}

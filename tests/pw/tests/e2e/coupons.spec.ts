@@ -46,7 +46,7 @@ test.describe('Coupons test', () => {
 
 
 	test('admin can add marketplace coupon @pro', async ( ) => {
-		await admin.addMarketplaceCoupon(data.coupon);
+		await admin.addMarketplaceCoupon({ ...data.coupon, title:data.coupon.couponTitle() });
 	});
 
 	test('vendor coupon menu page is rendering properly @pro @explo', async ( ) => {
@@ -58,19 +58,20 @@ test.describe('Coupons test', () => {
 	});
 
 	test('vendor can add coupon @pro', async ( ) => {
-		await vendor.addCoupon(data.coupon);
+		await vendor.addCoupon({ ...data.coupon, title:data.coupon.couponTitle() });
 	});
 
 	test('vendor can edit coupon @pro', async ( ) => {
-		await vendor.editCoupon({ ...data.coupon, editCoupon: couponCode });
+		await vendor.editCoupon({ ...data.coupon, title: couponCode });
 	});
 
 	test('vendor can delete coupon @pro', async ( ) => {
+		const[,, couponCode] = await apiUtils.createCoupon([PRODUCT_ID], payloads.createCoupon(), payloads.vendorAuth);
 		await vendor.deleteCoupon(couponCode);
 	});
 
 	test('customer can view coupon on single store @pro', async ( ) => {
-		await customer.storeCoupon(data.predefined.vendorStores.vendor1, 'c1_v1');
+		await customer.storeCoupon(data.predefined.vendorStores.vendor1, couponCode);
 	});
 
 

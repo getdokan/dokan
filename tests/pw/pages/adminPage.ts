@@ -64,7 +64,7 @@ export class AdminPage extends BasePage {
 		const currentCurrency = await this.getElementText(selector.admin.wooCommerce.settings.currency);
 		if (currentCurrency !== currency) {
 			await this.click(selector.admin.wooCommerce.settings.currency);
-			await this.type(selector.admin.wooCommerce.settings.currency, currency);
+			await this.clearAndType(selector.admin.wooCommerce.settings.currency, currency);
 			await this.press(data.key.enter);
 			await this.click(selector.admin.wooCommerce.settings.generalSaveChanges);
 			await this.toContainText(selector.admin.wooCommerce.settings.updatedSuccessMessage, data.payment.currency.saveSuccessMessage );

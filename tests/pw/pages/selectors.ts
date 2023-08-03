@@ -2642,7 +2642,8 @@ export const selector = {
 				adminCommissionCombined: '.additional_fee > .input-text',
 				// Vendor
 				// storeName: '#dokan_product_author_override',
-				storeName: 'div#sellerdiv span.select2-selection__arrow',
+				// storeName: 'div#sellerdiv span.select2-selection__arrow', //todo: dokansellerdiv on gitaction nd sellerdiv on local why
+				storeName: '//div[contains(@id, "sellerdiv")]//span[@class="select2-selection__arrow"]',
 				// storeNameOptions: '#dokan_product_author_override option',
 				storeNameInput: '.select2-search.select2-search--dropdown .select2-search__field',
 				storeNameOption: (text: string) => `//select[@id='dokan_product_author_override']//option[contains(text(),'${text}')]`, // Select Option by text

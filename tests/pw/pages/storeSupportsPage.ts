@@ -46,7 +46,7 @@ export class StoreSupportsPage extends AdminPage {
 		await this.goIfNotThere(data.subUrls.backend.dokan.storeSupport);
 
 		await this.clearInputField(selector.admin.dokan.storeSupport.searchTicket);
-		await this.typeAndWaitForResponse(data.subUrls.api.dokan.storeSupport, selector.admin.dokan.storeSupport.searchTicket, title);
+		await this.typeAndWaitForResponseAndLoadState(data.subUrls.api.dokan.storeSupport, selector.admin.dokan.storeSupport.searchTicket, title);
 		// await this.toBeVisible(selector.admin.dokan.storeSupport.supportTicketLink(title));
 		const count = (await this.getElementText(selector.admin.dokan.storeSupport.numberOfRowsFound))?.split(' ')[0];
 		expect(Number(count)).not.toBe(0);

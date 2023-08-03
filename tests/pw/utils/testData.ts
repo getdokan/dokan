@@ -417,7 +417,8 @@ export const data = {
 	// coupon
 	coupon: {
 		// title: () => 'VC_' + faker.string.alpha({count: 5, casing: 'upper'},),
-		title: () => 'VC_' + faker.string.uuid(),
+		couponTitle: () => 'VC_' + faker.string.uuid(),
+		title: '',
 		amount: () => faker.number.int({
 			min: 1, max: 10
 		},).toString(),

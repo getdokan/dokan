@@ -269,7 +269,7 @@ export class StoresPage extends AdminPage {
 
 		await this.clearInputField(selector.admin.dokan.vendors.search);
 
-		await this.typeAndWaitForResponse(data.subUrls.api.dokan.stores, selector.admin.dokan.vendors.search, vendorName);
+		await this.typeAndWaitForResponseAndLoadState(data.subUrls.api.dokan.stores, selector.admin.dokan.vendors.search, vendorName);
 		await this.toBeVisible(selector.admin.dokan.vendors.vendorCell(vendorName));
 
 		// negative scenario

@@ -18,7 +18,7 @@ export class CouponsPage extends AdminPage {
 		await this.goIfNotThere(data.subUrls.backend.wc.coupons);
 
 		await this.clickAndWaitForResponse(data.subUrls.backend.wc.addCoupon, selector.admin.marketing.addCoupon);
-		await this.clearAndType(selector.admin.marketing.addNewCoupon.couponCode, coupon.title());
+		await this.clearAndType(selector.admin.marketing.addNewCoupon.couponCode, coupon.title);
 		await this.clearAndType(selector.admin.marketing.addNewCoupon.couponDescription, coupon.description);
 		await this.selectByValue(selector.admin.marketing.addNewCoupon.discountType, coupon.discountType);
 		await this.clearAndType(selector.admin.marketing.addNewCoupon.couponAmount, coupon.amount());
@@ -62,10 +62,10 @@ export class CouponsPage extends AdminPage {
 
 	// update coupon fields
 	async updateCouponFields(coupon: coupon){
-		await this.type(selector.vendor.vCoupon.couponTitle, coupon.title());
-		await this.type(selector.vendor.vCoupon.description, coupon.description);
+		await this.clearAndType(selector.vendor.vCoupon.couponTitle, coupon.title);
+		await this.clearAndType(selector.vendor.vCoupon.description, coupon.description);
 		await this.selectByValue(selector.vendor.vCoupon.discountType, coupon.discountType);
-		await this.type(selector.vendor.vCoupon.amount, coupon.amount());
+		await this.clearAndType(selector.vendor.vCoupon.amount, coupon.amount());
 		await this.click(selector.vendor.vCoupon.selectAll);
 		await this.check(selector.vendor.vCoupon.applyForNewProducts);
 		await this.check(selector.vendor.vCoupon.showOnStore);
@@ -85,7 +85,7 @@ export class CouponsPage extends AdminPage {
 	// vendor edit coupon
 	async editCoupon(coupon: coupon) {
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.coupons);
-		await this.clickAndWaitForLoadState(selector.vendor.vCoupon.couponLink(coupon.editCoupon));
+		await this.clickAndWaitForLoadState(selector.vendor.vCoupon.couponLink(coupon.title));
 		await this.updateCouponFields(coupon);
 		await this.toContainText(selector.vendor.vCoupon.dokanMessage, selector.vendor.vCoupon.couponUpdateSuccessMessage );
 	}

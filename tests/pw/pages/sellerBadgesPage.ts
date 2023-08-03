@@ -47,7 +47,7 @@ export class SellerBadgesPage extends AdminPage {
 		await this.goIfNotThere(data.subUrls.backend.dokan.sellerBadge);
 
 		await this.clearInputField(selector.admin.dokan.sellerBadge.search);
-		await this.typeAndWaitForResponse(data.subUrls.api.dokan.sellerBadge, selector.admin.dokan.sellerBadge.search, badgeName);
+		await this.typeAndWaitForResponseAndLoadState(data.subUrls.api.dokan.sellerBadge, selector.admin.dokan.sellerBadge.search, badgeName);
 		await this.toBeVisible(selector.admin.dokan.sellerBadge.sellerBadgeCell(badgeName));
 	}
 

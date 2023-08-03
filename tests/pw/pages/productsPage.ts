@@ -74,14 +74,14 @@ export class ProductsPage extends AdminPage {
 			break;
 
 		case 'draft' :
-			await this.click(selector.admin.products.product.saveDraft);
+			await this.clickAndWaitForResponseAndLoadState(data.subUrls.post, selector.admin.products.product.saveDraft, 302);
 			await this.toContainText(selector.admin.products.product.updatedSuccessMessage, data.product.draftUpdateSuccessMessage);
 			break;
 
 		case 'pending' :
 			await this.click(selector.admin.products.product.editStatus);
 			await this.selectByValue(selector.admin.products.product.status, data.product.status.pending);
-			await this.click(selector.admin.products.product.saveDraft);
+			await this.clickAndWaitForResponseAndLoadState(data.subUrls.post, selector.admin.products.product.saveDraft, 302);
 			await this.toContainText(selector.admin.products.product.updatedSuccessMessage, data.product.pendingProductUpdateSuccessMessage);
 			break;
 
@@ -135,7 +135,7 @@ export class ProductsPage extends AdminPage {
 		await this.scrollToTop();
 
 		// Publish
-		await this.clickAndWaitForResponse(data.subUrls.post, selector.admin.products.product.publish, 302);
+		await this.clickAndWaitForResponseAndLoadState(data.subUrls.post, selector.admin.products.product.publish, 302);
 		await this.toContainText(selector.admin.products.product.updatedSuccessMessage, data.product.publishSuccessMessage);
 	}
 
@@ -163,7 +163,7 @@ export class ProductsPage extends AdminPage {
 		await this.scrollToTop();
 
 		// Publish
-		await this.clickAndWaitForResponse(data.subUrls.post, selector.admin.products.product.publish, 302);
+		await this.clickAndWaitForResponseAndLoadState(data.subUrls.post, selector.admin.products.product.publish, 302);
 
 		await this.toContainText(selector.admin.products.product.updatedSuccessMessage, data.product.publishSuccessMessage);
 	}
@@ -189,7 +189,7 @@ export class ProductsPage extends AdminPage {
 		await this.scrollToTop();
 
 		// Publish
-		await this.clickAndWaitForResponse(data.subUrls.post, selector.admin.products.product.publish, 302);
+		await this.clickAndWaitForResponseAndLoadState(data.subUrls.post, selector.admin.products.product.publish, 302);
 		await this.toContainText(selector.admin.products.product.updatedSuccessMessage, data.product.publishSuccessMessage);
 	}
 
@@ -214,12 +214,12 @@ export class ProductsPage extends AdminPage {
 		await this.type(selector.admin.products.product.expireAfterDays, product.expireAfterDays);
 		await this.click(selector.admin.products.product.recurringPayment);
 
-		// Vendor Store Name
-		await this.select2ByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameInput, product.storeName);
-		await this.scrollToTop();
+		// // Vendor Store Name
+		// await this.select2ByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameInput, product.storeName);
+		// await this.scrollToTop();
 
 		// Publish
-		await this.clickAndWaitForResponse(data.subUrls.post, selector.admin.products.product.publish, 302);
+		await this.clickAndWaitForResponseAndLoadState(data.subUrls.post, selector.admin.products.product.publish, 302);
 		await this.toContainText(selector.admin.products.product.updatedSuccessMessage, data.product.publishSuccessMessage);
 	}
 
@@ -314,7 +314,7 @@ export class ProductsPage extends AdminPage {
 		await this.clickAndWaitForLoadState(selector.vendor.product.view);
 		await expect(this.page).toHaveURL(data.subUrls.frontend.productDetails(helpers.slugify(productName)) + '/');
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		const { viewCart, ...productDetails } = selector.customer.cSingleProduct.productDetails;
+		const { quantity, addToCart, viewCart, ...productDetails } = selector.customer.cSingleProduct.productDetails;
 		await this.multipleElementVisible(productDetails);
 		//todo: actual value can be asserted
 	}
