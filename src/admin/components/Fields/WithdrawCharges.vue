@@ -135,7 +135,7 @@ export default {
         margin-top: 15px;
 
         .wm-methods-box {
-            border-bottom: 1px solid #b0a7a752;
+            border-bottom: 1px solid #f3f4f6;
             padding: 0 30px;
             display: flex;
             justify-content: space-between;

@@ -226,10 +226,10 @@
             $( '#dokan-withdraw-next-scheduled-date').html(nextDate);
         },
         calculateWithdrawCharges: () => {
+            let charges = $( "select[name='withdraw_method'][id='withdraw-method'] option:selected" ).data();
             if (
-                $(
-                    '#dokan-send-withdraw-request-popup-form > .dokan-alert-danger'
-                ).length
+                $( '#dokan-send-withdraw-request-popup-form > .dokan-alert-danger' ).length
+                || ! charges
             ) {
                 return;
             }
