@@ -588,18 +588,19 @@ class Settings {
                     'tooltip' => __( 'Check to add available payment methods for vendors to withdraw money.', 'dokan-lite' ),
                 ],
                 'withdraw_charges'      => [
-                    'name'    => 'withdraw_charges',
-                    'label'   => __( 'Withdraw Charges', 'dokan-lite' ),
-                    'desc'    => __( 'Select suitable withdraw charges for vendors', 'dokan-lite' ),
-                    'type'    => 'charges',
-                    'options' => dokan_withdraw_get_methods(),
-                    'default' => dokan_withdraw_get_method_charges(),
-                    'show_if' => [
+                    'name'               => 'withdraw_charges',
+                    'label'              => __( 'Withdraw Charges', 'dokan-lite' ),
+                    'desc'               => __( 'Select suitable withdraw charges for vendors', 'dokan-lite' ),
+                    'type'               => 'charges',
+                    'options'            => dokan_withdraw_get_methods(),
+                    'chargeable_methods' => dokan_withdraw_get_chargeable_methods(),
+                    'default'            => dokan_withdraw_get_method_charges(),
+                    'show_if'            => [
                         'withdraw_methods' => [
                             'contains-any' => array_keys( dokan_withdraw_get_methods() ),
                         ],
                     ],
-                    'items_show_if' => [
+                    'items_show_if'      => [
                         'key'       => 'withdraw_methods',
                         'condition' => 'contains-key-value',
                     ],

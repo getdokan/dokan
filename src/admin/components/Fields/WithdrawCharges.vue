@@ -17,11 +17,14 @@
                     <div class="wm-method">
                         <h4 class="field_heading">{{ optionVal }}</h4>
                     </div>
-                    <div class="wm-charges">
+                    <div class="wm-charges" v-if="fieldData.chargeable_methods?.[optionKey]">
                         <combine-input
                             :value="charges[ optionKey ] ?? {}"
                             v-on:change='data => chargeChangeHandler( data, optionKey )'
                         />
+                    </div>
+                    <div v-else class='wm-charges'>
+                        <span class='wm-automated'>{{ __( 'Automated', 'dokan-lite' ) }}</span>
                     </div>
                 </div>
             </div>
@@ -152,6 +155,14 @@ export default {
             .wm-charges {
                 display: flex;
                 align-items: center;
+
+                .wm-automated {
+                    border: 1px solid #dbdbdb;
+                    color: #838181;
+                    padding: 5px 8px;
+                    border-radius: 12px;
+                    background: #f5f5f6;;
+                }
             }
         }
     }

@@ -12,12 +12,14 @@ use WeDevs\Dokan\Cache;
 function dokan_withdraw_register_methods() {
     $methods = [
         'paypal' => [
-            'title'    => __( 'PayPal', 'dokan-lite' ),
-            'callback' => 'dokan_withdraw_method_paypal',
+            'title'        => __( 'PayPal', 'dokan-lite' ),
+            'callback'     => 'dokan_withdraw_method_paypal',
+            'apply_charge' => true,
         ],
         'bank'   => [
-            'title'    => __( 'Bank Transfer', 'dokan-lite' ),
-            'callback' => 'dokan_withdraw_method_bank',
+            'title'        => __( 'Bank Transfer', 'dokan-lite' ),
+            'callback'     => 'dokan_withdraw_method_bank',
+            'apply_charge' => true,
         ],
     ];
 
@@ -113,7 +115,7 @@ function dokan_withdraw_get_method_title( $method_key, $request = null ) {
     /**
      * @since 3.3.7 added filter dokan_get_withdraw_method_title
      */
-    return apply_filters( 'dokan_get_withdraw_method_title', isset( $registered[ $method_key ] ) ?  $registered[ $method_key ]['title'] : ucfirst( $method_key ), $method_key, $request );
+    return apply_filters( 'dokan_get_withdraw_method_title', isset( $registered[ $method_key ] ) ? $registered[ $method_key ]['title'] : ucfirst( $method_key ), $method_key, $request );
 }
 
 /**
@@ -539,6 +541,24 @@ function dokan_is_withdraw_method_enabled( $method_id ) {
 }
 
 /**
+ * Get registered withdraw methods suitable for Settings Api
+ *
+ * @return array
+ */
+function dokan_withdraw_get_chargeable_methods() {
+    $methods    = [];
+    $registered = dokan_withdraw_register_methods();
+
+    foreach ( $registered as $key => $value ) {
+        if ( ! empty( $value['apply_charge'] ) ) {
+            $methods[ $key ] = $value['title'];
+        }
+    }
+
+    return $methods;
+}
+
+/**
  * Returns all withdraw methods charges saved.
  *
  * @since DOKAN_SINCE
@@ -547,7 +567,7 @@ function dokan_is_withdraw_method_enabled( $method_id ) {
  */
 function dokan_withdraw_get_method_charges() {
     $charges     = dokan_get_option( 'withdraw_charges', 'dokan_withdraw', '' );
-    $methods     = array_keys( dokan_withdraw_get_methods() );
+    $methods     = array_keys( dokan_withdraw_get_chargeable_methods() );
     $default_val = [
         'fixed'      => '',
         'percentage' => '',
