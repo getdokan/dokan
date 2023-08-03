@@ -4,6 +4,40 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.7.24',
+        'released' => '2023-07-25',
+        'changes'  => [
+            'Update' => [
+                [
+                    'title'       => 'Restrictions added for vendors to review and purchase their own products.',
+                    'description' => 'Previously, vendors could purchase and post reviews for their own product. Which is not logical and could manipulate the search results of a product in a marketplace. With this update, vendors will not be able to purchase or post reviews for their own product.',
+                ],
+                [
+                    'title' => '[ReverseWithdrawal] Now Admin can request payment from vendors using the Reverse Withdrawal feature',
+                    'description' => "Currently, there is no way for Site admins to request payments from vendors. For some use cases, it is essential for admins to request money from vendors. For example: In Stripe 3DS mode, if customers ask for a refund, refund will be given from the admin Stripe account, after that vendor transfer will be reversed. But if the vendor doesn't have enough money in their stripe account transfer reversal will fail, in that case, vendor balance will be negative. Another case would be for non-connected vendors, in that case, admin will be responsible for refund and admin needs to request money from vendors.",
+                ],
+                [
+                    'title' => '[AdminSettings] Added a toggle switch for Google ReCaptcha in the appearance settings for better control.',
+                    'description' => '',
+                ],
+                [
+                    'title' => '[AdminSettings] Sensitive information like API keys, client secrets, etc., are now displayed as password fields with an unhide button to improve security.',
+                    'description' => '',
+                ],
+                [
+                    'title' => '[AdminCommission] Now, "percentage" is selected by default if the admin setup wizard is skipped in the commission setting.',
+                    'description' => '',
+                ],
+            ],
+            'Fix' => [
+                [
+                    'title' => 'Added some missing translations.',
+                    'description' => 'Previously, the template folder at dokan-lite was missing when the .pot file was generated. With this fix template folder will be respected while generating the pot file.',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.7.23',
         'released' => '2023-07-14',
         'changes'  => [
@@ -453,9 +487,8 @@ $changelog = [
 -- https://example.com/wp-json/dokan/v2/withdraw/settings
 -- https://example.com/wp-json/dokan/v2/withdraw/summary
 -- https://example.com/wp-json/dokan/v2/products  (new param added: author, post_status, date, product_cat, product_type, stock_status, filter_by_other)
--- https://example.com/wp-json/dokan/v2/products/filter-by-data'
-                    ,
-                ]
+-- https://example.com/wp-json/dokan/v2/products/filter-by-data',
+                ],
             ],
             'Fix' => [
                 [
