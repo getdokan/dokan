@@ -251,6 +251,12 @@ export const data = {
 			blockCost: '10',
 			storeName: String(process.env.VENDOR) + 'store',
 			saveSuccessMessage: 'Success! The product has been saved successfully.',
+
+			resource: {
+				resourceName: () => 'Booking Resource_' + faker.string.uuid(),
+				name: '',
+				quantity: String(faker.number.int({ min: 1, max: 100 })),
+			}
 		},
 
 		// Auction

@@ -4442,8 +4442,11 @@ export const selector = {
 					resourceName: '.swal2-input',
 					cancelAddNewResource: '.swal2-cancel',
 					confirmAddNewResource: '.swal2-confirm',
+					resourceRow: (resourceName: string) => `//a[contains(text(),'${resourceName}')]/../..`,
+					resourceCell: (resourceName: string) => `//a[contains(text(),'${resourceName}')]/..`,
 					editResource: (resourceName: string) => `//a[contains(text(),'${resourceName}')]/../..//a[contains(text(),'Edit')]`,
-					removeResourceButton: (resourceName: string) => `//a[contains(text(),'${resourceName}')]/../..//button[contains(text(),'Remove')]`,
+					deleteResource: (resourceName: string) => `//a[contains(text(),'${resourceName}')]/../..//button[contains(text(),'Remove')]`,
+
 
 					// Edit Resource
 					resourceTitle: '#post_title',

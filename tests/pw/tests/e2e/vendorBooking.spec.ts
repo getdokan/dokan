@@ -15,6 +15,7 @@ test.describe('Booking Product test', () => {
 	let aPage: Page, vPage: Page, cPage: Page;
 	// let apiUtils: ApiUtils;
 	const bookingProductName = data.product.booking.productName();
+	const bookingResourceName = data.product.booking.resource.resourceName();
 
 
 	test.beforeAll(async ({ browser }) => {
@@ -31,8 +32,8 @@ test.describe('Booking Product test', () => {
 		// cPage = await customerContext.newPage();
 		// customer = new BookingPage(cPage);
 
-		await vendor.addBookingProduct({ ...data.product.booking, name: bookingProductName }); //todo: convert with api
-
+		// await vendor.addBookingProduct({ ...data.product.booking, name: bookingProductName }); //todo: convert with api
+		await vendor.addBookingResource(bookingResourceName);
 		// apiUtils = new ApiUtils(request);
 
 	});
@@ -105,6 +106,20 @@ test.describe('Booking Product test', () => {
 		const bookingProductName = data.product.booking.productName();
 		await vendor.addBookingProduct({ ...data.product.booking, name: bookingProductName });
 		await vendor.deleteBookingProduct(bookingProductName);
+	});
+
+	test('vendor can add booking resource @pro', async ( ) => {
+		await vendor.addBookingResource(data.product.booking.resource.resourceName());
+	});
+
+	test('vendor can edit booking resource @pro', async ( ) => {
+		await vendor.editBookingResource({ ...data.product.booking.resource, name: bookingResourceName });
+	});
+
+	test('vendor can delete booking resource @pro', async ( ) => {
+		const bookingResourceName = data.product.booking.resource.resourceName();
+		await vendor.addBookingResource(bookingResourceName);
+		await vendor.deleteBookingResource(bookingResourceName);
 	});
 
 });

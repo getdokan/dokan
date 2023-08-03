@@ -2,8 +2,9 @@ import { Page } from '@playwright/test';
 import { VendorPage } from 'pages/vendorPage';
 import { selector } from 'pages/selectors';
 import { data } from 'utils/testData';
-import { product } from 'utils/interfaces';
 import { helpers } from 'utils/helpers';
+import { product, bookingResource } from 'utils/interfaces';
+
 
 export class BookingPage extends VendorPage {
 
@@ -261,6 +262,38 @@ export class BookingPage extends VendorPage {
 		await this.click(selector.vendor.vBooking.permanentlyDelete);
 		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.booking, selector.vendor.vBooking.confirmDelete);
 		await this.toContainText(selector.vendor.vBooking.dokanSuccessMessage, 'Product successfully deleted');
+	}
+
+
+	// add booking resource
+	async addBookingResource(resourceName: string){
+		await this.goIfNotThere(data.subUrls.frontend.vDashboard.manageResources);
+
+		await this.clickAndWaitForLoadState(selector.vendor.vBooking.manageResources.addNewResource);
+		await this.clearAndType(selector.vendor.vBooking.manageResources.resource.resourceName, resourceName);
+		await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.vendor.vBooking.manageResources.resource.confirmAddNewResource);
+		await this.toBeVisible(selector.vendor.vBooking.manageResources.resource.resourceCell(resourceName));
+	}
+
+
+	// add booking resource
+	async editBookingResource(resource: bookingResource){
+		await this.goIfNotThere(data.subUrls.frontend.vDashboard.manageResources);
+		await this.clickAndWaitForLoadState(selector.vendor.vBooking.manageResources.resource.editResource(resource.name));
+
+		await this.clearAndType(selector.vendor.vBooking.manageResources.resource.resourceTitle, resource.name);
+		await this.clearAndType(selector.vendor.vBooking.manageResources.resource.availableQuantity, resource.quantity);
+		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.manageResources, selector.vendor.vBooking.manageResources.resource.saveResource);
+		await this.toContainText(selector.vendor.product.updatedSuccessMessage, 'Success! The Resource has been updated successfully.');
+	}
+
+
+	// delete booking resource
+	async deleteBookingResource(resourceName: string){
+		await this.goIfNotThere(data.subUrls.frontend.vDashboard.manageResources);
+		await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.vendor.vBooking.manageResources.resource.deleteResource(resourceName));
+		await this.notToBeVisible(selector.vendor.vBooking.manageResources.resource.resourceCell(resourceName));
+
 	}
 
 

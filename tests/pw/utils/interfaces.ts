@@ -26,6 +26,11 @@ export interface adminDashboard {
 	}
 }
 
+export interface bookingResource {
+	resourceName: () => string;
+	name: string;
+	quantity: string;
+}
 
 //Product
 export interface product {
@@ -215,6 +220,11 @@ export interface product {
 		storeName: string;
 		saveSuccessMessage: string;
 
+	}
+
+	bookingResource: {
+		name: string;
+		quantity: string;
 	}
 
 	// Auction
