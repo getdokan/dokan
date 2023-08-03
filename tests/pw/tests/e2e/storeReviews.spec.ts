@@ -26,6 +26,7 @@ test.describe('Store Reviews test', () => {
 		customer = new StoreReviewsPage(cPage);
 
 		apiUtils = new ApiUtils(request);
+
 		await apiUtils.createStoreReview(VENDOR_ID, payloads.createStoreReview, payloads.customerAuth);
 		const [, reviewId] = await apiUtils.createStoreReview(VENDOR_ID, { ...payloads.createStoreReview, title: 'trashed test review' }, payloads.customerAuth);
 		await apiUtils.deleteStoreReview(reviewId, payloads.adminAuth);

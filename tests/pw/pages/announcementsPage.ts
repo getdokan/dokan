@@ -132,7 +132,7 @@ export class AnnouncementsPage extends AdminPage {
 
 
 	// vendor view announcement
-	async vendorViewAnnouncement(announcement: announcement){
+	async vendorViewAnnouncement(announcement: { title: string; content: string; }){
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.announcements);
 		await this.clickAndWaitForLoadState(selector.vendor.vAnnouncement.announcementLink(announcement.title));
 		await this.toContainText(selector.vendor.vAnnouncement.announcement.title, announcement.title);

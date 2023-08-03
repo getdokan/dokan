@@ -9,21 +9,14 @@ test.describe('Announcements test', () => {
 
 
 	let admin: AnnouncementsPage;
-	let vendor: AnnouncementsPage;
-	let aPage: Page, vPage: Page;
+	let aPage: Page;
 	let apiUtils: ApiUtils;
 	let announcementTitle: string;
-	const announcement = payloads.createAnnouncement();
 
 	test.beforeAll(async ({ browser, request }) => {
 		const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
 		aPage = await adminContext.newPage();
 		admin = new AnnouncementsPage(aPage);
-
-		const vendorContext = await browser.newContext({ storageState: data.auth.vendorAuthFile });
-		vPage = await vendorContext.newPage();
-		vendor = new AnnouncementsPage(vPage);
-
 
 		apiUtils = new ApiUtils(request);
 		[,, announcementTitle] = await apiUtils.createAnnouncement({ ...payloads.createAnnouncement(), status: 'draft' }, payloads.adminAuth);
@@ -32,7 +25,6 @@ test.describe('Announcements test', () => {
 
 	test.afterAll(async () => {
 		await aPage.close();
-		await vPage.close();
 	});
 
 
@@ -67,19 +59,45 @@ test.describe('Announcements test', () => {
 		await admin.announcementBulkAction('trash');
 	});
 
+});
+
+
+test.describe('Announcements test vendor', () => {
+
+	let vendor: AnnouncementsPage;
+	let vPage: Page;
+	let apiUtils: ApiUtils;
+	const announcement = payloads.createAnnouncement();
+
+
+	test.beforeAll(async ({ browser, request }) => {
+
+		const vendorContext = await browser.newContext({ storageState: data.auth.vendorAuthFile });
+		vPage = await vendorContext.newPage();
+		vendor = new AnnouncementsPage(vPage);
+
+		apiUtils = new ApiUtils(request);
+		await apiUtils.createAnnouncement(announcement, payloads.adminAuth);
+
+	});
+
+
+	test.afterAll(async () => {
+		await vPage.close();
+	});
+
+
+	// vendor
 
 	test('vendor announcement menu page is rendering properly @pro @explo', async ( ) => {
-		await apiUtils.createAnnouncement(payloads.createAnnouncement(), payloads.adminAuth);
 		await vendor.vendorAnnouncementsRenderProperly();
 	});
 
-	test('vendor can view announcement details  @pro', async ( ) => {
-		await apiUtils.createAnnouncement(announcement, payloads.adminAuth);
+	test('vendor can view announcement details @pro', async ( ) => {
 		await vendor.vendorViewAnnouncement(announcement);
 	});
 
 	test('vendor can delete announcement @pro', async ( ) => {
-		// await apiUtils.createAnnouncement(payloads.createAnnouncement(), payloads.adminAuth);
 		await vendor.vendorDeleteAnnouncement(announcement.title);
 	});
 

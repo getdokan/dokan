@@ -759,6 +759,7 @@ export const data = {
 			supportTickets: 'my-account/support-tickets',
 			productDetails: (productName: string) => `product/${productName}`,
 			vendorDetails: (storeName: string) => `store/${storeName}`,
+			storeReviews: (storeName: string) => `store/${storeName}/reviews`,
 			myOrderDetails: (orderId: string) => `my-account/view-order/${orderId}`,
 			productReview: 'wp-comments-post.php',
 			submitSupport: 'wp-comments-post.php',
@@ -1499,7 +1500,7 @@ export const data = {
 			featuredVendors: 'featured_seller',
 		},
 
-		randomTitle: () => 'test title_' + faker.string.uuid(),
+		randomTitle: () => 'test announcement_' + faker.string.uuid(),
 		title: 'test announcement title',
 		content:  'test announcement Content',
 		receiver: 'all_seller'

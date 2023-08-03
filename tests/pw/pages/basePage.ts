@@ -234,8 +234,8 @@ export class BasePage {
 	// click & wait for load state to complete
 	async clickAndWaitForLoadState(selector: string): Promise<void> {
 		await Promise.all([
-			this.page.waitForLoadState( 'networkidle' ),
-			// this.page.waitForLoadState( 'domcontentloaded' ),
+			// this.page.waitForLoadState( 'networkidle' ),
+			this.page.waitForLoadState( 'domcontentloaded' ),
 			this.page.locator(selector).click()
 		]);
 	}
@@ -278,6 +278,7 @@ export class BasePage {
 			// this.page.waitForLoadState( 'domcontentloaded'),
 			this.page.locator(selector).click()
 		]);
+		expect(response.status()).toBe(code);
 		return response;
 	}
 

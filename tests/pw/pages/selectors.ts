@@ -6067,7 +6067,9 @@ export const selector = {
 			// Review
 			review:{
 				close: 'button.icon-close',
-				write: '.add-review-btn',
+				noReviewsFound: '//span[normalize-space()="No Reviews found"]',
+				write: '//button[normalize-space()="Write a Review"]',
+				// write: '.add-review-btn',
 				edit: '.edit-review-btn',
 				rating: '.jq-ry-rated-group.jq-ry-group',
 				title: '#dokan-review-title',

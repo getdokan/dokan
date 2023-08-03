@@ -1046,7 +1046,7 @@ export const payloads = {
 
 	createAnnouncement: () => ({
 		// title: 'test announcement title',
-		title: 'test announcement title_' + faker.string.uuid(),
+		title: 'test announcement_' + faker.string.uuid(),
 		content: '<p>This is announcement content</p>',
 		status: 'publish',
 		sender_type: 'all_seller',
