@@ -97,7 +97,7 @@ export default {
                 height: 20px;
                 min-height: 32px;
                 min-width: 32px;
-                border: 0.957434px solid #686666;
+                border: 1px solid #f3f4f6;
                 box-shadow: 0px 3.82974px 3.82974px rgba(0, 0, 0, 0.1);
                 border-radius: 5px;
                 background: white;
