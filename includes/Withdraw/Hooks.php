@@ -164,8 +164,6 @@ class Hooks {
         }
 
         $withdraw = new Withdraw();
-        $all_withdraw_charges = dokan_withdraw_get_method_charges();
-        $charge_data = $all_withdraw_charges[ $method ];
 
         $withdraw
             ->set_user_id( $user_id )
@@ -174,13 +172,7 @@ class Hooks {
             ->set_status( dokan()->withdraw->get_status_code( 'pending' ) )
             ->set_method( $method )
             ->set_ip( dokan_get_client_ip() )
-            ->set_note( '' )
-            ->set_charge_data( $charge_data )
-            ->calculate_charge();
-
-        if ( $withdraw->get_receivable_amount() < 0 ) {
-            wp_send_json_error( esc_html__( 'Withdraw amount is less then the withdraw charge.', 'dokan-lite' ) );
-        }
+            ->set_note( '' );
 
         $result = $withdraw->save();
 

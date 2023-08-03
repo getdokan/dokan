@@ -27,11 +27,22 @@ class Manager {
      * @return bool|\WP_Error
      */
     public function is_valid_approval_request( $args ) {
+        $withdraw = new Withdraw();
         $user_id = $args['user_id'];
         $limit   = $this->get_withdraw_limit();
         $balance = wc_format_decimal( dokan_get_seller_balance( $user_id, false ), 2 );
         $amount  = wc_format_decimal( $args['amount'], 2 );
         $method  = $args['method'];
+
+        $all_withdraw_charges = dokan_withdraw_get_method_charges();
+        $charge_data = $all_withdraw_charges[ $method ];
+
+        $withdraw
+            ->set_user_id( $user_id )
+            ->set_amount( $amount )
+            ->set_method( $method )
+            ->set_charge_data( $charge_data )
+            ->calculate_charge();
 
         if ( empty( $amount ) ) {
             return new WP_Error( 'dokan_withdraw_empty', __( 'Withdraw amount required ', 'dokan-lite' ) );
@@ -56,6 +67,11 @@ class Manager {
 
         if ( ! empty( $args['id'] ) && isset( $args['status'] ) && absint( $args['status'] ) === dokan()->withdraw->get_status_code( 'approved' ) ) {
             return new WP_Error( 'dokan_withdraw_already_approved', __( 'Withdraw is already approved.', 'dokan-lite' ) );
+        }
+
+        // Check if withdraw amount is equal or greater than the charge.
+        if ( $withdraw->get_receivable_amount() < 0 ) {
+            return new WP_Error( 'dokan_withdraw_not_enough_balance', __( 'Withdraw amount is less then the withdraw charge.', 'dokan-lite' ) );
         }
 
         /**

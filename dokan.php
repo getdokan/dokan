@@ -50,6 +50,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @class WeDevs_Dokan The class that holds the entire WeDevs_Dokan plugin
  *
  * @property WeDevs\Dokan\BackgroundProcess\Manager $bg_process Instance of WeDevs\Dokan\BackgroundProcess\Manager class
+ * @property WeDevs\Dokan\Withdraw\Manager $withdraw Instance of WeDevs\Dokan\Withdraw\Manager class
  */
 final class WeDevs_Dokan {
 
