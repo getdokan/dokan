@@ -9,7 +9,7 @@ let reviewId: string;
 
 test.beforeAll(async ({ request }) => {
 	apiUtils = new ApiUtils(request);
-	[, reviewId] = await apiUtils.createProductReview(payloads.createProduct(), payloads.createProductReview());
+	[, reviewId,] = await apiUtils.createProductReview(payloads.createProduct(), payloads.createProductReview());
 });
 
 test.describe('product review api test', () => {

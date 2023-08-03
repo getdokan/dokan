@@ -160,10 +160,12 @@ export const payloads = {
 
 	createProductReview: () => ({
 		product_id: '',
-		review: 'Test_review' + faker.string.uuid(),
+		// review: 'Test_review' + faker.string.uuid(),
+		review: 'Test_review_' + faker.string.uuid(),
 		reviewer: faker.person.fullName(),
 		reviewer_email: faker.internet.email(),
 		rating: faker.number.int({ min: 1, max: 5 }),
+		status: 'approved', // approved, hold, spam, unspam, trash, untrash
 	}),
 
 	// product review

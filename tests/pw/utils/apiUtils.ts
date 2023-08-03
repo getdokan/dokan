@@ -1268,11 +1268,17 @@ export class ApiUtils {
 	// reviews
 
 	//create product review
-	async createProductReview(product: object, review: object, auth? : auth): Promise<[responseBody, string]> {
-		const [, productId] = await this.createProduct(product, auth);
+	async createProductReview(product: string | object, review: object, auth? : auth): Promise<[responseBody, string, string]> {
+		let productId: string;
+		if (typeof(product) != 'string'){
+			[, productId] = await this.createProduct(product, auth);
+		} else {
+			productId = product;
+		}
 		const [, responseBody] = await this.post(endPoints.wc.createReview, { data: { ...review, product_id: productId }, headers: auth });
 		const reviewId = responseBody.id;
-		return [responseBody, reviewId];
+		const reviewMessage = responseBody.review;
+		return [responseBody, reviewId, reviewMessage];
 	}
 
 	// categories

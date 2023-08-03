@@ -95,7 +95,7 @@ export class SingleProductPage extends CustomerPage {
 		await this.click(selector.customer.cSingleProduct.menus.reviews);
 		await this.click(selector.customer.cSingleProduct.reviews.rating(review.rating));
 		await this.clearAndType(selector.customer.cSingleProduct.reviews.reviewMessage, reviewMessage);
-		await this.clickAndWaitForResponse(data.subUrls.frontend.productReview, selector.customer.cSingleProduct.reviews.submitReview, 302);
+		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.productReview, selector.customer.cSingleProduct.reviews.submitReview, 302);
 		await this.toContainText(selector.customer.cSingleProduct.reviews.submittedReview(reviewMessage), reviewMessage);
 	}
 

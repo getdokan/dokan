@@ -3767,7 +3767,7 @@ export const selector = {
 			// Bulk Action
 			bulkActions:{
 				selectAll: '.dokan-check-all',
-				selectAction: 'select[name="comment_status"]',
+				selectAction: 'select[name="comment_status"]', // none, hold, spam, trash, approve, delete
 				applyAction: 'input[value="Apply"]',
 			},
 
@@ -3784,14 +3784,25 @@ export const selector = {
 
 
 			// Review Actions
-			viewReview: '//a[contains(text(),"View Comment")]',
-			reviewActions: '//ul[@class="dokan-cmt-row-actions"]',
-			reviewRow: (reviewMessage: string) => `//div[contains(text(),'${reviewMessage}')]/..`,
+			reviewRow: (reviewMessage: string) => `//div[contains(text(),'${reviewMessage}')]/../..`,
+			reviewMessageCell: (reviewMessage: string) => `//div[contains(text(),'${reviewMessage}')]/..`,
 			unApproveReview: (reviewMessage: string) => `//div[contains(text(),'${reviewMessage}')]/..//ul[@class='dokan-cmt-row-actions']//a[contains(text(),'Unapprove')]`,
 			approveReview: (reviewMessage: string) => `//div[contains(text(),'${reviewMessage}')]/..//ul[@class='dokan-cmt-row-actions']//a[contains(text(),'Approve')]`,
 			spamReview: (reviewMessage: string) => `//div[contains(text(),'${reviewMessage}')]/..//ul[@class='dokan-cmt-row-actions']//a[contains(text(),'Spam')]`,
 			trashReview: (reviewMessage: string) => `//div[contains(text(),'${reviewMessage}')]/..//ul[@class='dokan-cmt-row-actions']//a[contains(text(),'Trash')]`,
-			reviewLink: (reviewMessage: string) => `//div[contains(text(),'${reviewMessage}')]/../..//td[@class="col-link"]//a`
+			restoreReview: (reviewMessage: string) => `//div[contains(text(),'${reviewMessage}')]/..//ul[@class='dokan-cmt-row-actions']//a[contains(text(),'Restore')]`,
+			permanentlyDeleteReview: (reviewMessage: string) => `//div[contains(text(),'${reviewMessage}')]/..//ul[@class='dokan-cmt-row-actions']//a[contains(text(),'Delete Permanently')]`,
+			reviewLink: (reviewMessage: string) => `//div[contains(text(),'${reviewMessage}')]/../..//td[@class="col-link"]//a`,
+			viewReview: '//a[contains(text(),"View Comment")]',
+
+			reviewDetails: {
+				reviewer:'strong.woocommerce-review__author',
+				reviewPublishDate: 'time.woocommerce-review__published-date',
+				reviewMessage:'.comment-text .description p',
+				rating: '#reviews div.star-rating',
+				reviewMessageByMessage: (reviewMessage: string) => `//div[@class="description"]//p[contains(text(), '${reviewMessage}')]`,
+			}
+
 		},
 
 		// Withdraw

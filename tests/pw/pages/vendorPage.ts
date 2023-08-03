@@ -996,76 +996,6 @@ export class VendorPage extends BasePage {
 
 	}
 
-	// vendor product review render properly
-	async vendorProductReviewsRenderProperly(){
-		await this.goIfNotThere(data.subUrls.frontend.vDashboard.reviews);
-
-		// settings text is visible
-		await this.toBeVisible(selector.vendor.vReviews.reviewsText);
-
-		// product review menu elements are visible
-		await this.multipleElementVisible(selector.vendor.vReviews.menus);
-
-		// product review bulk action elements are visible
-		await this.multipleElementVisible(selector.vendor.vReviews.bulkActions);
-
-		// product review table elements are visible
-		await this.multipleElementVisible(selector.vendor.vReviews.table);
-
-		const noReviewsFound = await this.isVisible(selector.vendor.vReviews.noReviewsFound);
-		if (noReviewsFound){
-			return;
-		}
-		//todo: add more fields
-
-	}
-
-	// product review bulk action
-	async productReviewBulkAuction(action: string){
-		await this.goIfNotThere(data.subUrls.frontend.vDashboard.reviews);
-
-		// ensure row exists
-		await this.notToBeVisible(selector.vendor.vReviews.noReviewsFound);
-
-		await this.click(selector.vendor.vReviews.bulkActions.selectAll);
-		await this.selectByValue(selector.vendor.vReviews.bulkActions.selectAction, action);
-		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.reviews, selector.vendor.vReviews.bulkActions.applyAction);
-	}
-
-	// view product review
-	async viewProductReview(reviewMessage: string){
-		await this.goIfNotThere(data.subUrls.frontend.vDashboard.reviews);
-
-		await this.clickAndWaitForLoadState(selector.vendor.vReviews.reviewLink(reviewMessage));
-		await this.toContainText('.comment-text .description p', reviewMessage);
-	}
-
-	// update product review status
-	async updateProductReview(action: string){
-		await this.goIfNotThere(data.subUrls.frontend.vDashboard.reviews);
-
-		switch(action){
-		case 'approve' :
-
-			break;
-		case 'unApprove' :
-
-			break;
-		case 'spam' :
-
-			break;
-
-		case 'trash' :
-
-			break;
-
-		default :
-			break;
-
-		}
-
-	}
-
 
 	// vendor return request render properly
 	async vendorReturnRequestRenderProperly(){
@@ -1377,5 +1307,6 @@ export class VendorPage extends BasePage {
 		await this.multipleElementVisible(accountDetails);
 
 	}
+
 
 }
