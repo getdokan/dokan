@@ -11,8 +11,8 @@ test.describe('Booking Product test', () => {
 
 	let admin: BookingPage;
 	let vendor: BookingPage;
-	let customer: BookingPage;
-	let aPage: Page, vPage: Page, cPage: Page;
+	// let customer: BookingPage;
+	let aPage: Page, vPage: Page;
 	// let apiUtils: ApiUtils;
 	const bookingProductName = data.product.booking.productName();
 	const bookingResourceName = data.product.booking.resource.resourceName();
@@ -32,7 +32,7 @@ test.describe('Booking Product test', () => {
 		// cPage = await customerContext.newPage();
 		// customer = new BookingPage(cPage);
 
-		// await vendor.addBookingProduct({ ...data.product.booking, name: bookingProductName }); //todo: convert with api
+		// await vendor.addBookingProduct({ ...data.product.booking, name: bookingProductName }); //todo: convert with api or db
 		await vendor.addBookingResource(bookingResourceName);
 		// apiUtils = new ApiUtils(request);
 
@@ -121,5 +121,7 @@ test.describe('Booking Product test', () => {
 		await vendor.addBookingResource(bookingResourceName);
 		await vendor.deleteBookingResource(bookingResourceName);
 	});
+
+	//todo: add customer tests
 
 });
