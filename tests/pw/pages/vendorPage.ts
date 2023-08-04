@@ -9,9 +9,6 @@ import { helpers } from 'utils/helpers';
 import { product, vendor, vendorSetupWizard } from 'utils/interfaces';
 
 
-const { DOKAN_PRO } = process.env;
-
-
 export class VendorPage extends BasePage {
 
 	constructor(page: Page) {
@@ -159,7 +156,7 @@ export class VendorPage extends BasePage {
 	// products
 
 	// vendor add simple product
-	async addSimpleProduct(product: product['simple'] | product['simpleSubscription'] | product['external']): Promise<void> {
+	async vendorAddSimpleProduct(product: product['simple'] | product['simpleSubscription'] | product['external']): Promise<void> {
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.products);
 		const productName = product.productName();
 		// add new simple product
@@ -175,8 +172,8 @@ export class VendorPage extends BasePage {
 
 
 	// vendor add variable product
-	async addVariableProduct(product: product['variable'] ): Promise<void> {
-		await this.addSimpleProduct(product);
+	async vendorAddVariableProduct(product: product['variable'] ): Promise<void> {
+		await this.vendorAddSimpleProduct(product);
 
 		// edit product
 		await this.selectByValue(selector.vendor.product.productType, product.productType);
@@ -206,8 +203,8 @@ export class VendorPage extends BasePage {
 
 
 	// vendor add simple subscription product
-	async addSimpleSubscription(product: product['simpleSubscription']): Promise<void> {
-		await this.addSimpleProduct(product);
+	async vendorAddSimpleSubscription(product: product['simpleSubscription']): Promise<void> {
+		await this.vendorAddSimpleProduct(product);
 		// edit product
 		await this.selectByValue(selector.vendor.product.productType, product.productType);
 		await this.type(selector.vendor.product.subscriptionPrice, product.subscriptionPrice());
@@ -223,8 +220,8 @@ export class VendorPage extends BasePage {
 
 
 	// vendor add variable subscription product
-	async addVariableSubscription(product: product['variableSubscription']): Promise<void> {
-		await this.addSimpleProduct(product);
+	async vendorAddVariableSubscription(product: product['variableSubscription']): Promise<void> {
+		await this.vendorAddSimpleProduct(product);
 		// edit product
 		await this.selectByValue(selector.vendor.product.productType, product.productType);
 		// add variation
@@ -255,8 +252,8 @@ export class VendorPage extends BasePage {
 
 
 	// vendor add external product
-	async addExternalProduct(product: product['external']): Promise<void> {
-		await this.addSimpleProduct(product);
+	async vendorAddExternalProduct(product: product['external']): Promise<void> {
+		await this.vendorAddSimpleProduct(product);
 		// edit product
 		await this.selectByValue(selector.vendor.product.productType, product.productType);
 		await this.type(selector.vendor.product.productUrl, this.getBaseUrl() + product.productUrl);
@@ -781,7 +778,6 @@ export class VendorPage extends BasePage {
 		await this.toContainText(selector.vendor.vSocialProfileSettings.updateSettingsSuccessMessage, urls.saveSuccessMessage);
 	}
 
-
 	// vendor set rma settings
 	async setRmaSettings(rma: vendor['rma']): Promise<void> {
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsRma);
@@ -796,31 +792,12 @@ export class VendorPage extends BasePage {
 			await this.checkMultiple(selector.vendor.vRmaSettings.refundReasons);
 		}
 		await this.typeFrameSelector(selector.vendor.vRmaSettings.refundPolicyIframe, selector.vendor.vRmaSettings.refundPolicyHtmlBody, rma.refundPolicyHtmlBody);
-		await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.settingsRma, selector.vendor.vRmaSettings.saveChanges, 302);
-		await expect(this.page.getByText(rma.saveSuccessMessage)).toBeVisible();
+		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.settingsRma, selector.vendor.vRmaSettings.saveChanges, 302);
+		await expect(this.page.getByText(rma.saveSuccessMessage)).toBeVisible(); //todo: update this, with toBeVisible()
 	}
 
 
 	// vendor functions
-
-
-	// vendor approve product review
-	async approveProductReview(reviewMessage: string): Promise<void> {
-		await this.goIfNotThere(data.subUrls.frontend.vDashboard.reviews);
-		// let approvedReviewIsVisible = await this.isVisible(selector.vendor.vReviews.reviewRow(reviewMessage))
-		// if (approvedReviewIsVisible) {
-		//     expect(approvedReviewIsVisible).toBe(true)
-		// }
-		await this.click(selector.vendor.vReviews.pending);
-		await this.hover(selector.vendor.vReviews.reviewRow(reviewMessage));
-		await this.click(selector.vendor.vReviews.approveReview(reviewMessage));
-		await this.click(selector.vendor.vReviews.approved);
-
-		// const reviewIsVisible = await this.isVisible(selector.vendor.vReviews.reviewRow(reviewMessage));
-		// expect(reviewIsVisible).toBe(true);
-		await this.toBeVisible(selector.vendor.vReviews.reviewRow(reviewMessage));
-	}
-
 
 	// vendor approve return request
 	async approveReturnRequest(orderId: string, productName: string): Promise<void> {
@@ -997,40 +974,6 @@ export class VendorPage extends BasePage {
 	}
 
 
-	// vendor return request render properly
-	async vendorReturnRequestRenderProperly(){
-		await this.goIfNotThere(data.subUrls.frontend.vDashboard.returnRequest);
-
-		// return request menu elements are visible
-		await this.toBeVisible(selector.vendor.vReturnRequest.menus.all); //todo: add all menus
-
-		// return request table elements are visible
-		await this.multipleElementVisible(selector.vendor.vReturnRequest.table);
-
-		await this.toBeVisible(selector.vendor.vReturnRequest.noRowsFound);
-		//todo: add more fields
-
-	}
-
-
-	// vendor delivery time render properly
-	async vendorDeliveryTimeRenderProperly(){
-		await this.goIfNotThere(data.subUrls.frontend.vDashboard.deliveryTime);
-
-		// delivery time and store pickup text is visible
-		await this.toBeVisible(selector.vendor.vDeliveryTime.deliveryTimeAndStorePickup);
-
-		// delivery time calendar is visible
-		await this.toBeVisible(selector.vendor.vDeliveryTime.deliveryTimeCalender);
-
-		// delivery time filter elements are visible
-		await this.multipleElementVisible(selector.vendor.vDeliveryTime.filter);
-
-		// delivery time navigation elements are visible
-		await this.multipleElementVisible(selector.vendor.vDeliveryTime.navigation);
-
-	}
-
 	// vendor analytics render properly
 	async vendorAnalyticsRenderProperly(){
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.analytics);
@@ -1056,245 +999,6 @@ export class VendorPage extends BasePage {
 		await this.clickAndWaitForLoadState(selector.vendor.vAnalytics.menus.keyword);
 		await this.toBeVisible(selector.vendor.vAnalytics.noAnalytics);
 
-	}
-
-
-	// vendor settings render properly
-	async vendorSettingsRenderProperly(){
-		await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsStore);
-
-		// settings text is visible
-		await this.toBeVisible(selector.vendor.vStoreSettings.settingsText);
-
-		//todo: update for lite
-
-		// visit store link is visible
-		await this.toBeVisible(selector.vendor.vStoreSettings.banner);
-		await this.toBeVisible(selector.vendor.vStoreSettings.profilePicture);
-		await this.toBeVisible(selector.vendor.vStoreSettings.storeName);
-		await this.toBeVisible(selector.vendor.vStoreSettings.storeProductsPerPage);
-		await this.toBeVisible(selector.vendor.vStoreSettings.phoneNo);
-		DOKAN_PRO && await this.toBeVisible(selector.vendor.vStoreSettings.multipleLocation);
-
-		// store address location elements are visible
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		const { cancelSaveLocation, deleteSaveLocation,  ...address } = selector.vendor.vStoreSettings.address;
-		await this.multipleElementVisible(address);
-
-		// company info elements are visible
-		DOKAN_PRO && await this.multipleElementVisible(selector.vendor.vStoreSettings.companyInfo);
-
-		await this.toBeVisible(selector.vendor.vStoreSettings.email);
-		await this.toBeVisible(selector.vendor.vStoreSettings.moreProducts);
-
-		// map is visible
-		await this.toBeVisible(selector.vendor.vStoreSettings.map);
-
-		//todo: catalog, discount, vacation, open close, store category
-
-		// biography is visible
-		DOKAN_PRO && await this.toBeVisible(selector.vendor.vStoreSettings.biographyIframe);
-
-		//todo: min-max, store-support
-
-		// update settings are visible
-		await this.toBeVisible(selector.vendor.vStoreSettings.updateSettingsTop);
-		await this.toBeVisible(selector.vendor.vStoreSettings.updateSettings);
-	}
-
-
-	// vendor verifications render properly
-	async vendorVerificationsRenderProperly(){
-		await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsVerification);
-
-		// verification text is visible
-		await this.toBeVisible(selector.vendor.vVerificationSettings.verificationText);
-
-		// visit store link is visible
-		await this.toBeVisible(selector.vendor.vVerificationSettings.visitStore);
-
-		await this.toBeVisible(selector.vendor.vVerificationSettings.id.startIdVerification);
-		await this.toBeVisible(selector.vendor.vVerificationSettings.address.startAddressVerification);
-		await this.toBeVisible(selector.vendor.vVerificationSettings.company.startCompanyVerification);
-
-		await this.click(selector.vendor.vVerificationSettings.id.startIdVerification);
-		await this.click(selector.vendor.vVerificationSettings.address.startAddressVerification);
-		await this.click(selector.vendor.vVerificationSettings.company.startCompanyVerification);
-
-		// product addon fields elements are visible
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		const { startIdVerification, cancelIdVerificationRequest,  previousUploadedPhoto, removePreviousUploadedPhoto, idUpdateSuccessMessage,   ...idVerifications } = selector.vendor.vVerificationSettings.id;
-		await this.multipleElementVisible(idVerifications);
-
-		// product addon fields elements are visible
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		const { startAddressVerification, cancelAddressVerificationRequest, previousUploadedResidenceProof, removePreviousUploadedResidenceProof, addressUpdateSuccessMessage,  ...addressVerifications } = selector.vendor.vVerificationSettings.address;
-		await this.multipleElementVisible(addressVerifications);
-
-		// product addon fields elements are visible
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		const { startCompanyVerification, cancelCompanyVerificationRequest, uploadedCompanyFileClose, cancelSelectedInfo, companyInfoUpdateSuccessMessage,  ...companyVerifications } = selector.vendor.vVerificationSettings.company;
-		await this.multipleElementVisible(companyVerifications);
-
-	}
-
-
-	// vendor delivery time render properly
-	async vendorDeliveryTimeSettingsRenderProperly(){
-		await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsDeliveryTime);
-
-		// settings text is visible
-		await this.toBeVisible(selector.vendor.vDeliveryTimeSettings.settingsText);
-
-		// visit store link is visible
-		await this.toBeVisible(selector.vendor.vDeliveryTimeSettings.visitStore);
-
-		// delivery support elements are visible
-		await this.toBeVisible(selector.vendor.vDeliveryTimeSettings.homeDelivery);
-		await this.toBeVisible(selector.vendor.vDeliveryTimeSettings.storePickup);
-		await this.toBeVisible(selector.vendor.vDeliveryTimeSettings.deliveryBlockedBuffer);
-		await this.toBeVisible(selector.vendor.vDeliveryTimeSettings.timeSlot);
-		await this.toBeVisible(selector.vendor.vDeliveryTimeSettings.orderPerSlot);
-		await this.notToHaveCount(selector.vendor.vDeliveryTimeSettings.deliveryDaySwitches, 0);
-
-		// update settings is visible
-		await this.toBeVisible(selector.vendor.vDeliveryTimeSettings.updateSettings);
-	}
-
-
-	// vendor shipping render properly
-	async vendorShippingRenderProperly(){
-		await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsShipping);
-
-		// shipstation text is visible
-		await this.toBeVisible(selector.vendor.vShippingSettings.shippingSettingsText);
-
-		// visit store link is visible
-		await this.toBeVisible(selector.vendor.vShippingSettings.visitStore);
-
-		// add shipping policies is visible
-		await this.toBeVisible(selector.vendor.vShippingSettings.shippingPolicies.clickHereToAddShippingPolicies);
-
-		// previous shipping settings link is visible
-		await this.toBeVisible(selector.vendor.vShippingSettings.shippingPolicies.clickHereToAddShippingPolicies);
-
-		// shipping zone table elements are visible
-		await this.multipleElementVisible(selector.vendor.vShippingSettings.table);
-
-		await this.clickAndWaitForLoadState(selector.vendor.vShippingSettings.shippingPolicies.clickHereToAddShippingPolicies);
-
-		// shipping policy elements are visible
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		const { clickHereToAddShippingPolicies, ...companyVerifications } = selector.vendor.vShippingSettings.shippingPolicies;
-		await this.multipleElementVisible(companyVerifications);
-
-		await this.clickAndWaitForLoadState(selector.vendor.vShippingSettings.shippingPolicies.backToZoneList);
-
-		await this.clickAndWaitForLoadState(selector.vendor.vShippingSettings.previousShippingSettings.previousShippingSettings);
-
-		// previous shipping settings elements are visible
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		const { previousShippingSettings, ...previousShipping } = selector.vendor.vShippingSettings.previousShippingSettings;
-		await this.multipleElementVisible(previousShipping);
-
-		// await this.goBack();
-
-	}
-
-
-	// vendor shipstation render properly
-	async vendorShipstationRenderProperly(){
-		await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsShipstation);
-
-		// shipstation text is visible
-		await this.toBeVisible(selector.vendor.vShipStationSettings.shipStationText);
-
-		// visit store link is visible
-		await this.toBeVisible(selector.vendor.vShipStationSettings.visitStore);
-
-		// authentication key is visible
-		await this.toBeVisible(selector.vendor.vShipStationSettings.authenticationKey);
-
-		// export order statuses is visible
-		await this.toBeVisible(selector.vendor.vShipStationSettings.exportOrderStatuses);
-
-		// Shipped Order Status is visible
-		await this.toBeVisible(selector.vendor.vShipStationSettings.shippedOrderStatusDropdown);
-
-		// save changes is visible
-		await this.toBeVisible(selector.vendor.vShipStationSettings.saveChanges);
-	}
-
-
-	// vendor social profile render properly
-	async vendorSocialProfileRenderProperly(){
-		await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsSocialProfile);
-
-		// social profile text is visible
-		await this.toBeVisible(selector.vendor.vSocialProfileSettings.socialProfileText);
-
-		// visit store link is visible
-		await this.toBeVisible(selector.vendor.vSocialProfileSettings.visitStore);
-
-		// social platform elements are visible
-		await this.multipleElementVisible(selector.vendor.vSocialProfileSettings.platforms);
-
-		// update settings is visible
-		await this.toBeVisible(selector.vendor.vSocialProfileSettings.updateSettings);
-	}
-
-
-	// vendor rma render properly
-	async vendorRmaRenderProperly(){
-		await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsRma);
-
-		// return and warranty text is visible
-		await this.toBeVisible(selector.vendor.vRmaSettings.returnAndWarrantyText);
-
-		// visit store link is visible
-		await this.toBeVisible(selector.vendor.vRmaSettings.visitStore);
-
-		// rma label input is visible
-		await this.toBeVisible(selector.vendor.vRmaSettings.label);
-
-		// rma type input is visible
-		await this.toBeVisible(selector.vendor.vRmaSettings.type);
-
-		// rma policy input is visible
-		await this.toBeVisible(selector.vendor.vRmaSettings.refundPolicyIframe);
-
-		// save changes is visible
-		await this.toBeVisible(selector.vendor.vRmaSettings.saveChanges);
-	}
-
-
-	// vendor store seo render properly
-	async vendorStoreSeoRenderProperly(){
-		await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsSeo);
-
-		// store seo text is visible
-		await this.toBeVisible(selector.vendor.vStoreSeoSettings.storeSeoText);
-
-		// visit store link is visible
-		await this.toBeVisible(selector.vendor.vStoreSeoSettings.visitStore);
-
-		// seo title is visible
-		await this.toBeVisible(selector.vendor.vStoreSeoSettings.seoTitle);
-
-		// meta description is visible
-		await this.toBeVisible(selector.vendor.vStoreSeoSettings.metaDescription);
-
-		// meta keywords is visible
-		await this.toBeVisible(selector.vendor.vStoreSeoSettings.metaKeywords);
-
-		// store seo facebook elements are visible
-		await this.multipleElementVisible(selector.vendor.vStoreSeoSettings.facebook);
-
-		// store seo twitter elements are visible
-		await this.multipleElementVisible(selector.vendor.vStoreSeoSettings.twitter);
-
-		// save changes is visible
-		await this.toBeVisible(selector.vendor.vStoreSeoSettings.saveChanges);
 	}
 
 

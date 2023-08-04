@@ -106,7 +106,7 @@ export class AuctionsPage extends VendorPage {
 	async editAuctionProduct(product: product['auction']){
 		await this.searchAuctionProduct(product.name);
 		await this.hover(selector.vendor.vAuction.productCell(product.name));
-		await this.clickAndWaitForLoadState(selector.vendor.vAuction.edit);
+		await this.clickAndWaitForLoadState(selector.vendor.vAuction.edit(product.name));
 		await this.updateAuctionProductFields(product);
 		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.auction, selector.vendor.vAuction.auction.updateAuctionProduct, 302);
 		await this.toContainText(selector.vendor.product.updatedSuccessMessage, product.saveSuccessMessage);
@@ -118,7 +118,7 @@ export class AuctionsPage extends VendorPage {
 	async viewAuctionProduct(productName: string){
 		await this.searchAuctionProduct(productName);
 		await this.hover(selector.vendor.vAuction.productCell(productName));
-		await this.clickAndWaitForLoadState(selector.vendor.vAuction.view);
+		await this.clickAndWaitForLoadState(selector.vendor.vAuction.view(productName));
 
 		// auction product elements are visible
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -148,7 +148,7 @@ export class AuctionsPage extends VendorPage {
 	async deleteAuctionProduct(productName: string){
 		await this.searchAuctionProduct(productName);
 		await this.hover(selector.vendor.vAuction.productCell(productName));
-		await this.click(selector.vendor.vAuction.permanentlyDelete);
+		await this.click(selector.vendor.vAuction.permanentlyDelete(productName));
 		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.auction, selector.vendor.vAuction.confirmDelete);
 		await this.toContainText(selector.vendor.vAuction.dokanSuccessMessage, 'Product successfully deleted');
 	}

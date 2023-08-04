@@ -270,7 +270,7 @@ export class StoreSupportsPage extends AdminPage {
 		await this.toContainText(selector.vendor.vSupport.ticketStatus, 'Closed');
 	}
 
-	
+
 	// vendor reopen support ticket with a reply
 	async vendorReopenSupportTicketWithReply(ticketId: string, replyMessage: string){
 		await this.vendorSearchSupportTicket('id', ticketId, true);

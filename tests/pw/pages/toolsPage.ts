@@ -98,7 +98,7 @@ export class ToolsPage extends AdminPage {
 		await this.clickAndWaitForResponse(data.subUrls.api.dokan.dummyData, selector.admin.dokan.tools.importDummyData.import);
 		// await this.clickAndWaitForResponse(data.subUrls.api.dokan.dummyData, selector.admin.dokan.dummyData.runTheImporter);
 		//todo:  wait for multiple request one after another
-		const subUrls = [[data.subUrls.api.dokan.dummyData], [data.subUrls.api.dokan.dummyData], [data.subUrls.api.dokan.dummyData], [data.subUrls.api.dokan.dummyData], [data.subUrls.api.dokan.dummyData]];
+		// const subUrls = [[data.subUrls.api.dokan.dummyData], [data.subUrls.api.dokan.dummyData], [data.subUrls.api.dokan.dummyData], [data.subUrls.api.dokan.dummyData], [data.subUrls.api.dokan.dummyData]];
 		// await this.clickAndWaitForResponses(subUrls, selector.admin.dokan.dummyData.runTheImporter);
 		// await this.toBeVisible(selector.admin.dokan.dummyData.importComplete);
 	}

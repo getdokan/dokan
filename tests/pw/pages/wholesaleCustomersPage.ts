@@ -54,7 +54,7 @@ export class WholesaleCustomersPage extends AdminPage {
 	async editWholesaleCustomer(wholesaleCustomer: customer){
 		await this.searchWholesaleCustomer(wholesaleCustomer.username);
 		await this.hover(selector.admin.dokan.wholesaleCustomer.wholesaleCustomerCell(wholesaleCustomer.username));
-		await this.clickAndWaitForLoadState(selector.admin.dokan.wholesaleCustomer.wholesaleCustomerEdit);
+		await this.clickAndWaitForLoadState(selector.admin.dokan.wholesaleCustomer.wholesaleCustomerEdit(wholesaleCustomer.username));
 
 		// basic info
 		await this.selectByValue(selector.admin.users.userInfo.role, wholesaleCustomer.customerInfo.role);
@@ -113,7 +113,7 @@ export class WholesaleCustomersPage extends AdminPage {
 	async viewWholesaleCustomerOrders(wholesaleCustomer: string){
 		await this.searchWholesaleCustomer(wholesaleCustomer);
 		await this.hover(selector.admin.dokan.wholesaleCustomer.wholesaleCustomerCell(wholesaleCustomer));
-		await this.clickAndWaitForLoadState(selector.admin.dokan.wholesaleCustomer.wholesaleCustomerOrders);
+		await this.clickAndWaitForLoadState(selector.admin.dokan.wholesaleCustomer.wholesaleCustomerOrders(wholesaleCustomer));
 		const count = (await this.getElementText(selector.admin.dokan.wholesaleCustomer.numberOfRowsFound))?.split(' ')[0];
 		expect(Number(count)).not.toBe(0);
 	}
@@ -135,7 +135,7 @@ export class WholesaleCustomersPage extends AdminPage {
 
 		case 'delete' :
 			await this.hover(selector.admin.dokan.wholesaleCustomer.wholesaleCustomerCell(wholesaleCustomer));
-			await this.clickAndAcceptAndWaitForResponse(data.subUrls.api.dokan.wholesaleCustomers, selector.admin.dokan.wholesaleCustomer.wholesaleCustomerRemove);
+			await this.clickAndAcceptAndWaitForResponse(data.subUrls.api.dokan.wholesaleCustomers, selector.admin.dokan.wholesaleCustomer.wholesaleCustomerRemove(wholesaleCustomer));
 			break;
 
 		default :

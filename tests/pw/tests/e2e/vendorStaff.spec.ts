@@ -3,7 +3,6 @@ import { VendorStaffPage } from 'pages/vendorStaffPage';
 // import { ApiUtils } from 'utils/apiUtils';
 import { data } from 'utils/testData';
 // import { payloads } from 'utils/payloads';
-// import { faker } from '@faker-js/faker';
 
 
 test.describe('Vendor staff test', () => {

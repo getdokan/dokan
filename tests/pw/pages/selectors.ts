@@ -313,8 +313,8 @@ export const selector = {
 				numberOfRowsFound: '.tablenav.top .displaying-num',
 				noRowsFound: '//td[normalize-space()="No requests found."]',
 				withdrawCell: (storeName: string) => `//td//a[contains(text(), '${storeName}')]/../..`,
-				withdrawDelete: '.row-actions .trash',
-				withdrawCancel: '.row-actions .cancel',
+				withdrawDelete: (storeName: string) => `//td//a[contains(text(), '${storeName}')]/../..//span[@class="trash"]//a`,
+				withdrawCancel: (storeName: string) => `//td//a[contains(text(), '${storeName}')]/../..//span[@class="cancel"]//a`,
 				withdrawApprove:(storeName: string) => `//td//a[contains(text(), '${storeName}')]/../../..//button[@title='Approve Request']`,
 				withdrawAddNote:(storeName: string) => `//td//a[contains(text(), '${storeName}')]/../../..//button[@title='Add Note']`,
 				withdrawNoteModalClose: '.dokan-modal-content .modal-header button',
@@ -428,9 +428,9 @@ export const selector = {
 				vendorViewDetails: (username: string) => `//td//a[contains(text(), '${username}')]`,
 				vendorRow: (username: string) => `//td//a[contains(text(), '${username}')]/../../..`,
 				vendorCell: (username: string) => `//td//a[contains(text(), '${username}')]/../..`,
-				vendorEdit: '.row-actions .edit',
-				vendorProducts: '.row-actions .products',
-				vendorOrders: '.row-actions .orders',
+				vendorEdit: (username: string) => `//td//a[contains(text(), '${username}')]/../..//span[@class="edit"]//a`,
+				vendorProducts: (username: string) => `//td//a[contains(text(), '${username}')]/../..//span[@class="products"]//a`,
+				vendorOrders: (username: string) => `//td//a[contains(text(), '${username}')]/../..//span[@class="orders"]//a`,
 				statusSlider: (username: string) => `//td//a[contains(text(), '${username}')]/../../..//label[@class='switch tips']`,
 
 
@@ -599,11 +599,9 @@ export const selector = {
 					numberOfRowsFound: '.tablenav.top .displaying-num',
 					noRowsFound: '//td[normalize-space()="No category found"]',
 					storeCategoryCell: (title: string) => `//td//a[contains(text(), '${title}')]/../..`,
-					storeCategoryEdit: '.row-actions .edit',
-					storeCategoryDelete: '.row-actions .delete',
-					storeCategorySetDefault: '.row-actions .set_as_default',
-
-
+					storeCategoryEdit: (title: string) => `//td//a[contains(text(), '${title}')]/../..//span[@class='edit']//a`,
+					storeCategoryDelete: (title: string) => `//td//a[contains(text(), '${title}')]/../..//span[@class='delete']//a`,
+					storeCategorySetDefault: (title: string) => `//td//a[contains(text(), '${title}')]/../..//span[@class='set_as_default']//a`,
 				}
 
 			},
@@ -702,10 +700,6 @@ export const selector = {
 				storeReviewDelete: '(//a[normalize-space()="Trash"])[1]',
 				storeReviewRestore: '(//a[normalize-space()="Restore"])[1]',
 				storeReviewPermanentlyDelete: '(//a[normalize-space()="Permanent Delete"])[1]',
-				// storeReviewEdit: '.row-actions .edit',
-				// storeReviewDelete: '.row-actions .trash',
-				// storeReviewRestore: '.row-actions .restore',
-				// storeReviewPermanentlyDelete: '.row-actions .delete',
 
 				editReview:{
 					rating: (star: string) => `(//span[@class='vue-star-rating-pointer vue-star-rating-star'])[${star}]`,
@@ -824,12 +818,7 @@ export const selector = {
 
 					numberOfRowsFound: '.tablenav.top .displaying-num',
 					noRowsFound: '//td[normalize-space()="No quote found."]',
-					quoteCell:  (title: string) => `//strong[contains(text(),'${title}')]/../..//td[@class='column sl']`, //todo: flaky because of this
-					//todo:  uncomment after search added
-					// quoteRulesEdit: '.row-actions .edit',
-					// quoteRulesTrash: '.row-actions .trash',
-					// quoteRulesPermanentlyDelete: '.row-actions .delete',
-					// quoteRulesRestore: '.row-actions .restore',
+					quoteCell:  (title: string) => `//strong[contains(text(),'${title}')]/../..//td[@class='column sl']`, //todo: flaky because of this, not because of this, need unique test data
 					quoteEdit: (title: string) => `//strong[contains(text(),'${title}')]/../..//td[@class='column sl']//span[@class="edit"]`,
 					quoteTrash: (title: string) => `//strong[contains(text(),'${title}')]/../..//td[@class='column sl']//span[@class="trash"]`,
 					quotePermanentlyDelete: (title: string) => `//strong[contains(text(),'${title}')]/../..//span[@class="delete"]`,
@@ -913,11 +902,6 @@ export const selector = {
 					noRowsFound: '//td[normalize-space()="No quote found."]',
 					quoteRulesCell:  (title: string) => `//a[contains(text(),'${title}')]/../..`,
 					trashedQuoteRulesCell:  (title: string) => `//strong[contains(text(),'${title}')]/../..`,
-					//todo:  uncomment after search added
-					// quoteRulesEdit: '.row-actions .edit',
-					// quoteRulesTrash: '.row-actions .trash',
-					// quoteRulesPermanentlyDelete: '.row-actions .delete',
-					// quoteRulesRestore: '.row-actions .restore',
 					quoteRulesEdit: (title: string) => `//a[contains(text(),'${title}')]/../..//span[@class="edit"]`,
 					quoteRulesTrash: (title: string) => `//a[contains(text(),'${title}')]/../..//span[@class="trash"]`,
 					quoteRulesPermanentlyDelete: (title: string) => `//strong[contains(text(),'${title}')]/../..//span[@class="delete"]`,
@@ -992,16 +976,13 @@ export const selector = {
 				sellerBadgeRow: (name: string) => `//a[contains(text(),'${name}')]/../../..`,
 				sellerBadgeCell: (name: string) => `//a[contains(text(),'${name}')]/../..`,
 				sellerBadgeLevel: (name: string) => `//a[contains(text(),'${name}')]/../../..//span[@class="level_count"]//strong`,
+				sellerBadgeEdit: (name: string) => `//a[contains(text(),'${name}')]/../..//div[@class="row-actions"]//span[@class="edit"]//a`,
+				sellerBadgePreview: (name: string) => `//a[contains(text(),'${name}')]/../..//div[@class="row-actions"]//span[@class="view"]//a`,
+				sellerBadgeVendors: (name: string) => `//a[contains(text(),'${name}')]/../..//div[@class="row-actions"]//span[@class="show_vendors"]//a`,
 				sellerBadgePublish: (name: string) => `//a[contains(text(),'${name}')]/../..//div[@class="row-actions"]//span[@class="publish"]//a`,
 				sellerBadgeDraft: (name: string) => `//a[contains(text(),'${name}')]/../..//div[@class="row-actions"]//span[@class="draft"]//a`,
 				sellerBadgeDelete: (name: string) => `//a[contains(text(),'${name}')]/../..//div[@class="row-actions"]//span[@class="delete"]//a`,
 
-				sellerBadgeEdit: '.row-actions .edit',
-				sellerBadgePreview: '.row-actions .view',
-				sellerBadgeVendors: '.row-actions .show_vendors',
-				// sellerBadgePublish: '.row-actions .publish',
-				// sellerBadgeDraft: '.row-actions .draft',
-				// sellerBadgeDelete: '.row-actions .delete',
 				confirmAction: '.swal2-actions .swal2-confirm',
 				cancelAction: '.swal2-actions .swal2-cancel',
 				successMessage: '.swal2-actions .swal2-confirm',
@@ -1094,8 +1075,6 @@ export const selector = {
 				announcementDelete: (title: string) => `//strong[contains(text(),'${title}')]/../..//span[@class="trash"]`,
 				announcementPermanentlyDelete: (title: string) => `//a[contains(text(),'${title}')]/../..//span[@class="delete"]`,
 				announcementRestore: (title: string) => `//a[contains(text(),'${title}')]/../..//span[@class="restore"]`,
-				// announcementEdit: '.row-actions .edit',
-				// announcementDelete: '.row-actions .delete',
 
 
 				// add announcement
@@ -1560,8 +1539,7 @@ export const selector = {
 				advertisedProductOrderIdCell: (orderId: number) => `//a[normalize-space()="${orderId}"]/../..`,
 				advertisedProductExpire: (productName: string) => `//a[normalize-space()="${productName}"]/../..//span[@class="expire"]`,
 				advertisedProductDelete: (productName: string) => `//a[normalize-space()="${productName}"]/../..//span[@class="delete"]`,
-				// advertisedProductExpire: '.row-actions .expire',
-				// advertisedProduct: '.row-actions .delete',
+
 				confirmAction: '.swal2-actions .swal2-confirm', //todo:  merge this type of locators
 				actionSuccessful: '.swal2-actions .swal2-confirm', //todo:  merge this type of locators
 
@@ -1612,9 +1590,9 @@ export const selector = {
 				numberOfRowsFound: '.tablenav.top .displaying-num',
 				noRowsFound: '//td[normalize-space()="No customers found."]',
 				wholesaleCustomerCell: (username: string) => `//td[contains(text(), '${username}')]/..//td[@class='column full_name']`,
-				wholesaleCustomerEdit: '.row-actions .edit',
-				wholesaleCustomerOrders: '.row-actions .orders',
-				wholesaleCustomerRemove: '.row-actions .delete',
+				wholesaleCustomerEdit: (username: string) => `//td[contains(text(), '${username}')]/..//td[@class='column full_name']//span[@class='edit']//a`,
+				wholesaleCustomerOrders: (username: string) => `//td[contains(text(), '${username}')]/..//td[@class='column full_name']//span[@class='orders']//a`,
+				wholesaleCustomerRemove: (username: string) => `//td[contains(text(), '${username}')]/..//td[@class='column full_name']//span[@class='delete']//a`,
 				statusSlider: (username: string) => `//td[contains(text(), '${username}')]/..//label[@class='switch tips']`,
 				enableStatusUpdateSuccessMessage: '.notification-content',
 			},
@@ -3242,14 +3220,14 @@ export const selector = {
 			numberOfRows: '#dokan-product-list-table tbody tr',
 			productCell: (productName: string) => `//a[contains(text(),'${productName}')]/../..`,
 			productLink: (productName: string) => `//a[contains(text(),'${productName}')]`,
-			editProduct: '.row-actions .edit',
-			permanentlyDelete: '.row-actions .delete',
-			view: '.row-actions .view',
-			quickEdit: '.row-actions .item-inline-edit',
-			duplicate: '.row-actions .duplicate',
+			editProduct: (productName: string) => `//a[contains(text(),'${productName}')]/../..//span[@class="edit"]//a`,
+			permanentlyDelete: (productName: string) => `//a[contains(text(),'${productName}')]/../..//span[@class="delete"]//a`,
+			view: (productName: string) => `//a[contains(text(),'${productName}')]/../..//span[@class="view"]//a`,
+			quickEdit: (productName: string) => `//a[contains(text(),'${productName}')]/../..//span[@class="item-inline-edit"]//a`,
+			duplicate: (productName: string) => `//a[contains(text(),'${productName}')]/../..//span[@class="duplicate"]//a`,
 
 			// Create Product
-			closeCreateProductPopup: '.mfp-close',
+			closeCreateProductPopup: '.mfp-close', //todo: need to update, everywhere
 			addNewProduct: '.dokan-add-new-product',
 			productName: '//input[@name="post_title"]',
 			productImage: '.dokan-feat-image-btn',
@@ -4016,14 +3994,12 @@ export const selector = {
 			// Edit Staff
 			editStaff: {
 				editStaff: (staffName: string) => `//a[contains(text(), "${staffName}")]/..//span[@class="edit"]//a`,
-				// editStaff: '.row-actions .edit',
 				password: '#reg_password',
 				updateStaff: '//input[@name="staff_creation"]',
 			},
 
 			deleteStaff: {
 				deleteStaff: (staffName: string) => `//a[contains(text(), "${staffName}")]/..//span[@class="delete"]//a`,
-				// deleteStaff: '.row-actions .delete ',
 				okDelete: '.swal2-confirm',
 				cancelDelete: '.swal2-cancel',
 				deleteSuccessMessage: '.dokan-alert.dokan-alert-success',
@@ -4032,7 +4008,6 @@ export const selector = {
 			// Manage Permission
 			managePermission: {
 				managePermission: (staffName: string) => `//a[contains(text(), "${staffName}")]/..//span[@class="permission"]//a`,
-				// managePermission: '.row-actions .permission',
 
 				// Overview
 				overview:{
@@ -4199,14 +4174,10 @@ export const selector = {
 			noProductFound: '//td[normalize-space()="No product found"]',
 			numberOfRows: '.product-listing-table tbody tr',
 			productCell: (name: string) =>  `//a[normalize-space()="${name}"]/../..`,
-			editProduct: (name: string) =>  `//a[normalize-space()="${name}"]/../..//span[@class="edit"]`,
-			deletePermanently:(name: string) =>   `//a[normalize-space()="${name}"]/../..//span[@class="delete"]`,
-			duplicateProduct: (name: string) =>  `//a[normalize-space()="${name}"]/../..//span[@class="duplicate"]`,
-			viewProduct: (name: string) =>  `//a[normalize-space()="${name}"]/../..//span[@class="view"]`,
-			edit: '.row-actions .edit',
-			permanentlyDelete: '.row-actions .delete',
-			duplicate: '.row-actions .duplicate',
-			view: '.row-actions .view',
+			edit: (name: string) =>  `//a[normalize-space()="${name}"]/../..//span[@class="edit"]`,
+			permanentlyDelete:(name: string) =>   `//a[normalize-space()="${name}"]/../..//span[@class="delete"]`,
+			duplicate: (name: string) =>  `//a[normalize-space()="${name}"]/../..//span[@class="duplicate"]`,
+			view: (name: string) =>  `//a[normalize-space()="${name}"]/../..//span[@class="view"]`,
 
 			confirmDelete: '.swal2-confirm',
 			cancelDelete: '.swal2-cancel',
@@ -4645,12 +4616,9 @@ export const selector = {
 
 			noAuctionsFound: '//td[normalize-space()="No product found"]',
 			productCell: (name: string) =>  `//a[normalize-space()="${name}"]/../..`,
-			editProduct: (name: string) =>  `//a[normalize-space()="${name}"]/../..//span[@class="edit"]`,
-			deletePermanently:(name: string) =>   `//a[normalize-space()="${name}"]/../..//span[@class="delete"]`,
-			viewProduct: (name: string) =>  `//a[normalize-space()="${name}"]/../..//span[@class="view"]`,
-			edit: '.row-actions .edit',
-			permanentlyDelete: '.row-actions .delete',
-			view: '.row-actions .view',
+			edit: (name: string) =>  `//a[normalize-space()="${name}"]/../..//span[@class="edit"]`,
+			permanentlyDelete:(name: string) =>   `//a[normalize-space()="${name}"]/../..//span[@class="delete"]`,
+			view: (name: string) =>  `//a[normalize-space()="${name}"]/../..//span[@class="view"]`,
 
 			confirmDelete: '.swal2-confirm',
 			cancelDelete: '.swal2-cancel',

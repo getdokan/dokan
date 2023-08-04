@@ -100,7 +100,7 @@ export class SellerBadgesPage extends AdminPage {
 		await this.searchSellerBadge(badge.badgeName);
 
 		await this.hover(selector.admin.dokan.sellerBadge.sellerBadgeRow(badge.badgeName));
-		await this.clickAndWaitForResponse(data.subUrls.api.dokan.sellerBadge, selector.admin.dokan.sellerBadge.sellerBadgeEdit);
+		await this.clickAndWaitForResponse(data.subUrls.api.dokan.sellerBadge, selector.admin.dokan.sellerBadge.sellerBadgeEdit(badge.badgeName));
 
 		await this.clearAndType(selector.admin.dokan.sellerBadge.badgeDetails.badgeName, badge.badgeName);
 
@@ -156,7 +156,7 @@ export class SellerBadgesPage extends AdminPage {
 		const badgeLevel = await this.getElementText(selector.admin.dokan.sellerBadge.sellerBadgeLevel(badgeName));
 
 		await this.hover(selector.admin.dokan.sellerBadge.sellerBadgeRow(badgeName));
-		await this.clickAndWaitForResponse(data.subUrls.api.dokan.sellerBadge, selector.admin.dokan.sellerBadge.sellerBadgePreview);
+		await this.clickAndWaitForResponse(data.subUrls.api.dokan.sellerBadge, selector.admin.dokan.sellerBadge.sellerBadgePreview(badgeName));
 
 		// badge preview modal is visible
 		await this.toBeVisible(selector.admin.dokan.sellerBadge.previewBadgeDetails.modal);
@@ -187,7 +187,7 @@ export class SellerBadgesPage extends AdminPage {
 		await this.searchSellerBadge(badgeName);
 
 		await this.hover(selector.admin.dokan.sellerBadge.sellerBadgeRow(badgeName));
-		await this.clickAndWaitForResponse(data.subUrls.api.dokan.sellerBadge, selector.admin.dokan.sellerBadge.sellerBadgeVendors);
+		await this.clickAndWaitForResponse(data.subUrls.api.dokan.sellerBadge, selector.admin.dokan.sellerBadge.sellerBadgeVendors(badgeName));
 		// await this.toBeVisible(selector.admin.dokan.vendors.vendorCell(badgeName));
 		const count = (await this.getElementText(selector.admin.dokan.vendors.numberOfRowsFound))?.split(' ')[0];
 		expect(Number(count)).not.toBe(0);

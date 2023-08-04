@@ -311,7 +311,7 @@ export class ProductsPage extends AdminPage {
 	async viewProduct(productName: string): Promise<void> {
 		await this.searchProduct(productName);
 		await this.hover(selector.vendor.product.productCell(productName));
-		await this.clickAndWaitForLoadState(selector.vendor.product.view);
+		await this.clickAndWaitForLoadState(selector.vendor.product.view(productName));
 		await expect(this.page).toHaveURL(data.subUrls.frontend.productDetails(helpers.slugify(productName)) + '/');
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const { quantity, addToCart, viewCart, ...productDetails } = selector.customer.cSingleProduct.productDetails;
@@ -332,7 +332,7 @@ export class ProductsPage extends AdminPage {
 	async editProduct(product: product['simple']): Promise<void> {
 		await this.searchProduct(product.editProduct);
 		await this.hover(selector.vendor.product.productCell(product.editProduct));
-		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, selector.vendor.product.editProduct);
+		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, selector.vendor.product.editProduct(product.editProduct));
 
 		await this.clearAndType(selector.vendor.product.title, product.editProduct); // don't update name below test needs same product
 		await this.clearAndType(selector.vendor.product.price, product.regularPrice());
@@ -347,7 +347,7 @@ export class ProductsPage extends AdminPage {
 	async quickEditProduct(product: product['simple']): Promise<void> {
 		await this.searchProduct(product.editProduct);
 		await this.hover(selector.vendor.product.productCell(product.editProduct));
-		await this.click(selector.vendor.product.quickEdit);
+		await this.click(selector.vendor.product.quickEdit(product.editProduct));
 
 		await this.clearAndType(selector.vendor.product.quickEditProduct.title, product.editProduct);
 		//todo:  add more fields
@@ -361,7 +361,7 @@ export class ProductsPage extends AdminPage {
 	async duplicateProduct(productName: string): Promise<void> {
 		await this.searchProduct(productName);
 		await this.hover(selector.vendor.product.productCell(productName));
-		await this.clickAndAcceptAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, selector.vendor.product.duplicate);
+		await this.clickAndAcceptAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, selector.vendor.product.duplicate(productName));
 		await this.toContainText(selector.vendor.product.dokanSuccessMessage, 'Product succesfully duplicated');
 	}
 
@@ -370,7 +370,7 @@ export class ProductsPage extends AdminPage {
 	async permanentlyDeleteProduct(productName: string): Promise<void> {
 		await this.searchProduct(productName);
 		await this.hover(selector.vendor.product.productCell(productName));
-		await this.click(selector.vendor.product.permanentlyDelete);
+		await this.click(selector.vendor.product.permanentlyDelete(productName));
 		await this.clickAndWaitForLoadState(selector.vendor.product.confirmAction);
 		await this.toContainText(selector.vendor.product.dokanSuccessMessage, 'Product successfully deleted');
 

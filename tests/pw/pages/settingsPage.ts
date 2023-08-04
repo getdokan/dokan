@@ -14,8 +14,8 @@ export class SettingsPage extends AdminPage {
 
 	// settings
 
-	// settings render properly
-	async adminSettingsRenderProperly(){
+	// dokan settings render properly
+	async dokanSettingsRenderProperly(){
 		await this.goIfNotThere(data.subUrls.backend.dokan.settings);
 
 		// settings text is visible

@@ -5,7 +5,7 @@ import { data } from 'utils/testData';
 import { vendor  } from 'utils/interfaces';
 
 
-export class ProductAddonPage extends VendorPage {
+export class ProductAddonsPage extends VendorPage {
 
 
 	constructor(page: Page) {
@@ -13,7 +13,7 @@ export class ProductAddonPage extends VendorPage {
 	}
 
 	// product addons render properly
-	async vendorProductAddonsRenderProperly(): Promise<void> {
+	async vendorProductAddonsSettingsRenderProperly(): Promise<void> {
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsAddon);
 
 		// product addon text is visible
@@ -45,12 +45,8 @@ export class ProductAddonPage extends VendorPage {
 
 	}
 
-
-	// add addon
-	async addAddon(addon: vendor['addon']) {
-		await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsAddon);
-		await this.click(selector.vendor.vAddonSettings.createNewAddon);
-
+	// update addon fields
+	async updateAddonFields(addon: vendor['addon']){
 		await this.clearAndType(selector.vendor.vAddonSettings.addon.name, addon.name);
 		await this.clearAndType(selector.vendor.vAddonSettings.addon.priority, addon.priority);
 
@@ -59,7 +55,7 @@ export class ProductAddonPage extends VendorPage {
 		// await this.clearAndType(selector.vendor.vAddonSettings.addon.productCategories, addon.category);
 		// await this.press(data.key.enter);
 
-		await this.click(selector.vendor.vAddonSettings.addon.addField);
+		await this.click(selector.vendor.vAddonSettings.addon.addField); //todo: handle this scenario while merging edit addon fields
 		await this.selectByValue(selector.vendor.vAddonSettings.addon.type, addon.type);
 		await this.selectByValue(selector.vendor.vAddonSettings.addon.displayAs, addon.displayAs);
 		await this.clearAndType(selector.vendor.vAddonSettings.addon.titleRequired, addon.titleRequired);
@@ -70,6 +66,15 @@ export class ProductAddonPage extends VendorPage {
 		await this.clearAndType(selector.vendor.vAddonSettings.addon.enterAnOption, addon.enterAnOption);
 		await this.selectByValue(selector.vendor.vAddonSettings.addon.optionPriceType, addon.optionPriceType);
 		await this.clearAndType(selector.vendor.vAddonSettings.addon.optionPriceInput, addon.optionPriceInput);
+
+	}
+
+
+	// add addon
+	async addAddon(addon: vendor['addon']) {
+		await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsAddon);
+		await this.click(selector.vendor.vAddonSettings.createNewAddon);
+		await this.updateAddonFields(addon);
 		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.settingsAddon, selector.vendor.vAddonSettings.addon.publishOrUpdate);
 		await this.toContainText(selector.vendor.vAddonSettings.addon.addonUpdateSuccessMessage, addon.saveSuccessMessage);
 
@@ -90,7 +95,7 @@ export class ProductAddonPage extends VendorPage {
 		// await this.clearAndType(selector.vendor.vAddonSettings.addon.productCategories, addon.category);
 		// await this.press(data.key.enter);
 
-		await this.click(selector.vendor.vAddonSettings.addon.addonFieldsRow('Add-on Title'));
+		await this.click(selector.vendor.vAddonSettings.addon.addonFieldsRow('Add-on Title')); //todo: handle this scenario in update fields move to update fields
 		await this.selectByValue(selector.vendor.vAddonSettings.addon.type, addon.type);
 		await this.selectByValue(selector.vendor.vAddonSettings.addon.displayAs, addon.displayAs);
 		await this.clearAndType(selector.vendor.vAddonSettings.addon.titleRequired, addon.titleRequired);

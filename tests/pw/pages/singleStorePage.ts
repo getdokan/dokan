@@ -3,7 +3,6 @@ import { CustomerPage } from 'pages/customerPage';
 import { selector } from 'pages/selectors';
 import { helpers } from 'utils/helpers';
 import { data } from 'utils/testData';
-import { storeShare } from 'utils/interfaces';
 
 const { DOKAN_PRO } = process.env;
 

@@ -59,7 +59,7 @@ export class StoreCategoriesPage extends AdminPage {
 		await this.searchStoreCategory(storeCategory.name);
 
 		await this.hover(selector.admin.dokan.vendors.storeCategory.storeCategoryCell(storeCategory.name));
-		await this.clickAndWaitForResponse(data.subUrls.api.dokan.storeCategories, selector.admin.dokan.vendors.storeCategory.storeCategoryEdit);
+		await this.clickAndWaitForResponse(data.subUrls.api.dokan.storeCategories, selector.admin.dokan.vendors.storeCategory.storeCategoryEdit(storeCategory.name));
 		await this.clearAndType(selector.admin.dokan.vendors.storeCategory.editCategory.name, storeCategory.name);
 		await this.clearAndType(selector.admin.dokan.vendors.storeCategory.editCategory.description, storeCategory.description);
 		await this.clickAndWaitForResponse(data.subUrls.api.dokan.storeCategories, selector.admin.dokan.vendors.storeCategory.editCategory.update);
@@ -76,11 +76,11 @@ export class StoreCategoriesPage extends AdminPage {
 		switch(action){
 
 		case 'set-default' :
-			await this.clickAndWaitForResponse(data.subUrls.api.dokan.storeCategories, selector.admin.dokan.vendors.storeCategory.storeCategorySetDefault);
+			await this.clickAndWaitForResponse(data.subUrls.api.dokan.storeCategories, selector.admin.dokan.vendors.storeCategory.storeCategorySetDefault(categoryName));
 			break;
 
 		case 'delete' :
-			await this.clickAndAcceptAndWaitForResponse(data.subUrls.api.dokan.storeCategories, selector.admin.dokan.vendors.storeCategory.storeCategoryDelete);
+			await this.clickAndAcceptAndWaitForResponse(data.subUrls.api.dokan.storeCategories, selector.admin.dokan.vendors.storeCategory.storeCategoryDelete(categoryName));
 			break;
 
 		default :

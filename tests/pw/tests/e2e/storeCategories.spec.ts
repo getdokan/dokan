@@ -40,7 +40,7 @@ test.describe('Vendors test', () => {
 	});
 
 	test('admin can add store category @pro', async ( ) => {
-		await admin.addStoreCategory(data.storeCategory.create);
+		await admin.addStoreCategory(data.storeCategory.create); //todo:update test data, make it unique, will fail if run multiple times, for all test, rfq,also in test data where, create, and update is used
 	});
 
 	test('admin can search store category @pro', async ( ) => {

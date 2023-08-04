@@ -3,7 +3,6 @@ import { BookingPage } from 'pages/vendorBookingPage';
 // import { ApiUtils } from 'utils/apiUtils';
 import { data } from 'utils/testData';
 // import { payloads } from 'utils/payloads';
-// import { faker } from '@faker-js/faker';
 
 
 test.describe('Booking Product test', () => {

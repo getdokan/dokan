@@ -101,7 +101,7 @@ export class StoresPage extends AdminPage {
 		await this.searchVendor(vendor.storeName);
 
 		await this.hover(selector.admin.dokan.vendors.vendorRow(vendor.storeName));
-		await this.clickAndWaitForLoadState(selector.admin.dokan.vendors.vendorEdit);
+		await this.clickAndWaitForLoadState(selector.admin.dokan.vendors.vendorEdit(vendor.storeName));
 
 		if (!DOKAN_PRO){
 
@@ -309,11 +309,11 @@ export class StoresPage extends AdminPage {
 		switch(action){
 
 		case 'products' :
-			await this.clickAndWaitForLoadState(selector.admin.dokan.vendors.vendorProducts);
+			await this.clickAndWaitForLoadState(selector.admin.dokan.vendors.vendorProducts(vendorName));
 			break;
 
 		case 'orders' :
-			await this.clickAndWaitForLoadState(selector.admin.dokan.vendors.vendorOrders);
+			await this.clickAndWaitForLoadState(selector.admin.dokan.vendors.vendorOrders(vendorName));
 			break;
 
 		default :

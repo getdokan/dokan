@@ -81,12 +81,12 @@ export class WithdrawsPage extends AdminPage {
 
 		case 'cancel' :
 			await this.hover(selector.admin.dokan.withdraw.withdrawCell(vendorName));
-			await this.clickAndWaitForResponse(data.subUrls.api.dokan.withdraws, selector.admin.dokan.withdraw.withdrawCancel);
+			await this.clickAndWaitForResponse(data.subUrls.api.dokan.withdraws, selector.admin.dokan.withdraw.withdrawCancel(vendorName));
 			break;
 
 		case 'delete' :
 			await this.hover(selector.admin.dokan.withdraw.withdrawCell(vendorName));
-			await this.clickAndAcceptAndWaitForResponse(data.subUrls.api.dokan.withdraws, selector.admin.dokan.withdraw.withdrawDelete);
+			await this.clickAndAcceptAndWaitForResponse(data.subUrls.api.dokan.withdraws, selector.admin.dokan.withdraw.withdrawDelete(vendorName));
 			break;
 
 		default :

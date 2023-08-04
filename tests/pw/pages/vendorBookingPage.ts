@@ -181,7 +181,7 @@ export class BookingPage extends VendorPage {
 	async editBookingProduct(product: product['booking']){
 		await this.searchBookingProduct(product.name);
 		await this.hover(selector.vendor.vBooking.productCell(product.name));
-		await this.clickAndWaitForLoadState(selector.vendor.vBooking.edit);
+		await this.clickAndWaitForLoadState(selector.vendor.vBooking.edit(product.name));
 		await this.updateBookingProductFields(product);
 		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.booking, selector.vendor.vBooking.booking.saveProduct, 302);
 		await this.toContainText(selector.vendor.product.updatedSuccessMessage, product.saveSuccessMessage);
@@ -192,7 +192,7 @@ export class BookingPage extends VendorPage {
 	async viewBookingProduct(productName: string){
 		await this.searchBookingProduct(productName);
 		await this.hover(selector.vendor.vBooking.productCell(productName));
-		await this.clickAndWaitForLoadState(selector.vendor.vBooking.view);
+		await this.clickAndWaitForLoadState(selector.vendor.vBooking.view(productName));
 
 		// booking product elements are visible
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -252,7 +252,7 @@ export class BookingPage extends VendorPage {
 	async duplicateBookingProduct(productName: string){
 		await this.searchBookingProduct(productName);
 		await this.hover(selector.vendor.vBooking.productCell(productName));
-		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.booking, selector.vendor.vBooking.duplicate);
+		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.booking, selector.vendor.vBooking.duplicate(productName));
 		await this.toContainText(selector.vendor.vBooking.dokanSuccessMessage, 'Product succesfully duplicated');
 	}
 
@@ -261,7 +261,7 @@ export class BookingPage extends VendorPage {
 	async deleteBookingProduct(productName: string){
 		await this.searchBookingProduct(productName);
 		await this.hover(selector.vendor.vBooking.productCell(productName));
-		await this.click(selector.vendor.vBooking.permanentlyDelete);
+		await this.click(selector.vendor.vBooking.permanentlyDelete(productName));
 		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.booking, selector.vendor.vBooking.confirmDelete);
 		await this.toContainText(selector.vendor.vBooking.dokanSuccessMessage, 'Product successfully deleted');
 	}

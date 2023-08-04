@@ -1,12 +1,12 @@
 import { test, Page } from '@playwright/test';
-import { ProductAddonPage } from 'pages/productAddonPage';
+import { ProductAddonsPage } from 'pages/productAddonsPage';
 import { data } from 'utils/testData';
 
 
 test.describe('Product addon functionality test', () => {
 
 
-	let vendor: ProductAddonPage;
+	let vendor: ProductAddonsPage;
 	let vPage: Page;
 	let addonName: string;
 	let addonFieldTitle: string;
@@ -15,7 +15,7 @@ test.describe('Product addon functionality test', () => {
 	test.beforeAll(async ({ browser }) => {
 		const vendorContext = await browser.newContext({ storageState: data.auth.vendorAuthFile });
 		vPage = await vendorContext.newPage();
-		vendor = new ProductAddonPage(vPage);
+		vendor = new ProductAddonsPage(vPage);
 
 		addonName = data.vendor.addon.randomName();
 		addonFieldTitle = data.vendor.addon.randomTitle();
@@ -28,13 +28,12 @@ test.describe('Product addon functionality test', () => {
 	});
 
 	test('vendor product addons menu page is rendering properly @pro @explo', async ( ) => {
-		await vendor.vendorProductAddonsRenderProperly();
+		await vendor.vendorProductAddonsSettingsRenderProperly();
 	});
 
 	test('vendor can add addons @pro', async ( ) => {
 		await vendor.addAddon({ ...data.vendor.addon, name: data.vendor.addon.randomName() });
 	});
-
 
 	test('vendor can edit addon @pro', async ( ) => {
 

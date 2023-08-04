@@ -22,8 +22,8 @@ test.describe('Settings test', () => {
 		await aPage.close();
 	});
 
-	test('admin settings menu page is rendering properly @lite @pro @explo', async ( ) => {
-		await settingsPage.adminSettingsRenderProperly();
+	test('dokan settings menu page is rendering properly @lite @pro @explo', async ( ) => {
+		await settingsPage.dokanSettingsRenderProperly();
 	});
 
 	test('admin can scroll to top on settings @lite @pro', async ( ) => {
