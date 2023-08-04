@@ -234,8 +234,13 @@ export const installPluginThruWpCli = async ( pluginPath ) => {
 //todo: 
 //todo: 
 //todo: 
-//todo: 
-
+//todo: debug display is commencted, because of issue while create vendor staff *************************************
+"config": {
+	"WP_DEBUG": "true",
+	"SCRIPT_DEBUG": "true",
+	"WP_DEBUG_LOG": "true",
+	// "WP_DEBUG_DISPLAY": "true"
+  },
 
 
 // TODO: ********************api suite******************

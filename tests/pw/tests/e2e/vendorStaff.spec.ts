@@ -31,6 +31,7 @@ test.describe('Vendor staff test', () => {
 		await vPage.close();
 	});
 
+	//todo: dokan issue while creating vendor staff, debug display is commented right now
 
 	test('vendor staff menu page is rendering properly @pro @explo', async ( ) => {
 		await vendor.vendorStaffRenderProperly();
