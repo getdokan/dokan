@@ -127,25 +127,5 @@ test.describe('Product functionality test', () => {
 	});
 
 
-	test('vendor can add simple product @lite @pro', async ( ) => {  //todo: move functions from vendor-page to product-page
-		await vendor.vendorAddSimpleProduct(data.product.simple);
-	});
-
-	// test.skip('vendor can add variable product @pro', async ( ) => {
-	// 	await vendor.addVariableProduct(data.product.variable);
-	// });
-
-	test('vendor can add simple subscription product @pro', async ( ) => {
-		await vendor.vendorAddSimpleSubscription(data.product.simpleSubscription);
-	});
-
-	// test.skip('vendor can add variable subscription product @pro', async ( ) => {
-	// 	await vendor.addVariableSubscription(data.product.variableSubscription);
-	// });
-
-	test('vendor can add external product @pro', async ( ) => {
-		await vendor.vendorAddExternalProduct(data.product.external);
-	});
-
 
 });

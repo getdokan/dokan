@@ -220,7 +220,7 @@ export const installPluginThruWpCli = async ( pluginPath ) => {
 
  //ToDo: update every checkbox with check instead of click, check method , if checked remains checked
 //todo: 
-//todo: 
+//todo: Close modal if exists, causes issue with other tests where popup blocks next step*****
 //todo: 
 //todo: 
 //todo: 

@@ -192,6 +192,7 @@ export class WithdrawsPage extends AdminPage {
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.withdraw);
 		await this.click(selector.vendor.vWithdraw.manualWithdrawRequest.requestWithdraw);
 		await this.toContainText(selector.vendor.vWithdraw.manualWithdrawRequest.pendingRequestAlert, selector.vendor.vWithdraw.manualWithdrawRequest.pendingRequestAlertMessage );
+		await this.click(selector.vendor.vWithdraw.manualWithdrawRequest.closeModal);
 	}
 
 
