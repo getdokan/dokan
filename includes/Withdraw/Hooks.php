@@ -245,24 +245,22 @@ class Hooks {
         $method = sanitize_text_field( wp_unslash( $_POST['method'] ) );
 
         $withdraw = new Withdraw();
-        $all_charges = dokan_withdraw_get_method_charges();
         $withdraw->set_method( $method )
                 ->set_amount( $amount )
-                ->set_charge_data( $all_charges[ $withdraw->get_method() ] )
                 ->calculate_charge();
 
         $response = [
             'plain' => [
                 'charge'      => $withdraw->get_charge(),
                 'receivable'  => $withdraw->get_receivable_amount(),
-                'charge_data' => $all_charges[ $withdraw->get_method() ],
+                'charge_data' => $withdraw->get_charge_data(),
             ],
             'html'  => [
                 'charge'      => wc_price( $withdraw->get_charge() ),
                 'receivable'  => wc_price( $withdraw->get_receivable_amount() ),
                 'charge_data' => [
-                    'fixed'      => wc_price( $all_charges[ $withdraw->get_method() ]['fixed'] ),
-                    'percentage' => $all_charges[ $withdraw->get_method() ]['percentage'] . '%',
+                    'fixed'      => wc_price( $withdraw->get_charge_data()['fixed'] ),
+                    'percentage' => $withdraw->get_charge_data()['percentage'] . '%',
                 ],
             ],
         ];

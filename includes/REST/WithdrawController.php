@@ -682,18 +682,16 @@ class WithdrawController extends WP_REST_Controller {
         $method = $request->get_param( 'method' );
         $amount = wc_format_decimal( $request->get_param( 'amount' ) );
 
-        $withdraw    = new Withdraw();
-        $all_charges = dokan_withdraw_get_method_charges();
+        $withdraw = new Withdraw();
 
         $withdraw->set_method( $method )
                 ->set_amount( $amount )
-                ->set_charge_data( $all_charges[ $method ] )
                 ->calculate_charge();
 
         $response = [
             'charge'      => $withdraw->get_charge(),
             'receivable'  => $withdraw->get_receivable_amount(),
-            'charge_data' => $all_charges[ $withdraw->get_method() ],
+            'charge_data' => $withdraw->get_charge_data(),
         ];
 
         if ( $withdraw->get_receivable_amount() < 0 ) {

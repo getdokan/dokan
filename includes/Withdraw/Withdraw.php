@@ -53,10 +53,7 @@ class Withdraw {
         $details     = maybe_unserialize( $data['details'] );
         $charge      = isset( $details['charge'] ) ? wc_format_decimal( $details['charge'] ) : 0;
         $receivable  = isset( $details['receivable'] ) ? wc_format_decimal( $details['receivable'] ) : $this->get_amount();
-        $charge_data = isset( $details['charge_data'] ) ? $details['charge_data'] : [
-			'fixed' => 0,
-			'percentage' => 0,
-		];
+        $charge_data = isset( $details['charge_data'] ) ? $details['charge_data'] : [];
 
         $this
             ->set_charge( $charge )
@@ -204,7 +201,19 @@ class Withdraw {
      * @returns array
      */
     public function get_charge_data() {
-        return $this->data['charge_data'];
+        $charge_data = $this->data['charge_data'];
+        if ( ! empty( $this->get_method() ) && empty( $this->data['charge_data'] ) ) {
+            $default_val       = [
+                'fixed'      => 0.00,
+                'percentage' => 0.00,
+            ];
+			$all_charges = dokan_withdraw_get_method_charges();
+
+            $charge_data = array_key_exists( $this->get_method(), $all_charges ) ? $all_charges[ $this->get_method() ] : $default_val;
+            $this->set_charge_data( $charge_data );
+        }
+
+        return $charge_data;
     }
 
     /**
@@ -416,10 +425,7 @@ class Withdraw {
     protected function create() {
         global $wpdb;
 
-        $all_charges = dokan_withdraw_get_method_charges();
-        $current_method_charge_data = $all_charges[ $this->get_method() ];
-
-        $this->set_charge_data( $current_method_charge_data )->calculate_charge();
+        $this->calculate_charge();
 
         $details = dokan()->withdraw->get_formatted_details( $this->data['method'], absint( $this->data['user_id'] ) );
 
