@@ -4628,7 +4628,7 @@ export const selector = {
 			auction: {
 
 				// basic info
-				productName: '#post-title',
+				productName: '.dokan-auction-post-title input[name="post_title"]',
 				productShortDescription: '#post_excerpt',
 				ProductImage: '.dokan-feat-image-btn',
 				uploadProductImage: '#\\__wp-uploader-id-1',
