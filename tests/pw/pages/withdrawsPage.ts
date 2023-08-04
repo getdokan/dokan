@@ -178,7 +178,7 @@ export class WithdrawsPage extends AdminPage {
 			await this.click(selector.vendor.vWithdraw.manualWithdrawRequest.requestWithdraw);
 			await this.clearAndType(selector.vendor.vWithdraw.manualWithdrawRequest.withdrawAmount, String(withdraw.minimumWithdrawAmount));
 			await this.selectByValue(selector.vendor.vWithdraw.manualWithdrawRequest.withdrawMethod, withdraw.withdrawMethod.default);
-			await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vWithdraw.manualWithdrawRequest.submitRequest);
+			await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.vendor.vWithdraw.manualWithdrawRequest.submitRequest);
 			// await expect(this.page.getByText(selector.vendor.vWithdraw.manualWithdrawRequest.withdrawRequestSaveSuccessMessage)).toBeVisible(); //todo
 		} else {
 			test.skip();
@@ -198,7 +198,7 @@ export class WithdrawsPage extends AdminPage {
 	// vendor cancel withdraw request
 	async cancelWithdrawRequest(): Promise<void> {
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.withdraw);
-		await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.withdrawRequests, selector.vendor.vWithdraw.manualWithdrawRequest.cancelRequest, 302);
+		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.withdrawRequests, selector.vendor.vWithdraw.manualWithdrawRequest.cancelRequest, 302);
 		await this.toContainText(selector.vendor.vWithdraw.manualWithdrawRequest.cancelWithdrawRequestSuccess, selector.vendor.vWithdraw.manualWithdrawRequest.cancelWithdrawRequestSaveSuccessMessage);
 	}
 
@@ -212,7 +212,7 @@ export class WithdrawsPage extends AdminPage {
 		await this.click(selector.vendor.vWithdraw.autoWithdrawDisbursement.preferredSchedule(withdraw.preferredSchedule));
 		await this.selectByValue(selector.vendor.vWithdraw.autoWithdrawDisbursement.onlyWhenBalanceIs, withdraw.minimumWithdrawAmount);
 		await this.selectByValue(selector.vendor.vWithdraw.autoWithdrawDisbursement.maintainAReserveBalance, withdraw.reservedBalance);
-		await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vWithdraw.autoWithdrawDisbursement.changeSchedule);
+		await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.vendor.vWithdraw.autoWithdrawDisbursement.changeSchedule);
 		await this.notToContainText(selector.vendor.vWithdraw.autoWithdrawDisbursement.scheduleMessage, data.vendor.withdraw.scheduleMessageInitial);
 
 	}

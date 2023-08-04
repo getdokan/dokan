@@ -1558,8 +1558,10 @@ export const selector = {
 				noRowsFound: '//td[normalize-space()="No advertisement found."]',
 				advertisedProductCell: (productName: string) => `//a[normalize-space()="${productName}"]/../..`,
 				advertisedProductOrderIdCell: (orderId: number) => `//a[normalize-space()="${orderId}"]/../..`,
-				advertisedProductExpire: '.row-actions .expire',
-				advertisedProductDelete: '.row-actions .delete',
+				advertisedProductExpire: (productName: string) => `//a[normalize-space()="${productName}"]/../..//span[@class="expire"]`,
+				advertisedProductDelete: (productName: string) => `//a[normalize-space()="${productName}"]/../..//span[@class="delete"]`,
+				// advertisedProductExpire: '.row-actions .expire',
+				// advertisedProduct: '.row-actions .delete',
 				confirmAction: '.swal2-actions .swal2-confirm', //todo:  merge this type of locators
 				actionSuccessful: '.swal2-actions .swal2-confirm', //todo:  merge this type of locators
 

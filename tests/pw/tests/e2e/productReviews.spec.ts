@@ -4,6 +4,7 @@ import { ApiUtils } from 'utils/apiUtils';
 import { data } from 'utils/testData';
 import { payloads } from 'utils/payloads';
 
+const { PRODUCT_ID } = process.env;
 
 test.describe('Product Reviews test', () => {
 
@@ -11,8 +12,6 @@ test.describe('Product Reviews test', () => {
 	let vPage: Page;
 	let apiUtils: ApiUtils;
 	let reviewMessage: string;
-
-	const { PRODUCT_ID } = process.env;
 
 
 	test.beforeAll(async ({ browser, request }) => {

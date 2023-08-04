@@ -1347,7 +1347,7 @@ export class ApiUtils {
 
 	// create complete order
 	async createOrderWithStatus(product: string | object, order: any, status: string, auth?: auth): Promise<[APIResponse, responseBody, string, string]> {
-		//todo:  add feature for productID, creator of product(who will be the owner), create order auth, update order auth
+		//todo: creator of product(who will be the owner), create order auth, update order auth
 		const [response, responseBody, orderId, productId] = await this.createOrder(product, order, auth);
 		await this.updateOrderStatus(orderId, status, auth);
 		return [response, responseBody, orderId, productId];

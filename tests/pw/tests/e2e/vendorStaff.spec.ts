@@ -12,7 +12,7 @@ test.describe('Vendor staff test', () => {
 	let vendor: VendorStaffPage;
 	let vPage: Page;
 	// let apiUtils: ApiUtils;
-	const staff = data.staff;
+	const staff = data.staff();
 
 
 	test.beforeAll(async ({ browser }) => {
@@ -21,7 +21,7 @@ test.describe('Vendor staff test', () => {
 		vendor = new VendorStaffPage(vPage);
 
 		await vendor.addStaff(staff); //todo: replace with api
-		//TODO: update test data , use different data for before all
+
 		// apiUtils = new ApiUtils(request);
 		// await apiUtils.createUser( payloads.staff, payloads.adminAuth);
 
@@ -38,7 +38,7 @@ test.describe('Vendor staff test', () => {
 	});
 
 	test('vendor can add new staff @pro', async ( ) => {
-		await vendor.addStaff(data.staff.create);
+		await vendor.addStaff(data.staff());
 	});
 
 	test('vendor can edit staff @pro', async ( ) => {
@@ -46,11 +46,11 @@ test.describe('Vendor staff test', () => {
 	});
 
 	test('vendor can manage staff permission @pro', async ( ) => {
-		await vendor.manageStaffPermission(staff.firstName);
+		await vendor.manageStaffPermission(staff.firstName + ' ' + staff.lastName);
 	});
 
 	test('vendor can delete staff @pro', async ( ) => {
-		await vendor.deleteStaff(staff.firstName);
+		await vendor.deleteStaff(staff.firstName + ' ' + staff.lastName);
 	});
 
 });

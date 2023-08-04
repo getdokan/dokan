@@ -6,6 +6,8 @@ import { dbData } from 'utils/dbData';
 import { data } from 'utils/testData';
 import { payloads } from 'utils/payloads';
 
+const { PRODUCT_ID } = process.env;
+
 
 test.describe('Reverse withdraw test', () => {
 
@@ -20,7 +22,7 @@ test.describe('Reverse withdraw test', () => {
 		admin = new ReverseWithdrawsPage(aPage);
 
 		apiUtils = new ApiUtils(request);
-		await apiUtils.createOrderWithStatus(payloads.createProduct(), payloads.createOrderCod, 'wc-completed', payloads.vendorAuth);
+		await apiUtils.createOrderWithStatus(PRODUCT_ID, payloads.createOrderCod, 'wc-completed', payloads.vendorAuth);
 
 	});
 

@@ -1197,24 +1197,20 @@ export const data = {
 	},
 
 
-	staff: {
-		firstName: 'staff1',
-		lastName: 's1',
-		fullName:  'staff1 s1',
-		email: 'staff1@g.com',
-		phone: '0123456789',
+	staff: () => ( {
+		// firstName: 'staff1',
+		// lastName: 's1',
+		// fullName:  'staff1 s1',
+		// email: 'staff1@g.com',
+		// phone: '0123456789',
+		// password: String(process.env.USER_PASSWORD),
+
+		firstName:faker.person.firstName('male'),
+		lastName: faker.person.lastName('male'),
+		email: faker.internet.email(),
+		phone:  faker.phone.number('(###) ###-####'),
 		password: String(process.env.USER_PASSWORD),
-
-		create:{
-			firstName: faker.person.firstName('male'),
-			lastName: faker.person.lastName('male'),
-			fullName:  '',
-			email:  faker.internet.email(),
-			phone: '0123456789',
-			password: ''
-		}
-
-	},
+	}),
 
 
 	//customer

@@ -39,39 +39,42 @@ export class VendorStaffPage extends VendorPage {
 
 	}
 
+	// update staff fields
+	async updateStaffFields(staff: staff){
+		await this.clearAndType(selector.vendor.vStaff.addStaff.firstName, staff.firstName);
+		await this.clearAndType(selector.vendor.vStaff.addStaff.lastName, staff.lastName);
+		await this.clearAndType(selector.vendor.vStaff.addStaff.email, staff.email);
+		await this.clearAndType(selector.vendor.vStaff.addStaff.phone, staff.phone);
+		const isPasswordVisible = await this.isVisible(selector.vendor.vStaff.editStaff.password);
+		isPasswordVisible &&  await this.clearAndType(selector.vendor.vStaff.editStaff.password, staff.password);
+
+
+	}
+
 
 	// add new staff
 	async addStaff(staff: staff){
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.staff);
 		await this.clickAndWaitForLoadState(selector.vendor.vStaff.addStaff.addNewStaff);
-		await this.clearAndType(selector.vendor.vStaff.addStaff.firstName, staff.firstName);
-		await this.clearAndType(selector.vendor.vStaff.addStaff.lastName, staff.lastName);
-		await this.clearAndType(selector.vendor.vStaff.addStaff.email, staff.email);
-		await this.clearAndType(selector.vendor.vStaff.addStaff.phone, staff.phone);
+		await this.updateStaffFields(staff);
 		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.staff, selector.vendor.vStaff.addStaff.createStaff);
 		const userAlreadyExists = await this.isVisible(selector.vendor.vStaff.addStaff.userAlreadyExists);
 		if (userAlreadyExists){
 			console.log('Staff already exists!!');
 			return;
 		}
-		await this.toBeVisible(selector.vendor.vStaff.staffCell(staff.firstName));
+		await this.toBeVisible(selector.vendor.vStaff.staffCell(staff.firstName + ' ' + staff.lastName));
 	}
 
 
 	// edit staff
 	async editStaff(staff: staff){
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.staff);
-		await this.hover(selector.vendor.vStaff.staffCell(staff.firstName));
-		await this.clickAndWaitForLoadState(selector.vendor.vStaff.editStaff.editStaff(staff.firstName));
-
-		await this.clearAndType(selector.vendor.vStaff.addStaff.firstName, staff.firstName);
-		await this.clearAndType(selector.vendor.vStaff.addStaff.lastName, staff.lastName);
-		await this.clearAndType(selector.vendor.vStaff.addStaff.email, staff.email);
-		await this.clearAndType(selector.vendor.vStaff.addStaff.phone, staff.phone);
-		await this.clearAndType(selector.vendor.vStaff.editStaff.password, staff.password);
+		await this.hover(selector.vendor.vStaff.staffCell(staff.firstName + ' ' + staff.lastName));
+		await this.clickAndWaitForLoadState(selector.vendor.vStaff.editStaff.editStaff(staff.firstName + ' ' + staff.lastName));
+		await this.updateStaffFields(staff);
 		await this.pressOnLocatorAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.staff, selector.vendor.vStaff.editStaff.updateStaff, data.key.enter);
-		await this.toBeVisible(selector.vendor.vStaff.staffCell(staff.firstName));
-
+		await this.toBeVisible(selector.vendor.vStaff.staffCell(staff.firstName + ' ' + staff.lastName));
 	}
 
 

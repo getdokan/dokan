@@ -85,7 +85,7 @@ export class ProductAdvertisingPage extends AdminPage {
 
 		await this.clearInputField(selector.admin.dokan.productAdvertising.search);
 
-		await this.typeAndWaitForResponse(data.subUrls.api.dokan.productAdvertising, selector.admin.dokan.productAdvertising.search, String(productOrOrder));
+		await this.typeAndWaitForResponseAndLoadState(data.subUrls.api.dokan.productAdvertising, selector.admin.dokan.productAdvertising.search, String(productOrOrder));
 		if (typeof(productOrOrder) != 'number'){
 			await this.toBeVisible(selector.admin.dokan.productAdvertising.advertisedProductCell(productOrOrder));
 		} else {
@@ -131,11 +131,11 @@ export class ProductAdvertisingPage extends AdminPage {
 		switch (action) {
 
 		case 'expire' :
-			await this.click(selector.admin.dokan.productAdvertising.advertisedProductExpire);
+			await this.click(selector.admin.dokan.productAdvertising.advertisedProductExpire(productName));
 			break;
 
 		case 'delete' :
-			await this.click(selector.admin.dokan.productAdvertising.advertisedProductDelete);
+			await this.click(selector.admin.dokan.productAdvertising.advertisedProductDelete(productName));
 			break;
 
 		default :
