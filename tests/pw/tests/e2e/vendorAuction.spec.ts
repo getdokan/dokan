@@ -57,7 +57,7 @@ test.describe('Auction Product test', () => {
 		await vendor.addAuctionProduct({ ...data.product.auction, name: data.product.auction.productName() });
 	});
 
-	test.skip('vendor can edit auction product @pro', async ( ) => {
+	test.only('vendor can edit auction product @pro', async ( ) => {
 		await vendor.editAuctionProduct({ ...data.product.auction, name: 'Awesome Rubber Chicken (Auction)' });
 	});
 

@@ -141,7 +141,8 @@ export class StoreSupportsPage extends AdminPage {
 
 	// store support bulk action
 	async storeSupportBulkAction(action: string, supportTicketId?: string){
-		supportTicketId ? await this.searchSupportTicket(supportTicketId) : await this.goto(data.subUrls.backend.dokan.storeSupport);
+		await this.goto(data.subUrls.backend.dokan.storeSupport); // not used ternary because page need to reload before reflecting api updatecd 
+		supportTicketId && await this.searchSupportTicket(supportTicketId);
 
 		// ensure row exists
 		await this.notToBeVisible(selector.admin.dokan.storeSupport.noRowsFound);

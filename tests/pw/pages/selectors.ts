@@ -3975,7 +3975,7 @@ export const selector = {
 			},
 
 			noRowsFound: '//div[@class ="dokan-error" and normalize-space()="No staff found"]',
-			staffCell: (staffName: string) => `//a[contains(text(),"${staffName}")]/..`,
+			staffCell: (staffName: string) => `//td//a[contains(text(),"${staffName}")]/..`,
 
 
 			// Add Staff

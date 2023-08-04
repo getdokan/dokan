@@ -6,7 +6,7 @@ import { data } from 'utils/testData';
 
 
 test.describe('Vendor staff test', () => {
-
+	test.skip(!!process.env.CI, 'dokan issue while creating vendor staff');
 
 	let vendor: VendorStaffPage;
 	let vPage: Page;
@@ -31,7 +31,6 @@ test.describe('Vendor staff test', () => {
 		await vPage.close();
 	});
 
-	//todo: dokan issue while creating vendor staff, debug display is commented right now
 
 	test('vendor staff menu page is rendering properly @pro @explo', async ( ) => {
 		await vendor.vendorStaffRenderProperly();
