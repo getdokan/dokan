@@ -625,6 +625,26 @@ class Manager {
     }
 
     /**
+     * Check if order is belonged to given seller
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param int $seller_id
+     * @param int $order_id
+     *
+     * @return bool
+     */
+    public function is_seller_has_order( $seller_id, $order_id ) {
+        global $wpdb;
+        return 1 === (int) $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT 1 FROM {$wpdb->prefix}dokan_orders WHERE seller_id = %d AND order_id = %d LIMIT 1",
+                [ $seller_id, $order_id ]
+            )
+        );
+    }
+
+    /**
      * Get order of current logged-in users or by given customer id
      *
      * @since DOKAN_SINCE
@@ -1100,12 +1120,12 @@ class Manager {
      */
     public function maybe_split_orders( $parent_order_id, $force_create = false ) {
         $parent_order = $this->get( $parent_order_id );
-
         if ( ! $parent_order ) {
-            dokan_log( sprintf( 'Invalid Order ID #%d found. Skipping from here.', $parent_order_id ) );
+            //dokan_log( sprintf( 'Invalid Order ID #%d found. Skipping from here.', $parent_order_id ) );
+            return;
         }
 
-        dokan_log( sprintf( 'New Order #%d created. Init sub order.', $parent_order_id ) );
+        //dokan_log( sprintf( 'New Order #%d created. Init sub order.', $parent_order_id ) );
 
         if ( $force_create && wc_string_to_bool( $parent_order->get_meta( 'has_sub_order' ) ) === true ) {
             $child_orders = $this->get_child_orders( $parent_order->get_id() );
@@ -1119,7 +1139,7 @@ class Manager {
 
         // return if we've only ONE seller
         if ( count( $vendors ) === 1 ) {
-            dokan_log( '1 vendor only, skipping sub order.' );
+            //dokan_log( '1 vendor only, skipping sub order.' );
 
             $temp      = array_keys( $vendors );
             $seller_id = reset( $temp );
@@ -1141,14 +1161,14 @@ class Manager {
         $parent_order->update_meta_data( 'has_sub_order', true );
         $parent_order->save_meta_data();
 
-        dokan_log( sprintf( 'Got %s vendors, starting sub order.', count( $vendors ) ) );
+        //dokan_log( sprintf( 'Got %s vendors, starting sub order.', count( $vendors ) ) );
 
         // seems like we've got multiple sellers
         foreach ( $vendors as $seller_id => $seller_products ) {
             $this->create_sub_order( $parent_order, $seller_id, $seller_products );
         }
 
-        dokan_log( sprintf( 'Completed sub order for #%d.', $parent_order_id ) );
+        //dokan_log( sprintf( 'Completed sub order for #%d.', $parent_order_id ) );
     }
 
     /**

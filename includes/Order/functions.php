@@ -148,7 +148,7 @@ function dokan_get_seller_withdraw_by_date( $start_date, $end_date, $seller_id =
 }
 
 /**
- * Check if order is belong to given seller
+ * Check if order is belonged to given seller
  *
  * @param int $seller_id
  * @param int $order_id
@@ -156,15 +156,7 @@ function dokan_get_seller_withdraw_by_date( $start_date, $end_date, $seller_id =
  * @return bool
  */
 function dokan_is_seller_has_order( $seller_id, $order_id ) {
-    $args = [
-        'seller_id' => $seller_id,
-        'order_id'  => $order_id,
-        'return'    => 'count',
-    ];
-
-    $orders = dokan()->order->all( $args );
-
-    return ! empty( $orders );
+    return dokan()->order->is_seller_has_order( $seller_id, $order_id );
 }
 
 /**
