@@ -28,6 +28,234 @@ class Manager {
      * @return WP_Error|int[]|WC_Order[]
      */
     public function all( $args = [] ) {
+        $query_args = apply_filters( 'dokan_get_vendor_orders_args', wp_parse_args( $this->get_backward_compatibility_args( $args ), $args ), $args, [] );
+
+        if ( ! dokan_pro_is_hpos_enabled() ) {
+            $meta = $query_args['meta_query'] ?? [];
+            unset( $query_args['meta_query'] );
+
+            $handle_meta = function ( $query ) use ( $meta ) {
+                if ( [] === $meta ) {
+                    return $query;
+                }
+
+                if ( ! isset( $query['meta_query'] ) ) {
+                    $query['meta_query'] = $meta; // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+                } else {
+                    $query['meta_query'] = array_merge( $query['meta_query'], $meta ); // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+                }
+
+                return $query;
+            };
+
+            add_filter( 'woocommerce_order_data_store_cpt_get_orders_query', $handle_meta, 10, 1 );
+        }
+
+        $orders = wc_get_orders( $query_args );
+
+        if ( ! dokan_pro_is_hpos_enabled() ) {
+            remove_filter( 'woocommerce_order_data_store_cpt_get_orders_query', $handle_meta, 10 );
+        }
+
+        if ( 'count' === $args['return'] ) {
+            return apply_filters( 'dokan_get_vendor_orders_count', $orders->total, $args );
+        }
+
+        return apply_filters( 'dokan_get_vendor_orders', $orders, $args );
+    }
+
+    /**
+     * Get backward compatibility args
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $args
+     *
+     * @return array
+     */
+    protected function get_backward_compatibility_args( $args = [] ) {
+        $default = [
+            'seller_id'           => 0,
+            'customer_id'         => 0,
+            'order_id'            => 0,
+            'status'              => 'all',
+            'order_date'          => '', // only for backward compatibility, will be removed in the future, if date is passed in args, it will be ignored
+            'date'                => [
+                'from' => '',
+                'to'   => '',
+            ],
+            'search'              => '',
+            'include'             => [],
+            'exclude'             => [],
+            'orderby'             => 'date',
+            'order'               => 'DESC',
+            'limit'               => 10,
+            'paged'               => 1, // do nothing if offset is used
+            'offset'              => '',
+            'return'              => 'objects', // objects, ids, count
+            'meta_query'          => [], // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+            'meta_query_relation' => 'AND',
+        ];
+
+        $args = wp_parse_args( $args, $default );
+
+        $query_args = [
+            'limit'      => $args['limit'],
+            'paged'      => $args['paged'],
+            'offset'     => $args['offset'],
+            'order'      => $args['order'],
+            'return'     => $args['return'],
+            'meta_query' => $args['meta_query'] ?? [], // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+        ];
+
+        // fix meta query relation
+        $query_args['meta_query']['relation'] = $args['meta_query_relation'];
+
+        // now apply filtering on the field
+        // filter by seller id
+        if ( ! $this->is_empty( $args['seller_id'] ) ) {
+            $seller_ids                 = array_filter( array_map( 'absint', (array) $args['seller_id'] ) );
+            $query_args['meta_query'][] = [
+                [
+                    'key'     => '_dokan_vendor_id',
+                    'value'   => $seller_ids,
+                    'compare' => 'IN',
+                    'type'    => 'NUMERIC',
+                ],
+            ];
+        }
+
+        // filter customer id
+        if ( ! $this->is_empty( $args['customer_id'] ) ) {
+            $customer_ids              = array_filter( array_map( 'absint', (array) $args['customer_id'] ) );
+            $query_args['customer_id'] = $customer_ids;
+        }
+
+        // filter order id
+        if ( ! $this->is_empty( $args['order_id'] ) ) {
+            $order_ids        = array_filter( array_map( 'absint', (array) $args['order_id'] ) );
+            $query_args['id'] = $order_ids;
+        }
+
+        // filter status
+        if ( ! $this->is_empty( $args['status'] ) && 'all' !== $args['status'] ) {
+            $query_args['status'] = (array) $args['status'];
+        }
+
+        // include order ids
+        if ( ! $this->is_empty( $args['include'] ) ) {
+            $include          = array_filter( array_map( 'absint', (array) $args['include'] ) );
+            $query_args['id'] = $include;
+        }
+
+        // exclude order ids
+        if ( ! $this->is_empty( $args['exclude'] ) ) {
+            $exclude               = array_filter( array_map( 'absint', (array) $args['exclude'] ) );
+            $query_args['exclude'] = $exclude;
+        }
+
+        // date filter
+        $date_from = false;
+        $date_to   = false;
+        // check if the start date is set
+        if ( ! $this->is_empty( $args['date']['from'] ) ) {
+            // convert date string to object
+            $date_from = dokan_current_datetime()->modify( $args['date']['from'] );
+        }
+
+        // check if the end date is set
+        if ( ! $this->is_empty( $args['date']['to'] ) ) {
+            // convert date string to object
+            $date_to = dokan_current_datetime()->modify( $args['date']['to'] );
+        }
+
+        if ( $date_from && $date_to ) {
+            $date_from                  = $date_from->format( 'Y-m-d' );
+            $date_to                    = $date_to->format( 'Y-m-d' );
+            $query_args['date_created'] = $date_from . '...' . $date_to;
+            // if only start date is set
+        } elseif ( $date_from ) {
+            $query_args['date_created'] = '>=' . $date_from->format( 'Y-m-d' );
+            // if only end date is set
+        } elseif ( $date_to ) {
+            $query_args['date_created'] = '<=' . $date_to->format( 'Y-m-d' );
+            // if only a single date is set
+        } elseif ( is_string( $args['date'] ) && ! empty( $args['date'] ) ) {
+            // backward compatibility for old filter
+            $query_args['date_created'] = $args['date'];
+        } elseif ( ! $this->is_empty( $args['order_date'] ) ) {
+            // backward compatibility for old filter
+            $query_args['date_created'] = $args['order_date'];
+        }
+
+        // filter by search parameter
+        if ( ! $this->is_empty( $args['search'] ) ) {
+            $query_args['id'] = (int) $args['search'];
+        }
+
+        // fix order by parameter
+        if ( ! in_array( strtoupper( $args['order'] ), [ 'ASC', 'DESC' ], true ) ) {
+            $query_args['order'] = 'DESC';
+        }
+
+        // fix order by parameter
+        if ( isset( $args['order_by'] ) ) {
+            $args['orderby'] = $args['order_by'];
+        }
+
+        // get supported orderby paramter
+        $supported_order_by = [
+            'name'      => 'name',
+            'type'      => 'type',
+            'rand'      => 'rand',
+            'modified'  => 'modified',
+            'post_date' => 'date',
+            'date'      => 'date',
+            'id'        => 'ID',
+            'order_id'  => 'ID',
+            'seller_id' => 'seller_id',
+        ];
+
+        if ( ! array_key_exists( $args['orderby'], $supported_order_by ) ) {
+            $args['orderby'] = 'date';
+        }
+
+        switch ( $args['orderby'] ) {
+            case 'seller_id':
+                $query_args = array_merge(
+                    $query_args, [
+                        'orderby'   => 'meta_value',
+                        'meta_key'  => '_dokan_vendor_id', // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key
+                        'meta_type' => 'NUMERIC',
+                    ]
+                );
+                break;
+
+            default:
+                $query_args['orderby'] = $supported_order_by[ $args['orderby'] ];
+                break;
+        }
+
+        // fix return parameter
+        if ( 'count' === $query_args['return'] ) {
+            $query_args['limit']    = 1;
+            $query_args['return']   = 'ids';
+            $query_args['paginate'] = true;
+        }
+
+        return $query_args;
+    }
+
+    /**
+     * Get all orders
+     *
+     * @since 3.0.0
+     * @since 3.6.3 rewritten to include filters
+     * @since DOKAN_SINCE added HPOS support
+     *
+     * @return WP_Error|int[]|WC_Order[]
+     */
+    public function willremovesoon( $args = [] ) {
         $default = [
             'seller_id'   => 0,
             'customer_id' => 0,
