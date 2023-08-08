@@ -100,7 +100,9 @@ class Hooks {
         $sub_orders = dokan()->order->get_child_orders( $order_id );
         if ( $sub_orders ) {
             foreach ( $sub_orders as $sub_order ) {
-                $sub_order->update_status( $new_status );
+                if ( is_callable( [ $sub_order, 'update_status' ] ) ) {
+                    $sub_order->update_status( $new_status );
+                }
             }
         }
 
