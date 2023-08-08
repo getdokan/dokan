@@ -2063,6 +2063,46 @@ ul[data-v-525b077c] {
   border-radius: 50%;
 }
 
+.secret-box-wraper[data-v-38c7e6d8] {
+  display: flex;
+  flex-direction: row-reverse;
+}
+.secret-box-wraper .secret-input-box[data-v-38c7e6d8] {
+  position: relative;
+  display: flex;
+  width: 25em;
+}
+.secret-box-wraper .secret-input-box div button[data-v-38c7e6d8] {
+  cursor: pointer;
+  height: 20px;
+  min-height: 32px;
+  min-width: 32px;
+  border: 0.957434px solid #686666;
+  box-shadow: 0px 3.82974px 3.82974px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  background: white;
+  color: #686666;
+}
+.secret-box-wraper .secret-input-box .secret-input[data-v-38c7e6d8] {
+  width: 100%;
+}
+.secret-box-wraper .secret-input-box .secret-input.blurry-input[data-v-38c7e6d8] {
+  color: transparent;
+  text-shadow: 0 0 7px #333;
+}
+.secret-box-wraper .secret-input-box .secret-input-placeholder[data-v-38c7e6d8] {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #686666;
+}
+@media only screen and (max-width: 768px) {
+.secret-box-wraper .secret-input-box[data-v-38c7e6d8] {
+    max-width: 125px !important;
+}
+}
+
 span.repeatable-item-description {
   color: #999;
   font-size: 11px;
@@ -2211,6 +2251,10 @@ ul.dokan-settings-repeatable-list li span.remove-item {
 }
 .field_contents fieldset .field_data .field_desc a:focus {
   box-shadow: 0 0 0 1px transparent;
+}
+.field_contents fieldset .social-switch-wraper {
+  display: flex;
+  align-items: center;
 }
 .field_contents .combine_fields {
   display: flex;
@@ -2379,6 +2423,9 @@ ul.dokan-settings-repeatable-list li span.remove-item {
   padding-top: 0;
   border-radius: 50%;
 }
+.field_contents .scl_fields_disable {
+  filter: grayscale(1);
+}
 .field_contents .scl_fields {
   margin: 15px 0 4px 0px;
   border: 0.82px solid #E5E5E5;
@@ -2440,6 +2487,9 @@ ul.dokan-settings-repeatable-list li span.remove-item {
   left: 50%;
   position: absolute;
   transform: translate(-50%, -50%);
+}
+.field_contents .scl_fields .scl_header .expand_btn .active-social-expend-btn {
+  background: #4CAF4F;
 }
 .field_contents .scl_fields .scl_info {
   background: #fff;
@@ -3984,6 +4034,180 @@ to {
 }
 }
 
+.dokan-radio-fields[data-v-41450cfc] {
+  display: flex;
+  flex: 2;
+  align-self: center;
+}
+.dokan-radio-fields label[data-v-41450cfc] {
+  border: 1px solid #b0a7a7;
+  padding: 10px 15px;
+  display: inline-block;
+  overflow: hidden;
+  font-size: 12px;
+  font-family: Roboto, sans-serif;
+  font-weight: 400;
+  line-height: 14px;
+  border-right: 0;
+}
+.dokan-radio-fields label .dashicons-yes[data-v-41450cfc] {
+  color: #fff;
+  width: 15px;
+  height: 15px;
+  margin: -1px 3px 0 0;
+  cursor: pointer;
+  display: none;
+  font-size: 15px;
+  background: #1aa0f7;
+  padding-top: 0;
+  border-radius: 50%;
+}
+.dokan-radio-fields label input[type=radio][data-v-41450cfc] {
+  display: none;
+}
+.dokan-radio-fields label[data-v-41450cfc]:hover {
+  color: rgba(3, 58, 163, 0.85);
+  background: rgba(182, 206, 254, 0.38);
+  box-sizing: border-box;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
+}
+.dokan-radio-fields label.checked[data-v-41450cfc] {
+  color: rgba(3, 58, 163, 0.85);
+  border: 1px solid rgba(3, 58, 163, 0.81) !important;
+  background: rgba(182, 206, 254, 0.38);
+  box-sizing: border-box;
+}
+.dokan-radio-fields label.checked .dashicons-yes[data-v-41450cfc] {
+  display: inline-block;
+}
+.dokan-radio-fields label[data-v-41450cfc]:first-child {
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+.dokan-radio-fields label[data-v-41450cfc]:last-child {
+  border-right: 1px solid #b0a7a7;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.dokan-rw-footer {
+  display: flex;
+  flex-direction: row-reverse;
+}
+.dokan-rw-footer .dokan-rw-footer-btn {
+  display: flex;
+  align-items: center;
+}
+.dokan-rw-footer .dokan-rw-footer-btn img.not-loading {
+  height: 0px;
+  transition: height 200ms;
+}
+.dokan-rw-footer .dokan-rw-footer-btn img.is-loading {
+  height: 20px;
+  margin-right: 10px;
+  transition: height 200ms;
+}
+.dokan-rw-multiselect-container .multiselect .multiselect__tags {
+  border: 1px solid #b0a7a7;
+}
+.dokan-rw-multiselect-container .multiselect .multiselect__tags .multiselect__placeholder {
+  color: #b0a7a7;
+}
+.dokan-rw-section .dokan-rw-section-heading {
+  display: flex;
+  align-items: center;
+  column-gap: 5px;
+}
+.dokan-rw-section .dokan-rw-section-body .dokan-rw-note-area textarea {
+  width: 100%;
+  padding: 0.2rem;
+  border: 1px solid #b0a7a7;
+  min-height: 100px;
+  padding-left: 0.2rem;
+  padding-right: 0.2rem;
+}
+.dokan-rw-section .dokan-rw-section-body .dokan-rw-note-area textarea:focus {
+  border-color: #b0a7a7;
+  box-shadow: 0 0 0 0px #b0a7a7;
+  outline: none;
+}
+.dokan-rw-section .dokan-rw-section-body .dokan-rw-note-area textarea::placeholder {
+  color: #b0a7a7;
+}
+.dokan-rw-multiselect {
+  margin-top: 1rem;
+}
+.dokan-rw-multiselect input {
+  padding: 0;
+  line-height: 0;
+  min-height: 0;
+  box-shadow: none;
+  border-radius: 0;
+  border: none;
+}
+.dokan-rw-multiselect input:focus {
+  border-color: transparent;
+  box-shadow: none;
+  outline: none;
+}
+.dokan-rw-input input {
+  width: 100%;
+  padding: 0.2rem;
+  border: 1px solid #b0a7a7;
+}
+.dokan-rw-input input:focus {
+  border-color: #b0a7a7;
+  box-shadow: 0 0 0 0px #b0a7a7;
+  outline: none;
+}
+.dokan-rw-input input::placeholder {
+  color: #b0a7a7;
+}
+@media only screen and (max-width: 800px) {
+.dokan-add-new-rw .dokan-modal-content {
+    width: 80% !important;
+}
+}
+@media only screen and (max-width: 500px) {
+.dokan-add-new-rw .dokan-modal-content {
+    width: 400px !important;
+    top: 50% !important;
+}
+}
+@media only screen and (max-width: 376px) {
+.dokan-add-new-rw .dokan-modal-content {
+    width: 90% !important;
+}
+}
+.dokan-add-new-rw .dokan-modal-content {
+  height: 70% !important;
+  overflow: scroll;
+}
+.dokan-add-new-rw .modal-footer {
+  bottom: -55px;
+  position: relative;
+}
+.dokan-add-new-rw .modal-body {
+  overflow-y: hidden !important;
+}
+
+.animate-enter-active {
+  animation: animate 150ms;
+}
+.animate-leave-active {
+  animation: animate 150ms reverse;
+}
+@keyframes animate {
+0% {
+    opacity: 0;
+}
+50% {
+    opacity: 0.5;
+}
+100% {
+    opacity: 1;
+}
+}
 .swal2-actions button {
   margin-right: 10px !important;
 }
@@ -3991,6 +4215,14 @@ to {
   margin: 0px -10px;
   display: flex;
   flex-wrap: wrap;
+}
+#dokan_reverse_withdrawal_list_table .dokan-reverse-withdrawal-filters {
+  display: flex;
+}
+@media only screen and (max-width: 500px) {
+#dokan_reverse_withdrawal_list_table .dokan-reverse-withdrawal-filters {
+    flex-direction: column;
+}
 }
 #dokan_reverse_withdrawal_list_table input.multiselect__input {
   border: none;
