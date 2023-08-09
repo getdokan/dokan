@@ -995,3 +995,44 @@ function dokan_keep_old_vendor_woocommerce_duplicate_product( $duplicate, $produ
 }
 
 add_action( 'woocommerce_product_duplicate', 'dokan_keep_old_vendor_woocommerce_duplicate_product', 35, 2 );
+
+/**
+ * @since 3.7.24
+ *
+ * @param boolean $is_purchasable
+ * @param object $product
+ *
+ * @return boolean
+ */
+function dokan_vendor_own_product_purchase_restriction( bool $is_purchasable, $product ): bool {
+    if ( false === $is_purchasable || dokan_is_product_author( $product->get_id() ) ) {
+        $is_purchasable = false;
+    }
+    return $is_purchasable;
+}
+
+add_filter( 'woocommerce_is_purchasable', 'dokan_vendor_own_product_purchase_restriction', 10, 2 );
+
+/**
+ * Restricts vendor from reviewing own product
+ *
+ * @since 3.7.24
+ *
+ * @param array $data
+ * @return array
+ */
+function dokan_vendor_product_review_restriction( array $data ): array {
+    global $product;
+    if ( ! is_user_logged_in() ) {
+        return $data;
+    }
+    if ( dokan_is_product_author( $product->get_id() ) ) {
+        $data['title_reply'] = __( 'Reviews cannot be posted for products that you own.', 'dokan-lite' );
+        $data['comment_field'] = '';
+        $data['fields'] = [];
+        $data['submit_field'] = '';
+        $data['submit_button'] = '';
+    }
+    return $data;
+}
+add_filter( 'woocommerce_product_review_comment_form_args', 'dokan_vendor_product_review_restriction' );
