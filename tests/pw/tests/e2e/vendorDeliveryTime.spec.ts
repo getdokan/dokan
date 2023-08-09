@@ -35,4 +35,6 @@ test.describe('Vendor delivery time test', () => {
 		await vendor.vendorDeliveryTimeSettingsRenderProperly();
 	});
 
+	//todo: add vendor delivery time setup
+
 });

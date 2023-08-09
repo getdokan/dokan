@@ -207,7 +207,7 @@ export const data = {
 			subscriptionTrialPeriod: 'day',
 			storeName: String(process.env.VENDOR) + 'store',
 			status: 'publish',
-			attribute: 'size',
+			attribute: 'sizes',
 			attributeTerms: ['s', 'l', 'm'],
 			variations: {
 				linkAllVariation: 'link_all_variations',
@@ -338,14 +338,6 @@ export const data = {
 			failed: 'wc-failed',
 		},
 
-		// Refund
-		refund: {
-			itemQuantity: '1',
-			refundRequestType: 'refund',
-			refundRequestReasons: 'defective',
-			refundRequestDetails: 'I would like to return this product',
-			refundSubmitSuccessMessage: 'Request has been successfully submitted',
-		},
 	},
 
 	// order  Note
@@ -369,6 +361,7 @@ export const data = {
 		dateShipped: 'July 4, 2023' //todo:   f y, j
 	},
 
+
 	// order Shipment Details
 	orderShipmentDetails: {
 		shipmentOrderItem: 'p1_v1 (simple)',
@@ -380,12 +373,25 @@ export const data = {
 		comments: 'test shipment comment'
 	},
 
+	rma: {
 
-	// card
-	card: {
+		// requestWarranty
+		requestWarranty: {
+			itemQuantity: '1',
+			refundRequestType: 'refund',
+			refundRequestReasons: 'defective',
+			refundRequestDetails: 'I would like to return this product',
+			refundSubmitSuccessMessage: 'Request has been successfully submitted',
+		},
+	},
+
+
+	paymentDetails: {
+
 		strip: {
 			striptNon3D: '4242424242424242',
 			stript3D: '4000002500003155',
+			cardNumber: '4242424242424242',
 			expiryMonth: '12',
 			expiryYear: '50',
 			number: '4000002500003155',
@@ -399,9 +405,7 @@ export const data = {
 			expiryYear: '50',
 			cvc: '111',
 		},
-	},
 
-	paymentDetails: {
 		stripExpress: {
 			paymentMethod: 'card',
 			cardInfo: {
@@ -638,6 +642,7 @@ export const data = {
 		city: 'New York',
 		zipCode: '10006',
 		state: 'New York',
+		storeCategory: 'Uncategorized',
 		mapLocation: 'New York',
 		paypal: () => faker.internet.email(),
 		bankAccountName: 'accountName',
@@ -735,11 +740,15 @@ export const data = {
 		// customer
 			myAccount: 'my-account',
 			myOrders: 'my-orders',
+			accountMigration: 'my-account/account-migration',
 			orderCancel: 'cart/?cancel_order',
 			orderAgain: 'cart/?order_again',
 			orderPay: 'checkout/order-pay',
 			orderReceived: 'checkout/order-received',
 			customerLogout: 'my-account/customer-logout',
+			rmaRequests: 'my-account/rma-requests',
+			viewRmaRequests: 'my-account/view-rma-requests',
+			requestWarranty: 'my-account/request-warranty',
 			productCustomerPage: 'product',
 			ordersCustomerPage: 'orders',
 			shop: 'shop',
@@ -750,6 +759,7 @@ export const data = {
 			checkout: 'checkout',
 			addToCart: '?wc-ajax=add_to_cart',
 			applyCoupon: '?wc-ajax=apply_coupon',
+			removeCoupon: '?wc-ajax=remove_coupon',
 			placeOrder: '?wc-ajax=checkout',
 			billingAddress: 'my-account/edit-address/billing',
 			shippingAddress: 'my-account/edit-address/shipping',
@@ -758,9 +768,10 @@ export const data = {
 			becomeVendor: 'my-account/account-migration',
 			supportTickets: 'my-account/support-tickets',
 			productDetails: (productName: string) => `product/${productName}`,
+			orderDetails: (orderId: string) => `my-account/view-order/${orderId}`,
 			vendorDetails: (storeName: string) => `store/${storeName}`,
 			storeReviews: (storeName: string) => `store/${storeName}/reviews`,
-			myOrderDetails: (orderId: string) => `my-account/view-order/${orderId}`,
+
 			productReview: 'wp-comments-post.php',
 			submitSupport: 'wp-comments-post.php',
 
@@ -796,6 +807,7 @@ export const data = {
 				bookingCalendar: 'dashboard/booking/calendar',
 				manageResources: 'dashboard/booking/resources',
 				storeSupport: 'dashboard/support',
+				spmv: 'dashboard/products-search',
 				settingsStore: 'dashboard/settings/store',
 				settingsAddon: 'dashboard/settings/product-addon',
 				settingsPayment: 'dashboard/settings/payment',
@@ -920,15 +932,23 @@ export const data = {
 			biography: 'Vendor biography',
 			supportButtonText: 'Get Support',
 
+
+			account: {
+				updateSuccessMessage: 'Account details changed successfully.',
+			},
+
 			openingClosingTime: {
 				days: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'],
-				openingTime: '06:00 am',
-				closingTime: '12:00 pm',
+				openingTime: '12:00 am',
+				closingTime: '11:30 pm',
 				storeOpenNotice: 'Store is open',
 				storeCloseNotice: 'Store is closed',
 			},
 
 			vacation: {
+
+				closingStyle:  'datewise',
+
 				instantly: {
 					closingStyle: 'instantly',
 					vacationMessage: 'We are currently out of order',
@@ -942,9 +962,14 @@ export const data = {
 				}
 			},
 
-			discount: {
+			amountDiscount: {
 				minimumOrderAmount: '200',
-				minimumOrderAmountPercentage: '10',
+				discountPercentage: '10',
+			},
+
+			quantityDiscount: {
+				minimumQuantity: '10',
+				discountPercentage: '10',
 			},
 
 			minMax: {
@@ -954,6 +979,7 @@ export const data = {
 				maximumAmount: '1000000',
 				category: 'Uncategorized',
 			},
+
 			storeSettingsSaveSuccessMessage: 'Your information has been saved successfully',
 
 			socialProfileUrls: {
@@ -1119,13 +1145,18 @@ export const data = {
 
 		deliveryTime: {
 			deliveryBlockedBuffer: '0',
-			days: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'],
-			openingTime: '06:00 am',
-			closingTime: '11:30 pm',
-			fullDay: 'Full day',
 			timeSlot: '30',
 			orderPerSlot: '100',
+			days: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'],
+			choice: 'full-day',
+			openingTime: '12:00 am',
+			closingTime: '11:30 pm',
+			fullDay: 'Full day',
 			saveSuccessMessage: 'Delivery settings has been saved successfully!',
+		},
+
+		shipStation: {
+			status: 'Processing',
 		},
 
 		socialProfileUrls: {
@@ -1143,11 +1174,21 @@ export const data = {
 		rma: {
 			label: 'Warranty',
 			type: 'included_warranty', // 'no_warranty', 'included_warranty', 'addon_warranty'
-			rmaLength: 'limited', // 'limited', 'lifetime'
+			rmaLength: 'lifetime', // 'limited', 'lifetime'
 			lengthValue: '1',
 			lengthDuration: 'weeks', // 'days', 'weeks', 'months', 'years'
 			refundPolicyHtmlBody: 'Refund Policy Vendor',
 			saveSuccessMessage: 'Settings saved successfully',
+		},
+
+		seo: {
+			seoTitle: 'test seo title',
+			metaDescription: 'test meta description',
+			metaKeywords: 'test meta keywords',
+			facebookTitle: 'test facebook title',
+			facebookDescription: 'test facebook description',
+			twitterTitle: 'test twitter title',
+			twitterDescription: 'test twitter description',
 		},
 
 		withdraw: {
@@ -1217,24 +1258,23 @@ export const data = {
 	customer: {
 		username: String(process.env.CUSTOMER),
 		password: String(process.env.USER_PASSWORD),
-		lastname: String(process.env.CUSTOMER)[0] as string + String(process.env.CUSTOMER)[String(process.env.CUSTOMER).length-1], 		// lastname1: ( name = process.env.CUSTOMER) => {  name[0] + name[name.length - 1]; },
+		lastname: String(process.env.CUSTOMER)[0] as string + String(process.env.CUSTOMER)[String(process.env.CUSTOMER).length-1],
 
 		customerInfo: {
-			// emailDomain: '_' + faker.string.alphanumeric(5) + '@email.com',
 			emailDomain: '@email.com',
 			email: () => faker.internet.email(),
 			password: String(process.env.USER_PASSWORD),
 			password1: String(process.env.USER_PASSWORD) + '1',
 			firstName: () => faker.person.firstName('male'),
 			lastName: () => faker.person.lastName('male'),
-			// username: () => this.customer.customerInfo.firstName,
-			// storename: () => this.customer.customerInfo.firstName + 'store',
-			role: 'customer',
 			username: () => faker.person.firstName('male'),
-			storename: () => faker.person.firstName('male') + 'store',
+			shopName: () => faker.person.firstName('male') + 'store',
+			role: 'customer',
 			companyName: faker.company.name(),
 			companyId: faker.string.alphanumeric(5),
 			vatNumber: faker.string.alphanumeric(10),
+			bankName: 'bankName',
+			bankAddress: 'bankAddress',
 			bankIban: faker.finance.iban(),
 			phone: faker.phone.number('(###) ###-####'),
 			street1: 'abc street',
@@ -1247,22 +1287,52 @@ export const data = {
 			state: 'New York',
 			accountName: 'accountName',
 			accountNumber: faker.string.alphanumeric(10),
-			bankName: 'bankName',
-			bankAddress: 'bankAddress',
 			routingNumber: faker.string.alphanumeric(10),
 			swiftCode: faker.string.alphanumeric(10),
 			iban: faker.string.alphanumeric(10),
 			biography: 'Customer biography',
-			addressChangeSuccessMessage: 'Address changed successfully.',
-			getSupport: {
-				subject: 'get Support Subject',
-				message: 'get Support Message',
-				supportSubmitSuccessMessage: 'Thank you. Your ticket has been submitted!',
-
-				username: String(process.env.CUSTOMER),
-				userPassword: String(process.env.USER_PASSWORD),
-
+			billing: {
+				firstName: process.env.CUSTOMER,
+				lastName: 'c1',
+				companyName: faker.company.name(),
+				companyId: faker.string.alphanumeric(5),
+				vatNumber: faker.string.alphanumeric(10),
+				bankName: 'bankName',
+				bankIban: faker.finance.iban(),
+				street1: 'abc street',
+				street2: 'xyz street',
+				city: 'New York',
+				zipCode: '10003',
+				country: 'United States (US)',
+				state: 'New York',
+				email: process.env.CUSTOMER + '@yopmail.com',
+				phone: '0123456789',
 			},
+			shipping: {
+				firstName: process.env.CUSTOMER,
+				lastName: 'c1',
+				companyName: faker.company.name(),
+				street1: 'abc street',
+				street2: 'xyz street',
+				city: 'New York',
+				zipCode: '10003',
+				country: 'United States (US)',
+				state: 'New York',
+				phone: '0123456789',
+			},
+		},
+
+		getSupport: {
+			subject: 'get Support Subject',
+			message: 'get Support Message',
+			supportSubmitSuccessMessage: 'Thank you. Your ticket has been submitted!',
+			username: String(process.env.CUSTOMER),
+			userPassword: String(process.env.USER_PASSWORD),
+
+		},
+
+		supportTicket: {
+			message: () => faker.string.uuid(),
 		},
 
 		rma: {
@@ -1277,10 +1347,13 @@ export const data = {
 			following: 'Following',
 		},
 
-		supportTicket: {
-			message: () => faker.string.uuid(),
+		address: {
+			addressChangeSuccessMessage: 'Address changed successfully.',
 		},
-		registrationErrorMessage: 'Error: An account is already registered with your email address. Please log in.',
+
+		registration:{
+			registrationErrorMessage: 'Error: An account is already registered with your email address. Please log in.',
+		},
 	},
 
 
@@ -1792,6 +1865,11 @@ export const data = {
 			couponCode: 'c1_v1',
 		},
 
+		spmv: {
+			productName: () => 'spmv_' +  faker.string.uuid(),
+			product1: 'spmv_a1'
+		},
+
 		vendorInfo: {
 			firstName: () => 'vendor1',
 			lastName: () => 'v1',
@@ -1829,4 +1907,9 @@ export const data = {
 		adminEmail: 'shashwata@wedevs.com',
 
 	},
+
+	cssStyle:{
+		visibleStyle: 'visibility:visible;',
+
+	}
 };

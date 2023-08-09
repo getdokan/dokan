@@ -7,6 +7,7 @@ on:
   push:
     branches:
       - develop
+      - protests
   workflow_dispatch:
 
   # Cancels all previous workflow runs for pull requests that have not completed.
@@ -26,6 +27,7 @@ env:
   ADMIN: admin
   ADMIN_PASSWORD: password  
   VENDOR: vendor1
+  VENDOR2: vendor2
   CUSTOMER: customer1
   USER_PASSWORD: 01dokan01
   GMAP : ${{secrets.GMAP}}

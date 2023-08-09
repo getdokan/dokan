@@ -1,9 +1,8 @@
 import { Page } from '@playwright/test';
 import { CustomerPage } from 'pages/customerPage';
 import { selector } from 'pages/selectors';
-import { helpers } from 'utils/helpers';
 import { data } from 'utils/testData';
-import {  product } from 'utils/interfaces';
+import { product } from 'utils/interfaces';
 
 const { DOKAN_PRO } = process.env;
 
@@ -19,7 +18,7 @@ export class SingleProductPage extends CustomerPage {
 
 	// single product render properly
 	async singleProductRenderProperly(productName: string){
-		await this.goIfNotThere(data.subUrls.frontend.productDetails(helpers.slugify(productName)));
+		await this.goToProductDetails(productName);
 
 		// basic details are visible
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -90,7 +89,7 @@ export class SingleProductPage extends CustomerPage {
 
 	// review product
 	async reviewProduct(productName: string, review: product['review']): Promise<void> {
-		await this.goIfNotThere(data.subUrls.frontend.productDetails(helpers.slugify(productName)));
+		await this.goToProductDetails(productName);
 		const reviewMessage = review.reviewMessage();
 		await this.click(selector.customer.cSingleProduct.menus.reviews);
 		await this.click(selector.customer.cSingleProduct.reviews.rating(review.rating));
@@ -102,7 +101,7 @@ export class SingleProductPage extends CustomerPage {
 
 	// product vendor info
 	async productVendorInfo(productName: string){
-		await this.goIfNotThere(data.subUrls.frontend.productDetails(helpers.slugify(productName)));
+		await this.goToProductDetails(productName);
 		await this.click(selector.customer.cSingleProduct.menus.vendorInfo);
 		await this.multipleElementVisible(selector.customer.cSingleProduct.vendorInfo);
 	}
@@ -110,14 +109,15 @@ export class SingleProductPage extends CustomerPage {
 
 	// product location
 	async productLocation(productName: string){
-		await this.goIfNotThere(data.subUrls.frontend.productDetails(helpers.slugify(productName)));
+		await this.goToProductDetails(productName);
 		await this.click(selector.customer.cSingleProduct.menus.location);
 		await this.multipleElementVisible(selector.customer.cSingleProduct.location);
 	}
 
+
 	// product warranty policy
 	async productWarrantyPolicy(productName: string){
-		await this.goIfNotThere(data.subUrls.frontend.productDetails(helpers.slugify(productName)));
+		await this.goToProductDetails(productName);
 		await this.click(selector.customer.cSingleProduct.menus.warrantyPolicy);
 		await this.multipleElementVisible(selector.customer.cSingleProduct.warrantyPolicy);
 	}
@@ -125,22 +125,24 @@ export class SingleProductPage extends CustomerPage {
 
 	// view vendor more product
 	async viewMoreProducts(productName: string){
-		await this.goIfNotThere(data.subUrls.frontend.productDetails(helpers.slugify(productName)));
+		await this.goToProductDetails(productName);
 		await this.click(selector.customer.cSingleProduct.menus.moreProducts);
 
 		await this.toBeVisible(selector.customer.cSingleProduct.moreProducts.moreProductsDiv);
 		await this.notToHaveCount(selector.customer.cSingleProduct.moreProducts.product, 0);
 	}
 
+
 	// view vendor more product
 	async viewRelatedProducts(productName: string){
-		await this.goIfNotThere(data.subUrls.frontend.productDetails(helpers.slugify(productName)));
+		await this.goToProductDetails(productName);
 		await this.multipleElementVisible(selector.customer.cSingleProduct.relatedProducts);
 	}
 
+
 	// view highlighted vendor info
 	async viewHighlightedVendorInfo(productName: string){
-		await this.goIfNotThere(data.subUrls.frontend.productDetails(helpers.slugify(productName)));
+		await this.goToProductDetails(productName);
 		await this.multipleElementVisible(selector.customer.cSingleProduct.vendorHighlightedInfo);
 	}
 

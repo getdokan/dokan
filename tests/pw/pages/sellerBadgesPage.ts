@@ -191,7 +191,7 @@ export class SellerBadgesPage extends AdminPage {
 		// await this.toBeVisible(selector.admin.dokan.vendors.vendorCell(badgeName));
 		const count = (await this.getElementText(selector.admin.dokan.vendors.numberOfRowsFound))?.split(' ')[0];
 		expect(Number(count)).not.toBe(0);
-		//TOdo: either this or that assertion
+		//todo: either this or that assertion
 
 	}
 
@@ -202,7 +202,7 @@ export class SellerBadgesPage extends AdminPage {
 
 		await this.clickAndWaitForResponse(data.subUrls.api.dokan.sellerBadge, selector.admin.dokan.vendors.vendorViewDetails(vendorName));
 		await this.toBeVisible(selector.admin.dokan.vendors.vendorDetails.badgesAcquired);
-		//TOdo: either this or that assertion also add assertions for achieved badges
+		//todo: either this or that assertion also add assertions for achieved badges
 	}
 
 
@@ -249,8 +249,6 @@ export class SellerBadgesPage extends AdminPage {
 		await this.click(selector.admin.dokan.sellerBadge.successMessage);
 	}
 
-
-	//todo: vendor seller badge render properly
 
 	// vendor seller badge render properly
 	async vendorSellerBadgeRenderProperly(){

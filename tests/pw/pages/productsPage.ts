@@ -1,9 +1,10 @@
 import { Page, expect } from '@playwright/test';
 import { AdminPage } from 'pages/adminPage';
+// import { VendorPage } from 'pages/vendorPage';
 import { selector } from 'pages/selectors';
 import { data } from 'utils/testData';
 import { helpers } from 'utils/helpers';
-import { product } from 'utils/interfaces';
+import { product, vendor } from 'utils/interfaces';
 
 
 const { DOKAN_PRO } = process.env;
@@ -237,7 +238,7 @@ export class ProductsPage extends AdminPage {
 		await this.multipleElementVisible(menus);
 
 		// add new product is visible
-		await this.toBeVisible(selector.vendor.product.addNewProduct);
+		await this.toBeVisible(selector.vendor.product.create.addNewProduct);
 
 		// import export is visible
 		DOKAN_PRO && await this.multipleElementVisible(selector.vendor.product.importExport);
@@ -254,6 +255,138 @@ export class ProductsPage extends AdminPage {
 		// table elements are visible
 		await this.multipleElementVisible(selector.vendor.product.table);
 
+	}
+
+	// products
+
+
+	// vendor add simple product
+	async vendorAddSimpleProduct(product: product['simple'] |  product['variable'] | product['simpleSubscription'] | product['external']): Promise<void> {
+		const productName = product.productName();
+		await this.goIfNotThere(data.subUrls.frontend.vDashboard.products);
+		await this.click(selector.vendor.product.create.addNewProduct);
+		await this.waitForVisibleLocator(selector.vendor.product.create.productName);
+		await this.clearAndType(selector.vendor.product.create.productName, productName);
+		await this.clearAndType(selector.vendor.product.create.productPrice, product.regularPrice());
+		// await this.addProductCategory(product.category);
+		await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.vendor.product.create.createProduct);
+		const createdProduct = await this.getElementValue(selector.vendor.product.edit.title);
+		expect(createdProduct.toLowerCase()).toBe(productName.toLowerCase());
+	}
+
+
+	// vendor add variable product
+	async vendorAddVariableProduct(product: product['variable'] ): Promise<void> {
+		await this.vendorAddSimpleProduct(product);
+
+		// edit product
+		await this.selectByValue(selector.vendor.product.edit.productType, product.productType);
+		// add variation
+		await this.selectByValue(selector.vendor.product.attribute.customProductAttribute, `pa_${product.attribute}`);
+		await this.click(selector.vendor.product.attribute.addAttribute);
+		await this.click(selector.vendor.product.attribute.selectAll);
+		await this.click(selector.vendor.product.attribute.usedForVariations);
+		await this.click(selector.vendor.product.attribute.saveAttributes);
+		await this.selectByValue(selector.vendor.product.attribute.addVariations, product.variations.linkAllVariation);
+		await this.click(selector.vendor.product.attribute.go);
+		await this.click(selector.vendor.product.attribute.confirmGo);
+		await this.click(selector.vendor.product.attribute.okSuccessAlertGo);
+		await this.selectByValue(selector.vendor.product.attribute.addVariations, product.variations.variableRegularPrice);
+		await this.click(selector.vendor.product.attribute.go);
+		await this.type(selector.vendor.product.attribute.variationPrice, product.regularPrice());
+		await this.click(selector.vendor.product.attribute.okVariationPrice); //todo: variation price not saving dokan issue
+		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, selector.vendor.product.saveProduct, 302);
+		await this.toContainText(selector.vendor.product.updatedSuccessMessage, product.saveSuccessMessage);
+	}
+
+
+	// vendor add simple subscription product
+	async vendorAddSimpleSubscription(product: product['simpleSubscription']): Promise<void> {
+		await this.vendorAddSimpleProduct(product);
+		// edit product
+		await this.selectByValue(selector.vendor.product.edit.productType, product.productType);
+		await this.type(selector.vendor.product.edit.subscriptionPrice, product.subscriptionPrice());
+		await this.selectByValue(selector.vendor.product.edit.subscriptionPeriodInterval, product.subscriptionPeriodInterval);
+		await this.selectByValue(selector.vendor.product.edit.subscriptionPeriod, product.subscriptionPeriod);
+		await this.selectByValue(selector.vendor.product.edit.expireAfter, product.expireAfter);
+		await this.type(selector.vendor.product.edit.subscriptionTrialLength, product.subscriptionTrialLength);
+		await this.selectByValue(selector.vendor.product.edit.subscriptionTrialPeriod, product.subscriptionTrialPeriod);
+		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, selector.vendor.product.saveProduct, 302);
+		await this.toContainText(selector.vendor.product.updatedSuccessMessage, product.saveSuccessMessage);
+	}
+
+
+	// vendor add variable subscription product
+	async vendorAddVariableSubscription(product: product['variableSubscription']): Promise<void> {
+		await this.vendorAddSimpleProduct(product);
+		// edit product
+		await this.selectByValue(selector.vendor.product.edit.productType, product.productType);
+		// add variation
+		await this.selectByValue(selector.vendor.product.attribute.customProductAttribute, `pa_${product.attribute}`);
+		await this.click(selector.vendor.product.attribute.addAttribute);
+		await this.click(selector.vendor.product.attribute.selectAll);
+		await this.click(selector.vendor.product.attribute.usedForVariations);
+		await this.click(selector.vendor.product.attribute.saveAttributes);
+		await this.selectByValue(selector.vendor.product.attribute.addVariations, product.variations.linkAllVariation);
+		await this.click(selector.vendor.product.attribute.go);
+		await this.click(selector.vendor.product.attribute.confirmGo);
+		await this.click(selector.vendor.product.attribute.okSuccessAlertGo);
+		await this.selectByValue(selector.vendor.product.attribute.addVariations, product.variations.variableRegularPrice);
+		await this.click(selector.vendor.product.attribute.go);
+		await this.type(selector.vendor.product.attribute.variationPrice, product.regularPrice());
+		await this.click(selector.vendor.product.attribute.okVariationPrice); //todo: variation price not saving dokan issue
+		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, selector.vendor.product.saveProduct, 302);
+		await this.toContainText(selector.vendor.product.updatedSuccessMessage, product.saveSuccessMessage);
+	}
+
+
+	// vendor add external product
+	async vendorAddExternalProduct(product: product['external']): Promise<void> {
+		await this.vendorAddSimpleProduct(product);
+		// edit product
+		await this.selectByValue(selector.vendor.product.edit.productType, product.productType);
+		await this.type(selector.vendor.product.edit.productUrl, this.getBaseUrl() + product.productUrl);
+		await this.type(selector.vendor.product.edit.buttonText, product.buttonText);
+		await this.clearAndType(selector.vendor.product.edit.price, product.regularPrice());
+		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, selector.vendor.product.saveProduct, 302);
+		await this.toContainText(selector.vendor.product.updatedSuccessMessage, product.saveSuccessMessage);
+	}
+
+
+	// go to product edit
+	async goToProductEdit(productName: string): Promise<void> {
+		await this.searchProduct(productName);
+		await this.hover(selector.vendor.product.productCell(productName));
+		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, selector.vendor.product.editProduct(productName));
+		await this.toHaveValue(selector.vendor.product.edit.title, productName);
+	}
+
+
+	// vendor add product category
+	async addProductCategory(category: string): Promise<void> {
+		const productPopup = await this.isVisible(selector.vendor.product.create.productPopup);
+		productPopup ? await this.click(selector.vendor.product.category.productCategoryModalOnProductPopup) : await this.click(selector.vendor.product.category.productCategoryModal);
+		await this.waitForVisibleLocator(selector.vendor.product.category.productCategorySearchInput);
+		await this.type(selector.vendor.product.category.productCategorySearchInput, category);
+		await this.toContainText(selector.vendor.product.category.searchedResultText, category);
+		await this.click(selector.vendor.product.category.productCategorySearchResult);
+		await this.click(selector.vendor.product.category.productCategoryDone);
+
+		const categoryAlreadySelectedPopup = await this.isVisible(selector.vendor.product.category.productCategoryAlreadySelectedPopup);
+		if (categoryAlreadySelectedPopup) {
+			await this.click(selector.vendor.product.category.productCategoryAlreadySelectedPopup);
+			await this.click(selector.vendor.product.category.productCategoryModalClose);
+		}
+		//todo: add multiple category selection
+	}
+
+
+	// vendor add product category on product edit
+	async vendorAddProductCategory(productName: string, category: string): Promise<void>{
+		await this.goToProductEdit(productName);
+		await this.addProductCategory(category);
+		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, selector.vendor.product.saveProduct, 302);
+		await this.toContainText(selector.vendor.product.updatedSuccessMessage, 'Success! The product has been saved successfully.');
 	}
 
 
@@ -302,7 +435,7 @@ export class ProductsPage extends AdminPage {
 		}
 
 		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products,  selector.vendor.product.filters.filter);
-		await this.notToHaveCount(selector.vendor.product.numberOfRows, 0);
+		await this.notToHaveCount(selector.vendor.product.numberOfRowsFound, 0);
 
 	}
 
@@ -316,7 +449,6 @@ export class ProductsPage extends AdminPage {
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const { quantity, addToCart, viewCart, ...productDetails } = selector.customer.cSingleProduct.productDetails;
 		await this.multipleElementVisible(productDetails);
-		//todo: actual value can be asserted
 	}
 
 
@@ -330,16 +462,49 @@ export class ProductsPage extends AdminPage {
 
 	// edit product
 	async editProduct(product: product['simple']): Promise<void> {
-		await this.searchProduct(product.editProduct);
-		await this.hover(selector.vendor.product.productCell(product.editProduct));
-		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, selector.vendor.product.editProduct(product.editProduct));
+		await this.goToProductEdit(product.editProduct);
 
-		await this.clearAndType(selector.vendor.product.title, product.editProduct); // don't update name below test needs same product
-		await this.clearAndType(selector.vendor.product.price, product.regularPrice());
+		await this.clearAndType(selector.vendor.product.edit.title, product.editProduct); // don't update name below test needs same product
+		await this.clearAndType(selector.vendor.product.edit.price, product.regularPrice());
 		//todo:  add more fields
 
 		await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.products, selector.vendor.product.saveProduct, 302);
 		await this.toContainText(selector.vendor.product.dokanMessage, 'The product has been saved successfully. ');
+	}
+
+
+	// product edit
+
+
+	// add product quantity discount
+	async addProductQuantityDiscount(productName: string, quantityDiscount: vendor['vendorInfo']['quantityDiscount']): Promise<void> {
+		await this.goToProductEdit(productName);
+		// await this.check(selector.vendor.product.discount.enableBulkDiscount); //todo: need to fix
+		await this.clearAndType(selector.vendor.product.discount.lotMinimumQuantity, quantityDiscount.minimumQuantity);
+		await this.clearAndType(selector.vendor.product.discount.lotDiscountInPercentage, quantityDiscount.discountPercentage);
+		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, selector.vendor.product.saveProduct, 302);
+		await this.toContainText(selector.vendor.product.updatedSuccessMessage, data.product.createUpdateSaveSuccessMessage);
+	}
+
+
+	// vendor add product rma settings
+	async addProductRmaSettings(productName: string, rma: vendor['rma']): Promise<void> {
+		await this.goToProductEdit(productName);
+		await this.check(selector.vendor.product.rma.overrideYourDefaultRmaSettingsForThisProduct);
+		await this.clearAndType(selector.vendor.product.rma.label, rma.label);
+		await this.selectByValue(selector.vendor.product.rma.type, rma.type);
+		await this.selectByValue(selector.vendor.product.rma.length, rma.rmaLength);
+		//todo: add rma as addon
+		if (rma.rmaLength === 'limited'){
+			await this.clearAndType(selector.vendor.product.rma.lengthValue, rma.lengthValue);
+			await this.selectByValue(selector.vendor.product.rma.lengthDuration, rma.lengthDuration);
+		}
+		const refundReasonIsVisible = await this.isVisible(selector.vendor.product.rma.refundReasonsFirst);
+		if (refundReasonIsVisible) {
+			await this.checkMultiple(selector.vendor.product.rma.refundReasons); //todo:  update this
+		}
+		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, selector.vendor.product.saveProduct, 302);
+		await this.toContainText(selector.vendor.product.updatedSuccessMessage, data.product.createUpdateSaveSuccessMessage);
 	}
 
 

@@ -13,6 +13,3 @@
 // // 	});
 // // });
 
-// const { DOKAN_PRO } = process.env;
-
-// console.log(!DOKAN_PRO);

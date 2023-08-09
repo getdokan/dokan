@@ -14,13 +14,13 @@ test.beforeAll(async ({ request }) => {
 
 test.describe('settings api test', () => {
 
-	test('get settings @lite @pro', async () => {
+	test('get settings @lite', async () => {
 		const [response, responseBody] = await apiUtils.get(endPoints.getSettings);
 		expect(response.ok()).toBeTruthy();
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('update settings @lite @pro', async () => {
+	test('update settings @lite', async () => {
 		const [response, responseBody] = await apiUtils.put(endPoints.updateSettings, { data: payloads.updateSettings });
 		expect(response.ok()).toBeTruthy();
 		expect(responseBody).toBeTruthy();

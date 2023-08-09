@@ -300,7 +300,7 @@ export class StoreSupportsPage extends AdminPage {
 			break;
 
 		case 'order' :
-			await this.goIfNotThere(data.subUrls.frontend.myOrderDetails(input));
+			await this.goIfNotThere(data.subUrls.frontend.orderDetails(input));
 			break;
 
 		default :

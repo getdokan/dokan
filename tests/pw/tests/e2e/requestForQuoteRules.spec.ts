@@ -5,7 +5,7 @@ import { data } from 'utils/testData';
 import { payloads } from 'utils/payloads';
 
 
-test.describe('Request for quotation test', () => {
+test.describe('Request for quotation Rules test', () => {
 
 	let admin: RequestForQuotationsPage;
 	let aPage: Page;

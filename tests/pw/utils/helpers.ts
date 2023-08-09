@@ -9,6 +9,9 @@ export const helpers = {
 	// replace '_' to space & capitalize first letter of each word
 	replaceAndCapitalizeEachWord: (str: string) => str.replace('_', ' ').replace(/(^\w{1})|(\s+\w{1})/g, (letter: string) => letter.toUpperCase()),
 
+	// capitalize
+	capitalize: (word: string) => word[0].toUpperCase() + word.substring(1).toLowerCase(),
+
 	// returns a random number between min (inclusive) and max (exclusive)
 	getRandomArbitrary: (min: number, max: number) => Math.random() * (max - min) + min,
 
@@ -24,6 +27,7 @@ export const helpers = {
 	// remove array element
 	removeItem: (arr: any[], removeItem: any) => arr.filter((item) => item !== removeItem),
 
+	// is sub array
 	isSubArray: (parentArray: any[], subArray: any[]) => subArray.every(el => parentArray.includes(el)),
 
 	// check if object is empty
@@ -41,8 +45,14 @@ export const helpers = {
 		return res[1] as string;
 	},
 
+	// convert string to regex
+	stringToRegex:(str: string): RegExp => new RegExp( str), //todo: need to update, multiple cases unhandled
+
 	// convert string to price format
 	price: (str: string): number => parseFloat(str.replace(/[^\d\-.,]/g, '').replace(/,/g, '.').replace(/\.(?=.*\.)/g, '')),
+
+	// remove dollar sign
+	removeDollarSign: (str: string): string => str.replace('$', ''),
 
 	// current year
 	currentYear: new Date().getFullYear(),
@@ -73,6 +83,7 @@ export const helpers = {
 		return result.toLocaleDateString('en-CA');
 	},
 
+	// round to two decimal
 	roundToTwo(num: string | number) {
 		return Math.round((Number(num) + Number.EPSILON) * 100) / 100;
 	},
@@ -89,7 +100,7 @@ export const helpers = {
 
 	// subtotal
 	subtotal(price: number[], quantity: number[]) {
-		const subtotal = price.map((e, index) => e * quantity[index]);
+		const subtotal = price.map((e, index) => e * quantity[index]!);
 		return subtotal.reduce((a, b) => a + b, 0);
 	},
 

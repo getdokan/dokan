@@ -5,7 +5,7 @@ import { data } from 'utils/testData';
 import { payloads } from 'utils/payloads';
 
 
-test.describe('Vendors test', () => {
+test.describe('Store categories test', () => {
 
 
 	let admin: StoreCategoriesPage;

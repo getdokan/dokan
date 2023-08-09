@@ -22,45 +22,45 @@ test.describe('Settings test', () => {
 		await aPage.close();
 	});
 
-	test('dokan settings menu page is rendering properly @lite @pro @explo', async ( ) => {
+	test('dokan settings menu page is rendering properly @lite @explo', async ( ) => {
 		await settingsPage.dokanSettingsRenderProperly();
 	});
 
-	test('admin can scroll to top on settings @lite @pro', async ( ) => {
+	test('admin can scroll to top on settings @lite', async ( ) => {
 		await settingsPage.scrollToTopSettings();
 	});
 
-	test('admin can search settings @lite @pro', async ( ) => {
+	test('admin can search settings @lite', async ( ) => {
 		await settingsPage.searchSettings('Selling Options');
 	});
 
 	// dokan settings
 
-	test('admin can set dokan general settings @lite @pro', async ( ) => {
+	test('admin can set dokan general settings @lite', async ( ) => {
 		await settingsPage.setDokanGeneralSettings(data.dokanSettings.general);
 	});
 
-	test('admin can set dokan selling settings @lite @pro', async ( ) => {
+	test('admin can set dokan selling settings @lite', async ( ) => {
 		await settingsPage.setDokanSellingSettings(data.dokanSettings.selling);
 	});
 
-	test('admin can set dokan withdraw settings @lite @pro', async ( ) => {
+	test('admin can set dokan withdraw settings @lite', async ( ) => {
 		await settingsPage.setDokanWithdrawSettings(data.dokanSettings.withdraw);
 	});
 
-	test('admin can set dokan reverse withdraw settings @lite @pro', async ( ) => {
+	test('admin can set dokan reverse withdraw settings @lite', async ( ) => {
 		await settingsPage.setDokanReverseWithdrawSettings(data.dokanSettings.reverseWithdraw);
 	});
 
-	test('admin can set dokan page settings @lite @pro', async ( ) => {
+	test('admin can set dokan page settings @lite', async ( ) => {
 		await settingsPage.setPageSettings(data.dokanSettings.page);
 	});
 
-	test('admin can set dokan appearance settings @lite @pro', async ( ) => {
+	test('admin can set dokan appearance settings @lite', async ( ) => {
 		await settingsPage.setDokanAppearanceSettings(data.dokanSettings.appearance);
 	});
 
-	test('admin can set dokan privacy policy settings @lite @pro', async ( ) => {
+	test('admin can set dokan privacy policy settings @lite', async ( ) => {
 		await settingsPage.setDokanPrivacyPolicySettings(data.dokanSettings.privacyPolicy);
 	});
 

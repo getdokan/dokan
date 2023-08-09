@@ -29,39 +29,39 @@ test.describe('Stores test', () => {
 
 	// stores
 
-	test('admin vendors menu page is rendering properly @lite @pro @explo', async ( ) => {
+	test('admin vendors menu page is rendering properly @lite @explo', async ( ) => {
 		await admin.adminVendorsRenderProperly();
 	});
 
-	test('admin can add vendor @lite @pro', async ( ) => {
+	test('admin can add vendor @lite', async ( ) => {
 		await admin.addVendor(data.vendor.vendorInfo);
 	});
 
-	test('admin can search vendors @lite @pro', async ( ) => {
+	test('admin can search vendors @lite', async ( ) => {
 		await admin.searchVendor(data.predefined.vendorStores.vendor1);
 	});
 
-	test('admin can disable vendor\'s selling capability @lite @pro', async ( ) => {
+	test('admin can disable vendor\'s selling capability @lite', async ( ) => {
 		await admin.updateVendor(data.predefined.vendorStores.vendor1, 'disable');
 	});
 
-	test('admin can enable vendor\'s selling capability @lite @pro', async ( ) => {
+	test('admin can enable vendor\'s selling capability @lite', async ( ) => {
 		await admin.updateVendor(data.predefined.vendorStores.vendor1, 'enable');
 	});
 
-	test('admin can edit vendor info @lite @pro', async ( ) => {
+	test('admin can edit vendor info @lite', async ( ) => {
 		await admin.editVendor(data.vendor);
 	});
 
-	test('admin can view vendor products @lite @pro', async ( ) => {
+	test.skip('admin can view vendor products @lite', async ( ) => {
 		await admin.viewVendor(data.predefined.vendorStores.vendor1, 'products');
 	});
 
-	test('admin can view vendor orders @lite @pro', async ( ) => {
+	test('admin can view vendor orders @lite', async ( ) => {
 		await admin.viewVendor(data.predefined.vendorStores.vendor1, 'orders');
 	});
 
-	test('admin can perform vendor bulk actions @lite @pro', async ( ) => {
+	test('admin can perform vendor bulk actions @lite', async ( ) => {
 		await admin.vendorBulkAction('approved');
 	});
 

@@ -6,7 +6,7 @@ import { data } from 'utils/testData';
 import { payloads } from 'utils/payloads';
 
 
-test.describe('refunds test', () => {
+test.describe('Refunds test', () => {
 
 	let admin: RefundsPage;
 	let aPage: Page;
@@ -55,6 +55,8 @@ test.describe('refunds test', () => {
 		await dbUtils.createRefund(orderResponseBody);
 		await admin.refundRequestsBulkAction('completed');
 	});
+
+	//todo: add vendor refund tests
 
 
 });

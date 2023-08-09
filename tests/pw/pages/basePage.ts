@@ -56,10 +56,7 @@ export class BasePage {
 
 	// goto subUrl
 	async goto(subPath: string): Promise<void> {
-		// let subPath1: string = await this.createUrl(subPath)
-		// await this.page.goto(subPath);
 		await this.page.goto(subPath, { waitUntil: 'networkidle' });
-		// await this.page.goto(subPath, { waitUntil: 'domcontentloaded' });
 	}
 
 
@@ -204,7 +201,7 @@ export class BasePage {
 
 	//  click on element by Running the js element.Click() method
 	async clickJs(selector: string): Promise<void> {
-		const element = this.page.locator(selector);
+		const element = this.getElement(selector);
 		await element.click();
 	}
 
@@ -234,8 +231,8 @@ export class BasePage {
 	// click & wait for load state to complete
 	async clickAndWaitForLoadState(selector: string): Promise<void> {
 		await Promise.all([
-			// this.page.waitForLoadState( 'networkidle' ),
-			this.page.waitForLoadState( 'domcontentloaded' ),
+			this.page.waitForLoadState( 'networkidle' ),
+			// this.page.waitForLoadState( 'domcontentloaded' ),
 			this.page.locator(selector).click()
 		]);
 	}
@@ -272,10 +269,9 @@ export class BasePage {
 
 	// click & wait for response
 	async clickAndWaitForResponseAndLoadState(subUrl: string, selector: string, code = 200): Promise<Response> {
-		const [response] = await Promise.all([
-			this.page.waitForResponse((resp) => resp.url().includes(subUrl) && resp.status() === code),
+		const [, response] = await Promise.all([
 			this.page.waitForLoadState( 'networkidle'),
-			// this.page.waitForLoadState( 'domcontentloaded'),
+			this.page.waitForResponse((resp) => resp.url().includes(subUrl) && resp.status() === code),
 			this.page.locator(selector).click()
 		]);
 		expect(response.status()).toBe(code);
@@ -348,10 +344,10 @@ export class BasePage {
 	}
 
 
-	// type & wait for navigation
-	async pressAndWaitForNavigation(key: string,): Promise<void> {
+	// type & wait for load state
+	async pressAndWaitForLoadState(key: string,): Promise<void> {
 		await Promise.all([
-			this.waitForNavigation(),
+			this.waitForLoadState(),
 			this.press(key),
 		]);
 	}
@@ -538,6 +534,14 @@ export class BasePage {
 		// return await this.page.textContent(selector);
 	}
 
+	// get element text if visible
+	async getElementTextIfVisible(selector: string): Promise<void |string | null> {
+		const isVisible = await this.isVisible(selector);
+		if (isVisible) {
+			return await this.getElementText(selector);
+		}
+	}
+
 
 	// get element text content
 	async getElementTextViaPage(selector: string): Promise<string | null> {
@@ -549,16 +553,6 @@ export class BasePage {
 	async hasText(selector: string, text: string): Promise<boolean> {
 		const elementText = await this.textContentOfLocator(selector);
 		return elementText?.trim() === text ? true : false;
-	}
-
-
-	// get element text content
-	async getElementTextIfVisible(selector: string): Promise<string | null> {
-		const isVisible = await this.isVisible(selector);
-		if (isVisible) {
-			return await this.getElementText(selector);
-		}
-		return null;
 	}
 
 
@@ -588,7 +582,7 @@ export class BasePage {
 
 	//get element has class or not
 	async hasClass(selector: string, className: string): Promise<boolean> {
-		const element = this.page.locator(selector);
+		const element = this.getElement(selector);
 		const hasClass = await element.evaluate((element, className) => element.classList.contains(className), className,);
 		return hasClass;
 	}
@@ -602,7 +596,7 @@ export class BasePage {
 
 	// has attribute
 	async hasAttribute(selector: string, attribute: string): Promise<boolean> {
-		const element = this.page.locator(selector);
+		const element = this.getElement(selector);
 		const hasAttribute = await element.evaluate(
 			(element, attribute) => element.hasAttribute(attribute),
 			attribute,
@@ -613,14 +607,14 @@ export class BasePage {
 
 	// set attribute/class value
 	async setAttributeValue(selector: string, attribute: string, value: string): Promise<void> {
-		const element = this.page.locator(selector);
+		const element = this.getElement(selector);
 		await element.evaluate((element, [attribute, value]) => element.setAttribute(attribute as string, value as string), [attribute, value],);
 	}
 
 
 	// remove element attribute
 	async removeAttribute(selector: string, attribute: string): Promise<void> {
-		const element = this.page.locator(selector);
+		const element = this.getElement(selector);
 		await element.evaluate(
 			(element, attribute) => element.removeAttribute(attribute),
 			attribute,
@@ -630,7 +624,7 @@ export class BasePage {
 
 	// get element property value: background color
 	async getElementBackgroundColor(selector: string): Promise<string> {
-		const element = this.page.locator(selector);
+		const element = this.getElement(selector);
 		const value = await element.evaluate((element) =>
 			window.getComputedStyle(element).getPropertyValue('background-color'),
 		);
@@ -641,7 +635,7 @@ export class BasePage {
 
 	// get element property value: background color
 	async getElementColor(selector: string): Promise<string> {
-		const element = this.page.locator(selector);
+		const element = this.getElement(selector);
 		const value = await element.evaluate((element) => window.getComputedStyle(element).getPropertyValue('color'),);
 		// console.log(value)
 		return value;
@@ -662,12 +656,12 @@ export class BasePage {
 
 
 	// get multiple element texts
-	async getMultipleElementTexts(selector: string): Promise<(string | null)[]> {
-		const texts = await this.page.$$eval(selector, (elements) =>
-			elements.map((item) => item.textContent),
-		);
-		// console.log(texts)
-		return texts;
+	async getMultipleElementTexts(selector: string): Promise<string[]> {
+		// const texts = await this.page.$$eval(selector, (elements) => elements.map((item) => item.textContent));
+		const element =  this.getElement(selector);
+		const allTexts = await element.allTextContents();
+		// console.log(allTexts);
+		return allTexts;
 	}
 
 
@@ -891,7 +885,7 @@ export class BasePage {
 
 
 	/**
-	 * Files & Media methods¸¸
+	 * Files & Media methods
 	 */
 
 
@@ -1408,13 +1402,20 @@ export class BasePage {
 
 
 	// get cookies
-	async getCookie(): Promise<Cookie[]> {
+	async getCookies(): Promise<Cookie[]> {
 		return await this.page.context().cookies();
 	}
 
+
+	// get cookies
+	async clearCookies(): Promise<void> {
+		await this.page.context().clearCookies();
+	}
+
+
 	// get wp current user
 	async getCurrentUser(): Promise<string | undefined> {
-		const cookies = await this.page.context().cookies();
+		const cookies = await this.getCookies();
 		const cookie = cookies.find((c) => {
 			let _c$name: string;
 			return !!(
@@ -1691,10 +1692,7 @@ export class BasePage {
 
 	// enable switch or checkbox: vendor dashboard delivery time
 	async enableSwitcherDeliveryTime(selector: string): Promise<void> {
-		const value = await this.hasClass(
-			(selector += '//div[contains(@class,"minitoggle")]'),
-			'active',
-		);
+		const value = await this.hasClass((selector += '//div[contains(@class,"minitoggle")]'), 'active',);
 		if (!value) {
 			await this.click(selector);
 		}
@@ -1727,7 +1725,7 @@ export class BasePage {
 	async deleteIfExists(selector: string): Promise<void> {
 		const elementExists = await this.isVisible(selector);
 		if (elementExists) {
-			const element = this.page.locator(selector);
+			const element = this.getElement(selector);
 			await element.click();
 		}
 	}

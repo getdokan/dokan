@@ -12,13 +12,13 @@ test.beforeAll(async ({ request }) => {
 });
 
 test.describe('withdraw api test', () => {
-	test('get withdraw settings @v2 @lite @pro', async () => {
+	test('get withdraw settings @v2 @lite', async () => {
 		const [response, responseBody] = await apiUtils.get(endPoints.getWithdrawSettings);
 		expect(response.ok()).toBeTruthy();
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('get withdraw summary @v2 @lite @pro', async () => {
+	test('get withdraw summary @v2 @lite', async () => {
 		const [response, responseBody] = await apiUtils.get(endPoints.getWithdrawSummary);
 		expect(response.ok()).toBeTruthy();
 		expect(responseBody).toBeTruthy();

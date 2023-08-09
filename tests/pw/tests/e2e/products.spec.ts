@@ -36,15 +36,15 @@ test.describe('Product functionality test', () => {
 	});
 
 
-	test('admin can add product category @lite @pro', async ( ) => {
+	test('admin can add product category @lite', async ( ) => {
 		await admin.addCategory(data.product.category.randomCategory());
 	});
 
-	test('admin can add product attribute @lite @pro', async ( ) => {
+	test('admin can add product attribute @lite', async ( ) => {
 		await admin.addAttribute(data.product.attribute.randomAttribute());
 	});
 
-	test('admin can add simple product @lite @pro', async ( ) => {
+	test('admin can add simple product @lite', async ( ) => {
 		await admin.addSimpleProduct(data.product.simple);
 	});
 
@@ -57,10 +57,10 @@ test.describe('Product functionality test', () => {
 	});
 
 	// test.skip('admin can add variable subscription @pro', async ( ) => {
-	// 	// await admin.addVariableSubscription(data.product.variableSubscription);
+	// await admin.addVariableSubscription(data.product.variableSubscription);
 	// });
 
-	test('admin can add external product @lite @pro', async ( ) => {
+	test('admin can add external product @lite', async ( ) => {
 		await admin.addExternalProduct(data.product.external);
 	});
 
@@ -69,10 +69,34 @@ test.describe('Product functionality test', () => {
 	});
 
 
-	//vendors
+	//vendors   //todo: move create product in separate files, or product functionality to another page
+
+	test('vendor can add simple product @lite', async ( ) => {
+		await vendor.vendorAddSimpleProduct(data.product.simple);
+	});
+
+	test('vendor can add variable product @pro', async ( ) => {
+		await vendor.vendorAddVariableProduct(data.product.variable); //todo: variation price not saving dokan issue
+	});
+
+	test('vendor can add simple subscription product @pro', async ( ) => {
+		await vendor.vendorAddSimpleSubscription(data.product.simpleSubscription);
+	});
+
+	test('vendor can add variable subscription product @pro', async ( ) => {
+		await vendor.vendorAddVariableSubscription(data.product.variableSubscription); //todo: variation price not saving dokan issue
+	});
+
+	test('vendor can add external product @pro', async ( ) => {
+		await vendor.vendorAddExternalProduct(data.product.external);
+	});
+
+	test('vendor can add product product category @lite', async ( ) => {
+		await vendor.vendorAddProductCategory(data.predefined.simpleProduct.product1.name, data.product.category.unCategorized);
+	});
 
 
-	test('vendor product menu page is rendering properly @lite @pro @explo', async ( ) => {
+	test('vendor product menu page is rendering properly @lite @explo', async ( ) => {
 		await vendor.vendorProductsRenderProperly();
 	});
 
@@ -80,19 +104,19 @@ test.describe('Product functionality test', () => {
 		await vendor.exportProducts();
 	});
 
-	test('vendor can search product @lite @pro', async ( ) => {
+	test('vendor can search product @lite', async ( ) => {
 		await vendor.searchProduct(data.predefined.simpleProduct.product1.name);
 	});
 
-	test('vendor can filter products by date @lite @pro', async ( ) => {
+	test('vendor can filter products by date @lite', async ( ) => {
 		await vendor.filterProducts('by-date', '1');
 	});
 
-	test('vendor can filter products by category @lite @pro', async ( ) => {
+	test('vendor can filter products by category @lite', async ( ) => {
 		await vendor.filterProducts('by-category', 'Uncategorized');
 	});
 
-	test('vendor can filter products by type @lite @pro', async ( ) => {
+	test('vendor can filter products by type @lite', async ( ) => {
 		test.skip(!!process.env.CI, 'Filter gets removed if booking module is enabled!');
 		await vendor.filterProducts('by-other', 'simple');
 	});
@@ -101,7 +125,7 @@ test.describe('Product functionality test', () => {
 		await vendor.filterProducts('by-other', 'featured');
 	});
 
-	test('vendor can view product @lite @pro', async ( ) => {
+	test('vendor can view product @lite', async ( ) => {
 		await vendor.viewProduct(data.predefined.simpleProduct.product1.name);
 	});
 
@@ -109,7 +133,7 @@ test.describe('Product functionality test', () => {
 		await vendor.cantBuyOwnProduct(productName);
 	});
 
-	test('vendor can edit product @lite @pro', async ( ) => {
+	test('vendor can edit product @lite', async ( ) => {
 		await vendor.editProduct({ ...data.product.simple, editProduct: productName });
 	});
 
@@ -117,15 +141,24 @@ test.describe('Product functionality test', () => {
 		await vendor.quickEditProduct({ ...data.product.simple, editProduct: productName });
 	});
 
+	// test('vendor can add product quantity discount @pro @explo', async ( ) => {
+	// 	await vendor.addProductQuantityDiscount(data.predefined.simpleProduct.product1.name, data.vendor.vendorInfo.quantityDiscount);
+	// });
+
+	test('vendor can add product rma settings @pro @explo', async ( ) => {
+		await vendor.addProductRmaSettings(data.predefined.simpleProduct.product1.name, data.vendor.rma);
+	});
+
+	//todo: add more product edit tests
+
 	test('vendor can duplicate product @pro', async ( ) => {
 		await vendor.duplicateProduct(productName);
 	});
 
-	test('vendor can permanently delete product @lite @pro', async ( ) => {
+	test('vendor can permanently delete product @lite', async ( ) => {
 		const [,, productName] = await apiUtils.createProduct(payloads.createProduct(), payloads. vendorAuth);
 		await vendor.permanentlyDeleteProduct(productName);
 	});
-
 
 
 });

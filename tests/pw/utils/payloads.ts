@@ -41,6 +41,10 @@ export const payloads = {
 		Authorization: basicAuth(process.env.VENDOR, process.env.USER_PASSWORD),
 	},
 
+	vendor2Auth: {
+		Authorization: basicAuth(process.env.VENDOR2, process.env.USER_PASSWORD),
+	},
+
 	customerAuth: {
 		Authorization: basicAuth(process.env.CUSTOMER, process.env.USER_PASSWORD),
 	},
@@ -104,6 +108,29 @@ export const payloads = {
 			{
 				key: 'dokan_geo_address',
 				value: 'New York, NY, USA'
+			},
+			{
+				key: '_dokan_geolocation_use_store_settings',
+				value: 'yes'
+			},
+			{
+				key: '_dokan_rma_override_product',
+				value: 'yes'
+			},
+			{
+				key: '_dokan_rma_settings',
+				value: {
+					label: 'Warranty',
+					type: 'included_warranty',
+					policy: 'test refund policy',
+					reasons: [
+						'defective'
+					],
+					length: 'lifetime',
+					length_value: '',
+					length_duration: '',
+					addon_settings: []
+				}
 			}
 		]
 
@@ -1305,7 +1332,7 @@ export const payloads = {
 		body: 'Test email body',
 	},
 
-	createStore1: {
+	createStore1: { //todo: create and update data should be same
 		user_login: process.env.VENDOR,
 		user_pass: process.env.USER_PASSWORD,
 		user_nicename: process.env.VENDOR + 'store',
@@ -1313,7 +1340,134 @@ export const payloads = {
 		email: process.env.VENDOR + '@yopmail.com',
 		store_name: process.env.VENDOR + 'store',
 		first_name: process.env.VENDOR,
-		last_name: 'ven',
+		last_name: 'v1',
+		social: {
+			fb: 'http://dokan.test',
+			youtube: 'http://dokan.test',
+			twitter: 'http://dokan.test',
+			linkedin: 'http://dokan.test',
+			pinterest: 'http://dokan.test',
+			instagram: 'http://dokan.test',
+			flickr: 'http://dokan.test',
+		},
+		phone: '0123456789',
+		show_email: true, //todo:  don't work on lite
+		address: {
+			street_1: 'abc street',
+			street_2: 'xyz street',
+			city: 'New York',
+			zip: '10003',
+			state: 'NY',
+			country: 'US',
+		},
+		location: '40.7127753,-74.0059728',
+		banner: 0,
+		banner_id: 0,
+		gravatar: 0,
+		gravatar_id: 0,
+		products_per_page: 12,
+		show_more_product_tab: true,
+		toc_enabled: true,  //todo:  don't work on lite
+		store_toc: 'test Vendor terms and conditions',
+		featured: true,
+		rating: {
+			rating: '4.00', //todo:  don't work on lite
+			count: 1,
+		},
+		enabled: true,
+		payment: {
+			paypal: {
+				0: 'email',
+				email: 'paypal@g.c',
+			},
+			bank: {
+				ac_name: 'account name',
+				ac_type: 'personal',
+				ac_number: '1234567',
+				bank_name: 'bank name',
+				bank_addr: 'bank address',
+				routing_number: '123456',
+				iban: '123456',
+				swift: '12345',
+			},
+			stripe: false,
+		},
+		trusted: true,
+		// store_open_close: {
+		// 	enabled: false,
+		// 	time: [],
+		// 	open_notice: 'Store is open',
+		// 	close_notice: 'Store is closed',
+		// },
+		store_open_close: {  //todo:  don't work on lite
+			enabled: true,
+			time: {
+				monday: {
+					status: 'open',  // 'close'
+					opening_time: ['12:00 am'], // []
+					closing_time: ['11:30 pm']  // []
+				},
+				tuesday: {
+					status: 'open',
+					opening_time: ['12:00 am'],
+					closing_time: ['11:30 pm']
+				},
+				wednesday: {
+					status: 'open',
+					opening_time: ['12:00 am'],
+					closing_time: ['11:30 pm']
+				},
+				thursday: {
+					status: 'open',
+					opening_time: ['12:00 am'],
+					closing_time: ['11:30 pm']
+				},
+				friday: {
+					status: 'open',
+					opening_time: ['12:00 am'],
+					closing_time: ['11:30 pm']
+				},
+				saturday: {
+					status: 'open',
+					opening_time: ['12:00 am'],
+					closing_time: ['11:30 pm']
+				},
+				sunday: {
+					status: 'open',
+					opening_time: ['12:00 am'],
+					closing_time: ['11:30 pm']
+				}
+			},
+			open_notice: 'Store is open',
+			close_notice: 'Store is closed'
+		},
+		company_name: '',
+		vat_number: '',
+		company_id_number: '',
+		bank_name: '',
+		bank_iban: '',
+		categories: [
+			{
+				// id: 74,
+				// name: 'Uncategorized',
+				// slug: 'uncategorized'
+			},
+		],
+		admin_commission: '',
+		admin_additional_fee: '',
+		admin_commission_type: '',
+	},
+
+
+	createStore2: { //todo: create and update data should be same
+		user_login: process.env.VENDOR2,
+		user_pass: process.env.USER_PASSWORD,
+		user_nicename: process.env.VENDOR2 + 'store',
+		role: 'seller',
+		email: process.env.VENDOR2 + '@yopmail.com',
+		store_name: process.env.VENDOR2 + 'store',
+		first_name: process.env.VENDOR2,
+		last_name: 'v1',
 		social: {
 			fb: 'http://dokan.test',
 			youtube: 'http://dokan.test',
@@ -1453,7 +1607,7 @@ export const payloads = {
 		},
 		shipping: {
 			first_name: process.env.CUSTOMER,
-			last_name: 'cus',
+			last_name: 'c1',
 			company: '',
 			address_1: 'abc street',
 			address_2: 'xyz street',
@@ -1463,6 +1617,11 @@ export const payloads = {
 			state: 'NY',
 			phone: '0123456789',
 		},
+	},
+
+	// update password
+	updatePassword: {
+		password: '01dokan01'
 	},
 
 	// quote rule

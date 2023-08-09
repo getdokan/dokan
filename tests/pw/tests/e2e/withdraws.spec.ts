@@ -37,33 +37,33 @@ test.describe('Withdraw test', () => {
 	});
 
 
-	test('admin withdraw menu page is rendering properly @lite @pro @explo', async ( ) => {
+	test('admin withdraw menu page is rendering properly @lite @explo', async ( ) => {
 		await admin.adminWithdrawsRenderProperly();
 	});
 
-	test('admin can filter withdraws by vendor @lite @pro', async ( ) => {
+	test('admin can filter withdraws by vendor @lite', async ( ) => {
 		await admin.filterWithdraws(data.predefined.vendorStores.vendor1);
 	});
 
-	test('admin can add note to withdraw request @lite @pro', async ( ) => {
+	test('admin can add note to withdraw request @lite', async ( ) => {
 		await admin.addNoteWithdrawRequest(data.predefined.vendorStores.vendor1, 'test withdraw note');
 	});
 
-	test('admin can approve withdraw request @lite @pro', async ( ) => {
+	test('admin can approve withdraw request @lite', async ( ) => {
 		await admin.updateWithdrawRequest(data.predefined.vendorStores.vendor1, 'approve');
 	});
 
-	test('admin can cancel withdraw request @lite @pro', async ( ) => {
+	test('admin can cancel withdraw request @lite', async ( ) => {
 		await apiUtils.createWithdraw({ ...payloads.createWithdraw, amount: minimumWithdrawLimit }, payloads.vendorAuth);
 		await admin.updateWithdrawRequest(data.predefined.vendorStores.vendor1, 'cancel');
 	});
 
-	test('admin can delete withdraw request @lite @pro', async ( ) => {
+	test('admin can delete withdraw request @lite', async ( ) => {
 		await apiUtils.createWithdraw({ ...payloads.createWithdraw, amount: minimumWithdrawLimit }, payloads.vendorAuth);
 		await admin.updateWithdrawRequest(data.predefined.vendorStores.vendor1, 'delete');
 	});
 
-	test('admin can perform withdraw bulk actions @lite @pro', async ( ) => {
+	test('admin can perform withdraw bulk actions @lite', async ( ) => {
 		await apiUtils.createWithdraw({ ...payloads.createWithdraw, amount: minimumWithdrawLimit }, payloads.vendorAuth);
 		await admin.withdrawBulkAction('cancelled');
 	});
@@ -71,25 +71,25 @@ test.describe('Withdraw test', () => {
 
 	// vendor
 
-	test('vendor withdraw menu page is rendering properly @lite @pro @explo', async ( ) => {
+	test('vendor withdraw menu page is rendering properly @lite @explo', async ( ) => {
 		await vendor.vendorWithdrawRenderProperly();
 	});
 
-	test('vendor withdraw requests page is rendering properly @lite @pro @explo', async ( ) => {
+	test('vendor withdraw requests page is rendering properly @lite @explo', async ( ) => {
 		await vendor.vendorWithdrawRequestsRenderProperly();
 	});
 
-	test('vendor can request withdraw @lite @pro', async ( ) => {
+	test('vendor can request withdraw @lite', async ( ) => {
 		await apiUtils.cancelWithdraw('', payloads.vendorAuth);
 		await vendor.requestWithdraw({ ...data.vendor.withdraw, minimumWithdrawAmount: minimumWithdrawLimit, currentBalance: currentBalance });
 	});
 
-	test('vendor can\'t request withdraw when pending request exits @lite @pro', async ( ) => {
+	test('vendor can\'t request withdraw when pending request exits @lite', async ( ) => {
 		await apiUtils.createWithdraw({ ...payloads.createWithdraw, amount: minimumWithdrawLimit }, payloads.vendorAuth);
 		await vendor.cantRequestWithdraw();
 	});
 
-	test('vendor can cancel request withdraw @lite @pro', async ( ) => {
+	test('vendor can cancel request withdraw @lite', async ( ) => {
 		await apiUtils.createWithdraw({ ...payloads.createWithdraw, amount: minimumWithdrawLimit }, payloads.vendorAuth);
 		await vendor.cancelWithdrawRequest();
 	});
@@ -98,7 +98,7 @@ test.describe('Withdraw test', () => {
 		await vendor.addAutoWithdrawDisbursementSchedule({ ...data.vendor.withdraw, minimumWithdrawAmount: minimumWithdrawLimit });
 	});
 
-	test('vendor can add default withdraw payment methods @lite @pro', async ( ) => {
+	test('vendor can add default withdraw payment methods @lite', async ( ) => {
 		await vendor.addDefaultWithdrawPaymentMethods(data.vendor.withdraw.defaultWithdrawMethod.bankTransfer);
 		// Cleanup
 		await vendor.addDefaultWithdrawPaymentMethods(data.vendor.withdraw.defaultWithdrawMethod.paypal);

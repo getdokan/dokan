@@ -66,7 +66,7 @@ test.describe('Product Reviews test', () => {
 	});
 
 	test('vendor can perform product reviews bulk action @pro @explo', async ( ) => {
-		await vendor.productReviewsBulkAuction('hold');
+		await vendor.productReviewsBulkActions('hold');
 	});
 
 

@@ -28,15 +28,15 @@ test.describe('Single product functionality test', () => {
 
 	// single product page
 
-	test('single product is rendering properly @lite @pro @explo', async ( ) => {
+	test('single product is rendering properly @lite @explo', async ( ) => {
 		await customer.singleProductRenderProperly(data.predefined.simpleProduct.product1.name);
 	});
 
-	test('customer can view highlighted vendor info @lite @pro', async ( ) => {
+	test('customer can view highlighted vendor info @lite', async ( ) => {
 		await customer.viewHighlightedVendorInfo(data.predefined.simpleProduct.product1.name);
 	});
 
-	test('customer can view product vendor info @lite @pro', async ( ) => {
+	test('customer can view product vendor info @lite', async ( ) => {
 		await customer.productVendorInfo(data.predefined.simpleProduct.product1.name);
 	});
 
@@ -48,15 +48,15 @@ test.describe('Single product functionality test', () => {
 		await customer.productWarrantyPolicy(data.predefined.simpleProduct.product1.name);
 	});
 
-	test('customer can view more products @lite @pro', async ( ) => {
+	test('customer can view more products @lite', async ( ) => {
 		await customer.viewMoreProducts(data.predefined.simpleProduct.product1.name);
 	});
 
-	test('customer can view related products @lite @pro', async ( ) => {
+	test('customer can view related products @lite', async ( ) => {
 		await customer.viewRelatedProducts(data.predefined.simpleProduct.product1.name);
 	});
 
-	test('customer can review product @lite @pro', async ( ) => {
+	test('customer can review product @lite', async ( ) => {
 		await customer.reviewProduct(data.predefined.simpleProduct.product1.name, data.product.review);
 	});
 

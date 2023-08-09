@@ -296,7 +296,7 @@ export interface order {
 	}
 
 	// Refund
-	refund: {
+	requestWarranty: {
 		itemQuantity: string;
 		refundRequestType: string;
 		refundRequestReasons: string;
@@ -329,16 +329,35 @@ export interface orderShipmentDetails {
 
 // payment details
 export interface paymentDetails {
-		stripExpress: {
-			paymentMethod: string;
-			cardInfo: {
-				cardNumber: string;
-				expiryMonth: string;
-				expiryYear: string;
-				expiryDate: string;
-				cvc: string;
-			},
+
+	strip: {
+		striptNon3D: string;
+		stript3D: string;
+		cardNumber: string;
+		expiryMonth: string;
+		expiryYear: string;
+		number: string;
+		expiryDate: string;
+		cvc: string;
+	},
+
+	mangopay: {
+		creditCard: string;
+		expiryMonth: string;
+		expiryYear: string;
+		cvc: string;
+	},
+
+	stripExpress: {
+		paymentMethod: string;
+		cardInfo: {
+			cardNumber: string;
+			expiryMonth: string;
+			expiryYear: string;
+			expiryDate: string;
+			cvc: string;
 		},
+	},
 }
 
 // coupon
@@ -567,6 +586,7 @@ export interface vendorSetupWizard {
 	city: string;
 	zipCode: string;
 	state: string;
+	storeCategory: string;
 	mapLocation: string;
 	paypal: () => string;
 	bankAccountName: string;
@@ -655,6 +675,8 @@ export interface vendor {
 		}
 
 		vacation: {
+			closingStyle: string;
+
 			instantly: {
 				closingStyle: string;
 				vacationMessage: string;
@@ -668,10 +690,17 @@ export interface vendor {
 			}
 		},
 
-		discount: {
+		amountDiscount: {
 			minimumOrderAmount: string;
-			minimumOrderAmountPercentage: string;
-		}
+			discountPercentage: string;
+		},
+
+
+		quantityDiscount: {
+			minimumQuantity: string,
+			discountPercentage: string,
+		},
+
 
 		minMax: {
 			minimumProductQuantity: string;
@@ -886,14 +915,20 @@ export interface vendor {
 
 	deliveryTime: {
 		deliveryBlockedBuffer: string;
-		days: string;
+		timeSlot: string;
+		orderPerSlot: string;
+		days: string [];
+		choice: string;
 		openingTime: string;
 		closingTime: string;
 		fullDay: string;
-		timeSlot: string;
-		orderPerSlot: string;
 		saveSuccessMessage: string;
 	}
+
+
+	shipStation: {
+		status: string;
+	},
 
 	socialProfileUrls: {
 		facebook: string;
@@ -916,6 +951,16 @@ export interface vendor {
 		refundPolicyHtmlBody: string;
 		saveSuccessMessage: string;
 	}
+
+	seo: {
+		seoTitle: string;
+		metaDescription: string;
+		metaKeywords: string;
+		facebookTitle: string;
+		facebookDescription: string;
+		twitterTitle: string;
+		twitterDescription: string;
+	},
 
 	withdraw: {
 
@@ -995,7 +1040,7 @@ export interface customer {
 		lastName: () => string;
 		role: string;
 		username: () => string;
-		storename: () => string;
+		shopName: () => string;
 		companyName: string;
 		companyId: string;
 		vatNumber: string;
@@ -1017,16 +1062,51 @@ export interface customer {
 		swiftCode: string;
 		iban: string;
 		biography: string;
-		addressChangeSuccessMessage: string;
-		getSupport: {
-			subject: string;
-			message: string;
-			supportSubmitSuccessMessage: string;
+		billing: {
+			firstName: string;
+			lastName: string;
+			companyName: string;
+			companyId: string;
+			vatNumber: string;
+			bankName: string;
+			bankIban: string;
+			street1: string;
+			street2: string;
+			city: string;
+			zipCode: string;
+			country: string;
+			state: string;
+			email:  string;
+			phone: string;
+		},
 
-			username: string;
-			userPassword: string;
-		}
+		shipping: {
+			firstName: string;
+			lastName: string;
+			companyName: string;
+			street1: string;
+			street2: string;
+			city: string;
+			zipCode: string;
+			country: string;
+			state: string;
+			phone: string;
+		},
+
 	}
+
+	getSupport: {
+		subject: string;
+		message: string;
+		supportSubmitSuccessMessage: string;
+
+		username: string;
+		userPassword: string;
+	},
+
+	supportTicket: {
+		message: () => string;
+	},
 
 	rma: {
 		sendMessage: string;
@@ -1040,10 +1120,13 @@ export interface customer {
 		following: string;
 	}
 
-	supportTicket: {
-		message: () => string;
-	}
-	registrationErrorMessage: string;
+	address: {
+		addressChangeSuccessMessage: string;
+	},
+
+	registration:{
+		registrationErrorMessage: string;
+	},
 }
 
 

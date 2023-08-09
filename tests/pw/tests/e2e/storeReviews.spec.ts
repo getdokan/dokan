@@ -78,5 +78,9 @@ test.describe('Store Reviews test', () => {
 		await customer.reviewStore(data.predefined.vendorStores.vendor1, data.store);
 	});
 
+	//todo: vendor can only view store review
+	//todo: customer can view store review
+	//todo: admin can view store review
+
 
 });

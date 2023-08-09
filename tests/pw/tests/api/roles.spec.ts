@@ -12,7 +12,7 @@ test.beforeAll(async ({ request }) => {
 
 test.describe('roles api test', () => {
 
-	test('get all user roles @lite @pro', async () => {
+	test('get all user roles @lite', async () => {
 		const [response, responseBody] = await apiUtils.get(endPoints.getAllUserRoles);
 		expect(response.ok()).toBeTruthy();
 		expect(responseBody).toBeTruthy();

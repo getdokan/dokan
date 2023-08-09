@@ -7,6 +7,7 @@ declare global {
             ADMIN: string;
             ADMIN_PASSWORD: string;
             VENDOR: string;
+            VENDOR2: string;
             USER_PASSWORD: string;
             CUSTOMER: string;
             ADMIN_ID: string;

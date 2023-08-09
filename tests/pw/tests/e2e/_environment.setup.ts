@@ -6,7 +6,8 @@ import { payloads } from 'utils/payloads';
 import { dbUtils } from 'utils/dbUtils';
 import { dbData } from 'utils/dbData';
 import { data } from 'utils/testData';
-import { VendorPage } from 'pages/vendorPage';
+import { VendorSettingsPage } from 'pages/vendorSettingsPage';
+
 
 const { CUSTOMER_ID, DOKAN_PRO } = process.env;
 
@@ -22,7 +23,7 @@ setup.describe('setup site & woocommerce & user settings', () => {
 		apiUtils = new ApiUtils(request);
 	});
 
-	setup('check active plugins @lite @pro', async () => {
+	setup('check active plugins @lite', async () => {
 		setup.skip(!process.env.CI, 'skip plugin check on local');
 		const activePlugins = (await apiUtils.getAllPlugins({ status:'active' })).map((a: { plugin: string }) => (a.plugin).split('/')[1]);
 		expect(activePlugins).toEqual(expect.arrayContaining(data.plugin.plugins));
@@ -34,12 +35,12 @@ setup.describe('setup site & woocommerce & user settings', () => {
 		expect(activeModules).toEqual(expect.arrayContaining(data.modules.modules));
 	});
 
-	setup('set wp settings @lite @pro', async () => {
+	setup('set wp settings @lite', async () => {
 		const siteSettings = await apiUtils.setSiteSettings(payloads.siteSettings);
 		expect(siteSettings).toEqual(expect.objectContaining(payloads.siteSettings));
 	});
 
-	// setup.skip('reset dokan previous settings @lite @pro', async () => {
+	// setup.skip('reset dokan previous settings @lite', async () => {
 	// 	setup.skip(!!process.env.CI, 'skip previous settings check');
 
 	// 	// previous seller badges
@@ -48,18 +49,16 @@ setup.describe('setup site & woocommerce & user settings', () => {
 	// 	await apiUtils.deleteAllQuoteRules();
 	// });
 
-	setup('set wc settings @lite @pro', async () => {
-
+	setup('set wc settings @lite', async () => {
 		await apiUtils.updateBatchWcSettingsOptions('general', payloads.general);
 		await apiUtils.updateBatchWcSettingsOptions('account', payloads.account);
 	});
 
-	setup('set tax rate @lite @pro', async () => {
-
+	setup('set tax rate @lite', async () => {
 		await apiUtils.setUpTaxRate(payloads.enableTaxRate, payloads.createTaxRate);
 	});
 
-	setup('set shipping methods @lite @pro', async () => {
+	setup('set shipping methods @lite', async () => {
 
 		// delete previous shipping zones
 		const allShippingZoneIds = (await apiUtils.getAllShippingZones()).map((a: { id: string }) => a.id);
@@ -84,13 +83,13 @@ setup.describe('setup site & woocommerce & user settings', () => {
 
 	});
 
-	setup('set basic payments @lite @pro', async () => {
+	setup('set basic payments @lite', async () => {
 		await apiUtils.updatePaymentGateway('bacs', payloads.bcs);
 		await apiUtils.updatePaymentGateway('cheque', payloads.cheque);
 		await apiUtils.updatePaymentGateway('cod', payloads.cod);
 	});
 
-	setup('add categories and attributes @lite @pro', async () => {
+	setup('add categories and attributes @lite', async () => {
 
 		// delete previous categories
 		const allCategoryIds = (await apiUtils.getAllCategories()).map((a: { id: string }) => a.id);
@@ -126,7 +125,7 @@ setup.describe('setup  user settings', () => {
 
 
 	// Vendor Details
-	setup('add vendor product @lite @pro', async () => {
+	setup('add vendor product @lite', async () => {
 
 
 		// delete previous store products with predefined name if any
@@ -151,7 +150,7 @@ setup.describe('setup  user settings', () => {
 		// }
 	});
 
-	// setup.skip('admin add vendor products @lite @pro', async () => {
+	// setup.skip('admin add vendor products @lite', async () => {
 
 	// 	const product = payloads.createProduct();
 	// 	await apiUtils.createProduct({ ...product, status: 'publish', in_stock: false }, payloads.vendorAuth);
@@ -169,27 +168,41 @@ setup.describe('setup  user settings', () => {
 
 setup.describe('setup dokan settings', () => {
 
-	setup('set dokan general settings @lite @pro', async () => {
+	let apiUtils: ApiUtils;
+
+	// eslint-disable-next-line require-await
+	setup.beforeAll(async ({ request }) => {
+		apiUtils = new ApiUtils(request);
+	});
+
+	setup('set dokan general settings @lite', async () => {
 		await dbUtils.setDokanSettings(dbData.dokan.optionName.general, dbData.dokan.generalSettings);
 	});
 
-	setup('admin set dokan selling settings @lite @pro', async () => {
+	setup('admin set dokan selling settings @lite', async () => {
 		await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, dbData.dokan.sellingSettings);
 	});
 
-	setup('admin set dokan withdraw settings @lite @pro', async () => {
+	setup('admin set dokan withdraw settings @lite', async () => {
 		await dbUtils.setDokanSettings(dbData.dokan.optionName.withdraw, dbData.dokan.withdrawSettings);
 	});
 
-	setup('admin set dokan reverse withdraw settings @lite @pro', async () => {
+	setup('admin set dokan reverse withdraw settings @lite', async () => {
 		await dbUtils.setDokanSettings(dbData.dokan.optionName.reverseWithdraw, dbData.dokan.reverseWithdrawSettings);
 	});
 
-	setup('admin set dokan appearance settings @lite @pro', async () => {
+	// setup('admin set dokan page settings @lite', async () => {
+	// 	const pageId = await apiUtils.getPageId('sample-page', payloads.adminAuth);
+	// 	const pageSettings = await dbUtils.getDokanSettings(dbData.dokan.optionName.page);
+	// 	pageSettings['reg_tc_page'] = pageId;
+	// 	await dbUtils.setDokanSettings(dbData.dokan.optionName.page, dbData.dokan.pageSettings);
+	// });
+
+	setup('admin set dokan appearance settings @lite', async () => {
 		await dbUtils.setDokanSettings(dbData.dokan.optionName.appearance, dbData.dokan.appearanceSettings);
 	});
 
-	setup('admin set dokan privacy policy settings @lite @pro', async () => {
+	setup('admin set dokan privacy policy settings @lite', async () => {
 		await dbUtils.setDokanSettings(dbData.dokan.optionName.privacyPolicy, dbData.dokan.privacyPolicySettings);
 	});
 
@@ -253,7 +266,7 @@ setup.describe('setup dokan settings e2e', () => {
 
 	let productAdvertisingPage: ProductAdvertisingPage;
 	let reverseWithdrawsPage: ReverseWithdrawsPage;
-	let vendorPage: VendorPage;
+	let vendorPage: VendorSettingsPage;
 	let aPage: Page, vPage: Page;
 	let apiUtils: ApiUtils;
 
@@ -266,7 +279,7 @@ setup.describe('setup dokan settings e2e', () => {
 
 		const vendorContext = await browser.newContext({ storageState: data.auth.vendorAuthFile });
 		vPage = await vendorContext.newPage();
-		vendorPage = new VendorPage(vPage);
+		vendorPage = new VendorSettingsPage(vPage);
 
 		apiUtils = new ApiUtils(request);
 
@@ -292,7 +305,7 @@ setup.describe('setup dokan settings e2e', () => {
 		await reverseWithdrawsPage.reCreateReverseWithdrawalPaymentViaSettingsSave();
 	});
 
-	setup('reverse Withdraw payment product exists @lite @pro', async ( ) => {
+	setup('reverse Withdraw payment product exists @lite', async ( ) => {
 		const product = await apiUtils.productExistsOrNot('Reverse Withdrawal Payment',  payloads.adminAuth);
 		expect(product).toBeTruthy();
 	});
@@ -304,35 +317,35 @@ setup.describe('setup dokan settings e2e', () => {
 
 	// dokan settings
 
-	// 	setup.skip('admin set WpSettings @lite @pro', async ()=> {
+	// 	setup.skip('admin set WpSettings @lite', async ()=> {
 	// 		await adminPage.setPermalinkSettings(data.wpSettings.permalink);
 	// 	});
 
-	// 	setup('admin set dokan general settings @lite @pro', async ()=> {
+	// 	setup('admin set dokan general settings @lite', async ()=> {
 	// 		await adminPage.setDokanGeneralSettings(data.dokanSettings.general);
 	// 	});
 
-	// 	setup('admin set dokan selling settings @lite @pro', async ()=> {
+	// 	setup('admin set dokan selling settings @lite', async ()=> {
 	// 		await adminPage.setDokanSellingSettings(data.dokanSettings.selling);
 	// 	});
 
-	// 	setup('admin set dokan withdraw settings @lite @pro', async ()=> {
+	// 	setup('admin set dokan withdraw settings @lite', async ()=> {
 	// 		await adminPage.setDokanWithdrawSettings(data.dokanSettings.withdraw);
 	// 	});
 
-	// 	setup('admin set dokan reverse withdraw settings @lite @pro', async ()=> {
+	// 	setup('admin set dokan reverse withdraw settings @lite', async ()=> {
 	// 		await adminPage.setDokanReverseWithdrawSettings(data.dokanSettings.reverseWithdraw);
 	// 	});
 
-	// 	setup('admin set dokan page settings @lite @pro', async ()=> {
+	// 	setup('admin set dokan page settings @lite', async ()=> {
 	// 		await adminPage.setPageSettings(data.dokanSettings.page);
 	// 	});
 
-	// 	setup('admin set dokan appearance settings @lite @pro', async ()=> {
+	// 	setup('admin set dokan appearance settings @lite', async ()=> {
 	// 		await adminPage.setDokanAppearanceSettings(data.dokanSettings.appearance);
 	// 	});
 
-	// 	setup('admin set dokan privacy policy settings @lite @pro', async ()=> {
+	// 	setup('admin set dokan privacy policy settings @lite', async ()=> {
 	// 		await adminPage.setDokanPrivacyPolicySettings(data.dokanSettings.privacyPolicy);
 	// 	});
 

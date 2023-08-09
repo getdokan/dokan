@@ -2,7 +2,6 @@ import { Page } from '@playwright/test';
 import { VendorPage } from 'pages/vendorPage';
 import { selector } from 'pages/selectors';
 import { data } from 'utils/testData';
-import { helpers } from 'utils/helpers';
 import { product, bookingResource } from 'utils/interfaces';
 
 
@@ -145,7 +144,7 @@ export class BookingPage extends VendorPage {
 	// update booking product fields
 	async updateBookingProductFields(product: product['booking']){
 		await this.clearAndType(selector.vendor.vBooking.booking.productName, product.name);
-		// await this.addCategory(product.category);
+		// await this.addProductCategory(product.category);
 		// general booking options
 		await this.selectByValue(selector.vendor.vBooking.booking.bookingDurationType, product.bookingDurationType);
 		await this.clearAndType(selector.vendor.vBooking.booking.bookingDurationMax, product.bookingDurationMax);
@@ -170,7 +169,7 @@ export class BookingPage extends VendorPage {
 	// vendor add booking product
 	async addBookingProduct(product: product['booking']): Promise<void> {
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.booking);
-		await this.click(selector.vendor.vBooking.addNewBookingProduct);
+		await this.clickAndWaitForLoadState(selector.vendor.vBooking.addNewBookingProduct);
 		await this.updateBookingProductFields(product);
 		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.productBooking, selector.vendor.vBooking.booking.saveProduct, 302);
 		await this.toContainText(selector.vendor.product.updatedSuccessMessage, product.saveSuccessMessage);
@@ -204,7 +203,7 @@ export class BookingPage extends VendorPage {
 
 	// vendor can't buy own booking product
 	async cantBuyOwnBookingProduct(productName: string){
-		await this.goIfNotThere(data.subUrls.frontend.productDetails(helpers.slugify(productName)));
+		await this.goToProductDetails(productName);
 		await this.notToBeVisible(selector.vendor.vBooking.viewBooking.bookingCalendar);
 		await this.notToBeVisible(selector.vendor.vBooking.viewBooking.bookNow);
 	}
@@ -234,7 +233,7 @@ export class BookingPage extends VendorPage {
 		}
 
 		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.booking,  selector.vendor.vBooking.filters.filter);
-		await this.notToHaveCount(selector.vendor.vBooking.numberOfRows, 0);
+		await this.notToHaveCount(selector.vendor.vBooking.numberOfRowsFound, 0);
 
 	}
 

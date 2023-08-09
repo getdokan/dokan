@@ -3,7 +3,7 @@ import { VendorPage } from 'pages/vendorPage';
 import { selector } from 'pages/selectors';
 import { data } from 'utils/testData';
 import { product } from 'utils/interfaces';
-import { helpers } from 'utils/helpers';
+
 
 export class AuctionsPage extends VendorPage {
 
@@ -75,7 +75,7 @@ export class AuctionsPage extends VendorPage {
 	// update auction product fields
 	async updateAuctionProductFields(product: product['auction']){
 		await this.clearAndType(selector.vendor.vAuction.auction.productName, product.name);
-		// await this.addCategory(product.category);
+		// await this.addProductCategory(product.category);
 		await this.selectByValue(selector.vendor.vAuction.auction.itemCondition, product.itemCondition);
 		await this.selectByValue(selector.vendor.vAuction.auction.auctionType, product.auctionType);
 		await this.clearAndType(selector.vendor.vAuction.auction.startPrice, product.regularPrice());
@@ -130,7 +130,7 @@ export class AuctionsPage extends VendorPage {
 
 	// vendor can't bid own auction product
 	async cantBidOwnProduct(productName: string){
-		await this.goIfNotThere(data.subUrls.frontend.productDetails(helpers.slugify(productName)));
+		await this.goToProductDetails(productName);
 		await this.toBeVisible(selector.vendor.vAuction.viewAuction.noBidOption);
 	}
 
@@ -188,7 +188,7 @@ export class AuctionsPage extends VendorPage {
 	// customer
 
 	async bidAuctionProduct(productName: string){
-		await this.goIfNotThere(data.subUrls.frontend.productDetails(helpers.slugify(productName)));
+		await this.goToProductDetails(productName);
 		await this.click(selector.vendor.vAuction.viewAuction.bidButton);
 
 	}

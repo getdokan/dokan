@@ -26,7 +26,7 @@ test.describe('Dokan pro feature promo test', () => {
 	});
 
 
-	test('dokan pro features promo @lite @pro', async ( ) => {
+	test('dokan pro features promo @lite', async ( ) => {
 		await apiUtils.updatePlugin('dokan-pro/dokan-pro', { status:'inactive' }, payloads.adminAuth);
 		await admin.dokanProPromo();
 		await apiUtils.updatePlugin('dokan-pro/dokan-pro', { status:'active' }, payloads.adminAuth);

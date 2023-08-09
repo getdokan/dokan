@@ -30,15 +30,15 @@ test.describe('Shop functionality test', () => {
 	// shop page
 
 
-	test('shop page is rendering properly @lite @pro @explo', async ( ) => {
+	test('shop page is rendering properly @lite @explo', async ( ) => {
 		await customer.shopRenderProperly();
 	});
 
-	test('customer can sort products @lite @pro', async ( ) => {
+	test('customer can sort products @lite', async ( ) => {
 		await customer.sortProducts('price');
 	});
 
-	test('customer can search product @lite @pro', async ( ) => {
+	test('customer can search product @lite', async ( ) => {
 		await customer.searchProduct(data.predefined.simpleProduct.product1.name);
 	});
 
@@ -47,7 +47,7 @@ test.describe('Shop functionality test', () => {
 		// await customer.productOnMap(data.predefined.simpleProduct.product1.name);
 	});
 
-	test('customer can go to product details from shop @lite @pro', async ( ) => {
+	test('customer can go to product details from shop @lite', async ( ) => {
 		await customer.goToProductDetails(data.predefined.simpleProduct.product1.name);
 	});
 

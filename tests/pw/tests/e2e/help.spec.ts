@@ -23,11 +23,11 @@ test.describe('Dokan help test', () => {
 		await aPage.close();
 	});
 
-	test('dokan help menu page is rendering properly @lite @pro @explo', async ( ) => {
+	test('dokan help menu page is rendering properly @lite @explo', async ( ) => {
 		await admin.adminHelpRenderProperly();
 	});
 
-	test('dokan get help dropdown is rendering properly @lite @pro @explo', async ( ) => {
+	test('dokan get help dropdown is rendering properly @lite @explo', async ( ) => {
 		await admin.adminGetHelpDropdownRenderProperly();
 	});
 

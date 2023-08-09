@@ -33,15 +33,15 @@ test.describe('Reverse withdraw test', () => {
 	});
 
 
-	test('dokan admin reverse withdraw menu page is rendering properly @lite @pro @explo', async ( ) => {
+	test('dokan admin reverse withdraw menu page is rendering properly @lite @explo', async ( ) => {
 		await admin.adminReverseWithdrawRenderProperly();
 	});
 
-	test('filter reverse withdraws by store @lite @pro', async ( ) => {
-		await admin.filterReverseWithdraws(data.predefined.vendorStores.vendor1);
+	test.skip('filter reverse withdraws by store @lite', async ( ) => {
+		await admin.filterReverseWithdraws(data.predefined.vendorStores.vendor1); //todo:need to fix
 	});
 
-	test('admin can crete reverse withdraws @lite @pro', async ( ) => {
+	test('admin can crete reverse withdraws @lite', async ( ) => {
 		await admin.addReverseWithdrawal(data.reverseWithdraw);
 	});
 

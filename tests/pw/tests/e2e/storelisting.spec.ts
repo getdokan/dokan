@@ -29,19 +29,19 @@ test.describe('Store listing functionality test', () => {
 	// store listing
 
 
-	test('dokan store list page is rendering properly @lite @pro @explo', async ( ) => {
+	test('dokan store list page is rendering properly @lite @explo', async ( ) => {
 		await customer.storeListRenderProperly();
 	});
 
-	test('customer can sort stores @lite @pro', async ( ) => {
+	test('customer can sort stores @lite', async ( ) => {
 		await customer.sortStores(data.storeList.sort);
 	});
 
-	test('customer can change store view layout @lite @pro', async ( ) => {
+	test('customer can change store view layout @lite', async ( ) => {
 		await customer.storeViewLayout(data.storeList.layout.list);
 	});
 
-	test('customer can search store @lite @pro', async ( ) => {
+	test('customer can search store @lite', async ( ) => {
 		await customer.searchStore(data.predefined.vendorStores.vendor1);
 	});
 
@@ -50,7 +50,7 @@ test.describe('Store listing functionality test', () => {
 		// await customer.storeOnMap(data.predefined.vendorStores.vendor1);
 	});
 
-	test('customer can go to single store from store list @lite @pro', async ( ) => {
+	test('customer can go to single store from store list @lite', async ( ) => {
 		await customer.goToSingleStoreFromStoreListing(data.predefined.vendorStores.vendor1);
 	});
 

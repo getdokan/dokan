@@ -32,7 +32,8 @@ export class ProductReviewsPage extends VendorPage {
 		if (noReviewsFound){
 			return;
 		}
-		//todo: add more fields
+
+		await this.notToHaveCount(selector.vendor.vReviews.numberOfRowsFound, 0);
 
 	}
 
@@ -94,7 +95,7 @@ export class ProductReviewsPage extends VendorPage {
 
 
 	// product review bulk action
-	async productReviewsBulkAuction(action: string){
+	async productReviewsBulkActions(action: string){
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.reviews);
 
 		// ensure row exists

@@ -15,7 +15,7 @@ test.beforeAll(async ({ request }) => {
 
 test.describe('product block api test', () => {
 
-	test('get product block details @lite @pro', async () => {
+	test('get product block details @lite', async () => {
 		[, productId,] = await apiUtils.createProduct(payloads.createDownloadableProduct());
 		const [response, responseBody] = await apiUtils.get(endPoints.getProductBlockDetails(productId));
 		expect(response.ok()).toBeTruthy();

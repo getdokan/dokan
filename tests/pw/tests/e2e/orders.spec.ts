@@ -34,48 +34,48 @@ test.describe('Order functionality test', () => {
 
 	// orders
 
-	test('vendor order menu page is rendering properly @lite @pro @explo', async ( ) => {
+	test('vendor order menu page is rendering properly @lite @explo', async ( ) => {
 		await vendor.vendorOrdersRenderProperly();
 	});
 
-	test('vendor can export all orders @lite @pro', async ( ) => {
+	test('vendor can export all orders @lite', async ( ) => {
 		await vendor.exportOrders('all');
 	});
 
-	test('vendor can export filtered orders @lite @pro', async ( ) => {
+	test('vendor can export filtered orders @lite', async ( ) => {
 		await vendor.filterOrders('by-customer', data.customer.username);
 		await vendor.exportOrders('filtered');
 	});
 
-	test('vendor can search order @lite @pro', async ( ) => {
+	test('vendor can search order @lite', async ( ) => {
 		await vendor.searchOrder(orderId);
 	});
 
-	test('vendor can filter orders by customers @lite @pro', async ( ) => {
+	test('vendor can filter orders by customers @lite', async ( ) => {
 		await vendor.filterOrders('by-customer', data.customer.username);
 	});
 
-	test('vendor can view order details @lite @pro', async ( ) => {
+	test('vendor can view order details @lite', async ( ) => {
 		await vendor.viewOrderDetails(orderId);
 	});
 
-	test('vendor can update order status on table @lite @pro', async ( ) => {
+	test('vendor can update order status on table @lite', async ( ) => {
 		await vendor.updateOrderStatusOnTable(orderId, 'processing');
 	});
 
-	test('vendor can update order status on order details @lite @pro', async ( ) => {
+	test('vendor can update order status on order details @lite', async ( ) => {
 		await vendor.updateOrderStatus(orderId, 'wc-completed');
 	});
 
-	test('vendor can add order note @lite @pro', async ( ) => {
+	test('vendor can add order note @lite', async ( ) => {
 		await vendor.addOrderNote(orderId, data.orderNote.customer);
 	});
 
-	test('vendor can add private order note @lite @pro', async ( ) => {
+	test('vendor can add private order note @lite', async ( ) => {
 		await vendor.addOrderNote(orderId, data.orderNote.private);
 	});
 
-	test('vendor can add tracking details to order @lite @pro', async ( ) => {
+	test('vendor can add tracking details to order @lite', async ( ) => {
 		await vendor.addTrackingDetails(orderId, data.orderTrackingDetails);
 	});
 
@@ -85,13 +85,13 @@ test.describe('Order functionality test', () => {
 
 	// todo: update shipment
 
-	// test.skip('vendor can add downloadable product permission to order @lite @pro', async ( ) => {
+	// test.skip('vendor can add downloadable product permission to order @lite', async ( ) => {
 	// 	const [,, downloadableProductName] = await apiUtils.createProduct(payloads.createDownloadableProduct(), payloads.vendorAuth);
 	// 	await vendor.addDownloadableProduct(orderId, downloadableProductName);
 	// 	await vendor.removeDownloadableProduct(orderId, downloadableProductName);
 	// });
 
-	test('vendor can perform order bulk action @lite @pro', async ( ) => {
+	test('vendor can perform order bulk action @lite', async ( ) => {
 		await vendor.orderBulkAction('completed', orderId);
 	});
 

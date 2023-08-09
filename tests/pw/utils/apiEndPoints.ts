@@ -468,12 +468,13 @@ export const endPoints = {
 
 	wp: {
 
+		// todo : add all wp endpoints
 		// users
 		getAllUsers: `${SERVER_URL}/wp/v2/users`,
 		getCurrentUser: `${SERVER_URL}/wp/v2/users/me`,
 		getUserById: (userId: string) => `${SERVER_URL}/wp/v2/users/${userId}`,
 		createUser: `${SERVER_URL}/wp/v2/users`,
-		updateUser: `${SERVER_URL}/wp/v2/users`,
+		updateUser: (userId: string) => `${SERVER_URL}/wp/v2/users/${userId}`,
 		deleteUser: (userId: string) => `${SERVER_URL}/wp/v2/users/${userId}`,
 
 		//plugins
@@ -481,6 +482,14 @@ export const endPoints = {
 		getSinglePlugin: (plugin: string) => `${SERVER_URL}/wp/v2/plugins/${plugin}`,
 		updatePlugin: (plugin: string) => `${SERVER_URL}/wp/v2/plugins/${plugin}`,
 		deletePlugin: (plugin: string) => `${SERVER_URL}/wp/v2/plugins/${plugin}`,
+
+		//pages
+		getAllPages: `${SERVER_URL}/wp/v2/pages`,
+		getSinglePage: (pageId: string) => `${SERVER_URL}/wp/v2/pages/${pageId}`,
+		createPage: `${SERVER_URL}/wp/v2/pages`,
+		updatePage: (pageId: string) => `${SERVER_URL}/wp/v2/pages/${pageId}`,
+		deletePage: (pageId: string) => `${SERVER_URL}/wp/v2/pages/${pageId}`,
+
 
 		//media
 		getAllMediaItems: `${SERVER_URL}/wp/v2/media`,

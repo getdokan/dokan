@@ -15,37 +15,37 @@ test.beforeAll(async ({ request }) => {
 
 test.describe('attribute term api test', () => {
 
-	test('get all attribute terms @lite @pro', async () => {
+	test('get all attribute terms @lite', async () => {
 		const [response, responseBody] = await apiUtils.get(endPoints.getAllAttributeTerms(attributeId));
 		expect(response.ok()).toBeTruthy();
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('get single attribute term @lite @pro', async () => {
+	test('get single attribute term @lite', async () => {
 		const [response, responseBody] = await apiUtils.get(endPoints.getSingleAttributeTerm(attributeId, attributeTermId));
 		expect(response.ok()).toBeTruthy();
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('create an attribute term @lite @pro', async () => {
+	test('create an attribute term @lite', async () => {
 		const [response, responseBody] = await apiUtils.post(endPoints.createAttributeTerm(attributeId), { data: payloads.createAttributeTerm() });
 		expect(response.ok()).toBeTruthy();
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('update an attribute term  @lite @pro', async () => {
+	test('update an attribute term  @lite', async () => {
 		const [response, responseBody] = await apiUtils.put(endPoints.updateAttributeTerm(attributeId, attributeTermId), { data: payloads.updateAttributeTerm() });
 		expect(response.ok()).toBeTruthy();
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('delete an attribute term @lite @pro', async () => {
+	test('delete an attribute term @lite', async () => {
 		const [response, responseBody] = await apiUtils.delete(endPoints.deleteAttributeTerm(attributeId, attributeTermId));
 		expect(response.ok()).toBeTruthy();
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('update batch attribute terms @lite @pro', async () => {
+	test('update batch attribute terms @lite', async () => {
 		const allAttributeTermIds = (await apiUtils.getAllAttributeTerms(attributeId)).map((a: { id: unknown; }) => a.id);
 
 		const batchAttributeTerms: object[] = [];

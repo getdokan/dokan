@@ -10,7 +10,7 @@ import { payloads } from 'utils/payloads';
 const { VENDOR_ID, CUSTOMER_ID } = process.env;
 
 
-test.describe('Abuse report test', () => {
+test.describe('Product Enquiry test', () => {
 
 	// let admin: ProductEnquiryPage;
 	let customer: ProductEnquiryPage;

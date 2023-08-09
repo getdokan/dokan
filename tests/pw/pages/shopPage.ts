@@ -55,7 +55,7 @@ export class ShopPage extends CustomerPage {
 		await this.goIfNotThere(data.subUrls.frontend.shop);
 		if(!DOKAN_PRO){
 			await this.clearAndType(selector.customer.cShop.searchProductLite, productName);
-			await this.pressAndWaitForNavigation(data.key.enter);
+			await this.pressAndWaitForLoadState(data.key.enter);
 			await this.toContainText(selector.customer.cSingleProduct.productDetails.productTitle, productName );
 		} else {
 			await this.clearAndType(selector.customer.cShop.filters.searchProduct, productName);

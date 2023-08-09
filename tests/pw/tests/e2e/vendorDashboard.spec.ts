@@ -22,7 +22,7 @@ test.describe('Vendor dashboard test', () => {
 	});
 
 
-	test('vendor dashboard is rendering properly @lite @pro @explo', async ( ) => {
+	test('vendor dashboard is rendering properly @lite @explo', async ( ) => {
 		await vendor.vendorDashboardRenderProperly();
 	});
 

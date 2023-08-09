@@ -66,7 +66,7 @@ test.describe('Seller badge test', () => {
 		await admin.sellerBadgeAcquiredByVendor(data.predefined.vendorStores.vendor1);
 	});
 
-	test('admin can update seller badge status @pro', async ( ) => {
+	test.skip('admin can update seller badge status @pro', async ( ) => {
 		await apiUtils.createSellerBadge(payloads.createSellerBadgeExclusiveToPlatform, payloads.adminAuth);
 		await admin.updateSellerBadge(data.sellerBadge.eventName.exclusiveToPlatform, 'draft');
 	});

@@ -24,11 +24,11 @@ test.describe('Admin user functionality test', () => {
 	});
 
 
-	test('admin can login @lite @pro', async ( ) => {
+	test('admin can login @lite', async ( ) => {
 		await loginPage.adminLogin(data.admin);
 	});
 
-	test('admin can logout @lite @pro', async ( ) => {
+	test('admin can logout @lite', async ( ) => {
 		await loginPage.adminLogin(data.admin);
 		await loginPage.logoutBackend();
 	});
@@ -56,11 +56,11 @@ test.describe('Admin functionality test', () => {
 	});
 
 
-	// test('admin can add categories @lite @pro', async ( ) => {
+	// test('admin can add categories @lite', async ( ) => {
 	// 	await adminPage.addCategory(data.product.category.randomCategory());
 	// });
 
-	// test('admin can add attributes @lite @pro', async ( ) => {
+	// test('admin can add attributes @lite', async ( ) => {
 	// 	await adminPage.addAttributes(data.product.attribute.randomAttribute());
 	// });
 
@@ -122,11 +122,11 @@ test.describe('Admin functionality test', () => {
 	//     await adminPage.setupStripeExpress(data.payment)
 	// })
 
-	test('dokan notice @lite @pro', async ( ) => {
+	test('dokan notice @lite', async ( ) => {
 		await adminPage.dokanNotice();
 	});
 
-	test('dokan promotion @lite @pro', async ( ) => {
+	test('dokan promotion @lite', async ( ) => {
 		await adminPage.dokanPromotion();
 	});
 

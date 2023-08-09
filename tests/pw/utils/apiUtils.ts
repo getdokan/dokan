@@ -730,6 +730,7 @@ export class ApiUtils {
 		return [responseBody, customerId];
 	}
 
+
 	// delete customer
 	async deleteCustomer(userId: string, auth? : auth): Promise<responseBody> {
 		const [, responseBody] = await this.delete(endPoints.wc.deleteCustomer(userId), { headers: auth });
@@ -1084,10 +1085,11 @@ export class ApiUtils {
 	}
 
 	// update user
-	async updateUser(payload: object, auth? : auth): Promise<responseBody> {
-		const [, responseBody] = await this.put(endPoints.wp.createUser, { data: payload, headers: auth });
+	async updateUser(userId: string, payload: object, auth? : auth): Promise<responseBody> {
+		const [, responseBody] = await this.put(endPoints.wp.updateUser(userId), { data: payload, headers: auth });
 		return responseBody;
 	}
+
 
 	// delete user
 	async deleteUser(userId: string, auth? : auth): Promise<responseBody> {
@@ -1233,6 +1235,22 @@ export class ApiUtils {
 	async createPost(payload: object, auth? : auth): Promise<responseBody> {
 		const [, responseBody] = await this.put(endPoints.wp.createPost, { data: payload, headers: auth });
 		return responseBody;
+	}
+
+	// get all mediaItems
+	async getAllPages(auth? : auth): Promise<responseBody> {
+		const [, responseBody] = await this.get(endPoints.wp.getAllPages, { params: { per_page:100 }, headers: auth });
+		return responseBody;
+	}
+
+	async getPageId(pageSlug:string, auth?: auth): Promise<string> {
+		const allPages = await this.getAllPages(auth);
+		const pageId = (allPages.find((o: { slug: unknown; }) => o.slug === pageSlug)).id;
+		return pageId;
+	}
+
+	async createPage(){
+		//todo: imp***** create page with only req parameters, crate page assign to sample page/ subscription shortcode or other shortcode test
 	}
 
 	/**

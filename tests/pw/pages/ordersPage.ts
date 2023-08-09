@@ -95,7 +95,7 @@ export class OrdersPage extends VendorPage {
 		}
 
 		await this.clickAndWaitForLoadState(selector.vendor.orders.filters.filter);
-		await this.notToHaveCount(selector.vendor.orders.numberOfRows, 0);
+		await this.notToHaveCount(selector.vendor.orders.numberOfRowsFound, 0);
 
 	}
 
@@ -104,14 +104,52 @@ export class OrdersPage extends VendorPage {
 	async goToOrderDetails(orderNumber: string): Promise<void> {
 		await this.searchOrder(orderNumber);
 		await this.clickAndWaitForLoadState(selector.vendor.orders.view(orderNumber));
-		await this.toContainText(selector.vendor.orders.orderNumber, orderNumber);
+		await this.toContainText(selector.vendor.orders.orderDetails.orderNumber, orderNumber);
 	}
 
 
 	// view order details
 	async viewOrderDetails(orderNumber: string): Promise<void> {
 		await this.goToOrderDetails(orderNumber);
-		//todo:  add more files to assert
+
+		// order details elements are visible
+		await this.toBeVisible(selector.vendor.orders.orderDetails.orderNumber);
+		await this.toBeVisible(selector.vendor.orders.orderDetails.orderDate);
+		await this.toBeVisible(selector.vendor.orders.orderDetails.orderTotal);
+		//todo:  add more fields to assert
+		//todo:  add conditions: for shipment, downloadable product
+
+		// general details elements are visible
+		await this.multipleElementVisible(selector.vendor.orders.generalDetails);
+
+		await this.click(selector.vendor.orders.status.edit);
+
+		// status elements are visible
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		const { selectedOrderStatus, edit, ...status } = selector.vendor.orders.status;
+		await this.multipleElementVisible(status);
+
+		// order note elements are visible
+		await this.multipleElementVisible(selector.vendor.orders.orderNote);
+
+		await this.click(selector.vendor.orders.trackingDetails.addTrackingNumber);
+
+		// tracking detail elements are visible
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		const { addTrackingNumber,  ...trackingDetails } = selector.vendor.orders.trackingDetails;
+		await this.multipleElementVisible(trackingDetails);
+
+		await this.click(selector.vendor.orders.shipment.createNewShipment);
+
+		// shipment elements are visible
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		const { createNewShipment, shipmentOrderItem, shipmentOrderItemQty,  ...shipment } = selector.vendor.orders.shipment;
+		await this.multipleElementVisible(shipment);
+
+		// downloadable product elements are visible
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		const { revokeAccess, confirmAction, cancelAction,  ...downloadableProductPermission } = selector.vendor.orders.downloadableProductPermission;
+		await this.multipleElementVisible(downloadableProductPermission);
 	}
 
 
@@ -139,10 +177,10 @@ export class OrdersPage extends VendorPage {
 	// update order status
 	async updateOrderStatus(orderNumber: string, status: string): Promise<void> {
 		await this.goToOrderDetails(orderNumber);
-		await this.click(selector.vendor.orders.edit);
-		await this.selectByValue(selector.vendor.orders.orderStatus, status);
-		await this.clickAndAcceptAndWaitForResponse(data.subUrls.ajax, selector.vendor.orders.updateOrderStatus);
-		const currentStatus = await this.getElementText( selector.vendor.orders.currentOrderStatus);
+		await this.click(selector.vendor.orders.status.edit);
+		await this.selectByValue(selector.vendor.orders.status.orderStatus, status);
+		await this.clickAndAcceptAndWaitForResponse(data.subUrls.ajax, selector.vendor.orders.status.updateOrderStatus);
+		const currentStatus = await this.getElementText( selector.vendor.orders.status.currentOrderStatus);
 		expect(currentStatus?.toLowerCase()).toBe(status.split('-').pop());
 		// expect(currentOrderStatus?.toLowerCase()).toMatch((orderStatus.replace(/(^wc)|(\W)/g, '')).toLowerCase());
 	}
@@ -154,7 +192,7 @@ export class OrdersPage extends VendorPage {
 		await this.clearAndType(selector.vendor.orders.orderNote.orderNoteInput, orderNote.note);
 		await this.selectByLabel(selector.vendor.orders.orderNote.orderNoteType, orderNote.noteType);
 		await this.clickAndAcceptAndWaitForResponse(data.subUrls.ajax, selector.vendor.orders.orderNote.addNote);
-		//todo:  add new test customer can view order note
+		//todo:  add -> new test customer can view order note
 	}
 
 
