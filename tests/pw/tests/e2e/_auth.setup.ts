@@ -1,6 +1,6 @@
 import { test as setup, expect } from '@playwright/test';
 import { LoginPage } from 'pages/loginPage';
-// import { WpPage } from 'pages/wpPage';
+import { WpPage } from 'pages/wpPage';
 import { ApiUtils } from 'utils/apiUtils';
 import { data } from 'utils/testData';
 import { payloads } from 'utils/payloads';
@@ -18,7 +18,7 @@ setup.describe('authenticate users & set permalink', () => {
 		const wpPage = new WpPage(page);
 		await loginPage.adminLogin(data.admin);
 		await wpPage.setPermalinkSettings(data.wpSettings.permalink);
-	process.env.SERVER_URL = process.env.BASE_URL + '/wp-json';
+		process.env.SERVER_URL = process.env.BASE_URL + '/wp-json';
 	});
 
 	setup('add customer @lite', async ({ request }) => {
