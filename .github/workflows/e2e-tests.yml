@@ -54,6 +54,8 @@ jobs:
     steps:
       - name: Checkout testing repo
         uses: actions/checkout@v3
+        with:
+         ref: "refactor/hpos"
 
       - name: Use desired version of NodeJS
         uses: actions/setup-node@v3
@@ -67,7 +69,8 @@ jobs:
           repository: weDevsOfficial/dokan-pro
           token: ${{ secrets.ACCESS_TOKEN }}
           path: "plugins/dokan-pro"
-          ref: "develop"
+          # ref: "develop"
+          ref: "refactor/hpos_support"
 
       - name: Install latest npm
         run: |
