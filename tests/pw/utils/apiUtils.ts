@@ -490,7 +490,7 @@ export class ApiUtils {
 
 	// create withdraw
 	async createWithdraw(payload: object, auth? : auth): Promise<[responseBody, string]> {
-		const response = await this.request.post(endPoints.createWithdraw, { data: payload, headers: auth }); //todo: return withdrawid if already exists
+		const response = await this.request.post(endPoints.createWithdraw, { data: payload, headers: auth }); //todo: return withdrawId if already exists
 		const responseBody = await this.getResponseBody(response, false); //todo:  test if false is necessary there was false which is removed for testing
 		const withdrawId = responseBody.id;
 		return [responseBody, withdrawId];
@@ -1250,7 +1250,7 @@ export class ApiUtils {
 	}
 
 	async createPage(){
-		//todo: imp***** create page with only req parameters, crate page assign to sample page/ subscription shortcode or other shortcode test
+		//todo: imp***** create page with only req parameters, crate page assign to sample page/ subscription shortCode or other shortCode test
 	}
 
 	/**
