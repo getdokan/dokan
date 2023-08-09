@@ -2,7 +2,6 @@
 
 namespace WeDevs\Dokan\Order;
 
-use DateTimeZone;
 use Exception;
 use WC_Order;
 use WC_Order_Refund;
@@ -443,6 +442,7 @@ class Manager {
 
         return wc_get_orders(
             [
+                'type'   => 'shop_order',
                 'parent' => $parent_order_id,
                 'limit'  => -1,
             ]
@@ -884,7 +884,7 @@ class Manager {
             do_action( 'dokan_create_parent_order', $parent_order, $seller_id );
 
             $parent_order->update_meta_data( '_dokan_vendor_id', $seller_id );
-            $parent_order->save_meta_data();
+            $parent_order->save();
 
             // if the request is made from rest api then insert the order data to the sync table
             if ( defined( 'REST_REQUEST' ) ) {
@@ -896,7 +896,7 @@ class Manager {
 
         // flag it as it has a suborder
         $parent_order->update_meta_data( 'has_sub_order', true );
-        $parent_order->save_meta_data();
+        $parent_order->save();
 
         //dokan_log( sprintf( 'Got %s vendors, starting sub order.', count( $vendors ) ) );
 

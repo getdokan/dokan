@@ -74,7 +74,7 @@ function dokan_product_seller_tab( $val ) {
  */
 function dokan_order_show_suborders( $parent_order ) {
     $sub_orders = dokan()->order->get_child_orders( $parent_order );
-    if ( ! $sub_orders ) {
+    if ( empty( $sub_orders ) ) {
         return;
     }
 
