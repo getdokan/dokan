@@ -776,7 +776,7 @@ class Commission {
         } else {
             $shipping_recipient = apply_filters( 'dokan_shipping_fee_recipient', dokan_get_option( 'shipping_fee_recipient', 'dokan_selling', 'seller' ), $order->get_id() );
             $order->update_meta_data( 'shipping_fee_recipient', $shipping_recipient );
-            $order->save_meta_data();
+            $order->save();
         }
 
         return $shipping_recipient;
@@ -808,7 +808,7 @@ class Commission {
         } else {
             $tax_recipient = apply_filters( 'dokan_tax_fee_recipient', dokan_get_option( 'tax_fee_recipient', 'dokan_selling', 'seller' ), $order->get_id() );
             $order->update_meta_data( 'tax_fee_recipient', $tax_recipient );
-            $order->save_meta_data();
+            $order->save();
         }
 
         return $tax_recipient;
@@ -835,7 +835,7 @@ class Commission {
         $shipping_tax_recipient    = apply_filters( 'dokan_shipping_tax_fee_recipient', $shipping_tax_recipient, $order->get_id() );
 
         $order->update_meta_data( 'shipping_tax_fee_recipient', $shipping_tax_recipient, true );
-        $order->save_meta_data();
+        $order->save();
 
         return $shipping_tax_recipient;
     }
