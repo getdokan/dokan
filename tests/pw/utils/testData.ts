@@ -1910,6 +1910,9 @@ export const data = {
 
 	cssStyle:{
 		visibleStyle: 'visibility:visible;',
+		// style="visibility:visible;"
+		// style="display: block;"
+		// style="pointer-events: none;"
 
 	}
 };

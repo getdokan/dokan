@@ -353,8 +353,9 @@ export class CustomerPage extends BasePage {
 			break;
 		}
 
-		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.placeOrder, selector.customer.cCheckout.placeOrder);
+		// await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.placeOrder, selector.customer.cCheckout.placeOrder);
 		// await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.orderReceived, selector.customer.cCheckout.placeOrder);
+		await this.clickAndWaitForResponse(data.subUrls.frontend.orderReceived, selector.customer.cCheckout.placeOrder);
 		await this.toBeVisible(selector.customer.cOrderReceived.orderReceivedSuccessMessage);
 
 		if (getOrderDetails) {

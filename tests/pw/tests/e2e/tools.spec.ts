@@ -32,6 +32,7 @@ test.describe('Tools test', () => {
 	});
 
 	test('admin can regenerate order sync table @pro', async ( ) => {
+		test.skip(true, 'feature is deleted from dokan');
 		await admin.regenerateOrderSyncTable();
 	});
 

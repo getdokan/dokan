@@ -2116,7 +2116,7 @@ export const selector = {
 					licenseKeyInput: '.license-input-fields .license-input-key input',
 					activateLicense: '//button[contains(text(),"Activate License")]',
 				},
-				errorNotice: '.notice-error',
+				errorNotice: '.notice-error.appsero-license-section',
 			},
 
 			// Dokan Setup Wizard
@@ -3004,6 +3004,8 @@ export const selector = {
 			highlightedResult: '.select2-results__option.select2-results__option--highlighted',
 			selectedStoreCategories: '//select[contains(@id,"dokan_store_categories")]/..//li[@class="select2-selection__choice"]',
 			map: 'input#dokan-map-add',
+			mapResultFirst: '(//ul//li[@class="ui-menu-item"]//div[@class="ui-menu-item-wrapper"])[1]',
+			mapResultByName: (location: string) => `//li[@class="ui-menu-item"]//div[contains(text(), "${location}")],`, // New York, NY, USA
 			email: '//input[@id="show_email"]/..//label',
 			continueStoreSetup: '.store-step-continue',
 			skipTheStepStoreSetup: '.store-step-skip-btn',
@@ -4510,7 +4512,7 @@ export const selector = {
 			viewBooking: {
 				productImage: '.woocommerce-product-gallery__image--placeholder img.wp-post-image',
 				productName: '.product_title.entry-title',
-				price: '.summary .price',
+				price: '.summary .price .woocommerce-Price-amount.amount',
 				bookingCalendar: 'div#wc-bookings-booking-form',
 				bookNow: '.single_add_to_cart_button',
 				getSupport: '.dokan-store-support-btn',

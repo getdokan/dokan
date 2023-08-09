@@ -139,8 +139,9 @@ export class VendorPage extends BasePage {
 			const geoLocationEnabled = await this.isVisible(selector.vendor.vSetup.map);
 			if (geoLocationEnabled) {
 				await this.typeAndWaitForResponse(data.subUrls.gmap, selector.vendor.vSetup.map, setupWizardData.mapLocation);
-				await this.press(data.key.arrowDown);
-				await this.press(data.key.enter);
+				// await this.press(data.key.arrowDown);
+				// await this.press(data.key.enter);
+				await this.click(selector.vendor.vSetup.mapResultFirst);
 			}
 
 			await this.check(selector.vendor.vSetup.email);
