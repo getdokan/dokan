@@ -56,7 +56,7 @@ class Manager {
             remove_filter( 'woocommerce_order_data_store_cpt_get_orders_query', $handle_meta, 10 );
         }
 
-        if ( 'count' === $args['return'] ) {
+        if ( isset( $args['return'] ) && 'count' === $args['return'] ) {
             return apply_filters( 'dokan_get_vendor_orders_count', $orders->total, $args );
         }
 

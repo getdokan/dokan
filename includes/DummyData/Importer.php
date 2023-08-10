@@ -321,7 +321,7 @@ class Importer extends \WC_Product_Importer {
             return;
         }
 
-        $orders = dokan()->order->all( [ 'seller_id' => $vendor_id ] );
+        $orders = dokan()->order->all( [ 'seller_id' => $vendor_id, 'return' => 'objects' ] );
         // Deleting vendors orders.
         foreach ( $orders as $order ) {
             $order->delete( true );
