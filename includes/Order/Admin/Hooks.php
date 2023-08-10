@@ -47,7 +47,7 @@ class Hooks {
 
             add_action( 'wp_trash_post', [ $this, 'admin_on_trash_order' ] );
             add_action( 'untrash_post', [ $this, 'admin_on_untrash_order' ] );
-            add_action( 'delete_post', [ $this, 'admin_on_delete_order' ] );
+            add_action( 'delete_post', [ $this, 'admin_on_delete_order_post' ] );
         }
 
         // Change order meta key and value.
@@ -464,12 +464,25 @@ class Hooks {
      * @return void
      */
     public function admin_on_delete_order( $post_id ) {
+        dokan()->order->delete_seller_order_with_suborders( $post_id );
+    }
+
+    /**
+     * Delete sub orders and from dokan sync table when a order is deleted
+     *
+     * @since DOKAN_SINCE Moved from includes/Admin/Hooks.php file
+     * @since DOKAN_SINCE Rewritten for HPOS
+     *
+     * @param int $post_id
+     *
+     * @return void
+     */
+    public function admin_on_delete_order_post( $post_id ) {
         $order = wc_get_order( $post_id );
         if ( ! $order ) {
             return;
         }
-
-        dokan()->order->delete_seller_order_with_suborders( $order->get_id() );
+        dokan()->order->delete_seller_order_with_suborders( $post_id );
     }
 
     /**
