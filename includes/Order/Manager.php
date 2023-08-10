@@ -579,12 +579,28 @@ class Manager {
         try {
             $order = new WC_Order();
 
+            // save other details
+            $order->set_created_via( 'dokan' );
+            $order->set_cart_hash( $parent_order->get_cart_hash() );
+            $order->set_customer_id( $parent_order->get_customer_id() );
+            $order->set_currency( $parent_order->get_currency() );
+            $order->set_prices_include_tax( $parent_order->get_prices_include_tax() );
+            $order->set_customer_ip_address( $parent_order->get_customer_ip_address() );
+            $order->set_customer_user_agent( $parent_order->get_customer_user_agent() );
+            $order->set_customer_note( $parent_order->get_customer_note() );
+            $order->set_payment_method( $parent_order->get_payment_method() );
+            $order->set_payment_method_title( $parent_order->get_payment_method_title() );
+            $order->update_meta_data( '_dokan_vendor_id', $seller_id );
+
             // save billing and shipping address
             foreach ( $bill_ship as $key ) {
                 if ( is_callable( [ $order, "set_{$key}" ] ) ) {
                     $order->{"set_{$key}"}( $parent_order->{"get_{$key}"}() );
                 }
             }
+
+            // save other meta data
+            $order->save(); // need to save order data before passing it to a hook
 
             // now insert line items
             $this->create_line_items( $order, $seller_products );
@@ -598,18 +614,6 @@ class Manager {
             // add coupons if any
             $this->create_coupons( $order, $parent_order, $seller_products );
 
-            // save other details
-            $order->set_created_via( 'dokan' );
-            $order->set_cart_hash( $parent_order->get_cart_hash() );
-            $order->set_customer_id( $parent_order->get_customer_id() );
-            $order->set_currency( $parent_order->get_currency() );
-            $order->set_prices_include_tax( $parent_order->get_prices_include_tax() );
-            $order->set_customer_ip_address( $parent_order->get_customer_ip_address() );
-            $order->set_customer_user_agent( $parent_order->get_customer_user_agent() );
-            $order->set_customer_note( $parent_order->get_customer_note() );
-            $order->set_payment_method( $parent_order->get_payment_method() );
-            $order->set_payment_method_title( $parent_order->get_payment_method_title() );
-            $order->update_meta_data( '_dokan_vendor_id', $seller_id );
             $order->save(); // need to save order data before passing it to a hook
 
             do_action( 'dokan_create_sub_order_before_calculate_totals', $order, $parent_order, $seller_products );
