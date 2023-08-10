@@ -74,6 +74,7 @@ class Manager {
      */
     protected function get_backward_compatibility_args( $args = [] ) {
         $default = [
+            'type'                => 'shop_order',
             'seller_id'           => 0,
             'customer_id'         => 0,
             'order_id'            => 0,
@@ -399,7 +400,7 @@ class Manager {
             'return'      => ! empty( $args['return_type'] ) && in_array( $args['return_type'], [ 'ids', 'objects' ], true ) ? sanitize_text_field( $args['return_type'] ) : 'ids',
         ];
 
-        return wc_get_orders(
+        return $this->all(
             apply_filters( 'woocommerce_my_account_my_orders_query', $args )
         );
     }
@@ -421,13 +422,12 @@ class Manager {
 
         $args = [
             'customer_id' => $customer_id,
-            'meta_key'    => '_dokan_vendor_id', // phpcs:ignore
-            'meta_value'  => $seller_id, // phpcs:ignore
+            'seller_id'   => $seller_id,
             'return'      => 'ids',
             'limit'       => -1,
         ];
 
-        $orders = wc_get_orders( apply_filters( 'dokan_get_customer_orders_by_seller', $args ) );
+        $orders = $this->all( apply_filters( 'dokan_get_customer_orders_by_seller', $args ) );
 
         return ! empty( $orders ) ? $orders : null;
     }

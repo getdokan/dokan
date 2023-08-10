@@ -564,6 +564,7 @@ function dokan_get_seller_ids_by( $order_id ) {
 function dokan_get_suborder_ids_by( $parent_order_id ) {
     $sub_orders = wc_get_orders(
         [
+            'type'   => 'shop_order',
             'parent' => $parent_order_id,
             'return' => 'ids',
             'limit'  => -1,
@@ -852,18 +853,14 @@ function dokan_is_order_already_exists( $order_id ) {
  */
 function dokan_customer_has_order_from_this_seller( $customer_id, $seller_id = null ) {
     $seller_id = ! empty( $seller_id ) ? $seller_id : dokan_get_current_user_id();
-    $args      = [
+    $args = [
+        'seller_id'   => $seller_id,
         'customer_id' => $customer_id,
-        'meta_key'    => '_dokan_vendor_id', // phpcs:ignore
-        'meta_value'  => $seller_id, // phpcs:ignore
-        'post_status' => 'any',
-        'return'      => 'ids',
-        'limit'       => 1,
+        'return'      => 'count',
     ];
+    $count = dokan()->order->all( $args );
 
-    $orders = wc_get_orders( $args );
-
-    return ! empty( $orders );
+    return $count > 0;
 }
 
 /**
