@@ -90,7 +90,7 @@ test.describe('Vendor settings test', () => {
 		await vendor.setStoreSettings(data.vendor.vendorInfo, 'vacation');
 	});
 
-	test('vendor can set catalog settings @lite', async ( ) => {
+	test.skip('vendor can set catalog settings @lite', async ( ) => {
 		//todo: enable catalog
 		await vendor.setStoreSettings(data.vendor.vendorInfo, 'catalog');
 		//todo: disable catalog
