@@ -609,11 +609,9 @@
 
         div.nav-tab-wrapper {
             width: 340px;
-            border: 1px solid #c8d7e1;
             padding: 14px 16px 30px 24px;
             overflow: hidden;
-            background: #FAFBFF;
-            box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+            background: #F9FAFB;
             box-sizing: border-box;
             margin-right: 12px;
             border-bottom: none;
@@ -635,7 +633,7 @@
                 transition:none;
                 background: transparent;
                 font-weight: bold;
-                border-bottom: 1px solid #cecaca;
+                border-bottom: 1px solid #e9e9ea;
                 transition-property: none;
 
                 img {
@@ -671,7 +669,7 @@
                     position: relative;
                     transition: .3s linear;
                     background: #fff !important;
-                    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+                    //box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
                     transition-property: none;
 
                     &:before {
@@ -684,15 +682,6 @@
                         top: 0;
                     }
 
-                    &::after {
-                        content: '';
-                        position: absolute;
-                        width: 100%;
-                        height: 1px;
-                        background: #cecaca;
-                        left: 0;
-                        top: -1px;
-                    }
                 }
 
                 &:last-child {
@@ -739,16 +728,20 @@
 
                     a.doc-link {
                         color: #033AA3D9;
-                        border: 0.82px solid #033AA3;
+                        border: 1px solid #f3f4f6;
                         padding: 10px 15px;
                         font-size: 12px;
                         background: #FFF;
                         box-sizing: border-box;
-                        box-shadow: 0px 3.28px 3.28px rgba(0, 0, 0, 0.25);
+                        box-shadow: 2px 2px 3px 0px rgba(0, 0, 0, 0.1);
                         font-family: Roboto, sans-serif;
                         line-height: 15px;
                         border-radius: 6.56px;
                         text-decoration: none;
+
+                        &:hover {
+                            background: #033aa30f;
+                        }
                     }
                 }
             }
@@ -758,17 +751,20 @@
                     .dokan-settings-fields {
                         .dokan-settings-field-type-sub_section,
                         .dokan-settings-field-type-disbursement_sub_section {
-                            border-bottom: 1px solid #b0a7a7;
+                            border-bottom: 1px solid #f3f4f6;
 
                             .sub-section-styles {
-                                margin-top: 50px;
+                                margin-top: 20px;
+                                margin-bottom:0;
+                                padding: 20px;
+                                background: #f9fafb;
                             }
                         }
 
                         div {
                             &:not(.dokan-settings-field-type-sub_section) {
                                 .field_contents {
-                                    border: 1px solid #b0a7a7;
+                                    border: 1px solid #f3f4f6;
                                     border-top: none;
                                 }
                             }
@@ -777,7 +773,7 @@
                         > div {
                             &:not(.dokan-settings-field-type-sub_section) {
                                 &:first-child {
-                                    border-top: 1px solid #b0a7a7;
+                                    border-top: 1px solid #f3f4f6;
                                 }
                             }
                         }
@@ -817,7 +813,7 @@
                 height: 100%;
                 content: "";
                 position: absolute;
-                background: #E5E5E5;
+                background: #fff;
             }
         }
 
