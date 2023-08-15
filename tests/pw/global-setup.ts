@@ -10,7 +10,7 @@ async function globalSetup(config: FullConfig) {
 	for ( let i = 0; i < 3; i++ ) {
 		const headers = await apiUtils.getSiteHeaders(serverUrl);
 		if(headers.link) {
-			process.env.SERVER_URL =  (headers.link).includes('rest_route') ? serverUrl + '/?rest_route=' : serverUrl + '/wp-json';
+			process.env.SERVER_URL = (headers.link).includes('rest_route') ? serverUrl + '/?rest_route=' : serverUrl + '/wp-json';
 			break;
 		}
 		console.log('retrying...');
