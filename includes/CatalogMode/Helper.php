@@ -91,7 +91,7 @@ class Helper {
         // get catalog mode settings for vendor
         $catalog_mode_data = static::get_vendor_catalog_mode_settings( $vendor_id );
 
-        return 'on' === $catalog_mode_data['hide_add_to_cart_button'];
+        return apply_filters( 'dokan_catalog_mood_setting_by_vendor', 'on' === $catalog_mode_data['hide_add_to_cart_button'], $vendor_id );
     }
 
     /**
