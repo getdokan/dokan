@@ -260,6 +260,11 @@ class Hooks {
                         return;
                     }
 
+                    const urlParams = new URLSearchParams(window.location.search);
+                    if ( urlParams.get('s') ) {
+                        return;
+                    }
+
                     elms.each(function (index) {
                         if (hide) {
                             this.parentElement.parentElement.style.display = 'none';
