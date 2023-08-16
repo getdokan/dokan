@@ -866,6 +866,11 @@ class Manager {
             return;
         }
 
+        // return if order already has been processed by checking if a vendor id has been assigned to it
+        if ( (int) $parent_order->get_meta( '_dokan_vendor_id' ) > 0 ) {
+            return;
+        }
+
         //dokan_log( sprintf( 'New Order #%d created. Init sub order.', $parent_order_id ) );
 
         if ( $force_create && wc_string_to_bool( $parent_order->get_meta( 'has_sub_order' ) ) === true ) {
@@ -877,6 +882,11 @@ class Manager {
         }
 
         $vendors = dokan_get_sellers_by( $parent_order_id );
+        if ( empty( $vendors ) ) {
+            // we didn't find any vendor, so we can't create sub-order
+            //dokan_log( 'No vendor found, skipping sub order.' );
+            return;
+        }
 
         // return if we've only ONE seller
         if ( count( $vendors ) === 1 ) {
