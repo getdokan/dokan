@@ -133,8 +133,12 @@ class Manager {
 
         // filter order id
         if ( ! $this->is_empty( $args['order_id'] ) ) {
-            $order_ids        = array_filter( array_map( 'absint', (array) $args['order_id'] ) );
-            $query_args['id'] = $order_ids;
+            $order_ids = array_filter( array_map( 'absint', (array) $args['order_id'] ) );
+            if ( OrderUtil::is_hpos_enabled() ) {
+                $query_args['id'] = $order_ids;
+            } else {
+                $query_args['post__in'] = $order_ids;
+            }
         }
 
         // filter status
@@ -144,8 +148,12 @@ class Manager {
 
         // include order ids
         if ( ! $this->is_empty( $args['include'] ) ) {
-            $include          = array_filter( array_map( 'absint', (array) $args['include'] ) );
-            $query_args['id'] = $include;
+            $include = array_filter( array_map( 'absint', (array) $args['include'] ) );
+            if ( OrderUtil::is_hpos_enabled() ) {
+                $query_args['id'] = $include;
+            } else {
+                $query_args['post__in'] = $include;
+            }
         }
 
         // exclude order ids
@@ -190,7 +198,11 @@ class Manager {
 
         // filter by search parameter
         if ( ! $this->is_empty( $args['search'] ) ) {
-            $query_args['id'] = (int) $args['search'];
+            if ( OrderUtil::is_hpos_enabled() ) {
+                $query_args['id'] = (int) $args['search'];
+            } else {
+                $query_args['post__in'] = [ (int) $args['search'] ];
+            }
         }
 
         // fix order by parameter
