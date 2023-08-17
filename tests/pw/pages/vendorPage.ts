@@ -311,6 +311,7 @@ export class VendorPage extends BasePage {
 		await this.clearAndType(selector.vendor.orders.search.searchInput, orderNumber);
 		await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.orders, selector.vendor.orders.search.searchBtn);
 		await this.toBeVisible(selector.vendor.orders.orderLink(orderNumber));
+		await this.toHaveCount(selector.vendor.orders.numberOfRowsFound, 1);
 	}
 
 

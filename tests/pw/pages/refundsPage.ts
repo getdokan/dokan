@@ -43,6 +43,8 @@ export class RefundsPage extends AdminPage {
 		await this.typeAndWaitForResponse(data.subUrls.api.dokan.refunds, selector.admin.dokan.refunds.search, String(orderOrStore));
 		if (!isNaN(Number(orderOrStore))){
 			await this.toBeVisible(selector.admin.dokan.refunds.refundCell(orderOrStore));
+			const count = (await this.getElementText(selector.admin.dokan.refunds.numberOfRowsFound))?.split(' ')[0];
+			expect(Number(count)).toBe(1);
 
 		} else {
 			const count = (await this.getElementText(selector.admin.dokan.refunds.numberOfRowsFound))?.split(' ')[0];

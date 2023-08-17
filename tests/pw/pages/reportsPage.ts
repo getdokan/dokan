@@ -70,6 +70,8 @@ export class ReportsPage extends AdminPage {
 		await this.clearInputField(selector.admin.dokan.reports.allLogs.search);
 		await this.typeAndWaitForResponse(data.subUrls.api.dokan.logs, selector.admin.dokan.reports.allLogs.search, orderId);
 		await this.toBeVisible(selector.admin.dokan.reports.allLogs.orderIdCell(orderId));
+		const count = (await this.getElementText(selector.admin.dokan.reports.allLogs.numberOfRowsFound))?.split(' ')[0];
+		expect(Number(count)).toBe(1);
 		// await this.clickAndWaitForResponseAndLoadState(data.subUrls.api.dokan.logs, selector.admin.dokan.reports.allLogs.filters.clear);
 	}
 

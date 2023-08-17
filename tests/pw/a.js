@@ -13,3 +13,13 @@
 // // 	});
 // // });
 
+// let str = '$15.100.00,89';
+// let str = '$15,10,089'; //todo: will fail for all comma
+// const a = str.replace(/[^\d\-.,]/g, '').replace(/,/g, '.').replace(/\.(?=.*\.)/g, '');
+// // const b = parseFloat(str.replace(/[^\d\-.,]/g, '').replace(/,/g, '.').replace(/\.(?=.*\.)/g, ''));
+// console.log(a);
+
+
+let c = Number('99,999.99').toLocaleString('es-ES', );
+
+console.log(c);
