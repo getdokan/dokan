@@ -103,10 +103,10 @@ if ( $user_orders ) {
                             $h_time = $time_diff > 0 && $time_diff < 24 * 60 * 60
                                 // translators: 1)  human-readable date
                                 ? sprintf( __( '%s ago', 'dokan-lite' ), human_time_diff( $t_time->getTimestamp(), time() ) )
-                                : dokan_format_date( $t_time );
+                                : dokan_format_date( $t_time->getTimestamp() );
 
                             // fix t_time
-                            $t_time = dokan_format_date( $t_time );
+                            $t_time = dokan_format_date( $t_time->getTimestamp() );
                         }
 
                         echo '<abbr title="' . esc_attr( $t_time ) . '">' . esc_html( apply_filters( 'post_date_column_time', $h_time, $order->get_id() ) ) . '</abbr>';
