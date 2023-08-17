@@ -1,6 +1,7 @@
 <?php
 
 use WeDevs\Dokan\Cache;
+use WeDevs\Dokan\Utilities\OrderUtil;
 
 /**
  * Dokan Admin menu position
@@ -1793,8 +1794,12 @@ function dokan_disable_admin_bar( $show_admin_bar ) {
 
     if ( $current_user->ID !== 0 ) {
         $role = reset( $current_user->roles );
+        $block_admin_access = dokan_get_option( 'admin_access', 'dokan_general', 'on' );
+        if ( OrderUtil::is_hpos_enabled() ) {
+            $block_admin_access = 'on';
+        }
 
-        if ( dokan_get_option( 'admin_access', 'dokan_general', 'on' ) === 'on' ) {
+        if ( $block_admin_access === 'on' ) {
             if ( in_array( $role, [ 'seller', 'customer', 'vendor_staff' ], true ) ) {
                 return false;
             }
