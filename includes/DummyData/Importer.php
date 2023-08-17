@@ -321,23 +321,10 @@ class Importer extends \WC_Product_Importer {
             return;
         }
 
-        $args = [
-            'post_type'   => 'shop_order',
-            'post_status' => 'any',
-            'fields'      => 'all',
-            'meta_query'  => [  // phpcs:ignore
-                [
-                    'key'     => '_dokan_vendor_id',
-                    'value'   => $vendor_id,
-                    'compare' => '=',
-                ],
-            ],
-        ];
-        $query = new WP_query( $args );
-
+        $orders = dokan()->order->all( [ 'seller_id' => $vendor_id, 'return' => 'objects' ] );
         // Deleting vendors orders.
-        foreach ( $query->posts as $order ) {
-            wc_get_order( $order )->delete( true );
+        foreach ( $orders as $order ) {
+            $order->delete( true );
         }
 
         global $wpdb;

@@ -2,13 +2,15 @@
 
 namespace WeDevs\Dokan;
 
+use WeDevs\Dokan\Utilities\OrderUtil;
+
 /**
-* Core Class for Dokan Main functionality
-*
-* @package dokan
-*
-* @since 3.0.0
-*/
+ * Core Class for Dokan Main functionality
+ *
+ * @since   3.0.0
+ *
+ * @package dokan
+ */
 class Core {
 
     /**
@@ -17,12 +19,12 @@ class Core {
      * @since 3.0.0
      */
     public function __construct() {
-        add_action( 'admin_init', array( $this, 'block_admin_access' ) );
-        add_filter( 'posts_where', array( $this, 'hide_others_uploads' ) );
-        add_filter( 'body_class', array( $this, 'add_dashboard_template_class' ), 99 );
-        add_filter( 'wp_title', array( $this, 'wp_title' ), 20, 2 );
-        add_action( 'template_redirect', array( $this, 'redirect_if_not_logged_seller' ), 11 );
-        add_action( 'admin_init', array( $this, 'redirect_after_activate' ), 999 );
+        add_action( 'admin_init', [ $this, 'block_admin_access' ] );
+        add_filter( 'posts_where', [ $this, 'hide_others_uploads' ] );
+        add_filter( 'body_class', [ $this, 'add_dashboard_template_class' ], 99 );
+        add_filter( 'wp_title', [ $this, 'wp_title' ], 20, 2 );
+        add_action( 'template_redirect', [ $this, 'redirect_if_not_logged_seller' ], 11 );
+        add_action( 'admin_init', [ $this, 'redirect_after_activate' ], 999 );
     }
 
     /**
@@ -40,11 +42,14 @@ class Core {
             return;
         }
 
-        $no_access   = dokan_get_option( 'admin_access', 'dokan_general', 'on' );
-        $valid_pages = array( 'admin-ajax.php', 'admin-post.php', 'async-upload.php', 'media-upload.php' );
+        $no_access = dokan_get_option( 'admin_access', 'dokan_general', 'on' );
+        if ( OrderUtil::is_hpos_enabled() ) {
+            $no_access = 'on';
+        }
+        $valid_pages = [ 'admin-ajax.php', 'admin-post.php', 'async-upload.php', 'media-upload.php' ];
         $user_role   = reset( $current_user->roles );
 
-        if ( ( 'on' === $no_access ) && ( ! in_array( $pagenow, $valid_pages, true ) ) && in_array( $user_role, array( 'seller', 'customer', 'vendor_staff' ), true ) ) {
+        if ( ( 'on' === $no_access ) && ( ! in_array( $pagenow, $valid_pages, true ) ) && in_array( $user_role, [ 'seller', 'customer', 'vendor_staff' ], true ) ) {
             wp_safe_redirect( home_url() );
             exit;
         }
@@ -58,10 +63,10 @@ class Core {
      *
      * FIXME: fix the upload counts
      *
-     * @global string $pagenow
-     * @global object $wpdb
-     *
      * @param string  $where
+     *
+     * @global object $wpdb
+     * @global string $pagenow
      *
      * @return string
      */
@@ -114,8 +119,8 @@ class Core {
      *
      * @since Dokan 1.0.4
      *
-     * @param string  $title Default title text for current view.
-     * @param string  $sep   Optional separator.
+     * @param string $title Default title text for current view.
+     * @param string $sep   Optional separator.
      *
      * @return string The filtered title.
      */

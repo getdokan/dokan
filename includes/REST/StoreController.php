@@ -60,8 +60,10 @@ class StoreController extends WP_REST_Controller {
             $this->namespace, '/' . $this->base . '/(?P<id>[\d]+)', [
                 'args' => [
                     'id' => [
-                        'description' => __( 'Unique identifier for the object.', 'dokan-lite' ),
-                        'type'        => 'integer',
+                        'description'       => __( 'Unique identifier for the object.', 'dokan-lite' ),
+                        'type'              => 'integer',
+                        'sanitize_callback' => 'absint',
+                        'validate_callback' => 'dokan_rest_validate_store_id',
                     ],
                 ],
                 [
@@ -313,10 +315,6 @@ class StoreController extends WP_REST_Controller {
 
         $store = dokan()->vendor->get( $store_id );
 
-        if ( empty( $store->id ) ) {
-            return new WP_Error( 'no_store_found', __( 'No store found', 'dokan-lite' ), [ 'status' => 404 ] );
-        }
-
         $stores_data = $this->prepare_item_for_response( $store, $request );
         $response    = rest_ensure_response( $stores_data );
 
@@ -333,12 +331,8 @@ class StoreController extends WP_REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function delete_store( $request ) {
-        $store_id = ! empty( $request['id'] ) ? (int) $request['id'] : 0;
+        $store_id = $request['id'];
         $reassign = false === $request['reassign'] ? null : absint( $request['reassign'] );
-
-        if ( empty( $store_id ) ) {
-            return new WP_Error( 'no_vendor_found', __( 'No vendor found for updating status', 'dokan-lite' ), [ 'status' => 400 ] );
-        }
 
         if ( ! empty( $reassign ) ) {
             if ( $reassign === $store_id || ! get_userdata( $reassign ) ) {
@@ -383,10 +377,6 @@ class StoreController extends WP_REST_Controller {
      */
     public function update_store( $request ) {
         $store = dokan()->vendor->get( (int) $request->get_param( 'id' ) );
-
-        if ( empty( $store->get_id() ) ) {
-            return new WP_Error( 'no_store_found', __( 'No store found', 'dokan-lite' ), [ 'status' => 404 ] );
-        }
 
         $params   = $request->get_params();
         $store_id = dokan()->vendor->update( $store->get_id(), $params );
