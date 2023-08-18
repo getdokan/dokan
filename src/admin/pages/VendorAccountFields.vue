@@ -63,7 +63,7 @@
 
                 <div class="column">
                     <label for="store-phone">{{ __( 'Phone Number', 'dokan-lite') }}</label>
-                    <input type="text" id="store-phone" class="dokan-form-input" v-model="vendorInfo.phone" @input.prevent="validatePhoneInput" :placeholder="__( '+123456789', 'dokan-lite')">
+                    <input type="text" id="store-phone" class="dokan-form-input" v-model="vendorInfo.phone" @input.prevent="validatePhoneInput" :placeholder="__( '+123456789', 'dokan-lite' )">
                 </div>
 
                 <div class="column">
@@ -377,16 +377,7 @@ export default {
         },
 
         validatePhoneInput( event ) {
-            if ( ! event.data ) {
-                return;
-            }
-
-            const allowedChars = [ '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '(', ')', '+', '-', '_', '.' ];
-
-            // If the input character is valid.
-            if ( ! allowedChars.includes( event.data.at( -1 ) ) ) {
-                this.vendorInfo.phone = this.vendorInfo.phone.slice(0, -1);
-            }
+            this.vendorInfo.phone = this.vendorInfo.phone.replace( /[^0-9\\.\-\_\(\)\+]+/g, '' );
         }
     }
 };
