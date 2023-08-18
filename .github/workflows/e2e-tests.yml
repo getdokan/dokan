@@ -25,7 +25,7 @@ permissions:
 
 env:
   ADMIN: admin
-  ADMIN_PASSWORD: password  ddd
+  ADMIN_PASSWORD: password
   VENDOR: vendor1
   VENDOR2: vendor2
   CUSTOMER: customer1
