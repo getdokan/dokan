@@ -9,6 +9,18 @@
             </div>
         </template>
 
+        <template v-if="'sub_tab' === fieldData.type">
+            <tabs>
+                <tab
+                    v-for="tab in fieldData.tabs"
+                    :name="tab.label"
+                    :selected="tab.selected"
+                >
+                    <Sortable :list='tab.fields' />
+                </tab>
+          </tabs>
+        </template>
+
         <template v-if="containCommonFields( fieldData.type )">
             <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
@@ -433,11 +445,14 @@
 </template>
 
 <script>
-    import colorPicker from "admin/components/ColorPicker.vue";
-    import Switches from "admin/components/Switches.vue";
+    import colorPicker from './ColorPicker.vue';
+    import Switches from './Switches.vue';
     import SocialFields from './SocialFields.vue';
     import FieldHeading from './FieldHeading.vue';
     import SecretInput from './SecretInput.vue';
+    import Tabs from './Tabs.vue';
+    import Tab from './Tab.vue';
+    import Sortable from './Sortable.vue';
     let Mapbox                = dokan_get_lib('Mapbox');
     let TextEditor            = dokan_get_lib('TextEditor');
     let GoogleMaps            = dokan_get_lib('GoogleMaps');
@@ -447,6 +462,7 @@
         name: 'Fields',
 
         components: {
+            Sortable,
             Mapbox,
             Switches,
             TextEditor,
@@ -455,7 +471,9 @@
             FieldHeading,
             SocialFields,
             RefreshSettingOptions,
-            SecretInput
+            SecretInput,
+            Tabs,
+            Tab
         },
 
         props: ['id', 'fieldData', 'sectionId', 'fieldValue', 'allSettingsValues', 'errors', 'toggleLoadingState', 'validationErrors', 'dokanAssetsUrl'],
@@ -772,6 +790,10 @@
 
                 this.fieldData[ key ] = value;
             },
+
+            isSubTabComponent( type ) {
+                return _.contains( [ 'sub_tab_start', 'sub_tab_item_start', 'sub_tab_item_end', 'sub_tab_end' ], type );
+            }
         },
     };
 </script>

@@ -777,6 +777,81 @@
                                 }
                             }
                         }
+                        .menu_manager_menu_tab.dokan-settings-field-type-sub_tab {
+                            border: 1px solid #f3f4f6;
+                            margin: 0;
+                            padding: 0;
+                            border-top: 1px solid transparent;
+                            .tabs {
+                                ul {
+                                    padding: 15px 20px;
+                                    list-style: none;
+                                    display: flex;
+                                    li {
+                                        a {
+                                            text-decoration:none;
+                                            padding: 0 0 8px 0;
+                                            margin-right: 16px;
+                                            color: #000;
+                                        }
+                                    }
+                                    .is-active {
+                                        a {
+                                            color: #0090ff;
+                                            border-bottom: 2px solid #0090ff;
+                                        }
+                                    }
+                                }
+                            }
+                            .tabs-details {
+                                .menu-item {
+                                    border: 1px solid #f3f4f6;
+                                    padding: 8px 20px;
+                                    margin: 4px 0 4px 0;
+                                    background-color: #f9fafb;
+                                    display: flex;
+                                    justify-content: space-between;
+                                    .first-part {
+                                        display: flex;
+                                        .svg-pull-wrapper {
+                                            margin: 0;
+                                            padding: 0;
+                                            position: relative;
+                                            top: 4px;
+                                            cursor: grab;
+                                            left: -18px;
+                                            &:active {
+                                                cursor: grabbing;
+                                            }
+                                            svg {
+                                                margin: 0;
+                                                padding: 0;
+                                                display: inline-block;
+                                                position: relative;
+                                                &:nth-child(1) {
+                                                    right: -14px;
+                                                }
+                                            }
+                                        }
+                                    }
+                                    .second-part {
+                                        svg {
+                                            border: 0.5px solid #f3f4f6;
+                                            height:24px;
+                                            width: 24px;
+                                            position: relative;
+                                            top: 8px;
+                                            border-radius: 3px;
+                                            background-color: #fff;
+                                            margin-right: 16px;
+                                            &:hover {
+                                                cursor: pointer;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
