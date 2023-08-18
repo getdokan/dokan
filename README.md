@@ -3,11 +3,11 @@
 **Donate Link:** http://tareq.co/donate/  
 **Tags:** WooCommerce multivendor marketplace, multi vendor marketplace, multi seller store, multi-vendor, multi seller, commissions, multivendor, marketplace, product vendors, woocommerce vendor, commission rate, e-commerce, woocommerce, ebay, ecommerce.  
 **Requires at least:** 5.4  
-**Tested up to:** 6.2.2  
+**Tested up to:** 6.3.0  
 **WC requires at least:** 5.0.0  
-**WC tested up to:** 7.9.0  
-**Requires PHP:** 7.2  
-**Stable tag:** 3.7.24  
+**WC tested up to:** 8.0.2  
+**Requires PHP:** 7.3  
+**Stable tag:** 3.8.0  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -337,6 +337,13 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 ## Changelog ##
+
+### v3.8.0 ( Aug 18, 2023 ) ###
+
+- **update:** Added HPOS (High-Performance Order Storage) support for Dokan Lite.
+- **fix:** Resolved an issue where traces of order data were left on the Dokan end even after the order had been deleted from the WordPress admin panel.
+Previously, deleted orders were still visible under the Dashboard Overview menu, Reports menu, and under Withdraw menu. This issue has been fixed in the current release.
+- **fix:** Multiple issues have been fixed after a product of an order has been deleted.
 
 ### v3.7.24 ( Jul 25, 2023 ) ###
 

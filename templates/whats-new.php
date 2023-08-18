@@ -4,6 +4,32 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.8.0',
+        'released' => '2023-08-18',
+        'changes'  => [
+            'Update' => [
+                [
+                    'title'       => 'Added HPOS (High-Performance Order Storage) support for Dokan Lite',
+                    'description' => 'The High-Performance Order Storage (HPOS) feature is a solution that provides an easy-to-understand and solid database structure specifically designed for eCommerce needs. It uses the WooCommerce CRUD design to store order data in custom tables optimized for WooCommerce queries with minimal impact on the store’s performance. This feature enables eCommerce stores of all shapes and sizes to scale their business to their maximum potential without expert intervention. It also facilitates implementing read/write locks and prevents race conditions. You can enable High-Performance Order Storage by navigating to WooCommerce > Settings > Advanced > Features and choosing the suitable data storage options for orders.',
+                ],
+                [
+                    'title'       => 'Updated minimum PHP version requirement to 7.3',
+                    'description' => '',
+                ],
+            ],
+            'Fix' => [
+                [
+                    'title' => 'Resolved an issue where traces of order data were left on the Dokan end even after the order had been deleted from the WordPress admin panel.',
+                    'description' => 'Previously, deleted orders were still visible under the Dashboard Overview menu, Reports menu, and under Withdraw menu. This issue has been fixed in the current release.',
+                ],
+                [
+                    'title' => 'Multiple issues have been fixed after a product of an order has been deleted.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.7.24',
         'released' => '2023-07-25',
         'changes'  => [
