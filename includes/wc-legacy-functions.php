@@ -9,7 +9,7 @@
  *
  * @param int $parent_order_id
  *
- * @deprecated DOKAN_SINCE
+ * @deprecated 3.8.0
  *
  * @return void
  */
@@ -24,7 +24,7 @@ function dokan_create_sub_order( $parent_order_id ) {
  * @param int   $seller_id
  * @param array $seller_products
  *
- * @deprecated DOKAN_SINCE
+ * @deprecated 3.8.0
  *
  * @return void
  */

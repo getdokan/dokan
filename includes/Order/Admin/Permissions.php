@@ -10,13 +10,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Handle Admin Order Permission Related Hooks
  *
- * @since DOKAN_SINCE
+ * @since 3.8.0
  */
 class Permissions {
     /**
      * Class constructor
      *
-     * @since DOKAN_SINCE
+     * @since 3.8.0
      */
     public function __construct() {
         add_filter( 'map_meta_cap', [ $this, 'map_meta_caps' ], 12, 4 );
@@ -30,8 +30,8 @@ class Permissions {
     /**
      * Dokan map meta cpas for vendors
      *
-     * @since DOKAN_SINCE moved this method from includes/functions.php file
-     * @since DOKAN_SINCE Added HPOS support
+     * @since 3.8.0 moved this method from includes/functions.php file
+     * @since 3.8.0 Added HPOS support
      *
      * @param array  $caps
      * @param string $cap
@@ -71,8 +71,8 @@ class Permissions {
      * Filter orders of current user
      *
      * @since 2.9.4
-     * @since DOKAN_SINCE Moved this method from includes/functions.php
-     * @since DOKAN_SINCE Added HPOS Support
+     * @since 3.8.0 Moved this method from includes/functions.php
+     * @since 3.8.0 Added HPOS Support
      *
      * @param array  $args
      * @param object $query
@@ -113,7 +113,7 @@ class Permissions {
      * Revoke vendor access of changing order status in the backend if permission is not given
      *
      * @since 2.8.0
-     * @since DOKAN_SINCE Moved this method from includes/functions.php file
+     * @since 3.8.0 Moved this method from includes/functions.php file
      *
      * @return void
      */
@@ -139,7 +139,7 @@ class Permissions {
      * Revoke vendor access of changing order status in the backend if permission is not given
      *
      * @since 2.8.0
-     * @since DOKAN_SINCE Moved this method from includes/functions.php
+     * @since 3.8.0 Moved this method from includes/functions.php
      *
      * @param array $columns
      *
@@ -161,7 +161,7 @@ class Permissions {
      * Revoke vendor access of changing order status in the backend if permission is not given
      *
      * @since 2.8.0
-     * @since DOKAN_SINCE Moved this method form includes/functions.php file
+     * @since 3.8.0 Moved this method form includes/functions.php file
      *
      * @param array $actions
      *

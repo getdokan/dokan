@@ -16,13 +16,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Order admin related hooks
  *
- * @since DOKAN_SINCE moved functionality from includes/Admin/Hooks.php file
+ * @since 3.8.0 moved functionality from includes/Admin/Hooks.php file
  */
 class Hooks {
     /**
      * Class constructor
      *
-     * @since DOKAN_SINCE
+     * @since 3.8.0
      */
     public function __construct() {
         // Load all actions and filters
@@ -60,7 +60,7 @@ class Hooks {
     /**
      * Remove child orders from WC reports
      *
-     * @since DOKAN_SINCE Moved from includes/Admin/Hooks.php file
+     * @since 3.8.0 Moved from includes/Admin/Hooks.php file
      *
      * @param array $query
      *
@@ -75,8 +75,8 @@ class Hooks {
     /**
      * Change the columns shown in admin.
      *
-     * @since DOKAN_SINCE Moved from includes/Admin/Hooks.php file
-     * @since DOKAN_SINCE Rewritten for HPOS
+     * @since 3.8.0 Moved from includes/Admin/Hooks.php file
+     * @since 3.8.0 Rewritten for HPOS
      *
      * @param array $existing_columns
      *
@@ -101,8 +101,8 @@ class Hooks {
     /**
      * Adds custom column on dokan admin shop order table
      *
-     * @since DOKAN_SINCE Moved from includes/Admin/Hooks.php file
-     * @since DOKAN_SINCE Rewritten for HPOS
+     * @since 3.8.0 Moved from includes/Admin/Hooks.php file
+     * @since 3.8.0 Rewritten for HPOS
      *
      * @param string       $col
      * @param int|WC_Order $post_id
@@ -165,8 +165,8 @@ class Hooks {
     /**
      * Adds css classes on admin shop order table
      *
-     * @since DOKAN_SINCE Moved from includes/Admin/Hooks.php file
-     * @since DOKAN_SINCE Rewritten for HPOS
+     * @since 3.8.0 Moved from includes/Admin/Hooks.php file
+     * @since 3.8.0 Rewritten for HPOS
      *
      * @param string[] $classes An array of post class names.
      * @param string[] $class   An array of additional class names added to the post.
@@ -205,8 +205,8 @@ class Hooks {
     /**
      * Show/hide sub order css/js
      *
-     * @since DOKAN_SINCE Moved from includes/Admin/Hooks.php file
-     * @since DOKAN_SINCE Added HPOS support
+     * @since 3.8.0 Moved from includes/Admin/Hooks.php file
+     * @since 3.8.0 Added HPOS support
      *
      * @return void
      */
@@ -356,7 +356,7 @@ class Hooks {
      * Change order item display meta key.
      *
      * @since DOKAN_LITE_SINCE
-     * @since DOKAN_SINCE Moved this method from Order/Hooks.php file
+     * @since 3.8.0 Moved this method from Order/Hooks.php file
      *
      * @param string $display_key
      *
@@ -374,7 +374,7 @@ class Hooks {
      * Change order item display meta value.
      *
      * @since DOKAN_LITE_SINCE
-     * @since DOKAN_SINCE Moved this method from Order/Hooks.php file
+     * @since 3.8.0 Moved this method from Order/Hooks.php file
      *
      * @param string $display_value
      * @param object $meta
@@ -398,8 +398,8 @@ class Hooks {
     /**
      * Delete sub orders when parent order is trashed
      *
-     * @since DOKAN_SINCE Moved from includes/Admin/Hooks.php file
-     * @since DOKAN_SINCE Rewritten for HPOS
+     * @since 3.8.0 Moved from includes/Admin/Hooks.php file
+     * @since 3.8.0 Rewritten for HPOS
      *
      * @param int $post_id
      */
@@ -422,8 +422,8 @@ class Hooks {
     /**
      * Un-trash sub orders when parent orders are un-trashed
      *
-     * @since DOKAN_SINCE Moved from includes/Admin/Hooks.php file
-     * @since DOKAN_SINCE Rewritten for HPOS
+     * @since 3.8.0 Moved from includes/Admin/Hooks.php file
+     * @since 3.8.0 Rewritten for HPOS
      *
      * @param int $post_id
      *
@@ -461,8 +461,8 @@ class Hooks {
     /**
      * Delete sub orders and from dokan sync table when a order is deleted
      *
-     * @since DOKAN_SINCE Moved from includes/Admin/Hooks.php file
-     * @since DOKAN_SINCE Rewritten for HPOS
+     * @since 3.8.0 Moved from includes/Admin/Hooks.php file
+     * @since 3.8.0 Rewritten for HPOS
      *
      * @param int $post_id
      *
@@ -475,8 +475,8 @@ class Hooks {
     /**
      * Delete sub orders and from dokan sync table when a order is deleted
      *
-     * @since DOKAN_SINCE Moved from includes/Admin/Hooks.php file
-     * @since DOKAN_SINCE Rewritten for HPOS
+     * @since 3.8.0 Moved from includes/Admin/Hooks.php file
+     * @since 3.8.0 Rewritten for HPOS
      *
      * @param int $post_id
      *
@@ -493,8 +493,8 @@ class Hooks {
     /**
      * Show a toggle button to toggle all the sub orders
      *
-     * @since DOKAN_SINCE Moved from includes/Admin/Hooks.php file
-     * @since DOKAN_SINCE Rewritten for HPOS
+     * @since 3.8.0 Moved from includes/Admin/Hooks.php file
+     * @since 3.8.0 Rewritten for HPOS
      *
      * @param string $typenow
      *

@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Fake Mailer Class
  *
- * @since DOKAN_SINCE Moved this class from includes/wc-functions.php file
+ * @since 3.8.0 Moved this class from includes/wc-functions.php file
  */
 class FakeMailer {
     public function Send() {

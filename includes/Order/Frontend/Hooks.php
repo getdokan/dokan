@@ -10,13 +10,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Order Frontend Hooks
  *
- * @since DOKAN_SINCE
+ * @since 3.8.0
  */
 class Hooks {
     /**
      * Class constructor
      *
-     * @since DOKAN_SINCE
+     * @since 3.8.0
      */
     public function __construct() {
         add_action( 'template_redirect', [ $this, 'bulk_order_status_change' ] );
@@ -26,7 +26,7 @@ class Hooks {
      * Change bulk order status in vendor dashboard
      *
      * @since 2.8.3
-     * @since DOKAN_SINCE Moved this method from includes/wc-functions.php file
+     * @since 3.8.0 Moved this method from includes/wc-functions.php file
      *
      * @return void
      */

@@ -133,7 +133,7 @@ class Hooks {
     /**
      * If order status is set to refunded from vendor dashboard, enter remaining balance into vendor balance table.
      *
-     * @since DOKAN_SINCE Created this method from on_order_status_change()
+     * @since 3.8.0 Created this method from on_order_status_change()
      *
      * @param int      $order_id
      * @param string   $old_status

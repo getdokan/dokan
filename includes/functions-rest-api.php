@@ -3,7 +3,7 @@ if ( ! function_exists( 'dokan_rest_validate_store_id' ) ) {
     /**
      * This method will verify per page item value, will be used only with rest api validate callback
      *
-     * @since DOKAN_SINCE
+     * @since 3.8.0
      *
      * @param $value
      * @param $request WP_REST_Request

@@ -48,7 +48,7 @@ class ProductCategoryCache {
      * This method will delete store category cache after a category is updated
      *
      * @since 3.2.10
-     * @since DOKAN_SINCE Moved this method from includes/wc-functions.php file
+     * @since 3.8.0 Moved this method from includes/wc-functions.php file
      *
      * @param int $term_id
      */

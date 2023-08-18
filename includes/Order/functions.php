@@ -7,12 +7,12 @@ use WeDevs\Dokan\Cache;
  *
  * @param int $order_id
  *
- * @deprecated DOKAN_SINCE
+ * @deprecated 3.8.0
  *
  * @return float|array|WP_Error
  */
 function dokan_get_seller_amount_from_order( $order_id, $get_array = false ) {
-    wc_deprecated_function( 'dokan_get_seller_amount_from_order', 'DOKAN_SINCE', 'dokan()->commission->get_earning_by_order()' );
+    wc_deprecated_function( 'dokan_get_seller_amount_from_order', '3.8.0', 'dokan()->commission->get_earning_by_order()' );
 
     $order = wc_get_order( $order_id );
     if ( ! $order ) {
@@ -56,12 +56,12 @@ function dokan_get_seller_amount_from_order( $order_id, $get_array = false ) {
  * @param int   $seller_id
  * @param array $args
  *
- * @deprecated DOKAN_SINCE since this is an alias only.
+ * @deprecated 3.8.0 since this is an alias only.
  *
  * @return WP_Error|int[]|WC_Order[]
  */
 function dokan_get_seller_orders( $seller_id, $args ) {
-    wc_deprecated_function( 'dokan_get_seller_orders', 'DOKAN_SINCE', 'dokan()->order->all()' );
+    wc_deprecated_function( 'dokan_get_seller_orders', '3.8.0', 'dokan()->order->all()' );
 
     $args['seller_id'] = $seller_id;
 
@@ -82,12 +82,12 @@ function dokan_get_seller_orders( $seller_id, $args ) {
  * @param int|false $seller_id
  * @param string    $status
  *
- * @deprecated DOKAN_SINCE
+ * @deprecated 3.8.0
  *
  * @return WP_Error|WC_Order[]
  */
 function dokan_get_seller_orders_by_date( $start_date, $end_date, $seller_id = false, $status = 'all' ) {
-    wc_deprecated_function( 'dokan_get_seller_orders_by_date', 'DOKAN_SINCE', 'dokan()->order->all()' );
+    wc_deprecated_function( 'dokan_get_seller_orders_by_date', '3.8.0', 'dokan()->order->all()' );
 
     // format start and end date
     $start_date = dokan_current_datetime()->modify( $start_date );
@@ -111,12 +111,12 @@ function dokan_get_seller_orders_by_date( $start_date, $end_date, $seller_id = f
  *
  * @param array $args
  *
- * @deprecated DOKAN_SINCE
+ * @deprecated 3.8.0
  *
  * @return int
  */
 function dokan_get_seller_orders_number( $args = [] ) {
-    wc_deprecated_function( 'dokan_get_seller_orders_number', 'DOKAN_SINCE', 'dokan()->order->all()' );
+    wc_deprecated_function( 'dokan_get_seller_orders_number', '3.8.0', 'dokan()->order->all()' );
 
     $args['return'] = 'count';
 
@@ -162,7 +162,7 @@ function dokan_is_seller_has_order( $seller_id, $order_id ) {
 /**
  * Count orders for a seller
  *
- * @since DOKAN_SINCE moved the functionality of this function to Order Manager class
+ * @since 3.8.0 moved the functionality of this function to Order Manager class
  *
  * @param int $seller_id
  *
@@ -177,12 +177,12 @@ function dokan_count_orders( $seller_id ) {
  *
  * @param int $order_id
  *
- * @deprecated DOKAN_SINCE
+ * @deprecated 3.8.0
  *
  * @return void
  */
 function dokan_delete_sync_order( $order_id ) {
-    wc_deprecated_function( 'dokan_delete_sync_order', 'DOKAN_SINCE', 'dokan()->order->delete_seller_order()' );
+    wc_deprecated_function( 'dokan_delete_sync_order', '3.8.0', 'dokan()->order->delete_seller_order()' );
 
     dokan()->order->delete_seller_order( $order_id );
 }
@@ -195,12 +195,12 @@ function dokan_delete_sync_order( $order_id ) {
  * @param int $order_id
  * @param int $seller_id
  *
- * @deprecated DOKAN_SINCE
+ * @deprecated 3.8.0
  *
  * @return void
  */
 function dokan_delete_sync_duplicate_order( $order_id, $seller_id ) {
-    wc_deprecated_function( 'dokan_delete_sync_duplicate_order', 'DOKAN_SINCE', 'dokan()->order->delete_seller_order()' );
+    wc_deprecated_function( 'dokan_delete_sync_duplicate_order', '3.8.0', 'dokan()->order->delete_seller_order()' );
 
     dokan()->order->delete_seller_order( $order_id, $seller_id );
 }
@@ -491,12 +491,12 @@ function dokan_is_sub_order( $order ) {
  *
  * @since      2.4.3
  *
- * @deprecated DOKAN_SINCE
+ * @deprecated 3.8.0
  *
  * @return  int Order_count
  */
 function dokan_total_orders() {
-    wc_deprecated_function( 'dokan_total_orders', 'DOKAN_SINCE', 'dokan()->order->all()' );
+    wc_deprecated_function( 'dokan_total_orders', '3.8.0', 'dokan()->order->all()' );
 
     global $wpdb;
 
@@ -605,12 +605,12 @@ function dokan_get_admin_commission_by( $order, $context ) {
  * @param int $customer_id
  * @param int $seller_id
  *
- * @deprecated DOKAN_SINCE
+ * @deprecated 3.8.0
  *
  * @return array|null on failure
  */
 function dokan_get_customer_orders_by_seller( $customer_id, $seller_id ) {
-    wc_deprecated_function( 'dokan_get_customer_orders_by_seller', 'DOKAN_SINCE', 'dokan()->order->get_customer_order_ids_by_seller()' );
+    wc_deprecated_function( 'dokan_get_customer_orders_by_seller', '3.8.0', 'dokan()->order->get_customer_order_ids_by_seller()' );
 
     return dokan()->order->get_customer_order_ids_by_seller( $customer_id, $seller_id );
 }
@@ -815,7 +815,7 @@ function dokan_order_csv_export( $orders, $file = null ) {
  *
  * @param int $order_id
  *
- * @deprecated DOKAN_SINCE
+ * @deprecated 3.8.0
  *
  * @return int
  */
@@ -830,12 +830,12 @@ function dokan_get_seller_id_by_order_id( $order_id ) {
  *
  * @param int $order_id
  *
- * @deprecated DOKAN_SINCE
+ * @deprecated 3.8.0
  *
  * @return boolean
  */
 function dokan_is_order_already_exists( $order_id ) {
-    wc_deprecated_function( 'dokan_is_order_already_exists', 'DOKAN_SINCE', 'dokan()->order->is_order_already_synced()' );
+    wc_deprecated_function( 'dokan_is_order_already_exists', '3.8.0', 'dokan()->order->is_order_already_synced()' );
 
     return dokan()->order->is_order_already_synced( $order_id );
 }
@@ -844,7 +844,7 @@ function dokan_is_order_already_exists( $order_id ) {
  * Customer has order from current seller
  *
  * @since 2.8.6
- * @since DOKAN_SINCE moved this function from includes/functions.php
+ * @since 3.8.0 moved this function from includes/functions.php
  *
  * @param int      $customer_id
  * @param int|null $seller_id
@@ -866,7 +866,7 @@ function dokan_customer_has_order_from_this_seller( $customer_id, $seller_id = n
 /**
  * Get total sales amount of a seller
  *
- * @since DOKAN_SINCE moved from includes/functions.php
+ * @since 3.8.0 moved from includes/functions.php
  *
  * @param int $seller_id
  *
@@ -888,17 +888,17 @@ if ( ! function_exists( 'dokan_get_seller_earnings_by_order' ) ) {
      * Get Seller's net Earnings from a order
      *
      * @since      2.5.2
-     * @since      DOKAN_SINCE moved from includes/functions.php
+     * @since      3.8.0 moved from includes/functions.php
      *
      * @param WC_ORDER $order
      * @param int      $seller_id
      *
-     * @deprecated DOKAN_SINCE
+     * @deprecated 3.8.0
      *
      * @return int $earned
      */
     function dokan_get_seller_earnings_by_order( $order, $seller_id ) {
-        wc_deprecated_function( 'dokan_get_seller_earnings_by_order', 'DOKAN_SINCE', 'dokan()->commission->get_earning_by_order( $order, \'seller\' )' );
+        wc_deprecated_function( 'dokan_get_seller_earnings_by_order', '3.8.0', 'dokan()->commission->get_earning_by_order( $order, \'seller\' )' );
         $earned = dokan()->commission->get_earning_by_order( $order, 'seller' );
 
         return apply_filters( 'dokan_get_seller_earnings_by_order', $earned, $order, $seller_id );
@@ -909,7 +909,7 @@ if ( ! function_exists( 'dokan_get_seller_earnings_by_order' ) ) {
  * Dokan get vendor order details by order ID
  *
  * @since 3.2.11 rewritten entire function
- * @since DOKAN_SINCE Moved this function from includes/functions.php
+ * @since 3.8.0 Moved this function from includes/functions.php
  *
  * @param int      $order_id
  * @param int|null $vendor_id will remove this parameter in future
@@ -940,7 +940,7 @@ function dokan_get_vendor_order_details( $order_id, $vendor_id = null ) {
  * Updates bulk orders status by orders ids.
  *
  * @since 3.7.10
- * @since DOKAN_SINCE Moved this method from includes/functions.php file
+ * @since 3.8.0 Moved this method from includes/functions.php file
  *
  * @param array $postdata
  *

@@ -12,7 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Handle permission related hooks for Orders
  *
- * @since DOKAN_SINCE
+ * @since 3.8.0
  */
 class Controller {
     use ChainableContainer;
@@ -20,7 +20,7 @@ class Controller {
     /**
      * Class constructor
      *
-     * @since DOKAN_SINCE
+     * @since 3.8.0
      */
     public function __construct() {
         $this->init_classes();
