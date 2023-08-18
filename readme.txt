@@ -28,7 +28,7 @@ Hear what reputed WordPress influencer and online business strategist, Darrel Wi
 
 👉 **Official Free Demo Link:** Try out multiple [Dokan Demo sites](https://wedevs.com/dokan/demo/)
 
-👉 **Learn More About Dokan (PRO):** [All The Features of Dokan](https://wedevs.com/dokan/features/)
+👉 **Learn More About Dokan (PRO):** [All The Features of Dokan](https://dokan.co/wordpress/features/)
 
 👉 Check out the **comprehensive customer [Dokan Mobile App](https://wedevs.com/dokan/dokan-mobile-app)** to enhance your Dokan marketplace shopping experience.
 
