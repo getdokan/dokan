@@ -61,12 +61,16 @@ class Hooks {
 
         // Init Order Cache Class
         new OrderCache();
+
+        // Suborder pdf button
+        add_filter( 'dokan_my_account_my_sub_orders_actions', [ &$this, 'suborder_pdf_invoice_button' ], 10, 2 );
+
     }
 
     /**
      * Change order item display meta key.
      *
-     * @since DOKAN_LITE_SINCE
+     * @since DOKAN_SINCE
      *
      * @param $display_key
      *
@@ -83,7 +87,7 @@ class Hooks {
     /**
      * Change order item display meta value.
      *
-     * @since DOKAN_LITE_SINCE
+     * @since DOKAN_SINCE
      *
      * @param $display_value
      * @param $meta
@@ -162,7 +166,7 @@ class Hooks {
         /**
          * If `exclude_cod_payment` is enabled, don't include the fund in vendor's withdrawal balance.
          *
-         * @since DOKAN_LITE_SINCE
+         * @since DOKAN_SINCE
          */
         $exclude_cod_payment = 'on' === dokan_get_option( 'exclude_cod_payment', 'dokan_withdraw', 'off' );
 
@@ -483,7 +487,7 @@ class Hooks {
     /**
      * Handle stock level wrong calculation in order notes for suborder
      *
-     * @since DOKAN_LITE_SINCE
+     * @since DOKAN_SINCE
      *
      * @param $order
      *
@@ -526,5 +530,24 @@ class Hooks {
                 $order->add_order_note( __( 'Stock levels reduced:', 'woocommerce' ) . ' ' . $notes_content ); //phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
             }
         }
+    }
+
+    /**
+     * PDF Invoices & Packing Slips for WooCommerce plugin integration on suborder section.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param $actions
+     * @param $order
+     *
+     * @return mixed
+     */
+    public function suborder_pdf_invoice_button( $actions, $order ) {
+        $woocommerce_all_actions = apply_filters( 'woocommerce_my_account_my_orders_actions', $actions, $order );
+
+        if ( isset( $woocommerce_all_actions['invoice'] ) ) {
+            $actions['action'] = $woocommerce_all_actions['invoice'];
+        }
+        return $actions;
     }
 }
