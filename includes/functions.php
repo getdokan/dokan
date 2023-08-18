@@ -4580,7 +4580,7 @@ function dokan_apply_bulk_order_status_change( $postdata ) {
  * @return string
  */
 function dokan_sanitize_phone_number( $phone ) {
-    return filter_var( $phone, FILTER_SANITIZE_NUMBER_INT );
+	return preg_replace( '/[^0-9()._+-]/', '', $phone );
 }
 
 /**

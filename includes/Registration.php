@@ -146,7 +146,7 @@ class Registration {
             'social'         => $social_profiles,
             'payment'        => [],
             'address'        => isset( $_POST['dokan_address'] ) ? wc_clean( wp_unslash( $_POST['dokan_address'] ) ) : '',
-            'phone'          => isset( $_POST['phone'] ) ? sanitize_text_field( wp_unslash( $_POST['phone'] ) ) : '',
+            'phone'          => isset( $_POST['phone'] ) ? dokan_sanitize_phone_number( wp_unslash( $_POST['phone'] ) ) : '',
             'show_email'     => 'no',
             'location'       => '',
             'find_address'   => '',
