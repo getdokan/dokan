@@ -31,7 +31,10 @@ class VendorStoreInfo {
     public function add_vendor_info_on_product_single_page() {
         global $product;
 
-        $vendor       = dokan_get_vendor_by_product( $product );
+        $vendor = dokan_get_vendor_by_product( $product );
+        if ( ! $vendor ) {
+            return;
+        }
         $store_info   = $vendor->get_shop_info();
         $store_rating = $vendor->get_rating();
 

@@ -435,12 +435,19 @@ class OrderController extends DokanRESTController {
             'limit'       => $request['per_page'],
             'paged'       => isset( $request['page'] ) ? absint( $request['page'] ) : 1,
             'customer_id' => $request['customer_id'],
-            'seller_id'   => dokan_get_current_user_id(),
             'date'        => [
                 'from' => isset( $request['after'] ) ? sanitize_text_field( wp_unslash( $request['after'] ) ) : '',
                 'to'   => isset( $request['before'] ) ? sanitize_text_field( wp_unslash( $request['before'] ) ) : '',
-            ]
+            ],
         ];
+
+        // Admin can get any vendor orders but vendor can't get other vendors orders.
+        $current_user = dokan_get_current_user_id();
+        if ( ! current_user_can( 'manage_options' ) ) {
+            $args['seller_id'] = $current_user;
+        } else {
+            $args['seller_id'] = isset( $request['seller_id'] ) && is_numeric( $request['seller_id'] ) ? sanitize_text_field( $request['seller_id'] ) : $current_user;
+        }
 
         if ( ! empty( $request['search'] ) ) {
             $args['search'] = absint( $request['search'] );
@@ -545,15 +552,16 @@ class OrderController extends DokanRESTController {
      * @return array|WP_Error
      */
     public function get_order_notes( $request ) {
-        $order           = wc_get_order( (int) $request['id'] );
+        $order = wc_get_order( (int) $request['id'] );
+
+        if ( ! $order || $this->post_type !== $order->get_type() ) {
+            return new WP_Error( "dokan_rest_{$this->post_type}_invalid_id", __( 'Invalid order ID.', 'dokan-lite' ), array( 'status' => 404 ) );
+        }
+
         $order_author_id = (int) dokan_get_seller_id_by_order( $order->get_id() );
 
         if ( $order_author_id !== dokan_get_current_user_id() ) {
             return new WP_Error( "dokan_rest_{$this->post_type}_incorrect_order_author", __( 'You have no permission to view this notes', 'dokan-lite' ), array( 'status' => 404 ) );
-        }
-
-        if ( ! $order || $this->post_type !== $order->get_type() ) {
-            return new WP_Error( "dokan_rest_{$this->post_type}_invalid_id", __( 'Invalid order ID.', 'dokan-lite' ), array( 'status' => 404 ) );
         }
 
         $args = array(
@@ -896,9 +904,10 @@ class OrderController extends DokanRESTController {
                     'context'     => array( 'view' ),
                 ),
                 'seller_id'            => array(
-                    'description' => __( 'Orders belongs to specific seller', 'dokan-lite' ),
-                    'type'        => 'integer',
-                    'context'     => array( 'view' ),
+                    'description'       => __( 'Orders belongs to specific seller', 'dokan-lite' ),
+                    'type'              => 'integer',
+                    'context'           => array( 'view' ),
+                    'sanitize_callback' => 'absint',
                 ),
                 'number'               => array(
                     'description' => __( 'Order number.', 'dokan-lite' ),

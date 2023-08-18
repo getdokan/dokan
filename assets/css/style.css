@@ -4337,12 +4337,12 @@ div.media-sidebar a.edit-attachment {
 }
 .dokan-settings-content .dokan-settings-area .dokan-banner {
   border: 4px dashed #d8d8d8;
-  height: 300px;
-  margin: 0 0 30px 35px;
+  margin: 0 auto 35px;
   max-width: 850px;
   text-align: center;
   overflow: hidden;
   position: relative;
+  min-height: 300px;
 }
 .dokan-settings-content .dokan-settings-area .dokan-banner img {
   max-width: 100%;
@@ -6375,10 +6375,10 @@ p.vendor-customer-registration .radio:hover {
   }
   .dokan-dashboard .dokan-dash-sidebar .dokan-settings-area .dokan-banner,
   .dokan-dashboard .dokan-dashboard-content .dokan-settings-area .dokan-banner {
-    width: auto !important;
-    height: auto !important;
-    margin: 0 !important;
-    margin-bottom: 15px !important;
+    width: auto;
+    height: auto;
+    margin-bottom: 15px;
+    min-height: unset;
   }
   .dokan-dashboard .dashboard-content-area .dokan-announcement-widget .dokan-right {
     float: right !important;

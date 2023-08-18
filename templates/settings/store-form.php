@@ -298,8 +298,8 @@ $args     = apply_filters( 'dokan_store_time_arguments', $args, $all_times );
 
 <style>
     .dokan-settings-content .dokan-settings-area .dokan-banner {
-        width: <?php echo esc_attr( $banner_width ) . 'px'; ?>;
-        height: <?php echo esc_attr( $banner_height ) . 'px'; ?>;
+        max-width: <?php echo esc_attr( $banner_width ) . 'px'; ?>;
+        max-height: <?php echo esc_attr( $banner_height ) . 'px'; ?>;
     }
 
     .dokan-settings-content .dokan-settings-area .dokan-banner .dokan-remove-banner-image {
@@ -414,42 +414,8 @@ $args     = apply_filters( 'dokan_store_time_arguments', $args, $all_times );
                 $('#dokan-states-box').hide();
             }
 
-            $('#setting_phone').on( 'keydown', function(e) {
-                let cKey     = 67,
-                    vKey     = 86,
-                    cmdKey   = 91,
-                    ctrlKey  = 17,
-                    ctrlDown = false;
-
-                if (e.keyCode === ctrlKey || e.keyCode === cmdKey) {
-                    ctrlDown = true;
-                }
-
-                if (
-                    // Allow: backspace, delete, tab, escape, enter etc.
-                    $.inArray(e.keyCode, [8, 9, 13, 27, 46, 48, 53, 57, 59, 61, 91, 107, 109, 110, 169, 173, 187, 189, 190]) !== -1 ||
-                    // Allow: Ctrl+A
-                    (e.keyCode == 65 && e.ctrlKey === true) ||
-                    //Allow Ctrl+v
-                    (e.keyCode === vKey && ctrlDown) ||
-                    // Allow: Ctrl+c
-                    (e.keyCode === cKey && ctrlDown) ||
-                    // Allow: home, end, left, right.
-                    (e.keyCode >= 35 && e.keyCode <= 39)
-                ) {
-                    // Let it happen, don't do anything.
-                    return;
-                }
-
-                if ( ( e.shiftKey && ! isNaN( Number(e.key) ) ) ) {
-                    return;
-                }
-
-                // Ensure that it is a number and stop the keypress.
-                if ( isNaN( Number(e.key) ) ) {
-                    e.preventDefault();
-                }
-            });
+            // Sanitize phone number field.
+            $( '#setting_phone' ).on( 'keydown', dokan_sanitize_phone_number );
         });
     })(jQuery);
 </script>
