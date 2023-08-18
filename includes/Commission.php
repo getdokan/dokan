@@ -27,7 +27,7 @@ class Commission {
     /**
      * Order Line Item Id For Product
      *
-     * @since DOKAN_SINCE
+     * @since 3.8.0
      *
      * @var int $order_item_id
      */
@@ -160,7 +160,7 @@ class Commission {
     /**
      * Set order line item id
      *
-     * @since DOKAN_SINCE
+     * @since 3.8.0
      *
      * @param int $item_id
      *
@@ -184,7 +184,7 @@ class Commission {
     /**
      * Get order line item id
      *
-     * @since DOKAN_SINCE
+     * @since 3.8.0
      *
      * @return int
      */

@@ -110,7 +110,7 @@ class OrderCache {
      * This method will delete vendors best-selling product cache after a new order has been made
      *
      * @since 3.2.11
-     * @since DOKAN_SINCE Moved this function from includes/wc-functions.php
+     * @since 3.8.0 Moved this function from includes/wc-functions.php
      *
      * @param int $post_id
      */

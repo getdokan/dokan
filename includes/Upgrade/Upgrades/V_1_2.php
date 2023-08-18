@@ -12,7 +12,7 @@ class V_1_2 extends DokanUpgrader {
     /**
      * Generate dokan sync table
      *
-     * @since DOKAN_SINCE moved from includes/functions.php file
+     * @since 3.8.0 moved from includes/functions.php file
      *
      * @deprecated since 2.4.3
      */

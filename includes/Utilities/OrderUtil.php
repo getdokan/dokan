@@ -13,7 +13,7 @@ class OrderUtil {
      * This method can be removed, and we can directly use WC OrderUtil::custom_orders_table_usage_is_enabled method in future
      * if we set the minimum wc version requirements to 8.0
      *
-     * @since DOKAN_SINCE
+     * @since 3.8.0
      *
      * @return bool
      */
@@ -28,7 +28,7 @@ class OrderUtil {
     /**
      * Checks if posts and order custom table sync are enabled, and there are no pending orders.
      *
-     * @since DOKAN_SINCE
+     * @since 3.8.0
      *
      * @return bool
      */
@@ -39,7 +39,7 @@ class OrderUtil {
     /**
      * Helper function to get whether the order cache should be used or not.
      *
-     * @since DOKAN_SINCE
+     * @since 3.8.0
      *
      * @return bool True if the order cache should be used, false otherwise.
      */
@@ -50,7 +50,7 @@ class OrderUtil {
     /**
      * Helper function to initialize the global $theorder object, mostly used during order meta boxes rendering.
      *
-     * @since DOKAN_SINCE
+     * @since 3.8.0
      *
      * @param WC_Order|WP_Post $post_or_order_object Post or order object.
      *
@@ -77,7 +77,7 @@ class OrderUtil {
     /**
      * Helper function to id from a post or order object.
      *
-     * @since DOKAN_SINCE
+     * @since 3.8.0
      *
      * @param WP_Post|WC_Order $post_or_order_object WP_Post/WC_Order object to get ID for.
      *
@@ -102,7 +102,7 @@ class OrderUtil {
      * This method can be removed, and we can directly use WC OrderUtil::is_order method in future
      * if we set the minimum wc version requirements to 8.0
      *
-     * @since DOKAN_SINCE
+     * @since 3.8.0
      *
      * @param int|WP_Post|WC_Order $order_id Order ID, post object or order object.
      * @param string[]             $types    Types to match against.
@@ -124,7 +124,7 @@ class OrderUtil {
      * This method can be removed, and we can directly use WC OrderUtil::get_order_admin_screen method in future
      * if we set minimum wc version requirements to 8.0
      *
-     * @since DOKAN_SINCE
+     * @since 3.8.0
      *
      * @return string
      */
@@ -137,7 +137,7 @@ class OrderUtil {
     /**
      * Get admin order list page url
      *
-     * @since DOKAN_SINCE
+     * @since 3.8.0
      *
      * @return string
      */
@@ -150,7 +150,7 @@ class OrderUtil {
     /**
      * Helper method to generate admin URL for new order.
      *
-     * @since DOKAN_SINCE
+     * @since 3.8.0
      *
      * @return string Link for new order.
      */
@@ -164,7 +164,7 @@ class OrderUtil {
     /**
      * Get admin order edit page url
      *
-     * @since DOKAN_SINCE
+     * @since 3.8.0
      *
      * @param int $order_id
      *
@@ -181,7 +181,7 @@ class OrderUtil {
     /**
      * Get the custom orders table name for wc.
      *
-     * @since DOKAN_SINCE
+     * @since 3.8.0
      *
      * @return string
      */
@@ -197,7 +197,7 @@ class OrderUtil {
     /**
      * Get the name of the database table that's currently in use for orders.
      *
-     * @since DOKAN_SINCE
+     * @since 3.8.0
      *
      * @return string
      */

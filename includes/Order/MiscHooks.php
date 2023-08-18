@@ -13,13 +13,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Order admin related hooks
  *
- * @since DOKAN_SINCE moved functionality from includes/Admin/Hooks.php file
+ * @since 3.8.0 moved functionality from includes/Admin/Hooks.php file
  */
 class MiscHooks {
     /**
      * Class constructor
      *
-     * @since DOKAN_SINCE
+     * @since 3.8.0
      */
     public function __construct() {
         //Wc remove child order from wc_order_product_lookup & trim child order from posts for analytics
@@ -36,7 +36,7 @@ class MiscHooks {
     /**
      * Delete_child_order_from_wc_order_product
      *
-     * @since DOKAN_SINCE Moved this method from Order/Hooks.php file
+     * @since 3.8.0 Moved this method from Order/Hooks.php file
      *
      * @param \ActionScheduler_Action $args
      *
@@ -55,7 +55,7 @@ class MiscHooks {
     /**
      * Trim child order if parent exist from wc_order_product_lookup for analytics order
      *
-     * @since DOKAN_SINCE Moved this method from Order/Hooks.php file
+     * @since 3.8.0 Moved this method from Order/Hooks.php file
      *
      * @param WC_Order $orders
      *
@@ -74,7 +74,7 @@ class MiscHooks {
     /**
      * Remove customer sensitive information while exporting order
      *
-     * @since DOKAN_SINCE Moved this method from Order/Hooks.php file
+     * @since 3.8.0 Moved this method from Order/Hooks.php file
      *
      * @param array $headers
      *
@@ -93,7 +93,7 @@ class MiscHooks {
     /**
      * Add vendor info in restful wc_order
      *
-     * @since DOKAN_SINCE Moved this method from includes/functions.php file
+     * @since 3.8.0 Moved this method from includes/functions.php file
      *
      * @param WP_REST_Response $response
      *
@@ -156,7 +156,7 @@ class MiscHooks {
     /**
      * Modify order counts for vendor.
      *
-     * @since DOKAN_SINCE Moved this method from includes/wc-functions.php file
+     * @since 3.8.0 Moved this method from includes/wc-functions.php file
      *
      * @param object $counts
      *

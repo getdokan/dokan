@@ -13,13 +13,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Order admin related hooks
  *
- * @since DOKAN_SINCE moved functionality from includes/Admin/Hooks.php file
+ * @since 3.8.0 moved functionality from includes/Admin/Hooks.php file
  */
 class EmailHooks {
     /**
      * Class constructor
      *
-     * @since DOKAN_SINCE
+     * @since 3.8.0
      */
     public function __construct() {
         add_action( 'woocommerce_order_status_pending_to_on-hold', [ $this, 'prevent_sending_multiple_email' ] );
@@ -38,7 +38,7 @@ class EmailHooks {
      * Stop sending multiple email for an order
      *
      * @since 2.8.6
-     * @since DOKAN_SINCE Moved this method from includes/functions.php file
+     * @since 3.8.0 Moved this method from includes/functions.php file
      *
      * @return void
      */
@@ -67,7 +67,7 @@ class EmailHooks {
     /**
      * Send email to the vendor/seller when cancel the order
      *
-     * @since DOKAN_SINCE Moved this method from includes/wc-functions.php file
+     * @since 3.8.0 Moved this method from includes/wc-functions.php file
      *
      * @param string   $recipient
      * @param WC_Order $order
@@ -96,7 +96,7 @@ class EmailHooks {
     /**
      * Add vendor email on customers note mail replay to
      *
-     * @since DOKAN_SINCE Moved this method from includes/wc-functions.php file
+     * @since 3.8.0 Moved this method from includes/wc-functions.php file
      *
      * @param string   $headers
      * @param string   $id
@@ -132,7 +132,7 @@ class EmailHooks {
      * remove those action hooks. That's why we are doing this from the phpmailer_init action
      * by returning a fake phpmailer class.
      *
-     * @since DOKAN_SINCE Moved this method from includes/wc-functions.php file
+     * @since 3.8.0 Moved this method from includes/wc-functions.php file
      *
      * @param object $phpmailer
      *

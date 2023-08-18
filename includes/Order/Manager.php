@@ -13,7 +13,7 @@ use WP_Error;
  * Order Management API
  *
  * @since 2.8
- * @since DOKAN_SINCE added HPOS support
+ * @since 3.8.0 added HPOS support
  */
 class Manager {
 
@@ -22,7 +22,7 @@ class Manager {
      *
      * @since 3.0.0
      * @since 3.6.3 rewritten to include filters
-     * @since DOKAN_SINCE added HPOS support
+     * @since 3.8.0 added HPOS support
      *
      * @return WP_Error|int[]|WC_Order[]
      */
@@ -66,7 +66,7 @@ class Manager {
     /**
      * Get backward compatibility args
      *
-     * @since DOKAN_SINCE
+     * @since 3.8.0
      *
      * @param array $args
      *
@@ -272,7 +272,7 @@ class Manager {
     /**
      * Count orders for a seller
      *
-     * @since DOKAN_SINCE moved this function from functions.php file
+     * @since 3.8.0 moved this function from functions.php file
      *
      * @param int $seller_id
      *
@@ -351,7 +351,7 @@ class Manager {
     /**
      * Check if an order with same id is exists in database
      *
-     * @since DOKAN_SINCE
+     * @since 3.8.0
      *
      * @param int|WC_Order $order_id
      *
@@ -376,7 +376,7 @@ class Manager {
     /**
      * Check if order is belonged to given seller
      *
-     * @since DOKAN_SINCE
+     * @since 3.8.0
      *
      * @param int $seller_id
      * @param int $order_id
@@ -396,7 +396,7 @@ class Manager {
     /**
      * Get order of current logged-in users or by given customer id
      *
-     * @since DOKAN_SINCE
+     * @since 3.8.0
      *
      * @param array $args
      *
@@ -420,7 +420,7 @@ class Manager {
     /**
      * Get Customer Order IDs by Seller
      *
-     * @since DOKAN_SINCE
+     * @since 3.8.0
      *
      * @param int $customer_id
      * @param int $seller_id
@@ -464,7 +464,7 @@ class Manager {
     /**
      * Delete dokan order
      *
-     * @since DOKAN_SINCE
+     * @since 3.8.0
      *
      * @param int      $order_id
      * @param int|null $seller_id
@@ -533,7 +533,7 @@ class Manager {
     /**
      * Delete dokan order with suborders
      *
-     * @since DOKAN_SINCE
+     * @since 3.8.0
      *
      * @param int $order_id
      *
@@ -863,7 +863,7 @@ class Manager {
      * to each seller dashboard. That's why we need to divide the main order to
      * some sub-orders based on the number of sellers.
      *
-     * @since DOKAN_SINCE added $force_create parameter
+     * @since 3.8.0 added $force_create parameter
      *
      * @param bool $force_create if this parameter is true, if suborder is already created, they'd be deleted first
      *

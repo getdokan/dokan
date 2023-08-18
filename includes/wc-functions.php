@@ -419,12 +419,12 @@ function dokan_process_product_meta( int $post_id, array $data = [] ) {
  * @param int   $variation_id       optional product variation identifier
  * @param array $downloadable_files newly set files
  *
- * @deprecated DOKAN_SINCE
+ * @deprecated 3.8.0
  *
  * @return void
  */
 function dokan_process_product_file_download_paths( int $product_id, int $variation_id, array $downloadable_files ) {
-    wc_deprecated_function( 'dokan_process_product_file_download_paths', 'DOKAN_SINCE' );
+    wc_deprecated_function( 'dokan_process_product_file_download_paths', '3.8.0' );
     global $wpdb;
 
     if ( $variation_id ) {
@@ -474,12 +474,12 @@ function dokan_process_product_file_download_paths( int $product_id, int $variat
  *
  * @param int $order_id
  *
- * @deprecated DOKAN_SINCE
+ * @deprecated 3.8.0
  *
  * @return int
  */
 function dokan_sub_order_get_total_coupon( int $order_id ) : int {
-    wc_deprecated_function( 'dokan_sub_order_get_total_coupon', 'DOKAN_SINCE' );
+    wc_deprecated_function( 'dokan_sub_order_get_total_coupon', '3.8.0' );
     global $wpdb;
 
     $result = $wpdb->get_var(

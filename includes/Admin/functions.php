@@ -122,12 +122,12 @@ function dokan_admin_report_data( $group_by = 'day', $year = '', $start = '', $e
  * @param string $start
  * @param string $end
  *
- * @deprecated DOKAN_SINCE since we are getting the report data from REST API (dokan/v1/report), we don't need this function anymore.
+ * @deprecated 3.8.0 since we are getting the report data from REST API (dokan/v1/report), we don't need this function anymore.
  *
  * @return array
  */
 function dokan_admin_report( $group_by = 'day', $year = '', $start = '', $end = '' ) {
-    wc_deprecated_function( 'dokan_admin_report', 'DOKAN_SINCE' );
+    wc_deprecated_function( 'dokan_admin_report', '3.8.0' );
 
     global $wp_locale;
 
@@ -372,12 +372,12 @@ function dokan_admin_report( $group_by = 'day', $year = '', $start = '', $end = 
  * @global object $wp_locale
  *
  * @global WPDB   $wpdb
- * @deprecated DOKAN_SINCE since we are getting the report data from REST API (dokan/v1/report), we don't need this function anymore.
+ * @deprecated 3.8.0 since we are getting the report data from REST API (dokan/v1/report), we don't need this function anymore.
  *
  * @return array
  */
 function dokan_admin_report_by_seller( $chosen_seller_id = 0 ) {
-    wc_deprecated_function( 'dokan_admin_report_by_seller', 'DOKAN_SINCE' );
+    wc_deprecated_function( 'dokan_admin_report_by_seller', '3.8.0' );
 
     global $wpdb, $wp_locale;
 
