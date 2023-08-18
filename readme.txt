@@ -18,7 +18,7 @@ The pioneer multi-vendor plugin for WordPress. Start your own marketplace in min
 = DOKAN MULTIVENDOR MARKETPLACE PLUGIN FOR WORDPRESS - POWERED BY WOOCOMMERCE =
 
 
-[Dokan](https://dokan.co/wordpress/) is the best frontend multi-vendor marketplace plugin on WordPress, powered by WooCommerce. It helps you build your own marketplace similar to Amazon, Shopify, eBay, and Magento in under 30 minutes.
+[Dokan](https://dokan.co/wordpress/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) is the best frontend multi-vendor marketplace plugin on WordPress, powered by WooCommerce. It helps you build your own marketplace similar to Amazon, Shopify, eBay, and Magento in under 30 minutes.
 
 Dokan is the fastest way to launch an eCommerce business and earn through commissions with products ranging from digital, and physical to variable products.
 
@@ -26,15 +26,15 @@ Hear what reputed WordPress influencer and online business strategist, Darrel Wi
 
 [youtube https://www.youtube.com/watch?v=nDAxNypVxdw]
 
-👉 **Official Free Demo Link:** Try out multiple [Dokan Demo sites](https://dokan.co/wordpress/demo/)
+👉 **Official Free Demo Link:** Try out multiple [Dokan Demo sites](https://dokan.co/wordpress/demo/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org)
 
-👉 **Learn More About Dokan (PRO):** [All The Features of Dokan](https://dokan.co/wordpress/features/)
+👉 **Learn More About Dokan (PRO):** [All The Features of Dokan](https://dokan.co/wordpress/features/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org)
 
 👉 Check out the **comprehensive customer [Dokan Mobile App](https://dokan.co/wordpress/dokan-mobile-app/)** to enhance your Dokan marketplace shopping experience.
 
 👉 **Easy Delivery Management with [Dokan Delivery Driver App](https://dokan.co/wordpress/delivery-driver-app/)** (Pro) with real-time order tracking, live timeline updates, and an asynchronous system between admin, vendors, customers, and delivery drivers.
 
-👉 **Confused about how to get started?** Read our [Blogs](https://wedevs.com/blog/)
+👉 **Confused about how to get started?** Read our from [weDevs](https://wedevs.com/blog/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) and [Dokan](https://dokan.co/blog/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org)
 
 
 = PLACES WHERE DOKAN HAS BEEN FEATURED =
@@ -43,7 +43,7 @@ Hear what reputed WordPress influencer and online business strategist, Darrel Wi
 
 🏆 [How to Setup a WordPress Marketplace with Multiple Vendors](https://learnwoo.com/wordpress-marketplace/)
 
-🏆 [How to create a Multi-Vendor Marketplace for WordPress using Dokan](https://topnotchthemes.com/how-to-create-a-multi-vendor-marketplace-for-wordpress-using-dokan/)
+🏆 [How to create a Multi-Vendor Marketplace for WordPress using Dokan](https://youtu.be/_Vv5T7qqhoE)
 
 🏆 [Dokan Theme Review: A Multi-Vendor Marketplace Theme for WordPress](https://wpmayor.com/dokan-theme-review-multi-vendor-marketplace-theme-wordpress/)
 
@@ -73,11 +73,11 @@ Hear what reputed WordPress influencer and online business strategist, Darrel Wi
 
 = THE BEST FRONTEND USER INTERFACE =
 
-To provide a comprehensive frontend experience, every vendor has a [personalized customizable dashboard](https://dokan.co/wordpress/features/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) on the store frontend. They can easily navigate and control every aspect of their marketplace from there. Backend access is restricted to only the admin, which sets Dokan apart from other marketplace plugins. However, all Dokan [modules](https://wedevs.com/dokan/modules) are frontend compatible so that both the admin and vendors can enjoy the benefits and advanced features of Dokan.
+To provide a comprehensive frontend experience, every vendor has a [personalized customizable dashboard](https://dokan.co/wordpress/features/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) on the store frontend. They can easily navigate and control every aspect of their marketplace from there. Backend access is restricted to only the admin, which sets Dokan apart from other marketplace plugins. However, all Dokan [modules](https://dokan.co/wordpress/modules/) are frontend compatible so that both the admin and vendors can enjoy the benefits and advanced features of Dokan.
 
 Dokan (Pro) comes with a free, fully responsive eCommerce theme - [Dokani](https://dokan.co/wordpress/dokani-theme/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) with special widgets to ensure you can customize the theme however you like.
 
-Dokan is also compatible with the [Otel theme](https://wedevs.com/dokan/otel-theme/), a customizable and fully responsive WordPress theme for any hotel booking management site.
+Dokan is also compatible with the [Otel theme](https://dokan.co/wordpress/otel-theme/), a customizable and fully responsive WordPress theme for any hotel booking management site.
 
 = IT’S FAST AND EASY TO USE =
 
@@ -224,7 +224,7 @@ Dokan comes with a number of advanced features & modules that boost your marketp
 * [Product Subscription](https://dokan.co/wordpress/modules/product-subscription/?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=modules) (Pro): Let your vendors sell subscription-based products and services easily from the frontend of your website.
 * [Request for Quotation](https://dokan.co/wordpress/modules/request-for-quotation/?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=modules) (Pro): Customers can communicate with vendors by requesting quoted prices on wholesale orders.
 * [Rank Math SEO](https://dokan.co/wordpress/modules/rank-math-seo/?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=modules) (Pro): Let your vendors manage their product SEO with an easy-to-navigate frontend dashboard and drive traffic to your eCommerce site.
-* [Dokan MANGOPAY Integration](https://dokan.co/docs/wordpress/modules/dokan-mangopay/?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=modules) (Pro): Make smooth transactions with split payments, multi vendor support, and run your business operations in Europe with ease using Mangopay.
+* [Dokan MANGOPAY Integration](https://dokan.co/wordpress/modules/dokan-mangopay-integration/?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=modules) (Pro): Make smooth transactions with split payments, multi vendor support, and run your business operations in Europe with ease using Mangopay.
 * [Dokan Paypal Marketplace](https://dokan.co/wordpress/modules/dokan-paypal-marketplace/?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=modules) (Pro): Make your marketplace payment system smoother than ever with the advanced PayPal integration with all PayPal Commerce Platform (PCP) features.
 * [PDF Invoice](https://dokan.co/wordpress/modules/pdf-invoice-2/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org): Create automated multi-seller invoices with templates & download them in PDF.
 * [Product Duplicator](https://dokan.co/wordpress/modules/product-duplicator/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org): Enable vendors to copy a product that another seller is already selling.
@@ -311,7 +311,7 @@ A. Yes, that's how Dokan works. In every sales, you can cut a commission from a 
 A. Obviously, you can use this on a single seller site to give them a nice front-end experience.
 
 = Q. How to upgrade to the Pro version?
-A. Just install and activate the PRO version without deleting the free plugin. All your data will be safe on the database and some extra features will be added. If you feel something may go wrong, please consult with our [support](https://wedevs.com/contact/) staff first.
+A. Just install and activate the PRO version without deleting the free plugin. All your data will be safe on the database and some extra features will be added. If you feel something may go wrong, please consult with our [support](https://dokan.co/contact/) staff first.
 
 == Screenshots ==
 
