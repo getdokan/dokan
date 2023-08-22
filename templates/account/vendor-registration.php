@@ -35,10 +35,12 @@
         <input type="hidden" name="role" value="seller">
     </p>
 
+    <?php if ( get_option( 'woocommerce_registration_generate_password', 'no' ) !== 'yes' ) : ?>
     <p class="form-row form-group form-row-wide">
         <label for="reg_password"><?php esc_html_e( 'Password', 'dokan-lite' ); ?> <span class="required">*</span></label>
         <input type="password" class="input-text form-control" name="password" id="reg_password" value="<?php echo ! empty( $data['password'] ) ? esc_attr( $data['password'] ) : ''; ?>" required="required" minlength="6" />
     </p>
+    <?php endif; ?>
 
     <!-- Spam Trap -->
     <div style="left:-999em; position:absolute;"><label for="trap"><?php esc_html_e( 'Anti-spam', 'dokan-lite' ); ?></label><input type="text" name="email_2" id="trap" tabindex="-1" /></div>
