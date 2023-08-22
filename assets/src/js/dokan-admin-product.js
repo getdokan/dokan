@@ -1,11 +1,12 @@
 (function($) {
     const DokanAdminProduct = {
+        vendorHtmlElement: null,
         searchVendors(element) {
             $( element ).each( function () {
                 let selector = $(this);
                 let attributes = $( selector ).data();
 
-                $( selector ).selectWoo({
+                    DokanAdminProduct.vendorHtmlElement = $( selector ).selectWoo({
                     closeOnSelect:  attributes['close_on_select'] ? true : false,
                     minimumInputLength: attributes['minimum_input_length'] ? attributes['minimum_input_length']  : '0',
                     ajax: {
@@ -61,8 +62,23 @@
             });
         },
 
+         hideVendorIfSubscriptionProduct() {
+             let productType = $( '#product-type' ).val();
+             let vendorBox = $( '.dokan_product_author_override' ).closest('div.postbox');
+
+             if ( 'product_pack' === productType ) {
+                 let currentUser = wp.data.select('core').getCurrentUser();
+
+                 DokanAdminProduct.vendorHtmlElement.val( currentUser.id ? String( currentUser.id ) : '0' ).trigger('change');
+                 vendorBox.slideUp();
+             } else {
+                 vendorBox.slideDown();
+             }
+         },
+
         init() {
             this.searchVendors( '.dokan_product_author_override' );
+            $( '#product-type' ).on( 'change', this.hideVendorIfSubscriptionProduct );
         }
     }
 
