@@ -21,13 +21,17 @@ export default {
     components: {
         Tab
     },
+    props: {
+        fieldData: Object
+    },
     data() {
         return {tabs: [] };
     },
 
     created() {
-
         this.tabs = this.$children;
+        // console.log("FieldData");
+        // console.log(this.fieldData);
 
     },
     methods: {

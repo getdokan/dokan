@@ -10,7 +10,7 @@
         </template>
 
         <template v-if="'sub_tab' === fieldData.type">
-            <tabs>
+            <tabs :fieldData="fieldData">
                 <tab
                     v-for="tab in fieldData.tabs"
                     :name="tab.label"

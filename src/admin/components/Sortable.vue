@@ -1,6 +1,10 @@
 <template>
     <draggable
+        :component-data="getComponentData()"
         @change="onChangeData"
+        tag="div"
+        @start="dragging = true"
+        @end="dragging = false"
     >
         <div
             v-for="item in menuList"
@@ -62,6 +66,7 @@ export default {
     data() {
         return {
             menuList: Object.assign( {}, this.list ),
+            dragging: false,
         }
     },
     created() {
@@ -76,17 +81,75 @@ export default {
             temporary_disable_edit: false,
             switchable: true,
             is_switched_on: true,
+            menu_manager_position: 0, // Dashboard menu manager position
         };
         Object.keys(this.menuList).map( ( key ) => {
             let _new_object = { ...additional_fields, ...this.menuList[key] };
             _new_object.menu_key = key;
             _new_object.previous_title = _new_object.title;
             this.menuList[key] = _new_object;
-
         } );
+        // console.log(this.menuList);
+
+        // Sorting like in position at backend
+        this.menuList = Object.fromEntries(
+            Object.entries(this.menuList).sort(([, a], [, b]) => {
+                let position_a = a.menu_manager_position || a.pos;
+                let position_b = b.menu_manager_position || b.pos;
+                return position_a - position_b;
+            })
+        );
+        // console.log(this.menuList);
+
+        Object.keys(this.menuList).map( ( value, index ) => {
+            this.menuList[value].menu_manager_position = index
+            console.log(this.menuList[value].menu_key + ": " + this.menuList[value].pos + "[" + this.menuList[value].menu_manager_position + "]" );
+        } )
+
+
+        // console.log(this.menuList);
+        // Object.entries( this.menuList ).map((value, key) => {
+        //     console.log(key);
+        //     console.log(value);
+            // console.log(`${value.menu_key}: ${value.pos}`)
+        // });
     },
     methods: {
-        onChangeData() {
+        getComponentData() {
+            return {
+                on: {
+                    change: ( e ) => {
+                        console.log('Changed');
+                        console.log(e);
+                        let new_drag_index = e.newDraggableIndex;
+                        let new_index = e.newIndex;
+                        let old_drag_index = e.oldDraggableIndex;
+                        let old_index = e.oldIndex;
+
+                        // Update Index
+                        Object.keys( this.menuList ).map( (value, index ) => {
+                            this.menuList[key].menu_manager_position == new_drag_index
+                        });
+
+                        // console.log(e.newDraggableIndex);
+                        // console.log(this.menuList);
+                        // @TODO Swap Values
+                    },
+                    // move: ( e ) => {
+                    //   console.log('Moved');
+                    //   console.log(e);
+                    //   return false;
+                    // }
+                  // input: function() {
+                  //       console.log('input')
+                  // }
+                },
+                // props: {
+                //   value: this.activeNames
+                // }
+            }
+        },
+        onChangeData(e) {
             console.log('Changed');
         },
         switchToggle(checked, value) {
@@ -100,12 +163,21 @@ export default {
             }
             this.menuList[value].is_switched_on = checked;
             console.log([checked, value]);
+        },
+        checkMove: (e) => {
+            console.log("Move");
+        }
+    },
+    computed: {
+        onChangeDatac() {
+            console.log( 'OnChangeDataC' )
         }
     },
     watch: {
         menuList : {
             handler() {
-                console.log("menuList changed");
+                // console.log("menuList changed");
+                // console.log(this.menuList);
             },
             deep : true
         }
