@@ -67,10 +67,10 @@
              let vendorBox = $( '.dokan_product_author_override' ).closest('div.postbox');
 
              if ( 'product_pack' === productType ) {
-                 let currentUser = wp.data.select('core').getCurrentUser();
+                 let user = $('.dokan_product_author_override').data('data')[0];
 
-                 DokanAdminProduct.vendorHtmlElement.val( currentUser.id ? String( currentUser.id ) : '0' ).trigger('change');
                  vendorBox.slideUp();
+                 DokanAdminProduct.vendorHtmlElement.val( user.id ? String( user.id ) : '0' ).trigger('change');
              } else {
                  vendorBox.slideDown();
              }

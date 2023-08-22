@@ -117,7 +117,7 @@ class Hooks {
         $args    = [
             'number'   => 20,
             'status'   => [ 'all' ],
-            'role__in' => [ 'seller', 'administrator' ],
+            'role__in' => [ 'seller', 'administrator', 'shop_manager' ],
         ];
 
         if ( ! empty( $_GET['s'] ) ) {
