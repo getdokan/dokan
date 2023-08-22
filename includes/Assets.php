@@ -130,7 +130,7 @@ class Assets {
             wp_localize_script( 'dokan-admin-product', 'dokan_admin_product', $this->admin_product_localize_scripts() );
         }
 
-        do_action( 'dokan_enqueue_admin_scripts' );
+        do_action( 'dokan_enqueue_admin_scripts', $hook );
     }
 
     /**
