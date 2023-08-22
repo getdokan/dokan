@@ -15,6 +15,7 @@ use WP_User;
  *
  * @since 2.6.10
  */
+#[\AllowDynamicProperties]
 class Vendor {
     /**
      * Set class public properties
