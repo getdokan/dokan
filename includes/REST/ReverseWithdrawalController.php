@@ -87,7 +87,13 @@ class ReverseWithdrawalController extends WP_REST_Controller {
                     'permission_callback' => [ $this, 'get_store_transactions_permissions_check' ],
                     'args'                => $this->get_store_transactions_route_params(),
                 ],
-                'schema' => [ $this, 'get_public_item_schema_for_single_store_transactions' ],
+                [
+                    'methods'             => WP_REST_Server::CREATABLE,
+                    'callback'            => [ $this, 'create_transaction' ],
+                    'permission_callback' => [ $this, 'create_transactions_permissions_check' ],
+                    'args'                => $this->get_endpoint_args_for_item_schema( WP_REST_Server::CREATABLE ),
+                ],
+                'schema' => [ $this, 'get_item_schema' ],
             ]
         );
 
@@ -195,6 +201,19 @@ class ReverseWithdrawalController extends WP_REST_Controller {
      */
     public function get_store_transactions_permissions_check( $request ) {
         return is_user_logged_in() && dokan_is_user_seller( dokan_get_current_user_id() );
+    }
+
+    /**
+     * Checks if a given request has access to create items.
+     *
+     * @since 3.7.24
+     *
+     * @param WP_REST_Request $request Full details about the request.
+     *
+     * @return bool True if the request has read access, false otherwise.
+     */
+    public function create_transactions_permissions_check( $request ) {
+        return is_user_logged_in() && current_user_can( 'manage_options' );
     }
 
     /**
@@ -368,6 +387,35 @@ class ReverseWithdrawalController extends WP_REST_Controller {
         $response = $this->format_collection_response( $response, $request, count( $transaction_types ) );
 
         return $response;
+    }
+
+    /**
+     * Create manual reverse withdrawal transaction
+     *
+     * @since 3.7.24
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return WP_REST_Response
+     */
+    public function create_transaction( $request ) {
+        $manager = new Manager();
+        $inserted_id = $manager->insert(
+            [
+                'trn_id'    => $request->get_param( 'trn_id' ),
+                'trn_type'  => $request->get_param( 'trn_type' ),
+                'vendor_id' => $request->get_param( 'vendor_id' ),
+                'note'      => $request->get_param( 'note' ),
+                'debit'     => wc_format_decimal( $request->get_param( 'debit' ) ),
+                'credit'    => wc_format_decimal( $request->get_param( 'credit' ) ),
+            ]
+        );
+
+        if ( is_wp_error( $inserted_id ) ) {
+            return $inserted_id;
+        }
+
+        return rest_ensure_response( [ 'trn_id' => $inserted_id ] );
     }
 
     /**
@@ -676,7 +724,7 @@ class ReverseWithdrawalController extends WP_REST_Controller {
      *
      * @return array
      */
-    public function get_public_item_schema_for_single_store_transactions() {
+    public function get_item_schema() {
         $schema = [
             '$schema'    => 'http://json-schema.org/draft-04/schema#',
             'title'      => 'transactions',
@@ -691,8 +739,8 @@ class ReverseWithdrawalController extends WP_REST_Controller {
                 'trn_id'    => [
                     'description' => __( 'Transaction ID', 'dokan-lite' ),
                     'type'        => 'integer',
-                    'context'     => [ 'view' ],
-                    'readonly'    => true,
+                    'context'     => [ 'view', 'edit' ],
+                    'default'     => 0,
                 ],
                 'trn_url'   => [
                     'description' => __( 'Transaction URL.', 'dokan-lite' ),
@@ -708,34 +756,38 @@ class ReverseWithdrawalController extends WP_REST_Controller {
                     'readonly'    => true,
                 ],
                 'trn_type'  => [
-                    'description' => __( 'Transaction type to filter form', 'dokan-lite' ),
+                    'description' => __( 'Transaction type', 'dokan-lite' ),
                     'type'        => 'string',
-                    'readonly'    => true,
+                    'required'    => true,
+                    'context'     => [ 'view', 'edit' ],
                     'enum'        => array_keys( Helper::get_transaction_types() ),
                 ],
                 'vendor_id' => [
                     'description' => __( 'ID of the Store', 'dokan-lite' ),
                     'type'        => 'integer',
-                    'context'     => [ 'view' ],
-                    'readonly'    => true,
+                    'context'     => [ 'view', 'edit' ],
+                    'required'          => true,
+                    'default'           => dokan_get_current_user_id(),
+                    'sanitize_callback' => 'absint',
                 ],
                 'note'      => [
                     'description' => __( 'Added note.', 'dokan-lite' ),
                     'type'        => 'string',
-                    'context'     => [ 'view' ],
-                    'readonly'    => true,
+                    'context'     => [ 'view', 'edit' ],
+                    'required'    => true,
+                    'sanitize_callback' => 'sanitize_textarea_field',
                 ],
                 'debit'     => [
                     'description' => __( 'Amount that site admin charged to store owner', 'dokan-lite' ),
-                    'type'        => 'number',
-                    'context'     => [ 'view' ],
-                    'readonly'    => true,
+                    'type'        => 'string',
+                    'default'     => '0',
+                    'context'     => [ 'view', 'edit' ],
                 ],
                 'credit'    => [
                     'description' => __( 'Amount that has been paid via store owner to site admin', 'dokan-lite' ),
-                    'type'        => 'number',
-                    'context'     => [ 'view' ],
-                    'readonly'    => true,
+                    'type'        => 'string',
+                    'default'     => '0',
+                    'context'     => [ 'view', 'edit' ],
                 ],
                 'balance'   => [
                     'description' => __( 'Amount currently site owners owns from store owner', 'dokan-lite' ),

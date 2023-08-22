@@ -10,17 +10,19 @@
             <p class="field_desc" v-html="fieldData.desc"></p>
         </div>
         <div class="fields" v-bind:class="[fieldData.type === 'radio' ? 'radio_fields' : '']" v-if="fieldData.url || fieldData.type !== 'html'">
-            <input
-                disabled
-                type='text'
-                class='regular-text large'
+            <secret-input
+                v-model="fieldData.url"
+                :type="'text'"
                 v-if="fieldData.url"
-                :value='fieldData.url' />
-            <input
-                class="regular-text large"
-                :type="fieldData.type"
+                :copy-btn="true"
+                :disabled="true"
+                :is-secret="false"
+            />
+            <secret-input
                 v-model="fieldValue[fieldData.name]"
-                v-if="fieldData.type === 'text'" />
+                :type='fieldData.type'
+                v-if="fieldData.type === 'text'"
+            />
             <textarea
                 class="large"
                 v-model="fieldValue[fieldData.name]"
@@ -43,7 +45,12 @@
 </template>
 
 <script>
+    import SecretInput from './SecretInput.vue';
+
     export default {
+        components: {
+            SecretInput
+        },
         props: {
             fieldData: {
                 type: Object,
@@ -54,6 +61,12 @@
                 type: Object,
                 required: true,
             },
+        },
+
+        data() {
+            return {
+                copied: false,
+            }
         },
 
         methods: {
