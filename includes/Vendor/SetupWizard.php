@@ -115,7 +115,7 @@ class SetupWizard extends DokanSetupWizard {
      */
     public function frontend_enqueue_scripts() {
         wp_enqueue_style( 'jquery-ui' );
-        
+
         wp_enqueue_script( 'jquery' );
         wp_enqueue_script( 'jquery-tiptip' );
         wp_enqueue_script( 'jquery-blockui' );
@@ -393,6 +393,9 @@ class SetupWizard extends DokanSetupWizard {
         }
 
         $dokan_settings = $this->store_info;
+        $country_obj    = new WC_Countries();
+        $countries      = $country_obj->get_allowed_countries();
+        $states         = $country_obj->states;
 
         $dokan_settings['store_ppp']    = isset( $_POST['store_ppp'] ) ? absint( $_POST['store_ppp'] ) : '';
         $dokan_settings['address']      = isset( $_POST['address'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['address'] ) ) : [];
@@ -401,12 +404,35 @@ class SetupWizard extends DokanSetupWizard {
         $dokan_settings['show_email']   = isset( $_POST['show_email'] ) ? 'yes' : 'no';
 
         // Check address and add manually values on Profile Completion also increase progress value
-        if ( $dokan_settings['address'] ) {
-            $dokan_settings['profile_completion']['address'] = 10;
-            $profile_settings                                = get_user_meta( $this->store_id, 'dokan_profile_settings', true );
+        $dokan_settings['profile_completion']['address'] = $dokan_settings['profile_completion']['progress_vals']['address_val'];
+
+        if ( empty( $dokan_settings['address']['street_1'] ) ) {
+            unset( $dokan_settings['profile_completion']['address'] );
+        }
+
+        if ( empty( $dokan_settings['address']['city'] ) && ! empty( $dokan_settings['profile_completion']['address'] ) ) {
+            unset( $dokan_settings['profile_completion']['address'] );
+        }
+
+        if ( empty( $dokan_settings['address']['zip'] ) && ! empty( $dokan_settings['profile_completion']['address'] ) ) {
+            unset( $dokan_settings['profile_completion']['address'] );
+        }
+
+        if ( empty( $dokan_settings['address']['country'] ) && ! empty( $dokan_settings['profile_completion']['address'] ) ) {
+            unset( $dokan_settings['profile_completion']['address'] );
+        } else {
+            $country = $dokan_settings['address']['country'];
+
+            if ( ! empty( $states[ $country ] ) && empty( $dokan_settings['address']['state'] ) && ! empty( $dokan_settings['profile_completion']['address'] ) ) {
+                unset( $dokan_settings['profile_completion']['address'] );
+            }
+        }
+
+        if ( ! empty( $dokan_settings['profile_completion']['address'] ) ) {
+            $profile_settings = get_user_meta( $this->store_id, 'dokan_profile_settings', true );
 
             if ( ! empty( $profile_settings['profile_completion']['progress'] ) ) {
-                $dokan_settings['profile_completion']['progress'] = $profile_settings['profile_completion']['progress'] + 10;
+                $dokan_settings['profile_completion']['progress'] = $profile_settings['profile_completion']['progress'] + $dokan_settings['profile_completion']['progress_vals']['address_val'];
             }
         }
 
@@ -480,29 +506,38 @@ class SetupWizard extends DokanSetupWizard {
                 'iban'           => $bank['iban'],
                 'swift'          => $bank['swift'],
             ];
+
+            $user_data = array_filter( $dokan_settings['payment']['bank'], function( $item ) { return ! empty( $item ); } );
+            $require_fields = array_keys( dokan_bank_payment_required_fields() );
+
+            $has_bank_information = true;
+
+            foreach ( $require_fields as $require_field ) {
+                if( ! isset( $user_data[ $require_field ] ) ) {
+                    $has_bank_information = false;
+                    break;
+                }
+            }
+
+            if ( ! $has_bank_information ) {
+                $dokan_settings['profile_completion']['bank'] = $dokan_settings['profile_completion']['progress_vals']['payment_method_val'];
+                $dokan_settings['profile_completion']['paypal'] = 0;
+            }
         }
 
-        if ( isset( $_POST['settings']['paypal']['email'] ) ) {
+        if ( ! empty( $_POST['settings']['paypal']['email'] ) ) {
             $dokan_settings['payment']['paypal']            = [
                 'email' => sanitize_email( wp_unslash( $_POST['settings']['paypal']['email'] ) ),
             ];
-            $dokan_settings['profile_completion']['paypal'] = 15;
-            $dokan_settings['profile_completion']['skrill'] = 0;
-        }
-
-        if ( isset( $_POST['settings']['skrill']['email'] ) ) {
-            $dokan_settings['payment']['skrill']            = [
-                'email' => sanitize_email( wp_unslash( $_POST['settings']['skrill']['email'] ) ),
-            ];
-            $dokan_settings['profile_completion']['skrill'] = 15;
-            $dokan_settings['profile_completion']['paypal'] = 0;
+            $dokan_settings['profile_completion']['paypal'] = $dokan_settings['profile_completion']['progress_vals']['payment_method_val'];
+            $dokan_settings['profile_completion']['bank'] = 0;
         }
 
         // Check any payment methods setups and add manually value on Profile Completion also increase progress value
-        if ( isset( $_POST['settings']['paypal'] ) || isset( $_POST['settings']['skrill'] ) ) {
+        if ( isset( $_POST['profile_completion']['paypal'] ) || isset( $_POST['profile_completion']['bank'] ) ) {
             $profile_settings = get_user_meta( $this->store_id, 'dokan_profile_settings', true );
             if ( ! empty( $profile_settings['profile_completion']['progress'] ) ) {
-                $dokan_settings['profile_completion']['progress'] = $profile_settings['profile_completion']['progress'] + 15;
+                $dokan_settings['profile_completion']['progress'] = $profile_settings['profile_completion']['progress'] + $dokan_settings['profile_completion']['progress_vals']['payment_method_val'];
             }
         }
 
