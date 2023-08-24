@@ -212,6 +212,21 @@ class Helper {
     }
 
     /**
+     * This method will check if a product is reverse withdrawal product
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param int $product_id
+     *
+     * @return bool
+     */
+    public static function is_reverse_withdrawal_product( $product_id ) {
+        $base_product_id = static::get_reverse_withdrawal_base_product();
+
+        return $base_product_id === $product_id;
+    }
+
+    /**
      * This method will check if cart contain reverse withdrawal payment product
      *
      * @since 3.5.1
