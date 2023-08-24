@@ -25,6 +25,7 @@
             <input id='ac_name' name="settings[bank][ac_name]" value="<?php echo esc_attr( $ac_name ); ?>" class="dokan-form-control" placeholder="<?php echo esc_attr( ! empty( $fields_placeholders['ac_name']['placeholder'] ) ? $fields_placeholders['ac_name']['placeholder'] : '' ); ?>" type="text" <?php echo empty( $required_fields['ac_name'] ) ? '' : 'required'; ?> >
             <span class="error-container">
                 <?php
+                // phpcs:ignore
                 if ( ! empty( $_POST['error_ac_name'] ) ) {
                     echo '<span class="required">' . __( 'This is required', 'dokan-lite' ) . '</span>';
                 }
