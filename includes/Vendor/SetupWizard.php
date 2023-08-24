@@ -213,45 +213,127 @@ class SetupWizard extends DokanSetupWizard {
         <form method="post" class="dokan-seller-setup-form">
             <table class="form-table">
                 <tr>
-                    <th scope="row"><label for="store_ppp"><?php esc_attr_e( 'Store Products Per Page', 'dokan-lite' ); ?></label></th>
+                    <th scope="row">
+                        <label for="store_ppp">
+                            <?php esc_attr_e( 'Store Products Per Page', 'dokan-lite' ); ?><span class='required'>*</span>
+                        </label>
+                    </th>
                     <td>
                         <input type="text" id="store_ppp" name="store_ppp" value="<?php echo esc_attr( $store_ppp ); ?>"/>
+                        <span class="error-container">
+                            <?php
+                                if ( ! empty( $_POST['error_store_ppp'] ) ) {
+                                    echo '<span class="required">' . __( 'This is required', 'dokan-lite' ) . '</span>';
+                                }
+                            ?>
+                        </span>
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row"><label for="address[street_1]"><?php esc_html_e( 'Street', 'dokan-lite' ); ?></label></th>
+                    <th scope="row">
+                        <label for="address[street_1]">
+                            <?php esc_html_e( 'Street', 'dokan-lite' ); ?>
+                            <span class='required'>*</span></label></th>
+                        </label>
+                    </th>
                     <td>
                         <input type="text" id="address[street_1]" name="address[street_1]" value="<?php echo esc_attr( $address_street1 ); ?>"/>
+                        <span class="error-container">
+                            <?php
+                            if ( ! empty( $_POST['error_address[street_1]'] ) ) {
+                                echo '<span class="required">' . __( 'This is required', 'dokan-lite' ) . '</span>';
+                            }
+                            ?>
+                        </span>
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row"><label for="address[street_2]"><?php esc_html_e( 'Street 2', 'dokan-lite' ); ?></label></th>
+                    <th scope="row">
+                        <label for="address[street_2]">
+                            <?php esc_html_e( 'Street 2', 'dokan-lite' ); ?>
+                        </label>
+                    </th>
                     <td>
                         <input type="text" id="address[street_2]" name="address[street_2]" value="<?php echo esc_attr( $address_street2 ); ?>"/>
+                        <span class="error-container">
+                            <?php
+                            if ( ! empty( $_POST['error_address[street_2]'] ) ) {
+                                echo '<span class="required">' . __( 'This is required', 'dokan-lite' ) . '</span>';
+                            }
+                            ?>
+                        </span>
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row"><label for="address[city]"><?php esc_html_e( 'City', 'dokan-lite' ); ?></label></th>
+                    <th scope="row">
+                        <label for="address[city]">
+                            <?php esc_html_e( 'City', 'dokan-lite' ); ?>
+                            <span class='required'>*</span></label></th>
+                        </label>
+                    </th>
                     <td>
                         <input type="text" id="address[city]" name="address[city]" value="<?php echo esc_attr( $address_city ); ?>"/>
+                        <span class="error-container">
+                            <?php
+                            if ( ! empty( $_POST['error_address[city]'] ) ) {
+                                echo '<span class="required">' . __( 'This is required', 'dokan-lite' ) . '</span>';
+                            }
+                            ?>
+                        </span>
                     </td>
                 </tr>
-                <th scope="row"><label for="address[zip]"><?php esc_html_e( 'Post/Zip Code', 'dokan-lite' ); ?></label></th>
+                <th scope="row">
+                    <label for="address[zip]">
+                        <?php esc_html_e( 'Post/Zip Code', 'dokan-lite' ); ?>
+                        <span class='required'>*</span></label></th>
+                    </label>
+                </th>
                 <td>
                     <input type="text" id="address[zip]" name="address[zip]" value="<?php echo esc_attr( $address_zip ); ?>"/>
+                    <span class="error-container">
+                        <?php
+                        if ( ! empty( $_POST['error_address[zip]'] ) ) {
+                            echo '<span class="required">' . __( 'This is required', 'dokan-lite' ) . '</span>';
+                        }
+                        ?>
+                    </span>
                 </td>
                 <tr>
-                    <th scope="row"><label for="address[country]"><?php esc_html_e( 'Country', 'dokan-lite' ); ?></label></th>
+                    <th scope="row">
+                        <label for="address[country]">
+                            <?php esc_html_e( 'Country', 'dokan-lite' ); ?>
+                            <span class='required'>*</span></label></th>
+                        </label>
+                    </th>
                     <td>
                         <select name="address[country]" class="wc-enhanced-select country_to_state" id="address[country]" style="width: 100%;">
                             <?php dokan_country_dropdown( $countries, $address_country, false ); ?>
                         </select>
+                        <span class="error-container">
+                            <?php
+                            if ( ! empty( $_POST['error_address[country]'] ) ) {
+                                echo '<span class="required">' . __( 'This is required', 'dokan-lite' ) . '</span>';
+                            }
+                            ?>
+                        </span>
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row"><label for="calc_shipping_state"><?php esc_html_e( 'State', 'dokan-lite' ); ?></label></th>
+                    <th scope="row">
+                        <label for="calc_shipping_state">
+                            <?php esc_html_e( 'State', 'dokan-lite' ); ?>
+                            <span class='required'>*</span></label></th>
+                        </label>
+                    </th>
                     <td>
                         <input type="text" id="calc_shipping_state" name="address[state]" value="<?php echo esc_attr( $address_state ); ?>" / placeholder="<?php esc_attr_e( 'State Name', 'dokan-lite' ); ?>">
+                        <span class="error-container">
+                            <?php
+                            if ( ! empty( $_POST['error_address[state]'] ) ) {
+                                echo '<span class="required">' . __( 'This is required', 'dokan-lite' ) . '</span>';
+                            }
+                            ?>
+                        </span>
                     </td>
                 </tr>
 
@@ -293,7 +375,8 @@ class SetupWizard extends DokanSetupWizard {
 
             </table>
             <p class="wc-setup-actions step">
-                <input type="submit" class="button-primary button button-large button-next store-step-continue dokan-btn-theme" value="<?php esc_attr_e( 'Continue', 'dokan-lite' ); ?>" name="save_step"/>
+                <input type="button" class="button-primary button button-large button-next store-step-continue dokan-btn-theme" value="<?php esc_attr_e( 'Continue', 'dokan-lite' ); ?>"/>
+                <input type="submit" id="save_step_submit" style='display: none' value="submit" name="save_step"/>
                 <a href="<?php echo esc_url( $this->get_next_step_link() ); ?>" class="button button-large button-next store-step-skip-btn dokan-btn-theme"><?php esc_html_e( 'Skip this step', 'dokan-lite' ); ?></a>
                 <?php wp_nonce_field( 'dokan-seller-setup' ); ?>
             </p>
@@ -301,6 +384,7 @@ class SetupWizard extends DokanSetupWizard {
         <script>
             (function ($) {
                 var states = <?php echo wp_json_encode( $states ); ?>;
+                var requiredMsg = <?php echo wp_json_encode( __( 'This is required', 'dokan-lite' ) ); ?>;
 
                 $('body').on('change', 'select.country_to_state, input.country_to_state', function () {
                     // Grab wrapping element to target only stateboxes in same 'group'
@@ -371,6 +455,38 @@ class SetupWizard extends DokanSetupWizard {
 
                 $(':input.country_to_state').trigger('change');
 
+                $('.store-step-continue').on('click', function(e) {
+                    let data = $('.dokan-seller-setup-form').serializeArray().reduce(function(obj, item) {
+                        obj[item.name] = item.value;
+                        return obj;
+                    }, {});
+
+                    let requiredFields = [ 'store_ppp', 'address[street_1]', 'address[city]', 'address[zip]', 'address[country]' ];
+
+                    requiredFields.map( item => {
+                        if ( ! $( `*[name='${item}']` ).val() ) {
+                            $( `*[name='${item}']` ).closest('td').children(`span.error-container`).html(`<span class="required">${requiredMsg}</span>`);
+                        } else {
+                            $( `*[name='${item}']` ).closest('td').children(`span.error-container`).html('');
+                        }
+                    } );
+
+                    if ( ! data['store_ppp'] || ! data['address[street_1]'] || ! data['address[city]'] || ! data['address[zip]'] || ! data['address[country]'] ) {
+                        return;
+                    }
+
+                    if ( ( 'object' === typeof states[ data['address[country]'] ] && Object.keys( states[ data['address[country]'] ] ).length && ! data['address[state]'] ) || ( 'undefined' === typeof states[ data['address[country]'] ] && ! data['address[state]'] ) ) {
+                        if ( ! $( `*[name='address[state]']` ).val() ) {
+                            $( `*[name='address[state]']` ).closest('td').children(`span.error-container`).html(`<span class="required">${requiredMsg}</span>`);
+                        } else {
+                            $( `*[name='address[state]']` ).closest('td').children(`span.error-container`).html('');
+                        }
+
+                        return;
+                    }
+
+                    $('#save_step_submit').trigger("click");
+                });
             })(jQuery);
 
         </script>
@@ -394,7 +510,6 @@ class SetupWizard extends DokanSetupWizard {
 
         $dokan_settings = $this->store_info;
         $country_obj    = new WC_Countries();
-        $countries      = $country_obj->get_allowed_countries();
         $states         = $country_obj->states;
 
         $dokan_settings['store_ppp']    = isset( $_POST['store_ppp'] ) ? absint( $_POST['store_ppp'] ) : '';
@@ -402,6 +517,39 @@ class SetupWizard extends DokanSetupWizard {
         $dokan_settings['location']     = isset( $_POST['location'] ) ? sanitize_text_field( wp_unslash( $_POST['location'] ) ) : '';
         $dokan_settings['find_address'] = isset( $_POST['find_address'] ) ? sanitize_text_field( wp_unslash( $_POST['find_address'] ) ) : '';
         $dokan_settings['show_email']   = isset( $_POST['show_email'] ) ? 'yes' : 'no';
+
+        // Validating fileds.
+        $is_valid_form = true;
+        if ( empty( $dokan_settings['store_ppp'] ) ) {
+            $is_valid_form = false;
+            $_POST['error_store_ppp'] = 'error';
+        }
+        if ( empty( $dokan_settings['address']['street_1'] ) ) {
+            $is_valid_form = false;
+            $_POST['error_address[street_1]'] = 'error';
+        }
+        if ( empty( $dokan_settings['address']['city'] ) ) {
+            $is_valid_form = false;
+            $_POST['error_address[city]'] = 'error';
+        }
+        if ( empty( $dokan_settings['address']['zip'] ) ) {
+            $is_valid_form = false;
+            $_POST['error_address[zip]'] = 'error';
+        }
+        if ( empty( $dokan_settings['address']['country'] ) ) {
+            $is_valid_form = false;
+            $_POST['error_address[country]'] = 'error';
+        }
+        else {
+            if ( ( isset( $states[ $dokan_settings['address']['country'] ] ) && count( $states[ $dokan_settings['address']['country'] ] ) && empty( $dokan_settings['address']['state'] ) || ( ! isset( $states[ $dokan_settings['address']['country'] ] ) && empty( $dokan_settings['address']['state'] ) ) ) ) {
+                $is_valid_form = false;
+                $_POST['error_address[state]'] = 'error';
+            }
+        }
+
+        if ( ! $is_valid_form ) {
+            return;
+        }
 
         // Check address and add manually values on Profile Completion also increase progress value
         $dokan_settings['profile_completion']['address'] = $dokan_settings['profile_completion']['progress_vals']['address_val'];
@@ -423,7 +571,7 @@ class SetupWizard extends DokanSetupWizard {
         } else {
             $country = $dokan_settings['address']['country'];
 
-            if ( ! empty( $states[ $country ] ) && empty( $dokan_settings['address']['state'] ) && ! empty( $dokan_settings['profile_completion']['address'] ) ) {
+            if ( isset( $states[ $country ] ) && is_array( $states[ $country ] ) && empty( $dokan_settings['address']['state'] ) && ! empty( $dokan_settings['profile_completion']['address'] ) ) {
                 unset( $dokan_settings['profile_completion']['address'] );
             }
         }
@@ -452,7 +600,7 @@ class SetupWizard extends DokanSetupWizard {
         $store_info = $this->store_info;
         ?>
         <h1><?php esc_html_e( 'Payment Setup', 'dokan-lite' ); ?></h1>
-        <form method="post" novalidate>
+        <form method="post" id='dokan-seller-payment-setup-form' novalidate>
             <table class="form-table">
                 <?php
                 foreach ( $methods as $method_key ) {
@@ -473,11 +621,36 @@ class SetupWizard extends DokanSetupWizard {
                 ?>
             </table>
             <p class="wc-setup-actions step">
-                <input type="submit" class="button-primary button button-large button-next payment-continue-btn dokan-btn-theme" value="<?php esc_attr_e( 'Continue', 'dokan-lite' ); ?>" name="save_step"/>
+                <input type="button" class="button-primary button button-large button-next store-step-continue dokan-btn-theme" value="<?php esc_attr_e( 'Continue', 'dokan-lite' ); ?>"/>
+                <input type="submit" id="save_step_submit" style='display: none' value="submit" name="save_step"/>
+
                 <a href="<?php echo esc_url( $this->get_next_step_link() ); ?>" class="button button-large button-next payment-step-skip-btn dokan-btn-theme"><?php esc_html_e( 'Skip this step', 'dokan-lite' ); ?></a>
                 <?php wp_nonce_field( 'dokan-seller-setup' ); ?>
             </p>
         </form>
+        <script>
+            (function ($) {
+                $('.store-step-continue').on('click', function(e) {
+                    let requiredFields = <?php echo wp_json_encode( dokan_bank_payment_required_fields() ) ?>;
+
+                    let isValidForm = true;
+                    Object.keys(requiredFields).map( item => {
+                        if ( ! $( `*[name='settings[bank][${item}]']` ).val() ) {
+                            isValidForm = false;
+                            $( `*[name='settings[bank][${item}]']` ).closest('div').children('span.error-container').html(`<span class="required">${requiredFields[item]}</span>`)
+                        } else {
+                            $( `*[name='settings[bank][${item}]']` ).closest('div').children('span.error-container').html(``)
+                        }
+                    } );
+
+                    if ( ! isValidForm ) {
+                        return;
+                    }
+
+                    $('#save_step_submit').trigger("click");
+                });
+            })(jQuery);
+        </script>
         <?php
 
         do_action( 'dokan_seller_wizard_after_payment_setup_form', $this );
@@ -507,22 +680,23 @@ class SetupWizard extends DokanSetupWizard {
                 'swift'          => $bank['swift'],
             ];
 
-            $user_data = array_filter( $dokan_settings['payment']['bank'], function( $item ) { return ! empty( $item ); } );
+            $user_bank_data = array_filter( $dokan_settings['payment']['bank'], function( $item ) { return ! empty( $item ); } );
             $require_fields = array_keys( dokan_bank_payment_required_fields() );
 
             $has_bank_information = true;
-
             foreach ( $require_fields as $require_field ) {
-                if( ! isset( $user_data[ $require_field ] ) ) {
+                if( empty( $user_bank_data[ $require_field ] ) ) {
+                    $_POST[ 'error_' . $require_field ] = 'error';
                     $has_bank_information = false;
-                    break;
                 }
             }
 
             if ( ! $has_bank_information ) {
-                $dokan_settings['profile_completion']['bank'] = $dokan_settings['profile_completion']['progress_vals']['payment_method_val'];
-                $dokan_settings['profile_completion']['paypal'] = 0;
+                return;
             }
+
+            $dokan_settings['profile_completion']['bank'] = $dokan_settings['profile_completion']['progress_vals']['payment_method_val'];
+            $dokan_settings['profile_completion']['paypal'] = 0;
         }
 
         if ( ! empty( $_POST['settings']['paypal']['email'] ) ) {
