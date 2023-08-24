@@ -892,7 +892,8 @@ class Assets {
             if ( $api_key ) {
                 $query_args = apply_filters(
                     'dokan_google_maps_script_query_args', [
-                        'key' => $api_key,
+                        'key'      => $api_key,
+                        'callback' => 'Function.prototype',
                     ]
                 );
 
