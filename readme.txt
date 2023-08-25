@@ -7,7 +7,7 @@ Tested up to: 6.3.0
 WC requires at least: 5.0.0
 WC tested up to: 8.0.2
 Requires PHP: 7.3
-Stable tag: 3.8.0
+Stable tag: 3.8.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -337,6 +337,11 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 == Changelog ==
+
+= v3.8.1 ( Aug 25, 2023 ) =
+
+- **fix:** Fixed a console warning under Dokan admin settings for Google Map integration
+- **fix:** [ReverseWithdrawal] Fixed an issue where Vendor/Admin cannot pay for reverse withdrawal balance due to a rule that vendor’s can’t purchase their own products.
 
 = v3.8.0 ( Aug 18, 2023 ) =
 
