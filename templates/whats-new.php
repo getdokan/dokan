@@ -4,6 +4,22 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.8.1',
+        'released' => '2023-08-25',
+        'changes'  => [
+            'Fix' => [
+                [
+                    'title'       => 'Fixed a console warning under Dokan admin settings for Google Map integration',
+                    'description' => '',
+                ],
+                [
+                    'title'       => '[ReverseWithdrawal] Fixed an issue where Vendor/Admin cannot pay for reverse withdrawal balance due to a rule that vendor’s can’t purchase their own products.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.8.0',
         'released' => '2023-08-18',
         'changes'  => [
@@ -17,13 +33,13 @@ $changelog = [
                     'description' => '',
                 ],
             ],
-            'Fix' => [
+            'Fix'    => [
                 [
-                    'title' => 'Resolved an issue where traces of order data were left on the Dokan end even after the order had been deleted from the WordPress admin panel.',
+                    'title'       => 'Resolved an issue where traces of order data were left on the Dokan end even after the order had been deleted from the WordPress admin panel.',
                     'description' => 'Previously, deleted orders were still visible under the Dashboard Overview menu, Reports menu, and under Withdraw menu. This issue has been fixed in the current release.',
                 ],
                 [
-                    'title' => 'Multiple issues have been fixed after a product of an order has been deleted.',
+                    'title'       => 'Multiple issues have been fixed after a product of an order has been deleted.',
                     'description' => '',
                 ],
             ],
@@ -39,25 +55,25 @@ $changelog = [
                     'description' => 'Previously, vendors could purchase and post reviews for their own product. Which is not logical and could manipulate the search results of a product in a marketplace. With this update, vendors will not be able to purchase or post reviews for their own product.',
                 ],
                 [
-                    'title' => '[ReverseWithdrawal] Now Admin can request payment from vendors using the Reverse Withdrawal feature',
+                    'title'       => '[ReverseWithdrawal] Now Admin can request payment from vendors using the Reverse Withdrawal feature',
                     'description' => "Currently, there is no way for Site admins to request payments from vendors. For some use cases, it is essential for admins to request money from vendors. For example: In Stripe 3DS mode, if customers ask for a refund, refund will be given from the admin Stripe account, after that vendor transfer will be reversed. But if the vendor doesn't have enough money in their stripe account transfer reversal will fail, in that case, vendor balance will be negative. Another case would be for non-connected vendors, in that case, admin will be responsible for refund and admin needs to request money from vendors.",
                 ],
                 [
-                    'title' => '[AdminSettings] Added a toggle switch for Google ReCaptcha in the appearance settings for better control.',
+                    'title'       => '[AdminSettings] Added a toggle switch for Google ReCaptcha in the appearance settings for better control.',
                     'description' => '',
                 ],
                 [
-                    'title' => '[AdminSettings] Sensitive information like API keys, client secrets, etc., are now displayed as password fields with an unhide button to improve security.',
+                    'title'       => '[AdminSettings] Sensitive information like API keys, client secrets, etc., are now displayed as password fields with an unhide button to improve security.',
                     'description' => '',
                 ],
                 [
-                    'title' => '[AdminCommission] Now, "percentage" is selected by default if the admin setup wizard is skipped in the commission setting.',
+                    'title'       => '[AdminCommission] Now, "percentage" is selected by default if the admin setup wizard is skipped in the commission setting.',
                     'description' => '',
                 ],
             ],
-            'Fix' => [
+            'Fix'    => [
                 [
-                    'title' => 'Added some missing translations.',
+                    'title'       => 'Added some missing translations.',
                     'description' => 'Previously, the template folder at dokan-lite was missing when the .pot file was generated. With this fix template folder will be respected while generating the pot file.',
                 ],
             ],

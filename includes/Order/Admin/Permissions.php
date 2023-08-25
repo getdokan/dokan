@@ -21,6 +21,7 @@ class Permissions {
     public function __construct() {
         add_filter( 'map_meta_cap', [ $this, 'map_meta_caps' ], 12, 4 );
 
+        // didn't added hpos support for below hooks, since tareq bhai asked to revoke admin access for vendors
         add_filter( 'posts_clauses', [ $this, 'filter_orders_for_current_vendor' ], 12, 2 );
         add_action( 'load-post.php', [ $this, 'revoke_change_order_status' ] );
         add_filter( 'manage_edit-shop_order_columns', [ $this, 'remove_action_column' ], 15 );
