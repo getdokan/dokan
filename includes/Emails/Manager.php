@@ -121,6 +121,7 @@ class Manager {
                 'withdraw-approve.php',
                 'vendor-new-order.php',
                 'vendor-completed-order.php',
+                'reverse-withdrawal-invoice.php',
             )
         );
 
@@ -153,6 +154,8 @@ class Manager {
 				'dokan_withdraw_request_cancelled',
 				'dokan_pending_product_published_notification',
 				'dokan_trigger_contact_seller_mail',
+				'dokan_reverse_withdrawal_invoice_email_sent',
+				'woocommerce_order_status_completed_notification',
             )
         );
 

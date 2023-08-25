@@ -18,12 +18,20 @@ class NewSeller extends WC_Email {
      * Constructor.
      */
     public function __construct() {
-        $this->id               = 'dokan_new_seller';
-        $this->title            = __( 'Dokan New Seller Registered', 'dokan-lite' );
-        $this->description      = __( 'These emails are sent to chosen recipient(s) when a new vendor registers in marketplace', 'dokan-lite' );
-        $this->template_html    = 'emails/new-seller-registered.php';
-        $this->template_plain   = 'emails/plain/new-seller-registered.php';
-        $this->template_base    = DOKAN_DIR . '/templates/';
+        $this->id             = 'dokan_new_seller';
+        $this->title          = __( 'Dokan New Seller Registered', 'dokan-lite' );
+        $this->description    = __( 'These emails are sent to chosen recipient(s) when a new vendor registers in marketplace', 'dokan-lite' );
+        $this->template_html  = 'emails/new-seller-registered.php';
+        $this->template_plain = 'emails/plain/new-seller-registered.php';
+        $this->template_base  = DOKAN_DIR . '/templates/';
+        $this->placeholders   = [
+            '{seller_name}' => '',
+            '{store_url}'   => '',
+            '{store_name}'  => '',
+            '{seller_edit}' => '',
+            '{site_name}'   => $this->get_from_name(),
+            '{site_url}'    => site_url(),
+        ];
 
         // Triggers for this email
         add_action( 'dokan_new_seller_created', array( $this, 'trigger' ), 30, 2 );
@@ -58,33 +66,27 @@ class NewSeller extends WC_Email {
     /**
      * Trigger the sending of this email.
      *
-     * @param int $product_id The product ID.
-     * @param array $postdata.
+     * @param int $user_id The user ID.
+     * @param array $shop_info Store info.
      */
-    public function trigger( $user_id, $dokan_settings ) {
+    public function trigger( $user_id, $shop_info ) {
 		if ( ! $this->is_enabled() || ! $this->get_recipient() ) {
 			return;
 		}
+        $this->setup_locale();
 
-            $seller                    = get_user_by( 'id', $user_id );
-            $this->object              = $seller;
-            $this->find['seller_name'] = '{seller_name}';
-            $this->find['store_url']   = '{store_url}';
-            $this->find['store_name']  = '{store_name}';
-            $this->find['seller_edit'] = '{seller_edit}';
-            $this->find['site_name']   = '{site_name}';
-            $this->find['site_url']    = '{site_url}';
+        $seller       = get_user_by( 'id', $user_id );
+        $this->object = $seller;
 
-            $this->replace['seller_name']  = $seller->display_name;
-            $this->replace['store_url']    = dokan_get_store_url( $seller->ID );
-            $this->replace['store_name']   = $dokan_settings['store_name'];
-            $this->replace['seller_edit']  = admin_url( 'user-edit.php?user_id=' . $user_id );
-            $this->replace['site_name']    = $this->get_from_name();
-            $this->replace['site_url']     = site_url();
+        $this->placeholders['seller_name'] = $seller->display_name;
+        $this->placeholders['store_url']   = dokan_get_store_url( $seller->ID );
+        $this->placeholders['store_name']  = $shop_info['store_name'];
+        $this->placeholders['seller_edit'] = admin_url( 'user-edit.php?user_id=' . $user_id );
+        $this->placeholders['site_name']   = $this->get_from_name();
+        $this->placeholders['site_url']    = site_url();
 
-            $this->setup_locale();
-            $this->send( $this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
-            $this->restore_locale();
+        $this->send( $this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
+        $this->restore_locale();
     }
 
         /**
@@ -97,12 +99,13 @@ class NewSeller extends WC_Email {
             ob_start();
                 wc_get_template(
                     $this->template_html, array(
-						'seller'        => $this->object,
-						'email_heading' => $this->get_heading(),
-						'sent_to_admin' => true,
-						'plain_text'    => false,
-						'email'         => $this,
-						'data'          => $this->replace,
+                        'seller'             => $this->object,
+                        'email_heading'      => $this->get_heading(),
+                        'additional_content' => $this->get_additional_content(),
+                        'sent_to_admin'      => true,
+                        'plain_text'         => false,
+                        'email'              => $this,
+                        'data'               => $this->placeholders,
                     ), 'dokan/', $this->template_base
                 );
             return ob_get_clean();
@@ -118,12 +121,13 @@ class NewSeller extends WC_Email {
             ob_start();
                 wc_get_template(
                     $this->template_html, array(
-						'seller'        => $this->object,
-						'email_heading' => $this->get_heading(),
-						'sent_to_admin' => true,
-						'plain_text'    => true,
-						'email'         => $this,
-						'data'          => $this->replace,
+                        'seller'             => $this->object,
+                        'email_heading'      => $this->get_heading(),
+                        'additional_content' => $this->get_additional_content(),
+                        'sent_to_admin'      => true,
+                        'plain_text'         => true,
+                        'email'              => $this,
+                        'data'               => $this->placeholders,
                     ), 'dokan/', $this->template_base
                 );
             return ob_get_clean();
@@ -133,6 +137,8 @@ class NewSeller extends WC_Email {
      * Initialise settings form fields.
      */
     public function init_form_fields() {
+        /* translators: %s: list of placeholders */
+        $placeholder_text  = sprintf( __( 'Available placeholders: %s', 'dokan-lite' ), '<code>' . implode( '</code>, <code>', array_keys( $this->placeholders ) ) . '</code>' );
         $this->form_fields = array(
             'enabled' => array(
                 'title'         => __( 'Enable/Disable', 'dokan-lite' ),
@@ -153,8 +159,7 @@ class NewSeller extends WC_Email {
                 'title'         => __( 'Subject', 'dokan-lite' ),
                 'type'          => 'text',
                 'desc_tip'      => true,
-                /* translators: %s: list of placeholders */
-                'description'   => sprintf( __( 'Available placeholders: %s', 'dokan-lite' ), '<code>{site_name}, {store_name}, {seller_name}</code>' ),
+                'description'   => $placeholder_text,
                 'placeholder'   => $this->get_default_subject(),
                 'default'       => '',
             ),
@@ -162,10 +167,18 @@ class NewSeller extends WC_Email {
                 'title'         => __( 'Email heading', 'dokan-lite' ),
                 'type'          => 'text',
                 'desc_tip'      => true,
-                /* translators: %s: list of placeholders */
-                'description'   => sprintf( __( 'Available placeholders: %s', 'dokan-lite' ), '<code>{site_name}, {store_name}, {seller_name}</code>' ),
+                'description'   => $placeholder_text,
                 'placeholder'   => $this->get_default_heading(),
                 'default'       => '',
+            ),
+            'additional_content' => array(
+                'title'       => __( 'Additional content', 'dokan-lite' ),
+                'description' => __( 'Text to appear below the main email content.', 'dokan-lite' ) . ' ' . $placeholder_text,
+                'css'         => 'width:400px; height: 75px;',
+                'placeholder' => __( 'N/A', 'dokan-lite' ),
+                'type'        => 'textarea',
+                'default'     => $this->get_default_additional_content(),
+                'desc_tip'    => true,
             ),
             'email_type' => array(
                 'title'         => __( 'Email type', 'dokan-lite' ),

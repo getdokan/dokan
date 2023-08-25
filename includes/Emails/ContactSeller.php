@@ -27,12 +27,20 @@ class ContactSeller extends WC_Email {
      * Constructor.
      */
     public function __construct() {
-        $this->id               = 'dokan_contact_seller';
-        $this->title            = __( 'Dokan Contact Vendor', 'dokan-lite' );
-        $this->description      = __( 'These emails are sent to a vendor who is contacted by customer via contact form widget ', 'dokan-lite' );
-        $this->template_html    = 'emails/contact-seller.php';
-        $this->template_plain   = 'emails/plain/contact-seller.php';
-        $this->template_base    = DOKAN_DIR . '/templates/';
+        $this->id             = 'dokan_contact_seller';
+        $this->title          = __( 'Dokan Contact Vendor', 'dokan-lite' );
+        $this->description    = __( 'These emails are sent to a vendor who is contacted by customer via contact form widget ', 'dokan-lite' );
+        $this->template_html  = 'emails/contact-seller.php';
+        $this->template_plain = 'emails/plain/contact-seller.php';
+        $this->template_base  = DOKAN_DIR . '/templates/';
+        $this->placeholders   = [
+            '{seller_name}'    => '',
+            '{customer_name}'  => '',
+            '{customer_email}' => '',
+            '{message}'        => '',
+            '{site_name}'      => $this->get_from_name(),
+            '{site_url}'       => site_url(),
+        ];
 
         // Triggers for this email
         add_action( 'dokan_trigger_contact_seller_mail', array( $this, 'trigger' ), 30, 4 );
@@ -71,26 +79,19 @@ class ContactSeller extends WC_Email {
         if ( ! $this->is_enabled() || ! $this->get_recipient() ) {
             return;
         }
+        $this->setup_locale();
 
         $this->from_email = $contact_email;
 
         $seller = get_user_by( 'email', $seller_email );
 
-        $this->find['seller_name']    = '{seller_name}';
-        $this->find['customer_name']  = '{customer_name}';
-        $this->find['customer_email'] = '{customer_email}';
-        $this->find['message']        = '{message}';
-        $this->find['site_name']      = '{site_name}';
-        $this->find['site_url']       = '{site_url}';
+        $this->placeholders['{seller_name}']    = $seller->display_name;
+        $this->placeholders['{customer_name}']  = $contact_name;
+        $this->placeholders['{customer_email}'] = $contact_email;
+        $this->placeholders['{message}']        = $contact_message;
+        $this->placeholders['{site_name}']      = $this->get_from_name();
+        $this->placeholders['{site_url}']       = site_url();
 
-        $this->replace['seller_name']    = $seller->display_name;
-        $this->replace['customer_name']  = $contact_name;
-        $this->replace['customer_email'] = $contact_email;
-        $this->replace['message']        = $contact_message;
-        $this->replace['site_name']      = $this->get_from_name();
-        $this->replace['site_url']       = site_url();
-
-        $this->setup_locale();
         $this->send( $seller_email, $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
         $this->restore_locale();
     }
@@ -116,11 +117,12 @@ class ContactSeller extends WC_Email {
         ob_start();
         wc_get_template(
             $this->template_html, array(
-                'email_heading' => $this->get_heading(),
-                'sent_to_admin' => true,
-                'plain_text'    => false,
-                'email'         => $this,
-                'data'          => $this->replace,
+                'email_heading'      => $this->get_heading(),
+                'additional_content' => $this->get_additional_content(),
+                'sent_to_admin'      => true,
+                'plain_text'         => false,
+                'email'              => $this,
+                'data'               => $this->placeholders,
             ), 'dokan/', $this->template_base
         );
         return ob_get_clean();
@@ -136,11 +138,12 @@ class ContactSeller extends WC_Email {
         ob_start();
         wc_get_template(
             $this->template_html, array(
-                'email_heading' => $this->get_heading(),
-                'sent_to_admin' => true,
-                'plain_text'    => true,
-                'email'         => $this,
-                'data'          => $this->replace,
+                'email_heading'      => $this->get_heading(),
+                'additional_content' => $this->get_additional_content(),
+                'sent_to_admin'      => true,
+                'plain_text'         => true,
+                'email'              => $this,
+                'data'               => $this->placeholders,
             ), 'dokan/', $this->template_base
         );
         return ob_get_clean();
@@ -150,6 +153,8 @@ class ContactSeller extends WC_Email {
      * Initialize settings form fields.
      */
     public function init_form_fields() {
+        /* translators: %s: list of placeholders */
+        $placeholder_text  = sprintf( __( 'Available placeholders: %s', 'dokan-lite' ), '<code>' . implode( '</code>, <code>', array_keys( $this->placeholders ) ) . '</code>' );
         $this->form_fields = array(
             'enabled' => array(
                 'title'         => __( 'Enable/Disable', 'dokan-lite' ),
@@ -162,8 +167,7 @@ class ContactSeller extends WC_Email {
                 'title'         => __( 'Subject', 'dokan-lite' ),
                 'type'          => 'text',
                 'desc_tip'      => true,
-                /* translators: %s: list of placeholders */
-                'description'   => sprintf( __( 'Available placeholders: %s', 'dokan-lite' ), '<code>{seller_name}, {customer_name}, {site_name}</code>' ),
+                'description'   => $placeholder_text,
                 'placeholder'   => $this->get_default_subject(),
                 'default'       => '',
             ),
@@ -171,10 +175,18 @@ class ContactSeller extends WC_Email {
                 'title'         => __( 'Email heading', 'dokan-lite' ),
                 'type'          => 'text',
                 'desc_tip'      => true,
-                /* translators: %s: list of placeholders */
-                'description'   => sprintf( __( 'Available placeholders: %s', 'dokan-lite' ), '<code>{seller_name}, {customer_name}, {site_name}</code>' ),
+                'description'   => $placeholder_text,
                 'placeholder'   => $this->get_default_heading(),
                 'default'       => '',
+            ),
+            'additional_content' => array(
+                'title'       => __( 'Additional content', 'dokan-lite' ),
+                'description' => __( 'Text to appear below the main email content.', 'dokan-lite' ) . ' ' . $placeholder_text,
+                'css'         => 'width:400px; height: 75px;',
+                'placeholder' => __( 'N/A', 'dokan-lite' ),
+                'type'        => 'textarea',
+                'default'     => $this->get_default_additional_content(),
+                'desc_tip'    => true,
             ),
             'email_type' => array(
                 'title'         => __( 'Email type', 'dokan-lite' ),

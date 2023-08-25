@@ -20,12 +20,21 @@ class VendorWithdrawRequest extends WC_Email {
      * Constructor.
      */
     public function __construct() {
-        $this->id               = 'dokan_vendor_withdraw_request';
-        $this->title            = __( 'Dokan New Withdrawal Request', 'dokan-lite' );
-        $this->description      = __( 'These emails are sent to chosen recipient(s) when a vendor send request to withdraw', 'dokan-lite' );
-        $this->template_html    = 'emails/withdraw-new.php';
-        $this->template_plain   = 'emails/plain/withdraw-new.php';
-        $this->template_base    = DOKAN_DIR . '/templates/';
+        $this->id             = 'dokan_vendor_withdraw_request';
+        $this->title          = __( 'Dokan New Withdrawal Request', 'dokan-lite' );
+        $this->description    = __( 'These emails are sent to chosen recipient(s) when a vendor send request to withdraw', 'dokan-lite' );
+        $this->template_html  = 'emails/withdraw-new.php';
+        $this->template_plain = 'emails/plain/withdraw-new.php';
+        $this->template_base  = DOKAN_DIR . '/templates/';
+        $this->placeholders   = [
+            '{user_name}'     => '',
+            '{amount}'        => '',
+            '{method}'        => '',
+            '{profile_url}'   => '',
+            '{withdraw_page}' => '',
+            '{site_name}'     => $this->get_from_name(),
+            '{site_url}'      => site_url(),
+        ];
 
         // Triggers for this email
         add_action( 'dokan_after_withdraw_request', array( $this, 'trigger' ), 30, 3 );
@@ -60,8 +69,9 @@ class VendorWithdrawRequest extends WC_Email {
     /**
      * Trigger the sending of this email.
      *
-     * @param int $product_id The product ID.
-     * @param array $postdata.
+     * @param int $user_id User ID.
+     * @param mixed $amount Withdrawal amount.
+     * @param string $method Withdrawal method.
      */
     public function trigger( $user_id, $amount, $method ) {
         $seller = get_user_by( 'id', $user_id );
@@ -70,24 +80,16 @@ class VendorWithdrawRequest extends WC_Email {
             return;
         }
 
-        $this->object                = $seller;
-        $this->find['username']      = '{user_name}';
-        $this->find['amount']        = '{amount}';
-        $this->find['method']        = '{method}';
-        $this->find['profile_url']   = '{profile_url}';
-        $this->find['withdraw_page'] = '{withdraw_page}';
-        $this->find['site_name']     = '{site_name}';
-        $this->find['site_url']      = '{site_url}';
-
-        $this->replace['username']      = $seller->user_login;
-        $this->replace['amount']        = wc_price( $amount );
-        $this->replace['method']        = dokan_withdraw_get_method_title( $method );
-        $this->replace['profile_url']   = admin_url( 'user-edit.php?user_id=' . $seller->ID );
-        $this->replace['withdraw_page'] = admin_url( 'admin.php?page=dokan#/withdraw?status=pending' );
-        $this->replace['site_name']     = $this->get_from_name();
-        $this->replace['site_url']      = site_url();
-
         $this->setup_locale();
+        $this->object                          = $seller;
+        $this->placeholders['{user_name}']     = $seller->user_login;
+        $this->placeholders['{amount}']        = wc_price( $amount );
+        $this->placeholders['{method}']        = dokan_withdraw_get_method_title( $method );
+        $this->placeholders['{profile_url}']   = admin_url( 'user-edit.php?user_id=' . $seller->ID );
+        $this->placeholders['{withdraw_page}'] = admin_url( 'admin.php?page=dokan#/withdraw?status=pending' );
+        $this->placeholders['{site_name}']     = $this->get_from_name();
+        $this->placeholders['{site_url}']      = site_url();
+
         $this->send( $this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
         $this->restore_locale();
     }
@@ -103,12 +105,13 @@ class VendorWithdrawRequest extends WC_Email {
 
         wc_get_template(
             $this->template_html, array(
-				'seller'        => $this->object,
-				'email_heading' => $this->get_heading(),
-				'sent_to_admin' => true,
-				'plain_text'    => false,
-				'email'         => $this,
-				'data'          => $this->replace,
+                'seller'             => $this->object,
+                'email_heading'      => $this->get_heading(),
+                'additional_content' => $this->get_additional_content(),
+                'sent_to_admin'      => true,
+                'plain_text'         => false,
+                'email'              => $this,
+                'data'               => $this->placeholders,
             ), 'dokan/', $this->template_base
         );
 
@@ -126,12 +129,13 @@ class VendorWithdrawRequest extends WC_Email {
 
         wc_get_template(
             $this->template_html, array(
-				'seller'        => $this->object,
-				'email_heading' => $this->get_heading(),
-				'sent_to_admin' => true,
-				'plain_text'    => true,
-				'email'         => $this,
-				'data'          => $this->replace,
+                'seller'             => $this->object,
+                'email_heading'      => $this->get_heading(),
+                'additional_content' => $this->get_additional_content(),
+                'sent_to_admin'      => true,
+                'plain_text'         => true,
+                'email'              => $this,
+                'data'               => $this->placeholders,
             ), 'dokan/', $this->template_base
         );
 
@@ -142,6 +146,8 @@ class VendorWithdrawRequest extends WC_Email {
      * Initialise settings form fields.
      */
     public function init_form_fields() {
+        /* translators: %s: list of placeholders */
+        $placeholder_text  = sprintf( __( 'Available placeholders: %s', 'dokan-lite' ), '<code>' . implode( '</code>, <code>', array_keys( $this->placeholders ) ) . '</code>' );
         $this->form_fields = array(
             'enabled' => array(
                 'title'         => __( 'Enable/Disable', 'dokan-lite' ),
@@ -162,8 +168,7 @@ class VendorWithdrawRequest extends WC_Email {
                 'title'         => __( 'Subject', 'dokan-lite' ),
                 'type'          => 'text',
                 'desc_tip'      => true,
-                /* translators: %s: list of placeholders */
-                'description'   => sprintf( __( 'Available placeholders: %s', 'dokan-lite' ), '<code>{site_name},{amount},{user_name}</code>' ),
+                'description'   => $placeholder_text,
                 'placeholder'   => $this->get_default_subject(),
                 'default'       => '',
             ),
@@ -171,10 +176,18 @@ class VendorWithdrawRequest extends WC_Email {
                 'title'         => __( 'Email heading', 'dokan-lite' ),
                 'type'          => 'text',
                 'desc_tip'      => true,
-                /* translators: %s: list of placeholders */
-                'description'   => sprintf( __( 'Available placeholders: %s', 'dokan-lite' ), '<code>{site_name},{amount},{user_name}</code>' ),
+                'description'   => $placeholder_text,
                 'placeholder'   => $this->get_default_heading(),
                 'default'       => '',
+            ),
+            'additional_content' => array(
+                'title'       => __( 'Additional content', 'dokan-lite' ),
+                'description' => __( 'Text to appear below the main email content.', 'dokan-lite' ) . ' ' . $placeholder_text,
+                'css'         => 'width:400px; height: 75px;',
+                'placeholder' => __( 'N/A', 'dokan-lite' ),
+                'type'        => 'textarea',
+                'default'     => $this->get_default_additional_content(),
+                'desc_tip'    => true,
             ),
             'email_type' => array(
                 'title'         => __( 'Email type', 'dokan-lite' ),

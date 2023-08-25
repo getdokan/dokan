@@ -27,19 +27,19 @@ esc_html_e( 'Summary of the product:', 'dokan-lite' );
 echo "\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n\n";
 
 // translators: 1) product title
-echo sprintf( esc_html__( 'Title: %1$s', 'dokan-lite' ), esc_html( $data['title'] ) );
+echo sprintf( esc_html__( 'Title: %1$s', 'dokan-lite' ), esc_html( $data['{product_title}'] ) );
 echo " \n";
 
 // translators: 1) product price
-echo sprintf( esc_html__( 'Price: %1$s', 'dokan-lite' ), esc_html( wc_price( $data['price'] ) ) );
+echo sprintf( esc_html__( 'Price: %1$s', 'dokan-lite' ), esc_html( wc_price( $data['{price}'] ) ) );
 echo " \n";
 
 // translators: 1) product seller name
-echo sprintf( esc_html__( 'Vendor: %1$s', 'dokan-lite' ), esc_html( $data['seller_name'] ) );
+echo sprintf( esc_html__( 'Vendor: %1$s', 'dokan-lite' ), esc_html( $data['{seller_name}'] ) );
 echo " \n";
 
 // translators: 1) product category
-echo sprintf( esc_html__( 'Category: %1$s', 'dokan-lite' ), esc_html( $data['category'] ) );
+echo sprintf( esc_html__( 'Category: %1$s', 'dokan-lite' ), esc_html( $data['{category}'] ) );
 echo " \n";
 
 echo esc_html__( 'The product is currently in "publish" state. So everyone can view the product.', 'dokan-lite' );
@@ -49,7 +49,7 @@ echo wp_kses_post(
     sprintf(
         // translators: 1) product url
         __( 'In case it needs to be moderated  <a href="%s"> click here </a>', 'dokan-lite' ),
-        esc_url( $data['product_link'] )
+        esc_url( $data['{product_link}'] )
     )
 );
 
