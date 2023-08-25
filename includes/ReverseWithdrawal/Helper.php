@@ -214,7 +214,7 @@ class Helper {
     /**
      * This method will check if a product is reverse withdrawal product
      *
-     * @since DOKAN_SINCE
+     * @since 3.8.1
      *
      * @param int $product_id
      *
