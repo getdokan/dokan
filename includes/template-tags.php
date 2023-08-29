@@ -566,6 +566,10 @@ function dokan_dashboard_nav( $active_menu = '' ) {
     $menu .= '<ul class="dokan-dashboard-menu">';
 
     foreach ( $nav_menu as $key => $item ) {
+        // If switched off from menu manager
+        if ( isset( $item['is_switched_on'] ) && ! $item['is_switched_on'] ) {
+            continue;
+        }
         /**
          * Filters menu key according to slug if needed.
          *
@@ -576,7 +580,12 @@ function dokan_dashboard_nav( $active_menu = '' ) {
         $filtered_key = apply_filters( 'dokan_dashboard_nav_menu_key', $key );
 
         $class     = $active_menu === $filtered_key || 0 === stripos( $active_menu, $filtered_key ) ? 'active ' . $key : $key;  // checking starts with the key
-        $title     = isset( $item['title'] ) ? $item['title'] : __( 'No title', 'dokan-lite' );
+        $title = __( 'No Title', 'dokan-lite' );
+        if ( ! empty( $item['menu_manager_title'] ) ) {
+            $title = $item['menu_manager_title'];
+        } elseif ( ! empty( $item['title'] ) ) {
+            $title = $item['title'];
+        }
         $menu_slug = $filtered_key;
         $submenu   = '';
 
@@ -587,6 +596,10 @@ function dokan_dashboard_nav( $active_menu = '' ) {
             $subkey_slugs = [];
 
             foreach ( $item['submenu'] as $sub_key => $sub ) {
+                // If switched off from menu manager
+                if ( isset( $sub['is_switched_on'] ) && ! $sub['is_switched_on'] ) {
+                    continue;
+                }
                 /**
                  * Filters menu key according to slug if needed.
                  *
@@ -599,12 +612,18 @@ function dokan_dashboard_nav( $active_menu = '' ) {
 
                 $submenu_class = $active_submenu === $filtered_subkey || 0 === stripos( $active_submenu, $filtered_subkey ) ? "current $sub_key" : $sub_key;
 
+                $submenu_title = __( 'No Title', 'dokan-lite' );
+                if ( ! empty( $sub['menu_manager_title'] ) ) {
+                    $submenu_title = $sub['menu_manager_title'];
+                } elseif ( ! empty( $sub['title'] ) ) {
+                    $submenu_title = $sub['title'];
+                }
                 $submenu .= sprintf(
                     '<li class="submenu-item %s"><a href="%s" class="submenu-link">%s %s</a></li>',
                     $submenu_class,
                     isset( $sub['url'] ) ? $sub['url'] : dokan_get_navigation_url( "{$filtered_key}/{$filtered_subkey}" ),
                     isset( $sub['icon'] ) ? $sub['icon'] : '<i class="fab fa-staylinked"></i>',
-                    isset( $sub['title'] ) ? $sub['title'] : __( 'No title', 'dokan-lite' )
+                    $submenu_title
                 );
 
                 $subkey_slugs[] = $filtered_subkey;
