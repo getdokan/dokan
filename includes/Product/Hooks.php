@@ -28,6 +28,7 @@ class Hooks {
         add_action( 'woocommerce_product_bulk_edit_save', [ $this, 'update_category_data_for_bulk_and_quick_edit' ], 10, 1 );
         add_action( 'woocommerce_new_product', [ $this, 'update_category_data_for_new_and_update_product' ], 10, 1 );
         add_action( 'woocommerce_update_product', [ $this, 'update_category_data_for_new_and_update_product' ], 10, 1 );
+        add_filter( 'dokan_post_status', [ $this, 'set_product_status' ], 1, 2 );
 
         // Init Product Cache Class
         new VendorStoreInfo();
@@ -301,5 +302,33 @@ class Hooks {
         $chosen_categories = Helper::generate_chosen_categories( $terms );
 
         Helper::set_object_terms_from_chosen_categories( $product_id, $chosen_categories );
+    }
+
+    /**
+     * Set product edit status
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $all_statuses
+     * @param int $product_id
+     *
+     * @return array
+     */
+    public function set_product_status( $all_statuses, int $product_id ) {
+        if ( dokan()->is_pro_exists() ) {
+            return $all_statuses;
+        }
+
+        $product = wc_get_product( $product_id );
+        if ( ! $product ) {
+            return $all_statuses;
+        }
+
+        // Pending review is pro feature. if product status is pending (already from deactivated pro) then add it other size don't show it on lite.
+        if ( 'pending' === $product->get_status() ) {
+            $all_statuses['pending'] = dokan_get_post_status( 'pending' );
+        }
+
+        return $all_statuses;
     }
 }
