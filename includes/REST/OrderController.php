@@ -439,6 +439,7 @@ class OrderController extends DokanRESTController {
                 'from' => isset( $request['after'] ) ? sanitize_text_field( wp_unslash( $request['after'] ) ) : '',
                 'to'   => isset( $request['before'] ) ? sanitize_text_field( wp_unslash( $request['before'] ) ) : '',
             ],
+            'return'      => 'objects',
         ];
 
         // Admin can get any vendor orders but vendor can't get other vendors orders.

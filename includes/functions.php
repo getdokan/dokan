@@ -1,6 +1,7 @@
 <?php
 
 use WeDevs\Dokan\Cache;
+use WeDevs\Dokan\Utilities\OrderUtil;
 
 /**
  * Dokan Admin menu position
@@ -410,111 +411,6 @@ function dokan_author_pageviews( $seller_id ) {
     return $pageview;
 }
 
-/**
- * Get total sales amount of a seller
- *
- * @param int   $seller_id
- *
- * @return float
- */
-function dokan_author_total_sales( $seller_id ) {
-    global $wpdb;
-
-    $cache_group = "seller_order_data_{$seller_id}";
-    $cache_key   = "earning_{$seller_id}";
-    $earnings    = Cache::get( $cache_key, $cache_group );
-
-    if ( false === $earnings ) {
-        $earnings = (float) $wpdb->get_var(
-            $wpdb->prepare( "SELECT SUM(order_total) as earnings FROM {$wpdb->prefix}dokan_orders WHERE seller_id = %d AND order_status IN('wc-completed', 'wc-processing', 'wc-on-hold')", $seller_id )
-        );
-
-        Cache::set( $cache_key, $earnings, $cache_group );
-    }
-
-    return apply_filters( 'dokan_seller_total_sales', $earnings, $seller_id );
-}
-
-/**
- * Generate dokan sync table
- *
- * @deprecated since 2.4.3
- */
-function dokan_generate_sync_table() {
-    wc_deprecated_function( 'dokan_generate_sync_table', '2.4.3' );
-
-    global $wpdb;
-
-    $orders = $wpdb->get_results(
-        $wpdb->prepare(
-            "SELECT oi.order_id, p.ID as product_id, p.post_title, p.post_author as seller_id,
-                oim2.meta_value as order_total, p.post_status as order_status
-            FROM {$wpdb->prefix}woocommerce_order_items oi
-            INNER JOIN {$wpdb->prefix}woocommerce_order_itemmeta oim ON oim.order_item_id = oi.order_item_id
-            INNER JOIN {$wpdb->prefix}woocommerce_order_itemmeta oim2 ON oim2.order_item_id = oi.order_item_id
-            INNER JOIN $wpdb->posts p ON oi.order_id = p.ID
-            WHERE
-                oim.meta_key = %s AND
-                oim2.meta_key = %s
-            GROUP BY oi.order_id",
-            '_product_id',
-            '_line_total'
-        )
-    );
-
-    $table_name = $wpdb->prefix . 'dokan_orders';
-
-    $wpdb->query( "TRUNCATE TABLE {$wpdb->prefix}dokan_orders" );
-
-    if ( $orders ) {
-        foreach ( $orders as $order ) {
-            if ( dokan_is_admin_coupon_applied( $order, $seller_id ) ) {
-                $net_amount = dokan()->commission->get_earning_by_order( $order, 'seller' );
-            } else {
-                $admin_commission = dokan()->commission->get_earning_by_order( $order, 'admin' );
-                $net_amount       = $order_total - $admin_commission;
-            }
-
-            $wpdb->insert(
-                $table_name,
-                [
-                    'order_id'     => $order->order_id,
-                    'seller_id'    => $order->seller_id,
-                    'order_total'  => $order->order_total,
-                    'net_amount'   => $net_amount,
-                    'order_status' => $order->order_status,
-                ],
-                [
-                    '%d',
-                    '%d',
-                    '%f',
-                    '%f',
-                    '%s',
-                ]
-            );
-        }
-    }
-}
-
-if ( ! function_exists( 'dokan_get_seller_earnings_by_order' ) ) {
-
-    /**
-     * Get Seller's net Earnings from a order
-     *
-     * @since 2.5.2
-     *
-     * @param WC_ORDER $order
-     * @param int      $seller_id
-     *
-     * @return int $earned
-     */
-    function dokan_get_seller_earnings_by_order( $order, $seller_id ) {
-        $earned = $order->get_total() - dokan_get_admin_commission_by( $order, $seller_id );
-
-        return apply_filters( 'dokan_get_seller_earnings_by_order', $earned, $order, $seller_id );
-    }
-}
-
 if ( ! function_exists( 'dokan_get_seller_percentage' ) ) {
 
     /**
@@ -847,6 +743,29 @@ function dokan_get_post_status( $status = '' ) {
 }
 
 /**
+ * Get product available statuses
+ *
+ * @since DOKAN_SINCE
+ *
+ * @args int|object $product_id
+ *
+ * @return array
+ */
+if ( ! function_exists( 'dokan_get_available_post_status' ) ) {
+
+    function dokan_get_available_post_status( $product_id = 0 ) {
+        return apply_filters(
+            'dokan_post_status',
+            [
+                'publish' => dokan_get_post_status( 'publish' ),
+                'draft'   => dokan_get_post_status( 'draft' ),
+            ],
+            $product_id
+        );
+    }
+}
+
+/**
  * Get user friendly post status label based class
  *
  * @param string $status
@@ -1137,7 +1056,7 @@ add_filter( 'manage_edit-product_columns', 'dokan_admin_product_columns' );
  * @return mixed
  */
 function dokan_get_option( $option, $section, $default = '' ) {
-    list( $option, $section ) = dokan_admin_settings_rearrange_map( $option, $section );
+    [ $option, $section ] = dokan_admin_settings_rearrange_map( $option, $section );
 
     $options = get_option( $section );
 
@@ -1903,8 +1822,12 @@ function dokan_disable_admin_bar( $show_admin_bar ) {
 
     if ( $current_user->ID !== 0 ) {
         $role = reset( $current_user->roles );
+        $block_admin_access = dokan_get_option( 'admin_access', 'dokan_general', 'on' );
+        if ( OrderUtil::is_hpos_enabled() ) {
+            $block_admin_access = 'on';
+        }
 
-        if ( dokan_get_option( 'admin_access', 'dokan_general', 'on' ) === 'on' ) {
+        if ( $block_admin_access === 'on' ) {
             if ( in_array( $role, [ 'seller', 'customer', 'vendor_staff' ], true ) ) {
                 return false;
             }
@@ -1942,95 +1865,6 @@ function dokan_filter_product_for_current_vendor( $query ) {
 }
 
 add_filter( 'pre_get_posts', 'dokan_filter_product_for_current_vendor' );
-
-/**
- * Filter orders of current user
- *
- * @since 2.9.4
- *
- * @param object $query
- *
- * @param object $args
- *
- * @return object $args
- */
-function dokan_filter_orders_for_current_vendor( $args, $query ) {
-    global $wpdb;
-
-    if ( ! is_admin() || ! $query->is_main_query() ) {
-        return $args;
-    }
-
-    if ( ! isset( $query->query_vars['post_type'] ) ) {
-        return $args;
-    }
-
-    if ( ! in_array( $query->query_vars['post_type'], [ 'shop_order', 'wc_booking' ], true ) ) {
-        return $args;
-    }
-
-    $vendor_id = 0;
-
-    if ( ! current_user_can( 'manage_woocommerce' ) ) {
-        $vendor_id = dokan_get_current_user_id();
-    } elseif ( ! empty( $_GET['vendor_id'] ) ) { // phpcs:ignore
-        $vendor_id = absint( wp_unslash( $_GET['vendor_id'] ) ); // phpcs:ignore
-    }
-
-    if ( ! $vendor_id ) {
-        return $args;
-    }
-
-    $args['join']  .= " LEFT JOIN {$wpdb->prefix}dokan_orders as do ON $wpdb->posts.ID=do.order_id";
-    $args['where'] .= " AND do.seller_id=$vendor_id";
-
-    return $args;
-}
-
-add_filter( 'posts_clauses', 'dokan_filter_orders_for_current_vendor', 12, 2 );
-
-/**
- * Dokan map meta cpas for vendors
- *
- * @param array  $caps
- * @param string $cap
- * @param int    $user_id
- * @param array  $args
- *
- * @return array
- */
-function dokan_map_meta_caps( $caps, $cap, $user_id, $args ) {
-    global $post;
-
-    if ( ! is_admin() ) {
-        return $caps;
-    }
-
-    $post_id = ! empty( $args[0] ) ? $args[0] : 0;
-
-    if ( $cap === 'edit_post' || $cap === 'edit_others_shop_orders' ) {
-        $post_id = ! empty( $args[0] ) ? $args[0] : 0;
-
-        if ( empty( $post_id ) ) {
-            if ( empty( $post->ID ) ) {
-                return $caps;
-            }
-
-            $post_id = $post->ID;
-        }
-
-        $vendor_id       = get_post_meta( $post_id, '_dokan_vendor_id', true );
-        $current_user_id = get_current_user_id();
-
-        if ( absint( $vendor_id ) === absint( $current_user_id ) ) {
-            return [ 'edit_shop_orders' ];
-        }
-    }
-
-    return $caps;
-}
-
-add_filter( 'map_meta_cap', 'dokan_map_meta_caps', 12, 4 );
 
 /**
  * Remove sellerdiv metabox when a seller can access the backend
@@ -2262,36 +2096,6 @@ function dokan_get_processing_time_value( $index ) {
     if ( isset( $times[ $index ] ) ) {
         return $times[ $index ];
     }
-}
-
-/**
- * Dokan get vendor order details by order ID
- *
- * @since 3.2.11 rewritten entire function
- *
- * @param int|null $vendor_id will remove this parameter in future
- * @param int      $order
- *
- * @return array will return empty array in case order has suborders
- */
-function dokan_get_vendor_order_details( $order_id, $vendor_id = null ) {
-    $order      = wc_get_order( $order_id );
-    $order_info = [];
-
-    if ( ! $order instanceof WC_Abstract_Order || $order->get_meta( 'has_sub_order' ) ) {
-        return apply_filters( 'dokan_get_vendor_order_details', $order_info, $order_id, $vendor_id );
-    }
-
-    foreach ( $order->get_items( 'line_item' ) as $item ) {
-        $info = [
-            'product'  => $item['name'],
-            'quantity' => $item['quantity'],
-            'total'    => $item['total'],
-        ];
-        array_push( $order_info, $info );
-    }
-
-    return apply_filters( 'dokan_get_vendor_order_details', $order_info, $order_id, $vendor_id );
 }
 
 /**
@@ -2858,6 +2662,8 @@ function dokan_get_category_wise_seller_commission_type( $product_id, $category_
  * @param int $product_id
  * @param int $seller_id
  *
+ * @deprecated 2.9.11
+ *
  * @return float $earning | zero on failure or no price
  */
 function dokan_get_earning_by_product( $product_id, $seller_id ) {
@@ -3120,75 +2926,6 @@ function dokan_get_jed_locale_data( $domain, $language_dir = null ) {
 }
 
 /**
- * Revoke vendor access of changing order status in the backend if permission is not given
- *
- * @since 2.8.0
- *
- * @return void;
- */
-function dokan_revoke_change_order_status() {
-    if ( current_user_can( 'manage_woocommerce' ) ) {
-        return;
-    }
-
-    if ( is_admin() && get_current_screen()->id === 'shop_order' ) {
-        if ( dokan_get_option( 'order_status_change', 'dokan_selling', 'on' ) !== 'on' ) {
-            ?>
-            <style media="screen">
-                .order_data_column .wc-order-status {
-                    display: none !important;
-                }
-            </style>
-            <?php
-        }
-    }
-}
-
-add_action( 'load-post.php', 'dokan_revoke_change_order_status' );
-
-/**
- * Revoke vendor access of changing order status in the backend if permission is not given
- *
- * @since 2.8.0
- *
- * @return array;
- */
-function dokan_remove_action_column( $columns ) {
-    if ( current_user_can( 'manage_woocommerce' ) ) {
-        return $columns;
-    }
-
-    if ( dokan_get_option( 'order_status_change', 'dokan_selling', 'on' ) !== 'on' ) {
-        unset( $columns['wc_actions'] );
-    }
-
-    return $columns;
-}
-
-add_filter( 'manage_edit-shop_order_columns', 'dokan_remove_action_column', 15 );
-
-/**
- * Revoke vendor access of changing order status in the backend if permission is not given
- *
- * @since 2.8.0
- *
- * @return array;
- */
-function dokan_remove_action_button( $actions ) {
-    if ( current_user_can( 'manage_woocommerce' ) ) {
-        return $actions;
-    }
-
-    if ( dokan_get_option( 'order_status_change', 'dokan_selling', 'on' ) !== 'on' ) {
-        unset( $actions['status'] );
-    }
-
-    return $actions;
-}
-
-add_filter( 'woocommerce_admin_order_preview_actions', 'dokan_remove_action_button', 15 );
-
-/**
  * Dokan get translated days
  *
  * @since  2.8.2
@@ -3316,33 +3053,6 @@ function dokan_is_store_open( $user_id ) {
 }
 
 /**
- * Customer has order from current seller
- *
- * @since  2.8.6
- *
- * @param int $customer_id
- * @param int|null $seller_id
- *
- * @return bool
- */
-function dokan_customer_has_order_from_this_seller( $customer_id, $seller_id = null ) {
-    $seller_id = ! empty( $seller_id ) ? $seller_id : dokan_get_current_user_id();
-    $args      = [
-        'customer_id' => $customer_id,
-        'post_type'   => 'shop_order',
-        'meta_key'    => '_dokan_vendor_id', // phpcs:ignore
-        'meta_value'  => $seller_id, // phpcs:ignore
-        'post_status' => 'any',
-        'return'      => 'ids',
-        'numberposts' => 1,
-    ];
-
-    $orders = wc_get_orders( $args );
-
-    return ! empty( $orders ) ? true : false;
-}
-
-/**
  * Dokan get pro buy now url
  *
  * @since 2.8.5
@@ -3358,104 +3068,6 @@ function dokan_pro_buynow_url() {
 
     return $link;
 }
-
-/**
- * Add vendor info in restful wc_order
- *
- * @param WP_REST_Response $response
- *
- * @return WP_REST_Response
- */
-function dokan_add_vendor_info_in_rest_order( $response ) {
-    $vendor_ids = [];
-
-    foreach ( $response as $data ) {
-        if ( empty( $data['line_items'] ) ) {
-            continue;
-        }
-
-        foreach ( $data['line_items'] as $item ) {
-            $product_id = ! empty( $item['product_id'] ) ? $item['product_id'] : 0;
-            $vendor_id  = (int) get_post_field( 'post_author', $product_id );
-
-            if ( $vendor_id && ! in_array( $vendor_id, $vendor_ids, true ) ) {
-                array_push( $vendor_ids, $vendor_id );
-            }
-        }
-    }
-
-    if ( ! $vendor_ids ) {
-        return $response;
-    }
-
-    $data = $response->get_data();
-
-    foreach ( $vendor_ids as $store_id ) {
-        $store            = dokan()->vendor->get( $store_id );
-        $data['stores'][] = [
-            'id'        => $store->get_id(),
-            'name'      => $store->get_name(),
-            'shop_name' => $store->get_shop_name(),
-            'url'       => $store->get_shop_url(),
-            'address'   => $store->get_address(),
-        ];
-    }
-
-    // for backward compatibility, if there are multiple vendors, pass empty array.
-    if ( count( $vendor_ids ) > 1 ) {
-        $data['store'] = [];
-    } else {
-        $store         = dokan()->vendor->get( $vendor_ids[0] );
-        $data['store'] = [
-            'id'        => $store->get_id(),
-            'name'      => $store->get_name(),
-            'shop_name' => $store->get_shop_name(),
-            'url'       => $store->get_shop_url(),
-            'address'   => $store->get_address(),
-        ];
-    }
-
-    $response->set_data( $data );
-
-    return $response;
-}
-
-add_filter( 'woocommerce_rest_prepare_shop_order_object', 'dokan_add_vendor_info_in_rest_order', 10, 1 );
-
-/**
- * Stop sending multiple email for an order
- *
- * @since 2.8.6
- *
- * @return void
- */
-function dokan_stop_sending_multiple_email() {
-    if ( did_action( 'woocommerce_order_status_pending_to_on-hold_notification' ) === 1 ) {
-        dokan_remove_hook_for_anonymous_class( 'woocommerce_order_status_pending_to_on-hold_notification', 'WC_Email_Customer_On_Hold_Order', 'trigger', 10 );
-    }
-
-    if ( did_action( 'woocommerce_order_status_on-hold_to_processing_notification' ) === 1 ) {
-        dokan_remove_hook_for_anonymous_class( 'woocommerce_order_status_on-hold_to_processing_notification', 'WC_Email_Customer_Processing_Order', 'trigger', 10 );
-    }
-
-    if ( did_action( 'woocommerce_order_status_pending_to_processing_notification' ) === 1 ) {
-        dokan_remove_hook_for_anonymous_class( 'woocommerce_order_status_pending_to_processing_notification', 'WC_Email_Customer_Processing_Order', 'trigger', 10 );
-    }
-
-    if ( did_action( 'woocommerce_order_status_completed_notification' ) === 1 ) {
-        dokan_remove_hook_for_anonymous_class( 'woocommerce_order_status_completed_notification', 'WC_Email_Customer_Completed_Order', 'trigger', 10 );
-    }
-
-    if ( did_action( 'woocommerce_order_status_failed_to_processing_notification' ) === 1 ) {
-        dokan_remove_hook_for_anonymous_class( 'woocommerce_order_status_failed_to_processing_notification', 'WC_Email_Customer_Processing_Order', 'trigger', 10 );
-    }
-}
-
-add_action( 'woocommerce_order_status_pending_to_on-hold', 'dokan_stop_sending_multiple_email' );
-add_action( 'woocommerce_order_status_on-hold_to_processing', 'dokan_stop_sending_multiple_email' );
-add_action( 'woocommerce_order_status_pending_to_processing', 'dokan_stop_sending_multiple_email' );
-add_action( 'woocommerce_order_status_completed', 'dokan_stop_sending_multiple_email' );
-add_action( 'woocommerce_order_status_failed_to_processing', 'dokan_stop_sending_multiple_email' );
 
 /**
  * Remove hook for anonymous class
@@ -4231,13 +3843,15 @@ if ( ! function_exists( 'dokan_date_time_format' ) ) {
      * @since 2.6.8
      * @since 3.7.0 This method was moved from wc-functions.php
      *
+     * @param string  $time
      * @param boolean $date_only
      *
-     * @param string  $time
+     * @deprecated 3.8.0
      *
      * @return string
      */
     function dokan_date_time_format( $time, $date_only = false ) {
+        wc_deprecated_function( 'dokan_date_time_format', '3.8.0', 'dokan_format_datetime()' );
         $format = apply_filters( 'dokan_date_time_format', wc_date_format() . ' ' . wc_time_format() );
 
         if ( $date_only ) {
@@ -4281,7 +3895,7 @@ function dokan_mask_email_address( $email ) {
         return $email;
     }
 
-    list( $first, $last ) = explode( '@', $email );
+    [ $first, $last ] = explode( '@', $email );
     $first       = str_replace( substr( $first, '1' ), str_repeat( '*', strlen( $first ) - 1 ), $first );
     $last        = explode( '.', $last );
     $last_domain = str_replace( substr( $last['0'], '1' ), str_repeat( '*', strlen( $last['0'] ) - 1 ), $last['0'] );
@@ -4343,16 +3957,15 @@ function dokan_array_after( $array, $position, $new_array ) {
  *
  * @since 3.2.16
  *
+ * @param array  $old_array
  * @param array  $new_array
  * @param string $insert_after_key
  *
- * @param array  $old_array
- *
  * @return array
  */
-function dokan_array_insert_after( array $old_array, array $new_array, $insert_after_key ) {
+function dokan_array_insert_after( array $old_array, array $new_array, $insert_after_key = '' ) {
     $keys  = array_keys( $old_array );
-    $index = array_search( $insert_after_key, $keys, true );
+    $index = ! empty( $insert_after_key ) ? array_search( $insert_after_key, $keys, true ) : false;
     $pos   = false === $index ? count( $old_array ) : $index + 1;
 
     return array_slice( $old_array, 0, $pos, true ) + $new_array + array_slice( $old_array, $pos, count( $old_array ) - 1, true );
@@ -4533,45 +4146,6 @@ function dokan_bool_to_on_off( $bool ) {
 function is_tweleve_hour_format() {
     // Check if current setup format is 12 hour format.
     return preg_match( '/(am|pm)$/i', dokan_current_datetime()->format( wc_time_format() ) );
-}
-
-/**
- * Updates bulk orders status by orders ids.
- *
- * @since 3.7.10
- *
- * @param array $postdata
- *
- * @return void
- */
-function dokan_apply_bulk_order_status_change( $postdata ) {
-    if ( ! isset( $postdata['status'] ) || ! isset( $postdata['bulk_orders'] ) ) {
-        return;
-    }
-
-    $status = sanitize_text_field( wp_unslash( $postdata['status'] ) );
-    $orders = array_map( 'absint', $postdata['bulk_orders'] );
-
-    // -1 means bluk action option value
-    $excluded_status = [ '-1', 'cancelled', 'refunded' ];
-
-    if ( in_array( $status, $excluded_status, true ) ) {
-        return;
-    }
-
-    foreach ( $orders as $order_id ) {
-        $order = wc_get_order( $order_id );
-
-        if ( ! $order instanceof \WC_Order ) {
-            continue;
-        }
-
-        if ( in_array( $order->get_status(), $excluded_status, true ) || $order->get_status() === $status ) {
-            continue;
-        }
-
-        $order->update_status( $status );
-    }
 }
 
 /**

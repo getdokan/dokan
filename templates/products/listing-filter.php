@@ -71,7 +71,11 @@ do_action( 'dokan_product_listing_filter_before_form' );
         <?php endif; ?>
 
         <?php wp_nonce_field( 'product_listing_filter', '_product_listing_filter_nonce', false ); ?>
-        <button type="submit" class="dokan-btn"><?php esc_html_e( 'Filter', 'dokan-lite' ); ?></button>
+
+        <div class="dokan-form-group">
+            <button type="submit" class="dokan-btn"><?php esc_html_e( 'Filter', 'dokan-lite' ); ?></button>
+            <a class="dokan-btn" href="<?php echo esc_attr( dokan_get_navigation_url( 'products' ) ); ?>"><?php esc_html_e( 'Reset', 'dokan-lite' ); ?></a>
+        </div>
     </form>
 
     <?php do_action( 'dokan_product_listing_filter_before_search_form' ); ?>

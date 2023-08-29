@@ -5,6 +5,7 @@ namespace WeDevs\Dokan;
 use WeDevs\Dokan\Admin\Notices\Helper;
 use WeDevs\Dokan\ReverseWithdrawal\SettingsHelper;
 use WeDevs\Dokan\ProductCategory\Helper as CategoryHelper;
+use WeDevs\Dokan\Utilities\OrderUtil;
 
 class Assets {
 
@@ -129,7 +130,7 @@ class Assets {
             wp_localize_script( 'dokan-admin-product', 'dokan_admin_product', $this->admin_product_localize_scripts() );
         }
 
-        do_action( 'dokan_enqueue_admin_scripts' );
+        do_action( 'dokan_enqueue_admin_scripts', $hook );
     }
 
     /**
@@ -891,7 +892,8 @@ class Assets {
             if ( $api_key ) {
                 $query_args = apply_filters(
                     'dokan_google_maps_script_query_args', [
-                        'key' => $api_key,
+                        'key'      => $api_key,
+                        'callback' => 'Function.prototype',
                     ]
                 );
 
@@ -1144,6 +1146,8 @@ class Assets {
                     'buynowpro'    => dokan_pro_buynow_url(),
                     'upgradeToPro' => 'https://wedevs.com/dokan-lite-upgrade-to-pro/?utm_source=plugin&utm_medium=wp-admin&utm_campaign=dokan-lite',
                     'dummy_data'   => DOKAN_PLUGIN_ASSEST . '/dummy-data/dokan_dummy_data.csv',
+                    'adminOrderListUrl' => OrderUtil::get_admin_order_list_url(),
+                    'adminOrderEditUrl' => OrderUtil::get_admin_order_edit_url(),
                 ],
                 'states'                            => WC()->countries->get_allowed_country_states(),
                 'countries'                         => WC()->countries->get_allowed_countries(),

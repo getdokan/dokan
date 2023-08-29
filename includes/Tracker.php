@@ -65,7 +65,7 @@ class Tracker {
     protected function get_order_count() {
         global $wpdb;
 
-        return (int) $wpdb->get_var( "SELECT count(ID) FROM $wpdb->posts WHERE post_type = 'shop_order' and post_status IN ('wc-completed', 'wc-processing', 'wc-on-hold', 'wc-refunded');" );
+        return (int) $wpdb->get_var( "SELECT count(id) FROM {$wpdb->prefix}dokan_orders WHERE order_status IN ('wc-completed', 'wc-processing', 'wc-on-hold', 'wc-refunded');" );
     }
 
     /**

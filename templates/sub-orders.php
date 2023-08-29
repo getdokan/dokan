@@ -53,18 +53,14 @@ $wc_shipping_enabled = get_option( 'woocommerce_calc_shipping' ) === 'yes' ? tru
     <tbody>
     <?php
     $now = dokan_current_datetime();
-    foreach ( $sub_orders as $order_post ) {
-        $order      = wc_get_order( $order_post->ID ); // phpcs:ignore
-        if ( ! $order ) {
-            continue;
-        }
+    foreach ( $sub_orders as $order ) {
         $item_count = $order->get_item_count();
         $order_date = $order->get_date_created();
         $order_date = is_a( $order_date, 'WC_DateTime' ) ? $now->setTimestamp( $order_date->getTimestamp() ) : $now;
         ?>
             <tr class="order">
                 <td class="order-number">
-                    <a href="<?php echo esc_url( $order->get_view_order_url() ); ?>">
+                    <a href="<?php echo esc_url(  is_callable( [ $order, 'get_view_order_url' ] ) ? $order->get_view_order_url() : '#' ); ?>">
                         <?php echo esc_html( $order->get_order_number() ); ?>
                     </a>
                 </td>

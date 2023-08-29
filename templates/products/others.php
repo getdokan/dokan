@@ -1,3 +1,7 @@
+<?php
+$post_statuses = dokan_get_available_post_status( $post->ID );
+?>
+
 <div class="dokan-other-options dokan-edit-row dokan-clearfix <?php echo esc_attr( $class ); ?>">
     <div class="dokan-section-heading" data-togglehandler="dokan_other_options">
         <h2><i class="fas fa-cog" aria-hidden="true"></i> <?php esc_html_e( 'Other Options', 'dokan-lite' ); ?></h2>
@@ -28,7 +32,6 @@
                 }
 
                 ?>
-
                 <select id="post_status" class="dokan-form-control" name="post_status">
                     <?php foreach ( $post_statuses as $status => $label ) : // phpcs:ignore ?>
                         <option value="<?php echo esc_attr( $status ); ?>" <?php selected( $status, $post_status ); ?>>
@@ -36,11 +39,6 @@
                         </option>
                     <?php endforeach; ?>
                 </select>
-            <?php else : ?>
-                <span class="dokan-toggle-selected-display <?php echo 'pending' === $post_status ? 'dokan-label dokan-label-warning' : ''; ?>">
-                    <?php echo esc_html( dokan_get_post_status( $post_status ) ); ?>
-                </span>
-            <?php endif; ?>
         </div>
 
         <div class="dokan-form-group content-half-part">
