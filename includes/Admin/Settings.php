@@ -131,6 +131,7 @@ class Settings {
             $option_name  = sanitize_text_field( wp_unslash( $_POST['section'] ) );
             $option_value = $this->sanitize_options( wp_unslash( $_POST['settingsData'] ), 'edit' ); // phpcs:ignore
             $option_value = apply_filters( 'dokan_save_settings_value', $option_value, $option_name );
+//            error_log(print_r($option_value['dashboard_menu_manager'], true));
             $old_options  = get_option( $option_name, [] );
 
             /**

@@ -782,6 +782,15 @@
                             margin: 0;
                             padding: 0;
                             border-top: 1px solid transparent;
+                            .menu-manager-reset-all {
+                                display: inline-block;
+                                position: relative;
+                                float: right;
+                                top: 33px;
+                                right: 12px;
+                                color: #8891A8;
+                                cursor: pointer;
+                            }
                             .tabs {
                                 ul {
                                     padding: 15px 20px;
@@ -813,6 +822,11 @@
                                     justify-content: space-between;
                                     .first-part {
                                         display: flex;
+                                        .grabber-wrapper-placeholder {
+                                            /* border: 1px solid red; */
+                                            min-width: 40px;
+                                            min-height: 22px;
+                                        }
                                         .svg-pull-wrapper {
                                             margin: 0;
                                             padding: 0;
@@ -847,6 +861,11 @@
                                             &:hover {
                                                 cursor: pointer;
                                             }
+                                        }
+                                        .switch-wrapper-placeholder {
+                                            min-width: 45px;
+                                            min-height: 21px;
+                                            display: inline-block;
                                         }
                                     }
                                 }

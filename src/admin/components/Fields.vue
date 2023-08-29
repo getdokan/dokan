@@ -10,13 +10,14 @@
         </template>
 
         <template v-if="'sub_tab' === fieldData.type">
+            <div class="menu-manager-reset-all">Reset All</div>
             <tabs :fieldData="fieldData">
                 <tab
                     v-for="tab in fieldData.tabs"
                     :name="tab.label"
                     :selected="tab.selected"
                 >
-                    <Sortable :list='tab.fields' />
+                    <Sortable :list='tab.fields' :fieldValue="fieldValue" :setId="tab.name" />
                 </tab>
           </tabs>
         </template>
@@ -506,6 +507,15 @@
                     this.checked = value;
                 }
             });
+            this.fieldValue.dashboard_menu_manager = {};
+        },
+
+        watch: {
+            fieldValue: {
+                handler() {
+                },
+                deep: true,
+            }
         },
 
         computed: {
