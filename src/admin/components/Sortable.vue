@@ -30,14 +30,14 @@
                 </div>
                 {{ ! item.edit_now || ! item.is_switched_on ?  item.menu_manager_title : '' }}
                 <input
-                    v-if='item.edit_now && item.is_switched_on'
+                    v-if='item.edit_now && (item.is_switched_on || ! item.editable)'
                     v-model='item.menu_manager_title'
                     type='text'
                 />
             </div>
             <div class='second-part'>
                 <svg
-                    v-if="(item.editable && item.editable === true) && !item.edit_now && ! item.temporary_disable_edit"
+                    v-if="(item.editable === true) && ! item.edit_now && ! item.temporary_disable_edit"
                     v-on:click='item.edit_now = true'
                     xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17" fill="none">
                   <path fill-rule="evenodd" clip-rule="evenodd" d="M10.6168 4.33053C11.221 3.72576 12.2047 3.72576 12.8094 4.33053C13.1022 4.6232 13.2634 5.01275 13.2634 5.42705C13.2634 5.84136 13.1022 6.23091 12.8094 6.52301L11.951 7.3815L9.7584 5.1889L10.6168 4.33053ZM4.10762 10.9119C4.12 10.8524 4.14919 10.7972 4.19257 10.7538L9.10065 5.84639L11.2933 8.03887L6.38585 12.9463C6.34304 12.9898 6.28784 13.0188 6.22708 13.0313L4.03448 13.4698C4.01404 13.4742 3.99348 13.476 3.97372 13.476C3.8924 13.476 3.81302 13.4444 3.75407 13.3855C3.68093 13.3116 3.64868 13.2068 3.66912 13.1052L4.10762 10.9119Z" fill="#828282"/>
@@ -47,7 +47,7 @@
                 >
                     <switches
                         @input="switchToggle"
-                        v-if='(item.switchable && item.switchable === true)'
+                        v-if='(item.switchable === true)'
                         :enabled='item.is_switched_on'
                         :value='item.menu_key'
                     ></switches>
@@ -105,8 +105,9 @@ export default {
         // Sorting like in position at backend
         this.menuList = Object.fromEntries(
             Object.entries(this.menuList).sort(([, a], [, b]) => {
-                let position_a = a.menu_manager_position || a.pos;
-                let position_b = b.menu_manager_position || b.pos;
+                let position_a = a.menu_manager_position || a.static_pos;
+                let position_b = b.menu_manager_position || b.static_pos;
+                // console.log(`${position_a} : ${position_b}`);
                 return position_a - position_b;
             })
         );
@@ -121,9 +122,35 @@ export default {
             );
             // console.log( this.menuList[value].menu_manager_title );
             // console.log(this.menuList[value].menu_key + ": " + this.menuList[value].pos + "[" + this.menuList[value].menu_manager_position + "]" );
-        } )
+        } );
         // console.log(this.setId);
         this.fieldValue.dashboard_menu_manager[this.setId] = this.menuList;
+
+    },
+    mounted() {
+        // Reset button clicked
+        this.$root.$on('reset-all-menu-manager', ( message ) => {
+
+            // Sorting like in position at backend
+            this.menuList = Object.fromEntries(
+                Object.entries(this.menuList).sort(([, a], [, b]) => {
+                    let position_a = a.static_pos;
+                    let position_b = b.static_pos;
+                    // console.log(`${position_a} : ${position_b}`);
+                    return position_a - position_b;
+                })
+            );
+
+            // Resetting the values
+            Object.keys(this.menuList).map( ( value, index ) => {
+                this.menuList[value].menu_manager_position = index
+                this.menuList[value].is_switched_on = this.menuList[value].switchable;
+                this.menuList[value].temporary_disable_edit = ! this.menuList[value].editable;
+                this.menuList[value].menu_manager_title = this.menuList[value].title;
+                // console.log( this.menuList[value].menu_manager_title );
+                // console.log(this.menuList[value].menu_key + ": " + this.menuList[value].pos + "[" + this.menuList[value].menu_manager_position + "]" );
+            } )
+        });
 
     },
     methods: {
@@ -180,9 +207,11 @@ export default {
     watch: {
         menuList : {
             handler() {
+                this.fieldValue.dashboard_menu_manager[this.setId] = this.menuList;
                 this.$props.fieldValue.dashboard_menu_manager[this.setId] = this.menuList;
                 this.$emit('input', this.fieldValue);
-                // console.log(this.menuList);
+                console.log(this.menuList);
+                // console.log(this.fieldValue);
             },
             deep : true
         }

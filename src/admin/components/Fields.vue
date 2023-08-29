@@ -10,7 +10,7 @@
         </template>
 
         <template v-if="'sub_tab' === fieldData.type">
-            <div class="menu-manager-reset-all">Reset All</div>
+            <div class="menu-manager-reset-all" @click="() => {this.$root.$emit('reset-all-menu-manager', 'reset-all-menu-manager')}">Reset All</div>
             <tabs :fieldData="fieldData">
                 <tab
                     v-for="tab in fieldData.tabs"
