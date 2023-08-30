@@ -11,7 +11,7 @@
   ],
   "minimum-stability": "dev",
   "require": {
-    "php": ">=7.2",
+    "php": ">=7.3",
     "appsero/client": "dev-develop",
     "jakeasmith/http_build_url": "^1"
   },
@@ -26,7 +26,7 @@
   },
   "config": {
     "platform": {
-      "php": "7.2"
+      "php": "7.3"
     },
     "allow-plugins": {
       "dealerdirect/phpcodesniffer-composer-installer": true
@@ -35,7 +35,10 @@
   "autoload": {
     "psr-4": {
       "WeDevs\\Dokan\\": "includes/"
-    }
+    },
+    "files": [
+      "includes/functions-rest-api.php"
+    ]
   },
   "scripts": {
     "phpcs": [
