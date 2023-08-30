@@ -427,8 +427,8 @@ export default {
 
     methods: {
         async getPaymentMethodSelector() {
-            await dokan.api.get( "/withdraw/payment_methods" )
-                .done( ( response, status, xhr ) => {
+            await dokan.api.get( '/withdraw/payment_methods' )
+                .done( ( response ) => {
                     this.paymentMethods = [ { id: '', text: '' } ].concat( response.map( payment_method => {
                         return {
                             id: payment_method.id,
@@ -439,6 +439,13 @@ export default {
                     jQuery( '#filter-payment-methods' ).select2( {
                         data: this.paymentMethods,
                     } ).val( this.filter.payment_method ).trigger( 'change' );
+                } ).fail( ( jqXHR ) => {
+                    this.paymentMethods = [ { id: '', text: '' } ];
+                    let message = dokan_handle_ajax_error( jqXHR );
+
+                    if ( message ) {
+                        this.showErrorAlert( message );
+                    }
                 } );
         },
 
@@ -661,30 +668,31 @@ export default {
                 end_date: self.filterTransactionDate.end_date
             };
 
-            dokan.api.get( '/withdraw', args ).done( ( response, status, xhr ) => {
-                if ( ! response.percentage ) {
+            dokan.api.get( '/withdraw', args )
+                .done( ( response ) => {
+                    if ( ! response.percentage ) {
+                        self.loading              = false;
+                        self.progressbar.isActive = false;
+
+                        return;
+                    }
+
+                    self.progressbar.value = response.percentage;
+
+                    if ( response.percentage >= 100 ) {
+                        this.loading              = false;
+                        this.progressbar.isActive = false;
+
+                        // Redirect to the response URL.
+                        window.location.assign( response.url );
+                    } else {
+                        // Run recursive logs to file method again.
+                        self.recursiveWriteLogsToFile( response.step );
+                    }
+                } ).fail( ( jqXHR ) => {
                     self.loading              = false;
                     self.progressbar.isActive = false;
-
-                    return;
-                }
-
-                self.progressbar.value = response.percentage;
-
-                if ( response.percentage >= 100 ) {
-                    this.loading              = false;
-                    this.progressbar.isActive = false;
-
-                    // Redirect to the response URL.
-                    window.location.assign( response.url );
-                } else {
-                    // Run recursive logs to file method again.
-                    self.recursiveWriteLogsToFile( response.step );
-                }
-            } ).fail( ( jqXHR ) => {
-                self.loading              = false;
-                self.progressbar.isActive = false;
-            } );
+                } );
         },
 
         clearAllFiltering() {
@@ -812,6 +820,15 @@ export default {
 
         clearSelection(element) {
             $(element).val(null).trigger('change');
+        },
+
+        showErrorAlert( message ) {
+            let self = this;
+            swal.fire(
+                self.__( 'Something went wrong', 'dokan' ),
+                message,
+                'error'
+            );
         },
     }
 };
