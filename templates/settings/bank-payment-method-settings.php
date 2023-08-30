@@ -93,7 +93,7 @@
 
     <div class="dokan-form-group">
         <div>
-            <label><?php echo ! empty( $fields_placeholders['bank_name']['label'] ) ? esc_attr( $fields_placeholders['bank_name']['label']  ) : ''; ?> </label>
+            <label><?php echo ! empty( $fields_placeholders['bank_name']['label'] ) ? esc_attr( $fields_placeholders['bank_name']['label'] ) : ''; ?> </label>
         </div>
 
         <div class="dokan-w10">
