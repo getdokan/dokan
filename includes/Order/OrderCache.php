@@ -25,6 +25,9 @@ class OrderCache {
 
         add_action( 'wp_trash_post', [ $this, 'reset_cache_before_deleting_order' ], 20 );
         add_action( 'before_delete_post', [ $this, 'reset_cache_before_deleting_order' ], 20 );
+
+        add_action( 'woocommerce_new_order', [ $this, 'clear_product_cache' ], 10, 1 );
+        add_action( 'woocommerce_update_order', [ $this, 'clear_product_cache' ], 10, 1 );
     }
 
     /**
@@ -101,5 +104,36 @@ class OrderCache {
         $seller_id = dokan_get_seller_id_by_order( $order_id );
 
         self::delete( $seller_id, $order_id );
+    }
+
+    /**
+     * This method will delete vendors best-selling product cache after a new order has been made
+     *
+     * @since 3.2.11
+     * @since 3.8.0 Moved this function from includes/wc-functions.php
+     *
+     * @param int $post_id
+     */
+    public function clear_product_cache( $order_id ) {
+        $order = wc_get_order( $order_id );
+
+        if ( ! $order ) {
+            return;
+        }
+
+        // check if order has suborder
+        if ( $order->get_meta( 'has_sub_order' ) ) {
+            // same hooks will be called for individual sub orders
+            return;
+        }
+
+        // get vendor id from order
+        $seller_id = dokan_get_seller_id_by_order( $order_id );
+        if ( empty( $seller_id ) ) {
+            return;
+        }
+
+        $cache_group = "seller_product_data_$seller_id";
+        Cache::invalidate_group( $cache_group );
     }
 }

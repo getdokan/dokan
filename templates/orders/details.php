@@ -7,9 +7,8 @@ if ( ! dokan_is_seller_has_order( dokan_get_current_user_id(), $order_id ) ) {
 }
 
 $statuses = wc_get_order_statuses();
-$order    = new WC_Order( $order_id ); // phpcs:ignore
+$order    = wc_get_order( $order_id ); // phpcs:ignore
 $hide_customer_info = dokan_get_option( 'hide_customer_info', 'dokan_selling', 'off' );
-$customer_ip        = get_post_meta( $order->get_id(), '_customer_ip_address', true );
 ?>
 <div class="dokan-clearfix dokan-order-details-wrap">
     <div class="dokan-w8 dokan-order-left-content">
@@ -44,11 +43,7 @@ $customer_ip        = get_post_meta( $order->get_id(), '_customer_ip_address', t
                                 foreach ( $order_items as $item_id => $item ) {
                                     switch ( $item['type'] ) {
                                         case 'line_item':
-                                            if ( version_compare( WC_VERSION, '4.4.0', '>=' ) ) {
-                                                $_product = $item->get_product();
-                                            } else {
-                                                $_product = $order->get_product_from_item( $item );
-                                            }
+                                            $_product = $item->get_product();
                                             dokan_get_template_part(
                                                 'orders/order-item-html', '', array(
                                                     'order' => $order,
@@ -216,29 +211,20 @@ $customer_ip        = get_post_meta( $order->get_id(), '_customer_ip_address', t
                             <ul class="list-unstyled customer-details">
                                 <li>
                                     <span><?php esc_html_e( 'Customer:', 'dokan-lite' ); ?></span>
-                                    <?php
-                                    $customer_user = absint( get_post_meta( $order->get_id(), '_customer_user', true ) );
-                                    if ( $customer_user && $customer_user !== 0 ) {
-                                        $customer_userdata = get_userdata( $customer_user );
-                                        $display_name = $customer_userdata->display_name;
-                                    } else {
-                                        $display_name = get_post_meta( $order->get_id(), '_billing_first_name', true ) . ' ' . get_post_meta( $order->get_id(), '_billing_last_name', true );
-                                    }
-                                    ?>
-                                    <?php echo esc_html( $display_name ); ?><br>
+                                    <?php echo esc_html( $order->get_formatted_billing_full_name() ); ?><br>
                                 </li>
                                 <li>
                                     <span><?php esc_html_e( 'Email:', 'dokan-lite' ); ?></span>
-                                    <?php echo esc_html( get_post_meta( $order->get_id(), '_billing_email', true ) ); ?>
+                                    <?php echo esc_html( $order->get_billing_email() ); ?>
                                 </li>
                                 <li>
                                     <span><?php esc_html_e( 'Phone:', 'dokan-lite' ); ?></span>
-                                    <?php echo esc_html( get_post_meta( $order->get_id(), '_billing_phone', true ) ); ?>
+                                    <?php echo esc_html( $order->get_billing_phone() ); ?>
                                 </li>
                                 <li>
                                     <span><?php esc_html_e( 'Customer IP:', 'dokan-lite' ); ?></span>
-                                    <a href="<?php echo esc_url( 'https://tools.keycdn.com/geo?host=' . $customer_ip ); ?>" target="_blank">
-                                        <?php echo esc_html( $customer_ip ); ?>
+                                    <a href="<?php echo esc_url( 'https://tools.keycdn.com/geo?host=' . $order->get_customer_ip_address() ); ?>" target="_blank">
+                                        <?php echo esc_html( $order->get_customer_ip_address() ); ?>
                                     </a>
                                 </li>
 
@@ -247,8 +233,7 @@ $customer_ip        = get_post_meta( $order->get_id(), '_customer_ip_address', t
                         <?php endif; ?>
                         <?php
                         if ( get_option( 'woocommerce_enable_order_comments' ) !== 'no' ) {
-                            $customer_note = get_post_field( 'post_excerpt', $order->get_id() );
-
+                            $customer_note = $order->get_customer_note();
                             if ( ! empty( $customer_note ) ) {
                                 ?>
                                 <div class="alert alert-success customer-note">
