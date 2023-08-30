@@ -296,7 +296,7 @@ class Ajax {
         $order->update_status( $order_status );
 
         // Adjust product stock.
-        // dokan_sub_order_adjust_product_stock( $order );
+        dokan_sub_order_adjust_product_stock( $order );
 
         // Get the new order status. This is needed since plugin/theme authors might
         // change the order status behind the scenes in certain cases.
