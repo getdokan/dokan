@@ -78,6 +78,7 @@
 
         init() {
             this.searchVendors( '.dokan_product_author_override' );
+            this.hideVendorIfSubscriptionProduct();
             $( '#product-type' ).on( 'change', this.hideVendorIfSubscriptionProduct );
         }
     }
