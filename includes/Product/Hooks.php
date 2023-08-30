@@ -30,7 +30,7 @@ class Hooks {
         add_action( 'woocommerce_update_product', [ $this, 'update_category_data_for_new_and_update_product' ], 10, 1 );
 
         // Remove product type filter if pro not exists.
-        add_filter( 'dokan_product_listing_filter_args', [ $this, 'remove_product_type_filter_pro_not_exists' ] );
+        add_filter( 'dokan_product_listing_filter_args', [ $this, 'remove_product_type_filter' ] );
 
         // Init Product Cache Class
         new VendorStoreInfo();
@@ -315,10 +315,10 @@ class Hooks {
      *
      * @return array
      */
-    public function remove_product_type_filter_pro_not_exists( $args ) {
+    public function remove_product_type_filter( $args ) {
         global $wp;
 
-        if ( isset( $wp->query_vars['pagename'] ) && 'dashboard' === $wp->query_vars['pagename'] && isset( $wp->query_vars['products'] ) && ! function_exists( 'dokan_pro' ) ) {
+        if ( dokan_is_seller_dashboard() && isset( $wp->query_vars['products'] ) && ! function_exists( 'dokan_pro' ) ) {
             $args['product_types'] = '';
         }
 
