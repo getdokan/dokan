@@ -146,8 +146,8 @@
                                                 array(
                                                     'taxonomy' => 'product_type',
                                                     'field'    => 'slug',
-                                                    'terms'    => apply_filters( 'dokan_product_listing_exclude_type', array() ),
-                                                    'operator' => 'NOT IN',
+                                                    'terms'    => ! dokan()->is_pro_exists() ? [ 'simple' ] :apply_filters( 'dokan_product_listing_exclude_type', array() ),
+                                                    'operator' => ! dokan()->is_pro_exists() ? 'IN' : 'NOT IN',
                                                 ),
                                             ),
                                         );
