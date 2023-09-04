@@ -50,7 +50,7 @@
                             <a :href="section.document_link" target="_blank" class="doc-link">{{ __( 'Documentation', 'dokan-lite' ) }}</a>
                         </div>
                         <div v-if="'on' === section.action_button" class="settings-action-link">
-                            <a class="action-link" href="#" @click.prevent="resetAll(section.id)">{{ section.action_button_label }}</a>
+                            <a class="action-link" href="#" @click.prevent="handleAction( section.id )">{{ section.action_button_label }}</a>
                         </div>
                     </fieldset>
                     <template v-for="(fields, index) in settingFields" v-if="isLoaded">
@@ -161,14 +161,6 @@
         },
 
         methods: {
-            resetAll(sectionId) {
-                let settingValues = Object.entries(this.settingValues[sectionId]);
-
-                settingValues.forEach( ( key, value) => {
-                    this.settingValues[sectionId][key[0]] = this.settingFields[sectionId][key[0]].default;
-                } );
-            },
-
             changeTab( section ) {
                 var activetab = '';
                 this.currentTab = section.id;
@@ -544,6 +536,20 @@
                 self.settingFields = settingFields;
                 self.settingSections = settingSections;
                 this.$root.$emit('reinitWpTextEditor');
+            },
+
+            handleAction( sectionId ) {
+                if ( "dokan_product_custom_validation" === sectionId ) {
+                    this.resetAllFields( sectionId );
+                }
+            },
+
+            resetAllFields( sectionId ) {
+                let settingValues = Object.entries(this.settingValues[sectionId]);
+
+                settingValues.forEach( ( key, value) => {
+                    this.settingValues[sectionId][key[0]] = this.settingFields[sectionId][key[0]].default;
+                } );
             },
 
             scrollToTop() {
