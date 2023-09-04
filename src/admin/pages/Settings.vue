@@ -49,6 +49,9 @@
                         <div v-if="section.document_link" class="settings-document-button">
                             <a :href="section.document_link" target="_blank" class="doc-link">{{ __( 'Documentation', 'dokan-lite' ) }}</a>
                         </div>
+                        <div v-if="'on' === section.action_button" class="settings-action-link">
+                            <a class="action-link" href="#" @click.prevent="resetAll(section.id)">{{ section.action_button_label }}</a>
+                        </div>
                     </fieldset>
                     <template v-for="(fields, index) in settingFields" v-if="isLoaded">
                         <div :id="index" class="group" v-if="currentTab === index" :key="index">
@@ -158,6 +161,14 @@
         },
 
         methods: {
+            resetAll(sectionId) {
+                let settingValues = Object.entries(this.settingValues[sectionId]);
+
+                settingValues.forEach( ( key, value) => {
+                    this.settingValues[sectionId][key[0]] = this.settingFields[sectionId][key[0]].default;
+                } );
+            },
+
             changeTab( section ) {
                 var activetab = '';
                 this.currentTab = section.id;
@@ -697,11 +708,13 @@
 
             .settings-header {
                 display: flex;
-                margin-bottom: 50px;
+                margin-bottom: 30px;
                 justify-content: space-between;
+                flex-wrap: wrap;
 
                 .settings-content {
                     flex: 4;
+                    margin: 0 auto 20px;
 
                     .settings-title {
                         margin: 30px 0 20px 0;
@@ -724,7 +737,7 @@
                 .settings-document-button {
                     flex: 2.5;
                     text-align: right;
-                    margin-top: 35px;
+                    margin: 35px 0 20px;
 
                     a.doc-link {
                         color: #033AA3D9;
@@ -741,6 +754,22 @@
 
                         &:hover {
                             background: #033aa30f;
+                        }
+                    }
+                }
+
+                .settings-action-link {
+                    flex: 0 0 100%;
+                    margin: 10px auto -10px;
+                    text-align: right;
+
+                    a.action-link {
+                        color: #000;
+                        text-decoration: none;
+
+                        &:hover, &:active, &:focus {
+                            text-decoration: underline;
+                            outline: none;
                         }
                     }
                 }
