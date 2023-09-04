@@ -27,6 +27,9 @@
         <label for="reg_email"><?php esc_html_e( 'Email address', 'dokan-lite' ); ?> <span class="required">*</span></label>
         <input type="email" class="input-text form-control" name="email" id="reg_email" value="<?php echo ! empty( $data['email'] ) ? esc_attr( $data['email'] ) : ''; ?>" required="required" />
         <label class="reg_email_error"></label>
+        <?php if ( get_option( 'woocommerce_registration_generate_password', 'no' ) === 'yes' ) : ?>
+        <small><?php echo __( 'A link to set a new password will be sent to your email address.', 'dokan-lite' ); ?></small>
+        <?php endif; ?>
     </p>
 
     <p class="form-row form-group form-row-wide">
