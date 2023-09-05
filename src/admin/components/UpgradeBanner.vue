@@ -127,11 +127,11 @@
                     {{ __( 'Delivery Time', 'dokan-lite' ) }}
                     <span></span>
                 </label>
-                <a target="_blank" href="https://wedevs.com/dokan/modules">{{ __( 'See All Premium Modules', 'dokan-lite' ) }}</a>
+                <a target="_blank" href="https://dokan.co/wordpress/modules/">{{ __( 'See All Premium Modules', 'dokan-lite' ) }}</a>
             </div>
         </div>
         <div class="btn-upgrade">
-            <a target="_blank" href="https://wedevs.com/dokan-lite-upgrade-to-pro/?utm_source=dokan-plugin-dashboard&utm_medium=wp-admin-promotion&utm_campaign=dokan-lite">{{ __( 'Upgrade to Premium', 'dokan-lite' ) }}</a>
+            <a target="_blank" href="https://dokan.co/wordpress/upgrade-to-pro/?utm_source=plugin&utm_medium=wp-admin&utm_campaign=dokan-lite">{{ __( 'Upgrade to Premium', 'dokan-lite' ) }}</a>
         </div>
         <button class="close-banner" @click="dismiss()">
             <span class="dashicons dashicons-no-alt"></span>
