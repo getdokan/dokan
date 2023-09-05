@@ -6,7 +6,7 @@ import { payloads } from 'utils/payloads';
 let apiUtils: ApiUtils;
 let productId: string;
 
-// eslint-disable-next-line require-await
+
 test.beforeAll(async ({ request }) => {
 	apiUtils = new ApiUtils(request);
 	[, productId,] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendor2Auth);

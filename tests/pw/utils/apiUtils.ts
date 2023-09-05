@@ -154,7 +154,7 @@ export class ApiUtils {
 	// create store
 	async createStore(payload: any, auth? : auth): Promise<[responseBody, string, string]> {
 		const response = await this.request.post(endPoints.createStore, { data: payload, headers: auth });
-		const responseBody = await this.getResponseBody(response, false);   //todo:  convert to this.get , implement multiple optional function parameter to pass false to response-body
+		const responseBody = await this.getResponseBody(response, false);   
 		let sellerId :string;
 		let storeName :string;
 		if(responseBody.code){
@@ -234,7 +234,7 @@ export class ApiUtils {
 
 
 	// delete all products
-	async deleteAllProducts( productName = '', auth? : auth): Promise<responseBody> { //todo:  update handle first parameter
+	async deleteAllProducts( productName = '', auth? : auth): Promise<responseBody> { 
 		const allProducts = await this.getAllProducts(auth);
 		let allProductIds: any;
 		// delete all products with same name
@@ -381,7 +381,7 @@ export class ApiUtils {
 
 
 	// create coupon
-	async createCoupon(productIds: string[], coupon: coupon_api, auth?: auth ): Promise<[responseBody, string, string]> { //todo:  need to update; handle productIds can be empty
+	async createCoupon(productIds: string[], coupon: coupon_api, auth?: auth ): Promise<[responseBody, string, string]> { 
 		const response = await this.request.post(endPoints.createCoupon, { data: { ...coupon, product_ids: productIds }, headers: auth });
 		const responseBody = await this.getResponseBody(response, false);
 		let couponId: string;
@@ -464,7 +464,7 @@ export class ApiUtils {
 	// get withdrawId
 	async getWithdrawId(auth? : auth): Promise<string> {
 		const allWithdraws = await this.getAllWithdrawsByStatus('pending', auth);
-		if(!allWithdraws?.length){ return ''; } //todo:  apply this to all get id method
+		if(!allWithdraws?.length){ return ''; } 
 		const withdrawId = allWithdraws[0].id;
 		return withdrawId;
 	}
@@ -472,8 +472,8 @@ export class ApiUtils {
 
 	// create withdraw
 	async createWithdraw(payload: object, auth? : auth): Promise<[responseBody, string]> {
-		const response = await this.request.post(endPoints.createWithdraw, { data: payload, headers: auth }); //todo: return withdrawId if already exists
-		const responseBody = await this.getResponseBody(response, false); //todo:  test if false is necessary there was false which is removed for testing
+		const response = await this.request.post(endPoints.createWithdraw, { data: payload, headers: auth }); //todo: return withdrawId if already exists pending
+		const responseBody = await this.getResponseBody(response, false); 
 		const withdrawId = String(responseBody.id);
 		return [responseBody, withdrawId];
 	}
@@ -483,7 +483,7 @@ export class ApiUtils {
 	async cancelWithdraw(withdrawId: string, auth? : auth): Promise<responseBody> {
 		if(!withdrawId){
 			withdrawId = await this.getWithdrawId(auth);
-			if (!withdrawId) { return;} //todo:  apply this to all where get id method is called
+			if (!withdrawId) { return;} 
 		}
 		const [, responseBody] = await this.delete(endPoints.cancelWithdraw(withdrawId), { headers: payloads.adminAuth });
 		return responseBody;
@@ -642,7 +642,7 @@ export class ApiUtils {
 
 
 	// create support ticket comment
-	async createSupportTicketComment( supportTicketId = '', payload: object, auth? : auth): Promise<responseBody> { //todo:  update handle first parameter
+	async createSupportTicketComment( supportTicketId = '', payload: object, auth? : auth): Promise<responseBody> { 
 		if(!supportTicketId){
 			[supportTicketId,] = await this.getSupportTicketId(auth);
 		}
@@ -1100,7 +1100,7 @@ export class ApiUtils {
 
 	// create seller badge
 	async createSellerBadge(payload: any, auth? : auth): Promise<[responseBody, string]> {
-		const response = await this.request.post(endPoints.createSellerBadge, { data: payload, headers: auth }); //todo:  remove this.request from everywhere
+		const response = await this.request.post(endPoints.createSellerBadge, { data: payload, headers: auth }); 
 		const responseBody = await this.getResponseBody(response, false);
 		const badgeId = responseBody.code === 'invalid-event-type' ? await this.getSellerBadgeId(payload.event_type, auth) : responseBody.id;
 		return [responseBody, badgeId];
@@ -1124,7 +1124,7 @@ export class ApiUtils {
 	// delete all seller badges
 	async deleteAllSellerBadges(auth? : auth): Promise<void> {
 		const allBadges = await this.getAllSellerBadges(auth);
-		if(!allBadges?.length){return;} //todo:  apply this to all batch update/ anywhere a action can be lessened
+		if(!allBadges?.length){return;} 
 		const allBadgeIds = (await this.getAllSellerBadges(auth)).map((o: { id: unknown; }) => o.id);
 		await this.updateBatchSellerBadges('delete', allBadgeIds, auth);
 	}
@@ -1268,7 +1268,7 @@ export class ApiUtils {
 
 
 	// get all plugins
-	async getAllPlugins(params = {}, auth? : auth): Promise<responseBody> { //todo:  run loop & increment page to grab all plugins/products/...
+	async getAllPlugins(params = {}, auth? : auth): Promise<responseBody> { 
 		const [, responseBody] = await this.get(endPoints.wp.getAllPlugins, { params: { ...params, per_page:100 }, headers: auth });
 		return responseBody;
 	}
@@ -1313,88 +1313,23 @@ export class ApiUtils {
 
 
 	// upload media
-	async uploadMedia(filePath: string, auth?: auth): Promise<[responseBody, string]> { //todo:  handle different file upload, hardcoded: image
+	async uploadMedia(filePath: string, auth?: auth): Promise<[responseBody, string]> { 
 		const payload = {
 			headers: {
 				Accept: '*/*',
 				ContentType: 'multipart/form-data',
-				// Authorization: auth.Authorization  //todo:  handle authorization
+				// Authorization: auth.Authorization 
 			},
 			multipart: {
 				file: {
 					name: String((filePath.split('/')).pop()),
 					mimeType: 'image/' + (filePath.split('.')).pop(),
 					buffer: fs.readFileSync(filePath),
-					// buffer: Buffer.from(filePath),  //todo:  test then use it instead of previous, not working debug why
+					// buffer: Buffer.from(filePath),  
 				},
 			},
 		};
 		const response = await this.request.post(endPoints.wp.createMediaItem, payload);
-		const responseBody = await this.getResponseBody(response);
-		const mediaId = String(responseBody.id);
-		return [responseBody, mediaId];
-	}
-
-
-	// upload media
-	async uploadMedia2(filePath: string, attributes: any, auth?: auth): Promise<[responseBody, string]> { //todo:  handle different file upload, hardcoded: image
-		const form: any = new FormData();
-		// form.append("file", fs.createReadStream(filePath));
-		// const base64 = { 'base64': fs.readFileSync(filePath) }
-		// function base64_encode(file) {
-		// 	const body = fs.readFileSync(file);
-		// 	return body.toString('base64');
-		// }
-
-		form.append('file',
-			// fs.readFileSync(filePath, { encoding: 'base64' }),
-
-			// base64_encode(filePath),
-			fs.createReadStream(filePath),
-			{
-				name: String((filePath.split('/')).pop()),
-				type: 'image/' + (filePath.split('.')).pop(),
-			}
-
-		);
-
-		form.append('title', attributes.title);
-		form.append('caption', attributes.caption);
-		form.append('caption', attributes.description);
-		form.append('alt_text', attributes.alt_text);
-
-		// const payload = {
-		// 	headers: {
-		// 		Accept: '*/*',
-		// 		ContentType: 'multipart/form-data',
-		// 		// ContentType: 'image/png',
-		// 		'content-disposition': `attachment; filename=${String((filePath.split('/')).pop())}`
-		// 		// Authorization: auth.Authorization  //todo:  handle authorization
-		// 	},
-		// 	form: form
-		// }
-		const headers = {
-			Accept: '*/*',
-			ContentType: 'multipart/form-data',
-			// ContentType: 'image/png',
-			'content-disposition': `attachment; filename=${String((filePath.split('/')).pop())}`
-			// Authorization: auth.Authorization  //todo:  handle authorization
-		};
-
-		// const response = await this.request.post(endPoints.wp.createMediaItem, payload);
-		const response = await this.request.post(endPoints.wp.createMediaItem, { form: form, headers: headers });  //todo:  update all request.post to this.post/get/put/delete
-		const responseBody = await this.getResponseBody(response);
-		const mediaId = String(responseBody.id);
-		return [responseBody, mediaId];
-	}
-
-
-	// upload media
-	async uploadMedia3(filePath: string): Promise<[responseBody, string]> {
-		// const payload = fs.readFileSync(filePath);
-		const payload = Buffer.from(filePath);  //todo:  test then use it instead of previous , Add auth
-		const headers = { 'content-disposition': `attachment; filename=${String((filePath.split('/')).pop())}` };
-		const response = await this.request.post(endPoints.wp.createMediaItem, { data: payload, headers });
 		const responseBody = await this.getResponseBody(response);
 		const mediaId = String(responseBody.id);
 		return [responseBody, mediaId];

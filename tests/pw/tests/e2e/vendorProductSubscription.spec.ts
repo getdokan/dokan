@@ -24,7 +24,6 @@ test.describe('Product subscriptions test', () => {
 		customer = new VendorProductSubscriptionPage(cPage);
 
 		// apiUtils = new ApiUtils(request);
-		//todo: need subscription product via api
 
 	});
 

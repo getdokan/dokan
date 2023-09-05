@@ -198,7 +198,7 @@ export class BookingPage extends VendorPage {
 		await this.clickAndWaitForLoadState(selector.vendor.vBooking.view(productName));
 
 		// booking product elements are visible
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		
 		const { bookingCalendar, bookNow, getSupport, ...viewBooking } = selector.vendor.vBooking.viewBooking;
 		await this.multipleElementVisible(viewBooking);
 		//todo: actual value can be asserted

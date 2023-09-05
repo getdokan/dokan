@@ -26,13 +26,13 @@ export class StoreListingPage extends CustomerPage {
 
 		// map elements are visible
 		if(DOKAN_PRO){
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+			
 			const { storeOnMap, ...map } = selector.customer.cStoreList.map;
 			await this.multipleElementVisible(map);
 		}
 
 		// store filter elements are visible
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		
 		const { filterDetails, ...filters } = selector.customer.cStoreList.filters;
 		await this.multipleElementVisible(filters);
 
@@ -44,7 +44,7 @@ export class StoreListingPage extends CustomerPage {
 			await this.toBeVisible(selector.customer.cStoreList.filters.filterDetails.searchVendor);
 			await this.toBeVisible(selector.customer.cStoreList.filters.filterDetails.apply);
 		} else {
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+			
 			const { rating, ...filterDetails } = selector.customer.cStoreList.filters.filterDetails;
 			await this.multipleElementVisible(filterDetails);
 		}

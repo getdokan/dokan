@@ -1684,7 +1684,7 @@ export const selector = {
 				advertisedProductDelete: (productName: string) => `//a[normalize-space()="${productName}"]/../..//span[@class="delete"]`,
 
 				confirmAction: '.swal2-actions .swal2-confirm', //todo:  merge this type of locators
-				actionSuccessful: '.swal2-actions .swal2-confirm', //todo:  merge this type of locators
+				actionSuccessful: '.swal2-actions .swal2-confirm', 
 
 				addNewAdvertisement: {
 					closeModal: '.modal-header button',
@@ -1857,7 +1857,7 @@ export const selector = {
 				// Site Options
 					adminAreaAccess: '.admin_access .switch',
 
-					vendorStoreUrl: '#dokan_general\\[custom_store_url\\]', //todo:  for CSS selector [ ] needs escaped with double back slash \\
+					vendorStoreUrl: '#dokan_general\\[custom_store_url\\]', 
 					vendorSetupWizardLogo: '#dokan_general\\[setup_wizard_logo_url\\]',
 					disableWelcomeWizard: '#dokan_general\\[disable_welcome_wizard\\]',
 					sellingProductTypes: (type: string) => `//label[@for='dokan_general[global_digital_mode][${type}]']`,
@@ -2822,7 +2822,7 @@ export const selector = {
 				adminCommissionCombined: '.additional_fee > .input-text',
 				// Vendor
 				// storeName: '#dokan_product_author_override',
-				// storeName: 'div#sellerdiv span.select2-selection__arrow', //todo: dokansellerdiv on git action nd sellerdiv on local why
+				// storeName: 'div#sellerdiv span.select2-selection__arrow', 
 				storeName: '//div[contains(@id, "sellerdiv")]//span[@class="select2-selection__arrow"]',
 				// storeNameOptions: '#dokan_product_author_override option',
 				storeNameInput: '.select2-search.select2-search--dropdown .select2-search__field',
@@ -4078,7 +4078,7 @@ export const selector = {
 
 			// Coupon Dashboard
 			createdCoupon: '.coupon-code.column-primary strong span',
-			couponSaveSuccessMessage: 'Coupon has been saved successfully!', //todo:  move all success message to test data
+			couponSaveSuccessMessage: 'Coupon has been saved successfully!', 
 			couponUpdateSuccessMessage: 'Coupon has been updated successfully!',
 
 
@@ -4331,7 +4331,7 @@ export const selector = {
 				maintainAReserveBalance: '#withdraw-remaining-amount',
 				changeSchedule: '#dokan-withdraw-schedule-request-submit',
 				scheduleMessage: '//div[@class="dokan-switch-container"]/..//p',
-				dokanBottomPopup: '#swal2-html-container', //todo:  make it global and use to assert every popup massage frontend
+				dokanBottomPopup: '#swal2-html-container', 
 				withdrawScheduleSaveSuccessMessage: 'Withdraw schedule changed successfully.',
 			},
 
@@ -6235,10 +6235,8 @@ export const selector = {
 					renewNow: 'td a.button.subscription_renewal_early',
 				},
 
-				changePaymentMethod: '//input[@id="place_order"]', //todo: add & move to separate group -> payment change locators
-
+				changePaymentMethod: '//input[@id="place_order"]',
 				//todo: add more locators
-
 
 			}
 

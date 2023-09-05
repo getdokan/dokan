@@ -25,7 +25,7 @@ export class ShopPage extends CustomerPage {
 		if(DOKAN_PRO){
 
 			// map elements are visible
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+			
 			const { productOnMap, ...map } = selector.customer.cShop.map;
 			await this.multipleElementVisible(map);
 

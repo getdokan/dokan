@@ -34,7 +34,7 @@ test.describe('Vendor RMA test', () => {
 		customer1 = new CustomerPage(cPage);
 
 
-		//todo: implement via api
+	
 		await customer1.addProductToCartFromSingleProductPage(data.predefined.simpleProduct.product1.name);
 		await customer1.goToCheckout();
 		orderId = await customer1.paymentOrder();

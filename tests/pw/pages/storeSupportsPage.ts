@@ -32,7 +32,7 @@ export class StoreSupportsPage extends AdminPage {
 		await this.multipleElementVisible(selector.admin.dokan.storeSupport.bulkActions);
 
 		// filter elements are visible
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		
 		const { filterInput, result, ...filters } = selector.admin.dokan.storeSupport.filters;
 		await this.multipleElementVisible(filters);
 
@@ -60,7 +60,7 @@ export class StoreSupportsPage extends AdminPage {
 		await this.toBeVisible(selector.admin.dokan.storeSupport.supportTicketDetails.sendReply);
 
 		// ticket summary elements are visible
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		
 		const { reopenTicket, ...ticketSummary } = selector.admin.dokan.storeSupport.supportTicketDetails.ticketSummary;
 		await this.multipleElementVisible(ticketSummary);
 	}
@@ -201,7 +201,7 @@ export class StoreSupportsPage extends AdminPage {
 		await this.multipleElementVisible(selector.vendor.vSupport.menus);
 
 
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		
 		const { filterByCustomerInput, filterByDate, result,  ...filters } = selector.vendor.vSupport.filters;
 		await this.toBeVisible(selector.vendor.vSupport.filters.filterByDate.dateRangeInput);
 		await this.multipleElementVisible(filters);
@@ -261,7 +261,7 @@ export class StoreSupportsPage extends AdminPage {
 
 		case 'by-date' :
 			await this.setAttributeValue(selector.vendor.vSupport.filters.filterByDate.dateRangeInput, 'value', helpers.dateFormatFYJ(inputValue.startDate) + ' - ' + helpers.dateFormatFYJ(inputValue.endDate));
-			await this.setAttributeValue(selector.vendor.vSupport.filters.filterByDate.startDateInput, 'value', inputValue.startDate); //todo: resolve this
+			await this.setAttributeValue(selector.vendor.vSupport.filters.filterByDate.startDateInput, 'value', inputValue.startDate);
 			await this.setAttributeValue(selector.vendor.vSupport.filters.filterByDate.endDateInput, 'value', inputValue.endDate);
 			await this.clickAndWaitForLoadState(selector.vendor.vSupport.filters.search);
 			break;

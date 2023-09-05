@@ -32,7 +32,7 @@ export class WithdrawsPage extends AdminPage {
 		await this.multipleElementVisible(selector.admin.dokan.withdraw.bulkActions);
 
 		// filter elements are visible
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		
 		const { filterInput, clearFilter, result, ...filters } = selector.admin.dokan.withdraw.filters;
 		await this.multipleElementVisible(filters);
 

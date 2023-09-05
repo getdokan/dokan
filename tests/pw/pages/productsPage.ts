@@ -271,7 +271,7 @@ export class ProductsPage extends AdminPage {
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.products);
 
 		// product nav menus are visible
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		
 		const { draft, pendingReview, ...menus } = selector.vendor.product.menus;
 		await this.multipleElementVisible(menus);
 
@@ -484,7 +484,7 @@ export class ProductsPage extends AdminPage {
 		await this.hover(selector.vendor.product.productCell(productName));
 		await this.clickAndWaitForLoadState(selector.vendor.product.view(productName));
 		await expect(this.page).toHaveURL(data.subUrls.frontend.productDetails(helpers.slugify(productName)) + '/');
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		
 		const { quantity, addToCart, viewCart, ...productDetails } = selector.customer.cSingleProduct.productDetails;
 		await this.multipleElementVisible(productDetails);
 	}

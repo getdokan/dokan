@@ -27,7 +27,7 @@ export class OrdersPage extends VendorPage {
 		await this.multipleElementVisible(selector.vendor.orders.export);
 
 		// order filters elements are visible
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		
 		const { filterByCustomer, filterByDate, ...filters } = selector.vendor.orders.filters;
 		await this.toBeVisible(selector.vendor.orders.filters.filterByCustomer.dropDown);
 		await this.toBeVisible(selector.vendor.orders.filters.filterByDate.dateRangeInput);
@@ -92,7 +92,7 @@ export class OrdersPage extends VendorPage {
 
 		case 'by-date' :
 			await this.setAttributeValue(selector.vendor.orders.filters.filterByDate.dateRangeInput, 'value', helpers.dateFormatFYJ(inputValue.startDate) + ' - ' + helpers.dateFormatFYJ(inputValue.endDate));
-			await this.setAttributeValue(selector.vendor.orders.filters.filterByDate.startDateInput, 'value', inputValue.startDate); //todo: resolve this
+			await this.setAttributeValue(selector.vendor.orders.filters.filterByDate.startDateInput, 'value', inputValue.startDate); 
 			await this.setAttributeValue(selector.vendor.orders.filters.filterByDate.endDateInput, 'value', inputValue.endDate);
 			break;
 
@@ -122,7 +122,6 @@ export class OrdersPage extends VendorPage {
 		await this.toBeVisible(selector.vendor.orders.orderDetails.orderNumber);
 		await this.toBeVisible(selector.vendor.orders.orderDetails.orderDate);
 		await this.toBeVisible(selector.vendor.orders.orderDetails.orderTotal);
-		//todo:  add more fields to assert
 		//todo:  add conditions: for shipment, downloadable product
 
 		// general details elements are visible
@@ -131,7 +130,7 @@ export class OrdersPage extends VendorPage {
 		await this.click(selector.vendor.orders.status.edit);
 
 		// status elements are visible
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		
 		const { selectedOrderStatus, edit, ...status } = selector.vendor.orders.status;
 		await this.multipleElementVisible(status);
 
@@ -141,19 +140,19 @@ export class OrdersPage extends VendorPage {
 		await this.click(selector.vendor.orders.trackingDetails.addTrackingNumber);
 
 		// tracking detail elements are visible
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		
 		const { addTrackingNumber,  ...trackingDetails } = selector.vendor.orders.trackingDetails;
 		await this.multipleElementVisible(trackingDetails);
 
 		await this.click(selector.vendor.orders.shipment.createNewShipment);
 
 		// shipment elements are visible
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		
 		const { createNewShipment, shipmentOrderItem, shipmentOrderItemQty,  ...shipment } = selector.vendor.orders.shipment;
 		await this.multipleElementVisible(shipment);
 
 		// downloadable product elements are visible
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		
 		const { revokeAccess, confirmAction, cancelAction,  ...downloadableProductPermission } = selector.vendor.orders.downloadableProductPermission;
 		await this.multipleElementVisible(downloadableProductPermission);
 	}
@@ -225,11 +224,8 @@ export class OrdersPage extends VendorPage {
 		await this.clearAndType(selector.vendor.orders.shipment.comments, shipmentDetails.trackingNumber);
 		await this.click(selector.vendor.orders.shipment.notifyCustomer);
 		await this.clickAndAcceptAndWaitForResponse(data.subUrls.ajax, selector.vendor.orders.shipment.createShipment);
-		//todo: add more assertion, success message, or short shipment description div
-		//todo: also assert on my order details or add new test
 	}
 
-	//todo:  update shipment test, shipment updates timeline
 
 
 	// add Downloadable Product
@@ -237,13 +233,13 @@ export class OrdersPage extends VendorPage {
 		await this.goToOrderDetails(orderNumber);
 		await this.clearAndType(selector.vendor.orders.downloadableProductPermission.downloadableProductInput, downloadableProductName);
 		await this.press(data.key.enter);
-		await this.clickAndAcceptAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.vendor.orders.downloadableProductPermission.grantAccess); //todo:  need to fix
+		await this.clickAndAcceptAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.vendor.orders.downloadableProductPermission.grantAccess);
 	}
 
 
 	// add Downloadable Product
 	async removeDownloadableProduct(orderNumber: string, downloadableProductName: string): Promise<void> {
-		await this.addDownloadableProduct(orderNumber, downloadableProductName); //todo: do it via api
+		await this.addDownloadableProduct(orderNumber, downloadableProductName); 
 		await this.click(selector.vendor.orders.downloadableProductPermission.revokeAccess);
 		await this.clickAndAcceptAndWaitForResponse(data.subUrls.ajax, selector.vendor.orders.downloadableProductPermission.confirmAction);
 	}

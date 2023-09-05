@@ -224,7 +224,7 @@ test.describe('Store Support test (vendor)', () => {
 
 	test('vendor can search support ticket @pro', async ( ) => {
 		await vendor.vendorSearchSupportTicket('id', supportTicketId);
-		// await vendor.vendorSearchSupportTicket('title', data.storeSupport.title); //todo: separate or in same test
+		// await vendor.vendorSearchSupportTicket('title', data.storeSupport.title); 
 	});
 
 	test('vendor can reply to support ticket @pro', async ( ) => {

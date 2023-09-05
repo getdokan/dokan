@@ -128,7 +128,7 @@ export class RefundsPage extends AdminPage {
 		await this.clearAndType(selector.vendor.orders.refund.refundProductQuantity(productName), productQuantity);
 		await this.click(selector.vendor.orders.refund.refundDiv);
 		if (partialRefund) {
-			await this.clearAndType(selector.vendor.orders.refund.refundProductCostAmount(productName), helpers.priceString(helpers.roundToTwo(productCost/2), 'ES')); //todo: price style is fixed, make it dynamic
+			await this.clearAndType(selector.vendor.orders.refund.refundProductCostAmount(productName), helpers.priceString(helpers.roundToTwo(productCost/2), 'ES')); 
 			await this.clearAndType(selector.vendor.orders.refund.refundProductTaxAmount(productName), helpers.priceString(helpers.roundToTwo(productTax/2), 'ES'));
 			if (isShipping){
 				await this.clearAndType(selector.vendor.orders.refund.refundShippingAmount, helpers.priceString(helpers.roundToTwo(shippingCost/2), 'ES'));

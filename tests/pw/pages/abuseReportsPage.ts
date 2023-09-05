@@ -25,7 +25,7 @@ export class AbuseReportsPage extends AdminPage {
 		await this.multipleElementVisible(selector.admin.dokan.abuseReports.bulkActions);
 
 		// filter elements are visible
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		
 		const { filterInput, ...filters } = selector.admin.dokan.abuseReports.filters;
 		await this.multipleElementVisible(filters);
 

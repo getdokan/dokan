@@ -38,7 +38,7 @@ export class ProductAdvertisingPage extends AdminPage {
 		await this.multipleElementVisible(selector.admin.dokan.productAdvertising.bulkActions);
 
 		// filter elements are visible
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		
 		const { filterByStoreInput, filterByCreatedVia, ...filters } = selector.admin.dokan.productAdvertising.filters;
 		await this.multipleElementVisible(filters);
 

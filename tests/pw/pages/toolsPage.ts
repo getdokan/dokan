@@ -36,7 +36,7 @@ export class ToolsPage extends AdminPage {
 		await this.multipleElementVisible(selector.admin.dokan.tools.importDummyData);
 
 		//  Test Distance Matrix API (Google MAP) elements are visible
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		
 		const { enabledSuccess, ...testDistanceMatrixApi } = selector.admin.dokan.tools.testDistanceMatrixApi;
 		await this.multipleElementVisible(testDistanceMatrixApi);
 

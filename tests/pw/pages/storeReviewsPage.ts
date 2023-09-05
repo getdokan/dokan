@@ -29,7 +29,7 @@ export class StoreReviewsPage extends AdminPage {
 		await this.multipleElementVisible(selector.admin.dokan.storeReviews.bulkActions);
 
 		// filter elements are visible
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		
 		const { filterInput, filterClear, ...filters } = selector.admin.dokan.storeReviews.filters;
 		await this.multipleElementVisible(filters);
 
@@ -53,7 +53,7 @@ export class StoreReviewsPage extends AdminPage {
 	async viewStoreReview(){
 		await this.goto(data.subUrls.backend.dokan.storeReviews);
 		await this.click(selector.admin.dokan.storeReviews.storeReviewFirstLink);
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		
 		const { rating, ...editReview } = selector.admin.dokan.storeReviews.editReview;
 		await this.multipleElementVisible(editReview);
 		await this.click(selector.admin.dokan.storeReviews.editReview.modalClose);

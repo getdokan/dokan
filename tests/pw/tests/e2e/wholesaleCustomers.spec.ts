@@ -22,7 +22,6 @@ test.describe('Wholesale customers test (admin)', () => {
 		aPage = await adminContext.newPage();
 		admin = new WholesaleCustomersPage(aPage);
 
-		// const customerContext = await browser.newContext({ storageState: data.auth.customerAuthFile });
 		const customerContext = await browser.newContext({ storageState: { cookies: [], origins: [] } });
 		cPage = await customerContext.newPage();
 		customerPage = new CustomerPage(cPage);

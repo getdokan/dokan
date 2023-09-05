@@ -29,7 +29,7 @@ export class SingleStorePage extends CustomerPage {
 			await this.toBeVisible(selector.customer.cSingleStore.storeTabs.products);
 			// await this.toBeVisible(selector.customer.cSingleStore.storeTabs.toc); //todo: need vendor toc
 		} else {
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+			
 			const { toc,  ...storeTabs } = selector.customer.cSingleStore.storeTabs;
 			await this.multipleElementVisible(storeTabs);
 		}

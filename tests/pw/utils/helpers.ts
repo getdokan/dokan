@@ -46,7 +46,7 @@ export const helpers = {
 	},
 
 	// convert string to regex
-	stringToRegex:(str: string): RegExp => new RegExp( str), //todo: need to update, multiple cases unhandled
+	stringToRegex:(str: string): RegExp => new RegExp( str), 
 
 	// convert string to price format
 	price: (str: string): number => parseFloat(str.replace(/[^\d\-.,\\s]/g, '').replace(/,/g, '.').replace(/\.(?=.*\.)/g, '')),
@@ -57,7 +57,7 @@ export const helpers = {
 	// remove dollar sign
 	removeCurrencySign: (str: string): string => str.replace(/[^\d\-.,\\s]/g, ''),
 
-	// dateFormat //todo: remove all datetime , and update date to return date as required formate // also method to return as site date format
+	// dateFormat 
 	dateFormatFYJ: (date: string) => new Date(date).toLocaleDateString('en-CA', { year: 'numeric', month: 'long', day: 'numeric' }),
 
 	// current year

@@ -27,7 +27,7 @@ export class VendorToolsPage extends VendorPage {
 		// import
 
 		// import xml elements are visible
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		
 		const { completionMessage,  ...xml } = selector.vendor.vTools.import.xml;
 		await this.multipleElementVisible(xml);
 
@@ -58,7 +58,7 @@ export class VendorToolsPage extends VendorPage {
 		await this.click(selector.vendor.vTools.export.csv.exportCsv);
 
 		// export csv elements are visible
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		
 		const { exportCsvText, exportCsv, ...csv } = selector.vendor.vTools.export.csv;
 		await this.multipleElementVisible(csv);
 

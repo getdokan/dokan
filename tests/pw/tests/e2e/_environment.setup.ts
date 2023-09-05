@@ -18,7 +18,7 @@ setup.describe('setup site & woocommerce & user settings', () => {
 
 	let apiUtils: ApiUtils;
 
-	// eslint-disable-next-line require-await
+	
 	setup.beforeAll(async ({ request }) => {
 		apiUtils = new ApiUtils(request);
 	});
@@ -126,7 +126,7 @@ setup.describe('setup  user settings', () => {
 
 	let apiUtils: ApiUtils;
 
-	// eslint-disable-next-line require-await
+	
 	setup.beforeAll(async ({ request }) => {
 		apiUtils = new ApiUtils(request);
 	});
@@ -188,7 +188,7 @@ setup.describe('setup dokan settings', () => {
 
 	let apiUtils: ApiUtils;
 
-	// eslint-disable-next-line require-await
+	
 	setup.beforeAll(async ({ request }) => {
 		apiUtils = new ApiUtils(request);
 	});

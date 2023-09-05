@@ -8,7 +8,7 @@ let apiUtils: ApiUtils;
 let productId: string;
 let variationId: string;
 
-// eslint-disable-next-line require-await
+
 test.beforeAll(async ({ request }) => {
 	apiUtils = new ApiUtils(request);
 });

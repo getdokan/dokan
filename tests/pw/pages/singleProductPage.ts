@@ -21,7 +21,7 @@ export class SingleProductPage extends CustomerPage {
 		await this.goToProductDetails(productName);
 
 		// basic details are visible
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		
 		const { viewCart, ...productDetails } = selector.customer.cSingleProduct.productDetails;
 		await this.multipleElementVisible(productDetails);
 
@@ -78,7 +78,7 @@ export class SingleProductPage extends CustomerPage {
 
 			// product enquiry is visible
 			await this.click(selector.customer.cSingleProduct.menus.productEnquiry);
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+			
 			const { submitEnquirySuccessMessage, guest, ...productEnquiry } = selector.customer.cSingleProduct.productEnquiry;
 			await this.multipleElementVisible(productEnquiry);
 

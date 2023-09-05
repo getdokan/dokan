@@ -41,7 +41,7 @@ export class SpmvPage extends VendorPage {
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.spmv);
 
 		// search box elements are visible
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		
 		const { toggleBtn, ...search } = selector.vendor.vSpmv.search;
 		await this.multipleElementVisible(search);
 

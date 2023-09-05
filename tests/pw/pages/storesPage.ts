@@ -45,7 +45,7 @@ export class StoresPage extends AdminPage {
 		await this.goIfNotThere(data.subUrls.backend.dokan.vendorDetails(storeName));
 
 		// profile info elements are visible
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		
 		const { featuredVendor, storeRating, storeCategory, ...profileInfo } = selector.admin.dokan.vendors.vendorDetails.profileInfo;
 		await this.multipleElementVisible(profileInfo);
 
