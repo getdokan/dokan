@@ -90,7 +90,7 @@ export class ApiUtils {
 		try {
 			assert && expect(response.ok()).toBeTruthy();
 			const responseBody = await response.json();
-			// console.log('ResponseBody: ', responseBody);
+			console.log('ResponseBody: ', responseBody);
 			String(response.status())[0] != '2' && console.log('ResponseBody: ', responseBody);
 			return responseBody;
 		}
@@ -1494,7 +1494,7 @@ export class ApiUtils {
 	async createOrder(product: string | object, orderPayload: any, auth?: auth): Promise<[APIResponse, responseBody, string, string]> {
 		let productId: string;
 		if (typeof(product) != 'string'){
-			[, productId] = await this.createProduct(product, auth);
+			[, productId,] = await this.createProduct(product, auth);
 		} else {
 			productId = product;
 		}
