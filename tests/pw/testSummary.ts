@@ -1,16 +1,11 @@
-// import * as core from '@actions/core'
-// require('dotenv').config();
 const convert = require('xml-js');
 const fs = require('fs');
 const { SHA, PR_NUMBER, SYSTEM_INFO, API_TEST_RESULT, E2E_TEST_RESULT } = process.env;
 
-const  readEnvInfo= fs.readFileSync(SYSTEM_INFO, 'utf8');
+const readEnvInfo= fs.readFileSync(SYSTEM_INFO, 'utf8');
 const envInfo = JSON.parse(readEnvInfo);
 
-// const API_TEST_RESULT = './tests/pw/playwright-report/api/junit-report/api-results.xml';
-// const E2E_TEST_RESULT = './tests/pw/playwright-report/e2e/junit-report/e2e-results.xml';
-
-const getFormattedDuration = ( time) => {
+const getFormattedDuration = (time) => {
 	time =  Number(time) * 1000;
 	// const min = Math.floor( time / 1000 / 60 );
 	// const sec = Math.floor( ( time / 1000 ) % 60 );
