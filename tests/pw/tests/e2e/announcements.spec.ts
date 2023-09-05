@@ -36,6 +36,10 @@ test.describe('Announcements test', () => {
 		await admin.addAnnouncement({ ...data.announcement, title: data.announcement.randomTitle() });
 	});
 
+	test('admin can schedule announcement @pro', async ( ) => {
+		await admin.addAnnouncement({ ...data.announcement, title: data.announcement.randomTitle(), publishType: 'schedule'  });
+	});
+
 	test('admin can edit announcement @pro', async ( ) => {
 		await admin.editAnnouncement({ ...data.announcement, title: announcementTitle });
 	});
@@ -100,6 +104,5 @@ test.describe('Announcements test vendor', () => {
 	test('vendor can delete announcement @pro', async ( ) => {
 		await vendor.vendorDeleteAnnouncement(announcement.title);
 	});
-
 
 });

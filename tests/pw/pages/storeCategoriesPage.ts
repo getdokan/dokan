@@ -96,7 +96,14 @@ export class StoreCategoriesPage extends AdminPage {
 	//vendor update store category
 	async vendorUpdateStoreCategory(category: string){
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsStore);
-		await this.clearAndType(selector.vendor.vStoreSettings.storeCategories.storeCategoriesInput, category);
+		const isSingleCategory = await this.isVisible(selector.vendor.vStoreSettings.storeCategories.storeCategoryDropDown);
+		if(isSingleCategory){
+			await this.click(selector.vendor.vStoreSettings.storeCategories.storeCategoryDropDown);
+			await this.clearAndType(selector.vendor.vStoreSettings.storeCategories.storeCategoryInput, category);
+		} else {
+			await this.clearAndType(selector.vendor.vStoreSettings.storeCategories.storeCategoriesInput, category);
+
+		}
 		await this.toContainText(selector.vendor.vStoreSettings.storeCategories.result, category);
 		await this.press(data.key.enter);
 		await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.vendor.vStoreSettings.updateSettings);

@@ -1,3 +1,4 @@
+import fs from 'fs';
 
 export interface admin {
 	username: string;
@@ -24,6 +25,11 @@ export interface adminDashboard {
 		products: { this_month: string; };
 		withdraw: { pending: string; };
 	}
+}
+
+export interface bookings {
+	startDate: Date;
+	endDate: Date;
 }
 
 export interface bookingResource {
@@ -207,6 +213,7 @@ export interface product {
 		category: string;
 		bookingDurationType: string;
 		bookingDuration: string;
+		bookingDurationMin: string;
 		bookingDurationMax: string;
 		bookingDurationUnit: string;
 		calendarDisplayMode: string;
@@ -275,12 +282,6 @@ export interface product {
 	}
 }
 
-// store
-export interface store {
-	rating: string;
-	reviewTitle: string;
-	reviewMessage: () => string;
-}
 
 //order
 export interface order {
@@ -466,6 +467,10 @@ export interface shipping {
 }
 
 
+export interface deliveryTime {
+	date: string
+}
+
 export interface payment {
 	saveSuccessMessage: string;
 
@@ -604,13 +609,16 @@ export interface vendorSetupWizard {
 // user
 export interface user  {
 	username: () => string;
+	password: string;
+
 	userDetails: {
+		emailDomain: string;
 		name: () => string;
 		firstName: () => string;
 		lastName: () => string;
 		email: () => string;
-		email1: string;
 		role: string;
+
 	}
 }
 
@@ -631,8 +639,8 @@ export interface vendor {
 		firstName: () => string;
 		lastName: () => string;
 		userName: string;
-		shopName: string;
-		shopUrl: string;
+		shopName: () => string;
+		shopUrl: () => string;
 		companyName: string;
 		companyId: string;
 		vatNumber: string;
@@ -732,6 +740,11 @@ export interface vendor {
 			bankRoutingNumber: string;
 			bankIban: string;
 			bankSwiftCode: string;
+		}
+
+		sendEmail:{
+			subject: string;
+			message: string;
 		}
 	}
 
@@ -1098,8 +1111,8 @@ export interface customer {
 	getSupport: {
 		subject: string;
 		message: string;
+		orderId: string;
 		supportSubmitSuccessMessage: string;
-
 		username: string;
 		userPassword: string;
 	},
@@ -1129,31 +1142,41 @@ export interface customer {
 	},
 }
 
+//date
+export interface date {
+
+	previousDate: string;
+	currentDate: string;
+	nextDay: string;
+
+	dateRange: {
+		startDate: string;
+		endDate: string;
+	}
+
+	dateRangeFull: {
+		startDate: string;
+		endDate: string;
+	}
+
+}
+
 
 // store category
 export interface storeCategory {
-
-		name: string;
-		description: string;
-
+	name: string;
+	description: string;
 }
 
 
 // store review
 export interface storeReview {
-
-	create:{
-		rating: string;
-		title: string;
-		content: string;
-	}
-
-	update:{
-		rating: string;
-		title: string;
-		content: string;
-	}
-
+	review: {
+	rating: string;
+	ratingByWidth: string;
+	title: string;
+	content: string;
+	},
 	filter: {
 		byVendor: string;
 	}
@@ -1170,20 +1193,20 @@ export interface reverseWithdraw {
 }
 
 
-// store support
-export interface storeSupport {
+// // store support
+// export interface storeSupport {
 
-	title: string;
-	filter: {
-		byCustomer: string;
-		byVendor: string;
-	}
-	chatReply: {
-		asAdmin: string;
-		asVendor: string;
-	}
+// 	title: string;
+// 	filter: {
+// 		byCustomer: string;
+// 		byVendor: string;
+// 	}
+// 	chatReply: {
+// 		asAdmin: string;
+// 		asVendor: string;
+// 	}
 
-}
+// }
 
 
 // request for quotation
@@ -1266,6 +1289,21 @@ export interface requestForQuotation {
 		title: string;
 	}
 
+
+	userQuote:{
+		productName: string;
+		offeredPrice: string;
+		quantity: string;
+
+	}
+
+	guest:{
+		fullName: string;
+		email: string;
+		companyName: string;
+		phoneNumber: string;
+	}
+
 }
 
 
@@ -1321,6 +1359,8 @@ export interface announcement {
 		title: string;
 		content: string;
 		receiver: string;
+		publishType: string;
+		scheduleDate: Date;
 }
 
 export interface modules {
@@ -1443,7 +1483,10 @@ export interface	dokanSettings {
 
 	// Pages
 	page: {
-		termsAndConditionsPage:  string;
+		dashboard:  string;
+		myOrders:  string;
+		storeListing:  string;
+		termsAndConditions:  string;
 		saveSuccessMessage:  string;
 	}
 
@@ -1463,10 +1506,42 @@ export interface	dokanSettings {
 		saveSuccessMessage:  string;
 	}
 
+	// colors
+	colors: {
+		paletteChoice:  string;
+		colorPalette:  string;
+		saveSuccessMessage:  string;
+	}
+
+	// shipping status
+	shippingStatus: {
+		customShippingStatus:  string;
+		saveSuccessMessage:  string;
+	},
+
+	// quote
+	quote: {
+		decreaseOfferedPrice: string;
+		saveSuccessMessage:  string;
+	},
+
+	// live search
+	liveSearch: {
+		liveSearchOption:  string;
+		saveSuccessMessage:  string;
+	},
+
 	// Store support
 	storeSupport: {
 		displayOnSingleProductPage:  string;
 		supportButtonLabel:  string;
+		saveSuccessMessage:  string;
+	}
+
+	// Email verification
+	emailVerification: {
+		registrationNotice:  string;
+		loginNotice:  string;
 		saveSuccessMessage:  string;
 	}
 
@@ -1651,3 +1726,87 @@ export interface installWp {
 		adminPassword: string;
 		adminEmail: string;
 	}
+
+
+// api interfaces
+
+export interface auth {
+	[key: string]: string;
+ }
+
+export interface user_api {
+	username: string;
+	password: string;
+}
+
+export interface taxRate {
+	// [key: string]: string | number | boolean | string [];
+	country: string,
+	state: string,
+	postcode: string,
+	city: string,
+	rate: string,
+	name: string,
+	priority: number,
+	compound: boolean,
+	shipping: boolean,
+	order: number,
+	class: string,
+	postcodes: string[],
+	cities: string[],
+}
+
+export interface coupon_api {
+		code: string,
+		amount: string,
+		discount_type: string,
+		product_ids: number[],
+		individual_use?: boolean,
+		meta_data?: { key: string; value: string; }[]
+}
+
+export interface marketPlaceCoupon {
+	code: string,
+	amount: string,
+	discount_type: string,
+	individual_use?: boolean,
+	meta_data?: { key: string; value: string; }[]
+}
+
+export interface reqOptions {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	data?: any;
+	failOnStatusCode?: boolean | undefined;
+	form?: { [key: string]: string | number | boolean; } | undefined;
+	headers?: { [key: string]: string; } | undefined;
+	ignoreHTTPSErrors?: boolean | undefined;
+	maxRedirects?: number | undefined;
+	multipart?: { [key: string]: string | number | boolean | fs.ReadStream | { name: string; mimeType: string; buffer: Buffer; }; } | undefined;
+	params?: { [key: string]: string | string[]| number | boolean; } | undefined;
+	timeout?: number | undefined;
+}
+
+export interface headers { [key: string]: string; }
+
+export interface storageState {
+    cookies: Array<{
+      name: string;
+      value: string;
+      domain: string;
+      path: string;
+      expires: number;
+      httpOnly: boolean;
+      secure: boolean;
+      sameSite: 'Strict'|'Lax'|'None';
+    }>;
+	origins: Array<{
+		origin: string;
+		localStorage: Array<{
+		name: string;
+		value: string;
+		}>;
+	}>;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type responseBody = any;

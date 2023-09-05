@@ -24,6 +24,7 @@ test.describe('Follow stores functionality test', () => {
 		customer = new FollowStorePage(cPage);
 
 		// apiUtils = new ApiUtils(request);
+		//todo: need followers
 
 	});
 
@@ -36,6 +37,9 @@ test.describe('Follow stores functionality test', () => {
 
 	// follow store
 
+	test('customer followed vendors menu page is rendering properly @pro @explo', async ( ) => {
+		await customer.customerFollowedVendorsRenderProperly();
+	});
 
 	test('customer can follow store on store listing @pro', async ( ) => {
 		await customer.followStore(data.predefined.vendorStores.vendor1, data.predefined.vendorStores.followFromStoreListing);
@@ -47,6 +51,10 @@ test.describe('Follow stores functionality test', () => {
 
 	test('vendor followers menu page is rendering properly @pro @explo', async ( ) => {
 		await vendor.vendorFollowersRenderProperly();
+	});
+
+	test('vendor can view followers @pro ', async ( ) => {
+		await vendor.vendorViewFollowers();
 	});
 
 });

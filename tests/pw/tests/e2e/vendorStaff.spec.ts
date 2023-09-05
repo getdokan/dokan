@@ -1,28 +1,27 @@
 import { test, Page } from '@playwright/test';
 import { VendorStaffPage } from 'pages/vendorStaffPage';
-// import { ApiUtils } from 'utils/apiUtils';
+import { ApiUtils } from 'utils/apiUtils';
 import { data } from 'utils/testData';
-// import { payloads } from 'utils/payloads';
+import { payloads } from 'utils/payloads';
 
 
 test.describe('Vendor staff test', () => {
-	test.skip(!!process.env.CI, 'dokan issue while creating vendor staff');
 
 	let vendor: VendorStaffPage;
 	let vPage: Page;
-	// let apiUtils: ApiUtils;
+	let apiUtils: ApiUtils;
 	const staff = data.staff();
 
 
-	test.beforeAll(async ({ browser }) => {
+	test.beforeAll(async ({ browser, request }) => {
 		const vendorContext = await browser.newContext({ storageState: data.auth.vendorAuthFile });
 		vPage = await vendorContext.newPage();
 		vendor = new VendorStaffPage(vPage);
 
-		await vendor.addStaff(staff); //todo: replace with api
+		await vendor.addStaff(staff); //todo: replace with api after feature merge also update parameters
 
-		// apiUtils = new ApiUtils(request);
-		// await apiUtils.createUser( payloads.staff, payloads.adminAuth);
+		apiUtils = new ApiUtils(request);
+		// await apiUtils.createVendorStaff( payloads.staff, payloads.vendorAuth);
 
 	});
 

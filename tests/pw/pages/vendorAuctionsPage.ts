@@ -1,8 +1,10 @@
 import { Page } from '@playwright/test';
 import { VendorPage } from 'pages/vendorPage';
+import { CustomerPage } from 'pages/customerPage';
 import { selector } from 'pages/selectors';
 import { data } from 'utils/testData';
-import { product } from 'utils/interfaces';
+import { helpers } from 'utils/helpers';
+import { product, date } from 'utils/interfaces';
 
 
 export class AuctionsPage extends VendorPage {
@@ -11,6 +13,7 @@ export class AuctionsPage extends VendorPage {
 		super(page);
 	}
 
+	customerPage = new CustomerPage(this.page);
 
 	// auctions
 
@@ -124,7 +127,6 @@ export class AuctionsPage extends VendorPage {
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const { bidQuantity, bidButton, ...viewAuction } = selector.vendor.vAuction.viewAuction;
 		await this.multipleElementVisible(viewAuction);
-		//todo: actual value can be asserted
 	}
 
 
@@ -165,7 +167,9 @@ export class AuctionsPage extends VendorPage {
 		await this.toBeVisible(selector.vendor.vAuction.actionActivity.backToActions);
 
 		// filter elements are visible
-		await this.multipleElementVisible(selector.vendor.vAuction.actionActivity.filters);
+		const { filterByDate, ...filters } = selector.vendor.vAuction.actionActivity.filters;
+		await this.multipleElementVisible(filters);
+		await this.toBeVisible(filterByDate.dateRangeInput);
 
 		// search elements are visible
 		await this.multipleElementVisible(selector.vendor.vAuction.actionActivity.search);
@@ -176,12 +180,23 @@ export class AuctionsPage extends VendorPage {
 	}
 
 
+	// filter auction activity
+	async filterAuctionActivity(inputValue: date['dateRange']){
+		await this.goIfNotThere(data.subUrls.frontend.vDashboard.auctionActivity);
+		await this.setAttributeValue(selector.vendor.vAuction.actionActivity.filters.filterByDate.dateRangeInput, 'value', helpers.dateFormatFYJ(inputValue.startDate) + ' - ' + helpers.dateFormatFYJ(inputValue.endDate));
+		await this.setAttributeValue(selector.vendor.vAuction.actionActivity.filters.filterByDate.startDateInput, 'value', inputValue.startDate);
+		await this.setAttributeValue(selector.vendor.vAuction.actionActivity.filters.filterByDate.endDateInput, 'value', inputValue.endDate);
+		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.auctionActivity, selector.vendor.vAuction.actionActivity.filters.filter );
+		await this.notToHaveCount(selector.vendor.vAuction.actionActivity.numOfRowsFound, 0);
+	}
+
+
 	// search auction activity
 	async searchAuctionActivity(input: string){
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.auctionActivity);
 		await this.clearAndType(selector.vendor.vAuction.actionActivity.search.searchInput, input);
 		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.auctionActivity, selector.vendor.vAuction.actionActivity.search.search );
-		await this.notToHaveCount(selector.vendor.vAuction.actionActivity.rowsFound, 0);
+		await this.notToHaveCount(selector.vendor.vAuction.actionActivity.numOfRowsFound, 0);
 	}
 
 
@@ -190,6 +205,12 @@ export class AuctionsPage extends VendorPage {
 	async bidAuctionProduct(productName: string){
 		await this.goToProductDetails(productName);
 		await this.click(selector.vendor.vAuction.viewAuction.bidButton);
+
+	}
+
+	async buyAuctionProduct(productName: string){
+		await this.customerPage.addProductToCart(productName, 'single-product');
+		await this.customerPage.placeOrder();
 
 	}
 

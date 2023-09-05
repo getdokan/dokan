@@ -52,6 +52,7 @@ export const data = {
 		draftUpdateSuccessMessage: 'Product draft updated. ',
 		pendingProductUpdateSuccessMessage: 'Product updated. ',
 		createUpdateSaveSuccessMessage: 'Success! The product has been saved successfully. View Product →',
+		updateSuccessMessage: 'Product updated. ',
 
 		status: {
 			publish: 'publish',
@@ -169,7 +170,7 @@ export const data = {
 		external: {
 			productType: 'external',
 			productName: () => faker.commerce.productName() + (' (External)'),
-			productUrl: '/product/p1_v1/',
+			productUrl: '/product/p1_v1-simple/',
 			buttonText: 'Buy product',
 			category: 'Uncategorized',
 			regularPrice: () => (faker.finance.amount(100, 200, faker.helpers.arrayElement([1, 2]))).replace('.', ','),
@@ -239,7 +240,8 @@ export const data = {
 			category: 'Uncategorized',
 			bookingDurationType: 'customer',  // 'fixed', 'customer'
 			bookingDuration: '2',
-			bookingDurationMax: '2',
+			bookingDurationMin: '1',
+			bookingDurationMax: '20',
 			bookingDurationUnit: 'day',  // 'month', 'day', 'hour', 'minute'
 			calendarDisplayMode: 'always_visible',  // '', 'always_visible'
 			maxBookingsPerBlock: '5',
@@ -271,8 +273,8 @@ export const data = {
 			bidIncrement: () => (faker.finance.amount(40, 50, faker.helpers.arrayElement([1, 2]))).replace('.', ','),
 			reservedPrice: () => (faker.finance.amount(400, 500, faker.helpers.arrayElement([1, 2]))).replace('.', ','),
 			buyItNowPrice: () => (faker.finance.amount(900, 1000, faker.helpers.arrayElement([1, 2]))).replace('.', ','),
-			startDate: helpers.currentDateTime.replace(/,/g, ''),
-			endDate: helpers.addDays(helpers.currentDateTime, 1).replace(/,/g, ''),
+			startDate: helpers.currentDateTime,
+			endDate: helpers.addDays(helpers.currentDateTime, 20, 'full'),
 			storeName: String(process.env.VENDOR) + 'store',
 			// saveSuccessMessage: '× Success! The product has been updated successfully. View Product →',
 			saveSuccessMessage: 'Success! The product has been updated successfully.',
@@ -351,6 +353,7 @@ export const data = {
 			noteType: 'Private note',
 		},
 
+		note: () => 'test order note' + faker.string.uuid(),
 	},
 
 
@@ -358,7 +361,7 @@ export const data = {
 	orderTrackingDetails:{
 		shippingProvider: 'test shipping provider',
 		trackingNumber: '1234567890',
-		dateShipped: 'July 4, 2023' //todo:   f y, j
+		dateShipped: helpers.currentDate,
 	},
 
 
@@ -368,7 +371,7 @@ export const data = {
 		shipmentOrderItemQty: '1',
 		shippingStatus: 'ss_proceccing', // ss_delivered, ss_cancelled, ss_proceccing, ss_ready_for_pickup, ss_pickedup, ss_on_the_way
 		shippingProvider: 'sp-dhl', // sp-dhl, sp-dpd, sp-fedex, sp-polish-shipping-providers, sp-ups, sp-usps, sp-other
-		dateShipped: 'July 4, 2023', //todo:   f y, j
+		dateShipped: helpers.currentDate,
 		trackingNumber: '1234567890',
 		comments: 'test shipment comment'
 	},
@@ -694,6 +697,7 @@ export const data = {
 				withdraw: 'wp-admin/admin.php?page=dokan#/withdraw?status=pending',
 				reverseWithdraws: 'wp-admin/admin.php?page=dokan#/reverse-withdrawal',
 				vendors: 'wp-admin/admin.php?page=dokan#/vendors',
+				vendorDetails: (vendorId: string) => `wp-admin/admin.php?page=dokan#/vendors/${vendorId}`,
 				storeCategories: 'wp-admin/admin.php?page=dokan#/store-categories',
 				abuseReports: 'wp-admin/admin.php?page=dokan#/abuse-reports',
 				storeReviews: 'wp-admin/admin.php?page=dokan#/store-reviews',
@@ -721,6 +725,7 @@ export const data = {
 
 			wc: {
 				products: 'wp-admin/edit.php?post_type=product',
+				productDetails: (productId: string) => `wp-admin/post.php?post=${productId}&action=edit`,
 				addNewProducts: 'wp-admin/post-new.php?post_type=product',
 				addNewCategories: 'wp-admin/edit-tags.php?taxonomy=product_cat&post_type=product',
 				addNewAttributes: 'wp-admin/edit.php?post_type=product&page=product_attributes',
@@ -740,15 +745,21 @@ export const data = {
 		// customer
 			myAccount: 'my-account',
 			myOrders: 'my-orders',
+			requestForQuote: 'request-quote',
+			requestedQuote: 'my-account/request-a-quote',
 			accountMigration: 'my-account/account-migration',
 			orderCancel: 'cart/?cancel_order',
 			orderAgain: 'cart/?order_again',
 			orderPay: 'checkout/order-pay',
 			orderReceived: 'checkout/order-received',
 			customerLogout: 'my-account/customer-logout',
+
 			rmaRequests: 'my-account/rma-requests',
 			viewRmaRequests: 'my-account/view-rma-requests',
 			requestWarranty: 'my-account/request-warranty',
+			vendors: 'my-account/following',
+			supportTickets: 'my-account/support-tickets',
+
 			productCustomerPage: 'product',
 			ordersCustomerPage: 'orders',
 			shop: 'shop',
@@ -766,11 +777,14 @@ export const data = {
 			shippingAddressCheckout: 'wc-ajax=update_order_review',
 			editAccountCustomer: 'my-account/edit-account',
 			becomeVendor: 'my-account/account-migration',
-			supportTickets: 'my-account/support-tickets',
 			productDetails: (productName: string) => `product/${productName}`,
 			orderDetails: (orderId: string) => `my-account/view-order/${orderId}`,
+			orderReceivedDetails: (orderId: string, orderKey: string) => `checkout/order-received/${orderId}/?key=${orderKey}`,
 			vendorDetails: (storeName: string) => `store/${storeName}`,
 			storeReviews: (storeName: string) => `store/${storeName}/reviews`,
+			quoteDetails: (quotId: string) => `my-account/request-a-quote/${quotId}`,
+			supportTicketDetails: (ticketId: string) => `my-account/support-tickets/${ticketId}`,
+			productSubscriptionDetails: (subscriptionId: string) => `my-account/view-subscription/${subscriptionId}`,
 
 			productReview: 'wp-comments-post.php',
 			submitSupport: 'wp-comments-post.php',
@@ -785,12 +799,17 @@ export const data = {
 				productBooking: 'dashboard/booking/new-product',
 				orders: 'dashboard/orders',
 				userSubscriptions: 'dashboard/user-subscription',
+				requestQuotes: 'dashboard/requested-quotes',
+				quoteDetails: (quotId: string) => `dashboard/requested-quotes/${quotId}`,
 				coupons: 'dashboard/coupons',
+				reports: 'dashboard/reports',
+				statement: 'dashboard/reports/?chart=sales_statement',
 				deliveryTime: 'dashboard/delivery-time-dashboard',
 				reviews: 'dashboard/reviews',
 				withdraw: 'dashboard/withdraw',
 				withdrawRequests: 'dashboard/withdraw-requests',
 				badges: 'dashboard/seller-badge',
+				reverseWithdrawal: 'dashboard/reverse-withdrawal',
 				returnRequest: 'dashboard/return-request',
 				staff: 'dashboard/staffs',
 				followers: 'dashboard/followers',
@@ -803,6 +822,7 @@ export const data = {
 				auction: 'dashboard/auction',
 				auctionActivity: 'dashboard/auction-activity',
 				booking: 'dashboard/booking',
+				addBooking: 'dashboard/booking/add-booking',
 				manageBooking: 'dashboard/booking/my-bookings',
 				bookingCalendar: 'dashboard/booking/calendar',
 				manageResources: 'dashboard/booking/resources',
@@ -862,12 +882,15 @@ export const data = {
 	// user
 	user: {
 		username: () => faker.person.firstName('male'),
+		password: String(process.env.USER_PASSWORD),
+
 		userDetails: {
+			emailDomain: '@email.com',
 			name: () => faker.person.firstName('male'),
 			firstName: () => faker.person.firstName('male'),
 			lastName: () => faker.person.lastName('male'),
+			// email: faker.internet.email(),
 			email: () => faker.person.firstName('male') + '@email.com',
-			email1: faker.internet.email(),
 			role: 'customer',
 		},
 	},
@@ -889,16 +912,16 @@ export const data = {
 
 		vendorInfo: {
 
-			email: () => faker.internet.email(),
-			// emailDomain: '_' + faker.string.alphanumeric(5) + '@email.com',
 			emailDomain: '@email.com',
+			// email: () => faker.internet.email(),
+			email: () => faker.person.firstName('male') + '@email.com',
 			password: String(process.env.USER_PASSWORD),
 			password1: String(process.env.USER_PASSWORD) + '1',
 			firstName: () => faker.person.firstName('male'),
 			lastName: () => faker.person.lastName('male'),
 			userName: faker.person.firstName('male'),
-			shopName: faker.company.name(),
-			shopUrl: faker.company.name(),
+			shopName: () => faker.company.name(),
+			shopUrl: () => faker.company.name(),
 			companyName: faker.company.name(),
 			companyId: faker.string.alphanumeric(5),
 			vatNumber: faker.string.alphanumeric(10),
@@ -955,8 +978,8 @@ export const data = {
 				},
 
 				datewise: {
-					vacationDayFrom: () => helpers.addDays(helpers.currentDate, helpers.getRandomArbitraryInteger(31, 100)),
-					vacationDayTo: (from: string) => helpers.addDays(from, 31),
+					vacationDayFrom: () => helpers.addDays(helpers.currentDate, helpers.getRandomArbitraryInteger(31, 100), 'compact'),
+					vacationDayTo: (from: string) => helpers.addDays(from, 31, 'compact'),
 					closingStyle: 'datewise',
 					vacationMessage: 'We are currently out of order',
 				}
@@ -993,7 +1016,8 @@ export const data = {
 			},
 
 			payment: {
-				email: () => faker.internet.email(),
+				// email: () => faker.internet.email(),
+				email: () => faker.person.firstName('male') + '@email.com',
 				bankAccountName: 'accountName',
 				bankAccountType: faker.helpers.arrayElement(['personal', 'business']),
 				bankAccountNumber: faker.string.alphanumeric(10),
@@ -1003,6 +1027,11 @@ export const data = {
 				bankIban: faker.string.alphanumeric(10),
 				bankSwiftCode: faker.string.alphanumeric(10),
 			},
+
+			sendEmail:{
+				subject: 'test email subject',
+				message: 'test email message',
+			}
 		},
 
 		shipping: {
@@ -1022,6 +1051,7 @@ export const data = {
 					shippingCountry: 'United States (US)',
 					selectShippingMethod: 'flat_rate',
 					shippingMethod: 'Flat Rate',
+					shippingMethodTitle: 'Flat Rate',
 					taxStatus: 'taxable',
 					shippingCost: '20',
 					description: 'Flat rate',
@@ -1036,6 +1066,7 @@ export const data = {
 					shippingCountry: 'United States (US)',
 					selectShippingMethod: 'free_shipping',
 					shippingMethod: 'Free Shipping',
+					shippingMethodTitle: 'Free Shipping',
 					freeShippingRequires: 'min_amount',
 					freeShippingMinimumOrderAmount: '200',
 					shippingMethodSaveSuccessMessage: 'Shipping method added successfully',
@@ -1048,6 +1079,7 @@ export const data = {
 					shippingCountry: 'United States (US)',
 					selectShippingMethod: 'local_pickup',
 					shippingMethod: 'Local Pickup',
+					shippingMethodTitle: 'Local Pickup',
 					taxStatus: 'taxable',
 					shippingCost: '20',
 					description: 'Local Pickup',
@@ -1061,6 +1093,7 @@ export const data = {
 					shippingCountry: 'United States (US)',
 					selectShippingMethod: 'dokan_table_rate_shipping',
 					shippingMethod: 'Table Rate',
+					shippingMethodTitle: 'Table Rate',
 					taxStatus: 'taxable',
 					taxIncludedInShippingCosts: 'no', // 'yes', 'no'
 					handlingFee: '10',
@@ -1080,6 +1113,7 @@ export const data = {
 					shippingCountry: 'United States (US)',
 					selectShippingMethod: 'dokan_distance_rate_shipping',
 					shippingMethod: 'Distance Rate',
+					shippingMethodTitle: 'Distance Rate',
 					taxStatus: 'taxable',
 					transportationMode: 'driving', // 'driving', 'walking', 'Bicycling'
 					avoid: 'none', // 'none', 'tolls', 'highways', 'ferries'
@@ -1111,7 +1145,8 @@ export const data = {
 
 		payment: {
 			methodName: '',
-			email: () => faker.internet.email(),
+			// email: () => faker.internet.email(),
+			email: () => faker.person.firstName('male') + '@email.com',
 			bankAccountName: 'accountName',
 			bankAccountType: faker.helpers.arrayElement(['personal', 'business']),
 			bankAccountNumber: faker.string.alphanumeric(10),
@@ -1124,9 +1159,8 @@ export const data = {
 		},
 
 		verification: {
-			// file: 'utils/sampleData/avatar.png',
+			file: 'utils/sampleData/avatar.png',
 			// file2: 'tests/e2e/utils/sampleData/avatar.png',
-			file: 'tests/avatar.png', //todo: image path need to from project origin
 			street1: 'abc street',
 			street2: 'xyz street',
 			city: 'New York',
@@ -1262,7 +1296,8 @@ export const data = {
 
 		customerInfo: {
 			emailDomain: '@email.com',
-			email: () => faker.internet.email(),
+			// email: () => faker.internet.email(),
+			email: () => faker.person.firstName('male') + '@email.com',
 			password: String(process.env.USER_PASSWORD),
 			password1: String(process.env.USER_PASSWORD) + '1',
 			firstName: () => faker.person.firstName('male'),
@@ -1325,6 +1360,7 @@ export const data = {
 		getSupport: {
 			subject: 'get Support Subject',
 			message: 'get Support Message',
+			orderId: '',
 			supportSubmitSuccessMessage: 'Thank you. Your ticket has been submitted!',
 			username: String(process.env.CUSTOMER),
 			userPassword: String(process.env.USER_PASSWORD),
@@ -1357,37 +1393,43 @@ export const data = {
 	},
 
 
-	// store category
-	storeCategory:{
+	// date
+	date:{
 
-		create:{
-			name: 'test store category',
-			description: 'test store category description',
+		previousDate: helpers.addDays(helpers.currentDate, -1, 'compact'),
+		currentDate: helpers.currentDate,
+		nextDay: helpers.addDays(helpers.currentDate, 1, 'compact'),
+
+		// dateRange compact formate
+		dateRange: {
+			startDate: helpers.currentDate,
+			endDate:  helpers.addDays(helpers.currentDate, 1, 'compact'),
 		},
 
-		update:{
-			name: 'test store category',
-			description: 'updated test store category description',
-		},
+		// dateRange full format
+		dateRangeFull: {
+			startDate: helpers.currentDateTimeFullFormat,
+			endDate:  helpers.addDays(helpers.currentDateTimeFullFormat, 1, 'complete'),
+		}
 
 	},
 
 
+	// store category
+	storeCategory: () => ({
+		name: 'test category_'  + faker.string.uuid(),
+		description: 'test category description',
+	}),
+
+
 	// store review
 	storeReview:{
-
-		create:{
-			rating: '2',
-			title: 'test store review title',
-			content: 'test store review content',
-		},
-
-		update:{
+		review: () => ({
 			rating: '4',
-			title: 'updated test store review title',
-			content: 'updated test store review content',
-		},
-
+			ratingByWidth: faker.helpers.arrayElement(['width: 20%', 'width: 40%', 'width: 60%', 'width: 80%', 'width: 100%']),
+			title: 'test title_' + faker.string.uuid(),
+			content: 'test content_' + faker.string.uuid(),
+		}),
 		filter: {
 			byVendor: String(process.env.VENDOR) + 'store',
 		}
@@ -1417,9 +1459,9 @@ export const data = {
 	reverseWithdraw: {
 		store: String(process.env.VENDOR) + 'store',
 		transactionType: 'manual_product', //manual_product, manual_order, other
-		product: 'p1_v1',
-		withdrawalBalanceType: 'credit', //debit, credit
-		amount: '100',
+		product: 'p1_v1 (simple)',
+		withdrawalBalanceType: 'debit', //debit, credit
+		amount: '500',
 		note: 'test reverse withdraw note',
 		saveSuccessMessage: 'Reverse withdrawal created successfully.',
 	},
@@ -1444,8 +1486,8 @@ export const data = {
 
 
 		quoteRule: {
-			title: 'test quote rule',
-			userRole: '',
+			title: () => 'test rule_' + faker.string.uuid(),
+			userRole: 'customer',
 			product: 'p1_v1 (simple)',
 			category: 'Uncategorized',
 			hidePrice: '1',
@@ -1455,27 +1497,14 @@ export const data = {
 			order: '0',
 		},
 
-
-		updateQuoteRule: {
-			title: 'test quote rule',
-			userRole: '',
-			product: 'p1_v1 (simple)',
-			category: 'Uncategorized',
-			hidePrice: '0',
-			hidePriceText: 'Price is hidden',
-			hideAddToCartButton: 'replace', // replace, keep_and_add_new
-			customButtonLabel: 'Add to quote',
-			order: '1',
-		},
-
 		trashedQuoteRule:{
 			title: 'trashed quote rule ',
 			status: 'trash'
 		},
 
 		quote:{
-			title: 'test quote',
-			user: 'customer1',
+			title: () => 'test quote_' + faker.string.uuid(),
+			user: 'customer1',  //todo: update customer data via env and email domain
 			fullName: 'Jhon Doe',
 			email: 'customer1@g.com',
 			companyName: 'abc',
@@ -1486,19 +1515,6 @@ export const data = {
 			offerProductQuantity: '10',
 		},
 
-		updateQuote:{
-			title: 'test quote',
-			user: 'customer1',
-			fullName: 'Jhon Doe',
-			email: 'customer1@g.com',
-			companyName: 'abc',
-			phoneNumber: '0123456789',
-			product: 'p1_v1 (simple)',
-			quantity: '',
-			offerPrice: '70',
-			offerProductQuantity: '20',
-		},
-
 		trashedQuote:{
 			title: 'trashed quote',
 			status: 'trash'
@@ -1506,8 +1522,27 @@ export const data = {
 
 		convertedQuote:{
 			title: 'converted quote ' + faker.string.uuid(),
-		}
+		},
 
+		vendorUpdateQuote:{
+			productName: '',
+			offeredPrice: '80',
+			quantity:'20'
+
+		},
+
+		customerQuoteProduct:{
+			productName: '',
+			offeredPrice: '30',
+			quantity:'20'
+		},
+
+		guest: () => ({
+			fullName: faker.person.fullName({ sex:'male' }),
+			email: faker.person.firstName('male') + '@email.com',
+			companyName: faker.company.name(),
+			phoneNumber: faker.phone.number('(###) ###-####'),
+		}),
 	},
 
 
@@ -1572,7 +1607,9 @@ export const data = {
 		randomTitle: () => 'test announcement_' + faker.string.uuid(),
 		title: 'test announcement title',
 		content:  'test announcement Content',
-		receiver: 'all_seller'
+		receiver: 'all_seller',
+		publishType: 'immediately',
+		scheduleDate: helpers.futureDate('', 10),
 
 	},
 
@@ -1701,7 +1738,10 @@ export const data = {
 
 		// Pages
 		page: {
-			termsAndConditionsPage: 'Sample Page',
+			dashboard:'Dashboard',
+			myOrders:'My Orders',
+			storeListing:'Store List',
+			termsAndConditions: 'Terms And Conditions',
 			saveSuccessMessage: 'Setting has been saved successfully.',
 		},
 
@@ -1721,10 +1761,42 @@ export const data = {
 			saveSuccessMessage: 'Setting has been saved successfully.',
 		},
 
+		// colors
+		colors: {
+			paletteChoice: 'pre-defined',
+			colorPalette: 'default',
+			saveSuccessMessage: 'Setting has been saved successfully.',
+		},
+
+		// shipping status
+		shippingStatus:{
+			customShippingStatus: 'Test shipping status',
+			saveSuccessMessage: 'Setting has been saved successfully.',
+		},
+
+		// quote
+		quote:{
+			decreaseOfferedPrice: '0',
+			saveSuccessMessage: 'Setting has been saved successfully.',
+		},
+
+		// live search
+		liveSearch:{
+			liveSearchOption: 'suggestion_box', // suggestion_box, old_live_search
+			saveSuccessMessage: 'Setting has been saved successfully.',
+		},
+
 		// Store support
 		storeSupport: {
 			displayOnSingleProductPage: 'above_tab', // 'above_tab', 'inside_tab', 'dont_show'
 			supportButtonLabel: 'Get Support',
+			saveSuccessMessage: 'Setting has been saved successfully.',
+		},
+
+		// Email verification
+		emailVerification: {
+			registrationNotice: 'Please check your email and complete email verification to login.',
+			loginNotice: 'Please check your email and complete email verification to login.',
 			saveSuccessMessage: 'Setting has been saved successfully.',
 		},
 
@@ -1798,7 +1870,7 @@ export const data = {
 
 		// Vendor Subscription Settings
 		vendorSubscription: {
-			displayPage: '2', // '2', '4', '5', '6', '8', '9', '10', '11', '15', '-1'
+			displayPage: 'Sample Page', // '2', '4', '5', '6', '8', '9', '10', '11', '15', '-1'
 			noOfDays: '2',
 			productStatus: 'draft', // 'publish', 'pending', 'draft'
 			cancellingEmailSubject: 'Subscription Package Cancel notification',
@@ -1816,9 +1888,28 @@ export const data = {
 
 	},
 
+	deliveryTime:{
+		date: helpers.currentDateFJY
+	},
+
+	bookings: {
+		startDate: new Date(),
+		endDate:  helpers.futureDate(new Date(), 5),  // future date must be less than maximum duration
+	},
+
 
 	// predefined  test data
 	predefined: {
+
+		vendor2:{
+			simpleProduct: {
+				product1: {
+					name: 'p1_v2 (simple)',
+					productName: () => 'p1_v2 (simple)',
+				},
+			}
+		},
+
 		simpleProduct: {
 			product1: {
 				name: 'p1_v1 (simple)',
@@ -1829,12 +1920,13 @@ export const data = {
 			productFrac2: 'p2_F2_v1 (simple)',
 		},
 
+
 		variableProduct: {
 			product1: 'p1_v1 (variable)',
 		},
 
 		simpleSubscription: {
-			product1: 'p1_v1 (simple subscription)',
+			product1: 'sub1_v1 (simple subscription)',
 		},
 
 		variableSubscription: {
@@ -1881,6 +1973,7 @@ export const data = {
 			followFromStoreListing: 'storeListing',
 			followFromSingleStore: 'singleStore',
 			vendor1: String(process.env.VENDOR) + 'store',
+			vendor1FullName: String(process.env.VENDOR) + ' ' + 'v1',
 			shopUrl: String(process.env.VENDOR) + 'store',
 		},
 
@@ -1909,6 +2002,7 @@ export const data = {
 	},
 
 	cssStyle:{
+		inlineBlock:'display: inline-block;',
 		visibleStyle: 'visibility:visible;',
 		// style="visibility:visible;"
 		// style="display: block;"

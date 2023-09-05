@@ -2,13 +2,13 @@
 // require('dotenv').config();
 const convert = require('xml-js');
 const fs = require('fs');
-const { SHA, PR_NUMBER } = process.env;
+const { SHA, PR_NUMBER, SYSTEM_INFO, API_TEST_RESULT, E2E_TEST_RESULT } = process.env;
 
-const readEnvInfo = fs.readFileSync('./tests/pw/systemInfo.json', 'utf8');
+const  readEnvInfo= fs.readFileSync(SYSTEM_INFO, 'utf8');
 const envInfo = JSON.parse(readEnvInfo);
 
-const apiTestResultFile = './tests/pw/playwright-report/api/junit-report/api-results.xml';
-const e2eTestResultFile = './tests/pw/playwright-report/e2e/junit-report/e2e-results.xml';
+// const API_TEST_RESULT = './tests/pw/playwright-report/api/junit-report/api-results.xml';
+// const E2E_TEST_RESULT = './tests/pw/playwright-report/e2e/junit-report/e2e-results.xml';
 
 const getFormattedDuration = ( time) => {
 	time =  Number(time) * 1000;
@@ -42,8 +42,8 @@ const addSummaryHeadingAndTable = ( core ) => {
 		{ data: 'Skipped  :next_track_button:', header: true },
 		{ data: 'Duration  :alarm_clock:', header: true },
 	];
-	const apiTesResult = getTestResult('API Tests', apiTestResultFile);
-	const e2eTesResult = getTestResult('E2E Tests', e2eTestResultFile);
+	const apiTesResult = getTestResult('API Tests', API_TEST_RESULT);
+	const e2eTesResult = getTestResult('E2E Tests', E2E_TEST_RESULT);
 	core.summary
 		.addHeading( 'Tests Summary' )
 		.addRaw( `Commit SHA: ${ SHA }` )

@@ -46,7 +46,7 @@ export class ProductAddonsPage extends VendorPage {
 	}
 
 	// update addon fields
-	async updateAddonFields(addon: vendor['addon']){
+	async updateAddonFields(addon: vendor['addon'], add = true){
 		await this.clearAndType(selector.vendor.vAddonSettings.addon.name, addon.name);
 		await this.clearAndType(selector.vendor.vAddonSettings.addon.priority, addon.priority);
 
@@ -55,7 +55,8 @@ export class ProductAddonsPage extends VendorPage {
 		// await this.clearAndType(selector.vendor.vAddonSettings.addon.productCategories, addon.category);
 		// await this.press(data.key.enter);
 
-		await this.click(selector.vendor.vAddonSettings.addon.addField); //todo: handle this scenario while merging edit addon fields
+		add ? await this.click(selector.vendor.vAddonSettings.addon.addField) : await this.click(selector.vendor.vAddonSettings.addon.addonFieldsRow('Add-on Title'));
+
 		await this.selectByValue(selector.vendor.vAddonSettings.addon.type, addon.type);
 		await this.selectByValue(selector.vendor.vAddonSettings.addon.displayAs, addon.displayAs);
 		await this.clearAndType(selector.vendor.vAddonSettings.addon.titleRequired, addon.titleRequired);
@@ -67,6 +68,8 @@ export class ProductAddonsPage extends VendorPage {
 		await this.selectByValue(selector.vendor.vAddonSettings.addon.optionPriceType, addon.optionPriceType);
 		await this.clearAndType(selector.vendor.vAddonSettings.addon.optionPriceInput, addon.optionPriceInput);
 
+		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.settingsAddon, selector.vendor.vAddonSettings.addon.publishOrUpdate);
+		await this.toContainText(selector.vendor.vAddonSettings.addon.addonUpdateSuccessMessage, addon.saveSuccessMessage);
 	}
 
 
@@ -75,9 +78,6 @@ export class ProductAddonsPage extends VendorPage {
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsAddon);
 		await this.click(selector.vendor.vAddonSettings.createNewAddon);
 		await this.updateAddonFields(addon);
-		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.settingsAddon, selector.vendor.vAddonSettings.addon.publishOrUpdate);
-		await this.toContainText(selector.vendor.vAddonSettings.addon.addonUpdateSuccessMessage, addon.saveSuccessMessage);
-
 	}
 
 
@@ -86,28 +86,7 @@ export class ProductAddonsPage extends VendorPage {
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsAddon);
 		await this.hover(selector.vendor.vAddonSettings.addonRow(addon.name));
 		await this.clickAndWaitForLoadState(selector.vendor.vAddonSettings.editAddon(addon.name));
-
-		await this.clearAndType(selector.vendor.vAddonSettings.addon.name, addon.name);
-		await this.clearAndType(selector.vendor.vAddonSettings.addon.priority, addon.priority);
-
-		// skipped category
-		// await this.click(selector.vendor.vAddonSettings.addon.productCategories);
-		// await this.clearAndType(selector.vendor.vAddonSettings.addon.productCategories, addon.category);
-		// await this.press(data.key.enter);
-
-		await this.click(selector.vendor.vAddonSettings.addon.addonFieldsRow('Add-on Title')); //todo: handle this scenario in update fields move to update fields
-		await this.selectByValue(selector.vendor.vAddonSettings.addon.type, addon.type);
-		await this.selectByValue(selector.vendor.vAddonSettings.addon.displayAs, addon.displayAs);
-		await this.clearAndType(selector.vendor.vAddonSettings.addon.titleRequired, addon.titleRequired);
-		await this.selectByValue(selector.vendor.vAddonSettings.addon.formatTitle, addon.formatTitle);
-		await this.check(selector.vendor.vAddonSettings.addon.enableDescription);
-		await this.clearAndType(selector.vendor.vAddonSettings.addon.addDescription, addon.addDescription);
-		// await this.click(selector.vendor.vAddonSettings.addon.requiredField);
-		await this.clearAndType(selector.vendor.vAddonSettings.addon.enterAnOption, addon.enterAnOption);
-		await this.selectByValue(selector.vendor.vAddonSettings.addon.optionPriceType, addon.optionPriceType);
-		await this.clearAndType(selector.vendor.vAddonSettings.addon.optionPriceInput, addon.optionPriceInput);
-		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.settingsAddon, selector.vendor.vAddonSettings.addon.publishOrUpdate);
-		await this.toContainText(selector.vendor.vAddonSettings.addon.addonUpdateSuccessMessage, addon.saveSuccessMessage);
+		await this.updateAddonFields(addon, false);
 	}
 
 

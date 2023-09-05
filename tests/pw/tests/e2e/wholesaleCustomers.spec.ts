@@ -8,7 +8,7 @@ import { payloads } from 'utils/payloads';
 import { dbData } from 'utils/dbData';
 
 
-test.describe('Wholesale customers test', () => {
+test.describe('Wholesale customers test (admin)', () => {
 
 	let admin: WholesaleCustomersPage;
 	let customer: WholesaleCustomersPage;
@@ -29,8 +29,10 @@ test.describe('Wholesale customers test', () => {
 		customer = new WholesaleCustomersPage(cPage);
 
 		apiUtils = new ApiUtils(request);
+
 		await apiUtils.createWholesaleCustomer(payloads.createCustomer(), payloads.adminAuth);
 		await apiUtils.createWholesaleCustomer(payloads.createCustomer1, payloads.adminAuth);
+		//  [,, productName] = await apiUtils.createProduct(payloads.createWholesaleProduct(), payloads. vendorAuth);
 	});
 
 
@@ -83,5 +85,52 @@ test.describe('Wholesale customers test', () => {
 		await customer.customerRequestForBecomeWholesaleCustomer();
 	});
 
-
 });
+
+
+// test.describe('Wholesale customers test customer', () => {
+// 	test.skip(true, 'Dokan issue cant create product via api');
+
+// 	let customer: WholesaleCustomersPage;
+// 	let customerPage: CustomerPage;
+// 	let cPage: Page;
+// 	let apiUtils: ApiUtils;
+// 	let productName: string;
+// 	let wholesalePrice: string;
+// 	let minimumWholesaleQuantity: string;
+// 	// let responseBody: any;
+
+// 	test.beforeAll(async ({ browser, request }) => {
+
+// 		const customerContext = await browser.newContext({ storageState: data.auth.customerAuthFile });
+// 		cPage = await customerContext.newPage();
+// 		customerPage = new CustomerPage(cPage);
+// 		customer = new WholesaleCustomersPage(cPage);
+
+// 		apiUtils = new ApiUtils(request);
+
+// 		// await apiUtils.createWholesaleCustomer(payloads.createCustomer1, payloads.adminAuth);
+// 		const [responseBody,,] = await apiUtils.createProduct(payloads.createWholesaleProduct(), payloads. vendorAuth);
+// 		productName = responseBody.name;
+// 		wholesalePrice  = responseBody.meta_data[0]['value']['price'];
+// 		minimumWholesaleQuantity = responseBody.meta_data[0]['value']['quantity'];
+// 		// console.log(productName, wholesalePrice, minimumWholesaleQuantity);
+// 	});
+
+
+// 	test.afterAll(async () => {
+// 		await cPage.close();
+// 	});
+
+
+// 	test('customer can see wholesale price on shop archive', async () => {
+// 		await customer.viewWholeSalePrice(productName);
+// 	});
+
+// 	test('customer can buy wholesale product', async () => {
+// 		await customerPage.addProductToCart(productName, 'single-product', true, minimumWholesaleQuantity);
+// 		await customer.assertWholesalePrice(wholesalePrice, minimumWholesaleQuantity);
+// 		await customerPage.paymentOrder();
+// 	});
+
+// });

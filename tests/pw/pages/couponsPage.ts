@@ -1,5 +1,6 @@
 import { Page } from '@playwright/test';
 import { AdminPage } from 'pages/adminPage';
+import { CustomerPage } from 'pages/customerPage';
 import { selector } from 'pages/selectors';
 import { helpers } from 'utils/helpers';
 import { data } from 'utils/testData';
@@ -11,6 +12,8 @@ export class CouponsPage extends AdminPage {
 	constructor(page: Page) {
 		super(page);
 	}
+
+	customerPage = new CustomerPage(this.page);
 
 
 	// add marketplace coupon
@@ -100,10 +103,30 @@ export class CouponsPage extends AdminPage {
 	}
 
 
+	// customer
+
+
 	// single store coupon
-	async storeCoupon(storeName: string, couponCode:string){
+	async viewStoreCoupon(storeName: string, couponCode:string){
 		await this.goIfNotThere(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)));
 		await this.toBeVisible(selector.customer.cSingleStore.storeCoupon.coupon(couponCode));
 
 	}
+
+
+	// apply coupon
+	async applyCoupon(productName: string, couponCode:string){
+		await this.customerPage.addProductToCart(productName, 'single-product');
+		await this.customerPage.applyCoupon(couponCode);
+	}
+
+
+	// buy product with coupon
+	async buyProductWithCoupon(productName: string, couponCode:string){
+		await this.customerPage.addProductToCart(productName, 'single-product');
+		await this.customerPage.applyCoupon(couponCode);
+		await this.customerPage.placeOrder();
+	}
+
+
 }

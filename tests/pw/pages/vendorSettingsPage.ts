@@ -1,7 +1,8 @@
-import { Page, expect } from '@playwright/test';
+import { Page } from '@playwright/test';
 import { VendorPage } from 'pages/vendorPage';
 import { selector } from 'pages/selectors';
 import { data } from 'utils/testData';
+import { helpers } from 'utils/helpers';
 import { vendor, } from 'utils/interfaces';
 
 
@@ -58,81 +59,6 @@ export class VendorSettingsPage extends VendorPage {
 		// update settings are visible
 		await this.toBeVisible(selector.vendor.vStoreSettings.updateSettingsTop);
 		await this.toBeVisible(selector.vendor.vStoreSettings.updateSettings);
-	}
-
-
-	// vendor verifications render properly
-	async vendorVerificationsSettingsRenderProperly(){
-		await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsVerification);
-
-		// verification text is visible
-		await this.toBeVisible(selector.vendor.vVerificationSettings.verificationText);
-
-		// visit store link is visible
-		await this.toBeVisible(selector.vendor.vVerificationSettings.visitStore);
-
-		await this.toBeVisible(selector.vendor.vVerificationSettings.id.startIdVerification);
-		await this.toBeVisible(selector.vendor.vVerificationSettings.address.startAddressVerification);
-		await this.toBeVisible(selector.vendor.vVerificationSettings.company.startCompanyVerification);
-
-		await this.click(selector.vendor.vVerificationSettings.id.startIdVerification);
-		await this.click(selector.vendor.vVerificationSettings.address.startAddressVerification);
-		await this.click(selector.vendor.vVerificationSettings.company.startCompanyVerification);
-
-		// product addon fields elements are visible
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		const { startIdVerification, cancelIdVerificationRequest,  previousUploadedPhoto, removePreviousUploadedPhoto, idUpdateSuccessMessage,   ...idVerifications } = selector.vendor.vVerificationSettings.id;
-		await this.multipleElementVisible(idVerifications);
-
-		// product addon fields elements are visible
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		const { startAddressVerification, cancelAddressVerificationRequest, previousUploadedResidenceProof, removePreviousUploadedResidenceProof, addressUpdateSuccessMessage,  ...addressVerifications } = selector.vendor.vVerificationSettings.address;
-		await this.multipleElementVisible(addressVerifications);
-
-		// product addon fields elements are visible
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		const { startCompanyVerification, cancelCompanyVerificationRequest, uploadedCompanyFileClose, cancelSelectedInfo, companyInfoUpdateSuccessMessage,  ...companyVerifications } = selector.vendor.vVerificationSettings.company;
-		await this.multipleElementVisible(companyVerifications);
-
-	}
-
-
-	// vendor shipping render properly
-	async vendorShippingSettingsRenderProperly(){
-		await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsShipping);
-
-		// shipstation text is visible
-		await this.toBeVisible(selector.vendor.vShippingSettings.shippingSettingsText);
-
-		// visit store link is visible
-		await this.toBeVisible(selector.vendor.vShippingSettings.visitStore);
-
-		// add shipping policies is visible
-		await this.toBeVisible(selector.vendor.vShippingSettings.shippingPolicies.clickHereToAddShippingPolicies);
-
-		// previous shipping settings link is visible
-		await this.toBeVisible(selector.vendor.vShippingSettings.shippingPolicies.clickHereToAddShippingPolicies);
-
-		// shipping zone table elements are visible
-		await this.multipleElementVisible(selector.vendor.vShippingSettings.table);
-
-		await this.clickAndWaitForLoadState(selector.vendor.vShippingSettings.shippingPolicies.clickHereToAddShippingPolicies);
-
-		// shipping policy elements are visible
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		const { clickHereToAddShippingPolicies, ...companyVerifications } = selector.vendor.vShippingSettings.shippingPolicies;
-		await this.multipleElementVisible(companyVerifications);
-
-		await this.clickAndWaitForLoadState(selector.vendor.vShippingSettings.shippingPolicies.backToZoneList);
-
-		await this.clickAndWaitForLoadState(selector.vendor.vShippingSettings.previousShippingSettings.previousShippingSettings);
-
-		// previous shipping settings elements are visible
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		const { previousShippingSettings, ...previousShipping } = selector.vendor.vShippingSettings.previousShippingSettings;
-		await this.multipleElementVisible(previousShipping);
-
-		// await this.goBack();
 	}
 
 
@@ -393,15 +319,17 @@ export class VendorSettingsPage extends VendorPage {
 			await this.selectByValue(selector.vendor.vStoreSettings.closingStyle, vacation.closingStyle);
 
 			switch (vacation.closingStyle) {
+
 			// instantly close
 			case 'instantly' :
 				await this.clearAndType(selector.vendor.vStoreSettings.setVacationMessageInstantly, vacation.instantly.vacationMessage);
 				break;
 
-				// datewise close
+			// datewise close
 			case 'datewise' :{
-				const vacationDayFrom = (vacation.datewise.vacationDayFrom()).split(',')[0] as string;
-				const vacationDayTo = (vacation.datewise.vacationDayTo(vacationDayFrom)).split(',')[0] as string;
+				const vacationDayFrom = (vacation.datewise.vacationDayFrom());
+				const vacationDayTo = (vacation.datewise.vacationDayTo(vacationDayFrom));
+				await this.setAttributeValue(selector.vendor.vStoreSettings.vacationDateRange, 'value', helpers.dateFormatFYJ(vacationDayFrom) + ' - ' + helpers.dateFormatFYJ(vacationDayTo ));
 				await this.setAttributeValue(selector.vendor.vStoreSettings.vacationDateRangeFrom, 'value', vacationDayFrom);
 				await this.setAttributeValue(selector.vendor.vStoreSettings.vacationDateRangeTo, 'value', vacationDayTo);
 				await this.clearAndType(selector.vendor.vStoreSettings.setVacationMessageDatewise, vacation.datewise.vacationMessage);
@@ -440,6 +368,14 @@ export class VendorSettingsPage extends VendorPage {
 			await this.check(selector.vendor.vStoreSettings.hideProductPrice);
 			await this.checkIfVisible(selector.vendor.vStoreSettings.enableRequestQuoteSupport);
 		}
+	}
+
+	// reset catalog
+	async resetCatalog(): Promise<void> {
+		await this.uncheck(selector.vendor.vStoreSettings.removeAddToCartButton);
+		// update settings
+		await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.vendor.vStoreSettings.updateSettings);
+		await this.toContainText(selector.vendor.vStoreSettings.updateSettingsSuccessMessage, data.vendor.vendorInfo.storeSettingsSaveSuccessMessage);
 	}
 
 
@@ -496,146 +432,6 @@ export class VendorSettingsPage extends VendorPage {
 	}
 
 
-	// vendor set delivery settings
-	async setDeliveryTimeSettings(deliveryTime: vendor['deliveryTime']): Promise<void> {
-		await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsDeliveryTime);
-		// delivery support
-		await this.check(selector.vendor.vDeliveryTimeSettings.homeDelivery);
-		await this.check(selector.vendor.vDeliveryTimeSettings.storePickup);
-		await this.clearAndType(selector.vendor.vDeliveryTimeSettings.deliveryBlockedBuffer, deliveryTime.deliveryBlockedBuffer);
-		await this.clearAndType(selector.vendor.vDeliveryTimeSettings.timeSlot, deliveryTime.timeSlot);
-		await this.clearAndType(selector.vendor.vDeliveryTimeSettings.orderPerSlot, deliveryTime.orderPerSlot);
-		for (const day of deliveryTime.days) {
-			await this.enableSwitcherDeliveryTime(selector.vendor.vDeliveryTimeSettings.deliveryDaySwitch(day));
-			if (deliveryTime.choice === 'full-day'){
-				await this.click(selector.vendor.vDeliveryTimeSettings.openingTime(day));
-				await this.page.getByRole('listitem').filter({ hasText: 'Full day' }).click();
-			} else {
-				await this.setAttributeValue(selector.vendor.vDeliveryTimeSettings.openingTime(day), 'value', deliveryTime.openingTime);
-				await this.setAttributeValue(selector.vendor.vDeliveryTimeSettings.openingTimeHiddenInput(day), 'value', deliveryTime.openingTime);
-				await this.setAttributeValue(selector.vendor.vDeliveryTimeSettings.closingTime(day), 'value', deliveryTime.closingTime);
-				await this.setAttributeValue(selector.vendor.vDeliveryTimeSettings.closingTimeHiddenInput(day), 'value', deliveryTime.closingTime);
-			}
-		}
-		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.settingsDeliveryTime, selector.vendor.vDeliveryTimeSettings.updateSettings, 302);
-		await this.toContainText(selector.vendor.vDeliveryTimeSettings.settingsSuccessMessage, deliveryTime.saveSuccessMessage);
-	}
-
-
-	// vendor shipping settings
-
-	// vendor set all shipping settings
-	// async setAllShippingSettings(): Promise<void> {
-	// 	await this.setShippingSettings(data.vendor.shipping.shippingMethods.flatRate);
-	// 	await this.setShippingSettings(data.vendor.shipping.shippingMethods.freeShipping);
-	// 	await this.setShippingSettings(data.vendor.shipping.shippingMethods.localPickup);
-	// 	await this.setShippingSettings(data.vendor.shipping.shippingMethods.tableRateShipping);
-	// 	await this.setShippingSettings(data.vendor.shipping.shippingMethods.distanceRateShipping);
-	// }
-
-
-	// set shipping policies
-	async setShippingPolicies(shippingPolicy: vendor['shipping']['shippingPolicy']): Promise<void> {
-		await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsShipping);
-		await this.click(selector.vendor.vShippingSettings.shippingPolicies.clickHereToAddShippingPolicies);
-		await this.selectByValue(selector.vendor.vShippingSettings.shippingPolicies.processingTime, shippingPolicy.processingTime);
-		await this.clearAndType(selector.vendor.vShippingSettings.shippingPolicies.shippingPolicy, shippingPolicy.shippingPolicy);
-		await this.clearAndType(selector.vendor.vShippingSettings.shippingPolicies.refundPolicy, shippingPolicy.refundPolicy);
-		await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vShippingSettings.shippingPolicies.saveSettings);
-		await this.toContainText(selector.vendor.vShippingSettings.updateSettingsSuccessMessage, shippingPolicy.saveSuccessMessage);
-	}
-
-
-	// vendor set shipping settings
-	async setShippingSettings(shipping: any): Promise<void> {
-		await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsShipping);
-		// edit shipping zone
-		await this.hover(selector.vendor.vShippingSettings.shippingZoneCell(shipping.shippingZone));
-		await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.vendor.vShippingSettings.editShippingZone(shipping.shippingZone));
-
-		// add shipping method if not available
-		const methodIsVisible = await this.isVisible(selector.vendor.vShippingSettings.shippingMethodCell(shipping.shippingMethod));
-		if (!methodIsVisible) {
-			await this.click(selector.vendor.vShippingSettings.addShippingMethod);
-			await this.selectByValue(selector.vendor.vShippingSettings.shippingMethod, shipping.selectShippingMethod);
-			await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.vendor.vShippingSettings.shippingMethodPopupAddShippingMethod);
-			await expect(this.page.getByText(shipping.shippingMethodSaveSuccessMessage)).toBeVisible();
-			await expect(this.page.getByText(shipping.zoneSaveSuccessMessage)).toBeVisible();
-		}
-
-		// edit shipping method
-		await this.hover(selector.vendor.vShippingSettings.shippingMethodCell(shipping.shippingMethod));
-		await this.click(selector.vendor.vShippingSettings.editShippingMethod(shipping.shippingMethod));
-
-		switch (shipping.selectShippingMethod) {
-		// flat rate
-		case 'flat_rate' :
-			await this.clearAndType(selector.vendor.vShippingSettings.flatRateMethodTitle, shipping.shippingMethod);
-			await this.clearAndType(selector.vendor.vShippingSettings.flatRateCost, shipping.shippingCost);
-			await this.selectByValue(selector.vendor.vShippingSettings.flatRateTaxStatus, shipping.taxStatus);
-			await this.clearAndType(selector.vendor.vShippingSettings.flatRateDescription, shipping.description);
-			await this.selectByValue(selector.vendor.vShippingSettings.flatRateCalculationType, shipping.calculationType);
-			break;
-
-			// free shipping
-		case 'free_shipping' :
-			await this.clearAndType(selector.vendor.vShippingSettings.freeShippingTitle, shipping.shippingMethod);
-			await this.clearAndType(selector.vendor.vShippingSettings.freeShippingMinimumOrderAmount, shipping.freeShippingMinimumOrderAmount);
-			break;
-
-			// local pickup
-		case 'local_pickup' :
-			await this.clearAndType(selector.vendor.vShippingSettings.localPickupTitle, shipping.shippingMethod);
-			await this.clearAndType(selector.vendor.vShippingSettings.localPickupCost, shipping.shippingCost);
-			await this.selectByValue(selector.vendor.vShippingSettings.localPickupTaxStatus, shipping.taxStatus);
-			await this.clearAndType(selector.vendor.vShippingSettings.flatRateDescription, shipping.description);
-			break;
-
-			// dokan table rate shipping
-		case 'dokan_table_rate_shipping' :
-			await this.clearAndType(selector.vendor.vShippingSettings.tableRateShippingMethodTitle, shipping.shippingMethod);
-			await this.selectByValue(selector.vendor.vShippingSettings.tableRateShippingTaxStatus, shipping.taxStatus);
-			await this.selectByValue(selector.vendor.vShippingSettings.tableRateShippingTaxIncludedInShippingCosts, shipping.taxIncludedInShippingCosts);
-			await this.clearAndType(selector.vendor.vShippingSettings.tableRateShippingHandlingFee, shipping.handlingFee);
-			await this.clearAndType(selector.vendor.vShippingSettings.tableRateShippingMaximumShippingCost, shipping.maximumShippingCost);
-			// rates
-			// await this.selectByValue(selector.vendor.vShippingSettings.tableRateShippingCalculationType,  shipping.calculationType)
-			await this.clearAndType(selector.vendor.vShippingSettings.tableRateShippingHandlingFeePerOrder, shipping.handlingFeePerOrder);
-			await this.clearAndType(selector.vendor.vShippingSettings.tableRateShippingMinimumCostPerOrder, shipping.minimumCostPerOrder);
-			await this.clearAndType(selector.vendor.vShippingSettings.tableRateShippingMaximumCostPerOrder, shipping.maximumCostPerOrder);
-			await this.click(selector.vendor.vShippingSettings.tableRateShippingUpdateSettings);
-			await this.toContainText(selector.vendor.vShippingSettings.tableRateShippingUpdateSettingsSuccessMessage, shipping.tableRateSaveSuccessMessage);
-			return;
-
-			// dokan distance rate shipping
-		case 'dokan_distance_rate_shipping' :
-			await this.clearAndType(selector.vendor.vShippingSettings.distanceRateShippingMethodTitle, shipping.shippingMethod);
-			await this.selectByValue(selector.vendor.vShippingSettings.distanceRateShippingTaxStatus, shipping.taxStatus);
-			await this.selectByValue(selector.vendor.vShippingSettings.distanceRateShippingTransportationMode, shipping.transportationMode);
-			await this.selectByValue(selector.vendor.vShippingSettings.distanceRateShippingAvoid, shipping.avoid);
-			await this.selectByValue(selector.vendor.vShippingSettings.distanceRateShippingDistanceUnit, shipping.distanceUnit);
-			await this.check(selector.vendor.vShippingSettings.distanceRateShippingShowDistance);
-			await this.check(selector.vendor.vShippingSettings.distanceRateShippingShowDuration);
-			// shipping address
-			await this.clearAndType(selector.vendor.vShippingSettings.distanceRateShippingAddress1, shipping.street1);
-			await this.clearAndType(selector.vendor.vShippingSettings.distanceRateShippingAddress2, shipping.street2);
-			await this.clearAndType(selector.vendor.vShippingSettings.distanceRateShippingCity, shipping.city);
-			await this.clearAndType(selector.vendor.vShippingSettings.distanceRateShippingZipOrPostalCode, shipping.zipCode);
-			await this.clearAndType(selector.vendor.vShippingSettings.distanceRateShippingStateOrProvince, shipping.state);
-			await this.selectByValue(selector.vendor.vShippingSettings.distanceRateShippingCountry, shipping.country);
-			await this.click(selector.vendor.vShippingSettings.distanceRateShippingUpdateSettings);
-			await this.toContainText(selector.vendor.vShippingSettings.distanceRateShippingUpdateSettingsSuccessMessage, shipping.distanceRateSaveSuccessMessage);
-			return;
-
-		default :
-			break;
-		}
-		await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.vendor.vShippingSettings.shippingSettingsSaveSettings);
-		await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.vendor.vShippingSettings.saveChanges);
-		await this.toContainText(selector.vendor.vShippingSettings.updateSettingsSuccessMessage, shipping.saveSuccessMessage);
-	}
-
-
 	// vendor set shipstation settings
 	async setShipStation(shipStation: vendor['shipStation']): Promise<void> {
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsShipstation);
@@ -649,7 +445,7 @@ export class VendorSettingsPage extends VendorPage {
 		}
 
 		// await this.click(selector.vendor.vShipStationSettings.shippedOrderStatusDropdown);
-		// await this.clearAndType(selector.vendor.vShipStationSettings.shippedOrderStatusInput, shipStation.status);//todo: need to fix : locator issue
+		// await this.clearAndType(selector.vendor.vShipStationSettings.shippedOrderStatusInput, shipStation.status);//todo: need to fix -> locator issue
 		// await this.toContainText(selector.vendor.vShipStationSettings.result, shipStation.status);
 		// await this.press(data.key.enter);
 

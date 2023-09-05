@@ -39,7 +39,7 @@ test.describe('calculation test', () => {
 		// console.log(orderReport);
 		const adminCommission = orderReport.commission;
 		const vendorEarning = orderReport.vendor_earning;
-		//ToDo: compare with all order total
+		//todo: compare with all order total
 		//todo:  add discount scenario
 
 		const calculatedSubTotal = helpers.subtotal([productPrice], [productQuantity]); //todo:  update it for multiple products

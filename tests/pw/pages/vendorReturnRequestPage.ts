@@ -21,13 +21,13 @@ export class VendorReturnRequestPage extends VendorPage {
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.returnRequest);
 
 		// return request menu elements are visible
-		await this.toBeVisible(selector.vendor.vReturnRequest.menus.all); //todo: add all menus
+		await this.toBeVisible(selector.vendor.vReturnRequest.menus.all);
 
 		// return request table elements are visible
 		await this.multipleElementVisible(selector.vendor.vReturnRequest.table);
 
-		const noBookingsFound = await this.isVisible(selector.vendor.vReturnRequest.noRowsFound);
-		if (noBookingsFound){
+		const noRequestsFound = await this.isVisible(selector.vendor.vReturnRequest.noRowsFound);
+		if (noRequestsFound){
 			return;
 		}
 
@@ -82,7 +82,8 @@ export class VendorReturnRequestPage extends VendorPage {
 
 	// vendor send rma refund
 	async vendorRmaRefund(orderNumber: string, productName: string, status: string){
-		await this.goIfNotThere(data.subUrls.frontend.vDashboard.returnRequest);
+		// await this.goIfNotThere(data.subUrls.frontend.vDashboard.returnRequest); //todo:
+		await this.goto(data.subUrls.frontend.vDashboard.returnRequest);
 		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.returnRequest, selector.vendor.vReturnRequest.view(orderNumber));
 		const sendRefundIsVisible = await this.isVisible(selector.vendor.vReturnRequest.returnRequestDetails.status.sendRefund);
 		!sendRefundIsVisible && await this.vendorUpdateRmaStatus(orderNumber, status);
@@ -90,10 +91,10 @@ export class VendorReturnRequestPage extends VendorPage {
 		const taxIsVisible = await this.isVisible(selector.vendor.vReturnRequest.returnRequestDetails.modal.taxRefundColumn);
 		if (taxIsVisible) {
 			const tax = await this.getElementText(selector.vendor.vReturnRequest.returnRequestDetails.modal.taxAmount(productName)) as string;
-			await this.type(selector.vendor.vReturnRequest.returnRequestDetails.modal.taxRefund(productName), helpers.removeDollarSign(tax));
+			await this.type(selector.vendor.vReturnRequest.returnRequestDetails.modal.taxRefund(productName), helpers.removeCurrencySign(tax));
 		}
 		const subtotal = await this.getElementText(selector.vendor.vReturnRequest.returnRequestDetails.modal.subTotal(productName)) as string;
-		await this.type(selector.vendor.vReturnRequest.returnRequestDetails.modal.subTotalRefund(productName), helpers.removeDollarSign(subtotal));
+		await this.type(selector.vendor.vReturnRequest.returnRequestDetails.modal.subTotalRefund(productName), helpers.removeCurrencySign(subtotal));
 		await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.vendor.vReturnRequest.returnRequestDetails.modal.sendRequest);
 		await this.toContainText(selector.vendor.vReturnRequest.returnRequestDetails.modal.sendRequestSuccessMessage, 'Already send refund request. Wait for admin approval');
 	}
@@ -101,7 +102,8 @@ export class VendorReturnRequestPage extends VendorPage {
 
 	// vendor delete rma request
 	async vendorDeleteRmaRequest(orderNumber: string){
-		await this.goIfNotThere(data.subUrls.frontend.vDashboard.returnRequest);
+		// await this.goIfNotThere(data.subUrls.frontend.vDashboard.returnRequest); //todo:
+		await this.goto(data.subUrls.frontend.vDashboard.returnRequest);
 		await this.hover(selector.vendor.vReturnRequest.returnRequestCell(orderNumber));
 		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.returnRequest, selector.vendor.vReturnRequest.delete(orderNumber));
 		await this.toContainText(selector.customer.cWooSelector.wooCommerceSuccessMessage, 'Return Request has been deleted successfully');
@@ -109,6 +111,26 @@ export class VendorReturnRequestPage extends VendorPage {
 
 
 	// customer
+
+	// customer return request render properly
+	async customerReturnRequestRenderProperly(){
+		await this.goIfNotThere(data.subUrls.frontend.rmaRequests);
+
+		// allRequestText is  visible
+		await this.toBeVisible(selector.customer.cRma.allRequestText);
+
+		// return request table elements are visible
+		await this.multipleElementVisible(selector.customer.cRma.table);
+
+		const noRequestsFound = await this.isVisible(selector.customer.cRma.noRowsFound);
+		if (noRequestsFound){
+			console.log('No request found');
+			return;
+		}
+
+		await this.notToHaveCount(selector.customer.cRma.numberOfRowsFound, 0);
+
+	}
 
 
 	// customer request warranty

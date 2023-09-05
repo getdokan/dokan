@@ -12,7 +12,7 @@ test.beforeAll(async ({ request }) => {
 	apiUtils = new ApiUtils(request);
 	const [, pId,] = await apiUtils.createProduct(payloads.createProduct());
 	productId.push(pId);
-	[, requestQuoteId] = await apiUtils.createRequestQuote({ ...payloads.createRequestQuote(), product_ids: productId });
+	[, requestQuoteId,] = await apiUtils.createRequestQuote({ ...payloads.createRequestQuote(), product_ids: productId });
 });
 
 test.describe('request quote api test', () => {

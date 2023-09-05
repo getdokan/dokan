@@ -5,6 +5,9 @@ import { data } from 'utils/testData';
 // import { payloads } from 'utils/payloads';
 
 
+const { VENDOR_ID } = process.env;
+
+
 test.describe('Stores test', () => {
 
 	let admin: StoresPage;
@@ -33,6 +36,14 @@ test.describe('Stores test', () => {
 		await admin.adminVendorsRenderProperly();
 	});
 
+	test('admin can view vendor details @pro', async ( ) => {
+		await admin.viewVendorDetails(VENDOR_ID);
+	});
+
+	test('admin can email vendor @pro', async ( ) => {
+		await admin.emailVendor(VENDOR_ID, data.vendor.vendorInfo.sendEmail);
+	});
+
 	test('admin can add vendor @lite', async ( ) => {
 		await admin.addVendor(data.vendor.vendorInfo);
 	});
@@ -53,7 +64,7 @@ test.describe('Stores test', () => {
 		await admin.editVendor(data.vendor);
 	});
 
-	test.skip('admin can view vendor products @lite', async ( ) => {
+	test('admin can view vendor products @lite', async ( ) => {
 		await admin.viewVendor(data.predefined.vendorStores.vendor1, 'products');
 	});
 
@@ -64,5 +75,6 @@ test.describe('Stores test', () => {
 	test('admin can perform vendor bulk actions @lite', async ( ) => {
 		await admin.vendorBulkAction('approved');
 	});
+
 
 });

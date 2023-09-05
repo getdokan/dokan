@@ -2,7 +2,8 @@ import { Page, expect } from '@playwright/test';
 import { VendorPage } from 'pages/vendorPage';
 import { selector } from 'pages/selectors';
 import { data } from 'utils/testData';
-import { orderNote, orderTrackingDetails, orderShipmentDetails } from 'utils/interfaces';
+import { helpers } from 'utils/helpers';
+import { orderNote, orderTrackingDetails, orderShipmentDetails, date } from 'utils/interfaces';
 
 
 export class OrdersPage extends VendorPage {
@@ -27,8 +28,10 @@ export class OrdersPage extends VendorPage {
 
 		// order filters elements are visible
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		const { filterByCustomer,  ...filters } = selector.vendor.orders.filters;
-		await this.multipleElementVisible(filters); //todo: add dropdown selector
+		const { filterByCustomer, filterByDate, ...filters } = selector.vendor.orders.filters;
+		await this.toBeVisible(selector.vendor.orders.filters.filterByCustomer.dropDown);
+		await this.toBeVisible(selector.vendor.orders.filters.filterByDate.dateRangeInput);
+		await this.multipleElementVisible(filters);
 
 		// order search elements are visible
 		await this.multipleElementVisible(selector.vendor.orders.search);
@@ -76,19 +79,21 @@ export class OrdersPage extends VendorPage {
 
 
 	// filter orders
-	async filterOrders(filterType: string, value: string): Promise<void> {
+	async filterOrders(filterBy: string, inputValue: string | date['dateRange']): Promise<void> {
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.orders);
 
-		switch(filterType){
+		switch(filterBy){
 
 		case 'by-customer' :
 			await this.click(selector.vendor.orders.filters.filterByCustomer.dropDown);
-			await this.typeAndWaitForResponse(data.subUrls.ajax, selector.vendor.orders.filters.filterByCustomer.input, value);
+			await this.typeAndWaitForResponse(data.subUrls.ajax, selector.vendor.orders.filters.filterByCustomer.input, inputValue as string);
 			await this.click(selector.vendor.orders.filters.filterByCustomer.searchedResult);
 			break;
 
 		case 'by-date' :
-			//todo:
+			await this.setAttributeValue(selector.vendor.orders.filters.filterByDate.dateRangeInput, 'value', helpers.dateFormatFYJ(inputValue.startDate) + ' - ' + helpers.dateFormatFYJ(inputValue.endDate));
+			await this.setAttributeValue(selector.vendor.orders.filters.filterByDate.startDateInput, 'value', inputValue.startDate); //todo: resolve this
+			await this.setAttributeValue(selector.vendor.orders.filters.filterByDate.endDateInput, 'value', inputValue.endDate);
 			break;
 
 		default :
@@ -193,7 +198,6 @@ export class OrdersPage extends VendorPage {
 		await this.clearAndType(selector.vendor.orders.orderNote.orderNoteInput, orderNote.note);
 		await this.selectByLabel(selector.vendor.orders.orderNote.orderNoteType, orderNote.noteType);
 		await this.clickAndAcceptAndWaitForResponse(data.subUrls.ajax, selector.vendor.orders.orderNote.addNote);
-		//todo:  add -> new test customer can view order note
 	}
 
 
@@ -203,7 +207,7 @@ export class OrdersPage extends VendorPage {
 		await this.click(selector.vendor.orders.trackingDetails.addTrackingNumber);
 		await this.clearAndType(selector.vendor.orders.trackingDetails.shippingProvider, orderTrackingDetails.shippingProvider);
 		await this.clearAndType(selector.vendor.orders.trackingDetails.trackingNumber, orderTrackingDetails.trackingNumber);
-		// await this.clearAndType(selector.vendor.orders.trackingDetails.dateShipped, orderTrackingDetails.dateShipped); //todo:  grab site date formate and based on that create date value
+		await this.setAttributeValue(selector.vendor.orders.trackingDetails.dateShipped, 'value', helpers.dateFormatFYJ(orderTrackingDetails.dateShipped));
 		await this.clickAndAcceptAndWaitForResponse(data.subUrls.ajax, selector.vendor.orders.trackingDetails.addTrackingDetails);
 	}
 
@@ -216,7 +220,7 @@ export class OrdersPage extends VendorPage {
 		await this.clearAndType(selector.vendor.orders.shipment.shipmentOrderItemQty(shipmentDetails.shipmentOrderItem), shipmentDetails.shipmentOrderItemQty );
 		await this.selectByValue(selector.vendor.orders.shipment.shippingStatus, shipmentDetails.shippingStatus);
 		await this.selectByValue(selector.vendor.orders.shipment.shippingProvider, shipmentDetails.shippingProvider);
-		// await this.clearAndType(selector.vendor.orders.shipment.dateShipped, shipmentDetails.dateShipped); //todo:  grab site date formate and based on that create date value
+		await this.setAttributeValue(selector.vendor.orders.shipment.dateShipped, 'value', helpers.dateFormatFYJ(shipmentDetails.dateShipped));
 		await this.clearAndType(selector.vendor.orders.shipment.trackingNumber, shipmentDetails.shippingProvider);
 		await this.clearAndType(selector.vendor.orders.shipment.comments, shipmentDetails.trackingNumber);
 		await this.click(selector.vendor.orders.shipment.notifyCustomer);
@@ -239,7 +243,7 @@ export class OrdersPage extends VendorPage {
 
 	// add Downloadable Product
 	async removeDownloadableProduct(orderNumber: string, downloadableProductName: string): Promise<void> {
-		await this.addDownloadableProduct(orderNumber, downloadableProductName); // todo: do it via api
+		await this.addDownloadableProduct(orderNumber, downloadableProductName); //todo: do it via api
 		await this.click(selector.vendor.orders.downloadableProductPermission.revokeAccess);
 		await this.clickAndAcceptAndWaitForResponse(data.subUrls.ajax, selector.vendor.orders.downloadableProductPermission.confirmAction);
 	}

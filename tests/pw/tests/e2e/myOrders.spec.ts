@@ -7,7 +7,7 @@ import { payloads } from 'utils/payloads';
 const { CUSTOMER_ID, PRODUCT_ID } = process.env;
 
 
-test.describe('My Orders functionality test', () => {
+test.describe('My orders functionality test', () => {
 
 
 	let customer: MyOrdersPage;
@@ -28,7 +28,7 @@ test.describe('My Orders functionality test', () => {
 	});
 
 
-	test('dokan my orders page is rendering properly @lite', async ( ) => {
+	test('customer my orders page is rendering properly @lite', async ( ) => {
 		await customer.myOrdersRenderProperly();
 	});
 
@@ -36,6 +36,13 @@ test.describe('My Orders functionality test', () => {
 		const [,, orderId, ] = await apiUtils.createOrderWithStatus(PRODUCT_ID, { ...payloads.createOrder, customer_id: CUSTOMER_ID }, data.order.orderStatus.completed, payloads.vendorAuth);
 		await customer.viewOrderDetails(orderId);
 	});
+
+	test('customer can view order note @lite', async () => {
+		const orderNote = data.orderNote.note();
+		const [, orderId, ] = await apiUtils.createOrderNote(PRODUCT_ID, { ...payloads.createOrder, customer_id: CUSTOMER_ID }, { ...payloads.createOrderNoteForCustomer, note: orderNote }, payloads.vendorAuth);
+		await customer.viewOrderNote(orderId, orderNote);
+	});
+
 
 	test('customer can pay pending payment order @lite', async ( ) => {
 		const [,, orderId, ] = await apiUtils.createOrderWithStatus(PRODUCT_ID, { ...payloads.createOrder, customer_id: CUSTOMER_ID }, data.order.orderStatus.pending, payloads.vendorAuth);

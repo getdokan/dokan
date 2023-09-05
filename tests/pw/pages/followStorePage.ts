@@ -1,5 +1,5 @@
 import { Page } from '@playwright/test';
-import { CustomerPage } from './customerPage';
+import { CustomerPage } from 'pages/customerPage';
 import { selector } from 'pages/selectors';
 import { data } from 'utils/testData';
 import { helpers } from 'utils/helpers';
@@ -23,6 +23,31 @@ export class FollowStorePage extends CustomerPage {
 
 		// vendor followers table elements are visible
 		await this.multipleElementVisible(selector.vendor.vFollowers.table);
+
+	}
+
+
+	// vendor followers render properly
+	async vendorViewFollowers(){
+		await this.goIfNotThere(data.subUrls.frontend.vDashboard.followers);
+		await this.notToHaveCount(selector.vendor.vFollowers.numberOfRowsFound, 0);
+
+	}
+
+
+	// customer
+
+
+	async customerFollowedVendorsRenderProperly(){
+		await this.goIfNotThere(data.subUrls.frontend.vendors);
+
+		const noVendorsFound = await this.isVisible(selector.customer.cVendors.noVendorFound);
+		if (noVendorsFound){
+			await this.toContainText(selector.customer.cVendors.noVendorFound, 'No vendor found!');
+			return;
+		}
+
+		await this.notToHaveCount(selector.customer.cVendors.storeCard.storeCardDiv, 0);
 
 	}
 

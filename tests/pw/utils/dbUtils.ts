@@ -44,8 +44,8 @@ export const dbUtils = {
 	},
 
 	// update option table
-	async UpdateWpOptionTable(optionName: string, optionValue: object ): Promise<any> {
-		const queryUpdate = `UPDATE ${dbPrefix}_options SET option_value = '${serialize(optionValue)}' WHERE option_name = '${optionName}';`;
+	async updateWpOptionTable(optionName: string, optionValue: object| string, serializeData?: string ): Promise<any> {
+		const queryUpdate =  serializeData ? `UPDATE ${dbPrefix}_options SET option_value = '${serialize(optionValue)}' WHERE option_name = '${optionName}';`: `UPDATE ${dbPrefix}_options SET option_value = '${optionValue}' WHERE option_name = '${optionName}';`;
 		const res = await dbUtils.dbQuery(queryUpdate);
 		// console.log(res);
 		return res;
@@ -90,7 +90,7 @@ export const dbUtils = {
 
 	// create abuse report
 	async createAbuseReport(abuseReport: any, productId: string, vendorId: string, customerId: string ): Promise<any> {
-		const querySelect = `INSERT INTO ${dbPrefix}_dokan_report_abuse_reports (reason, product_id, vendor_id, customer_id, description, reported_at) VALUES ('${abuseReport.reason}', ${parseInt(productId)}, ${parseInt(vendorId)}, ${parseInt(customerId)}, '${abuseReport.description}',  '${helpers.currentDateTime1}');`;
+		const querySelect = `INSERT INTO ${dbPrefix}_dokan_report_abuse_reports (reason, product_id, vendor_id, customer_id, description, reported_at) VALUES ('${abuseReport.reason}', ${parseInt(productId)}, ${parseInt(vendorId)}, ${parseInt(customerId)}, '${abuseReport.description}',  '${helpers.currentDateTimeFullFormat}');`;
 		const res = await dbUtils.dbQuery(querySelect);
 		// console.log(res);
 		return res;
@@ -110,7 +110,7 @@ export const dbUtils = {
 			itemTotals: `{"${responseBody.line_items[0].id}":"10.000000","${responseBody.shipping_lines[0].id}":"5.000000"}`,
 			itemTaxTotals: `{"${responseBody.line_items[0].id}":{"${responseBody.line_items[0].taxes[0].id}":5},"${responseBody.shipping_lines[0].id}":{"${responseBody.line_items[0].taxes[0].id}":0.5}}`,
 			restockItems: 1,
-			date: helpers.currentDateTime1,
+			date: helpers.currentDateTimeFullFormat,
 			status: 0, // 0 for pending, 1 for completed
 			method: 0,
 		};

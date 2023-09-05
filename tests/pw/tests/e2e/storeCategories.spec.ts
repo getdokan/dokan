@@ -12,6 +12,7 @@ test.describe('Store categories test', () => {
 	let vendor: StoreCategoriesPage;
 	let aPage: Page, vPage: Page;
 	let apiUtils: ApiUtils;
+	let categoryName: string;
 
 
 	test.beforeAll(async ({ browser, request }) => {
@@ -24,6 +25,7 @@ test.describe('Store categories test', () => {
 		vendor = new StoreCategoriesPage(vPage);
 
 		apiUtils = new ApiUtils(request);
+		[,, categoryName] = await apiUtils.createStoreCategory(payloads.createStoreCategory(), payloads.adminAuth);
 	});
 
 
@@ -40,25 +42,25 @@ test.describe('Store categories test', () => {
 	});
 
 	test('admin can add store category @pro', async ( ) => {
-		await admin.addStoreCategory(data.storeCategory.create); //todo:update test data, make it unique, will fail if run multiple times, for all test, rfq,also in test data where, create, and update is used
+		await admin.addStoreCategory(data.storeCategory());
 	});
 
 	test('admin can search store category @pro', async ( ) => {
-		await admin.searchStoreCategory(data.storeCategory.create.name);
+		await admin.searchStoreCategory(categoryName);
 	});
 
 	test('admin can edit store category @pro', async ( ) => {
-		await admin.editStoreCategory(data.storeCategory.update);
+		await admin.editStoreCategory({ ...data.storeCategory(), name: categoryName });
 	});
 
 	test('admin can set default store category @pro', async ( ) => {
-		await admin.updateStoreCategory(data.storeCategory.create.name, 'set-default');
+		await admin.updateStoreCategory(categoryName, 'set-default');
 		// reset default category
 		await apiUtils.setDefaultStoreCategory('Uncategorized', payloads.adminAuth);
 	});
 
 	test('admin can delete store category @pro', async ( ) => {
-		await admin.updateStoreCategory(data.storeCategory.create.name, 'delete');
+		await admin.updateStoreCategory(categoryName, 'delete');
 	});
 
 	test('vendor can update own store category @pro', async ( ) => {

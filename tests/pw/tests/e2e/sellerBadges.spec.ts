@@ -38,20 +38,24 @@ test.describe('Seller badge test', () => {
 		await admin.adminSellerBadgeRenderProperly();
 	});
 
-	test('admin can create seller badge @pro', async ( ) => {
-		await admin.createSellerBadge({ ...data.sellerBadge, badgeName: data.sellerBadge.eventName.numberOfItemsSold });
+	test('admin can preview seller badge @pro @explo', async ( ) => {
+		await admin.previewSellerBadge(data.sellerBadge.eventName.productsPublished);
+	});
+
+	test('admin can view seller badge details @pro @explo', async ( ) => {
+		await admin.viewSellerBadge(data.sellerBadge.eventName.productsPublished);
 	});
 
 	test('admin can search seller badge @pro', async ( ) => {
 		await admin.searchSellerBadge(data.sellerBadge.eventName.productsPublished);
 	});
 
-	test('admin can edit seller badge @pro', async ( ) => {
-		await admin.editSellerBadge({ ...data.sellerBadge, badgeName: data.sellerBadge.eventName.productsPublished });
+	test('admin can create seller badge @pro', async ( ) => {
+		await admin.createSellerBadge({ ...data.sellerBadge, badgeName: data.sellerBadge.eventName.numberOfItemsSold });
 	});
 
-	test('admin can preview seller badge @pro', async ( ) => {
-		await admin.previewSellerBadge(data.sellerBadge.eventName.productsPublished);
+	test('admin can edit seller badge @pro', async ( ) => {
+		await admin.editSellerBadge({ ...data.sellerBadge, badgeName: data.sellerBadge.eventName.productsPublished });
 	});
 
 	// test.skip('admin can filter vendors by seller badge  @pro', async ( ) => {
@@ -66,7 +70,7 @@ test.describe('Seller badge test', () => {
 		await admin.sellerBadgeAcquiredByVendor(data.predefined.vendorStores.vendor1);
 	});
 
-	test.skip('admin can update seller badge status @pro', async ( ) => {
+	test('admin can update seller badge status @pro', async ( ) => {
 		await apiUtils.createSellerBadge(payloads.createSellerBadgeExclusiveToPlatform, payloads.adminAuth);
 		await admin.updateSellerBadge(data.sellerBadge.eventName.exclusiveToPlatform, 'draft');
 	});
@@ -80,6 +84,10 @@ test.describe('Seller badge test', () => {
 		await apiUtils.createSellerBadge(payloads.createSellerBadgeFeatureProducts, payloads.adminAuth);
 		await admin.sellerBadgeBulkAction('delete', data.sellerBadge.eventName.featuredProducts);
 	});
+
+
+	// vendor
+
 
 	test('vendor badges menu page is rendering properly @pro @explo', async ( ) => {
 		await vendor.vendorSellerBadgeRenderProperly();

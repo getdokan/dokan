@@ -222,7 +222,6 @@ export class CustomerPage extends BasePage {
 
 	// add product to cart from shop page
 	async addProductToCartFromShop(productName: string): Promise<void> {
-		await this.goToShop();
 		await this.searchProduct(productName);
 		await this.clickAndWaitForResponse(data.subUrls.frontend.addToCart, selector.customer.cShop.productCard.addToCart);
 		await this.toBeVisible(selector.customer.cShop.productCard.viewCart);
@@ -230,26 +229,30 @@ export class CustomerPage extends BasePage {
 
 
 	// add product to cart from product details page
-	async addProductToCartFromSingleProductPage(productName: string): Promise<void> {
+	async addProductToCartFromSingleProductPage(productName: string, quantity?: string): Promise<void> {
 		await this.goToProductDetails(productName);
 		const addonIsVisible = await this.isVisible(selector.customer.cSingleProduct.productAddon.addOnSelect);
 		addonIsVisible && this.selectByNumber(selector.customer.cSingleProduct.productAddon.addOnSelect, 1);
+		quantity && await this.clearAndType(selector.customer.cSingleProduct.productDetails.quantity, quantity);
 		await this.clickAndWaitForResponse(data.subUrls.frontend.productCustomerPage, selector.customer.cSingleProduct.productDetails.addToCart);
-		await this.toContainText(selector.customer.cWooSelector.wooCommerceSuccessMessage, `“${productName}” has been added to your cart.`);
+		if(!quantity){
+			await this.toContainText(selector.customer.cWooSelector.wooCommerceSuccessMessage, `“${productName}” has been added to your cart.`);
+		} else {
+			await this.toContainText(selector.customer.cWooSelector.wooCommerceSuccessMessage, `${quantity} × “${productName}” have been added to your cart.`);
+		}
 	}
 
 
 	// add product to cart
-	async addProductToCart(productName: string, from:string ){
+	async addProductToCart(productName: string, from:string, clearCart = true, quantity?: string){
 		// clear cart
-		// await this.clearCart(); //todo: sign-out user fix this
-		await this.clearCartManually();
+		clearCart && await this.clearCart();
 		switch(from){
 		case 'shop' :
 			await this.addProductToCartFromShop(productName);
 			break;
 		case 'single-product' :
-			await this. addProductToCartFromSingleProductPage(productName);
+			await this. addProductToCartFromSingleProductPage(productName, quantity);
 			break;
 		default :
 			break;
@@ -266,11 +269,6 @@ export class CustomerPage extends BasePage {
 
 	// clear cart
 	async clearCart(): Promise<void> {
-		await this.clearCookies();
-	}
-
-	// clear cart
-	async clearCartManually(): Promise<void> {
 		await this.goToCart();
 		const cartProductIsVisible = await this.isVisible(selector.customer.cCart.firstProductCrossIcon);
 		if (cartProductIsVisible) {
@@ -316,7 +314,7 @@ export class CustomerPage extends BasePage {
 
 	// add shipping address in checkout
 	async addShippingAddressInCheckout(shippingInfo: customer['customerInfo']['shipping']): Promise<void> {
-		await this.clickAndWaitForResponse(data.subUrls.frontend.shippingAddressCheckout, selector.customer.cCheckout.shipToADifferentAddress);
+		await this.clickAndWaitForResponse(data.subUrls.frontend.shippingAddressCheckout, selector.customer.cCheckout.shippingAddress.shipToADifferentAddress);
 		await this.updateShippingFields(shippingInfo);
 	}
 
@@ -324,7 +322,7 @@ export class CustomerPage extends BasePage {
 	// place order
 	async placeOrder(paymentMethod = 'bank', getOrderDetails = false, billingAddress = false, shippingAddress = false): Promise< string | object> {
 		await this.goToCheckout();
-		billingAddress && await this.addBillingAddressInCheckout(data.customer.customerInfo.billing); 		//todo: move shipping from here
+		billingAddress && await this.addBillingAddressInCheckout(data.customer.customerInfo.billing);
 		shippingAddress && await this.addShippingAddressInCheckout(data.customer.customerInfo.shipping);
 
 		switch (paymentMethod) {
@@ -353,10 +351,13 @@ export class CustomerPage extends BasePage {
 			break;
 		}
 
-		// await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.placeOrder, selector.customer.cCheckout.placeOrder);
-		// await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.orderReceived, selector.customer.cCheckout.placeOrder);
-		await this.clickAndWaitForResponse(data.subUrls.frontend.orderReceived, selector.customer.cCheckout.placeOrder);
+		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.orderReceived, selector.customer.cCheckout.placeOrder);
 		await this.toBeVisible(selector.customer.cOrderReceived.orderReceivedSuccessMessage);
+
+		const ifMultiVendorOrder  = await this.isVisible(selector.customer.cOrderReceived.orderDetails.subOrders.subOrders);
+		if (ifMultiVendorOrder){
+			await this.multipleElementVisible(selector.customer.cOrderReceived.orderDetails.subOrders);
+		}
 
 		if (getOrderDetails) {
 			return await this.getOrderDetailsAfterPlaceOrder();
@@ -381,6 +382,14 @@ export class CustomerPage extends BasePage {
 
 		case 'cod' :
 			await this.click(selector.customer.cCheckout.cashOnDelivery);
+			break;
+
+		case 'stripe' :
+			await this.payWithStripe(data.paymentDetails.strip);
+			break;
+
+		case 'stripeExpress' :
+			await this.payWithStripeExpress(data.paymentDetails.stripExpress);
 			break;
 
 		default :
@@ -435,17 +444,10 @@ export class CustomerPage extends BasePage {
 
 			case 'gPay' :
 				await this.clickFrameSelector(selector.customer.cPayWithStripeExpress.stripeExpressIframe, selector.customer.cPayWithStripeExpress.gPay);
-				//todo:
-				return;
-
-			case 'applePay' :
-				await this.clickFrameSelector(selector.customer.cPayWithStripeExpress.stripeExpressIframe, selector.customer.cPayWithStripeExpress.gPay);
-				//todo:
 				return;
 
 			case 'iDeal' :
 				await this.clickFrameSelector(selector.customer.cPayWithStripeExpress.stripeExpressIframe, selector.customer.cPayWithStripeExpress.iDeal);
-				//todo:
 				break;
 
 			default :
@@ -548,13 +550,15 @@ export class CustomerPage extends BasePage {
 
 	// search product
 	async searchProduct(productName: string): Promise<void> {
+		await this.goIfNotThere(data.subUrls.frontend.shop);
 		if(!DOKAN_PRO){
+			// search on lite
 			await this.clearAndType(selector.customer.cShop.searchProductLite, productName);
 			await this.pressAndWaitForLoadState(data.key.enter);
 			await this.toContainText(selector.customer.cSingleProduct.productDetails.productTitle, productName );
 		} else {
 			await this.clearAndType(selector.customer.cShop.filters.searchProduct, productName);
-			await this.click(selector.customer.cShop.filters.search);
+			await this.clickAndWaitForLoadState(selector.customer.cShop.filters.search);
 			await this.toContainText(selector.customer.cShop.productCard.productTitle, productName);
 		}
 	}
@@ -568,5 +572,6 @@ export class CustomerPage extends BasePage {
 		await this.clickAndWaitForResponse(data.subUrls.frontend.storeListing, selector.customer.cStoreList.filters.filterDetails.apply);
 		await this.toBeVisible(selector.customer.cStoreList.visitStore(storeName));
 	}
+
 
 }

@@ -48,7 +48,7 @@ test.describe('Abuse report test', () => {
 		await admin.adminAbuseReportRenderProperly();
 	});
 
-	test('admin can view abuse report details @pro', async ( ) => {
+	test('admin can view abuse report details @pro @explo', async ( ) => {
 		await admin.abuseReportDetails();
 	});
 

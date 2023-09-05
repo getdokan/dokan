@@ -33,9 +33,11 @@ test.describe('Vendor RMA test', () => {
 		customer = new VendorReturnRequestPage(cPage);
 		customer1 = new CustomerPage(cPage);
 
+
+		//todo: implement via api
 		await customer1.addProductToCartFromSingleProductPage(data.predefined.simpleProduct.product1.name);
 		await customer1.goToCheckout();
-		orderId = await customer1.paymentOrder(); //todo: implement via api
+		orderId = await customer1.paymentOrder();
 		await vendor1.updateOrderStatusOnTable(orderId, 'processing');
 		await customer.customerRequestWarranty(orderId, data.predefined.simpleProduct.product1.name, data.rma.requestWarranty);
 
@@ -73,13 +75,20 @@ test.describe('Vendor RMA test', () => {
 		await vendor.vendorUpdateRmaStatus(orderId, 'processing');
 	});
 
-	test.skip('vendor can rma refund @pro', async ( ) => {
+	test('vendor can rma refund @pro', async ( ) => {
 		await vendor.vendorRmaRefund(orderId, data.predefined.simpleProduct.product1.name, 'processing');
 	});
 
 	test('vendor can delete rma request @pro', async ( ) => {
 		//todo:need separate rma request
 		await vendor.vendorDeleteRmaRequest(orderId);
+	});
+
+
+	// customer
+
+	test('customer return request menu page is rendering properly @pro @explo', async ( ) => {
+		await customer.customerReturnRequestRenderProperly();
 	});
 
 	test('customer can request warranty @pro', async ( ) => {

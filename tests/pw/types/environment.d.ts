@@ -12,6 +12,7 @@ declare global {
             CUSTOMER: string;
             ADMIN_ID: string;
             VENDOR_ID: string;
+            VENDOR2_ID: string;
             CUSTOMER_ID: string;
             PRODUCT_ID: string;
             GMAP: string;

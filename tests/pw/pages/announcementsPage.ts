@@ -38,7 +38,7 @@ export class AnnouncementsPage extends AdminPage {
 		// add announcement fields are visible
 		await this.click(selector.admin.dokan.announcements.addNewAnnouncement);
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		const { contentHtmlBody, ...addAnnouncement } = selector.admin.dokan.announcements.addAnnouncement;
+		const { contentHtmlBody, schedule, ...addAnnouncement } = selector.admin.dokan.announcements.addAnnouncement;
 		await this.multipleElementVisible(addAnnouncement);
 		await this.goBack();
 
@@ -50,8 +50,21 @@ export class AnnouncementsPage extends AdminPage {
 		await this.clearAndType(selector.admin.dokan.announcements.addAnnouncement.title, announcement.title);
 		await this.typeFrameSelector(selector.admin.dokan.announcements.addAnnouncement.contentIframe, selector.admin.dokan.announcements.addAnnouncement.contentHtmlBody, announcement.content);
 		await this.selectByValue(selector.admin.dokan.announcements.addAnnouncement.sendAnnouncementTo, announcement.receiver);
-		await this.clickAndWaitForResponseAndLoadState(data.subUrls.api.dokan.announcements, selector.admin.dokan.announcements.addAnnouncement.publish);
-		await this.toBeVisible(selector.admin.dokan.announcements.announcementCellPublished(announcement.title));
+		if (announcement.publishType === 'immediately'){
+			await this.clickAndWaitForResponseAndLoadState(data.subUrls.api.dokan.announcements, selector.admin.dokan.announcements.addAnnouncement.publish);
+			await this.toBeVisible(selector.admin.dokan.announcements.announcementStatusPublished(announcement.title));
+		} else {
+			await this.click(selector.admin.dokan.announcements.addAnnouncement.schedule.addSchedule);
+			await this.selectByNumber(selector.admin.dokan.announcements.addAnnouncement.schedule.month, announcement.scheduleDate.getMonth());
+			await this.clearAndType(selector.admin.dokan.announcements.addAnnouncement.schedule.day, String(announcement.scheduleDate.getDate()));
+			await this.clearAndType(selector.admin.dokan.announcements.addAnnouncement.schedule.year, String(announcement.scheduleDate.getFullYear()));
+			await this.clearAndType(selector.admin.dokan.announcements.addAnnouncement.schedule.hour, String(announcement.scheduleDate.getHours()));
+			await this.clearAndType(selector.admin.dokan.announcements.addAnnouncement.schedule.minute, String(announcement.scheduleDate.getMinutes()));
+			await this.click(selector.admin.dokan.announcements.addAnnouncement.schedule.ok);
+			await this.clickAndWaitForResponseAndLoadState(data.subUrls.api.dokan.announcements, selector.admin.dokan.announcements.addAnnouncement.publish);
+			await this.toBeVisible(selector.admin.dokan.announcements.announcementStatusScheduled(announcement.title));
+		}
+
 	}
 
 
@@ -68,7 +81,6 @@ export class AnnouncementsPage extends AdminPage {
 		await this.goto(data.subUrls.backend.dokan.announcements);
 		await this.hover(selector.admin.dokan.announcements.announcementCell(announcement.title));
 		await this.clickAndWaitForResponseAndLoadState(data.subUrls.api.dokan.announcements, selector.admin.dokan.announcements.announcementEdit(announcement.title));
-
 		await this.updateAnnouncementFields(announcement);
 	}
 

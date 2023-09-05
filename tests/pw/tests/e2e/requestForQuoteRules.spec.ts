@@ -10,6 +10,7 @@ test.describe('Request for quotation Rules test', () => {
 	let admin: RequestForQuotationsPage;
 	let aPage: Page;
 	let apiUtils: ApiUtils;
+	const quoteRuleTitle = data.requestForQuotation.quoteRule.title();
 
 
 	test.beforeAll(async ({ browser, request }) => {
@@ -17,6 +18,7 @@ test.describe('Request for quotation Rules test', () => {
 		aPage = await adminContext.newPage();
 		admin = new RequestForQuotationsPage(aPage);
 		apiUtils = new ApiUtils(request);
+		await apiUtils.createQuoteRule({ ...payloads.createQuoteRule(), rule_name: quoteRuleTitle }, payloads.adminAuth);
 	});
 
 
@@ -32,19 +34,19 @@ test.describe('Request for quotation Rules test', () => {
 	});
 
 	test('admin can add quote rule @pro', async ( ) => {
-		await admin.addQuoteRule({ ...data.requestForQuotation.quoteRule, userRole:data.requestForQuotation.userRole.customer });
+		await admin.addQuoteRule({ ...data.requestForQuotation.quoteRule, title: data.requestForQuotation.quoteRule.title() });
 	});
 
 	test('admin can edit quote rule @pro', async ( ) => {
-		await admin.editQuoteRule({ ...data.requestForQuotation.updateQuoteRule, userRole:data.requestForQuotation.userRole.customer });
+		await admin.editQuoteRule({ ...data.requestForQuotation.quoteRule, title: quoteRuleTitle });
 	});
 
 	test('admin can trash quote rule @pro', async ( ) => {
-		await admin.updateQuoteRule(data.requestForQuotation.quoteRule.title, 'trash');
+		await admin.updateQuoteRule(quoteRuleTitle, 'trash');
 	});
 
 	test('admin can restore quote rule @pro', async ( ) => {
-		await admin.updateQuoteRule(data.requestForQuotation.quoteRule.title, 'restore');
+		await admin.updateQuoteRule(quoteRuleTitle, 'restore');
 	});
 
 	test('admin can permanently delete quote rule @pro', async ( ) => {

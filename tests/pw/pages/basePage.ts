@@ -258,6 +258,15 @@ export class BasePage {
 
 
 	// click & wait for response
+	async clickLocatorAndWaitForResponse(subUrl: string, locator: Locator, code = 200): Promise<Response> {
+		const [response] = await Promise.all([
+			this.page.waitForResponse((resp) => resp.url().includes(subUrl) && resp.status() === code),
+			locator.click()
+		]);
+		return response;
+	}
+
+	// click & wait for response
 	async clickAndWaitForResponse(subUrl: string, selector: string, code = 200): Promise<Response> {
 		const [response] = await Promise.all([
 			this.page.waitForResponse((resp) => resp.url().includes(subUrl) && resp.status() === code),
@@ -310,6 +319,15 @@ export class BasePage {
 		return response;
 	}
 
+
+	// type & wait for response
+	async typeViaPageAndWaitForResponse(subUrl: string, selector: string, text: string, code = 200,): Promise<Response> {
+		const [response] = await Promise.all([
+			this.page.waitForResponse((resp) => resp.url().includes(subUrl) && resp.status() === code),
+			await this.page.type(selector, text, { delay:100 }),
+		]);
+		return response;
+	}
 
 	// type & wait for response
 	async typeAndWaitForResponse(subUrl: string, selector: string, text: string, code = 200,): Promise<Response> {
@@ -492,6 +510,12 @@ export class BasePage {
 
 	// returns whether the element is disabled
 	async isDisabled(selector: string): Promise<boolean> {
+		return await this.isDisabledLocator(selector);
+		// return await this.page.isDisabled(selector);
+	}
+
+	// returns whether the element is disabled
+	async isDisabledViaPage(selector: string): Promise<boolean> {
 		return await this.page.isDisabled(selector);
 	}
 
@@ -512,7 +536,7 @@ export class BasePage {
 	async hover(selector: string): Promise<void> {
 		await this.page.locator(selector).hover();
 		// await this.page.hover(selector);
-		await this.wait(0.5);
+		await this.wait(0.2);
 	}
 
 
@@ -597,10 +621,7 @@ export class BasePage {
 	// has attribute
 	async hasAttribute(selector: string, attribute: string): Promise<boolean> {
 		const element = this.getElement(selector);
-		const hasAttribute = await element.evaluate(
-			(element, attribute) => element.hasAttribute(attribute),
-			attribute,
-		);
+		const hasAttribute = await element.evaluate((element, attribute) => element.hasAttribute(attribute), attribute);
 		return hasAttribute;
 	}
 
@@ -625,20 +646,26 @@ export class BasePage {
 	// get element property value: background color
 	async getElementBackgroundColor(selector: string): Promise<string> {
 		const element = this.getElement(selector);
-		const value = await element.evaluate((element) =>
-			window.getComputedStyle(element).getPropertyValue('background-color'),
-		);
+		const value = await element.evaluate((element) => window.getComputedStyle(element).getPropertyValue('background-color'),);
 		// console.log(value)
 		return value;
 	}
 
 
-	// get element property value: background color
+	// get element property value: color
 	async getElementColor(selector: string): Promise<string> {
 		const element = this.getElement(selector);
 		const value = await element.evaluate((element) => window.getComputedStyle(element).getPropertyValue('color'),);
 		// console.log(value)
 		return value;
+	}
+
+
+	// has color
+	async hasColor(selector: string, color: string): Promise<boolean> {
+		const elementColor = await this.getElementColor(selector);
+		// console.log(elementColor);
+		return elementColor === color ? true : false;
 	}
 
 
@@ -893,7 +920,7 @@ export class BasePage {
 	async uploadFile(selector: string, files: string | string[]): Promise<void> {
 		// await this.page.setInputFiles(selector, files, { noWaitAfter: true });
 		await this.page.setInputFiles(selector, files);
-		// await this.wait(2);
+		await this.wait(1.5);
 	}
 
 
@@ -1227,6 +1254,7 @@ export class BasePage {
 
 	// get last matching locator
 	lastLocator(selector: string): Locator {
+		//todo: update all selector parameter to both selector or locator
 		const locator = this.page.locator(selector);
 		return locator.last();
 	}
@@ -1351,19 +1379,24 @@ export class BasePage {
 
 	// accept alert
 	acceptAlert(): void {
-		this.page.on('dialog', (dialog) => { dialog.accept(); });
+		this.page.once('dialog', (dialog) => { // page.once is used avoid future alerts to be accepted
+			dialog.accept();
+		});
 	}
 
 
 	// dismiss alert
 	dismissAlert(): void {
-		this.page.on('dialog', (dialog) => { dialog.dismiss(); });
+		this.page.once('dialog', (dialog) => { // page.once is used avoid future alerts to be dismissed
+			dialog.dismiss(); });
 	}
 
 
 	// type on prompt box/alert
 	fillAlert(value: string): void {
-		this.page.on('dialog', (dialog) => { dialog.accept(value); });
+		this.page.once('dialog', (dialog) => { // page.once is used avoid future prompts to be filled
+			dialog.accept(value);
+		});
 	}
 
 
@@ -1406,6 +1439,11 @@ export class BasePage {
 		return await this.page.context().cookies();
 	}
 
+	// add cookies
+	async addCookies(browserContext: BrowserContext, cookies: { name: string; value: string; url?: string | undefined; domain?: string | undefined; path?: string | undefined; expires?: number | undefined; httpOnly?: boolean | undefined; secure?: boolean | undefined; sameSite?: 'Strict' | 'Lax' | 'None' | undefined; }[]): Promise<void> {
+		await browserContext.addCookies(cookies);
+	}
+
 
 	// get cookies
 	async clearCookies(): Promise<void> {
@@ -1442,7 +1480,7 @@ export class BasePage {
 		for (const element of elements) {
 			const text = element.evaluate((element) => element.textContent, element);
 			// console.log(text)
-			if (value.toLowerCase() == text.trim().toLowerCase()) {
+			if (value.toLowerCase() == text?.trim().toLowerCase()) {
 				// console.log(text)
 				await element.click();
 			}
@@ -1500,6 +1538,7 @@ export class BasePage {
 
 	// assert any element to be visible
 	async toBeVisibleAnyOfThem(selectors: string[],){
+		// todo: extend nd improve this method
 		const res = [];
 		for (const selector of selectors) {
 			res.push(await this.isVisible(selector));
@@ -1721,7 +1760,7 @@ export class BasePage {
 	}
 
 
-	// delete element if exist (only first will delete) : dokan rma,report abuse
+	// delete element if exist (only first will delete) : dokan rma,report abuse, company verifications //todo: delete all
 	async deleteIfExists(selector: string): Promise<void> {
 		const elementExists = await this.isVisible(selector);
 		if (elementExists) {
@@ -1730,15 +1769,14 @@ export class BasePage {
 		}
 	}
 
-
+	// upload file
 	async wpUploadFile(filePath: string | string[]) {
 		//wp image upload
 		const wpUploadFiles = '//div[@class="supports-drag-drop" and @style="position: relative;"]//button[@id="menu-item-upload"]';
 		const uploadedMedia = '.attachment-preview';
 		const selectFiles =	'//div[@class="supports-drag-drop" and @style="position: relative;"]//button[@class="browser button button-hero"]';
 		const select = '//div[@class="supports-drag-drop" and @style="position: relative;"]//button[contains(@class, "media-button-select")]';
-		const crop =
-			'//div[@class="supports-drag-drop" and @style="position: relative;"]//button[contains(@class, "media-button-insert")]';
+		const crop ='//div[@class="supports-drag-drop" and @style="position: relative;"]//button[contains(@class, "media-button-insert")]';
 		const uploadedMediaIsVisible = await this.isVisible(uploadedMedia);
 		if (uploadedMediaIsVisible) {
 			await this.click(wpUploadFiles);

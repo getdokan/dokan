@@ -21,16 +21,24 @@ setup.describe('authenticate users & set permalink', () => {
 		process.env.SERVER_URL = process.env.BASE_URL + '/wp-json';
 	});
 
-	setup('add customer @lite', async ({ request }) => {
+	setup('add customer1 @lite', async ({ request }) => {
 		const apiUtils = new ApiUtils(request);
 		const [, customerId] = await apiUtils.createCustomer (payloads.createCustomer1, payloads.adminAuth);
 		process.env.CUSTOMER_ID = customerId;
 	});
 
-	setup('add vendor @lite', async ({ request }) => {
+	setup('add vendor1 @lite', async ({ request }) => {
 		const apiUtils = new ApiUtils(request);
 		const [, sellerId,] = await apiUtils.createStore (payloads.createStore1, payloads.adminAuth);
+		await apiUtils.updateCustomer(sellerId, payloads.updateAddress, payloads.adminAuth);
 		process.env.VENDOR_ID = sellerId;
+	});
+
+	setup('add vendor2 @lite', async ({ request }) => {
+		const apiUtils = new ApiUtils(request);
+		const [, sellerId,] = await apiUtils.createStore (payloads.createStore2, payloads.adminAuth);
+		await apiUtils.updateCustomer(sellerId, payloads.updateAddress, payloads.adminAuth);
+		process.env.VENDOR2_ID = sellerId;
 	});
 
 	setup('authenticate customer @lite', async ({ page }) => {

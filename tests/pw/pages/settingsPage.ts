@@ -187,7 +187,10 @@ export class SettingsPage extends AdminPage {
 		await this.goToDokanSettings();
 		await this.click(selector.admin.dokan.settings.menus.pageSettings);
 
-		await this.selectByLabel(selector.admin.dokan.settings.page.termsAndConditionsPage, page.termsAndConditionsPage);
+		await this.selectByLabel(selector.admin.dokan.settings.page.dashboard, page.dashboard);
+		await this.selectByLabel(selector.admin.dokan.settings.page.myOrders, page.myOrders);
+		await this.selectByLabel(selector.admin.dokan.settings.page.storeListing, page.storeListing);
+		await this.selectByLabel(selector.admin.dokan.settings.page.termsAndConditions, page.termsAndConditions);
 
 		// save settings
 		await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.admin.dokan.settings.page.pageSaveChanges);
@@ -233,6 +236,37 @@ export class SettingsPage extends AdminPage {
 	}
 
 
+	// Admin Set Dokan Color Settings
+	async setDokanColorSettings(colors: dokanSettings['colors']) {
+		await this.goToDokanSettings();
+		await this.click(selector.admin.dokan.settings.menus.colors);
+
+		// Colors Settings
+		if (colors.paletteChoice === 'pre-defined'){
+			await this.click(selector.admin.dokan.settings.colors.predefineColorPalette);
+			await this.click(selector.admin.dokan.settings.colors.colorPalette[colors.colorPalette as keyof typeof selector.admin.dokan.settings.colors.colorPalette ]);
+		}
+
+		// save settings
+		await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.admin.dokan.settings.colors.colorsSaveChanges);
+		await this.toContainText(selector.admin.dokan.settings.dokanUpdateSuccessMessage, colors.saveSuccessMessage );
+	}
+
+
+	// Admin Set Dokan Live Search Settings
+	async setDokanLiveSearchSettings(liveSearch: dokanSettings['liveSearch']) {
+		await this.goToDokanSettings();
+		await this.click(selector.admin.dokan.settings.menus.liveSearch);
+
+		// Live Search Settings
+		await this.selectByValue(selector.admin.dokan.settings.liveSearch.liveSearchOptions, liveSearch.liveSearchOption);
+
+		// save settings
+		await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.admin.dokan.settings.liveSearch.liveSearchSaveChanges);
+		await this.toContainText(selector.admin.dokan.settings.dokanUpdateSuccessMessage, liveSearch.saveSuccessMessage );
+	}
+
+
 	// Admin Set Dokan Store Support Settings
 	async setDokanStoreSupportSettings(storeSupport: dokanSettings['storeSupport']) {
 		await this.goToDokanSettings();
@@ -247,6 +281,65 @@ export class SettingsPage extends AdminPage {
 		// save settings
 		await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.admin.dokan.settings.storeSupport.storeSupportSaveChanges);
 		await this.toContainText(selector.admin.dokan.settings.dokanUpdateSuccessMessage, storeSupport.saveSuccessMessage );
+	}
+
+
+	// Admin Set Dokan Email Verification Settings
+	async setDokanEmailVerificationSettings(emailVerification: dokanSettings['emailVerification']) {
+		await this.goToDokanSettings();
+		await this.click(selector.admin.dokan.settings.menus.emailVerification);
+
+		// Email Verification Settings
+		await this.enableSwitcher(selector.admin.dokan.settings.emailVerification.enableEmailVerification);
+		await this.clearAndType(selector.admin.dokan.settings.emailVerification.registrationNotice, emailVerification.registrationNotice);
+		await this.clearAndType(selector.admin.dokan.settings.emailVerification.loginNotice, emailVerification.loginNotice);
+
+		// save settings
+		await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.admin.dokan.settings.emailVerification.emailVerificationSaveChanges);
+		await this.toContainText(selector.admin.dokan.settings.dokanUpdateSuccessMessage, emailVerification.saveSuccessMessage );
+	}
+
+
+	// Admin Set Dokan Shipping Status Settings
+	async setDokanShippingStatusSettings(shippingStatus: dokanSettings['shippingStatus']) {
+		await this.goToDokanSettings();
+		await this.click(selector.admin.dokan.settings.menus.shippingStatus);
+
+		// Shipping Status Settings
+		await this.enableSwitcher(selector.admin.dokan.settings.shippingStatus.allowShipmentTracking);
+
+		// shipping status
+		await this.enableSwitcher(selector.admin.dokan.settings.shippingStatus.shippingProviders.australiaPost);
+		await this.enableSwitcher(selector.admin.dokan.settings.shippingStatus.shippingProviders.canadaPost);
+		await this.enableSwitcher(selector.admin.dokan.settings.shippingStatus.shippingProviders.cityLink);
+
+		await this.clearAndType(selector.admin.dokan.settings.shippingStatus.customShippingStatusInput, shippingStatus.customShippingStatus);
+		await this.click(selector.admin.dokan.settings.shippingStatus.customShippingStatusAdd);
+
+		// save settings
+		await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.admin.dokan.settings.shippingStatus.shippingStatusSaveChanges);
+		await this.toContainText(selector.admin.dokan.settings.dokanUpdateSuccessMessage, shippingStatus.saveSuccessMessage );
+	}
+
+
+	// Admin Set Dokan Quote Settings
+	async setDokanQuoteSettings(quote: dokanSettings['quote']) {
+		await this.goToDokanSettings();
+		await this.click(selector.admin.dokan.settings.menus.quote);
+
+		// Live Search Settings
+		await this.enableSwitcher(selector.admin.dokan.settings.quote.enableQuoteForOutOfStockProducts);
+		await this.enableSwitcher(selector.admin.dokan.settings.quote.enableAjaxAddToQuote);
+		await this.enableSwitcher(selector.admin.dokan.settings.quote.redirectToQuotePage);
+
+
+		await this.clearAndType(selector.admin.dokan.settings.quote.decreaseOfferedPrice, quote.decreaseOfferedPrice);
+		// await this.enableSwitcher(selector.admin.dokan.settings.quote.enableConvertToOrder);
+		// await this.enableSwitcher(selector.admin.dokan.settings.quote.enableQuoteConverterDisplay);
+
+		// save settings
+		await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.admin.dokan.settings.quote.quoteSaveChanges);
+		await this.toContainText(selector.admin.dokan.settings.dokanUpdateSuccessMessage, quote.saveSuccessMessage );
 	}
 
 
@@ -336,7 +429,7 @@ export class SettingsPage extends AdminPage {
 				await this.click(selector.admin.dokan.settings.deliveryTime.openingTime(day));
 				await this.page.getByRole('listitem').filter({ hasText: 'Full day' }).click();
 			} else{
-				await this.page.getByRole('listitem').filter({ hasText: deliveryTime.openingTime }).click(); //todo:  convert by locator, also move this to base page
+				await this.page.getByRole('listitem').filter({ hasText: deliveryTime.openingTime }).click();
 				await this.click(selector.admin.dokan.settings.deliveryTime.closingTime(day));
 				await this.page.getByRole('listitem').filter({ hasText: deliveryTime.closingTime }).click();
 			}
@@ -385,8 +478,9 @@ export class SettingsPage extends AdminPage {
 		await this.clearAndType(selector.admin.dokan.settings.geolocation.mapZoomLevel, geolocation.mapZoomLevel);
 		await this.focus(selector.admin.dokan.settings.geolocation.defaultLocation);
 		await this.typeAndWaitForResponse(data.subUrls.gmap, selector.admin.dokan.settings.geolocation.defaultLocation, geolocation.defaultLocation);
-		await this.press(data.key.arrowDown);
-		await this.press(data.key.enter); //todo:  map not saving
+		// await this.press(data.key.arrowDown);
+		// await this.press(data.key.enter);
+		await this.click(selector.admin.dokan.settings.geolocation.mapResultFirst);
 
 		// save settings
 		await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.admin.dokan.settings.geolocation.geolocationSaveChanges);
@@ -434,7 +528,7 @@ export class SettingsPage extends AdminPage {
 		await this.click(selector.admin.dokan.settings.menus.vendorSubscription);
 
 		// Vendor Subscription Settings
-		await this.selectByValue(selector.admin.dokan.settings.vendorSubscriptions.subscription, subscription.displayPage);
+		await this.selectByLabel(selector.admin.dokan.settings.vendorSubscriptions.subscription, subscription.displayPage);
 		await this.enableSwitcher(selector.admin.dokan.settings.vendorSubscriptions.enableProductSubscription);
 		await this.enableSwitcher(selector.admin.dokan.settings.vendorSubscriptions.enableSubscriptionInRegistrationForm);
 		await this.enableSwitcher(selector.admin.dokan.settings.vendorSubscriptions.enableEmailNotification);

@@ -48,7 +48,7 @@ test.describe('Product functionality test', () => {
 		await admin.addSimpleProduct(data.product.simple);
 	});
 
-	// test.skip('admin can add variable product @pro', async ( ) => {
+	// test('admin can add variable product @pro', async ( ) => {
 	// 	await admin.addVariableProduct(data.product.variable);
 	// });
 
@@ -56,8 +56,8 @@ test.describe('Product functionality test', () => {
 		await admin.addSimpleSubscription(data.product.simpleSubscription);
 	});
 
-	// test.skip('admin can add variable subscription @pro', async ( ) => {
-	// await admin.addVariableSubscription(data.product.variableSubscription);
+	// test('admin can add variable subscription @pro', async ( ) => {
+	// 	await admin.addVariableSubscription(data.product.variableSubscription);
 	// });
 
 	test('admin can add external product @lite', async ( ) => {
@@ -69,14 +69,16 @@ test.describe('Product functionality test', () => {
 	});
 
 
-	//vendors   //todo: move create product in separate files, or product functionality to another page
+	//vendors
+
+	//todo: move create product in separate files, or product functionality to another page
 
 	test('vendor can add simple product @lite', async ( ) => {
 		await vendor.vendorAddSimpleProduct(data.product.simple);
 	});
 
 	test('vendor can add variable product @pro', async ( ) => {
-		await vendor.vendorAddVariableProduct(data.product.variable); //todo: variation price not saving dokan issue
+		await vendor.vendorAddVariableProduct(data.product.variable);
 	});
 
 	test('vendor can add simple subscription product @pro', async ( ) => {
@@ -84,7 +86,7 @@ test.describe('Product functionality test', () => {
 	});
 
 	test('vendor can add variable subscription product @pro', async ( ) => {
-		await vendor.vendorAddVariableSubscription(data.product.variableSubscription); //todo: variation price not saving dokan issue
+		await vendor.vendorAddVariableSubscription(data.product.variableSubscription);
 	});
 
 	test('vendor can add external product @pro', async ( ) => {
@@ -141,15 +143,15 @@ test.describe('Product functionality test', () => {
 		await vendor.quickEditProduct({ ...data.product.simple, editProduct: productName });
 	});
 
-	// test('vendor can add product quantity discount @pro @explo', async ( ) => {
+	// test('vendor can add product quantity discount @pro', async ( ) => {
 	// 	await vendor.addProductQuantityDiscount(data.predefined.simpleProduct.product1.name, data.vendor.vendorInfo.quantityDiscount);
 	// });
 
-	test('vendor can add product rma settings @pro @explo', async ( ) => {
+	test('vendor can add product rma settings @pro', async ( ) => {
 		await vendor.addProductRmaSettings(data.predefined.simpleProduct.product1.name, data.vendor.rma);
 	});
 
-	//todo: add more product edit tests
+	//todo: add more product edit tests -> discount, wholesale, advertising
 
 	test('vendor can duplicate product @pro', async ( ) => {
 		await vendor.duplicateProduct(productName);

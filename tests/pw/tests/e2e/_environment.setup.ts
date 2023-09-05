@@ -9,12 +9,12 @@ import { data } from 'utils/testData';
 import { VendorSettingsPage } from 'pages/vendorSettingsPage';
 
 
-const { CUSTOMER_ID, DOKAN_PRO } = process.env;
+const { CUSTOMER_ID, DOKAN_PRO, HPOS } = process.env;
 
 
 setup.describe('setup site & woocommerce & user settings', () => {
 
-	setup.use({ extraHTTPHeaders: { Authorization: payloads.aAuth } });
+	setup.use({ extraHTTPHeaders: { Authorization: payloads.adminAuth.Authorization } });
 
 	let apiUtils: ApiUtils;
 
@@ -42,16 +42,14 @@ setup.describe('setup site & woocommerce & user settings', () => {
 
 	// setup.skip('reset dokan previous settings @lite', async () => {
 	// 	setup.skip(!!process.env.CI, 'skip previous settings check');
-
-	// 	// previous seller badges
 	// 	await apiUtils.deleteAllSellerBadges();
-	// 	// previous quote rules
 	// 	await apiUtils.deleteAllQuoteRules();
 	// });
 
 	setup('set wc settings @lite', async () => {
 		await apiUtils.updateBatchWcSettingsOptions('general', payloads.general);
 		await apiUtils.updateBatchWcSettingsOptions('account', payloads.account);
+		HPOS && await apiUtils.updateBatchWcSettingsOptions('advanced', payloads.advanced);
 	});
 
 	setup('set tax rate @lite', async () => {
@@ -87,6 +85,11 @@ setup.describe('setup site & woocommerce & user settings', () => {
 		await apiUtils.updatePaymentGateway('bacs', payloads.bcs);
 		await apiUtils.updatePaymentGateway('cheque', payloads.cheque);
 		await apiUtils.updatePaymentGateway('cod', payloads.cod);
+		// await apiUtils.updatePaymentGateway('dokan-stripe-connect', payloads.stripeConnect);
+		// await apiUtils.updatePaymentGateway('dokan_paypal_marketplace', payloads.payPal);
+		// await apiUtils.updatePaymentGateway('dokan_mangopay', payloads.mangoPay);
+		// await apiUtils.updatePaymentGateway('dokan_razorpay', payloads.razorpay);
+		// await apiUtils.updatePaymentGateway('dokan_stripe_express', payloads.stripeExpress);
 	});
 
 	setup('add categories and attributes @lite', async () => {
@@ -109,12 +112,17 @@ setup.describe('setup site & woocommerce & user settings', () => {
 		await apiUtils.createAttributeTerm(attributeId, { name: 'm' });
 	});
 
+	setup('disable simple-auction ajax bid check @pro', async () => {
+		const [,, status] = await apiUtils.getSinglePlugin('woocommerce-simple-auctions/woocommerce-simple-auctions', payloads.adminAuth);
+		status === 'active' && await dbUtils.updateWpOptionTable('simple_auctions_live_check', 'no');
+	});
+
 });
 
 
 setup.describe('setup  user settings', () => {
 
-	setup.use({ extraHTTPHeaders: { Authorization: payloads.aAuth } });
+	setup.use({ extraHTTPHeaders: { Authorization: payloads.adminAuth.Authorization } });
 
 	let apiUtils: ApiUtils;
 
@@ -125,8 +133,7 @@ setup.describe('setup  user settings', () => {
 
 
 	// Vendor Details
-	setup('add vendor product @lite', async () => {
-
+	setup('add vendor1 product @lite', async () => {
 
 		// delete previous store products with predefined name if any
 		await apiUtils.deleteAllProducts(data.predefined.simpleProduct.product1.name, payloads.vendorAuth);
@@ -135,6 +142,17 @@ setup.describe('setup  user settings', () => {
 		const product = { ...payloads.createProduct(), name: data.predefined.simpleProduct.product1.name, };
 		const [, productId,] = await apiUtils.createProduct(product, payloads.vendorAuth);
 		process.env.PRODUCT_ID = productId;
+	});
+
+	setup('add vendor2 product @lite', async () => {
+
+		// delete previous store products with predefined name if any
+		await apiUtils.deleteAllProducts(data.predefined.vendor2.simpleProduct.product1.name, payloads.vendor2Auth);
+
+		// create store product
+		const product = { ...payloads.createProduct(), name: data.predefined.vendor2.simpleProduct.product1.name, };
+		const [, productId,] = await apiUtils.createProduct(product, payloads.vendor2Auth);
+		process.env.Vendor2_PRODUCT_ID = productId;
 	});
 
 	setup('add vendor coupon @pro', async () => {
@@ -191,12 +209,12 @@ setup.describe('setup dokan settings', () => {
 		await dbUtils.setDokanSettings(dbData.dokan.optionName.reverseWithdraw, dbData.dokan.reverseWithdrawSettings);
 	});
 
-	// setup('admin set dokan page settings @lite', async () => {
-	// 	const pageId = await apiUtils.getPageId('sample-page', payloads.adminAuth);
-	// 	const pageSettings = await dbUtils.getDokanSettings(dbData.dokan.optionName.page);
-	// 	pageSettings['reg_tc_page'] = pageId;
-	// 	await dbUtils.setDokanSettings(dbData.dokan.optionName.page, dbData.dokan.pageSettings);
-	// });
+	setup('admin set dokan page settings @lite', async () => {
+		const [, pageId] = await apiUtils.createPage(payloads.tocPage, payloads.adminAuth);
+		const pageSettings = await dbUtils.getDokanSettings(dbData.dokan.optionName.page);
+		pageSettings['reg_tc_page'] = String(pageId);
+		await dbUtils.setDokanSettings(dbData.dokan.optionName.page, pageSettings);
+	});
 
 	setup('admin set dokan appearance settings @lite', async () => {
 		await dbUtils.setDokanSettings(dbData.dokan.optionName.appearance, dbData.dokan.appearanceSettings);
@@ -214,7 +232,7 @@ setup.describe('setup dokan settings', () => {
 		await dbUtils.setDokanSettings(dbData.dokan.optionName.storeSupport, dbData.dokan.storeSupportSettings);
 	});
 
-	setup('admin set dokan shipping settings @pro', async () => {
+	setup('admin set dokan shipping status settings @pro', async () => {
 		await dbUtils.setDokanSettings(dbData.dokan.optionName.shippingStatus, dbData.dokan.shippingStatusSettings);
 	});
 

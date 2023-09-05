@@ -6,10 +6,14 @@ import { data } from 'utils/testData';
 import { payloads } from 'utils/payloads';
 
 
+const { CUSTOMER_ID, PRODUCT_ID } = process.env;
+
+
 test.describe('Refunds test', () => {
 
 	let admin: RefundsPage;
-	let aPage: Page;
+	let vendor: RefundsPage;
+	let aPage: Page, vPage: Page;
 	let apiUtils: ApiUtils;
 	let orderResponseBody: any;
 	let orderId: string;
@@ -19,6 +23,10 @@ test.describe('Refunds test', () => {
 		const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
 		aPage = await adminContext.newPage();
 		admin = new RefundsPage(aPage);
+
+		const vendorContext = await browser.newContext({ storageState: data.auth.vendorAuthFile });
+		vPage = await vendorContext.newPage();
+		vendor = new RefundsPage(vPage);
 
 		apiUtils = new ApiUtils(request);
 		[, orderResponseBody, orderId, ] = await apiUtils.createOrderWithStatus(payloads.createProduct(), payloads.createOrder, data.order.orderStatus.processing, payloads.vendorAuth);
@@ -56,7 +64,15 @@ test.describe('Refunds test', () => {
 		await admin.refundRequestsBulkAction('completed');
 	});
 
-	//todo: add vendor refund tests
+	test('vendor can full refund @pro', async ( ) => {
+		const [,, orderId, ] = await apiUtils.createOrderWithStatus(PRODUCT_ID, { ...payloads.createOrder, customer_id: CUSTOMER_ID }, data.order.orderStatus.completed, payloads.vendorAuth);
+		await vendor.refundOrder(orderId, data.predefined.simpleProduct.product1.name);
+	});
+
+	test('vendor can partial refund @pro', async ( ) => {
+		const [,, orderId, ] = await apiUtils.createOrderWithStatus(PRODUCT_ID, { ...payloads.createOrder, customer_id: CUSTOMER_ID }, data.order.orderStatus.completed, payloads.vendorAuth);
+		await vendor.refundOrder(orderId, data.predefined.simpleProduct.product1.name, true);
+	});
 
 
 });

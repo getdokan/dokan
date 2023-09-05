@@ -40,7 +40,7 @@ test.describe('customers api test', () => {
 	});
 
 	test('delete a customer @pro', async () => {
-		const [response, responseBody] = await apiUtils.delete(endPoints.deleteCustomer(customerId), { params: payloads.paramsDeleteCustomer });
+		const [response, responseBody] = await apiUtils.delete(endPoints.deleteCustomer(customerId), { params: payloads.paramsForceDelete });
 		expect(response.ok()).toBeTruthy();
 		expect(responseBody).toBeTruthy();
 	});

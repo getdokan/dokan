@@ -36,7 +36,6 @@ test.describe('Product addon functionality test', () => {
 	});
 
 	test('vendor can edit addon @pro', async ( ) => {
-
 		await vendor.editAddon({ ...data.vendor.addon, name: addonName, titleRequired: addonFieldTitle });
 	});
 

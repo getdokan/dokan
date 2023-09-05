@@ -10,7 +10,7 @@ test.describe('Single store functionality test', () => {
 
 	let customer: SingleStorePage;
 	let cPage: Page;
-	let apiUtils: ApiUtils;
+	// let apiUtils: ApiUtils;
 
 
 	test.beforeAll(async ({ browser }) => {
@@ -28,11 +28,10 @@ test.describe('Single store functionality test', () => {
 
 	// single store page
 
-	// test.skip('dokan single store page is rendering properly @lite @explo', async ( ) => {
-	// 	//todo: pre: need toc on store and admin settings
-	// 	await customer.singleStoreRenderProperly(data.predefined.vendorStores.vendor1);
-	// 	//todo:  should be pass for all four layout
-	// });
+	test('dokan single store page is rendering properly @lite @explo', async ( ) => {
+		await customer.singleStoreRenderProperly(data.predefined.vendorStores.vendor1);
+
+	});
 
 	// test.skip('customer can view store open-close time on single store @lite', async ( ) => {
 	// 	//todo: pre: need store open close

@@ -68,7 +68,7 @@ export class ReportsPage extends AdminPage {
 		await this.goIfNotThere(data.subUrls.backend.dokan.allLogs);
 
 		await this.clearInputField(selector.admin.dokan.reports.allLogs.search);
-		await this.typeAndWaitForResponse(data.subUrls.api.dokan.logs, selector.admin.dokan.reports.allLogs.search, orderId);
+		await this.typeViaPageAndWaitForResponse(data.subUrls.api.dokan.logs, selector.admin.dokan.reports.allLogs.search, orderId);
 		await this.toBeVisible(selector.admin.dokan.reports.allLogs.orderIdCell(orderId));
 		const count = (await this.getElementText(selector.admin.dokan.reports.allLogs.numberOfRowsFound))?.split(' ')[0];
 		expect(Number(count)).toBe(1);
@@ -77,8 +77,8 @@ export class ReportsPage extends AdminPage {
 
 
 	// export all logs
-	async exportAllLogs(orderId: string){
-		await this.searchAllLogs(orderId);
+	async exportAllLogs(orderId?: string){
+		orderId && await this.searchAllLogs(orderId);
 		await this.clickAndWaitForDownload(selector.admin.dokan.reports.allLogs.exportLogs);
 	}
 
@@ -89,12 +89,12 @@ export class ReportsPage extends AdminPage {
 
 		await this.click(selector.admin.dokan.reports.allLogs.filters.filterByStore);
 		await this.typeAndWaitForResponse(data.subUrls.api.dokan.stores, selector.admin.dokan.reports.allLogs.filters.filterByStoreInput, storeName);
-		// await this.press(data.key.arrowDown);
+		await this.press(data.key.arrowDown);
 		// await this.toContainText(selector.admin.dokan.reports.allLogs.filters.searchedResult, (storeName));
 		await this.pressAndWaitForResponse(data.subUrls.api.dokan.logs, data.key.enter);
 
 		const count = (await this.getElementText(selector.admin.dokan.reports.allLogs.numberOfRowsFound))?.split(' ')[0];
-		expect(Number(count)).not.toBe(0);
+		expect(Number(count)).toBeGreaterThan(0);
 		// await this.clickAndWaitForResponseAndLoadState(data.subUrls.api.dokan.logs, selector.admin.dokan.reports.allLogs.filters.clear);
 	}
 
@@ -108,7 +108,7 @@ export class ReportsPage extends AdminPage {
 		// await this.toContainText(selector.admin.dokan.reports.allLogs.filters.searchedResult, (orderStatus));
 		await this.clickAndAcceptAndWaitForResponse(data.subUrls.api.dokan.logs, selector.admin.dokan.reports.allLogs.filters.searchedResult);
 		const count = (await this.getElementText(selector.admin.dokan.reports.allLogs.numberOfRowsFound))?.split(' ')[0];
-		expect(Number(count)).not.toBe(0);
+		expect(Number(count)).toBeGreaterThan(0);
 		// await this.clickAndWaitForResponseAndLoadState(data.subUrls.api.dokan.logs, selector.admin.dokan.reports.allLogs.filters.clear);
 	}
 

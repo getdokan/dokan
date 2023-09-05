@@ -17,6 +17,9 @@ export class VendorAnalyticsPage extends VendorPage {
 	async vendorAnalyticsRenderProperly(){
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.analytics);
 
+		// analytics text is visible
+		await this.toBeVisible(selector.vendor.vAnalytics.analyticsText);
+
 		// analytics menu elements are visible
 		await this.multipleElementVisible(selector.vendor.vAnalytics.menus);
 
@@ -24,19 +27,19 @@ export class VendorAnalyticsPage extends VendorPage {
 		await this.multipleElementVisible(selector.vendor.vAnalytics.datePicker);
 
 		await this.clickAndWaitForLoadState(selector.vendor.vAnalytics.menus.topPages);
-		await this.toBeVisible(selector.vendor.vAnalytics.noAnalytics);
+		await this.toBeVisible(selector.vendor.vAnalytics.noAnalyticsFound);
 
 		await this.clickAndWaitForLoadState(selector.vendor.vAnalytics.menus.location);
-		await this.toBeVisible(selector.vendor.vAnalytics.noAnalytics);
+		await this.toBeVisible(selector.vendor.vAnalytics.noAnalyticsFound);
 
 		await this.clickAndWaitForLoadState(selector.vendor.vAnalytics.menus.system);
-		await this.toBeVisible(selector.vendor.vAnalytics.noAnalytics);
+		await this.toBeVisible(selector.vendor.vAnalytics.noAnalyticsFound);
 
 		await this.clickAndWaitForLoadState(selector.vendor.vAnalytics.menus.promotions);
-		await this.toBeVisible(selector.vendor.vAnalytics.noAnalytics);
+		await this.toBeVisible(selector.vendor.vAnalytics.noAnalyticsFound);
 
 		await this.clickAndWaitForLoadState(selector.vendor.vAnalytics.menus.keyword);
-		await this.toBeVisible(selector.vendor.vAnalytics.noAnalytics);
+		await this.toBeVisible(selector.vendor.vAnalytics.noAnalyticsFound);
 
 	}
 

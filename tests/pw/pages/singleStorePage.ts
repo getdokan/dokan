@@ -18,6 +18,7 @@ export class SingleStorePage extends CustomerPage {
 
 	// single store render properly
 	async singleStoreRenderProperly(storeName: string){
+		//todo:  should be pass for all four layout
 		await this.goIfNotThere(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)));
 
 		// store profile elements are visible
@@ -26,9 +27,11 @@ export class SingleStorePage extends CustomerPage {
 		// store tab elements are visible
 		if (!DOKAN_PRO){
 			await this.toBeVisible(selector.customer.cSingleStore.storeTabs.products);
-			await this.toBeVisible(selector.customer.cSingleStore.storeTabs.toc); //todo:  enable toc on setup , get page id via api then user db // also need vendor toc
+			// await this.toBeVisible(selector.customer.cSingleStore.storeTabs.toc); //todo: need vendor toc
 		} else {
-			await this.multipleElementVisible(selector.customer.cSingleStore.storeTabs);
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+			const { toc,  ...storeTabs } = selector.customer.cSingleStore.storeTabs;
+			await this.multipleElementVisible(storeTabs);
 		}
 
 		// search elements are visible

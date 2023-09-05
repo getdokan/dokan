@@ -39,8 +39,8 @@ test.describe('setup local site', () => {
 	});
 
 	test('activate basic auth plugin', async () => {
-		await dbUtils.UpdateWpOptionTable(dbData.optionName.activePlugins, dbData.plugins);
-		// await dbUtils.UpdateWpOptionTable(dbData.dokan.optionName.dokanActiveModules, dbData.dokan.modules);
+		await dbUtils.updateWpOptionTable(dbData.optionName.activePlugins, dbData.plugins, 'serialize');
+		// await dbUtils.updateWpOptionTable(dbData.dokan.optionName.dokanActiveModules, dbData.dokan.modules, 'serialize');
 	});
 
 	// test('install and activate theme', async ({ request }) => {}

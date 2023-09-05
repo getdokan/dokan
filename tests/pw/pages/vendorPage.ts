@@ -1,4 +1,4 @@
-import { Page, expect } from '@playwright/test';
+import { Page, expect, test } from '@playwright/test';
 import { BasePage } from 'pages/basePage';
 import { LoginPage } from 'pages/loginPage';
 import { CustomerPage } from 'pages/customerPage';
@@ -65,7 +65,7 @@ export class VendorPage extends BasePage {
 		await this.waitForVisibleLocator(selector.vendor.vRegistration.firstName);
 		await this.clearAndType(selector.vendor.vRegistration.firstName, username);
 		await this.clearAndType(selector.vendor.vRegistration.lastName, vendorInfo.lastName());
-		await this.clearAndType(selector.vendor.vRegistration.shopName, vendorInfo.shopName);
+		await this.clearAndType(selector.vendor.vRegistration.shopName, vendorInfo.shopName());
 		await this.click(selector.vendor.vRegistration.shopUrl);
 
 		// fill address if enabled on registration
@@ -87,9 +87,10 @@ export class VendorPage extends BasePage {
 		}
 		await this.clearAndType(selector.vendor.vRegistration.phone, vendorInfo.phoneNumber);
 		await this.checkIfVisible(selector.customer.cDashboard.termsAndConditions);
+		// await this.checkIfVisible(selector.customer.cDashboard.termsAndConditions); //todo: fix
 		const subscriptionPackIsVisible = await this.isVisible(selector.vendor.vRegistration.subscriptionPack);
 		subscriptionPackIsVisible && await this.selectByLabel(selector.vendor.vRegistration.subscriptionPack, data.predefined.vendorSubscription.nonRecurring);
-		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.myAccount, selector.vendor.vRegistration.register,  302);
+		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.setupWizard, selector.vendor.vRegistration.register);
 		const registrationErrorIsVisible = await this.isVisible(selector.customer.cWooSelector.wooCommerceError);
 		if (registrationErrorIsVisible) {
 			const hasError = await this.hasText(selector.customer.cWooSelector.wooCommerceError, data.customer.registration.registrationErrorMessage);
@@ -254,7 +255,7 @@ export class VendorPage extends BasePage {
 
 		orderDetails.orderStatus = (await this.getElementText(selector.vendor.orders.status.currentOrderStatus) as string).replace('-', ' ');
 
-		const orderDate = (await this.getElementText(selector.vendor.orders.orderDetails.orderDate) as string)?.split(':')[1]?.trim();
+		const orderDate = (await this.getElementText(selector.vendor.orders.orderDetails.orderDate) as string)?.split(':')[1]?.trim() as string;
 		orderDetails.orderDate = orderDate?.substring(0, orderDate.indexOf(',', orderDate.indexOf(',') + 1));
 
 		const discountIsVisible = await this.isVisible(selector.vendor.orders.orderDetails.discount);
@@ -294,7 +295,7 @@ export class VendorPage extends BasePage {
 	}
 
 
-	// search product
+	// search product vendor dashboard
 	async searchProduct(productName: string): Promise<void> {
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.products);
 
@@ -315,124 +316,24 @@ export class VendorPage extends BasePage {
 	}
 
 
-	//todo: fixed above functions
-
-
-	//refund
-
-	// vendor refund order
-	async refundOrder(orderNumber: string, productName: string, partialRefund = false): Promise<void> {
-		await this.goToOrderDetails(orderNumber);
-
-		//request refund
-		await this.click(selector.vendor.orders.refund.requestRefund);
-		const productQuantity = await this.getElementText(selector.vendor.orders.refund.productQuantity(productName)) as string;
-		const productCost = helpers.price(await this.getElementText(selector.vendor.orders.refund.productCost(productName)) as string);
-		const productTax = helpers.price(await this.getElementText(selector.vendor.orders.refund.productTax(productName)) as string);
-		await this.type(selector.vendor.orders.refund.refundProductQuantity(productName), productQuantity);
-		if (partialRefund) {
-			await this.click(selector.vendor.orders.refund.refundDiv);
-			await this.clearAndType(selector.vendor.orders.refund.refundProductCostAmount(productName), String(helpers.roundToTwo(productCost / 2)));
-			await this.clearAndType(selector.vendor.orders.refund.refundProductTaxAmount(productName), String(helpers.roundToTwo(productTax / 2)));
+	async buyProductAdvertising(productName: string){
+		await this.searchProduct(productName);
+		const advertisementStatus = await this.hasColor(selector.vendor.product.advertisementStatus(productName), 'rgb(255, 99, 71)');
+		if (advertisementStatus){
+			console.log('Product advertisement is currently ongoing.');
+			test.skip();
+			// throw new Error('Product advertisement is currently ongoing.');
 		}
-		await this.type(selector.vendor.orders.refund.refundReason, 'Defective product');
-		await this.click(selector.vendor.orders.refund.refundManually);
-		await this.click(selector.vendor.orders.refund.confirmRefund);
-
-		await this.toContainText(selector.vendor.orders.refund.refundRequestSuccessMessage, 'Refund request submitted.');
-		await this.click(selector.vendor.orders.refund.refundRequestSuccessMessageOk);
-	}
-
-
-	// vendor send id verification request
-	async sendIdVerificationRequest(verification: vendor['verification']): Promise<void> {
-		await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsVerification);
-
-		// cancel previous verification request if any
-		const cancelRequestIsVisible = await this.isVisible(selector.vendor.vVerificationSettings.id.cancelIdVerificationRequest);
-		if (cancelRequestIsVisible) {
-			await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vVerificationSettings.id.cancelIdVerificationRequest);
-			await expect(this.page.getByText(verification.idRequestSubmitCancel)).toBeVisible();
-		}
-		// id verification
-		await this.click(selector.vendor.vVerificationSettings.id.startIdVerification);
-		// remove previously uploaded image
-		const uploadPhotoBtnIsVisible = await this.isVisible(selector.vendor.vVerificationSettings.id.uploadPhoto);
-		if (!uploadPhotoBtnIsVisible) {
-			// await this.hover(selector.vendor.vVerificationSettings.id.previousUploadedPhoto); //todo:  not working, real user behavior
-			// await this.click(selector.vendor.vVerificationSettings.id.removePreviousUploadedPhoto);
-			await this.setAttributeValue('.gravatar-wrap', 'class', 'gravatar-wrap dokan-hide'); //todo:  remove this alternative soln.
-			await this.setAttributeValue('.gravatar-button-area.dokan-hide', 'class', 'gravatar-button-area');
-		}
-		await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vVerificationSettings.id.uploadPhoto);
-		await this.uploadMedia(verification.file);
-		await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vVerificationSettings.id.submitId);
-		await this.toContainText(selector.vendor.vVerificationSettings.id.idUpdateSuccessMessage, verification.idRequestSubmitSuccessMessage);
-	}
-
-
-	// vendor send address verification request
-	async sendAddressVerificationRequest(verification: vendor['verification']): Promise<void> {
-		await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsVerification);
-		// cancel previous verification request if any
-		const cancelRequestIsVisible = await this.isVisible(selector.vendor.vVerificationSettings.address.cancelAddressVerificationRequest);
-		if (cancelRequestIsVisible) {
-			await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vVerificationSettings.address.cancelAddressVerificationRequest);
-			await expect(this.page.getByText(verification.addressRequestSubmitCancel)).toBeVisible();
-		}
-		// address verification
-		await this.click(selector.vendor.vVerificationSettings.address.startAddressVerification);
-		await this.clearAndType(selector.vendor.vVerificationSettings.address.street, verification.street1);
-		await this.clearAndType(selector.vendor.vVerificationSettings.address.street2, verification.street2);
-		await this.clearAndType(selector.vendor.vVerificationSettings.address.city, verification.city);
-		await this.clearAndType(selector.vendor.vVerificationSettings.address.postOrZipCode, verification.zipCode);
-		await this.selectByValue(selector.vendor.vVerificationSettings.address.country, verification.country);
-		await this.selectByValue(selector.vendor.vVerificationSettings.address.state, verification.state);
-		await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vVerificationSettings.address.uploadResidenceProof);
-		await this.uploadMedia(verification.file);
-		await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vVerificationSettings.address.submitAddress);
-		await this.toContainText(selector.vendor.vVerificationSettings.address.addressUpdateSuccessMessage, verification.addressRequestSubmitSuccessMessage);
-	}
-
-
-	// vendor send company verification request
-	async sendCompanyVerificationRequest(verification: vendor['verification']): Promise<void> {
-		await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsVerification);
-		// cancel previous verification request if any
-		const cancelRequestIsVisible = await this.isVisible(selector.vendor.vVerificationSettings.company.cancelCompanyVerificationRequest);
-		if (cancelRequestIsVisible) {
-			await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vVerificationSettings.company.cancelCompanyVerificationRequest);
-			await expect(this.page.getByText(verification.companyRequestSubmitCancel)).toBeVisible();
-		}
-		// company verification
-		await this.click(selector.vendor.vVerificationSettings.company.startCompanyVerification);
-		// remove previously uploaded company file
-		const UploadedCompanyFileIsVisible = await this.isVisible(selector.vendor.vVerificationSettings.company.uploadedCompanyFileClose);
-		if (UploadedCompanyFileIsVisible) {
-			await this.click(selector.vendor.vVerificationSettings.company.uploadedCompanyFileClose);
-		}
-		await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vVerificationSettings.company.uploadFiles);
-		await this.uploadMedia(verification.file);
-		await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vVerificationSettings.company.submitCompanyInfo);
-		await this.toContainText(selector.vendor.vVerificationSettings.company.companyInfoUpdateSuccessMessage, verification.companyRequestSubmitSuccessMessage);
-	}
-
-
-	// upload media
-	async uploadMedia(file: string) { //todo:  move uploadMedia to base page, try to make only one function for media upload for whole project
-		const uploadedMediaIsVisible = await this.isVisible(selector.wpMedia.uploadedMedia);
-		if (uploadedMediaIsVisible) {
-			await this.click(selector.wpMedia.uploadedMedia);
-		} else {
-			await this.uploadFile(selector.wpMedia.selectFilesInput, file); //todo:  image upload don't work , try on other site
-			await this.click(selector.wpMedia.selectUploadedMedia); //todo:  after fix this line not needed
-			await this.click(selector.wpMedia.select);
-		}
+		await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.product.buyAdvertisement(productName));
+		await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.product.confirmAction);
+		await this.click(selector.vendor.product.successMessage);
+		const orderId = await this.customer.paymentOrder();
+		return orderId;
 	}
 
 
 	// vendor set banner and profile picture settings
-	// async bannerAndProfilePictureSettings(banner: string, profilePicture: string): Promise<void> { //todo:  fix
+	// async bannerAndProfilePictureSettings(banner: string, profilePicture: string): Promise<void> { //todo:  fix banner and profile update
 	// 	// upload banner and profile picture
 	// 	await this.removePreviouslyUploadedImage(selector.vendor.vStoreSettings.bannerImage, selector.vendor.vStoreSettings.removeBannerImage);
 	// 	await this.click(selector.vendor.vStoreSettings.banner);

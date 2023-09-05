@@ -59,9 +59,34 @@ export class ShopPage extends CustomerPage {
 			await this.toContainText(selector.customer.cSingleProduct.productDetails.productTitle, productName );
 		} else {
 			await this.clearAndType(selector.customer.cShop.filters.searchProduct, productName);
-			await this.click(selector.customer.cShop.filters.search);
+			await this.clickAndWaitForLoadState(selector.customer.cShop.filters.search);
 			await this.toContainText(selector.customer.cShop.productCard.productTitle, productName);
 		}
+	}
+
+
+	// filter products
+	async filterProducts(filterBy: string, value: string): Promise<void> {
+		await this.goIfNotThere(data.subUrls.frontend.shop);
+
+		switch(filterBy){
+
+		case 'by-location' :
+			await this.typeAndWaitForResponse(data.subUrls.gmap, selector.customer.cShop.filters.location, value);
+			await this.press(data.key.arrowDown);
+			await this.pressAndWaitForResponse(data.subUrls.gmap, data.key.enter);
+			break;
+
+		case 'by-category' :
+			await this.selectByValue(selector.customer.cShop.filters.selectCategory, value);
+			break;
+
+		default :
+			break;
+		}
+
+		await this.clickAndWaitForLoadState(selector.customer.cShop.filters.search);
+		await this.notToHaveCount(selector.customer.cShop.productCard.card, 0);
 	}
 
 
@@ -84,7 +109,7 @@ export class ShopPage extends CustomerPage {
 
 
 	// go to product details
-	async  goToProductDetails(productName: string): Promise<void> {
+	async  goToProductDetailsFromShop(productName: string): Promise<void> {
 		await this.searchProduct(productName);
 		if(DOKAN_PRO){
 			await this.clickAndWaitForResponse(data.subUrls.frontend.productCustomerPage, selector.customer.cShop.productCard.productDetailsLink);

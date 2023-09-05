@@ -74,7 +74,7 @@ export class AbuseReportsPage extends AdminPage {
 		}
 
 		const count = (await this.getElementText(selector.admin.dokan.abuseReports.numberOfRowsFound))?.split(' ')[0];
-		expect(Number(count)).not.toBe(0);
+		expect(Number(count)).toBeGreaterThan(0);
 
 	}
 

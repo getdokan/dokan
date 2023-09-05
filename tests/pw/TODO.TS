@@ -1,4 +1,7 @@
 
+
+//****************************       e2e testing       ****************************
+
 //todo:  ***************** list all core tests and setup tests : plugins activated, wp settings, woocommerce settings, dokan modules activated , dokan settings for both e2e and api
 //todo:  ***************** GRAB CONSOLE ERROR, And PHP ERROR 
 //todo:  make tests more independent where possible specially admin parts : use before-all , after-all, delete data in before-all or after-all to repeat each tests: test should be passed for repeat-each:5, can be test parallely
@@ -8,72 +11,93 @@
 //todo:  Report: separate two junit report showing on simple git-action summary
 //todo:  global setup & teardown can be converted to project setup: no need 
 //todo:  Project Configuration: separate everything for local & CI like: global setup, env, playwright config, Configure projects for multiple environments : ci, local,
-//todo:  Fixture: add fixture: separarte user role,  implement fixture for lite pro issue handle
+//todo:  Fixture: add fixture: separate user role,  implement fixture for lite pro issue handle
 //todo:  ESlint: #  // "no-unused-vars": "off" is enabled for now but remove before push, remove every eslint comment before push
 //todo:  test basic auth can be used instead of cookies for authentication , no need to do this
 //todo:  # why two pages are opening : fix that
-//todo:  Assertion: convert all expect parameter to correct way: left side received and right part expected
-//todo:  Assertion: received & expected data: -> 1. trim if necessary 2. lowercase if necessary
-//todo:  Wp-env: Theme activatin, permalink update and wp cli not work for latest wp-env version
+
+//todo:  Wp-env: Theme activation, permalink update and wp cli not work for latest wp-env version
 //todo:  Checkbox: replace click with check for all check fields all suite , update every checkbox with check instead of click, check method , if checked remains checked
 //todo:  Env Variables:  remove not needed env variables from yml file, like slowmo, setup .........
-//todo:  BULK ACTION: 1. add search option before bulk option to minimize the number of rows to be effected  for all bulk action (not implemented everywhere)  2. check data exists or not for all bulk actions
 //todo:  Modal: Close modal if exists, causes issue with other tests where popup blocks next step*****
-//todo:  Explotary test: add render properly tests for, rfq, my subscriptions, vedors, seller support ticket, all customer menus 
-//todo:  Locator: add html tag to every css locator by-id, by class -> #id to input#id
-//todo:  Locator: shorten selectior: -> locator = selector.admin.dokan.settings; locator length can be shorten
-//todo:  read every playwright github issue & playwright comment
-//todo:  convert testSummary from commonjs module to ex module
-//todo:  implement new playwright settings 
-//todo:  ['json', { outputFile: 'results.json' }] add json reporter and try to replace junit, ust json report for test summary
-//todo:  fix npm run error without npx
-//todo:  Reporter: add os and browsers in env info
-//todo:  ***************** Test-data: use unique value for create and update for store categories, rfq name, rules.........baseURL..
-//todo:  ***************** Interface: interface should be one, no separate for create, update ....
-//todo:  
-//todo:  
-//todo:  
-//todo:  
-//todo:  
-//todo:  
-//todo:  
-//todo:  
+//todo: add new tests or multiple entry in same test for all search parameter, i.e : by-customer, by-product, but-store,..
+//todo:  insert all date format according to site format , currently hardcoded to default format -> helpers.dateFormatFYJ
+//todo:   try to fix product advertisement product, reversewithdraw product, storemap save via api, currently e2e is used
+//todo:  **************** need custom check method
+//todo:  *** add all email tests
 //todo:  
 
-//todo:  ****************************       readme       ****************************
+
+//****************************       test data       ****************************
+
+//todo: image path need to from project origin
+//todo:   more test date need to be unique, apply this type soln title: 'converted quote ' + faker.string.uuid(),  
+
+//****************************       assertions       ****************************
+
+//todo:  assert to have count more than , less than  used not-to-have-count
+//todo:  either this or that assertion
+//todo:  Assertion: convert all expect parameter to correct way: left side received and right side expected
+//todo:  Assertion: received & expected data: -> 1. trim if necessary 2. lowercase if necessary
+//todo:  convert by locator, also move this to base page  await this.page.getByRole('listitem').filter({ hasText: deliveryTime.openingTime }).click();
+//todo: convert with to have grater than  expect(Number(count)).not.toBe(0);  to ->   expect(Number(count)).toBeGreaterThan(0);
+
+//****************************       selectors       ****************************
+
+//todo:  Locator: add html tag to every css locator by-id, by class -> #id to input#id
+//todo:  Locator: shorten selector: -> locator = selector.admin.dokan.settings; locator length can be shorten
+
+//****************************       zip testing       ****************************
+
+//todo: add zip testing tests
+
+//****************************       wp-env       ****************************
+
+//todo:  wp-env logs
+//todo: wp-env install-path to get debug log file
+	// latest/wp-env/wp-content/debug.log
+
+//todo: user .wp-env.override.json  for local development
+
+
+
+//****************************       playwright       ****************************
+
+//todo:  implement new playwright settings 
+//todo:  fix npm run error without npx
+//todo:  read every playwright github issue & playwright comment
+
+//****************************       reporter       ****************************
+
+//todo:  Reporter: add os and browsers in env info
+//todo:  convert testSummary from commonjs module to ex module
+//todo:  ['json', { outputFile: 'results.json' }] add json reporter and try to replace junit, use json report for test summary if summary exists
+
+//****************************       readme        ****************************
+
 //todo:  add lite & pro config on readme
 //todo:  add emoji to readme
 //todo:  make readme follow readme guideline
 //todo:  use chatgpt to rephrase readme
-//todo:  test test env to doc
+//todo:  add test env to doc
 
 
+//****************************       api suite     ****************************
 
-//todo:  ****************************       api suite                    ******************
-
-//todo:   convert admin as vendor to vendor for whole suite
-//todo:   fix rank math api
-//todo:   create valid payload for every request : which doesn't cause php warning
-//todo:   run with parallel mode on , make tests independent if necessary
-//todo:  
-//todo:  
-//todo:  
-//todo:  
-//todo:  
-//todo:  
-//todo:  
-//todo:  
-//todo:  
-//todo:  
+//todo:  convert admin as vendor to vendor for whole suite
+//todo:  fix rank math api
+//todo:  create valid payload for every request : which doesn't cause php warning
+//todo:  run with parallel mode on , make tests independent if necessary
+//todo:  update all tests with productid, customerid, to make it faster
+//todo:  hardcoding admin auth will hinder negative testing : test with invalid user
+//todo:  reverse withdraw and proadvertisement setup needed on api suite
 //todo:  
 
 
+//********************************** NEW TODO **********************************
 
 
-// <----------------------------------------------- NEW TODO ------------------------------------------------->
-
-
-//todo:  ************ DON"T USE goIfNotThere where we need to reflact any changes done via api call or db table modification ************
+//todo:  ************ DON"T USE goIfNotThere where we need to reflect any changes done via api call or db table modification ************
  also after performing some test to load changes we need to skip goIfNotThere, also look for that
  test order can be the culprit too
 
@@ -81,8 +105,7 @@
 // either throw error or just return or convert to playwright error
 
 //todo:   add modal or sub option on explotory tesing tests all
-		//todo:  assert either this or that 
-		//todo:  assert to have count more than , less than  used not-to-have-count
+
 
 //todo:   export log test keep this, for wait for witch api is listed below
 		// await Promise.all([
@@ -100,18 +123,24 @@
 //todo:  clear data in beforeAll where necessary
 
 
+//todo: decide
+if (isPublished){
+	console.log('Badge is already published');
+	test.skip();
+	// throw new Error('Badge is already published'); //todo: skip or fail test
+}
 
 
+//********************************** tests to write **********************************
 
+//todo: reverse withdraw : filter by calendar, do via vue locator
+//todo: support ticket : filter by calendar
+//todo: reports: filter by calendar on by day, by year, by vendor
+//todo: all-logs : filter by calendar
+//todo: vendor can send phone verification request
+//todo: admin can approve phone verification request
+//todo: need update to wholesale suite, merge both describe, update become customer tests
 
-
-
-
-// tests to write
-
-Store support
-	//todo:  filter store support by calendar
-	//todo:   ask for get support on order received page
 
 wholesale setting options tests
 	//todo:   customer need or don't need approval : re-modify above two tests
@@ -121,44 +150,33 @@ wholesale setting options tests
 	//todo:   vendor can see Wholesale Price on Shop Archive
 	//todo:   vendor can create wholesale product  via api
 
-search
-	//todo add new tests or multiple entry in same test for all search parameter, i.e : by-customer, by-product, but-store,..
-refunds
- 	//todo:   add separate test or separate entry in same test for all search parameter
-	//todo:   add vendor tests
+
 product advertisement
     //todo:   add search product advertisement by order
 	//todo:   filter by calendar
-	//todo:   add tests for every setting options
-	//todo:   add vendor tests
-rfq
-	//todo:   add vendor tests
 
-			//todo:   create a generic function for below scenario on base page
-			await Promise.all([
-				this.page.waitForResponse((resp) => resp.url().includes(data.subUrls.api.dokan.quotes) && resp.status() === 200),
-				this.page.waitForResponse((resp) => resp.url().includes(data.subUrls.api.dokan.products) && resp.status() === 200),
-				this.page.locator(selector.admin.dokan.requestForQuotation.quoteRules.newQuoteRule).click()
-			]);
+rfq
+
+//todo:   create a generic function for below scenario on base page
+await Promise.all([
+	this.page.waitForResponse((resp) => resp.url().includes(data.subUrls.api.dokan.quotes) && resp.status() === 200),
+	this.page.waitForResponse((resp) => resp.url().includes(data.subUrls.api.dokan.products) && resp.status() === 200),
+	this.page.locator(selector.admin.dokan.requestForQuotation.quoteRules.newQuoteRule).click()
+]);
+
 reports 
 	//todo:   filter by calendar
+
 vendor stuff
-	//todo:   add tests for all permission group
-	//todo : add tests for email template
-reverse withdraw
+	//todo: add tests for all permission group
+	//todo:	add tests for email template
 
-	//todo:  filter reverse withdraws by calendar
-	//todo:   add vendor tests
-
-admin settings
-	//todo:   add more set settings live search, sms gateway, seller verification, email verification
-coupon
-	//todo:  add more customer tests
 verifications
-	//todo:   need multiple verification request for admin, use db alteration
-	//todo:   admin can disapprove verification request
-	//todo:   add vendor tests
-	//todo:  admin can approve phone verification request
+	//todo: need multiple verification request for admin, use db alteration
+	//todo: admin can disapprove verification request
+	//todo: add vendor tests
+	//todo: admin can approve phone verification request
+
 store review
 	// test('customer can edit store review @pro', async ( ) => {
 	// 	//todo:   need separate method or update locator, ensure previous review exits
@@ -175,10 +193,9 @@ store review
 	// }
 
 follow Store
-// test('customer can follow store on store listing @pro', async ( ) => {
-// 	await customer.followStore(data.predefined.vendorStores.vendor1, data.predefined.vendorStores.followFromStoreListing); //todo:   update parameter
-// });
-	//todo:   vendor can see followers, need followers via api
+//todo:  need followers via api
+
+
 seller badge
 	// test.skip('admin can filter vendors by seller badge  @pro', async ( ) => {
 	// 	//todo:   need to wait 1 min after badge create ; run via background process; can background process can be automated
@@ -194,8 +211,8 @@ stores spec
 // 	const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
 // 	aPage = await adminContext.newPage();
 // 	admin = new StoresPage(aPage);
-// 	// apiUtils = new ApiUtils(request);
-// 	// [,, storeName] = await apiUtils.createStore(payloads.createStore());  //todo:  ues different store all stores
+	// apiUtils = new ApiUtils(request);
+	// [,, storeName] = await apiUtils.createStore(payloads.createStore());  //todo:  ues different store all stores
 });
 
 stores page
@@ -206,47 +223,12 @@ products
 	//todo:   import product
 
 
-single product
-
-
-	// product vendor info
-	async productVendorInfo(productName: string){
-		await this.goToProductDetails(productName);
-		await this.click(selector.customer.cSingleProduct.menus.vendorInfo);
-		await this.multipleElementVisible(selector.customer.cSingleProduct.vendorInfo);
-		//todo:   assert actual value i.e. vendor info
-	}
-
-
-	// product location
-	async productLocation(productName: string){
-		await this.goToProductDetails(productName);
-		await this.click(selector.customer.cSingleProduct.menus.location);
-		await this.multipleElementVisible(selector.customer.cSingleProduct.location);
-		//todo:   assert actual value i.e. location
-	}
-
-	// product warranty policy
-	async productWarrantyPolicy(productName: string){
-		await this.goToProductDetails(productName);
-		await this.click(selector.customer.cSingleProduct.menus.warrantyPolicy);
-		await this.multipleElementVisible(selector.customer.cSingleProduct.warrantyPolicy);
-		//todo:   assert actual value i.e. warranty policy
-	}
-
-	async viewHighlightedVendorInfo(productName: string){
-		await this.goToProductDetails(productName);
-		await this.multipleElementVisible(selector.customer.cSingleProduct.vendorHighlightedInfo);
-		//todo:   assert actual value i.e. vendor info
-	}
-
 stores page
+
 	// search vendor
 	async searchVendor(vendorName: string){
 		await this.goIfNotThere(data.subUrls.backend.dokan.vendors);
-
 		await this.clearInputField(selector.admin.dokan.vendors.search);
-
 		await this.typeAndWaitForResponse(data.subUrls.api.dokan.stores, selector.admin.dokan.vendors.search, vendorName);
 		await this.toBeVisible(selector.admin.dokan.vendors.vendorCell(vendorName));
 
@@ -256,76 +238,6 @@ stores page
 
 	}
 
-seller badge
-
-// vendor filter seller badge
-async filterSellerBadges(option: string){
-	await this.clickIfVisible(selector.vendor.vBadges.congratsModal.closeModal);
-
-	await this.goIfNotThere(data.subUrls.frontend.vDashboard.badges);
-	await this.selectByValue( selector.vendor.vBadges.filterBadges, option);
-	const count = (await this.getElementText(selector.vendor.vBadges.numberOfBadgesFound))?.split(' ')[0];
-	expect(Number(count)).not.toBe(0);
-	//todo:  either this or that assertion
-	//todo:  to have count more than
-}
-
-
-Reports 
-
-
-	// search all logs
-	async searchAllLogs(orderId: string){
-		await this.goIfNotThere(data.subUrls.backend.dokan.allLogs);
-
-		await this.clearInputField(selector.admin.dokan.reports.allLogs.search);
-		await this.typeAndWaitForResponse(data.subUrls.api.dokan.logs, selector.admin.dokan.reports.allLogs.search, orderId);
-		await this.toBeVisible(selector.admin.dokan.reports.allLogs.orderIdCell(orderId));
-		// await this.clickAndWaitForResponse(data.subUrls.api.dokan.logs, selector.admin.dokan.reports.allLogs.filters.clear); //todo:  why
-	}
-
-
-	// export all logs
-	async exportAllLogs(orderId: string){
-		await this.searchAllLogs(orderId);
-		await this.clickAndWaitForDownload(selector.admin.dokan.reports.allLogs.exportLogs);
-	}
-
-
-	// filter all logs by store
-	async filterAllLogsByStore(storeName: string){
-		await this.goIfNotThere(data.subUrls.backend.dokan.allLogs);
-
-		await this.click(selector.admin.dokan.reports.allLogs.filters.filterByStore);
-		await this.typeAndWaitForResponse(data.subUrls.api.dokan.stores, selector.admin.dokan.reports.allLogs.filters.filterByStoreInput, storeName);
-		await this.pressAndWaitForResponse(data.subUrls.api.dokan.logs, data.key.enter);
-
-		const count = (await this.getElementText(selector.admin.dokan.reports.allLogs.numberOfRowsFound))?.split(' ')[0];
-		expect(Number(count)).not.toBe(0);
-		// await this.clickAndWaitForResponse(data.subUrls.api.dokan.logs, selector.admin.dokan.reports.allLogs.filters.clear); //todo:  why
-	}
-
-
-	// filter all logs by status
-	async filterAllLogsByStatus(orderStatus: string){
-		await this.goIfNotThere(data.subUrls.backend.dokan.allLogs);
-
-		await this.click(selector.admin.dokan.reports.allLogs.filters.filterByStatus);  //todo:   add multiselect option
-		await this.type( selector.admin.dokan.reports.allLogs.filters.filterByStatusInput, orderStatus);
-		await this.clickAndAcceptAndWaitForResponse(data.subUrls.api.dokan.logs, selector.admin.dokan.reports.allLogs.filters.searchedResult);
-		const count = (await this.getElementText(selector.admin.dokan.reports.allLogs.numberOfRowsFound))?.split(' ')[0];
-		expect(Number(count)).not.toBe(0);
-		// await this.clickAndWaitForResponse(data.subUrls.api.dokan.logs, selector.admin.dokan.reports.allLogs.filters.clear); //todo:  why
-	}
-
-
-_environmentcheck
-
-	//todo:   try to fix product advertisement product, reversewithdraw product, storemap save via api, currently e2e is used
-
-
-
-
 	setup('add test vendor orders @pro', async ({ request }) => {  //todo:   required for which test, might be replaced with create order with status
 		const apiUtils = new ApiUtils(request);
 		await apiUtils.createOrder(payloads.createProduct(), { ...payloads.createOrder, customer_id: CUSTOMER_ID }, payloads.vendorAuth);
@@ -333,7 +245,18 @@ _environmentcheck
 
 
 
+	// view auction product
+	async viewAuctionProduct(productName: string){
+		await this.searchAuctionProduct(productName);
+		await this.hover(selector.vendor.vAuction.productCell(productName));
+		await this.clickAndWaitForLoadState(selector.vendor.vAuction.view(productName));
 
+		// auction product elements are visible
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		const { bidQuantity, bidButton, ...viewAuction } = selector.vendor.vAuction.viewAuction;
+		await this.multipleElementVisible(viewAuction);
+		//todo: actual value can be asserted
+	}
 
 
 
@@ -396,20 +319,6 @@ test.beforeAll(async ({ request }) => {
 
 
 
-apiutils
-
-//todo:   gather all interfaces in one place
-
-interface auth {
-	[key: string]: string;
- }
-
- interface user {
-	username: string;
-	password: string;
-
-
-
 
 dbquery
 
@@ -444,7 +353,7 @@ generalSettings: {
 
 basepage
 
-	//todo:  apply pseudo-style
+//todo:  apply pseudo-style
 //todo:  add assertion to every base-page function
 //todo:  update every page method with locator method
 	// returns whether the element is visible
@@ -594,44 +503,11 @@ async multipleElementVisible(selectors: any){
 			city: 'New York',
 
 
-			quoteRule: {
-				title: 'test quote rule',  //todo:   title must be  used with uuid, tests are failing because of that
-				userRole: '',
-				product: 'p1_v1 (simple)',
-				category: 'Uncategorized',
-				hidePrice: '1',
-				hidePriceText: 'Price is hidden',
-				hideAddToCartButton: 'keep_and_add_new', // replace, keep_and_add_new
-				customButtonLabel: 'Add to quote',
-				order: '0',
-			},
-
-			updateQuote:{
-				title: 'test quote', // title should be same as create, cause search by title //todo:   updatedTitle:  can be added
-				user: 'customer1',
-				fullName: 'Jhon Doe',
-				email: 'customer1@g.com',
-				companyName: 'abc',
-				phoneNumber: '0123456789',
-				product: 'p1_v1 (simple)',
-				quantity: '', //todo:   because of interface, resolve interface issue
-				offerPrice: '70',
-				offerProductQuantity: '20',
-			},
-
-
-			convertedQuote:{
-				title: 'converted quote ' + faker.string.uuid(),  //todo:   more test date need to be unique, apply this
-			}
-	
 
 
 
 
-
-
-
-//todo:  #################################            woocommerce            ##################################################
+//  **********************************          woocommerce            **********************************
 
 //todo:  implement this for checkbox assert await expect( page.locator( '#woocommerce_calc_taxes' ) ).toBeChecked();
 
@@ -762,3 +638,37 @@ const config = {
   Run it like this:
   
   MODE=production npx playwright test
+
+
+
+
+
+
+
+
+
+
+
+
+//todo: replace simple switch with below soln.
+
+  40
+
+Neither, because both are quite verbose for a very simple task. You can just do:
+
+const result = ({
+  1: 'One',
+  2: 'Two',
+  3: 'Three'
+})[opt] ?? 'Default'  // opt can be 1, 2, 3 or anything (default)
+This, of course, also works with strings, a mix of both or without a default case:
+
+const result = ({
+  first: 'One',
+  'sec-ond': 'Two',
+  3: 'Three'
+})[opt]  // opt can be 'first', 'sec-ond' or 3
+Explanation:
+It works by creating an object where the options/cases are the keys and the results are the values. By putting the option into the brackets you access the value of the key that matches the expression via the bracket notation.
+
+This returns undefined if the expression inside the brackets is not a valid key. We can detect this undefined-case by using the nullish coalescing operator ?? and return a default value.

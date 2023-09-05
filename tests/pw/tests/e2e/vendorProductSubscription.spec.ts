@@ -9,7 +9,8 @@ test.describe('Product subscriptions test', () => {
 
 
 	let vendor: VendorProductSubscriptionPage;
-	let vPage: Page;
+	let customer: VendorProductSubscriptionPage;
+	let vPage: Page, cPage: Page;
 	// let apiUtils: ApiUtils;
 
 
@@ -18,27 +19,68 @@ test.describe('Product subscriptions test', () => {
 		vPage = await vendorContext.newPage();
 		vendor = new VendorProductSubscriptionPage(vPage);
 
+		const customerContext = await browser.newContext({ storageState: data.auth.customerAuthFile });
+		cPage = await customerContext.newPage();
+		customer = new VendorProductSubscriptionPage(cPage);
+
 		// apiUtils = new ApiUtils(request);
+		//todo: need subscription product via api
 
 	});
 
 
 	test.afterAll(async () => {
 		await vPage.close();
+		await cPage.close();
 	});
 
 	test('vendor user subscriptions menu page is rendering properly @pro @explo', async ( ) => {
 		await vendor.vendorUserSubscriptionsRenderProperly();
 	});
 
-	test.skip('vendor can filter user subscriptions @pro @explo', async ( ) => {
-		await vendor.filterProductSubscriptions('by-customer', data.customer.username);
-	});
+	// test.skip('vendor can view product subscription details @pro @explo', async ( ) => {
+	// 	await vendor.filterProductSubscriptions('by-customer', data.customer.username);
+	// });
 
-	test.skip('vendor can view user subscription @pro @explo', async ( ) => {
-		await vendor.viewProductSubscription(data.customer.username);
-	});
+	// test.skip('vendor can filter user subscriptions by customer @pro', async ( ) => {
+	// 	await vendor.filterProductSubscriptions('by-customer', data.customer.username);
+	// });
 
-	//todo: add customer can cancel subscription, change address, change payment, renew now
+	// test.skip('vendor can filter user subscriptions by date @pro', async ( ) => {
+	// 	await vendor.filterProductSubscriptions('by-date', data.date.previousDate);
+	// });
+
+	// test.skip('vendor can view user subscription @pro', async ( ) => {
+	// await vendor.viewProductSubscription(data.customer.username);
+	// });
+
+
+	// test('customer can view product subscription details @pro @explo', async ( ) => {
+	// 	await customer.customerViewProductSubscription('2328');
+	// });
+
+	// test('customer can cancel subscription @pro', async ( ) => {
+	// 	await customer.cancelProductSubscription('2328');
+	// });
+
+	// test('customer can reactivate subscription @pro', async ( ) => {
+	// 	await customer.reactivateProductSubscription('2328');
+	// });
+
+	// test('customer can change address of subscription @pro', async ( ) => {
+	// 	await customer.changeAddressOfProductSubscription('2328', data.customer.customerInfo.shipping);
+	// });
+
+	// test('customer can change payment of subscription @pro', async ( ) => {
+	// 	await customer.changePaymentOfProductSubscription('2328');
+	// });
+
+	// test('customer can renew subscription @pro', async ( ) => {
+	// 	await customer.renewProductSubscription('2328');
+	// });
+
+	// test('customer can buy product subscription @pro', async ( ) => {
+	// await customer.buyProductSubscription(data.predefined.simpleSubscription.product1);
+	// });
 
 });

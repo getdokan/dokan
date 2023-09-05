@@ -56,6 +56,7 @@ test.describe('Vendor functionality test', () => {
 		const vendorContext = await browser.newContext({ storageState: data.auth.vendorAuthFile });
 		vPage = await vendorContext.newPage();
 		vendor = new VendorPage(vPage);
+
 		// apiUtils = new ApiUtils(request);
 	});
 
@@ -81,7 +82,5 @@ test.describe('Vendor functionality test', () => {
 		await vendor.visitStore(data.predefined.vendorStores.vendor1);
 	});
 
-
-	//todo: vendor can export statement
 
 });

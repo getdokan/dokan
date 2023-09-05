@@ -52,6 +52,14 @@ export class MyOrdersPage extends CustomerPage {
 	}
 
 
+	// view order note
+	async viewOrderNote(orderNumber: string, orderNote: string){
+		await this.goIfNotThere(data.subUrls.frontend.orderDetails(orderNumber));
+		await this.toBeVisible(selector.customer.cOrderDetails.orderUpdates.orderNote(orderNote));
+
+	}
+
+
 	//  pay pending order
 	async payPendingOrder(orderId: string, paymentMethod = 'bank'){
 		await this.goIfNotThere(data.subUrls.frontend.myOrders);

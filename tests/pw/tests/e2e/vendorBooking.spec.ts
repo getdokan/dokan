@@ -1,8 +1,8 @@
 import { test, Page } from '@playwright/test';
 import { BookingPage } from 'pages/vendorBookingPage';
-// import { ApiUtils } from 'utils/apiUtils';
+import { ApiUtils } from 'utils/apiUtils';
+import { payloads } from 'utils/payloads';
 import { data } from 'utils/testData';
-// import { payloads } from 'utils/payloads';
 
 
 test.describe('Booking Product test', () => {
@@ -10,14 +10,14 @@ test.describe('Booking Product test', () => {
 
 	let admin: BookingPage;
 	let vendor: BookingPage;
-	// let customer: BookingPage;
-	let aPage: Page, vPage: Page;
-	// let apiUtils: ApiUtils;
-	const bookingProductName = data.product.booking.productName();
+	let customer: BookingPage;
+	let aPage: Page, vPage: Page, cPage: Page;
+	let apiUtils: ApiUtils;
+	let bookableProductName: string;
 	const bookingResourceName = data.product.booking.resource.resourceName();
 
 
-	test.beforeAll(async ({ browser }) => {
+	test.beforeAll(async ({ browser, request }) => {
 
 		const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
 		aPage = await adminContext.newPage();
@@ -27,13 +27,14 @@ test.describe('Booking Product test', () => {
 		vPage = await vendorContext.newPage();
 		vendor = new BookingPage(vPage);
 
-		// const customerContext = await browser.newContext({ storageState: data.auth.customerAuthFile });
-		// cPage = await customerContext.newPage();
-		// customer = new BookingPage(cPage);
+		const customerContext = await browser.newContext({ storageState: data.auth.customerAuthFile });
+		cPage = await customerContext.newPage();
+		customer = new BookingPage(cPage);
 
-		await vendor.addBookingProduct({ ...data.product.booking, name: bookingProductName }); //todo: convert with api or db
-		await vendor.addBookingResource(bookingResourceName);
-		// apiUtils = new ApiUtils(request);
+		apiUtils = new ApiUtils(request);
+		[,, bookableProductName] = await apiUtils.createBookableProduct(payloads.createBookableProduct(), payloads.vendorAuth);
+
+		await vendor.addBookingResource(bookingResourceName); //todo: convert with api or db
 
 	});
 
@@ -41,9 +42,8 @@ test.describe('Booking Product test', () => {
 	test.afterAll(async () => {
 		await aPage.close();
 		await vPage.close();
-		// await cPage.close();
+		await cPage.close();
 	});
-
 
 	test('admin can add booking product @pro', async ( ) => {
 		await admin.adminAddBookingProduct(data.product.booking);
@@ -70,7 +70,7 @@ test.describe('Booking Product test', () => {
 	});
 
 	test('vendor can edit booking product @pro', async ( ) => {
-		await vendor.editBookingProduct({ ...data.product.booking, name: bookingProductName });
+		await vendor.editBookingProduct({ ...data.product.booking, name: bookableProductName });
 	});
 
 	test('vendor can filter booking products by date @lite', async ( ) => {
@@ -86,25 +86,24 @@ test.describe('Booking Product test', () => {
 	});
 
 	test('vendor can view booking product @pro', async ( ) => {
-		await vendor.viewBookingProduct(bookingProductName);
+		await vendor.viewBookingProduct(bookableProductName);
 	});
 
 	test('vendor can\'t buy own booking product @pro', async ( ) => {
-		await vendor.cantBuyOwnBookingProduct(bookingProductName);
+		await vendor.cantBuyOwnBookingProduct(bookableProductName);
 	});
 
 	test('vendor can search booking product @pro', async ( ) => {
-		await vendor.searchBookingProduct(bookingProductName);
+		await vendor.searchBookingProduct(bookableProductName);
 	});
 
 	test('vendor can duplicate booking product @pro', async ( ) => {
-		await vendor.duplicateBookingProduct(bookingProductName);
+		await vendor.duplicateBookingProduct(bookableProductName);
 	});
 
 	test('vendor can permanently delete booking product @pro', async ( ) => {
-		const bookingProductName = data.product.booking.productName();
-		await vendor.addBookingProduct({ ...data.product.booking, name: bookingProductName });
-		await vendor.deleteBookingProduct(bookingProductName);
+		const [,, bookableProductName] = await apiUtils.createBookableProduct(payloads.createBookableProduct(), payloads.vendorAuth);
+		await vendor.deleteBookingProduct(bookableProductName);
 	});
 
 	test('vendor can add booking resource @pro', async ( ) => {
@@ -121,6 +120,17 @@ test.describe('Booking Product test', () => {
 		await vendor.deleteBookingResource(bookingResourceName);
 	});
 
-	//todo: add customer tests
+	test('vendor can add booking for guest customer @pro', async ( ) => {
+		await vendor.addBooking(bookableProductName, data.bookings);
+	});
 
+	test('vendor can add booking for existing customer @pro', async ( ) => {
+		await vendor.addBooking(bookableProductName, data.bookings, data.customer.username);
+	});
+
+	test('customer can buy bookable product @pro', async ( ) => {
+		await customer.buyBookableProduct(bookableProductName, data.bookings);
+	});
+
+	//todo: vendor can add booking resource to booking product
 });

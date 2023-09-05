@@ -15,7 +15,7 @@ export const dbData = {
 			storeSupport: 'dokan_store_support_setting',
 			// sellerVerification: 'dokan_verification',
 			// verificationSMSGateways: 'dokan_verification_sms_gateways',
-			// emailVerification: 'dokan_email_verification',
+			emailVerification: 'dokan_email_verification',
 			// socialApi: 'dokan_social_api',
 			shippingStatus: 'dokan_shipping_status_setting',
 			quote: 'dokan_quote_settings',
@@ -94,8 +94,8 @@ export const dbData = {
 
 			// catalog mode
 			catalog_mode_settings: '',
-			catalog_mode_hide_add_to_cart_button: 'off',
-			catalog_mode_hide_product_price: 'off',
+			catalog_mode_hide_add_to_cart_button: 'on',
+			catalog_mode_hide_product_price: 'on',
 		},
 
 		withdrawSettings: {
@@ -424,28 +424,28 @@ export const dbData = {
 				closing_time: '11:59 pm'
 			},
 			delivery_day_wednesday: {
-				delivery_status: '',
+				delivery_status: 'wednesday',
 				opening_time: '12:00 am',
 				closing_time: '11:59 pm'
 			},
 			delivery_day_thursday: {
-				delivery_status: '',
+				delivery_status: 'thursday',
 				opening_time: '12:00 am',
 				closing_time: '11:59 pm'
 			},
 			delivery_day_friday: {
-				delivery_status: '',
+				delivery_status: 'friday',
 				opening_time: '12:00 am',
 				closing_time: '11:59 pm'
 			},
 			delivery_day_saturday: {
-				delivery_status: '',
+				delivery_status: 'saturday',
 				opening_time: '12:00 am',
 				closing_time: '11:59 pm'
 			},
 			delivery_day_sunday: {
-				delivery_status: '',
-				opening_time: '',
+				delivery_status: 'sunday',
+				opening_time: '12:00 am',
 				closing_time: '11:59 pm'
 			}
 		},

@@ -1,5 +1,7 @@
 import { test, Page } from '@playwright/test';
 import { SettingsPage } from 'pages/settingsPage';
+import { dbData } from 'utils/dbData';
+import { dbUtils } from 'utils/dbUtils';
 import { data } from 'utils/testData';
 
 
@@ -64,8 +66,30 @@ test.describe('Settings test', () => {
 		await settingsPage.setDokanPrivacyPolicySettings(data.dokanSettings.privacyPolicy);
 	});
 
+	test('admin can set dokan color settings @pro', async ( ) => {
+		await settingsPage.setDokanColorSettings(data.dokanSettings.colors);
+	});
+
+	test('admin can set dokan live search settings @pro', async ( ) => {
+		await settingsPage.setDokanLiveSearchSettings(data.dokanSettings.liveSearch);
+	});
+
 	test('admin can set dokan store support settings @pro', async ( ) => {
 		await settingsPage.setDokanStoreSupportSettings(data.dokanSettings.storeSupport);
+	});
+
+	test('admin can set dokan email verification settings @pro', async ( ) => {
+		await settingsPage.setDokanEmailVerificationSettings(data.dokanSettings.emailVerification);
+		// reset  settings
+		await dbUtils.setDokanSettings(dbData.dokan.optionName.emailVerification, dbData.dokan.emailVerificationSettings);
+	});
+
+	test('admin can set dokan shipping status settings @pro', async ( ) => {
+		await settingsPage.setDokanShippingStatusSettings(data.dokanSettings.shippingStatus);
+	});
+
+	test('admin can set dokan quote settings @pro', async ( ) => {
+		await settingsPage.setDokanQuoteSettings(data.dokanSettings.quote);
 	});
 
 	test('admin can set dokan rma settings @pro', async ( ) => {
@@ -102,7 +126,7 @@ test.describe('Settings test', () => {
 
 	test('admin can set dokan vendor subscription settings @pro', async ( ) => {
 		await settingsPage.setDokanVendorSubscriptionSettings(data.dokanSettings.vendorSubscription);
-		await settingsPage.disableDokanVendorSubscription(data.dokanSettings.vendorSubscription);
+		await dbUtils.setDokanSettings(dbData.dokan.optionName.vendorSubscription, dbData.dokan.vendorSubscriptionSettings);
 	});
 
 

@@ -10,7 +10,7 @@ test.describe('Store listing functionality test', () => {
 
 	let customer: StoreListingPage;
 	let cPage: Page;
-	let apiUtils: ApiUtils;
+	// let apiUtils: ApiUtils;
 
 
 	test.beforeAll(async ({ browser }) => {
@@ -43,6 +43,26 @@ test.describe('Store listing functionality test', () => {
 
 	test('customer can search store @lite', async ( ) => {
 		await customer.searchStore(data.predefined.vendorStores.vendor1);
+	});
+
+	test('customer can filter stores by category @pro', async ( ) => {
+		await customer.filterStores('by-category', 'Uncategorized');
+	});
+
+	test('customer can filter stores by location @pro', async ( ) => {
+		await customer.filterStores('by-location', 'New York, NY, USA');
+	});
+
+	test.skip('customer can filter stores by ratings @pro', async ( ) => {
+		await customer.filterStores('by-ratings', '1');
+	});
+
+	test('customer can filter featured stores @pro', async ( ) => {
+		await customer.filterStores('featured');
+	});
+
+	test.skip('customer can filter open now stores @pro', async ( ) => {
+		await customer.filterStores('open-now');
 	});
 
 	test('customer can view stores on map @pro', async ( ) => {

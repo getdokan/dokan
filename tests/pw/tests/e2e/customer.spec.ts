@@ -1,4 +1,4 @@
-import { test, Page } from '@playwright/test';
+import { test, Page, BrowserContext } from '@playwright/test';
 import { LoginPage } from 'pages/loginPage';
 import { CustomerPage } from 'pages/customerPage';
 // import { ApiUtils } from 'utils/apiUtils';
@@ -53,10 +53,12 @@ test.describe('Customer functionality test', () => {
 
 	let customer: CustomerPage;
 	let cPage: Page;
+	let customerContext: BrowserContext;
 	// let apiUtils: ApiUtils;
 
+
 	test.beforeAll(async ({ browser,  }) => {
-		const customerContext = await browser.newContext({ storageState: data.auth.customerAuthFile });
+		customerContext = await browser.newContext({ storageState: data.auth.customerAuthFile });
 		cPage = await customerContext.newPage();
 		customer = new CustomerPage(cPage);
 		// apiUtils = new ApiUtils(request);
@@ -84,21 +86,19 @@ test.describe('Customer functionality test', () => {
 		await customer.productIsOnCart(productName);
 	});
 
-	test('customer can apply coupon @pro', async ( ) => {
-		await customer.addProductToCart(data.predefined.simpleProduct.product1.name, 'single-product');
-		await customer.applyCoupon(data.predefined.coupon.couponCode);
-	});
-
 	test('customer can buy product @lite', async ( ) => {
 		await customer.addProductToCart(data.predefined.simpleProduct.product1.name, 'single-product');
 		await customer.placeOrder();
 	});
 
-	//customer can buy product with applied coupon
+	test('customer can buy multi vendor products @lite', async ( ) => {
+		await customer.addProductToCart(data.predefined.simpleProduct.product1.name, 'single-product');
+		await customer.addProductToCart(data.predefined.vendor2.simpleProduct.product1.name, 'single-product', false);
+		await customer.placeOrder();
+	});
 
 	// test.skip('customer can download downloadables @lite', async ( ) => {
 	// pre: complete download product
 	// });
-
 
 });

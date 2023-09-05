@@ -10,7 +10,7 @@ export const helpers = {
 	replaceAndCapitalizeEachWord: (str: string) => str.replace('_', ' ').replace(/(^\w{1})|(\s+\w{1})/g, (letter: string) => letter.toUpperCase()),
 
 	// capitalize
-	capitalize: (word: string) => word[0].toUpperCase() + word.substring(1).toLowerCase(),
+	capitalize: (word: string) => word[0]?.toUpperCase() + word.substring(1).toLowerCase(),
 
 	// returns a random number between min (inclusive) and max (exclusive)
 	getRandomArbitrary: (min: number, max: number) => Math.random() * (max - min) + min,
@@ -49,39 +49,61 @@ export const helpers = {
 	stringToRegex:(str: string): RegExp => new RegExp( str), //todo: need to update, multiple cases unhandled
 
 	// convert string to price format
-	price: (str: string): number => parseFloat(str.replace(/[^\d\-.,]/g, '').replace(/,/g, '.').replace(/\.(?=.*\.)/g, '')),
+	price: (str: string): number => parseFloat(str.replace(/[^\d\-.,\\s]/g, '').replace(/,/g, '.').replace(/\.(?=.*\.)/g, '')),
+
+	// price as string
+	priceString: (num: number, choice: string): string => choice === 'US' ? Number(num).toLocaleString('es-US' ) : Number(num).toLocaleString('es-ES' ),
 
 	// remove dollar sign
-	removeDollarSign: (str: string): string => str.replace('$', ''),
+	removeCurrencySign: (str: string): string => str.replace(/[^\d\-.,\\s]/g, ''),
+
+	// dateFormat //todo: remove all datetime , and update date to return date as required formate // also method to return as site date format
+	dateFormatFYJ: (date: string) => new Date(date).toLocaleDateString('en-CA', { year: 'numeric', month: 'long', day: 'numeric' }),
 
 	// current year
 	currentYear: new Date().getFullYear(),
 
-	// current day
+	// current day [2023-06-02]
 	currentDate: new Date().toLocaleDateString('en-CA'),
 
-	// current date-time [2023-06-02, 00:33]
-	currentDateTime: new Date().toLocaleString('en-CA', { year: 'numeric', month: 'numeric', day: 'numeric', hourCycle: 'h23', hour: 'numeric', minute: 'numeric', }),
+	// current day [August 22, 2023]
+	currentDateFJY: new Date().toLocaleDateString('en-CA', { year: 'numeric', month: 'long', day: 'numeric' }),
+
+	// current date-time [2023-06-02 00:33]
+	currentDateTime: new Date().toLocaleString('en-CA', { year: 'numeric', month: 'numeric', day: 'numeric', hourCycle: 'h23', hour: 'numeric', minute: 'numeric', }).replace(',', ''),
 
 	// current date-time [2023-06-02 00:46:11]
-	currentDateTime1: new Date().toLocaleString('en-CA', { year: 'numeric', month: 'numeric', day: 'numeric', hourCycle: 'h23', hour: 'numeric', minute: 'numeric', second: 'numeric', }).replace(',', ''),
+	currentDateTimeFullFormat: new Date().toLocaleString('en-CA', { year: 'numeric', month: 'numeric', day: 'numeric', hourCycle: 'h23', hour: 'numeric', minute: 'numeric', second: 'numeric', }).replace(',', ''),
 
 	currentDateTime2: () =>  new Date().toLocaleString('en-CA', { year: 'numeric', month: 'numeric', day: 'numeric', hourCycle: 'h23', hour: 'numeric', minute: 'numeric', second: 'numeric', }).replace(',', ''),
 
 
 	// add two input days
-	addDays(date: string | number | Date, days: number) {
-		const result = new Date(date);
+	addDays(date: string | number | Date | null, days: number, format: string): string  {
+		const result = date ?  new Date(date) : new Date();
 		result.setDate(result.getDate() + days);
-		return result.toLocaleDateString('en-CA', { year: 'numeric', month: 'numeric', day: 'numeric', hourCycle: 'h23', hour: 'numeric', minute: 'numeric' });
+
+		if (format === 'full'){
+			// [2023-06-02, 00:33]
+			return result.toLocaleDateString('en-CA', { year: 'numeric', month: 'numeric', day: 'numeric', hourCycle: 'h23', hour: 'numeric', minute: 'numeric' }).replace(/,/g, '');
+		} else if (format === 'complete'){
+			//[2023-06-02 00:46:11]
+			return result.toLocaleDateString('en-CA', { year: 'numeric', month: 'numeric', day: 'numeric', hourCycle: 'h23', hour: 'numeric', minute: 'numeric', second: 'numeric' }).replace(/,/g, '');
+		} else {
+			// [2023-06-02]
+			return result.toLocaleDateString('en-CA');
+		}
+
 	},
 
-	// add two days
-	addDays1(date: string | number | Date, days: number) {
-		const result = new Date(date);
+
+	// future date
+	futureDate(date: string | number | Date | null, days: number): Date{
+		const result = date ?  new Date(date) : new Date();
 		result.setDate(result.getDate() + days);
-		return result.toLocaleDateString('en-CA');
+		return result;
 	},
+
 
 	// round to two decimal
 	roundToTwo(num: string | number) {
@@ -200,13 +222,23 @@ export const helpers = {
 		return fs.readFileSync(filePath, 'utf8');
 	},
 
+	readJson(filePath: string){
+		return JSON.parse(this.readFile(filePath));
+	},
+
 	// write file
 	writeFile(filePath: string, content: string) {
 		fs.writeFileSync(filePath, content,  { encoding: 'utf8' } );
-		// fs.writeFile(filePath, content, (err) => {
-		// 	if (err) throw err;
-		// });
 	},
+
+	// rename file
+	renameFile(newFilePath: string, oldFilePath: string){
+		fs.renameSync(newFilePath, oldFilePath);
+	},
+
+	overrideWpEnv(){
+		this.renameFile( '.wp-env.override.json', '.wp-env.override');
+	}
 
 
 };

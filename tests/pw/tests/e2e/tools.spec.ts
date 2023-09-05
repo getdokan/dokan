@@ -1,5 +1,7 @@
 import { test, Page } from '@playwright/test';
 import { ToolsPage } from 'pages/toolsPage';
+import { ApiUtils } from 'utils/apiUtils';
+import { payloads } from 'utils/payloads';
 import { data } from 'utils/testData';
 
 
@@ -10,12 +12,15 @@ test.describe('Tools test', () => {
 
 	let admin: ToolsPage;
 	let aPage: Page;
+	let apiUtils: ApiUtils;
 
 
-	test.beforeAll(async ({ browser }) => {
+	test.beforeAll(async ({ browser, request }) => {
 		const context = await browser.newContext({});
 		aPage = await context.newPage();
 		admin = new ToolsPage(aPage);
+
+		apiUtils = new ApiUtils(request);
 	});
 
 
@@ -29,11 +34,6 @@ test.describe('Tools test', () => {
 
 	test('admin can perform dokan page Installation @pro', async ( ) => {
 		await admin.dokanPageInstallation();
-	});
-
-	test('admin can regenerate order sync table @pro', async ( ) => {
-		test.skip(true, 'feature is deleted from dokan');
-		await admin.regenerateOrderSyncTable();
 	});
 
 	test('admin can check for duplicate orders @pro', async ( ) => {
@@ -52,9 +52,10 @@ test.describe('Tools test', () => {
 	// 	await admin.importDummyData();
 	// });
 
-	// test.skip('admin can clear dummy data @pro', async ( ) => {
-	// 	await admin.clearDummyData();
-	// });
+	test('admin can clear dummy data @pro', async ( ) => {
+		await apiUtils.importDummyData(payloads.dummyData, payloads.adminAuth);
+		await admin.clearDummyData();
+	});
 
 	test('admin can test distance matrix API @pro', async ( ) => {
 		await admin.testDistanceMatrixApi(data.tools.distanceMatrixApi);
