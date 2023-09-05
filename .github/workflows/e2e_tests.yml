@@ -86,7 +86,7 @@ jobs:
       - name: Install dependencies 
         run: |
           cd tests/pw 
-          npm ci --legacy-peer-deps
+          npm ci 
 
 
       - name: Start WordPress Env
