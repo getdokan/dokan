@@ -51,7 +51,7 @@ setup.describe('authenticate users & set permalink', () => {
 		await loginPage.login(data.vendor, data.auth.vendorAuthFile);
 	});
 
-	setup('Dokan Pro enabled or not @lite', async ({ request }) => {
+	setup('Dokan Pro enabled or not @pro', async ({ request }) => {
 		const apiUtils = new ApiUtils(request);
 		const res = await apiUtils.pluginsActiveOrNot(data.plugin.dokanPro, payloads.adminAuth);
 		process.env.DOKAN_PRO = String(res);

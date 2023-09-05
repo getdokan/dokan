@@ -26,8 +26,7 @@ setup.describe('setup site & woocommerce & user settings', () => {
 	setup('check active plugins @lite', async () => {
 		setup.skip(!process.env.CI, 'skip plugin check on local');
 		const activePlugins = (await apiUtils.getAllPlugins({ status:'active' })).map((a: { plugin: string }) => (a.plugin).split('/')[1]);
-		expect(activePlugins).toEqual(expect.arrayContaining(data.plugin.plugins));
-		// expect(activePlugins.every((plugin: string) => data.plugin.plugins.includes(plugin))).toBeTruthy();
+		DOKAN_PRO ? expect(activePlugins).toEqual(expect.arrayContaining(data.plugin.plugins)) : expect(activePlugins).toEqual(expect.arrayContaining(data.plugin.pluginsLite)) ; 
 	});
 
 	setup('check active dokan modules @pro', async () => {
