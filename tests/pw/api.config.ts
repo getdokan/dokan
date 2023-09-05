@@ -55,7 +55,7 @@ export default defineConfig({
 		{
 			name: 'api_tests',
 			testMatch: /.*\.spec\.ts/,
-			dependencies: process.env.SETUP ? ['api_setup'] : [],   /* whether to run setup tests before running actual tests */
+			dependencies: process.env.SETUP ? [] : ['api_setup'],   /* whether not to run setup tests before running actual tests */
 		},
 
 	],

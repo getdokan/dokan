@@ -96,7 +96,7 @@ export default defineConfig({
 		// 	...apiSuiteConfig,
 		// 	name: 'api_tests',
 		// 	testMatch: /.*\.spec\.ts/,
-		// 	dependencies: process.env.SETUP ? ['api_setup'] : [],    /* whether to run setup tests before running actual tests */
+		// 	dependencies: process.env.SETUP ? ['api_setup] : [],   /* whether not to run setup tests before running actual tests */
 		// },
 
 		// // E2e project
@@ -114,7 +114,7 @@ export default defineConfig({
 		// 	...e2eSuiteConfig,
 		// 	name: 'e2e_tests',
 		// 	testMatch: /.*\.spec\.ts/,
-		// 	dependencies: process.env.SETUP ? ['e2e_setup'] : [],    /* whether to run setup tests before running actual tests */
+		// 	dependencies: process.env.SETUP ? ['e2e_setup'] : [],    /* whether not to run setup tests before running actual tests */
 		// },
 
 		// // local site setup project
