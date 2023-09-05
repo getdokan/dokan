@@ -34,8 +34,6 @@
 #   GMAP : ${{secrets.GMAP}}
 #   BASE_URL: http://localhost:9999
 #   CI: true
-#   SETUP: true
-#   SLOWMO: 0
 #   FORCE_COLOR: 1
 #   DB_HOST_NAME: localhost
 #   DB_USER_NAME: root

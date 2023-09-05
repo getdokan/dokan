@@ -32,8 +32,6 @@ env:
   GMAP : ${{secrets.GMAP}}
   BASE_URL: http://localhost:9999
   CI: true
-  SETUP: true
-  SLOWMO: 0
   FORCE_COLOR: 1
   DB_HOST_NAME: localhost
   DB_USER_NAME: root
@@ -65,6 +63,11 @@ jobs:
           cache: "npm"
 
 
+      - name: Install latest npm
+        run: |
+          npm install -g npm@8.19.4
+
+
       - name: Clone dokan-pro
         uses: actions/checkout@v3
         with:
@@ -74,9 +77,7 @@ jobs:
           ref: "develop"
 
 
-      - name: Install latest npm
-        run: |
-          npm install -g npm@8.19.4
+
 
 
       - name: Composer install and build (Dokan-lite)
