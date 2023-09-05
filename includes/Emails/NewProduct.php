@@ -33,8 +33,7 @@ class NewProduct extends WC_Email {
             '{seller_url}'    => '',
             '{category}'      => '',
             '{product_link}'  => '',
-            '{site_name}'     => '',
-            '{site_url}'      => '',
+            '{site_name}'     => $this->get_from_name(),
         ];
 
         // Triggers for this email
@@ -103,8 +102,6 @@ class NewProduct extends WC_Email {
             $this->placeholders['{seller_url}']    = dokan_get_store_url( $seller->ID );
             $this->placeholders['{category}']      = $category_name;
             $this->placeholders['{product_link}']  = admin_url( 'post.php?action=edit&post=' . $product_id );
-            $this->placeholders['{site_name}']     = $this->get_from_name();
-            $this->placeholders['{site_url}']      = site_url();
         }
 
         $this->send( $this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );

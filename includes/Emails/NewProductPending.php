@@ -35,7 +35,6 @@ class NewProductPending extends WC_Email {
             '{category}'      => '',
             '{product_link}'  => '',
             '{site_name}'     => $this->get_from_name(),
-            '{site_url}'      => site_url(),
         ];
 
         // Triggers for this email
@@ -95,8 +94,6 @@ class NewProductPending extends WC_Email {
             $this->placeholders['{seller_url}']    = dokan_get_store_url( $seller->ID );
             $this->placeholders['{category}']      = $category_name;
             $this->placeholders['{product_link}']  = admin_url( 'post.php?action=edit&post=' . $product_id );
-            $this->placeholders['{site_name}']     = $this->get_from_name();
-            $this->placeholders['{site_url}']      = site_url();
         }
 
         $this->send( $this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );

@@ -30,7 +30,6 @@ class NewSeller extends WC_Email {
             '{store_name}'  => '',
             '{seller_edit}' => '',
             '{site_name}'   => $this->get_from_name(),
-            '{site_url}'    => site_url(),
         ];
 
         // Triggers for this email
@@ -82,14 +81,12 @@ class NewSeller extends WC_Email {
         $this->placeholders['store_url']   = dokan_get_store_url( $seller->ID );
         $this->placeholders['store_name']  = $shop_info['store_name'];
         $this->placeholders['seller_edit'] = admin_url( 'user-edit.php?user_id=' . $user_id );
-        $this->placeholders['site_name']   = $this->get_from_name();
-        $this->placeholders['site_url']    = site_url();
 
         $this->send( $this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
         $this->restore_locale();
     }
 
-        /**
+    /**
      * Get content html.
      *
      * @access public
@@ -120,7 +117,7 @@ class NewSeller extends WC_Email {
     public function get_content_plain() {
             ob_start();
                 wc_get_template(
-                    $this->template_html, array(
+                    $this->template_plain, array(
                         'seller'             => $this->object,
                         'email_heading'      => $this->get_heading(),
                         'additional_content' => $this->get_additional_content(),

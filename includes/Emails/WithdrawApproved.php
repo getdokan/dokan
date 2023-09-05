@@ -33,7 +33,6 @@ class WithdrawApproved extends WC_Email {
             '{profile_url}'   => '',
             '{withdraw_page}' => '',
             '{site_name}'     => $this->get_from_name(),
-            '{site_url}'      => site_url(),
         ];
 
         // Triggers for this email
@@ -85,8 +84,6 @@ class WithdrawApproved extends WC_Email {
         $this->placeholders['{method}']        = dokan_withdraw_get_method_title( $withdraw->get_method() );
         $this->placeholders['{profile_url}']   = admin_url( 'user-edit.php?user_id=' . $seller->ID );
         $this->placeholders['{withdraw_page}'] = admin_url( 'admin.php?page=dokan-withdraw' );
-        $this->placeholders['{site_name}']     = $this->get_from_name();
-        $this->placeholders['{site_url}']      = site_url();
 
         $this->send( $seller->user_email, $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
         $this->restore_locale();
@@ -124,7 +121,7 @@ class WithdrawApproved extends WC_Email {
     public function get_content_plain() {
         ob_start();
         wc_get_template(
-            $this->template_html, [
+            $this->template_plain, [
                 'seller'             => $this->object,
                 'email_heading'      => $this->get_heading(),
                 'additional_content' => $this->get_additional_content(),

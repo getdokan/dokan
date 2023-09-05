@@ -33,7 +33,6 @@ class WithdrawCancelled extends WC_Email {
             '{profile_url}'   => '',
             '{withdraw_page}' => admin_url( 'admin.php?page=dokan-withdraw' ),
             '{site_name}'     => $this->get_from_name(),
-            '{site_url}'      => site_url(),
             '{note}'          => '',
         ];
 
@@ -85,9 +84,6 @@ class WithdrawCancelled extends WC_Email {
         $this->placeholders['{amount}']        = wc_price( $withdraw->get_amount() );
         $this->placeholders['{method}']        = dokan_withdraw_get_method_title( $withdraw->get_method() );
         $this->placeholders['{profile_url}']   = admin_url( 'user-edit.php?user_id=' . $seller->ID );
-        $this->placeholders['{withdraw_page}'] = admin_url( 'admin.php?page=dokan-withdraw' );
-        $this->placeholders['{site_name}']     = $this->get_from_name();
-        $this->placeholders['{site_url}']      = site_url();
         $this->placeholders['{note}']          = $withdraw->get_note();
 
         $this->send( $seller->user_email, $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
@@ -125,7 +121,7 @@ class WithdrawCancelled extends WC_Email {
     public function get_content_plain() {
         ob_start();
         wc_get_template(
-            $this->template_html, array(
+            $this->template_plain, array(
                 'seller'             => $this->object,
                 'email_heading'      => $this->get_heading(),
                 'additional_content' => $this->get_additional_content(),

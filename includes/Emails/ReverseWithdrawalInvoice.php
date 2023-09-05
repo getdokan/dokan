@@ -60,8 +60,6 @@ class ReverseWithdrawalInvoice extends WC_Email {
 
         // Call parent constructor.
         parent::__construct();
-
-        $this->manual = false; // this email will not be triggered manually, as it will be automatically triggered when async action processed.
     }
 
     /**
@@ -184,7 +182,7 @@ class ReverseWithdrawalInvoice extends WC_Email {
      */
     public function get_content_plain() {
         return wc_get_template_html(
-            $this->template_html,
+            $this->template_plain,
             [
                 'due_status'         => $this->due_status,
                 'seller_info'        => $this->seller_info,

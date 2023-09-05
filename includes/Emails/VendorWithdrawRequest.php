@@ -33,7 +33,6 @@ class VendorWithdrawRequest extends WC_Email {
             '{profile_url}'   => '',
             '{withdraw_page}' => '',
             '{site_name}'     => $this->get_from_name(),
-            '{site_url}'      => site_url(),
         ];
 
         // Triggers for this email
@@ -87,8 +86,6 @@ class VendorWithdrawRequest extends WC_Email {
         $this->placeholders['{method}']        = dokan_withdraw_get_method_title( $method );
         $this->placeholders['{profile_url}']   = admin_url( 'user-edit.php?user_id=' . $seller->ID );
         $this->placeholders['{withdraw_page}'] = admin_url( 'admin.php?page=dokan#/withdraw?status=pending' );
-        $this->placeholders['{site_name}']     = $this->get_from_name();
-        $this->placeholders['{site_url}']      = site_url();
 
         $this->send( $this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
         $this->restore_locale();

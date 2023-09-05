@@ -33,7 +33,6 @@ class ProductPublished extends WC_Email {
             '{product_url}'       => '',
             '{product_edit_link}' => '',
             '{site_name}'         => $this->get_from_name(),
-            '{site_url}'          => site_url(),
         ];
 
         // Triggers for this email
@@ -90,8 +89,6 @@ class ProductPublished extends WC_Email {
         $this->placeholders['{seller_name}']       = $seller->display_name;
         $this->placeholders['{product_url}']       = get_permalink( $post->ID );
         $this->placeholders['{product_edit_link}'] = dokan_edit_product_url( $post->ID );
-        $this->placeholders['{site_name}']         = $this->get_from_name();
-        $this->placeholders['{site_url}']          = site_url();
 
         $this->send( $seller->user_email, $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
         $this->restore_locale();

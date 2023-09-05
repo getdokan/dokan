@@ -28,7 +28,6 @@ class VendorCompletedOrder extends WC_Email {
         $this->template_plain = 'emails/plain/vendor-completed-order.php';
         $this->template_base  = DOKAN_DIR . '/templates/';
         $this->placeholders   = array(
-            '{site_title}'   => $this->get_blogname(),
             '{order_date}'   => '',
             '{order_number}' => '',
         );

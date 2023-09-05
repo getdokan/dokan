@@ -39,7 +39,6 @@ class ContactSeller extends WC_Email {
             '{customer_email}' => '',
             '{message}'        => '',
             '{site_name}'      => $this->get_from_name(),
-            '{site_url}'       => site_url(),
         ];
 
         // Triggers for this email
@@ -89,9 +88,6 @@ class ContactSeller extends WC_Email {
         $this->placeholders['{customer_name}']  = $contact_name;
         $this->placeholders['{customer_email}'] = $contact_email;
         $this->placeholders['{message}']        = $contact_message;
-        $this->placeholders['{site_name}']      = $this->get_from_name();
-        $this->placeholders['{site_url}']       = site_url();
-
         $this->send( $seller_email, $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
         $this->restore_locale();
     }
