@@ -274,7 +274,7 @@ class SetupWizard {
         <?php
         $logo_url = ( ! empty( $this->custom_logo ) ) ? $this->custom_logo : plugins_url( 'assets/images/dokan-logo.png', DOKAN_FILE );
         ?>
-        <h1 id="wc-logo"><a href="https://wedevs.com/dokan/"><img src="<?php echo esc_url( $logo_url ); ?>" alt="Dokan Logo" width="135" height="auto"/></a></h1>
+        <h1 id="wc-logo"><a href="https://dokan.co/wordpress/"><img src="<?php echo esc_url( $logo_url ); ?>" alt="Dokan Logo" width="135" height="auto"/></a></h1>
         <?php
     }
 
