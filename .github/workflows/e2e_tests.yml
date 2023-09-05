@@ -66,9 +66,9 @@ jobs:
           cache: "npm"
 
 
-      - name: Install latest npm
-        run: |
-          npm install -g npm@8.19.4
+      # - name: Install latest npm
+      #   run: |
+      #     npm install -g npm@8.19.4
 
 
       - name: Composer install and build (Dokan-lite)
