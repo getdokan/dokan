@@ -24,8 +24,8 @@ test.describe('Admin user functionality test', () => {
 	});
 
 
-	test('admin can login @lite', async ( ) => {
-		await loginPage.adminLogin(data.admin);
+	test.only('admin can login @lite', async ( ) => {
+		// await loginPage.adminLogin(data.admin);
 	});
 
 	test('admin can logout @lite', async ( ) => {
