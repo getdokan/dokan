@@ -52,7 +52,7 @@ test.describe('test site & woocommerce & user settings', () => {
 	});
 
 	test('set tax rate @lite', async () => {
-		await apiUtils.testTaxRate(payloads.enableTaxRate, payloads.createTaxRate);
+		await apiUtils.setUpTaxRate(payloads.enableTaxRate, payloads.createTaxRate);
 	});
 
 	test('set shipping methods @lite', async () => {
@@ -183,7 +183,7 @@ test.describe('test  user settings', () => {
 });
 
 
-test.describe('test dokan settings', () => {
+test.describe('setup dokan settings', () => {
 
 	let apiUtils: ApiUtils;
 
@@ -278,7 +278,7 @@ test.describe('test dokan settings', () => {
 });
 
 
-test.describe('test dokan settings e2e', () => {
+test.describe('setup dokan settings e2e', () => {
 
 
 	let productAdvertisingPage: ProductAdvertisingPage;
