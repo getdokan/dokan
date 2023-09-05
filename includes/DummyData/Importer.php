@@ -268,16 +268,17 @@ class Importer extends \WC_Product_Importer {
      * @return string
      */
     public function clear_all_dummy_data() {
-        $all_products = get_posts(
-            [
-                'post_type'   => 'product',
-                'numberposts' => - 1,
-                'post_status' => 'any',
-                'fields'      => 'ids',
-                'meta_key'    => 'dokan_dummy_data',
-                'meta_value'  => '1'
-            ]
-        );
+        $args = [
+            'post_type'      => 'product',
+            'posts_per_page' => - 1,
+            'post_status'    => 'any',
+            'fields'         => 'ids',
+            'meta_key'       => 'dokan_dummy_data',
+            'meta_value'     => '1'
+        ];
+
+        $query = new WP_Query( $args );
+        $all_products = $query->posts;
 
         foreach ( $all_products as $product_id ) {
             wp_delete_post( $product_id, true );
