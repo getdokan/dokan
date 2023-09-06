@@ -36,7 +36,8 @@ export class StoresPage extends AdminPage {
 		await this.toBeVisible(selector.admin.dokan.vendors.search);
 
 		// vendor table elements are visible
-		await this.multipleElementVisible(selector.admin.dokan.vendors.table);
+		const { categoryColumn, ...table } = selector.admin.dokan.vendors.table
+		await this.multipleElementVisible(table);
 	}
 
 
@@ -100,11 +101,13 @@ export class StoresPage extends AdminPage {
 		await this.click(selector.admin.dokan.vendors.newVendor.generatePassword);
 		await this.clearAndType(selector.admin.dokan.vendors.newVendor.password, vendorInfo.password);
 		await this.typeAndWaitForResponse(data.subUrls.api.dokan.stores, selector.admin.dokan.vendors.newVendor.username, firstName);
-		await this.type(selector.admin.dokan.vendors.newVendor.companyName, vendorInfo.companyName);
-		await this.type(selector.admin.dokan.vendors.newVendor.companyIdEuidNumber, vendorInfo.companyId);
-		await this.type(selector.admin.dokan.vendors.newVendor.vatOrTaxNumber, vendorInfo.vatNumber);
-		await this.type(selector.admin.dokan.vendors.newVendor.nameOfBank, vendorInfo.bankName);
-		await this.type(selector.admin.dokan.vendors.newVendor.bankIban, vendorInfo.bankIban);
+		if (DOKAN_PRO){
+			await this.type(selector.admin.dokan.vendors.newVendor.companyName, vendorInfo.companyName);
+			await this.type(selector.admin.dokan.vendors.newVendor.companyIdEuidNumber, vendorInfo.companyId);
+			await this.type(selector.admin.dokan.vendors.newVendor.vatOrTaxNumber, vendorInfo.vatNumber);
+			await this.type(selector.admin.dokan.vendors.newVendor.nameOfBank, vendorInfo.bankName);
+			await this.type(selector.admin.dokan.vendors.newVendor.bankIban, vendorInfo.bankIban);
+		}
 		await this.click(selector.admin.dokan.vendors.newVendor.next);
 		// address
 		await this.type(selector.admin.dokan.vendors.newVendor.street1, vendorInfo.street1);

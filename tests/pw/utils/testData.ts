@@ -963,6 +963,7 @@ export const data = {
 
 			openingClosingTime: {
 				days: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'],
+				statusLite: 'open', // open, close
 				openingTime: '12:00 am',
 				closingTime: '11:30 pm',
 				storeOpenNotice: 'Store is open',

@@ -37,8 +37,9 @@ export class VendorSettingsPage extends VendorPage {
 
 		// store address location elements are visible
 		
-		const { cancelSaveLocation, deleteSaveLocation,  ...address } = selector.vendor.vStoreSettings.address;
+		const { saveLocation, cancelSaveLocation, deleteSaveLocation,  ...address } = selector.vendor.vStoreSettings.address;
 		await this.multipleElementVisible(address);
+		DOKAN_PRO && await this.toBeVisible(saveLocation);
 
 		// company info elements are visible
 		DOKAN_PRO && await this.multipleElementVisible(selector.vendor.vStoreSettings.companyInfo);
@@ -299,11 +300,19 @@ export class VendorSettingsPage extends VendorPage {
 		if (openCloseTimeEnabled) {
 			await this.check(selector.vendor.vStoreSettings.storeOpeningClosingTime);
 			for (const day of openingClosingTime.days) {
+				if(DOKAN_PRO){
 				await this.enableSwitcherDeliveryTime(selector.vendor.vStoreSettings.openingClosingTimeSwitch(day));
 				await this.setAttributeValue(selector.vendor.vStoreSettings.openingTime(day), 'value', openingClosingTime.openingTime);
 				await this.setAttributeValue(selector.vendor.vStoreSettings.openingTimeHiddenInput(day), 'value', openingClosingTime.openingTime);
 				await this.setAttributeValue(selector.vendor.vStoreSettings.closingTime(day), 'value', openingClosingTime.closingTime);
 				await this.setAttributeValue(selector.vendor.vStoreSettings.closingTimeHiddenInput(day), 'value', openingClosingTime.closingTime);
+				} else {
+					// lite
+					await this.selectByValue(selector.vendor.vStoreSettings.lite.openingClosingTimeEnable(day), openingClosingTime.statusLite)
+					await this.clearAndType(selector.vendor.vStoreSettings.lite.openingTimeInput(day), openingClosingTime.openingTime)
+					await this.clearAndType(selector.vendor.vStoreSettings.lite.closingTimeInput(day), openingClosingTime.closingTime)
+		
+				}
 			}
 			await this.clearAndType(selector.vendor.vStoreSettings.storeOpenNotice, openingClosingTime.storeOpenNotice);
 			await this.clearAndType(selector.vendor.vStoreSettings.storeCloseNotice, openingClosingTime.storeCloseNotice);

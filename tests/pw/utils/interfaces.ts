@@ -676,6 +676,7 @@ export interface vendor {
 
 		openingClosingTime: {
 			days: string[];
+			statusLite: string;
 			openingTime: string;
 			closingTime: string;
 			storeOpenNotice: string;

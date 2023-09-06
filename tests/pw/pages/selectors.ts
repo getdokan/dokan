@@ -4257,7 +4257,8 @@ export const selector = {
 			// balance
 			balance: {
 				balanceDiv: '//strong[normalize-space()="Balance"]/../..',
-				balance: '//p[contains(text(),"Your Balance:")]//a//span[@class="woocommerce-Price-amount amount"]',
+				balancePro: '//p[contains(text(),"Your Balance:")]//a//span[@class="woocommerce-Price-amount amount"]',
+				balanceLite: '//p[contains(text(),"Your Balance:")]//strong[1]',
 				minimumWithdrawAmount: '//p[contains(text(),"Your Balance:")]//strong[2]',
 			},
 
@@ -5545,8 +5546,14 @@ export const selector = {
 
 			// Store Opening Closing Time
 			storeOpeningClosingTime: '#dokan-store-time-enable',
-			// chooseBusinessDays: "//label[contains(text(),'Choose Business Days')]/..//input[contains(@class,'select2-search__field')]",
-			// businessDaysTab: (day: string) => `//ul[@class='tabs']//li[@rel='store-tab-${day}']`,
+
+			// lite locators
+			lite:{
+				openingClosingTimeEnable: (day: string) => `select[name="${day}[working_status]"]`,
+				openingTimeInput: (day: string) => `input#opening-time\\[${day}\\]`,
+				closingTimeInput: (day: string) => `input#closing-time\\[${day}\\]`,
+			},
+
 			// openingTime: (day: string) => `#opening-time-${day}`,
 			// closingTime: (day: string) => `#closing-time-${day}`,
 			// addNewRow: (day: string) => `#store-tab-${day} .added-store-opening-time > .fa`,

@@ -5,6 +5,8 @@ import { data } from 'utils/testData';
 import { payloads } from 'utils/payloads';
 
 
+const { PRODUCT_ID, } = process.env;
+
 test.describe('Withdraw test', () => {
 
 	let admin: WithdrawsPage;
@@ -24,9 +26,12 @@ test.describe('Withdraw test', () => {
 		vPage = await vendorContext.newPage();
 		vendor = new WithdrawsPage(vPage);
 
+		console.log('mkmkmkmk', PRODUCT_ID);
+		console.log('mkmkmkmk', typeof(PRODUCT_ID));
+		
 		apiUtils = new ApiUtils(request);
 		[currentBalance, minimumWithdrawLimit] = await apiUtils.getMinimumWithdrawLimit( payloads.vendorAuth);
-		await apiUtils.createOrderWithStatus(payloads.createProduct(), { ...payloads.createOrder, line_items: [{ quantity: 10 }] }, 'wc-completed', payloads.vendorAuth);
+		await apiUtils.createOrderWithStatus(PRODUCT_ID, { ...payloads.createOrder, line_items: [{ quantity: 10 }] }, 'wc-completed', payloads.vendorAuth);
 		await apiUtils.createWithdraw({ ...payloads.createWithdraw, amount: minimumWithdrawLimit }, payloads.vendorAuth);
 	});
 
