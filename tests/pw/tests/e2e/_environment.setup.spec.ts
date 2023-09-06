@@ -1,12 +1,13 @@
 import { test as setup , expect, Page } from '@playwright/test';
 import { ProductAdvertisingPage } from 'pages/productAdvertisingPage';
 import { ReverseWithdrawsPage } from 'pages/reverseWithdrawsPage';
+import { VendorSettingsPage } from 'pages/vendorSettingsPage';
 import { ApiUtils } from 'utils/apiUtils';
 import { payloads } from 'utils/payloads';
 import { dbUtils } from 'utils/dbUtils';
 import { dbData } from 'utils/dbData';
 import { data } from 'utils/testData';
-import { VendorSettingsPage } from 'pages/vendorSettingsPage';
+import { helpers } from 'utils/helpers';
 
 
 const { CUSTOMER_ID, DOKAN_PRO, HPOS } = process.env;
@@ -141,6 +142,7 @@ setup.describe('setup user settings', () => {
 		const product = { ...payloads.createProduct(), name: data.predefined.simpleProduct.product1.name, };
 		const [, productId,] = await apiUtils.createProduct(product, payloads.vendorAuth);
 		process.env.PRODUCT_ID = productId;
+		helpers.appendEnv('PRODUCT_ID=' + productId);
 		console.log('pp',process.env.PRODUCT_ID);
 		
 	});
@@ -154,6 +156,7 @@ setup.describe('setup user settings', () => {
 		const product = { ...payloads.createProduct(), name: data.predefined.vendor2.simpleProduct.product1.name, };
 		const [, productId,] = await apiUtils.createProduct(product, payloads.vendor2Auth);
 		process.env.V2_PRODUCT_ID = productId;
+		helpers.appendEnv('V2_PRODUCT_ID=' + productId);
 	});
 
 	setup('add vendor coupon @pro', async () => {

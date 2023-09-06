@@ -231,13 +231,20 @@ export const helpers = {
 		fs.writeFileSync(filePath, content,  { encoding: 'utf8' } );
 	},
 
+	// append file
+	appendFile(filePath: string, content: string) {
+		fs.appendFileSync(filePath, content,  { encoding: 'utf8' } );
+	},
+
 	// rename file
 	renameFile(newFilePath: string, oldFilePath: string){
 		fs.renameSync(newFilePath, oldFilePath);
 	},
 
-	overrideWpEnv(){
-		this.renameFile( '.wp-env.override.json', '.wp-env.override');
+
+	appendEnv(content: string){
+		content += "\n";
+		this.appendFile('.env', content)
 	}
 
 
