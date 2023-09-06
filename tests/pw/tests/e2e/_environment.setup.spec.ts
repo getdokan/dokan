@@ -12,7 +12,7 @@ import { VendorSettingsPage } from 'pages/vendorSettingsPage';
 const { CUSTOMER_ID, DOKAN_PRO, HPOS } = process.env;
 
 
-setup.describe.only('test site & woocommerce & user settings', () => {
+setup.describe('test site & woocommerce & user settings', () => {
 
 	setup.use({ extraHTTPHeaders: { Authorization: payloads.adminAuth.Authorization } });
 
@@ -119,7 +119,7 @@ setup.describe.only('test site & woocommerce & user settings', () => {
 });
 
 
-setup.describe.only('setup user settings', () => {
+setup.describe('setup user settings', () => {
 
 	setup.use({ extraHTTPHeaders: { Authorization: payloads.adminAuth.Authorization } });
 
@@ -185,7 +185,7 @@ setup.describe.only('setup user settings', () => {
 });
 
 
-setup.describe.only('setup dokan settings', () => {
+setup.describe('setup dokan settings', () => {
 
 	let apiUtils: ApiUtils;
 
@@ -280,7 +280,7 @@ setup.describe.only('setup dokan settings', () => {
 });
 
 
-setup.describe.only('setup dokan settings e2e', () => {
+setup.describe('setup dokan settings e2e', () => {
 
 
 	let productAdvertisingPage: ProductAdvertisingPage;
