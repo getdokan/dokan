@@ -241,7 +241,7 @@ export const helpers = {
 		fs.renameSync(newFilePath, oldFilePath);
 	},
 
-
+    // append content to .env file
 	appendEnv(content: string){
 		content += "\n";
 		this.appendFile('.env', content)
