@@ -3,7 +3,6 @@ import { OrdersPage } from 'pages/ordersPage';
 import { ApiUtils } from 'utils/apiUtils';
 import { data } from 'utils/testData';
 import { payloads } from 'utils/payloads';
-import { helpers } from 'utils/helpers';
 
 
 const { CUSTOMER_ID, PRODUCT_ID } = process.env;
@@ -22,10 +21,6 @@ test.describe('Order functionality test', () => {
 		const vendorContext = await browser.newContext({ storageState: data.auth.vendorAuthFile });
 		vPage = await vendorContext.newPage();
 		vendor = new OrdersPage(vPage);
-
-		const env = helpers.readFile('.env')
-		console.log(env);
-		
 
 		apiUtils = new ApiUtils(request);
 		[,, orderId, ] = await apiUtils.createOrderWithStatus(PRODUCT_ID, { ...payloads.createOrder, customer_id: CUSTOMER_ID }, data.order.orderStatus.onhold, payloads.vendorAuth);

@@ -30,13 +30,6 @@ test.describe('Reverse withdraw test', () => {
 		const vendor1 = new OrdersPage(vPage);
 
 		apiUtils = new ApiUtils(request);
-		console.log('server url', process.env.SERVER_URL)
-		console.log('customer id',process.env.CUSTOMER_ID)
-		console.log('vendor id',process.env.VENDOR_ID)
-		console.log('vendor2 id',process.env.VENDOR2_ID)
-		console.log('product id',process.env.PRODUCT_ID)
-		console.log('v2 product id',process.env.V2_PRODUCT_ID)
-		console.log('pruct id: ', PRODUCT_ID);
 		
 		await dbUtils.setDokanSettings(dbData.dokan.optionName.reverseWithdraw, dbData.dokan.reverseWithdrawSettings);
 
