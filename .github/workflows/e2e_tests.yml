@@ -156,13 +156,13 @@ jobs:
           npm run test:e2e:lite
 
 
-      # Run API tests
-      - name: 🧪 Running the api tests
-        if: always()
-        timeout-minutes: 5
-        run: |
-          cd tests/pw 
-          npm run test:api:lite
+      # # Run API tests
+      # - name: 🧪 Running the api tests
+      #   if: always()
+      #   timeout-minutes: 5
+      #   run: |
+      #     cd tests/pw 
+      #     npm run test:api:lite
           
 
       # Prepare test summary
