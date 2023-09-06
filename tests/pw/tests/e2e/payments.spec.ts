@@ -46,11 +46,11 @@ test.describe('Payments test', () => {
 		await vendor.setBankTransfer(data.vendor.payment);
 	});
 
-	test('vendor can add skrill payment method @lite', async ( ) => {
+	test('vendor can add skrill payment method @pro', async ( ) => {
 		await vendor.setBasicPayment({ ...data.vendor.payment, methodName: 'skrill' });
 	});
 
-	test('vendor can add custom payment method @lite', async ( ) => {
+	test('vendor can add custom payment method @pro', async ( ) => {
 		await vendor.setBasicPayment({ ...data.vendor.payment, methodName: 'custom' });
 	});
 
@@ -62,11 +62,11 @@ test.describe('Payments test', () => {
 		await vendor.disconnectBasicPayment({ ...data.vendor.payment, methodName: 'bank' });
 	});
 
-	test('vendor can disconnect skrill payment method @lite', async ( ) => {
+	test('vendor can disconnect skrill payment method @pro', async ( ) => {
 		await vendor.disconnectBasicPayment({ ...data.vendor.payment, methodName: 'skrill' });
 	});
 
-	test('vendor can disconnect custom payment method @lite', async ( ) => {
+	test('vendor can disconnect custom payment method @pro', async ( ) => {
 		await vendor.disconnectBasicPayment({ ...data.vendor.payment, methodName: 'custom' });
 	});
 

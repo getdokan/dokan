@@ -1817,6 +1817,7 @@ export const selector = {
 				search: {
 					searchBox: '.search-box',
 					input: '#dokan-admin-search',
+					close: '.search-box span.dashicons',
 				},
 
 				backToTop: '.back-to-top.tips',
@@ -1887,7 +1888,7 @@ export const selector = {
 					processRefundViaAPI: '#dokan_selling\\[automatic_process_api_refund\\]',
 
 					// Vendor Capability
-					newVendorProductUpload: '.new_seller_enable_selling .switch',
+					enableSelling: '.new_seller_enable_selling .switch',
 					disableProductPopup: '.disable_product_popup .switch',
 					orderStatusChange: '.order_status_change .switch',
 					newProductStatus: (status: string) => `//label[@for='dokan_selling[product_status][${status}]']`,
