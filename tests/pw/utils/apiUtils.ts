@@ -1559,7 +1559,7 @@ export class ApiUtils {
 	async createOrder(product: string | object, orderPayload: any, auth?: auth): Promise<[APIResponse, responseBody, string, string]> {
 		let productId: string;
 		if (typeof(product) != 'string'){
-			[, productId] = await this.createProduct(product, auth);
+			[, productId,] = await this.createProduct(product, auth);
 		} else {
 			productId = product;
 		}

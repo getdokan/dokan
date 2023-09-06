@@ -676,6 +676,7 @@ export interface vendor {
 
 		openingClosingTime: {
 			days: string[];
+			statusLite: string;
 			openingTime: string;
 			closingTime: string;
 			storeOpenNotice: string;
@@ -1450,7 +1451,8 @@ export interface	dokanSettings {
 		commissionType:  string;
 		adminCommission:  string;
 		shippingFeeRecipient:  string;
-		taxFeeRecipient:  string;
+		productTaxFeeRecipient:  string;
+		shippingTaxFeeRecipient:  string;
 		newProductStatus:  string;
 		productCategorySelection:  string;
 		saveSuccessMessage:  string;

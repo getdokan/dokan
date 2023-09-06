@@ -34,6 +34,7 @@ export const data = {
 
 	plugin: {
 		// PluginSlugList: ['dokan-lite', 'dokan-pro', 'woocommerce', 'woocommerce-bookings', 'woocommerce-product-add-ons', 'woocommerce-simple-auction', 'woocommerce-subscriptions', 'elementor', 'elementor-pro'],
+		pluginsLite:['basic-auth', 'dokan', 'woocommerce'],
 		plugins:['basic-auth', 'dokan', 'dokan-pro', 'woocommerce', 'woocommerce-bookings', 'woocommerce-product-addons', 'woocommerce-simple-auctions', 'woocommerce-subscriptions'],
 		// plugins: ['dokan/dokan', 'dokan-pro/dokan-pro', 'woocommerce/woocommerce'],
 		dokanPro: ['dokan-pro'],
@@ -962,6 +963,7 @@ export const data = {
 
 			openingClosingTime: {
 				days: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'],
+				statusLite: 'open', // open, close
 				openingTime: '12:00 am',
 				closingTime: '11:30 pm',
 				storeOpenNotice: 'Store is open',
@@ -1705,7 +1707,8 @@ export const data = {
 			commissionType: 'percentage', //'flat', 'percentage', 'combine'
 			adminCommission: '10',
 			shippingFeeRecipient: 'seller', //'seller', 'admin'
-			taxFeeRecipient: 'seller', //'seller', 'admin'
+			productTaxFeeRecipient: 'seller', //'seller', 'admin'
+			shippingTaxFeeRecipient: 'seller', //'seller', 'admin'
 			newProductStatus: 'publish', //'publish', 'pending'
 			productCategorySelection: 'single', //'single', 'multiple'
 			saveSuccessMessage: 'Setting has been saved successfully.',

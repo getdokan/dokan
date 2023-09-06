@@ -534,7 +534,7 @@ export const payloads = {
 				value: 'yes'
 			},
 			{
-				key: 'admin_coupons_send_notify_to_vendors', //todo:  dont' work
+				key: 'admin_coupons_send_notify_to_vendors', //todo:  doesn't work
 				value: 'yes'
 			}
 		]
@@ -2405,7 +2405,7 @@ export const payloads = {
 			flickr: 'http://dokan.test',
 		},
 		phone: '0123456789',
-		show_email: true, //todo:  don't work on lite
+		show_email: true, //todo:  doesn't work on lite
 		address: {
 			street_1: 'abc street',
 			street_2: 'xyz street',
@@ -2421,11 +2421,11 @@ export const payloads = {
 		gravatar_id: 0,
 		products_per_page: 12,
 		show_more_product_tab: true,
-		toc_enabled: true,  //todo:  don't work on lite
+		toc_enabled: true,  //todo:  doesn't work on lite
 		store_toc: 'test Vendor terms and conditions',
 		featured: true,
 		rating: {
-			rating: '4.00', //todo:  don't work on lite
+			rating: '4.00', //todo:  doesn't work on lite
 			count: 1,
 		},
 		enabled: true,
@@ -2453,7 +2453,7 @@ export const payloads = {
 		// 	open_notice: 'Store is open',
 		// 	close_notice: 'Store is closed',
 		// },
-		store_open_close: {  //todo:  don't work on lite
+		store_open_close: {  //todo:  doesn't work on lite
 			enabled: true,
 			time: {
 				monday: {
@@ -2532,7 +2532,7 @@ export const payloads = {
 			flickr: 'http://dokan.test',
 		},
 		phone: '0123456789',
-		show_email: true, //todo:  don't work on lite
+		show_email: true, //todo:  doesn't work on lite
 		address: {
 			street_1: 'abc street',
 			street_2: 'xyz street',
@@ -2548,11 +2548,11 @@ export const payloads = {
 		gravatar_id: 0,
 		products_per_page: 12,
 		show_more_product_tab: true,
-		toc_enabled: true,  //todo:  don't work on lite
+		toc_enabled: true,  //todo:  doesn't work on lite
 		store_toc: 'test Vendor terms and conditions',
 		featured: true,
 		rating: {
-			rating: '4.00', //todo:  don't work on lite
+			rating: '4.00', //todo:  doesn't work on lite
 			count: 1,
 		},
 		enabled: true,
@@ -2580,7 +2580,7 @@ export const payloads = {
 		// 	open_notice: 'Store is open',
 		// 	close_notice: 'Store is closed',
 		// },
-		store_open_close: {  //todo:  don't work on lite
+		store_open_close: {  //todo:  doesn't work on lite
 			enabled: true,
 			time: {
 				monday: {
