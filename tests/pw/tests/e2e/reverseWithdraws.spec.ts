@@ -30,14 +30,16 @@ test.describe('Reverse withdraw test', () => {
 		const vendor1 = new OrdersPage(vPage);
 
 		apiUtils = new ApiUtils(request);
+
 		await dbUtils.setDokanSettings(dbData.dokan.optionName.reverseWithdraw, dbData.dokan.reverseWithdrawSettings);
 
-		// await apiUtils.createOrderWithStatus(PRODUCT_ID, payloads.createOrderCod, data.order.orderStatus.completed, payloads.vendorAuth);
-
-		[,, orderId,]= await apiUtils.createOrderWithStatus(PRODUCT_ID, payloads.createOrderCod, data.order.orderStatus.processing, payloads.vendorAuth);
-		await vendor1.updateOrderStatusOnTable(orderId, 'complete');
-
 		// await admin.addReverseWithdrawal({ ...data.reverseWithdraw, amount: '1000', withdrawalBalanceType: 'debit' } );
+		// await apiUtils.createOrderWithStatus(PRODUCT_ID, payloads.createOrderCod, data.order.orderStatus.completed, payloads.vendorAuth);
+		// [,, orderId,]= await apiUtils.createOrderWithStatus(PRODUCT_ID, payloads.createOrderCod, data.order.orderStatus.processing, payloads.vendorAuth);
+		// await vendor1.updateOrderStatusOnTable(orderId, 'complete');
+
+		const [,, orderId,] = await apiUtils.createOrderWithStatus(payloads.createProduct(), payloads.createOrderCod, data.order.orderStatus.processing, payloads.vendorAuth);
+		await apiUtils.updateOrderStatus(orderId, data.order.orderStatus.completed, payloads.vendorAuth);
 
 	});
 
@@ -73,7 +75,7 @@ test.describe('Reverse withdraw test', () => {
 		await vendor.vendorViewReverseWithdrawalNotice();
 	});
 
-	test('vendor can view reverse withdrawal announcement @lite @explo', async ( ) => {
+	test('vendor can view reverse withdrawal announcement @pro @explo', async ( ) => {
 		await vendor.vendorViewReverseWithdrawalAnnouncement();
 	});
 
@@ -83,7 +85,7 @@ test.describe('Reverse withdraw test', () => {
 
 	test('vendor can pay reverse pay balance @lite', async ( ) => {
 		const orderId = await vendor.vendorPayReversePayBalance();
-		await apiUtils.updateOrderStatus(orderId, 'wc-completed', payloads.adminAuth);
+		await apiUtils.updateOrderStatus(orderId, data.order.orderStatus.completed, payloads.adminAuth);
 	});
 
 	//todo: vendor cant withdraw when reverse withdrawal rule applied

@@ -61,7 +61,7 @@ export class AdminDashboardPage extends AdminPage {
 
 		await this.clearAndType(selector.admin.dokan.dashboard.subscribeBox.subscriberName, user.name());
 		await this.clearAndType(selector.admin.dokan.dashboard.subscribeBox.subscriberEmail, user.email());
-		await this.clickAndWaitForResponse(data.subUrls.backend.dokan.subscribe, selector.admin.dokan.dashboard.subscribeBox.subscribeButton);
+		await this.clickAndWaitForResponse(data.subUrls.backend.dokan.subscribe, selector.admin.dokan.dashboard.subscribeBox.subscribeButton, 302);
 		await this.toContainText(selector.admin.dokan.dashboard.subscribeBox.thankYouMessage, 'Thank you for subscribing!' );
 
 	}

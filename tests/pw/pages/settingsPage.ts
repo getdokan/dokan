@@ -5,6 +5,9 @@ import { data } from 'utils/testData';
 import { dokanSettings } from 'utils/interfaces';
 
 
+const { DOKAN_PRO } = process.env;
+
+
 export class SettingsPage extends AdminPage {
 
 	constructor(page: Page) {
@@ -41,6 +44,7 @@ export class SettingsPage extends AdminPage {
 
 		await this.clearAndType(selector.admin.dokan.settings.search.input, settings);
 		await this.toBeVisible(selector.admin.dokan.settings.fields);
+		await this.click(selector.admin.dokan.settings.search.close);
 	}
 
 
@@ -63,13 +67,15 @@ export class SettingsPage extends AdminPage {
 		// site options
 		await this.enableSwitcher(selector.admin.dokan.settings.general.adminAreaAccess);
 		await this.clearAndType(selector.admin.dokan.settings.general.vendorStoreUrl, general.vendorStoreUrl);
-		await this.click(selector.admin.dokan.settings.general.sellingProductTypes(general.sellingProductTypes));
+		DOKAN_PRO && await this.click(selector.admin.dokan.settings.general.sellingProductTypes(general.sellingProductTypes));
 
 		// vendor store options
 		await this.enableSwitcher(selector.admin.dokan.settings.general.storeTermsAndConditions);
 		await this.clearAndType(selector.admin.dokan.settings.general.storeProductPerPage, general.storeProductPerPage);
-		await this.enableSwitcher(selector.admin.dokan.settings.general.enableTermsAndCondition);
-		await this.click(selector.admin.dokan.settings.general.storCategory(general.storCategory));
+		if(DOKAN_PRO) {
+			await this.enableSwitcher(selector.admin.dokan.settings.general.enableTermsAndCondition);
+			await this.click(selector.admin.dokan.settings.general.storCategory(general.storCategory));
+		}
 
 		// save settings
 		await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.admin.dokan.settings.general.generalSaveChanges);
@@ -86,23 +92,26 @@ export class SettingsPage extends AdminPage {
 		await this.selectByValue(selector.admin.dokan.settings.selling.commissionType, selling.commissionType);
 		await this.clearAndType(selector.admin.dokan.settings.selling.adminCommission, selling.adminCommission);
 		await this.click(selector.admin.dokan.settings.selling.shippingFeeRecipient(selling.shippingFeeRecipient));
-		await this.click(selector.admin.dokan.settings.selling.taxFeeRecipient(selling.taxFeeRecipient));
+		await this.click(selector.admin.dokan.settings.selling.productTaxFeeRecipient(selling.productTaxFeeRecipient));
+		await this.click(selector.admin.dokan.settings.selling.shippingTaxFeeRecipient(selling.shippingTaxFeeRecipient));
 
 		// vendor capability
-		await this.enableSwitcher(selector.admin.dokan.settings.selling.newVendorProductUpload);
+		await this.enableSwitcher(selector.admin.dokan.settings.selling.enableSelling);
 		await this.enableSwitcher(selector.admin.dokan.settings.selling.orderStatusChange);
-		await this.click(selector.admin.dokan.settings.selling.newProductStatus(selling.newProductStatus));
-		await this.enableSwitcher(selector.admin.dokan.settings.selling.duplicateProduct);
-		await this.enableSwitcher(selector.admin.dokan.settings.selling.productMailNotification);
-		await this.click(selector.admin.dokan.settings.selling.productCategorySelection(selling.productCategorySelection));
-		await this.enableSwitcher(selector.admin.dokan.settings.selling.vendorsCanCreateTags);
-		await this.enableSwitcher(selector.admin.dokan.settings.selling.orderDiscount);
-		await this.enableSwitcher(selector.admin.dokan.settings.selling.productDiscount);
-		await this.enableSwitcher(selector.admin.dokan.settings.selling.vendorProductReview);
-		await this.enableSwitcher(selector.admin.dokan.settings.selling.guestProductEnquiry);
-		await this.enableSwitcher(selector.admin.dokan.settings.selling.newVendorEnableAuction);
-		await this.enableSwitcher(selector.admin.dokan.settings.selling.enableMinMaxQuantities);
-		await this.enableSwitcher(selector.admin.dokan.settings.selling.enableMinMaxAmount);
+		if (DOKAN_PRO) {
+			await this.click(selector.admin.dokan.settings.selling.newProductStatus(selling.newProductStatus));
+			await this.enableSwitcher(selector.admin.dokan.settings.selling.duplicateProduct);
+			await this.enableSwitcher(selector.admin.dokan.settings.selling.productMailNotification);
+			await this.click(selector.admin.dokan.settings.selling.productCategorySelection(selling.productCategorySelection));
+			await this.enableSwitcher(selector.admin.dokan.settings.selling.vendorsCanCreateTags);
+			await this.enableSwitcher(selector.admin.dokan.settings.selling.orderDiscount);
+			await this.enableSwitcher(selector.admin.dokan.settings.selling.productDiscount);
+			await this.enableSwitcher(selector.admin.dokan.settings.selling.vendorProductReview);
+			await this.enableSwitcher(selector.admin.dokan.settings.selling.guestProductEnquiry);
+			await this.enableSwitcher(selector.admin.dokan.settings.selling.newVendorEnableAuction);
+			await this.enableSwitcher(selector.admin.dokan.settings.selling.enableMinMaxQuantities);
+			await this.enableSwitcher(selector.admin.dokan.settings.selling.enableMinMaxAmount);
+		}
 
 		// save settings
 		await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.admin.dokan.settings.selling.sellingOptionsSaveChanges);
@@ -118,37 +127,41 @@ export class SettingsPage extends AdminPage {
 		// Withdraw Options
 		await this.enableSwitcher(selector.admin.dokan.settings.withdraw.withdrawMethodsPaypal);
 		await this.enableSwitcher(selector.admin.dokan.settings.withdraw.withdrawMethodsBankTransfer);
-		await this.enableSwitcher(selector.admin.dokan.settings.withdraw.withdrawMethodsDokanCustom);
-		await this.enableSwitcher(selector.admin.dokan.settings.withdraw.withdrawMethodsSkrill);
-		await this.clearAndType(selector.admin.dokan.settings.withdraw.customMethodName, withdraw.customMethodName);
-		await this.clearAndType(selector.admin.dokan.settings.withdraw.customMethodType, withdraw.customMethodType);
+		if (DOKAN_PRO) {
+			await this.enableSwitcher(selector.admin.dokan.settings.withdraw.withdrawMethodsDokanCustom);
+			await this.enableSwitcher(selector.admin.dokan.settings.withdraw.withdrawMethodsSkrill);
+			await this.clearAndType(selector.admin.dokan.settings.withdraw.customMethodName, withdraw.customMethodName);
+			await this.clearAndType(selector.admin.dokan.settings.withdraw.customMethodType, withdraw.customMethodType);
+		}
 		await this.clearAndType(selector.admin.dokan.settings.withdraw.minimumWithdrawAmount, withdraw.minimumWithdrawAmount);
 		await this.enableSwitcher(selector.admin.dokan.settings.withdraw.orderStatusForWithdrawCompleted);
 		await this.enableSwitcher(selector.admin.dokan.settings.withdraw.orderStatusForWithdrawProcessing);
-		await this.clearAndType(selector.admin.dokan.settings.withdraw.withdrawThreshold, withdraw.withdrawThreshold);
+		if (DOKAN_PRO) {
+			await this.clearAndType(selector.admin.dokan.settings.withdraw.withdrawThreshold, withdraw.withdrawThreshold);
 
-		// Disbursement Schedule Settings
-		await this.enableSwitcher(selector.admin.dokan.settings.withdraw.withdrawDisbursementManual);
-		await this.enableSwitcher(selector.admin.dokan.settings.withdraw.withdrawDisbursementAuto);
+			// Disbursement Schedule Settings
+			await this.enableSwitcher(selector.admin.dokan.settings.withdraw.withdrawDisbursementManual);
+			await this.enableSwitcher(selector.admin.dokan.settings.withdraw.withdrawDisbursementAuto);
 
-		// Disbursement Schedule
-		await this.enableSwitcher(selector.admin.dokan.settings.withdraw.disburseMentQuarterlySchedule);
-		await this.enableSwitcher(selector.admin.dokan.settings.withdraw.disburseMentMonthlySchedule);
-		await this.enableSwitcher(selector.admin.dokan.settings.withdraw.disburseMentBiweeklySchedule);
-		await this.enableSwitcher(selector.admin.dokan.settings.withdraw.disburseMentWeeklySchedule);
+			// Disbursement Schedule
+			await this.enableSwitcher(selector.admin.dokan.settings.withdraw.disburseMentQuarterlySchedule);
+			await this.enableSwitcher(selector.admin.dokan.settings.withdraw.disburseMentMonthlySchedule);
+			await this.enableSwitcher(selector.admin.dokan.settings.withdraw.disburseMentBiweeklySchedule);
+			await this.enableSwitcher(selector.admin.dokan.settings.withdraw.disburseMentWeeklySchedule);
 
-		// Quarterly Schedule
-		await this.selectByValue(selector.admin.dokan.settings.withdraw.quarterlyScheduleMonth, withdraw.quarterlyScheduleMonth);
-		await this.selectByValue(selector.admin.dokan.settings.withdraw.quarterlyScheduleWeek, withdraw.quarterlyScheduleWeek);
-		await this.selectByValue(selector.admin.dokan.settings.withdraw.quarterlyScheduleDay, withdraw.quarterlyScheduleDay);
-		// Monthly Schedule
-		await this.selectByValue(selector.admin.dokan.settings.withdraw.monthlyScheduleWeek, withdraw.monthlyScheduleWeek);
-		await this.selectByValue(selector.admin.dokan.settings.withdraw.monthlyScheduleDay, withdraw.monthlyScheduleDay);
-		// Biweekly Schedule
-		await this.selectByValue(selector.admin.dokan.settings.withdraw.biweeklyScheduleWeek, withdraw.biweeklyScheduleWeek);
-		await this.selectByValue(selector.admin.dokan.settings.withdraw.biweeklyScheduleDay, withdraw.biweeklyScheduleDay);
-		// Weekly Schedule
-		await this.selectByValue(selector.admin.dokan.settings.withdraw.weeklyScheduleDay, withdraw.weeklyScheduleDay);
+			// Quarterly Schedule
+			await this.selectByValue(selector.admin.dokan.settings.withdraw.quarterlyScheduleMonth, withdraw.quarterlyScheduleMonth);
+			await this.selectByValue(selector.admin.dokan.settings.withdraw.quarterlyScheduleWeek, withdraw.quarterlyScheduleWeek);
+			await this.selectByValue(selector.admin.dokan.settings.withdraw.quarterlyScheduleDay, withdraw.quarterlyScheduleDay);
+			// Monthly Schedule
+			await this.selectByValue(selector.admin.dokan.settings.withdraw.monthlyScheduleWeek, withdraw.monthlyScheduleWeek);
+			await this.selectByValue(selector.admin.dokan.settings.withdraw.monthlyScheduleDay, withdraw.monthlyScheduleDay);
+			// Biweekly Schedule
+			await this.selectByValue(selector.admin.dokan.settings.withdraw.biweeklyScheduleWeek, withdraw.biweeklyScheduleWeek);
+			await this.selectByValue(selector.admin.dokan.settings.withdraw.biweeklyScheduleDay, withdraw.biweeklyScheduleDay);
+			// Weekly Schedule
+			await this.selectByValue(selector.admin.dokan.settings.withdraw.weeklyScheduleDay, withdraw.weeklyScheduleDay);
+		}
 
 		// save settings
 		await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.admin.dokan.settings.withdraw.withdrawSaveChanges);
@@ -174,7 +187,7 @@ export class SettingsPage extends AdminPage {
 		await this.enableSwitcher(selector.admin.dokan.settings.reverseWithdraw.MakeVendorStatusInactive);
 
 		await this.enableSwitcher(selector.admin.dokan.settings.reverseWithdraw.displayNoticeDuringGracePeriod);
-		await this.enableSwitcher(selector.admin.dokan.settings.reverseWithdraw.sendAnnouncement);
+		DOKAN_PRO && await this.enableSwitcher(selector.admin.dokan.settings.reverseWithdraw.sendAnnouncement);
 
 		// save settings
 		await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.admin.dokan.settings.reverseWithdraw.reverseWithdrawSaveChanges);
@@ -209,9 +222,11 @@ export class SettingsPage extends AdminPage {
 		await this.clearAndType(selector.admin.dokan.settings.appearance.googleMapApiKey, appearance.googleMapApiKey);
 		await this.click(selector.admin.dokan.settings.appearance.storeHeaderTemplate2);
 		await this.click(selector.admin.dokan.settings.appearance.storeHeaderTemplate1);
-		await this.clearAndType(selector.admin.dokan.settings.appearance.storeBannerWidth, appearance.storeBannerWidth);
-		await this.clearAndType(selector.admin.dokan.settings.appearance.storeBannerHeight, appearance.storeBannerHeight);
-		await this.enableSwitcher(selector.admin.dokan.settings.appearance.storeOpeningClosingTimeWidget);
+		if (DOKAN_PRO) {
+			await this.clearAndType(selector.admin.dokan.settings.appearance.storeBannerWidth, appearance.storeBannerWidth);
+			await this.clearAndType(selector.admin.dokan.settings.appearance.storeBannerHeight, appearance.storeBannerHeight);
+			await this.enableSwitcher(selector.admin.dokan.settings.appearance.storeOpeningClosingTimeWidget);
+		}
 		await this.enableSwitcher(selector.admin.dokan.settings.appearance.showVendorInfo);
 
 		// save settings

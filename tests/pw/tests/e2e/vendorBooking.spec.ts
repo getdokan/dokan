@@ -73,11 +73,11 @@ test.describe('Booking Product test', () => {
 		await vendor.editBookingProduct({ ...data.product.booking, name: bookableProductName });
 	});
 
-	test('vendor can filter booking products by date @lite', async ( ) => {
+	test('vendor can filter booking products by date @pro', async ( ) => {
 		await vendor.filterBookingProducts('by-date', '1');
 	});
 
-	test('vendor can filter booking products by category @lite', async ( ) => {
+	test('vendor can filter booking products by category @pro', async ( ) => {
 		await vendor.filterBookingProducts('by-category', 'Uncategorized');
 	});
 

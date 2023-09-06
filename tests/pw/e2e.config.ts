@@ -14,7 +14,7 @@ export default defineConfig({
 	},  /* Configuration for the expect assertion library */
 	preserveOutput: 'always',  /* Whether to preserve test output in the testConfig.outputDir. Defaults to 'always'. */
 	// fullyParallel: true, 	/* Run tests in files in parallel */
-	// forbidOnly: !!process.env.CI, 	/* Fail the build on CI if you accidentally left testonly in the source code. */
+	// forbidOnly: !!process.env.CI, 	/* Fail the build on CI if you accidentally left test-only in the source code. */
 	repeatEach: 1, /* The number of times to repeat each test, useful for debugging flaky tests. */
 	retries: process.env.CI ? 1 : 0,  	/* The maximum number of retry attempts given to failed tests.  */
 	workers: process.env.CI ? 1 : 1, 	/* Opt out of parallel tests on CI. */
@@ -34,7 +34,8 @@ export default defineConfig({
 	use: {
 		...devices['Desktop Chrome'],
 		acceptDownloads: true, /* Whether to automatically download all the attachments. */
-		actionTimeout: 0, /* Maximum time each action such as `click()` can take. Defaults to 0 (no limit). */
+		actionTimeout: 10 * 1000, /* Maximum time each action such as `click()` can take. Defaults to 0 (no limit). */
+		navigationTimeout: 15 * 1000, /* Maximum time each navigation such as 'goto()' can take. */ 
 		baseURL: process.env.BASE_URL ? process.env.BASE_URL : 'http://localhost:9999',  /* Base URL */
 		// browserName: 'chromium', /* Name of the browser that runs tests. */
 		bypassCSP: true, /* Toggles bypassing page's Content-Security-Policy. */

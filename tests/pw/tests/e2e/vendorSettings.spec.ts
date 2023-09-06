@@ -1,6 +1,8 @@
 import { test, Page } from '@playwright/test';
 import { VendorSettingsPage } from 'pages/vendorSettingsPage';
+import { dbData } from 'utils/dbData';
 // import { ApiUtils } from 'utils/apiUtils';
+import { dbUtils } from 'utils/dbUtils';
 import { data } from 'utils/testData';
 // import { payloads } from 'utils/payloads';
 
@@ -83,6 +85,7 @@ test.describe('Vendor settings test', () => {
 	});
 
 	test('vendor can set catalog settings @lite', async ( ) => {
+		await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, dbData.dokan.sellingSettings);
 		await vendor.setStoreSettings(data.vendor.vendorInfo, 'catalog');
 		await vendor.resetCatalog();
 	});

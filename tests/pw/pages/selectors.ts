@@ -193,8 +193,8 @@ export const selector = {
 
 			// dokan notice
 			notice : {
-				// notice: '.dokan-admin-notices',
-				noticeDiv: '.dokan-admin-notice.dokan-alert',
+				noticeDiv: '.dokan-admin-notices',
+				noticeDiv1: '.dokan-admin-notice.dokan-alert',
 				closeNotice: '.close-notice',
 				slider: '.slide-notice',
 				sliderPrev: '.slide-notice .prev',
@@ -1817,6 +1817,7 @@ export const selector = {
 				search: {
 					searchBox: '.search-box',
 					input: '#dokan-admin-search',
+					close: '.search-box span.dashicons',
 				},
 
 				backToTop: '.back-to-top.tips',
@@ -1878,16 +1879,16 @@ export const selector = {
 
 				// Selling
 				selling: {
-				// Selling Options
 				// Commission
 					commissionType: '#dokan_selling\\[commission_type\\]',
 					adminCommission: '#dokan_selling\\[admin_percentage\\]',
 					shippingFeeRecipient: (feeReceiver: string) => `//label[@for='dokan_selling[shipping_fee_recipient][${feeReceiver}]']`,
-					taxFeeRecipient: (feeReceiver: string) => `//label[@for='dokan_selling[tax_fee_recipient][${feeReceiver}]']`,
+					productTaxFeeRecipient: (feeReceiver: string) => `//label[@for='dokan_selling[tax_fee_recipient][${feeReceiver}]']`,
+					shippingTaxFeeRecipient: (feeReceiver: string) => `//label[@for='dokan_selling[shipping_tax_fee_recipient][${feeReceiver}]']`,
 					processRefundViaAPI: '#dokan_selling\\[automatic_process_api_refund\\]',
 
 					// Vendor Capability
-					newVendorProductUpload: '.new_seller_enable_selling .switch',
+					enableSelling: '.new_seller_enable_selling .switch',
 					disableProductPopup: '.disable_product_popup .switch',
 					orderStatusChange: '.order_status_change .switch',
 					newProductStatus: (status: string) => `//label[@for='dokan_selling[product_status][${status}]']`,
@@ -3792,6 +3793,11 @@ export const selector = {
 				shippingCost: '//td[contains(text(),"Shipping")]/..//bdi',
 				tax: '//td[contains(text(),"Tax")]/..//bdi',
 				refunded: '.total.refunded-total bdi',
+
+
+				//todo: add lite order details locators
+				//lite
+				total: '//th[contains(text(),"Total:")]/..//td//span[@class="woocommerce-Price-amount amount"]',
 			},
 
 			//general details
@@ -4251,7 +4257,8 @@ export const selector = {
 			// balance
 			balance: {
 				balanceDiv: '//strong[normalize-space()="Balance"]/../..',
-				balance: '//p[contains(text(),"Your Balance:")]//a//span[@class="woocommerce-Price-amount amount"]',
+				balancePro: '//p[contains(text(),"Your Balance:")]//a//span[@class="woocommerce-Price-amount amount"]',
+				balanceLite: '//p[contains(text(),"Your Balance:")]//strong[1]',
 				minimumWithdrawAmount: '//p[contains(text(),"Your Balance:")]//strong[2]',
 			},
 
@@ -5539,8 +5546,13 @@ export const selector = {
 
 			// Store Opening Closing Time
 			storeOpeningClosingTime: '#dokan-store-time-enable',
-			// chooseBusinessDays: "//label[contains(text(),'Choose Business Days')]/..//input[contains(@class,'select2-search__field')]",
-			// businessDaysTab: (day: string) => `//ul[@class='tabs']//li[@rel='store-tab-${day}']`,
+
+			// lite locators
+			lite:{
+				openingClosingTimeEnable: (day: string) => `select[name="${day}[working_status]"]`,
+				openingTimeInput: (day: string) => `input#opening-time\\[${day}\\]`,
+				closingTimeInput: (day: string) => `input#closing-time\\[${day}\\]`,
+			},
 			// openingTime: (day: string) => `#opening-time-${day}`,
 			// closingTime: (day: string) => `#closing-time-${day}`,
 			// addNewRow: (day: string) => `#store-tab-${day} .added-store-opening-time > .fa`,

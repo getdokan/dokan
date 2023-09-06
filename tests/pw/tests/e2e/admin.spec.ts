@@ -96,32 +96,6 @@ test.describe('Admin functionality test', () => {
 	//     await adminPage.addShippingMethod(data.shipping.shippingMethods.vendorShipping)
 	// })
 
-	// payment
-
-	// test('admin can add basic payment methods', async ( ) => {
-	//     await adminPage.setupBasicPaymentMethods(data.payment)
-	// })
-
-	// test('admin can add strip payment method', async ( ) => {
-	//     await adminPage.setupStripeConnect(data.payment)
-	// })
-
-	// test('admin can add paypal marketplace payment method', async ( ) => {
-	//     await adminPage.setupPaypalMarketPlace(data.payment)
-	// })
-
-	// test('admin can add mangopay payment method', async ( ) => {
-	//     await adminPage.setupMangoPay(data.payment)
-	// })
-
-	// test('admin can add razorpay payment method', async ( ) => {
-	//     await adminPage.setupRazorpay(data.payment)
-	// })
-
-	// test('admin can add strip express payment method', async ( ) => {
-	//     await adminPage.setupStripeExpress(data.payment)
-	// })
-
 	test('dokan notice @lite', async ( ) => {
 		await adminPage.dokanNotice();
 	});

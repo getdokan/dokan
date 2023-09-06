@@ -6,6 +6,9 @@ import { helpers } from 'utils/helpers';
 import { orderNote, orderTrackingDetails, orderShipmentDetails, date } from 'utils/interfaces';
 
 
+const { DOKAN_PRO } = process.env;
+
+
 export class OrdersPage extends VendorPage {
 
 	constructor(page: Page) {
@@ -40,7 +43,9 @@ export class OrdersPage extends VendorPage {
 		await this.multipleElementVisible(selector.vendor.orders.bulkActions);
 
 		// table elements are visible
-		await this.multipleElementVisible(selector.vendor.orders.table);
+		const { shipmentColumn, ...table } = selector.vendor.orders.table;
+		await this.multipleElementVisible(table);
+		DOKAN_PRO && await this.toBeVisible(shipmentColumn);
 	}
 
 
@@ -121,9 +126,8 @@ export class OrdersPage extends VendorPage {
 		// order details elements are visible
 		await this.toBeVisible(selector.vendor.orders.orderDetails.orderNumber);
 		await this.toBeVisible(selector.vendor.orders.orderDetails.orderDate);
-		await this.toBeVisible(selector.vendor.orders.orderDetails.orderTotal);
+		DOKAN_PRO ? await this.toBeVisible(selector.vendor.orders.orderDetails.orderTotal): await this.toBeVisible(selector.vendor.orders.orderDetails.total);
 		//todo:  add more fields to assert
-		//todo:  add conditions: for shipment, downloadable product
 
 		// general details elements are visible
 		await this.multipleElementVisible(selector.vendor.orders.generalDetails);
@@ -145,12 +149,14 @@ export class OrdersPage extends VendorPage {
 		const { addTrackingNumber,  ...trackingDetails } = selector.vendor.orders.trackingDetails;
 		await this.multipleElementVisible(trackingDetails);
 
-		await this.click(selector.vendor.orders.shipment.createNewShipment);
+		if (DOKAN_PRO){
+			await this.click(selector.vendor.orders.shipment.createNewShipment);
 
-		// shipment elements are visible
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		const { createNewShipment, shipmentOrderItem, shipmentOrderItemQty,  ...shipment } = selector.vendor.orders.shipment;
-		await this.multipleElementVisible(shipment);
+			// shipment elements are visible
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+			const { createNewShipment, shipmentOrderItem, shipmentOrderItemQty,  ...shipment } = selector.vendor.orders.shipment;
+			await this.multipleElementVisible(shipment);
+		}
 
 		// downloadable product elements are visible
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars

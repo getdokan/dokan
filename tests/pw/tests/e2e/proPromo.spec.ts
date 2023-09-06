@@ -25,11 +25,10 @@ test.describe('Dokan pro feature promo test', () => {
 		await aPage.close();
 	});
 
-
-	test('dokan pro features promo @lite', async ( ) => {
-		await apiUtils.updatePlugin('dokan-pro/dokan-pro', { status:'inactive' }, payloads.adminAuth);
+	test('dokan pro features promo @liteOnly', async ( ) => {
+		// await apiUtils.updatePlugin('dokan-pro/dokan-pro', { status:'inactive' }, payloads.adminAuth);
 		await admin.dokanProPromo();
-		await apiUtils.updatePlugin('dokan-pro/dokan-pro', { status:'active' }, payloads.adminAuth);
+		// await apiUtils.updatePlugin('dokan-pro/dokan-pro', { status:'active' }, payloads.adminAuth);
 	});
 
 });

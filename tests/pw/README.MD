@@ -103,6 +103,7 @@ Create .env file according to .env.example file
 ADMIN=John_Doe                          [Admin username]
 ADMIN_PASSWORD=AdminPass123             [Password for the admin account]
 VENDOR=David_Johnson                    [Vendor username]
+VENDOR2=jhonathon_Smith                 [Vendor username]
 CUSTOMER=Michael_Williams               [Customer username]
 USER_PASSWORD=Passw0rd123               [Password for all other users]
 GMAP=ABCD1234EFGH5678                   [Google Maps API key]
@@ -113,7 +114,7 @@ DOKAN_PRO=true                          [Dokan pro active status]
 BASE_URL=https://example.com            [Base URL of the test site]
 CI=true                                 [CI/CD environment indicator]
 SLOWMO=10                               [Slow down test execution by provided seconds]
-SETUP=true                              [Run setup tests before actual tests]
+SETUP=true                              [Weather to run setup tests before actual tests]
 
 # Database Configuration                
 DB_HOST_NAME=localhost                  [Database server hostname or IP address]
@@ -138,23 +139,23 @@ Running tests involves executing the predefined test cases or scripts to evaluat
 
 :radio_button: Run E2E test project Lite
 
-    npx playwright test --project=e2e_tests --grep @lite --config=e2e.config.ts
+    npx playwright test --project=e2e_tests --grep '@lite|@liteOnly' --config=e2e.config.ts 
 <br/>
 
 :radio_button: Run API test project Lite
 
-    npx playwright test --project=api_tests --grep @lite --config=api.config.ts 
+    npx playwright test --project=api_tests --grep '@lite|@liteOnly' --config=api.config.ts 
 <br/>
 
 
-:radio_button: Run API test project Pro
+:radio_button: Run E2E test project Pro
 
-    npx playwright test --project=api_tests --config=api.config.ts 
+    npx playwright test --project=e2e_tests --grep '@lite|@pro' --config=e2e.config.ts
 <br/>
 
 :radio_button: Run API test project Pro
 
-    npx playwright test --project=api_tests --grep @lite --config=api.config.ts 
+    npx playwright test --project=api_tests --grep '@lite|@pro' --config=api.config.ts
 <br/>
 
 

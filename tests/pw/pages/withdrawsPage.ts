@@ -119,7 +119,9 @@ export class WithdrawsPage extends AdminPage {
 		await this.toBeVisible(selector.vendor.vWithdraw.withdrawText);
 
 		// balance elements are visible
-		await this.multipleElementVisible(selector.vendor.vWithdraw.balance);
+		const { balanceLite, balancePro, ...balance } = selector.vendor.vWithdraw.balance;
+		await this.multipleElementVisible(balance);
+		DOKAN_PRO ? await this.toBeVisible(balancePro) : await this.toBeVisible(balanceLite);
 
 		// request withdraw is visible
 		await this.toBeVisible(selector.vendor.vWithdraw.manualWithdrawRequest.requestWithdraw);

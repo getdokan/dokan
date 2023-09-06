@@ -144,12 +144,12 @@ export class RequestForQuotationsPage extends AdminPage {
 
 		await this.check(selector.admin.dokan.requestForQuotation.quoteRules.bulkActions.selectAll);
 
-		// only to remove flakiness //todo: need diff soln and make generic , don't work need custom soln
-		const isDisabled = await this.hasAttribute(selector.admin.dokan.requestForQuotation.quoteRules.bulkActions.applyAction, 'disabled');
-		if(isDisabled){
-			await this.uncheck(selector.admin.dokan.requestForQuotation.quoteRules.bulkActions.selectAll);
-			await this.check(selector.admin.dokan.requestForQuotation.quoteRules.bulkActions.selectAll);
-		}
+		// // only to remove flakiness //todo: need diff soln and make generic , don't work need custom soln
+		// const isDisabled = await this.hasAttribute(selector.admin.dokan.requestForQuotation.quoteRules.bulkActions.applyAction, 'disabled');
+		// if(isDisabled){
+		// 	await this.uncheck(selector.admin.dokan.requestForQuotation.quoteRules.bulkActions.selectAll);
+		// 	await this.check(selector.admin.dokan.requestForQuotation.quoteRules.bulkActions.selectAll);
+		// }
 
 		await this.selectByValue(selector.admin.dokan.requestForQuotation.quoteRules.bulkActions.selectAction, action);
 		await this.clickAndWaitForResponse(data.subUrls.api.dokan.quoteRules, selector.admin.dokan.requestForQuotation.quoteRules.bulkActions.applyAction);

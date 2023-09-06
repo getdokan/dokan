@@ -291,8 +291,8 @@ export class ProductsPage extends AdminPage {
 		await this.multipleElementVisible(selector.vendor.product.bulkActions);
 
 		// table elements are visible
-		await this.multipleElementVisible(selector.vendor.product.table);
-
+		const { productAdvertisementColumn, ...table } = selector.vendor.product.table;
+		await this.multipleElementVisible(table);
 	}
 
 	// products

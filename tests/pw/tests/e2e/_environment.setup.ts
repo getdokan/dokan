@@ -1,12 +1,13 @@
 import { test as setup, expect, Page } from '@playwright/test';
 import { ProductAdvertisingPage } from 'pages/productAdvertisingPage';
 import { ReverseWithdrawsPage } from 'pages/reverseWithdrawsPage';
+import { VendorSettingsPage } from 'pages/vendorSettingsPage';
 import { ApiUtils } from 'utils/apiUtils';
 import { payloads } from 'utils/payloads';
 import { dbUtils } from 'utils/dbUtils';
 import { dbData } from 'utils/dbData';
 import { data } from 'utils/testData';
-import { VendorSettingsPage } from 'pages/vendorSettingsPage';
+import { helpers } from 'utils/helpers';
 
 
 const { CUSTOMER_ID, DOKAN_PRO, HPOS } = process.env;
@@ -26,7 +27,7 @@ setup.describe('setup site & woocommerce & user settings', () => {
 	setup('check active plugins @lite', async () => {
 		setup.skip(!process.env.CI, 'skip plugin check on local');
 		const activePlugins = (await apiUtils.getAllPlugins({ status:'active' })).map((a: { plugin: string }) => (a.plugin).split('/')[1]);
-		expect(activePlugins).toEqual(expect.arrayContaining(data.plugin.plugins));
+		DOKAN_PRO ? expect(activePlugins).toEqual(expect.arrayContaining(data.plugin.plugins)) : expect(activePlugins).toEqual(expect.arrayContaining(data.plugin.pluginsLite));
 		// expect(activePlugins.every((plugin: string) => data.plugin.plugins.includes(plugin))).toBeTruthy();
 	});
 
@@ -120,7 +121,7 @@ setup.describe('setup site & woocommerce & user settings', () => {
 });
 
 
-setup.describe('setup  user settings', () => {
+setup.describe('setup user settings', () => {
 
 	setup.use({ extraHTTPHeaders: { Authorization: payloads.adminAuth.Authorization } });
 
@@ -141,7 +142,8 @@ setup.describe('setup  user settings', () => {
 		// create store product
 		const product = { ...payloads.createProduct(), name: data.predefined.simpleProduct.product1.name, };
 		const [, productId,] = await apiUtils.createProduct(product, payloads.vendorAuth);
-		process.env.PRODUCT_ID = productId;
+		// process.env.PRODUCT_ID = productId;
+		helpers.appendEnv('PRODUCT_ID=' + productId);
 	});
 
 	setup('add vendor2 product @lite', async () => {
@@ -152,7 +154,8 @@ setup.describe('setup  user settings', () => {
 		// create store product
 		const product = { ...payloads.createProduct(), name: data.predefined.vendor2.simpleProduct.product1.name, };
 		const [, productId,] = await apiUtils.createProduct(product, payloads.vendor2Auth);
-		process.env.Vendor2_PRODUCT_ID = productId;
+		// process.env.V2_PRODUCT_ID = productId;
+		helpers.appendEnv('V2_PRODUCT_ID=' + productId);
 	});
 
 	setup('add vendor coupon @pro', async () => {
@@ -319,7 +322,7 @@ setup.describe('setup dokan settings e2e', () => {
 		expect(product).toBeTruthy();
 	});
 
-	setup('recreate reverse withdrawal payment product via settings save @pro', async () => {
+	setup('recreate reverse withdrawal payment product via settings save @lite', async () => {
 		await reverseWithdrawsPage.reCreateReverseWithdrawalPaymentViaSettingsSave();
 	});
 
@@ -328,7 +331,7 @@ setup.describe('setup dokan settings e2e', () => {
 		expect(product).toBeTruthy();
 	});
 
-	setup('save store settings to update store on map', async () => {
+	setup('save store settings to update store on map @lite', async () => {
 		await vendorPage.updateStoreMapViaSettingsSave();
 	});
 

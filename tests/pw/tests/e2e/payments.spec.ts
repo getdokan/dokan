@@ -33,6 +33,30 @@ test.describe('Payments test', () => {
 		await vPage.close();
 	});
 
+	// test('admin can add basic payment methods', async ( ) => {
+	//     await adminPage.setupBasicPaymentMethods(data.payment)
+	// })
+
+	// test('admin can add strip payment method', async ( ) => {
+	//     await adminPage.setupStripeConnect(data.payment)
+	// })
+
+	// test('admin can add paypal marketplace payment method', async ( ) => {
+	//     await adminPage.setupPaypalMarketPlace(data.payment)
+	// })
+
+	// test('admin can add mangopay payment method', async ( ) => {
+	//     await adminPage.setupMangoPay(data.payment)
+	// })
+
+	// test('admin can add razorpay payment method', async ( ) => {
+	//     await adminPage.setupRazorpay(data.payment)
+	// })
+
+	// test('admin can add strip express payment method', async ( ) => {
+	//     await adminPage.setupStripeExpress(data.payment)
+	// })
+
 
 	test('vendor payment menu is rendering properly @lite @explo', async ( ) => {
 		await vendor.vendorPaymentSettingsRenderProperly();
@@ -46,11 +70,11 @@ test.describe('Payments test', () => {
 		await vendor.setBankTransfer(data.vendor.payment);
 	});
 
-	test('vendor can add skrill payment method @lite', async ( ) => {
+	test('vendor can add skrill payment method @pro', async ( ) => {
 		await vendor.setBasicPayment({ ...data.vendor.payment, methodName: 'skrill' });
 	});
 
-	test('vendor can add custom payment method @lite', async ( ) => {
+	test('vendor can add custom payment method @pro', async ( ) => {
 		await vendor.setBasicPayment({ ...data.vendor.payment, methodName: 'custom' });
 	});
 
@@ -62,11 +86,11 @@ test.describe('Payments test', () => {
 		await vendor.disconnectBasicPayment({ ...data.vendor.payment, methodName: 'bank' });
 	});
 
-	test('vendor can disconnect skrill payment method @lite', async ( ) => {
+	test('vendor can disconnect skrill payment method @pro', async ( ) => {
 		await vendor.disconnectBasicPayment({ ...data.vendor.payment, methodName: 'skrill' });
 	});
 
-	test('vendor can disconnect custom payment method @lite', async ( ) => {
+	test('vendor can disconnect custom payment method @pro', async ( ) => {
 		await vendor.disconnectBasicPayment({ ...data.vendor.payment, methodName: 'custom' });
 	});
 
