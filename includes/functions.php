@@ -759,6 +759,7 @@ if ( ! function_exists( 'dokan_get_available_post_status' ) ) {
             [
                 'publish' => dokan_get_post_status( 'publish' ),
                 'draft'   => dokan_get_post_status( 'draft' ),
+                'pending' => dokan_get_post_status( 'pending' ),
             ],
             $product_id
         );

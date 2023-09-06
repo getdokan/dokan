@@ -16,6 +16,7 @@ $post_statuses = dokan_get_available_post_status( $post->ID );
         <div class="dokan-form-group content-half-part">
             <label for="post_status" class="form-label"><?php esc_html_e( 'Product Status', 'dokan-lite' ); ?></label>
             <select id="post_status" class="dokan-form-control" name="post_status">
+                <?php  ?>
                 <?php foreach ( $post_statuses as $status => $label ) : // phpcs:ignore ?>
                     <option value="<?php echo esc_attr( $status ); ?>" <?php selected( $status, $post_status ); ?>>
                         <?php echo esc_html( $label ); ?>

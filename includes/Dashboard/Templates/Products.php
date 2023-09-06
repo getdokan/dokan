@@ -164,11 +164,15 @@ class Products {
         $_visibility        = $product->get_catalog_visibility();
         $visibility_options = dokan_get_product_visibility_options();
 
+        // set new post status
+        $post_status = ! dokan_is_seller_trusted( get_current_user_id() ) ? 'pending' : 'publish';
+        $post_status = $product->get_status() === 'auto-draft' ? $post_status : $product->get_status();
+
         dokan_get_template_part(
             'products/others', '', [
                 'post_id'            => $post_id,
                 'post'               => $post,
-                'post_status'        => $post->post_status,
+                'post_status'        => apply_filters( 'dokan_post_edit_default_status', $post_status, $product ),
                 '_visibility'        => $_visibility,
                 'visibility_options' => $visibility_options,
                 'class'              => '',

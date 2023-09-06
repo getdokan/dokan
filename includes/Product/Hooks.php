@@ -315,8 +315,17 @@ class Hooks {
      * @return array
      */
     public function set_product_status( $all_statuses, int $product_id ) {
-        if ( dokan()->is_pro_exists() ) {
-            return $all_statuses;
+        if ( ! is_user_logged_in() ) {
+            return [
+                'draft'   => dokan_get_post_status( 'draft' ),
+            ];
+        }
+
+        $user_id = get_current_user_id();
+        if ( ! dokan_is_seller_trusted( $user_id ) ) {
+            unset( $all_statuses['publish'] );
+        } else {
+            unset( $all_statuses['pending'] );
         }
 
         $product = wc_get_product( $product_id );
@@ -324,9 +333,15 @@ class Hooks {
             return $all_statuses;
         }
 
-        // Pending review is pro feature. if product status is pending (already from deactivated pro) then add it other size don't show it on lite.
-        if ( 'pending' === $product->get_status() ) {
-            $all_statuses['pending'] = dokan_get_post_status( 'pending' );
+        switch ( $product->get_status() ) {
+            case 'pending':
+                $all_statuses['pending'] = dokan_get_post_status( 'pending' );
+                break;
+
+            case 'publish':
+                $all_statuses['publish'] = dokan_get_post_status( 'publish' );
+                unset( $all_statuses['pending'] );
+                break;
         }
 
         return $all_statuses;
