@@ -1492,6 +1492,13 @@ export class ApiUtils {
 
 	// create order
 	async createOrder(product: string | object, orderPayload: any, auth?: auth): Promise<[APIResponse, responseBody, string, string]> {
+		console.log('server url', process.env.SERVER_URL)
+		console.log('customer id',process.env.CUSTOMER_ID)
+		console.log('vendor id',process.env.VENDOR_ID)
+		console.log('vendor2 id',process.env.VENDOR2_ID)
+		console.log('product id',process.env.PRODUCT_ID)
+		console.log('v2 product id',process.env.V2_PRODUCT_ID)
+		console.log('pruct id: ', PRODUCT_ID);
 		console.log('wewwewe',product);
 		
 		let productId: string;

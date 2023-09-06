@@ -6,7 +6,7 @@ import { data } from 'utils/testData';
 import { payloads } from 'utils/payloads';
 
 
-setup.describe.only('authenticate users & set permalink', () => {
+setup.describe('authenticate users & set permalink', () => {
 
 	setup('authenticate admin @lite', async ({ page }) => {
 		const loginPage = new LoginPage(page);

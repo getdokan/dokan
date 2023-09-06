@@ -5,7 +5,7 @@ import { data } from 'utils/testData';
 import { payloads } from 'utils/payloads';
 
 
-test.describe.only('Dokan pro feature promo test', () => {
+test.describe('Dokan pro feature promo test', () => {
 
 	let admin: ProPromoPage;
 	let aPage: Page;
