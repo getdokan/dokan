@@ -1451,7 +1451,8 @@ export interface	dokanSettings {
 		commissionType:  string;
 		adminCommission:  string;
 		shippingFeeRecipient:  string;
-		taxFeeRecipient:  string;
+		productTaxFeeRecipient:  string;
+		shippingTaxFeeRecipient:  string;
 		newProductStatus:  string;
 		productCategorySelection:  string;
 		saveSuccessMessage:  string;

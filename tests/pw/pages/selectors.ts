@@ -1877,14 +1877,14 @@ export const selector = {
 
 				},
 
-				// Selling
-				selling: {
 				// Selling Options
-				// Commission
+				selling: {
+					// Commission
 					commissionType: '#dokan_selling\\[commission_type\\]',
 					adminCommission: '#dokan_selling\\[admin_percentage\\]',
 					shippingFeeRecipient: (feeReceiver: string) => `//label[@for='dokan_selling[shipping_fee_recipient][${feeReceiver}]']`,
-					taxFeeRecipient: (feeReceiver: string) => `//label[@for='dokan_selling[tax_fee_recipient][${feeReceiver}]']`,
+					productTaxFeeRecipient: (feeReceiver: string) => `//label[@for='dokan_selling[tax_fee_recipient][${feeReceiver}]']`,
+					shippingTaxFeeRecipient: (feeReceiver: string) => `//label[@for='dokan_selling[shipping_tax_fee_recipient][${feeReceiver}]']`,
 					processRefundViaAPI: '#dokan_selling\\[automatic_process_api_refund\\]',
 
 					// Vendor Capability

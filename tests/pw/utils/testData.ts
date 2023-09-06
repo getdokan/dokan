@@ -1707,7 +1707,8 @@ export const data = {
 			commissionType: 'percentage', //'flat', 'percentage', 'combine'
 			adminCommission: '10',
 			shippingFeeRecipient: 'seller', //'seller', 'admin'
-			taxFeeRecipient: 'seller', //'seller', 'admin'
+			productTaxFeeRecipient: 'seller', //'seller', 'admin'
+			shippingTaxFeeRecipient: 'seller', //'seller', 'admin'
 			newProductStatus: 'publish', //'publish', 'pending'
 			productCategorySelection: 'single', //'single', 'multiple'
 			saveSuccessMessage: 'Setting has been saved successfully.',

@@ -92,7 +92,8 @@ export class SettingsPage extends AdminPage {
 		await this.selectByValue(selector.admin.dokan.settings.selling.commissionType, selling.commissionType);
 		await this.clearAndType(selector.admin.dokan.settings.selling.adminCommission, selling.adminCommission);
 		await this.click(selector.admin.dokan.settings.selling.shippingFeeRecipient(selling.shippingFeeRecipient));
-		await this.click(selector.admin.dokan.settings.selling.taxFeeRecipient(selling.taxFeeRecipient));
+		await this.click(selector.admin.dokan.settings.selling.productTaxFeeRecipient(selling.productTaxFeeRecipient));
+		await this.click(selector.admin.dokan.settings.selling.shippingTaxFeeRecipient(selling.shippingTaxFeeRecipient));
 
 		// vendor capability
 		await this.enableSwitcher(selector.admin.dokan.settings.selling.enableSelling);
