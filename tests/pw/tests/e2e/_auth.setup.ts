@@ -6,7 +6,7 @@ import { data } from 'utils/testData';
 import { payloads } from 'utils/payloads';
 
 
-setup.describe('authenticate users & set permalink', () => {
+setup.describe.only('authenticate users & set permalink', () => {
 
 	setup('authenticate admin @lite', async ({ page }) => {
 		const loginPage = new LoginPage(page);
@@ -51,8 +51,7 @@ setup.describe('authenticate users & set permalink', () => {
 		await loginPage.login(data.vendor, data.auth.vendorAuthFile);
 	});
 
-
-	setup('dokan @pro', async ({ request }) => {
+	setup('dokan pro enabled or not@pro', async ({ request }) => {
 		const apiUtils = new ApiUtils(request);
 		const res = await apiUtils.pluginsActiveOrNot(data.plugin.dokanPro, payloads.adminAuth);
 		process.env.DOKAN_PRO = String(res);

@@ -193,8 +193,8 @@ export const selector = {
 
 			// dokan notice
 			notice : {
-				// notice: '.dokan-admin-notices',
-				noticeDiv: '.dokan-admin-notice.dokan-alert',
+				noticeDiv: '.dokan-admin-notices',
+				noticeDiv1: '.dokan-admin-notice.dokan-alert',
 				closeNotice: '.close-notice',
 				slider: '.slide-notice',
 				sliderPrev: '.slide-notice .prev',
