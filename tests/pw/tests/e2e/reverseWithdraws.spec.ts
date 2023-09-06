@@ -10,7 +10,7 @@ import { dbData } from 'utils/dbData';
 const { PRODUCT_ID } = process.env;
 
 
-test.describe.only('Reverse withdraw test', () => {
+test.describe('Reverse withdraw test', () => {
 
 	let admin: ReverseWithdrawsPage;
 	let vendor: ReverseWithdrawsPage;
