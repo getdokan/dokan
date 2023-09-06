@@ -90,7 +90,7 @@ export class ApiUtils {
 		try {
 			assert && expect(response.ok()).toBeTruthy();
 			const responseBody = await response.json();
-			console.log('ResponseBody: ', responseBody);
+			// console.log('ResponseBody: ', responseBody);
 			String(response.status())[0] != '2' && console.log('ResponseBody: ', responseBody);
 			return responseBody;
 		}

@@ -46,13 +46,13 @@ test.describe('stores api test', () => {
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('get store current visitor @lite', async () => {
+	test('get store current visitor @pro', async () => {
 		const [response, responseBody] = await apiUtils.get(endPoints.getStoreCurrentVisitor);
 		expect(response.ok()).toBeTruthy();
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('get store stats @lite', async () => {
+	test('get store stats @pro', async () => {
 		const [response, responseBody] = await apiUtils.get(endPoints.getStoreStats(sellerId));
 		expect(response.ok()).toBeTruthy();
 		expect(responseBody).toBeTruthy();

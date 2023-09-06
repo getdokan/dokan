@@ -15,6 +15,7 @@ declare global {
             VENDOR2_ID: string;
             CUSTOMER_ID: string;
             PRODUCT_ID: string;
+            V2_PRODUCT_ID: string;
             GMAP: string;
             DOKAN_PRO: string
             BASE_URL:string;
@@ -28,7 +29,7 @@ declare global {
             ADMIN_AUTH: string;
             VENDOR_AUTH: string;
             CUSTOMER_AUTH: string;
-            nonce: string;
+            NONCE: string;
             DB_HOST_NAME: string;
             DB_USER_NAME: string;
             DB_USER_PASSWORD: string;

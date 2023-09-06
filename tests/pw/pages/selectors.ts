@@ -3792,6 +3792,11 @@ export const selector = {
 				shippingCost: '//td[contains(text(),"Shipping")]/..//bdi',
 				tax: '//td[contains(text(),"Tax")]/..//bdi',
 				refunded: '.total.refunded-total bdi',
+
+
+				//todo: add lite order details locators
+				//lite
+				total: '//th[contains(text(),"Total:")]/..//td//span[@class="woocommerce-Price-amount amount"]',
 			},
 
 			//general details
