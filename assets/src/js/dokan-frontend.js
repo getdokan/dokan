@@ -66,9 +66,6 @@
       selectedLi.parents('ul.children').each(function(i, val) {
         $(val).css({ display: 'block' });
       });
-
-      let ulArea = $( '.store-cat-stack-dokan.cat-drop-stack ul');
-      ulArea.attr('style','max-height:500px;overflow-y:scroll;');
     }
 
   }
