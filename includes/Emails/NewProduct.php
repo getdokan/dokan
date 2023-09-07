@@ -29,6 +29,7 @@ class NewProduct extends WC_Email {
 
         // Triggers for this email
         add_action( 'dokan_new_product_added', array( $this, 'trigger' ), 30, 2 );
+        add_action( 'dokan_product_updated', array( $this, 'trigger' ), 30, 2 );
 
         // Call parent constructor
         parent::__construct();
@@ -68,14 +69,25 @@ class NewProduct extends WC_Email {
             return;
         }
 
-        if ( dokan_get_new_post_status() === 'pending' ) {
-            do_action( 'dokan_email_trigger_new_pending_product', $product_id, $postdata );
-
+        $product = wc_get_product( $product_id );
+        if ( ! $product ) {
             return;
         }
 
-        $product = wc_get_product( $product_id );
-        error_log( $product->get_status() );
+        // we've added _dokan_new_product_email_sent from version DOKAN_SINCE
+        // so, we are assuming if the meta doesn't exist, email was already send to client
+        $email_sent = $product->get_meta( '_dokan_new_product_email_sent' );
+        if ( empty( $email_sent ) || true === wc_string_to_bool( $email_sent ) ) {
+            return;
+        }
+
+        $product->update_meta_data( '_dokan_new_product_email_sent', 'no' );
+        $product->save();
+
+        if ( dokan_get_new_post_status() === 'pending' ) {
+            do_action( 'dokan_email_trigger_new_pending_product', $product_id, $postdata );
+            return;
+        }
 
         if ( ! $this->is_enabled() || ! $this->get_recipient() || 'publish' !== $product->get_status() ) {
             return;
