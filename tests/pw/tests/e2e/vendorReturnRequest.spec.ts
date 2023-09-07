@@ -22,7 +22,7 @@ test.describe('Vendor RMA test', () => {
 	let orderId: string;
 
 
-	test.beforeAll(async ({ browser }) => {
+	test.beforeAll(async ({ browser, }) => {
 		const vendorContext = await browser.newContext({ storageState: data.auth.vendorAuthFile });
 		vPage = await vendorContext.newPage();
 		vendor = new VendorReturnRequestPage(vPage);
@@ -42,6 +42,7 @@ test.describe('Vendor RMA test', () => {
 		await customer.customerRequestWarranty(orderId, data.predefined.simpleProduct.product1.name, data.rma.requestWarranty);
 
 		// apiUtils = new ApiUtils(request);
+
 		// [,, orderId, ] = await apiUtils.createOrderWithStatus(PRODUCT_ID, { ...payloads.createOrder, customer_id: CUSTOMER_ID }, data.order.orderStatus.processing, payloads.vendorAuth);
 		// [,, orderId, ] = await apiUtils.createOrderWithStatus(payloads.createProduct(), { ...payloads.createOrder, customer_id: CUSTOMER_ID }, data.order.orderStatus.processing, payloads.vendorAuth);
 

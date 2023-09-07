@@ -146,7 +146,7 @@ export class ApiUtils {
 	// get sellerId
 	async getSellerId(storeName?: string, auth? : auth): Promise<string> {
 		const allStores = await this.getAllStores(auth);
-		const sellerId = storeName ? (allStores.find((o: { store_name: unknown; }) => o.store_name === storeName)).id : allStores[0].id;
+		const sellerId = storeName ? (allStores.find((o: { store_name: unknown; }) => o.store_name === storeName))?.id : allStores[0]?.id;
 		return sellerId;
 	}
 
@@ -161,10 +161,11 @@ export class ApiUtils {
 			expect(response.status()).toBe(500);
 			sellerId = await this.getSellerId(payload.store_name, auth);
 			storeName = payload.store_name;
+			await this.updateStore(sellerId, payload, auth);
 		} else {
 			expect(response.ok()).toBeTruthy();
-			sellerId = String(responseBody.id);
-			storeName = String(responseBody.store_name);
+			sellerId = String(responseBody?.id);
+			storeName = String(responseBody?.store_name);
 		}
 		return [responseBody, sellerId, storeName];
 	}
@@ -180,7 +181,7 @@ export class ApiUtils {
 	// create store review
 	async createStoreReview(sellerId: string, payload: object, auth? : auth): Promise<[responseBody, string]> {
 		const [, responseBody] = await this.post(endPoints.createStoreReview(sellerId), { data: payload, headers: auth });
-		const reviewId = String(responseBody.id);
+		const reviewId = String(responseBody?.id);
 		return [responseBody, reviewId];
 	}
 
@@ -212,7 +213,7 @@ export class ApiUtils {
 	// get productId
 	async getProductId(productName: string, auth? : auth): Promise<string> {
 		const allProducts = await this.getAllProducts(auth);
-		const productId = productName ? (allProducts.find((o: { name: unknown; }) => o.name === productName)).id : allProducts[0].id;
+		const productId = productName ? (allProducts.find((o: { name: unknown; }) => o.name === productName))?.id : allProducts[0]?.id;
 		return productId;
 	}
 
@@ -220,8 +221,8 @@ export class ApiUtils {
 	// create product
 	async createProduct(payload: object, auth? : auth): Promise<[responseBody, string, string]> {
 		const [, responseBody] = await this.post(endPoints.createProduct, { data: payload, headers: auth });
-		const productId = String(responseBody.id);
-		const productName = String(responseBody.name);
+		const productId = String(responseBody?.id);
+		const productName = String(responseBody?.name);
 		return [responseBody, productId, productName];
 	}
 
@@ -250,10 +251,10 @@ export class ApiUtils {
 
 
 	// get product exists or not
-	async productExistsOrNot(productName: string, auth? : auth): Promise<boolean> {
+	async productExistsOrNot(productName: string, auth? : auth): Promise<string|boolean> {
 		const allProducts = await this.getAllProducts(auth);
-		const res = allProducts.find((o: { name: unknown; }) => o.name === productName);
-		return res ? res.id : false;
+		const res = allProducts.find((o: { name: unknown; }) => o.name === productName)?.id ?? false;
+		return res;
 	}
 
 
@@ -265,7 +266,7 @@ export class ApiUtils {
 	// create product
 	async createProductVariation(productId: string, payload: object, auth? : auth) : Promise<[responseBody, string]> {
 		const [, responseBody] = await this.post(endPoints.createProductVariation(productId), { data: payload, headers: auth });
-		const variationId = String(responseBody.id);
+		const variationId = String(responseBody?.id);
 		return [responseBody, variationId];
 	}
 
@@ -274,7 +275,7 @@ export class ApiUtils {
 	async getVariationId(productName: string, auth? : auth): Promise<[string, string]> {
 		const productId = await this.getProductId(productName, auth);
 		const [, responseBody] = await this.get(endPoints.getAllProductVariations(productId), { headers: auth });
-		const variationId = String(responseBody[0].id);
+		const variationId = String(responseBody[0]?.id);
 		return [productId, variationId];
 	}
 
@@ -311,7 +312,7 @@ export class ApiUtils {
 	// get attributeId
 	async getAttributeId(auth? : auth): Promise<string> {
 		const allAttributes = await this.getAllAttributes(auth);
-		const attributeId = allAttributes[0].id;
+		const attributeId = allAttributes[0]?.id;
 		return attributeId;
 	}
 
@@ -319,7 +320,7 @@ export class ApiUtils {
 	// create attribute
 	async createAttribute(payload: object, auth? : auth): Promise<[responseBody, string]> {
 		const [, responseBody] = await this.post(endPoints.createAttribute, { data: payload, headers: auth });
-		const attributeId = String(responseBody.id);
+		const attributeId = String(responseBody?.id);
 		return [responseBody, attributeId];
 	}
 
@@ -355,7 +356,7 @@ export class ApiUtils {
 		let attributeId: string;
 		typeof (attribute) === 'object' ? [, attributeId] = await this.createAttribute(attribute, auth) : attributeId = attribute;
 		const [, responseBody] = await this.post(endPoints.createAttributeTerm(attributeId), { data: attributeTerm, headers: auth });
-		const attributeTermId = String(responseBody.id);
+		const attributeTermId = String(responseBody?.id);
 		return [responseBody, attributeId, attributeTermId];
 	}
 
@@ -375,7 +376,7 @@ export class ApiUtils {
 	// get couponId
 	async getCouponId(couponCode: string, auth? : auth): Promise<string> {
 		const allCoupons = await this.getAllCoupons(auth);
-		const couponId = couponCode ? (allCoupons.find((o: { code: unknown; }) => o.code === couponCode)).id : allCoupons[0].id;
+		const couponId = couponCode ? (allCoupons.find((o: { code: unknown; }) => o.code === couponCode))?.id : allCoupons[0]?.id;
 		return couponId;
 	}
 
@@ -392,8 +393,8 @@ export class ApiUtils {
 			couponCode = coupon.code;
 		} else {
 			expect(response.ok()).toBeTruthy();
-			couponId = String(responseBody.id);
-			couponCode = String(responseBody.code);
+			couponId = String(responseBody?.id);
+			couponCode = String(responseBody?.code);
 		}
 		return [responseBody, couponId, couponCode];
 	}
@@ -402,7 +403,7 @@ export class ApiUtils {
 	// get market couponId
 	async getMarketPlaceCouponId(couponCode: string, auth? : auth): Promise<string> {
 		const [, allCoupons] = await this.get(endPoints.wc.getAllCoupons, { params: { per_page:100 }, headers: auth });
-		const couponId = couponCode ? (allCoupons.find((o: { code: unknown; }) => o.code === couponCode)).id : allCoupons[0].id;
+		const couponId = couponCode ? (allCoupons.find((o: { code: unknown; }) => o.code === couponCode))?.id : allCoupons[0]?.id;
 		return couponId;
 	}
 
@@ -419,8 +420,8 @@ export class ApiUtils {
 			couponCode = coupon.code;
 		} else {
 			expect(response.ok()).toBeTruthy();
-			couponId = String(responseBody.id);
-			couponCode = String(responseBody.code);
+			couponId = String(responseBody?.id);
+			couponCode = String(responseBody?.code);
 		}
 		return [responseBody, couponId, couponCode];
 	}
@@ -465,7 +466,7 @@ export class ApiUtils {
 	async getWithdrawId(auth? : auth): Promise<string> {
 		const allWithdraws = await this.getAllWithdrawsByStatus('pending', auth);
 		if(!allWithdraws?.length){ return ''; } //todo:  apply this to all get id method
-		const withdrawId = allWithdraws[0].id;
+		const withdrawId = allWithdraws[0]?.id;
 		return withdrawId;
 	}
 
@@ -474,7 +475,7 @@ export class ApiUtils {
 	async createWithdraw(payload: object, auth? : auth): Promise<[responseBody, string]> {
 		const response = await this.request.post(endPoints.createWithdraw, { data: payload, headers: auth }); //todo: return withdrawId if already exists
 		const responseBody = await this.getResponseBody(response, false); //todo:  test if false is necessary there was false which is removed for testing
-		const withdrawId = String(responseBody.id);
+		const withdrawId = String(responseBody?.id);
 		return [responseBody, withdrawId];
 	}
 
@@ -512,7 +513,7 @@ export class ApiUtils {
 	// get orderId
 	async getOrderId(auth? : auth): Promise<string> {
 		const allOrders = await this.getAllOrders(auth);
-		const orderId = allOrders[0].id;
+		const orderId = allOrders[0]?.id;
 		return orderId;
 	}
 
@@ -527,7 +528,7 @@ export class ApiUtils {
 	// get order key
 	async getOrderKey(orderId: string): Promise<string>{
 		const [, responseBody] = await this.getSingleOrder(orderId, payloads.adminAuth);
-		const  orderKey = responseBody.order_key;
+		const  orderKey = responseBody?.order_key;
 		return orderKey;
 	}
 
@@ -541,7 +542,7 @@ export class ApiUtils {
 	async createOrderNote(product: string | object, order: object, orderNote: object, auth? : auth): Promise<[responseBody, string, string]> {
 		const [,, orderId] = await this.createOrder(product, order, auth);
 		const [, responseBody] = await this.post(endPoints.createOrderNote(orderId), { data: orderNote, headers: auth });
-		const orderNoteId = String(responseBody.id);
+		const orderNoteId = String(responseBody?.id);
 		return [responseBody, orderId, orderNoteId];
 	}
 
@@ -588,7 +589,7 @@ export class ApiUtils {
 	// get refundId
 	async getRefundId(status: string, auth? : auth): Promise<string> {
 		const allRefunds = await this.getAllRefunds(status, auth);
-		const refundId = allRefunds[0].id;
+		const refundId = allRefunds[0]?.id;
 		return refundId;
 	}
 
@@ -627,8 +628,8 @@ export class ApiUtils {
 	// get support ticket id
 	async getSupportTicketId(auth? : auth): Promise<[string, string]> {
 		const allSupportTickets = await this.getAllSupportTickets(auth);
-		const supportTicketId = allSupportTickets[0].ID;
-		const sellerId = allSupportTickets[0].vendor_id;
+		const supportTicketId = allSupportTickets[0]?.id;
+		const sellerId = allSupportTickets[0]?.vendor_id;
 		return [supportTicketId, sellerId];
 	}
 
@@ -636,7 +637,7 @@ export class ApiUtils {
 	// create support ticket
 	async createSupportTicket(payload: object): Promise<[responseBody, string]> {
 		const [, responseBody] = await this.post(endPoints.wp.createCustomPost('dokan_store_support'), { data: payload, headers: payloads.adminAuth });
-		const supportTicketId = String(responseBody.id);
+		const supportTicketId = String(responseBody?.id);
 		return [responseBody, supportTicketId];
 	}
 
@@ -679,7 +680,7 @@ export class ApiUtils {
 	// get orderId
 	async getReverseWithdrawalStoreId(auth? : auth): Promise<string> {
 		const allReverseWithdrawalStores = await this.getAllReverseWithdrawalStores(auth);
-		const reverseWithdrawalStoreId = allReverseWithdrawalStores[0].id;
+		const reverseWithdrawalStoreId = allReverseWithdrawalStores[0]?.id;
 		return reverseWithdrawalStoreId;
 	}
 
@@ -743,7 +744,7 @@ export class ApiUtils {
 	async getCustomerId(username: string, auth? : auth): Promise<string> {
 		const allCustomers = await this.getAllCustomers(auth);
 		if(!allCustomers?.length){ return ''; }
-		const customerId = (allCustomers.find((o: { username: unknown; }) => o.username === username)).id;
+		const customerId = (allCustomers.find((o: { username: unknown; }) => o.username === username))?.id;
 		return customerId;
 	}
 
@@ -756,9 +757,10 @@ export class ApiUtils {
 		if(responseBody.code){
 			expect(response.status()).toBe(400);
 			customerId = await this.getCustomerId(payload.username, auth);
+			await this.updateCustomer(customerId, payload, auth);
 		} else {
 			expect(response.ok()).toBeTruthy();
-			customerId = String(responseBody.id);
+			customerId = String(responseBody?.id);
 		}
 		return [responseBody, customerId];
 	}
@@ -815,7 +817,7 @@ export class ApiUtils {
 		const [body, productId] = await this.createProduct(product, auth);
 		const sellerId = body.store.id;
 		const [, responseBody] = await this.post(endPoints.createProductAdvertisement, { data: { vendor_id: sellerId, product_id: productId }, headers: payloads.adminAuth });
-		const productAdvertisementId = String(responseBody.id);
+		const productAdvertisementId = String(responseBody?.id);
 		return [responseBody, productAdvertisementId];
 	}
 
@@ -835,7 +837,7 @@ export class ApiUtils {
 	// get abuse reportId
 	async getAbuseReportId(auth? : auth): Promise<string> {
 		const allAbuseReports = await this.getAllAbuseReports(auth);
-		const abuseReportId = allAbuseReports[0].id;
+		const abuseReportId = allAbuseReports[0]?.id;
 		return abuseReportId;
 	}
 
@@ -855,8 +857,8 @@ export class ApiUtils {
 	// create announcement
 	async createAnnouncement(payload: object, auth? : auth): Promise<[responseBody, string, string]> {
 		const [, responseBody] = await this.post(endPoints.createAnnouncement, { data: payload, headers: auth });
-		const announcementId = String(responseBody.id);
-		const announcementTitle = String(responseBody.title);
+		const announcementId = String(responseBody?.id);
+		const announcementTitle = String(responseBody?.title);
 		return [responseBody, announcementId, announcementTitle];
 	}
 
@@ -890,7 +892,7 @@ export class ApiUtils {
 	// get product review id
 	async getProductReviewId(auth? : auth): Promise<string> {
 		const allProductReviews = await this.getAllProductReviews(auth);
-		const reviewId = allProductReviews[0].id;
+		const reviewId = allProductReviews[0]?.id;
 		return reviewId;
 	}
 
@@ -910,7 +912,7 @@ export class ApiUtils {
 	// get store review id
 	async getStoreReviewId(auth? : auth): Promise<string> {
 		const allStoreReviews = await this.getAllStoreReviews(auth);
-		const reviewId = allStoreReviews[0].id;
+		const reviewId = allStoreReviews[0]?.id;
 		return reviewId;
 	}
 
@@ -947,7 +949,7 @@ export class ApiUtils {
 	// get sellerId
 	async getStoreCategoryId(StoreCategoryName?: string, auth? : auth): Promise<string> {
 		const allStoreCategories = await this.getAllStoreCategories(auth);
-		const storeCategoryId = StoreCategoryName ? (allStoreCategories.find((o: { name: unknown; }) => o.name === StoreCategoryName)).id : allStoreCategories[0].id;
+		const storeCategoryId = StoreCategoryName ? (allStoreCategories.find((o: { name: unknown; }) => o.name === StoreCategoryName))?.id : allStoreCategories[0]?.id;
 		return storeCategoryId;
 	}
 
@@ -955,8 +957,8 @@ export class ApiUtils {
 	// create store category
 	async createStoreCategory(payload: object, auth? : auth): Promise<[responseBody, string, string]> {
 		const [, responseBody] = await this.post(endPoints.createStoreCategory, { data: payload, headers: auth });
-		const categoryId = String(responseBody.id);
-		const categoryName = String(responseBody.name);
+		const categoryId = String(responseBody?.id);
+		const categoryName = String(responseBody?.name);
 		return [responseBody, categoryId, categoryName];
 	}
 
@@ -964,7 +966,7 @@ export class ApiUtils {
 	// get default store category
 	async getDefaultStoreCategory(auth? : auth): Promise<[responseBody, string]> {
 		const [, responseBody] = await this.get(endPoints.getDefaultStoreCategory, { headers: auth });
-		const categoryId = String(responseBody.id);
+		const categoryId = String(responseBody?.id);
 		return [responseBody, categoryId];
 	}
 
@@ -994,7 +996,7 @@ export class ApiUtils {
 	// create quote rule
 	async createQuoteRule(payload: object, auth? : auth): Promise<[responseBody, string]> {
 		const [, responseBody] = await this.post(endPoints.createQuoteRule, { data: payload, headers: auth });
-		const quoteRuleId = String(responseBody.id);
+		const quoteRuleId = String(responseBody?.id);
 		return [responseBody, quoteRuleId];
 	}
 
@@ -1030,8 +1032,8 @@ export class ApiUtils {
 	async createRequestQuote(payload: object, auth? : auth): Promise<[responseBody, string, string]> {
 		const [, responseBody] = await this.post(endPoints.createRequestQuote, { data: payload, headers: auth });
 		// console.log(responseBody);
-		const quoteId = String(responseBody[0].data.id);
-		const quoteTitle = String(responseBody[0].data.title);
+		const quoteId = String(responseBody[0]?.data?.id);
+		const quoteTitle = String(responseBody[0]?.data?.title);
 		// console.log(quoteTitle);
 		return [responseBody, quoteId, quoteTitle];
 	}
@@ -1093,7 +1095,7 @@ export class ApiUtils {
 	// get all seller badges
 	async getSellerBadgeId(eventType: string, auth? : auth): Promise<string> {
 		const allBadges = await this.getAllSellerBadges(auth);
-		const badgeId = allBadges.find((o: { event_type: unknown; }) => o.event_type === eventType).id;
+		const badgeId = allBadges.find((o: { event_type: unknown; }) => o.event_type === eventType)?.id;
 		return badgeId;
 	}
 
@@ -1102,7 +1104,7 @@ export class ApiUtils {
 	async createSellerBadge(payload: any, auth? : auth): Promise<[responseBody, string]> {
 		const response = await this.request.post(endPoints.createSellerBadge, { data: payload, headers: auth }); //todo:  remove this.request from everywhere
 		const responseBody = await this.getResponseBody(response, false);
-		const badgeId = responseBody.code === 'invalid-event-type' ? await this.getSellerBadgeId(payload.event_type, auth) : responseBody.id;
+		const badgeId = responseBody.code === 'invalid-event-type' ? await this.getSellerBadgeId(payload.event_type, auth) : responseBody?.id;
 		return [responseBody, badgeId];
 	}
 
@@ -1145,7 +1147,7 @@ export class ApiUtils {
 	// get staff Id
 	async getStaffId(username: string, auth? : auth): Promise<string> {
 		const allStaffs = await this.getAllVendorStaffs(auth);
-		const staffId = (allStaffs.find((o: { user_login: unknown; }) => o.user_login === username)).ID;
+		const staffId = (allStaffs.find((o: { user_login: unknown; }) => o.user_login === username))?.id;
 		return staffId;
 	}
 
@@ -1162,7 +1164,7 @@ export class ApiUtils {
 			staffId = await this.getStaffId(payload.username, auth);
 		} else {
 			expect(response.ok()).toBeTruthy();
-			staffId = String(responseBody.ID);
+			staffId = String(responseBody?.id);
 		}
 		return [responseBody, staffId];
 	}
@@ -1231,7 +1233,7 @@ export class ApiUtils {
 	// get current user
 	async getCurrentUser(auth? : auth): Promise<[responseBody, string]> {
 		const [, responseBody] = await this.get(endPoints.wp.getCurrentUser, { headers: auth });
-		const userId = String(responseBody.id);
+		const userId = String(responseBody?.id);
 		return [responseBody, userId];
 	}
 
@@ -1301,6 +1303,11 @@ export class ApiUtils {
 		return responseBody;
 	}
 
+	// get plugin active or not
+	async pluginsExistsOrNot(plugins: string[], auth? : auth): Promise<boolean> {
+		const existingPlugins = (await this.getAllPlugins({}, auth)).map((a: { plugin: string }) => (a.plugin).split('/')[1]);
+		return helpers.isSubArray(existingPlugins, plugins );
+	}
 
 	// get plugin active or not
 	async pluginsActiveOrNot(plugins: string[], auth? : auth): Promise<boolean> {
@@ -1331,7 +1338,7 @@ export class ApiUtils {
 		};
 		const response = await this.request.post(endPoints.wp.createMediaItem, payload);
 		const responseBody = await this.getResponseBody(response);
-		const mediaId = String(responseBody.id);
+		const mediaId = String(responseBody?.id);
 		return [responseBody, mediaId];
 	}
 
@@ -1384,7 +1391,7 @@ export class ApiUtils {
 		// const response = await this.request.post(endPoints.wp.createMediaItem, payload);
 		const response = await this.request.post(endPoints.wp.createMediaItem, { form: form, headers: headers });  //todo:  update all request.post to this.post/get/put/delete
 		const responseBody = await this.getResponseBody(response);
-		const mediaId = String(responseBody.id);
+		const mediaId = String(responseBody?.id);
 		return [responseBody, mediaId];
 	}
 
@@ -1396,7 +1403,7 @@ export class ApiUtils {
 		const headers = { 'content-disposition': `attachment; filename=${String((filePath.split('/')).pop())}` };
 		const response = await this.request.post(endPoints.wp.createMediaItem, { data: payload, headers });
 		const responseBody = await this.getResponseBody(response);
-		const mediaId = String(responseBody.id);
+		const mediaId = String(responseBody?.id);
 		return [responseBody, mediaId];
 	}
 
@@ -1411,7 +1418,7 @@ export class ApiUtils {
 	// get mediaItemId
 	async getMediaItemId(auth? : auth): Promise<string> {
 		const getAllMediaItems = await this.getAllMediaItems(auth);
-		const mediaId = getAllMediaItems[0].id;
+		const mediaId = getAllMediaItems[0]?.id;
 		return mediaId;
 	}
 
@@ -1423,23 +1430,38 @@ export class ApiUtils {
 	}
 
 
-	// get all mediaItems
+	// get all pages
 	async getAllPages(auth? : auth): Promise<responseBody> {
 		const [, responseBody] = await this.get(endPoints.wp.getAllPages, { params: { per_page:100 }, headers: auth });
 		return responseBody;
 	}
 
 
+	// get single page
+	async getSinglePage(pageId: string, auth? : auth): Promise<responseBody> {
+		const [, responseBody] = await this.get(endPoints.wp.getSinglePage(pageId), { headers: auth });
+		return responseBody;
+	}
+
+
+	// get page Id
 	async getPageId(pageSlug:string, auth?: auth): Promise<string> {
 		const allPages = await this.getAllPages(auth);
-		const pageId = (allPages.find((o: { slug: unknown; }) => o.slug === pageSlug)).id;
+		const pageId = (allPages.find((o: { slug: unknown; }) => o.slug === pageSlug))?.id;
 		return pageId;
 	}
 
 
+	// create page
 	async createPage(payload: object, auth? : auth): Promise<[responseBody, string]>{
-		const [, responseBody] = await this.post(endPoints.wp.createPage, { data: payload, headers: auth });
-		const pageId = String(responseBody.id);
+		let pageId = await this.getPageId(helpers.slugify(payloads.tocPage.title), payloads.adminAuth);
+		let responseBody;
+		if (pageId === undefined) {
+			[, responseBody] = await this.post(endPoints.wp.createPage, { data: payload, headers: auth });
+			pageId = String(responseBody?.id);
+		} else {
+			responseBody = await this.getSinglePage(pageId, auth);
+		}
 		return [responseBody, pageId];
 	}
 
@@ -1492,8 +1514,8 @@ export class ApiUtils {
 			productId = product;
 		}
 		const [, responseBody] = await this.post(endPoints.wc.createReview, { data: { ...review, product_id: productId }, headers: auth });
-		const reviewId = String(responseBody.id);
-		const reviewMessage = String(responseBody.review);
+		const reviewId = String(responseBody?.id);
+		const reviewMessage = String(responseBody?.review);
 		return [responseBody, reviewId, reviewMessage];
 	}
 
@@ -1518,7 +1540,7 @@ export class ApiUtils {
 	// get categoryId
 	async getCategoryId(categoryName: string, auth? : auth): Promise<string> {
 		const allCustomers = await this.getAllCustomers(auth);
-		const customerId = (allCustomers.find((o: { name: unknown; }) => o.name === categoryName)).id;
+		const customerId = (allCustomers.find((o: { name: unknown; }) => o.name === categoryName))?.id;
 		return customerId;
 	}
 
@@ -1526,7 +1548,7 @@ export class ApiUtils {
 	// create category
 	async createCategory(payload: object, auth? : auth): Promise<[responseBody, string]> {
 		const [, responseBody] = await this.post(endPoints.wc.createCategory, { data: payload, headers: auth });
-		const categoryId = String(responseBody.id);
+		const categoryId = String(responseBody?.id);
 		return [responseBody, categoryId];
 	}
 
@@ -1558,7 +1580,9 @@ export class ApiUtils {
 	// create order
 	async createOrder(product: string | object, orderPayload: any, auth?: auth): Promise<[APIResponse, responseBody, string, string]> {
 		let productId: string;
-		if (typeof(product) != 'string'){
+		if( !product){
+			[, productId,] = await this.createProduct(payloads.createProduct(), auth);
+		} else if (typeof(product) != 'string'){
 			[, productId,] = await this.createProduct(product, auth);
 		} else {
 			productId = product;
@@ -1567,7 +1591,7 @@ export class ApiUtils {
 		payload.line_items[0].product_id = productId;
 		const response = await this.request.post(endPoints.wc.createOrder, { data: payload, headers: payloads.adminAuth });
 		const responseBody = await this.getResponseBody(response);
-		const orderId = String(responseBody.id);
+		const orderId = String(responseBody?.id);
 		return [response, responseBody, orderId, productId];
 	}
 
@@ -1586,7 +1610,7 @@ export class ApiUtils {
 	// create refund
 	async createRefund(orderId: string, refund: object, auth? : auth): Promise<[responseBody, string]> {
 		const [, responseBody] = await this.post(endPoints.wc.createRefund(orderId), { data: refund, headers: auth });
-		const refundId = String(responseBody.id);
+		const refundId = String(responseBody?.id);
 		return [responseBody, refundId];
 	}
 
@@ -1646,7 +1670,7 @@ export class ApiUtils {
 	// get zoneId
 	async getZoneId(zoneName: string, auth? : auth): Promise<string> {
 		const allZones = await this.getAllShippingZones(auth);
-		const zoneId = ((allZones).find((o: { name: unknown; }) => o.name === zoneName)).id;
+		const zoneId = ((allZones).find((o: { name: unknown; }) => o.name === zoneName))?.id;
 		return zoneId;
 	}
 
@@ -1654,7 +1678,7 @@ export class ApiUtils {
 	// create shipping zone
 	async createShippingZone(payload: object, auth? : auth): Promise<[responseBody, string]> {
 		const [, responseBody] = await this.post(endPoints.wc.createShippingZone, { data: payload, headers: auth });
-		const shippingZoneId = String(responseBody.id);
+		const shippingZoneId = String(responseBody?.id);
 		return [responseBody, shippingZoneId];
 	}
 
@@ -1727,11 +1751,11 @@ export class ApiUtils {
 		activePlugins = activePlugins.filter((e: string | string[]) => !conditions.some(el => e.includes(el)));
 		// activePlugins = activePlugins.slice(1, -4);
 		const compactInfo = {
-			wpVersion: 'WordPress Version: ' + responseBody.environment.wp_version,
-			phpVersion: 'PHP Version: ' + responseBody.environment.php_version,
-			mysqlVersion: 'MySql Version: ' + responseBody.environment.mysql_version,
-			theme: 'Theme: ' + responseBody.theme.name + ' v' + responseBody.theme.version,
-			wpDebugMode: 'Debug Mode: ' + responseBody.environment.wp_debug_mode,
+			wpVersion: 'WordPress Version: ' + responseBody?.environment.wp_version,
+			phpVersion: 'PHP Version: ' + responseBody?.environment.php_version,
+			mysqlVersion: 'MySql Version: ' + responseBody?.environment.mysql_version,
+			theme: 'Theme: ' + responseBody?.theme.name + ' v' + responseBody?.theme.version,
+			wpDebugMode: 'Debug Mode: ' + responseBody?.environment.wp_debug_mode,
 			activePlugins:  activePlugins
 		};
 		return [responseBody, compactInfo];
@@ -1746,7 +1770,7 @@ export class ApiUtils {
 	// create product
 	async createBookableProduct(payload: object, auth? : auth): Promise<[responseBody, string, string]> {
 		const [, responseBody] = await this.post(endPoints.wc.booking.createBookableProduct, { data: payload, headers: auth });
-		const productId = String(responseBody.id);
+		const productId = String(responseBody?.id);
 		const productName = String(responseBody.name);
 		return [responseBody, productId, productName];
 	}

@@ -87,7 +87,10 @@ test.describe('Vendor settings test', () => {
 	test('vendor can set catalog settings @lite', async ( ) => {
 		await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, dbData.dokan.sellingSettings);
 		await vendor.setStoreSettings(data.vendor.vendorInfo, 'catalog');
-		await vendor.resetCatalog();
+		// await vendor.resetCatalog();
+
+		// disable catalog
+		await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, catalog_mode_hide_add_to_cart_button: 'off', catalog_mode_hide_product_price: 'off' });
 	});
 
 	test('vendor can set discount settings @pro', async ( ) => {
@@ -104,7 +107,8 @@ test.describe('Vendor settings test', () => {
 
 	test('vendor can set min-max settings @pro', async ( ) => {
 		await vendor.setStoreSettings(data.vendor.vendorInfo, 'min-max');
-		//todo: disable min-max
+		// disable min-max
+		await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, enable_min_max_quantity: 'off', enable_min_max_amount: 'off' });
 	});
 
 	test('vendor can set shipStation settings @pro', async ( ) => {

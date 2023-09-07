@@ -22,10 +22,11 @@
 //todo:  Modal: Close modal if exists, causes issue with other tests where popup blocks next step*****
 //todo: add new tests or multiple entry in same test for all search parameter, i.e : by-customer, by-product, but-store,..
 //todo:  insert all date format according to site format , currently hardcoded to default format -> helpers.dateFormatFYJ
-//todo:   try to fix product advertisement product, reversewithdraw product, storemap save via api, currently e2e is used
+//todo:   try to fix product advertisement product, reverse withdraw product, store map save via api, currently e2e is used
 //todo:  **************** need custom check method
 //todo:  *** add all email tests
-//todo:  
+//todo:  // add more fields in settings test
+
 
 
 //****************************       test data       ****************************
@@ -301,7 +302,7 @@ settings
 refunds
 test.beforeAll(async ({ request }) => {
 	apiUtils = new ApiUtils(request);
-	[, orderResponseBody,] = await apiUtils.createOrderWithStatus(payloads.createProduct(), payloads.createOrder, 'wc-processing', payloads.vendorAuth);
+	[, orderResponseBody,] = await apiUtils.createOrderWithStatus(PRODUCT_ID, payloads.createOrder, 'wc-processing', payloads.vendorAuth);
 	[, refundId] = await dbUtils.createRefund(orderResponseBody);
 	//todo:   dokan get all refunds dont recognize refunded by woocommerce, find out why & try to use refund by api instead of db
 	// [, refundId] = await apiUtils.createRefund(orderId, payloads.createRefund); // via woocommerce
@@ -314,7 +315,7 @@ test.beforeAll(async ({ request }) => {
 	// check reverse withdrawal payment product exists //todo:  add reverse withdraw check on setup
 	// await apiUtils.getReverseWithdrawalProductId(); //todo:   failed on git action. payment product not created
 	//todo:   add create product via admin after feature merged with pro
-	await apiUtils.createOrderWithStatus(payloads.createProduct(), payloads.createOrderCod, 'wc-completed', payloads.vendorAuth);
+	await apiUtils.createOrderWithStatus(PRODUCT_ID, payloads.createOrderCod, 'wc-completed', payloads.vendorAuth);
 });
 
 

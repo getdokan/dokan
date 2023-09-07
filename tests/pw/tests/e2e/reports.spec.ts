@@ -5,6 +5,9 @@ import { data } from 'utils/testData';
 import { payloads } from 'utils/payloads';
 
 
+const { PRODUCT_ID } = process.env;
+
+
 test.describe('Reports test', () => {
 
 
@@ -19,7 +22,7 @@ test.describe('Reports test', () => {
 		aPage = await adminContext.newPage();
 		admin = new ReportsPage(aPage);
 		apiUtils = new ApiUtils(request);
-		[,, orderId, ] = await apiUtils.createOrderWithStatus(payloads.createProduct(), payloads.createOrder, data.order.orderStatus.completed, payloads.vendorAuth);
+		[,, orderId, ] = await apiUtils.createOrderWithStatus(PRODUCT_ID, payloads.createOrder, data.order.orderStatus.completed, payloads.vendorAuth);
 	});
 
 

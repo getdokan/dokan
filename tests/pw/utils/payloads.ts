@@ -275,6 +275,59 @@ export const payloads = {
 	}),
 
 
+	createSimpleSubscriptionProduct: () => ({
+		name: faker.commerce.productName() + ' (Subscription)',
+		type: 'subscription',
+		status: 'publish',
+		featured: true,
+		description: '<p>test description</p>\n',
+		short_description: '<p>test short description</p>\n',
+		price: '100',
+		regular_price: '100',
+		categories: [
+			{}
+		],
+		meta_data: [
+			{
+				key: '_subscription_price',
+				value: '100'
+			},
+			{
+				key: '_subscription_period_interval',   // every 1st, 2nd, .. month
+				value: '1'
+			},
+			{
+				key: '_subscription_period',
+				value: 'month'
+			},
+			{
+				key: '_subscription_length', // expire after
+				value: '0'
+			}
+			// {
+			//     "key": "_subscription_trial_length",
+			//     "value": "5"
+			// },
+			// {
+			//     "key": "_subscription_sign_up_fee",
+			//     "value": "10"
+			// },
+			// {
+			//     "key": "_subscription_trial_period",
+			//     "value": "day"
+			// },
+			// {
+			//     "key": "_subscription_one_time_shipping",
+			//     "value": "no"
+			// },
+			// {
+			//     "key": "_subscription_payment_sync_date",
+			//     "value": "0"
+			// }
+		]
+	}),
+
+
 	createBookableProduct: () => ({
 		name: faker.commerce.productName() + ' (Bookable)',
 		status: 'publish',
@@ -2642,7 +2695,7 @@ export const payloads = {
 	createCustomer1: {
 		email: process.env.CUSTOMER + '@yopmail.com',
 		first_name: 'customer1',
-		last_name: 'cus',
+		last_name: 'c1',
 		role: 'customer',
 		username: process.env.CUSTOMER,
 		password: process.env.USER_PASSWORD,

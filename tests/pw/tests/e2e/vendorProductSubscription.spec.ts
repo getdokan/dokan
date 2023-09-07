@@ -1,8 +1,8 @@
 import { test, Page } from '@playwright/test';
 import { VendorProductSubscriptionPage } from 'pages/vendorProductSubscriptionPage';
-// import { ApiUtils } from 'utils/apiUtils';
+import { ApiUtils } from 'utils/apiUtils';
 import { data } from 'utils/testData';
-// import { payloads } from 'utils/payloads';
+import { payloads } from 'utils/payloads';
 
 
 test.describe('Product subscriptions test', () => {
@@ -11,10 +11,10 @@ test.describe('Product subscriptions test', () => {
 	let vendor: VendorProductSubscriptionPage;
 	let customer: VendorProductSubscriptionPage;
 	let vPage: Page, cPage: Page;
-	// let apiUtils: ApiUtils;
+	let apiUtils: ApiUtils;
 
 
-	test.beforeAll(async ({ browser, }) => {
+	test.beforeAll(async ({ browser,request }) => {
 		const vendorContext = await browser.newContext({ storageState: data.auth.vendorAuthFile });
 		vPage = await vendorContext.newPage();
 		vendor = new VendorProductSubscriptionPage(vPage);
@@ -23,8 +23,9 @@ test.describe('Product subscriptions test', () => {
 		cPage = await customerContext.newPage();
 		customer = new VendorProductSubscriptionPage(cPage);
 
-		// apiUtils = new ApiUtils(request);
-		//todo: need subscription product via api
+		apiUtils = new ApiUtils(request);
+		const [,productId, productName] = await apiUtils.createProduct(payloads.createProduct(), payloads. vendorAuth);
+
 
 	});
 

@@ -1,4 +1,4 @@
-import { test, Page } from '@playwright/test';
+import { test, Page, APIResponse } from '@playwright/test';
 import { RefundsPage } from 'pages/refundsPage';
 import { ApiUtils } from 'utils/apiUtils';
 import { dbUtils } from 'utils/dbUtils';
@@ -15,7 +15,7 @@ test.describe('Refunds test', () => {
 	let vendor: RefundsPage;
 	let aPage: Page, vPage: Page;
 	let apiUtils: ApiUtils;
-	let orderResponseBody: any;
+	let orderResponseBody: APIResponse;
 	let orderId: string;
 
 
@@ -29,7 +29,7 @@ test.describe('Refunds test', () => {
 		vendor = new RefundsPage(vPage);
 
 		apiUtils = new ApiUtils(request);
-		[, orderResponseBody, orderId, ] = await apiUtils.createOrderWithStatus(payloads.createProduct(), payloads.createOrder, data.order.orderStatus.processing, payloads.vendorAuth);
+		[, orderResponseBody, orderId, ] = await apiUtils.createOrderWithStatus(PRODUCT_ID, payloads.createOrder, data.order.orderStatus.processing, payloads.vendorAuth);
 		await dbUtils.createRefund(orderResponseBody);
 	});
 
@@ -53,13 +53,13 @@ test.describe('Refunds test', () => {
 	});
 
 	test('admin can cancel refund requests @pro', async ( ) => {
-		const[, orderResponseBody, orderId, ] = await apiUtils.createOrderWithStatus(payloads.createProduct(), payloads.createOrder, data.order.orderStatus.processing, payloads.vendorAuth);
+		const[, orderResponseBody, orderId, ] = await apiUtils.createOrderWithStatus(PRODUCT_ID, payloads.createOrder, data.order.orderStatus.processing, payloads.vendorAuth);
 		await dbUtils.createRefund(orderResponseBody);
 		await admin.updateRefundRequests(orderId, 'cancel');
 	});
 
 	test('admin can perform refund requests bulk actions @pro', async ( ) => {
-		const[, orderResponseBody,, ] = await apiUtils.createOrderWithStatus(payloads.createProduct(), payloads.createOrder, data.order.orderStatus.processing, payloads.vendorAuth);
+		const[, orderResponseBody,, ] = await apiUtils.createOrderWithStatus(PRODUCT_ID, payloads.createOrder, data.order.orderStatus.processing, payloads.vendorAuth);
 		await dbUtils.createRefund(orderResponseBody);
 		await admin.refundRequestsBulkAction('completed');
 	});
