@@ -24,7 +24,7 @@ test.describe('Product subscriptions test', () => {
 		customer = new VendorProductSubscriptionPage(cPage);
 
 		apiUtils = new ApiUtils(request);
-		const [,productId, productName] = await apiUtils.createProduct(payloads.createProduct(), payloads. vendorAuth);
+		const [,productId, productName] = await apiUtils.createProduct(payloads.createSimpleSubscriptionProduct(), payloads. vendorAuth);
 
 
 	});
