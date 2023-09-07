@@ -130,7 +130,7 @@ class Assets {
             wp_localize_script( 'dokan-admin-product', 'dokan_admin_product', $this->admin_product_localize_scripts() );
         }
 
-        do_action( 'dokan_enqueue_admin_scripts' );
+        do_action( 'dokan_enqueue_admin_scripts', $hook );
     }
 
     /**
@@ -892,7 +892,8 @@ class Assets {
             if ( $api_key ) {
                 $query_args = apply_filters(
                     'dokan_google_maps_script_query_args', [
-                        'key' => $api_key,
+                        'key'      => $api_key,
+                        'callback' => 'Function.prototype',
                     ]
                 );
 
@@ -1143,7 +1144,7 @@ class Assets {
                     'storePrefix'  => dokan_get_option( 'custom_store_url', 'dokan_general', 'store' ),
                     'assetsUrl'    => DOKAN_PLUGIN_ASSEST,
                     'buynowpro'    => dokan_pro_buynow_url(),
-                    'upgradeToPro' => 'https://wedevs.com/dokan-lite-upgrade-to-pro/?utm_source=plugin&utm_medium=wp-admin&utm_campaign=dokan-lite',
+                    'upgradeToPro' => 'https://dokan.co/wordpress/upgrade-to-pro/?utm_source=plugin&utm_medium=wp-admin&utm_campaign=dokan-lite',
                     'dummy_data'   => DOKAN_PLUGIN_ASSEST . '/dummy-data/dokan_dummy_data.csv',
                     'adminOrderListUrl' => OrderUtil::get_admin_order_list_url(),
                     'adminOrderEditUrl' => OrderUtil::get_admin_order_edit_url(),
