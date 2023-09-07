@@ -32,6 +32,9 @@ class Hooks {
         add_filter( 'dokan_post_status', [ $this, 'set_product_status' ], 1, 2 );
         add_action( 'dokan_new_product_added', [ $this, 'set_new_product_email_status' ], 1, 1 );
 
+        // Remove product type filter if pro not exists.
+        add_filter( 'dokan_product_listing_filter_args', [ $this, 'remove_product_type_filter' ] );
+
         // Init Product Cache Class
         new VendorStoreInfo();
         new ProductCache();
@@ -364,5 +367,24 @@ class Hooks {
         } else {
             update_post_meta( $product_id, '_dokan_new_product_email_sent', 'no' );
         }
+    }
+  
+    /**
+     * Remove product type filter if dokan pro does not exist.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $args
+     *
+     * @return array
+     */
+    public function remove_product_type_filter( $args ) {
+        global $wp;
+
+        if ( dokan_is_seller_dashboard() && isset( $wp->query_vars['products'] ) && ! function_exists( 'dokan_pro' ) ) {
+            $args['product_types'] = '';
+        }
+
+        return $args;
     }
 }
