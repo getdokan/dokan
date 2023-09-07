@@ -562,7 +562,16 @@ function dokan_get_commission_type( $seller_id = 0, $product_id = 0, $category_i
 function dokan_get_new_post_status() {
 	$user_id    = get_current_user_id();
 	$is_trusted = dokan_is_seller_trusted( $user_id );
-	$status     = $is_trusted ? 'publish' : dokan_get_option( 'product_status', 'dokan_selling', 'pending' );
+    $status     = 'pending';
+
+    if ( $is_trusted ) {
+        $status = 'publish';
+    }
+
+    // below code will be removed on future version of Dokan Lite
+    if ( dokan()->is_pro_exists() && version_compare( DOKAN_PRO_PLUGIN_VERSION, '3.8.3', '<' ) ) {
+        $status = 'publish' === $status ? $status : dokan_get_option( 'product_status', 'dokan_selling', 'pending' );
+    }
 
 	return apply_filters( 'dokan_get_new_post_status', $status, $user_id, $is_trusted );
 }
