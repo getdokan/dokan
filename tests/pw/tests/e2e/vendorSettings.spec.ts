@@ -3,7 +3,7 @@ import { VendorSettingsPage } from 'pages/vendorSettingsPage';
 import { dbData } from 'utils/dbData';
 // import { ApiUtils } from 'utils/apiUtils';
 import { dbUtils } from 'utils/dbUtils';
-// import { helpers } from 'utils/helpers';
+import { helpers } from 'utils/helpers';
 import { data } from 'utils/testData';
 // import { payloads } from 'utils/payloads';
 
@@ -19,6 +19,7 @@ test.describe('Vendor settings test', () => {
 	test.beforeAll(async ({ browser }) => {
 		const vendorContext = await browser.newContext(data.auth.vendorAuth);
 		vPage = await vendorContext.newPage();
+		// vPage = await helpers.createPage(browser, data.auth.vendorAuth);
 		vendor = new VendorSettingsPage(vPage);
 
 		// apiUtils = new ApiUtils(request);
