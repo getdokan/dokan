@@ -82,37 +82,41 @@ jobs:
           npm ci 
           npm run build
 
-
+      # Install test dependencies
       - name: Install dependencies 
         run: |
           cd tests/pw 
           npm ci 
 
-
+      # Start wordpress environment
       - name: Start WordPress Env
         run: |
           cd tests/pw
           npm run start:env 
 
 
+      # Grab test db port
       - name: Get Test DB PORT
         run: |
           cd tests/pw
           echo "DB_PORT=$(docker ps -f ancestor='mariadb' -f name='tests-mysql' --format='{{.Ports}}' | sed -E 's/.*:(.*)->.*/\1/')" >> $GITHUB_ENV
 
 
+      # db port
       - name: DB PORT
         run: |
           cd tests/pw 
           echo "The value of test DB_PORT is ${{ env.DB_PORT }}"
 
 
+      # Activate theme 
       - name: Activate theme:Storefront
         run: |
           cd tests/pw
           npm run wp-env run tests-cli "wp theme activate storefront"
 
 
+      # Set permalink structure
       - name: Set Permalink structure
         run: |
           cd tests/pw 
@@ -177,6 +181,7 @@ jobs:
                 return await script({github, context, core})
           
 
+      # Find PR comment  
       - name: Find PR comment by github-actions[bot]
         uses: peter-evans/find-comment@v2
         id: find-comment
@@ -187,6 +192,7 @@ jobs:
             body-includes: Tests Summary
     
 
+      # Post test summary as PR comment
       - name: Create or update PR comment
         uses: peter-evans/create-or-update-comment@v2
         if: github.event_name == 'pull_request'

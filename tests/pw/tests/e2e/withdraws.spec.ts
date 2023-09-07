@@ -25,9 +25,6 @@ test.describe('Withdraw test', () => {
 		const vendorContext = await browser.newContext({ storageState: data.auth.vendorAuthFile });
 		vPage = await vendorContext.newPage();
 		vendor = new WithdrawsPage(vPage);
-
-		console.log('mkmkmkmk', PRODUCT_ID);
-		console.log('mkmkmkmk', typeof(PRODUCT_ID));
 		
 		apiUtils = new ApiUtils(request);
 		[currentBalance, minimumWithdrawLimit] = await apiUtils.getMinimumWithdrawLimit( payloads.vendorAuth);
