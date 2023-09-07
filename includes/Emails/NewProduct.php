@@ -81,10 +81,10 @@ class NewProduct extends WC_Email {
             return;
         }
 
-        $product->update_meta_data( '_dokan_new_product_email_sent', 'no' );
+        $product->update_meta_data( '_dokan_new_product_email_sent', 'yes' );
         $product->save();
 
-        if ( dokan_get_new_post_status() === 'pending' ) {
+        if ( $product->get_status() === 'pending' ) {
             do_action( 'dokan_email_trigger_new_pending_product', $product_id, $postdata );
             return;
         }
