@@ -28,6 +28,23 @@
             </div>
         </template>
 
+        <template v-if="'extra_sub_section' === fieldData.type">
+            <div class="dokan-settings-sub-section" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
+                <div class='sub-section-column-heading'>
+                    <h4 class="sub-section-column-title">{{ fieldData.label_1 }}</h4>
+                    <h4 class="sub-section-column-title">{{ fieldData.label_2 }}</h4>
+                    <h4 class="sub-section-column-title">{{ fieldData.label_3 }}</h4>
+                </div>
+
+                <p v-if="hasError( fieldData.name )" class="dokan-error">
+                    {{ getError( fieldData.label ) }}
+                </p>
+                <p v-if="hasValidationError( fieldData.name )" class="dokan-error">
+                    {{ getValidationErrorMessage( fieldData.name ) }}
+                </p>
+            </div>
+        </template>
+
         <template v-if="containCommonFields( fieldData.type )">
             <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
@@ -875,6 +892,21 @@
         display: flex;
         justify-content: space-between;
 
+
+        .sub-section-column-heading {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            justify-content: space-between;
+            width: 100%;
+
+            .sub-section-column-title {
+                &:first-child {
+                    flex: 0 0 13%;
+                }
+            }
+        }
+
         .sub-section-text {
             display: flex;
             flex-direction: column;
@@ -905,6 +937,17 @@
 
         .sub-section-input {
             align-self: center;
+        }
+    }
+
+    .extra-sub-section-styles {
+        background-color: #FFFBF3;
+
+        .sub-section-column-heading {
+
+            .sub-section-column-title {
+                margin: 0;
+            }
         }
     }
     .field_contents.data_clear {
