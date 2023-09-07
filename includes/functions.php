@@ -4277,8 +4277,7 @@ if ( ! function_exists( 'dokan_user_update_to_seller' ) ) {
             $vendor->make_active();
         }
 
-        $publishing = dokan_get_option( 'product_status', 'dokan_selling', 'pending' );
-        update_user_meta( $user_id, 'dokan_publishing', $publishing );
+        update_user_meta( $user_id, 'dokan_publishing', 'no' );
 
         do_action( 'dokan_new_seller_created', $user_id, $vendor->get_shop_info() );
     }

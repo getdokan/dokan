@@ -883,7 +883,7 @@ class ProductController extends DokanRESTController {
                 $product->set_status( get_post_status_object( $request['status'] ) ? $request['status'] : 'draft' );
             }
         } else {
-            $status = dokan_get_option( 'product_status', 'dokan_selling', 'pending' );
+            $status = dokan_get_new_post_status();
             $product->set_status( get_post_status_object( $status ) ? $status : 'draft' );
         }
 
