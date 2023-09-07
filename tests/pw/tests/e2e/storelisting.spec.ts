@@ -14,7 +14,7 @@ test.describe('Store listing functionality test', () => {
 
 
 	test.beforeAll(async ({ browser }) => {
-		const customerContext = await browser.newContext({ storageState: data.auth.customerAuthFile });
+		const customerContext = await browser.newContext(data.auth.customerAuth);
 		cPage = await customerContext.newPage();
 		customer = new StoreListingPage(cPage);
 		// apiUtils = new ApiUtils(request);

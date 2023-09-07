@@ -17,7 +17,7 @@ test.describe('Request for quotation test admin', () => {
 
 
 	test.beforeAll(async ({ browser, request }) => {
-		const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
+		const adminContext = await browser.newContext(data.auth.adminAuth);
 		aPage = await adminContext.newPage();
 		admin = new RequestForQuotationsPage(aPage);
 
@@ -93,7 +93,7 @@ test.describe('Request for quotation test vendor', () => {
 
 	test.beforeAll(async ({ browser, request }) => {
 
-		const vendorContext = await browser.newContext({ storageState: data.auth.vendorAuthFile });
+		const vendorContext = await browser.newContext(data.auth.vendorAuth);
 		vPage = await vendorContext.newPage();
 		vendor = new RequestForQuotationsPage(vPage);
 
@@ -148,11 +148,11 @@ test.describe('Request for quotation test customer', () => {
 
 	test.beforeAll(async ({ browser, request }) => {
 
-		const customerContext = await browser.newContext({ storageState: data.auth.customerAuthFile });
+		const customerContext = await browser.newContext(data.auth.customerAuth);
 		cPage = await customerContext.newPage();
 		customer = new RequestForQuotationsPage(cPage);
 
-		const guestContext = await browser.newContext({ storageState: { cookies: [], origins: [] } });
+		const guestContext = await browser.newContext(data.auth.noAuth);
 		uPage = await guestContext.newPage();
 		guest =  new RequestForQuotationsPage(uPage);
 

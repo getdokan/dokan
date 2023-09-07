@@ -23,12 +23,12 @@ test.describe('Vendor RMA test', () => {
 
 
 	test.beforeAll(async ({ browser, }) => {
-		const vendorContext = await browser.newContext({ storageState: data.auth.vendorAuthFile });
+		const vendorContext = await browser.newContext(data.auth.vendorAuth);
 		vPage = await vendorContext.newPage();
 		vendor = new VendorReturnRequestPage(vPage);
 		vendor1 = new OrdersPage(vPage);
 
-		const customerContext = await browser.newContext({ storageState: data.auth.customerAuthFile });
+		const customerContext = await browser.newContext(data.auth.customerAuth);
 		cPage = await customerContext.newPage();
 		customer = new VendorReturnRequestPage(cPage);
 		customer1 = new CustomerPage(cPage);

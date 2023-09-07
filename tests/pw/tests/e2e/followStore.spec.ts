@@ -15,11 +15,11 @@ test.describe('Follow stores functionality test', () => {
 
 
 	test.beforeAll(async ({ browser,  }) => {
-		const vendorContext = await browser.newContext({ storageState: data.auth.vendorAuthFile });
+		const vendorContext = await browser.newContext(data.auth.vendorAuth);
 		vPage = await vendorContext.newPage();
 		vendor = new FollowStorePage(vPage);
 
-		const customerContext = await browser.newContext({ storageState: data.auth.customerAuthFile });
+		const customerContext = await browser.newContext(data.auth.customerAuth);
 		cPage = await customerContext.newPage();
 		customer = new FollowStorePage(cPage);
 

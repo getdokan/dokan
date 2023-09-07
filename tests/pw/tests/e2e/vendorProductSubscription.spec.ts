@@ -14,17 +14,17 @@ test.describe('Product subscriptions test', () => {
 	let apiUtils: ApiUtils;
 
 
-	test.beforeAll(async ({ browser,request }) => {
-		const vendorContext = await browser.newContext({ storageState: data.auth.vendorAuthFile });
+	test.beforeAll(async ({ browser, request }) => {
+		const vendorContext = await browser.newContext(data.auth.vendorAuth);
 		vPage = await vendorContext.newPage();
 		vendor = new VendorProductSubscriptionPage(vPage);
 
-		const customerContext = await browser.newContext({ storageState: data.auth.customerAuthFile });
+		const customerContext = await browser.newContext(data.auth.customerAuth);
 		cPage = await customerContext.newPage();
 		customer = new VendorProductSubscriptionPage(cPage);
 
 		apiUtils = new ApiUtils(request);
-		const [,productId, productName] = await apiUtils.createProduct(payloads.createSimpleSubscriptionProduct(), payloads. vendorAuth);
+		const [, productId, productName] = await apiUtils.createProduct(payloads.createSimpleSubscriptionProduct(), payloads. vendorAuth);
 
 
 	});

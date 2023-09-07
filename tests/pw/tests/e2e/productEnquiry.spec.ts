@@ -20,15 +20,15 @@ test.describe('Product Enquiry test', () => {
 
 
 	test.beforeAll(async ({ browser, request }) => {
-	// const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
+	// const adminContext = await browser.newContext(data.auth.adminAuth);
 	// aPage = await adminContext.newPage();
 	// admin = new ProductEnquiryPage(aPage);
 
-		const customerContext = await browser.newContext({ storageState: data.auth.customerAuthFile });
+		const customerContext = await browser.newContext(data.auth.customerAuth);
 		cPage = await customerContext.newPage();
 		customer = new ProductEnquiryPage(cPage);
 
-		const guestContext = await browser.newContext({ storageState: { cookies: [], origins: [] } });
+		const guestContext = await browser.newContext(data.auth.noAuth);
 		uPage = await guestContext.newPage();
 		guest =  new ProductEnquiryPage(uPage);
 

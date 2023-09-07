@@ -16,11 +16,11 @@ test.describe('Store categories test', () => {
 
 
 	test.beforeAll(async ({ browser, request }) => {
-		const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
+		const adminContext = await browser.newContext(data.auth.adminAuth);
 		aPage = await adminContext.newPage();
 		admin = new StoreCategoriesPage(aPage);
 
-		const vendorContext = await browser.newContext({ storageState: data.auth.vendorAuthFile });
+		const vendorContext = await browser.newContext(data.auth.vendorAuth);
 		vPage = await vendorContext.newPage();
 		vendor = new StoreCategoriesPage(vPage);
 

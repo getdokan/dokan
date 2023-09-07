@@ -20,11 +20,11 @@ test.describe('Refunds test', () => {
 
 
 	test.beforeAll(async ({ browser, request }) => {
-		const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
+		const adminContext = await browser.newContext(data.auth.adminAuth);
 		aPage = await adminContext.newPage();
 		admin = new RefundsPage(aPage);
 
-		const vendorContext = await browser.newContext({ storageState: data.auth.vendorAuthFile });
+		const vendorContext = await browser.newContext(data.auth.vendorAuth);
 		vPage = await vendorContext.newPage();
 		vendor = new RefundsPage(vPage);
 

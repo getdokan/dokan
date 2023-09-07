@@ -20,15 +20,15 @@ test.describe('Coupons test', () => {
 
 
 	test.beforeAll(async ({ browser, request }) => {
-		const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
+		const adminContext = await browser.newContext(data.auth.adminAuth);
 		aPage = await adminContext.newPage();
 		admin = new CouponsPage(aPage);
 
-		const vendorContext = await browser.newContext({ storageState: data.auth.vendorAuthFile });
+		const vendorContext = await browser.newContext(data.auth.vendorAuth);
 		vPage = await vendorContext.newPage();
 		vendor = new CouponsPage(vPage);
 
-		const customerContext = await browser.newContext({ storageState: data.auth.customerAuthFile });
+		const customerContext = await browser.newContext(data.auth.customerAuth);
 		cPage = await customerContext.newPage();
 		customer = new CouponsPage(cPage);
 

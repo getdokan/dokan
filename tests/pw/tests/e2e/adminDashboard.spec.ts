@@ -14,7 +14,7 @@ test.describe('Admin dashboard test', () => {
 
 
 	test.beforeAll(async ({ browser, request }) => {
-		const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
+		const adminContext = await browser.newContext(data.auth.adminAuth);
 		aPage = await adminContext.newPage();
 		admin = new AdminDashboardPage(aPage);
 		apiUtils = new ApiUtils(request);

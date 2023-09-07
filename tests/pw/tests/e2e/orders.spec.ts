@@ -18,7 +18,7 @@ test.describe('Order functionality test', () => {
 
 
 	test.beforeAll(async ({ browser, request }) => {
-		const vendorContext = await browser.newContext({ storageState: data.auth.vendorAuthFile });
+		const vendorContext = await browser.newContext(data.auth.vendorAuth);
 		vPage = await vendorContext.newPage();
 		vendor = new OrdersPage(vPage);
 

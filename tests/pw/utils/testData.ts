@@ -20,7 +20,23 @@ export const data = {
 	auth: {
 		adminAuthFile: 'playwright/.auth/adminStorageState.json',
 		vendorAuthFile: 'playwright/.auth/vendorStorageState.json',
-		customerAuthFile:'playwright/.auth/customerStorageState.json'
+		customerAuthFile:'playwright/.auth/customerStorageState.json',
+
+		adminAuth: {
+			storageState: 'playwright/.auth/adminStorageState.json',
+		},
+
+		vendorAuth: {
+			storageState: 'playwright/.auth/vendorStorageState.json',
+		},
+
+		customerAuth: {
+			storageState: 'playwright/.auth/customerStorageState.json',
+		},
+
+		noAuth: {
+			storageState: { cookies: [], origins: [] }
+		},
 	},
 
 

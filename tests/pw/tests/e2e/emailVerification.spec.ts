@@ -14,7 +14,7 @@ test.describe('Email verifications test', () => {
 
 
 	test.beforeAll(async ({ browser }) => {
-		const guestContext = await browser.newContext({ storageState: { cookies: [], origins: [] } });
+		const guestContext = await browser.newContext(data.auth.noAuth);
 		uPage = await guestContext.newPage();
 		guest = new EmailVerificationsPage(uPage);
 

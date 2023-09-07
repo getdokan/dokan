@@ -18,7 +18,7 @@ test.describe('Wholesale customers test (admin)', () => {
 
 
 	test.beforeAll(async ({ browser, request }) => {
-		const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
+		const adminContext = await browser.newContext(data.auth.adminAuth);
 		aPage = await adminContext.newPage();
 		admin = new WholesaleCustomersPage(aPage);
 
@@ -101,7 +101,7 @@ test.describe('Wholesale customers test (admin)', () => {
 
 // 	test.beforeAll(async ({ browser, request }) => {
 
-// 		const customerContext = await browser.newContext({ storageState: data.auth.customerAuthFile });
+// 		const customerContext = await browser.newContext(data.auth.customerAuth);
 // 		cPage = await customerContext.newPage();
 // 		customerPage = new CustomerPage(cPage);
 // 		customer = new WholesaleCustomersPage(cPage);

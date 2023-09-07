@@ -19,15 +19,15 @@ test.describe('Abuse report test', () => {
 	let apiUtils: ApiUtils;
 
 	test.beforeAll(async ({ browser, request }) => {
-		const adminContext = await browser.newContext({ storageState: data.auth.adminAuthFile });
+		const adminContext = await browser.newContext(data.auth.adminAuth);
 		aPage = await adminContext.newPage();
 		admin = new AbuseReportsPage(aPage);
 
-		const customerContext = await browser.newContext({ storageState: data.auth.customerAuthFile });
+		const customerContext = await browser.newContext(data.auth.customerAuth);
 		cPage = await customerContext.newPage();
 		customer = new AbuseReportsPage(cPage);
 
-		const guestContext = await browser.newContext({ storageState: { cookies: [], origins: [] } });
+		const guestContext = await browser.newContext(data.auth.noAuth);
 		uPage = await guestContext.newPage();
 		guest =  new AbuseReportsPage(uPage);
 

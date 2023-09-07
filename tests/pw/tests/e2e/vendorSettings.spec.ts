@@ -3,6 +3,7 @@ import { VendorSettingsPage } from 'pages/vendorSettingsPage';
 import { dbData } from 'utils/dbData';
 // import { ApiUtils } from 'utils/apiUtils';
 import { dbUtils } from 'utils/dbUtils';
+// import { helpers } from 'utils/helpers';
 import { data } from 'utils/testData';
 // import { payloads } from 'utils/payloads';
 
@@ -16,7 +17,7 @@ test.describe('Vendor settings test', () => {
 
 
 	test.beforeAll(async ({ browser }) => {
-		const vendorContext = await browser.newContext({ storageState: data.auth.vendorAuthFile });
+		const vendorContext = await browser.newContext(data.auth.vendorAuth);
 		vPage = await vendorContext.newPage();
 		vendor = new VendorSettingsPage(vPage);
 
@@ -30,7 +31,7 @@ test.describe('Vendor settings test', () => {
 	});
 
 
-	test('vendor store settings menu page is rendering properly @lite @explo', async ( ) => {
+	test.only('vendor store settings menu page is rendering properly @lite @explo', async ( ) => {
 		await vendor.vendorStoreSettingsRenderProperly();
 	});
 
