@@ -62,7 +62,7 @@
                             </div>
                             <?php esc_html_e( 'Documentation', 'dokan-lite' ); ?>
                         </a>
-                        <a href="https://wedevs.com/dokan/faq" target="_blank">
+                        <a href="https://dokan.co/wordpress/faq/" target="_blank">
                             <div class="dokan-icon">
                                 <svg width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M16.9035 11.1843C16.9035 9.19884 15.7645 7.42688 14.0586 6.56494C14.0056 10.3718 10.9192 13.4582 7.1123 13.5112C7.97424 15.2171 9.7462 16.3562 11.7317 16.3562C12.6626 16.3562 13.5678 16.1082 14.3632 15.6372L16.8809 16.3336L16.1845 13.8159C16.6556 13.0205 16.9035 12.1152 16.9035 11.1843Z" fill="#A3A3A3"/>
