@@ -102,7 +102,7 @@ test.describe('Store Support test (customer)', () => {
 	let cPage: Page, uPage: Page;
 	let apiUtils: ApiUtils;
 	let orderId: string;
-	let responseBody: any;
+	let responseBody: APIResponse;
 	let supportTicketId: string;
 
 
