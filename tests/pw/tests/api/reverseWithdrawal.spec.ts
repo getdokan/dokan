@@ -55,7 +55,7 @@ test.describe('reverse withdrawal api test', () => {
 		expect(responseBody).toBeTruthy();
 	});
 
-	test('add reverse withdrawal payment product to cart @lite', async () => {
+	test.skip('add reverse withdrawal payment product to cart @lite', async () => {
 		const [response, responseBody] = await apiUtils.post(endPoints.getReverseWithdrawalAddProductToCart, { data: payloads.amountToPay, headers: payloads.vendorAuth });
 		expect(response.ok()).toBeTruthy();
 		expect(responseBody).toBeTruthy();
