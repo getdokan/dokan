@@ -77,7 +77,7 @@
                 }
             } ).done( function ( response ) {
                 $( 'body' ).trigger( 'dokan:login_form_popup:logged_in', response );
-                $( '#dokan-login-form-popup' ).iziModal( 'close' );
+                $( '#dokan-modal-login-form-popup' ).iziModal( 'close' );
             } ).always( function () {
                 $( 'body' ).trigger( 'dokan:login_form_popup:done_working' );
             } ).fail( function ( jqXHR ) {

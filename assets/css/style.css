@@ -2730,6 +2730,11 @@ div.media-sidebar a.edit-attachment {
   vertical-align: middle;
   background: none;
 }
+.dokan-dashboard div.chart-container > div.chart-legend-container > table td {
+  padding: 0;
+  padding-left: 5px;
+  padding-right: 5px;
+}
 .dokan-column-name-with-avatar {
   position: relative;
   padding-left: 46px !important;
