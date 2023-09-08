@@ -1734,6 +1734,7 @@ export interface installWp {
 
 export interface auth {
 	[key: string]: string;
+	Authorization: string;
  }
 
 export interface user_api {
@@ -1784,7 +1785,7 @@ export interface reqOptions {
 	ignoreHTTPSErrors?: boolean | undefined;
 	maxRedirects?: number | undefined;
 	multipart?: { [key: string]: string | number | boolean | fs.ReadStream | { name: string; mimeType: string; buffer: Buffer; }; } | undefined;
-	params?: { [key: string]: string | string[]| number | boolean; } | undefined;
+	params?: { [key: string]: string | number | boolean; } | undefined;
 	timeout?: number | undefined;
 }
 

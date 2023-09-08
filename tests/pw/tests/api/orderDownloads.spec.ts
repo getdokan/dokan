@@ -11,7 +11,7 @@ let downloadId: string;
 
 test.beforeAll(async ({ request }) => {
 	apiUtils = new ApiUtils(request);
-	const [responseBody,] = await apiUtils.uploadMedia('../../tests/pw/utils/sampleData/avatar.png');
+	const [responseBody,] = await apiUtils.uploadMedia('../../tests/pw/utils/sampleData/avatar.png', payloads.mimeTypes.png, payloads.adminAuth); //todo: update image path
 	const downloads = [{
 		id: String(responseBody.id),
 		name: responseBody.title.raw,

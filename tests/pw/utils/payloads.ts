@@ -40,6 +40,17 @@ export const payloads = {
 
 	},
 
+	mimeTypes:{
+		csv: 'text/csv',
+		png: 'image/png',
+		jpeg: 'image/jpeg',
+		pdf: 'application/pdf',
+		txt: 'text/plain',
+		json: 'application/json',
+		xml: 'application/xml',
+		zip: 'application/zip',
+	},
+
 	// user auth
 
 	adminAuth: {

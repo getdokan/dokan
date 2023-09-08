@@ -5,8 +5,6 @@ import { helpers } from 'utils/helpers';
 import { auth, user_api, taxRate, coupon_api, marketPlaceCoupon, reqOptions, headers, storageState, responseBody  } from 'utils/interfaces';
 import fs from 'fs';
 
-// import FormData from 'form-data';
-
 
 export class ApiUtils {
 	readonly request: APIRequestContext;
@@ -381,7 +379,11 @@ export class ApiUtils {
 
 
 	// create coupon
-	async createCoupon(productIds: string[], coupon: coupon_api, auth?: auth ): Promise<[responseBody, string, string]> { //todo:  need to update; handle productIds can be empty
+	async createCoupon(productIds: string[], coupon: coupon_api, auth?: auth ): Promise<[responseBody, string, string]> {
+		if(!productIds.includes('undefined')){
+			const [, productId,] = await this.createProduct(payloads.createProduct(), auth);
+			productIds = [productId];
+		}
 		const response = await this.request.post(endPoints.createCoupon, { data: { ...coupon, product_ids: productIds }, headers: auth });
 		const responseBody = await this.getResponseBody(response, false);
 		let couponId: string;
@@ -1126,8 +1128,12 @@ export class ApiUtils {
 	async deleteAllSellerBadges(auth? : auth): Promise<void> {
 		const allBadges = await this.getAllSellerBadges(auth);
 		if(!allBadges?.length){return;} //todo:  apply this to all batch update/ anywhere a action can be lessened
-		const allBadgeIds = (await this.getAllSellerBadges(auth)).map((o: { id: unknown; }) => o.id);
-		await this.updateBatchSellerBadges('delete', allBadgeIds, auth);
+		// const allBadgeIds = (await this.getAllSellerBadges(auth)).map((o: { id: unknown; }) => o.id); // todo: fix all custom bulk actions where:  getAllIds is get, then check length, then later again calling getAllIds
+
+		// const allBadges = await this.getAllSellerBadges(auth);
+		// if(!allBadges?.length){return;}
+		// const allBadgeIds = (allBadges).map((o: { id: unknown; }) => o.id);
+		// await this.updateBatchSellerBadges('delete', allBadgeIds, auth);
 	}
 
 
@@ -1319,89 +1325,35 @@ export class ApiUtils {
 
 
 	// upload media
-	async uploadMedia(filePath: string, auth?: auth): Promise<[responseBody, string]> { //todo:  handle different file upload, hardcoded: image
+	async uploadMedia(filePath: string, mimeType: string,  auth: auth): Promise<[responseBody, string]> {
 		const payload = {
 			headers: {
 				Accept: '*/*',
 				ContentType: 'multipart/form-data',
-				// Authorization: auth.Authorization  //todo:  handle authorization
+				Authorization: auth.Authorization
 			},
 			multipart: {
 				file: {
 					name: String((filePath.split('/')).pop()),
-					mimeType: 'image/' + (filePath.split('.')).pop(),
+					mimeType: mimeType,
 					buffer: fs.readFileSync(filePath),
-					// buffer: Buffer.from(filePath),  //todo:  test then use it instead of previous, not working debug why
 				},
 			},
 		};
-		const response = await this.request.post(endPoints.wp.createMediaItem, payload);
-		const responseBody = await this.getResponseBody(response);
+		const  [, responseBody] = await this.post(endPoints.wp.createMediaItem, payload);
 		const mediaId = String(responseBody?.id);
 		return [responseBody, mediaId];
 	}
 
 
-	// upload media
-	async uploadMedia2(filePath: string, attributes: any, auth?: auth): Promise<[responseBody, string]> { //todo:  handle different file upload, hardcoded: image
-		const form: any = new FormData();
-		// form.append("file", fs.createReadStream(filePath));
-		// const base64 = { 'base64': fs.readFileSync(filePath) }
-		// function base64_encode(file) {
-		// 	const body = fs.readFileSync(file);
-		// 	return body.toString('base64');
-		// }
-
-		form.append('file',
-			// fs.readFileSync(filePath, { encoding: 'base64' }),
-
-			// base64_encode(filePath),
-			fs.createReadStream(filePath),
-			{
-				name: String((filePath.split('/')).pop()),
-				type: 'image/' + (filePath.split('.')).pop(),
-			}
-
-		);
-
-		form.append('title', attributes.title);
-		form.append('caption', attributes.caption);
-		form.append('caption', attributes.description);
-		form.append('alt_text', attributes.alt_text);
-
-		// const payload = {
-		// 	headers: {
-		// 		Accept: '*/*',
-		// 		ContentType: 'multipart/form-data',
-		// 		// ContentType: 'image/png',
-		// 		'content-disposition': `attachment; filename=${String((filePath.split('/')).pop())}`
-		// 		// Authorization: auth.Authorization  //todo:  handle authorization
-		// 	},
-		// 	form: form
-		// }
+	// upload file
+	async uploadFile(filePath: string, auth : auth): Promise<[responseBody, string]> {
+		const payload = fs.readFileSync(filePath);
 		const headers = {
-			Accept: '*/*',
-			ContentType: 'multipart/form-data',
-			// ContentType: 'image/png',
-			'content-disposition': `attachment; filename=${String((filePath.split('/')).pop())}`
-			// Authorization: auth.Authorization  //todo:  handle authorization
+			'content-disposition': `attachment; filename=${String((filePath.split('/')).pop())}`,
+			Authorization: auth.Authorization
 		};
-
-		// const response = await this.request.post(endPoints.wp.createMediaItem, payload);
-		const response = await this.request.post(endPoints.wp.createMediaItem, { form: form, headers: headers });  //todo:  update all request.post to this.post/get/put/delete
-		const responseBody = await this.getResponseBody(response);
-		const mediaId = String(responseBody?.id);
-		return [responseBody, mediaId];
-	}
-
-
-	// upload media
-	async uploadMedia3(filePath: string): Promise<[responseBody, string]> {
-		// const payload = fs.readFileSync(filePath);
-		const payload = Buffer.from(filePath);  //todo:  test then use it instead of previous , Add auth
-		const headers = { 'content-disposition': `attachment; filename=${String((filePath.split('/')).pop())}` };
-		const response = await this.request.post(endPoints.wp.createMediaItem, { data: payload, headers });
-		const responseBody = await this.getResponseBody(response);
+		const  [, responseBody] = await this.post(endPoints.wp.createMediaItem, { data: payload, headers: headers });
 		const mediaId = String(responseBody?.id);
 		return [responseBody, mediaId];
 	}
@@ -1419,6 +1371,15 @@ export class ApiUtils {
 		const getAllMediaItems = await this.getAllMediaItems(auth);
 		const mediaId = getAllMediaItems[0]?.id;
 		return mediaId;
+	}
+
+	async deleteAllMediaItems(auth? : auth){
+		const allMediaItems = await this.getAllMediaItems(auth);
+		if(!allMediaItems?.length){return;}
+		const allMediaItemIds = (allMediaItems).map((o: { id: unknown; }) => o.id);
+		for (const mediaId of allMediaItemIds){
+			await this.delete(endPoints.wp.deleteMediaItem(mediaId), { params: payloads.paramsForceDelete, headers: auth });
+		}
 	}
 
 
