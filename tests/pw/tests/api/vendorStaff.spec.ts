@@ -8,7 +8,6 @@ let apiUtils: ApiUtils;
 let staffId: string;
 
 
-// eslint-disable-next-line require-await
 test.beforeAll(async ({ request }) => {
 	apiUtils = new ApiUtils(request);
 	[, staffId] = await apiUtils.createVendorStaff(payloads.createStaff(), payloads.vendorAuth);

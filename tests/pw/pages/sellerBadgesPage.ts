@@ -63,7 +63,6 @@ export class SellerBadgesPage extends AdminPage {
 		await this.toBeVisible(selector.admin.dokan.sellerBadge.badgeDetails.badgeCondition.badgeConditionBox);
 
 		// badge event elements are visible
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const { badgeEvent, badgePublishedStatus, ...badgeEvents } = selector.admin.dokan.sellerBadge.badgeDetails.badgeEvents;
 		await this.multipleElementVisible(badgeEvents);
 
@@ -71,7 +70,6 @@ export class SellerBadgesPage extends AdminPage {
 		await this.multipleElementVisible(selector.admin.dokan.sellerBadge.badgeDetails.badgePhoto);
 
 		// badge status elements are visible
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const { create, ...badgeStatus } = selector.admin.dokan.sellerBadge.badgeDetails.badgeStatus;
 		await this.multipleElementVisible(badgeStatus);
 

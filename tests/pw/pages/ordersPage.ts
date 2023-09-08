@@ -30,7 +30,6 @@ export class OrdersPage extends VendorPage {
 		await this.multipleElementVisible(selector.vendor.orders.export);
 
 		// order filters elements are visible
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const { filterByCustomer, filterByDate, ...filters } = selector.vendor.orders.filters;
 		await this.toBeVisible(selector.vendor.orders.filters.filterByCustomer.dropDown);
 		await this.toBeVisible(selector.vendor.orders.filters.filterByDate.dateRangeInput);
@@ -135,7 +134,6 @@ export class OrdersPage extends VendorPage {
 		await this.click(selector.vendor.orders.status.edit);
 
 		// status elements are visible
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const { selectedOrderStatus, edit, ...status } = selector.vendor.orders.status;
 		await this.multipleElementVisible(status);
 
@@ -145,7 +143,6 @@ export class OrdersPage extends VendorPage {
 		await this.click(selector.vendor.orders.trackingDetails.addTrackingNumber);
 
 		// tracking detail elements are visible
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const { addTrackingNumber,  ...trackingDetails } = selector.vendor.orders.trackingDetails;
 		await this.multipleElementVisible(trackingDetails);
 
@@ -153,13 +150,11 @@ export class OrdersPage extends VendorPage {
 			await this.click(selector.vendor.orders.shipment.createNewShipment);
 
 			// shipment elements are visible
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			const { createNewShipment, shipmentOrderItem, shipmentOrderItemQty,  ...shipment } = selector.vendor.orders.shipment;
 			await this.multipleElementVisible(shipment);
 		}
 
 		// downloadable product elements are visible
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const { revokeAccess, confirmAction, cancelAction,  ...downloadableProductPermission } = selector.vendor.orders.downloadableProductPermission;
 		await this.multipleElementVisible(downloadableProductPermission);
 	}

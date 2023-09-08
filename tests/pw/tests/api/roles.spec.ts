@@ -5,7 +5,7 @@ import { endPoints } from 'utils/apiEndPoints';
 
 let apiUtils: ApiUtils;
 
-// eslint-disable-next-line require-await
+
 test.beforeAll(async ({ request }) => {
 	apiUtils = new ApiUtils(request);
 });

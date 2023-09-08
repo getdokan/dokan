@@ -32,7 +32,6 @@ export class StoreSupportsPage extends AdminPage {
 		await this.multipleElementVisible(selector.admin.dokan.storeSupport.bulkActions);
 
 		// filter elements are visible
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const { filterInput, result, ...filters } = selector.admin.dokan.storeSupport.filters;
 		await this.multipleElementVisible(filters);
 
@@ -60,7 +59,6 @@ export class StoreSupportsPage extends AdminPage {
 		await this.toBeVisible(selector.admin.dokan.storeSupport.supportTicketDetails.sendReply);
 
 		// ticket summary elements are visible
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const { reopenTicket, ...ticketSummary } = selector.admin.dokan.storeSupport.supportTicketDetails.ticketSummary;
 		await this.multipleElementVisible(ticketSummary);
 	}
@@ -201,7 +199,6 @@ export class StoreSupportsPage extends AdminPage {
 		await this.multipleElementVisible(selector.vendor.vSupport.menus);
 
 
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const { filterByCustomerInput, filterByDate, result,  ...filters } = selector.vendor.vSupport.filters;
 		await this.toBeVisible(selector.vendor.vSupport.filters.filterByDate.dateRangeInput);
 		await this.multipleElementVisible(filters);
@@ -417,9 +414,8 @@ export class StoreSupportsPage extends AdminPage {
 			break;
 
 		case 'order-received' :
-			// eslint-disable-next-line no-case-declarations
-			const [orderId, order_key]  = input.split(',');
-			await this.goIfNotThere(data.subUrls.frontend.orderReceivedDetails(orderId as string, order_key as string));
+			const [orderId, orderKey]  = input.split(',');
+			await this.goIfNotThere(data.subUrls.frontend.orderReceivedDetails(orderId as string, orderKey as string));
 			break;
 
 		default :

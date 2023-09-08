@@ -1776,7 +1776,7 @@ export interface marketPlaceCoupon {
 }
 
 export interface reqOptions {
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+
 	data?: any;
 	failOnStatusCode?: boolean | undefined;
 	form?: { [key: string]: string | number | boolean; } | undefined;

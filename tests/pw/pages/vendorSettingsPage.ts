@@ -36,7 +36,6 @@ export class VendorSettingsPage extends VendorPage {
 		DOKAN_PRO && await this.toBeVisible(selector.vendor.vStoreSettings.multipleLocation);
 
 		// store address location elements are visible
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const { saveLocation, cancelSaveLocation, deleteSaveLocation,  ...address } = selector.vendor.vStoreSettings.address;
 		await this.multipleElementVisible(address);
 		DOKAN_PRO && await this.toBeVisible(saveLocation);

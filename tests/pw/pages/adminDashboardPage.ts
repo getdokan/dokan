@@ -34,7 +34,6 @@ export class AdminDashboardPage extends AdminPage {
 		await this.multipleElementVisible(selector.admin.dokan.dashboard.dokanNewUpdates);
 
 		// Subscribe box elements are visible
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const { thankYouMessage, ...subscribeBox } = selector.admin.dokan.dashboard.subscribeBox;
 		await this.multipleElementVisible(subscribeBox);
 	}

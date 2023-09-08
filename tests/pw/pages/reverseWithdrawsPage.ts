@@ -38,7 +38,6 @@ export class ReverseWithdrawsPage extends CustomerPage {
 		await this.multipleElementVisible(selector.admin.dokan.reverseWithdraw.reverseWithdrawFactCards);
 
 		// filter elements are visible
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const { filterInput, clearFilter, filteredResult,  ...filters } = selector.admin.dokan.reverseWithdraw.filters;
 		await this.multipleElementVisible(filters);
 

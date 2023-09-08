@@ -1,5 +1,4 @@
 import { defineConfig } from '@playwright/test';
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
 
 

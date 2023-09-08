@@ -48,7 +48,6 @@ export class ReportsPage extends AdminPage {
 		await this.multipleElementVisible(selector.admin.dokan.reports.menus);
 
 		// filter elements are visible
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const { filterByStoreInput, filterByStatusInput, searchedResult,  ...filters } = selector.admin.dokan.reports.allLogs.filters;
 		await this.multipleElementVisible(filters);
 

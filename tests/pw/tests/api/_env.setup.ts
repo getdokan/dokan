@@ -9,7 +9,7 @@ import { helpers } from 'utils/helpers';
 
 let apiUtils: ApiUtils;
 
-// eslint-disable-next-line require-await
+
 setup.beforeAll(async ({ request }) => {
 	apiUtils = new ApiUtils(request);
 });

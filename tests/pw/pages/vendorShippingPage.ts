@@ -37,7 +37,6 @@ export class VendorShippingPage extends VendorPage {
 		await this.clickAndWaitForLoadState(selector.vendor.vShippingSettings.shippingPolicies.clickHereToAddShippingPolicies);
 
 		// shipping policy elements are visible
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const { clickHereToAddShippingPolicies, ...companyVerifications } = selector.vendor.vShippingSettings.shippingPolicies;
 		await this.multipleElementVisible(companyVerifications);
 
@@ -46,7 +45,6 @@ export class VendorShippingPage extends VendorPage {
 		await this.clickAndWaitForLoadState(selector.vendor.vShippingSettings.previousShippingSettings.previousShippingSettings);
 
 		// previous shipping settings elements are visible
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const { previousShippingSettings, ...previousShipping } = selector.vendor.vShippingSettings.previousShippingSettings;
 		await this.multipleElementVisible(previousShipping);
 

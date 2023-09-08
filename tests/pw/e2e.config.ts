@@ -1,5 +1,4 @@
 import { defineConfig, devices } from '@playwright/test';
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 require('dotenv').config();
 
 export default defineConfig({
@@ -35,7 +34,7 @@ export default defineConfig({
 		...devices['Desktop Chrome'],
 		acceptDownloads: true, /* Whether to automatically download all the attachments. */
 		actionTimeout: 10 * 1000, /* Maximum time each action such as `click()` can take. Defaults to 0 (no limit). */
-		navigationTimeout: 15 * 1000, /* Maximum time each navigation such as 'goto()' can take. */ 
+		navigationTimeout: 15 * 1000, /* Maximum time each navigation such as 'goto()' can take. */
 		baseURL: process.env.BASE_URL ? process.env.BASE_URL : 'http://localhost:9999',  /* Base URL */
 		// browserName: 'chromium', /* Name of the browser that runs tests. */
 		bypassCSP: true, /* Toggles bypassing page's Content-Security-Policy. */

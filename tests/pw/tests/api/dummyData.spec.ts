@@ -6,7 +6,7 @@ import { payloads } from 'utils/payloads';
 
 let apiUtils: ApiUtils;
 
-// eslint-disable-next-line require-await
+
 test.beforeAll(async ({ request }) => {
 	apiUtils = new ApiUtils(request);
 });

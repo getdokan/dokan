@@ -51,7 +51,6 @@ export class VendorReturnRequestPage extends VendorPage {
 		await this.multipleElementVisible(selector.vendor.vReturnRequest.returnRequestDetails.additionalDetails);
 
 		// status elements are visible
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const { sendRefund, ...status } = selector.vendor.vReturnRequest.returnRequestDetails.status;
 		await this.multipleElementVisible(status);
 

@@ -94,7 +94,6 @@ export class ApiUtils {
 			String(response.status())[0] != '2' && console.log('ResponseBody: ', responseBody);
 			return responseBody;
 		}
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		catch (err: any) {
 			console.log('End-point: ', response.url());
 			console.log('Status Code: ', response.status());

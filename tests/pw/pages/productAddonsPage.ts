@@ -37,7 +37,6 @@ export class ProductAddonsPage extends VendorPage {
 		await this.check(selector.vendor.vAddonSettings.addon.enableDescription);
 
 		// product addon fields elements are visible
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const { addonFieldsRow, addonUpdateSuccessMessage,  ...addonFields } = selector.vendor.vAddonSettings.addon;
 		await this.multipleElementVisible(addonFields);
 

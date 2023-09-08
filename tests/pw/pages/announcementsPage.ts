@@ -37,7 +37,6 @@ export class AnnouncementsPage extends AdminPage {
 
 		// add announcement fields are visible
 		await this.click(selector.admin.dokan.announcements.addNewAnnouncement);
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const { contentHtmlBody, schedule, ...addAnnouncement } = selector.admin.dokan.announcements.addAnnouncement;
 		await this.multipleElementVisible(addAnnouncement);
 		await this.goBack();

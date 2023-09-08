@@ -22,7 +22,6 @@ export class VendorProductSubscriptionPage extends VendorPage {
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.userSubscriptions);
 
 		// filter
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const { filterByCustomerInput, result,  ...filters } = selector.vendor.vUserSubscriptions.filters;
 		await this.multipleElementVisible(filters);
 
@@ -79,7 +78,6 @@ export class VendorProductSubscriptionPage extends VendorPage {
 		await this.toBeVisible(selector.customer.cSubscription.subscriptionDetails.subscriptionHeading);
 
 		// subscription action elements are visible
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const { reActivate, ...actions } = selector.customer.cSubscription.subscriptionDetails.actions;
 		await this.multipleElementVisible(actions);
 		//todo: add more fields

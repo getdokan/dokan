@@ -179,7 +179,6 @@ export class VendorPage extends BasePage {
 	async vendorAccountDetailsRenderProperly(){
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.editAccountVendor);
 
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const { saveSuccessMessage, ...accountDetails } = selector.vendor.vAccountDetails;
 		await this.multipleElementVisible(accountDetails);
 

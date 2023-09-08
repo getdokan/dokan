@@ -15,10 +15,7 @@
 //todo:  ESlint: #  // "no-unused-vars": "off" is enabled for now but remove before push, remove every eslint comment before push
 //todo:  test basic auth can be used instead of cookies for authentication , no need to do this
 //todo:  # why two pages are opening : fix that
-
 //todo:  Wp-env: Theme activation, permalink update and wp cli not work for latest wp-env version
-//todo:  Checkbox: replace click with check for all check fields all suite , update every checkbox with check instead of click, check method , if checked remains checked
-//todo:  Env Variables:  remove not needed env variables from yml file, like slowmo, setup .........
 //todo:  Modal: Close modal if exists, causes issue with other tests where popup blocks next step*****
 //todo: add new tests or multiple entry in same test for all search parameter, i.e : by-customer, by-product, but-store,..
 //todo:  insert all date format according to site format , currently hardcoded to default format -> helpers.dateFormatFYJ
@@ -26,6 +23,12 @@
 //todo:  **************** need custom check method
 //todo:  *** add all email tests
 //todo:  // add more fields in settings test
+//todo: // short this in pom
+const vendorContext = await browser.newContext({ storageState: data.auth.vendorAuthFile });
+vPage = await vendorContext.newPage();
+vendor = new OrdersPage(vPage);
+
+
 
 
 
@@ -253,7 +256,6 @@ stores page
 		await this.clickAndWaitForLoadState(selector.vendor.vAuction.view(productName));
 
 		// auction product elements are visible
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const { bidQuantity, bidButton, ...viewAuction } = selector.vendor.vAuction.viewAuction;
 		await this.multipleElementVisible(viewAuction);
 		//todo: actual value can be asserted

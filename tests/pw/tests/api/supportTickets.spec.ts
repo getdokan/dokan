@@ -8,7 +8,7 @@ const { VENDOR_ID, CUSTOMER_ID } = process.env;
 let apiUtils: ApiUtils;
 let supportTicketId: string;
 
-// eslint-disable-next-line require-await
+
 test.beforeAll(async ({ request }) => {
 	apiUtils = new ApiUtils(request);
 	[, supportTicketId] = await apiUtils.createSupportTicket({ ...payloads.createSupportTicket, author: CUSTOMER_ID, store_id: VENDOR_ID });
