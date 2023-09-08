@@ -166,6 +166,7 @@ class Manager {
             wp_send_json_error( __( 'Invalid nonce', 'dokan-lite' ) );
         }
 
+        // phpcs:ignore
         if ( ! current_user_can( 'manage_woocommerce' ) ) {
             wp_send_json_error( __( 'You have no permission to do that', 'dokan-lite' ) );
         }
