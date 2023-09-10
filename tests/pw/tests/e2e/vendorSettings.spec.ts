@@ -32,7 +32,7 @@ test.describe('Vendor settings test', () => {
 	});
 
 
-	test.only('vendor store settings menu page is rendering properly @lite @explo', async ( ) => {
+	test('vendor store settings menu page is rendering properly @lite @explo', async ( ) => {
 		await vendor.vendorStoreSettingsRenderProperly();
 	});
 
