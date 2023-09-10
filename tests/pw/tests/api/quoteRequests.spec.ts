@@ -12,13 +12,13 @@ test.beforeAll(async ({ request }) => {
 	apiUtils = new ApiUtils(request);
 	const [, pId,] = await apiUtils.createProduct(payloads.createProduct());
 	productId.push(pId);
-	[, requestQuoteId,] = await apiUtils.createRequestQuote({ ...payloads.createRequestQuote(), product_ids: productId });
+	[, requestQuoteId,] = await apiUtils.createQuoteRequest({ ...payloads.createQuoteRequest(), product_ids: productId });
 });
 
 test.describe('request quote api test', () => {
 
 	test('get all request quotes @pro', async () => {
-		const [response, responseBody] = await apiUtils.get(endPoints.getAllRequestQuotes);
+		const [response, responseBody] = await apiUtils.get(endPoints.getAllQuoteRequests);
 		expect(response.ok()).toBeTruthy();
 		expect(responseBody).toBeTruthy();
 	});
@@ -30,7 +30,7 @@ test.describe('request quote api test', () => {
 	});
 
 	test('create a request quote @pro', async () => {
-		const [response, responseBody] = await apiUtils.post(endPoints.createRequestQuote, { data: { ...payloads.createRequestQuote(), product_ids: productId } });
+		const [response, responseBody] = await apiUtils.post(endPoints.createQuoteRequest, { data: { ...payloads.createQuoteRequest(), product_ids: productId } });
 		expect(response.ok()).toBeTruthy();
 		expect(responseBody).toBeTruthy();
 	});
@@ -42,7 +42,7 @@ test.describe('request quote api test', () => {
 	});
 
 	test('delete a request quote @pro', async () => {
-		const [response, responseBody] = await apiUtils.delete(endPoints.deleteRequestQuote(requestQuoteId));
+		const [response, responseBody] = await apiUtils.delete(endPoints.deleteQuoteRequest(requestQuoteId));
 		expect(response.ok()).toBeTruthy();
 		expect(responseBody).toBeTruthy();
 	});
@@ -60,7 +60,7 @@ test.describe('request quote api test', () => {
 	});
 
 	test('update batch request quote @pro ', async () => {
-		const allRequestQuoteIds = (await apiUtils.getAllRequestQuotes()).map((a: { id: unknown }) => a.id);
+		const allRequestQuoteIds = (await apiUtils.getAllQuoteRequests()).map((a: { id: unknown }) => a.id);
 		const [response, responseBody] = await apiUtils.put(endPoints.updateBatchRequestQuotes, { data: { trash: allRequestQuoteIds } });
 		expect(response.ok()).toBeTruthy();
 		expect(responseBody).toBeTruthy();

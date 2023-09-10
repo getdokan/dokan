@@ -162,8 +162,7 @@ setup.describe('setup user settings', () => {
 
 		// create store coupon
 		const allProductIds = (await apiUtils.getAllProducts(payloads.vendorAuth)).map((o: { id: string }) => o.id);
-		const coupon = { ...payloads.createCoupon(), code: data.predefined.coupon.couponCode };
-		await apiUtils.createCoupon(allProductIds, coupon, payloads.vendorAuth);
+		await apiUtils.createCoupon(allProductIds, payloads.createCoupon1, payloads.vendorAuth);
 
 		// const [responseBody, couponId] = await apiUtils.createCoupon(allProductIds, coupon, payloads.vendorAuth);
 		// if(responseBody.code === 'woocommerce_rest_coupon_code_already_exists'){
@@ -318,7 +317,7 @@ setup.describe('setup dokan settings e2e', () => {
 	});
 
 	setup('product advertisement payment product exists @pro', async ( ) => {
-		const product = await apiUtils.productExistsOrNot('Product Advertisement Payment',  payloads.adminAuth);
+		const product = await apiUtils.checkProductExistence('Product Advertisement Payment',  payloads.adminAuth);
 		expect(product).toBeTruthy();
 	});
 
@@ -327,7 +326,7 @@ setup.describe('setup dokan settings e2e', () => {
 	});
 
 	setup('reverse Withdraw payment product exists @lite', async ( ) => {
-		const product = await apiUtils.productExistsOrNot('Reverse Withdrawal Payment',  payloads.adminAuth);
+		const product = await apiUtils.checkProductExistence('Reverse Withdrawal Payment',  payloads.adminAuth);
 		expect(product).toBeTruthy();
 	});
 

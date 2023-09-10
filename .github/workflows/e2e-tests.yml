@@ -49,8 +49,6 @@ jobs:
   tests:
     name: e2e tests
     runs-on: ubuntu-latest
-    # strategy:
-    #   fail-fast: false
 
     steps:
       - name: Checkout testing repo
@@ -62,22 +60,18 @@ jobs:
           node-version: '16'
           cache: "npm"
 
-
-      - name: Install latest npm
-        run: |
-          npm install -g npm@8.19.4
+      # - name: Install latest npm
+      #   run: |
+      #     npm install -g npm@8.19.4
 
 
       - name: Clone dokan-pro
         uses: actions/checkout@v3
         with:
-          repository: weDevsOfficial/dokan-pro
+          repository: getdokan/dokan-pro
           token: ${{ secrets.ACCESS_TOKEN }}
           path: "plugins/dokan-pro"
           ref: "develop"
-
-
-
 
 
       - name: Composer install and build (Dokan-lite)
@@ -122,7 +116,6 @@ jobs:
         run: |
           cd tests/pw
           echo "DB_PORT=$(docker ps -f ancestor='mariadb' -f name='tests-mysql' --format='{{.Ports}}' | sed -E 's/.*:(.*)->.*/\1/')" >> $GITHUB_ENV
-
 
       - name: DB PORT
         run: |

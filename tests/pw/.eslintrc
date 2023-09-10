@@ -21,12 +21,10 @@
     ],
     "rules": {
     
-    // we want to avoid extraneous spaces
-    //   "no-multi-spaces": ["error"],
     //   "camelcase": "error",
-    //   "spaced-comment": "error",
+      "spaced-comment": "error",
       "no-duplicate-imports": "error",
-    //   "require-await": "error",
+    // "require-await": "error",
     // "@typescript-eslint/require-await": "error",
     // "no-unused-vars": "off",
     "@typescript-eslint/no-unused-vars": "off",
@@ -37,18 +35,18 @@
 
     //Layout & Formatting 
     // "array-bracket-newline": ["error", "never"],
-    // "array-bracket-spacing": ["error", "never"],
+
     // "array-element-newline": ["error", "never"],
     // "arrow-parens": ["error", "as-needed"],
-    "arrow-spacing": ["error", { "before": true, "after": true }],
+    
     // "block-spacing": "error",
     // "brace-style": ["error", "stroustrup"],
-    "comma-spacing": ["error", { "before": false, "after": true }],
+
     "indent": ["error", "tab"],
-    // "no-multi-spaces": "error",
-    // "no-multiple-empty-lines": "error",
     "no-multiple-empty-lines": ["error", { "max": 2, "maxEOF": 0 }],
     "no-trailing-spaces": "error",
+    "no-multi-spaces": "error",
+    "key-spacing": ["error", { "align": "colon" }],
     // "no-whitespace-before-property": "error",
     // "object-curly-newline": ["error", "always"],
     // "object-curly-newline": ["error", { "minProperties": 2,"ImportDeclaration": "never", "ExportDeclaration": "never" }],
@@ -56,14 +54,22 @@
     // "object-curly-newline": ["error", "never", { "consistent": true }],
     // "object-curly-newline": ["error", { "minProperties": 1 }],
     // "object-curly-newline": ["error", { "multiline": true ,"minProperties": 2 }],
-    "object-curly-spacing": ["error", "always", {"arraysInObjects": true, "objectsInObjects": true}],
+
     "func-style": ["error", "declaration", { "allowArrowFunctions": true }],
     "arrow-body-style": ["error", "as-needed"],
 
     "quotes": ["error", "single"],
     "semi": ["error", "always"],
+    // space rules
     "semi-spacing": ["error", { "before": false, "after": true }],
-    "switch-colon-spacing": ["error", {"after": false, "before": true}]
+    "switch-colon-spacing": ["error", {"after": false, "before": true}],
+    // "space-in-parens": ["error", "always"],
+    "keyword-spacing": ["error", {"after": true, "before": true}],
+    "space-infix-ops": ["error", { "int32Hint": false }],
+    "arrow-spacing": ["error", { "before": true, "after": true }],
+    "comma-spacing": ["error", { "before": false, "after": true }],
+    // "array-bracket-spacing": ["error", "always"],
+    "object-curly-spacing": ["error", "always", {"arraysInObjects": true, "objectsInObjects": true}],
     },
     "settings": {
         "import/resolver": {

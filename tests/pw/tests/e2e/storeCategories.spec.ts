@@ -64,7 +64,7 @@ test.describe('Store categories test', () => {
 	});
 
 	test('vendor can update own store category @pro', async ( ) => {
-		const[,, categoryName] = await apiUtils.createStoreCategory(payloads.createStoreCategory(), payloads.adminAuth);
+		const [,, categoryName] = await apiUtils.createStoreCategory(payloads.createStoreCategory(), payloads.adminAuth);
 		await vendor.vendorUpdateStoreCategory(categoryName);
 	});
 

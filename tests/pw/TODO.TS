@@ -29,6 +29,9 @@ vPage = await vendorContext.newPage();
 vendor = new OrdersPage(vPage);
 
 
+//todo: ******************************************* add comments
+// add comments for whole suite
+
 
 
 
@@ -62,6 +65,16 @@ vendor = new OrdersPage(vPage);
 	// latest/wp-env/wp-content/debug.log
 
 //todo: user .wp-env.override.json  for local development
+// todo: use lifecycle scripts for running nodejs script after wp-env command 
+Lifecycle Scripts
+Using the lifecycleScripts option in .wp-env.json will allow you to set arbitrary commands to be executed at certain points in the lifecycle. This configuration
+can also be overridden using WP_ENV_LIFECYCLE_SCRIPT_{LIFECYCLE_EVENT} environment variables, with the remainder being the all-caps snake_case name of the option, for
+example, WP_ENV_LIFECYCLE_SCRIPT_AFTER_START. Keep in mind that these will be executed on both fresh and existing environments, so, ensure any commands you
+build won’t break on subsequent executions.
+
+afterStart: Runs after wp-env start has finished setting up the environment.
+afterClean: Runs after wp-env clean has finished cleaning the environment.
+afterDestroy: Runs after wp-env destroy has destroyed the environment.
 
 
 
@@ -80,22 +93,25 @@ vendor = new OrdersPage(vPage);
 //****************************       readme        ****************************
 
 //todo:  add lite & pro config on readme
-//todo:  add emoji to readme
 //todo:  make readme follow readme guideline
 //todo:  use chatgpt to rephrase readme
-//todo:  add test env to doc
 
 
 //****************************       api suite     ****************************
 
-//todo:  convert admin as vendor to vendor for whole suite
+//todo: make api suite independent, import: => like dokan pro exists or not, test summary, env setup from e2e sut  
+//todo: convert admin as vendor to vendor for whole suite
 //todo:  fix rank math api
 //todo:  create valid payload for every request : which doesn't cause php warning
 //todo:  run with parallel mode on , make tests independent if necessary
-//todo:  update all tests with productid, customerid, to make it faster
+//todo:  update all tests with product-id, customer-id, to make it faster
 //todo:  hardcoding admin auth will hinder negative testing : test with invalid user
-//todo:  reverse withdraw and proadvertisement setup needed on api suite
-//todo:  
+//todo:  reverse withdraw and product advertisement setup needed on api suite
+//todo:  run loop & increment page to grab all plugins/products/users/... see woocommerce code base
+
+
+if(!allBadges?.length){return;} //todo:  apply this to all batch update/ anywhere a action can be lessened
+// const allBadgeIds = (await this.getAllSellerBadges(auth)).map((o: { id: unknown; }) => o.id); // todo: fix all custom bulk actions where:  getAllIds is get, then check length, then later again calling getAllIds
 
 
 //********************************** NEW TODO **********************************

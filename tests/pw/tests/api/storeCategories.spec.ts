@@ -21,13 +21,12 @@ test.describe('store categories api test', () => {
 	});
 
 	test('set default store category @pro', async () => {
-		const [, defaultCategoryId] = await apiUtils.getDefaultStoreCategory();
 		const [response, responseBody] = await apiUtils.put(endPoints.setDefaultStoreCategory, { data: { id: categoryId } });
 		expect(response.ok()).toBeTruthy();
 		expect(responseBody).toBeTruthy();
 
 		// restore default store category
-		await apiUtils.setDefaultStoreCategory(defaultCategoryId);
+		await apiUtils.setDefaultStoreCategory('Uncategorized', payloads.adminAuth);
 	});
 
 	test('get all store categories @pro', async () => {

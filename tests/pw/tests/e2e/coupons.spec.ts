@@ -39,7 +39,7 @@ test.describe('Coupons test', () => {
 
 
 	test.afterAll(async () => {
-		await aPage.close(); //todo: close multiple pages to base page
+		await aPage.close(); // todo: close multiple pages to base page
 		await vPage.close();
 		await cPage.close();
 	});

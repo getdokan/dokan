@@ -38,21 +38,21 @@ export interface bookingResource {
 	quantity: string;
 }
 
-//Product
+// Product
 export interface product {
-	publishSuccessMessage:  string;
-	draftUpdateSuccessMessage:  string;
-	pendingProductUpdateSuccessMessage:  string;
-	createUpdateSaveSuccessMessage:  string;
+	publishSuccessMessage: string;
+	draftUpdateSuccessMessage: string;
+	pendingProductUpdateSuccessMessage: string;
+	createUpdateSaveSuccessMessage: string;
 
 	status: {
-		publish:  string;
-		draft:  string;
-		pending:  string;
+		publish: string;
+		draft: string;
+		pending: string;
 	}
 
 	stockStatus: {
-		outOfStock:  string;
+		outOfStock: string;
 	}
 
 	tax:{
@@ -283,7 +283,7 @@ export interface product {
 }
 
 
-//order
+// order
 export interface order {
 
 	orderStatus: {
@@ -607,7 +607,7 @@ export interface vendorSetupWizard {
 }
 
 // user
-export interface user  {
+export interface user {
 	username: () => string;
 	password: string;
 
@@ -664,7 +664,7 @@ export interface vendor {
 		iban: string;
 		role: string;
 
-		//shop details
+		// shop details
 		banner: string;
 		profilePicture: string;
 		storeName: string;
@@ -998,7 +998,7 @@ export interface vendor {
 		scheduleMessageInitial: string;
 	}
 
-	//addon
+	// addon
 	addon: {
 		randomName: () => string;
 		name: string;
@@ -1021,7 +1021,7 @@ export interface vendor {
 }
 
 
-//staff
+// staff
 export interface staff {
 	firstName: string;
 	lastName: string;
@@ -1038,7 +1038,7 @@ export interface staff {
 
 }
 
-//customer
+// customer
 export interface customer {
 	username: string;
 	password: string;
@@ -1090,7 +1090,7 @@ export interface customer {
 			zipCode: string;
 			country: string;
 			state: string;
-			email:  string;
+			email: string;
 			phone: string;
 		},
 
@@ -1143,7 +1143,7 @@ export interface customer {
 	},
 }
 
-//date
+// date
 export interface date {
 
 	previousDate: string;
@@ -1410,16 +1410,16 @@ export interface tools {
 
 // product advertisement
 export interface productAdvertisement {
-	advertisedProductStore:  string;
-	advertisedProduct:  string;
+	advertisedProductStore: string;
+	advertisedProduct: string;
 
 	filter: {
-		byStore:  string;
+		byStore: string;
 		createVia: {
-			admin:  string;
-			order:  string;
-			subscription:  string;
-			freePurchase:  string;
+			admin: string;
+			order: string;
+			subscription: string;
+			freePurchase: string;
 
 		}
 	}
@@ -1429,9 +1429,9 @@ export interface productAdvertisement {
 
 // wholesale customers
 export interface	wholesale {
-	wholesaleRequestSendMessage:  string;
-	becomeWholesaleCustomerSuccessMessage:  string;
-	wholesaleCapabilityActivate:  string;
+	wholesaleRequestSendMessage: string;
+	becomeWholesaleCustomerSuccessMessage: string;
+	wholesaleCapabilityActivate: string;
 }
 
 // dokan settings
@@ -1439,192 +1439,192 @@ export interface	dokanSettings {
 
 	// General Settings
 	general: {
-		vendorStoreUrl:  string;
-		sellingProductTypes:  string;
-		storeProductPerPage:  string;
-		storCategory:  string;
-		saveSuccessMessage:  string;
+		vendorStoreUrl: string;
+		sellingProductTypes: string;
+		storeProductPerPage: string;
+		storCategory: string;
+		saveSuccessMessage: string;
 	}
 
 	// Selling Options Settings
 	selling: {
-		commissionType:  string;
-		adminCommission:  string;
-		shippingFeeRecipient:  string;
-		productTaxFeeRecipient:  string;
-		shippingTaxFeeRecipient:  string;
-		newProductStatus:  string;
-		productCategorySelection:  string;
-		saveSuccessMessage:  string;
+		commissionType: string;
+		adminCommission: string;
+		shippingFeeRecipient: string;
+		productTaxFeeRecipient: string;
+		shippingTaxFeeRecipient: string;
+		newProductStatus: string;
+		productCategorySelection: string;
+		saveSuccessMessage: string;
 	}
 
 	// Withdraw
 	withdraw: {
-		customMethodName:  string;
-		customMethodType:  string;
-		minimumWithdrawAmount:  string;
-		withdrawThreshold:  string;
-		quarterlyScheduleMonth:  string;
-		quarterlyScheduleWeek:  string;
-		quarterlyScheduleDay:  string;
-		monthlyScheduleWeek:  string;
-		monthlyScheduleDay:  string;
-		biweeklyScheduleWeek:  string;
-		biweeklyScheduleDay:  string;
-		weeklyScheduleDay:  string;
-		saveSuccessMessage:  string;
+		customMethodName: string;
+		customMethodType: string;
+		minimumWithdrawAmount: string;
+		withdrawThreshold: string;
+		quarterlyScheduleMonth: string;
+		quarterlyScheduleWeek: string;
+		quarterlyScheduleDay: string;
+		monthlyScheduleWeek: string;
+		monthlyScheduleDay: string;
+		biweeklyScheduleWeek: string;
+		biweeklyScheduleDay: string;
+		weeklyScheduleDay: string;
+		saveSuccessMessage: string;
 	}
 
 	// Reverse withdraw
 	reverseWithdraw: {
-		billingType:  string;
-		reverseBalanceThreshold:  string;
-		gracePeriod:  string;
-		saveSuccessMessage:  string;
+		billingType: string;
+		reverseBalanceThreshold: string;
+		gracePeriod: string;
+		saveSuccessMessage: string;
 	}
 
 	// Pages
 	page: {
-		dashboard:  string;
-		myOrders:  string;
-		storeListing:  string;
-		termsAndConditions:  string;
-		saveSuccessMessage:  string;
+		dashboard: string;
+		myOrders: string;
+		storeListing: string;
+		termsAndConditions: string;
+		saveSuccessMessage: string;
 	}
 
 	// Appearance
 	appearance: {
 		googleMapApiKey: string;
 		mapBoxApiKey: string;
-		storeBannerWidth:  string;
-		storeBannerHeight:  string;
-		saveSuccessMessage:  string;
+		storeBannerWidth: string;
+		storeBannerHeight: string;
+		saveSuccessMessage: string;
 	}
 
 	// privacy policy
 	privacyPolicy: {
-		privacyPage:  string;
-		privacyPolicyHtmlBody:  string;
-		saveSuccessMessage:  string;
+		privacyPage: string;
+		privacyPolicyHtmlBody: string;
+		saveSuccessMessage: string;
 	}
 
 	// colors
 	colors: {
-		paletteChoice:  string;
-		colorPalette:  string;
-		saveSuccessMessage:  string;
+		paletteChoice: string;
+		colorPalette: string;
+		saveSuccessMessage: string;
 	}
 
 	// shipping status
 	shippingStatus: {
-		customShippingStatus:  string;
-		saveSuccessMessage:  string;
+		customShippingStatus: string;
+		saveSuccessMessage: string;
 	},
 
 	// quote
 	quote: {
 		decreaseOfferedPrice: string;
-		saveSuccessMessage:  string;
+		saveSuccessMessage: string;
 	},
 
 	// live search
 	liveSearch: {
-		liveSearchOption:  string;
-		saveSuccessMessage:  string;
+		liveSearchOption: string;
+		saveSuccessMessage: string;
 	},
 
 	// Store support
 	storeSupport: {
-		displayOnSingleProductPage:  string;
-		supportButtonLabel:  string;
-		saveSuccessMessage:  string;
+		displayOnSingleProductPage: string;
+		supportButtonLabel: string;
+		saveSuccessMessage: string;
 	}
 
 	// Email verification
 	emailVerification: {
-		registrationNotice:  string;
-		loginNotice:  string;
-		saveSuccessMessage:  string;
+		registrationNotice: string;
+		loginNotice: string;
+		saveSuccessMessage: string;
 	}
 
 	// Rma Settings
 	rma: {
-		orderStatus:  string;
+		orderStatus: string;
 		rmaReasons: string[];
-		refundPolicyHtmlBody:  string;
-		saveSuccessMessage:  string;
+		refundPolicyHtmlBody: string;
+		saveSuccessMessage: string;
 	}
 
 	// Wholesale
 	wholesale: {
-		whoCanSeeWholesalePrice:  string;
-		saveSuccessMessage:  string;
+		whoCanSeeWholesalePrice: string;
+		saveSuccessMessage: string;
 	}
 
 	// EuCompliance
 	euCompliance: {
-		saveSuccessMessage:  string;
+		saveSuccessMessage: string;
 	}
 
 	// delivery time
 	deliveryTime: {
-		deliveryDateLabel:  string;
-		deliveryBlockedBuffer:  string;
-		deliveryBoxInfo:  string;
+		deliveryDateLabel: string;
+		deliveryBlockedBuffer: string;
+		deliveryBoxInfo: string;
 		days: string[];
 		choice: string,
-		openingTime:  string;
-		closingTime:  string;
-		timeSlot:  string;
-		orderPerSlot:  string;
-		saveSuccessMessage:  string;
+		openingTime: string;
+		closingTime: string;
+		timeSlot: string;
+		orderPerSlot: string;
+		saveSuccessMessage: string;
 	}
 
 	// Product advertising
 	productAdvertising: {
-		noOfAvailableSlot:  string;
-		expireAfterDays:  string;
-		advertisementCost:  string;
-		saveSuccessMessage:  string;
+		noOfAvailableSlot: string;
+		expireAfterDays: string;
+		advertisementCost: string;
+		saveSuccessMessage: string;
 	}
 
 	// Geolocation Settings
 	geolocation: {
-		locationMapPosition:  string;
-		showMap:  string;
-		radiusSearchUnit:  string;
-		radiusSearchMinimumDistance:  string;
-		radiusSearchMaximumDistance:  string;
-		mapZoomLevel:  string;
-		defaultLocation:  string;
-		saveSuccessMessage:  string;
+		locationMapPosition: string;
+		showMap: string;
+		radiusSearchUnit: string;
+		radiusSearchMinimumDistance: string;
+		radiusSearchMaximumDistance: string;
+		mapZoomLevel: string;
+		defaultLocation: string;
+		saveSuccessMessage: string;
 	}
 
 	// Product report abuse
 	productReportAbuse: {
-		reasonsForAbuseReport:  string;
-		saveSuccessMessage:  string;
+		reasonsForAbuseReport: string;
+		saveSuccessMessage: string;
 	}
 
 	// Spmv Settings
 	spmv: {
-		sellItemButtonText:  string;
-		availableVendorDisplayAreaTitle:  string;
-		availableVendorSectionDisplayPosition:  string;
-		showSpmvProducts:  string;
-		saveSuccessMessage:  string;
+		sellItemButtonText: string;
+		availableVendorDisplayAreaTitle: string;
+		availableVendorSectionDisplayPosition: string;
+		showSpmvProducts: string;
+		saveSuccessMessage: string;
 	}
 
 	// Vendor Subscription Settings
 	vendorSubscription: {
-		displayPage:  string;
-		noOfDays:  string;
-		productStatus:  string;
-		cancellingEmailSubject:  string;
-		cancellingEmailBody:  string;
-		alertEmailSubject:  string;
-		alertEmailBody:  string;
-		saveSuccessMessage:  string;
+		displayPage: string;
+		noOfDays: string;
+		productStatus: string;
+		cancellingEmailSubject: string;
+		cancellingEmailBody: string;
+		alertEmailSubject: string;
+		alertEmailBody: string;
+		saveSuccessMessage: string;
 	}
 }
 
@@ -1640,60 +1640,60 @@ export interface dokanLicense {
 export interface predefined {
 	simpleProduct: {
 		product1: {
-			name:  string;
+			name: string;
 			productName: () => string;
 		}
-		product2:  string;
-		productFrac1:  string;
-		productFrac2:  string;
+		product2: string;
+		productFrac1: string;
+		productFrac2: string;
 	}
 
 	variableProduct: {
-		product1:  string;
+		product1: string;
 	}
 
 	simpleSubscription: {
-		product1:  string;
+		product1: string;
 	}
 
 	variableSubscription: {
-		product1:  string;
+		product1: string;
 	}
 
 	externalProduct: {
-		product1:  string;
+		product1: string;
 	}
 
 	auctionProduct: {
-		product1:  string;
+		product1: string;
 	}
 
 	bookingProduct: {
-		product1:  string;
+		product1: string;
 	}
 
 	saleProduct: {
-		product1:  string;
+		product1: string;
 	}
 
 	vendorSubscription: {
-		nonRecurring:  string;
+		nonRecurring: string;
 	}
 
 	coupon: {
-		couponCode:  string;
+		couponCode: string;
 	}
 
 	vendorInfo: {
 		firstName: () => string;
 		lastName: () => string;
-		username:  string;
+		username: string;
 		shopName: string;
 	}
 
 	vendorStores: {
-		followFromShopPage:  string;
-		followFromStorePage:  string;
+		followFromShopPage: string;
+		followFromStorePage: string;
 		vendor1: string;
 		shopUrl: string;
 	}
@@ -1702,7 +1702,7 @@ export interface predefined {
 		firstName: () => string;
 		lastName: () => string;
 		username: () => string;
-		username1:  string;
+		username1: string;
 	}
 }
 
@@ -1785,7 +1785,7 @@ export interface reqOptions {
 	ignoreHTTPSErrors?: boolean | undefined;
 	maxRedirects?: number | undefined;
 	multipart?: { [key: string]: string | number | boolean | fs.ReadStream | { name: string; mimeType: string; buffer: Buffer; }; } | undefined;
-	params?: { [key: string]: string | number | boolean; } | undefined;
+	params?: { [key: string]: string | number | boolean ; } | undefined;
 	timeout?: number | undefined;
 }
 
