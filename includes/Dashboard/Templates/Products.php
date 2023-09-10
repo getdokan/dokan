@@ -287,7 +287,7 @@ class Products {
 
             if ( ! self::$errors ) {
                 $timenow        = dokan_current_datetime()->setTimezone( new \DateTimeZone( 'UTC' ) );
-                $product_status = dokan_get_new_post_status();
+                $product_status = dokan_get_default_product_status( dokan_get_current_user_id() );
                 $post_data      = apply_filters(
                     'dokan_insert_product_post_data', [
                         'post_type'         => 'product',

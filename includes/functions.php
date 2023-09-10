@@ -553,27 +553,48 @@ function dokan_get_commission_type( $seller_id = 0, $product_id = 0, $category_i
 }
 
 /**
- * Get product status based on user id and settings
+ * Get the default product status for new and edited product for seller based on settings
  *
- * @since 3.7.20 added a new filter hook `dokan_get_new_post_status`
+ * @since DOKAN_SINCE
+ *
+ * @param int|null $seller_id
  *
  * @return string
  */
-function dokan_get_new_post_status() {
-	$user_id    = get_current_user_id();
-	$is_trusted = dokan_is_seller_trusted( $user_id );
+function dokan_get_default_product_status( $seller_id = null ) {
+    $seller_id  = null === $seller_id ? $seller_id : get_current_user_id();
+    $is_trusted = dokan_is_seller_trusted( $seller_id );
     $status     = 'pending';
 
     if ( $is_trusted ) {
         $status = 'publish';
     }
 
-    // below code will be removed on future version of Dokan Lite
+    // below code will be removed on a future version of Dokan Lite
     if ( dokan()->is_pro_exists() && version_compare( DOKAN_PRO_PLUGIN_VERSION, '3.8.3', '<' ) ) {
         $status = 'publish' === $status ? $status : dokan_get_option( 'product_status', 'dokan_selling', 'pending' );
     }
 
-	return apply_filters( 'dokan_get_new_post_status', $status, $user_id, $is_trusted );
+    $status = apply_filters_deprecated( 'dokan_get_new_post_status', [ $status, $seller_id, $is_trusted ], 'DOKAN_SINCE', 'dokan_get_default_product_status' );
+
+    return apply_filters( 'dokan_get_default_product_status', $status, $seller_id, $is_trusted );
+}
+
+/**
+ * Get product status based on user id and settings
+ *
+ * @since 3.7.20 added a new filter hook `dokan_get_new_post_status`
+ *
+ * @since DOKAN_SINCE made the function deprecated
+ *
+ * @param int|null $seller_id
+ *
+ * @deprecated DOKAN_SINCE use `dokan_get_default_product_status` instead
+ *
+ * @return string
+ */
+function dokan_get_new_post_status( $seller_id = null ) {
+    return dokan_get_default_product_status( $seller_id );
 }
 
 /**
