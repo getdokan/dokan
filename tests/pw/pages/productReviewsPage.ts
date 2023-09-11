@@ -50,7 +50,7 @@ export class ProductReviewsPage extends VendorPage {
 	async updateProductReview(action: string, reviewMessage: string){
 		await this.goto(data.subUrls.frontend.vDashboard.reviews);
 
-		switch(action){
+		switch (action){
 
 
 		case 'unApprove' :

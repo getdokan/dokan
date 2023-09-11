@@ -2,7 +2,7 @@ import { Page, expect } from '@playwright/test';
 import { AdminPage } from 'pages/adminPage';
 import { selector } from 'pages/selectors';
 import { data } from 'utils/testData';
-import { productAdvertisement  } from 'utils/interfaces';
+import { productAdvertisement } from 'utils/interfaces';
 
 export class ProductAdvertisingPage extends AdminPage {
 
@@ -75,7 +75,7 @@ export class ProductAdvertisingPage extends AdminPage {
 		await this.clickAndWaitForResponse(data.subUrls.api.dokan.productAdvertising, selector.admin.dokan.productAdvertising.addNewAdvertisement.addNew);
 		await this.click(selector.admin.dokan.productAdvertising.actionSuccessful);
 
-		//close modal
+		// close modal
 		await this.click(selector.admin.dokan.productAdvertising.addNewAdvertisement.closeModal);
 	}
 
@@ -119,7 +119,7 @@ export class ProductAdvertisingPage extends AdminPage {
 		const count = (await this.getElementText(selector.admin.dokan.productAdvertising.numberOfRowsFound))?.split(' ')[0];
 		expect(Number(count)).toBeGreaterThan(0);
 
-		//clear filter
+		// clear filter
 		await this.clickAndWaitForResponse(data.subUrls.api.dokan.productAdvertising, selector.admin.dokan.productAdvertising.filters.clearFilter);
 	}
 

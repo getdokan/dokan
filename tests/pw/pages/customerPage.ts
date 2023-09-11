@@ -235,7 +235,7 @@ export class CustomerPage extends BasePage {
 		addonIsVisible && this.selectByNumber(selector.customer.cSingleProduct.productAddon.addOnSelect, 1);
 		quantity && await this.clearAndType(selector.customer.cSingleProduct.productDetails.quantity, quantity);
 		await this.clickAndWaitForResponse(data.subUrls.frontend.productCustomerPage, selector.customer.cSingleProduct.productDetails.addToCart);
-		if(!quantity){
+		if (!quantity){
 			await this.toContainText(selector.customer.cWooSelector.wooCommerceSuccessMessage, `“${productName}” has been added to your cart.`);
 		} else {
 			await this.toContainText(selector.customer.cWooSelector.wooCommerceSuccessMessage, `${quantity} × “${productName}” have been added to your cart.`);
@@ -247,7 +247,7 @@ export class CustomerPage extends BasePage {
 	async addProductToCart(productName: string, from:string, clearCart = true, quantity?: string){
 		// clear cart
 		clearCart && await this.clearCart();
-		switch(from){
+		switch (from){
 		case 'shop' :
 			await this.addProductToCartFromShop(productName);
 			break;
@@ -354,7 +354,7 @@ export class CustomerPage extends BasePage {
 		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.orderReceived, selector.customer.cCheckout.placeOrder);
 		await this.toBeVisible(selector.customer.cOrderReceived.orderReceivedSuccessMessage);
 
-		const ifMultiVendorOrder  = await this.isVisible(selector.customer.cOrderReceived.orderDetails.subOrders.subOrders);
+		const ifMultiVendorOrder = await this.isVisible(selector.customer.cOrderReceived.orderDetails.subOrders.subOrders);
 		if (ifMultiVendorOrder){
 			await this.multipleElementVisible(selector.customer.cOrderReceived.orderDetails.subOrders);
 		}
@@ -363,7 +363,7 @@ export class CustomerPage extends BasePage {
 			return await this.getOrderDetailsAfterPlaceOrder();
 		}
 
-		return (await this.getElementText(selector.customer.cOrderReceived.orderDetails.orderNumber)) as string; //remove after solving api issue in -> return request before all
+		return (await this.getElementText(selector.customer.cOrderReceived.orderDetails.orderNumber)) as string; // remove after solving api issue in -> return request before all
 	}
 
 
@@ -398,7 +398,7 @@ export class CustomerPage extends BasePage {
 
 		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.orderReceived, selector.customer.cCheckout.placeOrder);
 		await this.toBeVisible(selector.customer.cOrderReceived.orderReceivedSuccessMessage);
-		return (await this.getElementText(selector.customer.cOrderReceived.orderDetails.orderNumber)) as string; //remove after solving api issue in -> return request before all
+		return (await this.getElementText(selector.customer.cOrderReceived.orderDetails.orderNumber)) as string; // remove after solving api issue in -> return request before all
 	}
 
 
@@ -462,13 +462,13 @@ export class CustomerPage extends BasePage {
 	// get order details after purchase
 	async getOrderDetailsAfterPlaceOrder(): Promise<object> {
 		const orderDetails	= {
-			orderNumber: '',
-			subtotal: 0,
-			shippingCost: 0,
+			orderNumber   : '',
+			subtotal      : 0,
+			shippingCost  : 0,
 			shippingMethod: '',
-			tax: 0,
-			paymentMethod: '',
-			orderTotal: 0,
+			tax           : 0,
+			paymentMethod : '',
+			orderTotal    : 0,
 		};
 
 		orderDetails.orderNumber = await this.getElementText(selector.customer.cOrderReceived.orderDetails.orderNumber) as string;
@@ -495,18 +495,18 @@ export class CustomerPage extends BasePage {
 		await this.goToOrderDetails(orderNumber);
 
 		const orderDetails = {
-			orderNumber: '',
-			orderDate: '',
-			orderStatus: '',
-			subtotal: 0,
-			shippingCost: 0,
-			shippingMethod: '',
-			tax: 0,
-			orderDiscount: 0,
+			orderNumber     : '',
+			orderDate       : '',
+			orderStatus     : '',
+			subtotal        : 0,
+			shippingCost    : 0,
+			shippingMethod  : '',
+			tax             : 0,
+			orderDiscount   : 0,
 			quantityDiscount: 0,
-			discount: 0,
-			paymentMethod: '',
-			orderTotal: 0,
+			discount        : 0,
+			paymentMethod   : '',
+			orderTotal      : 0,
 		};
 
 		orderDetails.orderNumber = await this.getElementText(selector.customer.cOrders.orderDetails.orderNumber) as string;
@@ -551,7 +551,7 @@ export class CustomerPage extends BasePage {
 	// search product
 	async searchProduct(productName: string): Promise<void> {
 		await this.goIfNotThere(data.subUrls.frontend.shop);
-		if(!DOKAN_PRO){
+		if (!DOKAN_PRO){
 			// search on lite
 			await this.clearAndType(selector.customer.cShop.searchProductLite, productName);
 			await this.pressAndWaitForLoadState(data.key.enter);

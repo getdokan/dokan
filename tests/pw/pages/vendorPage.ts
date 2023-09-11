@@ -127,7 +127,7 @@ export class VendorPage extends BasePage {
 			const storeCategoriesEnabled = await this.isVisible(selector.vendor.vSetup.storeCategories);
 			if (storeCategoriesEnabled){
 				const allStoreCategories = await this.getMultipleElementTexts(selector.vendor.vSetup.selectedStoreCategories);
-				const categoryIsSelected = allStoreCategories.includes('×'+ setupWizardData.storeCategory);
+				const categoryIsSelected = allStoreCategories.includes('×' + setupWizardData.storeCategory);
 				if (!categoryIsSelected){
 					await this.click(selector.vendor.vSetup.storeCategories);
 					await this.type(selector.vendor.vSetup.storeCategoriesInput, setupWizardData.storeCategory);
@@ -190,7 +190,7 @@ export class VendorPage extends BasePage {
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.editAccountVendor);
 		await this.clearAndType(selector.vendor.vAccountDetails.firstName, vendor.username);
 		await this.clearAndType(selector.vendor.vAccountDetails.lastName, vendor.lastname);
-		await this.clearAndType(selector.vendor.vAccountDetails.email,  vendor.username + vendor.vendorInfo.emailDomain);
+		await this.clearAndType(selector.vendor.vAccountDetails.email, vendor.username + vendor.vendorInfo.emailDomain);
 		// await this.updatePassword(vendor.vendorInfo.password, vendor.vendorInfo.password1);
 		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.editAccountVendor, selector.vendor.vAccountDetails.saveChanges, 302);
 		await expect(this.page.getByText(selector.vendor.vAccountDetails.saveSuccessMessage)).toBeVisible();
@@ -225,24 +225,24 @@ export class VendorPage extends BasePage {
 		await this.searchOrder(orderNumber);
 
 		const orderDetails = {
-			vendorEarning: 0,
-			orderNumber: '',
+			vendorEarning         : 0,
+			orderNumber           : '',
 			orderTotalBeforeRefund: 0,
-			orderTotal: 0,
-			orderStatus: '',
-			orderDate: '',
-			discount: 0,
-			shippingMethod: '',
-			shippingCost: 0,
-			tax: 0,
-			refunded: 0,
+			orderTotal            : 0,
+			orderStatus           : '',
+			orderDate             : '',
+			discount              : 0,
+			shippingMethod        : '',
+			shippingCost          : 0,
+			tax                   : 0,
+			refunded              : 0,
 
 		};
 
 		orderDetails.vendorEarning = helpers.price(await this.getElementText(selector.vendor.orders.vendorEarningTable(orderNumber)) as string);
 		await this.clickAndWaitForLoadState(selector.vendor.orders.view(orderNumber));
 
-		orderDetails.orderNumber = (await this.getElementText(selector.vendor.orders.orderDetails.orderNumber)  as string).split('#')[1]  as string;
+		orderDetails.orderNumber = (await this.getElementText(selector.vendor.orders.orderDetails.orderNumber) as string).split('#')[1] as string;
 
 		const refundedOrderTotalIsVisible = await this.isVisible(selector.vendor.orders.orderDetails.orderTotalAfterRefund);
 		if (refundedOrderTotalIsVisible) {

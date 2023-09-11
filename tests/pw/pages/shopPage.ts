@@ -22,7 +22,7 @@ export class ShopPage extends CustomerPage {
 		// shop text is visible
 		await this.toBeVisible(selector.customer.cShop.shopText);
 
-		if(DOKAN_PRO){
+		if (DOKAN_PRO){
 
 			// map elements are visible
 			const { productOnMap, ...map } = selector.customer.cShop.map;
@@ -52,7 +52,7 @@ export class ShopPage extends CustomerPage {
 	// search product
 	async searchProduct(productName: string): Promise<void> {
 		await this.goIfNotThere(data.subUrls.frontend.shop);
-		if(!DOKAN_PRO){
+		if (!DOKAN_PRO){
 			await this.clearAndType(selector.customer.cShop.searchProductLite, productName);
 			await this.pressAndWaitForLoadState(data.key.enter);
 			await this.toContainText(selector.customer.cSingleProduct.productDetails.productTitle, productName );
@@ -68,7 +68,7 @@ export class ShopPage extends CustomerPage {
 	async filterProducts(filterBy: string, value: string): Promise<void> {
 		await this.goIfNotThere(data.subUrls.frontend.shop);
 
-		switch(filterBy){
+		switch (filterBy){
 
 		case 'by-location' :
 			await this.typeAndWaitForResponse(data.subUrls.gmap, selector.customer.cShop.filters.location, value);
@@ -94,8 +94,8 @@ export class ShopPage extends CustomerPage {
 		await this.goIfNotThere(data.subUrls.frontend.shop);
 		// await this.click(selector.customer.cShop.map.productOnMap.productOnMap);
 		// await this.toBeVisibleAnyOfThem([selector.customer.cShop.map.productOnMap.productPopup, selector.customer.cShop.map.productOnMap.productListPopup]); // implement this instead of if-else soln
-		const storePinIsVisible  = await this.isVisible(selector.customer.cShop.map.productOnMap.productPin);
-		if(storePinIsVisible){
+		const storePinIsVisible = await this.isVisible(selector.customer.cShop.map.productOnMap.productPin);
+		if (storePinIsVisible){
 			await this.click(selector.customer.cShop.map.productOnMap.productPin);
 			await this.toBeVisible(selector.customer.cShop.map.productOnMap.productPopup);
 		} else {
@@ -108,9 +108,9 @@ export class ShopPage extends CustomerPage {
 
 
 	// go to product details
-	async  goToProductDetailsFromShop(productName: string): Promise<void> {
+	async goToProductDetailsFromShop(productName: string): Promise<void> {
 		await this.searchProduct(productName);
-		if(DOKAN_PRO){
+		if (DOKAN_PRO){
 			await this.clickAndWaitForResponse(data.subUrls.frontend.productCustomerPage, selector.customer.cShop.productCard.productDetailsLink);
 			await this.toContainText(selector.customer.cSingleProduct.productDetails.productTitle, productName );
 		}

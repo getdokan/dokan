@@ -112,7 +112,7 @@ export class ModulesPage extends AdminPage {
 	async moduleViewLayout(style: string){
 		await this.goIfNotThere(data.subUrls.backend.dokan.modules);
 		const currentStyle = await this.getClassValue(selector.admin.dokan.modules.pro.currentLayout);
-		if(!(currentStyle?.includes(style))){
+		if (!(currentStyle?.includes(style))){
 			await this.click(selector.admin.dokan.modules.pro.moduleViewMode);
 			await this.toHaveClass(selector.admin.dokan.modules.pro.currentLayout, style);
 		}

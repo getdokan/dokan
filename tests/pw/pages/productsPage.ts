@@ -58,7 +58,7 @@ export class ProductsPage extends AdminPage {
 		await this.click(selector.admin.products.product.category(product.category));
 
 		// stock status
-		if(product.stockStatus){
+		if (product.stockStatus){
 			await this.click(selector.admin.products.product.inventory);
 			await this.selectByValue(selector.admin.products.product.stockStatus, data.product.stockStatus.outOfStock);
 		}
@@ -298,7 +298,7 @@ export class ProductsPage extends AdminPage {
 
 
 	// vendor add simple product
-	async vendorAddSimpleProduct(product: product['simple'] |  product['variable'] | product['simpleSubscription'] | product['external']): Promise<void> {
+	async vendorAddSimpleProduct(product: product['simple'] | product['variable'] | product['simpleSubscription'] | product['external']): Promise<void> {
 		const productName = product.productName();
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.products);
 		await this.click(selector.vendor.product.create.addNewProduct);
@@ -414,7 +414,7 @@ export class ProductsPage extends AdminPage {
 			await this.click(selector.vendor.product.category.productCategoryAlreadySelectedPopup);
 			await this.click(selector.vendor.product.category.productCategoryModalClose);
 		}
-		//todo: add multiple category selection
+		// todo: add multiple category selection
 	}
 
 
@@ -449,7 +449,7 @@ export class ProductsPage extends AdminPage {
 	async filterProducts(filterBy: string, value: string): Promise<void> {
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.products);
 
-		switch(filterBy){
+		switch (filterBy){
 
 		case 'by-date' :
 			await this.selectByNumber(selector.vendor.product.filters.filterByDate, value);
@@ -471,7 +471,7 @@ export class ProductsPage extends AdminPage {
 			break;
 		}
 
-		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products,  selector.vendor.product.filters.filter);
+		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, selector.vendor.product.filters.filter);
 		await this.notToHaveCount(selector.vendor.product.numberOfRowsFound, 0);
 
 	}
@@ -502,7 +502,7 @@ export class ProductsPage extends AdminPage {
 
 		await this.clearAndType(selector.vendor.product.edit.title, product.editProduct); // don't update name below test needs same product
 		await this.clearAndType(selector.vendor.product.edit.price, product.regularPrice());
-		//todo:  add more fields
+		// todo:  add more fields
 
 		await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.products, selector.vendor.product.saveProduct, 302);
 		await this.toContainText(selector.vendor.product.dokanMessage, 'The product has been saved successfully. ');
@@ -515,7 +515,7 @@ export class ProductsPage extends AdminPage {
 	// add product quantity discount
 	async addProductQuantityDiscount(productName: string, quantityDiscount: vendor['vendorInfo']['quantityDiscount']): Promise<void> {
 		await this.goToProductEdit(productName);
-		await this.check(selector.vendor.product.discount.enableBulkDiscount); //todo: need to fix
+		await this.check(selector.vendor.product.discount.enableBulkDiscount); // todo: need to fix
 		await this.clearAndType(selector.vendor.product.discount.lotMinimumQuantity, quantityDiscount.minimumQuantity);
 		await this.clearAndType(selector.vendor.product.discount.lotDiscountInPercentage, quantityDiscount.discountPercentage);
 		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, selector.vendor.product.saveProduct, 302);
@@ -530,7 +530,7 @@ export class ProductsPage extends AdminPage {
 		await this.clearAndType(selector.vendor.product.rma.label, rma.label);
 		await this.selectByValue(selector.vendor.product.rma.type, rma.type);
 		await this.selectByValue(selector.vendor.product.rma.length, rma.rmaLength);
-		//todo: add rma as addon
+		// todo: add rma as addon
 		if (rma.rmaLength === 'limited'){
 			await this.clearAndType(selector.vendor.product.rma.lengthValue, rma.lengthValue);
 			await this.selectByValue(selector.vendor.product.rma.lengthDuration, rma.lengthDuration);
@@ -551,7 +551,7 @@ export class ProductsPage extends AdminPage {
 		await this.click(selector.vendor.product.quickEdit(product.editProduct));
 
 		await this.clearAndType(selector.vendor.product.quickEditProduct.title, product.editProduct);
-		//todo:  add more fields
+		// todo:  add more fields
 
 		await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.product.quickEditProduct.update);
 
@@ -583,11 +583,11 @@ export class ProductsPage extends AdminPage {
 		productName ? await this.searchProduct(productName) : await this.goIfNotThere(data.subUrls.frontend.vDashboard.products);
 
 		await this.click(selector.vendor.product.bulkActions.selectAll);
-		switch(action){
+		switch (action){
 
 		case 'edit' :
 			await this.selectByValue(selector.vendor.product.bulkActions.selectAction, 'edit');
-			//todo:
+			// todo:
 			break;
 
 		case 'permanently-delete' :

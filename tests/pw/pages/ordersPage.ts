@@ -52,7 +52,7 @@ export class OrdersPage extends VendorPage {
 	async exportOrders(type: string): Promise<void> {
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.orders);
 
-		switch(type){
+		switch (type){
 
 		case 'all' :
 			// await this.clickAndAcceptAndWaitForResponse(data.subUrls.frontend.vDashboard.orders, selector.vendor.orders.export.exportAll );
@@ -86,7 +86,7 @@ export class OrdersPage extends VendorPage {
 	async filterOrders(filterBy: string, inputValue: string | date['dateRange']): Promise<void> {
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.orders);
 
-		switch(filterBy){
+		switch (filterBy){
 
 		case 'by-customer' :
 			await this.click(selector.vendor.orders.filters.filterByCustomer.dropDown);
@@ -96,7 +96,7 @@ export class OrdersPage extends VendorPage {
 
 		case 'by-date' :
 			await this.setAttributeValue(selector.vendor.orders.filters.filterByDate.dateRangeInput, 'value', helpers.dateFormatFYJ(inputValue.startDate) + ' - ' + helpers.dateFormatFYJ(inputValue.endDate));
-			await this.setAttributeValue(selector.vendor.orders.filters.filterByDate.startDateInput, 'value', inputValue.startDate); //todo: resolve this
+			await this.setAttributeValue(selector.vendor.orders.filters.filterByDate.startDateInput, 'value', inputValue.startDate); // todo: resolve this
 			await this.setAttributeValue(selector.vendor.orders.filters.filterByDate.endDateInput, 'value', inputValue.endDate);
 			break;
 
@@ -125,8 +125,8 @@ export class OrdersPage extends VendorPage {
 		// order details elements are visible
 		await this.toBeVisible(selector.vendor.orders.orderDetails.orderNumber);
 		await this.toBeVisible(selector.vendor.orders.orderDetails.orderDate);
-		DOKAN_PRO ? await this.toBeVisible(selector.vendor.orders.orderDetails.orderTotal): await this.toBeVisible(selector.vendor.orders.orderDetails.total);
-		//todo:  add more fields to assert
+		DOKAN_PRO ? await this.toBeVisible(selector.vendor.orders.orderDetails.orderTotal) : await this.toBeVisible(selector.vendor.orders.orderDetails.total);
+		// todo:  add more fields to assert
 
 		// general details elements are visible
 		await this.multipleElementVisible(selector.vendor.orders.generalDetails);
@@ -143,19 +143,19 @@ export class OrdersPage extends VendorPage {
 		await this.click(selector.vendor.orders.trackingDetails.addTrackingNumber);
 
 		// tracking detail elements are visible
-		const { addTrackingNumber,  ...trackingDetails } = selector.vendor.orders.trackingDetails;
+		const { addTrackingNumber, ...trackingDetails } = selector.vendor.orders.trackingDetails;
 		await this.multipleElementVisible(trackingDetails);
 
 		if (DOKAN_PRO){
 			await this.click(selector.vendor.orders.shipment.createNewShipment);
 
 			// shipment elements are visible
-			const { createNewShipment, shipmentOrderItem, shipmentOrderItemQty,  ...shipment } = selector.vendor.orders.shipment;
+			const { createNewShipment, shipmentOrderItem, shipmentOrderItemQty, ...shipment } = selector.vendor.orders.shipment;
 			await this.multipleElementVisible(shipment);
 		}
 
 		// downloadable product elements are visible
-		const { revokeAccess, confirmAction, cancelAction,  ...downloadableProductPermission } = selector.vendor.orders.downloadableProductPermission;
+		const { revokeAccess, confirmAction, cancelAction, ...downloadableProductPermission } = selector.vendor.orders.downloadableProductPermission;
 		await this.multipleElementVisible(downloadableProductPermission);
 	}
 
@@ -163,7 +163,7 @@ export class OrdersPage extends VendorPage {
 	// update order status on table
 	async updateOrderStatusOnTable(orderNumber: string, status: string): Promise<void> {
 		await this.searchOrder(orderNumber);
-		switch(status){
+		switch (status){
 
 		case 'processing' :
 			await this.clickAndAcceptAndWaitForResponse(data.subUrls.ajax, selector.vendor.orders.processing(orderNumber), 302);
@@ -226,11 +226,11 @@ export class OrdersPage extends VendorPage {
 		await this.clearAndType(selector.vendor.orders.shipment.comments, shipmentDetails.trackingNumber);
 		await this.click(selector.vendor.orders.shipment.notifyCustomer);
 		await this.clickAndAcceptAndWaitForResponse(data.subUrls.ajax, selector.vendor.orders.shipment.createShipment);
-		//todo: add more assertion, success message, or short shipment description div
-		//todo: also assert on my order details or add new test
+		// todo: add more assertion, success message, or short shipment description div
+		// todo: also assert on my order details or add new test
 	}
 
-	//todo:  update shipment test, shipment updates timeline
+	// todo:  update shipment test, shipment updates timeline
 
 
 	// add Downloadable Product
@@ -238,13 +238,13 @@ export class OrdersPage extends VendorPage {
 		await this.goToOrderDetails(orderNumber);
 		await this.clearAndType(selector.vendor.orders.downloadableProductPermission.downloadableProductInput, downloadableProductName);
 		await this.press(data.key.enter);
-		await this.clickAndAcceptAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.vendor.orders.downloadableProductPermission.grantAccess); //todo:  need to fix
+		await this.clickAndAcceptAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.vendor.orders.downloadableProductPermission.grantAccess); // todo:  need to fix
 	}
 
 
 	// add Downloadable Product
 	async removeDownloadableProduct(orderNumber: string, downloadableProductName: string): Promise<void> {
-		await this.addDownloadableProduct(orderNumber, downloadableProductName); //todo: do it via api
+		await this.addDownloadableProduct(orderNumber, downloadableProductName); // todo: do it via api
 		await this.click(selector.vendor.orders.downloadableProductPermission.revokeAccess);
 		await this.clickAndAcceptAndWaitForResponse(data.subUrls.ajax, selector.vendor.orders.downloadableProductPermission.confirmAction);
 	}
@@ -255,7 +255,7 @@ export class OrdersPage extends VendorPage {
 		orderNumber ? await this.searchOrder(orderNumber) : await this.goIfNotThere(data.subUrls.frontend.vDashboard.orders);
 
 		await this.click(selector.vendor.orders.bulkActions.selectAll);
-		switch(action){
+		switch (action){
 
 		case 'onhold' :
 			await this.selectByValue(selector.vendor.orders.bulkActions.selectAction, 'wc-on-hold');

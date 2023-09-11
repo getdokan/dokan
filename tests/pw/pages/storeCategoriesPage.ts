@@ -73,7 +73,7 @@ export class StoreCategoriesPage extends AdminPage {
 
 		await this.hover(selector.admin.dokan.vendors.storeCategory.storeCategoryCell(categoryName));
 
-		switch(action){
+		switch (action){
 
 		case 'set-default' :
 			await this.clickAndWaitForResponse(data.subUrls.api.dokan.storeCategories, selector.admin.dokan.vendors.storeCategory.storeCategorySetDefault(categoryName));
@@ -93,11 +93,11 @@ export class StoreCategoriesPage extends AdminPage {
 
 	// vendor
 
-	//vendor update store category
+	// vendor update store category
 	async vendorUpdateStoreCategory(category: string){
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsStore);
 		const isSingleCategory = await this.isVisible(selector.vendor.vStoreSettings.storeCategories.storeCategoryDropDown);
-		if(isSingleCategory){
+		if (isSingleCategory){
 			await this.click(selector.vendor.vStoreSettings.storeCategories.storeCategoryDropDown);
 			await this.clearAndType(selector.vendor.vStoreSettings.storeCategories.storeCategoryInput, category);
 		} else {

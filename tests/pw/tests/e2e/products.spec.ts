@@ -69,9 +69,9 @@ test.describe('Product functionality test', () => {
 	});
 
 
-	//vendors
+	// vendors
 
-	//todo: move create product in separate files, or product functionality to another page
+	// todo: move create product in separate files, or product functionality to another page
 
 	test('vendor can add simple product @lite', async ( ) => {
 		await vendor.vendorAddSimpleProduct(data.product.simple);
@@ -151,7 +151,7 @@ test.describe('Product functionality test', () => {
 		await vendor.addProductRmaSettings(data.predefined.simpleProduct.product1.name, data.vendor.rma);
 	});
 
-	//todo: add more product edit tests -> discount, wholesale, advertising
+	// todo: add more product edit tests -> discount, wholesale, advertising
 
 	test('vendor can duplicate product @pro', async ( ) => {
 		await vendor.duplicateProduct(productName);

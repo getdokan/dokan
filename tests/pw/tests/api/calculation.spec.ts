@@ -11,12 +11,12 @@ let taxRate: number;
 test.beforeAll(async ({ request }) => {
 	apiUtils = new ApiUtils(request);
 	taxRate = await apiUtils.setUpTaxRate(payloads.enableTaxRate, payloads.createTaxRate);
-	//todo:  get tax rate instead of setup if possible
+	// todo:  get tax rate instead of setup if possible
 });
 
 test.describe('calculation test', () => {
 	test('calculation test @pro', async () => {
-		//todo:  modify for lite as well
+		// todo:  modify for lite as well
 		const [commission, feeRecipient] = await dbUtils.getSellingInfo();
 
 		const [, res, oid,] = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder);
@@ -39,14 +39,14 @@ test.describe('calculation test', () => {
 		// console.log(orderReport);
 		const adminCommission = orderReport.commission;
 		const vendorEarning = orderReport.vendor_earning;
-		//todo: compare with all order total
-		//todo:  add discount scenario
+		// todo: compare with all order total
+		// todo:  add discount scenario
 
-		const calculatedSubTotal = helpers.subtotal([productPrice], [productQuantity]); //todo:  update it for multiple products
+		const calculatedSubTotal = helpers.subtotal([productPrice], [productQuantity]); // todo:  update it for multiple products
 		const calculatedProductTax = helpers.productTax(taxRate, calculatedSubTotal);
 		const calculatedShippingTax = helpers.shippingTax(taxRate, shippingFee);
 		const calculatedTotalTax = helpers.roundToTwo(calculatedProductTax + calculatedShippingTax);
-		const calculatedOrderTotal = helpers.orderTotal(calculatedSubTotal, calculatedProductTax, calculatedShippingTax,  shippingFee);
+		const calculatedOrderTotal = helpers.orderTotal(calculatedSubTotal, calculatedProductTax, calculatedShippingTax, shippingFee);
 		const calculatedAdminCommission = helpers.adminCommission(calculatedSubTotal, commission, calculatedProductTax, calculatedShippingTax, shippingFee, gatewayFee, feeRecipient);
 		const calculatedVendorEarning = helpers.vendorEarning(calculatedSubTotal, calculatedAdminCommission, calculatedProductTax, calculatedShippingTax, shippingFee, gatewayFee, feeRecipient);
 

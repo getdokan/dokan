@@ -44,7 +44,7 @@ test.describe('support ticket api test', () => {
 		expect(response.ok()).toBeTruthy();
 		expect(responseBody).toBeTruthy();
 
-		//reopen support ticket
+		// reopen support ticket
 		await apiUtils.updateSupportTicketStatus(supportTicketId, 'open');
 	});
 

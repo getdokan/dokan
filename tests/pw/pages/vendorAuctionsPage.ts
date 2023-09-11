@@ -89,7 +89,7 @@ export class AuctionsPage extends VendorPage {
 		await this.removeAttribute(selector.vendor.vAuction.auction.auctionEndDate, 'readonly');
 		await this.clearAndType(selector.vendor.vAuction.auction.auctionStartDate, product.startDate);
 		await this.clearAndType(selector.vendor.vAuction.auction.auctionEndDate, product.endDate);
-		//todo: add more fields
+		// todo: add more fields
 
 	}
 

@@ -93,7 +93,7 @@ export class BookingPage extends VendorPage {
 		if (noBookingsFound){
 			return;
 		}
-		//todo: add more fields
+		// todo: add more fields
 
 	}
 
@@ -139,7 +139,7 @@ export class BookingPage extends VendorPage {
 		if (noBookingsFound){
 			return;
 		}
-		//todo: add more fields
+		// todo: add more fields
 
 	}
 
@@ -165,7 +165,7 @@ export class BookingPage extends VendorPage {
 		// costs
 		await this.clearAndType(selector.vendor.vBooking.booking.baseCost, product.baseCost);
 		await this.clearAndType(selector.vendor.vBooking.booking.blockCost, product.blockCost);
-		//todo: add more fields
+		// todo: add more fields
 
 	}
 
@@ -200,7 +200,7 @@ export class BookingPage extends VendorPage {
 		// booking product elements are visible
 		const { bookingCalendar, bookNow, getSupport, ...viewBooking } = selector.vendor.vBooking.viewBooking;
 		await this.multipleElementVisible(viewBooking);
-		//todo: actual value can be asserted
+		// todo: actual value can be asserted
 	}
 
 
@@ -216,7 +216,7 @@ export class BookingPage extends VendorPage {
 	async filterBookingProducts(filterBy: string, value: string): Promise<void> {
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.booking);
 
-		switch(filterBy){
+		switch (filterBy){
 
 		case 'by-date' :
 			await this.selectByNumber(selector.vendor.vBooking.filters.filterByDate, value);
@@ -235,7 +235,7 @@ export class BookingPage extends VendorPage {
 			break;
 		}
 
-		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.booking,  selector.vendor.vBooking.filters.filter);
+		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.booking, selector.vendor.vBooking.filters.filter);
 		await this.notToHaveCount(selector.vendor.vBooking.numberOfRowsFound, 0);
 
 	}
@@ -305,7 +305,7 @@ export class BookingPage extends VendorPage {
 	async addBooking(productName: string, bookings: bookings, customerName?: string){
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.addBooking);
 
-		if(customerName) {
+		if (customerName) {
 			await this.click(selector.vendor.vBooking.addBooking.selectCustomerDropdown);
 			await this.typeAndWaitForResponse(data.subUrls.ajax, selector.vendor.vBooking.addBooking.selectCustomerInput, customerName);
 			await this.toContainText(selector.vendor.vBooking.addBooking.searchedResult, customerName);

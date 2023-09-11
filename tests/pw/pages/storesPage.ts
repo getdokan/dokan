@@ -248,7 +248,7 @@ export class StoresPage extends AdminPage {
 			await this.clearAndType(selector.admin.dokan.vendors.editVendor.firstName, vendor.username);
 			await this.clearAndType(selector.admin.dokan.vendors.editVendor.lastName, vendor.lastname);
 			await this.clearAndType(selector.admin.dokan.vendors.editVendor.storeName, vendor.vendorInfo.storeName);
-			await this.clearAndType(selector.admin.dokan.vendors.editVendor.phoneNumber, vendor.vendorInfo.phone); //todo:  change input after fix
+			await this.clearAndType(selector.admin.dokan.vendors.editVendor.phoneNumber, vendor.vendorInfo.phone); // todo:  change input after fix
 			await this.clearAndType(selector.admin.dokan.vendors.editVendor.email, vendor.username + data.vendor.vendorInfo.emailDomain);
 			await this.clearAndType(selector.admin.dokan.vendors.editVendor.companyName, vendor.vendorInfo.companyName);
 			await this.clearAndType(selector.admin.dokan.vendors.editVendor.companyIdEuidNumber, vendor.vendorInfo.companyId);
@@ -288,11 +288,11 @@ export class StoresPage extends AdminPage {
 			await this.clearAndType(selector.admin.dokan.vendors.editVendor.iban, vendor.vendorInfo.payment.bankIban);
 			await this.clearAndType(selector.admin.dokan.vendors.editVendor.swift, vendor.vendorInfo.payment.bankSwiftCode);
 
-			//paypal
+			// paypal
 			await this.clearAndType(selector.admin.dokan.vendors.editVendor.payPalEmail, vendor.vendorInfo.payment.email());
 
-			//todo:  admin commission
-			//todo:  vendor subscription
+			// todo:  admin commission
+			// todo:  vendor subscription
 
 			// other settings
 			await this.enableSwitcher(selector.admin.dokan.vendors.editVendor.enableSelling);
@@ -325,7 +325,7 @@ export class StoresPage extends AdminPage {
 	async updateVendor(vendorName: string, action: string ){
 		await this.searchVendor(vendorName);
 
-		switch(action){
+		switch (action){
 
 		case 'enable' :
 			await this.enableSwitcherAndWaitForResponse(data.subUrls.api.dokan.stores, selector.admin.dokan.vendors.statusSlider(vendorName));
@@ -349,7 +349,7 @@ export class StoresPage extends AdminPage {
 
 		await this.hover(selector.admin.dokan.vendors.vendorRow(vendorName));
 
-		switch(action){
+		switch (action){
 
 		case 'products' :
 			await this.clickAndWaitForLoadState(selector.admin.dokan.vendors.vendorProducts(vendorName));

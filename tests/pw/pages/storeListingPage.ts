@@ -25,7 +25,7 @@ export class StoreListingPage extends CustomerPage {
 		await this.toBeVisible(selector.customer.cStoreList.storeListText);
 
 		// map elements are visible
-		if(DOKAN_PRO){
+		if (DOKAN_PRO){
 			const { storeOnMap, ...map } = selector.customer.cStoreList.map;
 			await this.multipleElementVisible(map);
 		}
@@ -90,7 +90,7 @@ export class StoreListingPage extends CustomerPage {
 		default :
 			break;
 		}
-		await this.toHaveClass(selector.customer.cStoreList.currentLayout, style+ '-view');
+		await this.toHaveClass(selector.customer.cStoreList.currentLayout, style + '-view');
 	}
 
 
@@ -108,7 +108,7 @@ export class StoreListingPage extends CustomerPage {
 		await this.goIfNotThere(data.subUrls.frontend.storeListing);
 		await this.click(selector.customer.cStoreList.filters.filterButton);
 
-		switch(filterBy){
+		switch (filterBy){
 
 		case 'by-location' :
 			await this.typeAndWaitForResponse(data.subUrls.gmap, selector.customer.cStoreList.filters.filterDetails.location, value!);
@@ -146,8 +146,8 @@ export class StoreListingPage extends CustomerPage {
 	// stores on map
 	async storeOnMap(storeName?: string){
 		await this.goIfNotThere(data.subUrls.frontend.storeListing);
-		const storePinIsVisible  = await this.isVisible(selector.customer.cStoreList.map.storeOnMap.storePin);
-		if(storePinIsVisible){
+		const storePinIsVisible = await this.isVisible(selector.customer.cStoreList.map.storeOnMap.storePin);
+		if (storePinIsVisible){
 			await this.click(selector.customer.cStoreList.map.storeOnMap.storePin);
 			await this.toBeVisible(selector.customer.cStoreList.map.storeOnMap.storePopup);
 		} else {
@@ -163,7 +163,7 @@ export class StoreListingPage extends CustomerPage {
 	async goToSingleStoreFromStoreListing(storeName: string): Promise<void> {
 		await this.searchStore(storeName);
 		await this.clickAndWaitForLoadState(selector.customer.cStoreList.storeCard.visitStore);
-		const storeUrl =  this.isCurrentUrl(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)));
+		const storeUrl = this.isCurrentUrl(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)));
 		expect(storeUrl).toBeTruthy();
 	}
 

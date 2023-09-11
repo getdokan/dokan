@@ -32,7 +32,7 @@ export class VendorDashboardPage extends VendorPage {
 		// products elements are visible
 		await this.multipleElementVisible(selector.vendor.vDashboard.products);
 
-		if(DOKAN_PRO){
+		if (DOKAN_PRO){
 
 			// profile progress elements are visible
 			await this.multipleElementVisible(selector.vendor.vDashboard.profileProgress);

@@ -3,7 +3,7 @@ import { AdminPage } from 'pages/adminPage';
 import { selector } from 'pages/selectors';
 import { helpers } from 'utils/helpers';
 import { data } from 'utils/testData';
-import{ storeReview } from 'utils/interfaces';
+import { storeReview } from 'utils/interfaces';
 
 
 export class StoreReviewsPage extends AdminPage {
@@ -41,7 +41,7 @@ export class StoreReviewsPage extends AdminPage {
 	async filterStoreReviews(vendorName: string){
 		await this.goto(data.subUrls.backend.dokan.storeReviews);
 
-		//filter by vendor
+		// filter by vendor
 		await this.click(selector.admin.dokan.storeReviews.filters.filterByVendor);
 		await this.typeAndWaitForResponse(data.subUrls.api.dokan.stores, selector.admin.dokan.storeReviews.filters.filterInput, vendorName);
 		await this.pressAndWaitForResponse(data.subUrls.api.dokan.storeReviews, data.key.enter);

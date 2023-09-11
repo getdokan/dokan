@@ -25,7 +25,7 @@ export class VendorSettingsPage extends VendorPage {
 		// settings text is visible
 		await this.toBeVisible(selector.vendor.vStoreSettings.settingsText);
 
-		//todo: update for lite
+		// todo: update for lite
 
 		// visit store link is visible
 		await this.toBeVisible(selector.vendor.vStoreSettings.banner);
@@ -36,7 +36,7 @@ export class VendorSettingsPage extends VendorPage {
 		DOKAN_PRO && await this.toBeVisible(selector.vendor.vStoreSettings.multipleLocation);
 
 		// store address location elements are visible
-		const { saveLocation, cancelSaveLocation, deleteSaveLocation,  ...address } = selector.vendor.vStoreSettings.address;
+		const { saveLocation, cancelSaveLocation, deleteSaveLocation, ...address } = selector.vendor.vStoreSettings.address;
 		await this.multipleElementVisible(address);
 		DOKAN_PRO && await this.toBeVisible(saveLocation);
 
@@ -49,12 +49,12 @@ export class VendorSettingsPage extends VendorPage {
 		// map is visible
 		await this.toBeVisible(selector.vendor.vStoreSettings.map);
 
-		//todo: catalog, discount, vacation, open close, store category
+		// todo: catalog, discount, vacation, open close, store category
 
 		// biography is visible
 		DOKAN_PRO && await this.toBeVisible(selector.vendor.vStoreSettings.biographyIframe);
 
-		//todo: min-max, store-support
+		// todo: min-max, store-support
 
 		// update settings are visible
 		await this.toBeVisible(selector.vendor.vStoreSettings.updateSettingsTop);
@@ -299,7 +299,7 @@ export class VendorSettingsPage extends VendorPage {
 		if (openCloseTimeEnabled) {
 			await this.check(selector.vendor.vStoreSettings.storeOpeningClosingTime);
 			for (const day of openingClosingTime.days) {
-				if(DOKAN_PRO){
+				if (DOKAN_PRO){
 					await this.enableSwitcherDeliveryTime(selector.vendor.vStoreSettings.openingClosingTimeSwitch(day));
 					await this.setAttributeValue(selector.vendor.vStoreSettings.openingTime(day), 'value', openingClosingTime.openingTime);
 					await this.setAttributeValue(selector.vendor.vStoreSettings.openingTimeHiddenInput(day), 'value', openingClosingTime.openingTime);
@@ -432,7 +432,7 @@ export class VendorSettingsPage extends VendorPage {
 			const multipleCategory = await this.isVisible(selector.vendor.vStoreSettings.selectCategorySearch);
 			if (multipleCategory){
 				await this.select2ByTextMultiSelector(selector.vendor.vStoreSettings.selectCategorySearch, selector.vendor.vStoreSettings.selectCategorySearchedResult, minMax.category);
-			}else {
+			} else {
 				await this.selectByLabel(selector.vendor.vStoreSettings.selectCategory, minMax.category);
 			}
 		}
@@ -444,7 +444,7 @@ export class VendorSettingsPage extends VendorPage {
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsShipstation);
 
 		const allStatus = await this.getMultipleElementTexts(selector.vendor.vShipStationSettings.selectedStatus);
-		const statusIsSelected = allStatus.includes('×'+ shipStation.status);
+		const statusIsSelected = allStatus.includes('×' + shipStation.status);
 		if (!statusIsSelected){
 			await this.clearAndType(selector.vendor.vShipStationSettings.exportOrderStatusesInput, shipStation.status);
 			await this.toContainText(selector.vendor.vShipStationSettings.result, shipStation.status);
@@ -483,7 +483,7 @@ export class VendorSettingsPage extends VendorPage {
 		await this.clearAndType(selector.vendor.vRmaSettings.label, rma.label);
 		await this.selectByValue(selector.vendor.vRmaSettings.type, rma.type);
 		await this.selectByValue(selector.vendor.vRmaSettings.length, rma.rmaLength);
-		//todo: add addon
+		// todo: add addon
 		if (rma.rmaLength === 'limited'){
 			await this.clearAndType(selector.vendor.vRmaSettings.lengthValue, rma.lengthValue);
 			await this.selectByValue(selector.vendor.vRmaSettings.lengthDuration, rma.lengthDuration);

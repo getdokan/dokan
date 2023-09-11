@@ -125,7 +125,7 @@ export class WholesaleCustomersPage extends AdminPage {
 	async updateWholesaleCustomer(wholesaleCustomer: string, action: string ){
 		await this.searchWholesaleCustomer(wholesaleCustomer);
 
-		switch(action){
+		switch (action){
 
 		case 'enable' :
 			await this.enableSwitcherAndWaitForResponse(data.subUrls.api.dokan.wholesaleCustomers, selector.admin.dokan.wholesaleCustomer.statusSlider(wholesaleCustomer));

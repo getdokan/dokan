@@ -18,7 +18,7 @@ test.describe('Vendor staff test', () => {
 		vPage = await vendorContext.newPage();
 		vendor = new VendorStaffPage(vPage);
 
-		await vendor.addStaff(staff); //todo: replace with api after feature merge also update parameters
+		await vendor.addStaff(staff); // todo: replace with api after feature merge also update parameters
 
 		apiUtils = new ApiUtils(request);
 		// await apiUtils.createVendorStaff( payloads.staff, payloads.vendorAuth);

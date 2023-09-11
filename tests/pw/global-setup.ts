@@ -1,4 +1,4 @@
-import { FullConfig, request  } from '@playwright/test';
+import { FullConfig, request } from '@playwright/test';
 import { ApiUtils } from 'utils/apiUtils';
 import { helpers } from 'utils/helpers';
 
@@ -10,9 +10,9 @@ async function globalSetup(config: FullConfig) {
 	const apiUtils = new ApiUtils(await request.newContext({ ignoreHTTPSErrors: true }));
 	for ( let i = 0; i < 3; i++ ) {
 		const headers = await apiUtils.getSiteHeaders(serverUrl);
-		if(headers.link) {
+		if (headers.link) {
 			serverUrl = (headers.link).includes('rest_route') ? serverUrl + '/?rest_route=' : serverUrl + '/wp-json';
-			process.env.SERVER_URL= serverUrl;
+			process.env.SERVER_URL = serverUrl;
 			helpers.appendEnv('SERVER_URL=' + serverUrl);
 			break;
 		}

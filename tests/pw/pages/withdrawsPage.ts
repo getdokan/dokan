@@ -45,12 +45,12 @@ export class WithdrawsPage extends AdminPage {
 	async filterWithdraws(vendorName: string): Promise<void> {
 		await this.goIfNotThere(data.subUrls.backend.dokan.withdraw);
 
-		await this.clickAndWaitForResponseIfVisible(data.subUrls.api.dokan.withdraws, selector.admin.dokan.withdraw.filters.clearFilter); //todo: replace click if visible with clickAndWaitForResponse
+		await this.clickAndWaitForResponseIfVisible(data.subUrls.api.dokan.withdraws, selector.admin.dokan.withdraw.filters.clearFilter); // todo: replace click if visible with clickAndWaitForResponse
 
 		await this.click(selector.admin.dokan.withdraw.filters.filterByVendor);
 		await this.typeAndWaitForResponse(data.subUrls.api.dokan.stores, selector.admin.dokan.withdraw.filters.filterInput, vendorName);
 		await this.toContainText(selector.admin.dokan.withdraw.filters.result, vendorName);
-		//todo: need to wait for focus event
+		// todo: need to wait for focus event
 		await this.pressAndWaitForResponse(data.subUrls.api.dokan.withdraws, data.key.enter);
 		await this.toBeVisible(selector.admin.dokan.withdraw.withdrawCell(vendorName));
 
@@ -140,14 +140,14 @@ export class WithdrawsPage extends AdminPage {
 			await this.toBeVisible(selector.vendor.vWithdraw.autoWithdrawDisbursement.editSchedule);
 		}
 
-		//todo:  pending request can be added
+		// todo:  pending request can be added
 
 		// withdraw payment methods div elements are visible
 		await this.toBeVisible(selector.vendor.vWithdraw.withdrawPaymentMethods.paymentMethodsDiv);
 
 		await this.notToHaveCount(selector.vendor.vWithdraw.withdrawPaymentMethods.paymentMethods, 0);
 
-		//todo: add request & disbursement modal
+		// todo: add request & disbursement modal
 
 	}
 

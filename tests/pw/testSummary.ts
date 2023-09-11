@@ -2,11 +2,11 @@ const convert = require('xml-js');
 const fs = require('fs');
 const { SHA, PR_NUMBER, SYSTEM_INFO, API_TEST_RESULT, E2E_TEST_RESULT } = process.env;
 
-const readEnvInfo= fs.readFileSync(SYSTEM_INFO, 'utf8');
+const readEnvInfo = fs.readFileSync(SYSTEM_INFO, 'utf8');
 const envInfo = JSON.parse(readEnvInfo);
 
 const getFormattedDuration = (time) => {
-	time =  Number(time) * 1000;
+	time = Number(time) * 1000;
 	// const min = Math.floor( time / 1000 / 60 );
 	// const sec = Math.floor( ( time / 1000 ) % 60 );
 	// return `${ min }m ${ (sec < 10 ? '0' : '') + sec }s`;
@@ -28,7 +28,7 @@ const getTestResult = (suiteName, filePath) => {
 };
 
 const addSummaryHeadingAndTable = ( core ) => {
-	const tableHeader =   [
+	const tableHeader = [
 		{ data: 'Test  :test_tube:', header: true },
 		{ data: 'Total  :bar_chart:', header: true },
 		{ data: 'Passed  :white_check_mark:', header: true },
@@ -50,9 +50,9 @@ const addSummaryHeadingAndTable = ( core ) => {
 const addList = ( core ) => {
 	const pluginList = core.summary.addList(envInfo.activePlugins).stringify();
 	core.summary.clear();
-	const pluginDetails =  core.summary.addDetails('Plugins: ', pluginList).stringify();
+	const pluginDetails = core.summary.addDetails('Plugins: ', pluginList).stringify();
 	core.summary.clear();
-	return core.summary.addList([envInfo.wpVersion, envInfo.phpVersion, envInfo.mysqlVersion,  String(envInfo.wpDebugMode), envInfo.theme, pluginDetails ]).stringify();
+	return core.summary.addList([envInfo.wpVersion, envInfo.phpVersion, envInfo.mysqlVersion, String(envInfo.wpDebugMode), envInfo.theme, pluginDetails ]).stringify();
 };
 
 const addSummaryFooter = ( core, list) => {

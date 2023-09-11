@@ -26,13 +26,13 @@ setup.describe('setup site & woocommerce & user settings', () => {
 
 	setup('check active plugins @lite', async () => {
 		setup.skip(!process.env.CI, 'skip plugin check on local');
-		const activePlugins = (await apiUtils.getAllPlugins({ status:'active' })).map((a: { plugin: string }) => (a.plugin).split('/')[1]);
+		const activePlugins = (await apiUtils.getAllPlugins({ status: 'active' })).map((a: { plugin: string }) => (a.plugin).split('/')[1]);
 		DOKAN_PRO ? expect(activePlugins).toEqual(expect.arrayContaining(data.plugin.plugins)) : expect(activePlugins).toEqual(expect.arrayContaining(data.plugin.pluginsLite));
 		// expect(activePlugins.every((plugin: string) => data.plugin.plugins.includes(plugin))).toBeTruthy();
 	});
 
 	setup('check active dokan modules @pro', async () => {
-		const activeModules = await apiUtils.getAllModuleIds({ status:'active' });
+		const activeModules = await apiUtils.getAllModuleIds({ status: 'active' });
 		expect(activeModules).toEqual(expect.arrayContaining(data.modules.modules));
 	});
 
@@ -317,7 +317,7 @@ setup.describe('setup dokan settings e2e', () => {
 	});
 
 	setup('product advertisement payment product exists @pro', async ( ) => {
-		const product = await apiUtils.checkProductExistence('Product Advertisement Payment',  payloads.adminAuth);
+		const product = await apiUtils.checkProductExistence('Product Advertisement Payment', payloads.adminAuth);
 		expect(product).toBeTruthy();
 	});
 
@@ -326,7 +326,7 @@ setup.describe('setup dokan settings e2e', () => {
 	});
 
 	setup('reverse Withdraw payment product exists @lite', async ( ) => {
-		const product = await apiUtils.checkProductExistence('Reverse Withdrawal Payment',  payloads.adminAuth);
+		const product = await apiUtils.checkProductExistence('Reverse Withdrawal Payment', payloads.adminAuth);
 		expect(product).toBeTruthy();
 	});
 

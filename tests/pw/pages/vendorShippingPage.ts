@@ -182,7 +182,7 @@ export class VendorShippingPage extends VendorPage {
 
 		const noOfMethods = await this.countLocator(selector.vendor.vShippingSettings.shippingMethodCell(shipping.shippingMethod));
 
-		if(noOfMethods > 1){
+		if (noOfMethods > 1){
 
 			(this.lastLocator(selector.vendor.vShippingSettings.shippingMethodCell(shipping.shippingMethod))).hover();
 			const deleteMethod = this.lastLocator(selector.vendor.vShippingSettings.deleteShippingMethod(shipping.shippingMethod));

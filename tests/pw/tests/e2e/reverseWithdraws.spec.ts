@@ -88,8 +88,8 @@ test.describe('Reverse withdraw test', () => {
 		await apiUtils.updateOrderStatus(orderId, data.order.orderStatus.completed, payloads.adminAuth);
 	});
 
-	//todo: vendor cant withdraw when reverse withdrawal rule applied
-	//todo: add to cart button removed when reverse withdrawal rule applied
+	// todo: vendor cant withdraw when reverse withdrawal rule applied
+	// todo: add to cart button removed when reverse withdrawal rule applied
 
 
 });

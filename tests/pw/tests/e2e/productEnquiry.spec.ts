@@ -30,7 +30,7 @@ test.describe('Product Enquiry test', () => {
 
 		const guestContext = await browser.newContext(data.auth.noAuth);
 		uPage = await guestContext.newPage();
-		guest =  new ProductEnquiryPage(uPage);
+		guest = new ProductEnquiryPage(uPage);
 
 		apiUtils = new ApiUtils(request);
 		const productId = await apiUtils.getProductId(data.predefined.simpleProduct.product1.name, payloads.vendorAuth);

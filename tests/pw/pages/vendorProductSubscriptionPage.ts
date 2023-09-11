@@ -22,7 +22,7 @@ export class VendorProductSubscriptionPage extends VendorPage {
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.userSubscriptions);
 
 		// filter
-		const { filterByCustomerInput, result,  ...filters } = selector.vendor.vUserSubscriptions.filters;
+		const { filterByCustomerInput, result, ...filters } = selector.vendor.vUserSubscriptions.filters;
 		await this.multipleElementVisible(filters);
 
 		const noSubscriptionsFound = await this.isVisible(selector.vendor.vUserSubscriptions.noSubscriptionsFound);
@@ -35,8 +35,8 @@ export class VendorProductSubscriptionPage extends VendorPage {
 
 	// vendor view product subscription
 	async viewProductSubscription(value: string){
-		//todo: go to subscription details via link , get subscription id via api
-		//todo:
+		// todo: go to subscription details via link , get subscription id via api
+		// todo:
 
 	}
 
@@ -45,7 +45,7 @@ export class VendorProductSubscriptionPage extends VendorPage {
 	async filterProductSubscriptions(filterBy: string, inputValue: string): Promise<void> {
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.userSubscriptions);
 
-		switch(filterBy){
+		switch (filterBy){
 
 		case 'by-customer' :
 			await this.click(selector.vendor.vUserSubscriptions.filters.filterByCustomer);
@@ -80,7 +80,7 @@ export class VendorProductSubscriptionPage extends VendorPage {
 		// subscription action elements are visible
 		const { reActivate, ...actions } = selector.customer.cSubscription.subscriptionDetails.actions;
 		await this.multipleElementVisible(actions);
-		//todo: add more fields
+		// todo: add more fields
 	}
 
 
@@ -120,7 +120,7 @@ export class VendorProductSubscriptionPage extends VendorPage {
 	async changePaymentOfProductSubscription(subscriptionId: string){
 		await this.goIfNotThere(data.subUrls.frontend.productSubscriptionDetails(subscriptionId));
 		await this.clickAndWaitForLoadState(selector.customer.cSubscription.subscriptionDetails.actions.changePayment);
-		//todo: change to new card
+		// todo: change to new card
 		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.productSubscriptionDetails(subscriptionId), selector.customer.cSubscription.subscriptionDetails.changePaymentMethod);
 		await this.toContainText(selector.customer.cWooSelector.wooCommerceSuccessMessage, 'Payment method updated.' );
 	}

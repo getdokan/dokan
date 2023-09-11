@@ -14,7 +14,7 @@ test.describe('Follow stores functionality test', () => {
 	// let apiUtils: ApiUtils;
 
 
-	test.beforeAll(async ({ browser,  }) => {
+	test.beforeAll(async ({ browser, }) => {
 		const vendorContext = await browser.newContext(data.auth.vendorAuth);
 		vPage = await vendorContext.newPage();
 		vendor = new FollowStorePage(vPage);
@@ -24,7 +24,7 @@ test.describe('Follow stores functionality test', () => {
 		customer = new FollowStorePage(cPage);
 
 		// apiUtils = new ApiUtils(request);
-		//todo: need followers
+		// todo: need followers
 
 	});
 

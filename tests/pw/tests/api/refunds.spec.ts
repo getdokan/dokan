@@ -25,7 +25,7 @@ test.describe('refunds api test', () => {
 	});
 
 	test('get all refunds by status @pro', async () => {
-		const [response, responseBody] = await apiUtils.get(endPoints.getAllRefunds, { params :{ status:'pending' }, headers: payloads.vendorAuth }); // pending, cancelled, completed
+		const [response, responseBody] = await apiUtils.get(endPoints.getAllRefunds, { params: { status: 'pending' }, headers: payloads.vendorAuth }); // pending, cancelled, completed
 		expect(response.ok()).toBeTruthy();
 		expect(responseBody).toBeTruthy();
 	});

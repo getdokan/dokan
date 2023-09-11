@@ -50,7 +50,7 @@ test.describe('Request for quotation Rules test', () => {
 	});
 
 	test('admin can permanently delete quote rule @pro', async ( ) => {
-		await apiUtils.createQuoteRule({ ...payloads.createQuoteRule(), rule_name: data.requestForQuotation.trashedQuoteRule.title, status:data.requestForQuotation.trashedQuoteRule.status }, payloads.adminAuth);
+		await apiUtils.createQuoteRule({ ...payloads.createQuoteRule(), rule_name: data.requestForQuotation.trashedQuoteRule.title, status: data.requestForQuotation.trashedQuoteRule.status }, payloads.adminAuth);
 		await admin.updateQuoteRule(data.requestForQuotation.trashedQuoteRule.title, 'permanently-delete');
 	});
 

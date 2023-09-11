@@ -38,7 +38,7 @@ export class ReverseWithdrawsPage extends CustomerPage {
 		await this.multipleElementVisible(selector.admin.dokan.reverseWithdraw.reverseWithdrawFactCards);
 
 		// filter elements are visible
-		const { filterInput, clearFilter, filteredResult,  ...filters } = selector.admin.dokan.reverseWithdraw.filters;
+		const { filterInput, clearFilter, filteredResult, ...filters } = selector.admin.dokan.reverseWithdraw.filters;
 		await this.multipleElementVisible(filters);
 
 		// reverse withdraw table elements are visible

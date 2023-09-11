@@ -34,7 +34,7 @@ test.describe('Vendor RMA test', () => {
 		customer1 = new CustomerPage(cPage);
 
 
-		//todo: implement via api
+		// todo: implement via api
 		await customer1.addProductToCartFromSingleProductPage(data.predefined.simpleProduct.product1.name);
 		await customer1.goToCheckout();
 		orderId = await customer1.paymentOrder();
@@ -68,7 +68,7 @@ test.describe('Vendor RMA test', () => {
 	});
 
 	test('vendor can send rma message @pro', async ( ) => {
-		//todo: depends on customer can request warranty, remove dependency
+		// todo: depends on customer can request warranty, remove dependency
 		await vendor.vendorSendRmaMessage(orderId, 'test vendor rma message');
 	});
 
@@ -81,7 +81,7 @@ test.describe('Vendor RMA test', () => {
 	});
 
 	test('vendor can delete rma request @pro', async ( ) => {
-		//todo:need separate rma request
+		// todo:need separate rma request
 		await vendor.vendorDeleteRmaRequest(orderId);
 	});
 

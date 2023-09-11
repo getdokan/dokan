@@ -53,13 +53,13 @@ test.describe('Refunds test', () => {
 	});
 
 	test('admin can cancel refund requests @pro', async ( ) => {
-		const[, orderResponseBody, orderId, ] = await apiUtils.createOrderWithStatus(PRODUCT_ID, payloads.createOrder, data.order.orderStatus.processing, payloads.vendorAuth);
+		const [, orderResponseBody, orderId, ] = await apiUtils.createOrderWithStatus(PRODUCT_ID, payloads.createOrder, data.order.orderStatus.processing, payloads.vendorAuth);
 		await dbUtils.createRefund(orderResponseBody);
 		await admin.updateRefundRequests(orderId, 'cancel');
 	});
 
 	test('admin can perform refund requests bulk actions @pro', async ( ) => {
-		const[, orderResponseBody,, ] = await apiUtils.createOrderWithStatus(PRODUCT_ID, payloads.createOrder, data.order.orderStatus.processing, payloads.vendorAuth);
+		const [, orderResponseBody,, ] = await apiUtils.createOrderWithStatus(PRODUCT_ID, payloads.createOrder, data.order.orderStatus.processing, payloads.vendorAuth);
 		await dbUtils.createRefund(orderResponseBody);
 		await admin.refundRequestsBulkAction('completed');
 	});

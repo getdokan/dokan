@@ -29,7 +29,7 @@ test.describe('Vendor user functionality test1', () => {
 
 
 	test('vendor can register @lite', async ( ) => {
-		await vendorPage.vendorRegister(data.vendor.vendorInfo, { ...data.vendorSetupWizard, choice:false });
+		await vendorPage.vendorRegister(data.vendor.vendorInfo, { ...data.vendorSetupWizard, choice: false });
 	});
 
 	test('vendor can login @lite', async ( ) => {
@@ -52,7 +52,7 @@ test.describe('Vendor functionality test', () => {
 	// let apiUtils: ApiUtils;
 
 
-	test.beforeAll(async ({ browser,  }) => {
+	test.beforeAll(async ({ browser, }) => {
 		const vendorContext = await browser.newContext(data.auth.vendorAuth);
 		vPage = await vendorContext.newPage();
 		vendor = new VendorPage(vPage);

@@ -18,7 +18,7 @@ export class SingleStorePage extends CustomerPage {
 
 	// single store render properly
 	async singleStoreRenderProperly(storeName: string){
-		//todo:  should be pass for all four layout
+		// todo:  should be pass for all four layout
 		await this.goIfNotThere(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)));
 
 		// store profile elements are visible
@@ -29,7 +29,7 @@ export class SingleStorePage extends CustomerPage {
 			await this.toBeVisible(selector.customer.cSingleStore.storeTabs.products);
 			// await this.toBeVisible(selector.customer.cSingleStore.storeTabs.toc); //todo: need vendor toc
 		} else {
-			const { toc,  ...storeTabs } = selector.customer.cSingleStore.storeTabs;
+			const { toc, ...storeTabs } = selector.customer.cSingleStore.storeTabs;
 			await this.multipleElementVisible(storeTabs);
 		}
 

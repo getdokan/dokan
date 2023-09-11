@@ -88,8 +88,8 @@ export class VendorDeliveryTimePage extends CustomerPage {
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.deliveryTime);
 		await this.selectByValue(selector.vendor.vDeliveryTime.filter.deliveryTimeFilter, value);
 		await this. clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.deliveryTime, selector.vendor.vDeliveryTime.filter.filter);
-		//todo: add more assertion
-		//todo: need order via delivery time; via api for assertion
+		// todo: add more assertion
+		// todo: need order via delivery time; via api for assertion
 
 	}
 
@@ -98,7 +98,7 @@ export class VendorDeliveryTimePage extends CustomerPage {
 	async updateCalendarView(value: string){
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.deliveryTime);
 
-		await this.click(selector.vendor.vDeliveryTime.navigation[value  as keyof typeof selector.vendor.vDeliveryTime.navigation]);
+		await this.click(selector.vendor.vDeliveryTime.navigation[value as keyof typeof selector.vendor.vDeliveryTime.navigation]);
 		const currentView = await this.getAttributeValue(selector.vendor.vDeliveryTime.navigation[value as keyof typeof selector.vendor.vDeliveryTime.navigation], 'aria-pressed');
 		expect(currentView).toContain('true');
 	}
@@ -136,10 +136,10 @@ export class VendorDeliveryTimePage extends CustomerPage {
 		await this.paymentOrder(paymentMethod);
 
 
-		if( deliveryType == 'delivery-time'){
+		if ( deliveryType == 'delivery-time'){
 			await this.toBeVisible(selector.customer.cDeliveryTime.orderDetails.deliveryTimeDetails);
 			await this.toContainText(selector.customer.cDeliveryTime.orderDetails.deliveryTimeTitle, 'Delivery Date');
-		} else{
+		} else {
 			await this.toBeVisible(selector.customer.cDeliveryTime.orderDetails.storePickupDetails);
 			await this.toContainText(selector.customer.cDeliveryTime.orderDetails.storePickupTitle, 'Store location pickup' );
 		}

@@ -49,7 +49,7 @@ export class AbuseReportsPage extends AdminPage {
 	async filterAbuseReports(input: string, action: string){
 		await this.goIfNotThere(data.subUrls.backend.dokan.abuseReports);
 
-		switch(action){
+		switch (action){
 
 		case 'by-reason' :
 			await this.selectByLabelAndWaitForResponse(data.subUrls.api.dokan.abuseReports, selector.admin.dokan.abuseReports.filters.filterByAbuseReason, input);
@@ -98,7 +98,7 @@ export class AbuseReportsPage extends AdminPage {
 		await this.clickAndWaitForResponse(data.subUrls.ajax, selector.customer.cSingleProduct.reportAbuse.reportAbuse);
 		// non logged user
 		const isNonLoggedUser = await this.isVisible(selector.customer.cSingleProduct.reportAbuse.nonLoggedUser.userName);
-		if(isNonLoggedUser){
+		if (isNonLoggedUser){
 			await this.clearAndType(selector.customer.cSingleProduct.reportAbuse.nonLoggedUser.userName, report.username);
 			await this.clearAndType(selector.customer.cSingleProduct.reportAbuse.nonLoggedUser.userPassword, report.password);
 			await this.clickAndWaitForResponse(data.subUrls.ajax, selector.customer.cSingleProduct.reportAbuse.nonLoggedUser.login);
@@ -108,7 +108,7 @@ export class AbuseReportsPage extends AdminPage {
 		await this.clearAndType(selector.customer.cSingleProduct.reportAbuse.reportDescription, report.reportReasonDescription);
 		// is guest
 		const isGuest = await this.isVisible(selector.customer.cSingleProduct.reportAbuse.guestName);
-		if(isGuest){
+		if (isGuest){
 			await this.clearAndType(selector.customer.cSingleProduct.reportAbuse.guestName, report.guestName());
 			await this.clearAndType(selector.customer.cSingleProduct.reportAbuse.guestEmail, report.guestEmail());
 		}

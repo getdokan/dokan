@@ -158,7 +158,7 @@ export class BasePage {
 	}
 
 
-	//brings page to front (activates tab)
+	// brings page to front (activates tab)
 	async bringToFront(): Promise<void> {
 		await this.page.bringToFront();
 	}
@@ -324,7 +324,7 @@ export class BasePage {
 	async typeViaPageAndWaitForResponse(subUrl: string, selector: string, text: string, code = 200,): Promise<Response> {
 		const [response] = await Promise.all([
 			this.page.waitForResponse((resp) => resp.url().includes(subUrl) && resp.status() === code),
-			await this.page.type(selector, text, { delay:100 }),
+			await this.page.type(selector, text, { delay: 100 }),
 		]);
 		return response;
 	}
@@ -383,7 +383,7 @@ export class BasePage {
 
 	// click & wait for event
 	async clickAndWaitForEvent(event: any, selector: string): Promise<Page> {
-		const [res, ]= await Promise.all([
+		const [res, ] = await Promise.all([
 			this.page.waitForEvent(event),
 			this.page.locator(selector).click()
 		]);
@@ -573,7 +573,7 @@ export class BasePage {
 	}
 
 
-	//get element has test or not
+	// get element has test or not
 	async hasText(selector: string, text: string): Promise<boolean> {
 		const elementText = await this.textContentOfLocator(selector);
 		return elementText?.trim() === text ? true : false;
@@ -592,19 +592,19 @@ export class BasePage {
 	}
 
 
-	//get element value [input, textarea, select]
+	// get element value [input, textarea, select]
 	async getElementValue(selector: string): Promise<string> {
 		return await this.page.inputValue(selector);
 	}
 
 
-	//get class attribute value
+	// get class attribute value
 	async getClassValue(selector: string): Promise<string | null> {
 		return await this.page.getAttribute(selector, 'class');
 	}
 
 
-	//get element has class or not
+	// get element has class or not
 	async hasClass(selector: string, className: string): Promise<boolean> {
 		const element = this.getElement(selector);
 		const hasClass = await element.evaluate((element, className) => element.classList.contains(className), className,);
@@ -612,7 +612,7 @@ export class BasePage {
 	}
 
 
-	//get attribute value
+	// get attribute value
 	async getAttributeValue(selector: string, attribute: string): Promise<string | null> {
 		return await this.page.getAttribute(selector, attribute);
 	}
@@ -685,7 +685,7 @@ export class BasePage {
 	// get multiple element texts
 	async getMultipleElementTexts(selector: string): Promise<string[]> {
 		// const texts = await this.page.$$eval(selector, (elements) => elements.map((item) => item.textContent));
-		const element =  this.getElement(selector);
+		const element = this.getElement(selector);
 		const allTexts = await element.allTextContents();
 		// console.log(allTexts);
 		return allTexts;
@@ -926,9 +926,9 @@ export class BasePage {
 
 	// upload file
 	async uploadBuffer(selector: string, filePath: string): Promise<void> {
-		await this.page.setInputFiles(selector, { name: String(filePath.split('/').pop()),
+		await this.page.setInputFiles(selector, { name    : String(filePath.split('/').pop()),
 			mimeType: 'image/' + filePath.split('.').pop(),
-			buffer: Buffer.from(filePath), });
+			buffer  : Buffer.from(filePath), });
 	}
 
 
@@ -941,7 +941,7 @@ export class BasePage {
 
 	async uploadFileViaListener1(selector: string, files: string | string[]): Promise<void> {
 		// Start waiting for file chooser before clicking. Note no await.
-		const fileChooserPromise = this.page.waitForEvent('filechooser'); //Note: no await on listener
+		const fileChooserPromise = this.page.waitForEvent('filechooser'); // Note: no await on listener
 		await this.page.locator(selector).click(); //    invokes the filechooser
 		const fileChooser = await fileChooserPromise;
 		await fileChooser.setFiles(files);
@@ -1058,7 +1058,7 @@ export class BasePage {
 	// check locator
 	async checkLocator(selector: string): Promise<void> {
 		const locator = this.page.locator(selector);
-		await locator.check( { force: true }); //forced is used to avoid "locator.check: Clicking the checkbox did not change its state" error
+		await locator.check( { force: true }); // forced is used to avoid "locator.check: Clicking the checkbox did not change its state" error
 	}
 
 
@@ -1254,7 +1254,7 @@ export class BasePage {
 
 	// get last matching locator
 	lastLocator(selector: string): Locator {
-		//todo: update all selector parameter to both selector or locator
+		// todo: update all selector parameter to both selector or locator
 		const locator = this.page.locator(selector);
 		return locator.last();
 	}
@@ -1771,12 +1771,12 @@ export class BasePage {
 
 	// upload file
 	async wpUploadFile(filePath: string | string[]) {
-		//wp image upload
+		// wp image upload
 		const wpUploadFiles = '//div[@class="supports-drag-drop" and @style="position: relative;"]//button[@id="menu-item-upload"]';
 		const uploadedMedia = '.attachment-preview';
 		const selectFiles =	'//div[@class="supports-drag-drop" and @style="position: relative;"]//button[@class="browser button button-hero"]';
 		const select = '//div[@class="supports-drag-drop" and @style="position: relative;"]//button[contains(@class, "media-button-select")]';
-		const crop ='//div[@class="supports-drag-drop" and @style="position: relative;"]//button[contains(@class, "media-button-insert")]';
+		const crop = '//div[@class="supports-drag-drop" and @style="position: relative;"]//button[contains(@class, "media-button-insert")]';
 		const uploadedMediaIsVisible = await this.isVisible(uploadedMedia);
 		if (uploadedMediaIsVisible) {
 			await this.click(wpUploadFiles);

@@ -36,7 +36,7 @@ export class vendorVerificationsPage extends AdminPage {
 
 		const verificationRequestIsExists = await this.isVisible(selector.admin.dokan.verifications.vendorRow(storeName));
 
-		if(!verificationRequestIsExists){
+		if (!verificationRequestIsExists){
 			console.log('No pending verification request found!!');
 			return;
 		}
@@ -84,7 +84,7 @@ export class vendorVerificationsPage extends AdminPage {
 		await this.clickAndWaitForLoadState(selector.admin.dokan.verifications.navTabs.approved);
 
 		const verificationRequestIsExists = await this.isVisible(selector.admin.dokan.verifications.vendorRow(storeName));
-		if(!verificationRequestIsExists){
+		if (!verificationRequestIsExists){
 			console.log('No approved verification request found!!');
 			return;
 		}
@@ -199,7 +199,7 @@ export class vendorVerificationsPage extends AdminPage {
 			await this.toBeVisible(selector.vendor.vVerificationSettings.id.passport);
 			await this.toBeVisible(selector.vendor.vVerificationSettings.id.nationalIdCard);
 			await this.toBeVisible(selector.vendor.vVerificationSettings.id.drivingLicense);
-			const  previousUploadedPhotoIsVisible =  await this.isVisible(selector.vendor.vVerificationSettings.id.previousUploadedPhoto);
+			const previousUploadedPhotoIsVisible = await this.isVisible(selector.vendor.vVerificationSettings.id.previousUploadedPhoto);
 			previousUploadedPhotoIsVisible && await this.toBeVisible(selector.vendor.vVerificationSettings.id.uploadPhoto);
 			await this.toBeVisible(selector.vendor.vVerificationSettings.id.submitId);
 			await this.toBeVisible(selector.vendor.vVerificationSettings.id.cancelSubmitId);
@@ -216,8 +216,8 @@ export class vendorVerificationsPage extends AdminPage {
 			await this.toBeVisible(selector.vendor.vVerificationSettings.address.city);
 			await this.toBeVisible(selector.vendor.vVerificationSettings.address.postOrZipCode);
 			await this.toBeVisible(selector.vendor.vVerificationSettings.address.country);
-			const  previousUploadedResidenceProofIsVisible =  await this.isVisible(selector.vendor.vVerificationSettings.address.previousUploadedResidenceProof);
-			!previousUploadedResidenceProofIsVisible  && await this.toBeVisible(selector.vendor.vVerificationSettings.address.uploadResidenceProof);
+			const previousUploadedResidenceProofIsVisible = await this.isVisible(selector.vendor.vVerificationSettings.address.previousUploadedResidenceProof);
+			!previousUploadedResidenceProofIsVisible && await this.toBeVisible(selector.vendor.vVerificationSettings.address.uploadResidenceProof);
 			await this.toBeVisible(selector.vendor.vVerificationSettings.address.submitAddress);
 			await this.toBeVisible(selector.vendor.vVerificationSettings.address.cancelSubmitAddress);
 		}
@@ -241,7 +241,7 @@ export class vendorVerificationsPage extends AdminPage {
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsVerification);
 
 		const idRequestIsApproved = await this.isVisible(selector.vendor.vVerificationSettings.id.idApproveFeedback);
-		if(idRequestIsApproved){
+		if (idRequestIsApproved){
 			return;
 		}
 
@@ -254,7 +254,7 @@ export class vendorVerificationsPage extends AdminPage {
 
 		// id verification
 		await this.click(selector.vendor.vVerificationSettings.id.startIdVerification);
-		await this.wait(0.5); //todo: resolve this
+		await this.wait(0.5); // todo: resolve this
 
 		// remove previously uploaded image
 		const uploadPhotoBtnIsVisible = await this.isVisible(selector.vendor.vVerificationSettings.id.uploadPhoto);

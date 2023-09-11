@@ -62,7 +62,7 @@ test.describe('Vendor shipping test', () => {
 	});
 
 	test('vendor can delete shipping method @pro', async ( ) => {
-		await vendor.addShippingMethod(data.vendor.shipping.shippingMethods.flatRate, true, true); //todo: add with api v2 settings group
+		await vendor.addShippingMethod(data.vendor.shipping.shippingMethods.flatRate, true, true); // todo: add with api v2 settings group
 		await vendor.deleteShippingMethod(data.vendor.shipping.shippingMethods.flatRate);
 	});
 

@@ -46,7 +46,7 @@ export class VendorStaffPage extends VendorPage {
 		await this.clearAndType(selector.vendor.vStaff.addStaff.email, staff.email);
 		await this.clearAndType(selector.vendor.vStaff.addStaff.phone, staff.phone);
 		const isPasswordVisible = await this.isVisible(selector.vendor.vStaff.editStaff.password);
-		isPasswordVisible &&  await this.clearAndType(selector.vendor.vStaff.editStaff.password, staff.password);
+		isPasswordVisible && await this.clearAndType(selector.vendor.vStaff.editStaff.password, staff.password);
 
 
 	}

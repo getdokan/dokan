@@ -20,7 +20,7 @@ export class ProductEnquiryPage extends CustomerPage {
 		await this.goToProductDetails(productName);
 		await this.click(selector.customer.cSingleProduct.menus.productEnquiry);
 		const isGuest = await this.isVisible(selector.customer.cSingleProduct.productEnquiry.guest.guestName);
-		if(isGuest){
+		if (isGuest){
 			await this.clearAndType(selector.customer.cSingleProduct.productEnquiry.guest.guestName, enquiry.guestName());
 			await this.clearAndType(selector.customer.cSingleProduct.productEnquiry.guest.guestEmail, enquiry.guestEmail());
 		}

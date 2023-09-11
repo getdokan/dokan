@@ -50,7 +50,7 @@ export class WpPage extends AdminPage {
 		// set permalinks settings
 		await this.click(selector.admin.settings.postName);
 		const customBaseIsVisible = await this.isVisible(selector.admin.settings.customBase);
-		if(customBaseIsVisible){
+		if (customBaseIsVisible){
 			await this.click(selector.admin.settings.customBase);
 			await this.clearAndType(selector.admin.settings.customBaseInput, permalink.customBaseInput);
 		}

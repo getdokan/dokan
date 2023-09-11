@@ -79,16 +79,16 @@ export class AdminPage extends BasePage {
 		await this.clearAndType(selector.admin.dokan.reports.allLogs.search, orderNumber);
 
 		const aOrderDetails = {
-			orderNumber: (await this.getElementText(selector.admin.dokan.reports.allLogs.orderDetails.orderId) as string ).split('#')[1],
-			store: await this.getElementText(selector.admin.dokan.reports.allLogs.orderDetails.store),
-			orderTotal: helpers.price(await this.getElementText(selector.admin.dokan.reports.allLogs.orderDetails.orderTotal) as string),
-			vendorEarning: helpers.price(await this.getElementText(selector.admin.dokan.reports.allLogs.orderDetails.vendorEarning)  as string ),
-			commission: helpers.price(await this.getElementText(selector.admin.dokan.reports.allLogs.orderDetails.commission)  as string),
-			gatewayFee: helpers.price(await this.getElementText(selector.admin.dokan.reports.allLogs.orderDetails.gatewayFee)  as string),
-			shippingCost: helpers.price(await this.getElementText(selector.admin.dokan.reports.allLogs.orderDetails.shippingCost)  as string),
-			tax: helpers.price(await this.getElementText(selector.admin.dokan.reports.allLogs.orderDetails.tax)  as string),
-			orderStatus: await this.getElementText(selector.admin.dokan.reports.allLogs.orderDetails.orderStatus),
-			orderDate: await this.getElementText(selector.admin.dokan.reports.allLogs.orderDetails.orderDate),
+			orderNumber  : (await this.getElementText(selector.admin.dokan.reports.allLogs.orderDetails.orderId) as string ).split('#')[1],
+			store        : await this.getElementText(selector.admin.dokan.reports.allLogs.orderDetails.store),
+			orderTotal   : helpers.price(await this.getElementText(selector.admin.dokan.reports.allLogs.orderDetails.orderTotal) as string),
+			vendorEarning: helpers.price(await this.getElementText(selector.admin.dokan.reports.allLogs.orderDetails.vendorEarning) as string ),
+			commission   : helpers.price(await this.getElementText(selector.admin.dokan.reports.allLogs.orderDetails.commission) as string),
+			gatewayFee   : helpers.price(await this.getElementText(selector.admin.dokan.reports.allLogs.orderDetails.gatewayFee) as string),
+			shippingCost : helpers.price(await this.getElementText(selector.admin.dokan.reports.allLogs.orderDetails.shippingCost) as string),
+			tax          : helpers.price(await this.getElementText(selector.admin.dokan.reports.allLogs.orderDetails.tax) as string),
+			orderStatus  : await this.getElementText(selector.admin.dokan.reports.allLogs.orderDetails.orderStatus),
+			orderDate    : await this.getElementText(selector.admin.dokan.reports.allLogs.orderDetails.orderDate),
 		};
 
 		return aOrderDetails;
@@ -164,7 +164,7 @@ export class AdminPage extends BasePage {
 		await this.goto(data.subUrls.backend.dokan.dokan);
 		// dokan promotion elements are visible
 		const isPromotionVisible = await this.isVisible(selector.admin.dokan.promotion.promotion);
-		if(isPromotionVisible){
+		if (isPromotionVisible){
 			await this.multipleElementVisible(selector.admin.dokan.promotion);
 		} else {
 			console.log('No promotion is ongoing');

@@ -27,7 +27,7 @@ export class VendorToolsPage extends VendorPage {
 		// import
 
 		// import xml elements are visible
-		const { completionMessage,  ...xml } = selector.vendor.vTools.import.xml;
+		const { completionMessage, ...xml } = selector.vendor.vTools.import.xml;
 		await this.multipleElementVisible(xml);
 
 
@@ -66,7 +66,7 @@ export class VendorToolsPage extends VendorPage {
 	async importProduct(importType: string, filePath: string){
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.tools);
 
-		switch(importType){
+		switch (importType){
 
 		case 'xml' :
 			await this.uploadFile(selector.vendor.vTools.import.xml.chooseXmlFile, filePath);
@@ -74,7 +74,7 @@ export class VendorToolsPage extends VendorPage {
 			await this.toBeVisible(selector.vendor.vTools.import.xml.completionMessage);
 			break;
 
-		case 'csv' : //todo: add wait for uploading file, add api level assertion
+		case 'csv' : // todo: add wait for uploading file, add api level assertion
 			await this.clickAndWaitForLoadState(selector.vendor.vTools.import.csv.csv);
 			await this.uploadFile(selector.vendor.vTools.import.csv.chooseCsv, filePath);
 			await this.click(selector.vendor.vTools.import.csv.updateExistingProducts);
@@ -92,7 +92,7 @@ export class VendorToolsPage extends VendorPage {
 	async exportProduct(exportType: string){
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.export);
 
-		switch(exportType){
+		switch (exportType){
 
 		case 'xml' :
 			await this.click(selector.vendor.vTools.export.xml.all);

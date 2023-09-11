@@ -2,7 +2,6 @@ import { Page } from '@playwright/test';
 import { AdminPage } from 'pages/adminPage';
 import { selector } from 'pages/selectors';
 import { data } from 'utils/testData';
-import {  } from 'utils/interfaces';
 
 export class HelpPage extends AdminPage {
 

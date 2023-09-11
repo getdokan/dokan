@@ -72,7 +72,7 @@ export class SettingsPage extends AdminPage {
 		// vendor store options
 		await this.enableSwitcher(selector.admin.dokan.settings.general.storeTermsAndConditions);
 		await this.clearAndType(selector.admin.dokan.settings.general.storeProductPerPage, general.storeProductPerPage);
-		if(DOKAN_PRO) {
+		if (DOKAN_PRO) {
 			await this.enableSwitcher(selector.admin.dokan.settings.general.enableTermsAndCondition);
 			await this.click(selector.admin.dokan.settings.general.storCategory(general.storCategory));
 		}
@@ -443,7 +443,7 @@ export class SettingsPage extends AdminPage {
 			if (deliveryTime.choice === 'full-day'){
 				await this.click(selector.admin.dokan.settings.deliveryTime.openingTime(day));
 				await this.page.getByRole('listitem').filter({ hasText: 'Full day' }).click();
-			} else{
+			} else {
 				await this.page.getByRole('listitem').filter({ hasText: deliveryTime.openingTime }).click();
 				await this.click(selector.admin.dokan.settings.deliveryTime.closingTime(day));
 				await this.page.getByRole('listitem').filter({ hasText: deliveryTime.closingTime }).click();

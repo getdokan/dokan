@@ -11,7 +11,7 @@ export class SpmvPage extends VendorPage {
 	}
 
 
-	//admin
+	// admin
 
 	async assignSpmvProduct(productId: string, storeName: string){
 		await this.goIfNotThere(data.subUrls.backend.wc.productDetails(productId));
@@ -89,7 +89,7 @@ export class SpmvPage extends VendorPage {
 		}
 
 		const searchInputIsVisible = await this.isVisible(selector.vendor.vSpmv.search.searchInput);
-		if(!searchInputIsVisible){
+		if (!searchInputIsVisible){
 			// forcing spmv search section to open via removing class
 			const spmvSearchDiv = (await this.getClassValue(selector.vendor.vSpmv.search.searchDiv))!;
 			await this.setAttributeValue(selector.vendor.vSpmv.search.searchDiv, 'class', spmvSearchDiv.replace('section-closed', ''));

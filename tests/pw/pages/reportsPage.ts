@@ -48,7 +48,7 @@ export class ReportsPage extends AdminPage {
 		await this.multipleElementVisible(selector.admin.dokan.reports.menus);
 
 		// filter elements are visible
-		const { filterByStoreInput, filterByStatusInput, searchedResult,  ...filters } = selector.admin.dokan.reports.allLogs.filters;
+		const { filterByStoreInput, filterByStatusInput, searchedResult, ...filters } = selector.admin.dokan.reports.allLogs.filters;
 		await this.multipleElementVisible(filters);
 
 		// search is visible
@@ -102,7 +102,7 @@ export class ReportsPage extends AdminPage {
 	async filterAllLogsByStatus(orderStatus: string){
 		await this.goIfNotThere(data.subUrls.backend.dokan.allLogs);
 
-		await this.click(selector.admin.dokan.reports.allLogs.filters.filterByStatus);  //todo:  add multiselect option
+		await this.click(selector.admin.dokan.reports.allLogs.filters.filterByStatus); // todo:  add multiselect option
 		await this.type( selector.admin.dokan.reports.allLogs.filters.filterByStatusInput, orderStatus);
 		// await this.toContainText(selector.admin.dokan.reports.allLogs.filters.searchedResult, (orderStatus));
 		await this.clickAndAcceptAndWaitForResponse(data.subUrls.api.dokan.logs, selector.admin.dokan.reports.allLogs.filters.searchedResult);

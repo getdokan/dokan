@@ -3,14 +3,14 @@ import { MySqlConnection, DbContext } from 'mysqlconnector';
 import { serialize, unserialize } from 'php-serialize';
 import { dbData } from 'utils/dbData';
 import { helpers } from 'utils/helpers';
-const { DB_HOST_NAME, DB_USER_NAME, DB_USER_PASSWORD, DATABASE, DB_PORT, DB_PREFIX  } = process.env;
+const { DB_HOST_NAME, DB_USER_NAME, DB_USER_PASSWORD, DATABASE, DB_PORT, DB_PREFIX } = process.env;
 
-const mySql =  new MySqlConnection({
+const mySql = new MySqlConnection({
 	hostname: DB_HOST_NAME,
 	username: DB_USER_NAME,
 	password: DB_USER_PASSWORD,
-	db: DATABASE,
-	port: Number(DB_PORT)
+	db      : DATABASE,
+	port    : Number(DB_PORT)
 });
 
 const dbPrefix = DB_PREFIX;
@@ -21,13 +21,13 @@ export const dbUtils = {
 	async dbQuery(query: string): Promise<any> {
 		const dbContext: DbContext = new DbContext(mySql);
 		return await dbContext.inTransactionAsync(async (dbContext) => {
-			try{
+			try {
 				const result = await dbContext.executeAsync(query);
 				const res = JSON.parse(JSON.stringify(result));
 				expect(res).not.toHaveProperty('errno');
 				return res;
 			}
-			catch(err: unknown){
+			catch (err: unknown){
 				// console.log('dbError:', err);
 				return err;
 			}
@@ -45,7 +45,7 @@ export const dbUtils = {
 
 	// update option table
 	async updateWpOptionTable(optionName: string, optionValue: object| string, serializeData?: string ): Promise<any> {
-		const queryUpdate =  serializeData ? `UPDATE ${dbPrefix}_options SET option_value = '${serialize(optionValue)}' WHERE option_name = '${optionName}';`: `UPDATE ${dbPrefix}_options SET option_value = '${optionValue}' WHERE option_name = '${optionName}';`;
+		const queryUpdate = serializeData ? `UPDATE ${dbPrefix}_options SET option_value = '${serialize(optionValue)}' WHERE option_name = '${optionName}';` : `UPDATE ${dbPrefix}_options SET option_value = '${optionValue}' WHERE option_name = '${optionName}';`;
 		const res = await dbUtils.dbQuery(queryUpdate);
 		// console.log(res);
 		return res;
@@ -76,13 +76,13 @@ export const dbUtils = {
 	async getSellingInfo(): Promise<object[]> {
 		const res = await this.getDokanSettings(dbData.dokan.optionName.selling);
 		const commission = {
-			type: res.commission_type,
-			amount:res.admin_percentage,
+			type            : res.commission_type,
+			amount          : res.admin_percentage,
 			additionalAmount: res.additional_fee
 		};
 		const feeRecipient = {
-			shippingFeeRecipient: res.shipping_fee_recipient,
-			taxFeeRecipient: res.tax_fee_recipient,
+			shippingFeeRecipient   : res.shipping_fee_recipient,
+			taxFeeRecipient        : res.tax_fee_recipient,
 			shippingTaxFeeRecipient: res.shipping_tax_fee_recipient,
 		};
 		return [commission, feeRecipient];
@@ -101,18 +101,18 @@ export const dbUtils = {
 		const refundId = await this.getMaxId('id', 'dokan_refund') + 1;
 
 		const refund = {
-			id: refundId,
-			orderId: responseBody.id,
-			sellerId: responseBody.stores[0].id,
-			refundAmount: 20.5,
-			refundReason: 'test refund',
-			itemQtys: `{"${responseBody.line_items[0].id}": 1 }`,
-			itemTotals: `{"${responseBody.line_items[0].id}":"10.000000","${responseBody.shipping_lines[0].id}":"5.000000"}`,
+			id           : refundId,
+			orderId      : responseBody.id,
+			sellerId     : responseBody.stores[0].id,
+			refundAmount : 20.5,
+			refundReason : 'test refund',
+			itemQtys     : `{"${responseBody.line_items[0].id}": 1 }`,
+			itemTotals   : `{"${responseBody.line_items[0].id}":"10.000000","${responseBody.shipping_lines[0].id}":"5.000000"}`,
 			itemTaxTotals: `{"${responseBody.line_items[0].id}":{"${responseBody.line_items[0].taxes[0].id}":5},"${responseBody.shipping_lines[0].id}":{"${responseBody.line_items[0].taxes[0].id}":0.5}}`,
-			restockItems: 1,
-			date: helpers.currentDateTimeFullFormat,
-			status: 0, // 0 for pending, 1 for completed
-			method: 0,
+			restockItems : 1,
+			date         : helpers.currentDateTimeFullFormat,
+			status       : 0, // 0 for pending, 1 for completed
+			method       : 0,
 		};
 		// console.log('refund data:', refund);
 		const queryInsert = `INSERT INTO ${dbPrefix}_dokan_refund VALUES ( '${refund.id}', '${refund.orderId}', '${refund.sellerId}', ${refund.refundAmount}, '${refund.refundReason}', '${refund.itemQtys}', '${refund.itemTotals}', '${refund.itemTaxTotals}', '${refund.restockItems}', '${refund.date}', '${refund.status}', '${refund.method}' );`;

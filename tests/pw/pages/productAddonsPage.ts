@@ -2,7 +2,7 @@ import { Page } from '@playwright/test';
 import { VendorPage } from 'pages/vendorPage';
 import { selector } from 'pages/selectors';
 import { data } from 'utils/testData';
-import { vendor  } from 'utils/interfaces';
+import { vendor } from 'utils/interfaces';
 
 
 export class ProductAddonsPage extends VendorPage {
@@ -37,7 +37,7 @@ export class ProductAddonsPage extends VendorPage {
 		await this.check(selector.vendor.vAddonSettings.addon.enableDescription);
 
 		// product addon fields elements are visible
-		const { addonFieldsRow, addonUpdateSuccessMessage,  ...addonFields } = selector.vendor.vAddonSettings.addon;
+		const { addonFieldsRow, addonUpdateSuccessMessage, ...addonFields } = selector.vendor.vAddonSettings.addon;
 		await this.multipleElementVisible(addonFields);
 
 		await this.clickAndWaitForLoadState(selector.vendor.vAddonSettings.backToAddonLists);

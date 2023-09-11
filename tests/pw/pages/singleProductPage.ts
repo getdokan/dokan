@@ -47,7 +47,7 @@ export class SingleProductPage extends CustomerPage {
 		// related products elements are visible
 		await this.multipleElementVisible(selector.customer.cSingleProduct.relatedProducts);
 
-		if(DOKAN_PRO){
+		if (DOKAN_PRO){
 
 			// get support is visible
 			await this.toBeVisible(selector.customer.cSingleProduct.getSupport.getSupport);

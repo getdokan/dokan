@@ -425,7 +425,7 @@ export class RequestForQuotationsPage extends AdminPage {
 			// request quote table elements are visible
 			await this.multipleElementVisible(selector.customer.cRequestForQuote.requestedQuote.table);
 
-			//pagination is visible
+			// pagination is visible
 			// await this.toBeVisible(selector.customer.cRequestForQuote.requestedQuote.pagination);
 		}
 
@@ -480,7 +480,7 @@ export class RequestForQuotationsPage extends AdminPage {
 
 		await this.clickAndWaitForResponse(data.subUrls.ajax, selector.customer.cRequestForQuote.singleProductDetails.addToQuote);
 		const viewQuoteIsVisible = await this.isVisible(selector.customer.cRequestForQuote.singleProductDetails.viewQuote);
-		if(viewQuoteIsVisible){
+		if (viewQuoteIsVisible){
 			await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.requestForQuote, selector.customer.cRequestForQuote.singleProductDetails.viewQuote);
 		} else {
 			await this.goIfNotThere(data.subUrls.frontend.requestForQuote);
@@ -500,7 +500,7 @@ export class RequestForQuotationsPage extends AdminPage {
 		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.requestForQuote, selector.customer.cRequestForQuote.requestForQuote.placeQuote, 302);
 		await this.toBeVisible(selector.customer.cRequestForQuote.requestedQuote.requestedQuoteDetails.requestedQuoteText);
 
-		if(! guest){
+		if (! guest){
 			const quoteId = (await this.getElementText(selector.customer.cRequestForQuote.requestedQuote.requestedQuoteDetails.basicDetails.quoteNumberValue))?.trim() as string;
 			return quoteId;
 		}

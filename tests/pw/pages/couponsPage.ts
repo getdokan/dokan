@@ -4,7 +4,7 @@ import { CustomerPage } from 'pages/customerPage';
 import { selector } from 'pages/selectors';
 import { helpers } from 'utils/helpers';
 import { data } from 'utils/testData';
-import{ coupon } from 'utils/interfaces';
+import { coupon } from 'utils/interfaces';
 
 
 export class CouponsPage extends AdminPage {

@@ -94,7 +94,7 @@ export class StoreSupportsPage extends AdminPage {
 	async filterSupportTickets(input: string, filterBy: string){
 		await this.goIfNotThere(data.subUrls.backend.dokan.storeSupport);
 
-		switch(filterBy){
+		switch (filterBy){
 
 		case 'by-vendor' :
 			await this.click(selector.admin.dokan.storeSupport.filters.filterByVendors);
@@ -126,7 +126,7 @@ export class StoreSupportsPage extends AdminPage {
 		await this.searchSupportTicket(supportTicketId);
 		await this.clickAndWaitForResponseAndLoadState(data.subUrls.api.dokan.storeSupport, selector.admin.dokan.storeSupport.supportTicketLink(supportTicketId));
 
-		if(replier === 'vendor'){
+		if (replier === 'vendor'){
 			await this.selectByValue(selector.admin.dokan.storeSupport.supportTicketDetails.chatAuthor, 'vendor');
 		}
 
@@ -141,7 +141,7 @@ export class StoreSupportsPage extends AdminPage {
 		await this.searchSupportTicket(supportTicketId);
 		await this.clickAndWaitForResponseAndLoadState(data.subUrls.api.dokan.storeSupport, selector.admin.dokan.storeSupport.supportTicketLink(supportTicketId));
 
-		switch(action){
+		switch (action){
 
 		case 'enable' :
 			await this.enableSwitcherAndWaitForResponse(data.subUrls.api.dokan.storeSupport, selector.admin.dokan.storeSupport.supportTicketDetails.ticketSummary.emailNotification);
@@ -199,12 +199,12 @@ export class StoreSupportsPage extends AdminPage {
 		await this.multipleElementVisible(selector.vendor.vSupport.menus);
 
 
-		const { filterByCustomerInput, filterByDate, result,  ...filters } = selector.vendor.vSupport.filters;
+		const { filterByCustomerInput, filterByDate, result, ...filters } = selector.vendor.vSupport.filters;
 		await this.toBeVisible(selector.vendor.vSupport.filters.filterByDate.dateRangeInput);
 		await this.multipleElementVisible(filters);
 
 
-		const noSupportTicket =  await this.isVisible(selector.vendor.vSupport.noSupportTicketFound);
+		const noSupportTicket = await this.isVisible(selector.vendor.vSupport.noSupportTicketFound);
 		if (noSupportTicket) {
 			console.log('No Support Tickets Found!!');
 			return;
@@ -235,7 +235,7 @@ export class StoreSupportsPage extends AdminPage {
 		// chat reply box elements are visible
 		const ticketIsOpen = await this.isVisible(selector.vendor.vSupport.supportTicketDetails.chatStatus.open);
 		const { addReplyText, closeTicketText, ...replyBox } = selector.vendor.vSupport.supportTicketDetails.replyBox;
-		ticketIsOpen &&  await this.toBeVisible(addReplyText);
+		ticketIsOpen && await this.toBeVisible(addReplyText);
 		!ticketIsOpen && await this.multipleElementVisible(closeTicketText);
 		await this.multipleElementVisible(replyBox);
 	}
@@ -245,7 +245,7 @@ export class StoreSupportsPage extends AdminPage {
 	async vendorFilterSupportTickets( filterBy:string, inputValue: string | date['dateRange'] ){
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.storeSupport);
 
-		switch(filterBy){
+		switch (filterBy){
 
 		case 'by-customer' :
 			await this.click(selector.vendor.vSupport.filters.filterByCustomer);
@@ -258,7 +258,7 @@ export class StoreSupportsPage extends AdminPage {
 
 		case 'by-date' :
 			await this.setAttributeValue(selector.vendor.vSupport.filters.filterByDate.dateRangeInput, 'value', helpers.dateFormatFYJ(inputValue.startDate) + ' - ' + helpers.dateFormatFYJ(inputValue.endDate));
-			await this.setAttributeValue(selector.vendor.vSupport.filters.filterByDate.startDateInput, 'value', inputValue.startDate); //todo: resolve this
+			await this.setAttributeValue(selector.vendor.vSupport.filters.filterByDate.startDateInput, 'value', inputValue.startDate); // todo: resolve this
 			await this.setAttributeValue(selector.vendor.vSupport.filters.filterByDate.endDateInput, 'value', inputValue.endDate);
 			await this.clickAndWaitForLoadState(selector.vendor.vSupport.filters.search);
 			break;
@@ -281,7 +281,7 @@ export class StoreSupportsPage extends AdminPage {
 		await this.clearAndType(selector.vendor.vSupport.filters.tickedIdOrKeyword, input);
 		await this.clickAndWaitForLoadState(selector.vendor.vSupport.filters.search);
 
-		switch(searchBy){
+		switch (searchBy){
 
 		case 'id' :
 			await this.toBeVisible(selector.vendor.vSupport.storeSupportCellById(input));
@@ -355,7 +355,7 @@ export class StoreSupportsPage extends AdminPage {
 
 		// menu elements are visible
 		await this.multipleElementVisible(selector.customer.cSupportTickets.menus);
-		const noSupportTicket =  await this.isVisible(selector.customer.cSupportTickets.noSupportTicketFound);
+		const noSupportTicket = await this.isVisible(selector.customer.cSupportTickets.noSupportTicketFound);
 		if (noSupportTicket) {
 			console.log('No Support Tickets Found!!');
 			return;
@@ -399,7 +399,7 @@ export class StoreSupportsPage extends AdminPage {
 	// customer ask for store support
 	async storeSupport(input: string, getSupport: customer['getSupport'], action: string): Promise<void> {
 
-		switch(action){
+		switch (action){
 
 		case 'store' :
 			await this.goIfNotThere(data.subUrls.frontend.vendorDetails(helpers.slugify(input)));
@@ -414,7 +414,7 @@ export class StoreSupportsPage extends AdminPage {
 			break;
 
 		case 'order-received' :
-			const [orderId, orderKey]  = input.split(',');
+			const [orderId, orderKey] = input.split(',');
 			await this.goIfNotThere(data.subUrls.frontend.orderReceivedDetails(orderId as string, orderKey as string));
 			break;
 
@@ -425,7 +425,7 @@ export class StoreSupportsPage extends AdminPage {
 
 		await this.clickAndWaitForResponse(data.subUrls.ajax, selector.customer.cSingleStore.storeTabs.getSupport);
 		const isGuest = await this.isVisible(selector.customer.cSingleStore.getSupport.userName);
-		if(isGuest){
+		if (isGuest){
 			await this.clearAndType(selector.customer.cSingleStore.getSupport.userName, getSupport.username);
 			await this.clearAndType(selector.customer.cSingleStore.getSupport.userPassword, getSupport.userPassword);
 			await this.clickAndWaitForResponse(data.subUrls.ajax, selector.customer.cSingleStore.getSupport.login);

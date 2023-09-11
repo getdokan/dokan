@@ -66,9 +66,9 @@ test.describe('attribute api test', () => {
 
 	test('set default attribute @lite', async () => {
 		const payload = {
-			id: attribute.id,
-			name: attribute.name,
-			option: attributeTerm.name,
+			id     : attribute.id,
+			name   : attribute.name,
+			option : attributeTerm.name,
 			options: [],
 		};
 		const [response, responseBody] = await apiUtils.put(endPoints.setDefaultAttribute(productId), { data: { attributes: [payload] } });
@@ -82,19 +82,19 @@ test.describe('attribute api test', () => {
 				{
 					all_terms: [
 						{
-							label: attributeTerm.name,
-							slug: attributeTerm.slug,
+							label   : attributeTerm.name,
+							slug    : attributeTerm.slug,
 							taxonomy: attribute.slug,
-							value: attributeTerm.id,
+							value   : attributeTerm.id,
 						},
 					],
-					id: attribute.id,
-					name: attribute.name,
-					options: [attributeTerm.name],
-					slug: attribute.slug,
-					taxonomy: true,
+					id       : attribute.id,
+					name     : attribute.name,
+					options  : [attributeTerm.name],
+					slug     : attribute.slug,
+					taxonomy : true,
 					variation: false,
-					visible: true,
+					visible  : true,
 				},
 			],
 		};

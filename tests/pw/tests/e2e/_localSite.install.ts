@@ -1,4 +1,4 @@
-import { test  } from '@playwright/test';
+import { test } from '@playwright/test';
 import { data } from 'utils/testData';
 import { LoginPage } from 'pages/loginPage';
 import { LocalSetupPage } from 'pages/localSetupPage';
@@ -14,7 +14,7 @@ test.describe('setup local site', () => {
 
 	// test('download wordpress to desired folder', async ({ page }) => {
 
-	//todo:
+	// todo:
 	/*
 	  1. create everything using bash script if needed
 	  2. get desired folder path
@@ -45,7 +45,7 @@ test.describe('setup local site', () => {
 
 	// test('install and activate theme', async ({ request }) => {}
 
-	//todo:  skip global setup for local_setup
+	// todo:  skip global setup for local_setup
 
 	test('activate dokan & woocommerce plugins', async ({ request }) => {
 		const apiUtils = new ApiUtils(request);
@@ -53,7 +53,7 @@ test.describe('setup local site', () => {
 			'dokan/dokan', 'dokan-pro/dokan-pro', 'woocommerce-bookings/woocommerce-bookings', 'woocommerce-product-addons/woocommerce-product-addons', 'woocommerce-simple-auctions/woocommerce-simple-auctions', 'woocommerce-subscriptions/woocommerce-subscriptions'
 		];
 		for (const plugin of plugins){
-			const activePlugins = await apiUtils.updatePlugin(plugin, { status:'active' }, payloads.adminAuth);
+			const activePlugins = await apiUtils.updatePlugin(plugin, { status: 'active' }, payloads.adminAuth);
 			console.log(activePlugins);}
 
 	});

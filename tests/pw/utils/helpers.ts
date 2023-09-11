@@ -41,13 +41,13 @@ export const helpers = {
 	openReport: () => open('playwright-report/html-report/index.html'),
 
 	// string between two tags
-	stringBetweenTags: (str: string): string =>  {
+	stringBetweenTags: (str: string): string => {
 		const res = str.split(/<p>(.*?)<\/p>/g);
 		return res[1] as string;
 	},
 
 	// convert string to regex
-	stringToRegex:(str: string): RegExp => new RegExp( str), //todo: need to update, multiple cases unhandled
+	stringToRegex: (str: string): RegExp => new RegExp( str), // todo: need to update, multiple cases unhandled
 
 	// convert string to price format
 	price: (str: string): number => parseFloat(str.replace(/[^\d\-.,\\s]/g, '').replace(/,/g, '.').replace(/\.(?=.*\.)/g, '')),
@@ -76,19 +76,19 @@ export const helpers = {
 	// current date-time [2023-06-02 00:46:11]
 	currentDateTimeFullFormat: new Date().toLocaleString('en-CA', { year: 'numeric', month: 'numeric', day: 'numeric', hourCycle: 'h23', hour: 'numeric', minute: 'numeric', second: 'numeric', }).replace(',', ''),
 
-	currentDateTime2: () =>  new Date().toLocaleString('en-CA', { year: 'numeric', month: 'numeric', day: 'numeric', hourCycle: 'h23', hour: 'numeric', minute: 'numeric', second: 'numeric', }).replace(',', ''),
+	currentDateTime2: () => new Date().toLocaleString('en-CA', { year: 'numeric', month: 'numeric', day: 'numeric', hourCycle: 'h23', hour: 'numeric', minute: 'numeric', second: 'numeric', }).replace(',', ''),
 
 
 	// add two input days
-	addDays(date: string | number | Date | null, days: number, format: string): string  {
-		const result = date ?  new Date(date) : new Date();
+	addDays(date: string | number | Date | null, days: number, format: string): string {
+		const result = date ? new Date(date) : new Date();
 		result.setDate(result.getDate() + days);
 
 		if (format === 'full'){
 			// [2023-06-02, 00:33]
 			return result.toLocaleDateString('en-CA', { year: 'numeric', month: 'numeric', day: 'numeric', hourCycle: 'h23', hour: 'numeric', minute: 'numeric' }).replace(/,/g, '');
 		} else if (format === 'complete'){
-			//[2023-06-02 00:46:11]
+			// [2023-06-02 00:46:11]
 			return result.toLocaleDateString('en-CA', { year: 'numeric', month: 'numeric', day: 'numeric', hourCycle: 'h23', hour: 'numeric', minute: 'numeric', second: 'numeric' }).replace(/,/g, '');
 		} else {
 			// [2023-06-02]
@@ -100,7 +100,7 @@ export const helpers = {
 
 	// future date
 	futureDate(date: string | number | Date | null, days: number): Date{
-		const result = date ?  new Date(date) : new Date();
+		const result = date ? new Date(date) : new Date();
 		result.setDate(result.getDate() + days);
 		return result;
 	},
@@ -141,7 +141,7 @@ export const helpers = {
 
 	// order total
 	orderTotal( subtotal: number, productTax = 0, shippingTax = 0, shippingFee = 0 ) {
-		const orderTotal = Number( subtotal ) + Number( productTax )  + Number( shippingTax ) + Number( shippingFee );
+		const orderTotal = Number( subtotal ) + Number( productTax ) + Number( shippingTax ) + Number( shippingFee );
 		return this.roundToTwo( orderTotal );
 	},
 
@@ -150,7 +150,7 @@ export const helpers = {
 
 		let subTotalCommission = 0;
 
-		switch(commission.type){
+		switch (commission.type){
 
 		case 'percentage' :
 			subTotalCommission = this.percentage( Number( subTotal ), Number( commission.amount ) );
@@ -186,7 +186,7 @@ export const helpers = {
 		shippingFee = feeRecipient.shippingFeeRecipient !== 'seller' ? 0 : shippingFee;
 		gatewayFee = gatewayFeeGiver !== 'seller' ? 0 : gatewayFee;
 
-		const vendorEarning = Number( subTotal ) - Number( commission ) - Number( gatewayFee ) + Number( productTax ) + Number( shippingTax )  + Number( shippingFee );
+		const vendorEarning = Number( subTotal ) - Number( commission ) - Number( gatewayFee ) + Number( productTax ) + Number( shippingTax ) + Number( shippingFee );
 		return this.roundToTwo( vendorEarning );
 	},
 
@@ -229,12 +229,12 @@ export const helpers = {
 
 	// write file
 	writeFile(filePath: string, content: string) {
-		fs.writeFileSync(filePath, content,  { encoding: 'utf8' } );
+		fs.writeFileSync(filePath, content, { encoding: 'utf8' } );
 	},
 
 	// append file
 	appendFile(filePath: string, content: string) {
-		fs.appendFileSync(filePath, content,  { encoding: 'utf8' } );
+		fs.appendFileSync(filePath, content, { encoding: 'utf8' } );
 	},
 
 	// rename file
