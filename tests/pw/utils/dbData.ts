@@ -76,8 +76,6 @@ export const dbData = {
 			dokan_any_category_selection   : 'off',
 			product_status                 : 'publish',
 			vendor_duplicate_product       : 'on',
-			edited_product_status          : 'off',
-			product_add_mail               : 'on',
 			product_category_style         : 'single',
 			product_vendors_can_create_tags: 'on',
 			add_new_attribute              : 'on',

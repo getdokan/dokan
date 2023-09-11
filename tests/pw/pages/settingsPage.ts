@@ -101,7 +101,6 @@ export class SettingsPage extends AdminPage {
 		if (DOKAN_PRO) {
 			await this.click(selector.admin.dokan.settings.selling.newProductStatus(selling.newProductStatus));
 			await this.enableSwitcher(selector.admin.dokan.settings.selling.duplicateProduct);
-			await this.enableSwitcher(selector.admin.dokan.settings.selling.productMailNotification);
 			await this.click(selector.admin.dokan.settings.selling.productCategorySelection(selling.productCategorySelection));
 			await this.enableSwitcher(selector.admin.dokan.settings.selling.vendorsCanCreateTags);
 			await this.enableSwitcher(selector.admin.dokan.settings.selling.orderDiscount);

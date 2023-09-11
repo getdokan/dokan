@@ -62,7 +62,7 @@ export class SingleProductPage extends CustomerPage {
 
 			// product shipping elements are visible
 			// await this.click(selector.customer.cSingleProduct.menus.shipping);
-			// await this.multipleElementVisible(selector.customer.cSingleProduct.shipping);  //todo:  need vendor shipping
+			// await this.multipleElementVisible(selector.customer.cSingleProduct.shipping);  // todo:  need vendor shipping
 
 
 			// product location elements are visible
@@ -72,7 +72,7 @@ export class SingleProductPage extends CustomerPage {
 
 			// // warranty policy is visible
 			// await this.click(selector.customer.cSingleProduct.menus.warrantyPolicy);
-			// await this.multipleElementVisible(selector.customer.cSingleProduct.warrantyPolicy); //todo:  need warranty policy
+			// await this.multipleElementVisible(selector.customer.cSingleProduct.warrantyPolicy); // todo:  need warranty policy
 
 
 			// product enquiry is visible

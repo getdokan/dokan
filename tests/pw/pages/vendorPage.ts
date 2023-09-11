@@ -87,7 +87,7 @@ export class VendorPage extends BasePage {
 		}
 		await this.clearAndType(selector.vendor.vRegistration.phone, vendorInfo.phoneNumber);
 		await this.checkIfVisible(selector.customer.cDashboard.termsAndConditions);
-		// await this.checkIfVisible(selector.customer.cDashboard.termsAndConditions); //todo: fix
+		// await this.checkIfVisible(selector.customer.cDashboard.termsAndConditions); // todo: fix
 		const subscriptionPackIsVisible = await this.isVisible(selector.vendor.vRegistration.subscriptionPack);
 		subscriptionPackIsVisible && await this.selectByLabel(selector.vendor.vRegistration.subscriptionPack, data.predefined.vendorSubscription.nonRecurring);
 		await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.setupWizard, selector.vendor.vRegistration.register);
@@ -332,7 +332,7 @@ export class VendorPage extends BasePage {
 
 
 	// vendor set banner and profile picture settings
-	// async bannerAndProfilePictureSettings(banner: string, profilePicture: string): Promise<void> { //todo:  fix banner and profile update
+	// async bannerAndProfilePictureSettings(banner: string, profilePicture: string): Promise<void> { // todo:  fix banner and profile update
 	// 	// upload banner and profile picture
 	// 	await this.removePreviouslyUploadedImage(selector.vendor.vStoreSettings.bannerImage, selector.vendor.vStoreSettings.removeBannerImage);
 	// 	await this.click(selector.vendor.vStoreSettings.banner);

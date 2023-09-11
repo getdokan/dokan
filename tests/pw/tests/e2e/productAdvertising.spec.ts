@@ -75,12 +75,12 @@ test.describe('Product Advertising test', () => {
 		await apiUtils.updateOrderStatus(orderId, 'wc-completed', payloads.adminAuth);
 	});
 
-	// test('vendor can buy booking product advertising @pro', async ( ) => { //todo:
+	// test('vendor can buy booking product advertising @pro', async ( ) => { // todo:
 	// 	const orderId = await vendor.buyProductAdvertising(data.productAdvertisement.advertisedProduct);
 	// 	await apiUtils.updateOrderStatus(orderId, 'wc-completed', payloads.adminAuth);
 	// });
 
-	// test('vendor can buy auction product advertising @pro', async ( ) => { //todo:
+	// test('vendor can buy auction product advertising @pro', async ( ) => { // todo:
 	// 	const orderId = await vendor.buyProductAdvertising(data.productAdvertisement.advertisedProduct);
 	// 	await apiUtils.updateOrderStatus(orderId, 'wc-completed', payloads.adminAuth);
 	// });

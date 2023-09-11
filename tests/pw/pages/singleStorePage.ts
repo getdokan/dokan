@@ -27,7 +27,7 @@ export class SingleStorePage extends CustomerPage {
 		// store tab elements are visible
 		if (!DOKAN_PRO){
 			await this.toBeVisible(selector.customer.cSingleStore.storeTabs.products);
-			// await this.toBeVisible(selector.customer.cSingleStore.storeTabs.toc); //todo: need vendor toc
+			// await this.toBeVisible(selector.customer.cSingleStore.storeTabs.toc); // todo: need vendor toc
 		} else {
 			const { toc, ...storeTabs } = selector.customer.cSingleStore.storeTabs;
 			await this.multipleElementVisible(storeTabs);

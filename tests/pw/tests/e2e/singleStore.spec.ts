@@ -34,7 +34,7 @@ test.describe('Single store functionality test', () => {
 	});
 
 	// test.skip('customer can view store open-close time on single store @lite', async ( ) => {
-	// 	//todo: pre: need store open close
+	// 	// todo: pre: need store open close
 	// 	await customer.storeOpenCloseTime(data.predefined.vendorStores.vendor1);
 	// });
 
@@ -47,7 +47,7 @@ test.describe('Single store functionality test', () => {
 	});
 
 	// test.skip('customer can view store terms and conditions @lite', async ( ) => {
-	// 	//todo: pre need toc on store and admin settings
+	// 	// todo: pre need toc on store and admin settings
 	// 	await customer.storeTermsAndCondition(data.predefined.vendorStores.vendor1, data.vendor.toc);
 	// });
 

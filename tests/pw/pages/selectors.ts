@@ -2823,7 +2823,7 @@ export const selector = {
 				adminCommissionCombined   : '.additional_fee > .input-text',
 				// Vendor
 				// storeName: '#dokan_product_author_override',
-				// storeName: 'div#sellerdiv span.select2-selection__arrow', //todo: dokansellerdiv on git action nd sellerdiv on local why
+				// storeName: 'div#sellerdiv span.select2-selection__arrow', // todo: dokansellerdiv on git action nd sellerdiv on local why
 				storeName                 : '//div[contains(@id, "sellerdiv")]//span[@class="select2-selection__arrow"]',
 				// storeNameOptions: '#dokan_product_author_override option',
 				storeNameInput            : '.select2-search.select2-search--dropdown .select2-search__field',
@@ -4648,9 +4648,9 @@ export const selector = {
 					viewShippingSettingsMenu    : '#dokan_view_store_shipping_menu',
 					viewSocialSettingsMenu      : '#dokan_view_store_social_menu',
 					viewSeoSettingsMenu         : '#dokan_view_store_seo_menu',
-					// viewBookingMenu:'#dokan_view_booking_menu', //todo:  add booking check
+					// viewBookingMenu:'#dokan_view_booking_menu', // todo:  add booking check
 					viewToolsMenu               : '#dokan_view_tools_menu',
-					// viewAuctionMenu:'#dokan_view_auction_menu', //todo:  add auction check
+					// viewAuctionMenu:'#dokan_view_auction_menu', // todo:  add auction check
 					viewVerificationSettingsMenu: '#dokan_view_store_verification_menu',
 
 				},
@@ -6589,7 +6589,7 @@ export const selector = {
 
 			// Product description
 			description: {
-				// descriptionHeading: '//h2[normalize-space()="Description"]', //todo:  storefrontOnly
+				// descriptionHeading: '//h2[normalize-space()="Description"]', // todo:  storefrontOnly
 				content: 'div[id="tab-description"] p',
 			},
 
@@ -6601,7 +6601,7 @@ export const selector = {
 
 			// Product Reviews
 			reviews: {
-				// reviewsHeading: '//h2[normalize-space()="Reviews"]', //todo:  storefrontOnly
+				// reviewsHeading: '//h2[normalize-space()="Reviews"]', // todo:  storefrontOnly
 				noReviews                    : '.woocommerce-noreviews',
 				ratings                      : '.comment-form-rating .stars',
 				rating                       : (star: string) => `.star-${star}`,
@@ -6615,7 +6615,7 @@ export const selector = {
 
 			// Product vendor info
 			vendorInfo: {
-				// vendorInfoHeading:'//h2[normalize-space()="Vendor Information"]', //todo:  storefrontOnly
+				// vendorInfoHeading:'//h2[normalize-space()="Vendor Information"]', // todo:  storefrontOnly
 				storeName   : '.store-name',
 				vendor      : '.seller-name',
 				storeAddress: '.store-address',
@@ -6623,7 +6623,7 @@ export const selector = {
 
 			// Product Location
 			location: {
-				// locationHeading: '//h2[normalize-space()="Product Location"]', //todo:  storefrontOnly
+				// locationHeading: '//h2[normalize-space()="Product Location"]', // todo:  storefrontOnly
 				productLocation: 'div[id="tab-geolocation"] address',
 				map            : '#dokan-geolocation-locations-map'
 
@@ -6958,7 +6958,7 @@ export const selector = {
 
 			// Get Support
 			getSupport: {
-				// close: '.mfp-close', //todo:  this locator don't exits delete this from all
+				// close: '.mfp-close', // todo:  this locator don't exits delete this from all
 				close  : 'button.icon-close',
 				subject: 'input#dokan-support-subject',
 				orderId: 'select.dokan-select',

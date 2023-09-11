@@ -259,7 +259,7 @@ export class vendorVerificationsPage extends AdminPage {
 		// remove previously uploaded image
 		const uploadPhotoBtnIsVisible = await this.isVisible(selector.vendor.vVerificationSettings.id.uploadPhoto);
 		if (!uploadPhotoBtnIsVisible) {
-			// await this.hover(selector.vendor.vVerificationSettings.id.previousUploadedPhoto); //todo:  not working: playwright issue
+			// await this.hover(selector.vendor.vVerificationSettings.id.previousUploadedPhoto); // todo:  not working: playwright issue
 			// await this.click(selector.vendor.vVerificationSettings.id.removePreviousUploadedPhoto);
 
 			await this.setAttributeValue('.gravatar-wrap', 'class', 'gravatar-wrap dokan-hide');
@@ -338,7 +338,7 @@ export class vendorVerificationsPage extends AdminPage {
 	}
 
 
-	// upload media //todo: move to base-page and merge with wpUploadFile
+	// upload media // todo: move to base-page and merge with wpUploadFile
 	async uploadMedia(file: string) {
 		await this.wait(0.5);
 		const uploadedMediaIsVisible = await this.isVisible(selector.wpMedia.uploadedMediaFirst);

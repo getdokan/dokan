@@ -180,7 +180,7 @@ export class WithdrawsPage extends AdminPage {
 			await this.clearAndType(selector.vendor.vWithdraw.manualWithdrawRequest.withdrawAmount, String(withdraw.minimumWithdrawAmount));
 			await this.selectByValue(selector.vendor.vWithdraw.manualWithdrawRequest.withdrawMethod, withdraw.withdrawMethod.default);
 			await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.vendor.vWithdraw.manualWithdrawRequest.submitRequest);
-			// await expect(this.page.getByText(selector.vendor.vWithdraw.manualWithdrawRequest.withdrawRequestSaveSuccessMessage)).toBeVisible(); //todo:
+			// await expect(this.page.getByText(selector.vendor.vWithdraw.manualWithdrawRequest.withdrawRequestSaveSuccessMessage)).toBeVisible(); // todo:
 		} else {
 			console.log('Vendor balance is less than minimum withdraw amount');
 			test.skip();

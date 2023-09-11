@@ -1760,7 +1760,7 @@ export class BasePage {
 	}
 
 
-	// delete element if exist (only first will delete) : dokan rma,report abuse, company verifications //todo: delete all
+	// delete element if exist (only first will delete) : dokan rma,report abuse, company verifications // todo: delete all
 	async deleteIfExists(selector: string): Promise<void> {
 		const elementExists = await this.isVisible(selector);
 		if (elementExists) {

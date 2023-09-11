@@ -1,8 +1,9 @@
-import { test, Page } from '@playwright/test';
+import { test, Page, } from '@playwright/test';
 import { StoreSupportsPage } from 'pages/storeSupportsPage';
 import { ApiUtils } from 'utils/apiUtils';
 import { data } from 'utils/testData';
 import { payloads } from 'utils/payloads';
+import { responseBody } from 'utils/interfaces';
 
 
 const { PRODUCT_ID, VENDOR_ID, CUSTOMER_ID } = process.env;
@@ -48,7 +49,7 @@ test.describe('Store Support test (admin)', () => {
 
 	test('admin can search support ticket @pro', async ( ) => {
 		await admin.searchSupportTicket(supportTicketId);
-		// await admin.searchSupportTicket(data.storeSupport.title); //todo:
+		// await admin.searchSupportTicket(data.storeSupport.title); // todo:
 	});
 
 	test('admin can filter support tickets by vendor @pro', async ( ) => {
@@ -102,7 +103,7 @@ test.describe('Store Support test (customer)', () => {
 	let cPage: Page, uPage: Page;
 	let apiUtils: ApiUtils;
 	let orderId: string;
-	let responseBody: APIResponse;
+	let responseBody: responseBody;
 	let supportTicketId: string;
 
 
@@ -224,7 +225,7 @@ test.describe('Store Support test (vendor)', () => {
 
 	test('vendor can search support ticket @pro', async ( ) => {
 		await vendor.vendorSearchSupportTicket('id', supportTicketId);
-		// await vendor.vendorSearchSupportTicket('title', data.storeSupport.title); //todo: separate or in same test
+		// await vendor.vendorSearchSupportTicket('title', data.storeSupport.title); // todo: separate or in same test
 	});
 
 	test('vendor can reply to support ticket @pro', async ( ) => {

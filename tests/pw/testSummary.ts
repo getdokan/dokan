@@ -33,7 +33,7 @@ const addSummaryHeadingAndTable = ( core ) => {
 		{ data: 'Total  :bar_chart:', header: true },
 		{ data: 'Passed  :white_check_mark:', header: true },
 		{ data: 'Failed  :rotating_light:', header: true },
-		// { data: 'Flaky :construction:', header: true }, //todo:  add flaky tests
+		// { data: 'Flaky :construction:', header: true }, // todo:  add flaky tests
 		{ data: 'Skipped  :next_track_button:', header: true },
 		{ data: 'Duration  :alarm_clock:', header: true },
 	];

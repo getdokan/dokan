@@ -174,7 +174,7 @@ export class VendorSettingsPage extends VendorPage {
 		switch (topic) {
 
 		case 'banner-profile' :
-			// await this.bannerAndProfilePictureSettings(); //todo:
+			// await this.bannerAndProfilePictureSettings(); // todo:
 			break;
 
 		case 'basic' :
@@ -452,7 +452,7 @@ export class VendorSettingsPage extends VendorPage {
 		}
 
 		// await this.click(selector.vendor.vShipStationSettings.shippedOrderStatusDropdown);
-		// await this.clearAndType(selector.vendor.vShipStationSettings.shippedOrderStatusInput, shipStation.status);//todo: need to fix -> locator issue
+		// await this.clearAndType(selector.vendor.vShipStationSettings.shippedOrderStatusInput, shipStation.status);// todo: need to fix -> locator issue
 		// await this.toContainText(selector.vendor.vShipStationSettings.result, shipStation.status);
 		// await this.press(data.key.enter);
 
