@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\Emails;
 
 use WC_Email;
+use WeDevs\Dokan\Vendor\Vendor;
 
 /**
  * New Seller Email.
@@ -74,13 +75,13 @@ class NewSeller extends WC_Email {
 		}
         $this->setup_locale();
 
-        $seller       = get_user_by( 'id', $user_id );
+        $seller       = new Vendor( $user_id );
         $this->object = $seller;
 
-        $this->placeholders['seller_name'] = $seller->display_name;
-        $this->placeholders['store_url']   = dokan_get_store_url( $seller->ID );
-        $this->placeholders['store_name']  = $shop_info['store_name'];
-        $this->placeholders['seller_edit'] = admin_url( 'user-edit.php?user_id=' . $user_id );
+        $this->placeholders['{seller_name}'] = $seller->get_name();
+        $this->placeholders['{store_url}']   = $seller->get_shop_url();
+        $this->placeholders['{store_name}']  = $seller->get_shop_name();
+        $this->placeholders['{seller_edit}'] = $seller->get_profile_url();
 
         $this->send( $this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
         $this->restore_locale();
@@ -93,19 +94,17 @@ class NewSeller extends WC_Email {
      * @return string
      */
     public function get_content_html() {
-            ob_start();
-                wc_get_template(
-                    $this->template_html, array(
-                        'seller'             => $this->object,
-                        'email_heading'      => $this->get_heading(),
-                        'additional_content' => $this->get_additional_content(),
-                        'sent_to_admin'      => true,
-                        'plain_text'         => false,
-                        'email'              => $this,
-                        'data'               => $this->placeholders,
-                    ), 'dokan/', $this->template_base
-                );
-            return ob_get_clean();
+        return wc_get_template_html(
+            $this->template_html, array(
+                'seller'             => $this->object,
+                'email_heading'      => $this->get_heading(),
+                'additional_content' => $this->get_additional_content(),
+                'sent_to_admin'      => true,
+                'plain_text'         => false,
+                'email'              => $this,
+                'data'               => $this->placeholders,
+            ), 'dokan/', $this->template_base
+        );
     }
 
     /**
@@ -115,19 +114,17 @@ class NewSeller extends WC_Email {
      * @return string
      */
     public function get_content_plain() {
-            ob_start();
-                wc_get_template(
-                    $this->template_plain, array(
-                        'seller'             => $this->object,
-                        'email_heading'      => $this->get_heading(),
-                        'additional_content' => $this->get_additional_content(),
-                        'sent_to_admin'      => true,
-                        'plain_text'         => true,
-                        'email'              => $this,
-                        'data'               => $this->placeholders,
-                    ), 'dokan/', $this->template_base
-                );
-            return ob_get_clean();
+        return wc_get_template_html(
+            $this->template_plain, array(
+                'seller'             => $this->object,
+                'email_heading'      => $this->get_heading(),
+                'additional_content' => $this->get_additional_content(),
+                'sent_to_admin'      => true,
+                'plain_text'         => true,
+                'email'              => $this,
+                'data'               => $this->placeholders,
+            ), 'dokan/', $this->template_base
+        );
     }
 
     /**

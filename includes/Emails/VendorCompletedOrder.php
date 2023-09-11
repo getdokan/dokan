@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\Emails;
 
 use WC_Email;
+use WeDevs\Dokan\Vendor\Vendor;
 
 /**
  * Completed Order Email.
@@ -74,16 +75,18 @@ class VendorCompletedOrder extends WC_Email {
             return;
         }
 
-        $this->setup_locale();
         if ( $order_id && ! is_a( $order, 'WC_Order' ) ) {
             $order = wc_get_order( $order_id );
         }
 
-        if ( is_a( $order, 'WC_Order' ) ) {
-            $this->object                         = $order;
-            $this->placeholders['{order_date}']   = wc_format_datetime( $this->object->get_date_created() );
-            $this->placeholders['{order_number}'] = $this->object->get_order_number();
+        if ( ! is_a( $order, 'WC_Order' ) ) {
+            return;
         }
+
+        $this->setup_locale();
+        $this->object                         = $order;
+        $this->placeholders['{order_date}']   = wc_format_datetime( $this->object->get_date_created() );
+        $this->placeholders['{order_number}'] = $this->object->get_order_number();
 
         $seller_id = dokan_get_seller_id_by_order( $order_id );
         if ( empty( $seller_id ) ) {
@@ -95,11 +98,11 @@ class VendorCompletedOrder extends WC_Email {
             // same hook will be called again for sub-orders, so we don't need to process this from here.
             return;
         } else {
-            $seller_info = get_userdata( $seller_id );
-            if ( ! $seller_info ) {
+            $seller_info = new Vendor( $seller_id );
+            if ( ! $seller_info->get_id() ) {
                 return;
             }
-            $seller_email     = $seller_info->user_email;
+            $seller_email     = $seller_info->get_email();
             $this->order_info = dokan_get_vendor_order_details( $order_id );
             $this->send( $seller_email, $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
         }

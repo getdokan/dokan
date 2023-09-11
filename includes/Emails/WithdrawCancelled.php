@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\Emails;
 
 use WC_Email;
+use WeDevs\Dokan\Vendor\Vendor;
 
 /**
  * Withdraw Request Cancelled
@@ -31,7 +32,7 @@ class WithdrawCancelled extends WC_Email {
             '{amount}'        => '',
             '{method}'        => '',
             '{profile_url}'   => '',
-            '{withdraw_page}' => admin_url( 'admin.php?page=dokan-withdraw' ),
+            '{withdraw_page}' => dokan_get_navigation_url( 'withdraw' ),
             '{site_name}'     => $this->get_from_name(),
             '{note}'          => '',
         ];
@@ -77,16 +78,16 @@ class WithdrawCancelled extends WC_Email {
         }
 
         $this->setup_locale();
-        $seller                      = get_user_by( 'id', $withdraw->get_user_id() );
+        $seller                      = new Vendor( $withdraw->get_user_id() );
         $this->object                = $seller;
 
-        $this->placeholders['{user_name}']      = $seller->user_login;
-        $this->placeholders['{amount}']        = wc_price( $withdraw->get_amount() );
+        $this->placeholders['{user_name}']     = $seller->get_name();
+        $this->placeholders['{amount}']        = dokan()->email->currency_symbol( $withdraw->get_amount() );
         $this->placeholders['{method}']        = dokan_withdraw_get_method_title( $withdraw->get_method() );
-        $this->placeholders['{profile_url}']   = admin_url( 'user-edit.php?user_id=' . $seller->ID );
+        $this->placeholders['{profile_url}']   = dokan_get_navigation_url( 'edit-account' );
         $this->placeholders['{note}']          = $withdraw->get_note();
 
-        $this->send( $seller->user_email, $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
+        $this->send( $seller->get_email(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
         $this->restore_locale();
     }
 

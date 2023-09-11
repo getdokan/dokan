@@ -87,11 +87,13 @@ class VendorNewOrder extends WC_Email {
             $order = wc_get_order( $order_id );
         }
 
-        if ( is_a( $order, 'WC_Order' ) ) {
-            $this->object                         = $order;
-            $this->placeholders['{order_date}']   = wc_format_datetime( $this->object->get_date_created() );
-            $this->placeholders['{order_number}'] = $this->object->get_order_number();
+        if ( ! is_a( $order, 'WC_Order' ) ) {
+            return;
         }
+
+        $this->object                         = $order;
+        $this->placeholders['{order_date}']   = wc_format_datetime( $this->object->get_date_created() );
+        $this->placeholders['{order_number}'] = $this->object->get_order_number();
 
         $seller_id = dokan_get_seller_id_by_order( $order_id );
         if ( empty( $seller_id ) ) {

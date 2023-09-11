@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\Emails;
 
 use WC_Email;
+use WeDevs\Dokan\Vendor\Vendor;
 
 /**
  * New Product Email.
@@ -86,23 +87,25 @@ class NewProduct extends WC_Email {
         if ( ! $this->is_enabled() || ! $this->get_recipient() ) {
             return;
         }
+
+        $product = wc_get_product( $product_id );
+        if ( ! $product ) {
+            return;
+        }
         $this->setup_locale();
 
-        $product       = wc_get_product( $product_id );
         $seller_id     = get_post_field( 'post_author', $product_id );
-        $seller        = get_user_by( 'id', $seller_id );
+        $seller        = new Vendor( $seller_id );
         $category      = wp_get_post_terms( dokan_get_prop( $product, 'id' ), 'product_cat', array( 'fields' => 'names' ) );
-        $category_name = $category ? reset( $category ) : 'N/A';
+        $category_name = $category ? implode( ', ', $category ) : 'N/A';
+        $this->object  = $product;
 
-        if ( is_a( $product, 'WC_Product' ) ) {
-            $this->object = $product;
-            $this->placeholders['{product_title}'] = $product->get_title();
-            $this->placeholders['{price}']         = $product->get_price();
-            $this->placeholders['{seller_name}']   = $seller->display_name;
-            $this->placeholders['{seller_url}']    = dokan_get_store_url( $seller->ID );
-            $this->placeholders['{category}']      = $category_name;
-            $this->placeholders['{product_link}']  = admin_url( 'post.php?action=edit&post=' . $product_id );
-        }
+        $this->placeholders['{product_title}'] = $product->get_title();
+        $this->placeholders['{price}']         = $product->get_price();
+        $this->placeholders['{seller_name}']   = $seller->get_name();
+        $this->placeholders['{seller_url}']    = $seller->get_shop_url();
+        $this->placeholders['{category}']      = $category_name;
+        $this->placeholders['{product_link}']  = admin_url( 'post.php?action=edit&post=' . $product_id );
 
         $this->send( $this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
         $this->restore_locale();
@@ -115,19 +118,20 @@ class NewProduct extends WC_Email {
      * @return string
      */
     public function get_content_html() {
-            ob_start();
-                wc_get_template(
-                    $this->template_html, array(
-                        'product'            => $this->object,
-                        'email_heading'      => $this->get_heading(),
-                        'additional_content' => $this->get_additional_content(),
-                        'sent_to_admin'      => true,
-                        'plain_text'         => false,
-                        'email'              => $this,
-                        'data'               => $this->placeholders,
-                    ), 'dokan/', $this->template_base
-                );
-            return ob_get_clean();
+        return wc_get_template_html(
+            $this->template_html,
+            array(
+                'product'            => $this->object,
+                'email_heading'      => $this->get_heading(),
+                'additional_content' => $this->get_additional_content(),
+                'sent_to_admin'      => true,
+                'plain_text'         => false,
+                'email'              => $this,
+                'data'               => $this->placeholders,
+            ),
+            'dokan/',
+            $this->template_base
+        );
     }
 
     /**
@@ -137,19 +141,20 @@ class NewProduct extends WC_Email {
      * @return string
      */
     public function get_content_plain() {
-            ob_start();
-                wc_get_template(
-                    $this->template_html, array(
-                        'product'            => $this->object,
-                        'email_heading'      => $this->get_heading(),
-                        'additional_content' => $this->get_additional_content(),
-                        'sent_to_admin'      => true,
-                        'plain_text'         => true,
-                        'email'              => $this,
-                        'data'               => $this->placeholders,
-                    ), 'dokan/', $this->template_base
-                );
-            return ob_get_clean();
+        wc_get_template_html(
+            $this->template_plain,
+            array(
+                'product'            => $this->object,
+                'email_heading'      => $this->get_heading(),
+                'additional_content' => $this->get_additional_content(),
+                'sent_to_admin'      => true,
+                'plain_text'         => true,
+                'email'              => $this,
+                'data'               => $this->placeholders,
+            ),
+            'dokan/',
+            $this->template_base
+        );
     }
 
     /**

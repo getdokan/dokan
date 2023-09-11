@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\Emails;
 
 use WC_Email;
+use WeDevs\Dokan\Vendor\Vendor;
 
 /**
  * New Product Email.
@@ -73,7 +74,7 @@ class VendorWithdrawRequest extends WC_Email {
      * @param string $method Withdrawal method.
      */
     public function trigger( $user_id, $amount, $method ) {
-        $seller = get_user_by( 'id', $user_id );
+        $seller = new Vendor( $user_id );
 
         if ( ! $this->is_enabled() || ! $this->get_recipient() ) {
             return;
@@ -81,10 +82,10 @@ class VendorWithdrawRequest extends WC_Email {
 
         $this->setup_locale();
         $this->object                          = $seller;
-        $this->placeholders['{user_name}']     = $seller->user_login;
+        $this->placeholders['{user_name}']     = $seller->get_name();
         $this->placeholders['{amount}']        = dokan()->email->currency_symbol( $amount );
         $this->placeholders['{method}']        = dokan_withdraw_get_method_title( $method );
-        $this->placeholders['{profile_url}']   = admin_url( 'user-edit.php?user_id=' . $seller->ID );
+        $this->placeholders['{profile_url}']   = $seller->get_profile_url();
         $this->placeholders['{withdraw_page}'] = admin_url( 'admin.php?page=dokan#/withdraw?status=pending' );
 
         $this->send( $this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
@@ -98,9 +99,7 @@ class VendorWithdrawRequest extends WC_Email {
      * @return string
      */
     public function get_content_html() {
-        ob_start();
-
-        wc_get_template(
+        return wc_get_template_html(
             $this->template_html, array(
                 'seller'             => $this->object,
                 'email_heading'      => $this->get_heading(),
@@ -111,8 +110,6 @@ class VendorWithdrawRequest extends WC_Email {
                 'data'               => $this->placeholders,
             ), 'dokan/', $this->template_base
         );
-
-        return ob_get_clean();
     }
 
     /**
@@ -122,10 +119,8 @@ class VendorWithdrawRequest extends WC_Email {
      * @return string
      */
     public function get_content_plain() {
-        ob_start();
-
-        wc_get_template(
-            $this->template_html, array(
+        return wc_get_template_html(
+            $this->template_plain, array(
                 'seller'             => $this->object,
                 'email_heading'      => $this->get_heading(),
                 'additional_content' => $this->get_additional_content(),
@@ -135,8 +130,6 @@ class VendorWithdrawRequest extends WC_Email {
                 'data'               => $this->placeholders,
             ), 'dokan/', $this->template_base
         );
-
-        return ob_get_clean();
     }
 
     /**

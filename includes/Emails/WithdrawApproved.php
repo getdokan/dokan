@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\Emails;
 
 use WC_Email;
+use WeDevs\Dokan\Vendor\Vendor;
 
 /**
  * New Product Email.
@@ -76,16 +77,16 @@ class WithdrawApproved extends WC_Email {
         }
 
         $this->setup_locale();
-        $seller                      = get_user_by( 'id', $withdraw->get_user_id() );
-        $this->object                = $seller;
+        $seller       = new Vendor( $withdraw->get_user_id() );
+        $this->object = $seller;
 
-        $this->placeholders['{username}']      = $seller->user_login;
+        $this->placeholders['{username}']      = $seller->get_name();
         $this->placeholders['{amount}']        = sprintf( '%1$s %2$s', get_woocommerce_currency_symbol(), wc_format_localized_price( wc_format_decimal( $withdraw->get_amount(), wc_get_price_decimals() ) ) );
         $this->placeholders['{method}']        = dokan_withdraw_get_method_title( $withdraw->get_method() );
         $this->placeholders['{profile_url}']   = admin_url( 'user-edit.php?user_id=' . $seller->ID );
         $this->placeholders['{withdraw_page}'] = admin_url( 'admin.php?page=dokan-withdraw' );
 
-        $this->send( $seller->user_email, $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
+        $this->send( $seller->get_email(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
         $this->restore_locale();
     }
 
@@ -96,8 +97,7 @@ class WithdrawApproved extends WC_Email {
      * @return string
      */
     public function get_content_html() {
-        ob_start();
-        wc_get_template(
+        return wc_get_template_html(
             $this->template_html, [
                 'seller'             => $this->object,
                 'email_heading'      => $this->get_heading(),
@@ -108,8 +108,6 @@ class WithdrawApproved extends WC_Email {
                 'data'               => $this->placeholders,
             ], 'dokan/', $this->template_base
         );
-
-        return ob_get_clean();
     }
 
     /**
@@ -119,8 +117,7 @@ class WithdrawApproved extends WC_Email {
      * @return string
      */
     public function get_content_plain() {
-        ob_start();
-        wc_get_template(
+        return wc_get_template_html(
             $this->template_plain, [
                 'seller'             => $this->object,
                 'email_heading'      => $this->get_heading(),
@@ -131,8 +128,6 @@ class WithdrawApproved extends WC_Email {
                 'data'               => $this->placeholders,
             ], 'dokan/', $this->template_base
         );
-
-        return ob_get_clean();
     }
 
     /**

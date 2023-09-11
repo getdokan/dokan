@@ -110,8 +110,7 @@ class ContactSeller extends WC_Email {
      * @return string
      */
     public function get_content_html() {
-        ob_start();
-        wc_get_template(
+        return wc_get_template_html(
             $this->template_html, array(
                 'email_heading'      => $this->get_heading(),
                 'additional_content' => $this->get_additional_content(),
@@ -121,7 +120,6 @@ class ContactSeller extends WC_Email {
                 'data'               => $this->placeholders,
             ), 'dokan/', $this->template_base
         );
-        return ob_get_clean();
     }
 
     /**
@@ -131,9 +129,8 @@ class ContactSeller extends WC_Email {
      * @return string
      */
     public function get_content_plain() {
-        ob_start();
-        wc_get_template(
-            $this->template_html, array(
+        return wc_get_template_html(
+            $this->template_plain, array(
                 'email_heading'      => $this->get_heading(),
                 'additional_content' => $this->get_additional_content(),
                 'sent_to_admin'      => true,
@@ -142,7 +139,6 @@ class ContactSeller extends WC_Email {
                 'data'               => $this->placeholders,
             ), 'dokan/', $this->template_base
         );
-        return ob_get_clean();
     }
 
     /**
