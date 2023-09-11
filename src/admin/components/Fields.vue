@@ -901,6 +901,8 @@
             width: 100%;
 
             .sub-section-column-title {
+                font-weight: 500;
+
                 &:first-child {
                     flex: 0 0 13%;
                 }
