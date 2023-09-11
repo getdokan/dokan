@@ -878,11 +878,25 @@ class ProductController extends DokanRESTController {
         }
 
         // Post status.
+        $default_product_status = dokan_get_default_product_status();
+        $post_status            = $product->get_status();
         if ( isset( $request['status'] ) ) {
-            $post_status = 'publish' === $request['status'] ? dokan_get_default_product_status() : $request['status'];
-        } else {
-            $post_status = 'auto-draft' === $product->get_status() ? dokan_get_default_product_status() : $product->get_status();
+            switch ( $request['status'] ) {
+                case 'publish':
+                    $post_status = $default_product_status;
+                    break;
+                case 'pending':
+                    if ( 'pending' === $post_status ) {
+                        $post_status = 'pending';
+                    } elseif ( 'pending' === $default_product_status ) {
+                        $post_status = 'pending';
+                    }
+                    break;
+                default:
+                    $post_status = $request['status'];
+            }
         }
+
         $product->set_status( get_post_status_object( $post_status ) ? $post_status : 'draft' );
 
         // Post slug.
