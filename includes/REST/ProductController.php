@@ -886,11 +886,7 @@ class ProductController extends DokanRESTController {
                     $post_status = $default_product_status;
                     break;
                 case 'pending':
-                    if ( 'pending' === $post_status ) {
-                        $post_status = 'pending';
-                    } elseif ( 'pending' === $default_product_status ) {
-                        $post_status = 'pending';
-                    }
+                    $post_status = 'pending' === $post_status ? 'pending' : $default_product_status;
                     break;
                 default:
                     $post_status = $request['status'];
