@@ -28,8 +28,8 @@ class NewProduct extends WC_Email {
         $this->template_base  = DOKAN_DIR . '/templates/';
 
         // Triggers for this email
-        add_action( 'dokan_new_product_added', array( $this, 'trigger' ), 30, 2 );
-        add_action( 'dokan_product_updated', array( $this, 'trigger' ), 30, 2 );
+        add_action( 'dokan_new_product_added', array( $this, 'trigger' ), 30, 1 );
+        add_action( 'dokan_product_updated', array( $this, 'trigger' ), 30, 1 );
 
         // Call parent constructor
         parent::__construct();
@@ -62,34 +62,28 @@ class NewProduct extends WC_Email {
      * Trigger the sending of this email.
      *
      * @param int $product_id The product ID.
-     * @param array $postdata.
      */
-    public function trigger( $product_id, $postdata ) {
+    public function trigger( $product_id ) {
         $product = wc_get_product( $product_id );
         if ( ! $product ) {
             return;
         }
 
         // we've added _dokan_new_product_email_sent from version DOKAN_SINCE
-        // so, we are assuming if the meta doesn't exist, email was already send to client
+        // so, we are assuming if the meta doesn't exist, email was already sent to the client
         $email_sent = $product->get_meta( '_dokan_new_product_email_sent' );
         if ( empty( $email_sent ) || true === wc_string_to_bool( $email_sent ) ) {
             return;
         }
 
-        if ( ! in_array( $product->get_status(), [ 'publish', 'pending' ], true ) ) {
+        if ( 'publish' !== $product->get_status() ) {
             return;
         }
 
         $product->update_meta_data( '_dokan_new_product_email_sent', 'yes' );
         $product->save();
 
-        if ( $product->get_status() === 'pending' ) {
-            do_action( 'dokan_email_trigger_new_pending_product', $product_id, $postdata );
-            return;
-        }
-
-        if ( ! $this->is_enabled() || ! $this->get_recipient() || 'publish' !== $product->get_status() ) {
+        if ( ! $this->is_enabled() || ! $this->get_recipient() ) {
             return;
         }
 
