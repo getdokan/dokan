@@ -65,10 +65,6 @@ class NewProduct extends WC_Email {
      * @param array $postdata.
      */
     public function trigger( $product_id, $postdata ) {
-        if ( dokan_get_option( 'product_add_mail', 'dokan_general', 'on' ) !== 'on' ) {
-            return;
-        }
-
         $product = wc_get_product( $product_id );
         if ( ! $product ) {
             return;
