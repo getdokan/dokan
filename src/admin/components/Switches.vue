@@ -1,6 +1,6 @@
 <template>
     <label class="switch tips">
-        <input type="checkbox" class="toogle-checkbox" :checked="enabled" @change="trigger" :value="value">
+        <input type="checkbox" class="toogle-checkbox" :checked="enabled" @change="trigger" :value="value" :disabled="disabled">
         <span class="slider round"></span>
     </label>
 </template>
@@ -16,6 +16,7 @@ export default {
             required: true,
             default: false
         },
+        disabled: false,
         value: {
             type: [String, Number]
         }
