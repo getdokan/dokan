@@ -21,7 +21,7 @@ export const payloads = {
 	},
 
 	createPage: () => ({
-		title : 'test-page_' + faker.string.uuid(),
+		title : 'test-page_' + faker.string.nanoid(10),
 		status: 'publish'
 
 	}),
@@ -498,12 +498,12 @@ export const payloads = {
 	}),
 
 	createProductAddons: () => ({
-		name                  : 'Test Addons Group_1' + faker.string.uuid(),
+		name                  : 'Test Addons Group_1' + faker.string.nanoid(10),
 		priority              : 1,
 		restrict_to_categories: [],
 		fields                : [
 			{
-				name              : 'Test Add-on Title_' + faker.string.uuid(),
+				name              : 'Test Add-on Title_' + faker.string.nanoid(10),
 				title_format      : 'label',
 				description_enable: 1,
 				description       : 'Test Add-on description',
@@ -536,8 +536,8 @@ export const payloads = {
 
 	createProductReview: () => ({
 		product_id    : '',
-		// review        : 'Test_review' + faker.string.uuid(),
-		review        : 'Test_review_' + faker.string.uuid(),
+		// review        : 'Test_review' + faker.string.nanoid(10),
+		review        : 'Test_review_' + faker.string.nanoid(10),
 		reviewer      : faker.person.fullName(),
 		reviewer_email: faker.internet.email(),
 		rating        : faker.number.int({ min: 1, max: 5 }),
@@ -547,7 +547,7 @@ export const payloads = {
 	// product review
 
 	updateReview: {
-		review  : () => 'review_message_' + faker.string.uuid(),
+		review  : () => 'review_message_' + faker.string.nanoid(10),
 		rating  : faker.number.int({ min: 1, max: 5 }),
 		name    : 'customer1',
 		email   : 'customer1@g.com',
@@ -579,7 +579,7 @@ export const payloads = {
 	// coupon
 
 	createCoupon: () => ({
-		code          : 'VC_' + faker.string.uuid(),
+		code          : 'VC_' + faker.string.nanoid(10),
 		discount_type : faker.helpers.arrayElement(['percent', 'fixed_product']),
 		amount        : faker.number.int({ min: 1, max: 10 }).toString(),
 		product_ids   : [15],
@@ -624,7 +624,7 @@ export const payloads = {
 	},
 
 	createMarketPlaceCoupon: () => ({
-		code          : 'AC_' + faker.string.uuid(),
+		code          : 'AC_' + faker.string.nanoid(10),
 		discount_type : faker.helpers.arrayElement(['percent', 'fixed_product', 'fixed_cart']),
 		amount        : faker.number.int({ min: 1, max: 10 }).toString(),
 		individual_use: false,
@@ -750,7 +750,7 @@ export const payloads = {
 
 	createOrderNoteForCustomer: {
 		status       : 'processing',
-		note         : 'test order note' + faker.string.uuid(),
+		note         : 'test order note' + faker.string.nanoid(10),
 		customer_note: 'true'
 	},
 
@@ -2062,7 +2062,7 @@ export const payloads = {
 		first_name: faker.person.firstName(),
 		last_name : faker.person.lastName(),
 		role      : 'customer',
-		username  : faker.person.firstName() + faker.string.uuid(),
+		username  : faker.person.firstName() + faker.string.nanoid(10),
 		password  : String(process.env.USER_PASSWORD),
 		billing   : {
 			first_name: 'customer1',
@@ -2154,7 +2154,7 @@ export const payloads = {
 	},
 
 	createStaff: () => ({
-		username  : faker.person.firstName('male') + faker.string.uuid(),
+		username  : faker.person.firstName('male') + faker.string.nanoid(10),
 		first_name: faker.person.firstName('male'),
 		last_name : faker.person.lastName('male'),
 		phone     : '0123456789',
@@ -2165,7 +2165,7 @@ export const payloads = {
 
 
 	updateStaff: () => ({
-		// username: faker.person.firstName('male') + faker.string.uuid(),
+		// username: faker.person.firstName('male') + faker.string.nanoid(10),
 		first_name: faker.person.firstName('male'),
 		last_name : faker.person.lastName('male'),
 		phone     : '0123456789',
@@ -2237,7 +2237,7 @@ export const payloads = {
 
 	createAnnouncement: () => ({
 		// title: 'test announcement title',
-		title      : 'test announcement_' + faker.string.uuid(),
+		title      : 'test announcement_' + faker.string.nanoid(10),
 		content    : '<p>This is announcement content</p>',
 		status     : 'publish',
 		sender_type: 'all_seller',
@@ -2266,8 +2266,8 @@ export const payloads = {
 
 	// store category
 
-	createStoreCategory: () => ({ name: 'Test_Store_Category' + faker.string.uuid() }),
-	updateStoreCategory: () => ({ name: 'Update_Test_Store_Category' + faker.string.uuid() }),
+	createStoreCategory: () => ({ name: 'Test_Store_Category' + faker.string.nanoid(10) }),
+	updateStoreCategory: () => ({ name: 'Update_Test_Store_Category' + faker.string.nanoid(10) }),
 
 	// dummy data
 
@@ -2312,7 +2312,7 @@ export const payloads = {
 	// store
 
 	createStore: () => ({
-		user_login: faker.person.firstName() + faker.string.uuid(),
+		user_login: faker.person.firstName() + faker.string.nanoid(10),
 		user_pass : String(process.env.USER_PASSWORD),
 		role      : 'seller',
 		email     : faker.internet.email(),
@@ -2817,7 +2817,7 @@ export const payloads = {
 	// quote rule
 
 	createQuoteRule: () => ({
-		rule_name           : 'QR_' + faker.string.uuid(),
+		rule_name           : 'QR_' + faker.string.nanoid(10),
 		selected_user_role  : ['customer', 'guest'],
 		category_ids        : [],
 		product_ids         : [],
@@ -2831,7 +2831,7 @@ export const payloads = {
 	}),
 
 	updateQuoteRule: {
-		rule_name           : 'updated_QR_' + faker.string.uuid(),
+		rule_name           : 'updated_QR_' + faker.string.nanoid(10),
 		selected_user_role  : ['customer'],
 		hide_price          : '0',
 		hide_price_text     : 'Price is covered',
@@ -2844,7 +2844,7 @@ export const payloads = {
 	// quote request
 
 	createQuoteRequest: () => ({
-		quote_title  : 'QT_' + faker.string.uuid(),
+		quote_title  : 'QT_' + faker.string.nanoid(10),
 		// user_id: '',
 		customer_info: {
 			name_field   : 'customer1',
@@ -2859,7 +2859,7 @@ export const payloads = {
 	}),
 
 	updateRequestQuote: {
-		quote_title  : 'updated_QT_' + faker.string.uuid(),
+		quote_title  : 'updated_QT_' + faker.string.nanoid(10),
 		// user_id: '',
 		customer_info: {
 			name_field   : 'customer1',

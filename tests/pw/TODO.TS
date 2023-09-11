@@ -38,7 +38,6 @@ vendor = new OrdersPage(vPage);
 //****************************       test data       ****************************
 
 //todo: image path need to from project origin
-//todo:   more test date need to be unique, apply this type soln title: 'converted quote ' + faker.string.uuid(),  
 
 //****************************       assertions       ****************************
 

@@ -272,7 +272,7 @@ export const data = {
 			saveSuccessMessage                       : 'Success! The product has been saved successfully.',
 
 			resource: {
-				resourceName: () => 'Booking Resource_' + faker.string.uuid(),
+				resourceName: () => 'Booking Resource_' + faker.string.nanoid(10),
 				name        : '',
 				quantity    : String(faker.number.int({ min: 1, max: 100 })),
 			}
@@ -300,7 +300,7 @@ export const data = {
 		// Review
 		review: {
 			rating       : String(faker.number.int({ min: 1, max: 5 })),
-			reviewMessage: () => faker.string.uuid(),
+			reviewMessage: () => faker.string.nanoid(10),
 		},
 
 		// Report
@@ -333,7 +333,7 @@ export const data = {
 	store: {
 		rating       : faker.helpers.arrayElement(['width: 20%', 'width: 40%', 'width: 60%', 'width: 80%', 'width: 100%']),
 		reviewTitle  : 'store review title',
-		reviewMessage: () => faker.string.uuid(),
+		reviewMessage: () => faker.string.nanoid(10),
 	},
 
 	// store list
@@ -370,7 +370,7 @@ export const data = {
 			noteType: 'Private note',
 		},
 
-		note: () => 'test order note' + faker.string.uuid(),
+		note: () => 'test order note' + faker.string.nanoid(10),
 	},
 
 
@@ -441,7 +441,7 @@ export const data = {
 	// coupon
 	coupon: {
 		// title                     : () => 'VC_' + faker.string.alpha({ count: 5, casing: 'upper' },),
-		couponTitle               : () => 'VC_' + faker.string.uuid(),
+		couponTitle               : () => 'VC_' + faker.string.nanoid(10),
 		title                     : '',
 		amount                    : () => faker.number.int({ min: 1, max: 10 },).toString(),
 		discount_type             : () => faker.helpers.arrayElement(['percent', 'fixed_product']), // percent, fixed_product, booking_person, sign_up_fee, sign_up_fee_percent, recurring_fee, recurring_percent
@@ -928,7 +928,7 @@ export const data = {
 		vendorInfo: {
 
 			emailDomain       : '@email.com',
-			// email: () => faker.internet.email(),
+			// email             : () => faker.internet.email(),
 			email             : () => faker.person.firstName('male') + '@email.com',
 			password          : String(process.env.USER_PASSWORD),
 			password1         : String(process.env.USER_PASSWORD) + '1',
@@ -959,6 +959,7 @@ export const data = {
 			swiftCode         : faker.string.alphanumeric(10),
 			iban              : faker.string.alphanumeric(10),
 			role              : 'seller',
+			nanoid            : faker.string.nanoid(10),
 
 			// shop details
 			banner            : 'tests/e2e/utils/sampleData/banner.png',
@@ -1266,8 +1267,8 @@ export const data = {
 
 		// addon
 		addon: {
-			randomName          : () => 'Addons Group_' + faker.string.uuid(),
-			randomTitle         : () => 'Add-on Title_' + faker.string.uuid(),
+			randomName          : () => 'Addons Group_' + faker.string.nanoid(10),
+			randomTitle         : () => 'Add-on Title_' + faker.string.nanoid(10),
 			name                : 'Addons Group_',
 			priority            : '10',
 			category            : 'Uncategorized',
@@ -1384,7 +1385,7 @@ export const data = {
 		},
 
 		supportTicket: {
-			message: () => faker.string.uuid(),
+			message: () => faker.string.nanoid(10),
 		},
 
 		rma: {
@@ -1433,7 +1434,7 @@ export const data = {
 
 	// store category
 	storeCategory: () => ({
-		name       : 'test category_' + faker.string.uuid(),
+		name       : 'test category_' + faker.string.nanoid(10),
 		description: 'test category description',
 	}),
 
@@ -1443,8 +1444,8 @@ export const data = {
 		review: () => ({
 			rating       : '4',
 			ratingByWidth: faker.helpers.arrayElement(['width: 20%', 'width: 40%', 'width: 60%', 'width: 80%', 'width: 100%']),
-			title        : 'test title_' + faker.string.uuid(),
-			content      : 'test content_' + faker.string.uuid(),
+			title        : 'test title_' + faker.string.nanoid(10),
+			content      : 'test content_' + faker.string.nanoid(10),
 		}),
 		filter: {
 			byVendor: String(process.env.VENDOR) + 'store',
@@ -1463,7 +1464,7 @@ export const data = {
 		},
 
 		chatReply: {
-			reply   : 'chat reply' + faker.string.uuid(),
+			reply   : 'chat reply' + faker.string.nanoid(10),
 			asAdmin : 'admin chat reply',
 			asVendor: 'vendor chat reply',
 		}
@@ -1502,7 +1503,7 @@ export const data = {
 
 
 		quoteRule: {
-			title              : () => 'test rule_' + faker.string.uuid(),
+			title              : () => 'test rule_' + faker.string.nanoid(10),
 			userRole           : 'customer',
 			product            : 'p1_v1 (simple)',
 			category           : 'Uncategorized',
@@ -1519,7 +1520,7 @@ export const data = {
 		},
 
 		quote: {
-			title               : () => 'test quote_' + faker.string.uuid(),
+			title               : () => 'test quote_' + faker.string.nanoid(10),
 			user                : 'customer1', // todo: update customer data via env and email domain
 			fullName            : 'Jhon Doe',
 			email               : 'customer1@g.com',
@@ -1537,7 +1538,7 @@ export const data = {
 		},
 
 		convertedQuote: {
-			title: 'converted quote ' + faker.string.uuid(),
+			title: 'converted quote ' + faker.string.nanoid(10),
 		},
 
 		vendorUpdateQuote: {
@@ -1620,7 +1621,7 @@ export const data = {
 			featuredVendors: 'featured_seller',
 		},
 
-		randomTitle : () => 'test announcement_' + faker.string.uuid(),
+		randomTitle : () => 'test announcement_' + faker.string.nanoid(10),
 		title       : 'test announcement title',
 		content     : 'test announcement Content',
 		receiver    : 'all_seller',
@@ -1914,6 +1915,11 @@ export const data = {
 		endDate  : helpers.futureDate(new Date(), 5), // future date must be less than maximum duration
 	},
 
+	uniqueId: {
+		uuid  : faker.string.uuid(),
+		nanoId: faker.string.nanoid(10)
+	},
+
 
 	// predefined  test data
 	predefined: {
@@ -1975,7 +1981,7 @@ export const data = {
 		},
 
 		spmv: {
-			productName: () => 'spmv_' + faker.string.uuid(),
+			productName: () => 'spmv_' + faker.string.nanoid(10),
 			product1   : 'spmv_a1'
 		},
 
