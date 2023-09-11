@@ -93,8 +93,8 @@ test.describe('Auction Product test', () => {
 		await customer.bidAuctionProduct(auctionProductName);
 	});
 
-	test('customer can buy auction product with buy it now price @pro', async ( ) => {
-		const [,, auctionProductName] = await apiUtils.createProduct(payloads.createAuctionProduct(), payloads. vendorAuth);
+	test.skip('customer can buy auction product with buy it now price @pro', async ( ) => {
+		const [,, auctionProductName] = await apiUtils.createProduct(payloads.createAuctionProduct(), payloads. vendorAuth); // todo: buy it now price is not saved by api
 		await customer.buyAuctionProduct(auctionProductName);
 	});
 

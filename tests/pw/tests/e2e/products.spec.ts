@@ -119,7 +119,7 @@ test.describe('Product functionality test', () => {
 	});
 
 	test('vendor can filter products by type @pro', async ( ) => {
-		await vendor.filterProducts('by-other', 'simple');
+		await vendor.filterProducts('by-type', 'simple');
 	});
 
 	test('vendor can filter products by other @pro', async ( ) => {

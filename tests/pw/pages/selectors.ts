@@ -3390,11 +3390,12 @@ export const selector = {
 
 			// Filter
 			filters: {
-				filterByDate    : '#filter-by-date',
-				filterByCategory: '#product_cat',
-				filterByType    : '#filter-by-type', // simple, variable, external, grouped, subscription, variable-subscription
+				filterByDate    : 'select#filter-by-date',
+				filterByCategory: 'select#product_cat',
+				filterByType    : 'select#filter-by-type', // simple, variable, external, grouped, subscription, variable-subscription
 				filterByOther   : '//select[@name="filter_by_other"]', // featured, top_rated, best_selling
 				filter          : '//button[normalize-space()="Filter"]',
+				reset           : '//a[normalize-space()="Reset"]',
 			},
 
 			// Search product

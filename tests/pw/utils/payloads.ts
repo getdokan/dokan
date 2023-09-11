@@ -415,8 +415,8 @@ export const payloads = {
 		description      : 'test description',
 		short_description: 'test short description',
 		// regular_price    : faker.finance.amount(200, 400, 2),
-		price            : '100',
-		regular_price    : '100',
+		// price            : '2232',
+		regular_price    : '2232',
 		categories       : [
 			{ }
 		],
@@ -451,6 +451,10 @@ export const payloads = {
 				key  : '_auction_dates_to',
 				value: helpers.addDays(helpers.currentDateTime, 20, 'full'),
 			},
+			{
+				key  : '_auction_has_started',
+				value: '1'
+			},
 
 			// {
 			// 	key  : '_auction_bid_count',
@@ -483,10 +487,6 @@ export const payloads = {
 			// {
 			// 	key  : '_auction_extend_enable',
 			// 	value: 'no'
-			// },
-			// {
-			// 	key  : '_auction_has_started',
-			// 	value: '1'
 			// },
 			// {
 			// 	key  : '_auction_last_activity',

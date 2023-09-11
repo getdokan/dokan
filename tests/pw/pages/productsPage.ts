@@ -298,6 +298,30 @@ export class ProductsPage extends AdminPage {
 
 
 	// vendor add simple product
+	async addProduct(product: product['simple'] | product['variable'] | product['simpleSubscription'] | product['external']): Promise<void> {
+		const productName = product.productName();
+		await this.goIfNotThere(data.subUrls.frontend.vDashboard.products);
+		await this.click(selector.vendor.product.create.addNewProduct);
+		await this.waitForVisibleLocator(selector.vendor.product.create.productName);
+
+		await this.clearAndType(selector.vendor.product.create.productName, productName);
+		await this.clearAndType(selector.vendor.product.create.productPrice, product.regularPrice());
+		// await this.addProductCategory(product.category);
+		await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.vendor.product.create.createProduct);
+		const createdProduct = await this.getElementValue(selector.vendor.product.edit.title);
+		expect(createdProduct.toLowerCase()).toBe(productName.toLowerCase());
+
+
+		//
+		await this.clearAndType(selector.vendor.product.edit.title, productName); 
+		await this.clearAndType(selector.vendor.product.edit.price, product.regularPrice());
+		// await this.addProductCategory(product.category);
+
+
+	}
+
+
+	// vendor add simple product
 	async vendorAddSimpleProduct(product: product['simple'] | product['variable'] | product['simpleSubscription'] | product['external']): Promise<void> {
 		const productName = product.productName();
 		await this.goIfNotThere(data.subUrls.frontend.vDashboard.products);
