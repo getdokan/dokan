@@ -562,7 +562,7 @@ function dokan_get_commission_type( $seller_id = 0, $product_id = 0, $category_i
  * @return string
  */
 function dokan_get_default_product_status( $seller_id = null ) {
-    $seller_id  = null === $seller_id ? dokan_get_current_user_id() : $seller_id ;
+    $seller_id  = null === $seller_id ? dokan_get_current_user_id() : $seller_id;
     $is_trusted = dokan_is_seller_trusted( $seller_id );
     $status     = 'pending';
 
