@@ -878,14 +878,12 @@ class ProductController extends DokanRESTController {
         }
 
         // Post status.
-        if ( dokan_is_seller_trusted( get_current_user_id() ) ) {
-            if ( isset( $request['status'] ) ) {
-                $product->set_status( get_post_status_object( $request['status'] ) ? $request['status'] : 'draft' );
-            }
+        if ( isset( $request['status'] ) ) {
+            $post_status = 'publish' === $request['status'] ? dokan_get_default_product_status() : $request['status'];
         } else {
-            $status = dokan_get_default_product_status();
-            $product->set_status( get_post_status_object( $status ) ? $status : 'draft' );
+            $post_status = 'auto-draft' === $product->get_status() ? dokan_get_default_product_status() : $product->get_status();
         }
+        $product->set_status( get_post_status_object( $post_status ) ? $post_status : 'draft' );
 
         // Post slug.
         if ( isset( $request['slug'] ) ) {

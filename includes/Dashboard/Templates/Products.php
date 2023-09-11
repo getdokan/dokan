@@ -165,7 +165,7 @@ class Products {
         $visibility_options = dokan_get_product_visibility_options();
 
         // set new post status
-        $post_status = ! dokan_is_seller_trusted( get_current_user_id() ) ? 'pending' : 'publish';
+        $post_status = dokan_get_default_product_status( dokan_get_current_user_id() );
         $post_status = $product->get_status() === 'auto-draft' ? $post_status : $product->get_status();
 
         dokan_get_template_part(
