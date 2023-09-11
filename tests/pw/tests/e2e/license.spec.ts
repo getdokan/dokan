@@ -5,15 +5,14 @@ import { data } from 'utils/testData';
 
 test.describe('License test', () => {
 
-	test.use({ storageState: data.auth.adminAuthFile });
 
 	let admin: LicensePage;
 	let aPage: Page;
 
 
 	test.beforeAll(async ({ browser }) => {
-		const context = await browser.newContext({});
-		aPage = await context.newPage();
+		const adminContext = await browser.newContext(data.auth.adminAuth);
+		aPage = await adminContext.newPage();
 		admin = new LicensePage(aPage);
 	});
 

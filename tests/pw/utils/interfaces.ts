@@ -663,6 +663,7 @@ export interface vendor {
 		swiftCode: string;
 		iban: string;
 		role: string;
+		nanoid: string;
 
 		// shop details
 		banner: string;

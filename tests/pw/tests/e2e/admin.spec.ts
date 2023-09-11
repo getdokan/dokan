@@ -38,15 +38,14 @@ test.describe('Admin user functionality test', () => {
 
 test.describe('Admin functionality test', () => {
 
-	test.use({ storageState: data.auth.adminAuthFile });
 
 	let adminPage: AdminPage;
 	let aPage: Page;
 
 
 	test.beforeAll(async ({ browser }) => {
-		const context = await browser.newContext({});
-		aPage = await context.newPage();
+		const adminContext = await browser.newContext(data.auth.adminAuth);
+		aPage = await adminContext.newPage();
 		adminPage = new AdminPage(aPage);
 	});
 

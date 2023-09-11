@@ -114,7 +114,8 @@ setup.describe('setup site & woocommerce & user settings', () => {
 	});
 
 	setup('disable simple-auction ajax bid check @pro', async () => {
-		const [,, status] = await apiUtils.getSinglePlugin('woocommerce-simple-auctions/woocommerce-simple-auctions', payloads.adminAuth);
+		// const [,, status] = await apiUtils.getSinglePlugin('woocommerce-simple-auctions', payloads.adminAuth);
+		const [,, status] = await apiUtils.getSinglePlugin('wa', payloads.adminAuth); // todo: remove after ..
 		status === 'active' && await dbUtils.updateWpOptionTable('simple_auctions_live_check', 'no');
 	});
 
@@ -159,15 +160,9 @@ setup.describe('setup user settings', () => {
 	});
 
 	setup('add vendor coupon @pro', async () => {
-
 		// create store coupon
 		const allProductIds = (await apiUtils.getAllProducts(payloads.vendorAuth)).map((o: { id: string }) => o.id);
 		await apiUtils.createCoupon(allProductIds, payloads.createCoupon1, payloads.vendorAuth);
-
-		// const [responseBody, couponId] = await apiUtils.createCoupon(allProductIds, coupon, payloads.vendorAuth);
-		// if(responseBody.code === 'woocommerce_rest_coupon_code_already_exists'){
-		// 	await apiUtils.updateCoupon(couponId, { product_ids: allProductIds }, payloads.vendorAuth);
-		// }
 	});
 
 	// setup.skip('admin add vendor products @lite', async () => {

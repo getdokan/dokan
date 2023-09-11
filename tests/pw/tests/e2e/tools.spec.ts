@@ -7,8 +7,6 @@ import { data } from 'utils/testData';
 
 test.describe('Tools test', () => {
 
-	test.use({ storageState: data.auth.adminAuthFile });
-
 
 	let admin: ToolsPage;
 	let aPage: Page;
@@ -16,8 +14,8 @@ test.describe('Tools test', () => {
 
 
 	test.beforeAll(async ({ browser, request }) => {
-		const context = await browser.newContext({});
-		aPage = await context.newPage();
+		const adminContext = await browser.newContext(data.auth.adminAuth);
+		aPage = await adminContext.newPage();
 		admin = new ToolsPage(aPage);
 
 		apiUtils = new ApiUtils(request);

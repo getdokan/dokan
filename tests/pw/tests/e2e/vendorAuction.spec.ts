@@ -94,6 +94,7 @@ test.describe('Auction Product test', () => {
 	});
 
 	test('customer can buy auction product with buy it now price @pro', async ( ) => {
+		const [,, auctionProductName] = await apiUtils.createProduct(payloads.createAuctionProduct(), payloads. vendorAuth);
 		await customer.buyAuctionProduct(auctionProductName);
 	});
 

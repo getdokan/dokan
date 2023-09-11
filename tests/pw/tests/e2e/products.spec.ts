@@ -118,8 +118,7 @@ test.describe('Product functionality test', () => {
 		await vendor.filterProducts('by-category', 'Uncategorized');
 	});
 
-	test('vendor can filter products by type @lite', async ( ) => {
-		test.skip(!!process.env.CI, 'Filter gets removed if booking module is enabled!');
+	test('vendor can filter products by type @pro', async ( ) => {
 		await vendor.filterProducts('by-other', 'simple');
 	});
 

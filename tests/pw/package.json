@@ -18,7 +18,7 @@
     "test:api:lite": "npx playwright test --project=api_tests --grep '@lite|@liteOnly' --grep-invert @pro --config=api.config.ts ",
     "test:e2e:lite:explo": "npx playwright test --project=e2e_tests --grep '(?=.*@lite)(?=.*@explo)' --config=e2e.config.ts ",
     "test:api:pro": "npx playwright test --project=api_tests --grep '@lite|@pro' --config=api.config.ts ",
-    "test:e2e:pro": "npx playwright test --project=e2e_tests --grep '@lite|@pro' --config=e2e.config.ts ",
+    "test:e2e:pro": "npx playwright test --project=e2e_tests --grep '@lite|@pro' --grep-invert @liteOnly --config=e2e.config.ts ",
     "test:e2e:explo": "npx playwright test --project=e2e_tests --grep @explo --config=e2e.config.ts ",
     "test:grep": "npx npx playwright test --grep",
     "test:debug": "npx playwright test --debug",
@@ -42,7 +42,6 @@
     "lint": "eslint src/**/*.{js,jsx,ts,tsx,json}",
     "lint:fix": "eslint --fix 'src/**/*.{js,jsx,ts,tsx,json}'",
     "format": "prettier --write 'src/**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc",
-    "restructure:permalink": "wp-env run tests-cli 'wp rewrite structure /%postname%/'",
     "docker:testDbPort": "docker ps -f ancestor='mariadb' -f name='tests-mysql' --format='{{.Ports}}'"
   },
   "keywords": [],
