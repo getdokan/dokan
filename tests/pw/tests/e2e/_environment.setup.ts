@@ -74,11 +74,13 @@ setup.describe('setup site & woocommerce & user settings', () => {
 		await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodFlatRate);
 		// await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodFreeShipping);
 		// await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodLocalPickup);
+		console.log('env_values', CUSTOMER_ID, DOKAN_PRO, HPOS);
+
 		if (DOKAN_PRO){
 			console.log('dokan pro enabled');
+			await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodDokanVendorShipping);
 			await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodDokanTableRateShipping);
 			await apiUtils.addShippingZoneMethod( zoneId, payloads.addShippingMethodDokanDistanceRateShipping);
-			await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodDokanVendorShipping);
 		}
 
 	});
@@ -115,10 +117,8 @@ setup.describe('setup site & woocommerce & user settings', () => {
 	});
 
 	setup('disable simple-auction ajax bid check @pro', async () => {
-		// const [,, status] = await apiUtils.getSinglePlugin('woocommerce-simple-auctions', payloads.adminAuth);
-		const plugins = await apiUtils.getAllPlugins('', payloads.adminAuth);
-		console.log(plugins);
-		const [,, status] = await apiUtils.getSinglePlugin('wa', payloads.adminAuth); // todo: remove after ..
+		const [,, status] = await apiUtils.getSinglePlugin('wa/woocommerce-simple-auctions', payloads.adminAuth);
+		console.log(status);
 		status === 'active' && await dbUtils.updateWpOptionTable('simple_auctions_live_check', 'no');
 	});
 

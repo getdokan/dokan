@@ -2,7 +2,7 @@ import { test, Page } from '@playwright/test';
 import { ProPromoPage } from 'pages/proPromoPage';
 import { ApiUtils } from 'utils/apiUtils';
 import { data } from 'utils/testData';
-import { payloads } from 'utils/payloads';
+// import { payloads } from 'utils/payloads';
 
 
 test.describe('Dokan pro feature promo test', () => {

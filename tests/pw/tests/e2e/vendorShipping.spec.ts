@@ -5,7 +5,7 @@ import { data } from 'utils/testData';
 // import { payloads } from 'utils/payloads';
 
 
-test.describe('Vendor shipping test', () => {
+test.describe.only('Vendor shipping test', () => {
 
 
 	let vendor: VendorShippingPage;
