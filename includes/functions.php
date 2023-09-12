@@ -3046,7 +3046,7 @@ function dokan_is_store_open( $user_id ) {
  * @return string [url]
  */
 function dokan_pro_buynow_url() {
-    $link = 'https://wedevs.com/dokan/pricing/';
+    $link = 'https://dokan.co/wordpress/pricing/';
 
     if ( $aff = get_option( '_dokan_aff_ref' ) ) { // phpcs:ignore
         $link = add_query_arg( [ 'ref' => $aff ], $link );

@@ -451,7 +451,7 @@ function dokan_withdraw_get_method_additional_info( $method_key ) {
             $method_info = '';
     }
 
-    return apply_filters( 'dokan_withdraw_method_additional_info', $method_info, $method_key, $payment_methods, $no_information );
+    return apply_filters( 'dokan_withdraw_method_additional_info', $method_info, $method_key );
 }
 
 /**
