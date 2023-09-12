@@ -22,3 +22,9 @@ Thumbs.db
 # Custom files
 todo.ts
 TODO.md
+
+
+# Ignore all design files:
+**/*.html
+**/*.css
+**/*.JSX
