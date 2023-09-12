@@ -117,16 +117,11 @@ jobs:
           cd tests/pw
           echo "DB_PORT=$(docker ps -f ancestor='mariadb' -f name='tests-mysql' --format='{{.Ports}}' | sed -E 's/.*:(.*)->.*/\1/')" >> $GITHUB_ENV
 
+
       - name: DB PORT
         run: |
           cd tests/pw 
           echo "The value of test DB_PORT is ${{ env.DB_PORT }}"
-
-
-      - name: Activate theme:Storefront
-        run: |
-          cd tests/pw
-          npm run wp-env run tests-cli "wp theme activate storefront"
 
 
       - name: Set Permalink structure
@@ -134,6 +129,12 @@ jobs:
           cd tests/pw 
           npm run wp-env run tests-cli "wp rewrite structure /%postname%/"
           # curl http://localhost:9999/wp-json/wp/v2 
+
+
+      - name: Activate theme:Storefront
+        run: |
+          cd tests/pw
+          npm run wp-env run tests-cli "wp theme activate storefront"
 
     
       # Get Playwright version
@@ -195,34 +196,35 @@ jobs:
           npm run test:api:pro
           
 
+      - name: Publish E2e Test Report (jUnit)
+        uses: mikepenz/action-junit-report@v3
+        if: always() # always run even if the previous step fails
+        with:
+          report_paths: "tests/pw/playwright-report/e2e/junit-report/e2e-results.xml"
+          job_summary: false
+          annotate_only: true,
+          # annotate_notice: true,
+          # include_passed: true,
+          # check_retries: true,
+          # detailed_summary: true,
+          # check_name: 'E2E Test Report'
+          # summary: 'E2E Test Summary'
+          # annotate_only: true
 
-      # - name: Publish Test Report
-      #   uses: mikepenz/action-junit-report@v3
-      #   if: always() # always run even if the previous step fails
-      #   with:
-      #     report_paths: "tests/pw/playwright-report/e2e/junit-report/e2e-results.xml"
-      #     # include_passed: true,
-      #     check_retries: true,
-      #     # detailed_summary: true,
-      #     check_name: 'E2E Test Report'
-      #     summary: 'E2E Test Summary'
-      #     # annotate_only: true,
-      #     # annotate_notice: true,
-      #     # job_name: 'e2e2e2e2e2e2e2e_jobName'
-
-      # - name: Publish Test Report
-      #   uses: mikepenz/action-junit-report@v3
-      #   if: always() # always run even if the previous step fails
-      #   with:
-      #     report_paths: "tests/pw/playwright-report/api/junit-report/api-results.xml"
-      #     # include_passed: true,
-      #     check_retries: true,
-      #     # detailed_summary: true,
-      #     check_name: 'API Test Report'
-      #     summary: 'API Test Summary'
-      #     # annotate_only: true,
-      #     # annotate_notice: true,
-      #     # job_name: 'e2e2e2e2e2e2e2e_jobName'
+      - name: Publish API Test Report (jUnit)
+        uses: mikepenz/action-junit-report@v3
+        if: always() # always run even if the previous step fails
+        with:
+          report_paths: "tests/pw/playwright-report/api/junit-report/api-results.xml"
+          job_summary: false
+          annotate_only: true,
+          # annotate_notice: true,
+          # include_passed: true,
+          # check_retries: true,
+          # detailed_summary: true,
+          # check_name: 'E2E Test Report'
+          # summary: 'E2E Test Summary'
+          # annotate_only: true
 
       - name: Prepare test summary
         id: prepare-test-summary
