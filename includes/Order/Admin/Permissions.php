@@ -3,6 +3,8 @@
 namespace WeDevs\Dokan\Order\Admin;
 
 // don't call the file directly
+use WeDevs\Dokan\Utilities\OrderUtil;
+
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
@@ -21,7 +23,13 @@ class Permissions {
     public function __construct() {
         add_filter( 'map_meta_cap', [ $this, 'map_meta_caps' ], 12, 4 );
 
-        add_filter( 'posts_clauses', [ $this, 'filter_orders_for_current_vendor' ], 12, 2 );
+        if ( OrderUtil::is_hpos_enabled() ) {
+            add_filter( 'woocommerce_order_list_table_prepare_items_query_args', [ $this, 'hpos_filter_orders_for_current_vendor' ] );
+        } else {
+            add_filter( 'posts_clauses', [ $this, 'filter_orders_for_current_vendor' ], 12, 2 );
+        }
+
+        // didn't added hpos support for below hooks, since tareq bhai asked to revoke admin access for vendors
         add_action( 'load-post.php', [ $this, 'revoke_change_order_status' ] );
         add_filter( 'manage_edit-shop_order_columns', [ $this, 'remove_action_column' ], 15 );
         add_filter( 'woocommerce_admin_order_preview_actions', [ $this, 'remove_action_button' ], 15 );
@@ -65,6 +73,39 @@ class Permissions {
         }
 
         return $caps;
+    }
+
+    /**
+     * Filter orders of current user
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $args
+     *
+     * @return array
+     */
+    public function hpos_filter_orders_for_current_vendor( $args ) {
+        // get the vendor id
+        $vendor_id = isset( $_GET['vendor_id'] ) ? absint( wp_unslash( $_GET['vendor_id'] ) ) : 0; // phpcs:ignore;
+        if ( ! current_user_can( 'manage_woocommerce' ) ) {
+            $vendor_id = dokan_get_current_user_id();
+        }
+
+        if ( ! $vendor_id ) {
+            return $args;
+        }
+
+        $meta_query = $args['meta_query'] ?? [];
+        $meta_query['meta_query'][] = [
+            [
+                'key'     => '_dokan_vendor_id',
+                'value'   => $vendor_id,
+                'compare' => '=',
+                'type'    => 'NUMERIC',
+            ],
+        ];
+
+        return array_merge( $args, $meta_query );
     }
 
     /**
