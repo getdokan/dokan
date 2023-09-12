@@ -36,7 +36,7 @@ setup.describe('setup site & woocommerce & user settings', () => {
 		expect(activeModules).toEqual(expect.arrayContaining(data.modules.modules));
 	});
 
-	setup('set wp settings @lite', async () => {
+	setup('set wordPress site settings @lite', async () => {
 		const siteSettings = await apiUtils.setSiteSettings(payloads.siteSettings);
 		expect(siteSettings).toEqual(expect.objectContaining(payloads.siteSettings));
 	});
@@ -47,7 +47,7 @@ setup.describe('setup site & woocommerce & user settings', () => {
 	// 	await apiUtils.deleteAllQuoteRules();
 	// });
 
-	setup('set wc settings @lite', async () => {
+	setup('set woocommerce settings @lite', async () => {
 		await apiUtils.updateBatchWcSettingsOptions('general', payloads.general);
 		await apiUtils.updateBatchWcSettingsOptions('account', payloads.account);
 		HPOS && await apiUtils.updateBatchWcSettingsOptions('advanced', payloads.advanced);
@@ -75,6 +75,7 @@ setup.describe('setup site & woocommerce & user settings', () => {
 		// await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodFreeShipping);
 		// await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodLocalPickup);
 		if (DOKAN_PRO){
+			console.log('dokan pro enabled');
 			await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodDokanTableRateShipping);
 			await apiUtils.addShippingZoneMethod( zoneId, payloads.addShippingMethodDokanDistanceRateShipping);
 			await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodDokanVendorShipping);
@@ -115,6 +116,8 @@ setup.describe('setup site & woocommerce & user settings', () => {
 
 	setup('disable simple-auction ajax bid check @pro', async () => {
 		// const [,, status] = await apiUtils.getSinglePlugin('woocommerce-simple-auctions', payloads.adminAuth);
+		const plugins = await apiUtils.getAllPlugins('', payloads.adminAuth);
+		console.log(plugins);
 		const [,, status] = await apiUtils.getSinglePlugin('wa', payloads.adminAuth); // todo: remove after ..
 		status === 'active' && await dbUtils.updateWpOptionTable('simple_auctions_live_check', 'no');
 	});
