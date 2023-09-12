@@ -177,7 +177,12 @@ export class ApiUtils {
 
 
 	// get sellerId
-	async getSellerId(storeName: string, auth? : auth): Promise<string> { // todo: apply multiple optional parameter
+	async getSellerId(storeName?: unknown, auth? : auth): Promise<string> { // todo: apply multiple optional parameter
+		if (arguments.length === 1 && typeof storeName === 'object' ){
+			auth = storeName as auth;
+			storeName = undefined;
+		}
+
 		const allStores = await this.getAllStores(auth);
 		const sellerId = storeName ? (allStores.find((o: { store_name: unknown; }) => o.store_name === storeName))?.id : allStores[0]?.id;
 		return sellerId;
