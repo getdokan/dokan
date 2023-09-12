@@ -553,18 +553,48 @@ function dokan_get_commission_type( $seller_id = 0, $product_id = 0, $category_i
 }
 
 /**
+ * Get the default product status for new and edited product for seller based on settings
+ *
+ * @since DOKAN_SINCE
+ *
+ * @param int|null $seller_id
+ *
+ * @return string
+ */
+function dokan_get_default_product_status( $seller_id = null ) {
+    $seller_id  = null === $seller_id ? dokan_get_current_user_id() : $seller_id;
+    $is_trusted = dokan_is_seller_trusted( $seller_id );
+    $status     = 'pending';
+
+    if ( $is_trusted ) {
+        $status = 'publish';
+    }
+
+    // below code will be removed on a future version of Dokan Lite
+    if ( dokan()->is_pro_exists() && version_compare( DOKAN_PRO_PLUGIN_VERSION, '3.8.3', '<' ) ) {
+        $status = 'publish' === $status ? $status : dokan_get_option( 'product_status', 'dokan_selling', 'pending' );
+    }
+
+    $status = apply_filters_deprecated( 'dokan_get_new_post_status', [ $status, $seller_id, $is_trusted ], 'DOKAN_SINCE', 'dokan_get_default_product_status' );
+
+    return apply_filters( 'dokan_get_default_product_status', $status, $seller_id, $is_trusted );
+}
+
+/**
  * Get product status based on user id and settings
  *
  * @since 3.7.20 added a new filter hook `dokan_get_new_post_status`
  *
+ * @since DOKAN_SINCE made the function deprecated
+ *
+ * @param int|null $seller_id
+ *
+ * @deprecated DOKAN_SINCE use `dokan_get_default_product_status` instead
+ *
  * @return string
  */
-function dokan_get_new_post_status() {
-	$user_id    = get_current_user_id();
-	$is_trusted = dokan_is_seller_trusted( $user_id );
-	$status     = $is_trusted ? 'publish' : dokan_get_option( 'product_status', 'dokan_selling', 'pending' );
-
-	return apply_filters( 'dokan_get_new_post_status', $status, $user_id, $is_trusted );
+function dokan_get_new_post_status( $seller_id = null ) {
+    return dokan_get_default_product_status( $seller_id );
 }
 
 /**
@@ -740,6 +770,30 @@ function dokan_get_post_status( $status = '' ) {
     }
 
     return $statuses;
+}
+
+/**
+ * Get product available statuses
+ *
+ * @since DOKAN_SINCE
+ *
+ * @args int|object $product_id
+ *
+ * @return array
+ */
+if ( ! function_exists( 'dokan_get_available_post_status' ) ) {
+
+    function dokan_get_available_post_status( $product_id = 0 ) {
+        return apply_filters(
+            'dokan_post_status',
+            [
+                'publish' => dokan_get_post_status( 'publish' ),
+                'draft'   => dokan_get_post_status( 'draft' ),
+                'pending' => dokan_get_post_status( 'pending' ),
+            ],
+            $product_id
+        );
+    }
 }
 
 /**
@@ -979,21 +1033,26 @@ function dokan_add_subpage_to_url( $url, $subpage ) {
  * Get edit product url
  *
  * @param int|WC_Product $product
+ * @param bool $is_new_product Is new product. Default `false`.
  *
  * @return string|false on failure
  */
-function dokan_edit_product_url( $product ) {
+function dokan_edit_product_url( $product, bool $is_new_product = false ) {
     if ( ! $product instanceof WC_Product ) {
         $product = wc_get_product( $product );
     }
 
-    if ( ! $product ) {
+    if ( ! $product && ! $is_new_product ) {
         return false;
+    }
+
+    if ( ! $product && $is_new_product ) {
+        $product = new WC_Product();
     }
 
     $url = add_query_arg(
         [
-            'product_id'                => $product->get_id(),
+            'product_id'                => $is_new_product ? 0 : $product->get_id(),
             'action'                    => 'edit',
             '_dokan_edit_product_nonce' => wp_create_nonce( 'dokan_edit_product_nonce' ),
         ],
@@ -4239,8 +4298,7 @@ if ( ! function_exists( 'dokan_user_update_to_seller' ) ) {
             $vendor->make_active();
         }
 
-        $publishing = dokan_get_option( 'product_status', 'dokan_selling', 'pending' );
-        update_user_meta( $user_id, 'dokan_publishing', $publishing );
+        update_user_meta( $user_id, 'dokan_publishing', 'no' );
 
         do_action( 'dokan_new_seller_created', $user_id, $vendor->get_shop_info() );
     }
