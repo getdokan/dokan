@@ -164,11 +164,15 @@ class Products {
         $_visibility        = $product->get_catalog_visibility();
         $visibility_options = dokan_get_product_visibility_options();
 
+        // set new post status
+        $post_status = dokan_get_default_product_status( dokan_get_current_user_id() );
+        $post_status = $product->get_status() === 'auto-draft' ? $post_status : $product->get_status();
+
         dokan_get_template_part(
             'products/others', '', [
                 'post_id'            => $post_id,
                 'post'               => $post,
-                'post_status'        => $post->post_status,
+                'post_status'        => apply_filters( 'dokan_post_edit_default_status', $post_status, $product ),
                 '_visibility'        => $_visibility,
                 'visibility_options' => $visibility_options,
                 'class'              => '',
@@ -283,7 +287,7 @@ class Products {
 
             if ( ! self::$errors ) {
                 $timenow        = dokan_current_datetime()->setTimezone( new \DateTimeZone( 'UTC' ) );
-                $product_status = dokan_get_new_post_status();
+                $product_status = dokan_get_default_product_status( dokan_get_current_user_id() );
                 $post_data      = apply_filters(
                     'dokan_insert_product_post_data', [
                         'post_type'         => 'product',
@@ -438,8 +442,11 @@ class Products {
             $errors[] = __( 'No product found!', 'dokan-lite' );
         }
 
+        $current_post_status = get_post_status( $post_id );
+        $is_new_product      = 'auto-draft' === $current_post_status;
+
         if ( empty( $post_status ) ) {
-            $post_status = get_post_status( $post_id );
+            $post_status = $current_post_status;
         }
 
         if ( ! dokan_is_product_author( $post_id ) ) {
@@ -521,7 +528,11 @@ class Products {
         /**  Process all variation products meta */
         dokan_process_product_meta( $post_id, $postdata );
 
-        do_action( 'dokan_product_updated', $post_id, $postdata );
+        if ( $is_new_product ) {
+            do_action( 'dokan_new_product_added', $post_id, $postdata );
+        } else {
+            do_action( 'dokan_product_updated', $post_id, $postdata );
+        }
 
         $redirect = apply_filters( 'dokan_add_new_product_redirect', dokan_edit_product_url( $post_id ), $post_id );
 
