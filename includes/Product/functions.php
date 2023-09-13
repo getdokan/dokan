@@ -53,7 +53,7 @@ function dokan_save_product( $args ) {
         return $error;
     }
 
-    $post_status = ! empty( $data['post_status'] ) ? sanitize_text_field( $data['post_status'] ) : dokan_get_new_post_status();
+    $post_status = ! empty( $data['post_status'] ) ? sanitize_text_field( $data['post_status'] ) : dokan_get_default_product_status();
 
     $post_arr = [
         'post_type'    => 'product',
