@@ -690,7 +690,7 @@ export class StoreSupportsPage extends AdminPage {
                 );
                 break;
 
-            case 'order-received':
+            case 'order-received': {
                 const [orderId, orderKey] = input.split(',');
                 await this.goIfNotThere(
                     data.subUrls.frontend.orderReceivedDetails(
@@ -699,6 +699,7 @@ export class StoreSupportsPage extends AdminPage {
                     ),
                 );
                 break;
+            }
 
             default:
                 break;

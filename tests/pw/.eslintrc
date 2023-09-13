@@ -13,16 +13,16 @@
     "root": true,
     "rules": {
         // eslint rules
-        "array-element-newline": ["error", "never"],
+        // "array-element-newline": ["error", "never"],
         "@typescript-eslint/no-var-requires": "off",
         "@typescript-eslint/no-unused-vars": "off",
         "@typescript-eslint/no-explicit-any": "off",
-
         // playwright rules
         "playwright/expect-expect": "off",
         "playwright/no-skipped-test": "off",
+        "playwright/no-conditional-in-test": "off",
         "playwright/no-networkidle": "off", // this option should only be disable on base-page
-        "playwright/no-force-option": "off", // this option should only be disable on base-page
+        "playwright/no-force-option": "off" // this option should only be disable on base-page
         // custom rules
         // "no-restricted-syntax": [
         //     "error",

@@ -30,6 +30,10 @@ vendor = new OrdersPage(vPage);
 
 
 // todo: ******************************************* add comments
+// todo: ******************************************* add coverage report
+// todo: ******************************************* add linters
+// todo: ******************************************* add js doc
+
 // add comments for whole suite
 
 

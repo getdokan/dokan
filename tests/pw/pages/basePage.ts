@@ -1,3 +1,10 @@
+/* eslint-disable playwright/no-element-handle */
+/* eslint-disable playwright/no-wait-for-timeout */
+/* eslint-disable playwright/no-page-pause */
+/* eslint-disable playwright/no-networkidle */
+/* eslint-disable playwright/no-force-option */
+//todo: disable eslint plugin altogether instead of one by one
+
 import {
     expect,
     Page,
@@ -91,7 +98,7 @@ export class BasePage {
         await this.page.reload();
     }
 
-    //  returns whether the current URL is expected
+    // returns whether the current URL is expected
     isCurrentUrl(subPath: string): boolean {
         const url = new URL(this.getCurrentUrl());
         const currentURL = url.href.replace(/[/]$/, ''); // added to remove last '/',
@@ -196,7 +203,7 @@ export class BasePage {
         await this.page.click(selector);
     }
 
-    //  click on element by Running the js element.Click() method
+    // click on element by Running the js element.Click() method
     async clickJs(selector: string): Promise<void> {
         const element = this.getElement(selector);
         await element.click();
@@ -467,10 +474,12 @@ export class BasePage {
         }
     }
 
+    // is locator exists
     async isLocatorExists(selector: string): Promise<boolean> {
         return (await this.page.locator(selector).count()) ? true : false;
     }
 
+    // is element exists
     async isElementExists(selector: string): Promise<boolean> {
         return (await this.page.$(selector).catch(() => null)) !== null;
     }
@@ -1151,6 +1160,7 @@ export class BasePage {
     // returns the return value of pageFunction as a JSHandle
     async evaluateHandle(
         selector: string,
+        // eslint-disable-next-line @typescript-eslint/ban-types
         pageFunction: Function | string,
     ): Promise<JSHandle> {
         const locator = this.page.locator(selector);
