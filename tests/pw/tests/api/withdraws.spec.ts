@@ -96,6 +96,9 @@ test.describe('withdraw api test', () => {
         helpers.isObjEmpty(pendingRequest) === false &&
             (await apiUtils.cancelWithdraw(withdrawId));
 
+        //todo: test below line and remove previous
+        !pendingRequest && (await apiUtils.cancelWithdraw(withdrawId));
+
         const [response, responseBody] = await apiUtils.post(
             endPoints.createWithdraw,
             {
