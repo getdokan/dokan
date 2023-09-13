@@ -69,7 +69,7 @@ class NewProduct extends WC_Email {
             return;
         }
 
-        // we've added _dokan_new_product_email_sent from version DOKAN_SINCE
+        // we've added _dokan_new_product_email_sent from version 3.8.2
         // so, we are assuming if the meta doesn't exist, email was already sent to the client
         $email_sent = $product->get_meta( '_dokan_new_product_email_sent' );
         if ( empty( $email_sent ) || true === wc_string_to_bool( $email_sent ) ) {

@@ -330,7 +330,7 @@ class Hooks {
      * @param int $product_id
      *
      * @return array
-     * @since DOKAN_SINCE
+     * @since 3.8.2
      */
     public function set_product_status( $all_statuses, int $product_id ) {
         if ( ! is_user_logged_in() ) {
@@ -371,7 +371,7 @@ class Hooks {
      * @param int|WC_Product $product_id
      *
      * @return void
-     * @since DOKAN_SINCE
+     * @since 3.8.2
      */
     public function set_new_product_email_status( $product_id ) {
         if ( is_a( $product_id, 'WC_Product' ) ) {
@@ -384,7 +384,7 @@ class Hooks {
     /**
      * Remove product type filter if dokan pro does not exist.
      *
-     * @since DOKAN_SINCE
+     * @since 3.8.2
      *
      * @param array $args
      *
