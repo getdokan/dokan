@@ -40,10 +40,10 @@
         "user-list": "wp-env run tests-cli 'wp user list'",
         "wp-env": "wp-env",
         "docker:testDbPort": "docker ps -f ancestor='mariadb' -f name='tests-mysql' --format='{{.Ports}}'",
-        "lint": "eslint src/**/*.{js,jsx,ts,tsx,json}",
-        "lint:fix": "eslint --fix 'src/**/*.{js,jsx,ts,tsx,json}'",
-        "prettier": "prettier . --check 'src/**/*.{js,jsx,ts,tsx,css,md,json}",
-        "prettier:fix": "prettier --write 'src/**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc"
+        "lint": "eslint .",
+        "lint:fix": "eslint . --fix",
+        "prettier": "prettier . --check",
+        "prettier:fix": "prettier . --write"
     },
     "keywords": [],
     "author": "",

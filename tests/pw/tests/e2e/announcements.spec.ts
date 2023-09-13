@@ -1,8 +1,8 @@
 import { test, Page } from '@playwright/test';
-import { AnnouncementsPage } from 'pages/announcementsPage';
-import { ApiUtils } from 'utils/apiUtils';
-import { data } from 'utils/testData';
-import { payloads } from 'utils/payloads';
+import { AnnouncementsPage } from '@pages/announcementsPage';
+import { ApiUtils } from '@utils/apiUtils';
+import { data } from '@utils/testData';
+import { payloads } from '@utils/payloads';
 
 
 test.describe('Announcements test', () => {
@@ -19,7 +19,7 @@ test.describe('Announcements test', () => {
 		admin = new AnnouncementsPage(aPage);
 
 		apiUtils = new ApiUtils(request);
-		[,, announcementTitle] = await apiUtils.createAnnouncement({ ...payloads.createAnnouncement(), status: 'draft' }, payloads.adminAuth);
+		[,, announcementTitle] = await apiUtils.createAnnouncement({ ...payloads.createAnnouncement(), status: 'draft', }, payloads.adminAuth);
 	});
 
 
