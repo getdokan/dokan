@@ -74,9 +74,6 @@ setup.describe('setup site & woocommerce & user settings', () => {
 		await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodFlatRate);
 		// await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodFreeShipping);
 		// await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodLocalPickup);
-		const en = helpers.readFile('.env');
-		console.log(en);
-
 		console.log('env_values', CUSTOMER_ID, DOKAN_PRO, HPOS);
 
 		if (DOKAN_PRO){
