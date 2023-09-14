@@ -147,7 +147,7 @@ class Manager {
         $dokan_email_actions = apply_filters(
             'dokan_email_actions', array(
 				'dokan_new_product_added',
-				'dokan_email_trigger_new_pending_product',
+                'dokan_product_updated',
 				'dokan_new_seller_created',
 				'dokan_after_withdraw_request',
 				'dokan_withdraw_request_approved',

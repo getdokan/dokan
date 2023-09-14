@@ -38,7 +38,8 @@ class NewProductPending extends WC_Email {
         ];
 
         // Triggers for this email
-        add_action( 'dokan_email_trigger_new_pending_product', array( $this, 'trigger' ), 30, 2 );
+        add_action( 'dokan_new_product_added', array( $this, 'trigger' ), 30, 1 );
+        add_action( 'dokan_product_updated', array( $this, 'trigger' ), 30, 1 );
 
         // Call parent constructor
         parent::__construct();
@@ -71,17 +72,31 @@ class NewProductPending extends WC_Email {
      * Trigger the sending of this email.
      *
      * @param int $product_id The product ID.
-     * @param array $postdata.
      */
-    public function trigger( $product_id, $postdata ) {
-        if ( ! $this->is_enabled() || ! $this->get_recipient() ) {
-            return;
-        }
-
+    public function trigger( $product_id ) {
         $product = wc_get_product( $product_id );
         if ( ! $product ) {
             return;
         }
+
+        // we've added _dokan_new_product_email_sent from version 3.8.2
+        // so, we are assuming if the meta doesn't exist, email was already sent to the client
+        $email_sent = $product->get_meta( '_dokan_new_product_email_sent' );
+        if ( empty( $email_sent ) || true === wc_string_to_bool( $email_sent ) ) {
+            return;
+        }
+
+        if ( 'pending' !== $product->get_status() ) {
+            return;
+        }
+
+        $product->update_meta_data( '_dokan_new_product_email_sent', 'yes' );
+        $product->save();
+
+        if ( ! $this->is_enabled() || ! $this->get_recipient() ) {
+            return;
+        }
+
         $this->setup_locale();
         $seller_id     = get_post_field( 'post_author', $product_id );
         $seller        = new Vendor( $seller_id );
