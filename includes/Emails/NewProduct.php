@@ -97,15 +97,11 @@ class NewProduct extends WC_Email {
             return;
         }
 
-        $product = wc_get_product( $product_id );
-        if ( ! $product ) {
-            return;
-        }
         $this->setup_locale();
 
         $seller_id     = get_post_field( 'post_author', $product_id );
         $seller        = new Vendor( $seller_id );
-        $category      = wp_get_post_terms( dokan_get_prop( $product, 'id' ), 'product_cat', array( 'fields' => 'names' ) );
+        $category      = wp_get_post_terms( $product_id, 'product_cat', array( 'fields' => 'names' ) );
         $category_name = $category ? implode( ', ', $category ) : 'N/A';
         $this->object  = $product;
 
