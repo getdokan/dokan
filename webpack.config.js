@@ -94,15 +94,11 @@ const updatedConfig = {
   module: {
     rules: [
       {
-        test: /\.js$/,
-        loader: 'babel-loader',
-      },
-      {
         test: /\.vue$/,
         loader: 'vue-loader',
       },
       {
-        test: /\.(less|css)$/i,
+        test: /\.(less)$/i,
         use: [
           MiniCssExtractPlugin.loader,
           {
@@ -137,6 +133,7 @@ const updatedConfig = {
           filename: '../font/[name].[ext]',
         },
       },
+      ...defaultConfig.module.rules
     ]
   },
 }
