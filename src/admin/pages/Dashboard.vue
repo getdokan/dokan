@@ -10,7 +10,7 @@
                 <postbox :title="__( 'At a Glance', 'dokan-lite' )" extraClass="dokan-status">
                     <div class="dokan-status" v-if="overview !== null">
                         <ul>
-                            <li class="sale">
+                            <li class="sale !mt-[13px]">
                                 <div class="dashicons dashicons-chart-bar"></div>
                                 <router-link :to="hasPro ? { name: 'Reports' } : ''">
                                     <strong>
@@ -21,7 +21,7 @@
                                     </div>
                                 </router-link>
                             </li>
-                            <li class="commission">
+                            <li class="commission !mt-[13px]">
                                 <div class="dashicons dashicons-chart-pie"></div>
                                 <router-link :to="hasPro ? {name: 'Reports'} : ''">
                                     <strong>
