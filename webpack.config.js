@@ -93,6 +93,7 @@ const updatedConfig = {
 
   module: {
     rules: [
+      ...defaultConfig.module.rules,
       {
         test: /\.vue$/,
         loader: 'vue-loader',
@@ -132,8 +133,7 @@ const updatedConfig = {
         generator: {
           filename: '../font/[name].[ext]',
         },
-      },
-      ...defaultConfig.module.rules
+      }
     ]
   },
 }
