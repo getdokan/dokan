@@ -45,6 +45,9 @@ if ( $user_orders ) {
             <tbody>
             <?php
             foreach ( $user_orders as $order ) { // phpcs:ignore
+                /**
+                 * @var WC_Order $order
+                 */
                 ?>
                 <tr>
                     <th class="dokan-order-select check-column">
@@ -82,45 +85,28 @@ if ( $user_orders ) {
                     </td>
                     <td class="dokan-order-customer" data-title="<?php esc_attr_e( 'Customer', 'dokan-lite' ); ?>">
                         <?php
-                        $user_info = '';
-
-                        if ( $order->get_user_id() ) {
-                            $user_info = get_userdata( $order->get_user_id() );
-                        }
-
-                        if ( ! empty( $user_info ) ) {
-                            $user = '';
-
-                            if ( $user_info->first_name || $user_info->last_name ) {
-                                $user .= esc_html( $user_info->first_name . ' ' . $user_info->last_name );
-                            } else {
-                                $user .= esc_html( $user_info->display_name );
-                            }
-                        } else {
-                            $user = empty( trim( $order->get_formatted_billing_full_name() ) ) ? __( 'Guest', 'dokan-lite' ) : $order->get_formatted_billing_full_name();
-                        }
-
+                        $customer_full_name = trim( $order->get_formatted_billing_full_name() );
+                        $user = empty( $customer_full_name ) ? __( 'Guest', 'dokan-lite' ) : $customer_full_name;
                         echo esc_html( $user );
                         ?>
                     </td>
                     <td class="dokan-order-date" data-title="<?php esc_attr_e( 'Date', 'dokan-lite' ); ?>">
                         <?php
-                        if ( '0000-00-00 00:00:00' === dokan_get_date_created( $order ) ) {
+                        if ( '0000-00-00 00:00:00' === $order->get_date_created()->format( 'Y-m-d H:i:s' ) ) {
                             $t_time = __( 'Unpublished', 'dokan-lite' );
                             $h_time = __( 'Unpublished', 'dokan-lite' );
                         } else {
-                            $now       = dokan_current_datetime()->setTimezone( new DateTimeZone( 'UTC' ) );
-                            $t_time    = $now->modify( $order->get_date_created() );
+                            $t_time    = $order->get_date_created();
                             $time_diff = time() - $t_time->getTimestamp();
 
                             // get human-readable time
                             $h_time = $time_diff > 0 && $time_diff < 24 * 60 * 60
                                 // translators: 1)  human-readable date
                                 ? sprintf( __( '%s ago', 'dokan-lite' ), human_time_diff( $t_time->getTimestamp(), time() ) )
-                                : dokan_format_date( $t_time );
+                                : dokan_format_date( $t_time->getTimestamp() );
 
                             // fix t_time
-                            $t_time = dokan_format_date( $t_time );
+                            $t_time = dokan_format_date( $t_time->getTimestamp() );
                         }
 
                         echo '<abbr title="' . esc_attr( $t_time ) . '">' . esc_html( apply_filters( 'post_date_column_time', $h_time, $order->get_id() ) ) . '</abbr>';
