@@ -37,13 +37,6 @@ class Manager {
         $all_withdraw_charges = dokan_withdraw_get_method_charges();
         $charge_data = $all_withdraw_charges[ $method ];
 
-        $withdraw
-            ->set_user_id( $user_id )
-            ->set_amount( $amount )
-            ->set_method( $method )
-            ->set_charge_data( $charge_data )
-            ->calculate_charge();
-
         if ( empty( $amount ) ) {
             return new WP_Error( 'dokan_withdraw_empty', __( 'Withdraw amount required ', 'dokan-lite' ) );
         }
@@ -68,6 +61,13 @@ class Manager {
         if ( ! empty( $args['id'] ) && isset( $args['status'] ) && absint( $args['status'] ) === dokan()->withdraw->get_status_code( 'approved' ) ) {
             return new WP_Error( 'dokan_withdraw_already_approved', __( 'Withdraw is already approved.', 'dokan-lite' ) );
         }
+
+        $withdraw
+            ->set_user_id( $user_id )
+            ->set_amount( $amount )
+            ->set_method( $method )
+            ->set_charge_data( $charge_data )
+            ->calculate_charge();
 
         // Check if withdraw amount is equal or greater than the charge.
         if ( $withdraw->get_receivable_amount() < 0 ) {
@@ -261,13 +261,11 @@ class Manager {
                 $result = $wpdb->get_results( $wpdb->prepare( "SELECT * FROM {$wpdb->dokan_withdraw} WHERE user_id = %d AND status = %d ORDER BY id DESC LIMIT %d, %d", $user_id, $status, $offset, $limit ) );
             }
 
-            $withdraws = [];
-
-            foreach ( $result as $withdraw ) {
-                $withdraws[] = new Withdraw( $withdraw );
-            }
-
-            $result = $withdraws;
+            $result = array_map(
+                function ( $withdraw ) {
+                    return new Withdraw( $withdraw );
+                }, $result
+            );
 
             Cache::set( $cache_key, $result, $cache_group );
         }

@@ -168,7 +168,7 @@ class Hooks {
         $withdraw
             ->set_user_id( $user_id )
             ->set_amount( $amount )
-            ->set_date( current_time( 'mysql' ) )
+            ->set_date( dokan_current_datetime() )
             ->set_status( dokan()->withdraw->get_status_code( 'pending' ) )
             ->set_method( $method )
             ->set_ip( dokan_get_client_ip() )

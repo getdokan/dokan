@@ -29,7 +29,7 @@
             <td><?php echo esc_html( dokan_withdraw_get_method_title( $row->get_method(), $row ) ); ?></td>
             <td><?php echo wp_kses_post( wc_price( $row->get_charge() ) ); ?></td>
             <td><?php echo wp_kses_post( wc_price( $row->get_receivable_amount() ) ); ?></td>
-            <td><?php echo esc_html( date_i18n( get_option( 'date_format' ), strtotime( $row->get_date() ) ) ); ?></td>
+            <td><?php echo esc_html( dokan_format_date( $row->get_date() ) ); ?></td>
             <td><?php echo wp_kses_post( $row->get_note() ); ?></td>
         </tr>
     <?php } ?>

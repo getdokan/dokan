@@ -25,7 +25,7 @@ class Withdraw {
             'id'          => 0,
             'user_id'     => 0,
             'amount'      => 0,
-            'date'        => current_time( 'mysql' ),
+            'date'        => dokan_current_datetime(),
             'status'      => dokan()->withdraw->get_status_code( 'pending' ),
             'method'      => 'paypal',
             'note'        => '',
@@ -387,7 +387,7 @@ class Withdraw {
         $charge      = 0;
 
         if ( ! empty( $fixed ) ) {
-            $charge += (int) $fixed;
+            $charge += (float) $fixed;
         }
 
         if ( ! empty( $percentage ) ) {
