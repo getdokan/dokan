@@ -15,9 +15,7 @@ test.describe('Follow stores functionality test', () => {
         vPage = await vendorContext.newPage();
         vendor = new FollowStorePage(vPage);
 
-        const customerContext = await browser.newContext(
-            data.auth.customerAuth,
-        );
+        const customerContext = await browser.newContext(data.auth.customerAuth);
         cPage = await customerContext.newPage();
         customer = new FollowStorePage(cPage);
 
@@ -37,17 +35,11 @@ test.describe('Follow stores functionality test', () => {
     });
 
     test('customer can follow store on store listing @pro', async () => {
-        await customer.followStore(
-            data.predefined.vendorStores.vendor1,
-            data.predefined.vendorStores.followFromStoreListing,
-        );
+        await customer.followStore(data.predefined.vendorStores.vendor1, data.predefined.vendorStores.followFromStoreListing);
     });
 
     test('customer can follow store on single store @pro', async () => {
-        await customer.followStore(
-            data.predefined.vendorStores.vendor1,
-            data.predefined.vendorStores.followFromSingleStore,
-        );
+        await customer.followStore(data.predefined.vendorStores.vendor1, data.predefined.vendorStores.followFromSingleStore);
     });
 
     test('vendor followers menu page is rendering properly @pro @explo', async () => {

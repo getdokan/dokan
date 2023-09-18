@@ -1724,16 +1724,7 @@ export interface reqOptions {
     headers?: Record<string, string> | undefined;
     ignoreHTTPSErrors?: boolean | undefined;
     maxRedirects?: number | undefined;
-    multipart?:
-        | Record<
-              string,
-              | string
-              | number
-              | boolean
-              | fs.ReadStream
-              | { name: string; mimeType: string; buffer: Buffer }
-          >
-        | undefined;
+    multipart?: Record<string, string | number | boolean | fs.ReadStream | { name: string; mimeType: string; buffer: Buffer }> | undefined;
     params?: Record<string, string | number | boolean> | undefined;
     timeout?: number | undefined;
 }

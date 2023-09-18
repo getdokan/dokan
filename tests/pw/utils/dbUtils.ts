@@ -3,14 +3,7 @@ import { MySqlConnection, DbContext } from 'mysqlconnector';
 import { serialize, unserialize } from 'php-serialize';
 import { dbData } from '@utils/dbData';
 import { helpers } from '@utils/helpers';
-const {
-    DB_HOST_NAME,
-    DB_USER_NAME,
-    DB_USER_PASSWORD,
-    DATABASE,
-    DB_PORT,
-    DB_PREFIX,
-} = process.env;
+const { DB_HOST_NAME, DB_USER_NAME, DB_USER_PASSWORD, DATABASE, DB_PORT, DB_PREFIX } = process.env;
 
 const mySql = new MySqlConnection({
     hostname: DB_HOST_NAME,
@@ -49,15 +42,9 @@ export const dbUtils = {
     },
 
     // update option table
-    async updateWpOptionTable(
-        optionName: string,
-        optionValue: object | string,
-        serializeData?: string,
-    ): Promise<any> {
+    async updateWpOptionTable(optionName: string, optionValue: object | string, serializeData?: string): Promise<any> {
         const queryUpdate = serializeData
-            ? `UPDATE ${dbPrefix}_options SET option_value = '${serialize(
-                  optionValue,
-              )}' WHERE option_name = '${optionName}';`
+            ? `UPDATE ${dbPrefix}_options SET option_value = '${serialize(optionValue)}' WHERE option_name = '${optionName}';`
             : `UPDATE ${dbPrefix}_options SET option_value = '${optionValue}' WHERE option_name = '${optionName}';`;
         const res = await dbUtils.dbQuery(queryUpdate);
         // console.log(res);
@@ -74,18 +61,11 @@ export const dbUtils = {
     },
 
     // set dokan settings
-    async setDokanSettings(
-        optionName: string,
-        optionValue: object,
-    ): Promise<any> {
-        const queryInsert = `INSERT INTO ${dbPrefix}_options VALUES ( NULL, '${optionName}', '${serialize(
-            optionValue,
-        )}', 'yes');`;
+    async setDokanSettings(optionName: string, optionValue: object): Promise<any> {
+        const queryInsert = `INSERT INTO ${dbPrefix}_options VALUES ( NULL, '${optionName}', '${serialize(optionValue)}', 'yes');`;
         let res = await dbUtils.dbQuery(queryInsert);
         if (res.code === 'ER_DUP_ENTRY') {
-            const queryUpdate = `UPDATE ${dbPrefix}_options SET option_value = '${serialize(
-                optionValue,
-            )}' WHERE option_name = '${optionName}';`;
+            const queryUpdate = `UPDATE ${dbPrefix}_options SET option_value = '${serialize(optionValue)}' WHERE option_name = '${optionName}';`;
             res = await dbUtils.dbQuery(queryUpdate);
         }
         // console.log(res);
@@ -94,9 +74,7 @@ export const dbUtils = {
 
     // get selling info
     async getSellingInfo(): Promise<object[]> {
-        const res = await this.getDokanSettings(
-            dbData.dokan.optionName.selling,
-        );
+        const res = await this.getDokanSettings(dbData.dokan.optionName.selling);
         const commission = {
             type: res.commission_type,
             amount: res.admin_percentage,
@@ -111,19 +89,10 @@ export const dbUtils = {
     },
 
     // create abuse report
-    async createAbuseReport(
-        abuseReport: any,
-        productId: string,
-        vendorId: string,
-        customerId: string,
-    ): Promise<any> {
-        const querySelect = `INSERT INTO ${dbPrefix}_dokan_report_abuse_reports (reason, product_id, vendor_id, customer_id, description, reported_at) VALUES ('${
-            abuseReport.reason
-        }', ${parseInt(productId)}, ${parseInt(vendorId)}, ${parseInt(
-            customerId,
-        )}, '${abuseReport.description}',  '${
-            helpers.currentDateTimeFullFormat
-        }');`;
+    async createAbuseReport(abuseReport: any, productId: string, vendorId: string, customerId: string): Promise<any> {
+        const querySelect = `INSERT INTO ${dbPrefix}_dokan_report_abuse_reports (reason, product_id, vendor_id, customer_id, description, reported_at) VALUES ('${abuseReport.reason}', ${parseInt(
+            productId,
+        )}, ${parseInt(vendorId)}, ${parseInt(customerId)}, '${abuseReport.description}',  '${helpers.currentDateTimeFullFormat}');`;
         const res = await dbUtils.dbQuery(querySelect);
         // console.log(res);
         return res;

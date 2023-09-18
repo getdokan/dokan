@@ -25,21 +25,15 @@ test.describe('Modules test', () => {
     });
 
     test('admin can filter modules by category @pro', async () => {
-        await admin.filterModules(
-            data.modules.moduleCategory.productManagement,
-        );
+        await admin.filterModules(data.modules.moduleCategory.productManagement);
     });
 
     test('admin can deactivate module @pro', async () => {
-        await admin.activateDeactivateModule(
-            data.modules.modulesName.AuctionIntegration,
-        );
+        await admin.activateDeactivateModule(data.modules.modulesName.AuctionIntegration);
     });
 
     test('admin can activate module @pro', async () => {
-        await admin.activateDeactivateModule(
-            data.modules.modulesName.AuctionIntegration,
-        );
+        await admin.activateDeactivateModule(data.modules.modulesName.AuctionIntegration);
     });
 
     test('admin can perform module bulk action @pro', async () => {

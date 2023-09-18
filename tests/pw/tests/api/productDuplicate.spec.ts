@@ -13,9 +13,7 @@ test.beforeAll(async ({ request }) => {
 
 test.describe('product duplicate api test', () => {
     test('create duplicate product @v2 @pro', async () => {
-        const [response, responseBody] = await apiUtils.post(
-            endPoints.createDuplicateProduct(productId),
-        );
+        const [response, responseBody] = await apiUtils.post(endPoints.createDuplicateProduct(productId));
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });

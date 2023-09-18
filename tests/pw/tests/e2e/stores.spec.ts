@@ -47,17 +47,11 @@ test.describe('Stores test', () => {
     });
 
     test("admin can disable vendor's selling capability @lite", async () => {
-        await admin.updateVendor(
-            data.predefined.vendorStores.vendor1,
-            'disable',
-        );
+        await admin.updateVendor(data.predefined.vendorStores.vendor1, 'disable');
     });
 
     test("admin can enable vendor's selling capability @lite", async () => {
-        await admin.updateVendor(
-            data.predefined.vendorStores.vendor1,
-            'enable',
-        );
+        await admin.updateVendor(data.predefined.vendorStores.vendor1, 'enable');
     });
 
     test('admin can edit vendor info @lite', async () => {
@@ -65,10 +59,7 @@ test.describe('Stores test', () => {
     });
 
     test('admin can view vendor products @lite', async () => {
-        await admin.viewVendor(
-            data.predefined.vendorStores.vendor1,
-            'products',
-        );
+        await admin.viewVendor(data.predefined.vendorStores.vendor1, 'products');
     });
 
     test('admin can view vendor orders @lite', async () => {

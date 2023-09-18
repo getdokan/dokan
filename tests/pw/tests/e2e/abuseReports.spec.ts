@@ -20,9 +20,7 @@ test.describe('Abuse report test', () => {
         aPage = await adminContext.newPage();
         admin = new AbuseReportsPage(aPage);
 
-        const customerContext = await browser.newContext(
-            data.auth.customerAuth,
-        );
+        const customerContext = await browser.newContext(data.auth.customerAuth);
         cPage = await customerContext.newPage();
         customer = new AbuseReportsPage(cPage);
 
@@ -31,16 +29,8 @@ test.describe('Abuse report test', () => {
         guest = new AbuseReportsPage(uPage);
 
         apiUtils = new ApiUtils(request);
-        const productId = await apiUtils.getProductId(
-            data.predefined.simpleProduct.product1.name,
-            payloads.vendorAuth,
-        );
-        await dbUtils.createAbuseReport(
-            dbData.dokan.createAbuseReport,
-            productId,
-            VENDOR_ID,
-            CUSTOMER_ID,
-        );
+        const productId = await apiUtils.getProductId(data.predefined.simpleProduct.product1.name, payloads.vendorAuth);
+        await dbUtils.createAbuseReport(dbData.dokan.createAbuseReport, productId, VENDOR_ID, CUSTOMER_ID);
     });
 
     test.afterAll(async () => {
@@ -62,17 +52,11 @@ test.describe('Abuse report test', () => {
     });
 
     test('admin can filter abuse reports by product @pro', async () => {
-        await admin.filterAbuseReports(
-            data.predefined.simpleProduct.product1.name,
-            'by-product',
-        );
+        await admin.filterAbuseReports(data.predefined.simpleProduct.product1.name, 'by-product');
     });
 
     test('admin can filter abuse reports by vendor @pro', async () => {
-        await admin.filterAbuseReports(
-            data.predefined.vendorStores.vendor1,
-            'by-vendor',
-        );
+        await admin.filterAbuseReports(data.predefined.vendorStores.vendor1, 'by-vendor');
     });
 
     test('admin can perform abuse report bulk action @pro', async () => {
@@ -82,30 +66,18 @@ test.describe('Abuse report test', () => {
     // customer
 
     test('customer can report product @pro', async () => {
-        await customer.reportProduct(
-            data.predefined.simpleProduct.product1.name,
-            data.product.report,
-        );
+        await customer.reportProduct(data.predefined.simpleProduct.product1.name, data.product.report);
     });
 
     test('guest customer can report product @pro', async () => {
-        await guest.reportProduct(
-            data.predefined.simpleProduct.product1.name,
-            data.product.report,
-        );
+        await guest.reportProduct(data.predefined.simpleProduct.product1.name, data.product.report);
     });
 
     test('only logged-in customer can report product @pro', async () => {
-        await dbUtils.setDokanSettings(
-            dbData.dokan.optionName.productReportAbuse,
-            {
-                ...dbData.dokan.productReportAbuseSettings,
-                reported_by_logged_in_users_only: 'on',
-            },
-        );
-        await guest.reportProduct(
-            data.predefined.simpleProduct.product1.name,
-            data.product.report,
-        );
+        await dbUtils.setDokanSettings(dbData.dokan.optionName.productReportAbuse, {
+            ...dbData.dokan.productReportAbuseSettings,
+            reported_by_logged_in_users_only: 'on',
+        });
+        await guest.reportProduct(data.predefined.simpleProduct.product1.name, data.product.report);
     });
 });

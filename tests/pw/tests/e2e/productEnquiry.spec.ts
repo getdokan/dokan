@@ -20,9 +20,7 @@ test.describe('Product Enquiry test', () => {
         // aPage = await adminContext.newPage();
         // admin = new ProductEnquiryPage(aPage);
 
-        const customerContext = await browser.newContext(
-            data.auth.customerAuth,
-        );
+        const customerContext = await browser.newContext(data.auth.customerAuth);
         cPage = await customerContext.newPage();
         customer = new ProductEnquiryPage(cPage);
 
@@ -31,16 +29,8 @@ test.describe('Product Enquiry test', () => {
         guest = new ProductEnquiryPage(uPage);
 
         apiUtils = new ApiUtils(request);
-        const productId = await apiUtils.getProductId(
-            data.predefined.simpleProduct.product1.name,
-            payloads.vendorAuth,
-        );
-        await dbUtils.createAbuseReport(
-            dbData.dokan.createAbuseReport,
-            productId,
-            VENDOR_ID,
-            CUSTOMER_ID,
-        );
+        const productId = await apiUtils.getProductId(data.predefined.simpleProduct.product1.name, payloads.vendorAuth);
+        await dbUtils.createAbuseReport(dbData.dokan.createAbuseReport, productId, VENDOR_ID, CUSTOMER_ID);
     });
 
     test.afterAll(async () => {
@@ -49,16 +39,10 @@ test.describe('Product Enquiry test', () => {
     });
 
     test('customer can enquire product @pro', async () => {
-        await customer.enquireProduct(
-            data.predefined.simpleProduct.product1.name,
-            data.product.enquiry,
-        );
+        await customer.enquireProduct(data.predefined.simpleProduct.product1.name, data.product.enquiry);
     });
 
     test('guest customer can enquire product @pro', async () => {
-        await guest.enquireProduct(
-            data.predefined.simpleProduct.product1.name,
-            data.product.enquiry,
-        );
+        await guest.enquireProduct(data.predefined.simpleProduct.product1.name, data.product.enquiry);
     });
 });

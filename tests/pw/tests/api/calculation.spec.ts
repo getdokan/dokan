@@ -9,10 +9,7 @@ let taxRate: number;
 
 test.beforeAll(async ({ request }) => {
     apiUtils = new ApiUtils(request);
-    taxRate = await apiUtils.setUpTaxRate(
-        payloads.enableTaxRate,
-        payloads.createTaxRate,
-    );
+    taxRate = await apiUtils.setUpTaxRate(payloads.enableTaxRate, payloads.createTaxRate);
     // todo:  get tax rate instead of setup if possible
 });
 
@@ -21,10 +18,7 @@ test.describe('calculation test', () => {
         // todo:  modify for lite as well
         const [commission, feeRecipient] = await dbUtils.getSellingInfo();
 
-        const [, res, oid] = await apiUtils.createOrder(
-            payloads.createProduct(),
-            payloads.createOrder,
-        );
+        const [, res, oid] = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder);
         // console.log( res );
         console.log('Cal: order id:', oid);
 
@@ -47,42 +41,13 @@ test.describe('calculation test', () => {
         // todo: compare with all order total
         // todo:  add discount scenario
 
-        const calculatedSubTotal = helpers.subtotal(
-            [productPrice],
-            [productQuantity],
-        ); // todo:  update it for multiple products
-        const calculatedProductTax = helpers.productTax(
-            taxRate,
-            calculatedSubTotal,
-        );
+        const calculatedSubTotal = helpers.subtotal([productPrice], [productQuantity]); // todo:  update it for multiple products
+        const calculatedProductTax = helpers.productTax(taxRate, calculatedSubTotal);
         const calculatedShippingTax = helpers.shippingTax(taxRate, shippingFee);
-        const calculatedTotalTax = helpers.roundToTwo(
-            calculatedProductTax + calculatedShippingTax,
-        );
-        const calculatedOrderTotal = helpers.orderTotal(
-            calculatedSubTotal,
-            calculatedProductTax,
-            calculatedShippingTax,
-            shippingFee,
-        );
-        const calculatedAdminCommission = helpers.adminCommission(
-            calculatedSubTotal,
-            commission,
-            calculatedProductTax,
-            calculatedShippingTax,
-            shippingFee,
-            gatewayFee,
-            feeRecipient,
-        );
-        const calculatedVendorEarning = helpers.vendorEarning(
-            calculatedSubTotal,
-            calculatedAdminCommission,
-            calculatedProductTax,
-            calculatedShippingTax,
-            shippingFee,
-            gatewayFee,
-            feeRecipient,
-        );
+        const calculatedTotalTax = helpers.roundToTwo(calculatedProductTax + calculatedShippingTax);
+        const calculatedOrderTotal = helpers.orderTotal(calculatedSubTotal, calculatedProductTax, calculatedShippingTax, shippingFee);
+        const calculatedAdminCommission = helpers.adminCommission(calculatedSubTotal, commission, calculatedProductTax, calculatedShippingTax, shippingFee, gatewayFee, feeRecipient);
+        const calculatedVendorEarning = helpers.vendorEarning(calculatedSubTotal, calculatedAdminCommission, calculatedProductTax, calculatedShippingTax, shippingFee, gatewayFee, feeRecipient);
 
         console.log(
             `\ncalculatedSubTotal:  ${calculatedSubTotal}\n`,

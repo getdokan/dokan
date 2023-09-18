@@ -21,17 +21,12 @@ test.describe('Auction Product test', () => {
         vPage = await vendorContext.newPage();
         vendor = new AuctionsPage(vPage);
 
-        const customerContext = await browser.newContext(
-            data.auth.customerAuth,
-        );
+        const customerContext = await browser.newContext(data.auth.customerAuth);
         cPage = await customerContext.newPage();
         customer = new AuctionsPage(cPage);
 
         apiUtils = new ApiUtils(request);
-        [, , auctionProductName] = await apiUtils.createProduct(
-            payloads.createAuctionProduct(),
-            payloads.vendorAuth,
-        );
+        [, , auctionProductName] = await apiUtils.createProduct(payloads.createAuctionProduct(), payloads.vendorAuth);
 
         await customer.bidAuctionProduct(auctionProductName);
     });
@@ -77,10 +72,7 @@ test.describe('Auction Product test', () => {
     });
 
     test('vendor can permanently delete auction product @pro', async () => {
-        const [, , auctionProductName] = await apiUtils.createProduct(
-            payloads.createAuctionProduct(),
-            payloads.vendorAuth,
-        );
+        const [, , auctionProductName] = await apiUtils.createProduct(payloads.createAuctionProduct(), payloads.vendorAuth);
         await vendor.deleteAuctionProduct(auctionProductName);
     });
 
@@ -101,10 +93,7 @@ test.describe('Auction Product test', () => {
     });
 
     test.skip('customer can buy auction product with buy it now price @pro', async () => {
-        const [, , auctionProductName] = await apiUtils.createProduct(
-            payloads.createAuctionProduct(),
-            payloads.vendorAuth,
-        ); // todo: buy it now price is not saved by api
+        const [, , auctionProductName] = await apiUtils.createProduct(payloads.createAuctionProduct(), payloads.vendorAuth); // todo: buy it now price is not saved by api
         await customer.buyAuctionProduct(auctionProductName);
     });
 });

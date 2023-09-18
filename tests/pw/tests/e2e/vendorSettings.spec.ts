@@ -78,10 +78,7 @@ test.describe('Vendor settings test', () => {
     });
 
     test('vendor can set catalog settings @lite', async () => {
-        await dbUtils.setDokanSettings(
-            dbData.dokan.optionName.selling,
-            dbData.dokan.sellingSettings,
-        );
+        await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, dbData.dokan.sellingSettings);
         await vendor.setStoreSettings(data.vendor.vendorInfo, 'catalog');
         // await vendor.resetCatalog();
 

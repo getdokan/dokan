@@ -10,9 +10,7 @@ test.beforeAll(async ({ request }) => {
 
 test.describe('roles api test', () => {
     test('get all user roles @pro', async () => {
-        const [response, responseBody] = await apiUtils.get(
-            endPoints.getAllUserRoles,
-        );
+        const [response, responseBody] = await apiUtils.get(endPoints.getAllUserRoles);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });

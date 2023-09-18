@@ -11,80 +11,61 @@ test.beforeAll(async ({ request }) => {
     apiUtils = new ApiUtils(request);
     // let [, sId,] = await apiUtils.createStore(payloads.createStore())
     [, sellerId] = await apiUtils.getCurrentUser();
-    [, reviewId] = await apiUtils.createStoreReview(
-        sellerId,
-        payloads.createStoreReview,
-        payloads.customerAuth,
-    );
+    [, reviewId] = await apiUtils.createStoreReview(sellerId, payloads.createStoreReview, payloads.customerAuth);
 });
 
 test.describe('store reviews api test', () => {
     test('get store reviews @pro', async () => {
-        const [response, responseBody] = await apiUtils.get(
-            endPoints.getStoreReviews(sellerId),
-        );
+        const [response, responseBody] = await apiUtils.get(endPoints.getStoreReviews(sellerId));
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
     test('create a store review @pro', async () => {
-        const [response, responseBody] = await apiUtils.post(
-            endPoints.createStoreReview(sellerId),
-            { data: payloads.createStoreReview },
-        );
+        const [response, responseBody] = await apiUtils.post(endPoints.createStoreReview(sellerId), {
+            data: payloads.createStoreReview,
+        });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
     test('get all store reviews @pro', async () => {
-        const [response, responseBody] = await apiUtils.get(
-            endPoints.getAllStoreReviews,
-        );
+        const [response, responseBody] = await apiUtils.get(endPoints.getAllStoreReviews);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
     test('get single store review @pro', async () => {
-        const [response, responseBody] = await apiUtils.get(
-            endPoints.getSingleStoreReview(reviewId),
-        );
+        const [response, responseBody] = await apiUtils.get(endPoints.getSingleStoreReview(reviewId));
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
     test('update a store review @pro', async () => {
-        const [response, responseBody] = await apiUtils.put(
-            endPoints.updateStoreReview(reviewId),
-            { data: payloads.updateStoreReview },
-        );
+        const [response, responseBody] = await apiUtils.put(endPoints.updateStoreReview(reviewId), {
+            data: payloads.updateStoreReview,
+        });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
     test('delete a store review @pro', async () => {
-        const [response, responseBody] = await apiUtils.delete(
-            endPoints.deleteStoreReview(reviewId),
-        );
+        const [response, responseBody] = await apiUtils.delete(endPoints.deleteStoreReview(reviewId));
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
     test('restore a deleted store review @pro', async () => {
-        const [response, responseBody] = await apiUtils.put(
-            endPoints.restoreDeletedStoreReview(reviewId),
-        );
+        const [response, responseBody] = await apiUtils.put(endPoints.restoreDeletedStoreReview(reviewId));
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
     test('update batch store review @pro', async () => {
-        const allStoreReviewIds = (await apiUtils.getAllStoreReviews()).map(
-            (a: { id: unknown }) => a.id,
-        );
-        const [response, responseBody] = await apiUtils.put(
-            endPoints.updateBatchStoreReviews,
-            { data: { trash: allStoreReviewIds } },
-        );
+        const allStoreReviewIds = (await apiUtils.getAllStoreReviews()).map((a: { id: unknown }) => a.id);
+        const [response, responseBody] = await apiUtils.put(endPoints.updateBatchStoreReviews, {
+            data: { trash: allStoreReviewIds },
+        });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
 

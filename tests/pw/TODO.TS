@@ -63,7 +63,7 @@ vendor = new OrdersPage(vPage);
 
 //****************************       wp-env       ****************************
 
-// todo:  wp-env logs
+// todo: wp-env logs
 // todo: wp-env install-path to get debug log file
 	// latest/wp-env/wp-content/debug.log
 
@@ -90,7 +90,7 @@ afterDestroy: Runs after wp-env destroy has destroyed the environment.
 //****************************       reporter       ****************************
 
 // todo:  Reporter: add os and browsers in env info
-// todo:  convert testSummary from commonjs module to ex module
+// todo:  convert testSummary from commonjs module to es module
 // todo:  ['json', { outputFile: 'results.json' }] add json reporter and try to replace junit, use json report for test summary if summary exists
 
 //****************************       readme        ****************************
@@ -103,7 +103,7 @@ afterDestroy: Runs after wp-env destroy has destroyed the environment.
 
 //****************************       api suite     ****************************
 
-// todo:  make api suite independent, import: => like dokan pro exists or not, test summary, env setup from e2e sut  
+// todo:  make api suite independent, import: => like dokan pro exists or not, test summary, env setup from e2e suite  
 // todo:  convert admin as vendor to vendor for whole suite
 // todo:  fix rank math api
 // todo:  create valid payload for every request : which doesn't cause php warning

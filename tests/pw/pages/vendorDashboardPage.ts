@@ -30,19 +30,13 @@ export class VendorDashboardPage extends VendorPage {
 
         if (DOKAN_PRO) {
             // profile progress elements are visible
-            await this.multipleElementVisible(
-                selector.vendor.vDashboard.profileProgress,
-            );
+            await this.multipleElementVisible(selector.vendor.vDashboard.profileProgress);
 
             // reviews elements are visible
-            await this.multipleElementVisible(
-                selector.vendor.vDashboard.reviews,
-            );
+            await this.multipleElementVisible(selector.vendor.vDashboard.reviews);
 
             // announcement elements are visible
-            await this.multipleElementVisible(
-                selector.vendor.vDashboard.announcement,
-            );
+            await this.multipleElementVisible(selector.vendor.vDashboard.announcement);
         }
     }
 }

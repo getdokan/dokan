@@ -21,19 +21,13 @@ export class HelpPage extends AdminPage {
         await this.multipleElementVisible(selector.admin.dokan.help.basics);
 
         // payment And Shipping elements are visible
-        await this.multipleElementVisible(
-            selector.admin.dokan.help.paymentAndShipping,
-        );
+        await this.multipleElementVisible(selector.admin.dokan.help.paymentAndShipping);
 
         // vendor related questions elements are visible
-        await this.multipleElementVisible(
-            selector.admin.dokan.help.vendorRelatedQuestions,
-        );
+        await this.multipleElementVisible(selector.admin.dokan.help.vendorRelatedQuestions);
 
         // miscellaneous elements are visible
-        await this.multipleElementVisible(
-            selector.admin.dokan.help.miscellaneous,
-        );
+        await this.multipleElementVisible(selector.admin.dokan.help.miscellaneous);
     }
 
     // get help
@@ -43,8 +37,6 @@ export class HelpPage extends AdminPage {
         await this.hover(selector.admin.dokan.dashboard.header.getHelpMenu);
 
         // get help drop down list elements are visible
-        await this.multipleElementVisible(
-            selector.admin.dokan.dashboard.getHelp,
-        );
+        await this.multipleElementVisible(selector.admin.dokan.dashboard.getHelp);
     }
 }

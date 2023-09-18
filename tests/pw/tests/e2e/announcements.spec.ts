@@ -16,10 +16,7 @@ test.describe('Announcements test', () => {
         admin = new AnnouncementsPage(aPage);
 
         apiUtils = new ApiUtils(request);
-        [, , announcementTitle] = await apiUtils.createAnnouncement(
-            { ...payloads.createAnnouncement(), status: 'draft' },
-            payloads.adminAuth,
-        );
+        [, , announcementTitle] = await apiUtils.createAnnouncement({ ...payloads.createAnnouncement(), status: 'draft' }, payloads.adminAuth);
     });
 
     test.afterAll(async () => {
@@ -57,18 +54,12 @@ test.describe('Announcements test', () => {
     });
 
     test('admin can restore announcement @pro', async () => {
-        const [, , announcementTitle] = await apiUtils.createAnnouncement(
-            { ...payloads.createAnnouncement(), status: 'trash' },
-            payloads.adminAuth,
-        );
+        const [, , announcementTitle] = await apiUtils.createAnnouncement({ ...payloads.createAnnouncement(), status: 'trash' }, payloads.adminAuth);
         await admin.updateAnnouncement(announcementTitle, 'restore');
     });
 
     test('admin can permanently delete announcement @pro', async () => {
-        const [, , announcementTitle] = await apiUtils.createAnnouncement(
-            { ...payloads.createAnnouncement(), status: 'trash' },
-            payloads.adminAuth,
-        );
+        const [, , announcementTitle] = await apiUtils.createAnnouncement({ ...payloads.createAnnouncement(), status: 'trash' }, payloads.adminAuth);
         await admin.updateAnnouncement(announcementTitle, 'permanently-delete');
     });
 

@@ -55,51 +55,29 @@ test.describe('Store Support test (admin)', () => {
     });
 
     test('admin can filter support tickets by vendor @pro', async () => {
-        await admin.filterSupportTickets(
-            data.storeSupport.filter.byVendor,
-            'by-vendor',
-        );
+        await admin.filterSupportTickets(data.storeSupport.filter.byVendor, 'by-vendor');
     });
 
     test('admin can filter support tickets by customer @pro', async () => {
-        await admin.filterSupportTickets(
-            data.storeSupport.filter.byCustomer,
-            'by-customer',
-        );
+        await admin.filterSupportTickets(data.storeSupport.filter.byCustomer, 'by-customer');
     });
 
     test('admin can reply to support ticket as admin @pro', async () => {
-        await admin.replySupportTicket(
-            supportTicketId,
-            data.storeSupport.chatReply.asAdmin,
-        );
+        await admin.replySupportTicket(supportTicketId, data.storeSupport.chatReply.asAdmin);
     });
 
     test('admin can reply to support ticket as vendor @pro', async () => {
-        await admin.replySupportTicket(
-            supportTicketId,
-            data.storeSupport.chatReply.asVendor,
-        );
+        await admin.replySupportTicket(supportTicketId, data.storeSupport.chatReply.asVendor);
     });
 
     test('admin can disable support ticket email notification @pro', async () => {
         // await apiUtils.updateSupportTicketEmailNotification(supportTicketId, { notification: true, }, payloads.adminAuth);
-        await admin.updateSupportTicketEmailNotification(
-            supportTicketId,
-            'disable',
-        );
+        await admin.updateSupportTicketEmailNotification(supportTicketId, 'disable');
     });
 
     test('admin can enable support ticket email notification @pro', async () => {
-        await apiUtils.updateSupportTicketEmailNotification(
-            supportTicketId,
-            { notification: false },
-            payloads.adminAuth,
-        );
-        await admin.updateSupportTicketEmailNotification(
-            supportTicketId,
-            'enable',
-        );
+        await apiUtils.updateSupportTicketEmailNotification(supportTicketId, { notification: false }, payloads.adminAuth);
+        await admin.updateSupportTicketEmailNotification(supportTicketId, 'enable');
     });
 
     test('admin can close support ticket @pro', async () => {
@@ -130,9 +108,7 @@ test.describe('Store Support test (customer)', () => {
     let supportTicketId: string;
 
     test.beforeAll(async ({ browser, request }) => {
-        const customerContext = await browser.newContext(
-            data.auth.customerAuth,
-        );
+        const customerContext = await browser.newContext(data.auth.customerAuth);
         cPage = await customerContext.newPage();
         customer = new StoreSupportsPage(cPage);
 
@@ -141,12 +117,7 @@ test.describe('Store Support test (customer)', () => {
         guest = new StoreSupportsPage(uPage);
 
         apiUtils = new ApiUtils(request);
-        [, responseBody, orderId] = await apiUtils.createOrderWithStatus(
-            PRODUCT_ID,
-            { ...payloads.createOrder, customer_id: CUSTOMER_ID },
-            data.order.orderStatus.completed,
-            payloads.vendorAuth,
-        );
+        [, responseBody, orderId] = await apiUtils.createOrderWithStatus(PRODUCT_ID, { ...payloads.createOrder, customer_id: CUSTOMER_ID }, data.order.orderStatus.completed, payloads.vendorAuth);
         [, supportTicketId] = await apiUtils.createSupportTicket({
             ...payloads.createSupportTicket,
             author: CUSTOMER_ID,
@@ -168,19 +139,11 @@ test.describe('Store Support test (customer)', () => {
     });
 
     test('customer can ask for store support on single product @pro', async () => {
-        await customer.storeSupport(
-            data.predefined.simpleProduct.product1.name,
-            data.customer.getSupport,
-            'product',
-        );
+        await customer.storeSupport(data.predefined.simpleProduct.product1.name, data.customer.getSupport, 'product');
     });
 
     test('customer can ask for store support on single store @pro', async () => {
-        await customer.storeSupport(
-            data.predefined.vendorStores.vendor1,
-            data.customer.getSupport,
-            'store',
-        );
+        await customer.storeSupport(data.predefined.vendorStores.vendor1, data.customer.getSupport, 'store');
     });
 
     test('customer can ask for store support on order details @pro', async () => {
@@ -189,33 +152,19 @@ test.describe('Store Support test (customer)', () => {
 
     test('customer can ask for store support on order received @pro', async () => {
         const orderKey = responseBody.order_key;
-        await customer.storeSupport(
-            orderId + ',' + orderKey,
-            data.customer.getSupport,
-            'order-received',
-        );
+        await customer.storeSupport(orderId + ',' + orderKey, data.customer.getSupport, 'order-received');
     });
 
     test('customer can ask for store support for order @pro', async () => {
-        await customer.storeSupport(
-            data.predefined.vendorStores.vendor1,
-            { ...data.customer.getSupport, orderId: orderId },
-            'store',
-        );
+        await customer.storeSupport(data.predefined.vendorStores.vendor1, { ...data.customer.getSupport, orderId: orderId }, 'store');
     });
 
     test('customer can view reference order number on support ticket @pro', async () => {
-        await customer.viewOrderReferenceNumberOnSupportTicket(
-            supportTicketId,
-            orderId,
-        );
+        await customer.viewOrderReferenceNumberOnSupportTicket(supportTicketId, orderId);
     });
 
     test('customer can send message to support ticket @pro', async () => {
-        await customer.sendMessageToSupportTicket(
-            supportTicketId,
-            data.customer.supportTicket,
-        );
+        await customer.sendMessageToSupportTicket(supportTicketId, data.customer.supportTicket);
     });
 
     test("customer can't send message to closed support ticket @pro", async () => {
@@ -229,11 +178,7 @@ test.describe('Store Support test (customer)', () => {
     });
 
     test('guest customer need to login before asking for store support @pro', async () => {
-        await guest.storeSupport(
-            data.predefined.vendorStores.vendor1,
-            data.customer.getSupport,
-            'store',
-        );
+        await guest.storeSupport(data.predefined.vendorStores.vendor1, data.customer.getSupport, 'store');
     });
 });
 
@@ -277,10 +222,7 @@ test.describe('Store Support test (vendor)', () => {
     });
 
     test('vendor can filter support tickets by customer @pro', async () => {
-        await vendor.vendorFilterSupportTickets(
-            'by-customer',
-            data.storeSupport.filter.byCustomer,
-        );
+        await vendor.vendorFilterSupportTickets('by-customer', data.storeSupport.filter.byCustomer);
     });
 
     test('vendor can filter support tickets by date range @pro', async () => {
@@ -293,10 +235,7 @@ test.describe('Store Support test (vendor)', () => {
     });
 
     test('vendor can reply to support ticket @pro', async () => {
-        await vendor.vendorReplySupportTicket(
-            supportTicketId,
-            data.storeSupport.chatReply.reply,
-        );
+        await vendor.vendorReplySupportTicket(supportTicketId, data.storeSupport.chatReply.reply);
     });
 
     test('vendor can close support ticket @pro', async () => {
@@ -319,10 +258,7 @@ test.describe('Store Support test (vendor)', () => {
             author: CUSTOMER_ID,
             meta: { store_id: VENDOR_ID },
         });
-        await vendor.vendorCloseSupportTicketWithReply(
-            supportTicketId,
-            'closing this ticket',
-        );
+        await vendor.vendorCloseSupportTicketWithReply(supportTicketId, 'closing this ticket');
     });
 
     test('vendor can reopen closed support ticket with a chat reply @pro', async () => {
@@ -332,9 +268,6 @@ test.describe('Store Support test (vendor)', () => {
             author: CUSTOMER_ID,
             meta: { store_id: VENDOR_ID },
         });
-        await vendor.vendorReopenSupportTicketWithReply(
-            closedSupportTicketId,
-            'reopening this ticket',
-        );
+        await vendor.vendorReopenSupportTicketWithReply(closedSupportTicketId, 'reopening this ticket');
     });
 });

@@ -21,33 +21,21 @@ export class VendorAnalyticsPage extends VendorPage {
         await this.multipleElementVisible(selector.vendor.vAnalytics.menus);
 
         // date-picker elements are visible
-        await this.multipleElementVisible(
-            selector.vendor.vAnalytics.datePicker,
-        );
+        await this.multipleElementVisible(selector.vendor.vAnalytics.datePicker);
 
-        await this.clickAndWaitForLoadState(
-            selector.vendor.vAnalytics.menus.topPages,
-        );
+        await this.clickAndWaitForLoadState(selector.vendor.vAnalytics.menus.topPages);
         await this.toBeVisible(selector.vendor.vAnalytics.noAnalyticsFound);
 
-        await this.clickAndWaitForLoadState(
-            selector.vendor.vAnalytics.menus.location,
-        );
+        await this.clickAndWaitForLoadState(selector.vendor.vAnalytics.menus.location);
         await this.toBeVisible(selector.vendor.vAnalytics.noAnalyticsFound);
 
-        await this.clickAndWaitForLoadState(
-            selector.vendor.vAnalytics.menus.system,
-        );
+        await this.clickAndWaitForLoadState(selector.vendor.vAnalytics.menus.system);
         await this.toBeVisible(selector.vendor.vAnalytics.noAnalyticsFound);
 
-        await this.clickAndWaitForLoadState(
-            selector.vendor.vAnalytics.menus.promotions,
-        );
+        await this.clickAndWaitForLoadState(selector.vendor.vAnalytics.menus.promotions);
         await this.toBeVisible(selector.vendor.vAnalytics.noAnalyticsFound);
 
-        await this.clickAndWaitForLoadState(
-            selector.vendor.vAnalytics.menus.keyword,
-        );
+        await this.clickAndWaitForLoadState(selector.vendor.vAnalytics.menus.keyword);
         await this.toBeVisible(selector.vendor.vAnalytics.noAnalyticsFound);
     }
 }

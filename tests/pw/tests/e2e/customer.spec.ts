@@ -80,23 +80,13 @@ test.describe('Customer functionality test', () => {
     });
 
     test('customer can buy product @lite', async () => {
-        await customer.addProductToCart(
-            data.predefined.simpleProduct.product1.name,
-            'single-product',
-        );
+        await customer.addProductToCart(data.predefined.simpleProduct.product1.name, 'single-product');
         await customer.placeOrder();
     });
 
     test('customer can buy multi vendor products @lite', async () => {
-        await customer.addProductToCart(
-            data.predefined.simpleProduct.product1.name,
-            'single-product',
-        );
-        await customer.addProductToCart(
-            data.predefined.vendor2.simpleProduct.product1.name,
-            'single-product',
-            false,
-        );
+        await customer.addProductToCart(data.predefined.simpleProduct.product1.name, 'single-product');
+        await customer.addProductToCart(data.predefined.vendor2.simpleProduct.product1.name, 'single-product', false);
         await customer.placeOrder();
     });
 

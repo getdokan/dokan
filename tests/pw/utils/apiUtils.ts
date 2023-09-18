@@ -1,24 +1,9 @@
-import {
-    expect,
-    type APIRequestContext,
-    APIResponse,
-    Request,
-} from '@playwright/test';
+import { expect, type APIRequestContext, APIResponse, Request } from '@playwright/test';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
 import { helpers } from '@utils/helpers';
 import fs from 'fs';
-import {
-    auth,
-    user_api,
-    taxRate,
-    coupon_api,
-    marketPlaceCoupon,
-    reqOptions,
-    headers,
-    storageState,
-    responseBody,
-} from '@utils/interfaces';
+import { auth, user_api, taxRate, coupon_api, marketPlaceCoupon, reqOptions, headers, storageState, responseBody } from '@utils/interfaces';
 
 const { VENDOR_ID, CUSTOMER_ID } = process.env;
 
@@ -35,9 +20,7 @@ export class ApiUtils {
 
     // get basic auth
     getBasicAuth(user: user_api): string {
-        const basicAuth =
-            'Basic ' +
-            Buffer.from(user.username + ':' + user.password).toString('base64');
+        const basicAuth = 'Basic ' + Buffer.from(user.username + ':' + user.password).toString('base64');
         return basicAuth;
     }
 
@@ -46,11 +29,7 @@ export class ApiUtils {
      */
 
     // get request
-    async get(
-        url: string,
-        options?: reqOptions | undefined,
-        ...args: any[]
-    ): Promise<[APIResponse, responseBody]> {
+    async get(url: string, options?: reqOptions | undefined, ...args: any[]): Promise<[APIResponse, responseBody]> {
         const assert = args.length ? Boolean(args[0]) : true;
         const response = await this.request.get(url, options);
         const responseBody = await this.getResponseBody(response, assert);
@@ -58,11 +37,7 @@ export class ApiUtils {
     }
 
     // post request
-    async post(
-        url: string,
-        options?: reqOptions | undefined,
-        ...args: any[]
-    ): Promise<[APIResponse, responseBody]> {
+    async post(url: string, options?: reqOptions | undefined, ...args: any[]): Promise<[APIResponse, responseBody]> {
         const assert = args.length ? Boolean(args[0]) : true;
         const response = await this.request.post(url, options);
         const responseBody = await this.getResponseBody(response, assert);
@@ -70,11 +45,7 @@ export class ApiUtils {
     }
 
     // put request
-    async put(
-        url: string,
-        options?: reqOptions | undefined,
-        ...args: any[]
-    ): Promise<[APIResponse, responseBody]> {
+    async put(url: string, options?: reqOptions | undefined, ...args: any[]): Promise<[APIResponse, responseBody]> {
         const assert = args.length ? Boolean(args[0]) : true;
         const response = await this.request.put(url, options);
         const responseBody = await this.getResponseBody(response, assert);
@@ -82,11 +53,7 @@ export class ApiUtils {
     }
 
     // patch request
-    async patch(
-        url: string,
-        options?: reqOptions | undefined,
-        ...args: any[]
-    ): Promise<[APIResponse, responseBody]> {
+    async patch(url: string, options?: reqOptions | undefined, ...args: any[]): Promise<[APIResponse, responseBody]> {
         const assert = args.length ? Boolean(args[0]) : true;
         const response = await this.request.patch(url, options);
         const responseBody = await this.getResponseBody(response, assert);
@@ -94,11 +61,7 @@ export class ApiUtils {
     }
 
     // delete request
-    async delete(
-        url: string,
-        options?: reqOptions | undefined,
-        ...args: any[]
-    ): Promise<[APIResponse, responseBody]> {
+    async delete(url: string, options?: reqOptions | undefined, ...args: any[]): Promise<[APIResponse, responseBody]> {
         const assert = args.length ? Boolean(args[0]) : true;
         const response = await this.request.delete(url, options);
         const responseBody = await this.getResponseBody(response, assert);
@@ -106,11 +69,7 @@ export class ApiUtils {
     }
 
     // fetch request
-    async fetch(
-        urlOrRequest: string | Request,
-        options?: reqOptions | undefined,
-        ...args: any[]
-    ): Promise<[APIResponse, responseBody]> {
+    async fetch(urlOrRequest: string | Request, options?: reqOptions | undefined, ...args: any[]): Promise<[APIResponse, responseBody]> {
         const assert = args.length ? Boolean(args[0]) : true;
         const response = await this.request.fetch(urlOrRequest, options);
         const responseBody = await this.getResponseBody(response, assert);
@@ -118,10 +77,7 @@ export class ApiUtils {
     }
 
     // head request
-    async head(
-        url: string,
-        options?: reqOptions | undefined,
-    ): Promise<APIResponse> {
+    async head(url: string, options?: reqOptions | undefined): Promise<APIResponse> {
         const response = await this.request.head(url, options);
         return response;
     }
@@ -137,17 +93,13 @@ export class ApiUtils {
     }
 
     // get responseBody
-    async getResponseBody(
-        response: APIResponse,
-        assert = true,
-    ): Promise<responseBody> {
+    async getResponseBody(response: APIResponse, assert = true): Promise<responseBody> {
         try {
             assert && expect(response.ok()).toBeTruthy();
             const responseBody = await response.json();
 
             // console log responseBody if response code is not between 200-299
-            String(response.status())[0] != '2' &&
-                console.log('ResponseBody: ', responseBody);
+            String(response.status())[0] != '2' && console.log('ResponseBody: ', responseBody);
             return responseBody;
         } catch (err: any) {
             console.log('End-point: ', response.url());
@@ -204,10 +156,7 @@ export class ApiUtils {
 
     // get single store
     async getSingleStore(sellerId: string, auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.get(
-            endPoints.getSingleStore(sellerId),
-            { headers: auth },
-        );
+        const [, responseBody] = await this.get(endPoints.getSingleStore(sellerId), { headers: auth });
         return responseBody;
     }
 
@@ -215,24 +164,13 @@ export class ApiUtils {
     async getSellerId(storeName: string, auth?: auth): Promise<string> {
         // todo: apply multiple optional parameter
         const allStores = await this.getAllStores(auth);
-        const sellerId = storeName
-            ? allStores.find(
-                  (o: { store_name: unknown }) => o.store_name === storeName,
-              )?.id
-            : allStores[0]?.id;
+        const sellerId = storeName ? allStores.find((o: { store_name: unknown }) => o.store_name === storeName)?.id : allStores[0]?.id;
         return sellerId;
     }
 
     // create store
-    async createStore(
-        payload: any,
-        auth?: auth,
-    ): Promise<[responseBody, string, string]> {
-        const [response, responseBody] = await this.post(
-            endPoints.createStore,
-            { data: payload, headers: auth },
-            false,
-        );
+    async createStore(payload: any, auth?: auth): Promise<[responseBody, string, string]> {
+        const [response, responseBody] = await this.post(endPoints.createStore, { data: payload, headers: auth }, false);
         let sellerId: string;
         let storeName: string;
         if (responseBody.code) {
@@ -253,28 +191,17 @@ export class ApiUtils {
     }
 
     // update store
-    async updateStore(
-        storeId: string,
-        payload: object,
-        auth?: auth,
-    ): Promise<responseBody> {
-        const [, responseBody] = await this.put(
-            endPoints.updateStore(storeId),
-            { data: payload, headers: auth },
-        );
+    async updateStore(storeId: string, payload: object, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.put(endPoints.updateStore(storeId), { data: payload, headers: auth });
         return responseBody;
     }
 
     // create store review
-    async createStoreReview(
-        sellerId: string,
-        payload: object,
-        auth?: auth,
-    ): Promise<[responseBody, string]> {
-        const [, responseBody] = await this.post(
-            endPoints.createStoreReview(sellerId),
-            { data: payload, headers: auth },
-        );
+    async createStoreReview(sellerId: string, payload: object, auth?: auth): Promise<[responseBody, string]> {
+        const [, responseBody] = await this.post(endPoints.createStoreReview(sellerId), {
+            data: payload,
+            headers: auth,
+        });
         const reviewId = String(responseBody?.id);
         return [responseBody, reviewId];
     }
@@ -284,14 +211,11 @@ export class ApiUtils {
      */
 
     // follow unfollow store
-    async followUnfollowStore(
-        sellerId: string,
-        auth?: auth,
-    ): Promise<responseBody> {
-        const [, responseBody] = await this.post(
-            endPoints.followUnfollowStore,
-            { data: { vendor_id: Number(sellerId) }, headers: auth },
-        );
+    async followUnfollowStore(sellerId: string, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.post(endPoints.followUnfollowStore, {
+            data: { vendor_id: Number(sellerId) },
+            headers: auth,
+        });
         return responseBody;
     }
 
@@ -312,18 +236,12 @@ export class ApiUtils {
     async getProductId(productName: string, auth?: auth): Promise<string> {
         // todo: apply multiple optional parameter
         const allProducts = await this.getAllProducts(auth);
-        const productId = productName
-            ? allProducts.find((o: { name: unknown }) => o.name === productName)
-                  ?.id
-            : allProducts[0]?.id;
+        const productId = productName ? allProducts.find((o: { name: unknown }) => o.name === productName)?.id : allProducts[0]?.id;
         return productId;
     }
 
     // create product
-    async createProduct(
-        payload: object,
-        auth?: auth,
-    ): Promise<[responseBody, string, string]> {
+    async createProduct(payload: object, auth?: auth): Promise<[responseBody, string, string]> {
         const [, responseBody] = await this.post(endPoints.createProduct, {
             data: payload,
             headers: auth,
@@ -335,18 +253,12 @@ export class ApiUtils {
 
     // delete product
     async deleteProduct(productId: string, auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.delete(
-            endPoints.deleteProduct(productId),
-            { headers: auth },
-        );
+        const [, responseBody] = await this.delete(endPoints.deleteProduct(productId), { headers: auth });
         return responseBody;
     }
 
     // delete all products
-    async deleteAllProducts(
-        productName: string,
-        auth?: auth,
-    ): Promise<responseBody> {
+    async deleteAllProducts(productName: string, auth?: auth): Promise<responseBody> {
         // todo: apply multiple optional parameter
         const allProducts = await this.getAllProducts(auth);
         if (!allProducts?.length) {
@@ -357,29 +269,22 @@ export class ApiUtils {
         let allProductIds: string[];
         if (productName) {
             // get all product ids with same name
-            allProductIds = allProducts
-                .filter((o: { name: unknown }) => o.name === productName)
-                .map((o: { id: unknown }) => o.id);
+            allProductIds = allProducts.filter((o: { name: unknown }) => o.name === productName).map((o: { id: unknown }) => o.id);
         } else {
             // get all product ids
             allProductIds = allProducts.map((o: { id: unknown }) => o.id);
         }
-        const [, responseBody] = await this.put(
-            endPoints.wc.updateBatchProducts,
-            { data: { delete: allProductIds }, headers: payloads.adminAuth },
-        );
+        const [, responseBody] = await this.put(endPoints.wc.updateBatchProducts, {
+            data: { delete: allProductIds },
+            headers: payloads.adminAuth,
+        });
         return responseBody;
     }
 
     // get product exists or not
-    async checkProductExistence(
-        productName: string,
-        auth?: auth,
-    ): Promise<string | boolean> {
+    async checkProductExistence(productName: string, auth?: auth): Promise<string | boolean> {
         const allProducts = await this.getAllProducts(auth);
-        const res =
-            allProducts.find((o: { name: unknown }) => o.name === productName)
-                ?.id ?? false;
+        const res = allProducts.find((o: { name: unknown }) => o.name === productName)?.id ?? false;
         return res;
     }
 
@@ -389,42 +294,26 @@ export class ApiUtils {
 
     // get variationIds
     async getVariationIds(productId: string, auth?: auth): Promise<string[]> {
-        const [, responseBody] = await this.get(
-            endPoints.getAllProductVariations(productId),
-            { headers: auth },
-        );
+        const [, responseBody] = await this.get(endPoints.getAllProductVariations(productId), { headers: auth });
         const variationIds = responseBody.map((o: { id: unknown }) => o.id);
         console.log(variationIds);
         return variationIds;
     }
 
     // create product variation
-    async createProductVariation(
-        productId: string,
-        payload: object,
-        auth?: auth,
-    ): Promise<[responseBody, string]> {
-        const [, responseBody] = await this.post(
-            endPoints.createProductVariation(productId),
-            { data: payload, headers: auth },
-        );
+    async createProductVariation(productId: string, payload: object, auth?: auth): Promise<[responseBody, string]> {
+        const [, responseBody] = await this.post(endPoints.createProductVariation(productId), {
+            data: payload,
+            headers: auth,
+        });
         const variationId = String(responseBody?.id);
         return [responseBody, variationId];
     }
 
     // get variationId
-    async createVariableProductWithVariation(
-        attribute: object,
-        attributeTerm: object,
-        product: any,
-        auth?: auth,
-    ): Promise<[string, string]> {
+    async createVariableProductWithVariation(attribute: object, attributeTerm: object, product: any, auth?: auth): Promise<[string, string]> {
         const [, productId] = await this.createProduct(product, auth);
-        const [body, attributeId] = await this.createAttributeTerm(
-            attribute,
-            attributeTerm,
-            auth,
-        );
+        const [body, attributeId] = await this.createAttributeTerm(attribute, attributeTerm, auth);
         const payload = {
             ...product,
             attributes: [
@@ -436,11 +325,7 @@ export class ApiUtils {
                 },
             ],
         }; // todo: need to fix
-        const [, variationId] = await this.createProductVariation(
-            productId,
-            payload,
-            auth,
-        );
+        const [, variationId] = await this.createProductVariation(productId, payload, auth);
         return [productId, variationId];
     }
 
@@ -457,14 +342,8 @@ export class ApiUtils {
     }
 
     // get single attribute
-    async getSingleAttribute(
-        attributeId: string,
-        auth?: auth,
-    ): Promise<responseBody> {
-        const [, responseBody] = await this.get(
-            endPoints.getSingleAttribute(attributeId),
-            { headers: auth },
-        );
+    async getSingleAttribute(attributeId: string, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.get(endPoints.getSingleAttribute(attributeId), { headers: auth });
         return responseBody;
     }
 
@@ -476,10 +355,7 @@ export class ApiUtils {
     }
 
     // create attribute
-    async createAttribute(
-        payload: object,
-        auth?: auth,
-    ): Promise<[responseBody, string]> {
+    async createAttribute(payload: object, auth?: auth): Promise<[responseBody, string]> {
         const [, responseBody] = await this.post(endPoints.createAttribute, {
             data: payload,
             headers: auth,
@@ -489,20 +365,14 @@ export class ApiUtils {
     }
 
     // update batch attributes
-    async updateBatchAttributes(
-        action: string,
-        allIds: string[],
-        auth?: auth,
-    ): Promise<[APIResponse, responseBody]> {
+    async updateBatchAttributes(action: string, allIds: string[], auth?: auth): Promise<[APIResponse, responseBody]> {
         if (!allIds?.length) {
-            allIds = (await this.getAllAttributes(auth)).map(
-                (a: { id: unknown }) => a.id,
-            );
+            allIds = (await this.getAllAttributes(auth)).map((a: { id: unknown }) => a.id);
         }
-        const [response, responseBody] = await this.post(
-            endPoints.wc.updateBatchAttributes,
-            { data: { [action]: allIds }, headers: auth },
-        );
+        const [response, responseBody] = await this.post(endPoints.wc.updateBatchAttributes, {
+            data: { [action]: allIds },
+            headers: auth,
+        });
         return [response, responseBody];
     }
 
@@ -511,44 +381,30 @@ export class ApiUtils {
      */
 
     // get all attribute terms
-    async getAllAttributeTerms(
-        attributeId: string,
-        auth?: auth,
-    ): Promise<responseBody> {
-        const [, responseBody] = await this.get(
-            endPoints.getAllAttributeTerms(attributeId),
-            { params: { per_page: 100 }, headers: auth },
-        );
+    async getAllAttributeTerms(attributeId: string, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.get(endPoints.getAllAttributeTerms(attributeId), {
+            params: { per_page: 100 },
+            headers: auth,
+        });
         return responseBody;
     }
 
     // get single attribute term
-    async getSingleAttributeTerm(
-        attributeId: string,
-        attributeTermId: string,
-        auth?: auth,
-    ): Promise<responseBody> {
-        const [, responseBody] = await this.get(
-            endPoints.getSingleAttributeTerm(attributeId, attributeTermId),
-            { headers: auth },
-        );
+    async getSingleAttributeTerm(attributeId: string, attributeTermId: string, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.get(endPoints.getSingleAttributeTerm(attributeId, attributeTermId), {
+            headers: auth,
+        });
         return responseBody;
     }
 
     // create attribute term
-    async createAttributeTerm(
-        attribute: any,
-        attributeTerm: object,
-        auth?: auth,
-    ): Promise<[responseBody, string, string]> {
+    async createAttributeTerm(attribute: any, attributeTerm: object, auth?: auth): Promise<[responseBody, string, string]> {
         let attributeId: string;
-        typeof attribute === 'object'
-            ? ([, attributeId] = await this.createAttribute(attribute, auth))
-            : (attributeId = attribute);
-        const [, responseBody] = await this.post(
-            endPoints.createAttributeTerm(attributeId),
-            { data: attributeTerm, headers: auth },
-        );
+        typeof attribute === 'object' ? ([, attributeId] = await this.createAttribute(attribute, auth)) : (attributeId = attribute);
+        const [, responseBody] = await this.post(endPoints.createAttributeTerm(attributeId), {
+            data: attributeTerm,
+            headers: auth,
+        });
         const attributeTermId = String(responseBody?.id);
         return [responseBody, attributeId, attributeTermId];
     }
@@ -570,37 +426,21 @@ export class ApiUtils {
     async getCouponId(couponCode: string, auth?: auth): Promise<string> {
         // todo: apply multiple optional parameter
         const allCoupons = await this.getAllCoupons(auth);
-        const couponId = couponCode
-            ? allCoupons.find((o: { code: unknown }) => o.code === couponCode)
-                  ?.id
-            : allCoupons[0]?.id;
+        const couponId = couponCode ? allCoupons.find((o: { code: unknown }) => o.code === couponCode)?.id : allCoupons[0]?.id;
         return couponId;
     }
 
     // create coupon
-    async createCoupon(
-        productIds: string[],
-        coupon: coupon_api,
-        auth?: auth,
-    ): Promise<[responseBody, string, string]> {
+    async createCoupon(productIds: string[], coupon: coupon_api, auth?: auth): Promise<[responseBody, string, string]> {
         // create product if invalid productId exists
         if (productIds.includes('undefined')) {
-            const [, productId] = await this.createProduct(
-                payloads.createProduct(),
-                auth,
-            );
+            const [, productId] = await this.createProduct(payloads.createProduct(), auth);
             productIds = [productId];
         }
-        const [response, responseBody] = await this.post(
-            endPoints.createCoupon,
-            { data: { ...coupon, product_ids: productIds }, headers: auth },
-            false,
-        );
+        const [response, responseBody] = await this.post(endPoints.createCoupon, { data: { ...coupon, product_ids: productIds }, headers: auth }, false);
         let couponId: string;
         let couponCode: string;
-        if (
-            responseBody.code === 'woocommerce_rest_coupon_code_already_exists'
-        ) {
+        if (responseBody.code === 'woocommerce_rest_coupon_code_already_exists') {
             expect(response.status()).toBe(400);
 
             // get coupon id if already exists
@@ -608,11 +448,7 @@ export class ApiUtils {
             couponCode = coupon.code;
 
             // update coupon if already exists
-            await this.updateCoupon(
-                couponId,
-                { ...coupon, product_ids: productIds },
-                auth,
-            );
+            await this.updateCoupon(couponId, { ...coupon, product_ids: productIds }, auth);
         } else {
             expect(response.ok()).toBeTruthy();
             couponId = String(responseBody?.id);
@@ -622,50 +458,28 @@ export class ApiUtils {
     }
 
     // update coupon
-    async updateCoupon(
-        couponId: string,
-        payload: object,
-        auth?: auth,
-    ): Promise<responseBody> {
-        const [, responseBody] = await this.put(
-            endPoints.updateCoupon(couponId),
-            { data: payload, headers: auth },
-        );
+    async updateCoupon(couponId: string, payload: object, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.put(endPoints.updateCoupon(couponId), { data: payload, headers: auth });
         return responseBody;
     }
 
     // get marketplace couponId
-    async getMarketPlaceCouponId(
-        couponCode: string,
-        auth?: auth,
-    ): Promise<string> {
+    async getMarketPlaceCouponId(couponCode: string, auth?: auth): Promise<string> {
         // todo: apply multiple optional parameter
         const [, allCoupons] = await this.get(endPoints.wc.getAllCoupons, {
             params: { per_page: 100 },
             headers: auth,
         });
-        const couponId = couponCode
-            ? allCoupons.find((o: { code: unknown }) => o.code === couponCode)
-                  ?.id
-            : allCoupons[0]?.id;
+        const couponId = couponCode ? allCoupons.find((o: { code: unknown }) => o.code === couponCode)?.id : allCoupons[0]?.id;
         return couponId;
     }
 
     // create marketplace coupon
-    async createMarketPlaceCoupon(
-        coupon: marketPlaceCoupon,
-        auth?: auth,
-    ): Promise<[responseBody, string, string]> {
-        const [response, responseBody] = await this.post(
-            endPoints.wc.createCoupon,
-            { data: coupon, headers: auth },
-            false,
-        );
+    async createMarketPlaceCoupon(coupon: marketPlaceCoupon, auth?: auth): Promise<[responseBody, string, string]> {
+        const [response, responseBody] = await this.post(endPoints.wc.createCoupon, { data: coupon, headers: auth }, false);
         let couponId: string;
         let couponCode: string;
-        if (
-            responseBody.code === 'woocommerce_rest_coupon_code_already_exists'
-        ) {
+        if (responseBody.code === 'woocommerce_rest_coupon_code_already_exists') {
             expect(response.status()).toBe(400);
             // get coupon id if already exists
             couponId = await this.getMarketPlaceCouponId(coupon.code, auth);
@@ -682,15 +496,8 @@ export class ApiUtils {
     }
 
     // update marketplace coupon
-    async updateMarketPlaceCoupon(
-        couponId: string,
-        payload: object,
-        auth?: auth,
-    ): Promise<responseBody> {
-        const [, responseBody] = await this.put(
-            endPoints.wc.updateCoupon(couponId),
-            { data: payload, headers: auth },
-        );
+    async updateMarketPlaceCoupon(couponId: string, payload: object, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.put(endPoints.wc.updateCoupon(couponId), { data: payload, headers: auth });
         return responseBody;
     }
 
@@ -704,9 +511,7 @@ export class ApiUtils {
             headers: auth,
         });
         const currentBalance = String(Math.abs(responseBody.current_balance));
-        const minimumWithdrawLimit = String(
-            Math.abs(responseBody.withdraw_limit),
-        );
+        const minimumWithdrawLimit = String(Math.abs(responseBody.withdraw_limit));
         return [currentBalance, minimumWithdrawLimit];
     }
 
@@ -720,10 +525,7 @@ export class ApiUtils {
     }
 
     // get all withdraws by status
-    async getAllWithdrawsByStatus(
-        status: string,
-        auth?: auth,
-    ): Promise<responseBody> {
+    async getAllWithdrawsByStatus(status: string, auth?: auth): Promise<responseBody> {
         const [, responseBody] = await this.get(endPoints.getAllWithdraws, {
             params: { per_page: 100, status: status },
             headers: auth,
@@ -733,24 +535,14 @@ export class ApiUtils {
 
     // get withdrawId
     async getWithdrawId(auth?: auth): Promise<string> {
-        const allWithdraws = await this.getAllWithdrawsByStatus(
-            'pending',
-            auth,
-        );
+        const allWithdraws = await this.getAllWithdrawsByStatus('pending', auth);
         const withdrawId = allWithdraws[0]?.id;
         return withdrawId;
     }
 
     // create withdraw
-    async createWithdraw(
-        payload: object,
-        auth?: auth,
-    ): Promise<[responseBody, string]> {
-        const [response, responseBody] = await this.post(
-            endPoints.createWithdraw,
-            { data: payload, headers: auth },
-            false,
-        );
+    async createWithdraw(payload: object, auth?: auth): Promise<[responseBody, string]> {
+        const [response, responseBody] = await this.post(endPoints.createWithdraw, { data: payload, headers: auth }, false);
         let withdrawId: string;
         if (responseBody.code) {
             expect(response.status()).toBe(400);
@@ -765,10 +557,7 @@ export class ApiUtils {
     }
 
     // cancel withdraw
-    async cancelWithdraw(
-        withdrawId: string,
-        auth?: auth,
-    ): Promise<responseBody> {
+    async cancelWithdraw(withdrawId: string, auth?: auth): Promise<responseBody> {
         if (!withdrawId) {
             withdrawId = await this.getWithdrawId(auth);
             if (!withdrawId) {
@@ -776,10 +565,9 @@ export class ApiUtils {
                 return;
             }
         }
-        const [, responseBody] = await this.delete(
-            endPoints.cancelWithdraw(withdrawId),
-            { headers: payloads.adminAuth },
-        );
+        const [, responseBody] = await this.delete(endPoints.cancelWithdraw(withdrawId), {
+            headers: payloads.adminAuth,
+        });
         return responseBody;
     }
 
@@ -798,10 +586,7 @@ export class ApiUtils {
 
     // get single order
     async getSingleOrder(orderId: string, auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.get(
-            endPoints.getSingleOrder(orderId),
-            { headers: auth },
-        );
+        const [, responseBody] = await this.get(endPoints.getSingleOrder(orderId), { headers: auth });
         return responseBody;
     }
 
@@ -813,24 +598,17 @@ export class ApiUtils {
     }
 
     // update order status
-    async updateOrderStatus(
-        orderId: string,
-        orderStatus: string,
-        auth?: auth,
-    ): Promise<responseBody> {
-        const [, responseBody] = await this.put(
-            endPoints.updateOrder(orderId),
-            { data: { status: orderStatus }, headers: auth },
-        );
+    async updateOrderStatus(orderId: string, orderStatus: string, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.put(endPoints.updateOrder(orderId), {
+            data: { status: orderStatus },
+            headers: auth,
+        });
         return responseBody;
     }
 
     // get order key
     async getOrderKey(orderId: string): Promise<string> {
-        const [, responseBody] = await this.getSingleOrder(
-            orderId,
-            payloads.adminAuth,
-        );
+        const [, responseBody] = await this.getSingleOrder(orderId, payloads.adminAuth);
         const orderKey = responseBody?.order_key;
         return orderKey;
     }
@@ -840,20 +618,13 @@ export class ApiUtils {
      */
 
     // create order note
-    async createOrderNote(
-        product: string | object,
-        order: object | string,
-        orderNote: object,
-        auth?: auth,
-    ): Promise<[responseBody, string, string]> {
+    async createOrderNote(product: string | object, order: object | string, orderNote: object, auth?: auth): Promise<[responseBody, string, string]> {
         let orderId: string;
-        typeof order === 'object'
-            ? ([, , orderId] = await this.createOrder(product, order, auth))
-            : (orderId = order);
-        const [, responseBody] = await this.post(
-            endPoints.createOrderNote(orderId),
-            { data: orderNote, headers: auth },
-        );
+        typeof order === 'object' ? ([, , orderId] = await this.createOrder(product, order, auth)) : (orderId = order);
+        const [, responseBody] = await this.post(endPoints.createOrderNote(orderId), {
+            data: orderNote,
+            headers: auth,
+        });
         const orderNoteId = String(responseBody?.id);
         return [responseBody, orderId, orderNoteId];
     }
@@ -864,10 +635,7 @@ export class ApiUtils {
 
     // get admin report summary
     async getAdminReportSummary(auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.get(
-            endPoints.getAdminReportSummary,
-            { headers: auth },
-        );
+        const [, responseBody] = await this.get(endPoints.getAdminReportSummary, { headers: auth });
         return responseBody;
     }
 
@@ -883,9 +651,7 @@ export class ApiUtils {
     // get single order log
     async getSingleOrderLog(orderId: string, auth?: auth) {
         const allOrderLogs = await this.getAllOrderLogs(auth);
-        const singleOrderLog = allOrderLogs.find(
-            (o: { order_id: unknown }) => o.order_id === orderId,
-        );
+        const singleOrderLog = allOrderLogs.find((o: { order_id: unknown }) => o.order_id === orderId);
         return singleOrderLog;
     }
 
@@ -922,10 +688,7 @@ export class ApiUtils {
     }
 
     // set store settings
-    async setStoreSettings(
-        payload: object,
-        auth?: auth,
-    ): Promise<responseBody> {
+    async setStoreSettings(payload: object, auth?: auth): Promise<responseBody> {
         const [, responseBody] = await this.put(endPoints.updateSettings, {
             data: payload,
             headers: auth,
@@ -939,10 +702,10 @@ export class ApiUtils {
 
     // get all support tickets
     async getAllSupportTickets(auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.get(
-            endPoints.getAllSupportTickets,
-            { params: { per_page: 100 }, headers: auth },
-        );
+        const [, responseBody] = await this.get(endPoints.getAllSupportTickets, {
+            params: { per_page: 100 },
+            headers: auth,
+        });
         return responseBody;
     }
 
@@ -955,60 +718,42 @@ export class ApiUtils {
     }
 
     // create support ticket
-    async createSupportTicket(
-        payload: object,
-    ): Promise<[responseBody, string]> {
-        const [, responseBody] = await this.post(
-            endPoints.wp.createCustomPost('dokan_store_support'),
-            { data: payload, headers: payloads.adminAuth },
-        );
+    async createSupportTicket(payload: object): Promise<[responseBody, string]> {
+        const [, responseBody] = await this.post(endPoints.wp.createCustomPost('dokan_store_support'), {
+            data: payload,
+            headers: payloads.adminAuth,
+        });
         const supportTicketId = String(responseBody?.id);
         return [responseBody, supportTicketId];
     }
 
     // create support ticket comment
-    async createSupportTicketComment(
-        supportTicketId: string,
-        payload: object,
-        auth?: auth,
-    ): Promise<responseBody> {
+    async createSupportTicketComment(supportTicketId: string, payload: object, auth?: auth): Promise<responseBody> {
         if (!supportTicketId) {
-            [supportTicketId] = await this.createSupportTicket({
-                ...payloads.createSupportTicket,
-                author: CUSTOMER_ID,
-                store_id: VENDOR_ID,
-            });
+            [supportTicketId] = await this.createSupportTicket({ ...payloads.createSupportTicket, author: CUSTOMER_ID, store_id: VENDOR_ID });
         }
-        const [, responseBody] = await this.post(
-            endPoints.createSupportTicketComment(supportTicketId),
-            { data: payload, headers: auth },
-        );
+        const [, responseBody] = await this.post(endPoints.createSupportTicketComment(supportTicketId), {
+            data: payload,
+            headers: auth,
+        });
         return responseBody;
     }
 
     // update support ticket status
-    async updateSupportTicketStatus(
-        supportTicketId: string,
-        status: string,
-        auth?: auth,
-    ): Promise<responseBody> {
-        const [, responseBody] = await this.post(
-            endPoints.updateSupportTicketStatus(supportTicketId),
-            { data: { status }, headers: auth },
-        );
+    async updateSupportTicketStatus(supportTicketId: string, status: string, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.post(endPoints.updateSupportTicketStatus(supportTicketId), {
+            data: { status },
+            headers: auth,
+        });
         return responseBody;
     }
 
     // update support ticket email notification
-    async updateSupportTicketEmailNotification(
-        supportTicketId: string,
-        payload: object,
-        auth?: auth,
-    ): Promise<responseBody> {
-        const [, responseBody] = await this.post(
-            endPoints.updateSupportTicketEmailNotification(supportTicketId),
-            { data: payload, headers: auth },
-        );
+    async updateSupportTicketEmailNotification(supportTicketId: string, payload: object, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.post(endPoints.updateSupportTicketEmailNotification(supportTicketId), {
+            data: payload,
+            headers: auth,
+        });
         return responseBody;
     }
 
@@ -1018,27 +763,20 @@ export class ApiUtils {
 
     // get all reverse withdrawal stores
     async getAllReverseWithdrawalStores(auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.get(
-            endPoints.getAllReverseWithdrawalStores,
-            { headers: auth },
-        );
+        const [, responseBody] = await this.get(endPoints.getAllReverseWithdrawalStores, { headers: auth });
         return responseBody;
     }
 
     // get reverse withdrawal storeId
     async getReverseWithdrawalStoreId(auth?: auth): Promise<string> {
-        const allReverseWithdrawalStores =
-            await this.getAllReverseWithdrawalStores(auth);
+        const allReverseWithdrawalStores = await this.getAllReverseWithdrawalStores(auth);
         const reverseWithdrawalStoreId = allReverseWithdrawalStores[0]?.id;
         return reverseWithdrawalStoreId;
     }
 
     // get reverseWithdrawal payment productId
     async getReverseWithdrawalProductId(auth?: auth): Promise<string> {
-        const productId = await this.getProductId(
-            'Reverse Withdrawal Payment',
-            auth,
-        );
+        const productId = await this.getProductId('Reverse Withdrawal Payment', auth);
         return productId;
     }
 
@@ -1063,10 +801,7 @@ export class ApiUtils {
     }
 
     // get activate modules
-    async activateModules(
-        moduleIds: string,
-        auth?: auth,
-    ): Promise<responseBody> {
+    async activateModules(moduleIds: string, auth?: auth): Promise<responseBody> {
         const [, responseBody] = await this.put(endPoints.activateModule, {
             data: { module: [moduleIds] },
             headers: auth,
@@ -1075,10 +810,7 @@ export class ApiUtils {
     }
 
     // get deactivated modules
-    async deactivateModules(
-        moduleIds: string,
-        auth?: auth,
-    ): Promise<responseBody> {
+    async deactivateModules(moduleIds: string, auth?: auth): Promise<responseBody> {
         const [, responseBody] = await this.put(endPoints.deactivateModule, {
             data: { module: [moduleIds] },
             headers: auth,
@@ -1108,24 +840,13 @@ export class ApiUtils {
     async getCustomerId(username: string, auth?: auth): Promise<string> {
         // todo: apply multiple optional parameter
         const allCustomers = await this.getAllCustomers(auth);
-        const customerId = username
-            ? allCustomers.find(
-                  (o: { username: unknown }) => o.username === username,
-              )?.id
-            : allCustomers[0]?.id;
+        const customerId = username ? allCustomers.find((o: { username: unknown }) => o.username === username)?.id : allCustomers[0]?.id;
         return customerId;
     }
 
     // create customer
-    async createCustomer(
-        payload: any,
-        auth?: auth,
-    ): Promise<[responseBody, string]> {
-        const [response, responseBody] = await this.post(
-            endPoints.wc.createCustomer,
-            { data: payload, headers: auth },
-            false,
-        );
+    async createCustomer(payload: any, auth?: auth): Promise<[responseBody, string]> {
+        const [response, responseBody] = await this.post(endPoints.wc.createCustomer, { data: payload, headers: auth }, false);
         let customerId: string;
         if (responseBody.code) {
             expect(response.status()).toBe(400);
@@ -1143,24 +864,17 @@ export class ApiUtils {
     }
 
     // update customer
-    async updateCustomer(
-        customerId: string,
-        payload: object,
-        auth?: auth,
-    ): Promise<responseBody> {
-        const [, responseBody] = await this.put(
-            endPoints.wc.updateCustomer(customerId),
-            { data: payload, headers: auth },
-        );
+    async updateCustomer(customerId: string, payload: object, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.put(endPoints.wc.updateCustomer(customerId), {
+            data: payload,
+            headers: auth,
+        });
         return responseBody;
     }
 
     // delete customer
     async deleteCustomer(userId: string, auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.delete(
-            endPoints.wc.deleteCustomer(userId),
-            { headers: auth },
-        );
+        const [, responseBody] = await this.delete(endPoints.wc.deleteCustomer(userId), { headers: auth });
         return responseBody;
     }
 
@@ -1170,26 +884,21 @@ export class ApiUtils {
 
     // get all wholesale customers
     async getAllWholesaleCustomers(auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.get(
-            endPoints.getAllWholesaleCustomers,
-            { params: { per_page: 100 }, headers: auth },
-        );
+        const [, responseBody] = await this.get(endPoints.getAllWholesaleCustomers, {
+            params: { per_page: 100 },
+            headers: auth,
+        });
         return responseBody;
     }
 
     // create a wholesale customer
-    async createWholesaleCustomer(
-        payload: string | object,
-        auth?: auth,
-    ): Promise<[responseBody, string]> {
+    async createWholesaleCustomer(payload: string | object, auth?: auth): Promise<[responseBody, string]> {
         let customerId: string;
-        typeof payload === 'object'
-            ? ([, customerId] = await this.createCustomer(payload, auth))
-            : (customerId = payload);
-        const [, responseBody] = await this.post(
-            endPoints.createWholesaleCustomer,
-            { data: { id: String(customerId) }, headers: auth },
-        );
+        typeof payload === 'object' ? ([, customerId] = await this.createCustomer(payload, auth)) : (customerId = payload);
+        const [, responseBody] = await this.post(endPoints.createWholesaleCustomer, {
+            data: { id: String(customerId) },
+            headers: auth,
+        });
         return [responseBody, customerId];
     }
 
@@ -1199,27 +908,21 @@ export class ApiUtils {
 
     // get all product advertisements
     async getAllProductAdvertisements(auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.get(
-            endPoints.getAllProductAdvertisements,
-            { params: { per_page: 100 }, headers: auth },
-        );
+        const [, responseBody] = await this.get(endPoints.getAllProductAdvertisements, {
+            params: { per_page: 100 },
+            headers: auth,
+        });
         return responseBody;
     }
 
     // create a product advertisement
-    async createProductAdvertisement(
-        product: object,
-        auth?: auth,
-    ): Promise<[responseBody, string]> {
+    async createProductAdvertisement(product: object, auth?: auth): Promise<[responseBody, string]> {
         const [body, productId] = await this.createProduct(product, auth);
         const sellerId = body.store.id;
-        const [, responseBody] = await this.post(
-            endPoints.createProductAdvertisement,
-            {
-                data: { vendor_id: sellerId, product_id: productId },
-                headers: payloads.adminAuth,
-            },
-        );
+        const [, responseBody] = await this.post(endPoints.createProductAdvertisement, {
+            data: { vendor_id: sellerId, product_id: productId },
+            headers: payloads.adminAuth,
+        });
         const productAdvertisementId = String(responseBody?.id);
         return [responseBody, productAdvertisementId];
     }
@@ -1257,10 +960,7 @@ export class ApiUtils {
     }
 
     // create announcement
-    async createAnnouncement(
-        payload: object,
-        auth?: auth,
-    ): Promise<[responseBody, string, string]> {
+    async createAnnouncement(payload: object, auth?: auth): Promise<[responseBody, string, string]> {
         const [, responseBody] = await this.post(endPoints.createAnnouncement, {
             data: payload,
             headers: auth,
@@ -1271,32 +971,20 @@ export class ApiUtils {
     }
 
     // delete announcement
-    async deleteAnnouncement(
-        announcementId: string,
-        auth?: auth,
-    ): Promise<responseBody> {
-        const [, responseBody] = await this.delete(
-            endPoints.deleteAnnouncement(announcementId),
-            { headers: auth },
-        );
+    async deleteAnnouncement(announcementId: string, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.delete(endPoints.deleteAnnouncement(announcementId), { headers: auth });
         return responseBody;
     }
 
     // update batch announcements
-    async updateBatchAnnouncements(
-        action: string,
-        allIds: string[],
-        auth?: auth,
-    ): Promise<responseBody> {
+    async updateBatchAnnouncements(action: string, allIds: string[], auth?: auth): Promise<responseBody> {
         if (!allIds?.length) {
-            allIds = (await this.getAllAnnouncements(auth)).map(
-                (a: { id: unknown }) => a.id,
-            );
+            allIds = (await this.getAllAnnouncements(auth)).map((a: { id: unknown }) => a.id);
         }
-        const [, responseBody] = await this.put(
-            endPoints.updateBatchAnnouncements,
-            { data: { [action]: allIds }, headers: auth },
-        );
+        const [, responseBody] = await this.put(endPoints.updateBatchAnnouncements, {
+            data: { [action]: allIds },
+            headers: auth,
+        });
         return responseBody;
     }
 
@@ -1306,10 +994,10 @@ export class ApiUtils {
 
     // get all product reviews
     async getAllProductReviews(auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.get(
-            endPoints.getAllProductReviews,
-            { params: { per_page: 100 }, headers: auth },
-        );
+        const [, responseBody] = await this.get(endPoints.getAllProductReviews, {
+            params: { per_page: 100 },
+            headers: auth,
+        });
         return responseBody;
     }
 
@@ -1341,32 +1029,20 @@ export class ApiUtils {
     }
 
     // delete store review
-    async deleteStoreReview(
-        reviewId: string,
-        auth?: auth,
-    ): Promise<responseBody> {
-        const [, responseBody] = await this.delete(
-            endPoints.deleteStoreReview(reviewId),
-            { headers: auth },
-        );
+    async deleteStoreReview(reviewId: string, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.delete(endPoints.deleteStoreReview(reviewId), { headers: auth });
         return responseBody;
     }
 
     // update batch store reviews
-    async updateBatchStoreReviews(
-        action: string,
-        allIds: string[],
-        auth?: auth,
-    ): Promise<responseBody> {
+    async updateBatchStoreReviews(action: string, allIds: string[], auth?: auth): Promise<responseBody> {
         if (!allIds?.length) {
-            allIds = (await this.getAllStoreReviews(auth)).map(
-                (a: { id: unknown }) => a.id,
-            );
+            allIds = (await this.getAllStoreReviews(auth)).map((a: { id: unknown }) => a.id);
         }
-        const [, responseBody] = await this.put(
-            endPoints.updateBatchStoreReviews,
-            { data: { [action]: allIds }, headers: auth },
-        );
+        const [, responseBody] = await this.put(endPoints.updateBatchStoreReviews, {
+            data: { [action]: allIds },
+            headers: auth,
+        });
         return responseBody;
     }
 
@@ -1376,67 +1052,43 @@ export class ApiUtils {
 
     // get all store categories
     async getAllStoreCategories(auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.get(
-            endPoints.getAllStoreCategories,
-            { params: { per_page: 100 }, headers: auth },
-        );
+        const [, responseBody] = await this.get(endPoints.getAllStoreCategories, {
+            params: { per_page: 100 },
+            headers: auth,
+        });
         return responseBody;
     }
 
     // get store category Id
-    async getStoreCategoryId(
-        StoreCategoryName: string,
-        auth?: auth,
-    ): Promise<string> {
+    async getStoreCategoryId(StoreCategoryName: string, auth?: auth): Promise<string> {
         // todo: apply multiple optional parameter
         const allStoreCategories = await this.getAllStoreCategories(auth);
-        const storeCategoryId = StoreCategoryName
-            ? allStoreCategories.find(
-                  (o: { name: unknown }) => o.name === StoreCategoryName,
-              )?.id
-            : allStoreCategories[0]?.id;
+        const storeCategoryId = StoreCategoryName ? allStoreCategories.find((o: { name: unknown }) => o.name === StoreCategoryName)?.id : allStoreCategories[0]?.id;
         return storeCategoryId;
     }
 
     // create store category
-    async createStoreCategory(
-        payload: object,
-        auth?: auth,
-    ): Promise<[responseBody, string, string]> {
-        const [, responseBody] = await this.post(
-            endPoints.createStoreCategory,
-            { data: payload, headers: auth },
-        );
+    async createStoreCategory(payload: object, auth?: auth): Promise<[responseBody, string, string]> {
+        const [, responseBody] = await this.post(endPoints.createStoreCategory, { data: payload, headers: auth });
         const categoryId = String(responseBody?.id);
         const categoryName = String(responseBody?.name);
         return [responseBody, categoryId, categoryName];
     }
 
     // get default store category
-    async getDefaultStoreCategory(
-        auth?: auth,
-    ): Promise<[responseBody, number]> {
-        const [, responseBody] = await this.get(
-            endPoints.getDefaultStoreCategory,
-            { headers: auth },
-        );
+    async getDefaultStoreCategory(auth?: auth): Promise<[responseBody, number]> {
+        const [, responseBody] = await this.get(endPoints.getDefaultStoreCategory, { headers: auth });
         const categoryId = responseBody?.id;
         return [responseBody, categoryId];
     }
 
     // set default store category
-    async setDefaultStoreCategory(
-        category: string | number,
-        auth?: auth,
-    ): Promise<responseBody> {
-        const categoryId =
-            typeof category === 'string'
-                ? await this.getStoreCategoryId(category, auth)
-                : category;
-        const [, responseBody] = await this.put(
-            endPoints.setDefaultStoreCategory,
-            { data: { id: categoryId }, headers: auth },
-        );
+    async setDefaultStoreCategory(category: string | number, auth?: auth): Promise<responseBody> {
+        const categoryId = typeof category === 'string' ? await this.getStoreCategoryId(category, auth) : category;
+        const [, responseBody] = await this.put(endPoints.setDefaultStoreCategory, {
+            data: { id: categoryId },
+            headers: auth,
+        });
         return responseBody;
     }
 
@@ -1454,10 +1106,7 @@ export class ApiUtils {
     }
 
     // create quote rule
-    async createQuoteRule(
-        payload: object,
-        auth?: auth,
-    ): Promise<[responseBody, string]> {
+    async createQuoteRule(payload: object, auth?: auth): Promise<[responseBody, string]> {
         const [, responseBody] = await this.post(endPoints.createQuoteRule, {
             data: payload,
             headers: auth,
@@ -1467,30 +1116,22 @@ export class ApiUtils {
     }
 
     // delete quote rule
-    async deleteQuoteRule(
-        quoteRuleId: string,
-        auth?: auth,
-    ): Promise<responseBody> {
-        const [, responseBody] = await this.delete(
-            endPoints.deleteQuoteRule(quoteRuleId),
-            { headers: auth },
-        );
+    async deleteQuoteRule(quoteRuleId: string, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.delete(endPoints.deleteQuoteRule(quoteRuleId), { headers: auth });
         return responseBody;
     }
 
     // delete all quote rules
     async deleteAllQuoteRules(auth?: auth): Promise<responseBody> {
-        const allQuoteRuleIds = (await this.getAllQuoteRules(auth)).map(
-            (o: { id: unknown }) => o.id,
-        );
+        const allQuoteRuleIds = (await this.getAllQuoteRules(auth)).map((o: { id: unknown }) => o.id);
         if (!allQuoteRuleIds?.length) {
             console.log('No quote rule exists');
             return;
         }
-        const [, responseBody] = await this.put(
-            endPoints.updateBatchQuoteRules,
-            { data: { trash: allQuoteRuleIds }, headers: auth },
-        );
+        const [, responseBody] = await this.put(endPoints.updateBatchQuoteRules, {
+            data: { trash: allQuoteRuleIds },
+            headers: auth,
+        });
         return responseBody;
     }
 
@@ -1508,10 +1149,7 @@ export class ApiUtils {
     }
 
     // create quote request
-    async createQuoteRequest(
-        payload: object,
-        auth?: auth,
-    ): Promise<[responseBody, string, string]> {
+    async createQuoteRequest(payload: object, auth?: auth): Promise<[responseBody, string, string]> {
         const [, responseBody] = await this.post(endPoints.createQuoteRequest, {
             data: payload,
             headers: auth,
@@ -1522,42 +1160,31 @@ export class ApiUtils {
     }
 
     // delete quote request
-    async deleteQuoteRequest(
-        quoteRuleId: string,
-        auth?: auth,
-    ): Promise<responseBody> {
-        const [, responseBody] = await this.delete(
-            endPoints.deleteQuoteRequest(quoteRuleId),
-            { headers: auth },
-        );
+    async deleteQuoteRequest(quoteRuleId: string, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.delete(endPoints.deleteQuoteRequest(quoteRuleId), { headers: auth });
         return responseBody;
     }
 
     // delete all quote requests
     async deleteAllQuoteRequests(auth?: auth): Promise<responseBody> {
-        const allQuoteIds = (await this.getAllQuoteRequests(auth)).map(
-            (o: { id: unknown }) => o.id,
-        );
+        const allQuoteIds = (await this.getAllQuoteRequests(auth)).map((o: { id: unknown }) => o.id);
         if (!allQuoteIds?.length) {
             console.log('No quote request exists');
             return;
         }
-        const [, responseBody] = await this.put(
-            endPoints.updateBatchRequestQuotes,
-            { data: { trash: allQuoteIds }, headers: auth },
-        );
+        const [, responseBody] = await this.put(endPoints.updateBatchRequestQuotes, {
+            data: { trash: allQuoteIds },
+            headers: auth,
+        });
         return responseBody;
     }
 
     // convert quote to order
-    async convertQuoteToOrder(
-        quoteId: string,
-        auth?: auth,
-    ): Promise<responseBody> {
-        const [, responseBody] = await this.post(
-            endPoints.convertRequestQuoteToOrder,
-            { data: { status: 'converted', quote_id: quoteId }, headers: auth },
-        );
+    async convertQuoteToOrder(quoteId: string, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.post(endPoints.convertRequestQuoteToOrder, {
+            data: { status: 'converted', quote_id: quoteId },
+            headers: auth,
+        });
         return responseBody;
     }
 
@@ -1566,27 +1193,20 @@ export class ApiUtils {
      */
 
     // get all order download
-    async getAllOrderDownloads(
-        orderId: string,
-        auth?: auth,
-    ): Promise<responseBody> {
-        const [, responseBody] = await this.get(
-            endPoints.getAllOrderDownloads(orderId),
-            { params: { per_page: 100 }, headers: auth },
-        );
+    async getAllOrderDownloads(orderId: string, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.get(endPoints.getAllOrderDownloads(orderId), {
+            params: { per_page: 100 },
+            headers: auth,
+        });
         return responseBody;
     }
 
     // create order download
-    async createOrderDownload(
-        orderId: string,
-        downloadableProducts: string[],
-        auth?: auth,
-    ): Promise<[responseBody, string]> {
-        const [, responseBody] = await this.post(
-            endPoints.createOrderDownload(orderId),
-            { data: { ids: downloadableProducts }, headers: auth },
-        );
+    async createOrderDownload(orderId: string, downloadableProducts: string[], auth?: auth): Promise<[responseBody, string]> {
+        const [, responseBody] = await this.post(endPoints.createOrderDownload(orderId), {
+            data: { ids: downloadableProducts },
+            headers: auth,
+        });
         const downloadId = String(Object.keys(responseBody)[0]);
         return [responseBody, downloadId];
     }
@@ -1607,56 +1227,32 @@ export class ApiUtils {
     // get seller badgeId
     async getSellerBadgeId(eventType: string, auth?: auth): Promise<string> {
         const allBadges = await this.getAllSellerBadges(auth);
-        const badgeId = allBadges.find(
-            (o: { event_type: unknown }) => o.event_type === eventType,
-        )?.id;
+        const badgeId = allBadges.find((o: { event_type: unknown }) => o.event_type === eventType)?.id;
         return badgeId;
     }
 
     // create seller badge
-    async createSellerBadge(
-        payload: any,
-        auth?: auth,
-    ): Promise<[responseBody, string]> {
-        const [, responseBody] = await this.post(
-            endPoints.createSellerBadge,
-            { data: payload, headers: auth },
-            false,
-        );
-        const badgeId =
-            responseBody.code === 'invalid-event-type'
-                ? await this.getSellerBadgeId(payload.event_type, auth)
-                : responseBody?.id;
+    async createSellerBadge(payload: any, auth?: auth): Promise<[responseBody, string]> {
+        const [, responseBody] = await this.post(endPoints.createSellerBadge, { data: payload, headers: auth }, false);
+        const badgeId = responseBody.code === 'invalid-event-type' ? await this.getSellerBadgeId(payload.event_type, auth) : responseBody?.id;
         return [responseBody, badgeId];
     }
 
     // update batch seller badges
-    async updateBatchSellerBadges(
-        action: string,
-        allIds: string[],
-        auth?: auth,
-    ): Promise<responseBody> {
+    async updateBatchSellerBadges(action: string, allIds: string[], auth?: auth): Promise<responseBody> {
         if (!allIds?.length) {
-            allIds = (await this.getAllSellerBadges(auth)).map(
-                (a: { id: unknown }) => a.id,
-            );
+            allIds = (await this.getAllSellerBadges(auth)).map((a: { id: unknown }) => a.id);
         }
-        const [, responseBody] = await this.put(
-            endPoints.updateBatchSellerBadges,
-            { data: { ids: allIds, action: action }, headers: auth },
-        );
+        const [, responseBody] = await this.put(endPoints.updateBatchSellerBadges, {
+            data: { ids: allIds, action: action },
+            headers: auth,
+        });
         return responseBody;
     }
 
     // delete seller badge
-    async deleteSellerBadge(
-        badgeId: string,
-        auth?: auth,
-    ): Promise<responseBody> {
-        const [, responseBody] = await this.delete(
-            endPoints.deleteSellerBadge(badgeId),
-            { headers: auth },
-        );
+    async deleteSellerBadge(badgeId: string, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.delete(endPoints.deleteSellerBadge(badgeId), { headers: auth });
         return responseBody;
     }
 
@@ -1687,22 +1283,13 @@ export class ApiUtils {
     // get staffId
     async getStaffId(username: string, auth?: auth): Promise<string> {
         const allStaffs = await this.getAllVendorStaffs(auth);
-        const staffId = allStaffs.find(
-            (o: { user_login: unknown }) => o.user_login === username,
-        )?.id;
+        const staffId = allStaffs.find((o: { user_login: unknown }) => o.user_login === username)?.id;
         return staffId;
     }
 
     // create vendor staff
-    async createVendorStaff(
-        payload: any,
-        auth?: auth,
-    ): Promise<[responseBody, string]> {
-        const [response, responseBody] = await this.post(
-            endPoints.createVendorStaff,
-            { data: payload, headers: auth },
-            false,
-        );
+    async createVendorStaff(payload: any, auth?: auth): Promise<[responseBody, string]> {
+        const [response, responseBody] = await this.post(endPoints.createVendorStaff, { data: payload, headers: auth }, false);
         let staffId: string;
         if (responseBody.code) {
             expect(response.status()).toBe(500);
@@ -1720,15 +1307,8 @@ export class ApiUtils {
     }
 
     // update staff
-    async updateStaff(
-        staffId: string,
-        payload: object,
-        auth?: auth,
-    ): Promise<responseBody> {
-        const [, responseBody] = await this.put(
-            endPoints.updateVendorStaff(staffId),
-            { data: payload, headers: auth },
-        );
+    async updateStaff(staffId: string, payload: object, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.put(endPoints.updateVendorStaff(staffId), { data: payload, headers: auth });
         return responseBody;
     }
 
@@ -1737,15 +1317,8 @@ export class ApiUtils {
      */
 
     // add spmv product to store
-    async addSpmvProductToStore(
-        productId: string,
-        auth?: auth,
-    ): Promise<[APIResponse, responseBody]> {
-        const [response, responseBody] = await this.post(
-            endPoints.addToStore,
-            { data: { product_id: productId }, headers: auth },
-            false,
-        );
+    async addSpmvProductToStore(productId: string, auth?: auth): Promise<[APIResponse, responseBody]> {
+        const [response, responseBody] = await this.post(endPoints.addToStore, { data: { product_id: productId }, headers: auth }, false);
 
         // todo: need to handle already cloned product, dokan issue: fatal error for requested with cloned product id
         // if(responseBody.code){
@@ -1792,10 +1365,7 @@ export class ApiUtils {
     }
 
     // get user by role
-    async getAllUsersByRole(
-        roles: string[],
-        auth?: auth,
-    ): Promise<responseBody> {
+    async getAllUsersByRole(roles: string[], auth?: auth): Promise<responseBody> {
         const [, responseBody] = await this.get(endPoints.wp.getAllUsers, {
             params: { per_page: 100, roles: roles },
             headers: auth,
@@ -1814,10 +1384,7 @@ export class ApiUtils {
 
     // get user by-id
     async getUserById(userId: string, auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.get(
-            endPoints.wp.getUserById(userId),
-            { headers: auth },
-        );
+        const [, responseBody] = await this.get(endPoints.wp.getUserById(userId), { headers: auth });
         return responseBody;
     }
 
@@ -1832,24 +1399,14 @@ export class ApiUtils {
     }
 
     // update user
-    async updateUser(
-        userId: string,
-        payload: object,
-        auth?: auth,
-    ): Promise<responseBody> {
-        const [, responseBody] = await this.put(
-            endPoints.wp.updateUser(userId),
-            { data: payload, headers: auth },
-        );
+    async updateUser(userId: string, payload: object, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.put(endPoints.wp.updateUser(userId), { data: payload, headers: auth });
         return responseBody;
     }
 
     // delete user
     async deleteUser(userId: string, auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.delete(
-            endPoints.wp.deleteUser(userId),
-            { headers: auth },
-        );
+        const [, responseBody] = await this.delete(endPoints.wp.deleteUser(userId), { headers: auth });
         return responseBody;
     }
 
@@ -1865,15 +1422,8 @@ export class ApiUtils {
     }
 
     // get single plugin
-    async getSinglePlugin(
-        plugin: string,
-        auth?: auth,
-    ): Promise<[responseBody, string, string]> {
-        const [response, responseBody] = await this.get(
-            endPoints.wp.getSinglePlugin(plugin + '/' + plugin),
-            { headers: auth },
-            false,
-        );
+    async getSinglePlugin(plugin: string, auth?: auth): Promise<[responseBody, string, string]> {
+        const [response, responseBody] = await this.get(endPoints.wp.getSinglePlugin(plugin + '/' + plugin), { headers: auth }, false);
         if (responseBody.code) {
             expect(response.status()).toBe(404);
             return [responseBody, plugin, 'not exists'];
@@ -1884,54 +1434,33 @@ export class ApiUtils {
     }
 
     // update plugin
-    async updatePlugin(
-        plugin: string,
-        payload: object,
-        auth?: auth,
-    ): Promise<responseBody> {
-        const [, responseBody] = await this.put(
-            endPoints.wp.updatePlugin(plugin),
-            { data: payload, headers: auth },
-        );
+    async updatePlugin(plugin: string, payload: object, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.put(endPoints.wp.updatePlugin(plugin), { data: payload, headers: auth });
         return responseBody;
     }
 
     // delete plugin
     async deletePlugin(plugin: string, auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.delete(
-            endPoints.wp.deletePlugin(plugin),
-            { headers: auth },
-        );
+        const [, responseBody] = await this.delete(endPoints.wp.deletePlugin(plugin), { headers: auth });
         return responseBody;
     }
 
     // get plugin active or not
-    async checkPluginsExistence(
-        plugins: string[],
-        auth?: auth,
-    ): Promise<boolean> {
-        const existingPlugins = (await this.getAllPlugins({}, auth)).map(
-            (a: { plugin: string }) => a.plugin.split('/')[1],
-        );
+    async checkPluginsExistence(plugins: string[], auth?: auth): Promise<boolean> {
+        const existingPlugins = (await this.getAllPlugins({}, auth)).map((a: { plugin: string }) => a.plugin.split('/')[1]);
         return helpers.isSubArray(existingPlugins, plugins);
     }
 
     // get plugin active or not
     async pluginsActiveOrNot(plugins: string[], auth?: auth): Promise<boolean> {
-        const activePlugins = (
-            await this.getAllPlugins({ status: 'active' }, auth)
-        ).map((a: { plugin: string }) => a.plugin.split('/')[1]);
+        const activePlugins = (await this.getAllPlugins({ status: 'active' }, auth)).map((a: { plugin: string }) => a.plugin.split('/')[1]);
         return helpers.isSubArray(activePlugins, plugins);
     }
 
     // media
 
     // upload media
-    async uploadMedia(
-        filePath: string,
-        mimeType: string,
-        auth: auth,
-    ): Promise<[responseBody, string]> {
+    async uploadMedia(filePath: string, mimeType: string, auth: auth): Promise<[responseBody, string]> {
         const payload = {
             headers: {
                 Accept: '*/*',
@@ -1946,24 +1475,16 @@ export class ApiUtils {
                 },
             },
         };
-        const [, responseBody] = await this.post(
-            endPoints.wp.createMediaItem,
-            payload,
-        );
+        const [, responseBody] = await this.post(endPoints.wp.createMediaItem, payload);
         const mediaId = String(responseBody?.id);
         return [responseBody, mediaId];
     }
 
     // upload file
-    async uploadFile(
-        filePath: string,
-        auth: auth,
-    ): Promise<[responseBody, string]> {
+    async uploadFile(filePath: string, auth: auth): Promise<[responseBody, string]> {
         const payload = fs.readFileSync(filePath);
         const headers = {
-            'content-disposition': `attachment; filename=${String(
-                filePath.split('/').pop(),
-            )}`,
+            'content-disposition': `attachment; filename=${String(filePath.split('/').pop())}`,
             Authorization: auth.Authorization,
         };
         const [, responseBody] = await this.post(endPoints.wp.createMediaItem, {
@@ -2026,31 +1547,20 @@ export class ApiUtils {
 
     // get single page
     async getSinglePage(pageId: string, auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.get(
-            endPoints.wp.getSinglePage(pageId),
-            { headers: auth },
-        );
+        const [, responseBody] = await this.get(endPoints.wp.getSinglePage(pageId), { headers: auth });
         return responseBody;
     }
 
     // get pageId
     async getPageId(pageSlug: string, auth?: auth): Promise<string> {
         const allPages = await this.getAllPages(auth);
-        const pageId = allPages.find(
-            (o: { slug: unknown }) => o.slug === pageSlug,
-        )?.id;
+        const pageId = allPages.find((o: { slug: unknown }) => o.slug === pageSlug)?.id;
         return pageId;
     }
 
     // create page
-    async createPage(
-        payload: object,
-        auth?: auth,
-    ): Promise<[responseBody, string]> {
-        let pageId = await this.getPageId(
-            helpers.slugify(payloads.tocPage.title),
-            payloads.adminAuth,
-        );
+    async createPage(payload: object, auth?: auth): Promise<[responseBody, string]> {
+        let pageId = await this.getPageId(helpers.slugify(payloads.tocPage.title), payloads.adminAuth);
         let responseBody;
         if (!pageId) {
             [, responseBody] = await this.post(endPoints.wp.createPage, {
@@ -2071,69 +1581,43 @@ export class ApiUtils {
     // settings
 
     // get all woocommerce setting options
-    async getAllWcSettings(
-        groupId: string,
-        auth?: auth,
-    ): Promise<responseBody> {
-        const [, responseBody] = await this.get(
-            endPoints.wc.getAllSettingOptions(groupId),
-            { headers: auth },
-        );
+    async getAllWcSettings(groupId: string, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.get(endPoints.wc.getAllSettingOptions(groupId), { headers: auth });
         return responseBody;
     }
 
     // get single woocommerce setting options
-    async getSingleWcSettingOptions(
-        groupId: string,
-        optionId: string,
-        auth?: auth,
-    ): Promise<responseBody> {
-        const [, responseBody] = await this.get(
-            endPoints.wc.getSingleSettingOption(groupId, optionId),
-            { headers: auth },
-        );
+    async getSingleWcSettingOptions(groupId: string, optionId: string, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.get(endPoints.wc.getSingleSettingOption(groupId, optionId), {
+            headers: auth,
+        });
         return responseBody;
     }
 
     // update single woocommerce setting options
-    async updateSingleWcSettingOptions(
-        groupId: string,
-        optionId: string,
-        payload: object,
-        auth?: auth,
-    ): Promise<responseBody> {
-        const [, responseBody] = await this.post(
-            endPoints.wc.updateSettingOption(groupId, optionId),
-            { data: payload, headers: auth },
-        );
+    async updateSingleWcSettingOptions(groupId: string, optionId: string, payload: object, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.post(endPoints.wc.updateSettingOption(groupId, optionId), {
+            data: payload,
+            headers: auth,
+        });
         return responseBody;
     }
 
     // update batch woocommerce settings options
-    async updateBatchWcSettingsOptions(
-        groupId: string,
-        payload: object,
-        auth?: auth,
-    ): Promise<responseBody> {
-        const [, responseBody] = await this.post(
-            endPoints.wc.updateBatchSettingOptions(groupId),
-            { data: payload, headers: auth },
-        );
+    async updateBatchWcSettingsOptions(groupId: string, payload: object, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.post(endPoints.wc.updateBatchSettingOptions(groupId), {
+            data: payload,
+            headers: auth,
+        });
         return responseBody;
     }
 
     // reviews
 
     // create product review
-    async createProductReview(
-        payload: string | object,
-        review: object,
-        auth?: auth,
-    ): Promise<[responseBody, string, string]> {
+    async createProductReview(payload: string | object, review: object, auth?: auth): Promise<[responseBody, string, string]> {
         let productId: string;
-        typeof payload === 'object'
-            ? ([, productId] = await this.createProduct(payload, auth))
-            : (productId = payload);
+        typeof payload === 'object' ? ([, productId] = await this.createProduct(payload, auth)) : (productId = payload);
         const [, responseBody] = await this.post(endPoints.wc.createReview, {
             data: { ...review, product_id: productId },
             headers: auth,
@@ -2155,33 +1639,20 @@ export class ApiUtils {
     }
 
     // get single category
-    async getSingleCategory(
-        categoryId: string,
-        auth?: auth,
-    ): Promise<responseBody> {
-        const [, responseBody] = await this.get(
-            endPoints.wc.getSingleCategory(categoryId),
-            { headers: auth },
-        );
+    async getSingleCategory(categoryId: string, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.get(endPoints.wc.getSingleCategory(categoryId), { headers: auth });
         return responseBody;
     }
 
     // get categoryId
     async getCategoryId(categoryName: string, auth?: auth): Promise<string> {
         const allCategories = await this.getAllCategories(auth);
-        const categoryId = categoryName
-            ? allCategories.find(
-                  (o: { name: unknown }) => o.name === categoryName,
-              )?.id
-            : allCategories[0]?.id;
+        const categoryId = categoryName ? allCategories.find((o: { name: unknown }) => o.name === categoryName)?.id : allCategories[0]?.id;
         return categoryId;
     }
 
     // create category
-    async createCategory(
-        payload: object,
-        auth?: auth,
-    ): Promise<[responseBody, string]> {
+    async createCategory(payload: object, auth?: auth): Promise<[responseBody, string]> {
         const [, responseBody] = await this.post(endPoints.wc.createCategory, {
             data: payload,
             headers: auth,
@@ -2191,87 +1662,52 @@ export class ApiUtils {
     }
 
     // update category
-    async updateCategory(
-        categoryId: string,
-        payload: object,
-        auth?: auth,
-    ): Promise<responseBody> {
-        const [, responseBody] = await this.put(
-            endPoints.wc.updateCategory(categoryId),
-            { data: payload, headers: auth },
-        );
+    async updateCategory(categoryId: string, payload: object, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.put(endPoints.wc.updateCategory(categoryId), {
+            data: payload,
+            headers: auth,
+        });
         return responseBody;
     }
 
     // delete category
-    async deleteCategory(
-        categoryId: string,
-        auth?: auth,
-    ): Promise<responseBody> {
-        const [, responseBody] = await this.delete(
-            endPoints.wc.deleteCategory(categoryId),
-            { headers: auth },
-        );
+    async deleteCategory(categoryId: string, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.delete(endPoints.wc.deleteCategory(categoryId), { headers: auth });
         return responseBody;
     }
 
     // update batch categories
-    async updateBatchCategories(
-        action: string,
-        allIds: string[],
-        auth?: auth,
-    ): Promise<[APIResponse, responseBody]> {
+    async updateBatchCategories(action: string, allIds: string[], auth?: auth): Promise<[APIResponse, responseBody]> {
         if (!allIds?.length) {
-            allIds = (await this.getAllCategories(auth)).map(
-                (a: { id: unknown }) => a.id,
-            );
+            allIds = (await this.getAllCategories(auth)).map((a: { id: unknown }) => a.id);
         }
-        const [response, responseBody] = await this.post(
-            endPoints.wc.updateBatchCategories,
-            { data: { [action]: allIds }, headers: auth },
-        );
+        const [response, responseBody] = await this.post(endPoints.wc.updateBatchCategories, {
+            data: { [action]: allIds },
+            headers: auth,
+        });
         return [response, responseBody];
     }
 
     // order
 
     // create order
-    async createOrder(
-        product: string | object,
-        orderPayload: any,
-        auth?: auth,
-    ): Promise<[APIResponse, responseBody, string, string]> {
+    async createOrder(product: string | object, orderPayload: any, auth?: auth): Promise<[APIResponse, responseBody, string, string]> {
         let productId: string;
         if (!product) {
-            [, productId] = await this.createProduct(
-                payloads.createProduct(),
-                auth,
-            );
+            [, productId] = await this.createProduct(payloads.createProduct(), auth);
         } else {
-            typeof product === 'object'
-                ? ([, productId] = await this.createProduct(product, auth))
-                : (productId = product);
+            typeof product === 'object' ? ([, productId] = await this.createProduct(product, auth)) : (productId = product);
         }
         const payload = orderPayload;
         payload.line_items[0].product_id = productId;
-        const [response, responseBody] = await this.post(
-            endPoints.wc.createOrder,
-            { data: payload, headers: payloads.adminAuth },
-            false,
-        );
+        const [response, responseBody] = await this.post(endPoints.wc.createOrder, { data: payload, headers: payloads.adminAuth }, false);
         const orderId = String(responseBody?.id);
         return [response, responseBody, orderId, productId];
     }
 
     // create complete order
-    async createOrderWithStatus(
-        product: string | object,
-        order: any,
-        status: string,
-        auth?: auth,
-    ): Promise<[APIResponse, responseBody, string, string]> {
-        const [response, responseBody, orderId, productId] =
-            await this.createOrder(product, order, auth);
+    async createOrderWithStatus(product: string | object, order: any, status: string, auth?: auth): Promise<[APIResponse, responseBody, string, string]> {
+        const [response, responseBody, orderId, productId] = await this.createOrder(product, order, auth);
         await this.updateOrderStatus(orderId, status, auth);
         return [response, responseBody, orderId, productId];
     }
@@ -2279,15 +1715,8 @@ export class ApiUtils {
     // refund
 
     // create refund
-    async createRefund(
-        orderId: string,
-        refund: object,
-        auth?: auth,
-    ): Promise<[responseBody, string]> {
-        const [, responseBody] = await this.post(
-            endPoints.wc.createRefund(orderId),
-            { data: refund, headers: auth },
-        );
+    async createRefund(orderId: string, refund: object, auth?: auth): Promise<[responseBody, string]> {
+        const [, responseBody] = await this.post(endPoints.wc.createRefund(orderId), { data: refund, headers: auth });
         const refundId = String(responseBody?.id);
         return [responseBody, refundId];
     }
@@ -2312,40 +1741,24 @@ export class ApiUtils {
     }
 
     // update batch tax rates
-    async updateBatchTaxRates(
-        action: string,
-        allIds: string[],
-        auth?: auth,
-    ): Promise<responseBody> {
+    async updateBatchTaxRates(action: string, allIds: string[], auth?: auth): Promise<responseBody> {
         if (!allIds?.length) {
-            allIds = (await this.getAllTaxRates(auth)).map(
-                (a: { id: unknown }) => a.id,
-            );
+            allIds = (await this.getAllTaxRates(auth)).map((a: { id: unknown }) => a.id);
         }
-        const [, responseBody] = await this.put(
-            endPoints.wc.updateBatchTaxRates,
-            { data: { [action]: allIds }, headers: auth },
-        );
+        const [, responseBody] = await this.put(endPoints.wc.updateBatchTaxRates, {
+            data: { [action]: allIds },
+            headers: auth,
+        });
         return responseBody;
     }
 
     // setup tax
-    async setUpTaxRate(
-        enableTaxPayload: object,
-        taxPayload: taxRate,
-        auth?: auth,
-    ): Promise<number> {
+    async setUpTaxRate(enableTaxPayload: object, taxPayload: taxRate, auth?: auth): Promise<number> {
         // enable tax rate
-        await this.updateBatchWcSettingsOptions(
-            'general',
-            enableTaxPayload,
-            auth,
-        );
+        await this.updateBatchWcSettingsOptions('general', enableTaxPayload, auth);
 
         // delete previous tax rates
-        const allTaxRateIds = (await this.getAllTaxRates(auth)).map(
-            (o: { id: unknown }) => o.id,
-        );
+        const allTaxRateIds = (await this.getAllTaxRates(auth)).map((o: { id: unknown }) => o.id);
         if (allTaxRateIds.length) {
             await this.updateBatchTaxRates('delete', allTaxRateIds, auth);
         }
@@ -2360,94 +1773,60 @@ export class ApiUtils {
 
     // get all shipping zones
     async getAllShippingZones(auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.get(
-            endPoints.wc.getAllShippingZones,
-            { headers: auth },
-        );
+        const [, responseBody] = await this.get(endPoints.wc.getAllShippingZones, { headers: auth });
         return responseBody;
     }
 
     // get zoneId
     async getZoneId(zoneName: string, auth?: auth): Promise<string> {
         const allZones = await this.getAllShippingZones(auth);
-        const zoneId = allZones.find(
-            (o: { name: unknown }) => o.name === zoneName,
-        )?.id;
+        const zoneId = allZones.find((o: { name: unknown }) => o.name === zoneName)?.id;
         return zoneId;
     }
 
     // create shipping zone
-    async createShippingZone(
-        payload: object,
-        auth?: auth,
-    ): Promise<[responseBody, string]> {
-        const [, responseBody] = await this.post(
-            endPoints.wc.createShippingZone,
-            { data: payload, headers: auth },
-        );
+    async createShippingZone(payload: object, auth?: auth): Promise<[responseBody, string]> {
+        const [, responseBody] = await this.post(endPoints.wc.createShippingZone, { data: payload, headers: auth });
         const shippingZoneId = String(responseBody?.id);
         return [responseBody, shippingZoneId];
     }
 
     // delete shipping zone
-    async deleteShippingZone(
-        zoneId: string,
-        auth?: auth,
-    ): Promise<responseBody> {
-        const [, responseBody] = await this.delete(
-            endPoints.wc.deleteShippingZone(zoneId),
-            { params: { force: true }, headers: auth },
-        );
+    async deleteShippingZone(zoneId: string, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.delete(endPoints.wc.deleteShippingZone(zoneId), {
+            params: { force: true },
+            headers: auth,
+        });
         return responseBody;
     }
 
     // get all shipping zone locations
-    async getAllShippingZoneLocations(
-        zoneId: string,
-        auth?: auth,
-    ): Promise<responseBody> {
-        const [, responseBody] = await this.get(
-            endPoints.wc.getAllShippingZoneLocations(zoneId),
-            { headers: auth },
-        );
+    async getAllShippingZoneLocations(zoneId: string, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.get(endPoints.wc.getAllShippingZoneLocations(zoneId), { headers: auth });
         return responseBody;
     }
 
     // add shipping zone location
-    async addShippingZoneLocation(
-        zoneId: string,
-        zoneLocation: object,
-        auth?: auth,
-    ): Promise<responseBody> {
-        const [, responseBody] = await this.put(
-            endPoints.wc.addShippingZoneLocation(zoneId),
-            { data: zoneLocation, headers: auth },
-        );
+    async addShippingZoneLocation(zoneId: string, zoneLocation: object, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.put(endPoints.wc.addShippingZoneLocation(zoneId), {
+            data: zoneLocation,
+            headers: auth,
+        });
         return responseBody;
     }
 
     // get all shipping zone methods
-    async getAllShippingZoneMethods(
-        zoneId: string,
-        auth?: auth,
-    ): Promise<responseBody> {
-        const [, responseBody] = await this.get(
-            endPoints.wc.getAllShippingZoneMethods(zoneId),
-            { headers: auth },
-        );
+    async getAllShippingZoneMethods(zoneId: string, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.get(endPoints.wc.getAllShippingZoneMethods(zoneId), { headers: auth });
         return responseBody;
     }
 
     // add shipping zone method
-    async addShippingZoneMethod(
-        zoneId: string,
-        zoneMethod: object,
-        auth?: auth,
-    ): Promise<responseBody> {
-        const [, responseBody] = await this.post(
-            endPoints.wc.addShippingZoneMethod(zoneId),
-            { data: zoneMethod, headers: auth },
-        );
+    async addShippingZoneMethod(zoneId: string, zoneMethod: object, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.post(endPoints.wc.addShippingZoneMethod(zoneId), {
+            data: zoneMethod,
+            headers: auth,
+        });
         return responseBody;
     }
 
@@ -2455,35 +1834,24 @@ export class ApiUtils {
 
     // get all payment gateway
     async getAllPaymentGateways(auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.get(
-            endPoints.wc.getAllPaymentGateways,
-            { headers: auth },
-        );
+        const [, responseBody] = await this.get(endPoints.wc.getAllPaymentGateways, { headers: auth });
         return responseBody;
     }
 
     // get single payment gateway
-    async getSinglePaymentGateway(
-        paymentGatewayId: string,
-        auth?: auth,
-    ): Promise<responseBody> {
-        const [, responseBody] = await this.get(
-            endPoints.wc.getSinglePaymentGateway(paymentGatewayId),
-            { headers: auth },
-        );
+    async getSinglePaymentGateway(paymentGatewayId: string, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.get(endPoints.wc.getSinglePaymentGateway(paymentGatewayId), {
+            headers: auth,
+        });
         return responseBody;
     }
 
     // update payment gateway
-    async updatePaymentGateway(
-        paymentGatewayId: string,
-        payload: object,
-        auth?: auth,
-    ): Promise<responseBody> {
-        const [, responseBody] = await this.put(
-            endPoints.wc.updatePaymentGateway(paymentGatewayId),
-            { data: payload, headers: auth },
-        );
+    async updatePaymentGateway(paymentGatewayId: string, payload: object, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.put(endPoints.wc.updatePaymentGateway(paymentGatewayId), {
+            data: payload,
+            headers: auth,
+        });
         return responseBody;
     }
 
@@ -2492,14 +1860,11 @@ export class ApiUtils {
      */
 
     // create product
-    async createBookableProduct(
-        payload: object,
-        auth?: auth,
-    ): Promise<[responseBody, string, string]> {
-        const [, responseBody] = await this.post(
-            endPoints.wc.booking.createBookableProduct,
-            { data: payload, headers: auth },
-        );
+    async createBookableProduct(payload: object, auth?: auth): Promise<[responseBody, string, string]> {
+        const [, responseBody] = await this.post(endPoints.wc.booking.createBookableProduct, {
+            data: payload,
+            headers: auth,
+        });
         const productId = String(responseBody?.id);
         const productName = String(responseBody.name);
         return [responseBody, productId, productName];
@@ -2507,44 +1872,18 @@ export class ApiUtils {
 
     // get system status
     async getSystemStatus(auth?: auth): Promise<[responseBody, object]> {
-        const [, responseBody] = await this.get(
-            endPoints.wc.getAllSystemStatus,
-            { headers: auth },
-        );
-        let activePlugins = responseBody.active_plugins.map(
-            (a: { plugin: string; version: string }) =>
-                a.plugin.split('/')[0] + ' v' + a.version,
-        );
+        const [, responseBody] = await this.get(endPoints.wc.getAllSystemStatus, { headers: auth });
+        let activePlugins = responseBody.active_plugins.map((a: { plugin: string; version: string }) => a.plugin.split('/')[0] + ' v' + a.version);
         activePlugins.sort();
-        const conditions = [
-            'Basic-Auth',
-            'bookings',
-            'addons',
-            'auctions',
-            'subscriptions',
-            'ba',
-            'wa',
-            'wb',
-            'ws',
-            'wps',
-        ];
-        activePlugins = activePlugins.filter(
-            (e: string | string[]) => !conditions.some(el => e.includes(el)),
-        );
+        const conditions = ['Basic-Auth', 'bookings', 'addons', 'auctions', 'subscriptions', 'ba', 'wa', 'wb', 'ws', 'wps'];
+        activePlugins = activePlugins.filter((e: string | string[]) => !conditions.some(el => e.includes(el)));
         // activePlugins = activePlugins.slice(1, -4);
         const compactInfo = {
-            wpVersion:
-                'WordPress Version: ' + responseBody?.environment.wp_version,
+            wpVersion: 'WordPress Version: ' + responseBody?.environment.wp_version,
             phpVersion: 'PHP Version: ' + responseBody?.environment.php_version,
-            mysqlVersion:
-                'MySql Version: ' + responseBody?.environment.mysql_version,
-            theme:
-                'Theme: ' +
-                responseBody?.theme.name +
-                ' v' +
-                responseBody?.theme.version,
-            wpDebugMode:
-                'Debug Mode: ' + responseBody?.environment.wp_debug_mode,
+            mysqlVersion: 'MySql Version: ' + responseBody?.environment.mysql_version,
+            theme: 'Theme: ' + responseBody?.theme.name + ' v' + responseBody?.theme.version,
+            wpDebugMode: 'Debug Mode: ' + responseBody?.environment.wp_debug_mode,
             activePlugins: activePlugins,
         };
         return [responseBody, compactInfo];

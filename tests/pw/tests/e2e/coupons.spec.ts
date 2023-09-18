@@ -24,22 +24,13 @@ test.describe('Coupons test', () => {
         vPage = await vendorContext.newPage();
         vendor = new CouponsPage(vPage);
 
-        const customerContext = await browser.newContext(
-            data.auth.customerAuth,
-        );
+        const customerContext = await browser.newContext(data.auth.customerAuth);
         cPage = await customerContext.newPage();
         customer = new CouponsPage(cPage);
 
         apiUtils = new ApiUtils(request);
-        [, , marketplaceCouponCode] = await apiUtils.createMarketPlaceCoupon(
-            payloads.createMarketPlaceCoupon(),
-            payloads.adminAuth,
-        );
-        [, , couponCode] = await apiUtils.createCoupon(
-            [PRODUCT_ID],
-            payloads.createCoupon(),
-            payloads.vendorAuth,
-        );
+        [, , marketplaceCouponCode] = await apiUtils.createMarketPlaceCoupon(payloads.createMarketPlaceCoupon(), payloads.adminAuth);
+        [, , couponCode] = await apiUtils.createCoupon([PRODUCT_ID], payloads.createCoupon(), payloads.vendorAuth);
     });
 
     test.afterAll(async () => {
@@ -75,32 +66,19 @@ test.describe('Coupons test', () => {
     });
 
     test('vendor can delete coupon @pro', async () => {
-        const [, , couponCode] = await apiUtils.createCoupon(
-            [PRODUCT_ID],
-            payloads.createCoupon(),
-            payloads.vendorAuth,
-        );
+        const [, , couponCode] = await apiUtils.createCoupon([PRODUCT_ID], payloads.createCoupon(), payloads.vendorAuth);
         await vendor.deleteCoupon(couponCode);
     });
 
     test('customer can view coupon on single store @pro', async () => {
-        await customer.viewStoreCoupon(
-            data.predefined.vendorStores.vendor1,
-            couponCode,
-        );
+        await customer.viewStoreCoupon(data.predefined.vendorStores.vendor1, couponCode);
     });
 
     test('customer can apply coupon @pro', async () => {
-        await customer.applyCoupon(
-            data.predefined.simpleProduct.product1.name,
-            data.predefined.coupon.couponCode,
-        );
+        await customer.applyCoupon(data.predefined.simpleProduct.product1.name, data.predefined.coupon.couponCode);
     });
 
     test('customer can buy product with coupon @pro', async () => {
-        await customer.buyProductWithCoupon(
-            data.predefined.simpleProduct.product1.name,
-            data.predefined.coupon.couponCode,
-        );
+        await customer.buyProductWithCoupon(data.predefined.simpleProduct.product1.name, data.predefined.coupon.couponCode);
     });
 });

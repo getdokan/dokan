@@ -21,10 +21,7 @@ test.describe('Store categories test', () => {
         vendor = new StoreCategoriesPage(vPage);
 
         apiUtils = new ApiUtils(request);
-        [, , categoryName] = await apiUtils.createStoreCategory(
-            payloads.createStoreCategory(),
-            payloads.adminAuth,
-        );
+        [, , categoryName] = await apiUtils.createStoreCategory(payloads.createStoreCategory(), payloads.adminAuth);
     });
 
     test.afterAll(async () => {
@@ -56,10 +53,7 @@ test.describe('Store categories test', () => {
     test('admin can set default store category @pro', async () => {
         await admin.updateStoreCategory(categoryName, 'set-default');
         // reset default category
-        await apiUtils.setDefaultStoreCategory(
-            'Uncategorized',
-            payloads.adminAuth,
-        );
+        await apiUtils.setDefaultStoreCategory('Uncategorized', payloads.adminAuth);
     });
 
     test('admin can delete store category @pro', async () => {
@@ -67,10 +61,7 @@ test.describe('Store categories test', () => {
     });
 
     test('vendor can update own store category @pro', async () => {
-        const [, , categoryName] = await apiUtils.createStoreCategory(
-            payloads.createStoreCategory(),
-            payloads.adminAuth,
-        );
+        const [, , categoryName] = await apiUtils.createStoreCategory(payloads.createStoreCategory(), payloads.adminAuth);
         await vendor.vendorUpdateStoreCategory(categoryName);
     });
 });

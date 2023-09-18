@@ -23,67 +23,45 @@ export class VendorReportsPage extends VendorPage {
         // chart elements are visible
         await this.multipleElementVisible(selector.vendor.vReports.chart);
 
-        await this.clickAndWaitForLoadState(
-            selector.vendor.vReports.menus.salesByDay,
-        );
+        await this.clickAndWaitForLoadState(selector.vendor.vReports.menus.salesByDay);
 
         // date picker elements are visible
         await this.multipleElementVisible(selector.vendor.vReports.datePicker);
         // chart elements are visible
         await this.multipleElementVisible(selector.vendor.vReports.chart);
 
-        await this.clickAndWaitForLoadState(
-            selector.vendor.vReports.menus.topSelling,
-        );
+        await this.clickAndWaitForLoadState(selector.vendor.vReports.menus.topSelling);
 
         // date picker elements are visible
         await this.multipleElementVisible(selector.vendor.vReports.datePicker);
 
         // top selling table elements are visible
-        await this.multipleElementVisible(
-            selector.vendor.vReports.topSelling.table,
-        );
+        await this.multipleElementVisible(selector.vendor.vReports.topSelling.table);
 
-        await this.clickAndWaitForLoadState(
-            selector.vendor.vReports.menus.topEarning,
-        );
+        await this.clickAndWaitForLoadState(selector.vendor.vReports.menus.topEarning);
 
         // date picker elements are visible
         await this.multipleElementVisible(selector.vendor.vReports.datePicker);
 
         // top earning table elements are visible
-        await this.multipleElementVisible(
-            selector.vendor.vReports.topEarning.table,
-        );
+        await this.multipleElementVisible(selector.vendor.vReports.topEarning.table);
 
-        await this.clickAndWaitForLoadState(
-            selector.vendor.vReports.menus.statement,
-        );
+        await this.clickAndWaitForLoadState(selector.vendor.vReports.menus.statement);
 
         // date picker elements are visible
         await this.multipleElementVisible(selector.vendor.vReports.datePicker);
 
         // statement table elements are visible
-        await this.multipleElementVisible(
-            selector.vendor.vReports.statement.table,
-        );
+        await this.multipleElementVisible(selector.vendor.vReports.statement.table);
 
         // export statements button is visible
-        await this.toBeVisible(
-            selector.vendor.vReports.statement.exportStatements,
-        );
+        await this.toBeVisible(selector.vendor.vReports.statement.exportStatements);
     }
 
     // vendor export statement
     async exportStatement(): Promise<void> {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.statement);
-        const isDisabled = await this.hasAttribute(
-            selector.vendor.vReports.statement.exportStatements,
-            'disabled',
-        );
-        !isDisabled &&
-            (await this.clickAndWaitForDownload(
-                selector.vendor.vReports.statement.exportStatements,
-            ));
+        const isDisabled = await this.hasAttribute(selector.vendor.vReports.statement.exportStatements, 'disabled');
+        !isDisabled && (await this.clickAndWaitForDownload(selector.vendor.vReports.statement.exportStatements));
     }
 }

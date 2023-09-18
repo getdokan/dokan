@@ -25,9 +25,6 @@ test.describe('License test', () => {
     // });
 
     test("admin can't activate license with incorrect key @pro @neg", async () => {
-        await admin.activateLicense(
-            data.dokanLicense.incorrectKey,
-            'incorrect',
-        );
+        await admin.activateLicense(data.dokanLicense.incorrectKey, 'incorrect');
     });
 });

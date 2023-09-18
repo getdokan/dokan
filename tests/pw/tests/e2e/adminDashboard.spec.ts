@@ -25,9 +25,7 @@ test.describe('Admin dashboard test', () => {
     });
 
     test('admin dashboard at a glance values are accurate @lite', async () => {
-        const summary = await apiUtils.getAdminReportSummary(
-            payloads.adminAuth,
-        );
+        const summary = await apiUtils.getAdminReportSummary(payloads.adminAuth);
         await admin.dokanAtAGlanceValueAccuracy(summary);
     });
 

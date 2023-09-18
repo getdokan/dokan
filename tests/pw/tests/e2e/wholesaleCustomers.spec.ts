@@ -28,14 +28,8 @@ test.describe('Wholesale customers test (admin)', () => {
 
         apiUtils = new ApiUtils(request);
 
-        await apiUtils.createWholesaleCustomer(
-            payloads.createCustomer(),
-            payloads.adminAuth,
-        );
-        await apiUtils.createWholesaleCustomer(
-            payloads.createCustomer1,
-            payloads.adminAuth,
-        );
+        await apiUtils.createWholesaleCustomer(payloads.createCustomer(), payloads.adminAuth);
+        await apiUtils.createWholesaleCustomer(payloads.createCustomer1, payloads.adminAuth);
         //  [,, productName] = await apiUtils.createProduct(payloads.createWholesaleProduct(), payloads. vendorAuth);
     });
 
@@ -49,23 +43,15 @@ test.describe('Wholesale customers test (admin)', () => {
     });
 
     test('admin can search wholesale customer @pro', async () => {
-        await admin.searchWholesaleCustomer(
-            data.predefined.customerInfo.username1,
-        );
+        await admin.searchWholesaleCustomer(data.predefined.customerInfo.username1);
     });
 
     test("admin can disable customer's wholesale capability @pro", async () => {
-        await admin.updateWholesaleCustomer(
-            data.predefined.customerInfo.username1,
-            'disable',
-        );
+        await admin.updateWholesaleCustomer(data.predefined.customerInfo.username1, 'disable');
     });
 
     test("admin can enable customer's wholesale capability @pro", async () => {
-        await admin.updateWholesaleCustomer(
-            data.predefined.customerInfo.username1,
-            'enable',
-        );
+        await admin.updateWholesaleCustomer(data.predefined.customerInfo.username1, 'enable');
     });
 
     test('admin can edit wholesale customer @pro', async () => {
@@ -73,16 +59,11 @@ test.describe('Wholesale customers test (admin)', () => {
     });
 
     test('admin can view wholesale customer orders @pro', async () => {
-        await admin.viewWholesaleCustomerOrders(
-            data.predefined.customerInfo.username1,
-        );
+        await admin.viewWholesaleCustomerOrders(data.predefined.customerInfo.username1);
     });
 
     test('admin can delete wholesale customer @pro', async () => {
-        await admin.updateWholesaleCustomer(
-            data.predefined.customerInfo.username1,
-            'delete',
-        );
+        await admin.updateWholesaleCustomer(data.predefined.customerInfo.username1, 'delete');
     });
 
     test('admin can perform wholesale customer bulk action @pro', async () => {

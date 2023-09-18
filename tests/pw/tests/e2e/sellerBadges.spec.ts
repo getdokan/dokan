@@ -20,10 +20,7 @@ test.describe('Seller badge test', () => {
         vendor = new SellerBadgesPage(vPage);
 
         apiUtils = new ApiUtils(request);
-        await apiUtils.createSellerBadge(
-            payloads.createSellerBadgeProductsPublished,
-            payloads.adminAuth,
-        );
+        await apiUtils.createSellerBadge(payloads.createSellerBadgeProductsPublished, payloads.adminAuth);
     });
 
     test.afterAll(async () => {
@@ -36,21 +33,15 @@ test.describe('Seller badge test', () => {
     });
 
     test('admin can preview seller badge @pro @explo', async () => {
-        await admin.previewSellerBadge(
-            data.sellerBadge.eventName.productsPublished,
-        );
+        await admin.previewSellerBadge(data.sellerBadge.eventName.productsPublished);
     });
 
     test('admin can view seller badge details @pro @explo', async () => {
-        await admin.viewSellerBadge(
-            data.sellerBadge.eventName.productsPublished,
-        );
+        await admin.viewSellerBadge(data.sellerBadge.eventName.productsPublished);
     });
 
     test('admin can search seller badge @pro', async () => {
-        await admin.searchSellerBadge(
-            data.sellerBadge.eventName.productsPublished,
-        );
+        await admin.searchSellerBadge(data.sellerBadge.eventName.productsPublished);
     });
 
     test('admin can create seller badge @pro', async () => {
@@ -76,42 +67,22 @@ test.describe('Seller badge test', () => {
     // });
 
     test('admin can view seller badges acquired by vendor @pro', async () => {
-        await admin.sellerBadgeAcquiredByVendor(
-            data.predefined.vendorStores.vendor1,
-        );
+        await admin.sellerBadgeAcquiredByVendor(data.predefined.vendorStores.vendor1);
     });
 
     test('admin can update seller badge status @pro', async () => {
-        await apiUtils.createSellerBadge(
-            payloads.createSellerBadgeExclusiveToPlatform,
-            payloads.adminAuth,
-        );
-        await admin.updateSellerBadge(
-            data.sellerBadge.eventName.exclusiveToPlatform,
-            'draft',
-        );
+        await apiUtils.createSellerBadge(payloads.createSellerBadgeExclusiveToPlatform, payloads.adminAuth);
+        await admin.updateSellerBadge(data.sellerBadge.eventName.exclusiveToPlatform, 'draft');
     });
 
     test('admin can delete seller badge @pro', async () => {
-        await apiUtils.createSellerBadge(
-            payloads.createSellerBadgeExclusiveToPlatform,
-            payloads.adminAuth,
-        );
-        await admin.updateSellerBadge(
-            data.sellerBadge.eventName.exclusiveToPlatform,
-            'delete',
-        );
+        await apiUtils.createSellerBadge(payloads.createSellerBadgeExclusiveToPlatform, payloads.adminAuth);
+        await admin.updateSellerBadge(data.sellerBadge.eventName.exclusiveToPlatform, 'delete');
     });
 
     test('admin can perform seller badge bulk action @pro', async () => {
-        await apiUtils.createSellerBadge(
-            payloads.createSellerBadgeFeatureProducts,
-            payloads.adminAuth,
-        );
-        await admin.sellerBadgeBulkAction(
-            'delete',
-            data.sellerBadge.eventName.featuredProducts,
-        );
+        await apiUtils.createSellerBadge(payloads.createSellerBadgeFeatureProducts, payloads.adminAuth);
+        await admin.sellerBadgeBulkAction('delete', data.sellerBadge.eventName.featuredProducts);
     });
 
     // vendor
@@ -125,9 +96,7 @@ test.describe('Seller badge test', () => {
     });
 
     test('vendor can search seller badge @pro', async () => {
-        await vendor.vendorSearchSellerBadge(
-            data.sellerBadge.eventName.productsPublished,
-        );
+        await vendor.vendorSearchSellerBadge(data.sellerBadge.eventName.productsPublished);
     });
 
     test('vendor can filter seller badges @pro', async () => {

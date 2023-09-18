@@ -11,39 +11,28 @@ export const helpers = {
             .replace(/^\w{1}/, letter => letter.toUpperCase()),
 
     // replace '_' to space & capitalize first letter of each word
-    replaceAndCapitalizeEachWord: (str: string) =>
-        str
-            .replace('_', ' ')
-            .replace(/(^\w{1})|(\s+\w{1})/g, (letter: string) =>
-                letter.toUpperCase(),
-            ),
+    replaceAndCapitalizeEachWord: (str: string) => str.replace('_', ' ').replace(/(^\w{1})|(\s+\w{1})/g, (letter: string) => letter.toUpperCase()),
 
     // capitalize
-    capitalize: (word: string) =>
-        word[0]?.toUpperCase() + word.substring(1).toLowerCase(),
+    capitalize: (word: string) => word[0]?.toUpperCase() + word.substring(1).toLowerCase(),
 
     // returns a random number between min (inclusive) and max (exclusive)
-    getRandomArbitrary: (min: number, max: number) =>
-        Math.random() * (max - min) + min,
+    getRandomArbitrary: (min: number, max: number) => Math.random() * (max - min) + min,
 
     // returns a random integer number between min (inclusive) and max (exclusive)
-    getRandomArbitraryInteger: (min: number, max: number) =>
-        Math.floor(Math.random() * (max - min) + min),
+    getRandomArbitraryInteger: (min: number, max: number) => Math.floor(Math.random() * (max - min) + min),
 
     // random number between 0 and 1000
     randomNumber: () => Math.floor(Math.random() * 1000),
 
     // random array element
-    randomItem: (arr: string | any[]) =>
-        arr[Math.floor(Math.random() * arr.length)],
+    randomItem: (arr: string | any[]) => arr[Math.floor(Math.random() * arr.length)],
 
     // remove array element
-    removeItem: (arr: any[], removeItem: any) =>
-        arr.filter(item => item !== removeItem),
+    removeItem: (arr: any[], removeItem: any) => arr.filter(item => item !== removeItem),
 
     // is sub array
-    isSubArray: (parentArray: any[], subArray: any[]) =>
-        subArray.every(el => parentArray.includes(el)),
+    isSubArray: (parentArray: any[], subArray: any[]) => subArray.every(el => parentArray.includes(el)),
 
     // check if object is empty
     isObjEmpty: (obj: object) => Object.keys(obj).length === 0,
@@ -73,14 +62,10 @@ export const helpers = {
         ),
 
     // price as string
-    priceString: (num: number, choice: string): string =>
-        choice === 'US'
-            ? Number(num).toLocaleString('es-US')
-            : Number(num).toLocaleString('es-ES'),
+    priceString: (num: number, choice: string): string => (choice === 'US' ? Number(num).toLocaleString('es-US') : Number(num).toLocaleString('es-ES')),
 
     // remove dollar sign
-    removeCurrencySign: (str: string): string =>
-        str.replace(/[^\d\-.,\\s]/g, ''),
+    removeCurrencySign: (str: string): string => str.replace(/[^\d\-.,\\s]/g, ''),
 
     // dateFormat // todo: remove all datetime , and update date to return date as required formate // also method to return as site date format
     dateFormatFYJ: (date: string) =>
@@ -142,11 +127,7 @@ export const helpers = {
             .replace(',', ''),
 
     // add two input days
-    addDays(
-        date: string | number | Date | null,
-        days: number,
-        format: string,
-    ): string {
+    addDays(date: string | number | Date | null, days: number, format: string): string {
         const result = date ? new Date(date) : new Date();
         result.setDate(result.getDate() + days);
 
@@ -222,39 +203,18 @@ export const helpers = {
     },
 
     // order total
-    orderTotal(
-        subtotal: number,
-        productTax = 0,
-        shippingTax = 0,
-        shippingFee = 0,
-    ) {
-        const orderTotal =
-            Number(subtotal) +
-            Number(productTax) +
-            Number(shippingTax) +
-            Number(shippingFee);
+    orderTotal(subtotal: number, productTax = 0, shippingTax = 0, shippingFee = 0) {
+        const orderTotal = Number(subtotal) + Number(productTax) + Number(shippingTax) + Number(shippingFee);
         return this.roundToTwo(orderTotal);
     },
 
     // calculate admin commission
-    adminCommission(
-        subTotal: number,
-        commission: any,
-        productTax = 0,
-        shippingTax = 0,
-        shippingFee = 0,
-        gatewayFee = 0,
-        feeRecipient: any,
-        gatewayFeeGiver = 'seller',
-    ) {
+    adminCommission(subTotal: number, commission: any, productTax = 0, shippingTax = 0, shippingFee = 0, gatewayFee = 0, feeRecipient: any, gatewayFeeGiver = 'seller') {
         let subTotalCommission = 0;
 
         switch (commission.type) {
             case 'percentage':
-                subTotalCommission = this.percentage(
-                    Number(subTotal),
-                    Number(commission.amount),
-                );
+                subTotalCommission = this.percentage(Number(subTotal), Number(commission.amount));
                 break;
 
             case 'flat':
@@ -262,11 +222,7 @@ export const helpers = {
                 break;
 
             case 'combine':
-                subTotalCommission =
-                    this.percentage(
-                        Number(subTotal),
-                        Number(commission.amount),
-                    ) + Number(commission.additionalAmount);
+                subTotalCommission = this.percentage(Number(subTotal), Number(commission.amount)) + Number(commission.additionalAmount);
                 break;
 
             default:
@@ -274,46 +230,22 @@ export const helpers = {
         }
 
         productTax = feeRecipient.taxFeeRecipient === 'seller' ? 0 : productTax;
-        shippingTax =
-            feeRecipient.shippingTaxFeeRecipient === 'seller' ? 0 : shippingTax;
-        shippingFee =
-            feeRecipient.shippingFeeRecipient === 'seller' ? 0 : shippingFee;
+        shippingTax = feeRecipient.shippingTaxFeeRecipient === 'seller' ? 0 : shippingTax;
+        shippingFee = feeRecipient.shippingFeeRecipient === 'seller' ? 0 : shippingFee;
         gatewayFee = gatewayFeeGiver === 'seller' ? 0 : gatewayFee;
 
-        const adminCommission =
-            subTotalCommission -
-            Number(gatewayFee) +
-            Number(productTax) +
-            Number(shippingTax) +
-            Number(shippingFee);
+        const adminCommission = subTotalCommission - Number(gatewayFee) + Number(productTax) + Number(shippingTax) + Number(shippingFee);
         return this.roundToTwo(adminCommission);
     },
 
     // calculate vendor earning
-    vendorEarning(
-        subTotal: number,
-        commission: number,
-        productTax = 0,
-        shippingTax = 0,
-        shippingFee = 0,
-        gatewayFee = 0,
-        feeRecipient: any,
-        gatewayFeeGiver = 'seller',
-    ) {
+    vendorEarning(subTotal: number, commission: number, productTax = 0, shippingTax = 0, shippingFee = 0, gatewayFee = 0, feeRecipient: any, gatewayFeeGiver = 'seller') {
         productTax = feeRecipient.taxFeeRecipient !== 'seller' ? 0 : productTax;
-        shippingTax =
-            feeRecipient.shippingTaxFeeRecipient !== 'seller' ? 0 : shippingTax;
-        shippingFee =
-            feeRecipient.shippingFeeRecipient !== 'seller' ? 0 : shippingFee;
+        shippingTax = feeRecipient.shippingTaxFeeRecipient !== 'seller' ? 0 : shippingTax;
+        shippingFee = feeRecipient.shippingFeeRecipient !== 'seller' ? 0 : shippingFee;
         gatewayFee = gatewayFeeGiver !== 'seller' ? 0 : gatewayFee;
 
-        const vendorEarning =
-            Number(subTotal) -
-            Number(commission) -
-            Number(gatewayFee) +
-            Number(productTax) +
-            Number(shippingTax) +
-            Number(shippingFee);
+        const vendorEarning = Number(subTotal) - Number(commission) - Number(gatewayFee) + Number(productTax) + Number(shippingTax) + Number(shippingFee);
         return this.roundToTwo(vendorEarning);
     },
 
@@ -377,10 +309,7 @@ export const helpers = {
         this.appendFile('.env', content);
     },
 
-    async createPage(
-        browser: Browser,
-        options?: BrowserContextOptions | undefined,
-    ) {
+    async createPage(browser: Browser, options?: BrowserContextOptions | undefined) {
         const browserContext = await browser.newContext(options);
         return browserContext.newPage();
     },

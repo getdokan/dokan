@@ -50,8 +50,7 @@ export class VendorToolsPage extends VendorPage {
         await this.click(selector.vendor.vTools.export.csv.exportCsv);
 
         // export csv elements are visible
-        const { exportCsvText, exportCsv, ...csv } =
-            selector.vendor.vTools.export.csv;
+        const { exportCsvText, exportCsv, ...csv } = selector.vendor.vTools.export.csv;
         await this.multipleElementVisible(csv);
     }
 
@@ -60,41 +59,18 @@ export class VendorToolsPage extends VendorPage {
 
         switch (importType) {
             case 'xml':
-                await this.uploadFile(
-                    selector.vendor.vTools.import.xml.chooseXmlFile,
-                    filePath,
-                );
-                await this.clickAndWaitForResponseAndLoadState(
-                    data.subUrls.frontend.vDashboard.tools,
-                    selector.vendor.vTools.import.xml.xml,
-                );
-                await this.toBeVisible(
-                    selector.vendor.vTools.import.xml.completionMessage,
-                );
+                await this.uploadFile(selector.vendor.vTools.import.xml.chooseXmlFile, filePath);
+                await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.tools, selector.vendor.vTools.import.xml.xml);
+                await this.toBeVisible(selector.vendor.vTools.import.xml.completionMessage);
                 break;
 
             case 'csv': // todo: add wait for uploading file, add api level assertion
-                await this.clickAndWaitForLoadState(
-                    selector.vendor.vTools.import.csv.csv,
-                );
-                await this.uploadFile(
-                    selector.vendor.vTools.import.csv.chooseCsv,
-                    filePath,
-                );
-                await this.click(
-                    selector.vendor.vTools.import.csv.updateExistingProducts,
-                );
-                await this.clickAndWaitForLoadState(
-                    selector.vendor.vTools.import.csv.continue,
-                );
-                await this.clickAndWaitForResponseAndLoadState(
-                    data.subUrls.frontend.vDashboard.csvImport,
-                    selector.vendor.vTools.import.csv.runTheImporter,
-                );
-                await this.toContainText(
-                    selector.vendor.vTools.import.csv.completionMessage,
-                    'Import complete!',
-                );
+                await this.clickAndWaitForLoadState(selector.vendor.vTools.import.csv.csv);
+                await this.uploadFile(selector.vendor.vTools.import.csv.chooseCsv, filePath);
+                await this.click(selector.vendor.vTools.import.csv.updateExistingProducts);
+                await this.clickAndWaitForLoadState(selector.vendor.vTools.import.csv.continue);
+                await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.csvImport, selector.vendor.vTools.import.csv.runTheImporter);
+                await this.toContainText(selector.vendor.vTools.import.csv.completionMessage, 'Import complete!');
                 break;
 
             default:
@@ -108,19 +84,13 @@ export class VendorToolsPage extends VendorPage {
         switch (exportType) {
             case 'xml':
                 await this.click(selector.vendor.vTools.export.xml.all);
-                await this.clickAndWaitForDownload(
-                    selector.vendor.vTools.export.xml.exportXml,
-                );
+                await this.clickAndWaitForDownload(selector.vendor.vTools.export.xml.exportXml);
                 break;
 
             case 'csv':
-                await this.clickAndWaitForLoadState(
-                    selector.vendor.vTools.export.csv.exportCsv,
-                );
+                await this.clickAndWaitForLoadState(selector.vendor.vTools.export.csv.exportCsv);
                 await this.click(selector.vendor.vTools.export.csv.customMeta);
-                await this.clickAndWaitForDownload(
-                    selector.vendor.vTools.export.csv.generateCsv,
-                );
+                await this.clickAndWaitForDownload(selector.vendor.vTools.export.csv.generateCsv);
                 break;
 
             default:

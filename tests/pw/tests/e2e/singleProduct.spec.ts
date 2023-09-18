@@ -10,9 +10,7 @@ test.describe('Single product functionality test', () => {
     // let apiUtils: ApiUtils;
 
     test.beforeAll(async ({ browser }) => {
-        const customerContext = await browser.newContext(
-            data.auth.customerAuth,
-        );
+        const customerContext = await browser.newContext(data.auth.customerAuth);
         cPage = await customerContext.newPage();
         customer = new SingleProductPage(cPage);
         // apiUtils = new ApiUtils(request);
@@ -25,51 +23,34 @@ test.describe('Single product functionality test', () => {
     // single product page
 
     test('single product is rendering properly @lite @explo', async () => {
-        await customer.singleProductRenderProperly(
-            data.predefined.simpleProduct.product1.name,
-        );
+        await customer.singleProductRenderProperly(data.predefined.simpleProduct.product1.name);
     });
 
     test('customer can view highlighted vendor info @lite', async () => {
-        await customer.viewHighlightedVendorInfo(
-            data.predefined.simpleProduct.product1.name,
-        );
+        await customer.viewHighlightedVendorInfo(data.predefined.simpleProduct.product1.name);
     });
 
     test('customer can view product vendor info @lite', async () => {
-        await customer.productVendorInfo(
-            data.predefined.simpleProduct.product1.name,
-        );
+        await customer.productVendorInfo(data.predefined.simpleProduct.product1.name);
     });
 
     test('customer can view product location @pro', async () => {
-        await customer.productLocation(
-            data.predefined.simpleProduct.product1.name,
-        );
+        await customer.productLocation(data.predefined.simpleProduct.product1.name);
     });
 
     test('customer can view product warranty policy @pro', async () => {
-        await customer.productWarrantyPolicy(
-            data.predefined.simpleProduct.product1.name,
-        );
+        await customer.productWarrantyPolicy(data.predefined.simpleProduct.product1.name);
     });
 
     test('customer can view more products @lite', async () => {
-        await customer.viewMoreProducts(
-            data.predefined.simpleProduct.product1.name,
-        );
+        await customer.viewMoreProducts(data.predefined.simpleProduct.product1.name);
     });
 
     test('customer can view related products @lite', async () => {
-        await customer.viewRelatedProducts(
-            data.predefined.simpleProduct.product1.name,
-        );
+        await customer.viewRelatedProducts(data.predefined.simpleProduct.product1.name);
     });
 
     test('customer can review product @lite', async () => {
-        await customer.reviewProduct(
-            data.predefined.simpleProduct.product1.name,
-            data.product.review,
-        );
+        await customer.reviewProduct(data.predefined.simpleProduct.product1.name, data.product.review);
     });
 });

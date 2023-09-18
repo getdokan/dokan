@@ -1,7 +1,6 @@
 const convert = require('xml-js');
 const fs = require('fs');
-const { SHA, PR_NUMBER, SYSTEM_INFO, API_TEST_RESULT, E2E_TEST_RESULT } =
-    process.env;
+const { SHA, PR_NUMBER, SYSTEM_INFO, API_TEST_RESULT, E2E_TEST_RESULT } = process.env;
 
 const readEnvInfo = fs.readFileSync(SYSTEM_INFO, 'utf8');
 const envInfo = JSON.parse(readEnvInfo);
@@ -19,9 +18,7 @@ const getFormattedDuration = time => {
 const getTestResult = (suiteName, filePath) => {
     if (fs.existsSync(filePath)) {
         const xmlFile = fs.readFileSync(filePath, 'utf8');
-        const jsonData = JSON.parse(
-            convert.xml2json(xmlFile, { compact: true, spaces: 2 }),
-        );
+        const jsonData = JSON.parse(convert.xml2json(xmlFile, { compact: true, spaces: 2 }));
         const testResult = jsonData.testsuites._attributes;
         const testSummary = [
             suiteName,
@@ -49,31 +46,15 @@ const addSummaryHeadingAndTable = core => {
     ];
     const apiTesResult = getTestResult('API Tests', API_TEST_RESULT);
     const e2eTesResult = getTestResult('E2E Tests', E2E_TEST_RESULT);
-    core.summary
-        .addHeading('Tests Summary')
-        .addRaw(`Commit SHA: ${SHA}`)
-        .addBreak()
-        .addBreak()
-        .addTable([tableHeader, apiTesResult, e2eTesResult]);
+    core.summary.addHeading('Tests Summary').addRaw(`Commit SHA: ${SHA}`).addBreak().addBreak().addTable([tableHeader, apiTesResult, e2eTesResult]);
 };
 
 const addList = core => {
     const pluginList = core.summary.addList(envInfo.activePlugins).stringify();
     core.summary.clear();
-    const pluginDetails = core.summary
-        .addDetails('Plugins: ', pluginList)
-        .stringify();
+    const pluginDetails = core.summary.addDetails('Plugins: ', pluginList).stringify();
     core.summary.clear();
-    return core.summary
-        .addList([
-            envInfo.wpVersion,
-            envInfo.phpVersion,
-            envInfo.mysqlVersion,
-            String(envInfo.wpDebugMode),
-            envInfo.theme,
-            pluginDetails,
-        ])
-        .stringify();
+    return core.summary.addList([envInfo.wpVersion, envInfo.phpVersion, envInfo.mysqlVersion, String(envInfo.wpDebugMode), envInfo.theme, pluginDetails]).stringify();
 };
 
 const addSummaryFooter = (core, list) => {

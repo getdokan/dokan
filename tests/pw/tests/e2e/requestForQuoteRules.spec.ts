@@ -15,10 +15,7 @@ test.describe('Request for quotation Rules test', () => {
         aPage = await adminContext.newPage();
         admin = new RequestForQuotationsPage(aPage);
         apiUtils = new ApiUtils(request);
-        await apiUtils.createQuoteRule(
-            { ...payloads.createQuoteRule(), rule_name: quoteRuleTitle },
-            payloads.adminAuth,
-        );
+        await apiUtils.createQuoteRule({ ...payloads.createQuoteRule(), rule_name: quoteRuleTitle }, payloads.adminAuth);
     });
 
     test.afterAll(async () => {
@@ -62,10 +59,7 @@ test.describe('Request for quotation Rules test', () => {
             },
             payloads.adminAuth,
         );
-        await admin.updateQuoteRule(
-            data.requestForQuotation.trashedQuoteRule.title,
-            'permanently-delete',
-        );
+        await admin.updateQuoteRule(data.requestForQuotation.trashedQuoteRule.title, 'permanently-delete');
     });
 
     test('admin can perform quote rule bulk actions @pro', async () => {

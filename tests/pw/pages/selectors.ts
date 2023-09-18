@@ -27,8 +27,7 @@ export const selector = {
         lostPassword: '.woocommerce-LostPassword > a',
 
         // User Logout
-        customerLogout:
-            '.woocommerce-MyAccount-navigation-link--customer-logout > a',
+        customerLogout: '.woocommerce-MyAccount-navigation-link--customer-logout > a',
         vendorLogout: '.fa-power-off',
 
         // User Forget Password
@@ -79,12 +78,9 @@ export const selector = {
         wpUploadFiles: '#menu-item-upload',
         uploadedMedia: 'div.attachment-preview',
         uploadedMediaFirst: '(//div[contains(@class,"attachment-preview")])[1]',
-        selectFiles:
-            '//div[@class="supports-drag-drop" and @style="position: relative;"]//button[@class="browser button button-hero"]',
-        selectFilesInput:
-            '//div[@class="supports-drag-drop" and @style="position: relative;"]//input[@type="file"]',
-        selectUploadedMedia:
-            '(//h2[contains(text(),"Media list")]/..//ul//li)[1]',
+        selectFiles: '//div[@class="supports-drag-drop" and @style="position: relative;"]//button[@class="browser button button-hero"]',
+        selectFilesInput: '//div[@class="supports-drag-drop" and @style="position: relative;"]//input[@type="file"]',
+        selectUploadedMedia: '(//h2[contains(text(),"Media list")]/..//ul//li)[1]',
         select: '//div[@class="supports-drag-drop" and @style="position: relative;"]//button[contains(@class, "media-button-select")]',
     },
 
@@ -105,8 +101,7 @@ export const selector = {
             wooCommerce: '.toplevel_page_woocommerce .wp-menu-name',
             products: '.menu-icon-product .wp-menu-name',
             bookings: '.menu-icon-wc_booking .wp-menu-name',
-            analytics:
-                '.toplevel_page_wc-admin\\&path\\=\\/analytics\\/overview .wp-menu-name',
+            analytics: '.toplevel_page_wc-admin\\&path\\=\\/analytics\\/overview .wp-menu-name',
             marketing: '.toplevel_page_woocommerce-marketing .wp-menu-name',
             elementor: '.toplevel_page_elementor .wp-menu-name',
             templates: '.menu-icon-elementor_library .wp-menu-name',
@@ -124,16 +119,14 @@ export const selector = {
         dashboard: {
             // Menus
             home: '//li[@id="menu-dashboard"]//a[contains(text(),"Home")]',
-            updates:
-                '//li[@id="menu-dashboard"]//a[contains(text(),"Updates ")]',
+            updates: '//li[@id="menu-dashboard"]//a[contains(text(),"Updates ")]',
         },
         // Posts
         posts: {
             // Menus
             allPosts: '//li[@id="menu-posts"]//a[contains(text(),"All Posts")]',
             addNew: '//li[@id="menu-posts"]//a[contains(text(),"Add New")]',
-            categories:
-                '//li[@id="menu-posts"]//a[contains(text(),"Categories")]',
+            categories: '//li[@id="menu-posts"]//a[contains(text(),"Categories")]',
             tags: '//li[@id="menu-posts"]//a[contains(text(),"Tags")]',
         },
         // Media
@@ -161,52 +154,33 @@ export const selector = {
         // EmailLog
         emailLog: {
             // Menus
-            viewLogs:
-                '//li[@id="toplevel_page_email-log"]//a[contains(text(),"View Logs")]',
-            settings:
-                '//li[@id="toplevel_page_email-log"]//a[contains(text(),"Settings")]',
+            viewLogs: '//li[@id="toplevel_page_email-log"]//a[contains(text(),"View Logs")]',
+            settings: '//li[@id="toplevel_page_email-log"]//a[contains(text(),"Settings")]',
             addOns: '//li[@id="toplevel_page_email-log"]//a[contains(text(),"Add-ons")]',
-            systemInfo:
-                '//li[@id="toplevel_page_email-log"]//a[contains(text(),"System Info")]',
+            systemInfo: '//li[@id="toplevel_page_email-log"]//a[contains(text(),"System Info")]',
         },
         // Dokan
         dokan: {
             // Dokan Menus
             menus: {
-                dashboard:
-                    '//li[contains(@class,"toplevel_page_dokan")]//a[text()="Dashboard"]',
-                withdraw:
-                    '//li[contains(@class,"toplevel_page_dokan")]//a[text()="Withdraw"]',
-                vendors:
-                    '//li[contains(@class,"toplevel_page_dokan")]//a[text()="Vendors"]',
-                abuseReports:
-                    '//li[contains(@class,"toplevel_page_dokan")]//a[text()="Abuse Reports"]',
-                storeReviews:
-                    '//li[contains(@class,"toplevel_page_dokan")]//a[text()="Store Reviews"]',
-                storeSupport:
-                    '//li[contains(@class,"toplevel_page_dokan")]//a[text()="Store Support"]',
-                announcements:
-                    '//li[contains(@class,"toplevel_page_dokan")]//a[text()="Announcements"]',
-                refunds:
-                    '//li[contains(@class,"toplevel_page_dokan")]//a[contains(text(),"Refunds")]',
-                reports:
-                    '//li[contains(@class,"toplevel_page_dokan")]//a[text()="Reports"]',
-                modules:
-                    '//li[contains(@class,"toplevel_page_dokan")]//a[text()="Modules"]',
-                proFeature:
-                    '//li[contains(@class,"toplevel_page_dokan")]//a[text()="PRO Features"]',
+                dashboard: '//li[contains(@class,"toplevel_page_dokan")]//a[text()="Dashboard"]',
+                withdraw: '//li[contains(@class,"toplevel_page_dokan")]//a[text()="Withdraw"]',
+                vendors: '//li[contains(@class,"toplevel_page_dokan")]//a[text()="Vendors"]',
+                abuseReports: '//li[contains(@class,"toplevel_page_dokan")]//a[text()="Abuse Reports"]',
+                storeReviews: '//li[contains(@class,"toplevel_page_dokan")]//a[text()="Store Reviews"]',
+                storeSupport: '//li[contains(@class,"toplevel_page_dokan")]//a[text()="Store Support"]',
+                announcements: '//li[contains(@class,"toplevel_page_dokan")]//a[text()="Announcements"]',
+                refunds: '//li[contains(@class,"toplevel_page_dokan")]//a[contains(text(),"Refunds")]',
+                reports: '//li[contains(@class,"toplevel_page_dokan")]//a[text()="Reports"]',
+                modules: '//li[contains(@class,"toplevel_page_dokan")]//a[text()="Modules"]',
+                proFeature: '//li[contains(@class,"toplevel_page_dokan")]//a[text()="PRO Features"]',
                 tools: '//li[contains(@class,"toplevel_page_dokan")]//a[text()="Tools"]',
-                verifications:
-                    '//li[contains(@class,"toplevel_page_dokan")]//a[text()="Verifications"]',
-                advertising:
-                    '//li[contains(@class,"toplevel_page_dokan")]//a[text()="Advertising"]',
-                wholesaleCustomer:
-                    '//li[contains(@class,"toplevel_page_dokan")]//a[text()="Wholesale Customer"]',
+                verifications: '//li[contains(@class,"toplevel_page_dokan")]//a[text()="Verifications"]',
+                advertising: '//li[contains(@class,"toplevel_page_dokan")]//a[text()="Advertising"]',
+                wholesaleCustomer: '//li[contains(@class,"toplevel_page_dokan")]//a[text()="Wholesale Customer"]',
                 help: '//li[contains(@class,"toplevel_page_dokan")]//span[text()="Help"]/..',
-                settings:
-                    '//li[contains(@class,"toplevel_page_dokan")]//a[text()="Settings"]',
-                license:
-                    '//li[contains(@class,"toplevel_page_dokan")]//a[text()="License"]',
+                settings: '//li[contains(@class,"toplevel_page_dokan")]//a[text()="Settings"]',
+                license: '//li[contains(@class,"toplevel_page_dokan")]//a[text()="License"]',
             },
 
             // dokan promotion
@@ -243,23 +217,15 @@ export const selector = {
                 },
 
                 getHelp: {
-                    whatsNew:
-                        '//div[@class="list-item"]//a[normalize-space()="What’s New"]',
-                    getSupport:
-                        '//div[@class="list-item"]//a[normalize-space()="Get Support"]',
-                    community:
-                        '//div[@class="list-item"]//a[normalize-space()="Community"]',
-                    documentation:
-                        '//div[@class="list-item"]//a[normalize-space()="Documentation"]',
+                    whatsNew: '//div[@class="list-item"]//a[normalize-space()="What’s New"]',
+                    getSupport: '//div[@class="list-item"]//a[normalize-space()="Get Support"]',
+                    community: '//div[@class="list-item"]//a[normalize-space()="Community"]',
+                    documentation: '//div[@class="list-item"]//a[normalize-space()="Documentation"]',
                     faq: '//div[@class="list-item"]//a[normalize-space()="FAQ"]',
-                    basicAndFundamental:
-                        '//div[@class="list-item"]//a[normalize-space()="Basic & Fundamental"]',
-                    requestAFeature:
-                        '//div[@class="list-item"]//a[normalize-space()="Request a Feature"]',
-                    runSetupWizard:
-                        '//div[@class="list-item"]//a[normalize-space()="Run Setup Wizard"]',
-                    importDummyData:
-                        '//div[@class="list-item"]//a[normalize-space()="Import dummy data"]',
+                    basicAndFundamental: '//div[@class="list-item"]//a[normalize-space()="Basic & Fundamental"]',
+                    requestAFeature: '//div[@class="list-item"]//a[normalize-space()="Request a Feature"]',
+                    runSetupWizard: '//div[@class="list-item"]//a[normalize-space()="Run Setup Wizard"]',
+                    importDummyData: '//div[@class="list-item"]//a[normalize-space()="Import dummy data"]',
                 },
 
                 // Dashboard Text
@@ -287,8 +253,7 @@ export const selector = {
                 // Dokan new Updates
                 dokanNewUpdates: {
                     dokanNewUpdates: '//div[@class="postbox dokan-postbox"]',
-                    collapsibleButton:
-                        '//div[@class="postbox dokan-postbox"]//div[@class="postbox-header"]//button',
+                    collapsibleButton: '//div[@class="postbox dokan-postbox"]//div[@class="postbox-header"]//button',
                     newUpdatesList: '.rss-widget ul',
                 },
 
@@ -296,8 +261,7 @@ export const selector = {
                 subscribeBox: {
                     subscribeBox: '.subscribe-box',
                     subscriberName: '//input[@placeholder="Your Name"]',
-                    subscriberEmail:
-                        '//input[@placeholder="Your Email Address"]',
+                    subscriberEmail: '//input[@placeholder="Your Email Address"]',
                     subscribeButton: '//button[normalize-space()="Subscribe"]',
                     thankYouMessage: '.thank-you',
                 },
@@ -309,12 +273,9 @@ export const selector = {
 
                 // Nav Tabs
                 navTabs: {
-                    pending:
-                        '//ul[@class="subsubsub"]//li//a[contains(text(),"Pending")]',
-                    approved:
-                        '//ul[@class="subsubsub"]//li//a[contains(text(),"Approved")]',
-                    cancelled:
-                        '//ul[@class="subsubsub"]//li//a[contains(text(),"Cancelled")]',
+                    pending: '//ul[@class="subsubsub"]//li//a[contains(text(),"Pending")]',
+                    approved: '//ul[@class="subsubsub"]//li//a[contains(text(),"Approved")]',
+                    cancelled: '//ul[@class="subsubsub"]//li//a[contains(text(),"Cancelled")]',
                 },
 
                 // Bulk Actions
@@ -326,10 +287,8 @@ export const selector = {
 
                 // Filters
                 filters: {
-                    filterByVendor:
-                        '//select[@id="filter-vendors"]/..//span[@class="select2-selection__arrow"]',
-                    filterInput:
-                        '.select2-search.select2-search--dropdown .select2-search__field',
+                    filterByVendor: '//select[@id="filter-vendors"]/..//span[@class="select2-selection__arrow"]',
+                    filterInput: '.select2-search.select2-search--dropdown .select2-search__field',
                     clearFilter: '//select[@id="filter-vendors"]/..//button',
                     result: 'li.select2-results__option.select2-results__option--highlighted',
                 },
@@ -349,18 +308,12 @@ export const selector = {
 
                 numberOfRowsFound: '.tablenav.top .displaying-num',
                 noRowsFound: '//td[normalize-space()="No requests found."]',
-                withdrawCell: (storeName: string) =>
-                    `//td//a[contains(text(), '${storeName}')]/../..`,
-                withdrawDelete: (storeName: string) =>
-                    `//td//a[contains(text(), '${storeName}')]/../..//span[@class="trash"]//a`,
-                withdrawCancel: (storeName: string) =>
-                    `//td//a[contains(text(), '${storeName}')]/../..//span[@class="cancel"]//a`,
-                withdrawApprove: (storeName: string) =>
-                    `//td//a[contains(text(), '${storeName}')]/../../..//button[@title='Approve Request']`,
-                withdrawAddNote: (storeName: string) =>
-                    `//td//a[contains(text(), '${storeName}')]/../../..//button[@title='Add Note']`,
-                withdrawNoteModalClose:
-                    '.dokan-modal-content .modal-header button',
+                withdrawCell: (storeName: string) => `//td//a[contains(text(), '${storeName}')]/../..`,
+                withdrawDelete: (storeName: string) => `//td//a[contains(text(), '${storeName}')]/../..//span[@class="trash"]//a`,
+                withdrawCancel: (storeName: string) => `//td//a[contains(text(), '${storeName}')]/../..//span[@class="cancel"]//a`,
+                withdrawApprove: (storeName: string) => `//td//a[contains(text(), '${storeName}')]/../../..//button[@title='Approve Request']`,
+                withdrawAddNote: (storeName: string) => `//td//a[contains(text(), '${storeName}')]/../../..//button[@title='Add Note']`,
+                withdrawNoteModalClose: '.dokan-modal-content .modal-header button',
                 addNote: '.dokan-modal-content .modal-body textarea',
                 updateNote: '.dokan-modal-content .modal-footer button',
             },
@@ -369,27 +322,18 @@ export const selector = {
             reverseWithdraw: {
                 reverseWithdrawText: '.dokan-reverse-withdrawal h1',
 
-                addNewReverseWithdrawal:
-                    '.dokan-reverse-withdrawal button.page-title-action',
+                addNewReverseWithdrawal: '.dokan-reverse-withdrawal button.page-title-action',
 
                 // Fact Cards
                 reverseWithdrawFactCards: {
-                    totalCollectedCard:
-                        '//p[normalize-space()="Total Collected"]/../..',
-                    totalCollected:
-                        '//p[normalize-space()="Total Collected"]/../..//h3',
-                    remainingBalanceCard:
-                        '//p[normalize-space()="Remaining Balance"]/../..',
-                    remainingBalance:
-                        '//p[normalize-space()="Remaining Balance"]/../..//h3',
-                    TotalTransactionsCard:
-                        '//p[normalize-space()="Total Transactions"]/../..',
-                    TotalTransactions:
-                        '//p[normalize-space()="Total Transactions"]/../..//h3',
-                    TotalVendorsCard:
-                        '//p[normalize-space()="Total Vendors"]/../..',
-                    TotalVendors:
-                        '//p[normalize-space()="Total Vendors"]/../..//h3',
+                    totalCollectedCard: '//p[normalize-space()="Total Collected"]/../..',
+                    totalCollected: '//p[normalize-space()="Total Collected"]/../..//h3',
+                    remainingBalanceCard: '//p[normalize-space()="Remaining Balance"]/../..',
+                    remainingBalance: '//p[normalize-space()="Remaining Balance"]/../..//h3',
+                    TotalTransactionsCard: '//p[normalize-space()="Total Transactions"]/../..',
+                    TotalTransactions: '//p[normalize-space()="Total Transactions"]/../..//h3',
+                    TotalVendorsCard: '//p[normalize-space()="Total Vendors"]/../..',
+                    TotalVendors: '//p[normalize-space()="Total Vendors"]/../..//h3',
                 },
 
                 // Filters
@@ -397,14 +341,12 @@ export const selector = {
                     filterByStore: '.multiselect__select',
                     filterInput: '.multiselect__input',
                     clearFilter: '//button[normalize-space()="Clear"]',
-                    filteredResult: (storeName: string) =>
-                        `//span[contains(text(), '${storeName}')]/..`,
+                    filteredResult: (storeName: string) => `//span[contains(text(), '${storeName}')]/..`,
                 },
 
                 // Table
                 table: {
-                    revereWithdrawTable:
-                        '#dokan_reverse_withdrawal_list_table table',
+                    revereWithdrawTable: '#dokan_reverse_withdrawal_list_table table',
                     storesColumn: 'thead th.store_name',
                     balanceColumn: 'thead th.balance',
                     lastPaymentDateColumn: 'thead th.last_payment_date',
@@ -412,31 +354,21 @@ export const selector = {
 
                 numberOfRowsFound: '.tablenav.top .displaying-num',
                 noRowsFound: '//td[normalize-space()="No transaction found."]',
-                reverseWithdrawCell: (storeName: string) =>
-                    `//td//a[contains(text(), '${storeName}')]/../..`,
+                reverseWithdrawCell: (storeName: string) => `//td//a[contains(text(), '${storeName}')]/../..`,
 
                 addReverseWithdrawal: {
                     closeModal: '.modal-close.modal-close-link',
-                    selectVendorDropdown:
-                        '//span[normalize-space()="Search vendor"]/../..//div[@class="multiselect__select"]',
+                    selectVendorDropdown: '//span[normalize-space()="Search vendor"]/../..//div[@class="multiselect__select"]',
                     selectVendorInput: '//input[@placeholder="Search vendor"]',
-                    transactionType: (type: string) =>
-                        `//input[@value="${type}"]/..`, // manual_product, manual_order, other
-                    selectProductDropdown:
-                        '//span[normalize-space()="Search product"]/../..//div[@class="multiselect__select"]',
-                    selectProductInput:
-                        '//input[@placeholder="Search product"]',
-                    selectOrderDropdown:
-                        '//span[normalize-space()="Search order"]/../..//div[@class="multiselect__select"]',
+                    transactionType: (type: string) => `//input[@value="${type}"]/..`, // manual_product, manual_order, other
+                    selectProductDropdown: '//span[normalize-space()="Search product"]/../..//div[@class="multiselect__select"]',
+                    selectProductInput: '//input[@placeholder="Search product"]',
+                    selectOrderDropdown: '//span[normalize-space()="Search order"]/../..//div[@class="multiselect__select"]',
                     selectOrderInput: '//input[@placeholder="Search order"]',
-                    selectOption: (value: string) =>
-                        `//div[@class="dokan-modal"]//li//span[contains(text(), "${value}")]/..`,
-                    searchedResult:
-                        'span.multiselect__option.multiselect__option--highlight',
-                    withdrawalBalanceType: (type: string) =>
-                        `//input[@value="${type}"]/..`, // debit, credit
-                    reverseWithdrawalAmount:
-                        'input.regular-text.wc_input_decimal',
+                    selectOption: (value: string) => `//div[@class="dokan-modal"]//li//span[contains(text(), "${value}")]/..`,
+                    searchedResult: 'span.multiselect__option.multiselect__option--highlight',
+                    withdrawalBalanceType: (type: string) => `//input[@value="${type}"]/..`, // debit, credit
+                    reverseWithdrawalAmount: 'input.regular-text.wc_input_decimal',
                     note: '//textarea[@placeholder="Write reverse withdrawal note"]',
                     save: 'button.dokan-rw-footer-btn',
                 },
@@ -450,12 +382,9 @@ export const selector = {
 
                 // Nav Tabs
                 navTabs: {
-                    cancelled:
-                        '//ul[@class="subsubsub"]//li//a[contains(text(),"All")]',
-                    approved:
-                        '//ul[@class="subsubsub"]//li//a[contains(text(),"Approved")]',
-                    pending:
-                        '//ul[@class="subsubsub"]//li//a[contains(text(),"Pending")]',
+                    cancelled: '//ul[@class="subsubsub"]//li//a[contains(text(),"All")]',
+                    approved: '//ul[@class="subsubsub"]//li//a[contains(text(),"Approved")]',
+                    pending: '//ul[@class="subsubsub"]//li//a[contains(text(),"Pending")]',
                 },
 
                 // Bulk Actions
@@ -486,31 +415,21 @@ export const selector = {
 
                 numberOfRowsFound: '.tablenav.top .displaying-num',
                 noRowsFound: '//td[normalize-space()="No vendors found."]',
-                vendorViewDetails: (username: string) =>
-                    `//td//a[contains(text(), '${username}')]`,
-                vendorRow: (username: string) =>
-                    `//td//a[contains(text(), '${username}')]/../../..`,
-                vendorCell: (username: string) =>
-                    `//td//a[contains(text(), '${username}')]/../..`,
-                vendorEdit: (username: string) =>
-                    `//td//a[contains(text(), '${username}')]/../..//span[@class="edit"]//a`,
-                vendorProducts: (username: string) =>
-                    `//td//a[contains(text(), '${username}')]/../..//span[@class="products"]//a`,
-                vendorOrders: (username: string) =>
-                    `//td//a[contains(text(), '${username}')]/../..//span[@class="orders"]//a`,
-                statusSlider: (username: string) =>
-                    `//td//a[contains(text(), '${username}')]/../../..//label[@class='switch tips']`,
+                vendorViewDetails: (username: string) => `//td//a[contains(text(), '${username}')]`,
+                vendorRow: (username: string) => `//td//a[contains(text(), '${username}')]/../../..`,
+                vendorCell: (username: string) => `//td//a[contains(text(), '${username}')]/../..`,
+                vendorEdit: (username: string) => `//td//a[contains(text(), '${username}')]/../..//span[@class="edit"]//a`,
+                vendorProducts: (username: string) => `//td//a[contains(text(), '${username}')]/../..//span[@class="products"]//a`,
+                vendorOrders: (username: string) => `//td//a[contains(text(), '${username}')]/../..//span[@class="orders"]//a`,
+                statusSlider: (username: string) => `//td//a[contains(text(), '${username}')]/../../..//label[@class='switch tips']`,
 
                 // Add New Vendors
 
                 newVendor: {
                     // Menus
-                    accountInfo:
-                        '//div[@class="tab-link"]//a[contains(text(), "Account Info")]',
-                    address:
-                        '//div[@class="tab-link"]//a[contains(text(), "Address")]',
-                    paymentOptions:
-                        '//div[@class="tab-link"]//a[contains(text(), "Payment Options")]',
+                    accountInfo: '//div[@class="tab-link"]//a[contains(text(), "Account Info")]',
+                    address: '//div[@class="tab-link"]//a[contains(text(), "Address")]',
+                    paymentOptions: '//div[@class="tab-link"]//a[contains(text(), "Payment Options")]',
                     addNewVendorCloseModal: '.modal-close',
                     next: '.button.button-primary',
 
@@ -538,8 +457,7 @@ export const selector = {
                     city: '#city',
                     zip: '#zip',
                     // country: '.multiselect__single',
-                    country:
-                        '//label[@for="country"]/..//div[@class="multiselect__select"]',
+                    country: '//label[@for="country"]/..//div[@class="multiselect__select"]',
                     countryInput: '#country',
                     state: '//label[@for="state"]/..//div[@class="multiselect__select"]',
                     stateInput: '#state',
@@ -552,12 +470,9 @@ export const selector = {
                     iban: '#iban',
                     swift: '#swift',
                     payPalEmail: '#paypal-email',
-                    enableSelling:
-                        '//span[contains(text(),"Enable Selling")]/..//span[@class="slider round"]',
-                    publishProductDirectly:
-                        '//span[contains(text(), "Publish Product Directly")]/..//span[@class="slider round"]',
-                    makeVendorFeature:
-                        '//span[contains(text(), "Make Vendor Featured")]/..//span[@class="slider round"]',
+                    enableSelling: '//span[contains(text(),"Enable Selling")]/..//span[@class="slider round"]',
+                    publishProductDirectly: '//span[contains(text(), "Publish Product Directly")]/..//span[@class="slider round"]',
+                    makeVendorFeature: '//span[contains(text(), "Make Vendor Featured")]/..//span[@class="slider round"]',
                     createVendor: '.button.button-primary.button-hero',
                 },
 
@@ -609,12 +524,10 @@ export const selector = {
 
                         // products-revenue
                         productRevenue: {
-                            productRevenueSection:
-                                '.vendor-summary div.products-revenue',
+                            productRevenueSection: '.vendor-summary div.products-revenue',
 
                             products: {
-                                products:
-                                    'div.products-revenue .stat-summary.products',
+                                products: 'div.products-revenue .stat-summary.products',
                                 productCount: 'ul.counts li.products .count',
                                 soldItemCount: 'ul.counts li.items .count',
                                 visitorsCount: 'ul.counts li.visitors .count',
@@ -655,8 +568,7 @@ export const selector = {
                 editVendor: {
                     editVendorIcon: '.dashicons-edit',
                     changeStorePhoto: '.profile-icon .dokan-upload-image img',
-                    changeStoreBanner:
-                        '.profile-banner .dokan-upload-image img',
+                    changeStoreBanner: '.profile-banner .dokan-upload-image img',
 
                     // Account Info
                     firstName: '#first-name',
@@ -675,8 +587,7 @@ export const selector = {
                     street2: '#street-2',
                     city: '#city',
                     zipCode: '#zip',
-                    country:
-                        '//input[@id="country"]/../..//div[@class="multiselect__select"]',
+                    country: '//input[@id="country"]/../..//div[@class="multiselect__select"]',
                     countryInput: '#country',
                     state: '//input[@id="state"]/../..//div[@class="multiselect__select"]',
                     stateInput: '#state',
@@ -700,31 +611,22 @@ export const selector = {
                     iban: '#iban',
                     swift: '#swift',
                     payPalEmail: '#paypal-email',
-                    AdminCommissionType:
-                        '//label[@for="commission-type"]/..//span[@class="multiselect__single"]',
+                    AdminCommissionType: '//label[@for="commission-type"]/..//span[@class="multiselect__single"]',
                     AdminCommissionFlat: '.wc_input_price',
                     AdminCommissionPercentage: '.wc_input_decimal',
 
-                    enableSelling:
-                        '//span[contains(text(), "Enable Selling")]/..//label[@class="switch tips"]',
-                    publishProductDirectly:
-                        '//span[contains(text(), "Publish Product Directly")]/..//label[@class="switch tips"]',
-                    makeVendorFeature:
-                        '//span[contains(text(), "Make Vendor Featured")]/..//label[@class="switch tips"]',
+                    enableSelling: '//span[contains(text(), "Enable Selling")]/..//label[@class="switch tips"]',
+                    publishProductDirectly: '//span[contains(text(), "Publish Product Directly")]/..//label[@class="switch tips"]',
+                    makeVendorFeature: '//span[contains(text(), "Make Vendor Featured")]/..//label[@class="switch tips"]',
 
                     // Vendor Subscription
-                    AssignSubscriptionPack:
-                        '.multiselect--active > .multiselect__tags',
+                    AssignSubscriptionPack: '.multiselect--active > .multiselect__tags',
 
                     // Edit Options
-                    cancelEdit:
-                        '//div[contains(@class, "action-links footer")]//button[contains(text(),"Cancel")]',
-                    saveChanges:
-                        '//div[contains(@class, "action-links footer")]//button[contains(text(),"Save Changes")]',
-                    cancelEditOnTop:
-                        '//div[contains(@class, "profile-banner")]//button[contains(text(),"Cancel")]',
-                    saveChangesOnTop:
-                        '//div[contains(@class, "profile-banner")]//button[contains(text(),"Save Changes")]',
+                    cancelEdit: '//div[contains(@class, "action-links footer")]//button[contains(text(),"Cancel")]',
+                    saveChanges: '//div[contains(@class, "action-links footer")]//button[contains(text(),"Save Changes")]',
+                    cancelEditOnTop: '//div[contains(@class, "profile-banner")]//button[contains(text(),"Cancel")]',
+                    saveChangesOnTop: '//div[contains(@class, "profile-banner")]//button[contains(text(),"Save Changes")]',
                     confirmSaveChanges: 'button.swal2-confirm',
                 },
 
@@ -756,14 +658,10 @@ export const selector = {
 
                     numberOfRowsFound: '.tablenav.top .displaying-num',
                     noRowsFound: '//td[normalize-space()="No category found"]',
-                    storeCategoryCell: (title: string) =>
-                        `//td//a[contains(text(), '${title}')]/../..`,
-                    storeCategoryEdit: (title: string) =>
-                        `//td//a[contains(text(), '${title}')]/../..//span[@class='edit']//a`,
-                    storeCategoryDelete: (title: string) =>
-                        `//td//a[contains(text(), '${title}')]/../..//span[@class='delete']//a`,
-                    storeCategorySetDefault: (title: string) =>
-                        `//td//a[contains(text(), '${title}')]/../..//span[@class='set_as_default']//a`,
+                    storeCategoryCell: (title: string) => `//td//a[contains(text(), '${title}')]/../..`,
+                    storeCategoryEdit: (title: string) => `//td//a[contains(text(), '${title}')]/../..//span[@class='edit']//a`,
+                    storeCategoryDelete: (title: string) => `//td//a[contains(text(), '${title}')]/../..//span[@class='delete']//a`,
+                    storeCategorySetDefault: (title: string) => `//td//a[contains(text(), '${title}')]/../..//span[@class='set_as_default']//a`,
                 },
             },
 
@@ -780,14 +678,10 @@ export const selector = {
 
                 // Filters
                 filters: {
-                    filterByAbuseReason:
-                        '(//select[@id="filter-products"]/..//select)[1]',
-                    filterByProduct:
-                        '(//span[@class="select2-selection__arrow"])[1]',
-                    filterByVendors:
-                        '(//span[@class="select2-selection__arrow"])[2]',
-                    filterInput:
-                        '.select2-search.select2-search--dropdown .select2-search__field',
+                    filterByAbuseReason: '(//select[@id="filter-products"]/..//select)[1]',
+                    filterByProduct: '(//span[@class="select2-selection__arrow"])[1]',
+                    filterByVendors: '(//span[@class="select2-selection__arrow"])[2]',
+                    filterInput: '.select2-search.select2-search--dropdown .select2-search__field',
                 },
 
                 // Table
@@ -802,21 +696,18 @@ export const selector = {
 
                 numberOfRowsFound: '.tablenav.top .displaying-num',
                 noRowsFound: '//td[normalize-space()="No items found."]',
-                abuseReportCell: (input: string) =>
-                    `//a[contains(text(), '${input}')]/../..`, // abuse-reason, product-name, vendor-name
+                abuseReportCell: (input: string) => `//a[contains(text(), '${input}')]/../..`, // abuse-reason, product-name, vendor-name
                 abuseReportFirstCell: '(//a[@href="#view-report"])[1]',
 
                 abuseReportModal: {
                     modalTitle: '.modal-header h1',
                     closeModal: '.modal-close',
-                    reportedProduct:
-                        '//strong[normalize-space()="Reported Product:"]',
+                    reportedProduct: '//strong[normalize-space()="Reported Product:"]',
                     reason: '//strong[normalize-space()="Reason:"]',
                     description: '//strong[normalize-space()="Description:"]',
                     reportedBy: '//strong[normalize-space()="Reported by:"]',
                     reportedAt: '//strong[normalize-space()="Reported At:"]',
-                    productVendor:
-                        '//strong[normalize-space()="Product Vendor:"]',
+                    productVendor: '//strong[normalize-space()="Product Vendor:"]',
                 },
             },
 
@@ -840,8 +731,7 @@ export const selector = {
                 // Filters
                 filters: {
                     filterByVendor: '.select2-selection__arrow',
-                    filterInput:
-                        '.select2-search.select2-search--dropdown .select2-search__field',
+                    filterInput: '.select2-search.select2-search--dropdown .select2-search__field',
                     filterClear: '.select2-selection__clear',
                 },
 
@@ -858,25 +748,19 @@ export const selector = {
 
                 numberOfRowsFound: '.tablenav.top .displaying-num',
                 noRowsFound: '//td[normalize-space()="No reviews found."]',
-                storeReviewCell: (title: string) =>
-                    `//td//a[contains(text(), '${title}')]/../..`,
-                storeReviewFirstCell:
-                    '(//td[@class="column title"]//a[@href="#"]/../..)[1]',
-                storeReviewFirstLink:
-                    '(//td[@class="column title"]//a[@href="#"])[1]',
+                storeReviewCell: (title: string) => `//td//a[contains(text(), '${title}')]/../..`,
+                storeReviewFirstCell: '(//td[@class="column title"]//a[@href="#"]/../..)[1]',
+                storeReviewFirstLink: '(//td[@class="column title"]//a[@href="#"])[1]',
                 storeReviewEdit: '(//a[normalize-space()="Edit"])[1]',
                 storeReviewDelete: '(//a[normalize-space()="Trash"])[1]',
                 storeReviewRestore: '(//a[normalize-space()="Restore"])[1]',
-                storeReviewPermanentlyDelete:
-                    '(//a[normalize-space()="Permanent Delete"])[1]',
+                storeReviewPermanentlyDelete: '(//a[normalize-space()="Permanent Delete"])[1]',
 
                 editReview: {
                     editReviewText: '//h1[normalize-space()="Edit Review"]',
                     modalClose: 'button.modal-close.modal-close-link',
-                    ratings:
-                        '(//div[@class="modal-body"]//div[@class="vue-star-rating"] )[1]',
-                    rating: (star: string) =>
-                        `(//span[@class='vue-star-rating-pointer vue-star-rating-star'])[${star}]`,
+                    ratings: '(//div[@class="modal-body"]//div[@class="vue-star-rating"] )[1]',
+                    rating: (star: string) => `(//span[@class='vue-star-rating-pointer vue-star-rating-star'])[${star}]`,
                     title: '#store-review-title',
                     content: '#store-review-content',
                     update: 'input[value="Update Review"]',
@@ -887,8 +771,7 @@ export const selector = {
             storeSupport: {
                 storeSupportText: '.admin-store-support-tickets h1',
 
-                unreadTicketCount:
-                    'span.pending-count.dokan-unread-ticket-count-badge-in-list',
+                unreadTicketCount: 'span.pending-count.dokan-unread-ticket-count-badge-in-list',
 
                 // Nav Tabs
                 navTabs: {
@@ -906,12 +789,9 @@ export const selector = {
 
                 // Filters
                 filters: {
-                    filterByVendors:
-                        '//select[@id="filter-vendors"]/..//span[@class="select2-selection__arrow"]',
-                    filterByCustomers:
-                        '//select[@id="filter-customers"]/..//span[@class="select2-selection__arrow"]',
-                    filterInput:
-                        '.select2-search.select2-search--dropdown .select2-search__field',
+                    filterByVendors: '//select[@id="filter-vendors"]/..//span[@class="select2-selection__arrow"]',
+                    filterByCustomers: '//select[@id="filter-customers"]/..//span[@class="select2-selection__arrow"]',
+                    filterInput: '.select2-search.select2-search--dropdown .select2-search__field',
                     filterButton: '//button[normalize-space()="Filter"]',
                     result: 'li.select2-results__option.select2-results__option--highlighted',
                 },
@@ -932,19 +812,15 @@ export const selector = {
 
                 numberOfRowsFound: '.tablenav.top .displaying-num',
                 noRowsFound: '//td[normalize-space()="No tickets found."]',
-                supportTicketCell: (ticketId: string) =>
-                    `//strong[contains(text(), '#${ticketId}')]/../..`,
+                supportTicketCell: (ticketId: string) => `//strong[contains(text(), '#${ticketId}')]/../..`,
                 supportTicketFirstCell: '(//td[@class="column ID"]//a)[1]',
-                supportTicketLink: (ticketId: string) =>
-                    `//strong[contains(text(), '#${ticketId}')]/..`,
+                supportTicketLink: (ticketId: string) => `//strong[contains(text(), '#${ticketId}')]/..`,
 
                 supportTicketDetails: {
                     backToTickets: '//span[@class="back-to-tickets"]//../..//a',
 
-                    ticketTitle:
-                        '//span[contains(@class,"dokan-chat-title") and not(contains(@class,"dokan-chat-status"))]',
-                    chatStatus:
-                        'div.dokan-chat-status-box  span.dokan-chat-status',
+                    ticketTitle: '//span[contains(@class,"dokan-chat-title") and not(contains(@class,"dokan-chat-status"))]',
+                    chatStatus: 'div.dokan-chat-status-box  span.dokan-chat-status',
                     chatBox: 'div.dokan-chat-box-container',
 
                     chatAuthor: 'select#sender', // admin, vendor
@@ -958,13 +834,10 @@ export const selector = {
 
                         ticketId: 'div.dokan-summary-info.ticket-id',
                         vendorInfo: 'div.dokan-summary-info.dokan-vendor-info',
-                        customerInfo:
-                            'div.dokan-summary-info.dokan-customer-info',
+                        customerInfo: 'div.dokan-summary-info.dokan-customer-info',
                         messageCount: 'div.dokan-summary-info.conversation',
-                        createdAt:
-                            '//div[normalize-space()="Created At:"]/..//div[@class="dokan-summary-info created-at"]',
-                        emailNotification:
-                            '.dokan-summary-info label.switch.tips',
+                        createdAt: '//div[normalize-space()="Created At:"]/..//div[@class="dokan-summary-info created-at"]',
+                        emailNotification: '.dokan-summary-info label.switch.tips',
                         closeTicket: 'button.dokan-close-ticket',
                         reopenTicket: 'button.dokan-reopen-ticket',
                     },
@@ -986,13 +859,10 @@ export const selector = {
                     // Nav Tabs
                     navTabs: {
                         all: '//ul[@class="subsubsub"]//li//a[contains(text(),"All")]',
-                        pending:
-                            '//ul[@class="subsubsub"]//li//a[contains(text(),"Pending")]',
+                        pending: '//ul[@class="subsubsub"]//li//a[contains(text(),"Pending")]',
                         draft: '//ul[@class="subsubsub"]//li//a[contains(text(),"Draft")]',
-                        converted:
-                            '//ul[@class="subsubsub"]//li//a[contains(text(),"Converted")]',
-                        approved:
-                            '//ul[@class="subsubsub"]//li//a[contains(text(),"Approved")]',
+                        converted: '//ul[@class="subsubsub"]//li//a[contains(text(),"Converted")]',
+                        approved: '//ul[@class="subsubsub"]//li//a[contains(text(),"Approved")]',
                         trash: '//ul[@class="subsubsub"]//li//a[contains(text(),"Trash")]',
                     },
 
@@ -1015,16 +885,11 @@ export const selector = {
 
                     numberOfRowsFound: '.tablenav.top .displaying-num',
                     noRowsFound: '//td[normalize-space()="No quote found."]',
-                    quoteCell: (title: string) =>
-                        `//strong[contains(text(),'${title}')]/../..//td[@class='column sl']`,
-                    quoteEdit: (title: string) =>
-                        `//strong[contains(text(),'${title}')]/../..//td[@class='column sl']//span[@class="edit"]`,
-                    quoteTrash: (title: string) =>
-                        `//strong[contains(text(),'${title}')]/../..//td[@class='column sl']//span[@class="trash"]`,
-                    quotePermanentlyDelete: (title: string) =>
-                        `//strong[contains(text(),'${title}')]/../..//span[@class="delete"]`,
-                    quoteRestore: (title: string) =>
-                        `//strong[contains(text(),'${title}')]/../..//span[@class="restore"]`,
+                    quoteCell: (title: string) => `//strong[contains(text(),'${title}')]/../..//td[@class='column sl']`,
+                    quoteEdit: (title: string) => `//strong[contains(text(),'${title}')]/../..//td[@class='column sl']//span[@class="edit"]`,
+                    quoteTrash: (title: string) => `//strong[contains(text(),'${title}')]/../..//td[@class='column sl']//span[@class="trash"]`,
+                    quotePermanentlyDelete: (title: string) => `//strong[contains(text(),'${title}')]/../..//span[@class="delete"]`,
+                    quoteRestore: (title: string) => `//strong[contains(text(),'${title}')]/../..//span[@class="restore"]`,
 
                     approveQuote: 'input[value="Approve Quote"]',
                     convertToOrder: 'input[value="Convert to Order"]',
@@ -1045,8 +910,7 @@ export const selector = {
 
                         // quote details
                         addProducts: 'input[value="Add product(s)"]',
-                        quoteProductDropDown:
-                            '.dokan-modal .multiselect__select',
+                        quoteProductDropDown: '.dokan-modal .multiselect__select',
                         quoteProductInput: '.dokan-modal .multiselect__input',
                         quoteProductQuantity: '#quantity',
                         addToQuote: 'input[value="Add to quote"]',
@@ -1054,12 +918,9 @@ export const selector = {
                         offerProductQuantity: '#offer_product_quantity',
                         deleteQuoteProduct: '.dashicons.dashicons-no',
 
-                        offerPriceByProductName: (product: string) =>
-                            `//a[normalize-space()="${product}"]/../../..//input[@id="offer_price"]`,
-                        offerProductQuantityByProductName: (product: string) =>
-                            `//a[normalize-space()="${product}"]/../../..//input[@id="offer_product_quantity"]`,
-                        deleteQuoteProductByProductName: (product: string) =>
-                            `//a[normalize-space()="${product}"]/../../..//span[@class="dashicons dashicons-no"]`,
+                        offerPriceByProductName: (product: string) => `//a[normalize-space()="${product}"]/../../..//input[@id="offer_price"]`,
+                        offerProductQuantityByProductName: (product: string) => `//a[normalize-space()="${product}"]/../../..//input[@id="offer_product_quantity"]`,
+                        deleteQuoteProductByProductName: (product: string) => `//a[normalize-space()="${product}"]/../../..//span[@class="dashicons dashicons-no"]`,
 
                         // publish
                         saveQuoteAsDraft: 'input[value="Save as Draft"]',
@@ -1075,8 +936,7 @@ export const selector = {
                     // Nav Tabs
                     navTabs: {
                         all: '//ul[@class="subsubsub"]//li//a[contains(text(),"All")]',
-                        published:
-                            '//ul[@class="subsubsub"]//li//a[contains(text(),"Published")]',
+                        published: '//ul[@class="subsubsub"]//li//a[contains(text(),"Published")]',
                         draft: '//ul[@class="subsubsub"]//li//a[contains(text(),"Draft")]',
                         trash: '//ul[@class="subsubsub"]//li//a[contains(text(),"Trash")]',
                     },
@@ -1102,18 +962,12 @@ export const selector = {
 
                     numberOfRowsFound: '.tablenav.top .displaying-num',
                     noRowsFound: '//td[normalize-space()="No quote found."]',
-                    quoteRulesCell: (title: string) =>
-                        `//a[contains(text(),'${title}')]/../..`,
-                    trashedQuoteRulesCell: (title: string) =>
-                        `//strong[contains(text(),'${title}')]/../..`,
-                    quoteRulesEdit: (title: string) =>
-                        `//a[contains(text(),'${title}')]/../..//span[@class="edit"]`,
-                    quoteRulesTrash: (title: string) =>
-                        `//a[contains(text(),'${title}')]/../..//span[@class="trash"]`,
-                    quoteRulesPermanentlyDelete: (title: string) =>
-                        `//strong[contains(text(),'${title}')]/../..//span[@class="delete"]`,
-                    quoteRulesRestore: (title: string) =>
-                        `//strong[contains(text(),'${title}')]/../..//span[@class="restore"]`,
+                    quoteRulesCell: (title: string) => `//a[contains(text(),'${title}')]/../..`,
+                    trashedQuoteRulesCell: (title: string) => `//strong[contains(text(),'${title}')]/../..`,
+                    quoteRulesEdit: (title: string) => `//a[contains(text(),'${title}')]/../..//span[@class="edit"]`,
+                    quoteRulesTrash: (title: string) => `//a[contains(text(),'${title}')]/../..//span[@class="trash"]`,
+                    quoteRulesPermanentlyDelete: (title: string) => `//strong[contains(text(),'${title}')]/../..//span[@class="delete"]`,
+                    quoteRulesRestore: (title: string) => `//strong[contains(text(),'${title}')]/../..//span[@class="restore"]`,
 
                     addNewQuoteRule: {
                         goBack: '//a[normalize-space()="Go Back"]',
@@ -1123,23 +977,18 @@ export const selector = {
 
                         // rule settings
                         applyQuoteFor: (role: string) => `#${role}`,
-                        applyQuoteFor1: (role: string) =>
-                            `//label[normalize-space()="${role}"]/..//input`,
+                        applyQuoteFor1: (role: string) => `//label[normalize-space()="${role}"]/..//input`,
                         applyOnAllProducts: '#apply_on_all_product',
                         selectProductsDropDown: '.multiselect__select',
                         selectProductsInput: '.multiselect__input',
-                        selectCategories: (category: string) =>
-                            `//span[normalize-space()="${category}"]/..//input`,
+                        selectCategories: (category: string) => `//span[normalize-space()="${category}"]/..//input`,
                         hidePrice: '#announcement_sender_type', // 1, 0
-                        hidePriceText:
-                            '//th[normalize-space()="Hide Price Text"]/..//input',
+                        hidePriceText: '//th[normalize-space()="Hide Price Text"]/..//input',
                         hideAddToCartButton: 'select[name="hide_cart_button"]', // replace, keep_and_add_new
-                        customButtonLabel:
-                            '//th[normalize-space()="Custom Button Label"]/..//input',
+                        customButtonLabel: '//th[normalize-space()="Custom Button Label"]/..//input',
 
                         // rule priority
-                        priorityOrder:
-                            '//span[normalize-space()="Rule priority"]/../../..//input',
+                        priorityOrder: '//span[normalize-space()="Rule priority"]/../../..//input',
 
                         // publish
                         saveRuleAsDraft: 'input[value="Save as Draft"]',
@@ -1156,8 +1005,7 @@ export const selector = {
                 // Nav Tabs
                 navTabs: {
                     all: '//ul[@class="subsubsub"]//li//a[contains(text(),"All")]',
-                    published:
-                        '//ul[@class="subsubsub"]//li//a[contains(text(),"Published")]',
+                    published: '//ul[@class="subsubsub"]//li//a[contains(text(),"Published")]',
                     draft: '//ul[@class="subsubsub"]//li//a[contains(text(),"Draft")]',
                 },
 
@@ -1181,24 +1029,15 @@ export const selector = {
 
                 numberOfRowsFound: '.tablenav.top .displaying-num',
                 noRowsFound: '//td[normalize-space()="No badges found."]',
-                sellerBadgeRow: (name: string) =>
-                    `//a[contains(text(),'${name}')]/../../..`,
-                sellerBadgeCell: (name: string) =>
-                    `//a[contains(text(),'${name}')]/../..`,
-                sellerBadgeLevel: (name: string) =>
-                    `//a[contains(text(),'${name}')]/../../..//span[@class="level_count"]//strong`,
-                sellerBadgeEdit: (name: string) =>
-                    `//a[contains(text(),'${name}')]/../..//div[@class="row-actions"]//span[@class="edit"]//a`,
-                sellerBadgePreview: (name: string) =>
-                    `//a[contains(text(),'${name}')]/../..//div[@class="row-actions"]//span[@class="view"]//a`,
-                sellerBadgeVendors: (name: string) =>
-                    `//a[contains(text(),'${name}')]/../..//div[@class="row-actions"]//span[@class="show_vendors"]//a`,
-                sellerBadgePublish: (name: string) =>
-                    `//a[contains(text(),'${name}')]/../..//div[@class="row-actions"]//span[@class="publish"]//a`,
-                sellerBadgeDraft: (name: string) =>
-                    `//a[contains(text(),'${name}')]/../..//div[@class="row-actions"]//span[@class="draft"]//a`,
-                sellerBadgeDelete: (name: string) =>
-                    `//a[contains(text(),'${name}')]/../..//div[@class="row-actions"]//span[@class="delete"]//a`,
+                sellerBadgeRow: (name: string) => `//a[contains(text(),'${name}')]/../../..`,
+                sellerBadgeCell: (name: string) => `//a[contains(text(),'${name}')]/../..`,
+                sellerBadgeLevel: (name: string) => `//a[contains(text(),'${name}')]/../../..//span[@class="level_count"]//strong`,
+                sellerBadgeEdit: (name: string) => `//a[contains(text(),'${name}')]/../..//div[@class="row-actions"]//span[@class="edit"]//a`,
+                sellerBadgePreview: (name: string) => `//a[contains(text(),'${name}')]/../..//div[@class="row-actions"]//span[@class="view"]//a`,
+                sellerBadgeVendors: (name: string) => `//a[contains(text(),'${name}')]/../..//div[@class="row-actions"]//span[@class="show_vendors"]//a`,
+                sellerBadgePublish: (name: string) => `//a[contains(text(),'${name}')]/../..//div[@class="row-actions"]//span[@class="publish"]//a`,
+                sellerBadgeDraft: (name: string) => `//a[contains(text(),'${name}')]/../..//div[@class="row-actions"]//span[@class="draft"]//a`,
+                sellerBadgeDelete: (name: string) => `//a[contains(text(),'${name}')]/../..//div[@class="row-actions"]//span[@class="delete"]//a`,
 
                 confirmAction: '.swal2-actions .swal2-confirm',
                 cancelAction: '.swal2-actions .swal2-cancel',
@@ -1221,10 +1060,8 @@ export const selector = {
                     badgeEvents: {
                         badgeEventBox: 'div.badge__event-box',
                         badgeEventDropdown: '.seller-badge-event-dropdown',
-                        badgeEvent: (name: string) =>
-                            `//h3[normalize-space()="${name}"]/../..`,
-                        badgePublishedStatus: (name: string) =>
-                            `//h3[normalize-space()="${name}"]/..//i[contains(@class, "published")]`,
+                        badgeEvent: (name: string) => `//h3[normalize-space()="${name}"]/../..`,
+                        badgePublishedStatus: (name: string) => `//h3[normalize-space()="${name}"]/..//i[contains(@class, "published")]`,
                         badgeName: 'input#title',
                     },
 
@@ -1232,30 +1069,21 @@ export const selector = {
                     badgeCondition: {
                         badgeConditionBox: 'div.badge__condition-box',
                         badgeLevel: 'span.badge-level',
-                        startingLevelValue:
-                            '//span[normalize-space()="Level 1"]/..//input',
-                        levelInputValue: (value: string) =>
-                            `//span[normalize-space()="Level ${value}"]/..//input`,
+                        startingLevelValue: '//span[normalize-space()="Level 1"]/..//input',
+                        levelInputValue: (value: string) => `//span[normalize-space()="Level ${value}"]/..//input`,
                         addBadgeLevel: 'div.dokan-logical-container button',
                         removeBadgeLevel: '(//i[@class="remove-level"])[2]',
-                        verifiedSellerMethod:
-                            '//option[normalize-space()="Select a method"]/..',
-                        disabledVerifiedSellerMethod:
-                            '//select//option[@disabled="disabled"]',
-                        verifiedSellerMethod1: (number: number) =>
-                            `(//option[normalize-space()="Select a method"]/..)[${number}]`,
-                        trendingProductPeriod:
-                            '.dokan-logical-container select',
-                        trendingProductTopBestSellingProduct:
-                            '.dokan-logical-container input',
+                        verifiedSellerMethod: '//option[normalize-space()="Select a method"]/..',
+                        disabledVerifiedSellerMethod: '//select//option[@disabled="disabled"]',
+                        verifiedSellerMethod1: (number: number) => `(//option[normalize-space()="Select a method"]/..)[${number}]`,
+                        trendingProductPeriod: '.dokan-logical-container select',
+                        trendingProductTopBestSellingProduct: '.dokan-logical-container input',
                     },
 
                     // badge photo
                     badgePhoto: {
-                        uploadBadgeImage:
-                            '//div[@class="dokan-upload-image-container"]//img',
-                        badgePhotoReset:
-                            '//a[normalize-space()="restore default."]',
+                        uploadBadgeImage: '//div[@class="dokan-upload-image-container"]//img',
+                        badgePhotoReset: '//a[normalize-space()="restore default."]',
                     },
 
                     // badge status
@@ -1280,12 +1108,9 @@ export const selector = {
                 // Nav Tabs
                 navTabs: {
                     all: '//ul[@class="subsubsub"]//li//a[contains(text(),"All")]',
-                    published:
-                        '//ul[@class="subsubsub"]//li//a[contains(text(),"Published")]',
-                    pending:
-                        '//ul[@class="subsubsub"]//li//a[contains(text(),"Pending")]',
-                    scheduled:
-                        '//ul[@class="subsubsub"]//li//a[contains(text(),"Scheduled")]',
+                    published: '//ul[@class="subsubsub"]//li//a[contains(text(),"Published")]',
+                    pending: '//ul[@class="subsubsub"]//li//a[contains(text(),"Pending")]',
+                    scheduled: '//ul[@class="subsubsub"]//li//a[contains(text(),"Scheduled")]',
                     draft: '//ul[@class="subsubsub"]//li//a[contains(text(),"Draft")]',
                     trash: '//ul[@class="subsubsub"]//li//a[contains(text(),"Trash")]',
                 },
@@ -1309,22 +1134,14 @@ export const selector = {
 
                 numberOfRowsFound: '.tablenav.top .displaying-num',
                 noRowsFound: '//td[normalize-space()="No announcement found."]',
-                announcementCell: (title: string) =>
-                    `//a[contains(text(),'${title}')]/../..`,
-                announcementCellPublished: (title: string) =>
-                    `//strong[contains(text(),'${title}')]/../..`,
-                announcementStatusPublished: (title: string) =>
-                    `//strong[contains(text(),'${title}')]/../..//td[@class="column status"]//span[@class="publish"]`,
-                announcementStatusScheduled: (title: string) =>
-                    `//a[contains(text(),'${title}')]/../../..//td[@class="column status"]//span[@class="future"]`,
-                announcementEdit: (title: string) =>
-                    `//a[contains(text(),'${title}')]/../..//span[@class="edit"]`,
-                announcementDelete: (title: string) =>
-                    `//strong[contains(text(),'${title}')]/../..//span[@class="trash"]`,
-                announcementPermanentlyDelete: (title: string) =>
-                    `//a[contains(text(),'${title}')]/../..//span[@class="delete"]`,
-                announcementRestore: (title: string) =>
-                    `//a[contains(text(),'${title}')]/../..//span[@class="restore"]`,
+                announcementCell: (title: string) => `//a[contains(text(),'${title}')]/../..`,
+                announcementCellPublished: (title: string) => `//strong[contains(text(),'${title}')]/../..`,
+                announcementStatusPublished: (title: string) => `//strong[contains(text(),'${title}')]/../..//td[@class="column status"]//span[@class="publish"]`,
+                announcementStatusScheduled: (title: string) => `//a[contains(text(),'${title}')]/../../..//td[@class="column status"]//span[@class="future"]`,
+                announcementEdit: (title: string) => `//a[contains(text(),'${title}')]/../..//span[@class="edit"]`,
+                announcementDelete: (title: string) => `//strong[contains(text(),'${title}')]/../..//span[@class="trash"]`,
+                announcementPermanentlyDelete: (title: string) => `//a[contains(text(),'${title}')]/../..//span[@class="delete"]`,
+                announcementRestore: (title: string) => `//a[contains(text(),'${title}')]/../..//span[@class="restore"]`,
 
                 // add announcement
                 addAnnouncement: {
@@ -1354,12 +1171,9 @@ export const selector = {
 
                 // Nav Tabs
                 navTabs: {
-                    pending:
-                        '//ul[@class="subsubsub"]//li//a[contains(text(),"Pending")]',
-                    approved:
-                        '//ul[@class="subsubsub"]//li//a[contains(text(),"Approved")]',
-                    cancelled:
-                        '//ul[@class="subsubsub"]//li//a[contains(text(),"Cancelled")]',
+                    pending: '//ul[@class="subsubsub"]//li//a[contains(text(),"Pending")]',
+                    approved: '//ul[@class="subsubsub"]//li//a[contains(text(),"Approved")]',
+                    cancelled: '//ul[@class="subsubsub"]//li//a[contains(text(),"Cancelled")]',
                 },
 
                 // Bulk Actions
@@ -1385,22 +1199,17 @@ export const selector = {
 
                 numberOfRowsFound: '.tablenav.top .displaying-num',
                 noRowsFound: '//td[normalize-space()="No request found."]',
-                refundCell: (orderNumber: string) =>
-                    `//strong[contains(text(),'#${orderNumber}')]/../..`,
-                approveRefund: (orderNumber: string) =>
-                    `//strong[contains(text(),'#${orderNumber}')]/../..//span[@class='completed']`,
-                cancelRefund: (orderNumber: string) =>
-                    `//strong[contains(text(),'#${orderNumber}')]/../..//span[@class='cancelled']`,
+                refundCell: (orderNumber: string) => `//strong[contains(text(),'#${orderNumber}')]/../..`,
+                approveRefund: (orderNumber: string) => `//strong[contains(text(),'#${orderNumber}')]/../..//span[@class='completed']`,
+                cancelRefund: (orderNumber: string) => `//strong[contains(text(),'#${orderNumber}')]/../..//span[@class='cancelled']`,
             },
 
             // Reports
             reports: {
                 // Menus
                 menus: {
-                    reports:
-                        '//a[contains(@class, "nav-tab") and contains(text(),"Reports")]',
-                    allLogs:
-                        '//a[contains(@class, "nav-tab") and contains(text(),"All Logs")]',
+                    reports: '//a[contains(@class, "nav-tab") and contains(text(),"Reports")]',
+                    allLogs: '//a[contains(@class, "nav-tab") and contains(text(),"All Logs")]',
                 },
                 // Reports
 
@@ -1408,8 +1217,7 @@ export const selector = {
                     // At a Glance
                     atAGlance: {
                         atAGlance: '.postbox.dokan-postbox.dokan-status',
-                        collapsibleButton:
-                            '.dokan-status .handle-actions button',
+                        collapsibleButton: '.dokan-status .handle-actions button',
                         netSalesThisMonth: '.sale strong',
                         commissionEarned: '.commission strong div',
                         signupThisMonth: '.vendor strong',
@@ -1421,8 +1229,7 @@ export const selector = {
                     // Overview
                     overview: {
                         overview: '.postbox.dokan-postbox.overview-chart',
-                        collapsibleButton:
-                            '.overview-chart .handle-actions button',
+                        collapsibleButton: '.overview-chart .handle-actions button',
                         chart: '#line-chart',
                     },
 
@@ -1431,8 +1238,7 @@ export const selector = {
                     filterMenus: {
                         byDay: '//ul[contains(@class, "dokan-report-sub")]//a[contains(text(),"By Day")]',
                         byYear: '//ul[contains(@class, "dokan-report-sub")]//a[contains(text(),"By Year")]',
-                        byVendor:
-                            '//ul[contains(@class, "dokan-report-sub")]//a[contains(text(),"By Vendor")]',
+                        byVendor: '//ul[contains(@class, "dokan-report-sub")]//a[contains(text(),"By Vendor")]',
                     },
 
                     filters: {
@@ -1445,8 +1251,7 @@ export const selector = {
 
                     // calendar
                     calendar: {
-                        dateFrom:
-                            '(//form[@class="form-inline report-filter"]//input[@class="dokan-input hasDatepicker"])[1]',
+                        dateFrom: '(//form[@class="form-inline report-filter"]//input[@class="dokan-input hasDatepicker"])[1]',
                         dateTo: '(//form[@class="form-inline report-filter"]//input[@class="dokan-input hasDatepicker"])[2]',
                     },
 
@@ -1459,17 +1264,12 @@ export const selector = {
                 allLogs: {
                     // Filter
                     filters: {
-                        filterByStore:
-                            '//span[@id="select2-filter-vendors-container"]/..//span[@class="select2-selection__arrow"]',
-                        filterByStoreInput:
-                            '//input[@class="select2-search__field" and @aria-owns="select2-filter-vendors-results"]',
+                        filterByStore: '//span[@id="select2-filter-vendors-container"]/..//span[@class="select2-selection__arrow"]',
+                        filterByStoreInput: '//input[@class="select2-search__field" and @aria-owns="select2-filter-vendors-results"]',
                         // filterByStoreValues: '.select2-results ul li',
-                        filterByStatus:
-                            '//span[@class="select2-selection select2-selection--multiple"]',
-                        filterByStatusInput:
-                            '//input[@class="select2-search__field" and @placeholder="Filter by status"]',
-                        searchedResult:
-                            '.select2-results__option.select2-results__option--highlighted',
+                        filterByStatus: '//span[@class="select2-selection select2-selection--multiple"]',
+                        filterByStatusInput: '//input[@class="select2-search__field" and @placeholder="Filter by status"]',
+                        searchedResult: '.select2-results__option.select2-results__option--highlighted',
                         // filterByStatusValues: '.select2-results ul li',
                         filterByDate: '.form-control',
                         clear: '//a[contains(text(),"Clear")]',
@@ -1498,12 +1298,9 @@ export const selector = {
 
                     // Order Details
                     numberOfRowsFound: '.tablenav.top .displaying-num',
-                    orderIdRow: (orderNumber: string) =>
-                        `//a[normalize-space()='#${orderNumber}']/..//..`,
-                    orderIdCell: (orderNumber: string) =>
-                        `//a[normalize-space()='#${orderNumber}']/..`,
-                    orderIdOrderTotal: (orderNumber: string) =>
-                        `//a[normalize-space()='#${orderNumber}']/..//..//td[@class="column order_total"]//div`,
+                    orderIdRow: (orderNumber: string) => `//a[normalize-space()='#${orderNumber}']/..//..`,
+                    orderIdCell: (orderNumber: string) => `//a[normalize-space()='#${orderNumber}']/..`,
+                    orderIdOrderTotal: (orderNumber: string) => `//a[normalize-space()='#${orderNumber}']/..//..//td[@class="column order_total"]//div`,
 
                     orderDetails: {
                         orderId: '.column.order_id > a',
@@ -1557,11 +1354,9 @@ export const selector = {
 
                     // filter
                     moduleFilter: '.module-category-filter',
-                    moduleFilterCheckBox: (category: string) =>
-                        `//label[contains(text(),"${category}")]/..//input`,
+                    moduleFilterCheckBox: (category: string) => `//label[contains(text(),"${category}")]/..//input`,
                     clearFilter: '//a[normalize-space()="Clear filter"]',
-                    moduleCategoryTag: (category: string) =>
-                        `//span[normalize-space()="${category}"]`,
+                    moduleCategoryTag: (category: string) => `//span[normalize-space()="${category}"]`,
                     moduleCategoryTypes: {
                         productManagement: '.product-management',
                         integration: '.integration',
@@ -1583,8 +1378,7 @@ export const selector = {
 
                     // module card
                     moduleCard: '.module-card',
-                    moduleCardByName: (moduleName: string) =>
-                        `//a[normalize-space()="${moduleName}"]/../../..`,
+                    moduleCardByName: (moduleName: string) => `//a[normalize-space()="${moduleName}"]/../../..`,
                     moduleIcon: '.module-icon',
                     moduleCheckbox: '.module-checkbox input',
                     moduleName: '.module-details a',
@@ -1595,8 +1389,7 @@ export const selector = {
                     moduleVideos: '//a[normalize-space()="Video"]',
 
                     // All Module Activation
-                    firstModuleCheckbox:
-                        '(//div[@class="module-checkbox"]//input)[1]',
+                    firstModuleCheckbox: '(//div[@class="module-checkbox"]//input)[1]',
                     selectAllBulkAction: '.bulk-actions li input',
                     activeAll: '.activate',
                     deActivateAll: '.deactivate',
@@ -1616,8 +1409,7 @@ export const selector = {
 
                 // vender capabilities
                 vendorCapabilitiesBanner: '.vendor-capabilities-banner',
-                checkOutAllVendorFunctionalities:
-                    '//a[normalize-space()="Check Out All Vendor Functionalities"]',
+                checkOutAllVendorFunctionalities: '//a[normalize-space()="Check Out All Vendor Functionalities"]',
 
                 // service section
                 serviceSection: '.service-section',
@@ -1626,10 +1418,8 @@ export const selector = {
 
                 // compare section
                 comparisonSection: '.comparison-section',
-                comparisonBoxDokanLite:
-                    '.comparison-section .compare-box.dokan-lite',
-                comparisonBoxDokanPro:
-                    '.comparison-section .compare-box.dokan-pro',
+                comparisonBoxDokanLite: '.comparison-section .compare-box.dokan-lite',
+                comparisonBoxDokanPro: '.comparison-section .compare-box.dokan-pro',
 
                 // pricing section
                 pricingSection: '.pricing-section',
@@ -1655,66 +1445,50 @@ export const selector = {
 
                 // Page Installation
                 pageInstallation: {
-                    pageInstallation:
-                        '//span[normalize-space()="Page Installation"]/../../..',
-                    collapsibleButton:
-                        '//span[normalize-space()="Page Installation"]/../../..//button',
-                    allPagesCreated:
-                        '//a[normalize-space()="All Pages Created"]',
+                    pageInstallation: '//span[normalize-space()="Page Installation"]/../../..',
+                    collapsibleButton: '//span[normalize-space()="Page Installation"]/../../..//button',
+                    allPagesCreated: '//a[normalize-space()="All Pages Created"]',
                 },
 
                 // Regenerate Order Sync Tab
                 regenerateOrderSyncTable: {
-                    regenerateOrderSyncTable:
-                        '//span[normalize-space()="Regenerate Order Sync Table"]/../../..',
-                    collapsibleButton:
-                        '//span[normalize-space()="Regenerate Order Sync Table"]/../../..//button',
+                    regenerateOrderSyncTable: '//span[normalize-space()="Regenerate Order Sync Table"]/../../..',
+                    collapsibleButton: '//span[normalize-space()="Regenerate Order Sync Table"]/../../..//button',
                     reBuild: '//a[normalize-space()="Re-build"]',
                 },
 
                 // Check for Duplicate Orders
                 checkForDuplicateOrders: {
-                    checkForDuplicateOrders:
-                        '//span[normalize-space()="Check for Duplicate Orders"]/../../..',
-                    collapsibleButton:
-                        '//span[normalize-space()="Check for Duplicate Orders"]/../../..//button',
+                    checkForDuplicateOrders: '//span[normalize-space()="Check for Duplicate Orders"]/../../..',
+                    collapsibleButton: '//span[normalize-space()="Check for Duplicate Orders"]/../../..//button',
                     checkOrders: '//a[normalize-space()="Check Orders"]',
                 },
 
                 // Dokan Setup Wizard
                 dokanSetupWizard: {
-                    dokanSetupWizard:
-                        '//span[normalize-space()="Dokan Setup Wizard"]/../../..',
-                    collapsibleButton:
-                        '//span[normalize-space()="Dokan Setup Wizard"]/../../..//button',
-                    openSetupWizard:
-                        '//a[normalize-space()="Open Setup Wizard"]',
+                    dokanSetupWizard: '//span[normalize-space()="Dokan Setup Wizard"]/../../..',
+                    collapsibleButton: '//span[normalize-space()="Dokan Setup Wizard"]/../../..//button',
+                    openSetupWizard: '//a[normalize-space()="Open Setup Wizard"]',
                 },
 
                 // regenerate Variable Product Variations Author Ids
                 regenerateVariableProductVariationsAuthorIds: {
-                    regenerateVariableProductVariationsAuthorIds:
-                        '//span[normalize-space()="Regenerate Variable Product Variations Author IDs"]/../../..',
-                    collapsibleButton:
-                        '//span[normalize-space()="Regenerate Variable Product Variations Author IDs"]/../../..//button',
+                    regenerateVariableProductVariationsAuthorIds: '//span[normalize-space()="Regenerate Variable Product Variations Author IDs"]/../../..',
+                    collapsibleButton: '//span[normalize-space()="Regenerate Variable Product Variations Author IDs"]/../../..//button',
                     regenerate: '//a[normalize-space()="Regenerate"]',
                 },
 
                 // Import Dummy Data
                 importDummyData: {
-                    importDummyData:
-                        '//span[normalize-space()="Import Dummy Data"]/../../..',
-                    collapsibleButton:
-                        '//span[normalize-space()="Import Dummy Data"]/../../..//button',
+                    importDummyData: '//span[normalize-space()="Import Dummy Data"]/../../..',
+                    collapsibleButton: '//span[normalize-space()="Import Dummy Data"]/../../..//button',
                     import: '//span[normalize-space()="Import Dummy Data"]/../../..//a',
                 },
 
                 // Test Distance Matrix API (Google MAP)
                 testDistanceMatrixApi: {
-                    testDistanceMatrixApi:
-                        '//span[normalize-space()="Test Distance Matrix API (Google MAP)"]/../../..',
-                    collapsibleButton:
-                        '//span[normalize-space()="Test Distance Matrix API (Google MAP)"]/../../..//button[@class="handlediv"]',
+                    testDistanceMatrixApi: '//span[normalize-space()="Test Distance Matrix API (Google MAP)"]/../../..',
+                    collapsibleButton: '//span[normalize-space()="Test Distance Matrix API (Google MAP)"]/../../..//button[@class="handlediv"]',
                     address1: '#address1',
                     address2: '#address2',
                     getDistance: '//button[normalize-space()="Get Distance"]',
@@ -1724,52 +1498,38 @@ export const selector = {
 
             // Verifications
             verifications: {
-                verificationRequestsText:
-                    '//h2[normalize-space()="Verification Requests"]',
+                verificationRequestsText: '//h2[normalize-space()="Verification Requests"]',
 
                 // Nav Tabs
                 navTabs: {
-                    pending:
-                        '//ul[@class="subsubsub"]//li//a[contains(text(),"Pending")]',
-                    approved:
-                        '//ul[@class="subsubsub"]//li//a[contains(text(),"Approved")]',
-                    rejected:
-                        '//ul[@class="subsubsub"]//li//a[contains(text(),"Rejected")]',
+                    pending: '//ul[@class="subsubsub"]//li//a[contains(text(),"Pending")]',
+                    approved: '//ul[@class="subsubsub"]//li//a[contains(text(),"Approved")]',
+                    rejected: '//ul[@class="subsubsub"]//li//a[contains(text(),"Rejected")]',
                 },
 
                 // Table
                 table: {
                     verificationTable: '.verification-table',
-                    storeNameColumn:
-                        '//thead//th[contains(text(),"Store Name")]',
+                    storeNameColumn: '//thead//th[contains(text(),"Store Name")]',
                     photoIdColumn: '//thead//th[contains(text(),"Photo ID")]',
                     addressColumn: '//thead//th[contains(text(),"Address")]',
-                    phoneNumberColumn:
-                        '//thead//th[contains(text(),"Phone Number")]',
+                    phoneNumberColumn: '//thead//th[contains(text(),"Phone Number")]',
                     companyColumn: '//thead//th[contains(text(),"Company")]',
                 },
 
-                vendorRow: (storeName: string) =>
-                    `//a[normalize-space()="${storeName}"]/../../..`,
+                vendorRow: (storeName: string) => `//a[normalize-space()="${storeName}"]/../../..`,
 
                 idRequest: {
-                    approveRequest: (storeName: string) =>
-                        `(//a[normalize-space()="${storeName}"]/../../..//a[@data-status="approved"])[1]`,
-                    rejectRequest: (storeName: string) =>
-                        `(//a[normalize-space()="${storeName}"]/../../..//a[@data-status="rejected"])[1]`,
-                    disapproveRequest: (storeName: string) =>
-                        `(//a[normalize-space()="${storeName}"]/../../..//a[@data-status="disapproved"])[1]`,
+                    approveRequest: (storeName: string) => `(//a[normalize-space()="${storeName}"]/../../..//a[@data-status="approved"])[1]`,
+                    rejectRequest: (storeName: string) => `(//a[normalize-space()="${storeName}"]/../../..//a[@data-status="rejected"])[1]`,
+                    disapproveRequest: (storeName: string) => `(//a[normalize-space()="${storeName}"]/../../..//a[@data-status="disapproved"])[1]`,
                 },
 
                 addressRequest: {
-                    approveRequest: (storeName: string) =>
-                        `//a[normalize-space()="${storeName}"]/../../..//a[@data-type="address"][normalize-space()="Approve"]`,
-                    rejectRequest: (storeName: string) =>
-                        `//a[normalize-space()="${storeName}"]/../../..//a[@data-type="address"][normalize-space()="Reject"]`,
-                    disapproveRequest: (storeName: string) =>
-                        `//a[normalize-space()="${storeName}"]/../../..//a[@data-type="address"][normalize-space()="Disapprove"]`,
-                    proofOfResidence: (storeName: string) =>
-                        `//a[normalize-space()="${storeName}"]/../../..//a[normalize-space()="Proof of residence"]`,
+                    approveRequest: (storeName: string) => `//a[normalize-space()="${storeName}"]/../../..//a[@data-type="address"][normalize-space()="Approve"]`,
+                    rejectRequest: (storeName: string) => `//a[normalize-space()="${storeName}"]/../../..//a[@data-type="address"][normalize-space()="Reject"]`,
+                    disapproveRequest: (storeName: string) => `//a[normalize-space()="${storeName}"]/../../..//a[@data-type="address"][normalize-space()="Disapprove"]`,
+                    proofOfResidence: (storeName: string) => `//a[normalize-space()="${storeName}"]/../../..//a[normalize-space()="Proof of residence"]`,
                 },
 
                 phoneRequest: {
@@ -1777,12 +1537,9 @@ export const selector = {
                 },
 
                 companyRequest: {
-                    approveRequest: (storeName: string) =>
-                        `//a[normalize-space()="${storeName}"]/../../..//a[@data-type="company_verification_files"][normalize-space()="Approve"]`,
-                    rejectRequest: (storeName: string) =>
-                        `//a[normalize-space()="${storeName}"]/../../..//a[@data-type="company_verification_files"][normalize-space()="Reject"]`,
-                    disapproveRequest: (storeName: string) =>
-                        `//a[normalize-space()="${storeName}"]/../../..//a[@data-type="company_verification_files"][normalize-space()="Disapprove"]`,
+                    approveRequest: (storeName: string) => `//a[normalize-space()="${storeName}"]/../../..//a[@data-type="company_verification_files"][normalize-space()="Approve"]`,
+                    rejectRequest: (storeName: string) => `//a[normalize-space()="${storeName}"]/../../..//a[@data-type="company_verification_files"][normalize-space()="Reject"]`,
+                    disapproveRequest: (storeName: string) => `//a[normalize-space()="${storeName}"]/../../..//a[@data-type="company_verification_files"][normalize-space()="Disapprove"]`,
                 },
             },
 
@@ -1790,34 +1547,28 @@ export const selector = {
             productAdvertising: {
                 productAdvertisingText: '.product-advertisement-list h1',
 
-                addNewProductAdvertising:
-                    '//button[normalize-space()="Add New Advertisement"]',
+                addNewProductAdvertising: '//button[normalize-space()="Add New Advertisement"]',
 
                 // Nav Tabs
                 navTabs: {
                     all: '//ul[@class="subsubsub"]//li//a[contains(text(),"All")]',
                     active: '//ul[@class="subsubsub"]//li//a[contains(text(),"Active")]',
-                    expired:
-                        '//ul[@class="subsubsub"]//li//a[contains(text(),"Expired")]',
+                    expired: '//ul[@class="subsubsub"]//li//a[contains(text(),"Expired")]',
                 },
 
                 // Bulk Actions
                 bulkActions: {
                     selectAll: 'thead .manage-column input',
                     selectAction: '.tablenav.top #bulk-action-selector-top', // delete
-                    applyAction:
-                        '//div[@class="tablenav top"]//button[normalize-space()="Apply"]',
+                    applyAction: '//div[@class="tablenav top"]//button[normalize-space()="Apply"]',
                 },
 
                 // Filters
                 filters: {
-                    allStoresDropdown:
-                        '//input[@placeholder="Filter by store"]/../..//div[@class="multiselect__select"]',
-                    createdViaDropdown:
-                        '(//div[@class="multiselect__select"])[2]',
+                    allStoresDropdown: '//input[@placeholder="Filter by store"]/../..//div[@class="multiselect__select"]',
+                    createdViaDropdown: '(//div[@class="multiselect__select"])[2]',
                     filterByStoreInput: 'input[placeholder="Filter by store"]',
-                    filterByCreatedVia: (createdVia: string) =>
-                        `//li[@class="multiselect__element"]//span[contains(@class,"multiselect__option")]//span[contains(text(), "${createdVia}")]`,
+                    filterByCreatedVia: (createdVia: string) => `//li[@class="multiselect__element"]//span[contains(@class,"multiselect__option")]//span[contains(text(), "${createdVia}")]`,
                     clearFilter: '//button[normalize-space()="Clear"]',
                     // todo:  add date-range filter locator
                 },
@@ -1827,8 +1578,7 @@ export const selector = {
 
                 // Table
                 table: {
-                    productAdvertisingTable:
-                        '#product_advertisement_list_table table',
+                    productAdvertisingTable: '#product_advertisement_list_table table',
                     productNameColumn: 'thead th.product_title',
                     storeNameColumn: 'thead th.store',
                     createdViaColumn: 'thead th.created_via',
@@ -1839,32 +1589,23 @@ export const selector = {
                 },
 
                 numberOfRowsFound: '.tablenav.top .displaying-num',
-                noRowsFound:
-                    '//td[normalize-space()="No advertisement found."]',
-                advertisedProductCell: (productName: string) =>
-                    `//a[normalize-space()="${productName}"]/../..`,
-                advertisedProductOrderIdCell: (orderNumber: number) =>
-                    `//a[normalize-space()="${orderNumber}"]/../..`,
-                advertisedProductExpire: (productName: string) =>
-                    `//a[normalize-space()="${productName}"]/../..//span[@class="expire"]`,
-                advertisedProductDelete: (productName: string) =>
-                    `//a[normalize-space()="${productName}"]/../..//span[@class="delete"]`,
+                noRowsFound: '//td[normalize-space()="No advertisement found."]',
+                advertisedProductCell: (productName: string) => `//a[normalize-space()="${productName}"]/../..`,
+                advertisedProductOrderIdCell: (orderNumber: number) => `//a[normalize-space()="${orderNumber}"]/../..`,
+                advertisedProductExpire: (productName: string) => `//a[normalize-space()="${productName}"]/../..//span[@class="expire"]`,
+                advertisedProductDelete: (productName: string) => `//a[normalize-space()="${productName}"]/../..//span[@class="delete"]`,
 
                 confirmAction: '.swal2-actions .swal2-confirm', // todo:  merge this type of locators
                 actionSuccessful: '.swal2-actions .swal2-confirm', // todo:  merge this type of locators
 
                 addNewAdvertisement: {
                     closeModal: '.modal-header button',
-                    selectStoreDropdown:
-                        '//label[normalize-space()="Select Store"]/..//div[@class="multiselect__select"]',
+                    selectStoreDropdown: '//label[normalize-space()="Select Store"]/..//div[@class="multiselect__select"]',
                     selectStoreInput: '#filter-vendors',
-                    selectedStore:
-                        '//label[normalize-space()="Select Store"]/..//span[@class="multiselect__option multiselect__option--highlight"]//span',
-                    selectProductDropdown:
-                        '//label[normalize-space()="Select Product"]/..//div[@class="multiselect__select"]',
+                    selectedStore: '//label[normalize-space()="Select Store"]/..//span[@class="multiselect__option multiselect__option--highlight"]//span',
+                    selectProductDropdown: '//label[normalize-space()="Select Product"]/..//div[@class="multiselect__select"]',
                     selectProductInput: '#filter-products',
-                    selectedProduct:
-                        '//label[normalize-space()="Select Product"]/..//span[@class="multiselect__option multiselect__option--highlight"]//span',
+                    selectedProduct: '//label[normalize-space()="Select Product"]/..//span[@class="multiselect__option multiselect__option--highlight"]//span',
                     addReverseWithdrawalEntry: '#reverse-withdrawal-entry',
                     addNew: '.modal-footer button',
                 },
@@ -1878,8 +1619,7 @@ export const selector = {
                 navTabs: {
                     all: '//ul[@class="subsubsub"]//li//a[contains(text(),"All")]',
                     active: '//ul[@class="subsubsub"]//li//a[contains(text(),"Active")]',
-                    deActive:
-                        '//ul[@class="subsubsub"]//li//a[contains(text(),"Deactive")]',
+                    deActive: '//ul[@class="subsubsub"]//li//a[contains(text(),"Deactive")]',
                 },
 
                 // Bulk Actions
@@ -1904,16 +1644,11 @@ export const selector = {
 
                 numberOfRowsFound: '.tablenav.top .displaying-num',
                 noRowsFound: '//td[normalize-space()="No customers found."]',
-                wholesaleCustomerCell: (username: string) =>
-                    `//td[contains(text(), '${username}')]/..//td[@class='column full_name']`,
-                wholesaleCustomerEdit: (username: string) =>
-                    `//td[contains(text(), '${username}')]/..//td[@class='column full_name']//span[@class='edit']//a`,
-                wholesaleCustomerOrders: (username: string) =>
-                    `//td[contains(text(), '${username}')]/..//td[@class='column full_name']//span[@class='orders']//a`,
-                wholesaleCustomerRemove: (username: string) =>
-                    `//td[contains(text(), '${username}')]/..//td[@class='column full_name']//span[@class='delete']//a`,
-                statusSlider: (username: string) =>
-                    `//td[contains(text(), '${username}')]/..//label[@class='switch tips']`,
+                wholesaleCustomerCell: (username: string) => `//td[contains(text(), '${username}')]/..//td[@class='column full_name']`,
+                wholesaleCustomerEdit: (username: string) => `//td[contains(text(), '${username}')]/..//td[@class='column full_name']//span[@class='edit']//a`,
+                wholesaleCustomerOrders: (username: string) => `//td[contains(text(), '${username}')]/..//td[@class='column full_name']//span[@class='orders']//a`,
+                wholesaleCustomerRemove: (username: string) => `//td[contains(text(), '${username}')]/..//td[@class='column full_name']//span[@class='delete']//a`,
+                statusSlider: (username: string) => `//td[contains(text(), '${username}')]/..//label[@class='switch tips']`,
                 enableStatusUpdateSuccessMessage: '.notification-content',
             },
 
@@ -1924,54 +1659,39 @@ export const selector = {
                 // basics
                 basics: {
                     basics: '//span[contains(text(), "Basics")]/../../..',
-                    collapsibleButton:
-                        '//span[contains(text(), "Basics")]/../../..//button',
-                    basicsList:
-                        '//span[contains(text(), "Basics")]/../../..//ul',
+                    collapsibleButton: '//span[contains(text(), "Basics")]/../../..//button',
+                    basicsList: '//span[contains(text(), "Basics")]/../../..//ul',
                 },
 
                 // payment And Shipping
                 paymentAndShipping: {
-                    paymentAndShipping:
-                        '//span[contains(text(), "Payment and Shipping")]/../../..',
-                    collapsibleButton:
-                        '//span[contains(text(), "Payment and Shipping")]/../../..//button',
-                    paymentAndShippingList:
-                        '//span[contains(text(), "Basics")]/../../..//ul',
+                    paymentAndShipping: '//span[contains(text(), "Payment and Shipping")]/../../..',
+                    collapsibleButton: '//span[contains(text(), "Payment and Shipping")]/../../..//button',
+                    paymentAndShippingList: '//span[contains(text(), "Basics")]/../../..//ul',
                 },
 
                 // vendor related questions
                 vendorRelatedQuestions: {
-                    vendorRelatedQuestions:
-                        '//span[contains(text(), "Vendor Related Questions")]/../../..',
-                    collapsibleButton:
-                        '//span[contains(text(), "Vendor Related Questions")]/../../..//button',
-                    vendorRelatedQuestionsList:
-                        '//span[contains(text(), "Basics")]/../../..//ul',
+                    vendorRelatedQuestions: '//span[contains(text(), "Vendor Related Questions")]/../../..',
+                    collapsibleButton: '//span[contains(text(), "Vendor Related Questions")]/../../..//button',
+                    vendorRelatedQuestionsList: '//span[contains(text(), "Basics")]/../../..//ul',
                 },
 
                 // miscellaneous
                 miscellaneous: {
-                    miscellaneous:
-                        '//span[contains(text(), "Miscellaneous")]/../../..',
-                    collapsibleButton:
-                        '//span[contains(text(), "Miscellaneous")]/../../..//button',
-                    miscellaneousList:
-                        '//span[contains(text(), "Miscellaneous")]/../../..//button',
+                    miscellaneous: '//span[contains(text(), "Miscellaneous")]/../../..',
+                    collapsibleButton: '//span[contains(text(), "Miscellaneous")]/../../..//button',
+                    miscellaneousList: '//span[contains(text(), "Miscellaneous")]/../../..//button',
                 },
             },
 
             spmv: {
                 spmvDiv: '#dokan-spmv-products-admin',
-                searchVendor:
-                    '#dokan-spmv-products-admin input.select2-search__field',
-                searchedResult: (storeName: string) =>
-                    `//div[contains(text(),"${storeName}") and @class="dokan-spmv-vendor-dropdown-results__title"]`,
-                highlightedResult:
-                    '.select2-results__option.select2-results__option--highlighted',
+                searchVendor: '#dokan-spmv-products-admin input.select2-search__field',
+                searchedResult: (storeName: string) => `//div[contains(text(),"${storeName}") and @class="dokan-spmv-vendor-dropdown-results__title"]`,
+                highlightedResult: '.select2-results__option.select2-results__option--highlighted',
                 assignVendor: '#dokan-spmv-products-admin-assign-vendors-btn',
-                unassignVendor: (storeName: string) =>
-                    `//span[normalize-space()="${storeName}"]/../..//span[@class="delete-product"]`,
+                unassignVendor: (storeName: string) => `//span[normalize-space()="${storeName}"]/../..//span[@class="delete-product"]`,
             },
 
             // Dokan Settings
@@ -1980,8 +1700,7 @@ export const selector = {
                 proAdvertisementBanner: {
                     settingsBanner: '#dokan-settings-banner',
                     upgradeToPro: '//a[normalize-space()="Upgrade to Pro"]',
-                    checkOutAllVendorFunctionalities:
-                        '//a[normalize-space()="Check Out All Vendor Functionalities"]',
+                    checkOutAllVendorFunctionalities: '//a[normalize-space()="Check Out All Vendor Functionalities"]',
                 },
 
                 settingsText: '.dokan-settings h1',
@@ -2012,57 +1731,33 @@ export const selector = {
 
                 // Setting Menus
                 menus: {
-                    general:
-                        '//div[@class="nav-title" and contains(text(),"General")]',
-                    sellingOptions:
-                        '//div[@class="nav-title" and contains(text(),"Selling Options")]',
-                    withdrawOptions:
-                        '//div[@class="nav-title" and contains(text(),"Withdraw Options")]',
-                    reverseWithdrawal:
-                        '//div[@class="nav-title" and contains(text(),"Reverse Withdrawal")]',
-                    pageSettings:
-                        '//div[@class="nav-title" and contains(text(),"Page Settings")]',
-                    appearance:
-                        '//div[@class="nav-title" and contains(text(),"Appearance")]',
-                    privacyPolicy:
-                        '//div[@class="nav-title" and contains(text(),"Privacy Policy")]',
+                    general: '//div[@class="nav-title" and contains(text(),"General")]',
+                    sellingOptions: '//div[@class="nav-title" and contains(text(),"Selling Options")]',
+                    withdrawOptions: '//div[@class="nav-title" and contains(text(),"Withdraw Options")]',
+                    reverseWithdrawal: '//div[@class="nav-title" and contains(text(),"Reverse Withdrawal")]',
+                    pageSettings: '//div[@class="nav-title" and contains(text(),"Page Settings")]',
+                    appearance: '//div[@class="nav-title" and contains(text(),"Appearance")]',
+                    privacyPolicy: '//div[@class="nav-title" and contains(text(),"Privacy Policy")]',
                     colors: '//div[@class="nav-title" and contains(text(),"Colors")]',
-                    liveSearch:
-                        '//div[@class="nav-title" and contains(text(),"Live Search")]',
-                    storeSupport:
-                        '//div[@class="nav-title" and contains(text(),"Store Support")]',
-                    sellerVerification:
-                        '//div[@class="nav-title" and contains(text(),"Seller Verification")]',
-                    verificationSmsGateways:
-                        '//div[@class="nav-title" and contains(text(),"Verification SMS Gateways")]',
-                    emailVerification:
-                        '//div[@class="nav-title" and contains(text(),"Email Verification")]',
-                    socialApi:
-                        '//div[@class="nav-title" and contains(text(),"Social API")]',
-                    shippingStatus:
-                        '//div[@class="nav-title" and contains(text(),"Shipping Status")]',
+                    liveSearch: '//div[@class="nav-title" and contains(text(),"Live Search")]',
+                    storeSupport: '//div[@class="nav-title" and contains(text(),"Store Support")]',
+                    sellerVerification: '//div[@class="nav-title" and contains(text(),"Seller Verification")]',
+                    verificationSmsGateways: '//div[@class="nav-title" and contains(text(),"Verification SMS Gateways")]',
+                    emailVerification: '//div[@class="nav-title" and contains(text(),"Email Verification")]',
+                    socialApi: '//div[@class="nav-title" and contains(text(),"Social API")]',
+                    shippingStatus: '//div[@class="nav-title" and contains(text(),"Shipping Status")]',
                     quote: '//div[@class="nav-title" and contains(text(),"Quote Settings")]',
-                    liveChat:
-                        '//div[@class="nav-title" and contains(text(),"Live Chat")]',
+                    liveChat: '//div[@class="nav-title" and contains(text(),"Live Chat")]',
                     rma: '//div[@class="nav-title" and contains(text(),"RMA")]',
-                    wholesale:
-                        '//div[@class="nav-title" and contains(text(),"Wholesale")]',
-                    euComplianceFields:
-                        '//div[@class="nav-title" and contains(text(),"EU Compliance Fields")]',
-                    deliveryTime:
-                        '//div[@class="nav-title" and contains(text(),"Delivery Time")]',
-                    productAdvertising:
-                        '//div[@class="nav-title" and contains(text(),"Product Advertising")]',
-                    geolocation:
-                        '//div[@class="nav-title" and contains(text(),"Geolocation")]',
-                    productReportAbuse:
-                        '//div[@class="nav-title" and contains(text(),"Product Report Abuse")]',
-                    singleProductMultiVendor:
-                        '//div[@class="nav-title" and contains(text(),"Single Product MultiVendor")]',
-                    vendorSubscription:
-                        '//div[@class="nav-title" and contains(text(),"Vendor Subscription")]',
-                    vendorAnalytics:
-                        '//div[@class="nav-title" and contains(text(),"Vendor Analytics")]',
+                    wholesale: '//div[@class="nav-title" and contains(text(),"Wholesale")]',
+                    euComplianceFields: '//div[@class="nav-title" and contains(text(),"EU Compliance Fields")]',
+                    deliveryTime: '//div[@class="nav-title" and contains(text(),"Delivery Time")]',
+                    productAdvertising: '//div[@class="nav-title" and contains(text(),"Product Advertising")]',
+                    geolocation: '//div[@class="nav-title" and contains(text(),"Geolocation")]',
+                    productReportAbuse: '//div[@class="nav-title" and contains(text(),"Product Report Abuse")]',
+                    singleProductMultiVendor: '//div[@class="nav-title" and contains(text(),"Single Product MultiVendor")]',
+                    vendorSubscription: '//div[@class="nav-title" and contains(text(),"Vendor Subscription")]',
+                    vendorAnalytics: '//div[@class="nav-title" and contains(text(),"Vendor Analytics")]',
                 },
 
                 // General
@@ -2071,28 +1766,20 @@ export const selector = {
                     adminAreaAccess: '.admin_access .switch',
 
                     vendorStoreUrl: '#dokan_general\\[custom_store_url\\]', // todo:  for CSS selector [ ] needs escaped with double back slash \\
-                    vendorSetupWizardLogo:
-                        '#dokan_general\\[setup_wizard_logo_url\\]',
-                    disableWelcomeWizard:
-                        '#dokan_general\\[disable_welcome_wizard\\]',
-                    sellingProductTypes: (type: string) =>
-                        `//label[@for='dokan_general[global_digital_mode][${type}]']`,
-                    logShipStationApiRequest:
-                        '#dokan_general\\[enable_shipstation_logging\\]',
+                    vendorSetupWizardLogo: '#dokan_general\\[setup_wizard_logo_url\\]',
+                    disableWelcomeWizard: '#dokan_general\\[disable_welcome_wizard\\]',
+                    sellingProductTypes: (type: string) => `//label[@for='dokan_general[global_digital_mode][${type}]']`,
+                    logShipStationApiRequest: '#dokan_general\\[enable_shipstation_logging\\]',
                     dataClear: '#dokan_general\\[data_clear_on_uninstall\\]',
                     confirmDataClear: '.swal2-confirm',
                     cancelDataClear: '.swal2-cancel',
 
                     // Vendor Store Options
-                    storeTermsAndConditions:
-                        '.seller_enable_terms_and_conditions .switch',
-                    storeProductPerPage:
-                        '#dokan_general\\[store_products_per_page\\]',
+                    storeTermsAndConditions: '.seller_enable_terms_and_conditions .switch',
+                    storeProductPerPage: '#dokan_general\\[store_products_per_page\\]',
                     enableTermsAndCondition: '.enable_tc_on_reg .switch',
-                    enableSingSellerMode:
-                        '#dokan_general\\[enable_single_seller_mode\\]',
-                    storCategory: (category: string) =>
-                        `//label[@for='dokan_general[store_category_type][${category}]']`,
+                    enableSingSellerMode: '#dokan_general\\[enable_single_seller_mode\\]',
+                    storCategory: (category: string) => `//label[@for='dokan_general[store_category_type][${category}]']`,
                     generalSaveChanges: '#submit',
                 },
 
@@ -2101,38 +1788,28 @@ export const selector = {
                     // Commission
                     commissionType: '#dokan_selling\\[commission_type\\]',
                     adminCommission: '#dokan_selling\\[admin_percentage\\]',
-                    shippingFeeRecipient: (feeReceiver: string) =>
-                        `//label[@for='dokan_selling[shipping_fee_recipient][${feeReceiver}]']`,
-                    productTaxFeeRecipient: (feeReceiver: string) =>
-                        `//label[@for='dokan_selling[tax_fee_recipient][${feeReceiver}]']`,
-                    shippingTaxFeeRecipient: (feeReceiver: string) =>
-                        `//label[@for='dokan_selling[shipping_tax_fee_recipient][${feeReceiver}]']`,
-                    processRefundViaAPI:
-                        '#dokan_selling\\[automatic_process_api_refund\\]',
+                    shippingFeeRecipient: (feeReceiver: string) => `//label[@for='dokan_selling[shipping_fee_recipient][${feeReceiver}]']`,
+                    productTaxFeeRecipient: (feeReceiver: string) => `//label[@for='dokan_selling[tax_fee_recipient][${feeReceiver}]']`,
+                    shippingTaxFeeRecipient: (feeReceiver: string) => `//label[@for='dokan_selling[shipping_tax_fee_recipient][${feeReceiver}]']`,
+                    processRefundViaAPI: '#dokan_selling\\[automatic_process_api_refund\\]',
 
                     // Vendor Capability
                     enableSelling: '.new_seller_enable_selling .switch',
                     disableProductPopup: '.disable_product_popup .switch',
                     orderStatusChange: '.order_status_change .switch',
-                    newProductStatus: (status: string) =>
-                        `//label[@for='dokan_selling[product_status][${status}]']`,
+                    newProductStatus: (status: string) => `//label[@for='dokan_selling[product_status][${status}]']`,
                     duplicateProduct: '.vendor_duplicate_product .switch',
                     editedProductStatus: '.edited_product_status .switch',
                     productMailNotification: '.product_add_mail .switch',
-                    productCategorySelection: (category: string) =>
-                        `//label[@for='dokan_selling[product_category_style][${category}]']`,
-                    vendorsCanCreateTags:
-                        '.product_vendors_can_create_tags .switch',
-                    orderDiscount:
-                        '//div[contains(text(),"Order Discount")]//label[@class="switch tips"]',
-                    productDiscount:
-                        '//div[contains(text(),"Product Discount")]//label[@class="switch tips"]',
+                    productCategorySelection: (category: string) => `//label[@for='dokan_selling[product_category_style][${category}]']`,
+                    vendorsCanCreateTags: '.product_vendors_can_create_tags .switch',
+                    orderDiscount: '//div[contains(text(),"Order Discount")]//label[@class="switch tips"]',
+                    productDiscount: '//div[contains(text(),"Product Discount")]//label[@class="switch tips"]',
 
                     hideCustomerInfo: '.hide_customer_info .switch',
                     vendorProductReview: '.seller_review_manage .switch',
                     guestProductEnquiry: '.enable_guest_user_enquiry .switch',
-                    newVendorEnableAuction:
-                        '.new_seller_enable_auction .switch',
+                    newVendorEnableAuction: '.new_seller_enable_auction .switch',
                     enableMinMaxQuantities: '.enable_min_max_quantity .switch',
                     enableMinMaxAmount: '.enable_min_max_amount .switch',
                     disableShipping: '.disable_shipping_tab .switch',
@@ -2142,97 +1819,57 @@ export const selector = {
                 // Withdraw
                 withdraw: {
                     // Withdraw Options
-                    withdrawMethodsPaypal:
-                        '//div[normalize-space(text())="PayPal"]',
-                    withdrawMethodsBankTransfer:
-                        '//div[contains(text()," Bank Transfer")]//label',
-                    withdrawMethodsWireCard:
-                        '//div[contains(text(),"Wirecard")]//label',
-                    withdrawMethodsPaypalMarketplace:
-                        '#dokan_withdraw\\[withdraw_methods\\]\\[dokan-paypal-marketplace\\]',
-                    withdrawMethodsDokanCustom:
-                        '//div[contains(text(),"Custom")]//label',
-                    withdrawMethodsRazorpay:
-                        '#dokan_withdraw\\[withdraw_methods\\]\\[dokan_razorpay\\]',
-                    withdrawMethodsMangoPay:
-                        '#dokan_withdraw\\[withdraw_methods\\]\\[dokan_mangopay\\]',
-                    withdrawMethodsStripe:
-                        '//div[contains(text(),"Stripe")]//label',
-                    withdrawMethodsStripeExpress:
-                        '#dokan_withdraw\\[withdraw_methods\\]\\[dokan_stripe_express\\]',
-                    withdrawMethodsSkrill:
-                        '//div[contains(text(),"Skrill")]//label',
-                    customMethodName:
-                        '#dokan_withdraw\\[withdraw_method_name\\]',
-                    customMethodType:
-                        '#dokan_withdraw\\[withdraw_method_type\\]',
-                    minimumWithdrawAmount:
-                        '#dokan_withdraw\\[withdraw_limit\\]',
-                    orderStatusForWithdrawCompleted:
-                        '//div[contains(text(),"Completed")]//label',
-                    orderStatusForWithdrawProcessing:
-                        '//div[contains(text(),"Processing")]//label',
-                    orderStatusForWithdrawOnHold:
-                        '//div[contains(text(),"On-hold")]//label',
+                    withdrawMethodsPaypal: '//div[normalize-space(text())="PayPal"]',
+                    withdrawMethodsBankTransfer: '//div[contains(text()," Bank Transfer")]//label',
+                    withdrawMethodsWireCard: '//div[contains(text(),"Wirecard")]//label',
+                    withdrawMethodsPaypalMarketplace: '#dokan_withdraw\\[withdraw_methods\\]\\[dokan-paypal-marketplace\\]',
+                    withdrawMethodsDokanCustom: '//div[contains(text(),"Custom")]//label',
+                    withdrawMethodsRazorpay: '#dokan_withdraw\\[withdraw_methods\\]\\[dokan_razorpay\\]',
+                    withdrawMethodsMangoPay: '#dokan_withdraw\\[withdraw_methods\\]\\[dokan_mangopay\\]',
+                    withdrawMethodsStripe: '//div[contains(text(),"Stripe")]//label',
+                    withdrawMethodsStripeExpress: '#dokan_withdraw\\[withdraw_methods\\]\\[dokan_stripe_express\\]',
+                    withdrawMethodsSkrill: '//div[contains(text(),"Skrill")]//label',
+                    customMethodName: '#dokan_withdraw\\[withdraw_method_name\\]',
+                    customMethodType: '#dokan_withdraw\\[withdraw_method_type\\]',
+                    minimumWithdrawAmount: '#dokan_withdraw\\[withdraw_limit\\]',
+                    orderStatusForWithdrawCompleted: '//div[contains(text(),"Completed")]//label',
+                    orderStatusForWithdrawProcessing: '//div[contains(text(),"Processing")]//label',
+                    orderStatusForWithdrawOnHold: '//div[contains(text(),"On-hold")]//label',
                     excludeCodPayments: '.exclude_cod_payment .switch',
-                    withdrawThreshold:
-                        '#dokan_withdraw\\[withdraw_date_limit\\]',
+                    withdrawThreshold: '#dokan_withdraw\\[withdraw_date_limit\\]',
                     hideWithdrawOption: '.hide_withdraw_option .switch',
                     // Disbursement Schedule Settings
-                    withdrawDisbursementManual:
-                        '//div[contains(text(),"Manual Withdraw")]//label',
-                    withdrawDisbursementAuto:
-                        '//div[contains(text(),"Schedule Disbursement")]//label',
-                    disburseMentQuarterlySchedule:
-                        '//div[contains(text(),"Quarterly")]//label',
-                    disburseMentMonthlySchedule:
-                        '//div[contains(text(),"Monthly")]//label',
-                    disburseMentBiweeklySchedule:
-                        '//div[contains(text(),"Biweekly (Twice Per Month)")]//label',
-                    disburseMentWeeklySchedule:
-                        '//div[contains(text(),"Weekly")]//label',
-                    quarterlyScheduleMonth:
-                        'select[name="dokan_withdraw[quarterly_schedule][month]"]',
-                    quarterlyScheduleWeek:
-                        'select[name="dokan_withdraw[quarterly_schedule][week]"]',
-                    quarterlyScheduleDay:
-                        'select[name="dokan_withdraw[quarterly_schedule][days]"]',
-                    monthlyScheduleWeek:
-                        'select[name="dokan_withdraw[monthly_schedule][week]"]',
-                    monthlyScheduleDay:
-                        'select[name="dokan_withdraw[monthly_schedule][days]"]',
-                    biweeklyScheduleWeek:
-                        'select[name="dokan_withdraw[biweekly_schedule][week]"]',
-                    biweeklyScheduleDay:
-                        'select[name="dokan_withdraw[biweekly_schedule][days]"]',
-                    weeklyScheduleDay:
-                        'select[name="dokan_withdraw[weekly_schedule]"]',
+                    withdrawDisbursementManual: '//div[contains(text(),"Manual Withdraw")]//label',
+                    withdrawDisbursementAuto: '//div[contains(text(),"Schedule Disbursement")]//label',
+                    disburseMentQuarterlySchedule: '//div[contains(text(),"Quarterly")]//label',
+                    disburseMentMonthlySchedule: '//div[contains(text(),"Monthly")]//label',
+                    disburseMentBiweeklySchedule: '//div[contains(text(),"Biweekly (Twice Per Month)")]//label',
+                    disburseMentWeeklySchedule: '//div[contains(text(),"Weekly")]//label',
+                    quarterlyScheduleMonth: 'select[name="dokan_withdraw[quarterly_schedule][month]"]',
+                    quarterlyScheduleWeek: 'select[name="dokan_withdraw[quarterly_schedule][week]"]',
+                    quarterlyScheduleDay: 'select[name="dokan_withdraw[quarterly_schedule][days]"]',
+                    monthlyScheduleWeek: 'select[name="dokan_withdraw[monthly_schedule][week]"]',
+                    monthlyScheduleDay: 'select[name="dokan_withdraw[monthly_schedule][days]"]',
+                    biweeklyScheduleWeek: 'select[name="dokan_withdraw[biweekly_schedule][week]"]',
+                    biweeklyScheduleDay: 'select[name="dokan_withdraw[biweekly_schedule][days]"]',
+                    weeklyScheduleDay: 'select[name="dokan_withdraw[weekly_schedule]"]',
                     withdrawSaveChanges: '#submit',
                 },
 
                 // Reverse Withdraw Settings
                 reverseWithdraw: {
                     // Reverse Withdraw Settings
-                    enableReverseWithdrawal:
-                        '.enabled.dokan-settings-field-type-switcher .switch',
-                    enableReverseWithdrawalForThisGateway:
-                        '.payment_gateways.dokan-settings-field-type-multicheck .switch',
+                    enableReverseWithdrawal: '.enabled.dokan-settings-field-type-switcher .switch',
+                    enableReverseWithdrawalForThisGateway: '.payment_gateways.dokan-settings-field-type-multicheck .switch',
                     billingType: '#dokan_reverse_withdrawal\\[billing_type\\]',
-                    monthlyBillingDate:
-                        '#dokan_reverse_withdrawal\\[monthly_billing_day\\]',
-                    reverseBalanceThreshold:
-                        '#dokan_reverse_withdrawal\\[reverse_balance_threshold\\]',
+                    monthlyBillingDate: '#dokan_reverse_withdrawal\\[monthly_billing_day\\]',
+                    reverseBalanceThreshold: '#dokan_reverse_withdrawal\\[reverse_balance_threshold\\]',
                     gracePeriod: '#dokan_reverse_withdrawal\\[due_period\\]',
-                    disableAddToCartButton:
-                        '//div[contains(text(),"Disable Add to Cart Button")]//label',
-                    hideWithdrawMenu:
-                        '//div[contains(text(),"Hide Withdraw Menu")]//label',
-                    MakeVendorStatusInactive:
-                        '//div[contains(text(),"Make Vendor Status Inactive")]//label',
-                    displayNoticeDuringGracePeriod:
-                        '.display_notice.dokan-settings-field-type-switcher .switch',
-                    sendAnnouncement:
-                        '.send_announcement.dokan-settings-field-type-switcher .switch',
+                    disableAddToCartButton: '//div[contains(text(),"Disable Add to Cart Button")]//label',
+                    hideWithdrawMenu: '//div[contains(text(),"Hide Withdraw Menu")]//label',
+                    MakeVendorStatusInactive: '//div[contains(text(),"Make Vendor Status Inactive")]//label',
+                    displayNoticeDuringGracePeriod: '.display_notice.dokan-settings-field-type-switcher .switch',
+                    sendAnnouncement: '.send_announcement.dokan-settings-field-type-switcher .switch',
                     reverseWithdrawSaveChanges: '#submit',
                 },
 
@@ -2250,37 +1887,26 @@ export const selector = {
                 appearance: {
                     // Appearance
                     showMapOnStorePage: '.store_map .switch',
-                    mapApiSourceGoogleMaps:
-                        '//div[@class="map_api_source dokan-settings-field-type-radio"] //label[@for="dokan_appearance[map_api_source][google_maps]"]',
-                    mapApiSourceMapBox:
-                        '//div[@class="map_api_source dokan-settings-field-type-radio"] //label[@for="dokan_appearance[map_api_source][mapbox]"]',
+                    mapApiSourceGoogleMaps: '//div[@class="map_api_source dokan-settings-field-type-radio"] //label[@for="dokan_appearance[map_api_source][google_maps]"]',
+                    mapApiSourceMapBox: '//div[@class="map_api_source dokan-settings-field-type-radio"] //label[@for="dokan_appearance[map_api_source][mapbox]"]',
                     googleMapApiKey: '#dokan_appearance\\[gmap_api_key\\]',
-                    mapBoxAccessToken:
-                        '#dokan_appearance\\[mapbox_access_token\\]',
+                    mapBoxAccessToken: '#dokan_appearance\\[mapbox_access_token\\]',
                     googleReCAPTCHA: '.recaptcha_validation_label .dashicons',
-                    googleReCAPTCHAValidationSiteKey:
-                        '//h3[contains(text()," Site Key")]//..//..//input',
-                    googleReCAPTCHAValidationSecretKey:
-                        '//h3[contains(text(),"Secret Key")]//..//..//input]',
+                    googleReCAPTCHAValidationSiteKey: '//h3[contains(text()," Site Key")]//..//..//input',
+                    googleReCAPTCHAValidationSecretKey: '//h3[contains(text(),"Secret Key")]//..//..//input]',
                     showContactFormOnStorePage: '.contact_seller .switch',
                     storeHeaderTemplate1: '.radio-image:nth-child(1) .button',
                     storeHeaderTemplate2: '.radio-image:nth-child(2) .button',
                     storeHeaderTemplate3: '.radio-image:nth-child(3) .button',
                     storeHeaderTemplate4: '.radio-image:nth-child(4) .button',
-                    storeBannerWidth:
-                        '#dokan_appearance\\[store_banner_width\\]',
-                    storeBannerHeight:
-                        '#dokan_appearance\\[store_banner_height\\]',
+                    storeBannerWidth: '#dokan_appearance\\[store_banner_width\\]',
+                    storeBannerHeight: '#dokan_appearance\\[store_banner_height\\]',
                     storeOpeningClosingTimeWidget: '.store_open_close .switch',
-                    enableStoreSidebarFromTheme:
-                        '.enable_theme_store_sidebar .switch',
+                    enableStoreSidebarFromTheme: '.enable_theme_store_sidebar .switch',
                     showVendorInfo: '.show_vendor_info .switch',
-                    hideVendorInfoEmailAddress:
-                        '//div[contains(text(),"Email Address")]//label[@class="switch tips"]',
-                    hideVendorInfoPhoneNumber:
-                        '//div[contains(text(),"Phone Number")]//label[@class="switch tips"]',
-                    hideVendorInfoStoreAddress:
-                        '//div[contains(text(),"Store Address")]//label[@class="switch tips"]',
+                    hideVendorInfoEmailAddress: '//div[contains(text(),"Email Address")]//label[@class="switch tips"]',
+                    hideVendorInfoPhoneNumber: '//div[contains(text(),"Phone Number")]//label[@class="switch tips"]',
+                    hideVendorInfoStoreAddress: '//div[contains(text(),"Store Address")]//label[@class="switch tips"]',
                     appearanceSaveChanges: '#submit',
                 },
 
@@ -2296,10 +1922,8 @@ export const selector = {
 
                 // Colors
                 colors: {
-                    predefineColorPalette:
-                        '//h3[normalize-space()="Pre-defined Color Palette"]/../..',
-                    customColorPalette:
-                        '//h3[normalize-space()="Custom Color Palette"]/../..',
+                    predefineColorPalette: '//h3[normalize-space()="Pre-defined Color Palette"]/../..',
+                    customColorPalette: '//h3[normalize-space()="Custom Color Palette"]/../..',
 
                     colorPalette: {
                         default: '#default',
@@ -2330,22 +1954,17 @@ export const selector = {
 
                 // Live Search
                 liveSearch: {
-                    liveSearchOptions:
-                        '#dokan_live_search_setting\\[live_search_option\\]',
+                    liveSearchOptions: '#dokan_live_search_setting\\[live_search_option\\]',
                     liveSearchSaveChanges: '#submit',
                 },
 
                 // Store Support
                 storeSupport: {
                     // Store Support
-                    displayOnOrderDetails:
-                        '.enabled_for_customer_order .switch',
-                    displayOnSingleProductPage:
-                        '#dokan_store_support_setting\\[store_support_product_page\\]',
-                    supportButtonLabel:
-                        '#dokan_store_support_setting\\[support_button_label\\]',
-                    supportTicketEmailNotification:
-                        '.dokan_admin_email_notification .switch',
+                    displayOnOrderDetails: '.enabled_for_customer_order .switch',
+                    displayOnSingleProductPage: '#dokan_store_support_setting\\[store_support_product_page\\]',
+                    supportButtonLabel: '#dokan_store_support_setting\\[support_button_label\\]',
+                    supportTicketEmailNotification: '.dokan_admin_email_notification .switch',
                     storeSupportSaveChanges: '#submit',
                 },
 
@@ -2357,46 +1976,34 @@ export const selector = {
                     facebookAppSecret: '#dokan_verification\\[fb_app_secret\\]',
                     // Twitter
                     consumerKey: '#dokan_verification\\[twitter_app_id\\]',
-                    consumerSecret:
-                        '#dokan_verification\\[twitter_app_secret\\]',
+                    consumerSecret: '#dokan_verification\\[twitter_app_secret\\]',
                     // Google
                     googleClientId: '#dokan_verification\\[google_app_id\\]',
-                    googleClientSecret:
-                        '#dokan_verification\\[google_app_secret\\]',
+                    googleClientSecret: '#dokan_verification\\[google_app_secret\\]',
                     // Linkedin
-                    linkedinClientId:
-                        '#dokan_verification\\[linkedin_app_id\\]',
-                    linkedinClientSecret:
-                        '#dokan_verification\\[linkedin_app_secret\\]',
+                    linkedinClientId: '#dokan_verification\\[linkedin_app_id\\]',
+                    linkedinClientSecret: '#dokan_verification\\[linkedin_app_secret\\]',
                 },
 
                 // Verification Sms Gateways
                 verificationSmsGateway: {
                     // Verification Sms Gateways
-                    senderName:
-                        '#dokan_verification_sms_gateways\\[sender_name\\]',
+                    senderName: '#dokan_verification_sms_gateways\\[sender_name\\]',
                     smsText: '#dokan_verification_sms_gateways\\[sms_text\\]',
-                    smsSentSuccess:
-                        '#dokan_verification_sms_gateways\\[sms_sent_msg\\]',
-                    smsSentError:
-                        '#dokan_verification_sms_gateways\\[sms_sent_error\\]',
-                    activeGateway:
-                        '#dokan_verification_sms_gateways\\[active_gateway\\]',
+                    smsSentSuccess: '#dokan_verification_sms_gateways\\[sms_sent_msg\\]',
+                    smsSentError: '#dokan_verification_sms_gateways\\[sms_sent_error\\]',
+                    activeGateway: '#dokan_verification_sms_gateways\\[active_gateway\\]',
                     // Nexmo
                     apiKey: '#dokan_verification_sms_gateways\\[nexmo_username\\]',
-                    apiSecret:
-                        '#dokan_verification_sms_gateways\\[nexmo_pass\\]',
+                    apiSecret: '#dokan_verification_sms_gateways\\[nexmo_pass\\]',
                 },
 
                 // Email Verification
                 emailVerification: {
                     // Email Verification
-                    enableEmailVerification:
-                        '//label[@for="dokan_email_verification[enabled]"]//label[@class="switch tips"]',
-                    registrationNotice:
-                        'textarea#dokan_email_verification\\[registration_notice\\]',
-                    loginNotice:
-                        'textarea#dokan_email_verification\\[login_notice\\]',
+                    enableEmailVerification: '//label[@for="dokan_email_verification[enabled]"]//label[@class="switch tips"]',
+                    registrationNotice: 'textarea#dokan_email_verification\\[registration_notice\\]',
+                    loginNotice: 'textarea#dokan_email_verification\\[login_notice\\]',
                     emailVerificationSaveChanges: '#submit',
                 },
 
@@ -2407,8 +2014,7 @@ export const selector = {
 
                 // Shipping Status
                 shippingStatus: {
-                    allowShipmentTracking:
-                        'label[for="dokan_shipping_status_setting[enabled]"] label',
+                    allowShipmentTracking: 'label[for="dokan_shipping_status_setting[enabled]"] label',
 
                     // Shipping Providers
                     shippingProviders: {
@@ -2426,20 +2032,14 @@ export const selector = {
                 // Quote
                 quote: {
                     // Configuration
-                    enableQuoteForOutOfStockProducts:
-                        'label[for="dokan_quote_settings[enable_out_of_stock]"] label.switch',
-                    enableAjaxAddToQuote:
-                        'label[for="dokan_quote_settings[enable_ajax_add_to_quote]"] label.switch',
-                    redirectToQuotePage:
-                        'label[for="dokan_quote_settings[redirect_to_quote_page]"] label.switch',
+                    enableQuoteForOutOfStockProducts: 'label[for="dokan_quote_settings[enable_out_of_stock]"] label.switch',
+                    enableAjaxAddToQuote: 'label[for="dokan_quote_settings[enable_ajax_add_to_quote]"] label.switch',
+                    redirectToQuotePage: 'label[for="dokan_quote_settings[redirect_to_quote_page]"] label.switch',
 
                     // Quote Attributes Settings
-                    decreaseOfferedPrice:
-                        'input#dokan_quote_settings\\[decrease_offered_price\\]',
-                    enableConvertToOrder:
-                        'label[for="dokan_quote_settings[enable_convert_to_order]"] label.switch',
-                    enableQuoteConverterDisplay:
-                        'label[for="dokan_quote_settings[enable_quote_converter_display]"] label.switch',
+                    decreaseOfferedPrice: 'input#dokan_quote_settings\\[decrease_offered_price\\]',
+                    enableConvertToOrder: 'label[for="dokan_quote_settings[enable_convert_to_order]"] label.switch',
+                    enableQuoteConverterDisplay: 'label[for="dokan_quote_settings[enable_quote_converter_display]"] label.switch',
 
                     quoteSaveChanges: '#submit',
                 },
@@ -2447,14 +2047,10 @@ export const selector = {
                 // Live Chat
                 liveChat: {
                     enableLiveChat: '#dokan_live_chat\\[enable\\]',
-                    chatProviderFacebookMessenger:
-                        '#dokan_live_chat\\[provider\\]\\[messenger\\]',
-                    chatProviderTalkJs:
-                        '#dokan_live_chat\\[provider\\]\\[talkjs\\]',
-                    chatProviderTawkTo:
-                        '#dokan_live_chat\\[provider\\]\\[tawkto\\]',
-                    chatProviderWhatsApp:
-                        '#dokan_live_chat\\[provider\\]\\[whatsapp\\]',
+                    chatProviderFacebookMessenger: '#dokan_live_chat\\[provider\\]\\[messenger\\]',
+                    chatProviderTalkJs: '#dokan_live_chat\\[provider\\]\\[talkjs\\]',
+                    chatProviderTawkTo: '#dokan_live_chat\\[provider\\]\\[tawkto\\]',
+                    chatProviderWhatsApp: '#dokan_live_chat\\[provider\\]\\[whatsapp\\]',
 
                     // Fb
                     messengerColor: '.button > span',
@@ -2465,14 +2061,11 @@ export const selector = {
 
                     // Whatsapp
                     openingPattern: '#dokan_live_chat\\[wa_opening_method\\]',
-                    preFilledMessage:
-                        '#dokan_live_chat\\[wa_pre_filled_message\\]',
+                    preFilledMessage: '#dokan_live_chat\\[wa_pre_filled_message\\]',
 
                     // Chat Button
-                    chatButtonOnVendorPage:
-                        '#dokan_live_chat\\[chat_button_seller_page\\]',
-                    chatButtonOnProductPage:
-                        '#dokan_live_chat\\[chat_button_product_page\\]',
+                    chatButtonOnVendorPage: '#dokan_live_chat\\[chat_button_seller_page\\]',
+                    chatButtonOnProductPage: '#dokan_live_chat\\[chat_button_product_page\\]',
                     liveChatSaveChanges: '#submit',
                 },
 
@@ -2481,8 +2074,7 @@ export const selector = {
                     orderStatus: '#dokan_rma\\[rma_order_status\\]',
                     enableRefundRequests: '.rma_enable_refund_request .switch',
                     enableCouponRequests: '.rma_enable_coupon_request .switch',
-                    reasonsForRmaSingle: (reason: string) =>
-                        `//li[contains(text(),'${reason}')]//span[@class="dashicons dashicons-no-alt remove-item"]`,
+                    reasonsForRmaSingle: (reason: string) => `//li[contains(text(),'${reason}')]//span[@class="dashicons dashicons-no-alt remove-item"]`,
                     reasonsForRma: '.remove-item',
                     reasonsForRmaInput: '.regular-text',
                     reasonsForRmaAdd: '.dokan-repetable-add-item-btn',
@@ -2495,84 +2087,55 @@ export const selector = {
                 wholesale: {
                     whoCanSeeWholesalePrice: (type: string) =>
                         `//div[@class='wholesale_price_display dokan-settings-field-type-radio'] //label[@for='dokan_wholesale[wholesale_price_display][${type}]']`,
-                    showWholesalePriceOnShopArchive:
-                        '.display_price_in_shop_archieve .switch',
-                    needApprovalForCustomer:
-                        '.need_approval_for_wholesale_customer .switch',
+                    showWholesalePriceOnShopArchive: '.display_price_in_shop_archieve .switch',
+                    needApprovalForCustomer: '.need_approval_for_wholesale_customer .switch',
                     wholesaleSaveChanges: '#submit',
                 },
 
                 // Eu Compliance Fields
                 euCompliance: {
-                    vendorExtraFieldsCompanyName:
-                        '//input[@value="dokan_company_name"]//..',
-                    vendorExtraFieldsCompanyIdOrEuidNumber:
-                        '//input[@value="dokan_company_id_number"]//..',
-                    vendorExtraFieldsVatOrTaxNumber:
-                        '//input[@value="dokan_vat_number"]//..',
-                    vendorExtraFieldsNameOfBank:
-                        '//input[@value="dokan_bank_name"]//..',
-                    vendorExtraFieldsBankIban:
-                        '//input[@value="dokan_bank_iban"]//..',
-                    displayInVendorRegistrationForm:
-                        '.vendor_registration .switch',
-                    customerExtraFieldsCompanyIdOrEuidNumber:
-                        '//input[@value="billing_dokan_company_id_number"]//..',
-                    customerExtraFieldsVatOrTaxNumber:
-                        '//input[@value="billing_dokan_vat_number"]//..',
-                    customerExtraFieldsNameOfBank:
-                        '//input[@value="billing_dokan_bank_name"]//..',
-                    customerExtraFieldsBankIban:
-                        '//input[@value="billing_dokan_bank_iban"]//..',
-                    enableGermanizedSupportForVendors:
-                        '.enabled_germanized .switch',
-                    vendorsWillBeAbleToOverrideInvoiceNumber:
-                        '.override_invoice_number .switch',
+                    vendorExtraFieldsCompanyName: '//input[@value="dokan_company_name"]//..',
+                    vendorExtraFieldsCompanyIdOrEuidNumber: '//input[@value="dokan_company_id_number"]//..',
+                    vendorExtraFieldsVatOrTaxNumber: '//input[@value="dokan_vat_number"]//..',
+                    vendorExtraFieldsNameOfBank: '//input[@value="dokan_bank_name"]//..',
+                    vendorExtraFieldsBankIban: '//input[@value="dokan_bank_iban"]//..',
+                    displayInVendorRegistrationForm: '.vendor_registration .switch',
+                    customerExtraFieldsCompanyIdOrEuidNumber: '//input[@value="billing_dokan_company_id_number"]//..',
+                    customerExtraFieldsVatOrTaxNumber: '//input[@value="billing_dokan_vat_number"]//..',
+                    customerExtraFieldsNameOfBank: '//input[@value="billing_dokan_bank_name"]//..',
+                    customerExtraFieldsBankIban: '//input[@value="billing_dokan_bank_iban"]//..',
+                    enableGermanizedSupportForVendors: '.enabled_germanized .switch',
+                    vendorsWillBeAbleToOverrideInvoiceNumber: '.override_invoice_number .switch',
                     euComplianceFieldsSaveChanges: '#submit',
                 },
 
                 // Delivery Time
                 deliveryTime: {
-                    allowVendorSettings:
-                        '.allow_vendor_override_settings .switch',
-                    homeDelivery:
-                        '//div[contains(text(), "Home Delivery")]//label[@class="switch tips"]',
-                    storePickup:
-                        '//div[contains(text(), "Store Pickup")]//label[@class="switch tips"]',
-                    deliveryDateLabel:
-                        '#dokan_delivery_time\\[delivery_date_label\\]',
-                    deliveryBlockedBuffer:
-                        '#dokan_delivery_time\\[preorder_date\\]',
+                    allowVendorSettings: '.allow_vendor_override_settings .switch',
+                    homeDelivery: '//div[contains(text(), "Home Delivery")]//label[@class="switch tips"]',
+                    storePickup: '//div[contains(text(), "Store Pickup")]//label[@class="switch tips"]',
+                    deliveryDateLabel: '#dokan_delivery_time\\[delivery_date_label\\]',
+                    deliveryBlockedBuffer: '#dokan_delivery_time\\[preorder_date\\]',
                     timeSlot: '#dokan_delivery_time\\[time_slot_minutes\\]',
                     orderPerSlot: '#dokan_delivery_time\\[order_per_slot\\]',
-                    deliveryBoxInfo:
-                        '#dokan_delivery_time\\[delivery_box_info\\]',
+                    deliveryBoxInfo: '#dokan_delivery_time\\[delivery_box_info\\]',
                     requireDeliveryDateAndTime: '.selection_required .switch',
-                    deliveryDay: (day: string) =>
-                        `//h3[contains(text(), '${day}')]/../..//label[@class='switch tips']`,
-                    openingTime: (day: string) =>
-                        `//input[@id="dokan_delivery_time[delivery_day_${day.toLowerCase()}][opening_time]"]/..`,
-                    openingTimeDatePicker: (time: string) =>
-                        `(//li[contains(text(),'${time}')])[2]`,
-                    closingTime: (day: string) =>
-                        `//input[@id="dokan_delivery_time[delivery_day_${day.toLowerCase()}][closing_time]"]/..`,
-                    closingTimeDatePicker: (time: string) =>
-                        `(//li[contains(text(),'${time}')])[1]`,
+                    deliveryDay: (day: string) => `//h3[contains(text(), '${day}')]/../..//label[@class='switch tips']`,
+                    openingTime: (day: string) => `//input[@id="dokan_delivery_time[delivery_day_${day.toLowerCase()}][opening_time]"]/..`,
+                    openingTimeDatePicker: (time: string) => `(//li[contains(text(),'${time}')])[2]`,
+                    closingTime: (day: string) => `//input[@id="dokan_delivery_time[delivery_day_${day.toLowerCase()}][closing_time]"]/..`,
+                    closingTimeDatePicker: (time: string) => `(//li[contains(text(),'${time}')])[1]`,
                     fullDay: 'li.fullDayClock',
                     deliveryTimeSaveChanges: '#submit',
                 },
 
                 // Product Advertising
                 productAdvertising: {
-                    noOfAvailableSlot:
-                        '#dokan_product_advertisement\\[total_available_slot\\]',
-                    expireAfterDays:
-                        '#dokan_product_advertisement\\[expire_after_days\\]',
-                    vendorCanPurchaseAdvertisement:
-                        '.per_product_enabled .switch',
+                    noOfAvailableSlot: '#dokan_product_advertisement\\[total_available_slot\\]',
+                    expireAfterDays: '#dokan_product_advertisement\\[expire_after_days\\]',
+                    vendorCanPurchaseAdvertisement: '.per_product_enabled .switch',
                     advertisementCost: '#dokan_product_advertisement\\[cost\\]',
-                    enableAdvertisementInSubscription:
-                        '.vendor_subscription_enabled .switch',
+                    enableAdvertisementInSubscription: '.vendor_subscription_enabled .switch',
                     markAdvertisedProductAsFeatured: '.featured .switch',
                     displayAdvertisedProductOnTop: '.catalog_priority .switch',
                     outOfStockVisibility: '.hide_out_of_stock_items .switch',
@@ -2581,35 +2144,24 @@ export const selector = {
 
                 // Geolocation
                 geolocation: {
-                    locationMapPosition: (position: string) =>
-                        `//label[@for='dokan_geolocation[show_locations_map][${position}]']`,
-                    showMap: (type: string) =>
-                        `//label[@for='dokan_geolocation[show_location_map_pages][${type}]']`,
-                    showFiltersBeforeLocationMap:
-                        '.show_filters_before_locations_map .switch',
-                    productLocationTab:
-                        '.show_product_location_in_wc_tab .switch',
-                    radiusSearchUnit: (unit: string) =>
-                        `//label[@for='dokan_geolocation[distance_unit][${unit}]']`,
-                    radiusSearchMinimumDistance:
-                        '#dokan_geolocation\\[distance_min\\]',
-                    radiusSearchMaximumDistance:
-                        '#dokan_geolocation\\[distance_max\\]',
+                    locationMapPosition: (position: string) => `//label[@for='dokan_geolocation[show_locations_map][${position}]']`,
+                    showMap: (type: string) => `//label[@for='dokan_geolocation[show_location_map_pages][${type}]']`,
+                    showFiltersBeforeLocationMap: '.show_filters_before_locations_map .switch',
+                    productLocationTab: '.show_product_location_in_wc_tab .switch',
+                    radiusSearchUnit: (unit: string) => `//label[@for='dokan_geolocation[distance_unit][${unit}]']`,
+                    radiusSearchMinimumDistance: '#dokan_geolocation\\[distance_min\\]',
+                    radiusSearchMaximumDistance: '#dokan_geolocation\\[distance_max\\]',
                     mapZoomLevel: '#dokan_geolocation\\[map_zoom\\]',
                     defaultLocation: '.search-address',
-                    mapResultFirst:
-                        '(//div[contains(@class,"pac-container")]//div[@class="pac-item"])[1]',
+                    mapResultFirst: '(//div[contains(@class,"pac-container")]//div[@class="pac-item"])[1]',
                     geolocationSaveChanges: '#submit',
                 },
 
                 // Product Report Abuse
                 productReportAbuse: {
-                    reportedBy:
-                        '#dokan_report_abuse\\[reported_by_logged_in_users_only\\]',
-                    reasonsForAbuseReportList:
-                        '.dokan-settings-repeatable-list li',
-                    reasonsForAbuseReportSingle: (reason: string) =>
-                        `//li[contains(text(),'${reason}')]//span[@class="dashicons dashicons-no-alt remove-item"]`,
+                    reportedBy: '#dokan_report_abuse\\[reported_by_logged_in_users_only\\]',
+                    reasonsForAbuseReportList: '.dokan-settings-repeatable-list li',
+                    reasonsForAbuseReportSingle: (reason: string) => `//li[contains(text(),'${reason}')]//span[@class="dashicons dashicons-no-alt remove-item"]`,
                     reasonsForAbuseReportInput: '.regular-text',
                     reasonsForAbuseReportAdd: '.dokan-repetable-add-item-btn',
                     productReportAbuseSaveChanges: '#submit',
@@ -2617,37 +2169,26 @@ export const selector = {
 
                 // Single Product Multi Vendor
                 spmv: {
-                    enableSingleProductMultipleVendor:
-                        '.enable_pricing .switch',
+                    enableSingleProductMultipleVendor: '.enable_pricing .switch',
                     sellItemButtonText: '#dokan_spmv\\[sell_item_btn\\]',
-                    availableVendorDisplayAreaTitle:
-                        '#dokan_spmv\\[available_vendor_list_title\\]',
-                    availableVendorSectionDisplayPosition:
-                        '#dokan_spmv\\[available_vendor_list_position\\]',
+                    availableVendorDisplayAreaTitle: '#dokan_spmv\\[available_vendor_list_title\\]',
+                    availableVendorSectionDisplayPosition: '#dokan_spmv\\[available_vendor_list_position\\]',
                     showSpmvProducts: '#dokan_spmv\\[show_order\\]',
                     singleProductMultiVendorSaveChanges: '#submit',
                 },
 
                 // Vendor Subscription
                 vendorSubscriptions: {
-                    subscription:
-                        '#dokan_product_subscription\\[subscription_pack\\]',
+                    subscription: '#dokan_product_subscription\\[subscription_pack\\]',
                     enableProductSubscription: '.enable_pricing .switch',
-                    enableSubscriptionInRegistrationForm:
-                        '.enable_subscription_pack_in_reg .switch',
+                    enableSubscriptionInRegistrationForm: '.enable_subscription_pack_in_reg .switch',
                     enableEmailNotification: '.notify_by_email .switch',
-                    noOfDays:
-                        '#dokan_product_subscription\\[no_of_days_before_mail\\]',
-                    productStatus:
-                        '#dokan_product_subscription\\[product_status_after_end\\]',
-                    cancellingEmailSubject:
-                        '#dokan_product_subscription\\[cancelling_email_subject\\]',
-                    cancellingEmailBody:
-                        '#dokan_product_subscription\\[cancelling_email_body\\]',
-                    alertEmailSubject:
-                        '#dokan_product_subscription\\[alert_email_subject\\]',
-                    alertEmailBody:
-                        '#dokan_product_subscription\\[alert_email_body\\]',
+                    noOfDays: '#dokan_product_subscription\\[no_of_days_before_mail\\]',
+                    productStatus: '#dokan_product_subscription\\[product_status_after_end\\]',
+                    cancellingEmailSubject: '#dokan_product_subscription\\[cancelling_email_subject\\]',
+                    cancellingEmailBody: '#dokan_product_subscription\\[cancelling_email_body\\]',
+                    alertEmailSubject: '#dokan_product_subscription\\[alert_email_subject\\]',
+                    alertEmailBody: '#dokan_product_subscription\\[alert_email_body\\]',
                     vendorSubscriptionSaveChanges: '#submit',
                 },
 
@@ -2657,8 +2198,7 @@ export const selector = {
                 },
 
                 // Update Settings
-                dokanUpdateSuccessMessage:
-                    '#setting-message_updated > p > strong',
+                dokanUpdateSuccessMessage: '#setting-message_updated > p > strong',
             },
 
             // License
@@ -2666,12 +2206,9 @@ export const selector = {
                 licenseText: '.appsero-license-settings-wrapper h1',
 
                 activateSection: {
-                    licenseSection:
-                        '.appsero-license-settings.appsero-license-section',
-                    licenseKeyInput:
-                        '.license-input-fields .license-input-key input',
-                    activateLicense:
-                        '//button[contains(text(),"Activate License")]',
+                    licenseSection: '.appsero-license-settings.appsero-license-section',
+                    licenseKeyInput: '.license-input-fields .license-input-key input',
+                    activateLicense: '//button[contains(text(),"Activate License")]',
                 },
                 errorNotice: '.notice-error.appsero-license-section',
             },
@@ -2702,39 +2239,31 @@ export const selector = {
                 skipThisStep: '//a[contains(text(),"Skip this step")]',
 
                 // Selling
-                newVendorEnableSelling:
-                    '//label[@for="new_seller_enable_selling" and @class="switch-label"]',
+                newVendorEnableSelling: '//label[@for="new_seller_enable_selling" and @class="switch-label"]',
                 commissionType: '.commission_type.wc-enhanced-select',
                 commissionTypeValues: '.select2-results ul li',
                 adminCommission: '#admin_percentage',
-                orderStatusChange:
-                    '//label[@for="order_status_change" and @class="switch-label"]',
+                orderStatusChange: '//label[@for="order_status_change" and @class="switch-label"]',
 
                 // Withdraw
                 payPal: '//label[@for="withdraw_methods[paypal]" and @class="switch-label"]',
-                bankTransfer:
-                    '//label[@for="withdraw_methods[bank]" and @class="switch-label"]',
-                wireCard:
-                    '//label[@for="withdraw_methods[dokan-moip-connect]" and @class="switch-label"]',
+                bankTransfer: '//label[@for="withdraw_methods[bank]" and @class="switch-label"]',
+                wireCard: '//label[@for="withdraw_methods[dokan-moip-connect]" and @class="switch-label"]',
                 stripe: '//label[@for="withdraw_methods[dokan-stripe-connect]" and @class="switch-label"]',
                 custom: '//label[@for="withdraw_methods[dokan_custom]" and @class="switch-label"]',
                 skrill: '//label[@for="withdraw_methods[skrill]" and @class="switch-label"]',
                 minimumWithdrawLimit: '#withdraw_limit',
-                orderStatusForWithdrawCompleted:
-                    '//label[@for="withdraw_order_status[wc-completed]"]',
-                orderStatusForWithdrawProcessing:
-                    '//label[@for="withdraw_order_status[wc-processing]"]',
+                orderStatusForWithdrawCompleted: '//label[@for="withdraw_order_status[wc-completed]"]',
+                orderStatusForWithdrawProcessing: '//label[@for="withdraw_order_status[wc-processing]"]',
 
                 // Recommended
-                wooCommerceConversionTracking:
-                    '//label[@for="dokan_recommended_wc_conversion_tracking"]',
+                wooCommerceConversionTracking: '//label[@for="dokan_recommended_wc_conversion_tracking"]',
                 weMail: '//label[@for="dokan_recommended_wemail"]',
                 texty: '//label[@for="dokan_recommended_texty"]',
                 continueRecommended: '.button-primary',
 
                 // Ready!
-                visitDokanDashboard:
-                    '//a[contains(text(),"Visit Dokan Dashboard")]',
+                visitDokanDashboard: '//a[contains(text(),"Visit Dokan Dashboard")]',
                 moreSettings: '//a[contains(text(),"More Settings")]',
                 ReturnToTheWordPressDashboard: '.wc-return-to-dashboard',
             },
@@ -2753,20 +2282,16 @@ export const selector = {
         // Woocommerce
         wooCommerce: {
             // Woocommerce Menu
-            settingsMenu:
-                '//li[contains(@class,"toplevel_page_woocommerce")]//a[text()="Settings"]',
+            settingsMenu: '//li[contains(@class,"toplevel_page_woocommerce")]//a[text()="Settings"]',
 
             // Woocommerce Settings
             settings: {
                 // Settings Menu
                 general: '//a[contains(@class,"nav-tab") and text()="General"]',
-                products:
-                    '//a[contains(@class,"nav-tab") and text()="Products"]',
+                products: '//a[contains(@class,"nav-tab") and text()="Products"]',
                 tax: '//a[contains(@class,"nav-tab") and text()="Tax"]',
-                shipping:
-                    '//a[contains(@class,"nav-tab") and text()="Shipping"]',
-                payments:
-                    '//a[contains(@class,"nav-tab") and text()="Payments"]',
+                shipping: '//a[contains(@class,"nav-tab") and text()="Shipping"]',
+                payments: '//a[contains(@class,"nav-tab") and text()="Payments"]',
                 accounts: '//a[contains(text(),"Accounts & Privacy")]',
 
                 // General
@@ -2774,23 +2299,17 @@ export const selector = {
                 addressLine1: '#woocommerce_store_address',
                 addressLine2: '#woocommerce_store_address_2',
                 city: '#woocommerce_store_city',
-                countryOrState:
-                    '#select2-woocommerce_default_country-g1-container',
+                countryOrState: '#select2-woocommerce_default_country-g1-container',
                 PostcodeOrZip: '#woocommerce_store_postcode',
                 // General Options
-                sellingLocation:
-                    '#select2-woocommerce_allowed_countries-container',
-                shippingLocation:
-                    '#select2-woocommerce_ship_to_countries-container',
-                defaultCustomerLocation:
-                    '#select2-woocommerce_default_customer_address-container',
+                sellingLocation: '#select2-woocommerce_allowed_countries-container',
+                shippingLocation: '#select2-woocommerce_ship_to_countries-container',
+                defaultCustomerLocation: '#select2-woocommerce_default_customer_address-container',
                 enableTaxes: '#woocommerce_calc_taxes',
-                enableShipping:
-                    '#select2-woocommerce_ship_to_countries-container',
+                enableShipping: '#select2-woocommerce_ship_to_countries-container',
                 enableShippingValues: '.select2-results ul li',
                 enableCoupon: '#woocommerce_enable_coupons',
-                calculateCouponDiscountsSequentially:
-                    '#woocommerce_calc_discounts_sequentially',
+                calculateCouponDiscountsSequentially: '#woocommerce_calc_discounts_sequentially',
                 // Currency Options
                 currency: '#select2-woocommerce_currency-container',
                 currencyPosition: '#select2-woocommerce_currency_pos-container',
@@ -2802,33 +2321,22 @@ export const selector = {
 
                 // Tax
                 // Tax Menus
-                taxOptions:
-                    '//ul[@class="subsubsub"]//a[contains(text(),"Tax options")]',
-                standardRates:
-                    '//ul[@class="subsubsub"]//a[contains(text(),"Standard rates")]',
-                reducedRateRates:
-                    '//ul[@class="subsubsub"]//a[contains(text(),"Reduced rate rates")]',
-                zeroRateRates:
-                    '//ul[@class="subsubsub"]//a[contains(text(),"Zero rate rates")]',
+                taxOptions: '//ul[@class="subsubsub"]//a[contains(text(),"Tax options")]',
+                standardRates: '//ul[@class="subsubsub"]//a[contains(text(),"Standard rates")]',
+                reducedRateRates: '//ul[@class="subsubsub"]//a[contains(text(),"Reduced rate rates")]',
+                zeroRateRates: '//ul[@class="subsubsub"]//a[contains(text(),"Zero rate rates")]',
 
                 // Tax Options
-                pricesEnteredWithTaxPricesInclusiveOfTax:
-                    '//label[contains(text(),"Yes, I will enter prices inclusive of tax")]//input[@name="woocommerce_prices_include_tax"]',
-                pricesEnteredWithTaxPricesExclusiveOfTax:
-                    '//label[contains(text(),"No, I will enter prices exclusive of tax")]//input[@name="woocommerce_prices_include_tax"]',
-                calculateTaxBasedOn:
-                    '#select2-woocommerce_tax_based_on-container',
-                shippingTaxClass:
-                    '#select2-woocommerce_shipping_tax_class-container',
+                pricesEnteredWithTaxPricesInclusiveOfTax: '//label[contains(text(),"Yes, I will enter prices inclusive of tax")]//input[@name="woocommerce_prices_include_tax"]',
+                pricesEnteredWithTaxPricesExclusiveOfTax: '//label[contains(text(),"No, I will enter prices exclusive of tax")]//input[@name="woocommerce_prices_include_tax"]',
+                calculateTaxBasedOn: '#select2-woocommerce_tax_based_on-container',
+                shippingTaxClass: '#select2-woocommerce_shipping_tax_class-container',
                 rounding: '#woocommerce_tax_round_at_subtotal',
                 additionalTaxClasses: '#woocommerce_tax_classes',
-                displayPricesInTheShop:
-                    '#select2-woocommerce_tax_display_shop-container',
-                displayPricesDuringCartAndCheckout:
-                    '#select2-woocommerce_tax_display_cart-container',
+                displayPricesInTheShop: '#select2-woocommerce_tax_display_shop-container',
+                displayPricesDuringCartAndCheckout: '#select2-woocommerce_tax_display_cart-container',
                 priceDisplaySuffix: '#woocommerce_price_display_suffix',
-                displayTaxTotals:
-                    '#select2-woocommerce_tax_total_display-container',
+                displayTaxTotals: '#select2-woocommerce_tax_total_display-container',
                 taxSaveChanges: '.woocommerce-save-button',
 
                 // Add Tax
@@ -2842,21 +2350,15 @@ export const selector = {
                 zoneName: '#zone_name',
                 // zoneRegions: ".select2-search__field",
                 zoneRegions: '#zone_locations',
-                shippingZoneCell: (shippingZone: string) =>
-                    `//a[contains(text(), '${shippingZone}')]/..`,
-                editShippingZone: (shippingZone: string) =>
-                    `//a[contains(text(), '${shippingZone}')]/..//div//a[contains(text(), 'Edit')]`,
-                deleteShippingZone: (shippingZone: string) =>
-                    `//a[contains(text(), '${shippingZone}')]/..//div//a[contains(text(), 'Delete')]`,
+                shippingZoneCell: (shippingZone: string) => `//a[contains(text(), '${shippingZone}')]/..`,
+                editShippingZone: (shippingZone: string) => `//a[contains(text(), '${shippingZone}')]/..//div//a[contains(text(), 'Edit')]`,
+                deleteShippingZone: (shippingZone: string) => `//a[contains(text(), '${shippingZone}')]/..//div//a[contains(text(), 'Delete')]`,
                 addShippingMethods: '.wc-shipping-zone-add-method',
                 shippingMethod: '.wc-shipping-zone-method-selector select',
                 addShippingMethod: '#btn-ok',
-                shippingMethodCell: (shippingMethodName: string) =>
-                    `//a[contains(text(),'${shippingMethodName}')]/..`,
-                editShippingMethod: (shippingMethodName: string) =>
-                    `//a[contains(text(),'${shippingMethodName}')]/..//div//a[contains(text(), 'Edit')]`,
-                deleteShippingMethod: (shippingMethodName: string) =>
-                    `//a[contains(text(),'${shippingMethodName}')]/..//div//a[contains(text(), 'Delete')]`,
+                shippingMethodCell: (shippingMethodName: string) => `//a[contains(text(),'${shippingMethodName}')]/..`,
+                editShippingMethod: (shippingMethodName: string) => `//a[contains(text(),'${shippingMethodName}')]/..//div//a[contains(text(), 'Edit')]`,
+                deleteShippingMethod: (shippingMethodName: string) => `//a[contains(text(),'${shippingMethodName}')]/..//div//a[contains(text(), 'Delete')]`,
 
                 // Edit Shipping Methods
                 // Flat Rate
@@ -2866,25 +2368,19 @@ export const selector = {
                 // Free Shipping
                 freeShippingTitle: '#woocommerce_free_shipping_title',
                 freeShippingRequires: '#woocommerce_free_shipping_requires',
-                freeShippingMinimumOrderAmount:
-                    '#woocommerce_free_shipping_min_amount',
-                freeShippingCouponsDiscounts:
-                    '#woocommerce_free_shipping_ignore_discounts',
+                freeShippingMinimumOrderAmount: '#woocommerce_free_shipping_min_amount',
+                freeShippingCouponsDiscounts: '#woocommerce_free_shipping_ignore_discounts',
                 // Local Pickup
                 localPickupTitle: '#woocommerce_local_pickup_title',
                 localPickupTaxStatus: '#woocommerce_local_pickup_tax_status',
                 localPickupCost: '#woocommerce_local_pickup_cost',
                 // Dokan Table Rate Shipping
-                dokanTableRateShippingMethodTitle:
-                    '#woocommerce_dokan_table_rate_shipping_title',
+                dokanTableRateShippingMethodTitle: '#woocommerce_dokan_table_rate_shipping_title',
                 // Dokan Distance Rate Shipping
-                dokanDistanceRateShippingMethodTitle:
-                    '#woocommerce_dokan_distance_rate_shipping_title',
+                dokanDistanceRateShippingMethodTitle: '#woocommerce_dokan_distance_rate_shipping_title',
                 // Vendor Shipping
-                vendorShippingMethodTitle:
-                    '#woocommerce_dokan_vendor_shipping_title',
-                vendorShippingTaxStatus:
-                    '#woocommerce_dokan_vendor_shipping_tax_status',
+                vendorShippingMethodTitle: '#woocommerce_dokan_vendor_shipping_title',
+                vendorShippingTaxStatus: '#woocommerce_dokan_vendor_shipping_tax_status',
 
                 // Shipping Method save Changes
                 shippingMethodSaveChanges: '#btn-ok',
@@ -2893,247 +2389,161 @@ export const selector = {
 
                 // Payments
                 // Enable Methods
-                enableDirectBankTransfer:
-                    '//a[contains(text(),"Direct bank transfer")]/../..//span',
-                enableCheckPayments:
-                    '//a[contains(text(),"Check payments")]/../..//span',
-                enableCashOnDelivery:
-                    '//a[contains(text(),"Cash on delivery")]/../..//span',
-                enableDokanWireCardConnect:
-                    '//a[contains(text(),"Dokan Wirecard Connect")]/../..//td[@class="status"]//span',
-                enableDokanPayPalAdaptivePayments:
-                    '//a[contains(text(),"Dokan PayPal Adaptive Payments")]/../..//td[@class="status"]//span',
-                enableDokanPayPalMarketplace:
-                    '//a[contains(text(),"Dokan PayPal Marketplace")]/../..//td[@class="status"]//span',
-                enableDokanStripeConnect:
-                    '//a[contains(text(),"Dokan Stripe Connect")]/../..//td[@class="status"]//span',
-                enableDokanMangoPay:
-                    '//a[contains(text(),"Dokan MangoPay")]/../..//td[@class="status"]//span',
-                enableDokanRazorpay:
-                    '//a[contains(text(),"Dokan Razorpay")]/../..//td[@class="status"]//span',
-                enableDokanStripeExpress:
-                    '//a[contains(text(),"Dokan Stripe Express")]/../..//td[@class="status"]//span',
+                enableDirectBankTransfer: '//a[contains(text(),"Direct bank transfer")]/../..//span',
+                enableCheckPayments: '//a[contains(text(),"Check payments")]/../..//span',
+                enableCashOnDelivery: '//a[contains(text(),"Cash on delivery")]/../..//span',
+                enableDokanWireCardConnect: '//a[contains(text(),"Dokan Wirecard Connect")]/../..//td[@class="status"]//span',
+                enableDokanPayPalAdaptivePayments: '//a[contains(text(),"Dokan PayPal Adaptive Payments")]/../..//td[@class="status"]//span',
+                enableDokanPayPalMarketplace: '//a[contains(text(),"Dokan PayPal Marketplace")]/../..//td[@class="status"]//span',
+                enableDokanStripeConnect: '//a[contains(text(),"Dokan Stripe Connect")]/../..//td[@class="status"]//span',
+                enableDokanMangoPay: '//a[contains(text(),"Dokan MangoPay")]/../..//td[@class="status"]//span',
+                enableDokanRazorpay: '//a[contains(text(),"Dokan Razorpay")]/../..//td[@class="status"]//span',
+                enableDokanStripeExpress: '//a[contains(text(),"Dokan Stripe Express")]/../..//td[@class="status"]//span',
                 // Setup or Manage Payment Methods
-                setupDirectBankTransfer:
-                    '//a[contains(text(),"Direct bank transfer")]/../..//td[@class="action"]//a',
-                setupCheckPayments:
-                    '//a[contains(text(),"Check payments")]/../..//td[@class="action"]//a',
-                setupCashOnDelivery:
-                    '//a[contains(text(),"Cash on delivery")]/../..//td[@class="action"]//a',
-                setupDokanWireCardConnect:
-                    '//a[contains(text(),"Dokan Wirecard Connect")]/../..//td[@class="action"]//a',
-                setupDokanPayPalAdaptivePayments:
-                    '//a[contains(text(),"Dokan PayPal Adaptive Payments")]/../..//td[@class="action"]//a',
-                setupDokanPayPalMarketplace:
-                    '//a[contains(text(),"Dokan PayPal Marketplace")]/../..//td[@class="action"]//a',
-                setupDokanStripeConnect:
-                    '//a[contains(text(),"Dokan Stripe Connect")]/../..//td[@class="action"]//a',
-                setupDokanMangoPay:
-                    '//a[contains(text(),"Dokan MangoPay")]/../..//td[@class="action"]//a',
-                setupDokanRazorpay:
-                    '//a[contains(text(),"Dokan Razorpay")]/../..//td[@class="action"]//a',
-                setupDokanStripeExpress:
-                    '//a[contains(text(),"Dokan Stripe Express")]/../..//td[@class="action"]//a',
+                setupDirectBankTransfer: '//a[contains(text(),"Direct bank transfer")]/../..//td[@class="action"]//a',
+                setupCheckPayments: '//a[contains(text(),"Check payments")]/../..//td[@class="action"]//a',
+                setupCashOnDelivery: '//a[contains(text(),"Cash on delivery")]/../..//td[@class="action"]//a',
+                setupDokanWireCardConnect: '//a[contains(text(),"Dokan Wirecard Connect")]/../..//td[@class="action"]//a',
+                setupDokanPayPalAdaptivePayments: '//a[contains(text(),"Dokan PayPal Adaptive Payments")]/../..//td[@class="action"]//a',
+                setupDokanPayPalMarketplace: '//a[contains(text(),"Dokan PayPal Marketplace")]/../..//td[@class="action"]//a',
+                setupDokanStripeConnect: '//a[contains(text(),"Dokan Stripe Connect")]/../..//td[@class="action"]//a',
+                setupDokanMangoPay: '//a[contains(text(),"Dokan MangoPay")]/../..//td[@class="action"]//a',
+                setupDokanRazorpay: '//a[contains(text(),"Dokan Razorpay")]/../..//td[@class="action"]//a',
+                setupDokanStripeExpress: '//a[contains(text(),"Dokan Stripe Express")]/../..//td[@class="action"]//a',
                 paymentMethodsSaveChanges: '.woocommerce-save-button',
 
                 // Stripe
                 stripe: {
                     // Stripe Connect
-                    enableDisableStripe:
-                        '#woocommerce_dokan-stripe-connect_enabled',
+                    enableDisableStripe: '#woocommerce_dokan-stripe-connect_enabled',
                     title: '#woocommerce_dokan-stripe-connect_title',
-                    description:
-                        '#woocommerce_dokan-stripe-connect_description',
-                    nonConnectedSellers:
-                        '#woocommerce_dokan-stripe-connect_allow_non_connected_sellers',
-                    displayNoticeToConnectSeller:
-                        '#woocommerce_dokan-stripe-connect_display_notice_to_non_connected_sellers',
-                    displayNoticeInterval:
-                        '#woocommerce_dokan-stripe-connect_display_notice_interval',
-                    threeDSecureAndSca:
-                        '#woocommerce_dokan-stripe-connect_enable_3d_secure',
-                    sellerPaysTheProcessingFeeIn3DsMode:
-                        '#woocommerce_dokan-stripe-connect_seller_pays_the_processing_fee',
+                    description: '#woocommerce_dokan-stripe-connect_description',
+                    nonConnectedSellers: '#woocommerce_dokan-stripe-connect_allow_non_connected_sellers',
+                    displayNoticeToConnectSeller: '#woocommerce_dokan-stripe-connect_display_notice_to_non_connected_sellers',
+                    displayNoticeInterval: '#woocommerce_dokan-stripe-connect_display_notice_interval',
+                    threeDSecureAndSca: '#woocommerce_dokan-stripe-connect_enable_3d_secure',
+                    sellerPaysTheProcessingFeeIn3DsMode: '#woocommerce_dokan-stripe-connect_seller_pays_the_processing_fee',
                     testMode: '#woocommerce_dokan-stripe-connect_testmode',
-                    stripeCheckout:
-                        '#woocommerce_dokan-stripe-connect_stripe_checkout',
-                    stripeCheckoutLocale:
-                        '#select2-woocommerce_dokan-stripe-connect_stripe_checkout_locale-container',
-                    checkoutImage:
-                        '#woocommerce_dokan-stripe-connect_stripe_checkout_image',
-                    checkoutButtonLabel:
-                        '#woocommerce_dokan-stripe-connect_stripe_checkout_label',
+                    stripeCheckout: '#woocommerce_dokan-stripe-connect_stripe_checkout',
+                    stripeCheckoutLocale: '#select2-woocommerce_dokan-stripe-connect_stripe_checkout_locale-container',
+                    checkoutImage: '#woocommerce_dokan-stripe-connect_stripe_checkout_image',
+                    checkoutButtonLabel: '#woocommerce_dokan-stripe-connect_stripe_checkout_label',
                     savedCards: '#woocommerce_dokan-stripe-connect_saved_cards',
                     // Test Credentials
-                    testPublishableKey:
-                        '#woocommerce_dokan-stripe-connect_test_publishable_key',
-                    testSecretKey:
-                        '#woocommerce_dokan-stripe-connect_test_secret_key',
-                    testClientId:
-                        '#woocommerce_dokan-stripe-connect_test_client_id',
+                    testPublishableKey: '#woocommerce_dokan-stripe-connect_test_publishable_key',
+                    testSecretKey: '#woocommerce_dokan-stripe-connect_test_secret_key',
+                    testClientId: '#woocommerce_dokan-stripe-connect_test_client_id',
                     stripeSaveChanges: '.woocommerce-save-button',
                 },
 
                 // Paypal Marketplace
                 paypalMarketPlace: {
-                    enableDisablePayPalMarketplace:
-                        '#woocommerce_dokan_paypal_marketplace_enabled',
+                    enableDisablePayPalMarketplace: '#woocommerce_dokan_paypal_marketplace_enabled',
                     title: '#woocommerce_dokan_paypal_marketplace_title',
-                    description:
-                        '#woocommerce_dokan_paypal_marketplace_description',
-                    payPalMerchantId:
-                        '#woocommerce_dokan_paypal_marketplace_partner_id',
+                    description: '#woocommerce_dokan_paypal_marketplace_description',
+                    payPalMerchantId: '#woocommerce_dokan_paypal_marketplace_partner_id',
                     // API Credentials
-                    payPalSandbox:
-                        '#woocommerce_dokan_paypal_marketplace_test_mode',
-                    sandboxClientId:
-                        '#woocommerce_dokan_paypal_marketplace_test_app_user',
-                    sandBoxClientSecret:
-                        '#woocommerce_dokan_paypal_marketplace_test_app_pass',
-                    payPalPartnerAttributionId:
-                        '#woocommerce_dokan_paypal_marketplace_bn_code',
-                    disbursementMode:
-                        '#select2-woocommerce_dokan_paypal_marketplace_disbursement_mode-container',
+                    payPalSandbox: '#woocommerce_dokan_paypal_marketplace_test_mode',
+                    sandboxClientId: '#woocommerce_dokan_paypal_marketplace_test_app_user',
+                    sandBoxClientSecret: '#woocommerce_dokan_paypal_marketplace_test_app_pass',
+                    payPalPartnerAttributionId: '#woocommerce_dokan_paypal_marketplace_bn_code',
+                    disbursementMode: '#select2-woocommerce_dokan_paypal_marketplace_disbursement_mode-container',
                     disbursementModeValues: '.select2-results ul li',
-                    paymentButtonType:
-                        '#select2-woocommerce_dokan_paypal_marketplace_button_type-container',
+                    paymentButtonType: '#select2-woocommerce_dokan_paypal_marketplace_button_type-container',
                     paymentButtonTypeValues: '.select2-results ul li',
-                    allowUnbrandedCreditCard:
-                        '#woocommerce_dokan_paypal_marketplace_ucc_mode',
-                    marketplaceLogo:
-                        '#woocommerce_dokan_paypal_marketplace_marketplace_logo',
-                    displayNoticeToConnectSeller:
-                        '#woocommerce_dokan_paypal_marketplace_display_notice_on_vendor_dashboard',
-                    sendAnnouncementToConnectSeller:
-                        '#woocommerce_dokan_paypal_marketplace_display_notice_to_non_connected_sellers',
-                    sendAnnouncementInterval:
-                        '#woocommerce_dokan_paypal_marketplace_display_notice_interval',
+                    allowUnbrandedCreditCard: '#woocommerce_dokan_paypal_marketplace_ucc_mode',
+                    marketplaceLogo: '#woocommerce_dokan_paypal_marketplace_marketplace_logo',
+                    displayNoticeToConnectSeller: '#woocommerce_dokan_paypal_marketplace_display_notice_on_vendor_dashboard',
+                    sendAnnouncementToConnectSeller: '#woocommerce_dokan_paypal_marketplace_display_notice_to_non_connected_sellers',
+                    sendAnnouncementInterval: '#woocommerce_dokan_paypal_marketplace_display_notice_interval',
                     paypalMarketPlaceSaveChanges: '.woocommerce-save-button',
                 },
 
                 // Dokan Mangopay
                 dokanMangoPay: {
-                    enableDisableMangoPayPayment:
-                        '#woocommerce_dokan_mangopay_enabled',
+                    enableDisableMangoPayPayment: '#woocommerce_dokan_mangopay_enabled',
                     title: '#woocommerce_dokan_mangopay_title',
                     description: '#woocommerce_dokan_mangopay_description',
                     // API Credentials
                     mangoPaySandbox: '#woocommerce_dokan_mangopay_sandbox_mode',
-                    sandboxClientId:
-                        '#woocommerce_dokan_mangopay_sandbox_client_id',
-                    sandBoxApiKey:
-                        '#woocommerce_dokan_mangopay_sandbox_api_key',
+                    sandboxClientId: '#woocommerce_dokan_mangopay_sandbox_client_id',
+                    sandBoxApiKey: '#woocommerce_dokan_mangopay_sandbox_api_key',
                     // Payment Options
-                    chooseAvailableCreditCards:
-                        '//label[contains(text(),"Choose Available Credit Cards ")]/../..//input[@class="select2-search__field"]',
+                    chooseAvailableCreditCards: '//label[contains(text(),"Choose Available Credit Cards ")]/../..//input[@class="select2-search__field"]',
                     chooseAvailableCreditCardsValues: '.select2-results ul li',
-                    chooseAvailableDirectPaymentServices:
-                        '//label[contains(text(),"Choose Available Direct Payment Services")]/../..//input[@class="select2-search__field"]',
-                    chooseAvailableDirectPaymentServicesValues:
-                        '.select2-results ul li',
+                    chooseAvailableDirectPaymentServices: '//label[contains(text(),"Choose Available Direct Payment Services")]/../..//input[@class="select2-search__field"]',
+                    chooseAvailableDirectPaymentServicesValues: '.select2-results ul li',
                     savedCards: '#woocommerce_dokan_mangopay_saved_cards',
                     threeDs2: '#woocommerce_dokan_mangopay_disabled_3DS2',
                     // Fund Transfers and Payouts
-                    transferFunds:
-                        '#select2-woocommerce_dokan_mangopay_disburse_mode-container',
+                    transferFunds: '#select2-woocommerce_dokan_mangopay_disburse_mode-container',
                     transferFundsValues: '.select2-results ul li',
                     payoutMode: '#woocommerce_dokan_mangopay_instant_payout',
                     // Types and Requirements of Vendors
-                    typeOfVendors:
-                        '#select2-woocommerce_dokan_mangopay_default_vendor_status-container',
+                    typeOfVendors: '#select2-woocommerce_dokan_mangopay_default_vendor_status-container',
                     typeOfVendorsValues: '.select2-results ul li',
-                    businessRequirement:
-                        '#select2-woocommerce_dokan_mangopay_default_business_type-container',
+                    businessRequirement: '#select2-woocommerce_dokan_mangopay_default_business_type-container',
                     businessRequirementValues: '.select2-results ul li',
                     // Advanced Settings
-                    displayNoticeToNonConnectedSellers:
-                        '#woocommerce_dokan_mangopay_notice_on_vendor_dashboard',
-                    sendAnnouncementToNonConnectedSellers:
-                        '#woocommerce_dokan_mangopay_announcement_to_sellers',
-                    announcementInterval:
-                        '#woocommerce_dokan_mangopay_notice_interval',
+                    displayNoticeToNonConnectedSellers: '#woocommerce_dokan_mangopay_notice_on_vendor_dashboard',
+                    sendAnnouncementToNonConnectedSellers: '#woocommerce_dokan_mangopay_announcement_to_sellers',
+                    announcementInterval: '#woocommerce_dokan_mangopay_notice_interval',
                     dokanMangopaySaveChanges: '.woocommerce-save-button',
                 },
 
                 dokanRazorpay: {
-                    enableDisableDokanRazorpay:
-                        '#woocommerce_dokan_razorpay_enabled',
+                    enableDisableDokanRazorpay: '#woocommerce_dokan_razorpay_enabled',
                     title: '#woocommerce_dokan_razorpay_title',
                     description: '#woocommerce_dokan_razorpay_description',
                     // API Credentials
                     razorpaySandbox: '#woocommerce_dokan_razorpay_test_mode',
                     testKeyId: '#woocommerce_dokan_razorpay_test_key_id',
-                    testKeySecret:
-                        '#woocommerce_dokan_razorpay_test_key_secret',
-                    disbursementMode:
-                        '#select2-woocommerce_dokan_razorpay_disbursement_mode-container',
+                    testKeySecret: '#woocommerce_dokan_razorpay_test_key_secret',
+                    disbursementMode: '#select2-woocommerce_dokan_razorpay_disbursement_mode-container',
                     disbursementModeValues: '.select2-results ul li',
-                    sellerPaysTheProcessingFee:
-                        '#woocommerce_dokan_razorpay_seller_pays_the_processing_fee',
-                    displayNoticeToConnectSeller:
-                        '#woocommerce_dokan_razorpay_display_notice_on_vendor_dashboard',
-                    sendAnnouncementToConnectSeller:
-                        '#woocommerce_dokan_razorpay_display_notice_to_non_connected_sellers',
-                    sendAnnouncementInterval:
-                        '#woocommerce_dokan_razorpay_display_notice_interval',
+                    sellerPaysTheProcessingFee: '#woocommerce_dokan_razorpay_seller_pays_the_processing_fee',
+                    displayNoticeToConnectSeller: '#woocommerce_dokan_razorpay_display_notice_on_vendor_dashboard',
+                    sendAnnouncementToConnectSeller: '#woocommerce_dokan_razorpay_display_notice_to_non_connected_sellers',
+                    sendAnnouncementInterval: '#woocommerce_dokan_razorpay_display_notice_interval',
                     dokanRazorpaySaveChanges: '.woocommerce-save-button',
                 },
 
                 stripeExpress: {
                     // Stripe Express
-                    enableOrDisableStripeExpress:
-                        '#woocommerce_dokan_stripe_express_enabled',
+                    enableOrDisableStripeExpress: '#woocommerce_dokan_stripe_express_enabled',
                     title: '#woocommerce_dokan_stripe_express_title',
-                    description:
-                        '#woocommerce_dokan_stripe_express_description',
+                    description: '#woocommerce_dokan_stripe_express_description',
                     // API Credentials
                     testMode: '#woocommerce_dokan_stripe_express_testmode',
-                    testPublishableKey:
-                        '#woocommerce_dokan_stripe_express_test_publishable_key',
-                    testSecretKey:
-                        '#woocommerce_dokan_stripe_express_test_secret_key',
-                    testWebhookSecret:
-                        '#woocommerce_dokan_stripe_express_test_webhook_key',
+                    testPublishableKey: '#woocommerce_dokan_stripe_express_test_publishable_key',
+                    testSecretKey: '#woocommerce_dokan_stripe_express_test_secret_key',
+                    testWebhookSecret: '#woocommerce_dokan_stripe_express_test_webhook_key',
                     // Payment and Disbursement
-                    choosePaymentMethods:
-                        '//select[@id="woocommerce_dokan_stripe_express_enabled_payment_methods"]/..//span[@class="select2-selection select2-selection--multiple"]',
+                    choosePaymentMethods: '//select[@id="woocommerce_dokan_stripe_express_enabled_payment_methods"]/..//span[@class="select2-selection select2-selection--multiple"]',
                     choosePaymentMethodsValues: '.select2-results ul li',
-                    takeProcessingFeesFromSellers:
-                        '#woocommerce_dokan_stripe_express_sellers_pay_processing_fee',
+                    takeProcessingFeesFromSellers: '#woocommerce_dokan_stripe_express_sellers_pay_processing_fee',
                     savedCards: '#woocommerce_dokan_stripe_express_saved_cards',
-                    capturePaymentsManually:
-                        '#woocommerce_dokan_stripe_express_capture',
-                    disburseFunds:
-                        '#select2-woocommerce_dokan_stripe_express_disburse_mode-container',
+                    capturePaymentsManually: '#woocommerce_dokan_stripe_express_capture',
+                    disburseFunds: '#select2-woocommerce_dokan_stripe_express_disburse_mode-container',
                     disbursementModeValues: '.select2-results ul li',
-                    customerBankStatement:
-                        '#woocommerce_dokan_stripe_express_statement_descriptor',
+                    customerBankStatement: '#woocommerce_dokan_stripe_express_statement_descriptor',
                     // Payment Request Options (Apple Pay / Google Pay)
-                    paymentRequestButtons:
-                        '#woocommerce_dokan_stripe_express_payment_request',
-                    buttonType:
-                        '#woocommerce_dokan_stripe_express_payment_request_button_type',
-                    buttonTheme:
-                        '#woocommerce_dokan_stripe_express_payment_request_button_theme',
-                    buttonLocations:
-                        '//select[@id="woocommerce_dokan_stripe_express_payment_request_button_locations"]/..//span[@class="select2-selection select2-selection--multiple"]',
+                    paymentRequestButtons: '#woocommerce_dokan_stripe_express_payment_request',
+                    buttonType: '#woocommerce_dokan_stripe_express_payment_request_button_type',
+                    buttonTheme: '#woocommerce_dokan_stripe_express_payment_request_button_theme',
+                    buttonLocations: '//select[@id="woocommerce_dokan_stripe_express_payment_request_button_locations"]/..//span[@class="select2-selection select2-selection--multiple"]',
                     buttonLocationsValues: '.select2-results ul li',
-                    buttonSize:
-                        '#woocommerce_dokan_stripe_express_payment_request_button_size',
+                    buttonSize: '#woocommerce_dokan_stripe_express_payment_request_button_size',
                     // Advanced Settings
-                    displayNoticeToNonConnectedSellers:
-                        '#woocommerce_dokan_stripe_express_notice_on_vendor_dashboard',
-                    sendAnnouncementToNonConnectedSellers:
-                        '#woocommerce_dokan_stripe_express_announcement_to_sellers',
-                    announcementInterval:
-                        '#woocommerce_dokan_stripe_express_notice_interval',
+                    displayNoticeToNonConnectedSellers: '#woocommerce_dokan_stripe_express_notice_on_vendor_dashboard',
+                    sendAnnouncementToNonConnectedSellers: '#woocommerce_dokan_stripe_express_announcement_to_sellers',
+                    announcementInterval: '#woocommerce_dokan_stripe_express_notice_interval',
                     debugLog: '#woocommerce_dokan_stripe_express_debug',
                     stripeExpressSaveChanges: '.woocommerce-save-button',
                 },
 
                 // Accounts
-                automaticPasswordGeneration:
-                    '#woocommerce_registration_generate_password',
+                automaticPasswordGeneration: '#woocommerce_registration_generate_password',
                 accountSaveChanges: '.woocommerce-save-button',
 
                 // Update Success Message
@@ -3144,15 +2554,12 @@ export const selector = {
         // Products
         products: {
             // Products Menus
-            allProductsMenu:
-                '//li[@id="menu-posts-product"]//a[text()="All Products"]',
+            allProductsMenu: '//li[@id="menu-posts-product"]//a[text()="All Products"]',
             addNewMenu: '//li[@id="menu-posts-product"]//a[text()="Add New"]',
-            categoriesMenu:
-                '//li[@id="menu-posts-product"]//a[text()="Categories"]',
+            categoriesMenu: '//li[@id="menu-posts-product"]//a[text()="Categories"]',
             tagsMenu: '//li[@id="menu-posts-product"]//a[text()="Tags"]',
             addOnsMenu: '//li[@id="menu-posts-product"]//a[text()="Add-ons"]',
-            attributesMenu:
-                '//li[@id="menu-posts-product"]//a[text()="Attributes"]',
+            attributesMenu: '//li[@id="menu-posts-product"]//a[text()="Attributes"]',
 
             // Product
             product: {
@@ -3217,16 +2624,11 @@ export const selector = {
                 packValidity: '#\\_pack_validity',
                 advertisementSlot: '#\\_dokan_advertisement_slot_count',
                 expireAfterDays: '#\\_dokan_advertisement_validity',
-                dokanSubscriptionAdminCommissionType:
-                    '#\\_subscription_product_admin_commission_type',
-                dokanSubscriptionAdminCommissionSingle:
-                    '.show_if_product_pack #admin_commission',
-                dokanSubscriptionAdminCommissionCombined:
-                    '.subscription_additional_fee > .input-text',
-                allowedProductTypes:
-                    '.dokan_subscription_allowed_product_types .select2-search__field',
-                allowedCategoriesUncategorized:
-                    '._vendor_allowed_categories .select2-search__field',
+                dokanSubscriptionAdminCommissionType: '#\\_subscription_product_admin_commission_type',
+                dokanSubscriptionAdminCommissionSingle: '.show_if_product_pack #admin_commission',
+                dokanSubscriptionAdminCommissionCombined: '.subscription_additional_fee > .input-text',
+                allowedProductTypes: '.dokan_subscription_allowed_product_types .select2-search__field',
+                allowedCategoriesUncategorized: '._vendor_allowed_categories .select2-search__field',
                 restrictGalleryImageUpload: '#\\_enable_gallery_restriction',
                 recurringPayment: '#\\_enable_recurring_payment',
                 billingCycleRange: '#\\_dokan_subscription_period_interval',
@@ -3234,8 +2636,7 @@ export const selector = {
                 billingCycleStop: '#\\_dokan_subscription_length',
                 enableTrial: '#dokan_subscription_enable_trial',
                 trialPeriodRange: '.dokan-subscription-range',
-                trialPeriodPeriod:
-                    '//select[@name="dokan_subscription_trial_period_types"]',
+                trialPeriodPeriod: '//select[@name="dokan_subscription_trial_period_types"]',
                 // Auction
                 itemCondition: '#\\_auction_item_condition',
                 auctionType: '#\\_auction_type',
@@ -3243,8 +2644,7 @@ export const selector = {
                 startPrice: '#\\_auction_start_price',
                 bidIncrement: '#\\_auction_bid_increment',
                 reservedPrice: '#\\_auction_reserved_price',
-                buyItNowPrice:
-                    '//label[contains(text(),"Buy it now price")]/..//input[@id="_regular_price"]',
+                buyItNowPrice: '//label[contains(text(),"Buy it now price")]/..//input[@id="_regular_price"]',
                 auctionDatesFrom: '#\\_auction_dates_from',
                 auctionDatesTo: '#\\_auction_dates_to',
 
@@ -3288,15 +2688,11 @@ export const selector = {
                 height: '#product_height',
                 shippingClass: '#product_shipping_class',
                 // Linked Products
-                upSells:
-                    '//label[contains(text(),"Grouped products")]/..//input[@class="select2-search__field"]',
-                crossSells:
-                    '//label[contains(text(),"Upsells")]/..//input[@class="select2-search__field"]',
+                upSells: '//label[contains(text(),"Grouped products")]/..//input[@class="select2-search__field"]',
+                crossSells: '//label[contains(text(),"Upsells")]/..//input[@class="select2-search__field"]',
                 // Attributes
-                addExistingAttribute:
-                    '#product_attributes .select2-selection__arrow',
-                addExistingAttributeInput:
-                    '.select2-search.select2-search--dropdown .select2-search__field',
+                addExistingAttribute: '#product_attributes .select2-selection__arrow',
+                addExistingAttributeInput: '.select2-search.select2-search--dropdown .select2-search__field',
                 addExistingAttributeValues: '.select2-results ul li',
                 customProductAttribute: '.attribute_taxonomy',
                 addAttribute: '.add_attribute',
@@ -3305,10 +2701,8 @@ export const selector = {
                 selectAll: '.select_all_attributes',
                 selectNone: '.minus',
                 addNewAttribute: '.button.add_new_attribute',
-                visibleOnTheProductPage:
-                    '//input[contains(@name, "attribute_visibility")]',
-                usedForVariations:
-                    '//input[contains(@name, "attribute_variation")]',
+                visibleOnTheProductPage: '//input[contains(@name, "attribute_visibility")]',
+                usedForVariations: '//input[contains(@name, "attribute_variation")]',
                 saveAttributes: '.save_attributes',
                 // Variations
                 productVariations: '.woocommerce_variation',
@@ -3324,17 +2718,13 @@ export const selector = {
                 // Vendor
                 // storeName: '#dokan_product_author_override',
                 // storeName: 'div#sellerdiv span.select2-selection__arrow', // todo: dokansellerdiv on git action nd sellerdiv on local why
-                storeName:
-                    '//div[contains(@id, "sellerdiv")]//span[@class="select2-selection__arrow"]',
+                storeName: '//div[contains(@id, "sellerdiv")]//span[@class="select2-selection__arrow"]',
                 // storeNameOptions: '#dokan_product_author_override option',
-                storeNameInput:
-                    '.select2-search.select2-search--dropdown .select2-search__field',
-                storeNameOption: (text: string) =>
-                    `//select[@id='dokan_product_author_override']//option[contains(text(),'${text}')]`, // Select Option by text
+                storeNameInput: '.select2-search.select2-search--dropdown .select2-search__field',
+                storeNameOption: (text: string) => `//select[@id='dokan_product_author_override']//option[contains(text(),'${text}')]`, // Select Option by text
 
                 // Category
-                category: (categoryName: string) =>
-                    `//label[contains(text(), ' ${categoryName}')]/input`,
+                category: (categoryName: string) => `//label[contains(text(), ' ${categoryName}')]/input`,
                 // Tags
                 tagInput: '#new-tag-product_tag',
                 addTag: '.tagadd',
@@ -3359,8 +2749,7 @@ export const selector = {
                 displayType: '#display_type',
                 uploadOrAddImage: '.upload_image_button',
                 addNewCategory: '#submit',
-                categoryCell: (categoryName: string) =>
-                    `//td[contains(text(), '${categoryName.toLowerCase()}')]/..`,
+                categoryCell: (categoryName: string) => `//td[contains(text(), '${categoryName.toLowerCase()}')]/..`,
             },
 
             // Attributes
@@ -3370,42 +2759,32 @@ export const selector = {
                 enableArchives: '#attribute_public',
                 defaultSortOrder: '#attribute_orderby',
                 addAttribute: '#submit',
-                attributeCell: (attributeName: string) =>
-                    `//td[contains(text(), '${attributeName.toLowerCase()}')]/..`,
-                configureTerms: (attributeName: string) =>
-                    `//td[contains(text(), '${attributeName.toLowerCase()}')]/..//a[normalize-space()="Configure terms"]`,
+                attributeCell: (attributeName: string) => `//td[contains(text(), '${attributeName.toLowerCase()}')]/..`,
+                configureTerms: (attributeName: string) => `//td[contains(text(), '${attributeName.toLowerCase()}')]/..//a[normalize-space()="Configure terms"]`,
                 // Terms
                 attributeTerm: '#tag-name',
                 attributeTermSlug: '#tag-slug',
                 description: '#tag-description',
                 addAttributeTerm: '#submit',
-                attributeTermCell: (attributeTerm: string) =>
-                    `//td[contains(text(), '${attributeTerm.toLowerCase()}')]/..`,
+                attributeTermCell: (attributeTerm: string) => `//td[contains(text(), '${attributeTerm.toLowerCase()}')]/..`,
             },
         },
 
         // Bookings
         bookings: {
             // Menus
-            allBooking:
-                '//li[@id="menu-posts-wc_booking"]//a[contains(text(),"All Bookings")]',
-            resources:
-                '//li[@id="menu-posts-wc_booking"]//a[contains(text(),"Resources")]',
-            addBooking:
-                '//li[@id="menu-posts-wc_booking"]//a[contains(text(),"Add Booking")]',
-            calendar:
-                '//li[@id="menu-posts-wc_booking"]//a[contains(text(),"Calendar")]',
-            sendNotification:
-                '//li[@id="menu-posts-wc_booking"]//a[contains(text(),"Send Notification")]',
-            settings:
-                '//li[@id="menu-posts-wc_booking"]//a[contains(text(),"Settings")]',
+            allBooking: '//li[@id="menu-posts-wc_booking"]//a[contains(text(),"All Bookings")]',
+            resources: '//li[@id="menu-posts-wc_booking"]//a[contains(text(),"Resources")]',
+            addBooking: '//li[@id="menu-posts-wc_booking"]//a[contains(text(),"Add Booking")]',
+            calendar: '//li[@id="menu-posts-wc_booking"]//a[contains(text(),"Calendar")]',
+            sendNotification: '//li[@id="menu-posts-wc_booking"]//a[contains(text(),"Send Notification")]',
+            settings: '//li[@id="menu-posts-wc_booking"]//a[contains(text(),"Settings")]',
         },
 
         // Marketing
         marketing: {
             // Menus
-            coupons:
-                '//li[@id="toplevel_page_woocommerce-marketing"]//a[contains(text(),"Coupons")]',
+            coupons: '//li[@id="toplevel_page_woocommerce-marketing"]//a[contains(text(),"Coupons")]',
 
             // Coupon
 
@@ -3430,12 +2809,9 @@ export const selector = {
                 // Vendor Limits
                 enableForAllVendors: '#admin_coupons_enabled_for_vendor',
                 couponPriceDeduct: '#coupon_commissions_type',
-                vendors:
-                    '.dokan-admin-coupons-include-vendors .select2-search__field',
-                products:
-                    '.dokan-coupons-include-product-search-group .select2-search__field',
-                excludeProducts:
-                    '//label[contains(text(),"Exclude products")]/..//input[@class="select2-search__field"]',
+                vendors: '.dokan-admin-coupons-include-vendors .select2-search__field',
+                products: '.dokan-coupons-include-product-search-group .select2-search__field',
+                excludeProducts: '//label[contains(text(),"Exclude products")]/..//input[@class="select2-search__field"]',
                 showOnStores: '#admin_coupons_show_on_stores',
                 notifyVendors: '#admin_coupons_send_notify_to_vendors',
 
@@ -3444,10 +2820,8 @@ export const selector = {
                 maximumSpend: '#maximum_amount',
                 individualUseOnly: '#individual_use',
                 excludeSaleItems: '#exclude_sale_items',
-                productCategories:
-                    '//label[contains(text(),"Product categories")]/..//input[@class="select2-search__field"]',
-                excludeCategories:
-                    '//label[contains(text(),"Exclude categories")]/..//input[@class="select2-search__field"]',
+                productCategories: '//label[contains(text(),"Product categories")]/..//input[@class="select2-search__field"]',
+                excludeCategories: '//label[contains(text(),"Exclude categories")]/..//input[@class="select2-search__field"]',
                 allowedEmails: '#customer_email',
 
                 // Usage Limits
@@ -3481,19 +2855,16 @@ export const selector = {
             chooseFile: '#pluginzip',
             installNow: '#install-plugin-submit',
             activatePlugin: '.button.button-primary',
-            activateCustomPlugin: (plugin: string) =>
-                `//strong[normalize-space()="${plugin}"]/..//div//span[@class="activate"]`,
+            activateCustomPlugin: (plugin: string) => `//strong[normalize-space()="${plugin}"]/..//div//span[@class="activate"]`,
         },
 
         // Users
         users: {
             // Users Menu
             menus: {
-                allUsers:
-                    '//li[@id="menu-users"]//a[contains(text(),"All Users")]',
+                allUsers: '//li[@id="menu-users"]//a[contains(text(),"All Users")]',
                 addNew: '//li[@id="menu-users"]//a[contains(text(),"Add New")]',
-                profile:
-                    '//li[@id="menu-users"]//a[contains(text(),"Profile")]',
+                profile: '//li[@id="menu-users"]//a[contains(text(),"Profile")]',
             },
 
             // All Users
@@ -3545,13 +2916,10 @@ export const selector = {
                     postcode: '#billing_postcode',
                     // country: '#select2-billing_country-container',
                     // countryInput: '.select2-results ul li',
-                    country:
-                        '//select[@id="billing_country"]/..//span[@class="select2-selection__arrow"]',
-                    countryInput:
-                        '.select2-search.select2-search--dropdown .select2-search__field',
+                    country: '//select[@id="billing_country"]/..//span[@class="select2-selection__arrow"]',
+                    countryInput: '.select2-search.select2-search--dropdown .select2-search__field',
                     state: '//select[@id="billing_state"]/..//span[@class="select2-selection__arrow"]',
-                    stateInput:
-                        '.select2-search.select2-search--dropdown .select2-search__field',
+                    stateInput: '.select2-search.select2-search--dropdown .select2-search__field',
                     phone: '#billing_phone',
                     email: '#billing_email',
                     companyIdOrEuidNumber: '#billing_dokan_company_id_number',
@@ -3570,13 +2938,10 @@ export const selector = {
                     address2: '#shipping_address_2',
                     city: '#shipping_city',
                     postcode: '#shipping_postcode',
-                    country:
-                        '//select[@id="shipping_country"]/..//span[@class="select2-selection__arrow"]',
-                    countryInput:
-                        '.select2-search.select2-search--dropdown .select2-search__field',
+                    country: '//select[@id="shipping_country"]/..//span[@class="select2-selection__arrow"]',
+                    countryInput: '.select2-search.select2-search--dropdown .select2-search__field',
                     state: '//select[@id="shipping_state"]/..//span[@class="select2-selection__arrow"]',
-                    stateInput:
-                        '.select2-search.select2-search--dropdown .select2-search__field',
+                    stateInput: '.select2-search.select2-search--dropdown .select2-search__field',
                     phone: '#shipping_phone',
                 },
 
@@ -3594,16 +2959,13 @@ export const selector = {
                     // state: '##select2-state-container',
                     // stateValues: '.select2-results ul li',
                     country: '(//span[@class="select2-selection__arrow"])[1]',
-                    countryInput:
-                        '.select2-search.select2-search--dropdown .select2-search__field',
+                    countryInput: '.select2-search.select2-search--dropdown .select2-search__field',
                     state: '(//span[@class="select2-selection__arrow"])[2]',
-                    stateInput:
-                        '.select2-search.select2-search--dropdown .select2-search__field',
+                    stateInput: '.select2-search.select2-search--dropdown .select2-search__field',
 
                     phone: '//input[@name="dokan_store_phone"]',
                     companyName: '//input[@name="dokan_company_name"]',
-                    companyIdOrEuidNumber:
-                        '//input[@name="dokan_company_id_number"]',
+                    companyIdOrEuidNumber: '//input[@name="dokan_company_id_number"]',
                     vatOrTaxNumber: '//input[@name="dokan_vat_number"]',
                     bank: '//input[@name="dokan_bank_name"]',
                     bankIban: '//input[@name="dokan_bank_iban"]',
@@ -3659,10 +3021,8 @@ export const selector = {
             newUserDefaultRole: '#default_role',
             siteLanguage: '#WPLANG',
             timezone: '#timezone_string',
-            customDateFormat:
-                '//input[@id="date_format_custom_radio" and @name="date_format"]',
-            timeFormat:
-                '//input[@id="time_format_custom_radio" and @name="time_format"]',
+            customDateFormat: '//input[@id="date_format_custom_radio" and @name="date_format"]',
+            timeFormat: '//input[@id="time_format_custom_radio" and @name="time_format"]',
             weekStartsOn: '#start_of_week',
             generalSaveChanges: '#submit',
 
@@ -3726,26 +3086,18 @@ export const selector = {
             city: '#address\\[city\\]',
             zipCode: '#address\\[zip\\]',
             country: '#select2-addresscountry-container',
-            countryInput:
-                '//input[@class="select2-search__field" and @aria-owns="select2-addresscountry-results"]',
+            countryInput: '//input[@class="select2-search__field" and @aria-owns="select2-addresscountry-results"]',
             state: '#select2-calc_shipping_state-container',
             // state: '//span[@id="select2-calc_shipping_state-container"]/..//span[@class="select2-selection__arrow"]',
-            stateInput:
-                '//input[@class="select2-search__field" and @aria-owns="select2-calc_shipping_state-results"]',
+            stateInput: '//input[@class="select2-search__field" and @aria-owns="select2-calc_shipping_state-results"]',
             // state: '#calc_shipping_state',
-            storeCategories:
-                '//select[contains(@id,"dokan_store_categories")]/..//span[@class="select2-selection select2-selection--multiple"]',
-            storeCategoriesInput:
-                '//input[@class="select2-search__field" and @aria-owns="select2-dokan_store_categories-results"]',
-            highlightedResult:
-                '.select2-results__option.select2-results__option--highlighted',
-            selectedStoreCategories:
-                '//select[contains(@id,"dokan_store_categories")]/..//li[@class="select2-selection__choice"]',
+            storeCategories: '//select[contains(@id,"dokan_store_categories")]/..//span[@class="select2-selection select2-selection--multiple"]',
+            storeCategoriesInput: '//input[@class="select2-search__field" and @aria-owns="select2-dokan_store_categories-results"]',
+            highlightedResult: '.select2-results__option.select2-results__option--highlighted',
+            selectedStoreCategories: '//select[contains(@id,"dokan_store_categories")]/..//li[@class="select2-selection__choice"]',
             map: 'input#dokan-map-add',
-            mapResultFirst:
-                '(//ul//li[@class="ui-menu-item"]//div[@class="ui-menu-item-wrapper"])[1]',
-            mapResultByName: (location: string) =>
-                `//li[@class="ui-menu-item"]//div[contains(text(), "${location}")],`, // New York, NY, USA
+            mapResultFirst: '(//ul//li[@class="ui-menu-item"]//div[@class="ui-menu-item-wrapper"])[1]',
+            mapResultByName: (location: string) => `//li[@class="ui-menu-item"]//div[contains(text(), "${location}")],`, // New York, NY, USA
             email: '//input[@id="show_email"]/..//label',
             continueStoreSetup: '.store-step-continue',
             skipTheStepStoreSetup: '.store-step-skip-btn',
@@ -3756,8 +3108,7 @@ export const selector = {
             // Bank
             bankAccountName: '#ac_name',
             bankAccountType: '#ac_type',
-            bankRoutingNumber:
-                '//input[@name="settings[bank][routing_number]"]',
+            bankRoutingNumber: '//input[@name="settings[bank][routing_number]"]',
             bankAccountNumber: '//input[@name="settings[bank][ac_number]"]',
             bankName: '//input[@name="settings[bank][bank_name]"]',
             bankAddress: '//textarea[@name="settings[bank][bank_addr]"]',
@@ -3827,14 +3178,10 @@ export const selector = {
                 pageviewTitle: '//div[normalize-space()="Pageview"]',
                 orderTitle: '//div[normalize-space()="Order"]',
 
-                salesValue:
-                    '//div[@class="title" and contains(text(), "Net Sales")]/..//div[@class="count"]',
-                earningValue:
-                    '//div[@class="title" and contains(text(), "Earning")]/..//div[@class="count"]',
-                pageViewValue:
-                    '//div[@class="title" and contains(text(), "Pageview")]/..//div[@class="count"]',
-                orderValue:
-                    '//div[@class="title" and contains(text(), "Order")]/..//div[@class="count"]',
+                salesValue: '//div[@class="title" and contains(text(), "Net Sales")]/..//div[@class="count"]',
+                earningValue: '//div[@class="title" and contains(text(), "Earning")]/..//div[@class="count"]',
+                pageViewValue: '//div[@class="title" and contains(text(), "Pageview")]/..//div[@class="count"]',
+                orderValue: '//div[@class="title" and contains(text(), "Order")]/..//div[@class="count"]',
             },
 
             // sells graph
@@ -3848,35 +3195,21 @@ export const selector = {
             orders: {
                 ordersDiv: '.dashboard-widget.orders',
                 widgetTitle: '.orders .widget-title',
-                totalTitle:
-                    '//div[@class="dashboard-widget orders"]//span[normalize-space()="Total"]',
-                completedTitle:
-                    '//div[@class="dashboard-widget orders"]//span[normalize-space()="Completed"]',
-                pendingTitle:
-                    '//div[@class="dashboard-widget orders"]//span[normalize-space()="Pending"]',
-                processingTitle:
-                    '//div[@class="dashboard-widget orders"]//span[normalize-space()="Processing"]',
-                cancelledTitle:
-                    '//div[@class="dashboard-widget orders"]//span[normalize-space()="Cancelled"]',
-                refundedTitle:
-                    '//div[@class="dashboard-widget orders"]//span[normalize-space()="Refunded"]',
-                onholdTitle:
-                    '//div[@class="dashboard-widget orders"]//span[normalize-space()="On hold"]',
+                totalTitle: '//div[@class="dashboard-widget orders"]//span[normalize-space()="Total"]',
+                completedTitle: '//div[@class="dashboard-widget orders"]//span[normalize-space()="Completed"]',
+                pendingTitle: '//div[@class="dashboard-widget orders"]//span[normalize-space()="Pending"]',
+                processingTitle: '//div[@class="dashboard-widget orders"]//span[normalize-space()="Processing"]',
+                cancelledTitle: '//div[@class="dashboard-widget orders"]//span[normalize-space()="Cancelled"]',
+                refundedTitle: '//div[@class="dashboard-widget orders"]//span[normalize-space()="Refunded"]',
+                onholdTitle: '//div[@class="dashboard-widget orders"]//span[normalize-space()="On hold"]',
 
-                totalValue:
-                    '//div[@class="dashboard-widget orders"]//span[normalize-space()="Total"]/..//span[@class="count"]',
-                completedValue:
-                    '//div[@class="dashboard-widget orders"]//span[normalize-space()="Completed"]/..//span[@class="count"]',
-                pendingValue:
-                    '//div[@class="dashboard-widget orders"]//span[normalize-space()="Pending"]/..//span[@class="count"]',
-                processingValue:
-                    '//div[@class="dashboard-widget orders"]//span[normalize-space()="Processing"]/..//span[@class="count"]',
-                cancelledValue:
-                    '//div[@class="dashboard-widget orders"]//span[normalize-space()="Cancelled"]/..//span[@class="count"]',
-                refundedValue:
-                    '//div[@class="dashboard-widget orders"]//span[normalize-space()="Refunded"]/..//span[@class="count"]',
-                onholdValue:
-                    '//div[@class="dashboard-widget orders"]//span[normalize-space()="On hold"]/..//span[@class="count"]',
+                totalValue: '//div[@class="dashboard-widget orders"]//span[normalize-space()="Total"]/..//span[@class="count"]',
+                completedValue: '//div[@class="dashboard-widget orders"]//span[normalize-space()="Completed"]/..//span[@class="count"]',
+                pendingValue: '//div[@class="dashboard-widget orders"]//span[normalize-space()="Pending"]/..//span[@class="count"]',
+                processingValue: '//div[@class="dashboard-widget orders"]//span[normalize-space()="Processing"]/..//span[@class="count"]',
+                cancelledValue: '//div[@class="dashboard-widget orders"]//span[normalize-space()="Cancelled"]/..//span[@class="count"]',
+                refundedValue: '//div[@class="dashboard-widget orders"]//span[normalize-space()="Refunded"]/..//span[@class="count"]',
+                onholdValue: '//div[@class="dashboard-widget orders"]//span[normalize-space()="On hold"]/..//span[@class="count"]',
 
                 pieChart: '#order-stats',
             },
@@ -3885,23 +3218,15 @@ export const selector = {
             reviews: {
                 reviewsDiv: '.dashboard-widget.reviews',
                 widgetTitle: '.reviews .widget-title',
-                allTitle:
-                    '//div[@class="dashboard-widget reviews"]//span[normalize-space()="All"]',
-                pendingTitle:
-                    '//div[@class="dashboard-widget reviews"]//span[normalize-space()="Pending"]',
-                spamTitle:
-                    '//div[@class="dashboard-widget reviews"]//span[normalize-space()="Spam"]',
-                trashTitle:
-                    '//div[@class="dashboard-widget reviews"]//span[normalize-space()="Trash"]',
+                allTitle: '//div[@class="dashboard-widget reviews"]//span[normalize-space()="All"]',
+                pendingTitle: '//div[@class="dashboard-widget reviews"]//span[normalize-space()="Pending"]',
+                spamTitle: '//div[@class="dashboard-widget reviews"]//span[normalize-space()="Spam"]',
+                trashTitle: '//div[@class="dashboard-widget reviews"]//span[normalize-space()="Trash"]',
 
-                allValue:
-                    '//div[@class="dashboard-widget reviews"]//span[normalize-space()="All"]/..//span[@class="count"]',
-                pendingValue:
-                    '//div[@class="dashboard-widget reviews"]//span[normalize-space()="Pending"]/..//span[@class="count"]',
-                spamValue:
-                    '//div[@class="dashboard-widget reviews"]//span[normalize-space()="Spam"]/..//span[@class="count"]',
-                trashValue:
-                    '//div[@class="dashboard-widget reviews"]//span[normalize-space()="Trash"]/..//span[@class="count"]',
+                allValue: '//div[@class="dashboard-widget reviews"]//span[normalize-space()="All"]/..//span[@class="count"]',
+                pendingValue: '//div[@class="dashboard-widget reviews"]//span[normalize-space()="Pending"]/..//span[@class="count"]',
+                spamValue: '//div[@class="dashboard-widget reviews"]//span[normalize-space()="Spam"]/..//span[@class="count"]',
+                trashValue: '//div[@class="dashboard-widget reviews"]//span[normalize-space()="Trash"]/..//span[@class="count"]',
             },
 
             // products
@@ -3909,23 +3234,15 @@ export const selector = {
                 productsDiv: '.dashboard-widget.products',
                 addNewProduct: '//a[normalize-space()="+ Add new product"]',
                 widgetTitle: '.products .widget-title',
-                totalTitle:
-                    '//div[@class="dashboard-widget products"]//span[normalize-space()="Total"]',
-                liveTitle:
-                    '//div[@class="dashboard-widget products"]//span[normalize-space()="Live"]',
-                offlineTitle:
-                    '//div[@class="dashboard-widget products"]//span[normalize-space()="Offline"]',
-                pendingReviewTitle:
-                    '//div[@class="dashboard-widget products"]//span[normalize-space()="Pending Review"]',
+                totalTitle: '//div[@class="dashboard-widget products"]//span[normalize-space()="Total"]',
+                liveTitle: '//div[@class="dashboard-widget products"]//span[normalize-space()="Live"]',
+                offlineTitle: '//div[@class="dashboard-widget products"]//span[normalize-space()="Offline"]',
+                pendingReviewTitle: '//div[@class="dashboard-widget products"]//span[normalize-space()="Pending Review"]',
 
-                totalValue:
-                    '//div[@class="dashboard-widget products"]//span[normalize-space()="Total"]/..//span[@class="count"]',
-                liveValue:
-                    '//div[@class="dashboard-widget products"]//span[normalize-space()="Live"]/..//span[@class="count"]',
-                offlineValue:
-                    '//div[@class="dashboard-widget products"]//span[normalize-space()="Offline"]/..//span[@class="count"]',
-                pendingReviewValue:
-                    '//div[@class="dashboard-widget products"]//span[normalize-space()="Pending Review"]/..//span[@class="count"]',
+                totalValue: '//div[@class="dashboard-widget products"]//span[normalize-space()="Total"]/..//span[@class="count"]',
+                liveValue: '//div[@class="dashboard-widget products"]//span[normalize-space()="Live"]/..//span[@class="count"]',
+                offlineValue: '//div[@class="dashboard-widget products"]//span[normalize-space()="Offline"]/..//span[@class="count"]',
+                pendingReviewValue: '//div[@class="dashboard-widget products"]//span[normalize-space()="Pending Review"]/..//span[@class="count"]',
             },
 
             // announcement
@@ -3946,10 +3263,8 @@ export const selector = {
                 all: '//ul[contains(@class,"subsubsub")]//a[contains(text(),"All")]',
                 online: '//ul[contains(@class,"subsubsub")]//a[contains(text(),"Online")]',
                 draft: '//ul[contains(@class,"subsubsub")]//a[contains(text(),"Draft")]',
-                pendingReview:
-                    '//ul[contains(@class,"subsubsub")]//a[contains(text(),"Pending Review")]',
-                inStock:
-                    '//ul[contains(@class,"subsubsub")]//a[contains(text(),"In stock")]',
+                pendingReview: '//ul[contains(@class,"subsubsub")]//a[contains(text(),"Pending Review")]',
+                inStock: '//ul[contains(@class,"subsubsub")]//a[contains(text(),"In stock")]',
             },
 
             // Import Export Product
@@ -3987,8 +3302,7 @@ export const selector = {
                 imageColumn: '//th[normalize-space()="Image"]',
                 nameColumn: '//th[normalize-space()="Name"]',
                 statusColumn: '//th[normalize-space()="Status"]',
-                productAdvertisementColumn:
-                    '//th[@class="product-advertisement-th"]',
+                productAdvertisementColumn: '//th[@class="product-advertisement-th"]',
                 skuColumn: '//th[normalize-space()="SKU"]',
                 stockColumn: '//th[normalize-space()="Stock"]',
                 priceColumn: '//th[normalize-space()="Price"]',
@@ -3999,24 +3313,15 @@ export const selector = {
 
             // Product Sub Options
             numberOfRowsFound: '#dokan-product-list-table tbody tr',
-            productCell: (productName: string) =>
-                `//a[contains(text(),'${productName}')]/../..`,
-            productLink: (productName: string) =>
-                `//a[contains(text(),'${productName}')]`,
-            editProduct: (productName: string) =>
-                `//a[contains(text(),'${productName}')]/../..//span[@class="edit"]//a`,
-            buyAdvertisement: (productName: string) =>
-                `//a[contains(text(),'${productName}')]/../../..//td[@class="product-advertisement-td"]//span`,
-            advertisementStatus: (productName: string) =>
-                `//a[contains(text(),'${productName}')]/../../..//td[@class="product-advertisement-td"]//i[contains(@class,'fa fa-circle')]`,
-            permanentlyDelete: (productName: string) =>
-                `//a[contains(text(),'${productName}')]/../..//span[@class="delete"]//a`,
-            view: (productName: string) =>
-                `//a[contains(text(),'${productName}')]/../..//span[@class="view"]//a`,
-            quickEdit: (productName: string) =>
-                `//a[contains(text(),'${productName}')]/../..//span[@class="item-inline-edit"]//a`,
-            duplicate: (productName: string) =>
-                `//a[contains(text(),'${productName}')]/../..//span[@class="duplicate"]//a`,
+            productCell: (productName: string) => `//a[contains(text(),'${productName}')]/../..`,
+            productLink: (productName: string) => `//a[contains(text(),'${productName}')]`,
+            editProduct: (productName: string) => `//a[contains(text(),'${productName}')]/../..//span[@class="edit"]//a`,
+            buyAdvertisement: (productName: string) => `//a[contains(text(),'${productName}')]/../../..//td[@class="product-advertisement-td"]//span`,
+            advertisementStatus: (productName: string) => `//a[contains(text(),'${productName}')]/../../..//td[@class="product-advertisement-td"]//i[contains(@class,'fa fa-circle')]`,
+            permanentlyDelete: (productName: string) => `//a[contains(text(),'${productName}')]/../..//span[@class="delete"]//a`,
+            view: (productName: string) => `//a[contains(text(),'${productName}')]/../..//span[@class="view"]//a`,
+            quickEdit: (productName: string) => `//a[contains(text(),'${productName}')]/../..//span[@class="item-inline-edit"]//a`,
+            duplicate: (productName: string) => `//a[contains(text(),'${productName}')]/../..//span[@class="duplicate"]//a`,
 
             // Create Product
             create: {
@@ -4033,18 +3338,15 @@ export const selector = {
                 productScheduleTo: '.dokan-end-date',
                 productScheduleCancel: '.cancel_sale_schedule.dokan-hide',
                 productTags: '.select2-search__field',
-                productDescription:
-                    'textarea[placeholder="Enter some short description about this product..."]',
+                productDescription: 'textarea[placeholder="Enter some short description about this product..."]',
                 createProduct: '#dokan-create-new-product-btn',
                 createAndNewProduct: '#dokan-create-and-add-new-product-btn',
             },
 
             // category
             category: {
-                productCategoryModalOnProductPopup:
-                    '#dokan-add-new-product-form  #dokan-category-open-modal',
-                productCategoryModal:
-                    '.dokan-select-product-category.dokan-category-open-modal',
+                productCategoryModalOnProductPopup: '#dokan-add-new-product-form  #dokan-category-open-modal',
+                productCategoryModal: '.dokan-select-product-category.dokan-category-open-modal',
                 productCategory: '#select2-product_cat-container',
                 productCategorySearchInput: '#dokan-single-cat-search-input',
                 productCategorySearchResult: '#dokan-cat-search-res-ul li',
@@ -4057,8 +3359,7 @@ export const selector = {
 
             // Edit Product
             edit: {
-                productEditContainer:
-                    '.product-edit-new-container.product-edit-container',
+                productEditContainer: '.product-edit-new-container.product-edit-container',
 
                 viewProduct: '.dokan-right .dokan-btn',
                 title: '#post_title',
@@ -4104,8 +3405,7 @@ export const selector = {
 
                 // Short Description
                 shortDescription: {
-                    shortDescriptionIframe:
-                        '.dokan-product-short-description iframe',
+                    shortDescriptionIframe: '.dokan-product-short-description iframe',
                     shortDescriptionHtmlBody: '#tinymce',
                 },
 
@@ -4123,8 +3423,7 @@ export const selector = {
                     stockQuantity: '//input[@name="_stock"]',
                     lowStockThreshold: '//input[@name="_low_stock_amount"]',
                     allowBackOrders: '#\\_backorders',
-                    allowOnlyOneQuantityOfThisProductToBeBoughtInASingleOrder:
-                        '#\\_sold_individually',
+                    allowOnlyOneQuantityOfThisProductToBeBoughtInASingleOrder: '#\\_sold_individually',
                 },
 
                 // Geolocation
@@ -4155,8 +3454,7 @@ export const selector = {
                         optionPriceType: '.wc-pao-addon-option-price-type',
                         optionPrice: '.wc-pao-addon-content-price input',
                         addOption: '.wc-pao-add-option',
-                        removeOptionCrossIcon:
-                            '.wc-pao-addon-content-remove > .button',
+                        removeOptionCrossIcon: '.wc-pao-addon-content-remove > .button',
                         cancelRemoveOption: '.swal2-cancel',
                         okRemoveOption: '.swal2-confirm',
                     },
@@ -4182,20 +3480,16 @@ export const selector = {
 
             // Linked Products
             linkedProduct: {
-                upSells:
-                    '//label[contains(text(),"Upsells")]/..//input[@class="select2-search__field"]',
-                crossSells:
-                    '//label[contains(text(),"Cross-sells ")]/..//input[@class="select2-search__field"]',
+                upSells: '//label[contains(text(),"Upsells")]/..//input[@class="select2-search__field"]',
+                crossSells: '//label[contains(text(),"Cross-sells ")]/..//input[@class="select2-search__field"]',
             },
 
             // Attribute
             attribute: {
                 customProductAttribute: '#predefined_attribute',
                 addAttribute: '.add_new_attribute',
-                visibleOnTheProductPage:
-                    '//input[contains(@name, "attribute_visibility")]',
-                usedForVariations:
-                    '//input[contains(@name, "attribute_variation")]',
+                visibleOnTheProductPage: '//input[contains(@name, "attribute_visibility")]',
+                usedForVariations: '//input[contains(@name, "attribute_variation")]',
                 selectTerms: '.dokan-attribute-values .select2-search__field',
                 selectAll: 'button.dokan-select-all-attributes',
                 selectNone: 'button.dokan-select-no-attributes',
@@ -4214,8 +3508,7 @@ export const selector = {
                 cancelVariationPrice: '.swal2-cancel',
                 saveVariationChanges: '.save-variation-changes',
                 cancelVariationChanges: '.cancel-variation-changes',
-                defaultAttribute:
-                    '.dokan-variation-default-select > .dokan-form-control',
+                defaultAttribute: '.dokan-variation-default-select > .dokan-form-control',
             },
 
             // Discount Options
@@ -4227,25 +3520,21 @@ export const selector = {
 
             // Rma Options
             rma: {
-                overrideYourDefaultRmaSettingsForThisProduct:
-                    '#dokan_rma_product_override',
+                overrideYourDefaultRmaSettingsForThisProduct: '#dokan_rma_product_override',
                 label: '#dokan-rma-label',
                 type: '#dokan-warranty-type',
                 length: '#dokan-warranty-length',
                 lengthValue: '//input[@name="warranty_length_value"]',
                 lengthDuration: '#dokan-warranty-length-duration',
-                refundReasonsFirst:
-                    '(//label[normalize-space()="Refund Reasons:"]/..//input)[1]',
-                refundReasons:
-                    '//label[normalize-space()="Refund Reasons:"]/..//input',
+                refundReasonsFirst: '(//label[normalize-space()="Refund Reasons:"]/..//input)[1]',
+                refundReasons: '//label[normalize-space()="Refund Reasons:"]/..//input',
                 rmaPolicyIframe: '#wp-warranty_policy-wrap iframe',
                 rmaPolicyHtmlBody: '#tinymce',
             },
 
             // Wholesale Options
             wholesale: {
-                enableWholeSaleForThisProduct:
-                    '#wholesale\\[enable_wholesale\\]',
+                enableWholeSaleForThisProduct: '#wholesale\\[enable_wholesale\\]',
                 wholesalePrice: '#dokan-wholesale-price',
                 minimumQuantityForWholesale: '#dokan-wholesale-qty',
             },
@@ -4297,17 +3586,12 @@ export const selector = {
             // Menus
             menus: {
                 all: '//ul[contains(@class,"order-statuses-filter")]//a[contains(text(), "All")]',
-                completed:
-                    '//ul[contains(@class,"order-statuses-filter")]//a[contains(text(), "Completed")]',
-                processing:
-                    '//ul[contains(@class,"order-statuses-filter")]//a[contains(text(), "Processing")]',
+                completed: '//ul[contains(@class,"order-statuses-filter")]//a[contains(text(), "Completed")]',
+                processing: '//ul[contains(@class,"order-statuses-filter")]//a[contains(text(), "Processing")]',
                 onHold: '//ul[contains(@class,"order-statuses-filter")]//a[contains(text(), "On-hold")]',
-                pending:
-                    '//ul[contains(@class,"order-statuses-filter")]//a[contains(text(), "Pending")]',
-                cancelled:
-                    '//ul[contains(@class,"order-statuses-filter")]//a[contains(text(), "Cancelled")]',
-                refunded:
-                    '//ul[contains(@class,"order-statuses-filter")]//a[contains(text(), "Refunded")]',
+                pending: '//ul[contains(@class,"order-statuses-filter")]//a[contains(text(), "Pending")]',
+                cancelled: '//ul[contains(@class,"order-statuses-filter")]//a[contains(text(), "Cancelled")]',
+                refunded: '//ul[contains(@class,"order-statuses-filter")]//a[contains(text(), "Refunded")]',
                 failed: '//ul[contains(@class,"order-statuses-filter")]//a[contains(text(), "Failed")]',
             },
 
@@ -4362,37 +3646,26 @@ export const selector = {
 
             numberOfRowsFound: '.dokan-table.dokan-table tbody tr',
             // Order Details from Table
-            orderTotalTable: (orderNumber: string) =>
-                `//strong[contains(text(),'Order ${orderNumber}')]/../../..//td[@class='dokan-order-total']//bdi`,
-            orderTotalAfterRefundTable: (orderNumber: string) =>
-                `///strong[contains(text(),'Order ${orderNumber}')]/../../..//td[@class='dokan-order-total']//ins//bdi`,
-            vendorEarningTable: (orderNumber: string) =>
-                `//strong[contains(text(),'Order ${orderNumber}')]/../../..//td[@class='dokan-order-earning']//span[@class="woocommerce-Price-amount amount"]`,
-            orderStatusTable: (orderNumber: string) =>
-                `//strong[contains(text(),'Order ${orderNumber}')]/../../..//td[@class='dokan-order-status']//span`,
+            orderTotalTable: (orderNumber: string) => `//strong[contains(text(),'Order ${orderNumber}')]/../../..//td[@class='dokan-order-total']//bdi`,
+            orderTotalAfterRefundTable: (orderNumber: string) => `///strong[contains(text(),'Order ${orderNumber}')]/../../..//td[@class='dokan-order-total']//ins//bdi`,
+            vendorEarningTable: (orderNumber: string) => `//strong[contains(text(),'Order ${orderNumber}')]/../../..//td[@class='dokan-order-earning']//span[@class="woocommerce-Price-amount amount"]`,
+            orderStatusTable: (orderNumber: string) => `//strong[contains(text(),'Order ${orderNumber}')]/../../..//td[@class='dokan-order-status']//span`,
 
             // Order Sub-Actions
-            orderLink: (orderNumber: string) =>
-                `//strong[contains(text(),'Order ${orderNumber}')]/..`,
-            processing: (orderNumber: string) =>
-                `//strong[contains(text(),'Order ${orderNumber}')]/../../..//a[@data-original-title='Processing']`,
-            complete: (orderNumber: string) =>
-                `//strong[contains(text(),'Order ${orderNumber}')]/../../..//a[@data-original-title='Complete']`,
-            view: (orderNumber: string) =>
-                `//strong[contains(text(),'Order ${orderNumber}')]/../../..//a[@data-original-title='View']`,
+            orderLink: (orderNumber: string) => `//strong[contains(text(),'Order ${orderNumber}')]/..`,
+            processing: (orderNumber: string) => `//strong[contains(text(),'Order ${orderNumber}')]/../../..//a[@data-original-title='Processing']`,
+            complete: (orderNumber: string) => `//strong[contains(text(),'Order ${orderNumber}')]/../../..//a[@data-original-title='Complete']`,
+            view: (orderNumber: string) => `//strong[contains(text(),'Order ${orderNumber}')]/../../..//a[@data-original-title='View']`,
 
             // order details
             orderDetails: {
                 orderNumber: '//strong[contains(text(),"Order#")]',
                 orderDate: '//span[contains(text(),"Order Date:")]/..',
                 orderTotal: '//td[contains(text(),"Order Total:")]/..//bdi',
-                orderTotalBeforeRefund:
-                    '//td[contains(text(),"Order Total:")]/..//del',
-                orderTotalAfterRefund:
-                    '//td[contains(text(),"Order Total:")]/..//ins//bdi',
+                orderTotalBeforeRefund: '//td[contains(text(),"Order Total:")]/..//del',
+                orderTotalAfterRefund: '//td[contains(text(),"Order Total:")]/..//ins//bdi',
                 discount: '//td[contains(text(),"Discount")]/..//bdi',
-                shippingMethod:
-                    '//tr[contains(@class,"shipping")]//td[@class="name"]//div[@class="view"]',
+                shippingMethod: '//tr[contains(@class,"shipping")]//td[@class="name"]//div[@class="view"]',
                 shippingCost: '//td[contains(text(),"Shipping")]/..//bdi',
                 tax: '//td[contains(text(),"Tax")]/..//bdi',
                 refunded: '.total.refunded-total bdi',
@@ -4404,8 +3677,7 @@ export const selector = {
 
             // general details
             generalDetails: {
-                generalDetailsDiv:
-                    '//strong[normalize-space()="General Details"]/../..',
+                generalDetailsDiv: '//strong[normalize-space()="General Details"]/../..',
                 orderDetails: '.list-unstyled.order-status',
                 customerDetails: '.list-unstyled.customer-details',
             },
@@ -4413,8 +3685,7 @@ export const selector = {
             // status
             status: {
                 currentOrderStatus: '.order-status .dokan-label',
-                selectedOrderStatus:
-                    '//select[@id="order_status"]//option[@selected="selected"]',
+                selectedOrderStatus: '//select[@id="order_status"]//option[@selected="selected"]',
                 edit: '.dokan-edit-status',
                 orderStatus: '#order_status', // wc-pending, wc-processing, wc-completed, wc-cancelled, wc-refunded, wc-failed, wc-checkout-draft
                 updateOrderStatus: '//input[@name="dokan_change_status"]',
@@ -4424,34 +3695,22 @@ export const selector = {
             refund: {
                 refundDiv: '#woocommerce-order-items',
                 requestRefund: '.dokan-btn.refund-items',
-                productQuantity: (productName: string) =>
-                    `//td[@class='name' and @data-sort-value='${productName}']/..//td[@class='quantity']//div[@class="view"]`,
-                productCost: (productName: string) =>
-                    `//td[@class='name' and @data-sort-value='${productName}']/..//td[@class='line_cost']//div[@class="view"]`,
-                productTax: (productName: string) =>
-                    `//td[@class='name' and @data-sort-value='${productName}']/..//td[@class='line_tax']//div[@class="view"]`,
-                refundProductQuantity: (productName: string) =>
-                    `//td[@class='name' and @data-sort-value='${productName}']/..//td[@class='quantity']//div[@class='refund']//input`,
-                refundProductCostAmount: (productName: string) =>
-                    `//td[@class='name' and @data-sort-value='${productName}']/..//input[@class='refund_line_total wc_input_price']`,
-                refundProductTaxAmount: (productName: string) =>
-                    `//td[@class='name' and @data-sort-value='${productName}']/..//input[@class='refund_line_tax wc_input_price']`,
-                shippingCost:
-                    '//tbody[@id="order_shipping_line_items"]//td[@class="line_cost"]//div[@class="view"]',
-                shippingTax:
-                    '//tbody[@id="order_shipping_line_items"]//td[@class="line_tax"]//div[@class="view"]',
-                refundShippingAmount:
-                    '//tbody[@id="order_shipping_line_items"]//td[@class="line_cost"]//input[@class="refund_line_total wc_input_price"]',
-                refundShippingTaxAmount:
-                    '//tbody[@id="order_shipping_line_items"]//td[@class="line_tax"]//input[@class="refund_line_tax wc_input_price"]',
+                productQuantity: (productName: string) => `//td[@class='name' and @data-sort-value='${productName}']/..//td[@class='quantity']//div[@class="view"]`,
+                productCost: (productName: string) => `//td[@class='name' and @data-sort-value='${productName}']/..//td[@class='line_cost']//div[@class="view"]`,
+                productTax: (productName: string) => `//td[@class='name' and @data-sort-value='${productName}']/..//td[@class='line_tax']//div[@class="view"]`,
+                refundProductQuantity: (productName: string) => `//td[@class='name' and @data-sort-value='${productName}']/..//td[@class='quantity']//div[@class='refund']//input`,
+                refundProductCostAmount: (productName: string) => `//td[@class='name' and @data-sort-value='${productName}']/..//input[@class='refund_line_total wc_input_price']`,
+                refundProductTaxAmount: (productName: string) => `//td[@class='name' and @data-sort-value='${productName}']/..//input[@class='refund_line_tax wc_input_price']`,
+                shippingCost: '//tbody[@id="order_shipping_line_items"]//td[@class="line_cost"]//div[@class="view"]',
+                shippingTax: '//tbody[@id="order_shipping_line_items"]//td[@class="line_tax"]//div[@class="view"]',
+                refundShippingAmount: '//tbody[@id="order_shipping_line_items"]//td[@class="line_cost"]//input[@class="refund_line_total wc_input_price"]',
+                refundShippingTaxAmount: '//tbody[@id="order_shipping_line_items"]//td[@class="line_tax"]//input[@class="refund_line_tax wc_input_price"]',
 
                 refundReason: '#refund_reason',
                 refundManually: '.dokan-btn.do-manual-refund',
-                confirmRefund:
-                    '.swal2-confirm.swal2-styled.swal2-default-outline',
+                confirmRefund: '.swal2-confirm.swal2-styled.swal2-default-outline',
                 refundRequestSuccessMessage: '#swal2-html-container',
-                refundRequestSuccessMessageOk:
-                    '.swal2-confirm.swal2-styled.swal2-default-outline',
+                refundRequestSuccessMessageOk: '.swal2-confirm.swal2-styled.swal2-default-outline',
                 cancelRefund: '.dokan-btn.cancel-action',
             },
 
@@ -4493,8 +3752,7 @@ export const selector = {
 
             // downloadable product permission
             downloadableProductPermission: {
-                downloadableProductPermissionDiv:
-                    '//strong[normalize-space()="Downloadable Product Permission"]/../..',
+                downloadableProductPermissionDiv: '//strong[normalize-space()="Downloadable Product Permission"]/../..',
                 downloadableProductInput: '.select2-search__field',
                 grantAccess: '.grant_access',
                 revokeAccess: '.revoke_access',
@@ -4507,8 +3765,7 @@ export const selector = {
         vUserSubscriptions: {
             // Filter
             filters: {
-                filterByCustomer:
-                    '//select[@id="dokan-filter-customer"]/..//span[@class="select2-selection__arrow"]',
+                filterByCustomer: '//select[@id="dokan-filter-customer"]/..//span[@class="select2-selection__arrow"]',
                 filterByCustomerInput: '.select2-search__field',
                 filterByDate: 'input#order_date_filter',
                 filter: '.dokan-btn',
@@ -4527,8 +3784,7 @@ export const selector = {
                 endColumn: '//th[normalize-space()="End"]',
             },
 
-            noSubscriptionsFound:
-                '//div[@class="dokan-error" and contains(text(), "No subscription found")]',
+            noSubscriptionsFound: '//div[@class="dokan-error" and contains(text(), "No subscription found")]',
             numberOfRowsFound: '.dokan-table.dokan-table tbody tr',
 
             // Edit Subscription
@@ -4536,8 +3792,7 @@ export const selector = {
             // Edit Subscription Order Status
             editSubscriptionOrderStatus: '.dokan-edit-status small',
             subscriptionOrderStatus: '#order_status',
-            updateSubscriptionOrderStatus:
-                '//input[@name="dokan_vps_change_status"]',
+            updateSubscriptionOrderStatus: '//input[@name="dokan_vps_change_status"]',
             cancelSubscriptionOrderStatus: '.dokan-btn-default',
             // Downloadable Product Permission
             chooseADownloadableProduct: '.select2-search__field',
@@ -4556,8 +3811,7 @@ export const selector = {
             endDate: '#end',
             endDateHour: '#end_hour',
             endDateMinute: '#end_minute',
-            updateSchedule:
-                '//input[@name="dokan_change_subscription_schedule"]',
+            updateSchedule: '//input[@name="dokan_change_subscription_schedule"]',
             // Subscription Notes
             addNoteContent: '#add-note-content',
             orderNoteType: '#order_note_type',
@@ -4568,8 +3822,7 @@ export const selector = {
 
         vRequestQuotes: {
             requestQuotesText: '//h3[normalize-space()="Request Quotes"]',
-            noQuoteMessage:
-                '//div[contains(@class, "woocommerce-message woocommerce-message--info")]',
+            noQuoteMessage: '//div[contains(@class, "woocommerce-message woocommerce-message--info")]',
             goToShop: '//a[normalize-space()="Go to shop"]',
 
             // table
@@ -4582,16 +3835,13 @@ export const selector = {
                 actionColumn: '//th[normalize-space()="Action"]',
             },
 
-            viewQuoteDetails: (quoteTitle: string) =>
-                `//td[normalize-space()="${quoteTitle}"]/..//a[@class="woocommerce-button button view"]`,
+            viewQuoteDetails: (quoteTitle: string) => `//td[normalize-space()="${quoteTitle}"]/..//a[@class="woocommerce-button button view"]`,
 
             quoteDetails: {
                 basicDetails: {
-                    requestQuotesText:
-                        '//h3[normalize-space()="Request Quotes"]',
+                    requestQuotesText: '//h3[normalize-space()="Request Quotes"]',
 
-                    basicDetailsTable:
-                        '//table[contains(@class,"quote_details") and not(contains(@class,"cart"))]',
+                    basicDetailsTable: '//table[contains(@class,"quote_details") and not(contains(@class,"cart"))]',
                     quoteNumberText: '//th[@class="quote-number"]',
                     customerNameText: '//th[@class="customer-name"]',
                     customerEmailText: '//th[@class="customer-email"]',
@@ -4609,43 +3859,34 @@ export const selector = {
                     quoteDetailsText: '//h2[normalize-space()="Quote Details"]',
 
                     table: {
-                        quoteDetailsTable:
-                            '//table[contains(@class,"quote_details") and contains(@class,"cart")]',
+                        quoteDetailsTable: '//table[contains(@class,"quote_details") and contains(@class,"cart")]',
                         productColumn: '//th[@class="product-name"]',
                         priceColumn: '//th[normalize-space()="Price"]',
-                        offeredPriceColumn:
-                            '//th[normalize-space()="Offered Price"]',
+                        offeredPriceColumn: '//th[normalize-space()="Offered Price"]',
                         quantityColumn: '//th[@class="product-quantity"]',
                         subtotalColumn: '//th[normalize-space()="Subtotal"]',
-                        offeredSubtotalColumn:
-                            '//th[normalize-space()="Offered Subtotal"]',
+                        offeredSubtotalColumn: '//th[normalize-space()="Offered Subtotal"]',
                     },
                 },
 
                 quoteTotals: {
                     quoteTotalsTitle: '//h2[normalize-space()="Quote totals"]',
                     quoteTotalsDiv: '.cart_totals',
-                    quoteTotalsTable:
-                        '//div[@class="cart_totals"]//table[contains(@class,"table_quote_totals")]',
+                    quoteTotalsTable: '//div[@class="cart_totals"]//table[contains(@class,"table_quote_totals")]',
 
                     subTotalText: '//tr[@class="cart-subtotal"]//th',
-                    offeredPriceSubtotalText:
-                        '//tr[@class="cart-subtotal offered"]//th',
+                    offeredPriceSubtotalText: '//tr[@class="cart-subtotal offered"]//th',
 
                     subTotalValue: '//td[@data-title="Subtotal (standard)"]',
-                    offeredPriceSubtotalValue:
-                        '//td[@data-title="Offered Price Subtotal"]',
+                    offeredPriceSubtotalValue: '//td[@data-title="Offered Price Subtotal"]',
                 },
 
-                offeredPriceInput: (productName: string) =>
-                    `//a[normalize-space()="${productName}"]/../..//input[@class="input-text offered-price-input text"]`,
-                quantityInput: (productName: string) =>
-                    `//a[normalize-space()="${productName}"]/../..//div[@class="quantity"]//input`,
+                offeredPriceInput: (productName: string) => `//a[normalize-space()="${productName}"]/../..//input[@class="input-text offered-price-input text"]`,
+                quantityInput: (productName: string) => `//a[normalize-space()="${productName}"]/../..//div[@class="quantity"]//input`,
 
                 updateQuote: 'button[name="dokan_update_quote"]',
                 approveThisQuote: 'button[name="approved_by_vendor_button"]',
-                convertToOrder:
-                    'button[name="dokan_convert_to_order_customer"]',
+                convertToOrder: 'button[name="dokan_convert_to_order_customer"]',
 
                 message: '.woocommerce-message',
             },
@@ -4653,20 +3894,17 @@ export const selector = {
 
         // Coupons
         vCoupon: {
-            couponText:
-                '.dokan-dashboard-header .left-header-content .entry-title',
+            couponText: '.dokan-dashboard-header .left-header-content .entry-title',
 
             // Menus
             menus: {
                 myCoupons: '//a[normalize-space()="My Coupons"]',
-                marketplaceCoupons:
-                    '//a[normalize-space()="Marketplace Coupons"]',
+                marketplaceCoupons: '//a[normalize-space()="Marketplace Coupons"]',
             },
 
             marketPlaceCoupon: {
                 marketPlaceCoupon: '#marketplace-coupon',
-                couponCell: (couponCode: string) =>
-                    `//td[contains(@class, "coupon-code")]//span[contains(text(), "${couponCode}")]`,
+                couponCell: (couponCode: string) => `//td[contains(@class, "coupon-code")]//span[contains(text(), "${couponCode}")]`,
             },
 
             // Table
@@ -4680,16 +3918,11 @@ export const selector = {
                 expiryDateColumn: '//th[normalize-space()="Expiry date"]',
             },
 
-            couponRow: (couponCode: string) =>
-                `//span[normalize-space()="${couponCode}"]/../../../../..`,
-            couponCell: (couponCode: string) =>
-                `//span[normalize-space()="${couponCode}"]/../../../..`,
-            couponLink: (couponCode: string) =>
-                `//span[normalize-space()="${couponCode}"]/..`,
-            couponEdit: (couponCode: string) =>
-                `//span[normalize-space()="${couponCode}"]/../../../..//div[@class="row-actions"]//span[@class="edit"]`,
-            couponDelete: (couponCode: string) =>
-                `//span[normalize-space()="${couponCode}"]/../../../..//div[@class="row-actions"]//span[@class="delete"]`,
+            couponRow: (couponCode: string) => `//span[normalize-space()="${couponCode}"]/../../../../..`,
+            couponCell: (couponCode: string) => `//span[normalize-space()="${couponCode}"]/../../../..`,
+            couponLink: (couponCode: string) => `//span[normalize-space()="${couponCode}"]/..`,
+            couponEdit: (couponCode: string) => `//span[normalize-space()="${couponCode}"]/../../../..//div[@class="row-actions"]//span[@class="edit"]`,
+            couponDelete: (couponCode: string) => `//span[normalize-space()="${couponCode}"]/../../../..//div[@class="row-actions"]//span[@class="delete"]`,
 
             // Create Coupon
             addNewCoupon: '.dokan-btn',
@@ -4703,13 +3936,11 @@ export const selector = {
             expireDate: '#dokan-expire',
             excludeSaleItems: '#checkboxes-2',
             minimumAmount: '#minium_ammount',
-            product:
-                '//label[contains(text(), "Product")]/..//input[@class="select2-search__field"]',
+            product: '//label[contains(text(), "Product")]/..//input[@class="select2-search__field"]',
             selectAll: '.dokan-coupon-product-select-all',
             clear: '.dokan-coupon-product-clear-all',
             applyForNewProducts: '#apply_new_products',
-            excludeProducts:
-                '//label[contains(text(), "Exclude products")]/..//input[@class="select2-search__field"]',
+            excludeProducts: '//label[contains(text(), "Exclude products")]/..//input[@class="select2-search__field"]',
             showOnStore: '#checkboxes-3',
             createCoupon: '.dokan-btn-danger',
 
@@ -4730,16 +3961,11 @@ export const selector = {
 
             // Menus
             menus: {
-                overview:
-                    '//ul[@class="dokan_tabs"]//a[contains(text(), "Overview")]',
-                salesByDay:
-                    '//ul[@class="dokan_tabs"]//a[contains(text(), "Sales by day")]',
-                topSelling:
-                    '//ul[@class="dokan_tabs"]//a[contains(text(), "Top selling")]',
-                topEarning:
-                    '//ul[@class="dokan_tabs"]//a[contains(text(), "Top earning")]',
-                statement:
-                    '//ul[@class="dokan_tabs"]//a[contains(text(), "Statement")]',
+                overview: '//ul[@class="dokan_tabs"]//a[contains(text(), "Overview")]',
+                salesByDay: '//ul[@class="dokan_tabs"]//a[contains(text(), "Sales by day")]',
+                topSelling: '//ul[@class="dokan_tabs"]//a[contains(text(), "Top selling")]',
+                topEarning: '//ul[@class="dokan_tabs"]//a[contains(text(), "Top earning")]',
+                statement: '//ul[@class="dokan_tabs"]//a[contains(text(), "Statement")]',
             },
 
             // chart
@@ -4765,8 +3991,7 @@ export const selector = {
                     salesColumn: '//th[normalize-space()="Sales"]',
                 },
 
-                noProductsFound:
-                    '//td[normalize-space()="No products found in given range."]',
+                noProductsFound: '//td[normalize-space()="No products found in given range."]',
             },
 
             topEarning: {
@@ -4778,8 +4003,7 @@ export const selector = {
                     earningColumn: '//th[normalize-space()="Earning"]',
                 },
 
-                noProductsFound:
-                    '//td[normalize-space()="No products found in given range."]',
+                noProductsFound: '//td[normalize-space()="No products found in given range."]',
             },
 
             statement: {
@@ -4803,8 +4027,7 @@ export const selector = {
 
         // Deliverytime
         vDeliveryTime: {
-            deliveryTimeAndStorePickup:
-                '//h1[normalize-space()="Delivery Time & Store Pickup"]',
+            deliveryTimeAndStorePickup: '//h1[normalize-space()="Delivery Time & Store Pickup"]',
 
             // Filter
             filter: {
@@ -4832,10 +4055,8 @@ export const selector = {
 
             // Menus
             menus: {
-                approved:
-                    '//div[@id="dokan-comments_menu"]//a[contains(text(), "Approved")]',
-                pending:
-                    '//div[@id="dokan-comments_menu"]//a[contains(text(), "Pending")]',
+                approved: '//div[@id="dokan-comments_menu"]//a[contains(text(), "Approved")]',
+                pending: '//div[@id="dokan-comments_menu"]//a[contains(text(), "Pending")]',
                 spam: '//div[@id="dokan-comments_menu"]//a[contains(text(), "Spam")]',
                 trash: '//div[@id="dokan-comments_menu"]//a[contains(text(), "Trash")]',
             },
@@ -4860,24 +4081,15 @@ export const selector = {
             numberOfRowsFound: '.dokan-reviews-content tbody tr',
 
             // Review Actions
-            reviewRow: (reviewMessage: string) =>
-                `//div[contains(text(),'${reviewMessage}')]/../..`,
-            reviewMessageCell: (reviewMessage: string) =>
-                `//div[contains(text(),'${reviewMessage}')]/..`,
-            unApproveReview: (reviewMessage: string) =>
-                `//div[contains(text(),'${reviewMessage}')]/..//ul[@class='dokan-cmt-row-actions']//a[contains(text(),'Unapprove')]`,
-            approveReview: (reviewMessage: string) =>
-                `//div[contains(text(),'${reviewMessage}')]/..//ul[@class='dokan-cmt-row-actions']//a[contains(text(),'Approve')]`,
-            spamReview: (reviewMessage: string) =>
-                `//div[contains(text(),'${reviewMessage}')]/..//ul[@class='dokan-cmt-row-actions']//a[contains(text(),'Spam')]`,
-            trashReview: (reviewMessage: string) =>
-                `//div[contains(text(),'${reviewMessage}')]/..//ul[@class='dokan-cmt-row-actions']//a[contains(text(),'Trash')]`,
-            restoreReview: (reviewMessage: string) =>
-                `//div[contains(text(),'${reviewMessage}')]/..//ul[@class='dokan-cmt-row-actions']//a[contains(text(),'Restore')]`,
-            permanentlyDeleteReview: (reviewMessage: string) =>
-                `//div[contains(text(),'${reviewMessage}')]/..//ul[@class='dokan-cmt-row-actions']//a[contains(text(),'Delete Permanently')]`,
-            reviewLink: (reviewMessage: string) =>
-                `//div[contains(text(),'${reviewMessage}')]/../..//td[@class="col-link"]//a`,
+            reviewRow: (reviewMessage: string) => `//div[contains(text(),'${reviewMessage}')]/../..`,
+            reviewMessageCell: (reviewMessage: string) => `//div[contains(text(),'${reviewMessage}')]/..`,
+            unApproveReview: (reviewMessage: string) => `//div[contains(text(),'${reviewMessage}')]/..//ul[@class='dokan-cmt-row-actions']//a[contains(text(),'Unapprove')]`,
+            approveReview: (reviewMessage: string) => `//div[contains(text(),'${reviewMessage}')]/..//ul[@class='dokan-cmt-row-actions']//a[contains(text(),'Approve')]`,
+            spamReview: (reviewMessage: string) => `//div[contains(text(),'${reviewMessage}')]/..//ul[@class='dokan-cmt-row-actions']//a[contains(text(),'Spam')]`,
+            trashReview: (reviewMessage: string) => `//div[contains(text(),'${reviewMessage}')]/..//ul[@class='dokan-cmt-row-actions']//a[contains(text(),'Trash')]`,
+            restoreReview: (reviewMessage: string) => `//div[contains(text(),'${reviewMessage}')]/..//ul[@class='dokan-cmt-row-actions']//a[contains(text(),'Restore')]`,
+            permanentlyDeleteReview: (reviewMessage: string) => `//div[contains(text(),'${reviewMessage}')]/..//ul[@class='dokan-cmt-row-actions']//a[contains(text(),'Delete Permanently')]`,
+            reviewLink: (reviewMessage: string) => `//div[contains(text(),'${reviewMessage}')]/../..//td[@class="col-link"]//a`,
             viewReview: '//a[contains(text(),"View Comment")]',
 
             reviewDetails: {
@@ -4885,8 +4097,7 @@ export const selector = {
                 reviewPublishDate: 'time.woocommerce-review__published-date',
                 reviewMessage: '.comment-text .description p',
                 rating: '#reviews div.star-rating',
-                reviewMessageByMessage: (reviewMessage: string) =>
-                    `//div[@class="description"]//p[contains(text(), '${reviewMessage}')]`,
+                reviewMessageByMessage: (reviewMessage: string) => `//div[@class="description"]//p[contains(text(), '${reviewMessage}')]`,
             },
         },
 
@@ -4897,40 +4108,31 @@ export const selector = {
             // balance
             balance: {
                 balanceDiv: '//strong[normalize-space()="Balance"]/../..',
-                balancePro:
-                    '//p[contains(text(),"Your Balance:")]//a//span[@class="woocommerce-Price-amount amount"]',
+                balancePro: '//p[contains(text(),"Your Balance:")]//a//span[@class="woocommerce-Price-amount amount"]',
                 balanceLite: '//p[contains(text(),"Your Balance:")]//strong[1]',
-                minimumWithdrawAmount:
-                    '//p[contains(text(),"Your Balance:")]//strong[2]',
+                minimumWithdrawAmount: '//p[contains(text(),"Your Balance:")]//strong[2]',
             },
 
             // payment details
             paymentDetails: {
                 manual: {
-                    paymentDetailsDiv:
-                        '//strong[normalize-space()="Payment Details"]/../..',
-                    lastPaymentSection:
-                        '//strong[normalize-space()="Last Payment"]/..',
+                    paymentDetailsDiv: '//strong[normalize-space()="Payment Details"]/../..',
+                    lastPaymentSection: '//strong[normalize-space()="Last Payment"]/..',
                 },
                 schedule: {
-                    ScheduleSection:
-                        '//input[@id="dokan-schedule-enabler-switch"]/../../..',
+                    ScheduleSection: '//input[@id="dokan-schedule-enabler-switch"]/../../..',
                 },
             },
 
             // withdraw payment methods
             withdrawPaymentMethods: {
                 paymentMethodsDiv: '#dokan-withdraw-payment-method-list',
-                paymentMethods:
-                    '#dokan-withdraw-payment-method-list .dokan-panel-inner-container',
-                makeMethodDefault: (methodName: string) =>
-                    `//div[@id='dokan-withdraw-payment-method-list']//strong[contains( text(), '${methodName}')]/../..//button[contains(@class, 'dokan-btn')]`,
-                setupMethod: (methodName: string) =>
-                    `//strong[contains( text(), '${methodName}')]/../..//a[@class='dokan-btn']`,
+                paymentMethods: '#dokan-withdraw-payment-method-list .dokan-panel-inner-container',
+                makeMethodDefault: (methodName: string) => `//div[@id='dokan-withdraw-payment-method-list']//strong[contains( text(), '${methodName}')]/../..//button[contains(@class, 'dokan-btn')]`,
+                setupMethod: (methodName: string) => `//strong[contains( text(), '${methodName}')]/../..//a[@class='dokan-btn']`,
                 defaultMethod: (methodName: string) =>
                     `//div[@id='dokan-withdraw-payment-method-list']//strong[contains( text(), '${methodName}')]/../..//button[contains(@class, 'dokan-btn-default')]`,
-                defaultPaymentMethodUpdateSuccessMessage:
-                    'Default method update successful.',
+                defaultPaymentMethodUpdateSuccessMessage: 'Default method update successful.',
             },
 
             // view payments
@@ -4938,12 +4140,9 @@ export const selector = {
                 viewPayments: '#dokan-withdraw-display-requests-button',
 
                 menus: {
-                    pendingRequests:
-                        '//ul[contains(@class,"subsubsub")]//a[contains(text(), "Pending Requests")]',
-                    approvedRequests:
-                        '//ul[contains(@class,"subsubsub")]//a[contains(text(), "Approved Requests")]',
-                    cancelledRequests:
-                        '//ul[contains(@class,"subsubsub")]//a[contains(text(), "Cancelled Requests")]',
+                    pendingRequests: '//ul[contains(@class,"subsubsub")]//a[contains(text(), "Pending Requests")]',
+                    approvedRequests: '//ul[contains(@class,"subsubsub")]//a[contains(text(), "Approved Requests")]',
+                    cancelledRequests: '//ul[contains(@class,"subsubsub")]//a[contains(text(), "Cancelled Requests")]',
                 },
 
                 requestWithdraw: '#dokan-request-withdraw-button',
@@ -4958,8 +4157,7 @@ export const selector = {
                     statusColumn: '//th[normalize-space()="Status"]',
                 },
 
-                noRowsFound:
-                    '//td[normalize-space()="No pending withdraw request"]',
+                noRowsFound: '//td[normalize-space()="No pending withdraw request"]',
             },
 
             // Manual Withdraw Request
@@ -4969,37 +4167,28 @@ export const selector = {
                 withdrawAmount: '#withdraw-amount',
                 withdrawMethod: '#withdraw-method',
                 submitRequest: '#dokan-withdraw-request-submit',
-                withdrawRequestSaveSuccessMessage:
-                    'Withdraw request successful.',
-                cancelWithdrawRequestSuccess:
-                    '.dokan-alert.dokan-alert-success',
-                cancelWithdrawRequestSaveSuccessMessage:
-                    'Your request has been cancelled successfully!',
-                cancelRequest:
-                    '//strong[normalize-space()="Pending Requests"]/..//a[normalize-space()="Cancel"]',
-                pendingRequest:
-                    '//strong[normalize-space()="Pending Requests"]',
+                withdrawRequestSaveSuccessMessage: 'Withdraw request successful.',
+                cancelWithdrawRequestSuccess: '.dokan-alert.dokan-alert-success',
+                cancelWithdrawRequestSaveSuccessMessage: 'Your request has been cancelled successfully!',
+                cancelRequest: '//strong[normalize-space()="Pending Requests"]/..//a[normalize-space()="Cancel"]',
+                pendingRequest: '//strong[normalize-space()="Pending Requests"]',
                 pendingRequestAlert: '.dokan-alert.dokan-alert-danger',
-                pendingRequestAlertMessage:
-                    'You already have pending withdraw request(s). Please submit your request after approval or cancellation of your previous request.',
+                pendingRequestAlertMessage: 'You already have pending withdraw request(s). Please submit your request after approval or cancellation of your previous request.',
             },
 
             // Auto withdraw Disbursement Schedule
             autoWithdrawDisbursement: {
-                enableSchedule:
-                    '//input[@id="dokan-schedule-enabler-switch"]/..',
+                enableSchedule: '//input[@id="dokan-schedule-enabler-switch"]/..',
                 editSchedule: '#dokan-withdraw-display-schedule-popup',
                 closeModal: '.mfp-close', // todo: need to update, everywhere
                 preferredPaymentMethod: '#preferred-payment-method',
-                preferredSchedule: (schedule: string) =>
-                    `#withdraw-schedule-${schedule}\\>`,
+                preferredSchedule: (schedule: string) => `#withdraw-schedule-${schedule}\\>`,
                 onlyWhenBalanceIs: '#minimum-withdraw-amount',
                 maintainAReserveBalance: '#withdraw-remaining-amount',
                 changeSchedule: '#dokan-withdraw-schedule-request-submit',
                 scheduleMessage: '//div[@class="dokan-switch-container"]/..//p',
                 dokanBottomPopup: '#swal2-html-container', // todo:  make it global and use to assert every popup massage frontend
-                withdrawScheduleSaveSuccessMessage:
-                    'Withdraw schedule changed successfully.',
+                withdrawScheduleSaveSuccessMessage: 'Withdraw schedule changed successfully.',
             },
         },
 
@@ -5007,8 +4196,7 @@ export const selector = {
         vBadges: {
             badgesText: '#dokan-seller-badge .entry-title',
 
-            description:
-                '//p[contains(text(), "Vendors with a good selling history on our marketplace are identified by seller badges")]',
+            description: '//p[contains(text(), "Vendors with a good selling history on our marketplace are identified by seller badges")]',
 
             search: '#post-search-input',
 
@@ -5023,26 +4211,21 @@ export const selector = {
                 actionColumn: 'thead th[class="column badge_view"]',
             },
 
-            sellerBadgeCell: (name: string) =>
-                `//strong[contains(text(),'${name}')]/../..`,
+            sellerBadgeCell: (name: string) => `//strong[contains(text(),'${name}')]/../..`,
             numberOfBadgesFound: '.tablenav.top .displaying-num',
 
             congratsModal: {
                 closeModal: '.modal-close.modal-close-link',
-                sellerBadgeModal:
-                    '.seller-badge-modal .seller-badge-modal-content',
+                sellerBadgeModal: '.seller-badge-modal .seller-badge-modal-content',
                 modalBody: '.modal-body',
-                congratsMessage:
-                    '//div[@class="modal-title"]//h2[contains(text(), "Congratulations!")]',
-                acquiredBadges:
-                    '//div[@class="modal-sub-title"]//h3[contains(text(), "Acquired Badge & Level:")]',
+                congratsMessage: '//div[@class="modal-title"]//h2[contains(text(), "Congratulations!")]',
+                acquiredBadges: '//div[@class="modal-sub-title"]//h3[contains(text(), "Acquired Badge & Level:")]',
             },
         },
 
         // reverse withdrawal
         vReverseWithdrawal: {
-            reverseWithdrawalText:
-                '//h1[normalize-space()="Reverse Withdrawal"]',
+            reverseWithdrawalText: '//h1[normalize-space()="Reverse Withdrawal"]',
 
             reverseWithdrawalNotice: {
                 noticeDiv: 'div.dokan-alert.dokan-alert-danger',
@@ -5052,11 +4235,9 @@ export const selector = {
             reverseBalanceSection: {
                 reverseBalanceSection: 'div.reverse-balance-section',
                 reversePayBalance: 'div.reverse-balance',
-                reversePayBalanceAmount:
-                    'div.reverse-balance .woocommerce-Price-amount.amount',
+                reversePayBalanceAmount: 'div.reverse-balance .woocommerce-Price-amount.amount',
                 reverseThreshold: 'div.reverse-threshold',
-                reverseThresholdAmount:
-                    'div.reverse-threshold .woocommerce-Price-amount.amount',
+                reverseThresholdAmount: 'div.reverse-threshold .woocommerce-Price-amount.amount',
             },
 
             payNow: 'input#reverse_pay',
@@ -5073,8 +4254,7 @@ export const selector = {
                 reverseWithdrawalTable: '.dokan-table.dokan-table-striped',
                 transactionIdColumn: '//th[normalize-space()="Transaction ID"]',
                 dateColumn: '//th[normalize-space()="Date"]',
-                transactionTypeColumn:
-                    '//th[normalize-space()="Transaction Type"]',
+                transactionTypeColumn: '//th[normalize-space()="Transaction Type"]',
                 noteColumn: '//th[normalize-space()="Note"]',
                 debitColumn: '//th[normalize-space()="Debit"]',
                 creditColumn: '//th[normalize-space()="Credit"]',
@@ -5093,10 +4273,8 @@ export const selector = {
             menus: {
                 all: '//ul[contains(@class,"request-statuses-filter")]//a[contains(text(),"All")]',
                 new: '//ul[contains(@class,"request-statuses-filter")]//a[contains(text(),"New")]',
-                completed:
-                    '//ul[contains(@class,"request-statuses-filter")]//a[contains(text(),"Completed")]',
-                processing:
-                    '//ul[contains(@class,"request-statuses-filter")]//a[contains(text(),"Processing")]',
+                completed: '//ul[contains(@class,"request-statuses-filter")]//a[contains(text(),"Completed")]',
+                processing: '//ul[contains(@class,"request-statuses-filter")]//a[contains(text(),"Processing")]',
             },
 
             // table
@@ -5113,14 +4291,10 @@ export const selector = {
             numberOfRowsFound: '.rma-request-listing-table tbody tr',
 
             // Refund Request table Actions
-            returnRequestCell: (orderNumber: string) =>
-                `//strong[contains(text(),'Order ${orderNumber}')]/../..`,
-            manage: (orderNumber: string) =>
-                `//strong[contains(text(),'Order ${orderNumber}')]/../..//a[@class='request-manage']`,
-            delete: (orderNumber: string) =>
-                `//strong[contains(text(),'Order ${orderNumber}')]/../..//a[@class='request-delete']`,
-            view: (orderNumber: string) =>
-                `//strong[contains(text(),'Order ${orderNumber}')]/../../..//i[@class='far fa-eye']`,
+            returnRequestCell: (orderNumber: string) => `//strong[contains(text(),'Order ${orderNumber}')]/../..`,
+            manage: (orderNumber: string) => `//strong[contains(text(),'Order ${orderNumber}')]/../..//a[@class='request-manage']`,
+            delete: (orderNumber: string) => `//strong[contains(text(),'Order ${orderNumber}')]/../..//a[@class='request-delete']`,
+            view: (orderNumber: string) => `//strong[contains(text(),'Order ${orderNumber}')]/../../..//i[@class='far fa-eye']`,
 
             // return request details
             returnRequestDetails: {
@@ -5129,8 +4303,7 @@ export const selector = {
                 basicDetails: {
                     basicDetails: '//div[normalize-space()="Details"]/..',
                     orderId: '//strong[normalize-space()="Order ID :"]',
-                    customerName:
-                        '//strong[normalize-space()="Customer Name :"]',
+                    customerName: '//strong[normalize-space()="Customer Name :"]',
                     requestType: '//strong[normalize-space()="Request Type :"]',
                     products: '//strong[normalize-space()="Products :"]',
                 },
@@ -5138,8 +4311,7 @@ export const selector = {
                 additionalDetails: {
                     additionalDetailsDiv: '.additional-details',
                     reason: '//p[normalize-space()="Reason"]/..//p[@class="details-value"]',
-                    reasonDetails:
-                        '//p[normalize-space()="Reason Details"]/..//p[@class="details-value"]',
+                    reasonDetails: '//p[normalize-space()="Reason Details"]/..//p[@class="details-value"]',
                 },
 
                 // status
@@ -5153,29 +4325,21 @@ export const selector = {
 
                 // conversations
                 conversations: {
-                    conversationsDiv:
-                        '//div[normalize-space()="Conversations"]/..',
+                    conversationsDiv: '//div[normalize-space()="Conversations"]/..',
                     message: '#message',
                     sendMessage: 'input[name="dokan_rma_send_message"]',
                 },
 
                 modal: {
-                    taxRefundColumn:
-                        '//div[@class="iziModal-content"]//th[contains(text(),"Tax Refund")]',
-                    subTotalRefundColumn:
-                        '//div[@class="iziModal-content"]//th[contains(text(),"Subtotal Refund")]',
+                    taxRefundColumn: '//div[@class="iziModal-content"]//th[contains(text(),"Tax Refund")]',
+                    subTotalRefundColumn: '//div[@class="iziModal-content"]//th[contains(text(),"Subtotal Refund")]',
 
-                    taxAmount: (productName: string) =>
-                        `(//a[contains(text(),'${productName}')]/../..//bdi)[1]`,
-                    subTotal: (productName: string) =>
-                        `(//a[contains(text(),'${productName}')]/../..//bdi)[2]`,
-                    taxRefund: (productName: string) =>
-                        `//div[@class="iziModal-content"]//td//a[contains(text(),'${productName}')]/../..//input[contains(@name,"refund_tax")]`,
-                    subTotalRefund: (productName: string) =>
-                        `//div[@class="iziModal-content"]//td//a[contains(text(),'${productName}')]/../..//input[contains(@name,"refund_amount")]`,
+                    taxAmount: (productName: string) => `(//a[contains(text(),'${productName}')]/../..//bdi)[1]`,
+                    subTotal: (productName: string) => `(//a[contains(text(),'${productName}')]/../..//bdi)[2]`,
+                    taxRefund: (productName: string) => `//div[@class="iziModal-content"]//td//a[contains(text(),'${productName}')]/../..//input[contains(@name,"refund_tax")]`,
+                    subTotalRefund: (productName: string) => `//div[@class="iziModal-content"]//td//a[contains(text(),'${productName}')]/../..//input[contains(@name,"refund_amount")]`,
 
-                    sendRequest:
-                        '//div[@class="iziModal-content"]//input[@name="dokan_refund_submit"]',
+                    sendRequest: '//div[@class="iziModal-content"]//input[@name="dokan_refund_submit"]',
                     sendRequestSuccessMessage: '.dokan-alert.dokan-alert-info',
                 },
             },
@@ -5187,19 +4351,15 @@ export const selector = {
 
             // Table
             table: {
-                vendorStaffTable:
-                    '.dokan-table.dokan-table-striped.vendor-staff-table',
+                vendorStaffTable: '.dokan-table.dokan-table-striped.vendor-staff-table',
                 nameColumn: '//th[normalize-space()="Name"]',
                 emailColumn: '//th[normalize-space()="Email"]',
                 phoneColumn: '//th[normalize-space()="Phone"]',
-                registeredDateColumn:
-                    '//th[normalize-space()="Registered Date"]',
+                registeredDateColumn: '//th[normalize-space()="Registered Date"]',
             },
 
-            noRowsFound:
-                '//div[@class ="dokan-error" and normalize-space()="No staff found"]',
-            staffCell: (staffName: string) =>
-                `//td//a[contains(text(),"${staffName}")]/..`,
+            noRowsFound: '//div[@class ="dokan-error" and normalize-space()="No staff found"]',
+            staffCell: (staffName: string) => `//td//a[contains(text(),"${staffName}")]/..`,
 
             // Add Staff
             addStaff: {
@@ -5211,21 +4371,18 @@ export const selector = {
                 createStaff: '.dokan-btn',
 
                 dokanAlert: '.dokan-alert-danger',
-                userAlreadyExists:
-                    '//strong[normalize-space()="Sorry, that username already exists!"]',
+                userAlreadyExists: '//strong[normalize-space()="Sorry, that username already exists!"]',
             },
 
             // Edit Staff
             editStaff: {
-                editStaff: (staffName: string) =>
-                    `//a[contains(text(), "${staffName}")]/..//span[@class="edit"]//a`,
+                editStaff: (staffName: string) => `//a[contains(text(), "${staffName}")]/..//span[@class="edit"]//a`,
                 password: '#reg_password',
                 updateStaff: '//input[@name="staff_creation"]',
             },
 
             deleteStaff: {
-                deleteStaff: (staffName: string) =>
-                    `//a[contains(text(), "${staffName}")]/..//span[@class="delete"]//a`,
+                deleteStaff: (staffName: string) => `//a[contains(text(), "${staffName}")]/..//span[@class="delete"]//a`,
                 okDelete: '.swal2-confirm',
                 cancelDelete: '.swal2-cancel',
                 deleteSuccessMessage: '.dokan-alert.dokan-alert-success',
@@ -5233,8 +4390,7 @@ export const selector = {
 
             // Manage Permission
             managePermission: {
-                managePermission: (staffName: string) =>
-                    `//a[contains(text(), "${staffName}")]/..//span[@class="permission"]//a`,
+                managePermission: (staffName: string) => `//a[contains(text(), "${staffName}")]/..//span[@class="permission"]//a`,
 
                 // Overview
                 overview: {
@@ -5243,8 +4399,7 @@ export const selector = {
                     viewAnnouncement: '#dokan_view_announcement',
                     viewOrderReport: '#dokan_view_order_report',
                     viewReviewReport: '#dokan_view_review_reports',
-                    viewProductStatusReport:
-                        '#dokan_view_product_status_report',
+                    viewProductStatusReport: '#dokan_view_product_status_report',
                 },
 
                 // Order
@@ -5327,8 +4482,7 @@ export const selector = {
                     // viewBookingMenu:'#dokan_view_booking_menu', // todo:  add booking check
                     viewToolsMenu: '#dokan_view_tools_menu',
                     // viewAuctionMenu:'#dokan_view_auction_menu', // todo:  add auction check
-                    viewVerificationSettingsMenu:
-                        '#dokan_view_store_verification_menu',
+                    viewVerificationSettingsMenu: '#dokan_view_store_verification_menu',
                 },
 
                 // Auction
@@ -5346,14 +4500,12 @@ export const selector = {
             storeFollowersText: '//h3[normalize-space()="Store Followers"]',
 
             table: {
-                followersTable:
-                    '.dokan-table.dokan-table-striped.product-listing-table.dokan-inline-editable-table',
+                followersTable: '.dokan-table.dokan-table-striped.product-listing-table.dokan-inline-editable-table',
                 nameColumn: '//th[normalize-space()="Name"]',
                 followedAtColumn: '//th[normalize-space()="Followed At"]',
             },
 
-            noRowsFound:
-                '//td[normalize-space()="Your store does not have any follower."]',
+            noRowsFound: '//td[normalize-space()="Your store does not have any follower."]',
             numberOfRowsFound: 'table.dokan-table tbody tr',
         },
 
@@ -5361,20 +4513,15 @@ export const selector = {
         vBooking: {
             allBookingProductText: '.dokan-dashboard-content h1',
 
-            addNewBookingProduct:
-                '//a[contains(text(),"Add New Booking Product")]',
+            addNewBookingProduct: '//a[contains(text(),"Add New Booking Product")]',
             addBookingBtn: '//a[normalize-space()="Add Booking"]',
 
             // Menus
             menus: {
-                allBookingProduct:
-                    '//ul[@class="dokan_tabs"]//a[contains(text(),"All Booking Product")]',
-                manageBookings:
-                    '//ul[@class="dokan_tabs"]//a[contains(text(),"Manage Bookings")]',
-                calendar:
-                    '//ul[@class="dokan_tabs"]//a[contains(text(),"Calendar")]',
-                manageResources:
-                    '//ul[@class="dokan_tabs"]//a[contains(text(),"Manage Resources")]',
+                allBookingProduct: '//ul[@class="dokan_tabs"]//a[contains(text(),"All Booking Product")]',
+                manageBookings: '//ul[@class="dokan_tabs"]//a[contains(text(),"Manage Bookings")]',
+                calendar: '//ul[@class="dokan_tabs"]//a[contains(text(),"Calendar")]',
+                manageResources: '//ul[@class="dokan_tabs"]//a[contains(text(),"Manage Resources")]',
             },
 
             // Filter
@@ -5407,16 +4554,11 @@ export const selector = {
 
             noProductFound: '//td[normalize-space()="No product found"]',
             numberOfRowsFound: '.product-listing-table tbody tr',
-            productCell: (name: string) =>
-                `//p//a[normalize-space()="${name}"]/../..`,
-            edit: (name: string) =>
-                `//a[normalize-space()="${name}"]/../..//span[@class="edit"]`,
-            permanentlyDelete: (name: string) =>
-                `//a[normalize-space()="${name}"]/../..//span[@class="delete"]`,
-            duplicate: (name: string) =>
-                `//a[normalize-space()="${name}"]/../..//span[@class="duplicate"]`,
-            view: (name: string) =>
-                `//a[normalize-space()="${name}"]/../..//span[@class="view"]`,
+            productCell: (name: string) => `//p//a[normalize-space()="${name}"]/../..`,
+            edit: (name: string) => `//a[normalize-space()="${name}"]/../..//span[@class="edit"]`,
+            permanentlyDelete: (name: string) => `//a[normalize-space()="${name}"]/../..//span[@class="delete"]`,
+            duplicate: (name: string) => `//a[normalize-space()="${name}"]/../..//span[@class="duplicate"]`,
+            view: (name: string) => `//a[normalize-space()="${name}"]/../..//span[@class="view"]`,
 
             confirmDelete: '.swal2-confirm',
             cancelDelete: '.swal2-cancel',
@@ -5430,15 +4572,12 @@ export const selector = {
                 virtual: '#\\_virtual',
                 accommodationBooking: '#\\_is_dokan_accommodation',
                 productCategory: '#select2-product_cat-container',
-                productCategoryInput:
-                    '.select2-search--dropdown > .select2-search__field',
+                productCategoryInput: '.select2-search--dropdown > .select2-search__field',
                 tags: '.select2-search__field',
 
                 // Accommodation Booking Options
-                minimumNumberOfNightsAllowedInABooking:
-                    '#\\_wc_booking_min_duration',
-                maximumNumberOfNightsAllowedInABooking:
-                    '#\\_wc_booking_max_duration',
+                minimumNumberOfNightsAllowedInABooking: '#\\_wc_booking_min_duration',
+                maximumNumberOfNightsAllowedInABooking: '#\\_wc_booking_max_duration',
                 checkInTime: '#\\_dokan_accommodation_checkin_time',
                 checkOutTime: '#\\_dokan_accommodation_checkout_time',
 
@@ -5456,8 +4595,7 @@ export const selector = {
                 requiresConfirmation: '#\\_wc_booking_requires_confirmation',
                 canBeCancelled: '#\\_wc_booking_user_can_cancel',
                 bookingCanBeCancelledLimit: '#\\_wc_booking_cancel_limit',
-                bookingCanBeCancelledLimitUnit:
-                    '#\\_wc_booking_cancel_limit_unit',
+                bookingCanBeCancelledLimitUnit: '#\\_wc_booking_cancel_limit_unit',
 
                 // Shipping
                 thisProductRequiresShipping: '#\\_disable_shipping',
@@ -5474,21 +4612,15 @@ export const selector = {
 
                 // Availability
                 maxBookingsPerBlock: '#\\_wc_booking_qty',
-                minimumBookingWindowIntoTheFutureDate:
-                    '#\\_wc_booking_min_date',
-                minimumBookingWindowIntoTheFutureDateUnit:
-                    '#\\_wc_booking_min_date_unit',
-                maximumBookingWindowIntoTheFutureDate:
-                    '#\\_wc_booking_max_date',
-                maximumBookingWindowIntoTheFutureDateUnit:
-                    '#\\_wc_booking_max_date_unit',
-                requireABufferPeriodOfMonthsBetweenBookings:
-                    '#\\_wc_booking_buffer_period',
+                minimumBookingWindowIntoTheFutureDate: '#\\_wc_booking_min_date',
+                minimumBookingWindowIntoTheFutureDateUnit: '#\\_wc_booking_min_date_unit',
+                maximumBookingWindowIntoTheFutureDate: '#\\_wc_booking_max_date',
+                maximumBookingWindowIntoTheFutureDateUnit: '#\\_wc_booking_max_date_unit',
+                requireABufferPeriodOfMonthsBetweenBookings: '#\\_wc_booking_buffer_period',
                 adjacentBuffering: '#\\_wc_booking_apply_adjacent_buffer',
                 allDatesAre: '#\\_wc_booking_default_date_availability',
                 checkRulesAgainst: '#\\_wc_booking_check_availability_against',
-                restrictStartAndEndDays:
-                    '#dokan_booking_has_restricted_days_field',
+                restrictStartAndEndDays: '#dokan_booking_has_restricted_days_field',
                 sunday: '#\\_wc_booking_restricted_days\\[0\\]',
                 monday: '#\\_wc_booking_restricted_days\\[1\\]',
                 tuesday: '#\\_wc_booking_restricted_days\\[2\\]',
@@ -5498,13 +4630,11 @@ export const selector = {
                 saturday: '#\\_wc_booking_restricted_days\\[6\\]',
 
                 // Setavailabilityrange
-                addRangeAvailability:
-                    '//div[@id="bookings_availability"]//a[contains(text(),"Add Range")]',
+                addRangeAvailability: '//div[@id="bookings_availability"]//a[contains(text(),"Add Range")]',
                 rangeTypeAbility: '.wc_booking_availability_type > select',
                 rangeFromAbility: '.from_date > .date-picker ',
                 rangeToAbility: '.to_date > .date-picker ',
-                bookableAbility:
-                    '//select[@name="wc_booking_availability_bookable[]"]',
+                bookableAbility: '//select[@name="wc_booking_availability_bookable[]"]',
                 priorityAbility: '.priority > input',
                 cancelAbility: '#availability_rows .remove',
 
@@ -5518,12 +4648,9 @@ export const selector = {
                 rangeTypeCostRange: '.wc_booking_pricing_type > select',
                 rangeFromCostRange: '.from_date > .date-picker',
                 rangeToCostRange: '.to_date > .date-picker ',
-                baseCostModifier:
-                    '//select[@name="wc_booking_pricing_base_cost_modifier[]"]',
-                baseCostRange:
-                    '//input[@name="wc_booking_pricing_base_cost[]"]',
-                blockCostModifier:
-                    '//select[@name="wc_booking_pricing_cost_modifier[]"]',
+                baseCostModifier: '//select[@name="wc_booking_pricing_base_cost_modifier[]"]',
+                baseCostRange: '//input[@name="wc_booking_pricing_base_cost[]"]',
+                blockCostModifier: '//select[@name="wc_booking_pricing_cost_modifier[]"]',
                 blockCostRange: '//input[@name="wc_booking_pricing_cost[]"]',
                 cancelCostRange: '#pricing_rows .remove',
 
@@ -5533,19 +4660,15 @@ export const selector = {
                 hasPersons: '#\\_wc_booking_has_persons',
                 minPersons: '#\\_wc_booking_min_persons_group',
                 maxPersons: '#\\_wc_booking_max_persons_group',
-                multiplyAllCostsByPersonCount:
-                    '#\\_wc_booking_person_cost_multiplier',
+                multiplyAllCostsByPersonCount: '#\\_wc_booking_person_cost_multiplier',
                 countPersonsAsBookings: '#\\_wc_booking_person_qty_multiplier',
                 enablePersonTypes: '#\\_wc_booking_has_person_types',
 
                 // Add Person
                 addPersonType: '.add_person',
-                personTypeName:
-                    '//label[contains(text(),"Person Type Name:")]/..//input',
-                personBaseCost:
-                    '//label[contains(text(),"Base Cost:")]/..//input',
-                personBlockCost:
-                    '//label[contains(text(),"Block Cost:")]/..//input',
+                personTypeName: '//label[contains(text(),"Person Type Name:")]/..//input',
+                personBaseCost: '//label[contains(text(),"Base Cost:")]/..//input',
+                personBlockCost: '//label[contains(text(),"Block Cost:")]/..//input',
                 description: '.person_description',
                 min: '//label[contains(text(),"Min:")]/..//input',
                 max: '//label[contains(text(),"Max:")]/..//input',
@@ -5559,15 +4682,12 @@ export const selector = {
                 resourcesAre: '#\\_wc_booking_resources_assignment',
                 addResourceId: '.add_resource_id',
                 addResource: '.add_resource',
-                resourceBaseCost:
-                    '//label[contains(text(),"Base Cost:")]/..//input',
-                resourceBlockCost:
-                    '//label[contains(text(),"Block Cost:")]/..//input',
+                resourceBaseCost: '//label[contains(text(),"Base Cost:")]/..//input',
+                resourceBlockCost: '//label[contains(text(),"Block Cost:")]/..//input',
                 removeResource: '.remove_booking_resource.button', // invokes default js alert
 
                 // Short Description
-                shortDescriptionIframe:
-                    '.dokan-product-short-description iframe',
+                shortDescriptionIframe: '.dokan-product-short-description iframe',
                 shortDescriptionHtmlBody: '#tinymce',
 
                 // Description
@@ -5581,8 +4701,7 @@ export const selector = {
                 stockQuantity: '//input[@name="_stock"]',
                 lowStockThreshold: '//input[@name="_low_stock_amount"]',
                 allowBackOrders: '#\\_backorders',
-                allowOnlyOneQuantityOfThisProductToBeBoughtInASingleOrder:
-                    '#\\_sold_individually',
+                allowOnlyOneQuantityOfThisProductToBeBoughtInASingleOrder: '#\\_sold_individually',
 
                 // Geolocation
                 sameAsStore: '#\\_dokan_geolocation_use_store_settings',
@@ -5597,10 +4716,8 @@ export const selector = {
                 enableDescription: 'wc-pao-addon-description-enable-0',
                 addDescription: '#wc-pao-addon-description-0',
                 requiredField: '#wc-pao-addon-required-0',
-                bookingsMultiplyCostByPersonCount:
-                    '#addon_wc_booking_person_qty_multiplier_0',
-                bookingsMultiplyCostByBlockCount:
-                    '#addon_wc_booking_block_qty_multiplier_0',
+                bookingsMultiplyCostByPersonCount: '#addon_wc_booking_person_qty_multiplier_0',
+                bookingsMultiplyCostByBlockCount: '#addon_wc_booking_block_qty_multiplier_0',
                 import: '.wc-pao-import-addons',
                 export: '.wc-pao-export-addons',
                 excludeAddons: '#\\_product_addons_exclude_global',
@@ -5627,8 +4744,7 @@ export const selector = {
             },
 
             viewBooking: {
-                productImage:
-                    '.woocommerce-product-gallery__image--placeholder img.wp-post-image',
+                productImage: '.woocommerce-product-gallery__image--placeholder img.wp-post-image',
                 productName: '.product_title.entry-title',
                 price: '.summary .price .woocommerce-Price-amount.amount',
                 bookingCalendar: 'div#wc-bookings-booking-form',
@@ -5638,26 +4754,18 @@ export const selector = {
 
             // Add Booking
             addBooking: {
-                selectCustomerDropdown:
-                    '//span[@id="select2-customer_id-container"]/..//span[@class="select2-selection__arrow"]',
+                selectCustomerDropdown: '//span[@id="select2-customer_id-container"]/..//span[@class="select2-selection__arrow"]',
                 selectCustomerInput: '.select2-search__field',
-                searchedResult:
-                    '.select2-results__option.select2-results__option--highlighted',
-                selectABookableProductDropdown:
-                    '//span[@id="select2-bookable_product_id-container"]/..//span[@class="select2-selection__arrow"]',
-                selectABookableProduct: (productName: string) =>
-                    `//li[contains(@class,"select2-results__option") and contains(text(), '${productName}')]`,
+                searchedResult: '.select2-results__option.select2-results__option--highlighted',
+                selectABookableProductDropdown: '//span[@id="select2-bookable_product_id-container"]/..//span[@class="select2-selection__arrow"]',
+                selectABookableProduct: (productName: string) => `//li[contains(@class,"select2-results__option") and contains(text(), '${productName}')]`,
 
-                createANewCorrespondingOrderForThisNewBooking:
-                    '//input[@name="booking_order" and @value="new"]',
-                assignThisBookingToAnExistingOrderWithThisId:
-                    '//input[@name="booking_order" and @value="existing"]',
+                createANewCorrespondingOrderForThisNewBooking: '//input[@name="booking_order" and @value="new"]',
+                assignThisBookingToAnExistingOrderWithThisId: '//input[@name="booking_order" and @value="existing"]',
                 bookingOrderId: '.text',
-                dontCreateAnOrderForThisBooking:
-                    '//label[normalize-space()="Don"t create an order for this booking."]/..//input',
+                dontCreateAnOrderForThisBooking: '//label[normalize-space()="Don"t create an order for this booking."]/..//input',
                 next: '.button-primary',
-                selectCalendarDay: (month: number, day: number) =>
-                    `//td[@title="This date is available" and @ data-month="${month}"]//a[@data-date="${day}"]`,
+                selectCalendarDay: (month: number, day: number) => `//td[@title="This date is available" and @ data-month="${month}"]//a[@data-date="${day}"]`,
 
                 addBooking: 'input[value="Add Booking"][type="submit"]',
 
@@ -5672,10 +4780,8 @@ export const selector = {
                 menus: {
                     all: '//ul[contains(@class,"order-statuses-filter")]//a[contains(text(),"All")]',
                     unPaid: '//ul[contains(@class,"order-statuses-filter")]//span[contains(text(),"Un-paid")]/..',
-                    paidAndConfirmed:
-                        '//ul[contains(@class,"order-statuses-filter")]//span[contains(text(),"Paid & Confirmed")]/..',
-                    completed:
-                        '//ul[contains(@class,"order-statuses-filter")]//span[contains(text(),"Complete")]/..',
+                    paidAndConfirmed: '//ul[contains(@class,"order-statuses-filter")]//span[contains(text(),"Paid & Confirmed")]/..',
+                    completed: '//ul[contains(@class,"order-statuses-filter")]//span[contains(text(),"Complete")]/..',
                 },
 
                 noBookingsFound: '//div[normalize-space()="No Bookings found"]',
@@ -5727,14 +4833,10 @@ export const selector = {
                     resourceName: '.swal2-input',
                     cancelAddNewResource: '.swal2-cancel',
                     confirmAddNewResource: '.swal2-confirm',
-                    resourceRow: (resourceName: string) =>
-                        `//a[contains(text(),'${resourceName}')]/../..`,
-                    resourceCell: (resourceName: string) =>
-                        `//a[contains(text(),'${resourceName}')]/..`,
-                    editResource: (resourceName: string) =>
-                        `//a[contains(text(),'${resourceName}')]/../..//a[contains(text(),'Edit')]`,
-                    deleteResource: (resourceName: string) =>
-                        `//a[contains(text(),'${resourceName}')]/../..//button[contains(text(),'Remove')]`,
+                    resourceRow: (resourceName: string) => `//a[contains(text(),'${resourceName}')]/../..`,
+                    resourceCell: (resourceName: string) => `//a[contains(text(),'${resourceName}')]/..`,
+                    editResource: (resourceName: string) => `//a[contains(text(),'${resourceName}')]/../..//a[contains(text(),'Edit')]`,
+                    deleteResource: (resourceName: string) => `//a[contains(text(),'${resourceName}')]/../..//button[contains(text(),'Remove')]`,
 
                     // Edit Resource
                     resourceTitle: '#post_title',
@@ -5742,8 +4844,7 @@ export const selector = {
                     rangeTypeResource: '.wc_booking_availability_type > select',
                     rangeFromResource: '.from_date > .date-picker',
                     rangeToResource: '.to_date > .date-picker ',
-                    bookableResource:
-                        '//select[contains(@name,"wc_booking_availability_type")]',
+                    bookableResource: '//select[contains(@name,"wc_booking_availability_type")]',
                     priorityResource: '.priority > input',
                     addRangeResource: '.button',
                     saveResource: '.dokan-btn-lg',
@@ -5771,8 +4872,7 @@ export const selector = {
                 show: 'input[value="Show"]',
             },
 
-            noAnalyticsFound:
-                '//div[contains(text(), "There is no analytics found for your store.")]',
+            noAnalyticsFound: '//div[contains(text(), "There is no analytics found for your store.")]',
         },
 
         // Announcements
@@ -5785,12 +4885,9 @@ export const selector = {
             announcementContent: '.dokan-announcement-content',
             removeAnnouncement: '.remove_announcement',
 
-            announcementLink: (title: string) =>
-                `//div[@class="dokan-announcement-heading"]//h3[contains(text(),"${title}")]/..`,
-            firstAnnouncementLink: (title: string) =>
-                `(//div[@class="dokan-announcement-heading"]//h3[contains(text(),"${title}")]/..)[1]`,
-            deleteAnnouncement: (title: string) =>
-                `//div[@class="dokan-announcement-heading"]//h3[contains(text(),"${title}")]/../../../..//a[@class="remove_announcement"]`,
+            announcementLink: (title: string) => `//div[@class="dokan-announcement-heading"]//h3[contains(text(),"${title}")]/..`,
+            firstAnnouncementLink: (title: string) => `(//div[@class="dokan-announcement-heading"]//h3[contains(text(),"${title}")]/..)[1]`,
+            deleteAnnouncement: (title: string) => `//div[@class="dokan-announcement-heading"]//h3[contains(text(),"${title}")]/../../../..//a[@class="remove_announcement"]`,
             confirmDeleteAnnouncement: '.swal2-confirm',
             cancelDeleteAnnouncement: '.swal2-cancel',
 
@@ -5829,8 +4926,7 @@ export const selector = {
                     csv: '#import > .dokan-btn',
 
                     chooseCsv: '#upload',
-                    updateExistingProducts:
-                        '#woocommerce-importer-update-existing',
+                    updateExistingProducts: '#woocommerce-importer-update-existing',
                     continue: '.button',
                     runTheImporter: '.button',
                     viewImportLog: '.woocommerce-importer-done-view-errors',
@@ -5854,10 +4950,8 @@ export const selector = {
                 csv: {
                     exportCsvText: '//h1[normalize-space()="Export CSV"]',
                     exportCsv: '#export > .dokan-btn',
-                    whichColumns:
-                        '//label[normalize-space()="Which columns should be exported?"]/../..//input[@class="select2-search__field"]',
-                    whichProductTypes:
-                        '//label[normalize-space()="Which product types should be exported?"]/../..//input[@class="select2-search__field"]',
+                    whichColumns: '//label[normalize-space()="Which columns should be exported?"]/../..//input[@class="select2-search__field"]',
+                    whichProductTypes: '//label[normalize-space()="Which product types should be exported?"]/../..//input[@class="select2-search__field"]',
                     customMeta: '#woocommerce-exporter-meta',
                     generateCsv: '.woocommerce-exporter-button',
                 },
@@ -5870,8 +4964,7 @@ export const selector = {
             menus: {
                 all: '//ul[contains(@class,"dokan-listing-filter")]//a[contains(text(),"All")]',
                 online: '//ul[contains(@class,"dokan-listing-filter")]//a[contains(text(),"Online")]',
-                pendingReview:
-                    '//ul[contains(@class,"dokan-listing-filter")]//a[contains(text(),"Pending Review")]',
+                pendingReview: '//ul[contains(@class,"dokan-listing-filter")]//a[contains(text(),"Pending Review")]',
                 draft: '//ul[contains(@class,"dokan-listing-filter")]//a[contains(text(),"Draft")]',
             },
 
@@ -5903,14 +4996,10 @@ export const selector = {
             },
 
             noAuctionsFound: '//td[normalize-space()="No product found"]',
-            productCell: (name: string) =>
-                `//a[normalize-space()="${name}"]/../..`,
-            edit: (name: string) =>
-                `//a[normalize-space()="${name}"]/../..//span[@class="edit"]`,
-            permanentlyDelete: (name: string) =>
-                `//a[normalize-space()="${name}"]/../..//span[@class="delete"]`,
-            view: (name: string) =>
-                `//a[normalize-space()="${name}"]/../..//span[@class="view"]`,
+            productCell: (name: string) => `//a[normalize-space()="${name}"]/../..`,
+            edit: (name: string) => `//a[normalize-space()="${name}"]/../..//span[@class="edit"]`,
+            permanentlyDelete: (name: string) => `//a[normalize-space()="${name}"]/../..//span[@class="delete"]`,
+            view: (name: string) => `//a[normalize-space()="${name}"]/../..//span[@class="view"]`,
 
             confirmDelete: '.swal2-confirm',
             cancelDelete: '.swal2-cancel',
@@ -5919,8 +5008,7 @@ export const selector = {
             // Create Auction Product
             auction: {
                 // basic info
-                productName:
-                    '.dokan-auction-post-title input[name="post_title"]',
+                productName: '.dokan-auction-post-title input[name="post_title"]',
                 productShortDescription: '#post_excerpt',
                 ProductImage: '.dokan-feat-image-btn',
                 uploadProductImage: '#\\__wp-uploader-id-1',
@@ -5935,16 +5023,14 @@ export const selector = {
                 // General Options
                 itemCondition: '#\\_auction_item_condition',
                 auctionType: '#\\_auction_type',
-                enableProxyBiddingForThisAuctionProduct:
-                    '.dokan-form-group > .checkbox > label',
+                enableProxyBiddingForThisAuctionProduct: '.dokan-form-group > .checkbox > label',
                 startPrice: '#\\_auction_start_price',
                 bidIncrement: '#\\_auction_bid_increment',
                 reservedPrice: '#\\_auction_reserved_price',
                 buyItNowPrice: '#\\_regular_price',
                 auctionStartDate: '#\\_auction_dates_from',
                 auctionEndDate: '#\\_auction_dates_to',
-                enableAutomaticRelistingForThisAuction:
-                    '#\\_auction_automatic_relist',
+                enableAutomaticRelistingForThisAuction: '#\\_auction_automatic_relist',
                 relistIfFailAfterNHours: '#\\_auction_relist_fail_time',
                 relistIfNotPaidAfterNHours: '#\\_auction_relist_not_paid_time',
                 relistAuctionDurationInH: '#\\_auction_relist_duration',
@@ -5975,8 +5061,7 @@ export const selector = {
             },
 
             viewAuction: {
-                productImage:
-                    '.woocommerce-product-gallery__image--placeholder img.wp-post-image',
+                productImage: '.woocommerce-product-gallery__image--placeholder img.wp-post-image',
                 productName: '.product_title.entry-title',
                 startingOrCurrentBid: '.summary .auction-price .amount',
                 itemCondition: '.curent-bid',
@@ -5984,8 +5069,7 @@ export const selector = {
                 auctionEnd: '.auction-end',
                 reversePriceStatus: '.reserve.hold',
 
-                noBidOption:
-                    '//div[@class="woocommerce-info" and contains(text(), "You are not allowed to bid your own product.")]',
+                noBidOption: '//div[@class="woocommerce-info" and contains(text(), "You are not allowed to bid your own product.")]',
                 bidQuantity: 'div.quantity.buttons_added',
                 bidButton: '.bid_button',
                 buyNow: '.single_add_to_cart_button',
@@ -5996,8 +5080,7 @@ export const selector = {
 
             // Auction Activity
             actionActivity: {
-                actionActivityText:
-                    '//h1[contains(text(), "Auctions Activity")]',
+                actionActivityText: '//h1[contains(text(), "Auctions Activity")]',
                 backToActions: '//a[normalize-space()="Auctions"]',
 
                 // Filter
@@ -6029,8 +5112,7 @@ export const selector = {
                     proxyColumn: '//th[normalize-space()="Proxy"]',
                 },
 
-                noActivityFound:
-                    '//td[normalize-space()="No Auctions Activity Found!"]',
+                noActivityFound: '//td[normalize-space()="No Auctions Activity Found!"]',
                 numOfRowsFound: '.dokan-table.product-listing-table tbody tr',
             },
         },
@@ -6039,24 +5121,19 @@ export const selector = {
         vSupport: {
             // Menus
             menus: {
-                allTickets:
-                    '//ul[contains(@class,"dokan-support-topic-counts")]//a[contains(text(), "All Tickets")]',
-                openTickets:
-                    '//ul[contains(@class,"dokan-support-topic-counts")]//a[contains(text(), "Open Tickets")]',
-                closedTickets:
-                    '//ul[contains(@class,"dokan-support-topic-counts")]//a[contains(text(), "Closed Tickets")]',
+                allTickets: '//ul[contains(@class,"dokan-support-topic-counts")]//a[contains(text(), "All Tickets")]',
+                openTickets: '//ul[contains(@class,"dokan-support-topic-counts")]//a[contains(text(), "Open Tickets")]',
+                closedTickets: '//ul[contains(@class,"dokan-support-topic-counts")]//a[contains(text(), "Closed Tickets")]',
             },
 
             // Filter
             filters: {
-                filterByCustomer:
-                    '//select[@id="dokan-search-support-customers"]/..//span[@class="select2-selection__arrow"]',
+                filterByCustomer: '//select[@id="dokan-search-support-customers"]/..//span[@class="select2-selection__arrow"]',
                 filterByCustomerInput: '.select2-search__field',
 
                 filterByDate: {
                     dateRangeInput: 'input#support_ticket_date_filter',
-                    startDateInput:
-                        'input#support_ticket_start_date_filter_alt',
+                    startDateInput: 'input#support_ticket_start_date_filter_alt',
                     endDateInput: 'input#support_ticket_end_date_filter_alt',
                 },
 
@@ -6077,24 +5154,18 @@ export const selector = {
             },
 
             numOfRowsFound: 'table.dokan-support-table tbody tr',
-            noSupportTicketFound:
-                '//div[@class="dokan-error" and contains(text(), "No tickets found!")]',
-            storeSupportLink: (id: string) =>
-                `//strong[normalize-space()="#${id}"]/..`,
-            storeSupportCellById: (id: string) =>
-                `//strong[normalize-space()="#${id}"]/../..`,
-            storeSupportCellByTitle: (title: string) =>
-                `//a[normalize-space()="${title}"]/..`,
-            storeSupportsCellByCustomer: (customerName: string) =>
-                `//strong[contains(text(),'${customerName}')]/../..`,
+            noSupportTicketFound: '//div[@class="dokan-error" and contains(text(), "No tickets found!")]',
+            storeSupportLink: (id: string) => `//strong[normalize-space()="#${id}"]/..`,
+            storeSupportCellById: (id: string) => `//strong[normalize-space()="#${id}"]/../..`,
+            storeSupportCellByTitle: (title: string) => `//a[normalize-space()="${title}"]/..`,
+            storeSupportsCellByCustomer: (customerName: string) => `//strong[contains(text(),'${customerName}')]/../..`,
 
             supportTicketDetails: {
                 backToTickets: '.dokan-dashboard-content > a',
 
                 basicDetails: {
                     basicDetailsDiv: 'div.dokan-support-single-title',
-                    ticketTitle:
-                        '//span[contains(@class,"dokan-chat-title") and not(contains(@class,"dokan-chat-status"))]',
+                    ticketTitle: '//span[contains(@class,"dokan-chat-title") and not(contains(@class,"dokan-chat-status"))]',
                     ticketId: 'span.dokan-chat-title.dokan-chat-status',
                 },
 
@@ -6106,10 +5177,8 @@ export const selector = {
 
                 orderReference: {
                     orderReferenceSpan: 'span.order-reference',
-                    orderReferenceText: (orderId: string) =>
-                        `//strong[normalize-space()="Referenced Order #${orderId}"]`,
-                    orderReferenceLink: (orderId: string) =>
-                        `//strong[normalize-space()="Referenced Order #${orderId}"]/..`,
+                    orderReferenceText: (orderId: string) => `//strong[normalize-space()="Referenced Order #${orderId}"]`,
+                    orderReferenceLink: (orderId: string) => `//strong[normalize-space()="Referenced Order #${orderId}"]/..`,
                 },
 
                 chatBox: {
@@ -6119,10 +5188,8 @@ export const selector = {
 
                 replyBox: {
                     addReplyText: '//strong[normalize-space()="Add Reply"]',
-                    closeTicketText:
-                        '//strong[normalize-space()="Ticket Closed"]',
-                    replyBoxDiv:
-                        'div.dokan-panel.dokan-panel-default.dokan-dss-panel-default',
+                    closeTicketText: '//strong[normalize-space()="Ticket Closed"]',
+                    replyBoxDiv: 'div.dokan-panel.dokan-panel-default.dokan-dss-panel-default',
                     addReply: '#dokan-support-commentform #comment',
                     submitReply: '#submit',
                 },
@@ -6137,12 +5204,10 @@ export const selector = {
             okEmptySubmit: '.swal2-confirm',
 
             // Close Ticket
-            closeTicket:
-                '//td[@data-title="Action"]//a[contains(@class, "dokan-support-status-change") and  @data-original-title="Close Topic" ]',
+            closeTicket: '//td[@data-title="Action"]//a[contains(@class, "dokan-support-status-change") and  @data-original-title="Close Topic" ]',
 
             // reOpen Ticket
-            reOpenTicket:
-                '//td[@data-title="Action"]//a[contains(@class, "dokan-support-status-change") and  @data-original-title="Re-open Topic" ]',
+            reOpenTicket: '//td[@data-title="Action"]//a[contains(@class, "dokan-support-status-change") and  @data-original-title="Re-open Topic" ]',
 
             confirmCloseTicket: '.swal2-confirm',
             cancelCloseTicket: '.swal2-cancel',
@@ -6186,8 +5251,7 @@ export const selector = {
             numberOfRowsFound: '#dokan-spmv-product-list-table tbody tr',
             resultCount: '.woocommerce-result-count',
             sortProduct: 'select.orderby', // popularity, rating, date, price, price-desc, bid_asc, bid_desc, auction_end, auction_started, auction_activity
-            editProduct: (productName: string) =>
-                `//a[normalize-space()="${productName}"]/../../..//a[@class="dokan-btn"]`,
+            editProduct: (productName: string) => `//a[normalize-space()="${productName}"]/../../..//a[@class="dokan-btn"]`,
             addToStore: 'button.dokan-spmv-clone-product',
 
             productDetails: {
@@ -6217,21 +5281,17 @@ export const selector = {
             // Wp Image Upload
             wpUploadFiles: '#menu-item-upload',
             uploadedMedia: '.attachment-preview',
-            selectFiles:
-                '//div[@class="supports-drag-drop" and @style="position: relative;"]//button[@class="browser button button-hero"]',
+            selectFiles: '//div[@class="supports-drag-drop" and @style="position: relative;"]//button[@class="browser button button-hero"]',
             select: '//div[@class="supports-drag-drop" and @style="position: relative;"]//button[contains(@class, "media-button-select")]',
             crop: '//div[@class="supports-drag-drop" and @style="position: relative;"]//button[contains(@class, "media-button-insert")]',
 
             // Banner and Profile Image
             banner: '.dokan-banner .dokan-banner-drag',
-            bannerImage:
-                '//div[@class="image-wrap"]//img[@class="dokan-banner-img"]',
+            bannerImage: '//div[@class="image-wrap"]//img[@class="dokan-banner-img"]',
             removeBannerImage: '.close.dokan-remove-banner-image',
             profilePicture: '.dokan-pro-gravatar-drag',
-            profilePictureImage:
-                '//div[@class="dokan-left gravatar-wrap"]//img[@class="dokan-gravatar-img"]',
-            removeProfilePictureImage:
-                '.dokan-close.dokan-remove-gravatar-image',
+            profilePictureImage: '//div[@class="dokan-left gravatar-wrap"]//img[@class="dokan-gravatar-img"]',
+            removeProfilePictureImage: '.dokan-close.dokan-remove-gravatar-image',
 
             // Basic Store Info
             storeName: '#dokan_store_name',
@@ -6240,12 +5300,9 @@ export const selector = {
 
             // store categories
             storeCategories: {
-                storeCategoryDropDown:
-                    '//label[contains(text(), "Store Category")]/..//span[@class="select2-selection__arrow"]',
-                storeCategoryInput:
-                    '//span[@class="select2-search select2-search--dropdown"]//input[@role="searchbox"]',
-                storeCategoriesInput:
-                    '//label[contains(text(), "Store Categories")]/..//input[@class="select2-search__field"]',
+                storeCategoryDropDown: '//label[contains(text(), "Store Category")]/..//span[@class="select2-selection__arrow"]',
+                storeCategoryInput: '//span[@class="select2-search select2-search--dropdown"]//input[@role="searchbox"]',
+                storeCategoriesInput: '//label[contains(text(), "Store Categories")]/..//input[@class="select2-search__field"]',
                 result: '.select2-results__option.select2-results__option--highlighted',
             },
 
@@ -6278,15 +5335,13 @@ export const selector = {
 
             // Email
             email: '//label[contains(text(), "Email")]/..//input[@type="checkbox"]',
-            moreProducts:
-                '//label[contains(text(), "More products")]/..//input[@type="checkbox"]',
+            moreProducts: '//label[contains(text(), "More products")]/..//input[@type="checkbox"]',
 
             // Map
             map: '#dokan-map-add',
 
             // Terms and Conditions
-            termsAndConditions:
-                '//label[contains(text(), "Terms and Conditions")]/..//input[@type="checkbox"]',
+            termsAndConditions: '//label[contains(text(), "Terms and Conditions")]/..//input[@type="checkbox"]',
             termsAndConditionsIframe: '#dokan_tnc_text iframe',
             termsAndConditionsHtmlBody: '#tinymce',
 
@@ -6295,35 +5350,27 @@ export const selector = {
 
             // lite locators
             lite: {
-                openingClosingTimeEnable: (day: string) =>
-                    `select[name="${day}[working_status]"]`,
-                openingTimeInput: (day: string) =>
-                    `input#opening-time\\[${day}\\]`,
-                closingTimeInput: (day: string) =>
-                    `input#closing-time\\[${day}\\]`,
+                openingClosingTimeEnable: (day: string) => `select[name="${day}[working_status]"]`,
+                openingTimeInput: (day: string) => `input#opening-time\\[${day}\\]`,
+                closingTimeInput: (day: string) => `input#closing-time\\[${day}\\]`,
             },
             // openingTime: (day: string) => `#opening-time-${day}`,
             // closingTime: (day: string) => `#closing-time-${day}`,
             // addNewRow: (day: string) => `#store-tab-${day} .added-store-opening-time > .fa`,
             // deleteOneRow: '.remove-store-closing-time > .fa',
-            openingClosingTimeSwitch: (day: string) =>
-                `//label[@for='${day}-working-status']/p[@class='switch tips']`,
+            openingClosingTimeSwitch: (day: string) => `//label[@for='${day}-working-status']/p[@class='switch tips']`,
             openingTime: (day: string) => `input#opening-time-${day}`,
-            openingTimeHiddenInput: (day: string) =>
-                `//input[@name='opening_time[${day}][]']`,
+            openingTimeHiddenInput: (day: string) => `//input[@name='opening_time[${day}][]']`,
             closingTime: (day: string) => `input#closing-time-${day}`,
-            closingTimeHiddenInput: (day: string) =>
-                `//input[@name='closing_time[${day}][]']`,
+            closingTimeHiddenInput: (day: string) => `//input[@name='closing_time[${day}][]']`,
             storeOpenNotice: '//input[@name="dokan_store_open_notice"]',
             storeCloseNotice: '//input[@name="dokan_store_close_notice"]',
 
             // Vacation
             goToVacation: '#dokan-seller-vacation-activate',
             closingStyle: 'label .form-control',
-            setVacationMessageInstantly:
-                '//textarea[@id="dokan-seller-vacation-message" and @name="setting_vacation_message"]',
-            setVacationMessageDatewise:
-                '//textarea[@id="dokan-seller-vacation-message" and @name="dokan_seller_vacation_datewise_message"]',
+            setVacationMessageInstantly: '//textarea[@id="dokan-seller-vacation-message" and @name="setting_vacation_message"]',
+            setVacationMessageDatewise: '//textarea[@id="dokan-seller-vacation-message" and @name="dokan_seller_vacation_datewise_message"]',
             vacationDateRange: '#dokan-seller-vacation-date-from-range',
             vacationDateRangeFrom: 'input#dokan-seller-vacation-date-from',
             vacationDateRangeTo: 'input#dokan-seller-vacation-date-to',
@@ -6331,18 +5378,15 @@ export const selector = {
             cancelVacationEdit: '#dokan-seller-vacation-cancel-edit',
             noVacationIsSet: '//td[contains( text(),"No vacation is set")]',
             vacationRow: '//td[@class="dokan-seller-vacation-list-action"]/..',
-            editSavedVacationSchedule:
-                '.dokan-seller-vacation-list-action .fas',
-            deleteSavedVacationSchedule:
-                '.dokan-seller-vacation-remove-schedule',
+            editSavedVacationSchedule: '.dokan-seller-vacation-list-action .fas',
+            deleteSavedVacationSchedule: '.dokan-seller-vacation-remove-schedule',
             confirmDeleteSavedVacationSchedule: '.swal2-confirm',
             cancelDeleteSavedVacationSchedule: '.swal2-cancel',
 
             // catalog mode
             removeAddToCartButton: 'input#catalog_mode_hide_add_to_cart_button',
             hideProductPrice: 'input#catalog_mode_hide_product_price',
-            enableRequestQuoteSupport:
-                'input#catalog_mode_request_a_quote_support',
+            enableRequestQuoteSupport: 'input#catalog_mode_request_a_quote_support',
 
             // Discount
             enableStoreWideDiscount: '#lbl_setting_minimum_quantity',
@@ -6365,17 +5409,13 @@ export const selector = {
             enableMinMaxAmount: '#enable_vendor_min_max_amount',
             minimumAmountToPlaceAnOrder: '#min_amount_to_order',
             maximumAmountToPlaceAnOrder: '#max_amount_to_order',
-            selectProducts:
-                '//label[contains(text(), "Select Products")]/..//input[contains(@class,"select2-search__field")]',
+            selectProducts: '//label[contains(text(), "Select Products")]/..//input[contains(@class,"select2-search__field")]',
             selectAll: '.dokan-min-max-product-select-all',
             clear: '.dokan-min-max-product-clear-all',
             selectCategory: 'select#product_cat',
-            selectCategorySearch:
-                '//select[@id="product_cat"]/..//input[@class="select2-search__field"]',
-            selectCategorySearchedResult:
-                '.select2-results__option.select2-results__option--highlighted',
-            alreadySelectedOption: (option: string) =>
-                `//li[@class="select2-selection__choice" and @title="${option}"]`,
+            selectCategorySearch: '//select[@id="product_cat"]/..//input[@class="select2-search__field"]',
+            selectCategorySearchedResult: '.select2-results__option.select2-results__option--highlighted',
+            alreadySelectedOption: (option: string) => `//li[@class="select2-selection__choice" and @title="${option}"]`,
 
             // Update Settings
             updateSettingsTop: 'button.dokan-update-setting-top-button',
@@ -6396,20 +5436,15 @@ export const selector = {
                 addonTable: '#global-addons-table',
                 nameColumn: 'th[scope="col"]',
                 priorityColumn: '//th[normalize-space()="Priority"]',
-                productCategoriesColumn:
-                    '//th[normalize-space()="Product Categories"]',
-                numberOfFieldsColumn:
-                    '//th[normalize-space()="Number of Fields"]',
+                productCategoriesColumn: '//th[normalize-space()="Product Categories"]',
+                numberOfFieldsColumn: '//th[normalize-space()="Number of Fields"]',
             },
 
             noRowsFound: '//td[normalize-space()="No add-ons found."]',
             firstAddonRow: '#the-list tr td .edit a',
-            addonRow: (addon: string) =>
-                `//a[contains(text(), '${addon}')]/../..`,
-            editAddon: (addon: string) =>
-                `//a[contains(text(), '${addon}')]/..//a[contains(text(), 'Edit')]`,
-            deleteAddon: (addon: string) =>
-                `//a[contains(text(), '${addon}')]/..//a[contains(text(), 'Delete')]`,
+            addonRow: (addon: string) => `//a[contains(text(), '${addon}')]/../..`,
+            editAddon: (addon: string) => `//a[contains(text(), '${addon}')]/..//a[contains(text(), 'Edit')]`,
+            deleteAddon: (addon: string) => `//a[contains(text(), '${addon}')]/..//a[contains(text(), 'Delete')]`,
 
             backToAddonLists: '.back-to-addon-lists-btn',
 
@@ -6419,8 +5454,7 @@ export const selector = {
                 productCategories: '.select2-search__field',
 
                 // Addon fields
-                addonFieldsRow: (addonField: string) =>
-                    `//h3[@class="wc-pao-addon-name" and contains(text(), "${addonField}")]/../..//span[@class="wc-pao-addon-toggle"]`,
+                addonFieldsRow: (addonField: string) => `//h3[@class="wc-pao-addon-name" and contains(text(), "${addonField}")]/../..//span[@class="wc-pao-addon-toggle"]`,
                 addField: '.wc-pao-add-field',
                 type: 'select.wc-pao-addon-type-select',
                 displayAs: '.wc-pao-addon-display-select',
@@ -6443,13 +5477,11 @@ export const selector = {
 
         // Payment Settings
         vPaymentSettings: {
-            paymentMethodText:
-                '.dokan-dashboard-content.dokan-settings-content h1',
+            paymentMethodText: '.dokan-dashboard-content.dokan-settings-content h1',
 
             paymentMethods: {
                 paymentMethodsDiv: '.dokan-payment-settings-summary',
-                addPaymentMethodDropDown:
-                    '#toggle-vendor-payment-method-drop-down',
+                addPaymentMethodDropDown: '#toggle-vendor-payment-method-drop-down',
                 noOfPaymentMethods: '//button[contains(text(),"Manage")]',
             },
 
@@ -6462,8 +5494,7 @@ export const selector = {
             bankAccountNumber: '//input[@name="settings[bank][ac_number]"]',
             bankName: '//input[@name="settings[bank][bank_name]"]',
             bankAddress: '//textarea[@name="settings[bank][bank_addr]"]',
-            bankRoutingNumber:
-                '//input[@name="settings[bank][routing_number]"]',
+            bankRoutingNumber: '//input[@name="settings[bank][routing_number]"]',
             bankIban: '//input[@name="settings[bank][iban]"]',
             bankSwiftCode: '//input[@name="settings[bank][swift]"]',
             declaration: '#declaration',
@@ -6540,33 +5571,26 @@ export const selector = {
             ibanIban: '#dokan-mangopay-vendor-acccount-IBAN-iban',
             ibanBic: '#dokan-mangopay-vendor-acccount-IBAN-bic',
             // Gb
-            gbAccountNumber:
-                '#dokan-mangopay-vendor-acccount-GB-account_number',
+            gbAccountNumber: '#dokan-mangopay-vendor-acccount-GB-account_number',
             gbSortCode: '#dokan-mangopay-vendor-acccount-GB-sort_code',
             // Us
-            usAccountNumber:
-                '#dokan-mangopay-vendor-acccount-US-account_number',
+            usAccountNumber: '#dokan-mangopay-vendor-acccount-US-account_number',
             usAba: '#dokan-mangopay-vendor-acccount-US-aba',
             usDepositAccountType: '#dokan-mangopay-vendor-acccount-US-datype',
             // Ca
             caBankName: '#dokan-mangopay-vendor-acccount-CA-bank_name',
-            caInstitutionNumber:
-                '#dokan-mangopay-vendor-acccount-CA-inst_number',
+            caInstitutionNumber: '#dokan-mangopay-vendor-acccount-CA-inst_number',
             caBranchCode: '#dokan-mangopay-vendor-acccount-CA-branch_code',
-            caAccountNumber:
-                '#dokan-mangopay-vendor-acccount-CA-account_number',
+            caAccountNumber: '#dokan-mangopay-vendor-acccount-CA-account_number',
             // Others
             othersCountry: '#dokan-mangopay-vendor-acccount-OTHER-country',
             othersBic: '#dokan-mangopay-vendor-acccount-OTHER-bic',
-            othersAccountNumber:
-                '#dokan-mangopay-vendor-acccount-OTHER-account_number',
+            othersAccountNumber: '#dokan-mangopay-vendor-acccount-OTHER-account_number',
             // Account Holders Details
             accountHolderDetails: {
                 accountHoldersName: '#dokan-mangopay-vendor-account-name',
-                accountHoldersAddress:
-                    '#dokan-mangopay-vendor-account-address1',
-                accountHoldersAddressDetails:
-                    '#dokan-mangopay-vendor-account-address2',
+                accountHoldersAddress: '#dokan-mangopay-vendor-account-address1',
+                accountHoldersAddressDetails: '#dokan-mangopay-vendor-account-address2',
                 accountHoldersCountry: '#dokan-mangopay-vendor-account-country',
                 accountHoldersState: '#dokan-mangopay-vendor-account-state',
                 city: '#dokan-mangopay-vendor-account-city',
@@ -6610,45 +5634,34 @@ export const selector = {
             // Id Verification
             id: {
                 idVerificationDiv: 'div#dokan_v_id',
-                idVerificationText:
-                    '//strong[normalize-space()="ID Verification"]',
+                idVerificationText: '//strong[normalize-space()="ID Verification"]',
 
-                idPendingFeedback:
-                    'div#dokan_v_id_feedback.dokan-alert-warning',
+                idPendingFeedback: 'div#dokan_v_id_feedback.dokan-alert-warning',
                 cancelIdVerificationRequest: 'button#dokan_v_id_cancel',
 
-                idApproveFeedback:
-                    'div#dokan_v_id_feedback.dokan-alert-success',
+                idApproveFeedback: 'div#dokan_v_id_feedback.dokan-alert-success',
                 startIdVerification: '#dokan_v_id_click',
                 passport: '//input[@value="passport"]',
                 nationalIdCard: '//input[@value="national_id"]',
                 drivingLicense: '//input[@value="driving_license"]',
                 uploadPhoto: 'a.dokan-gravatar-drag',
-                previousUploadedPhoto:
-                    '//div[@class="gravatar-wrap"]//img[@class="dokan-gravatar-img"]',
-                removePreviousUploadedPhoto:
-                    '.dokan-close.dokan-remove-gravatar-image',
+                previousUploadedPhoto: '//div[@class="gravatar-wrap"]//img[@class="dokan-gravatar-img"]',
+                removePreviousUploadedPhoto: '.dokan-close.dokan-remove-gravatar-image',
                 submitId: '#dokan_v_id_submit',
                 cancelSubmitId: '#dokan_v_id_cancel_form',
 
-                idUpdateSuccessMessage:
-                    'div#feedback.dokan-alert.dokan-alert-success',
+                idUpdateSuccessMessage: 'div#feedback.dokan-alert.dokan-alert-success',
             },
 
             // Address Verification
             address: {
-                addressVerificationDiv:
-                    '//strong[normalize-space()="Address Verification"]/../..',
-                addressVerificationText:
-                    '//strong[normalize-space()="Address Verification"]',
+                addressVerificationDiv: '//strong[normalize-space()="Address Verification"]/../..',
+                addressVerificationText: '//strong[normalize-space()="Address Verification"]',
 
-                addressPendingFeedback:
-                    'div#d_v_address_feedback.dokan-alert-warning',
-                cancelAddressVerificationRequest:
-                    'button#dokan_v_address_cancel',
+                addressPendingFeedback: 'div#d_v_address_feedback.dokan-alert-warning',
+                cancelAddressVerificationRequest: 'button#dokan_v_address_cancel',
 
-                addressApproveFeedback:
-                    'div#d_v_address_feedback.dokan-alert-success',
+                addressApproveFeedback: 'div#d_v_address_feedback.dokan-alert-success',
                 startAddressVerification: '#dokan_v_address_click',
                 street: '#dokan_address\\[street_1\\]',
                 street2: '#dokan_address\\[street_2\\]',
@@ -6658,41 +5671,31 @@ export const selector = {
                 state: '#dokan_address_state',
                 uploadResidenceProof: '#vendor-proof',
                 previousUploadedResidenceProof: '.vendor_img_container img',
-                removePreviousUploadedResidenceProof:
-                    '.dokan-close.dokan-remove-proof-image',
+                removePreviousUploadedResidenceProof: '.dokan-close.dokan-remove-proof-image',
                 submitAddress: '#dokan_v_address_submit',
-                cancelSubmitAddress:
-                    '.dokan-form-group > #dokan_v_address_cancel',
+                cancelSubmitAddress: '.dokan-form-group > #dokan_v_address_cancel',
 
-                addressUpdateSuccessMessage:
-                    'div#feedback.dokan-alert.dokan-alert-success',
+                addressUpdateSuccessMessage: 'div#feedback.dokan-alert.dokan-alert-success',
             },
 
             // Company Verification
             company: {
-                companyVerificationDiv:
-                    '//strong[normalize-space()="Company Verification"]/../..',
-                companyVerificationText:
-                    '//strong[normalize-space()="Company Verification"]',
+                companyVerificationDiv: '//strong[normalize-space()="Company Verification"]/../..',
+                companyVerificationText: '//strong[normalize-space()="Company Verification"]',
 
-                companyPendingFeedback:
-                    'div#d_v_company_feedback.dokan-alert-warning',
-                cancelCompanyVerificationRequest:
-                    'button#dokan_v_company_cancel',
+                companyPendingFeedback: 'div#d_v_company_feedback.dokan-alert-warning',
+                cancelCompanyVerificationRequest: 'button#dokan_v_company_cancel',
 
-                companyApproveFeedback:
-                    'div#d_v_company_feedback.dokan-alert-success',
+                companyApproveFeedback: 'div#d_v_company_feedback.dokan-alert-success',
                 startCompanyVerification: '#dokan_v_company_click',
                 uploadedCompanyFileClose: '.dokan-btn.dokan-btn-danger',
                 uploadFiles: 'a.dokan-files-drag',
-                uploadedFileFirst:
-                    '(//a[@onclick="companyVerificationRemoveList(event)"])[1]',
+                uploadedFileFirst: '(//a[@onclick="companyVerificationRemoveList(event)"])[1]',
                 cancelSelectedInfo: '.fa-times',
                 submitCompanyInfo: '#dokan_v_company_submit',
                 cancelSubmitCompanyInfo: '.dokan-w5 > #dokan_v_company_cancel',
 
-                companyInfoUpdateSuccessMessage:
-                    'div#feedback.dokan-alert.dokan-alert-success',
+                companyInfoUpdateSuccessMessage: 'div#feedback.dokan-alert.dokan-alert-success',
             },
         },
 
@@ -6710,27 +5713,17 @@ export const selector = {
 
             // Delivery Day
             deliveryDaySwitches: '.dokan-status p.switch.tips',
-            deliveryDaySwitch: (day: string) =>
-                `//label[@for='${day}-working-status']//p[@class='switch tips']`,
-            deliveryDaySwitchColor: (day: string) =>
-                `//label[@for='${day}-working-status']//p[@class='switch tips']//div[contains(@class,'minitoggle')]`,
+            deliveryDaySwitch: (day: string) => `//label[@for='${day}-working-status']//p[@class='switch tips']`,
+            deliveryDaySwitchColor: (day: string) => `//label[@for='${day}-working-status']//p[@class='switch tips']//div[contains(@class,'minitoggle')]`,
 
             // Individual Day Settings
             openingTime: (day: string) => `input#delivery-opening-time-${day}`,
-            openingTimeHiddenInput: (day: string) =>
-                `//input[@name='delivery_opening_time[${day}][]']`,
+            openingTimeHiddenInput: (day: string) => `//input[@name='delivery_opening_time[${day}][]']`,
             closingTime: (day: string) => `input#delivery-closing-time-${day}`,
-            closingTimeHiddenInput: (day: string) =>
-                `//input[@name='delivery_closing_time[${day}][]']`,
+            closingTimeHiddenInput: (day: string) => `//input[@name='delivery_closing_time[${day}][]']`,
 
-            closeDeliveryTime: (day: string) =>
-                `//label[normalize-space()="${helpers.capitalize(
-                    day,
-                )}" and @for="working-days"]/..//a[@class="remove-store-closing-time"]`,
-            addHours: (day: string) =>
-                `//label[normalize-space()="${helpers.capitalize(
-                    day,
-                )}" and @for="working-days"]/..//a[@class="added-store-opening-time "]`,
+            closeDeliveryTime: (day: string) => `//label[normalize-space()="${helpers.capitalize(day)}" and @for="working-days"]/..//a[@class="remove-store-closing-time"]`,
+            addHours: (day: string) => `//label[normalize-space()="${helpers.capitalize(day)}" and @for="working-days"]/..//a[@class="added-store-opening-time "]`,
 
             updateSettings: '.dokan-btn.dokan-btn-danger.dokan-btn-theme',
             settingsSuccessMessage: '.dokan-message strong',
@@ -6743,13 +5736,11 @@ export const selector = {
 
             // Shipping Policies
             shippingPolicies: {
-                clickHereToAddShippingPolicies:
-                    '//a[normalize-space()="Click here to add Shipping Policies"]',
+                clickHereToAddShippingPolicies: '//a[normalize-space()="Click here to add Shipping Policies"]',
                 backToZoneList: '.router-link-active',
                 processingTime: '#shipping-settings #dps_pt',
                 shippingPolicy: '#shipping-settings #_dps_shipping_policy',
-                refundPolicy:
-                    '//label[normalize-space()="Refund Policy"]/..//textarea[@class="dokan-form-control"]',
+                refundPolicy: '//label[normalize-space()="Refund Policy"]/..//textarea[@class="dokan-form-control"]',
                 saveSettings: '.dokan-btn-danger',
             },
 
@@ -6758,27 +5749,19 @@ export const selector = {
                 shippingZone: '.shipping-zone-table',
                 zoneNameColumn: '//th[normalize-space()="Zone Name"]',
                 regionsColumn: '//th[normalize-space()="Region(s)"]',
-                shippingMethodColumn:
-                    '//th[normalize-space()="Shipping Method"]',
+                shippingMethodColumn: '//th[normalize-space()="Shipping Method"]',
             },
 
             // Zone-wise Shipping Settings
-            ZonWiseAddShippingMethod: (zone: string) =>
-                `//a[contains(text(),'${zone}')]/../..//a[contains(text(),'Add Shipping Method')]`,
-            shippingZoneCell: (shippingZone: string) =>
-                `//a[contains(text(), '${shippingZone}')]/..`,
-            editShippingZone: (shippingZone: string) =>
-                `//a[contains(text(), '${shippingZone}')]/..//div//a[contains(text(), 'Edit')]`,
+            ZonWiseAddShippingMethod: (zone: string) => `//a[contains(text(),'${zone}')]/../..//a[contains(text(),'Add Shipping Method')]`,
+            shippingZoneCell: (shippingZone: string) => `//a[contains(text(), '${shippingZone}')]/..`,
+            editShippingZone: (shippingZone: string) => `//a[contains(text(), '${shippingZone}')]/..//div//a[contains(text(), 'Edit')]`,
             addShippingMethod: '//a[contains(text(),"Add Shipping Method")]',
             shippingMethod: '#shipping_method',
-            shippingMethodPopupAddShippingMethod:
-                '.button.button-primary.button-large',
-            shippingMethodCell: (shippingMethodName: string) =>
-                `//td[contains(text(),'${shippingMethodName}')]/..`,
-            editShippingMethod: (shippingMethodName: string) =>
-                `//td[contains(text(),'${shippingMethodName}')]/..//div//a[contains(text(), 'Edit')]`,
-            deleteShippingMethod: (shippingMethodName: string) =>
-                `//td[contains(text(),'${shippingMethodName}')]/..//div//a[contains(text(), 'Delete')]`,
+            shippingMethodPopupAddShippingMethod: '.button.button-primary.button-large',
+            shippingMethodCell: (shippingMethodName: string) => `//td[contains(text(),'${shippingMethodName}')]/..`,
+            editShippingMethod: (shippingMethodName: string) => `//td[contains(text(),'${shippingMethodName}')]/..//div//a[contains(text(), 'Edit')]`,
+            deleteShippingMethod: (shippingMethodName: string) => `//td[contains(text(),'${shippingMethodName}')]/..//div//a[contains(text(), 'Delete')]`,
 
             // Edit Shipping Methods
             // Flat Rate
@@ -6798,76 +5781,57 @@ export const selector = {
             localPickupDescription: '#method_description',
             // Dokan Table Rate Shipping
             tableRateShippingMethodTitle: '#table_rate_title',
-            tableRateShippingTaxStatus:
-                '//select[@name="table_rate_tax_status"]',
-            tableRateShippingTaxIncludedInShippingCosts:
-                '//select[@name="table_rate_prices_include_tax"]',
+            tableRateShippingTaxStatus: '//select[@name="table_rate_tax_status"]',
+            tableRateShippingTaxIncludedInShippingCosts: '//select[@name="table_rate_prices_include_tax"]',
             tableRateShippingHandlingFee: '#table_rate_order_handling_fee',
-            tableRateShippingMaximumShippingCost:
-                '#table_rate_max_shipping_cost',
+            tableRateShippingMaximumShippingCost: '#table_rate_max_shipping_cost',
             // Rates
-            tableRateShippingCalculationType:
-                '#dokan_table_rate_calculation_type',
-            tableRateShippingHandlingFeePerOrder:
-                '#dokan_table_rate_handling_fee',
+            tableRateShippingCalculationType: '#dokan_table_rate_calculation_type',
+            tableRateShippingHandlingFeePerOrder: '#dokan_table_rate_handling_fee',
             tableRateShippingMinimumCostPerOrder: '#dokan_table_rate_min_cost',
             tableRateShippingMaximumCostPerOrder: '#dokan_table_rate_max_cost',
-            tableRateShippingUpdateSettings:
-                '//input[@name="dokan_update_table_rate_shipping_settings"]',
-            tableRateShippingUpdateSettingsSuccessMessage:
-                '.dokan-message Strong',
+            tableRateShippingUpdateSettings: '//input[@name="dokan_update_table_rate_shipping_settings"]',
+            tableRateShippingUpdateSettingsSuccessMessage: '.dokan-message Strong',
             // Dokan Distance Rate Shipping
             distanceRateShippingMethodTitle: '#distance_rate_title',
             distanceRateShippingTaxStatus: '#distance_rate_tax_status',
             distanceRateShippingTransportationMode: '#dokan_distance_rate_mode',
             distanceRateShippingAvoid: '#dokan_distance_rate_avoid',
             distanceRateShippingDistanceUnit: '#dokan_distance_rate_unit',
-            distanceRateShippingShowDistance:
-                '#dokan_distance_rate_show_distance',
-            distanceRateShippingShowDuration:
-                '#dokan_distance_rate_show_duration',
+            distanceRateShippingShowDistance: '#dokan_distance_rate_show_distance',
+            distanceRateShippingShowDuration: '#dokan_distance_rate_show_duration',
             // Shipping Address
             distanceRateShippingAddress1: '#dokan_distance_rate_address_1',
             distanceRateShippingAddress2: '#dokan_distance_rate_address_2',
             distanceRateShippingCity: '#dokan_distance_rate_city',
-            distanceRateShippingZipOrPostalCode:
-                '#dokan_distance_rate_postal_code',
-            distanceRateShippingStateOrProvince:
-                '#dokan_distance_rate_state_province',
+            distanceRateShippingZipOrPostalCode: '#dokan_distance_rate_postal_code',
+            distanceRateShippingStateOrProvince: '#dokan_distance_rate_state_province',
             distanceRateShippingCountry: '#dokan_distance_rate_country',
-            distanceRateShippingUpdateSettings:
-                '//input[@name="dokan_update_distance_rate_shipping_settings"]',
-            distanceRateShippingUpdateSettingsSuccessMessage:
-                '.dokan-message Strong',
+            distanceRateShippingUpdateSettings: '//input[@name="dokan_update_distance_rate_shipping_settings"]',
+            distanceRateShippingUpdateSettingsSuccessMessage: '.dokan-message Strong',
             // Edit save Shipping Settings
             shippingSettingsSaveSettings: '.button.button-primary.button-large',
 
             // Save Changes
             saveChanges: '//input[@value="Save Changes"]',
-            updateSettingsSuccessMessage:
-                '.dokan-alert.dokan-alert-success span',
+            updateSettingsSuccessMessage: '.dokan-alert.dokan-alert-success span',
 
             // Previous Shipping Settings
             previousShippingSettings: {
-                previousShippingSettings:
-                    '//a[contains( text(), "Click Here")]',
+                previousShippingSettings: '//a[contains( text(), "Click Here")]',
                 backToZoneWiseShippingSettings: '.dokan-page-help a',
-                enableShipping:
-                    '//input[@type="checkbox" and @name="dps_enable_shipping"]',
+                enableShipping: '//input[@type="checkbox" and @name="dps_enable_shipping"]',
                 defaultShippingPrice: '#shipping_type_price',
                 perProductAdditionalPrice: '#additional_product',
                 perQtyAdditionalPrice: '#additional_qty',
                 processingTime: '#dps_pt',
-                shippingPolicy:
-                    '//label[contains(text(),"Shipping Policy")]/..//textarea[@name="dps_ship_policy"]',
-                refundPolicy:
-                    '//label[contains(text(),"Refund Policy")]/..//textarea[@name="dps_refund_policy"]',
+                shippingPolicy: '//label[contains(text(),"Shipping Policy")]/..//textarea[@name="dps_ship_policy"]',
+                refundPolicy: '//label[contains(text(),"Refund Policy")]/..//textarea[@name="dps_refund_policy"]',
                 shipsFrom: '//select[@name="dps_form_location"]',
                 shipTo: '(//select[@name="dps_country_to[]"])[1]',
                 cost: '(//input[@name="dps_country_to_price[]"])[1]',
                 addLocation: '.dokan-btn-default',
-                previousShippingSaveSettings:
-                    '//input[@name="dokan_update_shipping_options"]',
+                previousShippingSaveSettings: '//input[@name="dokan_update_shipping_options"]',
             },
         },
 
@@ -6876,15 +5840,11 @@ export const selector = {
             shipStationText: '.dokan-settings-content h1',
             visitStore: '//a[normalize-space()="Visit Store"]',
 
-            authenticationKey:
-                '//label[normalize-space()="Authentication Key"]/..//code',
-            selectedStatus:
-                '//label[@for="dokan-shipstation-export-statuses"]/..//li[@class="select2-selection__choice"]',
-            exportOrderStatusesInput:
-                '//label[normalize-space()="Export Order Statuses"]/..//span[@class="select2-selection select2-selection--multiple"]//input[@class="select2-search__field"]',
+            authenticationKey: '//label[normalize-space()="Authentication Key"]/..//code',
+            selectedStatus: '//label[@for="dokan-shipstation-export-statuses"]/..//li[@class="select2-selection__choice"]',
+            exportOrderStatusesInput: '//label[normalize-space()="Export Order Statuses"]/..//span[@class="select2-selection select2-selection--multiple"]//input[@class="select2-search__field"]',
             shippedOrderStatusDropdown: '.select2-selection__arrow',
-            shippedOrderStatusInput:
-                '(//input[@class="select2-search__field"])[2]',
+            shippedOrderStatusInput: '(//input[@class="select2-search__field"])[2]',
             result: '.select2-results__option.select2-results__option--highlighted',
 
             saveChanges: '#dokan-store-shipstation-form-submit',
@@ -6925,8 +5885,7 @@ export const selector = {
             lengthValue: '//input[@name="warranty_length_value"]',
             lengthDuration: '#dokan-warranty-length-duration',
             refundReasons: '#dokan-store-rma-form .checkbox input',
-            refundReasonsFirst:
-                '(//form[@id="dokan-store-rma-form"]//div[@class="checkbox"]//input)[1]',
+            refundReasonsFirst: '(//form[@id="dokan-store-rma-form"]//div[@class="checkbox"]//input)[1]',
             refundPolicyIframe: 'iframe',
             refundPolicyHtmlBody: '#tinymce',
             saveChanges: '#dokan-store-rma-form-submit',
@@ -6945,15 +5904,13 @@ export const selector = {
             facebook: {
                 facebookTitle: '#dokan-seo-og-title',
                 facebookDescription: '#dokan-seo-og-desc',
-                facebookImage:
-                    '//label[contains( text(), "Facebook Image :")]/..//a[contains(@class, "dokan-gravatar-drag")]',
+                facebookImage: '//label[contains( text(), "Facebook Image :")]/..//a[contains(@class, "dokan-gravatar-drag")]',
             },
 
             twitter: {
                 twitterTitle: '#dokan-seo-twitter-title',
                 twitterDescription: '#dokan-seo-twitter-desc',
-                twitterImage:
-                    '//label[contains( text(), "Twitter Image")]/..//a[contains(@class, "dokan-gravatar-drag")]',
+                twitterImage: '//label[contains( text(), "Twitter Image")]/..//a[contains(@class, "dokan-gravatar-drag")]',
             },
 
             saveChanges: '#dokan-store-seo-form-submit',
@@ -6969,8 +5926,7 @@ export const selector = {
             regEmail: '#reg_email',
             regPassword: '#reg_password',
             regAsCustomer: '//input[@value="customer"]',
-            regCustomerWelcomeMessage:
-                '//div[@class="woocommerce-MyAccount-content"]//p[contains(text(),"Hello")]',
+            regCustomerWelcomeMessage: '//div[@class="woocommerce-MyAccount-content"]//p[contains(text(),"Hello")]',
             // Register Button
             register: '.woocommerce-Button',
         },
@@ -6980,41 +5936,29 @@ export const selector = {
             home: '//ul[@class="nav-menu"]//a[contains(text(),"Home")]',
             cart: '//ul[@class="nav-menu"]//a[contains(text(),"Cart")]',
             checkout: '//ul[@class="nav-menu"]//a[contains(text(),"Checkout")]',
-            dashboard:
-                '//ul[@class="nav-menu"]//a[contains(text(),"Dashboard")]',
-            myAccount:
-                '//ul[@class="nav-menu"]//a[contains(text(),"My account")]',
-            myOrders:
-                '//ul[@class="nav-menu"]//a[contains(text(),"My Orders")]',
-            requestForQuote:
-                '//ul[@class="nav-menu"]//a[contains(text(),"Request for Quote")]',
-            samplePage:
-                '//ul[@class="nav-menu"]//a[contains(text(),"Sample Page")]',
+            dashboard: '//ul[@class="nav-menu"]//a[contains(text(),"Dashboard")]',
+            myAccount: '//ul[@class="nav-menu"]//a[contains(text(),"My account")]',
+            myOrders: '//ul[@class="nav-menu"]//a[contains(text(),"My Orders")]',
+            requestForQuote: '//ul[@class="nav-menu"]//a[contains(text(),"Request for Quote")]',
+            samplePage: '//ul[@class="nav-menu"]//a[contains(text(),"Sample Page")]',
             shop: '//ul[@class="nav-menu"]//a[contains(text(),"Shop")]',
-            storeList:
-                '//ul[@class="nav-menu"]//a[contains(text(),"Store List")]',
+            storeList: '//ul[@class="nav-menu"]//a[contains(text(),"Store List")]',
         },
 
         // Customer My Account
         cMyAccount: {
             dashboard: '.woocommerce-MyAccount-navigation-link--dashboard a',
             orders: '.woocommerce-MyAccount-navigation-link--orders a',
-            subscriptions:
-                '.woocommerce-MyAccount-navigation-link--subscriptions a',
+            subscriptions: '.woocommerce-MyAccount-navigation-link--subscriptions a',
             downloads: '.woocommerce-MyAccount-navigation-link--downloads a',
             addresses: '.woocommerce-MyAccount-navigation-link--edit-address a',
-            paymentMethods:
-                '.woocommerce-MyAccount-navigation-link--payment-methods a',
-            rmaRequests:
-                '.woocommerce-MyAccount-navigation-link--rma-requests a',
-            accountDetails:
-                '.woocommerce-MyAccount-navigation-link--edit-account a',
+            paymentMethods: '.woocommerce-MyAccount-navigation-link--payment-methods a',
+            rmaRequests: '.woocommerce-MyAccount-navigation-link--rma-requests a',
+            accountDetails: '.woocommerce-MyAccount-navigation-link--edit-account a',
             vendors: 'woocommerce-MyAccount-navigation-link--following a',
-            sellerSupportTickets:
-                '.woocommerce-MyAccount-navigation-link--support-tickets a',
+            sellerSupportTickets: '.woocommerce-MyAccount-navigation-link--support-tickets a',
             bookings: '.woocommerce-MyAccount-navigation-link--bookings a',
-            auctions:
-                '.woocommerce-MyAccount-navigation-link--auctions-endpoint a',
+            auctions: '.woocommerce-MyAccount-navigation-link--auctions-endpoint a',
             logout: '.woocommerce-MyAccount-navigation-link--customer-logout a',
         },
 
@@ -7039,25 +5983,19 @@ export const selector = {
 
             // Become Wholesale Customer
             becomeWholesaleCustomer: '#dokan-become-wholesale-customer-btn',
-            wholesaleRequestReturnMessage:
-                '.dokan-wholesale-migration-wrapper div.woocommerce-info',
+            wholesaleRequestReturnMessage: '.dokan-wholesale-migration-wrapper div.woocommerce-info',
         },
 
         // Customer Orders
         cOrders: {
             // Request Warranty
             requestWarranty: {
-                view: (orderNumber: string) =>
-                    `//a[contains(text(),'${orderNumber}')]/../..//a[contains(@class,'woocommerce-button button view')]`,
-                recentOrdersWarrantyRequest: (orderNumber: string) =>
-                    `//td[@class='${orderNumber}']/..//a[@class='button request_warranty']`,
+                view: (orderNumber: string) => `//a[contains(text(),'${orderNumber}')]/../..//a[contains(@class,'woocommerce-button button view')]`,
+                recentOrdersWarrantyRequest: (orderNumber: string) => `//td[@class='${orderNumber}']/..//a[@class='button request_warranty']`,
 
-                ordersWarrantyRequest: (orderNumber: string) =>
-                    `//a[contains(text(),'#${orderNumber}')]/../..//a[@class='woocommerce-button button request_warranty']`,
-                warrantyRequestItemCheckbox: (productName: string) =>
-                    `//a[contains(text(),'${productName}')]/../..//input[@type='checkbox' and contains(@name,'request_item')]`,
-                warrantyRequestItemQuantity: (productName: string) =>
-                    `//a[contains(text(),'${productName}')]/../..//select[contains(@name,'request_item_qty')]`,
+                ordersWarrantyRequest: (orderNumber: string) => `//a[contains(text(),'#${orderNumber}')]/../..//a[@class='woocommerce-button button request_warranty']`,
+                warrantyRequestItemCheckbox: (productName: string) => `//a[contains(text(),'${productName}')]/../..//input[@type='checkbox' and contains(@name,'request_item')]`,
+                warrantyRequestItemQuantity: (productName: string) => `//a[contains(text(),'${productName}')]/../..//select[contains(@name,'request_item_qty')]`,
                 warrantyRequestType: '#type', // replace, refund, coupon
                 warrantyRequestReason: '#reasons',
                 warrantyRequestDetails: '#warranty_request_details',
@@ -7066,37 +6004,25 @@ export const selector = {
 
             // Order Details
             orderDetails: {
-                orderDetailsLInk: (orderNumber: string) =>
-                    `//a[contains(text(), '#${orderNumber}')]/../..//a[contains(text(), 'View')]`,
-                orderNumber:
-                    '//div[@class="woocommerce-MyAccount-content"]//p//mark[@class="order-number"]',
-                orderDate:
-                    '//div[@class="woocommerce-MyAccount-content"]//p//mark[@class="order-date"]',
-                orderStatus:
-                    '//div[@class="woocommerce-MyAccount-content"]//p//mark[@class="order-status"]',
-                subTotal:
-                    '//th[contains(text(),"Subtotal:")]/..//span[@class="woocommerce-Price-amount amount"]',
-                orderDiscount:
-                    '//th[contains(text(),"Order Discount:")]/..//span[@class="woocommerce-Price-amount amount"]',
-                quantityDiscount:
-                    '//th[contains(text(),"Quantity Discount:")]/..//span[@class="woocommerce-Price-amount amount"]',
-                discount:
-                    '//th[text()="Discount:"]/..//span[@class="woocommerce-Price-amount amount"]',
+                orderDetailsLInk: (orderNumber: string) => `//a[contains(text(), '#${orderNumber}')]/../..//a[contains(text(), 'View')]`,
+                orderNumber: '//div[@class="woocommerce-MyAccount-content"]//p//mark[@class="order-number"]',
+                orderDate: '//div[@class="woocommerce-MyAccount-content"]//p//mark[@class="order-date"]',
+                orderStatus: '//div[@class="woocommerce-MyAccount-content"]//p//mark[@class="order-status"]',
+                subTotal: '//th[contains(text(),"Subtotal:")]/..//span[@class="woocommerce-Price-amount amount"]',
+                orderDiscount: '//th[contains(text(),"Order Discount:")]/..//span[@class="woocommerce-Price-amount amount"]',
+                quantityDiscount: '//th[contains(text(),"Quantity Discount:")]/..//span[@class="woocommerce-Price-amount amount"]',
+                discount: '//th[text()="Discount:"]/..//span[@class="woocommerce-Price-amount amount"]',
                 shippingMethod: '//th[contains(text(),"Shipping:")]/..//small',
-                shippingCost:
-                    '//th[contains(text(),"Shipping:")]/..//span[@class="woocommerce-Price-amount amount"]',
+                shippingCost: '//th[contains(text(),"Shipping:")]/..//span[@class="woocommerce-Price-amount amount"]',
                 tax: '//th[contains(text(),"Tax:")]/..//span[@class="woocommerce-Price-amount amount"]',
-                paymentMethod:
-                    '//th[contains(text(),"Payment method:")]/..//td',
-                orderTotal:
-                    '//th[contains(text(),"Total:")]/..//span[@class="woocommerce-Price-amount amount"]',
+                paymentMethod: '//th[contains(text(),"Payment method:")]/..//td',
+                orderTotal: '//th[contains(text(),"Total:")]/..//span[@class="woocommerce-Price-amount amount"]',
             },
         },
 
         // Customer Subscription
         cSubscription: {
-            view: (orderNumber: string) =>
-                `//a[contains(text(),'Order #${orderNumber}')]/../..//a[@class="woocommerce-button button view"]`,
+            view: (orderNumber: string) => `//a[contains(text(),'Order #${orderNumber}')]/../..//a[@class="woocommerce-button button view"]`,
 
             subscriptionDetails: {
                 subscriptionHeading: 'h1.entry-title',
@@ -7118,16 +6044,14 @@ export const selector = {
 
         // Customer Downloads
         cDownloads: {
-            view: (orderNumber: string) =>
-                `//a[contains(text(),'Order #${orderNumber}')]/../..//a[@class="woocommerce-button button view"]`,
+            view: (orderNumber: string) => `//a[contains(text(),'Order #${orderNumber}')]/../..//a[@class="woocommerce-button button view"]`,
         },
 
         // Customer Address
         cAddress: {
             // Billing Address
             billing: {
-                editBillingAddress:
-                    '//h3[contains(text(),"Billing address")]/..//a[@class="edit"]',
+                editBillingAddress: '//h3[contains(text(),"Billing address")]/..//a[@class="edit"]',
                 billingFirstName: '#billing_first_name',
                 billingLastName: '#billing_last_name',
                 billingCompanyName: '#billing_company',
@@ -7136,18 +6060,15 @@ export const selector = {
                 billingNameOfBank: '#billing_dokan_bank_name',
                 billingBankIban: '#billing_dokan_bank_iban',
                 // billingCountryOrRegion: "#select2-billing_country-container",
-                billingCountryOrRegion:
-                    '(//span[@class="select2-selection__arrow"])[1]',
-                billingCountryOrRegionInput:
-                    '.select2-search.select2-search--dropdown .select2-search__field',
+                billingCountryOrRegion: '(//span[@class="select2-selection__arrow"])[1]',
+                billingCountryOrRegionInput: '.select2-search.select2-search--dropdown .select2-search__field',
                 billingCountryOrRegionValues: '.select2-results ul li',
                 billingStreetAddress: '#billing_address_1',
                 billingStreetAddress2: '#billing_address_2',
                 billingTownCity: '#billing_city',
                 // billingState: "#select2-billing_state-container",
                 billingState: '(//span[@class="select2-selection__arrow"])[2]',
-                billingStateInput:
-                    '.select2-search.select2-search--dropdown .select2-search__field',
+                billingStateInput: '.select2-search.select2-search--dropdown .select2-search__field',
                 billingStateValues: '.select2-results ul li',
                 billingZipCode: '#billing_postcode',
                 billingPhone: '#billing_phone',
@@ -7159,24 +6080,20 @@ export const selector = {
 
             // Shipping Address
             shipping: {
-                editShippingAddress:
-                    '//h3[contains(text(),"Shipping address")]/..//a[@class="edit"]',
+                editShippingAddress: '//h3[contains(text(),"Shipping address")]/..//a[@class="edit"]',
                 shippingFirstName: '#shipping_first_name',
                 shippingLastName: '#shipping_last_name',
                 shippingCompanyName: '#shipping_company',
                 // shippingCountryOrRegion: "#select2-shipping_country-container",
-                shippingCountryOrRegion:
-                    '(//span[@class="select2-selection__arrow"])[1]',
-                shippingCountryOrRegionInput:
-                    '.select2-search.select2-search--dropdown .select2-search__field',
+                shippingCountryOrRegion: '(//span[@class="select2-selection__arrow"])[1]',
+                shippingCountryOrRegionInput: '.select2-search.select2-search--dropdown .select2-search__field',
                 shippingCountryOrRegionValues: '.select2-results ul li',
                 shippingStreetAddress: '#shipping_address_1',
                 shippingStreetAddress2: '#shipping_address_2',
                 shippingTownCity: '#shipping_city',
                 // shippingState: "#select2-shipping_state-container",
                 shippingState: '(//span[@class="select2-selection__arrow"])[2]',
-                shippingStateInput:
-                    '.select2-search.select2-search--dropdown .select2-search__field',
+                shippingStateInput: '.select2-search.select2-search--dropdown .select2-search__field',
                 shippingStateValues: '.select2-results ul li',
                 shippingZipCode: '#shipping_postcode',
                 shippingSaveAddress: '//button[@name="save_address"]',
@@ -7202,8 +6119,7 @@ export const selector = {
             noRowsFound: '//td[normalize-space()="No request found"]',
             numberOfRowsFound: 'table tbody tr.order',
 
-            view: (orderNumber: string) =>
-                `//a[contains(text(),'Order #${orderNumber}')]/../..//a[@class="woocommerce-button button view"]`,
+            view: (orderNumber: string) => `//a[contains(text(),'Order #${orderNumber}')]/../..//a[@class="woocommerce-button button view"]`,
             // Conversations
             message: '#message',
             sendMessage: '.woocommerce-button',
@@ -7263,10 +6179,8 @@ export const selector = {
                 followUnFollowButton: 'button.dokan-follow-store-button',
             },
 
-            visitStore: (storeName: string) =>
-                `//a[text()='${storeName}']/../../../../..//a[@title='Visit Store']`,
-            followUnFollowStore: (storeName: string) =>
-                `//a[text()='${storeName}']/../../../../..//button[contains(@class,'dokan-follow-store-button')]`,
+            visitStore: (storeName: string) => `//a[text()='${storeName}']/../../../../..//a[@title='Visit Store']`,
+            followUnFollowStore: (storeName: string) => `//a[text()='${storeName}']/../../../../..//button[contains(@class,'dokan-follow-store-button')]`,
             currentFollowStatus: (storeName: string) =>
                 `//a[text()='${storeName}']/../../../../..//button[contains(@class,'dokan-follow-store-button')]//span[@class='dokan-follow-store-button-label-current']`,
         },
@@ -7275,12 +6189,9 @@ export const selector = {
         cSupportTickets: {
             // Menus
             menus: {
-                allTickets:
-                    '//ul[contains(@class,"subsubsub")]//a[contains(text(),"All Tickets")]',
-                openTickets:
-                    '//ul[contains(@class,"subsubsub")]//a[contains(text(),"Open Tickets")]',
-                closedTickets:
-                    '//ul[contains(@class,"subsubsub")]//a[contains(text(),"Closed Tickets")]',
+                allTickets: '//ul[contains(@class,"subsubsub")]//a[contains(text(),"All Tickets")]',
+                openTickets: '//ul[contains(@class,"subsubsub")]//a[contains(text(),"Open Tickets")]',
+                closedTickets: '//ul[contains(@class,"subsubsub")]//a[contains(text(),"Closed Tickets")]',
             },
 
             // table
@@ -7293,20 +6204,16 @@ export const selector = {
                 dateColumn: '//th[normalize-space()="Date"]',
             },
 
-            noSupportTicketFound:
-                '//div[@class="dokan-error" and contains(text(), "No tickets found!")]',
-            firstSupportTicket:
-                '(//div[@class="dokan-support-topics-list"]//tr//td//a)[1]',
-            supportTicketLink: (ticketId: string) =>
-                `//tr//td[normalize-space()="#${ticketId}"]//a`,
+            noSupportTicketFound: '//div[@class="dokan-error" and contains(text(), "No tickets found!")]',
+            firstSupportTicket: '(//div[@class="dokan-support-topics-list"]//tr//td//a)[1]',
+            supportTicketLink: (ticketId: string) => `//tr//td[normalize-space()="#${ticketId}"]//a`,
 
             supportTicketDetails: {
                 backToTickets: '//a[contains(text(),"← Back to Tickets")]',
 
                 basicDetails: {
                     basicDetailsDiv: 'div.dokan-support-single-title',
-                    ticketTitle:
-                        '//span[contains(@class,"dokan-chat-title") and not(contains(@class,"dokan-chat-status"))]',
+                    ticketTitle: '//span[contains(@class,"dokan-chat-title") and not(contains(@class,"dokan-chat-status"))]',
                     ticketId: 'span.dokan-chat-title.dokan-chat-status',
                 },
 
@@ -7318,10 +6225,8 @@ export const selector = {
 
                 orderReference: {
                     orderReferenceSpan: 'span.order-reference',
-                    orderReferenceText: (orderId: string) =>
-                        `//strong[normalize-space()="Referenced Order #${orderId}"]`,
-                    orderReferenceLink: (orderId: string) =>
-                        `//strong[normalize-space()="Referenced Order #${orderId}"]/..`,
+                    orderReferenceText: (orderId: string) => `//strong[normalize-space()="Referenced Order #${orderId}"]`,
+                    orderReferenceLink: (orderId: string) => `//strong[normalize-space()="Referenced Order #${orderId}"]/..`,
                 },
 
                 chatBox: {
@@ -7331,18 +6236,15 @@ export const selector = {
 
                 replyBox: {
                     addReplyText: '//strong[normalize-space()="Add Reply"]',
-                    replyBoxDiv:
-                        'div.dokan-panel.dokan-panel-default.dokan-dss-panel-default',
+                    replyBoxDiv: 'div.dokan-panel.dokan-panel-default.dokan-dss-panel-default',
                     addReply: '#dokan-support-commentform #comment',
                     submitReply: '#submit',
                 },
 
-                chatText: (text: string) =>
-                    `//div[contains(@class, 'dokan-chat-text')]//p[contains(text(),'${text}')]`,
+                chatText: (text: string) => `//div[contains(@class, 'dokan-chat-text')]//p[contains(text(),'${text}')]`,
 
                 closedTicket: {
-                    closedTicketHeading:
-                        '//strong[normalize-space()="Ticket Closed"]',
+                    closedTicketHeading: '//strong[normalize-space()="Ticket Closed"]',
                     closedTicketMessage: '.dokan-alert.dokan-alert-warning',
                 },
             },
@@ -7350,17 +6252,14 @@ export const selector = {
 
         // Customer Bookings
         cBookings: {
-            selectCalendarDay: (month: number, day: number) =>
-                `//td[@title="This date is available" and @ data-month="${month}"]//a[@data-date="${day}"]`,
-            view: (orderNumber: string) =>
-                `//a[contains(text(),'Order #${orderNumber}')]/../..//a[@class="woocommerce-button button view"]`,
+            selectCalendarDay: (month: number, day: number) => `//td[@title="This date is available" and @ data-month="${month}"]//a[@data-date="${day}"]`,
+            view: (orderNumber: string) => `//a[contains(text(),'Order #${orderNumber}')]/../..//a[@class="woocommerce-button button view"]`,
             bookNow: 'button.wc-bookings-booking-form-button',
         },
 
         // Customer Auctions Settings
         cAuctions: {
-            view: (orderNumber: string) =>
-                `//a[contains(text(),'Order #${orderNumber}')]/../..//a[@class="woocommerce-button button view"]`,
+            view: (orderNumber: string) => `//a[contains(text(),'Order #${orderNumber}')]/../..//a[@class="woocommerce-button button view"]`,
             bidValue: '//input[@name="bid_value"]',
             plus: '//input[@value="+"]',
             minus: '//input[@value="-"]',
@@ -7380,16 +6279,12 @@ export const selector = {
                 zoomIn: '//button[@title="Zoom in"]',
                 zoomOut: '//button[@title="Zoom out"]',
                 productOnMap: {
-                    productPin:
-                        '//div[@id="dokan-geolocation-locations-map"]//img[contains(@src, "maps.gstatic.com/mapfiles/transparent.png")]/../..//div[@role="button"]',
-                    productCluster:
-                        '//div[@id="dokan-geolocation-locations-map"]//div[contains(@style, "dokan-pro/modules/geolocation/assets/images")]',
-                    productOnMap:
-                        '//span[normalize-space()="To navigate, press the arrow keys."]/..//div',
+                    productPin: '//div[@id="dokan-geolocation-locations-map"]//img[contains(@src, "maps.gstatic.com/mapfiles/transparent.png")]/../..//div[@role="button"]',
+                    productCluster: '//div[@id="dokan-geolocation-locations-map"]//div[contains(@style, "dokan-pro/modules/geolocation/assets/images")]',
+                    productOnMap: '//span[normalize-space()="To navigate, press the arrow keys."]/..//div',
                     productPopup: '.dokan-geo-map-info-window',
                     productListPopup: '.dokan-geo-map-info-windows-in-popup',
-                    productOnList: (productName: string) =>
-                        `//h3[@class="info-title"]//a[contains(text(),"${productName}")]`,
+                    productOnList: (productName: string) => `//h3[@class="info-title"]//a[contains(text(),"${productName}")]`,
                     closePopup: 'button.icon-close',
                 },
             },
@@ -7403,8 +6298,7 @@ export const selector = {
                 search: '.dokan-btn',
             },
 
-            mapResultFirst:
-                '(//div[contains(@class,"pac-container")]//div[@class="pac-item"])[1]',
+            mapResultFirst: '(//div[contains(@class,"pac-container")]//div[@class="pac-item"])[1]',
 
             searchProductLite: '(//input[@class="search-field"])[1]',
 
@@ -7414,10 +6308,8 @@ export const selector = {
             // Product Card
             productCard: {
                 card: '#main .products',
-                productDetailsLink:
-                    '#main .products .woocommerce-LoopProduct-link',
-                productTitle:
-                    '#main .products .woocommerce-loop-product__title',
+                productDetailsLink: '#main .products .woocommerce-LoopProduct-link',
+                productTitle: '#main .products .woocommerce-loop-product__title',
                 productPrice: '#main .products .price',
                 addToCart: '#main .products a.add_to_cart_button',
                 viewCart: 'a.added_to_cart',
@@ -7436,8 +6328,7 @@ export const selector = {
         cSingleProduct: {
             // Product Details
             productDetails: {
-                productImage:
-                    '.woocommerce-product-gallery__wrapper img.wp-post-image',
+                productImage: '.woocommerce-product-gallery__wrapper img.wp-post-image',
                 productTitle: '.product_title.entry-title',
                 quantity: '.quantity input.qty',
                 addToCart: '.single_add_to_cart_button',
@@ -7485,8 +6376,7 @@ export const selector = {
                 rating: (star: string) => `.star-${star}`,
                 reviewMessage: '#comment',
                 submitReview: '#submit',
-                submittedReview: (reviewMessage: string) =>
-                    `//div[@class='comment_container']//div[@class='description']// p[text()='${reviewMessage}']`,
+                submittedReview: (reviewMessage: string) => `//div[@class='comment_container']//div[@class='description']// p[text()='${reviewMessage}']`,
                 awaitingApprovalReview: (reviewMessage: string) =>
                     `//div[@class='comment_container']//div[@class='description']// p[text()='${reviewMessage}']/../..//p//em[@class='woocommerce-review__awaiting-approval']`,
                 duplicateCommentAlert: '#error-page .wp-die-message p',
@@ -7521,8 +6411,7 @@ export const selector = {
 
             // Product Enquiry
             productEnquiry: {
-                productEnquiryHeading:
-                    '//h3[normalize-space()="Product Enquiry"]',
+                productEnquiryHeading: '//h3[normalize-space()="Product Enquiry"]',
                 enquiryMessage: '#dokan-enq-message',
                 submitEnquiry: 'input.dokan-btn-theme',
                 submitEnquirySuccessMessage: '.alert.alert-success',
@@ -7536,8 +6425,7 @@ export const selector = {
 
             // related product
             relatedProducts: {
-                relatedProductHeading:
-                    '//h2[normalize-space()="Related products"]',
+                relatedProductHeading: '//h2[normalize-space()="Related products"]',
                 products: '.related.products .products',
             },
 
@@ -7563,10 +6451,8 @@ export const selector = {
             // Report Abuse
             reportAbuse: {
                 reportAbuse: 'a.dokan-report-abuse-button',
-                reportReasonByNumber: (reasonNumber: string) =>
-                    `li:nth-child(${reasonNumber}) input`, // By Number
-                reportReasonByName: (reasonName: string) =>
-                    `//input[@value='${reasonName}']/..`, // By Name
+                reportReasonByNumber: (reasonNumber: string) => `li:nth-child(${reasonNumber}) input`, // By Number
+                reportReasonByName: (reasonName: string) => `//input[@value='${reasonName}']/..`, // By Name
                 reportDescription: 'textarea[name="description"]',
                 reportSubmit: '#dokan-report-abuse-form-submit-btn',
                 reportSubmitSuccessMessage: '#swal2-html-container',
@@ -7603,8 +6489,7 @@ export const selector = {
 
         cSpmv: {
             otherAvailableVendorDiv: 'div.dokan-other-vendor-camparison',
-            availableVendorDisplayAreaTitle:
-                'div.dokan-other-vendor-camparison h3',
+            availableVendorDisplayAreaTitle: 'div.dokan-other-vendor-camparison h3',
             availableVendorTable: '.table.dokan-other-vendor-camparison-table',
             otherVendorAvailableTab: 'li#tab-title-vendor_comaprison',
 
@@ -7631,12 +6516,9 @@ export const selector = {
                     viewProduct: '.table-row .table-cell.action-area .view',
                     addToCart: '.table-row .table-cell.action-area .cart',
 
-                    viewStoreByVendor: (storeName: string) =>
-                        `//a[normalize-space()="${storeName}"]/../..//div[@class="table-cell action-area"]//a[@class="dokan-btn tips link"]`,
-                    viewProductByVendor: (storeName: string) =>
-                        `//a[normalize-space()="${storeName}"]/../..//div[@class="table-cell action-area"]//a[@class="dokan-btn tips view"]`,
-                    addToCartByVendor: (storeName: string) =>
-                        `//a[normalize-space()="${storeName}"]/../..//div[@class="table-cell action-area"]//a[@class="dokan-btn tips cart"]`,
+                    viewStoreByVendor: (storeName: string) => `//a[normalize-space()="${storeName}"]/../..//div[@class="table-cell action-area"]//a[@class="dokan-btn tips link"]`,
+                    viewProductByVendor: (storeName: string) => `//a[normalize-space()="${storeName}"]/../..//div[@class="table-cell action-area"]//a[@class="dokan-btn tips view"]`,
+                    addToCartByVendor: (storeName: string) => `//a[normalize-space()="${storeName}"]/../..//div[@class="table-cell action-area"]//a[@class="dokan-btn tips cart"]`,
                 },
             },
         },
@@ -7654,16 +6536,12 @@ export const selector = {
                 zoomIn: '//button[@title="Zoom in"]',
                 zoomOut: '//button[@title="Zoom out"]',
                 storeOnMap: {
-                    storePin:
-                        '//div[@id="dokan-geolocation-locations-map"]//img[contains(@src, "maps.gstatic.com/mapfiles/transparent.png")]/../..//div[@role="button"]',
-                    storeCluster:
-                        '//div[@id="dokan-geolocation-locations-map"]//div[contains(@style, "dokan-pro/modules/geolocation/assets/images")]',
-                    storeOnMap:
-                        '//span[normalize-space()="To navigate, press the arrow keys."]/..//div',
+                    storePin: '//div[@id="dokan-geolocation-locations-map"]//img[contains(@src, "maps.gstatic.com/mapfiles/transparent.png")]/../..//div[@role="button"]',
+                    storeCluster: '//div[@id="dokan-geolocation-locations-map"]//div[contains(@style, "dokan-pro/modules/geolocation/assets/images")]',
+                    storeOnMap: '//span[normalize-space()="To navigate, press the arrow keys."]/..//div',
                     storePopup: '.dokan-geo-map-info-window',
                     storeListPopup: '.dokan-geo-map-info-windows-in-popup',
-                    storeOnList: (storeName: string) =>
-                        `//h3[@class="info-title"]//a[contains(text(),"${storeName}")]`,
+                    storeOnList: (storeName: string) => `//h3[@class="info-title"]//a[contains(text(),"${storeName}")]`,
                     closePopup: 'button.icon-close',
                 },
             },
@@ -7698,12 +6576,9 @@ export const selector = {
                 },
             },
 
-            category: (category: string) =>
-                `//div[@class="category-box store_category"]//ul//li[contains(text(), '${category}')]`,
-            categoryFirst:
-                '(//div[@class="category-box store_category"]//ul//li)[1]',
-            mapResultFirst:
-                '(//div[contains(@class,"pac-container")]//div[@class="pac-item"])[1]',
+            category: (category: string) => `//div[@class="category-box store_category"]//ul//li[contains(text(), '${category}')]`,
+            categoryFirst: '(//div[@class="category-box store_category"]//ul//li)[1]',
+            mapResultFirst: '(//div[contains(@class,"pac-container")]//div[@class="pac-item"])[1]',
 
             // Store card
             storeCard: {
@@ -7727,23 +6602,19 @@ export const selector = {
                 followUnFollowButton: 'button.dokan-follow-store-button',
             },
 
-            visitStore: (storeName: string) =>
-                `//a[text()='${storeName}']/../../../../..//a[@title='Visit Store']`,
-            followUnFollowStore: (storeName: string) =>
-                `//a[text()='${storeName}']/../../../../..//button[contains(@class,'dokan-follow-store-button')]`,
+            visitStore: (storeName: string) => `//a[text()='${storeName}']/../../../../..//a[@title='Visit Store']`,
+            followUnFollowStore: (storeName: string) => `//a[text()='${storeName}']/../../../../..//button[contains(@class,'dokan-follow-store-button')]`,
             currentFollowStatus: (storeName: string) =>
                 `//a[text()='${storeName}']/../../../../..//button[contains(@class,'dokan-follow-store-button')]//span[@class='dokan-follow-store-button-label-current']`,
             followUnFollowStoreSingleStore: 'button.dokan-follow-store-button',
-            currentFollowStatusSingleStore:
-                'span.dokan-follow-store-button-label-current',
+            currentFollowStatusSingleStore: 'span.dokan-follow-store-button-label-current',
         },
 
         // Customer Single Store
         cSingleStore: {
             // Store Profile Summary
             storeProfile: {
-                storeProfileSummary:
-                    '.dokan-single-store .profile-info-summery',
+                storeProfileSummary: '.dokan-single-store .profile-info-summery',
 
                 storeBanner: '.profile-info-img',
 
@@ -7787,11 +6658,9 @@ export const selector = {
                 getSupport: 'button.dokan-store-support-btn',
                 share: '.dokan-share-btn',
 
-                products:
-                    '//div[@class="dokan-store-tabs"]//a[contains(text(),"Products")]',
+                products: '//div[@class="dokan-store-tabs"]//a[contains(text(),"Products")]',
                 toc: '//div[@class="dokan-store-tabs"]//a[contains(text(),"Terms and Conditions")]',
-                reviews:
-                    '//div[@class="dokan-store-tabs"]//a[contains(text(),"Reviews")]',
+                reviews: '//div[@class="dokan-store-tabs"]//a[contains(text(),"Reviews")]',
             },
 
             // Search product
@@ -7810,10 +6679,8 @@ export const selector = {
             // Product Card
             productCard: {
                 card: '.seller-items .product',
-                productDetailsLink:
-                    '.seller-items .product .woocommerce-LoopProduct-link',
-                productTitle:
-                    '.seller-items .product .woocommerce-loop-product__title',
+                productDetailsLink: '.seller-items .product .woocommerce-LoopProduct-link',
+                productTitle: '.seller-items .product .woocommerce-loop-product__title',
                 productPrice: '.seller-items .product .price',
                 addToCart: '.seller-items .product .add_to_cart_button',
             },
@@ -7832,8 +6699,7 @@ export const selector = {
                 title: '#dokan-review-title',
                 message: '#dokan-review-details',
                 submit: '#support-submit-btn',
-                submittedReview: (reviewMessage: string) =>
-                    `//div[@class='review_comment_container']//div[@class='description']// p[text()='${reviewMessage}']`,
+                submittedReview: (reviewMessage: string) => `//div[@class='review_comment_container']//div[@class='description']// p[text()='${reviewMessage}']`,
 
                 reviewDetails: {
                     yourReview: '//h3[normalize-space()="Your Review"]',
@@ -7881,8 +6747,7 @@ export const selector = {
                 couponTitle: '.coupon-title',
                 couponBody: '.coupon-body',
                 couponCode: '..coupon-code',
-                coupon: (code: string) =>
-                    `//span[@class="coupon-code"]//strong[normalize-space()="${code}"]`,
+                coupon: (code: string) => `//span[@class="coupon-code"]//strong[normalize-space()="${code}"]`,
             },
         },
 
@@ -7902,16 +6767,11 @@ export const selector = {
             },
 
             noOrdersFound: '.dokan-info',
-            orderNumber: (orderNumber: string) =>
-                `//a[normalize-space()="${orderNumber}"]`,
-            orderView: (orderNumber: string) =>
-                `//a[normalize-space()="${orderNumber}"]/../..//a[@class="button view"]`,
-            orderPay: (orderNumber: string) =>
-                `//a[normalize-space()="${orderNumber}"]/../..//a[@class="button pay"]`,
-            orderCancel: (orderNumber: string) =>
-                `//a[normalize-space()="${orderNumber}"]/../..//a[@class="button cancel"]`,
-            orderRequestWarranty: (orderNumber: string) =>
-                `//a[normalize-space()="${orderNumber}"]/../..//a[@class="button request_warranty"]`,
+            orderNumber: (orderNumber: string) => `//a[normalize-space()="${orderNumber}"]`,
+            orderView: (orderNumber: string) => `//a[normalize-space()="${orderNumber}"]/../..//a[@class="button view"]`,
+            orderPay: (orderNumber: string) => `//a[normalize-space()="${orderNumber}"]/../..//a[@class="button pay"]`,
+            orderCancel: (orderNumber: string) => `//a[normalize-space()="${orderNumber}"]/../..//a[@class="button cancel"]`,
+            orderRequestWarranty: (orderNumber: string) => `//a[normalize-space()="${orderNumber}"]/../..//a[@class="button request_warranty"]`,
         },
 
         cRequestForQuote: {
@@ -7921,14 +6781,12 @@ export const selector = {
             },
 
             orderDetails: {
-                quoteNoteOnOrderDetails:
-                    '//td[normalize-space()="Created by converting quote to order."]',
+                quoteNoteOnOrderDetails: '//td[normalize-space()="Created by converting quote to order."]',
             },
 
             // request for quote
             requestForQuote: {
-                requestForQuoteText:
-                    '//h1[normalize-space()="Request for Quote"]',
+                requestForQuoteText: '//h1[normalize-space()="Request for Quote"]',
                 noQuotesFound: '//p[@class="cart-empty"]',
                 returnToShop: '//a[normalize-space()="Return To Shop"]',
 
@@ -7936,38 +6794,30 @@ export const selector = {
                     quoteDetailsText: '//h2[normalize-space()="Quote Details"]',
 
                     table: {
-                        quoteDetailsTable:
-                            '//table[contains(@class,"quote_details") and contains(@class,"cart")]',
+                        quoteDetailsTable: '//table[contains(@class,"quote_details") and contains(@class,"cart")]',
                         productColumn: '//th[@class="product-name"]',
                         priceColumn: '//th[normalize-space()="Price"]',
-                        offeredPriceColumn:
-                            '//th[normalize-space()="Offered Price"]',
+                        offeredPriceColumn: '//th[normalize-space()="Offered Price"]',
                         quantityColumn: '//th[@class="product-quantity"]',
                         subtotalColumn: '//th[normalize-space()="Subtotal"]',
-                        offeredSubtotalColumn:
-                            '//th[normalize-space()="Offered Subtotal"]',
+                        offeredSubtotalColumn: '//th[normalize-space()="Offered Subtotal"]',
                     },
                 },
 
                 quoteTotals: {
                     quoteTotalsTitle: '//h2[normalize-space()="Quote totals"]',
                     quoteTotalsDiv: '.cart_totals',
-                    quoteTotalsTable:
-                        '//div[@class="cart_totals"]//table[contains(@class,"table_quote_totals")]',
+                    quoteTotalsTable: '//div[@class="cart_totals"]//table[contains(@class,"table_quote_totals")]',
 
                     subTotalText: '//tr[@class="cart-subtotal"]',
-                    offeredPriceSubtotalText:
-                        '//tr[@class="cart-subtotal offered"]//th',
+                    offeredPriceSubtotalText: '//tr[@class="cart-subtotal offered"]//th',
 
                     subTotalValue: '//td[@data-title="Subtotal (standard)"]',
-                    offeredPriceSubtotalValue:
-                        '//td[@data-title="Offered Price Subtotal"]',
+                    offeredPriceSubtotalValue: '//td[@data-title="Offered Price Subtotal"]',
                 },
 
-                offeredPriceInput: (productName: string) =>
-                    `//a[normalize-space()="${productName}"]/../..//input[@class="input-text offered-price-input text"]`,
-                quantityInput: (productName: string) =>
-                    `//a[normalize-space()="${productName}"]/../..//div[@class="quantity"]//input`,
+                offeredPriceInput: (productName: string) => `//a[normalize-space()="${productName}"]/../..//input[@class="input-text offered-price-input text"]`,
+                quantityInput: (productName: string) => `//a[normalize-space()="${productName}"]/../..//div[@class="quantity"]//input`,
 
                 updateQuote: 'button#dokan_update_quote_btn',
                 placeQuote: 'button[name="dokan_checkout_place_quote"]',
@@ -7984,11 +6834,9 @@ export const selector = {
 
             // requested quote
             requestedQuote: {
-                requestedQuoteText:
-                    '//h1[normalize-space()="Requested Quotes"]',
+                requestedQuoteText: '//h1[normalize-space()="Requested Quotes"]',
 
-                noQuoteMessage:
-                    '//div[contains(@class, "woocommerce-message woocommerce-message--info")]',
+                noQuoteMessage: '//div[contains(@class, "woocommerce-message woocommerce-message--info")]',
                 goToShop: '//a[normalize-space()="Go to shop"]',
 
                 // table
@@ -8003,72 +6851,53 @@ export const selector = {
 
                 pagination: 'ul.pagination',
 
-                viewQuoteDetails: (quoteId: string) =>
-                    `//td[normalize-space()="Quote ${quoteId}"]/..//a[@class="woocommerce-button button view"]`,
+                viewQuoteDetails: (quoteId: string) => `//td[normalize-space()="Quote ${quoteId}"]/..//a[@class="woocommerce-button button view"]`,
 
                 // requested quote details
                 requestedQuoteDetails: {
-                    requestedQuoteText:
-                        '//h1[normalize-space()="Requested Quotes"]',
+                    requestedQuoteText: '//h1[normalize-space()="Requested Quotes"]',
 
                     basicDetails: {
-                        basicDetailsTable:
-                            '(//table[@class="shop_table shop_table_responsive table_quote_totals dokan-table order-items"])[1]',
+                        basicDetailsTable: '(//table[@class="shop_table shop_table_responsive table_quote_totals dokan-table order-items"])[1]',
                         quoteNumberText: '//th[normalize-space()="Quote #"]',
                         quoteDateText: '//th[normalize-space()="Quote Date"]',
-                        quoteStatusText:
-                            '//th[normalize-space()="Current Status"]',
+                        quoteStatusText: '//th[normalize-space()="Current Status"]',
 
-                        quoteNumberValue:
-                            '//th[normalize-space()="Quote #"]/..//td',
-                        quoteDateValue:
-                            '//th[normalize-space()="Quote Date"]/..//td',
-                        quoteStatusValue:
-                            '//th[normalize-space()="Current Status"]/..//td',
+                        quoteNumberValue: '//th[normalize-space()="Quote #"]/..//td',
+                        quoteDateValue: '//th[normalize-space()="Quote Date"]/..//td',
+                        quoteStatusValue: '//th[normalize-space()="Current Status"]/..//td',
                     },
 
                     viewOrder: '//a[normalize-space()="View Order"]',
 
                     quoteItemDetails: {
-                        quoteDetailsText:
-                            '//h2[normalize-space()="Quote Details"]',
+                        quoteDetailsText: '//h2[normalize-space()="Quote Details"]',
 
                         table: {
-                            quoteDetailsTable:
-                                '//table[contains(@class,"quote_details") and contains(@class,"cart")]',
+                            quoteDetailsTable: '//table[contains(@class,"quote_details") and contains(@class,"cart")]',
                             productColumn: '//th[@class="product-name"]',
                             priceColumn: '//th[normalize-space()="Price"]',
-                            offeredPriceColumn:
-                                '//th[normalize-space()="Offered Price"]',
+                            offeredPriceColumn: '//th[normalize-space()="Offered Price"]',
                             quantityColumn: '//th[@class="product-quantity"]',
-                            subtotalColumn:
-                                '//th[normalize-space()="Subtotal"]',
-                            offeredSubtotalColumn:
-                                '//th[normalize-space()="Offered Subtotal"]',
+                            subtotalColumn: '//th[normalize-space()="Subtotal"]',
+                            offeredSubtotalColumn: '//th[normalize-space()="Offered Subtotal"]',
                         },
                     },
 
                     quoteTotals: {
-                        quoteTotalsTitle:
-                            '//h2[normalize-space()="Quote totals"]',
+                        quoteTotalsTitle: '//h2[normalize-space()="Quote totals"]',
                         quoteTotalsDiv: '.cart_totals',
-                        quoteTotalsTable:
-                            '//div[@class="cart_totals"]//table[contains(@class,"table_quote_totals")]',
+                        quoteTotalsTable: '//div[@class="cart_totals"]//table[contains(@class,"table_quote_totals")]',
 
                         subTotalText: '//tr[@class="cart-subtotal"]',
-                        offeredPriceSubtotalText:
-                            '//tr[@class="cart-subtotal offered"]//th',
+                        offeredPriceSubtotalText: '//tr[@class="cart-subtotal offered"]//th',
 
-                        subTotalValue:
-                            '//td[@data-title="Subtotal (standard)"]',
-                        offeredPriceSubtotalValue:
-                            '//td[@data-title="Offered Price Subtotal"]',
+                        subTotalValue: '//td[@data-title="Subtotal (standard)"]',
+                        offeredPriceSubtotalValue: '//td[@data-title="Offered Price Subtotal"]',
                     },
 
-                    offeredPriceInput: (productName: string) =>
-                        `//a[normalize-space()="${productName}"]/../..//input[@class="input-text offered-price-input text"]`,
-                    quantityInput: (productName: string) =>
-                        `//a[normalize-space()="${productName}"]/../..//div[@class="quantity"]//input`,
+                    offeredPriceInput: (productName: string) => `//a[normalize-space()="${productName}"]/../..//input[@class="input-text offered-price-input text"]`,
+                    quantityInput: (productName: string) => `//a[normalize-space()="${productName}"]/../..//div[@class="quantity"]//input`,
 
                     updateQuote: 'button[name="dokan_update_quote"]',
 
@@ -8082,10 +6911,8 @@ export const selector = {
             // Cart Content
             cartContent: '.cart-contents .woocommerce-Price-amount',
             removeItem: '.remove',
-            viewCart:
-                '//p[contains(@class,"woocommerce-mini-cart__buttons")]//a[contains(text(),"View cart")]',
-            checkout:
-                '//p[contains(@class,"woocommerce-mini-cart__buttons")]//a[contains(text(),"Checkout")]',
+            viewCart: '//p[contains(@class,"woocommerce-mini-cart__buttons")]//a[contains(text(),"View cart")]',
+            checkout: '//p[contains(@class,"woocommerce-mini-cart__buttons")]//a[contains(text(),"Checkout")]',
         },
 
         // Customer Cart
@@ -8093,33 +6920,24 @@ export const selector = {
             cartPageHeader: 'h1.entry-title',
 
             // Edit Cart
-            cartItem: (productName: string) =>
-                `//td[@class='product-name']//a[contains(text(),'${productName}')]`,
-            removeItem: (productName: string) =>
-                `//a[contains(text(),'${productName}')]/../..//a[@class='remove']`,
-            quantity: (productName: string) =>
-                `//a[contains(text(),'${productName}')]/../..//input[@class='input-text qty text']`,
+            cartItem: (productName: string) => `//td[@class='product-name']//a[contains(text(),'${productName}')]`,
+            removeItem: (productName: string) => `//a[contains(text(),'${productName}')]/../..//a[@class='remove']`,
+            quantity: (productName: string) => `//a[contains(text(),'${productName}')]/../..//input[@class='input-text qty text']`,
             couponCode: '#coupon_code',
             applyCoupon: '//button[@name="apply_coupon"]',
-            removeCoupon: (couponCode: string) =>
-                `.cart-discount.coupon-${couponCode.toLowerCase()} .woocommerce-remove-coupon`,
+            removeCoupon: (couponCode: string) => `.cart-discount.coupon-${couponCode.toLowerCase()} .woocommerce-remove-coupon`,
             updateCart: '//button[@name="update_cart"]',
 
             cartDetails: {
-                cartTotal:
-                    'tr.cart-subtotal span.woocommerce-Price-amount.amount',
-                shipping:
-                    '//ul[@id="shipping_method"]//input[@checked="checked"]/..//span[@class="woocommerce-Price-amount amount"]',
+                cartTotal: 'tr.cart-subtotal span.woocommerce-Price-amount.amount',
+                shipping: '//ul[@id="shipping_method"]//input[@checked="checked"]/..//span[@class="woocommerce-Price-amount amount"]',
                 tax: 'tr.tax-rate span.woocommerce-Price-amount.amount',
-                orderTotal:
-                    'tr.order-total span.woocommerce-Price-amount.amount',
+                orderTotal: 'tr.order-total span.woocommerce-Price-amount.amount',
             },
 
             // Shipping Methods
-            shippingMethod: (vendorName: string, shippingMethod: string) =>
-                `//th[contains(text(),'Shipping:  ${vendorName}')]/..//label[contains(text(),'${shippingMethod}')]/..//input`, // For Vendor-Wise or Admin Shipping Method
-            vendorShippingMethod: (shippingMethod: string) =>
-                `//label[contains(text(),'${shippingMethod}')]/..//input`, // For Unique Shipping Method
+            shippingMethod: (vendorName: string, shippingMethod: string) => `//th[contains(text(),'Shipping:  ${vendorName}')]/..//label[contains(text(),'${shippingMethod}')]/..//input`, // For Vendor-Wise or Admin Shipping Method
+            vendorShippingMethod: (shippingMethod: string) => `//label[contains(text(),'${shippingMethod}')]/..//input`, // For Unique Shipping Method
 
             // Proceed to Checkout
             proceedToCheckout: '.checkout-button.button.wc-forward',
@@ -8133,16 +6951,13 @@ export const selector = {
         cWholesale: {
             shop: {
                 wholesalePrice: 'span.dokan-wholesale-price',
-                wholesaleAmount:
-                    'span.dokan-wholesale-price span.woocommerce-Price-amount.amount',
+                wholesaleAmount: 'span.dokan-wholesale-price span.woocommerce-Price-amount.amount',
             },
 
             singleProductDetails: {
                 wholesaleInfo: 'p.dokan-wholesale-meta',
-                wholesalePrice:
-                    'p.dokan-wholesale-meta .woocommerce-Price-amount.amount',
-                minimumQuantity:
-                    '(//p[@class="dokan-wholesale-meta"]//strong)[2]',
+                wholesalePrice: 'p.dokan-wholesale-meta .woocommerce-Price-amount.amount',
+                minimumQuantity: '(//p[@class="dokan-wholesale-meta"]//strong)[2]',
             },
         },
 
@@ -8154,13 +6969,10 @@ export const selector = {
                 orderDetailsHeading: 'h3#order_review_heading',
                 orderDetailsDiv: 'div#order_review',
 
-                cartTotal:
-                    'tr.cart-subtotal span.woocommerce-Price-amount.amount',
-                shipping:
-                    '//ul[@id="shipping_method"]//input[@checked="checked"]/..//span[@class="woocommerce-Price-amount amount"]',
+                cartTotal: 'tr.cart-subtotal span.woocommerce-Price-amount.amount',
+                shipping: '//ul[@id="shipping_method"]//input[@checked="checked"]/..//span[@class="woocommerce-Price-amount amount"]',
                 tax: 'tr.tax-rate span.woocommerce-Price-amount.amount',
-                orderTotal:
-                    'tr.order-total span.woocommerce-Price-amount.amount',
+                orderTotal: 'tr.order-total span.woocommerce-Price-amount.amount',
             },
 
             // Billing Details
@@ -8168,8 +6980,7 @@ export const selector = {
                 billingFirstName: '#billing_first_name',
                 billingLastName: '#billing_last_name',
                 billingCompanyName: '#billing_company',
-                billingCompanyIDOrEuidNumber:
-                    '#billing_dokan_company_id_number',
+                billingCompanyIDOrEuidNumber: '#billing_dokan_company_id_number',
                 billingVatOrTaxNumber: '#billing_dokan_vat_number',
                 billingNameOfBank: '#billing_dokan_bank_name',
                 billingBankIban: '#billing_dokan_bank_iban',
@@ -8209,23 +7020,18 @@ export const selector = {
             orderComments: '#order_comments',
 
             // Shipping Methods
-            shippingMethod: (vendorName: string, shippingMethod: string) =>
-                `//th[contains(text(),'Shipping:  ${vendorName}')]/..//label[contains(text(),'${shippingMethod}')]/..//input`, // For Vendor-Wise or Admin Shipping Method
-            vendorShippingMethod: (shippingMethod: string) =>
-                `//label[contains(text(),'${shippingMethod}')]/..//input`, // For Unique Shipping Method
+            shippingMethod: (vendorName: string, shippingMethod: string) => `//th[contains(text(),'Shipping:  ${vendorName}')]/..//label[contains(text(),'${shippingMethod}')]/..//input`, // For Vendor-Wise or Admin Shipping Method
+            vendorShippingMethod: (shippingMethod: string) => `//label[contains(text(),'${shippingMethod}')]/..//input`, // For Unique Shipping Method
 
             // Payment Methods
             directBankTransfer: '.payment_method_bacs label',
             checkPayments: '.payment_method_cheque label',
             cashOnDelivery: '.payment_method_cod label',
             paypalAdaptive: '.payment_method_dokan_paypal_adaptive label',
-            stripeConnect:
-                '.wc_payment_method.payment_method_dokan-stripe-connect label[for="payment_method_dokan-stripe-connect"]',
+            stripeConnect: '.wc_payment_method.payment_method_dokan-stripe-connect label[for="payment_method_dokan-stripe-connect"]',
             wireCardCreditCard: '.payment_method_dokan-moip-connect label',
-            paypalMarketPlace:
-                '.wc_payment_method.payment_method_dokan_paypal_marketplace label',
-            stripeExpress:
-                '.wc_payment_method.payment_method_dokan_stripe_express label',
+            paypalMarketPlace: '.wc_payment_method.payment_method_dokan_paypal_marketplace label',
+            stripeExpress: '.wc_payment_method.payment_method_dokan_stripe_express label',
 
             // Place Order
             placeOrder: '#place_order',
@@ -8233,17 +7039,14 @@ export const selector = {
 
         cPayWithStripe: {
             strip: '#payment_method_dokan-stripe-connect',
-            savedTestCard4242:
-                '//label[contains(text(),"Visa ending in 4242")]/..//input',
+            savedTestCard4242: '//label[contains(text(),"Visa ending in 4242")]/..//input',
             userNewPaymentMethod: '#wc-dokan-stripe-connect-payment-token-new',
-            stripeConnectIframe:
-                'div#dokan-stripe-card-element iframe[title="Secure card payment input frame"]',
+            stripeConnectIframe: 'div#dokan-stripe-card-element iframe[title="Secure card payment input frame"]',
             creditCard: '#card-tab',
             cardNumber: 'input[name="cardnumber"]',
             expDate: 'input[name="exp-date"]',
             cvc: 'input[name="cvc"]',
-            savePaymentInformation:
-                '#wc-dokan-stripe-connect-new-payment-method',
+            savePaymentInformation: '#wc-dokan-stripe-connect-new-payment-method',
         },
 
         cPayWithPaypalMarketPlace: {
@@ -8268,11 +7071,9 @@ export const selector = {
         },
 
         cPayWithStripeExpress: {
-            savedTestCard4242:
-                '//label[contains(text(),"Visa ending in 4242")]/..//input',
+            savedTestCard4242: '//label[contains(text(),"Visa ending in 4242")]/..//input',
             userNewPaymentMethod: '#wc-dokan_stripe_express-payment-token-new',
-            savePaymentInformation:
-                '#wc-dokan_stripe_express-new-payment-method',
+            savePaymentInformation: '#wc-dokan_stripe_express-new-payment-method',
             stripeExpressIframe: '#dokan-stripe-express-element iframe',
             creditCard: '#card-tab',
             gPay: '#google_pay-tab',
@@ -8287,42 +7088,32 @@ export const selector = {
             deliveryTimeDiv: 'div#dokan-delivery-time-box',
 
             deliveryDetailsText: '//h3[normalize-space()="Delivery details"]',
-            deliveryTimeZone:
-                'div.delivery-timezone.dokan-delivery-time-tooltip',
+            deliveryTimeZone: 'div.delivery-timezone.dokan-delivery-time-tooltip',
 
             deliveryTimeBody: 'div.delivery-time-body',
             vendorInfo: 'div.delivery-time-body .vendor-info',
 
-            delivery:
-                '//div[@class="dokan-store-location-selector"]//div[@data-selector="delivery"]',
-            storePickup:
-                '//div[@class="dokan-store-location-selector"]//div[@data-selector="store-pickup"]',
+            delivery: '//div[@class="dokan-store-location-selector"]//div[@data-selector="delivery"]',
+            storePickup: '//div[@class="dokan-store-location-selector"]//div[@data-selector="store-pickup"]',
 
-            deliveryTimeInput:
-                '//input[@class="delivery-time-date-picker form-control input"]',
-            deliveryTimeInputHidden:
-                '//input[@class="delivery-time-date-picker flatpickr-input"]',
-            deliveryDate: (date: string) =>
-                `//div[contains(@class,"flatpickr-calendar")]//div[@class="dayContainer"]//span[contains(@class,"flatpickr-day") and @aria-label="${date}"]`,
+            deliveryTimeInput: '//input[@class="delivery-time-date-picker form-control input"]',
+            deliveryTimeInputHidden: '//input[@class="delivery-time-date-picker flatpickr-input"]',
+            deliveryDate: (date: string) => `//div[contains(@class,"flatpickr-calendar")]//div[@class="dayContainer"]//span[contains(@class,"flatpickr-day") and @aria-label="${date}"]`,
 
             timePicker: 'select.delivery-time-slot-picker',
             locationPicker: 'select.delivery-store-location-picker',
 
             orderDetails: {
-                deliveryTimeDetails:
-                    'div#dokan-delivery-time-slot-order-details',
+                deliveryTimeDetails: 'div#dokan-delivery-time-slot-order-details',
                 storePickupDetails: 'div#dokan-store-location-order-details',
-                deliveryTimeTitle:
-                    'div#dokan-delivery-time-slot-order-details .main strong',
-                storePickupTitle:
-                    'div#dokan-store-location-order-details .main strong',
+                deliveryTimeTitle: 'div#dokan-delivery-time-slot-order-details .main strong',
+                storePickupTitle: 'div#dokan-store-location-order-details .main strong',
             },
         },
 
         cOrderReceived: {
             orderReceivedHeading: '//h1[normalize-space()="Order received"]',
-            orderReceivedSuccessMessage:
-                '.woocommerce-notice.woocommerce-notice--success.woocommerce-thankyou-order-received',
+            orderReceivedSuccessMessage: '.woocommerce-notice.woocommerce-notice--success.woocommerce-thankyou-order-received',
 
             // Order Details
             orderDetails: {
@@ -8331,19 +7122,14 @@ export const selector = {
                 orderDate: '.woocommerce-order-overview__date.date strong',
                 email: '.woocommerce-order-overview__email.email strong',
                 total: '.woocommerce-order-overview__total.total strong',
-                paymentMethod:
-                    '.woocommerce-order-overview__payment-method.method strong',
+                paymentMethod: '.woocommerce-order-overview__payment-method.method strong',
 
-                subTotal:
-                    '//th[normalize-space()="Subtotal:"]//..//span[@class="woocommerce-Price-amount amount"]',
+                subTotal: '//th[normalize-space()="Subtotal:"]//..//span[@class="woocommerce-Price-amount amount"]',
                 shippingMethod: '//th[normalize-space()="Shipping:"]/..//small',
-                shippingCost:
-                    '//th[normalize-space()="Shipping:"]/..//span[@class="woocommerce-Price-amount amount"]',
+                shippingCost: '//th[normalize-space()="Shipping:"]/..//span[@class="woocommerce-Price-amount amount"]',
                 tax: '//th[normalize-space()="Tax:"]//..//span[@class="woocommerce-Price-amount amount"]',
-                orderPaymentMethod:
-                    '//th[normalize-space()="Payment method:"]//..//td',
-                orderTotal:
-                    '//th[normalize-space()="Total:"]//..//span[@class="woocommerce-Price-amount amount"]',
+                orderPaymentMethod: '//th[normalize-space()="Payment method:"]//..//td',
+                orderTotal: '//th[normalize-space()="Total:"]//..//span[@class="woocommerce-Price-amount amount"]',
 
                 subOrders: {
                     subOrders: '//h2[normalize-space()="Sub Orders"]',
@@ -8355,17 +7141,13 @@ export const selector = {
 
             // customer details
             customerDetails: {
-                customerDetailsSection:
-                    '.woocommerce-customer-details .addresses',
+                customerDetailsSection: '.woocommerce-customer-details .addresses',
                 // Billing address
-                billingAddressHeading:
-                    '//h2[normalize-space()="Billing address"]',
+                billingAddressHeading: '//h2[normalize-space()="Billing address"]',
                 billingAddress: '.woocommerce-column--billing-address  address',
                 // shipping address
-                shippingAddressHeading:
-                    '//h2[normalize-space()="Shipping address"]',
-                shippingAddress:
-                    '.woocommerce-column--shipping-address  address',
+                shippingAddressHeading: '//h2[normalize-space()="Shipping address"]',
+                shippingAddress: '.woocommerce-column--shipping-address  address',
             },
 
             getSupport: '.dokan-store-support-btn',
@@ -8388,41 +7170,30 @@ export const selector = {
                 orderTotalTitle: '//th[normalize-space()="Total:"]',
 
                 // values
-                subTotalValue:
-                    '//th[normalize-space()="Subtotal:"]//..//span[@class="woocommerce-Price-amount amount"]',
-                shippingMethodValue:
-                    '//th[normalize-space()="Shipping:"]/..//small',
-                shippingCostValue:
-                    '//th[normalize-space()="Shipping:"]/..//span[@class="woocommerce-Price-amount amount"]',
-                paymentMethodValue:
-                    '//th[normalize-space()="Payment method:"]//..//td',
-                orderTotalValue:
-                    '//th[normalize-space()="Total:"]//..//span[@class="woocommerce-Price-amount amount"]',
+                subTotalValue: '//th[normalize-space()="Subtotal:"]//..//span[@class="woocommerce-Price-amount amount"]',
+                shippingMethodValue: '//th[normalize-space()="Shipping:"]/..//small',
+                shippingCostValue: '//th[normalize-space()="Shipping:"]/..//span[@class="woocommerce-Price-amount amount"]',
+                paymentMethodValue: '//th[normalize-space()="Payment method:"]//..//td',
+                orderTotalValue: '//th[normalize-space()="Total:"]//..//span[@class="woocommerce-Price-amount amount"]',
             },
 
             // order update  [shows when order note exists]
             orderUpdates: {
                 orderReceivedHeading: '//h2[normalize-space()="Order updates"]',
                 allOrderNotes: 'ol.woocommerce-OrderUpdates.commentlist.notes',
-                singleOrderNote:
-                    'div.woocommerce-OrderUpdate-description.description p',
-                orderNote: (note: string) =>
-                    `//div[@class="woocommerce-OrderUpdate-description description"]//p[contains(text(),"${note}")]`,
+                singleOrderNote: 'div.woocommerce-OrderUpdate-description.description p',
+                orderNote: (note: string) => `//div[@class="woocommerce-OrderUpdate-description description"]//p[contains(text(),"${note}")]`,
             },
 
             // customer details
             customerDetails: {
-                customerDetailsSection:
-                    '.woocommerce-customer-details .addresses',
+                customerDetailsSection: '.woocommerce-customer-details .addresses',
                 // Billing address
-                billingAddressHeading:
-                    '//h2[normalize-space()="Billing address"]',
+                billingAddressHeading: '//h2[normalize-space()="Billing address"]',
                 billingAddress: '.woocommerce-column--billing-address  address',
                 // shipping address
-                shippingAddressHeading:
-                    '//h2[normalize-space()="Shipping address"]',
-                shippingAddress:
-                    '.woocommerce-column--shipping-address  address',
+                shippingAddressHeading: '//h2[normalize-space()="Shipping address"]',
+                shippingAddress: '.woocommerce-column--shipping-address  address',
             },
 
             orderAgain: '.order-again .button',

@@ -22,17 +22,12 @@ test.describe('Booking Product test', () => {
         vPage = await vendorContext.newPage();
         vendor = new BookingPage(vPage);
 
-        const customerContext = await browser.newContext(
-            data.auth.customerAuth,
-        );
+        const customerContext = await browser.newContext(data.auth.customerAuth);
         cPage = await customerContext.newPage();
         customer = new BookingPage(cPage);
 
         apiUtils = new ApiUtils(request);
-        [, , bookableProductName] = await apiUtils.createBookableProduct(
-            payloads.createBookableProduct(),
-            payloads.vendorAuth,
-        );
+        [, , bookableProductName] = await apiUtils.createBookableProduct(payloads.createBookableProduct(), payloads.vendorAuth);
 
         await vendor.addBookingResource(bookingResourceName); // todo: convert with api or db
     });
@@ -106,17 +101,12 @@ test.describe('Booking Product test', () => {
     });
 
     test('vendor can permanently delete booking product @pro', async () => {
-        const [, , bookableProductName] = await apiUtils.createBookableProduct(
-            payloads.createBookableProduct(),
-            payloads.vendorAuth,
-        );
+        const [, , bookableProductName] = await apiUtils.createBookableProduct(payloads.createBookableProduct(), payloads.vendorAuth);
         await vendor.deleteBookingProduct(bookableProductName);
     });
 
     test('vendor can add booking resource @pro', async () => {
-        await vendor.addBookingResource(
-            data.product.booking.resource.resourceName(),
-        );
+        await vendor.addBookingResource(data.product.booking.resource.resourceName());
     });
 
     test('vendor can edit booking resource @pro', async () => {
@@ -127,8 +117,7 @@ test.describe('Booking Product test', () => {
     });
 
     test('vendor can delete booking resource @pro', async () => {
-        const bookingResourceName =
-            data.product.booking.resource.resourceName();
+        const bookingResourceName = data.product.booking.resource.resourceName();
         await vendor.addBookingResource(bookingResourceName);
         await vendor.deleteBookingResource(bookingResourceName);
     });
@@ -138,11 +127,7 @@ test.describe('Booking Product test', () => {
     });
 
     test('vendor can add booking for existing customer @pro', async () => {
-        await vendor.addBooking(
-            bookableProductName,
-            data.bookings,
-            data.customer.username,
-        );
+        await vendor.addBooking(bookableProductName, data.bookings, data.customer.username);
     });
 
     test('customer can buy bookable product @pro', async () => {

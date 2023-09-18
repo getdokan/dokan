@@ -15,10 +15,7 @@ export class WpPage extends AdminPage {
     async checkActivePlugins(plugins: plugin) {
         await this.goIfNotThere(data.subUrls.backend.plugins);
         for (const pluginSlug of plugins.pluginSlugs) {
-            await this.toHaveClass(
-                selector.admin.plugins.plugin(pluginSlug),
-                plugins.activeClass,
-            );
+            await this.toHaveClass(selector.admin.plugins.plugin(pluginSlug), plugins.activeClass);
         }
     }
 
@@ -35,15 +32,9 @@ export class WpPage extends AdminPage {
         // enable user registration
         await this.check(selector.admin.settings.membership);
         // timezone
-        await this.selectByValue(
-            selector.admin.settings.timezone,
-            general.timezone,
-        );
+        await this.selectByValue(selector.admin.settings.timezone, general.timezone);
         await this.click(selector.admin.settings.generalSaveChanges);
-        await this.toContainText(
-            selector.admin.settings.updatedSuccessMessage,
-            general.saveSuccessMessage,
-        );
+        await this.toContainText(selector.admin.settings.updatedSuccessMessage, general.saveSuccessMessage);
     }
 
     // admin set permalink settings
@@ -52,20 +43,12 @@ export class WpPage extends AdminPage {
 
         // set permalinks settings
         await this.click(selector.admin.settings.postName);
-        const customBaseIsVisible = await this.isVisible(
-            selector.admin.settings.customBase,
-        );
+        const customBaseIsVisible = await this.isVisible(selector.admin.settings.customBase);
         if (customBaseIsVisible) {
             await this.click(selector.admin.settings.customBase);
-            await this.clearAndType(
-                selector.admin.settings.customBaseInput,
-                permalink.customBaseInput,
-            );
+            await this.clearAndType(selector.admin.settings.customBaseInput, permalink.customBaseInput);
         }
         await this.click(selector.admin.settings.permalinkSaveChanges);
-        await this.toContainText(
-            selector.admin.settings.updatedSuccessMessage,
-            permalink.saveSuccessMessage,
-        );
+        await this.toContainText(selector.admin.settings.updatedSuccessMessage, permalink.saveSuccessMessage);
     }
 }

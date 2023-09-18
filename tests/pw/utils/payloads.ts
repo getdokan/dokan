@@ -2,8 +2,7 @@ import { faker } from '@faker-js/faker';
 import { helpers } from '@utils/helpers';
 import { dbData } from '@utils/dbData';
 
-const basicAuth = (username: string, password: string) =>
-    'Basic ' + Buffer.from(username + ':' + password).toString('base64');
+const basicAuth = (username: string, password: string) => 'Basic ' + Buffer.from(username + ':' + password).toString('base64');
 
 export const payloads = {
     // wp
@@ -59,17 +58,11 @@ export const payloads = {
     },
 
     vendor2Auth: {
-        Authorization: basicAuth(
-            process.env.VENDOR2,
-            process.env.USER_PASSWORD,
-        ),
+        Authorization: basicAuth(process.env.VENDOR2, process.env.USER_PASSWORD),
     },
 
     customerAuth: {
-        Authorization: basicAuth(
-            process.env.CUSTOMER,
-            process.env.USER_PASSWORD,
-        ),
+        Authorization: basicAuth(process.env.CUSTOMER, process.env.USER_PASSWORD),
     },
 
     admin: {
@@ -104,11 +97,7 @@ export const payloads = {
     createProduct: () => ({
         name: faker.commerce.productName() + ' (Simple)',
         type: 'simple',
-        regular_price: faker.finance.amount(
-            100,
-            200,
-            faker.helpers.arrayElement([0, 2]),
-        ),
+        regular_price: faker.finance.amount(100, 200, faker.helpers.arrayElement([0, 2])),
         // regular_price: '114.15' , // failed for this price & 5% tax & 10% commission dokan .1 issue
         status: 'publish',
         categories: [
@@ -217,11 +206,7 @@ export const payloads = {
     createWholesaleProduct: () => ({
         name: faker.commerce.productName() + ' (wholesale)',
         type: 'simple',
-        regular_price: faker.finance.amount(
-            100,
-            110,
-            faker.helpers.arrayElement([0, 2]),
-        ),
+        regular_price: faker.finance.amount(100, 110, faker.helpers.arrayElement([0, 2])),
         // regular_price: '114.15' , // failed for this price & 5% tax & 10% commission dokan .1 issue
         status: 'publish',
         categories: [
@@ -239,11 +224,7 @@ export const payloads = {
                 key: '_dokan_wholesale_meta',
                 value: {
                     enable_wholesale: 'yes',
-                    price: faker.finance.amount(
-                        90,
-                        99,
-                        faker.helpers.arrayElement([0, 2]),
-                    ),
+                    price: faker.finance.amount(90, 99, faker.helpers.arrayElement([0, 2])),
                     // price: '100',
                     quantity: '10',
                 },
@@ -254,11 +235,7 @@ export const payloads = {
     createVariableProduct: () => ({
         name: faker.commerce.productName() + ' (Variable)',
         type: 'variable',
-        regular_price: faker.finance.amount(
-            100,
-            200,
-            faker.helpers.arrayElement([0, 2]),
-        ),
+        regular_price: faker.finance.amount(100, 200, faker.helpers.arrayElement([0, 2])),
         status: 'publish',
         categories: [
             {
@@ -283,11 +260,7 @@ export const payloads = {
 
     createProductVariation: {
         // id: '47',
-        regular_price: faker.finance.amount(
-            100,
-            200,
-            faker.helpers.arrayElement([0, 2]),
-        ),
+        regular_price: faker.finance.amount(100, 200, faker.helpers.arrayElement([0, 2])),
         status: 'publish',
         categories: [
             {
@@ -309,11 +282,7 @@ export const payloads = {
         name: faker.commerce.productName() + ' (Downloadable)',
         type: 'simple',
         downloadable: true,
-        regular_price: faker.finance.amount(
-            100,
-            200,
-            faker.helpers.arrayElement([0, 2]),
-        ),
+        regular_price: faker.finance.amount(100, 200, faker.helpers.arrayElement([0, 2])),
         downloads: [],
         // download_limit: 100,
         // download_expiry: 100,
@@ -536,19 +505,11 @@ export const payloads = {
     }),
 
     updateProduct: () => ({
-        regular_price: faker.finance.amount(
-            100,
-            200,
-            faker.helpers.arrayElement([0, 2]),
-        ),
+        regular_price: faker.finance.amount(100, 200, faker.helpers.arrayElement([0, 2])),
     }),
 
     updateProductVariation: () => ({
-        regular_price: faker.finance.amount(
-            100,
-            200,
-            faker.helpers.arrayElement([0, 2]),
-        ),
+        regular_price: faker.finance.amount(100, 200, faker.helpers.arrayElement([0, 2])),
     }),
 
     createProductReview: () => ({
@@ -641,11 +602,7 @@ export const payloads = {
 
     createMarketPlaceCoupon: () => ({
         code: 'AC_' + faker.string.nanoid(10),
-        discount_type: faker.helpers.arrayElement([
-            'percent',
-            'fixed_product',
-            'fixed_cart',
-        ]),
+        discount_type: faker.helpers.arrayElement(['percent', 'fixed_product', 'fixed_cart']),
         amount: faker.number.int({ min: 1, max: 10 }).toString(),
         individual_use: false,
         meta_data: [
@@ -1593,17 +1550,7 @@ export const payloads = {
                 id: 'cards',
                 // label: 'Choose Available Credit Cards',
                 // description: 'Payment types marked with asterisk(*) needs to be activated for your account. Please contact <a href="https://support.mangopay.com/s/contactsupport" target="_blank">MangoPay</a>.',
-                value: [
-                    'CB_VISA_MASTERCARD',
-                    'MAESTRO',
-                    'BCMC',
-                    'P24',
-                    'DINERS',
-                    'PAYLIB',
-                    'IDEAL',
-                    'MASTERPASS',
-                    'BANK_WIRE',
-                ],
+                value: ['CB_VISA_MASTERCARD', 'MAESTRO', 'BCMC', 'P24', 'DINERS', 'PAYLIB', 'IDEAL', 'MASTERPASS', 'BANK_WIRE'],
                 // "options": {
                 //     "CB_VISA_MASTERCARD": "CB/Visa/Mastercard",
                 //     "MAESTRO": "Maestro*",
@@ -2969,8 +2916,7 @@ export const payloads = {
     updateSellerBadge: {
         event_type: 'exclusive_to_platform',
         badge_name: 'Exclusive to Platform',
-        badge_logo:
-            'http://dokan16.test/wp-content/plugins/dokan-pro/modules/seller-badge/assets/images/badges/sale-only-here.svg',
+        badge_logo: 'http://dokan16.test/wp-content/plugins/dokan-pro/modules/seller-badge/assets/images/badges/sale-only-here.svg',
         badge_status: 'draft',
         levels: [
             {

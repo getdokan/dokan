@@ -18,27 +18,19 @@ export class ReportsPage extends AdminPage {
         await this.multipleElementVisible(selector.admin.dokan.reports.menus);
 
         // filter Menus are visible
-        await this.multipleElementVisible(
-            selector.admin.dokan.reports.reports.filterMenus,
-        );
+        await this.multipleElementVisible(selector.admin.dokan.reports.reports.filterMenus);
 
         // calendar input is visible
-        await this.multipleElementVisible(
-            selector.admin.dokan.reports.reports.calendar,
-        );
+        await this.multipleElementVisible(selector.admin.dokan.reports.reports.calendar);
 
         // show button is visible
         await this.toBeVisible(selector.admin.dokan.reports.reports.show);
 
         // at a glance elements are visible
-        await this.multipleElementVisible(
-            selector.admin.dokan.reports.reports.atAGlance,
-        );
+        await this.multipleElementVisible(selector.admin.dokan.reports.reports.atAGlance);
 
         // overview elements are visible
-        await this.multipleElementVisible(
-            selector.admin.dokan.reports.reports.overview,
-        );
+        await this.multipleElementVisible(selector.admin.dokan.reports.reports.overview);
     }
 
     // all logs
@@ -51,12 +43,7 @@ export class ReportsPage extends AdminPage {
         await this.multipleElementVisible(selector.admin.dokan.reports.menus);
 
         // filter elements are visible
-        const {
-            filterByStoreInput,
-            filterByStatusInput,
-            searchedResult,
-            ...filters
-        } = selector.admin.dokan.reports.allLogs.filters;
+        const { filterByStoreInput, filterByStatusInput, searchedResult, ...filters } = selector.admin.dokan.reports.allLogs.filters;
         await this.multipleElementVisible(filters);
 
         // search is visible
@@ -66,9 +53,7 @@ export class ReportsPage extends AdminPage {
         await this.toBeVisible(selector.admin.dokan.reports.allLogs.exportLogs);
 
         // all logs table elements are visible
-        await this.multipleElementVisible(
-            selector.admin.dokan.reports.allLogs.table,
-        );
+        await this.multipleElementVisible(selector.admin.dokan.reports.allLogs.table);
     }
 
     // search all logs
@@ -76,19 +61,9 @@ export class ReportsPage extends AdminPage {
         await this.goIfNotThere(data.subUrls.backend.dokan.allLogs);
 
         await this.clearInputField(selector.admin.dokan.reports.allLogs.search);
-        await this.typeViaPageAndWaitForResponse(
-            data.subUrls.api.dokan.logs,
-            selector.admin.dokan.reports.allLogs.search,
-            orderId,
-        );
-        await this.toBeVisible(
-            selector.admin.dokan.reports.allLogs.orderIdCell(orderId),
-        );
-        const count = (
-            await this.getElementText(
-                selector.admin.dokan.reports.allLogs.numberOfRowsFound,
-            )
-        )?.split(' ')[0];
+        await this.typeViaPageAndWaitForResponse(data.subUrls.api.dokan.logs, selector.admin.dokan.reports.allLogs.search, orderId);
+        await this.toBeVisible(selector.admin.dokan.reports.allLogs.orderIdCell(orderId));
+        const count = (await this.getElementText(selector.admin.dokan.reports.allLogs.numberOfRowsFound))?.split(' ')[0];
         expect(Number(count)).toBe(1);
         // await this.clickAndWaitForResponseAndLoadState(data.subUrls.api.dokan.logs, selector.admin.dokan.reports.allLogs.filters.clear);
     }
@@ -96,35 +71,20 @@ export class ReportsPage extends AdminPage {
     // export all logs
     async exportAllLogs(orderId?: string) {
         orderId && (await this.searchAllLogs(orderId));
-        await this.clickAndWaitForDownload(
-            selector.admin.dokan.reports.allLogs.exportLogs,
-        );
+        await this.clickAndWaitForDownload(selector.admin.dokan.reports.allLogs.exportLogs);
     }
 
     // filter all logs by store
     async filterAllLogsByStore(storeName: string) {
         await this.goIfNotThere(data.subUrls.backend.dokan.allLogs);
 
-        await this.click(
-            selector.admin.dokan.reports.allLogs.filters.filterByStore,
-        );
-        await this.typeAndWaitForResponse(
-            data.subUrls.api.dokan.stores,
-            selector.admin.dokan.reports.allLogs.filters.filterByStoreInput,
-            storeName,
-        );
+        await this.click(selector.admin.dokan.reports.allLogs.filters.filterByStore);
+        await this.typeAndWaitForResponse(data.subUrls.api.dokan.stores, selector.admin.dokan.reports.allLogs.filters.filterByStoreInput, storeName);
         await this.press(data.key.arrowDown);
         // await this.toContainText(selector.admin.dokan.reports.allLogs.filters.searchedResult, (storeName));
-        await this.pressAndWaitForResponse(
-            data.subUrls.api.dokan.logs,
-            data.key.enter,
-        );
+        await this.pressAndWaitForResponse(data.subUrls.api.dokan.logs, data.key.enter);
 
-        const count = (
-            await this.getElementText(
-                selector.admin.dokan.reports.allLogs.numberOfRowsFound,
-            )
-        )?.split(' ')[0];
+        const count = (await this.getElementText(selector.admin.dokan.reports.allLogs.numberOfRowsFound))?.split(' ')[0];
         expect(Number(count)).toBeGreaterThan(0);
         // await this.clickAndWaitForResponseAndLoadState(data.subUrls.api.dokan.logs, selector.admin.dokan.reports.allLogs.filters.clear);
     }
@@ -133,23 +93,11 @@ export class ReportsPage extends AdminPage {
     async filterAllLogsByStatus(orderStatus: string) {
         await this.goIfNotThere(data.subUrls.backend.dokan.allLogs);
 
-        await this.click(
-            selector.admin.dokan.reports.allLogs.filters.filterByStatus,
-        ); // todo:  add multiselect option
-        await this.type(
-            selector.admin.dokan.reports.allLogs.filters.filterByStatusInput,
-            orderStatus,
-        );
+        await this.click(selector.admin.dokan.reports.allLogs.filters.filterByStatus); // todo:  add multiselect option
+        await this.type(selector.admin.dokan.reports.allLogs.filters.filterByStatusInput, orderStatus);
         // await this.toContainText(selector.admin.dokan.reports.allLogs.filters.searchedResult, (orderStatus));
-        await this.clickAndAcceptAndWaitForResponse(
-            data.subUrls.api.dokan.logs,
-            selector.admin.dokan.reports.allLogs.filters.searchedResult,
-        );
-        const count = (
-            await this.getElementText(
-                selector.admin.dokan.reports.allLogs.numberOfRowsFound,
-            )
-        )?.split(' ')[0];
+        await this.clickAndAcceptAndWaitForResponse(data.subUrls.api.dokan.logs, selector.admin.dokan.reports.allLogs.filters.searchedResult);
+        const count = (await this.getElementText(selector.admin.dokan.reports.allLogs.numberOfRowsFound))?.split(' ')[0];
         expect(Number(count)).toBeGreaterThan(0);
         // await this.clickAndWaitForResponseAndLoadState(data.subUrls.api.dokan.logs, selector.admin.dokan.reports.allLogs.filters.clear);
     }

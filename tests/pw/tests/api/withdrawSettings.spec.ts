@@ -11,34 +11,27 @@ test.beforeAll(async ({ request }) => {
 
 test.describe('withdraw api test', () => {
     test('get withdraw settings @v2 @lite', async () => {
-        const [response, responseBody] = await apiUtils.get(
-            endPoints.getWithdrawSettings,
-        );
+        const [response, responseBody] = await apiUtils.get(endPoints.getWithdrawSettings);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
     test('get withdraw summary @v2 @lite', async () => {
-        const [response, responseBody] = await apiUtils.get(
-            endPoints.getWithdrawSummary,
-        );
+        const [response, responseBody] = await apiUtils.get(endPoints.getWithdrawSummary);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
     test('get withdraw disbursement settings @v2 @pro', async () => {
-        const [response, responseBody] = await apiUtils.get(
-            endPoints.getWithdrawDisbursementSettings,
-        );
+        const [response, responseBody] = await apiUtils.get(endPoints.getWithdrawDisbursementSettings);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
     test('update withdraw disbursement settings @v2 @pro', async () => {
-        const [response, responseBody] = await apiUtils.post(
-            endPoints.updateWithdrawDisbursementSettings,
-            { data: payloads.updateWithdrawDisbursementSettings },
-        );
+        const [response, responseBody] = await apiUtils.post(endPoints.updateWithdrawDisbursementSettings, {
+            data: payloads.updateWithdrawDisbursementSettings,
+        });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });

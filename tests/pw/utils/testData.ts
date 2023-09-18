@@ -46,19 +46,8 @@ export const data = {
     },
 
     plugin: {
-        // PluginSlugList: ['dokan-lite', 'dokan-pro', 'woocommerce', 'woocommerce-bookings', 'woocommerce-product-add-ons', 'woocommerce-simple-auction', 'woocommerce-subscriptions', 'elementor', 'elementor-pro'],
         pluginsLite: ['basic-auth', 'dokan', 'woocommerce'],
-        plugins: [
-            'basic-auth',
-            'dokan',
-            'dokan-pro',
-            'woocommerce',
-            'woocommerce-bookings',
-            'woocommerce-product-addons',
-            'woocommerce-simple-auctions',
-            'woocommerce-subscriptions',
-        ],
-        // plugins    : ['dokan/dokan', 'dokan-pro/dokan-pro', 'woocommerce/woocommerce'],
+        plugins: ['basic-auth', 'dokan', 'dokan-pro', 'woocommerce', 'woocommerce-bookings', 'woocommerce-product-addons', 'woocommerce-simple-auctions', 'woocommerce-subscriptions'],
         dokanPro: ['dokan-pro'],
         activeClass: 'active',
     },
@@ -72,8 +61,7 @@ export const data = {
         publishSuccessMessage: 'Product published. ',
         draftUpdateSuccessMessage: 'Product draft updated. ',
         pendingProductUpdateSuccessMessage: 'Product updated. ',
-        createUpdateSaveSuccessMessage:
-            'Success! The product has been saved successfully. View Product →',
+        createUpdateSaveSuccessMessage: 'Success! The product has been saved successfully. View Product →',
         updateSuccessMessage: 'Product updated. ',
 
         status: {
@@ -107,19 +95,12 @@ export const data = {
             variable: () => faker.commerce.productName() + ' (Variable)',
             external: () => faker.commerce.productName() + ' (External)',
             grouped: () => faker.commerce.productName() + ' (Grouped)',
-            simpleSubscription: () =>
-                faker.commerce.productName() + ' (Simple Subscription)',
-            variableSubscription: () =>
-                faker.commerce.productName() + ' (Variable Subscription)',
+            simpleSubscription: () => faker.commerce.productName() + ' (Simple Subscription)',
+            variableSubscription: () => faker.commerce.productName() + ' (Variable Subscription)',
             dokanSubscription: {
                 nonRecurring: () =>
                     'Dokan Subscription ' +
-                    faker.helpers.arrayElement([
-                        'Gold',
-                        'Silver',
-                        'Platinum',
-                        'Premium',
-                    ]) +
+                    faker.helpers.arrayElement(['Gold', 'Silver', 'Platinum', 'Premium']) +
                     ' ' +
                     faker.string.alpha({
                         length: 5,
@@ -136,24 +117,10 @@ export const data = {
             // price           : faker.number.int({ min: 1, max: 200, precision: 0.01 }),
             // price           : faker.finance.amount(1, 200, 2),
             price_int: () => faker.finance.amount(100, 200, 0),
-            price_random: () =>
-                faker.finance.amount(
-                    100,
-                    200,
-                    faker.helpers.arrayElement([0, 2]),
-                ), // 0 = no decimals, 2 = 2 decimals
-            price_frac: () =>
-                faker.finance.amount(
-                    100,
-                    200,
-                    faker.helpers.arrayElement([1, 2]),
-                ),
-            price_frac_comma: () =>
-                faker.finance
-                    .amount(100, 200, faker.helpers.arrayElement([1, 2]))
-                    .replace('.', ','),
-            auctionPrice: () =>
-                faker.commerce.price({ min: 10, max: 100, dec: 0 }),
+            price_random: () => faker.finance.amount(100, 200, faker.helpers.arrayElement([0, 2])), // 0 = no decimals, 2 = 2 decimals
+            price_frac: () => faker.finance.amount(100, 200, faker.helpers.arrayElement([1, 2])),
+            price_frac_comma: () => faker.finance.amount(100, 200, faker.helpers.arrayElement([1, 2])).replace('.', ','),
+            auctionPrice: () => faker.commerce.price({ min: 10, max: 100, dec: 0 }),
             price: () => data.product.price.price_frac_comma(),
         },
 
@@ -162,13 +129,7 @@ export const data = {
             clothings: 'Clothings',
             randomCategory1: () => faker.commerce.productAdjective(),
             randomCategory: () => 'category_' + faker.string.alpha(5),
-            categories: faker.helpers.arrayElement([
-                'Electronic Devices',
-                'Electronic Accessories',
-                'Men"s Fashion',
-                'Clothings',
-                'Women"s Fashion',
-            ]),
+            categories: faker.helpers.arrayElement(['Electronic Devices', 'Electronic Accessories', 'Men"s Fashion', 'Clothings', 'Women"s Fashion']),
         },
 
         store: {
@@ -197,10 +158,7 @@ export const data = {
             productType: 'simple',
             productName: () => faker.commerce.productName() + ' (Simple)',
             category: 'Uncategorized',
-            regularPrice: () =>
-                faker.finance
-                    .amount(100, 200, faker.helpers.arrayElement([1, 2]))
-                    .replace('.', ','),
+            regularPrice: () => faker.finance.amount(100, 200, faker.helpers.arrayElement([1, 2])).replace('.', ','),
             storeName: String(process.env.VENDOR) + 'store',
             status: 'publish',
             stockStatus: false,
@@ -211,10 +169,7 @@ export const data = {
             productType: 'variable',
             productName: () => faker.commerce.productName() + ' (Variable)',
             category: 'Uncategorized',
-            regularPrice: () =>
-                faker.finance
-                    .amount(100, 200, faker.helpers.arrayElement([1, 2]))
-                    .replace('.', ','),
+            regularPrice: () => faker.finance.amount(100, 200, faker.helpers.arrayElement([1, 2])).replace('.', ','),
             storeName: String(process.env.VENDOR) + 'store',
             status: 'publish',
             stockStatus: false,
@@ -224,8 +179,7 @@ export const data = {
                 linkAllVariation: 'link_all_variations',
                 variableRegularPrice: 'variable_regular_price',
             },
-            saveSuccessMessage:
-                'Success! The product has been saved successfully. View Product →',
+            saveSuccessMessage: 'Success! The product has been saved successfully. View Product →',
         },
 
         external: {
@@ -234,29 +188,18 @@ export const data = {
             productUrl: '/product/p1_v1-simple/',
             buttonText: 'Buy product',
             category: 'Uncategorized',
-            regularPrice: () =>
-                faker.finance
-                    .amount(100, 200, faker.helpers.arrayElement([1, 2]))
-                    .replace('.', ','),
+            regularPrice: () => faker.finance.amount(100, 200, faker.helpers.arrayElement([1, 2])).replace('.', ','),
             storeName: String(process.env.VENDOR) + 'store',
             status: 'publish',
-            saveSuccessMessage:
-                'Success! The product has been saved successfully. View Product →',
+            saveSuccessMessage: 'Success! The product has been saved successfully. View Product →',
         },
 
         simpleSubscription: {
             productType: 'subscription',
-            productName: () =>
-                faker.commerce.productName() + ' (Simple Subscription)',
+            productName: () => faker.commerce.productName() + ' (Simple Subscription)',
             category: 'Uncategorized',
-            regularPrice: () =>
-                faker.finance
-                    .amount(100, 200, faker.helpers.arrayElement([1, 2]))
-                    .replace('.', ','),
-            subscriptionPrice: () =>
-                faker.finance
-                    .amount(100, 200, faker.helpers.arrayElement([1, 2]))
-                    .replace('.', ','),
+            regularPrice: () => faker.finance.amount(100, 200, faker.helpers.arrayElement([1, 2])).replace('.', ','),
+            subscriptionPrice: () => faker.finance.amount(100, 200, faker.helpers.arrayElement([1, 2])).replace('.', ','),
             subscriptionPeriodInterval: '1', // '0', '1', '2', '3', '4', '5', '6'
             subscriptionPeriod: 'month', // 'day', 'week', 'month', 'year'
             expireAfter: '0', // '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24'
@@ -264,23 +207,15 @@ export const data = {
             subscriptionTrialPeriod: 'day', // 'day', 'week', 'month', 'year'
             storeName: String(process.env.VENDOR) + 'store',
             status: 'publish',
-            saveSuccessMessage:
-                'Success! The product has been saved successfully. View Product →',
+            saveSuccessMessage: 'Success! The product has been saved successfully. View Product →',
         },
 
         variableSubscription: {
             productType: 'variable-subscription',
-            productName: () =>
-                faker.commerce.productName() + ' (Variable Subscription)',
+            productName: () => faker.commerce.productName() + ' (Variable Subscription)',
             category: 'Uncategorized',
-            regularPrice: () =>
-                faker.finance
-                    .amount(100, 200, faker.helpers.arrayElement([1, 2]))
-                    .replace('.', ','),
-            subscriptionPrice: () =>
-                faker.finance
-                    .amount(100, 200, faker.helpers.arrayElement([1, 2]))
-                    .replace('.', ','),
+            regularPrice: () => faker.finance.amount(100, 200, faker.helpers.arrayElement([1, 2])).replace('.', ','),
+            subscriptionPrice: () => faker.finance.amount(100, 200, faker.helpers.arrayElement([1, 2])).replace('.', ','),
             subscriptionPeriodInterval: '1',
             subscriptionPeriod: 'month',
             expireAfter: '0',
@@ -294,20 +229,14 @@ export const data = {
                 linkAllVariation: 'link_all_variations',
                 variableRegularPrice: 'variable_regular_price',
             },
-            saveSuccessMessage:
-                'Success! The product has been saved successfully. View Product →',
+            saveSuccessMessage: 'Success! The product has been saved successfully. View Product →',
         },
 
         vendorSubscription: {
             productType: 'product_pack',
             productName: () =>
                 'Dokan Subscription ' +
-                faker.helpers.arrayElement([
-                    'Gold',
-                    'Silver',
-                    'Platinum',
-                    'Premium',
-                ]) +
+                faker.helpers.arrayElement(['Gold', 'Silver', 'Platinum', 'Premium']) +
                 ' ' +
                 faker.string.alpha({
                     length: 5,
@@ -315,10 +244,7 @@ export const data = {
                 }) +
                 ' (Product Pack)',
             category: 'Uncategorized',
-            regularPrice: () =>
-                faker.finance
-                    .amount(100, 200, faker.helpers.arrayElement([1, 2]))
-                    .replace('.', ','),
+            regularPrice: () => faker.finance.amount(100, 200, faker.helpers.arrayElement([1, 2])).replace('.', ','),
             numberOfProducts: '-1',
             packValidity: '0',
             advertisementSlot: '-1',
@@ -346,12 +272,10 @@ export const data = {
             baseCost: '20',
             blockCost: '10',
             storeName: String(process.env.VENDOR) + 'store',
-            saveSuccessMessage:
-                'Success! The product has been saved successfully.',
+            saveSuccessMessage: 'Success! The product has been saved successfully.',
 
             resource: {
-                resourceName: () =>
-                    'Booking Resource_' + faker.string.nanoid(10),
+                resourceName: () => 'Booking Resource_' + faker.string.nanoid(10),
                 name: '',
                 quantity: String(faker.number.int({ min: 1, max: 100 })),
             },
@@ -365,28 +289,15 @@ export const data = {
             category: 'Uncategorized',
             itemCondition: 'new', // 'new', 'used'
             auctionType: 'normal', // 'normal', 'reverse'
-            regularPrice: () =>
-                faker.finance
-                    .amount(10, 100, faker.helpers.arrayElement([1, 2]))
-                    .replace('.', ','),
-            bidIncrement: () =>
-                faker.finance
-                    .amount(40, 50, faker.helpers.arrayElement([1, 2]))
-                    .replace('.', ','),
-            reservedPrice: () =>
-                faker.finance
-                    .amount(400, 500, faker.helpers.arrayElement([1, 2]))
-                    .replace('.', ','),
-            buyItNowPrice: () =>
-                faker.finance
-                    .amount(900, 1000, faker.helpers.arrayElement([1, 2]))
-                    .replace('.', ','),
+            regularPrice: () => faker.finance.amount(10, 100, faker.helpers.arrayElement([1, 2])).replace('.', ','),
+            bidIncrement: () => faker.finance.amount(40, 50, faker.helpers.arrayElement([1, 2])).replace('.', ','),
+            reservedPrice: () => faker.finance.amount(400, 500, faker.helpers.arrayElement([1, 2])).replace('.', ','),
+            buyItNowPrice: () => faker.finance.amount(900, 1000, faker.helpers.arrayElement([1, 2])).replace('.', ','),
             startDate: helpers.currentDateTime,
             endDate: helpers.addDays(helpers.currentDateTime, 20, 'full'),
             storeName: String(process.env.VENDOR) + 'store',
             // saveSuccessMessage: '× Success! The product has been updated successfully. View Product →',
-            saveSuccessMessage:
-                'Success! The product has been updated successfully.',
+            saveSuccessMessage: 'Success! The product has been updated successfully.',
         },
 
         // Review
@@ -408,8 +319,7 @@ export const data = {
                 'Other',
             ]),
             reportReasonDescription: 'report reason description',
-            reportSubmitSuccessMessage:
-                'Your report has been submitted. Thank you for your response.',
+            reportSubmitSuccessMessage: 'Your report has been submitted. Thank you for your response.',
 
             // non logged user
             username: String(process.env.CUSTOMER),
@@ -433,13 +343,7 @@ export const data = {
 
     // store
     store: {
-        rating: faker.helpers.arrayElement([
-            'width: 20%',
-            'width: 40%',
-            'width: 60%',
-            'width: 80%',
-            'width: 100%',
-        ]),
+        rating: faker.helpers.arrayElement(['width: 20%', 'width: 40%', 'width: 60%', 'width: 80%', 'width: 100%']),
         reviewTitle: 'store review title',
         reviewMessage: () => faker.string.nanoid(10),
     },
@@ -505,8 +409,7 @@ export const data = {
             refundRequestType: 'refund',
             refundRequestReasons: 'defective',
             refundRequestDetails: 'I would like to return this product',
-            refundSubmitSuccessMessage:
-                'Request has been successfully submitted',
+            refundSubmitSuccessMessage: 'Request has been successfully submitted',
         },
     },
 
@@ -547,8 +450,7 @@ export const data = {
         couponTitle: () => 'VC_' + faker.string.nanoid(10),
         title: '',
         amount: () => faker.number.int({ min: 1, max: 10 }).toString(),
-        discount_type: () =>
-            faker.helpers.arrayElement(['percent', 'fixed_product']), // percent, fixed_product, booking_person, sign_up_fee, sign_up_fee_percent, recurring_fee, recurring_percent
+        discount_type: () => faker.helpers.arrayElement(['percent', 'fixed_product']), // percent, fixed_product, booking_person, sign_up_fee, sign_up_fee_percent, recurring_fee, recurring_percent
         discountType: 'percent',
         description: 'test Coupon description',
         existingCouponErrorMessage: 'Coupon title already exists',
@@ -592,14 +494,7 @@ export const data = {
         shippingZone: 'US',
 
         shippingMethods: {
-            methods: faker.helpers.arrayElement([
-                'flat_rate',
-                'free_shipping',
-                'local_pickup',
-                'dokan_table_rate_shipping',
-                'dokan_distance_rate_shipping',
-                'dokan_vendor_shipping',
-            ]),
+            methods: faker.helpers.arrayElement(['flat_rate', 'free_shipping', 'local_pickup', 'dokan_table_rate_shipping', 'dokan_distance_rate_shipping', 'dokan_vendor_shipping']),
             flatRate: {
                 shippingZone: 'US',
                 shippingCountry: 'United States (US)',
@@ -685,16 +580,14 @@ export const data = {
 
         paypalMarketPlace: {
             title: 'PayPal Marketplace',
-            description:
-                "Pay via PayPal Marketplace you can pay with your credit card if you don't have a PayPal account",
+            description: "Pay via PayPal Marketplace you can pay with your credit card if you don't have a PayPal account",
             payPalMerchantId: 'partner_',
             sandboxClientId: 'client_',
             sandBoxClientSecret: 'secret_',
             payPalPartnerAttributionId: 'weDevs_SP_Dokan',
             disbursementMode: 'Delayed', // 'Immediate', 'On Order Complete', 'Delayed'
             paymentButtonType: 'Smart Payment Buttons', // 'Smart Payment Buttons', 'Standard Button'
-            marketplaceLogoPath:
-                '/wp-content/plugins/dokan/assets/images/dokan-logo.png',
+            marketplaceLogoPath: '/wp-content/plugins/dokan/assets/images/dokan-logo.png',
             announcementInterval: '7',
         },
 
@@ -713,8 +606,7 @@ export const data = {
 
         razorPay: {
             title: 'Razorpay',
-            description:
-                'Pay securely by Credit or Debit card or Internet Banking through Razorpay.',
+            description: 'Pay securely by Credit or Debit card or Internet Banking through Razorpay.',
             testKeyId: 'rzp_test',
             testKeySecret: 'rzp_test',
             disbursementMode: 'Delayed', // 'Immediate', 'On Order Complete', 'Delayed'
@@ -731,20 +623,7 @@ export const data = {
                 card: 'Credit/Debit Card',
                 ideal: 'iDEAL',
             },
-            iDealBanks: [
-                'abn_amro',
-                'asn_bank',
-                'bunq',
-                'handelsbanken',
-                'ing',
-                'knab',
-                'rabobank',
-                'regiobank',
-                'revolut',
-                'sns_bank',
-                'triodos_bank',
-                'van_lanschot',
-            ],
+            iDealBanks: ['abn_amro', 'asn_bank', 'bunq', 'handelsbanken', 'ing', 'knab', 'rabobank', 'regiobank', 'revolut', 'sns_bank', 'triodos_bank', 'van_lanschot'],
             disbursementMode: 'Delayed', // 'On payment completed', 'On order completed', 'Delayed'
             customerBankStatement: 'Dokan',
             paymentRequestButtonType: 'default', // 'default', 'buy', 'donate', 'book'
@@ -827,37 +706,26 @@ export const data = {
                 proFeatures: 'wp-admin/admin.php?page=dokan#/premium',
 
                 // lite and pro
-                withdraw:
-                    'wp-admin/admin.php?page=dokan#/withdraw?status=pending',
-                reverseWithdraws:
-                    'wp-admin/admin.php?page=dokan#/reverse-withdrawal',
+                withdraw: 'wp-admin/admin.php?page=dokan#/withdraw?status=pending',
+                reverseWithdraws: 'wp-admin/admin.php?page=dokan#/reverse-withdrawal',
                 vendors: 'wp-admin/admin.php?page=dokan#/vendors',
-                vendorDetails: (vendorId: string) =>
-                    `wp-admin/admin.php?page=dokan#/vendors/${vendorId}`,
-                storeCategories:
-                    'wp-admin/admin.php?page=dokan#/store-categories',
+                vendorDetails: (vendorId: string) => `wp-admin/admin.php?page=dokan#/vendors/${vendorId}`,
+                storeCategories: 'wp-admin/admin.php?page=dokan#/store-categories',
                 abuseReports: 'wp-admin/admin.php?page=dokan#/abuse-reports',
                 storeReviews: 'wp-admin/admin.php?page=dokan#/store-reviews',
-                storeSupport:
-                    'wp-admin/admin.php?page=dokan#/admin-store-support',
-                requestForQuote:
-                    'wp-admin/admin.php?page=dokan#/request-for-quote',
-                requestForQuoteRules:
-                    'wp-admin/admin.php?page=dokan#/request-for-quote/quote-rules',
-                sellerBadge:
-                    'wp-admin/admin.php?page=dokan#/dokan-seller-badge',
+                storeSupport: 'wp-admin/admin.php?page=dokan#/admin-store-support',
+                requestForQuote: 'wp-admin/admin.php?page=dokan#/request-for-quote',
+                requestForQuoteRules: 'wp-admin/admin.php?page=dokan#/request-for-quote/quote-rules',
+                sellerBadge: 'wp-admin/admin.php?page=dokan#/dokan-seller-badge',
                 announcements: 'wp-admin/admin.php?page=dokan#/announcement',
                 refunds: 'wp-admin/admin.php?page=dokan#/refund?status=pending',
                 reports: 'wp-admin/admin.php?page=dokan#/reports',
                 allLogs: 'wp-admin/admin.php?page=dokan#/reports?tab=logs',
                 modules: 'wp-admin/admin.php?page=dokan#/modules',
                 tools: 'wp-admin/admin.php?page=dokan#/tools',
-                verifications:
-                    'wp-admin/admin.php?page=dokan-seller-verifications',
-                productAdvertising:
-                    'wp-admin/admin.php?page=dokan#/product-advertising',
-                wholeSaleCustomer:
-                    'wp-admin/admin.php?page=dokan#/wholesale-customer',
+                verifications: 'wp-admin/admin.php?page=dokan-seller-verifications',
+                productAdvertising: 'wp-admin/admin.php?page=dokan#/product-advertising',
+                wholeSaleCustomer: 'wp-admin/admin.php?page=dokan#/wholesale-customer',
                 help: 'wp-admin/admin.php?page=dokan#/help',
                 settings: 'wp-admin/admin.php?page=dokan#/settings',
                 license: 'wp-admin/admin.php?page=dokan_updates',
@@ -869,18 +737,13 @@ export const data = {
 
             wc: {
                 products: 'wp-admin/edit.php?post_type=product',
-                productDetails: (productId: string) =>
-                    `wp-admin/post.php?post=${productId}&action=edit`,
+                productDetails: (productId: string) => `wp-admin/post.php?post=${productId}&action=edit`,
                 addNewProducts: 'wp-admin/post-new.php?post_type=product',
-                addNewCategories:
-                    'wp-admin/edit-tags.php?taxonomy=product_cat&post_type=product',
-                addNewAttributes:
-                    'wp-admin/edit.php?post_type=product&page=product_attributes',
-                searchAttribute:
-                    'wp-admin/admin-ajax.php?action=woocommerce_json_search_product_attributes',
+                addNewCategories: 'wp-admin/edit-tags.php?taxonomy=product_cat&post_type=product',
+                addNewAttributes: 'wp-admin/edit.php?post_type=product&page=product_attributes',
+                searchAttribute: 'wp-admin/admin-ajax.php?action=woocommerce_json_search_product_attributes',
                 term: 'wp-admin/admin-ajax.php?term',
-                taxonomyTerms:
-                    'wp-admin/admin-ajax.php?action=woocommerce_json_search_taxonomy_terms',
+                taxonomyTerms: 'wp-admin/admin-ajax.php?action=woocommerce_json_search_taxonomy_terms',
                 taxonomy: 'wp-admin/edit-tags.php?taxonomy',
                 coupons: 'wp-admin/edit.php?post_type=shop_coupon',
                 addCoupon: 'wp-admin/post-new.php?post_type=shop_coupon',
@@ -926,18 +789,13 @@ export const data = {
             editAccountCustomer: 'my-account/edit-account',
             becomeVendor: 'my-account/account-migration',
             productDetails: (productName: string) => `product/${productName}`,
-            orderDetails: (orderId: string) =>
-                `my-account/view-order/${orderId}`,
-            orderReceivedDetails: (orderId: string, orderKey: string) =>
-                `checkout/order-received/${orderId}/?key=${orderKey}`,
+            orderDetails: (orderId: string) => `my-account/view-order/${orderId}`,
+            orderReceivedDetails: (orderId: string, orderKey: string) => `checkout/order-received/${orderId}/?key=${orderKey}`,
             vendorDetails: (storeName: string) => `store/${storeName}`,
             storeReviews: (storeName: string) => `store/${storeName}/reviews`,
-            quoteDetails: (quotId: string) =>
-                `my-account/request-a-quote/${quotId}`,
-            supportTicketDetails: (ticketId: string) =>
-                `my-account/support-tickets/${ticketId}`,
-            productSubscriptionDetails: (subscriptionId: string) =>
-                `my-account/view-subscription/${subscriptionId}`,
+            quoteDetails: (quotId: string) => `my-account/request-a-quote/${quotId}`,
+            supportTicketDetails: (ticketId: string) => `my-account/support-tickets/${ticketId}`,
+            productSubscriptionDetails: (subscriptionId: string) => `my-account/view-subscription/${subscriptionId}`,
 
             productReview: 'wp-comments-post.php',
             submitSupport: 'wp-comments-post.php',
@@ -953,8 +811,7 @@ export const data = {
                 orders: 'dashboard/orders',
                 userSubscriptions: 'dashboard/user-subscription',
                 requestQuotes: 'dashboard/requested-quotes',
-                quoteDetails: (quotId: string) =>
-                    `dashboard/requested-quotes/${quotId}`,
+                quoteDetails: (quotId: string) => `dashboard/requested-quotes/${quotId}`,
                 coupons: 'dashboard/coupons',
                 reports: 'dashboard/reports',
                 statement: 'dashboard/reports/?chart=sales_statement',
@@ -1056,9 +913,7 @@ export const data = {
     vendor: {
         username: String(process.env.VENDOR),
         password: String(process.env.USER_PASSWORD),
-        lastname:
-            (String(process.env.VENDOR)[0] as string) +
-            String(process.env.VENDOR)[String(process.env.VENDOR).length - 1],
+        lastname: (String(process.env.VENDOR)[0] as string) + String(process.env.VENDOR)[String(process.env.VENDOR).length - 1],
         storeName: String(process.env.VENDOR) + 'store',
 
         vendorInfo: {
@@ -1111,15 +966,7 @@ export const data = {
             },
 
             openingClosingTime: {
-                days: [
-                    'monday',
-                    'tuesday',
-                    'wednesday',
-                    'thursday',
-                    'friday',
-                    'saturday',
-                    'sunday',
-                ],
+                days: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'],
                 statusLite: 'open', // open, close
                 openingTime: '12:00 am',
                 closingTime: '11:30 pm',
@@ -1136,14 +983,8 @@ export const data = {
                 },
 
                 datewise: {
-                    vacationDayFrom: () =>
-                        helpers.addDays(
-                            helpers.currentDate,
-                            helpers.getRandomArbitraryInteger(31, 100),
-                            'compact',
-                        ),
-                    vacationDayTo: (from: string) =>
-                        helpers.addDays(from, 31, 'compact'),
+                    vacationDayFrom: () => helpers.addDays(helpers.currentDate, helpers.getRandomArbitraryInteger(31, 100), 'compact'),
+                    vacationDayTo: (from: string) => helpers.addDays(from, 31, 'compact'),
                     closingStyle: 'datewise',
                     vacationMessage: 'We are currently out of order',
                 },
@@ -1167,8 +1008,7 @@ export const data = {
                 category: 'Uncategorized',
             },
 
-            storeSettingsSaveSuccessMessage:
-                'Your information has been saved successfully',
+            storeSettingsSaveSuccessMessage: 'Your information has been saved successfully',
 
             socialProfileUrls: {
                 facebook: 'https://www.facebook.com/',
@@ -1184,10 +1024,7 @@ export const data = {
                 // email: () => faker.internet.email(),
                 email: () => faker.person.firstName('male') + '@email.com',
                 bankAccountName: 'accountName',
-                bankAccountType: faker.helpers.arrayElement([
-                    'personal',
-                    'business',
-                ]),
+                bankAccountType: faker.helpers.arrayElement(['personal', 'business']),
                 bankAccountNumber: faker.string.alphanumeric(10),
                 bankName: 'bankName',
                 bankAddress: 'bankAddress',
@@ -1212,13 +1049,7 @@ export const data = {
 
             shippingZone: 'US',
             shippingCountry: 'United States (US)',
-            methods: faker.helpers.arrayElement([
-                'flat_rate',
-                'free_shipping',
-                'local_pickup',
-                'dokan_table_rate_shipping',
-                'dokan_distance_rate_shipping',
-            ]),
+            methods: faker.helpers.arrayElement(['flat_rate', 'free_shipping', 'local_pickup', 'dokan_table_rate_shipping', 'dokan_distance_rate_shipping']),
             shippingMethods: {
                 flatRate: {
                     shippingZone: 'US',
@@ -1230,8 +1061,7 @@ export const data = {
                     shippingCost: '20',
                     description: 'Flat rate',
                     calculationType: 'class', // 'item', 'line', 'class', 'order'
-                    shippingMethodSaveSuccessMessage:
-                        'Shipping method added successfully',
+                    shippingMethodSaveSuccessMessage: 'Shipping method added successfully',
                     zoneSaveSuccessMessage: 'Zone settings save successfully',
                     saveSuccessMessage: 'Zone settings save successfully',
                 },
@@ -1244,8 +1074,7 @@ export const data = {
                     shippingMethodTitle: 'Free Shipping',
                     freeShippingRequires: 'min_amount',
                     freeShippingMinimumOrderAmount: '200',
-                    shippingMethodSaveSuccessMessage:
-                        'Shipping method added successfully',
+                    shippingMethodSaveSuccessMessage: 'Shipping method added successfully',
                     zoneSaveSuccessMessage: 'Zone settings save successfully',
                     saveSuccessMessage: 'Zone settings save successfully',
                 },
@@ -1259,8 +1088,7 @@ export const data = {
                     taxStatus: 'taxable',
                     shippingCost: '20',
                     description: 'Local Pickup',
-                    shippingMethodSaveSuccessMessage:
-                        'Shipping method added successfully',
+                    shippingMethodSaveSuccessMessage: 'Shipping method added successfully',
                     zoneSaveSuccessMessage: 'Zone settings save successfully',
                     saveSuccessMessage: 'Zone settings save successfully',
                 },
@@ -1279,12 +1107,10 @@ export const data = {
                     handlingFeePerOrder: '10',
                     minimumCostPerOrder: '10',
                     maximumCostPerOrder: '200',
-                    shippingMethodSaveSuccessMessage:
-                        'Shipping method added successfully',
+                    shippingMethodSaveSuccessMessage: 'Shipping method added successfully',
                     zoneSaveSuccessMessage: 'Zone settings save successfully',
                     saveSuccessMessage: 'Zone settings save successfully',
-                    tableRateSaveSuccessMessage:
-                        'Table rates has been saved successfully!',
+                    tableRateSaveSuccessMessage: 'Table rates has been saved successfully!',
                 },
 
                 distanceRateShipping: {
@@ -1303,12 +1129,10 @@ export const data = {
                     zipCode: '10006',
                     state: 'New York',
                     country: 'United States (US)',
-                    shippingMethodSaveSuccessMessage:
-                        'Shipping method added successfully',
+                    shippingMethodSaveSuccessMessage: 'Shipping method added successfully',
                     zoneSaveSuccessMessage: 'Zone settings save successfully',
                     saveSuccessMessage: 'Zone settings save successfully',
-                    distanceRateSaveSuccessMessage:
-                        'Distance rates has been saved successfully!',
+                    distanceRateSaveSuccessMessage: 'Distance rates has been saved successfully!',
                 },
 
                 vendorShipping: {
@@ -1329,10 +1153,7 @@ export const data = {
             // email: () => faker.internet.email(),
             email: () => faker.person.firstName('male') + '@email.com',
             bankAccountName: 'accountName',
-            bankAccountType: faker.helpers.arrayElement([
-                'personal',
-                'business',
-            ]),
+            bankAccountType: faker.helpers.arrayElement(['personal', 'business']),
             bankAccountNumber: faker.string.alphanumeric(10),
             bankName: 'bankName',
             bankAddress: 'bankAddress',
@@ -1351,17 +1172,12 @@ export const data = {
             zipCode: '10006',
             country: 'US',
             state: 'NY',
-            idRequestSubmitSuccessMessage:
-                'Your ID verification request is Sent and pending approval',
+            idRequestSubmitSuccessMessage: 'Your ID verification request is Sent and pending approval',
             idRequestSubmitCancel: 'Your ID Verification request is cancelled',
-            addressRequestSubmitSuccessMessage:
-                'Your Address verification request is Sent and Pending approval',
-            addressRequestSubmitCancel:
-                'Your Address Verification request is cancelled',
-            companyRequestSubmitSuccessMessage:
-                'Your company verification request is sent and pending approval',
-            companyRequestSubmitCancel:
-                'Your company verification request is cancelled',
+            addressRequestSubmitSuccessMessage: 'Your Address verification request is Sent and Pending approval',
+            addressRequestSubmitCancel: 'Your Address Verification request is cancelled',
+            companyRequestSubmitSuccessMessage: 'Your company verification request is sent and pending approval',
+            companyRequestSubmitCancel: 'Your company verification request is cancelled',
         },
 
         toc: 'test Vendor terms and conditions',
@@ -1370,21 +1186,12 @@ export const data = {
             deliveryBlockedBuffer: '0',
             timeSlot: '30',
             orderPerSlot: '100',
-            days: [
-                'monday',
-                'tuesday',
-                'wednesday',
-                'thursday',
-                'friday',
-                'saturday',
-                'sunday',
-            ],
+            days: ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'],
             choice: 'full-day',
             openingTime: '12:00 am',
             closingTime: '11:30 pm',
             fullDay: 'Full day',
-            saveSuccessMessage:
-                'Delivery settings has been saved successfully!',
+            saveSuccessMessage: 'Delivery settings has been saved successfully!',
         },
 
         shipStation: {
@@ -1442,8 +1249,7 @@ export const data = {
             currentBalance: '',
             minimumWithdrawAmount: '5', // '0', '5', '10', '15', '50', '100', '200', '300', '500', '1000', '2000', '3000', '5000', '10000'
             reservedBalance: '10',
-            scheduleMessageInitial:
-                'Please update your withdraw schedule selection to get payment automatically.',
+            scheduleMessageInitial: 'Please update your withdraw schedule selection to get payment automatically.',
         },
 
         // addon
@@ -1465,8 +1271,7 @@ export const data = {
             deleteSuccessMessage: 'Add-on deleted successfully',
         },
 
-        registrationErrorMessage:
-            'Error: An account is already registered with your email address. Please log in.',
+        registrationErrorMessage: 'Error: An account is already registered with your email address. Please log in.',
     },
 
     staff: () => ({
@@ -1488,11 +1293,7 @@ export const data = {
     customer: {
         username: String(process.env.CUSTOMER),
         password: String(process.env.USER_PASSWORD),
-        lastname:
-            (String(process.env.CUSTOMER)[0] as string) +
-            String(process.env.CUSTOMER)[
-                String(process.env.CUSTOMER).length - 1
-            ],
+        lastname: (String(process.env.CUSTOMER)[0] as string) + String(process.env.CUSTOMER)[String(process.env.CUSTOMER).length - 1],
 
         customerInfo: {
             emailDomain: '@email.com',
@@ -1561,8 +1362,7 @@ export const data = {
             subject: 'get Support Subject',
             message: 'get Support Message',
             orderId: '',
-            supportSubmitSuccessMessage:
-                'Thank you. Your ticket has been submitted!',
+            supportSubmitSuccessMessage: 'Thank you. Your ticket has been submitted!',
             username: String(process.env.CUSTOMER),
             userPassword: String(process.env.USER_PASSWORD),
         },
@@ -1588,8 +1388,7 @@ export const data = {
         },
 
         registration: {
-            registrationErrorMessage:
-                'Error: An account is already registered with your email address. Please log in.',
+            registrationErrorMessage: 'Error: An account is already registered with your email address. Please log in.',
         },
     },
 
@@ -1608,11 +1407,7 @@ export const data = {
         // dateRange full format
         dateRangeFull: {
             startDate: helpers.currentDateTimeFullFormat,
-            endDate: helpers.addDays(
-                helpers.currentDateTimeFullFormat,
-                1,
-                'complete',
-            ),
+            endDate: helpers.addDays(helpers.currentDateTimeFullFormat, 1, 'complete'),
         },
     },
 
@@ -1626,13 +1421,7 @@ export const data = {
     storeReview: {
         review: () => ({
             rating: '4',
-            ratingByWidth: faker.helpers.arrayElement([
-                'width: 20%',
-                'width: 40%',
-                'width: 60%',
-                'width: 80%',
-                'width: 100%',
-            ]),
+            ratingByWidth: faker.helpers.arrayElement(['width: 20%', 'width: 40%', 'width: 60%', 'width: 80%', 'width: 100%']),
             title: 'test title_' + faker.string.nanoid(10),
             content: 'test content_' + faker.string.nanoid(10),
         }),
@@ -1903,10 +1692,8 @@ export const data = {
 
     // wholesale customers
     wholesale: {
-        wholesaleRequestSendMessage:
-            'Your wholesale customer request send to the admin. Please wait for approval',
-        becomeWholesaleCustomerSuccessMessage:
-            'You are succefully converted as a wholesale customer',
+        wholesaleRequestSendMessage: 'Your wholesale customer request send to the admin. Please wait for approval',
+        becomeWholesaleCustomerSuccessMessage: 'You are succefully converted as a wholesale customer',
         wholesaleCapabilityActivate: 'Wholesale capability activate',
     },
 
@@ -2018,10 +1805,8 @@ export const data = {
 
         // Email verification
         emailVerification: {
-            registrationNotice:
-                'Please check your email and complete email verification to login.',
-            loginNotice:
-                'Please check your email and complete email verification to login.',
+            registrationNotice: 'Please check your email and complete email verification to login.',
+            loginNotice: 'Please check your email and complete email verification to login.',
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
 
@@ -2048,17 +1833,8 @@ export const data = {
         deliveryTime: {
             deliveryDateLabel: 'Delivery Date',
             deliveryBlockedBuffer: '0',
-            deliveryBoxInfo:
-                'This store needs %DAY% day(s) to process your delivery request',
-            days: [
-                'Monday',
-                'Tuesday',
-                'Wednesday',
-                'Thursday',
-                'Friday',
-                'Saturday',
-                'Sunday',
-            ],
+            deliveryBoxInfo: 'This store needs %DAY% day(s) to process your delivery request',
+            days: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
             choice: 'full-day',
             openingTime: '12:00 am',
             closingTime: '11:30 pm',
@@ -2108,11 +1884,9 @@ export const data = {
             noOfDays: '2',
             productStatus: 'draft', // 'publish', 'pending', 'draft'
             cancellingEmailSubject: 'Subscription Package Cancel notification',
-            cancellingEmailBody:
-                'Dear subscriber, Your subscription has expired. Please renew your package to continue using it.',
+            cancellingEmailBody: 'Dear subscriber, Your subscription has expired. Please renew your package to continue using it.',
             alertEmailSubject: 'Subscription Ending Soon',
-            alertEmailBody:
-                'Dear subscriber, Your subscription will be ending soon. Please renew your package in a timely',
+            alertEmailBody: 'Dear subscriber, Your subscription will be ending soon. Please renew your package in a timely',
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
     },

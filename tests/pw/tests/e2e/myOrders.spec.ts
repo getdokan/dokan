@@ -12,9 +12,7 @@ test.describe('My orders functionality test', () => {
     let apiUtils: ApiUtils;
 
     test.beforeAll(async ({ browser, request }) => {
-        const customerContext = await browser.newContext(
-            data.auth.customerAuth,
-        );
+        const customerContext = await browser.newContext(data.auth.customerAuth);
         cPage = await customerContext.newPage();
         customer = new MyOrdersPage(cPage);
         apiUtils = new ApiUtils(request);
@@ -29,12 +27,7 @@ test.describe('My orders functionality test', () => {
     });
 
     test('customer can view order details @lite', async () => {
-        const [, , orderId] = await apiUtils.createOrderWithStatus(
-            PRODUCT_ID,
-            { ...payloads.createOrder, customer_id: CUSTOMER_ID },
-            data.order.orderStatus.completed,
-            payloads.vendorAuth,
-        );
+        const [, , orderId] = await apiUtils.createOrderWithStatus(PRODUCT_ID, { ...payloads.createOrder, customer_id: CUSTOMER_ID }, data.order.orderStatus.completed, payloads.vendorAuth);
         await customer.viewOrderDetails(orderId);
     });
 
@@ -50,32 +43,17 @@ test.describe('My orders functionality test', () => {
     });
 
     test('customer can pay pending payment order @lite', async () => {
-        const [, , orderId] = await apiUtils.createOrderWithStatus(
-            PRODUCT_ID,
-            { ...payloads.createOrder, customer_id: CUSTOMER_ID },
-            data.order.orderStatus.pending,
-            payloads.vendorAuth,
-        );
+        const [, , orderId] = await apiUtils.createOrderWithStatus(PRODUCT_ID, { ...payloads.createOrder, customer_id: CUSTOMER_ID }, data.order.orderStatus.pending, payloads.vendorAuth);
         await customer.payPendingOrder(orderId, 'bank');
     });
 
     test('customer can cancel order @lite', async () => {
-        const [, , orderId] = await apiUtils.createOrderWithStatus(
-            PRODUCT_ID,
-            { ...payloads.createOrder, customer_id: CUSTOMER_ID },
-            data.order.orderStatus.pending,
-            payloads.vendorAuth,
-        );
+        const [, , orderId] = await apiUtils.createOrderWithStatus(PRODUCT_ID, { ...payloads.createOrder, customer_id: CUSTOMER_ID }, data.order.orderStatus.pending, payloads.vendorAuth);
         await customer.cancelPendingOrder(orderId);
     });
 
     test('customer can order again @lite', async () => {
-        const [, , orderId] = await apiUtils.createOrderWithStatus(
-            PRODUCT_ID,
-            { ...payloads.createOrder, customer_id: CUSTOMER_ID },
-            data.order.orderStatus.completed,
-            payloads.vendorAuth,
-        );
+        const [, , orderId] = await apiUtils.createOrderWithStatus(PRODUCT_ID, { ...payloads.createOrder, customer_id: CUSTOMER_ID }, data.order.orderStatus.completed, payloads.vendorAuth);
         await customer.orderAgain(orderId);
     });
 });

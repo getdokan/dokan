@@ -22,14 +22,8 @@ test.describe('Product Advertising test', () => {
         vendor = new VendorPage(vPage);
 
         apiUtils = new ApiUtils(request);
-        [, , productName] = await apiUtils.createProduct(
-            payloads.createProduct(),
-            payloads.vendorAuth,
-        );
-        await apiUtils.createProductAdvertisement(
-            payloads.createProduct(),
-            payloads.vendorAuth,
-        );
+        [, , productName] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendorAuth);
+        await apiUtils.createProductAdvertisement(payloads.createProduct(), payloads.vendorAuth);
     });
 
     test.afterAll(async () => {
@@ -53,17 +47,11 @@ test.describe('Product Advertising test', () => {
     });
 
     test('admin can filter advertised product by stores @pro', async () => {
-        await admin.filterAdvertisedProduct(
-            data.productAdvertisement.filter.byStore,
-            'by-store',
-        );
+        await admin.filterAdvertisedProduct(data.productAdvertisement.filter.byStore, 'by-store');
     });
 
     test('admin can filter advertised product by creation process @pro', async () => {
-        await admin.filterAdvertisedProduct(
-            data.productAdvertisement.filter.createVia.admin,
-            'by-creation',
-        );
+        await admin.filterAdvertisedProduct(data.productAdvertisement.filter.createVia.admin, 'by-creation');
     });
 
     test('admin can expire advertised product @pro', async () => {
@@ -80,14 +68,8 @@ test.describe('Product Advertising test', () => {
     });
 
     test('vendor can buy product advertising @pro', async () => {
-        const orderId = await vendor.buyProductAdvertising(
-            data.productAdvertisement.advertisedProduct,
-        );
-        await apiUtils.updateOrderStatus(
-            orderId,
-            'wc-completed',
-            payloads.adminAuth,
-        );
+        const orderId = await vendor.buyProductAdvertising(data.productAdvertisement.advertisedProduct);
+        await apiUtils.updateOrderStatus(orderId, 'wc-completed', payloads.adminAuth);
     });
 
     // test('vendor can buy booking product advertising @pro', async ( ) => { // todo:

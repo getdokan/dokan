@@ -17,12 +17,7 @@ test.describe('Reports test', () => {
         aPage = await adminContext.newPage();
         admin = new ReportsPage(aPage);
         apiUtils = new ApiUtils(request);
-        [, , orderId] = await apiUtils.createOrderWithStatus(
-            PRODUCT_ID,
-            payloads.createOrder,
-            data.order.orderStatus.completed,
-            payloads.vendorAuth,
-        );
+        [, , orderId] = await apiUtils.createOrderWithStatus(PRODUCT_ID, payloads.createOrder, data.order.orderStatus.completed, payloads.vendorAuth);
     });
 
     test.afterAll(async () => {

@@ -10,9 +10,7 @@ test.describe('Single store functionality test', () => {
     // let apiUtils: ApiUtils;
 
     test.beforeAll(async ({ browser }) => {
-        const customerContext = await browser.newContext(
-            data.auth.customerAuth,
-        );
+        const customerContext = await browser.newContext(data.auth.customerAuth);
         cPage = await customerContext.newPage();
         customer = new SingleStorePage(cPage);
         // apiUtils = new ApiUtils(request);
@@ -25,9 +23,7 @@ test.describe('Single store functionality test', () => {
     // single store page
 
     test('dokan single store page is rendering properly @lite @explo', async () => {
-        await customer.singleStoreRenderProperly(
-            data.predefined.vendorStores.vendor1,
-        );
+        await customer.singleStoreRenderProperly(data.predefined.vendorStores.vendor1);
     });
 
     // test.skip('customer can view store open-close time on single store @lite', async ( ) => {
@@ -36,17 +32,11 @@ test.describe('Single store functionality test', () => {
     // });
 
     test('customer can search product on single store @lite', async () => {
-        await customer.singleStoreSearchProduct(
-            data.predefined.vendorStores.vendor1,
-            data.predefined.simpleProduct.product1.name,
-        );
+        await customer.singleStoreSearchProduct(data.predefined.vendorStores.vendor1, data.predefined.simpleProduct.product1.name);
     });
 
     test('customer can sort products on single store @lite', async () => {
-        await customer.singleStoreSortProducts(
-            data.predefined.vendorStores.vendor1,
-            'price',
-        );
+        await customer.singleStoreSortProducts(data.predefined.vendorStores.vendor1, 'price');
     });
 
     // test.skip('customer can view store terms and conditions @lite', async ( ) => {
@@ -55,9 +45,6 @@ test.describe('Single store functionality test', () => {
     // });
 
     test('customer can share store @pro', async () => {
-        await customer.storeShare(
-            data.predefined.vendorStores.vendor1,
-            data.storeShare.facebook,
-        );
+        await customer.storeShare(data.predefined.vendorStores.vendor1, data.storeShare.facebook);
     });
 });

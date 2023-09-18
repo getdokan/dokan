@@ -23,25 +23,17 @@ test.describe('Vendor RMA test', () => {
         vendor = new VendorReturnRequestPage(vPage);
         vendor1 = new OrdersPage(vPage);
 
-        const customerContext = await browser.newContext(
-            data.auth.customerAuth,
-        );
+        const customerContext = await browser.newContext(data.auth.customerAuth);
         cPage = await customerContext.newPage();
         customer = new VendorReturnRequestPage(cPage);
         customer1 = new CustomerPage(cPage);
 
         // todo: implement via api
-        await customer1.addProductToCartFromSingleProductPage(
-            data.predefined.simpleProduct.product1.name,
-        );
+        await customer1.addProductToCartFromSingleProductPage(data.predefined.simpleProduct.product1.name);
         await customer1.goToCheckout();
         orderId = await customer1.paymentOrder();
         await vendor1.updateOrderStatusOnTable(orderId, 'processing');
-        await customer.customerRequestWarranty(
-            orderId,
-            data.predefined.simpleProduct.product1.name,
-            data.rma.requestWarranty,
-        );
+        await customer.customerRequestWarranty(orderId, data.predefined.simpleProduct.product1.name, data.rma.requestWarranty);
 
         // apiUtils = new ApiUtils(request);
 
@@ -63,10 +55,7 @@ test.describe('Vendor RMA test', () => {
     });
 
     test('customer can send rma message @pro', async () => {
-        await customer.customerSendRmaMessage(
-            orderId,
-            'test customer rma message',
-        );
+        await customer.customerSendRmaMessage(orderId, 'test customer rma message');
     });
 
     test('vendor can send rma message @pro', async () => {
@@ -79,11 +68,7 @@ test.describe('Vendor RMA test', () => {
     });
 
     test('vendor can rma refund @pro', async () => {
-        await vendor.vendorRmaRefund(
-            orderId,
-            data.predefined.simpleProduct.product1.name,
-            'processing',
-        );
+        await vendor.vendorRmaRefund(orderId, data.predefined.simpleProduct.product1.name, 'processing');
     });
 
     test('vendor can delete rma request @pro', async () => {
@@ -98,16 +83,10 @@ test.describe('Vendor RMA test', () => {
     });
 
     test('customer can request warranty @pro', async () => {
-        await customer1.addProductToCartFromSingleProductPage(
-            data.predefined.simpleProduct.product1.name,
-        );
+        await customer1.addProductToCartFromSingleProductPage(data.predefined.simpleProduct.product1.name);
         await customer1.goToCheckout();
         const orderId = await customer1.paymentOrder();
         await vendor1.updateOrderStatusOnTable(orderId, 'processing');
-        await customer.customerRequestWarranty(
-            orderId,
-            data.predefined.simpleProduct.product1.name,
-            data.rma.requestWarranty,
-        );
+        await customer.customerRequestWarranty(orderId, data.predefined.simpleProduct.product1.name, data.rma.requestWarranty);
     });
 });

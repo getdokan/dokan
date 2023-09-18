@@ -24,30 +24,19 @@ export class ProductReviewsPage extends VendorPage {
         // product review table elements are visible
         await this.multipleElementVisible(selector.vendor.vReviews.table);
 
-        const noReviewsFound = await this.isVisible(
-            selector.vendor.vReviews.noReviewsFound,
-        );
+        const noReviewsFound = await this.isVisible(selector.vendor.vReviews.noReviewsFound);
         if (noReviewsFound) {
             return;
         }
 
-        await this.notToHaveCount(
-            selector.vendor.vReviews.numberOfRowsFound,
-            0,
-        );
+        await this.notToHaveCount(selector.vendor.vReviews.numberOfRowsFound, 0);
     }
 
     // view product review
     async viewProductReview(reviewMessage: string) {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.reviews);
-        await this.clickAndWaitForLoadState(
-            selector.vendor.vReviews.reviewLink(reviewMessage),
-        );
-        await this.toBeVisible(
-            selector.vendor.vReviews.reviewDetails.reviewMessageByMessage(
-                reviewMessage,
-            ),
-        );
+        await this.clickAndWaitForLoadState(selector.vendor.vReviews.reviewLink(reviewMessage));
+        await this.toBeVisible(selector.vendor.vReviews.reviewDetails.reviewMessageByMessage(reviewMessage));
     }
 
     // update product review status
@@ -56,74 +45,36 @@ export class ProductReviewsPage extends VendorPage {
 
         switch (action) {
             case 'unApprove':
-                await this.hover(
-                    selector.vendor.vReviews.reviewMessageCell(reviewMessage),
-                );
-                await this.clickAndWaitForResponse(
-                    data.subUrls.ajax,
-                    selector.vendor.vReviews.unApproveReview(reviewMessage),
-                );
+                await this.hover(selector.vendor.vReviews.reviewMessageCell(reviewMessage));
+                await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vReviews.unApproveReview(reviewMessage));
                 break;
 
             case 'spam':
-                await this.hover(
-                    selector.vendor.vReviews.reviewMessageCell(reviewMessage),
-                );
-                await this.clickAndWaitForResponse(
-                    data.subUrls.ajax,
-                    selector.vendor.vReviews.spamReview(reviewMessage),
-                );
+                await this.hover(selector.vendor.vReviews.reviewMessageCell(reviewMessage));
+                await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vReviews.spamReview(reviewMessage));
                 break;
 
             case 'trash':
-                await this.hover(
-                    selector.vendor.vReviews.reviewMessageCell(reviewMessage),
-                );
-                await this.clickAndWaitForResponse(
-                    data.subUrls.ajax,
-                    selector.vendor.vReviews.trashReview(reviewMessage),
-                );
+                await this.hover(selector.vendor.vReviews.reviewMessageCell(reviewMessage));
+                await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vReviews.trashReview(reviewMessage));
                 break;
 
             case 'approve':
-                await this.clickAndWaitForLoadState(
-                    selector.vendor.vReviews.menus.pending,
-                );
-                await this.hover(
-                    selector.vendor.vReviews.reviewMessageCell(reviewMessage),
-                );
-                await this.clickAndWaitForResponse(
-                    data.subUrls.ajax,
-                    selector.vendor.vReviews.approveReview(reviewMessage),
-                );
+                await this.clickAndWaitForLoadState(selector.vendor.vReviews.menus.pending);
+                await this.hover(selector.vendor.vReviews.reviewMessageCell(reviewMessage));
+                await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vReviews.approveReview(reviewMessage));
                 break;
 
             case 'restore':
-                await this.clickAndWaitForLoadState(
-                    selector.vendor.vReviews.menus.trash,
-                );
-                await this.hover(
-                    selector.vendor.vReviews.reviewMessageCell(reviewMessage),
-                );
-                await this.clickAndWaitForResponse(
-                    data.subUrls.ajax,
-                    selector.vendor.vReviews.restoreReview(reviewMessage),
-                );
+                await this.clickAndWaitForLoadState(selector.vendor.vReviews.menus.trash);
+                await this.hover(selector.vendor.vReviews.reviewMessageCell(reviewMessage));
+                await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vReviews.restoreReview(reviewMessage));
                 break;
 
             case 'permanently-delete':
-                await this.clickAndWaitForLoadState(
-                    selector.vendor.vReviews.menus.trash,
-                );
-                await this.hover(
-                    selector.vendor.vReviews.reviewMessageCell(reviewMessage),
-                );
-                await this.clickAndWaitForResponse(
-                    data.subUrls.ajax,
-                    selector.vendor.vReviews.permanentlyDeleteReview(
-                        reviewMessage,
-                    ),
-                );
+                await this.clickAndWaitForLoadState(selector.vendor.vReviews.menus.trash);
+                await this.hover(selector.vendor.vReviews.reviewMessageCell(reviewMessage));
+                await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vReviews.permanentlyDeleteReview(reviewMessage));
                 break;
 
             default:
@@ -139,13 +90,7 @@ export class ProductReviewsPage extends VendorPage {
         await this.notToBeVisible(selector.vendor.vReviews.noReviewsFound);
 
         await this.click(selector.vendor.vReviews.bulkActions.selectAll);
-        await this.selectByValue(
-            selector.vendor.vReviews.bulkActions.selectAction,
-            action,
-        );
-        await this.clickAndWaitForResponseAndLoadState(
-            data.subUrls.frontend.vDashboard.reviews,
-            selector.vendor.vReviews.bulkActions.applyAction,
-        );
+        await this.selectByValue(selector.vendor.vReviews.bulkActions.selectAction, action);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.reviews, selector.vendor.vReviews.bulkActions.applyAction);
     }
 }

@@ -18,12 +18,7 @@ test.describe('Order functionality test', () => {
         vendor = new OrdersPage(vPage);
 
         apiUtils = new ApiUtils(request);
-        [, , orderId] = await apiUtils.createOrderWithStatus(
-            PRODUCT_ID,
-            { ...payloads.createOrder, customer_id: CUSTOMER_ID },
-            data.order.orderStatus.onhold,
-            payloads.vendorAuth,
-        );
+        [, , orderId] = await apiUtils.createOrderWithStatus(PRODUCT_ID, { ...payloads.createOrder, customer_id: CUSTOMER_ID }, data.order.orderStatus.onhold, payloads.vendorAuth);
     });
 
     test.afterAll(async () => {
@@ -62,17 +57,11 @@ test.describe('Order functionality test', () => {
     });
 
     test('vendor can update order status on table @lite', async () => {
-        await vendor.updateOrderStatusOnTable(
-            orderId,
-            data.order.orderStatus.processing,
-        );
+        await vendor.updateOrderStatusOnTable(orderId, data.order.orderStatus.processing);
     });
 
     test('vendor can update order status on order details @lite', async () => {
-        await vendor.updateOrderStatus(
-            orderId,
-            data.order.orderStatus.completed,
-        );
+        await vendor.updateOrderStatus(orderId, data.order.orderStatus.completed);
     });
 
     test('vendor can add order note @lite', async () => {

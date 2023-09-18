@@ -261,10 +261,8 @@ export const dbData = {
 
         emailVerificationSettings: {
             enabled: 'off',
-            registration_notice:
-                'Please check your email and complete email verification to login.',
-            login_notice:
-                'Please check your email and complete email verification to login.',
+            registration_notice: 'Please check your email and complete email verification to login.',
+            login_notice: 'Please check your email and complete email verification to login.',
         },
 
         socialAPISettings: {
@@ -345,8 +343,7 @@ export const dbData = {
             app_id: '',
             app_secret: '',
             wa_opening_method: 'in_app',
-            wa_pre_filled_message:
-                'Hello {store_name}, I have an enquiry regarding your store at {store_url}',
+            wa_pre_filled_message: 'Hello {store_name}, I have an enquiry regarding your store at {store_url}',
             chat_button_seller_page: 'on',
             chat_button_product_page: 'above_tab',
         },
@@ -388,8 +385,7 @@ export const dbData = {
             },
             vendor_registration: 'on',
             customer_fields: {
-                billing_dokan_company_id_number:
-                    'billing_dokan_company_id_number',
+                billing_dokan_company_id_number: 'billing_dokan_company_id_number',
                 billing_dokan_vat_number: 'billing_dokan_vat_number',
                 billing_dokan_bank_name: 'billing_dokan_bank_name',
                 billing_dokan_bank_iban: 'billing_dokan_bank_iban',
@@ -408,8 +404,7 @@ export const dbData = {
             preorder_date: 0,
             time_slot_minutes: 30,
             order_per_slot: 0,
-            delivery_box_info:
-                'This store needs %DAY% day(s) to process your delivery request',
+            delivery_box_info: 'This store needs %DAY% day(s) to process your delivery request',
             selection_required: 'off',
             delivery_day: '',
             delivery_day_monday: {
@@ -534,13 +529,10 @@ export const dbData = {
             notify_by_email: 'on',
             no_of_days_before_mail: '1',
             product_status_after_end: 'draft',
-            cancelling_email_subject:
-                'Subscription Package Cancel notification',
-            cancelling_email_body:
-                'Dear subscriber, Your subscription has expired. Please renew your package to continue using it.',
+            cancelling_email_subject: 'Subscription Package Cancel notification',
+            cancelling_email_body: 'Dear subscriber, Your subscription has expired. Please renew your package to continue using it.',
             alert_email_subject: 'Subscription Ending Soon',
-            alert_email_body:
-                'Dear subscriber, Your subscription will be ending soon. Please renew your package in a timely',
+            alert_email_body: 'Dear subscriber, Your subscription will be ending soon. Please renew your package in a timely',
         },
 
         // modules

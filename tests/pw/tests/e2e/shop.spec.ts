@@ -10,9 +10,7 @@ test.describe('Shop functionality test', () => {
     // let apiUtils: ApiUtils;
 
     test.beforeAll(async ({ browser }) => {
-        const customerContext = await browser.newContext(
-            data.auth.customerAuth,
-        );
+        const customerContext = await browser.newContext(data.auth.customerAuth);
         cPage = await customerContext.newPage();
         customer = new ShopPage(cPage);
 
@@ -34,9 +32,7 @@ test.describe('Shop functionality test', () => {
     });
 
     test('customer can search product @lite', async () => {
-        await customer.searchProduct(
-            data.predefined.simpleProduct.product1.name,
-        );
+        await customer.searchProduct(data.predefined.simpleProduct.product1.name);
     });
 
     test('customer can filter products by category @pro', async () => {
@@ -53,8 +49,6 @@ test.describe('Shop functionality test', () => {
     });
 
     test('customer can go to product details from shop @lite', async () => {
-        await customer.goToProductDetailsFromShop(
-            data.predefined.simpleProduct.product1.name,
-        );
+        await customer.goToProductDetailsFromShop(data.predefined.simpleProduct.product1.name);
     });
 });

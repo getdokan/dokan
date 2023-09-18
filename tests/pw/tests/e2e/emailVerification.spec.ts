@@ -17,17 +17,14 @@ test.describe('Email verifications test', () => {
         uPage = await guestContext.newPage();
         guest = new EmailVerificationsPage(uPage);
 
-        await dbUtils.setDokanSettings(
-            dbData.dokan.optionName.emailVerification,
-            { ...dbData.dokan.emailVerificationSettings, enabled: 'on' },
-        );
+        await dbUtils.setDokanSettings(dbData.dokan.optionName.emailVerification, {
+            ...dbData.dokan.emailVerificationSettings,
+            enabled: 'on',
+        });
     });
 
     test.afterAll(async () => {
-        await dbUtils.setDokanSettings(
-            dbData.dokan.optionName.emailVerification,
-            dbData.dokan.emailVerificationSettings,
-        );
+        await dbUtils.setDokanSettings(dbData.dokan.optionName.emailVerification, dbData.dokan.emailVerificationSettings);
         await uPage.close();
     });
 

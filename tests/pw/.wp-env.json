@@ -14,9 +14,7 @@
                 "https://github.com/shashwatahalder01/TestUtils/raw/main/wps.zip",
                 "https://github.com/shashwatahalder01/TestUtils/raw/main/ws.zip"
             ],
-            "themes": [
-                "https://downloads.wordpress.org/theme/storefront.latest-stable.zip"
-            ],
+            "themes": ["https://downloads.wordpress.org/theme/storefront.latest-stable.zip"],
             "config": {
                 "WP_DEBUG": "true",
                 "SCRIPT_DEBUG": "true",

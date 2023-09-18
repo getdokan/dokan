@@ -36,11 +36,7 @@ test.describe('setup local site', () => {
     });
 
     test('activate basic auth plugin', async () => {
-        await dbUtils.updateWpOptionTable(
-            dbData.optionName.activePlugins,
-            dbData.plugins,
-            'serialize',
-        );
+        await dbUtils.updateWpOptionTable(dbData.optionName.activePlugins, dbData.plugins, 'serialize');
         // await dbUtils.updateWpOptionTable(dbData.dokan.optionName.dokanActiveModules, dbData.dokan.modules, 'serialize');
     });
 
@@ -60,11 +56,7 @@ test.describe('setup local site', () => {
             'woocommerce-subscriptions/woocommerce-subscriptions',
         ];
         for (const plugin of plugins) {
-            const activePlugins = await apiUtils.updatePlugin(
-                plugin,
-                { status: 'active' },
-                payloads.adminAuth,
-            );
+            const activePlugins = await apiUtils.updatePlugin(plugin, { status: 'active' }, payloads.adminAuth);
             console.log(activePlugins);
         }
     });

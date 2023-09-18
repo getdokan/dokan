@@ -10,12 +10,8 @@ async function globalSetup() {
 
     // get test environment info
     if (!helpers.fileExists(systemInfo)) {
-        const apiUtils = new ApiUtils(
-            await request.newContext({ ignoreHTTPSErrors: true }),
-        );
-        const [, summaryInfo] = await apiUtils.getSystemStatus(
-            payloads.adminAuth,
-        );
+        const apiUtils = new ApiUtils(await request.newContext({ ignoreHTTPSErrors: true }));
+        const [, summaryInfo] = await apiUtils.getSystemStatus(payloads.adminAuth);
         helpers.writeFile(systemInfo, JSON.stringify(summaryInfo));
     }
 

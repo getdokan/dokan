@@ -12,33 +12,25 @@ test.beforeAll(async ({ request }) => {
 
 test.describe('report api test', () => {
     test('get sales overview report @pro', async () => {
-        const [response, responseBody] = await apiUtils.get(
-            endPoints.getSalesOverviewReport,
-        );
+        const [response, responseBody] = await apiUtils.get(endPoints.getSalesOverviewReport);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
     test('get summary report @pro', async () => {
-        const [response, responseBody] = await apiUtils.get(
-            endPoints.getSummaryReport,
-        );
+        const [response, responseBody] = await apiUtils.get(endPoints.getSummaryReport);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
     test('get top earners report @pro', async () => {
-        const [response, responseBody] = await apiUtils.get(
-            endPoints.getTopEarnersReport,
-        );
+        const [response, responseBody] = await apiUtils.get(endPoints.getTopEarnersReport);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
     test('get top selling products report @pro', async () => {
-        const [response, responseBody] = await apiUtils.get(
-            endPoints.getTopSellingProductsReport,
-        );
+        const [response, responseBody] = await apiUtils.get(endPoints.getTopSellingProductsReport);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });

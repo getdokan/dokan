@@ -21,10 +21,7 @@ test.describe('Product functionality test', () => {
         vendor = new ProductsPage(vPage);
 
         apiUtils = new ApiUtils(request);
-        [, , productName] = await apiUtils.createProduct(
-            payloads.createProduct(),
-            payloads.vendorAuth,
-        );
+        [, , productName] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendorAuth);
     });
 
     test.afterAll(async () => {
@@ -77,15 +74,11 @@ test.describe('Product functionality test', () => {
     });
 
     test('vendor can add simple subscription product @pro', async () => {
-        await vendor.vendorAddSimpleSubscription(
-            data.product.simpleSubscription,
-        );
+        await vendor.vendorAddSimpleSubscription(data.product.simpleSubscription);
     });
 
     test('vendor can add variable subscription product @pro', async () => {
-        await vendor.vendorAddVariableSubscription(
-            data.product.variableSubscription,
-        );
+        await vendor.vendorAddVariableSubscription(data.product.variableSubscription);
     });
 
     test('vendor can add external product @pro', async () => {
@@ -93,10 +86,7 @@ test.describe('Product functionality test', () => {
     });
 
     test('vendor can add product product category @lite', async () => {
-        await vendor.vendorAddProductCategory(
-            data.predefined.simpleProduct.product1.name,
-            data.product.category.unCategorized,
-        );
+        await vendor.vendorAddProductCategory(data.predefined.simpleProduct.product1.name, data.product.category.unCategorized);
     });
 
     test('vendor product menu page is rendering properly @lite @explo', async () => {
@@ -154,10 +144,7 @@ test.describe('Product functionality test', () => {
     // });
 
     test('vendor can add product rma settings @pro', async () => {
-        await vendor.addProductRmaSettings(
-            data.predefined.simpleProduct.product1.name,
-            data.vendor.rma,
-        );
+        await vendor.addProductRmaSettings(data.predefined.simpleProduct.product1.name, data.vendor.rma);
     });
 
     // todo: add more product edit tests -> discount, wholesale, advertising
@@ -167,10 +154,7 @@ test.describe('Product functionality test', () => {
     });
 
     test('vendor can permanently delete product @lite', async () => {
-        const [, , productName] = await apiUtils.createProduct(
-            payloads.createProduct(),
-            payloads.vendorAuth,
-        );
+        const [, , productName] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendorAuth);
         await vendor.permanentlyDeleteProduct(productName);
     });
 });

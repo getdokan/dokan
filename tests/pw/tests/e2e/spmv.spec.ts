@@ -25,9 +25,7 @@ test.describe('Vendor SPMV test', () => {
         vPage = await vendorContext.newPage();
         vendor = new SpmvPage(vPage);
 
-        const customerContext = await browser.newContext(
-            data.auth.customerAuth,
-        );
+        const customerContext = await browser.newContext(data.auth.customerAuth);
         cPage = await customerContext.newPage();
         customer = new SpmvPage(cPage);
 
@@ -55,10 +53,7 @@ test.describe('Vendor SPMV test', () => {
     });
 
     test.afterAll(async () => {
-        await dbUtils.setDokanSettings(
-            dbData.dokan.optionName.selling,
-            dbData.dokan.sellingSettings,
-        );
+        await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, dbData.dokan.sellingSettings);
         await aPage.close();
         await vPage.close();
         await cPage.close();
@@ -72,10 +67,7 @@ test.describe('Vendor SPMV test', () => {
             },
             payloads.vendor2Auth,
         );
-        await admin.assignSpmvProduct(
-            productId,
-            data.predefined.vendorStores.vendor1FullName,
-        );
+        await admin.assignSpmvProduct(productId, data.predefined.vendorStores.vendor1FullName);
     });
 
     test('vendor spmv menu page is rendering properly @pro @explo', async () => {
@@ -91,25 +83,17 @@ test.describe('Vendor SPMV test', () => {
     });
 
     test('vendor can search similar booking product @pro', async () => {
-        const [, , bookableProductName] = await apiUtils.createBookableProduct(
-            payloads.createBookableProduct(),
-            payloads.vendor2Auth,
-        );
+        const [, , bookableProductName] = await apiUtils.createBookableProduct(payloads.createBookableProduct(), payloads.vendor2Auth);
         await vendor.searchSimilarProduct(bookableProductName, 'booking');
     });
 
     test('vendor can search similar auction product @pro', async () => {
-        const [, , auctionProductName] = await apiUtils.createProduct(
-            payloads.createAuctionProduct(),
-            payloads.vendor2Auth,
-        );
+        const [, , auctionProductName] = await apiUtils.createProduct(payloads.createAuctionProduct(), payloads.vendor2Auth);
         await vendor.searchSimilarProduct(auctionProductName, 'auction');
     });
 
     test('vendor can go to own product edit from spmv page @pro', async () => {
-        await vendor.goToProductEditFromSPMV(
-            data.predefined.simpleProduct.product1.name,
-        );
+        await vendor.goToProductEditFromSPMV(data.predefined.simpleProduct.product1.name);
     });
 
     test('vendor can sort spmv products @pro', async () => {
@@ -138,23 +122,14 @@ test.describe('Vendor SPMV test', () => {
     });
 
     test('customer can view other available vendor @pro', async () => {
-        await customer.viewOtherAvailableVendor(
-            productName1,
-            data.predefined.vendorStores.vendor1,
-        );
+        await customer.viewOtherAvailableVendor(productName1, data.predefined.vendorStores.vendor1);
     });
 
     test('customer can view other available vendor product @pro', async () => {
-        await customer.viewOtherAvailableVendorProduct(
-            productName1,
-            data.predefined.vendorStores.vendor1,
-        );
+        await customer.viewOtherAvailableVendorProduct(productName1, data.predefined.vendorStores.vendor1);
     });
 
     test('customer can add to cart other available vendor product @pro', async () => {
-        await customer.addToCartOtherAvailableVendorsProduct(
-            productName1,
-            data.predefined.vendorStores.vendor1,
-        );
+        await customer.addToCartOtherAvailableVendorsProduct(productName1, data.predefined.vendorStores.vendor1);
     });
 });

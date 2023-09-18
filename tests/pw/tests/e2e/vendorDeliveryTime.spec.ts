@@ -17,9 +17,7 @@ test.describe('Vendor delivery time test', () => {
         vPage = await vendorContext.newPage();
         vendor = new VendorDeliveryTimePage(vPage);
 
-        const customerContext = await browser.newContext(
-            data.auth.customerAuth,
-        );
+        const customerContext = await browser.newContext(data.auth.customerAuth);
         cPage = await customerContext.newPage();
         customer = new VendorDeliveryTimePage(cPage);
 
@@ -52,14 +50,8 @@ test.describe('Vendor delivery time test', () => {
     });
 
     test('customer can buy product with delivery time @pro', async () => {
-        await customer.addProductToCart(
-            data.predefined.simpleProduct.product1.name,
-            'single-product',
-        );
-        await customer.placeOrderWithDeliverTimeStorePickup(
-            'delivery-time',
-            data.deliveryTime,
-        );
+        await customer.addProductToCart(data.predefined.simpleProduct.product1.name, 'single-product');
+        await customer.placeOrderWithDeliverTimeStorePickup('delivery-time', data.deliveryTime);
     });
 
     test('customer can buy product with store pickup @pro', async () => {
@@ -67,13 +59,7 @@ test.describe('Vendor delivery time test', () => {
             ...dbData.dokan.deliveryTimeSettings,
             allow_vendor_override_settings: 'off',
         }); // todo: added for: previous test is disable store pickup
-        await customer.addProductToCart(
-            data.predefined.simpleProduct.product1.name,
-            'single-product',
-        );
-        await customer.placeOrderWithDeliverTimeStorePickup(
-            'store-pickup',
-            data.deliveryTime,
-        );
+        await customer.addProductToCart(data.predefined.simpleProduct.product1.name, 'single-product');
+        await customer.placeOrderWithDeliverTimeStorePickup('store-pickup', data.deliveryTime);
     });
 });

@@ -20,19 +20,12 @@ export class ProPromoPage extends AdminPage {
         await this.goIfNotThere(data.subUrls.backend.dokan.liteModules);
 
         // pro upgrade popup elements are visible
-        await this.multipleElementVisible(
-            selector.admin.dokan.modules.lite.popup,
-        );
+        await this.multipleElementVisible(selector.admin.dokan.modules.lite.popup);
 
         // module cards are visible
-        await this.click(
-            selector.admin.dokan.modules.lite.popup.closeDokanUpgradePopup,
-        );
+        await this.click(selector.admin.dokan.modules.lite.popup.closeDokanUpgradePopup);
         await this.toBeVisible(selector.admin.dokan.modules.lite.moduleText);
-        await this.toHaveCount(
-            selector.admin.dokan.modules.lite.moduleCard,
-            27,
-        );
+        await this.toHaveCount(selector.admin.dokan.modules.lite.moduleCard, 27);
 
         // dokan pro features menu
         await this.goIfNotThere(data.subUrls.backend.dokan.proFeatures);
@@ -44,8 +37,6 @@ export class ProPromoPage extends AdminPage {
         await this.goToDokanSettings();
 
         // settings pro advertisement banner elements are visible
-        await this.multipleElementVisible(
-            selector.admin.dokan.settings.proAdvertisementBanner,
-        );
+        await this.multipleElementVisible(selector.admin.dokan.settings.proAdvertisementBanner);
     }
 }

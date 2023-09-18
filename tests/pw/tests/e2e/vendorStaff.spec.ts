@@ -38,9 +38,7 @@ test.describe('Vendor staff test', () => {
     });
 
     test('vendor can manage staff permission @pro', async () => {
-        await vendor.manageStaffPermission(
-            staff.firstName + ' ' + staff.lastName,
-        );
+        await vendor.manageStaffPermission(staff.firstName + ' ' + staff.lastName);
     });
 
     test('vendor can delete staff @pro', async () => {

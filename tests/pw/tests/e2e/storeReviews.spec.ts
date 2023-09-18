@@ -22,25 +22,15 @@ test.describe('Store Reviews test', () => {
         vPage = await vendorContext.newPage();
         vendor = new StoreReviewsPage(vPage);
 
-        const customerContext = await browser.newContext(
-            data.auth.customerAuth,
-        );
+        const customerContext = await browser.newContext(data.auth.customerAuth);
         cPage = await customerContext.newPage();
         customer = new StoreReviewsPage(cPage);
 
         apiUtils = new ApiUtils(request);
 
         await apiUtils.updateBatchStoreReviews('trash', [], payloads.adminAuth);
-        await apiUtils.createStoreReview(
-            VENDOR_ID,
-            payloads.createStoreReview,
-            payloads.customerAuth,
-        );
-        const [, reviewId] = await apiUtils.createStoreReview(
-            VENDOR_ID,
-            { ...payloads.createStoreReview, title: 'trashed test review' },
-            payloads.customerAuth,
-        );
+        await apiUtils.createStoreReview(VENDOR_ID, payloads.createStoreReview, payloads.customerAuth);
+        const [, reviewId] = await apiUtils.createStoreReview(VENDOR_ID, { ...payloads.createStoreReview, title: 'trashed test review' }, payloads.customerAuth);
         await apiUtils.deleteStoreReview(reviewId, payloads.adminAuth);
     });
 
@@ -79,39 +69,23 @@ test.describe('Store Reviews test', () => {
     });
 
     test('admin can perform store reviews bulk action @pro', async () => {
-        await apiUtils.createStoreReview(
-            VENDOR_ID,
-            payloads.createStoreReview,
-            payloads.customerAuth,
-        );
+        await apiUtils.createStoreReview(VENDOR_ID, payloads.createStoreReview, payloads.customerAuth);
         await admin.storeReviewsBulkAction('trash');
     });
 
     test('customer can review store @pro', async () => {
         // remove any previous reviews
         await apiUtils.updateBatchStoreReviews('trash', [], payloads.adminAuth);
-        await customer.reviewStore(
-            data.predefined.vendorStores.vendor1,
-            data.storeReview.review(),
-            'create',
-        );
+        await customer.reviewStore(data.predefined.vendorStores.vendor1, data.storeReview.review(), 'create');
     });
 
     test('customer can edit store review @pro', async () => {
-        await customer.reviewStore(
-            data.predefined.vendorStores.vendor1,
-            data.storeReview.review(),
-            'edit',
-        );
+        await customer.reviewStore(data.predefined.vendorStores.vendor1, data.storeReview.review(), 'edit');
     });
 
     test('customer can view own review @pro', async () => {
         await apiUtils.updateBatchStoreReviews('trash', [], payloads.adminAuth);
-        await apiUtils.createStoreReview(
-            VENDOR_ID,
-            payloads.createStoreReview,
-            payloads.customerAuth,
-        );
+        await apiUtils.createStoreReview(VENDOR_ID, payloads.createStoreReview, payloads.customerAuth);
         await customer.viewOwnReview(data.predefined.vendorStores.vendor1);
     });
 

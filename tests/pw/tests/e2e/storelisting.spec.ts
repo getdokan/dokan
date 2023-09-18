@@ -10,9 +10,7 @@ test.describe('Store listing functionality test', () => {
     // let apiUtils: ApiUtils;
 
     test.beforeAll(async ({ browser }) => {
-        const customerContext = await browser.newContext(
-            data.auth.customerAuth,
-        );
+        const customerContext = await browser.newContext(data.auth.customerAuth);
         cPage = await customerContext.newPage();
         customer = new StoreListingPage(cPage);
         // apiUtils = new ApiUtils(request);
@@ -66,8 +64,6 @@ test.describe('Store listing functionality test', () => {
     });
 
     test('customer can go to single store from store list @lite', async () => {
-        await customer.goToSingleStoreFromStoreListing(
-            data.predefined.vendorStores.vendor1,
-        );
+        await customer.goToSingleStoreFromStoreListing(data.predefined.vendorStores.vendor1);
     });
 });
