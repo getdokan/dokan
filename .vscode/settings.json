@@ -178,5 +178,6 @@
         "WPLANG",
         "wpnonce",
         "yopmail"
-    ]
+    ],
+    "coddx.taskBoard.fileList": "tests/pw/TODO.md"
 }

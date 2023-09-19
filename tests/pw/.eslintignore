@@ -1,0 +1,25 @@
+
+
+# Playwright Specific
+node_modules/
+playwright/
+playwright-report
+test-results/
+summary.json
+types/
+
+# IDE - VSCode
+.vscode/*
+
+# System Files
+.DS_Store
+Thumbs.db
+{"mode":"full","isActive":false}
+
+# Docs files
+*_spec3.json
+
+
+# Custom files
+todo.ts
+TODO.md
