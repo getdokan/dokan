@@ -2,12 +2,12 @@
 **Contributors:** [tareq1988](https://profiles.wordpress.org/tareq1988/), [wedevs](https://profiles.wordpress.org/wedevs/), [nizamuddinbabu](https://profiles.wordpress.org/nizamuddinbabu/)  
 **Donate Link:** http://tareq.co/donate/  
 **Tags:** WooCommerce multivendor marketplace, multi vendor marketplace, multi seller store, multi-vendor, multi seller, commissions, multivendor, marketplace, product vendors, woocommerce vendor, commission rate, e-commerce, woocommerce, ebay, ecommerce.  
-**Requires at least:** 5.4  
-**Tested up to:** 6.3.0  
+**Requires at least:** 5.6  
+**Tested up to:** 6.3.1  
 **WC requires at least:** 5.0.0  
-**WC tested up to:** 8.0.2  
+**WC tested up to:** 8.1.0  
 **Requires PHP:** 7.3  
-**Stable tag:** 3.8.1  
+**Stable tag:** 3.8.2  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -337,6 +337,23 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 ## Changelog ##
+
+### v3.8.2 ( Sep 13, 2023 ) ###
+
+- **new:** Feature: Single-page product creation form.
+Before this release, vendors had to go through a two-step process to create a product. However, with this release, a single-page product creation form has been introduced. To enable this feature, you need to navigate to the WordPress admin panel → Dokan → Settings → Selling Options → One Page Product Creation.
+It’s important to note that in the next version of Dokan, the Add New Product popup and the Add New Product form will be removed. After that, the Single-Page product form will be the default system for creating a product from the vendor dashboard.
+- **new:** Feature: Ask for product review
+The Ask for Product Review feature in Dokan allows vendors to set the product status to draft while creating a product using the single-page product creation form. After the vendor is satisfied with the edit, they can either ask for a review or publish the product directly based on the admin settings and vendor capability.
+- **fix:** Fixed an issue where orders can’t be filtered by vendor under Admin Dashboard → WooCommerce → Order lists page if HPOS feature is enabled
+- **fix:** Fixed an issue where multiple sub-orders has been created for a single parent order.
+- **fix:** Fixed and issue while trying to delete all demo products also deleting non-dummy products while calling the API endpoints multiple times
+- **fix:** Fixed an issue where Dokan Pro’s Product Status setting were used even though Dokan Pro plugin is deactivated.
+- **fix:** Fixed an issue where products were visible beyond Simple Products in the product list page under the vendor dashboard when Dokan Pro was deactivated or not installed.
+- **update:** Removed unnecessary product type filter from Vendor Dashboard product list page since there is only one product type available in Dokan Lite
+- **update:** [VendorRegistration] Improved Compatibility with WooCommerce Password Settings
+In the past, when vendors registered using the [dokan-vendor-registration] shortcode, the process did not align with WooCommerce's automatic password generation settings. However, in the latest update, we've enhanced this process. The vendor registration form presented through the [dokan-vendor-registration] shortcode now seamlessly adheres to WooCommerce's automatic password generation settings. This enhancement ensures a more unified and user-friendly registration experience for vendors, in line with WooCommerce's standard practices.
+- **update:** Added shipping tax fee recipient field setting under admin setup wizard.
 
 ### v3.8.1 ( Aug 25, 2023 ) ###
 
