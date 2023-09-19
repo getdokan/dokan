@@ -144,7 +144,7 @@ export default {
             // Resetting the values
             Object.keys(this.menuList).map( ( value, index ) => {
                 this.menuList[value].menu_manager_position = index
-                this.menuList[value].is_switched_on = this.menuList[value].switchable;
+                this.menuList[value].is_switched_on = true; // this.menuList[value].switchable;
                 this.menuList[value].temporary_disable_edit = ! this.menuList[value].editable;
                 this.menuList[value].menu_manager_title = this.menuList[value].title;
                 // console.log( this.menuList[value].menu_manager_title );

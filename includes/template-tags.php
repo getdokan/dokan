@@ -390,7 +390,7 @@ function dokan_nav_sort_by_pos( $a, $b ) {
  *
  * @return array
  */
-function dokan_get_dashboard_nav() {
+function dokan_get_dashboard_nav( $listing = false ) {
     $menus = array(
         'dashboard' => array(
             'title'      => __( 'Dashboard', 'dokan-lite' ),
@@ -459,7 +459,7 @@ function dokan_get_dashboard_nav() {
      *
      * @param array<string,array> $menus
      */
-    $nav_menus = apply_filters( 'dokan_get_dashboard_nav', $menus );
+    $nav_menus = apply_filters( 'dokan_get_dashboard_nav', $menus, $listing );
 
     foreach ( $nav_menus as $nav_key => $menu ) {
         if ( ! isset( $menu['pos'] ) ) {
