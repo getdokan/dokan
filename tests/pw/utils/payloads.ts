@@ -407,6 +407,7 @@ export const payloads = {
                 key: '_auction_type',
                 value: 'normal',
             },
+
             {
                 key: '_auction_start_price',
                 value: '10', // faker.finance.amount(10, 20, 2),
@@ -504,13 +505,9 @@ export const payloads = {
         ],
     }),
 
-    updateProduct: () => ({
-        regular_price: faker.finance.amount(100, 200, faker.helpers.arrayElement([0, 2])),
-    }),
+    updateProduct: () => ({ regular_price: faker.finance.amount(100, 200, faker.helpers.arrayElement([0, 2])) }),
 
-    updateProductVariation: () => ({
-        regular_price: faker.finance.amount(100, 200, faker.helpers.arrayElement([0, 2])),
-    }),
+    updateProductVariation: () => ({ regular_price: faker.finance.amount(100, 200, faker.helpers.arrayElement([0, 2])) }),
 
     createProductReview: () => ({
         product_id: '',
@@ -625,9 +622,7 @@ export const payloads = {
         ],
     }),
 
-    updateCoupon: () => ({
-        amount: faker.number.int({ min: 1, max: 10 }).toString(),
-    }),
+    updateCoupon: () => ({ amount: faker.number.int({ min: 1, max: 10 }).toString() }),
 
     // order
 
@@ -894,17 +889,11 @@ export const payloads = {
         // has_archives: false
     }),
 
-    updateAttribute: () => ({
-        name: 'Updated_Test_attribute_' + faker.string.alpha(5),
-    }),
+    updateAttribute: () => ({ name: 'Updated_Test_attribute_' + faker.string.alpha(5) }),
 
-    createAttributeTerm: () => ({
-        name: 'Test_attributeTerm_' + faker.string.alpha(8),
-    }),
+    createAttributeTerm: () => ({ name: 'Test_attributeTerm_' + faker.string.alpha(8) }),
 
-    updateAttributeTerm: () => ({
-        name: 'Updated_Test_attributeTerm_' + faker.string.alpha(5),
-    }),
+    updateAttributeTerm: () => ({ name: 'Updated_Test_attributeTerm_' + faker.string.alpha(5) }),
 
     // user
 
@@ -1077,6 +1066,7 @@ export const payloads = {
                 value: '.',
                 // value: '.',
             },
+
             {
                 id: 'woocommerce_price_decimal_sep',
                 // label: 'Decimal separator',
@@ -2222,12 +2212,8 @@ export const payloads = {
 
     // store category
 
-    createStoreCategory: () => ({
-        name: 'Test_Store_Category' + faker.string.nanoid(10),
-    }),
-    updateStoreCategory: () => ({
-        name: 'Update_Test_Store_Category' + faker.string.nanoid(10),
-    }),
+    createStoreCategory: () => ({ name: 'Test_Store_Category' + faker.string.nanoid(10) }),
+    updateStoreCategory: () => ({ name: 'Update_Test_Store_Category' + faker.string.nanoid(10) }),
 
     // dummy data
 

@@ -19,9 +19,7 @@ test.describe('Wholesale customers test (admin)', () => {
         aPage = await adminContext.newPage();
         admin = new WholesaleCustomersPage(aPage);
 
-        const customerContext = await browser.newContext({
-            storageState: { cookies: [], origins: [] },
-        });
+        const customerContext = await browser.newContext({ storageState: { cookies: [], origins: [] } });
         cPage = await customerContext.newPage();
         customerPage = new CustomerPage(cPage);
         customer = new WholesaleCustomersPage(cPage);
@@ -76,10 +74,7 @@ test.describe('Wholesale customers test (admin)', () => {
     });
 
     test('customer can request for become a wholesale customer', async () => {
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.wholesale, {
-            ...dbData.dokan.wholesaleSettings,
-            need_approval_for_wholesale_customer: 'on',
-        });
+        await dbUtils.setDokanSettings(dbData.dokan.optionName.wholesale, { ...dbData.dokan.wholesaleSettings, need_approval_for_wholesale_customer: 'on' });
         await customerPage.customerRegister(data.customer.customerInfo);
         await customer.customerRequestForBecomeWholesaleCustomer();
     });

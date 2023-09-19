@@ -46,17 +46,11 @@ test.describe('Auction Product test', () => {
     });
 
     test('vendor can add auction product @pro', async () => {
-        await vendor.addAuctionProduct({
-            ...data.product.auction,
-            name: data.product.auction.productName(),
-        });
+        await vendor.addAuctionProduct({ ...data.product.auction, name: data.product.auction.productName() });
     });
 
     test('vendor can edit auction product @pro', async () => {
-        await vendor.editAuctionProduct({
-            ...data.product.auction,
-            name: auctionProductName,
-        });
+        await vendor.editAuctionProduct({ ...data.product.auction, name: auctionProductName });
     });
 
     test('vendor can view auction product @pro', async () => {

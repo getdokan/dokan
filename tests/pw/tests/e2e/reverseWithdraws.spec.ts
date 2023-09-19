@@ -40,10 +40,7 @@ test.describe('Reverse withdraw test', () => {
     });
 
     test.afterAll(async () => {
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.reverseWithdraw, {
-            ...dbData.dokan.reverseWithdrawSettings,
-            enabled: 'off',
-        });
+        await dbUtils.setDokanSettings(dbData.dokan.optionName.reverseWithdraw, { ...dbData.dokan.reverseWithdrawSettings, enabled: 'off' });
         await aPage.close();
         await vPage.close();
     });

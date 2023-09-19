@@ -5,7 +5,8 @@ import { payloads } from '@utils/payloads';
 
 let apiUtils: ApiUtils;
 
-test.beforeAll(async ({ request }) => {  //todo: remove async from all before all
+test.beforeAll(async ({ request }) => {
+    //todo: remove async from all before all
     apiUtils = new ApiUtils(request);
 });
 

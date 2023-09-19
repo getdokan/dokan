@@ -30,25 +30,9 @@ test.describe('Vendor SPMV test', () => {
         customer = new SpmvPage(cPage);
 
         apiUtils = new ApiUtils(request);
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, {
-            ...dbData.dokan.sellingSettings,
-            enable_min_max_quantity: 'off',
-            enable_min_max_amount: 'off',
-        }); // todo: might exists dokan issue -> min-max field is required on admin product edit
-        [, , productName] = await apiUtils.createProduct(
-            {
-                ...payloads.createProduct(),
-                name: data.predefined.spmv.productName(),
-            },
-            payloads.vendor2Auth,
-        );
-        [, productId, productName1] = await apiUtils.createProduct(
-            {
-                ...payloads.createProduct(),
-                name: data.predefined.spmv.productName(),
-            },
-            payloads.vendor2Auth,
-        );
+        await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, enable_min_max_quantity: 'off', enable_min_max_amount: 'off' }); // todo: might exists dokan issue -> min-max field is required on admin product edit
+        [, , productName] = await apiUtils.createProduct({ ...payloads.createProduct(), name: data.predefined.spmv.productName() }, payloads.vendor2Auth);
+        [, productId, productName1] = await apiUtils.createProduct({ ...payloads.createProduct(), name: data.predefined.spmv.productName() }, payloads.vendor2Auth);
         await apiUtils.addSpmvProductToStore(productId, payloads.vendorAuth);
     });
 
@@ -60,13 +44,7 @@ test.describe('Vendor SPMV test', () => {
     });
 
     test('admin can assign SPMV product to other vendor @pro', async () => {
-        const [, productId] = await apiUtils.createProduct(
-            {
-                ...payloads.createProduct(),
-                name: data.predefined.spmv.productName(),
-            },
-            payloads.vendor2Auth,
-        );
+        const [, productId] = await apiUtils.createProduct({ ...payloads.createProduct(), name: data.predefined.spmv.productName() }, payloads.vendor2Auth);
         await admin.assignSpmvProduct(productId, data.predefined.vendorStores.vendor1FullName);
     });
 
@@ -105,13 +83,7 @@ test.describe('Vendor SPMV test', () => {
     });
 
     test('vendor can clone product via sell item button @pro', async () => {
-        const [, , productName] = await apiUtils.createProduct(
-            {
-                ...payloads.createProduct(),
-                name: data.predefined.spmv.productName(),
-            },
-            payloads.vendor2Auth,
-        );
+        const [, , productName] = await apiUtils.createProduct({ ...payloads.createProduct(), name: data.predefined.spmv.productName() }, payloads.vendor2Auth);
         await vendor.cloneProductViaSellItemButton(productName);
     });
 

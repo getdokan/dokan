@@ -4,7 +4,6 @@
 /* eslint-disable playwright/no-networkidle */
 /* eslint-disable playwright/no-force-option */
 //todo: disable eslint plugin altogether instead of one by one
-
 import { expect, Page, BrowserContext, Cookie, Request, Response, Locator, Frame, FrameLocator, JSHandle, ElementHandle } from '@playwright/test';
 import { data } from '@utils/testData';
 
@@ -48,15 +47,7 @@ export class BasePage {
     }
 
     // wait for url to be loaded
-    async waitForUrl(
-        url: string,
-        options?:
-            | {
-                  timeout?: number | undefined;
-                  waitUntil?: 'networkidle' | 'load' | 'domcontentloaded' | 'commit' | undefined;
-              }
-            | undefined,
-    ): Promise<void> {
+    async waitForUrl(url: string, options?: { timeout?: number | undefined; waitUntil?: 'networkidle' | 'load' | 'domcontentloaded' | 'commit' | undefined } | undefined): Promise<void> {
         await this.page.waitForURL(url, options);
         // await this.page.waitForURL(url,{ waitUntil: 'networkidle' });
     }
@@ -81,7 +72,7 @@ export class BasePage {
         await this.page.reload();
     }
 
-    // returns whether the current URL is expected
+    //  returns whether the current URL is expected
     isCurrentUrl(subPath: string): boolean {
         const url = new URL(this.getCurrentUrl());
         const currentURL = url.href.replace(/[/]$/, ''); // added to remove last '/',
@@ -184,7 +175,7 @@ export class BasePage {
         await this.page.click(selector);
     }
 
-    // click on element by Running the js element.Click() method
+    //  click on element by Running the js element.Click() method
     async clickJs(selector: string): Promise<void> {
         const element = this.getElement(selector);
         await element.click();
@@ -781,11 +772,7 @@ export class BasePage {
 
     // upload file
     async uploadBuffer(selector: string, filePath: string): Promise<void> {
-        await this.page.setInputFiles(selector, {
-            name: String(filePath.split('/').pop()),
-            mimeType: 'image/' + filePath.split('.').pop(),
-            buffer: Buffer.from(filePath),
-        });
+        await this.page.setInputFiles(selector, { name: String(filePath.split('/').pop()), mimeType: 'image/' + filePath.split('.').pop(), buffer: Buffer.from(filePath) });
     }
 
     // upload files when input file element is missing
@@ -957,11 +944,8 @@ export class BasePage {
     }
 
     // returns the return value of pageFunction as a JSHandle
-    async evaluateHandle(
-        selector: string,
-        // eslint-disable-next-line @typescript-eslint/ban-types
-        pageFunction: Function | string,
-    ): Promise<JSHandle> {
+    // eslint-disable-next-line @typescript-eslint/ban-types
+    async evaluateHandle(selector: string, pageFunction: Function | string): Promise<JSHandle> {
         const locator = this.page.locator(selector);
         return await locator.evaluateHandle(pageFunction);
     }

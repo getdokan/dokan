@@ -44,10 +44,7 @@ test.describe('Store categories test', () => {
     });
 
     test('admin can edit store category @pro', async () => {
-        await admin.editStoreCategory({
-            ...data.storeCategory(),
-            name: categoryName,
-        });
+        await admin.editStoreCategory({ ...data.storeCategory(), name: categoryName });
     });
 
     test('admin can set default store category @pro', async () => {

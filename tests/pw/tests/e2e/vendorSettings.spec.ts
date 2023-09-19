@@ -83,11 +83,7 @@ test.describe('Vendor settings test', () => {
         // await vendor.resetCatalog();
 
         // disable catalog
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, {
-            ...dbData.dokan.sellingSettings,
-            catalog_mode_hide_add_to_cart_button: 'off',
-            catalog_mode_hide_product_price: 'off',
-        });
+        await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, catalog_mode_hide_add_to_cart_button: 'off', catalog_mode_hide_product_price: 'off' });
     });
 
     test('vendor can set discount settings @pro', async () => {

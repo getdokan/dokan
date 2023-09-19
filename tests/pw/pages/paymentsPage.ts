@@ -226,19 +226,10 @@ export class PaymentsPage extends AdminPage {
 
     // vendor set basic payment settings
     async setBasicPaymentSettings(payment: vendor['payment']): Promise<void> {
-        await this.setBasicPayment({
-            ...data.vendor.payment,
-            methodName: 'paypal',
-        });
+        await this.setBasicPayment({ ...data.vendor.payment, methodName: 'paypal' });
         await this.setBankTransfer(payment);
-        await this.setBasicPayment({
-            ...data.vendor.payment,
-            methodName: 'skrill',
-        });
-        await this.setBasicPayment({
-            ...data.vendor.payment,
-            methodName: 'custom',
-        });
+        await this.setBasicPayment({ ...data.vendor.payment, methodName: 'skrill' });
+        await this.setBasicPayment({ ...data.vendor.payment, methodName: 'custom' });
     }
 
     // set basic payment method [paypal, skrill, custom ]

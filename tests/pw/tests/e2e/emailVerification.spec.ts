@@ -7,20 +7,14 @@ import { dbData } from '@utils/dbData';
 test.describe('Email verifications test', () => {
     let guest: EmailVerificationsPage;
     let uPage: Page;
-    const user = {
-        username: data.user.username() + data.user.userDetails.emailDomain,
-        password: data.user.password,
-    };
+    const user = { username: data.user.username() + data.user.userDetails.emailDomain, password: data.user.password };
 
     test.beforeAll(async ({ browser }) => {
         const guestContext = await browser.newContext(data.auth.noAuth);
         uPage = await guestContext.newPage();
         guest = new EmailVerificationsPage(uPage);
 
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.emailVerification, {
-            ...dbData.dokan.emailVerificationSettings,
-            enabled: 'on',
-        });
+        await dbUtils.setDokanSettings(dbData.dokan.optionName.emailVerification, { ...dbData.dokan.emailVerificationSettings, enabled: 'on' });
     });
 
     test.afterAll(async () => {

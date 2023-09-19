@@ -126,17 +126,11 @@ test.describe('Product functionality test', () => {
     });
 
     test('vendor can edit product @lite', async () => {
-        await vendor.editProduct({
-            ...data.product.simple,
-            editProduct: productName,
-        });
+        await vendor.editProduct({ ...data.product.simple, editProduct: productName });
     });
 
     test('vendor can quick edit product @pro', async () => {
-        await vendor.quickEditProduct({
-            ...data.product.simple,
-            editProduct: productName,
-        });
+        await vendor.quickEditProduct({ ...data.product.simple, editProduct: productName });
     });
 
     // test('vendor can add product quantity discount @pro', async ( ) => {

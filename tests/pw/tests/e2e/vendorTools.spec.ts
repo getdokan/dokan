@@ -29,10 +29,10 @@ test.describe('Vendor tools test', () => {
     });
 
     test('vendor can import product as xml @pro', async () => {
-        await vendor.importProduct('xml', '@utils/sampleData/products.xml');
+        await vendor.importProduct('xml', 'utils/sampleData/products.xml');
     });
 
     test('vendor can import product as csv @pro', async () => {
-        await vendor.importProduct('csv', '@utils/sampleData/products.csv');
+        await vendor.importProduct('csv', 'utils/sampleData/products.csv');
     });
 });

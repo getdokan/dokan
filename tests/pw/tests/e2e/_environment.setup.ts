@@ -12,9 +12,7 @@ import { helpers } from '@utils/helpers';
 const { CUSTOMER_ID, DOKAN_PRO, HPOS } = process.env;
 
 setup.describe('setup site & woocommerce & user settings', () => {
-    setup.use({
-        extraHTTPHeaders: { Authorization: payloads.adminAuth.Authorization },
-    });
+    setup.use({ extraHTTPHeaders: { Authorization: payloads.adminAuth.Authorization } });
 
     let apiUtils: ApiUtils;
 
@@ -30,13 +28,11 @@ setup.describe('setup site & woocommerce & user settings', () => {
     });
 
     setup('check active dokan modules @pro', async () => {
-        const activeModules = await apiUtils.getAllModuleIds({
-            status: 'active',
-        });
+        const activeModules = await apiUtils.getAllModuleIds({ status: 'active' });
         expect(activeModules).toEqual(expect.arrayContaining(data.modules.modules));
     });
 
-    setup('set wp settings @lite', async () => {
+    setup('set wordPress site settings @lite', async () => {
         const siteSettings = await apiUtils.setSiteSettings(payloads.siteSettings);
         expect(siteSettings).toEqual(expect.objectContaining(payloads.siteSettings));
     });
@@ -47,7 +43,7 @@ setup.describe('setup site & woocommerce & user settings', () => {
     // 	await apiUtils.deleteAllQuoteRules();
     // });
 
-    setup('set wc settings @lite', async () => {
+    setup('set woocommerce settings @lite', async () => {
         await apiUtils.updateBatchWcSettingsOptions('general', payloads.general);
         await apiUtils.updateBatchWcSettingsOptions('account', payloads.account);
         HPOS && (await apiUtils.updateBatchWcSettingsOptions('advanced', payloads.advanced));
@@ -104,25 +100,21 @@ setup.describe('setup site & woocommerce & user settings', () => {
         await apiUtils.createCategory(payloads.createCategory);
 
         // create attribute, attribute term
-        const [, attributeId] = await apiUtils.createAttribute({
-            name: 'sizes',
-        });
+        const [, attributeId] = await apiUtils.createAttribute({ name: 'sizes' });
         await apiUtils.createAttributeTerm(attributeId, { name: 's' });
         await apiUtils.createAttributeTerm(attributeId, { name: 'l' });
         await apiUtils.createAttributeTerm(attributeId, { name: 'm' });
     });
 
     setup('disable simple-auction ajax bid check @pro', async () => {
-        // const [,, status] = await apiUtils.getSinglePlugin('woocommerce-simple-auctions', payloads.adminAuth);
-        const [, , status] = await apiUtils.getSinglePlugin('wa', payloads.adminAuth); // todo: remove after ..
+        const [, , status] = await apiUtils.getSinglePlugin('wa/woocommerce-simple-auctions', payloads.adminAuth);
+        console.log(status);
         status === 'active' && (await dbUtils.updateWpOptionTable('simple_auctions_live_check', 'no'));
     });
 });
 
 setup.describe('setup user settings', () => {
-    setup.use({
-        extraHTTPHeaders: { Authorization: payloads.adminAuth.Authorization },
-    });
+    setup.use({ extraHTTPHeaders: { Authorization: payloads.adminAuth.Authorization } });
 
     let apiUtils: ApiUtils;
 
@@ -136,13 +128,10 @@ setup.describe('setup user settings', () => {
         await apiUtils.deleteAllProducts(data.predefined.simpleProduct.product1.name, payloads.vendorAuth);
 
         // create store product
-        const product = {
-            ...payloads.createProduct(),
-            name: data.predefined.simpleProduct.product1.name,
-        };
+        const product = { ...payloads.createProduct(), name: data.predefined.simpleProduct.product1.name };
         const [, productId] = await apiUtils.createProduct(product, payloads.vendorAuth);
-        // process.env.PRODUCT_ID = productId;
-        helpers.appendEnv('PRODUCT_ID=' + productId);
+        process.env.PRODUCT_ID = productId;
+        // helpers.appendEnv('PRODUCT_ID=' + productId);
     });
 
     setup('add vendor2 product @lite', async () => {
@@ -150,13 +139,10 @@ setup.describe('setup user settings', () => {
         await apiUtils.deleteAllProducts(data.predefined.vendor2.simpleProduct.product1.name, payloads.vendor2Auth);
 
         // create store product
-        const product = {
-            ...payloads.createProduct(),
-            name: data.predefined.vendor2.simpleProduct.product1.name,
-        };
+        const product = { ...payloads.createProduct(), name: data.predefined.vendor2.simpleProduct.product1.name };
         const [, productId] = await apiUtils.createProduct(product, payloads.vendor2Auth);
-        // process.env.V2_PRODUCT_ID = productId;
-        helpers.appendEnv('V2_PRODUCT_ID=' + productId);
+        process.env.V2_PRODUCT_ID = productId;
+        // helpers.appendEnv('V2_PRODUCT_ID=' + productId);
     });
 
     setup('add vendor coupon @pro', async () => {

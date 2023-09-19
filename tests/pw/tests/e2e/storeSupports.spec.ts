@@ -20,17 +20,8 @@ test.describe('Store Support test (admin)', () => {
         admin = new StoreSupportsPage(aPage);
 
         apiUtils = new ApiUtils(request);
-        [, supportTicketId] = await apiUtils.createSupportTicket({
-            ...payloads.createSupportTicket,
-            author: CUSTOMER_ID,
-            meta: { store_id: VENDOR_ID },
-        });
-        [, closedSupportTicketId] = await apiUtils.createSupportTicket({
-            ...payloads.createSupportTicket,
-            status: 'closed',
-            author: CUSTOMER_ID,
-            meta: { store_id: VENDOR_ID },
-        });
+        [, supportTicketId] = await apiUtils.createSupportTicket({ ...payloads.createSupportTicket, author: CUSTOMER_ID, meta: { store_id: VENDOR_ID } });
+        [, closedSupportTicketId] = await apiUtils.createSupportTicket({ ...payloads.createSupportTicket, status: 'closed', author: CUSTOMER_ID, meta: { store_id: VENDOR_ID } });
     });
 
     test.afterAll(async () => {

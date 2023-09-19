@@ -36,10 +36,7 @@ test.describe('Product Advertising test', () => {
     });
 
     test('admin can add product advertisement @pro', async () => {
-        await admin.addNewProductAdvertisement({
-            ...data.productAdvertisement,
-            advertisedProduct: productName,
-        });
+        await admin.addNewProductAdvertisement({ ...data.productAdvertisement, advertisedProduct: productName });
     });
 
     test('admin can search advertised product @pro', async () => {

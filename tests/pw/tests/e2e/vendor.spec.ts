@@ -24,10 +24,7 @@ test.describe('Vendor user functionality test1', () => {
     });
 
     test('vendor can register @lite', async () => {
-        await vendorPage.vendorRegister(data.vendor.vendorInfo, {
-            ...data.vendorSetupWizard,
-            choice: false,
-        });
+        await vendorPage.vendorRegister(data.vendor.vendorInfo, { ...data.vendorSetupWizard, choice: false });
     });
 
     test('vendor can login @lite', async () => {

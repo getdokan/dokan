@@ -19,41 +19,16 @@ export default defineConfig({
     repeatEach: 1 /* The number of times to repeat each test, useful for debugging flaky tests. */,
     retries: process.env.CI ? 1 : 0 /* The maximum number of retry attempts given to failed tests.  */,
     workers: process.env.CI ? 1 : 1 /* Opt out of parallel tests on CI. */,
-    reportSlowTests: {
-        max: 10,
-        threshold: 20,
-    } /* Whether to report slow test files. Pass null to disable this feature. */,
+    reportSlowTests: { max: 10, threshold: 20 } /* Whether to report slow test files. Pass null to disable this feature. */,
     reporter: process.env.CI
         ? [
-              [
-                  'html',
-                  {
-                      open: 'never',
-                      outputFolder: 'playwright-report/api/html/html-report-api',
-                  },
-              ],
-              [
-                  'junit',
-                  {
-                      outputFile: 'playwright-report/api/junit-report/api-results.xml',
-                  },
-              ],
+              ['html', { open: 'never', outputFolder: 'playwright-report/api/html/html-report-api' }],
+              ['junit', { outputFile: 'playwright-report/api/junit-report/api-results.xml' }],
               ['list', { printSteps: true }],
           ]
         : [
-              [
-                  'html',
-                  {
-                      open: 'never',
-                      outputFolder: 'playwright-report/api/html/html-report-api',
-                  },
-              ],
-              [
-                  'junit',
-                  {
-                      outputFile: 'playwright-report/api/junit-report/api-results.xml',
-                  },
-              ],
+              ['html', { open: 'never', outputFolder: 'playwright-report/api/html/html-report-api' }],
+              ['junit', { outputFile: 'playwright-report/api/junit-report/api-results.xml' }],
               ['list', { printSteps: true }],
               // ['allure-playwright',	{ detail: true, outputFolder: 'playwright-report/api/allure/allure-report', suiteTitle: false }]
           ],

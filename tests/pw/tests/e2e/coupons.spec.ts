@@ -40,10 +40,7 @@ test.describe('Coupons test', () => {
     });
 
     test('admin can add marketplace coupon @pro', async () => {
-        await admin.addMarketplaceCoupon({
-            ...data.coupon,
-            title: data.coupon.couponTitle(),
-        });
+        await admin.addMarketplaceCoupon({ ...data.coupon, title: data.coupon.couponTitle() });
     });
 
     test('vendor coupon menu page is rendering properly @pro @explo', async () => {
@@ -55,10 +52,7 @@ test.describe('Coupons test', () => {
     });
 
     test('vendor can add coupon @pro', async () => {
-        await vendor.addCoupon({
-            ...data.coupon,
-            title: data.coupon.couponTitle(),
-        });
+        await vendor.addCoupon({ ...data.coupon, title: data.coupon.couponTitle() });
     });
 
     test('vendor can edit coupon @pro', async () => {

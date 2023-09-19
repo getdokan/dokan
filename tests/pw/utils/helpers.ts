@@ -68,12 +68,7 @@ export const helpers = {
     removeCurrencySign: (str: string): string => str.replace(/[^\d\-.,\\s]/g, ''),
 
     // dateFormat // todo: remove all datetime , and update date to return date as required formate // also method to return as site date format
-    dateFormatFYJ: (date: string) =>
-        new Date(date).toLocaleDateString('en-CA', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-        }),
+    dateFormatFYJ: (date: string) => new Date(date).toLocaleDateString('en-CA', { year: 'numeric', month: 'long', day: 'numeric' }),
 
     // current year
     currentYear: new Date().getFullYear(),
@@ -82,49 +77,18 @@ export const helpers = {
     currentDate: new Date().toLocaleDateString('en-CA'),
 
     // current day [August 22, 2023]
-    currentDateFJY: new Date().toLocaleDateString('en-CA', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-    }),
+    currentDateFJY: new Date().toLocaleDateString('en-CA', { year: 'numeric', month: 'long', day: 'numeric' }),
 
     // current date-time [2023-06-02 00:33]
-    currentDateTime: new Date()
-        .toLocaleString('en-CA', {
-            year: 'numeric',
-            month: 'numeric',
-            day: 'numeric',
-            hourCycle: 'h23',
-            hour: 'numeric',
-            minute: 'numeric',
-        })
-        .replace(',', ''),
+    currentDateTime: new Date().toLocaleString('en-CA', { year: 'numeric', month: 'numeric', day: 'numeric', hourCycle: 'h23', hour: 'numeric', minute: 'numeric' }).replace(',', ''),
 
     // current date-time [2023-06-02 00:46:11]
     currentDateTimeFullFormat: new Date()
-        .toLocaleString('en-CA', {
-            year: 'numeric',
-            month: 'numeric',
-            day: 'numeric',
-            hourCycle: 'h23',
-            hour: 'numeric',
-            minute: 'numeric',
-            second: 'numeric',
-        })
+        .toLocaleString('en-CA', { year: 'numeric', month: 'numeric', day: 'numeric', hourCycle: 'h23', hour: 'numeric', minute: 'numeric', second: 'numeric' })
         .replace(',', ''),
 
     currentDateTime2: () =>
-        new Date()
-            .toLocaleString('en-CA', {
-                year: 'numeric',
-                month: 'numeric',
-                day: 'numeric',
-                hourCycle: 'h23',
-                hour: 'numeric',
-                minute: 'numeric',
-                second: 'numeric',
-            })
-            .replace(',', ''),
+        new Date().toLocaleString('en-CA', { year: 'numeric', month: 'numeric', day: 'numeric', hourCycle: 'h23', hour: 'numeric', minute: 'numeric', second: 'numeric' }).replace(',', ''),
 
     // add two input days
     addDays(date: string | number | Date | null, days: number, format: string): string {
@@ -133,29 +97,10 @@ export const helpers = {
 
         if (format === 'full') {
             // [2023-06-02, 00:33]
-            return result
-                .toLocaleDateString('en-CA', {
-                    year: 'numeric',
-                    month: 'numeric',
-                    day: 'numeric',
-                    hourCycle: 'h23',
-                    hour: 'numeric',
-                    minute: 'numeric',
-                })
-                .replace(/,/g, '');
+            return result.toLocaleDateString('en-CA', { year: 'numeric', month: 'numeric', day: 'numeric', hourCycle: 'h23', hour: 'numeric', minute: 'numeric' }).replace(/,/g, '');
         } else if (format === 'complete') {
             // [2023-06-02 00:46:11]
-            return result
-                .toLocaleDateString('en-CA', {
-                    year: 'numeric',
-                    month: 'numeric',
-                    day: 'numeric',
-                    hourCycle: 'h23',
-                    hour: 'numeric',
-                    minute: 'numeric',
-                    second: 'numeric',
-                })
-                .replace(/,/g, '');
+            return result.toLocaleDateString('en-CA', { year: 'numeric', month: 'numeric', day: 'numeric', hourCycle: 'h23', hour: 'numeric', minute: 'numeric', second: 'numeric' }).replace(/,/g, '');
         } else {
             // [2023-06-02]
             return result.toLocaleDateString('en-CA');

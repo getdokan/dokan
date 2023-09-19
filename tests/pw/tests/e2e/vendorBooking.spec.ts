@@ -59,17 +59,11 @@ test.describe('Booking Product test', () => {
     });
 
     test('vendor can add booking product @pro', async () => {
-        await vendor.addBookingProduct({
-            ...data.product.booking,
-            name: data.product.booking.productName(),
-        });
+        await vendor.addBookingProduct({ ...data.product.booking, name: data.product.booking.productName() });
     });
 
     test('vendor can edit booking product @pro', async () => {
-        await vendor.editBookingProduct({
-            ...data.product.booking,
-            name: bookableProductName,
-        });
+        await vendor.editBookingProduct({ ...data.product.booking, name: bookableProductName });
     });
 
     test('vendor can filter booking products by date @pro', async () => {
@@ -110,10 +104,7 @@ test.describe('Booking Product test', () => {
     });
 
     test('vendor can edit booking resource @pro', async () => {
-        await vendor.editBookingResource({
-            ...data.product.booking.resource,
-            name: bookingResourceName,
-        });
+        await vendor.editBookingResource({ ...data.product.booking.resource, name: bookingResourceName });
     });
 
     test('vendor can delete booking resource @pro', async () => {

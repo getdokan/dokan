@@ -29,17 +29,11 @@ test.describe('Request for quotation Rules test', () => {
     });
 
     test('admin can add quote rule @pro', async () => {
-        await admin.addQuoteRule({
-            ...data.requestForQuotation.quoteRule,
-            title: data.requestForQuotation.quoteRule.title(),
-        });
+        await admin.addQuoteRule({ ...data.requestForQuotation.quoteRule, title: data.requestForQuotation.quoteRule.title() });
     });
 
     test('admin can edit quote rule @pro', async () => {
-        await admin.editQuoteRule({
-            ...data.requestForQuotation.quoteRule,
-            title: quoteRuleTitle,
-        });
+        await admin.editQuoteRule({ ...data.requestForQuotation.quoteRule, title: quoteRuleTitle });
     });
 
     test('admin can trash quote rule @pro', async () => {
@@ -52,11 +46,7 @@ test.describe('Request for quotation Rules test', () => {
 
     test('admin can permanently delete quote rule @pro', async () => {
         await apiUtils.createQuoteRule(
-            {
-                ...payloads.createQuoteRule(),
-                rule_name: data.requestForQuotation.trashedQuoteRule.title,
-                status: data.requestForQuotation.trashedQuoteRule.status,
-            },
+            { ...payloads.createQuoteRule(), rule_name: data.requestForQuotation.trashedQuoteRule.title, status: data.requestForQuotation.trashedQuoteRule.status },
             payloads.adminAuth,
         );
         await admin.updateQuoteRule(data.requestForQuotation.trashedQuoteRule.title, 'permanently-delete');

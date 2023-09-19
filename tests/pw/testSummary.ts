@@ -5,7 +5,7 @@ const { SHA, PR_NUMBER, SYSTEM_INFO, API_TEST_RESULT, E2E_TEST_RESULT } = proces
 const readEnvInfo = fs.readFileSync(SYSTEM_INFO, 'utf8');
 const envInfo = JSON.parse(readEnvInfo);
 
-const getFormattedDuration = time => {
+const getFormattedDuration = (time: string | number) => {
     time = Number(time) * 1000;
     // const min = Math.floor( time / 1000 / 60 );
     // const sec = Math.floor( ( time / 1000 ) % 60 );
@@ -15,7 +15,7 @@ const getFormattedDuration = time => {
     // return `${date.getMinutes()}.${date.getSeconds()}s`;
 };
 
-const getTestResult = (suiteName, filePath) => {
+const getTestResult = (suiteName: string, filePath: string) => {
     if (fs.existsSync(filePath)) {
         const xmlFile = fs.readFileSync(filePath, 'utf8');
         const jsonData = JSON.parse(convert.xml2json(xmlFile, { compact: true, spaces: 2 }));

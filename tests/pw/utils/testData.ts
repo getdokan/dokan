@@ -1164,7 +1164,7 @@ export const data = {
         },
 
         verification: {
-            file: '@utils/sampleData/avatar.png',
+            file: 'utils/sampleData/avatar.png',
             // file2: 'tests/e2e/utils/sampleData/avatar.png',
             street1: 'abc street',
             street2: 'xyz street',

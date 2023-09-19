@@ -56,10 +56,7 @@ test.describe('Payments test', () => {
     });
 
     test('vendor can add paypal payment method @lite', async () => {
-        await vendor.setBasicPayment({
-            ...data.vendor.payment,
-            methodName: 'paypal',
-        });
+        await vendor.setBasicPayment({ ...data.vendor.payment, methodName: 'paypal' });
     });
 
     test('vendor can add bank payment method @lite', async () => {
@@ -67,44 +64,26 @@ test.describe('Payments test', () => {
     });
 
     test('vendor can add skrill payment method @pro', async () => {
-        await vendor.setBasicPayment({
-            ...data.vendor.payment,
-            methodName: 'skrill',
-        });
+        await vendor.setBasicPayment({ ...data.vendor.payment, methodName: 'skrill' });
     });
 
     test('vendor can add custom payment method @pro', async () => {
-        await vendor.setBasicPayment({
-            ...data.vendor.payment,
-            methodName: 'custom',
-        });
+        await vendor.setBasicPayment({ ...data.vendor.payment, methodName: 'custom' });
     });
 
     test('vendor can disconnect paypal payment method @lite', async () => {
-        await vendor.disconnectBasicPayment({
-            ...data.vendor.payment,
-            methodName: 'paypal',
-        });
+        await vendor.disconnectBasicPayment({ ...data.vendor.payment, methodName: 'paypal' });
     });
 
     test('vendor can disconnect bank payment method @lite', async () => {
-        await vendor.disconnectBasicPayment({
-            ...data.vendor.payment,
-            methodName: 'bank',
-        });
+        await vendor.disconnectBasicPayment({ ...data.vendor.payment, methodName: 'bank' });
     });
 
     test('vendor can disconnect skrill payment method @pro', async () => {
-        await vendor.disconnectBasicPayment({
-            ...data.vendor.payment,
-            methodName: 'skrill',
-        });
+        await vendor.disconnectBasicPayment({ ...data.vendor.payment, methodName: 'skrill' });
     });
 
     test('vendor can disconnect custom payment method @pro', async () => {
-        await vendor.disconnectBasicPayment({
-            ...data.vendor.payment,
-            methodName: 'custom',
-        });
+        await vendor.disconnectBasicPayment({ ...data.vendor.payment, methodName: 'custom' });
     });
 });

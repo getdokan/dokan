@@ -77,11 +77,7 @@ test.describe('Withdraw test', () => {
 
     test('vendor can request withdraw @lite', async () => {
         await apiUtils.cancelWithdraw('', payloads.vendorAuth);
-        await vendor.requestWithdraw({
-            ...data.vendor.withdraw,
-            minimumWithdrawAmount: minimumWithdrawLimit,
-            currentBalance: currentBalance,
-        });
+        await vendor.requestWithdraw({ ...data.vendor.withdraw, minimumWithdrawAmount: minimumWithdrawLimit, currentBalance: currentBalance });
     });
 
     test("vendor can't request withdraw when pending request exits @lite", async () => {
@@ -95,10 +91,7 @@ test.describe('Withdraw test', () => {
     });
 
     test('vendor can add auto withdraw disbursement schedule @pro', async () => {
-        await vendor.addAutoWithdrawDisbursementSchedule({
-            ...data.vendor.withdraw,
-            minimumWithdrawAmount: minimumWithdrawLimit,
-        });
+        await vendor.addAutoWithdrawDisbursementSchedule({ ...data.vendor.withdraw, minimumWithdrawAmount: minimumWithdrawLimit });
     });
 
     test('vendor can add default withdraw payment methods @lite', async () => {

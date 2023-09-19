@@ -15,11 +15,7 @@ test.describe('Product addon functionality test', () => {
 
         addonName = data.vendor.addon.randomName();
         addonFieldTitle = data.vendor.addon.randomTitle();
-        await vendor.addAddon({
-            ...data.vendor.addon,
-            name: addonName,
-            titleRequired: addonFieldTitle,
-        });
+        await vendor.addAddon({ ...data.vendor.addon, name: addonName, titleRequired: addonFieldTitle });
     });
 
     test.afterAll(async () => {
@@ -31,18 +27,11 @@ test.describe('Product addon functionality test', () => {
     });
 
     test('vendor can add addons @pro', async () => {
-        await vendor.addAddon({
-            ...data.vendor.addon,
-            name: data.vendor.addon.randomName(),
-        });
+        await vendor.addAddon({ ...data.vendor.addon, name: data.vendor.addon.randomName() });
     });
 
     test('vendor can edit addon @pro', async () => {
-        await vendor.editAddon({
-            ...data.vendor.addon,
-            name: addonName,
-            titleRequired: addonFieldTitle,
-        });
+        await vendor.editAddon({ ...data.vendor.addon, name: addonName, titleRequired: addonFieldTitle });
     });
 
     test('vendor can delete addon @pro', async () => {

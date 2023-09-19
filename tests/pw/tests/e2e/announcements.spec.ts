@@ -28,25 +28,15 @@ test.describe('Announcements test', () => {
     });
 
     test('admin can add announcement @pro', async () => {
-        await admin.addAnnouncement({
-            ...data.announcement,
-            title: data.announcement.randomTitle(),
-        });
+        await admin.addAnnouncement({ ...data.announcement, title: data.announcement.randomTitle() });
     });
 
     test('admin can schedule announcement @pro', async () => {
-        await admin.addAnnouncement({
-            ...data.announcement,
-            title: data.announcement.randomTitle(),
-            publishType: 'schedule',
-        });
+        await admin.addAnnouncement({ ...data.announcement, title: data.announcement.randomTitle(), publishType: 'schedule' });
     });
 
     test('admin can edit announcement @pro', async () => {
-        await admin.editAnnouncement({
-            ...data.announcement,
-            title: announcementTitle,
-        });
+        await admin.editAnnouncement({ ...data.announcement, title: announcementTitle });
     });
 
     test('admin can trash announcement @pro', async () => {
