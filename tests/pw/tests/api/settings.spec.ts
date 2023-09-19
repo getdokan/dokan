@@ -5,7 +5,7 @@ import { payloads } from '@utils/payloads';
 
 let apiUtils: ApiUtils;
 
-test.beforeAll(async ({ request }) => {
+test.beforeAll(({ request }) => {
     apiUtils = new ApiUtils(request);
 });
 

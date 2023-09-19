@@ -1,4 +1,4 @@
-<!-- [ ] prettier-ignore -->
+<!-- prettier-ignore -->
 # Dokan E2E-API TaskList
 
 ### Todo: E2e Suite
