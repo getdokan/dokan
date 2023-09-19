@@ -1,9 +1,9 @@
 import { test, Page } from '@playwright/test';
-import { StoreSupportsPage } from 'pages/storeSupportsPage';
-import { ApiUtils } from 'utils/apiUtils';
-import { data } from 'utils/testData';
-import { payloads } from 'utils/payloads';
-import { responseBody } from 'utils/interfaces';
+import { StoreSupportsPage } from '@pages/storeSupportsPage';
+import { ApiUtils } from '@utils/apiUtils';
+import { data } from '@utils/testData';
+import { payloads } from '@utils/payloads';
+import { responseBody } from '@utils/interfaces';
 
 const { PRODUCT_ID, VENDOR_ID, CUSTOMER_ID } = process.env;
 

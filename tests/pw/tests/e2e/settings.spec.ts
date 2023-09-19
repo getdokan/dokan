@@ -1,8 +1,8 @@
 import { test, Page } from '@playwright/test';
-import { SettingsPage } from 'pages/settingsPage';
-import { dbData } from 'utils/dbData';
-import { dbUtils } from 'utils/dbUtils';
-import { data } from 'utils/testData';
+import { SettingsPage } from '@pages/settingsPage';
+import { dbData } from '@utils/dbData';
+import { dbUtils } from '@utils/dbUtils';
+import { data } from '@utils/testData';
 
 test.describe('Settings test', () => {
     let settingsPage: SettingsPage;

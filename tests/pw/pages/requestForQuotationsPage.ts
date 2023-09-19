@@ -1,10 +1,10 @@
 import { Page } from '@playwright/test';
-import { AdminPage } from 'pages/adminPage';
-import { CustomerPage } from 'pages/customerPage';
-import { MyOrdersPage } from 'pages/myOrdersPage';
-import { selector } from 'pages/selectors';
-import { data } from 'utils/testData';
-import { requestForQuotation } from 'utils/interfaces';
+import { AdminPage } from '@pages/adminPage';
+import { CustomerPage } from '@pages/customerPage';
+import { MyOrdersPage } from '@pages/myOrdersPage';
+import { selector } from '@pages/selectors';
+import { data } from '@utils/testData';
+import { requestForQuotation } from '@utils/interfaces';
 
 export class RequestForQuotationsPage extends AdminPage {
     constructor(page: Page) {

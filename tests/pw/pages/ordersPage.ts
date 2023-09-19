@@ -1,9 +1,9 @@
 import { Page, expect } from '@playwright/test';
-import { VendorPage } from 'pages/vendorPage';
-import { selector } from 'pages/selectors';
-import { data } from 'utils/testData';
-import { helpers } from 'utils/helpers';
-import { orderNote, orderTrackingDetails, orderShipmentDetails, date } from 'utils/interfaces';
+import { VendorPage } from '@pages/vendorPage';
+import { selector } from '@pages/selectors';
+import { data } from '@utils/testData';
+import { helpers } from '@utils/helpers';
+import { orderNote, orderTrackingDetails, orderShipmentDetails, date } from '@utils/interfaces';
 
 const { DOKAN_PRO } = process.env;
 

@@ -1,8 +1,8 @@
 import { Page } from '@playwright/test';
-import { AdminPage } from 'pages/adminPage';
-import { selector } from 'pages/selectors';
-import { data } from 'utils/testData';
-import { plugin, wpSettings } from 'utils/interfaces';
+import { AdminPage } from '@pages/adminPage';
+import { selector } from '@pages/selectors';
+import { data } from '@utils/testData';
+import { plugin, wpSettings } from '@utils/interfaces';
 
 export class WpPage extends AdminPage {
     constructor(page: Page) {

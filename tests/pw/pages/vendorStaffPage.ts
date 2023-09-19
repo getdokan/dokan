@@ -1,8 +1,8 @@
 import { Page } from '@playwright/test';
-import { VendorPage } from 'pages/vendorPage';
-import { selector } from 'pages/selectors';
-import { data } from 'utils/testData';
-import { staff } from 'utils/interfaces';
+import { VendorPage } from '@pages/vendorPage';
+import { selector } from '@pages/selectors';
+import { data } from '@utils/testData';
+import { staff } from '@utils/interfaces';
 
 export class VendorStaffPage extends VendorPage {
     constructor(page: Page) {

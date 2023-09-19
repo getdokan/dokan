@@ -1,8 +1,8 @@
 import { test, Page } from '@playwright/test';
-import { AdminDashboardPage } from 'pages/adminDashboardPage';
-import { ApiUtils } from 'utils/apiUtils';
-import { data } from 'utils/testData';
-import { payloads } from 'utils/payloads';
+import { AdminDashboardPage } from '@pages/adminDashboardPage';
+import { ApiUtils } from '@utils/apiUtils';
+import { data } from '@utils/testData';
+import { payloads } from '@utils/payloads';
 
 test.describe('Admin dashboard test', () => {
     let admin: AdminDashboardPage;

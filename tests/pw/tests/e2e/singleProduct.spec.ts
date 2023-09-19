@@ -1,8 +1,8 @@
 import { test, Page } from '@playwright/test';
-import { SingleProductPage } from 'pages/singleProductPage';
-// import { ApiUtils } from 'utils/apiUtils';
-import { data } from 'utils/testData';
-// import { payloads } from 'utils/payloads';
+import { SingleProductPage } from '@pages/singleProductPage';
+// import { ApiUtils } from '@utils/apiUtils';
+import { data } from '@utils/testData';
+// import { payloads } from '@utils/payloads';
 
 test.describe('Single product functionality test', () => {
     let customer: SingleProductPage;

@@ -1,5 +1,5 @@
 import { FullConfig, request } from '@playwright/test';
-import { ApiUtils } from 'utils/apiUtils';
+import { ApiUtils } from '@utils/apiUtils';
 
 async function globalSetup(config: FullConfig) {
     console.log('Global Setup running....');

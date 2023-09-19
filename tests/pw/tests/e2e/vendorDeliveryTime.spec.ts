@@ -1,10 +1,10 @@
 import { test, Page } from '@playwright/test';
-import { VendorDeliveryTimePage } from 'pages/vendorDeliveryTimePage';
-import { dbData } from 'utils/dbData';
-import { dbUtils } from 'utils/dbUtils';
-// import { ApiUtils } from 'utils/apiUtils';
-import { data } from 'utils/testData';
-// import { payloads } from 'utils/payloads';
+import { VendorDeliveryTimePage } from '@pages/vendorDeliveryTimePage';
+import { dbData } from '@utils/dbData';
+import { dbUtils } from '@utils/dbUtils';
+// import { ApiUtils } from '@utils/apiUtils';
+import { data } from '@utils/testData';
+// import { payloads } from '@utils/payloads';
 
 test.describe('Vendor delivery time test', () => {
     let vendor: VendorDeliveryTimePage;

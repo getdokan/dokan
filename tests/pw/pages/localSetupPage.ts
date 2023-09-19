@@ -1,8 +1,8 @@
 import { Page } from '@playwright/test';
-import { WpPage } from 'pages/wpPage';
-import { selector } from 'pages/selectors';
-import { data } from 'utils/testData';
-import { installWp } from 'utils/interfaces';
+import { WpPage } from '@pages/wpPage';
+import { selector } from '@pages/selectors';
+import { data } from '@utils/testData';
+import { installWp } from '@utils/interfaces';
 
 export class LocalSetupPage extends WpPage {
     constructor(page: Page) {

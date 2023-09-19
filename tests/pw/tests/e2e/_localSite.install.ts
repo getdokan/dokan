@@ -1,12 +1,12 @@
 import { test } from '@playwright/test';
-import { data } from 'utils/testData';
-import { LoginPage } from 'pages/loginPage';
-import { LocalSetupPage } from 'pages/localSetupPage';
-import { ApiUtils } from 'utils/apiUtils';
-// import { apiEndpoints } from 'utils/apiEndPoints';
-import { payloads } from 'utils/payloads';
-import { dbUtils } from 'utils/dbUtils';
-import { dbData } from 'utils/dbData';
+import { data } from '@utils/testData';
+import { LoginPage } from '@pages/loginPage';
+import { LocalSetupPage } from '@pages/localSetupPage';
+import { ApiUtils } from '@utils/apiUtils';
+// import { apiEndpoints } from '@utils/apiEndPoints';
+import { payloads } from '@utils/payloads';
+import { dbUtils } from '@utils/dbUtils';
+import { dbData } from '@utils/dbData';
 
 test.describe('setup local site', () => {
     test.skip(!!process.env.CI, 'skip site setup on CI');

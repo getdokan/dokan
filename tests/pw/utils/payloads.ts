@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker';
-import { helpers } from 'utils/helpers';
-import { dbData } from 'utils/dbData';
+import { helpers } from '@utils/helpers';
+import { dbData } from '@utils/dbData';
 
 const basicAuth = (username: string, password: string) => 'Basic ' + Buffer.from(username + ':' + password).toString('base64');
 

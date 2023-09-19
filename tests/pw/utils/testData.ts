@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { helpers } from 'utils/helpers';
+import { helpers } from '@utils/helpers';
 
 interface user {
     username: string;

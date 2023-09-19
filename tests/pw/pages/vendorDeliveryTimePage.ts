@@ -1,9 +1,9 @@
 import { Page, expect } from '@playwright/test';
-// import { VendorPage } from 'pages/vendorPage';
-import { CustomerPage } from 'pages/customerPage';
-import { selector } from 'pages/selectors';
-import { data } from 'utils/testData';
-import { vendor, deliveryTime } from 'utils/interfaces';
+// import { VendorPage } from '@pages/vendorPage';
+import { CustomerPage } from '@pages/customerPage';
+import { selector } from '@pages/selectors';
+import { data } from '@utils/testData';
+import { vendor, deliveryTime } from '@utils/interfaces';
 
 export class VendorDeliveryTimePage extends CustomerPage {
     constructor(page: Page) {

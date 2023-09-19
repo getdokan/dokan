@@ -1,8 +1,8 @@
 import { test, Page } from '@playwright/test';
-import { StoreReviewsPage } from 'pages/storeReviewsPage';
-import { ApiUtils } from 'utils/apiUtils';
-import { data } from 'utils/testData';
-import { payloads } from 'utils/payloads';
+import { StoreReviewsPage } from '@pages/storeReviewsPage';
+import { ApiUtils } from '@utils/apiUtils';
+import { data } from '@utils/testData';
+import { payloads } from '@utils/payloads';
 
 test.describe('Store Reviews test', () => {
     const { VENDOR_ID } = process.env;

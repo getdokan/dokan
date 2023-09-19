@@ -1,8 +1,8 @@
 import { Page, expect } from '@playwright/test';
-import { AdminPage } from 'pages/adminPage';
-import { selector } from 'pages/selectors';
-import { helpers } from 'utils/helpers';
-import { data } from 'utils/testData';
+import { AdminPage } from '@pages/adminPage';
+import { selector } from '@pages/selectors';
+import { helpers } from '@utils/helpers';
+import { data } from '@utils/testData';
 
 export class RefundsPage extends AdminPage {
     constructor(page: Page) {

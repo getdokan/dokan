@@ -1,7 +1,7 @@
 import { Page } from '@playwright/test';
-import { BasePage } from 'pages/basePage';
-import { selector } from 'pages/selectors';
-import { data } from 'utils/testData';
+import { BasePage } from '@pages/basePage';
+import { selector } from '@pages/selectors';
+import { data } from '@utils/testData';
 
 export class EmailVerificationsPage extends BasePage {
     constructor(page: Page) {

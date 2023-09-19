@@ -1,6 +1,6 @@
 import { test, Page } from '@playwright/test';
-import { vendorVerificationsPage } from 'pages/vendorVerificationsPage';
-import { data } from 'utils/testData';
+import { vendorVerificationsPage } from '@pages/vendorVerificationsPage';
+import { data } from '@utils/testData';
 
 test.describe('Verifications test', () => {
     let admin: vendorVerificationsPage;

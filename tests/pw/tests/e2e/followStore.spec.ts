@@ -1,8 +1,8 @@
 import { test, Page } from '@playwright/test';
-import { FollowStorePage } from 'pages/followStorePage';
-// import { ApiUtils } from 'utils/apiUtils';
-import { data } from 'utils/testData';
-// import { payloads } from 'utils/payloads';
+import { FollowStorePage } from '@pages/followStorePage';
+// import { ApiUtils } from '@utils/apiUtils';
+import { data } from '@utils/testData';
+// import { payloads } from '@utils/payloads';
 
 test.describe('Follow stores functionality test', () => {
     let vendor: FollowStorePage;

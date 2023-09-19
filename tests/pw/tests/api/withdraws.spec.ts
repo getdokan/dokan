@@ -1,8 +1,8 @@
 import { test, expect } from '@playwright/test';
-import { ApiUtils } from 'utils/apiUtils';
-import { endPoints } from 'utils/apiEndPoints';
-import { payloads } from 'utils/payloads';
-import { helpers } from 'utils/helpers';
+import { ApiUtils } from '@utils/apiUtils';
+import { endPoints } from '@utils/apiEndPoints';
+import { payloads } from '@utils/payloads';
+import { helpers } from '@utils/helpers';
 
 let apiUtils: ApiUtils;
 let withdrawId: string;

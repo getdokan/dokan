@@ -1,10 +1,10 @@
 import { test, Page } from '@playwright/test';
-import { ProductEnquiryPage } from 'pages/productEnquiryPage';
-import { ApiUtils } from 'utils/apiUtils';
-import { dbUtils } from 'utils/dbUtils';
-import { data } from 'utils/testData';
-import { dbData } from 'utils/dbData';
-import { payloads } from 'utils/payloads';
+import { ProductEnquiryPage } from '@pages/productEnquiryPage';
+import { ApiUtils } from '@utils/apiUtils';
+import { dbUtils } from '@utils/dbUtils';
+import { data } from '@utils/testData';
+import { dbData } from '@utils/dbData';
+import { payloads } from '@utils/payloads';
 
 const { VENDOR_ID, CUSTOMER_ID } = process.env;
 

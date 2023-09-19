@@ -1,8 +1,8 @@
 import { test, Page } from '@playwright/test';
-import { StoreCategoriesPage } from 'pages/storeCategoriesPage';
-import { ApiUtils } from 'utils/apiUtils';
-import { data } from 'utils/testData';
-import { payloads } from 'utils/payloads';
+import { StoreCategoriesPage } from '@pages/storeCategoriesPage';
+import { ApiUtils } from '@utils/apiUtils';
+import { data } from '@utils/testData';
+import { payloads } from '@utils/payloads';
 
 test.describe('Store categories test', () => {
     let admin: StoreCategoriesPage;

@@ -1,8 +1,8 @@
 import { test, expect, APIResponse } from '@playwright/test';
-import { ApiUtils } from 'utils/apiUtils';
-import { dbUtils } from 'utils/dbUtils';
-import { endPoints } from 'utils/apiEndPoints';
-import { payloads } from 'utils/payloads';
+import { ApiUtils } from '@utils/apiUtils';
+import { dbUtils } from '@utils/dbUtils';
+import { endPoints } from '@utils/apiEndPoints';
+import { payloads } from '@utils/payloads';
 
 let apiUtils: ApiUtils;
 // let orderId: string;

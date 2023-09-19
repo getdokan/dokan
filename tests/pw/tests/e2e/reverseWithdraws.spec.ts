@@ -1,11 +1,11 @@
 import { test, Page } from '@playwright/test';
-import { ReverseWithdrawsPage } from 'pages/reverseWithdrawsPage';
-// import { OrdersPage } from 'pages/ordersPage';
-import { ApiUtils } from 'utils/apiUtils';
-import { data } from 'utils/testData';
-import { payloads } from 'utils/payloads';
-import { dbUtils } from 'utils/dbUtils';
-import { dbData } from 'utils/dbData';
+import { ReverseWithdrawsPage } from '@pages/reverseWithdrawsPage';
+// import { OrdersPage } from '@pages/ordersPage';
+import { ApiUtils } from '@utils/apiUtils';
+import { data } from '@utils/testData';
+import { payloads } from '@utils/payloads';
+import { dbUtils } from '@utils/dbUtils';
+import { dbData } from '@utils/dbData';
 
 const { PRODUCT_ID } = process.env;
 

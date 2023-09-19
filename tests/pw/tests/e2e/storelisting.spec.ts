@@ -1,8 +1,8 @@
 import { test, Page } from '@playwright/test';
-import { StoreListingPage } from 'pages/storeListingPage';
-// import { ApiUtils } from 'utils/apiUtils';
-import { data } from 'utils/testData';
-// import { payloads } from 'utils/payloads';
+import { StoreListingPage } from '@pages/storeListingPage';
+// import { ApiUtils } from '@utils/apiUtils';
+import { data } from '@utils/testData';
+// import { payloads } from '@utils/payloads';
 
 test.describe('Store listing functionality test', () => {
     let customer: StoreListingPage;

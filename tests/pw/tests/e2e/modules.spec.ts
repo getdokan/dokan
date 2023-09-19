@@ -1,6 +1,6 @@
 import { test, Page } from '@playwright/test';
-import { ModulesPage } from 'pages/modulesPage';
-import { data } from 'utils/testData';
+import { ModulesPage } from '@pages/modulesPage';
+import { data } from '@utils/testData';
 
 test.describe('Modules test', () => {
     let admin: ModulesPage;

@@ -1,7 +1,7 @@
 import { request } from '@playwright/test';
-import { ApiUtils } from 'utils/apiUtils';
-import { helpers } from 'utils/helpers';
-import { payloads } from 'utils/payloads';
+import { ApiUtils } from '@utils/apiUtils';
+import { helpers } from '@utils/helpers';
+import { payloads } from '@utils/payloads';
 
 async function globalSetup() {
     console.log('Global Teardown running....');

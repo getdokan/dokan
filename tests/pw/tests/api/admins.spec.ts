@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
-import { ApiUtils } from 'utils/apiUtils';
-import { endPoints } from 'utils/apiEndPoints';
+import { ApiUtils } from '@utils/apiUtils';
+import { endPoints } from '@utils/apiEndPoints';
 
 let apiUtils: ApiUtils;
 

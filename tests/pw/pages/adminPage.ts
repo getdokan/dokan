@@ -1,9 +1,9 @@
 import { Page } from '@playwright/test';
-import { BasePage } from 'pages/basePage';
-import { selector } from 'pages/selectors';
-import { data } from 'utils/testData';
-import { payment, dokanSetupWizard, woocommerce } from 'utils/interfaces';
-import { helpers } from 'utils/helpers';
+import { BasePage } from '@pages/basePage';
+import { selector } from '@pages/selectors';
+import { data } from '@utils/testData';
+import { payment, dokanSetupWizard, woocommerce } from '@utils/interfaces';
+import { helpers } from '@utils/helpers';
 
 const { DOKAN_PRO } = process.env;
 

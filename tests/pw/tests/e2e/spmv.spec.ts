@@ -1,10 +1,10 @@
 import { test, Page } from '@playwright/test';
-import { SpmvPage } from 'pages/spmvPage';
-import { ApiUtils } from 'utils/apiUtils';
-import { data } from 'utils/testData';
-import { payloads } from 'utils/payloads';
-import { dbUtils } from 'utils/dbUtils';
-import { dbData } from 'utils/dbData';
+import { SpmvPage } from '@pages/spmvPage';
+import { ApiUtils } from '@utils/apiUtils';
+import { data } from '@utils/testData';
+import { payloads } from '@utils/payloads';
+import { dbUtils } from '@utils/dbUtils';
+import { dbData } from '@utils/dbData';
 
 test.describe('Vendor SPMV test', () => {
     let admin: SpmvPage;

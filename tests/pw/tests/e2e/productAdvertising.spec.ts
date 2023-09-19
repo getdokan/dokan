@@ -1,9 +1,9 @@
 import { test, Page } from '@playwright/test';
-import { ProductAdvertisingPage } from 'pages/productAdvertisingPage';
-import { VendorPage } from 'pages/vendorPage';
-import { ApiUtils } from 'utils/apiUtils';
-import { data } from 'utils/testData';
-import { payloads } from 'utils/payloads';
+import { ProductAdvertisingPage } from '@pages/productAdvertisingPage';
+import { VendorPage } from '@pages/vendorPage';
+import { ApiUtils } from '@utils/apiUtils';
+import { data } from '@utils/testData';
+import { payloads } from '@utils/payloads';
 
 test.describe('Product Advertising test', () => {
     let admin: ProductAdvertisingPage;

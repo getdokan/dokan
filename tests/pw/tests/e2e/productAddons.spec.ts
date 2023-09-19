@@ -1,6 +1,6 @@
 import { test, Page } from '@playwright/test';
-import { ProductAddonsPage } from 'pages/productAddonsPage';
-import { data } from 'utils/testData';
+import { ProductAddonsPage } from '@pages/productAddonsPage';
+import { data } from '@utils/testData';
 
 test.describe('Product addon functionality test', () => {
     let vendor: ProductAddonsPage;

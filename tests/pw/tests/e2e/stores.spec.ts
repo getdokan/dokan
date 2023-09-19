@@ -1,8 +1,8 @@
 import { test, Page } from '@playwright/test';
-import { StoresPage } from 'pages/storesPage';
-// import { ApiUtils } from 'utils/apiUtils';
-import { data } from 'utils/testData';
-// import { payloads } from 'utils/payloads';
+import { StoresPage } from '@pages/storesPage';
+// import { ApiUtils } from '@utils/apiUtils';
+import { data } from '@utils/testData';
+// import { payloads } from '@utils/payloads';
 
 const { VENDOR_ID } = process.env;
 

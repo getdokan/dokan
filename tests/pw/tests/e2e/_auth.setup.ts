@@ -1,10 +1,10 @@
 import { test as setup, expect } from '@playwright/test';
-import { LoginPage } from 'pages/loginPage';
-import { WpPage } from 'pages/wpPage';
-import { ApiUtils } from 'utils/apiUtils';
-import { data } from 'utils/testData';
-import { payloads } from 'utils/payloads';
-import { helpers } from 'utils/helpers';
+import { LoginPage } from '@pages/loginPage';
+import { WpPage } from '@pages/wpPage';
+import { ApiUtils } from '@utils/apiUtils';
+import { data } from '@utils/testData';
+import { payloads } from '@utils/payloads';
+import { helpers } from '@utils/helpers';
 
 setup.describe('authenticate users & set permalink', () => {
     setup('authenticate admin @lite', async ({ page }) => {

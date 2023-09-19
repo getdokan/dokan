@@ -1,6 +1,6 @@
 import { test, Page } from '@playwright/test';
-import { LicensePage } from 'pages/licensePage';
-import { data } from 'utils/testData';
+import { LicensePage } from '@pages/licensePage';
+import { data } from '@utils/testData';
 
 test.describe('License test', () => {
     let admin: LicensePage;

@@ -1,9 +1,9 @@
 import { Page } from '@playwright/test';
-import { AdminPage } from 'pages/adminPage';
-import { selector } from 'pages/selectors';
-import { data } from 'utils/testData';
-import { announcement } from 'utils/interfaces';
-import { helpers } from 'utils/helpers';
+import { AdminPage } from '@pages/adminPage';
+import { selector } from '@pages/selectors';
+import { data } from '@utils/testData';
+import { announcement } from '@utils/interfaces';
+import { helpers } from '@utils/helpers';
 
 export class AnnouncementsPage extends AdminPage {
     constructor(page: Page) {

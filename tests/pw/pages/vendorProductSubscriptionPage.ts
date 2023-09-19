@@ -1,9 +1,9 @@
 import { Page } from '@playwright/test';
-import { VendorPage } from 'pages/vendorPage';
-import { CustomerPage } from 'pages/customerPage';
-import { selector } from 'pages/selectors';
-import { data } from 'utils/testData';
-import { customer } from 'utils/interfaces';
+import { VendorPage } from '@pages/vendorPage';
+import { CustomerPage } from '@pages/customerPage';
+import { selector } from '@pages/selectors';
+import { data } from '@utils/testData';
+import { customer } from '@utils/interfaces';
 
 export class VendorProductSubscriptionPage extends VendorPage {
     constructor(page: Page) {

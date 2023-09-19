@@ -1,9 +1,9 @@
 import { Page, expect, test } from '@playwright/test';
-import { AdminPage } from 'pages/adminPage';
-import { StoresPage } from 'pages/storesPage';
-import { selector } from 'pages/selectors';
-import { data } from 'utils/testData';
-import { sellerBadge } from 'utils/interfaces';
+import { AdminPage } from '@pages/adminPage';
+import { StoresPage } from '@pages/storesPage';
+import { selector } from '@pages/selectors';
+import { data } from '@utils/testData';
+import { sellerBadge } from '@utils/interfaces';
 
 export class SellerBadgesPage extends AdminPage {
     constructor(page: Page) {

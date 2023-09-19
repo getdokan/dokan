@@ -1,9 +1,9 @@
 import { test, Page } from '@playwright/test';
-import { LoginPage } from 'pages/loginPage';
-import { AdminPage } from 'pages/adminPage';
-// import { ApiUtils } from 'utils/apiUtils';
-import { data } from 'utils/testData';
-// import { payloads } from 'utils/payloads';
+import { LoginPage } from '@pages/loginPage';
+import { AdminPage } from '@pages/adminPage';
+// import { ApiUtils } from '@utils/apiUtils';
+import { data } from '@utils/testData';
+// import { payloads } from '@utils/payloads';
 
 test.describe('Admin user functionality test', () => {
     test.use({ storageState: { cookies: [], origins: [] } });

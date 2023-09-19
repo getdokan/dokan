@@ -1,7 +1,7 @@
 import { Page, expect } from '@playwright/test';
-import { BasePage } from 'pages/basePage';
-import { data, user } from 'utils/testData';
-import { selector } from 'pages/selectors';
+import { BasePage } from '@pages/basePage';
+import { data, user } from '@utils/testData';
+import { selector } from '@pages/selectors';
 
 export class LoginPage extends BasePage {
     constructor(page: Page) {

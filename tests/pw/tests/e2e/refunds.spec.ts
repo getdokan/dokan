@@ -1,9 +1,9 @@
 import { test, Page, APIResponse } from '@playwright/test';
-import { RefundsPage } from 'pages/refundsPage';
-import { ApiUtils } from 'utils/apiUtils';
-import { dbUtils } from 'utils/dbUtils';
-import { data } from 'utils/testData';
-import { payloads } from 'utils/payloads';
+import { RefundsPage } from '@pages/refundsPage';
+import { ApiUtils } from '@utils/apiUtils';
+import { dbUtils } from '@utils/dbUtils';
+import { data } from '@utils/testData';
+import { payloads } from '@utils/payloads';
 
 const { CUSTOMER_ID, PRODUCT_ID } = process.env;
 

@@ -1,8 +1,8 @@
 import { test, Page } from '@playwright/test';
-import { VendorProductSubscriptionPage } from 'pages/vendorProductSubscriptionPage';
-import { ApiUtils } from 'utils/apiUtils';
-import { data } from 'utils/testData';
-import { payloads } from 'utils/payloads';
+import { VendorProductSubscriptionPage } from '@pages/vendorProductSubscriptionPage';
+import { ApiUtils } from '@utils/apiUtils';
+import { data } from '@utils/testData';
+import { payloads } from '@utils/payloads';
 
 test.describe('Product subscriptions test', () => {
     let vendor: VendorProductSubscriptionPage;

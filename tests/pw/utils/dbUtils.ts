@@ -1,8 +1,8 @@
 import { expect } from '@playwright/test';
 import { MySqlConnection, DbContext } from 'mysqlconnector';
 import { serialize, unserialize } from 'php-serialize';
-import { dbData } from 'utils/dbData';
-import { helpers } from 'utils/helpers';
+import { dbData } from '@utils/dbData';
+import { helpers } from '@utils/helpers';
 const { DB_HOST_NAME, DB_USER_NAME, DB_USER_PASSWORD, DATABASE, DB_PORT, DB_PREFIX } = process.env;
 
 const mySql = new MySqlConnection({

@@ -1,8 +1,8 @@
 import { test, Page } from '@playwright/test';
-import { RequestForQuotationsPage } from 'pages/requestForQuotationsPage';
-import { ApiUtils } from 'utils/apiUtils';
-import { data } from 'utils/testData';
-import { payloads } from 'utils/payloads';
+import { RequestForQuotationsPage } from '@pages/requestForQuotationsPage';
+import { ApiUtils } from '@utils/apiUtils';
+import { data } from '@utils/testData';
+import { payloads } from '@utils/payloads';
 
 const { CUSTOMER_ID } = process.env;
 

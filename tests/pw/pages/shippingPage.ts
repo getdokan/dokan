@@ -1,9 +1,9 @@
 import { Page, expect } from '@playwright/test';
-import { AdminPage } from 'pages/adminPage';
-import { selector } from 'pages/selectors';
-import { data } from 'utils/testData';
-import { helpers } from 'utils/helpers';
-// import { shipping } from 'utils/interfaces';
+import { AdminPage } from '@pages/adminPage';
+import { selector } from '@pages/selectors';
+import { data } from '@utils/testData';
+import { helpers } from '@utils/helpers';
+// import { shipping } from '@utils/interfaces';
 
 export class shippingPage extends AdminPage {
     constructor(page: Page) {

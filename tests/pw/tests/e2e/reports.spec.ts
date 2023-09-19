@@ -1,8 +1,8 @@
 import { test, Page } from '@playwright/test';
-import { ReportsPage } from 'pages/reportsPage';
-import { ApiUtils } from 'utils/apiUtils';
-import { data } from 'utils/testData';
-import { payloads } from 'utils/payloads';
+import { ReportsPage } from '@pages/reportsPage';
+import { ApiUtils } from '@utils/apiUtils';
+import { data } from '@utils/testData';
+import { payloads } from '@utils/payloads';
 
 const { PRODUCT_ID } = process.env;
 

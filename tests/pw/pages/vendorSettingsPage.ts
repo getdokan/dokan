@@ -1,9 +1,9 @@
 import { Page } from '@playwright/test';
-import { VendorPage } from 'pages/vendorPage';
-import { selector } from 'pages/selectors';
-import { data } from 'utils/testData';
-import { helpers } from 'utils/helpers';
-import { vendor } from 'utils/interfaces';
+import { VendorPage } from '@pages/vendorPage';
+import { selector } from '@pages/selectors';
+import { data } from '@utils/testData';
+import { helpers } from '@utils/helpers';
+import { vendor } from '@utils/interfaces';
 
 const { DOKAN_PRO } = process.env;
 

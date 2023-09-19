@@ -1,10 +1,10 @@
 import { Page } from '@playwright/test';
-import { VendorPage } from 'pages/vendorPage';
-import { CustomerPage } from 'pages/customerPage';
-import { selector } from 'pages/selectors';
-import { data } from 'utils/testData';
-import { helpers } from 'utils/helpers';
-import { product, bookings, bookingResource } from 'utils/interfaces';
+import { VendorPage } from '@pages/vendorPage';
+import { CustomerPage } from '@pages/customerPage';
+import { selector } from '@pages/selectors';
+import { data } from '@utils/testData';
+import { helpers } from '@utils/helpers';
+import { product, bookings, bookingResource } from '@utils/interfaces';
 
 export class BookingPage extends VendorPage {
     constructor(page: Page) {

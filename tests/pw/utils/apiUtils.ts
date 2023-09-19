@@ -1,9 +1,9 @@
 import { expect, type APIRequestContext, APIResponse, Request } from '@playwright/test';
-import { endPoints } from 'utils/apiEndPoints';
-import { payloads } from 'utils/payloads';
-import { helpers } from 'utils/helpers';
+import { endPoints } from '@utils/apiEndPoints';
+import { payloads } from '@utils/payloads';
+import { helpers } from '@utils/helpers';
 import fs from 'fs';
-import { auth, user_api, taxRate, coupon_api, marketPlaceCoupon, reqOptions, headers, storageState, responseBody } from 'utils/interfaces';
+import { auth, user_api, taxRate, coupon_api, marketPlaceCoupon, reqOptions, headers, storageState, responseBody } from '@utils/interfaces';
 
 const { VENDOR_ID, CUSTOMER_ID } = process.env;
 

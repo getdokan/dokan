@@ -1,8 +1,8 @@
 import { test, Page } from '@playwright/test';
-import { EmailVerificationsPage } from 'pages/emailVerificationsPage';
-import { data } from 'utils/testData';
-import { dbUtils } from 'utils/dbUtils';
-import { dbData } from 'utils/dbData';
+import { EmailVerificationsPage } from '@pages/emailVerificationsPage';
+import { data } from '@utils/testData';
+import { dbUtils } from '@utils/dbUtils';
+import { dbData } from '@utils/dbData';
 
 test.describe('Email verifications test', () => {
     let guest: EmailVerificationsPage;

@@ -1,6 +1,6 @@
 import { test, Page } from '@playwright/test';
-import { HelpPage } from 'pages/helpPage';
-import { data } from 'utils/testData';
+import { HelpPage } from '@pages/helpPage';
+import { data } from '@utils/testData';
 
 test.describe('Dokan help test', () => {
     let admin: HelpPage;

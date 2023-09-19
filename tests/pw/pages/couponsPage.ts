@@ -1,10 +1,10 @@
 import { Page } from '@playwright/test';
-import { AdminPage } from 'pages/adminPage';
-import { CustomerPage } from 'pages/customerPage';
-import { selector } from 'pages/selectors';
-import { helpers } from 'utils/helpers';
-import { data } from 'utils/testData';
-import { coupon } from 'utils/interfaces';
+import { AdminPage } from '@pages/adminPage';
+import { CustomerPage } from '@pages/customerPage';
+import { selector } from '@pages/selectors';
+import { helpers } from '@utils/helpers';
+import { data } from '@utils/testData';
+import { coupon } from '@utils/interfaces';
 
 export class CouponsPage extends AdminPage {
     constructor(page: Page) {

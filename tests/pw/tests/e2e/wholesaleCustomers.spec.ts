@@ -1,11 +1,11 @@
 import { test, Page } from '@playwright/test';
-import { WholesaleCustomersPage } from 'pages/wholesaleCustomersPage';
-import { CustomerPage } from 'pages/customerPage';
-import { ApiUtils } from 'utils/apiUtils';
-import { dbUtils } from 'utils/dbUtils';
-import { data } from 'utils/testData';
-import { payloads } from 'utils/payloads';
-import { dbData } from 'utils/dbData';
+import { WholesaleCustomersPage } from '@pages/wholesaleCustomersPage';
+import { CustomerPage } from '@pages/customerPage';
+import { ApiUtils } from '@utils/apiUtils';
+import { dbUtils } from '@utils/dbUtils';
+import { data } from '@utils/testData';
+import { payloads } from '@utils/payloads';
+import { dbData } from '@utils/dbData';
 
 test.describe('Wholesale customers test (admin)', () => {
     let admin: WholesaleCustomersPage;

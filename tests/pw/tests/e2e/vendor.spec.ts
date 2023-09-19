@@ -1,9 +1,9 @@
 import { test, Page } from '@playwright/test';
-import { LoginPage } from 'pages/loginPage';
-import { VendorPage } from 'pages/vendorPage';
-// import { ApiUtils } from 'utils/apiUtils';
-import { data } from 'utils/testData';
-// import { payloads } from 'utils/payloads';
+import { LoginPage } from '@pages/loginPage';
+import { VendorPage } from '@pages/vendorPage';
+// import { ApiUtils } from '@utils/apiUtils';
+import { data } from '@utils/testData';
+// import { payloads } from '@utils/payloads';
 
 test.describe('Vendor user functionality test1', () => {
     test.use({ storageState: { cookies: [], origins: [] } });

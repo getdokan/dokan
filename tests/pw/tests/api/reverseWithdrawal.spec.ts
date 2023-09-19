@@ -1,10 +1,10 @@
 import { test, expect } from '@playwright/test';
-import { ApiUtils } from 'utils/apiUtils';
-import { endPoints } from 'utils/apiEndPoints';
-import { payloads } from 'utils/payloads';
-import { dbUtils } from 'utils/dbUtils';
-import { data } from 'utils/testData';
-import { dbData } from 'utils/dbData';
+import { ApiUtils } from '@utils/apiUtils';
+import { endPoints } from '@utils/apiEndPoints';
+import { payloads } from '@utils/payloads';
+import { dbUtils } from '@utils/dbUtils';
+import { data } from '@utils/testData';
+import { dbData } from '@utils/dbData';
 
 let apiUtils: ApiUtils;
 

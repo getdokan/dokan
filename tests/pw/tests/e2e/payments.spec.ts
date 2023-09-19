@@ -1,7 +1,7 @@
 import { test, Page } from '@playwright/test';
-import { PaymentsPage } from 'pages/paymentsPage';
-// import { ApiUtils } from 'utils/apiUtils';
-import { data } from 'utils/testData';
+import { PaymentsPage } from '@pages/paymentsPage';
+// import { ApiUtils } from '@utils/apiUtils';
+import { data } from '@utils/testData';
 
 test.describe('Payments test', () => {
     // let admin: PaymentsPage;

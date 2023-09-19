@@ -1,6 +1,6 @@
 import { test, Page } from '@playwright/test';
-import { VendorDashboardPage } from 'pages/vendorDashboardPage';
-import { data } from 'utils/testData';
+import { VendorDashboardPage } from '@pages/vendorDashboardPage';
+import { data } from '@utils/testData';
 
 test.describe('Vendor dashboard test', () => {
     let vendor: VendorDashboardPage;

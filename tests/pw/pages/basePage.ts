@@ -5,7 +5,7 @@
 /* eslint-disable playwright/no-force-option */
 //todo: disable eslint plugin altogether instead of one by one
 import { expect, Page, BrowserContext, Cookie, Request, Response, Locator, Frame, FrameLocator, JSHandle, ElementHandle } from '@playwright/test';
-import { data } from 'utils/testData';
+import { data } from '@utils/testData';
 
 // This Page Contains All Necessary Playwright Automation Methods
 
