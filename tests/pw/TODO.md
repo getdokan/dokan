@@ -1,4 +1,5 @@
 <!-- prettier-ignore -->
+
 # Dokan E2E-API TaskList
 
 ### Todo: E2e Suite
@@ -33,6 +34,8 @@
 - [ ] add coverage report  
 - [ ] add linters  
 - [ ] add JSDOC  
+- [ ] cmd + save & npm run prettier:fix formatting differently
+- [ ] todo.md not ignored by prettier 
 
 ### Todo: Test Data
 
