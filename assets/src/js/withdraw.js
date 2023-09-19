@@ -234,12 +234,9 @@
                 return;
             }
 
-            let withdrawMethod = $(
-                "[name='withdraw_method'][id='withdraw-method']"
-            ).val();
-            let withdrawAmount = $(
-                "[name='withdraw_amount'][id='withdraw-amount']"
-            ).val();
+            let withdrawMethod = $( "[name='withdraw_method'][id='withdraw-method']" ).val();
+            let withdrawAmount = $( "[name='withdraw_amount'][id='withdraw-amount']" ).val();
+
             withdrawAmount = accounting.unformat(
                 withdrawAmount,
                 dokan_refund.mon_decimal_point
@@ -248,66 +245,41 @@
                 "select[name='withdraw_method'][id='withdraw-method'] option:selected"
             ).data();
             let chargeAmount = 0;
-            let nonce = $( '#dokan_withdraw_charge_nonce' ).val();
 
-            $.post(
-                dokan.ajaxurl,
-                {
-                    action: 'dokan_handle_get_withdraw_method_charge',
-                    dokan_withdraw_charge_nonce: nonce,
-                    method: withdrawMethod,
-                    amount: withdrawAmount,
-                },
-                ( response ) => {
-                    let data = response.data ? response.data : {};
-                    Dokan_Withdraw.showWithdrawChargeHtml( data );
+            let chargeText = '';
+            if ( chargeFixed ) {
+                chargeText += accounting.formatMoney( chargeFixed, dokan.currency );
+                chargeAmount += chargeFixed;
+            }
+            if ( chargePercentage ) {
+                let percentageAmount = chargePercentage / 100 * withdrawAmount;
+                chargeAmount += percentageAmount;
+                chargeText += chargeText ? ' + ' : '';
+                chargeText += parseFloat( accounting.formatNumber( chargePercentage, dokan_refund.rounding_precision, '' ) )
+                    .toString()
+                    .replace('.', dokan_refund.mon_decimal_point ) + '%';
+                chargeText += ` = ${ accounting.formatMoney( chargeAmount ) }`;
+            }
 
-                    $( '#dokan-withdraw-request-submit' ).attr(
-                        'disabled',
-                        ! response.success
-                    );
-                }
-            );
+          Dokan_Withdraw.showWithdrawChargeHtml( chargeText, chargeAmount, withdrawAmount );
         },
 
-        showWithdrawChargeHtml( chargeData ) {
-            let chargeSection = $( '#dokan-withdraw-charge-section' );
-            let revivableSection = $( '#dokan-withdraw-revivable-section' );
+        showWithdrawChargeHtml(chargeText, chargeAmount, withdrawAmount) {
+            let chargeSection    = $('#dokan-withdraw-charge-section');
+            let revivableSection = $('#dokan-withdraw-revivable-section');
 
-            if ( ! chargeData.plain || ! chargeData.plain.charge ) {
+            if (!withdrawAmount) {
                 chargeSection.hide();
                 revivableSection.hide();
-
                 return;
             }
 
-            let chargeText = '';
-
-            if (
-                chargeData.plain.charge_data &&
-                chargeData.plain.charge_data.fixed
-            ) {
-                chargeText += `${ chargeData.html.charge_data.fixed }`;
-            }
-
-            if (
-                chargeData.plain.charge_data &&
-                chargeData.plain.charge_data.percentage
-            ) {
-                chargeText += chargeText ? ' + ' : '';
-                chargeText += `${ chargeData.html.charge_data.percentage }`;
-                chargeText += ` = ${ chargeData.html.charge }`;
-            }
-
-            $( '#dokan-withdraw-charge-section-text' ).html( chargeText );
-
-            $( '#dokan-withdraw-revivable-section-text' ).html(
-                chargeData.plain.receivable ? chargeData.html.receivable : ''
-            );
+            $('#dokan-withdraw-charge-section-text').html(chargeText);
+            $('#dokan-withdraw-revivable-section-text').html(accounting.formatMoney(withdrawAmount - chargeAmount));
 
             chargeSection.show();
             revivableSection.show();
-        },
+        }
     };
 
     $(document).ready(function() {

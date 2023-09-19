@@ -50,7 +50,6 @@
         <div class="dokan-form-group" id="dokan-withdraw-charge-section" style="display: none">
             <label for="withdraw-method" class="dokan-w4 dokan-control-label">
                 <?php esc_html_e( 'Withdraw Charge', 'dokan-lite' ); ?>
-                <?php echo wp_nonce_field( 'dokan_withdraw_charge', 'dokan_withdraw_charge_nonce' ); ?>
             </label>
             <div class="dokan-w5 dokan-text-left">
                 <span  id="dokan-withdraw-charge-section-text"></span>

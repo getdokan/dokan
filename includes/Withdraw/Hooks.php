@@ -24,7 +24,6 @@ class Hooks {
         if ( wp_doing_ajax() ) {
             add_action( 'wp_ajax_dokan_handle_withdraw_request', [ $this, 'ajax_handle_withdraw_request' ] );
             add_action( 'wp_ajax_dokan_withdraw_handle_make_default_method', [ $this, 'ajax_handle_make_default_method' ] );
-            add_action( 'wp_ajax_dokan_handle_get_withdraw_method_charge', [ $this, 'ajax_handle_get_withdraw_method_charge' ] );
         }
     }
 
@@ -214,57 +213,5 @@ class Hooks {
         update_user_meta( $user_id, 'dokan_withdraw_default_method', $method );
 
         wp_send_json_success( esc_html__( 'Default method update successful.', 'dokan-lite' ) );
-    }
-
-    /**
-     * Get withdraw method charge.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return void
-     */
-    public function ajax_handle_get_withdraw_method_charge() {
-        if ( ! isset( $_POST['dokan_withdraw_charge_nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['dokan_withdraw_charge_nonce'] ) ), 'dokan_withdraw_charge' ) ) {
-            wp_send_json_error( esc_html__( 'Are you cheating?', 'dokan-lite' ) );
-        }
-
-        // phpcs:ignore
-        if ( ! current_user_can( 'dokan_manage_withdraw' ) ) {
-            wp_send_json_error( esc_html__( 'You have no permission to do this action', 'dokan-lite' ) );
-        }
-
-        if ( empty( $_POST['amount'] ) ) {
-            wp_send_json_error( esc_html__( 'Withdraw amount is required.', 'dokan-lite' ) );
-        }
-
-        if ( empty( sanitize_text_field( wp_unslash( $_POST['method'] ) ) ) || ! array_key_exists( sanitize_text_field( wp_unslash( $_POST['method'] ) ), dokan_withdraw_get_methods() ) ) {
-            wp_send_json_error( esc_html__( 'Withdraw method is required.', 'dokan-lite' ) );
-        }
-
-        $amount = wc_format_decimal( sanitize_text_field( wp_unslash( $_POST['amount'] ) ) );
-        $method = sanitize_text_field( wp_unslash( $_POST['method'] ) );
-
-        $withdraw = new Withdraw();
-        $withdraw->set_method( $method )
-                ->set_amount( $amount )
-                ->calculate_charge();
-
-        $response = [
-            'plain' => [
-                'charge'      => $withdraw->get_charge(),
-                'receivable'  => $withdraw->get_receivable_amount(),
-                'charge_data' => $withdraw->get_charge_data(),
-            ],
-            'html'  => [
-                'charge'      => wc_price( $withdraw->get_charge() ),
-                'receivable'  => wc_price( $withdraw->get_receivable_amount() ),
-                'charge_data' => [
-                    'fixed'      => wc_price( $withdraw->get_charge_data()['fixed'] ),
-                    'percentage' => $withdraw->get_charge_data()['percentage'] . '%',
-                ],
-            ],
-        ];
-
-        wp_send_json_success( $response );
     }
 }
