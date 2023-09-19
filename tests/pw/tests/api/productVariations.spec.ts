@@ -26,17 +26,13 @@ test.describe('product variation api test', () => {
     });
 
     test('create a product variation @pro', async () => {
-        const [response, responseBody] = await apiUtils.post(endPoints.createProductVariation(productId), {
-            data: payloads.createProductVariation,
-        });
+        const [response, responseBody] = await apiUtils.post(endPoints.createProductVariation(productId), { data: payloads.createProductVariation });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
     test('update a product variation @pro', async () => {
-        const [response, responseBody] = await apiUtils.put(endPoints.updateProductVariation(productId, variationId), {
-            data: payloads.updateProductVariation(),
-        });
+        const [response, responseBody] = await apiUtils.put(endPoints.updateProductVariation(productId, variationId), { data: payloads.updateProductVariation() });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });

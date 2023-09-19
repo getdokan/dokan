@@ -19,9 +19,7 @@ test.describe('store categories api test', () => {
     });
 
     test('set default store category @pro', async () => {
-        const [response, responseBody] = await apiUtils.put(endPoints.setDefaultStoreCategory, {
-            data: { id: categoryId },
-        });
+        const [response, responseBody] = await apiUtils.put(endPoints.setDefaultStoreCategory, { data: { id: categoryId } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
 
@@ -42,26 +40,20 @@ test.describe('store categories api test', () => {
     });
 
     test('create a store category @pro', async () => {
-        const [response, responseBody] = await apiUtils.post(endPoints.createStoreCategory, {
-            data: payloads.createStoreCategory(),
-        });
+        const [response, responseBody] = await apiUtils.post(endPoints.createStoreCategory, { data: payloads.createStoreCategory() });
         expect(response.status()).toBe(201);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
     test('update a store category @pro', async () => {
-        const [response, responseBody] = await apiUtils.put(endPoints.updateStoreCategory(categoryId), {
-            data: payloads.updateStoreCategory(),
-        });
+        const [response, responseBody] = await apiUtils.put(endPoints.updateStoreCategory(categoryId), { data: payloads.updateStoreCategory() });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
     test('delete a store category @pro', async () => {
-        const [response, responseBody] = await apiUtils.delete(endPoints.deleteStoreCategory(categoryId), {
-            params: payloads.paramsDeleteStoreCategory,
-        });
+        const [response, responseBody] = await apiUtils.delete(endPoints.deleteStoreCategory(categoryId), { params: payloads.paramsDeleteStoreCategory });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });

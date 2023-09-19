@@ -27,17 +27,13 @@ test.describe('coupon api test', () => {
     });
 
     test('create a coupon @pro', async () => {
-        const [response, responseBody] = await apiUtils.post(endPoints.createCoupon, {
-            data: { ...payloads.createCoupon(), product_ids: productId },
-        });
+        const [response, responseBody] = await apiUtils.post(endPoints.createCoupon, { data: { ...payloads.createCoupon(), product_ids: productId } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
     test('update a coupon @pro', async () => {
-        const [response, responseBody] = await apiUtils.put(endPoints.updateCoupon(couponId), {
-            data: payloads.updateCoupon(),
-        });
+        const [response, responseBody] = await apiUtils.put(endPoints.updateCoupon(couponId), { data: payloads.updateCoupon() });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });

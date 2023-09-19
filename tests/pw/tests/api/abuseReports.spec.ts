@@ -38,9 +38,7 @@ test.describe('abuse report api test', () => {
 
     test('delete batch abuse reports @pro', async () => {
         const allAbuseReportIds = (await apiUtils.getAllAbuseReports()).map((a: { id: unknown }) => a.id);
-        const [response, responseBody] = await apiUtils.delete(endPoints.deleteBatchAbuseReports, {
-            data: { items: allAbuseReportIds },
-        });
+        const [response, responseBody] = await apiUtils.delete(endPoints.deleteBatchAbuseReports, { data: { items: allAbuseReportIds } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });

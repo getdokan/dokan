@@ -29,9 +29,7 @@ test.describe('withdraw api test', () => {
     });
 
     test('update withdraw disbursement settings @v2 @pro', async () => {
-        const [response, responseBody] = await apiUtils.post(endPoints.updateWithdrawDisbursementSettings, {
-            data: payloads.updateWithdrawDisbursementSettings,
-        });
+        const [response, responseBody] = await apiUtils.post(endPoints.updateWithdrawDisbursementSettings, { data: payloads.updateWithdrawDisbursementSettings });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });

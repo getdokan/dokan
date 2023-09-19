@@ -72,7 +72,7 @@ export class BasePage {
         await this.page.reload();
     }
 
-    //  returns whether the current URL is expected
+    // returns whether the current URL is expected
     isCurrentUrl(subPath: string): boolean {
         const url = new URL(this.getCurrentUrl());
         const currentURL = url.href.replace(/[/]$/, ''); // added to remove last '/',
@@ -175,7 +175,7 @@ export class BasePage {
         await this.page.click(selector);
     }
 
-    //  click on element by Running the js element.Click() method
+    // click on element by Running the js element.Click() method
     async clickJs(selector: string): Promise<void> {
         const element = this.getElement(selector);
         await element.click();
@@ -714,15 +714,15 @@ export class BasePage {
 
     // // select option by value/text/index
     // async select(selector: string, choice: string, value: string | number): Promise<string[]> {
-    //     switch (choice) {
-    //     case 'value':
-    //     return await this.page.selectOption(selector, {value: value})
-    //         case 'label':
-    //     return await this.page.selectOption(selector, {label: value})
-    //         case 'index':
-    //     return await this.page.selectOption(selector, {index: value})
-    //         default:
-    //         break
+    //   switch (choice) {
+    //   case 'value':
+    //   return await this.page.selectOption(selector, {value: value})
+    //       case 'label':
+    //   return await this.page.selectOption(selector, {label: value})
+    //       case 'index':
+    //   return await this.page.selectOption(selector, {index: value})
+    //       default:
+    //       break
     // }
     // }
 
@@ -755,8 +755,8 @@ export class BasePage {
 
     // set value based on select options text
     // async selectByText(selectSelector: string, optionSelector: string, text: string): Promise<void> {
-    //     let optionValue = await this.page.$$eval(optionSelector, (options, text) => options.find(option => (option.innerText).toLowerCase() === text.toLowerCase())?.value, text)
-    //     await this.selectByValue(selectSelector, optionValue);
+    //   let optionValue = await this.page.$$eval(optionSelector, (options, text) => options.find(option => (option.innerText).toLowerCase() === text.toLowerCase())?.value, text)
+    //   await this.selectByValue(selectSelector, optionValue);
     // }
 
     /**
@@ -786,7 +786,7 @@ export class BasePage {
     async uploadFileViaListener1(selector: string, files: string | string[]): Promise<void> {
         // Start waiting for file chooser before clicking. Note no await.
         const fileChooserPromise = this.page.waitForEvent('filechooser'); // Note: no await on listener
-        await this.page.locator(selector).click(); //    invokes the filechooser
+        await this.page.locator(selector).click(); //  invokes the filechooser
         const fileChooser = await fileChooserPromise;
         await fileChooser.setFiles(files);
         // or
@@ -825,7 +825,7 @@ export class BasePage {
      * Frame [iframe] methods
      */
 
-    //  get all frames attached to the page
+    // get all frames attached to the page
     getAllFrames(): Frame[] {
         return this.page.frames();
     }
@@ -1046,7 +1046,7 @@ export class BasePage {
         return await locator.isHidden();
     }
 
-    //  returns whether the locator is visible
+    // returns whether the locator is visible
     async isVisibleLocator(selector: string): Promise<boolean> {
         const locator = this.page.locator(selector);
         return await locator.isVisible();
@@ -1113,7 +1113,7 @@ export class BasePage {
         await locator.setChecked(checked);
     }
 
-    //  upload file
+    // upload file
     async setInputFilesLocator(selector: string, file: string): Promise<void> {
         const locator = this.page.locator(selector);
         await locator.setInputFiles(file);

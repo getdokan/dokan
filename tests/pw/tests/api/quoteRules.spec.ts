@@ -25,17 +25,13 @@ test.describe('quote rules api test', () => {
     });
 
     test('create a quote rule @pro', async () => {
-        const [response, responseBody] = await apiUtils.post(endPoints.createQuoteRule, {
-            data: payloads.createQuoteRule(),
-        });
+        const [response, responseBody] = await apiUtils.post(endPoints.createQuoteRule, { data: payloads.createQuoteRule() });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
     test('update a quote rule @pro', async () => {
-        const [response, responseBody] = await apiUtils.put(endPoints.updateQuoteRule(quoteRuleId), {
-            data: payloads.updateQuoteRule,
-        });
+        const [response, responseBody] = await apiUtils.put(endPoints.updateQuoteRule(quoteRuleId), { data: payloads.updateQuoteRule });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
@@ -54,9 +50,7 @@ test.describe('quote rules api test', () => {
 
     test('update batch quote rules @pro', async () => {
         const allQuoteRuleIds = (await apiUtils.getAllQuoteRules()).map((a: { id: unknown }) => a.id);
-        const [response, responseBody] = await apiUtils.put(endPoints.updateBatchQuoteRules, {
-            data: { trash: allQuoteRuleIds },
-        });
+        const [response, responseBody] = await apiUtils.put(endPoints.updateBatchQuoteRules, { data: { trash: allQuoteRuleIds } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });

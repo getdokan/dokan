@@ -101,11 +101,7 @@ test.describe('Vendor settings test', () => {
     test('vendor can set min-max settings @pro', async () => {
         await vendor.setStoreSettings(data.vendor.vendorInfo, 'min-max');
         // disable min-max
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, {
-            ...dbData.dokan.sellingSettings,
-            enable_min_max_quantity: 'off',
-            enable_min_max_amount: 'off',
-        });
+        await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, enable_min_max_quantity: 'off', enable_min_max_amount: 'off' });
     });
 
     test('vendor can set shipStation settings @pro', async () => {

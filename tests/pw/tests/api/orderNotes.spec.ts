@@ -26,9 +26,7 @@ test.describe('order note api test', () => {
     });
 
     test('create an order note @lite', async () => {
-        const [response, responseBody] = await apiUtils.post(endPoints.createOrderNote(orderId), {
-            data: payloads.createOrderNote,
-        });
+        const [response, responseBody] = await apiUtils.post(endPoints.createOrderNote(orderId), { data: payloads.createOrderNote });
         expect(response.status()).toBe(201);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();

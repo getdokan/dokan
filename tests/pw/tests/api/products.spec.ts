@@ -69,17 +69,13 @@ for (const version of versions) {
         });
 
         test('create a product @lite', async () => {
-            const [response, responseBody] = await apiUtils.post(endPoints.createProduct.replace('v1', version), {
-                data: payloads.createProduct(),
-            });
+            const [response, responseBody] = await apiUtils.post(endPoints.createProduct.replace('v1', version), { data: payloads.createProduct() });
             expect(response.ok()).toBeTruthy();
             expect(responseBody).toBeTruthy();
         });
 
         test('update a product @lite', async () => {
-            const [response, responseBody] = await apiUtils.put(endPoints.updateProduct(productId).replace('v1', version), {
-                data: payloads.updateProduct(),
-            });
+            const [response, responseBody] = await apiUtils.put(endPoints.updateProduct(productId).replace('v1', version), { data: payloads.updateProduct() });
             expect(response.ok()).toBeTruthy();
             expect(responseBody).toBeTruthy();
         });
@@ -91,9 +87,7 @@ for (const version of versions) {
         });
 
         test('get filtered products @v2 @lite', async () => {
-            const [response, responseBody] = await apiUtils.get(endPoints.getAllProducts.replace('v1', version), {
-                params: payloads.filterParams,
-            });
+            const [response, responseBody] = await apiUtils.get(endPoints.getAllProducts.replace('v1', version), { params: payloads.filterParams });
             expect(response.ok()).toBeTruthy();
             expect(responseBody).toBeTruthy();
         });

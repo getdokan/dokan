@@ -23,9 +23,7 @@ test.describe('new settings api test', () => {
     });
 
     test('update single setting group @v2 @lite', async () => {
-        const [response, responseBody] = await apiUtils.post(endPoints.updateSingleSettingGroup('store'), {
-            data: payloads.updateSettingsGroup,
-        });
+        const [response, responseBody] = await apiUtils.post(endPoints.updateSingleSettingGroup('store'), { data: payloads.updateSettingsGroup });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
@@ -37,9 +35,7 @@ test.describe('new settings api test', () => {
     });
 
     test('update sub settings from single settings group @v2 @lite', async () => {
-        const [response, responseBody] = await apiUtils.post(endPoints.updateSubSettingFromSingleSettingGroup('store', 'store_name'), {
-            data: payloads.updateSubSettingFromSingleSettingGroup,
-        });
+        const [response, responseBody] = await apiUtils.post(endPoints.updateSubSettingFromSingleSettingGroup('store', 'store_name'), { data: payloads.updateSubSettingFromSingleSettingGroup });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });

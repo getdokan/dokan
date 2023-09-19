@@ -22,9 +22,7 @@ test.describe('store reviews api test', () => {
     });
 
     test('create a store review @pro', async () => {
-        const [response, responseBody] = await apiUtils.post(endPoints.createStoreReview(sellerId), {
-            data: payloads.createStoreReview,
-        });
+        const [response, responseBody] = await apiUtils.post(endPoints.createStoreReview(sellerId), { data: payloads.createStoreReview });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
@@ -42,9 +40,7 @@ test.describe('store reviews api test', () => {
     });
 
     test('update a store review @pro', async () => {
-        const [response, responseBody] = await apiUtils.put(endPoints.updateStoreReview(reviewId), {
-            data: payloads.updateStoreReview,
-        });
+        const [response, responseBody] = await apiUtils.put(endPoints.updateStoreReview(reviewId), { data: payloads.updateStoreReview });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
@@ -63,9 +59,7 @@ test.describe('store reviews api test', () => {
 
     test('update batch store review @pro', async () => {
         const allStoreReviewIds = (await apiUtils.getAllStoreReviews()).map((a: { id: unknown }) => a.id);
-        const [response, responseBody] = await apiUtils.put(endPoints.updateBatchStoreReviews, {
-            data: { trash: allStoreReviewIds },
-        });
+        const [response, responseBody] = await apiUtils.put(endPoints.updateBatchStoreReviews, { data: { trash: allStoreReviewIds } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
 

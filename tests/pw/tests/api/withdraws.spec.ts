@@ -12,10 +12,7 @@ test.beforeAll(async ({ request }) => {
     apiUtils = new ApiUtils(request);
     [, minimumWithdrawLimit] = await apiUtils.getMinimumWithdrawLimit();
     await apiUtils.createOrderWithStatus(payloads.createProduct(), payloads.createOrder, 'wc-completed');
-    const [responseBody, id] = await apiUtils.createWithdraw({
-        ...payloads.createWithdraw,
-        amount: minimumWithdrawLimit,
-    });
+    const [responseBody, id] = await apiUtils.createWithdraw({ ...payloads.createWithdraw, amount: minimumWithdrawLimit });
     withdrawId = responseBody.message === 'You already have a pending withdraw request' ? await apiUtils.getWithdrawId() : id;
 });
 
@@ -33,9 +30,7 @@ test.describe('withdraw api test', () => {
     });
 
     test('get all withdraws by status @lite', async () => {
-        const [response, responseBody] = await apiUtils.get(endPoints.getAllWithdraws, {
-            params: { status: 'pending' },
-        }); // pending, cancelled, approved
+        const [response, responseBody] = await apiUtils.get(endPoints.getAllWithdraws, { params: { status: 'pending' } }); // pending, cancelled, approved
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
@@ -47,9 +42,7 @@ test.describe('withdraw api test', () => {
     });
 
     test('update a withdraw @lite', async () => {
-        const [response, responseBody] = await apiUtils.put(endPoints.updateWithdraw(withdrawId), {
-            data: payloads.updateWithdraw,
-        });
+        const [response, responseBody] = await apiUtils.put(endPoints.updateWithdraw(withdrawId), { data: payloads.updateWithdraw });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
@@ -62,9 +55,7 @@ test.describe('withdraw api test', () => {
 
     test('update batch withdraws @lite', async () => {
         const allWithdrawIds = (await apiUtils.getAllWithdraws()).map((a: { id: unknown }) => a.id);
-        const [response, responseBody] = await apiUtils.put(endPoints.updateBatchWithdraws, {
-            data: { approved: allWithdrawIds },
-        });
+        const [response, responseBody] = await apiUtils.put(endPoints.updateBatchWithdraws, { data: { approved: allWithdrawIds } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
@@ -74,15 +65,7 @@ test.describe('withdraw api test', () => {
         const pendingRequest = await apiUtils.getAllWithdrawsByStatus('pending');
         helpers.isObjEmpty(pendingRequest) === false && (await apiUtils.cancelWithdraw(withdrawId));
 
-        //todo: test below line and remove previous
-        !pendingRequest && (await apiUtils.cancelWithdraw(withdrawId));
-
-        const [response, responseBody] = await apiUtils.post(endPoints.createWithdraw, {
-            data: {
-                ...payloads.createWithdraw,
-                amount: minimumWithdrawLimit,
-            },
-        });
+        const [response, responseBody] = await apiUtils.post(endPoints.createWithdraw, { data: { ...payloads.createWithdraw, amount: minimumWithdrawLimit } });
         expect(response.status()).toBe(201);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();

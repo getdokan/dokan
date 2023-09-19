@@ -11,10 +11,7 @@ test.beforeAll(async ({ request }) => {
     apiUtils = new ApiUtils(request);
     const [, pId] = await apiUtils.createProduct(payloads.createProduct());
     productId.push(pId);
-    [, requestQuoteId] = await apiUtils.createQuoteRequest({
-        ...payloads.createQuoteRequest(),
-        product_ids: productId,
-    });
+    [, requestQuoteId] = await apiUtils.createQuoteRequest({ ...payloads.createQuoteRequest(), product_ids: productId });
 });
 
 test.describe('request quote api test', () => {
@@ -31,23 +28,13 @@ test.describe('request quote api test', () => {
     });
 
     test('create a request quote @pro', async () => {
-        const [response, responseBody] = await apiUtils.post(endPoints.createQuoteRequest, {
-            data: {
-                ...payloads.createQuoteRequest(),
-                product_ids: productId,
-            },
-        });
+        const [response, responseBody] = await apiUtils.post(endPoints.createQuoteRequest, { data: { ...payloads.createQuoteRequest(), product_ids: productId } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
     test('update a request quote @pro', async () => {
-        const [response, responseBody] = await apiUtils.put(endPoints.updateRequestQuote(requestQuoteId), {
-            data: {
-                ...payloads.updateRequestQuote,
-                product_ids: productId,
-            },
-        });
+        const [response, responseBody] = await apiUtils.put(endPoints.updateRequestQuote(requestQuoteId), { data: { ...payloads.updateRequestQuote, product_ids: productId } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
@@ -65,18 +52,14 @@ test.describe('request quote api test', () => {
     });
 
     test('convert request quote to order @pro', async () => {
-        const [response, responseBody] = await apiUtils.post(endPoints.convertRequestQuoteToOrder, {
-            data: { ...payloads.convertToOrder, quote_id: requestQuoteId },
-        });
+        const [response, responseBody] = await apiUtils.post(endPoints.convertRequestQuoteToOrder, { data: { ...payloads.convertToOrder, quote_id: requestQuoteId } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
     test('update batch request quote @pro ', async () => {
         const allRequestQuoteIds = (await apiUtils.getAllQuoteRequests()).map((a: { id: unknown }) => a.id);
-        const [response, responseBody] = await apiUtils.put(endPoints.updateBatchRequestQuotes, {
-            data: { trash: allRequestQuoteIds },
-        });
+        const [response, responseBody] = await apiUtils.put(endPoints.updateBatchRequestQuotes, { data: { trash: allRequestQuoteIds } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });

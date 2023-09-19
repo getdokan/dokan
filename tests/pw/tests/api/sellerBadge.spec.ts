@@ -41,41 +41,31 @@ test.describe('seller badge api test', () => {
     });
 
     test('get vendor unseen seller badges @pro', async () => {
-        const [response, responseBody] = await apiUtils.get(endPoints.getVendorUnseenSellerBadges, {
-            params: { vendor_id: currentUserId },
-        });
+        const [response, responseBody] = await apiUtils.get(endPoints.getVendorUnseenSellerBadges, { params: { vendor_id: currentUserId } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
     test('set vendor seller badges as seen @pro', async () => {
-        const [response, responseBody] = await apiUtils.put(endPoints.setSellerBadgeAsSeen, {
-            data: { vendor_id: currentUserId, badge_id: badgeId },
-        });
+        const [response, responseBody] = await apiUtils.put(endPoints.setSellerBadgeAsSeen, { data: { vendor_id: currentUserId, badge_id: badgeId } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
     test('create a seller badge @pro', async () => {
-        const [response, responseBody] = await apiUtils.post(endPoints.createSellerBadge, {
-            data: payloads.createSellerBadgeProductsPublished,
-        });
+        const [response, responseBody] = await apiUtils.post(endPoints.createSellerBadge, { data: payloads.createSellerBadgeProductsPublished });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
     test('update a seller badge @pro', async () => {
-        const [response, responseBody] = await apiUtils.put(endPoints.updateSellerBadge(badgeId), {
-            data: payloads.updateSellerBadge,
-        });
+        const [response, responseBody] = await apiUtils.put(endPoints.updateSellerBadge(badgeId), { data: payloads.updateSellerBadge });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
     test('update row actions @pro', async () => {
-        const [response, responseBody] = await apiUtils.put(endPoints.setSellerBadgeRowActions, {
-            data: { ids: badgeId, action: 'draft' },
-        });
+        const [response, responseBody] = await apiUtils.put(endPoints.setSellerBadgeRowActions, { data: { ids: badgeId, action: 'draft' } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
@@ -88,9 +78,7 @@ test.describe('seller badge api test', () => {
 
     test('update batch seller badges @pro', async () => {
         const allBadgeIds = (await apiUtils.getAllSellerBadges()).map((a: { id: unknown }) => a.id);
-        const [response, responseBody] = await apiUtils.put(endPoints.updateBatchSellerBadges, {
-            data: { ids: allBadgeIds, action: 'draft' },
-        });
+        const [response, responseBody] = await apiUtils.put(endPoints.updateBatchSellerBadges, { data: { ids: allBadgeIds, action: 'draft' } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });

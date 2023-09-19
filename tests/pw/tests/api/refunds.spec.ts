@@ -23,10 +23,7 @@ test.describe('refunds api test', () => {
     });
 
     test('get all refunds by status @pro', async () => {
-        const [response, responseBody] = await apiUtils.get(endPoints.getAllRefunds, {
-            params: { status: 'pending' },
-            headers: payloads.vendorAuth,
-        }); // pending, cancelled, completed
+        const [response, responseBody] = await apiUtils.get(endPoints.getAllRefunds, { params: { status: 'pending' }, headers: payloads.vendorAuth }); // pending, cancelled, completed
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
@@ -53,9 +50,7 @@ test.describe('refunds api test', () => {
     test('update batch refunds @pro', async () => {
         await dbUtils.createRefund(orderResponseBody);
         const allPendingRefundsIds = (await apiUtils.getAllRefunds('pending', payloads.vendorAuth)).map((a: { id: unknown }) => a.id);
-        const [response, responseBody] = await apiUtils.put(endPoints.updateBatchRefunds, {
-            data: { cancelled: allPendingRefundsIds },
-        });
+        const [response, responseBody] = await apiUtils.put(endPoints.updateBatchRefunds, { data: { cancelled: allPendingRefundsIds } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });

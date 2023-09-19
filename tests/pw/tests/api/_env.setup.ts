@@ -14,22 +14,20 @@ setup.beforeAll(async ({ request }) => {
 
 setup.describe(' setup environment', () => {
     setup('setup store settings @lite', async () => {
-        const [response] = await apiUtils.put(endPoints.updateSettings, {
-            data: payloads.setupStore,
-        });
+        const [response] = await apiUtils.put(endPoints.updateSettings, { data: payloads.setupStore });
         expect(response.ok()).toBeTruthy();
     });
 
     setup('create customer @lite', async () => {
         const [, customerId] = await apiUtils.createCustomer(payloads.createCustomer1, payloads.adminAuth);
-        // process.env.CUSTOMER_ID = customerId;
-        helpers.appendEnv('CUSTOMER_ID=' + customerId);
+        process.env.CUSTOMER_ID = customerId;
+        // helpers.appendEnv('CUSTOMER_ID=' + customerId);
     });
 
     setup('create vendor @lite', async () => {
         const [, sellerId] = await apiUtils.createStore(payloads.createStore1, payloads.adminAuth);
-        // process.env.VENDOR_ID = sellerId;
-        helpers.appendEnv('VENDOR_ID=' + sellerId);
+        process.env.VENDOR_ID = sellerId;
+        // helpers.appendEnv('VENDOR_ID=' + sellerId);
     });
 
     // setup('set dokan general settings @lite', async () => {

@@ -15,17 +15,13 @@ test.beforeAll(async ({ request }) => {
 
 test.describe('follow store api test', () => {
     test('get store follow status @pro', async () => {
-        const [response, responseBody] = await apiUtils.get(endPoints.getStoreFollowStatus, {
-            params: { vendor_id: sellerId },
-        });
+        const [response, responseBody] = await apiUtils.get(endPoints.getStoreFollowStatus, { params: { vendor_id: sellerId } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
     test('follow-unfollow a store @pro', async () => {
-        const [response, responseBody] = await apiUtils.post(endPoints.followUnfollowStore, {
-            data: { vendor_id: Number(sellerId) },
-        });
+        const [response, responseBody] = await apiUtils.post(endPoints.followUnfollowStore, { data: { vendor_id: Number(sellerId) } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });

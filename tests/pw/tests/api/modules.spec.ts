@@ -19,9 +19,7 @@ test.describe('modules api test', () => {
     });
 
     test('deactivate a module @pro', async () => {
-        const [response, responseBody] = await apiUtils.put(endPoints.deactivateModule, {
-            data: { module: [randomModule] },
-        });
+        const [response, responseBody] = await apiUtils.put(endPoints.deactivateModule, { data: { module: [randomModule] } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
 
@@ -30,9 +28,7 @@ test.describe('modules api test', () => {
     });
 
     test('activate a module @pro', async () => {
-        const [response, responseBody] = await apiUtils.put(endPoints.activateModule, {
-            data: { module: [randomModule] },
-        });
+        const [response, responseBody] = await apiUtils.put(endPoints.activateModule, { data: { module: [randomModule] } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });

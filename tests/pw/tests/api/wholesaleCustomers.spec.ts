@@ -20,34 +20,26 @@ test.describe('wholesale customers api test', () => {
 
     test('create a wholesale customer @pro', async () => {
         const [, customerId] = await apiUtils.createCustomer(payloads.createCustomer());
-        const [response, responseBody] = await apiUtils.post(endPoints.createWholesaleCustomer, {
-            data: { id: String(customerId) },
-        });
+        const [response, responseBody] = await apiUtils.post(endPoints.createWholesaleCustomer, { data: { id: String(customerId) } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
     test('update a wholesale customer @pro', async () => {
-        const [response, responseBody] = await apiUtils.post(endPoints.updateCustomer(wholesaleCustomerId), {
-            data: payloads.updateWholesaleCustomer,
-        });
+        const [response, responseBody] = await apiUtils.post(endPoints.updateCustomer(wholesaleCustomerId), { data: payloads.updateWholesaleCustomer });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
     test('delete a wholesale customer @pro', async () => {
-        const [response, responseBody] = await apiUtils.post(endPoints.updateCustomer(wholesaleCustomerId), {
-            data: payloads.deleteWholesaleCustomer,
-        });
+        const [response, responseBody] = await apiUtils.post(endPoints.updateCustomer(wholesaleCustomerId), { data: payloads.deleteWholesaleCustomer });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
     test('update batch wholesale customers @pro', async () => {
         const allWholesaleCustomerIds = (await apiUtils.getAllWholesaleCustomers()).map((a: { id: unknown }) => a.id);
-        const [response, responseBody] = await apiUtils.put(endPoints.updateBatchWholesaleCustomer, {
-            data: { activate: allWholesaleCustomerIds },
-        });
+        const [response, responseBody] = await apiUtils.put(endPoints.updateBatchWholesaleCustomer, { data: { activate: allWholesaleCustomerIds } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });

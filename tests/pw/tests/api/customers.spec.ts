@@ -25,26 +25,20 @@ test.describe('customers api test', () => {
     });
 
     test('create a customer @pro', async () => {
-        const [response, responseBody] = await apiUtils.post(endPoints.createCustomer, {
-            data: payloads.createCustomer(),
-        });
+        const [response, responseBody] = await apiUtils.post(endPoints.createCustomer, { data: payloads.createCustomer() });
         expect(response.status()).toBe(201);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
     test('update a customer @pro', async () => {
-        const [response, responseBody] = await apiUtils.put(endPoints.updateCustomer(customerId), {
-            data: payloads.updateCustomer(),
-        });
+        const [response, responseBody] = await apiUtils.put(endPoints.updateCustomer(customerId), { data: payloads.updateCustomer() });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
     test('delete a customer @pro', async () => {
-        const [response, responseBody] = await apiUtils.delete(endPoints.deleteCustomer(customerId), {
-            params: payloads.paramsForceDelete,
-        });
+        const [response, responseBody] = await apiUtils.delete(endPoints.deleteCustomer(customerId), { params: payloads.paramsForceDelete });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
@@ -54,15 +48,10 @@ test.describe('customers api test', () => {
 
         const batchCustomers: object[] = [];
         for (const customerId of allCustomerIds.slice(0, 2)) {
-            batchCustomers.push({
-                ...payloads.updateBatchCustomersTemplate(),
-                id: customerId,
-            });
+            batchCustomers.push({ ...payloads.updateBatchCustomersTemplate(), id: customerId });
         }
 
-        const [response, responseBody] = await apiUtils.put(endPoints.updateBatchCustomers, {
-            data: { update: batchCustomers },
-        });
+        const [response, responseBody] = await apiUtils.put(endPoints.updateBatchCustomers, { data: { update: batchCustomers } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });

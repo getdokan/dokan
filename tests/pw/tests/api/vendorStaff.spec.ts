@@ -15,9 +15,7 @@ test.beforeAll(async ({ request }) => {
 test.describe('vendor staff api test', () => {
     test.skip(true, 'feature not merged yet');
 
-    test.use({
-        extraHTTPHeaders: { Authorization: payloads.vendorAuth.Authorization },
-    });
+    test.use({ extraHTTPHeaders: { Authorization: payloads.vendorAuth.Authorization } });
 
     test('get all vendor staffs @pro', async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllVendorStaffs);
@@ -32,9 +30,7 @@ test.describe('vendor staff api test', () => {
     });
 
     test('create a vendor staff @pro', async () => {
-        const [response, responseBody] = await apiUtils.post(endPoints.createVendorStaff, {
-            data: payloads.createStaff(),
-        });
+        const [response, responseBody] = await apiUtils.post(endPoints.createVendorStaff, { data: payloads.createStaff() });
         expect(response.status()).toBe(201);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
@@ -42,9 +38,7 @@ test.describe('vendor staff api test', () => {
 
     test('update a vendor staff @pro', async () => {
         test.skip(true, 'fatal error exists dokan issue');
-        const [response, responseBody] = await apiUtils.put(endPoints.updateVendorStaff('100'), {
-            data: payloads.updateStaff(),
-        });
+        const [response, responseBody] = await apiUtils.put(endPoints.updateVendorStaff('100'), { data: payloads.updateStaff() });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
@@ -57,9 +51,7 @@ test.describe('vendor staff api test', () => {
 
     test('update vendor staff capabilities @pro', async () => {
         test.skip(true, 'need payload');
-        const [response, responseBody] = await apiUtils.put(endPoints.updateVendorStaffCapabilities(staffId), {
-            data: payloads.updateCapabilities,
-        });
+        const [response, responseBody] = await apiUtils.put(endPoints.updateVendorStaffCapabilities(staffId), { data: payloads.updateCapabilities });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });

@@ -18,10 +18,7 @@ test.beforeAll(async ({ request }) => {
             file: responseBody.source_url,
         },
     ];
-    [, downloadableProductId] = await apiUtils.createProduct({
-        ...payloads.createDownloadableProduct(),
-        downloads,
-    });
+    [, downloadableProductId] = await apiUtils.createProduct({ ...payloads.createDownloadableProduct(), downloads });
     [, , orderId] = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder);
     [, downloadId] = await apiUtils.createOrderDownload(orderId, [downloadableProductId]);
 });
@@ -34,17 +31,13 @@ test.describe('order downloads api test', () => {
     });
 
     test('create order downloads @v2 @lite', async () => {
-        const [response, responseBody] = await apiUtils.post(endPoints.createOrderDownload(orderId), {
-            data: { ids: [downloadableProductId] },
-        });
+        const [response, responseBody] = await apiUtils.post(endPoints.createOrderDownload(orderId), { data: { ids: [downloadableProductId] } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
     test('delete order downloads @v2 @lite', async () => {
-        const [response, responseBody] = await apiUtils.delete(endPoints.deleteOrderDownload(orderId), {
-            data: { permission_id: downloadId },
-        });
+        const [response, responseBody] = await apiUtils.delete(endPoints.deleteOrderDownload(orderId), { data: { permission_id: downloadId } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });

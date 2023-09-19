@@ -80,11 +80,7 @@ test.describe('Store Support test (admin)', () => {
     });
 
     test('admin can perform store support bulk action @pro', async () => {
-        const [, supportTicketId] = await apiUtils.createSupportTicket({
-            ...payloads.createSupportTicket,
-            author: CUSTOMER_ID,
-            meta: { store_id: VENDOR_ID },
-        });
+        const [, supportTicketId] = await apiUtils.createSupportTicket({ ...payloads.createSupportTicket, author: CUSTOMER_ID, meta: { store_id: VENDOR_ID } });
         await admin.storeSupportBulkAction('close', supportTicketId);
     });
 });

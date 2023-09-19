@@ -31,18 +31,14 @@ test.describe('attribute api test', () => {
     });
 
     test('create an attribute @lite', async () => {
-        const [response, responseBody] = await apiUtils.post(endPoints.createAttribute, {
-            data: payloads.createAttribute(),
-        });
+        const [response, responseBody] = await apiUtils.post(endPoints.createAttribute, { data: payloads.createAttribute() });
         expect(response.status()).toBe(201);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
     test('update an attribute @lite', async () => {
-        const [response, responseBody] = await apiUtils.put(endPoints.updateAttribute(attributeId), {
-            data: payloads.updateAttribute(),
-        });
+        const [response, responseBody] = await apiUtils.put(endPoints.updateAttribute(attributeId), { data: payloads.updateAttribute() });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
@@ -58,15 +54,10 @@ test.describe('attribute api test', () => {
 
         const batchAttributes: object[] = [];
         for (const attributeId of allAttributeIds.slice(0, 2)) {
-            batchAttributes.push({
-                ...payloads.updateBatchAttributesTemplate(),
-                id: attributeId,
-            });
+            batchAttributes.push({ ...payloads.updateBatchAttributesTemplate(), id: attributeId });
         }
 
-        const [response, responseBody] = await apiUtils.put(endPoints.batchUpdateAttributes, {
-            data: { update: batchAttributes },
-        });
+        const [response, responseBody] = await apiUtils.put(endPoints.batchUpdateAttributes, { data: { update: batchAttributes } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
@@ -78,9 +69,7 @@ test.describe('attribute api test', () => {
             option: attributeTerm.name,
             options: [],
         };
-        const [response, responseBody] = await apiUtils.put(endPoints.setDefaultAttribute(productId), {
-            data: { attributes: [payload] },
-        });
+        const [response, responseBody] = await apiUtils.put(endPoints.setDefaultAttribute(productId), { data: { attributes: [payload] } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
@@ -107,9 +96,7 @@ test.describe('attribute api test', () => {
                 },
             ],
         };
-        const [response, responseBody] = await apiUtils.post(endPoints.updateProductAttribute(productId), {
-            data: payload,
-        });
+        const [response, responseBody] = await apiUtils.post(endPoints.updateProductAttribute(productId), { data: payload });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });

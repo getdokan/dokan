@@ -27,9 +27,7 @@ for (const version of versions) {
         });
 
         test('get orders with param date-range @lite', async () => {
-            const [response, responseBody] = await apiUtils.get(endPoints.getAllOrders.replace('v1', version), {
-                params: payloads.paramsGetOrdersWithDateRange,
-            });
+            const [response, responseBody] = await apiUtils.get(endPoints.getAllOrders.replace('v1', version), { params: payloads.paramsGetOrdersWithDateRange });
             expect(response.ok()).toBeTruthy();
             expect(responseBody).toBeTruthy();
         });
@@ -41,9 +39,7 @@ for (const version of versions) {
         });
 
         test('update an order @lite', async () => {
-            const [response, responseBody] = await apiUtils.put(endPoints.updateOrder(orderId).replace('v1', version), {
-                data: payloads.updateOrder,
-            });
+            const [response, responseBody] = await apiUtils.put(endPoints.updateOrder(orderId).replace('v1', version), { data: payloads.updateOrder });
             expect(response.ok()).toBeTruthy();
             expect(responseBody).toBeTruthy();
         });
@@ -52,9 +48,7 @@ for (const version of versions) {
 
 test('update batch orders @v2 @lite', async () => {
     const allOrderIds = (await apiUtils.getAllOrders()).map((a: { id: unknown }) => a.id);
-    const [response, responseBody] = await apiUtils.post(endPoints.updateBatchOrders, {
-        data: { order_ids: allOrderIds, status: 'wc-completed' },
-    });
+    const [response, responseBody] = await apiUtils.post(endPoints.updateBatchOrders, { data: { order_ids: allOrderIds, status: 'wc-completed' } });
     expect(response.ok()).toBeTruthy();
     expect(responseBody).toBeTruthy();
 });

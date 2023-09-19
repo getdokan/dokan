@@ -17,10 +17,7 @@ test.beforeAll(async ({ request }) => {
 });
 
 test.afterAll(async () => {
-    await dbUtils.setDokanSettings(dbData.dokan.optionName.reverseWithdraw, {
-        ...dbData.dokan.reverseWithdrawSettings,
-        enabled: 'off',
-    });
+    await dbUtils.setDokanSettings(dbData.dokan.optionName.reverseWithdraw, { ...dbData.dokan.reverseWithdrawSettings, enabled: 'off' });
 });
 
 test.describe('reverse withdrawal api test', () => {
@@ -44,12 +41,7 @@ test.describe('reverse withdrawal api test', () => {
 
     test('get all reverse withdrawal transactions @lite', async () => {
         const storeId = await apiUtils.getReverseWithdrawalStoreId();
-        const [response, responseBody] = await apiUtils.get(endPoints.getAllReverseWithdrawalTransactions, {
-            params: {
-                ...payloads.paramsReverseWithdrawalTransactions,
-                vendor_id: storeId,
-            },
-        });
+        const [response, responseBody] = await apiUtils.get(endPoints.getAllReverseWithdrawalTransactions, { params: { ...payloads.paramsReverseWithdrawalTransactions, vendor_id: storeId } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
@@ -61,10 +53,7 @@ test.describe('reverse withdrawal api test', () => {
     });
 
     test('add reverse withdrawal payment product to cart @lite', async () => {
-        const [response, responseBody] = await apiUtils.post(endPoints.getReverseWithdrawalAddProductToCart, {
-            data: payloads.amountToPay,
-            headers: payloads.vendorAuth,
-        });
+        const [response, responseBody] = await apiUtils.post(endPoints.getReverseWithdrawalAddProductToCart, { data: payloads.amountToPay, headers: payloads.vendorAuth });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });

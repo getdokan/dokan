@@ -26,17 +26,13 @@ test.describe('attribute term api test', () => {
     });
 
     test('create an attribute term @lite', async () => {
-        const [response, responseBody] = await apiUtils.post(endPoints.createAttributeTerm(attributeId), {
-            data: payloads.createAttributeTerm(),
-        });
+        const [response, responseBody] = await apiUtils.post(endPoints.createAttributeTerm(attributeId), { data: payloads.createAttributeTerm() });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
     test('update an attribute term  @lite', async () => {
-        const [response, responseBody] = await apiUtils.put(endPoints.updateAttributeTerm(attributeId, attributeTermId), {
-            data: payloads.updateAttributeTerm(),
-        });
+        const [response, responseBody] = await apiUtils.put(endPoints.updateAttributeTerm(attributeId, attributeTermId), { data: payloads.updateAttributeTerm() });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
@@ -52,15 +48,10 @@ test.describe('attribute term api test', () => {
 
         const batchAttributeTerms: object[] = [];
         for (const attributeTermId of allAttributeTermIds.slice(0, 2)) {
-            batchAttributeTerms.push({
-                ...payloads.updateBatchAttributesTemplate(),
-                id: attributeTermId,
-            });
+            batchAttributeTerms.push({ ...payloads.updateBatchAttributesTemplate(), id: attributeTermId });
         }
 
-        const [response, responseBody] = await apiUtils.put(endPoints.updateBatchAttributeTerms(attributeId), {
-            data: { update: batchAttributeTerms },
-        });
+        const [response, responseBody] = await apiUtils.put(endPoints.updateBatchAttributeTerms(attributeId), { data: { update: batchAttributeTerms } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });

@@ -25,17 +25,13 @@ test.describe('announcements api test', () => {
     });
 
     test('create a announcement @pro', async () => {
-        const [response, responseBody] = await apiUtils.post(endPoints.createAnnouncement, {
-            data: payloads.createAnnouncement(),
-        });
+        const [response, responseBody] = await apiUtils.post(endPoints.createAnnouncement, { data: payloads.createAnnouncement() });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
     test('update a announcement @pro', async () => {
-        const [response, responseBody] = await apiUtils.post(endPoints.updateAnnouncement(announcementId), {
-            data: payloads.updateAnnouncement,
-        });
+        const [response, responseBody] = await apiUtils.post(endPoints.updateAnnouncement(announcementId), { data: payloads.updateAnnouncement });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
@@ -54,9 +50,7 @@ test.describe('announcements api test', () => {
 
     test('update batch announcements @pro', async () => {
         const allAnnouncementIds = (await apiUtils.getAllAnnouncements()).map((a: { id: unknown }) => a.id);
-        const [response, responseBody] = await apiUtils.put(endPoints.updateBatchAnnouncements, {
-            data: { trash: allAnnouncementIds },
-        });
+        const [response, responseBody] = await apiUtils.put(endPoints.updateBatchAnnouncements, { data: { trash: allAnnouncementIds } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
 
