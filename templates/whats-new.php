@@ -4,6 +4,59 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.8.2',
+        'released' => '2023-09-13',
+        'changes'  => [
+            'New Feature' => [
+                [
+                    'title'       => 'Feature: Single-page product creation form.',
+                    'description' => 'Before this release, vendors had to go through a two-step process to create a product. However, with this release, a single-page product creation form has been introduced. To enable this feature, you need to navigate to the WordPress admin panel → Dokan → Settings → Selling Options → One Page Product Creation.
+It’s important to note that in the next version of Dokan, the Add New Product popup and the Add New Product form will be removed. After that, the Single-Page product form will be the default system for creating a product from the vendor dashboard.',
+                ],
+                [
+                    'title'       => 'Feature: Ask for product review',
+                    'description' => 'The Ask for Product Review feature in Dokan allows vendors to set the product status to draft while creating a product using the single-page product creation form. After the vendor is satisfied with the edit, they can either ask for a review or publish the product directly based on the admin settings and vendor capability.',
+                ],
+            ],
+            'Improvement' => [
+                [
+                    'title'       => 'Removed unnecessary product type filter from Vendor Dashboard product list page since there is only one product type available in Dokan Lite',
+                    'description' => '',
+                ],
+                [
+                    'title'       => '[VendorRegistration] Improved Compatibility with WooCommerce Password Settings',
+                    'description' => 'In the past, when vendors registered using the [dokan-vendor-registration] shortcode, the process did not align with WooCommerce\'s automatic password generation settings. However, in the latest update, we\'ve enhanced this process. The vendor registration form presented through the [dokan-vendor-registration] shortcode now seamlessly adheres to WooCommerce\'s automatic password generation settings. This enhancement ensures a more unified and user-friendly registration experience for vendors, in line with WooCommerce\'s standard practices.',
+                ],
+                [
+                    'title'       => 'Added shipping tax fee recipient field setting under admin setup wizard.',
+                    'description' => '',
+                ],
+            ],
+            'Fix' => [
+                [
+                    'title'       => 'Fixed an issue where orders can’t be filtered by vendor under Admin Dashboard → WooCommerce → Order lists page if HPOS feature is enabled',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed an issue where multiple sub-orders has been created for a single parent order.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed and issue while trying to delete all demo products also deleting non-dummy products while calling the API endpoints multiple times',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed an issue where Dokan Pro’s Product Status setting were used even though Dokan Pro plugin is deactivated.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed an issue where products were visible beyond Simple Products in the product list page under the vendor dashboard when Dokan Pro was deactivated or not installed.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.8.1',
         'released' => '2023-08-25',
         'changes'  => [
