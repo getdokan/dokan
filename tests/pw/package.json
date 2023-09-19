@@ -1,7 +1,7 @@
 {
     "name": "dokan_e2e_api_automation_playwright",
     "version": "1.0.0",
-    "description": "dokan e2e & api endpoints test  automation using playwright",
+    "description": "dokan e2e & api endpoints test automation using playwright",
     "main": "index.js",
     "scripts": {
         "nip": "npm install --omit=dev",

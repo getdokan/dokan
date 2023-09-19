@@ -69,13 +69,10 @@ setup.describe('setup site & woocommerce & user settings', () => {
         await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodFlatRate);
         // await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodFreeShipping);
         // await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodLocalPickup);
-        console.log('env_values', CUSTOMER_ID, DOKAN_PRO, HPOS);
-
         if (DOKAN_PRO) {
-            console.log('dokan pro enabled');
-            await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodDokanVendorShipping);
             await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodDokanTableRateShipping);
             await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodDokanDistanceRateShipping);
+            await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodDokanVendorShipping);
         }
     });
 

@@ -29,6 +29,11 @@
 
 <br/>
 
+-   [Contributing to Dokan-e2e-api-test](#Contributing-to-dokan-e2e-api-test)
+    -   [How to wright tests](#how-to-run-tests)
+
+<br/>
+
 ## :pushpin: Pre-requisites
 
 #### :o: Install Node
