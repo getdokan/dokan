@@ -7,7 +7,7 @@ let apiUtils: ApiUtils;
 let productId: string;
 let variationId: string;
 
-test.beforeAll(async ({ request }) => {
+test.beforeAll(({ request }) => {
     apiUtils = new ApiUtils(request);
 });
 

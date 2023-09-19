@@ -4,7 +4,7 @@ import { endPoints } from '@utils/apiEndPoints';
 
 let apiUtils: ApiUtils;
 
-test.beforeAll(async ({ request }) => {
+test.beforeAll(({ request }) => {
     apiUtils = new ApiUtils(request);
 });
 
