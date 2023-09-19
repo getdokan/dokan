@@ -2,31 +2,25 @@ import { test, Page } from '@playwright/test';
 import { HelpPage } from 'pages/helpPage';
 import { data } from 'utils/testData';
 
-
 test.describe('Dokan help test', () => {
+    let admin: HelpPage;
+    let aPage: Page;
 
+    test.beforeAll(async ({ browser }) => {
+        const adminContext = await browser.newContext(data.auth.adminAuth);
+        aPage = await adminContext.newPage();
+        admin = new HelpPage(aPage);
+    });
 
-	let admin: HelpPage;
-	let aPage: Page;
+    test.afterAll(async () => {
+        await aPage.close();
+    });
 
+    test('dokan help menu page is rendering properly @lite @explo', async () => {
+        await admin.adminHelpRenderProperly();
+    });
 
-	test.beforeAll(async ({ browser }) => {
-		const adminContext = await browser.newContext(data.auth.adminAuth);
-		aPage = await adminContext.newPage();
-		admin = new HelpPage(aPage);
-	});
-
-
-	test.afterAll(async () => {
-		await aPage.close();
-	});
-
-	test('dokan help menu page is rendering properly @lite @explo', async ( ) => {
-		await admin.adminHelpRenderProperly();
-	});
-
-	test('dokan get help dropdown is rendering properly @lite @explo', async ( ) => {
-		await admin.adminGetHelpDropdownRenderProperly();
-	});
-
+    test('dokan get help dropdown is rendering properly @lite @explo', async () => {
+        await admin.adminGetHelpDropdownRenderProperly();
+    });
 });

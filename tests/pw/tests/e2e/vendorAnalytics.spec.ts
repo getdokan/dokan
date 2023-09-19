@@ -4,32 +4,24 @@ import { VendorAnalyticsPage } from 'pages/vendorAnalyticsPage';
 import { data } from 'utils/testData';
 // import { payloads } from 'utils/payloads';
 
-
 test.describe('Vendor analytics test', () => {
+    let vendor: VendorAnalyticsPage;
+    let vPage: Page;
+    // let apiUtils: ApiUtils;
 
+    test.beforeAll(async ({ browser }) => {
+        const vendorContext = await browser.newContext(data.auth.vendorAuth);
+        vPage = await vendorContext.newPage();
+        vendor = new VendorAnalyticsPage(vPage);
 
-	let vendor: VendorAnalyticsPage;
-	let vPage: Page;
-	// let apiUtils: ApiUtils;
+        // apiUtils = new ApiUtils(request);
+    });
 
+    test.afterAll(async () => {
+        await vPage.close();
+    });
 
-	test.beforeAll(async ({ browser }) => {
-		const vendorContext = await browser.newContext(data.auth.vendorAuth);
-		vPage = await vendorContext.newPage();
-		vendor = new VendorAnalyticsPage(vPage);
-
-		// apiUtils = new ApiUtils(request);
-
-	});
-
-
-	test.afterAll(async () => {
-		await vPage.close();
-	});
-
-	test('vendor analytics menu page is rendering properly @pro @explo', async ( ) => {
-		await vendor.vendorAnalyticsRenderProperly();
-	});
-
-
+    test('vendor analytics menu page is rendering properly @pro @explo', async () => {
+        await vendor.vendorAnalyticsRenderProperly();
+    });
 });

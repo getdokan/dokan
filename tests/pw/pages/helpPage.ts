@@ -4,45 +4,39 @@ import { selector } from 'pages/selectors';
 import { data } from 'utils/testData';
 
 export class HelpPage extends AdminPage {
+    constructor(page: Page) {
+        super(page);
+    }
 
-	constructor(page: Page) {
-		super(page);
-	}
+    // help
 
+    // help render properly
+    async adminHelpRenderProperly() {
+        await this.goIfNotThere(data.subUrls.backend.dokan.help);
 
-	// help
+        // help text is visible
+        await this.toBeVisible(selector.admin.dokan.help.helpText);
 
-	// help render properly
-	async adminHelpRenderProperly(){
-		await this.goIfNotThere(data.subUrls.backend.dokan.help);
+        // basics elements are visible
+        await this.multipleElementVisible(selector.admin.dokan.help.basics);
 
-		// help text is visible
-		await this.toBeVisible(selector.admin.dokan.help.helpText);
+        // payment And Shipping elements are visible
+        await this.multipleElementVisible(selector.admin.dokan.help.paymentAndShipping);
 
-		// basics elements are visible
-		await this.multipleElementVisible(selector.admin.dokan.help.basics);
+        // vendor related questions elements are visible
+        await this.multipleElementVisible(selector.admin.dokan.help.vendorRelatedQuestions);
 
-		// payment And Shipping elements are visible
-		await this.multipleElementVisible(selector.admin.dokan.help.paymentAndShipping);
+        // miscellaneous elements are visible
+        await this.multipleElementVisible(selector.admin.dokan.help.miscellaneous);
+    }
 
-		// vendor related questions elements are visible
-		await this.multipleElementVisible(selector.admin.dokan.help.vendorRelatedQuestions);
+    // get help
+    async adminGetHelpDropdownRenderProperly() {
+        await this.goIfNotThere(data.subUrls.backend.dokan.help);
 
-		// miscellaneous elements are visible
-		await this.multipleElementVisible(selector.admin.dokan.help.miscellaneous);
+        await this.hover(selector.admin.dokan.dashboard.header.getHelpMenu);
 
-	}
-
-
-	// get help
-	async adminGetHelpDropdownRenderProperly(){
-		await this.goIfNotThere(data.subUrls.backend.dokan.help);
-
-		await this.hover(selector.admin.dokan.dashboard.header.getHelpMenu);
-
-		// get help drop down list elements are visible
-		await this.multipleElementVisible(selector.admin.dokan.dashboard.getHelp);
-
-	}
-
+        // get help drop down list elements are visible
+        await this.multipleElementVisible(selector.admin.dokan.dashboard.getHelp);
+    }
 }

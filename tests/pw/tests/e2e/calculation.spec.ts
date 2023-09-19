@@ -6,7 +6,6 @@
 // import { CustomerPage } from 'pages/customerPage';
 // import { VendorPage } from 'pages/vendorPage';
 
-
 // test.describe.skip( 'Calculation functionality test', () => {
 // 	test('refund through rma test', async ({ page }) => {
 // 		const loginPage = new LoginPage(page);

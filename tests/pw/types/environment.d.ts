@@ -35,6 +35,8 @@ declare global {
             DATABASE: string;
             DB_PORT: number;
             DB_PREFIX: string;
+            API_TEST_RESULT: string
+            E2E_TEST_RESULT: string
 
 
         }
