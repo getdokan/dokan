@@ -105,11 +105,7 @@ test.describe('Store Support test (customer)', () => {
 
         apiUtils = new ApiUtils(request);
         [, responseBody, orderId] = await apiUtils.createOrderWithStatus(PRODUCT_ID, { ...payloads.createOrder, customer_id: CUSTOMER_ID }, data.order.orderStatus.completed, payloads.vendorAuth);
-        [, supportTicketId] = await apiUtils.createSupportTicket({
-            ...payloads.createSupportTicket,
-            author: CUSTOMER_ID,
-            meta: { store_id: VENDOR_ID, order_id: orderId },
-        });
+        [, supportTicketId] = await apiUtils.createSupportTicket({ ...payloads.createSupportTicket, author: CUSTOMER_ID, meta: { store_id: VENDOR_ID, order_id: orderId } });
     });
 
     test.afterAll(async () => {
@@ -155,12 +151,7 @@ test.describe('Store Support test (customer)', () => {
     });
 
     test("customer can't send message to closed support ticket @pro", async () => {
-        const [, supportTicketId] = await apiUtils.createSupportTicket({
-            ...payloads.createSupportTicket,
-            status: 'closed',
-            author: CUSTOMER_ID,
-            meta: { store_id: VENDOR_ID, order_id: orderId },
-        });
+        const [, supportTicketId] = await apiUtils.createSupportTicket({ ...payloads.createSupportTicket, status: 'closed', author: CUSTOMER_ID, meta: { store_id: VENDOR_ID, order_id: orderId } });
         await customer.cantSendMessageToSupportTicket(supportTicketId);
     });
 
@@ -181,17 +172,8 @@ test.describe('Store Support test (vendor)', () => {
         vendor = new StoreSupportsPage(vPage);
 
         apiUtils = new ApiUtils(request);
-        [, supportTicketId] = await apiUtils.createSupportTicket({
-            ...payloads.createSupportTicket,
-            author: CUSTOMER_ID,
-            meta: { store_id: VENDOR_ID },
-        });
-        await apiUtils.createSupportTicket({
-            ...payloads.createSupportTicket,
-            status: 'closed',
-            author: CUSTOMER_ID,
-            meta: { store_id: VENDOR_ID },
-        });
+        [, supportTicketId] = await apiUtils.createSupportTicket({ ...payloads.createSupportTicket, author: CUSTOMER_ID, meta: { store_id: VENDOR_ID } });
+        await apiUtils.createSupportTicket({ ...payloads.createSupportTicket, status: 'closed', author: CUSTOMER_ID, meta: { store_id: VENDOR_ID } });
     });
 
     test.afterAll(async () => {
@@ -230,31 +212,17 @@ test.describe('Store Support test (vendor)', () => {
     });
 
     test('vendor can reopen closed support ticket @pro', async () => {
-        const [, closedSupportTicketId] = await apiUtils.createSupportTicket({
-            ...payloads.createSupportTicket,
-            status: 'closed',
-            author: CUSTOMER_ID,
-            meta: { store_id: VENDOR_ID },
-        });
+        const [, closedSupportTicketId] = await apiUtils.createSupportTicket({ ...payloads.createSupportTicket, status: 'closed', author: CUSTOMER_ID, meta: { store_id: VENDOR_ID } });
         await vendor.vendorReopenSupportTicket(closedSupportTicketId);
     });
 
     test('vendor can close support ticket with a chat reply @pro', async () => {
-        const [, supportTicketId] = await apiUtils.createSupportTicket({
-            ...payloads.createSupportTicket,
-            author: CUSTOMER_ID,
-            meta: { store_id: VENDOR_ID },
-        });
+        const [, supportTicketId] = await apiUtils.createSupportTicket({ ...payloads.createSupportTicket, author: CUSTOMER_ID, meta: { store_id: VENDOR_ID } });
         await vendor.vendorCloseSupportTicketWithReply(supportTicketId, 'closing this ticket');
     });
 
     test('vendor can reopen closed support ticket with a chat reply @pro', async () => {
-        const [, closedSupportTicketId] = await apiUtils.createSupportTicket({
-            ...payloads.createSupportTicket,
-            status: 'closed',
-            author: CUSTOMER_ID,
-            meta: { store_id: VENDOR_ID },
-        });
+        const [, closedSupportTicketId] = await apiUtils.createSupportTicket({ ...payloads.createSupportTicket, status: 'closed', author: CUSTOMER_ID, meta: { store_id: VENDOR_ID } });
         await vendor.vendorReopenSupportTicketWithReply(closedSupportTicketId, 'reopening this ticket');
     });
 });
