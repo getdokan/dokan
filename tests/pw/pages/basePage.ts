@@ -267,7 +267,7 @@ export class BasePage {
 
     // type & wait for response
     async typeViaPageAndWaitForResponse(subUrl: string, selector: string, text: string, code = 200): Promise<Response> {
-        const [response] = await Promise.all([this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code), await this.page.type(selector, text, { delay: 100 })]);
+        const [response] = await Promise.all([this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code), this.page.type(selector, text, { delay: 100 })]);
         return response;
     }
 
@@ -348,10 +348,12 @@ export class BasePage {
         }
     }
 
+    // is locator exists
     async isLocatorExists(selector: string): Promise<boolean> {
         return (await this.page.locator(selector).count()) ? true : false;
     }
 
+    // is element exists
     async isElementExists(selector: string): Promise<boolean> {
         return (await this.page.$(selector).catch(() => null)) !== null;
     }

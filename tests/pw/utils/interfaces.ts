@@ -1720,21 +1720,19 @@ export interface marketPlaceCoupon {
 export interface reqOptions {
     data?: any;
     failOnStatusCode?: boolean | undefined;
-    form?: { [key: string]: string | number | boolean } | undefined;
-    headers?: { [key: string]: string } | undefined;
+    form?: Record<string, string | number | boolean> | undefined;
+    headers?: Record<string, string> | undefined;
     ignoreHTTPSErrors?: boolean | undefined;
     maxRedirects?: number | undefined;
-    multipart?: { [key: string]: string | number | boolean | fs.ReadStream | { name: string; mimeType: string; buffer: Buffer } } | undefined;
-    params?: { [key: string]: string | number | boolean } | undefined;
+    multipart?: Record<string, string | number | boolean | fs.ReadStream | { name: string; mimeType: string; buffer: Buffer }> | undefined;
+    params?: Record<string, string | number | boolean> | undefined;
     timeout?: number | undefined;
 }
 
-export interface headers {
-    [key: string]: string;
-}
+export type headers = Record<string, string>;
 
 export interface storageState {
-    cookies: Array<{
+    cookies: {
         name: string;
         value: string;
         domain: string;
@@ -1743,14 +1741,14 @@ export interface storageState {
         httpOnly: boolean;
         secure: boolean;
         sameSite: 'Strict' | 'Lax' | 'None';
-    }>;
-    origins: Array<{
+    }[];
+    origins: {
         origin: string;
-        localStorage: Array<{
+        localStorage: {
             name: string;
             value: string;
-        }>;
-    }>;
+        }[];
+    }[];
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

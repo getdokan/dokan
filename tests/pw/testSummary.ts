@@ -5,7 +5,7 @@ const { SHA, PR_NUMBER, SYSTEM_INFO, API_TEST_RESULT, E2E_TEST_RESULT } = proces
 const readEnvInfo = fs.readFileSync(SYSTEM_INFO, 'utf8');
 const envInfo = JSON.parse(readEnvInfo);
 
-const getFormattedDuration = time => {
+const getFormattedDuration = (time: string | number) => {
     time = Number(time) * 1000;
     // const min = Math.floor( time / 1000 / 60 );
     // const sec = Math.floor( ( time / 1000 ) % 60 );

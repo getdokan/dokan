@@ -8,7 +8,9 @@
         "plugin:playwright/recommended",
         "prettier"
     ],
-    "plugins": ["@typescript-eslint"],
+    "plugins": [
+        "@typescript-eslint"
+    ],
     "parser": "@typescript-eslint/parser",
     // for ts typed check
     // "parserOptions": {
