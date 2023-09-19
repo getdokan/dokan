@@ -18,7 +18,7 @@ export default defineConfig({
     // forbidOnly     : !!process.env.CI, 	/* Fail the build on CI if you accidentally left testonly in the source code. */
     repeatEach: 1 /* The number of times to repeat each test, useful for debugging flaky tests. */,
     retries: process.env.CI ? 1 : 0 /* The maximum number of retry attempts given to failed tests.  */,
-    workers: process.env.CI ? 1 : 1 /* Opt out of parallel tests on CI. */,
+    // workers: process.env.CI ? 1 : 1 /* Opt out of parallel tests on CI. */,
     reportSlowTests: { max: 10, threshold: 20 } /* Whether to report slow test files. Pass null to disable this feature. */,
     reporter: process.env.CI
         ? [
@@ -50,6 +50,8 @@ export default defineConfig({
         {
             name: 'api_setup',
             testMatch: /.*\.setup\.ts/,
+            fullyParallel: false,
+
         },
 
         // api_tests
@@ -57,6 +59,7 @@ export default defineConfig({
             name: 'api_tests',
             testMatch: /.*\.spec\.ts/,
             dependencies: process.env.SETUP ? [] : ['api_setup'] /* whether not to run setup tests before running actual tests */,
+            fullyParallel: true,
         },
     ],
 });
