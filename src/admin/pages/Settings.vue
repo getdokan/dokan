@@ -770,12 +770,20 @@
                     text-align: right;
 
                     a.action-link {
-                        color: #000;
+                        color: #033AA3D9;
+                        border: 1px solid #F3F4F6;
+                        padding: 10px 15px 8px;
+                        font-size: 12px;
+                        background: #FFF;
+                        box-sizing: border-box;
+                        box-shadow: 2px 2px 3px 0px rgba(0, 0, 0, 0.1);
+                        font-family: Roboto, sans-serif;
+                        line-height: 15px;
+                        border-radius: 6.56px;
                         text-decoration: none;
 
                         &:hover, &:active, &:focus {
-                            text-decoration: underline;
-                            outline: none;
+                            background-color: #F6F7F7;
                         }
                     }
                 }
