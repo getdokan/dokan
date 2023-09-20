@@ -269,16 +269,19 @@ class Importer extends \WC_Product_Importer {
      */
     public function clear_all_dummy_data() {
         $args = [
-            'post_type'   => 'product',
-            'numberposts' => -1,
-            'post_status' => 'any',
+            'post_type'      => 'product',
+            'posts_per_page' => - 1,
+            'post_status'    => 'any',
+            'fields'         => 'ids',
+            'meta_key'       => 'dokan_dummy_data',
+            'meta_value'     => '1'
         ];
 
-        $query = new WP_query( $args );
+        $query = new WP_Query( $args );
         $all_products = $query->posts;
 
-        foreach ( $all_products as $product ) {
-            wp_delete_post( $product->ID, true );
+        foreach ( $all_products as $product_id ) {
+            wp_delete_post( $product_id, true );
         }
 
         $all_vendors = dokan()->vendor->get_vendors(
@@ -321,23 +324,10 @@ class Importer extends \WC_Product_Importer {
             return;
         }
 
-        $args = [
-            'post_type'   => 'shop_order',
-            'post_status' => 'any',
-            'fields'      => 'all',
-            'meta_query'  => [  // phpcs:ignore
-                [
-                    'key'     => '_dokan_vendor_id',
-                    'value'   => $vendor_id,
-                    'compare' => '=',
-                ],
-            ],
-        ];
-        $query = new WP_query( $args );
-
+        $orders = dokan()->order->all( [ 'seller_id' => $vendor_id, 'return' => 'objects' ] );
         // Deleting vendors orders.
-        foreach ( $query->posts as $order ) {
-            wc_get_order( $order )->delete( true );
+        foreach ( $orders as $order ) {
+            $order->delete( true );
         }
 
         global $wpdb;

@@ -2287,8 +2287,8 @@ article.dokan-notice-single-notice-area span.dokan-single-announcement-date {
   font-size: 17px;
   color: #fff;
   position: absolute;
-  top: 10px;
-  right: 15px;
+  top: 0;
+  right: 0;
   width: 33px;
   z-index: 1;
   cursor: pointer;
@@ -2318,8 +2318,7 @@ article.dokan-notice-single-notice-area span.dokan-single-announcement-date {
 }
 @media only screen and (max-width: 450px) {
   .dokan-dashboard .dokan-dash-sidebar #dokan-navigation {
-    background: #000;
-    height: 58px;
+    height: 33px;
     position: relative;
   }
   .dokan-dashboard .dokan-dash-sidebar #dokan-navigation #mobile-menu-icon {
@@ -2340,6 +2339,10 @@ body {
 }
 div.media-sidebar a.edit-attachment {
   display: none;
+}
+.daterangepicker .calendar-table th,
+.daterangepicker .calendar-table td {
+  padding: 5px 10px;
 }
 .dokan-dashboard .dokan-dashboard-wrap {
   display: flex;
@@ -2729,6 +2732,11 @@ div.media-sidebar a.edit-attachment {
   text-align: left;
   vertical-align: middle;
   background: none;
+}
+.dokan-dashboard div.chart-container > div.chart-legend-container > table td {
+  padding: 0;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 .dokan-column-name-with-avatar {
   position: relative;

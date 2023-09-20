@@ -74,11 +74,7 @@ function dokan_replace_func( $old_method, $new_method, $object = null ) {
  * @return String date
  */
 function dokan_get_date_created( $order ) {
-    if ( version_compare( WC_VERSION, '2.7', '>' ) ) {
-        return wc_format_datetime( $order->get_date_created(), get_option( 'date_format' ) . ', ' . get_option( 'time_format' ) );
-    }
-
-    return $order->order_date;
+    return wc_format_datetime( $order->get_date_created(), wc_date_format() . ', ' . wc_time_format() );
 }
 
 /**

@@ -952,6 +952,8 @@ function dokan_store_contact_widget() {
  * @return string[]
  */
 function dokan_get_seller_registration_form_data() {
+    $set_password = get_option( 'woocommerce_registration_generate_password', 'no' ) !== 'yes';
+
     // prepare form data
     $data = [
         'fname'    => '',
@@ -959,10 +961,13 @@ function dokan_get_seller_registration_form_data() {
         'username' => '',
         'email'    => '',
         'phone'    => '',
-        'password' => '',
         'shopname' => '',
         'shopurl'  => '',
     ];
+
+    if ( $set_password ) {
+        $data['password'] = '';
+    }
     // check if user submitted data
     if ( isset( $_POST['woocommerce-register-nonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_POST['woocommerce-register-nonce'] ) ), 'woocommerce-register' ) ) {
         $data = [
@@ -975,6 +980,9 @@ function dokan_get_seller_registration_form_data() {
             'shopname' => isset( $_POST['shopname'] ) ? sanitize_text_field( wp_unslash( $_POST['shopname'] ) ) : '',
             'shopurl'  => isset( $_POST['shopurl'] ) ? sanitize_title( wp_unslash( $_POST['shopurl'] ) ) : '',
         ];
+        if ( $set_password ) {
+            $data['password'] = isset( $_POST['password'] ) ? wp_unslash( $_POST['password'] ) : ''; // phpcs:ignore;
+        }
     }
 
     return $data;
