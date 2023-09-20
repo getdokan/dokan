@@ -15,9 +15,10 @@
                             <label :for="sectionId + '[' + fieldData.name + ']'">
                                 <switches
                                     @input="onToggleSwitch"
-                                    :enabled="checked === 'on' ? true : false"
+                                    :enabled="'on' === checked ? true : false"
                                     value="isChecked"
                                 ></switches>
+                                <span class="toggle-status">{{ 'on' === checked ? __( 'Enabled', 'dokan' ) : __( 'Disabled', 'dokan' ) }}</span>
                             </label>
                         </div>
                     </fieldset>
@@ -939,6 +940,12 @@
 
         .sub-section-input {
             align-self: center;
+
+            span.toggle-status {
+                display: inline-block;
+                min-width: 60px;
+                text-align: right;
+            }
         }
     }
 
