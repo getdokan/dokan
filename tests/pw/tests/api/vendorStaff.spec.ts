@@ -9,7 +9,6 @@ let staffId: string;
 test.beforeAll(async ({ request }) => {
     apiUtils = new ApiUtils(request);
     [, staffId] = await apiUtils.createVendorStaff(payloads.createStaff(), payloads.vendorAuth);
-    // [, staffId] = await apiUtils.createVendorStaff(payloads.staff, payloads.vendorAuth);
 });
 
 test.describe('vendor staff api test', () => {
@@ -37,8 +36,7 @@ test.describe('vendor staff api test', () => {
     });
 
     test('update a vendor staff @pro', async () => {
-        test.skip(true, 'fatal error exists dokan issue');
-        const [response, responseBody] = await apiUtils.put(endPoints.updateVendorStaff('100'), { data: payloads.updateStaff() });
+        const [response, responseBody] = await apiUtils.put(endPoints.updateVendorStaff(staffId), { data: payloads.updateStaff() });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
@@ -49,17 +47,20 @@ test.describe('vendor staff api test', () => {
         expect(responseBody).toBeTruthy();
     });
 
+    test('get all vendor staff capabilities @pro', async () => {
+        const [response, responseBody] = await apiUtils.get(endPoints.getAllVendorStaffCapabilities);
+        expect(response.ok()).toBeTruthy();
+        expect(responseBody).toBeTruthy();
+    });
+
     test('update vendor staff capabilities @pro', async () => {
-        test.skip(true, 'need payload');
         const [response, responseBody] = await apiUtils.put(endPoints.updateVendorStaffCapabilities(staffId), { data: payloads.updateCapabilities });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
-    test.skip('delete a vendor staff @pro', async () => {
-        const [response, responseBody] = await apiUtils.delete(endPoints.deleteVendorStaff(staffId));
-        // const [response, responseBody] = await apiUtils.delete(endPoints.deleteVendorStaff(staffId), { params: payloads.paramsForceDelete });
+    test('delete a vendor staff @pro', async () => {
+        const [response] = await apiUtils.delete(endPoints.deleteVendorStaff(staffId), { params: payloads.paramsForceDelete });
         expect(response.ok()).toBeTruthy();
-        expect(responseBody).toBeTruthy();
     });
 });

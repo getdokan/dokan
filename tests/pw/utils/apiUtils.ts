@@ -96,7 +96,7 @@ export class ApiUtils {
     async getResponseBody(response: APIResponse, assert = true): Promise<responseBody> {
         try {
             assert && expect(response.ok()).toBeTruthy();
-            const responseBody = await response.json();
+            const responseBody = response.status() !== 204 && await response.json();  // 204 is for No Content
 
             // console log responseBody if response code is not between 200-299
             String(response.status())[0] != '2' && console.log('ResponseBody: ', responseBody);
@@ -1103,15 +1103,14 @@ export class ApiUtils {
         let staffId: string;
         if (responseBody.code) {
             expect(response.status()).toBe(500);
-
-            // update staff if already exists
+            // get staff id if already exists
             staffId = await this.getStaffId(payload.username, auth);
 
             // update staff if already exists
-            await this.updateStore(staffId, payload, auth);
+            await this.updateStaff(staffId, payload, auth);
         } else {
             expect(response.ok()).toBeTruthy();
-            staffId = String(responseBody?.id);
+            staffId = String(responseBody?.ID);
         }
         return [responseBody, staffId];
     }
