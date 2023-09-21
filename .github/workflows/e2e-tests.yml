@@ -262,51 +262,51 @@ jobs:
                       tests/pw/playwright-report
                   if-no-files-found: ignore
                   retention-days: 30
+#
+# publishTestResults:
+#   name: Publish HTML report to GH Pages
+#   if: always() # We want this to always run, even if test fail prior to this step running
+#   uses: peaceiris/actions-gh-pages@v3
+#   with:
+#     github_token: ${{ secrets.GITHUB_TOKEN }}
+#     publish_dir: tests/pw/playwright-report # This is where index.html will be output
+#     keep_files: true # Set this to true to make sure we don't wipe out the other content in GitHub Pages
+#     user_name: "github-actions[bot]" # This will be the username that gets stamped in the repo commit
+#     user_email: "github-actions[bot]@users.noreply.github.com" # This will be the user email that gets stamped in the repo c
+# - name: Test results
+#   if: always()
+#   run: |
+#     echo "url is https://$GITHUB_REPOSITORY_OWNER.github.io/${GITHUB_REPOSITORY#*/}"
 
-            # - name: Publish HTML report to GH Pages
-            #   if: always() # We want this to always run, even if test fail prior to this step running
-            #   uses: peaceiris/actions-gh-pages@v3
-            #   with:
-            #     github_token: ${{ secrets.GITHUB_TOKEN }}
-            #     publish_dir: tests/pw/playwright-report # This is where index.html will be output
-            #     keep_files: true # Set this to true to make sure we don't wipe out the other content in GitHub Pages
-            #     user_name: "github-actions[bot]" # This will be the username that gets stamped in the repo commit
-            #     user_email: "github-actions[bot]@users.noreply.github.com" # This will be the user email that gets stamped in the repo commit
+# publishTestResults:
+#   name: Publish Test Result
+#   needs: tests
+#   runs-on: ubuntu-latest
+#   if: always()
+#   steps:
+#     - name: Download artifacts
+#       uses: actions/download-artifact@v2
+#       id: download
 
-            # - name: Test results
-            #   if: always()
-            #   run: |
-            #     echo "url is https://$GITHUB_REPOSITORY_OWNER.github.io/${GITHUB_REPOSITORY#*/}"
+#     - name: Publish HTML report to GH Pages
+#       if: always() # We want this to always run, even if test fail prior to this step running
+#       uses: peaceiris/actions-gh-pages@v3
+#       with:
+#         github_token: ${{ secrets.GITHUB_TOKEN }}
+#         publish_dir: ${{steps.download.outputs.download-path}} # This is where index.html will be output
+#         # keep_files: true # Set this to true to make sure we don't wipe out the other content in GitHub Pages
+#         user_name: "github-actions[bot]" # This will be the username that gets stamped in the repo commit
+#         user_email: "github-actions[bot]@users.noreply.github.com" # This will be the user email that gets stamped in the repo commit
 
-    # publishTestResults:
-    #   name: Publish Test Result
-    #   needs: tests
-    #   runs-on: ubuntu-latest
-    #   if: always()
-    #   steps:
-    #     - name: Download artifacts
-    #       uses: actions/download-artifact@v2
-    #       id: download
+#       # redundant / in echo url remove before run
+#     - name: Test results
+#       run: |
+#         echo "url is https://$GITHUB_REPOSITORY_OWNER.github.io/${GITHUB_REPOSITORY#/*/}"
+# iff: github.event_name == 'pull_request'
 
-    #     - name: Publish HTML report to GH Pages
-    #       if: always() # We want this to always run, even if test fail prior to this step running
-    #       uses: peaceiris/actions-gh-pages@v3
-    #       with:
-    #         github_token: ${{ secrets.GITHUB_TOKEN }}
-    #         publish_dir: ${{steps.download.outputs.download-path}} # This is where index.html will be output
-    #         # keep_files: true # Set this to true to make sure we don't wipe out the other content in GitHub Pages
-    #         user_name: "github-actions[bot]" # This will be the username that gets stamped in the repo commit
-    #         user_email: "github-actions[bot]@users.noreply.github.com" # This will be the user email that gets stamped in the repo commit
-
-    #       # redundant / in echo url remove before run
-    #     - name: Test results
-    #       run: |
-    #         echo "url is https://$GITHUB_REPOSITORY_OWNER.github.io/${GITHUB_REPOSITORY#/*/}"
-    # iff: github.event_name == 'pull_request'
-
-    # - name: Log github context & env variables
-    #   env:
-    #     GITHUB_CONTEXT: ${{ toJson(github) }}
-    #   run: |
-    #     echo "$GITHUB_CONTEXT"
-    #     env
+# - name: Log github context & env variables
+#   env:
+#     GITHUB_CONTEXT: ${{ toJson(github) }}
+#   run: |
+#     echo "$GITHUB_CONTEXT"
+#     env
