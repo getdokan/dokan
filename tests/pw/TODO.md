@@ -4,11 +4,11 @@
 
 ### Todo: E2e Suite
 
+- [ ] global vs testEnv vs fullyParallel  
 - [ ] List all core tests and setup tests : plugins activated, wp settings, woocommerce settings, dokan modules activated , dokan settings for both e2e and api  
 - [ ] GRAB CONSOLE ERROR, And PHP ERROR  
 - [ ] Make tests more independent where possible specially admin parts : use before-all , after-all, delete data in before-all or after-all to repeat each tests: test should be passed for repeat-each:5, can be test parallely  
 - [ ] Slack integration  
-- [ ] Working-directory: ./path/to/tests  
 - [ ] Update auth if expired instead of every-time  
 - [ ] Report: separate two junit report showing on simple git-action summary  
 - [ ] Global setup & teardown can be converted to project setup: no need  
@@ -75,6 +75,7 @@
 - [ ] update readme contribute to e2e api  
 - [ ] use chatgpt to rephrase readme  
 - [ ] make readme follow readme guideline  
+- P  
 
 ### Todo: Api Suite
 
@@ -87,6 +88,7 @@
 - [ ] hardcoding admin auth will hinder negative testing : test with invalid user  
 - [ ] reverse withdraw and product advertisement setup needed on api suite  
 - [ ] run loop & increment page to grab all plugins/products/users/... see woocommerce code base  
+- [ ] Payload generator**  
 
 ### In Progress
 
