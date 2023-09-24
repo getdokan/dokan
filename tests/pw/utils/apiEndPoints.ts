@@ -7,6 +7,7 @@ export const endPoints = {
     getAllDokanEndpointsV1: `${SERVER_URL}/dokan/v1`,
     getAllDokanEndpointsV2: `${SERVER_URL}/dokan/v2`,
     getAllDokanEndpointsAdmin: `${SERVER_URL}/dokan/v1/admin`,
+    getAllDokanEndpointsRfq: `${SERVER_URL}/dokan/v1/request-for-quote`,
 
     // stores
     getAllStores: `${SERVER_URL}/dokan/v1/stores`,
@@ -268,7 +269,7 @@ export const endPoints = {
     createVendorStaff: ` ${SERVER_URL}/dokan/v1/vendor-staff`,
     updateVendorStaff: (staffId: string) => ` ${SERVER_URL}/dokan/v1/vendor-staff/${staffId}`,
     deleteVendorStaff: (staffId: string) => ` ${SERVER_URL}/dokan/v1/vendor-staff/${staffId}`,
-    getAllVendorStaffCapabilities:` ${SERVER_URL}/dokan/v1/vendor-staff/capabilities`,
+    getAllVendorStaffCapabilities: ` ${SERVER_URL}/dokan/v1/vendor-staff/capabilities`,
     getVendorStaffCapabilities: (staffId: string) => ` ${SERVER_URL}/dokan/v1/vendor-staff/${staffId}/capabilities`,
     updateVendorStaffCapabilities: (staffId: string) => ` ${SERVER_URL}/dokan/v1/vendor-staff/${staffId}/capabilities`,
 

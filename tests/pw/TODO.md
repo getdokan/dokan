@@ -35,6 +35,7 @@
 - [ ] add JSDOC  
 - [ ] cmd + save & npm run prettier:fix formatting differently  
 - [ ] todo.md not ignored by prettier  
+- [ ] undo prettier rules, test more eslint plugin
 
 ### Todo: Test Data
 

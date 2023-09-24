@@ -49,6 +49,13 @@ export const helpers = {
         return res[1] as string;
     },
 
+    // escape regex
+    escapeRegex: (str: string): string => {
+        // const escapePatten = /[.*+\-?^$|(){}[\]\\/]/g; // Special Regex Characters: ., *, +,-, ?, ^, $, |, (, ), {, }, [, ], \, ],
+        const escapePatten = /[.*+\-?^$|(){}[\]\\]/g; // Special Regex Characters: ., *, +,-, ?, ^, $, |, (, ), {, }, [, ], \, ],
+        return str.replace(escapePatten, '\\$&'); // $& means the whole matched string
+    },
+
     // convert string to regex
     stringToRegex: (str: string): RegExp => new RegExp(str), // todo: need to update, multiple cases unhandled
 

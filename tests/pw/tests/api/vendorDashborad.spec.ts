@@ -1,14 +1,22 @@
+//COVERAGE_TAG: GET /dokan/v1/vendor-dashboard
+//COVERAGE_TAG: GET /dokan/v1/vendor-dashboard/profile
+//COVERAGE_TAG: GET /dokan/v1/vendor-dashboard/sales
+//COVERAGE_TAG: GET /dokan/v1/vendor-dashboard/products
+//COVERAGE_TAG: GET /dokan/v1/vendor-dashboard/orders
+//COVERAGE_TAG: GET /dokan/v1/vendor-dashboard/preferences
+//COVERAGE_TAG: GET /dokan/v1/vendor-dashboard/profile-progressbar
+
 import { test, expect } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 
-let apiUtils: ApiUtils;
-
-test.beforeAll(({ request }) => {
-    apiUtils = new ApiUtils(request);
-});
-
 test.describe('vendor dashboard api test', () => {
+    let apiUtils: ApiUtils;
+
+    test.beforeAll(({ request }) => {
+        apiUtils = new ApiUtils(request);
+    });
+
     test('get vendor dashboard statistics @lite', async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getVendorDashboardStatistics);
         expect(response.ok()).toBeTruthy();

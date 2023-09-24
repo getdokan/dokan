@@ -6,13 +6,12 @@ import { dbUtils } from '@utils/dbUtils';
 import { dbData } from '@utils/dbData';
 import { helpers } from '@utils/helpers';
 
-let apiUtils: ApiUtils;
-
-setup.beforeAll(async ({ request }) => {
-    apiUtils = new ApiUtils(request);
-});
-
 setup.describe(' setup environment', () => {
+    let apiUtils: ApiUtils;
+
+    setup.beforeAll(async ({ request }) => {
+        apiUtils = new ApiUtils(request);
+    });
     setup('setup store settings @lite', async () => {
         const [response] = await apiUtils.put(endPoints.updateSettings, { data: payloads.setupStore });
         expect(response.ok()).toBeTruthy();

@@ -1,18 +1,25 @@
+//COVERAGE_TAG: GET /dokan/v1/products/attributes/(?P<attribute_id>[\d]+)/terms
+//COVERAGE_TAG: GET /dokan/v1/products/attributes/(?P<attribute_id>[\d]+)/terms/(?P<id>[\d]+)
+//COVERAGE_TAG: POST /dokan/v1/products/attributes/(?P<attribute_id>[\d]+)/terms
+//COVERAGE_TAG: PUT /dokan/v1/products/attributes/(?P<attribute_id>[\d]+)/terms/(?P<id>[\d]+)
+//COVERAGE_TAG: DELETE /dokan/v1/products/attributes/(?P<attribute_id>[\d]+)/terms/(?P<id>[\d]+)
+//COVERAGE_TAG: PUT /dokan/v1/products/attributes/(?P<attribute_id>[\d]+)/terms/batch
+
 import { test, expect } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
 
-let apiUtils: ApiUtils;
-let attributeId: string;
-let attributeTermId: string;
-
-test.beforeAll(async ({ request }) => {
-    apiUtils = new ApiUtils(request);
-    [, attributeId, attributeTermId] = await apiUtils.createAttributeTerm(payloads.createAttribute(), payloads.createAttributeTerm());
-});
-
 test.describe('attribute term api test', () => {
+    let apiUtils: ApiUtils;
+    let attributeId: string;
+    let attributeTermId: string;
+
+    test.beforeAll(async ({ request }) => {
+        apiUtils = new ApiUtils(request);
+        [, attributeId, attributeTermId] = await apiUtils.createAttributeTerm(payloads.createAttribute(), payloads.createAttributeTerm());
+    });
+
     test('get all attribute terms @lite', async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllAttributeTerms(attributeId));
         expect(response.ok()).toBeTruthy();

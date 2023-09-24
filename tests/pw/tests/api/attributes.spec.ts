@@ -1,23 +1,32 @@
+//COVERAGE_TAG: GET /dokan/v1/products/attributes
+//COVERAGE_TAG: GET /dokan/v1/products/attributes/(?P<id>[\d]+)
+//COVERAGE_TAG: POST /dokan/v1/products/attributes
+//COVERAGE_TAG: PUT /dokan/v1/products/attributes/(?P<id>[\d]+)
+//COVERAGE_TAG: DELETE /dokan/v1/products/attributes/(?P<id>[\d]+)
+//COVERAGE_TAG: PUT /dokan/v1/products/attributes/batch
+//COVERAGE_TAG: PUT /dokan/v1/products/attributes/set-default/(?P<id>[\d]+)
+//COVERAGE_TAG: POST /dokan/v1/products/attributes/edit-product/(?P<id>[\d]+)
+
 import { test, expect } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
 
-let apiUtils: ApiUtils;
-let productId: string;
-let attributeId: string;
-let attribute: any;
-let attributeTerm: any;
-let attributeTermId: string;
-
-test.beforeAll(async ({ request }) => {
-    apiUtils = new ApiUtils(request);
-    [, productId] = await apiUtils.createProduct(payloads.createProduct());
-    [attributeTerm, attributeId, attributeTermId] = await apiUtils.createAttributeTerm(payloads.createAttribute(), payloads.createAttributeTerm());
-    attribute = await apiUtils.getSingleAttribute(attributeId);
-});
-
 test.describe('attribute api test', () => {
+    let apiUtils: ApiUtils;
+    let productId: string;
+    let attributeId: string;
+    let attribute: any;
+    let attributeTerm: any;
+    let attributeTermId: string;
+
+    test.beforeAll(async ({ request }) => {
+        apiUtils = new ApiUtils(request);
+        [, productId] = await apiUtils.createProduct(payloads.createProduct());
+        [attributeTerm, attributeId, attributeTermId] = await apiUtils.createAttributeTerm(payloads.createAttribute(), payloads.createAttributeTerm());
+        attribute = await apiUtils.getSingleAttribute(attributeId);
+    });
+
     test('get all attributes @lite', async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllAttributes);
         expect(response.ok()).toBeTruthy();

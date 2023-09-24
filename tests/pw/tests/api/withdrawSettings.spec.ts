@@ -1,15 +1,20 @@
+//COVERAGE_TAG: GET /dokan/v2/withdraw/settings
+//COVERAGE_TAG: GET /dokan/v2/withdraw/summary
+//COVERAGE_TAG: GET /dokan/v2/withdraw/disbursement
+//COVERAGE_TAG: POST /dokan/v2/withdraw/disbursement
+
 import { test, expect } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
 
-let apiUtils: ApiUtils;
-
-test.beforeAll(({ request }) => {
-    apiUtils = new ApiUtils(request);
-});
-
 test.describe('withdraw api test', () => {
+    let apiUtils: ApiUtils;
+
+    test.beforeAll(({ request }) => {
+        apiUtils = new ApiUtils(request);
+    });
+
     test('get withdraw settings @v2 @lite', async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getWithdrawSettings);
         expect(response.ok()).toBeTruthy();

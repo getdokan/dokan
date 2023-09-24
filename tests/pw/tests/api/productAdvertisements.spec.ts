@@ -1,17 +1,24 @@
+//COVERAGE_TAG: GET /dokan/v1/product_adv/stores
+//COVERAGE_TAG: GET /dokan/v1/product_adv
+//COVERAGE_TAG: POST /dokan/v1/product_adv/create
+//COVERAGE_TAG: PUT /dokan/v1/product_adv/(?P<id>[\d]+)/expire
+//COVERAGE_TAG: DELETE /dokan/v1/product_adv/(?P<id>[\d]+)
+//COVERAGE_TAG: PUT /dokan/v1/product_adv/batch
+
 import { test, expect } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
 
-let apiUtils: ApiUtils;
-let productAdvertisementId: string;
-
-test.beforeAll(async ({ request }) => {
-    apiUtils = new ApiUtils(request);
-    [, productAdvertisementId] = await apiUtils.createProductAdvertisement(payloads.createProduct());
-});
-
 test.describe('product advertisement api test', () => {
+    let apiUtils: ApiUtils;
+    let productAdvertisementId: string;
+
+    test.beforeAll(async ({ request }) => {
+        apiUtils = new ApiUtils(request);
+        [, productAdvertisementId] = await apiUtils.createProductAdvertisement(payloads.createProduct());
+    });
+
     test('get all advertised product stores @pro', async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllProductAdvertisementStores);
         expect(response.ok()).toBeTruthy();

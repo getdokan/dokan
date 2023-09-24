@@ -1,17 +1,20 @@
+//COVERAGE_TAG: GET /dokan/v1/blocks/products/(?P<id>[\d]+)
+//COVERAGE_TAG: GET /dokan/v1/blocks/product-variation/(?P<id>[\d]+)
+
 import { test, expect } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
 
-let apiUtils: ApiUtils;
-let productId: string;
-let variationId: string;
-
-test.beforeAll(({ request }) => {
-    apiUtils = new ApiUtils(request);
-});
-
 test.describe('product block api test', () => {
+    let apiUtils: ApiUtils;
+    let productId: string;
+    let variationId: string;
+
+    test.beforeAll(({ request }) => {
+        apiUtils = new ApiUtils(request);
+    });
+
     test('get product block details @lite', async () => {
         [, productId] = await apiUtils.createProduct(payloads.createDownloadableProduct());
         const [response, responseBody] = await apiUtils.get(endPoints.getProductBlockDetails(productId));

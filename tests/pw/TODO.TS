@@ -832,232 +832,238 @@ test.use({ storageState: data.auth.adminAuthFile });
 
 
 
-//todo: eslint
+Endpoint with no coverage: POST /dokan/v1/admin/modules/activate
+Endpoint with no coverage: PATCH /dokan/v1/admin/modules/activate
+Endpoint with no coverage: POST /dokan/v1/admin/modules/deactivate
+Endpoint with no coverage: PATCH /dokan/v1/admin/modules/deactivate
+Endpoint with no coverage: POST /dokan/v1/admin/support-ticket/batch
+Endpoint with no coverage: PATCH /dokan/v1/admin/support-ticket/batch
+Endpoint with no coverage: GET /dokan/v1/admin/support-ticket/(?P<id>[\d]+)
+Endpoint with no coverage: POST /dokan/v1/admin/support-ticket/(?P<id>[\d]+)
+Endpoint with no coverage: POST /dokan/v1/admin/support-ticket/(?P<id>[\d]+)/status
+Endpoint with no coverage: DELETE /dokan/v1/admin/support-ticket/(?P<id>[\d]+)/comment
+Endpoint with no coverage: POST /dokan/v1/admin/support-ticket/(?P<id>[\d]+)/email-notification
+Endpoint with no coverage: GET /dokan/v1/stores/(?P<id>[\d]+)
+Endpoint with no coverage: DELETE /dokan/v1/stores/(?P<id>[\d]+)
+Endpoint with no coverage: POST /dokan/v1/stores/(?P<id>[\d]+)
+Endpoint with no coverage: PUT /dokan/v1/stores/(?P<id>[\d]+)
+Endpoint with no coverage: PATCH /dokan/v1/stores/(?P<id>[\d]+)
+Endpoint with no coverage: GET /dokan/v1/stores/(?P<id>[\d]+)/products
+Endpoint with no coverage: GET /dokan/v1/stores/(?P<id>[\d]+)/reviews
+Endpoint with no coverage: POST /dokan/v1/stores/(?P<id>[\d]+)/reviews
+Endpoint with no coverage: POST /dokan/v1/stores/(?P<id>[\d]+)/contact
+Endpoint with no coverage: POST /dokan/v1/stores/(?P<id>[\d]+)/status
+Endpoint with no coverage: PUT /dokan/v1/stores/(?P<id>[\d]+)/status
+Endpoint with no coverage: PATCH /dokan/v1/stores/(?P<id>[\d]+)/status
+Endpoint with no coverage: POST /dokan/v1/stores/(?P<id>[\d]+)/status
+Endpoint with no coverage: PUT /dokan/v1/stores/(?P<id>[\d]+)/status
+Endpoint with no coverage: PATCH /dokan/v1/stores/(?P<id>[\d]+)/status
+Endpoint with no coverage: POST /dokan/v1/stores/batch
+Endpoint with no coverage: PATCH /dokan/v1/stores/batch
+Endpoint with no coverage: POST /dokan/v1/stores/batch
+Endpoint with no coverage: PATCH /dokan/v1/stores/batch
+Endpoint with no coverage: GET /dokan/v1/stores/(?P<id>[\d]+)/categories
+Endpoint with no coverage: GET /dokan/v1/products/(?P<id>[\d]+)
+Endpoint with no coverage: POST /dokan/v1/products/(?P<id>[\d]+)
+Endpoint with no coverage: PUT /dokan/v1/products/(?P<id>[\d]+)
+Endpoint with no coverage: PATCH /dokan/v1/products/(?P<id>[\d]+)
+Endpoint with no coverage: DELETE /dokan/v1/products/(?P<id>[\d]+)
+Endpoint with no coverage: GET /dokan/v1/products/(?P<id>[\d]+)/related
+Endpoint with no coverage: GET /dokan/v1/products/attributes/(?P<id>[\d]+)
+Endpoint with no coverage: POST /dokan/v1/products/attributes/(?P<id>[\d]+)
+Endpoint with no coverage: PUT /dokan/v1/products/attributes/(?P<id>[\d]+)
+Endpoint with no coverage: PATCH /dokan/v1/products/attributes/(?P<id>[\d]+)
+Endpoint with no coverage: DELETE /dokan/v1/products/attributes/(?P<id>[\d]+)
+Endpoint with no coverage: POST /dokan/v1/products/attributes/batch
+Endpoint with no coverage: PATCH /dokan/v1/products/attributes/batch
+Endpoint with no coverage: POST /dokan/v1/products/attributes/edit-product/(?P<id>[\d]+)
+Endpoint with no coverage: PUT /dokan/v1/products/attributes/edit-product/(?P<id>[\d]+)
+Endpoint with no coverage: PATCH /dokan/v1/products/attributes/edit-product/(?P<id>[\d]+)
+Endpoint with no coverage: POST /dokan/v1/products/attributes/set-default/(?P<id>[\d]+)
+Endpoint with no coverage: PUT /dokan/v1/products/attributes/set-default/(?P<id>[\d]+)
+Endpoint with no coverage: PATCH /dokan/v1/products/attributes/set-default/(?P<id>[\d]+)
+Endpoint with no coverage: GET /dokan/v1/products/attributes/(?P<attribute_id>[\d]+)/terms
+Endpoint with no coverage: POST /dokan/v1/products/attributes/(?P<attribute_id>[\d]+)/terms
+Endpoint with no coverage: GET /dokan/v1/products/attributes/(?P<attribute_id>[\d]+)/terms/(?P<id>[\d]+)
+Endpoint with no coverage: POST /dokan/v1/products/attributes/(?P<attribute_id>[\d]+)/terms/(?P<id>[\d]+)
+Endpoint with no coverage: PUT /dokan/v1/products/attributes/(?P<attribute_id>[\d]+)/terms/(?P<id>[\d]+)
+Endpoint with no coverage: PATCH /dokan/v1/products/attributes/(?P<attribute_id>[\d]+)/terms/(?P<id>[\d]+)
+Endpoint with no coverage: DELETE /dokan/v1/products/attributes/(?P<attribute_id>[\d]+)/terms/(?P<id>[\d]+)
+Endpoint with no coverage: POST /dokan/v1/products/attributes/(?P<attribute_id>[\d]+)/terms/batch
+Endpoint with no coverage: PUT /dokan/v1/products/attributes/(?P<attribute_id>[\d]+)/terms/batch
+Endpoint with no coverage: PATCH /dokan/v1/products/attributes/(?P<attribute_id>[\d]+)/terms/batch
+Endpoint with no coverage: GET /dokan/v1/orders/(?P<id>[\d]+)
+Endpoint with no coverage: POST /dokan/v1/orders/(?P<id>[\d]+)
+Endpoint with no coverage: PUT /dokan/v1/orders/(?P<id>[\d]+)
+Endpoint with no coverage: PATCH /dokan/v1/orders/(?P<id>[\d]+)
+Endpoint with no coverage: GET /dokan/v1/orders/(?P<id>[\d]+)/notes
+Endpoint with no coverage: POST /dokan/v1/orders/(?P<id>[\d]+)/notes
+Endpoint with no coverage: GET /dokan/v1/orders/(?P<id>[\d]+)/notes/(?P<note_id>[\d]+)
+Endpoint with no coverage: DELETE /dokan/v1/orders/(?P<id>[\d]+)/notes/(?P<note_id>[\d]+)
+Endpoint with no coverage: GET /dokan/v1/withdraw/(?P<id>[\d]+)
+Endpoint with no coverage: POST /dokan/v1/withdraw/(?P<id>[\d]+)
+Endpoint with no coverage: PUT /dokan/v1/withdraw/(?P<id>[\d]+)
+Endpoint with no coverage: PATCH /dokan/v1/withdraw/(?P<id>[\d]+)
+Endpoint with no coverage: DELETE /dokan/v1/withdraw/(?P<id>[\d]+)
+Endpoint with no coverage: GET /dokan/v1/withdraw/payment_methods
+Endpoint with no coverage: POST /dokan/v1/withdraw/batch
+Endpoint with no coverage: PATCH /dokan/v1/withdraw/batch
+Endpoint with no coverage: POST /dokan/v1/settings
+Endpoint with no coverage: PATCH /dokan/v1/settings
+Endpoint with no coverage: GET /dokan/v1/blocks/products/(?P<id>[\d]+)
+Endpoint with no coverage: GET /dokan/v1/store-categories/(?P<id>[\d]+)
+Endpoint with no coverage: POST /dokan/v1/store-categories/(?P<id>[\d]+)
+Endpoint with no coverage: PUT /dokan/v1/store-categories/(?P<id>[\d]+)
+Endpoint with no coverage: PATCH /dokan/v1/store-categories/(?P<id>[\d]+)
+Endpoint with no coverage: DELETE /dokan/v1/store-categories/(?P<id>[\d]+)
+Endpoint with no coverage: POST /dokan/v1/store-categories/default-category
+Endpoint with no coverage: PATCH /dokan/v1/store-categories/default-category
+Endpoint with no coverage: GET /dokan/v1/coupons/(?P<id>[\d]+)
+Endpoint with no coverage: POST /dokan/v1/coupons/(?P<id>[\d]+)
+Endpoint with no coverage: PUT /dokan/v1/coupons/(?P<id>[\d]+)
+Endpoint with no coverage: PATCH /dokan/v1/coupons/(?P<id>[\d]+)
+Endpoint with no coverage: DELETE /dokan/v1/coupons/(?P<id>[\d]+)
+Endpoint with no coverage: POST /dokan/v1/reviews/(?P<id>[\d]+)
+Endpoint with no coverage: PUT /dokan/v1/reviews/(?P<id>[\d]+)
+Endpoint with no coverage: PATCH /dokan/v1/reviews/(?P<id>[\d]+)
+Endpoint with no coverage: GET /dokan/v1/products/(?P<product_id>[\d]+)/variations
+Endpoint with no coverage: POST /dokan/v1/products/(?P<product_id>[\d]+)/variations
+Endpoint with no coverage: GET /dokan/v1/products/(?P<product_id>[\d]+)/variations/(?P<id>[\d]+)
+Endpoint with no coverage: POST /dokan/v1/products/(?P<product_id>[\d]+)/variations/(?P<id>[\d]+)
+Endpoint with no coverage: PUT /dokan/v1/products/(?P<product_id>[\d]+)/variations/(?P<id>[\d]+)
+Endpoint with no coverage: PATCH /dokan/v1/products/(?P<product_id>[\d]+)/variations/(?P<id>[\d]+)
+Endpoint with no coverage: DELETE /dokan/v1/products/(?P<product_id>[\d]+)/variations/(?P<id>[\d]+)
+Endpoint with no coverage: POST /dokan/v1/products/(?P<product_id>[\d]+)/variations/batch
+Endpoint with no coverage: PUT /dokan/v1/products/(?P<product_id>[\d]+)/variations/batch
+Endpoint with no coverage: PATCH /dokan/v1/products/(?P<product_id>[\d]+)/variations/batch
+Endpoint with no coverage: GET /dokan/v1/stores/(?P<id>[\d]+)/stats
+Endpoint with no coverage: POST /dokan/v1/stores/(?P<id>[\d]+)/email
+Endpoint with no coverage: GET /dokan/v1/announcement/(?P<id>[\d]+)
+Endpoint with no coverage: POST /dokan/v1/announcement/(?P<id>[\d]+)
+Endpoint with no coverage: PUT /dokan/v1/announcement/(?P<id>[\d]+)
+Endpoint with no coverage: PATCH /dokan/v1/announcement/(?P<id>[\d]+)
+Endpoint with no coverage: DELETE /dokan/v1/announcement/(?P<id>[\d]+)
+Endpoint with no coverage: POST /dokan/v1/announcement/(?P<id>[\d]+)/restore
+Endpoint with no coverage: PUT /dokan/v1/announcement/(?P<id>[\d]+)/restore
+Endpoint with no coverage: PATCH /dokan/v1/announcement/(?P<id>[\d]+)/restore
+Endpoint with no coverage: POST /dokan/v1/announcement/batch
+Endpoint with no coverage: PATCH /dokan/v1/announcement/batch
+Endpoint with no coverage: POST /dokan/v1/refunds/(?P<id>[\d]+)/approve
+Endpoint with no coverage: PUT /dokan/v1/refunds/(?P<id>[\d]+)/approve
+Endpoint with no coverage: PATCH /dokan/v1/refunds/(?P<id>[\d]+)/approve
+Endpoint with no coverage: POST /dokan/v1/refunds/(?P<id>[\d]+)/cancel
+Endpoint with no coverage: PUT /dokan/v1/refunds/(?P<id>[\d]+)/cancel
+Endpoint with no coverage: PATCH /dokan/v1/refunds/(?P<id>[\d]+)/cancel
+Endpoint with no coverage: DELETE /dokan/v1/refunds/(?P<id>[\d]+)
+Endpoint with no coverage: POST /dokan/v1/refunds/batch
+Endpoint with no coverage: PATCH /dokan/v1/refunds/batch
+Endpoint with no coverage: GET /dokan/v1/blocks/product-variation/(?P<id>[\d]+)
+Endpoint with no coverage: DELETE /dokan/v1/abuse-reports/(?P<id>[\d]+)
+Endpoint with no coverage: POST /dokan/v1/product_adv/(?P<id>[\d]+)/expire
+Endpoint with no coverage: PUT /dokan/v1/product_adv/(?P<id>[\d]+)/expire
+Endpoint with no coverage: PATCH /dokan/v1/product_adv/(?P<id>[\d]+)/expire
+Endpoint with no coverage: DELETE /dokan/v1/product_adv/(?P<id>[\d]+)
+Endpoint with no coverage: POST /dokan/v1/product_adv/batch
+Endpoint with no coverage: PATCH /dokan/v1/product_adv/batch
+Endpoint with no coverage: POST /dokan/v1/wholesale/customer/(?P<id>[\d]+)
+Endpoint with no coverage: PUT /dokan/v1/wholesale/customer/(?P<id>[\d]+)
+Endpoint with no coverage: PATCH /dokan/v1/wholesale/customer/(?P<id>[\d]+)
+Endpoint with no coverage: POST /dokan/v1/wholesale/customers/batch
+Endpoint with no coverage: PATCH /dokan/v1/wholesale/customers/batch
+Endpoint with no coverage: GET /dokan/v1/seller-badge/(?P<id>[\d]+)
+Endpoint with no coverage: POST /dokan/v1/seller-badge/(?P<id>[\d]+)
+Endpoint with no coverage: PUT /dokan/v1/seller-badge/(?P<id>[\d]+)
+Endpoint with no coverage: PATCH /dokan/v1/seller-badge/(?P<id>[\d]+)
+Endpoint with no coverage: DELETE /dokan/v1/seller-badge/(?P<id>[\d]+)
+Endpoint with no coverage: POST /dokan/v1/seller-badge/row-actions
+Endpoint with no coverage: PATCH /dokan/v1/seller-badge/row-actions
+Endpoint with no coverage: POST /dokan/v1/seller-badge/bulk-actions
+Endpoint with no coverage: PATCH /dokan/v1/seller-badge/bulk-actions
+Endpoint with no coverage: POST /dokan/v1/seller-badge/set-badge-as-seen
+Endpoint with no coverage: PATCH /dokan/v1/seller-badge/set-badge-as-seen
+Endpoint with no coverage: GET /dokan/v1/request-for-quote/(?P<id>[\d]+)
+Endpoint with no coverage: POST /dokan/v1/request-for-quote/(?P<id>[\d]+)
+Endpoint with no coverage: PUT /dokan/v1/request-for-quote/(?P<id>[\d]+)
+Endpoint with no coverage: PATCH /dokan/v1/request-for-quote/(?P<id>[\d]+)
+Endpoint with no coverage: DELETE /dokan/v1/request-for-quote/(?P<id>[\d]+)
+Endpoint with no coverage: POST /dokan/v1/request-for-quote/(?P<id>[\d]+)/restore
+Endpoint with no coverage: PUT /dokan/v1/request-for-quote/(?P<id>[\d]+)/restore
+Endpoint with no coverage: PATCH /dokan/v1/request-for-quote/(?P<id>[\d]+)/restore
+Endpoint with no coverage: POST /dokan/v1/request-for-quote/batch
+Endpoint with no coverage: PATCH /dokan/v1/request-for-quote/batch
+Endpoint with no coverage: GET /dokan/v1/store-reviews/(?P<id>[\d]+)
+Endpoint with no coverage: POST /dokan/v1/store-reviews/(?P<id>[\d]+)
+Endpoint with no coverage: PUT /dokan/v1/store-reviews/(?P<id>[\d]+)
+Endpoint with no coverage: PATCH /dokan/v1/store-reviews/(?P<id>[\d]+)
+Endpoint with no coverage: DELETE /dokan/v1/store-reviews/(?P<id>[\d]+)
+Endpoint with no coverage: POST /dokan/v1/store-reviews/(?P<id>[\d]+)/restore
+Endpoint with no coverage: PUT /dokan/v1/store-reviews/(?P<id>[\d]+)/restore
+Endpoint with no coverage: PATCH /dokan/v1/store-reviews/(?P<id>[\d]+)/restore
+Endpoint with no coverage: POST /dokan/v1/store-reviews/batch
+Endpoint with no coverage: PATCH /dokan/v1/store-reviews/batch
+Endpoint with no coverage: POST /dokan/v1/reverse-withdrawal/transactions
+Endpoint with no coverage: GET /dokan/v2/products/(?P<id>[\d]+)
+Endpoint with no coverage: POST /dokan/v2/products/(?P<id>[\d]+)
+Endpoint with no coverage: PUT /dokan/v2/products/(?P<id>[\d]+)
+Endpoint with no coverage: PATCH /dokan/v2/products/(?P<id>[\d]+)
+Endpoint with no coverage: DELETE /dokan/v2/products/(?P<id>[\d]+)
+Endpoint with no coverage: GET /dokan/v2/products/(?P<id>[\d]+)
+Endpoint with no coverage: POST /dokan/v2/products/(?P<id>[\d]+)
+Endpoint with no coverage: PUT /dokan/v2/products/(?P<id>[\d]+)
+Endpoint with no coverage: PATCH /dokan/v2/products/(?P<id>[\d]+)
+Endpoint with no coverage: DELETE /dokan/v2/products/(?P<id>[\d]+)
+Endpoint with no coverage: GET /dokan/v2/products/(?P<id>[\d]+)/related
+Endpoint with no coverage: GET /dokan/v2/products/(?P<id>[\d]+)/related
+Endpoint with no coverage: GET /dokan/v2/orders/(?P<id>[\d]+)
+Endpoint with no coverage: POST /dokan/v2/orders/(?P<id>[\d]+)
+Endpoint with no coverage: PATCH /dokan/v2/orders/(?P<id>[\d]+)
+Endpoint with no coverage: GET /dokan/v2/orders/(?P<id>[\d]+)/notes
+Endpoint with no coverage: POST /dokan/v2/orders/(?P<id>[\d]+)/notes
+Endpoint with no coverage: GET /dokan/v2/orders/(?P<id>[\d]+)/notes/(?P<note_id>[\d]+)
+Endpoint with no coverage: DELETE /dokan/v2/orders/(?P<id>[\d]+)/notes/(?P<note_id>[\d]+)
+Endpoint with no coverage: GET /dokan/v2/orders/(?P<id>[\d]+)/downloads
+Endpoint with no coverage: POST /dokan/v2/orders/(?P<id>[\d]+)/downloads
+Endpoint with no coverage: DELETE /dokan/v2/orders/(?P<id>[\d]+)/downloads
+Endpoint with no coverage: GET /dokan/v2/settings/(?P<group_id>[\w-]+)
+Endpoint with no coverage: POST /dokan/v2/settings/(?P<group_id>[\w-]+)
+Endpoint with no coverage: PUT /dokan/v2/settings/(?P<group_id>[\w-]+)
+Endpoint with no coverage: PATCH /dokan/v2/settings/(?P<group_id>[\w-]+)
+Endpoint with no coverage: GET /dokan/v2/settings/(?P<group_id>[\w-]+)/(?P<id>[\w-]+)
+Endpoint with no coverage: POST /dokan/v2/settings/(?P<group_id>[\w-]+)/(?P<id>[\w-]+)
+Endpoint with no coverage: PUT /dokan/v2/settings/(?P<group_id>[\w-]+)/(?P<id>[\w-]+)
+Endpoint with no coverage: PATCH /dokan/v2/settings/(?P<group_id>[\w-]+)/(?P<id>[\w-]+)
+Endpoint with no coverage: GET /dokan/v2/settings/(?P<group_id>[\w-]+)/(?P<parent_id>[\w-]+)/(?P<id>[\w-]+)
+Endpoint with no coverage: POST /dokan/v2/settings/(?P<group_id>[\w-]+)/(?P<parent_id>[\w-]+)/(?P<id>[\w-]+)
+Endpoint with no coverage: PUT /dokan/v2/settings/(?P<group_id>[\w-]+)/(?P<parent_id>[\w-]+)/(?P<id>[\w-]+)
+Endpoint with no coverage: PATCH /dokan/v2/settings/(?P<group_id>[\w-]+)/(?P<parent_id>[\w-]+)/(?P<id>[\w-]+)
+Endpoint with no coverage: POST /dokan/v2/products/(?P<id>[\d]+)/duplicate
+Endpoint with no coverage: POST /dokan/v2/withdraw/disbursement/disable
 
 
 
-{
-	"env": {
-	  // "browser": true,
-	  "es2021": true
-	  // "node": true 
-	  // "commonjs": true,
-	},
-	"extends": [
-	  "eslint:recommended",
-	  "plugin:@typescript-eslint/recommended"
-	  // "plugin:playwright/playwright-test/recommended",
-	  // "prettier"
-  ],
-  "parser": "@typescript-eslint/parser",
-	"parserOptions": {
-	  "ecmaVersion": "latest",
-	  "sourceType": "module"
-	},
-	"plugins": [
-	  "@typescript-eslint",
-	  "prettier"
-  ],
-	"rules": {
-		// we want single quotes
-		"quotes": ["error", "single"],
-		// we want to force semicolons
-		"semi": ["error", "always"],
-		// we use 2 spaces to indent our code
-		"indent": ["error", 4],
-		// we want to avoid extraneous spaces
-		"no-multi-spaces": ["error"],
-		"camelcase": "error",
-		"spaced-comment": "error",
-		"no-duplicate-imports": "error",
+
+// Define an array of endpoint URLs
+const endpoints = [
+	endPoints.getAllDokanEndpointsAdmin,
+	endPoints.getAllDokanEndpointsV1,
+	endPoints.getAllDokanEndpointsV2,
+  ];
   
-  
-  
-		// todo:   remove before push
-		// disable no unused vars rule
-		"no-unused-vars": "off",
-		"@typescript-eslint/no-unused-vars": "error",
-  
-	   // todo:  test any un-comment any necessary
-	  // "node/exports-style": ["error", "module.exports"],
-	  //   "node/file-extension-in-import": ["error", "always"],
-	  //   "node/prefer-global/buffer": ["error", "always"],
-	  //   "node/prefer-global/console": ["error", "always"],
-	  //   "node/prefer-global/process": ["error", "always"],
-	  //   "node/prefer-global/url-search-params": ["error", "always"],
-	  //   "node/prefer-global/url": ["error", "always"],
-	  //   "node/prefer-promises/dns": "error",
-	  //   "node/prefer-promises/fs": "error"
-  
-	  "spaced-comment": "error",
-  
-	  //  Basic 
-  
-	  "require-await": "error",
-	  "no-duplicate-imports": "error",
-	  "array-callback-return": "error",
-	  "constructor-super": "error",
-	  "for-direction": "error",
-	  "no-await-in-loop": "error",
-	  "no-compare-neg-zero": "error",
-	  "no-cond-assign": "error",
-	  "no-const-assign": "error",
-	  "no-constant-binary-expression": "error",
-	  "no-constructor-return": "error",
-	  "no-control-regex": "error",
-	  "no-dupe-args": "error",
-	  "no-dupe-class-members": "error",
-	  "no-dupe-else-if": "error",
-	  "no-dupe-keys": "error",
-	  "no-duplicate-case": "error",
-	  "no-empty-pattern": "off",
-	  "no-explicit-any": "0ff",
-	  "no-func-assign": "error",
-	  "no-irregular-whitespace": "error",
-	  "no-loss-of-precision": "error",
-	  "no-unreachable": "error",
-	  "no-unsafe-negation": "error",
-	  "no-unsafe-optional-chaining": "error",
-	  "no-useless-backreference": "error",
-  
-	  // Suggestions 
-  
-	  "arrow-body-style": ["error", "as-needed"],
-	  "block-scoped-var": "error",
-	  "camelcase": "error",
-	  "capitalized-comments": ["error", "always"] ,
-	  "class-methods-use-this": "error",
-	  "curly": "error",
-	  "default-case": "error",
-	  "default-case-last": "error",
-	  "dot-notation": "error",
-	  "multiline-comment-style": ["error", "bare-block"],
-	  "eslint no-console": "error",
-	  "no-eq-null": "error",
-	  "no-extra-semi": "error",
-	  "no-inline-comments": "error",
-	  "no-invalid-this": "error",
-	  "no-loop-func": "error",
-	  "no-redeclare": "error",
-	  "no-regex-spaces": "error",
-	  "no-useless-rename": "error",
-	  "no-var": "error",
-	  "yoda": "error",
-  
-	  //Layout & Formatting 
-	  "array-bracket-newline": ["error", "never"],
-	  "array-bracket-spacing": ["error", "never"],
-	  "array-element-newline": ["error", "never"],
-	  "arrow-parens": ["error", "as-needed"],
-	  "arrow-spacing": ["error", { "before": false, "after": true }],
-	  "block-spacing": "error",
-	  "brace-style": ["error", "stroustrup"],
-	  "comma-spacing": ["error", { "before": false, "after": true }],
-	  "indent": ["error", 4],
-	  "no-multi-spaces": "error",
-	  "no-multiple-empty-lines": "error",
-	  // "no-multiple-empty-lines": ["error", { "max": 2, "maxEOF": 0 }],
-	  "no-trailing-spaces": "error",
-	  "no-whitespace-before-property": "error",
-	  "object-curly-newline": ["error", { "minProperties": 2 }],
-	  "object-curly-spacing": ["error", "always"],
-	  "quotes": ["error", "single"],
-	  "semi": ["error", "always"],
-	  "semi-spacing": ["error", { "before": false, "after": true }],
-	  "switch-colon-spacing": ["error", {"after": false, "before": true}],
-	  "arrow-body-style": ["error", "as-needed"]
-  
-	  },
-	  "settings": {
-		"import/resolver": {
-		  "typescript": {}
-		}
-	  }
-	  // "ignorePatterns": ["/**/*.test.ts"]
+  // Function to fetch data from an API endpoint and extract routes and methods
+  async function fetchRoutesAndMethods(endpoint) {
+	const [, responseBody] = await apiUtils.get(endpoint);
+	return Object.entries(responseBody.routes).map(([route, { methods }]) =>
+	  methods.map((method) => `${method} ${route}`)
+	);
   }
+  
+  // Fetch data from all endpoints concurrently
+  const allRouteMethods = await Promise.all(endpoints.map(fetchRoutesAndMethods));
+  
+  // Flatten the array and combine routes and methods
+  const coverageArray = allRouteMethods.flat();
 
 
-
-
-
-
-
-
-  {
-    "env": {
-        "browser": true,
-        "es2021": true
-    },
-    "extends": [
-        "eslint:recommended",
-        "plugin:@typescript-eslint/recommended"
-        // "prettier"
-    ],
-    "overrides": [],
-    "parser": "@typescript-eslint/parser",
-    "parserOptions": {
-        "ecmaVersion": "latest",
-        // "ecmaVersion": 2017,
-        "sourceType": "module"
-    },
-    "plugins": [
-        "@typescript-eslint"
-        // "prettier"
-    ],
-    "rules": {
-    
-    //   "camelcase": "error",
-    "spaced-comment": "error",
-    "@typescript-eslint/require-await": "error",
-    "@typescript-eslint/no-unused-vars": "off",
-    "@typescript-eslint/no-var-requires": "off",
-    "@typescript-eslint/no-explicit-any": "off",
-
-
-    //Layout & Formatting 
-    // "array-bracket-newline": ["error", "never"],
-
-    // "array-element-newline": ["error", "never"],
-    // "arrow-parens": ["error", "as-needed"],
-    
-    // "block-spacing": "error",
-    // "brace-style": ["error", "stroustrup"],
-
-    "indent": ["error", "tab"],
-    "no-multiple-empty-lines": ["error", { "max": 2, "maxEOF": 0 }],
-    "no-trailing-spaces": "error",
-    "no-multi-spaces": "error",
-    "key-spacing": ["error", { "align": "colon" }],
-    // "no-whitespace-before-property": "error",
-    // "object-curly-newline": ["error", "always"],
-    // "object-curly-newline": ["error", { "minProperties": 2,"ImportDeclaration": "never", "ExportDeclaration": "never" }],
-    // "object-curly-newline": ["error", { "ImportDeclaration": "never", "ExportDeclaration": "never" }],
-    // "object-curly-newline": ["error", "never", { "consistent": true }],
-    // "object-curly-newline": ["error", { "minProperties": 1 }],
-    // "object-curly-newline": ["error", { "multiline": true ,"minProperties": 2 }],
-
-    "func-style": ["error", "declaration", { "allowArrowFunctions": true }],
-    "arrow-body-style": ["error", "as-needed"],
-
-    "quotes": ["error", "single"],
-    "semi": ["error", "always"],
-    // space rules
-    "semi-spacing": ["error", { "before": false, "after": true }],
-    "switch-colon-spacing": ["error", {"after": false, "before": true}],
-    // "space-in-parens": ["error", "always"],
-    "keyword-spacing": ["error", {"after": true, "before": true}],
-    "space-infix-ops": ["error", { "int32Hint": false }],
-    "arrow-spacing": ["error", { "before": true, "after": true }],
-    "comma-spacing": ["error", { "before": false, "after": true }],
-    // "array-bracket-spacing": ["error", "always"],
-    "object-curly-spacing": ["error", "always", {"arraysInObjects": true, "objectsInObjects": true}],
-    },
-    "settings": {
-        "import/resolver": {
-            "typescript": {}
-        }
-    }
-}
 
 
 

@@ -4,16 +4,16 @@ import { helpers } from '@utils/helpers';
 import { payloads } from '@utils/payloads';
 import { dbUtils } from '@utils/dbUtils';
 
-let apiUtils: ApiUtils;
-let taxRate: number;
-
-test.beforeAll(async ({ request }) => {
-    apiUtils = new ApiUtils(request);
-    taxRate = await apiUtils.setUpTaxRate(payloads.enableTaxRate, payloads.createTaxRate);
-    // todo:  get tax rate instead of setup if possible
-});
-
 test.describe('calculation test', () => {
+    let apiUtils: ApiUtils;
+    let taxRate: number;
+
+    test.beforeAll(async ({ request }) => {
+        apiUtils = new ApiUtils(request);
+        taxRate = await apiUtils.setUpTaxRate(payloads.enableTaxRate, payloads.createTaxRate);
+        // todo:  get tax rate instead of setup if possible
+    });
+
     test('calculation test @pro', async () => {
         // todo:  modify for lite as well
         const [commission, feeRecipient] = await dbUtils.getSellingInfo();

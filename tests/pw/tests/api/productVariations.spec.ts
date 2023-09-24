@@ -1,18 +1,24 @@
+//COVERAGE_TAG: GET /dokan/v1/products/(?P<product_id>[\d]+)/variations
+//COVERAGE_TAG: GET /dokan/v1/products/(?P<product_id>[\d]+)/variations/(?P<id>[\d]+)
+//COVERAGE_TAG: POST /dokan/v1/products/(?P<product_id>[\d]+)/variations
+//COVERAGE_TAG: PUT /dokan/v1/products/(?P<product_id>[\d]+)/variations/(?P<id>[\d]+)
+//COVERAGE_TAG: DELETE /dokan/v1/products/(?P<product_id>[\d]+)/variations/(?P<id>[\d]+)
+
 import { test, expect } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
 
-let apiUtils: ApiUtils;
-let productId: string;
-let variationId: string;
-
-test.beforeAll(async ({ request }) => {
-    apiUtils = new ApiUtils(request);
-    [productId, variationId] = await apiUtils.createVariableProductWithVariation(payloads.createAttribute(), payloads.createAttributeTerm(), payloads.createVariableProduct());
-});
-
 test.describe('product variation api test', () => {
+    let apiUtils: ApiUtils;
+    let productId: string;
+    let variationId: string;
+
+    test.beforeAll(async ({ request }) => {
+        apiUtils = new ApiUtils(request);
+        [productId, variationId] = await apiUtils.createVariableProductWithVariation(payloads.createAttribute(), payloads.createAttributeTerm(), payloads.createVariableProduct());
+    });
+
     test('get all product variations @pro', async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllProductVariations(productId));
         expect(response.ok()).toBeTruthy();
