@@ -66,23 +66,23 @@ test.describe('Product functionality test', () => {
     // todo: move create product in separate files, or product functionality to another page
 
     test('vendor can add simple product @lite', async () => {
-        await vendor.vendorAddSimpleProduct(data.product.simple);
+        await vendor.vendorAddSimpleProduct(data.product.simple, false);
     });
 
     test('vendor can add variable product @pro', async () => {
-        await vendor.vendorAddVariableProduct(data.product.variable);
+        await vendor.vendorAddVariableProduct(data.product.variable, false);
     });
 
     test('vendor can add simple subscription product @pro', async () => {
-        await vendor.vendorAddSimpleSubscription(data.product.simpleSubscription);
+        await vendor.vendorAddSimpleSubscription(data.product.simpleSubscription, false);
     });
 
     test('vendor can add variable subscription product @pro', async () => {
-        await vendor.vendorAddVariableSubscription(data.product.variableSubscription);
+        await vendor.vendorAddVariableSubscription(data.product.variableSubscription, false);
     });
 
     test('vendor can add external product @pro', async () => {
-        await vendor.vendorAddExternalProduct(data.product.external);
+        await vendor.vendorAddExternalProduct(data.product.external, false);
     });
 
     test('vendor can add product product category @lite', async () => {

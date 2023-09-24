@@ -67,7 +67,7 @@ export const dbData = {
             // vendor capabilities
             additional_fee: '',
             new_seller_enable_selling: 'on',
-            one_step_product_create: 'off',
+            one_step_product_create: 'on',
             disable_product_popup: 'off',
             order_status_change: 'on',
             dokan_any_category_selection: 'off',

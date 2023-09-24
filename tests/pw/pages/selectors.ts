@@ -3326,7 +3326,7 @@ export const selector = {
             // Create Product
             create: {
                 closeCreateProductPopup: 'a.iziModal-button-close', // todo: need to update, everywhere
-                addNewProduct: '.dokan-add-new-product',
+                addNewProduct: 'span.dokan-add-product-link .dokan-btn.dokan-btn-theme:first-child',
                 productPopup: '#dokan-add-product-popup',
                 productName: '//input[@name="post_title"]',
                 productImage: '.dokan-feat-image-btn',

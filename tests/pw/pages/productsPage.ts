@@ -267,7 +267,7 @@ export class ProductsPage extends AdminPage {
         DOKAN_PRO && (await this.multipleElementVisible(selector.vendor.product.importExport));
 
         // product filters elements are visible
-        await this.multipleElementVisible(selector.vendor.product.filters); 
+        await this.multipleElementVisible(selector.vendor.product.filters);
 
         // product search elements are visible
         await this.multipleElementVisible(selector.vendor.product.search);
@@ -282,43 +282,44 @@ export class ProductsPage extends AdminPage {
 
     // products
 
-    // vendor add simple product
+    // vendor add product
     async addProduct(product: product['simple'] | product['variable'] | product['simpleSubscription'] | product['external']): Promise<void> {
         const productName = product.productName();
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.products);
-        await this.click(selector.vendor.product.create.addNewProduct);
-        await this.waitForVisibleLocator(selector.vendor.product.create.productName);
-
-        await this.clearAndType(selector.vendor.product.create.productName, productName);
-        await this.clearAndType(selector.vendor.product.create.productPrice, product.regularPrice());
-        // await this.addProductCategory(product.category);
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.vendor.product.create.createProduct);
-        const createdProduct = await this.getElementValue(selector.vendor.product.edit.title);
-        expect(createdProduct.toLowerCase()).toBe(productName.toLowerCase());
-
-        //
+        await this.clickAndWaitForLoadState(selector.vendor.product.create.addNewProduct);
         await this.clearAndType(selector.vendor.product.edit.title, productName);
-        await this.clearAndType(selector.vendor.product.edit.price, product.regularPrice());
-        // await this.addProductCategory(product.category);
     }
 
     // vendor add simple product
-    async vendorAddSimpleProduct(product: product['simple'] | product['variable'] | product['simpleSubscription'] | product['external']): Promise<void> {
+    async vendorAddSimpleProduct(product: product['simple'] | product['variable'] | product['simpleSubscription'] | product['external'], productPopup = false): Promise<void> {
         const productName = product.productName();
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.products);
-        await this.click(selector.vendor.product.create.addNewProduct);
-        await this.waitForVisibleLocator(selector.vendor.product.create.productName);
-        await this.clearAndType(selector.vendor.product.create.productName, productName);
-        await this.clearAndType(selector.vendor.product.create.productPrice, product.regularPrice());
-        // await this.addProductCategory(product.category);
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.vendor.product.create.createProduct);
-        const createdProduct = await this.getElementValue(selector.vendor.product.edit.title);
-        expect(createdProduct.toLowerCase()).toBe(productName.toLowerCase());
+        if (productPopup) {
+            await this.click(selector.vendor.product.create.addNewProduct);
+            await this.waitForVisibleLocator(selector.vendor.product.create.productName);
+            await this.clearAndType(selector.vendor.product.create.productName, productName);
+            await this.clearAndType(selector.vendor.product.create.productPrice, product.regularPrice());
+            // await this.addProductCategory(product.category);
+
+            await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.vendor.product.create.createProduct);
+            const createdProduct = await this.getElementValue(selector.vendor.product.edit.title);
+            expect(createdProduct.toLowerCase()).toBe(productName.toLowerCase());
+        } else {
+            await this.clickAndWaitForLoadState(selector.vendor.product.create.addNewProduct);
+            await this.clearAndType(selector.vendor.product.edit.title, productName);
+
+            await this.selectByValue(selector.vendor.product.edit.productType, product.productType);
+            await this.clearAndType(selector.vendor.product.edit.price, product.regularPrice());
+            // await this.addProductCategory(product.category);
+
+            await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.products, selector.vendor.product.saveProduct, 302);
+            await this.toContainText(selector.vendor.product.dokanMessage, 'The product has been saved successfully. ');
+        }
     }
 
     // vendor add variable product
-    async vendorAddVariableProduct(product: product['variable']): Promise<void> {
-        await this.vendorAddSimpleProduct(product);
+    async vendorAddVariableProduct(product: product['variable'], productPopup = false): Promise<void> {
+        productPopup ? await this.vendorAddSimpleProduct(product, productPopup) : await this.addProduct(product);
 
         // edit product
         await this.selectByValue(selector.vendor.product.edit.productType, product.productType);
@@ -341,8 +342,8 @@ export class ProductsPage extends AdminPage {
     }
 
     // vendor add simple subscription product
-    async vendorAddSimpleSubscription(product: product['simpleSubscription']): Promise<void> {
-        await this.vendorAddSimpleProduct(product);
+    async vendorAddSimpleSubscription(product: product['simpleSubscription'], productPopup = false): Promise<void> {
+        productPopup ? await this.vendorAddSimpleProduct(product, productPopup) : await this.addProduct(product);
         // edit product
         await this.selectByValue(selector.vendor.product.edit.productType, product.productType);
         await this.type(selector.vendor.product.edit.subscriptionPrice, product.subscriptionPrice());
@@ -356,8 +357,8 @@ export class ProductsPage extends AdminPage {
     }
 
     // vendor add variable subscription product
-    async vendorAddVariableSubscription(product: product['variableSubscription']): Promise<void> {
-        await this.vendorAddSimpleProduct(product);
+    async vendorAddVariableSubscription(product: product['variableSubscription'], productPopup = false): Promise<void> {
+        productPopup ? await this.vendorAddSimpleProduct(product, productPopup) : await this.addProduct(product);
         // edit product
         await this.selectByValue(selector.vendor.product.edit.productType, product.productType);
         // add variation
@@ -379,8 +380,8 @@ export class ProductsPage extends AdminPage {
     }
 
     // vendor add external product
-    async vendorAddExternalProduct(product: product['external']): Promise<void> {
-        await this.vendorAddSimpleProduct(product);
+    async vendorAddExternalProduct(product: product['external'], productPopup = false): Promise<void> {
+        productPopup ? await this.vendorAddSimpleProduct(product, productPopup) : await this.addProduct(product);
         // edit product
         await this.selectByValue(selector.vendor.product.edit.productType, product.productType);
         await this.type(selector.vendor.product.edit.productUrl, this.getBaseUrl() + product.productUrl);
