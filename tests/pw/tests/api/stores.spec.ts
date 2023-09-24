@@ -13,7 +13,6 @@
 //COVERAGE_TAG: POST /dokan/v1/stores/(?P<id>[\d]+)/email
 //COVERAGE_TAG: PUT /dokan/v1/stores/batch
 
-
 import { test, expect } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';

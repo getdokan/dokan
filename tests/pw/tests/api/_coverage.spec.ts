@@ -4,7 +4,7 @@ import { endPoints } from '@utils/apiEndPoints';
 import { helpers } from '@utils/helpers';
 import { execSync } from 'child_process';
 
-test.describe.only('get api test coverage', () => {
+test.describe('get api test coverage', () => {
     let apiUtils: ApiUtils;
 
     test.beforeAll(async ({ request }) => {

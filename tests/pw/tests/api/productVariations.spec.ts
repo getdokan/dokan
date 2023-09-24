@@ -53,17 +53,12 @@ test.describe('product variation api test', () => {
     });
 
     test('update batch product variations @pro', async () => {
-        test.skip(true, 'fatal error exists')
+        test.skip(true, 'fatal error exists');
         const [productId] = await apiUtils.createVariableProductWithVariation(payloads.createAttribute(), payloads.createAttributeTerm(), payloads.createVariableProduct());
-        console.log(productId);
-
-        console.log({...payloads.batchProductVariation, id: productId});
-        
-        
-        // const [response, responseBody] = await apiUtils.put(endPoints.batchUpdateProductVariations(productId), { data: { update: {...payloads.batchProductVariation, id: productId} } });
-        const [response, responseBody] = await apiUtils.put(endPoints.wc.updateBatchProductVariations(productId), { data: { update: {...payloads.batchProductVariation, id: productId} } });
-        console.log(responseBody);
-        
+        // console.log(productId);
+        // console.log({ ...payloads.batchProductVariation, id: productId });
+        const [response, responseBody] = await apiUtils.put(endPoints.batchUpdateProductVariations(productId), { data: { update: { ...payloads.batchProductVariation, id: productId } } });
+        // console.log(responseBody);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
