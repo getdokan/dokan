@@ -1,18 +1,28 @@
+//COVERAGE_TAG: GET /dokan/v1/admin/support-ticket/customers
+//COVERAGE_TAG: GET /dokan/v1/admin/support-ticket
+//COVERAGE_TAG: GET /dokan/v1/admin/support-ticket/(?P<id>[\d]+)
+//COVERAGE_TAG: POST /dokan/v1/admin/support-ticket/(?P<id>[\d]+)
+//COVERAGE_TAG: POST /dokan/v1/admin/support-ticket/(?P<id>[\d]+)/status
+//COVERAGE_TAG: POST /dokan/v1/admin/support-ticket/(?P<id>[\d]+)/email-notification
+//COVERAGE_TAG: DELETE /dokan/v1/admin/support-ticket/(?P<id>[\d]+)/comment
+//COVERAGE_TAG: PUT /dokan/v1/admin/support-ticket/batch
+
 import { test, expect } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
+
 const { VENDOR_ID, CUSTOMER_ID } = process.env;
 
-let apiUtils: ApiUtils;
-let supportTicketId: string;
-
-test.beforeAll(async ({ request }) => {
-    apiUtils = new ApiUtils(request);
-    [, supportTicketId] = await apiUtils.createSupportTicket({ ...payloads.createSupportTicket, author: CUSTOMER_ID, store_id: VENDOR_ID });
-});
-
 test.describe('support ticket api test', () => {
+    let apiUtils: ApiUtils;
+    let supportTicketId: string;
+
+    test.beforeAll(async ({ request }) => {
+        apiUtils = new ApiUtils(request);
+        [, supportTicketId] = await apiUtils.createSupportTicket({ ...payloads.createSupportTicket, author: CUSTOMER_ID, store_id: VENDOR_ID });
+    });
+
     test('get all support ticket customers @pro', async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllSupportTicketCustomers);
         expect(response.ok()).toBeTruthy();

@@ -1,17 +1,25 @@
+//COVERAGE_TAG: GET /dokan/v1/store-categories/default-category
+//COVERAGE_TAG: PUT /dokan/v1/store-categories/default-category
+//COVERAGE_TAG: GET /dokan/v1/store-categories
+//COVERAGE_TAG: GET /dokan/v1/store-categories/(?P<id>[\d]+)
+//COVERAGE_TAG: POST /dokan/v1/store-categories
+//COVERAGE_TAG: PUT /dokan/v1/store-categories/(?P<id>[\d]+)
+//COVERAGE_TAG: DELETE /dokan/v1/store-categories/(?P<id>[\d]+)
+
 import { test, expect } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
 
-let apiUtils: ApiUtils;
-let categoryId: string;
-
-test.beforeAll(async ({ request }) => {
-    apiUtils = new ApiUtils(request);
-    [, categoryId] = await apiUtils.createStoreCategory(payloads.createStoreCategory());
-});
-
 test.describe('store categories api test', () => {
+    let apiUtils: ApiUtils;
+    let categoryId: string;
+
+    test.beforeAll(async ({ request }) => {
+        apiUtils = new ApiUtils(request);
+        [, categoryId] = await apiUtils.createStoreCategory(payloads.createStoreCategory());
+    });
+
     test('get default store category @pro', async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getDefaultStoreCategory);
         expect(response.ok()).toBeTruthy();

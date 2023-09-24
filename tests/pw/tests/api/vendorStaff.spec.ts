@@ -1,18 +1,27 @@
+//COVERAGE_TAG: GET /dokan/v1/vendor-staff
+//COVERAGE_TAG: GET /dokan/v1/vendor-staff/(?P<id>[\d]+)
+//COVERAGE_TAG: POST /dokan/v1/vendor-staff
+//COVERAGE_TAG: PUT /dokan/v1/vendor-staff/(?P<id>[\d]+)
+//COVERAGE_TAG: GET /dokan/v1/vendor-staff/capabilities
+//COVERAGE_TAG: GET /dokan/v1/vendor-staff/(?P<id>[\d]+)/capabilities
+//COVERAGE_TAG: PUT /dokan/v1/vendor-staff/(?P<id>[\d]+)/capabilities
+//COVERAGE_TAG: DELETE /dokan/v1/vendor-staff/(?P<id>[\d]+)
+
 import { test, expect } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
 
-let apiUtils: ApiUtils;
-let staffId: string;
-
-test.beforeAll(async ({ request }) => {
-    apiUtils = new ApiUtils(request);
-    [, staffId] = await apiUtils.createVendorStaff(payloads.createStaff(), payloads.vendorAuth);
-});
-
 test.describe('vendor staff api test', () => {
     test.skip(true, 'feature not merged yet');
+
+    let apiUtils: ApiUtils;
+    let staffId: string;
+
+    test.beforeAll(async ({ request }) => {
+        apiUtils = new ApiUtils(request);
+        [, staffId] = await apiUtils.createVendorStaff(payloads.createStaff(), payloads.vendorAuth);
+    });
 
     test.use({ extraHTTPHeaders: { Authorization: payloads.vendorAuth.Authorization } });
 
@@ -37,6 +46,12 @@ test.describe('vendor staff api test', () => {
 
     test('update a vendor staff @pro', async () => {
         const [response, responseBody] = await apiUtils.put(endPoints.updateVendorStaff(staffId), { data: payloads.updateStaff() });
+        expect(response.ok()).toBeTruthy();
+        expect(responseBody).toBeTruthy();
+    });
+
+    test('get all vendor staff capabilities @pro', async () => {
+        const [response, responseBody] = await apiUtils.get(endPoints.getAllVendorStaffCapabilities);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });

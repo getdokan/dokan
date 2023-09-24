@@ -278,6 +278,11 @@ export const payloads = {
         ],
     },
 
+    batchProductVariation: {
+        id: '',
+        regular_price: '99.00',
+    },
+
     createDownloadableProduct: () => ({
         name: faker.commerce.productName() + ' (Downloadable)',
         type: 'simple',

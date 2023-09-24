@@ -1,17 +1,24 @@
+//COVERAGE_TAG: GET /dokan/v1/request-for-quote/customers
+//COVERAGE_TAG: GET /dokan/v1/request-for-quote/customers/(?P<id>[\d]+)
+//COVERAGE_TAG: POST /dokan/v1/request-for-quote/customers
+//COVERAGE_TAG: PUT /dokan/v1/request-for-quote/customers/(?P<id>[\d]+)
+//COVERAGE_TAG: DELETE /dokan/v1/request-for-quote/customers/(?P<id>[\d]+)
+//COVERAGE_TAG: PUT /dokan/v1/request-for-quote/customers/batch
+
 import { test, expect } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
 
-let apiUtils: ApiUtils;
-let customerId: string;
-
-test.beforeAll(async ({ request }) => {
-    apiUtils = new ApiUtils(request);
-    [, customerId] = await apiUtils.createCustomer(payloads.createCustomer());
-});
-
 test.describe('customers api test', () => {
+    let apiUtils: ApiUtils;
+    let customerId: string;
+
+    test.beforeAll(async ({ request }) => {
+        apiUtils = new ApiUtils(request);
+        [, customerId] = await apiUtils.createCustomer(payloads.createCustomer());
+    });
+
     test('get all customers @pro', async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllCustomers);
         expect(response.ok()).toBeTruthy();

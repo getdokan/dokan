@@ -1,22 +1,36 @@
+//COVERAGE_TAG: GET /dokan/v1/withdraw/balance
+//COVERAGE_TAG: GET /dokan/v1/withdraw
+//COVERAGE_TAG: GET /dokan/v1/withdraw/(?P<id>[\d]+)
+//COVERAGE_TAG: PUT /dokan/v1/withdraw/(?P<id>[\d]+)
+//COVERAGE_TAG: DELETE /dokan/v1/withdraw/(?P<id>[\d]+)
+//COVERAGE_TAG: PUT /dokan/v1/withdraw/batch
+//COVERAGE_TAG: POST /dokan/v1/withdraw
+
 import { test, expect } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
 import { helpers } from '@utils/helpers';
 
-let apiUtils: ApiUtils;
-let withdrawId: string;
-let minimumWithdrawLimit: string;
-
-test.beforeAll(async ({ request }) => {
-    apiUtils = new ApiUtils(request);
-    [, minimumWithdrawLimit] = await apiUtils.getMinimumWithdrawLimit();
-    await apiUtils.createOrderWithStatus(payloads.createProduct(), payloads.createOrder, 'wc-completed');
-    const [responseBody, id] = await apiUtils.createWithdraw({ ...payloads.createWithdraw, amount: minimumWithdrawLimit });
-    withdrawId = responseBody.message === 'You already have a pending withdraw request' ? await apiUtils.getWithdrawId() : id;
-});
-
 test.describe('withdraw api test', () => {
+    let apiUtils: ApiUtils;
+    let withdrawId: string;
+    let minimumWithdrawLimit: string;
+
+    test.beforeAll(async ({ request }) => {
+        apiUtils = new ApiUtils(request);
+        [, minimumWithdrawLimit] = await apiUtils.getMinimumWithdrawLimit();
+        await apiUtils.createOrderWithStatus(payloads.createProduct(), payloads.createOrder, 'wc-completed');
+        const [responseBody, id] = await apiUtils.createWithdraw({ ...payloads.createWithdraw, amount: minimumWithdrawLimit });
+        withdrawId = responseBody.message === 'You already have a pending withdraw request' ? await apiUtils.getWithdrawId() : id;
+    });
+
+    test('get withdraw payment methods @lite', async () => {
+        const [response, responseBody] = await apiUtils.get(endPoints.getWithdrawPaymentMethods);
+        expect(response.ok()).toBeTruthy();
+        expect(responseBody).toBeTruthy();
+    });
+
     test('get balance details @lite', async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getBalanceDetails);
         expect(response.ok()).toBeTruthy();

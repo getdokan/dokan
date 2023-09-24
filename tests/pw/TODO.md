@@ -36,6 +36,7 @@
 - [ ] add JSDOC  
 - [ ] cmd + save & npm run prettier:fix formatting differently  
 - [ ] todo.md not ignored by prettier  
+- [ ] undo prettier rules, test more eslint plugin 
 - [ ] run git action job parallely & playwright tests parallely
 
 ### Todo: Test Data

@@ -1,18 +1,34 @@
+//COVERAGE_TAG: GET /dokan/v1/stores
+//COVERAGE_TAG: GET /dokan/v1/stores/(?P<id>[\d]+)
+//COVERAGE_TAG: POST /dokan/v1/stores
+//COVERAGE_TAG: PUT /dokan/v1/stores/(?P<id>[\d]+)
+//COVERAGE_TAG: DELETE /dokan/v1/stores/(?P<id>[\d]+)
+//COVERAGE_TAG: GET /dokan/v1/stores/current-visitor
+//COVERAGE_TAG: GET /dokan/v1/stores/(?P<id>[\d]+)/stats
+//COVERAGE_TAG: GET /dokan/v1/stores/check
+//COVERAGE_TAG: GET /dokan/v1/stores/(?P<id>[\d]+)/categories
+//COVERAGE_TAG: GET /dokan/v1/stores/(?P<id>[\d]+)/products
+//COVERAGE_TAG: PUT /dokan/v1/stores/(?P<id>[\d]+)/status
+//COVERAGE_TAG: POST /dokan/v1/stores/(?P<id>[\d]+)/contact
+//COVERAGE_TAG: POST /dokan/v1/stores/(?P<id>[\d]+)/email
+//COVERAGE_TAG: PUT /dokan/v1/stores/batch
+
+
 import { test, expect } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
 
-let apiUtils: ApiUtils;
-let sellerId: string;
-
-test.beforeAll(async ({ request }) => {
-    apiUtils = new ApiUtils(request);
-    [, sellerId] = await apiUtils.createStore(payloads.createStore());
-    // let [, id] = await apiUtils.getCurrentUser()
-});
-
 test.describe('stores api test', () => {
+    let apiUtils: ApiUtils;
+    let sellerId: string;
+
+    test.beforeAll(async ({ request }) => {
+        apiUtils = new ApiUtils(request);
+        [, sellerId] = await apiUtils.createStore(payloads.createStore());
+        // let [, id] = await apiUtils.getCurrentUser()
+    });
+
     test('get all stores @lite', async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllStores);
         expect(response.ok()).toBeTruthy();

@@ -1,20 +1,29 @@
+//COVERAGE_TAG: GET /dokan/v1/stores/(?P<id>[\d]+)/reviews
+//COVERAGE_TAG: POST /dokan/v1/stores/(?P<id>[\d]+)/reviews
+//COVERAGE_TAG: GET /dokan/v1/store-reviews
+//COVERAGE_TAG: GET /dokan/v1/store-reviews/(?P<id>[\d]+)
+//COVERAGE_TAG: PUT /dokan/v1/store-reviews/(?P<id>[\d]+)
+//COVERAGE_TAG: DELETE /dokan/v1/store-reviews/(?P<id>[\d]+)
+//COVERAGE_TAG: PUT /dokan/v1/store-reviews/(?P<id>[\d]+)/restore
+//COVERAGE_TAG: PUT /dokan/v1/store-reviews/batch
+
 import { test, expect } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
 
-let apiUtils: ApiUtils;
-let sellerId: string;
-let reviewId: string;
-
-test.beforeAll(async ({ request }) => {
-    apiUtils = new ApiUtils(request);
-    // let [, sId,] = await apiUtils.createStore(payloads.createStore())
-    [, sellerId] = await apiUtils.getCurrentUser();
-    [, reviewId] = await apiUtils.createStoreReview(sellerId, payloads.createStoreReview, payloads.customerAuth);
-});
-
 test.describe('store reviews api test', () => {
+    let apiUtils: ApiUtils;
+    let sellerId: string;
+    let reviewId: string;
+
+    test.beforeAll(async ({ request }) => {
+        apiUtils = new ApiUtils(request);
+        // let [, sId,] = await apiUtils.createStore(payloads.createStore())
+        [, sellerId] = await apiUtils.getCurrentUser();
+        [, reviewId] = await apiUtils.createStoreReview(sellerId, payloads.createStoreReview, payloads.customerAuth);
+    });
+
     test('get store reviews @pro', async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getStoreReviews(sellerId));
         expect(response.ok()).toBeTruthy();

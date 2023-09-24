@@ -1,3 +1,10 @@
+//COVERAGE_TAG: GET /dokan/v1/reverse-withdrawal/transaction-types
+//COVERAGE_TAG: GET /dokan/v1/reverse-withdrawal/stores
+//COVERAGE_TAG: GET /dokan/v1/reverse-withdrawal/stores-balance
+//COVERAGE_TAG: GET /dokan/v1/reverse-withdrawal/transactions
+//COVERAGE_TAG: GET /dokan/v1/reverse-withdrawal/vendor-due-status
+//COVERAGE_TAG: POST /dokan/v1/reverse-withdrawal/add-to-cart
+
 import { test, expect } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
@@ -6,21 +13,21 @@ import { dbUtils } from '@utils/dbUtils';
 import { data } from '@utils/testData';
 import { dbData } from '@utils/dbData';
 
-let apiUtils: ApiUtils;
-
-test.beforeAll(async ({ request }) => {
-    apiUtils = new ApiUtils(request);
-    await dbUtils.setDokanSettings(dbData.dokan.optionName.reverseWithdraw, dbData.dokan.reverseWithdrawSettings);
-
-    const [, , orderId] = await apiUtils.createOrderWithStatus(payloads.createProduct(), payloads.createOrderCod, data.order.orderStatus.processing, payloads.vendorAuth);
-    await apiUtils.updateOrderStatus(orderId, data.order.orderStatus.completed, payloads.vendorAuth);
-});
-
-test.afterAll(async () => {
-    await dbUtils.setDokanSettings(dbData.dokan.optionName.reverseWithdraw, { ...dbData.dokan.reverseWithdrawSettings, enabled: 'off' });
-});
-
 test.describe('reverse withdrawal api test', () => {
+    let apiUtils: ApiUtils;
+
+    test.beforeAll(async ({ request }) => {
+        apiUtils = new ApiUtils(request);
+        await dbUtils.setDokanSettings(dbData.dokan.optionName.reverseWithdraw, dbData.dokan.reverseWithdrawSettings);
+
+        const [, , orderId] = await apiUtils.createOrderWithStatus(payloads.createProduct(), payloads.createOrderCod, data.order.orderStatus.processing, payloads.vendorAuth);
+        await apiUtils.updateOrderStatus(orderId, data.order.orderStatus.completed, payloads.vendorAuth);
+    });
+
+    test.afterAll(async () => {
+        await dbUtils.setDokanSettings(dbData.dokan.optionName.reverseWithdraw, { ...dbData.dokan.reverseWithdrawSettings, enabled: 'off' });
+    });
+
     test('get reverse withdrawal transaction types @lite', async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getReverseWithdrawalTransactionTypes);
         expect(response.ok()).toBeTruthy();

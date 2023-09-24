@@ -1067,3 +1067,36 @@ test.use({ storageState: data.auth.adminAuthFile });
 
 
 
+// Define an array of endpoint URLs
+const endpoints = [
+	endPoints.getAllDokanEndpointsAdmin,
+	endPoints.getAllDokanEndpointsV1,
+	endPoints.getAllDokanEndpointsV2,
+  ];
+  
+  // Function to fetch data from an API endpoint and extract routes and methods
+  async function fetchRoutesAndMethods(endpoint) {
+	const [, responseBody] = await apiUtils.get(endpoint);
+	return Object.entries(responseBody.routes).map(([route, { methods }]) =>
+	  methods.map((method) => `${method} ${route}`)
+	);
+  }
+  
+  // Fetch data from all endpoints concurrently
+  const allRouteMethods = await Promise.all(endpoints.map(fetchRoutesAndMethods));
+  
+  // Flatten the array and combine routes and methods
+  const coverageArray = allRouteMethods.flat();
+
+
+
+
+test.use({ extraHTTPHeaders: { Authorization: payloads.adminAuth.Authorization } });
+
+//todo: need to crosscheck coverage array : might not exist all endpoints
+
+
+
+
+
+

@@ -1,17 +1,22 @@
+//COVERAGE_TAG: GET /dokan/v1/wholesale/customers
+//COVERAGE_TAG: POST /dokan/v1/wholesale/register
+//COVERAGE_TAG: POST /dokan/v1/wholesale/customer/(?P<id>[\d]+)
+//COVERAGE_TAG: PUT /dokan/v1/wholesale/customers/batch
+
 import { test, expect } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
 
-let apiUtils: ApiUtils;
-let wholesaleCustomerId: string;
-
-test.beforeAll(async ({ request }) => {
-    apiUtils = new ApiUtils(request);
-    [, wholesaleCustomerId] = await apiUtils.createWholesaleCustomer(payloads.createCustomer(), payloads.adminAuth);
-});
-
 test.describe('wholesale customers api test', () => {
+    let apiUtils: ApiUtils;
+    let wholesaleCustomerId: string;
+
+    test.beforeAll(async ({ request }) => {
+        apiUtils = new ApiUtils(request);
+        [, wholesaleCustomerId] = await apiUtils.createWholesaleCustomer(payloads.createCustomer(), payloads.adminAuth);
+    });
+
     test('get all wholesale customers @pro', async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllWholesaleCustomers);
         expect(response.ok()).toBeTruthy();
