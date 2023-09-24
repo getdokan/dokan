@@ -1,46 +1,41 @@
 import { Page } from '@playwright/test';
-import { VendorPage } from 'pages/vendorPage';
-import { selector } from 'pages/selectors';
-import { data } from 'utils/testData';
+import { VendorPage } from '@pages/vendorPage';
+import { selector } from '@pages/selectors';
+import { data } from '@utils/testData';
 
 export class VendorAnalyticsPage extends VendorPage {
+    constructor(page: Page) {
+        super(page);
+    }
 
-	constructor(page: Page) {
-		super(page);
-	}
+    // vendor analytics
 
+    // vendor analytics render properly
+    async vendorAnalyticsRenderProperly() {
+        await this.goIfNotThere(data.subUrls.frontend.vDashboard.analytics);
 
-	// vendor analytics
+        // analytics text is visible
+        await this.toBeVisible(selector.vendor.vAnalytics.analyticsText);
 
+        // analytics menu elements are visible
+        await this.multipleElementVisible(selector.vendor.vAnalytics.menus);
 
-	// vendor analytics render properly
-	async vendorAnalyticsRenderProperly(){
-		await this.goIfNotThere(data.subUrls.frontend.vDashboard.analytics);
+        // date-picker elements are visible
+        await this.multipleElementVisible(selector.vendor.vAnalytics.datePicker);
 
-		// analytics text is visible
-		await this.toBeVisible(selector.vendor.vAnalytics.analyticsText);
+        await this.clickAndWaitForLoadState(selector.vendor.vAnalytics.menus.topPages);
+        await this.toBeVisible(selector.vendor.vAnalytics.noAnalyticsFound);
 
-		// analytics menu elements are visible
-		await this.multipleElementVisible(selector.vendor.vAnalytics.menus);
+        await this.clickAndWaitForLoadState(selector.vendor.vAnalytics.menus.location);
+        await this.toBeVisible(selector.vendor.vAnalytics.noAnalyticsFound);
 
-		// date-picker elements are visible
-		await this.multipleElementVisible(selector.vendor.vAnalytics.datePicker);
+        await this.clickAndWaitForLoadState(selector.vendor.vAnalytics.menus.system);
+        await this.toBeVisible(selector.vendor.vAnalytics.noAnalyticsFound);
 
-		await this.clickAndWaitForLoadState(selector.vendor.vAnalytics.menus.topPages);
-		await this.toBeVisible(selector.vendor.vAnalytics.noAnalyticsFound);
+        await this.clickAndWaitForLoadState(selector.vendor.vAnalytics.menus.promotions);
+        await this.toBeVisible(selector.vendor.vAnalytics.noAnalyticsFound);
 
-		await this.clickAndWaitForLoadState(selector.vendor.vAnalytics.menus.location);
-		await this.toBeVisible(selector.vendor.vAnalytics.noAnalyticsFound);
-
-		await this.clickAndWaitForLoadState(selector.vendor.vAnalytics.menus.system);
-		await this.toBeVisible(selector.vendor.vAnalytics.noAnalyticsFound);
-
-		await this.clickAndWaitForLoadState(selector.vendor.vAnalytics.menus.promotions);
-		await this.toBeVisible(selector.vendor.vAnalytics.noAnalyticsFound);
-
-		await this.clickAndWaitForLoadState(selector.vendor.vAnalytics.menus.keyword);
-		await this.toBeVisible(selector.vendor.vAnalytics.noAnalyticsFound);
-
-	}
-
+        await this.clickAndWaitForLoadState(selector.vendor.vAnalytics.menus.keyword);
+        await this.toBeVisible(selector.vendor.vAnalytics.noAnalyticsFound);
+    }
 }

@@ -29,13 +29,14 @@ declare global {
             ADMIN_AUTH: string;
             VENDOR_AUTH: string;
             CUSTOMER_AUTH: string;
-            NONCE: string;
             DB_HOST_NAME: string;
             DB_USER_NAME: string;
             DB_USER_PASSWORD: string;
             DATABASE: string;
             DB_PORT: number;
             DB_PREFIX: string;
+            API_TEST_RESULT: string
+            E2E_TEST_RESULT: string
 
 
         }
