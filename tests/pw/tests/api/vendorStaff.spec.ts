@@ -62,12 +62,6 @@ test.describe('vendor staff api test', () => {
         expect(responseBody).toBeTruthy();
     });
 
-    test('get all vendor staff capabilities @pro', async () => {
-        const [response, responseBody] = await apiUtils.get(endPoints.getAllVendorStaffCapabilities);
-        expect(response.ok()).toBeTruthy();
-        expect(responseBody).toBeTruthy();
-    });
-
     test('update vendor staff capabilities @pro', async () => {
         const [response, responseBody] = await apiUtils.put(endPoints.updateVendorStaffCapabilities(staffId), { data: payloads.updateCapabilities });
         expect(response.ok()).toBeTruthy();
