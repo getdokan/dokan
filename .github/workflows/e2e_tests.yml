@@ -7,7 +7,6 @@ on:
   push:
     branches:
       - develop
-      - update/lite
   workflow_dispatch:
 
 

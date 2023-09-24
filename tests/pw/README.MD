@@ -22,6 +22,9 @@
 
 -   [Running tests :test_tube: ](#running-tests)
     -   [How to run test projects](#how-to-run-test-projects)
+    -   [How to run tests](#how-to-run-tests)
+    -   [How to skip tests](#how-to-skip-tests)
+    -   [How to debug tests](#how-to-debug-tests)
     -   [How to serve reports](#how-to-serve-reports)
 
 <br/>
