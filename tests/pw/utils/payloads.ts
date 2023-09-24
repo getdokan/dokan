@@ -278,6 +278,11 @@ export const payloads = {
         ],
     },
 
+    batchProductVariation: {
+        id: '',
+        regular_price: '99.00',
+    },
+
     createDownloadableProduct: () => ({
         name: faker.commerce.productName() + ' (Downloadable)',
         type: 'simple',
@@ -2118,21 +2123,33 @@ export const payloads = {
         last_name: faker.person.lastName('male'),
         phone: '0123456789',
         email: faker.person.firstName('male') + '@email.com',
-        password: String(process.env.USER_PASSWORD),
+        // password: String(process.env.USER_PASSWORD), // todo: fatal error exists dokan issue, for updating password
     }),
 
     updateCapabilities: {
         capabilities: [
             {
-                capability: 'read',
+                capability: 'dokan_view_sales_overview',
                 access: false,
             },
             {
-                capability: 'vendor_staff',
+                capability: 'dokan_view_sales_report_chart',
                 access: false,
             },
             {
-                capability: 'dokandar',
+                capability: 'dokan_view_announcement',
+                access: false,
+            },
+            {
+                capability: 'dokan_view_order_report',
+                access: false,
+            },
+            {
+                capability: 'dokan_view_product_status_report',
+                access: false,
+            },
+            {
+                capability: 'dokan_add_product',
                 access: false,
             },
         ],

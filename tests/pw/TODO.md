@@ -4,8 +4,8 @@
 
 ### Todo: E2e Suite
 
+- [ ] global vs testEnv vs fullyParallel  
 - [ ] List all core tests and setup tests : plugins activated, wp settings, woocommerce settings, dokan modules activated , dokan settings for both e2e and api  
-- [ ] E2e Suite  
 - [ ] GRAB CONSOLE ERROR, And PHP ERROR  
 - [ ] Make tests more independent where possible specially admin parts : use before-all , after-all, delete data in before-all or after-all to repeat each tests: test should be passed for repeat-each:5, can be test parallely  
 - [ ] Slack integration  
@@ -34,8 +34,10 @@
 - [ ] add coverage report  
 - [ ] add linters  
 - [ ] add JSDOC  
-- [ ] cmd + save & npm run prettier:fix formatting differently
-- [ ] todo.md not ignored by prettier 
+- [ ] cmd + save & npm run prettier:fix formatting differently  
+- [ ] todo.md not ignored by prettier  
+- [ ] undo prettier rules, test more eslint plugin 
+- [ ] run git action job parallely & playwright tests parallely
 
 ### Todo: Test Data
 
@@ -88,6 +90,7 @@
 - [ ] hardcoding admin auth will hinder negative testing : test with invalid user  
 - [ ] reverse withdraw and product advertisement setup needed on api suite  
 - [ ] run loop & increment page to grab all plugins/products/users/... see woocommerce code base  
+- [ ] Payload generator**  
 
 ### In Progress
 

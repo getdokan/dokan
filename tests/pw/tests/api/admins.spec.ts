@@ -1,14 +1,25 @@
+//COVERAGE_TAG: GET /dokan/v1/admin/report/overview
+//COVERAGE_TAG: GET /dokan/v1/admin/report/summary
+//COVERAGE_TAG: GET /dokan/v1/admin/dashboard/feed
+//COVERAGE_TAG: GET /dokan/v1/admin/help
+//COVERAGE_TAG: GET /dokan/v1/admin/changelog/lite
+//COVERAGE_TAG: GET /dokan/v1/admin/changelog/pro
+//COVERAGE_TAG: GET /dokan/v1/admin/notices/admin
+//COVERAGE_TAG: GET /dokan/v1/admin/notices/promo
+//COVERAGE_TAG: GET /dokan/v1/admin/logs
+//COVERAGE_TAG: GET /dokan/v1/admin/logs/export
+
 import { test, expect } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 
-let apiUtils: ApiUtils;
-
-test.beforeAll(({ request }) => {
-    apiUtils = new ApiUtils(request);
-});
-
 test.describe('admin api test', () => {
+    let apiUtils: ApiUtils;
+
+    test.beforeAll(({ request }) => {
+        apiUtils = new ApiUtils(request);
+    });
+
     test('get admin report overview @lite', async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAdminReportOverview);
         expect(response.ok()).toBeTruthy();

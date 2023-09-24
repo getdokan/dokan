@@ -6,13 +6,12 @@ import { dbUtils } from '@utils/dbUtils';
 import { dbData } from '@utils/dbData';
 import { helpers } from '@utils/helpers';
 
-let apiUtils: ApiUtils;
-
-setup.beforeAll(async ({ request }) => {
-    apiUtils = new ApiUtils(request);
-});
-
 setup.describe(' setup environment', () => {
+    let apiUtils: ApiUtils;
+
+    setup.beforeAll(async ({ request }) => {
+        apiUtils = new ApiUtils(request);
+    });
     setup('setup store settings @lite', async () => {
         const [response] = await apiUtils.put(endPoints.updateSettings, { data: payloads.setupStore });
         expect(response.ok()).toBeTruthy();
@@ -21,13 +20,11 @@ setup.describe(' setup environment', () => {
     setup('create customer @lite', async () => {
         const [, customerId] = await apiUtils.createCustomer(payloads.createCustomer1, payloads.adminAuth);
         process.env.CUSTOMER_ID = customerId;
-        // helpers.appendEnv('CUSTOMER_ID=' + customerId);
     });
 
     setup('create vendor @lite', async () => {
         const [, sellerId] = await apiUtils.createStore(payloads.createStore1, payloads.adminAuth);
         process.env.VENDOR_ID = sellerId;
-        // helpers.appendEnv('VENDOR_ID=' + sellerId);
     });
 
     // setup('set dokan general settings @lite', async () => {

@@ -1,21 +1,33 @@
+//COVERAGE_TAG: GET /dokan/v1/seller-badge/verification-types
+//COVERAGE_TAG: GET /dokan/v1/seller-badge/events
+//COVERAGE_TAG: GET /dokan/v1/seller-badge
+//COVERAGE_TAG: GET /dokan/v1/seller-badge/(?P<id>[\d]+)
+//COVERAGE_TAG: GET /dokan/v1/seller-badge/vendor-unseen-badges
+//COVERAGE_TAG: PUT /dokan/v1/seller-badge/set-badge-as-seen
+//COVERAGE_TAG: POST /dokan/v1/seller-badge
+//COVERAGE_TAG: PUT /dokan/v1/seller-badge/(?P<id>[\d]+)
+//COVERAGE_TAG: PUT /dokan/v1/seller-badge/row-actions
+//COVERAGE_TAG: DELETE /dokan/v1/seller-badge/(?P<id>[\d]+)
+//COVERAGE_TAG: PUT /dokan/v1/seller-badge/bulk-actions
+
 import { test, expect } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
 
-let apiUtils: ApiUtils;
-let badgeId: string;
-let currentUserId: string;
-
-test.beforeAll(async ({ request }) => {
-    apiUtils = new ApiUtils(request);
-    // delete previous badges
-    await apiUtils.deleteAllSellerBadges();
-    [, currentUserId] = await apiUtils.getCurrentUser();
-    [, badgeId] = await apiUtils.createSellerBadge(payloads.createSellerBadgeExclusiveToPlatform);
-});
-
 test.describe('seller badge api test', () => {
+    let apiUtils: ApiUtils;
+    let badgeId: string;
+    let currentUserId: string;
+
+    test.beforeAll(async ({ request }) => {
+        apiUtils = new ApiUtils(request);
+        // delete previous badges
+        await apiUtils.deleteAllSellerBadges();
+        [, currentUserId] = await apiUtils.getCurrentUser();
+        [, badgeId] = await apiUtils.createSellerBadge(payloads.createSellerBadgeExclusiveToPlatform);
+    });
+
     test('get verified-seller verification types @pro', async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getVerifiedSellerVerificationTypes);
         expect(response.ok()).toBeTruthy();

@@ -1,21 +1,27 @@
+//COVERAGE_TAG: GET /dokan/v1/refunds
+//COVERAGE_TAG: PUT /dokan/v1/refunds/(?P<id>[\d]+)/cancel
+//COVERAGE_TAG: DELETE /dokan/v1/refunds/(?P<id>[\d]+)
+//COVERAGE_TAG: PUT /dokan/v1/refunds/(?P<id>[\d]+)/approve
+//COVERAGE_TAG: PUT /dokan/v1/refunds/batch
+
 import { test, expect, APIResponse } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { dbUtils } from '@utils/dbUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
 
-let apiUtils: ApiUtils;
-// let orderId: string;
-let refundId: string;
-let orderResponseBody: APIResponse;
-
-test.beforeAll(async ({ request }) => {
-    apiUtils = new ApiUtils(request);
-    [, orderResponseBody] = await apiUtils.createOrderWithStatus(payloads.createProduct(), payloads.createOrder, 'wc-processing', payloads.vendorAuth);
-    [, refundId] = await dbUtils.createRefund(orderResponseBody);
-});
-
 test.describe('refunds api test', () => {
+    let apiUtils: ApiUtils;
+    // let orderId: string;
+    let refundId: string;
+    let orderResponseBody: APIResponse;
+
+    test.beforeAll(async ({ request }) => {
+        apiUtils = new ApiUtils(request);
+        [, orderResponseBody] = await apiUtils.createOrderWithStatus(payloads.createProduct(), payloads.createOrder, 'wc-processing', payloads.vendorAuth);
+        [, refundId] = await dbUtils.createRefund(orderResponseBody);
+    });
+
     test('get all refunds @pro', async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllRefunds, { headers: payloads.vendorAuth });
         expect(response.ok()).toBeTruthy();

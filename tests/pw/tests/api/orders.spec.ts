@@ -1,19 +1,32 @@
+//COVERAGE_TAG: GET /dokan/v1/orders
+//COVERAGE_TAG: GET /dokan/v1/orders/summary
+//COVERAGE_TAG: GET /dokan/v1/orders/(?P<id>[\d]+)
+//COVERAGE_TAG: PUT /dokan/v1/orders/(?P<id>[\d]+)
+//COVERAGE_TAG: GET /dokan/v2/orders
+//COVERAGE_TAG: GET /dokan/v2/orders/summary
+//COVERAGE_TAG: GET /dokan/v2/orders/(?P<id>[\d]+)
+//COVERAGE_TAG: PUT /dokan/v2/orders/(?P<id>[\d]+)
+//COVERAGE_TAG: POST /dokan/v2/orders/bulk-actions
+
 import { test, expect } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
 
 let apiUtils: ApiUtils;
-let orderId: string;
-
-test.beforeAll(async ({ request }) => {
-    apiUtils = new ApiUtils(request);
-    [, , orderId] = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder);
-});
 
 const versions = ['v1', 'v2'];
+
 for (const version of versions) {
     test.describe(`order api test ${version}`, () => {
+        let apiUtils: ApiUtils;
+        let orderId: string;
+
+        test.beforeAll(async ({ request }) => {
+            apiUtils = new ApiUtils(request);
+            [, , orderId] = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder);
+        });
+
         test('get all orders @lite', async () => {
             const [response, responseBody] = await apiUtils.get(endPoints.getAllOrders.replace('v1', version));
             expect(response.ok()).toBeTruthy();

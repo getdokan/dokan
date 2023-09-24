@@ -4,6 +4,9 @@ const SERVER_URL = process.env.SERVER_URL ? process.env.SERVER_URL : process.env
 
 export const endPoints = {
     serverUrl: `${SERVER_URL}`,
+    getAllDokanEndpointsV1: `${SERVER_URL}/dokan/v1`,
+    getAllDokanEndpointsV2: `${SERVER_URL}/dokan/v2`,
+    getAllDokanEndpointsAdmin: `${SERVER_URL}/dokan/v1/admin`,
 
     // stores
     getAllStores: `${SERVER_URL}/dokan/v1/stores`,
@@ -59,6 +62,7 @@ export const endPoints = {
     createProductVariation: (productId: string) => `${SERVER_URL}/dokan/v1/products/${productId}/variations`,
     updateProductVariation: (productId: string, variationId: string) => `${SERVER_URL}/dokan/v1/products/${productId}/variations/${variationId}`,
     deleteProductVariation: (productId: string, variationId: string) => `${SERVER_URL}/dokan/v1/products/${productId}/variations/${variationId}`,
+    batchUpdateProductVariations: (productId: string) => `${SERVER_URL}/dokan/v1/products/${productId}/variations/batch`, // method: create, update, delete
 
     // orders
     getOrdersSummary: `${SERVER_URL}/dokan/v1/orders/summary`,
@@ -73,6 +77,7 @@ export const endPoints = {
     deleteOrderNote: (orderId: string, noteId: string) => `${SERVER_URL}/dokan/v1/orders/${orderId}/notes/${noteId}`,
 
     // withdraws
+    getWithdrawPaymentMethods: `${SERVER_URL}/dokan/v1/withdraw/payment_methods`,
     getBalanceDetails: `${SERVER_URL}/dokan/v1/withdraw/balance`,
     getAllWithdraws: `${SERVER_URL}/dokan/v1/withdraw`,
     getSingleWithdraw: (withdrawId: string) => `${SERVER_URL}/dokan/v1/withdraw/${withdrawId}`,
@@ -232,16 +237,16 @@ export const endPoints = {
     getAdminExportLogs: `${SERVER_URL}/dokan/v1/admin/logs/export`,
 
     // seller badge
-    getVerifiedSellerVerificationTypes: ` ${SERVER_URL}/dokan/v1/seller-badge/verification-types`,
-    getAllSellerBadgeEvents: ` ${SERVER_URL}/dokan/v1/seller-badge/events`,
-    getAllSellerBadges: ` ${SERVER_URL}/dokan/v1/seller-badge`,
-    getSingleSellerBadge: (badgeId: string) => ` ${SERVER_URL}/dokan/v1/seller-badge/${badgeId}`,
-    createSellerBadge: ` ${SERVER_URL}/dokan/v1/seller-badge`,
-    updateSellerBadge: (badgeId: string) => ` ${SERVER_URL}/dokan/v1/seller-badge/${badgeId}`,
-    deleteSellerBadge: (badgeId: string) => ` ${SERVER_URL}/dokan/v1/seller-badge/${badgeId}`,
+    getVerifiedSellerVerificationTypes: `${SERVER_URL}/dokan/v1/seller-badge/verification-types`,
+    getAllSellerBadgeEvents: `${SERVER_URL}/dokan/v1/seller-badge/events`,
+    getAllSellerBadges: `${SERVER_URL}/dokan/v1/seller-badge`,
+    getSingleSellerBadge: (badgeId: string) => `${SERVER_URL}/dokan/v1/seller-badge/${badgeId}`,
+    createSellerBadge: `${SERVER_URL}/dokan/v1/seller-badge`,
+    updateSellerBadge: (badgeId: string) => `${SERVER_URL}/dokan/v1/seller-badge/${badgeId}`,
+    deleteSellerBadge: (badgeId: string) => `${SERVER_URL}/dokan/v1/seller-badge/${badgeId}`,
     updateBatchSellerBadges: `${SERVER_URL}/dokan/v1/seller-badge/bulk-actions`,
     setSellerBadgeRowActions: `${SERVER_URL}/dokan/v1/seller-badge/row-actions`,
-    getVendorUnseenSellerBadges: ` ${SERVER_URL}/dokan/v1/seller-badge/vendor-unseen-badges`,
+    getVendorUnseenSellerBadges: `${SERVER_URL}/dokan/v1/seller-badge/vendor-unseen-badges`,
     setSellerBadgeAsSeen: `${SERVER_URL}/dokan/v1/seller-badge/set-badge-as-seen`,
 
     // new v1
@@ -261,12 +266,13 @@ export const endPoints = {
 
     // vendor staff
     getAllVendorStaffs: `${SERVER_URL}/dokan/v1/vendor-staff`,
-    getSingleVendorStaff: (staffId: string) => ` ${SERVER_URL}/dokan/v1/vendor-staff/${staffId}`,
-    createVendorStaff: ` ${SERVER_URL}/dokan/v1/vendor-staff`,
-    updateVendorStaff: (staffId: string) => ` ${SERVER_URL}/dokan/v1/vendor-staff/${staffId}`,
-    deleteVendorStaff: (staffId: string) => ` ${SERVER_URL}/dokan/v1/vendor-staff/${staffId}`,
-    getVendorStaffCapabilities: (staffId: string) => ` ${SERVER_URL}/dokan/v1/vendor-staff/${staffId}/capabilities`,
-    updateVendorStaffCapabilities: (staffId: string) => ` ${SERVER_URL}/dokan/v1/vendor-staff/${staffId}/capabilities`,
+    getSingleVendorStaff: (staffId: string) => `${SERVER_URL}/dokan/v1/vendor-staff/${staffId}`,
+    createVendorStaff: `${SERVER_URL}/dokan/v1/vendor-staff`,
+    updateVendorStaff: (staffId: string) => `${SERVER_URL}/dokan/v1/vendor-staff/${staffId}`,
+    deleteVendorStaff: (staffId: string) => `${SERVER_URL}/dokan/v1/vendor-staff/${staffId}`,
+    getAllVendorStaffCapabilities: `${SERVER_URL}/dokan/v1/vendor-staff/capabilities`,
+    getVendorStaffCapabilities: (staffId: string) => `${SERVER_URL}/dokan/v1/vendor-staff/${staffId}/capabilities`,
+    updateVendorStaffCapabilities: (staffId: string) => `${SERVER_URL}/dokan/v1/vendor-staff/${staffId}/capabilities`,
 
     // v2
 
@@ -287,6 +293,7 @@ export const endPoints = {
     getWithdrawSummary: `${SERVER_URL}/dokan/v2/withdraw/summary`,
     getWithdrawDisbursementSettings: `${SERVER_URL}/dokan/v2/withdraw/disbursement`,
     updateWithdrawDisbursementSettings: `${SERVER_URL}/dokan/v2/withdraw/disbursement`,
+    disableWithdrawDisbursement: `${SERVER_URL}/dokan/v2/withdraw/disbursement/disable`,
 
     // orders
     // all orders & order notes from v1 also work with v2

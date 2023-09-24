@@ -1,17 +1,25 @@
+//COVERAGE_TAG: GET /dokan/v1/request-for-quote/quote-rule
+//COVERAGE_TAG: GET /dokan/v1/request-for-quote/quote-rule/(?P<id>[\d]+)
+//COVERAGE_TAG: POST /dokan/v1/request-for-quote/quote-rule
+//COVERAGE_TAG: PUT /dokan/v1/request-for-quote/quote-rule/(?P<id>[\d]+)
+//COVERAGE_TAG: DELETE /dokan/v1/request-for-quote/quote-rule/(?P<id>[\d]+)
+//COVERAGE_TAG: PUT /dokan/v1/request-for-quote/quote-rule/(?P<id>[\d]+)/restore
+//COVERAGE_TAG: PUT /dokan/v1/request-for-quote/quote-rule/batch
+
 import { test, expect } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
 
-let apiUtils: ApiUtils;
-let quoteRuleId: string;
-
-test.beforeAll(async ({ request }) => {
-    apiUtils = new ApiUtils(request);
-    [, quoteRuleId] = await apiUtils.createQuoteRule(payloads.createQuoteRule());
-});
-
 test.describe('quote rules api test', () => {
+    let apiUtils: ApiUtils;
+    let quoteRuleId: string;
+
+    test.beforeAll(async ({ request }) => {
+        apiUtils = new ApiUtils(request);
+        [, quoteRuleId] = await apiUtils.createQuoteRule(payloads.createQuoteRule());
+    });
+
     test('get all quote rules @pro', async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllQuoteRules);
         expect(response.ok()).toBeTruthy();
