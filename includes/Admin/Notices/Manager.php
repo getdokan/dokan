@@ -48,6 +48,8 @@ class Manager {
         add_action( 'admin_notices', [ $this, 'render_missing_woocommerce_notice' ] );
         add_action( 'admin_notices', [ $this, 'render_global_admin_notices_html' ] );
         add_filter( 'dokan_admin_notices', [ $this, 'show_permalink_setting_notice' ] );
+        add_filter( 'dokan_admin_notices', [ $this, 'show_one_step_product_add_notice' ] );
+        add_action( 'wp_ajax_dismiss_dokan_one_step_product_notice', [ $this, 'dismiss_dokan_one_step_product_notice' ] );
     }
 
     /**
@@ -123,5 +125,53 @@ class Manager {
         }
 
         return $notices;
+    }
+
+    /**
+     * Display single page product page create notice.
+     *
+     * @since 3.8.2
+     *
+     * @param array $notices
+     *
+     * @return array
+     */
+    public function show_one_step_product_add_notice( $notices ) {
+        if ( 'yes' !== get_option( 'dismiss_dokan_one_step_product_nonce', 'no' ) ) {
+            $notices[] = [
+                'type'        => 'alert',
+                'title'       => __( 'New One-Step Product Form', 'dokan-lite' ),
+                'description' => __( 'Try it now to enhance your vendor\'s product upload experience, the older two-step version will be retired in one month.', 'dokan-lite' ),
+                'priority'    => 1,
+                'show_close_button' => true,
+                'ajax_data'   => [
+                    'action' => 'dismiss_dokan_one_step_product_notice',
+                    'nonce'  => wp_create_nonce( 'dismiss_dokan_one_step_product_nonce' ),
+                ],
+            ];
+        }
+
+        return $notices;
+    }
+
+    /**
+     * Dismisses one-step product create notice.
+     *
+     * @since 3.8.2
+     *
+     * @return void
+     */
+    public function dismiss_dokan_one_step_product_notice() {
+        if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['nonce'] ) ), 'dismiss_dokan_one_step_product_nonce' ) ) {
+            wp_send_json_error( __( 'Invalid nonce', 'dokan-lite' ) );
+        }
+
+        // phpcs:ignore
+        if ( ! current_user_can( 'manage_woocommerce' ) ) {
+            wp_send_json_error( __( 'You have no permission to do that', 'dokan-lite' ) );
+        }
+
+        update_option( 'dismiss_dokan_one_step_product_nonce', 'yes' );
+        wp_send_json_success();
     }
 }

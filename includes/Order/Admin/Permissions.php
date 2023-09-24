@@ -78,7 +78,7 @@ class Permissions {
     /**
      * Filter orders of current user
      *
-     * @since DOKAN_SINCE
+     * @since 3.8.2
      *
      * @param array $args
      *
