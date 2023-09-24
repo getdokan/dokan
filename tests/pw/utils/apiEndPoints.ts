@@ -7,7 +7,6 @@ export const endPoints = {
     getAllDokanEndpointsV1: `${SERVER_URL}/dokan/v1`,
     getAllDokanEndpointsV2: `${SERVER_URL}/dokan/v2`,
     getAllDokanEndpointsAdmin: `${SERVER_URL}/dokan/v1/admin`,
-    getAllDokanEndpointsRfq: `${SERVER_URL}/dokan/v1/request-for-quote`,
 
     // stores
     getAllStores: `${SERVER_URL}/dokan/v1/stores`,
@@ -238,16 +237,16 @@ export const endPoints = {
     getAdminExportLogs: `${SERVER_URL}/dokan/v1/admin/logs/export`,
 
     // seller badge
-    getVerifiedSellerVerificationTypes: ` ${SERVER_URL}/dokan/v1/seller-badge/verification-types`,
-    getAllSellerBadgeEvents: ` ${SERVER_URL}/dokan/v1/seller-badge/events`,
-    getAllSellerBadges: ` ${SERVER_URL}/dokan/v1/seller-badge`,
-    getSingleSellerBadge: (badgeId: string) => ` ${SERVER_URL}/dokan/v1/seller-badge/${badgeId}`,
-    createSellerBadge: ` ${SERVER_URL}/dokan/v1/seller-badge`,
-    updateSellerBadge: (badgeId: string) => ` ${SERVER_URL}/dokan/v1/seller-badge/${badgeId}`,
-    deleteSellerBadge: (badgeId: string) => ` ${SERVER_URL}/dokan/v1/seller-badge/${badgeId}`,
+    getVerifiedSellerVerificationTypes: `${SERVER_URL}/dokan/v1/seller-badge/verification-types`,
+    getAllSellerBadgeEvents: `${SERVER_URL}/dokan/v1/seller-badge/events`,
+    getAllSellerBadges: `${SERVER_URL}/dokan/v1/seller-badge`,
+    getSingleSellerBadge: (badgeId: string) => `${SERVER_URL}/dokan/v1/seller-badge/${badgeId}`,
+    createSellerBadge: `${SERVER_URL}/dokan/v1/seller-badge`,
+    updateSellerBadge: (badgeId: string) => `${SERVER_URL}/dokan/v1/seller-badge/${badgeId}`,
+    deleteSellerBadge: (badgeId: string) => `${SERVER_URL}/dokan/v1/seller-badge/${badgeId}`,
     updateBatchSellerBadges: `${SERVER_URL}/dokan/v1/seller-badge/bulk-actions`,
     setSellerBadgeRowActions: `${SERVER_URL}/dokan/v1/seller-badge/row-actions`,
-    getVendorUnseenSellerBadges: ` ${SERVER_URL}/dokan/v1/seller-badge/vendor-unseen-badges`,
+    getVendorUnseenSellerBadges: `${SERVER_URL}/dokan/v1/seller-badge/vendor-unseen-badges`,
     setSellerBadgeAsSeen: `${SERVER_URL}/dokan/v1/seller-badge/set-badge-as-seen`,
 
     // new v1
@@ -267,13 +266,13 @@ export const endPoints = {
 
     // vendor staff
     getAllVendorStaffs: `${SERVER_URL}/dokan/v1/vendor-staff`,
-    getSingleVendorStaff: (staffId: string) => ` ${SERVER_URL}/dokan/v1/vendor-staff/${staffId}`,
-    createVendorStaff: ` ${SERVER_URL}/dokan/v1/vendor-staff`,
-    updateVendorStaff: (staffId: string) => ` ${SERVER_URL}/dokan/v1/vendor-staff/${staffId}`,
-    deleteVendorStaff: (staffId: string) => ` ${SERVER_URL}/dokan/v1/vendor-staff/${staffId}`,
-    getAllVendorStaffCapabilities: ` ${SERVER_URL}/dokan/v1/vendor-staff/capabilities`,
-    getVendorStaffCapabilities: (staffId: string) => ` ${SERVER_URL}/dokan/v1/vendor-staff/${staffId}/capabilities`,
-    updateVendorStaffCapabilities: (staffId: string) => ` ${SERVER_URL}/dokan/v1/vendor-staff/${staffId}/capabilities`,
+    getSingleVendorStaff: (staffId: string) => `${SERVER_URL}/dokan/v1/vendor-staff/${staffId}`,
+    createVendorStaff: `${SERVER_URL}/dokan/v1/vendor-staff`,
+    updateVendorStaff: (staffId: string) => `${SERVER_URL}/dokan/v1/vendor-staff/${staffId}`,
+    deleteVendorStaff: (staffId: string) => `${SERVER_URL}/dokan/v1/vendor-staff/${staffId}`,
+    getAllVendorStaffCapabilities: `${SERVER_URL}/dokan/v1/vendor-staff/capabilities`,
+    getVendorStaffCapabilities: (staffId: string) => `${SERVER_URL}/dokan/v1/vendor-staff/${staffId}/capabilities`,
+    updateVendorStaffCapabilities: (staffId: string) => `${SERVER_URL}/dokan/v1/vendor-staff/${staffId}/capabilities`,
 
     // v2
 

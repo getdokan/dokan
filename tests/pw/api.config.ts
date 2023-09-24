@@ -50,8 +50,6 @@ export default defineConfig({
         {
             name: 'api_setup',
             testMatch: /.*\.setup\.ts/,
-            fullyParallel: false,
-
         },
 
         // api_tests
@@ -59,7 +57,6 @@ export default defineConfig({
             name: 'api_tests',
             testMatch: /.*\.spec\.ts/,
             dependencies: process.env.SETUP ? [] : ['api_setup'] /* whether not to run setup tests before running actual tests */,
-            fullyParallel: true,
         },
     ],
 });
