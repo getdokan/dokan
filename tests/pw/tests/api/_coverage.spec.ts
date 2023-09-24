@@ -13,12 +13,12 @@ test.describe.only('get api test coverage', () => {
 
     test('get coverage ', async () => {
         const [, responseBody1] = await apiUtils.get(endPoints.getAllDokanEndpointsAdmin);
-        console.log(Object.entries(responseBody1.routes));
-
         const [, responseBody2] = await apiUtils.get(endPoints.getAllDokanEndpointsV1);
         const [, responseBody3] = await apiUtils.get(endPoints.getAllDokanEndpointsV2);
         const allRoutes = [...Object.keys(responseBody1.routes), ...Object.keys(responseBody2.routes), ...Object.keys(responseBody3.routes)];
+        // const allRoutes = [ ...Object.keys(responseBody3.routes)];
         const allRouteObjValues = [...Object.values(responseBody1.routes), ...Object.values(responseBody2.routes), ...Object.values(responseBody3.routes)];
+        // const allRouteObjValues = [ ...Object.values(responseBody3.routes)];
         const allRouteMethods: string[][] = allRouteObjValues.map(route => route.methods);
         // console.log(allRoutes);
         // console.log(allRouteMethods);

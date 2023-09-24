@@ -2,6 +2,7 @@
 //COVERAGE_TAG: GET /dokan/v2/withdraw/summary
 //COVERAGE_TAG: GET /dokan/v2/withdraw/disbursement
 //COVERAGE_TAG: POST /dokan/v2/withdraw/disbursement
+//COVERAGE_TAG: POST /dokan/v2/withdraw/disbursement/disable
 
 import { test, expect } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
@@ -35,6 +36,12 @@ test.describe('withdraw api test', () => {
 
     test('update withdraw disbursement settings @v2 @pro', async () => {
         const [response, responseBody] = await apiUtils.post(endPoints.updateWithdrawDisbursementSettings, { data: payloads.updateWithdrawDisbursementSettings });
+        expect(response.ok()).toBeTruthy();
+        expect(responseBody).toBeTruthy();
+    });
+
+    test('disable withdraw disbursement @v2 @pro', async () => {
+        const [response, responseBody] = await apiUtils.post(endPoints.disableWithdrawDisbursement);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });

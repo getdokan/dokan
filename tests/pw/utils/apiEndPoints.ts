@@ -63,6 +63,7 @@ export const endPoints = {
     createProductVariation: (productId: string) => `${SERVER_URL}/dokan/v1/products/${productId}/variations`,
     updateProductVariation: (productId: string, variationId: string) => `${SERVER_URL}/dokan/v1/products/${productId}/variations/${variationId}`,
     deleteProductVariation: (productId: string, variationId: string) => `${SERVER_URL}/dokan/v1/products/${productId}/variations/${variationId}`,
+    batchUpdateProductVariations: (productId: string) => `${SERVER_URL}/dokan/v1/products/${productId}/variations/batch`, // method: create, update, delete
 
     // orders
     getOrdersSummary: `${SERVER_URL}/dokan/v1/orders/summary`,
@@ -77,6 +78,7 @@ export const endPoints = {
     deleteOrderNote: (orderId: string, noteId: string) => `${SERVER_URL}/dokan/v1/orders/${orderId}/notes/${noteId}`,
 
     // withdraws
+    getWithdrawPaymentMethods: `${SERVER_URL}/dokan/v1/withdraw/payment_methods`,
     getBalanceDetails: `${SERVER_URL}/dokan/v1/withdraw/balance`,
     getAllWithdraws: `${SERVER_URL}/dokan/v1/withdraw`,
     getSingleWithdraw: (withdrawId: string) => `${SERVER_URL}/dokan/v1/withdraw/${withdrawId}`,
@@ -292,6 +294,7 @@ export const endPoints = {
     getWithdrawSummary: `${SERVER_URL}/dokan/v2/withdraw/summary`,
     getWithdrawDisbursementSettings: `${SERVER_URL}/dokan/v2/withdraw/disbursement`,
     updateWithdrawDisbursementSettings: `${SERVER_URL}/dokan/v2/withdraw/disbursement`,
+    disableWithdrawDisbursement: `${SERVER_URL}/dokan/v2/withdraw/disbursement/disable`,
 
     // orders
     // all orders & order notes from v1 also work with v2

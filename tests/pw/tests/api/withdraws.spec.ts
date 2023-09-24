@@ -25,6 +25,12 @@ test.describe('withdraw api test', () => {
         withdrawId = responseBody.message === 'You already have a pending withdraw request' ? await apiUtils.getWithdrawId() : id;
     });
 
+    test('get withdraw payment methods @lite', async () => {
+        const [response, responseBody] = await apiUtils.get(endPoints.getWithdrawPaymentMethods);
+        expect(response.ok()).toBeTruthy();
+        expect(responseBody).toBeTruthy();
+    });
+
     test('get balance details @lite', async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getBalanceDetails);
         expect(response.ok()).toBeTruthy();
