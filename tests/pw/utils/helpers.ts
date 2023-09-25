@@ -51,7 +51,6 @@ export const helpers = {
 
     // escape regex
     escapeRegex: (str: string): string => {
-        // const escapePatten = /[.*+\-?^$|(){}[\]\\/]/g; // Special Regex Characters: ., *, +,-, ?, ^, $, |, (, ), {, }, [, ], \, ],
         const escapePatten = /[.*+\-?^$|(){}[\]\\]/g; // Special Regex Characters: ., *, +,-, ?, ^, $, |, (, ), {, }, [, ], \, ],
         return str.replace(escapePatten, '\\$&'); // $& means the whole matched string
     },
