@@ -267,9 +267,10 @@ export class ProductsPage extends AdminPage {
         DOKAN_PRO && (await this.multipleElementVisible(selector.vendor.product.importExport));
 
         // product filters elements are visible
-        const {filterByType, ...filters } = selector.vendor.product.filters;
+        const { filterByType, filterByOther, ...filters } = selector.vendor.product.filters;
         await this.multipleElementVisible(filters);
-        DOKAN_PRO && await this.toBeVisible(filterByType)
+        DOKAN_PRO && (await this.toBeVisible(filterByType));
+        DOKAN_PRO && (await this.toBeVisible(filterByOther));
 
         // product search elements are visible
         await this.multipleElementVisible(selector.vendor.product.search);
