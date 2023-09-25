@@ -7,7 +7,6 @@ import { payloads } from '@utils/payloads';
 import { dbUtils } from '@utils/dbUtils';
 import { dbData } from '@utils/dbData';
 import { data } from '@utils/testData';
-import { helpers } from '@utils/helpers';
 
 const { CUSTOMER_ID, DOKAN_PRO, HPOS } = process.env;
 

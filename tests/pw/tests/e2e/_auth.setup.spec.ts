@@ -16,7 +16,7 @@ setup.describe('authenticate users & set permalink', () => {
         const wpPage = new WpPage(page);
         await loginPage.adminLogin(data.admin);
         await wpPage.setPermalinkSettings(data.wpSettings.permalink);
-        process.env.SERVER_URL = process.env.BASE_URL + '/wp-json'; // todo: use global variable instead
+        process.env.SERVER_URL = process.env.BASE_URL + '/wp-json';
     });
 
     setup('add customer1 @lite', async ({ request }) => {
