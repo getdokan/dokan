@@ -2,6 +2,8 @@
 
 namespace WeDevs\Dokan\Withdraw;
 
+use WeDevs\Dokan\Cache;
+
 class Withdraws {
 
     /**
@@ -21,9 +23,9 @@ class Withdraws {
     /**
      * Total withdraw found
      *
-     * @var null|int
+     * @var int
      */
-    protected $total = null;
+    protected $total = 0;
 
     /**
      * Maximum number of pages
@@ -31,6 +33,15 @@ class Withdraws {
      * @var null|int
      */
     protected $max_num_pages = null;
+
+    /**
+     * Status counts.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @var array $status
+     */
+    protected $status = [];
 
     /**
      * Class constructor
@@ -42,13 +53,15 @@ class Withdraws {
      * @return void
      */
     public function __construct( $args = [] ) {
-        $defaults = [
+        $default_args = [
             'limit'         => 10,
             'page'          => 1,
             'no_found_rows' => false,
+            'return'        => 'all', // Possible values are: count, all
         ];
 
-        $this->args = wp_parse_args( $args, $defaults );
+        $this->args = wp_parse_args( $args, $default_args );
+
         $this->query();
     }
 
@@ -84,6 +97,12 @@ class Withdraws {
         $limits     = '';
         $query_args = [ 1, 1 ];
 
+        // Check if retrun type is counts.
+        if ( 'count' === $args['return'] ) {
+            $fields  = " CASE `status` WHEN 0 THEN 'pending' WHEN 1 THEN 'completed' WHEN 2 THEN 'cancelled' END AS `status`, COUNT(id) AS count";
+            $groupby = ' GROUP BY status';
+        }
+
         if ( isset( $args['ids'] ) && is_array( $args['ids'] ) ) {
             $ids = array_map( 'absint', $args['ids'] );
             $ids = array_filter( $ids );
@@ -107,12 +126,13 @@ class Withdraws {
             $query_args[] = $args['amount'];
         }
 
-        if ( isset( $args['date'] ) ) {
-            $where        .= ' and date = %s';
-            $query_args[] = $args['date'];
+        if ( isset( $args['start_date'] ) && isset( $args['end_date'] ) ) {
+            $where        .= ' and date(date) between %s and %s';
+            $query_args[] = current_datetime()->modify( $args['start_date'] )->format( 'Y-m-d' );
+            $query_args[] = current_datetime()->modify( $args['end_date'] )->format( 'Y-m-d' );
         }
 
-        if ( isset( $args['status'] ) ) {
+        if ( 'count' !== $args['return'] && isset( $args['status'] ) ) {
             $where        .= ' and status = %d';
             $query_args[] = $args['status'];
         }
@@ -127,7 +147,7 @@ class Withdraws {
             $query_args[] = $args['ip'];
         }
 
-        if ( ! empty( $args['limit'] ) ) {
+        if ( 'count' !== $args['return'] && ! empty( $args['limit'] ) ) {
             $limit  = absint( $args['limit'] );
             $page   = absint( $args['page'] );
             $page   = $page ? $page : 1;
@@ -139,26 +159,56 @@ class Withdraws {
         }
 
         $found_rows = '';
-        if ( ! $args['no_found_rows'] && ! empty( $limits ) ) {
+        if ( 'count' !== $args['return'] && ! $args['no_found_rows'] && ! empty( $limits ) ) {
             $found_rows = 'SQL_CALC_FOUND_ROWS';
         }
 
-        // @codingStandardsIgnoreStart
-        $withdraws = $wpdb->get_results(
-            $wpdb->prepare(
-                "SELECT $found_rows $fields FROM {$wpdb->dokan_withdraw} $join WHERE %d=%d $where $groupby $orderby $limits",
-                ...$query_args
-            ), ARRAY_A
-        );
-        // @codingStandardsIgnoreEnd
+        $cache_group = 'withdraws';
+        $cache_key   = 'withdraw_requests_' . md5( wp_json_encode( $args ) );
+        $withdraws   = Cache::get( $cache_key, $cache_group );
 
-        if ( ! empty( $withdraws ) ) {
+        if ( false === $withdraws ) {
+            // @codingStandardsIgnoreStart
+            $withdraws = $wpdb->get_results(
+                $wpdb->prepare(
+                    "SELECT $found_rows $fields FROM {$wpdb->dokan_withdraw} $join WHERE %d=%d $where $groupby $orderby $limits",
+                    ...$query_args
+                ), ARRAY_A
+            );
+            // @codingStandardsIgnoreEnd
+        }
+
+        if ( 'count' === $args['return'] ) {
+            // Reset default status values.
+            $this->status = [
+                'pending'   => 0,
+                'completed' => 0,
+                'cancelled' => 0,
+            ];
+            foreach ( $withdraws as $row ) {
+                $this->status[ $row['status'] ] = $row['count'];
+            }
+        } else {
+            $this->withdraws = [];
             foreach ( $withdraws as $withdraw ) {
                 $this->withdraws[] = new Withdraw( $withdraw );
             }
+
+            $this->total = absint( $wpdb->get_var( 'SELECT FOUND_ROWS()' ) );
         }
 
         return $this;
+    }
+
+    /**
+     * Get withdraw status count.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return array
+     */
+    public function get_status_count() {
+        return $this->status;
     }
 
     /**
@@ -169,12 +219,6 @@ class Withdraws {
      * @return int
      */
     public function get_total() {
-        global $wpdb;
-
-        if ( ! isset( $this->total ) ) {
-            $this->total = absint( $wpdb->get_var( 'SELECT FOUND_ROWS()' ) );
-        }
-
         return $this->total;
     }
 
