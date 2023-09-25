@@ -16,10 +16,8 @@ import { payloads } from '@utils/payloads';
 let apiUtils: ApiUtils;
 
 const versions = ['v1', 'v2'];
-
 for (const version of versions) {
     test.describe(`order api test ${version}`, () => {
-        let apiUtils: ApiUtils;
         let orderId: string;
 
         test.beforeAll(async ({ request }) => {
@@ -60,7 +58,7 @@ for (const version of versions) {
 }
 
 test('update batch orders @v2 @lite', async () => {
-    const allOrderIds = (await apiUtils.getAllOrders()).map((a: { id: unknown }) => a.id);
+    const allOrderIds = (await apiUtils.getAllOrders())?.map((a: { id: unknown }) => a.id);
     const [response, responseBody] = await apiUtils.post(endPoints.updateBatchOrders, { data: { order_ids: allOrderIds, status: 'wc-completed' } });
     expect(response.ok()).toBeTruthy();
     expect(responseBody).toBeTruthy();

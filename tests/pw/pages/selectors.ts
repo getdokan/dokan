@@ -5235,7 +5235,7 @@ export const selector = {
                 // toggleBtn: '#dokan-spmv-area-toggle-button i.fa-caret-down',
                 searchInput: 'input[name="search"]',
                 search: 'input.dokan-btn-search',
-                orCreateNew: 'a.dokan-add-new-product',
+                orCreateNew: '.dokan-spmv-add-new-product-search-box-area .dokan-product-listing a',
             },
 
             // table

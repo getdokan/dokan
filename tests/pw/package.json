@@ -60,7 +60,7 @@
     },
     "dependencies": {
         "@faker-js/faker": "^8.0.2",
-        "@playwright/test": "^1.37.1",
+        "@playwright/test": "^1.38.1",
         "@wordpress/env": "^4.2.1",
         "allure-playwright": "^2.7.0",
         "dotenv": "^16.3.1",
