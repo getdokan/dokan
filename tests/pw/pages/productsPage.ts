@@ -267,7 +267,9 @@ export class ProductsPage extends AdminPage {
         DOKAN_PRO && (await this.multipleElementVisible(selector.vendor.product.importExport));
 
         // product filters elements are visible
-        await this.multipleElementVisible(selector.vendor.product.filters);
+        const {filterByType, ...filters } = selector.vendor.product.filters;
+        await this.multipleElementVisible(filters);
+        DOKAN_PRO && await this.toBeVisible(filterByType)
 
         // product search elements are visible
         await this.multipleElementVisible(selector.vendor.product.search);
@@ -307,8 +309,6 @@ export class ProductsPage extends AdminPage {
         } else {
             await this.clickAndWaitForLoadState(selector.vendor.product.create.addNewProduct);
             await this.clearAndType(selector.vendor.product.edit.title, productName);
-
-            await this.selectByValue(selector.vendor.product.edit.productType, product.productType);
             await this.clearAndType(selector.vendor.product.edit.price, product.regularPrice());
             // await this.addProductCategory(product.category);
 

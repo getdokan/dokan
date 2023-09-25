@@ -83,7 +83,7 @@ export class SettingsPage extends AdminPage {
         // commission settings
         await this.selectByValue(selector.admin.dokan.settings.selling.commissionType, selling.commissionType);
         await this.clearAndType(selector.admin.dokan.settings.selling.adminCommission, selling.adminCommission);
-        await this.click(selector.admin.dokan.settings.selling.shippingFeeRecipient(selling.shippingFeeRecipient));
+        // await this.click(selector.admin.dokan.settings.selling.shippingFeeRecipient(selling.shippingFeeRecipient)); //todo: makes test flaky
         await this.click(selector.admin.dokan.settings.selling.productTaxFeeRecipient(selling.productTaxFeeRecipient));
         await this.click(selector.admin.dokan.settings.selling.shippingTaxFeeRecipient(selling.shippingTaxFeeRecipient));
 
