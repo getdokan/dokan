@@ -29,7 +29,7 @@ if ( ! function_exists( 'dokan_admin_menu_capability' ) ) {
     /**
      * Dokan Admin menu capability
      *
-     * @since DOKAN_SINCE
+     * @since 3.8.3
      *
      * @return string
      */

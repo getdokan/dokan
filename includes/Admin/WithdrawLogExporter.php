@@ -14,7 +14,7 @@ if ( ! class_exists( 'WC_CSV_Batch_Exporter', false ) ) {
 /**
  * WithdrawLogExporter for Log Export.
  *
- * @since DOKAN_SINCE
+ * @since 3.8.3
  *
  * @package dokan
  */
@@ -22,7 +22,7 @@ class WithdrawLogExporter extends \WC_CSV_Batch_Exporter {
     /**
      * Type of export used in filter names.
      *
-     * @since DOKAN_SINCE
+     * @since 3.8.3
      *
      * @var string
      */
@@ -31,7 +31,7 @@ class WithdrawLogExporter extends \WC_CSV_Batch_Exporter {
     /**
      * Filename to export to.
      *
-     * @since DOKAN_SINCE
+     * @since 3.8.3
      *
      * @var string
      */
@@ -40,7 +40,7 @@ class WithdrawLogExporter extends \WC_CSV_Batch_Exporter {
     /**
      * Items to export.
      *
-     * @since DOKAN_SINCE
+     * @since 3.8.3
      *
      * @var array
      */
@@ -49,7 +49,7 @@ class WithdrawLogExporter extends \WC_CSV_Batch_Exporter {
     /**
      * Total rows to export.
      *
-     * @since DOKAN_SINCE
+     * @since 3.8.3
      *
      * @var int
      */
@@ -58,7 +58,7 @@ class WithdrawLogExporter extends \WC_CSV_Batch_Exporter {
     /**
      * Decimal places.
      *
-     * @since DOKAN_SINCE
+     * @since 3.8.3
      *
      * @var int
      */
@@ -67,7 +67,7 @@ class WithdrawLogExporter extends \WC_CSV_Batch_Exporter {
     /**
      * Get column names.
      *
-     * @since DOKAN_SINCE
+     * @since 3.8.3
      *
      * @return array
      */
@@ -78,7 +78,7 @@ class WithdrawLogExporter extends \WC_CSV_Batch_Exporter {
     /**
      * Set items for export.
      *
-     * @since DOKAN_SINCE
+     * @since 3.8.3
      *
      * @param array $items
      */
@@ -89,7 +89,7 @@ class WithdrawLogExporter extends \WC_CSV_Batch_Exporter {
     /**
      * Set total rows.
      *
-     * @since DOKAN_SINCE
+     * @since 3.8.3
      *
      * @param int $total_rows
      */
@@ -100,7 +100,7 @@ class WithdrawLogExporter extends \WC_CSV_Batch_Exporter {
     /**
      * Return an array of columns to export.
      *
-     * @since DOKAN_SINCE
+     * @since 3.8.3
      *
      * @return array
      */
@@ -135,7 +135,7 @@ class WithdrawLogExporter extends \WC_CSV_Batch_Exporter {
     /**
      * Prepare formatted data to export.
      *
-     * @since DOKAN_SINCE
+     * @since 3.8.3
      *
      * @return void
      */
@@ -153,7 +153,7 @@ class WithdrawLogExporter extends \WC_CSV_Batch_Exporter {
     /**
      * Take a withdraw item and generate row data from it for export.
      *
-     * @since DOKAN_SINCE
+     * @since 3.8.3
      *
      * @param $withdraw_item
      *
@@ -178,7 +178,7 @@ class WithdrawLogExporter extends \WC_CSV_Batch_Exporter {
     /**
      * Get value from withdraw item by key.
      *
-     * @since DOKAN_SINCE
+     * @since 3.8.3
      *
      * @param $withdraw_item
      * @param $key
@@ -236,7 +236,7 @@ class WithdrawLogExporter extends \WC_CSV_Batch_Exporter {
     /**
      * Get total % complete.
      *
-     * @since DOKAN_SINCE
+     * @since 3.8.3
      *
      * @return int
      */

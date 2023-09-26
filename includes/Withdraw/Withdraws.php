@@ -37,7 +37,7 @@ class Withdraws {
     /**
      * Status counts.
      *
-     * @since DOKAN_SINCE
+     * @since 3.8.3
      *
      * @var array $status
      */
@@ -203,7 +203,7 @@ class Withdraws {
     /**
      * Get withdraw status count.
      *
-     * @since DOKAN_SINCE
+     * @since 3.8.3
      *
      * @return array
      */

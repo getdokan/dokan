@@ -112,7 +112,7 @@ class Hooks {
         /**
          * If `exclude_cod_payment` is enabled, don't include the fund in vendor's withdrawal balance.
          *
-         * @since DOKAN_SINCE
+         * @since 3.8.3
          */
         $exclude_cod_payment = 'on' === dokan_get_option( 'exclude_cod_payment', 'dokan_withdraw', 'off' );
 
@@ -399,7 +399,7 @@ class Hooks {
     /**
      * Handle stock level wrong calculation in order notes for suborder
      *
-     * @since DOKAN_SINCE
+     * @since 3.8.3
      *
      * @param WC_Order $order
      *
@@ -441,7 +441,7 @@ class Hooks {
     /**
      * PDF Invoices & Packing Slips for WooCommerce plugin integration on suborder section.
      *
-     * @since DOKAN_SINCE
+     * @since 3.8.3
      *
      * @param $actions
      * @param $order
