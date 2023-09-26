@@ -11,7 +11,6 @@ $banner_id      = ! empty( $profile_info['banner'] ) ? $profile_info['banner'] :
 $storename      = isset( $profile_info['store_name'] ) ? $profile_info['store_name'] : '';
 $phone          = isset( $profile_info['phone'] ) ? $profile_info['phone'] : '';
 $show_email     = isset( $profile_info['show_email'] ) ? $profile_info['show_email'] : 'no';
-$show_more_ptab = isset( $profile_info['show_more_ptab'] ) ? $profile_info['show_more_ptab'] : 'yes';
 
 $address         = isset( $profile_info['address'] ) ? $profile_info['address'] : '';
 $address_street1 = isset( $profile_info['address']['street_1'] ) ? $profile_info['address']['street_1'] : '';

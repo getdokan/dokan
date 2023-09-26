@@ -147,7 +147,6 @@ class Vendor {
             'gravatar'              => $this->get_avatar(),
             'gravatar_id'           => $this->get_avatar_id(),
             'shop_url'              => $this->get_shop_url(),
-            'show_more_product_tab' => $this->show_more_products_tab(),
             'toc_enabled'           => $this->toc_enabled(),
             'store_toc'             => $this->get_toc(),
             'featured'              => $this->is_featured(),
@@ -231,7 +230,6 @@ class Vendor {
             'banner'                  => 0,
             'icon'                    => 0,
             'gravatar'                => 0,
-            'show_more_ptab'          => 'yes',
             'enable_tnc'              => 'off',
             'store_tnc'               => '',
             'show_min_order_discount' => 'no',
@@ -516,17 +514,6 @@ class Vendor {
      */
     public function get_toc() {
         return $this->get_info_part( 'store_tnc' );
-    }
-
-    /**
-     * Check if showing more product is enabled
-     *
-     * @since 2.8
-     *
-     * @return boolean
-     */
-    public function show_more_products_tab() {
-        return 'yes' == $this->get_info_part( 'show_more_ptab' );
     }
 
     /**

@@ -460,6 +460,25 @@ class Settings {
             ]
         );
 
+        $general_product_page_options = apply_filters(
+            'dokan_settings_general_product_page_options', [
+                'product_page_options'      => [
+                    'name'          => 'product_page_options',
+                    'type'          => 'sub_section',
+                    'label'         => __( 'Product Page Settings', 'dokan-lite' ),
+                    'description'   => __( 'Configure single product page for vendors.', 'dokan-lite' ),
+                    'content_class' => 'sub-section-styles',
+                ],
+                'enabled_more_products_tab' => [
+                    'name'    => 'enabled_more_products_tab',
+                    'label'   => __( 'Enable More Products Tab', 'dokan-lite' ),
+                    'desc'    => __( 'Enable "More Products" tab on the single product page.', 'dokan-lite' ),
+                    'type'    => 'switcher',
+                    'default' => 'on',
+                ],
+            ]
+        );
+
         $selling_option_commission = apply_filters(
             'dokan_settings_selling_option_commission', [
                 'commission'             => [
@@ -567,7 +586,8 @@ class Settings {
         $settings_fields = [
             'dokan_general'    => array_merge(
                 $general_site_options,
-                $general_vendor_store_options
+                $general_vendor_store_options,
+                $general_product_page_options
             ),
             'dokan_selling'    => apply_filters(
                 'dokan_settings_selling_options',

@@ -606,15 +606,7 @@ function dokan_get_best_selling_products( $per_page = 8, $seller_id = '', $page 
  * @return boolean
  */
 function check_more_seller_product_tab() {
-    global $post;
-
-    $store_info = dokan_get_store_info( $post->post_author );
-
-    if ( isset( $store_info['show_more_ptab'] ) && 'yes' === $store_info['show_more_ptab'] ) {
-        return true;
-    } else {
-        return false;
-    }
+    return 'on' === dokan_get_option( 'enabled_more_products_tab', 'dokan_general', 'on' );
 }
 
 /**

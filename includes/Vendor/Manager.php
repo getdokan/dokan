@@ -191,7 +191,6 @@ class Manager {
             'banner'                  => ! empty( $data['banner_id'] ) ? $data['banner_id'] : 0,
             'icon'                    => ! empty( $data['icon'] ) ? $data['icon'] : '',
             'gravatar'                => ! empty( $data['gravatar_id'] ) ? $data['gravatar_id'] : 0,
-            'show_more_ptab'          => ! empty( $data['show_more_ptab'] ) ? $data['show_more_ptab'] : 'yes',
             'enable_tnc'              => ! empty( $data['enable_tnc'] ) ? $data['enable_tnc'] : 'off',
             'store_tnc'               => ! empty( $data['store_tnc'] ) ? $data['store_tnc'] : '',
             'show_min_order_discount' => ! empty( $data['show_min_order_discount'] ) ? $data['show_min_order_discount'] : 'no',
