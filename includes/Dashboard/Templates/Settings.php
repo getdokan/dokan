@@ -614,7 +614,7 @@ class Settings {
                 'location'                 => $location,
                 'find_address'             => $find_address,
                 'banner'                   => isset( $_POST['dokan_banner'] ) ? absint( $_POST['dokan_banner'] ) : 0,
-                'phone'                    => isset( $_POST['setting_phone'] ) ? sanitize_text_field( wp_unslash( $_POST['setting_phone'] ) ) : 'no',
+                'phone'                    => isset( $_POST['setting_phone'] ) ? dokan_sanitize_phone_number( wp_unslash( $_POST['setting_phone'] ) ) : 'no',
                 'show_email'               => isset( $_POST['setting_show_email'] ) ? sanitize_text_field( wp_unslash( $_POST['setting_show_email'] ) ) : 'no',
                 'show_more_ptab'           => isset( $_POST['setting_show_more_ptab'] ) ? sanitize_text_field( wp_unslash( $_POST['setting_show_more_ptab'] ) ) : 'no',
                 'gravatar'                 => isset( $_POST['dokan_gravatar'] ) ? absint( $_POST['dokan_gravatar'] ) : 0,
