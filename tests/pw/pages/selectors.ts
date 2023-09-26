@@ -287,11 +287,16 @@ export const selector = {
 
                 // Filters
                 filters: {
-                    filterByVendor: '//select[@id="filter-vendors"]/..//span[@class="select2-selection__arrow"]',
+                    // filterByVendor: '//select[@id="filter-vendors"]/..//span[@class="select2-selection__arrow"]',
+                    filterByVendor: '//span[@id="select2-filter-vendors-container"]/..//span[@class="select2-selection__arrow"]',
+                    filterByPaymentMethods: '//span[@id="select2-filter-payment-methods-container"]/..//span[@class="select2-selection__arrow"]',
                     filterInput: '.select2-search.select2-search--dropdown .select2-search__field',
-                    clearFilter: '//select[@id="filter-vendors"]/..//button',
+                    clearFilter: 'a#clear-all-filtering',
                     result: 'li.select2-results__option.select2-results__option--highlighted',
                 },
+
+                // Logs
+                exportWithdraws: 'a#export-all-logs',
 
                 // Table
                 table: {
@@ -4497,7 +4502,7 @@ export const selector = {
         },
 
         vFollowers: {
-            storeFollowersText: '//h3[normalize-space()="Store Followers"]',
+            storeFollowersText: '//h1[normalize-space()="Store Followers"]',
 
             table: {
                 followersTable: '.dokan-table.dokan-table-striped.product-listing-table.dokan-inline-editable-table',

@@ -1,4 +1,4 @@
-import { Page, test } from '@playwright/test';
+import { Page, test, expect } from '@playwright/test';
 import { AdminPage } from '@pages/adminPage';
 import { selector } from '@pages/selectors';
 import { data } from '@utils/testData';
@@ -36,22 +36,38 @@ export class WithdrawsPage extends AdminPage {
     }
 
     // filter withdraws
-    async filterWithdraws(vendorName: string): Promise<void> {
+    async filterWithdraws(input: string, action: string): Promise<void> {
         await this.goIfNotThere(data.subUrls.backend.dokan.withdraw);
 
-        await this.clickAndWaitForResponseIfVisible(data.subUrls.api.dokan.withdraws, selector.admin.dokan.withdraw.filters.clearFilter); // todo: replace click if visible with clickAndWaitForResponse
+        switch (action) {
+            case 'by-vendor':
+                await this.click(selector.admin.dokan.withdraw.filters.filterByVendor);
+                break;
 
-        await this.click(selector.admin.dokan.withdraw.filters.filterByVendor);
-        await this.typeAndWaitForResponse(data.subUrls.api.dokan.stores, selector.admin.dokan.withdraw.filters.filterInput, vendorName);
-        await this.toContainText(selector.admin.dokan.withdraw.filters.result, vendorName);
+            case 'by-payment-method':
+                await this.click(selector.admin.dokan.withdraw.filters.filterByPaymentMethods);
+                break;
+
+            default:
+                break;
+        }
+        await this.fill(selector.admin.dokan.withdraw.filters.filterInput, input);
+        await this.toContainText(selector.admin.dokan.withdraw.filters.result, input);
         // todo: need to wait for focus event
         await this.pressAndWaitForResponse(data.subUrls.api.dokan.withdraws, data.key.enter);
-        await this.toBeVisible(selector.admin.dokan.withdraw.withdrawCell(vendorName));
+        const count = (await this.getElementText(selector.admin.dokan.withdraw.numberOfRowsFound))?.split(' ')[0];
+        expect(Number(count)).toBeGreaterThan(0);
+    }
+
+    // export withdraws
+    async exportWithdraws() {
+        await this.goIfNotThere(data.subUrls.backend.dokan.withdraw);
+        await this.clickAndWaitForDownload(selector.admin.dokan.withdraw.exportWithdraws);
     }
 
     // add note to withdraw request
     async addNoteWithdrawRequest(vendorName: string, note: string): Promise<void> {
-        await this.filterWithdraws(vendorName);
+        await this.filterWithdraws(vendorName, 'by-vendor');
 
         await this.click(selector.admin.dokan.withdraw.withdrawAddNote(vendorName));
         await this.clearAndType(selector.admin.dokan.withdraw.addNote, note);
@@ -60,7 +76,7 @@ export class WithdrawsPage extends AdminPage {
 
     // add note to withdraw request
     async updateWithdrawRequest(vendorName: string, action: string): Promise<void> {
-        await this.filterWithdraws(vendorName);
+        await this.filterWithdraws(vendorName, 'by-vendor');
 
         switch (action) {
             case 'approve':

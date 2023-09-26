@@ -26,7 +26,6 @@ test.describe('withdraw api test', () => {
     });
 
     test('get withdraw payment methods @lite', async () => {
-        test.skip(true, 'Feature not merged yet')
         const [response, responseBody] = await apiUtils.get(endPoints.getWithdrawPaymentMethods);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();

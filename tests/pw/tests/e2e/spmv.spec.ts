@@ -45,7 +45,7 @@ test.describe('Vendor SPMV test', () => {
 
     test('admin can assign SPMV product to other vendor @pro', async () => {
         const [, productId] = await apiUtils.createProduct({ ...payloads.createProduct(), name: data.predefined.spmv.productName() }, payloads.vendor2Auth);
-        await admin.assignSpmvProduct(productId, data.predefined.vendorStores.vendor1FullName);
+        await admin.assignSpmvProduct(productId, data.predefined.vendorStores.vendor1);
     });
 
     test('vendor spmv menu page is rendering properly @pro @explo', async () => {

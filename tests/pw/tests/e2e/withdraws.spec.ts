@@ -39,7 +39,15 @@ test.describe('Withdraw test', () => {
     });
 
     test('admin can filter withdraws by vendor @lite', async () => {
-        await admin.filterWithdraws(data.predefined.vendorStores.vendor1);
+        await admin.filterWithdraws(data.predefined.vendorStores.vendor1, 'by-vendor');
+    });
+
+    test('admin can filter withdraws by payment methods @lite', async () => {
+        await admin.filterWithdraws(data.vendor.withdraw.defaultWithdrawMethod.paypal, 'by-payment-method');
+    });
+
+    test('admin can export withdraws', async () => {
+        await admin.exportWithdraws();
     });
 
     test('admin can add note to withdraw request @lite', async () => {
