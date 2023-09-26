@@ -907,6 +907,11 @@ export default {
     select#filter-payment-methods {
         width: 175px;
     }
+
+    .select2.select2-container {
+        width: 190px;
+        vertical-align: top;
+    }
 }
 
 @media only screen and (max-width: 600px) {

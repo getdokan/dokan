@@ -22,7 +22,20 @@ function dokan_admin_menu_position() {
  * @return string
  */
 function dokana_admin_menu_capability() {
-    return apply_filters( 'dokan_menu_capability', 'manage_woocommerce' );
+    return dokan_admin_menu_capability();
+}
+
+if ( ! function_exists( 'dokan_admin_menu_capability' ) ) {
+    /**
+     * Dokan Admin menu capability
+     *
+     * @since 3.8.3
+     *
+     * @return string
+     */
+    function dokan_admin_menu_capability() {
+        return apply_filters( 'dokan_menu_capability', 'manage_woocommerce' );
+    }
 }
 
 /**

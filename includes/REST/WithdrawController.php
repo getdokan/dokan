@@ -209,7 +209,7 @@ class WithdrawController extends WP_REST_Controller {
     /**
      * Check Permission for Wthdraw Payment Method Items.
      *
-     * @since DOKAN_SINCE
+     * @since 3.8.3
      *
      * @return bool
      */
@@ -585,7 +585,7 @@ class WithdrawController extends WP_REST_Controller {
     /**
      * Get Withdraw Payment Method Items.
      *
-     * @since DOKAN_SINCE
+     * @since 3.8.3
      *
      * @param  WP_REST_Request $request
      *
@@ -746,7 +746,7 @@ class WithdrawController extends WP_REST_Controller {
     /**
      * Prepare Payment Method Item Data for Response.
      *
-     * @since DOKAN_SINCE
+     * @since 3.8.3
      *
      * @param string          $payment_method
      * @param WP_REST_Request $request

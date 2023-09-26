@@ -31,7 +31,7 @@ class Hooks {
     /**
      * Download Withdraw Log Export File.
      *
-     * @since DOKAN_SINCE
+     * @since 3.8.3
      *
      * @return void
      */
