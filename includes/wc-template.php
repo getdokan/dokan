@@ -32,11 +32,13 @@ add_filter( 'woocommerce_get_item_data', 'dokan_product_seller_info', 10, 2 );
  * @return array
  */
 function dokan_seller_product_tab( $tabs ) {
-    $tabs['seller'] = [
-        'title'    => __( 'Vendor Info', 'dokan-lite' ),
-        'priority' => 90,
-        'callback' => 'dokan_product_seller_tab',
-    ];
+    if ( is_enabled_vendor_info_product_tab() ) {
+        $tabs['seller'] = [
+            'title' => __('Vendor Info', 'dokan-lite'),
+            'priority' => 90,
+            'callback' => 'dokan_product_seller_tab',
+        ];
+    }
 
     return $tabs;
 }
