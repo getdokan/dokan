@@ -617,7 +617,7 @@ function check_more_seller_product_tab() {
  * @return boolean
  */
 function is_enabled_vendor_info_product_tab() {
-    return 'on' === dokan_get_option( 'show_vendor_info', 'dokan_appearance', 'off' );
+    return 'on' === dokan_get_option( 'show_vendor_info', 'dokan_general', 'off' );
 }
 
 /**
