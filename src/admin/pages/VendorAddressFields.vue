@@ -192,8 +192,11 @@ export default {
 };
 </script>
 
-<style>
-.address-multiselect {
-    margin: 0px 12px;
-}
+<style lang="less">
+    .address-multiselect {
+
+        input.multiselect__input {
+            border: none;
+        }
+    }
 </style>

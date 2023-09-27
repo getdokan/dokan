@@ -130,7 +130,7 @@ class Manager {
     /**
      * Display single page product page create notice.
      *
-     * @since DOKAN_SINCE
+     * @since 3.8.2
      *
      * @param array $notices
      *
@@ -157,7 +157,7 @@ class Manager {
     /**
      * Dismisses one-step product create notice.
      *
-     * @since DOKAN_SINCE
+     * @since 3.8.2
      *
      * @return void
      */

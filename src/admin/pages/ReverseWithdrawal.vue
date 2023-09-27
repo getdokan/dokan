@@ -499,8 +499,28 @@ export default {
     }
 }
 
-#dokan_reverse_withdrawal_list_table .dokan-reverse-withdrawal-filters {
-    display: flex;
+#dokan_reverse_withdrawal_list_table {
+    .dokan-reverse-withdrawal-filters {
+        display: flex;
+
+        .multiselect {
+            .multiselect__select {
+                height: 28px;
+            }
+
+            .multiselect__tags {
+                input.multiselect__input {
+                    max-height: 28px;
+                }
+
+                span.multiselect__single {
+                    margin: 0 auto;
+                    min-height: 28px;
+                    line-height: 28px;
+                }
+            }
+        }
+    }
 }
 
 @media only screen and (max-width: 500px) {

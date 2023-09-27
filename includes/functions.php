@@ -22,7 +22,20 @@ function dokan_admin_menu_position() {
  * @return string
  */
 function dokana_admin_menu_capability() {
-    return apply_filters( 'dokan_menu_capability', 'manage_woocommerce' );
+    return dokan_admin_menu_capability();
+}
+
+if ( ! function_exists( 'dokan_admin_menu_capability' ) ) {
+    /**
+     * Dokan Admin menu capability
+     *
+     * @since 3.8.3
+     *
+     * @return string
+     */
+    function dokan_admin_menu_capability() {
+        return apply_filters( 'dokan_menu_capability', 'manage_woocommerce' );
+    }
 }
 
 /**
@@ -555,7 +568,7 @@ function dokan_get_commission_type( $seller_id = 0, $product_id = 0, $category_i
 /**
  * Get the default product status for new and edited product for seller based on settings
  *
- * @since DOKAN_SINCE
+ * @since 3.8.2
  *
  * @param int|null $seller_id
  *
@@ -575,7 +588,7 @@ function dokan_get_default_product_status( $seller_id = null ) {
         $status = 'publish' === $status ? $status : dokan_get_option( 'product_status', 'dokan_selling', 'pending' );
     }
 
-    $status = apply_filters_deprecated( 'dokan_get_new_post_status', [ $status, $seller_id, $is_trusted ], 'DOKAN_SINCE', 'dokan_get_default_product_status' );
+    $status = apply_filters_deprecated( 'dokan_get_new_post_status', [ $status, $seller_id, $is_trusted ], '3.8.2', 'dokan_get_default_product_status' );
 
     return apply_filters( 'dokan_get_default_product_status', $status, $seller_id, $is_trusted );
 }
@@ -585,11 +598,11 @@ function dokan_get_default_product_status( $seller_id = null ) {
  *
  * @since 3.7.20 added a new filter hook `dokan_get_new_post_status`
  *
- * @since DOKAN_SINCE made the function deprecated
+ * @since 3.8.2 made the function deprecated
  *
  * @param int|null $seller_id
  *
- * @deprecated DOKAN_SINCE use `dokan_get_default_product_status` instead
+ * @deprecated 3.8.2 use `dokan_get_default_product_status` instead
  *
  * @return string
  */
@@ -775,7 +788,7 @@ function dokan_get_post_status( $status = '' ) {
 /**
  * Get product available statuses
  *
- * @since DOKAN_SINCE
+ * @since 3.8.2
  *
  * @args int|object $product_id
  *
@@ -4190,7 +4203,7 @@ function is_tweleve_hour_format() {
  * @return string
  */
 function dokan_sanitize_phone_number( $phone ) {
-    return filter_var( $phone, FILTER_SANITIZE_NUMBER_INT );
+	return preg_replace( '/[^0-9()._+-]/', '', $phone );
 }
 
 /**

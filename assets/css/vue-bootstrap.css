@@ -1318,8 +1318,8 @@ td.disabled[data-v-98ac2448] {
   color: #46b450;
 }
 
-.address-multiselect {
-  margin: 0px 12px;
+.address-multiselect input.multiselect__input {
+  border: none;
 }
 
 .checkbox-group {
