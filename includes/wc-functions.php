@@ -5,11 +5,11 @@
  *
  * @access public
  *
- * @param int $post_id
+ * @param int   $post_id
  * @param array $data
  *
- * @return void
  * @throws WC_Data_Exception
+ * @return void
  */
 function dokan_process_product_meta( int $post_id, array $data = [] ) {
     if ( ! $post_id || ! $data ) {
@@ -38,7 +38,7 @@ function dokan_process_product_meta( int $post_id, array $data = [] ) {
         update_post_meta( $post_id, '_product_image_gallery', implode( ',', $attachment_ids ) );
     }
 
-    // Check product visibility and purchases note
+    // Check product visibility and purchase note
     $data['_visibility']    = isset( $data['_visibility'] ) ? sanitize_text_field( $data['_visibility'] ) : '';
     $data['_purchase_note'] = isset( $data['_purchase_note'] ) ? sanitize_textarea_field( $data['_purchase_note'] ) : '';
 
@@ -419,9 +419,12 @@ function dokan_process_product_meta( int $post_id, array $data = [] ) {
  * @param int   $variation_id       optional product variation identifier
  * @param array $downloadable_files newly set files
  *
+ * @deprecated 3.8.0
+ *
  * @return void
  */
 function dokan_process_product_file_download_paths( int $product_id, int $variation_id, array $downloadable_files ) {
+    wc_deprecated_function( 'dokan_process_product_file_download_paths', '3.8.0' );
     global $wpdb;
 
     if ( $variation_id ) {
@@ -471,9 +474,12 @@ function dokan_process_product_file_download_paths( int $product_id, int $variat
  *
  * @param int $order_id
  *
+ * @deprecated 3.8.0
+ *
  * @return int
  */
-function dokan_sub_order_get_total_coupon( int $order_id ): int {
+function dokan_sub_order_get_total_coupon( int $order_id ) : int {
+    wc_deprecated_function( 'dokan_sub_order_get_total_coupon', '3.8.0' );
     global $wpdb;
 
     $result = $wpdb->get_var(
@@ -656,7 +662,7 @@ function dokan_get_top_rated_products( $per_page = 8, $seller_id = '', $page = 1
  *
  * @return WP_Query
  */
-function dokan_get_on_sale_products( int $per_page = 10, int $paged = 1, int $seller_id = 0 ): WP_Query {
+function dokan_get_on_sale_products( int $per_page = 10, int $paged = 1, int $seller_id = 0 ) : WP_Query {
     // Get products on sale
     $product_ids_on_sale = wc_get_product_ids_on_sale();
 
@@ -752,69 +758,6 @@ function dokan_get_readable_seller_rating( $seller_id ) {
     return $vendor->get_readable_rating( false );
 }
 
-/**
- * Exclude child order emails for customers
- *
- * A hacky and dirty way to do this from this action. Because there is no easy
- * way to do this by removing action hooks from WooCommerce. It would be easier
- * if they were from functions. Because they are added from classes, we can't
- * remove those action hooks. That's why we are doing this from the phpmailer_init action
- * by returning a fake phpmailer class.
- *
- * @param array $attr
- *
- * @return void
- */
-function dokan_exclude_child_customer_receipt( &$phpmailer ) {
-    $subject = $phpmailer->Subject; ////phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-
-    // order receipt
-    $sub_receipt  = __( 'Your {site_title} order receipt from {order_date}', 'dokan-lite' );
-    $sub_download = __( 'Your {site_title} order from {order_date} is complete', 'dokan-lite' );
-
-    $sub_receipt  = str_replace(
-        [
-            '{site_title}',
-            '{order_date}',
-        ], [ wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES ), '' ], $sub_receipt
-    );
-    $sub_download = str_replace(
-        [
-            '{site_title}',
-            '{order_date} is complete',
-        ], [ wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES ), '' ], $sub_download
-    );
-
-    // not a customer receipt mail
-    if ( ( stripos( $subject, $sub_receipt ) === false ) && ( stripos( $subject, $sub_download ) === false ) ) {
-        return;
-    }
-
-    $message = $phpmailer->Body; //phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
-    $pattern = '/Order: #(\d+)/';
-    preg_match( $pattern, $message, $matches );
-
-    if ( isset( $matches[1] ) ) {
-        $order_id = $matches[1];
-        $order    = get_post( $order_id );
-
-        // we found a child order
-        if ( ! is_wp_error( $order ) && $order->post_parent !== 0 ) {
-            $phpmailer = new DokanFakeMailer();
-        }
-    }
-}
-
-add_action( 'phpmailer_init', 'dokan_exclude_child_customer_receipt' );
-
-/**
- * A fake mailer class to replace phpmailer
- */
-class DokanFakeMailer {
-    public function Send() {
-    }
-}
-
 add_filter( 'woocommerce_dashboard_status_widget_sales_query', 'dokan_filter_woocommerce_dashboard_status_widget_sales_query' );
 
 /**
@@ -829,7 +772,8 @@ add_filter( 'woocommerce_dashboard_status_widget_sales_query', 'dokan_filter_woo
 function dokan_filter_woocommerce_dashboard_status_widget_sales_query( $query ) {
     global $wpdb;
 
-    $query['where'] .= " AND posts.ID NOT IN ( SELECT post_parent FROM {$wpdb->posts} WHERE post_type IN ( '" . implode( "','", array_merge( wc_get_order_types( 'sales-reports' ), [ 'shop_order_refund' ] ) ) . "' ) )";
+    $query['where'] .= " AND posts.ID NOT IN ( SELECT post_parent FROM {
+    $wpdb->posts} WHERE post_type IN ( '" . implode( "','", array_merge( wc_get_order_types( 'sales-reports' ), [ 'shop_order_refund' ] ) ) . "' ) )";
 
     return $query;
 }
@@ -941,87 +885,6 @@ function dokan_save_account_details() {
 add_action( 'template_redirect', 'dokan_save_account_details' );
 
 /**
- * This method will delete vendors best-selling product cache after a new order has been made
- *
- * @since 3.2.11
- *
- * @param int $post_id
- */
-function dokan_clear_best_selling_product_category_cache( $order_id ) {
-    $order = wc_get_order( $order_id );
-
-    if ( ! $order ) {
-        return;
-    }
-
-    // check if order has suborder
-    if ( $order->get_meta( 'has_sub_order' ) ) {
-        // same hooks will be called for individual sub orders
-        return;
-    }
-
-    // get vendor id from order
-    $seller_id = dokan_get_seller_id_by_order( $order_id );
-    if ( empty( $seller_id ) ) {
-        return;
-    }
-
-    delete_transient( 'dokan_vendor_get_best_selling_products_' . $seller_id );
-    delete_transient( 'dokan_vendor_get_best_selling_categories_' . $seller_id );
-}
-
-add_action( 'woocommerce_new_order', 'dokan_clear_best_selling_product_category_cache', 10, 1 );
-add_action( 'woocommerce_update_order', 'dokan_clear_best_selling_product_category_cache', 10, 1 );
-
-/**
- * This method will delete store category cache after a category is updated
- *
- * @since 3.2.10
- *
- * @param int $term_id
- */
-function dokan_clear_edit_product_category_cache( $term_id ) {
-    // get taxonomy slug
-    $term = get_term_by( 'ID', $term_id, 'product_cat' );
-    if ( false === $term || ! isset( $term->slug ) ) {
-        return;
-    }
-
-    // get associated product id with this category
-    $args = [
-        'status'   => 'publish',
-        'limit'    => - 1,
-        'return'   => 'ids',
-        'category' => [ $term->slug ],
-    ];
-
-    $query    = new WC_Product_Query( $args );
-    $products = $query->get_products();
-
-    if ( empty( $products ) ) {
-        return;
-    }
-
-    global $wpdb;
-    $products   = implode( ',', array_map( 'absint', (array) $products ) );
-    $seller_ids = $wpdb->get_col( "SELECT DISTINCT post_author from {$wpdb->posts} WHERE ID in ($products)" ); // phpcs:ignore
-
-    foreach ( $seller_ids as $seller_id ) {
-        // delete vendor get_store_categories() method transient
-        if ( function_exists( 'wpml_get_active_languages' ) ) {
-            foreach ( wpml_get_active_languages() as $active_language ) {
-                delete_transient( 'dokan_vendor_get_store_categories_' . $active_language['code'] . '_' . $seller_id );
-            }
-        }
-
-        delete_transient( 'dokan_vendor_get_store_categories_' . $seller_id );
-    }
-}
-
-add_action( 'edit_product_cat', 'dokan_clear_edit_product_category_cache', 10, 1 );
-add_action( 'pre_delete_term', 'dokan_clear_edit_product_category_cache', 10, 1 );
-
-/**
  * Remove banner when without banner layout selected for profile
  *
  * @param array $progress_values
@@ -1116,67 +979,6 @@ function dokan_get_more_products_from_seller( $seller_id = 0, $posts_per_page = 
 }
 
 /**
- * Change bulk order status in vendor dashboard
- *
- * @since 2.8.3
- *
- * @return void
- */
-function dokan_bulk_order_status_change() {
-    if ( ! current_user_can( 'dokan_manage_order' ) ) {
-        return;
-    }
-
-    if ( dokan_get_option( 'order_status_change', 'dokan_selling' ) === 'off' ) {
-        return;
-    }
-
-    if ( ! isset( $_POST['security'] ) || ! wp_verify_nonce( sanitize_key( $_POST['security'] ), 'bulk_order_status_change' ) ) {
-        return;
-    }
-
-    // Doing the bulk action for orders.
-    dokan_apply_bulk_order_status_change(
-        [
-            'status'      => isset( $_POST['status'] ) ? sanitize_text_field( wp_unslash( $_POST['status'] ) ) : '',
-            'bulk_orders' => isset( $_POST['bulk_orders'] ) ? array_map( 'absint', $_POST['bulk_orders'] ) : [],
-        ]
-    );
-}
-
-add_action( 'template_redirect', 'dokan_bulk_order_status_change' );
-
-/**
- * Add vendor email on customers note mail replay to
- *
- * @param string   $headers
- * @param string   $id
- * @param WC_Order $order
- *
- * @return string $headers
- */
-function dokan_add_reply_to_vendor_email_on_wc_customer_note_mail( $headers, $id, $order ) {
-    if ( ! ( $order instanceof WC_Order ) ) {
-        return $headers;
-    }
-
-    if ( 'customer_note' === $id ) {
-        foreach ( $order->get_items( 'line_item' ) as $item ) {
-            $product_id  = $item['product_id'];
-            $author      = get_post_field( 'post_author', $product_id );
-            $author_data = get_userdata( absint( $author ) );
-            $user_email  = $author_data->user_email;
-
-            $headers .= "Reply-to: <$user_email>\r\n";
-        }
-    }
-
-    return $headers;
-}
-
-add_filter( 'woocommerce_email_headers', 'dokan_add_reply_to_vendor_email_on_wc_customer_note_mail', 10, 3 );
-
-/**
  * Keep old vendor after duplicate any product
  *
  * @param WC_Product $duplicate
@@ -1197,81 +999,8 @@ function dokan_keep_old_vendor_woocommerce_duplicate_product( $duplicate, $produ
 
 add_action( 'woocommerce_product_duplicate', 'dokan_keep_old_vendor_woocommerce_duplicate_product', 35, 2 );
 
-
 /**
- * Send email to the vendor/seller when cancel the order
- *
- * @param string   $recipient
- * @param WC_Order $order
- *
- * @return string
- */
-function send_email_for_order_cancellation( $recipient, $order ) {
-    if ( ! $order instanceof \WC_Order ) {
-        return $recipient;
-    }
-
-    // get the order id from order object
-    $seller_id = dokan_get_seller_id_by_order( $order->get_id() );
-
-    $seller_info  = get_userdata( $seller_id );
-    $seller_email = $seller_info->user_email;
-
-    // if admin email & seller email is same
-    if ( false === strpos( $recipient, $seller_email ) ) {
-        $recipient .= ',' . $seller_email;
-    }
-
-    return $recipient;
-}
-
-add_filter( 'woocommerce_email_recipient_cancelled_order', 'send_email_for_order_cancellation', 10, 2 );
-
-
-/**
- * Modify order counts for vendor.
- *
- * @since DOKAN_LITE_SINCE
- *
- * @param object $counts
- *
- * @return object $counts
- */
-function dokan_modify_vendor_order_counts( $counts ) {
-    global $pagenow;
-
-    if ( 'edit.php' !== $pagenow || 'shop_order' !== get_query_var( 'post_type' ) ) {
-        return $counts;
-    }
-
-    if ( current_user_can( 'manage_woocommerce' ) ) {
-        return $counts;
-    }
-
-    $vendor_id = dokan_get_current_user_id();
-
-    if ( empty( $vendor_id ) ) {
-        return $counts;
-    }
-
-    // Current order counts for the vendor.
-    $vendor_order_counts = dokan_count_orders( $vendor_id );
-
-    // Modify WP dashboard order counts as per vendor's order counts.
-    foreach ( $vendor_order_counts as $count_key => $count_value ) {
-        if ( 'total' !== $count_key ) {
-            $counts->{$count_key} = $count_value;
-        }
-    }
-
-    return $counts;
-}
-
-add_filter( 'wp_count_posts', 'dokan_modify_vendor_order_counts', 10, 1 );
-
-
-/**
- * @since DOKAN_SINCE
+ * @since 3.7.24
  *
  * @param boolean $is_purchasable
  * @param object $product
@@ -1290,7 +1019,7 @@ add_filter( 'woocommerce_is_purchasable', 'dokan_vendor_own_product_purchase_res
 /**
  * Restricts vendor from reviewing own product
  *
- * @since DOKAN_SINCE
+ * @since 3.7.24
  *
  * @param array $data
  * @return array

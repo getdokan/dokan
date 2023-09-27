@@ -392,7 +392,7 @@ class Settings {
                 'admin_access'           => [
                     'name'    => 'admin_access',
                     'label'   => __( 'Admin Area Access', 'dokan-lite' ),
-                    'desc'    => __( 'Disallow vendors from accessing the wp-admin dashboard area', 'dokan-lite' ),
+                    'desc'    => __( 'Prevent vendors from accessing the wp-admin dashboard area. If HPOS feature is enabled, admin access will be blocked regardless of this setting.', 'dokan-lite' ),
                     'type'    => 'switcher',
                     'default' => 'on',
                 ],
@@ -557,12 +557,23 @@ class Settings {
                     'default' => 'on',
                     'tooltip' => __( 'If checked, vendors will have permission to sell immediately after registration. If unchecked, newly registered vendors cannot add products until selling capability is activated manually from admin dashboard.', 'dokan-lite' ),
                 ],
+                'one_step_product_create'     => [
+                    'name'    => 'one_step_product_create',
+                    'label'   => __( 'One Page Product Creation', 'dokan-lite' ),
+                    'desc'    => __( 'Add new product in single page view', 'dokan-lite' ),
+                    'type'    => 'switcher',
+                    'default' => 'on',
+                    'tooltip' => __( 'If disabled, instead of a single add product page it will open a pop up window or vendor will redirect to product page when adding new product.', 'dokan-lite' ),
+                ],
                 'disable_product_popup'     => [
                     'name'    => 'disable_product_popup',
                     'label'   => __( 'Disable Product Popup', 'dokan-lite' ),
                     'desc'    => __( 'Disable add new product in popup view', 'dokan-lite' ),
                     'type'    => 'switcher',
                     'default' => 'off',
+                    'show_if' => [
+                        'dokan_selling.one_step_product_create' => [ 'equal' => 'off' ],
+                    ],
                     'tooltip' => __( 'If disabled, instead of a pop up window vendor will redirect to product page when adding new product.', 'dokan-lite' ),
                 ],
                 'order_status_change'       => [

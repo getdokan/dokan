@@ -244,7 +244,11 @@ export default {
             .fail( ( jqXHR ) => {
                 let message = window.dokan_handle_ajax_error( jqXHR );
                 if ( message ) {
-                    Swal.fire( message, '', 'error' );
+                    Swal.fire(
+                        self.__( 'Something went wrong', 'dokan' ),
+                        message,
+                        'error'
+                    );
                 }
             });
         },
@@ -365,7 +369,11 @@ export default {
                 .fail( ( jqXHR ) => {
                     let message = window.dokan_handle_ajax_error( jqXHR );
                     if ( message ) {
-                        Swal.fire( message, '', 'error' );
+                        Swal.fire(
+                            self.__( 'Something went wrong', 'dokan' ),
+                            message,
+                            'error'
+                        );
                     }
                 });
             }

@@ -89,7 +89,7 @@
 }
 .form-table .dokan-bank-settings-template .dokan-form-group input[name="settings[bank][routing_number]"],
 .form-table .dokan-bank-settings-template .dokan-form-group input[name="settings[bank][ac_number]"] {
-  width: 48% !important;
+  width: 100%;
 }
 .form-table .dokan-bank-settings-template .dokan-form-group textarea[name="settings[bank][bank_addr]"] {
   height: 45px !important;
