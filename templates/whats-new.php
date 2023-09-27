@@ -4,6 +4,44 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.8.3',
+        'released' => '2023-09-26',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Added advanced filtering and CSV export feature for vendor withdraws under Admin Dashboard → Dokan → Withdraw menu.',
+                    'description' => 'The ‘Withdraw’ page on the admin dashboard has been updated with advanced filtering and log exporting features. This allows admins to filter transactions based on payment method and date range, which enhances their ability to analyze and manage withdrawals. The feature to export CSV logs is also included, which makes tracking and record-keeping easier. These integrations aim to empower marketplace owners with comprehensive tools for efficient withdrawal management within the dashboard.',
+                ],
+                [
+                    'title'       => '[Dokan Invoice] Added PDF invoice links on Sub Order section',
+                    'description' => 'Previously PDF invoice links  was not visible on Sub Order section under customer order view. After this update customer will be able to view invoice link on sub order section.',
+                ],
+                [
+                    'title'       => 'Added backend validation of phone number used on entire Dokan plugin.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Store category widget list default state set to collapse.',
+                    'description' => 'Previously, if a store has a product count over 100 or more and the store has many product categories, the store category widget would display those categories and subcategories in an open state rather than collapsed state that the sidebar style gets broken. Now the list has a max height of 500px, which will be visible, and other elements will be visible by scrolling and the parent category that has a submenu will be in collapse mode.',
+                ],
+                [
+                    'title'       => 'Various style improvements of Dokan frontend including Vendor Dashboard, Single Store Page, Single Product Page etc.',
+                    'description' => '',
+                ],
+            ],
+            'Fix' => [
+                [
+                    'title'       => '[Refund] Earlier, when refunding an order under the vendor dashboard, the tax amount decimal point rounding precision was inconsistent with WooCommerce. However, it has now been updated to be consistent with WooCommerce.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed an issue where the order status label was missing on vendor dashboard for draft orders.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.8.2',
         'released' => '2023-09-13',
         'changes'  => [
