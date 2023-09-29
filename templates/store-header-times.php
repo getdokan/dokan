@@ -32,6 +32,11 @@
                     $formatted_closing_time = $current_time->modify( $store_info['closing_time'][ $index ] );
                     $exact_time             = '';
 
+                    // Check if formatted opening time or closing time missing.
+                    if ( ! $formatted_opening_time || ! $formatted_closing_time ) {
+                        continue;
+                    }
+
                     if ( $today === $day_key && $formatted_opening_time <= $current_time && $formatted_closing_time >= $current_time ) {
                         $exact_time = 'current_time';
                     }
