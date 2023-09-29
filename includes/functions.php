@@ -22,7 +22,20 @@ function dokan_admin_menu_position() {
  * @return string
  */
 function dokana_admin_menu_capability() {
-    return apply_filters( 'dokan_menu_capability', 'manage_woocommerce' );
+    return dokan_admin_menu_capability();
+}
+
+if ( ! function_exists( 'dokan_admin_menu_capability' ) ) {
+    /**
+     * Dokan Admin menu capability
+     *
+     * @since 3.8.3
+     *
+     * @return string
+     */
+    function dokan_admin_menu_capability() {
+        return apply_filters( 'dokan_menu_capability', 'manage_woocommerce' );
+    }
 }
 
 /**
@@ -4190,7 +4203,7 @@ function is_tweleve_hour_format() {
  * @return string
  */
 function dokan_sanitize_phone_number( $phone ) {
-    return filter_var( $phone, FILTER_SANITIZE_NUMBER_INT );
+	return preg_replace( '/[^0-9()._+-]/', '', $phone );
 }
 
 /**
