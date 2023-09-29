@@ -161,7 +161,14 @@ function dokan_product_dashboard_errors() {
                 )
             );
             break;
-
+        case 'product_duplicated':
+            dokan_get_template_part(
+                'global/dokan-success', '', [
+                    'deleted' => false,
+                    'message' => __( 'Product successfully duplicated', 'dokan-lite' )
+                ]
+            );
+            break;
         case 'error':
             dokan_get_template_part(
                 'global/dokan-error', '', array(
