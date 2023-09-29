@@ -34,7 +34,6 @@ class NewProduct extends WC_Email {
             '{seller_url}'    => '',
             '{category}'      => '',
             '{product_link}'  => '',
-            '{site_name}'     => $this->get_from_name(),
         ];
 
         // Triggers for this email
@@ -55,7 +54,7 @@ class NewProduct extends WC_Email {
      * @return string
      */
     public function get_default_subject() {
-            return __( '[{site_name}] A New product is added by ({seller_name}) - {product_title}', 'dokan-lite' );
+            return __( '[{site_title}] A New product is added by ({seller_name}) - {product_title}', 'dokan-lite' );
     }
 
     /**

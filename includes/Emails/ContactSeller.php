@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\Emails;
 
 use WC_Email;
+use WeDevs\Dokan\Vendor\Vendor;
 
 /**
  * Customer Email to vendor from contact form widget.
@@ -38,7 +39,6 @@ class ContactSeller extends WC_Email {
             '{customer_name}'  => '',
             '{customer_email}' => '',
             '{message}'        => '',
-            '{site_name}'      => $this->get_from_name(),
         ];
 
         // Triggers for this email
@@ -58,7 +58,7 @@ class ContactSeller extends WC_Email {
      * @return string
      */
     public function get_default_subject() {
-        return __( '[{customer_name}] sent you a message from your store at - {site_name}', 'dokan-lite' );
+        return __( '[{customer_name}] sent you a message from your store at - {site_title}', 'dokan-lite' );
     }
 
     /**
@@ -68,7 +68,7 @@ class ContactSeller extends WC_Email {
      * @return string
      */
     public function get_default_heading() {
-        return __( '{customer_name} - Sent a message from {site_name}', 'dokan-lite' );
+        return __( '{customer_name} - Sent a message from {site_title}', 'dokan-lite' );
     }
 
     /**
@@ -83,8 +83,9 @@ class ContactSeller extends WC_Email {
         $this->from_email = $contact_email;
 
         $seller = get_user_by( 'email', $seller_email );
+        $seller = new Vendor( $seller );
 
-        $this->placeholders['{seller_name}']    = $seller->display_name;
+        $this->placeholders['{seller_name}']    = $seller->get_shop_name();
         $this->placeholders['{customer_name}']  = $contact_name;
         $this->placeholders['{customer_email}'] = $contact_email;
         $this->placeholders['{message}']        = $contact_message;

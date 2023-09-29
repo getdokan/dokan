@@ -33,7 +33,6 @@ class ProductPublished extends WC_Email {
             '{seller_name}'       => '',
             '{product_url}'       => '',
             '{product_edit_link}' => '',
-            '{site_name}'         => $this->get_from_name(),
         ];
 
         // Triggers for this email
@@ -53,7 +52,7 @@ class ProductPublished extends WC_Email {
      * @return string
      */
     public function get_default_subject() {
-            return __( '[{site_name}] Your product - {product_title} - is now published', 'dokan-lite' );
+            return __( '[{site_title}] Your product - {product_title} - is now published', 'dokan-lite' );
     }
 
     /**

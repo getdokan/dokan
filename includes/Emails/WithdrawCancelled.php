@@ -33,7 +33,6 @@ class WithdrawCancelled extends WC_Email {
             '{method}'        => '',
             '{profile_url}'   => '',
             '{withdraw_page}' => dokan_get_navigation_url( 'withdraw' ),
-            '{site_name}'     => $this->get_from_name(),
             '{note}'          => '',
         ];
 
@@ -54,7 +53,7 @@ class WithdrawCancelled extends WC_Email {
      * @return string
      */
     public function get_default_subject() {
-        return __( '[{site_name}] Your withdrawal request was cancelled', 'dokan-lite' );
+        return __( '[{site_title}] Your withdrawal request was cancelled', 'dokan-lite' );
     }
 
     /**

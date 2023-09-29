@@ -30,7 +30,6 @@ class NewSeller extends WC_Email {
             '{store_url}'   => '',
             '{store_name}'  => '',
             '{seller_edit}' => '',
-            '{site_name}'   => $this->get_from_name(),
         ];
 
         // Triggers for this email
@@ -50,7 +49,7 @@ class NewSeller extends WC_Email {
      * @return string
      */
     public function get_default_subject() {
-            return __( '[{site_name}] A New vendor has registered', 'dokan-lite' );
+            return __( '[{site_title}] A New vendor has registered', 'dokan-lite' );
     }
 
     /**

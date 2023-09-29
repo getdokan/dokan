@@ -33,7 +33,6 @@ class WithdrawApproved extends WC_Email {
             '{method}'        => '',
             '{profile_url}'   => '',
             '{withdraw_page}' => '',
-            '{site_name}'     => $this->get_from_name(),
         ];
 
         // Triggers for this email
@@ -53,7 +52,7 @@ class WithdrawApproved extends WC_Email {
      * @return string
      */
     public function get_default_subject() {
-        return __( '[{site_name}] Your withdrawal request was approved', 'dokan-lite' );
+        return __( '[{site_title}] Your withdrawal request was approved', 'dokan-lite' );
     }
 
     /**
@@ -81,9 +80,9 @@ class WithdrawApproved extends WC_Email {
         $this->object = $seller;
 
         $this->placeholders['{username}']      = $seller->get_name();
-        $this->placeholders['{amount}']        = sprintf( '%1$s %2$s', get_woocommerce_currency_symbol(), wc_format_localized_price( wc_format_decimal( $withdraw->get_amount(), wc_get_price_decimals() ) ) );
+        $this->placeholders['{amount}']        = dokan()->email->currency_symbol( $withdraw->get_amount() );
         $this->placeholders['{method}']        = dokan_withdraw_get_method_title( $withdraw->get_method() );
-        $this->placeholders['{profile_url}']   = admin_url( 'user-edit.php?user_id=' . $seller->ID );
+        $this->placeholders['{profile_url}']   = $seller->get_profile_url();
         $this->placeholders['{withdraw_page}'] = admin_url( 'admin.php?page=dokan-withdraw' );
 
         $this->send( $seller->get_email(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );

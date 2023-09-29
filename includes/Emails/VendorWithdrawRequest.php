@@ -33,7 +33,6 @@ class VendorWithdrawRequest extends WC_Email {
             '{method}'        => '',
             '{profile_url}'   => '',
             '{withdraw_page}' => '',
-            '{site_name}'     => $this->get_from_name(),
         ];
 
         // Triggers for this email
@@ -53,7 +52,7 @@ class VendorWithdrawRequest extends WC_Email {
      * @return string
      */
     public function get_default_subject() {
-        return __( '[{site_name}] A New withdrawal request is made by {user_name}', 'dokan-lite' );
+        return __( '[{site_title}] A New withdrawal request is made by {user_name}', 'dokan-lite' );
     }
 
     /**

@@ -97,15 +97,15 @@ class VendorCompletedOrder extends WC_Email {
         if ( $order->get_meta( 'has_sub_order' ) ) {
             // same hook will be called again for sub-orders, so we don't need to process this from here.
             return;
-        } else {
-            $seller_info = new Vendor( $seller_id );
-            if ( ! $seller_info->get_id() ) {
-                return;
-            }
-            $seller_email     = $seller_info->get_email();
-            $this->order_info = dokan_get_vendor_order_details( $order_id );
-            $this->send( $seller_email, $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
         }
+        $seller_info = new Vendor( $seller_id );
+        if ( ! $seller_info->get_id() ) {
+            return;
+        }
+        $seller_email     = $seller_info->get_email();
+        $this->order_info = dokan_get_vendor_order_details( $order_id );
+        $this->send( $seller_email, $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
+
         $this->restore_locale();
     }
 
