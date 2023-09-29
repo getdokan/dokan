@@ -40,6 +40,21 @@ Detailed Description of the pull request. What was previous behaviour
 and what will be changed in this PR.
 
 
+### Before Changes
+
+Describe the issue before changes with screenshots(s).
+
+
+### After Changes
+
+Describe the issue after changes with screenshot(s).
+
+
+### Feature Video (optional)
+
+Link of detailed video if this PR is for a feature.
+
+
 ### PR Self Review Checklist:
 
 * Code is not following code style guidelines
