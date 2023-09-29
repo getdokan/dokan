@@ -27,7 +27,7 @@
                 $times_length = ! empty( $opening_times ) ? count( (array) $opening_times ) : 0;
 
                 // Get formatted times.
-                for ( $index = 0; $index < $times_length; $index ++ ) :
+                for ( $index = 0; $index < $times_length; $index++ ) :
                     $formatted_opening_time = $current_time->modify( $store_info['opening_time'][ $index ] );
                     $formatted_closing_time = $current_time->modify( $store_info['closing_time'][ $index ] );
                     $exact_time             = '';
