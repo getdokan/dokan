@@ -246,9 +246,12 @@
                 height: 100%;
 
                 .profile-info-summery {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
                     width: 320px;
-                    height: 100%;
-                    padding-top: 25px;
+                    min-height: 370px;
+                    padding: 25px 0 15px;
 
                     .profile-info-head {
                         .profile-img {
@@ -296,6 +299,7 @@
                             cursor: pointer;
                             position: relative;
                             list-style: none;
+                            margin-bottom: 0;
 
                             .dokan-store-phone,
                             .dokan-store-email {
@@ -1092,10 +1096,6 @@
                         .profile-info-summery {
                             .profile-info {
                                 padding: 5px 30px;
-
-                                ul.dokan-store-info {
-                                    margin-bottom: 10px;
-                                }
                             }
                         }
                     }
@@ -1106,6 +1106,8 @@
                     .profile-info-summery-wrapper {
 
                         .profile-info-summery {
+                            min-height: auto;
+                            padding: 0;
 
                             .profile-info {
 
@@ -1123,7 +1125,6 @@
                     position: relative;
                     width: 100%;
 
-
                     .profile-info-summery-wrapper {
                         position: relative;
                         background-color: #fff;
@@ -1132,8 +1133,9 @@
 
                         .profile-info-summery {
                             width: 100%;
+                            min-height: auto;
                             margin-top: -75px;
-                            padding-top: 0;
+                            padding: 0;
                             background: none;
 
                             .profile-info-head {
@@ -1238,6 +1240,15 @@
                     }
                 }
 
+                &.profile-layout-layout3 {
+
+                    .profile-info-summery-wrapper {
+
+                        .profile-info-summery {
+                            min-height: auto;
+                        }
+                    }
+                }
             }
         }
     }
@@ -1287,7 +1298,7 @@
 
                     .profile-info-summery {
                         width: 100%;
-                        padding-top: 0;
+                        min-height: auto;
 
                         .profile-info-head {
                             position: relative;
@@ -1384,7 +1395,8 @@
                         padding: 0 8px;
 
                         .profile-info-summery {
-                            margin-top: 0px;
+                            margin-top: -55px;
+                            min-height: auto;
 
                             .profile-info-head {
                                 top: 0;
