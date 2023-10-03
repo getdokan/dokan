@@ -3326,8 +3326,7 @@ function dokan_privacy_policy_text( $return = false ) {
 function dokan_commission_types() {
     return apply_filters(
         'dokan_commission_types', [
-            'flat'       => __( 'Flat', 'dokan-lite' ),
-            'percentage' => __( 'Percentage', 'dokan-lite' ),
+            'fixed'      => __( 'Fixed', 'dokan-lite' ),
         ]
     );
 }

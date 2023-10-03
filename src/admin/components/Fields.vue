@@ -61,39 +61,21 @@
             </div>
         </template>
 
-        <template v-if="'price' === fieldData.type && allSettingsValues.dokan_selling && 'combine' !== allSettingsValues.dokan_selling.commission_type">
-            <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
-                <fieldset>
-                    <FieldHeading :fieldData="fieldData"></FieldHeading>
-                    <div class="field">
-                        <label :for="sectionId + '[' + fieldData.name + ']'">
-                            <input type="text" :min="fieldData.min" class="regular-text medium" :id="sectionId + '[' + fieldData.name + ']'"
-                                :class="{ wc_input_decimal: allSettingsValues.dokan_selling.commission_type=='percentage', 'wc_input_price': allSettingsValues.dokan_selling.commission_type=='flat' }"
-                                :name="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]"/>
-                        </label>
-                    </div>
-                </fieldset>
-                <p v-if="hasError( fieldData.name )" class="dokan-error">
-                    {{ getError( fieldData.label ) }}
-                </p>
-                <p v-if="hasValidationError( fieldData.name )" class="dokan-error">
-                  {{ getValidationErrorMessage( fieldData.name ) }}
-                </p>
-            </div>
-        </template>
-
-        <template v-if="'combine' === fieldData.type && haveCondition( fieldData ) && fieldData.condition.type == 'show' && checkConditionLogic( fieldData, fieldValue )">
+        <template v-if="'commission_fixed' === fieldData.type">
             <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
                     <FieldHeading :fieldData="fieldData"></FieldHeading>
                     <div class="field combine_fields">
-                        <div class="percent_fee">
-                            <input type="text" class="wc_input_decimal regular-text medium" :id="sectionId + '[' + fieldData.name + ']' + '[' + 'percent_fee' + ']'" :name="sectionId + '[' + fieldData.fields.percent_fee.name + ']'" v-model="fieldValue[fieldData.fields.percent_fee.name]">
-                            {{ '%' }}
+                        <div class="percent_fee border-[0.957434px] rounded-[5px] shadow-md !p-0 !m-0 w-[110px] flex justify-start items-center box-border">
+                            <input type="text" class="wc_input_decimal regular-text !border-0 !shadow-none !p-0 !w-[100%] !pl-2" :id="sectionId + '[' + fieldData.name + ']' + '[' + 'percent_fee' + ']'" :name="sectionId + '[' + fieldData.fields.percent_fee.name + ']'" v-model="fieldValue[fieldData.fields.percent_fee.name]">
+                            <div class='h-full flex justify-center items-center !bg-gray-100'><span class='pl-2 pr-2'>{{ '%' }}</span></div>
                         </div>
-                        <div class="fixed_fee">
-                            {{ '+' }}
-                            <input type="text" class="wc_input_price regular-text medium" :id="sectionId + '[' + fieldData.name + ']' + '[' + 'fixed_fee' + ']'" :name="sectionId + '[' + fieldData.fields.fixed_fee.name + ']'" v-model="fieldValue[fieldData.fields.fixed_fee.name]">
+                        <div class='flex justify-center items-center'>
+                            <span class='p-2'>{{ '+' }}</span>
+                        </div>
+                        <div class="fixed_fee border-[0.957434px] rounded-[5px] shadow-md !p-0 !m-0 w-[110px] flex justify-start items-center box-border">
+                            <div class='h-full flex justify-center items-center !bg-gray-100'><span class='pl-2 pr-2'>{{ getCurrencySymbol }}</span></div>
+                            <input type="text" class="wc_input_price regular-text !border-0 !shadow-none !p-0 !w-[100%] !pl-2" :id="sectionId + '[' + fieldData.name + ']' + '[' + 'fixed_fee' + ']'" :name="sectionId + '[' + fieldData.fields.fixed_fee.name + ']'" v-model="fieldValue[fieldData.fields.fixed_fee.name]">
                         </div>
                     </div>
                 </fieldset>
@@ -596,6 +578,10 @@
                 }
 
                 return true;
+            },
+
+            getCurrencySymbol() {
+                return window.dokan.currency.symbol;
             }
         },
 
