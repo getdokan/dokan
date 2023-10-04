@@ -330,7 +330,7 @@ class Rewrites {
                 foreach ( $attributes as $key => $attribute ) {
                     $tax_query[] = [
                         'taxonomy' => $key,
-                        'field'    => 'name',
+                        'field'    => 'slug',
                         'terms'    => $attribute['terms'],
                     ];
                 }
