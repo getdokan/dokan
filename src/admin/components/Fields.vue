@@ -65,19 +65,7 @@
             <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
                     <FieldHeading :fieldData="fieldData"></FieldHeading>
-                    <div class="field combine_fields">
-                        <div class="percent_fee border-[0.957434px] rounded-[5px] shadow-md !p-0 !m-0 w-[110px] flex justify-start items-center box-border">
-                            <input type="text" class="wc_input_decimal regular-text !border-0 !shadow-none !p-0 !w-[100%] !pl-2" :id="sectionId + '[' + fieldData.name + ']' + '[' + 'percent_fee' + ']'" :name="sectionId + '[' + fieldData.fields.percent_fee.name + ']'" v-model="fieldValue[fieldData.fields.percent_fee.name]">
-                            <div class='h-full flex justify-center items-center !bg-gray-100'><span class='pl-2 pr-2'>{{ '%' }}</span></div>
-                        </div>
-                        <div class='flex justify-center items-center'>
-                            <span class='p-2'>{{ '+' }}</span>
-                        </div>
-                        <div class="fixed_fee border-[0.957434px] rounded-[5px] shadow-md !p-0 !m-0 w-[110px] flex justify-start items-center box-border">
-                            <div class='h-full flex justify-center items-center !bg-gray-100'><span class='pl-2 pr-2'>{{ getCurrencySymbol }}</span></div>
-                            <input type="text" class="wc_input_price regular-text !border-0 !shadow-none !p-0 !w-[100%] !pl-2" :id="sectionId + '[' + fieldData.name + ']' + '[' + 'fixed_fee' + ']'" :name="sectionId + '[' + fieldData.fields.fixed_fee.name + ']'" v-model="fieldValue[fieldData.fields.fixed_fee.name]">
-                        </div>
-                    </div>
+                    <fixed @update="commissionUpdated" v-model="fixedCommission"/>
                 </fieldset>
                 <p class="dokan-error combine-commission" v-if="hasError( fieldData.fields.percent_fee.name ) && hasError( fieldData.fields.fixed_fee.name )">
                     {{ __( 'Both percentage and fixed fee is required.', 'dokan-lite' ) }}
@@ -89,6 +77,20 @@
                     {{ getError( fieldData.fields.fixed_fee.label ) }}
                 </p>
             </div>
+        </template>
+
+        <template  v-if="'yes' === fieldData.dokan_pro_commission">
+            <component
+                :key="fieldData.type"
+                :sectionId="sectionId"
+                :fieldData="fieldData"
+                :is="settingsComponent"
+                :fieldValue="fieldValue"
+                :assetsUrl="dokanAssetsUrl"
+                :validationErrors="validationErrors"
+                :toggleLoadingState="toggleLoadingState"
+                @some-event="thisSomeEvent"
+                v-for="( settingsComponent, index ) in commissionFieldComponents"/>
         </template>
 
         <template v-if="'textarea' === fieldData.type">
@@ -420,6 +422,7 @@
     import SocialFields from './SocialFields.vue';
     import FieldHeading from './FieldHeading.vue';
     import SecretInput from './SecretInput.vue';
+    import Fixed from 'admin/components/fields/Commission/Fixed.vue';
     let Mapbox                = dokan_get_lib('Mapbox');
     let TextEditor            = dokan_get_lib('TextEditor');
     let GoogleMaps            = dokan_get_lib('GoogleMaps');
@@ -429,6 +432,7 @@
         name: 'Fields',
 
         components: {
+            Fixed,
             Mapbox,
             Switches,
             TextEditor,
@@ -453,6 +457,11 @@
                 singleColorPicker     : { default: this.fieldData.default, label: '', show_pallete: false },
                 yourStringTimeValue   : '',
                 customFieldComponents : dokan.hooks.applyFilters( 'getDokanCustomFieldComponents', [] ),
+                commissionFieldComponents : dokan.hooks.applyFilters( 'getDokanCommissionFieldComponents', [] ),
+                fixedCommission: {
+                    fixed: this.fieldData.fields ? this.fieldValue[this.fieldData.fields.fixed_fee.name] : '',
+                    percentage: this.fieldData.fields ? this.fieldValue[this.fieldData.fields.percent_fee.name] : ''
+                }
             }
         },
 
@@ -579,10 +588,6 @@
 
                 return true;
             },
-
-            getCurrencySymbol() {
-                return window.dokan.currency.symbol;
-            }
         },
 
         beforeMount() {
@@ -658,7 +663,6 @@
 
                 return 'on';
             },
-
 
             thisSomeEvent(value) {
                 console.log('hello priting...', value);
@@ -758,6 +762,11 @@
 
                 this.fieldData[ key ] = value;
             },
+
+            commissionUpdated() {
+                this.fieldValue[this.fieldData.fields.percent_fee.name] = this.fixedCommission.percentage;
+                this.fieldValue[this.fieldData.fields.fixed_fee.name] = this.fixedCommission.fixed;
+            }
         },
     };
 </script>

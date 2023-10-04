@@ -475,7 +475,7 @@ class Settings {
                     'desc'    => __( 'Select a commission type for vendor', 'dokan-lite' ),
                     'type'    => 'select',
                     'options' => $commission_types,
-                    'default' => 'percentage',
+                    'default' => 'fixed',
                     'tooltip' => __( 'Select a commission type', 'dokan-lite' ),
                 ],
                 'commission_fixed_values' => [
@@ -508,14 +508,13 @@ class Settings {
                     'min'     => '0',
                     'step'    => 'any',
                     'desc'    => __( 'Amount you will get from sales in both percentage and fixed fee', 'dokan' ),
-                    'condition' => [
-                        'type'  => 'show',
-                        'logic' => [
-                            'commission_type' => [ 'fixed' ],
-                        ],
-                    ],
                     'sanitize_callback'          => 'wc_format_decimal',
                     'response_sanitize_callback' => 'wc_format_localized_price',
+                    'show_if' => [
+                        'commission_type' => [
+                            'equal' => 'fixed',
+                        ],
+                    ],
                 ],
                 'shipping_fee_recipient' => [
                     'name'    => 'shipping_fee_recipient',
