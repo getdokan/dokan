@@ -612,15 +612,18 @@ function dokan_get_best_selling_products( $per_page = 8, $seller_id = '', $page 
  * @return boolean
  */
 function check_more_seller_product_tab() {
-    global $post;
+    return 'on' === dokan_get_option( 'enabled_more_products_tab', 'dokan_general', 'on' );
+}
 
-    $store_info = dokan_get_store_info( $post->post_author );
-
-    if ( isset( $store_info['show_more_ptab'] ) && 'yes' === $store_info['show_more_ptab'] ) {
-        return true;
-    } else {
-        return false;
-    }
+/**
+ * Check if Vendor Info tab enabled in single product page.
+ *
+ * @since DOKAN_SINCE
+ *
+ * @return boolean
+ */
+function is_enabled_vendor_info_product_tab() {
+    return 'on' === dokan_get_option( 'show_vendor_info', 'dokan_general', 'off' );
 }
 
 /**
