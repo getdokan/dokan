@@ -1178,7 +1178,16 @@ function dokan_get_store_url( $user_id ) {
     $user_nicename    = ( false !== $userdata ) ? $userdata->user_nicename : '';
     $custom_store_url = dokan_get_option( 'custom_store_url', 'dokan_general', 'store' );
 
-    return home_url( '/' . $custom_store_url . '/' . $user_nicename . '/' );
+    /**
+     * Filter hook for the store URL before returning.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $store_url        The default store URL
+     * @param string $custom_store_url The custom store URL
+     * @param int    $user_id          The user ID for the store owner
+     */
+    return apply_filters( 'dokan_get_store_url', home_url( '/' . $custom_store_url . '/' . $user_nicename . '/' ), $custom_store_url, $user_id );
 }
 
 /**
