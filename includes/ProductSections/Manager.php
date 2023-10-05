@@ -55,7 +55,7 @@ class Manager {
         // customizer settings
         add_action( 'dokan_store_customizer_after_vendor_products', [ $this, 'render_customizer_settings_fields' ] );
         // render product sections on single store page
-        add_action( 'dokan_store_profile_frame_after', [ $this, 'render_additional_product_sections' ], 5, 1 );
+        add_action( 'dokan_store_profile_frame_after', [ $this, 'render_additional_product_sections' ], 20, 1 );
     }
 
     /**
