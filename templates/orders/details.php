@@ -318,7 +318,7 @@ $hide_customer_info = dokan_get_option( 'hide_customer_info', 'dokan_selling', '
                                 </form>
                             <?php endif; ?>
 
-                            <?php if ( 'on' !== dokan_get_option( 'enabled', 'dokan_shipping_status_setting' ) ) : ?>
+                            <?php if ( ! dokan()->is_pro_exists() || 'on' !== dokan_get_option( 'enabled', 'dokan_shipping_status_setting' ) ) : ?>
                                 <div class="clearfix dokan-form-group" style="margin-top: 10px;">
                                     <!-- Trigger the modal with a button -->
                                     <input type="button" id="dokan-add-tracking-number" name="add_tracking_number" class="dokan-btn dokan-btn-success" value="<?php esc_attr_e( 'Tracking Number', 'dokan-lite' ); ?>">
