@@ -5305,7 +5305,6 @@ export const selector = {
 
             // Basic Store Info
             storeName: '#dokan_store_name',
-            storeProductsPerPage: '#dokan_store_ppp',
             phoneNo: '#setting_phone',
 
             // store categories
@@ -5345,7 +5344,6 @@ export const selector = {
 
             // Email
             email: '//label[contains(text(), "Email")]/..//input[@type="checkbox"]',
-            moreProducts: '//label[contains(text(), "More products")]/..//input[@type="checkbox"]',
 
             // Map
             map: '#dokan-map-add',

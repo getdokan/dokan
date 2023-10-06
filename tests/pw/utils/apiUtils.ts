@@ -153,7 +153,7 @@ export class ApiUtils {
     }
 
     // get sellerId
-    async getSellerId(storeName?: unknown, auth?: auth): Promise<string> {
+    async getSellerId(storeName?: string, auth?: auth): Promise<string> {
         // todo: apply multiple optional parameter
         if (arguments.length === 1 && typeof storeName === 'object') {
             auth = storeName as auth;
@@ -161,7 +161,7 @@ export class ApiUtils {
         }
 
         const allStores = await this.getAllStores(auth);
-        const sellerId = storeName ? allStores.find((o: { store_name: unknown }) => o.store_name === storeName)?.id : allStores[0]?.id;
+        const sellerId = storeName ? allStores.find((o: { store_name: string }) => o.store_name.toLowerCase() === storeName!.toLowerCase())?.id : allStores[0]?.id;
         return sellerId;
     }
 
@@ -224,7 +224,7 @@ export class ApiUtils {
     async getProductId(productName: string, auth?: auth): Promise<string> {
         // todo: apply multiple optional parameter
         const allProducts = await this.getAllProducts(auth);
-        const productId = productName ? allProducts.find((o: { name: unknown }) => o.name === productName)?.id : allProducts[0]?.id;
+        const productId = productName ? allProducts.find((o: { name: string }) => o.name.toLowerCase() === productName.toLowerCase())?.id : allProducts[0]?.id;
         return productId;
     }
 
@@ -266,7 +266,7 @@ export class ApiUtils {
     // get product exists or not
     async checkProductExistence(productName: string, auth?: auth): Promise<string | boolean> {
         const allProducts = await this.getAllProducts(auth);
-        const res = allProducts.find((o: { name: unknown }) => o.name === productName)?.id ?? false;
+        const res = allProducts.find((o: { name: string }) => o.name.toLowerCase() === productName.toLowerCase())?.id ?? false;
         return res;
     }
 
@@ -376,7 +376,7 @@ export class ApiUtils {
     async getCouponId(couponCode: string, auth?: auth): Promise<string> {
         // todo: apply multiple optional parameter
         const allCoupons = await this.getAllCoupons(auth);
-        const couponId = couponCode ? allCoupons.find((o: { code: unknown }) => o.code === couponCode)?.id : allCoupons[0]?.id;
+        const couponId = couponCode ? allCoupons.find((o: { code: string }) => o.code.toLowerCase() === couponCode.toLowerCase())?.id : allCoupons[0]?.id;
         return couponId;
     }
 
@@ -417,7 +417,7 @@ export class ApiUtils {
     async getMarketPlaceCouponId(couponCode: string, auth?: auth): Promise<string> {
         // todo: apply multiple optional parameter
         const [, allCoupons] = await this.get(endPoints.wc.getAllCoupons, { params: { per_page: 100 }, headers: auth });
-        const couponId = couponCode ? allCoupons.find((o: { code: unknown }) => o.code === couponCode)?.id : allCoupons[0]?.id;
+        const couponId = couponCode ? allCoupons.find((o: { code: string }) => o.code.toLowerCase() === couponCode.toLowerCase())?.id : allCoupons[0]?.id;
         return couponId;
     }
 
@@ -576,7 +576,7 @@ export class ApiUtils {
     // get single order log
     async getSingleOrderLog(orderId: string, auth?: auth) {
         const allOrderLogs = await this.getAllOrderLogs(auth);
-        const singleOrderLog = allOrderLogs.find((o: { order_id: unknown }) => o.order_id === orderId);
+        const singleOrderLog = allOrderLogs.find((o: { order_id: string }) => o.order_id.toLowerCase() === orderId.toLowerCase());
         return singleOrderLog;
     }
 
@@ -727,7 +727,7 @@ export class ApiUtils {
     async getCustomerId(username: string, auth?: auth): Promise<string> {
         // todo: apply multiple optional parameter
         const allCustomers = await this.getAllCustomers(auth);
-        const customerId = username ? allCustomers.find((o: { username: unknown }) => o.username === username)?.id : allCustomers[0]?.id;
+        const customerId = username ? allCustomers.find((o: { username: string }) => o.username.toLowerCase() === username.toLowerCase())?.id : allCustomers[0]?.id;
         return customerId;
     }
 
@@ -912,7 +912,7 @@ export class ApiUtils {
     async getStoreCategoryId(StoreCategoryName: string, auth?: auth): Promise<string> {
         // todo: apply multiple optional parameter
         const allStoreCategories = await this.getAllStoreCategories(auth);
-        const storeCategoryId = StoreCategoryName ? allStoreCategories.find((o: { name: unknown }) => o.name === StoreCategoryName)?.id : allStoreCategories[0]?.id;
+        const storeCategoryId = StoreCategoryName ? allStoreCategories.find((o: { name: string }) => o.name.toLowerCase() === StoreCategoryName.toLowerCase())?.id : allStoreCategories[0]?.id;
         return storeCategoryId;
     }
 
@@ -1043,7 +1043,7 @@ export class ApiUtils {
     // get seller badgeId
     async getSellerBadgeId(eventType: string, auth?: auth): Promise<string> {
         const allBadges = await this.getAllSellerBadges(auth);
-        const badgeId = allBadges.find((o: { event_type: unknown }) => o.event_type === eventType)?.id;
+        const badgeId = allBadges.find((o: { event_type: string }) => o.event_type.toLowerCase() === eventType.toLowerCase())?.id;
         return badgeId;
     }
 
@@ -1093,7 +1093,7 @@ export class ApiUtils {
     // get staffId
     async getStaffId(username: string, auth?: auth): Promise<string> {
         const allStaffs = await this.getAllVendorStaffs(auth);
-        const staffId = allStaffs.find((o: { user_login: unknown }) => o.user_login === username)?.id;
+        const staffId = allStaffs.find((o: { user_login: string }) => o.user_login.toLowerCase() === username.toLowerCase())?.id;
         return staffId;
     }
 
@@ -1329,7 +1329,7 @@ export class ApiUtils {
     // get pageId
     async getPageId(pageSlug: string, auth?: auth): Promise<string> {
         const allPages = await this.getAllPages(auth);
-        const pageId = allPages.find((o: { slug: unknown }) => o.slug === pageSlug)?.id;
+        const pageId = allPages.find((o: { slug: string }) => o.slug.toLowerCase() === pageSlug.toLowerCase())?.id;
         return pageId;
     }
 
@@ -1405,7 +1405,7 @@ export class ApiUtils {
     // get categoryId
     async getCategoryId(categoryName: string, auth?: auth): Promise<string> {
         const allCategories = await this.getAllCategories(auth);
-        const categoryId = categoryName ? allCategories.find((o: { name: unknown }) => o.name === categoryName)?.id : allCategories[0]?.id;
+        const categoryId = categoryName ? allCategories.find((o: { name: string }) => o.name === categoryName.toLowerCase())?.id : allCategories[0]?.id;
         return categoryId;
     }
 
@@ -1521,7 +1521,7 @@ export class ApiUtils {
     // get zoneId
     async getZoneId(zoneName: string, auth?: auth): Promise<string> {
         const allZones = await this.getAllShippingZones(auth);
-        const zoneId = allZones.find((o: { name: unknown }) => o.name === zoneName)?.id;
+        const zoneId = allZones.find((o: { name: string }) => o.name.toLowerCase() === zoneName.toLowerCase())?.id;
         return zoneId;
     }
 

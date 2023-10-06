@@ -27,7 +27,6 @@ export class VendorSettingsPage extends VendorPage {
         await this.toBeVisible(selector.vendor.vStoreSettings.banner);
         await this.toBeVisible(selector.vendor.vStoreSettings.profilePicture);
         await this.toBeVisible(selector.vendor.vStoreSettings.storeName);
-        await this.toBeVisible(selector.vendor.vStoreSettings.storeProductsPerPage);
         await this.toBeVisible(selector.vendor.vStoreSettings.phoneNo);
         DOKAN_PRO && (await this.toBeVisible(selector.vendor.vStoreSettings.multipleLocation));
 
@@ -40,7 +39,6 @@ export class VendorSettingsPage extends VendorPage {
         DOKAN_PRO && (await this.multipleElementVisible(selector.vendor.vStoreSettings.companyInfo));
 
         await this.toBeVisible(selector.vendor.vStoreSettings.email);
-        await this.toBeVisible(selector.vendor.vStoreSettings.moreProducts);
 
         // map is visible
         await this.toBeVisible(selector.vendor.vStoreSettings.map);
@@ -228,12 +226,9 @@ export class VendorSettingsPage extends VendorPage {
     async basicInfoSettings(vendorInfo: vendor['vendorInfo']): Promise<void> {
         // store basic info
         await this.clearAndType(selector.vendor.vStoreSettings.storeName, vendorInfo.storeName);
-        await this.clearAndType(selector.vendor.vStoreSettings.storeProductsPerPage, vendorInfo.productsPerPage);
         await this.clearAndType(selector.vendor.vStoreSettings.phoneNo, vendorInfo.phoneNumber);
         // email
         await this.check(selector.vendor.vStoreSettings.email);
-        // show more products
-        await this.check(selector.vendor.vStoreSettings.moreProducts);
     }
 
     // vendor set store address
