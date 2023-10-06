@@ -120,7 +120,7 @@ jobs:
               if: success()
               run: |
                   cd tests/pw
-                  npm run wp-env run tests-cli wp theme activate twenty-twenty
+                  npm run wp-env run tests-cli wp theme activate storefront
 
             # Get Playwright version
             - name: Get installed Playwright version
