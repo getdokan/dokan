@@ -28,8 +28,8 @@
 
                 // Get formatted times.
                 for ( $index = 0; $index < $times_length; $index++ ) :
-                    $formatted_opening_time = $current_time->modify( $store_info['opening_time'][ $index ] );
-                    $formatted_closing_time = $current_time->modify( $store_info['closing_time'][ $index ] );
+                    $formatted_opening_time = $store_info['opening_time'][ $index ] ? $current_time->modify( $store_info['opening_time'][ $index ] ) : '';
+                    $formatted_closing_time = $store_info['closing_time'][ $index ] ? $current_time->modify( $store_info['closing_time'][ $index ] ) : '';
                     $exact_time             = '';
 
                     // Check if formatted opening time or closing time missing.
