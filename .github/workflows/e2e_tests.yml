@@ -62,10 +62,6 @@ jobs:
                   node-version: '16'
                   cache: 'npm'
 
-            # - name: Install latest npm
-            #   run: |
-            #     npm install -g npm@8.19.4
-
             - name: Composer install and build (Dokan-lite)
               if: success()
               run: |
@@ -113,7 +109,6 @@ jobs:
               run: |
                   cd tests/pw
                   npm run wp-env run tests-cli wp rewrite structure /%postname%/
-                  
 
             # Activate theme
             - name: Activate theme:Storefront
