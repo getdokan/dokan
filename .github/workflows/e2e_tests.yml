@@ -7,7 +7,6 @@ on:
     push:
         branches:
             - develop
-            - testenvissue
     workflow_dispatch:
 
 # Cancels all previous workflow runs for pull requests that have not completed.
