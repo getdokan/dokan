@@ -7,7 +7,7 @@ Tested up to: 6.3.1
 WC requires at least: 5.0.0
 WC tested up to: 8.1.1
 Requires PHP: 7.3
-Stable tag: 3.8.3
+Stable tag: 3.9.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -337,6 +337,19 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 == Changelog ==
+
+= v3.9.0 ( Oct 06, 2023 ) =
+
+- **new:** Added two new hooks named `dokan_get_admin_report_data` and `dokan_get_overview_data` to extend Dokan reports functionality.
+- **fix:** Resolved an issue where the `Tracking Number` button was still visible under the `Vendor Dashboard → Order Details → Order Note section` even after the `Shipment Tracking` feature was enabled by the admin.
+- **fix:** [WidgetProductAttribute] Fixed an issue where the `Filter Products by Attribute` widget was not working for Multi-Word Attributes.
+- **update:** Added a new filter named `dokan_get_store_url` to filter store URLs for a single store.
+- **update:** Removed some redundant or not required settings from vendor store settings page, also rearranged some admin settings and added some settings under Admin dashboard.
+Details:
+1. Removed `Show Vendor Info` settings under the `WordPress Admin Dashboard → Dokan → Settings → Appearance` and added it back under the `WordPress Admin Dashboard → Dokan → Settings → General → Product Page Settings` section.
+2. Removed the  `More Products` setting under `Vendor Dashboard → Settings → Store Settings` and added it back as a new Admin setting under `WordPress Admin Dashboard → Dokan → Settings → General → Product Page Settings` section. Now, only the admin can control this setting.
+3. Removed redundant `Store Products Per Page` setting under `Vendor Dashboard → Settings → Store Settings`. Since the admin already has this setting under `WordPress Admin Dashboard → Dokan → Settings → General`, this setting will be used from now on and only the admin can control this setting.
+4. Removed redundant `Store Page Product Section` settings under `Vendor Dashboard → Settings → Store Page Product Section`. Now, only the admin can control these settings under Theme Customizer settings.
 
 = v3.8.3 ( Sep 26, 2023 ) =
 

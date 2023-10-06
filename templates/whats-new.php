@@ -4,6 +4,47 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.9.0',
+        'released' => '2023-10-06',
+        'changes'  => [
+            'New'         => [
+                [
+                    'title'       => 'Added two new hooks named `dokan_get_admin_report_data` and `dokan_get_overview_data` to extend Dokan reports functionality.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => '',
+                    'description' => '',
+                ],
+            ],
+            'Improvement' => [
+                [
+                    'title'       => 'Added a new filter named `dokan_get_store_url` to filter store URLs for a single store.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Removed some redundant or not required settings from vendor store settings page, also rearranged some admin settings and added some settings under Admin dashboard.',
+                    'description' => 'Details:
+1. Removed `Show Vendor Info` settings under the `WordPress Admin Dashboard → Dokan → Settings → Appearance` and added it back under the `WordPress Admin Dashboard → Dokan → Settings → General → Product Page Settings` section.
+2. Removed the  `More Products` setting under `Vendor Dashboard → Settings → Store Settings` and added it back as a new Admin setting under `WordPress Admin Dashboard → Dokan → Settings → General → Product Page Settings` section. Now, only the admin can control this setting.
+3. Removed redundant `Store Products Per Page` setting under `Vendor Dashboard → Settings → Store Settings`. Since the admin already has this setting under `WordPress Admin Dashboard → Dokan → Settings → General`, this setting will be used from now on and only the admin can control this setting.
+4. Removed redundant `Store Page Product Section` settings under `Vendor Dashboard → Settings → Store Page Product Section`. Now, only the admin can control these settings under Theme Customizer settings.
+',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => 'Resolved an issue where the `Tracking Number` button was still visible under the `Vendor Dashboard → Order Details → Order Note section` even after the `Shipment Tracking` feature was enabled by the admin.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => '[WidgetProductAttribute] Fixed an issue where the `Filter Products by Attribute` widget was not working for Multi-Word Attributes.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.8.3',
         'released' => '2023-09-26',
         'changes'  => [
@@ -29,7 +70,7 @@ $changelog = [
                     'description' => '',
                 ],
             ],
-            'Fix' => [
+            'Fix'         => [
                 [
                     'title'       => '[Refund] Earlier, when refunding an order under the vendor dashboard, the tax amount decimal point rounding precision was inconsistent with WooCommerce. However, it has now been updated to be consistent with WooCommerce.',
                     'description' => '',
@@ -70,7 +111,7 @@ It’s important to note that in the next version of Dokan, the Add New Product 
                     'description' => '',
                 ],
             ],
-            'Fix' => [
+            'Fix'         => [
                 [
                     'title'       => 'Fixed an issue where orders can’t be filtered by vendor under Admin Dashboard → WooCommerce → Order lists page if HPOS feature is enabled',
                     'description' => '',
