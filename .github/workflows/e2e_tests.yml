@@ -112,7 +112,7 @@ jobs:
               if: success()
               run: |
                   cd tests/pw 
-                  npm run set:post-permalink
+                  npm run wp-env run tests-cli wp rewrite structure /%postname%/
                  # wp-env run cli "wp rewrite structure /%postname%/"
                  # wp-env run tests-cli "wp rewrite structure /%postname%/"
                   
