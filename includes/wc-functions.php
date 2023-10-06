@@ -618,7 +618,7 @@ function check_more_seller_product_tab() {
 /**
  * Check if Vendor Info tab enabled in single product page.
  *
- * @since DOKAN_SINCE
+ * @since 3.9.0
  *
  * @return boolean
  */

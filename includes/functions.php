@@ -1181,7 +1181,7 @@ function dokan_get_store_url( $user_id ) {
     /**
      * Filter hook for the store URL before returning.
      *
-     * @since DOKAN_SINCE
+     * @since 3.9.0
      *
      * @param string $store_url        The default store URL
      * @param string $custom_store_url The custom store URL
