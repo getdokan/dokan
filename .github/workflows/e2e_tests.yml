@@ -41,8 +41,8 @@ env:
     PR_NUMBER: ${{ github.event.number }}
     SHA: ${{ github.event.pull_request.head.sha }}
     SYSTEM_INFO: ./tests/pw/systemInfo.json
-    API_TEST_RESULT: ./tests/pw/playwright-report/api/junit-report/api-results.xml
-    E2E_TEST_RESULT: ./tests/pw/playwright-report/e2e/junit-report/e2e-results.xml
+    API_TEST_RESULT: ./tests/pw/playwright-report/api/summary-report/results.json
+    E2E_TEST_RESULT: ./tests/pw/playwright-report/e2e/summary-report/results.json
 
 jobs:
     tests:
@@ -99,14 +99,20 @@ jobs:
               run: |
                   cd tests/pw
                   echo "DB_PORT=$(docker ps -f ancestor='mariadb' -f name='tests-mysql' --format='{{.Ports}}' | sed -E 's/.*:(.*)->.*/\1/')" >> $GITHUB_ENV
-                  echo "The value ... of test DB_PORT is ${{ env.DB_PORT }}"
 
-            # db port
-            - name: DB PORT
+            # # db port
+            # - name: DB PORT
+            #   if: success()
+            #   run: |
+            #       cd tests/pw
+            #       echo "The value of test DB_PORT is ${{ env.DB_PORT }}"
+
+            # Activate theme
+            - name: Activate theme:Storefront
               if: success()
               run: |
-                  cd tests/pw 
-                  echo "The value of test DB_PORT is ${{ env.DB_PORT }}"
+                  cd tests/pw
+                  npm run wp-env run tests-cli "wp theme activate twenty-twenty"
 
             # Set permalink structure
             - name: Set Permalink structure
@@ -114,13 +120,6 @@ jobs:
               run: |
                   cd tests/pw 
                   npm run wp-env run tests-cli "wp rewrite structure /%postname%/"
-
-            # Activate theme
-            - name: Activate theme:Storefront
-              if: success()
-              run: |
-                  cd tests/pw
-                  npm run wp-env run tests-cli "wp theme activate storefront"
 
             # Get Playwright version
             - name: Get installed Playwright version
@@ -176,7 +175,7 @@ jobs:
               with:
                   result-encoding: string
                   script: |
-                      const script = require("./tests/pw/testSummary.ts" )
+                      const script = require("./tests/pw/utils/gitTestSummary.ts")
                       return await script({github, context, core})
 
             # Find PR comment
