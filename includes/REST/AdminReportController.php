@@ -103,6 +103,7 @@ class AdminReportController extends DokanRESTAdminController {
         $date_modifier = $start_date->diff( $end_date )->m >= 11 ? '+1 month' : '+1 day';
         $group_by      = $date_modifier === '+1 month' ? 'month' : 'day';
         $data          = dokan_admin_report_data( $group_by, '', $start_date->format( 'Y-m-d' ), $end_date->format( 'Y-m-d' ), $seller_id );
+        $data          = apply_filters( 'dokan_get_overview_data', $data, $group_by, $start_date->format( 'Y-m-d' ), $end_date->format( 'Y-m-d' ), $seller_id );
 
         $labels          = array();
         $order_counts    = array();

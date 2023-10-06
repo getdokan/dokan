@@ -1,0 +1,196 @@
+name: End-to-End Tests Lite
+
+on:
+    schedule:
+        - cron: '0 8 * * *'
+    pull_request:
+    push:
+        branches:
+            - develop
+            - lite
+    workflow_dispatch:
+
+# Cancels all previous workflow runs for pull requests that have not completed.
+concurrency:
+    # The concurrency group contains the workflow name and the branch name for pull requests or the commit hash for any other events.
+    group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}
+    cancel-in-progress: true
+
+permissions:
+    checks: write
+    contents: read
+    issues: write
+    pull-requests: write
+
+env:
+    ADMIN: admin
+    ADMIN_PASSWORD: password
+    VENDOR: vendor1
+    VENDOR2: vendor2
+    CUSTOMER: customer1
+    USER_PASSWORD: 01dokan01
+    GMAP: ${{secrets.GMAP}}
+    BASE_URL: http://localhost:9999
+    CI: true
+    FORCE_COLOR: 1
+    DB_HOST_NAME: localhost
+    DB_USER_NAME: root
+    DB_USER_PASSWORD: password
+    DATABASE: tests-wordpress
+    DB_PREFIX: wp
+    PR_NUMBER: ${{ github.event.number }}
+    SHA: ${{ github.event.pull_request.head.sha }}
+    SYSTEM_INFO: ./tests/pw/systemInfo.json
+    API_TEST_RESULT: ./tests/pw/playwright-report/api/junit-report/api-results.xml
+    E2E_TEST_RESULT: ./tests/pw/playwright-report/e2e/junit-report/e2e-results.xml
+
+jobs:
+    tests:
+        name: e2e tests
+        runs-on: ubuntu-latest
+        # strategy:
+        #   fail-fast: false
+
+        steps:
+            - name: Checkout testing repo
+              uses: actions/checkout@v3
+
+            - name: Use desired version of NodeJS
+              uses: actions/setup-node@v3
+              with:
+                  node-version: '16'
+                  cache: 'npm'
+
+            # - name: Install latest npm
+            #   run: |
+            #     npm install -g npm@8.19.4
+
+            - name: Composer install and build (Dokan-lite)
+              run: |
+                  composer install --no-dev
+                  composer dump-autoload -o
+
+            - name: Npm install and build (Dokan-lite)
+              run: |
+                  npm ci 
+                  npm run build
+
+            # Install test dependencies
+            - name: Install dependencies
+              run: |
+                  cd tests/pw 
+                  npm ci
+
+            # Start wordpress environment
+            - name: Start WordPress Env
+              run: |
+                  cd tests/pw
+                  npm run start:env
+
+            # Grab test db port
+            - name: Get Test DB PORT
+              run: |
+                  cd tests/pw
+                  echo "DB_PORT=$(docker ps -f ancestor='mariadb' -f name='tests-mysql' --format='{{.Ports}}' | sed -E 's/.*:(.*)->.*/\1/')" >> $GITHUB_ENV
+
+            # db port
+            - name: DB PORT
+              run: |
+                  cd tests/pw 
+                  echo "The value of test DB_PORT is ${{ env.DB_PORT }}"
+
+            # Activate theme
+            - name: Activate theme:Storefront
+              run: |
+                  cd tests/pw
+                  npm run wp-env run tests-cli "wp theme activate storefront"
+
+            # Set permalink structure
+            - name: Set Permalink structure
+              run: |
+                  cd tests/pw 
+                  npm run wp-env run tests-cli "wp rewrite structure /%postname%/"
+
+            # Get Playwright version
+            - name: Get installed Playwright version
+              id: playwright-version
+              run: |
+                  cd tests/pw
+                  echo "PLAYWRIGHT_VERSION=$(npm ls @playwright/test --json | jq --raw-output '.dependencies["@playwright/test"].version')" >> $GITHUB_ENV
+
+            # Cache browser binaries, cache key is based on Playwright version and OS
+            - name: Cache playwright binaries
+              uses: actions/cache@v3
+              id: playwright-cache
+              with:
+                  path: |
+                      ~/.cache/ms-playwright
+                  key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
+                  restore-keys: |
+                      ${{ runner.os }}-playwright-
+
+            # Install browser binaries & OS dependencies if cache missed
+            - name: Install Playwright browser binaries & OS dependencies
+              if: steps.playwright-cache.outputs.cache-hit != 'true'
+              run: |
+                  cd tests/pw
+                  npm run pw:browser-with-deps
+
+            # Run e2e tests
+            - name: 🧪 Running the e2e tests
+              if: always()
+              timeout-minutes: 40
+              run: |
+                  cd tests/pw 
+                  npm run test:e2e:lite
+
+            # Run API tests
+            - name: 🧪 Running the api tests
+              if: always()
+              timeout-minutes: 5
+              run: |
+                  cd tests/pw 
+                  npm run test:api:lite
+
+            # Prepare test summary
+            - name: Prepare test summary
+              id: prepare-test-summary
+              uses: actions/github-script@v6
+              if: always()
+              with:
+                  result-encoding: string
+                  script: |
+                      const script = require("./tests/pw/testSummary.ts" )
+                      return await script({github, context, core})
+
+            # Find PR comment
+            - name: Find PR comment by github-actions[bot]
+              uses: peter-evans/find-comment@v2
+              id: find-comment
+              if: github.event_name == 'pull_request'
+              with:
+                  issue-number: ${{ github.event.pull_request.number }}
+                  comment-author: 'github-actions[bot]'
+                  body-includes: Tests Summary
+
+            # Post test summary as PR comment
+            - name: Create or update PR comment
+              uses: peter-evans/create-or-update-comment@v2
+              if: github.event_name == 'pull_request'
+              with:
+                  comment-id: ${{ steps.find-comment.outputs.comment-id }}
+                  issue-number: ${{ github.event.pull_request.number }}
+                  body: ${{ steps.prepare-test-summary.outputs.result }}
+                  edit-mode: replace
+
+            # Upload artifacts
+            - name: Archive test artifacts (screenshots, HTML snapshots, Reports)
+              uses: actions/upload-artifact@v3
+              if: always()
+              with:
+                  name: test-artifact
+                  path: |
+                      tests/pw/playwright
+                      tests/pw/playwright-report
+                  if-no-files-found: ignore
+                  retention-days: 30
