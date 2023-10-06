@@ -3093,7 +3093,6 @@ export const selector = {
             notRightNow: '.not-right-now-btn',
 
             // Store Setup
-            storeProductsPerPage: '#store_ppp',
             street1: '#address\\[street_1\\]',
             street2: '#address\\[street_2\\]',
             city: '#address\\[city\\]',

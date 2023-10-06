@@ -91,6 +91,7 @@ jobs:
 
             # Grab test db port
             - name: Get Test DB PORT
+              id: db-port
               if: success()
               run: |
                   cd tests/pw
@@ -157,7 +158,7 @@ jobs:
             # Run API tests
             - name: 🧪 Running the api tests
               id: api-test
-              if: steps.wp-env.outcome == 'success'
+              if: steps.db-port.outcome == 'success'
               timeout-minutes: 5
               run: |
                   cd tests/pw 
