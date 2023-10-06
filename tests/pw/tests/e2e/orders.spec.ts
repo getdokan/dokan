@@ -3,8 +3,10 @@ import { OrdersPage } from '@pages/ordersPage';
 import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
 import { payloads } from '@utils/payloads';
+import { dbUtils } from '@utils/dbUtils';
+import { dbData } from '@utils/dbData';
 
-const { CUSTOMER_ID, PRODUCT_ID } = process.env;
+const { DOKAN_PRO, CUSTOMER_ID, PRODUCT_ID } = process.env;
 
 test.describe('Order functionality test', () => {
     let vendor: OrdersPage;
@@ -73,7 +75,9 @@ test.describe('Order functionality test', () => {
     });
 
     test('vendor can add tracking details to order @lite', async () => {
+        DOKAN_PRO && (await dbUtils.setDokanSettings(dbData.dokan.optionName.shippingStatus, { ...dbData.dokan.shippingStatusSettings, enabled: 'off' }));
         await vendor.addTrackingDetails(orderId, data.orderTrackingDetails);
+        DOKAN_PRO && (await dbUtils.setDokanSettings(dbData.dokan.optionName.shippingStatus, { ...dbData.dokan.shippingStatusSettings, enabled: 'on' }));
     });
 
     test('vendor can add shipment to order @pro', async () => {

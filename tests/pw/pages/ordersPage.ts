@@ -84,13 +84,11 @@ export class OrdersPage extends VendorPage {
                 break;
 
             case 'by-date':
-                await this.setAttributeValue(
-                    selector.vendor.orders.filters.filterByDate.dateRangeInput,
-                    'value',
-                    helpers.dateFormatFYJ(inputValue.startDate) + ' - ' + helpers.dateFormatFYJ(inputValue.endDate),
-                );
-                await this.setAttributeValue(selector.vendor.orders.filters.filterByDate.startDateInput, 'value', inputValue.startDate); // todo: resolve this
-                await this.setAttributeValue(selector.vendor.orders.filters.filterByDate.endDateInput, 'value', inputValue.endDate);
+                if (typeof inputValue !== 'string') {
+                    await this.setAttributeValue(selector.vendor.orders.filters.filterByDate.dateRangeInput, 'value', helpers.dateFormatFYJ(inputValue.startDate) + ' - ' + helpers.dateFormatFYJ(inputValue.endDate));
+                    await this.setAttributeValue(selector.vendor.orders.filters.filterByDate.startDateInput, 'value', inputValue.startDate);
+                    await this.setAttributeValue(selector.vendor.orders.filters.filterByDate.endDateInput, 'value', inputValue.endDate);
+                }
                 break;
 
             default:
@@ -130,18 +128,16 @@ export class OrdersPage extends VendorPage {
         // order note elements are visible
         await this.multipleElementVisible(selector.vendor.orders.orderNote);
 
-        await this.click(selector.vendor.orders.trackingDetails.addTrackingNumber);
-
-        // tracking detail elements are visible
-        const { addTrackingNumber, ...trackingDetails } = selector.vendor.orders.trackingDetails;
-        await this.multipleElementVisible(trackingDetails);
-
         if (DOKAN_PRO) {
             await this.click(selector.vendor.orders.shipment.createNewShipment);
-
             // shipment elements are visible
             const { createNewShipment, shipmentOrderItem, shipmentOrderItemQty, ...shipment } = selector.vendor.orders.shipment;
             await this.multipleElementVisible(shipment);
+        } else {
+            await this.click(selector.vendor.orders.trackingDetails.addTrackingNumber);
+            // tracking detail elements are visible
+            const { addTrackingNumber, ...trackingDetails } = selector.vendor.orders.trackingDetails;
+            await this.multipleElementVisible(trackingDetails);
         }
 
         // downloadable product elements are visible

@@ -185,7 +185,7 @@ export class WholesaleCustomersPage extends AdminPage {
     async assertWholesalePrice(wholesalePrice: string, minimumWholesaleQuantity: string) {
         await this.customerPage.goToCheckout();
         const subtotal = Number(helpers.price((await this.getElementText(selector.customer.cCheckout.orderDetails.cartTotal)) as string));
-        const calcSubTotal = helpers.subtotal([Number(wholesalePrice)], [Number(minimumWholesaleQuantity)]);
+        const calcSubTotal = helpers.roundToTwo(helpers.subtotal([Number(wholesalePrice)], [Number(minimumWholesaleQuantity)]));
         expect(subtotal).toEqual(calcSubTotal);
     }
 }

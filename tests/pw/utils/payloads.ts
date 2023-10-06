@@ -2103,8 +2103,8 @@ export const payloads = {
         username: 'staff1',
         first_name: 'staff1',
         last_name: 's1',
-        phone: '0123456789',
         email: 'staff1@email.c',
+        phone: '0123456789',
         password: String(process.env.USER_PASSWORD),
     },
 
