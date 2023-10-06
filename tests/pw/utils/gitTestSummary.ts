@@ -1,37 +1,16 @@
-const convert = require('xml-js');
 const fs = require('fs');
 const { SHA, PR_NUMBER, SYSTEM_INFO, API_TEST_RESULT, E2E_TEST_RESULT } = process.env;
 
-const readEnvInfo = fs.readFileSync(SYSTEM_INFO, 'utf8');
-const envInfo = JSON.parse(readEnvInfo);
-
-const getFormattedDuration = time => {
-    time = Number(time) * 1000;
-    // const min = Math.floor( time / 1000 / 60 );
-    // const sec = Math.floor( ( time / 1000 ) % 60 );
-    // return `${ min }m ${ (sec < 10 ? '0' : '') + sec }s`;
-    const date = new Date(time);
-    return `${date.getMinutes()}m ${date.getSeconds()}s`;
-    // return `${date.getMinutes()}.${date.getSeconds()}s`;
-};
-
+const replace = obj => Object.keys(obj).forEach(key => (typeof obj[key] == 'object' ? replace(obj[key]) : (obj[key] = String(obj[key]))));
+const readFile = filePath => (fs.existsSync(filePath) ? JSON.parse(fs.readFileSync(filePath, 'utf8')) : false);
 const getTestResult = (suiteName, filePath) => {
-    if (fs.existsSync(filePath)) {
-        const xmlFile = fs.readFileSync(filePath, 'utf8');
-        const jsonData = JSON.parse(convert.xml2json(xmlFile, { compact: true, spaces: 2 }));
-        const testResult = jsonData.testsuites._attributes;
-        const testSummary = [
-            suiteName,
-            testResult.tests,
-            String(testResult.tests - testResult.skipped - testResult.failures),
-            testResult.failures,
-            testResult.skipped,
-            getFormattedDuration(testResult.time),
-        ];
+        const testResult = readFile(filePath);
+        if (!testResult) {
+            return [];
+        }
+        replace(testResult);
+        const testSummary = [suiteName, testResult.total_tests, testResult.passed, testResult.failed, testResult.flaky, testResult.skipped, testResult.suite_duration_formatted];
         return testSummary;
-    } else {
-        return [];
-    }
 };
 
 const addSummaryHeadingAndTable = core => {
@@ -40,7 +19,7 @@ const addSummaryHeadingAndTable = core => {
         { data: 'Total  :bar_chart:', header: true },
         { data: 'Passed  :white_check_mark:', header: true },
         { data: 'Failed  :rotating_light:', header: true },
-        // { data: 'Flaky :construction:', header: true }, // todo:  add flaky tests
+        { data: 'Flaky :construction:', header: true },
         { data: 'Skipped  :next_track_button:', header: true },
         { data: 'Duration  :alarm_clock:', header: true },
     ];
@@ -50,6 +29,10 @@ const addSummaryHeadingAndTable = core => {
 };
 
 const addList = core => {
+    const envInfo = readFile(SYSTEM_INFO);
+    if (!envInfo) {
+        return false;
+    }
     const pluginList = core.summary.addList(envInfo.activePlugins).stringify();
     core.summary.clear();
     const pluginDetails = core.summary.addDetails('Plugins: ', pluginList).stringify();
@@ -65,7 +48,7 @@ module.exports = async ({ github, context, core }) => {
     const plugins = addList(core);
     await core.summary.clear();
     addSummaryHeadingAndTable(core);
-    addSummaryFooter(core, plugins);
+    plugins && addSummaryFooter(core, plugins);
     const summary = core.summary.stringify();
     await core.summary.write();
     return summary;

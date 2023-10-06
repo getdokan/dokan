@@ -1386,6 +1386,7 @@ export interface dokanSettings {
     // General Settings
     general: {
         vendorStoreUrl: string;
+        setupWizardMessage: string;
         sellingProductTypes: string;
         storeProductPerPage: string;
         storCategory: string;
@@ -1450,7 +1451,7 @@ export interface dokanSettings {
     // privacy policy
     privacyPolicy: {
         privacyPage: string;
-        privacyPolicyHtmlBody: string;
+        privacyPolicyContent: string;
         saveSuccessMessage: string;
     };
 

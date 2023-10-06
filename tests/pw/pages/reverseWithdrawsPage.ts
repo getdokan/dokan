@@ -133,11 +133,7 @@ export class ReverseWithdrawsPage extends CustomerPage {
     async vendorFilterReverseWithdrawals(inputValue: date['dateRange']) {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.reverseWithdrawal);
 
-        await this.setAttributeValue(
-            selector.vendor.vReverseWithdrawal.filters.dateRangeInput,
-            'value',
-            helpers.dateFormatFYJ(inputValue.startDate) + ' - ' + helpers.dateFormatFYJ(inputValue.endDate),
-        );
+        await this.setAttributeValue(selector.vendor.vReverseWithdrawal.filters.dateRangeInput, 'value', helpers.dateFormatFYJ(inputValue.startDate) + ' - ' + helpers.dateFormatFYJ(inputValue.endDate));
         await this.setAttributeValue(selector.vendor.vReverseWithdrawal.filters.startDateInput, 'value', inputValue.startDate);
         await this.setAttributeValue(selector.vendor.vReverseWithdrawal.filters.endDateInput, 'value', inputValue.endDate);
         await this.clickAndWaitForLoadState(selector.vendor.vReverseWithdrawal.filters.filter);

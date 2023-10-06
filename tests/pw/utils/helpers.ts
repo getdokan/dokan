@@ -31,6 +31,9 @@ export const helpers = {
     // remove array element
     removeItem: (arr: any[], removeItem: any) => arr.filter(item => item !== removeItem),
 
+    // get count in array
+    getCount: (array: any[], element: any) => array.filter(n => n === element).length,
+
     // is sub array
     isSubArray: (parentArray: any[], subArray: any[]) => subArray.every(el => parentArray.includes(el)),
 
@@ -89,12 +92,9 @@ export const helpers = {
     currentDateTime: new Date().toLocaleString('en-CA', { year: 'numeric', month: 'numeric', day: 'numeric', hourCycle: 'h23', hour: 'numeric', minute: 'numeric' }).replace(',', ''),
 
     // current date-time [2023-06-02 00:46:11]
-    currentDateTimeFullFormat: new Date()
-        .toLocaleString('en-CA', { year: 'numeric', month: 'numeric', day: 'numeric', hourCycle: 'h23', hour: 'numeric', minute: 'numeric', second: 'numeric' })
-        .replace(',', ''),
+    currentDateTimeFullFormat: new Date().toLocaleString('en-CA', { year: 'numeric', month: 'numeric', day: 'numeric', hourCycle: 'h23', hour: 'numeric', minute: 'numeric', second: 'numeric' }).replace(',', ''),
 
-    currentDateTime2: () =>
-        new Date().toLocaleString('en-CA', { year: 'numeric', month: 'numeric', day: 'numeric', hourCycle: 'h23', hour: 'numeric', minute: 'numeric', second: 'numeric' }).replace(',', ''),
+    currentDateTime2: () => new Date().toLocaleString('en-CA', { year: 'numeric', month: 'numeric', day: 'numeric', hourCycle: 'h23', hour: 'numeric', minute: 'numeric', second: 'numeric' }).replace(',', ''),
 
     // add two input days
     addDays(date: string | number | Date | null, days: number, format: string): string {

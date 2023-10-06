@@ -164,11 +164,7 @@ export class AuctionsPage extends VendorPage {
     // filter auction activity
     async filterAuctionActivity(inputValue: date['dateRange']) {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.auctionActivity);
-        await this.setAttributeValue(
-            selector.vendor.vAuction.actionActivity.filters.filterByDate.dateRangeInput,
-            'value',
-            helpers.dateFormatFYJ(inputValue.startDate) + ' - ' + helpers.dateFormatFYJ(inputValue.endDate),
-        );
+        await this.setAttributeValue(selector.vendor.vAuction.actionActivity.filters.filterByDate.dateRangeInput, 'value', helpers.dateFormatFYJ(inputValue.startDate) + ' - ' + helpers.dateFormatFYJ(inputValue.endDate));
         await this.setAttributeValue(selector.vendor.vAuction.actionActivity.filters.filterByDate.startDateInput, 'value', inputValue.startDate);
         await this.setAttributeValue(selector.vendor.vAuction.actionActivity.filters.filterByDate.endDateInput, 'value', inputValue.endDate);
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.auctionActivity, selector.vendor.vAuction.actionActivity.filters.filter);

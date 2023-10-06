@@ -18,17 +18,19 @@ export default defineConfig({
     repeatEach: 1 /* The number of times to repeat each test, useful for debugging flaky tests. */,
     retries: process.env.CI ? 1 : 0 /* The maximum number of retry attempts given to failed tests.  */,
     workers: process.env.CI ? 1 : 1 /* Opt out of parallel tests on CI. */,
-    reportSlowTests: { max: 10, threshold: 20 } /* Whether to report slow test files. Pass null to disable this feature. */,
+    reportSlowTests: { max: 3, threshold: 25 } /* Whether to report slow test files. Pass null to disable this feature. */,
     reporter: process.env.CI
         ? [
               ['html', { open: 'never', outputFolder: 'playwright-report/e2e/html/html-report-e2e' }],
               ['junit', { outputFile: 'playwright-report/e2e/junit-report/e2e-results.xml' }],
               ['list', { printSteps: true }],
+              ['./utils/summaryReporter.ts', { outputFile: 'playwright-report/e2e/summary-report/results.json' }],
           ]
         : [
               ['html', { open: 'never', outputFolder: 'playwright-report/e2e/html/html-report-e2e' }],
               ['junit', { outputFile: 'playwright-report/e2e/junit-report/e2e-results.xml' }],
               ['list', { printSteps: true }],
+              ['./utils/summaryReporter.ts', { outputFile: 'playwright-report/e2e/summary-report/results.json' }],
               // ['allure-playwright',	{ detail: true, outputFolder: 'playwright-report/e2e/allure/allure-report', suiteTitle: false }]
           ],
 
@@ -66,7 +68,7 @@ export default defineConfig({
         {
             name: 'e2e_tests',
             testMatch: /.*\.spec\.ts/,
-            dependencies: process.env.SETUP ? [] : ['e2e_setup'] /* whether not to run setup tests before running actual tests */,
+            // dependencies: process.env.SETUP ? [] : ['e2e_setup'] /* whether not to run setup tests before running actual tests */,
         },
 
         // local site setup project

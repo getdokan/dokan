@@ -102,7 +102,6 @@ export class VendorPage extends BasePage {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.setupWizard);
         if (setupWizardData.choice) {
             await this.click(selector.vendor.vSetup.letsGo);
-            await this.clearAndType(selector.vendor.vSetup.storeProductsPerPage, setupWizardData.storeProductsPerPage);
             await this.clearAndType(selector.vendor.vSetup.street1, setupWizardData.street1);
             await this.clearAndType(selector.vendor.vSetup.street2, setupWizardData.street2);
             await this.clearAndType(selector.vendor.vSetup.city, setupWizardData.city);

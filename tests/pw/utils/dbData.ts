@@ -9,7 +9,7 @@ export const dbData = {
             appearance: 'dokan_appearance',
             privacyPolicy: 'dokan_privacy',
             colors: 'dokan_colors',
-            // liveSearch        : 'dokan_live_search_setting',
+            // liveSearch: 'dokan_live_search_setting',
             storeSupport: 'dokan_store_support_setting',
             // sellerVerification: 'dokan_verification',
             // verificationSMSGateways: 'dokan_verification_sms_gateways',
@@ -17,7 +17,7 @@ export const dbData = {
             // socialApi: 'dokan_social_api',
             shippingStatus: 'dokan_shipping_status_setting',
             quote: 'dokan_quote_settings',
-            // liveChat          : 'dokan_live_chat',
+            // liveChat: 'dokan_live_chat',
             rma: 'dokan_rma',
             wholesale: 'dokan_wholesale',
             euCompliance: 'dokan_germanized',
@@ -192,8 +192,7 @@ export const dbData = {
         privacyPolicySettings: {
             enable_privacy: 'on',
             privacy_page: '2',
-            privacy_policy:
-                '<p>Your personal data will be used to support your experience throughout this website, to manage access to your account, and for other purposes described in our [dokan_privacy_policy]</p>',
+            privacy_policy: '<p>Your personal data will be used to support your experience throughout this website, to manage access to your account, and for other purposes described in our [dokan_privacy_policy]</p>',
         },
 
         colorsSettings: {

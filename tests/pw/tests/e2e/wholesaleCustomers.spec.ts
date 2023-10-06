@@ -80,47 +80,42 @@ test.describe('Wholesale customers test (admin)', () => {
     });
 });
 
-// test.describe('Wholesale customers test customer', () => {
-// 	test.skip(true, 'Dokan issue cant create product via api');
+test.describe.skip('Wholesale customers test customer', () => {
+    let customer: WholesaleCustomersPage;
+    let customerPage: CustomerPage;
+    let cPage: Page;
+    let apiUtils: ApiUtils;
+    let productName: string;
+    let wholesalePrice: string;
+    let minimumWholesaleQuantity: string;
 
-// 	let customer: WholesaleCustomersPage;
-// 	let customerPage: CustomerPage;
-// 	let cPage: Page;
-// 	let apiUtils: ApiUtils;
-// 	let productName: string;
-// 	let wholesalePrice: string;
-// 	let minimumWholesaleQuantity: string;
-// 	// let responseBody: any;
+    test.beforeAll(async ({ browser, request }) => {
+        const customerContext = await browser.newContext(data.auth.customerAuth);
+        cPage = await customerContext.newPage();
+        customerPage = new CustomerPage(cPage);
+        customer = new WholesaleCustomersPage(cPage);
 
-// 	test.beforeAll(async ({ browser, request }) => {
+        apiUtils = new ApiUtils(request);
+        await apiUtils.createWholesaleCustomer(payloads.createCustomer1, payloads.adminAuth); // todo: need to update customer auth if crated wholesale or move to env setup
 
-// 		const customerContext = await browser.newContext(data.auth.customerAuth);
-// 		cPage = await customerContext.newPage();
-// 		customerPage = new CustomerPage(cPage);
-// 		customer = new WholesaleCustomersPage(cPage);
+        const [responseBody, ,] = await apiUtils.createProduct(payloads.createWholesaleProduct(), payloads.vendorAuth);
+        productName = responseBody.name;
+        wholesalePrice = responseBody.meta_data[0]['value']['price'];
+        minimumWholesaleQuantity = responseBody.meta_data[0]['value']['quantity'];
+    });
 
-// 		apiUtils = new ApiUtils(request);
+    test.afterAll(async () => {
+        await cPage.close();
+    });
 
-// 		// await apiUtils.createWholesaleCustomer(payloads.createCustomer1, payloads.adminAuth);
-// 		const [responseBody,,] = await apiUtils.createProduct(payloads.createWholesaleProduct(), payloads. vendorAuth);
-// 		productName = responseBody.name;
-// 		wholesalePrice  = responseBody.meta_data[0]['value']['price'];
-// 		minimumWholesaleQuantity = responseBody.meta_data[0]['value']['quantity'];
-// 		// console.log(productName, wholesalePrice, minimumWholesaleQuantity);
-// 	});
+    test('customer can see wholesale price on shop archive', async () => {
+        await customer.viewWholeSalePrice(productName);
+    });
 
-// 	test.afterAll(async () => {
-// 		await cPage.close();
-// 	});
-
-// 	test('customer can see wholesale price on shop archive', async () => {
-// 		await customer.viewWholeSalePrice(productName);
-// 	});
-
-// 	test('customer can buy wholesale product', async () => {
-// 		await customerPage.addProductToCart(productName, 'single-product', true, minimumWholesaleQuantity);
-// 		await customer.assertWholesalePrice(wholesalePrice, minimumWholesaleQuantity);
-// 		await customerPage.paymentOrder();
-// 	});
-
-// });
+    test('customer can buy wholesale product', async () => {
+        await customerPage.addProductToCart(productName, 'single-product', true, minimumWholesaleQuantity);
+        await customer.assertWholesalePrice(wholesalePrice, minimumWholesaleQuantity);
+        await customerPage.paymentOrder();
+        await customerPage.loginPage.login(data.customer);
+    });
+});
