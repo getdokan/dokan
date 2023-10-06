@@ -107,19 +107,19 @@ jobs:
             #       cd tests/pw
             #       echo "The value of test DB_PORT is ${{ env.DB_PORT }}"
 
+            # Set permalink structure
+            - name: Set Permalink structure
+              if: success()
+              run: |
+                  cd tests/pw 
+                  wp-env run tests-cli "wp rewrite structure /%postname%/"
+
             # Activate theme
             - name: Activate theme:Storefront
               if: success()
               run: |
                   cd tests/pw
                   npm run wp-env run tests-cli "wp theme activate twenty-twenty"
-
-            # Set permalink structure
-            - name: Set Permalink structure
-              if: success()
-              run: |
-                  cd tests/pw 
-                  npm run wp-env run tests-cli "wp rewrite structure /%postname%/"
 
             # Get Playwright version
             - name: Get installed Playwright version
