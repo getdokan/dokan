@@ -20,14 +20,7 @@ const getTestResult = (suiteName, filePath) => {
         const xmlFile = fs.readFileSync(filePath, 'utf8');
         const jsonData = JSON.parse(convert.xml2json(xmlFile, { compact: true, spaces: 2 }));
         const testResult = jsonData.testsuites._attributes;
-        const testSummary = [
-            suiteName,
-            testResult.tests,
-            String(testResult.tests - testResult.skipped - testResult.failures),
-            testResult.failures,
-            testResult.skipped,
-            getFormattedDuration(testResult.time),
-        ];
+        const testSummary = [suiteName, testResult.tests, String(testResult.tests - testResult.skipped - testResult.failures), testResult.failures, testResult.skipped, getFormattedDuration(testResult.time)];
         return testSummary;
     } else {
         return [];

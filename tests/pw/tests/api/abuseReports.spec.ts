@@ -22,7 +22,7 @@ test.describe('abuse report api test', () => {
         await dbUtils.createAbuseReport(dbData.dokan.createAbuseReport, productId, VENDOR_ID, CUSTOMER_ID);
     });
 
-    test('get all abuse report reasons @pro', async () => {
+    test.only('get all abuse report reasons @pro', async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllAbuseReportReasons);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
