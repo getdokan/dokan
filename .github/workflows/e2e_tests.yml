@@ -112,7 +112,10 @@ jobs:
               if: success()
               run: |
                   cd tests/pw 
-                  wp-env run tests-cli "wp rewrite structure /%postname%/"
+                  npm run set:post-permalink
+                 # wp-env run cli "wp rewrite structure /%postname%/"
+                 # wp-env run tests-cli "wp rewrite structure /%postname%/"
+                  
 
             # Activate theme
             - name: Activate theme:Storefront
