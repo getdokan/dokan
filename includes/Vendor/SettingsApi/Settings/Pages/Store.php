@@ -494,22 +494,6 @@ class Store extends Page {
             'card'      => 'product_display',
             'fields'    => $fields,
         ];
-
-        $product_display_card[] = [
-            'id'        => 'show_more_ptab',
-            'title'     => __( 'Add "More Product" tab on Single Store page', 'dokan-lite' ),
-            'desc'      => __( 'Add "More Product" tab to display additional items in your store page', 'dokan-lite' ),
-            'icon'      => '',
-            'type'      => 'checkbox',
-            'default'   => 'yes',
-            'options'   => [
-                'yes' => __( 'Yes', 'dokan-lite' ),
-                'no'  => __( 'No', 'dokan-lite' ),
-            ],
-            'parent_id' => 'store',
-            'tab'       => 'advanced',
-            'card'      => 'product_display',
-        ];
         $product_display_card[] = [
             'id'        => 'show_email',
             'title'     => __( 'Show Email', 'dokan-lite' ),
@@ -521,17 +505,6 @@ class Store extends Page {
                 'yes' => __( 'Yes', 'dokan-lite' ),
                 'no'  => __( 'No', 'dokan-lite' ),
             ],
-            'parent_id' => 'store',
-            'tab'       => 'advanced',
-            'card'      => 'product_display',
-        ];
-        $product_display_card[] = [
-            'id'        => 'store_ppp',
-            'title'     => __( 'Number of products displayed per page', 'dokan-lite' ),
-            'desc'      => __( 'Number of products that will be shown by default in your store page', 'dokan-lite' ),
-            'icon'      => '',
-            'type'      => 'number',
-            'default'   => 20,
             'parent_id' => 'store',
             'tab'       => 'advanced',
             'card'      => 'product_display',
