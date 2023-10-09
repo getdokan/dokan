@@ -2,9 +2,46 @@
     <div :class="[id, `dokan-settings-field-type-${fieldData.type}`]" v-if="shouldShow">
         <template v-if="'sub_section' === fieldData.type">
             <div class="dokan-settings-sub-section" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
-                <h3 class="sub-section-title">{{ fieldData.label }}</h3>
-                <p class="sub-section-description">
-                    {{ fieldData.description }}
+                <div class='sub-section-text'>
+                    <h3 class="sub-section-title">{{ fieldData.label }}</h3>
+                    <p class="sub-section-description">
+                        {{ fieldData.description }}
+                    </p>
+                </div>
+
+                <div class='sub-section-input' v-if="'on' === fieldData.toggle">
+                    <fieldset>
+                        <div class="field">
+                            <label :for="sectionId + '[' + fieldData.name + ']'">
+                                <switches
+                                    @input="onToggleSwitch"
+                                    :enabled="'on' === checked ? true : false"
+                                    value="isChecked"
+                                ></switches>
+                                <span class="toggle-status">{{ 'on' === checked ? __( 'Enabled', 'dokan' ) : __( 'Disabled', 'dokan' ) }}</span>
+                            </label>
+                        </div>
+                    </fieldset>
+                    <p v-if="hasValidationError( fieldData.name )" class="dokan-error">
+                        {{ getValidationErrorMessage( fieldData.name ) }}
+                    </p>
+                </div>
+            </div>
+        </template>
+
+        <template v-if="'extra_sub_section' === fieldData.type">
+            <div class="dokan-settings-sub-section" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
+                <div class='sub-section-column-heading'>
+                    <h4 class="sub-section-column-title">{{ fieldData.label_1 }}</h4>
+                    <h4 class="sub-section-column-title">{{ fieldData.label_2 }}</h4>
+                    <h4 class="sub-section-column-title">{{ fieldData.label_3 }}</h4>
+                </div>
+
+                <p v-if="hasError( fieldData.name )" class="dokan-error">
+                    {{ getError( fieldData.label ) }}
+                </p>
+                <p v-if="hasValidationError( fieldData.name )" class="dokan-error">
+                    {{ getValidationErrorMessage( fieldData.name ) }}
                 </p>
             </div>
         </template>
@@ -853,27 +890,71 @@
         border: 1px solid #f3f4f6;
         border-bottom: 0;
         background: #f9fafb;
+        display: flex;
+        justify-content: space-between;
 
-        .sub-section-title {
-            margin: 0;
-            font-size: 14px;
-            font-family: Roboto, sans-serif;
-            font-weight: 600;
-            line-height: 1.2;
-            margin-bottom: 8px;
+        .sub-section-column-heading {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: nowrap;
+            justify-content: space-between;
+            width: 100%;
+
+            .sub-section-column-title {
+                font-weight: 500;
+
+                &:first-child {
+                    flex: 0 0 13%;
+                }
+            }
         }
 
-        .sub-section-description {
-            margin: 0;
-            font-size: 13px;
-            font-weight: 300;
-            line-height: 21px;
-            font-family: Roboto, sans-serif;
-            color: #6B7280;
+        .sub-section-text {
+            display: flex;
+            flex-direction: column;
 
-            .learn-more-btn {
-                cursor: pointer;
-                text-decoration: none;
+            .sub-section-title {
+                margin: 0;
+                font-size: 14px;
+                font-family: Roboto, sans-serif;
+                font-weight: 600;
+                line-height: 1.2;
+                margin-bottom: 8px;
+            }
+
+            .sub-section-description {
+                margin: 0;
+                font-size: 13px;
+                font-weight: 300;
+                line-height: 21px;
+                font-family: Roboto, sans-serif;
+                color: #6B7280;
+
+                .learn-more-btn {
+                    cursor: pointer;
+                    text-decoration: none;
+                }
+            }
+        }
+
+        .sub-section-input {
+            align-self: center;
+
+            span.toggle-status {
+                display: inline-block;
+                min-width: 60px;
+                text-align: right;
+            }
+        }
+    }
+
+    .extra-sub-section-styles {
+        background-color: #FFFBF3;
+
+        .sub-section-column-heading {
+
+            .sub-section-column-title {
+                margin: 0;
             }
         }
     }
