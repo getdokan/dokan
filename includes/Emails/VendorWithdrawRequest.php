@@ -81,7 +81,7 @@ class VendorWithdrawRequest extends WC_Email {
 
         $this->setup_locale();
         $this->object                          = $seller;
-        $this->placeholders['{user_name}']     = $seller->get_name();
+        $this->placeholders['{user_name}']     = $seller->get_shop_name();
         $this->placeholders['{amount}']        = dokan()->email->currency_symbol( $amount );
         $this->placeholders['{method}']        = dokan_withdraw_get_method_title( $method );
         $this->placeholders['{profile_url}']   = $seller->get_profile_url();

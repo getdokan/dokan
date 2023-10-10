@@ -79,7 +79,7 @@ class WithdrawApproved extends WC_Email {
         $seller       = new Vendor( $withdraw->get_user_id() );
         $this->object = $seller;
 
-        $this->placeholders['{username}']      = $seller->get_name();
+        $this->placeholders['{username}']      = $seller->get_shop_name();
         $this->placeholders['{amount}']        = dokan()->email->currency_symbol( $withdraw->get_amount() );
         $this->placeholders['{method}']        = dokan_withdraw_get_method_title( $withdraw->get_method() );
         $this->placeholders['{profile_url}']   = $seller->get_profile_url();
