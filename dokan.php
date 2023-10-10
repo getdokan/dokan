@@ -1,14 +1,14 @@
 <?php
 /**
  * Plugin Name: Dokan
- * Plugin URI: https://wordpress.org/plugins/dokan-lite/
+ * Plugin URI: https://dokan.co/wordpress/
  * Description: An e-commerce marketplace plugin for WordPress. Powered by WooCommerce and weDevs.
- * Version: 3.8.0
+ * Version: 3.8.3
  * Author: weDevs
- * Author URI: https://wedevs.com/
+ * Author URI: https://dokan.co/
  * Text Domain: dokan-lite
  * WC requires at least: 5.0.0
- * WC tested up to: 8.0.2
+ * WC tested up to: 8.1.1
  * Domain Path: /languages/
  * License: GPL2
  */
@@ -62,7 +62,7 @@ final class WeDevs_Dokan {
      *
      * @var string
      */
-    public $version = '3.7.24';
+    public $version = '3.8.3';
 
     /**
      * Instance of self
@@ -504,11 +504,11 @@ final class WeDevs_Dokan {
      */
     public function plugin_action_links( $links ) {
         if ( ! $this->is_pro_exists() ) {
-            $links[] = '<a href="https://wedevs.com/dokan/" style="color: #389e38;font-weight: bold;" target="_blank">' . __( 'Get Pro', 'dokan-lite' ) . '</a>';
+            $links[] = '<a href="https://dokan.co/wordpress/" style="color: #389e38;font-weight: bold;" target="_blank">' . __( 'Get Pro', 'dokan-lite' ) . '</a>';
         }
 
         $links[] = '<a href="' . admin_url( 'admin.php?page=dokan#/settings' ) . '">' . __( 'Settings', 'dokan-lite' ) . '</a>';
-        $links[] = '<a href="https://wedevs.com/docs/dokan/" target="_blank">' . __( 'Documentation', 'dokan-lite' ) . '</a>';
+        $links[] = '<a href="https://dokan.co/docs/wordpress/" target="_blank">' . __( 'Documentation', 'dokan-lite' ) . '</a>';
 
         return $links;
     }

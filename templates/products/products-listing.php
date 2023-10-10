@@ -34,21 +34,28 @@
             ?>
 
                 <article class="dokan-product-listing-area">
-
                     <?php
-                    $disable_product_popup = 'on' === dokan_get_option( 'disable_product_popup', 'dokan_selling', 'off' );
-                    $new_product_url       = add_query_arg(
+                    $one_step_product_create = 'on' === dokan_get_option( 'one_step_product_create', 'dokan_selling', 'on' );
+                    $disable_product_popup   = $one_step_product_create || 'on' === dokan_get_option( 'disable_product_popup', 'dokan_selling', 'off' );
+                    $new_product_url         = $one_step_product_create ? dokan_edit_product_url( 0, true ) : add_query_arg(
                         [
                             '_dokan_add_product_nonce' => wp_create_nonce( 'dokan_add_product_nonce' ),
                         ],
                         dokan_get_navigation_url( 'new-product' )
                     );
-                    $product_listing_args  = [
-                        'author'            => dokan_get_current_user_id(),
-                        'posts_per_page'    => 1,
-                        'post_status'       => apply_filters( 'dokan_product_listing_post_statuses', [ 'publish', 'draft', 'pending', 'future' ] ),
+                    $product_listing_args    = [
+                        'author'         => dokan_get_current_user_id(),
+                        'posts_per_page' => 1,
+                        'post_status'    => apply_filters(
+                            'dokan_product_listing_post_statuses', [
+                                'publish',
+                                'draft',
+                                'pending',
+                                'future',
+                            ]
+                        ),
                     ];
-                    $product_query = dokan()->product->all( $product_listing_args );
+                    $product_query           = dokan()->product->all( $product_listing_args );
 
                     if ( $product_query->have_posts() ) {
                         ?>
@@ -139,8 +146,8 @@
                                                 array(
                                                     'taxonomy' => 'product_type',
                                                     'field'    => 'slug',
-                                                    'terms'    => apply_filters( 'dokan_product_listing_exclude_type', array() ),
-                                                    'operator' => 'NOT IN',
+                                                    'terms'    => ! dokan()->is_pro_exists() ? [ 'simple' ] : apply_filters( 'dokan_product_listing_exclude_type', array() ),
+                                                    'operator' => ! dokan()->is_pro_exists() ? 'IN' : 'NOT IN',
                                                 ),
                                             ),
                                         );

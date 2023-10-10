@@ -54,6 +54,9 @@ class Hooks {
         add_action( 'woocommerce_reduce_order_stock', [ $this, 'restore_reduced_order_stock' ] );
 
         add_action( 'woocommerce_reduce_order_stock', [ $this, 'handle_order_notes_for_suborder' ], 99 );
+
+        // Suborder pdf button
+        add_filter( 'dokan_my_account_my_sub_orders_actions', [ $this, 'suborder_pdf_invoice_button' ], 10, 2 );
     }
 
     /**
@@ -109,7 +112,7 @@ class Hooks {
         /**
          * If `exclude_cod_payment` is enabled, don't include the fund in vendor's withdrawal balance.
          *
-         * @since DOKAN_LITE_SINCE
+         * @since 3.8.3
          */
         $exclude_cod_payment = 'on' === dokan_get_option( 'exclude_cod_payment', 'dokan_withdraw', 'off' );
 
@@ -337,7 +340,7 @@ class Hooks {
         }
 
         // A coupon must be bound with a product
-        if ( count( $coupon->get_product_ids() ) === 0 ) {
+        if ( ! dokan()->is_pro_exists() && count( $coupon->get_product_ids() ) === 0 ) {
             throw new Exception( __( 'A coupon must be restricted with a vendor product.', 'dokan-lite' ) );
         }
 
@@ -396,7 +399,7 @@ class Hooks {
     /**
      * Handle stock level wrong calculation in order notes for suborder
      *
-     * @since DOKAN_LITE_SINCE
+     * @since 3.8.3
      *
      * @param WC_Order $order
      *
@@ -433,5 +436,24 @@ class Hooks {
                 $order->add_order_note( __( 'Stock levels reduced:', 'woocommerce' ) . ' ' . $notes_content ); //phpcs:ignore WordPress.WP.I18n.TextDomainMismatch
             }
         }
+    }
+
+    /**
+     * PDF Invoices & Packing Slips for WooCommerce plugin integration on suborder section.
+     *
+     * @since 3.8.3
+     *
+     * @param $actions
+     * @param $order
+     *
+     * @return mixed
+     */
+    public function suborder_pdf_invoice_button( $actions, $order ) {
+        $woocommerce_all_actions = apply_filters( 'woocommerce_my_account_my_orders_actions', $actions, $order );
+
+        if ( isset( $woocommerce_all_actions['invoice'] ) ) {
+            $actions['action'] = $woocommerce_all_actions['invoice'];
+        }
+        return $actions;
     }
 }

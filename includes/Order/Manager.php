@@ -885,7 +885,7 @@ class Manager {
 
         //dokan_log( sprintf( 'New Order #%d created. Init sub order.', $parent_order_id ) );
 
-        if ( $force_create && wc_string_to_bool( $parent_order->get_meta( 'has_sub_order' ) ) === true ) {
+        if ( $force_create || wc_string_to_bool( $parent_order->get_meta( 'has_sub_order' ) ) === true ) {
             $child_orders = $this->get_child_orders( $parent_order->get_id() );
 
             foreach ( $child_orders as $child_order ) {

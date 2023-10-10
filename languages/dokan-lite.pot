@@ -1,14 +1,14 @@
 # Copyright (c) 2023 weDevs Pte. Ltd. All Rights Reserved.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 3.8.0\n"
-"Report-Msgid-Bugs-To: https://wedevs.com/contact\n"
-"Last-Translator: support@wedevs.com\n"
+"Project-Id-Version: Dokan 3.8.3\n"
+"Report-Msgid-Bugs-To: https://dokan.co/contact/\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2023-08-17T14:10:33+00:00\n"
+"POT-Creation-Date: 2023-09-26T09:43:14+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.8.1\n"
 "X-Domain: dokan-lite\n"
@@ -22,7 +22,7 @@ msgid "Dokan"
 msgstr ""
 
 #. Plugin URI of the plugin
-msgid "https://wordpress.org/plugins/dokan-lite/"
+msgid "https://dokan.co/wordpress/"
 msgstr ""
 
 #. Description of the plugin
@@ -34,7 +34,7 @@ msgid "weDevs"
 msgstr ""
 
 #. Author URI of the plugin
-msgid "https://wedevs.com/"
+msgid "https://dokan.co/"
 msgstr ""
 
 #. translators: 1: Required PHP Version 2: Running php version
@@ -73,6 +73,7 @@ msgstr ""
 
 #: includes/Abstracts/DokanPromotion.php:185
 #: includes/Admin/Notices/LimitedTimePromotion.php:50
+#: includes/Admin/Notices/Manager.php:171
 #: includes/Admin/Notices/PluginReview.php:119
 #: includes/Admin/Notices/SetupWizard.php:81
 msgid "You have no permission to do that"
@@ -80,6 +81,7 @@ msgstr ""
 
 #: includes/Abstracts/DokanPromotion.php:189
 #: includes/Admin/Notices/LimitedTimePromotion.php:46
+#: includes/Admin/Notices/Manager.php:166
 #: includes/Admin/Notices/PluginReview.php:115
 #: includes/Admin/Notices/SetupWizard.php:77
 #: includes/Admin/Notices/WhatsNew.php:74
@@ -120,7 +122,7 @@ msgstr ""
 
 #: includes/Admin/AdminBar.php:54
 #: includes/Admin/Menu.php:46
-#: includes/Admin/Settings.php:622
+#: includes/Admin/Settings.php:633
 #: includes/Install/Installer.php:205
 #: includes/template-tags.php:396
 #: assets/js/vue-admin.js:2
@@ -131,7 +133,7 @@ msgstr ""
 #: includes/Admin/Menu.php:34
 #: includes/Admin/Menu.php:47
 #: includes/Admin/SetupWizard.php:160
-#: includes/functions.php:2790
+#: includes/functions.php:2862
 #: includes/template-tags.php:417
 #: templates/withdraw/header.php:11
 msgid "Withdraw"
@@ -192,7 +194,7 @@ msgstr ""
 #: includes/Admin/Settings.php:495
 #: includes/Admin/Settings.php:506
 #: includes/Admin/Settings.php:517
-#: includes/Admin/SetupWizard.php:361
+#: includes/Admin/SetupWizard.php:362
 #: includes/Install/Installer.php:142
 #: includes/Order/Admin/Hooks.php:92
 #: includes/Order/Admin/Hooks.php:367
@@ -224,7 +226,7 @@ msgstr ""
 
 #: includes/Admin/Menu.php:48
 #: includes/Admin/Settings.php:326
-#: includes/ReverseWithdrawal/Hooks.php:228
+#: includes/ReverseWithdrawal/Hooks.php:232
 #: templates/reverse-withdrawal/header.php:9
 #: assets/js/vue-admin.js:2
 msgid "Reverse Withdrawal"
@@ -246,12 +248,20 @@ msgid "<span style=\"color:#f18500\">Help</span>"
 msgstr ""
 
 #. translators: %s permalink settings url
-#: includes/Admin/Notices/Manager.php:113
+#: includes/Admin/Notices/Manager.php:115
 msgid "The <strong>Plain</strong> permalink structure is not working for the Dokan plugin. Please change your permalink structure from <a href=\"%s\">Settings > Permalinks</a>"
 msgstr ""
 
-#: includes/Admin/Notices/Manager.php:118
+#: includes/Admin/Notices/Manager.php:120
 msgid "Go to Settings"
+msgstr ""
+
+#: includes/Admin/Notices/Manager.php:143
+msgid "New One-Step Product Form"
+msgstr ""
+
+#: includes/Admin/Notices/Manager.php:144
+msgid "Try it now to enhance your vendor's product upload experience, the older two-step version will be retired in one month."
 msgstr ""
 
 #: includes/Admin/Notices/PluginReview.php:66
@@ -428,7 +438,7 @@ msgid "You have no permission to get settings value"
 msgstr ""
 
 #: includes/Admin/Settings.php:120
-#: includes/Admin/Settings.php:872
+#: includes/Admin/Settings.php:883
 msgid "You are not authorized to perform this action."
 msgstr ""
 
@@ -523,7 +533,7 @@ msgid "You can configure your store appearance settings, configure map API, Goog
 msgstr ""
 
 #: includes/Admin/Settings.php:353
-#: includes/Admin/Settings.php:808
+#: includes/Admin/Settings.php:819
 msgid "Privacy Policy"
 msgstr ""
 
@@ -540,24 +550,24 @@ msgid "You can configure your site's privacy settings and policy."
 msgstr ""
 
 #: includes/Admin/Settings.php:378
-#: includes/Admin/SetupWizard.php:544
+#: includes/Admin/SetupWizard.php:547
 #: includes/Dashboard/Templates/Dashboard.php:96
-#: includes/Order/functions.php:416
+#: includes/Order/functions.php:417
 #: templates/dashboard/orders-widget.php:25
 msgid "Completed"
 msgstr ""
 
 #: includes/Admin/Settings.php:379
-#: includes/Admin/SetupWizard.php:551
+#: includes/Admin/SetupWizard.php:554
 #: includes/Dashboard/Templates/Dashboard.php:106
-#: includes/Order/functions.php:431
+#: includes/Order/functions.php:432
 #: templates/dashboard/orders-widget.php:35
 #: templates/orders/listing.php:132
 msgid "Processing"
 msgstr ""
 
 #: includes/Admin/Settings.php:380
-#: includes/Order/functions.php:426
+#: includes/Order/functions.php:427
 msgid "On-hold"
 msgstr ""
 
@@ -698,11 +708,12 @@ msgstr ""
 #: includes/Admin/Settings.php:496
 #: includes/Admin/Settings.php:507
 #: includes/Admin/Settings.php:518
-#: includes/Admin/SetupWizard.php:362
+#: includes/Admin/SetupWizard.php:363
 msgid "Admin"
 msgstr ""
 
 #: includes/Admin/Settings.php:502
+#: templates/admin-setup-wizard/step-store.php:27
 msgid "Product Tax Fee Recipient"
 msgstr ""
 
@@ -711,6 +722,7 @@ msgid "Who will be receiving the tax fees for products? Note that, shipping tax 
 msgstr ""
 
 #: includes/Admin/Settings.php:513
+#: templates/admin-setup-wizard/step-store.php:41
 msgid "Shipping Tax Fee Recipient"
 msgstr ""
 
@@ -742,327 +754,339 @@ msgid "If checked, vendors will have permission to sell immediately after regist
 msgstr ""
 
 #: includes/Admin/Settings.php:544
-msgid "Disable Product Popup"
+msgid "One Page Product Creation"
 msgstr ""
 
 #: includes/Admin/Settings.php:545
-msgid "Disable add new product in popup view"
+msgid "Add new product in single page view"
 msgstr ""
 
 #: includes/Admin/Settings.php:548
-msgid "If disabled, instead of a pop up window vendor will redirect to product page when adding new product."
+msgid "If disabled, instead of a single add product page it will open a pop up window or vendor will redirect to product page when adding new product."
 msgstr ""
 
 #: includes/Admin/Settings.php:552
+msgid "Disable Product Popup"
+msgstr ""
+
+#: includes/Admin/Settings.php:553
+msgid "Disable add new product in popup view"
+msgstr ""
+
+#: includes/Admin/Settings.php:559
+msgid "If disabled, instead of a pop up window vendor will redirect to product page when adding new product."
+msgstr ""
+
+#: includes/Admin/Settings.php:563
 #: templates/admin-setup-wizard/step-selling.php:39
 #: assets/js/vue-admin.js:2
 msgid "Order Status Change"
 msgstr ""
 
-#: includes/Admin/Settings.php:553
+#: includes/Admin/Settings.php:564
 msgid "Allow vendor to update order status"
 msgstr ""
 
-#: includes/Admin/Settings.php:556
+#: includes/Admin/Settings.php:567
 msgid "Checking this will enable sellers to change the order status. If unchecked, only admin can change the order status."
 msgstr ""
 
-#: includes/Admin/Settings.php:560
+#: includes/Admin/Settings.php:571
 msgid "Select any category"
 msgstr ""
 
-#: includes/Admin/Settings.php:561
+#: includes/Admin/Settings.php:572
 msgid "Allow vendors to select any category while creating/editing products."
 msgstr ""
 
-#: includes/Admin/Settings.php:583
-#: includes/Admin/SetupWizard.php:487
+#: includes/Admin/Settings.php:594
+#: includes/Admin/SetupWizard.php:490
 msgid "Withdraw Methods"
 msgstr ""
 
-#: includes/Admin/Settings.php:584
+#: includes/Admin/Settings.php:595
 msgid "Select suitable withdraw methods for vendors"
 msgstr ""
 
-#: includes/Admin/Settings.php:588
+#: includes/Admin/Settings.php:599
 msgid "Check to add available payment methods for vendors to withdraw money."
 msgstr ""
 
-#: includes/Admin/Settings.php:592
-#: includes/Admin/SetupWizard.php:530
+#: includes/Admin/Settings.php:603
+#: includes/Admin/SetupWizard.php:533
 msgid "Minimum Withdraw Limit"
 msgstr ""
 
-#: includes/Admin/Settings.php:593
+#: includes/Admin/Settings.php:604
 msgid "Minimum balance required to make a withdraw request. Leave blank to set no minimum limits."
 msgstr ""
 
-#: includes/Admin/Settings.php:602
-#: includes/Admin/SetupWizard.php:537
+#: includes/Admin/Settings.php:613
+#: includes/Admin/SetupWizard.php:540
 msgid "Order Status for Withdraw"
 msgstr ""
 
-#: includes/Admin/Settings.php:603
-#: includes/Admin/SetupWizard.php:556
+#: includes/Admin/Settings.php:614
+#: includes/Admin/SetupWizard.php:559
 msgid "Order status for which vendor can make a withdraw request."
 msgstr ""
 
-#: includes/Admin/Settings.php:609
+#: includes/Admin/Settings.php:620
 msgid "Select the order status that will allow vendors to make withdraw request. We prefer you select \"completed\", \"processing\"."
 msgstr ""
 
-#: includes/Admin/Settings.php:613
+#: includes/Admin/Settings.php:624
 msgid "Exclude COD Payments"
 msgstr ""
 
-#: includes/Admin/Settings.php:614
+#: includes/Admin/Settings.php:625
 msgid "If an order is paid with Cash on Delivery (COD), then exclude that payment from vendor balance."
 msgstr ""
 
-#: includes/Admin/Settings.php:623
+#: includes/Admin/Settings.php:634
 msgid "Select a page to show vendor dashboard"
 msgstr ""
 
-#: includes/Admin/Settings.php:626
-#: includes/Admin/Settings.php:633
-#: includes/Admin/Settings.php:641
-#: includes/Admin/Settings.php:651
-#: includes/Admin/Settings.php:803
+#: includes/Admin/Settings.php:637
+#: includes/Admin/Settings.php:644
+#: includes/Admin/Settings.php:652
+#: includes/Admin/Settings.php:662
+#: includes/Admin/Settings.php:814
 msgid "Select page"
 msgstr ""
 
-#: includes/Admin/Settings.php:630
+#: includes/Admin/Settings.php:641
 #: includes/Install/Installer.php:217
 #: templates/global/header-menu.php:52
 msgid "My Orders"
 msgstr ""
 
-#: includes/Admin/Settings.php:631
+#: includes/Admin/Settings.php:642
 msgid "Select a page to show my orders"
 msgstr ""
 
-#: includes/Admin/Settings.php:638
+#: includes/Admin/Settings.php:649
 msgid "Store Listing"
 msgstr ""
 
-#: includes/Admin/Settings.php:639
+#: includes/Admin/Settings.php:650
 msgid "Select a page to show all stores"
 msgstr ""
 
-#: includes/Admin/Settings.php:647
+#: includes/Admin/Settings.php:658
 msgid "Select where you want to add Dokan pages."
 msgstr ""
 
-#: includes/Admin/Settings.php:648
+#: includes/Admin/Settings.php:659
 msgid "Terms and Conditions Page"
 msgstr ""
 
-#: includes/Admin/Settings.php:650
+#: includes/Admin/Settings.php:661
 msgid "Select a page to display the Terms and Conditions of your store for Vendors."
 msgstr ""
 
-#: includes/Admin/Settings.php:658
+#: includes/Admin/Settings.php:669
 msgid "Store Appearance"
 msgstr ""
 
-#: includes/Admin/Settings.php:659
+#: includes/Admin/Settings.php:670
 msgid "Configure your site appearances."
 msgstr ""
 
-#: includes/Admin/Settings.php:663
+#: includes/Admin/Settings.php:674
 msgid "Show map on Store Page"
 msgstr ""
 
-#: includes/Admin/Settings.php:664
+#: includes/Admin/Settings.php:675
 msgid "Enable map of the store location in the store sidebar"
 msgstr ""
 
-#: includes/Admin/Settings.php:670
-#: templates/admin-setup-wizard/step-store.php:40
+#: includes/Admin/Settings.php:681
+#: templates/admin-setup-wizard/step-store.php:55
 msgid "Map API Source"
 msgstr ""
 
-#: includes/Admin/Settings.php:671
+#: includes/Admin/Settings.php:682
 msgid "Which map API source you want to use in your site?"
 msgstr ""
 
-#: includes/Admin/Settings.php:676
-#: includes/Admin/SetupWizard.php:375
+#: includes/Admin/Settings.php:687
+#: includes/Admin/SetupWizard.php:377
 #: assets/js/vue-admin.js:2
 msgid "Google Maps"
 msgstr ""
 
-#: includes/Admin/Settings.php:677
-#: includes/Admin/SetupWizard.php:376
+#: includes/Admin/Settings.php:688
+#: includes/Admin/SetupWizard.php:378
 msgid "Mapbox"
 msgstr ""
 
-#: includes/Admin/Settings.php:682
-#: templates/admin-setup-wizard/step-store.php:53
+#: includes/Admin/Settings.php:693
+#: templates/admin-setup-wizard/step-store.php:68
 msgid "Google Map API Key"
 msgstr ""
 
-#: includes/Admin/Settings.php:683
+#: includes/Admin/Settings.php:694
 msgid "<a href=\"https://developers.google.com/maps/documentation/javascript/\" target=\"_blank\" rel=\"noopener noreferrer\">API Key</a> is needed to display map on store page"
 msgstr ""
 
-#: includes/Admin/Settings.php:686
+#: includes/Admin/Settings.php:697
 msgid "Insert Google API Key (with hyperlink) to display store map."
 msgstr ""
 
-#: includes/Admin/Settings.php:695
-#: templates/admin-setup-wizard/step-store.php:69
+#: includes/Admin/Settings.php:706
+#: templates/admin-setup-wizard/step-store.php:84
 msgid "Mapbox Access Token"
 msgstr ""
 
-#: includes/Admin/Settings.php:696
+#: includes/Admin/Settings.php:707
 msgid "<a href=\"https://docs.mapbox.com/help/how-mapbox-works/access-tokens/\" target=\"_blank\" rel=\"noopener noreferrer\">Access Token</a> is needed to display map on store page"
 msgstr ""
 
-#: includes/Admin/Settings.php:699
+#: includes/Admin/Settings.php:710
 msgid "Insert Mapbox Access Token (with hyperlink) to display store map."
 msgstr ""
 
 #. translators: 1) Opening anchor tag, 2) Closing anchor tag, 3) Opening anchor tag, 4) Closing anchor tag
-#: includes/Admin/Settings.php:711
+#: includes/Admin/Settings.php:722
 msgid "%1$sreCAPTCHA%2$s credentials required to enable invisible captcha for contact forms. %3$sGet Help%4$s"
 msgstr ""
 
-#: includes/Admin/Settings.php:717
+#: includes/Admin/Settings.php:728
 msgid "Google reCAPTCHA Validation"
 msgstr ""
 
-#: includes/Admin/Settings.php:719
+#: includes/Admin/Settings.php:730
 msgid "You can successfully connect to your Google reCaptcha account from here."
 msgstr ""
 
-#: includes/Admin/Settings.php:727
+#: includes/Admin/Settings.php:738
 msgid "Site Key"
 msgstr ""
 
-#: includes/Admin/Settings.php:728
+#: includes/Admin/Settings.php:739
 msgid "Insert Google reCAPTCHA v3 site key."
 msgstr ""
 
-#: includes/Admin/Settings.php:733
+#: includes/Admin/Settings.php:744
 msgid "Secret Key"
 msgstr ""
 
-#: includes/Admin/Settings.php:735
+#: includes/Admin/Settings.php:746
 msgid "Insert Google reCAPTCHA v3 secret key."
 msgstr ""
 
-#: includes/Admin/Settings.php:741
+#: includes/Admin/Settings.php:752
 msgid "Show Contact Form on Store Page"
 msgstr ""
 
-#: includes/Admin/Settings.php:742
+#: includes/Admin/Settings.php:753
 msgid "Display a vendor contact form in the store sidebar"
 msgstr ""
 
-#: includes/Admin/Settings.php:749
+#: includes/Admin/Settings.php:760
 msgid "Select a store header for your store."
 msgstr ""
 
-#: includes/Admin/Settings.php:750
+#: includes/Admin/Settings.php:761
 msgid "Store Header Template"
 msgstr ""
 
-#: includes/Admin/Settings.php:761
+#: includes/Admin/Settings.php:772
 msgid "Store Opening Closing Time Widget"
 msgstr ""
 
-#: includes/Admin/Settings.php:762
+#: includes/Admin/Settings.php:773
 msgid "Enable store opening & closing time widget in the store sidebar"
 msgstr ""
 
-#: includes/Admin/Settings.php:768
+#: includes/Admin/Settings.php:779
 msgid "Enable Store Sidebar From Theme"
 msgstr ""
 
-#: includes/Admin/Settings.php:769
+#: includes/Admin/Settings.php:780
 msgid "Enable showing store sidebar from your theme."
 msgstr ""
 
-#: includes/Admin/Settings.php:775
+#: includes/Admin/Settings.php:786
 msgid "Hide Vendor Info"
 msgstr ""
 
-#: includes/Admin/Settings.php:776
+#: includes/Admin/Settings.php:787
 msgid "Hide vendor contact info from single store page."
 msgstr ""
 
-#: includes/Admin/Settings.php:784
+#: includes/Admin/Settings.php:795
 msgid "Email Address"
 msgstr ""
 
-#: includes/Admin/Settings.php:785
+#: includes/Admin/Settings.php:796
 #: includes/Admin/UserProfile.php:211
 #: templates/account/update-customer-to-vendor.php:45
-#: templates/account/vendor-registration.php:33
+#: templates/account/vendor-registration.php:36
 #: templates/global/seller-registration-form.php:51
 #: assets/js/vue-admin.js:2
 #: assets/js/vue-bootstrap.js:2
 msgid "Phone Number"
 msgstr ""
 
-#: includes/Admin/Settings.php:786
+#: includes/Admin/Settings.php:797
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:249
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:250
 msgid "Store Address"
 msgstr ""
 
-#: includes/Admin/Settings.php:793
+#: includes/Admin/Settings.php:804
 msgid "Enable Privacy Policy"
 msgstr ""
 
-#: includes/Admin/Settings.php:795
+#: includes/Admin/Settings.php:806
 msgid "Enable privacy policy for vendor store contact form"
 msgstr ""
 
-#: includes/Admin/Settings.php:800
+#: includes/Admin/Settings.php:811
 msgid "Privacy Page"
 msgstr ""
 
-#: includes/Admin/Settings.php:802
+#: includes/Admin/Settings.php:813
 msgid "Select a page to show your privacy policy"
 msgstr ""
 
-#: includes/Admin/Settings.php:810
-#: includes/functions.php:3232
+#: includes/Admin/Settings.php:821
+#: includes/functions.php:3304
 msgid "Your personal data will be used to support your experience throughout this website, to manage access to your account, and for other purposes described in our [dokan_privacy_policy]"
 msgstr ""
 
-#: includes/Admin/Settings.php:811
+#: includes/Admin/Settings.php:822
 msgid "Customize the Privacy Policy text that will be displayed on your store."
 msgstr ""
 
-#: includes/Admin/Settings.php:883
+#: includes/Admin/Settings.php:894
 msgid "Both section and field params are required."
 msgstr ""
 
-#: includes/Admin/Settings.php:892
+#: includes/Admin/Settings.php:903
 msgid "No filter found to refresh the setting options"
 msgstr ""
 
-#: includes/Admin/Settings.php:924
+#: includes/Admin/Settings.php:935
 msgid "Minimum Withdraw Limit can't be negative value."
 msgstr ""
 
-#: includes/Admin/Settings.php:935
+#: includes/Admin/Settings.php:946
 #: includes/ReverseWithdrawal/Admin/Settings.php:214
 msgid "Validation error"
 msgstr ""
 
-#: includes/Admin/Settings.php:953
+#: includes/Admin/Settings.php:964
 msgid "Data Clear"
 msgstr ""
 
-#: includes/Admin/Settings.php:954
+#: includes/Admin/Settings.php:965
 msgid "Delete all data and tables related to Dokan and Dokan Pro plugin while deleting the Dokan plugin."
 msgstr ""
 
-#: includes/Admin/Settings.php:957
+#: includes/Admin/Settings.php:968
 msgid "Check this to remove Dokan related data and table from the database upon deleting the plugin. When you delete the Dokan lite version, it will also delete all the data related to Dokan Pro as well. This won't happen when the plugins are deactivated.."
 msgstr ""
 
@@ -1175,100 +1199,100 @@ msgstr ""
 msgid "Not right now"
 msgstr ""
 
-#: includes/Admin/SetupWizard.php:483
+#: includes/Admin/SetupWizard.php:486
 msgid "Withdraw Setup"
 msgstr ""
 
 #. translators: %s: withdraw method name
-#: includes/Admin/SetupWizard.php:505
+#: includes/Admin/SetupWizard.php:508
 msgid "Enable %s for your vendor as a withdraw method"
 msgstr ""
 
-#: includes/Admin/SetupWizard.php:533
+#: includes/Admin/SetupWizard.php:536
 msgid "Minimum balance required to make a withdraw request ( Leave it blank to set no limits )"
 msgstr ""
 
-#: includes/Admin/SetupWizard.php:561
-#: includes/Admin/SetupWizard.php:644
+#: includes/Admin/SetupWizard.php:564
+#: includes/Admin/SetupWizard.php:647
 #: includes/Admin/SetupWizardWCAdmin.php:232
 #: includes/Vendor/SetupWizard.php:296
 #: includes/Vendor/SetupWizard.php:450
 #: templates/admin-setup-wizard/step-selling.php:53
-#: templates/admin-setup-wizard/step-store.php:138
+#: templates/admin-setup-wizard/step-store.php:153
 msgid "Continue"
 msgstr ""
 
-#: includes/Admin/SetupWizard.php:562
+#: includes/Admin/SetupWizard.php:565
 #: includes/Vendor/SetupWizard.php:297
 #: includes/Vendor/SetupWizard.php:451
 #: templates/admin-setup-wizard/step-selling.php:54
-#: templates/admin-setup-wizard/step-store.php:139
+#: templates/admin-setup-wizard/step-store.php:154
 msgid "Skip this step"
 msgstr ""
 
-#: includes/Admin/SetupWizard.php:578
+#: includes/Admin/SetupWizard.php:581
 msgid "Recommended for All Dokan Marketplaces"
 msgstr ""
 
-#: includes/Admin/SetupWizard.php:580
+#: includes/Admin/SetupWizard.php:583
 msgid "Enhance your store with these recommended features."
 msgstr ""
 
-#: includes/Admin/SetupWizard.php:590
-#: includes/Admin/SetupWizard.php:596
-#: includes/Admin/SetupWizard.php:669
+#: includes/Admin/SetupWizard.php:593
+#: includes/Admin/SetupWizard.php:599
+#: includes/Admin/SetupWizard.php:672
 msgid "WooCommerce Conversion Tracking"
 msgstr ""
 
-#: includes/Admin/SetupWizard.php:591
+#: includes/Admin/SetupWizard.php:594
 msgid "Track conversions on your WooCommerce store like a pro!"
 msgstr ""
 
-#: includes/Admin/SetupWizard.php:593
+#: includes/Admin/SetupWizard.php:596
 msgid "WooCommerce Conversion Tracking logo"
 msgstr ""
 
-#: includes/Admin/SetupWizard.php:608
-#: includes/Admin/SetupWizard.php:614
-#: includes/Admin/SetupWizard.php:680
+#: includes/Admin/SetupWizard.php:611
+#: includes/Admin/SetupWizard.php:617
+#: includes/Admin/SetupWizard.php:683
 msgid "weMail"
 msgstr ""
 
-#: includes/Admin/SetupWizard.php:609
+#: includes/Admin/SetupWizard.php:612
 msgid "Simplified Email  Marketing Solution for WordPress!"
 msgstr ""
 
-#: includes/Admin/SetupWizard.php:611
+#: includes/Admin/SetupWizard.php:614
 msgid "weMail logo"
 msgstr ""
 
-#: includes/Admin/SetupWizard.php:626
-#: includes/Admin/SetupWizard.php:632
-#: includes/Admin/SetupWizard.php:691
+#: includes/Admin/SetupWizard.php:629
+#: includes/Admin/SetupWizard.php:635
+#: includes/Admin/SetupWizard.php:694
 msgid "Texty"
 msgstr ""
 
-#: includes/Admin/SetupWizard.php:627
+#: includes/Admin/SetupWizard.php:630
 msgid "SMS Notification for WordPress, WooCommerce, Dokan and more"
 msgstr ""
 
-#: includes/Admin/SetupWizard.php:629
+#: includes/Admin/SetupWizard.php:632
 msgid "Texty logo"
 msgstr ""
 
-#: includes/Admin/SetupWizard.php:748
+#: includes/Admin/SetupWizard.php:751
 msgid "Your Marketplace is Ready!"
 msgstr ""
 
-#: includes/Admin/SetupWizard.php:753
+#: includes/Admin/SetupWizard.php:756
 msgid "Visit Dokan Dashboard"
 msgstr ""
 
-#: includes/Admin/SetupWizard.php:754
+#: includes/Admin/SetupWizard.php:757
 msgid "More Settings"
 msgstr ""
 
-#: includes/Admin/SetupWizard.php:880
+#: includes/Admin/SetupWizard.php:883
 msgid "The following plugins will be installed and activated for you:"
 msgstr ""
 
@@ -1532,12 +1556,142 @@ msgstr ""
 msgid "This vendor will be marked as a featured vendor."
 msgstr ""
 
+#: includes/Admin/WithdrawLogExporter.php:111
+msgid "Vendor ID"
+msgstr ""
+
+#: includes/Admin/WithdrawLogExporter.php:112
+#: includes/Privacy.php:178
+#: includes/Vendor/SettingsApi/Settings/Pages/Store.php:117
+#: templates/settings/store-form.php:117
+#: assets/js/vue-admin.js:2
+#: assets/js/vue-bootstrap.js:2
+msgid "Store Name"
+msgstr ""
+
+#: includes/Admin/WithdrawLogExporter.php:113
+msgid "Withdraw Total"
+msgstr ""
+
+#: includes/Admin/WithdrawLogExporter.php:114
+#: includes/Product/functions.php:215
+#: templates/my-orders.php:27
+#: templates/orders/listing.php:33
+#: templates/orders/listing.php:83
+#: templates/products/products-listing-row.php:67
+#: templates/products/products-listing.php:121
+#: templates/sub-orders.php:45
+#: templates/withdraw/pending-request-listing-dashboard.php:21
+#: templates/withdraw/pending-request-listing.php:18
+#: templates/withdraw/pending-request-listing.php:62
+#: assets/js/vue-admin.js:2
+msgid "Status"
+msgstr ""
+
+#: includes/Admin/WithdrawLogExporter.php:115
+#: templates/withdraw/approved-request-listing.php:15
+#: templates/withdraw/cancelled-request-listing.php:15
+#: templates/withdraw/pending-request-listing-dashboard.php:18
+#: templates/withdraw/pending-request-listing.php:15
+#: templates/withdraw/pending-request-listing.php:59
+#: assets/js/vue-admin.js:2
+msgid "Method"
+msgstr ""
+
+#: includes/Admin/WithdrawLogExporter.php:116
+#: templates/my-orders.php:26
+#: templates/orders/listing.php:35
+#: templates/orders/listing.php:93
+#: templates/products/products-listing-row.php:125
+#: templates/products/products-listing.php:130
+#: templates/reverse-withdrawal/transaction-listing.php:19
+#: templates/sub-orders.php:44
+#: templates/withdraw/approved-request-listing.php:16
+#: templates/withdraw/cancelled-request-listing.php:16
+#: templates/withdraw/pending-request-listing-dashboard.php:19
+#: templates/withdraw/pending-request-listing.php:16
+#: templates/withdraw/pending-request-listing.php:60
+#: assets/js/vue-admin.js:2
+msgid "Date"
+msgstr ""
+
+#: includes/Admin/WithdrawLogExporter.php:117
+msgid "Bank Acc Name"
+msgstr ""
+
+#: includes/Admin/WithdrawLogExporter.php:118
+msgid "Bank Acc No."
+msgstr ""
+
+#: includes/Admin/WithdrawLogExporter.php:119
+msgid "Bank Acc Type"
+msgstr ""
+
+#: includes/Admin/WithdrawLogExporter.php:120
+#: includes/Privacy.php:276
+#: includes/Vendor/SettingsApi/Settings/Pages/Payments/Gateways/Bank.php:67
+#: includes/Withdraw/functions.php:299
+#: assets/js/vue-admin.js:2
+#: assets/js/vue-bootstrap.js:2
+msgid "Bank Name"
+msgstr ""
+
+#: includes/Admin/WithdrawLogExporter.php:121
+#: includes/Privacy.php:277
+#: includes/Vendor/SettingsApi/Settings/Pages/Payments/Gateways/Bank.php:75
+#: includes/Withdraw/functions.php:303
+#: assets/js/vue-admin.js:2
+#: assets/js/vue-bootstrap.js:2
+msgid "Bank Address"
+msgstr ""
+
+#: includes/Admin/WithdrawLogExporter.php:122
+msgid "Bank Declaration"
+msgstr ""
+
+#: includes/Admin/WithdrawLogExporter.php:123
+#: includes/Withdraw/functions.php:307
+msgid "Bank IBAN"
+msgstr ""
+
+#: includes/Admin/WithdrawLogExporter.php:124
+msgid "Bank Routing No."
+msgstr ""
+
+#: includes/Admin/WithdrawLogExporter.php:125
+msgid "Bank SWIFT Code"
+msgstr ""
+
+#: includes/Admin/WithdrawLogExporter.php:126
+msgid "Paypal Email"
+msgstr ""
+
+#: includes/Admin/WithdrawLogExporter.php:127
+#: includes/Privacy.php:296
+msgid "Skrill Email"
+msgstr ""
+
+#: includes/Admin/WithdrawLogExporter.php:128
+msgid "Custom Payment Method"
+msgstr ""
+
+#: includes/Admin/WithdrawLogExporter.php:129
+msgid "Custom Payment Value"
+msgstr ""
+
+#: includes/Admin/WithdrawLogExporter.php:130
+#: templates/reverse-withdrawal/transaction-listing.php:21
+#: templates/withdraw/cancelled-request-listing.php:17
+#: assets/js/vue-admin.js:2
+msgid "Note"
+msgstr ""
+
 #: includes/Ajax.php:71
 #: includes/Ajax.php:982
 #: includes/Ajax.php:1010
 #: includes/Dashboard/Templates/Withdraw.php:121
-#: includes/Withdraw/Hooks.php:125
-#: includes/Withdraw/Hooks.php:198
+#: includes/Withdraw/Hooks.php:147
+#: includes/Withdraw/Hooks.php:220
 msgid "You have no permission to do this action"
 msgstr ""
 
@@ -1555,8 +1709,8 @@ msgstr ""
 #: includes/Dashboard/Templates/Settings.php:424
 #: includes/Dashboard/Templates/Settings.php:469
 #: includes/Dashboard/Templates/Withdraw.php:116
-#: includes/Withdraw/Hooks.php:121
-#: includes/Withdraw/Hooks.php:194
+#: includes/Withdraw/Hooks.php:143
+#: includes/Withdraw/Hooks.php:216
 msgid "Are you cheating?"
 msgstr ""
 
@@ -1625,7 +1779,7 @@ msgid "Delete"
 msgstr ""
 
 #: includes/Ajax.php:529
-#: includes/Product/Hooks.php:46
+#: includes/Product/Hooks.php:66
 msgid "Error: Nonce verification failed"
 msgstr ""
 
@@ -1671,7 +1825,7 @@ msgstr ""
 
 #: includes/Assets.php:589
 #: includes/Product/functions.php:504
-#: templates/products/products-listing.php:102
+#: templates/products/products-listing.php:109
 #: assets/js/dokan-promo-notice.js:2
 #: assets/js/vue-admin.js:2
 #: assets/js/vue-bootstrap.js:2
@@ -1726,14 +1880,14 @@ msgid "mins"
 msgstr ""
 
 #: includes/Assets.php:725
-#: templates/products/edit-product-single.php:271
+#: templates/products/edit-product-single.php:299
 #: templates/products/new-product.php:252
 #: templates/products/tmpl-add-product-popup.php:88
 msgid "To"
 msgstr ""
 
 #: includes/Assets.php:727
-#: templates/products/edit-product-single.php:264
+#: templates/products/edit-product-single.php:292
 #: templates/products/new-product.php:245
 #: templates/products/tmpl-add-product-popup.php:81
 msgid "From"
@@ -1749,7 +1903,7 @@ msgstr ""
 
 #: includes/Assets.php:730
 #: templates/orders/listing.php:20
-#: templates/products/products-listing.php:101
+#: templates/products/products-listing.php:108
 #: templates/store-lists-filter.php:87
 #: assets/js/vue-admin.js:2
 msgid "Apply"
@@ -1761,7 +1915,7 @@ msgid "Clear"
 msgstr ""
 
 #: includes/Assets.php:732
-#: includes/Withdraw/Hooks.php:46
+#: includes/Withdraw/Hooks.php:68
 msgid "Custom"
 msgstr ""
 
@@ -1905,237 +2059,237 @@ msgstr ""
 msgid "Please enter a value greater than or equal to {0}."
 msgstr ""
 
-#: includes/Assets.php:946
+#: includes/Assets.php:947
 msgid "Upload featured image"
 msgstr ""
 
-#: includes/Assets.php:947
+#: includes/Assets.php:948
 msgid "Choose a file"
 msgstr ""
 
-#: includes/Assets.php:948
+#: includes/Assets.php:949
 msgid "Add Images to Product Gallery"
 msgstr ""
 
-#: includes/Assets.php:949
+#: includes/Assets.php:950
 msgid "Set featured image"
 msgstr ""
 
-#: includes/Assets.php:950
+#: includes/Assets.php:951
 #: includes/woo-views/html-product-download.php:8
 msgid "Insert file URL"
 msgstr ""
 
-#: includes/Assets.php:951
+#: includes/Assets.php:952
 msgid "Add to gallery"
 msgstr ""
 
-#: includes/Assets.php:952
+#: includes/Assets.php:953
 msgid "Sorry, this attribute option already exists, Try a different one."
 msgstr ""
 
-#: includes/Assets.php:953
+#: includes/Assets.php:954
 msgid "Warning! This product will not have any variations if this option is not checked."
 msgstr ""
 
-#: includes/Assets.php:954
+#: includes/Assets.php:955
 msgid "Enter a name for the new attribute term:"
 msgstr ""
 
-#: includes/Assets.php:955
+#: includes/Assets.php:956
 msgid "Remove this attribute?"
 msgstr ""
 
 #. translators: %d: max linked variation.
-#: includes/Assets.php:964
+#: includes/Assets.php:965
 msgid "Are you sure you want to link all variations? This will create a new variation for each and every possible combination of variation attributes (max %d per run)."
 msgstr ""
 
-#: includes/Assets.php:965
+#: includes/Assets.php:966
 msgid "Enter a value"
 msgstr ""
 
-#: includes/Assets.php:966
+#: includes/Assets.php:967
 msgid "Variation menu order (determines position in the list of variations)"
 msgstr ""
 
-#: includes/Assets.php:967
+#: includes/Assets.php:968
 msgid "Enter a value (fixed or %)"
 msgstr ""
 
-#: includes/Assets.php:968
+#: includes/Assets.php:969
 msgid "Are you sure you want to delete all variations? This cannot be undone."
 msgstr ""
 
-#: includes/Assets.php:969
+#: includes/Assets.php:970
 msgid "Last warning, are you sure?"
 msgstr ""
 
-#: includes/Assets.php:970
+#: includes/Assets.php:971
 msgid "Choose an image"
 msgstr ""
 
-#: includes/Assets.php:971
+#: includes/Assets.php:972
 msgid "Set variation image"
 msgstr ""
 
-#: includes/Assets.php:972
+#: includes/Assets.php:973
 msgid "variation added"
 msgstr ""
 
-#: includes/Assets.php:973
+#: includes/Assets.php:974
 msgid "variations added"
 msgstr ""
 
-#: includes/Assets.php:974
+#: includes/Assets.php:975
 msgid "No variations added"
 msgstr ""
 
-#: includes/Assets.php:975
+#: includes/Assets.php:976
 msgid "Are you sure you want to remove this variation?"
 msgstr ""
 
-#: includes/Assets.php:976
+#: includes/Assets.php:977
 msgid "Sale start date (YYYY-MM-DD format or leave blank)"
 msgstr ""
 
-#: includes/Assets.php:977
+#: includes/Assets.php:978
 msgid "Sale end date (YYYY-MM-DD format or leave blank)"
 msgstr ""
 
-#: includes/Assets.php:978
+#: includes/Assets.php:979
 msgid "Save changes before changing page?"
 msgstr ""
 
-#: includes/Assets.php:979
+#: includes/Assets.php:980
 msgid "%qty% variation"
 msgstr ""
 
-#: includes/Assets.php:980
+#: includes/Assets.php:981
 msgid "%qty% variations"
 msgstr ""
 
-#: includes/Assets.php:981
+#: includes/Assets.php:982
 msgid "No Result Found"
 msgstr ""
 
-#: includes/Assets.php:982
+#: includes/Assets.php:983
 msgid "Please insert value less than the regular price!"
 msgstr ""
 
 #. translators: %s: decimal
-#: includes/Assets.php:984
-#: includes/Assets.php:1162
+#: includes/Assets.php:985
+#: includes/Assets.php:1163
 msgid "Please enter with one decimal point (%s) without thousand separators."
 msgstr ""
 
 #. translators: %s: price decimal separator
-#: includes/Assets.php:986
-#: includes/Assets.php:1164
-msgid "Please enter with one monetary decimal point (%s) without thousand separators and currency symbols."
-msgstr ""
-
 #: includes/Assets.php:987
 #: includes/Assets.php:1165
-msgid "Please enter in country code with two capital letters."
+msgid "Please enter with one monetary decimal point (%s) without thousand separators and currency symbols."
 msgstr ""
 
 #: includes/Assets.php:988
 #: includes/Assets.php:1166
-msgid "Please enter in a value less than the regular price."
+msgid "Please enter in country code with two capital letters."
 msgstr ""
 
 #: includes/Assets.php:989
 #: includes/Assets.php:1167
-msgid "This product has produced sales and may be linked to existing orders. Are you sure you want to delete it?"
+msgid "Please enter in a value less than the regular price."
 msgstr ""
 
 #: includes/Assets.php:990
 #: includes/Assets.php:1168
+msgid "This product has produced sales and may be linked to existing orders. Are you sure you want to delete it?"
+msgstr ""
+
+#: includes/Assets.php:991
+#: includes/Assets.php:1169
 msgid "This action cannot be reversed. Are you sure you wish to erase personal data from the selected orders?"
 msgstr ""
 
-#: includes/Assets.php:1000
+#: includes/Assets.php:1001
 msgid "Select and Crop"
 msgstr ""
 
-#: includes/Assets.php:1001
+#: includes/Assets.php:1002
 msgid "Choose Image"
 msgstr ""
 
-#: includes/Assets.php:1002
+#: includes/Assets.php:1003
 msgid "Product title is required"
 msgstr ""
 
-#: includes/Assets.php:1003
+#: includes/Assets.php:1004
 msgid "Product category is required"
 msgstr ""
 
-#: includes/Assets.php:1004
+#: includes/Assets.php:1005
 msgid "Product created successfully"
 msgstr ""
 
-#: includes/Assets.php:1008
+#: includes/Assets.php:1009
 msgid "One result is available, press enter to select it."
 msgstr ""
 
-#: includes/Assets.php:1009
+#: includes/Assets.php:1010
 msgid "%qty% results are available, use up and down arrow keys to navigate."
 msgstr ""
 
-#: includes/Assets.php:1010
+#: includes/Assets.php:1011
 msgid "No matches found"
 msgstr ""
 
-#: includes/Assets.php:1011
+#: includes/Assets.php:1012
 msgid "Loading failed"
 msgstr ""
 
-#: includes/Assets.php:1012
+#: includes/Assets.php:1013
 msgid "Please enter 1 or more characters"
 msgstr ""
 
-#: includes/Assets.php:1013
+#: includes/Assets.php:1014
 msgid "Please enter %qty% or more characters"
 msgstr ""
 
-#: includes/Assets.php:1014
+#: includes/Assets.php:1015
 msgid "Please delete 1 character"
 msgstr ""
 
-#: includes/Assets.php:1015
+#: includes/Assets.php:1016
 msgid "Please delete %qty% characters"
 msgstr ""
 
-#: includes/Assets.php:1016
+#: includes/Assets.php:1017
 msgid "You can only select 1 item"
 msgstr ""
 
-#: includes/Assets.php:1017
+#: includes/Assets.php:1018
 msgid "You can only select %qty% items"
 msgstr ""
 
-#: includes/Assets.php:1018
+#: includes/Assets.php:1019
 msgid "Loading more results&hellip;"
 msgstr ""
 
-#: includes/Assets.php:1019
+#: includes/Assets.php:1020
 msgid "Searching&hellip;"
 msgstr ""
 
-#: includes/Assets.php:1020
+#: includes/Assets.php:1021
 msgid "Calculating"
 msgstr ""
 
-#: includes/Assets.php:1021
+#: includes/Assets.php:1022
 msgid "OK"
 msgstr ""
 
-#: includes/Assets.php:1022
+#: includes/Assets.php:1023
 #: includes/Product/functions.php:310
 #: templates/my-orders.php:95
 #: templates/orders/details.php:196
-#: templates/products/edit-product-single.php:235
+#: templates/products/edit-product-single.php:263
 #: templates/products/new-product.php:232
 #: templates/products/tmpl-add-product-popup.php:68
 #: templates/settings/bank-payment-method-settings.php:139
@@ -2151,15 +2305,15 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
-#: includes/Assets.php:1023
+#: includes/Assets.php:1024
 msgid "Attribute Name"
 msgstr ""
 
-#: includes/Assets.php:1025
+#: includes/Assets.php:1026
 msgid "Are you sure? You have uploaded banner but didn't click the Update Settings button!"
 msgstr ""
 
-#: includes/Assets.php:1026
+#: includes/Assets.php:1027
 #: templates/settings/header.php:20
 #: templates/settings/payment-manage.php:48
 #: templates/settings/store-form.php:292
@@ -2174,51 +2328,39 @@ msgstr ""
 msgid "Dokan variable products author IDs regenerated successfully!"
 msgstr ""
 
-#: includes/Blocks/ProductBlock.php:29
-#: includes/functions.php:731
-#: templates/products/others.php:19
-msgid "Online"
-msgstr ""
-
 #: includes/Blocks/ProductBlock.php:30
-#: includes/functions.php:732
-#: templates/products/others.php:20
-msgid "Draft"
-msgstr ""
-
-#: includes/Blocks/ProductBlock.php:36
 #: templates/products/inventory.php:27
 msgid "In Stock"
 msgstr ""
 
-#: includes/Blocks/ProductBlock.php:37
+#: includes/Blocks/ProductBlock.php:31
 #: templates/products/inventory.php:28
 msgid "Out of Stock"
 msgstr ""
 
-#: includes/Blocks/ProductBlock.php:40
+#: includes/Blocks/ProductBlock.php:34
 #: templates/products/inventory.php:67
 msgid "Do not allow"
 msgstr ""
 
-#: includes/Blocks/ProductBlock.php:41
+#: includes/Blocks/ProductBlock.php:35
 msgid "Allow, but notify customer"
 msgstr ""
 
-#: includes/Blocks/ProductBlock.php:42
+#: includes/Blocks/ProductBlock.php:36
 #: templates/products/inventory.php:69
 msgid "Allow"
 msgstr ""
 
-#: includes/Blocks/ProductBlock.php:46
-#: templates/products/edit-product-single.php:294
+#: includes/Blocks/ProductBlock.php:40
+#: templates/products/edit-product-single.php:322
 #: templates/products/new-product.php:271
 #: templates/products/tmpl-add-product-popup.php:19
 msgid "Select tags/Add tags"
 msgstr ""
 
-#: includes/Blocks/ProductBlock.php:46
-#: templates/products/edit-product-single.php:294
+#: includes/Blocks/ProductBlock.php:40
+#: templates/products/edit-product-single.php:322
 #: templates/products/new-product.php:271
 #: templates/products/tmpl-add-product-popup.php:19
 msgid "Select product tags"
@@ -2408,14 +2550,14 @@ msgid "Pending"
 msgstr ""
 
 #: includes/Dashboard/Templates/Dashboard.php:111
-#: includes/Order/functions.php:441
+#: includes/Order/functions.php:442
 #: templates/dashboard/orders-widget.php:40
 #: assets/js/vue-admin.js:2
 msgid "Cancelled"
 msgstr ""
 
 #: includes/Dashboard/Templates/Dashboard.php:116
-#: includes/Order/functions.php:436
+#: includes/Order/functions.php:437
 #: templates/dashboard/orders-widget.php:45
 msgid "Refunded"
 msgstr ""
@@ -2437,7 +2579,7 @@ msgid "Nonce verification failed!"
 msgstr ""
 
 #: includes/Dashboard/Templates/Orders.php:140
-#: includes/Dashboard/Templates/Products.php:226
+#: includes/Dashboard/Templates/Products.php:230
 #: assets/js/vue-admin.js:2
 msgid "Bulk Actions"
 msgstr ""
@@ -2454,51 +2596,51 @@ msgstr ""
 msgid "Change status to completed"
 msgstr ""
 
-#: includes/Dashboard/Templates/Products.php:208
+#: includes/Dashboard/Templates/Products.php:212
 #: includes/Dashboard/Templates/Settings.php:138
 #: includes/Shortcodes/Dashboard.php:30
 #: templates/global/no-permission.php:54
 msgid "You have no permission to view this page"
 msgstr ""
 
-#: includes/Dashboard/Templates/Products.php:227
+#: includes/Dashboard/Templates/Products.php:231
 #: includes/Product/functions.php:494
 msgid "Delete Permanently"
 msgstr ""
 
-#: includes/Dashboard/Templates/Products.php:256
+#: includes/Dashboard/Templates/Products.php:260
 msgid "Details of your product ..."
 msgstr ""
 
-#: includes/Dashboard/Templates/Products.php:265
-#: includes/Dashboard/Templates/Products.php:433
+#: includes/Dashboard/Templates/Products.php:269
+#: includes/Dashboard/Templates/Products.php:437
 #: includes/Product/functions.php:33
 msgid "Please enter product title"
 msgstr ""
 
-#: includes/Dashboard/Templates/Products.php:271
-#: includes/Dashboard/Templates/Products.php:279
-#: includes/Dashboard/Templates/Products.php:450
+#: includes/Dashboard/Templates/Products.php:275
+#: includes/Dashboard/Templates/Products.php:283
+#: includes/Dashboard/Templates/Products.php:457
 #: includes/Product/functions.php:39
 #: includes/Product/functions.php:47
 msgid "Please select a category"
 msgstr ""
 
-#: includes/Dashboard/Templates/Products.php:275
+#: includes/Dashboard/Templates/Products.php:279
 #: includes/Product/functions.php:43
 msgid "Please select at least one category"
 msgstr ""
 
-#: includes/Dashboard/Templates/Products.php:438
+#: includes/Dashboard/Templates/Products.php:442
 msgid "No product found!"
 msgstr ""
 
-#: includes/Dashboard/Templates/Products.php:446
+#: includes/Dashboard/Templates/Products.php:453
 msgid "I swear this is not your product!"
 msgstr ""
 
 #. translators: %s: maximum tag length
-#: includes/Dashboard/Templates/Products.php:467
+#: includes/Dashboard/Templates/Products.php:474
 #: includes/Product/functions.php:121
 msgid "You can only select %s tags"
 msgstr ""
@@ -2662,7 +2804,7 @@ msgstr ""
 msgid "No matching product exists to update."
 msgstr ""
 
-#: includes/DummyData/Importer.php:301
+#: includes/DummyData/Importer.php:304
 msgid "Cleared all dummy data successfully."
 msgstr ""
 
@@ -2683,8 +2825,8 @@ msgid "{customer_name} - Sent a message from {site_name}"
 msgstr ""
 
 #: includes/Emails/ContactSeller.php:155
-#: includes/Emails/NewProduct.php:161
-#: includes/Emails/NewProductPending.php:153
+#: includes/Emails/NewProduct.php:170
+#: includes/Emails/NewProductPending.php:171
 #: includes/Emails/NewSeller.php:138
 #: includes/Emails/ProductPublished.php:147
 #: includes/Emails/ReverseWithdrawalInvoice.php:214
@@ -2697,8 +2839,8 @@ msgid "Enable/Disable"
 msgstr ""
 
 #: includes/Emails/ContactSeller.php:157
-#: includes/Emails/NewProduct.php:163
-#: includes/Emails/NewProductPending.php:155
+#: includes/Emails/NewProduct.php:172
+#: includes/Emails/NewProductPending.php:173
 #: includes/Emails/NewSeller.php:140
 #: includes/Emails/ProductPublished.php:149
 #: includes/Emails/ReverseWithdrawalInvoice.php:216
@@ -2711,8 +2853,8 @@ msgid "Enable this email notification"
 msgstr ""
 
 #: includes/Emails/ContactSeller.php:162
-#: includes/Emails/NewProduct.php:176
-#: includes/Emails/NewProductPending.php:168
+#: includes/Emails/NewProduct.php:185
+#: includes/Emails/NewProductPending.php:186
 #: includes/Emails/NewSeller.php:153
 #: includes/Emails/ProductPublished.php:154
 #: includes/Emails/ReverseWithdrawalInvoice.php:220
@@ -2727,10 +2869,10 @@ msgstr ""
 #. translators: %s: list of placeholders
 #: includes/Emails/ContactSeller.php:166
 #: includes/Emails/ContactSeller.php:175
-#: includes/Emails/NewProduct.php:180
 #: includes/Emails/NewProduct.php:189
-#: includes/Emails/NewProductPending.php:172
-#: includes/Emails/NewProductPending.php:181
+#: includes/Emails/NewProduct.php:198
+#: includes/Emails/NewProductPending.php:190
+#: includes/Emails/NewProductPending.php:199
 #: includes/Emails/NewSeller.php:157
 #: includes/Emails/NewSeller.php:166
 #: includes/Emails/ProductPublished.php:158
@@ -2750,8 +2892,8 @@ msgid "Available placeholders: %s"
 msgstr ""
 
 #: includes/Emails/ContactSeller.php:171
-#: includes/Emails/NewProduct.php:185
-#: includes/Emails/NewProductPending.php:177
+#: includes/Emails/NewProduct.php:194
+#: includes/Emails/NewProductPending.php:195
 #: includes/Emails/NewSeller.php:162
 #: includes/Emails/ProductPublished.php:163
 #: includes/Emails/ReverseWithdrawalInvoice.php:228
@@ -2764,8 +2906,8 @@ msgid "Email heading"
 msgstr ""
 
 #: includes/Emails/ContactSeller.php:180
-#: includes/Emails/NewProduct.php:194
-#: includes/Emails/NewProductPending.php:186
+#: includes/Emails/NewProduct.php:203
+#: includes/Emails/NewProductPending.php:204
 #: includes/Emails/NewSeller.php:171
 #: includes/Emails/ProductPublished.php:172
 #: includes/Emails/ReverseWithdrawalInvoice.php:245
@@ -2778,8 +2920,8 @@ msgid "Email type"
 msgstr ""
 
 #: includes/Emails/ContactSeller.php:182
-#: includes/Emails/NewProduct.php:196
-#: includes/Emails/NewProductPending.php:188
+#: includes/Emails/NewProduct.php:205
+#: includes/Emails/NewProductPending.php:206
 #: includes/Emails/NewSeller.php:173
 #: includes/Emails/ProductPublished.php:174
 #: includes/Emails/ReverseWithdrawalInvoice.php:247
@@ -2844,23 +2986,23 @@ msgstr ""
 msgid "New Product emails are sent to chosen recipient(s) when a new product is created by vendors."
 msgstr ""
 
-#: includes/Emails/NewProduct.php:47
+#: includes/Emails/NewProduct.php:48
 msgid "[{site_name}] A New product is added by ({seller_name}) - {product_title}"
 msgstr ""
 
-#: includes/Emails/NewProduct.php:57
+#: includes/Emails/NewProduct.php:58
 msgid "New product added by Vendor {seller_name}"
 msgstr ""
 
-#: includes/Emails/NewProduct.php:167
-#: includes/Emails/NewProductPending.php:159
+#: includes/Emails/NewProduct.php:176
+#: includes/Emails/NewProductPending.php:177
 #: includes/Emails/NewSeller.php:144
 #: includes/Emails/VendorWithdrawRequest.php:153
 msgid "Recipient(s)"
 msgstr ""
 
 #. translators: 1) Email recipients
-#: includes/Emails/NewProduct.php:170
+#: includes/Emails/NewProduct.php:179
 #: includes/Emails/NewSeller.php:147
 #: includes/Emails/VendorWithdrawRequest.php:156
 msgid "Enter recipients (comma separated) for this email. Defaults to %s."
@@ -2874,16 +3016,16 @@ msgstr ""
 msgid "New Pending Product emails are sent to chosen recipient(s) when a new product is created by vendors."
 msgstr ""
 
-#: includes/Emails/NewProductPending.php:48
+#: includes/Emails/NewProductPending.php:49
 msgid "[{site_title}] A New product is pending from ({seller_name}) - {product_title}"
 msgstr ""
 
-#: includes/Emails/NewProductPending.php:58
+#: includes/Emails/NewProductPending.php:59
 msgid "New pending product added by Vendor {seller_name}"
 msgstr ""
 
 #. translators: 1) admin email address
-#: includes/Emails/NewProductPending.php:162
+#: includes/Emails/NewProductPending.php:180
 msgid "Enter recipients (comma separated) for this email. Defaults to %1$s."
 msgstr ""
 
@@ -3073,386 +3215,395 @@ msgstr ""
 msgid "No store found with given store id"
 msgstr ""
 
-#: includes/functions.php:733
+#: includes/functions.php:774
+msgid "Online"
+msgstr ""
+
+#: includes/functions.php:775
+#: includes/Order/functions.php:451
+msgid "Draft"
+msgstr ""
+
+#: includes/functions.php:776
 #: templates/dashboard/products-widget.php:41
 #: templates/withdraw/pending-request-listing-dashboard.php:46
 #: templates/withdraw/pending-request-listing.php:43
 msgid "Pending Review"
 msgstr ""
 
-#: includes/functions.php:734
+#: includes/functions.php:777
 #: templates/products/products-listing-row.php:166
 msgid "Scheduled"
 msgstr ""
 
-#: includes/functions.php:779
+#: includes/functions.php:846
 msgid "Simple Product"
 msgstr ""
 
-#: includes/functions.php:780
+#: includes/functions.php:847
 #: assets/js/vue-admin.js:2
 msgid "Variable Product"
 msgstr ""
 
-#: includes/functions.php:781
+#: includes/functions.php:848
 msgid "Grouped Product"
 msgstr ""
 
-#: includes/functions.php:782
+#: includes/functions.php:849
 msgid "External/Affiliate Product"
 msgstr ""
 
-#: includes/functions.php:1014
+#: includes/functions.php:1086
 msgid "Author"
 msgstr ""
 
-#: includes/functions.php:1201
+#: includes/functions.php:1273
 #: includes/template-tags.php:403
 #: templates/dashboard/products-widget.php:16
 #: assets/js/vue-admin.js:2
 msgid "Products"
 msgstr ""
 
-#: includes/functions.php:1205
+#: includes/functions.php:1277
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:545
 #: templates/settings/store-form.php:217
 msgid "Terms and Conditions"
 msgstr ""
 
 #. translators: 1) bank account name
-#: includes/functions.php:1245
+#: includes/functions.php:1317
 #: assets/js/vue-admin.js:2
 msgid "Account Name: %s"
 msgstr ""
 
 #. translators: 1) bank account number
-#: includes/functions.php:1250
+#: includes/functions.php:1322
 #: assets/js/vue-admin.js:2
 msgid "Account Number: %s"
 msgstr ""
 
 #. translators: 1) bank name
-#: includes/functions.php:1255
+#: includes/functions.php:1327
 #: assets/js/vue-admin.js:2
 msgid "Bank Name: %s"
 msgstr ""
 
 #. translators: 1)  bank address
-#: includes/functions.php:1260
+#: includes/functions.php:1332
 msgid "Address: %s"
 msgstr ""
 
 #. translators: 1) bank routing number
-#: includes/functions.php:1265
+#: includes/functions.php:1337
 #: assets/js/vue-admin.js:2
 msgid "Routing Number: %s"
 msgstr ""
 
 #. translators: 1) bank iban
-#: includes/functions.php:1270
+#: includes/functions.php:1342
 #: assets/js/vue-admin.js:2
 msgid "IBAN: %s"
 msgstr ""
 
 #. translators: 1) bank swift
-#: includes/functions.php:1275
+#: includes/functions.php:1347
 msgid "SWIFT: %s"
 msgstr ""
 
-#: includes/functions.php:1630
+#: includes/functions.php:1702
 msgid "Date is not valid"
 msgstr ""
 
-#: includes/functions.php:1996
+#: includes/functions.php:2068
 msgid "- Select a location -"
 msgstr ""
 
-#: includes/functions.php:2000
-#: includes/functions.php:2024
+#: includes/functions.php:2072
+#: includes/functions.php:2096
 msgid "Everywhere Else"
 msgstr ""
 
-#: includes/functions.php:2020
+#: includes/functions.php:2092
 msgid "- Select a State -"
 msgstr ""
 
-#: includes/functions.php:2043
+#: includes/functions.php:2115
 msgid "Ready to ship in..."
 msgstr ""
 
-#: includes/functions.php:2044
+#: includes/functions.php:2116
 msgid "1 business day"
 msgstr ""
 
-#: includes/functions.php:2045
+#: includes/functions.php:2117
 msgid "1-2 business days"
 msgstr ""
 
-#: includes/functions.php:2046
+#: includes/functions.php:2118
 msgid "1-3 business days"
 msgstr ""
 
-#: includes/functions.php:2047
+#: includes/functions.php:2119
 msgid "3-5 business days"
 msgstr ""
 
-#: includes/functions.php:2048
+#: includes/functions.php:2120
 msgid "1-2 weeks"
 msgstr ""
 
-#: includes/functions.php:2049
+#: includes/functions.php:2121
 msgid "2-3 weeks"
 msgstr ""
 
-#: includes/functions.php:2050
+#: includes/functions.php:2122
 msgid "3-4 weeks"
 msgstr ""
 
-#: includes/functions.php:2051
+#: includes/functions.php:2123
 msgid "4-6 weeks"
 msgstr ""
 
-#: includes/functions.php:2052
+#: includes/functions.php:2124
 msgid "6-8 weeks"
 msgstr ""
 
-#: includes/functions.php:2152
+#: includes/functions.php:2224
 msgid "All dates"
 msgstr ""
 
 #. translators: 1: month name, 2: 4-digit year
-#: includes/functions.php:2167
+#: includes/functions.php:2239
 #: includes/REST/ProductControllerV2.php:198
 msgid "%1$s %2$d"
 msgstr ""
 
-#: includes/functions.php:2182
+#: includes/functions.php:2254
 #: includes/REST/ProductControllerV2.php:236
-#: templates/products/edit-product-single.php:190
+#: templates/products/edit-product-single.php:218
 #: templates/products/products-listing-row.php:112
-#: templates/products/products-listing.php:131
+#: templates/products/products-listing.php:138
 msgid "Simple"
 msgstr ""
 
-#: includes/functions.php:2264
+#: includes/functions.php:2336
 #: includes/Privacy.php:201
 #: assets/js/vue-bootstrap.js:2
 msgid "Facebook"
 msgstr ""
 
-#: includes/functions.php:2268
+#: includes/functions.php:2340
 #: includes/Privacy.php:202
 #: assets/js/vue-bootstrap.js:2
 msgid "Twitter"
 msgstr ""
 
-#: includes/functions.php:2272
+#: includes/functions.php:2344
 #: includes/Privacy.php:203
 #: assets/js/vue-bootstrap.js:2
 msgid "Pinterest"
 msgstr ""
 
-#: includes/functions.php:2276
+#: includes/functions.php:2348
 msgid "LinkedIn"
 msgstr ""
 
-#: includes/functions.php:2280
+#: includes/functions.php:2352
 #: includes/Privacy.php:205
 #: assets/js/vue-bootstrap.js:2
 msgid "Youtube"
 msgstr ""
 
-#: includes/functions.php:2284
+#: includes/functions.php:2356
 #: includes/Privacy.php:206
 #: assets/js/vue-bootstrap.js:2
 msgid "Instagram"
 msgstr ""
 
-#: includes/functions.php:2288
+#: includes/functions.php:2360
 #: includes/Privacy.php:207
 #: assets/js/vue-bootstrap.js:2
 msgid "Flickr"
 msgstr ""
 
-#: includes/functions.php:2554
+#: includes/functions.php:2626
 msgid "Dokan Store Sidebar"
 msgstr ""
 
-#: includes/functions.php:2711
+#: includes/functions.php:2783
 msgid "View sales overview"
 msgstr ""
 
-#: includes/functions.php:2712
+#: includes/functions.php:2784
 msgid "View sales report chart"
 msgstr ""
 
-#: includes/functions.php:2713
+#: includes/functions.php:2785
 msgid "View announcement"
 msgstr ""
 
-#: includes/functions.php:2714
+#: includes/functions.php:2786
 msgid "View order report"
 msgstr ""
 
-#: includes/functions.php:2715
+#: includes/functions.php:2787
 msgid "View review report"
 msgstr ""
 
-#: includes/functions.php:2716
+#: includes/functions.php:2788
 msgid "View product status report"
 msgstr ""
 
-#: includes/functions.php:2719
+#: includes/functions.php:2791
 msgid "View overview report"
 msgstr ""
 
-#: includes/functions.php:2720
+#: includes/functions.php:2792
 msgid "View daily sales report"
 msgstr ""
 
-#: includes/functions.php:2721
+#: includes/functions.php:2793
 msgid "View top selling report"
 msgstr ""
 
-#: includes/functions.php:2722
+#: includes/functions.php:2794
 msgid "View top earning report"
 msgstr ""
 
-#: includes/functions.php:2723
+#: includes/functions.php:2795
 msgid "View statement report"
 msgstr ""
 
-#: includes/functions.php:2726
+#: includes/functions.php:2798
 msgid "View order"
 msgstr ""
 
-#: includes/functions.php:2727
+#: includes/functions.php:2799
 msgid "Manage order"
 msgstr ""
 
-#: includes/functions.php:2728
+#: includes/functions.php:2800
 msgid "Manage order note"
 msgstr ""
 
-#: includes/functions.php:2729
+#: includes/functions.php:2801
 msgid "Manage refund"
 msgstr ""
 
-#: includes/functions.php:2730
+#: includes/functions.php:2802
 msgid "Export order"
 msgstr ""
 
-#: includes/functions.php:2733
+#: includes/functions.php:2805
 msgid "Add coupon"
 msgstr ""
 
-#: includes/functions.php:2734
+#: includes/functions.php:2806
 msgid "Edit coupon"
 msgstr ""
 
-#: includes/functions.php:2735
+#: includes/functions.php:2807
 msgid "Delete coupon"
 msgstr ""
 
-#: includes/functions.php:2738
+#: includes/functions.php:2810
 msgid "View reviews"
 msgstr ""
 
-#: includes/functions.php:2739
+#: includes/functions.php:2811
 #: assets/js/vue-admin.js:2
 msgid "Manage reviews"
 msgstr ""
 
-#: includes/functions.php:2743
+#: includes/functions.php:2815
 msgid "Manage withdraw"
 msgstr ""
 
-#: includes/functions.php:2746
+#: includes/functions.php:2818
 msgid "Add product"
 msgstr ""
 
-#: includes/functions.php:2747
+#: includes/functions.php:2819
 msgid "Edit product"
 msgstr ""
 
-#: includes/functions.php:2748
+#: includes/functions.php:2820
 msgid "Delete product"
 msgstr ""
 
-#: includes/functions.php:2749
+#: includes/functions.php:2821
 msgid "View product"
 msgstr ""
 
-#: includes/functions.php:2750
+#: includes/functions.php:2822
 msgid "Duplicate product"
 msgstr ""
 
-#: includes/functions.php:2751
+#: includes/functions.php:2823
 msgid "Import product"
 msgstr ""
 
-#: includes/functions.php:2752
+#: includes/functions.php:2824
 msgid "Export product"
 msgstr ""
 
-#: includes/functions.php:2755
+#: includes/functions.php:2827
 msgid "View overview menu"
 msgstr ""
 
-#: includes/functions.php:2756
+#: includes/functions.php:2828
 msgid "View product menu"
 msgstr ""
 
-#: includes/functions.php:2757
+#: includes/functions.php:2829
 msgid "View order menu"
 msgstr ""
 
-#: includes/functions.php:2758
+#: includes/functions.php:2830
 msgid "View coupon menu"
 msgstr ""
 
-#: includes/functions.php:2759
+#: includes/functions.php:2831
 msgid "View report menu"
 msgstr ""
 
-#: includes/functions.php:2760
+#: includes/functions.php:2832
 msgid "View review menu"
 msgstr ""
 
-#: includes/functions.php:2761
+#: includes/functions.php:2833
 msgid "View withdraw menu"
 msgstr ""
 
-#: includes/functions.php:2762
+#: includes/functions.php:2834
 msgid "View store settings menu"
 msgstr ""
 
-#: includes/functions.php:2763
+#: includes/functions.php:2835
 msgid "View payment settings menu"
 msgstr ""
 
-#: includes/functions.php:2764
+#: includes/functions.php:2836
 msgid "View shipping settings menu"
 msgstr ""
 
-#: includes/functions.php:2765
+#: includes/functions.php:2837
 msgid "View social settings menu"
 msgstr ""
 
-#: includes/functions.php:2766
+#: includes/functions.php:2838
 msgid "View seo settings menu"
 msgstr ""
 
-#: includes/functions.php:2785
+#: includes/functions.php:2857
 #: assets/js/vue-admin.js:2
 msgid "Overview"
 msgstr ""
 
-#: includes/functions.php:2786
+#: includes/functions.php:2858
 msgid "Report"
 msgstr ""
 
-#: includes/functions.php:2787
+#: includes/functions.php:2859
 #: templates/dashboard/big-counter-widget.php:29
 #: templates/my-orders.php:25
 #: templates/orders/details.php:19
@@ -3463,83 +3614,83 @@ msgstr ""
 msgid "Order"
 msgstr ""
 
-#: includes/functions.php:2788
+#: includes/functions.php:2860
 msgid "Coupon"
 msgstr ""
 
-#: includes/functions.php:2789
+#: includes/functions.php:2861
 msgid "Review"
 msgstr ""
 
-#: includes/functions.php:2791
+#: includes/functions.php:2863
 #: templates/emails/vendor-completed-order.php:54
 #: templates/emails/vendor-new-order.php:53
 #: assets/js/vue-admin.js:2
 msgid "Product"
 msgstr ""
 
-#: includes/functions.php:2792
+#: includes/functions.php:2864
 msgid "Menu"
 msgstr ""
 
-#: includes/functions.php:2911
+#: includes/functions.php:2983
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:350
 msgid "Sunday"
 msgstr ""
 
-#: includes/functions.php:2912
+#: includes/functions.php:2984
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:302
 msgid "Monday"
 msgstr ""
 
-#: includes/functions.php:2913
+#: includes/functions.php:2985
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:310
 msgid "Tuesday"
 msgstr ""
 
-#: includes/functions.php:2914
+#: includes/functions.php:2986
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:318
 msgid "Wednesday"
 msgstr ""
 
-#: includes/functions.php:2915
+#: includes/functions.php:2987
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:326
 msgid "Thursday"
 msgstr ""
 
-#: includes/functions.php:2916
+#: includes/functions.php:2988
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:334
 msgid "Friday"
 msgstr ""
 
-#: includes/functions.php:2917
+#: includes/functions.php:2989
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:342
 msgid "Saturday"
 msgstr ""
 
-#: includes/functions.php:3210
+#: includes/functions.php:3282
 msgid "privacy policy"
 msgstr ""
 
-#: includes/functions.php:3257
+#: includes/functions.php:3329
 #: assets/js/vue-admin.js:2
 #: assets/js/vue-bootstrap.js:2
 msgid "Flat"
 msgstr ""
 
-#: includes/functions.php:3258
+#: includes/functions.php:3330
 #: assets/js/vue-admin.js:2
 #: assets/js/vue-bootstrap.js:2
 msgid "Percentage"
 msgstr ""
 
 #. translators: 1) plugin slug
-#: includes/functions.php:3432
+#: includes/functions.php:3504
 msgid "Unable to fetch plugin information from wordpress.org for %s."
 msgstr ""
 
 #. translators: 1) plugin slug
-#: includes/functions.php:3445
+#: includes/functions.php:3517
 msgid "Unable to install %s from wordpress.org"
 msgstr ""
 
@@ -3581,164 +3732,164 @@ msgstr ""
 msgid "Your {site_title} order from {order_date} is complete"
 msgstr ""
 
-#: includes/Order/functions.php:421
+#: includes/Order/functions.php:422
 msgid "Pending Payment"
 msgstr ""
 
-#: includes/Order/functions.php:446
+#: includes/Order/functions.php:447
 msgid "Failed"
 msgstr ""
 
-#: includes/Order/functions.php:628
+#: includes/Order/functions.php:633
 msgid "Order No"
 msgstr ""
 
-#: includes/Order/functions.php:629
+#: includes/Order/functions.php:634
 #: templates/orders/details.php:19
 msgid "Order Items"
 msgstr ""
 
-#: includes/Order/functions.php:630
+#: includes/Order/functions.php:635
 msgid "Shipping method"
 msgstr ""
 
-#: includes/Order/functions.php:631
+#: includes/Order/functions.php:636
 msgid "Shipping Cost"
 msgstr ""
 
-#: includes/Order/functions.php:632
+#: includes/Order/functions.php:637
 msgid "Payment method"
 msgstr ""
 
-#: includes/Order/functions.php:633
+#: includes/Order/functions.php:638
 #: templates/orders/listing.php:31
 #: templates/orders/listing.php:77
 msgid "Order Total"
 msgstr ""
 
-#: includes/Order/functions.php:634
+#: includes/Order/functions.php:639
 msgid "Earnings"
 msgstr ""
 
-#: includes/Order/functions.php:635
+#: includes/Order/functions.php:640
 #: includes/REST/OrderController.php:107
 msgid "Order Status"
 msgstr ""
 
-#: includes/Order/functions.php:636
+#: includes/Order/functions.php:641
 msgid "Order Date"
 msgstr ""
 
-#: includes/Order/functions.php:637
+#: includes/Order/functions.php:642
 msgid "Billing Company"
 msgstr ""
 
-#: includes/Order/functions.php:638
+#: includes/Order/functions.php:643
 msgid "Billing First Name"
 msgstr ""
 
-#: includes/Order/functions.php:639
+#: includes/Order/functions.php:644
 msgid "Billing Last Name"
 msgstr ""
 
-#: includes/Order/functions.php:640
+#: includes/Order/functions.php:645
 msgid "Billing Full Name"
 msgstr ""
 
-#: includes/Order/functions.php:641
+#: includes/Order/functions.php:646
 msgid "Billing Email"
 msgstr ""
 
-#: includes/Order/functions.php:642
+#: includes/Order/functions.php:647
 msgid "Billing Phone"
 msgstr ""
 
-#: includes/Order/functions.php:643
+#: includes/Order/functions.php:648
 msgid "Billing Address 1"
 msgstr ""
 
-#: includes/Order/functions.php:644
+#: includes/Order/functions.php:649
 msgid "Billing Address 2"
 msgstr ""
 
-#: includes/Order/functions.php:645
+#: includes/Order/functions.php:650
 msgid "Billing City"
 msgstr ""
 
-#: includes/Order/functions.php:646
+#: includes/Order/functions.php:651
 msgid "Billing State"
 msgstr ""
 
-#: includes/Order/functions.php:647
+#: includes/Order/functions.php:652
 msgid "Billing Postcode"
 msgstr ""
 
-#: includes/Order/functions.php:648
+#: includes/Order/functions.php:653
 msgid "Billing Country"
 msgstr ""
 
-#: includes/Order/functions.php:649
+#: includes/Order/functions.php:654
 msgid "Shipping Company"
 msgstr ""
 
-#: includes/Order/functions.php:650
+#: includes/Order/functions.php:655
 msgid "Shipping First Name"
 msgstr ""
 
-#: includes/Order/functions.php:651
+#: includes/Order/functions.php:656
 msgid "Shipping Last Name"
 msgstr ""
 
-#: includes/Order/functions.php:652
+#: includes/Order/functions.php:657
 msgid "Shipping Full Name"
 msgstr ""
 
-#: includes/Order/functions.php:653
+#: includes/Order/functions.php:658
 msgid "Shipping Address 1"
 msgstr ""
 
-#: includes/Order/functions.php:654
+#: includes/Order/functions.php:659
 msgid "Shipping Address 2"
 msgstr ""
 
-#: includes/Order/functions.php:655
+#: includes/Order/functions.php:660
 msgid "Shipping City"
 msgstr ""
 
-#: includes/Order/functions.php:656
+#: includes/Order/functions.php:661
 msgid "Shipping State"
 msgstr ""
 
-#: includes/Order/functions.php:657
+#: includes/Order/functions.php:662
 msgid "Shipping Postcode"
 msgstr ""
 
-#: includes/Order/functions.php:658
+#: includes/Order/functions.php:663
 msgid "Shipping Country"
 msgstr ""
 
-#: includes/Order/functions.php:659
+#: includes/Order/functions.php:664
 msgid "Customer IP"
 msgstr ""
 
-#: includes/Order/functions.php:660
+#: includes/Order/functions.php:665
 msgid "Customer Note"
 msgstr ""
 
-#: includes/Order/Hooks.php:272
+#: includes/Order/Hooks.php:275
 msgid "Mark parent order completed when all child orders are completed."
 msgstr ""
 
-#: includes/Order/Hooks.php:327
+#: includes/Order/Hooks.php:330
 msgid "This coupon is invalid for multiple vendors."
 msgstr ""
 
-#: includes/Order/Hooks.php:341
+#: includes/Order/Hooks.php:344
 msgid "A coupon must be restricted with a vendor product."
 msgstr ""
 
 #. translators: %s item name.
-#: includes/Order/Hooks.php:387
+#: includes/Order/Hooks.php:390
 msgid "Unable to restore stock for item %s."
 msgstr ""
 
@@ -3888,14 +4039,6 @@ msgstr ""
 msgid "Dokan vendor personal data."
 msgstr ""
 
-#: includes/Privacy.php:178
-#: includes/Vendor/SettingsApi/Settings/Pages/Store.php:117
-#: templates/settings/store-form.php:117
-#: assets/js/vue-admin.js:2
-#: assets/js/vue-bootstrap.js:2
-msgid "Store Name"
-msgstr ""
-
 #: includes/Privacy.php:179
 msgid "Social"
 msgstr ""
@@ -3977,22 +4120,6 @@ msgstr ""
 msgid "Account Number"
 msgstr ""
 
-#: includes/Privacy.php:276
-#: includes/Vendor/SettingsApi/Settings/Pages/Payments/Gateways/Bank.php:67
-#: includes/Withdraw/functions.php:299
-#: assets/js/vue-admin.js:2
-#: assets/js/vue-bootstrap.js:2
-msgid "Bank Name"
-msgstr ""
-
-#: includes/Privacy.php:277
-#: includes/Vendor/SettingsApi/Settings/Pages/Payments/Gateways/Bank.php:75
-#: includes/Withdraw/functions.php:303
-#: assets/js/vue-admin.js:2
-#: assets/js/vue-bootstrap.js:2
-msgid "Bank Address"
-msgstr ""
-
 #: includes/Privacy.php:279
 #: includes/Vendor/SettingsApi/Settings/Pages/Payments/Gateways/Bank.php:91
 #: includes/Withdraw/functions.php:308
@@ -4011,10 +4138,6 @@ msgstr ""
 #: assets/js/vue-admin.js:2
 #: assets/js/vue-bootstrap.js:2
 msgid "PayPal Email"
-msgstr ""
-
-#: includes/Privacy.php:296
-msgid "Skrill Email"
 msgstr ""
 
 #. translators: vendor name.
@@ -4040,20 +4163,6 @@ msgstr ""
 
 #: includes/Product/functions.php:214
 msgid "Delete all variations"
-msgstr ""
-
-#: includes/Product/functions.php:215
-#: templates/my-orders.php:27
-#: templates/orders/listing.php:33
-#: templates/orders/listing.php:83
-#: templates/products/products-listing-row.php:67
-#: templates/products/products-listing.php:114
-#: templates/sub-orders.php:45
-#: templates/withdraw/pending-request-listing-dashboard.php:21
-#: templates/withdraw/pending-request-listing.php:18
-#: templates/withdraw/pending-request-listing.php:62
-#: assets/js/vue-admin.js:2
-msgid "Status"
 msgstr ""
 
 #: includes/Product/functions.php:216
@@ -4111,7 +4220,7 @@ msgstr ""
 
 #: includes/Product/functions.php:231
 #: templates/products/products-listing-row.php:82
-#: templates/products/products-listing.php:119
+#: templates/products/products-listing.php:126
 msgid "Stock"
 msgstr ""
 
@@ -4214,13 +4323,13 @@ msgid "Catalog"
 msgstr ""
 
 #: includes/Product/functions.php:363
-#: includes/Product/Hooks.php:182
-#: templates/products/listing-filter.php:81
+#: includes/Product/Hooks.php:203
+#: templates/products/listing-filter.php:85
 msgid "Search"
 msgstr ""
 
 #: includes/Product/functions.php:364
-#: templates/products/edit-product-single.php:128
+#: templates/products/edit-product-single.php:156
 msgid "Hidden"
 msgstr ""
 
@@ -4264,19 +4373,19 @@ msgstr ""
 msgid "Relevance"
 msgstr ""
 
-#: includes/Product/Hooks.php:53
+#: includes/Product/Hooks.php:73
 msgid "Products not found with this search"
 msgstr ""
 
-#: includes/Product/Hooks.php:142
+#: includes/Product/Hooks.php:162
 msgid "SKU:"
 msgstr ""
 
-#: includes/Product/Hooks.php:179
+#: includes/Product/Hooks.php:199
 msgid "Enter product name"
 msgstr ""
 
-#: includes/Product/Hooks.php:185
+#: includes/Product/Hooks.php:207
 msgid "Shop order"
 msgstr ""
 
@@ -4435,605 +4544,605 @@ msgstr ""
 msgid "Orders"
 msgstr ""
 
-#: includes/REST/DummyDataController.php:167
+#: includes/REST/DummyDataController.php:171
 msgid "Vendors products data."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:175
+#: includes/REST/DummyDataController.php:179
 #: includes/REST/OrderController.php:897
-#: includes/REST/ProductController.php:1672
+#: includes/REST/ProductController.php:1680
 msgid "Unique identifier for the resource."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:181
+#: includes/REST/DummyDataController.php:185
 #: includes/REST/OrderController.php:1253
-#: includes/REST/ProductController.php:1678
+#: includes/REST/ProductController.php:1686
 msgid "Product name."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:187
-#: includes/REST/ProductController.php:1683
+#: includes/REST/DummyDataController.php:191
+#: includes/REST/ProductController.php:1691
 msgid "Product slug."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:193
-#: includes/REST/ProductController.php:1688
+#: includes/REST/DummyDataController.php:197
+#: includes/REST/ProductController.php:1696
 msgid "Product URL."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:201
-#: includes/REST/ProductController.php:1695
+#: includes/REST/DummyDataController.php:205
+#: includes/REST/ProductController.php:1703
 msgid "The date the product was created, in the site's timezone."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:208
-#: includes/REST/ProductController.php:1701
+#: includes/REST/DummyDataController.php:212
+#: includes/REST/ProductController.php:1709
 msgid "The date the product was created, as GMT."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:215
-#: includes/REST/ProductController.php:1707
+#: includes/REST/DummyDataController.php:219
+#: includes/REST/ProductController.php:1715
 msgid "The date the product was last modified, in the site's timezone."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:222
-#: includes/REST/ProductController.php:1713
+#: includes/REST/DummyDataController.php:226
+#: includes/REST/ProductController.php:1721
 msgid "The date the product was last modified, as GMT."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:229
-#: includes/REST/ProductController.php:1719
+#: includes/REST/DummyDataController.php:233
+#: includes/REST/ProductController.php:1727
 msgid "Product type."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:238
-#: includes/REST/ProductController.php:1726
+#: includes/REST/DummyDataController.php:242
+#: includes/REST/ProductController.php:1734
 msgid "Product status (post status)."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:247
-#: includes/REST/ProductController.php:1733
+#: includes/REST/DummyDataController.php:251
+#: includes/REST/ProductController.php:1741
 msgid "Featured product."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:253
-#: includes/REST/ProductController.php:1739
+#: includes/REST/DummyDataController.php:257
+#: includes/REST/ProductController.php:1747
 msgid "Catalog visibility."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:261
-#: includes/REST/ProductController.php:1746
+#: includes/REST/DummyDataController.php:265
+#: includes/REST/ProductController.php:1754
 msgid "Product description."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:267
-#: includes/REST/ProductController.php:1751
+#: includes/REST/DummyDataController.php:271
+#: includes/REST/ProductController.php:1759
 msgid "Product short description."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:273
-#: includes/REST/ProductController.php:1756
+#: includes/REST/DummyDataController.php:277
+#: includes/REST/ProductController.php:1764
 msgid "Unique identifier."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:279
-#: includes/REST/ProductController.php:1761
+#: includes/REST/DummyDataController.php:283
+#: includes/REST/ProductController.php:1769
 msgid "Current product price."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:285
-#: includes/REST/ProductController.php:1767
+#: includes/REST/DummyDataController.php:289
+#: includes/REST/ProductController.php:1775
 msgid "Product regular price."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:291
-#: includes/REST/ProductController.php:1772
+#: includes/REST/DummyDataController.php:295
+#: includes/REST/ProductController.php:1780
 msgid "Product sale price."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:298
-#: includes/REST/ProductController.php:1777
+#: includes/REST/DummyDataController.php:302
+#: includes/REST/ProductController.php:1785
 msgid "Start date of sale price, in the site's timezone."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:304
-#: includes/REST/ProductController.php:1782
+#: includes/REST/DummyDataController.php:308
+#: includes/REST/ProductController.php:1790
 msgid "Start date of sale price, as GMT."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:310
-#: includes/REST/ProductController.php:1787
+#: includes/REST/DummyDataController.php:314
+#: includes/REST/ProductController.php:1795
 msgid "End date of sale price, in the site's timezone."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:316
-#: includes/REST/ProductController.php:1792
+#: includes/REST/DummyDataController.php:320
+#: includes/REST/ProductController.php:1800
 msgid "End date of sale price, as GMT."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:322
-#: includes/REST/ProductController.php:1803
+#: includes/REST/DummyDataController.php:326
+#: includes/REST/ProductController.php:1811
 msgid "Shows if the product is on sale."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:328
-#: includes/REST/ProductController.php:1809
+#: includes/REST/DummyDataController.php:332
+#: includes/REST/ProductController.php:1817
 msgid "Shows if the product can be bought."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:334
-#: includes/REST/ProductController.php:1815
+#: includes/REST/DummyDataController.php:338
+#: includes/REST/ProductController.php:1823
 msgid "Amount of sales."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:341
-#: includes/REST/ProductController.php:1821
+#: includes/REST/DummyDataController.php:345
+#: includes/REST/ProductController.php:1829
 msgid "If the product is virtual."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:348
-#: includes/REST/ProductController.php:1827
+#: includes/REST/DummyDataController.php:352
+#: includes/REST/ProductController.php:1835
 msgid "If the product is downloadable."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:355
-#: includes/REST/ProductController.php:1833
+#: includes/REST/DummyDataController.php:359
+#: includes/REST/ProductController.php:1841
 msgid "List of downloadable files."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:362
-#: includes/REST/ProductController.php:1840
+#: includes/REST/DummyDataController.php:366
+#: includes/REST/ProductController.php:1848
 msgid "File MD5 hash."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:369
-#: includes/REST/ProductController.php:1846
+#: includes/REST/DummyDataController.php:373
+#: includes/REST/ProductController.php:1854
 msgid "File name."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:375
-#: includes/REST/ProductController.php:1851
+#: includes/REST/DummyDataController.php:379
+#: includes/REST/ProductController.php:1859
 msgid "File URL."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:384
-#: includes/REST/ProductController.php:1859
+#: includes/REST/DummyDataController.php:388
+#: includes/REST/ProductController.php:1867
 msgid "Number of times downloadable files can be downloaded after purchase."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:391
-#: includes/REST/ProductController.php:1865
+#: includes/REST/DummyDataController.php:395
+#: includes/REST/ProductController.php:1873
 msgid "Number of days until access to downloadable files expires."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:398
-#: includes/REST/ProductController.php:1871
+#: includes/REST/DummyDataController.php:402
+#: includes/REST/ProductController.php:1879
 msgid "Product external URL. Only for external products."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:405
-#: includes/REST/ProductController.php:1877
+#: includes/REST/DummyDataController.php:409
+#: includes/REST/ProductController.php:1885
 msgid "Product external button text. Only for external products."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:411
-#: includes/REST/ProductController.php:1882
+#: includes/REST/DummyDataController.php:415
+#: includes/REST/ProductController.php:1890
 msgid "Tax status."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:419
-#: includes/REST/ProductController.php:1889
+#: includes/REST/DummyDataController.php:423
+#: includes/REST/ProductController.php:1897
 msgid "Tax class."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:425
-#: includes/REST/ProductController.php:1894
+#: includes/REST/DummyDataController.php:429
+#: includes/REST/ProductController.php:1902
 msgid "Stock management at product level."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:431
-#: includes/REST/ProductController.php:1900
+#: includes/REST/DummyDataController.php:435
+#: includes/REST/ProductController.php:1908
 msgid "Stock quantity."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:438
-#: includes/REST/ProductController.php:1905
+#: includes/REST/DummyDataController.php:442
+#: includes/REST/ProductController.php:1913
 msgid "Controls whether or not the product is listed as \"in stock\" or \"out of stock\" on the frontend."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:444
-#: includes/REST/ProductController.php:1911
+#: includes/REST/DummyDataController.php:448
+#: includes/REST/ProductController.php:1919
 msgid "If managing stock, this controls if backorders are allowed."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:451
-#: includes/REST/ProductController.php:1918
+#: includes/REST/DummyDataController.php:455
+#: includes/REST/ProductController.php:1926
 msgid "Shows if backorders are allowed."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:457
-#: includes/REST/ProductController.php:1924
+#: includes/REST/DummyDataController.php:461
+#: includes/REST/ProductController.php:1932
 msgid "Shows if the product is on backordered."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:463
-#: includes/REST/ProductController.php:1930
+#: includes/REST/DummyDataController.php:467
+#: includes/REST/ProductController.php:1938
 msgid "Allow one item to be bought in a single order."
 msgstr ""
 
 #. translators: %s: weight unit
-#: includes/REST/DummyDataController.php:471
-#: includes/REST/ProductController.php:1937
+#: includes/REST/DummyDataController.php:475
+#: includes/REST/ProductController.php:1945
 msgid "Product weight (%s)."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:477
-#: includes/REST/ProductController.php:1942
+#: includes/REST/DummyDataController.php:481
+#: includes/REST/ProductController.php:1950
 msgid "Product dimensions."
 msgstr ""
 
 #. translators: %s: dimension unit
-#: includes/REST/DummyDataController.php:483
-#: includes/REST/ProductController.php:1948
+#: includes/REST/DummyDataController.php:487
+#: includes/REST/ProductController.php:1956
 msgid "Product length (%s)."
 msgstr ""
 
 #. translators: %s: dimension unit
-#: includes/REST/DummyDataController.php:490
-#: includes/REST/ProductController.php:1954
+#: includes/REST/DummyDataController.php:494
+#: includes/REST/ProductController.php:1962
 msgid "Product width (%s)."
 msgstr ""
 
 #. translators: %s: dimension unit
-#: includes/REST/DummyDataController.php:497
-#: includes/REST/ProductController.php:1960
+#: includes/REST/DummyDataController.php:501
+#: includes/REST/ProductController.php:1968
 msgid "Product height (%s)."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:505
-#: includes/REST/ProductController.php:1967
+#: includes/REST/DummyDataController.php:509
+#: includes/REST/ProductController.php:1975
 msgid "Shows if the product need to be shipped."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:511
-#: includes/REST/ProductController.php:1973
+#: includes/REST/DummyDataController.php:515
+#: includes/REST/ProductController.php:1981
 msgid "Shows whether or not the product shipping is taxable."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:517
-#: includes/REST/ProductController.php:1979
+#: includes/REST/DummyDataController.php:521
+#: includes/REST/ProductController.php:1987
 msgid "Shipping class slug."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:523
-#: includes/REST/ProductController.php:1984
+#: includes/REST/DummyDataController.php:527
+#: includes/REST/ProductController.php:1992
 msgid "Shipping class ID."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:530
-#: includes/REST/ProductController.php:1990
+#: includes/REST/DummyDataController.php:534
+#: includes/REST/ProductController.php:1998
 msgid "Allow reviews."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:536
-#: includes/REST/ProductController.php:1996
+#: includes/REST/DummyDataController.php:540
+#: includes/REST/ProductController.php:2004
 msgid "Reviews average rating."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:543
-#: includes/REST/ProductController.php:2002
+#: includes/REST/DummyDataController.php:547
+#: includes/REST/ProductController.php:2010
 msgid "Amount of reviews that the product have."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:550
-#: includes/REST/ProductController.php:2008
+#: includes/REST/DummyDataController.php:554
+#: includes/REST/ProductController.php:2016
 msgid "List of related products IDs."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:559
-#: includes/REST/ProductController.php:2017
+#: includes/REST/DummyDataController.php:563
+#: includes/REST/ProductController.php:2025
 msgid "List of up-sell products IDs."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:567
-#: includes/REST/ProductController.php:2025
+#: includes/REST/DummyDataController.php:571
+#: includes/REST/ProductController.php:2033
 msgid "List of cross-sell products IDs."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:575
-#: includes/REST/ProductController.php:2033
+#: includes/REST/DummyDataController.php:579
+#: includes/REST/ProductController.php:2041
 msgid "Product parent ID."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:582
-#: includes/REST/ProductController.php:2038
+#: includes/REST/DummyDataController.php:586
+#: includes/REST/ProductController.php:2046
 msgid "Optional note to send the customer after purchase."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:588
-#: includes/REST/ProductController.php:2043
+#: includes/REST/DummyDataController.php:592
+#: includes/REST/ProductController.php:2051
 msgid "List of categories."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:595
-#: includes/REST/ProductController.php:2050
+#: includes/REST/DummyDataController.php:599
+#: includes/REST/ProductController.php:2058
 msgid "Category ID."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:601
-#: includes/REST/ProductController.php:2055
+#: includes/REST/DummyDataController.php:605
+#: includes/REST/ProductController.php:2063
 msgid "Category name."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:608
-#: includes/REST/ProductController.php:2061
+#: includes/REST/DummyDataController.php:612
+#: includes/REST/ProductController.php:2069
 msgid "Category slug."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:618
-#: includes/REST/ProductController.php:2070
+#: includes/REST/DummyDataController.php:622
+#: includes/REST/ProductController.php:2078
 msgid "List of tags."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:625
-#: includes/REST/ProductController.php:2077
+#: includes/REST/DummyDataController.php:629
+#: includes/REST/ProductController.php:2085
 msgid "Tag ID."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:631
-#: includes/REST/ProductController.php:2082
+#: includes/REST/DummyDataController.php:635
+#: includes/REST/ProductController.php:2090
 msgid "Tag name."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:638
-#: includes/REST/ProductController.php:2088
+#: includes/REST/DummyDataController.php:642
+#: includes/REST/ProductController.php:2096
 msgid "Tag slug."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:648
-#: includes/REST/ProductController.php:2097
+#: includes/REST/DummyDataController.php:652
+#: includes/REST/ProductController.php:2105
 msgid "List of images."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:655
-#: includes/REST/ProductController.php:2104
+#: includes/REST/DummyDataController.php:659
+#: includes/REST/ProductController.php:2112
 msgid "Image ID."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:661
-#: includes/REST/ProductController.php:2109
+#: includes/REST/DummyDataController.php:665
+#: includes/REST/ProductController.php:2117
 msgid "The date the image was created, in the site's timezone."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:669
-#: includes/REST/ProductController.php:2115
+#: includes/REST/DummyDataController.php:673
+#: includes/REST/ProductController.php:2123
 msgid "The date the image was created, as GMT."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:677
-#: includes/REST/ProductController.php:2121
+#: includes/REST/DummyDataController.php:681
+#: includes/REST/ProductController.php:2129
 msgid "The date the image was last modified, in the site's timezone."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:685
-#: includes/REST/ProductController.php:2127
+#: includes/REST/DummyDataController.php:689
+#: includes/REST/ProductController.php:2135
 msgid "The date the image was last modified, as GMT."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:693
-#: includes/REST/ProductController.php:2133
+#: includes/REST/DummyDataController.php:697
+#: includes/REST/ProductController.php:2141
 msgid "Image URL."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:700
-#: includes/REST/ProductController.php:2139
+#: includes/REST/DummyDataController.php:704
+#: includes/REST/ProductController.php:2147
 msgid "Image name."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:706
-#: includes/REST/ProductController.php:2144
+#: includes/REST/DummyDataController.php:710
+#: includes/REST/ProductController.php:2152
 msgid "Image alternative text."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:712
-#: includes/REST/ProductController.php:2149
+#: includes/REST/DummyDataController.php:716
+#: includes/REST/ProductController.php:2157
 msgid "Image position. 0 means that the image is featured."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:722
-#: includes/REST/ProductController.php:2157
+#: includes/REST/DummyDataController.php:726
+#: includes/REST/ProductController.php:2165
 msgid "List of attributes."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:729
-#: includes/REST/DummyDataController.php:779
-#: includes/REST/ProductController.php:2164
-#: includes/REST/ProductController.php:2209
+#: includes/REST/DummyDataController.php:733
+#: includes/REST/DummyDataController.php:783
+#: includes/REST/ProductController.php:2172
+#: includes/REST/ProductController.php:2217
 msgid "Attribute ID."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:735
-#: includes/REST/DummyDataController.php:785
+#: includes/REST/DummyDataController.php:739
+#: includes/REST/DummyDataController.php:789
 #: includes/REST/ProductAttributeController.php:181
-#: includes/REST/ProductController.php:2169
-#: includes/REST/ProductController.php:2214
+#: includes/REST/ProductController.php:2177
+#: includes/REST/ProductController.php:2222
 msgid "Attribute name."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:741
-#: includes/REST/ProductController.php:2174
+#: includes/REST/DummyDataController.php:745
+#: includes/REST/ProductController.php:2182
 msgid "Attribute position."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:748
-#: includes/REST/ProductController.php:2179
+#: includes/REST/DummyDataController.php:752
+#: includes/REST/ProductController.php:2187
 msgid "Define if the attribute is visible on the \"Additional information\" tab in the product's page."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:754
-#: includes/REST/ProductController.php:2185
+#: includes/REST/DummyDataController.php:758
+#: includes/REST/ProductController.php:2193
 msgid "Define if the attribute can be used as variation."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:760
-#: includes/REST/ProductController.php:2191
+#: includes/REST/DummyDataController.php:764
+#: includes/REST/ProductController.php:2199
 msgid "List of available term names of the attribute."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:772
-#: includes/REST/ProductController.php:2202
+#: includes/REST/DummyDataController.php:776
+#: includes/REST/ProductController.php:2210
 msgid "Defaults variation attributes."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:791
-#: includes/REST/ProductController.php:2219
+#: includes/REST/DummyDataController.php:795
+#: includes/REST/ProductController.php:2227
 msgid "Selected attribute term name."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:800
-#: includes/REST/ProductController.php:2227
+#: includes/REST/DummyDataController.php:804
+#: includes/REST/ProductController.php:2235
 msgid "List of variations IDs."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:810
-#: includes/REST/ProductController.php:2236
+#: includes/REST/DummyDataController.php:814
+#: includes/REST/ProductController.php:2244
 msgid "List of grouped products ID."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:819
-#: includes/REST/ProductController.php:2244
+#: includes/REST/DummyDataController.php:823
+#: includes/REST/ProductController.php:2252
 msgid "Menu order, used to custom sort products."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:825
+#: includes/REST/DummyDataController.php:829
 #: includes/REST/OrderController.php:1214
 #: includes/REST/OrderController.php:1326
 #: includes/REST/OrderController.php:1417
 #: includes/REST/OrderController.php:1503
 #: includes/REST/OrderController.php:1601
 #: includes/REST/OrderController.php:1659
-#: includes/REST/ProductController.php:2249
+#: includes/REST/ProductController.php:2257
 msgid "Meta data."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:832
+#: includes/REST/DummyDataController.php:836
 #: includes/REST/OrderController.php:1221
 #: includes/REST/OrderController.php:1333
 #: includes/REST/OrderController.php:1424
 #: includes/REST/OrderController.php:1510
 #: includes/REST/OrderController.php:1608
 #: includes/REST/OrderController.php:1666
-#: includes/REST/ProductController.php:2256
+#: includes/REST/ProductController.php:2264
 msgid "Meta ID."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:839
+#: includes/REST/DummyDataController.php:843
 #: includes/REST/OrderController.php:1227
 #: includes/REST/OrderController.php:1339
 #: includes/REST/OrderController.php:1430
 #: includes/REST/OrderController.php:1516
 #: includes/REST/OrderController.php:1614
 #: includes/REST/OrderController.php:1672
-#: includes/REST/ProductController.php:2262
+#: includes/REST/ProductController.php:2270
 msgid "Meta key."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:845
+#: includes/REST/DummyDataController.php:849
 #: includes/REST/OrderController.php:1232
 #: includes/REST/OrderController.php:1344
 #: includes/REST/OrderController.php:1435
 #: includes/REST/OrderController.php:1521
 #: includes/REST/OrderController.php:1619
 #: includes/REST/OrderController.php:1677
-#: includes/REST/ProductController.php:2267
+#: includes/REST/ProductController.php:2275
 msgid "Meta value."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:857
+#: includes/REST/DummyDataController.php:861
 msgid "Vendors profile data."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:863
+#: includes/REST/DummyDataController.php:867
 msgid "Vendor email."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:870
+#: includes/REST/DummyDataController.php:874
 msgid "Vendor password."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:876
+#: includes/REST/DummyDataController.php:880
 msgid "Vendor store name."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:883
+#: includes/REST/DummyDataController.php:887
 msgid "Vendor social"
 msgstr ""
 
-#: includes/REST/DummyDataController.php:888
+#: includes/REST/DummyDataController.php:892
 msgid "Vendor payments"
 msgstr ""
 
-#: includes/REST/DummyDataController.php:893
+#: includes/REST/DummyDataController.php:897
 msgid "Vendor phone"
 msgstr ""
 
-#: includes/REST/DummyDataController.php:900
+#: includes/REST/DummyDataController.php:904
 msgid "Vendor show email"
 msgstr ""
 
-#: includes/REST/DummyDataController.php:906
+#: includes/REST/DummyDataController.php:910
 msgid "Vendor address"
 msgstr ""
 
-#: includes/REST/DummyDataController.php:912
+#: includes/REST/DummyDataController.php:916
 msgid "Vendor location"
 msgstr ""
 
-#: includes/REST/DummyDataController.php:918
+#: includes/REST/DummyDataController.php:922
 msgid "Vendor banner"
 msgstr ""
 
-#: includes/REST/DummyDataController.php:924
+#: includes/REST/DummyDataController.php:928
 msgid "Vendor icon"
 msgstr ""
 
-#: includes/REST/DummyDataController.php:930
+#: includes/REST/DummyDataController.php:934
 msgid "Vendor gravatar"
 msgstr ""
 
-#: includes/REST/DummyDataController.php:936
+#: includes/REST/DummyDataController.php:940
 msgid "Vendor show more tpab"
 msgstr ""
 
-#: includes/REST/DummyDataController.php:942
+#: includes/REST/DummyDataController.php:946
 msgid "Vendor show product per page"
 msgstr ""
 
-#: includes/REST/DummyDataController.php:949
+#: includes/REST/DummyDataController.php:953
 msgid "Enable terms and condition"
 msgstr ""
 
-#: includes/REST/DummyDataController.php:957
+#: includes/REST/DummyDataController.php:961
 msgid "Store seo"
 msgstr ""
 
-#: includes/REST/DummyDataController.php:962
+#: includes/REST/DummyDataController.php:966
 msgid "Store time open close array."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:967
+#: includes/REST/DummyDataController.php:971
 msgid "Vendor enabled."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:974
+#: includes/REST/DummyDataController.php:978
 msgid "Vendor is trusted."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:983
+#: includes/REST/DummyDataController.php:987
 msgid "Vendor item index to import."
 msgstr ""
 
-#: includes/REST/DummyDataController.php:989
+#: includes/REST/DummyDataController.php:993
 msgid "Total vendors"
 msgstr ""
 
@@ -5050,8 +5159,8 @@ msgstr ""
 #: includes/REST/StoreController.php:142
 #: includes/REST/StoreController.php:176
 #: includes/REST/StoreController.php:208
-#: includes/REST/WithdrawController.php:81
-#: includes/REST/WithdrawController.php:737
+#: includes/REST/WithdrawController.php:89
+#: includes/REST/WithdrawController.php:848
 msgid "Unique identifier for the object."
 msgstr ""
 
@@ -5623,17 +5732,17 @@ msgstr ""
 msgid "You can not select more than category"
 msgstr ""
 
-#: includes/REST/ProductController.php:1270
-#: includes/REST/ProductController.php:1271
+#: includes/REST/ProductController.php:1278
+#: includes/REST/ProductController.php:1279
 msgid "Placeholder"
 msgstr ""
 
 #. translators: %s: attachment id
-#: includes/REST/ProductController.php:1487
+#: includes/REST/ProductController.php:1495
 msgid "#%s is an invalid image ID."
 msgstr ""
 
-#: includes/REST/ProductController.php:1797
+#: includes/REST/ProductController.php:1805
 msgid "Price formatted in HTML."
 msgstr ""
 
@@ -5899,8 +6008,8 @@ msgid "Store List Order"
 msgstr ""
 
 #: includes/REST/StoreSettingController.php:107
-#: includes/REST/WithdrawController.php:259
-#: includes/REST/WithdrawController.php:350
+#: includes/REST/WithdrawController.php:289
+#: includes/REST/WithdrawController.php:417
 msgid "No vendor found"
 msgstr ""
 
@@ -6024,64 +6133,76 @@ msgstr ""
 msgid "End date to show orders"
 msgstr ""
 
-#: includes/REST/WithdrawController.php:47
+#: includes/REST/WithdrawController.php:49
 msgid "IDs of withdraws"
 msgstr ""
 
-#: includes/REST/WithdrawController.php:218
+#: includes/REST/WithdrawController.php:57
+msgid "Is withdraws exportable"
+msgstr ""
+
+#: includes/REST/WithdrawController.php:248
 msgid "Withdraw not found"
 msgstr ""
 
-#: includes/REST/WithdrawController.php:340
+#: includes/REST/WithdrawController.php:407
 msgid "User does not have permission to withdraw"
 msgstr ""
 
-#: includes/REST/WithdrawController.php:363
+#: includes/REST/WithdrawController.php:430
 msgid "You already have a pending withdraw request"
 msgstr ""
 
-#: includes/REST/WithdrawController.php:743
+#: includes/REST/WithdrawController.php:854
 msgid "Requested User"
 msgstr ""
 
-#: includes/REST/WithdrawController.php:750
+#: includes/REST/WithdrawController.php:861
 msgid "Requested User ID"
 msgstr ""
 
-#: includes/REST/WithdrawController.php:756
+#: includes/REST/WithdrawController.php:867
 msgid "The amount of discount. Should always be numeric, even if setting a percentage."
 msgstr ""
 
-#: includes/REST/WithdrawController.php:761
+#: includes/REST/WithdrawController.php:872
 msgid "The date the withdraw request has beed created in the site's timezone."
 msgstr ""
 
-#: includes/REST/WithdrawController.php:768
+#: includes/REST/WithdrawController.php:879
 msgid "Withdraw status"
 msgstr ""
 
-#: includes/REST/WithdrawController.php:776
+#: includes/REST/WithdrawController.php:887
 #: templates/withdraw/request-form.php:28
 msgid "Withdraw Method"
 msgstr ""
 
-#: includes/REST/WithdrawController.php:783
+#: includes/REST/WithdrawController.php:894
 msgid "Withdraw Notes"
 msgstr ""
 
-#: includes/REST/WithdrawController.php:789
+#: includes/REST/WithdrawController.php:900
 msgid "User IP"
 msgstr ""
 
-#: includes/REST/WithdrawController.php:815
+#: includes/REST/WithdrawController.php:925
+msgid "Unique identifier for the payment method."
+msgstr ""
+
+#: includes/REST/WithdrawController.php:932
+msgid "Title for the payment method."
+msgstr ""
+
+#: includes/REST/WithdrawController.php:959
 msgid "List of withdraw IDs to be approved"
 msgstr ""
 
-#: includes/REST/WithdrawController.php:825
+#: includes/REST/WithdrawController.php:969
 msgid "List of withdraw IDs to be cancelled"
 msgstr ""
 
-#: includes/REST/WithdrawController.php:835
+#: includes/REST/WithdrawController.php:979
 msgid "List of withdraw IDs to be deleted"
 msgstr ""
 
@@ -6225,61 +6346,61 @@ msgstr ""
 msgid "Other"
 msgstr ""
 
-#: includes/ReverseWithdrawal/Helper.php:347
+#: includes/ReverseWithdrawal/Helper.php:362
 #: includes/ReverseWithdrawal/Manager.php:373
 #: includes/ReverseWithdrawal/Manager.php:409
 msgid "No vendor id provided"
 msgstr ""
 
-#: includes/ReverseWithdrawal/Helper.php:354
-#: includes/ReverseWithdrawal/Helper.php:419
-#: includes/ReverseWithdrawal/Helper.php:486
+#: includes/ReverseWithdrawal/Helper.php:369
+#: includes/ReverseWithdrawal/Helper.php:434
+#: includes/ReverseWithdrawal/Helper.php:501
 msgid "Invalid date provided"
 msgstr ""
 
-#: includes/ReverseWithdrawal/Helper.php:475
+#: includes/ReverseWithdrawal/Helper.php:490
 msgid "Invalid vendor provided."
 msgstr ""
 
-#: includes/ReverseWithdrawal/Helper.php:617
+#: includes/ReverseWithdrawal/Helper.php:632
 msgid "Your products add to cart will be hidden. Hence users will not be able to purchase any of your products."
 msgstr ""
 
-#: includes/ReverseWithdrawal/Helper.php:621
+#: includes/ReverseWithdrawal/Helper.php:636
 msgid "Withdraw menu will be hidden. Hence you will not be able to make any withdraw request from your account."
 msgstr ""
 
-#: includes/ReverseWithdrawal/Helper.php:625
+#: includes/ReverseWithdrawal/Helper.php:640
 msgid "Your account will be disabled for selling. Hence you will no longer be able to sell any products."
 msgstr ""
 
-#: includes/ReverseWithdrawal/Helper.php:660
+#: includes/ReverseWithdrawal/Helper.php:675
 msgid "Your products add to cart button has been temporarily hidden. Hence users are not able to purchase any of your products currently."
 msgstr ""
 
-#: includes/ReverseWithdrawal/Helper.php:664
+#: includes/ReverseWithdrawal/Helper.php:679
 msgid "Withdraw menu has been temporarily hidden. Hence you are not able to make any withdrawal requests from your account."
 msgstr ""
 
-#: includes/ReverseWithdrawal/Helper.php:668
+#: includes/ReverseWithdrawal/Helper.php:683
 msgid "Your account has been temporarily disabled for selling. Hence you are no longer able to sell any products."
 msgstr ""
 
-#: includes/ReverseWithdrawal/Helper.php:717
+#: includes/ReverseWithdrawal/Helper.php:732
 msgid "Payment can not be less than or equal to zero."
 msgstr ""
 
-#: includes/ReverseWithdrawal/Helper.php:723
-#: includes/ReverseWithdrawal/Helper.php:728
+#: includes/ReverseWithdrawal/Helper.php:738
+#: includes/ReverseWithdrawal/Helper.php:743
 msgid "Invalid base payment product id. Please contact with site admin."
 msgstr ""
 
-#: includes/ReverseWithdrawal/Helper.php:732
+#: includes/ReverseWithdrawal/Helper.php:747
 msgid "Base payment product status is not published. Please contact with site admin."
 msgstr ""
 
-#: includes/ReverseWithdrawal/Helper.php:754
-#: includes/ReverseWithdrawal/Helper.php:761
+#: includes/ReverseWithdrawal/Helper.php:769
+#: includes/ReverseWithdrawal/Helper.php:776
 msgid "Something went wrong while adding product to cart. Please contact site admin."
 msgstr ""
 
@@ -6917,14 +7038,14 @@ msgstr ""
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:562
 #: templates/admin-setup-wizard/step-selling.php:9
 #: templates/admin-setup-wizard/step-selling.php:43
-#: templates/admin-setup-wizard/step-store.php:90
+#: templates/admin-setup-wizard/step-store.php:105
 msgid "On"
 msgstr ""
 
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:563
 #: templates/admin-setup-wizard/step-selling.php:10
 #: templates/admin-setup-wizard/step-selling.php:44
-#: templates/admin-setup-wizard/step-store.php:91
+#: templates/admin-setup-wizard/step-store.php:106
 msgid "Off"
 msgstr ""
 
@@ -7312,10 +7433,6 @@ msgstr ""
 msgid "Address of your bank"
 msgstr ""
 
-#: includes/Withdraw/functions.php:307
-msgid "Bank IBAN"
-msgstr ""
-
 #: includes/Withdraw/functions.php:311
 msgid "Bank Swift Code"
 msgstr ""
@@ -7332,53 +7449,53 @@ msgstr ""
 msgid "Incorrect or mismatched account name and number can result in withdrawal delays and fees"
 msgstr ""
 
-#: includes/Withdraw/functions.php:438
+#: includes/Withdraw/functions.php:413
 msgid "No information found."
 msgstr ""
 
 #. translators: 1: Email address for withdraw method.
-#: includes/Withdraw/functions.php:444
+#: includes/Withdraw/functions.php:419
 msgid "( %1$s )"
 msgstr ""
 
 #. translators: 1: Bank account holder name. 2: Bank name. 1: Bank account number
-#: includes/Withdraw/functions.php:448
+#: includes/Withdraw/functions.php:423
 msgid "- %1$s - %2$s - ****%3$s"
 msgstr ""
 
-#: includes/Withdraw/Hooks.php:131
+#: includes/Withdraw/Hooks.php:153
 msgid "You already have a pending withdraw request."
 msgstr ""
 
-#: includes/Withdraw/Hooks.php:135
+#: includes/Withdraw/Hooks.php:157
 msgid "Withdraw method is required"
 msgstr ""
 
-#: includes/Withdraw/Hooks.php:139
+#: includes/Withdraw/Hooks.php:161
 msgid "Withdraw amount is required"
 msgstr ""
 
-#: includes/Withdraw/Hooks.php:146
+#: includes/Withdraw/Hooks.php:168
 msgid "Withdraw method is not activated."
 msgstr ""
 
-#: includes/Withdraw/Hooks.php:150
+#: includes/Withdraw/Hooks.php:172
 msgid "Negative withdraw amount is not permitted."
 msgstr ""
 
-#: includes/Withdraw/Hooks.php:182
+#: includes/Withdraw/Hooks.php:204
 msgid "Withdraw request successful."
 msgstr ""
 
-#: includes/Withdraw/Hooks.php:203
+#: includes/Withdraw/Hooks.php:225
 msgid "Please provide Withdrew method."
 msgstr ""
 
-#: includes/Withdraw/Hooks.php:207
+#: includes/Withdraw/Hooks.php:229
 msgid "Method not active."
 msgstr ""
 
-#: includes/Withdraw/Hooks.php:213
+#: includes/Withdraw/Hooks.php:235
 msgid "Default method update successful."
 msgstr ""
 
@@ -7462,13 +7579,13 @@ msgid "Update account to Vendor"
 msgstr ""
 
 #: templates/account/update-customer-to-vendor.php:33
-#: templates/account/vendor-registration.php:47
+#: templates/account/vendor-registration.php:52
 #: templates/global/seller-registration-form.php:24
 msgid "Shop Name"
 msgstr ""
 
 #: templates/account/update-customer-to-vendor.php:38
-#: templates/account/vendor-registration.php:52
+#: templates/account/vendor-registration.php:57
 #: templates/global/seller-registration-form.php:29
 msgid "Shop URL"
 msgstr ""
@@ -7489,24 +7606,28 @@ msgstr ""
 msgid "Username"
 msgstr ""
 
-#: templates/account/vendor-registration.php:39
+#: templates/account/vendor-registration.php:31
+msgid "A link to set a new password will be sent to your email address."
+msgstr ""
+
+#: templates/account/vendor-registration.php:43
 #: templates/login-form/login-form.php:9
 #: assets/js/vue-admin.js:2
 #: assets/js/vue-bootstrap.js:2
 msgid "Password"
 msgstr ""
 
-#: templates/account/vendor-registration.php:44
+#: templates/account/vendor-registration.php:49
 msgid "Anti-spam"
 msgstr ""
 
 #. translators: %1$s: opening anchor tag with link, %2$s: an ampersand %3$s: closing anchor tag
-#: templates/account/vendor-registration.php:87
+#: templates/account/vendor-registration.php:92
 #: templates/global/seller-registration-form.php:67
 msgid "I have read and agree to the %1$sTerms %2$s Conditions%3$s."
 msgstr ""
 
-#: templates/account/vendor-registration.php:102
+#: templates/account/vendor-registration.php:107
 msgid "Register"
 msgstr ""
 
@@ -7672,39 +7793,39 @@ msgstr ""
 msgid "Shipping fees will go to"
 msgstr ""
 
-#: templates/admin-setup-wizard/step-store.php:27
-msgid "Tax Fee Recipient"
-msgstr ""
-
 #: templates/admin-setup-wizard/step-store.php:36
-msgid "Tax fees will go to"
+msgid "Product Tax fees will go to"
 msgstr ""
 
-#: templates/admin-setup-wizard/step-store.php:49
+#: templates/admin-setup-wizard/step-store.php:51
+msgid "Shipping Tax fees will go to"
+msgstr ""
+
+#: templates/admin-setup-wizard/step-store.php:64
 msgid "Which Map API source you want to use in your site?"
 msgstr ""
 
 #. translators: %1$s: opening anchor tag, %2$s: closing anchor tag
-#: templates/admin-setup-wizard/step-store.php:60
+#: templates/admin-setup-wizard/step-store.php:75
 msgid "%1$sAPI Key%2$s is needed to display map on store page"
 msgstr ""
 
 #. translators: %1$s: opening anchor tag, %2$s: closing anchor tag
-#: templates/admin-setup-wizard/step-store.php:76
+#: templates/admin-setup-wizard/step-store.php:91
 msgid "%1$sAccess Token%2$s is needed to display map on store page"
 msgstr ""
 
-#: templates/admin-setup-wizard/step-store.php:85
+#: templates/admin-setup-wizard/step-store.php:100
 msgid "Share Essentials"
 msgstr ""
 
 #. translators: %1$s: opening anchor tag with link, %2$s: closing anchor tag
-#: templates/admin-setup-wizard/step-store.php:98
+#: templates/admin-setup-wizard/step-store.php:113
 msgid "Want to help make Dokan even more awesome? Allow Dokan Multivendor Marketplace to collect non-sensitive diagnostic data and usage information. %1$sWhat we collect%2$s"
 msgstr ""
 
 #. translators: %1$s: Appsero hypertext with link, %2$s: opening anchor tag with link, %3$s: closing anchor tag
-#: templates/admin-setup-wizard/step-store.php:117
+#: templates/admin-setup-wizard/step-store.php:132
 msgid "Server environment details (php, mysql, server, WordPress versions), Number of users in your site, Site language, Number of active and inactive plugins, Site name and url, Your name and email address. No sensitive data is tracked. We are using %1$s to collect your data. %2$sLearn more%3$s about how %1$s collects and handles your data."
 msgstr ""
 
@@ -8130,10 +8251,10 @@ msgstr ""
 
 #: templates/emails/vendor-completed-order.php:56
 #: templates/emails/vendor-new-order.php:55
-#: templates/products/edit-product-single.php:214
+#: templates/products/edit-product-single.php:242
 #: templates/products/new-product.php:221
 #: templates/products/products-listing-row.php:91
-#: templates/products/products-listing.php:120
+#: templates/products/products-listing.php:127
 #: templates/products/tmpl-add-product-popup.php:57
 msgid "Price"
 msgstr ""
@@ -8237,7 +8358,7 @@ msgid "I am a vendor"
 msgstr ""
 
 #: templates/global/seller-warning.php:11
-#: templates/products/edit-product-single.php:139
+#: templates/products/edit-product-single.php:167
 #: templates/products/new-product.php:119
 msgid "Error!"
 msgstr ""
@@ -8279,22 +8400,6 @@ msgstr ""
 
 #: templates/my-orders.php:20
 msgid "Recent Orders"
-msgstr ""
-
-#: templates/my-orders.php:26
-#: templates/orders/listing.php:35
-#: templates/orders/listing.php:93
-#: templates/products/products-listing-row.php:125
-#: templates/products/products-listing.php:123
-#: templates/reverse-withdrawal/transaction-listing.php:19
-#: templates/sub-orders.php:44
-#: templates/withdraw/approved-request-listing.php:16
-#: templates/withdraw/cancelled-request-listing.php:16
-#: templates/withdraw/pending-request-listing-dashboard.php:19
-#: templates/withdraw/pending-request-listing.php:16
-#: templates/withdraw/pending-request-listing.php:60
-#: assets/js/vue-admin.js:2
-msgid "Date"
 msgstr ""
 
 #. translators: 1) order total amount 2) item count
@@ -8340,13 +8445,14 @@ msgid "End Date"
 msgstr ""
 
 #: templates/orders/date-export.php:27
-#: templates/products/listing-filter.php:74
+#: templates/products/listing-filter.php:76
 #: templates/reverse-withdrawal/filters.php:15
 #: templates/store-lists-filter.php:43
 msgid "Filter"
 msgstr ""
 
 #: templates/orders/date-export.php:28
+#: templates/products/listing-filter.php:77
 msgid "Reset"
 msgstr ""
 
@@ -8487,7 +8593,7 @@ msgid "Grant Access"
 msgstr ""
 
 #: templates/orders/listing.php:9
-#: templates/products/products-listing.php:85
+#: templates/products/products-listing.php:92
 #: assets/js/vue-admin.js:2
 msgid "Select bulk action"
 msgstr ""
@@ -8604,6 +8710,7 @@ msgid "&larr; Orders"
 msgstr ""
 
 #: templates/products/add-new-product-modal.php:2
+#: templates/products/edit-product-single.php:140
 #: templates/products/new-product.php:107
 msgid "Add New Product"
 msgstr ""
@@ -8685,7 +8792,7 @@ msgstr ""
 
 #: templates/products/downloadable.php:38
 #: templates/products/products-listing-row.php:52
-#: templates/products/products-listing.php:113
+#: templates/products/products-listing.php:120
 msgid "Name"
 msgstr ""
 
@@ -8709,81 +8816,81 @@ msgstr ""
 msgid "Download Expiry"
 msgstr ""
 
-#: templates/products/edit-product-single.php:18
+#: templates/products/edit-product-single.php:19
 msgid "Access Denied, No product found"
 msgstr ""
 
-#: templates/products/edit-product-single.php:42
+#: templates/products/edit-product-single.php:60
 msgid "Access Denied"
 msgstr ""
 
-#: templates/products/edit-product-single.php:116
+#: templates/products/edit-product-single.php:142
 msgid "Edit Product"
 msgstr ""
 
-#: templates/products/edit-product-single.php:123
+#: templates/products/edit-product-single.php:151
 msgid "View Product"
 msgstr ""
 
-#: templates/products/edit-product-single.php:147
+#: templates/products/edit-product-single.php:175
 #: templates/products/new-product.php:127
 #: assets/js/vue-admin.js:2
 msgid "Success!"
 msgstr ""
 
-#: templates/products/edit-product-single.php:147
+#: templates/products/edit-product-single.php:175
 msgid "The product has been saved successfully."
 msgstr ""
 
-#: templates/products/edit-product-single.php:150
+#: templates/products/edit-product-single.php:178
 msgid "View Product &rarr;"
 msgstr ""
 
-#: templates/products/edit-product-single.php:169
+#: templates/products/edit-product-single.php:197
 msgid "Title"
 msgstr ""
 
-#: templates/products/edit-product-single.php:175
+#: templates/products/edit-product-single.php:203
 #: templates/products/new-product.php:215
 #: templates/products/tmpl-add-product-popup.php:51
 msgid "Product name.."
 msgstr ""
 
-#: templates/products/edit-product-single.php:181
+#: templates/products/edit-product-single.php:209
 msgid "Please enter product title!"
 msgstr ""
 
-#: templates/products/edit-product-single.php:197
+#: templates/products/edit-product-single.php:225
 msgid "Product Type"
 msgstr ""
 
-#: templates/products/edit-product-single.php:197
+#: templates/products/edit-product-single.php:225
 msgid "Choose Variable if your product has multiple attributes - like sizes, colors, quality etc"
 msgstr ""
 
-#: templates/products/edit-product-single.php:223
-#: templates/products/edit-product-single.php:246
+#: templates/products/edit-product-single.php:251
+#: templates/products/edit-product-single.php:274
 msgid "0.00"
 msgstr ""
 
-#: templates/products/edit-product-single.php:233
+#: templates/products/edit-product-single.php:261
 #: templates/products/new-product.php:230
 #: templates/products/tmpl-add-product-popup.php:66
 msgid "Discounted Price"
 msgstr ""
 
-#: templates/products/edit-product-single.php:234
+#: templates/products/edit-product-single.php:262
 #: templates/products/new-product.php:231
 #: templates/products/tmpl-add-product-popup.php:67
 msgid "Schedule"
 msgstr ""
 
-#: templates/products/edit-product-single.php:257
+#: templates/products/edit-product-single.php:285
 msgid "Product price can't be less than the vendor fee!"
 msgstr ""
 
-#: templates/products/edit-product-single.php:265
-#: templates/products/edit-product-single.php:272
+#: templates/products/edit-product-single.php:293
+#: templates/products/edit-product-single.php:300
 #: templates/products/new-product.php:246
 #: templates/products/new-product.php:253
 #: templates/products/tmpl-add-product-popup.php:82
@@ -8791,39 +8898,39 @@ msgstr ""
 msgid "YYYY-MM-DD"
 msgstr ""
 
-#: templates/products/edit-product-single.php:290
+#: templates/products/edit-product-single.php:318
 #: templates/products/new-product.php:270
 #: templates/products/tmpl-add-product-popup.php:105
 msgid "Tags"
 msgstr ""
 
-#: templates/products/edit-product-single.php:331
+#: templates/products/edit-product-single.php:359
 #: templates/products/tmpl-add-product-popup.php:25
 msgid "Upload a product cover image"
 msgstr ""
 
-#: templates/products/edit-product-single.php:371
+#: templates/products/edit-product-single.php:399
 #: templates/products/new-product.php:195
 msgid "Delete image"
 msgstr ""
 
-#: templates/products/edit-product-single.php:377
+#: templates/products/edit-product-single.php:405
 #: templates/products/new-product.php:202
 #: templates/products/tmpl-add-product-popup.php:39
 msgid "Add gallery image"
 msgstr ""
 
-#: templates/products/edit-product-single.php:393
+#: templates/products/edit-product-single.php:421
 msgid "Short Description"
 msgstr ""
 
-#: templates/products/edit-product-single.php:413
+#: templates/products/edit-product-single.php:441
 #: templates/products/new-product.php:286
 msgid "Description"
 msgstr ""
 
-#: templates/products/edit-product-single.php:444
-#: templates/products/edit-product-single.php:445
+#: templates/products/edit-product-single.php:473
+#: templates/products/edit-product-single.php:474
 msgid "Save Product"
 msgstr ""
 
@@ -8833,7 +8940,7 @@ msgstr ""
 
 #: templates/products/inventory.php:14
 #: templates/products/products-listing-row.php:73
-#: templates/products/products-listing.php:118
+#: templates/products/products-listing.php:125
 msgid "SKU"
 msgstr ""
 
@@ -8882,7 +8989,7 @@ msgstr ""
 msgid "Product type"
 msgstr ""
 
-#: templates/products/listing-filter.php:86
+#: templates/products/listing-filter.php:90
 msgid "Search Products"
 msgstr ""
 
@@ -8919,41 +9026,41 @@ msgstr ""
 msgid "Create Product"
 msgstr ""
 
-#: templates/products/others.php:3
+#: templates/products/others.php:7
 msgid "Other Options"
 msgstr ""
 
-#: templates/products/others.php:4
+#: templates/products/others.php:8
 msgid "Set your extra product options"
 msgstr ""
 
-#: templates/products/others.php:13
+#: templates/products/others.php:17
 msgid "Product Status"
 msgstr ""
 
-#: templates/products/others.php:41
+#: templates/products/others.php:28
 msgid "Visibility"
 msgstr ""
 
-#: templates/products/others.php:54
+#: templates/products/others.php:41
 msgid "Purchase Note"
 msgstr ""
 
-#: templates/products/others.php:55
+#: templates/products/others.php:42
 msgid "Customer will get this info in their order email"
 msgstr ""
 
-#: templates/products/others.php:65
+#: templates/products/others.php:52
 msgid "Enable product reviews"
 msgstr ""
 
 #: templates/products/products-listing-row.php:45
-#: templates/products/products-listing.php:112
+#: templates/products/products-listing.php:119
 msgid "Image"
 msgstr ""
 
 #: templates/products/products-listing-row.php:100
-#: templates/products/products-listing.php:121
+#: templates/products/products-listing.php:128
 msgid "Type"
 msgstr ""
 
@@ -8970,7 +9077,7 @@ msgid "Variable"
 msgstr ""
 
 #: templates/products/products-listing-row.php:122
-#: templates/products/products-listing.php:122
+#: templates/products/products-listing.php:129
 msgid "Views"
 msgstr ""
 
@@ -8986,28 +9093,28 @@ msgstr ""
 msgid "Last Modified"
 msgstr ""
 
-#: templates/products/products-listing.php:64
-#: templates/products/products-listing.php:276
+#: templates/products/products-listing.php:71
+#: templates/products/products-listing.php:283
 msgid "Add new product"
 msgstr ""
 
-#: templates/products/products-listing.php:221
+#: templates/products/products-listing.php:228
 msgid "No product found"
 msgstr ""
 
-#: templates/products/products-listing.php:247
+#: templates/products/products-listing.php:254
 msgid "&laquo; Previous"
 msgstr ""
 
-#: templates/products/products-listing.php:248
+#: templates/products/products-listing.php:255
 msgid "Next &raquo;"
 msgstr ""
 
-#: templates/products/products-listing.php:264
+#: templates/products/products-listing.php:271
 msgid "No Products Found!"
 msgstr ""
 
-#: templates/products/products-listing.php:269
+#: templates/products/products-listing.php:276
 msgid "Ready to start selling something awesome?"
 msgstr ""
 
@@ -9038,12 +9145,6 @@ msgstr ""
 #: templates/reverse-withdrawal/transaction-listing.php:20
 #: assets/js/vue-admin.js:2
 msgid "Transaction Type"
-msgstr ""
-
-#: templates/reverse-withdrawal/transaction-listing.php:21
-#: templates/withdraw/cancelled-request-listing.php:17
-#: assets/js/vue-admin.js:2
-msgid "Note"
 msgstr ""
 
 #: templates/reverse-withdrawal/transaction-listing.php:22
@@ -9332,15 +9433,6 @@ msgstr ""
 msgid "Amount"
 msgstr ""
 
-#: templates/withdraw/approved-request-listing.php:15
-#: templates/withdraw/cancelled-request-listing.php:15
-#: templates/withdraw/pending-request-listing-dashboard.php:18
-#: templates/withdraw/pending-request-listing.php:15
-#: templates/withdraw/pending-request-listing.php:59
-#: assets/js/vue-admin.js:2
-msgid "Method"
-msgstr ""
-
 #: templates/withdraw/header.php:13
 msgid "Send Withdraw Request"
 msgstr ""
@@ -9585,7 +9677,19 @@ msgid "Mark as Pending"
 msgstr ""
 
 #: assets/js/vue-admin.js:2
-msgid "Filter by vendor"
+msgid "Filter by Vendor"
+msgstr ""
+
+#: assets/js/vue-admin.js:2
+msgid "Filter by Payment Methods"
+msgstr ""
+
+#: assets/js/vue-admin.js:2
+msgid "Filter by Date"
+msgstr ""
+
+#: assets/js/vue-admin.js:2
+msgid "Export"
 msgstr ""
 
 #: assets/js/vue-admin.js:2
@@ -9952,7 +10056,7 @@ msgstr ""
 
 #: assets/js/vue-admin.js:2
 #: assets/js/vue-bootstrap.js:2
-msgid "123456789"
+msgid "+123456789"
 msgstr ""
 
 #: assets/js/vue-admin.js:2
@@ -10013,6 +10117,11 @@ msgstr ""
 #: assets/js/vue-admin.js:2
 #: assets/js/vue-bootstrap.js:2
 msgid "1233456789"
+msgstr ""
+
+#: assets/js/vue-admin.js:2
+#: assets/js/vue-bootstrap.js:2
+msgid "123456789"
 msgstr ""
 
 #: assets/js/vue-admin.js:2
