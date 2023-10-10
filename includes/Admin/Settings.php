@@ -446,10 +446,9 @@ class Settings {
                 'store_products_per_page'            => [
                     'name'    => 'store_products_per_page',
                     'label'   => __( 'Store Products Per Page', 'dokan-lite' ),
-                    'desc'    => __( 'Set how many products to display per page on the vendor store page. It will affect only if the vendor isn\'t set this value on their vendor setting page.', 'dokan-lite' ),
+                    'desc'    => __( 'Set how many products to display per page on the vendor store page.', 'dokan-lite' ),
                     'type'    => 'number',
                     'default' => '12',
-                    'tooltip' => __( 'It will affect the vendor only if they havent set a value on their settings page.', 'dokan-lite' ),
                 ],
                 'enabled_address_on_reg'             => [
                     'name'    => 'enabled_address_on_reg',
@@ -457,6 +456,25 @@ class Settings {
                     'desc'    => __( 'Add Address Fields on the Vendor Registration form', 'dokan-lite' ),
                     'type'    => 'switcher',
                     'default' => 'off',
+                ],
+            ]
+        );
+
+        $general_product_page_options = apply_filters(
+            'dokan_settings_general_product_page_options', [
+                'product_page_options'      => [
+                    'name'          => 'product_page_options',
+                    'type'          => 'sub_section',
+                    'label'         => __( 'Product Page Settings', 'dokan-lite' ),
+                    'description'   => __( 'Configure single product page for vendors.', 'dokan-lite' ),
+                    'content_class' => 'sub-section-styles',
+                ],
+                'enabled_more_products_tab' => [
+                    'name'    => 'enabled_more_products_tab',
+                    'label'   => __( 'Enable More Products Tab', 'dokan-lite' ),
+                    'desc'    => __( 'Enable "More Products" tab on the single product page.', 'dokan-lite' ),
+                    'type'    => 'switcher',
+                    'default' => 'on',
                 ],
             ]
         );
@@ -579,7 +597,8 @@ class Settings {
         $settings_fields = [
             'dokan_general'    => array_merge(
                 $general_site_options,
-                $general_vendor_store_options
+                $general_vendor_store_options,
+                $general_product_page_options
             ),
             'dokan_selling'    => apply_filters(
                 'dokan_settings_selling_options',

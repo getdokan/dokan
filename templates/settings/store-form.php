@@ -9,10 +9,8 @@
 $gravatar_id    = ! empty( $profile_info['gravatar'] ) ? $profile_info['gravatar'] : 0;
 $banner_id      = ! empty( $profile_info['banner'] ) ? $profile_info['banner'] : 0;
 $storename      = isset( $profile_info['store_name'] ) ? $profile_info['store_name'] : '';
-$store_ppp      = ! empty( $profile_info['store_ppp'] ) ? $profile_info['store_ppp'] : '';
 $phone          = isset( $profile_info['phone'] ) ? $profile_info['phone'] : '';
 $show_email     = isset( $profile_info['show_email'] ) ? $profile_info['show_email'] : 'no';
-$show_more_ptab = isset( $profile_info['show_more_ptab'] ) ? $profile_info['show_more_ptab'] : 'yes';
 
 $address         = isset( $profile_info['address'] ) ? $profile_info['address'] : '';
 $address_street1 = isset( $profile_info['address']['street_1'] ) ? $profile_info['address']['street_1'] : '';
@@ -123,17 +121,7 @@ $args     = apply_filters( 'dokan_store_time_arguments', $args, $all_times );
 
     <?php do_action( 'dokan_settings_after_store_name', $current_user, $profile_info ); ?>
 
-    <div class="dokan-form-group">
-        <label class="dokan-w3 dokan-control-label" for="dokan_store_ppp"><?php esc_html_e( 'Store Products Per Page', 'dokan-lite' ); ?></label>
-
-        <div class="dokan-w5 dokan-text-left">
-            <input id="dokan_store_ppp" value="<?php echo ! empty( $store_ppp ) ? absint( $store_ppp ) : ''; ?>" name="dokan_store_ppp"
-                    <?php // translators: 1) store page per product count ?>
-                    placeholder="<?php printf( esc_attr__( 'Products to display on store page, default value is %s', 'dokan-lite' ), dokan_get_option( 'store_products_per_page', 'dokan_general', 12 ) ); ?>" class="dokan-form-control" type="number">
-        </div>
-    </div>
     <!--address-->
-
     <?php
     if ( ! function_exists( 'dokan_pro' ) || ( function_exists( 'dokan_pro' ) && ! dokan_pro()->module->is_active( 'delivery_time' ) ) ) {
         $verified = false;
@@ -174,17 +162,7 @@ $args     = apply_filters( 'dokan_store_time_arguments', $args, $all_times );
         </div>
     <?php endif; ?>
 
-    <div class="dokan-form-group">
-        <label class="dokan-w3 dokan-control-label"><?php esc_html_e( 'More products', 'dokan-lite' ); ?></label>
-        <div class="dokan-w5 dokan-text-left">
-            <div class="checkbox">
-                <label>
-                    <input type="hidden" name="setting_show_more_ptab" value="no">
-                    <input type="checkbox" name="setting_show_more_ptab" value="yes"<?php checked( $show_more_ptab, 'yes' ); ?>> <?php esc_html_e( 'Enable tab on product single page view', 'dokan-lite' ); ?>
-                </label>
-            </div>
-        </div>
-    </div>
+    <?php do_action( 'dokan_settings_after_store_email', $current_user, $profile_info ); ?>
 
     <?php do_action( 'dokan_settings_after_store_more_products', $current_user, $profile_info ); ?>
 

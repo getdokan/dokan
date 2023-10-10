@@ -22,7 +22,7 @@ class Hooks {
     public function __construct() {
         add_action( 'template_redirect', [ $this, 'bulk_product_status_change' ] );
         add_action( 'dokan_bulk_product_status_change', [ $this, 'bulk_product_delete' ], 10, 2 );
-        add_action( 'dokan_store_profile_frame_after', [ $this, 'store_products_orderby' ], 10, 2 );
+        add_action( 'dokan_store_profile_frame_after', [ $this, 'store_products_orderby' ], 30, 2 );
         add_action( 'wp_ajax_dokan_store_product_search_action', [ $this, 'store_product_search_action' ], 10, 2 );
         add_action(
             'wp_ajax_nopriv_dokan_store_product_search_action', [
@@ -330,7 +330,7 @@ class Hooks {
      * @param int $product_id
      *
      * @return array
-     * @since DOKAN_SINCE
+     * @since 3.8.2
      */
     public function set_product_status( $all_statuses, int $product_id ) {
         if ( ! is_user_logged_in() ) {
@@ -371,7 +371,7 @@ class Hooks {
      * @param int|WC_Product $product_id
      *
      * @return void
-     * @since DOKAN_SINCE
+     * @since 3.8.2
      */
     public function set_new_product_email_status( $product_id ) {
         if ( is_a( $product_id, 'WC_Product' ) ) {
@@ -384,7 +384,7 @@ class Hooks {
     /**
      * Remove product type filter if dokan pro does not exist.
      *
-     * @since DOKAN_SINCE
+     * @since 3.8.2
      *
      * @param array $args
      *

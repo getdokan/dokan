@@ -115,7 +115,6 @@ class SetupWizard extends DokanSetupWizard {
      */
     public function frontend_enqueue_scripts() {
         wp_enqueue_style( 'jquery-ui' );
-
         wp_enqueue_script( 'jquery' );
         wp_enqueue_script( 'jquery-tiptip' );
         wp_enqueue_script( 'jquery-blockui' );
@@ -194,7 +193,6 @@ class SetupWizard extends DokanSetupWizard {
     public function dokan_setup_store() {
         $store_info = $this->store_info;
 
-        $store_ppp       = isset( $store_info['store_ppp'] ) ? absint( $store_info['store_ppp'] ) : (int) dokan_get_option( 'store_products_per_page', 'dokan_general', 12 );
         $show_email      = isset( $store_info['show_email'] ) ? esc_attr( $store_info['show_email'] ) : 'no';
         $address_street1 = isset( $store_info['address']['street_1'] ) ? $store_info['address']['street_1'] : '';
         $address_street2 = isset( $store_info['address']['street_2'] ) ? $store_info['address']['street_2'] : '';
@@ -236,6 +234,7 @@ class SetupWizard extends DokanSetupWizard {
                             <span class='required'>*</span></label></th>
                         </label>
                     </th>
+
                     <td>
                         <input type="text" id="address[street_1]" name="address[street_1]" value="<?php echo esc_attr( $address_street1 ); ?>"/>
                         <span class="error-container">
@@ -512,7 +511,6 @@ class SetupWizard extends DokanSetupWizard {
         $country_obj    = new WC_Countries();
         $states         = $country_obj->states;
 
-        $dokan_settings['store_ppp']    = isset( $_POST['store_ppp'] ) ? absint( $_POST['store_ppp'] ) : '';
         $dokan_settings['address']      = isset( $_POST['address'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['address'] ) ) : [];
         $dokan_settings['location']     = isset( $_POST['location'] ) ? sanitize_text_field( wp_unslash( $_POST['location'] ) ) : '';
         $dokan_settings['find_address'] = isset( $_POST['find_address'] ) ? sanitize_text_field( wp_unslash( $_POST['find_address'] ) ) : '';
