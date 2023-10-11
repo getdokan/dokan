@@ -28,7 +28,7 @@
                         </svg>
                     </div>
                 </div>
-                {{ ! item.edit_now || ! item.is_switched_on ?  item.menu_manager_title : '' }}
+                <span class="menu-name">{{ ! item.edit_now || ! item.is_switched_on ?  item.menu_manager_title : '' }}</span>
                 <input
                     v-if='item.edit_now && (item.is_switched_on || ! item.editable)'
                     v-model='item.menu_manager_title'

@@ -831,7 +831,7 @@
                                             margin: 0;
                                             padding: 0;
                                             position: relative;
-                                            top: 4px;
+                                            top: 10px;
                                             cursor: grab;
                                             left: -18px;
                                             &:active {
@@ -847,6 +847,9 @@
                                                 }
                                             }
                                         }
+                                        .menu-name {
+                                            padding-top: 8px;
+                                        }
                                     }
                                     .second-part {
                                         svg {
@@ -854,7 +857,7 @@
                                             height:24px;
                                             width: 24px;
                                             position: relative;
-                                            top: 8px;
+                                            top: 4px;
                                             border-radius: 3px;
                                             background-color: #fff;
                                             margin-right: 16px;
@@ -866,6 +869,9 @@
                                             min-width: 45px;
                                             min-height: 21px;
                                             display: inline-block;
+                                            .switch {
+                                                top: -6px;
+                                            }
                                         }
                                     }
                                 }
