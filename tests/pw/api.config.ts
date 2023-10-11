@@ -1,4 +1,5 @@
-import { defineConfig } from '@playwright/test';
+import { defineConfig, expect } from '@playwright/test';
+import { customExpect } from '@utils/pwMatchers';
 import 'dotenv/config';
 
 export default defineConfig({
@@ -21,6 +22,7 @@ export default defineConfig({
     reportSlowTests: { max: 3, threshold: 10 } /* Whether to report slow test files. Pass null to disable this feature. */,
     reporter: process.env.CI
         ? [
+              ['github'],
               ['html', { open: 'never', outputFolder: 'playwright-report/api/html/html-report-api' }],
               ['junit', { outputFile: 'playwright-report/api/junit-report/api-results.xml' }],
               ['list', { printSteps: true }],
@@ -31,7 +33,6 @@ export default defineConfig({
               ['junit', { outputFile: 'playwright-report/api/junit-report/api-results.xml' }],
               ['list', { printSteps: true }],
               ['./utils/summaryReporter.ts', { outputFile: 'playwright-report/api/summary-report/results.json' }],
-              //   ['allure-playwright', { detail: true, outputFolder: 'playwright-report/api/allure/allure-report', suiteTitle: false }],
           ],
 
     use: {
@@ -57,7 +58,9 @@ export default defineConfig({
         {
             name: 'api_tests',
             testMatch: /.*\.spec\.ts/,
-            // dependencies: process.env.SETUP ? [] : ['api_setup'] /* whether not to run setup tests before running actual tests */,
+            dependencies: process.env.SETUP ? [] : ['api_setup'] /* whether not to run setup tests before running actual tests */,
         },
     ],
 });
+
+expect.extend(customExpect);

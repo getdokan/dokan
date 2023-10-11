@@ -12,6 +12,7 @@
 import { test, expect } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
+import { schemas } from '@utils/schemas';
 
 test.describe('admin api test', () => {
     let apiUtils: ApiUtils;
@@ -30,6 +31,7 @@ test.describe('admin api test', () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAdminReportSummary);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.reportSummarySchema);
     });
 
     test('get admin dashboard feed @lite', async () => {

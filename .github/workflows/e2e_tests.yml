@@ -1,12 +1,17 @@
-name: End-to-End Tests Lite
+name: E2E_API Tests
 
 on:
     schedule:
+        # workflow will run daily at 8:00 AM
         - cron: '0 8 * * *'
+    # workflow will trigger on pull request
     pull_request:
+        branches: [develop]
+    # workflow will trigger on push to develop branch
     push:
-        branches:
-            - develop
+        branches: [develop]
+
+    # workflow can be manually triggered
     workflow_dispatch:
 
 # Cancels all previous workflow runs for pull requests that have not completed.
@@ -15,12 +20,14 @@ concurrency:
     group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}
     cancel-in-progress: true
 
+# workflow permissions
 permissions:
     checks: write
     contents: read
     issues: write
     pull-requests: write
 
+# workflow environment variables
 env:
     ADMIN: admin
     ADMIN_PASSWORD: password
@@ -45,10 +52,8 @@ env:
 
 jobs:
     tests:
-        name: e2e tests
+        name: e2e_api tests
         runs-on: ubuntu-latest
-        # strategy:
-        #   fail-fast: false
 
         steps:
             - name: Checkout testing repo
@@ -146,10 +151,17 @@ jobs:
                   cd tests/pw
                   npm run pw:browser-with-deps
 
+            # Install only the OS dependencies if cache hit  not needed
+            # - name: Install Playwright OS dependencies
+            #   if: steps.playwright-cache.outputs.cache-hit == 'true'
+            #   run: |
+            #     cd tests/pw
+            #     npm run pw:deps-only
+
             # Run e2e tests
             - name: 🧪 Running the e2e tests
               id: e2e-test
-              if: steps.pw-install.outcome == 'success'
+              if: success()
               timeout-minutes: 40
               run: |
                   cd tests/pw 

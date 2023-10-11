@@ -25,7 +25,9 @@
             "@helpers": ["utils/helpers"],
             "@interfaces": ["utils/interfaces"],
             "@payloads": ["utils/payloads"],
-            "@testData": ["utils/testData"]
+            "@schemas": ["utils/schemas"],
+            "@testData": ["utils/testData"],
+            "@pwMatchers": ["utils/pwMatchers"]
         },
         "esModuleInterop": true /* fixes some issues TS originally had with the ES6 spec where TypeScript treats CommonJS/AMD/UMD modules similar to ES6 module*/,
         "moduleResolution": "node" /* Pretty much always node for modern JS. Other option is "classic"*/,
