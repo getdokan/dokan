@@ -20,6 +20,7 @@
         "test:api:pro": "npx playwright test --project=api_tests --grep '@lite|@pro' --grep-invert @liteOnly --config=api.config.ts ",
         "test:e2e:pro": "npx playwright test --project=e2e_tests --grep '@lite|@pro' --grep-invert @liteOnly --config=e2e.config.ts ",
         "test:e2e:explo": "npx playwright test --project=e2e_tests --grep @explo --config=e2e.config.ts ",
+        "test:e2e:core": "npx playwright test --project=e2e_tests --grep @core --config=e2e.config.ts ",
         "test:grep": "npx playwright test --grep",
         "test:debug": "npx playwright test --debug",
         "test:codegen": "playwright codegen",

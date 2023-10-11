@@ -107,7 +107,7 @@ jobs:
               run: |
                   cd tests/pw
                   echo "The value of test DB_PORT is ${{ env.DB_PORT }}"
-                  echo "The value of test DB_PORT is ${{ env.GMAP }}"
+                  echo "The value of test GMAP is ${{ env.GMAP }}"
 
             # Set permalink structure
             - name: Set Permalink structure
@@ -170,7 +170,7 @@ jobs:
             # Run API tests
             - name: 🧪 Running the api tests
               id: api-test
-              if: always()
+              if: always() && steps.db-port.outcome == 'success'
               timeout-minutes: 5
               run: |
                   cd tests/pw 
