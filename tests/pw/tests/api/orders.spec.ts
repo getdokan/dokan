@@ -47,7 +47,7 @@ for (const version of versions) {
             expect(responseBody).toBeTruthy();
         });
 
-        test.only('get single order @lite', async () => {
+        test('get single order @lite', async () => {
             const [response, responseBody] = await apiUtils.get(endPoints.getSingleOrder(orderId).replace('v1', version));
             console.log(responseBody);
             expect(response.ok()).toBeTruthy();
