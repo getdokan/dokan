@@ -49,7 +49,16 @@ setup.describe('authenticate users & set permalink', () => {
         await loginPage.login(data.vendor, data.auth.vendorAuthFile);
     });
 
-    setup('dokan pro enabled or not @pro', async ({ request }) => {
+    setup('dokan pro enabled or not @lite', async ({ request }) => {
+        const apiUtils = new ApiUtils(request);
+        let res = await apiUtils.checkPluginsExistence(data.plugin.dokanPro, payloads.adminAuth);
+        if (res) {
+            res = await apiUtils.pluginsActiveOrNot(data.plugin.dokanPro, payloads.adminAuth);
+        }
+        process.env.DOKAN_PRO = String(res);
+    });
+
+    setup('dokan pro activation status @pro', async ({ request }) => {
         const apiUtils = new ApiUtils(request);
         const res = await apiUtils.pluginsActiveOrNot(data.plugin.dokanPro, payloads.adminAuth);
         process.env.DOKAN_PRO = String(res);

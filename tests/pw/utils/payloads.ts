@@ -639,7 +639,7 @@ export const payloads = {
         payment_method: 'bacs',
         payment_method_title: 'Direct Bank Transfer',
         set_paid: true,
-        customer_id: 0,
+        // customer_id: 0,
         billing: {
             first_name: 'customer1',
             last_name: 'c1',
