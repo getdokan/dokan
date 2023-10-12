@@ -14,6 +14,7 @@ import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
 
 let apiUtils: ApiUtils;
+let responseBody1;
 
 const versions = ['v1', 'v2'];
 for (const version of versions) {
@@ -22,7 +23,10 @@ for (const version of versions) {
 
         test.beforeAll(async ({ request }) => {
             apiUtils = new ApiUtils(request);
-            [, , orderId] = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder);
+            [, responseBody1, orderId,] = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder);
+            console.log(responseBody1);
+            console.log(orderId);
+            
         });
 
         test('get all orders @lite', async () => {
@@ -43,7 +47,7 @@ for (const version of versions) {
             expect(responseBody).toBeTruthy();
         });
 
-        test('get single order @lite', async () => {
+        test.only('get single order @lite', async () => {
             const [response, responseBody] = await apiUtils.get(endPoints.getSingleOrder(orderId).replace('v1', version));
             expect(response.ok()).toBeTruthy();
             expect(responseBody).toBeTruthy();
