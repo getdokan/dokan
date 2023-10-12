@@ -36,12 +36,14 @@
                 />
             </div>
             <div class='second-part'>
-                <svg
-                    v-if="(item.editable === true) && ! item.edit_now && ! item.temporary_disable_edit"
-                    v-on:click='item.edit_now = true'
-                    xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17" fill="none">
-                  <path fill-rule="evenodd" clip-rule="evenodd" d="M10.6168 4.33053C11.221 3.72576 12.2047 3.72576 12.8094 4.33053C13.1022 4.6232 13.2634 5.01275 13.2634 5.42705C13.2634 5.84136 13.1022 6.23091 12.8094 6.52301L11.951 7.3815L9.7584 5.1889L10.6168 4.33053ZM4.10762 10.9119C4.12 10.8524 4.14919 10.7972 4.19257 10.7538L9.10065 5.84639L11.2933 8.03887L6.38585 12.9463C6.34304 12.9898 6.28784 13.0188 6.22708 13.0313L4.03448 13.4698C4.01404 13.4742 3.99348 13.476 3.97372 13.476C3.8924 13.476 3.81302 13.4444 3.75407 13.3855C3.68093 13.3116 3.64868 13.2068 3.66912 13.1052L4.10762 10.9119Z" fill="#828282"/>
-                </svg>
+                <div class="edit-icon-wrapper">
+                    <svg
+                        v-if="(item.editable === true) && ! item.edit_now && ! item.temporary_disable_edit"
+                        v-on:click='item.edit_now = true'
+                        xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 17 17" fill="none">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M10.6168 4.33053C11.221 3.72576 12.2047 3.72576 12.8094 4.33053C13.1022 4.6232 13.2634 5.01275 13.2634 5.42705C13.2634 5.84136 13.1022 6.23091 12.8094 6.52301L11.951 7.3815L9.7584 5.1889L10.6168 4.33053ZM4.10762 10.9119C4.12 10.8524 4.14919 10.7972 4.19257 10.7538L9.10065 5.84639L11.2933 8.03887L6.38585 12.9463C6.34304 12.9898 6.28784 13.0188 6.22708 13.0313L4.03448 13.4698C4.01404 13.4742 3.99348 13.476 3.97372 13.476C3.8924 13.476 3.81302 13.4444 3.75407 13.3855C3.68093 13.3116 3.64868 13.2068 3.66912 13.1052L4.10762 10.9119Z" fill="#828282"/>
+                    </svg>
+                </div>
                 <div
                     class="switch-wrapper-placeholder"
                 >
@@ -199,7 +201,9 @@ export default {
             }
             this.menuList[value].is_switched_on = checked;
         },
-        checkMove: (e) => {
+        checkMove: ( e ) => {
+            console.log( "Checkmove Called" );
+            return true;
         }
     },
     computed: {
@@ -210,7 +214,7 @@ export default {
                 this.fieldValue.dashboard_menu_manager[this.setId] = this.menuList;
                 this.$props.fieldValue.dashboard_menu_manager[this.setId] = this.menuList;
                 this.$emit('input', this.fieldValue);
-                console.log(this.menuList);
+                // console.log(this.menuList);
                 // console.log(this.fieldValue);
             },
             deep : true

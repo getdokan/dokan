@@ -852,25 +852,26 @@
                                         }
                                     }
                                     .second-part {
-                                        svg {
-                                            border: 0.5px solid #f3f4f6;
-                                            height:24px;
-                                            width: 24px;
-                                            position: relative;
-                                            top: 4px;
-                                            border-radius: 3px;
-                                            background-color: #fff;
-                                            margin-right: 16px;
-                                            &:hover {
-                                                cursor: pointer;
+                                        display: flex;
+                                        .edit-icon-wrapper {
+                                            width: 26px;
+                                            height: 30px;
+                                            svg {
+                                                border: 0.5px solid #f3f4f6;
+                                                height:24px;
+                                                width: 24px;
+                                                border-radius: 3px;
+                                                background-color: #fff;
+                                                &:hover {
+                                                    cursor: pointer;
+                                                }
                                             }
                                         }
                                         .switch-wrapper-placeholder {
                                             min-width: 45px;
-                                            min-height: 21px;
-                                            display: inline-block;
                                             .switch {
-                                                top: -6px;
+                                                top: 3px;
+                                                left: 6px;
                                             }
                                         }
                                     }
