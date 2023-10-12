@@ -4,7 +4,7 @@
         tag="div"
         @start="dragging = true"
         @end="dragging = false"
-        :move="checkMove"
+        @move="checkMove"
     >
         <div
             v-for="item in menuList"
@@ -79,6 +79,9 @@ export default {
         return {
             menuList: Object.assign( {}, this.list ),
             dragging: false,
+            grabbedItemKey: '',
+            oldIndex: '',
+            newIndex: '',
         }
     },
     created() {
@@ -109,7 +112,6 @@ export default {
             Object.entries(this.menuList).sort(([, a], [, b]) => {
                 let position_a = a.menu_manager_position || a.static_pos;
                 let position_b = b.menu_manager_position || b.static_pos;
-                // console.log(`${position_a} : ${position_b}`);
                 return position_a - position_b;
             })
         );
@@ -122,10 +124,7 @@ export default {
                     ? this.menuList[value].title
                     : this.menuList[value].menu_manager_title
             );
-            // console.log( this.menuList[value].menu_manager_title );
-            // console.log(this.menuList[value].menu_key + ": " + this.menuList[value].pos + "[" + this.menuList[value].menu_manager_position + "]" );
         } );
-        // console.log(this.setId);
         this.fieldValue.dashboard_menu_manager[this.setId] = this.menuList;
 
     },
@@ -138,7 +137,6 @@ export default {
                 Object.entries(this.menuList).sort(([, a], [, b]) => {
                     let position_a = a.static_pos;
                     let position_b = b.static_pos;
-                    // console.log(`${position_a} : ${position_b}`);
                     return position_a - position_b;
                 })
             );
@@ -149,8 +147,6 @@ export default {
                 this.menuList[value].is_switched_on = true; // this.menuList[value].switchable;
                 this.menuList[value].temporary_disable_edit = ! this.menuList[value].editable;
                 this.menuList[value].menu_manager_title = this.menuList[value].title;
-                // console.log( this.menuList[value].menu_manager_title );
-                // console.log(this.menuList[value].menu_key + ": " + this.menuList[value].pos + "[" + this.menuList[value].menu_manager_position + "]" );
             } )
         });
 
@@ -160,36 +156,35 @@ export default {
             return {
                 on: {
                     change: ( e ) => {
-                        let new_drag_index = e.newDraggableIndex;
-                        let new_index = e.newIndex;
-                        let old_drag_index = e.oldDraggableIndex;
-                        let old_index = e.oldIndex;
-                        let key_one = '';
-                        let key_two = '';
-
-                        // find Index
-                        Object.keys( this.menuList ).map( (value, index ) => {
-                            if( this.menuList[value].menu_manager_position == new_index ) {
-
-                                key_one = value;
-                            }
-                            if( this.menuList[value].menu_manager_position == old_index ) {
-
-                                key_two = value;
-                            }
-                        });
-
-                        if( key_one && key_two ) {
-                            // Swap index
-                            this.menuList[key_one].menu_manager_position = old_index;
-                            this.menuList[key_two].menu_manager_position = new_index;
-                        }
+                        this.oldIndex = e.oldIndex;
+                        this.newIndex = e.newIndex;
                     },
-                    move: ( e ) => {
-                    }
+                    end: ( e ) => {
+                        Object.keys( this.menuList ).map( ( value, index ) => {
+                            if ( index === this.oldIndex ) {
+                                this.grabbedItemKey = value
+                            }
+                        } );
+
+                        if ( this.oldIndex > this.newIndex ) { // Pulled up
+                            Object.keys( this.menuList ).map( ( value, index ) => {
+                                if ( index < this.oldIndex && index >= this.newIndex ) {
+                                    this.menuList[ value ].menu_manager_position++;
+                                }
+                            } );
+                        } else { // Pulled down
+                            Object.keys( this.menuList ).map( ( value, index ) => {
+                                if ( index > this.oldIndex && index <= this.newIndex ) {
+                                    this.menuList[ value ].menu_manager_position--;
+                                }
+                            } );
+                        }
+                        this.menuList[ this.grabbedItemKey ].menu_manager_position = this.newIndex;
+                    },
                 },
             }
         },
+
         switchToggle(checked, value) {
 
             this.menuList[value].temporary_disable_edit = !checked;
@@ -202,8 +197,6 @@ export default {
             this.menuList[value].is_switched_on = checked;
         },
         checkMove: ( e ) => {
-            console.log( "Checkmove Called" );
-            return true;
         }
     },
     computed: {
@@ -214,8 +207,6 @@ export default {
                 this.fieldValue.dashboard_menu_manager[this.setId] = this.menuList;
                 this.$props.fieldValue.dashboard_menu_manager[this.setId] = this.menuList;
                 this.$emit('input', this.fieldValue);
-                // console.log(this.menuList);
-                // console.log(this.fieldValue);
             },
             deep : true
         }
