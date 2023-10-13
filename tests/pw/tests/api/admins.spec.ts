@@ -31,7 +31,7 @@ test.describe('admin api test', () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAdminReportSummary);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
-        console.log(responseBody);x
+        console.log(responseBody);
         expect(responseBody).toMatchSchema(schemas.reportSummarySchema);
     });
 
