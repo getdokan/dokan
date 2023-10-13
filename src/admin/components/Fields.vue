@@ -2,6 +2,15 @@
     <div :class="[id, `dokan-settings-field-type-${fieldData.type}`]" v-if="shouldShow">
         <template v-if="'sub_section' === fieldData.type">
             <div class="dokan-settings-sub-section" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
+                <h3 class="sub-section-title">{{ fieldData.label }}</h3>
+                <p class="sub-section-description">
+                    {{ fieldData.description }}
+                </p>
+            </div>
+        </template>
+
+        <template v-if="'form_manager_block' === fieldData.type">
+            <div class="dokan-settings-sub-section" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <div class='sub-section-text'>
                     <h3 class="sub-section-title">{{ fieldData.label }}</h3>
                     <p class="sub-section-description">
@@ -9,7 +18,7 @@
                     </p>
                 </div>
 
-                <div class='sub-section-input' v-if="'on' === fieldData.toggle">
+                <div class='sub-section-input'>
                     <fieldset>
                         <div class="field">
                             <label :for="sectionId + '[' + fieldData.name + ']'">
@@ -26,23 +35,6 @@
                         {{ getValidationErrorMessage( fieldData.name ) }}
                     </p>
                 </div>
-            </div>
-        </template>
-
-        <template v-if="'extra_sub_section' === fieldData.type">
-            <div class="dokan-settings-sub-section" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
-                <div class='sub-section-column-heading'>
-                    <h4 class="sub-section-column-title">{{ fieldData.label_1 }}</h4>
-                    <h4 class="sub-section-column-title">{{ fieldData.label_2 }}</h4>
-                    <h4 class="sub-section-column-title">{{ fieldData.label_3 }}</h4>
-                </div>
-
-                <p v-if="hasError( fieldData.name )" class="dokan-error">
-                    {{ getError( fieldData.label ) }}
-                </p>
-                <p v-if="hasValidationError( fieldData.name )" class="dokan-error">
-                    {{ getValidationErrorMessage( fieldData.name ) }}
-                </p>
             </div>
         </template>
 

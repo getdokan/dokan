@@ -539,7 +539,7 @@
             },
 
             handleAction( sectionId ) {
-                if ( "dokan_product_custom_validation" === sectionId ) {
+                if ( "dokan_product_form_manager" === sectionId ) {
                     this.resetAllFields( sectionId );
                 }
             },
