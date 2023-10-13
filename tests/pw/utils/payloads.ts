@@ -614,7 +614,7 @@ export const payloads = {
             },
             {
                 key: 'coupon_commissions_type',
-                value: 'default',
+                value: 'default',  // 'default', 'from_vendor', 'from_admin', 'shared_coupon'
             },
             {
                 key: 'admin_coupons_show_on_stores',
@@ -678,6 +678,8 @@ export const payloads = {
                 total: '10.00',
             },
         ],
+
+        coupon_lines: [],
     },
 
     createOrderCod: {

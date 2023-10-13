@@ -422,7 +422,7 @@ export class ApiUtils {
     }
 
     // create marketplace coupon
-    async createMarketPlaceCoupon(coupon: marketPlaceCoupon, auth?: auth): Promise<[responseBody, string, string]> {
+    async createMarketPlaceCoupon(coupon: marketPlaceCoupon, auth?: auth): Promise<[responseBody, string, string, string]> {
         const [response, responseBody] = await this.post(endPoints.wc.createCoupon, { data: coupon, headers: auth }, false);
         let couponId: string;
         let couponCode: string;
@@ -439,7 +439,7 @@ export class ApiUtils {
             couponId = String(responseBody?.id);
             couponCode = String(responseBody?.code);
         }
-        return [responseBody, couponId, couponCode];
+        return [responseBody, couponId, couponCode, coupon.amount];
     }
 
     // update marketplace coupon
