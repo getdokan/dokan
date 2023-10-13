@@ -2,8 +2,8 @@ name: E2E_API Tests
 
 on:
     schedule:
-        # workflow will run daily at 8:00 AM
-        - cron: '0 8 * * *'
+        # workflow will run daily at 8:00 AM BDT (2:00 AM UTC)
+        - cron: '0 2 * * *'
     # workflow will trigger on pull request
     pull_request:
         branches: [develop]

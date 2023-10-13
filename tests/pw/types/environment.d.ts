@@ -25,6 +25,7 @@ declare global {
             DEVTOOLS: string;
             RETRY_TIMES: string;
             TIME_OUT: string;
+            NO_SETUP: string;
             SERVER_URL: string;
             ADMIN_AUTH: string;
             VENDOR_AUTH: string;
