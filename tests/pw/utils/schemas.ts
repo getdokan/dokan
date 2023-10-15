@@ -288,9 +288,13 @@ export const schemas = {
         }),
     },
     customersSchema: {}, //TODO:
+
     dokanEndpointsSchema: {}, //TODO:
+
     dummyDataSchema: {}, //TODO:
+
     followStoresSchema: {}, //TODO:
+
     modulesSchema: {
         //todo: this schema might be sufficient for all
         modulesSchema: z.object({
@@ -310,31 +314,83 @@ export const schemas = {
         }),
     },
     orderDownloadsSchema: {}, //TODO:
+
     orderNotesSchema: {}, //TODO:
+
     ordersSchema: {}, //TODO:
+
     productAdvertisementsSchema: {}, //TODO:
+
     productBlocksSchema: {}, //TODO:
+
     productDuplicateSchema: {}, //TODO:
+
     productFilterSchema: {}, //TODO:
+
     productReviewsSchema: {}, //TODO:
+
     productsSchema: {}, //TODO:
+
     productVariationsSchema: {}, //TODO:
+
     quoteRequestsSchema: {}, //TODO:
+
     quoteRulesSchema: {}, //TODO:
+
     rankMathSchema: {}, //TODO:
+
     refundsSchema: {}, //TODO:
+
     reportsSchema: {}, //TODO:
+
     reverseWithdrawalSchema: {}, //TODO:
+
     rolesSchema: {}, //TODO:
+
     sellerBadgeSchema: {}, //TODO:
+
     settingsSchema: {}, //TODO:
+
     settingsGroupSchema: {}, //TODO:
-    spmvSchema: {}, //TODO:
+
+    spmvSchema: {
+        spmvSettingsSchema: z.object({
+            success: z.boolean(),
+        }),
+
+        spmvProductsSchema: z.array(
+            z.object({
+                average_rating: z.string(),
+                title: z.string(),
+                image: z.string(),
+                permalink: z.string(),
+                review_count: z.number(),
+                type: z.string(),
+                id: z.number(),
+                price: z.string(),
+                price_html: z.string(),
+                category_list: z.string(),
+                vendor_name: z.string(),
+                action: z.string(),
+            }),
+        ),
+
+        addToStoreSchema: z.object({
+            status: z.boolean(),
+            success_message: z.string(),
+        }),
+    },
+
     storeCategoriesSchema: {}, //TODO:
+
     storeReviewsSchema: {}, //TODO:
+
     storesSchema: {}, //TODO:
+
     supportTicketsSchema: {}, //TODO:
+
     vendorDashboardSchema: {}, //TODO:
+
     vendorStaffSchema: {
         staff: z.object({
             ID: z.string(),
@@ -582,7 +638,240 @@ export const schemas = {
         }),
     },
 
-    wholesaleCustomersSchema: {}, //TODO:
-    withdrawsSchema: {}, //TODO:
-    withSettingsSchema: {}, //TODO:
+    wholesaleCustomersSchema: {
+        wholesaleCustomersSchema: z.object({
+            id: z.number(),
+            first_name: z.string(),
+            last_name: z.string(),
+            username: z.string(),
+            name: z.string(),
+            email: z.string(),
+            avatar: z.string(),
+            url: z.string(),
+            role: z.string(),
+            registered_date: z.string(),
+            wholesale_status: z.string(),
+            _links: z.object({
+                self: z.array(
+                    z.object({
+                        href: z.string(),
+                    }),
+                ),
+                collection: z.array(
+                    z.object({
+                        href: z.string(),
+                    }),
+                ),
+            }),
+        }),
+    }, //TODO:
+
+    withdrawsSchema: {
+        // getBalanceDetailsSchema
+        getBalanceDetailsSchema: z.object({
+            current_balance: z.number(),
+            withdraw_limit: z.string(),
+            withdraw_threshold: z.number(),
+            withdraw_methods: z.enum(['paypal', 'bank']), //TODO: add more
+            last_withdraw: z
+                .array(
+                    z.object({
+                        id: z.string(),
+                        user_id: z.string(),
+                        amount: z.string(),
+                        date: z.string(),
+                        status: z.string(),
+                        method: z.string(),
+                        note: z.string(),
+                        details: z.string(),
+                        ip: z.string(),
+                    }),
+                )
+                .optional(),
+        }),
+
+        allWithdrawsSchema: z.object({
+            id: z.string(),
+            user: z.object({
+                id: z.string(),
+                store_name: z.string(),
+                first_name: z.string(),
+                last_name: z.string(),
+                email: z.string(),
+                social: z.record(z.string()), // assuming social is a record of strings
+                phone: z.string(),
+                show_email: z.boolean(),
+                address: z.object({
+                    street_1: z.string(),
+                    street_2: z.string(),
+                    city: z.string(),
+                    zip: z.string(),
+                    country: z.string(),
+                    state: z.string(),
+                }),
+                location: z.string(),
+                banner: z.string(),
+                banner_id: z.string(),
+                gravatar: z.string(),
+                gravatar_id: z.string(),
+                shop_url: z.string(),
+                toc_enabled: z.boolean(),
+                store_toc: z.string(),
+                featured: z.boolean(),
+                rating: z.object({
+                    rating: z.string(),
+                    count: z.number(),
+                }),
+                enabled: z.boolean(),
+                registered: z.string(),
+                payment: z.object({
+                    bank: z
+                        .object({
+                            ac_name: z.string(),
+                            ac_type: z.string(),
+                            ac_number: z.string(),
+                            bank_name: z.string(),
+                            bank_addr: z.string(),
+                            routing_number: z.string(),
+                            iban: z.string(),
+                            swift: z.string(),
+                            declaration: z.string(),
+                        })
+                        .nullable(), // Assuming bank is optional
+                    paypal: z
+                        .object({
+                            email: z.string(),
+                        })
+                        .nullable(), // Assuming paypal is optional
+                    stripe_express: z.boolean(),
+                }),
+                trusted: z.boolean(),
+                store_open_close: z.object({
+                    enabled: z.boolean(),
+                    time: z.record(
+                        z.object({
+                            status: z.string(),
+                            opening_time: z.array(z.string()),
+                            closing_time: z.array(z.string()),
+                        }),
+                    ),
+                    open_notice: z.string(),
+                    close_notice: z.string(),
+                }),
+                sale_only_here: z.boolean(),
+                company_name: z.string(),
+                vat_number: z.string(),
+                company_id_number: z.string(),
+                bank_name: z.string(),
+                bank_iban: z.string(),
+                categories: z.array(
+                    z.object({
+                        term_id: z.number(),
+                        name: z.string(),
+                        slug: z.string(),
+                        term_group: z.number(),
+                        term_taxonomy_id: z.number(),
+                        taxonomy: z.string(),
+                        description: z.string(),
+                        parent: z.number(),
+                        count: z.number(),
+                        filter: z.string(),
+                    }),
+                ),
+            }),
+            amount: z.number(),
+            created: z.string(),
+            status: z.string(),
+            method: z.string(),
+            method_title: z.string(),
+            note: z.string(),
+            details: z.union([
+                z.object({
+                    paypal: z.object({
+                        email: z.string(),
+                    }),
+                }),
+                z.object({
+                    bank: z.object({
+                        ac_name: z.string(),
+                        ac_type: z.string(),
+                        ac_number: z.string(),
+                        bank_name: z.string(),
+                        bank_addr: z.string(),
+                        routing_number: z.string(),
+                        iban: z.string(),
+                        swift: z.string(),
+                    }),
+                }),
+                z.object({
+                    skrill: z.object({
+                        email: z.string(),
+                    }),
+                }),
+            ]),
+            ip: z.string(),
+            _links: z.object({
+                self: z.array(z.object({ href: z.string().url() })),
+                collection: z.array(z.object({ href: z.string().url() })),
+            }),
+
+            WithdrawPaymentMethods: z.array(
+                z.object({
+                    id: z.string(),
+                    title: z.string(),
+                }),
+            ),
+
+            batchUpdateWithdraw: z.object({
+                success: z.array(z.unknown()),
+                failed: z.object({
+                    approved: z.array(z.number()),
+                }),
+            }),
+        }),
+    }, //TODO:
+
+    withdrawSettingsSchema: {
+        withdrawSettingsSchema: z.object({
+            withdraw_method: z.enum(['paypal', 'bank', 'skrill', 'dokan_custom']),
+            payment_methods: z.array(
+                z.object({
+                    label: z.string(),
+                    value: z.string(),
+                }),
+            ),
+        }),
+
+        withdrawSummarySchema: z.object({
+            total: z.number(),
+            pending: z.number(),
+            approved: z.number(),
+            cancelled: z.number(),
+        }),
+
+        withdrawDisbursementSettingsSchema: z.object({
+            enabled: z.boolean(),
+            selected_schedule: z.enum(['quarterly', 'monthly', 'biweekly', 'weekly']),
+            minimum_amount_list: z.array(z.number()),
+            minimum_amount_selected: z.number(),
+            reserve_balance_list: z.array(z.number()),
+            reserve_balance_selected: z.number(),
+            default_method: z.enum(['paypal', 'bank', 'skrill', 'dokan_custom']),
+            schedules: z.record(
+                z.object({
+                    next: z.string(),
+                    title: z.string(),
+                    description: z.string(),
+                }),
+            ),
+            active_methods: z.array(z.enum(['PayPal', 'Bank Transfer', 'Skrill', 'bkash'])),
+            method_additional_info: z.array(z.enum(['paypal', 'bank', 'skrill', 'dokan_custom'])),
+            minimum_amount_needed: z.number(),
+            is_schedule_selected: z.boolean(),
+        }),
+
+        updateWithdrawDisbursementSettingsSchema: z.object({
+            success: z.boolean(),
+        }),
+    }, //TODO:
 };
