@@ -1191,6 +1191,19 @@ function dokan_get_store_url( $user_id ) {
 }
 
 /**
+ * Get current page URL.
+ *
+ * @since DOKAN_SINCE
+ *
+ * @return string
+ */
+function dokan_get_current_page_url() {
+    global $wp;
+
+    return add_query_arg( $_SERVER['QUERY_STRING'], '', home_url( $wp->request ) );
+}
+
+/**
  * Check if current page is store review page
  *
  * @since 2.2

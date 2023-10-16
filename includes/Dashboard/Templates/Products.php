@@ -32,6 +32,7 @@ class Products {
         add_action( 'template_redirect', [ $this, 'handle_delete_product' ] );
         add_action( 'dokan_render_new_product_template', [ $this, 'render_new_product_template' ], 10 );
         add_action( 'dokan_render_product_edit_template', [ $this, 'load_product_edit_template' ], 11 );
+        add_action( 'template_redirect', [ $this, 'render_product_edit_page_for_email' ], 1 );
         add_action( 'dokan_after_listing_product', [ $this, 'load_add_new_product_popup' ], 10 );
         add_action( 'dokan_after_listing_product', [ $this, 'load_add_new_product_modal' ], 10 );
         add_action( 'dokan_product_edit_after_title', [ __CLASS__, 'load_download_virtual_template' ], 10, 2 );
@@ -213,6 +214,28 @@ class Products {
                 ]
             );
         }
+    }
+
+    /**
+     * Render Product Edit Page for Email.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public function render_product_edit_page_for_email() {
+        if (
+            ! isset( $_GET['action'], $_GET['_view_mode'] ) ||
+            'edit' !== sanitize_text_field( wp_unslash( $_GET['action'] ) ) ||
+            'product_email' !== sanitize_text_field( wp_unslash( $_GET['_view_mode'] ) ) ) {
+            return;
+        }
+
+        $product_edit_url = remove_query_arg( '_view_mode', dokan_get_current_page_url() );
+        $product_edit_url = add_query_arg( '_dokan_edit_product_nonce', wp_create_nonce( 'dokan_edit_product_nonce' ), $product_edit_url );
+
+        wp_safe_redirect( $product_edit_url );
+        exit();
     }
 
     /**
