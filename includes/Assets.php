@@ -94,7 +94,6 @@ class Assets {
                 wp_enqueue_style( 'dokan-wp-version-before-5-3' );
             }
 
-            // load fontawesome styles
             wp_enqueue_style( 'dokan-fontawesome' );
 
             // load wooCommerce select2 styles
@@ -567,7 +566,9 @@ class Assets {
         if ( DOKAN_LOAD_STYLE ) {
             wp_enqueue_style( 'dokan-style' );
             wp_enqueue_style( 'dokan-modal' );
-            wp_enqueue_style( 'dokan-fontawesome' );
+            if ( 'off' === dokan_get_option( 'disable_dokan_fontawesome', 'dokan_appearance', 'off' ) ) {
+                wp_enqueue_style( 'dokan-fontawesome' );
+            }
 
             if ( is_rtl() ) {
                 wp_enqueue_style( 'dokan-rtl-style' );
