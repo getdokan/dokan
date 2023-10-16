@@ -9,33 +9,6 @@
             </div>
         </template>
 
-        <template v-if="'form_manager_block' === fieldData.type">
-            <div class="dokan-settings-sub-section" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
-                <h3 class="sub-section-title">{{ fieldData.label }}</h3>
-                <p class="sub-section-description">
-                    {{ fieldData.description }}
-                </p>
-
-                <div class='sub-section-input'>
-                    <fieldset>
-                        <div class="field">
-                            <label :for="sectionId + '[' + fieldData.name + ']'">
-                                <switches
-                                    @input="onToggleSwitch"
-                                    :enabled="'on' === checked ? true : false"
-                                    value="isChecked"
-                                ></switches>
-                                <span class="toggle-status">{{ 'on' === checked ? __( 'Enabled', 'dokan' ) : __( 'Disabled', 'dokan' ) }}</span>
-                            </label>
-                        </div>
-                    </fieldset>
-                    <p v-if="hasValidationError( fieldData.name )" class="dokan-error">
-                        {{ getValidationErrorMessage( fieldData.name ) }}
-                    </p>
-                </div>
-            </div>
-        </template>
-
         <template v-if="containCommonFields( fieldData.type )">
             <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
@@ -880,64 +853,30 @@
         border: 1px solid #f3f4f6;
         border-bottom: 0;
         background: #f9fafb;
-        display: flex;
-        justify-content: space-between;
 
-        .sub-section-column-heading {
-            display: flex;
-            flex-direction: row;
-            flex-wrap: nowrap;
-            justify-content: space-between;
-            width: 100%;
-
-            .sub-section-column-title {
-                font-weight: 500;
-
-                &:first-child {
-                    flex: 0 0 13%;
-                }
-            }
+        .sub-section-title {
+            margin: 0;
+            font-size: 14px;
+            font-family: Roboto, sans-serif;
+            font-weight: 600;
+            line-height: 1.2;
+            margin-bottom: 8px;
         }
 
-        .sub-section-text {
-            display: flex;
-            flex-direction: column;
+        .sub-section-description {
+            margin: 0;
+            font-size: 13px;
+            font-weight: 300;
+            line-height: 21px;
+            font-family: Roboto, sans-serif;
+            color: #6B7280;
 
-            .sub-section-title {
-                margin: 0;
-                font-size: 14px;
-                font-family: Roboto, sans-serif;
-                font-weight: 600;
-                line-height: 1.2;
-                margin-bottom: 8px;
-            }
-
-            .sub-section-description {
-                margin: 0;
-                font-size: 13px;
-                font-weight: 300;
-                line-height: 21px;
-                font-family: Roboto, sans-serif;
-                color: #6B7280;
-
-                .learn-more-btn {
-                    cursor: pointer;
-                    text-decoration: none;
-                }
-            }
-        }
-
-        .sub-section-input {
-            align-self: center;
-
-            span.toggle-status {
-                display: inline-block;
-                min-width: 60px;
-                text-align: right;
+            .learn-more-btn {
+                cursor: pointer;
+                text-decoration: none;
             }
         }
     }
-
     .field_contents.data_clear {
         background-color: #FFFBF3;
 
