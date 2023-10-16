@@ -315,17 +315,13 @@ class Assets {
                 'deps'    => [ 'dokan-vue-vendor' ],
                 'version' => filemtime( DOKAN_DIR . '/assets/css/vue-bootstrap.css' ),
             ],
-            'dokan-flaticon'                => [
-                'src'     => DOKAN_PLUGIN_ASSEST . '/font/flaticon/flaticon.css',
-                'version' => filemtime( DOKAN_DIR . '/assets/font/flaticon/flaticon.css' ),
-            ],
             'dokan-sf-pro-text'              => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/font/sf-pro-text/sf-pro-text.css',
                 'version' => filemtime( DOKAN_DIR . '/assets/font/sf-pro-text/sf-pro-text.css' ),
             ],
             'dokan-vue-admin'               => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/vue-admin.css',
-                'deps'    => [ 'dokan-vue-vendor', 'dokan-vue-bootstrap', 'dokan-flaticon' ],
+                'deps'    => [ 'dokan-vue-vendor', 'dokan-vue-bootstrap' ],
                 'version' => filemtime( DOKAN_DIR . '/assets/css/vue-admin.css' ),
             ],
             'dokan-vue-frontend'            => [
