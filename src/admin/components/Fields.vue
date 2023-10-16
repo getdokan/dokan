@@ -11,12 +11,10 @@
 
         <template v-if="'form_manager_block' === fieldData.type">
             <div class="dokan-settings-sub-section" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
-                <div class='sub-section-text'>
-                    <h3 class="sub-section-title">{{ fieldData.label }}</h3>
-                    <p class="sub-section-description">
-                        {{ fieldData.description }}
-                    </p>
-                </div>
+                <h3 class="sub-section-title">{{ fieldData.label }}</h3>
+                <p class="sub-section-description">
+                    {{ fieldData.description }}
+                </p>
 
                 <div class='sub-section-input'>
                     <fieldset>
@@ -940,16 +938,6 @@
         }
     }
 
-    .extra-sub-section-styles {
-        background-color: #FFFBF3;
-
-        .sub-section-column-heading {
-
-            .sub-section-column-title {
-                margin: 0;
-            }
-        }
-    }
     .field_contents.data_clear {
         background-color: #FFFBF3;
 
