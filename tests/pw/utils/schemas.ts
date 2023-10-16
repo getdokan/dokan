@@ -9,9 +9,32 @@ export const schemas = {
             }),
         ),
 
-        // allAbuseReportsSchema:
-        // deleteAbuseReportSchema:
-        // deleteBatchAbuseReportSchema:
+        abuseReportSchema: z.array(
+            z.object({
+                id: z.number(),
+                reason: z.string(),
+                product: z.object({
+                    id: z.number(),
+                    title: z.string(),
+                    admin_url: z.string().url(),
+                }),
+                vendor: z.object({
+                    id: z.number(),
+                    name: z.string(),
+                    admin_url: z.string().url(),
+                }),
+                reported_by: z.object({
+                    id: z.number(),
+                    name: z.string(),
+                    email: z.string().email(),
+                    admin_url: z.string().url(),
+                }),
+                description: z.string(),
+                reported_at: z.string(), //todo add date format
+            }),
+        ),
+
+        // abuseReportsSchema: z.array(schemas.abuseReportsSchema.abuseReportsSchema),
     },
 
     admin: {
