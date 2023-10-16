@@ -98,8 +98,12 @@ class DummyDataController extends DokanRESTController {
         $vendor_index    = $request->get_param( 'vendor_index' ) ? absint( $request->get_param( 'vendor_index' ) ) : 0;
         $total_vendors   = $request->get_param( 'total_vendors' ) ? absint( $request->get_param( 'total_vendors' ) ) : 0;
 
-        $created_vendor          = dokan()->dummy_data_importer->create_dummy_vendor( $vendor_data );
-        $created_products_result = dokan()->dummy_data_importer->create_dummy_products_for_vendor( $created_vendor->id, $vendor_products );
+        try {
+            $created_vendor          = dokan()->dummy_data_importer->create_dummy_vendor( $vendor_data );
+            $created_products_result = dokan()->dummy_data_importer->create_dummy_products_for_vendor( $created_vendor->id, $vendor_products );
+        } catch ( \Exception $exception ) {
+            return new WP_Error( 'dummy-data-import-error', $exception->getMessage() );
+        }
 
         if ( $vendor_index + 1 >= $total_vendors ) {
             update_option( 'dokan_dummy_data_import_success', 'yes', true );

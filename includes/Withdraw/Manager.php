@@ -326,22 +326,29 @@ class Manager {
      *
      * @since 3.0.0
      *
-     * @param array $args
+     * @param  array $args
      *
      * @return array|object
      */
     public function all( $args = [] ) {
         $withdraws = new Withdraws( $args );
 
+        // Return status counts.
+        if ( isset( $args['return'] ) && 'count' === $args['return'] ) {
+            return $withdraws->get_status_count();
+        }
+
+        // Return withdraw object only.
         if ( empty( $args['paginate'] ) ) {
             return $withdraws->get_withdraws();
-        } else {
-            return (object) [
-                'withdraws'     => $withdraws->get_withdraws(),
-                'total'         => $withdraws->get_total(),
-                'max_num_pages' => $withdraws->get_maximum_num_pages(),
-            ];
         }
+
+        // Return withdraw object with pagination.
+        return (object) [
+            'withdraws'     => $withdraws->get_withdraws(),
+            'total'         => $withdraws->get_total(),
+            'max_num_pages' => $withdraws->get_maximum_num_pages(),
+        ];
     }
 
     /**
