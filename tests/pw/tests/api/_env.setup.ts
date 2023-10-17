@@ -12,6 +12,7 @@ setup.describe(' setup environment', () => {
     setup.beforeAll(async ({ request }) => {
         apiUtils = new ApiUtils(request);
     });
+
     setup('setup store settings @lite', async () => {
         const [response] = await apiUtils.put(endPoints.updateSettings, { data: payloads.setupStore });
         expect(response.ok()).toBeTruthy();

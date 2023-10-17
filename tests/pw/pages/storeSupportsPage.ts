@@ -234,14 +234,12 @@ export class StoreSupportsPage extends AdminPage {
                 break;
 
             case 'by-date':
-                await this.setAttributeValue(
-                    selector.vendor.vSupport.filters.filterByDate.dateRangeInput,
-                    'value',
-                    helpers.dateFormatFYJ(inputValue.startDate) + ' - ' + helpers.dateFormatFYJ(inputValue.endDate),
-                );
-                await this.setAttributeValue(selector.vendor.vSupport.filters.filterByDate.startDateInput, 'value', inputValue.startDate); // todo: resolve this
-                await this.setAttributeValue(selector.vendor.vSupport.filters.filterByDate.endDateInput, 'value', inputValue.endDate);
-                await this.clickAndWaitForLoadState(selector.vendor.vSupport.filters.search);
+                if (typeof inputValue !== 'string') {
+                    await this.setAttributeValue(selector.vendor.vSupport.filters.filterByDate.dateRangeInput, 'value', helpers.dateFormatFYJ(inputValue.startDate) + ' - ' + helpers.dateFormatFYJ(inputValue.endDate));
+                    await this.setAttributeValue(selector.vendor.vSupport.filters.filterByDate.startDateInput, 'value', inputValue.startDate);
+                    await this.setAttributeValue(selector.vendor.vSupport.filters.filterByDate.endDateInput, 'value', inputValue.endDate);
+                    await this.clickAndWaitForLoadState(selector.vendor.vSupport.filters.search);
+                }
                 break;
 
             default:
@@ -426,9 +424,6 @@ export class StoreSupportsPage extends AdminPage {
         await this.goIfNotThere(data.subUrls.frontend.supportTicketDetails(supportTicketId));
         await this.toBeVisible(selector.customer.cSupportTickets.supportTicketDetails.chatStatus.closed);
         await this.toBeVisible(selector.customer.cSupportTickets.supportTicketDetails.closedTicket.closedTicketHeading);
-        await this.toContainText(
-            selector.customer.cSupportTickets.supportTicketDetails.closedTicket.closedTicketMessage,
-            'This ticket has been closed. Open a new support ticket if you have any further query.',
-        );
+        await this.toContainText(selector.customer.cSupportTickets.supportTicketDetails.closedTicket.closedTicketMessage, 'This ticket has been closed. Open a new support ticket if you have any further query.');
     }
 }

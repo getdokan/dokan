@@ -33,12 +33,7 @@ test.describe('My orders functionality test', () => {
 
     test('customer can view order note @lite', async () => {
         const orderNote = data.orderNote.note();
-        const [, orderId] = await apiUtils.createOrderNote(
-            PRODUCT_ID,
-            { ...payloads.createOrder, customer_id: CUSTOMER_ID },
-            { ...payloads.createOrderNoteForCustomer, note: orderNote },
-            payloads.vendorAuth,
-        );
+        const [, orderId] = await apiUtils.createOrderNote(PRODUCT_ID, { ...payloads.createOrder, customer_id: CUSTOMER_ID }, { ...payloads.createOrderNoteForCustomer, note: orderNote }, payloads.vendorAuth);
         await customer.viewOrderNote(orderId, orderNote);
     });
 

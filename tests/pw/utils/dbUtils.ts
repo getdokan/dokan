@@ -90,9 +90,9 @@ export const dbUtils = {
 
     // create abuse report
     async createAbuseReport(abuseReport: any, productId: string, vendorId: string, customerId: string): Promise<any> {
-        const querySelect = `INSERT INTO ${dbPrefix}_dokan_report_abuse_reports (reason, product_id, vendor_id, customer_id, description, reported_at) VALUES ('${abuseReport.reason}', ${parseInt(
-            productId,
-        )}, ${parseInt(vendorId)}, ${parseInt(customerId)}, '${abuseReport.description}',  '${helpers.currentDateTimeFullFormat}');`;
+        const querySelect = `INSERT INTO ${dbPrefix}_dokan_report_abuse_reports (reason, product_id, vendor_id, customer_id, description, reported_at) VALUES ('${abuseReport.reason}', ${parseInt(productId)}, ${parseInt(
+            vendorId,
+        )}, ${parseInt(customerId)}, '${abuseReport.description}',  '${helpers.currentDateTimeFullFormat}');`;
         const res = await dbUtils.dbQuery(querySelect);
         // console.log(res);
         return res;

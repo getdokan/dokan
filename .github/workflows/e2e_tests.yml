@@ -7,7 +7,6 @@ on:
     push:
         branches:
             - develop
-            - lite
     workflow_dispatch:
 
 # Cancels all previous workflow runs for pull requests that have not completed.
@@ -41,8 +40,8 @@ env:
     PR_NUMBER: ${{ github.event.number }}
     SHA: ${{ github.event.pull_request.head.sha }}
     SYSTEM_INFO: ./tests/pw/systemInfo.json
-    API_TEST_RESULT: ./tests/pw/playwright-report/api/junit-report/api-results.xml
-    E2E_TEST_RESULT: ./tests/pw/playwright-report/e2e/junit-report/e2e-results.xml
+    API_TEST_RESULT: ./tests/pw/playwright-report/api/summary-report/results.json
+    E2E_TEST_RESULT: ./tests/pw/playwright-report/e2e/summary-report/results.json
 
 jobs:
     tests:
@@ -56,72 +55,82 @@ jobs:
               uses: actions/checkout@v3
 
             - name: Use desired version of NodeJS
+              if: success()
               uses: actions/setup-node@v3
               with:
                   node-version: '16'
                   cache: 'npm'
 
-            # - name: Install latest npm
-            #   run: |
-            #     npm install -g npm@8.19.4
-
             - name: Composer install and build (Dokan-lite)
+              if: success()
               run: |
                   composer install --no-dev
                   composer dump-autoload -o
 
             - name: Npm install and build (Dokan-lite)
+              if: success()
               run: |
                   npm ci 
                   npm run build
 
             # Install test dependencies
             - name: Install dependencies
+              if: success()
               run: |
                   cd tests/pw 
                   npm ci
 
             # Start wordpress environment
             - name: Start WordPress Env
+              id: wp-env
+              if: success()
               run: |
                   cd tests/pw
                   npm run start:env
 
             # Grab test db port
             - name: Get Test DB PORT
+              id: db-port
+              if: success()
               run: |
                   cd tests/pw
                   echo "DB_PORT=$(docker ps -f ancestor='mariadb' -f name='tests-mysql' --format='{{.Ports}}' | sed -E 's/.*:(.*)->.*/\1/')" >> $GITHUB_ENV
 
             # db port
             - name: DB PORT
-              run: |
-                  cd tests/pw 
-                  echo "The value of test DB_PORT is ${{ env.DB_PORT }}"
-
-            # Activate theme
-            - name: Activate theme:Storefront
+              if: success()
               run: |
                   cd tests/pw
-                  npm run wp-env run tests-cli "wp theme activate storefront"
+                  echo "The value of test DB_PORT is ${{ env.DB_PORT }}"
+                  echo "The value of test DB_PORT is ${{ env.GMAP }}"
 
             # Set permalink structure
             - name: Set Permalink structure
+              if: success()
               run: |
-                  cd tests/pw 
-                  npm run wp-env run tests-cli "wp rewrite structure /%postname%/"
+                  cd tests/pw
+                  npm run wp-env run tests-cli wp rewrite structure /%postname%/
+
+            # Activate theme
+            - name: Activate theme:Storefront
+              if: success()
+              run: |
+                  cd tests/pw
+                  npm run wp-env run tests-cli wp theme activate storefront
 
             # Get Playwright version
             - name: Get installed Playwright version
               id: playwright-version
+              if: success()
               run: |
                   cd tests/pw
                   echo "PLAYWRIGHT_VERSION=$(npm ls @playwright/test --json | jq --raw-output '.dependencies["@playwright/test"].version')" >> $GITHUB_ENV
 
             # Cache browser binaries, cache key is based on Playwright version and OS
             - name: Cache playwright binaries
-              uses: actions/cache@v3
               id: playwright-cache
+              if: success()
+              uses: actions/cache@v3
               with:
                   path: |
                       ~/.cache/ms-playwright
@@ -131,14 +140,16 @@ jobs:
 
             # Install browser binaries & OS dependencies if cache missed
             - name: Install Playwright browser binaries & OS dependencies
-              if: steps.playwright-cache.outputs.cache-hit != 'true'
+              id: pw-install
+              if: success() && steps.playwright-cache.outputs.cache-hit != 'true'
               run: |
                   cd tests/pw
                   npm run pw:browser-with-deps
 
             # Run e2e tests
             - name: 🧪 Running the e2e tests
-              if: always()
+              id: e2e-test
+              if: steps.pw-install.outcome == 'success'
               timeout-minutes: 40
               run: |
                   cd tests/pw 
@@ -146,6 +157,7 @@ jobs:
 
             # Run API tests
             - name: 🧪 Running the api tests
+              id: api-test
               if: always()
               timeout-minutes: 5
               run: |
@@ -160,7 +172,7 @@ jobs:
               with:
                   result-encoding: string
                   script: |
-                      const script = require("./tests/pw/testSummary.ts" )
+                      const script = require("./tests/pw/utils/gitTestSummary.ts")
                       return await script({github, context, core})
 
             # Find PR comment

@@ -60,6 +60,7 @@ export class SettingsPage extends AdminPage {
         // site options
         await this.enableSwitcher(selector.admin.dokan.settings.general.adminAreaAccess);
         await this.clearAndType(selector.admin.dokan.settings.general.vendorStoreUrl, general.vendorStoreUrl);
+        await this.typeFrameSelector(selector.admin.dokan.settings.general.setupWizardMessageIframe, selector.admin.dokan.settings.general.setupWizardMessageHtmlBody, general.setupWizardMessage);
         DOKAN_PRO && (await this.click(selector.admin.dokan.settings.general.sellingProductTypes(general.sellingProductTypes)));
 
         // vendor store options
@@ -69,6 +70,10 @@ export class SettingsPage extends AdminPage {
             await this.enableSwitcher(selector.admin.dokan.settings.general.enableTermsAndCondition);
             await this.click(selector.admin.dokan.settings.general.storCategory(general.storCategory));
         }
+
+        // product page settings
+        await this.enableSwitcher(selector.admin.dokan.settings.general.showVendorInfo);
+        await this.enableSwitcher(selector.admin.dokan.settings.general.enableMoreProductsTab);
 
         // save settings
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.admin.dokan.settings.general.generalSaveChanges);
@@ -87,9 +92,11 @@ export class SettingsPage extends AdminPage {
         await this.click(selector.admin.dokan.settings.selling.productTaxFeeRecipient(selling.productTaxFeeRecipient));
         await this.click(selector.admin.dokan.settings.selling.shippingTaxFeeRecipient(selling.shippingTaxFeeRecipient));
 
-        // vendor capability
+        // vendor capabilities
         await this.enableSwitcher(selector.admin.dokan.settings.selling.enableSelling);
+        await this.enableSwitcher(selector.admin.dokan.settings.selling.onePageProductCreate);
         await this.enableSwitcher(selector.admin.dokan.settings.selling.orderStatusChange);
+        await this.enableSwitcher(selector.admin.dokan.settings.selling.selectAnyCategory);
         if (DOKAN_PRO) {
             await this.click(selector.admin.dokan.settings.selling.newProductStatus(selling.newProductStatus));
             await this.enableSwitcher(selector.admin.dokan.settings.selling.duplicateProduct);
@@ -97,7 +104,7 @@ export class SettingsPage extends AdminPage {
             await this.enableSwitcher(selector.admin.dokan.settings.selling.vendorsCanCreateTags);
             await this.enableSwitcher(selector.admin.dokan.settings.selling.orderDiscount);
             await this.enableSwitcher(selector.admin.dokan.settings.selling.productDiscount);
-            await this.enableSwitcher(selector.admin.dokan.settings.selling.vendorProductReview);
+            await this.enableSwitcher(selector.admin.dokan.settings.selling.vendorProductReviewStatusChange);
             await this.enableSwitcher(selector.admin.dokan.settings.selling.guestProductEnquiry);
             await this.enableSwitcher(selector.admin.dokan.settings.selling.newVendorEnableAuction);
             await this.enableSwitcher(selector.admin.dokan.settings.selling.enableMinMaxQuantities);
@@ -207,6 +214,7 @@ export class SettingsPage extends AdminPage {
         await this.enableSwitcher(selector.admin.dokan.settings.appearance.showMapOnStorePage);
         await this.click(selector.admin.dokan.settings.appearance.mapApiSourceGoogleMaps);
         await this.clearAndType(selector.admin.dokan.settings.appearance.googleMapApiKey, appearance.googleMapApiKey);
+        await this.enableSwitcher(selector.admin.dokan.settings.appearance.showContactFormOnStorePage);
         await this.click(selector.admin.dokan.settings.appearance.storeHeaderTemplate2);
         await this.click(selector.admin.dokan.settings.appearance.storeHeaderTemplate1);
         if (DOKAN_PRO) {
@@ -214,7 +222,6 @@ export class SettingsPage extends AdminPage {
             await this.clearAndType(selector.admin.dokan.settings.appearance.storeBannerHeight, appearance.storeBannerHeight);
             await this.enableSwitcher(selector.admin.dokan.settings.appearance.storeOpeningClosingTimeWidget);
         }
-        await this.enableSwitcher(selector.admin.dokan.settings.appearance.showVendorInfo);
 
         // save settings
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.admin.dokan.settings.appearance.appearanceSaveChanges);
@@ -229,11 +236,7 @@ export class SettingsPage extends AdminPage {
         // Privacy Policy Settings
         await this.enableSwitcher(selector.admin.dokan.settings.privacyPolicy.enablePrivacyPolicy);
         await this.selectByValue(selector.admin.dokan.settings.privacyPolicy.privacyPage, privacyPolicy.privacyPage);
-        await this.typeFrameSelector(
-            selector.admin.dokan.settings.privacyPolicy.privacyPolicyIframe,
-            selector.admin.dokan.settings.privacyPolicy.privacyPolicyHtmlBody,
-            privacyPolicy.privacyPolicyHtmlBody,
-        );
+        await this.typeFrameSelector(selector.admin.dokan.settings.privacyPolicy.privacyPolicyIframe, selector.admin.dokan.settings.privacyPolicy.privacyPolicyHtmlBody, privacyPolicy.privacyPolicyContent);
 
         // save settings
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.admin.dokan.settings.privacyPolicy.privacyPolicySaveChanges);

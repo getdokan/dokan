@@ -816,6 +816,13 @@ class Settings {
                         'address' => __( 'Store Address', 'dokan-lite' ),
                     ],
                 ],
+                'disable_dokan_fontawesome' => [
+                    'name'    => 'disable_dokan_fontawesome',
+                    'label'   => __( 'Disable Dokan FontAwesome', 'dokan-lite' ),
+                    'desc'    => __( "If disabled then dokan fontawesome library won't be loaded in frontend", 'dokan-lite' ),
+                    'type'    => 'switcher',
+                    'default' => 'off',
+                ],
             ],
             'dokan_privacy'    => [
                 'enable_privacy' => [

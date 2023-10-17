@@ -3,7 +3,7 @@
 /* eslint-disable playwright/no-page-pause */
 /* eslint-disable playwright/no-networkidle */
 /* eslint-disable playwright/no-force-option */
-//todo: disable eslint plugin altogether instead of one by one
+
 import { expect, Page, BrowserContext, Cookie, Request, Response, Locator, Frame, FrameLocator, JSHandle, ElementHandle } from '@playwright/test';
 import { data } from '@utils/testData';
 
@@ -234,11 +234,7 @@ export class BasePage {
 
     // click & wait for response
     async clickAndWaitForResponseAndLoadState(subUrl: string, selector: string, code = 200): Promise<Response> {
-        const [, response] = await Promise.all([
-            this.page.waitForLoadState('networkidle'),
-            this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code),
-            this.page.locator(selector).click(),
-        ]);
+        const [, response] = await Promise.all([this.page.waitForLoadState('networkidle'), this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code), this.page.locator(selector).click()]);
         expect(response.status()).toBe(code);
         return response;
     }
@@ -294,11 +290,7 @@ export class BasePage {
 
     // type & wait for response and LoadState
     async pressOnLocatorAndWaitForResponseAndLoadState(subUrl: string, selector: string, key: string, code = 200): Promise<Response> {
-        const [response] = await Promise.all([
-            this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code),
-            this.page.waitForLoadState('networkidle'),
-            this.keyPressOnLocator(selector, key),
-        ]);
+        const [response] = await Promise.all([this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code), this.page.waitForLoadState('networkidle'), this.keyPressOnLocator(selector, key)]);
         return response;
     }
 
@@ -560,10 +552,7 @@ export class BasePage {
     // get pseudo element style
     async getPseudoElementStyles(selector: string, pseudoElement: string, property: string): Promise<string> {
         const element = this.getElement(selector);
-        const value = await element.evaluate(
-            (element, [pseudoElement, property]) => window.getComputedStyle(element, '::' + pseudoElement).getPropertyValue(property as string),
-            [pseudoElement, property],
-        );
+        const value = await element.evaluate((element, [pseudoElement, property]) => window.getComputedStyle(element, '::' + pseudoElement).getPropertyValue(property as string), [pseudoElement, property]);
         // console.log(value);
         return value;
     }
