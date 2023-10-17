@@ -86,7 +86,7 @@ test.describe(' Marketplace Coupon calculation test', () => {
         // taxRate = await apiUtils.updateSingleWcSettingOptions('general', 'woocommerce_calc_discounts_sequentially', { value: 'no' });
         sequentialCoupon = await apiUtils.getSingleWcSettingOptions('general', 'woocommerce_calc_discounts_sequentially');
         sequentialCoupon = sequentialCoupon.value === 'yes' ? true : false;
-        console.log('applySequentially:', sequentialCoupon);
+        // console.log('applySequentially:', sequentialCoupon);
         [commission, feeRecipient] = await dbUtils.getSellingInfo();
     });
 

@@ -220,6 +220,12 @@ export class ApiUtils {
         return responseBody;
     }
 
+    // get single product
+    async getSingleProduct(productId: string, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.get(endPoints.getSingleProduct(productId), { headers: auth });
+        return responseBody;
+    }
+
     // get productId
     async getProductId(productName: string, auth?: auth): Promise<string> {
         // todo: apply multiple optional parameter
@@ -1442,13 +1448,31 @@ export class ApiUtils {
     // create order
     async createOrder(product: string | object, orderPayload: any, auth?: auth): Promise<[APIResponse, responseBody, string, string]> {
         let productId: string;
+        // if (!product) {
+        //     [, productId] = await this.createProduct(payloads.createProduct(), auth);
+        // } else {
+        //     typeof product === 'object' ? ([, productId] = await this.createProduct(product, auth)) : (productId = product);
+        // } //todo: have to resolve invalid id form env issue
+
         if (!product) {
             [, productId] = await this.createProduct(payloads.createProduct(), auth);
         } else {
-            typeof product === 'object' ? ([, productId] = await this.createProduct(product, auth)) : (productId = product);
+            if (typeof product === 'object') {
+                [, productId] = await this.createProduct(product, auth);
+            } else {
+                const responseBody = await this.getSingleProduct(product, payloads.adminAuth);
+                if (responseBody.code === 'dokan_rest_invalid_product_id') {
+                    [, productId] = await this.createProduct(payloads.createProduct(), auth);
+                } else {
+                    productId = product;
+                }
+            }
         }
+        // Set the product ID in the order payload
         const payload = orderPayload;
         payload.line_items[0].product_id = productId;
+
+        // Post the order and return the results // Todo: add comment for all methods
         const [response, responseBody] = await this.post(endPoints.wc.createOrder, { data: payload, headers: payloads.adminAuth }, false);
         const orderId = String(responseBody?.id);
         return [response, responseBody, orderId, productId];
