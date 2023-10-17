@@ -106,7 +106,7 @@ export class SettingsPage extends AdminPage {
             await this.enableSwitcher(selector.admin.dokan.settings.selling.productDiscount);
             await this.enableSwitcher(selector.admin.dokan.settings.selling.vendorProductReviewStatusChange);
             await this.enableSwitcher(selector.admin.dokan.settings.selling.guestProductEnquiry);
-            await this.enableSwitcher(selector.admin.dokan.settings.selling.newVendorEnableAuction);
+            await this.enableSwitcher(selector.admin.dokan.settings.selling.newVendorEnableAuction); // todo: add condition for simple auction plugin enabled
             await this.enableSwitcher(selector.admin.dokan.settings.selling.enableMinMaxQuantities);
             await this.enableSwitcher(selector.admin.dokan.settings.selling.enableMinMaxAmount);
         }

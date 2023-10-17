@@ -127,7 +127,13 @@ export const helpers = {
 
     // calculate percentage
     percentage(number: number, percentage: number) {
+        // return this.roundToTwo(number * (percentage / 100));
+        return number * (percentage / 100);
+    },
+
+    percentageWithRound(number: number, percentage: number) {
         return this.roundToTwo(number * (percentage / 100));
+        // return number * (percentage / 100);
     },
 
     // calculate percentage
@@ -141,7 +147,7 @@ export const helpers = {
         return subtotal.reduce((a, b) => a + b, 0);
     },
 
-    // subtotal
+    // discount
     discount(subTotal: number, discount: any) {
         let discount_total = 0;
         switch (discount.type) {
@@ -149,14 +155,13 @@ export const helpers = {
                 {
                     switch (discount.coupon.type) {
                         case 'percentage':
-                            // discount_total = this.percentage(Number(subTotal), Number(discount.coupon.amount));
                             for (const rate of discount.coupon.amount) {
                                 if (discount.coupon.applySequentially) {
-                                    const discount = this.percentage(Number(subTotal), Number(rate));
+                                    const discount = this.percentageWithRound(Number(subTotal), Number(rate));
                                     subTotal -= discount;
                                     discount_total += discount;
                                 } else {
-                                    discount_total += subTotal * rate;
+                                    discount_total += this.percentageWithRound(Number(subTotal), Number(rate));
                                 }
                             }
                             break;
@@ -233,7 +238,7 @@ export const helpers = {
     },
 
     // calculate vendor earning
-    vendorEarning(subTotal: number, commission: number, productTax = 0, shippingTax = 0, shippingFee = 0, gatewayFee = 0, feeRecipient: any, gatewayFeeGiver = 'seller') {
+    vendorEarning(subTotal: number, commission: number, productTax = 0, shippingTax = 0, shippingFee = 0, gatewayFee = 0, feeRecipient: any, gatewayFeeGiver = 'seller') {        
         productTax = feeRecipient.taxFeeRecipient !== 'seller' ? 0 : productTax;
         shippingTax = feeRecipient.shippingTaxFeeRecipient !== 'seller' ? 0 : shippingTax;
         shippingFee = feeRecipient.shippingFeeRecipient !== 'seller' ? 0 : shippingFee;

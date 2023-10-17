@@ -5,6 +5,8 @@ import { payloads } from '@utils/payloads';
 import { dbUtils } from '@utils/dbUtils';
 import { commission, feeRecipient } from '@utils/interfaces';
 
+// test.use({ extraHTTPHeaders: { Authorization: payloads.adminAuth.Authorization } });
+
 test.describe('calculation test', () => {
     let apiUtils: ApiUtils;
     let taxRate: number;
@@ -73,17 +75,23 @@ test.describe('calculation test', () => {
 
 test.describe(' Marketplace Coupon calculation test', () => {
     let apiUtils: ApiUtils;
-    let taxRate: number = 0;
+    let taxRate: number = 5;
     let commission: commission;
     let feeRecipient: feeRecipient;
+    let sequentialCoupon: { value: string } | boolean;
 
     test.beforeAll(async ({ request }) => {
         apiUtils = new ApiUtils(request);
         taxRate = await apiUtils.setUpTaxRate(payloads.enableTaxRate, payloads.createTaxRate);
+        // taxRate = await apiUtils.updateSingleWcSettingOptions('general', 'woocommerce_calc_discounts_sequentially', { value: 'no' });
+        sequentialCoupon = await apiUtils.getSingleWcSettingOptions('general', 'woocommerce_calc_discounts_sequentially');
+        sequentialCoupon = sequentialCoupon.value === 'yes' ? true : false;
+        console.log('applySequentially:', sequentialCoupon);
         [commission, feeRecipient] = await dbUtils.getSellingInfo();
     });
 
     test('coupon calculation test @pro', async () => {
+        //todo: apply single coupon, multiple coupon, sequential coupon with options and make separate test
         const [, , code1, amount1] = await apiUtils.createMarketPlaceCoupon({ ...payloads.createMarketPlaceCoupon(), discount_type: 'percent' }, payloads.adminAuth);
         const [, , code2, amount2] = await apiUtils.createMarketPlaceCoupon({ ...payloads.createMarketPlaceCoupon(), discount_type: 'percent' }, payloads.adminAuth);
         const discount = {
@@ -91,14 +99,14 @@ test.describe(' Marketplace Coupon calculation test', () => {
             coupon: {
                 type: 'percentage',
                 amount: [amount1, amount2],
-                applySequentially: true,
+                // amount: [5, 8],
+                applySequentially: sequentialCoupon,
             },
         };
-
         const [, res, oid] = await apiUtils.createOrder(payloads.createProduct(), { ...payloads.createOrder, coupon_lines: [{ code: code1 }, { code: code2 }] });
+        // const [, res, oid] = await apiUtils.createOrder('997', { ...payloads.createOrder, coupon_lines: [{ code: 'ac_66iu9e4awq' }, { code: 'ac_05taq2zkqo' }] });
         // console.log(res);
         console.log('Order id:', oid);
-
         const discountTotal = res.discount_total;
         const discountTax = res.discount_tax;
         const shippingTotal = res.shipping_total;
@@ -110,7 +118,6 @@ test.describe(' Marketplace Coupon calculation test', () => {
         // const paymentMethod = res.payment_method_ti;
         const productPrice = res.line_items[0].subtotal;
         const productQuantity = res.line_items[0].quantity;
-
         const orderReport = await apiUtils.getSingleOrderLog(String(oid));
         // console.log(orderReport);
         const adminCommission = orderReport.commission;
@@ -123,7 +130,7 @@ test.describe(' Marketplace Coupon calculation test', () => {
         const calculatedShippingTax = helpers.shippingTax(taxRate, shippingTotal);
         const calculatedTotalTax = helpers.roundToTwo(calculatedProductTax + calculatedShippingTax);
         const calculatedOrderTotal = helpers.orderTotal(calculatedDiscountedSubTotal, calculatedProductTax, calculatedShippingTax, shippingTotal);
-        const calculatedAdminCommission = helpers.adminCommission(calculatedDiscountedSubTotal, commission, calculatedProductTax, calculatedShippingTax, shippingTotal, gatewayFee, feeRecipient); // todo: calculatedSubTotal, if coupon deduct value is default
+        const calculatedAdminCommission = helpers.adminCommission(calculatedDiscountedSubTotal, commission, calculatedProductTax, calculatedShippingTax, shippingTotal, gatewayFee, feeRecipient);
         const calculatedVendorEarning = helpers.vendorEarning(calculatedDiscountedSubTotal, calculatedAdminCommission, calculatedProductTax, calculatedShippingTax, shippingTotal, gatewayFee, feeRecipient);
 
         console.log(
@@ -137,7 +144,6 @@ test.describe(' Marketplace Coupon calculation test', () => {
             `calculatedTotalTax:  ${calculatedTotalTax} received: ${Number(totalTax)}\n`,
             `shippingTotal:  ${shippingTotal}\n`,
         );
-
         expect(Number(discountTotal)).toEqual(calculatedDiscount);
         expect(Number(cartTax)).toEqual(calculatedProductTax);
         expect(Number(shippingTax)).toEqual(calculatedShippingTax);

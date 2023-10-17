@@ -1,3 +1,6 @@
+
+import 'dotenv/config';
+// const SERVER_URL = process.env.SERVER_URL ? process.env.SERVER_URL : process.env.BASE_URL + '/wp-json';
 const SERVER_URL = process.env.SERVER_URL ? process.env.SERVER_URL : process.env.BASE_URL + '/wp-json';
 
 export const endPoints = {
@@ -469,7 +472,7 @@ export const endPoints = {
         getAllSettingsGroups: `${SERVER_URL}/wc/v3/settings`,
         getAllSettingOptions: (groupId: string) => `${SERVER_URL}/wc/v3/settings/${groupId}`,
         getSingleSettingOption: (groupId: string, optionId: string) => `${SERVER_URL}/wc/v3/settings/${groupId}/${optionId}`,
-        updateSettingOption: (groupId: string, optionId: string) => `${SERVER_URL}/wc/v3/settings/${groupId}/${optionId}`,
+        updateSingleSettingOption: (groupId: string, optionId: string) => `${SERVER_URL}/wc/v3/settings/${groupId}/${optionId}`,
         updateBatchSettingOptions: (groupId: string) => `${SERVER_URL}/wc/v3/settings/${groupId}/batch`,
 
         // system status
@@ -522,7 +525,6 @@ export const endPoints = {
     },
 
     wp: {
-        // todo : add all wp endpoints
         // users
         getAllUsers: `${SERVER_URL}/wp/v2/users`,
         getCurrentUser: `${SERVER_URL}/wp/v2/users/me`,
