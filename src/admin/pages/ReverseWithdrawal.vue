@@ -3,6 +3,7 @@
         <h1 class="wp-heading-inline">
             {{ __( 'Reverse Withdrawal', 'dokan-lite') }}
         </h1>
+        <button @click="addNew()" class="page-title-action">{{ __( 'Add New', 'dokan-lite' ) }}</button>
         <AdminNotice />
         <hr class="wp-header-end">
 
@@ -48,7 +49,8 @@
                 </template>
 
                 <template slot="filters">
-                    <span class="form-group">
+                    <div class="dokan-reverse-withdrawal-filters">
+                        <span class="form-group">
                     <multiselect
                         @search-change="fetchStoreLists"
                         v-model="filter.selected_store"
@@ -71,11 +73,11 @@
                         ><i class="dashicons dashicons-no"></i></button>
                     </span>
 
-                    <span class="form-group">
+                        <span class="form-group">
                         <date-range-picker
-                            class="mr-5"
+                            class="mr-5 ml-5"
                             ref="picker"
-                            :locale-data="this.dateTimePickerFormat"
+                            :locale-data="dateTimePickerFormat()"
                             :singleDatePicker="false"
                             :showDropdowns="true"
                             :autoApply="false"
@@ -94,18 +96,24 @@
                             </div>
                         </date-range-picker>
                     </span>
-                    <span class="form-group">
+                        <span class="form-group">
                         <button class="button action" v-on:click="this.clearFilters">{{ this.__( 'Clear', 'dokan-lite' ) }}</button>
                     </span>
+                    </div>
                 </template>
             </list-table>
         </div>
+
+        <Transition name="animate">
+            <add-reverse-withdraw v-if='loadAddNewModal' v-on:onWithdrawCreate="onCreatedReverseWithdrawal()"/>
+        </Transition>
     </div>
 </template>
 
 <script>
 import $ from 'jquery';
 import moment from "moment";
+import AddReverseWithdraw from '../components/AddReverseWithdraw.vue'
 
 const ListTable       = dokan_get_lib('ListTable');
 const Multiselect     = dokan_get_lib('Multiselect');
@@ -136,11 +144,13 @@ export default {
         swal,
         DateRangePicker,
         AdminNotice,
-        CardFunFact
+        CardFunFact,
+        AddReverseWithdraw
     },
 
     data () {
         return {
+            loadAddNewModal: false,
             transactionData: [],
             loading: false,
             clearingFilters: false,
@@ -150,10 +160,6 @@ export default {
                 balance: 0,
                 total_transactions: 0,
                 total_vendors: 0,
-            },
-            dateTimePickerFormat: {
-                format: dokan_get_daterange_picker_format().toLowerCase(),
-                ...dokan_helper.daterange_picker_local,
             },
             dateRangePickerRanges: {
                 'Today': [moment().toDate(), moment().toDate()],
@@ -187,7 +193,7 @@ export default {
                     startDate: '',
                     endDate: '',
                 },
-            },
+            }
         }
     },
 
@@ -195,6 +201,11 @@ export default {
         this.setDefaultTransactionDate();
         this.fetchStoreLists();
         this.fetchBalances();
+
+        // close modal
+        this.$root.$on('modalClosed', () => {
+            this.loadAddNewModal = false;
+        } );
     },
 
     mounted() {
@@ -247,7 +258,7 @@ export default {
 
         bulkActions() {
             return [];
-        }
+        },
     },
 
     watch: {
@@ -279,6 +290,10 @@ export default {
     },
 
     methods: {
+        addNew() {
+            this.loadAddNewModal = true;
+        },
+
         updatedCounts( xhr ) {
             this.counts.debit  = parseFloat( xhr.getResponseHeader('X-Status-Debit') ?? 0 );
             this.counts.credit = parseFloat( xhr.getResponseHeader('X-Status-Credit') ?? 0 );
@@ -436,12 +451,38 @@ export default {
                 message = jqXHR.responseText;
             }
             return message;
-        }
+        },
+
+        onCreatedReverseWithdrawal() {
+            this.fetchStoreLists();
+            this.fetchBalances();
+        },
     }
 };
 </script>
 
 <style lang="less">
+
+.animate-enter-active {
+    animation: animate 150ms;
+}
+.animate-leave-active {
+    animation: animate 150ms reverse;
+}
+@keyframes animate {
+    0% {
+        opacity: 0;
+    }
+    50% {
+        opacity: .5;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+
+
 .swal2-actions button {
     margin-right: 10px !important;
 }
@@ -451,6 +492,36 @@ export default {
         margin: 0px -10px;
         display: flex;
         flex-wrap: wrap;
+    }
+}
+
+#dokan_reverse_withdrawal_list_table {
+    .dokan-reverse-withdrawal-filters {
+        display: flex;
+
+        .multiselect {
+            .multiselect__select {
+                height: 28px;
+            }
+
+            .multiselect__tags {
+                input.multiselect__input {
+                    max-height: 28px;
+                }
+
+                span.multiselect__single {
+                    margin: 0 auto;
+                    min-height: 28px;
+                    line-height: 28px;
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 500px) {
+    #dokan_reverse_withdrawal_list_table .dokan-reverse-withdrawal-filters {
+        flex-direction: column;
     }
 }
 

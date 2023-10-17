@@ -32,6 +32,7 @@ class Products {
         add_action( 'template_redirect', [ $this, 'handle_delete_product' ] );
         add_action( 'dokan_render_new_product_template', [ $this, 'render_new_product_template' ], 10 );
         add_action( 'dokan_render_product_edit_template', [ $this, 'load_product_edit_template' ], 11 );
+        add_action( 'template_redirect', [ $this, 'render_product_edit_page_for_email' ], 1 );
         add_action( 'dokan_after_listing_product', [ $this, 'load_add_new_product_popup' ], 10 );
         add_action( 'dokan_after_listing_product', [ $this, 'load_add_new_product_modal' ], 10 );
         add_action( 'dokan_product_edit_after_title', [ __CLASS__, 'load_download_virtual_template' ], 10, 2 );
@@ -164,11 +165,15 @@ class Products {
         $_visibility        = $product->get_catalog_visibility();
         $visibility_options = dokan_get_product_visibility_options();
 
+        // set new post status
+        $post_status = dokan_get_default_product_status( dokan_get_current_user_id() );
+        $post_status = $product->get_status() === 'auto-draft' ? $post_status : $product->get_status();
+
         dokan_get_template_part(
             'products/others', '', [
                 'post_id'            => $post_id,
                 'post'               => $post,
-                'post_status'        => $post->post_status,
+                'post_status'        => apply_filters( 'dokan_post_edit_default_status', $post_status, $product ),
                 '_visibility'        => $_visibility,
                 'visibility_options' => $visibility_options,
                 'class'              => '',
@@ -209,6 +214,28 @@ class Products {
                 ]
             );
         }
+    }
+
+    /**
+     * Render Product Edit Page for Email.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public function render_product_edit_page_for_email() {
+        if (
+            ! isset( $_GET['action'], $_GET['_view_mode'] ) ||
+            'edit' !== sanitize_text_field( wp_unslash( $_GET['action'] ) ) ||
+            'product_email' !== sanitize_text_field( wp_unslash( $_GET['_view_mode'] ) ) ) {
+            return;
+        }
+
+        $product_edit_url = remove_query_arg( '_view_mode', dokan_get_current_page_url() );
+        $product_edit_url = add_query_arg( '_dokan_edit_product_nonce', wp_create_nonce( 'dokan_edit_product_nonce' ), $product_edit_url );
+
+        wp_safe_redirect( $product_edit_url );
+        exit();
     }
 
     /**
@@ -283,7 +310,7 @@ class Products {
 
             if ( ! self::$errors ) {
                 $timenow        = dokan_current_datetime()->setTimezone( new \DateTimeZone( 'UTC' ) );
-                $product_status = dokan_get_new_post_status();
+                $product_status = dokan_get_default_product_status( dokan_get_current_user_id() );
                 $post_data      = apply_filters(
                     'dokan_insert_product_post_data', [
                         'post_type'         => 'product',
@@ -438,8 +465,11 @@ class Products {
             $errors[] = __( 'No product found!', 'dokan-lite' );
         }
 
+        $current_post_status = get_post_status( $post_id );
+        $is_new_product      = 'auto-draft' === $current_post_status;
+
         if ( empty( $post_status ) ) {
-            $post_status = get_post_status( $post_id );
+            $post_status = $current_post_status;
         }
 
         if ( ! dokan_is_product_author( $post_id ) ) {
@@ -521,7 +551,11 @@ class Products {
         /**  Process all variation products meta */
         dokan_process_product_meta( $post_id, $postdata );
 
-        do_action( 'dokan_product_updated', $post_id, $postdata );
+        if ( $is_new_product ) {
+            do_action( 'dokan_new_product_added', $post_id, $postdata );
+        } else {
+            do_action( 'dokan_product_updated', $post_id, $postdata );
+        }
 
         $redirect = apply_filters( 'dokan_add_new_product_redirect', dokan_edit_product_url( $post_id ), $post_id );
 

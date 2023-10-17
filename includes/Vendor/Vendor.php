@@ -3,8 +3,10 @@
 namespace WeDevs\Dokan\Vendor;
 
 use Automattic\WooCommerce\Utilities\NumberUtil;
+use WC_Order;
 use WeDevs\Dokan\Cache;
 use WeDevs\Dokan\Product\ProductCache;
+use WP_Error;
 use WP_Query;
 use WP_User;
 
@@ -147,8 +149,6 @@ class Vendor {
             'gravatar'              => $this->get_avatar(),
             'gravatar_id'           => $this->get_avatar_id(),
             'shop_url'              => $this->get_shop_url(),
-            'products_per_page'     => $this->get_per_page(),
-            'show_more_product_tab' => $this->show_more_products_tab(),
             'toc_enabled'           => $this->toc_enabled(),
             'store_toc'             => $this->get_toc(),
             'featured'              => $this->is_featured(),
@@ -232,8 +232,6 @@ class Vendor {
             'banner'                  => 0,
             'icon'                    => 0,
             'gravatar'                => 0,
-            'show_more_ptab'          => 'yes',
-            'store_ppp'               => (int) dokan_get_option( 'store_products_per_page', 'dokan_general', 12 ),
             'enable_tnc'              => 'off',
             'store_tnc'               => '',
             'show_min_order_discount' => 'no',
@@ -429,7 +427,7 @@ class Vendor {
         $location = $this->get_info_part( 'location' );
 
         if ( $location ) {
-            list( $default['lat'], $default['long'] ) = explode( ',', $location );
+            [ $default['lat'], $default['long'] ] = explode( ',', $location );
         }
 
         return $location;
@@ -490,29 +488,12 @@ class Vendor {
     }
 
     /**
-     * Get per page pagination
-     *
-     * @since 2.8
-     *
-     * @return integer
-     */
-    public function get_per_page() {
-        $per_page = (int) $this->get_info_part( 'store_ppp' );
-
-        if ( ! $per_page ) {
-            return 10;
-        }
-
-        return $per_page;
-    }
-
-    /**
      * If should show the email
      *
      * @return boolean
      */
     public function show_email() {
-        return 'yes' == $this->get_info_part( 'show_email' );
+        return 'yes' === $this->get_info_part( 'show_email' );
     }
 
     /**
@@ -523,7 +504,7 @@ class Vendor {
      * @return boolean
      */
     public function toc_enabled() {
-        return 'on' == $this->get_info_part( 'enable_tnc' );
+        return 'on' === $this->get_info_part( 'enable_tnc' );
     }
 
     /**
@@ -538,25 +519,12 @@ class Vendor {
     }
 
     /**
-     * Check if showing more product is enabled
-     *
-     * @since 2.8
-     *
-     * @return boolean
-     */
-    public function show_more_products_tab() {
-        return 'yes' == $this->get_info_part( 'show_more_ptab' );
-    }
-
-    /**
      * Get a vendor products
      *
      * @return object
      */
     public function get_products() {
-        $products = dokan()->product->all( [
-            'author' => $this->id
-        ] );
+        $products = dokan()->product->all( [ 'author' => $this->id ] );
 
         if ( ! $products ) {
             return null;
@@ -577,11 +545,13 @@ class Vendor {
         $transient_key   = "get_published_products_{$this->get_id()}";
 
         if ( false === ( $products = Cache::get_transient( $transient_key, $transient_group ) ) ) {
-            $products = dokan()->product->all( [
-                'author'      => $this->id,
-                'post_status' => 'publish',
-                'fields'      => 'ids'
-            ] );
+            $products = dokan()->product->all(
+                [
+                    'author'      => $this->id,
+                    'post_status' => 'publish',
+                    'fields'      => 'ids',
+                ]
+            );
             $products = $products->posts;
             Cache::set_transient( $transient_key, $products, $transient_group );
         }
@@ -745,10 +715,10 @@ class Vendor {
                         [
                             'taxonomy' => $taxonomy,
                             'field' => 'slug',
-                            'terms' => $term
+                            'terms' => $term,
                         ],
                     ],
-                    'fields' => 'ids'
+                    'fields' => 'ids',
                 ];
 
                 $all_posts = get_posts( $args );
@@ -761,8 +731,6 @@ class Vendor {
             }
         }
 
-//        Cache::set_transient( $transient_key, $author_terms, $transient_group );
-
         return $author_terms;
     }
 
@@ -771,9 +739,10 @@ class Vendor {
      *
      * @since 3.0.0
      *
-     * @return wc_get_order objects
+     * @return WP_Error|WC_Order[] objects
      */
     public function get_orders( $args = [] ) {
+        $args['seller_id'] = empty( $args['seller_id'] ) ? $this->get_id() : $args['seller_id'];
         return dokan()->order->all( $args );
     }
 
@@ -783,7 +752,21 @@ class Vendor {
      * @return float
      */
     public function get_total_sales() {
-        return dokan_author_total_sales( $this->id );
+        global $wpdb;
+
+        $cache_group = "seller_order_data_{$this->id}";
+        $cache_key   = "earning_{$this->id}";
+        $earnings    = Cache::get( $cache_key, $cache_group );
+
+        if ( false === $earnings ) {
+            $earnings = (float) $wpdb->get_var(
+                $wpdb->prepare( "SELECT SUM(order_total) as earnings FROM {$wpdb->prefix}dokan_orders WHERE seller_id = %d AND order_status IN('wc-completed', 'wc-processing', 'wc-on-hold')", $this->id )
+            );
+
+            Cache::set( $cache_key, $earnings, $cache_group );
+        }
+
+        return apply_filters( 'dokan_seller_total_sales', $earnings, $this->id );
     }
 
     /**
@@ -810,35 +793,28 @@ class Vendor {
         $on_date     = $on_date->format( 'Y-m-d H:i:s' );
 
         if ( false === $earning ) {
-            $installed_version = get_option( 'dokan_theme_version' );
-            $status            = dokan_withdraw_get_active_order_status_in_comma();
-
-            if ( ! $installed_version || version_compare( $installed_version, '2.8.2', '>' ) ) {
-                $debit_balance  = $wpdb->get_var( $wpdb->prepare(
+            $status = dokan_withdraw_get_active_order_status_in_comma();
+            $debit_balance = $wpdb->get_var(
+                $wpdb->prepare(
                     "SELECT SUM(debit) AS earnings
                     FROM {$wpdb->prefix}dokan_vendor_balance
                     WHERE
                         vendor_id = %d AND DATE(balance_date) <= %s AND status IN ($status) AND trn_type = 'dokan_orders'",
-                    $this->id, $on_date ) );
+                    $this->id, $on_date
+                )
+            );
 
-               $credit_balance = $wpdb->get_var( $wpdb->prepare(
+            $credit_balance = $wpdb->get_var(
+                $wpdb->prepare(
                     "SELECT SUM(credit) AS earnings
                     FROM {$wpdb->prefix}dokan_vendor_balance
                     WHERE
                         vendor_id = %d AND DATE(balance_date) <= %s AND trn_type = %s AND status = %s",
-                    $this->id, $on_date, 'dokan_refund', 'approved' ) );
+                    $this->id, $on_date, 'dokan_refund', 'approved'
+                )
+            );
 
-                $earning = floatval( $debit_balance - $credit_balance );
-            } else {
-                $earning = (float) $wpdb->get_var( $wpdb->prepare(
-                    "SELECT
-                        SUM(net_amount) as earnings
-                    FROM
-                        {$wpdb->prefix}dokan_orders as do LEFT JOIN {$wpdb->prefix}posts as p ON do.order_id = p.ID
-                    WHERE
-                        seller_id = %d AND DATE(p.post_date) <= %s AND order_status IN ($status)",
-                    $this->id, $on_date ) );
-            }
+            $earning = floatval( $debit_balance - $credit_balance );
 
             Cache::set( $cache_key, $earning, $cache_group );
         }
@@ -874,24 +850,19 @@ class Vendor {
 
 
         if ( false === $earning ) {
-            $installed_version = get_option( 'dokan_theme_version' );
-            $status            = dokan_withdraw_get_active_order_status_in_comma();
-
-            if ( ! $installed_version || version_compare( $installed_version, '2.8.2', '>' ) ) {
-                $result = $wpdb->get_row( $wpdb->prepare(
-                        "SELECT SUM(debit) as earnings,
-                        ( SELECT SUM(credit) FROM {$wpdb->prefix}dokan_vendor_balance WHERE vendor_id = %d AND DATE(balance_date) <= %s ) as withdraw
-                        from {$wpdb->prefix}dokan_vendor_balance
-                        WHERE vendor_id = %d AND DATE(balance_date) <= %s AND status IN($status)",
-                    $seller_id, $on_date, $seller_id, $on_date ) );
-            } else {
-                $result = $wpdb->get_row( $wpdb->prepare(
-                    "SELECT SUM(net_amount) as earnings,
-                    (SELECT SUM(amount) FROM {$wpdb->prefix}dokan_withdraw WHERE user_id = %d AND status = 1 AND DATE(`date`) <= %s) as withdraw
-                    FROM {$wpdb->prefix}dokan_orders as do LEFT JOIN {$wpdb->prefix}posts as p ON do.order_id = p.ID
-                    WHERE seller_id = %d AND DATE(p.post_date) <= %s AND order_status IN ($status)",
-                    $seller_id, $on_date, $seller_id, $date ) );
-            }
+            $status = dokan_withdraw_get_active_order_status_in_comma();
+            $result = $wpdb->get_row(
+                $wpdb->prepare(
+                    "SELECT SUM(debit) as earnings,
+                    (
+                        SELECT SUM(credit) FROM {$wpdb->prefix}dokan_vendor_balance
+                        WHERE vendor_id = %d AND DATE(balance_date) <= %s
+                    ) as withdraw
+                    from {$wpdb->prefix}dokan_vendor_balance
+                    WHERE vendor_id = %d AND DATE(balance_date) <= %s AND status IN($status)",
+                    $seller_id, $on_date, $seller_id, $on_date
+                )
+            );
 
             $earning = (float) $result->earnings - (float) NumberUtil::round( $result->withdraw, wc_get_rounding_precision() );
 
@@ -902,8 +873,11 @@ class Vendor {
             $decimal = ( 0 === wc_get_price_decimals() ) ? 2 : wc_get_price_decimals();
             return apply_filters(
                 'dokan_get_formatted_seller_balance',
-                wc_price( $earning, [ 'decimals' => $decimal ]
-            ), $this->id );
+                wc_price(
+                    $earning, [ 'decimals' => $decimal ]
+                ),
+                $this->id
+            );
         }
 
         return apply_filters( 'dokan_get_seller_balance', $earning, $this->id );

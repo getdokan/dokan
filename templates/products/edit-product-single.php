@@ -6,6 +6,7 @@ use WeDevs\Dokan\ProductCategory\Helper;
 global $post;
 
 $from_shortcode = false;
+$new_product    = false;
 
 if (
     ! isset( $post->ID )
@@ -30,12 +31,29 @@ if ( isset( $post->ID ) && $post->ID && 'product' === $post->post_type ) {
 if ( isset( $_GET['product_id'] ) ) {
     $post_id        = intval( $_GET['product_id'] );
     $post           = get_post( $post_id );
-    $post_title     = $post->post_title;
-    $post_content   = $post->post_content;
-    $post_excerpt   = $post->post_excerpt;
     $post_status    = $post->post_status;
+    $auto_draft     = 'auto-draft' === $post_status;
+    $post_title     = $auto_draft ? '' : $post->post_title;
+    $post_content   = $auto_draft ? '' : $post->post_content;
+    $post_excerpt   = $post->post_excerpt;
     $product        = wc_get_product( $post_id );
     $from_shortcode = true;
+}
+
+if ( isset( $_GET['product_id'] ) && 0 === absint( $_GET['product_id'] ) ) {
+    $post_id      = intval( $_GET['product_id'] );
+    $post_title   = '';
+    $post_content = '';
+    $post_excerpt = '';
+    $post_status  = 'auto-draft';
+    $product      = new WC_Product( $post_id );
+
+    $product->set_name( $post_title );
+    $product->set_status( $post_status );
+    $post_id        = $product->save();
+    $post           = get_post( $post_id );
+    $from_shortcode = true;
+    $new_product    = true;
 }
 
 if ( ! dokan_is_product_author( $post_id ) ) {
@@ -44,7 +62,7 @@ if ( ! dokan_is_product_author( $post_id ) ) {
 
 $_regular_price         = get_post_meta( $post_id, '_regular_price', true );
 $_sale_price            = get_post_meta( $post_id, '_sale_price', true );
-$is_discount            = ! empty( $_sale_price ) ? true : false;
+$is_discount            = ! empty( $_sale_price );
 $_sale_price_dates_from = get_post_meta( $post_id, '_sale_price_dates_from', true );
 $_sale_price_dates_to   = get_post_meta( $post_id, '_sale_price_dates_to', true );
 
@@ -109,11 +127,21 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
              *  @since 2.4
              */
             do_action( 'dokan_product_content_inside_area_before' );
+
+            if ( $new_product ) {
+                do_action( 'dokan_new_product_before_product_area' );
+            }
             ?>
 
             <header class="dokan-dashboard-header dokan-clearfix">
                 <h1 class="entry-title">
-                    <?php esc_html_e( 'Edit Product', 'dokan-lite' ); ?>
+                    <?php
+                    if ( $new_product || 'auto-draft' === $post->post_status ) {
+                        esc_html_e( 'Add New Product', 'dokan-lite' );
+                    } else {
+                        esc_html_e( 'Edit Product', 'dokan-lite' );
+                    }
+                    ?>
                     <span class="dokan-label <?php echo esc_attr( dokan_get_post_status_label_class( $post->post_status ) ); ?> dokan-product-status-label">
                         <?php echo esc_html( dokan_get_post_status( $post->post_status ) ); ?>
                     </span>
@@ -399,9 +427,9 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                                         'dokan_product_short_description',
                                         [
                                             'editor_height' => 50,
-                                            'quicktags'     => false,
+                                            'quicktags'     => true,
                                             'media_buttons' => false,
-                                            'teeny'         => true,
+                                            'teeny'         => false,
                                             'editor_class'  => 'post_excerpt',
                                         ]
                                     )
@@ -419,9 +447,9 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                                         'dokan_product_description',
                                         [
                                             'editor_height' => 50,
-                                            'quicktags'     => false,
+                                            'quicktags'     => true,
                                             'media_buttons' => false,
-                                            'teeny'         => true,
+                                            'teeny'         => false,
                                             'editor_class'  => 'post_content',
                                         ]
                                     )
@@ -440,6 +468,7 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
 
                             <?php wp_nonce_field( 'dokan_edit_product', 'dokan_edit_product_nonce' ); ?>
 
+                            <input type="hidden" name="dokan_product_id" id="dokan_product_id" value="<?php echo esc_attr( $post_id ); ?>" />
                             <!--hidden input for Firefox issue-->
                             <input type="hidden" name="dokan_update_product" value="<?php esc_attr_e( 'Save Product', 'dokan-lite' ); ?>"/>
                             <input type="submit" name="dokan_update_product" id="publish" class="dokan-btn dokan-btn-theme dokan-btn-lg dokan-right" value="<?php esc_attr_e( 'Save Product', 'dokan-lite' ); ?>"/>

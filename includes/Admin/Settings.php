@@ -392,7 +392,7 @@ class Settings {
                 'admin_access'           => [
                     'name'    => 'admin_access',
                     'label'   => __( 'Admin Area Access', 'dokan-lite' ),
-                    'desc'    => __( 'Disallow vendors from accessing the wp-admin dashboard area', 'dokan-lite' ),
+                    'desc'    => __( 'Prevent vendors from accessing the wp-admin dashboard area. If HPOS feature is enabled, admin access will be blocked regardless of this setting.', 'dokan-lite' ),
                     'type'    => 'switcher',
                     'default' => 'on',
                 ],
@@ -442,15 +442,13 @@ class Settings {
                     'desc'    => __( 'Enable terms and conditions for vendor stores', 'dokan-lite' ),
                     'type'    => 'switcher',
                     'default' => 'off',
-                    'tooltip' => __( 'Prompt terms and condition check for vendors when creating store on your site', 'dokan-lite' ),
                 ],
                 'store_products_per_page'            => [
                     'name'    => 'store_products_per_page',
                     'label'   => __( 'Store Products Per Page', 'dokan-lite' ),
-                    'desc'    => __( 'Set how many products to display per page on the vendor store page. It will affect only if the vendor isn\'t set this value on their vendor setting page.', 'dokan-lite' ),
+                    'desc'    => __( 'Set how many products to display per page on the vendor store page.', 'dokan-lite' ),
                     'type'    => 'number',
                     'default' => '12',
-                    'tooltip' => __( 'It will affect the vendor only if they havent set a value on their settings page.', 'dokan-lite' ),
                 ],
                 'enabled_address_on_reg'             => [
                     'name'    => 'enabled_address_on_reg',
@@ -458,6 +456,25 @@ class Settings {
                     'desc'    => __( 'Add Address Fields on the Vendor Registration form', 'dokan-lite' ),
                     'type'    => 'switcher',
                     'default' => 'off',
+                ],
+            ]
+        );
+
+        $general_product_page_options = apply_filters(
+            'dokan_settings_general_product_page_options', [
+                'product_page_options'      => [
+                    'name'          => 'product_page_options',
+                    'type'          => 'sub_section',
+                    'label'         => __( 'Product Page Settings', 'dokan-lite' ),
+                    'description'   => __( 'Configure single product page for vendors.', 'dokan-lite' ),
+                    'content_class' => 'sub-section-styles',
+                ],
+                'enabled_more_products_tab' => [
+                    'name'    => 'enabled_more_products_tab',
+                    'label'   => __( 'Enable More Products Tab', 'dokan-lite' ),
+                    'desc'    => __( 'Enable "More Products" tab on the single product page.', 'dokan-lite' ),
+                    'type'    => 'switcher',
+                    'default' => 'on',
                 ],
             ]
         );
@@ -540,12 +557,23 @@ class Settings {
                     'default' => 'on',
                     'tooltip' => __( 'If checked, vendors will have permission to sell immediately after registration. If unchecked, newly registered vendors cannot add products until selling capability is activated manually from admin dashboard.', 'dokan-lite' ),
                 ],
+                'one_step_product_create'     => [
+                    'name'    => 'one_step_product_create',
+                    'label'   => __( 'One Page Product Creation', 'dokan-lite' ),
+                    'desc'    => __( 'Add new product in single page view', 'dokan-lite' ),
+                    'type'    => 'switcher',
+                    'default' => 'on',
+                    'tooltip' => __( 'If disabled, instead of a single add product page it will open a pop up window or vendor will redirect to product page when adding new product.', 'dokan-lite' ),
+                ],
                 'disable_product_popup'     => [
                     'name'    => 'disable_product_popup',
                     'label'   => __( 'Disable Product Popup', 'dokan-lite' ),
                     'desc'    => __( 'Disable add new product in popup view', 'dokan-lite' ),
                     'type'    => 'switcher',
                     'default' => 'off',
+                    'show_if' => [
+                        'dokan_selling.one_step_product_create' => [ 'equal' => 'off' ],
+                    ],
                     'tooltip' => __( 'If disabled, instead of a pop up window vendor will redirect to product page when adding new product.', 'dokan-lite' ),
                 ],
                 'order_status_change'       => [
@@ -569,7 +597,8 @@ class Settings {
         $settings_fields = [
             'dokan_general'    => array_merge(
                 $general_site_options,
-                $general_vendor_store_options
+                $general_vendor_store_options,
+                $general_product_page_options
             ),
             'dokan_selling'    => apply_filters(
                 'dokan_settings_selling_options',
@@ -683,14 +712,26 @@ class Settings {
                     'label'   => __( 'Google Map API Key', 'dokan-lite' ),
                     'desc'    => __( '<a href="https://developers.google.com/maps/documentation/javascript/" target="_blank" rel="noopener noreferrer">API Key</a> is needed to display map on store page', 'dokan-lite' ),
                     'type'    => 'text',
+                    'secret_text' => true,
                     'tooltip' => __( 'Insert Google API Key (with hyperlink) to display store map.', 'dokan-lite' ),
+                    'show_if' => [
+                        'map_api_source' => [
+                            'equal' => 'google_maps',
+                        ],
+                    ],
                 ],
                 'mapbox_access_token'        => [
                     'name'    => 'mapbox_access_token',
                     'label'   => __( 'Mapbox Access Token', 'dokan-lite' ),
                     'desc'    => __( '<a href="https://docs.mapbox.com/help/how-mapbox-works/access-tokens/" target="_blank" rel="noopener noreferrer">Access Token</a> is needed to display map on store page', 'dokan-lite' ),
                     'type'    => 'text',
+                    'secret_text' => true,
                     'tooltip' => __( 'Insert Mapbox Access Token (with hyperlink) to display store map.', 'dokan-lite' ),
+                    'show_if' => [
+                        'map_api_source' => [
+                            'equal' => 'mapbox',
+                        ],
+                    ],
                 ],
                 'recaptcha_validation_label' => [
                     'name'                 => 'recaptcha_validation_label',
@@ -706,6 +747,10 @@ class Settings {
                     'label'                => __( 'Google reCAPTCHA Validation', 'dokan-lite' ),
                     'icon_url'             => DOKAN_PLUGIN_ASSEST . '/images/google.svg',
                     'social_desc'          => __( 'You can successfully connect to your Google reCaptcha account from here.', 'dokan-lite' ),
+                    'enable_status'        => [
+                        'name'    => 'recaptcha_enable_status',
+                        'default' => 'on',
+                    ],
                     'recaptcha_site_key'   => [
                         'name'         => 'recaptcha_site_key',
                         'type'         => 'text',
@@ -770,6 +815,13 @@ class Settings {
                         'phone'   => __( 'Phone Number', 'dokan-lite' ),
                         'address' => __( 'Store Address', 'dokan-lite' ),
                     ],
+                ],
+                'disable_dokan_fontawesome' => [
+                    'name'    => 'disable_dokan_fontawesome',
+                    'label'   => __( 'Disable Dokan FontAwesome', 'dokan-lite' ),
+                    'desc'    => __( "If disabled then dokan fontawesome library won't be loaded in frontend", 'dokan-lite' ),
+                    'type'    => 'switcher',
+                    'default' => 'off',
                 ],
             ],
             'dokan_privacy'    => [

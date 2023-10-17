@@ -5,6 +5,7 @@ namespace WeDevs\Dokan;
 use WeDevs\Dokan\Admin\Notices\Helper;
 use WeDevs\Dokan\ReverseWithdrawal\SettingsHelper;
 use WeDevs\Dokan\ProductCategory\Helper as CategoryHelper;
+use WeDevs\Dokan\Utilities\OrderUtil;
 
 class Assets {
 
@@ -93,7 +94,6 @@ class Assets {
                 wp_enqueue_style( 'dokan-wp-version-before-5-3' );
             }
 
-            // load fontawesome styles
             wp_enqueue_style( 'dokan-fontawesome' );
 
             // load wooCommerce select2 styles
@@ -129,7 +129,7 @@ class Assets {
             wp_localize_script( 'dokan-admin-product', 'dokan_admin_product', $this->admin_product_localize_scripts() );
         }
 
-        do_action( 'dokan_enqueue_admin_scripts' );
+        do_action( 'dokan_enqueue_admin_scripts', $hook );
     }
 
     /**
@@ -314,17 +314,13 @@ class Assets {
                 'deps'    => [ 'dokan-vue-vendor' ],
                 'version' => filemtime( DOKAN_DIR . '/assets/css/vue-bootstrap.css' ),
             ],
-            'dokan-flaticon'                => [
-                'src'     => DOKAN_PLUGIN_ASSEST . '/font/flaticon/flaticon.css',
-                'version' => filemtime( DOKAN_DIR . '/assets/font/flaticon/flaticon.css' ),
-            ],
             'dokan-sf-pro-text'              => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/font/sf-pro-text/sf-pro-text.css',
                 'version' => filemtime( DOKAN_DIR . '/assets/font/sf-pro-text/sf-pro-text.css' ),
             ],
             'dokan-vue-admin'               => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/vue-admin.css',
-                'deps'    => [ 'dokan-vue-vendor', 'dokan-vue-bootstrap', 'dokan-flaticon' ],
+                'deps'    => [ 'dokan-vue-vendor', 'dokan-vue-bootstrap' ],
                 'version' => filemtime( DOKAN_DIR . '/assets/css/vue-admin.css' ),
             ],
             'dokan-vue-frontend'            => [
@@ -570,7 +566,9 @@ class Assets {
         if ( DOKAN_LOAD_STYLE ) {
             wp_enqueue_style( 'dokan-style' );
             wp_enqueue_style( 'dokan-modal' );
-            wp_enqueue_style( 'dokan-fontawesome' );
+            if ( 'off' === dokan_get_option( 'disable_dokan_fontawesome', 'dokan_appearance', 'off' ) ) {
+                wp_enqueue_style( 'dokan-fontawesome' );
+            }
 
             if ( is_rtl() ) {
                 wp_enqueue_style( 'dokan-rtl-style' );
@@ -891,7 +889,8 @@ class Assets {
             if ( $api_key ) {
                 $query_args = apply_filters(
                     'dokan_google_maps_script_query_args', [
-                        'key' => $api_key,
+                        'key'      => $api_key,
+                        'callback' => 'Function.prototype',
                     ]
                 );
 
@@ -1142,8 +1141,10 @@ class Assets {
                     'storePrefix'  => dokan_get_option( 'custom_store_url', 'dokan_general', 'store' ),
                     'assetsUrl'    => DOKAN_PLUGIN_ASSEST,
                     'buynowpro'    => dokan_pro_buynow_url(),
-                    'upgradeToPro' => 'https://wedevs.com/dokan-lite-upgrade-to-pro/?utm_source=plugin&utm_medium=wp-admin&utm_campaign=dokan-lite',
+                    'upgradeToPro' => 'https://dokan.co/wordpress/upgrade-to-pro/?utm_source=plugin&utm_medium=wp-admin&utm_campaign=dokan-lite',
                     'dummy_data'   => DOKAN_PLUGIN_ASSEST . '/dummy-data/dokan_dummy_data.csv',
+                    'adminOrderListUrl' => OrderUtil::get_admin_order_list_url(),
+                    'adminOrderEditUrl' => OrderUtil::get_admin_order_edit_url(),
                 ],
                 'states'                            => WC()->countries->get_allowed_country_states(),
                 'countries'                         => WC()->countries->get_allowed_countries(),

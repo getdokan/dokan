@@ -191,8 +191,6 @@ class Manager {
             'banner'                  => ! empty( $data['banner_id'] ) ? $data['banner_id'] : 0,
             'icon'                    => ! empty( $data['icon'] ) ? $data['icon'] : '',
             'gravatar'                => ! empty( $data['gravatar_id'] ) ? $data['gravatar_id'] : 0,
-            'show_more_ptab'          => ! empty( $data['show_more_ptab'] ) ? $data['show_more_ptab'] : 'yes',
-            'store_ppp'               => ! empty( $data['store_ppp'] ) ? $data['store_ppp'] : (int) dokan_get_option( 'store_products_per_page', 'dokan_general', 12 ),
             'enable_tnc'              => ! empty( $data['enable_tnc'] ) ? $data['enable_tnc'] : 'off',
             'store_tnc'               => ! empty( $data['store_tnc'] ) ? $data['store_tnc'] : '',
             'show_min_order_discount' => ! empty( $data['show_min_order_discount'] ) ? $data['show_min_order_discount'] : 'no',
@@ -354,11 +352,11 @@ class Manager {
             $vendor->set_show_email( 'no' );
         }
 
-        if ( ! empty( $data['gravatar_id'] ) && is_numeric( $data['gravatar_id'] ) ) {
+        if ( isset( $data['gravatar_id'] ) && is_numeric( $data['gravatar_id'] ) ) {
             $vendor->set_gravatar_id( $data['gravatar_id'] );
         }
 
-        if ( ! empty( $data['banner_id'] ) && is_numeric( $data['banner_id'] ) ) {
+        if ( isset( $data['banner_id'] ) && is_numeric( $data['banner_id'] ) ) {
             $vendor->set_banner_id( $data['banner_id'] );
         }
 

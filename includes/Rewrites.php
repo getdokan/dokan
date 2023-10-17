@@ -27,6 +27,7 @@ class Rewrites {
         add_filter( 'template_include', [ $this, 'store_toc_template' ], 99 );
         add_filter( 'query_vars', [ $this, 'register_query_var' ] );
         add_filter( 'woocommerce_get_breadcrumb', [ $this, 'store_page_breadcrumb' ] );
+        add_filter( 'tiny_mce_before_init', [ $this, 'remove_h1_from_heading_in_edit_product_page' ] );
     }
 
     /**
@@ -272,6 +273,25 @@ class Rewrites {
     }
 
     /**
+     * Remove h1 tag in edit product page.
+     *
+     * @param $args
+     *
+     * @return mixed
+     */
+    public function remove_h1_from_heading_in_edit_product_page( $args ) {
+        global $wp;
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        if ( ( dokan_is_seller_dashboard() && isset( $wp->query_vars['settings'] ) && $wp->query_vars['settings'] === 'store' ) || ( ! empty( $_GET['product_id'] ) && ! empty( $_GET['action'] ) && ! empty( $_GET['_dokan_edit_product_nonce'] ) ) ) {
+            // Just omit h1 from the list
+            $args['block_formats'] = 'Paragraph=p;Heading 2=h2;Heading 3=h3;Heading 4=h4;Heading 5=h5;Heading 6=h6;Pre=pre';
+            return $args;
+        }
+
+        return $args;
+    }
+
+    /**
      * Store query filter
      *
      * Handles the product filtering by category in store page
@@ -292,12 +312,11 @@ class Rewrites {
                 return get_404_template();
             }
 
-            $store_info    = dokan_get_store_info( $seller_info->data->ID );
-            $product_ppp   = dokan_get_option( 'store_products_per_page', 'dokan_general', 12 );
-            $post_per_page = isset( $store_info['store_ppp'] ) && ! empty( $store_info['store_ppp'] ) ? $store_info['store_ppp'] : $product_ppp;
+            $store_info  = dokan_get_store_info( $seller_info->data->ID );
+            $product_ppp = dokan_get_option( 'store_products_per_page', 'dokan_general', 12 );
 
             do_action( 'dokan_store_page_query_filter', $query, $store_info );
-            set_query_var( 'posts_per_page', apply_filters( 'dokan_store_products_per_page', $post_per_page ) );
+            set_query_var( 'posts_per_page', apply_filters( 'dokan_store_products_per_page', $product_ppp ) );
 
             $query->set( 'post_type', 'product' );
             $query->set( 'author_name', $author );
@@ -310,7 +329,7 @@ class Rewrites {
                 foreach ( $attributes as $key => $attribute ) {
                     $tax_query[] = [
                         'taxonomy' => $key,
-                        'field'    => 'name',
+                        'field'    => 'slug',
                         'terms'    => $attribute['terms'],
                     ];
                 }

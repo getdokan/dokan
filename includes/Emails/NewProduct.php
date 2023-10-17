@@ -28,7 +28,8 @@ class NewProduct extends WC_Email {
         $this->template_base  = DOKAN_DIR . '/templates/';
 
         // Triggers for this email
-        add_action( 'dokan_new_product_added', array( $this, 'trigger' ), 30, 2 );
+        add_action( 'dokan_new_product_added', array( $this, 'trigger' ), 30, 1 );
+        add_action( 'dokan_product_updated', array( $this, 'trigger' ), 30, 1 );
 
         // Call parent constructor
         parent::__construct();
@@ -61,53 +62,61 @@ class NewProduct extends WC_Email {
      * Trigger the sending of this email.
      *
      * @param int $product_id The product ID.
-     * @param array $postdata.
      */
-    public function trigger( $product_id, $postdata ) {
-		if ( dokan_get_option( 'product_add_mail', 'dokan_general', 'on' ) !== 'on' ) {
-			return;
-		}
+    public function trigger( $product_id ) {
+        $product = wc_get_product( $product_id );
+        if ( ! $product ) {
+            return;
+        }
 
-		if ( dokan_get_new_post_status() === 'pending' ) {
-			do_action( 'dokan_email_trigger_new_pending_product', $product_id, $postdata );
-			return;
-		}
+        // we've added _dokan_new_product_email_sent from version 3.8.2
+        // so, we are assuming if the meta doesn't exist, email was already sent to the client
+        $email_sent = $product->get_meta( '_dokan_new_product_email_sent' );
+        if ( empty( $email_sent ) || true === wc_string_to_bool( $email_sent ) ) {
+            return;
+        }
 
-		if ( ! $this->is_enabled() || ! $this->get_recipient() ) {
-			return;
-		}
+        if ( 'publish' !== $product->get_status() ) {
+            return;
+        }
 
-            $product       = wc_get_product( $product_id );
-            $seller_id     = get_post_field( 'post_author', $product_id );
-            $seller        = get_user_by( 'id', $seller_id );
-            $category      = wp_get_post_terms( dokan_get_prop( $product, 'id' ), 'product_cat', array( 'fields' => 'names' ) );
-            $category_name = $category ? reset( $category ) : 'N/A';
+        $product->update_meta_data( '_dokan_new_product_email_sent', 'yes' );
+        $product->save();
 
-		if ( is_a( $product, 'WC_Product' ) ) {
-			$this->object = $product;
+        if ( ! $this->is_enabled() || ! $this->get_recipient() ) {
+            return;
+        }
 
-			$this->find['product-title'] = '{product_title}';
-			$this->find['price']         = '{price}';
-			$this->find['seller-name']   = '{seller_name}';
-			$this->find['seller_url']    = '{seller_url}';
-			$this->find['category']      = '{category}';
-			$this->find['product_link']  = '{product_link}';
-			$this->find['site_name']     = '{site_name}';
-			$this->find['site_url']      = '{site_url}';
+        $seller_id     = get_post_field( 'post_author', $product_id );
+        $seller        = get_user_by( 'id', $seller_id );
+        $category      = wp_get_post_terms( dokan_get_prop( $product, 'id' ), 'product_cat', array( 'fields' => 'names' ) );
+        $category_name = $category ? reset( $category ) : 'N/A';
 
-			$this->replace['product-title'] = $product->get_title();
-			$this->replace['price']         = $product->get_price();
-			$this->replace['seller-name']   = $seller->display_name;
-			$this->replace['seller_url']    = dokan_get_store_url( $seller->ID );
-			$this->replace['category']      = $category_name;
-			$this->replace['product_link']  = admin_url( 'post.php?action=edit&post=' . $product_id );
-			$this->replace['site_name']     = $this->get_from_name();
-			$this->replace['site_url']      = site_url();
-		}
+        if ( is_a( $product, 'WC_Product' ) ) {
+            $this->object = $product;
 
-            $this->setup_locale();
-            $this->send( $this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
-            $this->restore_locale();
+            $this->find['product-title'] = '{product_title}';
+            $this->find['price']         = '{price}';
+            $this->find['seller-name']   = '{seller_name}';
+            $this->find['seller_url']    = '{seller_url}';
+            $this->find['category']      = '{category}';
+            $this->find['product_link']  = '{product_link}';
+            $this->find['site_name']     = '{site_name}';
+            $this->find['site_url']      = '{site_url}';
+
+            $this->replace['product-title'] = $product->get_title();
+            $this->replace['price']         = $product->get_price();
+            $this->replace['seller-name']   = $seller->display_name;
+            $this->replace['seller_url']    = dokan_get_store_url( $seller->ID );
+            $this->replace['category']      = $category_name;
+            $this->replace['product_link']  = admin_url( 'post.php?action=edit&post=' . $product_id );
+            $this->replace['site_name']     = $this->get_from_name();
+            $this->replace['site_url']      = site_url();
+        }
+
+        $this->setup_locale();
+        $this->send( $this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
+        $this->restore_locale();
     }
 
         /**
