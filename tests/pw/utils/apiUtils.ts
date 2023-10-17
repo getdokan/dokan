@@ -193,6 +193,19 @@ export class ApiUtils {
         return responseBody;
     }
 
+    // delete all stores
+    async deleteAllStores(auth?: auth): Promise<responseBody> {
+        // todo: apply multiple optional parameter
+        const allStores = await this.getAllStores(auth);
+        if (!allStores?.length) {
+            console.log('No store exists');
+            return;
+        }
+        const allStoreIds = allStores.map((o: { id: unknown }) => o.id);
+        const [, responseBody] = await this.put(endPoints.updateBatchStores, { data: { delete: allStoreIds }, headers: payloads.adminAuth });
+        return responseBody;
+    }
+
     // create store review
     async createStoreReview(sellerId: string, payload: object, auth?: auth): Promise<[responseBody, string]> {
         const [, responseBody] = await this.post(endPoints.createStoreReview(sellerId), { data: payload, headers: auth });
@@ -204,7 +217,7 @@ export class ApiUtils {
      * follow store methods
      */
 
-    // follow unfollow store
+    // follow un-follow store
     async followUnfollowStore(sellerId: string, auth?: auth): Promise<responseBody> {
         const [, responseBody] = await this.post(endPoints.followUnfollowStore, { data: { vendor_id: Number(sellerId) }, headers: auth });
         return responseBody;
@@ -249,7 +262,7 @@ export class ApiUtils {
     }
 
     // delete all products
-    async deleteAllProducts(productName: string, auth?: auth): Promise<responseBody> {
+    async deleteAllProducts(productName?: string, auth?: auth): Promise<responseBody> {
         // todo: apply multiple optional parameter
         const allProducts = await this.getAllProducts(auth);
         if (!allProducts?.length) {
@@ -765,6 +778,19 @@ export class ApiUtils {
     // delete customer
     async deleteCustomer(userId: string, auth?: auth): Promise<responseBody> {
         const [, responseBody] = await this.delete(endPoints.wc.deleteCustomer(userId), { headers: auth });
+        return responseBody;
+    }
+
+    // delete all customers
+    async deleteAllCustomers(auth?: auth): Promise<responseBody> {
+        // todo: apply multiple optional parameter
+        const allCustomers = await this.getAllCustomers(auth);
+        if (!allCustomers?.length) {
+            console.log('No customer exists');
+            return;
+        }
+        const allCustomersIds = allCustomers.map((o: { id: unknown }) => o.id);
+        const [, responseBody] = await this.put(endPoints.updateBatchCustomers, { data: { delete: allCustomersIds }, headers: payloads.adminAuth });
         return responseBody;
     }
 
