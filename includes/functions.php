@@ -1193,7 +1193,7 @@ function dokan_get_store_url( $user_id ) {
 /**
  * Get current page URL.
  *
- * @since DOKAN_SINCE
+ * @since 3.9.1
  *
  * @return string
  */
