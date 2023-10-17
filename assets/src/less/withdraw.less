@@ -84,3 +84,50 @@
         border-top: 1px solid #eee;
     }
 }
+
+@media only screen and (max-width: 500px) {
+  .dokan-withdraw-content {
+    .dokan-withdraw-area {
+      .entry-content {
+        .dokan-panel {
+          .dokan-panel-body {
+            .dokan-panel-inner-container {
+              display: flex;
+              flex-direction: column;
+
+              .dokan-w5 {
+                position: relative;
+                left: 0;
+                right: 100%;
+                top: 100%;
+                transform: none;
+                margin-top: 20px;
+              }
+            }
+          }
+        }
+
+        .dokan-withdraw-status-filter-container {
+          .dokan-add-product-link {
+            a {
+              margin: 15px 0;
+            }
+          }
+        }
+      }
+
+      table.dokan-table-striped {
+        overflow: auto;
+        display: block;
+
+        tbody {
+          tr {
+            th {
+              width: 150px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
