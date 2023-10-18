@@ -24,13 +24,13 @@ export default defineConfig({
         ? [
               ['github'],
               ['html', { open: 'never', outputFolder: 'playwright-report/e2e/html/html-report-e2e' }],
-              ['junit', { outputFile: 'playwright-report/e2e/junit-report/e2e-results.xml' }],
+            //   ['junit', { outputFile: 'playwright-report/e2e/junit-report/e2e-results.xml' }],
               ['list', { printSteps: true }],
               ['./utils/summaryReporter.ts', { outputFile: 'playwright-report/e2e/summary-report/results.json' }],
           ]
         : [
               ['html', { open: 'never', outputFolder: 'playwright-report/e2e/html/html-report-e2e' }],
-              ['junit', { outputFile: 'playwright-report/e2e/junit-report/e2e-results.xml' }],
+            //   ['junit', { outputFile: 'playwright-report/e2e/junit-report/e2e-results.xml' }],
               ['list', { printSteps: true }],
               ['./utils/summaryReporter.ts', { outputFile: 'playwright-report/e2e/summary-report/results.json' }],
           ],
@@ -70,7 +70,7 @@ export default defineConfig({
         {
             name: 'e2e_tests',
             testMatch: /.*\.spec\.ts/,
-            dependencies: process.env.NO_SETUP ? [] : ['e2e_setup'] /* whether not to run setup tests before running actual tests */,
+            // dependencies: process.env.NO_SETUP ? [] : ['e2e_setup'] /* whether not to run setup tests before running actual tests */,
         },
 
         // local site setup project

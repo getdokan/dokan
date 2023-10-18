@@ -24,13 +24,13 @@ export default defineConfig({
         ? [
               ['github'],
               ['html', { open: 'never', outputFolder: 'playwright-report/api/html/html-report-api' }],
-              ['junit', { outputFile: 'playwright-report/api/junit-report/api-results.xml' }],
+            //   ['junit', { outputFile: 'playwright-report/api/junit-report/api-results.xml' }],
               ['list', { printSteps: true }],
               ['./utils/summaryReporter.ts', { outputFile: 'playwright-report/api/summary-report/results.json' }],
           ]
         : [
               ['html', { open: 'never', outputFolder: 'playwright-report/api/html/html-report-api' }],
-              ['junit', { outputFile: 'playwright-report/api/junit-report/api-results.xml' }],
+            //   ['junit', { outputFile: 'playwright-report/api/junit-report/api-results.xml' }],
               ['list', { printSteps: true }],
               ['./utils/summaryReporter.ts', { outputFile: 'playwright-report/api/summary-report/results.json' }],
           ],
@@ -59,7 +59,7 @@ export default defineConfig({
         {
             name: 'api_tests',
             testMatch: /.*\.spec\.ts/,
-            dependencies: process.env.NO_SETUP ? [] : ['api_setup'] /* whether not to run setup tests before running actual tests */,
+            // dependencies: process.env.NO_SETUP ? [] : ['api_setup'] /* whether not to run setup tests before running actual tests */,
         },
     ],
 });

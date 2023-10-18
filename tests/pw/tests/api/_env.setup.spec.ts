@@ -20,12 +20,12 @@ setup.describe(' setup environment', () => {
 
     setup('create customer @lite', async () => {
         const [, customerId] = await apiUtils.createCustomer(payloads.createCustomer1, payloads.adminAuth);
-        process.env.CUSTOMER_ID = customerId;
+        // process.env.CUSTOMER_ID = customerId;
     });
 
     setup('create vendor @lite', async () => {
         const [, sellerId] = await apiUtils.createStore(payloads.createStore1, payloads.adminAuth);
-        process.env.VENDOR_ID = sellerId;
+        // process.env.VENDOR_ID = sellerId;
     });
 
     // setup('set dokan general settings @lite', async () => {
