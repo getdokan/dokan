@@ -43,7 +43,7 @@
                 <div class="metabox-holder">
                     <fieldset class="settings-header" v-for="section in settingSections" v-if="currentTab === section.id">
                         <div class="settings-content">
-                            <h2 class="settings-title">{{ section.settings_title }}</h2>
+                            <h2 class="settings-title font-bold">{{ section.settings_title }}</h2>
                             <p class="settings-description">{{ section.settings_description }}</p>
                         </div>
                         <div v-if="section.document_link" class="settings-document-button">
