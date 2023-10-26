@@ -63,9 +63,9 @@
 
         <template v-if="'commission_fixed' === fieldData.type">
             <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
-                <fieldset>
-                    <FieldHeading :fieldData="fieldData"></FieldHeading>
-                    <fixed @update="commissionUpdated" v-model="fixedCommission"/>
+                <fieldset class='flex justify-between'>
+                    <FieldHeading class='flex-1' :fieldData="fieldData"></FieldHeading>
+                    <fixed class='flex-1' @update="commissionUpdated" v-model="fixedCommission"/>
                 </fieldset>
                 <p class="dokan-error combine-commission" v-if="hasError( fieldData.fields.percent_fee.name ) && hasError( fieldData.fields.fixed_fee.name )">
                     {{ __( 'Both percentage and fixed fee is required.', 'dokan-lite' ) }}
