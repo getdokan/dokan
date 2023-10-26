@@ -394,6 +394,7 @@ function dokan_get_order_status_class( $status ) {
         case 'wc-refunded':
         case 'cancelled':
         case 'wc-cancelled':
+        case 'checkout-draft':
             $order_status_class = 'default';
             break;
     }
@@ -444,6 +445,10 @@ function dokan_get_order_status_translated( $status ) {
         case 'failed':
         case 'wc-failed':
             $translated_order_status = __( 'Failed', 'dokan-lite' );
+            break;
+
+        case 'checkout-draft':
+            $translated_order_status = __( 'Draft', 'dokan-lite' );
             break;
     }
 

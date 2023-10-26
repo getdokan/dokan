@@ -134,11 +134,11 @@ class EmailHooks {
      *
      * @since 3.8.0 Moved this method from includes/wc-functions.php file
      *
-     * @param object $phpmailer
+     * @param \PHPMailer $phpmailer
      *
      * @return void
      */
-    public function exclude_child_customer_receipt( &$phpmailer ) {
+    public function exclude_child_customer_receipt( $phpmailer ) {
         $subject = $phpmailer->Subject; ////phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
 
         // order receipt

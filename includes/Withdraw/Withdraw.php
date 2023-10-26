@@ -498,7 +498,7 @@ class Withdraw {
             [ '%d' ]
         );
 
-        if ( $updated !== 1 ) {
+        if ( $wpdb->last_error ) {
             return new WP_Error( 'dokan_withdraw_update_error', __( 'Could not update withdraw', 'dokan-lite' ) );
         }
 

@@ -3,11 +3,11 @@
 **Donate Link:** http://tareq.co/donate/  
 **Tags:** WooCommerce multivendor marketplace, multi vendor marketplace, multi seller store, multi-vendor, multi seller, commissions, multivendor, marketplace, product vendors, woocommerce vendor, commission rate, e-commerce, woocommerce, ebay, ecommerce.  
 **Requires at least:** 5.6  
-**Tested up to:** 6.3.1  
+**Tested up to:** 6.3.2  
 **WC requires at least:** 5.0.0  
-**WC tested up to:** 8.1.0  
+**WC tested up to:** 8.2.1  
 **Requires PHP:** 7.3  
-**Stable tag:** 3.8.2  
+**Stable tag:** 3.9.1  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -337,6 +337,42 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 ## Changelog ##
+
+### v3.9.1 ( Oct 17, 2023 ) ###
+
+- **update:** Removed flaticon packages and replace used icons with fontAwesome icons. This will reduce the plugin zip size.
+- **update:** Added a new settings to disable fontAwesome library
+- **update:** Changed all the single date picker fields with daterange picker. This updates will keep the design consistent throughout the plugin.
+- **fix:** [StoreOpenCloseTime] An issue where invalid store opening or closing times generate warning and fatal error on single store page.
+- **fix:** [Email] Fixed an issue where the product edit link on email template redirects to the products listing instead of single product edit page
+- **fix:** Fixed some responsive issue under vendor dashboard product edit page.
+- **fix:** Fixed some responsive issue under vendor dashboard withdraw page.
+
+### v3.9.0 ( Oct 06, 2023 ) ###
+
+- **new:** Added two new hooks named `dokan_get_admin_report_data` and `dokan_get_overview_data` to extend Dokan reports functionality.
+- **fix:** Resolved an issue where the `Tracking Number` button was still visible under the `Vendor Dashboard → Order Details → Order Note section` even after the `Shipment Tracking` feature was enabled by the admin.
+- **fix:** [WidgetProductAttribute] Fixed an issue where the `Filter Products by Attribute` widget was not working for Multi-Word Attributes.
+- **update:** Added a new filter named `dokan_get_store_url` to filter store URLs for a single store.
+- **update:** Removed some redundant or not required settings from vendor store settings page, also rearranged some admin settings and added some settings under Admin dashboard.
+Details:
+1. Removed `Show Vendor Info` settings under the `WordPress Admin Dashboard → Dokan → Settings → Appearance` and added it back under the `WordPress Admin Dashboard → Dokan → Settings → General → Product Page Settings` section.
+2. Removed the  `More Products` setting under `Vendor Dashboard → Settings → Store Settings` and added it back as a new Admin setting under `WordPress Admin Dashboard → Dokan → Settings → General → Product Page Settings` section. Now, only the admin can control this setting.
+3. Removed redundant `Store Products Per Page` setting under `Vendor Dashboard → Settings → Store Settings`. Since the admin already has this setting under `WordPress Admin Dashboard → Dokan → Settings → General`, this setting will be used from now on and only the admin can control this setting.
+4. Removed redundant `Store Page Product Section` settings under `Vendor Dashboard → Settings → Store Page Product Section`. Now, only the admin can control these settings under Theme Customizer settings.
+
+### v3.8.3 ( Sep 26, 2023 ) ###
+
+- **update:** Added advanced filtering and CSV export feature for vendor withdraws under Admin Dashboard → Dokan → Withdraw menu.
+The ‘Withdraw’ page on the admin dashboard has been updated with advanced filtering and log exporting features. This allows admins to filter transactions based on payment method and date range, which enhances their ability to analyze and manage withdrawals. The feature to export CSV logs is also included, which makes tracking and record-keeping easier. These integrations aim to empower marketplace owners with comprehensive tools for efficient withdrawal management within the dashboard.
+- **update:** [Dokan Invoice] Added PDF invoice links on Sub Order section
+Previously PDF invoice links  was not visible on Sub Order section under customer order view. After this update customer will be able to view invoice link on sub order section.
+- **update:** Added backend validation of phone number used on entire Dokan plugin.
+- **update:** Store category widget list default state set to collapse.
+Previously, if a store has a product count over 100 or more and the store has many product categories, the store category widget would display those categories and subcategories in an open state rather than collapsed state that the sidebar style gets broken. Now the list has a max height of 500px, which will be visible, and other elements will be visible by scrolling and the parent category that has a submenu will be in collapse mode.
+- **update:** Various style improvements of Dokan frontend including Vendor Dashboard, Single Store Page, Single Product Page etc.
+- **fix:** [Refund] Earlier, when refunding an order under the vendor dashboard, the tax amount decimal point rounding precision was inconsistent with WooCommerce. However, it has now been updated to be consistent with WooCommerce.
+- **fix** Fixed an issue where the order status label was missing on vendor dashboard for draft orders.
 
 ### v3.8.2 ( Sep 13, 2023 ) ###
 

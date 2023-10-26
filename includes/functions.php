@@ -22,7 +22,20 @@ function dokan_admin_menu_position() {
  * @return string
  */
 function dokana_admin_menu_capability() {
-    return apply_filters( 'dokan_menu_capability', 'manage_woocommerce' );
+    return dokan_admin_menu_capability();
+}
+
+if ( ! function_exists( 'dokan_admin_menu_capability' ) ) {
+    /**
+     * Dokan Admin menu capability
+     *
+     * @since 3.8.3
+     *
+     * @return string
+     */
+    function dokan_admin_menu_capability() {
+        return apply_filters( 'dokan_menu_capability', 'manage_woocommerce' );
+    }
 }
 
 /**
@@ -1165,7 +1178,29 @@ function dokan_get_store_url( $user_id ) {
     $user_nicename    = ( false !== $userdata ) ? $userdata->user_nicename : '';
     $custom_store_url = dokan_get_option( 'custom_store_url', 'dokan_general', 'store' );
 
-    return home_url( '/' . $custom_store_url . '/' . $user_nicename . '/' );
+    /**
+     * Filter hook for the store URL before returning.
+     *
+     * @since 3.9.0
+     *
+     * @param string $store_url        The default store URL
+     * @param string $custom_store_url The custom store URL
+     * @param int    $user_id          The user ID for the store owner
+     */
+    return apply_filters( 'dokan_get_store_url', home_url( '/' . $custom_store_url . '/' . $user_nicename . '/' ), $custom_store_url, $user_id );
+}
+
+/**
+ * Get current page URL.
+ *
+ * @since 3.9.1
+ *
+ * @return string
+ */
+function dokan_get_current_page_url() {
+    global $wp;
+
+    return add_query_arg( $_SERVER['QUERY_STRING'], '', home_url( $wp->request ) );
 }
 
 /**
@@ -4190,7 +4225,7 @@ function is_tweleve_hour_format() {
  * @return string
  */
 function dokan_sanitize_phone_number( $phone ) {
-    return filter_var( $phone, FILTER_SANITIZE_NUMBER_INT );
+	return preg_replace( '/[^0-9()._+-]/', '', $phone );
 }
 
 /**

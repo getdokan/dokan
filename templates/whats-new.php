@@ -4,6 +4,133 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.9.1',
+        'released' => '2023-10-17',
+        'changes'  => [
+            'New'         => [
+                [
+                    'title'       => '',
+                    'description' => '',
+                ],
+                [
+                    'title'       => '',
+                    'description' => '',
+                ],
+            ],
+            'Improvement' => [
+                [
+                    'title'       => 'Removed flaticon packages and replace used icons with fontAwesome icons. This will reduce the plugin zip size.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added a new settings to disable fontAwesome library',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Changed all the single date picker fields with daterange picker. This updates will keep the design consistent throughout the plugin.',
+                    'description' => '',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => '[StoreOpenCloseTime] An issue where invalid store opening or closing times generate warning and fatal error on single store page.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => '[Email] Fixed an issue where the product edit link on email template redirects to the products listing instead of single product edit page',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed some responsive issue under vendor dashboard product edit page.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed some responsive issue under vendor dashboard withdraw page.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.9.0',
+        'released' => '2023-10-06',
+        'changes'  => [
+            'New'         => [
+                [
+                    'title'       => 'Added two new hooks named `dokan_get_admin_report_data` and `dokan_get_overview_data` to extend Dokan reports functionality.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => '',
+                    'description' => '',
+                ],
+            ],
+            'Improvement' => [
+                [
+                    'title'       => 'Added a new filter named `dokan_get_store_url` to filter store URLs for a single store.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Removed some redundant or not required settings from vendor store settings page, also rearranged some admin settings and added some settings under Admin dashboard.',
+                    'description' => 'Details:
+1. Removed `Show Vendor Info` settings under the `WordPress Admin Dashboard → Dokan → Settings → Appearance` and added it back under the `WordPress Admin Dashboard → Dokan → Settings → General → Product Page Settings` section.
+2. Removed the  `More Products` setting under `Vendor Dashboard → Settings → Store Settings` and added it back as a new Admin setting under `WordPress Admin Dashboard → Dokan → Settings → General → Product Page Settings` section. Now, only the admin can control this setting.
+3. Removed redundant `Store Products Per Page` setting under `Vendor Dashboard → Settings → Store Settings`. Since the admin already has this setting under `WordPress Admin Dashboard → Dokan → Settings → General`, this setting will be used from now on and only the admin can control this setting.
+4. Removed redundant `Store Page Product Section` settings under `Vendor Dashboard → Settings → Store Page Product Section`. Now, only the admin can control these settings under Theme Customizer settings.
+',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => 'Resolved an issue where the `Tracking Number` button was still visible under the `Vendor Dashboard → Order Details → Order Note section` even after the `Shipment Tracking` feature was enabled by the admin.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => '[WidgetProductAttribute] Fixed an issue where the `Filter Products by Attribute` widget was not working for Multi-Word Attributes.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.8.3',
+        'released' => '2023-09-26',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Added advanced filtering and CSV export feature for vendor withdraws under Admin Dashboard → Dokan → Withdraw menu.',
+                    'description' => 'The ‘Withdraw’ page on the admin dashboard has been updated with advanced filtering and log exporting features. This allows admins to filter transactions based on payment method and date range, which enhances their ability to analyze and manage withdrawals. The feature to export CSV logs is also included, which makes tracking and record-keeping easier. These integrations aim to empower marketplace owners with comprehensive tools for efficient withdrawal management within the dashboard.',
+                ],
+                [
+                    'title'       => '[Dokan Invoice] Added PDF invoice links on Sub Order section',
+                    'description' => 'Previously PDF invoice links  was not visible on Sub Order section under customer order view. After this update customer will be able to view invoice link on sub order section.',
+                ],
+                [
+                    'title'       => 'Added backend validation of phone number used on entire Dokan plugin.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Store category widget list default state set to collapse.',
+                    'description' => 'Previously, if a store has a product count over 100 or more and the store has many product categories, the store category widget would display those categories and subcategories in an open state rather than collapsed state that the sidebar style gets broken. Now the list has a max height of 500px, which will be visible, and other elements will be visible by scrolling and the parent category that has a submenu will be in collapse mode.',
+                ],
+                [
+                    'title'       => 'Various style improvements of Dokan frontend including Vendor Dashboard, Single Store Page, Single Product Page etc.',
+                    'description' => '',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => '[Refund] Earlier, when refunding an order under the vendor dashboard, the tax amount decimal point rounding precision was inconsistent with WooCommerce. However, it has now been updated to be consistent with WooCommerce.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed an issue where the order status label was missing on vendor dashboard for draft orders.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.8.2',
         'released' => '2023-09-13',
         'changes'  => [
@@ -32,7 +159,7 @@ It’s important to note that in the next version of Dokan, the Add New Product 
                     'description' => '',
                 ],
             ],
-            'Fix' => [
+            'Fix'         => [
                 [
                     'title'       => 'Fixed an issue where orders can’t be filtered by vendor under Admin Dashboard → WooCommerce → Order lists page if HPOS feature is enabled',
                     'description' => '',

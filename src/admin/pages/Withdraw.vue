@@ -86,14 +86,45 @@
                     <select
                         id="filter-vendors"
                         style="width: 190px;"
-                        :data-placeholder="__('Filter by vendor', 'dokan-lite')"
+                        :data-placeholder="__( 'Filter by Vendor', 'dokan-lite' )"
                     />
-                    <button
-                        v-if="filter.user_id"
-                        type="button"
-                        class="button"
-                        @click="filter.user_id = 0"
-                    >&times;</button>
+
+                    <select
+                        id="filter-payment-methods"
+                        :data-placeholder="__( 'Filter by Payment Methods', 'dokan-lite' )"
+                    />
+
+                    <date-range-picker
+                        class="mr-5"
+                        ref="picker"
+                        :locale-data="this.dateTimePickerFormat"
+                        :singleDatePicker="false"
+                        :showDropdowns="true"
+                        :autoApply="false"
+                        :ranges="this.dateRangePickerRanges"
+                        v-model="filter.transaction_date">
+
+                        <!--    Date Selection Slot-->
+                        <template v-slot:input="picker">
+                            <span v-if="filter.transaction_date.startDate">{{ filter.transaction_date.startDate | getFormattedDate }} - {{ filter.transaction_date.endDate | getFormattedDate }}</span>
+                            <span class="date-range-placeholder" v-if="! filter.transaction_date.startDate">{{ __( 'Filter by Date', 'dokan-lite' ) }}</span>
+                        </template>
+
+                        <!--    Footer Slot-->
+                        <div slot="footer" slot-scope="data" class="drp-buttons">
+                            <span class="drp-selected">{{ data.rangeText }}</span>
+                            <button @click="setDefaultTransactionDate()" type="button" class="cancelBtn btn btn-sm btn-secondary">{{ __( 'Cancel', 'dokan-lite' ) }}</button>
+                            <button @click="data.clickApply" v-if="! data.in_selection" type="button" class="applyBtn btn btn-sm btn-success">{{ __( 'Apply', 'dokan-lite' ) }}</button>
+                        </div>
+                    </date-range-picker>
+
+                    <a @click="clearAllFiltering()" id="clear-all-filtering" class="button router-link-active">
+                        {{ __( 'Clear', 'dokan-lite' ) }}
+                    </a>
+
+                    <a @click="exportAllLogs()" id="export-all-logs" class="button router-link-active">
+                        {{ __( 'Export', 'dokan-lite' ) }}
+                    </a>
                 </template>
 
                 <template slot="actions" slot-scope="data">
@@ -121,14 +152,16 @@
 </template>
 
 <script>
-let ListTable    = dokan_get_lib('ListTable');
-let Modal        = dokan_get_lib('Modal');
-let Currency     = dokan_get_lib('Currency');
-let AdminNotice  = dokan_get_lib('AdminNotice');
+import moment from 'moment/moment';
+
+let ListTable         = dokan_get_lib('ListTable');
+let Modal             = dokan_get_lib('Modal');
+let Currency          = dokan_get_lib('Currency');
+let AdminNotice       = dokan_get_lib('AdminNotice');
+const DateRangePicker = dokan_get_lib('DateRangePicker');
 
 import $ from 'jquery';
 import UpgradeBanner from "admin/components/UpgradeBanner.vue";
-
 
 export default {
 
@@ -140,6 +173,7 @@ export default {
         Currency,
         UpgradeBanner,
         AdminNotice,
+        DateRangePicker,
     },
 
     data () {
@@ -149,12 +183,36 @@ export default {
                 id: null,
                 note: null
             },
-
+            dateTimePickerFormat: {
+                format: dokan_get_daterange_picker_format().toLowerCase(),
+                ...dokan_helper.daterange_picker_local,
+            },
+            dateRangePickerRanges: {
+                'Today': [moment().toDate(), moment().toDate()],
+                'Last 30 Days': [moment().subtract(29, 'days').toDate(), moment().toDate()],
+                'This Month': [moment().startOf('month').toDate(), moment().endOf('month').toDate()],
+                'Last Month': [moment().subtract(1, 'month').startOf('month').toDate(), moment().subtract(1, 'month').endOf('month').toDate()],
+                'This Year': [moment().month(0).startOf('month').toDate(), moment().month(11).endOf('month').toDate()],
+                'Last Year': [moment().month(0).subtract(1, 'year').startOf('month').toDate(), moment().month(11).subtract(1, 'year').endOf('month').toDate()]
+            },
+            progressbar: {
+                value: 0,
+                isActive: false,
+            },
+            paymentMethods: [],
             totalPages: 1,
             perPage: 10,
             totalItems: 0,
             filter: {
-                user_id: 0
+                user_id: 0,
+                payment_method: {
+                    id: '',
+                    title: '',
+                },
+                transaction_date: {
+                    startDate: '',
+                    endDate: '',
+                }
             },
             counts: {
                 pending: 0,
@@ -185,8 +243,6 @@ export default {
 
     watch: {
         '$route.query.status'() {
-            this.filter.user_id = 0;
-            this.clearSelection('#filter-vendors');
             this.fetchRequests();
         },
 
@@ -198,12 +254,28 @@ export default {
             this.fetchRequests();
         },
 
+        '$route.query.payment_method'() {
+            this.fetchRequests();
+        },
+
         'filter.user_id'(user_id) {
             if (user_id === 0) {
                 this.clearSelection('#filter-vendors');
             }
 
             this.goTo(this.query);
+        },
+
+        'filter.payment_method.id'( id ) {
+            if ( ! id ) {
+                this.clearSelection( '#filter-payment-methods' );
+            }
+
+            this.goTo( this.query );
+        },
+
+        'filter.transaction_date.startDate'() {
+            this.fetchRequests();
         }
     },
 
@@ -290,6 +362,22 @@ export default {
                     },
                 ];
             }
+        },
+
+        filterTransactionDate() {
+            let data = {
+                start_date: '',
+                end_date: '',
+            };
+
+            if ( ! this.filter.transaction_date.startDate || ! this.filter.transaction_date.endDate ) {
+                return data;
+            }
+
+            data.start_date = moment( this.filter.transaction_date.startDate ).format( 'YYYY-MM-DD HH:mm:ss' );
+            data.end_date   = moment( this.filter.transaction_date.endDate ).format( 'YYYY-MM-DD HH:mm:ss' );
+
+            return data;
         }
     },
 
@@ -299,6 +387,8 @@ export default {
 
     mounted() {
         const self = this;
+
+        self.getPaymentMethodSelector();
 
         $('#filter-vendors').selectWoo({
             ajax: {
@@ -328,9 +418,46 @@ export default {
         $('#filter-vendors').on('select2:select', (e) => {
             self.filter.user_id = e.params.data.id;
         });
+
+        $( '#filter-payment-methods' ).on( 'select2:select', ( e ) => {
+            self.filter.payment_method.id    = e.params.data.id;
+            self.filter.payment_method.title = e.params.data.text;
+        } );
+
+        $( '#filter-payment-methods' ).on( 'select2:clear', ( e ) => {
+            self.filter.payment_method.id = "";
+        } );
+    },
+
+    filters: {
+        getFormattedDate( date ) {
+            return date ? $.datepicker.formatDate( dokan_get_i18n_date_format(), new Date( date ) ) : '';
+        }
     },
 
     methods: {
+        async getPaymentMethodSelector() {
+            await dokan.api.get( '/withdraw/payment_methods' )
+                .done( ( response ) => {
+                    this.paymentMethods = [ { id: '', text: '' } ].concat( response.map( payment_method => {
+                        return {
+                            id: payment_method.id,
+                            text: payment_method.title
+                        }
+                    } ) );
+
+                    jQuery( '#filter-payment-methods' ).select2( {
+                        data: this.paymentMethods,
+                    } ).val( this.filter.payment_method ).trigger( 'change' );
+                } ).fail( ( jqXHR ) => {
+                    this.paymentMethods = [ { id: '', text: '' } ];
+                    let message = dokan_handle_ajax_error( jqXHR );
+
+                    if ( message ) {
+                        this.showErrorAlert( message );
+                    }
+                } );
+        },
 
         updatedCounts(xhr) {
             this.counts.pending   = parseInt( xhr.getResponseHeader('X-Status-Pending') );
@@ -351,11 +478,35 @@ export default {
             return dokan.urls.adminRoot + 'user-edit.php?user_id=' + id;
         },
 
+        getDefaultTransactionDate() {
+            return {
+                startDate: '',
+                endDate: '',
+            }
+        },
+
+        setDefaultTransactionDate() {
+            let transaction_date = this.getDefaultTransactionDate();
+
+            this.filter.transaction_date.startDate = transaction_date.startDate;
+            this.filter.transaction_date.endDate   = transaction_date.endDate;
+
+            if ( this.$refs.picker ) {
+                this.$refs.picker.togglePicker( false );
+            }
+        },
+
         fetchRequests() {
-            this.loading = true;
-            var user_id = '';
+            this.loading       = true;
+            let user_id        = '';
+            let payment_method = '';
+
             if (parseInt(this.filter.user_id) > 0) {
                 user_id = this.filter.user_id;
+            }
+
+            if ( this.filter.payment_method.id ) {
+                payment_method = this.filter.payment_method.id;
             }
 
             const data = {
@@ -363,6 +514,9 @@ export default {
                 page: this.currentPage,
                 status: this.currentStatus,
                 user_id: user_id,
+                payment_method: payment_method,
+                start_date: this.filterTransactionDate.start_date,
+                end_date: this.filterTransactionDate.end_date
             };
             dokan.api.get('/withdraw', data)
             .done((response, status, xhr) => {
@@ -379,8 +533,9 @@ export default {
                 name: 'Withdraw',
                 query: {
                     status: this.currentStatus,
-                    page: page,
-                    user_id: this.filter.user_id
+                    user_id: this.filter.user_id,
+                    payment_method: this.filter.payment_method.id,
+                    page: page
                 }
             });
         },
@@ -390,7 +545,8 @@ export default {
                 name: 'Withdraw',
                 query: {
                     status: this.currentStatus,
-                    user_id: this.filter.user_id
+                    user_id: this.filter.user_id,
+                    payment_method: this.filter.payment_method.id
                 }
             });
         },
@@ -500,6 +656,67 @@ export default {
             }
 
             return dokan.hooks.applyFilters( 'dokan_get_payment_details', details, method, data );
+        },
+
+        recursiveWriteLogsToFile( page = 1 ) {
+            this.loading = true;
+            let self     = this;
+            let user_id  = '';
+
+            if ( parseInt( this.filter.user_id ) > 0 ) {
+                user_id = this.filter.user_id;
+            }
+
+            const args = {
+                is_export: true,
+                per_page: self.perPage,
+                page: self.currentPage,
+                status: self.currentStatus,
+                user_id: user_id,
+                payment_method: self.paymentMethods.id,
+                start_date: self.filterTransactionDate.start_date,
+                end_date: self.filterTransactionDate.end_date
+            };
+
+            dokan.api.get( '/withdraw', args )
+                .done( ( response ) => {
+                    if ( ! response.percentage ) {
+                        self.loading              = false;
+                        self.progressbar.isActive = false;
+
+                        return;
+                    }
+
+                    self.progressbar.value = response.percentage;
+
+                    if ( response.percentage >= 100 ) {
+                        this.loading              = false;
+                        this.progressbar.isActive = false;
+
+                        // Redirect to the response URL.
+                        window.location.assign( response.url );
+                    } else {
+                        // Run recursive logs to file method again.
+                        self.recursiveWriteLogsToFile( response.step );
+                    }
+                } ).fail( ( jqXHR ) => {
+                    self.loading              = false;
+                    self.progressbar.isActive = false;
+                } );
+        },
+
+        clearAllFiltering() {
+            this.filter.user_id                    = 0;
+            this.filter.payment_method.id          = '';
+            this.filter.payment_method.title       = '';
+            this.filter.transaction_date.startDate = '';
+            this.filter.transaction_date.endDate   = '';
+        },
+
+        exportAllLogs() {
+            this.progressbar.value = 0;
+
+            this.recursiveWriteLogsToFile( 1 );
         },
 
         moment(date) {
@@ -614,6 +831,15 @@ export default {
         clearSelection(element) {
             $(element).val(null).trigger('change');
         },
+
+        showErrorAlert( message ) {
+            let self = this;
+            swal.fire(
+                self.__( 'Something went wrong', 'dokan' ),
+                message,
+                'error'
+            );
+        },
     }
 };
 </script>
@@ -686,6 +912,15 @@ export default {
         p {
             margin-bottom: 2px;
         }
+    }
+
+    select#filter-payment-methods {
+        width: 175px;
+    }
+
+    .select2.select2-container {
+        width: 190px;
+        vertical-align: top;
     }
 }
 
