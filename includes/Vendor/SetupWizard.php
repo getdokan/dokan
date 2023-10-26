@@ -202,6 +202,7 @@ class SetupWizard extends DokanSetupWizard {
         $address_state   = isset( $store_info['address']['state'] ) ? $store_info['address']['state'] : '';
         $map_location    = isset( $store_info['location'] ) ? $store_info['location'] : '';
         $map_address     = isset( $store_info['find_address'] ) ? $store_info['find_address'] : '';
+        $store_ppp       = isset( $store_info['store_ppp'] ) ? $store_info['store_ppp'] : 12;
 
         $country_obj = new WC_Countries();
         $countries   = $country_obj->get_allowed_countries();
