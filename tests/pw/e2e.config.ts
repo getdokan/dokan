@@ -12,6 +12,11 @@ export default defineConfig({
     timeout: process.env.CI ? 40 * 1000 : 35 * 1000 /* Maximum time one test can run for. */,
     expect: {
         timeout: 10 * 1000 /* Maximum time expect() should wait for the condition to be met.  For example in `await expect(locator).toHaveText();`*/,
+        toHaveScreenshot: {
+            maxDiffPixelRatio: 0.2,
+            maxDiffPixels: 500,
+            threshold: 0.5,
+        },
     } /* Configuration for the expect assertion library */,
     preserveOutput: 'always' /* Whether to preserve test output in the testConfig.outputDir. Defaults to 'always'. */,
     // fullyParallel  : true, 	/* Run tests in files in parallel */
@@ -24,13 +29,13 @@ export default defineConfig({
         ? [
               ['github'],
               ['html', { open: 'never', outputFolder: 'playwright-report/e2e/html/html-report-e2e' }],
-            //   ['junit', { outputFile: 'playwright-report/e2e/junit-report/e2e-results.xml' }],
+              //   ['junit', { outputFile: 'playwright-report/e2e/junit-report/e2e-results.xml' }],
               ['list', { printSteps: true }],
               ['./utils/summaryReporter.ts', { outputFile: 'playwright-report/e2e/summary-report/results.json' }],
           ]
         : [
               ['html', { open: 'never', outputFolder: 'playwright-report/e2e/html/html-report-e2e' }],
-            //   ['junit', { outputFile: 'playwright-report/e2e/junit-report/e2e-results.xml' }],
+              //   ['junit', { outputFile: 'playwright-report/e2e/junit-report/e2e-results.xml' }],
               ['list', { printSteps: true }],
               ['./utils/summaryReporter.ts', { outputFile: 'playwright-report/e2e/summary-report/results.json' }],
           ],
