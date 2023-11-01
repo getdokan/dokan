@@ -2,9 +2,9 @@ import { test as setup, expect } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
-import { dbUtils } from '@utils/dbUtils';
-import { dbData } from '@utils/dbData';
-import { helpers } from '@utils/helpers';
+// import { dbUtils } from '@utils/dbUtils';
+// import { dbData } from '@utils/dbData';
+// import { helpers } from '@utils/helpers';
 
 setup.describe(' setup environment', () => {
     let apiUtils: ApiUtils;

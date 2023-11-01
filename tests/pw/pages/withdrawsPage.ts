@@ -5,7 +5,7 @@ import { data } from '@utils/testData';
 import { helpers } from '@utils/helpers';
 import { vendor } from '@utils/interfaces';
 
-const { DOKAN_PRO } = process.env;
+const { DOKAN_PRO } = data.env;
 
 export class WithdrawsPage extends AdminPage {
     constructor(page: Page) {

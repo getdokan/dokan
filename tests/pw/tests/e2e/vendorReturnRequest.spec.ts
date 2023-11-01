@@ -6,7 +6,7 @@ import { OrdersPage } from '@pages/ordersPage';
 import { data } from '@utils/testData';
 // import { payloads } from '@utils/payloads';
 
-// const { CUSTOMER_ID, PRODUCT_ID } = process.env;
+// const { CUSTOMER_ID, PRODUCT_ID } = data.env;
 
 test.describe('Vendor RMA test', () => {
     let vendor: VendorReturnRequestPage;

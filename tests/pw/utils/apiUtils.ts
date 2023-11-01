@@ -2,10 +2,11 @@ import { expect, type APIRequestContext, APIResponse, Request } from '@playwrigh
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
 import { helpers } from '@utils/helpers';
+import { data } from '@utils/testData';
 import fs from 'fs';
 import { auth, user_api, taxRate, coupon_api, marketPlaceCoupon, reqOptions, headers, storageState, responseBody } from '@utils/interfaces';
 
-const { VENDOR_ID, CUSTOMER_ID } = process.env;
+const { VENDOR_ID, CUSTOMER_ID } = data.env;
 
 export class ApiUtils {
     readonly request: APIRequestContext;
@@ -154,7 +155,6 @@ export class ApiUtils {
 
     // get sellerId
     async getSellerId(storeName?: string, auth?: auth): Promise<string> {
-        // todo: apply multiple optional parameter
         if (arguments.length === 1 && typeof storeName === 'object') {
             auth = storeName as auth;
             storeName = undefined;
@@ -195,7 +195,7 @@ export class ApiUtils {
 
     // delete all stores
     async deleteAllStores(auth?: auth): Promise<responseBody> {
-        // todo: apply multiple optional parameter
+        // todo: apply multiple optional parameter (implement from deleteAllProducts)
         const allStores = await this.getAllStores(auth);
         if (!allStores?.length) {
             console.log('No store exists');
@@ -240,10 +240,14 @@ export class ApiUtils {
     }
 
     // get productId
-    async getProductId(productName: string, auth?: auth): Promise<string> {
-        // todo: apply multiple optional parameter
+    async getProductId(productName?: string, auth?: auth): Promise<string> {
+        if (arguments.length === 1 && typeof productName === 'object') {
+            auth = productName as auth;
+            productName = undefined;
+        }
+
         const allProducts = await this.getAllProducts(auth);
-        const productId = productName ? allProducts.find((o: { name: string }) => o.name.toLowerCase() === productName.toLowerCase())?.id : allProducts[0]?.id;
+        const productId = productName ? allProducts.find((o: { name: string }) => o.name.toLowerCase() === productName!.toLowerCase())?.id : allProducts[0]?.id;
         return productId;
     }
 
@@ -392,10 +396,14 @@ export class ApiUtils {
     }
 
     // get couponId
-    async getCouponId(couponCode: string, auth?: auth): Promise<string> {
-        // todo: apply multiple optional parameter
+    async getCouponId(couponCode?: string, auth?: auth): Promise<string> {
+        if (arguments.length === 1 && typeof couponCode === 'object') {
+            auth = couponCode as auth;
+            couponCode = undefined;
+        }
+
         const allCoupons = await this.getAllCoupons(auth);
-        const couponId = couponCode ? allCoupons.find((o: { code: string }) => o.code.toLowerCase() === couponCode.toLowerCase())?.id : allCoupons[0]?.id;
+        const couponId = couponCode ? allCoupons.find((o: { code: string }) => o.code.toLowerCase() === couponCode!.toLowerCase())?.id : allCoupons[0]?.id;
         return couponId;
     }
 
@@ -433,10 +441,14 @@ export class ApiUtils {
     }
 
     // get marketplace couponId
-    async getMarketPlaceCouponId(couponCode: string, auth?: auth): Promise<string> {
-        // todo: apply multiple optional parameter
+    async getMarketPlaceCouponId(couponCode?: string, auth?: auth): Promise<string> {
+        if (arguments.length === 1 && typeof couponCode === 'object') {
+            auth = couponCode as auth;
+            couponCode = undefined;
+        }
+
         const [, allCoupons] = await this.get(endPoints.wc.getAllCoupons, { params: { per_page: 100 }, headers: auth });
-        const couponId = couponCode ? allCoupons.find((o: { code: string }) => o.code.toLowerCase() === couponCode.toLowerCase())?.id : allCoupons[0]?.id;
+        const couponId = couponCode ? allCoupons.find((o: { code: string }) => o.code.toLowerCase() === couponCode!.toLowerCase())?.id : allCoupons[0]?.id;
         return couponId;
     }
 
@@ -743,10 +755,14 @@ export class ApiUtils {
     }
 
     // get customerId
-    async getCustomerId(username: string, auth?: auth): Promise<string> {
-        // todo: apply multiple optional parameter
+    async getCustomerId(username?: string, auth?: auth): Promise<string> {
+        if (arguments.length === 1 && typeof username === 'object') {
+            auth = username as auth;
+            username = undefined;
+        }
+
         const allCustomers = await this.getAllCustomers(auth);
-        const customerId = username ? allCustomers.find((o: { username: string }) => o.username.toLowerCase() === username.toLowerCase())?.id : allCustomers[0]?.id;
+        const customerId = username ? allCustomers.find((o: { username: string }) => o.username.toLowerCase() === username!.toLowerCase())?.id : allCustomers[0]?.id;
         return customerId;
     }
 
@@ -941,10 +957,14 @@ export class ApiUtils {
     }
 
     // get store category Id
-    async getStoreCategoryId(StoreCategoryName: string, auth?: auth): Promise<string> {
-        // todo: apply multiple optional parameter
+    async getStoreCategoryId(StoreCategoryName?: string, auth?: auth): Promise<string> {
+        if (arguments.length === 1 && typeof StoreCategoryName === 'object') {
+            auth = StoreCategoryName as auth;
+            StoreCategoryName = undefined;
+        }
+
         const allStoreCategories = await this.getAllStoreCategories(auth);
-        const storeCategoryId = StoreCategoryName ? allStoreCategories.find((o: { name: string }) => o.name.toLowerCase() === StoreCategoryName.toLowerCase())?.id : allStoreCategories[0]?.id;
+        const storeCategoryId = StoreCategoryName ? allStoreCategories.find((o: { name: string }) => o.name.toLowerCase() === StoreCategoryName!.toLowerCase())?.id : allStoreCategories[0]?.id;
         return storeCategoryId;
     }
 
@@ -1160,14 +1180,11 @@ export class ApiUtils {
     // add spmv product to store
     async addSpmvProductToStore(productId: string, auth?: auth): Promise<[APIResponse, responseBody]> {
         const [response, responseBody] = await this.post(endPoints.addToStore, { data: { product_id: productId }, headers: auth }, false);
-
-        // todo: need to handle already cloned product, dokan issue: fatal error for requested with cloned product id
-        // if(responseBody.code){
-        // 	expect(response.status()).toBe(500);
-        // } else {
-        // 	expect(response.ok()).toBeTruthy();
-        // }
-
+        if (responseBody.code) {
+            expect(response.status()).toBe(500);
+        } else {
+            expect(response.ok()).toBeTruthy();
+        }
         return [response, responseBody];
     }
 
@@ -1214,6 +1231,13 @@ export class ApiUtils {
     async getUserById(userId: string, auth?: auth): Promise<responseBody> {
         const [, responseBody] = await this.get(endPoints.wp.getUserById(userId), { headers: auth });
         return responseBody;
+    }
+
+    // get user id
+    async getUserId(fullName: string, auth?: auth): Promise<responseBody> {
+        const allUsers = await this.getAllUsers(auth);
+        const userId = allUsers.find((o: { name: string }) => o.name.toLowerCase() === fullName!.toLowerCase())?.id;
+        return userId;
     }
 
     // create user

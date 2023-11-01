@@ -4,7 +4,7 @@ import { selector } from '@pages/selectors';
 import { data } from '@utils/testData';
 import { dokanSettings } from '@utils/interfaces';
 
-const { DOKAN_PRO } = process.env;
+const { DOKAN_PRO } = data.env;
 
 export class SettingsPage extends AdminPage {
     constructor(page: Page) {

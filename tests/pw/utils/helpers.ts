@@ -238,7 +238,7 @@ export const helpers = {
     },
 
     // calculate vendor earning
-    vendorEarning(subTotal: number, commission: number, productTax = 0, shippingTax = 0, shippingFee = 0, gatewayFee = 0, feeRecipient: any, gatewayFeeGiver = 'seller') {        
+    vendorEarning(subTotal: number, commission: number, productTax = 0, shippingTax = 0, shippingFee = 0, gatewayFee = 0, feeRecipient: any, gatewayFeeGiver = 'seller') {
         productTax = feeRecipient.taxFeeRecipient !== 'seller' ? 0 : productTax;
         shippingTax = feeRecipient.shippingTaxFeeRecipient !== 'seller' ? 0 : shippingTax;
         shippingFee = feeRecipient.shippingFeeRecipient !== 'seller' ? 0 : shippingFee;

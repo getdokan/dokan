@@ -3,8 +3,9 @@ import { MySqlConnection, DbContext } from 'mysqlconnector';
 import { serialize, unserialize } from 'php-serialize';
 import { dbData } from '@utils/dbData';
 import { helpers } from '@utils/helpers';
+import { data } from '@utils/testData';
 import { commission, feeRecipient } from '@utils/interfaces';
-const { DB_HOST_NAME, DB_USER_NAME, DB_USER_PASSWORD, DATABASE, DB_PORT, DB_PREFIX } = process.env;
+const { DB_HOST_NAME, DB_USER_NAME, DB_USER_PASSWORD, DATABASE, DB_PORT, DB_PREFIX } = data.env;
 
 const mySql = new MySqlConnection({
     hostname: DB_HOST_NAME,

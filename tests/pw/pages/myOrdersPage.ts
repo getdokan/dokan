@@ -3,7 +3,7 @@ import { CustomerPage } from '@pages/customerPage';
 import { selector } from '@pages/selectors';
 import { data } from '@utils/testData';
 
-const { DOKAN_PRO } = process.env;
+const { DOKAN_PRO } = data.env;
 
 export class MyOrdersPage extends CustomerPage {
     constructor(page: Page) {

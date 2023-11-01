@@ -4,13 +4,13 @@ const { SHA, PR_NUMBER, SYSTEM_INFO, API_TEST_RESULT, E2E_TEST_RESULT } = proces
 const replace = obj => Object.keys(obj).forEach(key => (typeof obj[key] == 'object' ? replace(obj[key]) : (obj[key] = String(obj[key]))));
 const readFile = filePath => (fs.existsSync(filePath) ? JSON.parse(fs.readFileSync(filePath, 'utf8')) : false);
 const getTestResult = (suiteName, filePath) => {
-        const testResult = readFile(filePath);
-        if (!testResult) {
-            return [];
-        }
-        replace(testResult);
-        const testSummary = [suiteName, testResult.total_tests, testResult.passed, testResult.failed, testResult.flaky, testResult.skipped, testResult.suite_duration_formatted];
-        return testSummary;
+    const testResult = readFile(filePath);
+    if (!testResult) {
+        return [];
+    }
+    replace(testResult);
+    const testSummary = [suiteName, testResult.total_tests, testResult.passed, testResult.failed, testResult.flaky, testResult.skipped, testResult.suite_duration_formatted];
+    return testSummary;
 };
 
 const addSummaryHeadingAndTable = core => {

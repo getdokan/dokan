@@ -6,7 +6,7 @@ import { data } from '@utils/testData';
 import { dbData } from '@utils/dbData';
 import { payloads } from '@utils/payloads';
 
-const { VENDOR_ID, CUSTOMER_ID } = process.env;
+const { VENDOR_ID, CUSTOMER_ID } = data.env;
 
 test.describe('Abuse report test', () => {
     let admin: AbuseReportsPage;

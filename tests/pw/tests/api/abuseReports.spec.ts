@@ -9,8 +9,9 @@ import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
 import { dbUtils } from '@utils/dbUtils';
 import { dbData } from '@utils/dbData';
+import { data } from '@utils/testData';
 
-const { VENDOR_ID, CUSTOMER_ID } = process.env;
+const { VENDOR_ID, CUSTOMER_ID } = data.env;
 
 test.describe('abuse report api test', () => {
     let apiUtils: ApiUtils;
