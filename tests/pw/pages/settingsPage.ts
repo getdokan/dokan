@@ -214,6 +214,7 @@ export class SettingsPage extends AdminPage {
         await this.enableSwitcher(selector.admin.dokan.settings.appearance.showMapOnStorePage);
         await this.click(selector.admin.dokan.settings.appearance.mapApiSourceGoogleMaps);
         await this.clearAndType(selector.admin.dokan.settings.appearance.googleMapApiKey, appearance.googleMapApiKey);
+        console.log(appearance.googleMapApiKey); //todo: remove after check on ci
         await this.enableSwitcher(selector.admin.dokan.settings.appearance.showContactFormOnStorePage);
         await this.click(selector.admin.dokan.settings.appearance.storeHeaderTemplate2);
         await this.click(selector.admin.dokan.settings.appearance.storeHeaderTemplate1);
