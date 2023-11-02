@@ -88,7 +88,7 @@
                         <div class="dokan-dashboard-product-listing-wrapper">
 
                             <form id="product-filter" method="POST" class="dokan-form-inline">
-                                <div class="dokan-form-group">
+                                <div id="dokan-bulk-action-selector" class="dokan-form-group">
                                     <label for="bulk-product-action-selector" class="screen-reader-text"><?php esc_html_e( 'Select bulk action', 'dokan-lite' ); ?></label>
 
                                     <select name="status" id="bulk-product-action-selector" class="dokan-form-control chosen">
@@ -98,7 +98,7 @@
                                     </select>
                                 </div>
 
-                                <div class="dokan-form-group">
+                                <div id="dokan-bulk-action-submit" class="dokan-form-group">
                                     <?php wp_nonce_field( 'bulk_product_status_change', 'security' ); ?>
                                     <input
                                         type="submit"

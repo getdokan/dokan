@@ -82,6 +82,9 @@ class ProductPublished extends WC_Email {
         }
         $this->setup_locale();
 
+        $product_edit_url = remove_query_arg( '_dokan_edit_product_nonce', dokan_edit_product_url( $post->ID ) );
+        $product_edit_url = add_query_arg( '_view_mode', 'product_email', $product_edit_url );
+
         $this->object = $product;
         $seller = new Vendor( $seller );
 
@@ -89,7 +92,7 @@ class ProductPublished extends WC_Email {
         $this->placeholders['{price}']             = $product->get_price();
         $this->placeholders['{seller_name}']       = $seller->get_name();
         $this->placeholders['{product_url}']       = get_permalink( $post->ID );
-        $this->placeholders['{product_edit_link}'] = dokan_edit_product_url( $post->ID );
+        $this->placeholders['{product_edit_link}'] = $product_edit_url;
 
         $this->send( $seller->get_email(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
         $this->restore_locale();
