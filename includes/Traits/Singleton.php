@@ -14,7 +14,7 @@ trait Singleton {
      *
      * @since 1.0.0
      *
-     * @var object
+     * @var static
      */
     protected static $instance;
 
@@ -23,7 +23,7 @@ trait Singleton {
      *
      * @since 1.0.0
      *
-     * @return object
+     * @return static
      */
     public static function instance() {
         if ( ! isset( static::$instance ) && ! ( static::$instance instanceof static ) ) {
