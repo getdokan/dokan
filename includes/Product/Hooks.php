@@ -410,7 +410,7 @@ class Hooks {
     public function own_product_not_purchasable_notice() {
         global $product;
 
-        if ( ! dokan_is_product_author( $product->get_id() ) ) {
+        if ( ! dokan_is_product_author( $product->get_id() ) || 'auction' === $product->get_type() ) {
             return;
         }
 
