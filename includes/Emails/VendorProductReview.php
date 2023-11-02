@@ -195,7 +195,7 @@ class VendorProductReview extends WC_Email {
                 'type'        => 'text',
                 'desc_tip'    => true,
                 'description' => $placeholder_text,
-                'placeholder' => '',
+                'placeholder' => $this->get_default_subject(),
                 'default'     => $this->get_default_subject(),
             ],
             'heading'            => [
@@ -203,7 +203,7 @@ class VendorProductReview extends WC_Email {
                 'type'        => 'text',
                 'desc_tip'    => true,
                 'description' => $placeholder_text,
-                'placeholder' => '',
+                'placeholder' => $this->get_default_heading(),
                 'default'     => $this->get_default_heading(),
             ],
             'additional_content' => [
