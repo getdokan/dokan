@@ -49,7 +49,7 @@ class Hooks {
 
         // Remove product type filter if pro not exists.
         add_filter( 'dokan_product_listing_filter_args', [ $this, 'remove_product_type_filter' ] );
-
+        add_action( 'woocommerce_before_single_product', [ $this, 'own_product_not_purchasable_notice' ] );
         // Init Product Cache Class
         new VendorStoreInfo();
         new ProductCache();
@@ -398,5 +398,22 @@ class Hooks {
         }
 
         return $args;
+    }
+
+    /**
+     * Display own product not punchable notice.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public function own_product_not_purchasable_notice() {
+        global $product;
+
+        if ( ! dokan_is_product_author( $product->get_id() ) ) {
+            return;
+        }
+
+        wc_print_notice( __( 'As this is your own product, the "Add to Cart" button has been removed. Please visit as a guest to view it.', 'dokan-lite' ), 'notice' );
     }
 }
