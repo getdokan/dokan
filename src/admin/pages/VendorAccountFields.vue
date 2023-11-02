@@ -63,7 +63,7 @@
 
                 <div class="column">
                     <label for="store-phone">{{ __( 'Phone Number', 'dokan-lite') }}</label>
-                    <input type="number" id="store-phone" class="dokan-form-input" v-model="vendorInfo.phone" :placeholder="__( '123456789', 'dokan-lite')">
+                    <input type="text" id="store-phone" class="dokan-form-input" v-model="vendorInfo.phone" @input.prevent="validatePhoneInput" :placeholder="__( '+123456789', 'dokan-lite' )">
                 </div>
 
                 <div class="column">
@@ -374,8 +374,11 @@ export default {
             let height = dokan.store_banner_dimension.height;
 
             return this.__( `Upload banner for your store. Banner size is (${width}x${height}) pixels.`, 'dokan-lite' );
-        }
+        },
 
+        validatePhoneInput( event ) {
+            this.vendorInfo.phone = this.vendorInfo.phone.replace( /[^0-9\\.\-\_\(\)\+]+/g, '' );
+        }
     }
 };
 </script>

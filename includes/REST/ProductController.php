@@ -902,14 +902,22 @@ class ProductController extends DokanRESTController {
         }
 
         // Post status.
-        if ( dokan_is_seller_trusted( $this->validate_post_author_override( $request, get_current_user_id() ) ) ) {
-            if ( isset( $request['status'] ) ) {
-                $product->set_status( get_post_status_object( $request['status'] ) ? $request['status'] : 'draft' );
+        $default_product_status = dokan_get_default_product_status();
+        $post_status            = $product->get_status();
+        if ( isset( $request['status'] ) ) {
+            switch ( $request['status'] ) {
+                case 'publish':
+                    $post_status = $default_product_status;
+                    break;
+                case 'pending':
+                    $post_status = 'pending' === $post_status ? 'pending' : $default_product_status;
+                    break;
+                default:
+                    $post_status = $request['status'];
             }
-        } else {
-            $status = dokan_get_option( 'product_status', 'dokan_selling', 'pending' );
-            $product->set_status( ( get_post_status_object( $status ) && get_current_user_id() === $this->validate_post_author_override( $request, get_current_user_id() ) ) ? $status : 'draft' );
         }
+
+        $product->set_status( get_post_status_object( $post_status ) ? $post_status : 'draft' );
 
         // Post slug.
         if ( isset( $request['slug'] ) ) {

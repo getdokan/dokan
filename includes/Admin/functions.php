@@ -1,4 +1,7 @@
 <?php
+
+use WeDevs\Dokan\Utilities\OrderUtil;
+
 /**
  * Get help documents for admin
  *
@@ -11,7 +14,7 @@ function dokan_admin_get_help() {
 
     if ( false === $help_docs ) {
         $help_url  = 'https://dokan.co/wp-json/org/help';
-        $response  = wp_remote_get( $help_url, array( 'timeout' => 15 ) );
+        $response  = wp_remote_get( $help_url, [ 'timeout' => 15 ] );
         $help_docs = wp_remote_retrieve_body( $response );
 
         if ( is_wp_error( $response ) || (int) $response['response']['code'] !== 200 ) {
@@ -35,7 +38,7 @@ function dokan_admin_get_help() {
  * @param string $year
  * @param string $start
  * @param string $end
- * @param int $seller_id
+ * @param int    $seller_id
  *
  * @return array
  */
@@ -44,8 +47,8 @@ function dokan_admin_report_data( $group_by = 'day', $year = '', $start = '', $e
 
     $now          = dokan_current_datetime();
     $group_by     = apply_filters( 'dokan_report_group_by', $group_by );
-    $start_date   = ! empty( $start ) ? sanitize_text_field( $start ) : ''; // WPCS: CSRF ok.
-    $end_date     = ! empty( $end ) ? sanitize_text_field( $end ) : ''; // WPCS: CSRF ok.
+    $start_date   = ! empty( $start ) ? sanitize_text_field( $start ) : '';
+    $end_date     = ! empty( $end ) ? sanitize_text_field( $end ) : '';
     $current_year = $now->format( 'Y' );
 
     if ( empty( $start_date ) ) {
@@ -64,54 +67,68 @@ function dokan_admin_report_data( $group_by = 'day', $year = '', $start = '', $e
         }
     }
 
-    $date_where = '';
+    $date_where       = '';
+    $order_table_name = $wpdb->posts;
+    $id_field         = 'ID';
+    $date_field       = 'post_date';
+    $status_field     = 'post_status';
 
-    if ( 'day' === $group_by ) {
-        $group_by_query = 'YEAR(p.post_date), MONTH(p.post_date), DAY(p.post_date)';
-        $date_where     = " AND DATE(p.post_date) >= '$start_date' AND DATE(p.post_date) <= '$end_date'";
-    } else {
-        $group_by_query = 'YEAR(p.post_date), MONTH(p.post_date)';
-        $date_where     = " AND DATE(p.post_date) >= '$start_date' AND DATE(p.post_date) <= '$end_date'";
+    if ( OrderUtil::is_hpos_enabled() ) {
+        $start_date       = $now->modify( $start_date )->setTimezone( new DateTimeZone( 'UTC' ) )->format( 'Y-m-d' );
+        $end_date         = $now->modify( $end_date )->setTimezone( new DateTimeZone( 'UTC' ) )->format( 'Y-m-d' );
+        $order_table_name = OrderUtil::get_order_table_name();
+        $id_field         = 'id';
+        $date_field       = 'date_created_gmt';
+        $status_field     = 'status';
     }
 
-    $left_join    = apply_filters( 'dokan_report_left_join', $date_where );
+    if ( 'day' === $group_by ) {
+        $group_by_query = "YEAR(p.{$date_field}), MONTH(p.{$date_field}), DAY(p.{$date_field})";
+        $date_where     = " AND DATE(p.{$date_field}) >= '{$start_date}' AND DATE(p.${date_field}) <= '{$end_date}'";
+    } else {
+        $group_by_query = "YEAR(p.{$date_field}), MONTH(p.{$date_field})";
+        $date_where     = " AND DATE(p.{$date_field}) >= '{$start_date}' AND DATE(p.{$date_field}) <= '{$end_date}'";
+    }
+
+    $left_join    = apply_filters( 'dokan_report_left_join', '' );
     $date_where   = apply_filters( 'dokan_report_where', $date_where );
     $seller_where = $seller_id ? "seller_id = {$seller_id}" : 'seller_id != ' . 0;
 
     $sql = "SELECT
-                SUM((do.order_total - do.net_amount)) as earning,
-                SUM(do.order_total) as order_total,
-                COUNT(DISTINCT p.ID) as total_orders,
-                p.post_date as order_date
-            FROM {$wpdb->prefix}dokan_orders do
-            LEFT JOIN $wpdb->posts p ON do.order_id = p.ID
-            $left_join
+                SUM((do.order_total - do.net_amount)) AS earning,
+                SUM(do.order_total) AS order_total,
+                COUNT(DISTINCT p.{$id_field}) AS total_orders,
+                p.{$date_field} AS order_date
+            FROM {$wpdb->prefix}dokan_orders AS do
+            LEFT JOIN {$order_table_name} p ON do.order_id = p.{$id_field}
+            {$left_join}
             WHERE
-                $seller_where AND
-                p.post_status != 'trash' AND
+                {$seller_where} AND
+                p.{$status_field} != 'trash' AND
                 do.order_status IN ('wc-on-hold', 'wc-completed', 'wc-processing')
-                $date_where
-            GROUP BY $group_by_query";
+                    {$date_where}
+            GROUP BY {$group_by_query}";
 
     $data = $wpdb->get_results( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL
 
-    return $data;
+    return apply_filters( 'dokan_get_admin_report_data', $data, $group_by, $year, $start, $end, $seller_id );
 }
 
 /**
  * Generate report in admin area
- *
- * @global WPDB $wpdb
- * @global object $wp_locale
  *
  * @param string $group_by
  * @param string $year
  * @param string $start
  * @param string $end
  *
+ * @deprecated 3.8.0 since we are getting the report data from REST API (dokan/v1/report), we don't need this function anymore.
+ *
  * @return array
  */
 function dokan_admin_report( $group_by = 'day', $year = '', $start = '', $end = '' ) {
+    wc_deprecated_function( 'dokan_admin_report', '3.8.0' );
+
     global $wp_locale;
 
     $data = dokan_admin_report_data( $group_by, $year, $start, $end );
@@ -153,17 +170,17 @@ function dokan_admin_report( $group_by = 'day', $year = '', $start = '', $end = 
     $order_commision = dokan_prepare_chart_data( $data, 'order_date', 'earning', $chart_interval, $start_date_to_time->getTimestamp(), $group_by );
 
     // Encode in json format
-    $chart_data = array(
+    $chart_data = [
         'order_counts'    => array_values( $order_counts ),
         'order_amounts'   => array_values( $order_amounts ),
         'order_commision' => array_values( $order_commision ),
-    );
+    ];
 
-    $chart_colours = array(
+    $chart_colours = [
         'order_counts'    => '#3498db',
         'order_amounts'   => '#1abc9c',
         'order_commision' => '#73a724',
-    );
+    ];
 
     ?>
 
@@ -180,11 +197,11 @@ function dokan_admin_report( $group_by = 'day', $year = '', $start = '', $end = 
         }
     </style>
     <script type="text/javascript">
-        jQuery(function($) {
+        jQuery(function ($) {
 
-            $(document).ready( function() {
+            $(document).ready(function () {
 
-                var order_data = JSON.parse( '<?php echo wp_json_encode( $chart_data ); ?>' );
+                var order_data = JSON.parse('<?php echo wp_json_encode( $chart_data ); ?>');
                 var isRtl = '<?php echo is_rtl() ? '1' : '0'; ?>';
                 var series = [
                     {
@@ -192,8 +209,8 @@ function dokan_admin_report( $group_by = 'day', $year = '', $start = '', $end = 
                         data: order_data.order_amounts,
                         shadowSize: 0,
                         hoverable: true,
-                        points: { show: true, radius: 5, lineWidth: 3, fillColor: '#fff', fill: true },
-                        lines: { show: true, lineWidth: 4, fill: false },
+                        points: {show: true, radius: 5, lineWidth: 3, fillColor: '#fff', fill: true},
+                        lines: {show: true, lineWidth: 4, fill: false},
                         shadowSize: 0,
                         prepend_tooltip: "<?php echo esc_attr__( 'Total: ', 'dokan-lite' ) . esc_attr( get_woocommerce_currency_symbol() ); ?>"
                     },
@@ -202,8 +219,8 @@ function dokan_admin_report( $group_by = 'day', $year = '', $start = '', $end = 
                         data: order_data.order_counts,
                         shadowSize: 0,
                         hoverable: true,
-                        points: { show: true, radius: 5, lineWidth: 3, fillColor: '#fff', fill: true },
-                        lines: { show: true, lineWidth: 4, fill: false },
+                        points: {show: true, radius: 5, lineWidth: 3, fillColor: '#fff', fill: true},
+                        lines: {show: true, lineWidth: 4, fill: false},
                         shadowSize: 0,
                         append_tooltip: " <?php echo esc_attr__( 'sales', 'dokan-lite' ); ?>"
                     },
@@ -212,8 +229,8 @@ function dokan_admin_report( $group_by = 'day', $year = '', $start = '', $end = 
                         data: order_data.order_commision,
                         shadowSize: 0,
                         hoverable: true,
-                        points: { show: true, radius: 5, lineWidth: 3, fillColor: '#fff', fill: true },
-                        lines: { show: true, lineWidth: 4, fill: false },
+                        points: {show: true, radius: 5, lineWidth: 3, fillColor: '#fff', fill: true},
+                        lines: {show: true, lineWidth: 4, fill: false},
                         shadowSize: 0,
                         prepend_tooltip: "<?php echo esc_attr__( 'Commision: ', 'dokan-lite' ) . esc_attr( get_woocommerce_currency_symbol() ); ?>"
                     },
@@ -228,8 +245,8 @@ function dokan_admin_report( $group_by = 'day', $year = '', $start = '', $end = 
                             position: 'nw'
                         },
                         series: {
-                            lines: { show: true, lineWidth: 4, fill: false },
-                            points: { show: true }
+                            lines: {show: true, lineWidth: 4, fill: false},
+                            points: {show: true}
                         },
                         grid: {
                             borderColor: '#eee',
@@ -252,25 +269,29 @@ function dokan_admin_report( $group_by = 'day', $year = '', $start = '', $end = 
                             font: {
                                 color: "#aaa"
                             },
-                            transform: function (v) { return ( isRtl === '1' ) ? -v : v; },
-                            inverseTransform: function (v) { return ( isRtl === '1' ) ? -v : v; }
+                            transform: function (v) {
+                                return (isRtl === '1') ? -v : v;
+                            },
+                            inverseTransform: function (v) {
+                                return (isRtl === '1') ? -v : v;
+                            }
                         },
                         yaxes: [
                             {
-                                position: ( isRtl === '1' ) ? "right" : "left",
+                                position: (isRtl === '1') ? "right" : "left",
                                 min: 0,
                                 minTickSize: 1,
                                 tickDecimals: 0,
                                 color: '#d4d9dc',
-                                font: { color: "#aaa" }
+                                font: {color: "#aaa"}
                             },
                             {
-                                position: ( isRtl === '1' ) ? "right" : "left",
+                                position: (isRtl === '1') ? "right" : "left",
                                 min: 0,
                                 tickDecimals: 2,
                                 alignTicksWithAxis: 1,
                                 color: 'transparent',
-                                font: { color: "#aaa" }
+                                font: {color: "#aaa"}
                             }
                         ],
                         colors: ["<?php echo esc_attr( $chart_colours['order_counts'] ); ?>", "<?php echo esc_attr( $chart_colours['order_amounts'] ); ?>", "<?php echo esc_attr( $chart_colours['order_commision'] ); ?>"]
@@ -290,7 +311,7 @@ function dokan_admin_report( $group_by = 'day', $year = '', $start = '', $end = 
                 var prev_data_index = null;
                 var prev_series_index = null;
 
-                jQuery(".chart-placeholder").bind("plothover", function(event, pos, item) {
+                jQuery(".chart-placeholder").bind("plothover", function (event, pos, item) {
                     if (item) {
                         if (prev_data_index != item.dataIndex || prev_series_index != item.seriesIndex) {
                             prev_data_index = item.dataIndex;
@@ -346,47 +367,43 @@ function dokan_admin_report( $group_by = 'day', $year = '', $start = '', $end = 
 /**
  * Generate Earning report By seller in admin area
  *
- * @global WPDB $wpdb
+ * @param int     $chosen_seller_id
+ *
  * @global object $wp_locale
  *
- * @param int $chosen_seller_id
+ * @global WPDB   $wpdb
+ * @deprecated 3.8.0 since we are getting the report data from REST API (dokan/v1/report), we don't need this function anymore.
  *
  * @return array
  */
 function dokan_admin_report_by_seller( $chosen_seller_id = 0 ) {
+    wc_deprecated_function( 'dokan_admin_report_by_seller', '3.8.0' );
+
     global $wpdb, $wp_locale;
 
-    $group_by     = 'day';
-    $group_by     = apply_filters( 'dokan_report_group_by', $group_by );
-    $now          = dokan_current_datetime();
-    $year         = $now->format( 'Y' );
-    $start_date   = '';
-    $end_date     = '';
+    $group_by   = 'day';
+    $group_by   = apply_filters( 'dokan_report_group_by', $group_by );
+    $now        = dokan_current_datetime();
+    $year       = $now->format( 'Y' );
+    $start_date = $now->modify( 'first day of this month' )->format( 'Y-m-d' );
+    $end_date   = $now->format( 'Y-m-d' );
     $current_year = $now->format( 'Y' );
 
     if ( empty( $chosen_seller_id ) ) {
         return [];
     }
 
-    if ( ! empty( $start_date ) ) {
-        $start_date = $now->modify( 'first day of this month' )->format( 'Y-m-d' );
-
-        if ( $group_by === 'month' ) {
-            $start_date = $year . '-01-01';
-        }
+    if ( $group_by === 'month' ) {
+        $start_date = $year . '-01-01';
     }
 
-    if ( ! empty( $end_date ) ) {
-        $end_date = $now->format( 'Y-m-d' );
-
-        if ( $group_by === 'month' && ( $year < $current_year ) ) {
-            $end_date = $year . '-12-31';
-        }
+    if ( $group_by === 'month' && ( $year < $current_year ) ) {
+        $end_date = $year . '-12-31';
     }
 
     $date_where         = '';
-    $start_date_to_time = strtotime( $start_date );
-    $end_date_to_time   = strtotime( $end_date );
+    $start_date_to_time = $now->modify( $start_date )->getTimestamp();
+    $end_date_to_time   = $now->modify( $end_date )->getTimestamp();
     $chart_interval     = dokan_get_interval_between_dates( $start_date_to_time, $end_date_to_time, $group_by );
 
     if ( $group_by === 'day' ) {
@@ -419,22 +436,22 @@ function dokan_admin_report_by_seller( $chosen_seller_id = 0 ) {
     $data = $wpdb->get_results( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL
 
     // Prepare data for report
-    $order_counts      = dokan_prepare_chart_data( $data, 'order_date', 'total_orders', $chart_interval, $start_date_to_time, $group_by );
-    $order_amounts     = dokan_prepare_chart_data( $data, 'order_date', 'order_total', $chart_interval, $start_date_to_time, $group_by );
-    $order_commision   = dokan_prepare_chart_data( $data, 'order_date', 'earning', $chart_interval, $start_date_to_time, $group_by );
+    $order_counts    = dokan_prepare_chart_data( $data, 'order_date', 'total_orders', $chart_interval, $start_date_to_time, $group_by );
+    $order_amounts   = dokan_prepare_chart_data( $data, 'order_date', 'order_total', $chart_interval, $start_date_to_time, $group_by );
+    $order_commision = dokan_prepare_chart_data( $data, 'order_date', 'earning', $chart_interval, $start_date_to_time, $group_by );
 
     // Encode in json format
-    $chart_data = array(
+    $chart_data = [
         'order_counts'    => array_values( $order_counts ),
         'order_amounts'   => array_values( $order_amounts ),
         'order_commision' => array_values( $order_commision ),
-    );
+    ];
 
-    $chart_colours = array(
+    $chart_colours = [
         'order_counts'    => '#3498db',
         'order_amounts'   => '#1abc9c',
         'order_commision' => '#73a724',
-    );
+    ];
     ?>
 
     <style type="text/css">
@@ -450,17 +467,17 @@ function dokan_admin_report_by_seller( $chosen_seller_id = 0 ) {
         }
     </style>
     <script type="text/javascript">
-        jQuery(function($) {
+        jQuery(function ($) {
 
-            var order_data = JSON.parse( '<?php echo wp_json_encode( $chart_data ); ?>' );
+            var order_data = JSON.parse('<?php echo wp_json_encode( $chart_data ); ?>');
             var series = [
                 {
                     label: "<?php echo esc_js( __( 'Total Sales', 'dokan-lite' ) ); ?>",
                     data: order_data.order_amounts,
                     shadowSize: 0,
                     hoverable: true,
-                    points: { show: true, radius: 5, lineWidth: 3, fillColor: '#fff', fill: true },
-                    lines: { show: true, lineWidth: 4, fill: false },
+                    points: {show: true, radius: 5, lineWidth: 3, fillColor: '#fff', fill: true},
+                    lines: {show: true, lineWidth: 4, fill: false},
                     shadowSize: 0,
                     prepend_tooltip: "<?php echo esc_attr__( 'Total: ', 'dokan-lite' ) . esc_attr( get_woocommerce_currency_symbol() ); ?>"
                 },
@@ -469,8 +486,8 @@ function dokan_admin_report_by_seller( $chosen_seller_id = 0 ) {
                     data: order_data.order_counts,
                     shadowSize: 0,
                     hoverable: true,
-                    points: { show: true, radius: 5, lineWidth: 3, fillColor: '#fff', fill: true },
-                    lines: { show: true, lineWidth: 4, fill: false },
+                    points: {show: true, radius: 5, lineWidth: 3, fillColor: '#fff', fill: true},
+                    lines: {show: true, lineWidth: 4, fill: false},
                     shadowSize: 0,
                     append_tooltip: "<?php echo esc_attr__( 'sales', 'dokan-lite' ); ?>"
                 },
@@ -479,8 +496,8 @@ function dokan_admin_report_by_seller( $chosen_seller_id = 0 ) {
                     data: order_data.order_commision,
                     shadowSize: 0,
                     hoverable: true,
-                    points: { show: true, radius: 5, lineWidth: 3, fillColor: '#fff', fill: true },
-                    lines: { show: true, lineWidth: 4, fill: false },
+                    points: {show: true, radius: 5, lineWidth: 3, fillColor: '#fff', fill: true},
+                    lines: {show: true, lineWidth: 4, fill: false},
                     shadowSize: 0,
                     prepend_tooltip: "<?php echo esc_attr__( 'Commision: ', 'dokan-lite' ) . esc_attr( get_woocommerce_currency_symbol() ); ?>"
                 },
@@ -495,8 +512,8 @@ function dokan_admin_report_by_seller( $chosen_seller_id = 0 ) {
                         position: 'nw'
                     },
                     series: {
-                        lines: { show: true, lineWidth: 4, fill: false },
-                        points: { show: true }
+                        lines: {show: true, lineWidth: 4, fill: false},
+                        points: {show: true}
                     },
                     grid: {
                         borderColor: '#eee',
@@ -526,7 +543,7 @@ function dokan_admin_report_by_seller( $chosen_seller_id = 0 ) {
                             minTickSize: 1,
                             tickDecimals: 0,
                             color: '#d4d9dc',
-                            font: { color: "#aaa" }
+                            font: {color: "#aaa"}
                         },
                         {
                             position: "right",
@@ -534,7 +551,7 @@ function dokan_admin_report_by_seller( $chosen_seller_id = 0 ) {
                             tickDecimals: 2,
                             alignTicksWithAxis: 1,
                             color: 'transparent',
-                            font: { color: "#aaa" }
+                            font: {color: "#aaa"}
                         }
                     ],
                     colors: ["<?php echo esc_attr( $chart_colours['order_counts'] ); ?>", "<?php echo esc_attr( $chart_colours['order_amounts'] ); ?>", "<?php echo esc_attr( $chart_colours['order_commision'] ); ?>"]
@@ -554,7 +571,7 @@ function dokan_admin_report_by_seller( $chosen_seller_id = 0 ) {
             var prev_data_index = null;
             var prev_series_index = null;
 
-            jQuery(".chart-placeholder").bind("plothover", function(event, pos, item) {
+            jQuery(".chart-placeholder").bind("plothover", function (event, pos, item) {
                 if (item) {
                     if (prev_data_index != item.dataIndex || prev_series_index != item.seriesIndex) {
                         prev_data_index = item.dataIndex;

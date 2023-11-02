@@ -70,7 +70,46 @@
 
             this.attribute.disbalePredefinedAttribute();
 
+            this.setCorrectProductId();
+
             $( 'body' ).trigger( 'dokan-product-editor-loaded', this );
+        },
+
+        setCorrectProductId : function () {
+            let productForm = $( '.dokan-product-edit-form' );
+            if ( ! productForm ) {
+              return;
+            }
+            let productId = $( '#dokan_product_id' ).val();
+
+            if ( window.history.replaceState ) {
+                let url = new URL( document.location );
+                let searchParams = url.searchParams;
+
+                let currentProductId = searchParams.get( 'product_id' );
+                if ( ! ( '' === currentProductId || '0' === currentProductId ) ) {
+                    return;
+                }
+
+                // new value of "product_id" is set to new value
+                searchParams.set('product_id', productId );
+
+                let action = searchParams.get( 'action' );
+                if ( 'edit' !== action ) {
+                    return;
+                }
+
+                // change the search property of the main url
+                url.search = searchParams.toString();
+
+                // the new url string
+                let newUrl = url.toString();
+                let stateData = {
+                    product_id: productId,
+                }
+
+              window.history.replaceState( stateData, document.title, newUrl );
+            }
         },
 
         saleSchedule: function() {

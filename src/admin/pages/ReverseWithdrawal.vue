@@ -75,9 +75,9 @@
 
                         <span class="form-group">
                         <date-range-picker
-                            class="mr-5"
+                            class="mr-5 ml-5"
                             ref="picker"
-                            :locale-data="this.dateTimePickerFormat"
+                            :locale-data="dateTimePickerFormat()"
                             :singleDatePicker="false"
                             :showDropdowns="true"
                             :autoApply="false"
@@ -160,10 +160,6 @@ export default {
                 balance: 0,
                 total_transactions: 0,
                 total_vendors: 0,
-            },
-            dateTimePickerFormat: {
-                format: dokan_get_daterange_picker_format().toLowerCase(),
-                ...dokan_helper.daterange_picker_local,
             },
             dateRangePickerRanges: {
                 'Today': [moment().toDate(), moment().toDate()],
@@ -499,8 +495,28 @@ export default {
     }
 }
 
-#dokan_reverse_withdrawal_list_table .dokan-reverse-withdrawal-filters {
-    display: flex;
+#dokan_reverse_withdrawal_list_table {
+    .dokan-reverse-withdrawal-filters {
+        display: flex;
+
+        .multiselect {
+            .multiselect__select {
+                height: 28px;
+            }
+
+            .multiselect__tags {
+                input.multiselect__input {
+                    max-height: 28px;
+                }
+
+                span.multiselect__single {
+                    margin: 0 auto;
+                    min-height: 28px;
+                    line-height: 28px;
+                }
+            }
+        }
+    }
 }
 
 @media only screen and (max-width: 500px) {
