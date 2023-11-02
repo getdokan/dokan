@@ -9,6 +9,8 @@ use WC_Email;
  *
  * @since       DOKAN_SINCE
  *
+ * @class       Dokan_Email_Vendor_Product_Review
+ *
  * @author      weDevs
  *
  * @extends     WC_Email
