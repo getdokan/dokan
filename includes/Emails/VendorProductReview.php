@@ -40,7 +40,6 @@ class VendorProductReview extends WC_Email {
             '{store_name}'     => '',
             '{product_name}'   => '',
             '{customer_name}'  => '',
-            '{customer_email}' => '',
             '{rating}'         => '',
             '{review_text}'    => '',
             '{review_link}'    => '',
@@ -111,7 +110,6 @@ class VendorProductReview extends WC_Email {
         $this->placeholders['{store_name}']     = $seller->get_shop_name();
         $this->placeholders['{product_name}']   = $product->get_title();
         $this->placeholders['{customer_name}']  = $comment->comment_author;
-        $this->placeholders['{customer_email}'] = $comment->comment_author_email;
         $this->placeholders['{rating}']         = (int) get_comment_meta( $comment->comment_ID, 'rating', true );
         $this->placeholders['{review_text}']    = wp_specialchars_decode( $comment->comment_content );
         $this->placeholders['{review_link}']    = get_comment_link( $comment );
