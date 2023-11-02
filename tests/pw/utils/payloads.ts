@@ -2215,6 +2215,10 @@ export const payloads = {
         sender_type: 'all_seller',
     },
 
+    updateAnnouncementNotice: {
+        read_status: 'read', // read, unread, trash
+    },
+
     // product review
 
     updateProductReview: {

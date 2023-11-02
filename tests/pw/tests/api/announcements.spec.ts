@@ -14,10 +14,13 @@ import { payloads } from '@utils/payloads';
 test.describe('announcements api test', () => {
     let apiUtils: ApiUtils;
     let announcementId: string;
+    let noticeId: string;
 
     test.beforeAll(async ({ request }) => {
         apiUtils = new ApiUtils(request);
         [, announcementId] = await apiUtils.createAnnouncement(payloads.createAnnouncement());
+        // noticeId = await apiUtils.getAnnouncementNoticeId(payloads.vendorAuth); // todo: uncomment after fix
+        // console.log(noticeId);
     });
 
     test('get all announcements @pro', async () => {
@@ -64,5 +67,28 @@ test.describe('announcements api test', () => {
 
         // restore all announcements
         await apiUtils.updateBatchAnnouncements('restore', allAnnouncementIds);
+    });
+
+    // announcement notice
+
+    test.skip('get single announcement notice @pro', async () => {
+        const [response, responseBody] = await apiUtils.get(endPoints.getSingleAnnouncementNotice(noticeId), { headers: payloads.vendorAuth });
+        expect(response.ok()).toBeTruthy();
+        expect(responseBody).toBeTruthy();
+        console.log(responseBody);
+    });
+
+    test.skip('update a announcement notice @pro', async () => {
+        const [response, responseBody] = await apiUtils.post(endPoints.updateAnnouncementNotice(noticeId), { data: payloads.updateAnnouncementNotice, headers: payloads.vendorAuth });
+        expect(response.ok()).toBeTruthy();
+        expect(responseBody).toBeTruthy();
+        console.log(responseBody);
+    });
+
+    test.skip('delete a announcement notice @pro', async () => {
+        const [response, responseBody] = await apiUtils.delete(endPoints.deleteAnnouncementNotice(noticeId), { headers: payloads.vendorAuth });
+        expect(response.ok()).toBeTruthy();
+        expect(responseBody).toBeTruthy();
+        console.log(responseBody);
     });
 });

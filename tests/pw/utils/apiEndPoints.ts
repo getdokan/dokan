@@ -142,6 +142,11 @@ export const endPoints = {
     restoreDeletedAnnouncement: (announcementId: string) => `${SERVER_URL}/dokan/v1/announcement/${announcementId}/restore`, // put
     updateBatchAnnouncements: `${SERVER_URL}/dokan/v1/announcement/batch`, // method: trash, delete, restore
 
+    // announcement notice
+    getSingleAnnouncementNotice: (noticeId: string) => `${SERVER_URL}/dokan/v1/announcement/notice/${noticeId}`,
+    updateAnnouncementNotice: (noticeId: string) => `${SERVER_URL}/dokan/v1/announcement/notice/${noticeId}`,
+    deleteAnnouncementNotice: (noticeId: string) => `${SERVER_URL}/dokan/v1/announcement/notice/${noticeId}`,
+
     // refunds
     getAllRefunds: `${SERVER_URL}/dokan/v1/refunds`,
     approveRefund: (refundId: string) => `${SERVER_URL}/dokan/v1/refunds/${refundId}/approve`, // put

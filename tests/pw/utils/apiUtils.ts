@@ -874,6 +874,20 @@ export class ApiUtils {
         return responseBody;
     }
 
+    // get single announcement
+    async getSingleAnnouncement(announcementId: string, auth?: auth): Promise<[responseBody, string]> {
+        const [, responseBody] = await this.get(endPoints.getSingleAnnouncement(announcementId), { headers: auth });
+        const noticeId = responseBody?.notice_id;
+        return [responseBody, noticeId];
+    }
+
+    // get announcement notice Id
+    async getAnnouncementNoticeId(auth?: auth): Promise<string> {
+        const allAnnouncements = await this.getAllAnnouncements(auth);
+        const noticeId = allAnnouncements[0]?.notice_id;
+        return noticeId;
+    }
+
     // create announcement
     async createAnnouncement(payload: object, auth?: auth): Promise<[responseBody, string, string]> {
         const [, responseBody] = await this.post(endPoints.createAnnouncement, { data: payload, headers: auth });
