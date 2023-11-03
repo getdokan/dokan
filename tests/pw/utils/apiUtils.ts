@@ -107,6 +107,8 @@ export class ApiUtils {
             console.log('Status Code: ', response.status());
             console.log('Response text: ', await response.text());
             console.log('Error: ', err.message); // todo: showing playwright error message instead of api error message
+            console.log('header:', response.headers());
+            console.log('header:', response.headersArray());
         }
     }
 
