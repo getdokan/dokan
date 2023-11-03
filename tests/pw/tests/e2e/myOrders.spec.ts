@@ -4,7 +4,7 @@ import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
 import { payloads } from '@utils/payloads';
 
-const { CUSTOMER_ID, PRODUCT_ID } = process.env;
+const { CUSTOMER_ID, PRODUCT_ID } = data.env;
 
 test.describe('My orders functionality test', () => {
     let customer: MyOrdersPage;
