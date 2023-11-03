@@ -48,6 +48,6 @@ setup.describe('setup test environment', () => {
 
     // setup('get test environment info @lite', async () => {
     // 	const [, summaryInfo] = await apiUtils.getSystemStatus();
-    // 	helpers.writeFile('systemInfo.json', JSON.stringify(summaryInfo));
+    // 	helpers.writeFile('playwright/systemInfo.json', JSON.stringify(summaryInfo));
     // });
 });

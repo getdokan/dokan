@@ -25,8 +25,7 @@ for (const version of versions) {
         test.beforeAll(async ({ request }) => {
             apiUtils = new ApiUtils(request);
             [, respnseBody, orderId, productId] = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder);
-            console.log(respnseBody, orderId,productId);
-            
+            console.log(respnseBody, orderId, productId);
         });
 
         test('get all orders @lite', async () => {
@@ -48,7 +47,7 @@ for (const version of versions) {
         });
 
         test('get single order @lite', async () => {
-            const [response, responseBody] = await apiUtils.get(endPoints.getSingleOrder(orderId).replace('v1', version));
+            const [response, responseBody] = await apiUtils.get(endPoints.getSingleOrder(orderId).replace('v1', version), { headers: payloads.adminAuth });
             expect(response.ok()).toBeTruthy();
             expect(responseBody).toBeTruthy();
         });
