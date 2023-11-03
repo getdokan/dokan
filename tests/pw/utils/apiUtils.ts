@@ -107,8 +107,8 @@ export class ApiUtils {
             console.log('Status Code: ', response.status());
             console.log('Response text: ', await response.text());
             console.log('Error: ', err.message); // todo: showing playwright error message instead of api error message
-            console.log('header:', response.headers());
-            console.log('header:', response.headersArray());
+            // console.log('header:', response.headers());
+            // console.log('header:', response.headersArray());
         }
     }
 
@@ -1454,6 +1454,7 @@ export class ApiUtils {
     async createProductReview(payload: string | object, review: object, auth?: auth): Promise<[responseBody, string, string]> {
         let productId: string;
         typeof payload === 'object' ? ([, productId] = await this.createProduct(payload, auth)) : (productId = payload);
+        //todo: check if product exists with that id follow: createOrder
         const [, responseBody] = await this.post(endPoints.wc.createReview, { data: { ...review, product_id: productId }, headers: auth });
         const reviewId = String(responseBody?.id);
         const reviewMessage = String(responseBody?.review);

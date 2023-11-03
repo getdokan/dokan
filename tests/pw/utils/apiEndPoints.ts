@@ -68,7 +68,7 @@ export const endPoints = {
     // orders
     getOrdersSummary: `${SERVER_URL}/dokan/v1/orders/summary`,
     getAllOrders: `${SERVER_URL}/dokan/v1/orders`,
-    getSingleOrder: (orderId: string) => `${SERVER_URL}/dokan/v1/orders/${orderId}`,
+    getSingleOrder: (orderId: number) => `${SERVER_URL}/dokan/v1/orders/${orderId}`,
     updateOrder: (orderId: string) => `${SERVER_URL}/dokan/v1/orders/${orderId}`,
 
     // order notes

@@ -21,7 +21,7 @@ export const data = {
     env: {
         SERVER_URL: process.env.SERVER_URL ? process.env.SERVER_URL : process.env.BASE_URL + '/wp-json',
         DOKAN_PRO: process.env.DOKAN_PRO ? process.env.DOKAN_PRO : '',
-        CUSTOMER_ID: process.env.CUSTOMER_ID ? process.env.CUSTOMER_ID : '',
+        CUSTOMER_ID: process.env.CUSTOMER_ID ? Number(process.env.CUSTOMER_ID) : '',
         VENDOR_ID: process.env.VENDOR_ID ? process.env.VENDOR_ID : '',
         VENDOR2_ID: process.env.VENDOR2_ID ? process.env.VENDOR2_ID : '',
         PRODUCT_ID: process.env.PRODUCT_ID ? process.env.PRODUCT_ID : '',
