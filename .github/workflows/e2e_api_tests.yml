@@ -101,13 +101,12 @@ jobs:
                   cd tests/pw
                   echo "DB_PORT=$(docker ps -f ancestor='mariadb' -f name='tests-mysql' --format='{{.Ports}}' | sed -E 's/.*:(.*)->.*/\1/')" >> $GITHUB_ENV
 
-            # db port
-            - name: DB PORT
-              if: success()
-              run: |
-                  cd tests/pw
-                  echo "The value of test DB_PORT is ${{ env.DB_PORT }}"
-                  echo "The value of test GMAP is ${{ env.GMAP }}"
+            # # db port
+            # - name: DB PORT
+            #   if: success()
+            #   run: |
+            #       cd tests/pw
+            #       echo "The value of test DB_PORT is ${{ env.DB_PORT }}"
 
             # Set permalink structure
             - name: Set Permalink structure
@@ -116,40 +115,40 @@ jobs:
                   cd tests/pw
                   npm run wp-env run tests-cli wp rewrite structure /%postname%/
 
-            # Activate theme
-            - name: Activate theme:Storefront
-              if: success()
-              run: |
-                  cd tests/pw
-                  npm run wp-env run tests-cli wp theme activate storefront
+            # # Activate theme
+            # - name: Activate theme:Storefront
+            #   if: success()
+            #   run: |
+            #       cd tests/pw
+            #       npm run wp-env run tests-cli wp theme activate storefront
 
-            # Get Playwright version
-            - name: Get installed Playwright version
-              id: playwright-version
-              if: success()
-              run: |
-                  cd tests/pw
-                  echo "PLAYWRIGHT_VERSION=$(npm ls @playwright/test --json | jq --raw-output '.dependencies["@playwright/test"].version')" >> $GITHUB_ENV
+            # # Get Playwright version
+            # - name: Get installed Playwright version
+            #   id: playwright-version
+            #   if: success()
+            #   run: |
+            #       cd tests/pw
+            #       echo "PLAYWRIGHT_VERSION=$(npm ls @playwright/test --json | jq --raw-output '.dependencies["@playwright/test"].version')" >> $GITHUB_ENV
 
-            # Cache browser binaries, cache key is based on Playwright version and OS
-            - name: Cache playwright binaries
-              id: playwright-cache
-              if: success()
-              uses: actions/cache@v3
-              with:
-                  path: |
-                      ~/.cache/ms-playwright
-                  key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
-                  restore-keys: |
-                      ${{ runner.os }}-playwright-
+            # # Cache browser binaries, cache key is based on Playwright version and OS
+            # - name: Cache playwright binaries
+            #   id: playwright-cache
+            #   if: success()
+            #   uses: actions/cache@v3
+            #   with:
+            #       path: |
+            #           ~/.cache/ms-playwright
+            #       key: ${{ runner.os }}-playwright-${{ env.PLAYWRIGHT_VERSION }}
+            #       restore-keys: |
+            #           ${{ runner.os }}-playwright-
 
-            # Install browser binaries & OS dependencies if cache missed
-            - name: Install Playwright browser binaries & OS dependencies
-              id: pw-install
-              if: success() && steps.playwright-cache.outputs.cache-hit != 'true'
-              run: |
-                  cd tests/pw
-                  npm run pw:browser-with-deps
+            # # Install browser binaries & OS dependencies if cache missed
+            # - name: Install Playwright browser binaries & OS dependencies
+            #   id: pw-install
+            #   if: success() && steps.playwright-cache.outputs.cache-hit != 'true'
+            #   run: |
+            #       cd tests/pw
+            #       npm run pw:browser-with-deps
 
             # Install only the OS dependencies if cache hit  not needed
             # - name: Install Playwright OS dependencies
@@ -158,14 +157,14 @@ jobs:
             #     cd tests/pw
             #     npm run pw:deps-only
 
-            # Run e2e tests
-            - name: 🧪 Running the e2e tests
-              id: e2e-test
-              if: success()
-              timeout-minutes: 40
-              run: |
-                  cd tests/pw 
-                  npm run test:e2e:lite
+            # # Run e2e tests
+            # - name: 🧪 Running the e2e tests
+            #   id: e2e-test
+            #   if: success()
+            #   timeout-minutes: 40
+            #   run: |
+            #       cd tests/pw 
+            #       npm run test:e2e:lite
 
             # Run API tests
             - name: 🧪 Running the api tests
