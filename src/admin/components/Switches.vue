@@ -18,7 +18,7 @@ export default {
         },
         disabled: false,
         value: {
-            type: [String, Number]
+            type: [String, Number, Boolean]
         }
     },
 
