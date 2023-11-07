@@ -9,19 +9,6 @@
             </div>
         </template>
 
-        <template v-if="'sub_tab' === fieldData.type">
-            <div class="menu-manager-reset-all" @click="() => {this.$root.$emit('reset-all-menu-manager', 'reset-all-menu-manager')}">Reset All</div>
-            <tabs :fieldData="fieldData">
-                <tab
-                    v-for="tab in fieldData.tabs"
-                    :name="tab.label"
-                    :selected="tab.selected"
-                >
-                    <Sortable :list='tab.fields' :fieldValue="fieldValue" :setId="tab.name" />
-                </tab>
-          </tabs>
-        </template>
-
         <template v-if="containCommonFields( fieldData.type )">
             <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
@@ -451,9 +438,7 @@
     import SocialFields from './SocialFields.vue';
     import FieldHeading from './FieldHeading.vue';
     import SecretInput from './SecretInput.vue';
-    import Tabs from './Tabs.vue';
-    import Tab from './Tab.vue';
-    import Sortable from './Sortable.vue';
+
     let Mapbox                = dokan_get_lib('Mapbox');
     let TextEditor            = dokan_get_lib('TextEditor');
     let GoogleMaps            = dokan_get_lib('GoogleMaps');
@@ -463,7 +448,6 @@
         name: 'Fields',
 
         components: {
-            Sortable,
             Mapbox,
             Switches,
             TextEditor,
@@ -473,8 +457,6 @@
             SocialFields,
             RefreshSettingOptions,
             SecretInput,
-            Tabs,
-            Tab
         },
 
         props: ['id', 'fieldData', 'sectionId', 'fieldValue', 'allSettingsValues', 'errors', 'toggleLoadingState', 'validationErrors', 'dokanAssetsUrl'],
@@ -507,7 +489,6 @@
                     this.checked = value;
                 }
             });
-            this.fieldValue.dashboard_menu_manager = {};
         },
 
         watch: {
@@ -800,10 +781,6 @@
 
                 this.fieldData[ key ] = value;
             },
-
-            isSubTabComponent( type ) {
-                return _.contains( [ 'sub_tab_start', 'sub_tab_item_start', 'sub_tab_item_end', 'sub_tab_end' ], type );
-            }
         },
     };
 </script>

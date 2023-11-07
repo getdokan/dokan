@@ -37,7 +37,8 @@
       "WeDevs\\Dokan\\": "includes/"
     },
     "files": [
-      "includes/functions-rest-api.php"
+      "includes/functions-rest-api.php",
+      "includes/functions-dashboard-navigation.php"
     ]
   },
   "scripts": {
