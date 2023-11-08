@@ -88,6 +88,9 @@ class StoreSettingController extends WP_REST_Controller {
         $vendor   = $this->get_vendor();
         $response = dokan_get_store_info( $vendor->id );
 
+        $response['bank_payment_required_fields'] = dokan_bank_payment_required_fields();
+        $response['active_payment_methods'] = dokan_withdraw_get_active_methods();
+
         return rest_ensure_response( $response );
     }
 

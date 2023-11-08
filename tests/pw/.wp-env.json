@@ -1,0 +1,26 @@
+{
+    "env": {
+        "tests": {
+            "port": 9999,
+            "core": "https://wordpress.org/latest.zip",
+            "phpVersion": "7.4",
+            "plugins": [
+            "https://downloads.wordpress.org/plugin/woocommerce.latest-stable.zip", 
+            "../../", 
+            "https://github.com/shashwatahalder01/TestUtils/raw/main/ba.zip"
+             ],
+            "themes": [
+                "https://downloads.wordpress.org/theme/storefront.latest-stable.zip"
+            ],
+            "config": {
+                "WP_DEBUG": "true",
+                "SCRIPT_DEBUG": "true",
+                "WP_DEBUG_LOG": "true",
+                "WP_DEBUG_DISPLAY": "true"
+            },
+            "mappings": {
+                ".htaccess": ".htaccess"
+            }
+        }
+    }
+}

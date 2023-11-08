@@ -35,15 +35,6 @@ abstract class AbstractProductSection {
     protected $show_in_customizer = true;
 
     /**
-     * Show this section under vendor settings.
-     *
-     * @since 3.3.7
-     *
-     * @var bool
-     */
-    protected $show_in_settings = true;
-
-    /**
      * Products to display in this sections.
      *
      * @since 3.3.7
@@ -131,28 +122,6 @@ abstract class AbstractProductSection {
      */
     public function get_show_in_customizer() {
         return $this->show_in_customizer;
-    }
-
-    /**
-     * Set if we need vendor settings for this section or not
-     *
-     * @since 3.3.7
-     *
-     * @return void
-     */
-    public function set_show_in_settings( $value ) {
-        $this->show_in_settings = wc_string_to_bool( $value );
-    }
-
-    /**
-     * Check if vendor settings is needed for this section.
-     *
-     * @since 3.3.7
-     *
-     * @return bool
-     */
-    public function get_show_in_settings() {
-        return $this->show_in_settings;
     }
 
     /**
