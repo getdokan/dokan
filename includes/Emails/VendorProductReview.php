@@ -95,6 +95,10 @@ class VendorProductReview extends WC_Email {
         }
 
         $comment = get_comment( $comment_id );
+        if ( ! $comment ) {
+            // the comment does not exist
+            return;
+        }
 
         $product = wc_get_product( $comment->comment_post_ID );
         if ( ! $product ) {
