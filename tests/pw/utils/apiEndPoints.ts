@@ -227,7 +227,7 @@ export const endPoints = {
     createSupportTicketComment: (supportTicketId: string) => `${SERVER_URL}/dokan/v1/admin/support-ticket/${supportTicketId}`,
     updateSupportTicketStatus: (supportTicketId: string) => `${SERVER_URL}/dokan/v1/admin/support-ticket/${supportTicketId}/status`, // post
     updateSupportTicketEmailNotification: (supportTicketId: string) => `${SERVER_URL}/dokan/v1/admin/support-ticket/${supportTicketId}/email-notification`, // post
-    deleteSupportTicketComment: (supportTicketId: string) => `${SERVER_URL}/dokan/v1/admin/support-ticket/${supportTicketId}/comment`,
+    deleteSupportTicketComment: (supportTicketCommentId: string) => `${SERVER_URL}/dokan/v1/admin/support-ticket/${supportTicketCommentId}/comment`,
     updateBatchSupportTickets: `${SERVER_URL}/dokan/v1/admin/support-ticket/batch`, // method: close
 
     // admin

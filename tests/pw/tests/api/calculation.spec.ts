@@ -54,12 +54,12 @@ test.describe('calculation test', () => {
         const calculatedVendorEarning = helpers.vendorEarning(calculatedSubTotal, calculatedAdminCommission, calculatedProductTax, calculatedShippingTax, shippingFee, gatewayFee, feeRecipient);
 
         console.log(
-            `\ncalculatedSubTotal:  ${calculatedSubTotal}\n  `,
+            `\ncalculatedSubTotal:  ${calculatedSubTotal}\n`,
             `calculatedOrderTotal:  ${calculatedOrderTotal} received: ${Number(orderTotal)}\n`,
             `calculatedVendorEarning:  ${calculatedVendorEarning} received: ${Number(vendorEarning)}\n`,
             `calculatedAdminCommission:  ${calculatedAdminCommission} received: ${Number(adminCommission)}\n`,
             `providedShippingFee:  ${shippingFee}\n`,
-            `calculatedShippingTax:  ${calculatedShippingTax} received: ${Number(shippingTax)}}\n`,
+            `calculatedShippingTax:  ${calculatedShippingTax} received: ${Number(shippingTax)}\n`,
             `calculatedProductTax:  ${calculatedProductTax} received: ${Number(cartTax)} \n`,
             `calculatedTotalTax:  ${calculatedTotalTax} received: ${Number(totalTax)}\n`,
         );

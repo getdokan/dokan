@@ -19,13 +19,10 @@ const versions = ['v1', 'v2'];
 for (const version of versions) {
     test.describe(`order api test ${version}`, () => {
         let orderId: string;
-        let respnseBody: string;
-        let productId: string;
 
         test.beforeAll(async ({ request }) => {
             apiUtils = new ApiUtils(request);
-            [, respnseBody, orderId, productId] = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder);
-            console.log(respnseBody, orderId, productId);
+            [, , orderId] = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder);
         });
 
         test('get all orders @lite', async () => {
