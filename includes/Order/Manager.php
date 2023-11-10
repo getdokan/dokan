@@ -814,7 +814,7 @@ class Manager {
      * @return void
      */
     private function create_coupons( $order, $parent_order, $products ) {
-        if ( dokan()->is_pro_exists() ) {
+        if ( dokan()->is_pro_exists() && property_exists( dokan_pro(), 'vendor_discount' ) ) {
             // remove vendor discount coupon code changes
             remove_filter( 'woocommerce_order_get_items', [ dokan_pro()->vendor_discount->woocommerce_hooks, 'replace_coupon_name' ], 10 );
         }
