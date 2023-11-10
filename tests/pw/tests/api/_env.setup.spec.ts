@@ -21,7 +21,7 @@ setup.describe('setup test environment', () => {
     setup('create customer @lite', async () => {
         const [, customerId] = await apiUtils.createCustomer(payloads.createCustomer1, payloads.adminAuth);
         process.env.CUSTOMER_ID = customerId;
-        // // helpers.appendEnv('CUSTOMER_ID=' + customerId);
+        // helpers.appendEnv('CUSTOMER_ID=' + customerId);
     });
 
     setup('create vendor @lite', async () => {

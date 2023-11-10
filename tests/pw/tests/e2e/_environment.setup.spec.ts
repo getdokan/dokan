@@ -280,21 +280,21 @@ setup.describe('setup dokan settings e2e', () => {
         await vPage.close();
     });
 
-    setup('recreate product advertisement payment product via settings save @pro', async () => {
-        await productAdvertisingPage.recreateProductAdvertisementPaymentViaSettingsSave();
-    });
-
-    setup('product advertisement payment product exists @pro', async () => {
-        const product = await apiUtils.checkProductExistence('Product Advertisement Payment', payloads.adminAuth);
-        expect(product).toBeTruthy();
-    });
-
     setup('recreate reverse withdrawal payment product via settings save @lite', async () => {
         await reverseWithdrawsPage.reCreateReverseWithdrawalPaymentViaSettingsSave();
     });
 
     setup('reverse Withdraw payment product exists @lite', async () => {
         const product = await apiUtils.checkProductExistence('Reverse Withdrawal Payment', payloads.adminAuth);
+        expect(product).toBeTruthy();
+    });
+
+    setup('recreate product advertisement payment product via settings save @pro', async () => {
+        await productAdvertisingPage.recreateProductAdvertisementPaymentViaSettingsSave();
+    });
+
+    setup('product advertisement payment product exists @pro', async () => {
+        const product = await apiUtils.checkProductExistence('Product Advertisement Payment', payloads.adminAuth);
         expect(product).toBeTruthy();
     });
 
