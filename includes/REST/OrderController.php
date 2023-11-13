@@ -199,6 +199,26 @@ class OrderController extends DokanRESTController {
     }
 
     /**
+     * Get Item for an object
+     *
+     * @since 3.9.2
+     *
+     * @return object
+     */
+    public function get_item( $request ) {
+        $order = dokan()->order->get( $request->get_param( 'id' ) );
+
+        if ( empty( $order ) ) {
+            return new WP_Error( "dokan_rest_invalid_order_id", __( 'Invalid Order ID.', 'dokan-lite' ), array( 'status' => 404 ) );
+        }
+
+        $data     = $this->prepare_data_for_response( $order, $request );
+        $response = rest_ensure_response( $data );
+
+        return $response;
+    }
+
+    /**
      * Validation before update product
      *
      * @since 2.8.0
