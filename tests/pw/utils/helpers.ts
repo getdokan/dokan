@@ -283,8 +283,24 @@ export const helpers = {
         return fs.readFileSync(filePath, 'utf8');
     },
 
+    // read json
     readJson(filePath: string) {
-        return JSON.parse(this.readFile(filePath));
+        if (fs.existsSync(filePath)) {
+            return JSON.parse(this.readFile(filePath));
+        }
+    },
+
+    // read a single json data
+    readJsonData(filePath: string, propertyName: string) {
+        const data = this.readJson(filePath);
+        return data[propertyName];
+    },
+
+    // write a single json data
+    writeJsonData(filePath: string, property: string, value: string) {
+        const jsonData = this.readJson(filePath);
+        jsonData[property] = value;
+        this.writeFile(filePath, JSON.stringify(jsonData));
     },
 
     // write file

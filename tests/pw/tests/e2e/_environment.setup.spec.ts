@@ -130,7 +130,8 @@ setup.describe('setup user settings', () => {
         const product = { ...payloads.createProduct(), name: data.predefined.simpleProduct.product1.name };
         const [, productId] = await apiUtils.createProduct(product, payloads.vendorAuth);
         process.env.PRODUCT_ID = productId;
-        helpers.appendEnv('PRODUCT_ID=' + productId);
+        helpers.writeJsonData('utils/data.json', 'PRODUCT_ID', productId);
+        // helpers.appendEnv('PRODUCT_ID=' + productId);
     });
 
     setup('add vendor2 product @lite', async () => {
@@ -140,8 +141,9 @@ setup.describe('setup user settings', () => {
         // create store product
         const product = { ...payloads.createProduct(), name: data.predefined.vendor2.simpleProduct.product1.name };
         const [, productId] = await apiUtils.createProduct(product, payloads.vendor2Auth);
-        process.env.V2_PRODUCT_ID = productId;
-        helpers.appendEnv('V2_PRODUCT_ID=' + productId);
+        // process.env.V2_PRODUCT_ID = productId;
+        // helpers.writeJsonData('utils/data.json', 'V2_PRODUCT_ID', productId);
+        // helpers.appendEnv('V2_PRODUCT_ID=' + productId);
     });
 
     setup('add vendor coupon @pro', async () => {
