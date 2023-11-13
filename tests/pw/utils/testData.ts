@@ -1748,7 +1748,7 @@ export const data = {
         general: {
             vendorStoreUrl: 'store',
             setupWizardMessage:
-                "Thank you for choosing The Marketplace to power your online store! This quick setup wizard will help you configure the basic settings. It's completely optional and shouldn't take longer than two minutes.",
+                'Thank you for choosing The Marketplace to power your online store! This quick setup wizard will help you configure the basic settings. It\'s completely optional and shouldn\'t take longer than two minutes.',
             sellingProductTypes: 'sell_both', // 'sell_both', 'sell_physical', 'sell_digital'
             storeProductPerPage: '12',
             storCategory: 'multiple', // 'none', 'single', 'multiple'
