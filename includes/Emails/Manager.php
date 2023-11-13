@@ -92,6 +92,7 @@ class Manager {
         $wc_emails['Dokan_Email_New_Order']                  = new VendorNewOrder();
         $wc_emails['Dokan_Email_Completed_Order']            = new VendorCompletedOrder();
         $wc_emails['Dokan_Email_Reverse_Withdrawal_Invoice'] = new ReverseWithdrawalInvoice();
+        $wc_emails['Dokan_Email_Vendor_Product_Review']      = new VendorProductReview();
 
         return apply_filters( 'dokan_email_classes', $wc_emails );
     }
@@ -153,6 +154,8 @@ class Manager {
 				'dokan_withdraw_request_cancelled',
 				'dokan_pending_product_published_notification',
 				'dokan_trigger_contact_seller_mail',
+                'wp_set_comment_status',
+                'comment_post',
             )
         );
 

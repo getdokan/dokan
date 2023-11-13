@@ -219,7 +219,7 @@ class Products {
     /**
      * Render Product Edit Page for Email.
      *
-     * @since DOKAN_SINCE
+     * @since 3.9.1
      *
      * @return void
      */

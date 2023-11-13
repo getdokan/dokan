@@ -3,11 +3,11 @@ Contributors: tareq1988, wedevs, nizamuddinbabu
 Donate Link: http://tareq.co/donate/
 Tags: WooCommerce multivendor marketplace, multi vendor marketplace, multi seller store, multi-vendor, multi seller, commissions, multivendor, marketplace, product vendors, woocommerce vendor, commission rate, e-commerce, woocommerce, ebay, ecommerce.
 Requires at least: 5.6
-Tested up to: 6.3.1
+Tested up to: 6.3.2
 WC requires at least: 5.0.0
-WC tested up to: 8.1.1
+WC tested up to: 8.2.1
 Requires PHP: 7.3
-Stable tag: 3.9.0
+Stable tag: 3.9.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -337,6 +337,16 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 == Changelog ==
+
+= v3.9.1 ( Oct 17, 2023 ) =
+
+- **update:** Removed flaticon packages and replace used icons with fontAwesome icons. This will reduce the plugin zip size.
+- **update:** Added a new settings to disable fontAwesome library
+- **update:** Changed all the single date picker fields with daterange picker. This updates will keep the design consistent throughout the plugin.
+- **fix:** [StoreOpenCloseTime] An issue where invalid store opening or closing times generate warning and fatal error on single store page.
+- **fix:** [Email] Fixed an issue where the product edit link on email template redirects to the products listing instead of single product edit page
+- **fix:** Fixed some responsive issue under vendor dashboard product edit page.
+- **fix:** Fixed some responsive issue under vendor dashboard withdraw page.
 
 = v3.9.0 ( Oct 06, 2023 ) =
 
