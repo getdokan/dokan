@@ -84,7 +84,7 @@ class Installer {
     /**
      * Schedule cron jobs
      *
-     * @since DOKAN_SINCE
+     * @since 3.9.2
      *
      * @return void
      */
