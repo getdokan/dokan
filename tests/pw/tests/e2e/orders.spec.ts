@@ -32,7 +32,7 @@ test.describe('Order functionality test', () => {
 
     // orders
 
-    test.only('vendor order menu page is rendering properly @lite @explo', async () => {
+    test('vendor order menu page is rendering properly @lite @explo', async () => {
         await vendor.vendorOrdersRenderProperly();
     });
 
