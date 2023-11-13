@@ -292,6 +292,13 @@ export const helpers = {
         fs.writeFileSync(filePath, content, { encoding: 'utf8' });
     },
 
+    // delete file
+    deleteFile(filePath: string) {
+        if (fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath);
+        }
+    },
+
     // append file
     appendFile(filePath: string, content: string) {
         fs.appendFileSync(filePath, content, { encoding: 'utf8' });

@@ -20,7 +20,7 @@ export { admin, user };
 export const data = {
     env: {
         SERVER_URL: process.env.SERVER_URL ? process.env.SERVER_URL : process.env.BASE_URL + '/wp-json',
-        DOKAN_PRO: process.env.DOKAN_PRO ? process.env.DOKAN_PRO : '',
+        DOKAN_PRO: process.env.DOKAN_PRO ? !!process.env.DOKAN_PRO : '',
         CUSTOMER_ID: process.env.CUSTOMER_ID ? Number(process.env.CUSTOMER_ID) : '',
         VENDOR_ID: process.env.VENDOR_ID ? process.env.VENDOR_ID : '',
         VENDOR2_ID: process.env.VENDOR2_ID ? process.env.VENDOR2_ID : '',

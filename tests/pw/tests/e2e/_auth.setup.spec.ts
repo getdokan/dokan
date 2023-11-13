@@ -6,6 +6,8 @@ import { data } from '@utils/testData';
 import { payloads } from '@utils/payloads';
 import { helpers } from '@utils/helpers';
 
+const { DOKAN_PRO } = data.env;
+
 setup.describe('authenticate users & set permalink', () => {
     setup('authenticate admin @lite', async ({ page }) => {
         const loginPage = new LoginPage(page);
@@ -54,13 +56,13 @@ setup.describe('authenticate users & set permalink', () => {
         await loginPage.login(data.vendor, data.auth.vendorAuthFile);
     });
 
-    setup('dokan pro enabled or not @lite', async ({ request }) => {
+    setup.only('dokan pro enabled or not @lite', async ({ request }) => {
         const apiUtils = new ApiUtils(request);
         let res = await apiUtils.checkPluginsExistence(data.plugin.dokanPro, payloads.adminAuth);
         if (res) {
             res = await apiUtils.pluginsActiveOrNot(data.plugin.dokanPro, payloads.adminAuth);
         }
-        !process.env.DOKAN_PRO ? expect(res).toBeTruthy() : expect(res).toBeFalsy();
+        DOKAN_PRO ? expect(res).toBeTruthy() : expect(res).toBeFalsy();
         // process.env.DOKAN_PRO = String(res);
         // helpers.appendEnv('DOKAN_PRO=' + String(res));
     });
