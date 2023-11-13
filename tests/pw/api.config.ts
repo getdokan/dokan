@@ -51,8 +51,8 @@ export default defineConfig({
         // api_setup
         {
             name: 'api_setup',
-            testMatch: /.*\.setup\.ts/,
-            // testMatch: /.*\.setup\.spec\.ts/,
+            // testMatch: /.*\.setup\.ts/,
+            testMatch: /.*\.setup\.spec\.ts/,
         },
 
         // api_tests
