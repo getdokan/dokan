@@ -37,6 +37,7 @@ env:
     USER_PASSWORD: 01dokan01
     GMAP: ${{secrets.GMAP}}
     BASE_URL: http://localhost:9999
+    DOKAN_PRO: false
     CI: true
     FORCE_COLOR: 1
     DB_HOST_NAME: localhost
