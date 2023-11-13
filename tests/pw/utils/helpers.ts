@@ -331,6 +331,17 @@ export const helpers = {
         this.appendFile('.env', content);
     },
 
+    // write env json
+    writeEnvJson(property: string, value: string) {
+        const filePath = 'data.json';
+        let envData: { [key: string]: string } = {};
+        if (fs.existsSync(filePath)) {
+            envData = this.readJson(filePath);
+        }
+        envData[property] = value;
+        this.writeFile(filePath, JSON.stringify(envData));
+    },
+
     async createPage(browser: Browser, options?: BrowserContextOptions | undefined) {
         const browserContext = await browser.newContext(options);
         return browserContext.newPage();
