@@ -55,6 +55,9 @@ class Hooks {
         add_filter( 'woocommerce_order_item_display_meta_value', [ $this, 'change_order_item_display_meta_value' ], 10, 2 );
         add_filter( 'woocommerce_reports_get_order_report_query', [ $this, 'admin_order_reports_remove_parents' ] );
         add_filter( 'post_class', [ $this, 'admin_shop_order_row_classes' ], 10, 3 );
+
+        // Add commission meta-box in order details page.
+        add_action( 'add_meta_boxes', [ $this, 'add_commission_metabox_in_order_details_page' ] );
     }
 
     /**
@@ -504,5 +507,43 @@ class Hooks {
         if ( $typenow === 'shop_order' ) {
             echo '<button class="toggle-sub-orders button show">' . esc_html__( 'Toggle Sub-orders', 'dokan-lite' ) . '</button>';
         }
+    }
+
+    /**
+     * Add dokan commission meta-box in woocommerce order details page.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public function add_commission_metabox_in_order_details_page() {
+        $screen = OrderUtil::is_hpos_enabled() ? 'woocommerce_page_wc-orders' : 'shop_order';
+
+        add_meta_box(
+            'dokan_commission_box',
+            __( 'Comissions', 'dokan-lite' ),
+            [ $this, 'commission_meta_box' ],
+            $screen,
+            'normal',
+            'core'
+        );
+    }
+
+    /**
+     * Dokan order commission meta-box body.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param WP_Post|WC_Order $post_or_order
+     *
+     * @return void
+     */
+    public function commission_meta_box( $post_or_order ) {
+        $order_id = OrderUtil::get_post_or_order_id( $post_or_order );
+        $order = dokan()->order->get( $order_id );
+
+        ?>
+
+        <?php
     }
 }
