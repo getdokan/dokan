@@ -7,7 +7,7 @@
  * The email may also contain a link to the review page where the vendor can view the review and respond to it if necessary.
  *
  * @class     \WeDevs\Dokan\Emails\VendorProductReview
- * @since     DOKAN_SINCE
+ * @since     3.9.2
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
