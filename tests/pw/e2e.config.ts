@@ -75,7 +75,7 @@ export default defineConfig({
         {
             name: 'e2e_tests',
             testMatch: /.*\.spec\.ts/,
-            // dependencies: process.env.NO_SETUP ? [] : ['e2e_setup'] /* whether not to run setup tests before running actual tests */,
+            dependencies: process.env.NO_SETUP ? [] : ['e2e_setup'] /* whether not to run setup tests before running actual tests */,
         },
 
         // local site setup project
