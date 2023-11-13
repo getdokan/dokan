@@ -21,6 +21,9 @@ test.describe('Order functionality test', () => {
 
         apiUtils = new ApiUtils(request);
         [, , orderId] = await apiUtils.createOrderWithStatus(PRODUCT_ID, { ...payloads.createOrder, customer_id: CUSTOMER_ID }, data.order.orderStatus.onhold, payloads.vendorAuth);
+        console.log(orderId);
+        console.log(typeof CUSTOMER_ID);
+        
     });
 
     test.afterAll(async () => {
@@ -29,7 +32,7 @@ test.describe('Order functionality test', () => {
 
     // orders
 
-    test('vendor order menu page is rendering properly @lite @explo', async () => {
+    test.only('vendor order menu page is rendering properly @lite @explo', async () => {
         await vendor.vendorOrdersRenderProperly();
     });
 
