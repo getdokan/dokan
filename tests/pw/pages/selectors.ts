@@ -1724,7 +1724,7 @@ export const selector = {
 
                 fields: '.dokan-settings-fields',
 
-                saveChanges: '.submit',
+                saveChanges: '//input[@id="submit" and @value="Save Changes"]',
 
                 search: {
                     searchBox: '.search-box',
