@@ -7,7 +7,7 @@ use WC_Email;
 /**
  * Send email to vendor when a product is reviewed
  *
- * @since       DOKAN_SINCE
+ * @since       3.9.2
  *
  * @class       Dokan_Email_Vendor_Product_Review
  *
@@ -20,7 +20,7 @@ class VendorProductReview extends WC_Email {
     /**
      * Reply email
      *
-     * @since DOKAN_SINCE
+     * @since 3.9.2
      *
      * @var string
      */
@@ -29,7 +29,7 @@ class VendorProductReview extends WC_Email {
     /**
      * Constructor.
      *
-     * @since DOKAN_SINCE
+     * @since 3.9.2
      */
     public function __construct() {
         $this->id             = 'dokan_contact_seller';
@@ -61,7 +61,7 @@ class VendorProductReview extends WC_Email {
     /**
      * Get the email subject.
      *
-     * @since  DOKAN_SINCE
+     * @since  3.9.2
      *
      * @return string
      */
@@ -72,7 +72,7 @@ class VendorProductReview extends WC_Email {
     /**
      * Get email heading.
      *
-     * @since  DOKAN_SINCE
+     * @since  3.9.2
      *
      * @return string
      */
@@ -83,7 +83,7 @@ class VendorProductReview extends WC_Email {
     /**
      * Trigger this email.
      *
-     * @since DOKAN_SINCE
+     * @since 3.9.2
      *
      * @param int $comment_id
      *
@@ -126,7 +126,7 @@ class VendorProductReview extends WC_Email {
     /**
      * Get the from address for outgoing emails.
      *
-     * @since DOKAN_SINCE
+     * @since 3.9.2
      *
      * @return string
      */
@@ -137,7 +137,7 @@ class VendorProductReview extends WC_Email {
     /**
      * Get content html.
      *
-     * @since DOKAN_SINCE
+     * @since 3.9.2
      *
      * @return string
      */
@@ -159,7 +159,7 @@ class VendorProductReview extends WC_Email {
     /**
      * Get content plain.
      *
-     * @since DOKAN_SINCE
+     * @since 3.9.2
      *
      * @return string
      */
@@ -181,7 +181,7 @@ class VendorProductReview extends WC_Email {
     /**
      * Initialize settings form fields.
      *
-     * @since DOKAN_SINCE
+     * @since 3.9.2
      */
     public function init_form_fields() {
         /* translators: %s: list of placeholders */
