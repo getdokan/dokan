@@ -2216,7 +2216,7 @@ export const payloads = {
     },
 
     updateAnnouncementNotice: {
-        read_status: 'read', // read, unread, trash
+        read_status: 'read', // read, unread
     },
 
     // product review

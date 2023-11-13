@@ -1,8 +1,6 @@
 // import { request } from '@playwright/test';
 import { faker } from '@faker-js/faker';
 import { helpers } from '@utils/helpers';
-// import { ApiUtils } from '@utils/apiUtils';
-// import { payloads } from '@utils/payloads';
 import 'dotenv/config';
 
 interface user {
@@ -20,7 +18,7 @@ export { admin, user };
 export const data = {
     env: {
         SERVER_URL: process.env.SERVER_URL ? process.env.SERVER_URL : process.env.BASE_URL + '/wp-json',
-        DOKAN_PRO: process.env.DOKAN_PRO ? !!process.env.DOKAN_PRO : '',
+        DOKAN_PRO: process.env.DOKAN_PRO ? process.env.DOKAN_PRO : '',
         CUSTOMER_ID: process.env.CUSTOMER_ID ? Number(process.env.CUSTOMER_ID) : '',
         VENDOR_ID: process.env.VENDOR_ID ? process.env.VENDOR_ID : '',
         VENDOR2_ID: process.env.VENDOR2_ID ? process.env.VENDOR2_ID : '',
@@ -1748,7 +1746,7 @@ export const data = {
         general: {
             vendorStoreUrl: 'store',
             setupWizardMessage:
-                'Thank you for choosing The Marketplace to power your online store! This quick setup wizard will help you configure the basic settings. It\'s completely optional and shouldn\'t take longer than two minutes.',
+                "Thank you for choosing The Marketplace to power your online store! This quick setup wizard will help you configure the basic settings. It's completely optional and shouldn't take longer than two minutes.",
             sellingProductTypes: 'sell_both', // 'sell_both', 'sell_physical', 'sell_digital'
             storeProductPerPage: '12',
             storCategory: 'multiple', // 'none', 'single', 'multiple'

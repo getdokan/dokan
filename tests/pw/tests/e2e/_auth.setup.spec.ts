@@ -63,15 +63,5 @@ setup.describe('authenticate users & set permalink', () => {
             res = await apiUtils.pluginsActiveOrNot(data.plugin.dokanPro, payloads.adminAuth);
         }
         DOKAN_PRO ? expect(res).toBeTruthy() : expect(res).toBeFalsy();
-        // process.env.DOKAN_PRO = String(res);
-        // helpers.appendEnv('DOKAN_PRO=' + String(res));
     });
-
-    // setup('dokan pro activation status @pro', async ({ request }) => {
-    //     const apiUtils = new ApiUtils(request);
-    //     const res = await apiUtils.pluginsActiveOrNot(data.plugin.dokanPro, payloads.adminAuth);
-    //     process.env.DOKAN_PRO = String(res);
-    //     // helpers.appendEnv('DOKAN_PRO=' + String(res));
-    //     expect(res).toBeTruthy();
-    // });
 });

@@ -17,7 +17,7 @@ declare global {
             PRODUCT_ID: string;
             V2_PRODUCT_ID: string;
             GMAP: string;
-            DOKAN_PRO: boolean;
+            DOKAN_PRO: string;
             BASE_URL: string;
             QUERY: string;
             HEADLESS: string;
