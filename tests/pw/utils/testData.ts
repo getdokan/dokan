@@ -31,13 +31,13 @@ const envData: envData = helpers.readJson('utils/data.json');
 export const data = {
     env: {
         SERVER_URL: process.env.SERVER_URL ? process.env.SERVER_URL : envData.SERVER_URL,
-        CUSTOMER_ID: process.env.CUSTOMER_ID ? process.env.CUSTOMER_ID : envData.CUSTOMER_ID,
+        CUSTOMER_ID: process.env.CUSTOMER_ID ? Number(process.env.CUSTOMER_ID) : Number(envData.CUSTOMER_ID),
         VENDOR_ID: process.env.VENDOR_ID ? process.env.VENDOR_ID : envData.VENDOR_ID,
         VENDOR2_ID: process.env.VENDOR2_ID ? process.env.VENDOR2_ID : envData.VENDOR2_ID,
         PRODUCT_ID: process.env.PRODUCT_ID ? process.env.PRODUCT_ID : envData.PRODUCT_ID,
         HPOS: process.env.HPOS ? process.env.HPOS : envData.HPOS,
         // SERVER_URL: process.env.SERVER_URL ? process.env.SERVER_URL : helpers.readJsonData(envDataFile, 'SERVER_URL'),
-        // CUSTOMER_ID: process.env.CUSTOMER_ID ? process.env.CUSTOMER_ID : helpers.readJsonData(envDataFile, 'CUSTOMER_ID'),
+        // CUSTOMER_ID: process.env.CUSTOMER_ID ? Number(process.env.CUSTOMER_ID) : Number(helpers.readJsonData(envDataFile, 'CUSTOMER_ID')),
         // VENDOR_ID: process.env.VENDOR_ID ? process.env.VENDOR_ID : helpers.readJsonData(envDataFile, 'VENDOR_ID'),
         // VENDOR2_ID: process.env.VENDOR2_ID ? process.env.VENDOR2_ID : helpers.readJsonData(envDataFile, 'VENDOR2_ID'),
         // PRODUCT_ID: process.env.PRODUCT_ID ? process.env.PRODUCT_ID : helpers.readJsonData(envDataFile, 'PRODUCT_ID'),
