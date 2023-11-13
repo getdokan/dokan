@@ -1,4 +1,4 @@
-export { };
+export {};
 
 declare global {
     namespace NodeJS {

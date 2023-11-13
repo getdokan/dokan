@@ -2,8 +2,8 @@ name: E2E_API Tests
 
 on:
     schedule:
-        # workflow will run daily at 8:00 AM
-        - cron: '0 8 * * *'
+        # workflow will run daily at 8:00 AM BDT (2:00 AM UTC)
+        - cron: '0 2 * * *'
     # workflow will trigger on pull request
     pull_request:
         branches: [develop]
@@ -46,7 +46,7 @@ env:
     DB_PREFIX: wp
     PR_NUMBER: ${{ github.event.number }}
     SHA: ${{ github.event.pull_request.head.sha }}
-    SYSTEM_INFO: ./tests/pw/systemInfo.json
+    SYSTEM_INFO: ./tests/pw/playwright/systemInfo.json
     API_TEST_RESULT: ./tests/pw/playwright-report/api/summary-report/results.json
     E2E_TEST_RESULT: ./tests/pw/playwright-report/e2e/summary-report/results.json
 
@@ -107,7 +107,6 @@ jobs:
               run: |
                   cd tests/pw
                   echo "The value of test DB_PORT is ${{ env.DB_PORT }}"
-                  echo "The value of test GMAP is ${{ env.GMAP }}"
 
             # Set permalink structure
             - name: Set Permalink structure
@@ -152,11 +151,11 @@ jobs:
                   npm run pw:browser-with-deps
 
             # Install only the OS dependencies if cache hit  not needed
-            # - name: Install Playwright OS dependencies
-            #   if: steps.playwright-cache.outputs.cache-hit == 'true'
-            #   run: |
-            #     cd tests/pw
-            #     npm run pw:deps-only
+            - name: Install Playwright OS dependencies
+              if: steps.playwright-cache.outputs.cache-hit == 'true'
+              run: |
+                cd tests/pw
+                npm run pw:deps-only
 
             # Run e2e tests
             - name: 🧪 Running the e2e tests

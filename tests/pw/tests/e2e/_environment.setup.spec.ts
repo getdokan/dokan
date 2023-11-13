@@ -130,7 +130,7 @@ setup.describe('setup user settings', () => {
         const product = { ...payloads.createProduct(), name: data.predefined.simpleProduct.product1.name };
         const [, productId] = await apiUtils.createProduct(product, payloads.vendorAuth);
         process.env.PRODUCT_ID = productId;
-        helpe]rs.appendEnv('PRODUCT_ID=' + productId);
+        helpers.appendEnv('PRODUCT_ID=' + productId);
     });
 
     setup('add vendor2 product @lite', async () => {
