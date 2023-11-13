@@ -52,6 +52,11 @@ export const dbData = {
             enable_tc_on_reg: 'on',
             enable_single_seller_mode: 'off',
             store_category_type: 'multiple', // none, multiple
+
+            // product page settings
+            product_page_options: '',
+            show_vendor_info: 'on', 
+            enabled_more_products_tab: 'on',
         },
 
         sellingSettings: {
@@ -181,12 +186,12 @@ export const dbData = {
             store_banner_height: '300',
             store_open_close: 'on',
             enable_theme_store_sidebar: 'off',
-            show_vendor_info: 'on',
             hide_vendor_info: {
                 email: '',
                 phone: '',
                 address: '',
             },
+            disable_dokan_fontawesome: 'off',
         },
 
         privacyPolicySettings: {
@@ -226,7 +231,6 @@ export const dbData = {
             enabled_for_customer_order: 'on',
             store_support_product_page: 'above_tab',
             support_button_label: 'Get Support',
-            dokan_admin_email_notification: 'on',
         },
 
         sellerVerificationSettings: {

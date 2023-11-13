@@ -281,7 +281,6 @@ export class SettingsPage extends AdminPage {
         await this.enableSwitcher(selector.admin.dokan.settings.storeSupport.displayOnOrderDetails);
         await this.selectByValue(selector.admin.dokan.settings.storeSupport.displayOnSingleProductPage, storeSupport.displayOnSingleProductPage);
         await this.clearAndType(selector.admin.dokan.settings.storeSupport.supportButtonLabel, storeSupport.supportButtonLabel);
-        await this.enableSwitcher(selector.admin.dokan.settings.storeSupport.supportTicketEmailNotification);
 
         // save settings
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.admin.dokan.settings.storeSupport.storeSupportSaveChanges);

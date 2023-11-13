@@ -1,4 +1,4 @@
-import { test as setup } from '@playwright/test';
+import { test as setup, expect } from '@playwright/test';
 import { LoginPage } from '@pages/loginPage';
 import { WpPage } from '@pages/wpPage';
 import { ApiUtils } from '@utils/apiUtils';
@@ -60,9 +60,9 @@ setup.describe('authenticate users & set permalink', () => {
         if (res) {
             res = await apiUtils.pluginsActiveOrNot(data.plugin.dokanPro, payloads.adminAuth);
         }
-        process.env.DOKAN_PRO = String(res);
-        helpers.appendEnv('DOKAN_PRO=' + String(res));
-        console.log(process.env.DOKAN_PRO);g
+        !process.env.DOKAN_PRO ? expect(res).toBeTruthy() : expect(res).toBeFalsy();
+        // process.env.DOKAN_PRO = String(res);
+        // helpers.appendEnv('DOKAN_PRO=' + String(res));
     });
 
     // setup('dokan pro activation status @pro', async ({ request }) => {
