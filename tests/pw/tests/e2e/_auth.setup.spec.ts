@@ -62,6 +62,7 @@ setup.describe('authenticate users & set permalink', () => {
         }
         process.env.DOKAN_PRO = String(res);
         helpers.appendEnv('DOKAN_PRO=' + String(res));
+        console.log(process.env.DOKAN_PRO);g
     });
 
     // setup('dokan pro activation status @pro', async ({ request }) => {
