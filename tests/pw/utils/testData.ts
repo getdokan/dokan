@@ -36,7 +36,7 @@ export const data = {
         VENDOR2_ID: envData.VENDOR2_ID,
         PRODUCT_ID: envData.PRODUCT_ID,
         HPOS: envData.HPOS,
-        DOKAN_PRO: process.env.DOKAN_PRO,
+        DOKAN_PRO: process.env.DOKAN_PRO ? true : false,
 
         // db data
         DB_HOST_NAME: process.env.DB_HOST_NAME,
