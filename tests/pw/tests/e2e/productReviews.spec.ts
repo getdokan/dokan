@@ -4,7 +4,7 @@ import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
 import { payloads } from '@utils/payloads';
 
-const { PRODUCT_ID } = process.env;
+const { PRODUCT_ID } = data.env;
 
 test.describe('Product Reviews test', () => {
     let vendor: ProductReviewsPage;

@@ -18,19 +18,19 @@ export default defineConfig({
     // forbidOnly     : !!process.env.CI, 	/* Fail the build on CI if you accidentally left testonly in the source code. */
     repeatEach: 1 /* The number of times to repeat each test, useful for debugging flaky tests. */,
     retries: process.env.CI ? 1 : 0 /* The maximum number of retry attempts given to failed tests.  */,
-    workers: process.env.CI ? 1 : 1 /* Opt out of parallel tests on CI. */,
+    workers: process.env.CI ? 4 : 4 /* Opt out of parallel tests on CI. */,
     reportSlowTests: { max: 3, threshold: 10 } /* Whether to report slow test files. Pass null to disable this feature. */,
     reporter: process.env.CI
         ? [
               ['github'],
               ['html', { open: 'never', outputFolder: 'playwright-report/api/html/html-report-api' }],
-              ['junit', { outputFile: 'playwright-report/api/junit-report/api-results.xml' }],
+              //   ['junit', { outputFile: 'playwright-report/api/junit-report/api-results.xml' }],
               ['list', { printSteps: true }],
               ['./utils/summaryReporter.ts', { outputFile: 'playwright-report/api/summary-report/results.json' }],
           ]
         : [
               ['html', { open: 'never', outputFolder: 'playwright-report/api/html/html-report-api' }],
-              ['junit', { outputFile: 'playwright-report/api/junit-report/api-results.xml' }],
+              //   ['junit', { outputFile: 'playwright-report/api/junit-report/api-results.xml' }],
               ['list', { printSteps: true }],
               ['./utils/summaryReporter.ts', { outputFile: 'playwright-report/api/summary-report/results.json' }],
           ],
@@ -52,13 +52,14 @@ export default defineConfig({
         {
             name: 'api_setup',
             testMatch: /.*\.setup\.ts/,
+            // testMatch: /.*\.setup\.spec\.ts/,
         },
 
         // api_tests
         {
             name: 'api_tests',
             testMatch: /.*\.spec\.ts/,
-            dependencies: process.env.SETUP ? [] : ['api_setup'] /* whether not to run setup tests before running actual tests */,
+            dependencies: process.env.NO_SETUP ? [] : ['api_setup'] /* whether not to run setup tests before running actual tests */,
         },
     ],
 });

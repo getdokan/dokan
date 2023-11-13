@@ -1754,3 +1754,16 @@ export interface storageState {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type responseBody = any;
+
+
+export interface commission {
+    type: string;
+    amount: string;
+    additionalAmount: string;
+}
+
+export interface feeRecipient {
+    shippingFeeRecipient: string;
+    taxFeeRecipient: string;
+    shippingTaxFeeRecipient: string;
+}

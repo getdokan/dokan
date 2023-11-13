@@ -4,7 +4,7 @@ import { selector } from '@pages/selectors';
 import { data } from '@utils/testData';
 import { dokanSettings } from '@utils/interfaces';
 
-const { DOKAN_PRO } = process.env;
+const { DOKAN_PRO } = data.env;
 
 export class SettingsPage extends AdminPage {
     constructor(page: Page) {
@@ -106,7 +106,7 @@ export class SettingsPage extends AdminPage {
             await this.enableSwitcher(selector.admin.dokan.settings.selling.productDiscount);
             await this.enableSwitcher(selector.admin.dokan.settings.selling.vendorProductReviewStatusChange);
             await this.enableSwitcher(selector.admin.dokan.settings.selling.guestProductEnquiry);
-            await this.enableSwitcher(selector.admin.dokan.settings.selling.newVendorEnableAuction);
+            await this.enableSwitcher(selector.admin.dokan.settings.selling.newVendorEnableAuction); // todo: add condition for simple auction plugin enabled
             await this.enableSwitcher(selector.admin.dokan.settings.selling.enableMinMaxQuantities);
             await this.enableSwitcher(selector.admin.dokan.settings.selling.enableMinMaxAmount);
         }
@@ -281,7 +281,6 @@ export class SettingsPage extends AdminPage {
         await this.enableSwitcher(selector.admin.dokan.settings.storeSupport.displayOnOrderDetails);
         await this.selectByValue(selector.admin.dokan.settings.storeSupport.displayOnSingleProductPage, storeSupport.displayOnSingleProductPage);
         await this.clearAndType(selector.admin.dokan.settings.storeSupport.supportButtonLabel, storeSupport.supportButtonLabel);
-        await this.enableSwitcher(selector.admin.dokan.settings.storeSupport.supportTicketEmailNotification);
 
         // save settings
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.admin.dokan.settings.storeSupport.storeSupportSaveChanges);

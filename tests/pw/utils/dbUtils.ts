@@ -3,7 +3,9 @@ import { MySqlConnection, DbContext } from 'mysqlconnector';
 import { serialize, unserialize } from 'php-serialize';
 import { dbData } from '@utils/dbData';
 import { helpers } from '@utils/helpers';
-const { DB_HOST_NAME, DB_USER_NAME, DB_USER_PASSWORD, DATABASE, DB_PORT, DB_PREFIX } = process.env;
+import { data } from '@utils/testData';
+import { commission, feeRecipient } from '@utils/interfaces';
+const { DB_HOST_NAME, DB_USER_NAME, DB_USER_PASSWORD, DATABASE, DB_PORT, DB_PREFIX } = data.env;
 
 const mySql = new MySqlConnection({
     hostname: DB_HOST_NAME,
@@ -73,7 +75,7 @@ export const dbUtils = {
     },
 
     // get selling info
-    async getSellingInfo(): Promise<object[]> {
+    async getSellingInfo(): Promise<[commission, feeRecipient]> {
         const res = await this.getDokanSettings(dbData.dokan.optionName.selling);
         const commission = {
             type: res.commission_type,

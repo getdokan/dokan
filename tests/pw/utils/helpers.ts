@@ -127,7 +127,13 @@ export const helpers = {
 
     // calculate percentage
     percentage(number: number, percentage: number) {
+        // return this.roundToTwo(number * (percentage / 100));
+        return number * (percentage / 100);
+    },
+
+    percentageWithRound(number: number, percentage: number) {
         return this.roundToTwo(number * (percentage / 100));
+        // return number * (percentage / 100);
     },
 
     // calculate percentage
@@ -141,15 +147,57 @@ export const helpers = {
         return subtotal.reduce((a, b) => a + b, 0);
     },
 
+    // discount
+    discount(subTotal: number, discount: any) {
+        let discount_total = 0;
+        switch (discount.type) {
+            case 'coupon':
+                {
+                    switch (discount.coupon.type) {
+                        case 'percentage':
+                            for (const rate of discount.coupon.amount) {
+                                if (discount.coupon.applySequentially) {
+                                    const discount = this.percentageWithRound(Number(subTotal), Number(rate));
+                                    subTotal -= discount;
+                                    discount_total += discount;
+                                } else {
+                                    discount_total += this.percentageWithRound(Number(subTotal), Number(rate));
+                                }
+                            }
+                            break;
+
+                        case 'fixed':
+                            discount_total = Number(subTotal - discount.amount);
+                            break;
+
+                        default:
+                            break;
+                    }
+                }
+
+                break;
+
+            case 'amount_discount':
+                break;
+
+            case 'quantity_discount':
+                break;
+
+            default:
+                break;
+        }
+        return this.roundToTwo(discount_total);
+    },
+
     // product tax
     productTax(taxRate: number, subtotal: number) {
-        const productTax = this.percentage(subtotal, taxRate);
+        const productTax = this.percentage(Number(subtotal), Number(taxRate));
         return this.roundToTwo(productTax);
     },
 
     // product tax
     shippingTax(taxRate: number, shippingFee = 0) {
-        const shippingTax = this.percentage(shippingFee, taxRate);
+        const shippingTax = this.percentage(Number(shippingFee), Number(taxRate));
         return this.roundToTwo(shippingTax);
     },
 
@@ -242,6 +290,13 @@ export const helpers = {
     // write file
     writeFile(filePath: string, content: string) {
         fs.writeFileSync(filePath, content, { encoding: 'utf8' });
+    },
+
+    // delete file
+    deleteFile(filePath: string) {
+        if (fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath);
+        }
     },
 
     // append file

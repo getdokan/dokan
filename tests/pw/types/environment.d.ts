@@ -17,14 +17,15 @@ declare global {
             PRODUCT_ID: string;
             V2_PRODUCT_ID: string;
             GMAP: string;
-            DOKAN_PRO: string
-            BASE_URL:string;
-            QUERY:string;
+            DOKAN_PRO: boolean;
+            BASE_URL: string;
+            QUERY: string;
             HEADLESS: string;
             SLOWMO: string;
             DEVTOOLS: string;
             RETRY_TIMES: string;
             TIME_OUT: string;
+            NO_SETUP: string;
             SERVER_URL: string;
             ADMIN_AUTH: string;
             VENDOR_AUTH: string;
@@ -35,10 +36,8 @@ declare global {
             DATABASE: string;
             DB_PORT: number;
             DB_PREFIX: string;
-            API_TEST_RESULT: string
-            E2E_TEST_RESULT: string
-
-
+            API_TEST_RESULT: string;
+            E2E_TEST_RESULT: string;
         }
     }
 }
