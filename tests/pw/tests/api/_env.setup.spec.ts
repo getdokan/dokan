@@ -31,23 +31,23 @@ setup.describe('setup test environment', () => {
     });
 
     setup('set dokan general settings @lite', async () => {
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.general, { ...dbData.dokan.generalSettings, store_category_type: 'single' });
+    	await dbUtils.setDokanSettings(dbData.dokan.optionName.general, { ...dbData.dokan.generalSettings, store_category_type: 'single' });
     });
 
     setup('admin set dokan selling settings @lite', async () => {
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, dbData.dokan.sellingSettings);
+    	await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, dbData.dokan.sellingSettings);
     });
 
     setup('admin set dokan withdraw settings @lite', async () => {
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.withdraw, dbData.dokan.withdrawSettings);
+    	await dbUtils.setDokanSettings(dbData.dokan.optionName.withdraw, dbData.dokan.withdrawSettings);
     });
 
     setup('admin set dokan reverse withdraw settings @lite', async () => {
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.reverseWithdraw, dbData.dokan.reverseWithdrawSettings);
+    	await dbUtils.setDokanSettings(dbData.dokan.optionName.reverseWithdraw, dbData.dokan.reverseWithdrawSettings);
     });
 
     setup('get test environment info @lite', async () => {
-        const [, summaryInfo] = await apiUtils.getSystemStatus();
-        helpers.writeFile('playwright/systemInfo.json', JSON.stringify(summaryInfo));
+    	const [, summaryInfo] = await apiUtils.getSystemStatus();
+    	helpers.writeFile('playwright/systemInfo.json', JSON.stringify(summaryInfo));
     });
 });
