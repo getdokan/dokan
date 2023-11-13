@@ -56,7 +56,7 @@ setup.describe('authenticate users & set permalink', () => {
         await loginPage.login(data.vendor, data.auth.vendorAuthFile);
     });
 
-    setup.only('dokan pro enabled or not @lite', async ({ request }) => {
+    setup('dokan pro enabled or not @lite', async ({ request }) => {
         const apiUtils = new ApiUtils(request);
         let res = await apiUtils.checkPluginsExistence(data.plugin.dokanPro, payloads.adminAuth);
         if (res) {
