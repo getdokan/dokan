@@ -201,7 +201,7 @@ class OrderController extends DokanRESTController {
     /**
      * Get Item for an object
      *
-     * @since DOKAN_SINCE
+     * @since 3.9.2
      *
      * @return object
      */

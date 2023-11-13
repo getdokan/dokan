@@ -396,7 +396,7 @@ class Hooks {
     /**
      * Display own product not punchable notice.
      *
-     * @since DOKAN_SINCE
+     * @since 3.9.2
      *
      * @return void
      */
@@ -416,7 +416,7 @@ class Hooks {
      * Right now, if someone leaves a review for a vendor product, the vendor is receiving a notification email.
      * This email notification should be sent to the admin instead of the vendor.
      *
-     * @since DOKAN_SINCE
+     * @since 3.9.2
      *
      * @param array $emails
      * @param int   $comment_id
