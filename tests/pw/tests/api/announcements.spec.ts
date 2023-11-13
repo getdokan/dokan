@@ -14,13 +14,10 @@ import { payloads } from '@utils/payloads';
 test.describe('announcements api test', () => {
     let apiUtils: ApiUtils;
     let announcementId: string;
-    let noticeId: string;
 
     test.beforeAll(async ({ request }) => {
         apiUtils = new ApiUtils(request);
         [, announcementId] = await apiUtils.createAnnouncement(payloads.createAnnouncement());
-        // noticeId = await apiUtils.getAnnouncementNoticeId(payloads.vendorAuth); // todo: uncomment after fix
-        // console.log(noticeId);
     });
 
     test('get all announcements @pro', async () => {
