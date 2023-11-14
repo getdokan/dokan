@@ -54,10 +54,11 @@ jobs:
     tests:
         name: e2e_api tests
         runs-on: ubuntu-latest
-        permissions:
-          contents: write
-          issues: write
-          pull-requests: write
+        permissions: write-all
+        # permissions:
+        #   contents: write
+        #   issues: write
+        #   pull-requests: write
 
         steps:
             - name: Checkout testing repo
