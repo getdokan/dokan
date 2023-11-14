@@ -21,11 +21,11 @@ concurrency:
     cancel-in-progress: true
 
 # workflow permissions
-permissions:
-    checks: write
-    contents: read
-    issues: write
-    pull-requests: write
+# permissions:
+#     checks: write
+#     contents: read
+#     issues: write
+#     pull-requests: write
 
 # workflow environment variables
 env:
@@ -54,6 +54,10 @@ jobs:
     tests:
         name: e2e_api tests
         runs-on: ubuntu-latest
+        permissions:
+          contents: write
+          issues: write
+          pull-requests: write
 
         steps:
             - name: Checkout testing repo
@@ -188,7 +192,8 @@ jobs:
 
             # Find PR comment
             - name: Find PR comment by github-actions[bot]
-              uses: peter-evans/find-comment@v2
+              # uses: peter-evans/find-comment@v2
+              uses: peter-evans/find-comment@034abe94d3191f9c89d870519735beae326f2bdb
               id: find-comment
               if: github.event_name == 'pull_request'
               with:
@@ -198,12 +203,14 @@ jobs:
 
             # Post test summary as PR comment
             - name: Create or update PR comment
-              uses: peter-evans/create-or-update-comment@v2
+              # uses: peter-evans/create-or-update-comment@v2
+              uses: peter-evans/create-or-update-comment@67dcc547d311b736a8e6c5c236542148a47adc3d
               if: github.event_name == 'pull_request'
               with:
                   comment-id: ${{ steps.find-comment.outputs.comment-id }}
                   issue-number: ${{ github.event.pull_request.number }}
                   body: ${{ steps.prepare-test-summary.outputs.result }}
+                  reactions: hooray
                   edit-mode: replace
 
             # Upload artifacts
