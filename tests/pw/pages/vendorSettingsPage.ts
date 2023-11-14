@@ -41,7 +41,7 @@ export class VendorSettingsPage extends VendorPage {
         await this.toBeVisible(selector.vendor.vStoreSettings.email);
 
         // map is visible
-        // await this.toBeVisible(selector.vendor.vStoreSettings.map); //todo: gmap not reading from env lite
+        await this.toBeVisible(selector.vendor.vStoreSettings.map);
 
         // todo: catalog, discount, vacation, open close, store category
 
