@@ -608,6 +608,7 @@ class Hooks {
                                     $row_class    = apply_filters( 'woocommerce_admin_html_order_item_class', ! empty( $class ) ? $class : '', $item, $order );
                                     $commission   = 0;
 
+                                    $commission_type_html = $item->get_meta( '_dokan_commission_type' ) && isset( dokan_commission_types()[ $item->get_meta( '_dokan_commission_type' ) ] ) ? dokan_commission_types()[ $item->get_meta( '_dokan_commission_type' ) ] : '';
                                 ?>
                                 <tr class="item  <?php echo esc_attr( $row_class ); ?>" data-order_item_id="<?php echo $item->get_id(); ?>">
                                     <td class="thumb">
@@ -637,7 +638,7 @@ class Hooks {
 
                                     <td width="1%">
                                         <div class="view">
-                                            <bdi><?php echo esc_html( $item->get_meta( '_dokan_commission_type' ) ); ?></bdi>
+                                            <bdi><?php echo esc_html( $commission_type_html ); ?></bdi>
                                         </div>
                                     </td>
                                     <td width="1%">
@@ -738,8 +739,30 @@ class Hooks {
 
     public function sub_or_related_orders_meta_box( $post_or_order ) {
         $order = dokan()->order->get( OrderUtil::get_post_or_order_id( $post_or_order ) );
+        $parent_order  = new WC_Order();
+        $has_sub_order = '1' === $order->get_meta( 'has_sub_order', true );
 
+        if ( $has_sub_order ) {
+            $orders_to_render = dokan()->order->get_child_orders( $order->get_id() );
+        } else {
+            $orders_to_render = dokan()->order->all(
+                [
+					'parent' => $order->get_parent_id(),
+					'limit' => -1,
+				]
+            );
 
+            $parent_order = dokan()->order->get( $order->get_parent_id() );
+
+            $orders_to_render = array_filter(
+                $orders_to_render,
+                function ( $item ) use( $order ) {
+                    return $item->get_id() !== $order->get_id();
+                }
+            );
+
+            array_unshift( $orders_to_render, $parent_order );
+        }
         ?>
         <div id="woocommerce-order-items" class="postbox" style='border: none'>
             <div class="postbox-header">
@@ -760,8 +783,7 @@ class Hooks {
                     <table cellpadding="0" cellspacing="0" class="woocommerce_order_items">
                         <thead>
                         <tr>
-                            <th colspan="2">Item</th>
-                            <th><?php esc_html_e( 'Order', 'dokan-lite' ); ?></th>
+                            <th colspan="2"><?php esc_html_e( 'Order', 'dokan-lite' ); ?></th>
                             <th><?php esc_html_e( 'Date', 'dokan-lite' ); ?></th>
                             <th><?php esc_html_e( 'Status', 'dokan-lite' ); ?></th>
                             <th><?php esc_html_e( 'Total', 'dokan-lite' ); ?></th>
@@ -770,45 +792,62 @@ class Hooks {
                         </thead>
 
                         <tbody id="order_line_items">
-                            <tr class="item">
+                            <?php foreach ( $orders_to_render as $order_item ) : ?>
+                                <?php
+                                $woocommerce_list_table = new \Automattic\WooCommerce\Internal\Admin\Orders\ListTable();
+                                $woocommerce_list_table->init( new \Automattic\WooCommerce\Internal\Admin\Orders\PageController() );
+                                $vendor = dokan()->vendor->get( $order_item->get_meta( '_dokan_vendor_id' ) );
 
-                                <td class="thumb">
-                                    <?php echo esc_html( 100 . get_woocommerce_currency_symbol() ); ?>
+                                ?>
+                            <tr class="item">
+                                <td class="name">
+                                    <?php $woocommerce_list_table->render_order_number_column( $order_item ); ?>
+                                    <?php
+                                    if ( ! $has_sub_order && $order_item->get_id() === $parent_order->get_id() ) {
+                                        echo '<strong>' . esc_html_e( '(Parent order)', 'dokan-lite' ) . '</p>';
+                                    }
+                                    ?>
                                 </td>
                                 <td width="1%"></td>
 
 
-                                <td width="1%">
+                                <td class=''>
                                     <div class="view">
-                                        <bdi>asdf</bdi>
+                                        <?php echo $woocommerce_list_table->render_order_date_column( $order_item ); ?>
                                     </div>
                                 </td>
-                                <td width="1%">
+
+                                <td class="">
                                     <div class="view">
-                                        <?php echo esc_html( 100 . get_woocommerce_currency_symbol() ); ?>
+                                        <?php echo $woocommerce_list_table->render_order_status_column( $order_item ); ?>
                                     </div>
                                 </td>
-                                <td class="quantity" width="1%">
+                                <td>
                                     <div class="view">
-                                        <?php echo esc_html( 100 . get_woocommerce_currency_symbol() ); ?>
+                                        <?php echo $woocommerce_list_table->render_order_total_column( $order_item ); ?>
                                     </div>
                                 </td>
-                                <td width="1%">
+                                <td>
                                     <div class="view">
-                                        <?php echo esc_html( 100 . get_woocommerce_currency_symbol() ); ?>
-                                    </div>
-                                </td>
-                                <td width="1%">
-                                    <div class="view">
-                                        <?php echo esc_html( 100 . get_woocommerce_currency_symbol() ); ?>
+                                        <?php if ( $vendor->get_shop_name() ) : ?>
+                                            <a href="<?php echo esc_url( $vendor->get_shop_url() ); ?>"><?php echo esc_html( $vendor->get_shop_name() ); ?></a>
+                                        <?php else : ?>
+                                            <?php esc_html_e( '(no name)', 'dokan-lite' ); ?>
+                                        <?php endif ?>
                                     </div>
                                 </td>
                             </tr>
+                            <?php endforeach; ?>
                         </tbody>
                     </table>
                 </div>
             </div>
         </div>
+        <script>
+            jQuery( document ).ready(function() {
+                jQuery( '#dokan_sub_or_related_orders a.order-preview' ).hide();
+            });
+        </script>
         <?php
     }
 }
