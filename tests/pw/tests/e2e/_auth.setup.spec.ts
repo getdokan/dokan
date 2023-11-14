@@ -71,7 +71,7 @@ setup.describe('authenticate users & set permalink', () => {
 
     setup('get test environment info @lite', async ({ request }) => {
         const apiUtils = new ApiUtils(request);
-        const [, summaryInfo] = await apiUtils.getSystemStatus();
+        const [, summaryInfo] = await apiUtils.getSystemStatus(payloads.adminAuth);
         helpers.writeFile('playwright/systemInfo.json', JSON.stringify(summaryInfo));
     });
 });
