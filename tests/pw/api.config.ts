@@ -48,6 +48,12 @@ export default defineConfig({
     projects: [
         // Api project
 
+        // global_setup
+        {
+            name: 'global_setup',
+            testMatch: /__global\.setup\.ts/,
+        },
+
         // api_setup
         {
             name: 'api_setup',
@@ -59,7 +65,14 @@ export default defineConfig({
         {
             name: 'api_tests',
             testMatch: /.*\.spec\.ts/,
-            dependencies: process.env.NO_SETUP ? [] : ['api_setup'] /* whether not to run setup tests before running actual tests */,
+            dependencies: process.env.NO_SETUP ? [] : ['global_setup', 'api_setup'] /* whether not to run setup tests before running actual tests */,
+            teardown: 'global_teardown',
+        },
+
+        // global_teardown
+        {
+            name: 'global_teardown',
+            testMatch: /__global\.teardown\.ts/,
         },
     ],
 });

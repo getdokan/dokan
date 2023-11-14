@@ -18,6 +18,8 @@ test.describe('dokan visual test', () => {
         await aPage.close();
     });
 
+    // TODO: add dokan lite pages like modules, promotions
+
     test('dokan admin dashboard @visual', async () => {
         await admin.dokanMenu(data.subUrls.backend.dokan.dokan);
     });

@@ -31,7 +31,6 @@ export class ApiUtils {
 
     // get request
     async get(url: string, options?: reqOptions | undefined, ...args: any[]): Promise<[APIResponse, responseBody]> {
-        console.log('url: ',url);
         const assert = args.length ? Boolean(args[0]) : true;
         const response = await this.request.get(url, options);
         const responseBody = await this.getResponseBody(response, assert);
@@ -1688,7 +1687,6 @@ export class ApiUtils {
 
     // get system status
     async getSystemStatus(auth?: auth): Promise<[responseBody, object]> {
-        console.log('--------------------------------------------------',endPoints.wc.getAllSystemStatus);
         const [, responseBody] = await this.get(endPoints.wc.getAllSystemStatus, { headers: auth });
         let activePlugins = responseBody.active_plugins.map((a: { plugin: string; version: string }) => a.plugin.split('/')[0] + ' v' + a.version);
         activePlugins.sort();
