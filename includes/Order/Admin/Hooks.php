@@ -57,7 +57,7 @@ class Hooks {
         add_filter( 'post_class', [ $this, 'admin_shop_order_row_classes' ], 10, 3 );
 
         // Add commission meta-box in order details page.
-        add_action( 'add_meta_boxes', [ $this, 'add_commission_metabox_in_order_details_page' ], 10, 2 );
+        add_action( 'add_meta_boxes', [ $this, 'add_commission_metabox_and_related_orders_in_order_details_page' ], 10, 2 );
     }
 
     /**
@@ -510,32 +510,47 @@ class Hooks {
     }
 
     /**
-     * Add dokan commission meta-box in woocommerce order details page.
+     * Add dokan commission meta-box in woocommerce order details page
+     * and add suborders or related sibling orders in meta-box.
      *
      * @since DOKAN_SINCE
      *
      * @return void
      */
-    public function add_commission_metabox_in_order_details_page( $post_type, $post ) {
+    public function add_commission_metabox_and_related_orders_in_order_details_page( $post_type, $post ) {
         $screen = OrderUtil::get_order_admin_screen();
 
-        // Check if the screen is order details page and if it is parent order then don't show the meta-box.
-        if ( $screen === $post_type ) {
-            $order = dokan()->order->get( OrderUtil::get_post_or_order_id( $post ) );
-
-            if ( '1' === $order->get_meta( 'has_sub_order', true ) ) {
-                return;
-            }
+        if ( $screen !== $post_type ) {
+            return;
         }
 
-        add_meta_box(
-            'dokan_commission_box',
-            __( 'Comissions', 'dokan-lite' ),
-            [ $this, 'commission_meta_box' ],
-            $screen,
-            'normal',
-            'core'
-        );
+        $order = dokan()->order->get( OrderUtil::get_post_or_order_id( $post ) );
+
+        // Check if the screen is order details page and if it is a child order.
+        if ( '1' !== $order->get_meta( 'has_sub_order', true ) ) {
+            add_meta_box(
+                'dokan_commission_box',
+                __( 'Commissions', 'dokan-lite' ),
+                [ $this, 'commission_meta_box' ],
+                $screen,
+                'normal',
+                'core'
+            );
+        }
+
+        // If the order has is a parent order or a child order, avoid those order that has no parent order or child order.
+        if ( '1' === $order->get_meta( 'has_sub_order', true ) || ! empty( $order->get_parent_id() ) ) {
+            $title = '1' === $order->get_meta( 'has_sub_order', true ) ? __( 'Sub orders', 'dokan-lite' ) : __( 'Related orders', 'dokan-lite' );
+
+            add_meta_box(
+                'dokan_sub_or_related_orders',
+                $title,
+                [ $this, 'sub_or_related_orders_meta_box' ],
+                $screen,
+                'normal',
+                'core'
+            );
+        }
     }
 
     /**
@@ -558,8 +573,20 @@ class Hooks {
         $total_commission = (float) $data->order_total - (float) $data->net_amount;
         ?>
         <div id="woocommerce-order-items" class="postbox" style='border: none'>
-            <div class="postbox-header"><h2 class="hndle ui-sortable-handle">Items</h2>
-                <div class="handle-actions hide-if-no-js"><button type="button" class="handle-order-higher" aria-disabled="false" aria-describedby="woocommerce-order-items-handle-order-higher-description"><span class="screen-reader-text">Move up</span><span class="order-higher-indicator" aria-hidden="true"></span></button><span class="hidden" id="woocommerce-order-items-handle-order-higher-description">Move Items box up</span><button type="button" class="handle-order-lower" aria-disabled="false" aria-describedby="woocommerce-order-items-handle-order-lower-description"><span class="screen-reader-text">Move down</span><span class="order-lower-indicator" aria-hidden="true"></span></button><span class="hidden" id="woocommerce-order-items-handle-order-lower-description">Move Items box down</span><button type="button" class="handlediv" aria-expanded="true"><span class="screen-reader-text">Toggle panel: Items</span><span class="toggle-indicator" aria-hidden="true"></span></button></div></div><div class="inside">
+            <div class="postbox-header">
+                <div class="handle-actions hide-if-no-js">
+                    <button type="button" class="handle-order-higher" aria-disabled="false" aria-describedby="woocommerce-order-items-handle-order-higher-description">
+                        <span class="order-higher-indicator" aria-hidden="true"></span>
+                    </button>
+                    <button type="button" class="handle-order-lower" aria-disabled="false" aria-describedby="woocommerce-order-items-handle-order-lower-description">
+                        <span class="screen-reader-text"></span><span class="order-lower-indicator" aria-hidden="true"></span>
+                    </button>
+                    <button type="button" class="handlediv" aria-expanded="true">
+                        <span class="toggle-indicator" aria-hidden="true"></span>
+                    </button>
+                </div>
+            </div>
+            <div class="inside">
                 <div class="woocommerce_order_items_wrapper wc-order-items-editable">
                     <table cellpadding="0" cellspacing="0" class="woocommerce_order_items">
                         <thead>
@@ -569,7 +596,6 @@ class Hooks {
                             <th><?php esc_html_e( 'Rate', 'dokan-lite' ); ?></th>
                             <th><?php esc_html_e( 'Qty', 'dokan-lite' ); ?></th>
                             <th><?php esc_html_e( 'Commission', 'dokan-lite' ); ?></th>
-                            <th class="wc-order-edit-line-item" width="1%">&nbsp;</th>
                         </tr>
                         </thead>
 
@@ -665,8 +691,6 @@ class Hooks {
                                             ?>
                                         </div>
                                     </td>
-
-                                    <td class="wc-order-edit-line-item" width="1%"></td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
@@ -702,6 +726,82 @@ class Hooks {
                                 <td width="1%"></td>
                                 <td class="total">
                                     <?php echo wc_price( $total_commission, array( 'currency' => $order->get_currency() ) ); ?>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <?php
+    }
+
+    public function sub_or_related_orders_meta_box( $post_or_order ) {
+        $order = dokan()->order->get( OrderUtil::get_post_or_order_id( $post_or_order ) );
+
+
+        ?>
+        <div id="woocommerce-order-items" class="postbox" style='border: none'>
+            <div class="postbox-header">
+                <div class="handle-actions hide-if-no-js">
+                    <button type="button" class="handle-order-higher" aria-disabled="false" aria-describedby="woocommerce-order-items-handle-order-higher-description">
+                        <span class="order-higher-indicator" aria-hidden="true"></span>
+                    </button>
+                    <button type="button" class="handle-order-lower" aria-disabled="false" aria-describedby="woocommerce-order-items-handle-order-lower-description">
+                        <span class="screen-reader-text"></span><span class="order-lower-indicator" aria-hidden="true"></span>
+                    </button>
+                    <button type="button" class="handlediv" aria-expanded="true">
+                        <span class="toggle-indicator" aria-hidden="true"></span>
+                    </button>
+                </div>
+            </div>
+            <div class="inside">
+                <div class="woocommerce_order_items_wrapper wc-order-items-editable">
+                    <table cellpadding="0" cellspacing="0" class="woocommerce_order_items">
+                        <thead>
+                        <tr>
+                            <th colspan="2">Item</th>
+                            <th><?php esc_html_e( 'Order', 'dokan-lite' ); ?></th>
+                            <th><?php esc_html_e( 'Date', 'dokan-lite' ); ?></th>
+                            <th><?php esc_html_e( 'Status', 'dokan-lite' ); ?></th>
+                            <th><?php esc_html_e( 'Total', 'dokan-lite' ); ?></th>
+                            <th><?php esc_html_e( 'Vendor', 'dokan-lite' ); ?></th>
+                        </tr>
+                        </thead>
+
+                        <tbody id="order_line_items">
+                            <tr class="item">
+
+                                <td class="thumb">
+                                    <?php echo esc_html( 100 . get_woocommerce_currency_symbol() ); ?>
+                                </td>
+                                <td width="1%"></td>
+
+
+                                <td width="1%">
+                                    <div class="view">
+                                        <bdi>asdf</bdi>
+                                    </div>
+                                </td>
+                                <td width="1%">
+                                    <div class="view">
+                                        <?php echo esc_html( 100 . get_woocommerce_currency_symbol() ); ?>
+                                    </div>
+                                </td>
+                                <td class="quantity" width="1%">
+                                    <div class="view">
+                                        <?php echo esc_html( 100 . get_woocommerce_currency_symbol() ); ?>
+                                    </div>
+                                </td>
+                                <td width="1%">
+                                    <div class="view">
+                                        <?php echo esc_html( 100 . get_woocommerce_currency_symbol() ); ?>
+                                    </div>
+                                </td>
+                                <td width="1%">
+                                    <div class="view">
+                                        <?php echo esc_html( 100 . get_woocommerce_currency_symbol() ); ?>
+                                    </div>
                                 </td>
                             </tr>
                         </tbody>
