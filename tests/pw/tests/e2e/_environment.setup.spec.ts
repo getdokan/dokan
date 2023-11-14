@@ -10,8 +10,7 @@ import { data } from '@utils/testData';
 import { helpers } from '@utils/helpers';
 
 const { CUSTOMER_ID, DOKAN_PRO, HPOS } = data.env;
-console.log(DOKAN_PRO);
-console.log(typeof DOKAN_PRO);
+
 
 
 setup.describe('setup site & woocommerce & user settings', () => {
