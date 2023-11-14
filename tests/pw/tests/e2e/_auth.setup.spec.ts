@@ -22,7 +22,6 @@ setup.describe('authenticate users & set permalink', () => {
         // process.env.SERVER_URL = process.env.BASE_URL + '/wp-json';
         // helpers.writeJsonData('utils/data.json', 'SERVER_URL', process.env.BASE_URL + '/wp-json');
         // helpers.appendEnv('SERVER_URL=' + process.env.BASE_URL + '/wp-json');
-  
     });
 
     setup('add customer1 @lite', async ({ request }) => {
@@ -68,5 +67,11 @@ setup.describe('authenticate users & set permalink', () => {
             res = await apiUtils.pluginsActiveOrNot(data.plugin.dokanPro, payloads.adminAuth);
         }
         DOKAN_PRO ? expect(res).toBeTruthy() : expect(res).toBeFalsy();
+    });
+
+    setup('get test environment info @lite', async ({ request }) => {
+        const apiUtils = new ApiUtils(request);
+        const [, summaryInfo] = await apiUtils.getSystemStatus();
+        helpers.writeFile('playwright/systemInfo.json', JSON.stringify(summaryInfo));
     });
 });
