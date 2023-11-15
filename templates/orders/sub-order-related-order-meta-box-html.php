@@ -5,6 +5,9 @@
  * Dokan Dashboard Sub-order or Related Order Content Template
  *
  * @var WC_Order $order
+ * @var WC_Order[] $orders_to_render
+ * @var boolean $has_sub_order
+ * @var WC_Order $parent_order
  *
  * @since DOKAN_LITE
  *

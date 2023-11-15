@@ -21,7 +21,8 @@
                 <span class="order-higher-indicator" aria-hidden="true"></span>
             </button>
             <button type="button" class="handle-order-lower" aria-disabled="false" aria-describedby="woocommerce-order-items-handle-order-lower-description">
-                <span class="screen-reader-text"></span><span class="order-lower-indicator" aria-hidden="true"></span>
+                <span class="screen-reader-text"></span>
+                <span class="order-lower-indicator" aria-hidden="true"></span>
             </button>
             <button type="button" class="handlediv" aria-expanded="true">
                 <span class="toggle-indicator" aria-hidden="true"></span>
