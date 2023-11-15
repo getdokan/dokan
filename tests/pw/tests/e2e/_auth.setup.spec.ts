@@ -29,6 +29,7 @@ setup.describe.only('authenticate users & set permalink', () => {
         const [, customerId] = await apiUtils.createCustomer(payloads.createCustomer1, payloads.adminAuth);
         process.env.CUSTOMER_ID = customerId;
         helpers.writeJsonData('utils/data.json', 'CUSTOMER_ID', customerId);
+        console.log('ServerUrl:', helpers.readJsonData('utils/data.json', 'CUSTOMER_ID'));
         // helpers.appendEnv('CUSTOMER_ID=' + customerId);
     });
 
@@ -38,6 +39,7 @@ setup.describe.only('authenticate users & set permalink', () => {
         await apiUtils.updateCustomer(sellerId, payloads.updateAddress, payloads.adminAuth);
         process.env.VENDOR_ID = sellerId;
         helpers.writeJsonData('utils/data.json', 'VENDOR_ID', sellerId);
+        console.log('ServerUrl:', helpers.readJsonData('utils/data.json', 'VENDOR_ID'));
         // helpers.appendEnv('VENDOR_ID=' + sellerId);
     });
 
