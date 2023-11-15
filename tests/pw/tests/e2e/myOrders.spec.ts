@@ -26,6 +26,9 @@ test.describe('My orders functionality test', () => {
     });
 
     test('customer can view order details @lite', async () => {
+        console.log('CUSTOMER---------------------------------------->',CUSTOMER_ID);
+        console.log('CUSTOMER---------------------------------------->',PRODUCT_ID);
+        
         const [, , orderId] = await apiUtils.createOrderWithStatus(PRODUCT_ID, { ...payloads.createOrder, customer_id: CUSTOMER_ID }, data.order.orderStatus.completed, payloads.vendorAuth);
         await customer.viewOrderDetails(orderId);
     });
