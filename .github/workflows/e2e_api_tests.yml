@@ -21,11 +21,12 @@ concurrency:
     cancel-in-progress: true
 
 # workflow permissions
-permissions:
-    checks: write
-    contents: read
-    issues: write
-    pull-requests: write
+permissions: write-all
+# permissions:
+#     checks: write
+#     contents: write
+#     issues: write
+#     pull-requests: write
 
 # workflow environment variables
 env:
@@ -205,6 +206,7 @@ jobs:
                   issue-number: ${{ github.event.pull_request.number }}
                   body: ${{ steps.prepare-test-summary.outputs.result }}
                   edit-mode: replace
+                  reactions: hooray
 
             # Upload artifacts
             - name: Archive test artifacts (screenshots, HTML snapshots, Reports)

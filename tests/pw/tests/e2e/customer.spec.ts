@@ -5,7 +5,7 @@ import { CustomerPage } from '@pages/customerPage';
 import { data } from '@utils/testData';
 // import { payloads } from '@utils/payloads';
 
-test.describe('Customer user functionality test', () => {
+test.describe.only('Customer user functionality test', () => {
     test.use({ storageState: { cookies: [], origins: [] } });
 
     let loginPage: LoginPage;

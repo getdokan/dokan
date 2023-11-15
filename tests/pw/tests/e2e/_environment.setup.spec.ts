@@ -13,7 +13,7 @@ const { CUSTOMER_ID, DOKAN_PRO, HPOS } = data.env;
 
 
 
-setup.describe('setup site & woocommerce & user settings', () => {
+setup.describe.only('setup site & woocommerce & user settings', () => {
     setup.use({ extraHTTPHeaders: { Authorization: payloads.adminAuth.Authorization } });
 
     let apiUtils: ApiUtils;

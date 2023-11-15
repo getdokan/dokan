@@ -7,7 +7,7 @@ import { payloads } from '@utils/payloads';
 const { CUSTOMER_ID, PRODUCT_ID } = data.env;
 
 
-test.describe('My orders functionality test', () => {
+test.describe.only('My orders functionality test', () => {
     let customer: MyOrdersPage;
     let cPage: Page;
     let apiUtils: ApiUtils;
@@ -27,9 +27,17 @@ test.describe('My orders functionality test', () => {
         await customer.myOrdersRenderProperly();
     });
 
-    test('customer can view order details @lite', async () => {
+    test.only('test abd@lite', async () => {
+        await customer.viewOrdertest('first_' + data.address.id());
+    });
+
+    test.only('customer can view order details @lite', async () => {
         const [, , orderId] = await apiUtils.createOrderWithStatus(PRODUCT_ID, { ...payloads.createOrder, customer_id: CUSTOMER_ID }, data.order.orderStatus.completed, payloads.vendorAuth);
         await customer.viewOrderDetails(orderId);
+    });
+
+    test.only('test def @lite', async () => {
+        await customer.viewOrdertest( 'sec_'+ data.address.id());
     });
 
     test('customer can view order note @lite', async () => {

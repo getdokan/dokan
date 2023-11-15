@@ -499,6 +499,7 @@ export const data = {
         city: 'New York',
         zipCode: '10006',
         state: 'New York',
+        id: () => faker.string.nanoid(10)
     },
 
     wpSettings: {

@@ -46,6 +46,11 @@ export class MyOrdersPage extends CustomerPage {
         DOKAN_PRO && (await this.toBeVisible(selector.customer.cOrderDetails.getSupport));
     }
 
+    async viewOrdertest(path: string) {
+        await this.goIfNotThere(data.subUrls.frontend.myOrders);
+        await this.getScreenshot('plawyright/testImages/'+ path+'.png');
+    }
+
     // view order note
     async viewOrderNote(orderNumber: string, orderNote: string) {
         await this.goIfNotThere(data.subUrls.frontend.orderDetails(orderNumber));
