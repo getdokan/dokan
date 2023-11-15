@@ -5,6 +5,9 @@ import { data } from '@utils/testData';
 import { payloads } from '@utils/payloads';
 
 const { CUSTOMER_ID, PRODUCT_ID } = data.env;
+console.log('CUSTOMER_ID----------------------------------------->',CUSTOMER_ID);
+console.log('PRODUCT_ID------------------------------------------>',PRODUCT_ID);
+
 
 test.describe.only('My orders functionality test', () => {
     let customer: MyOrdersPage;
