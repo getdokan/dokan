@@ -11,9 +11,9 @@ import { test, expect } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
-import { data } from '@utils/testData';
 
-const { VENDOR_ID, CUSTOMER_ID } = data.env;
+
+import { VENDOR_ID, CUSTOMER_ID } from '@utils/data.json';
 
 test.describe('support ticket api test', () => {
     let apiUtils: ApiUtils;

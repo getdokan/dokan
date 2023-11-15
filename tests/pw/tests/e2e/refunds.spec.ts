@@ -5,7 +5,7 @@ import { dbUtils } from '@utils/dbUtils';
 import { data } from '@utils/testData';
 import { payloads } from '@utils/payloads';
 
-const { CUSTOMER_ID, PRODUCT_ID } = data.env;
+import { CUSTOMER_ID, PRODUCT_ID } from '@utils/data.json';
 
 test.describe('Refunds test', () => {
     let admin: RefundsPage;

@@ -3,10 +3,9 @@ import { StoreReviewsPage } from '@pages/storeReviewsPage';
 import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
 import { payloads } from '@utils/payloads';
+import { VENDOR_ID } from '@utils/data.json';
 
 test.describe('Store Reviews test', () => {
-    const { VENDOR_ID } = data.env;
-
     let admin: StoreReviewsPage;
     let vendor: StoreReviewsPage;
     let customer: StoreReviewsPage;

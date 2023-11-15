@@ -6,7 +6,7 @@ import { data } from '@utils/testData';
 import { dbData } from '@utils/dbData';
 import { payloads } from '@utils/payloads';
 
-const { VENDOR_ID, CUSTOMER_ID } = data.env;
+import { VENDOR_ID, CUSTOMER_ID } from '@utils/data.json';
 
 test.describe('Product Enquiry test', () => {
     // let admin: ProductEnquiryPage;

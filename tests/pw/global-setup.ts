@@ -5,8 +5,6 @@ import { helpers } from '@utils/helpers';
 async function globalSetup(config: FullConfig) {
     console.log('Global Setup running....');
 
-    //todo: refactor global setup to project setup
-
     // get site url structure
     let serverUrl = config.projects[0]?.use.baseURL as string;
     const apiUtils = new ApiUtils(await request.newContext({ ignoreHTTPSErrors: true }));
@@ -14,13 +12,12 @@ async function globalSetup(config: FullConfig) {
         const headers = await apiUtils.getSiteHeaders(serverUrl);
         if (headers.link) {
             serverUrl = headers.link.includes('rest_route') ? serverUrl + '/?rest_route=' : serverUrl + '/wp-json';
-            // process.env.SERVER_URL = serverUrl;
-            helpers.writeJsonData('utils/data.json', 'SERVER_URL', serverUrl);
+            helpers.writeEnvJson('SERVER_URL', serverUrl);
             break;
         }
         console.log('retrying...');
     }
-    console.log('ServerUrl:', helpers.readJsonData('utils/data.json', 'SERVER_URL'));
+    console.log('ServerUrl:', serverUrl);
 
     console.log('Global Setup Finished!');
 }

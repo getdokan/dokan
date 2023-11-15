@@ -5,8 +5,7 @@ import { dbUtils } from '@utils/dbUtils';
 import { data } from '@utils/testData';
 import { dbData } from '@utils/dbData';
 import { payloads } from '@utils/payloads';
-
-const { VENDOR_ID, CUSTOMER_ID } = data.env;
+import { VENDOR_ID, CUSTOMER_ID } from '@utils/data.json';
 
 test.describe('Abuse report test', () => {
     let admin: AbuseReportsPage;

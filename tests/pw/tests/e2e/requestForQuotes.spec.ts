@@ -3,8 +3,7 @@ import { RequestForQuotationsPage } from '@pages/requestForQuotationsPage';
 import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
 import { payloads } from '@utils/payloads';
-
-const { CUSTOMER_ID } = data.env;
+import { CUSTOMER_ID } from '@utils/data.json';
 
 test.describe('Request for quotation test admin', () => {
     let admin: RequestForQuotationsPage;

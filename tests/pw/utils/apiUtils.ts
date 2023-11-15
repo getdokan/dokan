@@ -2,11 +2,10 @@ import { expect, type APIRequestContext, APIResponse, Request } from '@playwrigh
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
 import { helpers } from '@utils/helpers';
-import { data } from '@utils/testData';
 import fs from 'fs';
 import { auth, user_api, taxRate, coupon_api, marketPlaceCoupon, reqOptions, headers, storageState, responseBody } from '@utils/interfaces';
+import { VENDOR_ID, CUSTOMER_ID } from '@utils/data.json';
 
-const { VENDOR_ID, CUSTOMER_ID } = data.env;
 
 export class ApiUtils {
     readonly request: APIRequestContext;

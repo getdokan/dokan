@@ -3,15 +3,12 @@ import { MyOrdersPage } from '@pages/myOrdersPage';
 import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
 import { payloads } from '@utils/payloads';
+import { CUSTOMER_ID, PRODUCT_ID } from '@utils/data.json';
 
 test.describe('My orders functionality test', () => {
     let customer: MyOrdersPage;
     let cPage: Page;
     let apiUtils: ApiUtils;
-
-    const { CUSTOMER_ID, PRODUCT_ID } = data.env;
-    console.log('my order page,CUSTOMER_ID----------------------------------------->', CUSTOMER_ID);
-    console.log('my order page,PRODUCT_ID------------------------------------------>', PRODUCT_ID);
 
     test.beforeAll(async ({ browser, request }) => {
         const customerContext = await browser.newContext(data.auth.customerAuth);
@@ -26,10 +23,6 @@ test.describe('My orders functionality test', () => {
 
     test('customer my orders page is rendering properly @lite', async () => {
         await customer.myOrdersRenderProperly();
-    });
-
-    test('test abd@lite', async () => {
-        await customer.viewOrdertest('first_' + data.address.id());
     });
 
     test('customer can view order details @lite', async () => {

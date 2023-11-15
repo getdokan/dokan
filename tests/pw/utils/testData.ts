@@ -26,18 +26,9 @@ interface envData {
 
 export { admin, user };
 
-const envData: envData = helpers.readJson('utils/data.json');
-
 export const data = {
     env: {
-        SERVER_URL: envData.SERVER_URL,
-        CUSTOMER_ID: Number(envData.CUSTOMER_ID),
-        VENDOR_ID: envData.VENDOR_ID,
-        VENDOR2_ID: envData.VENDOR2_ID,
-        PRODUCT_ID: envData.PRODUCT_ID,
-        HPOS: envData.HPOS,
         DOKAN_PRO: process.env.DOKAN_PRO ? true : false,
-
         // db data
         DB_HOST_NAME: process.env.DB_HOST_NAME,
         DB_USER_NAME: process.env.DB_USER_NAME,
@@ -499,7 +490,7 @@ export const data = {
         city: 'New York',
         zipCode: '10006',
         state: 'New York',
-        id: () => faker.string.nanoid(10)
+        id: () => faker.string.nanoid(10),
     },
 
     wpSettings: {

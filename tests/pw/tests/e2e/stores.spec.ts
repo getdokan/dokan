@@ -3,8 +3,7 @@ import { StoresPage } from '@pages/storesPage';
 // import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
 // import { payloads } from '@utils/payloads';
-
-const { VENDOR_ID } = data.env;
+import { VENDOR_ID} from '@utils/data.json';
 
 test.describe('Stores test', () => {
     let admin: StoresPage;
