@@ -5,7 +5,7 @@ import { data } from '@utils/testData';
 import { payloads } from '@utils/payloads';
 import { CUSTOMER_ID, PRODUCT_ID } from '@utils/data.json';
 
-test.describe('My orders functionality test', () => {
+test.describe.only('My orders functionality test', () => {
     let customer: MyOrdersPage;
     let cPage: Page;
     let apiUtils: ApiUtils;
