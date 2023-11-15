@@ -5,6 +5,11 @@ import { AdminPage } from '@pages/adminPage';
 import { data } from '@utils/testData';
 // import { payloads } from '@utils/payloads';
 
+const { CUSTOMER_ID, PRODUCT_ID } = data.env;
+console.log('admin,CUSTOMER_ID----------------------------------------->', CUSTOMER_ID);
+console.log('admin,PRODUCT_ID------------------------------------------>', PRODUCT_ID);
+
+
 test.describe('Admin user functionality test', () => {
     test.use({ storageState: { cookies: [], origins: [] } });
 
