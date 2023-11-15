@@ -36,7 +36,7 @@ export class MyOrdersPage extends CustomerPage {
     //  view order details
     async viewOrderDetails(orderId: string) {
         await this.goIfNotThere(data.subUrls.frontend.myOrders);
-        console.log('orderID:------------------------------------------->',orderId);
+        console.log('orderID:------------------------------------------->', orderId);
         await this.goIfNotThere(data.subUrls.frontend.orderDetails(orderId));
 
         // order details are visible
@@ -46,11 +46,6 @@ export class MyOrdersPage extends CustomerPage {
         await this.multipleElementVisible(selector.customer.cOrderDetails.customerDetails);
 
         DOKAN_PRO && (await this.toBeVisible(selector.customer.cOrderDetails.getSupport));
-    }
-
-    async viewOrdertest(path: string) {
-        await this.goIfNotThere(data.subUrls.frontend.myOrders);
-        await this.getScreenshot('plawyright/testImages/'+ path+'.png');
     }
 
     // view order note

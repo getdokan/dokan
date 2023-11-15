@@ -5,8 +5,8 @@ import { data } from '@utils/testData';
 import { payloads } from '@utils/payloads';
 
 const { CUSTOMER_ID, PRODUCT_ID } = data.env;
-console.log('CUSTOMER_ID----------------------------------------->',CUSTOMER_ID);
-console.log('PRODUCT_ID------------------------------------------>',PRODUCT_ID);
+console.log('my order page,CUSTOMER_ID----------------------------------------->',CUSTOMER_ID);
+console.log('my order page,PRODUCT_ID------------------------------------------>',PRODUCT_ID);
 
 
 test.describe.only('My orders functionality test', () => {
@@ -38,9 +38,6 @@ test.describe.only('My orders functionality test', () => {
         await customer.viewOrderDetails(orderId);
     });
 
-    test('test def @lite', async () => {
-        await customer.viewOrdertest('sec_' + data.address.id());
-    });
 
     test('customer can view order note @lite', async () => {
         const orderNote = data.orderNote.note();
