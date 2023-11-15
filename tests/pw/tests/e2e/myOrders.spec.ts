@@ -4,15 +4,14 @@ import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
 import { payloads } from '@utils/payloads';
 
-const { CUSTOMER_ID, PRODUCT_ID } = data.env;
-console.log('my order page,CUSTOMER_ID----------------------------------------->',CUSTOMER_ID);
-console.log('my order page,PRODUCT_ID------------------------------------------>',PRODUCT_ID);
-
-
 test.describe.only('My orders functionality test', () => {
     let customer: MyOrdersPage;
     let cPage: Page;
     let apiUtils: ApiUtils;
+
+    const { CUSTOMER_ID, PRODUCT_ID } = data.env;
+    console.log('my order page,CUSTOMER_ID----------------------------------------->', CUSTOMER_ID);
+    console.log('my order page,PRODUCT_ID------------------------------------------>', PRODUCT_ID);
 
     test.beforeAll(async ({ browser, request }) => {
         const customerContext = await browser.newContext(data.auth.customerAuth);
@@ -37,7 +36,6 @@ test.describe.only('My orders functionality test', () => {
         const [, , orderId] = await apiUtils.createOrderWithStatus(PRODUCT_ID, { ...payloads.createOrder, customer_id: CUSTOMER_ID }, data.order.orderStatus.completed, payloads.vendorAuth);
         await customer.viewOrderDetails(orderId);
     });
-
 
     test('customer can view order note @lite', async () => {
         const orderNote = data.orderNote.note();
