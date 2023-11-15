@@ -35,6 +35,8 @@ export class MyOrdersPage extends CustomerPage {
 
     //  view order details
     async viewOrderDetails(orderId: string) {
+        await this.goIfNotThere(data.subUrls.frontend.myOrders);
+        console.log(orderId);
         await this.goIfNotThere(data.subUrls.frontend.orderDetails(orderId));
 
         // order details are visible
