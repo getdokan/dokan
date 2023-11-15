@@ -46,16 +46,16 @@ export default defineConfig({
         actionTimeout: 15 * 1000 /* Maximum time each action such as `click()` can take. Defaults to 0 (no limit). */,
         navigationTimeout: 20 * 1000 /* Maximum time each navigation such as 'goto()' can take. */,
         baseURL: process.env.BASE_URL ? process.env.BASE_URL : 'http://localhost:9999' /* Base URL */,
-        // browserName      : 'chromium', /* Name of the browser that runs tests. */
+        // browserName: 'chromium' /* Name of the browser that runs tests. */,
         bypassCSP: true /* Toggles bypassing page's Content-Security-Policy. */,
-        // channel          : 'chrome', /* Browser distribution channel. */
-        // colorScheme      : 'dark', /* Emulates 'prefers-colors-scheme' media feature, supported values are 'light', 'dark', 'no-preference' */
+        // channel: 'chrome' /* Browser distribution channel. */,
+        // colorScheme: 'dark' /* Emulates 'prefers-colors-scheme' media feature, supported values are 'light', 'dark', 'no-preference' */,
         headless: process.env.CI ? !!process.env.CI : false /* Whether to run tests on headless or non-headless mode */,
         ignoreHTTPSErrors: true /* Whether to ignore HTTPS errors during navigation. */,
-        // trace            : 'retain-on-failure', /* Record trace only when retrying a test for the first time. */
+        // trace: 'retain-on-failure' /* Record trace only when retrying a test for the first time. */,
         trace: 'on-first-retry' /* Record trace only when retrying a test for the first time. */,
         screenshot: 'only-on-failure' /* Capture screenshot after each test failure. */,
-        video            : 'retain-on-failure', /* Record video only when retrying a test for the first time. */
+        video: 'retain-on-failure' /* Record video only when retrying a test for the first time. */,
         // video: 'on-first-retry' /* Record video only when retrying a test for the first time. */,
         // viewport         : { width: 1280, height: 720 }, /* Size of viewport */
         launchOptions: { slowMo: process.env.SLOWMO ? Number(process.env.SLOWMO) * 1000 : 0 /* whether to slow down test execution by provided seconds */ },
