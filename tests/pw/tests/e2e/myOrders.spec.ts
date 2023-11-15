@@ -6,7 +6,6 @@ import { payloads } from '@utils/payloads';
 
 const { CUSTOMER_ID, PRODUCT_ID } = data.env;
 
-
 test.describe.only('My orders functionality test', () => {
     let customer: MyOrdersPage;
     let cPage: Page;
@@ -37,7 +36,7 @@ test.describe.only('My orders functionality test', () => {
     });
 
     test('test def @lite', async () => {
-        await customer.viewOrdertest( 'sec_'+ data.address.id());
+        await customer.viewOrdertest('sec_' + data.address.id());
     });
 
     test('customer can view order note @lite', async () => {

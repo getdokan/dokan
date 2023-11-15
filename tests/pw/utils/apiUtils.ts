@@ -1547,8 +1547,12 @@ export class ApiUtils {
 
     // create complete order
     async createOrderWithStatus(product: string | object, order: any, status: string, auth?: auth): Promise<[APIResponse, responseBody, string, string]> {
+        console.log(order);
         const [response, responseBody, orderId, productId] = await this.createOrder(product, order, auth);
+        console.log(responseBody);
         await this.updateOrderStatus(orderId, status, auth);
+        console.log('after update ---------------------------------------------------------------------------------');
+        console.log(responseBody);
         return [response, responseBody, orderId, productId];
     }
 
