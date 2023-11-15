@@ -13,20 +13,10 @@ interface admin {
     password: string;
 }
 
-interface envData {
-    [key: string]: string;
-    SERVER_URL: string;
-    CUSTOMER_ID: string;
-    VENDOR_ID: string;
-    VENDOR2_ID: string;
-    PRODUCT_ID: string;
-    V2_PRODUCT_ID: string;
-    HPOS: string;
-}
-
 export { admin, user };
 
 export const data = {
+    envData: 'utils/data.json',
     env: {
         DOKAN_PRO: process.env.DOKAN_PRO ? true : false,
         // db data

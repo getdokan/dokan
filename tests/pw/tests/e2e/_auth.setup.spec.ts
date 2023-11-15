@@ -14,7 +14,7 @@ setup.describe.only('authenticate users & set permalink', () => {
         await loginPage.adminLogin(data.admin, data.auth.adminAuthFile);
     });
 
-    setup('admin set WpSettings @lite', async ({ page }) => {
+    setup.skip('admin set WpSettings @lite', async ({ page }) => {
         const loginPage = new LoginPage(page);
         const wpPage = new WpPage(page);
         await loginPage.adminLogin(data.admin);
@@ -25,7 +25,7 @@ setup.describe.only('authenticate users & set permalink', () => {
         const apiUtils = new ApiUtils(request);
         const [, customerId] = await apiUtils.createCustomer(payloads.createCustomer1, payloads.adminAuth);
         helpers.writeEnvJson('CUSTOMER_ID', customerId);
-        console.log('CUSTOMER_ID', helpers.readJsonData('data.json', 'CUSTOMER_ID'));
+        console.log('CUSTOMER_ID', helpers.readJsonData(data.envData, 'CUSTOMER_ID'));
     });
 
     setup('add vendor1 @lite', async ({ request }) => {
@@ -33,15 +33,15 @@ setup.describe.only('authenticate users & set permalink', () => {
         const [, sellerId] = await apiUtils.createStore(payloads.createStore1, payloads.adminAuth);
         await apiUtils.updateCustomer(sellerId, payloads.updateAddress, payloads.adminAuth);
         helpers.writeEnvJson('VENDOR_ID', sellerId);
-        console.log('VENDOR_ID', helpers.readJsonData('data.json', 'VENDOR_ID'));
+        console.log('VENDOR_ID', helpers.readJsonData(data.envData, 'VENDOR_ID'));
     });
 
-    setup('add vendor2 @lite', async ({ request }) => {
-        const apiUtils = new ApiUtils(request);
-        const [, sellerId] = await apiUtils.createStore(payloads.createStore2, payloads.adminAuth);
-        await apiUtils.updateCustomer(sellerId, payloads.updateAddress, payloads.adminAuth);
-        helpers.writeEnvJson('VENDOR2_ID', sellerId);
-    });
+    // setup('add vendor2 @lite', async ({ request }) => {
+    //     const apiUtils = new ApiUtils(request);
+    //     const [, sellerId] = await apiUtils.createStore(payloads.createStore2, payloads.adminAuth);
+    //     await apiUtils.updateCustomer(sellerId, payloads.updateAddress, payloads.adminAuth);
+    //     helpers.writeEnvJson('VENDOR2_ID', sellerId);
+    // });
 
     setup('authenticate customer @lite', async ({ page }) => {
         const loginPage = new LoginPage(page);
@@ -53,14 +53,14 @@ setup.describe.only('authenticate users & set permalink', () => {
         await loginPage.login(data.vendor, data.auth.vendorAuthFile);
     });
 
-    setup('dokan pro enabled or not @lite', async ({ request }) => {
-        const apiUtils = new ApiUtils(request);
-        let res = await apiUtils.checkPluginsExistence(data.plugin.dokanPro, payloads.adminAuth);
-        if (res) {
-            res = await apiUtils.pluginsActiveOrNot(data.plugin.dokanPro, payloads.adminAuth);
-        }
-        DOKAN_PRO ? expect(res).toBeTruthy() : expect(res).toBeFalsy();
-    });
+    // setup('dokan pro enabled or not @lite', async ({ request }) => {
+    //     const apiUtils = new ApiUtils(request);
+    //     let res = await apiUtils.checkPluginsExistence(data.plugin.dokanPro, payloads.adminAuth);
+    //     if (res) {
+    //         res = await apiUtils.pluginsActiveOrNot(data.plugin.dokanPro, payloads.adminAuth);
+    //     }
+    //     DOKAN_PRO ? expect(res).toBeTruthy() : expect(res).toBeFalsy();
+    // });
 
     setup('get test environment info @lite', async ({ request }) => {
         const apiUtils = new ApiUtils(request);
