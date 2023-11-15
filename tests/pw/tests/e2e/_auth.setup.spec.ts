@@ -8,7 +8,7 @@ import { helpers } from '@utils/helpers';
 
 const { DOKAN_PRO } = data.env;
 
-setup.describe('authenticate users & set permalink', () => {
+setup.describe.only('authenticate users & set permalink', () => {
     setup('authenticate admin @lite', async ({ page }) => {
         const loginPage = new LoginPage(page);
         await loginPage.adminLogin(data.admin, data.auth.adminAuthFile);
@@ -25,6 +25,7 @@ setup.describe('authenticate users & set permalink', () => {
         const apiUtils = new ApiUtils(request);
         const [, customerId] = await apiUtils.createCustomer(payloads.createCustomer1, payloads.adminAuth);
         helpers.writeEnvJson('CUSTOMER_ID', customerId);
+        console.log('CUSTOMER_ID', helpers.readJsonData('data.json', 'CUSTOMER_ID'));
     });
 
     setup('add vendor1 @lite', async ({ request }) => {
@@ -32,6 +33,7 @@ setup.describe('authenticate users & set permalink', () => {
         const [, sellerId] = await apiUtils.createStore(payloads.createStore1, payloads.adminAuth);
         await apiUtils.updateCustomer(sellerId, payloads.updateAddress, payloads.adminAuth);
         helpers.writeEnvJson('VENDOR_ID', sellerId);
+        console.log('VENDOR_ID', helpers.readJsonData('data.json', 'VENDOR_ID'));
     });
 
     setup('add vendor2 @lite', async ({ request }) => {

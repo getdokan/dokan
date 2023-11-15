@@ -5,7 +5,7 @@ import { data } from '@utils/testData';
 import { payloads } from '@utils/payloads';
 import { CUSTOMER_ID, PRODUCT_ID } from '@utils/data.json';
 
-test.describe('My orders functionality test', () => {
+test.describe.only('My orders functionality test', () => {
     let customer: MyOrdersPage;
     let cPage: Page;
     let apiUtils: ApiUtils;
@@ -26,8 +26,8 @@ test.describe('My orders functionality test', () => {
     });
 
     test('customer can view order details @lite', async () => {
-        console.log('CUSTOMER---------------------------------------->',CUSTOMER_ID);
-        console.log('CUSTOMER---------------------------------------->',PRODUCT_ID);
+        console.log('CUSTOMER_ID---------------------------------------->',CUSTOMER_ID);
+        console.log('PRODUCT_ID---------------------------------------->',PRODUCT_ID);
         
         const [, , orderId] = await apiUtils.createOrderWithStatus(PRODUCT_ID, { ...payloads.createOrder, customer_id: CUSTOMER_ID }, data.order.orderStatus.completed, payloads.vendorAuth);
         await customer.viewOrderDetails(orderId);
