@@ -4,7 +4,7 @@ import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
 import { payloads } from '@utils/payloads';
 
-const { PRODUCT_ID } = data.env;
+const { PRODUCT_ID } = global as any;
 
 test.describe('Reports test', () => {
     let admin: ReportsPage;

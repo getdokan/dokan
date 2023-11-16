@@ -9,9 +9,8 @@ import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
 import { dbUtils } from '@utils/dbUtils';
 import { dbData } from '@utils/dbData';
-import { data } from '@utils/testData';
 
-const { VENDOR_ID, CUSTOMER_ID } = data.env;
+const { VENDOR_ID, CUSTOMER_ID } = global as any;
 
 test.describe('abuse report api test', () => {
     let apiUtils: ApiUtils;
@@ -19,8 +18,8 @@ test.describe('abuse report api test', () => {
     test.beforeAll(async ({ request }) => {
         apiUtils = new ApiUtils(request);
         const [, productId] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendorAuth);
-        await dbUtils.createAbuseReport(dbData.dokan.createAbuseReport, productId, VENDOR_ID, String(CUSTOMER_ID));
-        await dbUtils.createAbuseReport(dbData.dokan.createAbuseReport, productId, VENDOR_ID, String(CUSTOMER_ID));
+        await dbUtils.createAbuseReport(dbData.dokan.createAbuseReport, productId, VENDOR_ID, CUSTOMER_ID);
+        await dbUtils.createAbuseReport(dbData.dokan.createAbuseReport, productId, VENDOR_ID, CUSTOMER_ID);
     });
 
     test('get all abuse report reasons @pro', async () => {

@@ -300,7 +300,7 @@ export const helpers = {
     writeJsonData(filePath: string, property: string, value: string) {
         const jsonData = this.readJson(filePath);
         jsonData[property] = value;
-        this.writeFile(filePath, JSON.stringify(jsonData));
+        this.writeFile(filePath, JSON.stringify(jsonData, null, 2));
     },
 
     // write file
@@ -333,13 +333,13 @@ export const helpers = {
 
     // write env json
     writeEnvJson(property: string, value: string) {
-        const filePath = 'data.json';
+        const filePath = 'utils/data.json';
         let envData: { [key: string]: string } = {};
         if (fs.existsSync(filePath)) {
             envData = this.readJson(filePath);
         }
         envData[property] = value;
-        this.writeFile(filePath, JSON.stringify(envData));
+        this.writeFile(filePath, JSON.stringify(envData, null, 2));
     },
 
     async createPage(browser: Browser, options?: BrowserContextOptions | undefined) {

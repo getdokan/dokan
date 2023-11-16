@@ -5,7 +5,7 @@ import { data } from '@utils/testData';
 import { helpers } from '@utils/helpers';
 import { vendor } from '@utils/interfaces';
 
-const { DOKAN_PRO } = data.env;
+const { DOKAN_PRO } = process.env;
 
 export class VendorSettingsPage extends VendorPage {
     constructor(page: Page) {

@@ -7,11 +7,10 @@ import { payloads } from '@utils/payloads';
 import { dbUtils } from '@utils/dbUtils';
 import { dbData } from '@utils/dbData';
 import { data } from '@utils/testData';
-import { helpers } from '@utils/helpers';
+// import { helpers } from '@utils/helpers';
 
-const { CUSTOMER_ID, DOKAN_PRO, HPOS } = data.env;
-
-
+const { DOKAN_PRO } = process.env;
+const { CUSTOMER_ID, HPOS } = global as any;
 
 setup.describe('setup site & woocommerce & user settings', () => {
     setup.use({ extraHTTPHeaders: { Authorization: payloads.adminAuth.Authorization } });
@@ -131,7 +130,8 @@ setup.describe('setup user settings', () => {
         // create store product
         const product = { ...payloads.createProduct(), name: data.predefined.simpleProduct.product1.name };
         const [, productId] = await apiUtils.createProduct(product, payloads.vendorAuth);
-        helpers.writeJsonData('utils/data.json', 'PRODUCT_ID', productId);
+        (global as any).PRODUCT_ID = productId;
+        // helpers.writeEnvJson('PRODUCT_ID', productId);
     });
 
     setup('add vendor2 product @lite', async () => {
@@ -141,7 +141,8 @@ setup.describe('setup user settings', () => {
         // create store product
         const product = { ...payloads.createProduct(), name: data.predefined.vendor2.simpleProduct.product1.name };
         const [, productId] = await apiUtils.createProduct(product, payloads.vendor2Auth);
-        helpers.writeJsonData('utils/data.json', 'V2_PRODUCT_ID', productId);
+        (global as any).V2_PRODUCT_ID = productId;
+        // helpers.writeEnvJson('V2_PRODUCT_ID', productId);
     });
 
     setup('add vendor coupon @pro', async () => {

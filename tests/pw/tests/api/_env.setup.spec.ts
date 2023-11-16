@@ -20,12 +20,14 @@ setup.describe('setup test environment', () => {
 
     setup('create customer @lite', async () => {
         const [, customerId] = await apiUtils.createCustomer(payloads.createCustomer1, payloads.adminAuth);
-        helpers.writeJsonData('utils/data.json', 'CUSTOMER_ID', customerId);
+        console.log('CUSTOMER_ID:', customerId);
+        (global as any).CUSTOMER_ID = customerId;
     });
 
     setup('create vendor @lite', async () => {
         const [, sellerId] = await apiUtils.createStore(payloads.createStore1, payloads.adminAuth);
-        helpers.writeJsonData('utils/data.json', 'VENDOR_ID', sellerId);
+        console.log('VENDOR_ID:', sellerId);
+        (global as any).VENDOR_ID = sellerId;
     });
 
     setup('set dokan general settings @lite', async () => {

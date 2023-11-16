@@ -16,7 +16,7 @@ test.describe('Vendor staff test', () => {
         vendor = new VendorStaffPage(vPage);
 
         apiUtils = new ApiUtils(request);
-        await apiUtils.createVendorStaff({...payloads.createStaff(), first_name: staff.firstName, last_name: staff.lastName}, payloads.vendorAuth);
+        await apiUtils.createVendorStaff({ ...payloads.createStaff(), first_name: staff.firstName, last_name: staff.lastName }, payloads.vendorAuth);
     });
 
     test.afterAll(async () => {

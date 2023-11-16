@@ -55,7 +55,7 @@ export const dbData = {
 
             // product page settings
             product_page_options: '',
-            show_vendor_info: 'on', 
+            show_vendor_info: 'on',
             enabled_more_products_tab: 'on',
         },
 

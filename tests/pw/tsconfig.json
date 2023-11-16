@@ -31,7 +31,7 @@
         },
         "esModuleInterop": true /* fixes some issues TS originally had with the ES6 spec where TypeScript treats CommonJS/AMD/UMD modules similar to ES6 module*/,
         "moduleResolution": "node" /* Pretty much always node for modern JS. Other option is "classic"*/,
-        "typeRoots": ["./node_modules/@types", "./types"] /* List of folders to include type definitions from. */,
+        "typeRoots": ["node_modules/@types", "types/**/*"] /* List of folders to include type definitions from. */,
         "resolveJsonModule": true,
         "importHelpers": true /* Import emit helpers from 'tslib'. */,
         "downlevelIteration": true /* Provide full support for iterables in 'for-of', spread, and destructuring when targeting 'ES5' or 'ES3'. */,

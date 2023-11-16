@@ -13,29 +13,11 @@ interface admin {
     password: string;
 }
 
-interface envData {
-    [key: string]: string;
-    SERVER_URL: string;
-    CUSTOMER_ID: string;
-    VENDOR_ID: string;
-    VENDOR2_ID: string;
-    PRODUCT_ID: string;
-    V2_PRODUCT_ID: string;
-    HPOS: string;
-}
-
 export { admin, user };
 
-const envData: envData = helpers.readJson('utils/data.json');
-
 export const data = {
+    envData: 'utils/data.json',
     env: {
-        SERVER_URL: envData.SERVER_URL,
-        CUSTOMER_ID: Number(envData.CUSTOMER_ID),
-        VENDOR_ID: envData.VENDOR_ID,
-        VENDOR2_ID: envData.VENDOR2_ID,
-        PRODUCT_ID: envData.PRODUCT_ID,
-        HPOS: envData.HPOS,
         DOKAN_PRO: process.env.DOKAN_PRO ? true : false,
 
         // db data

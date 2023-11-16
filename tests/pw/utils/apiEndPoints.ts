@@ -1,7 +1,6 @@
 import 'dotenv/config';
-import { data } from '@utils/testData';
 
-const { SERVER_URL } = data.env;
+const { SERVER_URL } = process.env;
 
 export const endPoints = {
     serverUrl: `${SERVER_URL}`,

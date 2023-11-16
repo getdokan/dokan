@@ -1755,7 +1755,6 @@ export interface storageState {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type responseBody = any;
 
-
 export interface commission {
     type: string;
     amount: string;
@@ -1766,15 +1765,4 @@ export interface feeRecipient {
     shippingFeeRecipient: string;
     taxFeeRecipient: string;
     shippingTaxFeeRecipient: string;
-}
-
-export interface envData {
-    [key: string]: string;
-    SERVER_URL: string;
-    CUSTOMER_ID: string;
-    VENDOR_ID: string;
-    VENDOR2_ID: string;
-    PRODUCT_ID: string;
-    V2_PRODUCT_ID: string;
-    HPOS: string;
 }

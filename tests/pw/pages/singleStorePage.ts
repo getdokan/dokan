@@ -4,7 +4,7 @@ import { selector } from '@pages/selectors';
 import { helpers } from '@utils/helpers';
 import { data } from '@utils/testData';
 
-const { DOKAN_PRO } = data.env;
+const { DOKAN_PRO } = process.env;
 
 export class SingleStorePage extends CustomerPage {
     constructor(page: Page) {

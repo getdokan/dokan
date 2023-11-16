@@ -6,7 +6,7 @@ import { helpers } from '@utils/helpers';
 import { data } from '@utils/testData';
 import { customer, paymentDetails } from '@utils/interfaces';
 
-const { DOKAN_PRO } = data.env;
+const { DOKAN_PRO } = process.env;
 
 export class CustomerPage extends BasePage {
     constructor(page: Page) {
