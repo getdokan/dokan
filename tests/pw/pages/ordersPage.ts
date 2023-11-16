@@ -5,7 +5,7 @@ import { data } from '@utils/testData';
 import { helpers } from '@utils/helpers';
 import { orderNote, orderTrackingDetails, orderShipmentDetails, date } from '@utils/interfaces';
 
-const { DOKAN_PRO } = data.env;
+const { DOKAN_PRO } = process.env;
 
 export class OrdersPage extends VendorPage {
     constructor(page: Page) {

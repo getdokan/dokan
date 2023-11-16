@@ -6,7 +6,7 @@ import { data } from '@utils/testData';
 import { payloads } from '@utils/payloads';
 import { helpers } from '@utils/helpers';
 
-const { DOKAN_PRO } = data.env;
+const { DOKAN_PRO } = process.env;
 
 setup.describe('authenticate users & set permalink', () => {
     setup('authenticate admin @lite', async ({ page }) => {

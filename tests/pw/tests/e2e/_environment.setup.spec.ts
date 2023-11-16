@@ -9,7 +9,7 @@ import { dbData } from '@utils/dbData';
 import { data } from '@utils/testData';
 // import { helpers } from '@utils/helpers';
 
-const { DOKAN_PRO } = data.env;
+const { DOKAN_PRO } = process.env;
 const { CUSTOMER_ID, HPOS } = global as any;
 
 setup.describe('setup site & woocommerce & user settings', () => {

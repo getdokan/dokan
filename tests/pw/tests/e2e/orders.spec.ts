@@ -6,7 +6,7 @@ import { payloads } from '@utils/payloads';
 import { dbUtils } from '@utils/dbUtils';
 import { dbData } from '@utils/dbData';
 
-const { DOKAN_PRO } = data.env;
+const { DOKAN_PRO } = process.env;
 const { CUSTOMER_ID, PRODUCT_ID } = global as any;
 
 test.describe('Order functionality test', () => {

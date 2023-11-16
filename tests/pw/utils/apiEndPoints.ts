@@ -2,7 +2,6 @@ import 'dotenv/config';
 
 const { SERVER_URL } = process.env;
 
-
 export const endPoints = {
     serverUrl: `${SERVER_URL}`,
     getAllDokanEndpointsV1: `${SERVER_URL}/dokan/v1`,

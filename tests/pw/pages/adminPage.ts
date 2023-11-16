@@ -5,7 +5,7 @@ import { data } from '@utils/testData';
 import { payment, dokanSetupWizard, woocommerce } from '@utils/interfaces';
 import { helpers } from '@utils/helpers';
 
-const { DOKAN_PRO } = data.env;
+const { DOKAN_PRO } = process.env;
 
 export class AdminPage extends BasePage {
     constructor(page: Page) {
