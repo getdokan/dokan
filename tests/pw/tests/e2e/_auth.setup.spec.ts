@@ -40,7 +40,9 @@ setup.describe('authenticate users & set permalink', () => {
         const apiUtils = new ApiUtils(request);
         const [, sellerId] = await apiUtils.createStore(payloads.createStore2, payloads.adminAuth);
         await apiUtils.updateCustomer(sellerId, payloads.updateAddress, payloads.adminAuth);
-        helpers.writeJsonData('utils/data.json', 'VENDOR2_ID', sellerId);
+        console.log('VENDOR2_ID:', sellerId);
+        (global as any).VENDOR2_ID = sellerId;
+        // helpers.writeEnvJson('VENDOR2_ID', sellerId);
     });
 
     setup('authenticate customer @lite', async ({ page }) => {
