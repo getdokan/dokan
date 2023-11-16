@@ -9,7 +9,6 @@ import { helpers } from '@utils/helpers';
 const { DOKAN_PRO } = data.env;
 
 setup.describe.only('authenticate users & set permalink', () => {
-
     // setup('authenticate admin @lite', async ({ page }) => {
     //     const loginPage = new LoginPage(page);
     //     await loginPage.adminLogin(data.admin, data.auth.adminAuthFile);
@@ -25,15 +24,18 @@ setup.describe.only('authenticate users & set permalink', () => {
     setup('add customer1 @lite', async ({ request }) => {
         const apiUtils = new ApiUtils(request);
         const [, customerId] = await apiUtils.createCustomer(payloads.createCustomer1, payloads.adminAuth);
+        process.env.CUSTOMER_ID = customerId;
+        console.log('CUSTOMER_ID:', customerId);
         (global as any).CUSTOMER_ID = customerId;
         helpers.writeEnvJson('CUSTOMER_ID', customerId);
-        console.log('CUSTOMER_ID', helpers.readJsonData(data.envData, 'CUSTOMER_ID'));
+        // console.log('CUSTOMER_ID', helpers.readJsonData(data.envData, 'CUSTOMER_ID'));
     });
 
     // setup('add vendor1 @lite', async ({ request }) => {
     //     const apiUtils = new ApiUtils(request);
     //     const [, sellerId] = await apiUtils.createStore(payloads.createStore1, payloads.adminAuth);
     //     await apiUtils.updateCustomer(sellerId, payloads.updateAddress, payloads.adminAuth);
+    //    console.log('VENDOR_ID:', sellerId);
     //     helpers.writeEnvJson('VENDOR_ID', sellerId);
     //     console.log('VENDOR_ID', helpers.readJsonData(data.envData, 'VENDOR_ID'));
     // });

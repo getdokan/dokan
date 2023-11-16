@@ -6,7 +6,8 @@ import { payloads } from '@utils/payloads';
 import { helpers } from '@utils/helpers';
 // import { CUSTOMER_ID, PRODUCT_ID } from '@utils/data.json';
 
-const { CUSTOMER_ID, PRODUCT_ID } = global as any;
+// const { CUSTOMER_ID, PRODUCT_ID } = data.env;
+const { CUSTOMER_ID, PRODUCT_ID } = process.env;
 
 // CUSTOMER_ID ? CUSTOMER_ID : (CUSTOMER_ID = helpers.readJsonData(data.envData, 'CUSTOMER_ID') );
 
