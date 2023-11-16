@@ -4,7 +4,8 @@ import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
 import { payloads } from '@utils/payloads';
 import { responseBody } from '@utils/interfaces';
-import { VENDOR_ID, CUSTOMER_ID, PRODUCT_ID } from '@utils/data.json';
+
+const { VENDOR_ID, CUSTOMER_ID, PRODUCT_ID } = global as any;
 
 test.describe('Store Support test (admin)', () => {
     let admin: StoreSupportsPage;

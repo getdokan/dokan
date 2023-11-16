@@ -4,7 +4,7 @@ import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
 import { payloads } from '@utils/payloads';
 
-import { PRODUCT_ID } from '@utils/data.json';
+const { PRODUCT_ID } = global as any;
 
 test.describe('Coupons test', () => {
     let admin: CouponsPage;

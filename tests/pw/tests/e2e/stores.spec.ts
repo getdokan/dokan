@@ -3,7 +3,8 @@ import { StoresPage } from '@pages/storesPage';
 // import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
 // import { payloads } from '@utils/payloads';
-import { VENDOR_ID} from '@utils/data.json';
+
+const { VENDOR_ID } = global as any;
 
 test.describe('Stores test', () => {
     let admin: StoresPage;

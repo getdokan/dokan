@@ -5,8 +5,9 @@ import { data } from '@utils/testData';
 import { payloads } from '@utils/payloads';
 import { dbUtils } from '@utils/dbUtils';
 import { dbData } from '@utils/dbData';
-import { CUSTOMER_ID, PRODUCT_ID } from '@utils/data.json';
+
 const { DOKAN_PRO } = data.env;
+const { CUSTOMER_ID, PRODUCT_ID } = global as any;
 
 test.describe('Order functionality test', () => {
     let vendor: OrdersPage;

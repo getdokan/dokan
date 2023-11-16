@@ -5,7 +5,8 @@ import { OrdersPage } from '@pages/ordersPage';
 // import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
 // import { payloads } from '@utils/payloads';
-// import { CUSTOMER_ID, PRODUCT_ID } from '@utils/data.json';
+
+// const { CUSTOMER_ID, PRODUCT_ID } = global as any;
 
 test.describe('Vendor RMA test', () => {
     let vendor: VendorReturnRequestPage;

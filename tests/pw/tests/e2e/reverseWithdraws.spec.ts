@@ -6,8 +6,8 @@ import { data } from '@utils/testData';
 import { payloads } from '@utils/payloads';
 import { dbUtils } from '@utils/dbUtils';
 import { dbData } from '@utils/dbData';
-import { PRODUCT_ID} from '@utils/data.json';
 
+const { PRODUCT_ID } = global as any;
 
 test.describe('Reverse withdraw test', () => {
     let admin: ReverseWithdrawsPage;

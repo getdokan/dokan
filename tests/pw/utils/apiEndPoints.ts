@@ -1,5 +1,6 @@
 import 'dotenv/config';
-import { SERVER_URL } from '@utils/data.json';
+
+const { SERVER_URL } = global as any;
 
 export const endPoints = {
     serverUrl: `${SERVER_URL}`,

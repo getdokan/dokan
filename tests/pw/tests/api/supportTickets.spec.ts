@@ -12,8 +12,7 @@ import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
 
-
-import { VENDOR_ID, CUSTOMER_ID } from '@utils/data.json';
+const { VENDOR_ID, CUSTOMER_ID } = global as any;
 
 test.describe('support ticket api test', () => {
     let apiUtils: ApiUtils;

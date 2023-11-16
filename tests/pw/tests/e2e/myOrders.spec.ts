@@ -3,18 +3,10 @@ import { MyOrdersPage } from '@pages/myOrdersPage';
 import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
 import { payloads } from '@utils/payloads';
-import { helpers } from '@utils/helpers';
-// import { CUSTOMER_ID, PRODUCT_ID } from '@utils/data.json';
 
-// const { CUSTOMER_ID, PRODUCT_ID } = data.env;
-const { CUSTOMER_ID, PRODUCT_ID } = process.env;
+const { CUSTOMER_ID, PRODUCT_ID } = global as any;
 
-// CUSTOMER_ID ? CUSTOMER_ID : (CUSTOMER_ID = helpers.readJsonData(data.envData, 'CUSTOMER_ID') );
-
-console.log('CUSTOMER_ID---------------------------------------->', CUSTOMER_ID);
-console.log('PRODUCT_ID---------------------------------------->', PRODUCT_ID);
-
-test.describe('My orders functionality test', () => {
+test.describe.only('My orders functionality test', () => {
     let customer: MyOrdersPage;
     let cPage: Page;
     let apiUtils: ApiUtils;
@@ -34,10 +26,7 @@ test.describe('My orders functionality test', () => {
         await customer.myOrdersRenderProperly();
     });
 
-    test.only('customer can view order details @lite', async () => {
-        console.log('CUSTOMER_ID---------------------------------------->', CUSTOMER_ID);
-        console.log('PRODUCT_ID---------------------------------------->', PRODUCT_ID);
-
+    test('customer can view order details @lite', async () => {
         const [, , orderId] = await apiUtils.createOrderWithStatus(PRODUCT_ID, { ...payloads.createOrder, customer_id: CUSTOMER_ID }, data.order.orderStatus.completed, payloads.vendorAuth);
         await customer.viewOrderDetails(orderId);
     });
