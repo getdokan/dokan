@@ -6,7 +6,7 @@ import { payloads } from '@utils/payloads';
 
 const { CUSTOMER_ID, PRODUCT_ID } = global as any;
 
-test.describe.only('My orders functionality test', () => {
+test.describe('My orders functionality test', () => {
     let customer: MyOrdersPage;
     let cPage: Page;
     let apiUtils: ApiUtils;
