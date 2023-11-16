@@ -202,7 +202,6 @@ class SetupWizard extends DokanSetupWizard {
         $address_state   = isset( $store_info['address']['state'] ) ? $store_info['address']['state'] : '';
         $map_location    = isset( $store_info['location'] ) ? $store_info['location'] : '';
         $map_address     = isset( $store_info['find_address'] ) ? $store_info['find_address'] : '';
-        $store_ppp       = isset( $store_info['store_ppp'] ) ? $store_info['store_ppp'] : 12;
 
         $country_obj = new WC_Countries();
         $countries   = $country_obj->get_allowed_countries();
@@ -211,23 +210,6 @@ class SetupWizard extends DokanSetupWizard {
         <h1><?php esc_attr_e( 'Store Setup', 'dokan-lite' ); ?></h1>
         <form method="post" class="dokan-seller-setup-form">
             <table class="form-table">
-                <tr>
-                    <th scope="row">
-                        <label for="store_ppp">
-                            <?php esc_attr_e( 'Store Products Per Page', 'dokan-lite' ); ?><span class='required'>*</span>
-                        </label>
-                    </th>
-                    <td>
-                        <input type="text" id="store_ppp" name="store_ppp" value="<?php echo esc_attr( $store_ppp ); ?>"/>
-                        <span class="error-container">
-                            <?php
-                                if ( ! empty( $_POST['error_store_ppp'] ) ) {
-                                    echo '<span class="required">' . __( 'This is required', 'dokan-lite' ) . '</span>';
-                                }
-                            ?>
-                        </span>
-                    </td>
-                </tr>
                 <tr>
                     <th scope="row">
                         <label for="address[street_1]">
@@ -461,7 +443,7 @@ class SetupWizard extends DokanSetupWizard {
                         return obj;
                     }, {});
 
-                    let requiredFields = [ 'store_ppp', 'address[street_1]', 'address[city]', 'address[zip]', 'address[country]' ];
+                    let requiredFields = [ 'address[street_1]', 'address[city]', 'address[zip]', 'address[country]' ];
 
                     requiredFields.map( item => {
                         if ( ! $( `*[name='${item}']` ).val() ) {
@@ -470,10 +452,6 @@ class SetupWizard extends DokanSetupWizard {
                             $( `*[name='${item}']` ).closest('td').children(`span.error-container`).html('');
                         }
                     } );
-
-                    if ( ! data['store_ppp'] || ! data['address[street_1]'] || ! data['address[city]'] || ! data['address[zip]'] || ! data['address[country]'] ) {
-                        return;
-                    }
 
                     if ( ( 'object' === typeof states[ data['address[country]'] ] && Object.keys( states[ data['address[country]'] ] ).length && ! data['address[state]'] ) || ( 'undefined' === typeof states[ data['address[country]'] ] && ! data['address[state]'] ) ) {
                         if ( ! $( `*[name='address[state]']` ).val() ) {
@@ -519,10 +497,6 @@ class SetupWizard extends DokanSetupWizard {
 
         // Validating fileds.
         $is_valid_form = true;
-        if ( empty( $dokan_settings['store_ppp'] ) ) {
-            $is_valid_form = false;
-            $_POST['error_store_ppp'] = 'error';
-        }
         if ( empty( $dokan_settings['address']['street_1'] ) ) {
             $is_valid_form = false;
             $_POST['error_address[street_1]'] = 'error';
@@ -630,7 +604,16 @@ class SetupWizard extends DokanSetupWizard {
         <script>
             (function ($) {
                 $('.store-step-continue').on('click', function(e) {
-                    let requiredFields = <?php echo wp_json_encode( dokan_bank_payment_required_fields() ) ?>;
+                    <?php
+                        $withdraw_payments = dokan_get_option( 'withdraw_methods', 'dokan_withdraw' );
+                        $bank_is_active = is_array( $withdraw_payments ) && ! empty( $withdraw_payments['bank'] );
+                    ?>
+                    let requiredFields = <?php echo wp_json_encode( dokan_bank_payment_required_fields() ); ?>;
+                    let bank_is_active = <?php echo wp_json_encode( $bank_is_active ); ?>;
+
+                    if ( ! bank_is_active ) {
+                        requiredFields = {};
+                    }
 
                     let isValidForm = true;
                     Object.keys(requiredFields).map( item => {
