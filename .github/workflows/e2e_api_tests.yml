@@ -205,8 +205,8 @@ jobs:
                   comment-id: ${{ steps.find-comment.outputs.comment-id }}
                   issue-number: ${{ github.event.pull_request.number }}
                   body: ${{ steps.prepare-test-summary.outputs.result }}
-                  edit-mode: replace
                   reactions: hooray
+                  edit-mode: replace
 
             # Upload artifacts
             - name: Archive test artifacts (screenshots, HTML snapshots, Reports)

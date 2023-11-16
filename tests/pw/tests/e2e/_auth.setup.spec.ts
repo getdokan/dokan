@@ -14,7 +14,7 @@ setup.describe('authenticate users & set permalink', () => {
         await loginPage.adminLogin(data.admin, data.auth.adminAuthFile);
     });
 
-    setup.skip('admin set WpSettings @lite', async ({ page }) => {
+    setup('admin set WpSettings @lite', async ({ page }) => {
         const loginPage = new LoginPage(page);
         const wpPage = new WpPage(page);
         await loginPage.adminLogin(data.admin);

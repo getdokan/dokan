@@ -19,6 +19,7 @@ export const data = {
     envData: 'utils/data.json',
     env: {
         DOKAN_PRO: process.env.DOKAN_PRO ? true : false,
+
         // db data
         DB_HOST_NAME: process.env.DB_HOST_NAME,
         DB_USER_NAME: process.env.DB_USER_NAME,
@@ -480,7 +481,6 @@ export const data = {
         city: 'New York',
         zipCode: '10006',
         state: 'New York',
-        id: () => faker.string.nanoid(10),
     },
 
     wpSettings: {

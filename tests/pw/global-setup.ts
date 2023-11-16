@@ -1,6 +1,5 @@
 import { FullConfig, request } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
-import { helpers } from '@utils/helpers';
 
 async function globalSetup(config: FullConfig) {
     console.log('Global Setup running....');
@@ -13,7 +12,6 @@ async function globalSetup(config: FullConfig) {
         if (headers.link) {
             serverUrl = headers.link.includes('rest_route') ? serverUrl + '/?rest_route=' : serverUrl + '/wp-json';
             process.env.SERVER_URL = serverUrl;
-            helpers.writeEnvJson('SERVER_URL', serverUrl);
             break;
         }
         console.log('retrying...');
