@@ -5,6 +5,7 @@ import { dbUtils } from '@utils/dbUtils';
 import { data } from '@utils/testData';
 import { dbData } from '@utils/dbData';
 import { payloads } from '@utils/payloads';
+
 const { VENDOR_ID, CUSTOMER_ID } = global as any;
 
 test.describe('Abuse report test', () => {

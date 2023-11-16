@@ -26,8 +26,6 @@ setup.describe('authenticate users & set permalink', () => {
         const [, customerId] = await apiUtils.createCustomer(payloads.createCustomer1, payloads.adminAuth);
         console.log('CUSTOMER_ID:', customerId);
         (global as any).CUSTOMER_ID = customerId;
-        // helpers.writeEnvJson('CUSTOMER_ID', customerId);
-        // console.log('CUSTOMER_ID', helpers.readJsonData(data.envData, 'CUSTOMER_ID'));
     });
 
     setup('add vendor1 @lite', async ({ request }) => {
@@ -36,14 +34,13 @@ setup.describe('authenticate users & set permalink', () => {
         await apiUtils.updateCustomer(sellerId, payloads.updateAddress, payloads.adminAuth);
         console.log('VENDOR_ID:', sellerId);
         (global as any).VENDOR_ID = sellerId;
-        // helpers.writeEnvJson('VENDOR_ID', sellerId);
-        // console.log('VENDOR_ID', helpers.readJsonData(data.envData, 'VENDOR_ID'));
     });
 
     setup('add vendor2 @lite', async ({ request }) => {
         const apiUtils = new ApiUtils(request);
         const [, sellerId] = await apiUtils.createStore(payloads.createStore2, payloads.adminAuth);
         await apiUtils.updateCustomer(sellerId, payloads.updateAddress, payloads.adminAuth);
+        console.log('VENDOR2_ID:', sellerId);
         (global as any).VENDOR2_ID = sellerId;
         // helpers.writeEnvJson('VENDOR2_ID', sellerId);
     });
