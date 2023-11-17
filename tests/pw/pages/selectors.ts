@@ -1724,7 +1724,7 @@ export const selector = {
 
                 fields: '.dokan-settings-fields',
 
-                saveChanges: '.submit',
+                saveChanges: '//input[@id="submit" and @value="Save Changes"]',
 
                 search: {
                     searchBox: '.search-box',
@@ -1978,7 +1978,6 @@ export const selector = {
                     displayOnOrderDetails: '.enabled_for_customer_order .switch',
                     displayOnSingleProductPage: '#dokan_store_support_setting\\[store_support_product_page\\]',
                     supportButtonLabel: '#dokan_store_support_setting\\[support_button_label\\]',
-                    supportTicketEmailNotification: '.dokan_admin_email_notification .switch',
                     storeSupportSaveChanges: '#submit',
                 },
 
