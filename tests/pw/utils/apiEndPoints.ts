@@ -1,6 +1,6 @@
-// const { SERVER_URL  } = process.env;
+import 'dotenv/config';
 
-const SERVER_URL = process.env.SERVER_URL ? process.env.SERVER_URL : process.env.BASE_URL + '/wp-json';
+const { SERVER_URL } = process.env;
 
 export const endPoints = {
     serverUrl: `${SERVER_URL}`,
@@ -141,6 +141,11 @@ export const endPoints = {
     restoreDeletedAnnouncement: (announcementId: string) => `${SERVER_URL}/dokan/v1/announcement/${announcementId}/restore`, // put
     updateBatchAnnouncements: `${SERVER_URL}/dokan/v1/announcement/batch`, // method: trash, delete, restore
 
+    // announcement notice
+    getSingleAnnouncementNotice: (noticeId: string) => `${SERVER_URL}/dokan/v1/announcement/notice/${noticeId}`,
+    updateAnnouncementNotice: (noticeId: string) => `${SERVER_URL}/dokan/v1/announcement/notice/${noticeId}`,
+    deleteAnnouncementNotice: (noticeId: string) => `${SERVER_URL}/dokan/v1/announcement/notice/${noticeId}`,
+
     // refunds
     getAllRefunds: `${SERVER_URL}/dokan/v1/refunds`,
     approveRefund: (refundId: string) => `${SERVER_URL}/dokan/v1/refunds/${refundId}/approve`, // put
@@ -221,7 +226,7 @@ export const endPoints = {
     createSupportTicketComment: (supportTicketId: string) => `${SERVER_URL}/dokan/v1/admin/support-ticket/${supportTicketId}`,
     updateSupportTicketStatus: (supportTicketId: string) => `${SERVER_URL}/dokan/v1/admin/support-ticket/${supportTicketId}/status`, // post
     updateSupportTicketEmailNotification: (supportTicketId: string) => `${SERVER_URL}/dokan/v1/admin/support-ticket/${supportTicketId}/email-notification`, // post
-    deleteSupportTicketComment: (supportTicketId: string) => `${SERVER_URL}/dokan/v1/admin/support-ticket/${supportTicketId}/comment`,
+    deleteSupportTicketComment: (supportTicketCommentId: string) => `${SERVER_URL}/dokan/v1/admin/support-ticket/${supportTicketCommentId}/comment`,
     updateBatchSupportTickets: `${SERVER_URL}/dokan/v1/admin/support-ticket/batch`, // method: close
 
     // admin
@@ -471,7 +476,7 @@ export const endPoints = {
         getAllSettingsGroups: `${SERVER_URL}/wc/v3/settings`,
         getAllSettingOptions: (groupId: string) => `${SERVER_URL}/wc/v3/settings/${groupId}`,
         getSingleSettingOption: (groupId: string, optionId: string) => `${SERVER_URL}/wc/v3/settings/${groupId}/${optionId}`,
-        updateSettingOption: (groupId: string, optionId: string) => `${SERVER_URL}/wc/v3/settings/${groupId}/${optionId}`,
+        updateSingleSettingOption: (groupId: string, optionId: string) => `${SERVER_URL}/wc/v3/settings/${groupId}/${optionId}`,
         updateBatchSettingOptions: (groupId: string) => `${SERVER_URL}/wc/v3/settings/${groupId}/batch`,
 
         // system status
@@ -524,7 +529,6 @@ export const endPoints = {
     },
 
     wp: {
-        // todo : add all wp endpoints
         // users
         getAllUsers: `${SERVER_URL}/wp/v2/users`,
         getCurrentUser: `${SERVER_URL}/wp/v2/users/me`,

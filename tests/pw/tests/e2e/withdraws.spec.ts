@@ -4,7 +4,7 @@ import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
 import { payloads } from '@utils/payloads';
 
-const { PRODUCT_ID } = process.env;
+const { PRODUCT_ID } = global as any;
 
 test.describe('Withdraw test', () => {
     let admin: WithdrawsPage;

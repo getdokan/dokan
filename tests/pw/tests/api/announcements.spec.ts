@@ -65,4 +65,27 @@ test.describe('announcements api test', () => {
         // restore all announcements
         await apiUtils.updateBatchAnnouncements('restore', allAnnouncementIds);
     });
+
+    // announcement notice
+
+    test.skip('get single announcement notice @pro', async () => {
+        const [response, responseBody] = await apiUtils.get(endPoints.getSingleAnnouncementNotice(noticeId), { headers: payloads.vendorAuth });
+        expect(response.ok()).toBeTruthy();
+        expect(responseBody).toBeTruthy();
+        console.log(responseBody);
+    });
+
+    test.skip('update a announcement notice @pro', async () => {
+        const [response, responseBody] = await apiUtils.post(endPoints.updateAnnouncementNotice(noticeId), { data: payloads.updateAnnouncementNotice, headers: payloads.vendorAuth });
+        expect(response.ok()).toBeTruthy();
+        expect(responseBody).toBeTruthy();
+        console.log(responseBody);
+    });
+
+    test.skip('delete a announcement notice @pro', async () => {
+        const [response, responseBody] = await apiUtils.delete(endPoints.deleteAnnouncementNotice(noticeId), { headers: payloads.vendorAuth });
+        expect(response.ok()).toBeTruthy();
+        expect(responseBody).toBeTruthy();
+        console.log(responseBody);
+    });
 });
