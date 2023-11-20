@@ -1145,8 +1145,8 @@ export const selector = {
                 announcementStatusScheduled: (title: string) => `//a[contains(text(),'${title}')]/../../..//td[@class="column status"]//span[@class="future"]`,
                 announcementEdit: (title: string) => `//a[contains(text(),'${title}')]/../..//span[@class="edit"]`,
                 announcementDelete: (title: string) => `//strong[contains(text(),'${title}')]/../..//span[@class="trash"]`,
-                announcementPermanentlyDelete: (title: string) => `//a[contains(text(),'${title}')]/../..//span[@class="delete"]`,
-                announcementRestore: (title: string) => `//a[contains(text(),'${title}')]/../..//span[@class="restore"]`,
+                announcementPermanentlyDelete: (title: string) => `//strong[contains(text(),'${title}')]/../..//span[@class="delete"]`,
+                announcementRestore: (title: string) => `//strong[contains(text(),'${title}')]/../..//span[@class="restore"]`,
 
                 // add announcement
                 addAnnouncement: {

@@ -42,7 +42,6 @@ setup.describe('authenticate users & set permalink', () => {
         await apiUtils.updateCustomer(sellerId, payloads.updateAddress, payloads.adminAuth);
         console.log('VENDOR2_ID:', sellerId);
         (global as any).VENDOR2_ID = sellerId;
-        // helpers.writeEnvJson('VENDOR2_ID', sellerId);
     });
 
     setup('authenticate customer @lite', async ({ page }) => {
