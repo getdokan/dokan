@@ -189,7 +189,7 @@ class Hooks {
         $withdraw
             ->set_user_id( $user_id )
             ->set_amount( $amount )
-            ->set_date( dokan_current_datetime() )
+            ->set_date( dokan_current_datetime()->format( 'Y-m-d H:i:s' ) )
             ->set_status( dokan()->withdraw->get_status_code( 'pending' ) )
             ->set_method( $method )
             ->set_ip( dokan_get_client_ip() )
