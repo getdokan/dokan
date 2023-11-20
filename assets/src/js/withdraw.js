@@ -245,8 +245,8 @@
                 "select[name='withdraw_method'][id='withdraw-method'] option:selected"
             ).data();
             let chargeAmount = 0;
-
             let chargeText = '';
+
             if ( chargeFixed ) {
                 chargeText += accounting.formatMoney( chargeFixed, dokan.currency );
                 chargeAmount += chargeFixed;
@@ -259,6 +259,10 @@
                     .toString()
                     .replace('.', dokan_refund.mon_decimal_point ) + '%';
                 chargeText += ` = ${ accounting.formatMoney( chargeAmount ) }`;
+            }
+
+            if ( ! chargeText ) {
+              chargeText = accounting.formatMoney( chargeAmount, dokan.currency );
             }
 
           Dokan_Withdraw.showWithdrawChargeHtml( chargeText, chargeAmount, withdrawAmount );

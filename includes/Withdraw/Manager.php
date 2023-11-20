@@ -243,9 +243,9 @@ class Manager {
      * @param integer $limit
      * @param integer $offset
      *
-     * @return array
+     * @return Withdraw[]
      */
-    public function get_withdraw_requests( $user_id = '', $status = 0, $limit = 10, $offset = 0 ) {
+    public function get_withdraw_requests( $user_id = '', $status = 0, $limit = 10, $offset = 0 ): array {
         // get all function arguments as key => value pairs
         $args = get_defined_vars();
 

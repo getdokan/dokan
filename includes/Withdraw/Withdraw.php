@@ -401,6 +401,17 @@ class Withdraw {
     }
 
     /**
+     * Returns withdraw data.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return array
+     */
+    public function get_data(): array {
+        return $this->data;
+    }
+
+    /**
      * Create or update a withdraw
      *
      * @since 3.0.0
