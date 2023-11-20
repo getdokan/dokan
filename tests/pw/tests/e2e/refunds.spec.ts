@@ -5,7 +5,7 @@ import { dbUtils } from '@utils/dbUtils';
 import { data } from '@utils/testData';
 import { payloads } from '@utils/payloads';
 
-const { CUSTOMER_ID, PRODUCT_ID } = process.env;
+const { CUSTOMER_ID, PRODUCT_ID } = global as any;
 
 test.describe('Refunds test', () => {
     let admin: RefundsPage;

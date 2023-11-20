@@ -1,5 +1,7 @@
+// import { request } from '@playwright/test';
 import { faker } from '@faker-js/faker';
 import { helpers } from '@utils/helpers';
+import 'dotenv/config';
 
 interface user {
     username: string;
@@ -14,7 +16,19 @@ interface admin {
 export { admin, user };
 
 export const data = {
-    // Generated  test data
+    envData: 'utils/data.json',
+    env: {
+        DOKAN_PRO: process.env.DOKAN_PRO ? true : false,
+
+        // db data
+        DB_HOST_NAME: process.env.DB_HOST_NAME,
+        DB_USER_NAME: process.env.DB_USER_NAME,
+        DB_USER_PASSWORD: process.env.DB_USER_PASSWORD,
+        DATABASE: process.env.DATABASE,
+        DB_PORT: process.env.DB_PORT,
+        DB_PREFIX: process.env.DB_PREFIX,
+    },
+
     auth: {
         adminAuthFile: 'playwright/.auth/adminStorageState.json',
         vendorAuthFile: 'playwright/.auth/vendorStorageState.json',
@@ -931,7 +945,7 @@ export const data = {
             companyId: faker.string.alphanumeric(5),
             vatNumber: faker.string.alphanumeric(10),
             bankIban: faker.finance.iban(),
-            phoneNumber: faker.phone.number('(###) ###-####'),
+            phoneNumber: faker.phone.number(),
             phone: '0123456789',
             street1: 'abc street',
             street2: 'xyz street',
@@ -1279,7 +1293,7 @@ export const data = {
         firstName: faker.person.firstName('male'),
         lastName: faker.person.lastName('male'),
         email: faker.internet.email(),
-        phone: faker.phone.number('(###) ###-####'),
+        phone: faker.phone.number(),
         password: String(process.env.USER_PASSWORD),
     }),
 
@@ -1306,7 +1320,7 @@ export const data = {
             bankName: 'bankName',
             bankAddress: 'bankAddress',
             bankIban: faker.finance.iban(),
-            phone: faker.phone.number('(###) ###-####'),
+            phone: faker.phone.number(),
             street1: 'abc street',
             street2: 'xyz street',
             country: 'United States (US)',
@@ -1522,7 +1536,7 @@ export const data = {
             fullName: faker.person.fullName({ sex: 'male' }),
             email: faker.person.firstName('male') + '@email.com',
             companyName: faker.company.name(),
-            phoneNumber: faker.phone.number('(###) ###-####'),
+            phoneNumber: faker.phone.number(),
         }),
     },
 
@@ -1697,7 +1711,7 @@ export const data = {
         general: {
             vendorStoreUrl: 'store',
             setupWizardMessage:
-                'Thank you for choosing The Marketplace to power your online store! This quick setup wizard will help you configure the basic settings. It\'s completely optional and shouldn\'t take longer than two minutes.',
+                "Thank you for choosing The Marketplace to power your online store! This quick setup wizard will help you configure the basic settings. It's completely optional and shouldn't take longer than two minutes.",
             sellingProductTypes: 'sell_both', // 'sell_both', 'sell_physical', 'sell_digital'
             storeProductPerPage: '12',
             storCategory: 'multiple', // 'none', 'single', 'multiple'

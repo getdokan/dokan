@@ -614,7 +614,7 @@ export const payloads = {
             },
             {
                 key: 'coupon_commissions_type',
-                value: 'default',
+                value: 'default', // 'default', 'from_vendor', 'from_admin', 'shared_coupon'
             },
             {
                 key: 'admin_coupons_show_on_stores',
@@ -678,6 +678,8 @@ export const payloads = {
                 total: '10.00',
             },
         ],
+
+        coupon_lines: [],
     },
 
     createOrderCod: {
@@ -2213,6 +2215,10 @@ export const payloads = {
         sender_type: 'all_seller',
     },
 
+    updateAnnouncementNotice: {
+        read_status: 'read', // read, unread
+    },
+
     // product review
 
     updateProductReview: {
@@ -2592,7 +2598,7 @@ export const payloads = {
         email: process.env.VENDOR2 + '@yopmail.com',
         store_name: process.env.VENDOR2 + 'store',
         first_name: process.env.VENDOR2,
-        last_name: 'v1',
+        last_name: 'v',
         social: {
             fb: 'http://dokan.test',
             youtube: 'http://dokan.test',

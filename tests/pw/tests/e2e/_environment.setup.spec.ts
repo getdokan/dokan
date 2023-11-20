@@ -7,8 +7,10 @@ import { payloads } from '@utils/payloads';
 import { dbUtils } from '@utils/dbUtils';
 import { dbData } from '@utils/dbData';
 import { data } from '@utils/testData';
+// import { helpers } from '@utils/helpers';
 
-const { CUSTOMER_ID, DOKAN_PRO, HPOS } = process.env;
+const { DOKAN_PRO } = process.env;
+const { CUSTOMER_ID, HPOS } = global as any;
 
 setup.describe('setup site & woocommerce & user settings', () => {
     setup.use({ extraHTTPHeaders: { Authorization: payloads.adminAuth.Authorization } });
@@ -107,7 +109,6 @@ setup.describe('setup site & woocommerce & user settings', () => {
 
     setup('disable simple-auction ajax bid check @pro', async () => {
         const [, , status] = await apiUtils.getSinglePlugin('wa/woocommerce-simple-auctions', payloads.adminAuth);
-        console.log(status);
         status === 'active' && (await dbUtils.updateWpOptionTable('simple_auctions_live_check', 'no'));
     });
 });
@@ -129,7 +130,8 @@ setup.describe('setup user settings', () => {
         // create store product
         const product = { ...payloads.createProduct(), name: data.predefined.simpleProduct.product1.name };
         const [, productId] = await apiUtils.createProduct(product, payloads.vendorAuth);
-        process.env.PRODUCT_ID = productId;
+        (global as any).PRODUCT_ID = productId;
+        // helpers.writeEnvJson('PRODUCT_ID', productId);
     });
 
     setup('add vendor2 product @lite', async () => {
@@ -139,7 +141,8 @@ setup.describe('setup user settings', () => {
         // create store product
         const product = { ...payloads.createProduct(), name: data.predefined.vendor2.simpleProduct.product1.name };
         const [, productId] = await apiUtils.createProduct(product, payloads.vendor2Auth);
-        process.env.V2_PRODUCT_ID = productId;
+        (global as any).V2_PRODUCT_ID = productId;
+        // helpers.writeEnvJson('V2_PRODUCT_ID', productId);
     });
 
     setup('add vendor coupon @pro', async () => {
@@ -278,21 +281,21 @@ setup.describe('setup dokan settings e2e', () => {
         await vPage.close();
     });
 
-    setup('recreate product advertisement payment product via settings save @pro', async () => {
-        await productAdvertisingPage.recreateProductAdvertisementPaymentViaSettingsSave();
-    });
-
-    setup('product advertisement payment product exists @pro', async () => {
-        const product = await apiUtils.checkProductExistence('Product Advertisement Payment', payloads.adminAuth);
-        expect(product).toBeTruthy();
-    });
-
     setup('recreate reverse withdrawal payment product via settings save @lite', async () => {
         await reverseWithdrawsPage.reCreateReverseWithdrawalPaymentViaSettingsSave();
     });
 
     setup('reverse Withdraw payment product exists @lite', async () => {
         const product = await apiUtils.checkProductExistence('Reverse Withdrawal Payment', payloads.adminAuth);
+        expect(product).toBeTruthy();
+    });
+
+    setup('recreate product advertisement payment product via settings save @pro', async () => {
+        await productAdvertisingPage.recreateProductAdvertisementPaymentViaSettingsSave();
+    });
+
+    setup('product advertisement payment product exists @pro', async () => {
+        const product = await apiUtils.checkProductExistence('Product Advertisement Payment', payloads.adminAuth);
         expect(product).toBeTruthy();
     });
 
