@@ -8,7 +8,7 @@
             <div slot='body' class='dokan-rw-body'>
                 <div class='dokan-rw-section mb-4'>
                     <div class='dokan-rw-section-heading mb-[-0.5rem]'>
-                        <h3 class='font-bold'>{{ __('Select vendor', 'dokan-lite') }}</h3>
+                        <h3 class='font-bold text-[1.3em]'>{{ __('Select vendor', 'dokan-lite') }}</h3>
                     </div>
                     <div class='dokan-rw-section-body'>
                         <div class="form-group dokan-rw-multiselect">
@@ -35,7 +35,7 @@
 
                 <div class='dokan-rw-section mb-4'>
                     <div class='dokan-rw-section-heading mb-1'>
-                        <h3 class='font-bold'>{{ __('Transaction Type', 'dokan-lite') }}</h3>
+                        <h3 class='font-bold text-[1.3em]'>{{ __('Transaction Type', 'dokan-lite') }}</h3>
                     </div>
                     <div class='dokan-rw-section-body'>
                         <dokan-radio-group
@@ -48,7 +48,7 @@
 
                 <div class='dokan-rw-section mb-4' v-if="'manual_product' === transectionType">
                     <div class='dokan-rw-section-heading mb-[-0.5rem]'>
-                        <h3 class='font-bold'>{{ __('Select Product', 'dokan-lite') }}</h3>
+                        <h3 class='font-bold text-[1.3em]'>{{ __('Select Product', 'dokan-lite') }}</h3>
                     </div>
                     <div class='dokan-rw-section-body'>
                         <div class="form-group dokan-rw-multiselect">
@@ -74,7 +74,7 @@
 
                 <div class='dokan-rw-section mb-4' v-if="'manual_order' === transectionType">
                     <div class='dokan-rw-section-heading mb-1'>
-                        <h3 class='font-bold'>{{ __('Select Order', 'dokan-lite') }}</h3>
+                        <h3 class='font-bold text-[1.3em]'>{{ __('Select Order', 'dokan-lite') }}</h3>
                     </div>
                     <div class='dokan-rw-section-body'>
                         <div class="form-group dokan-rw-multiselect">
@@ -100,7 +100,7 @@
 
                 <div class='dokan-rw-section mb-4'>
                     <div class='dokan-rw-section-heading mb-1'>
-                        <h3 class='font-bold'>{{ __('Withdrawal Balance Type', 'dokan-lite') }}</h3>
+                        <h3 class='font-bold text-[1.3em]'>{{ __('Withdrawal Balance Type', 'dokan-lite') }}</h3>
                         <i
                             class="dashicons dashicons-editor-help tips"
                             :title="__( 'Adjust Balance by Creating a New Reverse Withdrawal Entry', 'dokan-lite' )"
@@ -118,7 +118,7 @@
 
                 <div class='dokan-rw-section mb-4'>
                     <div class='dokan-rw-section-heading mb-1'>
-                        <h3 class='font-bold'>{{ __('Reverse Withdrawal Amount', 'dokan-lite') }}</h3>
+                        <h3 class='font-bold text-[1.3em]'>{{ __('Reverse Withdrawal Amount', 'dokan-lite') }}</h3>
                     </div>
                     <div class='dokan-rw-section-body'>
                         <div class="dokan-rw-input">
@@ -135,7 +135,7 @@
 
                 <div class='dokan-rw-section'>
                     <div class='dokan-rw-section-heading mb-1'>
-                        <h3 class='font-bold'>{{ __('Notes', 'dokan-lite') }}</h3>
+                        <h3 class='font-bold text-[1.3em]'>{{ __('Notes', 'dokan-lite') }}</h3>
                     </div>
                     <div class='dokan-rw-section-body'>
                         <div class="dokan-rw-note-area">

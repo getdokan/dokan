@@ -5,7 +5,7 @@
         </div>
 
         <div class="content-body">
-            <div class="dokan-form-group">
+            <div class="dokan-form-group flex flex-wrap">
                 <div class="column">
                     <label for="account-name">{{ __( 'Account Name', 'dokan-lite') }}</label>
                     <input type="text" id="account-name" class="dokan-form-input" v-model="vendorInfo.payment.bank.ac_name" :placeholder="__( 'Account Name', 'dokan-lite')">
