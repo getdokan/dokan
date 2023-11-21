@@ -12,7 +12,7 @@ import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
 import { helpers } from '@utils/helpers';
 
-test.describe('withdraw api test', () => {
+test.describe.only('withdraw api test', () => {
     let apiUtils: ApiUtils;
     let withdrawId: string;
     let minimumWithdrawLimit: string;
@@ -81,6 +81,20 @@ test.describe('withdraw api test', () => {
 
         const [response, responseBody] = await apiUtils.post(endPoints.createWithdraw, { data: { ...payloads.createWithdraw, amount: minimumWithdrawLimit } });
         expect(response.status()).toBe(201);
+        expect(response.ok()).toBeTruthy();
+        expect(responseBody).toBeTruthy();
+    });
+
+    test('get all withdraw method charges @lite', async () => {
+        test.skip(true, 'feature not merged yet');
+        const [response, responseBody] = await apiUtils.get(endPoints.getAllWithdrawMethodCharges);
+        expect(response.ok()).toBeTruthy();
+        expect(responseBody).toBeTruthy();
+    });
+
+    test('get withdraw charge details @lite', async () => {
+        test.skip(true, 'feature not merged yet');
+        const [response, responseBody] = await apiUtils.get(endPoints.getWithdrawCharge, { params: payloads.withdrawCharge });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
