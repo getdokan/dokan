@@ -12,7 +12,7 @@ import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
 import { helpers } from '@utils/helpers';
 
-test.describe.only('withdraw api test', () => {
+test.describe('withdraw api test', () => {
     let apiUtils: ApiUtils;
     let withdrawId: string;
     let minimumWithdrawLimit: string;

@@ -42,7 +42,7 @@ test.describe('Customer user functionality test', () => {
     });
 });
 
-test.describe('Customer functionality test', () => {
+test.describe.only('Customer functionality test', () => {
     let customer: CustomerPage;
     let cPage: Page;
     let customerContext: BrowserContext;
