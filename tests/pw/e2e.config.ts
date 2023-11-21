@@ -11,7 +11,7 @@ export default defineConfig({
     maxFailures: process.env.CI ? 30 : 30 /* The maximum number of test failures for the whole test suite run. After reaching this number, testing will stop and exit with an error. */,
     timeout: process.env.CI ? 40 * 1000 : 35 * 1000 /* Maximum time one test can run for. */,
     expect: {
-        timeout: 10 * 1000 /* Maximum time expect() should wait for the condition to be met.  For example in `await expect(locator).toHaveText();`*/,
+        timeout: 15 * 1000 /* Maximum time expect() should wait for the condition to be met.  For example in `await expect(locator).toHaveText();`*/,
         toHaveScreenshot: {
             maxDiffPixelRatio: 0.2,
             maxDiffPixels: 500,

@@ -186,7 +186,7 @@ export const selector = {
             // dokan promotion
             promotion: {
                 promotion: '.dokan-notice-slides .dokan-promotion',
-                joinTheSale: '//a[contains(text(),"Join the Sale! →")]',
+                message: '.dokan-promotion .dokan-message',
             },
 
             // dokan notice
