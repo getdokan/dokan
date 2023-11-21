@@ -12,7 +12,7 @@ import { data } from '@utils/testData';
 const { DOKAN_PRO } = process.env;
 const { CUSTOMER_ID, HPOS } = global as any;
 
-setup.describe.only('setup site & woocommerce & user settings', () => {
+setup.describe('setup site & woocommerce & user settings', () => {
     setup.use({ extraHTTPHeaders: { Authorization: payloads.adminAuth.Authorization } });
 
     let apiUtils: ApiUtils;

@@ -6924,7 +6924,7 @@ export const selector = {
             cartPageHeader: 'h1.entry-title',
 
             // Edit Cart
-            cartItem: (productName: string) => `//td[@class='product-name']//a[contains(text(),'${productName}')]`,
+            cartItem: (productName: string) => `//tr[@class='wc-block-cart-items__row']//a[@class= 'wc-block-components-product-name' and contains(text(),'${productName}')]`,
             removeItem: (productName: string) => `//a[contains(text(),'${productName}')]/../..//a[@class='remove']`,
             quantity: (productName: string) => `//a[contains(text(),'${productName}')]/../..//input[@class='input-text qty text']`,
             couponCode: '#coupon_code',
@@ -6948,8 +6948,8 @@ export const selector = {
 
             // Remove All Item
             productCrossIcon: '.product-remove a',
-            firstProductCrossIcon: '(//td[@class="product-remove"]//a)[1]',
-            cartEmptyMessage: '.cart-empty.woocommerce-info',
+            removeFirstItem: '(//button[@class="wc-block-cart-item__remove-link"])[1]',
+            cartEmptyMessage: '.wp-block-woocommerce-empty-cart-block .wc-block-cart__empty-cart__title',
         },
 
         cWholesale: {
@@ -7028,9 +7028,9 @@ export const selector = {
             vendorShippingMethod: (shippingMethod: string) => `//label[contains(text(),'${shippingMethod}')]/..//input`, // For Unique Shipping Method
 
             // Payment Methods
-            directBankTransfer: '.payment_method_bacs label',
-            checkPayments: '.payment_method_cheque label',
-            cashOnDelivery: '.payment_method_cod label',
+            directBankTransfer: 'label[for="radio-control-wc-payment-method-options-bacs"]',
+            checkPayments: 'label[for="radio-control-wc-payment-method-options-cheque"]',
+            cashOnDelivery: 'label[for="radio-control-wc-payment-method-options-cod"]',
             paypalAdaptive: '.payment_method_dokan_paypal_adaptive label',
             stripeConnect: '.wc_payment_method.payment_method_dokan-stripe-connect label[for="payment_method_dokan-stripe-connect"]',
             wireCardCreditCard: '.payment_method_dokan-moip-connect label',
@@ -7038,7 +7038,7 @@ export const selector = {
             stripeExpress: '.wc_payment_method.payment_method_dokan_stripe_express label',
 
             // Place Order
-            placeOrder: '#place_order',
+            placeOrder: 'div.wc-block-checkout__actions_row button.wc-block-components-checkout-place-order-button',
         },
 
         cPayWithStripe: {
@@ -7211,8 +7211,9 @@ export const selector = {
         },
 
         cWooSelector: {
-            wooCommerceSuccessMessage: 'div.woocommerce .woocommerce-message',
-            wooCommerceError: '.woocommerce .woocommerce-error',
+            // wooCommerceSuccessMessage: 'div.woocommerce .woocommerce-message',
+            wooCommerceSuccessMessage: '.woocommerce .is-success',
+            wooCommerceError: '.woocommerce .is-error',
             wooCommerceInfo: '.woocommerce .woocommerce-info',
         },
     },

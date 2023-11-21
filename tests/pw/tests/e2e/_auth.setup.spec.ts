@@ -8,7 +8,7 @@ import { helpers } from '@utils/helpers';
 
 const { DOKAN_PRO } = process.env;
 
-setup.describe.only('authenticate users & set permalink', () => {
+setup.describe('authenticate users & set permalink', () => {
     setup('authenticate admin @lite', async ({ page }) => {
         const loginPage = new LoginPage(page);
         await loginPage.adminLogin(data.admin, data.auth.adminAuthFile);
