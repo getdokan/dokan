@@ -161,7 +161,14 @@ function dokan_product_dashboard_errors() {
                 )
             );
             break;
-
+        case 'product_duplicated':
+            dokan_get_template_part(
+                'global/dokan-success', '', [
+                    'deleted' => false,
+                    'message' => __( 'Product successfully duplicated', 'dokan-lite' ),
+                ]
+            );
+            break;
         case 'error':
             dokan_get_template_part(
                 'global/dokan-error', '', array(
@@ -407,7 +414,6 @@ if ( ! function_exists( 'dokan_store_category_menu' ) ) :
     }
 
 endif;
-
 if ( ! function_exists( 'dokan_store_term_menu_list' ) ) :
 
     /**
@@ -488,7 +494,6 @@ if ( ! function_exists( 'dokan_store_term_menu_list' ) ) :
     }
 
 endif;
-
 /**
  * Return the currently viewed term slug.
  *
@@ -547,6 +552,7 @@ function dokan_seller_reg_form_fields() {
         ]
     );
 }
+
 add_action( 'woocommerce_register_form', 'dokan_seller_reg_form_fields' );
 
 if ( ! function_exists( 'dokan_seller_not_enabled_notice' ) ) :
@@ -581,6 +587,8 @@ if ( ! function_exists( 'dokan_header_user_menu' ) ) :
 
 endif;
 
+add_action( 'template_redirect', 'dokan_myorder_login_check' );
+
 /**
  * Redirect My order in Login page without user logged login
  *
@@ -605,7 +613,6 @@ function dokan_myorder_login_check() {
         dokan_redirect_login();
     }
 }
-add_action( 'template_redirect', 'dokan_myorder_login_check' );
 
 /**
  * Store sidebar widget args
@@ -706,7 +713,7 @@ function dokan_get_seller_registration_form_data() {
             'lname'    => isset( $_POST['lname'] ) ? sanitize_text_field( wp_unslash( $_POST['lname'] ) ) : '',
             'username' => isset( $_POST['username'] ) ? sanitize_user( wp_unslash( $_POST['username'] ) ) : '',
             'email'    => isset( $_POST['email'] ) ? sanitize_email( wp_unslash( $_POST['email'] ) ) : '',
-            'phone'    => isset( $_POST['phone'] ) ? dokan_sanitize_phone_number( wp_unslash( $_POST['phone'] ) ) : '', // phpcs:ignore;
+            'phone'    => isset( $_POST['phone'] ) ? dokan_sanitize_phone_number( wp_unslash( $_POST['phone'] ) ) : '', // phpcs:ignore
             'password' => isset( $_POST['password'] ) ? wp_unslash( $_POST['password'] ) : '', // phpcs:ignore
             'shopname' => isset( $_POST['shopname'] ) ? sanitize_text_field( wp_unslash( $_POST['shopname'] ) ) : '',
             'shopurl'  => isset( $_POST['shopurl'] ) ? sanitize_title( wp_unslash( $_POST['shopurl'] ) ) : '',
