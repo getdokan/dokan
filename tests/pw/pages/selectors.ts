@@ -6944,7 +6944,7 @@ export const selector = {
             vendorShippingMethod: (shippingMethod: string) => `//label[contains(text(),'${shippingMethod}')]/..//input`, // For Unique Shipping Method
 
             // Proceed to Checkout
-            proceedToCheckout: '.checkout-button.button.wc-forward',
+            proceedToCheckout: '.checkout-button.button.wc-forward, .wp-block-woocommerce-proceed-to-checkout-block a',
 
             // Remove All Item
             productCrossIcon: '.product-remove a',
@@ -7028,9 +7028,9 @@ export const selector = {
             vendorShippingMethod: (shippingMethod: string) => `//label[contains(text(),'${shippingMethod}')]/..//input`, // For Unique Shipping Method
 
             // Payment Methods
-            directBankTransfer: 'label[for="radio-control-wc-payment-method-options-bacs"]',
-            checkPayments: 'label[for="radio-control-wc-payment-method-options-cheque"]',
-            cashOnDelivery: 'label[for="radio-control-wc-payment-method-options-cod"]',
+            directBankTransfer: '.payment_method_bacs label, label[for="radio-control-wc-payment-method-options-bacs"]',
+            checkPayments: '.payment_method_cheque label, label[for="radio-control-wc-payment-method-options-cheque"]',
+            cashOnDeliveryWcBlock: '.payment_method_cod label, label[for="radio-control-wc-payment-method-options-cod"]',
             paypalAdaptive: '.payment_method_dokan_paypal_adaptive label',
             stripeConnect: '.wc_payment_method.payment_method_dokan-stripe-connect label[for="payment_method_dokan-stripe-connect"]',
             wireCardCreditCard: '.payment_method_dokan-moip-connect label',
@@ -7038,7 +7038,7 @@ export const selector = {
             stripeExpress: '.wc_payment_method.payment_method_dokan_stripe_express label',
 
             // Place Order
-            placeOrder: 'div.wc-block-checkout__actions_row button.wc-block-components-checkout-place-order-button',
+            placeOrder: '#place_order, div.wc-block-checkout__actions_row button.wc-block-components-checkout-place-order-button',
         },
 
         cPayWithStripe: {
@@ -7211,10 +7211,9 @@ export const selector = {
         },
 
         cWooSelector: {
-            // wooCommerceSuccessMessage: 'div.woocommerce .woocommerce-message',
             wooCommerceSuccessMessage: '.woocommerce .is-success',
             wooCommerceError: '.woocommerce .is-error',
-            wooCommerceInfo: '.woocommerce .woocommerce-info',
+            wooCommerceInfo: '.woocommerce .is-info',
         },
     },
 };
