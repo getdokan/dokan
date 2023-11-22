@@ -1170,6 +1170,7 @@ class Assets {
                 'decimal_point'                     => $decimal,
                 'mon_decimal_point'                 => wc_get_price_decimal_separator(),
                 'i18n_date_format'                  => wc_date_format(),
+                'product_types'                     => apply_filters( 'dokan_product_types', [ 'simple' ] ),
             ]
         );
     }
