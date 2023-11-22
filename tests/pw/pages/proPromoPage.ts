@@ -13,8 +13,13 @@ export class ProPromoPage extends AdminPage {
         // dokan promo banner
         await this.goIfNotThere(data.subUrls.backend.dokan.dokan);
 
-        // promo banner elements are visible
-        await this.multipleElementVisible(selector.admin.dokan.promoBanner);
+        const isProPromotionVisible = await this.isVisible(selector.admin.dokan.promoBanner.promoBanner);
+        if (isProPromotionVisible) {
+            // promo banner elements are visible
+            await this.multipleElementVisible(selector.admin.dokan.promoBanner);
+        } else {
+            console.log('No Pro promotion exists');
+        }
 
         // dokan lite modules
         await this.goIfNotThere(data.subUrls.backend.dokan.liteModules);

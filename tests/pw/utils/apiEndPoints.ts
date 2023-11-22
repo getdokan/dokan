@@ -85,6 +85,8 @@ export const endPoints = {
     updateWithdraw: (withdrawId: string) => `${SERVER_URL}/dokan/v1/withdraw/${withdrawId}`,
     cancelWithdraw: (withdrawId: string) => `${SERVER_URL}/dokan/v1/withdraw/${withdrawId}`,
     updateBatchWithdraws: `${SERVER_URL}/dokan/v1/withdraw/batch`, // method: approved, pending, delete, cancelled
+    getAllWithdrawMethodCharges: `${SERVER_URL}/dokan/v1/withdraw/charges`,
+    getWithdrawCharge: `${SERVER_URL}/dokan/v1/withdraw/charge`,
 
     // store settings
     getSettings: `${SERVER_URL}/dokan/v1/settings`,
