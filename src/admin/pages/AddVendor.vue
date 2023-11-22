@@ -396,6 +396,8 @@ export default {
             .dokan-form-group {
                 margin: 0 10px;
                 overflow: hidden;
+                display: flex;
+                flex-wrap: wrap;
 
                 &:after,
                 &:before {
