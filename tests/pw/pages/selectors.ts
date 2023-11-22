@@ -7030,7 +7030,7 @@ export const selector = {
             // Payment Methods
             directBankTransfer: '.payment_method_bacs label, label[for="radio-control-wc-payment-method-options-bacs"]',
             checkPayments: '.payment_method_cheque label, label[for="radio-control-wc-payment-method-options-cheque"]',
-            cashOnDeliveryWcBlock: '.payment_method_cod label, label[for="radio-control-wc-payment-method-options-cod"]',
+            cashOnDelivery: '.payment_method_cod label, label[for="radio-control-wc-payment-method-options-cod"]',
             paypalAdaptive: '.payment_method_dokan_paypal_adaptive label',
             stripeConnect: '.wc_payment_method.payment_method_dokan-stripe-connect label[for="payment_method_dokan-stripe-connect"]',
             wireCardCreditCard: '.payment_method_dokan-moip-connect label',
