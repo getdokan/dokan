@@ -22,11 +22,9 @@ function dokan_nav_sort_by_pos( $a, $b ) {
  *
  * @since DOKAN_SINCE moved this method from includes/template-tags.php
  *
- * @param bool $listing
- *
  * @return array
  */
-function dokan_get_dashboard_nav( bool $listing = false ): array {
+function dokan_get_dashboard_nav(): array {
     $menus = [
         'dashboard' => [
             'title'      => __( 'Dashboard', 'dokan-lite' ),
