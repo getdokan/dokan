@@ -80,7 +80,7 @@ class Withdraw {
      * @return int
      */
     public function get_id() {
-        return $this->data['id'];
+        return $this->data['id'] ?? 0;
     }
 
     /**

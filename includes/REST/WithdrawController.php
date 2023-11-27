@@ -488,7 +488,7 @@ class WithdrawController extends WP_REST_Controller {
                 throw new DokanException( $result->get_error_code(), $result->get_error_message(), 400 );
             }
 
-            $response = $this->prepare_item_for_response( $withdraw, $request );
+            $response = $this->prepare_item_for_response( $result, $request );
             $response = rest_ensure_response( $response );
 
             $response->set_status( 201 );
