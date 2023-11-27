@@ -130,7 +130,7 @@ class ProductBulkEdit {
                     'deleted' => true,
                     'message' => sprintf(
                     // translators: %d is product count.
-                        _n( '%d product has been successfully updated.', '%d products have been successfully updated.', $count, 'dokan-lite' ),
+                        _n( '%s product has been successfully updated.', '%s products have been successfully updated.', $count, 'dokan-lite' ),
                         number_format_i18n( $count )
                     ),
                 ]

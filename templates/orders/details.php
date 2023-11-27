@@ -85,7 +85,7 @@ $hide_customer_info = dokan_get_option( 'hide_customer_info', 'dokan_selling', '
                             </table>
 
                             <?php
-                            $coupons = $order->get_items( array( 'coupon' ) );
+                            $coupons = $order->get_items( 'coupon' );
 
                             if ( $coupons ) {
                                 ?>
@@ -318,35 +318,37 @@ $hide_customer_info = dokan_get_option( 'hide_customer_info', 'dokan_selling', '
                                 </form>
                             <?php endif; ?>
 
-                            <div class="clearfix dokan-form-group" style="margin-top: 10px;">
-                                <!-- Trigger the modal with a button -->
-                                <input type="button" id="dokan-add-tracking-number" name="add_tracking_number" class="dokan-btn dokan-btn-success" value="<?php esc_attr_e( 'Tracking Number', 'dokan-lite' ); ?>">
+                            <?php if ( ! dokan()->is_pro_exists() || 'on' !== dokan_get_option( 'enabled', 'dokan_shipping_status_setting' ) ) : ?>
+                                <div class="clearfix dokan-form-group" style="margin-top: 10px;">
+                                    <!-- Trigger the modal with a button -->
+                                    <input type="button" id="dokan-add-tracking-number" name="add_tracking_number" class="dokan-btn dokan-btn-success" value="<?php esc_attr_e( 'Tracking Number', 'dokan-lite' ); ?>">
 
-                                <form id="add-shipping-tracking-form" method="post" class="dokan-hide" style="margin-top: 10px;">
-                                    <div class="dokan-form-group">
-                                        <label class="dokan-control-label"><?php esc_html_e( 'Shipping Provider Name / URL', 'dokan-lite' ); ?></label>
-                                        <input type="text" name="shipping_provider" id="shipping_provider" class="dokan-form-control" value="">
-                                    </div>
+                                    <form id="add-shipping-tracking-form" method="post" class="dokan-hide" style="margin-top: 10px;">
+                                        <div class="dokan-form-group">
+                                            <label class="dokan-control-label"><?php esc_html_e( 'Shipping Provider Name / URL', 'dokan-lite' ); ?></label>
+                                            <input type="text" name="shipping_provider" id="shipping_provider" class="dokan-form-control" value="">
+                                        </div>
 
-                                    <div class="dokan-form-group">
-                                        <label class="dokan-control-label"><?php esc_html_e( 'Tracking Number', 'dokan-lite' ); ?></label>
-                                        <input type="text" name="tracking_number" id="tracking_number" class="dokan-form-control" value="">
-                                    </div>
+                                        <div class="dokan-form-group">
+                                            <label class="dokan-control-label"><?php esc_html_e( 'Tracking Number', 'dokan-lite' ); ?></label>
+                                            <input type="text" name="tracking_number" id="tracking_number" class="dokan-form-control" value="">
+                                        </div>
 
-                                    <div class="dokan-form-group">
-                                        <label class="dokan-control-label"><?php esc_html_e( 'Date Shipped', 'dokan-lite' ); ?></label>
-                                        <input type="text" name="shipped_date" id="shipped-date" class="dokan-form-control" value="" placeholder="<?php echo esc_attr( get_option( 'date_format' ) ); ?>">
-                                    </div>
-                                    <input type="hidden" name="security" id="security" value="<?php echo esc_attr( wp_create_nonce( 'add-shipping-tracking-info' ) ); ?>">
-                                    <input type="hidden" name="post_id" id="post-id" value="<?php echo esc_attr( $order->get_id() ); ?>">
-                                    <input type="hidden" name="action" id="action" value="dokan_add_shipping_tracking_info">
+                                        <div class="dokan-form-group">
+                                            <label class="dokan-control-label"><?php esc_html_e( 'Date Shipped', 'dokan-lite' ); ?></label>
+                                            <input type="text" name="shipped_date" id="shipped-date" class="dokan-form-control" value="" placeholder="<?php echo esc_attr( get_option( 'date_format' ) ); ?>">
+                                        </div>
+                                        <input type="hidden" name="security" id="security" value="<?php echo esc_attr( wp_create_nonce( 'add-shipping-tracking-info' ) ); ?>">
+                                        <input type="hidden" name="post_id" id="post-id" value="<?php echo esc_attr( $order->get_id() ); ?>">
+                                        <input type="hidden" name="action" id="action" value="dokan_add_shipping_tracking_info">
 
-                                    <div class="dokan-form-group">
-                                        <input id="add-tracking-details" type="button" class="btn btn-primary" value="<?php esc_attr_e( 'Add Tracking Details', 'dokan-lite' ); ?>">
-                                        <button type="button" class="btn btn-default" id="dokan-cancel-tracking-note"><?php esc_html_e( 'Close', 'dokan-lite' ); ?></button>
-                                    </div>
-                                </form>
-                            </div>
+                                        <div class="dokan-form-group">
+                                            <input id="add-tracking-details" type="button" class="btn btn-primary" value="<?php esc_attr_e( 'Add Tracking Details', 'dokan-lite' ); ?>">
+                                            <button type="button" class="btn btn-default" id="dokan-cancel-tracking-note"><?php esc_html_e( 'Close', 'dokan-lite' ); ?></button>
+                                        </div>
+                                    </form>
+                                </div>
+                            <?php endif; ?>
                         </div> <!-- .add_note -->
                     </div> <!-- .dokan-panel-body -->
                 </div> <!-- .dokan-panel -->

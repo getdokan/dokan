@@ -111,7 +111,7 @@ function dokan_admin_report_data( $group_by = 'day', $year = '', $start = '', $e
 
     $data = $wpdb->get_results( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL
 
-    return $data;
+    return apply_filters( 'dokan_get_admin_report_data', $data, $group_by, $year, $start, $end, $seller_id );
 }
 
 /**
