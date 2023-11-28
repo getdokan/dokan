@@ -30,6 +30,12 @@ setup.describe('setup test environment', () => {
         (global as any).VENDOR_ID = sellerId;
     });
 
+    setup('add vendor2 @lite', async () => {
+        const [, sellerId] = await apiUtils.createStore(payloads.createStore2, payloads.adminAuth);
+        console.log('VENDOR2_ID:', sellerId);
+        (global as any).VENDOR2_ID = sellerId;
+    });
+
     setup('set dokan general settings @lite', async () => {
         await dbUtils.setDokanSettings(dbData.dokan.optionName.general, { ...dbData.dokan.generalSettings, store_category_type: 'single' });
     });

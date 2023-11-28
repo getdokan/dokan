@@ -24,4 +24,7 @@ test.describe(' test environment', () => {
     test('delete all customers @lite', async () => {
         await apiUtils.deleteAllCustomers(payloads.adminAuth);
     });
+
+    //todo: delete all announcements
+    //todo: delete all support tickets
 });

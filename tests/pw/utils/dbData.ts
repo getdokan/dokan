@@ -111,7 +111,7 @@ export const dbData = {
             withdraw_method_type: 'Phone',
             withdraw_charges: {
                 paypal: {
-                    fixed: '5',
+                    fixed: '0',
                     percentage: '0',
                 },
                 bank: {
