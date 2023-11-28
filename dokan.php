@@ -111,7 +111,7 @@ final class WeDevs_Dokan {
         register_activation_hook( __FILE__, [ $this, 'activate' ] );
         register_deactivation_hook( __FILE__, [ $this, 'deactivate' ] );
 
-        add_action( 'before_woocommerce_init', [ $this, 'add_hpos_support' ] );
+        add_action( 'before_woocommerce_init', [ $this, 'declare_woocommerce_feature_compatibility' ] );
         add_action( 'woocommerce_loaded', [ $this, 'init_plugin' ] );
         add_action( 'woocommerce_flush_rewrite_rules', [ $this, 'flush_rewrite_rules' ] );
 
@@ -287,9 +287,10 @@ final class WeDevs_Dokan {
      *
      * @return void
      */
-    public function add_hpos_support() {
+    public function declare_woocommerce_feature_compatibility() {
         if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
             \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', __FILE__, true );
+            \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'cart_checkout_blocks', __FILE__, false );
         }
     }
 
