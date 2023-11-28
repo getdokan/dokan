@@ -67,6 +67,7 @@
                                             :field-data="field"
                                             :field-value="settingValues[index]"
                                             :all-settings-values="settingValues"
+                                            :setting-fields='settingFields'
                                             @openMedia="showMedia"
                                             :key="fieldId"
                                             :errors="errors"
