@@ -149,8 +149,6 @@ class Vendor {
             'gravatar'              => $this->get_avatar(),
             'gravatar_id'           => $this->get_avatar_id(),
             'shop_url'              => $this->get_shop_url(),
-            'products_per_page'     => $this->get_per_page(),
-            'show_more_product_tab' => $this->show_more_products_tab(),
             'toc_enabled'           => $this->toc_enabled(),
             'store_toc'             => $this->get_toc(),
             'featured'              => $this->is_featured(),
@@ -234,8 +232,6 @@ class Vendor {
             'banner'                  => 0,
             'icon'                    => 0,
             'gravatar'                => 0,
-            'show_more_ptab'          => 'yes',
-            'store_ppp'               => (int) dokan_get_option( 'store_products_per_page', 'dokan_general', 12 ),
             'enable_tnc'              => 'off',
             'store_tnc'               => '',
             'show_min_order_discount' => 'no',
@@ -253,6 +249,7 @@ class Vendor {
         $shop_info = get_user_meta( $this->id, 'dokan_profile_settings', true );
         $shop_info = is_array( $shop_info ) ? $shop_info : array();
         $shop_info = wp_parse_args( $shop_info, $defaults );
+        $shop_info['address'] = empty( $shop_info['address'] ) ? []: $shop_info['address']; // Empty vendor address save issue fix
 
         $this->shop_data = apply_filters( 'dokan_vendor_shop_data', $shop_info, $this );
     }
@@ -492,23 +489,6 @@ class Vendor {
     }
 
     /**
-     * Get per page pagination
-     *
-     * @since 2.8
-     *
-     * @return integer
-     */
-    public function get_per_page() {
-        $per_page = (int) $this->get_info_part( 'store_ppp' );
-
-        if ( ! $per_page ) {
-            return 10;
-        }
-
-        return $per_page;
-    }
-
-    /**
      * If should show the email
      *
      * @return boolean
@@ -537,17 +517,6 @@ class Vendor {
      */
     public function get_toc() {
         return $this->get_info_part( 'store_tnc' );
-    }
-
-    /**
-     * Check if showing more product is enabled
-     *
-     * @since 2.8
-     *
-     * @return boolean
-     */
-    public function show_more_products_tab() {
-        return 'yes' === $this->get_info_part( 'show_more_ptab' );
     }
 
     /**

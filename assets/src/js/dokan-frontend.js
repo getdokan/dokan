@@ -53,6 +53,13 @@
     },
 
     init_category_widget_css() {
+      let withChildren = $('.cat-drop-stack ul li.has-children.parent-cat-wrap').find('ul.children.level-0');
+      withChildren.each(function(i, element) {
+        $(element).parent().find('a span.caret-icon').each(function(i, caret) {
+          caret.click();
+        });
+      });
+
       let selectedLi = $('.cat-drop-stack ul').find('a.selected');
       selectedLi.css({ fontWeight: 'bold' });
 

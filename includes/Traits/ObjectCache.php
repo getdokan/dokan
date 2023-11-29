@@ -7,7 +7,7 @@ namespace WeDevs\Dokan\Traits;
  *
  * Handles Caching underneath functionalities with the help of this Cacheable trait.
  *
- * @since 3.3.2
+ * @since   3.3.2
  *
  * @package WeDevs\Dokan\Abstracts\Traits
  */
@@ -129,7 +129,7 @@ trait ObjectCache {
         if ( empty( $key ) ) {
             return false;
         }
-        
+
         return wp_cache_delete( $key, $group, $time );
     }
 
@@ -143,12 +143,17 @@ trait ObjectCache {
      *
      * @since 3.3.2
      *
-     * @param string $group Group of cache to clear.
+     * @param string $group Group of caches to clear.
      *
      * @return bool
      */
     public static function invalidate_group( $group ) {
         $group = static::get_cache_group_with_prefix( $group );
+
+        $supported = wp_cache_supports( 'flush_group' );
+        if ( $supported ) {
+            wp_cache_flush_group( $group . '_prefix' );
+        }
 
         return wp_cache_set( $group . '_prefix', static::get_time_prefix(), $group );
     }
@@ -156,10 +161,10 @@ trait ObjectCache {
     /**
      * Get Cache Key and Group with Prefix added.
      *
-     * @param  string $key
-     * @param  string $group
-     *
      * @since 3.3.2
+     *
+     * @param string $key
+     * @param string $group
      *
      * @return array
      */

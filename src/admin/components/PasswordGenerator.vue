@@ -33,7 +33,7 @@ export default {
 
         regenrateTitle: {
             type: String,
-            default: 'Regenrate'
+            default: 'Regenerate'
         },
 
         length: {

@@ -20,6 +20,13 @@ export default {
 
         sprintf( fmt, ...args ) {
             return sprintf( fmt, ...args );
-        }
+        },
+
+        dateTimePickerFormat() {
+          return {
+            format: window.dokan_get_daterange_picker_format().toLowerCase(),
+            ...window.dokan_helper.daterange_picker_local
+          }
+        },
     }
 }
