@@ -14,8 +14,7 @@ test.describe.skip('rank math api test', () => {
         [, productId] = await apiUtils.createProduct(payloads.createProduct());
     });
 
-    test('rank math @pro', async () => {
-        test.skip(!!process.env.CI, 'feature not merged yet!');
+    test.skip('rank math @pro', async () => {
         const [response, responseBody] = await apiUtils.post(endPoints.rankMath(productId), { data: {} });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();

@@ -109,6 +109,24 @@ export const dbData = {
             },
             withdraw_method_name: 'Bksh',
             withdraw_method_type: 'Phone',
+            withdraw_charges: {
+                paypal: {
+                    fixed: '0',
+                    percentage: '0',
+                },
+                bank: {
+                    fixed: '0',
+                    percentage: '0',
+                },
+                skrill: {
+                    fixed: '0',
+                    percentage: '0',
+                },
+                dokan_custom: {
+                    fixed: '0',
+                    percentage: '0',
+                },
+            },
             withdraw_limit: '5',
             withdraw_order_status: {
                 'wc-completed': 'wc-completed',
