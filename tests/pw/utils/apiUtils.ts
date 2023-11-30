@@ -408,9 +408,9 @@ export class ApiUtils {
     }
 
     // create coupon
-    async createCoupon(productIds: string[], coupon: coupon_api, auth?: auth): Promise<[responseBody, string, string]> {
+    async createCoupon(productIds: (string | undefined)[], coupon: coupon_api, auth?: auth): Promise<[responseBody, string, string]> {
         // create product if invalid productId exists
-        if (productIds.includes('undefined')) {
+        if (productIds.includes(undefined)) {
             const [, productId] = await this.createProduct(payloads.createProduct(), auth);
             productIds = [productId];
         }

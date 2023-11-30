@@ -6925,12 +6925,12 @@ export const selector = {
 
             // Edit Cart
             cartItem: (productName: string) => `//tr[@class='wc-block-cart-items__row']//a[@class= 'wc-block-components-product-name' and contains(text(),'${productName}')]`,
-            removeItem: (productName: string) => `//a[contains(text(),'${productName}')]/../..//a[@class='remove']`,
-            quantity: (productName: string) => `//a[contains(text(),'${productName}')]/../..//input[@class='input-text qty text']`,
-            couponCode: '#coupon_code',
-            applyCoupon: '//button[@name="apply_coupon"]',
-            removeCoupon: (couponCode: string) => `.cart-discount.coupon-${couponCode.toLowerCase()} .woocommerce-remove-coupon`,
-            updateCart: '//button[@name="update_cart"]',
+            removeItem: (productName: string) => `//a[contains(text(),'${productName}')]/..//button[@class='wc-block-cart-item__remove-link']`,
+            quantity: (productName: string) => `//a[contains(text(),'${productName}')]/..//input[@class='wc-block-components-quantity-selector__input']`,
+            addCoupon: 'a[aria-label="Add a coupon"]',
+            couponCode: 'form#wc-block-components-totals-coupon__form input',
+            applyCoupon: 'form#wc-block-components-totals-coupon__form  button',
+            removeCoupon: (couponCode: string) => `//span[contains(text(), '${couponCode.toLowerCase()}')]/..//button`,
 
             cartDetails: {
                 cartTotal: 'tr.cart-subtotal span.woocommerce-Price-amount.amount',
@@ -7214,6 +7214,8 @@ export const selector = {
             wooCommerceSuccessMessage: '.woocommerce .is-success',
             wooCommerceError: '.woocommerce .is-error',
             wooCommerceInfo: '.woocommerce .is-info',
+            wooCommerceNoriceBanner: 'div.wc-block-components-notice-banner.is-info', // todo: .is-info might not be needed
+            wooCommerceNoriceBannerContent: 'div.wc-block-components-notice-banner__content',
         },
     },
 };
