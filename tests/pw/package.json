@@ -14,12 +14,14 @@
         "test:api": "npx playwright test --project=api_tests --config=api.config.ts ",
         "test:e2e": "npx playwright test --project=e2e_tests --config=e2e.config.ts ",
         "test:e2e-i": "npx playwright test --project=e2e_tests --headed",
-        "test:e2e:lite": "npx playwright test --project=e2e_tests --grep '@lite|@liteOnly' --grep-invert @pro --config=e2e.config.ts ",
+        "test:e2e:lite": "npx playwright test --project=e2e_tests --grep '@lite|@liteOnly' --grep-invert '@pro' --config=e2e.config.ts ",
         "test:api:lite": "npx playwright test --project=api_tests --grep '@lite|@liteOnly' --grep-invert @pro --config=api.config.ts ",
         "test:e2e:lite:explo": "npx playwright test --project=e2e_tests --grep '(?=.*@lite)(?=.*@explo)' --config=e2e.config.ts ",
         "test:api:pro": "npx playwright test --project=api_tests --grep '@lite|@pro' --grep-invert @liteOnly --config=api.config.ts ",
         "test:e2e:pro": "npx playwright test --project=e2e_tests --grep '@lite|@pro' --grep-invert @liteOnly --config=e2e.config.ts ",
+        "test:e2e:visual": "npx playwright test --project=e2e_tests --grep @visual --config=e2e.config.ts ",
         "test:e2e:explo": "npx playwright test --project=e2e_tests --grep @explo --config=e2e.config.ts ",
+        "test:e2e:core": "npx playwright test --project=e2e_tests --grep @core --config=e2e.config.ts ",
         "test:grep": "npx playwright test --grep",
         "test:debug": "npx playwright test --debug",
         "test:codegen": "playwright codegen",
@@ -49,23 +51,22 @@
     "author": "",
     "license": "ISC",
     "devDependencies": {
-        "@typescript-eslint/eslint-plugin": "^6.6.0",
-        "@typescript-eslint/parser": "^6.6.0",
-        "eslint": "^8.49.0",
+        "@typescript-eslint/eslint-plugin": "^6.8.0",
+        "@typescript-eslint/parser": "^6.8.0",
+        "eslint": "^8.51.0",
         "eslint-config-prettier": "^9.0.0",
-        "eslint-plugin-playwright": "^0.16.0",
-        "npm-check-updates": "^16.13.3",
+        "eslint-plugin-playwright": "^0.17.0",
+        "npm-check-updates": "^16.14.6",
         "prettier": "^3.0.3",
         "typescript": "^5.2.2"
     },
     "dependencies": {
-        "@faker-js/faker": "^8.0.2",
-        "@playwright/test": "^1.38.1",
+        "@faker-js/faker": "^8.2.0",
+        "@playwright/test": "^1.39.0",
         "@wordpress/env": "^8.9.0",
-        "allure-playwright": "^2.7.0",
         "dotenv": "^16.3.1",
         "mysqlconnector": "^2.0.1",
         "php-serialize": "^4.1.1",
-        "xml-js": "^1.6.11"
+        "zod": "^3.22.4"
     }
 }
