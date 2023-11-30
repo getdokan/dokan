@@ -67,7 +67,7 @@ class Helper {
                 continue;
             }
 
-            if ( wc_string_to_bool( $promo['lite_only'] ) && self::is_pro_license_active() ) {
+            if ( isset( $promo['lite_only'] ) && wc_string_to_bool( $promo['lite_only'] ) && self::is_pro_license_active() ) {
                 continue;
             }
 
