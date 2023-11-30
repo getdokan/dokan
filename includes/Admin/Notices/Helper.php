@@ -107,7 +107,7 @@ class Helper {
     /**
      * Check if dokan pro-license is active
      *
-     * @since DOKAN_SINCE
+     * @since 3.9.3
      *
      * @return bool
      */
