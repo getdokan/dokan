@@ -4,7 +4,8 @@ import { payloads } from '@utils/payloads';
 import { helpers } from '@utils/helpers';
 import fs from 'fs';
 import { auth, user_api, taxRate, coupon_api, marketPlaceCoupon, reqOptions, headers, storageState, responseBody } from '@utils/interfaces';
-const { VENDOR_ID, CUSTOMER_ID } = global as any;
+
+const { VENDOR_ID, CUSTOMER_ID } = process.env;
 
 export class ApiUtils {
     readonly request: APIRequestContext;

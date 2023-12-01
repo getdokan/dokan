@@ -29,6 +29,8 @@ export const data = {
         DB_PREFIX: process.env.DB_PREFIX,
     },
 
+    systemInfo: 'playwright/systemInfo.json',
+
     auth: {
         adminAuthFile: 'playwright/.auth/adminStorageState.json',
         vendorAuthFile: 'playwright/.auth/vendorStorageState.json',
@@ -897,7 +899,7 @@ export const data = {
 
             wc: {
                 wcProducts: 'wc/v3/products',
-                store: 'wc/store'
+                store: 'wc/store',
             },
         },
     },

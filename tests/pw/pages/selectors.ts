@@ -1818,7 +1818,7 @@ export const selector = {
                     productCategorySelection: (category: string) => `//label[@for='dokan_selling[product_category_style][${category}]']`,
                     vendorsCanCreateTags: '.product_vendors_can_create_tags .switch',
                     orderDiscount: '//div[contains(text(),"Order Discount")]//label[@class="switch tips"]',
-                    productDiscount: '//div[contains(text(),"Product Discount")]//label[@class="switch tips"]',
+                    productDiscount: '//div[contains(text(),"Product Quantity Discount")]//label[@class="switch tips"]//span',
 
                     hideCustomerInfo: '.hide_customer_info .switch',
                     vendorProductReviewStatusChange: '.seller_review_manage .switch',
@@ -2596,7 +2596,7 @@ export const selector = {
                 bookingCosts: '.bookings_pricing_options a',
 
                 // General
-                regularPrice: '#\\_regular_price',
+                regularPrice: 'div#general_product_data  input#\\_regular_price',
                 salePrice: '#\\_sale_price',
                 salePriceDateFrom: '#\\_sale_price_dates_from',
                 salePriceDateTo: '#\\_sale_price_dates_to',
@@ -6944,7 +6944,8 @@ export const selector = {
             vendorShippingMethod: (shippingMethod: string) => `//label[contains(text(),'${shippingMethod}')]/..//input`, // For Unique Shipping Method
 
             // Proceed to Checkout
-            proceedToCheckout: '.checkout-button.button.wc-forward, .wp-block-woocommerce-proceed-to-checkout-block a',
+            // proceedToCheckout: '.checkout-button.button.wc-forward, .wp-block-woocommerce-proceed-to-checkout-block a', //todo: remove in future
+            proceedToCheckout: ' .wp-block-woocommerce-proceed-to-checkout-block a',
 
             // Remove All Item
             productCrossIcon: '.product-remove a',

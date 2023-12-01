@@ -4,7 +4,7 @@ import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
 import { payloads } from '@utils/payloads';
 
-const { PRODUCT_ID } = global as any;
+const { PRODUCT_ID } = process.env;
 
 test.describe('Coupons test', () => {
     let admin: CouponsPage;
@@ -34,7 +34,7 @@ test.describe('Coupons test', () => {
     });
 
     test.afterAll(async () => {
-        await aPage.close(); // todo: close multiple pages to base page
+        await aPage.close();
         await vPage.close();
         await cPage.close();
     });

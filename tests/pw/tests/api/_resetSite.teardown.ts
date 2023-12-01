@@ -13,6 +13,10 @@ test.describe(' test environment', () => {
         apiUtils = new ApiUtils(request);
     });
 
+    test('delete all media items @lite', async () => {
+        await apiUtils.deleteAllMediaItems(payloads.adminAuth);
+    });
+
     test('delete all products @lite', async () => {
         await apiUtils.deleteAllProducts('', payloads.adminAuth);
     });
@@ -23,6 +27,18 @@ test.describe(' test environment', () => {
 
     test('delete all customers @lite', async () => {
         await apiUtils.deleteAllCustomers(payloads.adminAuth);
+    });
+
+    test('delete all seller badges @lite', async () => {
+        await apiUtils.deleteAllSellerBadges();
+    });
+
+    test('delete all RFQ Rules @lite', async () => {
+        await apiUtils.deleteAllQuoteRules(payloads.adminAuth);
+    });
+
+    test('delete all Request Quotes @lite', async () => {
+        await apiUtils.deleteAllQuoteRequests(payloads.adminAuth);
     });
 
     //todo: delete all announcements

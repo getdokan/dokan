@@ -1,6 +1,6 @@
 // const open = require( 'open' );
 import fs from 'fs';
-import { Browser, BrowserContextOptions } from '@playwright/test';
+import { Browser, BrowserContextOptions, Page } from '@playwright/test';
 
 export const helpers = {
     // replace '_' to space & capitalize first letter of string
@@ -346,4 +346,10 @@ export const helpers = {
         const browserContext = await browser.newContext(options);
         return browserContext.newPage();
     },
+
+    async closePages(pages: Page[]): Promise<void> {
+        for (const page of pages) {
+            await page.close();
+        }
+    }
 };
