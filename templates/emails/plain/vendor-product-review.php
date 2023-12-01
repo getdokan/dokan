@@ -8,7 +8,7 @@
  *
  * @class    \WeDevs\Dokan\Emails\VendorProductReview
  *
- * @since    DOKAN_SINCE
+ * @since    3.9.2
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

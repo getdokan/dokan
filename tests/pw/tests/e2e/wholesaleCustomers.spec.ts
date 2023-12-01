@@ -96,7 +96,7 @@ test.describe.skip('Wholesale customers test customer', () => {
         customer = new WholesaleCustomersPage(cPage);
 
         apiUtils = new ApiUtils(request);
-        await apiUtils.createWholesaleCustomer(payloads.createCustomer1, payloads.adminAuth); // todo: need to update customer auth if crated wholesale or move to env setup
+        await apiUtils.createWholesaleCustomer(payloads.createCustomer1, payloads.adminAuth); // todo: need to update customer auth if created wholesale or move to env setup
 
         const [responseBody, ,] = await apiUtils.createProduct(payloads.createWholesaleProduct(), payloads.vendorAuth);
         productName = responseBody.name;

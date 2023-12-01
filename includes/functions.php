@@ -2996,11 +2996,13 @@ function dokan_get_jed_locale_data( $domain, $language_dir = null ) {
  *
  * @since  2.8.2
  *
- * @param string|null days
+ * @param string|null $days
+ * @maram string/null $form
  *
  * @return string|array
  */
-function dokan_get_translated_days( $day = '' ) {
+function dokan_get_translated_days( $day = '', $form = 'long' ) {
+
     $all_days = [
         'sunday'    => __( 'Sunday', 'dokan-lite' ),
         'monday'    => __( 'Monday', 'dokan-lite' ),
@@ -3010,6 +3012,18 @@ function dokan_get_translated_days( $day = '' ) {
         'friday'    => __( 'Friday', 'dokan-lite' ),
         'saturday'  => __( 'Saturday', 'dokan-lite' ),
     ];
+
+    if ( 'short' === $form ) {
+        $all_days = [
+			'sunday'    => __( 'Sun', 'dokan-lite' ),
+			'monday'    => __( 'Mon', 'dokan-lite' ),
+			'tuesday'   => __( 'Tue', 'dokan-lite' ),
+			'wednesday' => __( 'Wed', 'dokan-lite' ),
+			'thursday'  => __( 'Thu', 'dokan-lite' ),
+			'friday'    => __( 'Fri', 'dokan-lite' ),
+			'saturday'  => __( 'Sat', 'dokan-lite' ),
+        ];
+    }
 
     $week_starts_on = get_option( 'start_of_week', 0 );
     $day_keys       = array_keys( $all_days );

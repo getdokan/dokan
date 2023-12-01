@@ -186,7 +186,7 @@ export const selector = {
             // dokan promotion
             promotion: {
                 promotion: '.dokan-notice-slides .dokan-promotion',
-                joinTheSale: '//a[contains(text(),"Join the Sale! →")]',
+                message: '.dokan-promotion .dokan-message',
             },
 
             // dokan notice
@@ -1145,8 +1145,8 @@ export const selector = {
                 announcementStatusScheduled: (title: string) => `//a[contains(text(),'${title}')]/../../..//td[@class="column status"]//span[@class="future"]`,
                 announcementEdit: (title: string) => `//a[contains(text(),'${title}')]/../..//span[@class="edit"]`,
                 announcementDelete: (title: string) => `//strong[contains(text(),'${title}')]/../..//span[@class="trash"]`,
-                announcementPermanentlyDelete: (title: string) => `//a[contains(text(),'${title}')]/../..//span[@class="delete"]`,
-                announcementRestore: (title: string) => `//a[contains(text(),'${title}')]/../..//span[@class="restore"]`,
+                announcementPermanentlyDelete: (title: string) => `//strong[contains(text(),'${title}')]/../..//span[@class="delete"]`,
+                announcementRestore: (title: string) => `//strong[contains(text(),'${title}')]/../..//span[@class="restore"]`,
 
                 // add announcement
                 addAnnouncement: {
@@ -1724,7 +1724,7 @@ export const selector = {
 
                 fields: '.dokan-settings-fields',
 
-                saveChanges: '.submit',
+                saveChanges: '//input[@id="submit" and @value="Save Changes"]',
 
                 search: {
                     searchBox: '.search-box',
@@ -1978,7 +1978,6 @@ export const selector = {
                     displayOnOrderDetails: '.enabled_for_customer_order .switch',
                     displayOnSingleProductPage: '#dokan_store_support_setting\\[store_support_product_page\\]',
                     supportButtonLabel: '#dokan_store_support_setting\\[support_button_label\\]',
-                    supportTicketEmailNotification: '.dokan_admin_email_notification .switch',
                     storeSupportSaveChanges: '#submit',
                 },
 
@@ -6925,7 +6924,7 @@ export const selector = {
             cartPageHeader: 'h1.entry-title',
 
             // Edit Cart
-            cartItem: (productName: string) => `//td[@class='product-name']//a[contains(text(),'${productName}')]`,
+            cartItem: (productName: string) => `//tr[@class='wc-block-cart-items__row']//a[@class= 'wc-block-components-product-name' and contains(text(),'${productName}')]`,
             removeItem: (productName: string) => `//a[contains(text(),'${productName}')]/../..//a[@class='remove']`,
             quantity: (productName: string) => `//a[contains(text(),'${productName}')]/../..//input[@class='input-text qty text']`,
             couponCode: '#coupon_code',
@@ -6945,12 +6944,12 @@ export const selector = {
             vendorShippingMethod: (shippingMethod: string) => `//label[contains(text(),'${shippingMethod}')]/..//input`, // For Unique Shipping Method
 
             // Proceed to Checkout
-            proceedToCheckout: '.checkout-button.button.wc-forward',
+            proceedToCheckout: '.checkout-button.button.wc-forward, .wp-block-woocommerce-proceed-to-checkout-block a',
 
             // Remove All Item
             productCrossIcon: '.product-remove a',
-            firstProductCrossIcon: '(//td[@class="product-remove"]//a)[1]',
-            cartEmptyMessage: '.cart-empty.woocommerce-info',
+            removeFirstItem: '(//button[@class="wc-block-cart-item__remove-link"])[1]',
+            cartEmptyMessage: '.wp-block-woocommerce-empty-cart-block .wc-block-cart__empty-cart__title',
         },
 
         cWholesale: {
@@ -7029,9 +7028,9 @@ export const selector = {
             vendorShippingMethod: (shippingMethod: string) => `//label[contains(text(),'${shippingMethod}')]/..//input`, // For Unique Shipping Method
 
             // Payment Methods
-            directBankTransfer: '.payment_method_bacs label',
-            checkPayments: '.payment_method_cheque label',
-            cashOnDelivery: '.payment_method_cod label',
+            directBankTransfer: '.payment_method_bacs label, label[for="radio-control-wc-payment-method-options-bacs"]',
+            checkPayments: '.payment_method_cheque label, label[for="radio-control-wc-payment-method-options-cheque"]',
+            cashOnDelivery: '.payment_method_cod label, label[for="radio-control-wc-payment-method-options-cod"]',
             paypalAdaptive: '.payment_method_dokan_paypal_adaptive label',
             stripeConnect: '.wc_payment_method.payment_method_dokan-stripe-connect label[for="payment_method_dokan-stripe-connect"]',
             wireCardCreditCard: '.payment_method_dokan-moip-connect label',
@@ -7039,7 +7038,7 @@ export const selector = {
             stripeExpress: '.wc_payment_method.payment_method_dokan_stripe_express label',
 
             // Place Order
-            placeOrder: '#place_order',
+            placeOrder: '#place_order, div.wc-block-checkout__actions_row button.wc-block-components-checkout-place-order-button',
         },
 
         cPayWithStripe: {
@@ -7212,9 +7211,9 @@ export const selector = {
         },
 
         cWooSelector: {
-            wooCommerceSuccessMessage: 'div.woocommerce .woocommerce-message',
-            wooCommerceError: '.woocommerce .woocommerce-error',
-            wooCommerceInfo: '.woocommerce .woocommerce-info',
+            wooCommerceSuccessMessage: '.woocommerce .is-success',
+            wooCommerceError: '.woocommerce .is-error',
+            wooCommerceInfo: '.woocommerce .is-info',
         },
     },
 };

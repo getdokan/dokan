@@ -4,6 +4,50 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.9.3',
+        'released' => '2023-11-30',
+        'changes'  => [
+            'Fix'         => [
+                [
+                    'title'       => 'Fixed an issue where the Tab fields under the product Add/Edit page don’t display predefined tags until users start typing to select tags.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.9.2',
+        'released' => '2023-11-13',
+        'changes'  => [
+            'New'         => [
+                [
+                    'title'       => 'A new email template has been introduced named Dokan Vendor Product Review. After a product has been reviewed, an email containing information about the review is sent to the vendor. The email includes details such as the reviewer’s name, product name, review rating, and text. The email also contains a link to the review page where the vendor can view the review and respond if necessary.',
+                    'description' => '',
+                ],
+            ],
+            'Improvement' => [
+                [
+                    'title'       => 'Display a non-purchasable notice for the vendor’s own products.',
+                    'description' => '',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => '[RestAPI] Fixed an issue where getting a single order via API gives an \'invalid ID\' error If the compatibility mode isn\'t enabled for the HPOS feature on WooCOmmerce Order data storage settings',
+                    'description' => '',
+                ],
+                [
+                    'title'       => '[ProductReview] Previously the email notification sent by WordPress when a review was added to a product, was sent to the product owner. This was wrong in the context of a marketplace. Because the email sent by WordPress includes some sensitive information, like the admin dashboard URL, customer email address, etc. With these changes, we are making sure that only the marketplace admin gets the new review emails sent by WordPress.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Previously, there was an issue where selecting “All,” then “None,” and subsequently “All” again didn’t function as expected. This occurred on the vendor product edit page for simple products, specifically within the Attributes section. However, following this update, all special cases of the “Select All” feature now work flawlessly.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.9.1',
         'released' => '2023-10-17',
         'changes'  => [
