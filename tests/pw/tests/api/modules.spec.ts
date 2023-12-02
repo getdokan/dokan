@@ -6,6 +6,7 @@ import { test, expect } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { helpers } from '@utils/helpers';
+import { schemas } from '@utils/schemas';
 
 test.describe('modules api test', () => {
     let apiUtils: ApiUtils;
@@ -20,12 +21,14 @@ test.describe('modules api test', () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllModules);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.modulesSchema);
     });
 
     test('deactivate a module @pro', async () => {
         const [response, responseBody] = await apiUtils.put(endPoints.deactivateModule, { data: { module: [randomModule] } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.modulesSchema);
 
         // reactivate module
         // await apiUtils.activateModules(randomModule)
@@ -35,5 +38,6 @@ test.describe('modules api test', () => {
         const [response, responseBody] = await apiUtils.put(endPoints.activateModule, { data: { module: [randomModule] } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.modulesSchema);
     });
 });

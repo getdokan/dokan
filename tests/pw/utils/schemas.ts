@@ -9,7 +9,30 @@ export const schemas = {
             }),
         ),
 
-        abuseReportSchema: z.array(
+        abuseReportSchema: z.object({
+            id: z.number(),
+            reason: z.string(),
+            product: z.object({
+                id: z.number(),
+                title: z.string(),
+                admin_url: z.string().url(),
+            }),
+            vendor: z.object({
+                id: z.number(),
+                name: z.string(),
+                admin_url: z.string().url(),
+            }),
+            reported_by: z.object({
+                id: z.number(),
+                name: z.string(),
+                email: z.string().email(),
+                admin_url: z.string().url(),
+            }),
+            description: z.string(),
+            reported_at: z.coerce.date(),
+        }),
+
+        abuseReportsSchema: z.array(
             z.object({
                 id: z.number(),
                 reason: z.string(),
@@ -30,11 +53,9 @@ export const schemas = {
                     admin_url: z.string().url(),
                 }),
                 description: z.string(),
-                reported_at: z.string(), //todo add date format
+                reported_at: z.coerce.date(),
             }),
         ),
-
-        // abuseReportsSchema: z.array(schemas.abuseReportsSchema.abuseReportsSchema),
     },
 
     admin: {
@@ -231,52 +252,103 @@ export const schemas = {
     announcementsSchema: {
         announcementSchema: z.object({
             id: z.number(),
+            notice_id: z.number(),
+            vendor_id: z.number(),
+            title: z.string(),
+            content: z.string(),
+            status: z.enum(['all', 'publish', 'pending', 'draft', 'future', 'trash']),
+            read_status: z.enum(['read', 'unread', '']),
+            date: z.string(),
+            date_gmt: z.string(),
+            human_readable_date: z.string(),
+            announcement_sellers: z.array(
+                z.object({
+                    id: z.string(),
+                    name: z.string(),
+                    shop_name: z.string(),
+                    email: z.string().email(),
+                }),
+            ),
+            announcement_type: z.string(),
+            _links: z.object({
+                self: z.array(z.object({ href: z.string() })),
+                collection: z.array(z.object({ href: z.string() })),
+            }),
+        }),
+
+        announcementsSchema: z.array(
+            z.object({
+                id: z.number(),
+                notice_id: z.number(),
+                vendor_id: z.number(),
+                title: z.string(),
+                content: z.string(),
+                status: z.enum(['all', 'publish', 'pending', 'draft', 'future', 'trash']),
+                read_status: z.enum(['read', 'unread', '']),
+                date: z.coerce.date(),
+                date_gmt: z.coerce.date(),
+                human_readable_date: z.string(),
+                announcement_sellers: z.array(
+                    z.object({
+                        id: z.string(),
+                        name: z.string(),
+                        shop_name: z.string(),
+                        email: z.string().email(),
+                    }),
+                ),
+                announcement_type: z.string(),
+                _links: z.object({
+                    self: z.array(z.object({ href: z.string() })),
+                    collection: z.array(z.object({ href: z.string() })),
+                }),
+            }),
+        ),
+
+        batchUpdateAnnouncementsSchema: z.object({
+            success: z.boolean(),
+        }),
+
+        announcementNoticeSchema: z.object({
+            id: z.number(),
+            notice_id: z.number(),
+            vendor_id: z.number(),
             title: z.string(),
             content: z.string(),
             status: z.string(),
-            created_at: z.string(),
-            sender_type: z.string(),
-            sender_ids: z.array(
-                z.object({
-                    id: z.number(),
-                    name: z.string(),
-                    shop_name: z.string(),
-                }),
-            ),
+            read_status: z.string(),
+            date: z.coerce.date(),
+            date_gmt: z.coerce.date(),
+            human_readable_date: z.string(),
             _links: z.object({
-                self: z.array(
-                    z.object({
-                        href: z.string(),
-                    }),
-                ),
-                collection: z.array(
-                    z.object({
-                        href: z.string(),
-                    }),
-                ),
+                self: z.array(z.object({ href: z.string() })),
+                collection: z.array(z.object({ href: z.string() })),
             }),
+        }),
+
+        deleteAnnouncementNoticeSchema: z.object({
+            success: z.boolean(),
         }),
     },
 
     attributesSchema: {}, //TODO:
     attributeTeermsSchema: {}, //TODO:
+
     couponsSchema: {
-        //todo: this schema might be sufficient for all
         couponSchema: z.object({
             id: z.number(),
             code: z.string(),
             amount: z.string(),
-            date_created: z.string(), //todo add date format
-            date_created_gmt: z.string(),
-            date_modified: z.string(),
-            date_modified_gmt: z.string(),
+            date_created: z.coerce.date(),
+            date_created_gmt: z.coerce.date(),
+            date_modified: z.coerce.date(),
+            date_modified_gmt: z.coerce.date(),
             discount_type: z.string(),
             description: z.string(),
             date_expires: z.nullable(z.string()),
             date_expires_gmt: z.nullable(z.string()),
             usage_count: z.number(),
             individual_use: z.boolean(),
-            product_ids: z.array(z.string()),
+            product_ids: z.array(z.number()),
             excluded_product_ids: z.array(z.string()),
             usage_limit: z.nullable(z.number()),
             usage_limit_per_user: z.nullable(z.number()),
@@ -309,12 +381,77 @@ export const schemas = {
                 ),
             }),
         }),
+
+        couponsSchema: z.array(
+            z.object({
+                id: z.number(),
+                code: z.string(),
+                amount: z.string(),
+                date_created: z.coerce.date(),
+                date_created_gmt: z.coerce.date(),
+                date_modified: z.coerce.date(),
+                date_modified_gmt: z.coerce.date(),
+                discount_type: z.string(),
+                description: z.string(),
+                date_expires: z.nullable(z.string()),
+                date_expires_gmt: z.nullable(z.string()),
+                usage_count: z.number(),
+                individual_use: z.boolean(),
+                product_ids: z.array(z.number()),
+                excluded_product_ids: z.array(z.string()),
+                usage_limit: z.nullable(z.number()),
+                usage_limit_per_user: z.nullable(z.number()),
+                limit_usage_to_x_items: z.nullable(z.number()),
+                free_shipping: z.boolean(),
+                product_categories: z.array(z.string()),
+                excluded_product_categories: z.array(z.string()),
+                exclude_sale_items: z.boolean(),
+                minimum_amount: z.string(),
+                maximum_amount: z.string(),
+                email_restrictions: z.array(z.string()),
+                used_by: z.array(z.string()),
+                meta_data: z.array(
+                    z.object({
+                        id: z.number(),
+                        key: z.string(),
+                        value: z.string(),
+                    }),
+                ),
+                _links: z.object({
+                    self: z.array(
+                        z.object({
+                            href: z.string().url(),
+                        }),
+                    ),
+                    collection: z.array(
+                        z.object({
+                            href: z.string().url(),
+                        }),
+                    ),
+                }),
+            }),
+        ),
     },
+
     customersSchema: {}, //TODO:
 
-    dokanEndpointsSchema: {}, //TODO:
-
-    dummyDataSchema: {}, //TODO:
+    dummyDataSchema: {
+        dummyDataStatusSchema: z.object({
+            import_status: z.enum(['yes', 'no']),
+        }),
+        importdummyDataSchema: z.object({
+            result: z.object({
+                imported: z.array(z.number()),
+                failed: z.array(z.unknown()),
+                updated: z.array(z.unknown()),
+                skipped: z.array(z.unknown()),
+            }),
+            vendor_index: z.number(),
+        }),
+        cleardummyDataClearSchema: z.object({
+            message: z.string(),
+        }),
+    },
 
     followStoresSchema: {
         followstatusSchema: z.object({
@@ -337,24 +474,24 @@ export const schemas = {
         ),
     },
 
-    modulesSchema: {
-        //todo: this schema might be sufficient for all
-        modulesSchema: z.object({
+    modulesSchema: z.array(
+        z.object({
             id: z.string(),
             name: z.string(),
             description: z.string(),
             thumbnail: z.string().url(),
-            plan: z.enum(['starter', 'liquidweb', 'professional', 'business', 'enterprise']),
+            plan: z.array(z.string()),
             active: z.boolean(),
             available: z.boolean(),
-            doc_id: z.string().nullable(),
+            doc_id: z.union([z.string(), z.number()]).nullable(),
             doc_link: z.string().nullable(),
             mod_link: z.string().nullable(),
             pre_requisites: z.string().nullable(),
             categories: z.array(z.string()).nullable(),
             video_id: z.string().nullable(),
         }),
-    },
+    ),
+
     orderDownloadsSchema: {}, //TODO:
 
     orderNotesSchema: {}, //TODO:
@@ -377,7 +514,48 @@ export const schemas = {
 
     quoteRequestsSchema: {}, //TODO:
 
-    quoteRulesSchema: {}, //TODO:
+    quoteRulesSchema: {
+        quoteRuleSchema: z.object({
+            id: z.string(),
+            rule_name: z.string(),
+            selected_user_role:  z.array(z.string()),
+            category_ids:  z.array(z.string()), //TODO: need to update
+            product_categories:  z.array(z.string()), //TODO: need to update
+            product_ids: z.string(),
+            hide_price: z.string(),
+            hide_cart_button: z.string(),
+            button_text: z.string(),
+            apply_on_all_product: z.string(),
+            rule_priority: z.string(),
+            status: z.string(),
+            created_at: z.string(),
+            _links: z.object({
+                self: z.array(z.object({ href: z.string() })),
+                collection: z.array(z.object({ href: z.string() })),
+            }),
+        }),
+        quoteRulesSchema: z.array(
+            z.object({
+                id: z.string(),
+                rule_name: z.string(),
+                selected_user_role:  z.array(z.string()),
+                category_ids:  z.array(z.string()), //TODO: need to update
+                product_categories:  z.array(z.string()), //TODO: need to update
+                product_ids: z.string(),
+                hide_price: z.string(),
+                hide_cart_button: z.string(),
+                button_text: z.string(),
+                apply_on_all_product: z.string(),
+                rule_priority: z.string(),
+                status: z.string(),
+                created_at: z.string(),
+                _links: z.object({
+                    self: z.array(z.object({ href: z.string() })),
+                    collection: z.array(z.object({ href: z.string() })),
+                }),
+            }),
+        ),
+    },
 
     rankMathSchema: {}, //TODO:
 
@@ -434,6 +612,7 @@ export const schemas = {
     vendorDashboardSchema: {}, //TODO:
 
     vendorStaffSchema: {
+
         staff: z.object({
             ID: z.string(),
             user_login: z.string(),
@@ -578,7 +757,6 @@ export const schemas = {
         }),
 
         staffCapabilities: z.object({
-            ID: z.string(),
             user_login: z.string(),
             user_nicename: z.string(),
             user_email: z.string(),
@@ -633,7 +811,7 @@ export const schemas = {
                 dokan_view_store_social_menu: z.boolean(),
                 dokan_view_store_seo_menu: z.boolean(),
                 dokan_export_order: z.boolean(),
-            }),
+            }).optional(),
         }),
 
         updateCapabilities: z.object({
