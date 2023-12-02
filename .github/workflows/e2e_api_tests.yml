@@ -13,6 +13,14 @@ on:
 
     # workflow can be manually triggered
     workflow_dispatch:
+      testsuite:
+        description: Choose which test suite to run
+        default: All
+        type: choice
+        options:
+          - E2E
+          - API
+          - All
 
 # Cancels all previous workflow runs for pull requests that have not completed.
 concurrency:
@@ -160,7 +168,7 @@ jobs:
             # Run e2e tests
             - name: 🧪 Running the e2e tests
               id: e2e-test
-              if: success()
+              if: success() && (github.event.inputs.testsuite == 'E2E' || github.event.inputs.testsuite == 'All')
               timeout-minutes: 40
               run: |
                   cd tests/pw 
@@ -169,7 +177,7 @@ jobs:
             # Run API tests
             - name: 🧪 Running the api tests
               id: api-test
-              if: always() && steps.db-port.outcome == 'success'
+              if: always() && steps.db-port.outcome == 'success'  && (github.event.inputs.testsuite == 'API' || github.event.inputs.testsuite == 'All')
               timeout-minutes: 5
               run: |
                   cd tests/pw 
