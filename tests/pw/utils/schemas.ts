@@ -316,7 +316,26 @@ export const schemas = {
 
     dummyDataSchema: {}, //TODO:
 
-    followStoresSchema: {}, //TODO:
+    followStoresSchema: {
+        followstatusSchema: z.object({
+            status: z.boolean(),
+        }),
+        followUnfollowSchema: z.object({
+            status: z.enum(['following', 'unfollowed']),
+        }),
+        followersSchema: z.array(
+            z.object({
+                id: z.number(),
+                first_name: z.string(),
+                last_name: z.string(),
+                full_name: z.string(),
+                avatar_url: z.string().url(),
+                avatar_url_2x: z.string().url(),
+                followed_at: z.coerce.date(),
+                formatted_followed_at: z.string(),
+            }),
+        ),
+    },
 
     modulesSchema: {
         //todo: this schema might be sufficient for all

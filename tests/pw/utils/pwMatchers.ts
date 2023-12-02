@@ -1,3 +1,4 @@
+import { APIResponse } from '@playwright/test';
 import { ZodTypeAny } from 'zod';
 
 export const customMatchers = {
@@ -15,6 +16,29 @@ export const customMatchers = {
             };
         }
     },
+
+    toBeSecureHeader(headers: any) {
+        // todo: implement this
+        // let pass;
+        // pass = headers['content-type'] === 'application/json; charset=UTF-8';
+        // pass = headers['x-content-type-options'] === 'nosniff';
+        // pass = headers['access-control-expose-headers'] === 'X-WP-Total, X-WP-TotalPages, Link';
+        // pass = headers['access-control-allow-headers'] === 'Authorization, X-WP-Nonce, Content-Disposition, Content-MD5, Content-Type';
+        // pass = headers['allow'] === 'GET, POST, df';
+        // if (pass) {
+        //     return {
+        //         message: () => 'passed',
+        //         pass: true,
+        //     };
+        // } else {
+        //     return {
+        //         message: () => 'failed',
+        //         pass: false,
+        //     };
+        // }
+    },
+
+    
 
     toBeWithinRange(received: number, floor: number, ceiling: number) {
         const pass = received >= floor && received <= ceiling;
@@ -34,6 +58,7 @@ export const customMatchers = {
 
 export const customExpect = {
     toMatchSchema: customMatchers.toMatchSchema,
+    toBeSecureHeader: customMatchers.toBeSecureHeader,
     toBeWithinRange: customMatchers.toBeWithinRange,
 };
 
