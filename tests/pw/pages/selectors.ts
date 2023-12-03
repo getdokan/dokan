@@ -6945,7 +6945,7 @@ export const selector = {
 
             // Proceed to Checkout
             // proceedToCheckout: '.checkout-button.button.wc-forward, .wp-block-woocommerce-proceed-to-checkout-block a', //todo: remove in future
-            proceedToCheckout: ' .wp-block-woocommerce-proceed-to-checkout-block a',
+            proceedToCheckout: 'div.wc-block-cart__submit-container a.wc-block-cart__submit-button',
 
             // Remove All Item
             productCrossIcon: '.product-remove a',
