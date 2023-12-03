@@ -9,6 +9,7 @@ import { test, expect } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
+import { schemas } from '@utils/schemas';
 
 test.describe('attribute term api test', () => {
     let apiUtils: ApiUtils;
@@ -24,30 +25,35 @@ test.describe('attribute term api test', () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllAttributeTerms(attributeId));
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.attributeTeermsSchema.attributeTermsSchema);
     });
 
     test('get single attribute term @lite', async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getSingleAttributeTerm(attributeId, attributeTermId));
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.attributeTeermsSchema.attributeTermSchema);
     });
 
     test('create an attribute term @lite', async () => {
         const [response, responseBody] = await apiUtils.post(endPoints.createAttributeTerm(attributeId), { data: payloads.createAttributeTerm() });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.attributeTeermsSchema.attributeTermSchema);
     });
 
     test('update an attribute term  @lite', async () => {
         const [response, responseBody] = await apiUtils.put(endPoints.updateAttributeTerm(attributeId, attributeTermId), { data: payloads.updateAttributeTerm() });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.attributeTeermsSchema.attributeTermSchema);
     });
 
     test('delete an attribute term @lite', async () => {
         const [response, responseBody] = await apiUtils.delete(endPoints.deleteAttributeTerm(attributeId, attributeTermId));
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.attributeTeermsSchema.attributeTermSchema);
     });
 
     test('update batch attribute terms @lite', async () => {
@@ -61,5 +67,7 @@ test.describe('attribute term api test', () => {
         const [response, responseBody] = await apiUtils.put(endPoints.updateBatchAttributeTerms(attributeId), { data: { update: batchAttributeTerms } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.attributeTeermsSchema.batchupdateAttributesSchema);
+     
     });
 });
