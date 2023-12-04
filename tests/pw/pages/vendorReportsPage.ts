@@ -25,15 +25,14 @@ export class VendorReportsPage extends VendorPage {
 
         await this.clickAndWaitForLoadState(selector.vendor.vReports.menus.salesByDay);
 
-        // date picker elements are visible
-        await this.multipleElementVisible(selector.vendor.vReports.datePicker);
         // chart elements are visible
         await this.multipleElementVisible(selector.vendor.vReports.chart);
 
         await this.clickAndWaitForLoadState(selector.vendor.vReports.menus.topSelling);
 
         // date picker elements are visible
-        await this.multipleElementVisible(selector.vendor.vReports.datePicker);
+        const {dateRangePickerinput, show} = selector.vendor.vAnalytics.datePicker
+        await this.multipleElementVisible({ dateRangePickerinput, show });
 
         // top selling table elements are visible
         await this.multipleElementVisible(selector.vendor.vReports.topSelling.table);
@@ -41,7 +40,7 @@ export class VendorReportsPage extends VendorPage {
         await this.clickAndWaitForLoadState(selector.vendor.vReports.menus.topEarning);
 
         // date picker elements are visible
-        await this.multipleElementVisible(selector.vendor.vReports.datePicker);
+        await this.multipleElementVisible({ dateRangePickerinput, show });
 
         // top earning table elements are visible
         await this.multipleElementVisible(selector.vendor.vReports.topEarning.table);
@@ -49,7 +48,7 @@ export class VendorReportsPage extends VendorPage {
         await this.clickAndWaitForLoadState(selector.vendor.vReports.menus.statement);
 
         // date picker elements are visible
-        await this.multipleElementVisible(selector.vendor.vReports.datePicker);
+        await this.multipleElementVisible({ dateRangePickerinput, show });
 
         // statement table elements are visible
         await this.multipleElementVisible(selector.vendor.vReports.statement.table);

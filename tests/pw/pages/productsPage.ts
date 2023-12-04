@@ -549,7 +549,7 @@ export class ProductsPage extends AdminPage {
         await this.searchProduct(productName);
         await this.hover(selector.vendor.product.productCell(productName));
         await this.clickAndAcceptAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, selector.vendor.product.duplicate(productName));
-        await this.toContainText(selector.vendor.product.dokanSuccessMessage, 'Product succesfully duplicated');
+        await this.toContainText(selector.vendor.product.dokanSuccessMessage, 'Product successfully duplicated');
     }
 
     // permanently delete product

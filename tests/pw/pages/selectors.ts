@@ -1255,10 +1255,7 @@ export const selector = {
                     },
 
                     // calendar
-                    calendar: {
-                        dateFrom: '(//form[@class="form-inline report-filter"]//input[@class="dokan-input hasDatepicker"])[1]',
-                        dateTo: '(//form[@class="form-inline report-filter"]//input[@class="dokan-input hasDatepicker"])[2]',
-                    },
+                    calendar: 'div.report-date-range',
 
                     // show
                     show: '//button[normalize-space()="Show"]',
@@ -1462,6 +1459,13 @@ export const selector = {
                     reBuild: '//a[normalize-space()="Re-build"]',
                 },
 
+                // Regenerate Order commission
+                regenerateOrderCommission: {
+                    regenerateOrderSyncTable: '//span[normalize-space()="Regenerate Order Commission"]/../../..',
+                    collapsibleButton: '//span[normalize-space()="Regenerate Order Commission"]/../../..//button',
+                    regenerate: '//span[normalize-space()="Regenerate Order Commission"]/../../..//a[normalize-space()="Regenerate"]',
+                },
+
                 // Check for Duplicate Orders
                 checkForDuplicateOrders: {
                     checkForDuplicateOrders: '//span[normalize-space()="Check for Duplicate Orders"]/../../..',
@@ -1480,7 +1484,7 @@ export const selector = {
                 regenerateVariableProductVariationsAuthorIds: {
                     regenerateVariableProductVariationsAuthorIds: '//span[normalize-space()="Regenerate Variable Product Variations Author IDs"]/../../..',
                     collapsibleButton: '//span[normalize-space()="Regenerate Variable Product Variations Author IDs"]/../../..//button',
-                    regenerate: '//a[normalize-space()="Regenerate"]',
+                    regenerate: '//span[normalize-space()="Regenerate Variable Product Variations Author IDs"]/../../..//a[normalize-space()="Regenerate"]',
                 },
 
                 // Import Dummy Data
@@ -1818,7 +1822,7 @@ export const selector = {
                     productCategorySelection: (category: string) => `//label[@for='dokan_selling[product_category_style][${category}]']`,
                     vendorsCanCreateTags: '.product_vendors_can_create_tags .switch',
                     orderDiscount: '//div[contains(text(),"Order Discount")]//label[@class="switch tips"]',
-                    productDiscount: '//div[contains(text(),"Product Quantity Discount")]//label[@class="switch tips"]//span',
+                    productDiscount: '//div[contains(text(),"Product Quantity Discount")]//label[@class="switch tips"]',
 
                     hideCustomerInfo: '.hide_customer_info .switch',
                     vendorProductReviewStatusChange: '.seller_review_manage .switch',
@@ -3589,7 +3593,7 @@ export const selector = {
             cancelAction: '.swal2-actions .swal2-cancel',
             successMessage: '.swal2-actions .swal2-confirm',
             dokanMessage: '.dokan-message',
-            dokanSuccessMessage: '.dokan-alert.dokan-alert-success',
+            dokanSuccessMessage: '.dokan-alert.dokan-alert-success strong',
         },
 
         // Orders
@@ -3897,7 +3901,7 @@ export const selector = {
                 approveThisQuote: 'button[name="approved_by_vendor_button"]',
                 convertToOrder: 'button[name="dokan_convert_to_order_customer"]',
 
-                message: '.woocommerce-message',
+                message: '.woocommerce .is-success',
             },
         },
 
@@ -3987,8 +3991,9 @@ export const selector = {
 
             // date picker
             datePicker: {
-                from: '#from',
-                to: '#to',
+                dateRangePickerinput: 'input.dokan-daterangepicker',
+                dateRangePickerFromInputHidden: 'input.dokan-daterangepicker-start-date',
+                dateRangePickerToInputHidden: 'input.dokan-daterangepicker-end-date',
                 show: 'input[value="Show"]',
             },
 
@@ -4570,7 +4575,7 @@ export const selector = {
 
             confirmDelete: '.swal2-confirm',
             cancelDelete: '.swal2-cancel',
-            dokanSuccessMessage: '.dokan-alert.dokan-alert-success',
+            dokanSuccessMessage: '.dokan-alert.dokan-alert-success strong',
 
             // Create Booking Product
             booking: {
@@ -4777,7 +4782,7 @@ export const selector = {
 
                 addBooking: 'input[value="Add Booking"][type="submit"]',
 
-                successMessage: '.woocommerce-message',
+                successMessage: '.woocommerce .is-success',
             },
 
             // Manage Booking
@@ -4875,12 +4880,13 @@ export const selector = {
             },
 
             datePicker: {
-                from: '#from',
-                to: '#to',
+                dateRangePickerinput: 'input.dokan-daterangepicker',
+                dateRangePickerFromInputHidden: 'input.dokan-daterangepicker-start-date',
+                dateRangePickerToInputHidden: 'input.dokan-daterangepicker-end-date',
                 show: 'input[value="Show"]',
             },
 
-            noAnalyticsFound: '//div[contains(text(), "There is no analytics found for your store.")]',
+            noAnalyticsFound: '//div[@class="tab-pane active" and normalize-space()="There is no analytics found for your store."]',
         },
 
         // Announcements
@@ -5064,8 +5070,8 @@ export const selector = {
                 productDescriptionHtmlBody: '#tinymce',
 
                 // Add Auction
-                addAuctionProduct: 'input[value="Add auction Product"]',
-                updateAuctionProduct: 'input[value="Update Product"]',
+                addAuctionProduct: '//input[@name="update_auction_product"]',
+                updateAuctionProduct: '//input[@name="update_auction_product"]',
             },
 
             viewAuction: {
@@ -6081,7 +6087,7 @@ export const selector = {
                 billingEmailAddress: '#billing_email',
                 billingSaveAddress: '//button[@name="save_address"]',
                 // Success Message
-                successMessage: '.woocommerce-message',
+                successMessage: '.woocommerce .is-success',
             },
 
             // Shipping Address
@@ -6105,7 +6111,7 @@ export const selector = {
                 shippingSaveAddress: '//button[@name="save_address"]',
 
                 // Success Message
-                successMessage: '.woocommerce-message',
+                successMessage: '.woocommerce .is-success',
             },
         },
 
@@ -6706,7 +6712,6 @@ export const selector = {
                 submittedReview: (reviewMessage: string) => `//div[@class='review_comment_container']//div[@class='description']// p[text()='${reviewMessage}']`,
 
                 reviewDetails: {
-                    yourReview: '//h3[normalize-space()="Your Review"]',
                     author: '#dokan-store-review-single p strong[itemprop="author"]',
                     rating: '#dokan-store-review-single .dokan-rating div',
                     title: '#dokan-store-review-single .description h4',
@@ -6833,7 +6838,7 @@ export const selector = {
                     phoneNumber: 'input[name="phone_field"]',
                 },
 
-                message: '.woocommerce-message',
+                message: '.woocommerce .is-success',
             },
 
             // requested quote
@@ -6905,7 +6910,7 @@ export const selector = {
 
                     updateQuote: 'button[name="dokan_update_quote"]',
 
-                    message: '.woocommerce-message',
+                    message: '.woocommerce .is-success',
                 },
             },
         },

@@ -21,7 +21,8 @@ export class VendorAnalyticsPage extends VendorPage {
         await this.multipleElementVisible(selector.vendor.vAnalytics.menus);
 
         // date-picker elements are visible
-        await this.multipleElementVisible(selector.vendor.vAnalytics.datePicker);
+        const {dateRangePickerinput, show} = selector.vendor.vAnalytics.datePicker
+        await this.multipleElementVisible({ dateRangePickerinput, show });
 
         await this.clickAndWaitForLoadState(selector.vendor.vAnalytics.menus.topPages);
         await this.toBeVisible(selector.vendor.vAnalytics.noAnalyticsFound);

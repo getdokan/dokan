@@ -822,7 +822,7 @@ export const data = {
                 dashboard: 'dashboard',
                 products: 'dashboard/products',
                 productSearch: 'products/?product_listing_search',
-                productAuction: 'dashboard/new-auction-product',
+                productAuction: 'dashboard/auction',
                 productBooking: 'dashboard/booking/new-product',
                 orders: 'dashboard/orders',
                 userSubscriptions: 'dashboard/user-subscription',

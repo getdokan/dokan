@@ -29,6 +29,10 @@ test.describe('Tools test', () => {
         await admin.dokanPageInstallation();
     });
 
+    test('admin can regenerate order commission @pro', async () => {
+        await admin.regenerateOrderCommission();
+    });
+
     test('admin can check for duplicate orders @pro', async () => {
         await admin.checkForDuplicateOrders();
     });
