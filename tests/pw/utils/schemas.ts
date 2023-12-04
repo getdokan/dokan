@@ -365,7 +365,7 @@ export const schemas = {
                 vendor: z.object({
                     id: z.number(),
                     name: z.string(),
-                    admin_url: z.string().url().nullable(),,
+                    admin_url: z.string().url().nullable(),
                 }),
                 reported_by: z.object({
                     id: z.number(),
