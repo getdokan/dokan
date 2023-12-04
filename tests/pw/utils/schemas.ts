@@ -348,7 +348,7 @@ export const schemas = {
                 name: z.string(),
                 email: z.string().email(),
                 admin_url: z.string().url(),
-            }),
+            }).nullable(),
             description: z.string(),
             reported_at: z.coerce.date(),
         }),
@@ -360,12 +360,12 @@ export const schemas = {
                 product: z.object({
                     id: z.number(),
                     title: z.string(),
-                    admin_url: z.string().url(),
+                    admin_url: z.string().url().nullable(),
                 }),
                 vendor: z.object({
                     id: z.number(),
                     name: z.string(),
-                    admin_url: z.string().url(),
+                    admin_url: z.string().url().nullable(),,
                 }),
                 reported_by: z.object({
                     id: z.number(),
@@ -611,7 +611,7 @@ export const schemas = {
                 human_readable_date: z.string(),
                 announcement_sellers: z.array(
                     z.object({
-                        id: z.string(),
+                        id: z.string().or(z.number()),
                         name: z.string(),
                         shop_name: z.string(),
                         email: z.string().email(),
