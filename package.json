@@ -18,9 +18,12 @@
     "format": "wp-scripts format",
     "lint:css": "wp-scripts lint-style",
     "lint:js": "wp-scripts lint-js",
-    "release": "npm run readme && npm run build && npm run clean-files && npm run makepot && npm run version && npm run zip"
+    "release": "npm run readme && npm run build && npm run clean-files && npm run makepot && npm run version && npm run zip",
+    "payment:build": "wp-scripts build --config webpack.config.cart-checkout.js --progress",
+    "payment:start": "wp-scripts start --config webpack.config.cart-checkout.js --progress"
   },
   "devDependencies": {
+    "@woocommerce/dependency-extraction-webpack-plugin": "^2.3.0",
     "@wordpress/scripts": "^26.14.0",
     "chartjs-adapter-moment": "^1.0.1",
     "debounce": "^1.2.1",

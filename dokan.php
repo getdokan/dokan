@@ -372,6 +372,7 @@ final class WeDevs_Dokan {
         new \WeDevs\Dokan\Vendor\UserSwitch();
         new \WeDevs\Dokan\CacheInvalidate();
         new \WeDevs\Dokan\Shipping\Hooks();
+        new \WeDevs\Dokan\WC_Aun_Payment_Gateway();
 
         if ( is_admin() ) {
             new \WeDevs\Dokan\Admin\Hooks();
@@ -589,3 +590,26 @@ function dokan() {
 
 // Lets Go....
 dokan();
+
+add_filter(
+    'woocommerce_payment_gateways', function ( $gateways ) {
+		$gateways[] = '\WeDevs\Dokan\WC_Aun_Payment_Gateway';
+
+		return $gateways;
+	}
+);
+
+
+add_action( 'woocommerce_blocks_loaded', 'my_extension_woocommerce_blocks_support' );
+
+function my_extension_woocommerce_blocks_support() {
+    if ( class_exists( 'Automattic\WooCommerce\Blocks\Payments\Integrations\AbstractPaymentMethodType' ) ) {
+        add_action(
+            'woocommerce_blocks_payment_method_type_registration',
+            function ( Automattic\WooCommerce\Blocks\Payments\PaymentMethodRegistry $payment_method_registry ) {
+                $payment_method = new \WeDevs\Dokan\Blocks\AunPay\PaymentMethod();
+                $payment_method_registry->register( $payment_method );
+            }
+        );
+    }
+}
