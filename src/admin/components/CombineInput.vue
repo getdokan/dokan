@@ -55,7 +55,7 @@
                 type: Object,
                 default: {
                     fixed: 0,
-                    percentage: 0'
+                    percentage: 0
                 }
             },
         },
