@@ -7,7 +7,7 @@ import { payloads } from '@utils/payloads';
 import { dbUtils } from '@utils/dbUtils';
 import { dbData } from '@utils/dbData';
 
-const { PRODUCT_ID } = process.env;
+const { PRODUCT_ID } = global as any;
 
 test.describe('Reverse withdraw test', () => {
     let admin: ReverseWithdrawsPage;

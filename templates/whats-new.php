@@ -4,6 +4,18 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.9.3',
+        'released' => '2023-11-30',
+        'changes'  => [
+            'Fix'         => [
+                [
+                    'title'       => 'Fixed an issue where the Tab fields under the product Add/Edit page don’t display predefined tags until users start typing to select tags.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.9.2',
         'released' => '2023-11-13',
         'changes'  => [

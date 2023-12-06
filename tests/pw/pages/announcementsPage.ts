@@ -87,13 +87,13 @@ export class AnnouncementsPage extends AdminPage {
 
             case 'restore':
                 await this.clickAndWaitForResponse(data.subUrls.api.dokan.announcements, selector.admin.dokan.announcements.navTabs.trash);
-                await this.hover(selector.admin.dokan.announcements.announcementCell(announcementTitle));
+                await this.hover(selector.admin.dokan.announcements.announcementCellPublished(announcementTitle));
                 await this.clickAndWaitForResponse(data.subUrls.api.dokan.announcements, selector.admin.dokan.announcements.announcementRestore(announcementTitle));
                 break;
 
             case 'permanently-delete':
                 await this.clickAndWaitForResponse(data.subUrls.api.dokan.announcements, selector.admin.dokan.announcements.navTabs.trash);
-                await this.hover(selector.admin.dokan.announcements.announcementCell(announcementTitle));
+                await this.hover(selector.admin.dokan.announcements.announcementCellPublished(announcementTitle));
                 await this.clickAndWaitForResponse(data.subUrls.api.dokan.announcements, selector.admin.dokan.announcements.announcementPermanentlyDelete(announcementTitle));
                 break;
 

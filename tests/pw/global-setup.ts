@@ -16,7 +16,7 @@ async function globalSetup(config: FullConfig) {
         }
         console.log('retrying...');
     }
-    console.log('ServerUrl:', process.env.SERVER_URL);
+    console.log('ServerUrl:', serverUrl);
 
     console.log('Global Setup Finished!');
 }
