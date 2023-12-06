@@ -239,7 +239,7 @@
 
             withdrawAmount = accounting.unformat(
                 withdrawAmount,
-                dokan_refund.mon_decimal_point
+                dokan.mon_decimal_point
             );
             let { chargePercentage, chargeFixed } = $(
                 "select[name='withdraw_method'][id='withdraw-method'] option:selected"
@@ -248,24 +248,34 @@
             let chargeText = '';
 
             if ( chargeFixed ) {
-                chargeText += accounting.formatMoney( chargeFixed, dokan.currency );
+                chargeText += Dokan_Withdraw.formatMoney( chargeFixed );
                 chargeAmount += chargeFixed;
             }
             if ( chargePercentage ) {
                 let percentageAmount = chargePercentage / 100 * withdrawAmount;
                 chargeAmount += percentageAmount;
                 chargeText += chargeText ? ' + ' : '';
-                chargeText += parseFloat( accounting.formatNumber( chargePercentage, dokan_refund.rounding_precision, '' ) )
+                chargeText += parseFloat( accounting.formatNumber( chargePercentage, dokan.rounding_precision, '' ) )
                     .toString()
-                    .replace('.', dokan_refund.mon_decimal_point ) + '%';
-                chargeText += ` = ${ accounting.formatMoney( chargeAmount ) }`;
+                    .replace('.', dokan.mon_decimal_point ) + '%';
+                chargeText += ` = ${ Dokan_Withdraw.formatMoney( chargeAmount ) }`;
             }
 
             if ( ! chargeText ) {
-              chargeText = accounting.formatMoney( chargeAmount, dokan.currency );
+              chargeText = Dokan_Withdraw.formatMoney( chargeAmount, dokan.currency );
             }
 
           Dokan_Withdraw.showWithdrawChargeHtml( chargeText, chargeAmount, withdrawAmount );
+        },
+
+        formatMoney( money ) {
+            return accounting.formatMoney( money, {
+                symbol:    dokan.currency_format_symbol,
+                decimal:   dokan.currency_format_decimal_sep,
+                thousand:  dokan.currency_format_thousand_sep,
+                precision: dokan.currency_format_num_decimals,
+                format:    dokan.currency_format
+            } )
         },
 
         showWithdrawChargeHtml(chargeText, chargeAmount, withdrawAmount) {
@@ -279,7 +289,7 @@
             }
 
             $('#dokan-withdraw-charge-section-text').html(chargeText);
-            $('#dokan-withdraw-revivable-section-text').html(accounting.formatMoney(withdrawAmount - chargeAmount));
+            $('#dokan-withdraw-revivable-section-text').html(Dokan_Withdraw.formatMoney(withdrawAmount - chargeAmount));
 
             chargeSection.show();
             revivableSection.show();
