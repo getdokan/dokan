@@ -19,7 +19,7 @@
                     </div>
                     <div class="wm-charges" v-if="fieldData.chargeable_methods?.[optionKey]">
                         <combine-input
-                            :value="charges[ optionKey ] ?? {}"
+                            :value="formatValue( charges[ optionKey ] ?? defaultVal )"
                             v-on:change='data => chargeChangeHandler( data, optionKey )'
                         />
                     </div>
@@ -43,8 +43,8 @@ export default {
         return {
             charges: {},
             defaultVal: {
-                fixed: '',
-                percentage: ''
+                fixed: 0,
+                percentage: 0
             },
             showItems: {}
         };
@@ -52,6 +52,12 @@ export default {
     components: { FieldHeading, CombineInput, Switches },
     props: [ 'sectionId', 'fieldData', 'fieldValue' ],
     methods: {
+        formatValue( data ) {
+            return {
+                fixed: Math.abs( data.fixed ),
+                percentage: Math.abs( data.percentage )
+            };
+        },
         isSwitchOptionChecked( optionKey ) {
             return (
                 this.fieldValue[ this.fieldData.name ] &&
@@ -65,7 +71,7 @@ export default {
                 : '';
         },
         chargeChangeHandler( data, field ) {
-            this.fieldValue[ this.fieldData.name ][ field ] = data;
+            this.fieldValue[ this.fieldData.name ][ field ] = this.formatValue( data );
         },
         validateCombineInputData( data ) {
             if ( 'object' !== typeof data ) {

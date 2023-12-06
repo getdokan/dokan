@@ -30,6 +30,7 @@
 
 <script>
     import { fixed } from 'lodash/fp/_falseOptions';
+    const Debounce = dokan_get_lib('debounce');
 
     export default {
         name: 'CombineInput',
@@ -53,19 +54,28 @@
             value: {
                 type: Object,
                 default: {
-                    fixed: '',
-                    percentage: ''
+                    fixed: 0,
+                    percentage: 0'
                 }
             },
         },
         data() {
             return {
-                fixed: this.value.fixed ?? '',
-                percentage: this.value.percentage ?? '',
+                fixed: this.value.fixed ?? 0,
+                percentage: this.value.percentage ?? 0,
             };
         },
+        watch: {
+            value: {
+                handler(newVal, oldVal) {
+                    this.fixed = newVal.fixed;
+                    this.percentage = newVal.percentage
+                },
+                deep: true
+            }
+        },
         methods: {
-            onInput(e) {
+            onInput: Debounce( function() {
                 let self = this,
                     data = {
                         fixed: self.fixed,
@@ -73,7 +83,7 @@
                     };
 
                 this.$emit('change', data);
-            }
+            }, 300 ),
         },
         computed:{
             getCurrencySymbol() {
