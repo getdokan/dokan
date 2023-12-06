@@ -83,7 +83,7 @@
                     };
 
                 this.$emit('change', data);
-            }, 300 ),
+            }, 500 ),
         },
         computed:{
             getCurrencySymbol() {

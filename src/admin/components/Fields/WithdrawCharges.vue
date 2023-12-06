@@ -54,8 +54,8 @@ export default {
     methods: {
         formatValue( data ) {
             return {
-                fixed: Math.abs( data.fixed ),
-                percentage: Math.abs( data.percentage )
+                fixed: Math.abs( data.fixed ) ? Math.abs( data.fixed ) : 0,
+                percentage: Math.abs( data.percentage ) ? Math.abs( data.percentage ) : 0
             };
         },
         isSwitchOptionChecked( optionKey ) {
