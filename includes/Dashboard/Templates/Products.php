@@ -409,8 +409,7 @@ class Products {
 
         $props               = [];
         $meta_data           = [];
-        $current_post_status = $product->get_status();
-        $is_new_product      = 'auto-draft' === $current_post_status;
+        $is_new_product      = 'auto-draft' === $product->get_status();
 
         foreach ( ProductFormFactory::get_fields() as $field_id => $field ) {
             if ( $field->is_other_type() ) {
@@ -486,8 +485,8 @@ class Products {
         }
 
         // apply hooks before saving product
-        $props     = apply_filters( 'dokan_product_edit_props', $props, $product );
-        $meta_data = apply_filters( 'dokan_product_edit_meta_data', $meta_data, $product );
+        $props     = apply_filters( 'dokan_product_edit_props', $props, $product, $is_new_product );
+        $meta_data = apply_filters( 'dokan_product_edit_meta_data', $meta_data, $product, $is_new_product );
 
         $errors = $product->set_props( $props );
         if ( is_wp_error( $errors ) ) {

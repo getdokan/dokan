@@ -174,15 +174,12 @@ class Helper {
 
         // get product id
         if ( 'variation' === $product->get_type() ) {
-            $product_id = $product->get_parent_id();
-        } else {
-            $product_id = $product->get_id();
+            $product = wc_get_product( $product->get_parent_id() );
         }
 
         // check for saved values
-        $catalog_mode_data = get_post_meta( $product_id, '_dokan_catalog_mode', true );
-        $catalog_mode_data = is_array( $catalog_mode_data ) && ! empty( $catalog_mode_data ) ? $catalog_mode_data : $defaults;
+        $catalog_mode_data = $product->get_meta( '_dokan_catalog_mode', true );
 
-        return $catalog_mode_data;
+        return is_array( $catalog_mode_data ) && ! empty( $catalog_mode_data ) ? $catalog_mode_data : $defaults;
     }
 }
