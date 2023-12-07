@@ -387,7 +387,13 @@ class Init {
                     'min'  => 0,
                     'step' => 'any',
                 ],
-                'sanitize_callback'     => 'wc_stock_amount',
+                'sanitize_callback'     => function ( $value ) {
+                    if ( '' !== $value ) {
+                        return wc_stock_amount( $value );
+                    }
+
+                    return '';
+                },
             ]
         );
 
@@ -403,7 +409,7 @@ class Init {
 
         $section->add_field(
             Elements::SOLD_INDIVIDUALLY, [
-                'title'                 => __( 'Sold Individually', 'dokan-lite' ),
+                'title'                 => __( 'Allow only one quantity of this product to be bought in a single order', 'dokan-lite' ),
                 'description'           => __( 'Check to let customers to purchase only 1 item in a single order. This is particularly useful for items that have limited quantity, for example art or handmade goods.', 'dokan-lite' ),
                 'field_type'            => 'checkbox',
                 'name'                  => '_sold_individually',
@@ -457,7 +463,12 @@ class Init {
                     'min'  => 0,
                     'step' => 1,
                 ],
-                'sanitize_callback'     => 'absint',
+                'sanitize_callback'     => function ( $value ) {
+                    if ( '' !== $value ) {
+                        return absint( $value );
+                    }
+                    return '';
+                },
             ]
         );
 
@@ -472,7 +483,12 @@ class Init {
                     'min'  => 0,
                     'step' => 1,
                 ],
-                'sanitize_callback'     => 'absint',
+                'sanitize_callback'     => function ( $value ) {
+                    if ( '' !== $value ) {
+                        return absint( $value );
+                    }
+                    return '';
+                },
             ]
         );
     }

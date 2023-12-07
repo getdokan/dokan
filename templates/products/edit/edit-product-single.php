@@ -135,9 +135,8 @@ do_action( 'dokan_dashboard_wrap_before', $post, $product->get_id() );
                 <?php if ( dokan()->dashboard->templates->products->has_errors() ) : ?>
                     <div class="dokan-alert dokan-alert-danger">
                         <a class="dokan-close" data-dismiss="alert">&times;</a>
-
                         <?php foreach ( dokan()->dashboard->templates->products->get_errors() as $error ) : ?>
-                            <strong><?php esc_html_e( 'Error!', 'dokan-lite' ); ?></strong> <?php echo esc_html( $error ); ?>.<br>
+                            <strong><?php esc_html_e( 'Error!', 'dokan-lite' ); ?></strong> <?php echo wp_kses_post( $error ); ?>.<br>
                         <?php endforeach; ?>
                     </div>
                 <?php endif; ?>

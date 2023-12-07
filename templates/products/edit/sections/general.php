@@ -212,8 +212,8 @@ if ( is_wp_error( $section ) ) {
                 $terms = $product->get_tag_ids();
                 ?>
                 <div class="dokan-form-group">
-                    <label for="product_tag_edit" class="form-label"><?php echo $tags->get_title(); ?></label>
-                    <select multiple="multiple" id="product_tag_edit" name="<?php echo esc_attr( $tags->get_name() ); ?>" class="product_tag_search dokan-form-control" data-placeholder="<?php echo esc_attr( $tags->get_placeholder() ); ?>">
+                    <label for="<?php echo esc_attr( $tags->get_name() ); ?>" class="form-label"><?php echo $tags->get_title(); ?></label>
+                    <select multiple="multiple" id="<?php echo esc_attr( $tags->get_name() ); ?>" name="<?php echo esc_attr( $tags->get_name() ); ?>" class="product_tag_search dokan-form-control" data-placeholder="<?php echo esc_attr( $tags->get_placeholder() ); ?>">
                         <?php if ( ! empty( $terms ) ) : ?>
                             <?php
                             foreach ( $terms as $tax_term ) :

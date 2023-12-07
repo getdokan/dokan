@@ -155,13 +155,13 @@ $post = get_post( $product->get_id() ); // phpcs:ignore WordPress.WP.GlobalVaria
                         <?php
                         dokan_post_input_box(
                             $product->get_id(),
-                            $stock_quantity->get_name(),
+                            $low_stock_amount->get_name(),
                             [
                                 'value'       => $product->get_low_stock_amount( 'edit' ),
                                 'class'       => 'dokan-form-control',
-                                'placeholder' => $stock_quantity->get_placeholder(),
-                                'min'         => $stock_quantity->get_additional_properties( 'min' ),
-                                'step'        => $stock_quantity->get_additional_properties( 'step' ),
+                                'placeholder' => $low_stock_amount->get_placeholder(),
+                                'min'         => $low_stock_amount->get_additional_properties( 'min' ),
+                                'step'        => $low_stock_amount->get_additional_properties( 'step' ),
                             ],
                             'number'
                         );
@@ -171,7 +171,7 @@ $post = get_post( $product->get_id() ); // phpcs:ignore WordPress.WP.GlobalVaria
 
                 <?php
                 $backorders = $section->get_field( Elements::BACKORDERS );
-                if ( is_wp_error( $backorders ) && $backorders->is_visible() ) :
+                if ( ! is_wp_error( $backorders ) && $backorders->is_visible() ) :
                     ?>
                     <div class="content-half-part last-child">
                         <label for="<?php echo esc_attr( $backorders->get_name() ); ?>" class="form-label">
@@ -205,19 +205,18 @@ $post = get_post( $product->get_id() ); // phpcs:ignore WordPress.WP.GlobalVaria
         if ( ! is_wp_error( $sold_individually ) && $sold_individually->is_visible() ) :
             ?>
             <div class="dokan-form-group hide_if_grouped hide_if_external">
-                <label class="" for="<?php echo esc_attr( $sold_individually->get_name() ); ?>">
-                    <input
-                        name="<?php echo esc_attr( $sold_individually->get_name() ); ?>"
-                        id="<?php echo esc_attr( $sold_individually->get_name() ); ?>"
-                        value="yes"
-                        type="checkbox" <?php checked( $product->get_sold_individually( 'edit' ), true ); ?>>
-                    <i
-                        class="fas fa-question-circle tips"
-                        aria-hidden="true"
-                        data-title="<?php echo esc_attr( $sold_individually->get_description() ); ?>">
-                    </i>
-                    <?php esc_html_e( 'Allow only one quantity of this product to be bought in a single order', 'dokan-lite' ); ?>
-                </label>
+                <?php
+                dokan_post_input_box(
+                    $product->get_id(),
+                    $sold_individually->get_name(),
+                    [
+                        'value' => $product->get_sold_individually() ? 'yes' : 'no',
+                        'label' => $sold_individually->get_title(),
+                        'desc'  => $sold_individually->get_description(),
+                    ],
+                    'checkbox'
+                );
+                ?>
             </div>
         <?php endif; ?>
 

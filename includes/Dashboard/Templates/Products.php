@@ -185,8 +185,8 @@ class Products {
      *
      * @since 1.0.0
      *
-     * @param WP_Post    $post
-     * @param int        $post_id
+     * @param WP_Post $post
+     * @param int     $post_id
      *
      * @return void
      */
@@ -222,8 +222,8 @@ class Products {
      *
      * @since 2.9.2
      *
-     * @param WP_Post    $post
-     * @param int        $post_id
+     * @param WP_Post $post
+     * @param int     $post_id
      *
      * @return void
      */
@@ -253,8 +253,8 @@ class Products {
      *
      * @since 2.9.2
      *
-     * @param WP_Post    $post
-     * @param int        $post_id
+     * @param WP_Post $post
+     * @param int     $post_id
      *
      * @return void
      */
@@ -289,8 +289,8 @@ class Products {
      *
      * @since 2.9.2
      *
-     * @param WP_Post    $post
-     * @param int        $post_id
+     * @param WP_Post $post
+     * @param int     $post_id
      *
      * @return void
      */
@@ -407,9 +407,12 @@ class Products {
             return;
         }
 
-        $props               = [];
-        $meta_data           = [];
-        $is_new_product      = 'auto-draft' === $product->get_status();
+        $props          = [];
+        $meta_data      = [];
+        $is_new_product = 'auto-draft' === $product->get_status();
+
+        // stock quantity
+        $props[ ProductFormElements::STOCK_QUANTITY ] = null;
 
         foreach ( ProductFormFactory::get_fields() as $field_id => $field ) {
             if ( $field->is_other_type() ) {
@@ -421,17 +424,19 @@ class Products {
                 continue;
             }
 
+            $field_name = sanitize_key( $field->get_name() );
+
             // check if field is required
-            if ( $field->is_required() && empty( $_POST[ $field->get_name() ] ) ) {
-                self::$errors[ $field->get_id() ][] = ! empty( $field->get_error_message() )
+            if ( $field->is_required() && empty( $_POST[ $field_name ] ) ) {
+                self::$errors[ $field->get_id() ] = ! empty( $field->get_error_message() )
                     ? $field->get_error_message()
                     // translators: 1) field title
-                    : sprintf( __( '%1$s is a required field.', 'dokan-lite' ), $field->get_title() );
+                    : sprintf( __( '<strong>%1$s</strong> is a required field.', 'dokan-lite' ), $field->get_title() );
                 continue;
             }
 
             // check if the field is present
-            if ( ! isset( $_POST[ $field->get_name() ] ) ) {
+            if ( ! isset( $_POST[ $field_name ] ) ) {
                 continue;
             }
 
@@ -450,14 +455,14 @@ class Products {
 
                 case ProductFormElements::STOCK_QUANTITY:
                     $original_stock = isset( $_POST['_original_stock'] ) ? wc_stock_amount( wp_unslash( $_POST['_original_stock'] ) ) : false; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
-                    $field_value    = $field->sanitize( wp_unslash( $_POST[ $field->get_name() ] ), $original_stock, $product ); //phpcs:ignore
+                    $field_value    = $field->sanitize( wp_unslash( $_POST[ $field_name ] ), $original_stock, $product ); //phpcs:ignore
                     break;
 
                 default:
                     // give a chance to other plugins to sanitize their data
-                    $field_value = apply_filters( 'dokan_product_update_field_value', null, $field, wp_unslash( $_POST[ $field->get_name() ] ), $product ); // phpcs:ignore
+                    $field_value = apply_filters( 'dokan_product_update_field_value', null, $field, wp_unslash( $_POST[ $field_name ] ), $product ); // phpcs:ignore
                     if ( null === $field_value ) {
-                        $field_value = $field->sanitize( wp_unslash( $_POST[ $field->get_name() ] ) ); //phpcs:ignore
+                        $field_value = $field->sanitize( wp_unslash( $_POST[ $field_name ] ) ); //phpcs:ignore
                     }
                     break;
             }
@@ -491,7 +496,6 @@ class Products {
         $errors = $product->set_props( $props );
         if ( is_wp_error( $errors ) ) {
             self::$errors = array_merge( self::$errors, $errors->get_error_messages() );
-            exit;
         }
 
         // return early for validation errors

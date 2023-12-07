@@ -80,18 +80,18 @@ class Field extends Component {
     }
 
     /**
-     * Set field name, validated by sanitize_title()
+     * Set field name, validated by sanitize_text_field()
      *
      * @since DOKAN_SINCE
      *
      * @param string $name
      *
-     * @see   sanitize_title()
+     * @see   sanitize_text_field()
      *
      * @return $this
      */
     public function set_name( string $name ): Field {
-        $this->data['name'] = sanitize_title( $name );
+        $this->data['name'] = sanitize_text_field( $name );
 
         return $this;
     }
