@@ -362,16 +362,18 @@ class Hooks {
      *
      * @since 3.8.2
      *
-     * @param int|WC_Product $product_id
+     * @param int $product_id
      *
      * @return void
      */
     public function set_new_product_email_status( $product_id ) {
-        if ( is_a( $product_id, 'WC_Product' ) ) {
-            $product_id->update_meta_data( '_dokan_new_product_email_sent', 'no' );
-        } else {
-            update_post_meta( $product_id, '_dokan_new_product_email_sent', 'no' );
+        $product = wc_get_product( $product_id );
+        if ( ! $product ) {
+            return;
         }
+
+        $product->add_meta_data( '_dokan_new_product_email_sent', 'no', true );
+        $product->save();
     }
 
     /**
@@ -409,7 +411,7 @@ class Hooks {
 
         wc_print_notice( __( 'As this is your own product, the "Add to Cart" button has been removed. Please visit as a guest to view it.', 'dokan-lite' ), 'notice' );
     }
-  
+
     /**
      * Filter the recipients of the product review notification.
      *

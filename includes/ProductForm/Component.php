@@ -37,9 +37,9 @@ abstract class Component {
     ];
 
     public function __construct( string $id, array $args = [] ) {
-        foreach ( $this->data as $key => $value ) {
-            if ( method_exists( $this, "set_{$key}" ) ) {
-                $this->{"set_{$key}"}( $args[ $key ] );
+        foreach ( $args as $key => $value ) {
+            if ( method_exists( $this, "set_{$key}" ) && null !== $value ) {
+                $this->{"set_{$key}"}( $value );
             }
         }
     }
@@ -90,12 +90,12 @@ abstract class Component {
      *
      * @param string $title
      *
-     * @see   sanitize_text_field()
+     * @see   wp_kses_post()
      *
      * @return $this
      */
     public function set_title( string $title ): self {
-        $this->data['title'] = sanitize_text_field( $title );
+        $this->data['title'] = wp_kses_post( $title );
 
         return $this;
     }
@@ -317,10 +317,10 @@ abstract class Component {
                 function ( $arg_key ) use ( $args ) {
                     // return false if not exists or empty
                     if ( ! array_key_exists( $arg_key, $args ) || empty( $args[ $arg_key ] ) ) {
-                        return false;
+                        return true;
                     }
 
-                    return true;
+                    return false;
                 }
             )
         );

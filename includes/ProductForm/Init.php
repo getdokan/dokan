@@ -2,6 +2,9 @@
 
 namespace WeDevs\Dokan\ProductForm;
 
+use WC_Product;
+use WeDevs\Dokan\ProductCategory\Helper as ProductCategoryHelper;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -19,7 +22,7 @@ class Init {
      * @return void
      */
     public function __construct() {
-        add_action( 'init', [ $this, 'init_form_fields' ], 1 );
+        add_action( 'init', [ $this, 'init_form_fields' ], 5 );
     }
 
     /**
@@ -32,6 +35,7 @@ class Init {
     public function init_form_fields() {
         $this->init_general_fields();
         $this->init_inventory_fields();
+        $this->init_downloadable_virtual_fields();
         $this->init_downloadable_fields();
         $this->init_other_fields();
     }
@@ -53,21 +57,39 @@ class Init {
         );
 
         $section->add_field(
-            Elements::ID,
+            Elements::NAME,
             [
                 'title'       => __( 'Title', 'dokan-lite' ),
-                'type'        => 'text',
+                'field_type'  => 'text',
                 'name'        => 'post_title',
                 'placeholder' => __( 'Enter product title...', 'dokan-lite' ),
+                'required'    => true,
                 'error_msg'   => __( 'Please enter product title!', 'dokan-lite' ),
+            ]
+        );
+
+        $section->add_field(
+            Elements::SLUG,
+            [
+                'title'       => __( 'Slug', 'dokan-lite' ),
+                'field_type'  => 'text',
+                'type'        => 'other',
+                'name'        => 'slug',
+                'placeholder' => __( 'Enter product slug...', 'dokan-lite' ),
+                'required'    => false,
+                'error_msg'   => __( 'Please enter product slug!', 'dokan-lite' ),
+                'sanitize_callback' => function ( $slug, $product_id, $status, $post_parent = 0 ) {
+                    return wp_unique_post_slug( $slug, $product_id, $status, 'product', $post_parent );
+                },
             ]
         );
 
         $section->add_field(
             Elements::TYPE, [
                 'title'        => __( 'Product Type', 'dokan-lite' ),
-                'type'         => 'select',
-                'name'         => 'product_type',
+                'field_type'   => 'select',
+                'type'         => 'other',
+                'name'         => 'product-type',
                 'options'      => apply_filters(
                     'dokan_product_types',
                     [
@@ -81,7 +103,7 @@ class Init {
         $section->add_field(
             Elements::REGULAR_PRICE, [
                 'title'       => __( 'Price', 'dokan-lite' ),
-                'type'        => 'text',
+                'field_type'  => 'text',
                 'name'        => '_regular_price',
                 'placeholder' => '0.00',
             ]
@@ -90,7 +112,7 @@ class Init {
         $section->add_field(
             Elements::SALE_PRICE, [
                 'title'       => __( 'Discounted Price', 'dokan-lite' ),
-                'type'        => 'text',
+                'field_type'  => 'text',
                 'name'        => '_sale_price',
                 'placeholder' => '0.00',
             ]
@@ -99,47 +121,88 @@ class Init {
         $section->add_field(
             Elements::DATE_ON_SALE_FROM, [
                 'title'       => __( 'From', 'dokan-lite' ),
-                'type'        => 'text',
+                'field_type'  => 'text',
                 'name'        => '_sale_price_dates_from',
-                'placeholder' => wc_date_format(),
+                'placeholder' => 'YYYY-MM-DD',
             ]
         );
 
         $section->add_field(
             Elements::DATE_ON_SALE_TO, [
                 'title'       => __( 'To', 'dokan-lite' ),
-                'type'        => 'text',
+                'field_type'  => 'text',
                 'name'        => '_sale_price_dates_to',
-                'placeholder' => wc_date_format(),
+                'placeholder' => 'YYYY-MM-DD',
             ]
         );
+
+        $category_error_message = ProductCategoryHelper::product_category_selection_is_single()
+            ? __( 'Please select at least one category!', 'dokan-lite' )
+            : __( 'Please select a category', 'dokan-lite' );
 
         $section->add_field(
             Elements::CATEGORIES, [
                 'title'       => __( 'Categories', 'dokan-lite' ),
-                'type'        => 'select',
-                'name'        => 'product_cat[]',
+                'field_type'  => 'select',
+                'name'        => 'chosen_product_cat[]',
                 'placeholder' => __( 'Select product categories', 'dokan-lite' ),
                 'options'     => [],
+                'required'    => true,
+                'error_msg'   => $category_error_message,
+                'sanitize_callback' => function ( array $categories, WC_Product $product ) {
+                    $chosen_product_categories = array_map( 'absint', $categories );
+                    $chosen_cat                = ProductCategoryHelper::product_category_selection_is_single() ? [ reset( $chosen_product_categories ) ] : $chosen_product_categories;
+
+                    // store product category in meta data
+                    $product->add_meta_data( 'chosen_product_cat', $chosen_cat, true );
+
+                    return array_map( 'absint', ProductCategoryHelper::get_object_terms_from_chosen_categories( $product, $chosen_cat ) );
+                },
             ]
         );
 
-        $can_create_tags  = dokan_get_option( 'product_vendors_can_create_tags', 'dokan_selling' );
+        $can_create_tags  = dokan()->is_pro_exists() ? dokan_get_option( 'product_vendors_can_create_tags', 'dokan_selling', 'off' ) : 'off';
         $tags_placeholder = 'on' === $can_create_tags ? __( 'Select tags/Add tags', 'dokan-lite' ) : __( 'Select product tags', 'dokan-lite' );
         $section->add_field(
             Elements::TAGS, [
-                'title'       => __( 'Tags', 'dokan-lite' ),
-                'type'        => 'select',
-                'name'        => 'product_tag[]',
-                'placeholder' => $tags_placeholder,
+                'title'             => __( 'Tags', 'dokan-lite' ),
+                'field_type'        => 'select',
+                'name'              => 'product_tag[]',
+                'placeholder'       => $tags_placeholder,
+                'sanitize_callback' => function ( $tags ) {
+                    /**
+                     * Maximum number of tags a vendor can add.
+                     *
+                     * @since 3.3.7
+                     *
+                     * @args  int -1 default to unlimited
+                     */
+                    $maximum_tags_select_length = apply_filters( 'dokan_product_tags_select_max_length', -1 );
+
+                    if ( $maximum_tags_select_length !== -1 && count( $tags ) > $maximum_tags_select_length ) {
+                        // translators: %s: maximum tag length
+                        return sprintf( __( 'You can only select %s tags', 'dokan-lite' ), number_format_i18n( $maximum_tags_select_length ) );
+                    }
+
+                    // todo: add support for creating tags
+                    return array_map(
+                        function ( $tag ) {
+                            if ( is_numeric( $tag ) ) {
+                                    return absint( $tag );
+                            } else {
+                                return sanitize_text_field( $tag );
+                            }
+                        }, (array) $tags
+                    );
+                },
             ]
         );
 
         $section->add_field(
             Elements::FEATURED_IMAGE_ID, [
                 'title'       => __( 'Product Image', 'dokan-lite' ),
-                'type'        => 'image',
-                'name'        => 'feat_image_id',
+                'field_type'  => 'image',
+                'name'        => 'image_id',
                 'placeholder' => __( 'Select product image', 'dokan-lite' ),
             ]
         );
@@ -147,8 +210,8 @@ class Init {
         $section->add_field(
             Elements::GALLERY_IMAGE_IDS, [
                 'title'       => __( 'Product Gallery', 'dokan-lite' ),
-                'type'        => 'gallery',
-                'name'        => 'product_image_gallery',
+                'field_type'  => 'gallery',
+                'name'        => 'gallery_image_ids',
                 'placeholder' => __( 'Select product gallery images', 'dokan-lite' ),
             ]
         );
@@ -156,21 +219,67 @@ class Init {
         $section->add_field(
             Elements::SHORT_DESCRIPTION, [
                 'title'       => __( 'Short Description', 'dokan-lite' ),
-                'type'        => 'textarea',
+                'field_type'  => 'textarea',
                 'name'        => 'post_excerpt',
                 'placeholder' => __( 'Enter product short description', 'dokan-lite' ),
-                'visibility'  => false,
             ]
         );
 
         $section->add_field(
             Elements::DESCRIPTION, [
                 'title'       => __( 'Description', 'dokan-lite' ),
-                'type'        => 'textarea',
+                'field_type'  => 'textarea',
                 'name'        => 'post_content',
                 'placeholder' => __( 'Enter product description', 'dokan-lite' ),
                 'required'    => true,
-                'visibility'  => false,
+            ]
+        );
+    }
+
+    /**
+     * Init downloadable and virtual fields
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return void
+     */
+    public function init_downloadable_virtual_fields() {
+        $section = Factory::add_section(
+            'downloadable_virtual',
+            [
+                'title'       => __( 'Downloadable', 'dokan-lite' ),
+                'description' => __( 'Downloadable products give access to a file upon purchase.', 'dokan-lite' ),
+                'order'       => 20,
+            ]
+        );
+
+        $section->add_field(
+            Elements::DOWNLOADABLE, [
+                'title'                 => __( 'Downloadable', 'dokan-lite' ),
+                'description'           => __( 'Virtual products are intangible and are not shipped.', 'dokan-lite' ),
+                'field_type'            => 'checkbox',
+                'name'                  => '_downloadable',
+                'additional_properties' => [
+                    'value' => 'yes',
+                ],
+                'sanitize_callback'     => function ( $value ) {
+                    return ! empty( $value ) && 'yes' === $value;
+                },
+            ]
+        );
+
+        $section->add_field(
+            Elements::VIRTUAL, [
+                'title'                 => __( 'Virtual', 'dokan-lite' ),
+                'description'           => __( 'Downloadable products give access to a file upon purchase.', 'dokan-lite' ),
+                'field_type'            => 'checkbox',
+                'name'                  => '_virtual',
+                'additional_properties' => [
+                    'value' => 'yes',
+                ],
+                'sanitize_callback'     => function ( $value ) {
+                    return ! empty( $value ) && 'yes' === $value;
+                },
             ]
         );
     }
@@ -187,75 +296,123 @@ class Init {
             'inventory',
             [
                 'title'       => __( 'Inventory', 'dokan-lite' ),
-                'description' => __( 'Manage your product stock', 'dokan-lite' ),
+                'description' => __( 'Manage inventory for this product', 'dokan-lite' ),
                 'order'       => 20,
             ]
         );
 
         $section->add_field(
             Elements::SKU, [
-                'title'       => __( 'SKU', 'dokan-lite' ),
-                'type'        => 'text',
-                'name'        => '_sku',
+                'title'       => '<abbr title="' . esc_attr__( 'Stock Keeping Unit', 'dokan-lite' ) . '">' . esc_html__( 'SKU', 'dokan-lite' ) . '</abbr>',
+                'description' => __( 'SKU refers to a Stock-keeping unit, a unique identifier for each distinct product and service that can be purchased.', 'dokan-lite' ),
                 'placeholder' => __( 'Enter product SKU', 'dokan-lite' ),
+                'field_type'  => 'text',
+                'name'        => '_sku',
             ]
         );
 
         $section->add_field(
             Elements::STOCK_STATUS, [
-                'title'   => __( 'Stock Status', 'dokan-lite' ),
-                'type'    => 'select',
-                'name'    => '_stock_status',
-                'options' => wc_get_product_stock_status_options(),
+                'title'       => __( 'Stock Status', 'dokan-lite' ),
+                'description' => __( 'Controls whether or not the product is listed as "in stock" or "out of stock" on the frontend.', 'dokan-lite' ),
+                'field_type'  => 'select',
+                'name'        => '_stock_status',
+                'options'     => wc_get_product_stock_status_options(),
             ]
         );
 
         $section->add_field(
             Elements::MANAGE_STOCK, [
-                'title' => __( 'Enable product stock management', 'dokan-lite' ),
-                'type'  => 'checkbox',
-                'name'  => '_manage_stock',
-                'value' => 'yes',
+                'title'                 => __( 'Enable product stock management', 'dokan-lite' ),
+                'description'           => __( 'Manage stock level (quantity)', 'dokan-lite' ),
+                'field_type'            => 'checkbox',
+                'name'                  => '_manage_stock',
+                'additional_properties' => [
+                    'value' => 'yes',
+                ],
+                'sanitize_callback'     => function ( $value ) {
+                    return ! empty( $value ) && 'yes' === $value;
+                },
             ]
         );
 
         $section->add_field(
             Elements::STOCK_QUANTITY, [
-                'title'       => __( 'Stock quantity', 'dokan-lite' ),
-                'type'        => 'number',
-                'name'        => '_stock',
-                'placeholder' => '1',
-                'min'         => 0,
-                'step'        => 1,
+                'title'                 => __( 'Stock quantity', 'dokan-lite' ),
+                'description'           => __( 'Stock quantity. If this is a variable product this value will be used to control stock for all variations, unless you define stock at variation level.', 'dokan-lite' ),
+                'field_type'            => 'number',
+                'name'                  => '_stock',
+                'placeholder'           => '1',
+                'additional_properties' => [
+                    'min'  => 0,
+                    'step' => 'any',
+                ],
+                'sanitize_callback'     => function ( $value, $original_stock = false, $product = null ) {
+                    if (
+                        false !== $original_stock
+                        && $product instanceof WC_Product
+                        && wc_stock_amount( $product->get_stock_quantity( 'edit' ) ) !== wc_stock_amount( $original_stock )
+                    ) {
+                        return new \WP_Error(
+                            'invalid-stock-quantity',
+                            sprintf(
+                                /* translators: 1: product ID 2: quantity in stock */
+                                __(
+                                    'The stock has not been updated because the value has changed since editing. Product %1$d has %2$d units in stock.',
+                                    'dokan-lite'
+                                ),
+                                $product->get_id(),
+                                $product->get_stock_quantity( 'edit' )
+                            )
+                        );
+                    }
+
+                    return wc_stock_amount( $value );
+                },
             ]
         );
 
         $section->add_field(
             Elements::LOW_STOCK_AMOUNT, [
-                'title'       => __( 'Low stock threshold', 'dokan-lite' ),
-                'type'        => 'number',
-                'name'        => '_low_stock_amount',
-                'placeholder' => 1,
-                'min'         => 0,
-                'step'        => 1,
+                'title'                 => __( 'Low stock threshold', 'dokan-lite' ),
+                'description'           => __( 'When product stock reaches this amount you will be notified by email. It is possible to define different values for each variation individually.', 'dokan-lite' ),
+                'field_type'            => 'number',
+                'name'                  => '_low_stock_amount',
+                'placeholder'           => sprintf(
+                /* translators: %d: Amount of stock left */
+                    esc_attr__( 'Store-wide threshold (%d)', 'dokan-lite' ),
+                    esc_attr( get_option( 'woocommerce_notify_low_stock_amount' ) )
+                ),
+                'additional_properties' => [
+                    'min'  => 0,
+                    'step' => 'any',
+                ],
+                'sanitize_callback'     => 'wc_stock_amount',
             ]
         );
 
         $section->add_field(
             Elements::BACKORDERS, [
-                'title'   => __( 'Allow Backorders', 'dokan-lite' ),
-                'type'    => 'select',
-                'name'    => '_backorders',
-                'options' => wc_get_product_backorder_options(),
+                'title'       => __( 'Allow Backorders', 'dokan-lite' ),
+                'description' => __( 'If managing stock, this controls whether or not backorders are allowed. If enabled, stock quantity can go below 0.', 'dokan-lite' ),
+                'field_type'  => 'select',
+                'name'        => '_backorders',
+                'options'     => wc_get_product_backorder_options(),
             ]
         );
 
         $section->add_field(
             Elements::SOLD_INDIVIDUALLY, [
-                'title' => __( 'Sold Individually', 'dokan-lite' ),
-                'type'  => 'checkbox',
-                'name'  => '_sold_individually',
-                'value' => 'yes',
+                'title'                 => __( 'Sold Individually', 'dokan-lite' ),
+                'description'           => __( 'Check to let customers to purchase only 1 item in a single order. This is particularly useful for items that have limited quantity, for example art or handmade goods.', 'dokan-lite' ),
+                'field_type'            => 'checkbox',
+                'name'                  => '_sold_individually',
+                'additional_properties' => [
+                    'value' => 'yes',
+                ],
+                'sanitize_callback'     => function ( $value ) {
+                    return ! empty( $value ) && 'yes' === $value;
+                },
             ]
         );
     }
@@ -278,24 +435,44 @@ class Init {
         );
 
         $section->add_field(
+            Elements::DOWNLOADS, [
+                'title'       => __( 'Downloadable Files', 'dokan-lite' ),
+                'description' => __( 'Upload files that customers can download after purchase.', 'dokan-lite' ),
+                'field_type'  => 'downloadable',
+                'name'        => '_wc_file_urls[]',
+                'sanitize_callback' => function ( $file_names, $file_urls, $file_hashes ) {
+                    return dokan()->product->prepare_downloads( $file_names, $file_urls, $file_hashes );
+                },
+            ]
+        );
+
+        $section->add_field(
             Elements::DOWNLOAD_LIMIT, [
-                'title'       => __( 'Download Limit', 'dokan-lite' ),
-                'type'        => 'number',
-                'name'        => '_download_limit',
-                'placeholder' => __( 'Unlimited', 'dokan-lite' ),
-                'min'         => 0,
-                'step'        => 1,
+                'title'                 => __( 'Download Limit', 'dokan-lite' ),
+                'placeholder'           => __( 'Unlimited', 'dokan-lite' ),
+                'description'           => __( 'Leave blank for unlimited re-downloads.', 'dokan-lite' ),
+                'field_type'            => 'number',
+                'name'                  => '_download_limit',
+                'additional_properties' => [
+                    'min'  => 0,
+                    'step' => 1,
+                ],
+                'sanitize_callback'     => 'absint',
             ]
         );
 
         $section->add_field(
             Elements::DOWNLOAD_EXPIRY, [
-                'title'       => __( 'Download Expiry', 'dokan-lite' ),
-                'type'        => 'number',
-                'name'        => '_download_expiry',
-                'placeholder' => __( 'Never', 'dokan-lite' ),
-                'min'         => 0,
-                'step'        => 1,
+                'title'                 => __( 'Download Expiry', 'dokan-lite' ),
+                'placeholder'           => __( 'Never', 'dokan-lite' ),
+                'description'           => __( 'Enter the number of days before a download link expires, or leave blank.', 'dokan-lite' ),
+                'field_type'            => 'number',
+                'name'                  => '_download_expiry',
+                'additional_properties' => [
+                    'min'  => 0,
+                    'step' => 1,
+                ],
+                'sanitize_callback'     => 'absint',
             ]
         );
     }
@@ -319,38 +496,43 @@ class Init {
 
         $section->add_field(
             Elements::STATUS, [
-                'title'   => __( 'Product Status', 'dokan-lite' ),
-                'type'    => 'select',
-                'name'    => 'post_status',
-                'default' => dokan_get_default_product_status( dokan_get_current_user_id() ),
-                'options' => dokan_get_available_post_status(), // get it with product_id param
+                'title'      => __( 'Product Status', 'dokan-lite' ),
+                'field_type' => 'select',
+                'name'       => 'status',
+                'options'    => dokan_get_available_post_status(), // get it with product_id param
             ]
         );
 
         $section->add_field(
             Elements::CATALOG_VISIBILITY, [
-                'title'   => __( 'Visibility', 'dokan-lite' ),
-                'type'    => 'select',
-                'name'    => '_visibility',
-                'options' => dokan_get_product_visibility_options(),
+                'title'      => __( 'Visibility', 'dokan-lite' ),
+                'field_type' => 'select',
+                'name'       => '_visibility',
+                'options'    => dokan_get_product_visibility_options(),
             ]
         );
 
         $section->add_field(
             Elements::PURCHASE_NOTE, [
-                'title'       => __( 'Purchase Note', 'dokan-lite' ),
-                'type'        => 'textarea',
-                'name'        => '_purchase_note',
-                'placeholder' => __( 'Customer will get this info in their order email', 'dokan-lite' ),
+                'title'             => __( 'Purchase Note', 'dokan-lite' ),
+                'field_type'        => 'textarea',
+                'name'              => '_purchase_note',
+                'placeholder'       => __( 'Customer will get this info in their order email', 'dokan-lite' ),
+                'sanitize_callback' => 'wp_kses_post',
             ]
         );
 
         $section->add_field(
             Elements::REVIEWS_ALLOWED, [
-                'title' => __( 'Enable product reviews', 'dokan-lite' ),
-                'type'  => 'checkbox',
-                'name'  => '_enable_reviews',
-                'value' => 'yes',
+                'title'                 => __( 'Enable product reviews', 'dokan-lite' ),
+                'field_type'            => 'checkbox',
+                'name'                  => 'comment_status',
+                'additional_properties' => [
+                    'value' => 'yes',
+                ],
+                'sanitize_callback'     => function ( $value ) {
+                    return ! empty( $value ) && 'yes' === $value;
+                },
             ]
         );
     }
@@ -382,17 +564,20 @@ class Init {
 
         $section->add_field(
             Elements::DISABLE_SHIPPING_META, [
-                'title' => __( 'Disable shipping', 'dokan-lite' ),
-                'type'  => 'checkbox',
-                'name'  => '_disable_shipping',
-                'value' => 'no',
+                'title'                 => __( 'Disable shipping', 'dokan-lite' ),
+                'type'                  => 'meta',
+                'field_type'            => 'checkbox',
+                'name'                  => '_disable_shipping',
+                'additional_properties' => [
+                    'value' => 'no',
+                ],
             ]
         );
 
         $section->add_field(
             Elements::WEIGHT, [
                 'title'       => __( 'Weight', 'dokan-lite' ),
-                'type'        => 'number',
+                'field_type'  => 'number',
                 'name'        => '_weight',
                 'placeholder' => '0.00',
                 'min'         => 0,
@@ -403,7 +588,7 @@ class Init {
         $section->add_field(
             Elements::DIMENSIONS_LENGTH, [
                 'title'       => __( 'Length', 'dokan-lite' ),
-                'type'        => 'number',
+                'field_type'  => 'number',
                 'name'        => '_length',
                 'placeholder' => '0.00',
                 'min'         => 0,
@@ -414,7 +599,7 @@ class Init {
         $section->add_field(
             Elements::DIMENSIONS_WIDTH, [
                 'title'       => __( 'Width', 'dokan-lite' ),
-                'type'        => 'number',
+                'field_type'  => 'number',
                 'name'        => '_width',
                 'placeholder' => '0.00',
                 'min'         => 0,
@@ -425,7 +610,7 @@ class Init {
         $section->add_field(
             Elements::DIMENSIONS_HEIGHT, [
                 'title'       => __( 'Height', 'dokan-lite' ),
-                'type'        => 'number',
+                'field_type'  => 'number',
                 'name'        => '_height',
                 'placeholder' => '0.00',
                 'min'         => 0,
@@ -439,27 +624,32 @@ class Init {
 
         $section->add_field(
             Elements::SHIPPING_CLASS, [
-                'title'       => __( 'Shipping Class', 'dokan-lite' ),
-                'type'        => 'select',
-                'name'        => '_shipping_class',
-                'placeholder' => __( 'Select shipping class', 'dokan-lite' ),
-                'options'     => [],
+                'title'                 => __( 'Shipping Class', 'dokan-lite' ),
+                'field_type'            => 'select',
+                'name'                  => 'product_shipping_class',
+                'placeholder'           => __( 'Select shipping class', 'dokan-lite' ),
+                'options'               => [],
+                'sanitization_callback' => 'absint',
             ]
         );
 
         $section->add_field(
             Elements::OVERWRITE_SHIPPING_META, [
-                'title' => __( 'Override your store\'s default shipping cost for this product', 'dokan-lite' ),
-                'type'  => 'checkbox',
-                'name'  => '_overwrite_shipping',
-                'value' => 'no',
+                'title'                 => __( 'Override your store\'s default shipping cost for this product', 'dokan-lite' ),
+                'type'                  => 'meta',
+                'field_type'            => 'checkbox',
+                'name'                  => '_overwrite_shipping',
+                'additional_properties' => [
+                    'value' => 'no',
+                ],
             ]
         );
 
         $section->add_field(
             Elements::ADDITIONAL_SHIPPING_COST_META, [
                 'title'       => __( 'Additional cost', 'dokan-lite' ),
-                'type'        => 'number',
+                'type'        => 'meta',
+                'field_type'  => 'number',
                 'name'        => '_additional_price',
                 'placeholder' => '0.00',
                 'min'         => 0,
@@ -470,7 +660,8 @@ class Init {
         $section->add_field(
             Elements::ADDITIONAL_SHIPPING_QUANTITY_META, [
                 'title'       => __( 'Per Qty Additional Price', 'dokan-lite' ),
-                'type'        => 'number',
+                'type'        => 'meta',
+                'field_type'  => 'number',
                 'name'        => '_additional_qty',
                 'placeholder' => '0',
                 'min'         => 0,
@@ -480,19 +671,20 @@ class Init {
 
         $section->add_field(
             Elements::ADDITIONAL_SHIPPING_PROCESSING_TIME_META, [
-                'title'   => __( 'Processing Time', 'dokan-lite' ),
-                'type'    => 'select',
-                'name'    => '_dps_processing_time',
-                'options' => [],
+                'title'      => __( 'Processing Time', 'dokan-lite' ),
+                'type'       => 'meta',
+                'field_type' => 'select',
+                'name'       => '_dps_processing_time',
+                'options'    => [],
             ]
         );
 
         $section->add_field(
             Elements::TAX_STATUS, [
-                'title'   => __( 'Tax Status', 'dokan-lite' ),
-                'type'    => 'select',
-                'name'    => '_tax_status',
-                'options' => [
+                'title'      => __( 'Tax Status', 'dokan-lite' ),
+                'field_type' => 'select',
+                'name'       => '_tax_status',
+                'options'    => [
                     'taxable'  => __( 'Taxable', 'dokan-lite' ),
                     'shipping' => __( 'Shipping only', 'dokan-lite' ),
                     'none'     => _x( 'None', 'Tax status', 'dokan-lite' ),
@@ -502,10 +694,11 @@ class Init {
 
         $section->add_field(
             Elements::TAX_CLASS, [
-                'title'   => __( 'Tax Class', 'dokan-lite' ),
-                'type'    => 'select',
-                'name'    => '_tax_class',
-                'options' => wc_get_product_tax_class_options(),
+                'title'             => __( 'Tax Class', 'dokan-lite' ),
+                'field_type'        => 'select',
+                'name'              => '_tax_class',
+                'options'           => wc_get_product_tax_class_options(),
+                'sanitize_callback' => 'sanitize_title',
             ]
         );
     }

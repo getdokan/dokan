@@ -58,8 +58,8 @@ class Elements {
     const INVENTORY_DELTA = 'inventory_delta';
     const UPSELL_IDS = 'upsell_ids';
     const CROSS_SELL_IDS = 'cross_sell_ids';
-    const CATEGORIES = 'categories';
-    const TAGS = 'tags';
+    const CATEGORIES = 'category_ids';
+    const TAGS = 'tag_ids';
     const DOWNLOADABLE = 'downloadable';
     const DOWNLOADS = 'downloads';
     const DOWNLOAD_LIMIT = 'download_limit';
@@ -67,7 +67,7 @@ class Elements {
     const EXTERNAL_URL = 'product_url';
     const BUTTON_TEXT = 'button_text';
     const GROUP_PRODUCTS = 'children';
-    const FEATURED_IMAGE_ID = 'featured_image_id';
+    const FEATURED_IMAGE_ID = 'image_id';
     const GALLERY_IMAGE_IDS = 'gallery_image_ids';
     const META_DATA = 'meta_data';
     const DISABLE_SHIPPING_META = '_disable_shipping';

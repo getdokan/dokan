@@ -81,7 +81,7 @@ class NewProductPending extends WC_Email {
             return;
         }
 
-        $product->update_meta_data( '_dokan_new_product_email_sent', 'yes' );
+        $product->add_meta_data( '_dokan_new_product_email_sent', 'yes', true );
         $product->save();
 
         if ( ! $this->is_enabled() || ! $this->get_recipient() ) {

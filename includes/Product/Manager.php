@@ -404,9 +404,9 @@ class Manager {
 
         //call dokan hooks
         if ( ! $is_update ) {
-            do_action( 'dokan_new_product_added', $product_id, $product );
+            do_action( 'dokan_new_product_added', $product_id, [] );
         } else {
-            do_action( 'dokan_product_updated', $product_id, $product );
+            do_action( 'dokan_product_updated', $product_id, [] );
         }
 
         return $this->get( $product_id );
@@ -704,6 +704,37 @@ class Manager {
         }
 
         return $product;
+    }
+
+    /**
+     * Prepare downloads for save.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $file_names  File names.
+     * @param array $file_urls   File urls.
+     * @param array $file_hashes File hashes.
+     *
+     * @return array
+     */
+    public function prepare_downloads( $file_names, $file_urls, $file_hashes ) {
+        $downloads = [];
+
+        if ( ! empty( $file_urls ) ) {
+            $file_url_size = count( $file_urls );
+
+            for ( $i = 0; $i < $file_url_size; $i++ ) {
+                if ( ! empty( $file_urls[ $i ] ) ) {
+                    $downloads[] = [
+                        'name'        => wc_clean( $file_names[ $i ] ),
+                        'file'        => wp_unslash( trim( $file_urls[ $i ] ) ),
+                        'download_id' => wc_clean( $file_hashes[ $i ] ),
+                    ];
+                }
+            }
+        }
+
+        return $downloads;
     }
 
     /**

@@ -19,6 +19,10 @@ class Helper {
      * @return boolean
      */
     public static function product_category_selection_is_single() {
+		if ( ! dokan()->is_pro_exists() ) {
+			return 'single';
+		}
+
         return 'single' === dokan_get_option( 'product_category_style', 'dokan_selling', 'single' );
     }
 
@@ -150,6 +154,44 @@ class Helper {
         return $chosen_cats;
     }
 
+	/**
+	 * Get all ancestors of chosen categories.
+	 *
+	 * @since 3.6.2
+	 *
+	 * @param \WC_Product|int $product
+	 * @param array $chosen_categories
+	 *
+	 * @return array
+	 */
+	public static function get_object_terms_from_chosen_categories( $product, $chosen_categories = [] ) {
+		if ( is_numeric( $product ) ) {
+			$product = wc_get_product( $product );
+		}
+
+		if ( ! $product ) {
+			return [];
+		}
+
+		if ( empty( $chosen_categories ) || ! is_array( $chosen_categories ) ) {
+			// get chosen categories from product meta
+			$chosen_categories = self::get_product_chosen_category( $product->get_id() );
+		}
+
+		$all_ancestors = [];
+		// If category middle selection is true, then we will save only the chosen categories or we will save all the ancestors.
+		if ( self::is_any_category_selection_enabled() ) {
+			$all_ancestors = $chosen_categories;
+		} else {
+			// we need to assign all ancestor of chosen category to add to the given product
+			foreach ( $chosen_categories as $term_id ) {
+				$all_ancestors = array_merge( $all_ancestors, get_ancestors( $term_id, 'product_cat' ), [ (int) $term_id ] );
+			}
+		}
+
+		return array_map( 'absint', array_unique( $all_ancestors ) );
+	}
+
     /**
      * Set all ancestors to a product from chosen product categories
      *
@@ -165,22 +207,7 @@ class Helper {
             return;
         }
 
-        /**
-         * If enabled any one middle category in dokan product multi-step category selection.
-         */
-        $any_category_selection = self::is_any_category_selection_enabled();
-
-        $all_ancestors = [];
-
-        // If category middle selection is true, then we will save only the chosen categories or we will save all the ancestors.
-        if ( $any_category_selection ) {
-            $all_ancestors = $chosen_categories;
-        } else {
-            // we need to assign all ancestor of chosen category to add to the given product
-            foreach ( $chosen_categories as $term_id ) {
-                $all_ancestors = array_merge( $all_ancestors, get_ancestors( $term_id, 'product_cat' ), [ $term_id ] );
-            }
-        }
+        $all_ancestors = self::get_object_terms_from_chosen_categories( $post_id, $chosen_categories );
 
         // save chosen cat to database
         update_post_meta( $post_id, 'chosen_product_cat', $chosen_categories );
@@ -254,12 +281,19 @@ class Helper {
      *
      * @since 3.7.0
      *
-     * @param int $product_id
+     * @param \WC_Product|int $product
      *
      * @return array
      */
-    public static function get_product_chosen_category( $product_id ) {
-        return get_post_meta( $product_id, 'chosen_product_cat', true );
+    public static function get_product_chosen_category( $product ) {
+		if ( is_numeric( $product ) ) {
+			$product = wc_get_product( $product );
+		}
+		if ( ! $product ) {
+			return [];
+		}
+
+		return (array) $product->get_meta( 'chosen_product_cat', true );
     }
 
     /**

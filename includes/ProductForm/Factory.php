@@ -54,6 +54,10 @@ class Factory {
      * @return Field|WP_Error New field or WP_Error.
      */
     public static function add_field( $id, $args ) {
+        if ( empty( $args['id'] ) ) {
+            $args['id'] = $id;
+        }
+
         $new_field = self::create_item( 'field', 'Field', $id, $args );
         if ( is_wp_error( $new_field ) ) {
             return $new_field;
@@ -79,6 +83,10 @@ class Factory {
      * @return Section|WP_Error New section or WP_Error.
      */
     public static function add_section( $id, $args ) {
+        if ( empty( $args['id'] ) ) {
+            $args['id'] = $id;
+        }
+
         $new_section = self::create_item( 'section', 'Section', $id, $args );
         if ( is_wp_error( $new_section ) ) {
             return $new_section;
@@ -96,9 +104,9 @@ class Factory {
     /**
      * Returns list of registered fields.
      *
-     * @return array list of registered fields.
+     * @return Field[] list of registered fields.
      */
-    public static function get_fields() {
+    public static function get_fields(): array {
         return self::$form_fields;
     }
 
@@ -154,21 +162,20 @@ class Factory {
      */
     private static function get_items( string $type, string $class_name, string $sort_by = 'asc' ) {
         $item_list = self::get_item_list( $type );
-        $items     = array_values( $item_list );
 
         if ( class_exists( $class_name ) && method_exists( $class_name, 'sort' ) ) {
             /**
-             * @var \WeDevs\Dokan\ProductForm\Component $class_name
+             * @var Component $class_name
              */
-            usort(
-                $items,
+            uasort(
+                $item_list,
                 function ( $a, $b ) use ( $sort_by, $class_name ) {
                     return $class_name::sort( $a, $b, $sort_by );
                 }
             );
         }
 
-        return $items;
+        return $item_list;
     }
 
     /**
@@ -202,6 +209,7 @@ class Factory {
      * @return Field|Section|WP_Error New product form item or WP_Error.
      */
     private static function create_item( string $type, string $class_name, string $id, array $args ) {
+        $class_name = __NAMESPACE__ . '\\' . $class_name;
         if ( ! class_exists( $class_name ) ) {
             return new WP_Error(
                 'dokan_product_form_' . $type . '_missing_form_class',

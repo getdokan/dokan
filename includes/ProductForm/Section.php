@@ -2,6 +2,8 @@
 
 namespace WeDevs\Dokan\ProductForm;
 
+use WP_Error;
+
 defined( 'ABSPATH' ) || exit;
 
 /**
@@ -25,7 +27,6 @@ class Section extends Component {
      */
     public function __construct( string $id, array $args = [] ) {
         $this->data['fields'] = [];
-        $this->data = wp_parse_args( $args, $this->data );
 
         // set id from the args
         $this->set_id( $id );
@@ -79,6 +80,17 @@ class Section extends Component {
     }
 
     /**
+     * Returns registered field based on given field id.
+     *
+     * @param string $id Field id.
+     *
+     * @return Field|WP_Error New field or WP_Error.
+     */
+    public function get_field( string $id ) {
+        return Factory::get_field( $id );
+    }
+
+    /**
      * Initialize fields
      *
      * @since DOKAN_SINCE
@@ -86,13 +98,12 @@ class Section extends Component {
      * @return $this
      */
     private function init_fields() {
-        $fields = Factory::instance()->get_fields();
-        $this->data['fields'] = array_filter(
-            $fields,
-            function ( Field $field ) {
-                return $field->get_section() === $this->get_id();
+        $this->data['fields'] = [];
+        foreach ( Factory::instance()->get_fields() as $field ) {
+            if ( $field->get_section() === $this->get_id() ) {
+                $this->data['fields'][ $field->get_id() ] = $field;
             }
-        );
+        }
 
         return $this;
     }

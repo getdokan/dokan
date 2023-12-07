@@ -22,6 +22,7 @@ class Field extends Component {
         'id',
         'title',
         'section',
+        'type',
     ];
 
     /**
@@ -34,14 +35,17 @@ class Field extends Component {
      * @throws \Exception
      */
     public function __construct( string $id, array $args = [] ) {
-        $data = [
-            'name'            => '', // html name attribute of the field, if not exists id value will be used as name
-            'property'        => '', // if exists, this will be the name of the field
-            'section'         => '', // section id, required
-            'field_type'      => '', // html field type
-            'placeholder'     => '', // html placeholder attribute value for the field
-            'options'         => '', // if the field is select, radio, checkbox, etc
+        $data       = [
+            'name'                  => '', // html name attribute of the field, if not exists id value will be used as name
+            'value'                 => '', // html value attribute of the field
+            'property'              => '', // if exists, this will be the name of the field
+            'section'               => '', // section id, required
+            'type'                  => 'prop', // field type, accept value can be 'prop', 'meta' or 'other'
+            'field_type'            => '', // html field type
+            'placeholder'           => '', // html placeholder attribute value for the field
+            'options'               => [], // if the field is select, radio, checkbox, etc
             'additional_properties' => [], // additional arguments for the field
+            'sanitize_callback'     => '', // callback function for sanitizing the field value
         ];
         $this->data = array_merge( $this->data, $data );
 
@@ -56,7 +60,7 @@ class Field extends Component {
         if ( count( $missing_arguments ) > 0 ) {
             throw new \Exception(
                 sprintf(
-                    /* translators: 1: Missing arguments list. */
+                /* translators: 1: Missing arguments list. */
                     esc_html__( 'You are missing required arguments of Dokan ProductForm Field: %1$s', 'dokan-lite' ),
                     esc_attr( join( ', ', $missing_arguments ) )
                 )
@@ -76,16 +80,44 @@ class Field extends Component {
     }
 
     /**
-     * Set field name, validated by @since DOKAN_SINCE
+     * Set field name, validated by sanitize_title()
+     *
+     * @since DOKAN_SINCE
      *
      * @param string $name
      *
-     * @see sanitize_title()
+     * @see   sanitize_title()
      *
      * @return $this
      */
     public function set_name( string $name ): Field {
         $this->data['name'] = sanitize_title( $name );
+
+        return $this;
+    }
+
+    /**
+     * Get field value
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return mixed
+     */
+    public function get_value() {
+        return $this->data['value'];
+    }
+
+    /**
+     * Set field value
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param mixed $value
+     *
+     * @return $this
+     */
+    public function set_value( $value ): Field {
+        $this->data['value'] = $value;
 
         return $this;
     }
@@ -102,7 +134,7 @@ class Field extends Component {
     }
 
     /**
-     * Set field property, validated by
+     * Set field property, validated by sanitize_key()
      *
      * @since DOKAN_SINCE
      *
@@ -140,6 +172,65 @@ class Field extends Component {
      */
     public function set_section( string $section ): Field {
         $this->data['section'] = sanitize_key( $section );
+
+        return $this;
+    }
+
+    /**
+     * Get type of the current field
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return string
+     */
+    public function get_type(): string {
+        return $this->data['type'];
+    }
+
+    /**
+     * Return if the type is a prop
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return bool
+     */
+    public function is_prop(): bool {
+        return 'prop' === $this->data['type'];
+    }
+
+    /**
+     * Return if the type is a meta_data
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return bool
+     */
+    public function is_meta(): bool {
+        return 'meta' === $this->data['type'];
+    }
+
+    /**
+     * Return if the type is a date_prop
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return bool
+     */
+    public function is_other_type(): bool {
+        return 'other' === $this->data['type'];
+    }
+
+    /**
+     * Set field type
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $field_type
+     *
+     * @return $this
+     */
+    public function set_type( string $type ): Field {
+        $this->data['type'] = in_array( $type, [ 'prop', 'meta', 'other' ], true ) ? sanitize_key( $type ) : 'other';
 
         return $this;
     }
@@ -183,7 +274,7 @@ class Field extends Component {
     }
 
     /**
-     * Set field placeholder, validated with
+     * Set field placeholder, validated with wp_kses_post()
      *
      * @since DOKAN_SINCE
      *
@@ -260,5 +351,54 @@ class Field extends Component {
         }
 
         return $this;
+    }
+
+    /**
+     * Set field sanitize callback
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param callable|string $callback
+     *
+     * @return void
+     */
+    public function set_sanitize_callback( $callback ): Field {
+        $this->data['sanitize_callback'] = $callback;
+
+        return $this;
+    }
+
+    /**
+     * Get field sanitize callback
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return callable|string
+     */
+    public function get_sanitize_callback() {
+        return $this->data['sanitize_callback'];
+    }
+
+    /**
+     * Get field sanitize callback
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param mixed $value
+     *
+     * @return mixed|\WP_Error
+     */
+    public function sanitize( ...$value ) {
+        $callback = $this->get_sanitize_callback();
+        if ( ! empty( $callback ) && is_callable( $callback ) ) {
+            return call_user_func( $callback, ...$value );
+        }
+
+        $value = current( $value );
+        if ( is_string( $value ) ) {
+            return wc_clean( $value );
+        }
+
+        return $value;
     }
 }
