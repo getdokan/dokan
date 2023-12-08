@@ -10,6 +10,8 @@ use WP_Query;
 use WP_Error;
 use WeDevs\Dokan\ProductForm\Elements as FormElements;
 
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Product manager Class
  *

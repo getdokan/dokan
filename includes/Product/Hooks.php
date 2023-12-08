@@ -5,6 +5,8 @@ namespace WeDevs\Dokan\Product;
 use WeDevs\Dokan\ProductCategory\Helper;
 use WC_Product;
 
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Admin Hooks
  *
