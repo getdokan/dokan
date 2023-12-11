@@ -230,7 +230,7 @@ function dokan_bank_payment_required_fields() {
     // Filtering out all payment fields except dokan bank payment available fields.
     $fields = array_filter(
         $required_fields,
-        function( $key ) use ( $available ) {
+        function ( $key ) use ( $available ) {
             return in_array( $key, $available, true );
         },
         ARRAY_FILTER_USE_KEY
@@ -315,7 +315,7 @@ function dokan_bank_payment_fields_placeholders() {
             ],
             'declaration' => [
                 'label'       => __( 'I attest that I am the owner and have full authorization to this bank account', 'dokan-lite' ),
-                'placeholder' => __( '', 'dokan-lite' ),
+                'placeholder' => __( '', 'dokan-lite' ), // phpcs:ignore
             ],
             'form_caution' => [
                 'label'       => __( 'Please double-check your account information!', 'dokan-lite' ),

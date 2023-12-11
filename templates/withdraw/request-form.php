@@ -75,6 +75,6 @@
     </div>
 <?php else : ?>
     <div class="dokan-alert dokan-alert-warning">
-        <strong><?php echo sprintf( '%s <a href="%s">%s</a>', esc_attr__( 'No withdraw method is available. Please update your payment method to withdraw funds.', 'dokan-lite' ), esc_url( dokan_get_navigation_url( 'settings/payment' ) ), esc_attr__( 'Payment Settings Setup', 'dokan-lite' ) ); ?></strong>
+        <strong><?php printf( '%s <a href="%s">%s</a>', esc_attr__( 'No withdraw method is available. Please update your payment method to withdraw funds.', 'dokan-lite' ), esc_url( dokan_get_navigation_url( 'settings/payment' ) ), esc_attr__( 'Payment Settings Setup', 'dokan-lite' ) ); ?></strong>
     </div>
 <?php endif; ?>

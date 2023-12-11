@@ -461,10 +461,10 @@ class WithdrawController extends WP_REST_Controller {
 
             $validate_request = dokan()->withdraw->is_valid_approval_request(
                 [
-					'user_id' => $user_id,
-					'amount'  => $request['amount'],
-					'method'  => $request['method'],
-				]
+			        'user_id' => $user_id,
+			        'amount'  => $request['amount'],
+			        'method'  => $request['method'],
+                    ]
             );
 
             if ( is_wp_error( $validate_request ) ) {

@@ -585,7 +585,7 @@ final class WeDevs_Dokan {
  *
  * @return WeDevs_Dokan
  */
-function dokan() {
+function dokan() { // phpcs:ignore
     return WeDevs_Dokan::init();
 }
 
