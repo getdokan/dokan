@@ -85,7 +85,7 @@ $hide_customer_info = dokan_get_option( 'hide_customer_info', 'dokan_selling', '
                             </table>
 
                             <?php
-                            $coupons = $order->get_items( array( 'coupon' ) );
+                            $coupons = $order->get_items( 'coupon' );
 
                             if ( $coupons ) {
                                 ?>

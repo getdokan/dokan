@@ -94,7 +94,6 @@ class Assets {
                 wp_enqueue_style( 'dokan-wp-version-before-5-3' );
             }
 
-            // load fontawesome styles
             wp_enqueue_style( 'dokan-fontawesome' );
 
             // load wooCommerce select2 styles
@@ -315,17 +314,13 @@ class Assets {
                 'deps'    => [ 'dokan-vue-vendor' ],
                 'version' => filemtime( DOKAN_DIR . '/assets/css/vue-bootstrap.css' ),
             ],
-            'dokan-flaticon'                => [
-                'src'     => DOKAN_PLUGIN_ASSEST . '/font/flaticon/flaticon.css',
-                'version' => filemtime( DOKAN_DIR . '/assets/font/flaticon/flaticon.css' ),
-            ],
             'dokan-sf-pro-text'              => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/font/sf-pro-text/sf-pro-text.css',
                 'version' => filemtime( DOKAN_DIR . '/assets/font/sf-pro-text/sf-pro-text.css' ),
             ],
             'dokan-vue-admin'               => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/vue-admin.css',
-                'deps'    => [ 'dokan-vue-vendor', 'dokan-vue-bootstrap', 'dokan-flaticon' ],
+                'deps'    => [ 'dokan-vue-vendor', 'dokan-vue-bootstrap' ],
                 'version' => filemtime( DOKAN_DIR . '/assets/css/vue-admin.css' ),
             ],
             'dokan-vue-frontend'            => [
@@ -571,7 +566,9 @@ class Assets {
         if ( DOKAN_LOAD_STYLE ) {
             wp_enqueue_style( 'dokan-style' );
             wp_enqueue_style( 'dokan-modal' );
-            wp_enqueue_style( 'dokan-fontawesome' );
+            if ( 'off' === dokan_get_option( 'disable_dokan_fontawesome', 'dokan_appearance', 'off' ) ) {
+                wp_enqueue_style( 'dokan-fontawesome' );
+            }
 
             if ( is_rtl() ) {
                 wp_enqueue_style( 'dokan-rtl-style' );

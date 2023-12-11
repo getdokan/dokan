@@ -38,6 +38,7 @@ export class WithdrawsPage extends AdminPage {
     // filter withdraws
     async filterWithdraws(input: string, action: string): Promise<void> {
         await this.goIfNotThere(data.subUrls.backend.dokan.withdraw);
+        await this.click(selector.admin.dokan.withdraw.filters.clearFilter);
 
         switch (action) {
             case 'by-vendor':

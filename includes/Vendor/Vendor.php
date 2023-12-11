@@ -15,6 +15,7 @@ use WP_User;
  *
  * @since 2.6.10
  */
+#[\AllowDynamicProperties]
 class Vendor {
     /**
      * Set class public properties
@@ -249,6 +250,7 @@ class Vendor {
         $shop_info = get_user_meta( $this->id, 'dokan_profile_settings', true );
         $shop_info = is_array( $shop_info ) ? $shop_info : array();
         $shop_info = wp_parse_args( $shop_info, $defaults );
+        $shop_info['address'] = empty( $shop_info['address'] ) ? []: $shop_info['address']; // Empty vendor address save issue fix
 
         $this->shop_data = apply_filters( 'dokan_vendor_shop_data', $shop_info, $this );
     }

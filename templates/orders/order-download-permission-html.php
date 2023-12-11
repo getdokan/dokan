@@ -49,7 +49,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                             echo wp_kses_post(
                                 sprintf(
                                     // translators: 1) file download counter
-                                    _n( '%d time', '%d times', intval( $download->download_count ), 'dokan-lite' ),
+                                    _n( '%s time', '%s times', intval( $download->download_count ), 'dokan-lite' ),
                                     number_format_i18n( $download->download_count )
                                 )
                             );

@@ -4,7 +4,7 @@ import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
 import { payloads } from '@utils/payloads';
 
-const { CUSTOMER_ID } = process.env;
+const { CUSTOMER_ID } = global as any;
 
 test.describe('Request for quotation test admin', () => {
     let admin: RequestForQuotationsPage;

@@ -211,6 +211,10 @@ class Hooks {
      * @return void
      */
     public function admin_shop_order_scripts() {
+        $current_screen = get_current_screen();
+        if ( $current_screen && OrderUtil::get_order_admin_screen() !== $current_screen->base ) {
+            return;
+        }
         ?>
         <script type="text/javascript">
             jQuery(function ($) {

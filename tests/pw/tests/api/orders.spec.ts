@@ -44,7 +44,7 @@ for (const version of versions) {
         });
 
         test('get single order @lite', async () => {
-            const [response, responseBody] = await apiUtils.get(endPoints.getSingleOrder(orderId).replace('v1', version));
+            const [response, responseBody] = await apiUtils.get(endPoints.getSingleOrder(orderId).replace('v1', version), { headers: payloads.adminAuth });
             expect(response.ok()).toBeTruthy();
             expect(responseBody).toBeTruthy();
         });
