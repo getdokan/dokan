@@ -66,7 +66,6 @@
             $( '.dokan-product-attribute-wrapper ul.dokan-attribute-option-list' ).on( 'click', 'button.dokan-add-new-attribute', this.attribute.addNewExtraAttr );
             $( '.product-edit-container .dokan-product-attribute-wrapper' ).on( 'click', 'a.dokan-product-remove-attribute', this.attribute.removeAttribute );
             $( '.product-edit-container .dokan-product-attribute-wrapper' ).on( 'click', 'a.dokan-save-attribute', this.attribute.saveAttribute );
-            $( 'body' ).on( 'click', '.product-container-footer input[type="submit"]', this.createNewProduct );
 
             this.attribute.disbalePredefinedAttribute();
 
@@ -338,69 +337,6 @@
 
             Dokan_Editor.gallery.sortable();
             $( 'body' ).trigger( 'dokan-product-editor-popup-opened', Dokan_Editor );
-        },
-
-        createNewProduct: function (e) {
-            e.preventDefault();
-
-            var self = $(this),
-                form = self.closest('form#dokan-add-new-product-form'),
-                btn_id = self.attr('data-btn_id');
-
-            form.find( 'span.dokan-show-add-product-success' ).html('');
-            form.find( 'span.dokan-show-add-product-error' ).html('');
-            form.find( 'span.dokan-add-new-product-spinner' ).css( 'display', 'inline-block' );
-
-            self.attr( 'disabled', 'disabled' );
-
-            if ( form.find( 'input[name="post_title"]' ).val() == '' ) {
-                $( 'span.dokan-show-add-product-error' ).html( dokan.product_title_required );
-                self.removeAttr( 'disabled' );
-                form.find( 'span.dokan-add-new-product-spinner' ).css( 'display', 'none' );
-                return;
-            }
-
-            if ( form.find( 'select[name="product_cat"]' ).val() == '-1' ) {
-                $( 'span.dokan-show-add-product-error' ).html( dokan.product_category_required );
-                self.removeAttr( 'disabled' );
-                form.find( 'span.dokan-add-new-product-spinner' ).css( 'display', 'none' );
-                return;
-            }
-
-            var data = {
-                action:   'dokan_create_new_product',
-                postdata: form.serialize(),
-                _wpnonce : dokan.nonce
-            };
-
-            Dokan_Editor.modal.iziModal('startLoading');
-            $.post( dokan.ajaxurl, data, function( resp ) {
-                if ( resp.success ) {
-                    self.removeAttr( 'disabled' );
-                    if ( btn_id === 'create_new' ) {
-                        $( '#dokan-add-product-popup' ).iziModal('close');
-                        window.location.href = resp.data;
-                    } else {
-                        product_featured_frame = undefined;
-                        $('.dokan-dashboard-product-listing-wrapper').load( window.location.href + ' table.product-listing-table' );
-                        Dokan_Editor.modal.iziModal('resetContent');
-                        Dokan_Editor.openProductPopup();
-                        Dokan_Editor.reRenderPopupElements();
-                        $( 'span.dokan-show-add-product-success' ).html( dokan.product_created_response );
-
-                        setTimeout(function() {
-                            $( 'span.dokan-show-add-product-success' ).html( '' );
-                        }, 3000);
-                    }
-                } else {
-                    self.removeAttr( 'disabled' );
-                    $( 'span.dokan-show-add-product-error' ).html( resp.data );
-                }
-                form.find( 'span.dokan-add-new-product-spinner' ).css( 'display', 'none' );
-            })
-            .always( function () {
-                Dokan_Editor.modal.iziModal('stopLoading');
-            });
         },
 
         attribute: {

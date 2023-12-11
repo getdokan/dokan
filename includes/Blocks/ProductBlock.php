@@ -17,7 +17,7 @@ class ProductBlock {
      * @return array
      */
     public function get_configurations() {
-        $can_create_tags = dokan_get_option( 'product_vendors_can_create_tags', 'dokan_selling' );
+        $can_create_tags = dokan()->is_pro_exists() ? dokan_get_option( 'product_vendors_can_create_tags', 'dokan_selling', 'off' ) : 'off';
 
         return apply_filters(
             'dokan_get_product_block_configurations',

@@ -14,154 +14,18 @@ use WeDevs\Dokan\ProductCategory\Helper;
  *
  * @param array $args
  *
- * @return int|bool|WP_Error
+ * @deprecated DOKAN_SINCE
+ *
+ * @return \WP_Error|\WC_Product
  */
 function dokan_save_product( $args ) {
-    $defaults = [
-        'post_title'       => '',
-        'post_content'     => '',
-        'post_excerpt'     => '',
-        'post_status'      => '',
-        'post_type'        => 'product',
-        'product_tag'      => [],
-        '_visibility'      => 'visible',
-    ];
+    wc_deprecated_function( __FUNCTION__, 'DOKAN_SINCE', 'dokan()->product->create()' );
 
-    $data = wp_parse_args( $args, $defaults );
-
-    if ( empty( $data['post_title'] ) ) {
-        return new WP_Error( 'no-title', __( 'Please enter product title', 'dokan-lite' ) );
+    try {
+        return dokan()->product->create( $args );
+    } catch ( Exception $e ) {
+        return new WP_Error( $e->getCode(), $e->getMessage() );
     }
-
-    if ( ! isset( $data['chosen_product_cat'] ) ) {
-        if ( Helper::product_category_selection_is_single() ) {
-            if ( absint( $data['product_cat'] ) < 0 ) {
-                return new WP_Error( 'no-category', __( 'Please select a category', 'dokan-lite' ) );
-            }
-        } else {
-            if ( ! isset( $data['product_cat'] ) && empty( $data['product_cat'] ) ) {
-                return new WP_Error( 'no-category', __( 'Please select at least one category', 'dokan-lite' ) );
-            }
-        }
-    } elseif ( empty( $data['chosen_product_cat'] ) ) {
-        return new WP_Error( 'no-category', __( 'Please select a category', 'dokan-lite' ) );
-    }
-
-    $error = apply_filters( 'dokan_new_product_popup_args', '', $data );
-
-    if ( is_wp_error( $error ) ) {
-        return $error;
-    }
-
-    $post_status = ! empty( $data['post_status'] ) ? sanitize_text_field( $data['post_status'] ) : dokan_get_default_product_status();
-
-    $post_arr = [
-        'post_type'    => 'product',
-        'post_status'  => $post_status,
-        'post_title'   => sanitize_text_field( $data['post_title'] ),
-        'post_content' => wp_kses_post( $data['post_content'] ),
-        'post_excerpt' => wp_kses_post( $data['post_excerpt'] ),
-    ];
-
-    if ( ! empty( $data['ID'] ) ) {
-        $post_arr['ID'] = absint( $data['ID'] );
-
-        if ( ! dokan_is_product_author( $post_arr['ID'] ) ) {
-            return new WP_Error( 'not-own', __( 'Sorry, You can not modify another vendor\'s product !', 'dokan-lite' ) );
-        }
-
-        $is_updating = true;
-    } else {
-        $is_updating = false;
-    }
-
-    $post_arr = apply_filters( 'dokan_insert_product_post_data', $post_arr, $data );
-
-    $post_data = [
-        'id'                 => $is_updating ? $post_arr['ID'] : '',
-        'name'               => $post_arr['post_title'],
-        'type'               => ! empty( $data['product_type'] ) ? $data['product_type'] : 'simple',
-        'description'        => $post_arr['post_content'],
-        'short_description'  => $post_arr['post_excerpt'],
-        'status'             => $post_status,
-    ];
-
-    if ( ! isset( $data['chosen_product_cat'] ) ) {
-        if ( Helper::product_category_selection_is_single() ) {
-            $cat_ids[] = $data['product_cat'];
-        } else {
-            if ( ! empty( $data['product_cat'] ) ) {
-                $cat_ids = array_map( 'absint', (array) $data['product_cat'] );
-            }
-        }
-        $post_data['categories'] = $cat_ids;
-    }
-
-    if ( isset( $data['feat_image_id'] ) ) {
-        $post_data['featured_image_id'] = ! empty( $data['feat_image_id'] ) ? absint( $data['feat_image_id'] ) : '';
-    }
-
-    if ( isset( $data['product_image_gallery'] ) ) {
-        $post_data['gallery_image_ids'] = ! empty( $data['product_image_gallery'] ) ? array_filter( explode( ',', wc_clean( $data['product_image_gallery'] ) ) ) : [];
-    }
-
-    if ( isset( $data['product_tag'] ) ) {
-        /**
-         * Filter of maximun a vendor can add tags.
-         *
-         * @since 3.3.7
-         *
-         * @param integer default -1
-         */
-        $maximum_tags_select_length = apply_filters( 'dokan_product_tags_select_max_length', -1 );
-
-        // Setting limitation for how many product tags that vendor can input.
-        if ( $maximum_tags_select_length !== -1 && count( $data['product_tag'] ) !== 0 && count( $data['product_tag'] ) > $maximum_tags_select_length ) {
-            /* translators: %s: maximum tag length */
-            return new WP_Error( 'tags-limit', sprintf( __( 'You can only select %s tags', 'dokan-lite' ), number_format_i18n( $maximum_tags_select_length ) ) );
-        }
-
-        $post_data['tags'] = array_map( 'absint', (array) $data['product_tag'] );
-    }
-
-    if ( isset( $data['_regular_price'] ) ) {
-        $post_data['regular_price'] = $data['_regular_price'] === '' ? '' : wc_format_decimal( $data['_regular_price'] );
-    }
-
-    if ( isset( $data['_sale_price'] ) ) {
-        $post_data['sale_price'] = wc_format_decimal( $data['_sale_price'] );
-    }
-
-    if ( isset( $data['_sale_price_dates_from'] ) ) {
-        $post_data['date_on_sale_from'] = wc_clean( $data['_sale_price_dates_from'] );
-    }
-
-    if ( isset( $data['_sale_price_dates_to'] ) ) {
-        $post_data['date_on_sale_to'] = wc_clean( $data['_sale_price_dates_to'] );
-    }
-
-    if ( isset( $data['_visibility'] ) && array_key_exists( $data['_visibility'], dokan_get_product_visibility_options() ) ) {
-        $post_data['catalog_visibility'] = sanitize_text_field( $data['_visibility'] );
-    }
-
-    $product = dokan()->product->create( $post_data );
-
-    if ( $product ) {
-        $chosen_cat = Helper::product_category_selection_is_single() ? [ reset( $data['chosen_product_cat'] ) ] : $data['chosen_product_cat'];
-        Helper::set_object_terms_from_chosen_categories( $product->get_id(), $chosen_cat );
-    }
-
-    if ( ! $is_updating ) {
-        do_action( 'dokan_new_product_added', $product->get_id(), $data );
-    } else {
-        do_action( 'dokan_product_updated', $product->get_id(), $data );
-    }
-
-    if ( $product ) {
-        return $product->get_id();
-    }
-
-    return false;
 }
 
 /**

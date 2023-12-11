@@ -5,6 +5,8 @@ namespace WeDevs\Dokan\Product;
 use WeDevs\Dokan\ProductCategory\Helper;
 use WC_Product;
 
+defined( 'ABSPATH' ) || exit;
+
 /**
  * Admin Hooks
  *
@@ -30,7 +32,7 @@ class Hooks {
         add_action( 'woocommerce_new_product', [ $this, 'update_category_data_for_new_and_update_product' ], 10, 1 );
         add_action( 'woocommerce_update_product', [ $this, 'update_category_data_for_new_and_update_product' ], 10, 1 );
         add_filter( 'dokan_post_status', [ $this, 'set_product_status' ], 1, 2 );
-        add_action( 'dokan_new_product_added', [ $this, 'set_new_product_email_status' ], 1, 1 );
+        add_filter( 'dokan_product_edit_meta_data', [ $this, 'set_new_product_email_status' ], 1, 3 );
 
         // Remove product type filter if pro not exists.
         add_filter( 'dokan_product_listing_filter_args', [ $this, 'remove_product_type_filter' ] );
@@ -362,16 +364,20 @@ class Hooks {
      *
      * @since 3.8.2
      *
-     * @param int|WC_Product $product_id
+     * @param array $meta_data
+     * @param WC_Product $product
+     * @param bool $is_new_product
      *
-     * @return void
+     * @return array
      */
-    public function set_new_product_email_status( $product_id ) {
-        if ( is_a( $product_id, 'WC_Product' ) ) {
-            $product_id->update_meta_data( '_dokan_new_product_email_sent', 'no' );
-        } else {
-            update_post_meta( $product_id, '_dokan_new_product_email_sent', 'no' );
+    public function set_new_product_email_status( array $meta_data, WC_Product $product, bool $is_new_product ) {
+        if ( ! $is_new_product ) {
+            return $meta_data;
         }
+
+        $meta_data['_dokan_new_product_email_sent'] = 'no';
+
+        return $meta_data;
     }
 
     /**
@@ -409,7 +415,7 @@ class Hooks {
 
         wc_print_notice( __( 'As this is your own product, the "Add to Cart" button has been removed. Please visit as a guest to view it.', 'dokan-lite' ), 'notice' );
     }
-  
+
     /**
      * Filter the recipients of the product review notification.
      *
