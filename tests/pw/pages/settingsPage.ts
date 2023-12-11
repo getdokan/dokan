@@ -130,9 +130,20 @@ export class SettingsPage extends AdminPage {
             await this.clearAndType(selector.admin.dokan.settings.withdraw.customMethodName, withdraw.customMethodName);
             await this.clearAndType(selector.admin.dokan.settings.withdraw.customMethodType, withdraw.customMethodType);
         }
+        // Withdraw Charge
+        await this.clearAndType(selector.admin.dokan.settings.withdraw.payPalChargePercentage, withdraw.charge.paypal);
+        await this.clearAndType(selector.admin.dokan.settings.withdraw.bankTransferChargeFixed, withdraw.charge.bank);
+        if (DOKAN_PRO) {
+            await this.clearAndType(selector.admin.dokan.settings.withdraw.skrillChargePercentage, withdraw.charge.skrill);
+            await this.clearAndType(selector.admin.dokan.settings.withdraw.customChargePercentage, withdraw.charge.custom);
+        }
+
         await this.clearAndType(selector.admin.dokan.settings.withdraw.minimumWithdrawAmount, withdraw.minimumWithdrawAmount);
         await this.enableSwitcher(selector.admin.dokan.settings.withdraw.orderStatusForWithdrawCompleted);
         await this.enableSwitcher(selector.admin.dokan.settings.withdraw.orderStatusForWithdrawProcessing);
+
+        // Withdraw Charge
+
         if (DOKAN_PRO) {
             await this.clearAndType(selector.admin.dokan.settings.withdraw.withdrawThreshold, withdraw.withdrawThreshold);
 

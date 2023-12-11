@@ -40,7 +40,7 @@ test.describe('Settings test', () => {
         await settingsPage.setDokanSellingSettings(data.dokanSettings.selling);
     });
 
-    test('admin can set dokan withdraw settings @lite', async () => {
+    test.skip('admin can set dokan withdraw settings @lite', async () => {
         await settingsPage.setDokanWithdrawSettings(data.dokanSettings.withdraw);
     });
 

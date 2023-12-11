@@ -23,8 +23,8 @@ export default defineConfig({
     // forbidOnly     : !!process.env.CI, 	/* Fail the build on CI if you accidentally left test-only in the source code. */
     repeatEach: 1 /* The number of times to repeat each test, useful for debugging flaky tests. */,
     retries: process.env.CI ? 1 : 0 /* The maximum number of retry attempts given to failed tests.  */,
-    workers: process.env.CI ? 2 : 1 /* Opt out of parallel tests on CI. */,
-    reportSlowTests: { max: 3, threshold: 25 } /* Whether to report slow test files. Pass null to disable this feature. */,
+    workers: process.env.CI ? 4 : 1 /* Opt out of parallel tests on CI. */,
+    reportSlowTests: { max: 2, threshold: 25 } /* Whether to report slow test files. Pass null to disable this feature. */,
     reporter: process.env.CI
         ? [
               ['github'],
@@ -62,11 +62,19 @@ export default defineConfig({
 
     projects: [
         // E2e project
+        // auth_setup
+        {
+            name: 'auth_setup',
+            // testMatch: /.*\.setup\.ts/,
+            testMatch: '_auth.setup.ts',
+        },
 
         // e2e_setup
         {
             name: 'e2e_setup',
-            testMatch: /.*\.setup\.ts/,
+            // testMatch: /.*\.setup\.ts/,
+            testMatch: '_env.setup.ts',
+            dependencies: process.env.NO_SETUP ? [] : ['auth_setup'] /* whether not to run setup tests before running actual tests */,
         },
 
         // e2e_tests

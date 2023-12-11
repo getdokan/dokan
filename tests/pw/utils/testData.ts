@@ -1737,6 +1737,12 @@ export const data = {
         withdraw: {
             customMethodName: 'Bksh',
             customMethodType: 'Phone',
+            charge: {
+                paypal: '5',
+                bank: '5',
+                skrill: '5',
+                custom: '5',
+            },
             minimumWithdrawAmount: '5',
             withdrawThreshold: '0',
             quarterlyScheduleMonth: 'march', // 'january', 'february', 'march'

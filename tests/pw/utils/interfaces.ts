@@ -1409,6 +1409,12 @@ export interface dokanSettings {
     withdraw: {
         customMethodName: string;
         customMethodType: string;
+        charge: {
+            paypal: string;
+            bank: string;
+            skrill: string;
+            custom: string;
+        };
         minimumWithdrawAmount: string;
         withdrawThreshold: string;
         quarterlyScheduleMonth: string;
