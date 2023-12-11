@@ -13,12 +13,17 @@ import { schemas } from '@utils/schemas';
 
 const { VENDOR_ID, CUSTOMER_ID } = process.env;
 
-test.describe('abuse report api test', () => {
+test.describe.only('abuse report api test', () => {
     let apiUtils: ApiUtils;
 
     test.beforeAll(async ({ request }) => {
         apiUtils = new ApiUtils(request);
+        console.log('VENDOR_ID', VENDOR_ID);
+        console.log('CUSTOMER_ID', CUSTOMER_ID);
+        
         const [, productId] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendorAuth);
+        console.log('productId', productId);
+        
         await dbUtils.createAbuseReport(dbData.dokan.createAbuseReport, productId, VENDOR_ID, CUSTOMER_ID);
         await dbUtils.createAbuseReport(dbData.dokan.createAbuseReport, productId, VENDOR_ID, CUSTOMER_ID);
     });
@@ -32,6 +37,7 @@ test.describe('abuse report api test', () => {
 
     test('get all abuse reports @pro', async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllAbuseReports);
+        console.log(responseBody);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
         expect(responseBody).toMatchSchema(schemas.abuseReportsSchema.abuseReportsSchema);
@@ -48,6 +54,7 @@ test.describe('abuse report api test', () => {
     test('delete batch abuse reports @pro', async () => {
         const allAbuseReportIds = (await apiUtils.getAllAbuseReports())?.map((a: { id: unknown }) => a.id);
         const [response, responseBody] = await apiUtils.delete(endPoints.deleteBatchAbuseReports, { data: { items: allAbuseReportIds } });
+        console.log(responseBody);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
         expect(responseBody).toMatchSchema(schemas.abuseReportsSchema.abuseReportsSchema);
