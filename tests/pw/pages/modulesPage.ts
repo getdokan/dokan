@@ -48,7 +48,7 @@ export class ModulesPage extends AdminPage {
         await this.toHaveCount(selector.admin.dokan.modules.pro.moduleCategoryTypes.uiUx, 2);
         await this.toHaveCount(selector.admin.dokan.modules.pro.moduleCategoryTypes.shipping, 3);
         await this.toHaveCount(selector.admin.dokan.modules.pro.moduleCategoryTypes.storeManagement, 10);
-        await this.toHaveCount(selector.admin.dokan.modules.pro.moduleCategoryTypes.payment, 7);
+        await this.toHaveCount(selector.admin.dokan.modules.pro.moduleCategoryTypes.payment, 6);
         await this.toHaveCount(selector.admin.dokan.modules.pro.moduleCategoryTypes.orderManagement, 2);
         await this.toHaveCount(selector.admin.dokan.modules.pro.moduleCategoryTypes.vendorManagement, 1);
     }

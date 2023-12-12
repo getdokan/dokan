@@ -371,7 +371,7 @@ export const schemas = {
                     id: z.number(),
                     name: z.string(),
                     email: z.string().email(),
-                    admin_url: z.string().url(),
+                    admin_url: z.string().url().nullable(),
                 }),
                 description: z.string(),
                 reported_at: z.coerce.date(),
