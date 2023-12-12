@@ -181,7 +181,7 @@ class Hooks {
             return $classes;
         }
 
-        if ( is_search() || ! current_user_can( 'manage_woocommerce' ) ) {
+        if ( ! is_admin() || ! current_user_can( 'manage_woocommerce' ) ) {
             return $classes;
         }
 
@@ -212,7 +212,11 @@ class Hooks {
      */
     public function admin_shop_order_scripts() {
         $current_screen = get_current_screen();
-        if ( $current_screen && OrderUtil::get_order_admin_screen() !== $current_screen->base ) {
+        if ( ! $current_screen ) {
+            return;
+        }
+
+        if ( ( 'edit' === $current_screen->base && 'shop_order' !== $current_screen->post_type ) && OrderUtil::get_order_admin_screen() !== $current_screen->base ) {
             return;
         }
         ?>

@@ -3,11 +3,11 @@
 **Donate Link:** http://tareq.co/donate/  
 **Tags:** WooCommerce multivendor marketplace, multi vendor marketplace, multi seller store, multi-vendor, multi seller, commissions, multivendor, marketplace, product vendors, woocommerce vendor, commission rate, e-commerce, woocommerce, ebay, ecommerce.  
 **Requires at least:** 5.6  
-**Tested up to:** 6.4.1  
+**Tested up to:** 6.4.2  
 **WC requires at least:** 5.0.0  
 **WC tested up to:** 8.2.2  
 **Requires PHP:** 7.3  
-**Stable tag:** 3.9.3  
+**Stable tag:** 3.9.4  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -337,6 +337,11 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 ## Changelog ##
+
+### v3.9.4 ( Dec 12, 2023 ) ###
+
+**fix:** Fixed an issue where the Vendor class shop_data persistence is broken on save()
+**fix:** Fixed a fatal error while trying to edit a subscription under WordPress Admin Panel → WooCommerce → Subscription menu of the WooCommerce Subscription Plugin.
 
 ### v3.9.3 ( Nov 30, 2023 ) ###
 
