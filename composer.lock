@@ -550,12 +550,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCompatibility/PHPCompatibilityWP.git",
-                "reference": "1708fc935ceeff3ec57dca5b1b18666403e53fba"
+                "reference": "a1d8194a8442be9b7087136f5ec6cb2125716c8d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCompatibility/PHPCompatibilityWP/zipball/1708fc935ceeff3ec57dca5b1b18666403e53fba",
-                "reference": "1708fc935ceeff3ec57dca5b1b18666403e53fba",
+                "url": "https://api.github.com/repos/PHPCompatibility/PHPCompatibilityWP/zipball/a1d8194a8442be9b7087136f5ec6cb2125716c8d",
+                "reference": "a1d8194a8442be9b7087136f5ec6cb2125716c8d",
                 "shasum": ""
             },
             "require": {
@@ -598,7 +598,7 @@
                 "issues": "https://github.com/PHPCompatibility/PHPCompatibilityWP/issues",
                 "source": "https://github.com/PHPCompatibility/PHPCompatibilityWP"
             },
-            "time": "2023-09-27T11:31:40+00:00"
+            "time": "2023-11-14T01:21:01+00:00"
         },
         {
             "name": "phpcsstandards/phpcsextra",
@@ -606,12 +606,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCSStandards/PHPCSExtra.git",
-                "reference": "746c3190ba8eb2f212087c947ba75f4f5b9a58d5"
+                "reference": "9ca16b21ac556f6dd1b338329b12ac3cb2a9c62e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCSStandards/PHPCSExtra/zipball/746c3190ba8eb2f212087c947ba75f4f5b9a58d5",
-                "reference": "746c3190ba8eb2f212087c947ba75f4f5b9a58d5",
+                "url": "https://api.github.com/repos/PHPCSStandards/PHPCSExtra/zipball/9ca16b21ac556f6dd1b338329b12ac3cb2a9c62e",
+                "reference": "9ca16b21ac556f6dd1b338329b12ac3cb2a9c62e",
                 "shasum": ""
             },
             "require": {
@@ -660,9 +660,10 @@
             ],
             "support": {
                 "issues": "https://github.com/PHPCSStandards/PHPCSExtra/issues",
+                "security": "https://github.com/PHPCSStandards/PHPCSExtra/security/policy",
                 "source": "https://github.com/PHPCSStandards/PHPCSExtra"
             },
-            "time": "2023-09-20T22:06:18+00:00"
+            "time": "2023-11-29T01:20:16+00:00"
         },
         {
             "name": "phpcsstandards/phpcsutils",
@@ -670,12 +671,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCSStandards/PHPCSUtils.git",
-                "reference": "77a6aa4e6abc437eb0cb71702c1a635655a33af8"
+                "reference": "f76bab4ac55d559a22c24dafe1f35c0b940b5c02"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCSStandards/PHPCSUtils/zipball/77a6aa4e6abc437eb0cb71702c1a635655a33af8",
-                "reference": "77a6aa4e6abc437eb0cb71702c1a635655a33af8",
+                "url": "https://api.github.com/repos/PHPCSStandards/PHPCSUtils/zipball/f76bab4ac55d559a22c24dafe1f35c0b940b5c02",
+                "reference": "f76bab4ac55d559a22c24dafe1f35c0b940b5c02",
                 "shasum": ""
             },
             "require": {
@@ -734,9 +735,10 @@
             "support": {
                 "docs": "https://phpcsutils.com/",
                 "issues": "https://github.com/PHPCSStandards/PHPCSUtils/issues",
+                "security": "https://github.com/PHPCSStandards/PHPCSUtils/security/policy",
                 "source": "https://github.com/PHPCSStandards/PHPCSUtils"
             },
-            "time": "2023-09-13T20:12:39+00:00"
+            "time": "2023-11-24T21:05:41+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -1042,12 +1044,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "c8f1d07cab40fcbf3d9ad9bce17c42188e981b7d"
+                "reference": "539165bf4afe10c758f55215a1057861873a2421"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/c8f1d07cab40fcbf3d9ad9bce17c42188e981b7d",
-                "reference": "c8f1d07cab40fcbf3d9ad9bce17c42188e981b7d",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/539165bf4afe10c758f55215a1057861873a2421",
+                "reference": "539165bf4afe10c758f55215a1057861873a2421",
                 "shasum": ""
             },
             "require": {
@@ -1132,7 +1134,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-11-09T06:47:34+00:00"
+            "time": "2023-11-29T12:08:41+00:00"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
@@ -1961,16 +1963,16 @@
         },
         {
             "name": "theseer/tokenizer",
-            "version": "1.2.1",
+            "version": "1.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/theseer/tokenizer.git",
-                "reference": "34a41e998c2183e22995f158c581e7b5e755ab9e"
+                "reference": "b2ad5003ca10d4ee50a12da31de12a5774ba6b96"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/theseer/tokenizer/zipball/34a41e998c2183e22995f158c581e7b5e755ab9e",
-                "reference": "34a41e998c2183e22995f158c581e7b5e755ab9e",
+                "url": "https://api.github.com/repos/theseer/tokenizer/zipball/b2ad5003ca10d4ee50a12da31de12a5774ba6b96",
+                "reference": "b2ad5003ca10d4ee50a12da31de12a5774ba6b96",
                 "shasum": ""
             },
             "require": {
@@ -1999,7 +2001,7 @@
             "description": "A small library for converting tokenized PHP source code into XML and potentially other formats",
             "support": {
                 "issues": "https://github.com/theseer/tokenizer/issues",
-                "source": "https://github.com/theseer/tokenizer/tree/1.2.1"
+                "source": "https://github.com/theseer/tokenizer/tree/1.2.2"
             },
             "funding": [
                 {
@@ -2007,7 +2009,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2021-07-28T10:34:58+00:00"
+            "time": "2023-11-20T00:12:19+00:00"
         },
         {
             "name": "wp-coding-standards/wpcs",
@@ -2015,12 +2017,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/WordPress/WordPress-Coding-Standards.git",
-                "reference": "7722c0b8a6f4eb615be4ba8ebe22ed92a5fa87d7"
+                "reference": "fe7895876b6ea344fa87bb82a2fbce73f90e9897"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/WordPress/WordPress-Coding-Standards/zipball/7722c0b8a6f4eb615be4ba8ebe22ed92a5fa87d7",
-                "reference": "7722c0b8a6f4eb615be4ba8ebe22ed92a5fa87d7",
+                "url": "https://api.github.com/repos/WordPress/WordPress-Coding-Standards/zipball/fe7895876b6ea344fa87bb82a2fbce73f90e9897",
+                "reference": "fe7895876b6ea344fa87bb82a2fbce73f90e9897",
                 "shasum": ""
             },
             "require": {
@@ -2074,7 +2076,7 @@
                     "type": "custom"
                 }
             ],
-            "time": "2023-09-20T23:16:50+00:00"
+            "time": "2023-11-23T08:44:49+00:00"
         },
         {
             "name": "wp-phpunit/wp-phpunit",
@@ -2082,12 +2084,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/wp-phpunit/wp-phpunit.git",
-                "reference": "ec1898606a6b32580b474825c8b99f78642496be"
+                "reference": "9cf9521c93992b39b88a60997fba4225bc32e707"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/wp-phpunit/wp-phpunit/zipball/ec1898606a6b32580b474825c8b99f78642496be",
-                "reference": "ec1898606a6b32580b474825c8b99f78642496be",
+                "url": "https://api.github.com/repos/wp-phpunit/wp-phpunit/zipball/9cf9521c93992b39b88a60997fba4225bc32e707",
+                "reference": "9cf9521c93992b39b88a60997fba4225bc32e707",
                 "shasum": ""
             },
             "default-branch": true,
@@ -2123,7 +2125,7 @@
                 "issues": "https://github.com/wp-phpunit/issues",
                 "source": "https://github.com/wp-phpunit/wp-phpunit"
             },
-            "time": "2023-08-09T01:26:57+00:00"
+            "time": "2023-11-28T00:32:39+00:00"
         },
         {
             "name": "yoast/phpunit-polyfills",
@@ -2131,12 +2133,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Yoast/PHPUnit-Polyfills.git",
-                "reference": "f1f7e15daf4f0e7225757ff902322df6d47c1385"
+                "reference": "899650219cd85e3f0ec4530d98647d1aa1c2ec60"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Yoast/PHPUnit-Polyfills/zipball/f1f7e15daf4f0e7225757ff902322df6d47c1385",
-                "reference": "f1f7e15daf4f0e7225757ff902322df6d47c1385",
+                "url": "https://api.github.com/repos/Yoast/PHPUnit-Polyfills/zipball/899650219cd85e3f0ec4530d98647d1aa1c2ec60",
+                "reference": "899650219cd85e3f0ec4530d98647d1aa1c2ec60",
                 "shasum": ""
             },
             "require": {
@@ -2181,9 +2183,10 @@
             ],
             "support": {
                 "issues": "https://github.com/Yoast/PHPUnit-Polyfills/issues",
+                "security": "https://github.com/Yoast/PHPUnit-Polyfills/security/policy",
                 "source": "https://github.com/Yoast/PHPUnit-Polyfills"
             },
-            "time": "2023-09-27T10:45:26+00:00"
+            "time": "2023-11-24T21:57:56+00:00"
         }
     ],
     "aliases": [],
