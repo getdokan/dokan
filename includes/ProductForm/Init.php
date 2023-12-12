@@ -51,8 +51,9 @@ class Init {
         $section = Factory::add_section(
             'general',
             [
-                'title' => __( 'General', 'dokan-lite' ),
-                'order' => 10,
+                'title'    => __( 'General', 'dokan-lite' ),
+                'order'    => 10,
+                'required' => true,
             ]
         );
 
