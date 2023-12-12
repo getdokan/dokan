@@ -15,6 +15,7 @@ use WP_User;
  *
  * @since 2.6.10
  */
+#[\AllowDynamicProperties]
 class Vendor {
     /**
      * Set class public properties
@@ -1386,7 +1387,7 @@ class Vendor {
      * @since 2.9.11
      *
      * @param string $key
-     * @param mix $value
+     * @param mixed $value
      *
      * @return void
      */
@@ -1550,7 +1551,8 @@ class Vendor {
      * @since 2.9.11
      */
     public function apply_changes() {
-        $this->update_meta( 'dokan_profile_settings', array_replace_recursive( $this->shop_data, $this->changes ) );
+        $this->shop_data = array_replace_recursive( $this->shop_data, $this->changes );
+        $this->update_meta( 'dokan_profile_settings', $this->shop_data );
         $this->update_meta_data();
 
         $this->changes = [];
