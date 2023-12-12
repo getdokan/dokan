@@ -1620,7 +1620,6 @@ export const data = {
             'live_chat',
             'live_search',
             'moip',
-            'dokan_paypal_ap',
             'paypal_marketplace',
             'product_addon',
             'product_enquiry',

@@ -33,12 +33,12 @@ export class ModulesPage extends AdminPage {
         await this.toBeVisible(selector.admin.dokan.modules.pro.moduleViewMode);
 
         // module cards and card details are visible
-        await this.toHaveCount(selector.admin.dokan.modules.pro.moduleCard, 39);
-        await this.toHaveCount(selector.admin.dokan.modules.pro.moduleIcon, 39);
-        await this.toHaveCount(selector.admin.dokan.modules.pro.moduleCheckbox, 39);
-        await this.toHaveCount(selector.admin.dokan.modules.pro.moduleName, 39);
-        await this.toHaveCount(selector.admin.dokan.modules.pro.moduleDescription, 39);
-        await this.toHaveCount(selector.admin.dokan.modules.pro.moduleActivationSwitch, 39);
+        await this.toHaveCount(selector.admin.dokan.modules.pro.moduleCard, 38);
+        await this.toHaveCount(selector.admin.dokan.modules.pro.moduleIcon, 38);
+        await this.toHaveCount(selector.admin.dokan.modules.pro.moduleCheckbox, 38);
+        await this.toHaveCount(selector.admin.dokan.modules.pro.moduleName, 38);
+        await this.toHaveCount(selector.admin.dokan.modules.pro.moduleDescription, 38);
+        await this.toHaveCount(selector.admin.dokan.modules.pro.moduleActivationSwitch, 38);
         await this.toHaveCount(selector.admin.dokan.modules.pro.moduleDocs, 38);
         await this.toHaveCount(selector.admin.dokan.modules.pro.moduleVideos, 17);
 
