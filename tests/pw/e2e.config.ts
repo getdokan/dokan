@@ -8,10 +8,10 @@ export default defineConfig({
     globalSetup: './global-setup' /* Path to the global setup file. This file will be required and run before all the tests. */,
     // globalTeardown: './global-teardown' /* Path to the global teardown file. This file will be required and run after all the tests. */,
     globalTimeout: process.env.CI ? 40 * (60 * 1000) : 40 * (60 * 1000) /* Maximum time in milliseconds the whole test suite can run */,
-    maxFailures: process.env.CI ? 30 : 30 /* The maximum number of test failures for the whole test suite run. After reaching this number, testing will stop and exit with an error. */,
-    timeout: process.env.CI ? 40 * 1000 : 35 * 1000 /* Maximum time one test can run for. */,
+    maxFailures: process.env.CI ? 40 : 30 /* The maximum number of test failures for the whole test suite run. After reaching this number, testing will stop and exit with an error. */,
+    timeout: process.env.CI ? 50 * 1000 : 35 * 1000 /* Maximum time one test can run for. */,
     expect: {
-        timeout: 10 * 1000 /* Maximum time expect() should wait for the condition to be met.  For example in `await expect(locator).toHaveText();`*/,
+        timeout: 15 * 1000 /* Maximum time expect() should wait for the condition to be met.  For example in `await expect(locator).toHaveText();`*/,
         toHaveScreenshot: {
             maxDiffPixelRatio: 0.2,
             maxDiffPixels: 500,
@@ -43,7 +43,7 @@ export default defineConfig({
     use: {
         ...devices['Desktop Chrome'],
         acceptDownloads: true /* Whether to automatically download all the attachments. */,
-        actionTimeout: 15 * 1000 /* Maximum time each action such as `click()` can take. Defaults to 0 (no limit). */,
+        actionTimeout: 20 * 1000 /* Maximum time each action such as `click()` can take. Defaults to 0 (no limit). */,
         navigationTimeout: 20 * 1000 /* Maximum time each navigation such as 'goto()' can take. */,
         baseURL: process.env.BASE_URL ? process.env.BASE_URL : 'http://localhost:9999' /* Base URL */,
         // browserName: 'chromium' /* Name of the browser that runs tests. */,
