@@ -329,7 +329,7 @@
     .dokan-dashboard-content {
       float: none;
       width: 100%;
-      padding: 20px;
+      padding: 20px 0;
 
       .dokan-table {
         display: table;
@@ -389,40 +389,64 @@
     }
 
     // product listing
-    .dokan-product-listing .dokan-product-listing-area {
-      .product-listing-top {
-        border-bottom: 0;
+    .dokan-product-listing {
+      .dokan-product-listing-area {
+        .product-listing-top {
+          border-bottom: 0;
 
-        ul.dokan-listing-filter {
-          width: 100%;
+          ul.dokan-listing-filter {
+            width: 100%;
+          }
+
+          .dokan-add-product-link {
+            display: flex;
+            justify-content: space-between;
+            width: auto;
+            float: none;
+          }
         }
-        .dokan-add-product-link {
+
+        .dokan-product-date-filter {
+          display: flex;
+          flex-flow: column wrap;
+          justify-content: space-between;
+
+          .dokan-form-group {
+            margin-bottom: 10px;
+          }
+        }
+
+        .dokan-product-search-form {
           display: flex;
           justify-content: space-between;
-          width: auto;
-          float: none;
-        }
-      }
-      .dokan-product-date-filter {
-        display: flex;
-        justify-content: space-between;
+          flex-flow: row-reverse nowrap;
 
-        .dokan-form-group {
-          margin-bottom: 0;
-        }
-      }
-      .dokan-product-search-form {
-        margin-top: 15px;
-        width: 100%;
+          .dokan-form-group {
+            margin-bottom: 0;
+            margin-right: 0;
+            width: 73%;
+          }
 
-        .dokan-form-group {
-          margin-bottom: 0;
+          .dokan-btn {
+            width: 25%;
+          }
+        }
+
+        #dokan-bulk-action-selector {
+          width: 73%;
+          margin-right: 2%;
+        }
+
+        #dokan-bulk-action-submit {
+          width: 25%;
           margin-right: 0;
         }
-      }
 
-      #product-filter .dokan-form-group {
-        margin-top: 15px;
+        #product-filter {
+          .dokan-btn {
+            width: 100%;
+          }
+        }
       }
     }
 

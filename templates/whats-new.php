@@ -4,6 +4,159 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.9.4',
+        'released' => '2023-12-12',
+        'changes'  => [
+            'Fix'         => [
+                [
+                    'title'       => 'Fixed an issue where the Vendor class shop_data persistence is broken on save()',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed a fatal error while trying to edit a subscription under WordPress Admin Panel → WooCommerce → Subscription menu of the WooCommerce Subscription Plugin.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Toggle Sub-Orders and Show Sub-Orders buttons are not working if HPOS feature is disabled.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.9.3',
+        'released' => '2023-11-30',
+        'changes'  => [
+            'Fix'         => [
+                [
+                    'title'       => 'Fixed an issue where the Tab fields under the product Add/Edit page don’t display predefined tags until users start typing to select tags.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.9.2',
+        'released' => '2023-11-13',
+        'changes'  => [
+            'New'         => [
+                [
+                    'title'       => 'A new email template has been introduced named Dokan Vendor Product Review. After a product has been reviewed, an email containing information about the review is sent to the vendor. The email includes details such as the reviewer’s name, product name, review rating, and text. The email also contains a link to the review page where the vendor can view the review and respond if necessary.',
+                    'description' => '',
+                ],
+            ],
+            'Improvement' => [
+                [
+                    'title'       => 'Display a non-purchasable notice for the vendor’s own products.',
+                    'description' => '',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => '[RestAPI] Fixed an issue where getting a single order via API gives an \'invalid ID\' error If the compatibility mode isn\'t enabled for the HPOS feature on WooCOmmerce Order data storage settings',
+                    'description' => '',
+                ],
+                [
+                    'title'       => '[ProductReview] Previously the email notification sent by WordPress when a review was added to a product, was sent to the product owner. This was wrong in the context of a marketplace. Because the email sent by WordPress includes some sensitive information, like the admin dashboard URL, customer email address, etc. With these changes, we are making sure that only the marketplace admin gets the new review emails sent by WordPress.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Previously, there was an issue where selecting “All,” then “None,” and subsequently “All” again didn’t function as expected. This occurred on the vendor product edit page for simple products, specifically within the Attributes section. However, following this update, all special cases of the “Select All” feature now work flawlessly.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.9.1',
+        'released' => '2023-10-17',
+        'changes'  => [
+            'New'         => [
+                [
+                    'title'       => '',
+                    'description' => '',
+                ],
+                [
+                    'title'       => '',
+                    'description' => '',
+                ],
+            ],
+            'Improvement' => [
+                [
+                    'title'       => 'Removed flaticon packages and replace used icons with fontAwesome icons. This will reduce the plugin zip size.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added a new settings to disable fontAwesome library',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Changed all the single date picker fields with daterange picker. This updates will keep the design consistent throughout the plugin.',
+                    'description' => '',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => '[StoreOpenCloseTime] An issue where invalid store opening or closing times generate warning and fatal error on single store page.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => '[Email] Fixed an issue where the product edit link on email template redirects to the products listing instead of single product edit page',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed some responsive issue under vendor dashboard product edit page.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed some responsive issue under vendor dashboard withdraw page.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.9.0',
+        'released' => '2023-10-06',
+        'changes'  => [
+            'New'         => [
+                [
+                    'title'       => 'Added two new hooks named `dokan_get_admin_report_data` and `dokan_get_overview_data` to extend Dokan reports functionality.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => '',
+                    'description' => '',
+                ],
+            ],
+            'Improvement' => [
+                [
+                    'title'       => 'Added a new filter named `dokan_get_store_url` to filter store URLs for a single store.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Removed some redundant or not required settings from vendor store settings page, also rearranged some admin settings and added some settings under Admin dashboard.',
+                    'description' => 'Details:
+1. Removed `Show Vendor Info` settings under the `WordPress Admin Dashboard → Dokan → Settings → Appearance` and added it back under the `WordPress Admin Dashboard → Dokan → Settings → General → Product Page Settings` section.
+2. Removed the  `More Products` setting under `Vendor Dashboard → Settings → Store Settings` and added it back as a new Admin setting under `WordPress Admin Dashboard → Dokan → Settings → General → Product Page Settings` section. Now, only the admin can control this setting.
+3. Removed redundant `Store Products Per Page` setting under `Vendor Dashboard → Settings → Store Settings`. Since the admin already has this setting under `WordPress Admin Dashboard → Dokan → Settings → General`, this setting will be used from now on and only the admin can control this setting.
+4. Removed redundant `Store Page Product Section` settings under `Vendor Dashboard → Settings → Store Page Product Section`. Now, only the admin can control these settings under Theme Customizer settings.
+',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => 'Resolved an issue where the `Tracking Number` button was still visible under the `Vendor Dashboard → Order Details → Order Note section` even after the `Shipment Tracking` feature was enabled by the admin.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => '[WidgetProductAttribute] Fixed an issue where the `Filter Products by Attribute` widget was not working for Multi-Word Attributes.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.8.3',
         'released' => '2023-09-26',
         'changes'  => [
@@ -29,7 +182,7 @@ $changelog = [
                     'description' => '',
                 ],
             ],
-            'Fix' => [
+            'Fix'         => [
                 [
                     'title'       => '[Refund] Earlier, when refunding an order under the vendor dashboard, the tax amount decimal point rounding precision was inconsistent with WooCommerce. However, it has now been updated to be consistent with WooCommerce.',
                     'description' => '',
@@ -70,7 +223,7 @@ It’s important to note that in the next version of Dokan, the Add New Product 
                     'description' => '',
                 ],
             ],
-            'Fix' => [
+            'Fix'         => [
                 [
                     'title'       => 'Fixed an issue where orders can’t be filtered by vendor under Admin Dashboard → WooCommerce → Order lists page if HPOS feature is enabled',
                     'description' => '',

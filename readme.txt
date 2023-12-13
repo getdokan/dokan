@@ -3,11 +3,11 @@ Contributors: tareq1988, wedevs, nizamuddinbabu
 Donate Link: http://tareq.co/donate/
 Tags: WooCommerce multivendor marketplace, multi vendor marketplace, multi seller store, multi-vendor, multi seller, commissions, multivendor, marketplace, product vendors, woocommerce vendor, commission rate, e-commerce, woocommerce, ebay, ecommerce.
 Requires at least: 5.6
-Tested up to: 6.3.1
+Tested up to: 6.4.2
 WC requires at least: 5.0.0
-WC tested up to: 8.1.1
+WC tested up to: 8.2.2
 Requires PHP: 7.3
-Stable tag: 3.8.3
+Stable tag: 3.9.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -337,6 +337,47 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 == Changelog ==
+
+= v3.9.4 ( Dec 12, 2023 ) =
+
+- **fix:** Fixed an issue where the Vendor class shop_data persistence is broken on save()
+- **fix:** Fixed a fatal error while trying to edit a subscription under WordPress Admin Panel → WooCommerce → Subscription menu of the WooCommerce Subscription Plugin.
+- **fix:** Toggle Sub-Orders and Show Sub-Orders buttons are not working if HPOS feature is disabled.
+
+= v3.9.3 ( Nov 30, 2023 ) =
+
+- **fix:** Fixed an issue where the Tab fields under the product Add/Edit page don’t display predefined tags until users start typing to select tags.
+
+= v3.9.2 ( Nov 13, 2023 ) =
+
+- **new:** A new email template has been introduced named Dokan Vendor Product Review. After a product has been reviewed, an email containing information about the review is sent to the vendor. The email includes details such as the reviewer’s name, product name, review rating, and text. The email also contains a link to the review page where the vendor can view the review and respond if necessary.
+- **update:** Display a non-purchasable notice for the vendor’s own products.
+- **fix:** [RestAPI] Fixed an issue where getting a single order via API gives an 'invalid ID' error If the compatibility mode isn't enabled for the HPOS feature on WooCOmmerce Order data storage settings
+- **fix:** [ProductReview] Previously the email notification sent by WordPress when a review was added to a product, was sent to the product owner. This was wrong in the context of a marketplace. Because the email sent by WordPress includes some sensitive information, like the admin dashboard URL, customer email address, etc. With these changes, we are making sure that only the marketplace admin gets the new review emails sent by WordPress.
+- **fix:** Previously, there was an issue where selecting “All,” then “None,” and subsequently “All” again didn’t function as expected. This occurred on the vendor product edit page for simple products, specifically within the Attributes section. However, following this update, all special cases of the “Select All” feature now work flawlessly.
+
+= v3.9.1 ( Oct 17, 2023 ) =
+
+- **update:** Removed flaticon packages and replace used icons with fontAwesome icons. This will reduce the plugin zip size.
+- **update:** Added a new settings to disable fontAwesome library
+- **update:** Changed all the single date picker fields with daterange picker. This updates will keep the design consistent throughout the plugin.
+- **fix:** [StoreOpenCloseTime] An issue where invalid store opening or closing times generate warning and fatal error on single store page.
+- **fix:** [Email] Fixed an issue where the product edit link on email template redirects to the products listing instead of single product edit page
+- **fix:** Fixed some responsive issue under vendor dashboard product edit page.
+- **fix:** Fixed some responsive issue under vendor dashboard withdraw page.
+
+= v3.9.0 ( Oct 06, 2023 ) =
+
+- **new:** Added two new hooks named `dokan_get_admin_report_data` and `dokan_get_overview_data` to extend Dokan reports functionality.
+- **fix:** Resolved an issue where the `Tracking Number` button was still visible under the `Vendor Dashboard → Order Details → Order Note section` even after the `Shipment Tracking` feature was enabled by the admin.
+- **fix:** [WidgetProductAttribute] Fixed an issue where the `Filter Products by Attribute` widget was not working for Multi-Word Attributes.
+- **update:** Added a new filter named `dokan_get_store_url` to filter store URLs for a single store.
+- **update:** Removed some redundant or not required settings from vendor store settings page, also rearranged some admin settings and added some settings under Admin dashboard.
+Details:
+1. Removed `Show Vendor Info` settings under the `WordPress Admin Dashboard → Dokan → Settings → Appearance` and added it back under the `WordPress Admin Dashboard → Dokan → Settings → General → Product Page Settings` section.
+2. Removed the  `More Products` setting under `Vendor Dashboard → Settings → Store Settings` and added it back as a new Admin setting under `WordPress Admin Dashboard → Dokan → Settings → General → Product Page Settings` section. Now, only the admin can control this setting.
+3. Removed redundant `Store Products Per Page` setting under `Vendor Dashboard → Settings → Store Settings`. Since the admin already has this setting under `WordPress Admin Dashboard → Dokan → Settings → General`, this setting will be used from now on and only the admin can control this setting.
+4. Removed redundant `Store Page Product Section` settings under `Vendor Dashboard → Settings → Store Page Product Section`. Now, only the admin can control these settings under Theme Customizer settings.
 
 = v3.8.3 ( Sep 26, 2023 ) =
 
