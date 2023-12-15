@@ -45,6 +45,17 @@ abstract class Component {
     }
 
     /**
+     * Get array of data.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return array
+     */
+    public function toArray(): array {
+        return (array) $this->data;
+    }
+
+    /**
      * Get field id
      *
      * @since DOKAN_SINCE

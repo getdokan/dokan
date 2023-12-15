@@ -594,6 +594,12 @@
         inputValidate: function( e ) {
             e.preventDefault();
 
+            let productFormFields = JSON.parse( dokan.product_form_fields );
+
+            for ( const [ id, field ] of Object.entries( productFormFields ) ) {
+              console.log(`${id}: ${field.required}`);
+            }
+
             if ( $( '#post_title' ).val().trim() == '' ) {
                 $( '#post_title' ).focus();
                 $( 'div.dokan-product-title-alert' ).removeClass('dokan-hide');
