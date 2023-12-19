@@ -881,7 +881,13 @@ class Manager {
      * @return void
      */
     public function maybe_split_orders( $parent_order_id, $force_create = false ) {
-        $parent_order = $this->get( $parent_order_id );
+        if ( is_a( $parent_order_id, 'WC_Order' ) ) {
+            $parent_order    = $parent_order_id;
+            $parent_order_id = $parent_order->get_id();
+        } else {
+            $parent_order = $this->get( $parent_order_id );
+        }
+
         if ( ! $parent_order ) {
             //dokan_log( sprintf( 'Invalid Order ID #%d found. Skipping from here.', $parent_order_id ) );
             return;
