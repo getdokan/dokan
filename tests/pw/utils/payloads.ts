@@ -24,6 +24,12 @@ export const payloads = {
         status: 'publish',
     }),
 
+    privacyPolicyPage: {
+        title: 'Privacy Policy',
+        content: 'This Privacy Policy describes how we collect, use, and disclose your personal information in connection with your use of our product.',
+        status: 'publish',
+    },
+
     tocPage: {
         title: 'Terms And Conditions',
         status: 'publish',

@@ -1772,3 +1772,9 @@ export interface feeRecipient {
     taxFeeRecipient: string;
     shippingTaxFeeRecipient: string;
 }
+
+export interface storeContactData {
+    name: string;
+    email: string;
+    message: string;
+}

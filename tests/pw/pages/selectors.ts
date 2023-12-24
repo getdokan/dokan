@@ -2879,8 +2879,16 @@ export const selector = {
             uploadPlugin: '.upload',
             chooseFile: '#pluginzip',
             installNow: '#install-plugin-submit',
-            activatePlugin: '.button.button-primary',
-            activateCustomPlugin: (plugin: string) => `//strong[normalize-space()="${plugin}"]/..//div//span[@class="activate"]`,
+            activatePlugin: (plugin: string) => `a#activate-${plugin}`,
+            deactivatePlugin: (plugin: string) => `a#deactivate-${plugin}`,
+
+            deactivateReason: {
+                deactivateReasonModal: (plugin: string) => `div#${plugin}-wd-dr-modal`,
+                reason: (reasonNumber: number) => `//div[contains(@class, 'wd-dr-modal')]//ul[@class="wd-de-reasons"]//li[${reasonNumber}]`,
+                skipAndDeactivate: `div.wd-dr-modal div.wd-dr-modal-footer a.dont-bother-me`,
+                cancel: `div.wd-dr-modal div.wd-dr-modal-footer button.wd-dr-cancel-modal`,
+                submitAndDeactivate: `div.wd-dr-modal div.wd-dr-modal-footer button.wd-dr-submit-modal`,
+            },
         },
 
         // Users
@@ -6766,6 +6774,17 @@ export const selector = {
                 couponBody: '.coupon-body',
                 couponCode: '..coupon-code',
                 coupon: (code: string) => `//span[@class="coupon-code"]//strong[normalize-space()="${code}"]`,
+            },
+
+            storeContactForm: {
+                storeContactForm:'#dokan-form-contact-seller',
+                name: '//form[@id="dokan-form-contact-seller"]//input[@placeholder="Your Name"]',
+                email: '//form[@id="dokan-form-contact-seller"]//input[@placeholder="you@example.com"]',
+                message: '//form[@id="dokan-form-contact-seller"]//textarea[@name="message"]',
+                sendMessage: 'input[name="store_message_send"]',
+                successMessage: 'div.alert.alert-success',
+                privacyPolicy: 'div.dokan-privacy-policy-text p',
+                privacyPolicyLink: 'a.dokan-privacy-policy-link',
             },
         },
 

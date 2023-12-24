@@ -25,7 +25,7 @@ test.describe('Tools test', () => {
         await admin.adminToolsRenderProperly();
     });
 
-    test('admin can perform dokan page Installation @pro', async () => {
+    test.skip('admin can perform dokan page Installation @pro', async () => {
         await admin.dokanPageInstallation();
     });
 

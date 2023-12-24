@@ -196,6 +196,8 @@ setup.describe('setup dokan settings', () => {
     });
 
     setup('admin set dokan privacy policy settings @lite', async () => {
+        const [, pageId] = await apiUtils.createPage(payloads.privacyPolicyPage, payloads.adminAuth);
+        dbData.dokan.privacyPolicySettings.privacy_page = String(pageId);
         await dbUtils.setDokanSettings(dbData.dokan.optionName.privacyPolicy, dbData.dokan.privacyPolicySettings);
     });
 

@@ -66,6 +66,10 @@ export const data = {
         plugins: ['basic-auth', 'dokan', 'dokan-pro', 'woocommerce', 'woocommerce-bookings', 'woocommerce-product-addons', 'woocommerce-simple-auctions', 'woocommerce-subscriptions'],
         dokanPro: ['dokan-pro'],
         activeClass: 'active',
+        pluginName: {
+            dokanlite: 'dokan-lite',
+            dokanPro: 'dokan-pro',
+        },
     },
 
     woocommerce: {
@@ -712,6 +716,8 @@ export const data = {
             general: 'wp-admin/options-general.php',
             permalinks: 'wp-admin/options-permalink.php',
             plugins: 'wp-admin/plugins.php',
+            activatePlugin: 'wp-admin/plugins.php?action=activate',
+            deactivatePlugin: 'wp-admin/plugins.php?action=deactivate',
 
             dokan: {
                 setupWizard: 'wp-admin/admin.php?page=dokan-setup',
@@ -1906,6 +1912,12 @@ export const data = {
             alertEmailBody: 'Dear subscriber, Your subscription will be ending soon. Please renew your package in a timely',
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
+    },
+
+    storeContactData:{
+        name: String(process.env.CUSTOMER),
+        email: String(process.env.CUSTOMER) + '@yopmail.com',
+        message: 'Test Message'
     },
 
     // dokan license

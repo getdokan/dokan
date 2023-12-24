@@ -22,6 +22,8 @@ export const helpers = {
     // returns a random integer number between min (inclusive) and max (exclusive)
     getRandomArbitraryInteger: (min: number, max: number) => Math.floor(Math.random() * (max - min) + min),
 
+    getRandomNumber: (min: number, max: number) => Math.floor(Math.random() * (max - min + 1)) + min,
+
     // random number between 0 and 1000
     randomNumber: () => Math.floor(Math.random() * 1000),
 
