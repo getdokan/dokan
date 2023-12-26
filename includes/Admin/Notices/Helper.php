@@ -67,6 +67,10 @@ class Helper {
                 continue;
             }
 
+            if ( isset( $promo['lite_only'] ) && wc_string_to_bool( $promo['lite_only'] ) && self::is_pro_license_active() ) {
+                continue;
+            }
+
             if ( $est_time_now >= $promo['start_date'] && $est_time_now <= $promo['end_date'] ) {
                 $notices[] = [
                     'type'              => 'promotion',
@@ -98,6 +102,32 @@ class Helper {
         uasort( $notices, [ self::class, 'dokan_sort_notices_by_priority' ] );
 
         return array_values( $notices );
+    }
+
+    /**
+     * Check if dokan pro-license is active
+     *
+     * @since 3.9.3
+     *
+     * @return bool
+     */
+    public static function is_pro_license_active(): bool {
+        if ( ! dokan()->is_pro_exists() ) {
+            return false;
+        }
+
+        if ( ! property_exists( dokan_pro(), 'license' ) ) {
+            // this is old version of dokan pro
+            return false;
+        }
+
+        $license = dokan_pro()->license->plugin_update_message();
+        if ( ! empty( $license ) ) {
+            // if the plugin update message is not empty, then the license is not active
+            return false;
+        }
+
+        return true;
     }
 
     /**
