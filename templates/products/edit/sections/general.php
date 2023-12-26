@@ -33,7 +33,9 @@ if ( is_wp_error( $section ) ) {
                 <div id="dokan-product-title-area" class="dokan-form-group">
                     <input type="hidden" name="dokan_product_id" id="dokan-edit-product-id" value="<?php echo esc_attr( $product->get_id() ); ?>" />
 
-                    <label for="<?php echo esc_attr( $product_title->get_name() ); ?>" class="form-label"><?php echo esc_html( $product_title->get_title() ); ?></label>
+                    <label for="<?php echo esc_attr( $product_title->get_name() ); ?>" class="form-label"><?php echo esc_html( $product_title->get_title() ); ?>
+                        <?php $product_title->print_required_symbol(); ?>
+                    </label>
                     <?php
                     dokan_post_input_box(
                         $product->get_id(),
@@ -66,7 +68,10 @@ if ( is_wp_error( $section ) ) {
             <?php else : ?>
                 <div class="dokan-form-group">
                     <label for="<?php echo esc_attr( $product_type->get_name() ); ?>" class="form-label">
-                        <?php echo esc_html( $product_type->get_title() ); ?>
+                        <?php
+                            echo esc_html( $product_type->get_title() );
+                            $product_title->print_required_symbol();
+                        ?>
                         <i
                             class="fas fa-question-circle tips"
                             aria-hidden="true"
@@ -91,7 +96,9 @@ if ( is_wp_error( $section ) ) {
                     if ( ! is_wp_error( $regular_price ) && $regular_price->is_visible() ) :
                         ?>
                         <div class="content-half-part regular-price">
-                            <label for="<?php echo esc_attr( $regular_price->get_name() ); ?>" class="form-label"><?php echo esc_html( $regular_price->get_title() ); ?></label>
+                            <label for="<?php echo esc_attr( $regular_price->get_name() ); ?>" class="form-label"><?php echo esc_html( $regular_price->get_title() ); ?>
+                                <?php $product_title->print_required_symbol(); ?>
+                            </label>
                             <div class="dokan-input-group">
                                 <span class="dokan-input-group-addon"><?php echo esc_html( get_woocommerce_currency_symbol() ); ?></span>
                                 <?php
@@ -123,6 +130,7 @@ if ( is_wp_error( $section ) ) {
                         <div class="content-half-part sale-price">
                             <label for="<?php echo esc_attr( $sale_price->get_name() ); ?>" class="form-label">
                                 <?php echo esc_html( $sale_price->get_title() ); ?>
+                                <?php $product_title->print_required_symbol(); ?>
                                 <a href="#" class="sale_schedule <?php echo $show_schedule ? 'dokan-hide' : ''; ?>"><?php esc_html_e( 'Schedule', 'dokan-lite' ); ?></a>
                                 <a href="#" class="cancel_sale_schedule <?php echo ( ! $show_schedule ) ? 'dokan-hide' : ''; ?>"><?php esc_html_e( 'Cancel', 'dokan-lite' ); ?></a>
                             </label>

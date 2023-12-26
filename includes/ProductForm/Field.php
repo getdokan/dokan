@@ -401,4 +401,27 @@ class Field extends Component {
 
         return $value;
     }
+
+    /**
+     * Print required field symbol.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param bool $echo
+     *
+     * @return string $symbol
+     */
+    public function print_required_symbol( $echo = true ) {
+        if ( ! $this->is_required() ) {
+            return;
+        }
+
+        $symbol = '<span style="color: red; display: inline-block;">*</span>';
+
+        if ( $echo ) {
+            echo $symbol;
+        }
+
+        return $symbol;
+    }
 }

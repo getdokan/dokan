@@ -35,6 +35,7 @@ use WeDevs\Dokan\ProductForm\Section;
             <div class="dokan-form-group content-half-part">
                 <label for="<?php echo esc_attr( $product_status->get_name() ); ?>" class="form-label">
                     <?php echo esc_html( $product_status->get_title() ); ?>
+                    <?php $product_status->print_required_symbol(); ?>
                 </label>
                 <select id="<?php echo esc_attr( $product_status->get_name() ); ?>" class="dokan-form-control" name="<?php echo esc_attr( $product_status->get_name() ); ?>">
                     <?php foreach ( $product_status->get_options() as $status => $label ) : // phpcs:ignore ?>
@@ -53,6 +54,7 @@ use WeDevs\Dokan\ProductForm\Section;
             <div class="dokan-form-group content-half-part">
                 <label for="<?php echo esc_attr( $catalog_visibility->get_name() ); ?>" class="form-label">
                     <?php echo esc_html( $catalog_visibility->get_title() ); ?>
+                    <?php $catalog_visibility->print_required_symbol(); ?>
                 </label>
                 <select name="<?php echo esc_attr( $catalog_visibility->get_name() ); ?>" id="<?php echo esc_attr( $catalog_visibility->get_name() ); ?>" class="dokan-form-control">
                     <?php foreach ( $catalog_visibility->get_options() as $name => $label ) : ?>
@@ -73,6 +75,7 @@ use WeDevs\Dokan\ProductForm\Section;
             <div class="dokan-form-group">
                 <label for="<?php echo esc_attr( $purchase_note->get_name() ); ?>" class="form-label">
                     <?php echo esc_html( $purchase_note->get_title() ); ?>
+                    <?php $purchase_note->print_required_symbol(); ?>
                 </label>
                 <?php
                 dokan_post_input_box(

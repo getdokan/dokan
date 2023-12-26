@@ -37,6 +37,7 @@ $post = get_post( $product->get_id() ); // phpcs:ignore WordPress.WP.GlobalVaria
             <div class="content-half-part dokan-form-group">
                 <label for="<?php echo esc_attr( $sku->get_name() ); ?>" class="form-label">
                     <?php echo wp_kses_post( $sku->get_title() ); ?>
+                    <?php $sku->print_required_symbol(); ?>
                     <i
                         class="fas fa-question-circle tips"
                         aria-hidden="true"
@@ -63,6 +64,7 @@ $post = get_post( $product->get_id() ); // phpcs:ignore WordPress.WP.GlobalVaria
             <div class="content-half-part hide_if_variable hide_if_external hide_if_stock_global">
                 <label for="<?php echo esc_attr( $stock_status->get_name() ); ?>" class="form-label">
                     <?php echo esc_html( $stock_status->get_title() ); ?>
+                    <?php $stock_status->print_required_symbol(); ?>
                     <i
                         class="fas fa-question-circle tips"
                         aria-hidden="true"
@@ -114,6 +116,7 @@ $post = get_post( $product->get_id() ); // phpcs:ignore WordPress.WP.GlobalVaria
                     <div class="content-half-part">
                         <label for="<?php echo esc_attr( $stock_quantity->get_name() ); ?>" class="form-label">
                             <?php echo esc_html( $stock_quantity->get_title() ); ?>
+                            <?php $stock_quantity->print_required_symbol(); ?>
                             <i
                                 class="fas fa-question-circle tips"
                                 aria-hidden="true"
@@ -146,6 +149,7 @@ $post = get_post( $product->get_id() ); // phpcs:ignore WordPress.WP.GlobalVaria
                     <div class="content-half-part">
                         <label for="<?php echo esc_attr( $low_stock_amount->get_name() ); ?>" class="form-label">
                             <?php echo esc_html( $low_stock_amount->get_title() ); ?>
+                            <?php $low_stock_amount->print_required_symbol(); ?>
                             <i
                                 class="fas fa-question-circle tips"
                                 aria-hidden="true"
@@ -176,6 +180,7 @@ $post = get_post( $product->get_id() ); // phpcs:ignore WordPress.WP.GlobalVaria
                     <div class="content-half-part last-child">
                         <label for="<?php echo esc_attr( $backorders->get_name() ); ?>" class="form-label">
                             <?php echo esc_html( $backorders->get_title() ); ?>
+                            <?php $backorders->print_required_symbol(); ?>
                             <i
                                 class="fas fa-question-circle tips"
                                 aria-hidden="true"

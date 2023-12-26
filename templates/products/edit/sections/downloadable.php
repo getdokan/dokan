@@ -89,6 +89,7 @@ $post = get_post( $product->get_id() ); // phpcs:ignore WordPress.WP.GlobalVaria
                         <div class="content-half-part">
                             <label for="<?php echo esc_attr( $download_limit->get_name() ); ?>" class="form-label">
                                 <?php echo esc_html( $download_limit->get_title() ); ?>
+                                <?php $download_limit->print_required_symbol(); ?>
                                 <i
                                     class="fas fa-question-circle tips"
                                     aria-hidden="true"
@@ -118,6 +119,7 @@ $post = get_post( $product->get_id() ); // phpcs:ignore WordPress.WP.GlobalVaria
                         <div class="content-half-part">
                             <label for="<?php echo esc_attr( $download_expiry->get_name() ); ?>" class="form-label">
                                 <?php echo esc_html( $download_expiry->get_title() ); ?>
+                                <?php $download_expiry->print_required_symbol(); ?>
                                 <i
                                     class="fas fa-question-circle tips"
                                     aria-hidden="true"
