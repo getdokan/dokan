@@ -561,7 +561,7 @@ class UserProfile {
         $store_settings['banner']     = isset( $_POST['dokan_banner'] ) ? intval( $_POST['dokan_banner'] ) : '';
         $store_settings['store_name'] = isset( $_POST['dokan_store_name'] ) ? sanitize_text_field( wp_unslash( $_POST['dokan_store_name'] ) ) : '';
         $store_settings['address']    = isset( $_POST['dokan_store_address'] ) ? array_map( 'sanitize_text_field', wp_unslash( $_POST['dokan_store_address'] ) ) : [];
-        $store_settings['phone']      = isset( $_POST['dokan_store_phone'] ) ? sanitize_text_field( wp_unslash( $_POST['dokan_store_phone'] ) ) : '';
+        $store_settings['phone']      = isset( $_POST['dokan_store_phone'] ) ? dokan_sanitize_phone_number( wp_unslash( $_POST['dokan_store_phone'] ) ) : '';
 
         // social settings
         $social        = isset( $_POST['dokan_social'] ) ? array_map( 'esc_url_raw', (array) wp_unslash( $_POST['dokan_social'] ) ) : [];

@@ -32,11 +32,13 @@ add_filter( 'woocommerce_get_item_data', 'dokan_product_seller_info', 10, 2 );
  * @return array
  */
 function dokan_seller_product_tab( $tabs ) {
-    $tabs['seller'] = [
-        'title'    => __( 'Vendor Info', 'dokan-lite' ),
-        'priority' => 90,
-        'callback' => 'dokan_product_seller_tab',
-    ];
+    if ( is_enabled_vendor_info_product_tab() ) {
+        $tabs['seller'] = [
+            'title' => __('Vendor Info', 'dokan-lite'),
+            'priority' => 90,
+            'callback' => 'dokan_product_seller_tab',
+        ];
+    }
 
     return $tabs;
 }
@@ -73,15 +75,8 @@ function dokan_product_seller_tab( $val ) {
  * @return void
  */
 function dokan_order_show_suborders( $parent_order ) {
-    $sub_orders = get_children(
-        [
-            'post_parent' => dokan_get_prop( $parent_order, 'id' ),
-            'post_type'   => 'shop_order',
-            'post_status' => array_keys( wc_get_order_statuses() ),
-        ]
-    );
-
-    if ( ! $sub_orders ) {
+    $sub_orders = dokan()->order->get_child_orders( $parent_order );
+    if ( empty( $sub_orders ) ) {
         return;
     }
 
@@ -297,7 +292,7 @@ add_action( 'woocommerce_account_dashboard', 'dokan_set_go_to_vendor_dashboard_b
  *
  * @since 2.8.3
  *
- * @return string
+ * @return void
  */
 function dokan_attach_vendor_name( $item_id, $order ) {
     $product_id = $order->get_product_id();
@@ -309,7 +304,7 @@ function dokan_attach_vendor_name( $item_id, $order ) {
     $vendor_id = get_post_field( 'post_author', $product_id );
     $vendor    = dokan()->vendor->get( $vendor_id );
 
-    if ( ! is_object( $vendor ) ) {
+    if ( ! $vendor->is_vendor() ) {
         return;
     }
 
@@ -400,7 +395,7 @@ add_action(
     'pre_get_avatar',
     function () {
         $page_id = get_queried_object_id();
-        $page    = get_page( $page_id );
+        $page    = get_post( $page_id );
 
         if ( ! $page instanceof WP_Post ) {
             return;

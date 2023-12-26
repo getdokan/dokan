@@ -13,6 +13,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Frontend Manager
  *
  * @since 3.7.21
+ *
+ * @property BecomeAVendor $become_a_vendor Instance of Commission class
  */
 class Frontend {
 

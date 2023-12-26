@@ -1,4 +1,4 @@
-;(function(document, window) {
+;(function(document, window, $) {
 
   /**
    * Gets i18n date format
@@ -339,4 +339,91 @@
     }
     return error_message;
   }
-})(document, window);
+
+  /**
+   * Sanitize phone number characters.
+   *
+   * @since 3.7.22
+   *
+   * @param evt Event Object
+   *
+   * @return {void}
+   */
+  window.dokan_sanitize_phone_number = function ( evt ) {
+    // Allow: backspace, tab, enter and escape.
+    if ( [ "Backspace", "Tab", "Enter", "Escape" ].indexOf( evt.key ) !== -1 ) {
+      return;
+    }
+
+    // Allow: special characters.
+    if ( [ "(", ")", ".", "-", "_", "+" ].indexOf( evt.key ) !== -1  ) {
+      return;
+    }
+
+    // Allow: Ctrl+A.
+    if ( "a" === evt.key && true === evt.ctrlKey ) {
+      return;
+    }
+
+    // Allow: arrow keys.
+    if ( [ "ArrowLeft", "ArrowRight" ].indexOf( evt.key ) !== -1  ) {
+      return;
+    }
+
+    // Ensure that it is a number and stop the keypress.
+    if ( ( evt.shiftKey && ! isNaN( Number( evt.key ) ) ) ) {
+      return;
+    }
+
+    if ( isNaN( Number( evt.key ) ) ) {
+      evt.preventDefault();
+    }
+  }
+
+  let copyIcon = `<svg width='20px' height='20px' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
+  <path d='M8 4V16C8 17.1046 8.89543 18 10 18L18 18C19.1046 18 20 17.1046 20 16V7.24162C20 6.7034 19.7831 6.18789 19.3982 5.81161L16.0829 2.56999C15.7092 2.2046 15.2074 2 14.6847 2H10C8.89543 2 8 2.89543 8 4Z' stroke='#000000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/>
+  <path d='M16 18V20C16 21.1046 15.1046 22 14 22H6C4.89543 22 4 21.1046 4 20V9C4 7.89543 4.89543 7 6 7H8' stroke='#000000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/>
+  </svg>`;
+  let tickIcon = `<svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M4.89163 13.2687L9.16582 17.5427L18.7085 8" stroke="#000000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>`;
+  let copyHolder = null;
+
+  let Functions = {
+    init() {
+      this.copyToClipBoardInit();
+      $('.dokan-copy-to-clipboard').on( 'click', this.copyToClipboardClickhandler );
+    },
+
+    copyToClipBoardInit() {
+      copyHolder = $('.dokan-copy-to-clipboard');
+      copyHolder.css( 'cursor', 'pointer' );
+      copyHolder.html( copyIcon )
+    },
+
+    copyToClipboardClickhandler() {
+      let copyItem = $(this);
+      let copydata = $(this).data('copy') ? $(this).data('copy') : '';
+
+      const textarea = document.createElement('textarea');
+      textarea.classList.add("dokan-copy-to-clipboard-textarea");
+      document.body.appendChild(textarea);
+      textarea.value = copydata;
+      textarea.select();
+      textarea.setSelectionRange(0, 99999);
+      let copiedSuccessfully = document.execCommand('copy');
+      document.body.removeChild(textarea);
+
+      if (copiedSuccessfully) {
+        copyItem.html( tickIcon )
+        setTimeout(() => {
+          copyItem.html( copyIcon )
+        }, 1000);
+      }
+    }
+  };
+
+  $( document ).ready( function() {
+    Functions.init();
+  });
+})(document, window, jQuery);

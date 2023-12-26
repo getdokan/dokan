@@ -66,9 +66,9 @@ function dokan_get_seller_active_withdraw_methods( $vendor_id = 0 ) {
     $vendor_id = $vendor_id ? $vendor_id : dokan_get_current_user_id();
 
     $payment_methods = get_user_meta( $vendor_id, 'dokan_profile_settings' );
-    $paypal          = isset( $payment_methods[0]['payment']['paypal']['email'] ) && $payment_methods[0]['payment']['paypal']['email'] !== false ? 'paypal' : '';
-    $bank            = isset( $payment_methods[0]['payment']['bank']['ac_number'] ) && $payment_methods[0]['payment']['bank']['ac_number'] !== '' ? 'bank' : '';
-    $skrill          = isset( $payment_methods[0]['payment']['skrill']['email'] ) && $payment_methods[0]['payment']['skrill']['email'] !== false ? 'skrill' : '';
+    $paypal          = ! empty( $payment_methods[0]['payment']['paypal']['email'] ) ? 'paypal' : '';
+    $bank            = ! empty( $payment_methods[0]['payment']['bank']['ac_number'] ) ? 'bank' : '';
+    $skrill          = ! empty( $payment_methods[0]['payment']['skrill']['email'] ) ? 'skrill' : '';
 
     $payment_methods        = [ $paypal, $bank, $skrill ];
     $active_payment_methods = [];
@@ -326,46 +326,21 @@ function dokan_bank_payment_fields_placeholders() {
 /**
  * Get withdraw counts, used in admin area
  *
- * @global WPDB $wpdb
+ * @param int $user_id User ID
  *
  * @return array
  */
 function dokan_get_withdraw_count( $user_id = null ) {
-    global $wpdb;
+    $args = [
+        'return' => 'count',
+    ];
 
-    $cache_group = empty( $user_id ) ? 'withdraws' : "withdraws_seller_$user_id";
-    $cache_key   = "get_withdraw_count_{$user_id}";
-    $counts      = Cache::get( $cache_key, $cache_group );
-
-    if ( false === $counts ) {
-        $counts = [
-            'pending'   => 0,
-            'completed' => 0,
-            'cancelled' => 0,
-        ];
-
-        if ( ! empty( $user_id ) ) {
-            $result = $wpdb->get_results( $wpdb->prepare( "SELECT COUNT(id) as count, status FROM {$wpdb->dokan_withdraw} WHERE user_id=%d GROUP BY status", $user_id ) );
-        } else {
-            $result = $wpdb->get_results( "SELECT COUNT(id) as count, status FROM {$wpdb->dokan_withdraw} WHERE 1=1 GROUP BY status" );
-        }
-
-        if ( $result ) {
-            foreach ( $result as $row ) {
-                if ( $row->status === '0' ) {
-                    $counts['pending'] = (int) $row->count;
-                } elseif ( $row->status === '1' ) {
-                    $counts['completed'] = (int) $row->count;
-                } elseif ( $row->status === '2' ) {
-                    $counts['cancelled'] = (int) $row->count;
-                }
-            }
-        }
-
-        Cache::set( $cache_key, $counts, $cache_group );
+    if ( is_numeric( $user_id ) ) {
+        $args['user_id'] = $user_id;
     }
 
-    return $counts;
+    // Return withdraw status counts.
+    return dokan()->withdraw->all( $args );
 }
 
 /**

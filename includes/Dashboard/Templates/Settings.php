@@ -609,14 +609,12 @@ class Settings {
             // Update store settings info.
             $dokan_settings = [
                 'store_name'               => isset( $_POST['dokan_store_name'] ) ? sanitize_text_field( wp_unslash( $_POST['dokan_store_name'] ) ) : '',
-                'store_ppp'                => isset( $_POST['dokan_store_ppp'] ) ? absint( $_POST['dokan_store_ppp'] ) : 10,
                 'address'                  => isset( $_POST['dokan_address'] ) ? wc_clean( wp_unslash( $_POST['dokan_address'] ) ) : $prev_dokan_settings['address'],
                 'location'                 => $location,
                 'find_address'             => $find_address,
                 'banner'                   => isset( $_POST['dokan_banner'] ) ? absint( $_POST['dokan_banner'] ) : 0,
-                'phone'                    => isset( $_POST['setting_phone'] ) ? sanitize_text_field( wp_unslash( $_POST['setting_phone'] ) ) : 'no',
+                'phone'                    => isset( $_POST['setting_phone'] ) ? dokan_sanitize_phone_number( wp_unslash( $_POST['setting_phone'] ) ) : 'no',
                 'show_email'               => isset( $_POST['setting_show_email'] ) ? sanitize_text_field( wp_unslash( $_POST['setting_show_email'] ) ) : 'no',
-                'show_more_ptab'           => isset( $_POST['setting_show_more_ptab'] ) ? sanitize_text_field( wp_unslash( $_POST['setting_show_more_ptab'] ) ) : 'no',
                 'gravatar'                 => isset( $_POST['dokan_gravatar'] ) ? absint( $_POST['dokan_gravatar'] ) : 0,
                 'enable_tnc'               => isset( $_POST['dokan_store_tnc_enable'] ) && 'on' === sanitize_text_field( wp_unslash( $_POST['dokan_store_tnc_enable'] ) ) ? 'on' : 'off',
                 'store_tnc'                => isset( $_POST['dokan_store_tnc'] ) ? wp_kses_post( wp_unslash( $_POST['dokan_store_tnc'] ) ) : '',

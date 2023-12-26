@@ -25,7 +25,7 @@ defined( 'ABSPATH' ) || exit; ?>
         <p class="item store-count">
             <?php
             // translators: 1) number of stores
-            printf( _n( 'Total store showing: %d', 'Total stores showing: %d', $number_of_store, 'dokan-lite' ), number_format_i18n( $number_of_store ) );
+            printf( _n( 'Total store showing: %s', 'Total stores showing: %s', $number_of_store, 'dokan-lite' ), number_format_i18n( $number_of_store ) );
             ?>
         </p>
     </div>

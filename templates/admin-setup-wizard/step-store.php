@@ -24,7 +24,7 @@
             </td>
         </tr>
         <tr>
-            <th scope="row"><label for="tax_fee_recipient"><?php esc_html_e( 'Tax Fee Recipient', 'dokan-lite' ); ?></label></th>
+            <th scope="row"><label for="tax_fee_recipient"><?php esc_html_e( 'Product Tax Fee Recipient', 'dokan-lite' ); ?></label></th>
             <td>
                 <select class="wc-enhanced-select" id="tax_fee_recipient" name="tax_fee_recipient">
                     <?php foreach ( $recipients as $key => $value ) : ?>
@@ -33,7 +33,22 @@
                     </option>
                     <?php endforeach; ?>
                 </select>
-                <p class="description"><?php esc_html_e( 'Tax fees will go to', 'dokan-lite' ); ?></p>
+                <p class="description"><?php esc_html_e( 'Product Tax fees will go to', 'dokan-lite' ); ?></p>
+            </td>
+        </tr>
+        <tr>
+            <th scope='row'><label
+                    for='tax_fee_recipient'><?php esc_html_e( 'Shipping Tax Fee Recipient', 'dokan-lite' ); ?></label>
+            </th>
+            <td>
+                <select class="wc-enhanced-select" id="shipping_tax_fee_recipient" name="shipping_tax_fee_recipient">
+                    <?php foreach ( $recipients as $key => $value ) : ?>
+                        <option value="<?php echo esc_attr( $key ); ?>" <?php selected( $key, $shipping_tax_fee_recipient ); ?>>
+                            <?php echo esc_html( $value ); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+                <p class="description"><?php esc_html_e( 'Shipping Tax fees will go to', 'dokan-lite' ); ?></p>
             </td>
         </tr>
         <tr>

@@ -45,7 +45,7 @@ class StoreController extends WP_REST_Controller {
                 [
                     'methods'             => WP_REST_Server::READABLE,
                     'callback'            => [ $this, 'get_stores' ],
-                    'args'                => apply_filters( 'dokan_rest_api_store_collection_params', $this->get_collection_params() ),
+                    'args'                => apply_filters( 'dokan_rest_api_store_collection_params', $this->get_store_collection_params() ),
                     'permission_callback' => '__return_true',
                 ],
                 [
@@ -60,8 +60,10 @@ class StoreController extends WP_REST_Controller {
             $this->namespace, '/' . $this->base . '/(?P<id>[\d]+)', [
                 'args' => [
                     'id' => [
-                        'description' => __( 'Unique identifier for the object.', 'dokan-lite' ),
-                        'type'        => 'integer',
+                        'description'       => __( 'Unique identifier for the object.', 'dokan-lite' ),
+                        'type'              => 'integer',
+                        'sanitize_callback' => 'absint',
+                        'validate_callback' => 'dokan_rest_validate_store_id',
                     ],
                 ],
                 [
@@ -240,6 +242,9 @@ class StoreController extends WP_REST_Controller {
             'status' => 'all',
         ];
 
+        // To avoid args overriding, we are settings filter here. Then setting args changed from parameter.
+        $args = apply_filters( 'dokan_seller_listing_args', $args, $request );
+
         if ( ! empty( $params['search'] ) ) {
             $args['search']         = '*' . sanitize_text_field( ( $params['search'] ) ) . '*';
             $args['search_columns'] = [ 'user_login', 'user_email', 'display_name', 'user_nicename' ];
@@ -310,10 +315,6 @@ class StoreController extends WP_REST_Controller {
 
         $store = dokan()->vendor->get( $store_id );
 
-        if ( empty( $store->id ) ) {
-            return new WP_Error( 'no_store_found', __( 'No store found', 'dokan-lite' ), [ 'status' => 404 ] );
-        }
-
         $stores_data = $this->prepare_item_for_response( $store, $request );
         $response    = rest_ensure_response( $stores_data );
 
@@ -330,12 +331,8 @@ class StoreController extends WP_REST_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function delete_store( $request ) {
-        $store_id = ! empty( $request['id'] ) ? (int) $request['id'] : 0;
+        $store_id = $request['id'];
         $reassign = false === $request['reassign'] ? null : absint( $request['reassign'] );
-
-        if ( empty( $store_id ) ) {
-            return new WP_Error( 'no_vendor_found', __( 'No vendor found for updating status', 'dokan-lite' ), [ 'status' => 400 ] );
-        }
 
         if ( ! empty( $reassign ) ) {
             if ( $reassign === $store_id || ! get_userdata( $reassign ) ) {
@@ -380,10 +377,6 @@ class StoreController extends WP_REST_Controller {
      */
     public function update_store( $request ) {
         $store = dokan()->vendor->get( (int) $request->get_param( 'id' ) );
-
-        if ( empty( $store->get_id() ) ) {
-            return new WP_Error( 'no_store_found', __( 'No store found', 'dokan-lite' ), [ 'status' => 404 ] );
-        }
 
         $params   = $request->get_params();
         $store_id = dokan()->vendor->update( $store->get_id(), $params );
@@ -519,7 +512,7 @@ class StoreController extends WP_REST_Controller {
     public function get_store_products( $request ) {
         $product_controller = new Dokan_REST_Product_Controller();
 
-        $request->set_param( 'post_status', [ 'publish' ] );
+        $request->set_param( 'status', [ 'publish' ] );
         $request->set_param( 'author', $request['id'] );
         $request->set_param( 'per_page', $request['per_page'] );
         $request->set_param( 'paged', $request['page'] );
@@ -945,5 +938,44 @@ class StoreController extends WP_REST_Controller {
         $response      = rest_ensure_response( $category_data );
 
         return $response;
+    }
+
+    /**
+     * Retrieves the query params for the collections.
+     *
+     * @since 3.7.22
+     *
+     * @return array Query parameters for the collection.
+     */
+    public function get_store_collection_params(): array {
+        $params = array(
+            'status'     => array(
+                'description'       => __( 'Status of the store', 'dokan-lite' ),
+                'type'              => 'string',
+                'default'           => 'all',
+                'sanitize_callback' => 'sanitize_text_field',
+                'validate_callback' => 'rest_validate_request_arg',
+            ),
+            'orderby'     => array(
+                'description'       => __( 'Store List Order By', 'dokan-lite' ),
+                'type'              => 'string',
+                'sanitize_callback' => 'sanitize_text_field',
+                'validate_callback' => 'rest_validate_request_arg',
+            ),
+            'order'     => array(
+                'description'       => __( 'Store List Order', 'dokan-lite' ),
+                'type'              => 'string',
+                'sanitize_callback' => 'sanitize_text_field',
+                'validate_callback' => 'rest_validate_request_arg',
+            ),
+            'featured'     => array(
+                'description'       => __( 'Store List Order', 'dokan-lite' ),
+                'type'              => 'string',
+                'sanitize_callback' => 'sanitize_text_field',
+                'validate_callback' => 'rest_validate_request_arg',
+            ),
+        );
+
+        return array_merge( parent::get_collection_params(), $params );
     }
 }

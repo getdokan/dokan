@@ -12,7 +12,7 @@ class VendorStoreInfo {
      * @since 3.3.7
      */
     public function __construct() {
-        $show_vendor_info = dokan_get_option( 'show_vendor_info', 'dokan_appearance', 'off' );
+        $show_vendor_info = dokan_get_option( 'show_vendor_info', 'dokan_general', 'off' );
 
         if ( 'on' === $show_vendor_info ) {
             add_action( 'woocommerce_product_meta_end', [ $this, 'add_vendor_info_on_product_single_page' ] );
@@ -31,7 +31,10 @@ class VendorStoreInfo {
     public function add_vendor_info_on_product_single_page() {
         global $product;
 
-        $vendor       = dokan_get_vendor_by_product( $product );
+        $vendor = dokan_get_vendor_by_product( $product );
+        if ( ! $vendor ) {
+            return;
+        }
         $store_info   = $vendor->get_shop_info();
         $store_rating = $vendor->get_rating();
 
@@ -70,8 +73,8 @@ class VendorStoreInfo {
 
         return $dokan_settings->add_settings_after(
             $settings_fields,
-            'dokan_appearance',
-            'enable_theme_store_sidebar',
+            'dokan_general',
+            'product_page_options',
             $vendor_info
         );
     }
