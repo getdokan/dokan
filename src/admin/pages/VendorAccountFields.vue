@@ -49,7 +49,7 @@
                         :class="{'dokan-form-input': true, 'has-error': getError('store_name')}"
                         :placeholder="getError( 'store_name' ) ? __( 'Store Name is required', 'dokan-lite' ) : __( 'Store Name', 'dokan-lite' )">
                 </div>
-                <div class="column">
+                <div v-if="this.vendorInfo.categories" class="column">
                     <label for="store-category">{{ __( 'Store Category', 'dokan-lite' ) }}</label>
                     <StoreCategory
                         :categories=vendorInfo.categories
