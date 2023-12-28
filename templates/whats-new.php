@@ -4,6 +4,18 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.9.5',
+        'released' => '2023-12-28',
+        'changes'  => [
+            'Fix'         => [
+                [
+                    'title'       => 'API request on get all orders returns empty results for the endpoint http://dev.test/wp-json/dokan/v1/orders due to default customer id was set to 0.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.9.4',
         'released' => '2023-12-12',
         'changes'  => [
