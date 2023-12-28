@@ -462,12 +462,13 @@ class OrderController extends DokanRESTController {
             'return'      => 'objects',
         ];
 
+        if ( is_numeric( $request->get_param( 'seller_id' ) ) ) {
+            $args['seller_id'] = absint( $request['seller_id'] );
+        }
+
         // Admin can get any vendor orders but vendor can't get other vendors orders.
-        $current_user = dokan_get_current_user_id();
         if ( ! current_user_can( 'manage_options' ) ) {
-            $args['seller_id'] = $current_user;
-        } else {
-            $args['seller_id'] = isset( $request['seller_id'] ) && is_numeric( $request['seller_id'] ) ? sanitize_text_field( $request['seller_id'] ) : $current_user;
+            $args['seller_id'] = dokan_get_current_user_id();
         }
 
         if ( ! empty( $request['search'] ) ) {
@@ -1748,7 +1749,7 @@ class OrderController extends DokanRESTController {
     /**
      * Validating the customer id to query orders.
      *
-     * @since DOKAN_SINCE
+     * @since 3.9.5
      *
      * @param string $param
      * @param WP_REST_Request $request
