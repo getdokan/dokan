@@ -105,7 +105,7 @@ class NewProduct extends WC_Email {
         $this->object  = $product;
 
         $this->placeholders['{product_title}'] = $product->get_title();
-        $this->placeholders['{price}']         = $product->get_price();
+        $this->placeholders['{price}']         = dokan()->email->currency_symbol( $product->get_price() );
         $this->placeholders['{seller_name}']   = $seller->get_name();
         $this->placeholders['{seller_url}']    = $seller->get_shop_url();
         $this->placeholders['{category}']      = $category_name;
@@ -145,7 +145,7 @@ class NewProduct extends WC_Email {
      * @return string
      */
     public function get_content_plain() {
-        wc_get_template_html(
+        return wc_get_template_html(
             $this->template_plain,
             array(
                 'product'            => $this->object,

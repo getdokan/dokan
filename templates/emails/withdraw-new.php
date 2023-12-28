@@ -17,7 +17,7 @@ do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
     <?php esc_html_e( 'Hi,', 'dokan-lite' ); ?>
 </p>
 <p>
-    <?php esc_html_e( 'A new withdraw request has been made by', 'dokan-lite' ); ?> <?php echo esc_attr( $data ['{username}'] ); ?>.
+    <?php esc_html_e( 'A new withdraw request has been made by', 'dokan-lite' ); ?> <?php echo esc_attr( $data ['{user_name}'] ); ?>.
 </p>
 <hr>
 <ul>
@@ -26,7 +26,7 @@ do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
             <?php esc_html_e( 'Username : ', 'dokan-lite' ); ?>
         </strong>
         <?php
-        printf( '<a href="%s">%s</a>', esc_attr( $data['{profile_url}'] ), esc_attr( $data['{username}'] ) );
+        printf( '<a href="%s">%s</a>', esc_attr( $data['{profile_url}'] ), esc_attr( $data['{user_name}'] ) );
         ?>
     </li>
     <li>

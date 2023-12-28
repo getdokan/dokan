@@ -17,7 +17,7 @@ do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
     <?php esc_html_e( 'Hello there,', 'dokan-lite' ); ?>
     <br>
     <?php esc_html_e( 'A new vendor has registered in your marketplace ', 'dokan-lite' ); ?>
-    <?php echo esc_html( $data['{site_name}'] ); ?>
+    <?php echo esc_html( $data['{site_title}'] ); ?>
 </p>
 <p>
     <?php esc_html_e( 'Vendor Details:', 'dokan-lite' ); ?>

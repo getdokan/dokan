@@ -105,7 +105,7 @@ class NewProductPending extends WC_Email {
         $this->object  = $product;
 
         $this->placeholders['{product_title}'] = $product->get_title();
-        $this->placeholders['{price}']         = $product->get_price();
+        $this->placeholders['{price}']         = dokan()->email->currency_symbol( $product->get_price() );
         $this->placeholders['{seller_name}']   = $seller->get_name();
         $this->placeholders['{seller_url}']    = $seller->get_shop_url();
         $this->placeholders['{category}']      = $category_name;
@@ -146,7 +146,7 @@ class NewProductPending extends WC_Email {
     public function get_content_plain() {
             ob_start();
                 wc_get_template(
-                    $this->template_html, array(
+                    $this->template_plain, array(
                         'product'            => $this->object,
                         'email_heading'      => $this->get_heading(),
                         'additional_content' => $this->get_additional_content(),

@@ -31,7 +31,7 @@ echo sprintf( esc_html__( 'Title: %s', 'dokan-lite' ), esc_html( $data['{product
 echo " \n";
 
 // translators: 1) product price
-echo sprintf( esc_html__( 'Price: %1$s', 'dokan-lite' ), esc_html( wc_price( $data['{price}'] ) ) );
+echo sprintf( esc_html__( 'Price: %1$s', 'dokan-lite' ), esc_html( $data['{price}'] ) );
 echo " \n";
 
 // translators: 1) product seller name
@@ -49,7 +49,7 @@ echo wp_kses_post(
     sprintf(
         // translators: 1) product url
         __( 'In case it needs to be moderated  <a href="%s"> click here </a>', 'dokan-lite' ),
-        $data['product_link']
+        $data['{product_link}']
     )
 );
 

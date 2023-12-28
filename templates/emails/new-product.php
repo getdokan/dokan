@@ -16,7 +16,7 @@ do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
 
 <p><?php esc_attr_e( 'Hello,', 'dokan-lite' ); ?></p>
 
-<p><?php esc_attr_e( 'A new product is submitted to your site', 'dokan-lite' ); ?> <a href="<?php echo esc_url( $data['{site_url}'] ); ?>" ><?php echo esc_attr( $data['{site_name}'] ); ?></a> </p>
+<p><?php esc_attr_e( 'A new product is submitted to your site', 'dokan-lite' ); ?> <a href="<?php echo esc_url( $data['{site_url}'] ); ?>" ><?php echo esc_attr( $data['{site_title}'] ); ?></a> </p>
 <p><?php esc_attr_e( 'Summary of the product:', 'dokan-lite' ); ?></p>
 <hr>
 <ul>

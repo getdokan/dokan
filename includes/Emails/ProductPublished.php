@@ -89,7 +89,7 @@ class ProductPublished extends WC_Email {
         $seller = new Vendor( $seller );
 
         $this->placeholders['{product_title}']     = $product->get_title();
-        $this->placeholders['{price}']             = $product->get_price();
+        $this->placeholders['{price}']             = dokan()->email->currency_symbol( $product->get_price() );
         $this->placeholders['{seller_name}']       = $seller->get_name();
         $this->placeholders['{product_url}']       = get_permalink( $post->ID );
         $this->placeholders['{product_edit_link}'] = $product_edit_url;
