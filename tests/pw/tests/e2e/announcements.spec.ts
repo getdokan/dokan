@@ -27,7 +27,7 @@ test.describe('Announcements test', () => {
         await admin.adminAnnouncementsRenderProperly();
     });
 
-    test('admin can add announcement @pro', async () => {
+    test('admin can send announcement @pro', async () => {
         await admin.addAnnouncement({ ...data.announcement, title: data.announcement.randomTitle() });
     });
 
@@ -44,12 +44,14 @@ test.describe('Announcements test', () => {
     });
 
     test('admin can restore announcement @pro', async () => {
-        const [, , announcementTitle] = await apiUtils.createAnnouncement({ ...payloads.createAnnouncement(), status: 'trash' }, payloads.adminAuth);
+        const [, announcementId, announcementTitle] = await apiUtils.createAnnouncement(payloads.createAnnouncement(), payloads.adminAuth);
+        await apiUtils.deleteAnnouncement(announcementId,payloads.adminAuth);
         await admin.updateAnnouncement(announcementTitle, 'restore');
     });
 
     test('admin can permanently delete announcement @pro', async () => {
-        const [, , announcementTitle] = await apiUtils.createAnnouncement({ ...payloads.createAnnouncement(), status: 'trash' }, payloads.adminAuth);
+        const [, announcementId, announcementTitle] = await apiUtils.createAnnouncement(payloads.createAnnouncement(), payloads.adminAuth);
+        await apiUtils.deleteAnnouncement(announcementId,payloads.adminAuth);
         await admin.updateAnnouncement(announcementTitle, 'permanently-delete');
     });
 

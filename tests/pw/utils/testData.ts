@@ -897,6 +897,7 @@ export const data = {
 
             wc: {
                 wcProducts: 'wc/v3/products',
+                store: 'wc/store'
             },
         },
     },

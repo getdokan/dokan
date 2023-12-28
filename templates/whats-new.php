@@ -4,6 +4,38 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.9.4',
+        'released' => '2023-12-12',
+        'changes'  => [
+            'Fix'         => [
+                [
+                    'title'       => 'Fixed an issue where the Vendor class shop_data persistence is broken on save()',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed a fatal error while trying to edit a subscription under WordPress Admin Panel → WooCommerce → Subscription menu of the WooCommerce Subscription Plugin.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Toggle Sub-Orders and Show Sub-Orders buttons are not working if HPOS feature is disabled.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.9.3',
+        'released' => '2023-11-30',
+        'changes'  => [
+            'Fix'         => [
+                [
+                    'title'       => 'Fixed an issue where the Tab fields under the product Add/Edit page don’t display predefined tags until users start typing to select tags.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.9.2',
         'released' => '2023-11-13',
         'changes'  => [

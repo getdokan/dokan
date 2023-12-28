@@ -250,13 +250,13 @@ export class CustomerPage extends BasePage {
     // clear cart
     async clearCart(): Promise<void> {
         await this.goToCart();
-        const cartProductIsVisible = await this.isVisible(selector.customer.cCart.firstProductCrossIcon);
+        const cartProductIsVisible = await this.isVisible(selector.customer.cCart.removeFirstItem);
         if (cartProductIsVisible) {
-            await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.cart, selector.customer.cCart.firstProductCrossIcon);
-            await this.toContainText(selector.customer.cWooSelector.wooCommerceSuccessMessage, 'removed. Undo?');
+            await this.clickAndWaitForResponseAndLoadState(data.subUrls.api.wc.store, selector.customer.cCart.removeFirstItem, 207);
+            // await this.toContainText(selector.customer.cWooSelector.wooCommerceSuccessMessage, 'removed. Undo?'); //todo: remove in future
             await this.clearCart();
         } else {
-            await this.toContainText(selector.customer.cCart.cartEmptyMessage, 'Your cart is currently empty.');
+            await this.toContainText(selector.customer.cCart.cartEmptyMessage, 'Your cart is currently empty!');
         }
     }
 
@@ -323,7 +323,7 @@ export class CustomerPage extends BasePage {
             default:
                 break;
         }
-
+        await this.focusOnLocator(selector.customer.cCheckout.placeOrder);
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.orderReceived, selector.customer.cCheckout.placeOrder);
         await this.toBeVisible(selector.customer.cOrderReceived.orderReceivedSuccessMessage);
 
