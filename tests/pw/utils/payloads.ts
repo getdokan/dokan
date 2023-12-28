@@ -765,6 +765,11 @@ export const payloads = {
         method: 'paypal',
     },
 
+    withdrawCharge: {
+        method: 'paypal',
+        amount: '100',
+    },
+
     // settings
 
     updateSettings: {
