@@ -594,13 +594,13 @@
         inputValidate: function( e ) {
             e.preventDefault();
 
-            let productFormFields = JSON.parse( dokan.product_form_fields );
-
-            for ( const [ id, field ] of Object.entries( productFormFields ) ) {
-              if ( field.required ) {
-                console.log(`${id}: ${field.name} --> ${field.required}`);
-              }
-            }
+            // let productFormFields = JSON.parse( dokan.product_form_fields );
+            //
+            // for ( const [ id, field ] of Object.entries( productFormFields ) ) {
+            //   if ( field.required ) {
+            //     console.log(`${id}: ${field.name} --> ${field.required}`);
+            //   }
+            // }
 
             if ( $( '#post_title' ).val().trim() == '' ) {
                 $( '#post_title' ).focus();

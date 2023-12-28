@@ -206,8 +206,9 @@ if ( is_wp_error( $section ) ) {
                 ?>
                 <div class="dokan-form-group">
                     <?php
-                    $data         = Helper::get_saved_products_category( $product->get_id() );
-                    $data['from'] = 'edit_product';
+                    $data                    = Helper::get_saved_products_category( $product->get_id() );
+                    $data['from']            = 'edit_product';
+                    $data['required_symbol'] = $category->print_required_symbol( false );
 
                     dokan_get_template_part( 'products/dokan-category-header-ui', '', $data );
                     ?>
@@ -220,7 +221,10 @@ if ( is_wp_error( $section ) ) {
                 $terms = $product->get_tag_ids();
                 ?>
                 <div class="dokan-form-group">
-                    <label for="<?php echo esc_attr( $tags->get_name() ); ?>" class="form-label"><?php echo $tags->get_title(); ?></label>
+                    <label for="<?php echo esc_attr( $tags->get_name() ); ?>" class="form-label">
+                        <?php echo $tags->get_title(); ?>
+                        <?php $product_title->print_required_symbol(); ?>
+                    </label>
                     <select multiple="multiple" id="<?php echo esc_attr( $tags->get_name() ); ?>" name="<?php echo esc_attr( $tags->get_name() ); ?>" class="product_tag_search dokan-form-control" data-placeholder="<?php echo esc_attr( $tags->get_placeholder() ); ?>">
                         <?php if ( ! empty( $terms ) ) : ?>
                             <?php
@@ -260,7 +264,10 @@ if ( is_wp_error( $section ) ) {
                         <input type="hidden" name="<?php echo esc_attr( $featured_image->get_name() ); ?>" class="dokan-feat-image-id" value="<?php echo esc_attr( $feat_image_id ); ?>">
 
                         <i class="fas fa-cloud-upload-alt"></i>
-                        <a href="#" class="dokan-feat-image-btn btn btn-sm"><?php esc_html_e( 'Upload a product cover image', 'dokan-lite' ); ?></a>
+                        <a href="#" class="dokan-feat-image-btn btn btn-sm">
+                            <?php esc_html_e( 'Upload a product cover image', 'dokan-lite' ); ?>
+                            <?php $featured_image->print_required_symbol(); ?>
+                        </a>
                     </div>
 
                     <div class="image-wrap<?php echo esc_attr( $wrap_class ); ?>">
@@ -332,7 +339,10 @@ if ( is_wp_error( $section ) ) {
     if ( ! is_wp_error( $short_description ) && $short_description->is_visible() ) :
         ?>
         <div class="dokan-product-short-description">
-            <label for="<?php echo esc_attr( $short_description->get_name() ); ?>" class="form-label"><?php echo esc_html( $short_description->get_title() ); ?></label>
+            <label for="<?php echo esc_attr( $short_description->get_name() ); ?>" class="form-label">
+                <?php echo esc_html( $short_description->get_title() ); ?>
+                <?php $short_description->print_required_symbol(); ?>
+            </label>
             <?php
             wp_editor(
                 $product->get_short_description(),
@@ -357,7 +367,10 @@ if ( is_wp_error( $section ) ) {
     if ( ! is_wp_error( $description ) && $description->is_visible() ) :
         ?>
         <div class="dokan-product-description">
-            <label for="<?php echo esc_attr( $description->get_name() ); ?>" class="form-label"><?php echo esc_html( $description->get_title() ); ?></label>
+            <label for="<?php echo esc_attr( $description->get_name() ); ?>" class="form-label">
+                <?php echo esc_html( $description->get_title() ); ?>
+                <?php $description->print_required_symbol(); ?>
+            </label>
             <?php
             wp_editor(
                 $product->get_description(),

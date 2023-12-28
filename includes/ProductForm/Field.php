@@ -409,11 +409,11 @@ class Field extends Component {
      *
      * @param bool $echo
      *
-     * @return string $symbol
+     * @return string
      */
     public function print_required_symbol( $echo = true ) {
         if ( ! $this->is_required() ) {
-            return;
+            return '';
         }
 
         $symbol = '<span style="color: red; display: inline-block;">*</span>';
