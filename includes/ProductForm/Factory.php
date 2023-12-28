@@ -235,7 +235,7 @@ class Factory {
         }
 
         try {
-            return apply_filters( 'dokan_product_form_item_created', new $class_name( $id, $args ) );
+            return apply_filters( 'dokan_product_form_item_created', new $class_name( $id, $args ), $type );
         } catch ( \Exception $e ) {
             return new WP_Error(
                 'dokan_product_form_' . $type . '_class_creation',
