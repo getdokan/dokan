@@ -23,7 +23,7 @@ class VendorNewOrder extends WC_Email {
     public function __construct() {
         $this->id             = 'dokan_vendor_new_order';
         $this->title          = __( 'Dokan Vendor New Order', 'dokan-lite' );
-        $this->description    = __( 'New order emails are sent to chosen recipient(s) when a new order is received.', 'dokan-lite' );
+        $this->description    = __( 'New order emails are sent to the vendor when a new order is received.', 'dokan-lite' );
         $this->template_html  = 'emails/vendor-new-order.php';
         $this->template_plain = 'emails/plain/vendor-new-order.php';
         $this->template_base  = DOKAN_DIR . '/templates/';

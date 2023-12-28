@@ -24,7 +24,7 @@ class VendorCompletedOrder extends WC_Email {
     public function __construct() {
         $this->id             = 'dokan_vendor_completed_order';
         $this->title          = __( 'Dokan Vendor Completed Order', 'dokan-lite' );
-        $this->description    = __( 'Completed order emails are sent to chosen recipient(s) when a order is completed.', 'dokan-lite' );
+        $this->description    = __( 'Completed order emails are sent to the vendor when a order is completed.', 'dokan-lite' );
         $this->template_html  = 'emails/vendor-completed-order.php';
         $this->template_plain = 'emails/plain/vendor-completed-order.php';
         $this->template_base  = DOKAN_DIR . '/templates/';
