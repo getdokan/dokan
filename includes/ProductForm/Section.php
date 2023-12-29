@@ -26,7 +26,11 @@ class Section extends Component {
      * @return void
      */
     public function __construct( string $id, array $args = [] ) {
-        $this->data['fields'] = [];
+        $data       = [
+            'type'   => 'default', // field type, accept value can be 'default', 'custom'
+            'fields' => [],
+        ];
+        $this->data = array_merge( $this->data, $data );
 
         // set id from the args
         $this->set_id( $id );
@@ -104,6 +108,32 @@ class Section extends Component {
                 $this->data['fields'][ $field->get_id() ] = $field;
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * Get type of the current field.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return string
+     */
+    public function get_type(): string {
+        return $this->data['type'];
+    }
+
+    /**
+     * Set field type.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $type
+     *
+     * @return $this
+     */
+    public function set_type( string $type ): Section {
+        $this->data['type'] = in_array( $type, [ 'default', 'custom' ], true ) ? sanitize_key( $type ) : 'other';
 
         return $this;
     }

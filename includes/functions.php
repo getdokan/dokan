@@ -655,7 +655,7 @@ function dokan_post_input_box( $post_id, $meta_key, $attr = [], $type = 'text' )
     $name          = isset( $attr['name'] ) ? esc_attr( $attr['name'] ) : $meta_key;
     $value         = isset( $attr['value'] ) ? $attr['value'] : get_post_meta( $post_id, $meta_key, true );
     $size          = isset( $attr['size'] ) ? $attr['size'] : 30;
-    $required      = isset( $attr['required'] ) ? 'required' : '';
+    $required      = ! empty( $attr['required'] ) ? 'required' : '';
 
     switch ( $type ) {
         case 'text':

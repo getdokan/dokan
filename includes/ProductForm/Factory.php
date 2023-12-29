@@ -111,6 +111,29 @@ class Factory {
     }
 
     /**
+     * Return list of registered fields by type eg: custom, props etc.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $type
+     *
+     * @return \WeDevs\Dokan\ProductForm\Field[]
+     */
+    public static function get_fields_by_type( string $type = '' ): array {
+        $items = self::get_fields();
+        if ( empty( $type ) ) {
+            return $items;
+        }
+
+        return array_filter(
+            $items,
+            function ( $item ) use ( $type ) {
+                return $type === $item->get_type();
+            }
+        );
+    }
+
+    /**
      * Returns registered field based on given field id.
      *
      * @param string $id Field id.
@@ -134,6 +157,25 @@ class Factory {
      */
     public static function get_sections( string $sort_by = 'asc' ): array {
         return self::get_items( 'section', 'Section', $sort_by );
+    }
+
+    /**
+     * Returns list of registered sections by type eg: default, custom.
+     *
+     * @param string $type
+     * @param string $sort_by
+     *
+     * @return \WeDevs\Dokan\ProductForm\Section[]
+     */
+    public static function get_sections_by_type( string $type = 'default', string $sort_by = 'asc' ): array {
+        $items = self::get_sections( $sort_by );
+
+        return array_filter(
+            $items,
+            function ( $item ) use ( $type ) {
+                return $type === $item->get_type();
+            }
+        );
     }
 
     /**

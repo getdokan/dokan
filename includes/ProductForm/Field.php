@@ -40,7 +40,7 @@ class Field extends Component {
             'value'                 => '', // html value attribute of the field
             'property'              => '', // if exists, this will be the name of the field
             'section'               => '', // section id, required
-            'type'                  => 'prop', // field type, accept value can be 'prop', 'meta' or 'other'
+            'type'                  => 'prop', // field type, accept value can be 'prop', 'meta' or 'other', 'custom'
             'field_type'            => '', // html field type
             'placeholder'           => '', // html placeholder attribute value for the field
             'options'               => [], // if the field is select, radio, checkbox, etc
@@ -230,7 +230,7 @@ class Field extends Component {
      * @return $this
      */
     public function set_type( string $type ): Field {
-        $this->data['type'] = in_array( $type, [ 'prop', 'meta', 'other' ], true ) ? sanitize_key( $type ) : 'other';
+        $this->data['type'] = in_array( $type, [ 'prop', 'meta', 'other', 'custom' ], true ) ? sanitize_key( $type ) : 'other';
 
         return $this;
     }
