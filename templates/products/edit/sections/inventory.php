@@ -49,8 +49,9 @@ $post = get_post( $product->get_id() ); // phpcs:ignore WordPress.WP.GlobalVaria
                     $product->get_id(),
                     $sku->get_name(),
                     [
-                        'value' => $product->get_sku(),
-                        'class' => 'dokan-form-control',
+                        'value'    => $product->get_sku(),
+                        'class'    => 'dokan-form-control',
+                        'required' => $sku->is_required(),
                     ]
                 );
                 ?>
@@ -76,9 +77,10 @@ $post = get_post( $product->get_id() ); // phpcs:ignore WordPress.WP.GlobalVaria
                     $product->get_id(),
                     $stock_status->get_name(),
                     [
-                        'name'    => $product->get_name(),
-                        'value'   => $product->get_stock_status(),
-                        'options' => $stock_status->get_options(),
+                        'name'     => $product->get_name(),
+                        'value'    => $product->get_stock_status(),
+                        'options'  => $stock_status->get_options(),
+                        'required' => $stock_status->is_required(),
                     ],
                     'select'
                 );
@@ -134,6 +136,7 @@ $post = get_post( $product->get_id() ); // phpcs:ignore WordPress.WP.GlobalVaria
                                 'placeholder' => $stock_quantity->get_placeholder(),
                                 'min'         => $stock_quantity->get_additional_properties( 'min' ),
                                 'step'        => $stock_quantity->get_additional_properties( 'step' ),
+                                'required'    => $stock_quantity->is_required(),
                             ],
                             'number'
                         );
@@ -166,6 +169,7 @@ $post = get_post( $product->get_id() ); // phpcs:ignore WordPress.WP.GlobalVaria
                                 'placeholder' => $low_stock_amount->get_placeholder(),
                                 'min'         => $low_stock_amount->get_additional_properties( 'min' ),
                                 'step'        => $low_stock_amount->get_additional_properties( 'step' ),
+                                'required'    => $low_stock_amount->is_required(),
                             ],
                             'number'
                         );
@@ -193,7 +197,8 @@ $post = get_post( $product->get_id() ); // phpcs:ignore WordPress.WP.GlobalVaria
                             $product->get_id(),
                             $backorders->get_name(),
                             [
-                                'options' => $backorders->get_options(),
+                                'options'  => $backorders->get_options(),
+                                'required' => $backorders->is_required(),
                             ],
                             'select'
                         );

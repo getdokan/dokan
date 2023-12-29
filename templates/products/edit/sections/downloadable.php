@@ -105,6 +105,7 @@ $post = get_post( $product->get_id() ); // phpcs:ignore WordPress.WP.GlobalVaria
                                     'placeholder' => $download_limit->get_placeholder(),
                                     'min'         => $download_limit->get_additional_properties( 'min' ),
                                     'step'        => $download_limit->get_additional_properties( 'step' ),
+                                    'required'    => $download_limit->is_required(),
                                 ],
                                 'number'
                             );
@@ -135,6 +136,7 @@ $post = get_post( $product->get_id() ); // phpcs:ignore WordPress.WP.GlobalVaria
                                     'placeholder' => __( 'Never', 'dokan-lite' ),
                                     'min'         => $download_expiry->get_additional_properties( 'min' ),
                                     'step'        => $download_expiry->get_additional_properties( 'step' ),
+                                    'required'    => $download_expiry->is_required(),
                                 ],
                                 'number'
                             );
@@ -148,5 +150,3 @@ $post = get_post( $product->get_id() ); // phpcs:ignore WordPress.WP.GlobalVaria
 
     <?php do_action( 'dokan_product_edit_after_downloadable', $post, $product->get_id(), $product ); ?>
 </div>
-
-

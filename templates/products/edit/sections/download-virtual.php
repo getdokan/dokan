@@ -28,9 +28,10 @@ defined( 'ABSPATH' ) || exit;
                 $product->get_id(),
                 $downloadable->get_name(),
                 [
-                    'value' => $product->is_downloadable() ? 'yes' : 'no',
-                    'label' => $downloadable->get_title(),
-                    'desc'  => $downloadable->get_description(),
+                    'value'    => $product->is_downloadable() ? 'yes' : 'no',
+                    'label'    => $downloadable->get_title(),
+                    'desc'     => $downloadable->get_description(),
+                    'required' => $downloadable->is_required(),
                 ],
                 'checkbox'
             );
@@ -48,9 +49,10 @@ defined( 'ABSPATH' ) || exit;
                 $product->get_id(),
                 $virtual->get_name(),
                 [
-                    'value' => $product->is_virtual() ? 'yes' : 'no',
-                    'label' => $virtual->get_title(),
-                    'desc'  => $virtual->get_description(),
+                    'value'    => $product->is_virtual() ? 'yes' : 'no',
+                    'label'    => $virtual->get_title(),
+                    'desc'     => $virtual->get_description(),
+                    'required' => $virtual->is_required(),
                 ],
                 'checkbox'
             );

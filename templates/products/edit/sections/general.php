@@ -44,6 +44,7 @@ if ( is_wp_error( $section ) ) {
                             'name'        => $product_title->get_name(),
                             'placeholder' => $product_title->get_placeholder(),
                             'value'       => $product->get_name(),
+                            'required'    => $product_title->is_required(),
                         ]
                     );
                     ?>
@@ -109,6 +110,7 @@ if ( is_wp_error( $section ) ) {
                                         'value'       => $product->get_regular_price(),
                                         'class'       => 'dokan-product-regular-price',
                                         'placeholder' => $regular_price->get_placeholder(),
+                                        'required'    => $regular_price->is_required(),
                                     ],
                                     'price'
                                 );
@@ -146,6 +148,7 @@ if ( is_wp_error( $section ) ) {
                                         'value'       => $product->get_sale_price(),
                                         'class'       => 'dokan-product-sales-price',
                                         'placeholder' => $sale_price->get_placeholder(),
+                                        'required'    => $sale_price->is_required(),
                                     ],
                                     'price'
                                 );
@@ -164,7 +167,7 @@ if ( is_wp_error( $section ) ) {
                 <?php
                 if ( ! is_wp_error( $sale_price ) && $sale_price->is_visible() ) :
                     $date_on_sale_from = $section->get_field( Elements::DATE_ON_SALE_FROM );
-                    $date_on_sale_to = $section->get_field( Elements::DATE_ON_SALE_TO );
+                    $date_on_sale_to   = $section->get_field( Elements::DATE_ON_SALE_TO );
                     ?>
                     <div class="sale_price_dates_fields dokan-clearfix dokan-form-group <?php echo ( ! $show_schedule ) ? 'dokan-hide' : ''; ?>">
                         <div class="content-half-part from">
@@ -177,7 +180,8 @@ if ( is_wp_error( $section ) ) {
                                     value="<?php echo esc_attr( $sale_price_dates_from ); ?>"
                                     maxlength="10"
                                     pattern="[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|1[0-9]|2[0-9]|3[01])"
-                                    placeholder="<?php echo esc_attr( $date_on_sale_from->get_placeholder() ); ?>">
+                                    placeholder="<?php echo esc_attr( $date_on_sale_from->get_placeholder() ); ?>"
+                                    <?php echo $date_on_sale_from->is_required() ? 'required' : ''; ?>>
                             </div>
                         </div>
 
@@ -191,7 +195,8 @@ if ( is_wp_error( $section ) ) {
                                     value="<?php echo esc_attr( $sale_price_dates_to ); ?>"
                                     maxlength="10"
                                     pattern="[0-9]{4}-(0[1-9]|1[012])-(0[1-9]|1[0-9]|2[0-9]|3[01])"
-                                    placeholder="<?php echo esc_attr( $date_on_sale_to->get_placeholder() ); ?>">
+                                    placeholder="<?php echo esc_attr( $date_on_sale_to->get_placeholder() ); ?>"
+                                    <?php echo $date_on_sale_to->is_required() ? 'required' : ''; ?>>
                             </div>
                         </div>
                     </div><!-- .sale-schedule-container -->
@@ -225,7 +230,7 @@ if ( is_wp_error( $section ) ) {
                         <?php echo $tags->get_title(); ?>
                         <?php $product_title->print_required_symbol(); ?>
                     </label>
-                    <select multiple="multiple" id="<?php echo esc_attr( $tags->get_name() ); ?>" name="<?php echo esc_attr( $tags->get_name() ); ?>" class="product_tag_search dokan-form-control" data-placeholder="<?php echo esc_attr( $tags->get_placeholder() ); ?>">
+                    <select multiple="multiple" id="<?php echo esc_attr( $tags->get_name() ); ?>" name="<?php echo esc_attr( $tags->get_name() ); ?>" class="product_tag_search dokan-form-control" data-placeholder="<?php echo esc_attr( $tags->get_placeholder() ); ?>" <?php echo $tags->is_required() ? 'required' : ''; ?>>
                         <?php if ( ! empty( $terms ) ) : ?>
                             <?php
                             foreach ( $terms as $tax_term ) :
@@ -355,6 +360,7 @@ if ( is_wp_error( $section ) ) {
                         'media_buttons' => false,
                         'teeny'         => false,
                         'editor_class'  => 'post_excerpt',
+                        'required'      => $short_description->is_required(),
                     ]
                 )
             );
@@ -383,6 +389,7 @@ if ( is_wp_error( $section ) ) {
                         'media_buttons' => false,
                         'teeny'         => false,
                         'editor_class'  => 'post_content',
+                        'required'      => $description->is_required(),
                     ]
                 )
             );

@@ -37,7 +37,7 @@ use WeDevs\Dokan\ProductForm\Section;
                     <?php echo esc_html( $product_status->get_title() ); ?>
                     <?php $product_status->print_required_symbol(); ?>
                 </label>
-                <select id="<?php echo esc_attr( $product_status->get_name() ); ?>" class="dokan-form-control" name="<?php echo esc_attr( $product_status->get_name() ); ?>">
+                <select id="<?php echo esc_attr( $product_status->get_name() ); ?>" class="dokan-form-control" name="<?php echo esc_attr( $product_status->get_name() ); ?>" <?php echo $product_status->get_required() ? 'required' : ''; ?>>
                     <?php foreach ( $product_status->get_options() as $status => $label ) : // phpcs:ignore ?>
                         <option value="<?php echo esc_attr( $status ); ?>" <?php selected( $status, $post_status ); ?>>
                             <?php echo esc_html( $label ); ?>
@@ -56,7 +56,7 @@ use WeDevs\Dokan\ProductForm\Section;
                     <?php echo esc_html( $catalog_visibility->get_title() ); ?>
                     <?php $catalog_visibility->print_required_symbol(); ?>
                 </label>
-                <select name="<?php echo esc_attr( $catalog_visibility->get_name() ); ?>" id="<?php echo esc_attr( $catalog_visibility->get_name() ); ?>" class="dokan-form-control">
+                <select name="<?php echo esc_attr( $catalog_visibility->get_name() ); ?>" id="<?php echo esc_attr( $catalog_visibility->get_name() ); ?>" class="dokan-form-control" <?php echo $catalog_visibility->is_required() ? 'required' : ''; ?>>
                     <?php foreach ( $catalog_visibility->get_options() as $name => $label ) : ?>
                         <option value="<?php echo esc_attr( $name ); ?>" <?php selected( $product->get_catalog_visibility( 'edit' ), $name ); ?>>
                             <?php echo esc_html( $label ); ?>
@@ -82,9 +82,10 @@ use WeDevs\Dokan\ProductForm\Section;
                     $product->get_id(),
                     $purchase_note->get_name(),
                     [
-                        'name' => $purchase_note->get_name(),
+                        'name'        => $purchase_note->get_name(),
                         'value'       => $product->get_purchase_note( 'edit' ),
                         'placeholder' => $purchase_note->get_placeholder(),
+                        'required'    => $purchase_note->is_required(),
                     ],
                     'textarea'
                 );
@@ -102,9 +103,10 @@ use WeDevs\Dokan\ProductForm\Section;
                     $product->get_id(),
                     $enable_reviews->get_name(),
                     [
-                        'name' => $enable_reviews->get_name(),
-                        'value' => $product->get_reviews_allowed( 'edit' ) ? 'yes' : 'no',
-                        'label' => __( 'Enable product reviews', 'dokan-lite' ),
+                        'name'     => $enable_reviews->get_name(),
+                        'value'    => $product->get_reviews_allowed( 'edit' ) ? 'yes' : 'no',
+                        'label'    => __( 'Enable product reviews', 'dokan-lite' ),
+                        'required' => $enable_reviews->is_required(),
                     ],
                     'checkbox'
                 );
