@@ -17,7 +17,7 @@ do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
     <?php esc_html_e( 'Hi,', 'dokan-lite' ); ?>
 </p>
 <p>
-    <?php esc_html_e( 'A new withdraw request has been made by', 'dokan-lite' ); ?> <?php echo esc_attr( $data ['{user_name}'] ); ?>.
+    <?php esc_html_e( 'A new withdraw request has been made by', 'dokan-lite' ); ?> <?php echo esc_html( $data ['{store_name}'] ); ?>.
 </p>
 <hr>
 <ul>
@@ -26,7 +26,7 @@ do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
             <?php esc_html_e( 'Store Name : ', 'dokan-lite' ); ?>
         </strong>
         <?php
-        printf( '<a href="%s">%s</a>', esc_url( $data['{profile_url}'] ), esc_attr( $data['{user_name}'] ) );
+        printf( '<a href="%s">%s</a>', esc_url( $data['{profile_url}'] ), esc_html( $data['{store_name}'] ) );
         ?>
     </li>
     <li>
@@ -39,7 +39,7 @@ do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
         <strong>
             <?php esc_html_e( 'Payment Method: ', 'dokan-lite' ); ?>
         </strong>
-        <?php echo esc_attr( $data['{method}'] ); ?>
+        <?php echo esc_html( $data['{method}'] ); ?>
     </li>
 </ul>
 
@@ -47,7 +47,7 @@ do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
 echo wp_kses_post(
     sprintf(
         // translators: 1) withdraw page url
-        __( 'You can approve or deny it by going <a href="%s"> here </a>', 'dokan-lite' ), esc_attr( $data['{withdraw_page}'] )
+        __( 'You can approve or deny it by going <a href="%s"> here </a>', 'dokan-lite' ), esc_url( $data['{withdraw_page}'] )
     )
 );
 

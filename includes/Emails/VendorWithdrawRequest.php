@@ -28,7 +28,7 @@ class VendorWithdrawRequest extends WC_Email {
         $this->template_plain = 'emails/plain/withdraw-new.php';
         $this->template_base  = DOKAN_DIR . '/templates/';
         $this->placeholders   = [
-            '{user_name}'     => '',
+            '{store_name}'    => '',
             '{amount}'        => '',
             '{method}'        => '',
             '{profile_url}'   => '',
@@ -52,7 +52,7 @@ class VendorWithdrawRequest extends WC_Email {
      * @return string
      */
     public function get_default_subject() {
-        return __( '[{site_title}] A New withdrawal request is made by {user_name}', 'dokan-lite' );
+        return __( '[{site_title}] A New withdrawal request is made by {store_name}', 'dokan-lite' );
     }
 
     /**
@@ -62,7 +62,7 @@ class VendorWithdrawRequest extends WC_Email {
      * @return string
      */
     public function get_default_heading() {
-        return __( 'New Withdraw Request from - {user_name}', 'dokan-lite' );
+        return __( 'New Withdraw Request from - {store_name}', 'dokan-lite' );
     }
 
     /**
@@ -81,7 +81,7 @@ class VendorWithdrawRequest extends WC_Email {
 
         $this->setup_locale();
         $this->object                          = $seller;
-        $this->placeholders['{user_name}']     = $seller->get_shop_name();
+        $this->placeholders['{store_name}']    = $seller->get_shop_name();
         $this->placeholders['{amount}']        = dokan()->email->currency_symbol( $amount );
         $this->placeholders['{method}']        = dokan_withdraw_get_method_title( $method );
         $this->placeholders['{profile_url}']   = $seller->get_profile_url();
