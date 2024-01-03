@@ -217,7 +217,7 @@ class VendorProductReview extends WC_Email {
                 'placeholder' => __( 'N/A', 'dokan-lite' ),
                 'type'        => 'textarea',
                 'default'     => $this->get_default_additional_content(),
-                'desc_tip'    => false,
+                'desc_tip'    => true,
             ],
             'email_type'         => [
                 'title'       => __( 'Email type', 'dokan-lite' ),

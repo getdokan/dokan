@@ -16,7 +16,7 @@ do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
 <p>
     <?php
     // translators: user name
-    echo sprintf( esc_html__( 'Hi %s', 'dokan-lite' ), esc_html( $data['{username}'] ) );
+    echo sprintf( esc_html__( 'Hi %s', 'dokan-lite' ), esc_html( $data['{store_name}'] ) );
     ?>
 </p>
 <p>
@@ -34,7 +34,7 @@ do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
     ?>
 </p>
 <p>
-    <?php esc_html_e( 'We\'ll transfer this amount to your preferred payment method shortly.', 'dokan-lite' ); ?>
+    <?php esc_html_e( 'We\'ll transfer this amount to your preferred withdrawal method shortly.', 'dokan-lite' ); ?>
 
     <?php esc_html_e( 'Thanks for being with us.', 'dokan-lite' ); ?>
 </p>

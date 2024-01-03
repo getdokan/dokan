@@ -17,7 +17,7 @@ echo esc_html( wp_strip_all_tags( $email_heading ) );
 echo "\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n\n";
 
 // translators: 1) user name
-echo sprintf( esc_html__( 'Hi %s', 'dokan-lite' ), esc_html( $data['{user_name}'] ) );
+echo sprintf( esc_html__( 'Hi %s', 'dokan-lite' ), esc_html( $data['{store_name}'] ) );
 echo " \n";
 
 esc_attr_e( 'Your withdraw request was cancelled', 'dokan-lite' );

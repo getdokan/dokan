@@ -28,7 +28,7 @@ class WithdrawCancelled extends WC_Email {
         $this->template_plain   = 'emails/plain/withdraw-cancel.php';
         $this->template_base    = DOKAN_DIR . '/templates/';
         $this->placeholders = [
-            '{user_name}'     => '',
+            '{store_name}'    => '',
             '{amount}'        => '',
             '{method}'        => '',
             '{profile_url}'   => '',
@@ -80,7 +80,7 @@ class WithdrawCancelled extends WC_Email {
         $seller                      = new Vendor( $withdraw->get_user_id() );
         $this->object                = $seller;
 
-        $this->placeholders['{user_name}']     = $seller->get_shop_name();
+        $this->placeholders['{store_name}']    = $seller->get_shop_name();
         $this->placeholders['{amount}']        = dokan()->email->currency_symbol( $withdraw->get_amount() );
         $this->placeholders['{method}']        = dokan_withdraw_get_method_title( $withdraw->get_method() );
         $this->placeholders['{profile_url}']   = dokan_get_navigation_url( 'edit-account' );
