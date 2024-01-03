@@ -478,7 +478,7 @@ class Assets {
             ],
             'dokan-script'              => [
                 'src'     => $asset_url . '/js/dokan.js',
-                'deps'    => [ 'imgareaselect', 'customize-base', 'customize-model', 'dokan-i18n-jed', 'jquery-tiptip', 'moment', 'dokan-date-range-picker' ],
+                'deps'    => [ 'imgareaselect', 'customize-base', 'customize-model', 'dokan-i18n-jed', 'jquery-tiptip', 'moment', 'dokan-date-range-picker', 'dokan-accounting' ],
                 'version' => filemtime( $asset_path . 'js/dokan.js' ),
             ],
             'dokan-vue-vendor'          => [
@@ -576,24 +576,30 @@ class Assets {
         }
 
         $default_script = [
-            'ajaxurl'                    => admin_url( 'admin-ajax.php' ),
-            'nonce'                      => wp_create_nonce( 'dokan_reviews' ),
-            'ajax_loader'                => DOKAN_PLUGIN_ASSEST . '/images/ajax-loader.gif',
-            'seller'                     => [
+            'ajaxurl'                      => admin_url( 'admin-ajax.php' ),
+            'nonce'                        => wp_create_nonce( 'dokan_reviews' ),
+            'ajax_loader'                  => DOKAN_PLUGIN_ASSEST . '/images/ajax-loader.gif',
+            'seller'                       => [
                 'available'    => __( 'Available', 'dokan-lite' ),
                 'notAvailable' => __( 'Not Available', 'dokan-lite' ),
             ],
-            'delete_confirm'             => __( 'Are you sure?', 'dokan-lite' ),
-            'wrong_message'              => __( 'Something went wrong. Please try again.', 'dokan-lite' ),
-            'vendor_percentage'          => dokan_get_seller_percentage( dokan_get_current_user_id() ),
-            'commission_type'            => dokan_get_commission_type( dokan_get_current_user_id() ),
-            'rounding_precision'         => wc_get_rounding_precision(),
-            'mon_decimal_point'          => wc_get_price_decimal_separator(),
-            'product_types'              => apply_filters( 'dokan_product_types', [ 'simple' ] ),
-            'loading_img'                => DOKAN_PLUGIN_ASSEST . '/images/loading.gif',
-            'store_product_search_nonce' => wp_create_nonce( 'dokan_store_product_search_nonce' ),
-            'i18n_download_permission'   => __( 'Are you sure you want to revoke access to this download?', 'dokan-lite' ),
-            'i18n_download_access'       => __( 'Could not grant access - the user may already have permission for this file or billing email is not set. Ensure the billing email is set, and the order has been saved.', 'dokan-lite' ),
+            'delete_confirm'               => __( 'Are you sure?', 'dokan-lite' ),
+            'wrong_message'                => __( 'Something went wrong. Please try again.', 'dokan-lite' ),
+            'vendor_percentage'            => dokan_get_seller_percentage( dokan_get_current_user_id() ),
+            'commission_type'              => dokan_get_commission_type( dokan_get_current_user_id() ),
+            'rounding_precision'           => wc_get_rounding_precision(),
+            'mon_decimal_point'            => wc_get_price_decimal_separator(),
+            'currency_format_num_decimals' => wc_get_price_decimals(),
+            'currency_format_symbol'       => get_woocommerce_currency_symbol(),
+            'currency_format_decimal_sep'  => esc_attr( wc_get_price_decimal_separator() ),
+            'currency_format_thousand_sep' => esc_attr( wc_get_price_thousand_separator() ),
+            'currency_format'              => esc_attr( str_replace( [ '%1$s', '%2$s' ], [ '%s', '%v' ], get_woocommerce_price_format() ) ), // For accounting JS
+            'round_at_subtotal'            => get_option( 'woocommerce_tax_round_at_subtotal', 'no' ),
+            'product_types'                => apply_filters( 'dokan_product_types', [ 'simple' ] ),
+            'loading_img'                  => DOKAN_PLUGIN_ASSEST . '/images/loading.gif',
+            'store_product_search_nonce'   => wp_create_nonce( 'dokan_store_product_search_nonce' ),
+            'i18n_download_permission'     => __( 'Are you sure you want to revoke access to this download?', 'dokan-lite' ),
+            'i18n_download_access'         => __( 'Could not grant access - the user may already have permission for this file or billing email is not set. Ensure the billing email is set, and the order has been saved.', 'dokan-lite' ),
             /**
              * Filter of maximun a vendor can add tags.
              *

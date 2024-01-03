@@ -54,6 +54,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @property WeDevs\Dokan\Product\Manager $product Instance of Order Manager class
  * @property WeDevs\Dokan\Vendor\Manager $vendor Instance of Vendor Manager Class
  * @property WeDevs\Dokan\BackgroundProcess\Manager $bg_process Instance of WeDevs\Dokan\BackgroundProcess\Manager class
+ * @property WeDevs\Dokan\Withdraw\Manager $withdraw Instance of WeDevs\Dokan\Withdraw\Manager class
  * @property WeDevs\Dokan\Frontend\Frontend $frontend_manager Instance of \WeDevs\Dokan\Frontend\Frontend class
  */
 final class WeDevs_Dokan {
@@ -584,7 +585,7 @@ final class WeDevs_Dokan {
  *
  * @return WeDevs_Dokan
  */
-function dokan() {
+function dokan() { // phpcs:ignore
     return WeDevs_Dokan::init();
 }
 
