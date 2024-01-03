@@ -43,7 +43,7 @@ if ( is_wp_error( $section ) ) {
                         [
                             'name'        => $product_title->get_name(),
                             'placeholder' => $product_title->get_placeholder(),
-                            'value'       => $product->get_name(),
+                            'value'       => $product_title->get_value() ? $product_title->get_value() : $product->get_name(),
                             'required'    => $product_title->is_required(),
                         ]
                     );
