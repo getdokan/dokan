@@ -32,7 +32,7 @@ echo sprintf( esc_html__( 'Payment Method : %s', 'dokan-lite' ), esc_html( $data
 echo " \n";
 
 // translators: 1) user name
-echo sprintf( esc_html__( 'Username : %s', 'dokan-lite' ), esc_html( $data['{user_name}'] ) );
+echo sprintf( esc_html__( 'Store Name : %s', 'dokan-lite' ), esc_html( $data['{user_name}'] ) );
 echo " \n";
 
 // translators: 1) vendor profile url

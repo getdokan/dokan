@@ -31,7 +31,7 @@ echo sprintf( esc_html__( 'Title: %1$s', 'dokan-lite' ), esc_html( $data['{produ
 echo " \n";
 
 // translators: 1) product price
-echo sprintf( esc_html__( 'Price: %1$s', 'dokan-lite' ), esc_html( wc_price( $data['{price}'] ) ) );
+echo sprintf( esc_html__( 'Price: %1$s', 'dokan-lite' ), esc_html( $data['{price}'] ) );
 echo " \n";
 
 // translators: 1) product seller name
@@ -45,14 +45,11 @@ echo " \n";
 echo esc_html__( 'The product is currently in "publish" state. So everyone can view the product.', 'dokan-lite' );
 echo " \n";
 
-echo wp_kses_post(
-    sprintf(
-        // translators: 1) product url
-        __( 'In case it needs to be moderated  <a href="%s"> click here </a>', 'dokan-lite' ),
-        esc_url( $data['{product_link}'] )
-    )
-);
+esc_html_e( 'In case it needs to be moderated, please the follow URL below.', 'dokan-lite' );
+echo esc_url( $data['{product_link}'] );
+echo " \n";
 
+echo "\n\n----------------------------------------\n\n";
 /**
  * Show user-defined additional content - this is set in each email's settings.
  */

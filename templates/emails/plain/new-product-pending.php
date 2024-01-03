@@ -45,13 +45,8 @@ echo " \n";
 esc_html_e( 'The product is currently in "pending" state.', 'dokan-lite' );
 echo " \n";
 
-echo wp_kses_post(
-    sprintf(
-        // translators: 1) product url
-        __( 'In case it needs to be moderated  <a href="%s"> click here </a>', 'dokan-lite' ),
-        $data['{product_link}']
-    )
-);
+esc_html_e( 'In case it needs to be moderated, please the follow URL below.', 'dokan-lite' );
+echo esc_url( $data['{product_link}'] );
 
 echo "\n\n----------------------------------------\n\n";
 

@@ -23,7 +23,7 @@ do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
 <ul>
     <li>
         <strong>
-            <?php esc_html_e( 'Username : ', 'dokan-lite' ); ?>
+            <?php esc_html_e( 'Store Name : ', 'dokan-lite' ); ?>
         </strong>
         <?php
         printf( '<a href="%s">%s</a>', esc_url( $data['{profile_url}'] ), esc_attr( $data['{user_name}'] ) );
