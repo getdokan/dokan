@@ -67,6 +67,13 @@
             $( '.product-edit-container .dokan-product-attribute-wrapper' ).on( 'click', 'a.dokan-product-remove-attribute', this.attribute.removeAttribute );
             $( '.product-edit-container .dokan-product-attribute-wrapper' ).on( 'click', 'a.dokan-save-attribute', this.attribute.saveAttribute );
 
+            // Product form customizer.
+            $('.dokan-product-field-search').select2();
+            $( '.dokan-product-custom-image-drag' ).on( 'click', this.productCustomImageUpload );
+            $( '.dokan-remove-product-custom-image' ).on( 'click', this.productCustomImageRemove );
+            $( '.dokan-product-custom-file-drag' ).on( 'click', this.productCustomFileUpload );
+            $( '.dokan-remove-product-custom-file' ).on( 'click', this.productCustomFileRemove );
+
             this.attribute.disbalePredefinedAttribute();
 
             this.setCorrectProductId();
@@ -338,6 +345,124 @@
             Dokan_Editor.gallery.sortable();
             $( 'body' ).trigger( 'dokan-product-editor-popup-opened', Dokan_Editor );
         },
+
+        productCustomImageUpload: function( e ) {
+          e.preventDefault();
+
+          let parentWrap = $( this ).closest(".dokan-product-custom-image-uploader-wrap");
+
+          // create the media frame
+          let mediaFrame = wp.media.frames.mediaFrame = wp.media( {
+
+            title: 'Upload Product Image',
+
+            button: {
+              text: 'Set Product Image'
+            },
+
+            // only images
+            library: {
+              type: 'image'
+            },
+
+            multiple: false
+          } );
+
+          // After a file has been selected.
+          mediaFrame.on( 'select', function() {
+            let selection = mediaFrame.state().get( 'selection' );
+
+            selection.map( function( attachment ) {
+
+              attachment = attachment.toJSON();
+
+              if ( attachment.id ) {
+                let url = attachment.sizes.thumbnail ? attachment.sizes.thumbnail.url : attachment.url;
+
+                parentWrap.find( '.dokan-product-custom-image-input' ).val( attachment.id );
+                parentWrap.find( 'img.dokan-product-custom-img' ).prop( 'src', url );
+                parentWrap.find( 'img.dokan-product-custom-img' ).prop( 'alt', attachment.alt );
+                parentWrap.find( '.dokan-product-custom-image-preview' ).removeClass( 'dokan-hide' );
+                parentWrap.find( '.dokan-product-custom-image-button-area' ).addClass( 'dokan-hide' );
+              }
+            } );
+          } );
+
+          // Open the modal frame.
+          mediaFrame.open();
+        },
+
+        productCustomImageRemove: function( e ) {
+          e.preventDefault();
+
+          let parentWrap = $( this ).closest(".dokan-product-custom-image-uploader-wrap");
+
+          parentWrap.find( '.dokan-product-custom-image-input' ).val( '' );
+          parentWrap.find( 'img.dokan-product-custom-img' ).prop( 'src', '' );
+          parentWrap.find( 'img.dokan-product-custom-img' ).prop( 'alt', '' );
+          parentWrap.find( '.dokan-product-custom-image-preview' ).addClass( 'dokan-hide' );
+          parentWrap.find( '.dokan-product-custom-image-button-area' ).removeClass( 'dokan-hide' );
+        },
+
+      productCustomFileUpload: function( e ) {
+        e.preventDefault();
+
+        let parentWrap = $( this ).closest(".dokan-product-custom-file-uploader-wrap");
+
+        // create the media frame
+        let mediaFrame = wp.media.frames.mediaFrame = wp.media( {
+
+        title: 'Upload Product File',
+
+        button: {
+          text: 'Set Product File'
+        },
+
+        // only files
+        library: {
+          type: 'pdf'
+        },
+
+        multiple: false
+        } );
+
+        // After a file has been selected.
+        mediaFrame.on( 'select', function() {
+          let selection = mediaFrame.state().get( 'selection' );
+
+          // console.log( selection );
+
+          selection.map( function( attachment ) {
+
+            attachment = attachment.toJSON();
+
+            console.log(parentWrap);
+            console.log(attachment);
+
+            if ( attachment.id ) {
+              parentWrap.find( '.dokan-product-custom-file-input' ).val( attachment.id );
+              // parentWrap.find( '.dokan-product-custom-file-input' ).val( attachment.icon );
+              parentWrap.find( 'a.dokan-product-custom-file-link' ).text( attachment.filename );
+              parentWrap.find( 'a.dokan-product-custom-file-link' ).prop( 'href', attachment.url );
+              parentWrap.find( '.dokan-product-custom-file-preview' ).removeClass( 'dokan-hide' );
+              parentWrap.find( '.dokan-product-custom-file-button-area' ).addClass( 'dokan-hide' );
+            }
+          } );
+        } );
+
+        // Open the modal frame.
+        mediaFrame.open();
+      },
+
+      productCustomFileRemove: function( e ) {
+        e.preventDefault();
+
+        let parentWrap = $( this ).closest(".dokan-product-custom-file-uploader-wrap");
+
+        parentWrap.find( '.dokan-product-custom-file-input' ).val( '' );
+        parentWrap.find( '.dokan-product-custom-file-preview' ).addClass( 'dokan-hide' );
+        parentWrap.find( '.dokan-product-custom-file-button-area' ).removeClass( 'dokan-hide' );
+      },
 
         attribute: {
 
