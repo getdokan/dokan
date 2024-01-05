@@ -45,7 +45,7 @@ echo " \n";
 echo esc_html__( 'The product is currently in "publish" state. So everyone can view the product.', 'dokan-lite' );
 echo " \n";
 
-esc_html_e( 'In case it needs to be moderated, please the follow URL below.', 'dokan-lite' );
+esc_html_e( 'In case it needs to be moderated, please follow the URL below.', 'dokan-lite' );
 echo esc_url( $data['{product_link}'] );
 echo " \n";
 
