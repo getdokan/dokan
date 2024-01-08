@@ -35,10 +35,13 @@ class ContactSeller extends WC_Email {
         $this->template_plain = 'emails/plain/contact-seller.php';
         $this->template_base  = DOKAN_DIR . '/templates/';
         $this->placeholders   = [
-            '{seller_name}'    => '',
+            '{store_name}'     => '',
             '{customer_name}'  => '',
             '{customer_email}' => '',
             '{message}'        => '',
+            // only for backward compatibility
+            '{site_name}'      => $this->get_from_name(),
+            '{seller_name}'    => '',
         ];
 
         // Triggers for this email
@@ -72,7 +75,7 @@ class ContactSeller extends WC_Email {
     }
 
     /**
-     * Trigger the this email.
+     * Trigger this email.
      */
     public function trigger( $seller_email, $contact_name, $contact_email, $contact_message ) {
         if ( ! $this->is_enabled() || ! $this->get_recipient() ) {
@@ -85,18 +88,17 @@ class ContactSeller extends WC_Email {
         $seller = get_user_by( 'email', $seller_email );
         $seller = new Vendor( $seller );
 
-        $this->placeholders['{seller_name}']    = $seller->get_shop_name();
+        $this->placeholders['{store_name}']     = $seller->get_shop_name();
         $this->placeholders['{customer_name}']  = $contact_name;
         $this->placeholders['{customer_email}'] = $contact_email;
         $this->placeholders['{message}']        = $contact_message;
+        $this->placeholders['{seller_name}']    = $seller->get_shop_name(); // only for backward compatibility.
         $this->send( $seller_email, $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
         $this->restore_locale();
     }
 
     /**
      * Get the from address for outgoing emails.
-     *
-     * @since DOKAN_LITE_SINCE
      *
      * @return string
      */
@@ -146,8 +148,10 @@ class ContactSeller extends WC_Email {
      * Initialize settings form fields.
      */
     public function init_form_fields() {
+        $placeholders = $this->placeholders;
+        unset( $placeholders['{site_name}'], $placeholders['{seller_name}'] );
         /* translators: %s: list of placeholders */
-        $placeholder_text  = sprintf( __( 'Available placeholders: %s', 'dokan-lite' ), '<code>' . implode( '</code>, <code>', array_keys( $this->placeholders ) ) . '</code>' );
+        $placeholder_text  = sprintf( __( 'Available placeholders: %s', 'dokan-lite' ), '<code>' . implode( '</code>, <code>', array_keys( $placeholders ) ) . '</code>' );
         $this->form_fields = array(
             'enabled' => array(
                 'title'         => __( 'Enable/Disable', 'dokan-lite' ),

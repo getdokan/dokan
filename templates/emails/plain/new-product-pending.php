@@ -35,7 +35,7 @@ echo sprintf( esc_html__( 'Price: %1$s', 'dokan-lite' ), esc_html( $data['{price
 echo " \n";
 
 // translators: 1) product seller name
-echo sprintf( esc_html__( 'Vendor: %1$s', 'dokan-lite' ), esc_html( $data['{seller_name}'] ) );
+echo sprintf( esc_html__( 'Vendor: %1$s', 'dokan-lite' ), esc_html( $data['{store_name}'] ) );
 echo " \n";
 
 // translators: 1) product category

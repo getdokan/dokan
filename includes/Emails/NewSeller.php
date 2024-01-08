@@ -30,6 +30,8 @@ class NewSeller extends WC_Email {
             '{store_url}'   => '',
             '{store_name}'  => '',
             '{seller_edit}' => '',
+            // only for backward compatibility.
+            '{site_name}'   => $this->get_from_name(),
         ];
 
         // Triggers for this email
@@ -130,8 +132,10 @@ class NewSeller extends WC_Email {
      * Initialise settings form fields.
      */
     public function init_form_fields() {
+        $placeholders = $this->placeholders;
+        unset( $placeholders['{site_name}'] );
         /* translators: %s: list of placeholders */
-        $placeholder_text  = sprintf( __( 'Available placeholders: %s', 'dokan-lite' ), '<code>' . implode( '</code>, <code>', array_keys( $this->placeholders ) ) . '</code>' );
+        $placeholder_text  = sprintf( __( 'Available placeholders: %s', 'dokan-lite' ), '<code>' . implode( '</code>, <code>', array_keys( $placeholders ) ) . '</code>' );
         $this->form_fields = array(
             'enabled' => array(
                 'title'         => __( 'Enable/Disable', 'dokan-lite' ),

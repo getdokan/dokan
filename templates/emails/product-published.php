@@ -16,7 +16,7 @@ do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
 <p>
     <?php
     // translators: 1) seller name
-    echo sprintf( __( 'Hello %s', 'dokan-lite' ), esc_html( $data['{seller_name}'] ) );
+    echo sprintf( __( 'Hello %s', 'dokan-lite' ), esc_html( $data['{store_name}'] ) );
     ?>
 </p>
 <p>

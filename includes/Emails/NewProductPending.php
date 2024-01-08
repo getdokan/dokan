@@ -31,10 +31,13 @@ class NewProductPending extends WC_Email {
         $this->placeholders   = [
             '{product_title}' => '',
             '{price}'         => '',
-            '{seller_name}'   => '',
+            '{store_name}'    => '',
             '{seller_url}'    => '',
             '{category}'      => '',
             '{product_link}'  => '',
+            // only for backward compatibility
+            '{site_name}'     => $this->get_from_name(),
+            '{seller_name}'   => '',
         ];
 
         // Triggers for this email
@@ -55,7 +58,7 @@ class NewProductPending extends WC_Email {
      * @return string
      */
     public function get_default_subject() {
-            return __( '[{site_title}] A New product is pending from ({seller_name}) - {product_title}', 'dokan-lite' );
+            return __( '[{site_title}] A New product is pending from ({store_name}) - {product_title}', 'dokan-lite' );
     }
 
     /**
@@ -65,7 +68,7 @@ class NewProductPending extends WC_Email {
      * @return string
      */
     public function get_default_heading() {
-            return __( 'New pending product added by Vendor {seller_name}', 'dokan-lite' );
+            return __( 'New pending product added by Vendor {store_name}', 'dokan-lite' );
     }
 
     /**
@@ -106,10 +109,11 @@ class NewProductPending extends WC_Email {
 
         $this->placeholders['{product_title}'] = $product->get_title();
         $this->placeholders['{price}']         = dokan()->email->currency_symbol( $product->get_price() );
-        $this->placeholders['{seller_name}']   = $seller->get_name();
+        $this->placeholders['{store_name}']    = $seller->get_shop_name();
         $this->placeholders['{seller_url}']    = $seller->get_shop_url();
         $this->placeholders['{category}']      = $category_name;
         $this->placeholders['{product_link}']  = admin_url( 'post.php?action=edit&post=' . $product_id );
+        $this->placeholders['{seller_name}']   = $seller->get_shop_name(); // only for backward compatibility.
 
         $this->send( $this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
         $this->restore_locale();
@@ -163,8 +167,10 @@ class NewProductPending extends WC_Email {
      * Initialise settings form fields.
      */
     public function init_form_fields() {
+        $placeholders = $this->placeholders;
+        unset( $placeholders['{site_name}'], $placeholders['{seller_name}'] );
         /* translators: %s: list of placeholders */
-        $placeholder_text  = sprintf( __( 'Available placeholders: %s', 'dokan-lite' ), '<code>' . implode( '</code>, <code>', array_keys( $this->placeholders ) ) . '</code>' );
+        $placeholder_text  = sprintf( __( 'Available placeholders: %s', 'dokan-lite' ), '<code>' . implode( '</code>, <code>', array_keys( $placeholders ) ) . '</code>' );
         $this->form_fields = array(
             'enabled' => array(
                 'title'         => __( 'Enable/Disable', 'dokan-lite' ),

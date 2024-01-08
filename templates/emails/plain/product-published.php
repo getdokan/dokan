@@ -17,7 +17,7 @@ echo esc_html( wp_strip_all_tags( $email_heading ) );
 echo "\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n\n";
 
 // translators: 1) Seller name
-echo sprintf( esc_html__( 'Hello %s', 'dokan-lite' ), esc_html( $data['{seller_name}'] ) );
+echo sprintf( esc_html__( 'Hello %s', 'dokan-lite' ), esc_html( $data['{store_name}'] ) );
 echo " \n\n";
 
 // translators: 1) product title

@@ -33,6 +33,9 @@ class WithdrawApproved extends WC_Email {
             '{method}'        => '',
             '{profile_url}'   => '',
             '{withdraw_page}' => '',
+            // Only for backward compatibility.
+            '{user_name}'     => '',
+            '{site_name}'     => $this->get_from_name(),
         ];
 
         // Triggers for this email
@@ -84,6 +87,7 @@ class WithdrawApproved extends WC_Email {
         $this->placeholders['{method}']        = dokan_withdraw_get_method_title( $withdraw->get_method() );
         $this->placeholders['{profile_url}']   = esc_url( dokan_get_navigation_url( 'edit-account' ) );
         $this->placeholders['{withdraw_page}'] = esc_url( dokan_get_navigation_url( 'withdraw-requests' ) );
+        $this->placeholders['{user_name}']     = $seller->get_shop_name(); // for backward compatibility.
 
         $this->send( $seller->get_email(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
         $this->restore_locale();
@@ -133,8 +137,10 @@ class WithdrawApproved extends WC_Email {
      * Initialise settings form fields.
      */
     public function init_form_fields() {
+        $placeholders = $this->placeholders;
+        unset( $placeholders['{site_name}'], $placeholders['{user_name}'] );
         /* translators: %s: list of placeholders */
-        $placeholder_text  = sprintf( __( 'Available placeholders: %s', 'dokan-lite' ), '<code>' . implode( '</code>, <code>', array_keys( $this->placeholders ) ) . '</code>' );
+        $placeholder_text  = sprintf( __( 'Available placeholders: %s', 'dokan-lite' ), '<code>' . implode( '</code>, <code>', array_keys( $placeholders ) ) . '</code>' );
         $this->form_fields = [
             'enabled'    => [
                 'title'   => __( 'Enable/Disable', 'dokan-lite' ),
