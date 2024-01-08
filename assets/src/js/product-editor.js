@@ -68,17 +68,49 @@
             $( '.product-edit-container .dokan-product-attribute-wrapper' ).on( 'click', 'a.dokan-save-attribute', this.attribute.saveAttribute );
 
             // Product form customizer.
-            $('.dokan-product-field-search').select2();
+            $( '.dokan-product-field-search' ).select2();
             $( '.dokan-product-custom-image-drag' ).on( 'click', this.productCustomImageUpload );
             $( '.dokan-remove-product-custom-image' ).on( 'click', this.productCustomImageRemove );
             $( '.dokan-product-custom-file-drag' ).on( 'click', this.productCustomFileUpload );
             $( '.dokan-remove-product-custom-file' ).on( 'click', this.productCustomFileRemove );
+            $( '.dokan-product-custom-date-range-picker' ).on( 'click', 'input.date-range-input', this.handleDateRangePicker );
 
             this.attribute.disbalePredefinedAttribute();
 
             this.setCorrectProductId();
 
             $( 'body' ).trigger( 'dokan-product-editor-loaded', this );
+        },
+
+      handleDateRangePicker: function( e ) {
+          e.preventDefault();
+
+          let self       = $( this );
+          let selfId     = self[0].id;
+          let localeData = {
+            format : dokan_get_daterange_picker_format(),
+            ...dokan_helper.daterange_picker_local
+          };
+
+          self.daterangepicker({
+            autoUpdateInput : false,
+            locale          : localeData,
+          });
+
+          // Set the value for date range field to show frontend.
+          self.on( 'apply.daterangepicker', function( ev, picker ) {
+            $( this ).val( picker.startDate.format( localeData.format ) + ' - ' + picker.endDate.format( localeData.format ) );
+            // Set the value for date range fields to send backend
+            $( 'input[name="' + selfId + '[start_date]"]' ).val( picker.startDate.format( 'YYYY-MM-DD' ) );
+            $( 'input[name="' + selfId + '[end_date]"]' ).val(picker.endDate.format('YYYY-MM-DD'));
+          });
+
+          // Clear the data.
+          self.on( 'cancel.daterangepicker', function( ev, picker ) {
+            $( this ).val( '' );
+            $( 'input[name="' + selfId + '[start_date]"]' ).val('');
+            $( 'input[name="' + selfId + '[end_date]"]' ).val('');
+          });
         },
 
         setCorrectProductId : function () {
