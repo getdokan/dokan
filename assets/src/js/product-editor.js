@@ -73,7 +73,8 @@
             $( '.dokan-remove-product-custom-image' ).on( 'click', this.productCustomImageRemove );
             $( '.dokan-product-custom-file-drag' ).on( 'click', this.productCustomFileUpload );
             $( '.dokan-remove-product-custom-file' ).on( 'click', this.productCustomFileRemove );
-            $( '.dokan-product-custom-date-range-picker' ).on( 'click', 'input.date-range-input', this.handleDateRangePicker );
+
+            this.initDatePicker();
 
             this.attribute.disbalePredefinedAttribute();
 
@@ -82,36 +83,47 @@
             $( 'body' ).trigger( 'dokan-product-editor-loaded', this );
         },
 
-      handleDateRangePicker: function( e ) {
-          e.preventDefault();
+        initDatePicker: function() {
+          let element = $( '.dokan-product-custom-date-range-picker input.date-range-input' );
 
-          let self       = $( this );
-          let selfId     = self[0].id;
-          let localeData = {
-            format : dokan_get_daterange_picker_format(),
-            ...dokan_helper.daterange_picker_local
-          };
+          element.each( function( e ) {
+            let self           = $( this );
+            let selfId         = self[0].id;
+            let datePickerType = self.data( 'date-picker-type' );
+            let localeData     = {
+              format : dokan_get_daterange_picker_format(),
+              ...dokan_helper.daterange_picker_local
+            };
 
-          self.daterangepicker({
-            autoUpdateInput : false,
-            locale          : localeData,
-          });
+            self.daterangepicker( {
+              autoUpdateInput  : false,
+              showDropdowns    : true,
+              locale           : localeData,
+              singleDatePicker : 'date_range_picker' !== datePickerType,
+            } );
 
-          // Set the value for date range field to show frontend.
-          self.on( 'apply.daterangepicker', function( ev, picker ) {
-            $( this ).val( picker.startDate.format( localeData.format ) + ' - ' + picker.endDate.format( localeData.format ) );
-            // Set the value for date range fields to send backend
-            $( 'input[name="' + selfId + '[start_date]"]' ).val( picker.startDate.format( 'YYYY-MM-DD' ) );
-            $( 'input[name="' + selfId + '[end_date]"]' ).val(picker.endDate.format('YYYY-MM-DD'));
-          });
+            // Set the value for date range field to show frontend.
+            self.on( 'apply.daterangepicker', function( ev, picker ) {
+              let val = picker.startDate.format( localeData.format );
+              if ( 'date_range_picker' === datePickerType ) {
+                val += ' - ' + picker.endDate.format( localeData.format )
+              }
+              $( this ).val( val  );
 
-          // Clear the data.
-          self.on( 'cancel.daterangepicker', function( ev, picker ) {
-            $( this ).val( '' );
-            $( 'input[name="' + selfId + '[start_date]"]' ).val('');
-            $( 'input[name="' + selfId + '[end_date]"]' ).val('');
-          });
-        },
+              // Set the value for date range fields to send backend.
+              $( 'input[name="' + selfId + '[start_date]"]' ).val( picker.startDate.format( 'YYYY-MM-DD' ) );
+              $( 'input[name="' + selfId + '[end_date]"]' ).val( picker.endDate.format( 'YYYY-MM-DD' ) );
+            } );
+
+            // Clear the data.
+            self.on( 'cancel.daterangepicker', function( ev, picker ) {
+              $( this ).val( '' );
+
+              $( 'input[name="' + selfId + '[start_date]"]' ).val( '' );
+              $( 'input[name="' + selfId + '[end_date]"]' ).val( '' );
+            } );
+          } );
+      },
 
         setCorrectProductId : function () {
             let productForm = $( '.dokan-product-edit-form' );
