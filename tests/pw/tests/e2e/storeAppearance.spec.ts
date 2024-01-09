@@ -6,7 +6,7 @@ import { dbUtils } from '@utils/dbUtils';
 import { data } from '@utils/testData';
 import { dbData } from '@utils/dbData';
 
-test.describe.only('Store Appearance test', () => {
+test.describe('Store Appearance test', () => {
     let customer: StoreAppearance;
     let customerPage: CustomerPage;
     let cPage: Page;
