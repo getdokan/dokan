@@ -30,12 +30,12 @@ export class PrivacyPolicy extends BasePage {
         await this.clickAndWaitForUrl(helpers.stringToRegex('privacy-policy'), selector.customer.cSingleStore.storeContactForm.privacyPolicyLink);
     }
 
-    async disabledPrivacyPolicy(storeName: string) {
+    async disablePrivacyPolicy(storeName: string) {
         await this.goIfNotThere(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)));
         await this.notToBeVisible(selector.customer.cSingleStore.storeContactForm.privacyPolicy);
     }
 
-    async disabledStoreContactForm(storeName: string) {
+    async disableStoreContactForm(storeName: string) {
         await this.goto(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)));
         await this.notToBeVisible(selector.customer.cSingleStore.storeContactForm.storeContactForm);
     }

@@ -6653,7 +6653,7 @@ export const selector = {
                 storeInfo: '.dokan-store-info',
                 storeAddress: '.dokan-store-address',
                 storePhone: '.dokan-store-phone',
-                // storeEmail: '.dokan-store-email',
+                storeEmail: '.dokan-store-email',
                 // storeRating: '.dokan-store-rating',
                 // storeOpenClose: '.dokan-store-open-close',
                 storeSocial: '.store-social',
@@ -6786,6 +6786,8 @@ export const selector = {
                 privacyPolicy: 'div.dokan-privacy-policy-text p',
                 privacyPolicyLink: 'a.dokan-privacy-policy-link',
             },
+            storeMap: 'div#dokan-store-location',
+            storeOpenCloseTime: 'div.dokan-store-open-close',
         },
 
         cMyOrders: {
