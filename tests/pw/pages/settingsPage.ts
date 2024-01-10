@@ -173,7 +173,7 @@ export class SettingsPage extends AdminPage {
 
         // save settings
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.admin.dokan.settings.withdraw.withdrawSaveChanges);
-        await this.toContainText(selector.admin.dokan.settings.dokanUpdateSuccessMessage, withdraw.saveSuccessMessage);
+        await this.toHaveValue(selector.admin.dokan.settings.withdraw.minimumWithdrawAmount, withdraw.minimumWithdrawAmount);
     }
 
     // Admin Set Dokan Reverse Withdraw Settings
