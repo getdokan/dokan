@@ -718,6 +718,7 @@ export const data = {
             plugins: 'wp-admin/plugins.php',
             activatePlugin: 'wp-admin/plugins.php?action=activate',
             deactivatePlugin: 'wp-admin/plugins.php?action=deactivate',
+            widgets: 'wp-admin/widgets.php',
 
             dokan: {
                 setupWizard: 'wp-admin/admin.php?page=dokan-setup',
@@ -1013,6 +1014,12 @@ export const data = {
                 },
             },
 
+            // todo:  will be under product object
+            description: {
+                shortDescription: 'test short description',
+                description: 'test long description',
+            },
+
             amountDiscount: {
                 minimumOrderAmount: '200',
                 discountPercentage: '10',
@@ -1021,6 +1028,11 @@ export const data = {
             quantityDiscount: {
                 minimumQuantity: '10',
                 discountPercentage: '10',
+            },
+
+            wholesaleOption: {
+                wholesalePrice: '90',
+                minimumWholesaleQuantity: '10',
             },
 
             minMax: {
@@ -1914,10 +1926,10 @@ export const data = {
         },
     },
 
-    storeContactData:{
+    storeContactData: {
         name: String(process.env.CUSTOMER),
         email: String(process.env.CUSTOMER) + '@yopmail.com',
-        message: 'Test Message'
+        message: 'Test Message',
     },
 
     // dokan license

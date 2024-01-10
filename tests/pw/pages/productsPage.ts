@@ -502,6 +502,16 @@ export class ProductsPage extends AdminPage {
 
     // product edit
 
+    // add product description
+    async addProductDescription(productName: string, description: vendor['vendorInfo']['description']): Promise<void> { // todo : interface should be under product info
+        await this.goToProductEdit(productName);
+        await this.typeFrameSelector(selector.vendor.product.shortDescription.shortDescriptionIframe,selector.vendor.product.shortDescription.shortDescriptionHtmlBody, description.shortDescription);
+        await this.typeFrameSelector(selector.vendor.product.description.descriptionIframe,selector.vendor.product.description.descriptionHtmlBody, description.description);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, selector.vendor.product.saveProduct, 302);
+        await this.toContainText(selector.vendor.product.updatedSuccessMessage, data.product.createUpdateSaveSuccessMessage);
+        // todo: add more assertions
+    }
+
     // add product quantity discount
     async addProductQuantityDiscount(productName: string, quantityDiscount: vendor['vendorInfo']['quantityDiscount']): Promise<void> {
         await this.goToProductEdit(productName);
@@ -510,10 +520,23 @@ export class ProductsPage extends AdminPage {
         await this.clearAndType(selector.vendor.product.discount.lotDiscountInPercentage, quantityDiscount.discountPercentage);
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, selector.vendor.product.saveProduct, 302);
         await this.toContainText(selector.vendor.product.updatedSuccessMessage, data.product.createUpdateSaveSuccessMessage);
+        // todo: add more assertions
     }
 
-    // vendor add product rma settings
-    async addProductRmaSettings(productName: string, rma: vendor['rma']): Promise<void> {
+     // add product Wholesale options
+     async addProductWholesaleOptions(productName: string, wholesaleOption: vendor['vendorInfo']['wholesaleOption']): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.check(selector.vendor.product.wholesale.enableWholeSaleForThisProduct); 
+        await this.clearAndType(selector.vendor.product.wholesale.wholesalePrice, wholesaleOption.wholesalePrice);
+        await this.clearAndType(selector.vendor.product.wholesale.minimumQuantityForWholesale, wholesaleOption.minimumWholesaleQuantity);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, selector.vendor.product.saveProduct, 302);
+        await this.toContainText(selector.vendor.product.updatedSuccessMessage, data.product.createUpdateSaveSuccessMessage);
+        await this.toHaveValue(selector.vendor.product.wholesale.wholesalePrice, wholesaleOption.wholesalePrice);
+        await this.toHaveValue(selector.vendor.product.wholesale.minimumQuantityForWholesale, wholesaleOption.minimumWholesaleQuantity);
+     }
+
+    // vendor add product rma options
+    async addProductRmaOptions(productName: string, rma: vendor['rma']): Promise<void> {
         await this.goToProductEdit(productName);
         await this.check(selector.vendor.product.rma.overrideYourDefaultRmaSettingsForThisProduct);
         await this.clearAndType(selector.vendor.product.rma.label, rma.label);

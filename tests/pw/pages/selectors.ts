@@ -151,6 +151,13 @@ export const selector = {
             spam: '//li[@class="spam"]',
             trash: '//li[@class="trash"]',
         },
+
+        // widgets
+        widgets: {
+            listView: 'button.edit-widgets-header-toolbar__list-view-toggle',
+            dokanStoreSidebar: '//span[text()="Dokan Store Sidebar"]/../../..//span[@class="block-editor-list-view__expander"]',
+        },
+
         // EmailLog
         emailLog: {
             // Menus
@@ -3434,62 +3441,61 @@ export const selector = {
                 signUpFee: '#\\_subscription_sign_up_fee',
                 subscriptionTrialLength: '#\\_subscription_trial_length',
                 subscriptionTrialPeriod: '#\\_subscription_trial_period',
+            },
+            // Short Description
+            shortDescription: {
+                shortDescriptionIframe: '.dokan-product-short-description iframe',
+                shortDescriptionHtmlBody: '#tinymce',
+            },
 
-                // Short Description
-                shortDescription: {
-                    shortDescriptionIframe: '.dokan-product-short-description iframe',
-                    shortDescriptionHtmlBody: '#tinymce',
-                },
+            // Description
+            description: {
+                descriptionIframe: '.dokan-product-description iframe',
+                descriptionHtmlBody: '#tinymce',
+            },
 
-                // Description
-                description: {
-                    descriptionIframe: '.dokan-product-description iframe',
-                    descriptionHtmlBody: '#tinymce',
-                },
+            // Inventory
+            inventory: {
+                sku: '#\\_sku',
+                stockStatus: '#\\_stock_status',
+                enableProductStockManagement: '#\\_manage_stock',
+                stockQuantity: '//input[@name="_stock"]',
+                lowStockThreshold: '//input[@name="_low_stock_amount"]',
+                allowBackOrders: '#\\_backorders',
+                allowOnlyOneQuantityOfThisProductToBeBoughtInASingleOrder: '#\\_sold_individually',
+            },
 
-                // Inventory
-                inventory: {
-                    sku: '#\\_sku',
-                    stockStatus: '#\\_stock_status',
-                    enableProductStockManagement: '#\\_manage_stock',
-                    stockQuantity: '//input[@name="_stock"]',
-                    lowStockThreshold: '//input[@name="_low_stock_amount"]',
-                    allowBackOrders: '#\\_backorders',
-                    allowOnlyOneQuantityOfThisProductToBeBoughtInASingleOrder: '#\\_sold_individually',
-                },
+            // Geolocation
+            geolocation: {
+                sameAsStore: '#\\_dokan_geolocation_use_store_settings',
+                productLocation: '#\\_dokan_geolocation_product_location',
+            },
 
-                // Geolocation
-                geolocation: {
-                    sameAsStore: '#\\_dokan_geolocation_use_store_settings',
-                    productLocation: '#\\_dokan_geolocation_product_location',
-                },
+            // Add-Ons
+            addOns: {
+                addField: '.wc-pao-add-field',
+                type: '#wc-pao-addon-content-type-0',
+                displayAs: '#wc-pao-addon-content-display-0',
+                titleRequired: '#wc-pao-addon-content-name-0',
+                formatTitle: '#wc-pao-addon-content-title-format',
+                enableDescription: 'wc-pao-addon-description-enable-0',
+                addDescription: '#wc-pao-addon-description-0',
+                requiredField: '#wc-pao-addon-required-0',
+                import: '.wc-pao-import-addons',
+                export: '.wc-pao-export-addons',
+                excludeAddons: '\\_product_addons_exclude_global',
+                expandAll: '.wc-pao-expand-all',
+                closeAll: '.wc-pao-close-all',
 
-                // Add-Ons
-                addOns: {
-                    addField: '.wc-pao-add-field',
-                    type: '#wc-pao-addon-content-type-0',
-                    displayAs: '#wc-pao-addon-content-display-0',
-                    titleRequired: '#wc-pao-addon-content-name-0',
-                    formatTitle: '#wc-pao-addon-content-title-format',
-                    enableDescription: 'wc-pao-addon-description-enable-0',
-                    addDescription: '#wc-pao-addon-description-0',
-                    requiredField: '#wc-pao-addon-required-0',
-                    import: '.wc-pao-import-addons',
-                    export: '.wc-pao-export-addons',
-                    excludeAddons: '\\_product_addons_exclude_global',
-                    expandAll: '.wc-pao-expand-all',
-                    closeAll: '.wc-pao-close-all',
-
-                    // Add-Ons Option
-                    options: {
-                        enterAnOption: '.wc-pao-addon-content-label > input',
-                        optionPriceType: '.wc-pao-addon-option-price-type',
-                        optionPrice: '.wc-pao-addon-content-price input',
-                        addOption: '.wc-pao-add-option',
-                        removeOptionCrossIcon: '.wc-pao-addon-content-remove > .button',
-                        cancelRemoveOption: '.swal2-cancel',
-                        okRemoveOption: '.swal2-confirm',
-                    },
+                // Add-Ons Option
+                options: {
+                    enterAnOption: '.wc-pao-addon-content-label > input',
+                    optionPriceType: '.wc-pao-addon-option-price-type',
+                    optionPrice: '.wc-pao-addon-content-price input',
+                    addOption: '.wc-pao-add-option',
+                    removeOptionCrossIcon: '.wc-pao-addon-content-remove > .button',
+                    cancelRemoveOption: '.swal2-cancel',
+                    okRemoveOption: '.swal2-confirm',
                 },
             },
 
@@ -6777,7 +6783,7 @@ export const selector = {
             },
 
             storeContactForm: {
-                storeContactForm:'#dokan-form-contact-seller',
+                storeContactForm: '#dokan-form-contact-seller',
                 name: '//form[@id="dokan-form-contact-seller"]//input[@placeholder="Your Name"]',
                 email: '//form[@id="dokan-form-contact-seller"]//input[@placeholder="you@example.com"]',
                 message: '//form[@id="dokan-form-contact-seller"]//textarea[@name="message"]',

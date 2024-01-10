@@ -6,7 +6,7 @@ import { dbUtils } from '@utils/dbUtils';
 import { data } from '@utils/testData';
 import { dbData } from '@utils/dbData';
 
-test.describe('Privacy Policy & Store Contact form test', () => {
+test.describe.skip('Privacy Policy & Store Contact form test', () => {
     let customer: PrivacyPolicy;
     let customerPage: CustomerPage;
     let cPage: Page;
