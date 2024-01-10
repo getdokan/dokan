@@ -462,12 +462,13 @@ class OrderController extends DokanRESTController {
             'return'      => 'objects',
         ];
 
+        if ( is_numeric( $request->get_param( 'seller_id' ) ) ) {
+            $args['seller_id'] = absint( $request['seller_id'] );
+        }
+
         // Admin can get any vendor orders but vendor can't get other vendors orders.
-        $current_user = dokan_get_current_user_id();
         if ( ! current_user_can( 'manage_options' ) ) {
-            $args['seller_id'] = $current_user;
-        } else {
-            $args['seller_id'] = isset( $request['seller_id'] ) && is_numeric( $request['seller_id'] ) ? sanitize_text_field( $request['seller_id'] ) : $current_user;
+            $args['seller_id'] = dokan_get_current_user_id();
         }
 
         if ( ! empty( $request['search'] ) ) {
@@ -1043,8 +1044,8 @@ class OrderController extends DokanRESTController {
                 ),
                 'customer_id'          => array(
                     'description' => __( 'User ID who owns the order. 0 for guests.', 'dokan-lite' ),
-                    'type'        => 'integer',
-                    'default'     => 0,
+                    'type'        => 'string',
+                    'default'     => '',
                     'context'     => array( 'view' ),
                 ),
                 'search'          => array(
@@ -1746,6 +1747,28 @@ class OrderController extends DokanRESTController {
     }
 
     /**
+     * Validating the customer id to query orders.
+     *
+     * @since 3.9.5
+     *
+     * @param string $param
+     * @param WP_REST_Request $request
+     * @param string $key
+     *
+     * @return boolean|WP_Error
+     */
+    public function rest_validate_customer_id( $param, $request, $key ) {
+        if ( is_numeric( $param ) || empty( $param ) ) {
+            return true;
+        }
+
+        return new WP_Error(
+            'rest_invalid_param',
+            __( 'The customer_id must be an integer, accepted value is 0 or any integer value', 'dokan-lite' )
+        );
+    }
+
+    /**
      * Retrieves the query params for the posts collection.
      *
      * @since 4.7.0
@@ -1782,10 +1805,11 @@ class OrderController extends DokanRESTController {
         );
 
         $query_params['customer_id'] = array(
-            'required'    => false,
-            'default'     => $schema_properties['customer_id']['default'],
-            'description' => $schema_properties['customer_id']['description'],
-            'type'        => $schema_properties['customer_id']['type'],
+            'required'          => false,
+            'default'           => $schema_properties['customer_id']['default'],
+            'description'       => $schema_properties['customer_id']['description'],
+            'type'              => $schema_properties['customer_id']['type'],
+            'validate_callback' => [ $this, 'rest_validate_customer_id' ],
         );
 
         $query_params['search'] = array(

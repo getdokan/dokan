@@ -416,6 +416,15 @@
             </div>
         </template>
 
+        <template v-if="'charges' === fieldData.type">
+            <withdraw-charges
+                :section-id="sectionId"
+                :fieldData='fieldData'
+                :field-value='fieldValue'
+                :should-show='shouldShow'
+            />
+        </template>
+
         <template v-if="customFieldComponents">
             <component
                 :key="index"
@@ -438,6 +447,7 @@
     import SocialFields from './SocialFields.vue';
     import FieldHeading from './FieldHeading.vue';
     import SecretInput from './SecretInput.vue';
+    import WithdrawCharges from './Fields/WithdrawCharges.vue'
     let Mapbox                = dokan_get_lib('Mapbox');
     let TextEditor            = dokan_get_lib('TextEditor');
     let GoogleMaps            = dokan_get_lib('GoogleMaps');
@@ -455,7 +465,8 @@
             FieldHeading,
             SocialFields,
             RefreshSettingOptions,
-            SecretInput
+            SecretInput,
+            WithdrawCharges
         },
 
         props: ['id', 'fieldData', 'sectionId', 'fieldValue', 'allSettingsValues', 'errors', 'toggleLoadingState', 'validationErrors', 'dokanAssetsUrl'],
@@ -537,7 +548,14 @@
                                 }
                                 break;
 
+                            case 'contains-any':
+                                if ( ! value.some(item => Object.values( dependencyValue ).includes(item)) ) {
+                                    shouldShow = false;
+                                }
+                                break;
+
                             case 'equal':
+
                             default:
                                 if ( dependencyValue !== value ) {
                                     shouldShow = false;

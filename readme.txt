@@ -7,7 +7,7 @@ Tested up to: 6.4.2
 WC requires at least: 5.0.0
 WC tested up to: 8.2.2
 Requires PHP: 7.3
-Stable tag: 3.9.4
+Stable tag: 3.9.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -337,6 +337,10 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 == Changelog ==
+
+= v3.9.5 ( Dec 28, 2023 ) =
+
+- **fix:** API request on get all orders returns empty results for the endpoint http://dev.test/wp-json/dokan/v1/orders due to default customer id was set to 0.
 
 = v3.9.4 ( Dec 12, 2023 ) =
 
