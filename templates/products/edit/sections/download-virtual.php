@@ -15,7 +15,7 @@ use WeDevs\Dokan\ProductForm\Section;
 
 defined( 'ABSPATH' ) || exit;
 
-
+$post = get_post( $product->get_id() ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 ?>
 <div class="dokan-form-group dokan-product-type-container <?php echo esc_attr( $class ); ?>">
     <?php
@@ -61,3 +61,5 @@ defined( 'ABSPATH' ) || exit;
     <?php endif; ?>
     <div class="dokan-clearfix"></div>
 </div>
+
+<?php do_action( 'dokan_product_edit_after_downloadable_virtual', $post, $product->get_id(), $product ); ?>

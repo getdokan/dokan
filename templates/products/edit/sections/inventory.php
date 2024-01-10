@@ -230,7 +230,7 @@ $post = get_post( $product->get_id() ); // phpcs:ignore WordPress.WP.GlobalVaria
             </div>
         <?php endif; ?>
 
-        <?php do_action( 'dokan_product_edit_after_inventory' ); ?>
+        <?php do_action( 'dokan_product_edit_after_inventory', $post, $product->get_id(), $product ); ?>
         <?php do_action( 'dokan_product_edit_after_sidebar', $post, $product->get_id(), $product ); ?>
         <?php do_action( 'dokan_single_product_edit_after_sidebar', $post, $product->get_id(), $product ); ?>
 

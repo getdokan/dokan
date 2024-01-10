@@ -15,6 +15,9 @@
 use WeDevs\Dokan\ProductForm\Elements;
 use WeDevs\Dokan\ProductForm\Section;
 
+defined( 'ABSPATH' ) || exit;
+
+$post = get_post( $product->get_id() ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 ?>
 
 <div class="dokan-other-options dokan-edit-row dokan-clearfix <?php echo esc_attr( $class ); ?>">
@@ -113,5 +116,7 @@ use WeDevs\Dokan\ProductForm\Section;
                 ?>
             </div>
         <?php endif; ?>
+
+        <?php do_action( 'dokan_product_edit_after_other_options', $post, $product->get_id(), $product ); ?>
     </div>
 </div><!-- .dokan-other-options -->
