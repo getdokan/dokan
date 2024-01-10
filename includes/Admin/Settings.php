@@ -634,6 +634,7 @@ class Settings {
                         'key'       => 'withdraw_methods',
                         'condition' => 'contains-key-value',
                     ],
+                    'refresh_after_save' => true,
                 ],
                 'withdraw_limit'        => [
                     'name'                       => 'withdraw_limit',

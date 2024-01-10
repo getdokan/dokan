@@ -47,7 +47,7 @@
             </div>
         </div>
 
-        <div class="dokan-form-group" id="dokan-withdraw-charge-section" style="display: none">
+        <div class="dokan-form-group" id="dokan-withdraw-charge-section">
             <label for="withdraw-method" class="dokan-w4 dokan-control-label">
                 <?php esc_html_e( 'Withdraw Charge', 'dokan-lite' ); ?>
             </label>
@@ -56,7 +56,7 @@
             </div>
         </div>
 
-        <div class="dokan-form-group" id="dokan-withdraw-revivable-section" style="display: none">
+        <div class="dokan-form-group" id="dokan-withdraw-revivable-section">
             <label for="withdraw-method" class="dokan-w4 dokan-control-label">
                 <?php esc_html_e( 'Receivable amount', 'dokan-lite' ); ?>
             </label>

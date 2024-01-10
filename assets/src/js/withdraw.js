@@ -11,10 +11,6 @@
                 Dokan_Withdraw.makeDefault( e );
             } );
 
-            $('#dokan-withdraw-request-submit').on( 'click', (e) => {
-                Dokan_Withdraw.handleWithdrawRequest( e );
-            } );
-
             $('#dokan-withdraw-display-schedule-popup').on( 'click', (e) => {
                 Dokan_Withdraw.opensScheduleWindow( e );
             } );
@@ -27,11 +23,35 @@
                 Dokan_Withdraw.handleScheduleChange( e );
             });
 
+            Dokan_Withdraw.initModal();
+        },
+
+        withdrawTemplate: '',
+        withdrawModal: '',
+
+        initModal: function() {
+             const modal = $( '#dokan-withdraw-request-popup' ).iziModal(
+                 {
+                     width       : 690,
+                     overlayColor: 'rgba(0, 0, 0, 0.8)',
+                     headerColor : dokan.modal_header_color,
+                     onOpening   : function ( modal ) {
+                        Dokan_Withdraw.calculateWithdrawCharges();
+                     },
+                 }
+            );
+
+            modal.iziModal( 'setContent', Dokan_Withdraw.withdrawTemplate );
             $( "[name='withdraw_method'][id='withdraw-method']" ).on( 'change', ( e ) => {
-                Dokan_Withdraw.calculateWithdrawCharges();
+              Dokan_Withdraw.calculateWithdrawCharges();
             } );
 
             $( 'input#withdraw-amount' ).on( 'keyup', Dokan_Withdraw.debounce( Dokan_Withdraw.calculateWithdrawCharges, 500 ) );
+            $('#dokan-withdraw-request-submit').on( 'click', (e) => {
+                Dokan_Withdraw.handleWithdrawRequest( e );
+            } );
+
+            Dokan_Withdraw.withdrawModal = modal;
         },
 
         debounce( func, wait, immediate ) {
@@ -50,20 +70,7 @@
             };
         },
         openRequestWithdrawWindow: () => {
-            const withdrawTemplate = wp.template( 'withdraw-request-popup' ),
-                modal = $( '#dokan-withdraw-request-popup' ).iziModal( {
-                    width       : 690,
-                    overlayColor: 'rgba(0, 0, 0, 0.8)',
-                    headerColor : dokan.modal_header_color,
-                    onOpening   : function ( modal ) {
-                        Dokan_Withdraw.calculateWithdrawCharges();
-                    },
-                } );
-
-            modal.iziModal( 'setContent', withdrawTemplate().trim() );
-            modal.iziModal( 'open' );
-
-            Dokan_Withdraw.init();
+          Dokan_Withdraw.withdrawModal.iziModal( 'open' );
         },
         opensScheduleWindow: () => {
             const scheduleTemplate = wp.template( 'withdraw-schedule-popup' ),
@@ -265,7 +272,7 @@
               chargeText = Dokan_Withdraw.formatMoney( chargeAmount, dokan.currency );
             }
 
-          Dokan_Withdraw.showWithdrawChargeHtml( chargeText, chargeAmount, withdrawAmount );
+            Dokan_Withdraw.showWithdrawChargeHtml( chargeText, chargeAmount, withdrawAmount );
         },
 
         formatMoney( money ) {
@@ -282,12 +289,6 @@
             let chargeSection    = $('#dokan-withdraw-charge-section');
             let revivableSection = $('#dokan-withdraw-revivable-section');
 
-            if (!withdrawAmount) {
-                chargeSection.hide();
-                revivableSection.hide();
-                return;
-            }
-
             $('#dokan-withdraw-charge-section-text').html(chargeText);
             $('#dokan-withdraw-revivable-section-text').html(Dokan_Withdraw.formatMoney(withdrawAmount - chargeAmount));
 
@@ -297,6 +298,8 @@
     };
 
     $(document).ready(function() {
+        const template = window.wp.template( 'withdraw-request-popup' );
+        Dokan_Withdraw.withdrawTemplate = template().trim();
         Dokan_Withdraw.init();
     });
 })(jQuery);
