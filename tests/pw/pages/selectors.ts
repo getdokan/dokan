@@ -6986,7 +6986,8 @@ export const selector = {
 
             // Proceed to Checkout
             // proceedToCheckout: '.checkout-button.button.wc-forward, .wp-block-woocommerce-proceed-to-checkout-block a', //todo: remove in future
-            proceedToCheckout: 'div.wc-block-cart__submit-container a.wc-block-cart__submit-button',
+            // proceedToCheckout: 'div.wc-block-cart__submit-container a.wc-block-cart__submit-button',
+            proceedToCheckout: '//a[.="Proceed to Checkout"]',
             // proceedToCheckout: '//span[contains (text(), "Proceed to Checkout")]/..',
 
             // Remove All Item
