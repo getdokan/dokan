@@ -7082,7 +7082,8 @@ export const selector = {
             stripeExpress: '.wc_payment_method.payment_method_dokan_stripe_express label',
 
             // Place Order
-            placeOrder: '#place_order, div.wc-block-checkout__actions_row button.wc-block-components-checkout-place-order-button',
+            // placeOrder: '#place_order, div.wc-block-checkout__actions_row button.wc-block-components-checkout-place-order-button',
+            placeOrder: '//button[contains(@class,"wc-block-components-checkout-place-order-button")]',
         },
 
         cPayWithStripe: {
