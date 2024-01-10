@@ -145,7 +145,6 @@ setup.describe('setup user settings', () => {
         setup.skip(!DOKAN_PRO, 'skip on lite');
         // create store coupon
         const allProductIds = (await apiUtils.getAllProducts(payloads.vendorAuth)).map((o: { id: string }) => o.id);
-        console.log(allProductIds);
         await apiUtils.createCoupon(allProductIds, payloads.createCoupon1, payloads.vendorAuth);
     });
 

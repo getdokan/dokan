@@ -6,7 +6,7 @@ import { payloads } from '@utils/payloads';
 // import { dbData } from '@utils/dbData';
 // import { helpers } from '@utils/helpers';
 
-test.describe(' test environment', () => {
+test.describe('test environment', () => {
     let apiUtils: ApiUtils;
 
     test.beforeAll(async ({ request }) => {
