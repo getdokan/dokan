@@ -477,7 +477,7 @@ class Products {
             // store props and meta data
             if ( $field->is_prop() ) {
                 $props[ $field->get_id() ] = $field_value;
-            } elseif ( $field->is_meta() ) {
+            } elseif ( $field->is_meta() || $field->is_custom() ) {
                 $meta_data[ $field->get_id() ] = $field_value;
             }
         }

@@ -210,6 +210,17 @@ class Field extends Component {
     }
 
     /**
+     * Return if the type is custom.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return bool
+     */
+    public function is_custom(): bool {
+        return 'custom' === $this->data['type'];
+    }
+
+    /**
      * Return if the type is a date_prop
      *
      * @since DOKAN_SINCE

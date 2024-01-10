@@ -116,11 +116,18 @@ class Factory {
      * @since DOKAN_SINCE
      *
      * @param string $type
+     * @param string $section_id
      *
      * @return \WeDevs\Dokan\ProductForm\Field[]
      */
-    public static function get_fields_by_type( string $type = '' ): array {
-        $items = self::get_fields();
+    public static function get_fields_by_type( string $type = '', string $section_id = '' ): array {
+        if ( ! empty( $section_id ) ) {
+            $section = static::get_section( $section_id );
+            $items = is_wp_error( $section ) ? [] : $section->get_fields();
+        } else {
+            $items = self::get_fields();
+        }
+
         if ( empty( $type ) ) {
             return $items;
         }
