@@ -133,16 +133,16 @@ test.describe('Product functionality test', () => {
         await vendor.quickEditProduct({ ...data.product.simple, editProduct: productName });
     });
 
-    test('vendor can add product description @lite', async ( ) => {
-    	await vendor.addProductDescription(data.predefined.simpleProduct.product1.name, data.vendor.vendorInfo.description);
+    test('vendor can add product description @lite', async () => {
+        await vendor.addProductDescription(data.predefined.simpleProduct.product1.name, data.vendor.vendorInfo.description);
     });
 
     // test('vendor can add product quantity discount @pro', async ( ) => {
     // 	await vendor.addProductQuantityDiscount(data.predefined.simpleProduct.product1.name, data.vendor.vendorInfo.quantityDiscount);
     // });
 
-    test.skip('vendor can add product wholesale options @pro', async ( ) => {
-    	await vendor.addProductWholesaleOptions(data.predefined.simpleProduct.product1.name, data.vendor.vendorInfo.wholesaleOption);
+    test.skip('vendor can add product wholesale options @pro', async () => {
+        await vendor.addProductWholesaleOptions(data.predefined.simpleProduct.product1.name, data.vendor.vendorInfo.wholesaleOption);
     });
 
     test('vendor can add product rma options @pro', async () => {

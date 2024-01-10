@@ -11,7 +11,7 @@ test.describe('get api test coverage', () => {
         apiUtils = new ApiUtils(request);
     });
 
-    test('get coverage ', async () => {
+    test('get coverage', async () => {
         const [, responseBody1] = await apiUtils.get(endPoints.getAllDokanEndpointsAdmin);
         const [, responseBody2] = await apiUtils.get(endPoints.getAllDokanEndpointsV1);
         const [, responseBody3] = await apiUtils.get(endPoints.getAllDokanEndpointsV2);

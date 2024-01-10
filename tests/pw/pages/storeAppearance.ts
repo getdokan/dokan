@@ -18,7 +18,7 @@ export class StoreAppearance extends BasePage {
         await this.goto(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)));
         await this.notToBeVisible(selector.customer.cSingleStore.storeOpenCloseTime);
     }
-    
+
     async disableVendorInfoOnSingleStorePage(storeName: string) {
         await this.goto(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)));
         await this.notToBeVisible(selector.customer.cSingleStore.storeOpenCloseTime);

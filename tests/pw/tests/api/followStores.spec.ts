@@ -27,7 +27,7 @@ test.describe('follow store api test', () => {
         expect(headers['access-control-expose-headers']).toBe('X-WP-Total, X-WP-TotalPages, Link');
         expect(headers['access-control-allow-headers']).toBe('Authorization, X-WP-Nonce, Content-Disposition, Content-MD5, Content-Type');
         expect(headers['allow']).toBe('GET, POST');
-        expect(response.statusText()).toBe('OK')
+        expect(response.statusText()).toBe('OK');
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
         expect(responseBody).toMatchSchema(schemas.followStoresSchema.followstatusSchema);
@@ -41,7 +41,7 @@ test.describe('follow store api test', () => {
         expect(headers['access-control-expose-headers']).toBe('X-WP-Total, X-WP-TotalPages, Link');
         expect(headers['access-control-allow-headers']).toBe('Authorization, X-WP-Nonce, Content-Disposition, Content-MD5, Content-Type');
         expect(headers['allow']).toBe('GET, POST');
-        expect(response.statusText()).toBe('OK')
+        expect(response.statusText()).toBe('OK');
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
         expect(responseBody).toMatchSchema(schemas.followStoresSchema.followUnfollowSchema);
@@ -55,7 +55,7 @@ test.describe('follow store api test', () => {
         expect(headers['access-control-expose-headers']).toBe('X-WP-Total, X-WP-TotalPages, Link');
         expect(headers['access-control-allow-headers']).toBe('Authorization, X-WP-Nonce, Content-Disposition, Content-MD5, Content-Type');
         expect(headers['allow']).toBe('GET');
-        expect(response.statusText()).toBe('OK')
+        expect(response.statusText()).toBe('OK');
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
         expect(responseBody).toMatchSchema(schemas.followStoresSchema.followersSchema);

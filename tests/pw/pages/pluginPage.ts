@@ -35,7 +35,7 @@ export class PluginPage extends BasePage {
         await this.click(selector.admin.plugins.deactivatePlugin(plugin));
         const isDeactivateModalVisible = await this.isVisible(selector.admin.plugins.deactivateReason.deactivateReasonModal(plugin));
         console.log(isDeactivateModalVisible);
-        
+
         if (isDeactivateModalVisible) {
             if (submitReason) {
                 await this.click(selector.admin.plugins.deactivateReason.reason(helpers.getRandomNumber(1, 7)));

@@ -68,6 +68,5 @@ test.describe('attribute term api test', () => {
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
         expect(responseBody).toMatchSchema(schemas.attributeTeermsSchema.batchupdateAttributesSchema);
-     
     });
 });

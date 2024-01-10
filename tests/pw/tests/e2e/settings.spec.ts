@@ -58,7 +58,7 @@ test.describe('Settings test', () => {
 
     test('admin can set dokan privacy policy settings @lite', async () => {
         const privacyPolicySettings = await dbUtils.getDokanSettings(dbData.dokan.optionName.privacyPolicy);
-        await settingsPage.setDokanPrivacyPolicySettings({...data.dokanSettings.privacyPolicy, privacyPage: privacyPolicySettings.privacyPage});
+        await settingsPage.setDokanPrivacyPolicySettings({ ...data.dokanSettings.privacyPolicy, privacyPage: privacyPolicySettings.privacyPage });
     });
 
     test('admin can set dokan color settings @pro', async () => {

@@ -31,7 +31,7 @@ export class VendorReportsPage extends VendorPage {
         await this.clickAndWaitForLoadState(selector.vendor.vReports.menus.topSelling);
 
         // date picker elements are visible
-        const {dateRangePickerinput, show} = selector.vendor.vAnalytics.datePicker
+        const { dateRangePickerinput, show } = selector.vendor.vAnalytics.datePicker;
         await this.multipleElementVisible({ dateRangePickerinput, show });
 
         // top selling table elements are visible

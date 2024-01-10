@@ -343,12 +343,14 @@ export const schemas = {
                 name: z.string(),
                 admin_url: z.string().url(),
             }),
-            reported_by: z.object({
-                id: z.number(),
-                name: z.string(),
-                email: z.string().email(),
-                admin_url: z.string().url(),
-            }).nullable(),
+            reported_by: z
+                .object({
+                    id: z.number(),
+                    name: z.string(),
+                    email: z.string().email(),
+                    admin_url: z.string().url(),
+                })
+                .nullable(),
             description: z.string(),
             reported_at: z.coerce.date(),
         }),

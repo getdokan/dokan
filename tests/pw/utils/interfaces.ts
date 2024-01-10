@@ -684,7 +684,7 @@ export interface vendor {
         description: {
             shortDescription: string;
             description: string;
-        },     
+        };
 
         amountDiscount: {
             minimumOrderAmount: string;
@@ -698,8 +698,8 @@ export interface vendor {
 
         wholesaleOption: {
             wholesalePrice: string;
-            minimumWholesaleQuantity: string; 
-        },
+            minimumWholesaleQuantity: string;
+        };
 
         minMax: {
             minimumProductQuantity: string;

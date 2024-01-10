@@ -45,13 +45,13 @@ test.describe('Announcements test', () => {
 
     test('admin can restore announcement @pro', async () => {
         const [, announcementId, announcementTitle] = await apiUtils.createAnnouncement(payloads.createAnnouncement(), payloads.adminAuth);
-        await apiUtils.deleteAnnouncement(announcementId,payloads.adminAuth);
+        await apiUtils.deleteAnnouncement(announcementId, payloads.adminAuth);
         await admin.updateAnnouncement(announcementTitle, 'restore');
     });
 
     test('admin can permanently delete announcement @pro', async () => {
         const [, announcementId, announcementTitle] = await apiUtils.createAnnouncement(payloads.createAnnouncement(), payloads.adminAuth);
-        await apiUtils.deleteAnnouncement(announcementId,payloads.adminAuth);
+        await apiUtils.deleteAnnouncement(announcementId, payloads.adminAuth);
         await admin.updateAnnouncement(announcementTitle, 'permanently-delete');
     });
 

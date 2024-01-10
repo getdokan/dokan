@@ -353,5 +353,5 @@ export const helpers = {
         for (const page of pages) {
             await page.close();
         }
-    }
+    },
 };
