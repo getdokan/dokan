@@ -19,7 +19,7 @@
                     </div>
                     <div class="wm-charges" v-if="fieldData.chargeable_methods?.[optionKey]">
                         <combine-input
-                            :value="formatValue( charges[ optionKey ] ?? defaultVal )"
+                            :value="charges[ optionKey ] ?? defaultVal"
                             v-on:change='data => chargeChangeHandler( data, optionKey )'
                         />
                     </div>
@@ -58,6 +58,18 @@ export default {
                 percentage: Math.abs( data.percentage ) ? Math.abs( data.percentage ) : 0
             };
         },
+        formatPositiveValue( data ) {
+            return {
+                fixed: accounting.formatNumber( data.fixed, dokan.currency.precision, dokan.currency.thousand, dokan.currency.decimal ),
+                percentage: accounting.formatNumber( data.percentage, dokan.currency.precision, dokan.currency.thousand, dokan.currency.decimal )
+            };
+        },
+        unFormatValue( data ) {
+            return {
+                fixed: Math.abs( accounting.unformat( data.fixed , dokan.currency.decimal ) ),
+                percentage: Math.abs( accounting.unformat( data.percentage , dokan.currency.decimal  ) )
+            }
+        },
         isSwitchOptionChecked( optionKey ) {
             return (
                 this.fieldValue[ this.fieldData.name ] &&
@@ -71,7 +83,10 @@ export default {
                 : '';
         },
         chargeChangeHandler( data, field ) {
-            this.fieldValue[ this.fieldData.name ][ field ] = this.formatValue( data );
+            let positiveValue = this.unFormatValue(data);
+            let formatedData = this.formatPositiveValue( positiveValue );
+
+            this.fieldValue[ this.fieldData.name ][ field ] = formatedData;
         },
         validateCombineInputData( data ) {
             if ( 'object' !== typeof data ) {
