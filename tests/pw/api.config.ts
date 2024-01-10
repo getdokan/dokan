@@ -14,7 +14,7 @@ export default defineConfig({
         timeout: 5 * 1000 /* Maximum time expect() should wait for the condition to be met.  For example in `await expect(locator).toHaveText();`*/,
     } /* Configuration for the expect assertion library */,
     preserveOutput: 'always' /* Whether to preserve test output in the testConfig.outputDir. Defaults to 'always'. */,
-    fullyParallel  : true, 	/* Run tests in files in parallel */
+    // fullyParallel  : true, 	/* Run tests in files in parallel */
     // forbidOnly     : !!process.env.CI, 	/* Fail the build on CI if you accidentally left testonly in the source code. */
     repeatEach: 1 /* The number of times to repeat each test, useful for debugging flaky tests. */,
     retries: process.env.CI ? 1 : 0 /* The maximum number of retry attempts given to failed tests.  */,

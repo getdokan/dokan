@@ -57,7 +57,8 @@ for (const version of versions) {
     });
 }
 
-test('update batch orders @v2 @lite', async () => {
+test('update batch orders @v2 @lite', async ({ request }) => {
+    apiUtils = new ApiUtils(request);
     const allOrderIds = (await apiUtils.getAllOrders())?.map((a: { id: unknown }) => a.id);
     const [response, responseBody] = await apiUtils.post(endPoints.updateBatchOrders, { data: { order_ids: allOrderIds, status: 'wc-completed' } });
     expect(response.ok()).toBeTruthy();

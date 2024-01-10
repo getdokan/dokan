@@ -544,7 +544,7 @@ export class ApiUtils {
      * order api methods
      */
 
-    // get all orders
+    // get all orders [of a vendor]
     async getAllOrders(auth?: auth): Promise<responseBody> {
         const [, responseBody] = await this.get(endPoints.getAllOrders, { params: { per_page: 100 }, headers: auth });
         return responseBody;
@@ -1510,6 +1510,12 @@ export class ApiUtils {
     }
 
     // order
+
+    // get all site orders
+    async getAllOrdersSite(auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.get(endPoints.wc.getAllOrders, { params: { per_page: 100 }, headers: auth });
+        return responseBody;
+    }
 
     // create order
     async createOrder(product: string | object, orderPayload: any, auth?: auth): Promise<[APIResponse, responseBody, string, string]> {
