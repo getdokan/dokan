@@ -591,13 +591,3 @@ function dokan() { // phpcs:ignore
 
 // Lets Go....
 dokan();
-
-
-add_filter( 'woocommerce_analytics_update_order_stats_data', function ($data, $order) {
-
-    if ( $data['parent_id'] == 0 ) {
-        return $data;
-    } else {
-        return [];
-    }
-}, 10, 2 );

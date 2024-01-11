@@ -57,7 +57,6 @@ class Hooks {
 
         // Suborder pdf button
         add_filter( 'dokan_my_account_my_sub_orders_actions', [ $this, 'suborder_pdf_invoice_button' ], 10, 2 );
-        add_filter( 'woocommerce_analytics_report_schedulers', [ $this, 'change_order_analytics_report_scheduler_class' ] );
     }
 
     /**
@@ -456,28 +455,5 @@ class Hooks {
             $actions['action'] = $woocommerce_all_actions['invoice'];
         }
         return $actions;
-    }
-
-    /**
-     * Replacing the WooCommerce order scheduler class by our dokan scheduler class.
-     *
-     * @see https://github.com/getdokan/dokan-pro/issues/2735
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param array $schedulers [object]
-     *
-     * @return array
-     */
-    public function change_order_analytics_report_scheduler_class( $schedulers ) {
-        if ( class_exists( '\Automattic\WooCommerce\Internal\Admin\Schedulers\OrdersScheduler' ) ) {
-            foreach ( $schedulers as $key => $scheduler ) {
-                if ( $scheduler instanceof \Automattic\WooCommerce\Internal\Admin\Schedulers\OrdersScheduler ) {
-                    $schedulers[ $key ] = new \WeDevs\Dokan\Order\WooAnalytics\DokanOrdersScheduler();
-                }
-            }
-        }
-
-        return $schedulers;
     }
 }
