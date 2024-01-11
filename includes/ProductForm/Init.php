@@ -66,6 +66,13 @@ class Init {
                 'placeholder' => __( 'Enter product title...', 'dokan-lite' ),
                 'required'    => true,
                 'error_msg'   => __( 'Please enter product title!', 'dokan-lite' ),
+                'value_callback' => function ( $product = null ) {
+                    if ( ! $product instanceof WC_Product ) {
+                        return '';
+                    }
+
+                    return $product->get_name();
+                },
             ]
         );
 
@@ -81,6 +88,13 @@ class Init {
                 'error_msg'   => __( 'Please enter product slug!', 'dokan-lite' ),
                 'sanitize_callback' => function ( $slug, $product_id, $status, $post_parent = 0 ) {
                     return wp_unique_post_slug( $slug, $product_id, $status, 'product', $post_parent );
+                },
+                'value_callback' => function ( $product = null ) {
+                    if ( ! $product instanceof WC_Product ) {
+                        return '';
+                    }
+
+                    return $product->get_slug();
                 },
             ]
         );
@@ -98,6 +112,13 @@ class Init {
                     ]
                 ),
                 'help_content' => __( 'Choose Variable if your product has multiple attributes - like sizes, colors, quality etc', 'dokan-lite' ),
+                'get_value_callback' => function ( $product = null ) {
+                    if ( ! $product instanceof WC_Product ) {
+                        return 'simple';
+                    }
+
+                    return $product->get_type();
+                },
             ]
         );
 
@@ -159,6 +180,13 @@ class Init {
 
                     return array_map( 'absint', ProductCategoryHelper::get_object_terms_from_chosen_categories( $product, $chosen_cat ) );
                 },
+                'value_callback' => function ( $product = null ) {
+                    if ( ! $product instanceof WC_Product ) {
+                        return [];
+                    }
+
+                    return $product->get_category_ids();
+                },
             ]
         );
 
@@ -196,6 +224,13 @@ class Init {
                         }, (array) $tags
                     );
                 },
+                'value_callback' => function ( $product = null ) {
+                    if ( ! $product instanceof WC_Product ) {
+                        return [];
+                    }
+
+                    return $product->get_tag_ids();
+                },
             ]
         );
 
@@ -223,6 +258,13 @@ class Init {
                 'field_type'  => 'textarea',
                 'name'        => 'post_excerpt',
                 'placeholder' => __( 'Enter product short description', 'dokan-lite' ),
+                'value_callback' => function ( $product = null ) {
+                    if ( ! $product instanceof WC_Product ) {
+                        return '';
+                    }
+
+                    return $product->get_short_description();
+                },
             ]
         );
 
@@ -233,6 +275,13 @@ class Init {
                 'name'        => 'post_content',
                 'placeholder' => __( 'Enter product description', 'dokan-lite' ),
                 'required'    => true,
+                'value_callback' => function ( $product = null ) {
+                    if ( ! $product instanceof WC_Product ) {
+                        return '';
+                    }
+
+                    return $product->get_description();
+                },
             ]
         );
     }

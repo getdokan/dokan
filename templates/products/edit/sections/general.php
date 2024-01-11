@@ -28,6 +28,7 @@ if ( is_wp_error( $section ) ) {
         <div class="content-half-part dokan-product-meta">
             <?php
             $product_title = $section->get_field( Elements::NAME );
+            $product_slug  = $section->get_field( Elements::SLUG );
             if ( ! is_wp_error( $product_title ) && $product_title->is_visible() ) :
                 ?>
                 <div id="dokan-product-title-area" class="dokan-form-group">
@@ -43,7 +44,7 @@ if ( is_wp_error( $section ) ) {
                         [
                             'name'        => $product_title->get_name(),
                             'placeholder' => $product_title->get_placeholder(),
-                            'value'       => $product_title->get_value() ? $product_title->get_value() : $product->get_name(),
+                            'value'       => $product_title->get_value( $product ),
                             'required'    => $product_title->is_required(),
                         ]
                     );
@@ -55,7 +56,7 @@ if ( is_wp_error( $section ) ) {
                     <div id="edit-slug-box" class="hide-if-no-js"></div>
                     <?php wp_nonce_field( 'samplepermalink', 'samplepermalinknonce', false ); ?>
                     <input type="hidden" name="editable-post-name" class="dokan-hide" id="editable-post-name-full-dokan">
-                    <input type="hidden" value="<?php echo esc_attr( $product->get_slug() ); ?>" name="edited-post-name" class="dokan-hide" id="edited-post-name-dokan">
+                    <input type="hidden" value="<?php echo esc_attr( $product_slug->get_value( $product ) ); ?>" name="edited-post-name" class="dokan-hide" id="edited-post-name-dokan">
                 </div>
             <?php endif; ?>
 
@@ -81,7 +82,7 @@ if ( is_wp_error( $section ) ) {
                     </label>
                     <select name="<?php echo esc_attr( $product_type->get_name() ); ?>" class="dokan-form-control" id="<?php echo esc_attr( $product_type->get_name() ); ?>">
                         <?php foreach ( $product_type_options as $key => $value ) : ?>
-                            <option value="<?php echo esc_attr( $key ); ?>" <?php selected( $product->get_type(), $key ); ?>><?php echo esc_html( $value ); ?></option>
+                            <option value="<?php echo esc_attr( $key ); ?>" <?php selected( $product_type->get_value( $product ), $key ); ?>><?php echo esc_html( $value ); ?></option>
                         <?php endforeach; ?>
                     </select>
                 </div>
@@ -107,7 +108,7 @@ if ( is_wp_error( $section ) ) {
                                     $product->get_id(),
                                     $regular_price->get_name(),
                                     [
-                                        'value'       => $product->get_regular_price(),
+                                        'value'       => $regular_price->get_value( $product ),
                                         'class'       => 'dokan-product-regular-price',
                                         'placeholder' => $regular_price->get_placeholder(),
                                         'required'    => $regular_price->is_required(),
@@ -145,7 +146,7 @@ if ( is_wp_error( $section ) ) {
                                     $sale_price->get_name(),
                                     [
                                         'name'        => $sale_price->get_name(),
-                                        'value'       => $product->get_sale_price(),
+                                        'value'       => $sale_price->get_value( $product ),
                                         'class'       => 'dokan-product-sales-price',
                                         'placeholder' => $sale_price->get_placeholder(),
                                         'required'    => $sale_price->is_required(),
@@ -214,6 +215,7 @@ if ( is_wp_error( $section ) ) {
                     $data                    = Helper::get_saved_products_category( $product->get_id() );
                     $data['from']            = 'edit_product';
                     $data['required_symbol'] = $category->print_required_symbol( false );
+                    $data['chosen_cat']      = $category->get_value( $product );
 
                     dokan_get_template_part( 'products/dokan-category-header-ui', '', $data );
                     ?>
@@ -223,7 +225,7 @@ if ( is_wp_error( $section ) ) {
             <?php
             $tags = $section->get_field( Elements::TAGS );
             if ( ! is_wp_error( $tags ) && $tags->is_visible() ) :
-                $terms = $product->get_tag_ids();
+                $terms = $tags->get_value( $product );
                 ?>
                 <div class="dokan-form-group">
                     <label for="<?php echo esc_attr( $tags->get_name() ); ?>" class="form-label">
@@ -257,7 +259,7 @@ if ( is_wp_error( $section ) ) {
                     <?php
                     $wrap_class        = ' dokan-hide';
                     $instruction_class = '';
-                    $feat_image_id     = $product->get_image_id();
+                    $feat_image_id     = $featured_image->get_value( $product );
 
                     if ( $feat_image_id ) {
                         $wrap_class        = '';
@@ -305,7 +307,8 @@ if ( is_wp_error( $section ) ) {
                         <div id="product_images_container">
                             <ul class="product_images dokan-clearfix">
                                 <?php
-                                $product_images = $product->get_gallery_image_ids();
+                                $product_images = $gallery_images->get_value( $product );
+                                $product_images = is_array( $product_images ) ? $product_images : explode( ',', $product_images );
 
                                 if ( $product_images ) :
                                     foreach ( $product_images as $image_id ) :
@@ -350,7 +353,7 @@ if ( is_wp_error( $section ) ) {
             </label>
             <?php
             wp_editor(
-                $product->get_short_description(),
+                $short_description->get_value( $product ),
                 $short_description->get_name(),
                 apply_filters(
                     'dokan_product_short_description',
@@ -379,7 +382,7 @@ if ( is_wp_error( $section ) ) {
             </label>
             <?php
             wp_editor(
-                $product->get_description(),
+                $description->get_value( $product ),
                 $description->get_name(),
                 apply_filters(
                     'dokan_product_description',

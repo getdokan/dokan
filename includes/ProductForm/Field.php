@@ -46,6 +46,7 @@ class Field extends Component {
             'options'               => [], // if the field is select, radio, checkbox, etc
             'additional_properties' => [], // additional arguments for the field
             'sanitize_callback'     => '', // callback function for sanitizing the field value
+            'value_callback'    => '', // callback function to get field value via a callback
         ];
         $this->data = array_merge( $this->data, $data );
 
@@ -95,6 +96,31 @@ class Field extends Component {
 
         return $this;
     }
+    /**
+     * Get callable function to get field value
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return callable|string
+     */
+    public function get_value_callback() {
+        return $this->data['value_callback'];
+    }
+
+    /**
+     * Set callable function to get field value
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param callable|string $method
+     *
+     * @return $this
+     */
+    public function set_value_callback( $method ): Field {
+        $this->data['value_callback'] = $method;
+
+        return $this;
+    }
 
     /**
      * Get field value
@@ -103,8 +129,35 @@ class Field extends Component {
      *
      * @return mixed
      */
-    public function get_value() {
-        return $this->data['value'];
+    public function get_value( ...$value ) {
+        // if value is set under the field, return that value
+        if ( '' !== $this->data['value'] || empty( $value ) ) {
+            return $this->data['value'];
+        }
+
+        $callback = $this->get_value_callback();
+        if ( ! empty( $callback ) && is_callable( $callback ) ) {
+            return call_user_func( $callback, ...$value );
+        }
+
+        $product = current( $value );
+        if ( ! $product instanceof \WC_Product ) {
+            return '';
+        }
+
+        $field_name = sanitize_key( $this->get_name() );
+        if ( 0 === strpos( $field_name, '_' ) ) {
+            $field_name = preg_replace( '/_/', '', $field_name, 1 );
+        }
+
+        if ( $this->is_prop() ) {
+            $method_name = 'get_' . $field_name;
+            return $product->{$method_name}();
+        } elseif ( $this->is_meta() || $this->is_custom() ) {
+            return $product->get_meta( $field_name );
+        }
+
+        return $value;
     }
 
     /**
@@ -418,19 +471,20 @@ class Field extends Component {
      *
      * @since DOKAN_SINCE
      *
-     * @param bool $echo
+     * @param bool $output
      *
-     * @return string
+     * @return string|void
      */
-    public function print_required_symbol( $echo = true ) {
+    public function print_required_symbol( bool $output = true ) {
         if ( ! $this->is_required() ) {
             return '';
         }
 
         $symbol = '<span style="color: red; display: inline-block;">*</span>';
 
-        if ( $echo ) {
+        if ( $output ) {
             echo $symbol;
+            return;
         }
 
         return $symbol;
