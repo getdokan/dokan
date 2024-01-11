@@ -536,7 +536,7 @@ function dokan_withdraw_get_chargeable_methods() {
 /**
  * Returns all withdraw methods charges saved.
  *
- * @since DOKAN_SINCE
+ * @since 3.9.6
  *
  * @return array
  */

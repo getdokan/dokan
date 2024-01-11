@@ -751,7 +751,7 @@ class WithdrawController extends WP_REST_Controller {
     /**
      * Get all withdraw method charges.
      *
-     * @since DOKAN_SINCE
+     * @since 3.9.6
      *
      * @return WP_Error|\WP_HTTP_Response|WP_REST_Response
      */
@@ -764,7 +764,7 @@ class WithdrawController extends WP_REST_Controller {
     /**
      * Get withdraw method charge.
      *
-     * @since DOKAN_SINCE
+     * @since 3.9.6
      *
      * @return WP_Error|\WP_HTTP_Response|WP_REST_Response
      */

@@ -29,7 +29,15 @@
         withdrawTemplate: '',
         withdrawModal: '',
 
+        loadModalTemplate: function() {
+            if ( ! Dokan_Withdraw.withdrawTemplate && $('#tmpl-withdraw-request-popup').length ) {
+              const template = window.wp.template( 'withdraw-request-popup' );
+              Dokan_Withdraw.withdrawTemplate = template();
+            }
+        },
+
         initModal: function() {
+            Dokan_Withdraw.loadModalTemplate();
              const modal = $( '#dokan-withdraw-request-popup' ).iziModal(
                  {
                      width       : 690,
@@ -298,8 +306,6 @@
     };
 
     $(document).ready(function() {
-        const template = window.wp.template( 'withdraw-request-popup' );
-        Dokan_Withdraw.withdrawTemplate = template().trim();
         Dokan_Withdraw.init();
     });
 })(jQuery);
