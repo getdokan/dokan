@@ -319,7 +319,7 @@ class Settings {
                 'description'          => __( 'Withdraw Settings, Threshold', 'dokan-lite' ),
                 'document_link'        => 'https://wedevs.com/docs/dokan/settings/withdraw-options/',
                 'settings_title'       => __( 'Withdraw Settings', 'dokan-lite' ),
-                'settings_description' => __( 'You can configure your store\'s withdrawal methods, limits, order status and more.', 'dokan-lite' ),
+                'settings_description' => __( 'You can configure your store\'s withdrawal methods, charges, limits, order status and more.', 'dokan-lite' ),
             ],
             [
                 'id'                   => 'dokan_reverse_withdrawal',
@@ -616,6 +616,25 @@ class Settings {
                     'default' => apply_filters( 'dokan_settings_withdraw_methods_default', [ 'paypal' => 'paypal' ] ),
                     'options' => dokan_withdraw_get_methods(),
                     'tooltip' => __( 'Check to add available payment methods for vendors to withdraw money.', 'dokan-lite' ),
+                ],
+                'withdraw_charges'      => [
+                    'name'               => 'withdraw_charges',
+                    'label'              => __( 'Withdraw Charges', 'dokan-lite' ),
+                    'desc'               => __( 'Select suitable withdraw charges for vendors', 'dokan-lite' ),
+                    'type'               => 'charges',
+                    'options'            => dokan_withdraw_get_methods(),
+                    'chargeable_methods' => dokan_withdraw_get_chargeable_methods(),
+                    'default'            => dokan_withdraw_get_method_charges(),
+                    'show_if'            => [
+                        'withdraw_methods' => [
+                            'contains-any' => array_keys( dokan_withdraw_get_methods() ),
+                        ],
+                    ],
+                    'items_show_if'      => [
+                        'key'       => 'withdraw_methods',
+                        'condition' => 'contains-key-value',
+                    ],
+                    'refresh_after_save' => true,
                 ],
                 'withdraw_limit'        => [
                     'name'                       => 'withdraw_limit',
