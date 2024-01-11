@@ -5,9 +5,9 @@ Tags: WooCommerce multivendor marketplace, multi vendor marketplace, multi selle
 Requires at least: 5.6
 Tested up to: 6.4.2
 WC requires at least: 5.0.0
-WC tested up to: 8.2.2
-Requires PHP: 7.3
-Stable tag: 3.9.5
+WC tested up to: 8.4.2
+Requires PHP: 7.4
+Stable tag: 3.9.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -337,6 +337,11 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 == Changelog ==
+
+= v3.9.6 ( Jan 11, 2024 ) =
+
+- **new** Features: Withdraw Charge
+Dokan has introduced a new feature that allows the admin to set a withdrawal charge for vendors. This charge can be either a flat rate or a percentage of the withdrawal amount based on the payment gateway used. The charge will be reflected in the details report, and vendors can see how many charges will apply when they request a withdrawal. The vendor dashboard list will also show the charge and receivable amount. This feature provides greater flexibility and transparency in managing vendor withdrawals.
 
 = v3.9.5 ( Dec 28, 2023 ) =
 
