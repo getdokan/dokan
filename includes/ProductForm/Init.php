@@ -66,7 +66,11 @@ class Init {
                 'placeholder'    => __( 'Enter product title...', 'dokan-lite' ),
                 'required'       => true,
                 'error_msg'      => __( 'Please enter product title!', 'dokan-lite' ),
-                'value_callback' => function ( $product = null ) {
+                'value_callback' => function ( $product, $value = '' ) {
+                    if ( '' !== $value ) {
+                        return $value;
+                    }
+
                     if ( ! $product instanceof WC_Product ) {
                         return '';
                     }
@@ -89,7 +93,11 @@ class Init {
                 'sanitize_callback' => function ( $slug, $product_id, $status, $post_parent = 0 ) {
                     return wp_unique_post_slug( $slug, $product_id, $status, 'product', $post_parent );
                 },
-                'value_callback'    => function ( $product = null ) {
+                'value_callback'    => function ( $product, $value = '' ) {
+                    if ( '' !== $value ) {
+                        return $value;
+                    }
+
                     if ( ! $product instanceof WC_Product ) {
                         return '';
                     }
@@ -112,7 +120,10 @@ class Init {
                     ]
                 ),
                 'help_content'   => __( 'Choose Variable if your product has multiple attributes - like sizes, colors, quality etc', 'dokan-lite' ),
-                'value_callback' => function ( $product = null ) {
+                'value_callback' => function ( $product, $value = '' ) {
+                    if ( '' !== $value ) {
+                        return $value;
+                    }
                     if ( ! $product instanceof WC_Product ) {
                         return 'simple';
                     }
@@ -146,15 +157,41 @@ class Init {
                 'field_type'     => 'text',
                 'name'           => '_sale_price_dates_from',
                 'placeholder'    => 'YYYY-MM-DD',
+                'value_callback' => function ( $product, $value = '' ) {
+                    if ( '' !== $value ) {
+                        $time = dokan_current_datetime()->modify( $value );
+
+                        return $time ? $time->getTimestamp() : false;
+                    }
+
+                    if ( ! $product instanceof WC_Product ) {
+                        return false;
+                    }
+
+                    return $product->get_date_on_sale_from( 'edit' ) ? $product->get_date_on_sale_from( 'edit' )->getTimestamp() : false;
+                },
             ]
         );
 
         $section->add_field(
             Elements::DATE_ON_SALE_TO, [
-                'title'       => __( 'To', 'dokan-lite' ),
-                'field_type'  => 'text',
-                'name'        => '_sale_price_dates_to',
-                'placeholder' => 'YYYY-MM-DD',
+                'title'          => __( 'To', 'dokan-lite' ),
+                'field_type'     => 'text',
+                'name'           => '_sale_price_dates_to',
+                'placeholder'    => 'YYYY-MM-DD',
+                'value_callback' => function ( $product, $value = '' ) {
+                    if ( '' !== $value ) {
+                        $time = dokan_current_datetime()->modify( $value );
+
+                        return $time ? $time->getTimestamp() : false;
+                    }
+
+                    if ( ! $product instanceof WC_Product ) {
+                        return false;
+                    }
+
+                    return $product->get_date_on_sale_to( 'edit' ) ? $product->get_date_on_sale_to( 'edit' )->getTimestamp() : false;
+                },
             ]
         );
 
@@ -180,7 +217,11 @@ class Init {
 
                     return array_map( 'absint', ProductCategoryHelper::get_object_terms_from_chosen_categories( $product, $chosen_cat ) );
                 },
-                'value_callback'    => function ( $product = null ) {
+                'value_callback'    => function ( $product, $value = '' ) {
+                    if ( '' !== $value ) {
+                        return $value;
+                    }
+
                     if ( ! $product instanceof WC_Product ) {
                         return [];
                     }
@@ -224,7 +265,11 @@ class Init {
                         }, (array) $tags
                     );
                 },
-                'value_callback'    => function ( $product = null ) {
+                'value_callback'    => function ( $product, $value = '' ) {
+                    if ( '' !== $value ) {
+                        return $value;
+                    }
+
                     if ( ! $product instanceof WC_Product ) {
                         return [];
                     }
@@ -258,7 +303,11 @@ class Init {
                 'field_type'     => 'textarea',
                 'name'           => 'post_excerpt',
                 'placeholder'    => __( 'Enter product short description', 'dokan-lite' ),
-                'value_callback' => function ( $product = null ) {
+                'value_callback' => function ( $product, $value = '' ) {
+                    if ( '' !== $value ) {
+                        return $value;
+                    }
+
                     if ( ! $product instanceof WC_Product ) {
                         return '';
                     }
@@ -275,7 +324,11 @@ class Init {
                 'name'           => 'post_content',
                 'placeholder'    => __( 'Enter product description', 'dokan-lite' ),
                 'required'       => true,
-                'value_callback' => function ( $product = null ) {
+                'value_callback' => function ( $product, $value = '' ) {
+                    if ( '' !== $value ) {
+                        return $value;
+                    }
+
                     if ( ! $product instanceof WC_Product ) {
                         return '';
                     }
@@ -419,7 +472,11 @@ class Init {
 
                     return wc_stock_amount( $value );
                 },
-                'value_callback'        => function ( $product = null ) {
+                'value_callback'        => function ( $product, $value = '' ) {
+                    if ( '' !== $value ) {
+                        return $value;
+                    }
+
                     if ( ! $product instanceof WC_Product ) {
                         return 0;
                     }

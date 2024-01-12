@@ -121,13 +121,17 @@ if ( is_wp_error( $section ) ) {
                     <?php endif; ?>
 
                     <?php
-                    $sale_price                      = $section->get_field( Elements::SALE_PRICE );
-                    $sale_price_dates_from_timestamp = $product->get_date_on_sale_from( 'edit' ) ? $product->get_date_on_sale_from( 'edit' )->getOffsetTimestamp() : false;
-                    $sale_price_dates_to_timestamp   = $product->get_date_on_sale_to( 'edit' ) ? $product->get_date_on_sale_to( 'edit' )->getOffsetTimestamp() : false;
+                    $sale_price        = $section->get_field( Elements::SALE_PRICE );
+                    $date_on_sale_from = $section->get_field( Elements::DATE_ON_SALE_FROM );
+                    $date_on_sale_to   = $section->get_field( Elements::DATE_ON_SALE_TO );
 
-                    $sale_price_dates_from = $sale_price_dates_from_timestamp ? date_i18n( 'Y-m-d', $sale_price_dates_from_timestamp ) : '';
-                    $sale_price_dates_to   = $sale_price_dates_to_timestamp ? date_i18n( 'Y-m-d', $sale_price_dates_to_timestamp ) : '';
+                    $sale_price_dates_from_timestamp = $date_on_sale_from->get_value( $product );
+                    $sale_price_dates_to_timestamp   = $date_on_sale_to->get_value( $product );
+
+                    $sale_price_dates_from = $sale_price_dates_from_timestamp ? dokan_current_datetime()->setTimestamp( $sale_price_dates_from_timestamp )->format( 'Y-m-d' ) : '';
+                    $sale_price_dates_to   = $sale_price_dates_to_timestamp ? dokan_current_datetime()->setTimestamp( $sale_price_dates_to_timestamp )->format( 'Y-m-d' ) : '';
                     $show_schedule         = $sale_price_dates_from && $sale_price_dates_to;
+
                     if ( ! is_wp_error( $sale_price ) && $sale_price->is_visible() ) :
                         ?>
                         <div class="content-half-part sale-price">
@@ -167,8 +171,6 @@ if ( is_wp_error( $section ) ) {
 
                 <?php
                 if ( ! is_wp_error( $sale_price ) && $sale_price->is_visible() ) :
-                    $date_on_sale_from = $section->get_field( Elements::DATE_ON_SALE_FROM );
-                    $date_on_sale_to   = $section->get_field( Elements::DATE_ON_SALE_TO );
                     ?>
                     <div class="sale_price_dates_fields dokan-clearfix dokan-form-group <?php echo ( ! $show_schedule ) ? 'dokan-hide' : ''; ?>">
                         <div class="content-half-part from">
@@ -282,8 +284,8 @@ if ( is_wp_error( $section ) ) {
                         <?php if ( $feat_image_id ) : ?>
                             <?php
                             // todo: need to change this with $product->get_image()
-                            echo get_the_post_thumbnail(
-                                $product->get_id(),
+                            echo wp_get_attachment_image(
+                                $feat_image_id,
                                 apply_filters( 'single_product_large_thumbnail_size', 'shop_single' ),
                                 [
                                     'height' => '',

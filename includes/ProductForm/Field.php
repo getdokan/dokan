@@ -130,14 +130,15 @@ class Field extends Component {
      * @return mixed
      */
     public function get_value( ...$value ) {
+        $callback = $this->get_value_callback();
+        if ( ! empty( $callback ) && is_callable( $callback ) ) {
+            $value[] = $this->data['value'];
+            return call_user_func( $callback, ...$value );
+        }
+
         // if value is set under the field, return that value
         if ( '' !== $this->data['value'] || empty( $value ) ) {
             return $this->data['value'];
-        }
-
-        $callback = $this->get_value_callback();
-        if ( ! empty( $callback ) && is_callable( $callback ) ) {
-            return call_user_func( $callback, ...$value );
         }
 
         $product = current( $value );
