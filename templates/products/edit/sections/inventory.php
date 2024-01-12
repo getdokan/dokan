@@ -49,7 +49,7 @@ $post = get_post( $product->get_id() ); // phpcs:ignore WordPress.WP.GlobalVaria
                     $product->get_id(),
                     $sku->get_name(),
                     [
-                        'value'    => $product->get_sku(),
+                        'value'    => $sku->get_value( $product ),
                         'class'    => 'dokan-form-control',
                         'required' => $sku->is_required(),
                     ]
@@ -77,8 +77,8 @@ $post = get_post( $product->get_id() ); // phpcs:ignore WordPress.WP.GlobalVaria
                     $product->get_id(),
                     $stock_status->get_name(),
                     [
-                        'name'     => $product->get_name(),
-                        'value'    => $product->get_stock_status(),
+                        'name'     => $stock_status->get_name(),
+                        'value'    => $stock_status->get_value( $product ),
                         'options'  => $stock_status->get_options(),
                         'required' => $stock_status->is_required(),
                     ],
@@ -101,7 +101,7 @@ $post = get_post( $product->get_id() ); // phpcs:ignore WordPress.WP.GlobalVaria
                         $product->get_id(),
                         $manage_stock->get_name(),
                         [
-                            'value' => $product->get_manage_stock( 'edit' ) ? 'yes' : 'no',
+                            'value' => $manage_stock->get_value( $product ) ? 'yes' : 'no',
                             'label' => $manage_stock->get_title(),
                         ],
                         'checkbox'
@@ -131,7 +131,7 @@ $post = get_post( $product->get_id() ); // phpcs:ignore WordPress.WP.GlobalVaria
                             $stock_quantity->get_name(),
                             [
                                 'name'        => $stock_quantity->get_name(),
-                                'value'       => wc_stock_amount( $product->get_stock_quantity( 'edit' ) ),
+                                'value'       => wc_stock_amount( $stock_quantity->get_value( $product ) ),
                                 'class'       => 'dokan-form-control',
                                 'placeholder' => $stock_quantity->get_placeholder(),
                                 'min'         => $stock_quantity->get_additional_properties( 'min' ),
@@ -164,7 +164,7 @@ $post = get_post( $product->get_id() ); // phpcs:ignore WordPress.WP.GlobalVaria
                             $product->get_id(),
                             $low_stock_amount->get_name(),
                             [
-                                'value'       => $product->get_low_stock_amount( 'edit' ),
+                                'value'       => $low_stock_amount->get_value( $product ),
                                 'class'       => 'dokan-form-control',
                                 'placeholder' => $low_stock_amount->get_placeholder(),
                                 'min'         => $low_stock_amount->get_additional_properties( 'min' ),
@@ -197,6 +197,7 @@ $post = get_post( $product->get_id() ); // phpcs:ignore WordPress.WP.GlobalVaria
                             $product->get_id(),
                             $backorders->get_name(),
                             [
+                                'value'    => $backorders->get_value( $product ),
                                 'options'  => $backorders->get_options(),
                                 'required' => $backorders->is_required(),
                             ],
@@ -220,7 +221,7 @@ $post = get_post( $product->get_id() ); // phpcs:ignore WordPress.WP.GlobalVaria
                     $product->get_id(),
                     $sold_individually->get_name(),
                     [
-                        'value' => $product->get_sold_individually() ? 'yes' : 'no',
+                        'value' => $sold_individually->get_value( $product ) ? 'yes' : 'no',
                         'label' => $sold_individually->get_title(),
                         'desc'  => $sold_individually->get_description(),
                     ],

@@ -60,12 +60,12 @@ class Init {
         $section->add_field(
             Elements::NAME,
             [
-                'title'       => __( 'Title', 'dokan-lite' ),
-                'field_type'  => 'text',
-                'name'        => 'post_title',
-                'placeholder' => __( 'Enter product title...', 'dokan-lite' ),
-                'required'    => true,
-                'error_msg'   => __( 'Please enter product title!', 'dokan-lite' ),
+                'title'          => __( 'Title', 'dokan-lite' ),
+                'field_type'     => 'text',
+                'name'           => 'post_title',
+                'placeholder'    => __( 'Enter product title...', 'dokan-lite' ),
+                'required'       => true,
+                'error_msg'      => __( 'Please enter product title!', 'dokan-lite' ),
                 'value_callback' => function ( $product = null ) {
                     if ( ! $product instanceof WC_Product ) {
                         return '';
@@ -79,17 +79,17 @@ class Init {
         $section->add_field(
             Elements::SLUG,
             [
-                'title'       => __( 'Slug', 'dokan-lite' ),
-                'field_type'  => 'text',
-                'type'        => 'other',
-                'name'        => 'slug',
-                'placeholder' => __( 'Enter product slug...', 'dokan-lite' ),
-                'required'    => false,
-                'error_msg'   => __( 'Please enter product slug!', 'dokan-lite' ),
+                'title'             => __( 'Slug', 'dokan-lite' ),
+                'field_type'        => 'text',
+                'type'              => 'other',
+                'name'              => 'slug',
+                'placeholder'       => __( 'Enter product slug...', 'dokan-lite' ),
+                'required'          => false,
+                'error_msg'         => __( 'Please enter product slug!', 'dokan-lite' ),
                 'sanitize_callback' => function ( $slug, $product_id, $status, $post_parent = 0 ) {
                     return wp_unique_post_slug( $slug, $product_id, $status, 'product', $post_parent );
                 },
-                'value_callback' => function ( $product = null ) {
+                'value_callback'    => function ( $product = null ) {
                     if ( ! $product instanceof WC_Product ) {
                         return '';
                     }
@@ -101,18 +101,18 @@ class Init {
 
         $section->add_field(
             Elements::TYPE, [
-                'title'        => __( 'Product Type', 'dokan-lite' ),
-                'field_type'   => 'select',
-                'type'         => 'other',
-                'name'         => 'product-type',
-                'options'      => apply_filters(
+                'title'          => __( 'Product Type', 'dokan-lite' ),
+                'field_type'     => 'select',
+                'type'           => 'other',
+                'name'           => 'product-type',
+                'options'        => apply_filters(
                     'dokan_product_types',
                     [
                         'simple' => __( 'Simple', 'dokan-lite' ), // dokan lite only supports simple product
                     ]
                 ),
-                'help_content' => __( 'Choose Variable if your product has multiple attributes - like sizes, colors, quality etc', 'dokan-lite' ),
-                'get_value_callback' => function ( $product = null ) {
+                'help_content'   => __( 'Choose Variable if your product has multiple attributes - like sizes, colors, quality etc', 'dokan-lite' ),
+                'value_callback' => function ( $product = null ) {
                     if ( ! $product instanceof WC_Product ) {
                         return 'simple';
                     }
@@ -142,10 +142,10 @@ class Init {
 
         $section->add_field(
             Elements::DATE_ON_SALE_FROM, [
-                'title'       => __( 'From', 'dokan-lite' ),
-                'field_type'  => 'text',
-                'name'        => '_sale_price_dates_from',
-                'placeholder' => 'YYYY-MM-DD',
+                'title'          => __( 'From', 'dokan-lite' ),
+                'field_type'     => 'text',
+                'name'           => '_sale_price_dates_from',
+                'placeholder'    => 'YYYY-MM-DD',
             ]
         );
 
@@ -164,13 +164,13 @@ class Init {
 
         $section->add_field(
             Elements::CATEGORIES, [
-                'title'       => __( 'Categories', 'dokan-lite' ),
-                'field_type'  => 'select',
-                'name'        => 'chosen_product_cat[]',
-                'placeholder' => __( 'Select product categories', 'dokan-lite' ),
-                'options'     => [],
-                'required'    => true,
-                'error_msg'   => $category_error_message,
+                'title'             => __( 'Categories', 'dokan-lite' ),
+                'field_type'        => 'select',
+                'name'              => 'chosen_product_cat[]',
+                'placeholder'       => __( 'Select product categories', 'dokan-lite' ),
+                'options'           => [],
+                'required'          => true,
+                'error_msg'         => $category_error_message,
                 'sanitize_callback' => function ( array $categories, WC_Product $product ) {
                     $chosen_product_categories = array_map( 'absint', $categories );
                     $chosen_cat                = ProductCategoryHelper::product_category_selection_is_single() ? [ reset( $chosen_product_categories ) ] : $chosen_product_categories;
@@ -180,7 +180,7 @@ class Init {
 
                     return array_map( 'absint', ProductCategoryHelper::get_object_terms_from_chosen_categories( $product, $chosen_cat ) );
                 },
-                'value_callback' => function ( $product = null ) {
+                'value_callback'    => function ( $product = null ) {
                     if ( ! $product instanceof WC_Product ) {
                         return [];
                     }
@@ -217,14 +217,14 @@ class Init {
                     return array_map(
                         function ( $tag ) {
                             if ( is_numeric( $tag ) ) {
-                                    return absint( $tag );
+                                return absint( $tag );
                             } else {
                                 return sanitize_text_field( $tag );
                             }
                         }, (array) $tags
                     );
                 },
-                'value_callback' => function ( $product = null ) {
+                'value_callback'    => function ( $product = null ) {
                     if ( ! $product instanceof WC_Product ) {
                         return [];
                     }
@@ -254,10 +254,10 @@ class Init {
 
         $section->add_field(
             Elements::SHORT_DESCRIPTION, [
-                'title'       => __( 'Short Description', 'dokan-lite' ),
-                'field_type'  => 'textarea',
-                'name'        => 'post_excerpt',
-                'placeholder' => __( 'Enter product short description', 'dokan-lite' ),
+                'title'          => __( 'Short Description', 'dokan-lite' ),
+                'field_type'     => 'textarea',
+                'name'           => 'post_excerpt',
+                'placeholder'    => __( 'Enter product short description', 'dokan-lite' ),
                 'value_callback' => function ( $product = null ) {
                     if ( ! $product instanceof WC_Product ) {
                         return '';
@@ -270,11 +270,11 @@ class Init {
 
         $section->add_field(
             Elements::DESCRIPTION, [
-                'title'       => __( 'Description', 'dokan-lite' ),
-                'field_type'  => 'textarea',
-                'name'        => 'post_content',
-                'placeholder' => __( 'Enter product description', 'dokan-lite' ),
-                'required'    => true,
+                'title'          => __( 'Description', 'dokan-lite' ),
+                'field_type'     => 'textarea',
+                'name'           => 'post_content',
+                'placeholder'    => __( 'Enter product description', 'dokan-lite' ),
+                'required'       => true,
                 'value_callback' => function ( $product = null ) {
                     if ( ! $product instanceof WC_Product ) {
                         return '';
@@ -419,6 +419,13 @@ class Init {
 
                     return wc_stock_amount( $value );
                 },
+                'value_callback'        => function ( $product = null ) {
+                    if ( ! $product instanceof WC_Product ) {
+                        return 0;
+                    }
+
+                    return $product->get_stock_quantity();
+                },
             ]
         );
 
@@ -492,10 +499,10 @@ class Init {
 
         $section->add_field(
             Elements::DOWNLOADS, [
-                'title'       => __( 'Downloadable Files', 'dokan-lite' ),
-                'description' => __( 'Upload files that customers can download after purchase.', 'dokan-lite' ),
-                'field_type'  => 'downloadable',
-                'name'        => '_wc_file_urls[]',
+                'title'             => __( 'Downloadable Files', 'dokan-lite' ),
+                'description'       => __( 'Upload files that customers can download after purchase.', 'dokan-lite' ),
+                'field_type'        => 'downloadable',
+                'name'              => '_wc_file_urls[]',
                 'sanitize_callback' => function ( $file_names, $file_urls, $file_hashes ) {
                     return dokan()->product->prepare_downloads( $file_names, $file_urls, $file_hashes );
                 },
@@ -517,6 +524,7 @@ class Init {
                     if ( '' !== $value ) {
                         return absint( $value );
                     }
+
                     return '';
                 },
             ]
@@ -537,6 +545,7 @@ class Init {
                     if ( '' !== $value ) {
                         return absint( $value );
                     }
+
                     return '';
                 },
             ]
