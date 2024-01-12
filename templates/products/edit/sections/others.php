@@ -42,7 +42,7 @@ $post = get_post( $product->get_id() ); // phpcs:ignore WordPress.WP.GlobalVaria
                 </label>
                 <select id="<?php echo esc_attr( $product_status->get_name() ); ?>" class="dokan-form-control" name="<?php echo esc_attr( $product_status->get_name() ); ?>" <?php echo $product_status->get_required() ? 'required' : ''; ?>>
                     <?php foreach ( $product_status->get_options() as $status => $label ) : // phpcs:ignore ?>
-                        <option value="<?php echo esc_attr( $status ); ?>" <?php selected( $status, $post_status ); ?>>
+                        <option value="<?php echo esc_attr( $status ); ?>" <?php selected( $status, $product_status->get_value( $product ) ); ?>>
                             <?php echo esc_html( $label ); ?>
                         </option>
                     <?php endforeach; ?>
@@ -61,7 +61,7 @@ $post = get_post( $product->get_id() ); // phpcs:ignore WordPress.WP.GlobalVaria
                 </label>
                 <select name="<?php echo esc_attr( $catalog_visibility->get_name() ); ?>" id="<?php echo esc_attr( $catalog_visibility->get_name() ); ?>" class="dokan-form-control" <?php echo $catalog_visibility->is_required() ? 'required' : ''; ?>>
                     <?php foreach ( $catalog_visibility->get_options() as $name => $label ) : ?>
-                        <option value="<?php echo esc_attr( $name ); ?>" <?php selected( $product->get_catalog_visibility( 'edit' ), $name ); ?>>
+                        <option value="<?php echo esc_attr( $name ); ?>" <?php selected( $catalog_visibility->get_value( $product ), $name ); ?>>
                             <?php echo esc_html( $label ); ?>
                         </option>
                     <?php endforeach; ?>
@@ -86,7 +86,7 @@ $post = get_post( $product->get_id() ); // phpcs:ignore WordPress.WP.GlobalVaria
                     $purchase_note->get_name(),
                     [
                         'name'        => $purchase_note->get_name(),
-                        'value'       => $product->get_purchase_note( 'edit' ),
+                        'value'       => $purchase_note->get_value( $product ),
                         'placeholder' => $purchase_note->get_placeholder(),
                         'required'    => $purchase_note->is_required(),
                     ],
@@ -107,7 +107,7 @@ $post = get_post( $product->get_id() ); // phpcs:ignore WordPress.WP.GlobalVaria
                     $enable_reviews->get_name(),
                     [
                         'name'     => $enable_reviews->get_name(),
-                        'value'    => $product->get_reviews_allowed( 'edit' ) ? 'yes' : 'no',
+                        'value'    => $enable_reviews->get_value( $product ) ? 'yes' : 'no',
                         'label'    => __( 'Enable product reviews', 'dokan-lite' ),
                         'required' => $enable_reviews->is_required(),
                     ],

@@ -637,10 +637,21 @@ class Init {
 
         $section->add_field(
             Elements::CATALOG_VISIBILITY, [
-                'title'      => __( 'Visibility', 'dokan-lite' ),
-                'field_type' => 'select',
-                'name'       => '_visibility',
-                'options'    => dokan_get_product_visibility_options(),
+                'title'          => __( 'Visibility', 'dokan-lite' ),
+                'field_type'     => 'select',
+                'name'           => '_visibility',
+                'options'        => dokan_get_product_visibility_options(),
+                'value_callback' => function ( $product, $value = '' ) {
+                    if ( '' !== $value ) {
+                        return $value;
+                    }
+
+                    if ( ! $product instanceof WC_Product ) {
+                        return '';
+                    }
+
+                    return $product->get_catalog_visibility();
+                },
             ]
         );
 
@@ -664,6 +675,17 @@ class Init {
                 ],
                 'sanitize_callback'     => function ( $value ) {
                     return ! empty( $value ) && 'yes' === $value;
+                },
+                'value_callback'        => function ( $product, $value = '' ) {
+                    if ( '' !== $value ) {
+                        return $value;
+                    }
+
+                    if ( ! $product instanceof WC_Product ) {
+                        return '';
+                    }
+
+                    return $product->get_reviews_allowed();
                 },
             ]
         );
