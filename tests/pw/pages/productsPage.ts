@@ -556,6 +556,17 @@ export class ProductsPage extends AdminPage {
         await this.toContainText(selector.vendor.product.updatedSuccessMessage, data.product.createUpdateSaveSuccessMessage);
     }
 
+    // add product description
+    async addCatalogMode(productName: string,): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.check(selector.vendor.product.catalogMode.removeAddToCart);
+        await this.check(selector.vendor.product.catalogMode.hideProductPrice);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, selector.vendor.product.saveProduct, 302);
+        await this.toContainText(selector.vendor.product.updatedSuccessMessage, data.product.createUpdateSaveSuccessMessage);
+        await this.toBeChecked(selector.vendor.product.catalogMode.removeAddToCart);
+        await this.toBeChecked(selector.vendor.product.catalogMode.hideProductPrice);
+    }
+
     // quick edit product
     async quickEditProduct(product: product['simple']): Promise<void> {
         await this.searchProduct(product.editProduct);

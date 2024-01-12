@@ -149,6 +149,12 @@ test.describe('Product functionality test', () => {
         await vendor.addProductRmaOptions(data.predefined.simpleProduct.product1.name, data.vendor.rma);
     });
 
+
+    test.skip('vendor can add catalog mode @lite', async () => {
+        await vendor.addCatalogMode(data.predefined.simpleProduct.product1.name);
+    });
+
+
     // todo: add more product edit tests -> discount, wholesale, advertising
 
     test('vendor can duplicate product @pro', async () => {

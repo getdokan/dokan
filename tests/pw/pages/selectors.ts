@@ -3602,6 +3602,12 @@ export const selector = {
                 cancelAdvertiseThisProduct: '.swal2-cancel',
             },
 
+            // catalog mode
+            catalogMode: {
+                removeAddToCart: '#catalog_mode_hide_add_to_cart_button',
+                hideProductPrice: '#catalog_mode_hide_product_price',
+            },
+
             // Save Product
             saveProduct: '.dokan-btn-lg',
             updatedSuccessMessage: '.dokan-message',
@@ -6659,7 +6665,7 @@ export const selector = {
                 storeInfo: '.dokan-store-info',
                 storeAddress: '.dokan-store-address',
                 storePhone: '.dokan-store-phone',
-                storeEmail: '.dokan-store-email',
+                // storeEmail: '.dokan-store-email', //todo: doesn't work on lite
                 // storeRating: '.dokan-store-rating',
                 // storeOpenClose: '.dokan-store-open-close',
                 storeSocial: '.store-social',
@@ -7082,8 +7088,10 @@ export const selector = {
             stripeExpress: '.wc_payment_method.payment_method_dokan_stripe_express label',
 
             // Place Order
-            // placeOrder: '#place_order, div.wc-block-checkout__actions_row button.wc-block-components-checkout-place-order-button',
-            placeOrder: '//button[contains(@class,"wc-block-components-checkout-place-order-button")]',
+            placeOrder: '#place_order, button.wc-block-components-checkout-place-order-button',
+            // placeOrder: '//button[contains(@class,"wc-block-components-checkout-place-order-button")]',
+            // placeOrder: '//button[contains(@class,"components-button wc-block-components-button")]',
+            
         },
 
         cPayWithStripe: {
