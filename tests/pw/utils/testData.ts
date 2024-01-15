@@ -81,7 +81,7 @@ export const data = {
         publishSuccessMessage: 'Product published. ',
         draftUpdateSuccessMessage: 'Product draft updated. ',
         pendingProductUpdateSuccessMessage: 'Product updated. ',
-        createUpdateSaveSuccessMessage: 'Success! The product has been saved successfully. View Product →',
+        createUpdateSaveSuccessMessage: 'Success! The product has been saved successfully.',
         updateSuccessMessage: 'Product updated. ',
 
         status: {
@@ -420,7 +420,14 @@ export const data = {
                 maximumAmount: '1000000',
                 category: 'Uncategorized',
             },
+
+            otherOptions:{
+                productStatus: 'draft' , // publish, 
+                visibility: 'hidden' , // visible, catalog, search, hidden
+                purchaseNote: 'test purchase note'
+            }
         },
+
     },
 
     // store

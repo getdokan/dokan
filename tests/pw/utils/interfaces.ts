@@ -325,6 +325,12 @@ export interface product {
             maximumAmount: string;
             category: string;
         };
+
+        otherOptions: {
+            productStatus: string;
+            visibility: string;
+            purchaseNote: string;
+        };
     };
 }
 

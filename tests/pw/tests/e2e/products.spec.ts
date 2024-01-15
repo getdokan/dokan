@@ -149,12 +149,20 @@ test.describe('Product functionality test', () => {
     // 	await vendor.addProductQuantityDiscount(data.predefined.simpleProduct.product1.name, data.product.productInfo.quantityDiscount);
     // });
 
+    test('vendor can add product rma options @pro', async () => {
+        await vendor.addProductRmaOptions(productName, data.vendor.rma);
+    });
+
     test('vendor can add product wholesale options @pro', async () => {
         await vendor.addProductWholesaleOptions(productName, data.product.productInfo.wholesaleOption);
     });
 
-    test('vendor can add product rma options @pro', async () => {
-        await vendor.addProductRmaOptions(productName, data.vendor.rma);
+    test('vendor can add product min-max options @pro', async () => {
+        await vendor.addProductMinMaxOptions(productName, data.product.productInfo.minMax);
+    });
+
+    test('vendor can add product other options @lite', async () => {
+        await vendor.addProductOtherOptions(productName, data.product.productInfo.otherOptions);
     });
 
     test('vendor can add catalog mode @lite', async () => {

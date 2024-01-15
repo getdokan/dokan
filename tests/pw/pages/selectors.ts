@@ -3466,8 +3466,8 @@ export const selector = {
             },
 
             // Downloadable options
-            downloadableOptions:{
-                addFile:'a.insert-file-row.dokan-btn',
+            downloadableOptions: {
+                addFile: 'a.insert-file-row.dokan-btn',
                 addDownloadableFiles: '.insert',
                 fileName: 'input[placeholder="File Name"]',
                 fileUrl: 'input[placeholder="https://"]',
@@ -3592,20 +3592,22 @@ export const selector = {
 
             // Min-Max Options
             minMax: {
-                enableMinMaxRulesThisProduct: '#product_wise_activation',
-                minimumQuantity: '#min_quantity',
-                maximumQuantity: '#max_quantity',
-                minimumAmount: '#min_amount',
-                maximumAmount: '#max_amount',
+                enableMinMaxRulesThisProduct: 'input#product_wise_activation',
+                minimumQuantity: 'input#min_quantity',
+                maximumQuantity: 'input#max_quantity',
+                minimumAmount: 'input#min_amount',
+                maximumAmount: 'input#max_amount',
                 orderRulesDoNotCount: '#\\_donot_count',
                 categoryRulesExclude: '#ignore_from_cat',
             },
 
             // Other Options
-            productStatus: '#post_status',
-            visibility: '#\\_visibility',
-            purchaseNote: '#\\_purchase_note',
-            enableProductReviews: '#\\_enable_reviews',
+            otherOptions: {
+                productStatus: '#post_status',
+                visibility: '#\\_visibility',
+                purchaseNote: '#\\_purchase_note',
+                enableProductReviews: '#\\_enable_reviews',
+            },
 
             // Advertise Product
             advertisement: {
@@ -7104,7 +7106,6 @@ export const selector = {
             placeOrder: '#place_order, button.wc-block-components-checkout-place-order-button',
             // placeOrder: '//button[contains(@class,"wc-block-components-checkout-place-order-button")]',
             // placeOrder: '//button[contains(@class,"components-button wc-block-components-button")]',
-            
         },
 
         cPayWithStripe: {

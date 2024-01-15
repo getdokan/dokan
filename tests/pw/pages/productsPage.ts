@@ -404,7 +404,7 @@ export class ProductsPage extends AdminPage {
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, selector.vendor.product.saveProduct, 302);
         await this.toContainText(selector.vendor.product.updatedSuccessMessage, product.saveSuccessMessage);
         await this.toHaveValue(selector.vendor.product.edit.title, productName);
-         //todo: add more assettions
+        //todo: add more assettions
     }
 
     // vendor add variable subscription product
@@ -430,7 +430,7 @@ export class ProductsPage extends AdminPage {
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, selector.vendor.product.saveProduct, 302);
         await this.toContainText(selector.vendor.product.updatedSuccessMessage, product.saveSuccessMessage);
         await this.toHaveValue(selector.vendor.product.edit.title, productName);
-         //todo: add more assettions
+        //todo: add more assettions
     }
 
     // vendor add external product
@@ -579,18 +579,6 @@ export class ProductsPage extends AdminPage {
         // todo: add more assertions
     }
 
-    // add product Wholesale options
-    async addProductWholesaleOptions(productName: string, wholesaleOption: product['productInfo']['wholesaleOption']): Promise<void> {
-        await this.goToProductEdit(productName);
-        await this.check(selector.vendor.product.wholesale.enableWholeSaleForThisProduct);
-        await this.clearAndType(selector.vendor.product.wholesale.wholesalePrice, wholesaleOption.wholesalePrice);
-        await this.clearAndType(selector.vendor.product.wholesale.minimumQuantityForWholesale, wholesaleOption.minimumWholesaleQuantity);
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, selector.vendor.product.saveProduct, 302);
-        await this.toContainText(selector.vendor.product.updatedSuccessMessage, data.product.createUpdateSaveSuccessMessage);
-        await this.toHaveValue(selector.vendor.product.wholesale.wholesalePrice, wholesaleOption.wholesalePrice);
-        await this.toHaveValue(selector.vendor.product.wholesale.minimumQuantityForWholesale, wholesaleOption.minimumWholesaleQuantity);
-    }
-
     // vendor add product rma options
     async addProductRmaOptions(productName: string, rma: vendor['rma']): Promise<void> {
         await this.goToProductEdit(productName);
@@ -609,6 +597,56 @@ export class ProductsPage extends AdminPage {
         }
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, selector.vendor.product.saveProduct, 302);
         await this.toContainText(selector.vendor.product.updatedSuccessMessage, data.product.createUpdateSaveSuccessMessage);
+        //todo: add more assertions
+    }
+
+    // add product Wholesale options
+    async addProductWholesaleOptions(productName: string, wholesaleOption: product['productInfo']['wholesaleOption']): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.check(selector.vendor.product.wholesale.enableWholeSaleForThisProduct);
+        await this.clearAndType(selector.vendor.product.wholesale.wholesalePrice, wholesaleOption.wholesalePrice);
+        await this.clearAndType(selector.vendor.product.wholesale.minimumQuantityForWholesale, wholesaleOption.minimumWholesaleQuantity);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, selector.vendor.product.saveProduct, 302);
+        await this.toContainText(selector.vendor.product.updatedSuccessMessage, data.product.createUpdateSaveSuccessMessage);
+        await this.toHaveValue(selector.vendor.product.wholesale.wholesalePrice, wholesaleOption.wholesalePrice);
+        await this.toHaveValue(selector.vendor.product.wholesale.minimumQuantityForWholesale, wholesaleOption.minimumWholesaleQuantity);
+    }
+
+    // add product min-max options
+    async addProductMinMaxOptions(productName: string, minMaxOption: product['productInfo']['minMax']): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.check(selector.vendor.product.minMax.enableMinMaxRulesThisProduct);
+        await this.clearAndType(selector.vendor.product.minMax.minimumQuantity, minMaxOption.minimumProductQuantity);
+        await this.clearAndType(selector.vendor.product.minMax.maximumQuantity, minMaxOption.maximumProductQuantity);
+        await this.clearAndType(selector.vendor.product.minMax.minimumAmount, minMaxOption.minimumAmount);
+        await this.clearAndType(selector.vendor.product.minMax.maximumAmount, minMaxOption.maximumAmount);
+        await this.check(selector.vendor.product.minMax.orderRulesDoNotCount);
+        await this.check(selector.vendor.product.minMax.categoryRulesExclude);
+
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, selector.vendor.product.saveProduct, 302);
+        await this.toContainText(selector.vendor.product.updatedSuccessMessage, data.product.createUpdateSaveSuccessMessage);
+        await this.toBeChecked(selector.vendor.product.minMax.enableMinMaxRulesThisProduct);
+        await this.toHaveValue(selector.vendor.product.minMax.minimumQuantity, minMaxOption.minimumProductQuantity);
+        await this.toHaveValue(selector.vendor.product.minMax.maximumQuantity, minMaxOption.maximumProductQuantity);
+        await this.toHaveValue(selector.vendor.product.minMax.minimumAmount, minMaxOption.minimumAmount);
+        await this.toHaveValue(selector.vendor.product.minMax.maximumAmount, minMaxOption.maximumAmount);
+        await this.toBeChecked(selector.vendor.product.minMax.orderRulesDoNotCount);
+        await this.toBeChecked(selector.vendor.product.minMax.categoryRulesExclude);
+    }
+
+    // add product other (product status, visibility, purchase note, reviews) options
+    async addProductOtherOptions(productName: string, otherOption: product['productInfo']['otherOptions']): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.selectByValue(selector.vendor.product.otherOptions.productStatus, otherOption.productStatus);
+        await this.selectByValue(selector.vendor.product.otherOptions.visibility, otherOption.visibility);
+        await this.clearAndType(selector.vendor.product.otherOptions.purchaseNote, otherOption.purchaseNote);
+        await this.check(selector.vendor.product.otherOptions.enableProductReviews);
+
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, selector.vendor.product.saveProduct, 302);
+        await this.toContainText(selector.vendor.product.updatedSuccessMessage, data.product.createUpdateSaveSuccessMessage);
+        //todo: add more assertion
+        await this.toHaveValue(selector.vendor.product.otherOptions.purchaseNote, otherOption.purchaseNote);
+        await this.toBeChecked(selector.vendor.product.otherOptions.enableProductReviews);
     }
 
     // add product description
