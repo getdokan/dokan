@@ -28,7 +28,7 @@ $post = get_post( $product->get_id() ); // phpcs:ignore WordPress.WP.GlobalVaria
                 $product->get_id(),
                 $downloadable->get_name(),
                 [
-                    'value'    => $product->is_downloadable() ? 'yes' : 'no',
+                    'value'    => $downloadable->get_value( $product ) ? 'yes' : 'no',
                     'label'    => $downloadable->get_title(),
                     'desc'     => $downloadable->get_description(),
                     'required' => $downloadable->is_required(),
@@ -49,7 +49,7 @@ $post = get_post( $product->get_id() ); // phpcs:ignore WordPress.WP.GlobalVaria
                 $product->get_id(),
                 $virtual->get_name(),
                 [
-                    'value'    => $product->is_virtual() ? 'yes' : 'no',
+                    'value'    => $virtual->get_value( $product ) ? 'yes' : 'no',
                     'label'    => $virtual->get_title(),
                     'desc'     => $virtual->get_description(),
                     'required' => $virtual->is_required(),

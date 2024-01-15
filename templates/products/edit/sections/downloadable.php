@@ -101,7 +101,7 @@ $post = get_post( $product->get_id() ); // phpcs:ignore WordPress.WP.GlobalVaria
                                 $product->get_id(),
                                 $download_limit->get_name(),
                                 [
-                                    'value'       => - 1 === $product->get_download_limit( 'edit' ) ? '' : $product->get_download_limit( 'edit' ),
+                                    'value'       => - 1 === $download_limit->get_value( $product ) ? '' : $download_limit->get_value( $product ),
                                     'placeholder' => $download_limit->get_placeholder(),
                                     'min'         => $download_limit->get_additional_properties( 'min' ),
                                     'step'        => $download_limit->get_additional_properties( 'step' ),
@@ -132,7 +132,7 @@ $post = get_post( $product->get_id() ); // phpcs:ignore WordPress.WP.GlobalVaria
                                 $product->get_id(),
                                 $download_expiry->get_name(),
                                 [
-                                    'value'       => - 1 === $product->get_download_expiry( 'edit' ) ? '' : $product->get_download_expiry( 'edit' ),
+                                    'value'       => - 1 === $download_expiry->get_value( $product ) ? '' : $download_expiry->get_value( $product ),
                                     'placeholder' => __( 'Never', 'dokan-lite' ),
                                     'min'         => $download_expiry->get_additional_properties( 'min' ),
                                     'step'        => $download_expiry->get_additional_properties( 'step' ),
