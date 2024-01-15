@@ -5,6 +5,7 @@ namespace WeDevs\Dokan\REST;
 use Cassandra\Date;
 use Exception;
 use WeDevs\Dokan\Cache;
+use WeDevs\Dokan\Withdraw\Withdraw;
 use WP_Error;
 use WP_REST_Controller;
 use WP_REST_Request;
@@ -133,6 +134,43 @@ class WithdrawController extends WP_REST_Controller {
 				],
 				'schema' => [ $this, 'get_public_batch_schema' ],
 			]
+        );
+
+        register_rest_route(
+            $this->namespace, '/' . $this->rest_base . '/charges', [
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_all_method_charges' ],
+                    'permission_callback' => [ $this, 'get_items_permissions_check' ],
+                ],
+            ]
+        );
+
+        $methods = array_keys( dokan_withdraw_get_methods() );
+
+        register_rest_route(
+            $this->namespace, '/' . $this->rest_base . '/charge', [
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_method_charge' ],
+                    'permission_callback' => [ $this, 'get_items_permissions_check' ],
+                    'args'                => [
+                        'method' => [
+                            'description' => __( 'Withdraw method key', 'dokan-lite' ),
+                            'type'        => 'string',
+                            'context'     => [ 'view' ],
+                            'enum'        => $methods,
+                            'required'    => true,
+                        ],
+                        'amount' => [
+                            'description' => __( 'Withdraw amount', 'dokan-lite' ),
+                            'type'        => 'number',
+                            'context'     => [ 'view' ],
+                            'required'    => true,
+                        ],
+                    ],
+                ],
+            ]
         );
     }
 
@@ -417,32 +455,40 @@ class WithdrawController extends WP_REST_Controller {
                 throw new DokanException( 'dokan_rest_withdraw_error', __( 'No vendor found', 'dokan-lite' ), 404 );
             }
 
-            $args = [
-                'user_id' => $user_id,
-                'amount'  => $request['amount'],
-                'date'    => current_time( 'mysql' ),
-                'method'  => $request['method'],
-                'note'    => $note,
-                'ip'      => dokan_get_client_ip(),
-            ];
-
             if ( dokan()->withdraw->has_pending_request( $user_id ) ) {
                 throw new DokanException( 'dokan_rest_withdraw_error', __( 'You already have a pending withdraw request', 'dokan-lite' ), 400 );
             }
 
-            $validate_request = dokan()->withdraw->is_valid_approval_request( $args );
+            $validate_request = dokan()->withdraw->is_valid_approval_request(
+                [
+			        'user_id' => $user_id,
+			        'amount'  => $request['amount'],
+			        'method'  => $request['method'],
+                    ]
+            );
 
             if ( is_wp_error( $validate_request ) ) {
                 throw new DokanException( 'dokan_rest_withdraw_error', $validate_request->get_error_message(), 400 );
             }
 
-            $withdraw = dokan()->withdraw->create( $args );
+            $withdraw = new Withdraw();
 
-            if ( is_wp_error( $withdraw ) ) {
-                throw new DokanException( $withdraw->get_error_code(), $withdraw->get_error_message(), 400 );
+            $withdraw
+                ->set_user_id( $user_id )
+                ->set_amount( $request['amount'] )
+                ->set_date( dokan_current_datetime()->format( 'Y-m-d H:i:s' ) )
+                ->set_status( dokan()->withdraw->get_status_code( 'pending' ) )
+                ->set_method( $request['method'] )
+                ->set_ip( dokan_get_client_ip() )
+                ->set_note( $note );
+
+            $result = $withdraw->save();
+
+            if ( is_wp_error( $result ) ) {
+                throw new DokanException( $result->get_error_code(), $result->get_error_message(), 400 );
             }
 
-            $response = $this->prepare_item_for_response( $withdraw, $request );
+            $response = $this->prepare_item_for_response( $result, $request );
             $response = rest_ensure_response( $response );
 
             $response->set_status( 201 );
@@ -703,9 +749,59 @@ class WithdrawController extends WP_REST_Controller {
     }
 
     /**
+     * Get all withdraw method charges.
+     *
+     * @since 3.9.6
+     *
+     * @return WP_Error|\WP_HTTP_Response|WP_REST_Response
+     */
+    public function get_all_method_charges() {
+        $all_charges = dokan_withdraw_get_method_charges();
+
+        return rest_ensure_response( $all_charges );
+    }
+
+    /**
+     * Get withdraw method charge.
+     *
+     * @since 3.9.6
+     *
+     * @return WP_Error|\WP_HTTP_Response|WP_REST_Response
+     */
+    public function get_method_charge( $request ) {
+        $method = $request->get_param( 'method' );
+        $amount = wc_format_decimal( $request->get_param( 'amount' ) );
+
+        $withdraw = new Withdraw();
+
+        $withdraw->set_method( $method )
+                ->set_amount( $amount )
+                ->calculate_charge();
+
+        $response = [
+            'charge'      => $withdraw->get_charge(),
+            'receivable'  => $withdraw->get_receivable_amount(),
+            'charge_data' => $withdraw->get_charge_data(),
+        ];
+
+        if ( $withdraw->get_receivable_amount() < 0 ) {
+            return new WP_Error(
+                'invalid-withdraw-amount',
+                __( 'Invalid withdraw amount. The withdraw charge is greater than the withdraw amount', 'dokan-lite' ),
+                $response
+            );
+        }
+
+        return rest_ensure_response( $response );
+    }
+
+    /**
      * Prepare data for response
      *
      * @since 2.8.0
+     *
+     * @param $withdraw \WeDevs\Dokan\Withdraw\Withdraw
+     * @param $request \WP_REST_Request
      *
      * @return WP_REST_Response|WP_Error
      */
@@ -735,6 +831,9 @@ class WithdrawController extends WP_REST_Controller {
             'note'         => $withdraw->get_note(),
             'details'      => $details,
             'ip'           => $withdraw->get_ip(),
+            'charge'       => $withdraw->get_charge(),
+            'receivable'   => $withdraw->get_receivable_amount(),
+            'charge_data'  => $withdraw->get_charge_data(),
         ];
 
         $response = rest_ensure_response( $data );

@@ -4,6 +4,30 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.9.6',
+        'released' => '2023-01-11',
+        'changes'  => [
+            'New Feature'         => [
+                [
+                    'title'       => 'Features: Withdraw Charge',
+                    'description' => 'Dokan has introduced a new feature that allows the admin to set a withdrawal charge for vendors. This charge can be either a flat rate or a percentage of the withdrawal amount based on the payment gateway used. The charge will be reflected in the details report, and vendors can see how many charges will apply when they request a withdrawal. The vendor dashboard list will also show the charge and receivable amount. This feature provides greater flexibility and transparency in managing vendor withdrawals.',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.9.5',
+        'released' => '2023-12-28',
+        'changes'  => [
+            'Fix'         => [
+                [
+                    'title'       => 'API request on get all orders returns empty results for the endpoint http://dev.test/wp-json/dokan/v1/orders due to default customer id was set to 0.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.9.4',
         'released' => '2023-12-12',
         'changes'  => [
