@@ -594,45 +594,12 @@ class SetupWizard extends DokanSetupWizard {
                 ?>
             </table>
             <p class="wc-setup-actions step">
-                <input type="button" class="button-primary button button-large button-next store-step-continue dokan-btn-theme" value="<?php esc_attr_e( 'Continue', 'dokan-lite' ); ?>"/>
-                <input type="submit" id="save_step_submit" style='display: none' value="submit" name="save_step"/>
+                <input type="submit" class="button-primary button button-large button-next payment-continue-btn dokan-btn-theme" value="<?php esc_attr_e( 'Continue', 'dokan-lite' ); ?>" name="save_step"/>
 
                 <a href="<?php echo esc_url( $this->get_next_step_link() ); ?>" class="button button-large button-next payment-step-skip-btn dokan-btn-theme"><?php esc_html_e( 'Skip this step', 'dokan-lite' ); ?></a>
                 <?php wp_nonce_field( 'dokan-seller-setup' ); ?>
             </p>
         </form>
-        <script>
-            (function ($) {
-                $('.store-step-continue').on('click', function(e) {
-                    <?php
-                        $withdraw_payments = dokan_get_option( 'withdraw_methods', 'dokan_withdraw' );
-                        $bank_is_active = is_array( $withdraw_payments ) && ! empty( $withdraw_payments['bank'] );
-                    ?>
-                    let requiredFields = <?php echo wp_json_encode( dokan_bank_payment_required_fields() ); ?>;
-                    let bank_is_active = <?php echo wp_json_encode( $bank_is_active ); ?>;
-
-                    if ( ! bank_is_active ) {
-                        requiredFields = {};
-                    }
-
-                    let isValidForm = true;
-                    Object.keys(requiredFields).map( item => {
-                        if ( ! $( `*[name='settings[bank][${item}]']` ).val() ) {
-                            isValidForm = false;
-                            $( `*[name='settings[bank][${item}]']` ).closest('div').children('span.error-container').html(`<span class="required">${requiredFields[item]}</span>`)
-                        } else {
-                            $( `*[name='settings[bank][${item}]']` ).closest('div').children('span.error-container').html(``)
-                        }
-                    } );
-
-                    if ( ! isValidForm ) {
-                        return;
-                    }
-
-                    $('#save_step_submit').trigger("click");
-                });
-            })(jQuery);
-        </script>
         <?php
 
         do_action( 'dokan_seller_wizard_after_payment_setup_form', $this );
@@ -673,12 +640,10 @@ class SetupWizard extends DokanSetupWizard {
                 }
             }
 
-            if ( ! $has_bank_information ) {
-                return;
+            if ( $has_bank_information ) {
+                $dokan_settings['profile_completion']['bank'] = $dokan_settings['profile_completion']['progress_vals']['payment_method_val'];
+                $dokan_settings['profile_completion']['paypal'] = 0;
             }
-
-            $dokan_settings['profile_completion']['bank'] = $dokan_settings['profile_completion']['progress_vals']['payment_method_val'];
-            $dokan_settings['profile_completion']['paypal'] = 0;
         }
 
         if ( ! empty( $_POST['settings']['paypal']['email'] ) ) {
@@ -690,7 +655,7 @@ class SetupWizard extends DokanSetupWizard {
         }
 
         // Check any payment methods setups and add manually value on Profile Completion also increase progress value
-        if ( isset( $_POST['profile_completion']['paypal'] ) || isset( $_POST['profile_completion']['bank'] ) ) {
+        if ( ! empty( $dokan_settings['profile_completion']['paypal'] ) || ! empty( $dokan_settings['profile_completion']['bank'] ) ) {
             $profile_settings = get_user_meta( $this->store_id, 'dokan_profile_settings', true );
             if ( ! empty( $profile_settings['profile_completion']['progress'] ) ) {
                 $dokan_settings['profile_completion']['progress'] = $profile_settings['profile_completion']['progress'] + $dokan_settings['profile_completion']['progress_vals']['payment_method_val'];
