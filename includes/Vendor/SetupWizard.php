@@ -370,7 +370,7 @@ class SetupWizard extends DokanSetupWizard {
             .select2-container--open .select2-dropdown {
                 left: 20px;
             }
-        </style
+        </style>
         <?php
 
         do_action( 'dokan_seller_wizard_after_store_setup_form', $this );
