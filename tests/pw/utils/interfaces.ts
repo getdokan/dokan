@@ -122,6 +122,26 @@ export interface product {
         status: string;
         stockStatus: boolean;
         editProduct: string;
+        saveSuccessMessage: string;
+    };
+
+    downloadable: {
+        productType: string;
+        productName: () => string;
+        category: string;
+        regularPrice: () => string;
+        storeName: string;
+        status: string;
+        stockStatus: boolean;
+        editProduct: string;
+        saveSuccessMessage: string;
+
+        downloadableOptions: {
+            fileName: string;
+            fileUrl: string;
+            downloadLimit: string;
+            downloadExpiry: string;
+        };
     };
 
     variable: {
@@ -275,6 +295,36 @@ export interface product {
 
         guestName: () => string;
         guestEmail: () => string;
+    };
+
+    productInfo: {
+        description: {
+            shortDescription: string;
+            description: string;
+        };
+
+        amountDiscount: {
+            minimumOrderAmount: string;
+            discountPercentage: string;
+        };
+
+        quantityDiscount: {
+            minimumQuantity: string;
+            discountPercentage: string;
+        };
+
+        wholesaleOption: {
+            wholesalePrice: string;
+            minimumWholesaleQuantity: string;
+        };
+
+        minMax: {
+            minimumProductQuantity: string;
+            maximumProductQuantity: string;
+            minimumAmount: string;
+            maximumAmount: string;
+            category: string;
+        };
     };
 }
 
@@ -679,34 +729,6 @@ export interface vendor {
                 closingStyle: string;
                 vacationMessage: string;
             };
-        };
-
-        description: {
-            shortDescription: string;
-            description: string;
-        };
-
-        amountDiscount: {
-            minimumOrderAmount: string;
-            discountPercentage: string;
-        };
-
-        quantityDiscount: {
-            minimumQuantity: string;
-            discountPercentage: string;
-        };
-
-        wholesaleOption: {
-            wholesalePrice: string;
-            minimumWholesaleQuantity: string;
-        };
-
-        minMax: {
-            minimumProductQuantity: string;
-            maximumProductQuantity: string;
-            minimumAmount: string;
-            maximumAmount: string;
-            category: string;
         };
 
         storeSettingsSaveSuccessMessage: string;

@@ -183,6 +183,38 @@ export const data = {
             status: 'publish',
             stockStatus: false,
             editProduct: '',
+            saveSuccessMessage: 'Success! The product has been saved successfully. View Product →',
+        },
+
+        downloadable: {
+            productType: 'simple',
+            productName: () => faker.commerce.productName() + ' (Downadable)',
+            category: 'Uncategorized',
+            regularPrice: () => faker.finance.amount(100, 200, faker.helpers.arrayElement([1, 2])).replace('.', ','),
+            storeName: String(process.env.VENDOR) + 'store',
+            status: 'publish',
+            stockStatus: false,
+            editProduct: '',
+            saveSuccessMessage: 'Success! The product has been saved successfully. View Product →',
+
+            downloadableOptions: {
+                fileName: 'avatar',
+                fileUrl: 'utils/sampleData/avatar.png',
+                downloadLimit: '200',
+                downloadExpiry: '361',
+            },
+        },
+
+        virtual: {
+            productType: 'simple',
+            productName: () => faker.commerce.productName() + ' (Virtual)',
+            category: 'Uncategorized',
+            regularPrice: () => faker.finance.amount(100, 200, faker.helpers.arrayElement([1, 2])).replace('.', ','),
+            storeName: String(process.env.VENDOR) + 'store',
+            status: 'publish',
+            stockStatus: false,
+            editProduct: '',
+            saveSuccessMessage: 'Success! The product has been saved successfully. View Product →',
         },
 
         variable: {
@@ -358,6 +390,36 @@ export const data = {
             // guest user
             guestName: () => faker.person.firstName('male'),
             guestEmail: () => faker.person.firstName('male') + '@email.com',
+        },
+
+        productInfo: {
+            description: {
+                shortDescription: 'test short description',
+                description: 'test long description',
+            },
+
+            amountDiscount: {
+                minimumOrderAmount: '200',
+                discountPercentage: '10',
+            },
+
+            quantityDiscount: {
+                minimumQuantity: '10',
+                discountPercentage: '10',
+            },
+
+            wholesaleOption: {
+                wholesalePrice: '90',
+                minimumWholesaleQuantity: '10',
+            },
+
+            minMax: {
+                minimumProductQuantity: '1',
+                maximumProductQuantity: '20',
+                minimumAmount: '10',
+                maximumAmount: '1000000',
+                category: 'Uncategorized',
+            },
         },
     },
 
@@ -1012,35 +1074,6 @@ export const data = {
                     closingStyle: 'datewise',
                     vacationMessage: 'We are currently out of order',
                 },
-            },
-
-            // todo:  will be under product object
-            description: {
-                shortDescription: 'test short description',
-                description: 'test long description',
-            },
-
-            amountDiscount: {
-                minimumOrderAmount: '200',
-                discountPercentage: '10',
-            },
-
-            quantityDiscount: {
-                minimumQuantity: '10',
-                discountPercentage: '10',
-            },
-
-            wholesaleOption: {
-                wholesalePrice: '90',
-                minimumWholesaleQuantity: '10',
-            },
-
-            minMax: {
-                minimumProductQuantity: '1',
-                maximumProductQuantity: '20',
-                minimumAmount: '10',
-                maximumAmount: '1000000',
-                category: 'Uncategorized',
             },
 
             storeSettingsSaveSuccessMessage: 'Your information has been saved successfully',

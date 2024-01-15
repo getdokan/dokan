@@ -3465,6 +3465,18 @@ export const selector = {
                 allowOnlyOneQuantityOfThisProductToBeBoughtInASingleOrder: '#\\_sold_individually',
             },
 
+            // Downloadable options
+            downloadableOptions:{
+                addFile:'a.insert-file-row.dokan-btn',
+                addDownloadableFiles: '.insert',
+                fileName: 'input[placeholder="File Name"]',
+                fileUrl: 'input[placeholder="https://"]',
+                chooseFile: 'a.upload_file_button',
+                deleteFile: 'a.dokan-product-delete',
+                downloadLimit: '#\\_download_limit',
+                downloadExpiry: '#\\_download_expiry',
+            },
+
             // Geolocation
             geolocation: {
                 sameAsStore: '#\\_dokan_geolocation_use_store_settings',
@@ -3501,6 +3513,7 @@ export const selector = {
 
             // Shipping
             shipping: {
+                shippingContainer: 'div.dokan-shipping-container.hide_if_virtual',
                 thisProductRequiresShipping: '#\\_disable_shipping',
                 weight: '#\\_weight',
                 length: '#\\_length',
