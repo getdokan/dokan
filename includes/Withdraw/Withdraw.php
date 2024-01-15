@@ -174,7 +174,7 @@ class Withdraw {
     /**
      * Get withdraw charge
      *
-     * @since DOKAN_SINCE
+     * @since 3.9.6
      *
      * @returns int|float
      */
@@ -185,7 +185,7 @@ class Withdraw {
     /**
      * Get withdraw revivable amount after deducting the charge amount.
      *
-     * @since DOKAN_SINCE
+     * @since 3.9.6
      *
      * @returns int|float
      */
@@ -196,7 +196,7 @@ class Withdraw {
     /**
      * Get withdraw charge information.
      *
-     * @since DOKAN_SINCE
+     * @since 3.9.6
      *
      * @returns array
      */
@@ -331,7 +331,7 @@ class Withdraw {
     /**
      * Sets charge.
      *
-     * @since DOKAN_SINCE
+     * @since 3.9.6
      *
      * @param $amount
      *
@@ -346,7 +346,7 @@ class Withdraw {
     /**
      * Set receivable amount
      *
-     * @since DOKAN_SINCE
+     * @since 3.9.6
      *
      * @param $receivable
      *
@@ -361,7 +361,7 @@ class Withdraw {
     /**
      * Sets charge data.
      *
-     * @since DOKAN_SINCE
+     * @since 3.9.6
      *
      * @param $charge_data array
      *
@@ -376,7 +376,7 @@ class Withdraw {
     /**
      * Calculate withdraw charge
      *
-     * @since DOKAN_SINCE
+     * @since 3.9.6
      *
      * @return \WeDevs\Dokan\Withdraw\Withdraw
      */
@@ -403,7 +403,7 @@ class Withdraw {
     /**
      * Returns withdraw data.
      *
-     * @since DOKAN_SINCE
+     * @since 3.9.6
      *
      * @return array
      */
