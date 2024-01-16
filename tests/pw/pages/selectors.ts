@@ -6680,7 +6680,7 @@ export const selector = {
                 storeInfo: '.dokan-store-info',
                 storeAddress: '.dokan-store-address',
                 storePhone: '.dokan-store-phone',
-                // storeEmail: '.dokan-store-email', //todo: doesn't work on lite
+                storeEmail: '.dokan-store-email',
                 // storeRating: '.dokan-store-rating',
                 // storeOpenClose: '.dokan-store-open-close',
                 storeSocial: '.store-social',
