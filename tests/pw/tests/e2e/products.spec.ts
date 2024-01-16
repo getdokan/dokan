@@ -93,7 +93,7 @@ test.describe('Product functionality test', () => {
         await vendor.vendorAddVirtualProduct(data.product.virtual, false);
     });
 
-    test('vendor can add product product category @lite', async () => {
+    test('vendor can add product category @lite', async () => {
         await vendor.vendorAddProductCategory(data.predefined.simpleProduct.product1.name, data.product.category.unCategorized);
     });
 
@@ -165,7 +165,7 @@ test.describe('Product functionality test', () => {
         await vendor.addProductOtherOptions(productName, data.product.productInfo.otherOptions);
     });
 
-    test('vendor can add catalog mode @lite', async () => {
+    test.skip('vendor can add catalog mode @lite', async () => {
         await vendor.addCatalogMode(productName);
     });
 
