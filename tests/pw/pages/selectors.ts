@@ -2241,8 +2241,13 @@ export const selector = {
                     licenseSection: '.appsero-license-settings.appsero-license-section',
                     licenseKeyInput: '.license-input-fields .license-input-key input',
                     activateLicense: '//button[contains(text(),"Activate License")]',
+                    deactivateLicense: 'button.deactive-button',
+                    refreshLicense: 'button.appsero-license-refresh-button',
+                    activateLicenseInfo:'div.active-license-info',
                 },
-                errorNotice: '.notice-error.appsero-license-section',
+
+                successNotice: 'div.notice-success.appsero-license-section',
+                errorNotice: 'div.notice-error.appsero-license-section',
             },
 
             // Dokan Setup Wizard
