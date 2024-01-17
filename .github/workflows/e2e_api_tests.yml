@@ -78,8 +78,7 @@ jobs:
             - name: Composer install and build (Dokan-lite)
               if: success()
               run: |
-                  composer install --no-dev
-                  composer dump-autoload -o
+                composer install --no-dev -o
 
             - name: Npm install and build (Dokan-lite)
               if: success()
