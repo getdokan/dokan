@@ -147,7 +147,7 @@ class Field extends Component {
         }
 
         $field_name = sanitize_key( $this->get_name() );
-        if ( 0 === strpos( $field_name, '_' ) ) {
+        if ( $this->is_prop() && 0 === strpos( $field_name, '_' ) ) {
             $field_name = preg_replace( '/_/', '', $field_name, 1 );
         }
 
