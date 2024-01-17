@@ -3,12 +3,12 @@
  * Plugin Name: Dokan
  * Plugin URI: https://dokan.co/wordpress/
  * Description: An e-commerce marketplace plugin for WordPress. Powered by WooCommerce and weDevs.
- * Version: 3.9.5
+ * Version: 3.9.6
  * Author: weDevs
  * Author URI: https://dokan.co/
  * Text Domain: dokan-lite
  * WC requires at least: 5.0.0
- * WC tested up to: 8.2.2
+ * WC tested up to: 8.4.0
  * Domain Path: /languages/
  * License: GPL2
  */
@@ -54,6 +54,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @property WeDevs\Dokan\Product\Manager $product Instance of Order Manager class
  * @property WeDevs\Dokan\Vendor\Manager $vendor Instance of Vendor Manager Class
  * @property WeDevs\Dokan\BackgroundProcess\Manager $bg_process Instance of WeDevs\Dokan\BackgroundProcess\Manager class
+ * @property WeDevs\Dokan\Withdraw\Manager $withdraw Instance of WeDevs\Dokan\Withdraw\Manager class
  * @property WeDevs\Dokan\Frontend\Frontend $frontend_manager Instance of \WeDevs\Dokan\Frontend\Frontend class
  */
 final class WeDevs_Dokan {
@@ -63,7 +64,7 @@ final class WeDevs_Dokan {
      *
      * @var string
      */
-    public $version = '3.9.5';
+    public $version = '3.9.6';
 
     /**
      * Instance of self
@@ -584,7 +585,7 @@ final class WeDevs_Dokan {
  *
  * @return WeDevs_Dokan
  */
-function dokan() {
+function dokan() { // phpcs:ignore
     return WeDevs_Dokan::init();
 }
 

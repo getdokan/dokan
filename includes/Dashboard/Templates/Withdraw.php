@@ -434,13 +434,16 @@ class Withdraw {
             return;
         }
 
+        /**
+         * @var $last_withdraw \WeDevs\Dokan\Withdraw\Withdraw[]
+         */
         $last_withdraw = dokan()->withdraw->get_withdraw_requests( dokan_get_current_user_id(), 1, 1 );
         $payment_details = __( 'You do not have any approved withdraw yet.', 'dokan-lite' );
 
         if ( ! empty( $last_withdraw ) ) {
-            $last_withdraw_amount      = '<strong>' . wc_price( $last_withdraw[0]->amount ) . '</strong>';
-            $last_withdraw_date        = '<strong><em>' . dokan_format_date( $last_withdraw[0]->date ) . '</em></strong>';
-            $last_withdraw_method_used = '<strong>' . dokan_withdraw_get_method_title( $last_withdraw[0]->method ) . '</strong>';
+            $last_withdraw_amount      = '<strong>' . wc_price( $last_withdraw[0]->get_amount() ) . '</strong>';
+            $last_withdraw_date        = '<strong><em>' . dokan_format_date( $last_withdraw[0]->get_date() ) . '</em></strong>';
+            $last_withdraw_method_used = '<strong>' . dokan_withdraw_get_method_title( $last_withdraw[0]->get_method() ) . '</strong>';
 
             // translators: 1: Last formatted withdraw amount 2: Last formatted withdraw date 3: Last formatted withdraw method used.
             $payment_details = sprintf( __( '%1$s on %2$s to %3$s', 'dokan-lite' ), $last_withdraw_amount, $last_withdraw_date, $last_withdraw_method_used );
@@ -502,9 +505,10 @@ class Withdraw {
         $default_withdraw_method = dokan_withdraw_get_default_method( $current_user_id );
         dokan_get_template_part(
             'withdraw/request-form', '', array(
-				'amount'          => NumberUtil::round( $balance, wc_get_price_decimals(), PHP_ROUND_HALF_DOWN ), // we are setting 12.3456 to 12.34 not 12.35
-				'withdraw_method' => $default_withdraw_method,
-				'payment_methods' => $payment_methods,
+				'amount'           => NumberUtil::round( $balance, wc_get_price_decimals(), PHP_ROUND_HALF_DOWN ), // we are setting 12.3456 to 12.34 not 12.35
+				'withdraw_method'  => $default_withdraw_method,
+				'payment_methods'  => $payment_methods,
+                'withdraw_charges' => dokan_withdraw_get_method_charges(),
             )
         );
     }
