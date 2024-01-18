@@ -85,7 +85,15 @@ test.describe('Product functionality test', () => {
         await vendor.vendorAddExternalProduct(data.product.external, false);
     });
 
-    test('vendor can add product product category @lite', async () => {
+    test('vendor can add downloadable product @lite', async () => {
+        await vendor.vendorAddDownloadableProduct(data.product.downloadable, false);
+    });
+
+    test('vendor can add virtual product @lite', async () => {
+        await vendor.vendorAddVirtualProduct(data.product.virtual, false);
+    });
+
+    test('vendor can add product category @lite', async () => {
         await vendor.vendorAddProductCategory(data.predefined.simpleProduct.product1.name, data.product.category.unCategorized);
     });
 
@@ -133,12 +141,32 @@ test.describe('Product functionality test', () => {
         await vendor.quickEditProduct({ ...data.product.simple, editProduct: productName });
     });
 
+    test('vendor can add product description @lite', async () => {
+        await vendor.addProductDescription(productName, data.product.productInfo.description);
+    });
+
     // test('vendor can add product quantity discount @pro', async ( ) => {
-    // 	await vendor.addProductQuantityDiscount(data.predefined.simpleProduct.product1.name, data.vendor.vendorInfo.quantityDiscount);
+    // 	await vendor.addProductQuantityDiscount(data.predefined.simpleProduct.product1.name, data.product.productInfo.quantityDiscount);
     // });
 
-    test('vendor can add product rma settings @pro', async () => {
-        await vendor.addProductRmaSettings(data.predefined.simpleProduct.product1.name, data.vendor.rma);
+    test('vendor can add product rma options @pro', async () => {
+        await vendor.addProductRmaOptions(productName, data.vendor.rma);
+    });
+
+    test('vendor can add product wholesale options @pro', async () => {
+        await vendor.addProductWholesaleOptions(productName, data.product.productInfo.wholesaleOption);
+    });
+
+    test.skip('vendor can add product min-max options @pro', async () => {
+        await vendor.addProductMinMaxOptions(productName, data.product.productInfo.minMax);
+    });
+
+    test('vendor can add product other options @lite', async () => {
+        await vendor.addProductOtherOptions(productName, data.product.productInfo.otherOptions);
+    });
+
+    test.skip('vendor can add catalog mode @lite', async () => {
+        await vendor.addCatalogMode(productName);
     });
 
     // todo: add more product edit tests -> discount, wholesale, advertising

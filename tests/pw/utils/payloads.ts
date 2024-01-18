@@ -24,6 +24,12 @@ export const payloads = {
         status: 'publish',
     }),
 
+    privacyPolicyPage: {
+        title: 'Privacy Policy',
+        content: 'This Privacy Policy describes how we collect, use, and disclose your personal information in connection with your use of our product.',
+        status: 'publish',
+    },
+
     tocPage: {
         title: 'Terms And Conditions',
         status: 'publish',
@@ -2487,7 +2493,7 @@ export const payloads = {
             flickr: 'http://dokan.test',
         },
         phone: '0123456789',
-        show_email: true, // todo:  doesn't work on lite
+        show_email: 'yes',
         address: {
             street_1: 'abc street',
             street_2: 'xyz street',
@@ -2503,17 +2509,16 @@ export const payloads = {
         gravatar_id: 0,
         products_per_page: 12,
         show_more_product_tab: true,
-        toc_enabled: true, // todo:  doesn't work on lite
-        store_toc: 'test Vendor terms and conditions',
-        featured: true,
-        rating: {
-            rating: '4.00', // todo:  doesn't work on lite
-            count: 1,
-        },
+        enable_tnc: 'on',
+        store_tnc: 'test Vendor terms and conditions',
+        featured: 'yes',
+        // rating: {
+        //     rating: '4.00', // todo:  doesn't work on lite [might not implemented on lite]
+        //     count: 1,
+        // },
         enabled: true,
         payment: {
             paypal: {
-                0: 'email',
                 email: 'paypal@g.c',
             },
             bank: {
@@ -2526,7 +2531,6 @@ export const payloads = {
                 iban: '123456',
                 swift: '12345',
             },
-            stripe: false,
         },
         trusted: true,
         // store_open_close: {
@@ -2535,49 +2539,49 @@ export const payloads = {
         // 	open_notice: 'Store is open',
         // 	close_notice: 'Store is closed',
         // },
-        store_open_close: {
-            // todo:  doesn't work on lite
-            enabled: true,
-            time: {
-                monday: {
-                    status: 'open', // 'close'
-                    opening_time: ['12:00 am'], // []
-                    closing_time: ['11:30 pm'], // []
-                },
-                tuesday: {
-                    status: 'open',
-                    opening_time: ['12:00 am'],
-                    closing_time: ['11:30 pm'],
-                },
-                wednesday: {
-                    status: 'open',
-                    opening_time: ['12:00 am'],
-                    closing_time: ['11:30 pm'],
-                },
-                thursday: {
-                    status: 'open',
-                    opening_time: ['12:00 am'],
-                    closing_time: ['11:30 pm'],
-                },
-                friday: {
-                    status: 'open',
-                    opening_time: ['12:00 am'],
-                    closing_time: ['11:30 pm'],
-                },
-                saturday: {
-                    status: 'open',
-                    opening_time: ['12:00 am'],
-                    closing_time: ['11:30 pm'],
-                },
-                sunday: {
-                    status: 'open',
-                    opening_time: ['12:00 am'],
-                    closing_time: ['11:30 pm'],
-                },
-            },
-            open_notice: 'Store is open',
-            close_notice: 'Store is closed',
-        },
+        // store_open_close: {
+        //     // todo:  isn't implemented on dokan create store api
+        //     enabled: 'yes', // todo:
+        //     time: {
+        //         monday: {
+        //             status: 'open', // 'close'
+        //             opening_time: ['12:00 am'], // []
+        //             closing_time: ['11:30 pm'], // []
+        //         },
+        //         tuesday: {
+        //             status: 'open',
+        //             opening_time: ['12:00 am'],
+        //             closing_time: ['11:30 pm'],
+        //         },
+        //         wednesday: {
+        //             status: 'open',
+        //             opening_time: ['12:00 am'],
+        //             closing_time: ['11:30 pm'],
+        //         },
+        //         thursday: {
+        //             status: 'open',
+        //             opening_time: ['12:00 am'],
+        //             closing_time: ['11:30 pm'],
+        //         },
+        //         friday: {
+        //             status: 'open',
+        //             opening_time: ['12:00 am'],
+        //             closing_time: ['11:30 pm'],
+        //         },
+        //         saturday: {
+        //             status: 'open',
+        //             opening_time: ['12:00 am'],
+        //             closing_time: ['11:30 pm'],
+        //         },
+        //         sunday: {
+        //             status: 'open',
+        //             opening_time: ['12:00 am'],
+        //             closing_time: ['11:30 pm'],
+        //         },
+        //     },
+        //     open_notice: 'Store is open',
+        //     close_notice: 'Store is closed',
+        // },
         company_name: '',
         vat_number: '',
         company_id_number: '',

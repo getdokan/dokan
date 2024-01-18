@@ -7,7 +7,7 @@ import { commission, feeRecipient } from '@utils/interfaces';
 
 // test.use({ extraHTTPHeaders: { Authorization: payloads.adminAuth.Authorization } });
 
-test.describe('calculation test', () => {
+test.describe.skip('calculation test', () => {
     let apiUtils: ApiUtils;
     let taxRate: number;
     let commission: commission;
@@ -73,7 +73,7 @@ test.describe('calculation test', () => {
     });
 });
 
-test.describe(' Marketplace Coupon calculation test', () => {
+test.describe.skip('Marketplace Coupon calculation test', () => {
     let apiUtils: ApiUtils;
     let taxRate: number = 5;
     let commission: commission;

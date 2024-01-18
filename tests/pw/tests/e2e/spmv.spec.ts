@@ -52,7 +52,7 @@ test.describe('Vendor SPMV test', () => {
         await vendor.vendorSpmvRenderProperly();
     });
 
-    test('vendor can search similar product on spmv page @pro ', async () => {
+    test('vendor can search similar product on spmv page @pro', async () => {
         await vendor.searchSimilarProduct(productName, 'spmv');
     });
 

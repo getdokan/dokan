@@ -216,6 +216,9 @@ function dokan_sync_insert_order( $order_id ) {
     global $wpdb;
 
     $order = wc_get_order( $order_id );
+    if ( ! $order || $order instanceof WC_Subscription ) {
+        return;
+    }
 
     if ( dokan()->order->is_order_already_synced( $order ) ) {
         return;

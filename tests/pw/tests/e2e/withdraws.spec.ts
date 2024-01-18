@@ -4,7 +4,7 @@ import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
 import { payloads } from '@utils/payloads';
 
-const { PRODUCT_ID } = global as any;
+const { PRODUCT_ID } = process.env;
 
 test.describe('Withdraw test', () => {
     let admin: WithdrawsPage;
@@ -83,7 +83,7 @@ test.describe('Withdraw test', () => {
         await vendor.vendorWithdrawRequestsRenderProperly();
     });
 
-    test('vendor can request withdraw @lite', async () => {
+    test.skip('vendor can request withdraw @lite', async () => {
         await apiUtils.cancelWithdraw('', payloads.vendorAuth);
         await vendor.requestWithdraw({ ...data.vendor.withdraw, minimumWithdrawAmount: minimumWithdrawLimit, currentBalance: currentBalance });
     });

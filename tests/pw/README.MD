@@ -120,13 +120,13 @@ GMAP=ABCD1234EFGH5678                   [Google Maps API key]
 LICENSE_KEY=ABCD1234EFGH5678            [Dokan License key]
 DOKAN_PRO=true                          [Dokan pro active status]
 
-# Playwright Configuration              
+# Playwright Configuration
 BASE_URL=https://example.com            [Base URL of the test site]
 CI=true                                 [CI/CD environment indicator]
 SLOWMO=10                               [Slow down test execution by provided seconds] [optional]
 NO_SETUP=true                           [Whether not to run setup tests before actual tests] [optional]
 
-# Database Configuration                
+# Database Configuration
 DB_HOST_NAME=localhost                  [Database server hostname or IP address]
 DB_USER_NAME=dbuser                     [Database username]
 DB_USER_PASSWORD=dbpassword             [Database user password]

@@ -1,8 +1,6 @@
 import { test, Page } from '@playwright/test';
 import { VendorAnalyticsPage } from '@pages/vendorAnalyticsPage';
-// import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
-// import { payloads } from '@utils/payloads';
 
 test.describe('Vendor analytics test', () => {
     let vendor: VendorAnalyticsPage;
@@ -13,8 +11,6 @@ test.describe('Vendor analytics test', () => {
         const vendorContext = await browser.newContext(data.auth.vendorAuth);
         vPage = await vendorContext.newPage();
         vendor = new VendorAnalyticsPage(vPage);
-
-        // apiUtils = new ApiUtils(request);
     });
 
     test.afterAll(async () => {

@@ -112,11 +112,11 @@ export const dbData = {
             withdraw_charges: {
                 paypal: {
                     fixed: '0',
-                    percentage: '0',
+                    percentage: '5',
                 },
                 bank: {
-                    fixed: '0',
-                    percentage: '0',
+                    fixed: '5',
+                    percentage: '',
                 },
                 skrill: {
                     fixed: '0',
@@ -127,7 +127,7 @@ export const dbData = {
                     percentage: '0',
                 },
             },
-            withdraw_limit: '5',
+            withdraw_limit: '10',
             withdraw_order_status: {
                 'wc-completed': 'wc-completed',
                 'wc-processing': 'wc-processing',

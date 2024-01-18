@@ -46,7 +46,7 @@ test.describe('Follow stores functionality test', () => {
         await vendor.vendorFollowersRenderProperly();
     });
 
-    test('vendor can view followers @pro ', async () => {
+    test('vendor can view followers @pro', async () => {
         await vendor.vendorViewFollowers();
     });
 });

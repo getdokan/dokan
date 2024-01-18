@@ -66,7 +66,7 @@ test.describe('request quote api test', () => {
         expect(responseBody).toBeTruthy();
     });
 
-    test('update batch request quote @pro ', async () => {
+    test('update batch request quote @pro', async () => {
         const allRequestQuoteIds = (await apiUtils.getAllQuoteRequests()).map((a: { id: unknown }) => a.id);
         const [response, responseBody] = await apiUtils.put(endPoints.updateBatchRequestQuotes, { data: { trash: allRequestQuoteIds } });
         expect(response.ok()).toBeTruthy();
