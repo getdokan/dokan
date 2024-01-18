@@ -2241,10 +2241,11 @@ export const selector = {
                     licenseSection: '.appsero-license-settings.appsero-license-section',
                     licenseKeyInput: '.license-input-fields .license-input-key input',
                     activateLicense: '//button[contains(text(),"Activate License")]',
-                    deactivateLicense: 'button.deactive-button',
-                    refreshLicense: 'button.appsero-license-refresh-button',
-                    activateLicenseInfo:'div.active-license-info',
                 },
+
+                deactivateLicense: 'button.deactive-button',
+                refreshLicense: 'button.appsero-license-refresh-button',
+                activateLicenseInfo: 'div.active-license-info',
 
                 successNotice: 'div.notice-success.appsero-license-section',
                 errorNotice: 'div.notice-error.appsero-license-section',
@@ -3358,7 +3359,7 @@ export const selector = {
             // Product Sub Options
             numberOfRowsFound: '#dokan-product-list-table tbody tr',
             productCell: (productName: string) => `//a[contains(text(),'${productName}')]/../..`,
-            productLink: (productName: string) => `//a[contains(text(),'${productName}')]`,
+            productLink: (productName: string) => `//strong//a[contains(text(),'${productName}')]`,
             editProduct: (productName: string) => `//a[contains(text(),'${productName}')]/../..//span[@class="edit"]//a`,
             buyAdvertisement: (productName: string) => `//a[contains(text(),'${productName}')]/../../..//td[@class="product-advertisement-td"]//span`,
             advertisementStatus: (productName: string) => `//a[contains(text(),'${productName}')]/../../..//td[@class="product-advertisement-td"]//i[contains(@class,'fa fa-circle')]`,

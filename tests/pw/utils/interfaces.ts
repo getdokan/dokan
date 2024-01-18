@@ -765,6 +765,19 @@ export interface vendor {
             subject: string;
             message: string;
         };
+
+        amountDiscount: {
+            minimumOrderAmount: string;
+            discountPercentage: string;
+        };
+
+        minMax: {
+            minimumProductQuantity: string;
+            maximumProductQuantity: string;
+            minimumAmount: string;
+            maximumAmount: string;
+            category: string;
+        };
     };
 
     shipping: {

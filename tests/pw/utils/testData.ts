@@ -421,13 +421,12 @@ export const data = {
                 category: 'Uncategorized',
             },
 
-            otherOptions:{
-                productStatus: 'draft' , // publish, 
-                visibility: 'hidden' , // visible, catalog, search, hidden
-                purchaseNote: 'test purchase note'
-            }
+            otherOptions: {
+                productStatus: 'draft', // publish,
+                visibility: 'hidden', // visible, catalog, search, hidden
+                purchaseNote: 'test purchase note',
+            },
         },
-
     },
 
     // store
@@ -1111,6 +1110,19 @@ export const data = {
             sendEmail: {
                 subject: 'test email subject',
                 message: 'test email message',
+            },
+
+            amountDiscount: {
+                minimumOrderAmount: '200',
+                discountPercentage: '10',
+            },
+
+            minMax: {
+                minimumProductQuantity: '1',
+                maximumProductQuantity: '20',
+                minimumAmount: '10',
+                maximumAmount: '1000000',
+                category: 'Uncategorized',
             },
         },
 

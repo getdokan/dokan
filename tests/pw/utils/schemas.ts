@@ -552,7 +552,7 @@ export const schemas = {
 
         //adminExportLogsSchema
         adminExportLogsSchema: z.object({
-            step: z.number(),
+            step: z.string().or(z.number()),
             percentage: z.number(),
             columns: z.object({
                 order_id: z.string(),

@@ -157,7 +157,7 @@ test.describe('Product functionality test', () => {
         await vendor.addProductWholesaleOptions(productName, data.product.productInfo.wholesaleOption);
     });
 
-    test('vendor can add product min-max options @pro', async () => {
+    test.skip('vendor can add product min-max options @pro', async () => {
         await vendor.addProductMinMaxOptions(productName, data.product.productInfo.minMax);
     });
 

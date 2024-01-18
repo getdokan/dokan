@@ -2513,7 +2513,7 @@ export const payloads = {
         store_tnc: 'test Vendor terms and conditions',
         featured: 'yes',
         // rating: {
-        //     rating: '4.00', // todo:  doesn't work on lite [might not implemented on lite] 
+        //     rating: '4.00', // todo:  doesn't work on lite [might not implemented on lite]
         //     count: 1,
         // },
         enabled: true,
@@ -2541,7 +2541,7 @@ export const payloads = {
         // },
         // store_open_close: {
         //     // todo:  isn't implemented on dokan create store api
-        //     enabled: 'yes', // todo: 
+        //     enabled: 'yes', // todo:
         //     time: {
         //         monday: {
         //             status: 'open', // 'close'
