@@ -231,7 +231,7 @@ export class BookingPage extends VendorPage {
         await this.searchBookingProduct(productName);
         await this.hover(selector.vendor.vBooking.productCell(productName));
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.booking, selector.vendor.vBooking.duplicate(productName));
-        await this.toContainText(selector.vendor.vBooking.dokanSuccessMessage, 'Product succesfully duplicated');
+        await this.toContainText(selector.vendor.vBooking.dokanSuccessMessage, 'Product successfully duplicated');
     }
 
     // delete booking product

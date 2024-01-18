@@ -17,6 +17,7 @@ declare global {
             PRODUCT_ID: string;
             V2_PRODUCT_ID: string;
             GMAP: string;
+            LICENSE_KEY: string;
             DOKAN_PRO: string;
             BASE_URL: string;
             QUERY: string;

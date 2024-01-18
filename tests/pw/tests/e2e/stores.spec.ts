@@ -4,7 +4,7 @@ import { StoresPage } from '@pages/storesPage';
 import { data } from '@utils/testData';
 // import { payloads } from '@utils/payloads';
 
-const { VENDOR_ID } = global as any;
+const { VENDOR_ID } = process.env;
 
 test.describe('Stores test', () => {
     let admin: StoresPage;

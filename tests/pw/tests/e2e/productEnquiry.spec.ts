@@ -6,7 +6,7 @@ import { data } from '@utils/testData';
 import { dbData } from '@utils/dbData';
 import { payloads } from '@utils/payloads';
 
-const { VENDOR_ID, CUSTOMER_ID } = global as any;
+const { VENDOR_ID, CUSTOMER_ID } = process.env;
 
 test.describe('Product Enquiry test', () => {
     // let admin: ProductEnquiryPage;

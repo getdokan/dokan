@@ -286,8 +286,7 @@ export class ProductsPage extends AdminPage {
     // products
 
     // vendor add product
-    async addProduct(product: product['simple'] | product['variable'] | product['simpleSubscription'] | product['external']): Promise<void> {
-        const productName = product.productName();
+    async addProduct(productName: string): Promise<void> {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.products);
         await this.clickAndWaitForLoadState(selector.vendor.product.create.addNewProduct);
         await this.clearAndType(selector.vendor.product.edit.title, productName);
@@ -296,12 +295,13 @@ export class ProductsPage extends AdminPage {
     // vendor add simple product
     async vendorAddSimpleProduct(product: product['simple'] | product['variable'] | product['simpleSubscription'] | product['external'], productPopup = false): Promise<void> {
         const productName = product.productName();
+        const productPrice = product.regularPrice();
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.products);
         if (productPopup) {
             await this.click(selector.vendor.product.create.addNewProduct);
             await this.waitForVisibleLocator(selector.vendor.product.create.productName);
             await this.clearAndType(selector.vendor.product.create.productName, productName);
-            await this.clearAndType(selector.vendor.product.create.productPrice, product.regularPrice());
+            await this.clearAndType(selector.vendor.product.create.productPrice, productPrice);
             // await this.addProductCategory(product.category);
 
             await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.vendor.product.create.createProduct);
@@ -310,17 +310,63 @@ export class ProductsPage extends AdminPage {
         } else {
             await this.clickAndWaitForLoadState(selector.vendor.product.create.addNewProduct);
             await this.clearAndType(selector.vendor.product.edit.title, productName);
-            await this.clearAndType(selector.vendor.product.edit.price, product.regularPrice());
+            await this.clearAndType(selector.vendor.product.edit.price, productPrice);
             // await this.addProductCategory(product.category);
 
             await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.products, selector.vendor.product.saveProduct, 302);
             await this.toContainText(selector.vendor.product.dokanMessage, 'The product has been saved successfully. ');
+            await this.toHaveValue(selector.vendor.product.edit.title, productName);
+            await this.toHaveValue(selector.vendor.product.create.productPrice, productPrice);
         }
+    }
+
+    // vendor add downloadble product
+    async vendorAddDownloadableProduct(product: product['downloadable'], productPopup = false): Promise<void> {
+        const productName = product.productName();
+        const productPrice = product.regularPrice();
+        productPopup ? await this.vendorAddSimpleProduct(product, productPopup) : await this.addProduct(productName);
+        await this.clearAndType(selector.vendor.product.create.productPrice, productPrice);
+        await this.check(selector.vendor.product.edit.downloadable);
+        // await this.addProductCategory(product.category);
+
+        await this.click(selector.vendor.product.downloadableOptions.addFile);
+        await this.clearAndType(selector.vendor.product.downloadableOptions.fileName, product.downloadableOptions.fileName);
+        await this.click(selector.vendor.product.downloadableOptions.chooseFile);
+        await this.uploadMedia(product.downloadableOptions.fileUrl);
+        await this.clearAndType(selector.vendor.product.downloadableOptions.downloadLimit, product.downloadableOptions.downloadLimit);
+        await this.clearAndType(selector.vendor.product.downloadableOptions.downloadExpiry, product.downloadableOptions.downloadExpiry);
+
+        await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.products, selector.vendor.product.saveProduct, 302);
+        await this.toContainText(selector.vendor.product.updatedSuccessMessage, product.saveSuccessMessage);
+        await this.toHaveValue(selector.vendor.product.edit.title, productName);
+        await this.toHaveValue(selector.vendor.product.create.productPrice, productPrice);
+        await this.toBeChecked(selector.vendor.product.edit.downloadable);
+        await this.toHaveValue(selector.vendor.product.downloadableOptions.fileName, product.downloadableOptions.fileName);
+        await this.toHaveValue(selector.vendor.product.downloadableOptions.downloadLimit, product.downloadableOptions.downloadLimit);
+        await this.toHaveValue(selector.vendor.product.downloadableOptions.downloadExpiry, product.downloadableOptions.downloadExpiry);
+    }
+
+    // vendor add vitual product
+    async vendorAddVirtualProduct(product: product['simple'], productPopup = false): Promise<void> {
+        const productName = product.productName();
+        const productPrice = product.regularPrice();
+        productPopup ? await this.vendorAddSimpleProduct(product, productPopup) : await this.addProduct(productName);
+        await this.clearAndType(selector.vendor.product.create.productPrice, productPrice);
+        await this.check(selector.vendor.product.edit.virtual);
+        // await this.addProductCategory(product.category);
+
+        await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.products, selector.vendor.product.saveProduct, 302);
+        await this.toContainText(selector.vendor.product.updatedSuccessMessage, product.saveSuccessMessage);
+        await this.toHaveValue(selector.vendor.product.edit.title, productName);
+        await this.toHaveValue(selector.vendor.product.create.productPrice, productPrice);
+        await this.toBeChecked(selector.vendor.product.edit.virtual);
+        await this.notToBeVisible(selector.vendor.product.shipping.shippingContainer);
     }
 
     // vendor add variable product
     async vendorAddVariableProduct(product: product['variable'], productPopup = false): Promise<void> {
-        productPopup ? await this.vendorAddSimpleProduct(product, productPopup) : await this.addProduct(product);
+        const productName = product.productName();
+        productPopup ? await this.vendorAddSimpleProduct(product, productPopup) : await this.addProduct(productName);
 
         // edit product
         await this.selectByValue(selector.vendor.product.edit.productType, product.productType);
@@ -340,11 +386,13 @@ export class ProductsPage extends AdminPage {
         await this.click(selector.vendor.product.attribute.okVariationPrice);
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, selector.vendor.product.saveProduct, 302);
         await this.toContainText(selector.vendor.product.updatedSuccessMessage, product.saveSuccessMessage);
+        await this.toHaveValue(selector.vendor.product.edit.title, productName);
     }
 
     // vendor add simple subscription product
     async vendorAddSimpleSubscription(product: product['simpleSubscription'], productPopup = false): Promise<void> {
-        productPopup ? await this.vendorAddSimpleProduct(product, productPopup) : await this.addProduct(product);
+        const productName = product.productName();
+        productPopup ? await this.vendorAddSimpleProduct(product, productPopup) : await this.addProduct(productName);
         // edit product
         await this.selectByValue(selector.vendor.product.edit.productType, product.productType);
         await this.type(selector.vendor.product.edit.subscriptionPrice, product.subscriptionPrice());
@@ -355,11 +403,14 @@ export class ProductsPage extends AdminPage {
         await this.selectByValue(selector.vendor.product.edit.subscriptionTrialPeriod, product.subscriptionTrialPeriod);
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, selector.vendor.product.saveProduct, 302);
         await this.toContainText(selector.vendor.product.updatedSuccessMessage, product.saveSuccessMessage);
+        await this.toHaveValue(selector.vendor.product.edit.title, productName);
+        //todo: add more assettions
     }
 
     // vendor add variable subscription product
     async vendorAddVariableSubscription(product: product['variableSubscription'], productPopup = false): Promise<void> {
-        productPopup ? await this.vendorAddSimpleProduct(product, productPopup) : await this.addProduct(product);
+        const productName = product.productName();
+        productPopup ? await this.vendorAddSimpleProduct(product, productPopup) : await this.addProduct(productName);
         // edit product
         await this.selectByValue(selector.vendor.product.edit.productType, product.productType);
         // add variation
@@ -378,11 +429,14 @@ export class ProductsPage extends AdminPage {
         await this.click(selector.vendor.product.attribute.okVariationPrice);
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, selector.vendor.product.saveProduct, 302);
         await this.toContainText(selector.vendor.product.updatedSuccessMessage, product.saveSuccessMessage);
+        await this.toHaveValue(selector.vendor.product.edit.title, productName);
+        //todo: add more assettions
     }
 
     // vendor add external product
     async vendorAddExternalProduct(product: product['external'], productPopup = false): Promise<void> {
-        productPopup ? await this.vendorAddSimpleProduct(product, productPopup) : await this.addProduct(product);
+        const productName = product.productName();
+        productPopup ? await this.vendorAddSimpleProduct(product, productPopup) : await this.addProduct(productName);
         // edit product
         await this.selectByValue(selector.vendor.product.edit.productType, product.productType);
         await this.type(selector.vendor.product.edit.productUrl, this.getBaseUrl() + product.productUrl);
@@ -390,6 +444,8 @@ export class ProductsPage extends AdminPage {
         await this.clearAndType(selector.vendor.product.edit.price, product.regularPrice());
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, selector.vendor.product.saveProduct, 302);
         await this.toContainText(selector.vendor.product.updatedSuccessMessage, product.saveSuccessMessage);
+        await this.toHaveValue(selector.vendor.product.edit.title, productName);
+        //todo: add more assettions
     }
 
     // go to product edit
@@ -502,18 +558,29 @@ export class ProductsPage extends AdminPage {
 
     // product edit
 
+    // add product description
+    async addProductDescription(productName: string, description: product['productInfo']['description']): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.typeFrameSelector(selector.vendor.product.shortDescription.shortDescriptionIframe, selector.vendor.product.shortDescription.shortDescriptionHtmlBody, description.shortDescription);
+        await this.typeFrameSelector(selector.vendor.product.description.descriptionIframe, selector.vendor.product.description.descriptionHtmlBody, description.description);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, selector.vendor.product.saveProduct, 302);
+        await this.toContainText(selector.vendor.product.updatedSuccessMessage, data.product.createUpdateSaveSuccessMessage);
+        // todo: add more assertions
+    }
+
     // add product quantity discount
-    async addProductQuantityDiscount(productName: string, quantityDiscount: vendor['vendorInfo']['quantityDiscount']): Promise<void> {
+    async addProductQuantityDiscount(productName: string, quantityDiscount: product['productInfo']['quantityDiscount']): Promise<void> {
         await this.goToProductEdit(productName);
         await this.check(selector.vendor.product.discount.enableBulkDiscount); // todo: need to fix
         await this.clearAndType(selector.vendor.product.discount.lotMinimumQuantity, quantityDiscount.minimumQuantity);
         await this.clearAndType(selector.vendor.product.discount.lotDiscountInPercentage, quantityDiscount.discountPercentage);
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, selector.vendor.product.saveProduct, 302);
         await this.toContainText(selector.vendor.product.updatedSuccessMessage, data.product.createUpdateSaveSuccessMessage);
+        // todo: add more assertions
     }
 
-    // vendor add product rma settings
-    async addProductRmaSettings(productName: string, rma: vendor['rma']): Promise<void> {
+    // vendor add product rma options
+    async addProductRmaOptions(productName: string, rma: vendor['rma']): Promise<void> {
         await this.goToProductEdit(productName);
         await this.check(selector.vendor.product.rma.overrideYourDefaultRmaSettingsForThisProduct);
         await this.clearAndType(selector.vendor.product.rma.label, rma.label);
@@ -530,6 +597,67 @@ export class ProductsPage extends AdminPage {
         }
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, selector.vendor.product.saveProduct, 302);
         await this.toContainText(selector.vendor.product.updatedSuccessMessage, data.product.createUpdateSaveSuccessMessage);
+        //todo: add more assertions
+    }
+
+    // add product Wholesale options
+    async addProductWholesaleOptions(productName: string, wholesaleOption: product['productInfo']['wholesaleOption']): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.check(selector.vendor.product.wholesale.enableWholeSaleForThisProduct);
+        await this.clearAndType(selector.vendor.product.wholesale.wholesalePrice, wholesaleOption.wholesalePrice);
+        await this.clearAndType(selector.vendor.product.wholesale.minimumQuantityForWholesale, wholesaleOption.minimumWholesaleQuantity);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, selector.vendor.product.saveProduct, 302);
+        await this.toContainText(selector.vendor.product.updatedSuccessMessage, data.product.createUpdateSaveSuccessMessage);
+        await this.toHaveValue(selector.vendor.product.wholesale.wholesalePrice, wholesaleOption.wholesalePrice);
+        await this.toHaveValue(selector.vendor.product.wholesale.minimumQuantityForWholesale, wholesaleOption.minimumWholesaleQuantity);
+    }
+
+    // add product min-max options
+    async addProductMinMaxOptions(productName: string, minMaxOption: product['productInfo']['minMax']): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.check(selector.vendor.product.minMax.enableMinMaxRulesThisProduct);
+        await this.clearAndType(selector.vendor.product.minMax.minimumQuantity, minMaxOption.minimumProductQuantity);
+        await this.clearAndType(selector.vendor.product.minMax.maximumQuantity, minMaxOption.maximumProductQuantity);
+        await this.clearAndType(selector.vendor.product.minMax.minimumAmount, minMaxOption.minimumAmount);
+        await this.clearAndType(selector.vendor.product.minMax.maximumAmount, minMaxOption.maximumAmount);
+        await this.check(selector.vendor.product.minMax.orderRulesDoNotCount);
+        await this.check(selector.vendor.product.minMax.categoryRulesExclude);
+
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, selector.vendor.product.saveProduct, 302);
+        await this.toContainText(selector.vendor.product.updatedSuccessMessage, data.product.createUpdateSaveSuccessMessage);
+        await this.toBeChecked(selector.vendor.product.minMax.enableMinMaxRulesThisProduct);
+        await this.toHaveValue(selector.vendor.product.minMax.minimumQuantity, minMaxOption.minimumProductQuantity);
+        await this.toHaveValue(selector.vendor.product.minMax.maximumQuantity, minMaxOption.maximumProductQuantity);
+        await this.toHaveValue(selector.vendor.product.minMax.minimumAmount, minMaxOption.minimumAmount);
+        await this.toHaveValue(selector.vendor.product.minMax.maximumAmount, minMaxOption.maximumAmount);
+        await this.toBeChecked(selector.vendor.product.minMax.orderRulesDoNotCount);
+        await this.toBeChecked(selector.vendor.product.minMax.categoryRulesExclude);
+    }
+
+    // add product other (product status, visibility, purchase note, reviews) options
+    async addProductOtherOptions(productName: string, otherOption: product['productInfo']['otherOptions']): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.selectByValue(selector.vendor.product.otherOptions.productStatus, otherOption.productStatus);
+        await this.selectByValue(selector.vendor.product.otherOptions.visibility, otherOption.visibility);
+        await this.clearAndType(selector.vendor.product.otherOptions.purchaseNote, otherOption.purchaseNote);
+        await this.check(selector.vendor.product.otherOptions.enableProductReviews);
+
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, selector.vendor.product.saveProduct, 302);
+        await this.toContainText(selector.vendor.product.updatedSuccessMessage, data.product.createUpdateSaveSuccessMessage);
+        //todo: add more assertion
+        await this.toHaveValue(selector.vendor.product.otherOptions.purchaseNote, otherOption.purchaseNote);
+        await this.toBeChecked(selector.vendor.product.otherOptions.enableProductReviews);
+    }
+
+    // add product description
+    async addCatalogMode(productName: string): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.check(selector.vendor.product.catalogMode.removeAddToCart);
+        await this.check(selector.vendor.product.catalogMode.hideProductPrice);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, selector.vendor.product.saveProduct, 302);
+        await this.toContainText(selector.vendor.product.updatedSuccessMessage, data.product.createUpdateSaveSuccessMessage);
+        await this.toBeChecked(selector.vendor.product.catalogMode.removeAddToCart);
+        await this.toBeChecked(selector.vendor.product.catalogMode.hideProductPrice);
     }
 
     // quick edit product
@@ -549,7 +677,7 @@ export class ProductsPage extends AdminPage {
         await this.searchProduct(productName);
         await this.hover(selector.vendor.product.productCell(productName));
         await this.clickAndAcceptAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, selector.vendor.product.duplicate(productName));
-        await this.toContainText(selector.vendor.product.dokanSuccessMessage, 'Product succesfully duplicated');
+        await this.toContainText(selector.vendor.product.dokanSuccessMessage, 'Product successfully duplicated');
     }
 
     // permanently delete product
@@ -585,5 +713,19 @@ export class ProductsPage extends AdminPage {
         }
 
         await this.clickAndAcceptAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, selector.vendor.product.bulkActions.applyAction);
+    }
+
+    // upload media // todo: move to base-page and merge with wpUploadFile
+    async uploadMedia(file: string) {
+        await this.wait(0.5);
+        const uploadedMediaIsVisible = await this.isVisible(selector.wpMedia.uploadedMediaFirst);
+        if (uploadedMediaIsVisible) {
+            await this.click(selector.wpMedia.uploadedMediaFirst);
+        } else {
+            await this.uploadFile(selector.wpMedia.selectFilesInput, file);
+            const isSelectDisabled = await this.isDisabled(selector.wpMedia.select);
+            isSelectDisabled && (await this.click(selector.wpMedia.selectUploadedMedia));
+            await this.click(selector.wpMedia.select);
+        }
     }
 }
