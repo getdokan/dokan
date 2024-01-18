@@ -19,7 +19,8 @@
                 "WP_DEBUG_DISPLAY": "true"
             },
             "mappings": {
-                ".htaccess": ".htaccess"
+                ".htaccess": ".htaccess",
+                "wp-content/debug.log": "./playwright/debug.log"
             }
         }
     }
