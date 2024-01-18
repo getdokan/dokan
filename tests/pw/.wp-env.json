@@ -20,7 +20,7 @@
             },
             "mappings": {
                 ".htaccess": ".htaccess",
-                "wp-content/debug.log": "./playwright/debug.log"
+                "wp-content/debug.log": "./debuglog/debug.log"
             }
         }
     }

@@ -222,6 +222,7 @@ jobs:
               with:
                   name: test-artifact
                   path: |
+                      tests/pw/debuglog
                       tests/pw/playwright
                       tests/pw/playwright-report
                   if-no-files-found: ignore
