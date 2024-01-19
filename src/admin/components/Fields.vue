@@ -361,8 +361,7 @@
                         <input
                           type="text"
                           class="regular-text medium"
-                          :value="fieldValue[fieldData.name]"
-                          @input="event => inputValueHandler( fieldData.name, event.target.value, fieldValue[fieldData.name] )"
+                          v-model="repeatableItem[fieldData.name]"
                         />
                         <a href="#" class="button dokan-repetable-add-item-btn" @click.prevent="addItem( fieldData.type, fieldData.name )">
                             <span class="dashicons dashicons-plus-alt2"></span>
@@ -727,16 +726,28 @@
                     return;
                 }
 
-                this.fieldValue[ name ].push( {
+                let oldData = JSON.parse( JSON.stringify( this.fieldValue[ name ] ) );
+                let newData = [
+                    ...oldData,
+                    {
                         id    : this.repeatableItem[ name ].trim().replace(/\s+/g, '_').toLowerCase(),
                         value : this.repeatableItem[ name ]
                     }
-                );
+                ];
+
+                newData = this.validateInputData( this.fieldData.name, newData, oldData, this.fieldData );
+
+                this.fieldValue[ name ] = newData;
                 this.repeatableItem[ name ] = '';
             },
 
             removeItem( optionVal, name ) {
-                this.fieldValue[name].splice( optionVal, 1 );
+                let oldData = JSON.parse( JSON.stringify( this.fieldValue[name] ) );
+                let newData = JSON.parse( JSON.stringify( this.fieldValue[name] ) );
+                newData.splice( optionVal, 1 );
+
+
+                this.fieldValue[name] = this.validateInputData( this.fieldData.name, newData, oldData, this.fieldData );
             },
 
             haveCondition( fieldData ) {
@@ -824,8 +835,10 @@
                     return;
                 }
 
-                this.socialChecked                     = status ? 'on' : 'off';
-                this.fieldValue[ this.fieldData[ 'enable_status' ]['name'] ]          = status ? 'on' : 'off';
+                let isChecked = this.validateInputData( this.fieldData[ 'enable_status' ]['name'], status ? 'on' : 'off', this.fieldValue[ this.fieldData[ 'enable_status' ]['name'] ], this.fieldData  );
+
+                this.socialChecked                                           = isChecked;
+                this.fieldValue[ this.fieldData[ 'enable_status' ]['name'] ] = isChecked;
             },
 
             hasError( key ) {
