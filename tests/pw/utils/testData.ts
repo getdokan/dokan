@@ -29,6 +29,8 @@ export const data = {
         DB_PREFIX: process.env.DB_PREFIX,
     },
 
+    systemInfo: 'playwright/systemInfo.json',
+
     auth: {
         adminAuthFile: 'playwright/.auth/adminStorageState.json',
         vendorAuthFile: 'playwright/.auth/vendorStorageState.json',
@@ -64,6 +66,10 @@ export const data = {
         plugins: ['basic-auth', 'dokan', 'dokan-pro', 'woocommerce', 'woocommerce-bookings', 'woocommerce-product-addons', 'woocommerce-simple-auctions', 'woocommerce-subscriptions'],
         dokanPro: ['dokan-pro'],
         activeClass: 'active',
+        pluginName: {
+            dokanlite: 'dokan-lite',
+            dokanPro: 'dokan-pro',
+        },
     },
 
     woocommerce: {
@@ -75,7 +81,7 @@ export const data = {
         publishSuccessMessage: 'Product published. ',
         draftUpdateSuccessMessage: 'Product draft updated. ',
         pendingProductUpdateSuccessMessage: 'Product updated. ',
-        createUpdateSaveSuccessMessage: 'Success! The product has been saved successfully. View Product →',
+        createUpdateSaveSuccessMessage: 'Success! The product has been saved successfully.',
         updateSuccessMessage: 'Product updated. ',
 
         status: {
@@ -177,6 +183,38 @@ export const data = {
             status: 'publish',
             stockStatus: false,
             editProduct: '',
+            saveSuccessMessage: 'Success! The product has been saved successfully. View Product →',
+        },
+
+        downloadable: {
+            productType: 'simple',
+            productName: () => faker.commerce.productName() + ' (Downadable)',
+            category: 'Uncategorized',
+            regularPrice: () => faker.finance.amount(100, 200, faker.helpers.arrayElement([1, 2])).replace('.', ','),
+            storeName: String(process.env.VENDOR) + 'store',
+            status: 'publish',
+            stockStatus: false,
+            editProduct: '',
+            saveSuccessMessage: 'Success! The product has been saved successfully. View Product →',
+
+            downloadableOptions: {
+                fileName: 'avatar',
+                fileUrl: 'utils/sampleData/avatar.png',
+                downloadLimit: '200',
+                downloadExpiry: '361',
+            },
+        },
+
+        virtual: {
+            productType: 'simple',
+            productName: () => faker.commerce.productName() + ' (Virtual)',
+            category: 'Uncategorized',
+            regularPrice: () => faker.finance.amount(100, 200, faker.helpers.arrayElement([1, 2])).replace('.', ','),
+            storeName: String(process.env.VENDOR) + 'store',
+            status: 'publish',
+            stockStatus: false,
+            editProduct: '',
+            saveSuccessMessage: 'Success! The product has been saved successfully. View Product →',
         },
 
         variable: {
@@ -352,6 +390,42 @@ export const data = {
             // guest user
             guestName: () => faker.person.firstName('male'),
             guestEmail: () => faker.person.firstName('male') + '@email.com',
+        },
+
+        productInfo: {
+            description: {
+                shortDescription: 'test short description',
+                description: 'test long description',
+            },
+
+            amountDiscount: {
+                minimumOrderAmount: '200',
+                discountPercentage: '10',
+            },
+
+            quantityDiscount: {
+                minimumQuantity: '10',
+                discountPercentage: '10',
+            },
+
+            wholesaleOption: {
+                wholesalePrice: '90',
+                minimumWholesaleQuantity: '10',
+            },
+
+            minMax: {
+                minimumProductQuantity: '1',
+                maximumProductQuantity: '20',
+                minimumAmount: '10',
+                maximumAmount: '1000000',
+                category: 'Uncategorized',
+            },
+
+            otherOptions: {
+                productStatus: 'draft', // publish,
+                visibility: 'hidden', // visible, catalog, search, hidden
+                purchaseNote: 'test purchase note',
+            },
         },
     },
 
@@ -710,6 +784,9 @@ export const data = {
             general: 'wp-admin/options-general.php',
             permalinks: 'wp-admin/options-permalink.php',
             plugins: 'wp-admin/plugins.php',
+            activatePlugin: 'wp-admin/plugins.php?action=activate',
+            deactivatePlugin: 'wp-admin/plugins.php?action=deactivate',
+            widgets: 'wp-admin/widgets.php',
 
             dokan: {
                 setupWizard: 'wp-admin/admin.php?page=dokan-setup',
@@ -820,7 +897,7 @@ export const data = {
                 dashboard: 'dashboard',
                 products: 'dashboard/products',
                 productSearch: 'products/?product_listing_search',
-                productAuction: 'dashboard/new-auction-product',
+                productAuction: 'dashboard/auction',
                 productBooking: 'dashboard/booking/new-product',
                 orders: 'dashboard/orders',
                 userSubscriptions: 'dashboard/user-subscription',
@@ -897,7 +974,7 @@ export const data = {
 
             wc: {
                 wcProducts: 'wc/v3/products',
-                store: 'wc/store'
+                store: 'wc/store',
             },
         },
     },
@@ -1005,24 +1082,6 @@ export const data = {
                 },
             },
 
-            amountDiscount: {
-                minimumOrderAmount: '200',
-                discountPercentage: '10',
-            },
-
-            quantityDiscount: {
-                minimumQuantity: '10',
-                discountPercentage: '10',
-            },
-
-            minMax: {
-                minimumProductQuantity: '1',
-                maximumProductQuantity: '20',
-                minimumAmount: '10',
-                maximumAmount: '1000000',
-                category: 'Uncategorized',
-            },
-
             storeSettingsSaveSuccessMessage: 'Your information has been saved successfully',
 
             socialProfileUrls: {
@@ -1051,6 +1110,19 @@ export const data = {
             sendEmail: {
                 subject: 'test email subject',
                 message: 'test email message',
+            },
+
+            amountDiscount: {
+                minimumOrderAmount: '200',
+                discountPercentage: '10',
+            },
+
+            minMax: {
+                minimumProductQuantity: '1',
+                maximumProductQuantity: '20',
+                minimumAmount: '10',
+                maximumAmount: '1000000',
+                category: 'Uncategorized',
             },
         },
 
@@ -1618,7 +1690,6 @@ export const data = {
             'live_chat',
             'live_search',
             'moip',
-            'dokan_paypal_ap',
             'paypal_marketplace',
             'product_addon',
             'product_enquiry',
@@ -1735,6 +1806,12 @@ export const data = {
         withdraw: {
             customMethodName: 'Bksh',
             customMethodType: 'Phone',
+            charge: {
+                paypal: '5',
+                bank: '5',
+                skrill: '5',
+                custom: '5',
+            },
             minimumWithdrawAmount: '5',
             withdrawThreshold: '0',
             quarterlyScheduleMonth: 'march', // 'january', 'february', 'march'
@@ -1899,6 +1976,12 @@ export const data = {
             alertEmailBody: 'Dear subscriber, Your subscription will be ending soon. Please renew your package in a timely',
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
+    },
+
+    storeContactData: {
+        name: String(process.env.CUSTOMER),
+        email: String(process.env.CUSTOMER) + '@yopmail.com',
+        message: 'Test Message',
     },
 
     // dokan license

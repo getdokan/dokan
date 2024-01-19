@@ -122,6 +122,26 @@ export interface product {
         status: string;
         stockStatus: boolean;
         editProduct: string;
+        saveSuccessMessage: string;
+    };
+
+    downloadable: {
+        productType: string;
+        productName: () => string;
+        category: string;
+        regularPrice: () => string;
+        storeName: string;
+        status: string;
+        stockStatus: boolean;
+        editProduct: string;
+        saveSuccessMessage: string;
+
+        downloadableOptions: {
+            fileName: string;
+            fileUrl: string;
+            downloadLimit: string;
+            downloadExpiry: string;
+        };
     };
 
     variable: {
@@ -275,6 +295,42 @@ export interface product {
 
         guestName: () => string;
         guestEmail: () => string;
+    };
+
+    productInfo: {
+        description: {
+            shortDescription: string;
+            description: string;
+        };
+
+        amountDiscount: {
+            minimumOrderAmount: string;
+            discountPercentage: string;
+        };
+
+        quantityDiscount: {
+            minimumQuantity: string;
+            discountPercentage: string;
+        };
+
+        wholesaleOption: {
+            wholesalePrice: string;
+            minimumWholesaleQuantity: string;
+        };
+
+        minMax: {
+            minimumProductQuantity: string;
+            maximumProductQuantity: string;
+            minimumAmount: string;
+            maximumAmount: string;
+            category: string;
+        };
+
+        otherOptions: {
+            productStatus: string;
+            visibility: string;
+            purchaseNote: string;
+        };
     };
 }
 
@@ -681,24 +737,6 @@ export interface vendor {
             };
         };
 
-        amountDiscount: {
-            minimumOrderAmount: string;
-            discountPercentage: string;
-        };
-
-        quantityDiscount: {
-            minimumQuantity: string;
-            discountPercentage: string;
-        };
-
-        minMax: {
-            minimumProductQuantity: string;
-            maximumProductQuantity: string;
-            minimumAmount: string;
-            maximumAmount: string;
-            category: string;
-        };
-
         storeSettingsSaveSuccessMessage: string;
 
         socialProfileUrls: {
@@ -726,6 +764,19 @@ export interface vendor {
         sendEmail: {
             subject: string;
             message: string;
+        };
+
+        amountDiscount: {
+            minimumOrderAmount: string;
+            discountPercentage: string;
+        };
+
+        minMax: {
+            minimumProductQuantity: string;
+            maximumProductQuantity: string;
+            minimumAmount: string;
+            maximumAmount: string;
+            category: string;
         };
     };
 
@@ -1409,6 +1460,12 @@ export interface dokanSettings {
     withdraw: {
         customMethodName: string;
         customMethodType: string;
+        charge: {
+            paypal: string;
+            bank: string;
+            skrill: string;
+            custom: string;
+        };
         minimumWithdrawAmount: string;
         withdrawThreshold: string;
         quarterlyScheduleMonth: string;
@@ -1765,4 +1822,10 @@ export interface feeRecipient {
     shippingFeeRecipient: string;
     taxFeeRecipient: string;
     shippingTaxFeeRecipient: string;
+}
+
+export interface storeContactData {
+    name: string;
+    email: string;
+    message: string;
 }

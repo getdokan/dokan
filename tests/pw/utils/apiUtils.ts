@@ -4,7 +4,8 @@ import { payloads } from '@utils/payloads';
 import { helpers } from '@utils/helpers';
 import fs from 'fs';
 import { auth, user_api, taxRate, coupon_api, marketPlaceCoupon, reqOptions, headers, storageState, responseBody } from '@utils/interfaces';
-const { VENDOR_ID, CUSTOMER_ID } = global as any;
+
+const { VENDOR_ID, CUSTOMER_ID } = process.env;
 
 export class ApiUtils {
     readonly request: APIRequestContext;
@@ -408,9 +409,9 @@ export class ApiUtils {
     }
 
     // create coupon
-    async createCoupon(productIds: string[], coupon: coupon_api, auth?: auth): Promise<[responseBody, string, string]> {
+    async createCoupon(productIds: (string | undefined)[], coupon: coupon_api, auth?: auth): Promise<[responseBody, string, string]> {
         // create product if invalid productId exists
-        if (productIds.includes('undefined')) {
+        if (productIds.includes(undefined)) {
             const [, productId] = await this.createProduct(payloads.createProduct(), auth);
             productIds = [productId];
         }
@@ -543,7 +544,7 @@ export class ApiUtils {
      * order api methods
      */
 
-    // get all orders
+    // get all orders [of a vendor]
     async getAllOrders(auth?: auth): Promise<responseBody> {
         const [, responseBody] = await this.get(endPoints.getAllOrders, { params: { per_page: 100 }, headers: auth });
         return responseBody;
@@ -1509,6 +1510,12 @@ export class ApiUtils {
     }
 
     // order
+
+    // get all site orders
+    async getAllOrdersSite(auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.get(endPoints.wc.getAllOrders, { params: { per_page: 100 }, headers: auth });
+        return responseBody;
+    }
 
     // create order
     async createOrder(product: string | object, orderPayload: any, auth?: auth): Promise<[APIResponse, responseBody, string, string]> {

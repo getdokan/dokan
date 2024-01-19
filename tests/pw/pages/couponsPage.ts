@@ -15,9 +15,10 @@ export class CouponsPage extends AdminPage {
 
     // add marketplace coupon
     async addMarketplaceCoupon(coupon: coupon) {
-        await this.goIfNotThere(data.subUrls.backend.wc.coupons);
+        // await this.goIfNotThere(data.subUrls.backend.wc.coupons);
+        await this.goIfNotThere(data.subUrls.backend.wc.addCoupon);
 
-        await this.clickAndWaitForResponse(data.subUrls.backend.wc.addCoupon, selector.admin.marketing.addCoupon);
+        // await this.clickAndWaitForResponse(data.subUrls.backend.wc.addCoupon, selector.admin.marketing.addCoupon); // blocked by woocommer setup div
         await this.clearAndType(selector.admin.marketing.addNewCoupon.couponCode, coupon.title);
         await this.clearAndType(selector.admin.marketing.addNewCoupon.couponDescription, coupon.description);
         await this.selectByValue(selector.admin.marketing.addNewCoupon.discountType, coupon.discountType);
@@ -27,6 +28,7 @@ export class CouponsPage extends AdminPage {
         await this.check(selector.admin.marketing.addNewCoupon.enableForAllVendors);
         await this.check(selector.admin.marketing.addNewCoupon.showOnStores);
         await this.check(selector.admin.marketing.addNewCoupon.notifyVendors);
+        await this.scrollToTop();
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.post, selector.admin.marketing.addNewCoupon.publish);
         await this.toContainText(selector.admin.marketing.addNewCoupon.publishSuccessMessage, 'Coupon updated.');
     }

@@ -21,6 +21,9 @@ export class ToolsPage extends AdminPage {
         // Page Installation elements are visible
         await this.multipleElementVisible(selector.admin.dokan.tools.pageInstallation);
 
+        // Check For Regenerate Order commission are visible
+        await this.multipleElementVisible(selector.admin.dokan.tools.regenerateOrderCommission);
+
         // Check For Duplicate Orders are visible
         await this.multipleElementVisible(selector.admin.dokan.tools.checkForDuplicateOrders);
 
@@ -47,6 +50,12 @@ export class ToolsPage extends AdminPage {
         // todo:  enable the button then install pages again
         // await this.setAttributeValue(selector.admin.dokan.tools.pageInstallation.allPagesCreated, 'class',  'button button-primary');
         // await this.clickAndWaitForResponse(data.subUrls.ajax, selector.admin.dokan.tools.pageInstallation.allPagesCreated);
+    }
+
+    // regenerate variable product variations author IDs
+    async regenerateOrderCommission() {
+        await this.goIfNotThere(data.subUrls.backend.dokan.tools);
+        await this.clickAndWaitForResponse(data.subUrls.ajax, selector.admin.dokan.tools.regenerateOrderCommission.regenerate);
     }
 
     // check for duplicate order
