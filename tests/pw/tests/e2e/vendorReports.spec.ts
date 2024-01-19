@@ -14,11 +14,12 @@ test.describe('Vendor analytics test', () => {
         vPage = await vendorContext.newPage();
         vendor = new VendorReportsPage(vPage);
 
-        // apiUtils = new ApiUtils(request);
+        // apiUtils = new ApiUtils(await request.newContext());
     });
 
     test.afterAll(async () => {
         await vPage.close();
+        // await apiUtils.dispose();
     });
 
     test('vendor reports menu page is rendering properly @pro @explo', async () => {

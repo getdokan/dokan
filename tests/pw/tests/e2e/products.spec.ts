@@ -1,4 +1,4 @@
-import { test, Page } from '@playwright/test';
+import { test, request, Page } from '@playwright/test';
 import { ProductsPage } from '@pages/productsPage';
 import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
@@ -11,7 +11,7 @@ test.describe('Product functionality test', () => {
     let apiUtils: ApiUtils;
     let productName: string;
 
-    test.beforeAll(async ({ browser, request }) => {
+    test.beforeAll(async ({ browser }) => {
         const adminContext = await browser.newContext(data.auth.adminAuth);
         aPage = await adminContext.newPage();
         admin = new ProductsPage(aPage);
@@ -20,13 +20,14 @@ test.describe('Product functionality test', () => {
         vPage = await vendorContext.newPage();
         vendor = new ProductsPage(vPage);
 
-        apiUtils = new ApiUtils(request);
+        apiUtils = new ApiUtils(await request.newContext());
         [, , productName] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendorAuth);
     });
 
     test.afterAll(async () => {
         await aPage.close();
         await vPage.close();
+        await apiUtils.dispose();
     });
 
     test('admin can add product category @lite', async () => {

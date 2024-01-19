@@ -1,4 +1,4 @@
-import { test } from '@playwright/test';
+import { test, request } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { helpers } from '@utils/helpers';
@@ -7,8 +7,12 @@ import { execSync } from 'child_process';
 test.describe('get api test coverage', () => {
     let apiUtils: ApiUtils;
 
-    test.beforeAll(async ({ request }) => {
-        apiUtils = new ApiUtils(request);
+    test.beforeAll(async () => {
+        apiUtils = new ApiUtils(await request.newContext());
+    });
+
+    test.afterAll(async () => {
+        await apiUtils.dispose();
     });
 
     test('get coverage', async () => {

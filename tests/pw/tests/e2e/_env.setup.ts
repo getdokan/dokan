@@ -1,4 +1,4 @@
-import { test as setup, expect, Page } from '@playwright/test';
+import { test as setup, expect, request, Page } from '@playwright/test';
 import { ProductAdvertisingPage } from '@pages/productAdvertisingPage';
 import { ReverseWithdrawsPage } from '@pages/reverseWithdrawsPage';
 import { VendorSettingsPage } from '@pages/vendorSettingsPage';
@@ -16,8 +16,12 @@ setup.describe('setup site & woocommerce & user settings', () => {
 
     let apiUtils: ApiUtils;
 
-    setup.beforeAll(async ({ request }) => {
-        apiUtils = new ApiUtils(request);
+    setup.beforeAll(async () => {
+        apiUtils = new ApiUtils(await request.newContext());
+    });
+
+    setup.afterAll(async () => {
+        await apiUtils.dispose();
     });
 
     setup('check active plugins @lite', async () => {
@@ -112,8 +116,12 @@ setup.describe('setup user settings', () => {
 
     let apiUtils: ApiUtils;
 
-    setup.beforeAll(async ({ request }) => {
-        apiUtils = new ApiUtils(request);
+    setup.beforeAll(async () => {
+        apiUtils = new ApiUtils(await request.newContext());
+    });
+
+    setup.afterAll(async () => {
+        await apiUtils.dispose();
     });
 
     // Vendor Details
@@ -164,8 +172,12 @@ setup.describe('setup user settings', () => {
 setup.describe('setup dokan settings', () => {
     let apiUtils: ApiUtils;
 
-    setup.beforeAll(async ({ request }) => {
-        apiUtils = new ApiUtils(request);
+    setup.beforeAll(async () => {
+        apiUtils = new ApiUtils(await request.newContext());
+    });
+
+    setup.afterAll(async () => {
+        await apiUtils.dispose();
     });
 
     setup('set dokan general settings @lite', async () => {
@@ -274,7 +286,7 @@ setup.describe('setup dokan settings e2e', () => {
     let aPage: Page, vPage: Page;
     let apiUtils: ApiUtils;
 
-    setup.beforeAll(async ({ browser, request }) => {
+    setup.beforeAll(async ({ browser }) => {
         const adminContext = await browser.newContext(data.auth.adminAuth);
         aPage = await adminContext.newPage();
         productAdvertisingPage = new ProductAdvertisingPage(aPage);
@@ -284,12 +296,13 @@ setup.describe('setup dokan settings e2e', () => {
         vPage = await vendorContext.newPage();
         vendorPage = new VendorSettingsPage(vPage);
 
-        apiUtils = new ApiUtils(request);
+        apiUtils = new ApiUtils(await request.newContext());
     });
 
     setup.afterAll(async () => {
         await aPage.close();
         await vPage.close();
+        await apiUtils.dispose();
     });
 
     setup('recreate reverse withdrawal payment product via settings save @lite', async () => {

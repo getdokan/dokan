@@ -35,7 +35,7 @@ test.describe.skip('Vendor RMA test', () => {
         await vendor1.updateOrderStatusOnTable(orderId, 'processing');
         await customer.customerRequestWarranty(orderId, data.predefined.simpleProduct.product1.name, data.rma.requestWarranty);
 
-        // apiUtils = new ApiUtils(request);
+        // apiUtils = new ApiUtils(await request.newContext());
 
         // [,, orderId, ] = await apiUtils.createOrderWithStatus(PRODUCT_ID, { ...payloads.createOrder, customer_id: CUSTOMER_ID }, data.order.orderStatus.processing, payloads.vendorAuth);
         // [,, orderId, ] = await apiUtils.createOrderWithStatus(payloads.createProduct(), { ...payloads.createOrder, customer_id: CUSTOMER_ID }, data.order.orderStatus.processing, payloads.vendorAuth);
@@ -44,6 +44,7 @@ test.describe.skip('Vendor RMA test', () => {
     test.afterAll(async () => {
         await vPage.close();
         await cPage.close();
+        // await apiUtils.dispose();
     });
 
     test('vendor return request menu page is rendering properly @pro @explo', async () => {

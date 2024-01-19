@@ -1,4 +1,4 @@
-import { test, Page } from '@playwright/test';
+import { test, request, Page } from '@playwright/test';
 import { OrdersPage } from '@pages/ordersPage';
 import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
@@ -14,17 +14,18 @@ test.describe('Order functionality test', () => {
     let apiUtils: ApiUtils;
     let orderId: string;
 
-    test.beforeAll(async ({ browser, request }) => {
+    test.beforeAll(async ({ browser }) => {
         const vendorContext = await browser.newContext(data.auth.vendorAuth);
         vPage = await vendorContext.newPage();
         vendor = new OrdersPage(vPage);
 
-        apiUtils = new ApiUtils(request);
+        apiUtils = new ApiUtils(await request.newContext());
         [, , orderId] = await apiUtils.createOrderWithStatus(PRODUCT_ID, { ...payloads.createOrder, customer_id: CUSTOMER_ID }, data.order.orderStatus.onhold, payloads.vendorAuth);
     });
 
     test.afterAll(async () => {
         await vPage.close();
+        await apiUtils.dispose();
     });
 
     // orders

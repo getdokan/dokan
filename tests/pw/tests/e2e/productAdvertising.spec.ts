@@ -1,4 +1,4 @@
-import { test, Page } from '@playwright/test';
+import { test, request, Page } from '@playwright/test';
 import { ProductAdvertisingPage } from '@pages/productAdvertisingPage';
 import { VendorPage } from '@pages/vendorPage';
 import { ApiUtils } from '@utils/apiUtils';
@@ -12,7 +12,7 @@ test.describe('Product Advertising test', () => {
     let apiUtils: ApiUtils;
     let productName: string;
 
-    test.beforeAll(async ({ browser, request }) => {
+    test.beforeAll(async ({ browser }) => {
         const adminContext = await browser.newContext(data.auth.adminAuth);
         aPage = await adminContext.newPage();
         admin = new ProductAdvertisingPage(aPage);
@@ -21,7 +21,7 @@ test.describe('Product Advertising test', () => {
         vPage = await vendorContext.newPage();
         vendor = new VendorPage(vPage);
 
-        apiUtils = new ApiUtils(request);
+        apiUtils = new ApiUtils(await request.newContext());
         [, , productName] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendorAuth);
         await apiUtils.createProductAdvertisement(payloads.createProduct(), payloads.vendorAuth);
     });
@@ -29,6 +29,7 @@ test.describe('Product Advertising test', () => {
     test.afterAll(async () => {
         await aPage.close();
         await vPage.close();
+        await apiUtils.dispose();
     });
 
     test('dokan product advertising menu page is rendering properly @pro @explo', async () => {

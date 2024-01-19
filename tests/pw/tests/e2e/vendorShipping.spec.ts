@@ -14,11 +14,12 @@ test.describe('Vendor shipping test', () => {
         vPage = await vendorContext.newPage();
         vendor = new VendorShippingPage(vPage);
 
-        // apiUtils = new ApiUtils(request);
+        // apiUtils = new ApiUtils(await request.newContext());
     });
 
     test.afterAll(async () => {
         await vPage.close();
+        // await apiUtils.dispose();
     });
 
     test('vendor shipping settings menu page is rendering properly @pro @explo', async () => {

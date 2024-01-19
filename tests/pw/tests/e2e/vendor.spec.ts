@@ -21,6 +21,7 @@ test.describe('Vendor user functionality test1', () => {
 
     test.afterAll(async () => {
         await page.close();
+        // await apiUtils.dispose();
     });
 
     test('vendor can register @lite', async () => {
@@ -47,7 +48,7 @@ test.describe('Vendor functionality test', () => {
         vPage = await vendorContext.newPage();
         vendor = new VendorPage(vPage);
 
-        // apiUtils = new ApiUtils(request);
+        // apiUtils = new ApiUtils(await request.newContext());
     });
 
     test.afterAll(async () => {

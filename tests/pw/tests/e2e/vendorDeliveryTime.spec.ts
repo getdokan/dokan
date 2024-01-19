@@ -21,12 +21,13 @@ test.describe('Vendor delivery time test', () => {
         cPage = await customerContext.newPage();
         customer = new VendorDeliveryTimePage(cPage);
 
-        // apiUtils = new ApiUtils(request);
+        // apiUtils = new ApiUtils(await request.newContext());
     });
 
     test.afterAll(async () => {
         await vPage.close();
         await cPage.close();
+        // await apiUtils.dispose();
     });
 
     test('vendor delivery time menu page is rendering properly @pro @explo', async () => {

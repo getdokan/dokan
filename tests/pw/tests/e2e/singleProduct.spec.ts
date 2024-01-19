@@ -13,11 +13,12 @@ test.describe('Single product functionality test', () => {
         const customerContext = await browser.newContext(data.auth.customerAuth);
         cPage = await customerContext.newPage();
         customer = new SingleProductPage(cPage);
-        // apiUtils = new ApiUtils(request);
+        // apiUtils = new ApiUtils(await request.newContext());
     });
 
     test.afterAll(async () => {
         await cPage.close();
+        // await apiUtils.dispose();
     });
 
     // single product page

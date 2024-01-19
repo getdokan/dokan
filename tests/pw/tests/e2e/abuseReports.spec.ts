@@ -1,4 +1,4 @@
-import { test, Page } from '@playwright/test';
+import { test, request, Page } from '@playwright/test';
 import { AbuseReportsPage } from '@pages/abuseReportsPage';
 import { ApiUtils } from '@utils/apiUtils';
 import { dbUtils } from '@utils/dbUtils';
@@ -15,7 +15,7 @@ test.describe('Abuse report test', () => {
     let aPage: Page, cPage: Page, uPage: Page;
     let apiUtils: ApiUtils;
 
-    test.beforeAll(async ({ browser, request }) => {
+    test.beforeAll(async ({ browser }) => {
         const adminContext = await browser.newContext(data.auth.adminAuth);
         aPage = await adminContext.newPage();
         admin = new AbuseReportsPage(aPage);
@@ -28,7 +28,7 @@ test.describe('Abuse report test', () => {
         uPage = await guestContext.newPage();
         guest = new AbuseReportsPage(uPage);
 
-        apiUtils = new ApiUtils(request);
+        apiUtils = new ApiUtils(await request.newContext());
         const productId = await apiUtils.getProductId(data.predefined.simpleProduct.product1.name, payloads.vendorAuth);
         await dbUtils.createAbuseReport(dbData.dokan.createAbuseReport, productId, VENDOR_ID, CUSTOMER_ID);
     });
@@ -37,6 +37,7 @@ test.describe('Abuse report test', () => {
         await aPage.close();
         await cPage.close();
         await uPage.close();
+        await apiUtils.dispose();
     });
 
     test('dokan abuse report menu page is rendering properly @pro @explo', async () => {

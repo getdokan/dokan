@@ -93,6 +93,13 @@ jobs:
                   cd tests/pw 
                   npm ci
 
+            # Create php Debuglog file
+            - name: Install dependencies
+              if: success()
+              run: |
+                  cd tests/pw 
+                  mkdir -p debuglog && touch debuglog/debug.log
+
             # Start wordpress environment
             - name: Start WordPress Env
               id: wp-env

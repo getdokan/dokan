@@ -1,4 +1,4 @@
-import { test, Page } from '@playwright/test';
+import { test, request, Page } from '@playwright/test';
 import { StoreSupportsPage } from '@pages/storeSupportsPage';
 import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
@@ -14,18 +14,19 @@ test.describe('Store Support test (admin)', () => {
     let supportTicketId: string;
     let closedSupportTicketId: string;
 
-    test.beforeAll(async ({ browser, request }) => {
+    test.beforeAll(async ({ browser }) => {
         const adminContext = await browser.newContext(data.auth.adminAuth);
         aPage = await adminContext.newPage();
         admin = new StoreSupportsPage(aPage);
 
-        apiUtils = new ApiUtils(request);
+        apiUtils = new ApiUtils(await request.newContext());
         [, supportTicketId] = await apiUtils.createSupportTicket({ ...payloads.createSupportTicket, author: CUSTOMER_ID, meta: { store_id: VENDOR_ID } });
         [, closedSupportTicketId] = await apiUtils.createSupportTicket({ ...payloads.createSupportTicket, status: 'closed', author: CUSTOMER_ID, meta: { store_id: VENDOR_ID } });
     });
 
     test.afterAll(async () => {
         await aPage.close();
+        await apiUtils.dispose();
     });
 
     test('dokan store support menu page is rendering properly @pro @explo', async () => {
@@ -94,7 +95,7 @@ test.describe('Store Support test (customer)', () => {
     let responseBody: responseBody;
     let supportTicketId: string;
 
-    test.beforeAll(async ({ browser, request }) => {
+    test.beforeAll(async ({ browser }) => {
         const customerContext = await browser.newContext(data.auth.customerAuth);
         cPage = await customerContext.newPage();
         customer = new StoreSupportsPage(cPage);
@@ -103,7 +104,7 @@ test.describe('Store Support test (customer)', () => {
         uPage = await guestContext.newPage();
         guest = new StoreSupportsPage(uPage);
 
-        apiUtils = new ApiUtils(request);
+        apiUtils = new ApiUtils(await request.newContext());
         [, responseBody, orderId] = await apiUtils.createOrderWithStatus(PRODUCT_ID, { ...payloads.createOrder, customer_id: CUSTOMER_ID }, data.order.orderStatus.completed, payloads.vendorAuth);
         [, supportTicketId] = await apiUtils.createSupportTicket({ ...payloads.createSupportTicket, author: CUSTOMER_ID, meta: { store_id: VENDOR_ID, order_id: orderId } });
     });
@@ -166,12 +167,12 @@ test.describe('Store Support test (vendor)', () => {
     let apiUtils: ApiUtils;
     let supportTicketId: string;
 
-    test.beforeAll(async ({ browser, request }) => {
+    test.beforeAll(async ({ browser }) => {
         const vendorContext = await browser.newContext(data.auth.vendorAuth);
         vPage = await vendorContext.newPage();
         vendor = new StoreSupportsPage(vPage);
 
-        apiUtils = new ApiUtils(request);
+        apiUtils = new ApiUtils(await request.newContext());
         [, supportTicketId] = await apiUtils.createSupportTicket({ ...payloads.createSupportTicket, author: CUSTOMER_ID, meta: { store_id: VENDOR_ID } });
         await apiUtils.createSupportTicket({ ...payloads.createSupportTicket, status: 'closed', author: CUSTOMER_ID, meta: { store_id: VENDOR_ID } });
     });

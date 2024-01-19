@@ -1,4 +1,4 @@
-import { test, Page } from '@playwright/test';
+import { test, request, Page } from '@playwright/test';
 import { AuctionsPage } from '@pages/vendorAuctionsPage';
 import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
@@ -12,7 +12,7 @@ test.describe('Auction Product test', () => {
     let apiUtils: ApiUtils;
     let auctionProductName: string;
 
-    test.beforeAll(async ({ browser, request }) => {
+    test.beforeAll(async ({ browser }) => {
         const adminContext = await browser.newContext(data.auth.adminAuth);
         aPage = await adminContext.newPage();
         admin = new AuctionsPage(aPage);
@@ -25,7 +25,7 @@ test.describe('Auction Product test', () => {
         cPage = await customerContext.newPage();
         customer = new AuctionsPage(cPage);
 
-        apiUtils = new ApiUtils(request);
+        apiUtils = new ApiUtils(await request.newContext());
         [, , auctionProductName] = await apiUtils.createProduct(payloads.createAuctionProduct(), payloads.vendorAuth);
         await customer.bidAuctionProduct(auctionProductName);
     });
@@ -34,6 +34,7 @@ test.describe('Auction Product test', () => {
         await aPage.close();
         await vPage.close();
         await cPage.close();
+        await apiUtils.dispose();
     });
 
     test('admin can add auction product @pro', async () => {

@@ -1,4 +1,4 @@
-import { test, Page, BrowserContext } from '@playwright/test';
+import { test, Page, request, BrowserContext } from '@playwright/test';
 import { LoginPage } from '@pages/loginPage';
 import { CustomerPage } from '@pages/customerPage';
 // import { ApiUtils } from '@utils/apiUtils';
@@ -52,7 +52,7 @@ test.describe('Customer functionality test', () => {
         customerContext = await browser.newContext(data.auth.customerAuth);
         cPage = await customerContext.newPage();
         customer = new CustomerPage(cPage);
-        // apiUtils = new ApiUtils(request);
+        // apiUtils = new ApiUtils(await request.newContext());
     });
 
     test.afterAll(async () => {

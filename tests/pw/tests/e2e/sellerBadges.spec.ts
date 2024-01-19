@@ -1,4 +1,4 @@
-import { test, Page } from '@playwright/test';
+import { test, request, Page } from '@playwright/test';
 import { SellerBadgesPage } from '@pages/sellerBadgesPage';
 import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
@@ -10,7 +10,7 @@ test.describe('Seller badge test', () => {
     let aPage: Page, vPage: Page;
     let apiUtils: ApiUtils;
 
-    test.beforeAll(async ({ browser, request }) => {
+    test.beforeAll(async ({ browser }) => {
         const adminContext = await browser.newContext(data.auth.adminAuth);
         aPage = await adminContext.newPage();
         admin = new SellerBadgesPage(aPage);
@@ -19,13 +19,14 @@ test.describe('Seller badge test', () => {
         vPage = await vendorContext.newPage();
         vendor = new SellerBadgesPage(vPage);
 
-        apiUtils = new ApiUtils(request);
+        apiUtils = new ApiUtils(await request.newContext());
         await apiUtils.createSellerBadge(payloads.createSellerBadgeProductsPublished, payloads.adminAuth);
     });
 
     test.afterAll(async () => {
         await aPage.close();
         await vPage.close();
+        await apiUtils.dispose();
     });
 
     test('dokan seller badge menu page is rendering properly @pro @explo', async () => {

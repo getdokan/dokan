@@ -1,4 +1,4 @@
-import { test, Page } from '@playwright/test';
+import { test, request, Page } from '@playwright/test';
 import { VendorProductSubscriptionPage } from '@pages/vendorProductSubscriptionPage';
 import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
@@ -10,7 +10,7 @@ test.describe('Product subscriptions test', () => {
     let vPage: Page, cPage: Page;
     let apiUtils: ApiUtils;
 
-    test.beforeAll(async ({ browser, request }) => {
+    test.beforeAll(async ({ browser }) => {
         const vendorContext = await browser.newContext(data.auth.vendorAuth);
         vPage = await vendorContext.newPage();
         vendor = new VendorProductSubscriptionPage(vPage);
@@ -19,13 +19,14 @@ test.describe('Product subscriptions test', () => {
         cPage = await customerContext.newPage();
         customer = new VendorProductSubscriptionPage(cPage);
 
-        apiUtils = new ApiUtils(request);
+        apiUtils = new ApiUtils(await request.newContext());
         const [, productId, productName] = await apiUtils.createProduct(payloads.createSimpleSubscriptionProduct(), payloads.vendorAuth);
     });
 
     test.afterAll(async () => {
         await vPage.close();
         await cPage.close();
+        await apiUtils.dispose();
     });
 
     test('vendor user subscriptions menu page is rendering properly @pro @explo', async () => {

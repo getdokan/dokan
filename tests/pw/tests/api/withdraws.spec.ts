@@ -6,7 +6,7 @@
 //COVERAGE_TAG: PUT /dokan/v1/withdraw/batch
 //COVERAGE_TAG: POST /dokan/v1/withdraw
 
-import { test, expect } from '@playwright/test';
+import { test, expect, request } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
@@ -17,12 +17,16 @@ test.describe('withdraw api test', () => {
     let withdrawId: string;
     let minimumWithdrawLimit: string;
 
-    test.beforeAll(async ({ request }) => {
-        apiUtils = new ApiUtils(request);
+    test.beforeAll(async () => {
+        apiUtils = new ApiUtils(await request.newContext());
         [, minimumWithdrawLimit] = await apiUtils.getMinimumWithdrawLimit();
         await apiUtils.createOrderWithStatus(payloads.createProduct(), payloads.createOrder, 'wc-completed');
         const [responseBody, id] = await apiUtils.createWithdraw({ ...payloads.createWithdraw, amount: minimumWithdrawLimit });
         withdrawId = responseBody.message === 'You already have a pending withdraw request' ? await apiUtils.getWithdrawId() : id;
+    });
+
+    test.afterAll(async () => {
+        await apiUtils.dispose();
     });
 
     test('get withdraw payment methods @lite', async () => {

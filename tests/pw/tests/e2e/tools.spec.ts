@@ -1,4 +1,4 @@
-import { test, Page } from '@playwright/test';
+import { test, request, Page } from '@playwright/test';
 import { ToolsPage } from '@pages/toolsPage';
 import { ApiUtils } from '@utils/apiUtils';
 import { payloads } from '@utils/payloads';
@@ -9,16 +9,17 @@ test.describe('Tools test', () => {
     let aPage: Page;
     let apiUtils: ApiUtils;
 
-    test.beforeAll(async ({ browser, request }) => {
+    test.beforeAll(async ({ browser }) => {
         const adminContext = await browser.newContext(data.auth.adminAuth);
         aPage = await adminContext.newPage();
         admin = new ToolsPage(aPage);
 
-        apiUtils = new ApiUtils(request);
+        apiUtils = new ApiUtils(await request.newContext());
     });
 
     test.afterAll(async () => {
         await aPage.close();
+        await apiUtils.dispose();
     });
 
     test('dokan tools menu page is rendering properly @pro @explo', async () => {

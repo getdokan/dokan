@@ -1,4 +1,4 @@
-import { test, Page } from '@playwright/test';
+import { test, request, Page } from '@playwright/test';
 import { RequestForQuotationsPage } from '@pages/requestForQuotationsPage';
 import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
@@ -13,12 +13,12 @@ test.describe('Request for quotation test admin', () => {
     const productId: string[] = [];
     let quoteTitle: string;
 
-    test.beforeAll(async ({ browser, request }) => {
+    test.beforeAll(async ({ browser }) => {
         const adminContext = await browser.newContext(data.auth.adminAuth);
         aPage = await adminContext.newPage();
         admin = new RequestForQuotationsPage(aPage);
 
-        apiUtils = new ApiUtils(request);
+        apiUtils = new ApiUtils(await request.newContext());
         const [, pId] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendorAuth);
         productId.push(pId);
         [, , quoteTitle] = await apiUtils.createQuoteRequest({ ...payloads.createQuoteRequest(), product_ids: productId, user_id: CUSTOMER_ID }, payloads.adminAuth);
@@ -26,6 +26,7 @@ test.describe('Request for quotation test admin', () => {
 
     test.afterAll(async () => {
         await aPage.close();
+        await apiUtils.dispose();
     });
 
     // quotes
@@ -81,12 +82,12 @@ test.describe('Request for quotation test vendor', () => {
     let pId: string;
     let quoteId: string;
 
-    test.beforeAll(async ({ browser, request }) => {
+    test.beforeAll(async ({ browser }) => {
         const vendorContext = await browser.newContext(data.auth.vendorAuth);
         vPage = await vendorContext.newPage();
         vendor = new RequestForQuotationsPage(vPage);
 
-        apiUtils = new ApiUtils(request);
+        apiUtils = new ApiUtils(await request.newContext());
         [, pId, productName] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendorAuth);
         productId.push(pId);
         [, quoteId, quoteTitle] = await apiUtils.createQuoteRequest({ ...payloads.createQuoteRequest(), product_ids: productId, user_id: CUSTOMER_ID }, payloads.adminAuth);
@@ -128,7 +129,7 @@ test.describe('Request for quotation test customer', () => {
     let pId: string;
     let quoteId: string;
 
-    test.beforeAll(async ({ browser, request }) => {
+    test.beforeAll(async ({ browser }) => {
         const customerContext = await browser.newContext(data.auth.customerAuth);
         cPage = await customerContext.newPage();
         customer = new RequestForQuotationsPage(cPage);
@@ -137,7 +138,7 @@ test.describe('Request for quotation test customer', () => {
         uPage = await guestContext.newPage();
         guest = new RequestForQuotationsPage(uPage);
 
-        apiUtils = new ApiUtils(request);
+        apiUtils = new ApiUtils(await request.newContext());
 
         [, pId, productName] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendorAuth);
         productId.push(pId);

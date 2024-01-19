@@ -1,4 +1,4 @@
-import { test, Page } from '@playwright/test';
+import { test, request, Page } from '@playwright/test';
 import { SpmvPage } from '@pages/spmvPage';
 import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
@@ -16,7 +16,7 @@ test.describe('Vendor SPMV test', () => {
     let productName1: string;
     let productId: string;
 
-    test.beforeAll(async ({ browser, request }) => {
+    test.beforeAll(async ({ browser }) => {
         const adminContext = await browser.newContext(data.auth.adminAuth);
         aPage = await adminContext.newPage();
         admin = new SpmvPage(aPage);
@@ -29,7 +29,7 @@ test.describe('Vendor SPMV test', () => {
         cPage = await customerContext.newPage();
         customer = new SpmvPage(cPage);
 
-        apiUtils = new ApiUtils(request);
+        apiUtils = new ApiUtils(await request.newContext());
         await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, enable_min_max_quantity: 'off', enable_min_max_amount: 'off' }); // todo: might exists dokan issue -> min-max field is required on admin product edit
         [, , productName] = await apiUtils.createProduct({ ...payloads.createProduct(), name: data.predefined.spmv.productName() }, payloads.vendor2Auth);
         [, productId, productName1] = await apiUtils.createProduct({ ...payloads.createProduct(), name: data.predefined.spmv.productName() }, payloads.vendor2Auth);
@@ -41,6 +41,7 @@ test.describe('Vendor SPMV test', () => {
         await aPage.close();
         await vPage.close();
         await cPage.close();
+        await apiUtils.dispose();
     });
 
     test('admin can assign SPMV product to other vendor @pro', async () => {

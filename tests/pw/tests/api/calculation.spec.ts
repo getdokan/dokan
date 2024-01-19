@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, request } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { helpers } from '@utils/helpers';
 import { payloads } from '@utils/payloads';
@@ -13,11 +13,15 @@ test.describe.skip('calculation test', () => {
     let commission: commission;
     let feeRecipient: feeRecipient;
 
-    test.beforeAll(async ({ request }) => {
-        apiUtils = new ApiUtils(request);
+    test.beforeAll(async () => {
+        apiUtils = new ApiUtils(await request.newContext());
         taxRate = await apiUtils.setUpTaxRate(payloads.enableTaxRate, payloads.createTaxRate);
         // todo:  get tax rate instead of setup if possible
         [commission, feeRecipient] = await dbUtils.getSellingInfo();
+    });
+
+    test.afterAll(async () => {
+        await apiUtils.dispose();
     });
 
     test('calculation test @pro', async () => {
@@ -80,8 +84,8 @@ test.describe.skip('Marketplace Coupon calculation test', () => {
     let feeRecipient: feeRecipient;
     let sequentialCoupon: { value: string } | boolean;
 
-    test.beforeAll(async ({ request }) => {
-        apiUtils = new ApiUtils(request);
+    test.beforeAll(async () => {
+        apiUtils = new ApiUtils(await request.newContext());
         taxRate = await apiUtils.setUpTaxRate(payloads.enableTaxRate, payloads.createTaxRate);
         // taxRate = await apiUtils.updateSingleWcSettingOptions('general', 'woocommerce_calc_discounts_sequentially', { value: 'no' });
         sequentialCoupon = await apiUtils.getSingleWcSettingOptions('general', 'woocommerce_calc_discounts_sequentially');

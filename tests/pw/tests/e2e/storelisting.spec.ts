@@ -1,4 +1,4 @@
-import { test, Page } from '@playwright/test';
+import { test, request, Page } from '@playwright/test';
 import { StoreListingPage } from '@pages/storeListingPage';
 // import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
@@ -13,11 +13,12 @@ test.describe('Store listing functionality test', () => {
         const customerContext = await browser.newContext(data.auth.customerAuth);
         cPage = await customerContext.newPage();
         customer = new StoreListingPage(cPage);
-        // apiUtils = new ApiUtils(request);
+        // apiUtils = new ApiUtils(await request.newContext());
     });
 
     test.afterAll(async () => {
         await cPage.close();
+        // await apiUtils.dispose();
     });
 
     // store listing

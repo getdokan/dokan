@@ -1,4 +1,4 @@
-import { test, Page } from '@playwright/test';
+import { test, request, Page } from '@playwright/test';
 import { ShopPage } from '@pages/shopPage';
 // import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
@@ -14,11 +14,12 @@ test.describe('Shop functionality test', () => {
         cPage = await customerContext.newPage();
         customer = new ShopPage(cPage);
 
-        // apiUtils = new ApiUtils(request);
+        // apiUtils = new ApiUtils(await request.newContext());
     });
 
     test.afterAll(async () => {
         await cPage.close();
+        // await apiUtils.dispose();
     });
 
     // shop page

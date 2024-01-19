@@ -1,4 +1,4 @@
-import { test, Page } from '@playwright/test';
+import { test, request, Page } from '@playwright/test';
 import { StoreReviewsPage } from '@pages/storeReviewsPage';
 import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
@@ -13,7 +13,7 @@ test.describe('Store Reviews test', () => {
     let aPage: Page, vPage: Page, cPage: Page;
     let apiUtils: ApiUtils;
 
-    test.beforeAll(async ({ browser, request }) => {
+    test.beforeAll(async ({ browser }) => {
         const adminContext = await browser.newContext(data.auth.adminAuth);
         aPage = await adminContext.newPage();
         admin = new StoreReviewsPage(aPage);
@@ -26,7 +26,7 @@ test.describe('Store Reviews test', () => {
         cPage = await customerContext.newPage();
         customer = new StoreReviewsPage(cPage);
 
-        apiUtils = new ApiUtils(request);
+        apiUtils = new ApiUtils(await request.newContext());
 
         await apiUtils.updateBatchStoreReviews('trash', [], payloads.adminAuth);
         await apiUtils.createStoreReview(VENDOR_ID, payloads.createStoreReview, payloads.customerAuth);
@@ -38,6 +38,7 @@ test.describe('Store Reviews test', () => {
         await aPage.close();
         await vPage.close();
         await cPage.close();
+        await apiUtils.dispose();
     });
 
     test('dokan store reviews menu page is rendering properly @pro @explo', async () => {

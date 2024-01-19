@@ -1,4 +1,4 @@
-import { test, Page } from '@playwright/test';
+import { test, request, Page } from '@playwright/test';
 import { WithdrawsPage } from '@pages/withdrawsPage';
 import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
@@ -14,7 +14,7 @@ test.describe('Withdraw test', () => {
     let currentBalance: string;
     let minimumWithdrawLimit: string;
 
-    test.beforeAll(async ({ browser, request }) => {
+    test.beforeAll(async ({ browser }) => {
         const adminContext = await browser.newContext(data.auth.adminAuth);
         aPage = await adminContext.newPage();
         admin = new WithdrawsPage(aPage);
@@ -23,7 +23,7 @@ test.describe('Withdraw test', () => {
         vPage = await vendorContext.newPage();
         vendor = new WithdrawsPage(vPage);
 
-        apiUtils = new ApiUtils(request);
+        apiUtils = new ApiUtils(await request.newContext());
         [currentBalance, minimumWithdrawLimit] = await apiUtils.getMinimumWithdrawLimit(payloads.vendorAuth);
         await apiUtils.createOrderWithStatus(PRODUCT_ID, { ...payloads.createOrder, line_items: [{ quantity: 10 }] }, 'wc-completed', payloads.vendorAuth);
         await apiUtils.createWithdraw({ ...payloads.createWithdraw, amount: minimumWithdrawLimit }, payloads.vendorAuth);
@@ -32,6 +32,7 @@ test.describe('Withdraw test', () => {
     test.afterAll(async () => {
         await aPage.close();
         await vPage.close();
+        await apiUtils.dispose();
     });
 
     test('admin withdraw menu page is rendering properly @lite @explo', async () => {

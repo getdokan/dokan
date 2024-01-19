@@ -1,4 +1,4 @@
-import { test, Page } from '@playwright/test';
+import { test, request, Page } from '@playwright/test';
 import { PluginPage } from '@pages/pluginPage';
 import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
@@ -9,16 +9,17 @@ test.describe.skip('Plugin functionality test', () => {
     let aPage: Page;
     let apiUtils: ApiUtils;
 
-    test.beforeAll(async ({ browser, request }) => {
+    test.beforeAll(async ({ browser }) => {
         const adminContext = await browser.newContext(data.auth.adminAuth);
         aPage = await adminContext.newPage();
         pluginPage = new PluginPage(aPage);
 
-        apiUtils = new ApiUtils(request);
+        apiUtils = new ApiUtils(await request.newContext());
     });
 
     test.afterAll(async () => {
         await aPage.close();
+        await apiUtils.dispose();
     });
 
     //todo: install plugin

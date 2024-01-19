@@ -1,4 +1,4 @@
-import { expect, type APIRequestContext, APIResponse, Request } from '@playwright/test';
+import { expect, Request, APIRequestContext, APIResponse } from '@playwright/test';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
 import { helpers } from '@utils/helpers';
@@ -82,14 +82,14 @@ export class ApiUtils {
         return response;
     }
 
+    // dispose api request context
+    async dispose(): Promise<void> {
+        await this.request.dispose();
+    }
+
     // get storageState
     async storageState(path?: string | undefined): Promise<storageState> {
         return await this.request.storageState({ path: path });
-    }
-
-    // dispose api context
-    async disposeApiRequestContext(): Promise<void> {
-        await this.request.dispose();
     }
 
     // get responseBody

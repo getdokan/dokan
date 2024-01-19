@@ -1,4 +1,4 @@
-import { test, Page } from '@playwright/test';
+import { test, request, Page } from '@playwright/test';
 import { ProductReviewsPage } from '@pages/productReviewsPage';
 import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
@@ -12,17 +12,18 @@ test.describe('Product Reviews test', () => {
     let apiUtils: ApiUtils;
     let reviewMessage: string;
 
-    test.beforeAll(async ({ browser, request }) => {
+    test.beforeAll(async ({ browser }) => {
         const vendorContext = await browser.newContext(data.auth.vendorAuth);
         vPage = await vendorContext.newPage();
         vendor = new ProductReviewsPage(vPage);
 
-        apiUtils = new ApiUtils(request);
+        apiUtils = new ApiUtils(await request.newContext());
         [, , reviewMessage] = await apiUtils.createProductReview(PRODUCT_ID, payloads.createProductReview(), payloads.vendorAuth);
     });
 
     test.afterAll(async () => {
         await vPage.close();
+        await apiUtils.dispose();
     });
 
     test('vendor product reviews menu page is rendering properly @pro @explo', async () => {

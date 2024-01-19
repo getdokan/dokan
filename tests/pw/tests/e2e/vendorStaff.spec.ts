@@ -1,4 +1,4 @@
-import { test, Page } from '@playwright/test';
+import { test, request, Page } from '@playwright/test';
 import { VendorStaffPage } from '@pages/vendorStaffPage';
 import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
@@ -10,17 +10,18 @@ test.describe('Vendor staff test', () => {
     let apiUtils: ApiUtils;
     const staff = data.staff();
 
-    test.beforeAll(async ({ browser, request }) => {
+    test.beforeAll(async ({ browser }) => {
         const vendorContext = await browser.newContext(data.auth.vendorAuth);
         vPage = await vendorContext.newPage();
         vendor = new VendorStaffPage(vPage);
 
-        apiUtils = new ApiUtils(request);
+        apiUtils = new ApiUtils(await request.newContext());
         await apiUtils.createVendorStaff({ ...payloads.createStaff(), first_name: staff.firstName, last_name: staff.lastName }, payloads.vendorAuth);
     });
 
     test.afterAll(async () => {
         await vPage.close();
+        await apiUtils.dispose();
     });
 
     test('vendor staff menu page is rendering properly @pro @explo', async () => {

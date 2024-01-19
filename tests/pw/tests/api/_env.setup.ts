@@ -1,4 +1,4 @@
-import { test as setup, expect } from '@playwright/test';
+import { test as setup, expect, request } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
@@ -12,12 +12,16 @@ import { data } from '@utils/testData';
 setup.describe('setup test environment', () => {
     let apiUtils: ApiUtils;
 
-    setup.beforeAll(async ({ request }) => {
-        apiUtils = new ApiUtils(request);
+    setup.beforeAll(async () => {
+        apiUtils = new ApiUtils(await request.newContext());
+    });
+
+    setup.afterAll(async () => {
+        await apiUtils.dispose();
     });
 
     // setup.skip('get server url @lite', async ({ request }) => {
-    //     const apiUtils = new ApiUtils(request);
+    //     const apiUtils = new ApiUtils(await request.newContext());
     //     const headers = await apiUtils.getSiteHeaders(BASE_URL);
     //     if (headers.link) {
     //         const serverUrl = headers.link.includes('rest_route') ? BASE_URL + '/?rest_route=' : BASE_URL + '/wp-json';

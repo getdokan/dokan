@@ -1,4 +1,4 @@
-import { test, Page } from '@playwright/test';
+import { test, request, Page } from '@playwright/test';
 import { MyOrdersPage } from '@pages/myOrdersPage';
 import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
@@ -11,15 +11,16 @@ test.describe('My orders functionality test', () => {
     let cPage: Page;
     let apiUtils: ApiUtils;
 
-    test.beforeAll(async ({ browser, request }) => {
+    test.beforeAll(async ({ browser }) => {
         const customerContext = await browser.newContext(data.auth.customerAuth);
         cPage = await customerContext.newPage();
         customer = new MyOrdersPage(cPage);
-        apiUtils = new ApiUtils(request);
+        apiUtils = new ApiUtils(await request.newContext());
     });
 
     test.afterAll(async () => {
         await cPage.close();
+        await apiUtils.dispose();
     });
 
     test('customer my orders page is rendering properly @lite', async () => {

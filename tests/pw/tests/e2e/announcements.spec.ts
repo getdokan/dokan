@@ -1,4 +1,4 @@
-import { test, Page } from '@playwright/test';
+import { test, request, Page } from '@playwright/test';
 import { AnnouncementsPage } from '@pages/announcementsPage';
 import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
@@ -10,17 +10,18 @@ test.describe('Announcements test', () => {
     let apiUtils: ApiUtils;
     let announcementTitle: string;
 
-    test.beforeAll(async ({ browser, request }) => {
+    test.beforeAll(async ({ browser }) => {
         const adminContext = await browser.newContext(data.auth.adminAuth);
         aPage = await adminContext.newPage();
         admin = new AnnouncementsPage(aPage);
 
-        apiUtils = new ApiUtils(request);
+        apiUtils = new ApiUtils(await request.newContext());
         [, , announcementTitle] = await apiUtils.createAnnouncement({ ...payloads.createAnnouncement(), status: 'draft' }, payloads.adminAuth);
     });
 
     test.afterAll(async () => {
         await aPage.close();
+        await apiUtils.dispose();
     });
 
     test('dokan announcements menu page is rendering properly @pro @explo', async () => {
@@ -67,17 +68,18 @@ test.describe('Announcements test vendor', () => {
     let apiUtils: ApiUtils;
     const announcement = payloads.createAnnouncement();
 
-    test.beforeAll(async ({ browser, request }) => {
+    test.beforeAll(async ({ browser }) => {
         const vendorContext = await browser.newContext(data.auth.vendorAuth);
         vPage = await vendorContext.newPage();
         vendor = new AnnouncementsPage(vPage);
 
-        apiUtils = new ApiUtils(request);
+        apiUtils = new ApiUtils(await request.newContext());
         await apiUtils.createAnnouncement(announcement, payloads.adminAuth);
     });
 
     test.afterAll(async () => {
         await vPage.close();
+        await apiUtils.dispose();
     });
 
     // vendor

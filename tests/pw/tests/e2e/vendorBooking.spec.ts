@@ -1,4 +1,4 @@
-import { test, Page } from '@playwright/test';
+import { test, request, Page } from '@playwright/test';
 import { BookingPage } from '@pages/vendorBookingPage';
 import { ApiUtils } from '@utils/apiUtils';
 import { payloads } from '@utils/payloads';
@@ -13,7 +13,7 @@ test.describe('Booking Product test', () => {
     let bookableProductName: string;
     const bookingResourceName = data.product.booking.resource.resourceName();
 
-    test.beforeAll(async ({ browser, request }) => {
+    test.beforeAll(async ({ browser }) => {
         const adminContext = await browser.newContext(data.auth.adminAuth);
         aPage = await adminContext.newPage();
         admin = new BookingPage(aPage);
@@ -26,7 +26,7 @@ test.describe('Booking Product test', () => {
         cPage = await customerContext.newPage();
         customer = new BookingPage(cPage);
 
-        apiUtils = new ApiUtils(request);
+        apiUtils = new ApiUtils(await request.newContext());
         [, , bookableProductName] = await apiUtils.createBookableProduct(payloads.createBookableProduct(), payloads.vendorAuth);
         await vendor.addBookingResource(bookingResourceName); // todo: convert with api or db
     });
@@ -35,6 +35,7 @@ test.describe('Booking Product test', () => {
         await aPage.close();
         await vPage.close();
         await cPage.close();
+        await apiUtils.dispose();
     });
 
     test('admin can add booking product @pro', async () => {

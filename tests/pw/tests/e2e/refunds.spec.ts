@@ -1,4 +1,4 @@
-import { test, Page, APIResponse } from '@playwright/test';
+import { test, request, Page, APIResponse } from '@playwright/test';
 import { RefundsPage } from '@pages/refundsPage';
 import { ApiUtils } from '@utils/apiUtils';
 import { dbUtils } from '@utils/dbUtils';
@@ -15,7 +15,7 @@ test.describe('Refunds test', () => {
     let orderResponseBody: APIResponse;
     let orderId: string;
 
-    test.beforeAll(async ({ browser, request }) => {
+    test.beforeAll(async ({ browser }) => {
         const adminContext = await browser.newContext(data.auth.adminAuth);
         aPage = await adminContext.newPage();
         admin = new RefundsPage(aPage);
@@ -24,13 +24,14 @@ test.describe('Refunds test', () => {
         vPage = await vendorContext.newPage();
         vendor = new RefundsPage(vPage);
 
-        apiUtils = new ApiUtils(request);
+        apiUtils = new ApiUtils(await request.newContext());
         [, orderResponseBody, orderId] = await apiUtils.createOrderWithStatus(PRODUCT_ID, payloads.createOrder, data.order.orderStatus.processing, payloads.vendorAuth);
         await dbUtils.createRefund(orderResponseBody);
     });
 
     test.afterAll(async () => {
         await aPage.close();
+        await apiUtils.dispose();
     });
 
     test('admin refunds menu page is rendering properly @pro @explo', async () => {

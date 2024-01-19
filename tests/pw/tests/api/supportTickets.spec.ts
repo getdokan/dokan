@@ -7,7 +7,7 @@
 //COVERAGE_TAG: DELETE /dokan/v1/admin/support-ticket/(?P<id>[\d]+)/comment
 //COVERAGE_TAG: PUT /dokan/v1/admin/support-ticket/batch
 
-import { test, expect } from '@playwright/test';
+import { test, expect, request } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
@@ -18,9 +18,13 @@ test.describe('support ticket api test', () => {
     let apiUtils: ApiUtils;
     let supportTicketId: string;
 
-    test.beforeAll(async ({ request }) => {
-        apiUtils = new ApiUtils(request);
+    test.beforeAll(async () => {
+        apiUtils = new ApiUtils(await request.newContext());
         [, supportTicketId] = await apiUtils.createSupportTicket({ ...payloads.createSupportTicket, author: CUSTOMER_ID, store_id: VENDOR_ID });
+    });
+
+    test.afterAll(async () => {
+        await apiUtils.dispose();
     });
 
     test('get all support ticket customers @pro', async () => {

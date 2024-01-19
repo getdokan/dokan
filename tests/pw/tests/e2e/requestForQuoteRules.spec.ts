@@ -1,4 +1,4 @@
-import { test, Page } from '@playwright/test';
+import { test, request, Page } from '@playwright/test';
 import { RequestForQuotationsPage } from '@pages/requestForQuotationsPage';
 import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
@@ -10,16 +10,17 @@ test.describe('Request for quotation Rules test', () => {
     let apiUtils: ApiUtils;
     const quoteRuleTitle = data.requestForQuotation.quoteRule.title();
 
-    test.beforeAll(async ({ browser, request }) => {
+    test.beforeAll(async ({ browser }) => {
         const adminContext = await browser.newContext(data.auth.adminAuth);
         aPage = await adminContext.newPage();
         admin = new RequestForQuotationsPage(aPage);
-        apiUtils = new ApiUtils(request);
+        apiUtils = new ApiUtils(await request.newContext());
         await apiUtils.createQuoteRule({ ...payloads.createQuoteRule(), rule_name: quoteRuleTitle }, payloads.adminAuth);
     });
 
     test.afterAll(async () => {
         await aPage.close();
+        await apiUtils.dispose();
     });
 
     // quote rules

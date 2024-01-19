@@ -1,4 +1,4 @@
-import { test, Page } from '@playwright/test';
+import { test, request, Page } from '@playwright/test';
 import { PaymentsPage } from '@pages/paymentsPage';
 // import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
@@ -19,12 +19,13 @@ test.describe('Payments test', () => {
         vPage = await vendorContext.newPage();
         vendor = new PaymentsPage(vPage);
 
-        // apiUtils = new ApiUtils(request);
+        // apiUtils = new ApiUtils(await request.newContext());
     });
 
     test.afterAll(async () => {
         // await aPage.close();
         await vPage.close();
+        // await apiUtils.dispose();
     });
 
     // test('admin can add basic payment methods', async ( ) => {

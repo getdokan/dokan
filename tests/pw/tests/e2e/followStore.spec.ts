@@ -1,4 +1,4 @@
-import { test, Page } from '@playwright/test';
+import { test, request, Page } from '@playwright/test';
 import { FollowStorePage } from '@pages/followStorePage';
 // import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
@@ -19,13 +19,14 @@ test.describe('Follow stores functionality test', () => {
         cPage = await customerContext.newPage();
         customer = new FollowStorePage(cPage);
 
-        // apiUtils = new ApiUtils(request);
+        // apiUtils = new ApiUtils(await request.newContext());
         // todo: need followers
     });
 
     test.afterAll(async () => {
         await vPage.close();
         await cPage.close();
+        // await apiUtils.dispose();
     });
 
     // follow store

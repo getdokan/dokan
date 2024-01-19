@@ -17,11 +17,12 @@ test.describe('Vendor settings test', () => {
         vPage = await vendorContext.newPage();
         vendor = new VendorSettingsPage(vPage);
 
-        // apiUtils = new ApiUtils(request);
+        // apiUtils = new ApiUtils(await request.newContext());
     });
 
     test.afterAll(async () => {
         await vPage.close();
+        // await apiUtils.dispose();
     });
 
     test('vendor store settings menu page is rendering properly @lite @explo', async () => {

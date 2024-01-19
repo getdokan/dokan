@@ -1,4 +1,4 @@
-import { test, Page } from '@playwright/test';
+import { test, request, Page } from '@playwright/test';
 import { WholesaleCustomersPage } from '@pages/wholesaleCustomersPage';
 import { CustomerPage } from '@pages/customerPage';
 import { ApiUtils } from '@utils/apiUtils';
@@ -14,7 +14,7 @@ test.describe('Wholesale customers test (admin)', () => {
     let aPage: Page, cPage: Page;
     let apiUtils: ApiUtils;
 
-    test.beforeAll(async ({ browser, request }) => {
+    test.beforeAll(async ({ browser }) => {
         const adminContext = await browser.newContext(data.auth.adminAuth);
         aPage = await adminContext.newPage();
         admin = new WholesaleCustomersPage(aPage);
@@ -24,7 +24,7 @@ test.describe('Wholesale customers test (admin)', () => {
         customerPage = new CustomerPage(cPage);
         customer = new WholesaleCustomersPage(cPage);
 
-        apiUtils = new ApiUtils(request);
+        apiUtils = new ApiUtils(await request.newContext());
 
         await apiUtils.createWholesaleCustomer(payloads.createCustomer(), payloads.adminAuth);
         await apiUtils.createWholesaleCustomer(payloads.createCustomer1, payloads.adminAuth);
@@ -34,6 +34,7 @@ test.describe('Wholesale customers test (admin)', () => {
     test.afterAll(async () => {
         await aPage.close();
         await cPage.close();
+        await apiUtils.dispose();
     });
 
     test('dokan wholesale customers menu page is rendering properly @pro @explo', async () => {
@@ -89,13 +90,13 @@ test.describe.skip('Wholesale customers test customer', () => {
     let wholesalePrice: string;
     let minimumWholesaleQuantity: string;
 
-    test.beforeAll(async ({ browser, request }) => {
+    test.beforeAll(async ({ browser }) => {
         const customerContext = await browser.newContext(data.auth.customerAuth);
         cPage = await customerContext.newPage();
         customerPage = new CustomerPage(cPage);
         customer = new WholesaleCustomersPage(cPage);
 
-        apiUtils = new ApiUtils(request);
+        apiUtils = new ApiUtils(await request.newContext());
         await apiUtils.createWholesaleCustomer(payloads.createCustomer1, payloads.adminAuth); // todo: need to update customer auth if created wholesale or move to env setup
 
         const [responseBody, ,] = await apiUtils.createProduct(payloads.createWholesaleProduct(), payloads.vendorAuth);

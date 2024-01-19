@@ -1,4 +1,4 @@
-import { test, Page } from '@playwright/test';
+import { test, request, Page } from '@playwright/test';
 import { StoresPage } from '@pages/storesPage';
 // import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
@@ -16,12 +16,13 @@ test.describe('Stores test', () => {
         const adminContext = await browser.newContext(data.auth.adminAuth);
         aPage = await adminContext.newPage();
         admin = new StoresPage(aPage);
-        // apiUtils = new ApiUtils(request);
+        // apiUtils = new ApiUtils(await request.newContext());
         // [,, storeName] = await apiUtils.createStore(payloads.createStore());
     });
 
     test.afterAll(async () => {
         await aPage.close();
+        // await apiUtils.dispose();
     });
 
     // stores

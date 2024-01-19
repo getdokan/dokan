@@ -1,4 +1,4 @@
-import { test, Page } from '@playwright/test';
+import { test, request, Page } from '@playwright/test';
 import { ReverseWithdrawsPage } from '@pages/reverseWithdrawsPage';
 // import { OrdersPage } from '@pages/ordersPage';
 import { ApiUtils } from '@utils/apiUtils';
@@ -16,7 +16,7 @@ test.describe('Reverse withdraw test', () => {
     let apiUtils: ApiUtils;
     // let orderId: string;
 
-    test.beforeAll(async ({ browser, request }) => {
+    test.beforeAll(async ({ browser }) => {
         const adminContext = await browser.newContext(data.auth.adminAuth);
         aPage = await adminContext.newPage();
         admin = new ReverseWithdrawsPage(aPage);
@@ -26,7 +26,7 @@ test.describe('Reverse withdraw test', () => {
         vendor = new ReverseWithdrawsPage(vPage);
         // const vendor1 = new OrdersPage(vPage);
 
-        apiUtils = new ApiUtils(request);
+        apiUtils = new ApiUtils(await request.newContext());
 
         await dbUtils.setDokanSettings(dbData.dokan.optionName.reverseWithdraw, dbData.dokan.reverseWithdrawSettings);
 
@@ -43,6 +43,7 @@ test.describe('Reverse withdraw test', () => {
         await dbUtils.setDokanSettings(dbData.dokan.optionName.reverseWithdraw, { ...dbData.dokan.reverseWithdrawSettings, enabled: 'off' });
         await aPage.close();
         await vPage.close();
+        await apiUtils.dispose();
     });
 
     test('dokan admin reverse withdraw menu page is rendering properly @lite @explo', async () => {

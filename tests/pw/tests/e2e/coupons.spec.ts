@@ -1,4 +1,4 @@
-import { test, Page } from '@playwright/test';
+import { test, request, Page } from '@playwright/test';
 import { CouponsPage } from '@pages/couponsPage';
 import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
@@ -15,7 +15,7 @@ test.describe('Coupons test', () => {
     let marketplaceCouponCode: string;
     let couponCode: string;
 
-    test.beforeAll(async ({ browser, request }) => {
+    test.beforeAll(async ({ browser }) => {
         const adminContext = await browser.newContext(data.auth.adminAuth);
         aPage = await adminContext.newPage();
         admin = new CouponsPage(aPage);
@@ -28,7 +28,7 @@ test.describe('Coupons test', () => {
         cPage = await customerContext.newPage();
         customer = new CouponsPage(cPage);
 
-        apiUtils = new ApiUtils(request);
+        apiUtils = new ApiUtils(await request.newContext());
         [, , marketplaceCouponCode] = await apiUtils.createMarketPlaceCoupon(payloads.createMarketPlaceCoupon(), payloads.adminAuth);
         [, , couponCode] = await apiUtils.createCoupon([PRODUCT_ID], payloads.createCoupon(), payloads.vendorAuth);
     });
@@ -37,6 +37,7 @@ test.describe('Coupons test', () => {
         await aPage.close();
         await vPage.close();
         await cPage.close();
+        await apiUtils.dispose();
     });
 
     test('admin can add marketplace coupon @pro', async () => {

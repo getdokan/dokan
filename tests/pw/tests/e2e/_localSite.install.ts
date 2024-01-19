@@ -1,4 +1,4 @@
-import { test } from '@playwright/test';
+import { test, request } from '@playwright/test';
 import { data } from '@utils/testData';
 import { LoginPage } from '@pages/loginPage';
 import { LocalSetupPage } from '@pages/localSetupPage';
@@ -44,8 +44,8 @@ test.describe('setup local site', () => {
 
     // todo:  skip global setup for local_setup
 
-    test('activate dokan & woocommerce plugins', async ({ request }) => {
-        const apiUtils = new ApiUtils(request);
+    test('activate dokan & woocommerce plugins', async () => {
+        const apiUtils = new ApiUtils(await request.newContext());
         const plugins = [
             'woocommerce/woocommerce',
             'dokan/dokan',
