@@ -19,7 +19,7 @@ setup.describe.skip('setup dokan settings e2e', () => {
     let aPage: Page, vPage: Page;
     let apiUtils: ApiUtils;
 
-    setup.beforeAll(async ({ browser, }) => {
+    setup.beforeAll(async ({ browser }) => {
         const adminContext = await browser.newContext(data.auth.adminAuth);
         aPage = await adminContext.newPage();
         productAdvertisingPage = new ProductAdvertisingPage(aPage);
@@ -31,6 +31,7 @@ setup.describe.skip('setup dokan settings e2e', () => {
     setup.afterAll(async () => {
         await aPage.close();
         await vPage.close();
+        await apiUtils.dispose();
     });
 
     setup('recreate reverse withdrawal payment product via settings save @lite', async () => {

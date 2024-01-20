@@ -112,6 +112,7 @@ test.describe('Store Support test (customer)', () => {
     test.afterAll(async () => {
         await cPage.close();
         await uPage.close();
+        await apiUtils.dispose();
     });
 
     test('customer store support menu page is rendering properly @pro @explo', async () => {
@@ -179,6 +180,7 @@ test.describe('Store Support test (vendor)', () => {
 
     test.afterAll(async () => {
         await vPage.close();
+        await apiUtils.dispose();
     });
 
     // vendor

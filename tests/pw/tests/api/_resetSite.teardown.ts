@@ -17,39 +17,39 @@ test.describe('test environment', () => {
         await apiUtils.dispose();
     });
 
-    test('delete all media items req', async () => {
+    test('delete all media items', async () => {
         await apiUtils.deleteAllMediaItems(payloads.adminAuth);
     });
 
-    test('delete all products req', async () => {
+    test('delete all products', async () => {
         await apiUtils.deleteAllProducts('', payloads.adminAuth);
     });
 
-    test('delete all stores req', async () => {
+    test('delete all stores', async () => {
         await apiUtils.deleteAllStores(payloads.adminAuth); //todo: don't work
     });
 
-    test('delete all customers req', async () => {
+    test('delete all customers', async () => {
         await apiUtils.deleteAllCustomers(payloads.adminAuth);
     });
 
-    test('delete all seller badges req', async () => {
+    test('delete all seller badges', async () => {
         await apiUtils.deleteAllSellerBadges();
     });
 
-    test('delete all RFQ Rules req', async () => {
+    test('delete all RFQ Rules', async () => {
         await apiUtils.deleteAllQuoteRules(payloads.adminAuth);
     });
 
-    test('delete all request quotes req', async () => {
+    test('delete all request quotes', async () => {
         await apiUtils.deleteAllQuoteRequests(payloads.adminAuth);
     });
 
-    test('delete all announcements req', async () => {
+    test('delete all announcements', async () => {
         // await apiUtils.deleteAllAnnouncements(payloads.adminAuth);
     });
 
-    test('delete all support tickets req', async () => {
+    test('delete all support tickets', async () => {
         // await apiUtils.deleteAllSupportTickets(payloads.adminAuth);
     });
 

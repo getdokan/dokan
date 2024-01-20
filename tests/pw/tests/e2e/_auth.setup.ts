@@ -1,12 +1,12 @@
 import { test as setup, expect, request } from '@playwright/test';
 import { LoginPage } from '@pages/loginPage';
-// import { WpPage } from '@pages/wpPage';
+import { WpPage } from '@pages/wpPage';
 import { ApiUtils } from '@utils/apiUtils';
 import { payloads } from '@utils/payloads';
 import { data } from '@utils/testData';
 import { helpers } from '@utils/helpers';
 
-const { DOKAN_PRO } = process.env;
+const { DOKAN_PRO, BASE_URL } = process.env;
 
 setup.describe('authenticate users & set permalink', () => {
     let apiUtils: ApiUtils;
@@ -19,29 +19,29 @@ setup.describe('authenticate users & set permalink', () => {
         await apiUtils.dispose();
     });
 
-    // setup.skip('get server url @lite', async () => {
-    //     const apiUtils = new ApiUtils(await request.newContext());
-    //     const headers = await apiUtils.getSiteHeaders(BASE_URL);
-    //     if (headers.link) {
-    //         const serverUrl = headers.link.includes('rest_route') ? BASE_URL + '/?rest_route=' : BASE_URL + '/wp-json';
-    //         console.log('ServerUrl:', serverUrl);
-    //         process.env.SERVER_URL = serverUrl;
-    //     } else {
-    //         console.log("Headers link doesn't exists");
-    //     }
-    // });
+    setup.skip('get server url @lite', async () => {
+        const apiUtils = new ApiUtils(await request.newContext());
+        const headers = await apiUtils.getSiteHeaders(BASE_URL);
+        if (headers.link) {
+            const serverUrl = headers.link.includes('rest_route') ? BASE_URL + '/?rest_route=' : BASE_URL + '/wp-json';
+            console.log('ServerUrl:', serverUrl);
+            process.env.SERVER_URL = serverUrl;
+        } else {
+            console.log("Headers link doesn't exists");
+        }
+    });
 
     setup('authenticate admin @lite', async ({ page }) => {
         const loginPage = new LoginPage(page);
         await loginPage.adminLogin(data.admin, data.auth.adminAuthFile);
     });
 
-    // setup('admin set WpSettings @lite', async ({ page }) => {
-    //     const loginPage = new LoginPage(page);
-    //     const wpPage = new WpPage(page);
-    //     await loginPage.adminLogin(data.admin);
-    //     await wpPage.setPermalinkSettings(data.wpSettings.permalink);
-    // });
+    setup.skip('admin set WpSettings @lite', async ({ page }) => {
+        const loginPage = new LoginPage(page);
+        const wpPage = new WpPage(page);
+        await loginPage.adminLogin(data.admin);
+        await wpPage.setPermalinkSettings(data.wpSettings.permalink);
+    });
 
     setup('add customer1 @lite', async () => {
         const [, customerId] = await apiUtils.createCustomer(payloads.createCustomer1, payloads.adminAuth);
