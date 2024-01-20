@@ -6,7 +6,7 @@ import { data } from '@utils/testData';
 // import { payloads } from '@utils/payloads';
 
 test.describe('Vendor user functionality test1', () => {
-    test.use({ storageState: { cookies: [], origins: [] } });
+    test.use(data.auth.noAuth);
 
     let loginPage: LoginPage;
     let vendorPage: VendorPage;

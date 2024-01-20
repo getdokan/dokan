@@ -89,7 +89,7 @@ test.describe('Store Support test (admin)', () => {
 test.describe('Store Support test (customer)', () => {
     let customer: StoreSupportsPage;
     let guest: StoreSupportsPage;
-    let cPage: Page, uPage: Page;
+    let cPage: Page, gPage: Page;
     let apiUtils: ApiUtils;
     let orderId: string;
     let responseBody: responseBody;
@@ -101,8 +101,8 @@ test.describe('Store Support test (customer)', () => {
         customer = new StoreSupportsPage(cPage);
 
         const guestContext = await browser.newContext(data.auth.noAuth);
-        uPage = await guestContext.newPage();
-        guest = new StoreSupportsPage(uPage);
+        gPage = await guestContext.newPage();
+        guest = new StoreSupportsPage(gPage);
 
         apiUtils = new ApiUtils(await request.newContext());
         [, responseBody, orderId] = await apiUtils.createOrderWithStatus(PRODUCT_ID, { ...payloads.createOrder, customer_id: CUSTOMER_ID }, data.order.orderStatus.completed, payloads.vendorAuth);
@@ -111,7 +111,7 @@ test.describe('Store Support test (customer)', () => {
 
     test.afterAll(async () => {
         await cPage.close();
-        await uPage.close();
+        await gPage.close();
         await apiUtils.dispose();
     });
 

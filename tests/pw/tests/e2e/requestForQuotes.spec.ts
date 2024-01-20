@@ -122,7 +122,7 @@ test.describe('Request for quotation test vendor', () => {
 test.describe('Request for quotation test customer', () => {
     let customer: RequestForQuotationsPage;
     let guest: RequestForQuotationsPage;
-    let cPage: Page, uPage: Page;
+    let cPage: Page, gPage: Page;
     let apiUtils: ApiUtils;
     const productId: string[] = [];
     let productName: string;
@@ -135,8 +135,8 @@ test.describe('Request for quotation test customer', () => {
         customer = new RequestForQuotationsPage(cPage);
 
         const guestContext = await browser.newContext(data.auth.noAuth);
-        uPage = await guestContext.newPage();
-        guest = new RequestForQuotationsPage(uPage);
+        gPage = await guestContext.newPage();
+        guest = new RequestForQuotationsPage(gPage);
 
         apiUtils = new ApiUtils(await request.newContext());
 
@@ -150,7 +150,7 @@ test.describe('Request for quotation test customer', () => {
 
     test.afterAll(async () => {
         await cPage.close();
-        await uPage.close();
+        await gPage.close();
     });
 
     test('customer request for quote menu page is rendering properly @pro @explo', async () => {

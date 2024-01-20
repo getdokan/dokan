@@ -12,7 +12,7 @@ test.describe('Product Enquiry test', () => {
     // let admin: ProductEnquiryPage;
     let customer: ProductEnquiryPage;
     let guest: ProductEnquiryPage;
-    let cPage: Page, uPage: Page;
+    let cPage: Page, gPage: Page;
     let apiUtils: ApiUtils;
 
     test.beforeAll(async ({ browser }) => {
@@ -25,8 +25,8 @@ test.describe('Product Enquiry test', () => {
         customer = new ProductEnquiryPage(cPage);
 
         const guestContext = await browser.newContext(data.auth.noAuth);
-        uPage = await guestContext.newPage();
-        guest = new ProductEnquiryPage(uPage);
+        gPage = await guestContext.newPage();
+        guest = new ProductEnquiryPage(gPage);
 
         apiUtils = new ApiUtils(await request.newContext());
         const productId = await apiUtils.getProductId(data.predefined.simpleProduct.product1.name, payloads.vendorAuth);
@@ -35,7 +35,7 @@ test.describe('Product Enquiry test', () => {
 
     test.afterAll(async () => {
         await cPage.close();
-        await uPage.close();
+        await gPage.close();
         await apiUtils.dispose();
     });
 
