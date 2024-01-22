@@ -39,6 +39,11 @@ $post = get_post( $product->get_id() ); // phpcs:ignore WordPress.WP.GlobalVaria
                 <label for="<?php echo esc_attr( $product_status->get_name() ); ?>" class="form-label">
                     <?php echo esc_html( $product_status->get_title() ); ?>
                     <?php $product_status->print_required_symbol(); ?>
+                    <i
+                        class="fas fa-question-circle tips"
+                        aria-hidden="true"
+                        data-title="<?php echo esc_attr( $product_status->get_description() ); ?>">
+                    </i>
                 </label>
                 <select id="<?php echo esc_attr( $product_status->get_name() ); ?>" class="dokan-form-control" name="<?php echo esc_attr( $product_status->get_name() ); ?>" <?php echo $product_status->get_required() ? 'required' : ''; ?>>
                     <?php foreach ( $product_status->get_options() as $status => $label ) : // phpcs:ignore ?>
@@ -58,6 +63,11 @@ $post = get_post( $product->get_id() ); // phpcs:ignore WordPress.WP.GlobalVaria
                 <label for="<?php echo esc_attr( $catalog_visibility->get_name() ); ?>" class="form-label">
                     <?php echo esc_html( $catalog_visibility->get_title() ); ?>
                     <?php $catalog_visibility->print_required_symbol(); ?>
+                    <i
+                        class="fas fa-question-circle tips"
+                        aria-hidden="true"
+                        data-title="<?php echo esc_attr( $catalog_visibility->get_description() ); ?>">
+                    </i>
                 </label>
                 <select name="<?php echo esc_attr( $catalog_visibility->get_name() ); ?>" id="<?php echo esc_attr( $catalog_visibility->get_name() ); ?>" class="dokan-form-control" <?php echo $catalog_visibility->is_required() ? 'required' : ''; ?>>
                     <?php foreach ( $catalog_visibility->get_options() as $name => $label ) : ?>
@@ -79,6 +89,11 @@ $post = get_post( $product->get_id() ); // phpcs:ignore WordPress.WP.GlobalVaria
                 <label for="<?php echo esc_attr( $purchase_note->get_name() ); ?>" class="form-label">
                     <?php echo esc_html( $purchase_note->get_title() ); ?>
                     <?php $purchase_note->print_required_symbol(); ?>
+                    <i
+                        class="fas fa-question-circle tips"
+                        aria-hidden="true"
+                        data-title="<?php echo esc_attr( $purchase_note->get_description() ); ?>">
+                    </i>
                 </label>
                 <?php
                 dokan_post_input_box(
