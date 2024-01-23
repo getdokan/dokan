@@ -82,9 +82,9 @@
             inputValueHandler( value ) {
                 let data = dokan.hooks.applyFilters(
                     'dokanFieldComponentInputValue',
-                    this.fieldData.name,
                     value,
                     this.fieldValue[this.fieldData.name],
+                    this.fieldData.name,
                     this.fieldData.is_lite ?? false
                 );
 

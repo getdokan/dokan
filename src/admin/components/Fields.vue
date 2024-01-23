@@ -699,8 +699,15 @@
 
               return data;
             },
+
             validateInputData( name, newValue, oldValue, fieldData ) {
-                return dokan.hooks.applyFilters( 'dokanFieldComponentInputValue', name, newValue, oldValue, fieldData.is_lite ?? false );
+                return dokan.hooks.applyFilters(
+                  'dokanFieldComponentInputValue',
+                  newValue,
+                  oldValue,
+                  name,
+                  fieldData.is_lite ?? false
+                );
             },
             inputValueHandler( name, newValue, oldValue ) {
               this.fieldValue[ name ] = this.validateInputData( name, newValue, oldValue, this.fieldData );

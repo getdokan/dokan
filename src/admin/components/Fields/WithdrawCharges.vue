@@ -86,7 +86,13 @@ export default {
             let positiveValue = this.unFormatValue(data);
             let formatedData = this.formatPositiveValue( positiveValue );
 
-            this.fieldValue[ this.fieldData.name ][ field ] = dokan.hooks.applyFilters( 'dokanFieldComponentInputValue', this.fieldData.name, formatedData, this.fieldValue[ this.fieldData.name ][ field ], this.fieldData.is_lite ?? false );
+            this.fieldValue[ this.fieldData.name ][ field ] = dokan.hooks.applyFilters(
+              'dokanFieldComponentInputValue',
+              formatedData,
+              this.fieldValue[ this.fieldData.name ][ field ],
+              this.fieldData.name,
+              this.fieldData.is_lite ?? false
+            );
         },
         validateCombineInputData( data ) {
             if ( 'object' !== typeof data ) {
