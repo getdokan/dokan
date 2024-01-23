@@ -17,6 +17,14 @@ class SetupWizard extends DokanSetupWizard {
 
     /** @var string custom logo url of the theme */
     protected $custom_logo = '';
+    /**
+     * @var int
+     */
+    public $store_id;
+    /**
+     * @var array
+     */
+    public $store_info;
 
     /**
      * Hook in tabs.

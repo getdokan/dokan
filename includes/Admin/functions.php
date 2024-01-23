@@ -84,7 +84,7 @@ function dokan_admin_report_data( $group_by = 'day', $year = '', $start = '', $e
 
     if ( 'day' === $group_by ) {
         $group_by_query = "YEAR(p.{$date_field}), MONTH(p.{$date_field}), DAY(p.{$date_field})";
-        $date_where     = " AND DATE(p.{$date_field}) >= '{$start_date}' AND DATE(p.${date_field}) <= '{$end_date}'";
+        $date_where     = " AND DATE(p.{$date_field}) >= '{$start_date}' AND DATE(p.{$date_field}) <= '{$end_date}'";
     } else {
         $group_by_query = "YEAR(p.{$date_field}), MONTH(p.{$date_field})";
         $date_where     = " AND DATE(p.{$date_field}) >= '{$start_date}' AND DATE(p.{$date_field}) <= '{$end_date}'";
