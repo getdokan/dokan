@@ -18,8 +18,8 @@
     "format": "wp-scripts format",
     "lint:css": "wp-scripts lint-style",
     "lint:js": "wp-scripts lint-js",
-    "release": "npm run install && npm run readme && npm run build && npm run clean-files && npm run makepot && npm run version && npm run zip",
-    "release:dev": "npm run install && npm run build && npm run clean-files && npm run makepot && npm run zip"
+    "release": "npm install && npm run readme && npm run build && npm run clean-files && npm run makepot && npm run version && npm run zip",
+    "release:dev": "npm install && npm run build && npm run clean-files && npm run makepot && npm run zip"
   },
   "devDependencies": {
     "@wordpress/scripts": "^26.18.0",
