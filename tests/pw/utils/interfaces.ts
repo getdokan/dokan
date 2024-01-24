@@ -1829,3 +1829,14 @@ export interface storeContactData {
     email: string;
     message: string;
 }
+
+export interface questionsAnswers {
+    question: string;
+    editQuestion: string;
+    answer: string;
+    editAnswer: string;
+    user: {
+        username: string;
+        password: string;
+    };
+}

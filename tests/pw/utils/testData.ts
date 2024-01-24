@@ -814,6 +814,8 @@ export const data = {
                 allLogs: 'wp-admin/admin.php?page=dokan#/reports?tab=logs',
                 modules: 'wp-admin/admin.php?page=dokan#/modules',
                 tools: 'wp-admin/admin.php?page=dokan#/tools',
+                productQA: 'wp-admin/admin.php?page=dokan#/product-qa',
+                questionDetails: (questionId: string) => `wp-admin/admin.php?page=dokan#/product-qa/${questionId}`,
                 verifications: 'wp-admin/admin.php?page=dokan-seller-verifications',
                 productAdvertising: 'wp-admin/admin.php?page=dokan#/product-advertising',
                 wholeSaleCustomer: 'wp-admin/admin.php?page=dokan#/wholesale-customer',
@@ -850,6 +852,7 @@ export const data = {
             requestForQuote: 'request-quote',
             requestedQuote: 'my-account/request-a-quote',
             accountMigration: 'my-account/account-migration',
+            myAccountToProductQA: 'my-account/?product_qa',
             orderCancel: 'cart/?cancel_order',
             orderAgain: 'cart/?order_again',
             orderPay: 'checkout/order-pay',
@@ -911,6 +914,8 @@ export const data = {
                 withdraw: 'dashboard/withdraw',
                 withdrawRequests: 'dashboard/withdraw-requests',
                 badges: 'dashboard/seller-badge',
+                productQA: 'dashboard/product-questions-answers',
+                questionDetails: (questionId: string) => `dashboard/product-questions-answers/?question_id=${questionId}`,
                 reverseWithdrawal: 'dashboard/reverse-withdrawal',
                 returnRequest: 'dashboard/return-request',
                 staff: 'dashboard/staffs',
@@ -970,6 +975,9 @@ export const data = {
                 quoteRules: 'dokan/v1/request-for-quote/quote-rule',
                 sellerBadge: 'dokan/v1/seller-badge',
                 sellerBadgeEvent: 'dokan/v1/seller-badge/events',
+                productQuestions: 'dokan/v1/product-questions',
+                productQuestionsBulkActions: 'dokan/v1/product-questions/bulk_action',
+                productAnswers: 'dokan/v1/product-answers',
             },
 
             wc: {
@@ -1655,6 +1663,23 @@ export const data = {
         },
 
         badgeStatus: 'published', // published, draft
+    },
+
+    //  question answeres
+    questionAnswers: {
+        question: 'test question',
+        editQuestion: 'edited test question',
+        answer: 'test answer',
+        editAnswer: 'edited test answer',
+        user: {
+            username: String(process.env.CUSTOMER),
+            password: String(process.env.USER_PASSWORD),
+        },
+
+        filter: {
+            byVendor: String(process.env.VENDOR) + 'store',
+            byProduct: 'p1_v1 (simple)',
+        },
     },
 
     // announcement
