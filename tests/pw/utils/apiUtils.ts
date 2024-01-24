@@ -1695,7 +1695,7 @@ export class ApiUtils {
         const [, responseBody] = await this.get(endPoints.wc.getAllSystemStatus, { headers: auth });
         let activePlugins = responseBody.active_plugins.map((a: { plugin: string; version: string }) => a.plugin.split('/')[0] + ' v' + a.version);
         activePlugins.sort();
-        const conditions = ['Basic-Auth', 'bookings', 'addons', 'auctions', 'subscriptions', 'ba', 'wa', 'wb', 'ws', 'wps'];
+        const conditions = ['Basic-Auth', 'bookings', 'addons', 'auctions', 'subscriptions', 'ba', 'wa', 'wb', 'ws', 'wpa'];
         activePlugins = activePlugins.filter((e: string | string[]) => !conditions.some(el => e.includes(el)));
         // activePlugins = activePlugins.slice(1, -4);
         const compactInfo = {
