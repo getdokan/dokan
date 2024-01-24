@@ -325,6 +325,21 @@ export const endPoints = {
     getSpmvProducts: `${SERVER_URL}/dokan/v1/spmv-product/search`,
     addToStore: `${SERVER_URL}/dokan/v1/spmv-product/add-to-store`, // post
 
+    // product question answere
+    getAllProductQuestions: `${SERVER_URL}/dokan/v1/product-questions`,
+    getSingleProductQuestion: (questionId: string) => `${SERVER_URL}/dokan/v1/product-questions/${questionId}`,
+    createProductQuestion: `${SERVER_URL}/dokan/v1/product-questions`,
+    updateProductQuestion: (questionId: string) => `${SERVER_URL}/dokan/v1/product-questions/${questionId}`,
+    deleteProductQuestion: (questionId: string) => `${SERVER_URL}/dokan/v1/product-questions/${questionId}`,
+    updateBatchProductQuestions: `${SERVER_URL}/dokan/v1/product-questions/bulk_action`, // method: delete, read, unread
+    
+    getAllProductQuestionAnswers: `${SERVER_URL}/dokan/v1/product-answers`,
+    getSingleProductQuestionAnswer: (answerId: string) => `${SERVER_URL}/dokan/v1/product-answers/${answerId}`,
+    createProductQuestionAnswer: `${SERVER_URL}/dokan/v1/product-answers`,
+    updateProductQuestionAnswer: (answerId: string) => `${SERVER_URL}/dokan/v1/product-answers/${answerId}`,
+    deleteProductQuestionAnswer: (answerId: string) => `${SERVER_URL}/dokan/v1/product-answers/${answerId}`,
+
+
     wc: {
         // coupons
         getAllCoupons: `${SERVER_URL}/wc/v3/coupons`,

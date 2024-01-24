@@ -845,7 +845,7 @@ export class BasePage {
     async typeFrameSelector(frame: string, frameSelector: string, text: string): Promise<void> {
         const locator = this.page.frameLocator(frame).locator(frameSelector);
         await locator.fill(text);
-        await locator.pressSequentially(text);
+        // await locator.pressSequentially(text);
     }
 
     /**
@@ -1326,7 +1326,7 @@ export class BasePage {
     }
 
     // assert element to contain text
-    async toContainText(selector: string, text: string) {
+    async toContainText(selector: string, text: string | RegExp) {
         await expect(this.page.locator(selector)).toContainText(text);
     }
 

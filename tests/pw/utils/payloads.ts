@@ -2945,6 +2945,27 @@ export const payloads = {
         ],
     },
 
+    // product questions answeres
+
+    createProductQuestion: () => ({
+        question: 'test question_' + faker.string.nanoid(10),
+        product_id: '',
+    }),
+
+    updateProductQuestion: () => ({
+        question: 'test question updated_' + faker.string.nanoid(10),
+        status: 'hidden',
+    }),
+
+    createProductQuestionAnswer: () => ({
+        answer: 'test answer_' + faker.string.nanoid(10),
+        question_id: '',
+    }),
+
+    updateProductQuestionAnswer: () => ({
+        answer: 'test anser updated_' + faker.string.nanoid(10),
+    }),
+
     // reverse withdrawal
 
     amountToPay: {

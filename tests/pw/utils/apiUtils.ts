@@ -1204,6 +1204,47 @@ export class ApiUtils {
     }
 
     /**
+     * product questions answers
+     */
+
+    // get all product questions
+    async getAllProductQuestions(auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.get(endPoints.getAllProductQuestions, { params: { per_page: 100 }, headers: auth });
+        return responseBody;
+    }
+
+    // create product question
+    async createProductQuestion(payload: object, auth?: auth): Promise<[responseBody, string]> {
+        const [, responseBody] = await this.post(endPoints.createProductQuestion, { data: payload, headers: auth });
+        const questionId = String(responseBody?.id);
+        return [responseBody, questionId];
+    }
+
+    // update product question
+    async updateProductQuestion(questionId: string, payload: object, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.put(endPoints.updateProductQuestion(questionId), { data: payload, headers: auth });
+        return responseBody;
+    }
+
+    // delete all product questions
+    async deleteAllProductQuestions(auth?: auth): Promise<responseBody> {
+        const allProductQuestionIds = (await this.getAllProductQuestions()).map((a: { id: unknown }) => a.id);
+        if (!allProductQuestionIds?.length) {
+            console.log('No product question exists');
+            return;
+        }
+        const [, responseBody] = await this.put(endPoints.updateBatchProductQuestions, { data: { action: 'delete', ids: allProductQuestionIds }, headers: auth });
+        return responseBody;
+    }
+
+    // create product question answer
+    async createProductQuestionAnswer(payload: object, auth?: auth): Promise<[responseBody, string]> {
+        const [, responseBody] = await this.post(endPoints.createProductQuestionAnswer, { data: payload, headers: auth });
+        const answerId = String(responseBody?.id);
+        return [responseBody, answerId];
+    }
+
+    /**
      * wp api methods
      */
 

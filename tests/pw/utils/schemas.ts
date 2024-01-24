@@ -321,6 +321,57 @@ const supportTicketSchema = z.object({
     _links: linksSchema,
 });
 
+const productQuestionSchema = z.object({
+    id: z.number(),
+    product_id: z.number(),
+    question: z.string(),
+    user_id: z.number(),
+    read: z.number(),
+    status: z.string(),
+    created_at: z.string(),
+    updated_at: z.string(),
+    answer: z.object({
+        id: z.number(),
+        question_id: z.number(),
+        answer: z.string(),
+        user_id: z.number(),
+        created_at: z.string(),
+        updated_at: z.string(),
+        human_readable_created_at: z.string(),
+        human_readable_updated_at: z.string(),
+        user_display_name: z.string(),
+    }),
+    user_display_name: z.string(),
+    human_readable_created_at: z.string(),
+    human_readable_updated_at: z.string(),
+    display_human_readable_created_at: z.boolean(),
+    display_human_readable_updated_at: z.boolean(),
+    product: z.object({
+        id: z.number(),
+        title: z.string(),
+        image: z.string(),
+    }),
+    vendor: z.object({
+        id: z.number(),
+        name: z.string(),
+        avatar: z.string(),
+    }),
+    _links: linksSchema,
+});
+
+const productQuestionAnswerSchema = z.object({
+    id: z.number(),
+    question_id: z.number(),
+    answer: z.string(),
+    user_id: z.number(),
+    created_at: z.string(),
+    updated_at: z.string(),
+    human_readable_created_at: z.string(),
+    human_readable_updated_at: z.string(),
+    user_display_name: z.string(),
+    _links: linksSchema,
+});
+
 export const schemas = {
     abuseReportsSchema: {
         abuseReportReasonsSchema: z.array(
@@ -1973,4 +2024,16 @@ export const schemas = {
             success: z.boolean(),
         }),
     }, //TODO:
+
+    productQaSchema: {
+        productQuestionSchema: productQuestionSchema,
+        productQuestionsSchema: z.array(productQuestionSchema),
+
+        batchUpdateproductQuestionsSchema: z.object({
+            message: z.string(),
+        }),
+
+        productQuestionAnswerSchema: productQuestionAnswerSchema,
+        productQuestionAnswersSchema: z.array(productQuestionAnswerSchema),
+    },
 };

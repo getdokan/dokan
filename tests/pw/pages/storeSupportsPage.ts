@@ -77,11 +77,11 @@ export class StoreSupportsPage extends AdminPage {
     // decrease unread support ticket count
     async decreaseUnreadSupportTicketCount(supportTicketId: string) {
         await this.goIfNotThere(data.subUrls.backend.dokan.storeSupport);
-        const getUnreadCount = Number(await this.getElementText(selector.admin.dokan.storeSupport.unreadTicketCount));
+        const unreadCount = Number(await this.getElementText(selector.admin.dokan.storeSupport.unreadTicketCount));
         await this.searchSupportTicket(supportTicketId);
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.api.dokan.storeSupport, selector.admin.dokan.storeSupport.supportTicketLink(supportTicketId));
         const getNewUnreadCount = Number(await this.getElementText(selector.admin.dokan.storeSupport.unreadTicketCount));
-        expect(getNewUnreadCount).toEqual(getUnreadCount - 1);
+        expect(getNewUnreadCount).toEqual(unreadCount - 1);
     }
 
     // filter store supports
