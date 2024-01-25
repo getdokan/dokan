@@ -55,7 +55,6 @@ class Dashboard {
      * @return void
      */
     public function get_big_counter_widgets() {
-
         if ( ! apply_filters( 'dokan_dashboard_widget_applicable', true, 'reports' ) ) {
             return;
         }
@@ -86,7 +85,6 @@ class Dashboard {
      * @return void
      */
     public function get_orders_widgets() {
-
         if ( ! apply_filters( 'dokan_dashboard_widget_applicable', true, 'orders' ) ) {
             return;
         }
@@ -149,7 +147,6 @@ class Dashboard {
      * @return void
      */
     public function get_products_widgets() {
-
         if ( ! apply_filters( 'dokan_dashboard_widget_applicable', true, 'products' ) ) {
             return;
         }
@@ -174,7 +171,6 @@ class Dashboard {
      * @return void
      */
     public function get_sales_report_chart_widget() {
-
         if ( ! apply_filters( 'dokan_dashboard_widget_applicable', true, 'reports' ) ) {
             return;
         }
