@@ -402,7 +402,7 @@ class SetupWizard extends DokanSetupWizard {
         }
 
         update_user_meta( $this->store_id, 'dokan_profile_settings', $dokan_settings );
-
+        do_action( 'dokan_store_profile_saved', $this->store_id, $dokan_settings );
         do_action( 'dokan_seller_wizard_store_field_save', $this );
 
         wp_safe_redirect( esc_url_raw( $this->get_next_step_link() ) );

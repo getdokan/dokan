@@ -12,7 +12,7 @@
   "minimum-stability": "dev",
   "require": {
     "php": ">=7.4",
-    "appsero/client": "^v1.4.0",
+    "appsero/client": "^v2.0.1",
     "jakeasmith/http_build_url": "^1"
   },
   "require-dev": {
