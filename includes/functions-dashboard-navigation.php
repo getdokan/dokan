@@ -93,7 +93,7 @@ function dokan_get_dashboard_nav(): array {
      *
      * @param array<string,array> $menus
      */
-    $nav_menus = apply_filters( 'dokan_get_dashboard_nav', $menus, $listing );
+    $nav_menus = apply_filters( 'dokan_get_dashboard_nav', $menus );
 
     foreach ( $nav_menus as $nav_key => $menu ) {
         if ( ! isset( $menu['pos'] ) ) {
