@@ -1,5 +1,6 @@
 // const open = require( 'open' );
 import fs from 'fs';
+import { execSync } from 'child_process';
 import { Browser, BrowserContextOptions, Page } from '@playwright/test';
 
 export const helpers = {
@@ -342,6 +343,12 @@ export const helpers = {
         }
         envData[property] = value;
         this.writeFile(filePath, JSON.stringify(envData, null, 2));
+    },
+
+    // execute command
+    async execommand(command: string) {
+        const output = execSync(command, { encoding: 'utf-8' });
+        console.log(output);
     },
 
     async createPage(browser: Browser, options?: BrowserContextOptions | undefined) {

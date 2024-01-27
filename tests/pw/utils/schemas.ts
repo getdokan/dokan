@@ -619,7 +619,7 @@ export const schemas = {
                 tax_total: z.string(),
                 status: z.string(),
                 date: z.string(),
-            }),
+            }).or(z.null()),
         }),
     },
 

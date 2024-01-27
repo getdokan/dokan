@@ -50,6 +50,8 @@ test.describe('Request for quotation Rules test', () => {
         await admin.updateQuoteRule(data.requestForQuotation.trashedQuoteRule.title, 'permanently-delete');
     });
 
+
+    // todo: need order for this type of test for whole project , will fail others tests while running parallel
     test('admin can perform quote rule bulk actions @pro', async () => {
         await admin.quoteRulesBulkAction('trash');
     });

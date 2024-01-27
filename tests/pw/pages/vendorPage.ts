@@ -81,7 +81,6 @@ export class VendorPage extends BasePage {
         }
         await this.clearAndType(selector.vendor.vRegistration.phone, vendorInfo.phoneNumber);
         await this.checkIfVisible(selector.customer.cDashboard.termsAndConditions);
-        // await this.checkIfVisible(selector.customer.cDashboard.termsAndConditions); // todo: fix
         const subscriptionPackIsVisible = await this.isVisible(selector.vendor.vRegistration.subscriptionPack);
         subscriptionPackIsVisible && (await this.selectByLabel(selector.vendor.vRegistration.subscriptionPack, data.predefined.vendorSubscription.nonRecurring));
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.setupWizard, selector.vendor.vRegistration.register);

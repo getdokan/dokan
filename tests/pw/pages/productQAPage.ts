@@ -51,7 +51,7 @@ export class ProductQAPage extends BasePage {
         await this.toBeVisible(selector.admin.dokan.productQA.questionDetails.goBack);
 
         // question details elements are visible
-        const { questionInput, saveQuestion, questionText,...questionDetails } = selector.admin.dokan.productQA.questionDetails.questionDetails; // todo: need to add questiontext
+        const { questionInput, saveQuestion, questionText, ...questionDetails } = selector.admin.dokan.productQA.questionDetails.questionDetails; // todo: need to add questiontext
         await this.multipleElementVisible(questionDetails);
 
         // status elements are visible
@@ -136,7 +136,9 @@ export class ProductQAPage extends BasePage {
         await this.clickAndWaitForResponse(data.subUrls.api.dokan.productQuestions, selector.admin.dokan.productQA.questionDetails.confirmAction);
         await this.toBeVisible(selector.admin.dokan.productQA.questionDetails.visibilityStatusSaveSuccessMessage);
         action == 'hide' ? await this.toBeVisible(selector.admin.dokan.productQA.questionDetails.status.hiddenStatus) : await this.toBeVisible(selector.admin.dokan.productQA.questionDetails.status.visibleStatus);
-        action == 'hide' ? await this.toBeVisible(selector.admin.dokan.productQA.questionDetails.status.showInProductPage) : await this.toBeVisible(selector.admin.dokan.productQA.questionDetails.status.hideFromProductPage);
+        action == 'hide'
+            ? await this.toBeVisible(selector.admin.dokan.productQA.questionDetails.status.showInProductPage)
+            : await this.toBeVisible(selector.admin.dokan.productQA.questionDetails.status.hideFromProductPage);
     }
 
     // delete answer

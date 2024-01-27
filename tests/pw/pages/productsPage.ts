@@ -714,18 +714,4 @@ export class ProductsPage extends AdminPage {
 
         await this.clickAndAcceptAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, selector.vendor.product.bulkActions.applyAction);
     }
-
-    // upload media // todo: move to base-page and merge with wpUploadFile
-    async uploadMedia(file: string) {
-        await this.wait(0.5);
-        const uploadedMediaIsVisible = await this.isVisible(selector.wpMedia.uploadedMediaFirst);
-        if (uploadedMediaIsVisible) {
-            await this.click(selector.wpMedia.uploadedMediaFirst);
-        } else {
-            await this.uploadFile(selector.wpMedia.selectFilesInput, file);
-            const isSelectDisabled = await this.isDisabled(selector.wpMedia.select);
-            isSelectDisabled && (await this.click(selector.wpMedia.selectUploadedMedia));
-            await this.click(selector.wpMedia.select);
-        }
-    }
 }

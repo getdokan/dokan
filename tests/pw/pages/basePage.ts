@@ -6,6 +6,7 @@
 
 import { expect, Page, BrowserContext, Cookie, Request, Response, Locator, Frame, FrameLocator, JSHandle, ElementHandle } from '@playwright/test';
 import { data } from '@utils/testData';
+import { selector } from '@pages/selectors';
 
 // This Page Contains All Necessary Playwright Automation Methods
 
@@ -1506,6 +1507,19 @@ export class BasePage {
         if (elementExists) {
             const element = this.getElement(selector);
             await element.click();
+        }
+    }
+
+    async uploadMedia(file: string) {
+        // await this.wait(0.5);
+        const uploadedMediaIsVisible = await this.isVisible(selector.wpMedia.uploadedMediaFirst);
+        if (uploadedMediaIsVisible) {
+            await this.click(selector.wpMedia.uploadedMediaFirst);
+        } else {
+            await this.uploadFile(selector.wpMedia.selectFilesInput, file);
+            const isSelectDisabled = await this.isDisabled(selector.wpMedia.select);
+            isSelectDisabled && (await this.click(selector.wpMedia.selectUploadedMedia));
+            await this.click(selector.wpMedia.select);
         }
     }
 

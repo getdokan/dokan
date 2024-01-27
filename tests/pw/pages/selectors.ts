@@ -33,13 +33,20 @@ export const selector = {
         // User Forget Password
         resetPasswordEmail: '#user_login',
         resetPasswordBtn: '.woocommerce-Button.button',
+
+        // page not found
+        pageNotFound: '//h1[text()="Oops! That page can’t be found."]',
     },
 
     backend: {
+        // page not found
+        pageNotFound: '//h1[text()="Oops! That page can’t be found."]',
+
         // setup
         alreadyInstalled: '//h1[contains(text(), "Already Installed")]',
         languageContinue: '#language-continue',
         letsGo: '//a[contains(text(), "go!")]',
+
         // db setup
         dbName: '#dbname',
         dbUserName: '#uname',
@@ -48,6 +55,7 @@ export const selector = {
         dbTablePrefix: '#prefix',
         submit: '.step input',
         runTheInstallation: '.step a',
+
         // site info
         siteTitle: '#weblog_title',
         adminUserName: '#user_login',
@@ -64,11 +72,14 @@ export const selector = {
         login: '#wp-submit',
         dashboardMenu: '.wp-first-item > .wp-menu-name',
         dashboardText: '.wrap h1',
+
         // Admin Logout
         userMenu: '#wp-admin-bar-my-account',
         logout: '#wp-admin-bar-logout a',
+
         // Logout Message
         logoutSuccessMessage: '#login p',
+
         // Login Error
         loginError: '#login_error',
     },
@@ -3210,6 +3221,9 @@ export const selector = {
         // Vendor Setup Wizard
         vSetup: {
             // Intro
+            setupLogo: 'h1#wc-logo',
+            setupLogoImage: 'h1#wc-logo img',
+            setupwizardContent: '//div[@class="wc-setup-content"]//div//p',
             letsGo: '.lets-go-btn',
             notRightNow: '.not-right-now-btn',
 
@@ -6835,6 +6849,7 @@ export const selector = {
 
         // Customer Single Store
         cSingleStore: {
+            singleStoreDiv: 'div.dokan-single-store',
             // Store Profile Summary
             storeProfile: {
                 storeProfileSummary: '.dokan-single-store .profile-info-summery',

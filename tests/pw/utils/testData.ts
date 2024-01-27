@@ -2114,6 +2114,18 @@ export const data = {
         },
     },
 
+    // image
+    image: {
+        avatar: 'utils/sampleData/avatar.png',
+        dokan: 'utils/sampleData/dokan.png',
+        license: 'utils/sampleData/license.png',
+    },
+
+    // command
+    command: {
+        permalink: 'npm run wp-env run tests-cli wp rewrite structure /%postname%/',
+    },
+
     // install wordpress
     installWp: {
         // db info
