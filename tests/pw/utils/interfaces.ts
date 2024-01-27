@@ -623,6 +623,7 @@ export interface dokanSetupWizard {
 // Vendor Setup Wizard
 export interface vendorSetupWizard {
     choice: boolean;
+    setupWizardEnabled: boolean;
     storeProductsPerPage: string;
     street1: string;
     street2: string;
@@ -711,6 +712,8 @@ export interface vendor {
         termsAndConditions: string;
         biography: string;
         supportButtonText: string;
+
+        addressFieldsEnabled: boolean;
 
         openingClosingTime: {
             days: string[];

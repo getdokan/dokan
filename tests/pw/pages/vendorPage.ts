@@ -46,6 +46,15 @@ export class VendorPage extends BasePage {
         await this.toHaveValue(selector.vendor.product.edit.title, productName);
     }
 
+    // open vendor registration form
+    async openVendorRegistrationForm() {
+        await this.goto(data.subUrls.frontend.myAccount);
+        const regIsVisible = await this.isVisible(selector.customer.cRegistration.regEmail);
+        !regIsVisible && (await this.loginPage.logout());
+        await this.focusAndClick(selector.vendor.vRegistration.regVendor);
+        await this.waitForVisibleLocator(selector.vendor.vRegistration.firstName);
+    }
+
     // vendor registration
     async vendorRegister(vendorInfo: vendor['vendorInfo'], setupWizardData: vendorSetupWizard): Promise<void> {
         const username = vendorInfo.firstName() + vendorInfo.lastName().replace("'", '');
@@ -63,8 +72,7 @@ export class VendorPage extends BasePage {
         await this.click(selector.vendor.vRegistration.shopUrl);
 
         // fill address if enabled on registration
-        const addressInputIsVisible = await this.isVisible(selector.vendor.vRegistration.street1);
-        if (addressInputIsVisible) {
+        if (vendorInfo.addressFieldsEnabled) {
             await this.clearAndType(selector.vendor.vRegistration.street1, vendorInfo.street1);
             await this.clearAndType(selector.vendor.vRegistration.street2, vendorInfo.street2);
             await this.clearAndType(selector.vendor.vRegistration.city, vendorInfo.city);
@@ -83,7 +91,9 @@ export class VendorPage extends BasePage {
         await this.checkIfVisible(selector.customer.cDashboard.termsAndConditions);
         const subscriptionPackIsVisible = await this.isVisible(selector.vendor.vRegistration.subscriptionPack);
         subscriptionPackIsVisible && (await this.selectByLabel(selector.vendor.vRegistration.subscriptionPack, data.predefined.vendorSubscription.nonRecurring));
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.setupWizard, selector.vendor.vRegistration.register);
+        setupWizardData.setupWizardEnabled
+            ? await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.setupWizard, selector.vendor.vRegistration.register)
+            : await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.dashboard, selector.vendor.vRegistration.register);
         const registrationErrorIsVisible = await this.isVisible(selector.customer.cWooSelector.wooCommerceError);
         if (registrationErrorIsVisible) {
             const hasError = await this.hasText(selector.customer.cWooSelector.wooCommerceError, data.customer.registration.registrationErrorMessage);
@@ -93,12 +103,13 @@ export class VendorPage extends BasePage {
             }
         }
         subscriptionPackIsVisible && (await this.customer.placeOrder('bank', false, true, false));
-        await this.vendorSetupWizard(setupWizardData);
+        setupWizardData.setupWizardEnabled && (await this.vendorSetupWizard(setupWizardData));
     }
 
     // vendor setup wizard
     async vendorSetupWizard(setupWizardData: vendorSetupWizard): Promise<void> {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.setupWizard);
+
         if (setupWizardData.choice) {
             await this.click(selector.vendor.vSetup.letsGo);
             await this.clearAndType(selector.vendor.vSetup.street1, setupWizardData.street1);

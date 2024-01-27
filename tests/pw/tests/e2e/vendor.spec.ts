@@ -1,11 +1,13 @@
 import { test, Page } from '@playwright/test';
 import { LoginPage } from '@pages/loginPage';
 import { VendorPage } from '@pages/vendorPage';
+import { dbData } from '@utils/dbData';
+import { dbUtils } from '@utils/dbUtils';
 // import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
 // import { payloads } from '@utils/payloads';
 
-test.describe('Vendor user functionality test1', () => {
+test.describe('Vendor user functionality test', () => {
     test.use(data.auth.noAuth);
 
     let loginPage: LoginPage;
@@ -26,6 +28,12 @@ test.describe('Vendor user functionality test1', () => {
 
     test('vendor can register @lite', async () => {
         await vendorPage.vendorRegister(data.vendor.vendorInfo, { ...data.vendorSetupWizard, choice: false });
+    });
+
+    test('vendor can register (address fields are enabled) @lite', async () => {
+        await dbUtils.setDokanSettings(dbData.dokan.optionName.general, { ...dbData.dokan.generalSettings, enabled_address_on_reg: 'on' });
+        await vendorPage.vendorRegister({ ...data.vendor.vendorInfo, addressFieldsEnabled: true }, { ...data.vendorSetupWizard, choice: false });
+        await dbUtils.setDokanSettings(dbData.dokan.optionName.general, { ...dbData.dokan.generalSettings, enabled_address_on_reg: 'off' });
     });
 
     test('vendor can login @lite', async () => {

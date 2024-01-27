@@ -98,6 +98,10 @@ test.describe('Product functionality test', () => {
         await vendor.vendorAddProductCategory(data.predefined.simpleProduct.product1.name, data.product.category.unCategorized);
     });
 
+    // todo: move to other files: product categories
+    // todo: add multistep product categories test
+    // todo: add product categories settings test
+
     test('vendor product menu page is rendering properly @lite @explo', async () => {
         await vendor.vendorProductsRenderProperly();
     });

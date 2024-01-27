@@ -109,7 +109,6 @@ export class SingleProductPage extends CustomerPage {
     async viewMoreProducts(productName: string) {
         await this.goToProductDetails(productName);
         await this.click(selector.customer.cSingleProduct.menus.moreProducts);
-
         await this.toBeVisible(selector.customer.cSingleProduct.moreProducts.moreProductsDiv);
         await this.notToHaveCount(selector.customer.cSingleProduct.moreProducts.product, 0);
     }

@@ -62,4 +62,6 @@ test.describe('Store categories test', () => {
         const [, , categoryName] = await apiUtils.createStoreCategory(payloads.createStoreCategory(), payloads.adminAuth);
         await vendor.vendorUpdateStoreCategory(categoryName);
     });
+
+    // todo: add multi store category tests
 });

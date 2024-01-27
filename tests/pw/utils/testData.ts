@@ -739,6 +739,7 @@ export const data = {
 
     // Vendor Setup Wizard
     vendorSetupWizard: {
+        setupWizardEnabled: true,
         choice: true,
         storeProductsPerPage: '12',
         street1: 'abc street',
@@ -1060,6 +1061,9 @@ export const data = {
             termsAndConditions: 'Vendor Terms and Conditions',
             biography: 'Vendor biography',
             supportButtonText: 'Get Support',
+
+            // address fields enable flag (on vendor registration)
+            addressFieldsEnabled: false,
 
             account: {
                 updateSuccessMessage: 'Account details changed successfully.',
@@ -2114,6 +2118,11 @@ export const data = {
         },
     },
 
+    status: {
+        on: 'on',
+        off: 'off',
+    },
+
     // image
     image: {
         avatar: 'utils/sampleData/avatar.png',
@@ -2124,6 +2133,7 @@ export const data = {
     // command
     command: {
         permalink: 'npm run wp-env run tests-cli wp rewrite structure /%postname%/',
+        permalinkLocal: `cd ${process.env.SITE_PATH} && wp rewrite structure /%postname%/ && wp rewrite flush`,
     },
 
     // install wordpress

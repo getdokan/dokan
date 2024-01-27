@@ -640,4 +640,40 @@ export const dbData = {
     woocommerceSettings: {
         woocommerce_enable_myaccount_registration: 'yes',
     },
+
+    // test db data
+
+    testData: {
+        dokan: {
+            generalSettings: {
+                // site settings
+                site_options: '',
+                admin_access: 'on', // vendor edit product test needs it to disable
+                custom_store_url: 'stores',
+                setup_wizard_logo_url: '',
+                setup_wizard_message:
+                    '<p>Thank you for choosing The Marketplace to power your online store! This quick setup wizard will help you configure the basic settings. <strong>It&rsquo;s completely optional and shouldn&rsquo;t take longer than two minutes.</strong> Test wizard message.</p>',
+                setup_wozard_message_without_html:
+                    'Thank you for choosing The Marketplace to power your online store! This quick setup wizard will help you configure the basic settings. It’s completely optional and shouldn’t take longer than two minutes. Test wizard message.',
+                disable_welcome_wizard: 'off',
+                global_digital_mode: 'sell_both',
+                enable_shipstation_logging: 'off',
+                data_clear_on_uninstall: 'off',
+
+                // vendor store settings
+                vendor_store_options: '',
+                seller_enable_terms_and_conditions: 'on',
+                store_products_per_page: '12',
+                enabled_address_on_reg: 'off',
+                enable_tc_on_reg: 'on',
+                enable_single_seller_mode: 'off',
+                store_category_type: 'multiple', // none, multiple
+
+                // product page settings
+                product_page_options: '',
+                show_vendor_info: 'on',
+                enabled_more_products_tab: 'on',
+            },
+        },
+    },
 };

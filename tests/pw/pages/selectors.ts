@@ -3282,6 +3282,8 @@ export const selector = {
 
         // Vendor Dashboard
         vDashboard: {
+            dokanAlert: '.dokan-alert.dokan-alert-warning',
+
             // Dashboard Menus
             menus: {
                 dashboard: '.dashboard a',

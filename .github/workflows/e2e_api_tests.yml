@@ -1,8 +1,8 @@
 name: E2E_API Tests
 
 on:
+    # workflow will run daily at 8:00 AM BDT (2:00 AM UTC)
     schedule:
-        # workflow will run daily at 8:00 AM BDT (2:00 AM UTC)
         - cron: '0 2 * * *'
     # workflow will trigger on pull request
     pull_request:
@@ -201,26 +201,26 @@ jobs:
                       const script = require("./tests/pw/utils/gitTestSummary.ts")
                       return await script({github, context, core})
 
-            # # Find PR comment
-            # - name: Find PR comment by github-actions[bot]
-            #   uses: peter-evans/find-comment@v2
-            #   id: find-comment
-            #   if: github.event_name == 'pull_request'
-            #   with:
-            #       issue-number: ${{ github.event.pull_request.number }}
-            #       comment-author: 'github-actions[bot]'
-            #       body-includes: Tests Summary
+            # Find PR comment
+            - name: Find PR comment by github-actions[bot]
+              uses: peter-evans/find-comment@v2
+              id: find-comment
+              if: github.event_name == 'pull_request'
+              with:
+                  issue-number: ${{ github.event.pull_request.number }}
+                  comment-author: 'github-actions[bot]'
+                  body-includes: Tests Summary
 
-            # # Post test summary as PR comment
-            # - name: Create or update PR comment
-            #   uses: peter-evans/create-or-update-comment@v2
-            #   if: github.event_name == 'pull_request'
-            #   with:
-            #       comment-id: ${{ steps.find-comment.outputs.comment-id }}
-            #       issue-number: ${{ github.event.pull_request.number }}
-            #       body: ${{ steps.prepare-test-summary.outputs.result }}
-            #       reactions: hooray
-            #       edit-mode: replace
+            # Post test summary as PR comment
+            - name: Create or update PR comment
+              uses: peter-evans/create-or-update-comment@v2
+              if: github.event_name == 'pull_request'
+              with:
+                  comment-id: ${{ steps.find-comment.outputs.comment-id }}
+                  issue-number: ${{ github.event.pull_request.number }}
+                  body: ${{ steps.prepare-test-summary.outputs.result }}
+                  reactions: hooray
+                  edit-mode: replace
 
             # Upload artifacts
             - name: Archive test artifacts (screenshots, HTML snapshots, Reports)
