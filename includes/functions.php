@@ -4352,3 +4352,21 @@ if ( ! function_exists( 'dokan_user_update_to_seller' ) ) {
         do_action( 'dokan_new_seller_created', $user_id, $vendor->get_shop_info() );
     }
 }
+
+/**
+ * Get new product creation URL.
+ *
+ * @since 3.9.7
+ *
+ * @return false|string
+ */
+function dokan_get_new_product_url() {
+    $one_step_product_create = 'on' === dokan_get_option( 'one_step_product_create', 'dokan_selling', 'on' );
+
+    return $one_step_product_create ? dokan_edit_product_url( 0, true ) : add_query_arg(
+        [
+            '_dokan_add_product_nonce' => wp_create_nonce( 'dokan_add_product_nonce' ),
+        ],
+        dokan_get_navigation_url( 'new-product' )
+    );
+}

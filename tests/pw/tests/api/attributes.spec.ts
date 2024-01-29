@@ -11,6 +11,7 @@ import { test, expect } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
+import { schemas } from '@utils/schemas';
 
 test.describe('attribute api test', () => {
     let apiUtils: ApiUtils;
@@ -18,7 +19,7 @@ test.describe('attribute api test', () => {
     let attributeId: string;
     let attribute: any;
     let attributeTerm: any;
-    let attributeTermId: string;
+    let attributeTermId: string; //todo: why attributetermId is needed here
 
     test.beforeAll(async ({ request }) => {
         apiUtils = new ApiUtils(request);
@@ -31,12 +32,14 @@ test.describe('attribute api test', () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllAttributes);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.attributesSchema.attributesSchema);
     });
 
     test('get single attribute @lite', async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getSingleAttribute(attributeId));
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.attributesSchema.attributeSchema);
     });
 
     test('create an attribute @lite', async () => {
@@ -44,18 +47,21 @@ test.describe('attribute api test', () => {
         expect(response.status()).toBe(201);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.attributesSchema.attributeSchema);
     });
 
     test('update an attribute @lite', async () => {
         const [response, responseBody] = await apiUtils.put(endPoints.updateAttribute(attributeId), { data: payloads.updateAttribute() });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.attributesSchema.attributeSchema);
     });
 
     test('delete an attribute @lite', async () => {
         const [response, responseBody] = await apiUtils.delete(endPoints.deleteAttribute(attributeId));
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.attributesSchema.attributeSchema);
     });
 
     test('update batch attributes @lite', async () => {
@@ -69,6 +75,7 @@ test.describe('attribute api test', () => {
         const [response, responseBody] = await apiUtils.put(endPoints.batchUpdateAttributes, { data: { update: batchAttributes } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.attributesSchema.batchupdateAttributesSchema);
     });
 
     test('set default attribute @lite', async () => {
@@ -81,6 +88,7 @@ test.describe('attribute api test', () => {
         const [response, responseBody] = await apiUtils.put(endPoints.setDefaultAttribute(productId), { data: { attributes: [payload] } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.attributesSchema.setDefaultAttributeSchema);
     });
 
     test('update product attribute @lite', async () => {
@@ -108,5 +116,6 @@ test.describe('attribute api test', () => {
         const [response, responseBody] = await apiUtils.post(endPoints.updateProductAttribute(productId), { data: payload });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.attributesSchema.updateProductAttributeSchema);
     });
 });

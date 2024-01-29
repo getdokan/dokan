@@ -86,14 +86,12 @@ test.describe('withdraw api test', () => {
     });
 
     test('get all withdraw method charges @lite', async () => {
-        test.skip(true, 'feature not merged yet');
         const [response, responseBody] = await apiUtils.get(endPoints.getAllWithdrawMethodCharges);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
     test('get withdraw charge details @lite', async () => {
-        test.skip(true, 'feature not merged yet');
         const [response, responseBody] = await apiUtils.get(endPoints.getWithdrawCharge, { params: payloads.withdrawCharge });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();

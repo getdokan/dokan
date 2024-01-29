@@ -22,11 +22,11 @@ test.describe('Email verifications test', () => {
         await uPage.close();
     });
 
-    test('user can see registration notice (2-step authentication) while registering as customer @pro ', async () => {
+    test('user can see registration notice (2-step authentication) while registering as customer @pro', async () => {
         await guest.register(user);
     });
 
-    test('user can see registration notice (2-step authentication) while loggingIn @pro ', async () => {
+    test('user can see registration notice (2-step authentication) while loggingIn @pro', async () => {
         await guest.login(user);
     });
 });

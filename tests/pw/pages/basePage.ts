@@ -1320,6 +1320,11 @@ export class BasePage {
         await expect(this.page.locator(selector)).toBeVisible();
     }
 
+    // assert checkbox to be checked
+    async toBeChecked(selector: string) {
+        await expect(this.page.locator(selector)).toBeChecked();
+    }
+
     // assert element to contain text
     async toContainText(selector: string, text: string) {
         await expect(this.page.locator(selector)).toContainText(text);

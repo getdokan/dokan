@@ -5,7 +5,7 @@ import { data } from '@utils/testData';
 import { payloads } from '@utils/payloads';
 import { responseBody } from '@utils/interfaces';
 
-const { VENDOR_ID, CUSTOMER_ID, PRODUCT_ID } = global as any;
+const { VENDOR_ID, CUSTOMER_ID, PRODUCT_ID } = process.env;
 
 test.describe('Store Support test (admin)', () => {
     let admin: StoreSupportsPage;

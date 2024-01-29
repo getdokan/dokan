@@ -1,6 +1,6 @@
 // const open = require( 'open' );
 import fs from 'fs';
-import { Browser, BrowserContextOptions } from '@playwright/test';
+import { Browser, BrowserContextOptions, Page } from '@playwright/test';
 
 export const helpers = {
     // replace '_' to space & capitalize first letter of string
@@ -21,6 +21,8 @@ export const helpers = {
 
     // returns a random integer number between min (inclusive) and max (exclusive)
     getRandomArbitraryInteger: (min: number, max: number) => Math.floor(Math.random() * (max - min) + min),
+
+    getRandomNumber: (min: number, max: number) => Math.floor(Math.random() * (max - min + 1)) + min,
 
     // random number between 0 and 1000
     randomNumber: () => Math.floor(Math.random() * 1000),
@@ -345,5 +347,11 @@ export const helpers = {
     async createPage(browser: Browser, options?: BrowserContextOptions | undefined) {
         const browserContext = await browser.newContext(options);
         return browserContext.newPage();
+    },
+
+    async closePages(pages: Page[]): Promise<void> {
+        for (const page of pages) {
+            await page.close();
+        }
     },
 };

@@ -13,6 +13,15 @@ on:
 
     # workflow can be manually triggered
     workflow_dispatch:
+      inputs:
+        testsuite:
+          description: Choose which test suite to run
+          default: All
+          type: choice
+          options:
+            - E2E
+            - API
+            - All
 
 # Cancels all previous workflow runs for pull requests that have not completed.
 concurrency:
@@ -69,8 +78,7 @@ jobs:
             - name: Composer install and build (Dokan-lite)
               if: success()
               run: |
-                  composer install --no-dev
-                  composer dump-autoload -o
+                composer install --no-dev -o
 
             - name: Npm install and build (Dokan-lite)
               if: success()
@@ -150,17 +158,17 @@ jobs:
                   cd tests/pw
                   npm run pw:browser-with-deps
 
-            # Install only the OS dependencies if cache hit  not needed
-            - name: Install Playwright OS dependencies
-              if: steps.playwright-cache.outputs.cache-hit == 'true'
-              run: |
-                cd tests/pw
-                npm run pw:deps-only
+            # # Install only the OS dependencies if cache hit  not needed
+            # - name: Install Playwright OS dependencies
+            #   if: steps.playwright-cache.outputs.cache-hit == 'true'
+            #   run: |
+            #     cd tests/pw
+            #     npm run pw:deps-only
 
             # Run e2e tests
             - name: 🧪 Running the e2e tests
               id: e2e-test
-              if: success()
+              if: success() || ( success() && (github.event_name == 'workflow_dispatch' && (github.event.inputs.testsuite == 'E2E' || github.event.inputs.testsuite == 'All')))
               timeout-minutes: 40
               run: |
                   cd tests/pw 
@@ -169,7 +177,7 @@ jobs:
             # Run API tests
             - name: 🧪 Running the api tests
               id: api-test
-              if: always() && steps.db-port.outcome == 'success'
+              if: always() && steps.db-port.outcome == 'success' || ( always() && steps.db-port.outcome == 'success' && (github.event_name == 'workflow_dispatch' && (github.event.inputs.testsuite == 'API' || github.event.inputs.testsuite == 'All')))
               timeout-minutes: 5
               run: |
                   cd tests/pw 

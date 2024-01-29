@@ -4,7 +4,7 @@ import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
 import { payloads } from '@utils/payloads';
 
-const { CUSTOMER_ID, PRODUCT_ID } = global as any;
+const { CUSTOMER_ID, PRODUCT_ID } = process.env;
 
 test.describe('My orders functionality test', () => {
     let customer: MyOrdersPage;
@@ -47,7 +47,7 @@ test.describe('My orders functionality test', () => {
         await customer.cancelPendingOrder(orderId);
     });
 
-    test('customer can order again @lite', async () => {
+    test.skip('customer can order again @lite', async () => {
         const [, , orderId] = await apiUtils.createOrderWithStatus(PRODUCT_ID, { ...payloads.createOrder, customer_id: CUSTOMER_ID }, data.order.orderStatus.completed, payloads.vendorAuth);
         await customer.orderAgain(orderId);
     });

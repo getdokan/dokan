@@ -3,12 +3,12 @@
  * Plugin Name: Dokan
  * Plugin URI: https://dokan.co/wordpress/
  * Description: An e-commerce marketplace plugin for WordPress. Powered by WooCommerce and weDevs.
- * Version: 3.9.6
+ * Version: 3.9.7
  * Author: weDevs
  * Author URI: https://dokan.co/
  * Text Domain: dokan-lite
  * WC requires at least: 5.0.0
- * WC tested up to: 8.4.0
+ * WC tested up to: 8.5.2
  * Domain Path: /languages/
  * License: GPL2
  */
@@ -64,7 +64,7 @@ final class WeDevs_Dokan {
      *
      * @var string
      */
-    public $version = '3.9.6';
+    public $version = '3.9.7';
 
     /**
      * Instance of self
@@ -291,7 +291,7 @@ final class WeDevs_Dokan {
     public function declare_woocommerce_feature_compatibility() {
         if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
             \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', __FILE__, true );
-            \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'cart_checkout_blocks', __FILE__, false );
+            \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'cart_checkout_blocks', __FILE__, true );
         }
     }
 

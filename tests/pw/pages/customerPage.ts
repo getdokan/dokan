@@ -250,36 +250,32 @@ export class CustomerPage extends BasePage {
     // clear cart
     async clearCart(): Promise<void> {
         await this.goToCart();
-        const cartProductIsVisible = await this.isVisible(selector.customer.cCart.removeFirstItem);
-        if (cartProductIsVisible) {
+        const emptyCart = await this.isVisible(selector.customer.cCart.cartEmptyMessage);
+        if (!emptyCart) {
             await this.clickAndWaitForResponseAndLoadState(data.subUrls.api.wc.store, selector.customer.cCart.removeFirstItem, 207);
-            // await this.toContainText(selector.customer.cWooSelector.wooCommerceSuccessMessage, 'removed. Undo?'); //todo: remove in future
             await this.clearCart();
-        } else {
-            await this.toContainText(selector.customer.cCart.cartEmptyMessage, 'Your cart is currently empty!');
         }
     }
 
     // Update product quantity from cart
     async updateProductQuantityOnCart(productName: string, quantity: string): Promise<void> {
         await this.goToCart();
-        await this.clearAndType(selector.customer.cCart.quantity(productName), quantity);
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.cart, selector.customer.cCart.updateCart);
-        await this.toContainText(selector.customer.cWooSelector.wooCommerceSuccessMessage, 'Cart updated.');
+        await this.typeAndWaitForResponse(data.subUrls.api.wc.store, selector.customer.cCart.quantity(productName), quantity, 207);
         await this.toHaveValue(selector.customer.cCart.quantity(productName), quantity);
     }
 
     // apply coupon
-    async applyCoupon(couponTitle: string): Promise<void> {
+    async applyCoupon(couponCode: string): Promise<void> {
         await this.goToCart();
-        const couponIsApplied = await this.isVisible(selector.customer.cCart.removeCoupon(couponTitle));
+        const couponIsApplied = await this.isVisible(selector.customer.cCart.removeCoupon(couponCode));
         if (couponIsApplied) {
-            await this.clickAndWaitForResponse(data.subUrls.frontend.removeCoupon, selector.customer.cCart.removeCoupon(couponTitle));
-            await this.toContainText(selector.customer.cWooSelector.wooCommerceSuccessMessage, 'Coupon has been removed.');
+            await this.clickAndWaitForResponse(data.subUrls.api.wc.store, selector.customer.cCart.removeCoupon(couponCode), 207);
+            await this.toContainText(selector.customer.cWooSelector.wooCommerceNoriceBannerContent, `Coupon code "${couponCode}" has been removed from your cart.`);
         }
-        await this.clearAndType(selector.customer.cCart.couponCode, couponTitle);
-        await this.clickAndWaitForResponse(data.subUrls.frontend.applyCoupon, selector.customer.cCart.applyCoupon);
-        await this.toContainText(selector.customer.cWooSelector.wooCommerceSuccessMessage, 'Coupon code applied successfully.');
+        await this.click(selector.customer.cCart.addCoupon);
+        await this.clearAndType(selector.customer.cCart.couponCode, couponCode);
+        await this.clickAndWaitForResponse(data.subUrls.api.wc.store, selector.customer.cCart.applyCoupon, 207);
+        await this.toContainText(selector.customer.cWooSelector.wooCommerceNoriceBannerContent, `Coupon code "${couponCode}" has been applied to your cart.`);
     }
 
     // add billing address in checkout

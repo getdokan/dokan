@@ -757,6 +757,13 @@ class Assets {
                         __( 'December', 'dokan-lite' ),
                     ],
                 ],
+                'sweetalert_local'       => [
+                    'cancelButtonText'     => __( 'Cancel', 'dokan-lite' ),
+                    'closeButtonText'      => __( 'Close', 'dokan-lite' ),
+                    'confirmButtonText'    => __( 'OK', 'dokan-lite' ),
+                    'denyButtonText'       => __( 'No', 'dokan-lite' ),
+                    'closeButtonAriaLabel' => __( 'Close this dialog', 'dokan-lite' ),
+                ],
             ]
         );
 

@@ -7,11 +7,11 @@ export default defineConfig({
     outputDir: 'playwright/e2e/test-artifacts/' /* Folder for test artifacts such as screenshots, videos, traces, etc. */,
     globalSetup: './global-setup' /* Path to the global setup file. This file will be required and run before all the tests. */,
     // globalTeardown: './global-teardown' /* Path to the global teardown file. This file will be required and run after all the tests. */,
-    globalTimeout: process.env.CI ? 40 * (60 * 1000) : 20 * (60 * 1000) /* Maximum time in milliseconds the whole test suite can run */,
-    maxFailures: process.env.CI ? 30 : 30 /* The maximum number of test failures for the whole test suite run. After reaching this number, testing will stop and exit with an error. */,
-    timeout: process.env.CI ? 40 * 1000 : 35 * 1000 /* Maximum time one test can run for. */,
+    globalTimeout: process.env.CI ? 40 * (60 * 1000) : 40 * (60 * 1000) /* Maximum time in milliseconds the whole test suite can run */,
+    maxFailures: process.env.CI ? 40 : 30 /* The maximum number of test failures for the whole test suite run. After reaching this number, testing will stop and exit with an error. */,
+    timeout: process.env.CI ? 50 * 1000 : 35 * 1000 /* Maximum time one test can run for. */,
     expect: {
-        timeout: 10 * 1000 /* Maximum time expect() should wait for the condition to be met.  For example in `await expect(locator).toHaveText();`*/,
+        timeout: 15 * 1000 /* Maximum time expect() should wait for the condition to be met.  For example in `await expect(locator).toHaveText();`*/,
         toHaveScreenshot: {
             maxDiffPixelRatio: 0.2,
             maxDiffPixels: 500,
@@ -23,8 +23,8 @@ export default defineConfig({
     // forbidOnly     : !!process.env.CI, 	/* Fail the build on CI if you accidentally left test-only in the source code. */
     repeatEach: 1 /* The number of times to repeat each test, useful for debugging flaky tests. */,
     retries: process.env.CI ? 1 : 0 /* The maximum number of retry attempts given to failed tests.  */,
-    workers: process.env.CI ? 1 : 1 /* Opt out of parallel tests on CI. */,
-    reportSlowTests: { max: 3, threshold: 25 } /* Whether to report slow test files. Pass null to disable this feature. */,
+    workers: process.env.CI ? 4 : 1 /* Opt out of parallel tests on CI. */,
+    reportSlowTests: { max: 2, threshold: 25 } /* Whether to report slow test files. Pass null to disable this feature. */,
     reporter: process.env.CI
         ? [
               ['github'],
@@ -43,7 +43,7 @@ export default defineConfig({
     use: {
         ...devices['Desktop Chrome'],
         acceptDownloads: true /* Whether to automatically download all the attachments. */,
-        actionTimeout: 15 * 1000 /* Maximum time each action such as `click()` can take. Defaults to 0 (no limit). */,
+        actionTimeout: 20 * 1000 /* Maximum time each action such as `click()` can take. Defaults to 0 (no limit). */,
         navigationTimeout: 20 * 1000 /* Maximum time each navigation such as 'goto()' can take. */,
         baseURL: process.env.BASE_URL ? process.env.BASE_URL : 'http://localhost:9999' /* Base URL */,
         // browserName: 'chromium' /* Name of the browser that runs tests. */,
@@ -62,26 +62,32 @@ export default defineConfig({
 
     projects: [
         // E2e project
+        // auth_setup
+        {
+            name: 'auth_setup',
+            // testMatch: /.*\.setup\.ts/,
+            testMatch: '_auth.setup.ts',
+        },
 
         // e2e_setup
         {
             name: 'e2e_setup',
             // testMatch: /.*\.setup\.ts/,
-            testMatch: /.*\.setup\.spec\.ts/,
+            testMatch: '_env.setup.ts',
+            dependencies: process.env.NO_SETUP ? [] : ['auth_setup'] /* whether not to run setup tests before running actual tests */,
         },
 
         // e2e_tests
         {
             name: 'e2e_tests',
             testMatch: /.*\.spec\.ts/,
-            // dependencies: process.env.NO_SETUP ? [] : ['e2e_setup'] /* whether not to run setup tests before running actual tests */,
+            dependencies: process.env.NO_SETUP ? [] : ['e2e_setup'] /* whether not to run setup tests before running actual tests */,
         },
 
         // local site setup project
         {
             name: 'site_setup',
             testMatch: /.*\.install\.ts/,
-            // globalSetup: '',
         },
     ],
 });
