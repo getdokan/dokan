@@ -591,3 +591,5 @@ function dokan() { // phpcs:ignore
 
 // Lets Go....
 dokan();
+
+// Path: includes/Upgrade/Manager.php
