@@ -1,13 +1,13 @@
 <template>
     <div class='dokan-radio-fields'>
-        <label v-for='( item, index ) in items' :class="item.value === value ? 'checked' : ''" :key="`${index}-${item.value}`" :for="`${index}-${item.value}`">
+        <label v-for='( item, index ) in items' :class="item.value === value ? 'checked' : ''" :key="`${index}-${item.value}`" :for="`${index}-${item.value}-${id}`">
             <span class='dashicons dashicons-yes'></span>
             <input
                 type='radio'
                 class='radio'
                 :name="'dokan-group-radio-input'"
                 :value="item.value"
-                :id="`${index}-${item.value}`"
+                :id="`${index}-${item.value}-${id}`"
                 @change="$emit('onChange', $event.target.value)"
             />
             {{ item.label }}
@@ -19,7 +19,7 @@
 
 export default {
     name: 'DokanRadioGroup',
-    props: ['items','value'],
+    props: ['items','value', 'id'],
     emits: ['onChange']
 }
 </script>

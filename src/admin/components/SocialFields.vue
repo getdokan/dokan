@@ -19,7 +19,8 @@
                 :is-secret="false"
             />
             <secret-input
-                v-model="fieldValue[fieldData.name]"
+                :value="fieldValue[fieldData.name]"
+                @input="event => inputValueHandler( event )"
                 :type='fieldData.type'
                 v-if="fieldData.type === 'text'"
             />
@@ -76,6 +77,20 @@
                 }
 
                 return false;
+            },
+
+            inputValueHandler( value ) {
+                let data = dokan.hooks.applyFilters(
+                    'dokanFieldComponentInputValue',
+                    value,
+                    this.fieldValue[this.fieldData.name],
+                    this.fieldData.name,
+                    this.fieldData.is_lite ?? false
+                );
+
+                console.log(value);
+
+                this.fieldValue[this.fieldData.name] = data;
             },
         },
     }
