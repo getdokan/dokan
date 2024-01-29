@@ -1,14 +1,14 @@
 # Copyright (c) 2024 weDevs Pte. Ltd. All Rights Reserved.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 3.9.6\n"
+"Project-Id-Version: Dokan 3.9.7\n"
 "Report-Msgid-Bugs-To: https://dokan.co/contact/\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-01-11T04:52:54+00:00\n"
+"POT-Creation-Date: 2024-01-26T10:01:54+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.8.1\n"
 "X-Domain: dokan-lite\n"
@@ -552,22 +552,22 @@ msgstr ""
 #: includes/Admin/Settings.php:378
 #: includes/Admin/SetupWizard.php:551
 #: includes/Dashboard/Templates/Dashboard.php:96
-#: includes/Order/functions.php:420
-#: templates/dashboard/orders-widget.php:25
+#: includes/Order/functions.php:426
+#: templates/dashboard/orders-widget.php:33
 msgid "Completed"
 msgstr ""
 
 #: includes/Admin/Settings.php:379
 #: includes/Admin/SetupWizard.php:558
 #: includes/Dashboard/Templates/Dashboard.php:106
-#: includes/Order/functions.php:435
-#: templates/dashboard/orders-widget.php:35
+#: includes/Order/functions.php:441
+#: templates/dashboard/orders-widget.php:43
 #: templates/orders/listing.php:132
 msgid "Processing"
 msgstr ""
 
 #: includes/Admin/Settings.php:380
-#: includes/Order/functions.php:430
+#: includes/Order/functions.php:436
 msgid "On-hold"
 msgstr ""
 
@@ -1906,14 +1906,14 @@ msgid "mins"
 msgstr ""
 
 #: includes/Assets.php:728
-#: templates/products/edit-product-single.php:299
+#: templates/products/edit-product-single.php:306
 #: templates/products/new-product.php:252
 #: templates/products/tmpl-add-product-popup.php:88
 msgid "To"
 msgstr ""
 
 #: includes/Assets.php:730
-#: templates/products/edit-product-single.php:292
+#: templates/products/edit-product-single.php:299
 #: templates/products/new-product.php:245
 #: templates/products/tmpl-add-product-popup.php:81
 msgid "From"
@@ -2021,301 +2021,12 @@ msgstr ""
 msgid "December"
 msgstr ""
 
-#: includes/Assets.php:773
-msgid "This field is required"
-msgstr ""
-
-#: includes/Assets.php:774
-msgid "Please fix this field."
-msgstr ""
-
-#: includes/Assets.php:775
-msgid "Please enter a valid email address."
-msgstr ""
-
-#: includes/Assets.php:776
-msgid "Please enter a valid URL."
-msgstr ""
-
-#: includes/Assets.php:777
-msgid "Please enter a valid date."
-msgstr ""
-
-#: includes/Assets.php:778
-msgid "Please enter a valid date (ISO)."
-msgstr ""
-
-#: includes/Assets.php:779
-msgid "Please enter a valid number."
-msgstr ""
-
-#: includes/Assets.php:780
-msgid "Please enter only digits."
-msgstr ""
-
-#: includes/Assets.php:781
-msgid "Please enter a valid credit card number."
-msgstr ""
-
-#: includes/Assets.php:782
-msgid "Please enter the same value again."
-msgstr ""
-
-#: includes/Assets.php:783
-msgid "Please enter no more than {0} characters."
-msgstr ""
-
-#: includes/Assets.php:784
-msgid "Please enter at least {0} characters."
-msgstr ""
-
-#: includes/Assets.php:785
-msgid "Please enter a value between {0} and {1} characters long."
-msgstr ""
-
-#: includes/Assets.php:786
-msgid "Please enter a value between {0} and {1}."
-msgstr ""
-
-#: includes/Assets.php:787
-msgid "Please enter a value less than or equal to {0}."
-msgstr ""
-
-#: includes/Assets.php:788
-msgid "Please enter a value greater than or equal to {0}."
-msgstr ""
-
-#: includes/Assets.php:950
-msgid "Upload featured image"
-msgstr ""
-
-#: includes/Assets.php:951
-msgid "Choose a file"
-msgstr ""
-
-#: includes/Assets.php:952
-msgid "Add Images to Product Gallery"
-msgstr ""
-
-#: includes/Assets.php:953
-msgid "Set featured image"
-msgstr ""
-
-#: includes/Assets.php:954
-#: includes/woo-views/html-product-download.php:8
-msgid "Insert file URL"
-msgstr ""
-
-#: includes/Assets.php:955
-msgid "Add to gallery"
-msgstr ""
-
-#: includes/Assets.php:956
-msgid "Sorry, this attribute option already exists, Try a different one."
-msgstr ""
-
-#: includes/Assets.php:957
-msgid "Warning! This product will not have any variations if this option is not checked."
-msgstr ""
-
-#: includes/Assets.php:958
-msgid "Enter a name for the new attribute term:"
-msgstr ""
-
-#: includes/Assets.php:959
-msgid "Remove this attribute?"
-msgstr ""
-
-#. translators: %d: max linked variation.
-#: includes/Assets.php:968
-msgid "Are you sure you want to link all variations? This will create a new variation for each and every possible combination of variation attributes (max %d per run)."
-msgstr ""
-
-#: includes/Assets.php:969
-msgid "Enter a value"
-msgstr ""
-
-#: includes/Assets.php:970
-msgid "Variation menu order (determines position in the list of variations)"
-msgstr ""
-
-#: includes/Assets.php:971
-msgid "Enter a value (fixed or %)"
-msgstr ""
-
-#: includes/Assets.php:972
-msgid "Are you sure you want to delete all variations? This cannot be undone."
-msgstr ""
-
-#: includes/Assets.php:973
-msgid "Last warning, are you sure?"
-msgstr ""
-
-#: includes/Assets.php:974
-msgid "Choose an image"
-msgstr ""
-
-#: includes/Assets.php:975
-msgid "Set variation image"
-msgstr ""
-
-#: includes/Assets.php:976
-msgid "variation added"
-msgstr ""
-
-#: includes/Assets.php:977
-msgid "variations added"
-msgstr ""
-
-#: includes/Assets.php:978
-msgid "No variations added"
-msgstr ""
-
-#: includes/Assets.php:979
-msgid "Are you sure you want to remove this variation?"
-msgstr ""
-
-#: includes/Assets.php:980
-msgid "Sale start date (YYYY-MM-DD format or leave blank)"
-msgstr ""
-
-#: includes/Assets.php:981
-msgid "Sale end date (YYYY-MM-DD format or leave blank)"
-msgstr ""
-
-#: includes/Assets.php:982
-msgid "Save changes before changing page?"
-msgstr ""
-
-#: includes/Assets.php:983
-msgid "%qty% variation"
-msgstr ""
-
-#: includes/Assets.php:984
-msgid "%qty% variations"
-msgstr ""
-
-#: includes/Assets.php:985
-msgid "No Result Found"
-msgstr ""
-
-#: includes/Assets.php:986
-msgid "Please insert value less than the regular price!"
-msgstr ""
-
-#. translators: %s: decimal
-#: includes/Assets.php:988
-#: includes/Assets.php:1166
-msgid "Please enter with one decimal point (%s) without thousand separators."
-msgstr ""
-
-#. translators: %s: price decimal separator
-#: includes/Assets.php:990
-#: includes/Assets.php:1168
-msgid "Please enter with one monetary decimal point (%s) without thousand separators and currency symbols."
-msgstr ""
-
-#: includes/Assets.php:991
-#: includes/Assets.php:1169
-msgid "Please enter in country code with two capital letters."
-msgstr ""
-
-#: includes/Assets.php:992
-#: includes/Assets.php:1170
-msgid "Please enter in a value less than the regular price."
-msgstr ""
-
-#: includes/Assets.php:993
-#: includes/Assets.php:1171
-msgid "This product has produced sales and may be linked to existing orders. Are you sure you want to delete it?"
-msgstr ""
-
-#: includes/Assets.php:994
-#: includes/Assets.php:1172
-msgid "This action cannot be reversed. Are you sure you wish to erase personal data from the selected orders?"
-msgstr ""
-
-#: includes/Assets.php:1004
-msgid "Select and Crop"
-msgstr ""
-
-#: includes/Assets.php:1005
-msgid "Choose Image"
-msgstr ""
-
-#: includes/Assets.php:1006
-msgid "Product title is required"
-msgstr ""
-
-#: includes/Assets.php:1007
-msgid "Product category is required"
-msgstr ""
-
-#: includes/Assets.php:1008
-msgid "Product created successfully"
-msgstr ""
-
-#: includes/Assets.php:1012
-msgid "One result is available, press enter to select it."
-msgstr ""
-
-#: includes/Assets.php:1013
-msgid "%qty% results are available, use up and down arrow keys to navigate."
-msgstr ""
-
-#: includes/Assets.php:1014
-msgid "No matches found"
-msgstr ""
-
-#: includes/Assets.php:1015
-msgid "Loading failed"
-msgstr ""
-
-#: includes/Assets.php:1016
-msgid "Please enter 1 or more characters"
-msgstr ""
-
-#: includes/Assets.php:1017
-msgid "Please enter %qty% or more characters"
-msgstr ""
-
-#: includes/Assets.php:1018
-msgid "Please delete 1 character"
-msgstr ""
-
-#: includes/Assets.php:1019
-msgid "Please delete %qty% characters"
-msgstr ""
-
-#: includes/Assets.php:1020
-msgid "You can only select 1 item"
-msgstr ""
-
-#: includes/Assets.php:1021
-msgid "You can only select %qty% items"
-msgstr ""
-
-#: includes/Assets.php:1022
-msgid "Loading more results&hellip;"
-msgstr ""
-
-#: includes/Assets.php:1023
-msgid "Searching&hellip;"
-msgstr ""
-
-#: includes/Assets.php:1024
-msgid "Calculating"
-msgstr ""
-
-#: includes/Assets.php:1025
-msgid "OK"
-msgstr ""
-
-#: includes/Assets.php:1026
+#: includes/Assets.php:761
+#: includes/Assets.php:1033
 #: includes/Product/functions.php:310
 #: templates/my-orders.php:95
 #: templates/orders/details.php:196
-#: templates/products/edit-product-single.php:263
+#: templates/products/edit-product-single.php:270
 #: templates/products/new-product.php:232
 #: templates/products/tmpl-add-product-popup.php:68
 #: templates/settings/bank-payment-method-settings.php:139
@@ -2331,15 +2042,327 @@ msgstr ""
 msgid "Cancel"
 msgstr ""
 
+#: includes/Assets.php:762
+#: includes/Product/functions.php:321
+#: templates/orders/details.php:347
+#: templates/settings/store-form.php:38
+msgid "Close"
+msgstr ""
+
+#: includes/Assets.php:763
+#: includes/Assets.php:1032
+msgid "OK"
+msgstr ""
+
+#: includes/Assets.php:764
+#: includes/Vendor/SettingsApi/Settings/Pages/Store.php:283
+#: includes/Vendor/SettingsApi/Settings/Pages/Store.php:430
+#: includes/Vendor/SettingsApi/Settings/Pages/Store.php:446
+#: includes/Vendor/SettingsApi/Settings/Pages/Store.php:462
+#: includes/Vendor/SettingsApi/Settings/Pages/Store.php:478
+#: includes/Vendor/SettingsApi/Settings/Pages/Store.php:506
+msgid "No"
+msgstr ""
+
+#: includes/Assets.php:765
+msgid "Close this dialog"
+msgstr ""
+
+#: includes/Assets.php:780
+msgid "This field is required"
+msgstr ""
+
+#: includes/Assets.php:781
+msgid "Please fix this field."
+msgstr ""
+
+#: includes/Assets.php:782
+msgid "Please enter a valid email address."
+msgstr ""
+
+#: includes/Assets.php:783
+msgid "Please enter a valid URL."
+msgstr ""
+
+#: includes/Assets.php:784
+msgid "Please enter a valid date."
+msgstr ""
+
+#: includes/Assets.php:785
+msgid "Please enter a valid date (ISO)."
+msgstr ""
+
+#: includes/Assets.php:786
+msgid "Please enter a valid number."
+msgstr ""
+
+#: includes/Assets.php:787
+msgid "Please enter only digits."
+msgstr ""
+
+#: includes/Assets.php:788
+msgid "Please enter a valid credit card number."
+msgstr ""
+
+#: includes/Assets.php:789
+msgid "Please enter the same value again."
+msgstr ""
+
+#: includes/Assets.php:790
+msgid "Please enter no more than {0} characters."
+msgstr ""
+
+#: includes/Assets.php:791
+msgid "Please enter at least {0} characters."
+msgstr ""
+
+#: includes/Assets.php:792
+msgid "Please enter a value between {0} and {1} characters long."
+msgstr ""
+
+#: includes/Assets.php:793
+msgid "Please enter a value between {0} and {1}."
+msgstr ""
+
+#: includes/Assets.php:794
+msgid "Please enter a value less than or equal to {0}."
+msgstr ""
+
+#: includes/Assets.php:795
+msgid "Please enter a value greater than or equal to {0}."
+msgstr ""
+
+#: includes/Assets.php:957
+msgid "Upload featured image"
+msgstr ""
+
+#: includes/Assets.php:958
+msgid "Choose a file"
+msgstr ""
+
+#: includes/Assets.php:959
+msgid "Add Images to Product Gallery"
+msgstr ""
+
+#: includes/Assets.php:960
+msgid "Set featured image"
+msgstr ""
+
+#: includes/Assets.php:961
+#: includes/woo-views/html-product-download.php:8
+msgid "Insert file URL"
+msgstr ""
+
+#: includes/Assets.php:962
+msgid "Add to gallery"
+msgstr ""
+
+#: includes/Assets.php:963
+msgid "Sorry, this attribute option already exists, Try a different one."
+msgstr ""
+
+#: includes/Assets.php:964
+msgid "Warning! This product will not have any variations if this option is not checked."
+msgstr ""
+
+#: includes/Assets.php:965
+msgid "Enter a name for the new attribute term:"
+msgstr ""
+
+#: includes/Assets.php:966
+msgid "Remove this attribute?"
+msgstr ""
+
+#. translators: %d: max linked variation.
+#: includes/Assets.php:975
+msgid "Are you sure you want to link all variations? This will create a new variation for each and every possible combination of variation attributes (max %d per run)."
+msgstr ""
+
+#: includes/Assets.php:976
+msgid "Enter a value"
+msgstr ""
+
+#: includes/Assets.php:977
+msgid "Variation menu order (determines position in the list of variations)"
+msgstr ""
+
+#: includes/Assets.php:978
+msgid "Enter a value (fixed or %)"
+msgstr ""
+
+#: includes/Assets.php:979
+msgid "Are you sure you want to delete all variations? This cannot be undone."
+msgstr ""
+
+#: includes/Assets.php:980
+msgid "Last warning, are you sure?"
+msgstr ""
+
+#: includes/Assets.php:981
+msgid "Choose an image"
+msgstr ""
+
+#: includes/Assets.php:982
+msgid "Set variation image"
+msgstr ""
+
+#: includes/Assets.php:983
+msgid "variation added"
+msgstr ""
+
+#: includes/Assets.php:984
+msgid "variations added"
+msgstr ""
+
+#: includes/Assets.php:985
+msgid "No variations added"
+msgstr ""
+
+#: includes/Assets.php:986
+msgid "Are you sure you want to remove this variation?"
+msgstr ""
+
+#: includes/Assets.php:987
+msgid "Sale start date (YYYY-MM-DD format or leave blank)"
+msgstr ""
+
+#: includes/Assets.php:988
+msgid "Sale end date (YYYY-MM-DD format or leave blank)"
+msgstr ""
+
+#: includes/Assets.php:989
+msgid "Save changes before changing page?"
+msgstr ""
+
+#: includes/Assets.php:990
+msgid "%qty% variation"
+msgstr ""
+
+#: includes/Assets.php:991
+msgid "%qty% variations"
+msgstr ""
+
+#: includes/Assets.php:992
+msgid "No Result Found"
+msgstr ""
+
+#: includes/Assets.php:993
+msgid "Please insert value less than the regular price!"
+msgstr ""
+
+#. translators: %s: decimal
+#: includes/Assets.php:995
+#: includes/Assets.php:1173
+msgid "Please enter with one decimal point (%s) without thousand separators."
+msgstr ""
+
+#. translators: %s: price decimal separator
+#: includes/Assets.php:997
+#: includes/Assets.php:1175
+msgid "Please enter with one monetary decimal point (%s) without thousand separators and currency symbols."
+msgstr ""
+
+#: includes/Assets.php:998
+#: includes/Assets.php:1176
+msgid "Please enter in country code with two capital letters."
+msgstr ""
+
+#: includes/Assets.php:999
+#: includes/Assets.php:1177
+msgid "Please enter in a value less than the regular price."
+msgstr ""
+
+#: includes/Assets.php:1000
+#: includes/Assets.php:1178
+msgid "This product has produced sales and may be linked to existing orders. Are you sure you want to delete it?"
+msgstr ""
+
+#: includes/Assets.php:1001
+#: includes/Assets.php:1179
+msgid "This action cannot be reversed. Are you sure you wish to erase personal data from the selected orders?"
+msgstr ""
+
+#: includes/Assets.php:1011
+msgid "Select and Crop"
+msgstr ""
+
+#: includes/Assets.php:1012
+msgid "Choose Image"
+msgstr ""
+
+#: includes/Assets.php:1013
+msgid "Product title is required"
+msgstr ""
+
+#: includes/Assets.php:1014
+msgid "Product category is required"
+msgstr ""
+
+#: includes/Assets.php:1015
+msgid "Product created successfully"
+msgstr ""
+
+#: includes/Assets.php:1019
+msgid "One result is available, press enter to select it."
+msgstr ""
+
+#: includes/Assets.php:1020
+msgid "%qty% results are available, use up and down arrow keys to navigate."
+msgstr ""
+
+#: includes/Assets.php:1021
+msgid "No matches found"
+msgstr ""
+
+#: includes/Assets.php:1022
+msgid "Loading failed"
+msgstr ""
+
+#: includes/Assets.php:1023
+msgid "Please enter 1 or more characters"
+msgstr ""
+
+#: includes/Assets.php:1024
+msgid "Please enter %qty% or more characters"
+msgstr ""
+
+#: includes/Assets.php:1025
+msgid "Please delete 1 character"
+msgstr ""
+
+#: includes/Assets.php:1026
+msgid "Please delete %qty% characters"
+msgstr ""
+
 #: includes/Assets.php:1027
-msgid "Attribute Name"
+msgid "You can only select 1 item"
+msgstr ""
+
+#: includes/Assets.php:1028
+msgid "You can only select %qty% items"
 msgstr ""
 
 #: includes/Assets.php:1029
-msgid "Are you sure? You have uploaded banner but didn't click the Update Settings button!"
+msgid "Loading more results&hellip;"
 msgstr ""
 
 #: includes/Assets.php:1030
+msgid "Searching&hellip;"
+msgstr ""
+
+#: includes/Assets.php:1031
+msgid "Calculating"
+msgstr ""
+
+#: includes/Assets.php:1034
+msgid "Attribute Name"
+msgstr ""
+
+#: includes/Assets.php:1036
+msgid "Are you sure? You have uploaded banner but didn't click the Update Settings button!"
+msgstr ""
+
+#: includes/Assets.php:1037
 #: templates/settings/header.php:20
 #: templates/settings/payment-manage.php:48
 #: templates/settings/store-form.php:270
@@ -2379,14 +2402,14 @@ msgid "Allow"
 msgstr ""
 
 #: includes/Blocks/ProductBlock.php:40
-#: templates/products/edit-product-single.php:322
+#: templates/products/edit-product-single.php:329
 #: templates/products/new-product.php:271
 #: templates/products/tmpl-add-product-popup.php:19
 msgid "Select tags/Add tags"
 msgstr ""
 
 #: includes/Blocks/ProductBlock.php:40
-#: templates/products/edit-product-single.php:322
+#: templates/products/edit-product-single.php:329
 #: templates/products/new-product.php:271
 #: templates/products/tmpl-add-product-popup.php:19
 msgid "Select product tags"
@@ -2570,21 +2593,21 @@ msgid "How should stores be sorted by default?"
 msgstr ""
 
 #: includes/Dashboard/Templates/Dashboard.php:101
-#: templates/dashboard/orders-widget.php:30
+#: templates/dashboard/orders-widget.php:38
 #: assets/js/vue-admin.js:2
 msgid "Pending"
 msgstr ""
 
 #: includes/Dashboard/Templates/Dashboard.php:111
-#: includes/Order/functions.php:445
-#: templates/dashboard/orders-widget.php:40
+#: includes/Order/functions.php:451
+#: templates/dashboard/orders-widget.php:48
 #: assets/js/vue-admin.js:2
 msgid "Cancelled"
 msgstr ""
 
 #: includes/Dashboard/Templates/Dashboard.php:116
-#: includes/Order/functions.php:440
-#: templates/dashboard/orders-widget.php:45
+#: includes/Order/functions.php:446
+#: templates/dashboard/orders-widget.php:53
 msgid "Refunded"
 msgstr ""
 
@@ -3254,16 +3277,19 @@ msgstr ""
 
 #. translators: 1) argument name, 2) argument value
 #: includes/functions-rest-api.php:22
+#: includes/functions-rest-api.php:61
 msgid "%1$s is not of type %2$s"
 msgstr ""
 
 #. translators: 1) argument name
 #: includes/functions-rest-api.php:28
+#: includes/functions-rest-api.php:67
 msgid "%s was not registered as a request argument."
 msgstr ""
 
 #. translators: 1) rest api endpoint key name
 #: includes/functions-rest-api.php:37
+#: includes/functions-rest-api.php:76
 msgid "No store found with given store id"
 msgstr ""
 
@@ -3272,12 +3298,12 @@ msgid "Online"
 msgstr ""
 
 #: includes/functions.php:775
-#: includes/Order/functions.php:454
+#: includes/Order/functions.php:460
 msgid "Draft"
 msgstr ""
 
 #: includes/functions.php:776
-#: templates/dashboard/products-widget.php:41
+#: templates/dashboard/products-widget.php:47
 #: templates/withdraw/pending-request-listing-dashboard.php:52
 #: templates/withdraw/pending-request-listing.php:45
 msgid "Pending Review"
@@ -3311,7 +3337,7 @@ msgstr ""
 
 #: includes/functions.php:1295
 #: includes/template-tags.php:410
-#: templates/dashboard/products-widget.php:16
+#: templates/dashboard/products-widget.php:22
 #: assets/js/vue-admin.js:2
 msgid "Products"
 msgstr ""
@@ -3431,7 +3457,7 @@ msgstr ""
 
 #: includes/functions.php:2276
 #: includes/REST/ProductControllerV2.php:236
-#: templates/products/edit-product-single.php:218
+#: templates/products/edit-product-single.php:225
 #: templates/products/products-listing-row.php:112
 #: templates/products/products-listing.php:138
 msgid "Simple"
@@ -3812,164 +3838,164 @@ msgstr ""
 msgid "Your {site_title} order from {order_date} is complete"
 msgstr ""
 
-#: includes/Order/functions.php:425
+#: includes/Order/functions.php:431
 msgid "Pending Payment"
 msgstr ""
 
-#: includes/Order/functions.php:450
+#: includes/Order/functions.php:456
 msgid "Failed"
 msgstr ""
 
-#: includes/Order/functions.php:636
+#: includes/Order/functions.php:642
 msgid "Order No"
 msgstr ""
 
-#: includes/Order/functions.php:637
+#: includes/Order/functions.php:643
 #: templates/orders/details.php:19
 msgid "Order Items"
 msgstr ""
 
-#: includes/Order/functions.php:638
+#: includes/Order/functions.php:644
 msgid "Shipping method"
 msgstr ""
 
-#: includes/Order/functions.php:639
+#: includes/Order/functions.php:645
 msgid "Shipping Cost"
 msgstr ""
 
-#: includes/Order/functions.php:640
+#: includes/Order/functions.php:646
 msgid "Payment method"
 msgstr ""
 
-#: includes/Order/functions.php:641
+#: includes/Order/functions.php:647
 #: templates/orders/listing.php:31
 #: templates/orders/listing.php:77
 msgid "Order Total"
 msgstr ""
 
-#: includes/Order/functions.php:642
+#: includes/Order/functions.php:648
 msgid "Earnings"
 msgstr ""
 
-#: includes/Order/functions.php:643
+#: includes/Order/functions.php:649
 #: includes/REST/OrderController.php:107
 msgid "Order Status"
 msgstr ""
 
-#: includes/Order/functions.php:644
+#: includes/Order/functions.php:650
 msgid "Order Date"
 msgstr ""
 
-#: includes/Order/functions.php:645
+#: includes/Order/functions.php:651
 msgid "Billing Company"
 msgstr ""
 
-#: includes/Order/functions.php:646
+#: includes/Order/functions.php:652
 msgid "Billing First Name"
 msgstr ""
 
-#: includes/Order/functions.php:647
+#: includes/Order/functions.php:653
 msgid "Billing Last Name"
 msgstr ""
 
-#: includes/Order/functions.php:648
+#: includes/Order/functions.php:654
 msgid "Billing Full Name"
 msgstr ""
 
-#: includes/Order/functions.php:649
+#: includes/Order/functions.php:655
 msgid "Billing Email"
 msgstr ""
 
-#: includes/Order/functions.php:650
+#: includes/Order/functions.php:656
 msgid "Billing Phone"
 msgstr ""
 
-#: includes/Order/functions.php:651
+#: includes/Order/functions.php:657
 msgid "Billing Address 1"
 msgstr ""
 
-#: includes/Order/functions.php:652
+#: includes/Order/functions.php:658
 msgid "Billing Address 2"
 msgstr ""
 
-#: includes/Order/functions.php:653
+#: includes/Order/functions.php:659
 msgid "Billing City"
 msgstr ""
 
-#: includes/Order/functions.php:654
+#: includes/Order/functions.php:660
 msgid "Billing State"
 msgstr ""
 
-#: includes/Order/functions.php:655
+#: includes/Order/functions.php:661
 msgid "Billing Postcode"
 msgstr ""
 
-#: includes/Order/functions.php:656
+#: includes/Order/functions.php:662
 msgid "Billing Country"
 msgstr ""
 
-#: includes/Order/functions.php:657
+#: includes/Order/functions.php:663
 msgid "Shipping Company"
 msgstr ""
 
-#: includes/Order/functions.php:658
+#: includes/Order/functions.php:664
 msgid "Shipping First Name"
 msgstr ""
 
-#: includes/Order/functions.php:659
+#: includes/Order/functions.php:665
 msgid "Shipping Last Name"
 msgstr ""
 
-#: includes/Order/functions.php:660
+#: includes/Order/functions.php:666
 msgid "Shipping Full Name"
 msgstr ""
 
-#: includes/Order/functions.php:661
+#: includes/Order/functions.php:667
 msgid "Shipping Address 1"
 msgstr ""
 
-#: includes/Order/functions.php:662
+#: includes/Order/functions.php:668
 msgid "Shipping Address 2"
 msgstr ""
 
-#: includes/Order/functions.php:663
+#: includes/Order/functions.php:669
 msgid "Shipping City"
 msgstr ""
 
-#: includes/Order/functions.php:664
+#: includes/Order/functions.php:670
 msgid "Shipping State"
 msgstr ""
 
-#: includes/Order/functions.php:665
+#: includes/Order/functions.php:671
 msgid "Shipping Postcode"
 msgstr ""
 
-#: includes/Order/functions.php:666
+#: includes/Order/functions.php:672
 msgid "Shipping Country"
 msgstr ""
 
-#: includes/Order/functions.php:667
+#: includes/Order/functions.php:673
 msgid "Customer IP"
 msgstr ""
 
-#: includes/Order/functions.php:668
+#: includes/Order/functions.php:674
 msgid "Customer Note"
 msgstr ""
 
-#: includes/Order/Hooks.php:275
+#: includes/Order/Hooks.php:277
 msgid "Mark parent order completed when all child orders are completed."
 msgstr ""
 
-#: includes/Order/Hooks.php:330
+#: includes/Order/Hooks.php:332
 msgid "This coupon is invalid for multiple vendors."
 msgstr ""
 
-#: includes/Order/Hooks.php:344
+#: includes/Order/Hooks.php:346
 msgid "A coupon must be restricted with a vendor product."
 msgstr ""
 
 #. translators: %s item name.
-#: includes/Order/Hooks.php:390
+#: includes/Order/Hooks.php:392
 msgid "Unable to restore stock for item %s."
 msgstr ""
 
@@ -4359,12 +4385,6 @@ msgstr[1] ""
 msgid "Expand"
 msgstr ""
 
-#: includes/Product/functions.php:321
-#: templates/orders/details.php:347
-#: templates/settings/store-form.php:38
-msgid "Close"
-msgstr ""
-
 #: includes/Product/functions.php:324
 msgid "Go to the first page"
 msgstr ""
@@ -4409,7 +4429,7 @@ msgid "Search"
 msgstr ""
 
 #: includes/Product/functions.php:364
-#: templates/products/edit-product-single.php:156
+#: templates/products/edit-product-single.php:163
 msgid "Hidden"
 msgstr ""
 
@@ -4604,8 +4624,8 @@ msgid "Untitled"
 msgstr ""
 
 #: includes/REST/AdminReportController.php:145
-#: templates/dashboard/orders-widget.php:20
-#: templates/dashboard/products-widget.php:26
+#: templates/dashboard/orders-widget.php:28
+#: templates/dashboard/products-widget.php:32
 #: templates/my-orders.php:28
 #: templates/orders/order-fee-html.php:24
 #: templates/sub-orders.php:49
@@ -4614,7 +4634,7 @@ msgstr ""
 
 #: includes/REST/AdminReportController.php:153
 #: includes/template-tags.php:417
-#: templates/dashboard/orders-widget.php:14
+#: templates/dashboard/orders-widget.php:22
 #: assets/js/vue-admin.js:2
 msgid "Orders"
 msgstr ""
@@ -6558,7 +6578,7 @@ msgstr ""
 msgid "Make Vendor Status Inactive"
 msgstr ""
 
-#: includes/Shipping/Hooks.php:113
+#: includes/Shipping/Hooks.php:116
 msgid "Shipping: "
 msgstr ""
 
@@ -6979,15 +6999,6 @@ msgstr ""
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:477
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:505
 msgid "Yes"
-msgstr ""
-
-#: includes/Vendor/SettingsApi/Settings/Pages/Store.php:283
-#: includes/Vendor/SettingsApi/Settings/Pages/Store.php:430
-#: includes/Vendor/SettingsApi/Settings/Pages/Store.php:446
-#: includes/Vendor/SettingsApi/Settings/Pages/Store.php:462
-#: includes/Vendor/SettingsApi/Settings/Pages/Store.php:478
-#: includes/Vendor/SettingsApi/Settings/Pages/Store.php:506
-msgid "No"
 msgstr ""
 
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:292
@@ -7960,19 +7971,19 @@ msgstr ""
 msgid "Save changes"
 msgstr ""
 
-#: templates/dashboard/orders-widget.php:50
+#: templates/dashboard/orders-widget.php:58
 msgid "On hold"
 msgstr ""
 
-#: templates/dashboard/products-widget.php:19
+#: templates/dashboard/products-widget.php:25
 msgid "+ Add new product"
 msgstr ""
 
-#: templates/dashboard/products-widget.php:31
+#: templates/dashboard/products-widget.php:37
 msgid "Live"
 msgstr ""
 
-#: templates/dashboard/products-widget.php:36
+#: templates/dashboard/products-widget.php:42
 msgid "Offline"
 msgstr ""
 
@@ -8363,7 +8374,7 @@ msgstr ""
 
 #: templates/emails/vendor-completed-order.php:56
 #: templates/emails/vendor-new-order.php:55
-#: templates/products/edit-product-single.php:242
+#: templates/products/edit-product-single.php:249
 #: templates/products/new-product.php:221
 #: templates/products/products-listing-row.php:91
 #: templates/products/products-listing.php:127
@@ -8475,7 +8486,7 @@ msgid "I am a vendor"
 msgstr ""
 
 #: templates/global/seller-warning.php:11
-#: templates/products/edit-product-single.php:167
+#: templates/products/edit-product-single.php:174
 #: templates/products/new-product.php:119
 msgid "Error!"
 msgstr ""
@@ -8827,7 +8838,7 @@ msgid "&larr; Orders"
 msgstr ""
 
 #: templates/products/add-new-product-modal.php:2
-#: templates/products/edit-product-single.php:140
+#: templates/products/edit-product-single.php:147
 #: templates/products/new-product.php:107
 msgid "Add New Product"
 msgstr ""
@@ -8937,77 +8948,77 @@ msgstr ""
 msgid "Access Denied, No product found"
 msgstr ""
 
-#: templates/products/edit-product-single.php:60
+#: templates/products/edit-product-single.php:67
 msgid "Access Denied"
 msgstr ""
 
-#: templates/products/edit-product-single.php:142
+#: templates/products/edit-product-single.php:149
 msgid "Edit Product"
 msgstr ""
 
-#: templates/products/edit-product-single.php:151
+#: templates/products/edit-product-single.php:158
 msgid "View Product"
 msgstr ""
 
-#: templates/products/edit-product-single.php:175
+#: templates/products/edit-product-single.php:182
 #: templates/products/new-product.php:127
 #: assets/js/vue-admin.js:2
 msgid "Success!"
 msgstr ""
 
-#: templates/products/edit-product-single.php:175
+#: templates/products/edit-product-single.php:182
 msgid "The product has been saved successfully."
 msgstr ""
 
-#: templates/products/edit-product-single.php:178
+#: templates/products/edit-product-single.php:185
 msgid "View Product &rarr;"
 msgstr ""
 
-#: templates/products/edit-product-single.php:197
+#: templates/products/edit-product-single.php:204
 msgid "Title"
 msgstr ""
 
-#: templates/products/edit-product-single.php:203
+#: templates/products/edit-product-single.php:210
 #: templates/products/new-product.php:215
 #: templates/products/tmpl-add-product-popup.php:51
 msgid "Product name.."
 msgstr ""
 
-#: templates/products/edit-product-single.php:209
+#: templates/products/edit-product-single.php:216
 msgid "Please enter product title!"
 msgstr ""
 
-#: templates/products/edit-product-single.php:225
+#: templates/products/edit-product-single.php:232
 msgid "Product Type"
 msgstr ""
 
-#: templates/products/edit-product-single.php:225
+#: templates/products/edit-product-single.php:232
 msgid "Choose Variable if your product has multiple attributes - like sizes, colors, quality etc"
 msgstr ""
 
-#: templates/products/edit-product-single.php:251
-#: templates/products/edit-product-single.php:274
+#: templates/products/edit-product-single.php:258
+#: templates/products/edit-product-single.php:281
 msgid "0.00"
 msgstr ""
 
-#: templates/products/edit-product-single.php:261
+#: templates/products/edit-product-single.php:268
 #: templates/products/new-product.php:230
 #: templates/products/tmpl-add-product-popup.php:66
 msgid "Discounted Price"
 msgstr ""
 
-#: templates/products/edit-product-single.php:262
+#: templates/products/edit-product-single.php:269
 #: templates/products/new-product.php:231
 #: templates/products/tmpl-add-product-popup.php:67
 msgid "Schedule"
 msgstr ""
 
-#: templates/products/edit-product-single.php:285
+#: templates/products/edit-product-single.php:292
 msgid "Product price can't be less than the vendor fee!"
 msgstr ""
 
-#: templates/products/edit-product-single.php:293
 #: templates/products/edit-product-single.php:300
+#: templates/products/edit-product-single.php:307
 #: templates/products/new-product.php:246
 #: templates/products/new-product.php:253
 #: templates/products/tmpl-add-product-popup.php:82
@@ -9015,39 +9026,39 @@ msgstr ""
 msgid "YYYY-MM-DD"
 msgstr ""
 
-#: templates/products/edit-product-single.php:318
+#: templates/products/edit-product-single.php:325
 #: templates/products/new-product.php:270
 #: templates/products/tmpl-add-product-popup.php:105
 msgid "Tags"
 msgstr ""
 
-#: templates/products/edit-product-single.php:359
+#: templates/products/edit-product-single.php:366
 #: templates/products/tmpl-add-product-popup.php:25
 msgid "Upload a product cover image"
 msgstr ""
 
-#: templates/products/edit-product-single.php:399
+#: templates/products/edit-product-single.php:406
 #: templates/products/new-product.php:195
 msgid "Delete image"
 msgstr ""
 
-#: templates/products/edit-product-single.php:405
+#: templates/products/edit-product-single.php:412
 #: templates/products/new-product.php:202
 #: templates/products/tmpl-add-product-popup.php:39
 msgid "Add gallery image"
 msgstr ""
 
-#: templates/products/edit-product-single.php:421
+#: templates/products/edit-product-single.php:428
 msgid "Short Description"
 msgstr ""
 
-#: templates/products/edit-product-single.php:441
+#: templates/products/edit-product-single.php:448
 #: templates/products/new-product.php:286
 msgid "Description"
 msgstr ""
 
-#: templates/products/edit-product-single.php:473
-#: templates/products/edit-product-single.php:474
+#: templates/products/edit-product-single.php:480
+#: templates/products/edit-product-single.php:481
 msgid "Save Product"
 msgstr ""
 

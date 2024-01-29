@@ -5,9 +5,9 @@
 **Requires at least:** 5.6  
 **Tested up to:** 6.4.2  
 **WC requires at least:** 5.0.0  
-**WC tested up to:** 8.4.2  
+**WC tested up to:** 8.5.2  
 **Requires PHP:** 7.4  
-**Stable tag:** 3.9.6  
+**Stable tag:** 3.9.7  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -338,7 +338,18 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 ## Changelog ##
 
-### v3.9.6 ( Jan 10, 2024 ) ###
+### v3.9.7 ( Jan 29, 2024 ) ###
+
+- **update:** Added WooCommerce Cart and Checkout Block supports for Dokan Lite
+- **fix:** Fixed an issue where the vendor’s store map address was not saved during vendor setup wizard configuration
+- **fix:** Some links under the vendor dashboard weren't working properly due to a nonce mismatch. With this release, those issues have been fixed.
+- **fix:** Fixed an issue where the valid store name required check was missing from the customer-to-vendor migration form.
+- **fix:** Fixed an issue where the customer buys digital and physical products from different vendors, shipping charges are applied separately to each vendor.
+- **fix:** Fixed some translation-related issues with the date range picker
+- **fix:** Fixed some translation-related issues with Dokan Sweetalert
+
+
+### v3.9.6 ( Jan 11, 2024 ) ###
 
 - **new** Features: Withdraw Charge
 Dokan has introduced a new feature that allows the admin to set a withdrawal charge for vendors. This charge can be either a flat rate or a percentage of the withdrawal amount based on the payment gateway used. The charge will be reflected in the details report, and vendors can see how many charges will apply when they request a withdrawal. The vendor dashboard list will also show the charge and receivable amount. This feature provides greater flexibility and transparency in managing vendor withdrawals.
