@@ -7,7 +7,7 @@ Tested up to: 6.4.2
 WC requires at least: 5.0.0
 WC tested up to: 8.5.2
 Requires PHP: 7.4
-Stable tag: 3.9.7
+Stable tag: 3.9.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -337,6 +337,10 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 == Changelog ==
+
+= v3.9.8 ( Jan 30, 2024 ) =
+
+- **fix:** Updated Appsero Client SDK library to version 2.0.2 which will fix a security issue with the previous version of the library and a fatal error caused by the library.
 
 = v3.9.7 ( Jan 29, 2024 ) =
 

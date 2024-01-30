@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b7c36dca126f9ba3110cb4dc269fedad",
+    "content-hash": "3529739a22543acf5e965b386a48176f",
     "packages": [
         {
             "name": "appsero/client",
-            "version": "v2.0.1",
+            "version": "v2.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Appsero/client.git",
-                "reference": "b87e7593c6295748e88cdbfc92a638c8a73462ce"
+                "reference": "b61c3ab21df4d44f805ee9476f9d880f8370a36b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Appsero/client/zipball/b87e7593c6295748e88cdbfc92a638c8a73462ce",
-                "reference": "b87e7593c6295748e88cdbfc92a638c8a73462ce",
+                "url": "https://api.github.com/repos/Appsero/client/zipball/b61c3ab21df4d44f805ee9476f9d880f8370a36b",
+                "reference": "b61c3ab21df4d44f805ee9476f9d880f8370a36b",
                 "shasum": ""
             },
             "require": {
@@ -56,9 +56,46 @@
             ],
             "support": {
                 "issues": "https://github.com/Appsero/client/issues",
-                "source": "https://github.com/Appsero/client/tree/v2.0.1"
+                "source": "https://github.com/Appsero/client/tree/v2.0.2"
             },
-            "time": "2024-01-16T11:20:48+00:00"
+            "time": "2024-01-30T08:15:01+00:00"
+        },
+        {
+            "name": "appsero/updater",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Appsero/updater.git",
+                "reference": "541cf090d42a9354aee2cf6438b3eee0e5e34a99"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Appsero/updater/zipball/541cf090d42a9354aee2cf6438b3eee0e5e34a99",
+                "reference": "541cf090d42a9354aee2cf6438b3eee0e5e34a99",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Appsero\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Tareq Hasan",
+                    "email": "tareq@appsero.com"
+                }
+            ],
+            "description": "Appsero client updater module",
+            "support": {
+                "issues": "https://github.com/Appsero/updater/issues",
+                "source": "https://github.com/Appsero/updater/tree/v1.0.0"
+            },
+            "time": "2023-12-06T08:32:44+00:00"
         },
         {
             "name": "jakeasmith/http_build_url",
@@ -1152,12 +1189,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "c2f616898ae8868e4d68643ad39ea34b30a860c8"
+                "reference": "040e6b96128f11f53f6633ece38d5f113c85ff4b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/c2f616898ae8868e4d68643ad39ea34b30a860c8",
-                "reference": "c2f616898ae8868e4d68643ad39ea34b30a860c8",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/040e6b96128f11f53f6633ece38d5f113c85ff4b",
+                "reference": "040e6b96128f11f53f6633ece38d5f113c85ff4b",
                 "shasum": ""
             },
             "require": {
@@ -1247,7 +1284,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-01-24T14:41:56+00:00"
+            "time": "2024-01-30T07:11:21+00:00"
         },
         {
             "name": "sebastian/cli-parser",
@@ -2219,12 +2256,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCSStandards/PHP_CodeSniffer.git",
-                "reference": "b5dc38b2afe659ebc61fcbabc90976859bea2f4a"
+                "reference": "2fbf9e38ef3307d740de375b8d2f19fc1dd19472"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/b5dc38b2afe659ebc61fcbabc90976859bea2f4a",
-                "reference": "b5dc38b2afe659ebc61fcbabc90976859bea2f4a",
+                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/2fbf9e38ef3307d740de375b8d2f19fc1dd19472",
+                "reference": "2fbf9e38ef3307d740de375b8d2f19fc1dd19472",
                 "shasum": ""
             },
             "require": {
@@ -2292,7 +2329,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2024-01-26T05:12:05+00:00"
+            "time": "2024-01-29T05:54:15+00:00"
         },
         {
             "name": "tareq1988/wp-php-cs-fixer",
