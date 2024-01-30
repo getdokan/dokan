@@ -1749,4 +1749,44 @@ export class ApiUtils {
         };
         return [responseBody, compactInfo];
     }
+
+    // get order details
+    orderDetails(responseBody: responseBody) {
+        const orderDetails = {
+            id: responseBody.id,
+            status: responseBody.status,
+            order: {
+                total: responseBody.total,
+            },
+            tax: {
+                prices_include_tax: responseBody.prices_include_tax,
+                cart_tax: responseBody.cart_tax,
+                shipping_tax: responseBody.shipping_tax,
+                discount_tax: responseBody.discount_tax,
+                total_tax: responseBody.total_tax,
+                // tax_total: responseBody.tax_lines.tax_total,
+                // shipping_tax_total: responseBody.tax_lines.shipping_tax_total,
+            },
+            shipping: {
+                shipping_total: responseBody.shipping_total,
+                shipping_tax: responseBody.shipping_tax,
+                // total: responseBody.shipping_lines.total,
+                // total_tax: responseBody.shipping_lines.total_tax,
+            },
+            discount: {
+                discount_total: responseBody.discount_total,
+                discount_tax: responseBody.discount_tax,
+            },
+            line_items:{
+                subtotal: responseBody.line_items.subtotal,
+                subtotal_tax: responseBody.line_items.subtotal_tax,
+                total: responseBody.line_items.total,
+                total_tax: responseBody.line_items.total_tax,
+                price: responseBody.line_items.price,
+                
+            }
+        };
+
+        return orderDetails;
+    }
 }

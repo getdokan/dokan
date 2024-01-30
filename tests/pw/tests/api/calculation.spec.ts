@@ -3,9 +3,10 @@ import { ApiUtils } from '@utils/apiUtils';
 import { helpers } from '@utils/helpers';
 import { payloads } from '@utils/payloads';
 import { dbUtils } from '@utils/dbUtils';
+import { dbData } from '@utils/dbData';
 import { commission, feeRecipient } from '@utils/interfaces';
 
-// test.use({ extraHTTPHeaders: { Authorization: payloads.adminAuth.Authorization } });
+test.use({ extraHTTPHeaders: { Authorization: payloads.adminAuth.Authorization } });
 
 test.describe.skip('calculation test', () => {
     let apiUtils: ApiUtils;
@@ -155,5 +156,104 @@ test.describe.skip('Marketplace Coupon calculation test', () => {
         expect(Number(orderTotal)).toEqual(calculatedOrderTotal);
         expect(Number(adminCommission)).toEqual(calculatedAdminCommission);
         expect(Number(vendorEarning)).toEqual(calculatedVendorEarning);
+    });
+});
+
+test.describe.skip('commission test', () => {
+    let apiUtils: ApiUtils;
+    const taxRate: number = 10;
+    let commission: commission;
+    let feeRecipient: feeRecipient;
+
+    test.beforeAll(async () => {
+        apiUtils = new ApiUtils(await request.newContext());
+        // taxRate = await apiUtils.setUpTaxRate(payloads.enableTaxRate, { ...payloads.createTaxRate, rate: '10' });
+    });
+
+    test.afterAll(async () => {
+        // await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, dbData.dokan.sellingSettings);
+        await apiUtils.dispose();
+    });
+
+    test('percentage commission (global) test @lite', async () => {
+        // await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, commission_type: 'percentage' });
+        // const [commission, feeRecipient] = await dbUtils.getSellingInfo();
+        const [, res, oid] = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder);
+        console.log(res);
+    });
+
+    test('flat commission test (global) @lite', async () => {
+        await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, commission_type: 'flat' });
+    });
+
+    test('combined commission (global) test @lite', async () => {
+        await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, commission_type: 'combine' });
+    });
+
+    // //todo: add vendorwise, categorywise, productwise commission
+
+    test('shipping fee recipient test @pro', async () => {
+        await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, shipping_fee_recipient: 'seller' });
+        await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, shipping_fee_recipient: 'admin' });
+    });
+
+    test('product tax fee recipient test @pro', async () => {
+        await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, tax_fee_recipient: 'seller' });
+        await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, tax_fee_recipient: 'admin' });
+    });
+
+    test('shipping tax fee recipient test @pro', async () => {
+        await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, shipping_tax_fee_recipient: 'seller' });
+        await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, shipping_tax_fee_recipient: 'admin' });
+    });
+
+    test('calculation test @lite', async () => {
+        // todo:  modify for lite as well
+        const [commission, feeRecipient] = await dbUtils.getSellingInfo();
+        const [, res, oid] = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder);
+        const discountTotal = res.discount_total;
+        const shippingFee = res.shipping_total;
+        const shippingTax = res.shipping_tax;
+        const cartTax = res.cart_tax;
+        const totalTax = res.total_tax;
+        const orderTotal = res.total;
+        const gatewayFee = 0;
+        const lineItems = res.line_items;
+
+        const calculatedSubTotal = helpers.lineItemsToSubtoal(lineItems) - discountTotal;
+        const calculatedProductTax = helpers.productTax(taxRate, calculatedSubTotal);
+        const calculatedShippingTax = helpers.shippingTax(taxRate, shippingFee);
+        const calculatedTotalTax = calculatedProductTax + calculatedShippingTax;
+        const calculatedOrderTotal = helpers.orderTotal(calculatedSubTotal, calculatedProductTax, calculatedShippingTax, shippingFee);
+        const calculatedAdminCommission = helpers.adminCommission(calculatedSubTotal, commission, calculatedProductTax, calculatedShippingTax, shippingFee, gatewayFee, feeRecipient);
+        const calculatedVendorEarning = helpers.vendorEarning(calculatedSubTotal, calculatedAdminCommission, calculatedProductTax, calculatedShippingTax, shippingFee, gatewayFee, feeRecipient);
+
+        //  todo: works only for pro
+        const orderReport = await apiUtils.getSingleOrderLog(String(oid));
+        const order_total = orderReport.order_total;
+        const vendor_earning = orderReport.vendor_earning;
+        const admin_commission = orderReport.commission;
+        const gateway_fee = orderReport.dokan_gateway_fee;
+        const shipping_fee = orderReport.shipping_total;
+        const shipping_tax = orderReport.shipping_total_tax;
+        const tax_total = orderReport.tax_total;
+
+        // todo: compare with all order total
+        // todo: add discount scenario
+
+        const table = [
+            [`OID: ${oid}`, 'OrderTotal', 'VendorEarning', 'AdmminCommission', 'GatewayFee', 'ShippingFee', 'ShippingTax', 'ProductTax'],
+            ['Expected', calculatedOrderTotal, calculatedVendorEarning, calculatedAdminCommission, gatewayFee, shippingFee, calculatedShippingTax, calculatedProductTax],
+            ['Received', orderTotal, '-', '-', gatewayFee, shippingFee, shippingTax, cartTax],
+            ['adminLog', order_total, vendor_earning, admin_commission, gateway_fee, shipping_fee, shipping_tax, tax_total],
+        ];
+        console.table(table);
+
+        expect(Number(cartTax)).toEqual(calculatedProductTax);
+        expect(Number(shippingTax)).toEqual(calculatedShippingTax);
+        expect(Number(totalTax)).toEqual(calculatedTotalTax);
+        expect(Number(orderTotal)).toEqual(calculatedOrderTotal);
+        expect(Number(admin_commission)).toEqual(calculatedAdminCommission);
+        expect(Number(vendor_earning)).toEqual(calculatedVendorEarning);
     });
 });
