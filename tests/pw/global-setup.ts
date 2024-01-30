@@ -1,8 +1,18 @@
 import { FullConfig, request } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
+import { helpers } from '@utils/helpers';
+import { data } from '@utils/testData';
+
+const { CI } = process.env;
 
 async function globalSetup(config: FullConfig) {
     console.log('Global Setup running....');
+
+    // rewrite permalink structure
+    !CI && helpers.execommand(data.command.permalinkLocal);
+
+    // activate theme: storefront
+    !CI && helpers.execommand(data.command.activateTheme);
 
     // get site url structure
     let serverUrl = config.projects[0]?.use.baseURL as string;
