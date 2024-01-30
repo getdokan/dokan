@@ -319,7 +319,7 @@ class Settings {
                 'description'          => __( 'Withdraw Settings, Threshold', 'dokan-lite' ),
                 'document_link'        => 'https://wedevs.com/docs/dokan/settings/withdraw-options/',
                 'settings_title'       => __( 'Withdraw Settings', 'dokan-lite' ),
-                'settings_description' => __( 'You can configure your store\'s withdrawal methods, limits, order status and more.', 'dokan-lite' ),
+                'settings_description' => __( 'You can configure your store\'s withdrawal methods, charges, limits, order status and more.', 'dokan-lite' ),
             ],
             [
                 'id'                   => 'dokan_reverse_withdrawal',
@@ -446,10 +446,9 @@ class Settings {
                 'store_products_per_page'            => [
                     'name'    => 'store_products_per_page',
                     'label'   => __( 'Store Products Per Page', 'dokan-lite' ),
-                    'desc'    => __( 'Set how many products to display per page on the vendor store page. It will affect only if the vendor isn\'t set this value on their vendor setting page.', 'dokan-lite' ),
+                    'desc'    => __( 'Set how many products to display per page on the vendor store page.', 'dokan-lite' ),
                     'type'    => 'number',
                     'default' => '12',
-                    'tooltip' => __( 'It will affect the vendor only if they havent set a value on their settings page.', 'dokan-lite' ),
                 ],
                 'enabled_address_on_reg'             => [
                     'name'    => 'enabled_address_on_reg',
@@ -457,6 +456,25 @@ class Settings {
                     'desc'    => __( 'Add Address Fields on the Vendor Registration form', 'dokan-lite' ),
                     'type'    => 'switcher',
                     'default' => 'off',
+                ],
+            ]
+        );
+
+        $general_product_page_options = apply_filters(
+            'dokan_settings_general_product_page_options', [
+                'product_page_options'      => [
+                    'name'          => 'product_page_options',
+                    'type'          => 'sub_section',
+                    'label'         => __( 'Product Page Settings', 'dokan-lite' ),
+                    'description'   => __( 'Configure single product page for vendors.', 'dokan-lite' ),
+                    'content_class' => 'sub-section-styles',
+                ],
+                'enabled_more_products_tab' => [
+                    'name'    => 'enabled_more_products_tab',
+                    'label'   => __( 'Enable More Products Tab', 'dokan-lite' ),
+                    'desc'    => __( 'Enable "More Products" tab on the single product page.', 'dokan-lite' ),
+                    'type'    => 'switcher',
+                    'default' => 'on',
                 ],
             ]
         );
@@ -609,7 +627,8 @@ class Settings {
         $settings_fields = [
             'dokan_general'    => array_merge(
                 $general_site_options,
-                $general_vendor_store_options
+                $general_vendor_store_options,
+                $general_product_page_options
             ),
             'dokan_selling'    => apply_filters(
                 'dokan_settings_selling_options',
@@ -627,6 +646,25 @@ class Settings {
                     'default' => apply_filters( 'dokan_settings_withdraw_methods_default', [ 'paypal' => 'paypal' ] ),
                     'options' => dokan_withdraw_get_methods(),
                     'tooltip' => __( 'Check to add available payment methods for vendors to withdraw money.', 'dokan-lite' ),
+                ],
+                'withdraw_charges'      => [
+                    'name'               => 'withdraw_charges',
+                    'label'              => __( 'Withdraw Charges', 'dokan-lite' ),
+                    'desc'               => __( 'Select suitable withdraw charges for vendors', 'dokan-lite' ),
+                    'type'               => 'charges',
+                    'options'            => dokan_withdraw_get_methods(),
+                    'chargeable_methods' => dokan_withdraw_get_chargeable_methods(),
+                    'default'            => dokan_withdraw_get_method_charges(),
+                    'show_if'            => [
+                        'withdraw_methods' => [
+                            'contains-any' => array_keys( dokan_withdraw_get_methods() ),
+                        ],
+                    ],
+                    'items_show_if'      => [
+                        'key'       => 'withdraw_methods',
+                        'condition' => 'contains-key-value',
+                    ],
+                    'refresh_after_save' => true,
                 ],
                 'withdraw_limit'        => [
                     'name'                       => 'withdraw_limit',
@@ -826,6 +864,13 @@ class Settings {
                         'phone'   => __( 'Phone Number', 'dokan-lite' ),
                         'address' => __( 'Store Address', 'dokan-lite' ),
                     ],
+                ],
+                'disable_dokan_fontawesome' => [
+                    'name'    => 'disable_dokan_fontawesome',
+                    'label'   => __( 'Disable Dokan FontAwesome', 'dokan-lite' ),
+                    'desc'    => __( "If disabled then dokan fontawesome library won't be loaded in frontend", 'dokan-lite' ),
+                    'type'    => 'switcher',
+                    'default' => 'off',
                 ],
             ],
             'dokan_privacy'    => [

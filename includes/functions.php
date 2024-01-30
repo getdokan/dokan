@@ -1178,7 +1178,29 @@ function dokan_get_store_url( $user_id ) {
     $user_nicename    = ( false !== $userdata ) ? $userdata->user_nicename : '';
     $custom_store_url = dokan_get_option( 'custom_store_url', 'dokan_general', 'store' );
 
-    return home_url( '/' . $custom_store_url . '/' . $user_nicename . '/' );
+    /**
+     * Filter hook for the store URL before returning.
+     *
+     * @since 3.9.0
+     *
+     * @param string $store_url        The default store URL
+     * @param string $custom_store_url The custom store URL
+     * @param int    $user_id          The user ID for the store owner
+     */
+    return apply_filters( 'dokan_get_store_url', home_url( '/' . $custom_store_url . '/' . $user_nicename . '/' ), $custom_store_url, $user_id );
+}
+
+/**
+ * Get current page URL.
+ *
+ * @since 3.9.1
+ *
+ * @return string
+ */
+function dokan_get_current_page_url() {
+    global $wp;
+
+    return add_query_arg( $_SERVER['QUERY_STRING'], '', home_url( $wp->request ) );
 }
 
 /**
@@ -2974,11 +2996,13 @@ function dokan_get_jed_locale_data( $domain, $language_dir = null ) {
  *
  * @since  2.8.2
  *
- * @param string|null days
+ * @param string|null $days
+ * @maram string/null $form
  *
  * @return string|array
  */
-function dokan_get_translated_days( $day = '' ) {
+function dokan_get_translated_days( $day = '', $form = 'long' ) {
+
     $all_days = [
         'sunday'    => __( 'Sunday', 'dokan-lite' ),
         'monday'    => __( 'Monday', 'dokan-lite' ),
@@ -2988,6 +3012,18 @@ function dokan_get_translated_days( $day = '' ) {
         'friday'    => __( 'Friday', 'dokan-lite' ),
         'saturday'  => __( 'Saturday', 'dokan-lite' ),
     ];
+
+    if ( 'short' === $form ) {
+        $all_days = [
+			'sunday'    => __( 'Sun', 'dokan-lite' ),
+			'monday'    => __( 'Mon', 'dokan-lite' ),
+			'tuesday'   => __( 'Tue', 'dokan-lite' ),
+			'wednesday' => __( 'Wed', 'dokan-lite' ),
+			'thursday'  => __( 'Thu', 'dokan-lite' ),
+			'friday'    => __( 'Fri', 'dokan-lite' ),
+			'saturday'  => __( 'Sat', 'dokan-lite' ),
+        ];
+    }
 
     $week_starts_on = get_option( 'start_of_week', 0 );
     $day_keys       = array_keys( $all_days );
@@ -4314,4 +4350,22 @@ if ( ! function_exists( 'dokan_user_update_to_seller' ) ) {
 
         do_action( 'dokan_new_seller_created', $user_id, $vendor->get_shop_info() );
     }
+}
+
+/**
+ * Get new product creation URL.
+ *
+ * @since 3.9.7
+ *
+ * @return false|string
+ */
+function dokan_get_new_product_url() {
+    $one_step_product_create = 'on' === dokan_get_option( 'one_step_product_create', 'dokan_selling', 'on' );
+
+    return $one_step_product_create ? dokan_edit_product_url( 0, true ) : add_query_arg(
+        [
+            '_dokan_add_product_nonce' => wp_create_nonce( 'dokan_add_product_nonce' ),
+        ],
+        dokan_get_navigation_url( 'new-product' )
+    );
 }

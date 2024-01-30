@@ -4,6 +4,7 @@ namespace WeDevs\Dokan\Order;
 
 use Exception;
 use WC_Order;
+use WC_Order_Item_Coupon;
 use WC_Order_Refund;
 use WeDevs\Dokan\Cache;
 use WeDevs\Dokan\Utilities\OrderUtil;
@@ -385,12 +386,13 @@ class Manager {
      */
     public function is_seller_has_order( $seller_id, $order_id ) {
         global $wpdb;
+
         return 1 === (int) $wpdb->get_var(
-            $wpdb->prepare(
-                "SELECT 1 FROM {$wpdb->prefix}dokan_orders WHERE seller_id = %d AND order_id = %d LIMIT 1",
-                [ $seller_id, $order_id ]
-            )
-        );
+                $wpdb->prepare(
+                    "SELECT 1 FROM {$wpdb->prefix}dokan_orders WHERE seller_id = %d AND order_id = %d LIMIT 1",
+                    [ $seller_id, $order_id ]
+                )
+            );
     }
 
     /**
@@ -803,7 +805,7 @@ class Manager {
     }
 
     /**
-     * Create coupons for a sub-order if neccessary
+     * Create coupons for a sub-order if necessary
      *
      * @param WC_Order $order
      * @param WC_Order $parent_order
@@ -812,6 +814,11 @@ class Manager {
      * @return void
      */
     private function create_coupons( $order, $parent_order, $products ) {
+        if ( dokan()->is_pro_exists() && property_exists( dokan_pro(), 'vendor_discount' ) ) {
+            // remove vendor discount coupon code changes
+            remove_filter( 'woocommerce_order_get_items', [ dokan_pro()->vendor_discount->woocommerce_hooks, 'replace_coupon_name' ], 10 );
+        }
+
         $used_coupons = $parent_order->get_items( 'coupon' );
         $product_ids  = array_map(
             function ( $item ) {
@@ -830,17 +837,19 @@ class Manager {
         }
 
         foreach ( $used_coupons as $item ) {
+            /**
+             * @var WC_Order_Item_Coupon $item
+             */
             $coupon = new \WC_Coupon( $item->get_code() );
 
             if (
-                $coupon &&
-                ! is_wp_error( $coupon ) &&
+                apply_filters( 'dokan_should_copy_coupon_to_sub_order', true, $coupon, $item, $order ) &&
                 (
                     array_intersect( $product_ids, $coupon->get_product_ids() ) ||
                     apply_filters( 'dokan_is_order_have_admin_coupon', false, $coupon, [ $seller_id ], $product_ids )
                 )
             ) {
-                $new_item = new \WC_Order_Item_Coupon();
+                $new_item = new WC_Order_Item_Coupon();
                 $new_item->set_props(
                     [
                         'code'         => $item->get_code(),
@@ -872,7 +881,13 @@ class Manager {
      * @return void
      */
     public function maybe_split_orders( $parent_order_id, $force_create = false ) {
-        $parent_order = $this->get( $parent_order_id );
+        if ( is_a( $parent_order_id, 'WC_Order' ) ) {
+            $parent_order    = $parent_order_id;
+            $parent_order_id = $parent_order->get_id();
+        } else {
+            $parent_order = $this->get( $parent_order_id );
+        }
+
         if ( ! $parent_order ) {
             //dokan_log( sprintf( 'Invalid Order ID #%d found. Skipping from here.', $parent_order_id ) );
             return;

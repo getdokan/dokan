@@ -176,6 +176,8 @@ class BecomeAVendor {
             return;
         }
 
+        wp_enqueue_script( 'dokan-vendor-registration' );
+
         $data = [
             'user_id'     => $user_id,
             'first_name'  => get_user_meta( $user_id, 'first_name', true ),

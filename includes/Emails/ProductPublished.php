@@ -73,6 +73,9 @@ class ProductPublished extends WC_Email {
             return;
         }
 
+        $product_edit_url = remove_query_arg( '_dokan_edit_product_nonce', dokan_edit_product_url( $post->ID ) );
+        $product_edit_url = add_query_arg( '_view_mode', 'product_email', $product_edit_url );
+
         $this->object = $product;
 
         $this->find['product-title']     = '{product_title}';
@@ -87,7 +90,7 @@ class ProductPublished extends WC_Email {
         $this->replace['price']             = $product->get_price();
         $this->replace['seller-name']       = $seller->display_name;
         $this->replace['product_url']       = get_permalink( $post->ID );
-        $this->replace['product_edit_link'] = dokan_edit_product_url( $post->ID );
+        $this->replace['product_edit_link'] = $product_edit_url;
         $this->replace['site_name']         = $this->get_from_name();
         $this->replace['site_url']          = site_url();
 

@@ -43,6 +43,9 @@ class Hooks {
         $packages     = [];
 
         foreach ( $cart_content as $key => $item ) {
+            if ( $item['data']->is_virtual() ) {
+                continue;
+            }
             $post_author = get_post_field( 'post_author', $item['data']->get_id() );
 
             $seller_pack[ $post_author ][ $key ] = $item;
