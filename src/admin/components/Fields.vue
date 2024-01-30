@@ -64,8 +64,14 @@
         <template v-if="'commission_fixed' === fieldData.type">
             <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset class='flex justify-between'>
-                    <FieldHeading class='flex-1' :fieldData="fieldData"></FieldHeading>
-                    <fixed class='flex-1' @update="commissionUpdated" v-model="fixedCommission"/>
+                    <FieldHeading :fieldData="fieldData"></FieldHeading>
+                      <combine-input
+                        :value="{
+                            fixed: fieldData.fields ? fieldValue[fieldData.fields.fixed_fee.name] : '',
+                            percentage: fieldData.fields ? fieldValue[fieldData.fields.percent_fee.name] : ''
+                        }"
+                        v-on:change='data => commissionUpdated( data )'
+                      />
                 </fieldset>
                 <p class="dokan-error combine-commission" v-if="hasError( fieldData.fields.percent_fee.name ) && hasError( fieldData.fields.fixed_fee.name )">
                     {{ __( 'Both percentage and fixed fee is required.', 'dokan-lite' ) }}
@@ -86,6 +92,10 @@
                 :fieldData="fieldData"
                 :is="settingsComponent"
                 :fieldValue="fieldValue"
+                :id="id"
+                :allSettingsValues="allSettingsValues"
+                :dokanAssetsUrl="dokanAssetsUrl"
+                :errors="errors"
                 :assetsUrl="dokanAssetsUrl"
                 :validationErrors="validationErrors"
                 :toggleLoadingState="toggleLoadingState"
@@ -431,8 +441,8 @@
     import SocialFields from './SocialFields.vue';
     import FieldHeading from './FieldHeading.vue';
     import SecretInput from './SecretInput.vue';
-    import Fixed from 'admin/components/fields/Commission/Fixed.vue';
     import WithdrawCharges from './Fields/WithdrawCharges.vue'
+    import CombineInput from "admin/components/CombineInput.vue";
     let Mapbox                = dokan_get_lib('Mapbox');
     let TextEditor            = dokan_get_lib('TextEditor');
     let GoogleMaps            = dokan_get_lib('GoogleMaps');
@@ -442,7 +452,7 @@
         name: 'Fields',
 
         components: {
-            Fixed,
+          CombineInput,
             Mapbox,
             Switches,
             TextEditor,
@@ -469,10 +479,6 @@
                 yourStringTimeValue   : '',
                 customFieldComponents : dokan.hooks.applyFilters( 'getDokanCustomFieldComponents', [] ),
                 commissionFieldComponents : dokan.hooks.applyFilters( 'getDokanCommissionFieldComponents', [] ),
-                fixedCommission: {
-                    fixed: this.fieldData.fields ? this.fieldValue[this.fieldData.fields.fixed_fee.name] : '',
-                    percentage: this.fieldData.fields ? this.fieldValue[this.fieldData.fields.percent_fee.name] : ''
-                }
             }
         },
 
@@ -781,9 +787,9 @@
                 this.fieldData[ key ] = value;
             },
 
-            commissionUpdated() {
-                this.fieldValue[this.fieldData.fields.percent_fee.name] = this.fixedCommission.percentage;
-                this.fieldValue[this.fieldData.fields.fixed_fee.name] = this.fixedCommission.fixed;
+            commissionUpdated( data ) {
+                this.fieldValue[this.fieldData.fields.percent_fee.name] = data.percentage;
+                this.fieldValue[this.fieldData.fields.fixed_fee.name] = data.fixed;
             }
         },
     };

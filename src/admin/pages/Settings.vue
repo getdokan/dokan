@@ -17,10 +17,10 @@
                     <div class="nav-tab-wrapper xs:!pb-5 xs:!pt-5 xs:w-full md:w-[340px]">
                         <div class='xs:flex justify-between md:hidden font-bold'>
                             <p class='font-bold'>{{ __( 'Settings', 'dokan' ) }}</p>
-                            <label for='dokan-setting-show'><i :class="showMenu ? 'fas fa-chevron-down' : 'fas fa-chevron-up'"></i></label>
-                            <input class='!hidden' id='dokan-setting-show' checked :value='showMenu' @click='() => showMenu = !showMenu' type='checkbox'>
+                            <label v-if="screenWidth < 753" for='dokan-setting-show'><i :class="showMenu || screenWidth >= 753 ? 'fas fa-chevron-down' : 'fas fa-chevron-up'"></i></label>
+                            <input v-if="screenWidth < 753" class='!hidden' id='dokan-setting-show' checked :value='showMenu' @click='() => showMenu = !showMenu' type='checkbox'>
                         </div>
-                        <div class="nab-section md:block" :class="showMenu ? 'xs:block' : 'xs:hidden'">
+                        <div class="nab-section md:block" :class="showMenu || screenWidth >= 753 ? 'xs:block' : 'xs:hidden'">
                             <div class="search-box">
                                 <label for="dokan-admin-search" class="dashicons dashicons-search"></label>
                                 <input type="text" id="dokan-admin-search" class="dokan-admin-search-settings"
@@ -140,7 +140,8 @@
                 disbursementSchedule: {},
                 isSaveConfirm: false,
                 dokanAssetsUrl: dokan.urls.assetsUrl,
-                showMenu: false
+                showMenu: false,
+                screenWidth: window.document.documentElement.clientWidth
             }
         },
 
@@ -173,6 +174,11 @@
                 this.$refs.settingsWrapper.scrollIntoView({ behavior: 'smooth' });
                 if ( typeof( localStorage ) != 'undefined' ) {
                     localStorage.setItem( "activetab", this.currentTab );
+                }
+
+                if (  this.screenWidth >= 753 ) {
+                    this.showMenu = true;
+                    return;
                 }
 
                 this.showMenu = false;
@@ -553,6 +559,10 @@
                     this.$refs.backToTop.style.transform = window.scrollY > ( document.body.scrollHeight - 800 ) ? 'scale(1)' : 'scale(0)';
                 }
             },
+
+            updateDocumentWidth() {
+                this.screenWidth = window.document.documentElement.clientWidth;
+            }
         },
 
         created() {
@@ -585,6 +595,15 @@
             this.settingFields   = dokan.settings_fields;
             window.addEventListener( 'scroll', this.handleScroll );
         },
+
+        mounted() {
+            this.updateDocumentWidth();
+            window.addEventListener('resize', this.updateDocumentWidth);
+        },
+
+        beforeDestroy() {
+            window.removeEventListener('resize', this.updateDocumentWidth);
+        }
     };
 
 </script>
