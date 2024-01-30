@@ -1152,12 +1152,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "4c1997c21fb0e29198b7b83be49d460df2571d79"
+                "reference": "c2f616898ae8868e4d68643ad39ea34b30a860c8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/4c1997c21fb0e29198b7b83be49d460df2571d79",
-                "reference": "4c1997c21fb0e29198b7b83be49d460df2571d79",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/c2f616898ae8868e4d68643ad39ea34b30a860c8",
+                "reference": "c2f616898ae8868e4d68643ad39ea34b30a860c8",
                 "shasum": ""
             },
             "require": {
@@ -1247,7 +1247,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-01-21T09:34:47+00:00"
+            "time": "2024-01-24T14:41:56+00:00"
         },
         {
             "name": "sebastian/cli-parser",
@@ -2219,12 +2219,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCSStandards/PHP_CodeSniffer.git",
-                "reference": "e0e03f05662f5035923abebc90f85abaf5efdb3f"
+                "reference": "b5dc38b2afe659ebc61fcbabc90976859bea2f4a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/e0e03f05662f5035923abebc90f85abaf5efdb3f",
-                "reference": "e0e03f05662f5035923abebc90f85abaf5efdb3f",
+                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/b5dc38b2afe659ebc61fcbabc90976859bea2f4a",
+                "reference": "b5dc38b2afe659ebc61fcbabc90976859bea2f4a",
                 "shasum": ""
             },
             "require": {
@@ -2292,7 +2292,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2024-01-22T23:39:52+00:00"
+            "time": "2024-01-26T05:12:05+00:00"
         },
         {
             "name": "tareq1988/wp-php-cs-fixer",

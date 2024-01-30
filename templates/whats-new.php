@@ -4,6 +4,44 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.9.7',
+        'released' => '2023-01-29',
+        'changes'  => [
+            'Improvement'         => [
+                [
+                    'title'       => 'Added WooCommerce Cart and Checkout Block supports for Dokan Lite',
+                    'description' => '',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => 'Fixed an issue where the vendor’s store map address was not saved during vendor setup wizard configuration',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Some links under the vendor dashboard weren\'t working properly due to a nonce mismatch. With this release, those issues have been fixed.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed an issue where the valid store name required check was missing from the customer-to-vendor migration form.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed an issue where the customer buys digital and physical products from different vendors, shipping charges are applied separately to each vendor.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed some translation-related issues with the date range picker',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed some translation-related issues with Dokan Sweetalert',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.9.6',
         'released' => '2023-01-11',
         'changes'  => [

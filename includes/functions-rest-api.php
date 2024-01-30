@@ -42,7 +42,7 @@ if ( ! function_exists( 'dokan_rest_validate_order_id' ) ) {
     /**
      * This method will verify an order id, will be used only with rest api validate callback
      *
-     * @since DOKAN_SINCE
+     * @since 3.9.7
      *
      * @param $value
      * @param $request WP_REST_Request
