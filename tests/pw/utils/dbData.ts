@@ -70,7 +70,7 @@ export const dbData = {
             automatic_process_api_refund: 'off',
 
             // vendor capabilities
-            additional_fee: '',
+            additional_fee: '10',
             new_seller_enable_selling: 'on',
             one_step_product_create: 'on',
             disable_product_popup: 'off',

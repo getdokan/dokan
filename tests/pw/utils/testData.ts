@@ -2134,6 +2134,7 @@ export const data = {
     command: {
         permalink: 'npm run wp-env run tests-cli wp rewrite structure /%postname%/',
         permalinkLocal: `cd ${process.env.SITE_PATH} && wp rewrite structure /%postname%/ && wp rewrite flush`,
+        activateTheme: `cd ${process.env.SITE_PATH} && wp theme activate storefront`,
     },
 
     // install wordpress

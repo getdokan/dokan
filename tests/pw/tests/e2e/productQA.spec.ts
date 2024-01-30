@@ -72,7 +72,7 @@ test.describe('Product QA functionality test', () => {
         await admin.filterQuestions(data.questionAnswers.filter.byProduct, 'by-product');
     });
 
-    test.only('admin can edit question @pro', async () => {
+    test('admin can edit question @pro', async () => {
         await admin.editQuestion(questionId, data.questionAnswers);
     });
 

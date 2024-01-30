@@ -675,6 +675,10 @@ export const payloads = {
                 product_id: '',
                 quantity: 1,
             },
+            // {
+            //     product_id: '',
+            //     quantity: 1,
+            // },
         ],
 
         shipping_lines: [

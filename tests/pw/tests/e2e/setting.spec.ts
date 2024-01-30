@@ -9,7 +9,7 @@ import { payloads } from '@utils/payloads';
 
 const { CI, CUSTOMER_ID, PRODUCT_ID } = process.env;
 
-test.describe.only('Settings test', () => {
+test.describe('Settings test', () => {
     let admin: SettingPage;
     let vendor: SettingPage;
     let customer: SettingPage;

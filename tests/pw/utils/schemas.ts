@@ -576,7 +576,7 @@ export const schemas = {
                 vendor_name: z.string(),
                 previous_order_total: z.string(),
                 order_total: z.string(),
-                vendor_earning: z.string(),
+                vendor_earning: z.string().or(z.number()),
                 commission: z.string(),
                 dokan_gateway_fee: z.union([z.string(), z.number()]),
                 gateway_fee_paid_by: z.string(),

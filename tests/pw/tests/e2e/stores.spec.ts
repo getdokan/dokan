@@ -48,7 +48,7 @@ test.describe('Stores test', () => {
     });
 
     test("admin can disable vendor's selling capability @lite", async () => {
-        await admin.updateVendor(data.predefined.vendorStores.vendor1, 'disable');
+        await admin.updateVendor(data.predefined.vendorStores.vendor1, 'disable'); //todo: nedd different vendor for this
     });
 
     test("admin can enable vendor's selling capability @lite", async () => {

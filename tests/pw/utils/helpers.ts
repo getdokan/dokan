@@ -150,6 +150,13 @@ export const helpers = {
         return subtotal.reduce((a, b) => a + b, 0);
     },
 
+    lineItemsToSubtoal(lineItems: object[]) {
+        const arrOfPriceQuantity = lineItems.map(({ price, quantity }) => [price, quantity]);
+        // const arrOfSubtotals = res.map(([price, quantity]) => price * quantity)
+        const subtotal = arrOfPriceQuantity.reduce((sum, [price, quantity]) => sum + price * quantity, 0);
+        return subtotal;
+    },
+
     // discount
     discount(subTotal: number, discount: any) {
         let discount_total = 0;
