@@ -84,7 +84,7 @@
                                 <div class="loading" v-if="subscribe.loading">
                                     <loading></loading>
                                 </div>
-                                <h3>{{ __( 'Stay up-to-date', 'dokan-lite' ) }}</h3>
+                                <h3 class='text-xl'>{{ __( 'Stay up-to-date', 'dokan-lite' ) }}</h3>
                                 <p>
                                     {{ __( 'We\'re constantly developing new features, stay up-to-date by subscribing to our newsletter.', 'dokan-lite' ) }}
                                 </p>

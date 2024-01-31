@@ -1,7 +1,6 @@
 import App from './App.vue'
 import router from './router'
 import menuFix from './utils/admin-menu-fix'
-import './tailwind.css';
 
 /* eslint-disable no-new */
 let Vue = dokan_get_lib('Vue');

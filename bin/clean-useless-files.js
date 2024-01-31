@@ -21,6 +21,8 @@ const targetFiles = [
     'assets/js/setup.js',
     'assets/js/setup-no-wc-style.js',
     'assets/js/style.js',
+    'assets/js/dokan-tailwind.js',
+
     'assets/js/dokan-promo-notice.js.LICENSE.txt',
     'assets/js/vue-admin.js.LICENSE.txt',
     'assets/js/vue-bootstrap.js.LICENSE.txt',

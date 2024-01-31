@@ -1,5 +1,5 @@
 <template>
-    <div class="dokan-card-fun-fact">
+    <div class="dokan-card-fun-fact mr-[20px] last:mr-0 mt-[20px]">
         <div class="card-fun-fact__icon">
             <span class="fa-stack fa-2x">
                 <i class="fas fa-circle fa-stack-2x" v-bind:style="{ color: circle_background }"></i>
@@ -86,8 +86,8 @@ export default {
     transition: height 1000ms;
     display: flex;
     align-items: center;
-    flex-basis: 20%;
-    margin: 10px;
+    width: calc(25% - 15px);
+    //margin: 10px;
 
     .rounded-icon {
         background-color: #ccc;

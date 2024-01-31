@@ -6,6 +6,9 @@ const defaultConfig = require('@wordpress/scripts/config/webpack.config');
 const isProduction = process.env.NODE_ENV === 'production';
 
 const entryPoint = {
+  // Dokan tailwind css
+  'dokan-tailwind': './src/tailwind.css',
+
   'vue-frontend': './src/frontend/main.js',
   'vue-admin': './src/admin/main.js',
   'vue-bootstrap': './src/utils/Bootstrap.js',

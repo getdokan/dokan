@@ -108,7 +108,7 @@
                 <fieldset>
                     <FieldHeading :fieldData="fieldData"></FieldHeading>
                     <div class="field">
-                        <textarea type="textarea" :rows="fieldData.rows" :cols="fieldData.cols" class="regular-text medium" :id="sectionId + '[' + fieldData.name + ']'" :name="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]"></textarea>
+                        <textarea type="textarea" :rows="fieldData.rows" :cols="fieldData.cols" class="regular-text medium p-2" :id="sectionId + '[' + fieldData.name + ']'" :name="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]"></textarea>
                     </div>
                 </fieldset>
                 <p v-if="hasError( fieldData.name )" class="dokan-error">
@@ -386,7 +386,7 @@
                 </fieldset>
                 <div class="field scl_fields" :class="fieldData.enable_status && 'off' === socialChecked ? 'scl_fields_disable' : ''">
                     <div class="scl_header">
-                        <div class="scl_contents">
+                        <div class="scl_contents ">
                             <div class="scl_icon">
                                 <img :src="fieldData.icon_url" :alt="fieldData.label" />
                             </div>
@@ -949,6 +949,7 @@
 
                     a {
                         display: inline-block;
+                        text-decoration: underline;
 
                         &:hover {
                             box-shadow: 0 0 0 1px transparent;
@@ -995,7 +996,6 @@
                     color: #000;
                     cursor: inherit;
                     margin: 9px 0 9px 15px;
-                    border: 1px solid rgba(0, 0, 0, 0.10);
                     display: inline-block;
                     font-size: 12px;
                     font-style: normal;
@@ -1190,7 +1190,6 @@
                 justify-content: space-between;
 
                 .scl_contents {
-                    flex: 2;
                     display: flex;
                     align-items: center;
 
