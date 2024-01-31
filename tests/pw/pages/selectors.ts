@@ -6640,6 +6640,7 @@ export const selector = {
 
             // More Products
             moreProducts: {
+                noProductsDiv: 'div#tab-more_seller_product',
                 moreProductsDiv: '#tab-more_seller_product .products',
                 product: '#tab-more_seller_product .product',
             },
