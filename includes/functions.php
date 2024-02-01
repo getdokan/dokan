@@ -1131,18 +1131,17 @@ add_action( 'login_init', 'dokan_redirect_to_register' );
 /**
  * Check if the seller is enabled
  *
+ * @since DOKAN_SINCE New filter added `dokan_is_seller_enabled`
+ *
  * @param int $user_id
  *
  * @return bool
  */
-function dokan_is_seller_enabled( $user_id ) {
-    $selling = get_user_meta( $user_id, 'dokan_enable_selling', true );
-
-    if ( $selling === 'yes' ) {
-        return true;
-    }
-
-    return false;
+function dokan_is_seller_enabled( $user_id ): bool {
+    return apply_filters(
+        'dokan_is_seller_enabled',
+        'yes' === get_user_meta( $user_id, 'dokan_enable_selling', 'no' )
+    );
 }
 
 /**
