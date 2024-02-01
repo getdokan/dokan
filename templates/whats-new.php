@@ -4,8 +4,58 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.9.8',
+        'released' => '2024-01-30',
+        'changes'  => [
+            'Fix'         => [
+                [
+                    'title'       => 'Updated Appsero Client SDK library to version 2.0.2 which will fix a security issue with the previous version of the library and a fatal error caused by the library.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.9.7',
+        'released' => '2024-01-29',
+        'changes'  => [
+            'Improvement'         => [
+                [
+                    'title'       => 'Added WooCommerce Cart and Checkout Block supports for Dokan Lite',
+                    'description' => '',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => 'Fixed an issue where the vendor’s store map address was not saved during vendor setup wizard configuration',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Some links under the vendor dashboard weren\'t working properly due to a nonce mismatch. With this release, those issues have been fixed.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed an issue where the valid store name required check was missing from the customer-to-vendor migration form.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed an issue where the customer buys digital and physical products from different vendors, shipping charges are applied separately to each vendor.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed some translation-related issues with the date range picker',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed some translation-related issues with Dokan Sweetalert',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.9.6',
-        'released' => '2023-01-11',
+        'released' => '2024-01-11',
         'changes'  => [
             'New Feature'         => [
                 [

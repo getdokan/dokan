@@ -4356,7 +4356,7 @@ if ( ! function_exists( 'dokan_user_update_to_seller' ) ) {
 /**
  * Get new product creation URL.
  *
- * @since DOKAN_SINCE
+ * @since 3.9.7
  *
  * @return false|string
  */
