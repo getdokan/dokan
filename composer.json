@@ -12,8 +12,9 @@
   "minimum-stability": "dev",
   "require": {
     "php": ">=7.4",
-    "appsero/client": "^v1.4.0",
-    "jakeasmith/http_build_url": "^1"
+    "appsero/client": "^v2.0.2",
+    "jakeasmith/http_build_url": "^1",
+    "appsero/updater": "^v1.0.0"
   },
   "require-dev": {
     "wp-coding-standards/wpcs": "dev-develop",

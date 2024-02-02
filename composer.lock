@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c2a9df22d67a08d96f9896580e526200",
+    "content-hash": "3529739a22543acf5e965b386a48176f",
     "packages": [
         {
             "name": "appsero/client",
-            "version": "v1.4.0",
+            "version": "v2.0.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Appsero/client.git",
-                "reference": "43289d79f1d55de687f667b17a2834b986cc7b6e"
+                "reference": "b61c3ab21df4d44f805ee9476f9d880f8370a36b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Appsero/client/zipball/43289d79f1d55de687f667b17a2834b986cc7b6e",
-                "reference": "43289d79f1d55de687f667b17a2834b986cc7b6e",
+                "url": "https://api.github.com/repos/Appsero/client/zipball/b61c3ab21df4d44f805ee9476f9d880f8370a36b",
+                "reference": "b61c3ab21df4d44f805ee9476f9d880f8370a36b",
                 "shasum": ""
             },
             "require": {
@@ -56,9 +56,46 @@
             ],
             "support": {
                 "issues": "https://github.com/Appsero/client/issues",
-                "source": "https://github.com/Appsero/client/tree/v1.4.0"
+                "source": "https://github.com/Appsero/client/tree/v2.0.2"
             },
-            "time": "2024-01-08T11:38:14+00:00"
+            "time": "2024-01-30T08:15:01+00:00"
+        },
+        {
+            "name": "appsero/updater",
+            "version": "v1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Appsero/updater.git",
+                "reference": "541cf090d42a9354aee2cf6438b3eee0e5e34a99"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Appsero/updater/zipball/541cf090d42a9354aee2cf6438b3eee0e5e34a99",
+                "reference": "541cf090d42a9354aee2cf6438b3eee0e5e34a99",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Appsero\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Tareq Hasan",
+                    "email": "tareq@appsero.com"
+                }
+            ],
+            "description": "Appsero client updater module",
+            "support": {
+                "issues": "https://github.com/Appsero/updater/issues",
+                "source": "https://github.com/Appsero/updater/tree/v1.0.0"
+            },
+            "time": "2023-12-06T08:32:44+00:00"
         },
         {
             "name": "jakeasmith/http_build_url",
@@ -311,12 +348,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "ff095c3c65c144f32a811685a81195c4df53fb99"
+                "reference": "ce019e9ad711e31ee87c2c4c72e538b5240970c3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/ff095c3c65c144f32a811685a81195c4df53fb99",
-                "reference": "ff095c3c65c144f32a811685a81195c4df53fb99",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/ce019e9ad711e31ee87c2c4c72e538b5240970c3",
+                "reference": "ce019e9ad711e31ee87c2c4c72e538b5240970c3",
                 "shasum": ""
             },
             "require": {
@@ -362,7 +399,7 @@
                 "issues": "https://github.com/nikic/PHP-Parser/issues",
                 "source": "https://github.com/nikic/PHP-Parser/tree/master"
             },
-            "time": "2024-01-10T19:34:09+00:00"
+            "time": "2024-01-14T09:02:54+00:00"
         },
         {
             "name": "phar-io/manifest",
@@ -744,12 +781,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCSStandards/PHPCSUtils.git",
-                "reference": "da4c4da18b430eacdc6a6016009475951f9b1434"
+                "reference": "26dcb893d86fbe90ab2a8abd7b08a3fda3602237"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCSStandards/PHPCSUtils/zipball/da4c4da18b430eacdc6a6016009475951f9b1434",
-                "reference": "da4c4da18b430eacdc6a6016009475951f9b1434",
+                "url": "https://api.github.com/repos/PHPCSStandards/PHPCSUtils/zipball/26dcb893d86fbe90ab2a8abd7b08a3fda3602237",
+                "reference": "26dcb893d86fbe90ab2a8abd7b08a3fda3602237",
                 "shasum": ""
             },
             "require": {
@@ -825,7 +862,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2024-01-02T16:59:15+00:00"
+            "time": "2024-01-15T05:03:54+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -1152,12 +1189,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "241c4aa189ef1f3b7608de2da5510a59f1d22a01"
+                "reference": "040e6b96128f11f53f6633ece38d5f113c85ff4b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/241c4aa189ef1f3b7608de2da5510a59f1d22a01",
-                "reference": "241c4aa189ef1f3b7608de2da5510a59f1d22a01",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/040e6b96128f11f53f6633ece38d5f113c85ff4b",
+                "reference": "040e6b96128f11f53f6633ece38d5f113c85ff4b",
                 "shasum": ""
             },
             "require": {
@@ -1247,7 +1284,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-01-07T09:57:50+00:00"
+            "time": "2024-01-30T07:11:21+00:00"
         },
         {
             "name": "sebastian/cli-parser",
@@ -2219,12 +2256,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCSStandards/PHP_CodeSniffer.git",
-                "reference": "364cc7269d54dc4c862d1a41318764c86e43710d"
+                "reference": "2fbf9e38ef3307d740de375b8d2f19fc1dd19472"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/364cc7269d54dc4c862d1a41318764c86e43710d",
-                "reference": "364cc7269d54dc4c862d1a41318764c86e43710d",
+                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/2fbf9e38ef3307d740de375b8d2f19fc1dd19472",
+                "reference": "2fbf9e38ef3307d740de375b8d2f19fc1dd19472",
                 "shasum": ""
             },
             "require": {
@@ -2292,7 +2329,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2024-01-10T13:52:25+00:00"
+            "time": "2024-01-29T05:54:15+00:00"
         },
         {
             "name": "tareq1988/wp-php-cs-fixer",
