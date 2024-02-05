@@ -26,7 +26,8 @@
             />
             <textarea
                 class="large"
-                v-model="fieldValue[fieldData.name]"
+                :value="fieldValue[fieldData.name]"
+                @input="event => inputValueHandler( event.target.value )"
                 v-if="fieldData.type === 'textarea'"
             ></textarea>
             <template v-if="fieldData.type === 'radio'">
@@ -87,8 +88,6 @@
                     this.fieldData.name,
                     this.fieldData.is_lite ?? false
                 );
-
-                console.log(value);
 
                 this.fieldValue[this.fieldData.name] = data;
             },

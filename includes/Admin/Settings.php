@@ -776,6 +776,7 @@ class Settings {
                         'label'        => __( 'Site Key', 'dokan-lite' ),
                         'tooltip'      => __( 'Insert Google reCAPTCHA v3 site key.', 'dokan-lite' ),
                         'social_field' => true,
+                        'is_lite'      => true,
                     ],
                     'recaptcha_secret_key' => [
                         'name'         => 'recaptcha_secret_key',
@@ -783,7 +784,9 @@ class Settings {
                         'type'         => 'text',
                         'tooltip'      => __( 'Insert Google reCAPTCHA v3 secret key.', 'dokan-lite' ),
                         'social_field' => true,
+                        'is_lite'      => true,
                     ],
+                    'is_lite'      => true,
                 ],
                 'contact_seller'             => [
                     'name'    => 'contact_seller',
