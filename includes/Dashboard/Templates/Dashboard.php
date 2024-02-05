@@ -35,7 +35,7 @@ class Dashboard {
     }
 
     /**
-     * Get Seller Dhasboard Notice
+     * Get Seller Dashboard Notice
      *
      * @since 2.4
      *

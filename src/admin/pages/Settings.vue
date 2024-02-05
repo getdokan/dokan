@@ -78,7 +78,7 @@
                                         name="submit"
                                         id="submit"
                                         class="button button-primary"
-                                        value="Save Changes"
+                                        :value="__( 'Save Changes', 'dokan-lite' )"
                                         @click.prevent="saveSettings( settingValues[index], index )"
                                         :disabled="disableSubmit"
                                     >

@@ -35,7 +35,7 @@ class Dashboard extends DokanShortcode {
         /**
          * Filter query var before rendering dokan vendor shortcode
          */
-        $query_vars = apply_filters( 'dokan_load_custom_template_before_action', $wp->query_vars );
+        $query_vars = apply_filters( 'dokan_dashboard_shortcode_query_vars', $wp->query_vars );
 
         if ( isset( $query_vars['products'] ) ) {
             if ( ! current_user_can( 'dokan_view_product_menu' ) ) {
