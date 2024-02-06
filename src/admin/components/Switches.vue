@@ -91,8 +91,8 @@ export default {
             right: 0;
             bottom: 0;
             background-color: var(--dokan-toggle-inactive-color);
-            -webkit-transition: .4s;
-            transition: .4s;
+            -webkit-transition: .2s;
+            transition: .2s;
 
             &:before {
                 position: absolute;
@@ -102,8 +102,8 @@ export default {
                 left: 3px;
                 bottom: 3px;
                 background-color: var(--dokan-toggle-color);
-                -webkit-transition: .4s;
-                transition: .4s;
+                -webkit-transition: .2s;
+                transition: .2s;
             }
             &.round {
                 border-radius: 34px;
