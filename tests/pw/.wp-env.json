@@ -2,12 +2,12 @@
     "env": {
         "tests": {
             "port": 9999,
-            "core": "https://wordpress.org/latest.zip",
+            "core": null,
             "phpVersion": "7.4",
             "plugins": [
-            "https://downloads.wordpress.org/plugin/woocommerce.latest-stable.zip", 
-            "../../", 
-            "https://github.com/shashwatahalder01/TestUtils/raw/main/ba.zip"
+                "WP-API/Basic-Auth",
+                "https://downloads.wordpress.org/plugin/woocommerce.latest-stable.zip", 
+                "../../"
              ],
             "themes": [
                 "https://downloads.wordpress.org/theme/storefront.latest-stable.zip"

@@ -1,16 +1,16 @@
 {
-  "env": {
-    "tests": {
-      "plugins": [
-        "https://downloads.wordpress.org/plugin/woocommerce.latest-stable.zip",
-        "../../",
-        "../../../../",
-        "https://github.com/shashwatahalder01/TestUtils/raw/main/ba.zip",
-        "https://github.com/shashwatahalder01/TestUtils/raw/main/wa.zip",
-        "https://github.com/shashwatahalder01/TestUtils/raw/main/wb.zip",
-        "https://github.com/shashwatahalder01/TestUtils/raw/main/wpa.zip",
-        "https://github.com/shashwatahalder01/TestUtils/raw/main/ws.zip"
-      ]
+    "env": {
+        "tests": {
+            "plugins": [
+                "WP-API/Basic-Auth",
+                "https://downloads.wordpress.org/plugin/woocommerce.latest-stable.zip",
+                "../../",
+                "../../../../",
+                "../../../woocommerce-booking",
+                "../../../woocommerce-auction",
+                "../../../woocommerce-product-addon",
+                "../../../woocommerce-subscription"
+            ]
+        }
     }
-  }
 }
