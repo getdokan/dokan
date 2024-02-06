@@ -212,6 +212,11 @@ class Assets {
                 'component' => 'Vendors',
             ],
             [
+                'path'      => '/vendors/:id',
+                'name'      => 'VendorSingle',
+                'component' => 'VendorSingle',
+            ],
+            [
                 'path'      => '/dummy-data',
                 'name'      => 'DummyData',
                 'component' => 'DummyData',
