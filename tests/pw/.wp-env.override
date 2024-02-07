@@ -6,10 +6,10 @@
                 "https://downloads.wordpress.org/plugin/woocommerce.latest-stable.zip",
                 "../../",
                 "../../../../",
-                "../../../woocommerce-booking",
-                "../../../woocommerce-auction",
-                "../../../woocommerce-product-addon",
-                "../../../woocommerce-subscription"
+                "../../../woocommerce-bookings",
+                "../../../woocommerce-product-addons",
+                "../../../woocommerce-simple-auctions",
+                "../../../woocommerce-subscriptions"
             ]
         }
     }
