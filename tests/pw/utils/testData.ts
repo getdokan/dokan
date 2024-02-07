@@ -136,9 +136,9 @@ export const data = {
             // price           : faker.commerce.price(100, 200, 2),
             // price           : faker.number.int({ min: 1, max: 200, precision: 0.01 }),
             // price           : faker.finance.amount(1, 200, 2),
-            price_int: () => faker.finance.amount(100, 200, 0),
-            price_random: () => faker.finance.amount(100, 200, faker.helpers.arrayElement([0, 2])), // 0 = no decimals, 2 = 2 decimals
-            price_frac: () => faker.finance.amount(100, 200, faker.helpers.arrayElement([1, 2])),
+            price_int: () => faker.finance.amount({ min: 100, max: 200, dec: 0 }),
+            price_random: () => faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([0, 2]) }), // 0 = no decimals, 2 = 2 decimals
+            price_frac: () => faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([1, 2]) }),
             price_frac_comma: () => faker.finance.amount(100, 200, faker.helpers.arrayElement([1, 2])).replace('.', ','),
             auctionPrice: () => faker.commerce.price({ min: 10, max: 100, dec: 0 }),
             price: () => data.product.price.price_frac_comma(),

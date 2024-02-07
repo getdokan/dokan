@@ -103,7 +103,7 @@ export const payloads = {
     createProduct: () => ({
         name: faker.commerce.productName() + ' (Simple)',
         type: 'simple',
-        regular_price: faker.finance.amount(100, 200, faker.helpers.arrayElement([0, 2])),
+        regular_price: { min: 100, max: 200, dec: faker.helpers.arrayElement([0, 2]) },
         // regular_price: '114.15' , // failed for this price & 5% tax & 10% commission dokan .1 issue
         status: 'publish',
         categories: [
@@ -212,7 +212,7 @@ export const payloads = {
     createWholesaleProduct: () => ({
         name: faker.commerce.productName() + ' (wholesale)',
         type: 'simple',
-        regular_price: faker.finance.amount(100, 110, faker.helpers.arrayElement([0, 2])),
+        regular_price: { min: 100, max: 110, dec: faker.helpers.arrayElement([0, 2]) },
         // regular_price: '114.15' , // failed for this price & 5% tax & 10% commission dokan .1 issue
         status: 'publish',
         categories: [
@@ -230,7 +230,7 @@ export const payloads = {
                 key: '_dokan_wholesale_meta',
                 value: {
                     enable_wholesale: 'yes',
-                    price: faker.finance.amount(90, 99, faker.helpers.arrayElement([0, 2])),
+                    regular_price: { min: 90, max: 99, dec: faker.helpers.arrayElement([0, 2]) },
                     // price: '100',
                     quantity: '10',
                 },
@@ -241,7 +241,7 @@ export const payloads = {
     createVariableProduct: () => ({
         name: faker.commerce.productName() + ' (Variable)',
         type: 'variable',
-        regular_price: faker.finance.amount(100, 200, faker.helpers.arrayElement([0, 2])),
+        regular_price: { min: 100, max: 200, dec: faker.helpers.arrayElement([0, 2]) },
         status: 'publish',
         categories: [
             {
@@ -266,7 +266,7 @@ export const payloads = {
 
     createProductVariation: {
         // id: '47',
-        regular_price: faker.finance.amount(100, 200, faker.helpers.arrayElement([0, 2])),
+        regular_price: { min: 100, max: 200, dec: faker.helpers.arrayElement([0, 2]) },
         status: 'publish',
         categories: [
             {
@@ -293,7 +293,7 @@ export const payloads = {
         name: faker.commerce.productName() + ' (Downloadable)',
         type: 'simple',
         downloadable: true,
-        regular_price: faker.finance.amount(100, 200, faker.helpers.arrayElement([0, 2])),
+        regular_price: { min: 100, max: 200, dec: faker.helpers.arrayElement([0, 2]) },
         downloads: [],
         // download_limit: 100,
         // download_expiry: 100,

@@ -73,7 +73,8 @@ setup.describe('setup test environment', () => {
         await dbUtils.setDokanSettings(dbData.dokan.optionName.reverseWithdraw, dbData.dokan.reverseWithdrawSettings);
     });
 
-    setup('get test environment info @lite', async () => {
+    setup.skip('get test environment info @lite', async () => {
+        //todo: might not needed anymore
         const [, systemInfo] = await apiUtils.getSystemStatus(payloads.adminAuth);
         helpers.writeFile(data.systemInfo, JSON.stringify(systemInfo));
     });
