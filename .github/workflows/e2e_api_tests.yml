@@ -66,11 +66,11 @@ jobs:
 
         steps:
             - name: Checkout testing repo
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
 
             - name: Use desired version of NodeJS
               if: success()
-              uses: actions/setup-node@v3
+              uses: actions/setup-node@v4
               with:
                   node-version: '16'
                   cache: 'npm'
@@ -149,7 +149,7 @@ jobs:
             - name: Cache playwright binaries
               id: playwright-cache
               if: success()
-              uses: actions/cache@v3
+              uses: actions/cache@v4
               with:
                   path: |
                       ~/.cache/ms-playwright
@@ -193,7 +193,7 @@ jobs:
             # Prepare test summary
             - name: Prepare test summary
               id: prepare-test-summary
-              uses: actions/github-script@v6
+              uses: actions/github-script@v7
               if: always()
               with:
                   result-encoding: string
@@ -203,7 +203,7 @@ jobs:
 
             # Find PR comment
             - name: Find PR comment by github-actions[bot]
-              uses: peter-evans/find-comment@v2
+              uses: peter-evans/find-comment@v3
               id: find-comment
               if: github.event_name == 'pull_request'
               with:
@@ -213,7 +213,7 @@ jobs:
 
             # Post test summary as PR comment
             - name: Create or update PR comment
-              uses: peter-evans/create-or-update-comment@v2
+              uses: peter-evans/create-or-update-comment@v4
               if: github.event_name == 'pull_request'
               with:
                   comment-id: ${{ steps.find-comment.outputs.comment-id }}
@@ -224,7 +224,7 @@ jobs:
 
             # Upload artifacts
             - name: Archive test artifacts (screenshots, HTML snapshots, Reports)
-              uses: actions/upload-artifact@v3
+              uses: actions/upload-artifact@v4
               if: always()
               with:
                   name: test-artifact
