@@ -434,7 +434,7 @@ if ( ! function_exists( 'dokan_get_seller_percentage' ) ) {
      *
      * @return int
      */
-    function dokan_get_seller_percentage( $seller_id = 0, $product_id = 0, $category_id = 0 ) {
+    function dokan_get_seller_percentage( $seller_id = 0, $product_id = 0, $category_id = 0 ) { // TODO: commission-restructure need to rewrite this full function.
 
         // Seller will get 100 percent if ( any_input_val < 0 || percentage_input_val > 100 )
         $commission_val = 100;
@@ -479,6 +479,7 @@ if ( ! function_exists( 'dokan_get_seller_percentage' ) ) {
             $is_single_category  = dokan_get_option( 'product_category_style', 'dokan_selling', 'single' );
 
             if ( $is_single_category === 'single' && $category_commission !== '' && is_numeric( $category_commission ) && $category_commission >= 0 ) {
+                // TODO: commission-restructure
                 $category_commission_type = dokan_get_category_wise_seller_commission_type( $product_id, $category_id );
 
                 if ( 'percentage' === $category_commission_type ) {
@@ -520,7 +521,7 @@ if ( ! function_exists( 'dokan_get_seller_percentage' ) ) {
  *
  * @return string $type
  */
-function dokan_get_commission_type( $seller_id = 0, $product_id = 0, $category_id = 0 ) {
+function dokan_get_commission_type( $seller_id = 0, $product_id = 0, $category_id = 0 ) { // TODO: commission-restructure need to rewrite this full function...
     //return product wise percentage
     if ( $product_id ) {
         $_per_product_commission = get_post_meta( $product_id, '_per_product_admin_commission', true );
@@ -2667,7 +2668,7 @@ add_action( 'widgets_init', 'dokan_register_store_widget' );
  *
  * @return int $commission_rate
  */
-function dokan_get_category_wise_seller_commission( $product_id, $category_id = 0 ) {
+function dokan_get_category_wise_seller_commission( $product_id, $category_id = 0 ) { // TODO: commission-restructure need to rewrite this function for category commission
     $terms = get_the_terms( $product_id, 'product_cat' );
 
     if ( empty( $terms ) ) {
@@ -2684,7 +2685,7 @@ function dokan_get_category_wise_seller_commission( $product_id, $category_id = 
     }
 
     if ( $terms ) {
-        $category_commision = get_term_meta( $term_id, 'per_category_admin_commission', true );
+        $category_commision = get_term_meta( $term_id, 'per_category_admin_commission', true ); // TODO: commission-restructure
     }
 
     if ( ! empty( $category_commision ) ) {
@@ -2703,7 +2704,7 @@ function dokan_get_category_wise_seller_commission( $product_id, $category_id = 
  *
  * @return int $commission_rate
  */
-function dokan_get_category_wise_seller_commission_type( $product_id, $category_id = 0 ) {
+function dokan_get_category_wise_seller_commission_type( $product_id, $category_id = 0 ) { // TODO: commission-restructure need to rewrite this full function
     $terms              = get_the_terms( $product_id, 'product_cat' );
     $term_id            = $terms[0]->term_id;
     $category_commision = '';
@@ -2714,7 +2715,7 @@ function dokan_get_category_wise_seller_commission_type( $product_id, $category_
     }
 
     if ( $terms ) {
-        $category_commision = get_term_meta( $term_id, 'per_category_admin_commission_type', true );
+        $category_commision = get_term_meta( $term_id, 'per_category_admin_commission_type', true ); // TODO: commission-restructure
     }
 
     return $category_commision;
@@ -3362,7 +3363,8 @@ function dokan_privacy_policy_text( $return = false ) {
 function dokan_commission_types() {
     return apply_filters(
         'dokan_commission_types', [
-            'fixed'      => __( 'Fixed', 'dokan-lite' ),
+            'fixed'          => __( 'Fixed', 'dokan-lite' ),
+            'category_based' => __( 'Category Based', 'dokan' ),
         ]
     );
 }

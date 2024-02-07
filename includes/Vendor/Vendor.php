@@ -630,8 +630,8 @@ class Vendor {
                             // get extra information
                             $display_type            = get_term_meta( $term->term_id, 'display_type', true );
                             $thumbnail_id            = absint( get_term_meta( $term->term_id, 'thumbnail_id', true ) );
-                            $category_commision_type = get_term_meta( $term->term_id, 'per_category_admin_commission_type', true );
-                            $category_commision      = get_term_meta( $term->term_id, 'per_category_admin_commission', true );
+                            $category_commision_type = get_term_meta( $term->term_id, 'per_category_admin_commission_type', true ); // TODO: commission-restructure
+                            $category_commision      = get_term_meta( $term->term_id, 'per_category_admin_commission', true ); // TODO: commission-restructure
                             $category_icon           = get_term_meta( $term->term_id, 'dokan_cat_icon', true );
                             $category_icon_color     = get_term_meta( $term->term_id, 'dokan_cat_icon_color', true );
 
@@ -646,7 +646,7 @@ class Vendor {
                             }
 
                             // fix commission
-                            $category_commision = ! empty( $category_commision ) ? wc_format_decimal( $category_commision ) : 0.00;
+                            $category_commision = ! empty( $category_commision ) ? wc_format_decimal( $category_commision ) : 0.00; // TODO: commission-restructure
 
                             // set extra fields to term object
                             $term->thumbnail = $thumbnail;
@@ -656,8 +656,8 @@ class Vendor {
                             $term->icon_color   = $category_icon_color;
                             $term->display_type = $display_type;
                             // set commissions
-                            $term->admin_commission_type = $category_commision_type;
-                            $term->admin_commission      = $category_commision;
+                            $term->admin_commission_type = $category_commision_type; // TODO: commission-restructure
+                            $term->admin_commission      = $category_commision; // TODO: commission-restructure
 
                             // finally store category data
                             $all_categories[] = $term;

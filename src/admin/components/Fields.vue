@@ -85,6 +85,38 @@
             </div>
         </template>
 
+        <template v-if="'category_based_commission' === fieldData.type">
+            <div class="field_contents p-0" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
+                <fieldset class="pt-4 pb-0 pl-5 pr-5">
+                    <FieldHeading :fieldData="fieldData"></FieldHeading>
+                </fieldset>
+                <div class="p-4 pl-5 pr-5">
+                    <commission
+                        :id="id"
+                        :fieldData="fieldData"
+                        :sectionId="sectionId"
+                        :fieldValue="fieldValue"
+                        :allSettingsValues="allSettingsValues"
+                        :errors="errors"
+                        :toggleLoadingState="toggleLoadingState"
+                        :validationErrors="validationErrors"
+                        :dokanAssetsUr="dokanAssetsUrl"
+                    />
+                    <category-based-commission
+                        :value="watchCategoryCommission"
+                        @change="onCategoryUpdate"
+                    />
+                </div>
+
+                <!--        <p v-if="hasError( fieldData.name )" class="dokan-error">-->
+                <!--            {{ getError( fieldData.label ) }}-->
+                <!--        </p>-->
+                <!--        <p v-if="hasValidationError( fieldData.name )" class="dokan-error">-->
+                <!--            {{ getValidationErrorMessage( fieldData.name ) }}-->
+                <!--        </p>-->
+            </div>
+        </template>
+
         <template  v-if="'yes' === fieldData.dokan_pro_commission">
             <component
                 :key="fieldData.type"
@@ -443,6 +475,7 @@
     import SecretInput from './SecretInput.vue';
     import WithdrawCharges from './Fields/WithdrawCharges.vue'
     import CombineInput from "admin/components/CombineInput.vue";
+    import CategoryBasedCommission from "admin/components/Commission/CategoryBasedCommission.vue";
     let Mapbox                = dokan_get_lib('Mapbox');
     let TextEditor            = dokan_get_lib('TextEditor');
     let GoogleMaps            = dokan_get_lib('GoogleMaps');
@@ -452,6 +485,7 @@
         name: 'Fields',
 
         components: {
+            CategoryBasedCommission,
           CombineInput,
             Mapbox,
             Switches,
@@ -611,6 +645,16 @@
                 }
 
                 return true;
+            },
+
+            watchCategoryCommission() {
+                let data =  JSON.parse( JSON.stringify( this.fieldValue[this.fieldData.name] ) );
+
+                if ( window._.isEmpty( data ) ) {
+                    return {};
+                }
+
+                return data;
             },
         },
 
@@ -790,7 +834,11 @@
             commissionUpdated( data ) {
                 this.fieldValue[this.fieldData.fields.percent_fee.name] = data.percentage;
                 this.fieldValue[this.fieldData.fields.fixed_fee.name] = data.fixed;
-            }
+            },
+
+            onCategoryUpdate(data) {
+                this.fieldValue[this.fieldData.name] = data;
+            },
         },
     };
 </script>

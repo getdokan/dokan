@@ -52,6 +52,7 @@ import VendorPaymentFields from "admin/pages/VendorPaymentFields.vue";
 import AdminNotice from "../admin/components/AdminNotice.vue";
 import CardFunFact from "../admin/components/CardFunFact.vue";
 import CombineInput  from 'admin/components/CombineInput.vue';
+import CategoryBasedCommission from "admin/components/Commission/CategoryBasedCommission.vue";
 
 import "vue-multiselect/dist/vue-multiselect.min.css"
 
@@ -123,6 +124,7 @@ window.dokan.libs['AdminNotice']         = AdminNotice;
 window.dokan.libs['CardFunFact']         = CardFunFact;
 window.dokan.libs['papaparse']           = parse;
 window.dokan.libs['CombineInput']        = CombineInput;
+window.dokan.libs['CategoryBasedCommission'] = CategoryBasedCommission;
 
 window.dokan.libs['ContentLoading']  = {
   VclCode,

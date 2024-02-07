@@ -64,7 +64,7 @@ class V_2_6_9 extends DokanUpgrader {
         }
     }
 
-    public static function replace_category_commission_meta() {
+    public static function replace_category_commission_meta() { // TODO: commission-restructure need to discuss with @ziku vai to remove this functoin for category commission.
         $args = [
             'taxonomy'   => 'product_cat',
             'hide_empty' => true,
@@ -76,7 +76,7 @@ class V_2_6_9 extends DokanUpgrader {
 
         foreach ( $terms as $t ) {
             $admin_commission = 100 - (int) get_term_meta( $t->term_id, 'per_category_commission', true );
-            update_term_meta( $t->term_id, 'per_category_admin_commission', $admin_commission );
+            update_term_meta( $t->term_id, 'per_category_admin_commission', $admin_commission ); // TODO: commission-restructure
         }
     }
 

@@ -151,12 +151,14 @@ class Manager {
             return $data;
         }
 
-        $commission                    = get_user_meta( $store_id, 'dokan_admin_percentage', true );
-        $additional_fee                = get_user_meta( $store_id, 'dokan_admin_additional_fee', true );
-        $commission_type               = get_user_meta( $store_id, 'dokan_admin_percentage_type', true );
-        $data['admin_commission']      = $commission;
-        $data['admin_additional_fee']  = $additional_fee;
-        $data['admin_commission_type'] = $commission_type;
+        $commission                        = get_user_meta( $store_id, 'dokan_admin_percentage', true );
+        $additional_fee                    = get_user_meta( $store_id, 'dokan_admin_additional_fee', true );
+        $commission_type                   = get_user_meta( $store_id, 'dokan_admin_percentage_type', true );
+        $admin_category_commission         = get_user_meta( $store_id, 'admin_category_commission', true );
+        $data['admin_category_commission'] = $admin_category_commission;
+        $data['admin_commission']          = $commission;
+        $data['admin_additional_fee']      = $additional_fee;
+        $data['admin_commission_type']     = $commission_type;
 
         return $data;
     }

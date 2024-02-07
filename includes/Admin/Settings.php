@@ -498,25 +498,25 @@ class Settings {
                 ],
                 'commission_fixed_values' => [
                     'name'    => 'commission_fixed_values',
-                    'label'   => __( 'Admin Commission', 'dokan' ),
+                    'label'   => __( 'Admin Commission', 'dokan-lite' ),
                     'type'    => 'commission_fixed',
                     'fields'  => [
                         'percent_fee' => [
                             'name'                       => 'admin_percentage',
-                            'label'                      => __( 'Percent Fee', 'dokan' ),
+                            'label'                      => __( 'Percent Fee', 'dokan-lite' ),
                             'default'                    => '10',
                             'type'                       => 'text',
-                            'desc'                       => __( 'Amount you will get from sales in percentage (10%)', 'dokan' ),
+                            'desc'                       => __( 'Amount you will get from sales in percentage (10%)', 'dokan-lite' ),
                             'required'                   => 'yes',
                             'sanitize_callback'          => 'wc_format_decimal',
                             'response_sanitize_callback' => 'wc_format_decimal',
                         ],
                         'fixed_fee' => [
                             'name'                       => 'additional_fee',
-                            'label'                      => __( 'Fixed Fee', 'dokan' ),
+                            'label'                      => __( 'Fixed Fee', 'dokan-lite' ),
                             'default'                    => '10',
                             'type'                       => 'text',
-                            'desc'                       => __( 'Amount you will get from sales in flat rate(+5)', 'dokan' ),
+                            'desc'                       => __( 'Amount you will get from sales in flat rate(+5)', 'dokan-lite' ),
                             'required'                   => 'yes',
                             'sanitize_callback'          => 'wc_format_decimal',
                             'response_sanitize_callback' => 'wc_format_localized_price',
@@ -525,12 +525,24 @@ class Settings {
                     'default' => 'fixed',
                     'min'     => '0',
                     'step'    => 'any',
-                    'desc'    => __( 'Amount you will get from sales in both percentage and fixed fee', 'dokan' ),
+                    'desc'    => __( 'Amount you will get from sales in both percentage and fixed fee', 'dokan-lite' ),
                     'sanitize_callback'          => 'wc_format_decimal',
                     'response_sanitize_callback' => 'wc_format_localized_price',
                     'show_if' => [
                         'commission_type' => [
                             'equal' => 'fixed',
+                        ],
+                    ],
+                ],
+                'commission_category_based_values' => [
+                    'name'    => 'commission_category_based_values',
+                    'type'    => 'category_based_commission',
+                    'dokan_pro_commission' => 'yes',
+                    'label'   => __( 'Admin Commission', 'dokan-lite' ),
+                    'desc'    => __( 'Amount you will get from each sale', 'dokan-lite' ),
+                    'show_if' => [
+                        'commission_type' => [
+                            'equal' => 'category_based',
                         ],
                     ],
                 ],

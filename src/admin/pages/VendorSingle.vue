@@ -323,6 +323,9 @@
                 <div class="payment-info">
                     <VendorPaymentFields :vendorInfo="store" />
                 </div>
+                <div class="commission-info">
+                    <vendor-commission-fields :vendorInfo="store"/>
+                </div>
             </section>
 
             <div :class="{'action-links': true, 'footer': true, 'edit-mode': editMode}">
@@ -339,6 +342,7 @@
 
 <script>
 import $ from 'jquery';
+import VendorCommissionFields from "admin/components/VendorCommissionFields.vue";
 
 let ContentLoading      = dokan_get_lib('ContentLoading');
 let Modal               = dokan_get_lib('Modal');
@@ -356,6 +360,7 @@ export default {
     name: 'VendorSingle',
 
     components: {
+      VendorCommissionFields,
         Modal,
         Currency,
         VclTwitch,
@@ -524,7 +529,6 @@ export default {
     },
 
     methods: {
-
         fetch() {
             const self = this;
             dokan.api.get( '/settings' )
@@ -700,6 +704,8 @@ export default {
 
             self.isUpdating = true;
 
+            console.log(self.store);
+
             dokan.api.put( `/stores/${self.store.id}`, self.store )
                 .done( ( response ) => {
                     self.editMode = false;
@@ -821,8 +827,9 @@ export default {
             this.editingCategories = true;
             await this.$nextTick();
             this.setStoreCategories();
-        }
-    }
+        },
+
+    },
 };
 </script>
 
@@ -1551,6 +1558,23 @@ export default {
                     width: 48%;
                     padding: 10px 20px;
                 }
+            }
+        }
+
+        .commission-info {
+            background-color: white;
+            margin-top: 30px;
+
+            .content-header {
+                font-size: 18px;
+                margin: 0;
+                padding: 10px;
+                border-bottom: 1px solid #f1f1f1;
+            }
+
+            .content-body {
+                display: flex;
+                justify-content: space-between;
             }
         }
 

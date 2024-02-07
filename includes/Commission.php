@@ -415,7 +415,7 @@ class Commission {
         }
 
         $term_id = $terms[0];
-        $rate    = ! $terms ? null : get_term_meta( $term_id, 'per_category_admin_commission', true );
+        $rate    = ! $terms ? null : get_term_meta( $term_id, 'per_category_admin_commission', true ); // TODO: commission-restructure
 
         return $this->validate_rate( $rate );
     }
@@ -457,7 +457,7 @@ class Commission {
         $terms   = get_the_terms( $this->validate_product_id( $product_id ), 'product_cat' );
         $term_id = $terms[0]->term_id;
 
-        return ! $terms ? null : get_term_meta( $term_id, 'per_category_admin_commission_type', true );
+        return ! $terms ? null : get_term_meta( $term_id, 'per_category_admin_commission_type', true ); // TODO: commission-restructure
     }
 
     /**
@@ -708,7 +708,7 @@ class Commission {
         }
 
         $term_id = $terms[0]->term_id;
-        $rate    = ! $terms ? null : get_term_meta( $term_id, 'per_category_admin_additional_fee', true );
+        $rate    = ! $terms ? null : get_term_meta( $term_id, 'per_category_admin_additional_fee', true ); // TODO: commission-restructure
 
         return $this->validate_rate( $rate );
     }
