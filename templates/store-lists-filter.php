@@ -50,7 +50,7 @@ defined( 'ABSPATH' ) || exit; ?>
             <select name="stores_orderby" id="stores_orderby" aria-label="<?php esc_html_e( 'Sort by', 'dokan-lite' ); ?>">
                 <?php
                 foreach ( $sort_filters as $key => $filter ) {
-                    $optoins = "<option value='${key}'" . selected( $sort_by, $key, false ) . ">${filter}</option>";
+                    $optoins = "<option value='{$key}'" . selected( $sort_by, $key, false ) . ">{$filter}</option>";
                     printf( $optoins );
                 }
                 ?>
