@@ -62,7 +62,7 @@
                 </template>
 
                 <template slot="categories" slot-scope="{ row }">
-                    {{ row.categories.map( category => category.name ).join( ', ' ) }}
+                      <span v-for="(category, key) in row.categories" :key="key" v-html="`${category.name}${key < row.categories.length - 1 ? ', ' : ''}`"></span>
                 </template>
 
                 <template slot="registered" slot-scope="data">

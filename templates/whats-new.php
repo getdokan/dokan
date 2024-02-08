@@ -4,8 +4,20 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.9.8',
+        'released' => '2024-01-30',
+        'changes'  => [
+            'Fix'         => [
+                [
+                    'title'       => 'Updated Appsero Client SDK library to version 2.0.2 which will fix a security issue with the previous version of the library and a fatal error caused by the library.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.9.7',
-        'released' => '2023-01-29',
+        'released' => '2024-01-29',
         'changes'  => [
             'Improvement'         => [
                 [
@@ -43,7 +55,7 @@ $changelog = [
     ],
     [
         'version'  => 'Version 3.9.6',
-        'released' => '2023-01-11',
+        'released' => '2024-01-11',
         'changes'  => [
             'New Feature'         => [
                 [
