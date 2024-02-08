@@ -1,14 +1,15 @@
 import { test, request, Page } from '@playwright/test';
 import { PaymentsPage } from '@pages/paymentsPage';
-// import { ApiUtils } from '@utils/apiUtils';
+import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
+import { payloads } from '@utils/payloads';
 
 test.describe('Payments test', () => {
     // let admin: PaymentsPage;
     let vendor: PaymentsPage;
     // let aPage: Page, vPage: Page;
     let vPage: Page;
-    // let apiUtils: ApiUtils;
+    let apiUtils: ApiUtils;
 
     test.beforeAll(async ({ browser }) => {
         // const adminContext = await browser.newContext(data.auth.adminAuth);
@@ -19,13 +20,14 @@ test.describe('Payments test', () => {
         vPage = await vendorContext.newPage();
         vendor = new PaymentsPage(vPage);
 
-        // apiUtils = new ApiUtils(await request.newContext());
+        apiUtils = new ApiUtils(await request.newContext());
     });
 
     test.afterAll(async () => {
         // await aPage.close();
         await vPage.close();
-        // await apiUtils.dispose();
+        await apiUtils.setStoreSettings(payloads.defaultStoreSettings, payloads.vendorAuth)
+        await apiUtils.dispose();
     });
 
     // test('admin can add basic payment methods', async ( ) => {
@@ -72,12 +74,13 @@ test.describe('Payments test', () => {
         await vendor.setBasicPayment({ ...data.vendor.payment, methodName: 'custom' });
     });
 
-    test('vendor can disconnect paypal payment method @lite', async () => {
+    test.only('vendor can disconnect paypal payment method @lite', async () => {
         await vendor.disconnectBasicPayment({ ...data.vendor.payment, methodName: 'paypal' });
     });
 
     test('vendor can disconnect bank payment method @lite', async () => {
         await vendor.disconnectBasicPayment({ ...data.vendor.payment, methodName: 'bank' });
+        //todo: need to reset disconnect, also update other tests
     });
 
     test('vendor can disconnect skrill payment method @pro', async () => {

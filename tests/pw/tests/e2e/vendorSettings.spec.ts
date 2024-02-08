@@ -1,28 +1,29 @@
-import { test, Page } from '@playwright/test';
+import { test, request, Page } from '@playwright/test';
 import { VendorSettingsPage } from '@pages/vendorSettingsPage';
 import { dbData } from '@utils/dbData';
-// import { ApiUtils } from '@utils/apiUtils';
+import { ApiUtils } from '@utils/apiUtils';
 import { dbUtils } from '@utils/dbUtils';
 // import { helpers } from '@utils/helpers';
 import { data } from '@utils/testData';
-// import { payloads } from '@utils/payloads';
+import { payloads } from '@utils/payloads';
 
 test.describe('Vendor settings test', () => {
     let vendor: VendorSettingsPage;
     let vPage: Page;
-    // let apiUtils: ApiUtils;
+    let apiUtils: ApiUtils;
 
     test.beforeAll(async ({ browser }) => {
         const vendorContext = await browser.newContext(data.auth.vendorAuth);
         vPage = await vendorContext.newPage();
         vendor = new VendorSettingsPage(vPage);
 
-        // apiUtils = new ApiUtils(await request.newContext());
+        apiUtils = new ApiUtils(await request.newContext());
     });
 
     test.afterAll(async () => {
         await vPage.close();
-        // await apiUtils.dispose();
+        await apiUtils.setStoreSettings(payloads.defaultStoreSettings, payloads.vendorAuth);
+        await apiUtils.dispose();
     });
 
     test('vendor store settings menu page is rendering properly @lite @explo', async () => {
