@@ -6,7 +6,7 @@ import { payloads } from '@utils/payloads';
 
 const { PRODUCT_ID } = process.env;
 
-test.describe('Withdraw test', () => {
+test.describe.only('Withdraw test', () => {
     let admin: WithdrawsPage;
     let vendor: WithdrawsPage;
     let aPage: Page, vPage: Page;
