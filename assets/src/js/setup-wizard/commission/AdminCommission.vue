@@ -1,23 +1,22 @@
 <template>
     <div class="p-3">
         <div class="mb-5">
-            <p class="!p-0 !m-0 !font-semibold" for="_subscription_product_admin_commission_type">Admin Commission type</p>
+            <p class="!p-0 !m-0 !font-semibold" for="_subscription_product_admin_commission_type">{{__( 'Admin Commission type', 'dokan' )}}</p>
             <div class="flex flex-col">
                 <select v-model="selectedCommission" id="_subscription_product_admin_commission_type" name="_subscription_product_admin_commission_type" class="select short">
                     <option v-for="(commissionData, key) in commissionTypes" :value="key">{{commissionData}}</option>
                 </select>
-                <span class="description">Set the commission type admin will get under this subscription</span>
             </div>
         </div>
         <div v-if="'category_based' === selectedCommission">
-            <p class="!p-0 !m-0 !font-semibold" for="_subscription_product_admin_commission_type">Admin Commission</p>
+            <p class="!p-0 !m-0 !font-semibold" for="_subscription_product_admin_commission_type">{{__( 'Admin Commission', 'dokan' )}}</p>
             <category-based-commission
                 :value="commission"
                 @change="onCategoryUpdate"
             />
         </div>
         <div v-else-if="'fixed' === selectedCommission">
-            <p class="!p-0 !m-0 !font-semibold" for="_subscription_product_admin_commission_type">Admin Commission</p>
+            <p class="!p-0 !m-0 !font-semibold" for="_subscription_product_admin_commission_type">{{__( 'Admin Commission', 'dokan' )}}</p>
             <combine-input
                 :value="fixedCommission"
                 v-on:change="fixedCOmmissionhandler"

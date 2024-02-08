@@ -21,7 +21,7 @@
                     <button type='button' class='p-1 xs:pl-1 md:pl-4 bg-transparent bg-co border-none cursor-pointer' @click='()=>allCategroyEnabled = !allCategroyEnabled'>
                         <i class="far" :class='! allCategroyEnabled ? "fa-minus-square text-black" : "fa-plus-square text-[#F05025]"'></i>
                     </button>
-                    <p class='xs:text-[8px] sm:text-[14px]'>{{__( 'All Categories', 'dokan' )}}</p>
+                    <p class='xs:text-[8px] sm:text-[14px] !m-0'>{{__( 'All Categories', 'dokan' )}}</p>
                 </div>
 
                 <div class='flex flex-row w-1/2 border-0 border-b-[1px] border-[#e9e9ea] border-solid'>
@@ -63,7 +63,7 @@
                     <button type='button' class='p-1 xs:pl-1 md:pl-6 bg-transparent border-none cursor-pointer' :disabled='!item.children.length' :class='!item.children.length ? "disabled:cursor-not-allowed text-gray-300" : "cursor-pointer text-[#F05025]"' @click='()=> catRowClick( item, index )'>
                         <i class="far" :class='openRows.includes( Number( item.term_id ) ) ? "fa-minus-square text-black" : "fa-plus-square"'></i>
                     </button>
-                    <p class='xs:text-[8px] sm:text-[14px] text-black' v-html="`${item.name} (${item.term_id})`"></p>
+                    <p class='xs:text-[8px] sm:text-[14px] text-black !m-0' v-html="`${item.name} (${item.term_id})`"></p>
                 </div>
 
                 <div class='w-1/2 flex min-h-[3rem] border-0 border-solid border-[#e9e9ea]'>
