@@ -533,7 +533,9 @@ class SetupWizard extends DokanSetupWizard {
         }
 
         // Check address and add manually values on Profile Completion also increase progress value
-        $dokan_settings['profile_completion']['address'] = $dokan_settings['profile_completion']['progress_vals']['address_val'];
+        if ( ! empty( $dokan_settings['profile_completion']['progress_vals']['address_val'] ) ) {
+            $dokan_settings['profile_completion']['address'] = $dokan_settings['profile_completion']['progress_vals']['address_val'];
+        }
 
         if ( empty( $dokan_settings['address']['street_1'] ) ) {
             unset( $dokan_settings['profile_completion']['address'] );
