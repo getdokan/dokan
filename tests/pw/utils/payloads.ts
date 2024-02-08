@@ -405,7 +405,7 @@ export const payloads = {
         featured: true,
         description: 'test description',
         short_description: 'test short description',
-        // regular_price    : faker.finance.amount(200, 400, 2),
+        // regular_price: faker.finance.amount({ min: 200, max: 400, dec: 2 }),
         // price            : '2232',
         regular_price: '2232',
         categories: [{}],
@@ -421,7 +421,7 @@ export const payloads = {
 
             {
                 key: '_auction_start_price',
-                value: '10', // faker.finance.amount(10, 20, 2),
+                value: '10', // faker.finance.amount({min:10, max:20, dec:2}),
             },
             {
                 key: '_auction_bid_increment',
@@ -516,9 +516,9 @@ export const payloads = {
         ],
     }),
 
-    updateProduct: () => ({ regular_price: faker.finance.amount(100, 200, faker.helpers.arrayElement([0, 2])) }),
+    updateProduct: () => ({ regular_price: faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([0, 2]) }) }),
 
-    updateProductVariation: () => ({ regular_price: faker.finance.amount(100, 200, faker.helpers.arrayElement([0, 2])) }),
+    updateProductVariation: () => ({ regular_price: faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([0, 2]) }) }),
 
     createProductReview: () => ({
         product_id: '',
