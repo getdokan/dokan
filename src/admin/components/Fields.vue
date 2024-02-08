@@ -20,7 +20,7 @@
                             :id="sectionId + '[' + fieldData.name + ']'"
                             :name="sectionId + '[' + fieldData.name + ']'"
                             :value="fieldValue[fieldData.name]"
-                            @input="event => inputValueHandler( fieldData.name, event.target.value, fieldValue[fieldData.name] )"
+                            @input="value => inputValueHandler( fieldData.name, value, fieldValue[fieldData.name] )"
                         />
                         <input
                             v-else
