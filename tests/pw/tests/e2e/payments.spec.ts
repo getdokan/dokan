@@ -74,7 +74,7 @@ test.describe('Payments test', () => {
         await vendor.setBasicPayment({ ...data.vendor.payment, methodName: 'custom' });
     });
 
-    test.only('vendor can disconnect paypal payment method @lite', async () => {
+    test('vendor can disconnect paypal payment method @lite', async () => {
         await vendor.disconnectBasicPayment({ ...data.vendor.payment, methodName: 'paypal' });
     });
 
