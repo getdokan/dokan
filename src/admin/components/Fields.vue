@@ -91,29 +91,18 @@
                     <FieldHeading :fieldData="fieldData"></FieldHeading>
                 </fieldset>
                 <div class="p-4 pl-5 pr-5">
-                    <commission
-                        :id="id"
-                        :fieldData="fieldData"
-                        :sectionId="sectionId"
-                        :fieldValue="fieldValue"
-                        :allSettingsValues="allSettingsValues"
-                        :errors="errors"
-                        :toggleLoadingState="toggleLoadingState"
-                        :validationErrors="validationErrors"
-                        :dokanAssetsUr="dokanAssetsUrl"
-                    />
                     <category-based-commission
                         :value="watchCategoryCommission"
                         @change="onCategoryUpdate"
                     />
                 </div>
 
-                <!--        <p v-if="hasError( fieldData.name )" class="dokan-error">-->
-                <!--            {{ getError( fieldData.label ) }}-->
-                <!--        </p>-->
-                <!--        <p v-if="hasValidationError( fieldData.name )" class="dokan-error">-->
-                <!--            {{ getValidationErrorMessage( fieldData.name ) }}-->
-                <!--        </p>-->
+                <p v-if="hasError( fieldData.name )" class="dokan-error">
+                    {{ getError( fieldData.label ) }}
+                </p>
+                <p v-if="hasValidationError( fieldData.name )" class="dokan-error">
+                    {{ getValidationErrorMessage( fieldData.name ) }}
+                </p>
             </div>
         </template>
 

@@ -4,6 +4,10 @@ const Vue = dokan_get_lib('Vue');
 import './style.css';
 
 jQuery( document ).ready(function() {
+    if ( ! jQuery('#dokan-setup-wizard-commission-wrapper').length ) {
+        return;
+    }
+
     new Vue({
         el: '#dokan-setup-wizard-commission-wrapper',
         render: h => h(AdminCommission),

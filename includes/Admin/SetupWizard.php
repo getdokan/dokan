@@ -2,6 +2,8 @@
 
 namespace WeDevs\Dokan\Admin;
 
+use stdClass;
+
 /**
  * Setup wizard class
  *
@@ -116,13 +118,6 @@ class SetupWizard {
             DOKAN_PLUGIN_ASSEST . '/css/dokan-setup-wizard-commission.css',
             [ 'dokan-setup' ],
             DOKAN_PLUGIN_VERSION
-        );
-        wp_localize_script(
-            'dokan-setup-wizard-commission',
-            'dokanCommission',
-            [
-                'commissionTypes' => dokan_commission_types(),
-            ]
         );
 
         if ( 'off' === dokan_get_option( 'disable_dokan_fontawesome', 'dokan_appearance', 'off' ) ) {
@@ -503,22 +498,21 @@ class SetupWizard {
      * @return void
      */
     public function dokan_setup_commission() {
-        $options          = get_option( 'dokan_selling', [ 'admin_percentage' => 10 ] );
-        $admin_percentage = isset( $options['admin_percentage'] ) ? $options['admin_percentage'] : 10;
+        $options = get_option( 'dokan_selling', [ 'admin_percentage' => 10 ] );
 
-        $new_seller_enable_selling = ! empty( $options['new_seller_enable_selling'] ) ? $options['new_seller_enable_selling'] : '';
-        $commission_type           = ! empty( $options['commission_type'] ) ? $options['commission_type'] : 'percentage';
-        $order_status_change       = ! empty( $options['order_status_change'] ) ? $options['order_status_change'] : '';
-        $dokan_commission_types    = dokan_commission_types();
+        $admin_percentage                 = isset( $options['admin_percentage'] ) ? $options['admin_percentage'] : 10;
+        $additional_fee                   = isset( $options['additional_fee'] ) ? $options['additional_fee'] : 0;
+        $commission_category_based_values = isset( $options['commission_category_based_values'] ) ? $options['commission_category_based_values'] : new stdClass();
+        $commission_type                  = ! empty( $options['commission_type'] ) ? $options['commission_type'] : 'fixed';
 
         $args = apply_filters(
             'dokan_admin_setup_wizard_step_setup_selling_template_args', [
-                'new_seller_enable_selling' => $new_seller_enable_selling,
-                'commission_type'           => $commission_type,
-                'admin_percentage'          => $admin_percentage,
-                'order_status_change'       => $order_status_change,
-                'dokan_commission_types'    => $dokan_commission_types,
-                'setup_wizard'              => $this,
+                'commission_type'                  => $commission_type,
+                'admin_percentage'                 => $admin_percentage,
+                'additional_fee'                   => $additional_fee,
+                'commission_category_based_values' => $commission_category_based_values,
+                'dokanCommission'                  => dokan_commission_types(),
+                'setup_wizard'                     => $this,
             ]
         );
 
@@ -533,8 +527,6 @@ class SetupWizard {
 
         $options                              = get_option( 'dokan_selling', [] );
         $options['new_seller_enable_selling'] = isset( $_POST['new_seller_enable_selling'] ) ? 'on' : 'off';
-        $options['commission_type']           = isset( $_POST['commission_type'] ) ? sanitize_text_field( wp_unslash( $_POST['commission_type'] ) ) : '';
-        $options['admin_percentage']          = isset( $_POST['admin_percentage'] ) ? wc_format_decimal( sanitize_text_field( wp_unslash( $_POST['admin_percentage'] ) ) ) : 0;
         $options['order_status_change']       = isset( $_POST['order_status_change'] ) ? 'on' : 'off';
 
         update_option( 'dokan_selling', $options );
@@ -555,15 +547,15 @@ class SetupWizard {
     public function dokan_setup_commission_save() {
         check_admin_referer( 'dokan-setup' );
 
-        $options                              = get_option( 'dokan_selling', [] );
-        $options['new_seller_enable_selling'] = isset( $_POST['new_seller_enable_selling'] ) ? 'on' : 'off';
-        $options['commission_type']           = isset( $_POST['commission_type'] ) ? sanitize_text_field( wp_unslash( $_POST['commission_type'] ) ) : '';
-        $options['admin_percentage']          = isset( $_POST['admin_percentage'] ) ? wc_format_decimal( sanitize_text_field( wp_unslash( $_POST['admin_percentage'] ) ) ) : 0;
-        $options['order_status_change']       = isset( $_POST['order_status_change'] ) ? 'on' : 'off';
+        $options                                     = get_option( 'dokan_selling', [] );
+        $options['commission_type']                  = isset( $_POST['dokan_commission_type'] ) ? sanitize_text_field( wp_unslash( $_POST['dokan_commission_type'] ) ) : 'fixed';
+        $options['admin_percentage']                 = isset( $_POST['dokan_commission_percentage'] ) ? wc_format_decimal( sanitize_text_field( wp_unslash( $_POST['dokan_commission_percentage'] ) ) ) : 0;
+        $options['additional_fee']                   = isset( $_POST['dokan_commission_flat'] ) ? sanitize_text_field( wp_unslash( $_POST['dokan_commission_flat'] ) ) : 0;
+        $options['commission_category_based_values'] = isset( $_POST['dokan_commission_category_based'] ) ? wc_clean( json_decode( sanitize_text_field( wp_unslash( $_POST['dokan_commission_category_based'] ) ), true ) ) : [];
 
         update_option( 'dokan_selling', $options );
 
-        do_action( 'dokan_admin_setup_wizard_save_step_setup_selling', $options, [] );
+        do_action( 'dokan_admin_setup_wizard_save_step_setup_commission', $options, [] );
 
         wp_safe_redirect( esc_url_raw( $this->get_next_step_link() ) );
         exit;

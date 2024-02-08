@@ -22,6 +22,11 @@
                 v-on:change="fixedCOmmissionhandler"
             />
         </div>
+
+        <input type="hidden" :value="selectedCommission" name="dokan_commission_type"/>
+        <input type="hidden" :value="fixedCommission.fixed ?? 0" name="dokan_commission_flat">
+        <input type="hidden" :value="fixedCommission.percentage ?? 0" name="dokan_commission_percentage">
+        <input type="hidden" :value="JSON.stringify(commission)" name="dokan_commission_category_based">
     </div>
 </template>
 
@@ -40,107 +45,31 @@
                 commission: {},
                 commissionTypes: {},
                 fixedCommission: {},
-                productId: 0,
-                wcProduct: {},
             }
         },
 
         created() {
             let $ = window.jQuery;
-            let self = this;
 
-            if ( window.dokanCommission && window.dokanCommission.commissionTypes ) {
-                this.commissionTypes = window.dokanCommission.commissionTypes;
+            if ( $('#dokan-setup-wizard-commission-data').data('commission') ) {
+                let commission = $('#dokan-setup-wizard-commission-data').data('commission');
+
+                this.commissionTypes = commission.dokanCommission;
+                this.fixedCommission.fixed = commission.additional_fee ? Number( commission.additional_fee ) : 0;
+                this.fixedCommission.percentage = commission.admin_percentage ? Number( commission.admin_percentage ) : 0;
+                this.selectedCommission = commission.commission_type ? String(commission.commission_type) : 'fixed';
+                this.commission = commission.commission_category_based_values;
             }
-
-            if ( $('#post_ID').val() ) {
-                self.productId = $('#post_ID').val();
-            }
-
-            $("form").submit( this.saveommission );
-
-            this.fetchCommission();
         },
 
         methods: {
-            fetchCommission() {
-                // dokan.api.get(`/products/${this.productId}`)
-                //     .done((response, status, xhr) => {
-                //         this.wcProduct = response
-                //
-                //         this.selectedCommission = this.getMetaData('_subscription_product_admin_commission_type', 'fixed');
-                //         this.fixedCommission = {
-                //             fixed: this.getMetaData( '_subscription_product_admin_commission', 0 ),
-                //             percentage: this.getMetaData( '_subscription_product_admin_additional_fee', 0 ),
-                //         }
-                //
-                //         this.commission = this.getMetaData( '_subscription_product_admin_category_based_commission', 0 );
-                //     });
-            },
-
-            saveommission() {
-                let data = {
-                    product_id: this.productId,
-                    commission_type: this.selectedCommission,
-                    commission: this.processItemsForDatabase()
-                }
-
-                console.log(data);
-
-                // dokan.api.post(`/subscription/save-commission`, data);
-            },
-
             onCategoryUpdate(data) {
                 this.commission = data;
             },
 
-            fixedCOmmissionhandler(data, de) {
+            fixedCOmmissionhandler(data) {
                 this.fixedCommission = data;
             },
-
-            processItemsForDatabase() {
-                if ( ! this.commission.hasOwnProperty( 'items' ) ) {
-                    return [];
-                }
-
-                let items = [];
-                let all = this.commission.hasOwnProperty('all') ? this.commission.all : {};
-                let commissionItems = this.commission.items;
-
-                Object.keys( commissionItems ).forEach( item => {
-                    items.push({
-                        category_id: item,
-                        ...commissionItems[item]
-                    });
-                } );
-
-                return {
-                    fixed: {
-                        flat: this.fixedCommission.hasOwnProperty('fixed') ? this.fixedCommission.fixed : 0,
-                        percentage: this.fixedCommission.hasOwnProperty('percentage') ? this.fixedCommission.percentage : 0,
-                    },
-                    category_based: {
-                        all,
-                        items
-                    }
-                };
-            },
-
-            getMetaData( key, defaultData = '' ) {
-                if ( ! Object.values( this.wcProduct ).length || ! this.wcProduct.hasOwnProperty('meta_data') || 'object' !== typeof this.wcProduct.meta_data ) {
-                    return defaultData;
-                }
-
-                let metaData = this.wcProduct.meta_data;
-
-                metaData.forEach(item => {
-                    if ( item.hasOwnProperty( 'key' ) && item.key === key ) {
-                        defaultData = item.value;
-                    }
-                });
-
-                return defaultData;
-            }
         }
     }
 </script>
