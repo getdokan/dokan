@@ -476,6 +476,12 @@ class Init {
 
                     return $product->get_stock_quantity();
                 },
+                'dependency_condition'  => [
+                    'section'  => 'inventory',
+                    'field'    => Elements::MANAGE_STOCK,
+                    'operator' => 'equal',
+                    'value'    => 'on',
+                ],
             ]
         );
 
@@ -501,16 +507,28 @@ class Init {
 
                     return '';
                 },
+                'dependency_condition'  => [
+                    'section'  => 'inventory',
+                    'field'    => Elements::MANAGE_STOCK,
+                    'operator' => 'equal',
+                    'value'    => 'on',
+                ],
             ]
         );
 
         $section->add_field(
             Elements::BACKORDERS, [
-                'title'       => __( 'Allow Backorders', 'dokan-lite' ),
-                'description' => __( 'If managing stock, this controls whether or not backorders are allowed. If enabled, stock quantity can go below 0.', 'dokan-lite' ),
-                'field_type'  => 'select',
-                'name'        => '_backorders',
-                'options'     => wc_get_product_backorder_options(),
+                'title'                => __( 'Allow Backorders', 'dokan-lite' ),
+                'description'          => __( 'If managing stock, this controls whether or not backorders are allowed. If enabled, stock quantity can go below 0.', 'dokan-lite' ),
+                'field_type'           => 'select',
+                'name'                 => '_backorders',
+                'options'              => wc_get_product_backorder_options(),
+                'dependency_condition' => [
+                    'section'  => 'inventory',
+                    'field'    => Elements::MANAGE_STOCK,
+                    'operator' => 'equal',
+                    'value'    => 'on',
+                ],
             ]
         );
 
