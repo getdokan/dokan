@@ -35,7 +35,6 @@ class Init {
     public function init_form_fields() {
         $this->init_general_fields();
         $this->init_inventory_fields();
-        $this->init_downloadable_virtual_fields();
         $this->init_downloadable_fields();
         $this->init_other_fields();
     }
@@ -153,11 +152,11 @@ class Init {
 
         $section->add_field(
             Elements::DATE_ON_SALE_FROM, [
-                'title'          => __( 'From', 'dokan-lite' ),
-                'field_type'     => 'text',
-                'name'           => '_sale_price_dates_from',
-                'placeholder'    => 'YYYY-MM-DD',
-                'value_callback' => function ( $product, $value = '' ) {
+                'title'                => __( 'From', 'dokan-lite' ),
+                'field_type'           => 'text',
+                'name'                 => '_sale_price_dates_from',
+                'placeholder'          => 'YYYY-MM-DD',
+                'value_callback'       => function ( $product, $value = '' ) {
                     if ( '' !== $value ) {
                         $time = dokan_current_datetime()->modify( $value );
 
@@ -170,16 +169,22 @@ class Init {
 
                     return $product->get_date_on_sale_from( 'edit' ) ? $product->get_date_on_sale_from( 'edit' )->getTimestamp() : false;
                 },
+                'dependency_condition' => [
+                    'section'  => 'general',
+                    'field'    => Elements::SALE_PRICE,
+                    'operator' => 'equal',
+                    'value'    => 'on',
+                ],
             ]
         );
 
         $section->add_field(
             Elements::DATE_ON_SALE_TO, [
-                'title'          => __( 'To', 'dokan-lite' ),
-                'field_type'     => 'text',
-                'name'           => '_sale_price_dates_to',
-                'placeholder'    => 'YYYY-MM-DD',
-                'value_callback' => function ( $product, $value = '' ) {
+                'title'                => __( 'To', 'dokan-lite' ),
+                'field_type'           => 'text',
+                'name'                 => '_sale_price_dates_to',
+                'placeholder'          => 'YYYY-MM-DD',
+                'value_callback'       => function ( $product, $value = '' ) {
                     if ( '' !== $value ) {
                         $time = dokan_current_datetime()->modify( $value );
 
@@ -192,6 +197,12 @@ class Init {
 
                     return $product->get_date_on_sale_to( 'edit' ) ? $product->get_date_on_sale_to( 'edit' )->getTimestamp() : false;
                 },
+                'dependency_condition' => [
+                    'section'  => 'general',
+                    'field'    => Elements::SALE_PRICE,
+                    'operator' => 'equal',
+                    'value'    => 'on',
+                ],
             ]
         );
 
@@ -335,24 +346,6 @@ class Init {
 
                     return $product->get_description();
                 },
-            ]
-        );
-    }
-
-    /**
-     * Init downloadable and virtual fields
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return void
-     */
-    public function init_downloadable_virtual_fields() {
-        $section = Factory::add_section(
-            'downloadable_virtual',
-            [
-                'title'       => __( 'Downloadable', 'dokan-lite' ),
-                'description' => __( 'Downloadable products give access to a file upon purchase.', 'dokan-lite' ),
-                'order'       => 20,
             ]
         );
 
@@ -548,9 +541,15 @@ class Init {
         $section = Factory::add_section(
             'downloadable',
             [
-                'title'       => __( 'Downloadable Options', 'dokan-lite' ),
-                'description' => __( 'Configure your downloadable product settings', 'dokan-lite' ),
-                'order'       => 30,
+                'title'                => __( 'Downloadable Options', 'dokan-lite' ),
+                'description'          => __( 'Configure your downloadable product settings', 'dokan-lite' ),
+                'order'                => 30,
+                'dependency_condition' => [
+                    'section'  => 'general',
+                    'field'    => Elements::DOWNLOADABLE,
+                    'operator' => 'equal',
+                    'value'    => 'on',
+                ],
             ]
         );
 

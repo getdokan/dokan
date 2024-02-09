@@ -26,14 +26,15 @@ abstract class Component {
      * @var array $data
      */
     protected $data = [
-        'id'            => '', // html id attribute of the field, required
-        'title'         => '', // label for the field
-        'description'   => '', // description of the field
-        'help_content'  => '', // help content for the field
-        'visibility'    => true, // field visibility, if the field is visible under frontend
-        'required'      => false, // by default, all fields are not required
-        'order'         => 30,
-        'error_message' => '',
+        'id'                   => '', // html id attribute of the field, required
+        'title'                => '', // label for the field
+        'description'          => '', // description of the field
+        'help_content'         => '', // help content for the field
+        'visibility'           => true, // field visibility, if the field is visible under frontend
+        'required'             => false, // by default, all fields are not required
+        'dependency_condition' => [], // dependency condition for the field
+        'order'                => 30,
+        'error_message'        => '',
     ];
 
     public function __construct( string $id, array $args = [] ) {
@@ -263,6 +264,32 @@ abstract class Component {
      */
     public function set_order( int $order ): self {
         $this->data['order'] = $order;
+
+        return $this;
+    }
+
+    /**
+     * Get Dependency Condition.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return array
+     */
+    public function get_dependency_condition(): array {
+        return $this->data['dependency_condition'];
+    }
+
+    /**
+     * Set Dependency Condition.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $condition
+     *
+     * @return $this
+     */
+    public function set_dependency_condition( array $condition ): self {
+        $this->data['dependency_condition'] = $condition;
 
         return $this;
     }

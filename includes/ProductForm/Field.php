@@ -44,9 +44,10 @@ class Field extends Component {
             'field_type'            => '', // html field type
             'placeholder'           => '', // html placeholder attribute value for the field
             'options'               => [], // if the field is select, radio, checkbox, etc
+            'dependency_condition'  => [], // dependency condition for the field
             'additional_properties' => [], // additional arguments for the field
             'sanitize_callback'     => '', // callback function for sanitizing the field value
-            'value_callback'    => '', // callback function to get field value via a callback
+            'value_callback'        => '', // callback function to get field value via a callback
         ];
         $this->data = array_merge( $this->data, $data );
 
