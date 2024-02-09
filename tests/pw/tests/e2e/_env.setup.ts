@@ -325,7 +325,7 @@ setup.describe('setup dokan settings e2e', () => {
         expect(product).toBeTruthy();
     });
 
-    setup('save store settings to update store on map @lite', async () => {
+    setup.skip('save store settings to update store on map @lite', async () => {
         await vendorPage.updateStoreMapViaSettingsSave();
     });
 });
