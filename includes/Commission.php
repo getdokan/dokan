@@ -387,14 +387,9 @@ class Commission {
      * @return int
      */
     public function validate_product_id( $product_id ) {
-        $product = wc_get_product( $product_id );
-        if ( ! $product ) {
-            return 0;
-        }
+        wc_deprecated_function( 'validate_product_id', 'DOKAN_SINCE', 'dokan()->product->validate_product_id()' );
 
-        $parent_id = $product->get_parent_id();
-
-        return $parent_id ? $parent_id : $product_id;
+        return dokan()->product->validate_product_id( $product_id );
     }
 
     /**
@@ -546,6 +541,7 @@ class Commission {
      * @return float|null on failure
      */
     public function get_product_wise_earning( $product_id, $product_price ) {
+		// TODO: commission-restructure need to remove it
         if ( ! dokan()->is_pro_exists() ) {
             return null;
         }
@@ -558,7 +554,7 @@ class Commission {
      *
      * @since  2.9.21
      *
-     * @param callable $callable
+     * @param callable $callable_function
      * @param int      $product_id
      * @param float    $product_price
      *
@@ -924,13 +920,13 @@ class Commission {
      * @return float
      */
     public function calculate_commission( $product_id, $product_price, $vendor_id = null ) {
-        $product_wise_earning = $this->get_product_wise_earning( $product_id, $product_price );
+        $product_wise_earning = $this->get_product_wise_earning( $product_id, $product_price ); // TODO: commission-restructure need to remove it.
 
         if ( ! is_null( $product_wise_earning ) ) {
             return $product_wise_earning;
         }
 
-        $category_wise_earning = $this->get_category_wise_earning( $product_id, $product_price );
+        $category_wise_earning = $this->get_category_wise_earning( $product_id, $product_price ); // TODO: commission-restructure need to remove it. because we are removing category commission.
 
         if ( ! is_null( $category_wise_earning ) ) {
             return $category_wise_earning;
@@ -949,5 +945,20 @@ class Commission {
         }
 
         return $product_price;
+    }
+
+    /**
+     * Returns all the commission types that ware in dokan. These types were existed before dokan lite version DOKAN_SINCE
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return string[]
+     */
+    public function get_legacy_commission_types() {
+        return [
+            'combine'    => __( 'Combine', 'dokan-lite' ),
+            'percentage' => __( 'Percentage', 'dokan-lite' ),
+            'flat'       => __( 'Flat', 'dokan-lite' ),
+        ];
     }
 }

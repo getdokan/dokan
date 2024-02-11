@@ -63,15 +63,15 @@ export default {
     value: {
       type: Object,
       default: {
-        fixed: 0,
-        percentage: 0
+        fixed: '',
+        percentage: ''
       }
     }
   },
   data() {
     return {
-      fixed: this.value.fixed ?? 0,
-      percentage: this.value.percentage ?? 0
+      fixed: this.value.fixed ?? '',
+      percentage: this.value.percentage ?? ''
     };
   },
   watch: {

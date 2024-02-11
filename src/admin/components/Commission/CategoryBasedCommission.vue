@@ -263,7 +263,7 @@
                     this.$set(this.commission.items, term_id, data);
                 }
 
-                this.$emit( 'change', JSON.parse( JSON.stringify( this.commission ) ) );
+                this.emitComponentChange( JSON.parse( JSON.stringify( this.commission ) ) )
             },
 
             handleAllCategoryInput( value, commission_type ) {
@@ -271,7 +271,7 @@
 
                 this.deleteDuplicateCategories( JSON.parse( JSON.stringify( this.commission.items ) ) );
 
-                this.$emit( 'change', JSON.parse( JSON.stringify( this.commission ) ) );
+                this.emitComponentChange( JSON.parse( JSON.stringify( this.commission ) ) )
             },
 
             deleteDuplicateCategories( items ) {
@@ -280,6 +280,10 @@
                         this.$delete(this.commission.items, key);
                     }
                 } );
+            },
+
+            emitComponentChange( data ) {
+                this.$emit( 'change', data );
             }
         }
     }

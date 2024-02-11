@@ -587,7 +587,9 @@ export default {
                 this.store.admin_commission_type = 'flat';
             }
 
-            this.store.admin_additional_fee = accounting.formatNumber( this.store.admin_additional_fee, dokan.currency.precision, dokan.currency.thousand, dokan.currency.decimal, dokan.currency.format );
+            if ( this.store.admin_additional_fee ) {
+                this.store.admin_additional_fee = accounting.formatNumber( this.store.admin_additional_fee, dokan.currency.precision, dokan.currency.thousand, dokan.currency.decimal, dokan.currency.format );
+            }
 
             /**
              * if admin commission type is flat and no admin commission is set then it will not not set
@@ -704,7 +706,7 @@ export default {
 
             self.isUpdating = true;
 
-            console.log(self.store);
+            self.store.aunshon = {};
 
             dokan.api.put( `/stores/${self.store.id}`, self.store )
                 .done( ( response ) => {

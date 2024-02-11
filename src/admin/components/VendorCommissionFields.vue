@@ -66,8 +66,8 @@ export default {
       }
 
       let fixedCommission = {
-          fixed: 0,
-          percentage: 0
+          fixed: '',
+          percentage: ''
       };
 
       if ( this.vendorInfo.admin_commission ) {
@@ -99,8 +99,8 @@ export default {
       },
 
       commissionUpdated() {
-          this.vendorInfo.admin_additional_fee = this.fixedCommission.fixed ?? 0;
-          this.vendorInfo.admin_commission = this.fixedCommission.percentage ?? 0;
+          this.vendorInfo.admin_additional_fee = this.fixedCommission.fixed ?? '';
+          this.vendorInfo.admin_commission = this.fixedCommission.percentage ?? '';
           this.vendorInfo.admin_commission_type = this.selectedCommission;
           this.vendorInfo.admin_category_commission = JSON.parse( JSON.stringify( this.categoryCommission ) );
       }

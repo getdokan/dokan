@@ -714,4 +714,26 @@ class Manager {
 
         return $products;
     }
+
+    /**
+     * Validate product id (if it's a variable product, return it's parent id)
+     *
+     * Moved from \WeDevs\Dokan\Commission() ( commission.php file ) in version DOKAN_SINCE
+     *
+     * @since  2.9.21
+     *
+     * @param int $product_id
+     *
+     * @return int
+     */
+    public function validate_product_id( $product_id ) {
+        $product = wc_get_product( $product_id );
+        if ( ! $product ) {
+            return 0;
+        }
+
+        $parent_id = $product->get_parent_id();
+
+        return $parent_id ? $parent_id : $product_id;
+    }
 }
