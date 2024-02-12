@@ -414,6 +414,12 @@ class SetupWizard {
             dokan()->tracker->insights->optout();
         }
 
+        // store this value for later use
+        update_option( 'dokan_share_essentials', $share_essentials );
+
+        // call a hook for other plugins to do their thing
+        do_action( 'dokan_share_essentials_updated', $share_essentials );
+
         update_option( 'dokan_general', $general_options );
         update_option( 'dokan_selling', $selling_options );
         update_option( 'dokan_appearance', $appearance );

@@ -50,7 +50,7 @@ defined( 'ABSPATH' ) || exit; ?>
             <select name="stores_orderby" id="stores_orderby" aria-label="<?php esc_html_e( 'Sort by', 'dokan-lite' ); ?>">
                 <?php
                 foreach ( $sort_filters as $key => $filter ) {
-                    $optoins = "<option value='${key}'" . selected( $sort_by, $key, false ) . ">${filter}</option>";
+                    $optoins = "<option value='{$key}'" . selected( $sort_by, $key, false ) . ">{$filter}</option>";
                     printf( $optoins );
                 }
                 ?>
@@ -74,7 +74,7 @@ defined( 'ABSPATH' ) || exit; ?>
     if ( apply_filters( 'dokan_load_store_lists_filter_search_bar', true ) ) :
         ?>
         <div class="store-search grid-item">
-            <input type="search" class="store-search-input" name="dokan_seller_search" placeholder="<?php esc_html_e( 'Search Vendors', 'dokan-lite' ); ?>">
+            <input type="search" class="store-search-input" name="dokan_seller_search" placeholder="<?php esc_attr_e( 'Search Vendors', 'dokan-lite' ); ?>">
         </div>
         <?php
     endif;
