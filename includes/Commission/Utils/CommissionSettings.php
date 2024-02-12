@@ -3,16 +3,19 @@
 namespace WeDevs\Dokan\Commission\Utils;
 
 class CommissionSettings {
-    public $type = null;
-    public $flat = '';
-    public $percentage          = '';
-    public $category_commission = [];
+    private $type = null;
+    private $flat = '';
+    private $percentage = '';
+    private $category_id = '';
 
-    public function __construct( $type = '', $flat = '', $percentage = '', $category_commission = [] ) {
+    private $category_commissions = [];
+
+    public function __construct( $type = '', $flat = '', $percentage = '', $category_commissions = [], $category_id = '' ) {
         $this->type = $type;
         $this->flat = $flat;
         $this->percentage = $percentage;
-        $this->category_commission = $category_commission;
+        $this->category_commissions = $category_commissions;
+        $this->category_id = $category_id;
     }
 
     /**
@@ -39,7 +42,14 @@ class CommissionSettings {
     /**
      * @return array|mixed|null
      */
-    public function get_category_commission() {
-        return $this->category_commission;
+    public function get_category_commissions() {
+        return $this->category_commissions;
+    }
+
+    /**
+     * @return array|mixed|null
+     */
+    public function get_category_id() {
+        return $this->category_id;
     }
 }

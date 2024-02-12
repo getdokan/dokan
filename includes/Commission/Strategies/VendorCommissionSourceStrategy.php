@@ -6,7 +6,7 @@ use WeDevs\Dokan\Commission\Calculators\CommissionCalculatorInterface;
 use WeDevs\Dokan\Commission\CommissionCalculatorFactory;
 use WeDevs\Dokan\Commission\Utils\CommissionSettings;
 
-class VendorCommissionSourceStrategy implements CommissionSourceStrategyInterface {
+class VendorCommissionSourceStrategy extends AbstractCommissionSourceStrategy {
 
     /**
      * @var object|\WeDevs\Dokan\Vendor\Vendor
@@ -30,27 +30,16 @@ class VendorCommissionSourceStrategy implements CommissionSourceStrategyInterfac
         return $this->category_id;
     }
 
-    public function get_commission_calculator(): ?CommissionCalculatorInterface {
-        $settings = $this->getVendorCommissionSettings();
-        $commission_calculator = CommissionCalculatorFactory::createCalculator( $settings, $this->get_category_id() );
-
-        if ( $commission_calculator && $commission_calculator->is_applicable() ) {
-            return $commission_calculator;
-        }
-
-        return null;
+    public function get_source(): string {
+        return self::SOURCE;
     }
 
-    private function getVendorCommissionSettings(): CommissionSettings {
+    public function get_settings(): CommissionSettings {
         $percentage = $this->vendor->get_meta( 'dokan_admin_percentage', true );
         $type       = $this->vendor->get_meta( 'dokan_admin_percentage_type', true );
         $flat       = $this->vendor->get_meta( 'dokan_admin_additional_fee', true );
         $category  = $this->vendor->get_meta( 'admin_category_commission', true ) ?? [];
 
-        return new CommissionSettings( $type, $flat, $percentage, $category );
-    }
-
-    public function get_source(): string {
-        return self::SOURCE;
+        return new CommissionSettings( $type, $flat, $percentage, $category, $this->get_category_id() );
     }
 }

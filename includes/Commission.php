@@ -4,6 +4,11 @@ namespace WeDevs\Dokan;
 
 use WC_Order;
 use WC_Product;
+use WeDevs\Dokan\Commission\CommissionContext;
+use WeDevs\Dokan\Commission\Strategies\GlobalCommissionSourceStrategy;
+use WeDevs\Dokan\Commission\Strategies\OrderCommissionSourceStrategyItem;
+use WeDevs\Dokan\Commission\Strategies\ProductCommissionSourceStrategy;
+use WeDevs\Dokan\Commission\Strategies\VendorCommissionSourceStrategy;
 use WeDevs\Dokan\ProductCategory\Helper;
 use WP_Error;
 use WooCommerce\PayPalCommerce\WcGateway\Gateway\PayPalGateway;
@@ -604,17 +609,6 @@ class Commission {
             wc_add_order_item_meta( $this->get_order_item_id(), '_dokan_additional_fee', $additional_fee );
         }
 
-        /**
-         * If dokan pro doesn't exist but combine commission is found in database due to it was active before
-         * Then make the commission type 'flat'. We are making it flat cause when commission type is there in database
-         * But in option field, looks like flat commission is selected.
-         *
-         * @since 3.0.0
-         */
-        if ( ! dokan()->is_pro_exists() && 'combine' === $commission_type ) {
-            $commission_type = 'flat';
-        }
-
         $earning = null;
 
         if ( 'flat' === $commission_type ) {
@@ -920,6 +914,28 @@ class Commission {
      * @return float
      */
     public function calculate_commission( $product_id, $product_price, $vendor_id = null ) {
+        $category_id = 15;     // Example cat
+
+        $strategies = [
+            new OrderCommissionSourceStrategyItem( $this->order_item_id, $product_price ),
+            new ProductCommissionSourceStrategy( $product_id ),
+            new VendorCommissionSourceStrategy( $vendor_id, $category_id ),
+            new GlobalCommissionSourceStrategy( $category_id ),
+        ];
+
+        $context      = new CommissionContext( $strategies );
+        $commission   = $context->calculate_commission( $product_price );
+
+		//        return $commission; TODO: commission-restructure need to return here the actial commisssion
+        // return apply_filters( 'dokan_prepare_for_calculation', $earning, $commission_rate, $commission_type, $additional_fee, $product_price, $this->get_order_id() ); TODO: commission-restructure need to Return commission/earning here by this hook.
+        // TODO: commission-restructure need to save applied commission to order item meta.
+        /**
+         * // Saving applied commission rates and types for current order item in order item meta.
+         * wc_add_order_item_meta( $this->get_order_item_id(), '_dokan_commission_rate', $commission_rate );
+         * wc_add_order_item_meta( $this->get_order_item_id(), '_dokan_commission_type', $commission_type );
+         * wc_add_order_item_meta( $this->get_order_item_id(), '_dokan_additional_fee', $additional_fee );
+         */
+
         $product_wise_earning = $this->get_product_wise_earning( $product_id, $product_price ); // TODO: commission-restructure need to remove it.
 
         if ( ! is_null( $product_wise_earning ) ) {

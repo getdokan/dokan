@@ -5,9 +5,8 @@ namespace WeDevs\Dokan\Commission\Strategies;
 use WeDevs\Dokan\Commission\Calculators\CommissionCalculatorInterface;
 use WeDevs\Dokan\Commission\CommissionCalculatorFactory;
 use WeDevs\Dokan\Commission\Utils\CommissionSettings;
-use WeDevs\Dokan\Commission\Calculators\FixedCommissionCalculator;
 
-class GlobalCommissionSourceStrategy implements CommissionSourceStrategyInterface {
+class GlobalCommissionSourceStrategy extends AbstractCommissionSourceStrategy {
 
     const SOURCE = 'global';
     /**
@@ -26,28 +25,16 @@ class GlobalCommissionSourceStrategy implements CommissionSourceStrategyInterfac
         return $this->category_id;
     }
 
-    public function get_commission_calculator(): ?CommissionCalculatorInterface {
-        $settings = $this->getGlobalCommissionSettings();
-
-        $commission_calculator = CommissionCalculatorFactory::createCalculator( $settings, $this->get_category_id() );
-
-        if ( $commission_calculator && $commission_calculator->is_applicable() ) {
-            return $commission_calculator;
-        }
-
-        return null;
-    }
-
-    private function getGlobalCommissionSettings(): CommissionSettings {
-        $percentage = dokan_get_option( 'admin_percentage', 'dokan_selling', '' );
-        $type = dokan_get_option( 'commission_type', 'dokan_selling', '' );
-        $flat = dokan_get_option( 'additional_fee', 'dokan_selling', '' );
-        $category = dokan_get_option( 'commission_category_based_values', 'dokan_selling', [] );
-
-        return new CommissionSettings( $type, $flat, $percentage, $category );
-    }
-
     public function get_source(): string {
         return self::SOURCE;
+    }
+
+    public function get_settings(): CommissionSettings {
+        $percentage = dokan_get_option( 'admin_percentage', 'dokan_selling', '' );
+        $type       = dokan_get_option( 'commission_type', 'dokan_selling', '' );
+        $flat       = dokan_get_option( 'additional_fee', 'dokan_selling', '' );
+        $category_commissions   = dokan_get_option( 'commission_category_based_values', 'dokan_selling', [] );
+
+        return new CommissionSettings( $type, $flat, $percentage, $category_commissions, $this->get_category_id() );
     }
 }

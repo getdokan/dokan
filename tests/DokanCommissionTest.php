@@ -2,7 +2,7 @@
 
 use WeDevs\Dokan\Commission\CommissionContext;
 use WeDevs\Dokan\Commission\Strategies\GlobalCommissionSourceStrategy;
-use WeDevs\Dokan\Commission\Strategies\OrderItemCommissionSourceStrategy;
+use WeDevs\Dokan\Commission\Strategies\OrderCommissionSourceStrategyItem;
 use WeDevs\Dokan\Commission\Strategies\ProductCommissionSourceStrategy;
 use WeDevs\Dokan\Commission\Strategies\VendorCommissionSourceStrategy;
 
@@ -24,7 +24,7 @@ class DokanCommissionTest extends WP_UnitTestCase {
         $category_id  = 15;     // Example cat
 
         $strategies = [
-            new OrderItemCommissionSourceStrategy( $orderItemId ),
+            new OrderCommissionSourceStrategyItem( $orderItemId ),
             new ProductCommissionSourceStrategy( $productId ),
             new VendorCommissionSourceStrategy( $vendorId, $category_id ),
             new GlobalCommissionSourceStrategy( $category_id ),
@@ -34,7 +34,6 @@ class DokanCommissionTest extends WP_UnitTestCase {
         $productPrice = 100.00; // Example product price
         $commission   = $context->calculate_commission( $productPrice );
 
-        print_r( $commission );
 
         $this->assertEmpty($commission);
     }

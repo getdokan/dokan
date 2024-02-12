@@ -2,17 +2,17 @@
 
 namespace WeDevs\Dokan\Commission;
 
-use WeDevs\Dokan\Commission\Strategies\CommissionSourceStrategyInterface;
+use WeDevs\Dokan\Commission\Strategies\AbstractCommissionSourceStrategy;
 
 class CommissionContext {
 
     /**
-     * @var CommissionSourceStrategyInterface[]
+     * @var AbstractCommissionSourceStrategy[]
      */
     private array $strategies;
 
     /**
-     * @param CommissionSourceStrategyInterface[] $strategies
+     * @param AbstractCommissionSourceStrategy[] $strategies
      */
     public function __construct( array $strategies ) {
         $this->strategies = $strategies;
@@ -23,20 +23,20 @@ class CommissionContext {
             $calculator = $strategy->get_commission_calculator();
             if ( $calculator !== null ) {
                 return [
-                    'source'               => $strategy->get_source(),
-                    'commissionAmount'     => $calculator->calculate( $price ),
-                    'commissionType'       => $calculator->get_source(),
-                    'commissionParameters' => $calculator->get_parameters(),
+                    'source'     => $strategy->get_source(),
+                    'amount'     => $calculator->calculate( $price ),
+                    'type'       => $calculator->get_source(),
+                    'parameters' => $calculator->get_parameters(),
                 ];
             }
         }
 
         // If no commission is defined at any level, default to 0
         return [
-            'source'               => 'none',
-            'commissionAmount'     => 0,
-            'commissionType'       => 'none',
-            'commissionParameters' => [],
+            'source'     => 'none',
+            'amount'     => 0,
+            'type'       => 'none', // TODO: commission-restructure need to re-consider this default type.
+            'parameters' => [],
         ];
     }
 }
