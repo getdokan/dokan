@@ -2950,7 +2950,7 @@ function dokan_get_translations_for_plugin_domain( $domain, $language_dir = null
  */
 function dokan_get_jed_locale_data( $domain, $language_dir = null ) {
     // get transient key
-    $transient_key = sprintf( 'dokan_i18n-%s-%d', $domain, filectime( $language_dir ) );
+    $transient_key = sprintf( 'dokan_i18n-%s-%d-%s', $domain, filectime( $language_dir ), get_user_locale() );
 
     // check if data exists on cache or not
     $locale = Cache::get_transient( $transient_key );
