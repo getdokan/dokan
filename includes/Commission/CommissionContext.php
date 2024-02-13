@@ -22,11 +22,14 @@ class CommissionContext {
         foreach ( $this->strategies as $strategy ) {
             $calculator = $strategy->get_commission_calculator();
             if ( $calculator !== null ) {
+                $calculator->calculate( $price );
+
                 return [
-                    'source'     => $strategy->get_source(),
-                    'amount'     => $calculator->calculate( $price ),
-                    'type'       => $calculator->get_source(),
-                    'parameters' => $calculator->get_parameters(),
+                    'source'           => $strategy->get_source(),
+                    'admin_commission' => $calculator->get_admin_commission(),
+                    'vendor_earning'   => $calculator->get_vendor_earning(),
+                    'type'             => $calculator->get_source(),
+                    'parameters'       => $calculator->get_parameters(),
                 ];
             }
         }

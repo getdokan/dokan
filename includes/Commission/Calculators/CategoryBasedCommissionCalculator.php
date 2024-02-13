@@ -6,6 +6,8 @@ use WeDevs\Dokan\Commission\Utils\CommissionSettings;
 
 class CategoryBasedCommissionCalculator implements CommissionCalculatorInterface {
     private $category_commissions = [];
+    private $admin_commission = 0;
+    private $vendor_earning = 0;
     const SOURCE = 'category_based';
     private FixedCommissionCalculator $fixed_commission_calculator;
     /**
@@ -41,11 +43,14 @@ class CategoryBasedCommissionCalculator implements CommissionCalculatorInterface
         $this->category_id = $category_id;
     }
 
-    public function calculate( $price ): float {
+    public function calculate( $total_amount, $total_quantity = 1 ) {
         $valid_commission = $this->get_valid_commission();
         // Use FixedCommissionCalculator for the calculation
         $this->fixed_commission_calculator = new FixedCommissionCalculator( FixedCommissionCalculator::SOURCE, $valid_commission['flat'], $valid_commission['percentage'] );
-        return $this->fixed_commission_calculator->calculate( $price );
+        $this->fixed_commission_calculator->calculate( $total_amount, $total_quantity );
+
+        $this->admin_commission = $this->fixed_commission_calculator->get_admin_commission();
+        $this->vendor_earning = $this->fixed_commission_calculator->get_vendor_earning();
     }
 
     public function get_parameters(): array {
@@ -98,5 +103,13 @@ class CategoryBasedCommissionCalculator implements CommissionCalculatorInterface
             'flat' => 0,
             'percentage' => 0,
         ];
+    }
+
+    public function get_admin_commission(): float {
+        return $this->admin_commission;
+    }
+
+    public function get_vendor_earning(): float {
+        return $this->vendor_earning;
     }
 }

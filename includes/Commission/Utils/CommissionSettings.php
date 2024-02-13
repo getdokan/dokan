@@ -29,14 +29,14 @@ class CommissionSettings {
      * @return mixed|string
      */
     public function get_flat() {
-        return dokan()->commission->validate_rate( $this->flat );
+        return $this->flat;
     }
 
     /**
      * @return mixed|string
      */
     public function get_percentage() {
-        return dokan()->commission->validate_rate( $this->percentage );
+        return $this->percentage;
     }
 
     /**

@@ -6,14 +6,16 @@ use WeDevs\Dokan\Commission\CommissionCalculatorFactory;
 use WeDevs\Dokan\Commission\Utils\CommissionSettings;
 use WeDevs\Dokan\Commission\Calculators\CommissionCalculatorInterface;
 
-class OrderCommissionSourceStrategyItem extends AbstractCommissionSourceStrategy {
+class OrderItemCommissionSourceStrategy extends AbstractCommissionSourceStrategy {
     private $order_item_id;
     private $product_price_to_calculate_commission;
+    private $total_order_item_quantity;
     const SOURCE = 'order_item';
 
-    public function __construct( $order_item_id, $product_price_to_calculate_commission ) {
+    public function __construct( $order_item_id = '', $product_price_to_calculate_commission = 0, $total_order_item_quantity = 1 ) {
         $this->order_item_id                         = $order_item_id;
         $this->product_price_to_calculate_commission = $product_price_to_calculate_commission;
+        $this->total_order_item_quantity             = $total_order_item_quantity;
     }
 
     public function get_source(): string {
@@ -22,8 +24,8 @@ class OrderCommissionSourceStrategyItem extends AbstractCommissionSourceStrategy
 
     public function get_settings(): CommissionSettings {
         $commission_percentage = ! empty( $this->order_item_id ) ? wc_get_order_item_meta( $this->order_item_id, '_dokan_commission_rate', true ) : '';
-        $commission_type = ! empty( $this->order_item_id ) ? wc_get_order_item_meta( $this->order_item_id, '_dokan_commission_type', true ) : '';
-        $additional_flat  = ! empty( $this->order_item_id ) ? wc_get_order_item_meta( $this->order_item_id, '_dokan_additional_fee', true ) : '';
+        $commission_type       = ! empty( $this->order_item_id ) ? wc_get_order_item_meta( $this->order_item_id, '_dokan_commission_type', true ) : '';
+        $additional_flat       = ! empty( $this->order_item_id ) ? wc_get_order_item_meta( $this->order_item_id, '_dokan_additional_fee', true ) : '';
 
         /**
          * If `_dokan_item_total` returns `non-falsy` value that means, the request comes from the `order refund request`.
@@ -36,7 +38,7 @@ class OrderCommissionSourceStrategyItem extends AbstractCommissionSourceStrategy
          * @see https://github.com/getdokan/dokan/blob/28888e6824d96747ed65004fbd6de80d0eee5161/includes/Commission.php#L567-L653
          * @see https://github.com/getdokan/dokan/blob/28888e6824d96747ed65004fbd6de80d0eee5161/includes/Commission.php
          */
-        $order_id = wc_get_order_id_by_order_item_id( $this->order_item_id );
+        $order_id      = wc_get_order_id_by_order_item_id( $this->order_item_id );
         $item_total    = get_post_meta( $order_id, '_dokan_item_total', true );
         $product_price = (float) wc_format_decimal( $this->product_price_to_calculate_commission );
         if ( $order_id && $item_total ) {

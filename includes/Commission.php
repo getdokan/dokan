@@ -6,7 +6,7 @@ use WC_Order;
 use WC_Product;
 use WeDevs\Dokan\Commission\CommissionContext;
 use WeDevs\Dokan\Commission\Strategies\GlobalCommissionSourceStrategy;
-use WeDevs\Dokan\Commission\Strategies\OrderCommissionSourceStrategyItem;
+use WeDevs\Dokan\Commission\Strategies\OrderItemCommissionSourceStrategy;
 use WeDevs\Dokan\Commission\Strategies\ProductCommissionSourceStrategy;
 use WeDevs\Dokan\Commission\Strategies\VendorCommissionSourceStrategy;
 use WeDevs\Dokan\ProductCategory\Helper;
@@ -620,7 +620,7 @@ class Commission {
             // As it's `flat` fee, So modify `commission rate` to the correct amount to get refunded. (commission_rate/item_total)*product_price.
             $item_total = 0;
             if ( $this->get_order_id() ) {
-                $order      = wc_get_order( $this->get_order_id() );
+                $order      = dokan()->order->get( $this->get_order_id() );
                 $item_total = $order->get_meta( '_dokan_item_total', true );
             }
 
@@ -917,7 +917,7 @@ class Commission {
         $category_id = 15;     // Example cat
 
         $strategies = [
-            new OrderCommissionSourceStrategyItem( $this->order_item_id, $product_price ),
+            new OrderItemCommissionSourceStrategy( $this->order_item_id, $product_price, $this->get_order_qunatity() ),
             new ProductCommissionSourceStrategy( $product_id ),
             new VendorCommissionSourceStrategy( $vendor_id, $category_id ),
             new GlobalCommissionSourceStrategy( $category_id ),
@@ -976,5 +976,31 @@ class Commission {
             'percentage' => __( 'Percentage', 'dokan-lite' ),
             'flat'       => __( 'Flat', 'dokan-lite' ),
         ];
+    }
+
+    /**
+     * This is a test function to test commission.
+     *
+     * TODO: commission-restructure remember to delete this function when commission restructure is done.
+     *
+     * @return array
+     */
+    public function com_test( $order_item_id = '', $product_price = 0, $qunatity = 1, $product_id = 0, $vendor_id = 1, $category_id = 0 ) {
+
+//        $order_item_id = ''; $product_price = 0; $qunatity = 1; $product_id = 0; $vendor_id = 1; $category_id = 0;
+//        dokan()->commission->com_test(
+//            $order_item_id, $product_price, $qunatity, $product_id, $vendor_id, $category_id
+//        );
+
+
+        $strategies = [
+            new OrderItemCommissionSourceStrategy( $order_item_id, $product_price, $qunatity ),
+            new ProductCommissionSourceStrategy( $product_id ),
+            new VendorCommissionSourceStrategy( $vendor_id, $category_id ),
+            new GlobalCommissionSourceStrategy( $category_id ),
+        ];
+
+        $context = new CommissionContext( $strategies );
+        return $context->calculate_commission( $product_price );
     }
 }
