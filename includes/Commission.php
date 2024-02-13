@@ -981,7 +981,7 @@ class Commission {
     /**
      * This is a test function to test commission.
      *
-     * TODO: commission-restructure remember to delete this function when commission restructure is done.
+     * TODO: commission-restructure remember to delete this function when commission restructure is done.And this is the calling style for get_earning_by_order
      *
      * @return array
      */
@@ -1001,6 +1001,6 @@ class Commission {
         ];
 
         $context = new CommissionContext( $strategies );
-        return $context->calculate_commission( $product_price );
+        return $context->calculate_commission( $product_price, $qunatity );
     }
 }

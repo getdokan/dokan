@@ -8,5 +8,7 @@ interface CommissionCalculatorInterface {
     public function get_vendor_earning(): float;
     public function get_parameters(): array;
     public function get_source(): string;
+    public function get_per_item_admin_commission(): float;
+    public function get_items_total_quantity(): int;
     public function is_applicable(): bool;
 }
