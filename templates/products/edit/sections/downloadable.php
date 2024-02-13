@@ -144,9 +144,10 @@ $post = get_post( $product->get_id() ); // phpcs:ignore WordPress.WP.GlobalVaria
                         </div><!-- .content-half-part -->
                     <?php endif; ?>
                 </div>
+
+                <?php do_action( 'dokan_product_edit_after_downloadable', $post, $product->get_id(), $product ); ?>
+
             </div> <!-- .dokan-side-body -->
         </div> <!-- .downloadable -->
     </div>
-
-    <?php do_action( 'dokan_product_edit_after_downloadable', $post, $product->get_id(), $product ); ?>
 </div>
