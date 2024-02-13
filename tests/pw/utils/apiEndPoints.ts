@@ -538,10 +538,10 @@ export const endPoints = {
 
         productAddons: {
             getAllProductAddons: `${SERVER_URL}/wc-product-add-ons/v1/product-add-ons`,
-            getSingleProductAddon: (productId: string) => `${SERVER_URL}/wc-product-add-ons/v1/product-add-ons${productId}`,
+            getSingleProductAddon: (productId: string) => `${SERVER_URL}/wc-product-add-ons/v1/product-add-ons/${productId}`,
             createProductAddon: `${SERVER_URL}/wc-product-add-ons/v1/product-add-ons`,
-            updateProductAddon: (productId: string) => `${SERVER_URL}/wc-product-add-ons/v1/product-add-ons${productId}`,
-            deleteProductAddon: (productId: string) => `${SERVER_URL}/wc-product-add-ons/v1/product-add-ons${productId}`,
+            updateProductAddon: (productId: string) => `${SERVER_URL}/wc-product-add-ons/v1/product-add-ons/${productId}`,
+            deleteProductAddon: (productId: string) => `${SERVER_URL}/wc-product-add-ons/v1/product-add-ons/${productId}`,
         },
     },
 

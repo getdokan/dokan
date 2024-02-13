@@ -484,8 +484,8 @@ export const payloads = {
     }),
 
     createProductAddons: () => ({
-        name: 'Test Addons Group_1' + faker.string.nanoid(10),
-        priority: 1,
+        name: 'Test Addons Group_' + faker.string.nanoid(10),
+        priority: 10,
         restrict_to_categories: [],
         fields: [
             {
@@ -507,7 +507,13 @@ export const payloads = {
                 options: [
                     {
                         label: 'Option 1',
-                        price: '30',
+                        price: '10',
+                        image: '',
+                        price_type: 'flat_fee',
+                    },
+                    {
+                        label: 'Option 2',
+                        price: '20',
                         image: '',
                         price_type: 'flat_fee',
                     },

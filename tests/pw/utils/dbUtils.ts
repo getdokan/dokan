@@ -123,4 +123,12 @@ export const dbUtils = {
         // console.log(res);
         return [res, refundId];
     },
+
+    // update cell
+    async updateCell(id: any, value: any): Promise<any> {
+        const queryUpdate = `UPDATE ${dbPrefix}_posts SET post_author = '${value}' WHERE ID = '${id}';`;
+        const res = await dbUtils.dbQuery(queryUpdate);
+        // console.log(res);
+        return res;
+    },
 };
