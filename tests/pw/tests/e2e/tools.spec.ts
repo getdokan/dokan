@@ -22,27 +22,27 @@ test.describe('Tools test', () => {
         await apiUtils.dispose();
     });
 
-    test('dokan tools menu page is rendering properly @pro @explo', async () => {
+    test('dokan tools menu page is rendering properly @pro @exp @a', async () => {
         await admin.adminToolsRenderProperly();
     });
 
-    test.skip('admin can perform dokan page Installation @pro', async () => {
+    test.skip('admin can perform dokan page Installation @pro @a', async () => {
         await admin.dokanPageInstallation();
     });
 
-    test('admin can regenerate order commission @pro', async () => {
+    test('admin can regenerate order commission @pro @a', async () => {
         await admin.regenerateOrderCommission();
     });
 
-    test('admin can check for duplicate orders @pro', async () => {
+    test('admin can check for duplicate orders @pro @a', async () => {
         await admin.checkForDuplicateOrders();
     });
 
-    test('admin can set dokan setup wizard @lite', async () => {
+    test('admin can set dokan setup wizard @lite @a', async () => {
         await admin.setDokanSetupWizard(data.dokanSetupWizard);
     });
 
-    test('admin can regenerate variable product variations author IDs @pro', async () => {
+    test('admin can regenerate variable product variations author IDs @pro @a', async () => {
         await admin.regenerateVariableProductVariationsAuthorIds();
     });
 
@@ -50,12 +50,12 @@ test.describe('Tools test', () => {
     // 	await admin.importDummyData();
     // });
 
-    test('admin can clear dummy data @pro', async () => {
+    test('admin can clear dummy data @pro @a', async () => {
         await apiUtils.importDummyData(payloads.dummyData, payloads.adminAuth);
         await admin.clearDummyData();
     });
 
-    test('admin can test distance matrix API @pro', async () => {
+    test('admin can test distance matrix API @pro @a', async () => {
         await admin.testDistanceMatrixApi(data.tools.distanceMatrixApi);
     });
 });

@@ -32,50 +32,52 @@ test.describe('Product Advertising test', () => {
         await apiUtils.dispose();
     });
 
-    test('dokan product advertising menu page is rendering properly @pro @explo', async () => {
+    test('dokan product advertising menu page is rendering properly @pro @exp', async () => {
         await admin.adminProductAdvertisingRenderProperly();
     });
 
-    test('admin can add product advertisement @pro', async () => {
+    test('admin can add product advertisement @pro @a', async () => {
         await admin.addNewProductAdvertisement({ ...data.productAdvertisement, advertisedProduct: productName });
     });
 
-    test('admin can search advertised product @pro', async () => {
+    test('admin can search advertised product @pro @a', async () => {
         await admin.searchAdvertisedProduct(productName);
     });
 
-    test('admin can filter advertised product by stores @pro', async () => {
+    test('admin can filter advertised product by stores @pro @a', async () => {
         await admin.filterAdvertisedProduct(data.productAdvertisement.filter.byStore, 'by-store');
     });
 
-    test('admin can filter advertised product by creation process @pro', async () => {
+    test('admin can filter advertised product by creation process @pro @a', async () => {
         await admin.filterAdvertisedProduct(data.productAdvertisement.filter.createVia.admin, 'by-creation');
     });
 
-    test('admin can expire advertised product @pro', async () => {
+    test('admin can expire advertised product @pro @a', async () => {
         await admin.updateAdvertisedProduct(productName, 'expire');
     });
 
-    test('admin can delete advertised product @pro', async () => {
+    test('admin can delete advertised product @pro @a', async () => {
         await admin.updateAdvertisedProduct(productName, 'delete');
     });
 
-    test('admin can perform product advertising bulk action @pro', async () => {
+    test('admin can perform product advertising bulk action @pro @a', async () => {
         // await apiUtils.createProductAdvertisement(payloads.createProduct(), payloads.vendorAuth);
         await admin.productAdvertisingBulkAction('delete');
     });
 
-    test('vendor can buy product advertising @pro', async () => {
-        const orderId = await vendor.buyProductAdvertising(data.productAdvertisement.advertisedProduct);
+    test('vendor can buy product advertising @pro @v', async () => {
+        //todo: p1_v1 status gets pending review; need to resolve
+        [, , productName] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendorAuth);
+        const orderId = await vendor.buyProductAdvertising(productName);
         await apiUtils.updateOrderStatus(orderId, 'wc-completed', payloads.adminAuth);
     });
 
-    // test('vendor can buy booking product advertising @pro', async ( ) => { // todo:
+    // test('vendor can buy booking product advertising @pro @v', async ( ) => { // todo:
     // 	const orderId = await vendor.buyProductAdvertising(data.productAdvertisement.advertisedProduct);
     // 	await apiUtils.updateOrderStatus(orderId, 'wc-completed', payloads.adminAuth);
     // });
 
-    // test('vendor can buy auction product advertising @pro', async ( ) => { // todo:
+    // test('vendor can buy auction product advertising @pro @v', async ( ) => { // todo:
     // 	const orderId = await vendor.buyProductAdvertising(data.productAdvertisement.advertisedProduct);
     // 	await apiUtils.updateOrderStatus(orderId, 'wc-completed', payloads.adminAuth);
     // });

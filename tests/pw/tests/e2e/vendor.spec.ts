@@ -26,21 +26,21 @@ test.describe('Vendor user functionality test', () => {
         // await apiUtils.dispose();
     });
 
-    test('vendor can register @lite', async () => {
+    test('vendor can register @lite @v', async () => {
         await vendorPage.vendorRegister(data.vendor.vendorInfo, { ...data.vendorSetupWizard, choice: false });
     });
 
-    test('vendor can register (address fields are enabled) @lite', async () => {
+    test('vendor can register (address fields are enabled) @lite @v', async () => {
         await dbUtils.setDokanSettings(dbData.dokan.optionName.general, { ...dbData.dokan.generalSettings, enabled_address_on_reg: 'on' });
         await vendorPage.vendorRegister({ ...data.vendor.vendorInfo, addressFieldsEnabled: true }, { ...data.vendorSetupWizard, choice: false });
         await dbUtils.setDokanSettings(dbData.dokan.optionName.general, { ...dbData.dokan.generalSettings, enabled_address_on_reg: 'off' });
     });
 
-    test('vendor can login @lite', async () => {
+    test('vendor can login @lite @v', async () => {
         await loginPage.login(data.vendor);
     });
 
-    test('vendor can logout @lite', async () => {
+    test('vendor can logout @lite @v', async () => {
         await loginPage.login(data.vendor);
         await loginPage.logout();
     });
@@ -63,19 +63,19 @@ test.describe('Vendor functionality test', () => {
         await vPage.close();
     });
 
-    test('vendor can setup setup-wizard @lite', async () => {
+    test('vendor can setup setup-wizard @lite @v', async () => {
         await vendor.vendorSetupWizard(data.vendorSetupWizard);
     });
 
-    test('vendor account details menu page is rendering properly @lite @explo', async () => {
+    test('vendor account details menu page is rendering properly @lite @exp @v', async () => {
         await vendor.vendorAccountDetailsRenderProperly();
     });
 
-    test('vendor update account details @lite', async () => {
+    test('vendor update account details @lite @v', async () => {
         await vendor.addVendorDetails(data.vendor);
     });
 
-    test('vendor can visit own Store @lite', async () => {
+    test('vendor can visit own Store @lite @v', async () => {
         await vendor.visitStore(data.predefined.vendorStores.vendor1);
     });
 });

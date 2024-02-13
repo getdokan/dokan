@@ -21,11 +21,11 @@ test.describe('Admin user functionality test', () => {
         await page.close();
     });
 
-    test('admin can login @lite', async () => {
+    test('admin can login @lite @a', async () => {
         await loginPage.adminLogin(data.admin);
     });
 
-    test('admin can logout @lite', async () => {
+    test('admin can logout @lite @a', async () => {
         await loginPage.adminLogin(data.admin);
         await loginPage.logoutBackend();
     });
@@ -85,11 +85,11 @@ test.describe('Admin functionality test', () => {
     //     await adminPage.addShippingMethod(data.shipping.shippingMethods.vendorShipping)
     // })
 
-    test('dokan notice @lite', async () => {
+    test('dokan notice @lite @a', async () => {
         await adminPage.dokanNotice();
     });
 
-    test('dokan promotion @lite', async () => {
+    test('dokan promotion @lite @a', async () => {
         await adminPage.dokanPromotion();
     });
 });

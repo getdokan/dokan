@@ -22,11 +22,11 @@ test.describe('Vendor analytics test', () => {
         // await apiUtils.dispose();
     });
 
-    test('vendor reports menu page is rendering properly @pro @explo', async () => {
+    test('vendor reports menu page is rendering properly @pro @exp @v', async () => {
         await vendor.vendorReportsRenderProperly();
     });
 
-    test('vendor can export statement @pro', async () => {
+    test('vendor can export statement @pro @v', async () => {
         await vendor.exportStatement();
     });
 });

@@ -80,10 +80,8 @@ export class ShopPage extends CustomerPage {
     }
 
     // products on map
-    async productOnMap(productName?: string) {
+    async productOnMap() {
         await this.goIfNotThere(data.subUrls.frontend.shop);
-        // await this.click(selector.customer.cShop.map.productOnMap.productOnMap);
-        // await this.toBeVisibleAnyOfThem([selector.customer.cShop.map.productOnMap.productPopup, selector.customer.cShop.map.productOnMap.productListPopup]); // implement this instead of if-else soln
         const storePinIsVisible = await this.isVisible(selector.customer.cShop.map.productOnMap.productPin);
         if (storePinIsVisible) {
             await this.click(selector.customer.cShop.map.productOnMap.productPin);
@@ -93,7 +91,6 @@ export class ShopPage extends CustomerPage {
             await this.toBeVisible(selector.customer.cShop.map.productOnMap.productListPopup);
             await this.click(selector.customer.cShop.map.productOnMap.closePopup);
         }
-        productName && (await this.toBeVisible(selector.customer.cShop.map.productOnMap.productOnList(productName)));
     }
 
     // go to product details

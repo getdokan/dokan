@@ -67,7 +67,7 @@ export const data = {
         dokanPro: ['dokan-pro'],
         activeClass: 'active',
         pluginName: {
-            dokanlite: 'dokan-lite',
+            dokanLite: 'dokan-lite',
             dokanPro: 'dokan-pro',
         },
     },

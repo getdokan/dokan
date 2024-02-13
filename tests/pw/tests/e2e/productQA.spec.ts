@@ -49,11 +49,11 @@ test.describe('Product QA functionality test', () => {
 
     // admin
 
-    test('admin product QA menu page is rendering properly @pro @explo', async () => {
+    test('admin product QA menu page is rendering properly @pro @exp @a', async () => {
         await admin.adminProductQARenderProperly();
     });
 
-    test('admin can view product question details @pro @explo', async () => {
+    test('admin can view product question details @pro @exp @a', async () => {
         const [, questionId] = await apiUtils.createProductQuestion({ ...payloads.createProductQuestion(), product_id: PRODUCT_ID }, payloads.customerAuth);
         await admin.viewQuestionDetails(questionId);
     });
@@ -64,100 +64,100 @@ test.describe('Product QA functionality test', () => {
     //     await admin.decreaseUnreadQuestionCount();
     // });
 
-    test('admin can filter questions by vendor @pro', async () => {
+    test('admin can filter questions by vendor @pro @a', async () => {
         await admin.filterQuestions(data.questionAnswers.filter.byVendor, 'by-vendor');
     });
 
-    test('admin can filter questions by product @pro', async () => {
+    test('admin can filter questions by product @pro @a', async () => {
         await admin.filterQuestions(data.questionAnswers.filter.byProduct, 'by-product');
     });
 
-    test('admin can edit question @pro', async () => {
+    test('admin can edit question @pro @a', async () => {
         await admin.editQuestion(questionId, data.questionAnswers);
     });
 
-    test('admin can answer to question @pro', async () => {
+    test('admin can answer to question @pro @a', async () => {
         const [, questionId] = await apiUtils.createProductQuestion({ ...payloads.createProductQuestion(), product_id: PRODUCT_ID }, payloads.customerAuth);
         await admin.answerQuestion(questionId, data.questionAnswers);
     });
 
-    test('admin can edit answer @pro', async () => {
+    test('admin can edit answer @pro @a', async () => {
         await admin.editAnswer(questionId, data.questionAnswers);
     });
 
-    test('admin can delete answer @pro', async () => {
+    test('admin can delete answer @pro @a', async () => {
         await admin.deleteAnswer(questionId);
     });
 
-    test('admin can edit (hide) question visibility @pro', async () => {
+    test('admin can edit (hide) question visibility @pro @a', async () => {
         await admin.editQuestionVisibility(questionId, 'hide');
     });
 
-    test('admin can edit (show) question visibility @pro', async () => {
+    test('admin can edit (show) question visibility @pro @a', async () => {
         await apiUtils.updateProductQuestion(questionId, payloads.updateProductQuestion(), payloads.adminAuth);
         await admin.editQuestionVisibility(questionId, 'show');
     });
 
-    test('admin can delete a question @pro', async () => {
+    test('admin can delete a question @pro @a', async () => {
         const [, questionId] = await apiUtils.createProductQuestion({ ...payloads.createProductQuestion(), product_id: PRODUCT_ID }, payloads.customerAuth);
         await admin.deleteQuestion(questionId);
     });
 
-    test('admin can perform store support bulk action @pro', async () => {
+    test('admin can perform store support bulk action @pro @a', async () => {
         await admin.productQuestionsBulkAction('read');
     });
 
     // vendor
 
-    test('vendor product QA menu page is rendering properly @pro @explo', async () => {
+    test('vendor product QA menu page is rendering properly @pro @exp @v', async () => {
         await vendor.vendorProductQARenderProperly();
     });
 
-    test('vendor can view product question details @pro @explo', async () => {
+    test('vendor can view product question details @pro @exp @v', async () => {
         const [, questionId] = await apiUtils.createProductQuestion({ ...payloads.createProductQuestion(), product_id: PRODUCT_ID }, payloads.customerAuth);
         await vendor.vendorViewQuestionDetails(questionId);
     });
 
     // todo: vendor receive notification for new question
 
-    // test('unread count decrease after admin viewing a question @pro', async () => {
+    // test('unread count decrease after admin viewing a question @pro @a', async () => {
     //     await admin.decreaseUnreadQuestionCount();
     // });
 
-    test('vendor can filter questions @pro', async () => {
+    test('vendor can filter questions @pro @v', async () => {
         await vendor.vendorFilterQuestions(data.predefined.simpleProduct.product1.name);
     });
 
-    test('vendor can answer to question @pro', async () => {
+    test('vendor can answer to question @pro @v', async () => {
         const [, questionId] = await apiUtils.createProductQuestion({ ...payloads.createProductQuestion(), product_id: PRODUCT_ID }, payloads.customerAuth);
         await vendor.vendorAnswerQuestion(questionId, data.questionAnswers);
     });
 
-    test('vendor can edit answer @pro', async () => {
+    test('vendor can edit answer @pro @v', async () => {
         await vendor.vendorEditAnswer(questionId, data.questionAnswers);
     });
 
-    test('vendor can delete a answer @pro', async () => {
+    test('vendor can delete a answer @pro @v', async () => {
         await vendor.vendorDeleteAnswer(questionId);
     });
 
-    test('vendor can delete a question @pro', async () => {
+    test('vendor can delete a question @pro @v', async () => {
         await vendor.vendorDeleteQuestion(questionId);
     });
 
     // customer
 
-    test('customer can search question @pro', async () => {
+    test('customer can search question @pro @c', async () => {
         await customer.searchQuestion(data.predefined.simpleProduct.product1.name, data.questionAnswers);
     });
 
-    test('customer can post question @pro', async () => {
+    test('customer can post question @pro @c', async () => {
         await customer.postQuestion(data.predefined.simpleProduct.product1.name, data.questionAnswers);
     });
 
     // guest
 
-    test('guest customer need to sign-in/signup post question @pro', async () => {
+    test('guest customer need to sign-in/signup post question @pro @g', async () => {
         await guest.postQuestion(data.predefined.simpleProduct.product1.name, data.questionAnswers);
     });
 });

@@ -38,90 +38,90 @@ test.describe('Booking Product test', () => {
         await apiUtils.dispose();
     });
 
-    test('admin can add booking product @pro', async () => {
+    test('admin can add booking product @pro @a', async () => {
         await admin.adminAddBookingProduct(data.product.booking);
     });
 
-    test('vendor booking menu page is rendering properly @pro @explo', async () => {
+    test('vendor booking menu page is rendering properly @pro @exp @v', async () => {
         await vendor.vendorBookingRenderProperly();
     });
 
-    test('vendor manage booking page is rendering properly @pro @explo', async () => {
+    test('vendor manage booking page is rendering properly @pro @exp @v', async () => {
         await vendor.vendorManageBookingRenderProperly();
     });
 
-    test('vendor booking calendar page is rendering properly @pro @explo', async () => {
+    test('vendor booking calendar page is rendering properly @pro @exp @v', async () => {
         await vendor.vendorBookingCalendarRenderProperly();
     });
 
-    test('vendor manage booking resource page is rendering properly @pro @explo', async () => {
+    test('vendor manage booking resource page is rendering properly @pro @exp @v', async () => {
         await vendor.vendorManageResourcesRenderProperly();
     });
 
-    test('vendor can add booking product @pro', async () => {
+    test('vendor can add booking product @pro @v', async () => {
         await vendor.addBookingProduct({ ...data.product.booking, name: data.product.booking.productName() });
     });
 
-    test('vendor can edit booking product @pro', async () => {
+    test('vendor can edit booking product @pro @v', async () => {
         await vendor.editBookingProduct({ ...data.product.booking, name: bookableProductName });
     });
 
-    test('vendor can filter booking products by date @pro', async () => {
+    test('vendor can filter booking products by date @pro @v', async () => {
         await vendor.filterBookingProducts('by-date', '1');
     });
 
-    test('vendor can filter booking products by category @pro', async () => {
+    test('vendor can filter booking products by category @pro @v', async () => {
         await vendor.filterBookingProducts('by-category', 'Uncategorized');
     });
 
-    test('vendor can filter booking products by other @pro', async () => {
+    test('vendor can filter booking products by other @pro @v', async () => {
         await vendor.filterBookingProducts('by-other', 'featured');
     });
 
-    test('vendor can view booking product @pro', async () => {
+    test('vendor can view booking product @pro @v', async () => {
         await vendor.viewBookingProduct(bookableProductName);
     });
 
-    test("vendor can't buy own booking product @pro", async () => {
+    test("vendor can't buy own booking product @pro @v", async () => {
         await vendor.cantBuyOwnBookingProduct(bookableProductName);
     });
 
-    test('vendor can search booking product @pro', async () => {
+    test('vendor can search booking product @pro @v', async () => {
         await vendor.searchBookingProduct(bookableProductName);
     });
 
-    test('vendor can duplicate booking product @pro', async () => {
+    test('vendor can duplicate booking product @pro @v', async () => {
         await vendor.duplicateBookingProduct(bookableProductName);
     });
 
-    test('vendor can permanently delete booking product @pro', async () => {
+    test('vendor can permanently delete booking product @pro @v', async () => {
         const [, , bookableProductName] = await apiUtils.createBookableProduct(payloads.createBookableProduct(), payloads.vendorAuth);
         await vendor.deleteBookingProduct(bookableProductName);
     });
 
-    test('vendor can add booking resource @pro', async () => {
+    test('vendor can add booking resource @pro @v', async () => {
         await vendor.addBookingResource(data.product.booking.resource.resourceName());
     });
 
-    test('vendor can edit booking resource @pro', async () => {
+    test('vendor can edit booking resource @pro @v', async () => {
         await vendor.editBookingResource({ ...data.product.booking.resource, name: bookingResourceName });
     });
 
-    test('vendor can delete booking resource @pro', async () => {
+    test('vendor can delete booking resource @pro @v', async () => {
         const bookingResourceName = data.product.booking.resource.resourceName();
         await vendor.addBookingResource(bookingResourceName);
         await vendor.deleteBookingResource(bookingResourceName);
     });
 
-    test('vendor can add booking for guest customer @pro', async () => {
+    test('vendor can add booking for guest customer @pro @v', async () => {
         await vendor.addBooking(bookableProductName, data.bookings);
     });
 
-    test('vendor can add booking for existing customer @pro', async () => {
+    test('vendor can add booking for existing customer @pro @v', async () => {
         await vendor.addBooking(bookableProductName, data.bookings, data.customer.username);
     });
 
-    test.skip('customer can buy bookable product @pro', async () => {
+    test.skip('customer can buy bookable product @pro @c', async () => {
         // todo: customer storage state gets reset somehow (from previous tests)
         await customer.buyBookableProduct(bookableProductName, data.bookings);
     });

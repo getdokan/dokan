@@ -30,32 +30,32 @@ test.describe('Vendor delivery time test', () => {
         // await apiUtils.dispose();
     });
 
-    test('vendor delivery time menu page is rendering properly @pro @explo', async () => {
+    test('vendor delivery time menu page is rendering properly @pro @exp @v', async () => {
         await vendor.vendorDeliveryTimeRenderProperly();
     });
 
-    test('vendor delivery time settings menu page is rendering properly @pro @explo', async () => {
+    test('vendor delivery time settings menu page is rendering properly @pro @exp @v', async () => {
         await vendor.vendorDeliveryTimeSettingsRenderProperly();
     });
 
-    test('vendor can set delivery time settings @pro', async () => {
+    test('vendor can set delivery time settings @pro @v', async () => {
         await vendor.setDeliveryTimeSettings(data.vendor.deliveryTime);
     });
 
-    test('vendor can filter delivery time @pro', async () => {
+    test('vendor can filter delivery time @pro @v', async () => {
         await vendor.filterDeliveryTime('delivery');
     });
 
-    test('vendor can change view style of delivery time calender @pro', async () => {
+    test('vendor can change view style of delivery time calender @pro @v', async () => {
         await vendor.updateCalendarView('week');
     });
 
-    test.skip('customer can buy product with delivery time @pro', async () => {
+    test.skip('customer can buy product with delivery time @pro @c', async () => {
         await customer.addProductToCart(data.predefined.simpleProduct.product1.name, 'single-product');
         await customer.placeOrderWithDeliverTimeStorePickup('delivery-time', data.deliveryTime);
     });
 
-    test.skip('customer can buy product with store pickup @pro', async () => {
+    test.skip('customer can buy product with store pickup @pro @c', async () => {
         await dbUtils.setDokanSettings(dbData.dokan.optionName.deliveryTime, { ...dbData.dokan.deliveryTimeSettings, allow_vendor_override_settings: 'off' }); // todo: added for: previous test is disable store pickup
         await customer.addProductToCart(data.predefined.simpleProduct.product1.name, 'single-product');
         await customer.placeOrderWithDeliverTimeStorePickup('store-pickup', data.deliveryTime);

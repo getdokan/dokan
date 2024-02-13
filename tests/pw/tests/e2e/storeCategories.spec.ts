@@ -32,33 +32,33 @@ test.describe('Store categories test', () => {
 
     // store categories
 
-    test('admin store category page is rendering properly @pro @explo', async () => {
+    test('admin store category page is rendering properly @pro @exp @a', async () => {
         await admin.adminStoreCategoryRenderProperly();
     });
 
-    test('admin can add store category @pro', async () => {
+    test('admin can add store category @pro @a', async () => {
         await admin.addStoreCategory(data.storeCategory());
     });
 
-    test('admin can search store category @pro', async () => {
+    test('admin can search store category @pro @a', async () => {
         await admin.searchStoreCategory(categoryName);
     });
 
-    test('admin can edit store category @pro', async () => {
+    test('admin can edit store category @pro @a', async () => {
         await admin.editStoreCategory({ ...data.storeCategory(), name: categoryName });
     });
 
-    test('admin can set default store category @pro', async () => {
+    test('admin can set default store category @pro @a', async () => {
         await admin.updateStoreCategory(categoryName, 'set-default');
         // reset default category
         await apiUtils.setDefaultStoreCategory('Uncategorized', payloads.adminAuth);
     });
 
-    test('admin can delete store category @pro', async () => {
+    test('admin can delete store category @pro @a', async () => {
         await admin.updateStoreCategory(categoryName, 'delete');
     });
 
-    test('vendor can update own store category @pro', async () => {
+    test('vendor can update own store category @pro @v', async () => {
         const [, , categoryName] = await apiUtils.createStoreCategory(payloads.createStoreCategory(), payloads.adminAuth);
         await vendor.vendorUpdateStoreCategory(categoryName);
     });

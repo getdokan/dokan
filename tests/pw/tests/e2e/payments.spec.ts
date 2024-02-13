@@ -5,16 +5,15 @@ import { data } from '@utils/testData';
 import { payloads } from '@utils/payloads';
 
 test.describe('Payments test', () => {
-    // let admin: PaymentsPage;
+    let admin: PaymentsPage;
     let vendor: PaymentsPage;
-    // let aPage: Page, vPage: Page;
-    let vPage: Page;
+    let aPage: Page, vPage: Page;
     let apiUtils: ApiUtils;
 
     test.beforeAll(async ({ browser }) => {
-        // const adminContext = await browser.newContext(data.auth.adminAuth);
-        // aPage = await adminContext.newPage();
-        // admin = new PaymentsPage(aPage);
+        const adminContext = await browser.newContext(data.auth.adminAuth);
+        aPage = await adminContext.newPage();
+        admin = new PaymentsPage(aPage);
 
         const vendorContext = await browser.newContext(data.auth.vendorAuth);
         vPage = await vendorContext.newPage();
@@ -24,70 +23,76 @@ test.describe('Payments test', () => {
     });
 
     test.afterAll(async () => {
-        // await aPage.close();
+        await aPage.close();
         await vPage.close();
-        await apiUtils.setStoreSettings(payloads.defaultStoreSettings, payloads.vendorAuth)
         await apiUtils.dispose();
     });
 
-    // test('admin can add basic payment methods', async ( ) => {
-    //     await adminPage.setupBasicPaymentMethods(data.payment)
-    // })
+    //admin
 
-    // test('admin can add strip payment method', async ( ) => {
-    //     await adminPage.setupStripeConnect(data.payment)
-    // })
+    test.skip('admin can add basic payment methods @lite @a', async () => {
+        await admin.setupBasicPaymentMethods(data.payment);
+    });
 
-    // test('admin can add paypal marketplace payment method', async ( ) => {
-    //     await adminPage.setupPaypalMarketPlace(data.payment)
-    // })
+    test.skip('admin can add strip payment method @pro @a', async () => {
+        await admin.setupStripeConnect(data.payment);
+    });
 
-    // test('admin can add mangopay payment method', async ( ) => {
-    //     await adminPage.setupMangoPay(data.payment)
-    // })
+    test.skip('admin can add paypal marketplace payment method @pro @a', async () => {
+        await admin.setupPaypalMarketPlace(data.payment);
+    });
 
-    // test('admin can add razorpay payment method', async ( ) => {
-    //     await adminPage.setupRazorpay(data.payment)
-    // })
+    test.skip('admin can add mangopay payment method @pro @a', async () => {
+        await admin.setupMangoPay(data.payment);
+    });
 
-    // test('admin can add strip express payment method', async ( ) => {
-    //     await adminPage.setupStripeExpress(data.payment)
-    // })
+    test.skip('admin can add razorpay payment method @pro @a', async () => {
+        await admin.setupRazorpay(data.payment);
+    });
 
-    test('vendor payment menu is rendering properly @lite @explo', async () => {
+    test.skip('admin can add strip express payment method @pro @a', async () => {
+        await admin.setupStripeExpress(data.payment);
+    });
+
+    //vendor
+
+    test('vendor payment menu is rendering properly @lite @exp @v', async () => {
         await vendor.vendorPaymentSettingsRenderProperly();
     });
 
-    test('vendor can add paypal payment method @lite', async () => {
+    test('vendor can add paypal payment method @lite @v', async () => {
         await vendor.setBasicPayment({ ...data.vendor.payment, methodName: 'paypal' });
     });
 
-    test('vendor can add bank payment method @lite', async () => {
+    test('vendor can add bank payment method @lite @v', async () => {
         await vendor.setBankTransfer(data.vendor.payment);
     });
 
-    test('vendor can add skrill payment method @pro', async () => {
+    test('vendor can add skrill payment method @pro @v', async () => {
         await vendor.setBasicPayment({ ...data.vendor.payment, methodName: 'skrill' });
     });
 
-    test('vendor can add custom payment method @pro', async () => {
+    test('vendor can add custom payment method @pro @v', async () => {
         await vendor.setBasicPayment({ ...data.vendor.payment, methodName: 'custom' });
     });
 
-    test('vendor can disconnect paypal payment method @lite', async () => {
+    test('vendor can disconnect paypal payment method @lite @v', async () => {
         await vendor.disconnectBasicPayment({ ...data.vendor.payment, methodName: 'paypal' });
+        //reset
+        await apiUtils.setStoreSettings(payloads.defaultStoreSettings, payloads.vendorAuth);
     });
 
-    test('vendor can disconnect bank payment method @lite', async () => {
+    test('vendor can disconnect bank payment method @lite @v', async () => {
         await vendor.disconnectBasicPayment({ ...data.vendor.payment, methodName: 'bank' });
-        //todo: need to reset disconnect, also update other tests
+        // reset
+        await apiUtils.setStoreSettings(payloads.defaultStoreSettings, payloads.vendorAuth);
     });
 
-    test('vendor can disconnect skrill payment method @pro', async () => {
+    test('vendor can disconnect skrill payment method @pro @v', async () => {
         await vendor.disconnectBasicPayment({ ...data.vendor.payment, methodName: 'skrill' });
     });
 
-    test('vendor can disconnect custom payment method @pro', async () => {
+    test('vendor can disconnect custom payment method @pro @v', async () => {
         await vendor.disconnectBasicPayment({ ...data.vendor.payment, methodName: 'custom' });
     });
 });

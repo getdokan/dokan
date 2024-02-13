@@ -46,37 +46,37 @@ test.describe('Reverse withdraw test', () => {
         await apiUtils.dispose();
     });
 
-    test('dokan admin reverse withdraw menu page is rendering properly @lite @explo', async () => {
+    test('dokan admin reverse withdraw menu page is rendering properly @lite @exp @a', async () => {
         await admin.adminReverseWithdrawRenderProperly();
     });
 
-    test.skip('filter reverse withdraws by store @lite', async () => {
+    test.skip('filter reverse withdraws by store @lite @a', async () => {
         await admin.filterReverseWithdraws(data.predefined.vendorStores.vendor1);
     });
 
-    test('admin can crete reverse withdraws @lite', async () => {
+    test('admin can crete reverse withdraws @lite @a', async () => {
         await admin.addReverseWithdrawal(data.reverseWithdraw);
     });
 
     // vendor
 
-    test('vendor reverse withdrawal menu page is rendering properly @lite @explo', async () => {
+    test('vendor reverse withdrawal menu page is rendering properly @lite @exp @v', async () => {
         await vendor.vendorReverseWithdrawalRenderProperly();
     });
 
-    test('vendor can view reverse withdrawal notice @lite @explo', async () => {
+    test('vendor can view reverse withdrawal notice @lite @exp @v', async () => {
         await vendor.vendorViewReverseWithdrawalNotice();
     });
 
-    test('vendor can view reverse withdrawal announcement @pro @explo', async () => {
+    test('vendor can view reverse withdrawal announcement @pro @exp @v', async () => {
         await vendor.vendorViewReverseWithdrawalAnnouncement();
     });
 
-    test('vendor can filter reverse withdrawals @lite', async () => {
+    test('vendor can filter reverse withdrawals @lite @v', async () => {
         await vendor.vendorFilterReverseWithdrawals(data.date.dateRange);
     });
 
-    test('vendor can pay reverse pay balance @lite', async () => {
+    test('vendor can pay reverse pay balance @lite @v', async () => {
         const orderId = await vendor.vendorPayReversePayBalance();
         await apiUtils.updateOrderStatus(orderId, data.order.orderStatus.completed, payloads.adminAuth);
     });

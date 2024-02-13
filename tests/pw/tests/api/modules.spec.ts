@@ -18,6 +18,7 @@ test.describe('modules api test', () => {
     });
 
     test.afterAll(async () => {
+        await apiUtils.activateModules([randomModule]);
         await apiUtils.dispose();
     });
 
@@ -33,9 +34,6 @@ test.describe('modules api test', () => {
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
         expect(responseBody).toMatchSchema(schemas.modulesSchema);
-
-        // reactivate module
-        // await apiUtils.activateModules(randomModule)
     });
 
     test('activate a module @pro', async () => {

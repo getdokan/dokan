@@ -594,7 +594,7 @@ export interface payment {
             card: string;
             ideal: string;
         };
-        iDealBanks: string;
+        iDealBanks: string[];
         disbursementMode: string;
         customerBankStatement: string;
         paymentRequestButtonType: string;

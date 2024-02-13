@@ -27,30 +27,30 @@ test.describe('Reports test', () => {
 
     // reports
 
-    test('admin reports menu page is rendering properly @pro @explo', async () => {
+    test('admin reports menu page is rendering properly @pro @exp @a', async () => {
         await admin.adminReportsRenderProperly();
     });
 
     // all logs
 
-    test('admin All Logs menu page is rendering properly @pro @explo', async () => {
+    test('admin All Logs menu page is rendering properly @pro @exp @a', async () => {
         await admin.adminAllLogsRenderProperly();
     });
 
-    test('admin can search all logs @pro', async () => {
+    test('admin can search all logs @pro @a', async () => {
         await admin.searchAllLogs(orderId);
     });
 
-    test('admin can export all logs @pro', async () => {
+    test('admin can export all logs @pro @a', async () => {
         // await admin.exportAllLogs(orderId);
         await admin.exportAllLogs();
     });
 
-    test('admin can filter all logs by store name @pro', async () => {
+    test('admin can filter all logs by store name @pro @a', async () => {
         await admin.filterAllLogsByStore(data.predefined.vendorStores.vendor1);
     });
 
-    test('admin can filter all logs by order status @pro', async () => {
+    test('admin can filter all logs by order status @pro @a', async () => {
         await admin.filterAllLogsByStatus('completed');
     });
 });

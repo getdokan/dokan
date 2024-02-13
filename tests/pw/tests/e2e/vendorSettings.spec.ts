@@ -26,23 +26,23 @@ test.describe('Vendor settings test', () => {
         await apiUtils.dispose();
     });
 
-    test('vendor store settings menu page is rendering properly @lite @explo', async () => {
+    test('vendor store settings menu page is rendering properly @lite @exp @v', async () => {
         await vendor.vendorStoreSettingsRenderProperly();
     });
 
-    test('vendor shipstation settings menu page is rendering properly @pro @explo', async () => {
+    test('vendor shipstation settings menu page is rendering properly @pro @exp @v', async () => {
         await vendor.vendorShipstationSettingsRenderProperly();
     });
 
-    test('vendor social profile settings menu page is rendering properly @pro @explo', async () => {
+    test('vendor social profile settings menu page is rendering properly @pro @exp @v', async () => {
         await vendor.vendorSocialProfileSettingsRenderProperly();
     });
 
-    test('vendor rma settings menu page is rendering properly @pro @explo', async () => {
+    test('vendor rma settings menu page is rendering properly @pro @exp @v', async () => {
         await vendor.vendorRmaSettingsRenderProperly();
     });
 
-    test('vendor store seo settings menu page is rendering properly @pro @explo', async () => {
+    test('vendor store seo settings menu page is rendering properly @pro @exp @v', async () => {
         await vendor.vendorStoreSeoSettingsRenderProperly();
     });
 
@@ -50,35 +50,35 @@ test.describe('Vendor settings test', () => {
 
     // todo: ensure which settings need to reset, and test data should be what
 
-    test('vendor can set store basic settings @lite', async () => {
+    test('vendor can set store basic settings @lite @v', async () => {
         await vendor.setStoreSettings(data.vendor.vendorInfo, 'basic');
     });
 
-    test('vendor can set store address settings @lite', async () => {
+    test('vendor can set store address settings @lite @v', async () => {
         await vendor.setStoreSettings(data.vendor.vendorInfo, 'address');
     });
 
-    test('vendor can set company info settings @pro', async () => {
+    test('vendor can set company info settings @pro @v', async () => {
         await vendor.setStoreSettings(data.vendor.vendorInfo, 'company-info');
     });
 
-    test('vendor can set map settings @lite', async () => {
+    test('vendor can set map settings @lite @v', async () => {
         await vendor.setStoreSettings(data.vendor.vendorInfo, 'map');
     });
 
-    test('vendor can set terms and conditions settings @lite', async () => {
+    test('vendor can set terms and conditions settings @lite @v', async () => {
         await vendor.setStoreSettings(data.vendor.vendorInfo, 'toc');
     });
 
-    test('vendor can set open-close settings @lite', async () => {
+    test('vendor can set open-close settings @lite @v', async () => {
         await vendor.setStoreSettings(data.vendor.vendorInfo, 'open-close');
     });
 
-    test('vendor can set vacation settings @pro', async () => {
+    test('vendor can set vacation settings @pro @v', async () => {
         await vendor.setStoreSettings(data.vendor.vendorInfo, 'vacation');
     });
 
-    test('vendor can set catalog settings @lite', async () => {
+    test('vendor can set catalog settings @lite @v', async () => {
         await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, dbData.dokan.sellingSettings);
         await vendor.setStoreSettings(data.vendor.vendorInfo, 'catalog');
         // await vendor.resetCatalog();
@@ -87,37 +87,37 @@ test.describe('Vendor settings test', () => {
         await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, catalog_mode_hide_add_to_cart_button: 'off', catalog_mode_hide_product_price: 'off' });
     });
 
-    test('vendor can set discount settings @pro', async () => {
+    test('vendor can set discount settings @pro @v', async () => {
         await vendor.setStoreSettings(data.vendor.vendorInfo, 'discount');
     });
 
-    test('vendor can set biography settings @pro', async () => {
+    test('vendor can set biography settings @pro @v', async () => {
         await vendor.setStoreSettings(data.vendor.vendorInfo, 'biography');
     });
 
-    test('vendor can set store support settings @pro', async () => {
+    test('vendor can set store support settings @pro @v', async () => {
         await vendor.setStoreSettings(data.vendor.vendorInfo, 'store-support');
     });
 
-    test('vendor can set min-max settings @pro', async () => {
+    test('vendor can set min-max settings @pro @v', async () => {
         await vendor.setStoreSettings(data.vendor.vendorInfo, 'min-max');
         // disable min-max
         await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, enable_min_max_quantity: 'off', enable_min_max_amount: 'off' });
     });
 
-    test('vendor can set shipStation settings @pro', async () => {
+    test('vendor can set shipStation settings @pro @v', async () => {
         await vendor.setShipStation(data.vendor.shipStation);
     });
 
-    test('vendor can set social profile settings @pro', async () => {
+    test('vendor can set social profile settings @pro @v', async () => {
         await vendor.setSocialProfile(data.vendor.socialProfileUrls);
     });
 
-    test('vendor can set rma settings @pro', async () => {
+    test('vendor can set rma settings @pro @v', async () => {
         await vendor.setRmaSettings(data.vendor.rma);
     });
 
-    test('vendor can set store seo settings @pro', async () => {
+    test('vendor can set store seo settings @pro @v', async () => {
         await vendor.setStoreSeo(data.vendor.seo);
     });
 });
