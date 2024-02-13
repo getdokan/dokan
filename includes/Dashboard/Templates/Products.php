@@ -202,7 +202,7 @@ class Products {
         }
 
         // get section data
-        $section = ProductFormFactory::get_section( 'downloadable_virtual' );
+        $section = ProductFormFactory::get_section( 'downloadable' );
         if ( is_wp_error( $section ) || ! $section->is_visible() ) {
             return;
         }
