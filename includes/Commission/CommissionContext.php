@@ -18,15 +18,15 @@ class CommissionContext {
         $this->strategies = $strategies;
     }
 
-    public function calculate_commission( float $price, $quantity = 1 ): array {
-        if ( ! is_numeric( $quantity ) || $quantity < 1 ) {
-            $quantity = 1;
+    public function calculate_commission( $total_amount, $total_quantity = 1 ): array {
+        if ( ! is_numeric( $total_quantity ) || $total_quantity < 1 ) {
+            $total_quantity = 1;
         }
 
         foreach ( $this->strategies as $strategy ) {
             $calculator = $strategy->get_commission_calculator();
             if ( $calculator !== null ) {
-                $calculator->calculate( $price, $quantity );
+                $calculator->calculate( $total_amount, $total_quantity );
 
                 return [
                     'source'                    => $strategy->get_source(),
@@ -40,12 +40,15 @@ class CommissionContext {
             }
         }
 
-        // If no commission is defined at any level, default to 0
+        // If no commission is defined at any level.
         return [
-            'source'     => 'none',
-            'amount'     => 0,
-            'type'       => 'none', // TODO: commission-restructure need to re-consider this default type.
-            'parameters' => [],
+            'source'                    => 'none',
+            'per_item_admin_commission' => '',
+            'admin_commission'          => 0,
+            'vendor_earning'            => 0,
+            'items_total_quantity'      => 1,
+            'type'                      => 'none',
+            'parameters'                => [],
         ];
     }
 }

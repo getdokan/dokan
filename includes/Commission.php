@@ -914,20 +914,18 @@ class Commission {
      * @return float
      */
     public function calculate_commission( $product_id, $product_price, $vendor_id = null ) {
-        $category_id = 15;     // Example cat
+        wc_deprecated_function( 'validate_product_id', 'DOKAN_SINCE', 'dokan()->product->validate_product_id()' );
+        $commission_data = $this->get_commission(
+            [
+                'order_item_id'  => $this->get_order_item_id(),
+                'total_amount'   => $product_price,
+                'total_quantity' => $this->get_order_qunatity(),
+                'product_id'     => $product_id,
+                'vendor_id'      => $vendor_id,
+            ]
+        );
 
-        $strategies = [
-            new OrderItemCommissionSourceStrategy( $this->order_item_id, $product_price, $this->get_order_qunatity() ),
-            new ProductCommissionSourceStrategy( $product_id ),
-            new VendorCommissionSourceStrategy( $vendor_id, $category_id ),
-            new GlobalCommissionSourceStrategy( $category_id ),
-        ];
 
-        $context      = new CommissionContext( $strategies );
-        $commission   = $context->calculate_commission( $product_price );
-
-		//        return $commission; TODO: commission-restructure need to return here the actial commisssion
-        // return apply_filters( 'dokan_prepare_for_calculation', $earning, $commission_rate, $commission_type, $additional_fee, $product_price, $this->get_order_id() ); TODO: commission-restructure need to Return commission/earning here by this hook.
         // TODO: commission-restructure need to save applied commission to order item meta.
         /**
          * // Saving applied commission rates and types for current order item in order item meta.
@@ -968,7 +966,7 @@ class Commission {
      *
      * @since DOKAN_SINCE
      *
-     * @return string[]
+     * @return array
      */
     public function get_legacy_commission_types() {
         return [
@@ -979,28 +977,50 @@ class Commission {
     }
 
     /**
-     * This is a test function to test commission.
+     * Returns commission (commission priority [1.Order item if exists. 2.product, 3.vendor, 4.global] wise)
      *
-     * TODO: commission-restructure remember to delete this function when commission restructure is done.And this is the calling style for get_earning_by_order
+     * @since DOKAN_SINCE
+     *
+     * @param array $args {
+     *     Accepted arguments are below.
+     *
+     *     @type int       $order_item_id Order item id. Default ''. Accepted values numbers.
+     *     @type float|int $total_amount The amount on which the commission will be calculated. Default 0. Accepted values numbers.
+     *                                   Ff you want to calculate for order line item the $total_amount should be total line item amount and
+     *                                   $total_quantity should be total line item quantity. EX: for product item apple with cost $100 then $total_amount = 500, $total_quantity = 5
+     *                                   or if you want to calculate for product price the $total_amount should be the product price and $total_quantity should be 1
+     *                                   EX: for product apple with cost $100 then $total_amount = 100, $total_quantity = 1
+     *     @type int       $total_quantity This is the total quantity that represents the $total_amounts item units. Default 1. Accepted values numbers.
+     *                                     Please read $total_amount doc above to understand clearly.
+     *     @type int       $product_id Product id. Default 0. Accepted values numbers.
+     *     @type int       $vendor_id Vendor id. Default ''. Accepted values numbers.
+     *     @type int       $category_id Product category id. Default 0'. Accepted values numbers.
+     * }
      *
      * @return array
      */
-    public function com_test( $order_item_id = '', $product_price = 0, $qunatity = 1, $product_id = 0, $vendor_id = 1, $category_id = 0 ) {
+    public function get_commission( $args = [] ) {
+        $order_item_id  = $args['order_item_id'] ?? '';
+        $total_amount   = $args['total_amount'] ?? 0;
+        $total_quantity = $args['total_quantity'] ?? 1;
+        $product_id     = $args['product_id'] ?? 0;
+        $vendor_id      = $args['vendor_id'] ?? '';
+        $category_id    = $args['category_id'] ?? 0;
 
-//        $order_item_id = ''; $product_price = 0; $qunatity = 1; $product_id = 0; $vendor_id = 1; $category_id = 0;
-//        dokan()->commission->com_test(
-//            $order_item_id, $product_price, $qunatity, $product_id, $vendor_id, $category_id
-//        );
-
+		if ( ! empty( $product_id ) && Helper::product_category_selection_is_single() && empty( $category_id ) ) {
+            $product_categories = Helper::get_saved_products_category( 105 );
+            $chosen_categories  = Helper::generate_chosen_categories( $product_categories );
+            $category_id        = reset( $chosen_categories ) ? reset( $chosen_categories ) : 0;
+        }
 
         $strategies = [
-            new OrderItemCommissionSourceStrategy( $order_item_id, $product_price, $qunatity ),
+            new OrderItemCommissionSourceStrategy( $order_item_id, $total_amount, $total_quantity ),
             new ProductCommissionSourceStrategy( $product_id ),
             new VendorCommissionSourceStrategy( $vendor_id, $category_id ),
             new GlobalCommissionSourceStrategy( $category_id ),
         ];
 
         $context = new CommissionContext( $strategies );
-        return $context->calculate_commission( $product_price, $qunatity );
+        return $context->calculate_commission( $total_amount, $total_quantity );
     }
 }

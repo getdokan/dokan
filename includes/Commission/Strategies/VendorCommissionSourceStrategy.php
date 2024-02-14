@@ -2,8 +2,6 @@
 
 namespace WeDevs\Dokan\Commission\Strategies;
 
-use WeDevs\Dokan\Commission\Calculators\CommissionCalculatorInterface;
-use WeDevs\Dokan\Commission\CommissionCalculatorFactory;
 use WeDevs\Dokan\Commission\Utils\CommissionSettings;
 
 class VendorCommissionSourceStrategy extends AbstractCommissionSourceStrategy {
