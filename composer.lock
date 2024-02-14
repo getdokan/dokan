@@ -287,12 +287,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/myclabs/DeepCopy.git",
-                "reference": "202aaf6b7c2e1e0a622b0298e9f3f537e4d84018"
+                "reference": "2f5294676c802a62b0549f6bc8983f14294ce369"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/202aaf6b7c2e1e0a622b0298e9f3f537e4d84018",
-                "reference": "202aaf6b7c2e1e0a622b0298e9f3f537e4d84018",
+                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/2f5294676c802a62b0549f6bc8983f14294ce369",
+                "reference": "2f5294676c802a62b0549f6bc8983f14294ce369",
                 "shasum": ""
             },
             "require": {
@@ -340,7 +340,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2023-11-01T08:01:43+00:00"
+            "time": "2024-02-10T11:10:03+00:00"
         },
         {
             "name": "nikic/php-parser",
@@ -694,6 +694,20 @@
                 "security": "https://github.com/PHPCompatibility/PHPCompatibilityWP/security/policy",
                 "source": "https://github.com/PHPCompatibility/PHPCompatibilityWP"
             },
+            "funding": [
+                {
+                    "url": "https://github.com/PHPCompatibility",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/jrfnl",
+                    "type": "github"
+                },
+                {
+                    "url": "https://opencollective.com/php_codesniffer",
+                    "type": "open_collective"
+                }
+            ],
             "time": "2023-12-08T17:31:57+00:00"
         },
         {
@@ -781,12 +795,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCSStandards/PHPCSUtils.git",
-                "reference": "26dcb893d86fbe90ab2a8abd7b08a3fda3602237"
+                "reference": "8aca6ebc2b4416bc449d2ba3d58e538e0f3742d4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCSStandards/PHPCSUtils/zipball/26dcb893d86fbe90ab2a8abd7b08a3fda3602237",
-                "reference": "26dcb893d86fbe90ab2a8abd7b08a3fda3602237",
+                "url": "https://api.github.com/repos/PHPCSStandards/PHPCSUtils/zipball/8aca6ebc2b4416bc449d2ba3d58e538e0f3742d4",
+                "reference": "8aca6ebc2b4416bc449d2ba3d58e538e0f3742d4",
                 "shasum": ""
             },
             "require": {
@@ -862,7 +876,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2024-01-15T05:03:54+00:00"
+            "time": "2024-02-05T08:38:08+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -1189,12 +1203,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "040e6b96128f11f53f6633ece38d5f113c85ff4b"
+                "reference": "43ab70b9e2d16f43e37fb43cbca87e60bf0ad289"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/040e6b96128f11f53f6633ece38d5f113c85ff4b",
-                "reference": "040e6b96128f11f53f6633ece38d5f113c85ff4b",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/43ab70b9e2d16f43e37fb43cbca87e60bf0ad289",
+                "reference": "43ab70b9e2d16f43e37fb43cbca87e60bf0ad289",
                 "shasum": ""
             },
             "require": {
@@ -1284,7 +1298,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-01-30T07:11:21+00:00"
+            "time": "2024-02-08T16:45:52+00:00"
         },
         {
             "name": "sebastian/cli-parser",
@@ -2256,12 +2270,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCSStandards/PHP_CodeSniffer.git",
-                "reference": "2fbf9e38ef3307d740de375b8d2f19fc1dd19472"
+                "reference": "7240235b2692a888d6d892c3b3729e13ab4894c9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/2fbf9e38ef3307d740de375b8d2f19fc1dd19472",
-                "reference": "2fbf9e38ef3307d740de375b8d2f19fc1dd19472",
+                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/7240235b2692a888d6d892c3b3729e13ab4894c9",
+                "reference": "7240235b2692a888d6d892c3b3729e13ab4894c9",
                 "shasum": ""
             },
             "require": {
@@ -2329,7 +2343,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2024-01-29T05:54:15+00:00"
+            "time": "2024-02-10T14:20:10+00:00"
         },
         {
             "name": "tareq1988/wp-php-cs-fixer",
