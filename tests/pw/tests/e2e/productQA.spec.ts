@@ -12,7 +12,7 @@ test.describe('Product QA functionality test', () => {
     let vendor: ProductQAPage;
     let customer: ProductQAPage;
     let guest: ProductQAPage;
-    let aPage: Page, vPage: Page, cPage: Page, gPage: Page;
+    let aPage: Page, vPage: Page, cPage: Page;
     let apiUtils: ApiUtils;
     let questionId: string;
     let answerId: string;
@@ -22,17 +22,13 @@ test.describe('Product QA functionality test', () => {
         aPage = await adminContext.newPage();
         admin = new ProductQAPage(aPage);
 
-        // const vendorContext = await browser.newContext(data.auth.vendorAuth);
-        // vPage = await vendorContext.newPage();
-        // vendor = new ProductQAPage(vPage);
+        const vendorContext = await browser.newContext(data.auth.vendorAuth);
+        vPage = await vendorContext.newPage();
+        vendor = new ProductQAPage(vPage);
 
-        // const customerContext = await browser.newContext(data.auth.customerAuth);
-        // cPage = await customerContext.newPage();
-        // customer = new ProductQAPage(cPage);
-
-        // const guestContext = await browser.newContext(data.auth.noAuth);
-        // gPage = await guestContext.newPage();
-        // guest = new ProductQAPage(gPage);
+        const customerContext = await browser.newContext(data.auth.customerAuth);
+        cPage = await customerContext.newPage();
+        customer = new ProductQAPage(cPage);
 
         apiUtils = new ApiUtils(await request.newContext());
         [, questionId] = await apiUtils.createProductQuestion({ ...payloads.createProductQuestion(), product_id: PRODUCT_ID }, payloads.customerAuth);
@@ -41,9 +37,8 @@ test.describe('Product QA functionality test', () => {
 
     test.afterAll(async () => {
         await aPage.close();
-        // await vPage.close();
-        // await cPage.close();
-        // await gPage.close();
+        await vPage.close();
+        await cPage.close();
         await apiUtils.dispose();
     });
 
@@ -60,9 +55,9 @@ test.describe('Product QA functionality test', () => {
 
     // todo: admin receive notification for new question
 
-    // test('unread count decrease after admin viewing a question @pro', async () => {
-    //     await admin.decreaseUnreadQuestionCount();
-    // });
+    test.skip('unread count decrease after admin viewing a question @pro', async () => {
+        await admin.decreaseUnreadQuestionCount();
+    });
 
     test('admin can filter questions by vendor @pro @a', async () => {
         await admin.filterQuestions(data.questionAnswers.filter.byVendor, 'by-vendor');
@@ -120,9 +115,9 @@ test.describe('Product QA functionality test', () => {
 
     // todo: vendor receive notification for new question
 
-    // test('unread count decrease after admin viewing a question @pro @a', async () => {
-    //     await admin.decreaseUnreadQuestionCount();
-    // });
+    test.skip('unread count decrease after vendor viewing a question @pro @a', async () => {
+        await admin.decreaseUnreadQuestionCount();
+    });
 
     test('vendor can filter questions @pro @v', async () => {
         await vendor.vendorFilterQuestions(data.predefined.simpleProduct.product1.name);
@@ -157,7 +152,8 @@ test.describe('Product QA functionality test', () => {
 
     // guest
 
-    test('guest customer need to sign-in/signup post question @pro @g', async () => {
+    test('guest customer need to sign-in/signup post question @pro @g', async ({ page }) => {
+        guest = new ProductQAPage(page);
         await guest.postQuestion(data.predefined.simpleProduct.product1.name, data.questionAnswers);
     });
 });

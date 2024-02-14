@@ -10,7 +10,6 @@ const { VENDOR_ID } = process.env;
 test.describe('Product addon functionality test', () => {
     let vendor: ProductAddonsPage;
     let vPage: Page;
-    let addonId: string;
     let addonName: string;
     let addonFieldTitle: string;
     let apiUtils: ApiUtils;
@@ -28,7 +27,7 @@ test.describe('Product addon functionality test', () => {
         vendor = new ProductAddonsPage(vPage);
 
         apiUtils = new ApiUtils(await request.newContext());
-        [addonId, addonName, addonFieldTitle] = await createVendorProductAddon();
+        [, addonName, addonFieldTitle] = await createVendorProductAddon();
     });
 
     test.afterAll(async () => {

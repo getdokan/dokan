@@ -143,30 +143,4 @@ export class AdminPage extends BasePage {
         await this.click(selector.admin.dokan.dokanSetupWizard.visitDokanDashboard);
         await this.toBeVisible(selector.admin.dokan.dashboard.dashboardText);
     }
-
-    // dokan notice & promotion
-
-    // dokan notice
-    async dokanPromotion() {
-        await this.goto(data.subUrls.backend.dokan.dokan);
-        // dokan promotion elements are visible
-        const isPromotionVisible = await this.isVisible(selector.admin.dokan.promotion.promotion);
-        if (isPromotionVisible) {
-            await this.multipleElementVisible(selector.admin.dokan.promotion);
-        } else {
-            console.log('No promotion is ongoing');
-        }
-    }
-
-    // dokan notice
-    async dokanNotice() {
-        await this.goto(data.subUrls.backend.dokan.dokan);
-
-        // dokan notice elements are visible
-        const isPromotionVisible = await this.isVisible(selector.admin.dokan.promotion.promotion);
-        isPromotionVisible ? await this.notToHaveCount(selector.admin.dokan.notice.noticeDiv1, 0) : await this.notToHaveCount(selector.admin.dokan.notice.noticeDiv, 0);
-        await this.notToHaveCount(selector.admin.dokan.notice.slider, 0);
-        await this.notToHaveCount(selector.admin.dokan.notice.sliderPrev, 0);
-        await this.notToHaveCount(selector.admin.dokan.notice.sliderNext, 0);
-    }
 }

@@ -5,7 +5,7 @@ import { data } from '@utils/testData';
 import { helpers } from '@utils/helpers';
 // import { shipping } from '@utils/interfaces';
 
-export class shippingPage extends AdminPage {
+export class ShippingPage extends AdminPage {
     constructor(page: Page) {
         super(page);
     }

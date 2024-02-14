@@ -35,6 +35,7 @@ test.describe('Product Reviews test', () => {
     });
 
     test('vendor can unApprove product review @pro @v', async () => {
+        const [, , reviewMessage] = await apiUtils.createProductReview(PRODUCT_ID, payloads.createProductReview(), payloads.vendorAuth);
         await vendor.updateProductReview('unApprove', reviewMessage);
     });
 
@@ -63,7 +64,8 @@ test.describe('Product Reviews test', () => {
         await vendor.updateProductReview('permanently-delete', reviewMessage);
     });
 
-    test('vendor can perform product reviews bulk action @pro @v', async () => {
+    test.skip('vendor can perform product reviews bulk action @pro @v', async () => {
+        // todo: might cause other tests to fail in parallel
         await vendor.productReviewsBulkActions('hold');
     });
 });

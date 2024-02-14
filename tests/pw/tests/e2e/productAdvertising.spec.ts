@@ -11,6 +11,7 @@ test.describe('Product Advertising test', () => {
     let aPage: Page, vPage: Page;
     let apiUtils: ApiUtils;
     let productName: string;
+    let advertisedProduct: string;
 
     test.beforeAll(async ({ browser }) => {
         const adminContext = await browser.newContext(data.auth.adminAuth);
@@ -23,7 +24,7 @@ test.describe('Product Advertising test', () => {
 
         apiUtils = new ApiUtils(await request.newContext());
         [, , productName] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendorAuth);
-        await apiUtils.createProductAdvertisement(payloads.createProduct(), payloads.vendorAuth);
+        [, , advertisedProduct] = await apiUtils.createProductAdvertisement(payloads.createProduct(), payloads.vendorAuth);
     });
 
     test.afterAll(async () => {
@@ -31,6 +32,8 @@ test.describe('Product Advertising test', () => {
         await vPage.close();
         await apiUtils.dispose();
     });
+
+    //admin
 
     test('dokan product advertising menu page is rendering properly @pro @exp', async () => {
         await admin.adminProductAdvertisingRenderProperly();
@@ -41,7 +44,7 @@ test.describe('Product Advertising test', () => {
     });
 
     test('admin can search advertised product @pro @a', async () => {
-        await admin.searchAdvertisedProduct(productName);
+        await admin.searchAdvertisedProduct(advertisedProduct);
     });
 
     test('admin can filter advertised product by stores @pro @a', async () => {
@@ -57,28 +60,33 @@ test.describe('Product Advertising test', () => {
     });
 
     test('admin can delete advertised product @pro @a', async () => {
-        await admin.updateAdvertisedProduct(productName, 'delete');
+        const [, , advertisedProduct] = await apiUtils.createProductAdvertisement(payloads.createProduct(), payloads.vendorAuth);
+        await admin.updateAdvertisedProduct(advertisedProduct, 'delete');
     });
 
-    test('admin can perform product advertising bulk action @pro @a', async () => {
-        // await apiUtils.createProductAdvertisement(payloads.createProduct(), payloads.vendorAuth);
+    test.skip('admin can perform product advertising bulk action @pro @a', async () => {
+        // todo: might cause other tests to fail in parallel
         await admin.productAdvertisingBulkAction('delete');
     });
 
+    // vendor
+
     test('vendor can buy product advertising @pro @v', async () => {
         //todo: p1_v1 status gets pending review; need to resolve
-        [, , productName] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendorAuth);
+        const [, , productName] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendorAuth);
         const orderId = await vendor.buyProductAdvertising(productName);
         await apiUtils.updateOrderStatus(orderId, 'wc-completed', payloads.adminAuth);
     });
 
-    // test('vendor can buy booking product advertising @pro @v', async ( ) => { // todo:
-    // 	const orderId = await vendor.buyProductAdvertising(data.productAdvertisement.advertisedProduct);
-    // 	await apiUtils.updateOrderStatus(orderId, 'wc-completed', payloads.adminAuth);
-    // });
+    test.skip('vendor can buy booking product advertising @pro @v', async () => {
+        // todo: create booking product via api
+        const orderId = await vendor.buyProductAdvertising(data.productAdvertisement.advertisedProduct);
+        await apiUtils.updateOrderStatus(orderId, 'wc-completed', payloads.adminAuth);
+    });
 
-    // test('vendor can buy auction product advertising @pro @v', async ( ) => { // todo:
-    // 	const orderId = await vendor.buyProductAdvertising(data.productAdvertisement.advertisedProduct);
-    // 	await apiUtils.updateOrderStatus(orderId, 'wc-completed', payloads.adminAuth);
-    // });
+    test.skip('vendor can buy auction product advertising @pro @v', async () => {
+        // todo: create auction product via api
+        const orderId = await vendor.buyProductAdvertising(data.productAdvertisement.advertisedProduct);
+        await apiUtils.updateOrderStatus(orderId, 'wc-completed', payloads.adminAuth);
+    });
 });

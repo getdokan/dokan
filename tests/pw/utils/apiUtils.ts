@@ -840,12 +840,13 @@ export class ApiUtils {
     }
 
     // create a product advertisement
-    async createProductAdvertisement(product: object, auth?: auth): Promise<[responseBody, string]> {
+    async createProductAdvertisement(product: object, auth?: auth): Promise<[responseBody, string, string]> {
         const [body, productId] = await this.createProduct(product, auth);
         const sellerId = body.store.id;
         const [, responseBody] = await this.post(endPoints.createProductAdvertisement, { data: { vendor_id: sellerId, product_id: productId }, headers: payloads.adminAuth });
-        const productAdvertisementId = String(responseBody?.id);
-        return [responseBody, productAdvertisementId];
+        const advertisementId = String(responseBody?.id);
+        const advertisedProduct = responseBody?.product_title;
+        return [responseBody, advertisementId, advertisedProduct];
     }
 
     /**

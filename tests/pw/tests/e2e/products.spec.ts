@@ -30,6 +30,8 @@ test.describe('Product functionality test', () => {
         await apiUtils.dispose();
     });
 
+    //admin
+
     test('admin can add product category @lite @a', async () => {
         await admin.addCategory(data.product.category.randomCategory());
     });
@@ -42,17 +44,17 @@ test.describe('Product functionality test', () => {
         await admin.addSimpleProduct(data.product.simple);
     });
 
-    // test('admin can add variable product @pro @a', async ( ) => {
-    // 	await admin.addVariableProduct(data.product.variable);
-    // });
+    test.skip('admin can add variable product @pro @a', async () => {
+        await admin.addVariableProduct(data.product.variable);
+    });
 
-    test('admin can add simple subscription @pro @a', async () => {
+    test('admin can add simple subscription product @pro @a', async () => {
         await admin.addSimpleSubscription(data.product.simpleSubscription);
     });
 
-    // test('admin can add variable subscription @pro @a', async ( ) => {
-    // 	await admin.addVariableSubscription(data.product.variableSubscription);
-    // });
+    test.skip('admin can add variable subscription product @pro @a', async () => {
+        await admin.addVariableSubscription(data.product.variableSubscription);
+    });
 
     test('admin can add external product @lite @a', async () => {
         await admin.addExternalProduct(data.product.external);
@@ -131,7 +133,7 @@ test.describe('Product functionality test', () => {
     });
 
     test('vendor can view product @lite @v', async () => {
-        await vendor.viewProduct(data.predefined.simpleProduct.product1.name);
+        await vendor.viewProduct(productName);
     });
 
     test("vendor can't buy own product @pro @v", async () => {
@@ -150,9 +152,9 @@ test.describe('Product functionality test', () => {
         await vendor.addProductDescription(productName, data.product.productInfo.description);
     });
 
-    // test('vendor can add product quantity discount @pro @v', async ( ) => {
-    // 	await vendor.addProductQuantityDiscount(data.predefined.simpleProduct.product1.name, data.product.productInfo.quantityDiscount);
-    // });
+    test.skip('vendor can add product quantity discount @pro @v', async ( ) => {
+    	await vendor.addProductQuantityDiscount(productName, data.product.productInfo.quantityDiscount);
+    });
 
     test('vendor can add product rma options @pro @v', async () => {
         await vendor.addProductRmaOptions(productName, data.vendor.rma);
