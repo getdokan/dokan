@@ -498,7 +498,7 @@
                         Dokan_Editor.bindProductTagDropdown();
                         Dokan_Editor.attribute.reArrangeAttribute();
 
-                        if ( "variable" !== $( 'select#product_type' ).val() ) {
+                        if ( "variable" !== $( 'select#product-type' ).val() ) {
                             let labels = $( 'div.dokan-product-attribute-wrapper label.show_if_variable' );
 
                             for( let label of labels ) {
@@ -519,7 +519,7 @@
                     }
                 })
                 .done(function() {
-                    $( 'select#product_type' ).trigger('change');
+                    $( 'select#product-type' ).trigger('change');
                 });
             },
 
@@ -575,7 +575,7 @@
                     // Load variations panel.
                     $( '#dokan-variable-product-options' ).load( window.location.toString() + ' #dokan-variable-product-options-inner', function() {
                         $( '#dokan-variable-product-options' ).trigger( 'reload' );
-                        $( 'select#product_type' ).trigger('change');
+                        $( 'select#product-type' ).trigger('change');
                         $( '.dokan-product-attribute-wrapper' ).unblock();
                     });
                 });
@@ -627,7 +627,7 @@
         },
 
         showManageStock: function(e) {
-            const product_type = $( '#product_type' ).val();
+            const product_type = $( '#product-type' ).val();
 
             if ( $(this).is(':checked') && 'external' !== product_type ) {
                 $('.show_if_stock').slideDown('fast');
@@ -860,7 +860,7 @@
         Dokan_Editor.init();
 
         // PRODUCT TYPE SPECIFIC OPTIONS.
-        $( 'select#product_type' ).on( 'change', function() {
+        $( 'select#product-type' ).on( 'change', function() {
             // Get value.
             var select_val = $( this ).val();
 
@@ -884,7 +884,7 @@
         $( 'input#_virtual' ).trigger( 'change' );
 
         function show_and_hide_panels() {
-            var product_type    = $( '#product_type' ).val();
+            var product_type    = $( '#product-type' ).val();
             var is_virtual      = $( 'input#_virtual:checked' ).length;
             var is_downloadable = $( 'input#_downloadable:checked' ).length;
             let shippingTaxContainer  = $( '.dokan-product-shipping-tax' );
