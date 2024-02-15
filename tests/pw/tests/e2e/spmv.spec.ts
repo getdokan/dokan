@@ -13,7 +13,7 @@ test.describe('Vendor SPMV test', () => {
     let aPage: Page, vPage: Page, cPage: Page;
     let apiUtils: ApiUtils;
     let productName: string;
-    let productName1: string;
+    let productName2: string;
     let productId: string;
 
     test.beforeAll(async ({ browser }) => {
@@ -32,7 +32,7 @@ test.describe('Vendor SPMV test', () => {
         apiUtils = new ApiUtils(await request.newContext());
         await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, enable_min_max_quantity: 'off', enable_min_max_amount: 'off' }); // todo: might exists dokan issue -> min-max field is required on admin product edit
         [, , productName] = await apiUtils.createProduct({ ...payloads.createProduct(), name: data.predefined.spmv.productName() }, payloads.vendor2Auth);
-        [, productId, productName1] = await apiUtils.createProduct({ ...payloads.createProduct(), name: data.predefined.spmv.productName() }, payloads.vendor2Auth);
+        [, productId, productName2] = await apiUtils.createProduct({ ...payloads.createProduct(), name: data.predefined.spmv.productName() }, payloads.vendor2Auth);
         await apiUtils.addSpmvProductToStore(productId, payloads.vendorAuth);
     });
 
@@ -75,7 +75,7 @@ test.describe('Vendor SPMV test', () => {
     });
 
     test('vendor can go to own product edit from spmv page @pro @v', async () => {
-        await vendor.goToProductEditFromSPMV(data.predefined.simpleProduct.product1.name);
+        await vendor.goToProductEditFromSpmv(data.predefined.simpleProduct.product1.name);
     });
 
     test('vendor can sort spmv products @pro @v', async () => {
@@ -94,18 +94,18 @@ test.describe('Vendor SPMV test', () => {
     // customer
 
     test('customer can view other available vendors @pro @c', async () => {
-        await customer.viewOtherAvailableVendors(productName1);
+        await customer.viewOtherAvailableVendors(productName2);
     });
 
     test('customer can view other available vendor @pro @c', async () => {
-        await customer.viewOtherAvailableVendor(productName1, data.predefined.vendorStores.vendor1);
+        await customer.viewOtherAvailableVendor(productName2, data.predefined.vendorStores.vendor1);
     });
 
     test('customer can view other available vendor product @pro @c', async () => {
-        await customer.viewOtherAvailableVendorProduct(productName1, data.predefined.vendorStores.vendor1);
+        await customer.viewOtherAvailableVendorProduct(productName2, data.predefined.vendorStores.vendor1);
     });
 
     test('customer can add to cart other available vendor product @pro @c', async () => {
-        await customer.addToCartOtherAvailableVendorsProduct(productName1, data.predefined.vendorStores.vendor1);
+        await customer.addToCartOtherAvailableVendorsProduct(productName2, data.predefined.vendorStores.vendor1);
     });
 });

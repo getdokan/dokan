@@ -61,7 +61,6 @@ test.describe('Store listing functionality test', () => {
 
     test('customer can view stores on map @pro @c', async () => {
         await customer.storeOnMap();
-        // await customer.storeOnMap(data.predefined.vendorStores.vendor1);
     });
 
     test('customer can go to single store from store list @lite @c', async () => {

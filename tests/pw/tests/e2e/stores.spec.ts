@@ -1,28 +1,27 @@
 import { test, request, Page } from '@playwright/test';
 import { StoresPage } from '@pages/storesPage';
-// import { ApiUtils } from '@utils/apiUtils';
+import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
-// import { payloads } from '@utils/payloads';
+import { payloads } from '@utils/payloads';
 
 const { VENDOR_ID } = process.env;
 
 test.describe('Stores test', () => {
     let admin: StoresPage;
     let aPage: Page;
-    // let apiUtils: ApiUtils;
-    // let storeName: string;
+    let apiUtils: ApiUtils;
 
     test.beforeAll(async ({ browser }) => {
         const adminContext = await browser.newContext(data.auth.adminAuth);
         aPage = await adminContext.newPage();
         admin = new StoresPage(aPage);
-        // apiUtils = new ApiUtils(await request.newContext());
-        // [,, storeName] = await apiUtils.createStore(payloads.createStore());
+
+        apiUtils = new ApiUtils(await request.newContext());
     });
 
     test.afterAll(async () => {
         await aPage.close();
-        // await apiUtils.dispose();
+        await apiUtils.dispose();
     });
 
     // stores
@@ -48,11 +47,13 @@ test.describe('Stores test', () => {
     });
 
     test("admin can disable vendor's selling capability @lite @a", async () => {
-        await admin.updateVendor(data.predefined.vendorStores.vendor1, 'disable'); //todo: nedd different vendor for this
+        const [, , storeName] = await apiUtils.createStore(payloads.createStore(), payloads.adminAuth);
+        await admin.updateVendor(storeName, 'disable');
     });
 
     test("admin can enable vendor's selling capability @lite @a", async () => {
-        await admin.updateVendor(data.predefined.vendorStores.vendor1, 'enable');
+        const [, , storeName] = await apiUtils.createStore(payloads.createStore(), payloads.adminAuth);
+        await admin.updateVendor(storeName, 'enable');
     });
 
     test('admin can edit vendor info @lite @a', async () => {

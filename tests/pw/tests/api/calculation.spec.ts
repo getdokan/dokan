@@ -225,7 +225,7 @@ test.describe.skip('commission test', () => {
         const gatewayFee = 0;
         const lineItems = res.line_items;
 
-        const calculatedSubTotal = helpers.lineItemsToSubtoal(lineItems);
+        const calculatedSubTotal = helpers.lineItemsToSubtotal(lineItems);
         const calculatedProductTax = helpers.productTax(taxRate, calculatedSubTotal);
         const calculatedShippingTax = helpers.shippingTax(taxRate, providedShippingFee);
         const calculatedTotalTax = calculatedProductTax + calculatedShippingTax;

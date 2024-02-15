@@ -16,6 +16,7 @@ test.describe('Reports test', () => {
         const adminContext = await browser.newContext(data.auth.adminAuth);
         aPage = await adminContext.newPage();
         admin = new ReportsPage(aPage);
+
         apiUtils = new ApiUtils(await request.newContext());
         [, , orderId] = await apiUtils.createOrderWithStatus(PRODUCT_ID, payloads.createOrder, data.order.orderStatus.completed, payloads.vendorAuth);
     });
@@ -33,7 +34,7 @@ test.describe('Reports test', () => {
 
     // all logs
 
-    test('admin All Logs menu page is rendering properly @pro @exp @a', async () => {
+    test('admin all Logs menu page is rendering properly @pro @exp @a', async () => {
         await admin.adminAllLogsRenderProperly();
     });
 
@@ -42,7 +43,6 @@ test.describe('Reports test', () => {
     });
 
     test('admin can export all logs @pro @a', async () => {
-        // await admin.exportAllLogs(orderId);
         await admin.exportAllLogs();
     });
 

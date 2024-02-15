@@ -653,7 +653,7 @@ export const dbData = {
                 setup_wizard_logo_url: '',
                 setup_wizard_message:
                     '<p>Thank you for choosing The Marketplace to power your online store! This quick setup wizard will help you configure the basic settings. <strong>It&rsquo;s completely optional and shouldn&rsquo;t take longer than two minutes.</strong> Test wizard message.</p>',
-                setup_wozard_message_without_html:
+                setup_wizard_message_without_html:
                     'Thank you for choosing The Marketplace to power your online store! This quick setup wizard will help you configure the basic settings. It’s completely optional and shouldn’t take longer than two minutes. Test wizard message.',
                 disable_welcome_wizard: 'off',
                 global_digital_mode: 'sell_both',

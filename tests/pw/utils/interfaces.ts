@@ -668,6 +668,11 @@ export interface vendor {
     lastname: string;
     storeName: string;
 
+    vendor2: {
+        username: string;
+        password: string;
+    };
+
     vendorInfo: {
         email: () => string;
         // emailDomain: string;
@@ -1789,6 +1794,8 @@ export interface reqOptions {
     params?: Record<string, string | number | boolean> | undefined;
     timeout?: number | undefined;
 }
+
+export type params = Record<string, string | number | boolean> | undefined;
 
 export type headers = Record<string, string>;
 

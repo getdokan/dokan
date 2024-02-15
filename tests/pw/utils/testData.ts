@@ -1,4 +1,3 @@
-// import { request } from '@playwright/test';
 import { faker } from '@faker-js/faker';
 import { helpers } from '@utils/helpers';
 import 'dotenv/config';
@@ -34,6 +33,7 @@ export const data = {
     auth: {
         adminAuthFile: 'playwright/.auth/adminStorageState.json',
         vendorAuthFile: 'playwright/.auth/vendorStorageState.json',
+        vendor2AuthFile: 'playwright/.auth/vendor2StorageState.json',
         customerAuthFile: 'playwright/.auth/customerStorageState.json',
 
         adminAuth: {
@@ -42,6 +42,10 @@ export const data = {
 
         vendorAuth: {
             storageState: 'playwright/.auth/vendorStorageState.json',
+        },
+
+        vendor2Auth: {
+            storageState: 'playwright/.auth/vendor2StorageState.json',
         },
 
         customerAuth: {
@@ -1017,6 +1021,11 @@ export const data = {
         lastname: (String(process.env.VENDOR)[0] as string) + String(process.env.VENDOR)[String(process.env.VENDOR).length - 1],
         storeName: String(process.env.VENDOR) + 'store',
 
+        vendor2: {
+            username: String(process.env.VENDOR2),
+            password: String(process.env.USER_PASSWORD),
+        },
+
         vendorInfo: {
             emailDomain: '@email.com',
             // email             : () => faker.internet.email(),
@@ -1541,9 +1550,9 @@ export const data = {
 
     // Reverse withdraw
     reverseWithdraw: {
-        store: String(process.env.VENDOR) + 'store',
+        store: String(process.env.VENDOR2) + 'store',
         transactionType: 'manual_product', // manual_product, manual_order, other
-        product: 'p1_v1 (simple)',
+        product: '',
         withdrawalBalanceType: 'debit', // debit, credit
         amount: '500',
         note: 'test reverse withdraw note',
@@ -1566,8 +1575,8 @@ export const data = {
             guest: 'guest',
         },
 
-        quoteRule: {
-            title: () => 'test rule_' + faker.string.nanoid(10),
+        quoteRule: () => ({
+            title: 'test rule_' + faker.string.nanoid(10),
             userRole: 'customer',
             product: 'p1_v1 (simple)',
             category: 'Uncategorized',
@@ -1576,15 +1585,15 @@ export const data = {
             hideAddToCartButton: 'keep_and_add_new', // replace, keep_and_add_new
             customButtonLabel: 'Add to quote',
             order: '0',
-        },
+        }),
 
         trashedQuoteRule: {
-            title: 'trashed quote rule ',
+            title: 'trashed quote rule',
             status: 'trash',
         },
 
-        quote: {
-            title: () => 'test quote_' + faker.string.nanoid(10),
+        quote: () => ({
+            title: 'test quote_' + faker.string.nanoid(10),
             user: 'customer1', // todo: update customer data via env and email domain
             fullName: 'Jhon Doe',
             email: 'customer1@g.com',
@@ -1594,7 +1603,7 @@ export const data = {
             quantity: '5',
             offerPrice: '80',
             offerProductQuantity: '10',
-        },
+        }),
 
         trashedQuote: {
             title: 'trashed quote',
@@ -2106,6 +2115,7 @@ export const data = {
             followFromStoreListing: 'storeListing',
             followFromSingleStore: 'singleStore',
             vendor1: String(process.env.VENDOR) + 'store',
+            vendor2: String(process.env.VENDOR2) + 'store',
             vendor1FullName: String(process.env.VENDOR) + ' ' + 'v1',
             shopUrl: String(process.env.VENDOR) + 'store',
         },

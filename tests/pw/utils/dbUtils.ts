@@ -100,7 +100,7 @@ export const dbUtils = {
     },
 
     // create refund
-    async createRefund(responseBody: any): Promise<[any, string]> {
+    async createRefundRequest(responseBody: any): Promise<[any, string]> {
         const refundId = (await this.getMaxId('id', 'dokan_refund')) + 1;
 
         const refund = {

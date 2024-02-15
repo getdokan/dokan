@@ -50,12 +50,12 @@ test.describe.skip('Settings test', () => {
     test.skip('admin can set vendor store url (general settings) @lite @a', async () => {
         // todo: need to run on serial mode, will fail other tests
         await dbUtils.setDokanSettings(dbData.dokan.optionName.general, { ...dbData.dokan.generalSettings, custom_store_url: 'stores' });
-        CI ? await helpers.execommand(data.command.permalink) : await helpers.execommand(data.command.permalinkLocal);
+        CI ? await helpers.exeCommand(data.command.permalink) : await helpers.exeCommand(data.command.permalinkLocal);
         await admin.vendorStoreUrlSetting(data.predefined.vendorStores.vendor1, 'stores');
 
         //reset
         await dbUtils.setDokanSettings(dbData.dokan.optionName.general, dbData.dokan.generalSettings);
-        CI ? await helpers.execommand(data.command.permalink) : await helpers.execommand(data.command.permalinkLocal);
+        CI ? await helpers.exeCommand(data.command.permalink) : await helpers.exeCommand(data.command.permalinkLocal);
     });
 
     test('admin can set vendor setup wizard logo & message (general settings) @lite @a', async () => {
@@ -67,7 +67,7 @@ test.describe.skip('Settings test', () => {
             setup_wizard_logo_url: logoUrl,
             setup_wizard_message: dbData.testData.dokan.generalSettings.setup_wizard_message,
         });
-        await admin.vendorSetupWizardLogoAndMessageSetting(logoUrl, dbData.testData.dokan.generalSettings.setup_wozard_message_without_html);
+        await admin.vendorSetupWizardLogoAndMessageSetting(logoUrl, dbData.testData.dokan.generalSettings.setup_wizard_message_without_html);
     });
 
     test('admin can disable vendor setup wizard (general settings) @lite @g', async () => {

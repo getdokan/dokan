@@ -55,11 +55,11 @@ test.describe('Store categories test', () => {
     });
 
     test('admin can delete store category @pro @a', async () => {
+        const [, , categoryName] = await apiUtils.createStoreCategory(payloads.createStoreCategory(), payloads.adminAuth);
         await admin.updateStoreCategory(categoryName, 'delete');
     });
 
     test('vendor can update own store category @pro @v', async () => {
-        const [, , categoryName] = await apiUtils.createStoreCategory(payloads.createStoreCategory(), payloads.adminAuth);
         await vendor.vendorUpdateStoreCategory(categoryName);
     });
 

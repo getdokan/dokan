@@ -7082,7 +7082,7 @@ export const selector = {
                     phoneNumber: 'input[name="phone_field"]',
                 },
 
-                message: '.woocommerce .is-success',
+                message: '.woocommerce-message',
             },
 
             // requested quote

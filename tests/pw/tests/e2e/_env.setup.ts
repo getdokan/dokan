@@ -130,8 +130,7 @@ setup.describe('setup user settings', () => {
         await apiUtils.deleteAllProducts(data.predefined.simpleProduct.product1.name, payloads.vendorAuth);
 
         // create store product
-        const product = { ...payloads.createProduct(), name: data.predefined.simpleProduct.product1.name };
-        const [, productId] = await apiUtils.createProduct(product, payloads.vendorAuth);
+        const [, productId] = await apiUtils.createProduct({ ...payloads.createProduct(), name: data.predefined.simpleProduct.product1.name }, payloads.vendorAuth);
         console.log('PRODUCT_ID', productId);
         process.env.PRODUCT_ID = productId;
         helpers.appendEnv(`PRODUCT_ID=${productId}`); // for local testing
@@ -142,8 +141,7 @@ setup.describe('setup user settings', () => {
         await apiUtils.deleteAllProducts(data.predefined.vendor2.simpleProduct.product1.name, payloads.vendor2Auth);
 
         // create store product
-        const product = { ...payloads.createProduct(), name: data.predefined.vendor2.simpleProduct.product1.name };
-        const [, productId] = await apiUtils.createProduct(product, payloads.vendor2Auth);
+        const [, productId] = await apiUtils.createProduct({ ...payloads.createProduct(), name: data.predefined.vendor2.simpleProduct.product1.name }, payloads.vendor2Auth);
         console.log('V2_PRODUCT_ID:', productId);
         process.env.V2_PRODUCT_ID = productId;
         helpers.appendEnv(`V2_PRODUCT_ID=${productId}`); // for local testing

@@ -12,7 +12,6 @@ test.describe('Store Support test (admin)', () => {
     let aPage: Page;
     let apiUtils: ApiUtils;
     let supportTicketId: string;
-    let closedSupportTicketId: string;
 
     test.beforeAll(async ({ browser }) => {
         const adminContext = await browser.newContext(data.auth.adminAuth);
@@ -21,13 +20,14 @@ test.describe('Store Support test (admin)', () => {
 
         apiUtils = new ApiUtils(await request.newContext());
         [, supportTicketId] = await apiUtils.createSupportTicket({ ...payloads.createSupportTicket, author: CUSTOMER_ID, meta: { store_id: VENDOR_ID } });
-        [, closedSupportTicketId] = await apiUtils.createSupportTicket({ ...payloads.createSupportTicket, status: 'closed', author: CUSTOMER_ID, meta: { store_id: VENDOR_ID } });
     });
 
     test.afterAll(async () => {
         await aPage.close();
         await apiUtils.dispose();
     });
+
+    //admin
 
     test('dokan store support menu page is rendering properly @pro @exp @a', async () => {
         await admin.adminStoreSupportRenderProperly();
@@ -41,9 +41,12 @@ test.describe('Store Support test (admin)', () => {
         await admin.adminViewSupportTicketDetails(supportTicketId);
     });
 
-    test('admin can search support ticket @pro @a', async () => {
+    test('admin can search support ticket by ticket id @pro @a', async () => {
         await admin.searchSupportTicket(supportTicketId);
-        // await admin.searchSupportTicket(data.storeSupport.title); // todo:
+    });
+
+    test('admin can search support ticket by ticket title @pro @a', async () => {
+        await admin.searchSupportTicket(data.storeSupport.title);
     });
 
     test('admin can filter support tickets by vendor @pro @a', async () => {
@@ -63,11 +66,11 @@ test.describe('Store Support test (admin)', () => {
     });
 
     test('admin can disable support ticket email notification @pro @a', async () => {
-        // await apiUtils.updateSupportTicketEmailNotification(supportTicketId, { notification: true, }, payloads.adminAuth);
         await admin.updateSupportTicketEmailNotification(supportTicketId, 'disable');
     });
 
     test('admin can enable support ticket email notification @pro @a', async () => {
+        const [, supportTicketId] = await apiUtils.createSupportTicket({ ...payloads.createSupportTicket, author: CUSTOMER_ID, meta: { store_id: VENDOR_ID } });
         await apiUtils.updateSupportTicketEmailNotification(supportTicketId, { notification: false }, payloads.adminAuth);
         await admin.updateSupportTicketEmailNotification(supportTicketId, 'enable');
     });
@@ -77,6 +80,7 @@ test.describe('Store Support test (admin)', () => {
     });
 
     test('admin can reopen closed support ticket @pro @a', async () => {
+        const [, closedSupportTicketId] = await apiUtils.createSupportTicket({ ...payloads.createSupportTicket, status: 'closed', author: CUSTOMER_ID, meta: { store_id: VENDOR_ID } });
         await admin.reopenSupportTicket(closedSupportTicketId);
     });
 
@@ -89,7 +93,7 @@ test.describe('Store Support test (admin)', () => {
 test.describe('Store Support test (customer)', () => {
     let customer: StoreSupportsPage;
     let guest: StoreSupportsPage;
-    let cPage: Page, gPage: Page;
+    let cPage: Page;
     let apiUtils: ApiUtils;
     let orderId: string;
     let responseBody: responseBody;
@@ -100,10 +104,6 @@ test.describe('Store Support test (customer)', () => {
         cPage = await customerContext.newPage();
         customer = new StoreSupportsPage(cPage);
 
-        const guestContext = await browser.newContext(data.auth.noAuth);
-        gPage = await guestContext.newPage();
-        guest = new StoreSupportsPage(gPage);
-
         apiUtils = new ApiUtils(await request.newContext());
         [, responseBody, orderId] = await apiUtils.createOrderWithStatus(PRODUCT_ID, { ...payloads.createOrder, customer_id: CUSTOMER_ID }, data.order.orderStatus.completed, payloads.vendorAuth);
         [, supportTicketId] = await apiUtils.createSupportTicket({ ...payloads.createSupportTicket, author: CUSTOMER_ID, meta: { store_id: VENDOR_ID, order_id: orderId } });
@@ -111,7 +111,6 @@ test.describe('Store Support test (customer)', () => {
 
     test.afterAll(async () => {
         await cPage.close();
-        await gPage.close();
         await apiUtils.dispose();
     });
 
@@ -157,7 +156,8 @@ test.describe('Store Support test (customer)', () => {
         await customer.cantSendMessageToSupportTicket(supportTicketId);
     });
 
-    test('guest customer need to login before asking for store support @pro @g', async () => {
+    test('guest customer need to login before asking for store support @pro @g', async ({ page }) => {
+        guest = new StoreSupportsPage(page);
         await guest.storeSupport(data.predefined.vendorStores.vendor1, data.customer.getSupport, 'store');
     });
 });
@@ -201,9 +201,12 @@ test.describe('Store Support test (vendor)', () => {
         await vendor.vendorFilterSupportTickets('by-date', data.date.dateRange);
     });
 
-    test('vendor can search support ticket @pro @v', async () => {
+    test('vendor can search support ticket by ticket id @pro @v', async () => {
         await vendor.vendorSearchSupportTicket('id', supportTicketId);
-        // await vendor.vendorSearchSupportTicket('title', data.storeSupport.title); // todo: separate or in same test
+    });
+
+    test('vendor can search support ticket by ticket title @pro @v', async () => {
+        await vendor.vendorSearchSupportTicket('title', data.storeSupport.title);
     });
 
     test('vendor can reply to support ticket @pro @v', async () => {

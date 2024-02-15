@@ -26,7 +26,7 @@ test.describe('Refunds test', () => {
 
         apiUtils = new ApiUtils(await request.newContext());
         [, orderResponseBody, orderId] = await apiUtils.createOrderWithStatus(PRODUCT_ID, payloads.createOrder, data.order.orderStatus.processing, payloads.vendorAuth);
-        await dbUtils.createRefund(orderResponseBody);
+        await dbUtils.createRefundRequest(orderResponseBody);
     });
 
     test.afterAll(async () => {
@@ -34,13 +34,18 @@ test.describe('Refunds test', () => {
         await apiUtils.dispose();
     });
 
+    //admin
+
     test('admin refunds menu page is rendering properly @pro @exp @a', async () => {
         await admin.adminRefundRequestsRenderProperly();
     });
 
-    test('admin can search refund requests @pro @a', async () => {
+    test('admin can search refund requests by order-id @pro @a', async () => {
         await admin.searchRefundRequests(orderId);
-        // await admin.searchRefundRequests(data.predefined.vendorStores.vendor1);
+    });
+
+    test('admin can search refund requests by vendor @pro @a', async () => {
+        await admin.searchRefundRequests(data.predefined.vendorStores.vendor1);
     });
 
     test('admin can approve refund request @pro @a', async () => {
@@ -49,15 +54,17 @@ test.describe('Refunds test', () => {
 
     test('admin can cancel refund requests @pro @a', async () => {
         const [, orderResponseBody, orderId] = await apiUtils.createOrderWithStatus(PRODUCT_ID, payloads.createOrder, data.order.orderStatus.processing, payloads.vendorAuth);
-        await dbUtils.createRefund(orderResponseBody);
+        await dbUtils.createRefundRequest(orderResponseBody);
         await admin.updateRefundRequests(orderId, 'cancel');
     });
 
     test('admin can perform refund requests bulk actions @pro @a', async () => {
         const [, orderResponseBody, ,] = await apiUtils.createOrderWithStatus(PRODUCT_ID, payloads.createOrder, data.order.orderStatus.processing, payloads.vendorAuth);
-        await dbUtils.createRefund(orderResponseBody);
+        await dbUtils.createRefundRequest(orderResponseBody);
         await admin.refundRequestsBulkAction('completed');
     });
+
+    //vendor
 
     test('vendor can full refund @pro @v', async () => {
         const [, , orderId] = await apiUtils.createOrderWithStatus(PRODUCT_ID, { ...payloads.createOrder, customer_id: CUSTOMER_ID }, data.order.orderStatus.completed, payloads.vendorAuth);

@@ -51,16 +51,14 @@ setup.describe('authenticate users & set permalink', () => {
     });
 
     setup('add vendor1 @lite', async () => {
-        const [, sellerId] = await apiUtils.createStore(payloads.createStore1, payloads.adminAuth);
-        await apiUtils.updateCustomer(sellerId, payloads.updateAddress, payloads.adminAuth);
+        const [, sellerId] = await apiUtils.createStore(payloads.createStore1, payloads.adminAuth, true);
         console.log('VENDOR_ID:', sellerId);
         process.env.VENDOR_ID = sellerId;
         helpers.appendEnv(`VENDOR_ID=${sellerId}`); // for local testing
     });
 
     setup('add vendor2 @lite', async () => {
-        const [, sellerId] = await apiUtils.createStore(payloads.createStore2, payloads.adminAuth);
-        await apiUtils.updateCustomer(sellerId, payloads.updateAddress, payloads.adminAuth);
+        const [, sellerId] = await apiUtils.createStore(payloads.createStore2, payloads.adminAuth, true);
         console.log('VENDOR2_ID:', sellerId);
         process.env.VENDOR2_ID = sellerId;
         helpers.appendEnv(`VENDOR2_ID=${sellerId}`); // for local testing
@@ -74,6 +72,11 @@ setup.describe('authenticate users & set permalink', () => {
     setup('authenticate vendor @lite', async ({ page }) => {
         const loginPage = new LoginPage(page);
         await loginPage.login(data.vendor, data.auth.vendorAuthFile);
+    });
+
+    setup('authenticate vendor2 @lite', async ({ page }) => {
+        const loginPage = new LoginPage(page);
+        await loginPage.login(data.vendor.vendor2, data.auth.vendor2AuthFile);
     });
 
     setup('dokan pro enabled or not @lite', async () => {

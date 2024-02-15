@@ -1,42 +1,35 @@
 import { test, request, Page } from '@playwright/test';
 import { ReverseWithdrawsPage } from '@pages/reverseWithdrawsPage';
-// import { OrdersPage } from '@pages/ordersPage';
 import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
 import { payloads } from '@utils/payloads';
 import { dbUtils } from '@utils/dbUtils';
 import { dbData } from '@utils/dbData';
 
-const { PRODUCT_ID } = process.env;
-
 test.describe('Reverse withdraw test', () => {
     let admin: ReverseWithdrawsPage;
     let vendor: ReverseWithdrawsPage;
     let aPage: Page, vPage: Page;
     let apiUtils: ApiUtils;
-    // let orderId: string;
+    let productId: string;
+    let productName: string;
 
     test.beforeAll(async ({ browser }) => {
         const adminContext = await browser.newContext(data.auth.adminAuth);
         aPage = await adminContext.newPage();
         admin = new ReverseWithdrawsPage(aPage);
 
-        const vendorContext = await browser.newContext(data.auth.vendorAuth);
+        const vendorContext = await browser.newContext(data.auth.vendor2Auth);
         vPage = await vendorContext.newPage();
         vendor = new ReverseWithdrawsPage(vPage);
-        // const vendor1 = new OrdersPage(vPage);
-
-        apiUtils = new ApiUtils(await request.newContext());
 
         await dbUtils.setDokanSettings(dbData.dokan.optionName.reverseWithdraw, dbData.dokan.reverseWithdrawSettings);
 
-        // await admin.addReverseWithdrawal({ ...data.reverseWithdraw, amount: '1000', withdrawalBalanceType: 'debit' } );
-        // await apiUtils.createOrderWithStatus(PRODUCT_ID, payloads.createOrderCod, data.order.orderStatus.completed, payloads.vendorAuth);
-        // [,, orderId,]= await apiUtils.createOrderWithStatus(PRODUCT_ID, payloads.createOrderCod, data.order.orderStatus.processing, payloads.vendorAuth);
-        // await vendor1.updateOrderStatusOnTable(orderId, 'complete');
+        apiUtils = new ApiUtils(await request.newContext());
 
-        const [, , orderId] = await apiUtils.createOrderWithStatus(PRODUCT_ID, payloads.createOrderCod, data.order.orderStatus.processing, payloads.vendorAuth);
-        await apiUtils.updateOrderStatus(orderId, data.order.orderStatus.completed, payloads.vendorAuth);
+        [, productId, productName] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendor2Auth);
+        const [, , orderId] = await apiUtils.createOrderWithStatus(productId, payloads.createOrderCod, data.order.orderStatus.processing, payloads.vendor2Auth);
+        await apiUtils.updateOrderStatus(orderId, data.order.orderStatus.completed, payloads.vendor2Auth);
     });
 
     test.afterAll(async () => {
@@ -50,12 +43,12 @@ test.describe('Reverse withdraw test', () => {
         await admin.adminReverseWithdrawRenderProperly();
     });
 
-    test.skip('filter reverse withdraws by store @lite @a', async () => {
-        await admin.filterReverseWithdraws(data.predefined.vendorStores.vendor1);
+    test('filter reverse withdraws by store @lite @a', async () => {
+        await admin.filterReverseWithdraws(data.predefined.vendorStores.vendor2);
     });
 
     test('admin can crete reverse withdraws @lite @a', async () => {
-        await admin.addReverseWithdrawal(data.reverseWithdraw);
+        await admin.addReverseWithdrawal({ ...data.reverseWithdraw, store: data.predefined.vendorStores.vendor2, product: productName });
     });
 
     // vendor

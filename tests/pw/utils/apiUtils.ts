@@ -3,7 +3,7 @@ import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
 import { helpers } from '@utils/helpers';
 import fs from 'fs';
-import { auth, user_api, taxRate, coupon_api, marketPlaceCoupon, reqOptions, headers, storageState, responseBody } from '@utils/interfaces';
+import { auth, user_api, taxRate, coupon_api, marketPlaceCoupon, reqOptions, params, headers, storageState, responseBody } from '@utils/interfaces';
 
 const { VENDOR_ID, CUSTOMER_ID } = process.env;
 
@@ -167,7 +167,7 @@ export class ApiUtils {
     }
 
     // create store
-    async createStore(payload: any, auth?: auth): Promise<[responseBody, string, string]> {
+    async createStore(payload: any, auth?: auth, addUserAddress: boolean = false): Promise<[responseBody, string, string]> {
         const [response, responseBody] = await this.post(endPoints.createStore, { data: payload, headers: auth }, false);
         let sellerId: string;
         let storeName: string;
@@ -185,6 +185,10 @@ export class ApiUtils {
             sellerId = String(responseBody?.id);
             storeName = String(responseBody?.store_name);
         }
+
+        // add vendor user address
+        addUserAddress && (await this.updateCustomer(sellerId, payloads.updateAddress, payloads.adminAuth));
+
         return [responseBody, sellerId, storeName];
     }
 
@@ -1011,16 +1015,21 @@ export class ApiUtils {
      */
 
     // get all quote rules
-    async getAllQuoteRules(auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.get(endPoints.getAllQuoteRules, { params: { per_page: 100 }, headers: auth });
+    async getAllQuoteRules(params: params = { per_page: 100 }, auth?: auth): Promise<responseBody> {
+        if (arguments.length === 1 && 'Authorization' in params) {
+            auth = params as auth;
+            params = undefined;
+        }
+        const [, responseBody] = await this.get(endPoints.getAllQuoteRules, { params, headers: auth });
         return responseBody;
     }
 
     // create quote rule
-    async createQuoteRule(payload: object, auth?: auth): Promise<[responseBody, string]> {
+    async createQuoteRule(payload: object, auth?: auth): Promise<[responseBody, string, string]> {
         const [, responseBody] = await this.post(endPoints.createQuoteRule, { data: payload, headers: auth });
         const quoteRuleId = String(responseBody?.id);
-        return [responseBody, quoteRuleId];
+        const quoteRuleName = responseBody?.rule_name;
+        return [responseBody, quoteRuleId, quoteRuleName];
     }
 
     // delete quote rule
@@ -1037,6 +1046,17 @@ export class ApiUtils {
             return;
         }
         const [, responseBody] = await this.put(endPoints.updateBatchQuoteRules, { data: { trash: allQuoteRuleIds }, headers: auth });
+        return responseBody;
+    }
+
+    // delete all quote rules trashed
+    async deleteAllQuoteRulesTrashed(auth?: auth): Promise<responseBody> {
+        const allQuoteRuleIds = (await this.getAllQuoteRules({ status: 'trash', per_page: 100 }, auth)).map((o: { id: unknown }) => o.id);
+        if (!allQuoteRuleIds?.length) {
+            console.log('No quote rule exists');
+            return;
+        }
+        const [, responseBody] = await this.put(endPoints.updateBatchQuoteRules, { data: { delete: allQuoteRuleIds }, headers: auth });
         return responseBody;
     }
 

@@ -91,7 +91,7 @@ export class SpmvPage extends VendorPage {
     }
 
     // got to product edit from spmv
-    async goToProductEditFromSPMV(productName: string): Promise<void> {
+    async goToProductEditFromSpmv(productName: string): Promise<void> {
         await this.searchSimilarProduct(productName, 'spmv');
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, selector.vendor.vSpmv.editProduct(productName));
         await this.toHaveValue(selector.vendor.product.edit.title, productName);

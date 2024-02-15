@@ -2834,6 +2834,132 @@ export const payloads = {
         admin_commission_type: '',
     },
 
+    createStore3: {
+        user_login: process.env.VENDOR3,
+        user_pass: process.env.USER_PASSWORD,
+        user_nicename: process.env.VENDOR3 + 'store',
+        role: 'seller',
+        email: process.env.VENDOR3 + '@yopmail.com',
+        store_name: process.env.VENDOR3 + 'store',
+        first_name: process.env.VENDOR3,
+        last_name: 'v',
+        social: {
+            fb: 'http://dokan.test',
+            youtube: 'http://dokan.test',
+            twitter: 'http://dokan.test',
+            linkedin: 'http://dokan.test',
+            pinterest: 'http://dokan.test',
+            instagram: 'http://dokan.test',
+            flickr: 'http://dokan.test',
+        },
+        phone: '0123456789',
+        show_email: true, // todo:  doesn't work on lite
+        address: {
+            street_1: 'abc street',
+            street_2: 'xyz street',
+            city: 'New York',
+            zip: '10003',
+            state: 'NY',
+            country: 'US',
+        },
+        location: '40.7127753,-74.0059728',
+        banner: 0,
+        banner_id: 0,
+        gravatar: 0,
+        gravatar_id: 0,
+        show_more_product_tab: true,
+        toc_enabled: true, // todo:  doesn't work on lite
+        store_toc: 'test Vendor terms and conditions',
+        featured: true,
+        rating: {
+            rating: '4.00', // todo:  doesn't work on lite
+            count: 1,
+        },
+        enabled: true,
+        payment: {
+            paypal: {
+                0: 'email',
+                email: 'paypal@g.c',
+            },
+            bank: {
+                ac_name: 'account name',
+                ac_type: 'personal',
+                ac_number: '1234567',
+                bank_name: 'bank name',
+                bank_addr: 'bank address',
+                routing_number: '123456',
+                iban: '123456',
+                swift: '12345',
+            },
+            stripe: false,
+        },
+        trusted: true,
+        // store_open_close: {
+        // 	enabled: false,
+        // 	time: [],
+        // 	open_notice: 'Store is open',
+        // 	close_notice: 'Store is closed',
+        // },
+        store_open_close: {
+            // todo:  doesn't work on lite
+            enabled: true,
+            time: {
+                monday: {
+                    status: 'open', // 'close'
+                    opening_time: ['12:00 am'], // []
+                    closing_time: ['11:30 pm'], // []
+                },
+                tuesday: {
+                    status: 'open',
+                    opening_time: ['12:00 am'],
+                    closing_time: ['11:30 pm'],
+                },
+                wednesday: {
+                    status: 'open',
+                    opening_time: ['12:00 am'],
+                    closing_time: ['11:30 pm'],
+                },
+                thursday: {
+                    status: 'open',
+                    opening_time: ['12:00 am'],
+                    closing_time: ['11:30 pm'],
+                },
+                friday: {
+                    status: 'open',
+                    opening_time: ['12:00 am'],
+                    closing_time: ['11:30 pm'],
+                },
+                saturday: {
+                    status: 'open',
+                    opening_time: ['12:00 am'],
+                    closing_time: ['11:30 pm'],
+                },
+                sunday: {
+                    status: 'open',
+                    opening_time: ['12:00 am'],
+                    closing_time: ['11:30 pm'],
+                },
+            },
+            open_notice: 'Store is open',
+            close_notice: 'Store is closed',
+        },
+        company_name: '',
+        vat_number: '',
+        company_id_number: '',
+        bank_name: '',
+        bank_iban: '',
+        categories: [
+            {
+                // id: 74,
+                // name: 'Uncategorized',
+                // slug: 'uncategorized'
+            },
+        ],
+        admin_commission: '',
+        admin_additional_fee: '',
+        admin_commission_type: '',
+    },
+
     createCustomer1: {
         email: process.env.CUSTOMER + '@yopmail.com',
         first_name: 'customer1',
@@ -2871,7 +2997,7 @@ export const payloads = {
     updateAddress: {
         billing: {
             first_name: faker.person.firstName(),
-            last_name: 'c1',
+            last_name: faker.person.lastName(),
             company: '',
             address_1: 'abc street',
             address_2: 'xyz street',
@@ -2884,7 +3010,7 @@ export const payloads = {
         },
         shipping: {
             first_name: faker.person.firstName(),
-            last_name: 'c1',
+            last_name: faker.person.lastName(),
             company: '',
             address_1: 'abc street',
             address_2: 'xyz street',
