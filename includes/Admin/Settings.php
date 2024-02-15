@@ -546,9 +546,21 @@ class Settings {
                         ],
                     ],
                 ],
+            ]
+        );
+
+        $selling_option_fees = apply_filters(
+            'dokan_settings_selling_option_fees', [
+                'ree-recipients' => [
+                    'name'        => 'ree-recipients',
+                    'label'       => __( 'Fee Recipients', 'dokan-lite' ),
+                    'type'        => 'sub_section',
+                    'description' => __( 'Define the fees that admin or vendor will recive', 'dokan-lite' ),
+                    'content_class' => 'sub-section-styles',
+                ],
                 'shipping_fee_recipient' => [
                     'name'    => 'shipping_fee_recipient',
-                    'label'   => __( 'Shipping Fee Recipient', 'dokan-lite' ),
+                    'label'   => __( 'Shipping Fee', 'dokan-lite' ),
                     'desc'    => __( 'Who will be receiving the shipping fees? Note that, tax fees for corresponding shipping method will not be included with shipping fees.', 'dokan-lite' ),
                     'type'    => 'radio',
                     'options' => [
@@ -559,7 +571,7 @@ class Settings {
                 ],
                 'tax_fee_recipient'      => [
                     'name'    => 'tax_fee_recipient',
-                    'label'   => __( 'Product Tax Fee Recipient', 'dokan-lite' ),
+                    'label'   => __( 'Product Tax Fee', 'dokan-lite' ),
                     'desc'    => __( 'Who will be receiving the tax fees for products? Note that, shipping tax fees will not be included with product tax.', 'dokan-lite' ),
                     'type'    => 'radio',
                     'options' => [
@@ -570,7 +582,7 @@ class Settings {
                 ],
                 'shipping_tax_fee_recipient'      => [
                     'name'    => 'shipping_tax_fee_recipient',
-                    'label'   => __( 'Shipping Tax Fee Recipient', 'dokan-lite' ),
+                    'label'   => __( 'Shipping Tax Fee', 'dokan-lite' ),
                     'desc'    => __( 'Who will be receiving the tax fees for shipping?', 'dokan-lite' ),
                     'type'    => 'radio',
                     'options' => [
@@ -646,6 +658,7 @@ class Settings {
                 'dokan_settings_selling_options',
                 array_merge(
                     $selling_option_commission,
+                    $selling_option_fees,
                     $selling_option_vendor_capability
                 )
             ),

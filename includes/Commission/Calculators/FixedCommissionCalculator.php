@@ -2,64 +2,40 @@
 
 namespace WeDevs\Dokan\Commission\Calculators;
 
+use WeDevs\Dokan\Commission\Utils\CommissionSettings;
+
 class FixedCommissionCalculator implements CommissionCalculatorInterface {
-    private $flat;
-    private $percentage;
+
     private $admin_commission = 0;
     private $per_item_admin_commission = 0;
     private $vendor_earning = 0;
     private $items_total_quantity = 1;
-
-    /**
-     * @return mixed
-     */
-    public function get_flat() {
-        return dokan()->commission->validate_rate( $this->flat );
-    }
-
-    /**
-     * @return mixed
-     */
-    public function get_percentage() {
-        return dokan()->commission->validate_rate( $this->percentage );
-    }
+    private CommissionSettings $settings;
     const SOURCE = 'fixed';
-    /**
-     * @var mixed|string
-     */
-    private $type;
 
-    /**
-     * @return mixed|string
-     */
-    public function get_type() {
-        return $this->type;
-    }
-
-    public function __construct( $type, $flat, $percentage ) {
-        $this->flat = $flat;
-        $this->percentage = $percentage;
-        $this->type = $type;
+    public function __construct( CommissionSettings $settings ) {
+        $this->settings = $settings;
     }
 
     public function calculate( $total_amount, $total_quantity = 1 ) {
         $total_quantity = max( $total_quantity, 1 );
-        $flat_calculator = new FlatCommissionCalculator( $this->get_flat() );
-        $percentage_calculator = new PercentageCommissionCalculator( $this->get_percentage() );
+        $flat_calculator = new FlatCommissionCalculator( $this->settings );
+        $percentage_calculator = new PercentageCommissionCalculator( $this->settings );
 
         $flat_calculator->calculate( $total_amount, $total_quantity );
         $percentage_calculator->calculate( $total_amount, $total_quantity );
 
         $this->per_item_admin_commission = $flat_calculator->get_per_item_admin_commission() + $percentage_calculator->get_per_item_admin_commission();
         $this->admin_commission          = $flat_calculator->get_admin_commission() + $percentage_calculator->get_admin_commission();
-        $this->vendor_earning            = $this->vendor_earning = $total_amount - $this->admin_commission;
-        $this->items_total_quantity  = $total_quantity;
+        $this->vendor_earning            = $total_amount - $this->admin_commission;
+        $this->items_total_quantity      = $total_quantity;
     }
 
     public function get_parameters(): array {
         return [
-            'flat' => $this->flat,
-            'percentage' => $this->percentage,
+            'flat'       => $this->settings->get_flat(),
+            'percentage' => $this->settings->get_percentage(),
+            'meta_data'  => $this->settings->get_meta_data(),
         ];
     }
 
@@ -76,19 +52,19 @@ class FixedCommissionCalculator implements CommissionCalculatorInterface {
 
         $all_types = array_keys( $legacy_types );
 
-        return in_array( $this->type, $all_types, true ) || $this->get_type() === self::SOURCE;
+        return in_array( $this->settings->get_type(), $all_types, true ) || $this->settings->get_type() === self::SOURCE;
     }
 
     private function valid_commission(): bool {
-        return is_numeric( $this->flat ) || is_numeric( $this->percentage );
+        return is_numeric( $this->settings->get_flat() ) || is_numeric( $this->settings->get_percentage() );
     }
 
     public function get_admin_commission(): float {
-        return $this->admin_commission;
+        return dokan()->commission->validate_rate( $this->admin_commission );
     }
 
     public function get_vendor_earning(): float {
-        return $this->vendor_earning;
+        return dokan()->commission->validate_rate( $this->vendor_earning );
     }
 
     public function get_per_item_admin_commission(): float {

@@ -5,6 +5,7 @@ namespace WeDevs\Dokan\Vendor;
 use Automattic\WooCommerce\Utilities\NumberUtil;
 use WC_Order;
 use WeDevs\Dokan\Cache;
+use WeDevs\Dokan\Commission\Utils\CommissionSettings;
 use WeDevs\Dokan\Product\ProductCache;
 use WP_Error;
 use WP_Query;
@@ -944,17 +945,6 @@ class Vendor {
     }
 
     /**
-     * Get vendor percentage
-     *
-     * @param  integer $product_id
-     *
-     * @return integer
-     */
-    public function get_percentage( $product_id = 0 ) {
-        return dokan_get_seller_percentage( $this->id, $product_id );
-    }
-
-    /**
      * Make vendor active
      *
      * @since 2.8.0
@@ -1565,5 +1555,21 @@ class Vendor {
      */
     public function save() {
         $this->apply_changes();
+    }
+
+    /**
+     * Returns vendor commission settings data.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return \WeDevs\Dokan\Commission\Utils\CommissionSettings
+     */
+    public function get_commission_settings() {
+        $percentage = $this->get_meta( 'dokan_admin_percentage', true );
+        $type       = $this->get_meta( 'dokan_admin_percentage_type', true );
+        $flat       = $this->get_meta( 'dokan_admin_additional_fee', true );
+        $category  = $this->get_meta( 'admin_category_commission', true ) ?? [];
+
+        return new CommissionSettings( $type, $flat, $percentage, $category, '' );
     }
 }

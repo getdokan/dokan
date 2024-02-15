@@ -33,11 +33,9 @@ class VendorCommissionSourceStrategy extends AbstractCommissionSourceStrategy {
     }
 
     public function get_settings(): CommissionSettings {
-        $percentage = $this->vendor->get_meta( 'dokan_admin_percentage', true );
-        $type       = $this->vendor->get_meta( 'dokan_admin_percentage_type', true );
-        $flat       = $this->vendor->get_meta( 'dokan_admin_additional_fee', true );
-        $category  = $this->vendor->get_meta( 'admin_category_commission', true ) ?? [];
+        $commission_settings = $this->vendor->get_commission_settings();
+        $commission_settings->set_category_id( $this->get_category_id() );
 
-        return new CommissionSettings( $type, $flat, $percentage, $category, $this->get_category_id() );
+        return $commission_settings;
     }
 }

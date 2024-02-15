@@ -35,6 +35,13 @@ class GlobalCommissionSourceStrategy extends AbstractCommissionSourceStrategy {
         $flat       = dokan_get_option( 'additional_fee', 'dokan_selling', '' );
         $category_commissions   = dokan_get_option( 'commission_category_based_values', 'dokan_selling', [] );
 
-        return new CommissionSettings( $type, $flat, $percentage, $category_commissions, $this->get_category_id() );
+        $settings = new CommissionSettings();
+        $settings->set_type( $type )
+                ->set_flat( $flat )
+                ->set_percentage( $percentage )
+                ->set_category_commissions( $category_commissions )
+                ->set_category_id( $this->get_category_id() );
+
+        return $settings;
     }
 }

@@ -429,13 +429,15 @@ if ( ! function_exists( 'dokan_get_seller_percentage' ) ) {
     /**
      * Get store seller percentage settings
      *
+     * @deprecated 3.9.9 Do Not Use This Function
+     *
      * @param int $seller_id
      * @param int $product_id
      *
      * @return int
      */
     function dokan_get_seller_percentage( $seller_id = 0, $product_id = 0, $category_id = 0 ) { // TODO: commission-restructure need to rewrite this full function.
-
+        wc_deprecated_function( __FUNCTION__ , '3.9.9', );
         // Seller will get 100 percent if ( any_input_val < 0 || percentage_input_val > 100 )
         $commission_val = 100;
 
@@ -522,6 +524,13 @@ if ( ! function_exists( 'dokan_get_seller_percentage' ) ) {
  * @return string $type
  */
 function dokan_get_commission_type( $seller_id = 0, $product_id = 0, $category_id = 0 ) { // TODO: commission-restructure need to rewrite this full function...
+    $commission_or_earning = dokan()->commission->get_commission(
+        [
+            'product_id' => $product_id,
+            'vendor_id' => $seller_id,
+            'category_id' => $category_id,
+        ]
+    );
     //return product wise percentage
     if ( $product_id ) {
         $_per_product_commission = get_post_meta( $product_id, '_per_product_admin_commission', true );

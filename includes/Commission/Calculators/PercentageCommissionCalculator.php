@@ -2,35 +2,32 @@
 
 namespace WeDevs\Dokan\Commission\Calculators;
 
+use WeDevs\Dokan\Commission\Utils\CommissionSettings;
+
 class PercentageCommissionCalculator implements CommissionCalculatorInterface {
-    private $percentage = 0;
+
     private $admin_commission = 0;
     private $per_item_admin_commission = 0;
     private $vendor_earning = 0;
     private $items_total_quantity = 1;
+    private CommissionSettings $settings;
 
-    /**
-     * @return mixed
-     */
-    public function get_percentage() {
-        return dokan()->commission->validate_rate( $this->percentage );
-    }
     const SOURCE = 'percentage';
 
-    public function __construct( $percentage ) {
-        $this->percentage = $percentage;
+    public function __construct( CommissionSettings $settings ) {
+        $this->settings = $settings;
     }
 
     public function calculate( $total_amount, $total_quantity = 1 ) {
-        $this->admin_commission = ( $total_amount * $this->get_percentage() ) / 100;
+        $this->admin_commission          = ( $total_amount * dokan()->commission->validate_rate( $this->settings->get_percentage() ) ) / 100;
         $this->per_item_admin_commission = $this->admin_commission / $total_quantity;
-        $this->vendor_earning   = $total_amount - $this->admin_commission;
+        $this->vendor_earning            = $total_amount - $this->admin_commission;
 
         // vendor will get 100 percent if commission rate > 100
         // TODO: commission-restructure need to re-consider this about the vendor earning and admin commission.
-        if ( $this->get_percentage() > 100 ) {
-            $this->vendor_earning   = $total_amount;
-            $this->admin_commission = 0;
+        if ( $this->settings->get_percentage() > 100 ) {
+            $this->admin_commission = $total_amount;
+            $this->vendor_earning   = 0;
         }
 
         $this->items_total_quantity = $total_quantity;
@@ -38,7 +35,8 @@ class PercentageCommissionCalculator implements CommissionCalculatorInterface {
 
     public function get_parameters(): array {
         return [
-            'percentage' => $this->percentage,
+            'percentage' => $this->settings->get_percentage(),
+            'meta_data'  => $this->settings->get_meta_data(),
         ];
     }
 
@@ -47,15 +45,15 @@ class PercentageCommissionCalculator implements CommissionCalculatorInterface {
     }
 
     public function is_applicable(): bool {
-        return is_numeric( $this->percentage );
+        return is_numeric( $this->settings->get_percentage() );
     }
 
     public function get_admin_commission(): float {
-        return $this->admin_commission;
+        return dokan()->commission->validate_rate( $this->admin_commission );
     }
 
     public function get_vendor_earning(): float {
-        return $this->vendor_earning;
+        return dokan()->commission->validate_rate( $this->vendor_earning );
     }
 
     public function get_per_item_admin_commission(): float {

@@ -23,9 +23,14 @@ class ProductCommissionSourceStrategy extends AbstractCommissionSourceStrategy {
 
     public function get_settings(): CommissionSettings {
         $percentage = $this->product ? $this->product->get_meta( '_per_product_admin_commission', true ) : '';
-        $type = $this->product ? $this->product->get_meta( '_per_product_admin_commission_type', true ) : '';
-        $flat = $this->product ? $this->product->get_meta( '_per_product_admin_additional_fee', true ) : '';
+        $type       = $this->product ? $this->product->get_meta( '_per_product_admin_commission_type', true ) : '';
+        $flat       = $this->product ? $this->product->get_meta( '_per_product_admin_additional_fee', true ) : '';
 
-        return new CommissionSettings( $type, $flat, $percentage );
+        $settings = new CommissionSettings();
+        $settings->set_type( $type )
+                ->set_flat( $flat )
+                ->set_percentage( $percentage );
+
+        return $settings;
     }
 }

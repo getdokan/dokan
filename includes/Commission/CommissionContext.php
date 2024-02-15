@@ -33,7 +33,8 @@ class CommissionContext {
                     'per_item_admin_commission' => $calculator->get_per_item_admin_commission(),
                     'admin_commission'          => $calculator->get_admin_commission(),
                     'vendor_earning'            => $calculator->get_vendor_earning(),
-                    'items_total_quantity'      => $calculator->get_items_total_quantity(),
+                    'total_quantity'      => $calculator->get_items_total_quantity(),
+                    'total_amount'        => $total_amount,
                     'type'                      => $calculator->get_source(),
                     'parameters'                => $calculator->get_parameters(),
                 ];
@@ -45,8 +46,9 @@ class CommissionContext {
             'source'                    => 'none',
             'per_item_admin_commission' => '',
             'admin_commission'          => 0,
-            'vendor_earning'            => 0,
-            'items_total_quantity'      => 1,
+            'vendor_earning'            => $total_amount,
+            'total_quantity'      => $total_quantity,
+            'total_amount'        => $total_amount,
             'type'                      => 'none',
             'parameters'                => [],
         ];

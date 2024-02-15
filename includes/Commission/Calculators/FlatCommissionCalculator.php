@@ -2,35 +2,31 @@
 
 namespace WeDevs\Dokan\Commission\Calculators;
 
+use WeDevs\Dokan\Commission\Utils\CommissionSettings;
+
 class FlatCommissionCalculator implements CommissionCalculatorInterface {
-    private $flat;
+    private $flat_commission = 0;
+    private CommissionSettings $settings;
     private $per_item_admin_commission = 0;
     private $admin_commission = 0;
     private $vendor_earning = 0;
     private $items_total_quantity = 1;
 
-    /**
-     * @return mixed
-     */
-    public function get_flat() {
-        return dokan()->commission->validate_rate( $this->flat );
-    }
-
     const SOURCE = 'flat';
 
-    public function __construct( $flat ) {
-        $this->flat = $flat;
+    public function __construct( CommissionSettings $settings ) {
+        $this->settings = $settings;
     }
 
     public function calculate( $total_amount, $total_quantity = 1 ) {
         $total_quantity = max( $total_quantity, 1 );
 
-        $this->per_item_admin_commission = $this->flat;
+        $this->per_item_admin_commission = dokan()->commission->validate_rate( $this->settings->get_flat() );
         if ( (int) $total_quantity > 1 ) {
-            $this->flat *= apply_filters( 'dokan_commission_multiply_by_order_quantity', $total_quantity );
+            $this->flat_commission = $this->per_item_admin_commission * apply_filters( 'dokan_commission_multiply_by_order_quantity', $total_quantity );
         }
 
-        $this->admin_commission = $this->get_flat();
+        $this->admin_commission = $this->flat_commission;
 
         if ( $this->admin_commission > $total_amount ) { // TODO: commission-restruture need discussion that if total amount is less then commission then admin commission will be 0/vendor earning is 0, here admin commissin is 0 in percentage vendor earnig was 0
             $this->admin_commission = $total_amount;
@@ -42,7 +38,8 @@ class FlatCommissionCalculator implements CommissionCalculatorInterface {
 
     public function get_parameters(): array {
         return [
-            'flat' => $this->flat,
+            'flat'      => $this->settings->get_flat(),
+            'meta_data' => $this->settings->get_meta_data(),
         ];
     }
 
@@ -51,7 +48,7 @@ class FlatCommissionCalculator implements CommissionCalculatorInterface {
     }
 
     public function is_applicable(): bool {
-        return is_numeric( $this->flat );
+        return is_numeric( $this->settings->get_flat() );
     }
 
     public function get_admin_commission(): float {
@@ -66,8 +63,7 @@ class FlatCommissionCalculator implements CommissionCalculatorInterface {
         return dokan()->commission->validate_rate( $this->per_item_admin_commission );
     }
 
-    public function get_items_total_quantity()
-    : int {
+    public function get_items_total_quantity(): int {
         return $this->items_total_quantity;
     }
 }

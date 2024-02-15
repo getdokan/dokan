@@ -623,14 +623,21 @@ class StoreController extends WP_REST_Controller {
     /**
      * Prepare a single user output for response
      *
-     * @param $store
+     * @param Vendor $store
      * @param WP_REST_Request $request Request object.
      * @param array $additional_fields (optional)
      *
      * @return WP_REST_Response $response Response data.
      */
     public function prepare_item_for_response( $store, $request, $additional_fields = [] ) {
-        $data     = $store->to_array();
+        $data = $store->to_array();
+
+        $commission_settings               = $store->get_commission_settings();
+        $data['admin_category_commission'] = $commission_settings->get_category_commissions();
+        $data['admin_commission']          = $commission_settings->get_percentage();
+        $data['admin_additional_fee']      = $commission_settings->get_flat();
+        $data['admin_commission_type']     = $commission_settings->get_type();
+
         $data     = array_merge( $data, apply_filters( 'dokan_rest_store_additional_fields', $additional_fields, $store, $request ) );
         $response = rest_ensure_response( $data );
         $response->add_links( $this->prepare_links( $data, $request ) );

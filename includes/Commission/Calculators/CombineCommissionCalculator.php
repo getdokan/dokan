@@ -2,63 +2,39 @@
 
 namespace WeDevs\Dokan\Commission\Calculators;
 
+use WeDevs\Dokan\Commission\Utils\CommissionSettings;
+
 class CombineCommissionCalculator implements CommissionCalculatorInterface {
-    private $flat;
-    private $percentage;
+
     private $per_item_admin_commission = 0;
     private $admin_commission = 0;
     private $vendor_earning = 0;
     private $items_total_quantity = 1;
-
-    /**
-     * @return mixed
-     */
-    public function get_flat() {
-        return $this->flat;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function get_percentage() {
-        return $this->percentage;
-    }
+    private CommissionSettings $settings;
     const SOURCE = 'fixed';
-    /**
-     * @var mixed|string
-     */
-    private $type;
 
-    /**
-     * @return mixed|string
-     */
-    public function get_type() {
-        return $this->type;
-    }
-
-    public function __construct( $type, $flat, $percentage ) {
-        $this->flat = $flat;
-        $this->percentage = $percentage;
-        $this->type = $type;
+    public function __construct( CommissionSettings $settings ) {
+        $this->settings = $settings;
     }
 
     public function calculate( $total_amount, $total_quantity = 1 ) {
-        $percent_commission = $total_amount * ( $this->percentage / 100 );
-        $commission         = (float) $this->flat + $percent_commission;
+        $percent_commission = $total_amount * ( dokan()->commission->validate_rate( $this->settings->get_percentage() ) / 100 );
+        $commission         = (float) dokan()->commission->validate_rate( $this->settings->get_flat() ) + $percent_commission;
 
-        $per_item_flat       = $this->get_flat() / $total_quantity;
+        $per_item_flat       = dokan()->commission->validate_rate( $this->settings->get_flat() ) / $total_quantity;
         $per_item_percentage = $percent_commission / $total_quantity;
 
         $this->admin_commission          = $commission;
         $this->vendor_earning            = $total_amount - $this->admin_commission;
         $this->per_item_admin_commission = $per_item_flat + $per_item_percentage;
-        $this->items_total_quantity = 1;
+        $this->items_total_quantity      = $total_quantity;
     }
 
     public function get_parameters(): array {
         return [
-            'flat' => $this->flat,
-            'percentage' => $this->percentage,
+            'flat'       => $this->settings->get_flat(),
+            'percentage' => $this->settings->get_percentage(),
+            'meta_data'  => $this->settings->get_meta_data(),
         ];
     }
 
@@ -75,11 +51,11 @@ class CombineCommissionCalculator implements CommissionCalculatorInterface {
 
         $all_types = array_keys( $legacy_types );
 
-        return in_array( $this->type, $all_types, true ) || $this->get_type() === self::SOURCE;
+        return in_array( $this->settings->get_type(), $all_types, true ) || $this->settings->get_type() === self::SOURCE;
     }
 
     private function valid_commission(): bool {
-        return is_numeric( $this->flat ) || is_numeric( $this->percentage );
+        return is_numeric( $this->settings->get_flat() ) || is_numeric( $this->settings->get_percentage() );
     }
 
     public function get_admin_commission(): float {

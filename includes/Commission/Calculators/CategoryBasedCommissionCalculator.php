@@ -5,11 +5,20 @@ namespace WeDevs\Dokan\Commission\Calculators;
 use WeDevs\Dokan\Commission\Utils\CommissionSettings;
 
 class CategoryBasedCommissionCalculator implements CommissionCalculatorInterface {
-    private $category_commissions = [];
     private $admin_commission = 0;
     private $per_item_admin_commission = 0;
     private $vendor_earning = 0;
     private $items_total_quantity = 1;
+    private $meta_data = [];
+    private CommissionSettings $settings;
+
+    public function get_meta_data(): array {
+        return $this->meta_data;
+    }
+
+    public function set_meta_data( array $meta_data ): void {
+        $this->meta_data = $meta_data;
+    }
     const SOURCE = 'category_based';
     private FixedCommissionCalculator $fixed_commission_calculator;
     /**
@@ -24,44 +33,38 @@ class CategoryBasedCommissionCalculator implements CommissionCalculatorInterface
     /**
      * @return mixed
      */
-    public function get_category_id() {
-        return $this->category_id;
-    }
-
-    public function get_category_commissions(): array {
-        return $this->category_commissions;
-    }
-
-    /**
-     * @return mixed
-     */
     public function get_type() {
         return $this->type;
     }
 
-    public function __construct( $type, $category_id, array $category_commissions ) {
-        $this->category_commissions = $category_commissions;
-        $this->type = $type;
-        $this->category_id = $category_id;
+    public function __construct( CommissionSettings $settings ) {
+		//        $this->category_commissions = $settings->get_category_commissions();
+		//        $this->type = $settings->get_type();
+		//        $this->category_id = $settings->get_category_id();
+
+        $this->settings = $settings;
     }
 
     public function calculate( $total_amount, $total_quantity = 1 ) {
-        $total_quantity = max( $total_quantity, 1 );
-        $valid_commission = $this->get_valid_commission();
+        $total_quantity            = max( $total_quantity, 1 );
+        $valid_commission_settings = $this->get_valid_commission_settings();
+        $valid_commission_settings->set_type( FixedCommissionCalculator::SOURCE );
+
         // Use FixedCommissionCalculator for the calculation
-        $this->fixed_commission_calculator = new FixedCommissionCalculator( FixedCommissionCalculator::SOURCE, $valid_commission['flat'], $valid_commission['percentage'] );
+        $this->fixed_commission_calculator = new FixedCommissionCalculator( $valid_commission_settings );
         $this->fixed_commission_calculator->calculate( $total_amount, $total_quantity );
 
         $this->per_item_admin_commission = $this->fixed_commission_calculator->get_per_item_admin_commission();
-        $this->admin_commission = $this->fixed_commission_calculator->get_admin_commission();
-        $this->vendor_earning = $this->fixed_commission_calculator->get_vendor_earning();
-        $this->items_total_quantity = $total_quantity;
+        $this->admin_commission          = $this->fixed_commission_calculator->get_admin_commission();
+        $this->vendor_earning            = $this->fixed_commission_calculator->get_vendor_earning();
+        $this->items_total_quantity      = $total_quantity;
     }
 
     public function get_parameters(): array {
         $parameters = $this->fixed_commission_calculator->get_parameters();
 
-        $parameters['category_id'] = $this->get_category_id();
+        $parameters['category_id'] = $this->settings->get_category_id();
+        $parameters['meta_data'] = $this->settings->get_meta_data();
 
         return $parameters;
     }
@@ -76,38 +79,45 @@ class CategoryBasedCommissionCalculator implements CommissionCalculatorInterface
     }
 
     private function valid_commission_type(): bool {
-        return $this->get_type() === $this->get_source();
+        return $this->settings->get_type() === $this->get_source();
     }
 
     private function is_valid_commission(): bool {
-        if ( is_numeric( $this->get_category_id() ) && isset( $this->get_category_commissions()['items'][ $this->get_category_id() ] ) ) {
+        if ( is_numeric( $this->settings->get_category_id() ) && isset( $this->settings->get_category_commissions()['items'][ $this->settings->get_category_id() ] ) ) {
             return true;
-        } elseif ( is_numeric( $this->get_category_commissions()['all']['flat'] ) || is_numeric( $this->get_category_commissions()['all']['percentage'] ) ) {
+        } elseif ( is_numeric( $this->settings->get_category_commissions()['all']['flat'] ) || is_numeric( $this->settings->get_category_commissions()['all']['percentage'] ) ) {
             return true;
         }
 
         return false;
     }
 
-    private function get_valid_commission(): array {
-        if ( is_numeric( $this->get_category_id() ) && isset( $this->get_category_commissions()['items'][ $this->get_category_id() ] ) ) {
-            $commission = $this->get_category_commissions()['items'][ $this->get_category_id() ];
-            return [
-                'flat' => $commission['flat'] ?? 0,
-                'percentage' => $commission['percentage'] ?? 0,
+    private function get_valid_commission_settings(): CommissionSettings {
+        if ( is_numeric( $this->settings->get_category_id() ) && isset( $this->settings->get_category_commissions()['items'][ $this->settings->get_category_id() ] ) ) {
+            $commissions = $this->settings->get_category_commissions();
+
+            $items = $commissions['items'];
+            $item = $items[ $this->settings->get_category_id() ];
+            $item = [
+                'flat'       => $item['flat'] ?? 0,
+                'percentage' => $item['percentage'] ?? 0,
             ];
-        } elseif ( is_numeric( $this->get_category_commissions()['all']['flat'] ) || is_numeric( $this->get_category_commissions()['all']['percentage'] ) ) {
-            $commission = $this->get_category_commissions()['all'];
-            return [
-                'flat' => $commission['flat'] ?? 0,
-                'percentage' => $commission['percentage'] ?? 0,
+
+            $items[ $this->settings->get_category_id() ] = $item;
+            $commissions['items'] = $items;
+            $this->settings->set_category_commissions( $commissions );
+        } elseif ( is_numeric( $this->settings->get_category_commissions()['all']['flat'] ) || is_numeric( $this->settings->get_category_commissions()['all']['percentage'] ) ) {
+            $commissions = $this->settings->get_category_commissions();
+            $all = $commissions['all'];
+            $commissions['all'] = [
+                'flat' => $all['flat'] ?? 0,
+                'percentage' => $all['percentage'] ?? 0,
             ];
+
+            $this->settings->set_category_commissions( $commissions );
         }
 
-        return [
-            'flat' => 0,
-            'percentage' => 0,
-        ];
+        return $this->settings;
     }
 
     public function get_admin_commission(): float {
