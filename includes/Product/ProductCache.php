@@ -70,6 +70,12 @@ class ProductCache {
      * @return void
      */
     public static function delete( $seller_id ) {
+        $proceed = apply_filters( 'dokan_product_cache_delete_all_data', true, $seller_id );
+
+        if ( ! $proceed ) {
+            return;
+        }
+
         Cache::invalidate_group( 'product_data' );
         Cache::invalidate_group( "seller_product_data_{$seller_id}" );
         Cache::invalidate_group( "seller_product_stock_data_{$seller_id}" );
