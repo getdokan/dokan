@@ -80,8 +80,8 @@ test.describe('support ticket api test', () => {
         expect(responseBody).toBeTruthy();
 
         // reopen all support tickets
-        for (const supportTicketId of allSupportTicketIds) {
-            await apiUtils.updateSupportTicketStatus(supportTicketId, 'open');
-        }
+        // for (const supportTicketId of allSupportTicketIds) {
+        //     await apiUtils.updateSupportTicketStatus(supportTicketId, 'open');
+        // }
     });
 });

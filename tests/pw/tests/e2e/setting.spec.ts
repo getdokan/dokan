@@ -140,5 +140,4 @@ test.describe.skip('Settings test', () => {
         await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, order_status_change: 'off' });
         await vendor.setOrderStatusChangeCapability(orderId, 'off');
     });
-
 });

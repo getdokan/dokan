@@ -3463,7 +3463,7 @@ export const selector = {
 
             // Product Sub Options
             numberOfRowsFound: '#dokan-product-list-table tbody tr',
-            productCell: (productName: string) => `//a[contains(text(),'${productName}')]/../..`,
+            productCell: (productName: string) => `//strong//a[contains(text(),'${productName}')]/../..`,
             productLink: (productName: string) => `//strong//a[contains(text(),'${productName}')]`,
             editProduct: (productName: string) => `//a[contains(text(),'${productName}')]/../..//span[@class="edit"]//a`,
             buyAdvertisement: (productName: string) => `//a[contains(text(),'${productName}')]/../../..//td[@class="product-advertisement-td"]//span`,

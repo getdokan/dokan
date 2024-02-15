@@ -33,7 +33,7 @@ test.describe('Product addon functionality test', () => {
         await apiUtils.deleteAllProductAddons(payloads.adminAuth);
         await vPage.close();
         await apiUtils.dispose();
-    });
+    }); 
 
     test('vendor product addons menu page is rendering properly @pro @exp @v', async () => {
         await vendor.vendorProductAddonsSettingsRenderProperly();

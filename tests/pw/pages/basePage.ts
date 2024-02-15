@@ -264,7 +264,9 @@ export class BasePage {
 
     // type & wait for response
     async typeViaPageAndWaitForResponse(subUrl: string, selector: string, text: string, code = 200): Promise<Response> {
-        const [response] = await Promise.all([this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code), this.page.locator(selector).pressSequentially(text, { delay: 100 })]);
+        const [response] = await Promise.all([
+            this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code),
+             this.page.locator(selector).pressSequentially(text, { delay: 100 })]);
         return response;
     }
 
@@ -272,7 +274,6 @@ export class BasePage {
     async typeAndWaitForResponse(subUrl: string, selector: string, text: string, code = 200): Promise<Response> {
         const [response] = await Promise.all([
             this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code),
-            // await this.page.locator(selector).pressSequentially(text),
             this.clearAndFill(selector, text),
         ]);
         return response;
@@ -874,7 +875,8 @@ export class BasePage {
     // check locator
     async checkLocator(selector: string): Promise<void> {
         const locator = this.page.locator(selector);
-        await locator.check({ force: true }); // forced is used to avoid "locator.check: Clicking the checkbox did not change its state" error
+        await locator.check();
+        // await locator.check({ force: true }); // forced is used to avoid "locator.check: Clicking the checkbox did not change its state" error
     }
 
     // click locator

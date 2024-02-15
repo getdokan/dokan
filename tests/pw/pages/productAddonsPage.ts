@@ -22,13 +22,13 @@ export class ProductAddonsPage extends VendorPage {
         // create new addon text is visible
         await this.toBeVisible(selector.vendor.vAddonSettings.createNewAddon);
 
-        // create new  text is visible
+        // create new text is visible
         await this.toBeVisible(selector.vendor.vAddonSettings.createNew);
 
         // product addon table elements are visible
         await this.multipleElementVisible(selector.vendor.vAddonSettings.table);
 
-        await this.click(selector.vendor.vAddonSettings.createNewAddon);
+        await this.clickAndWaitForLoadState(selector.vendor.vAddonSettings.createNewAddon);
         await this.click(selector.vendor.vAddonSettings.addon.addField);
         await this.check(selector.vendor.vAddonSettings.addon.enableDescription);
 
@@ -69,7 +69,7 @@ export class ProductAddonsPage extends VendorPage {
     // add addon
     async addAddon(addon: vendor['addon']) {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsAddon);
-        await this.click(selector.vendor.vAddonSettings.createNewAddon);
+        await this.clickAndWaitForLoadState(selector.vendor.vAddonSettings.createNewAddon);
         await this.updateAddonFields(addon);
     }
 

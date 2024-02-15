@@ -46,9 +46,9 @@ test.describe('Tools test', () => {
         await admin.regenerateVariableProductVariationsAuthorIds();
     });
 
-    test.skip('admin can import dummy data @pro', async ( ) => {
+    test.skip('admin can import dummy data @pro', async () => {
         // todo: need to fix
-    	await admin.importDummyData();
+        await admin.importDummyData();
     });
 
     test('admin can clear dummy data @pro @a', async () => {

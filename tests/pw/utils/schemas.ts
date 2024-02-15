@@ -605,21 +605,23 @@ export const schemas = {
         adminExportLogsSchema: z.object({
             step: z.string().or(z.number()),
             percentage: z.number(),
-            columns: z.object({
-                order_id: z.string(),
-                vendor_id: z.string(),
-                vendor_name: z.string(),
-                previous_order_total: z.string(),
-                order_total: z.string(),
-                vendor_earning: z.string(),
-                commission: z.string(),
-                dokan_gateway_fee: z.string(),
-                gateway_fee_paid_by: z.string(),
-                shipping_total: z.string(),
-                tax_total: z.string(),
-                status: z.string(),
-                date: z.string(),
-            }).or(z.null()),
+            columns: z
+                .object({
+                    order_id: z.string(),
+                    vendor_id: z.string(),
+                    vendor_name: z.string(),
+                    previous_order_total: z.string(),
+                    order_total: z.string(),
+                    vendor_earning: z.string(),
+                    commission: z.string(),
+                    dokan_gateway_fee: z.string(),
+                    gateway_fee_paid_by: z.string(),
+                    shipping_total: z.string(),
+                    tax_total: z.string(),
+                    status: z.string(),
+                    date: z.string(),
+                })
+                .or(z.null()),
         }),
     },
 

@@ -36,6 +36,7 @@ test.describe('announcements api test', () => {
 
     test('get single announcement @pro', async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getSingleAnnouncement(announcementId));
+        console.log(responseBody);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
         expect(responseBody).toMatchSchema(schemas.announcementsSchema.announcementSchema);

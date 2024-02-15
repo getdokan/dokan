@@ -152,8 +152,8 @@ test.describe('Product functionality test', () => {
         await vendor.addProductDescription(productName, data.product.productInfo.description);
     });
 
-    test.skip('vendor can add product quantity discount @pro @v', async ( ) => {
-    	await vendor.addProductQuantityDiscount(productName, data.product.productInfo.quantityDiscount);
+    test.skip('vendor can add product quantity discount @pro @v', async () => {
+        await vendor.addProductQuantityDiscount(productName, data.product.productInfo.quantityDiscount);
     });
 
     test('vendor can add product rma options @pro @v', async () => {

@@ -51,14 +51,14 @@ test.describe('refunds api test', () => {
     });
 
     test('approve a refund @pro', async () => {
-        const [, refundId] = await dbUtils.createRefund(orderResponseBody);
+        const [, refundId] = await dbUtils.createRefundRequest(orderResponseBody);
         const [response, responseBody] = await apiUtils.put(endPoints.approveRefund(refundId));
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
     test('update batch refunds @pro', async () => {
-        await dbUtils.createRefund(orderResponseBody);
+        await dbUtils.createRefundRequest(orderResponseBody);
         const allPendingRefundsIds = (await apiUtils.getAllRefunds('pending', payloads.vendorAuth)).map((a: { id: unknown }) => a.id);
         const [response, responseBody] = await apiUtils.put(endPoints.updateBatchRefunds, { data: { cancelled: allPendingRefundsIds } });
         expect(response.ok()).toBeTruthy();

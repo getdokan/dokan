@@ -251,7 +251,7 @@ test.describe.skip('commission test', () => {
             ];
             console.table(table);
         } else {
-                    // todo:  modify for lite as well
+            // todo:  modify for lite as well
             const table = [
                 [`OID: ${oid}`, 'OrderTotal', 'VendorEarning', 'AdmminCommission', 'GatewayFee', 'ShippingFee', 'ShippingTax', 'ProductTax'],
                 ['Expected', calculatedOrderTotal, calculatedVendorEarning, calculatedAdminCommission, gatewayFee, providedShippingFee, calculatedShippingTax, calculatedProductTax],

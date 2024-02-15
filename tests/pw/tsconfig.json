@@ -27,7 +27,7 @@
             "@payloads": ["utils/payloads"],
             "@schemas": ["utils/schemas"],
             "@testData": ["utils/testData"],
-            "@pwMatchers": ["utils/pwMatchers"],
+            "@pwMatchers": ["utils/pwMatchers"]
         },
         "esModuleInterop": true /* fixes some issues TS originally had with the ES6 spec where TypeScript treats CommonJS/AMD/UMD modules similar to ES6 module*/,
         "moduleResolution": "node" /* Pretty much always node for modern JS. Other option is "classic"*/,
@@ -56,7 +56,7 @@
         "noImplicitReturns": true /* Report error when not all code paths in function return a value. */,
         "noUncheckedIndexedAccess": true /* accessing index must always check for undefined*/,
         "noFallthroughCasesInSwitch": true /* Report errors for fallthrough cases in switch statement. */,
-        "forceConsistentCasingInFileNames": true /* Force consistent Casing In File Names */,
+        "forceConsistentCasingInFileNames": true /* Force consistent Casing In File Names */
     },
-    "exclude": ["node_modules/**/*", "playwright/**/*", "playwright-report/**/*"],
+    "exclude": ["node_modules/**/*", "playwright/**/*", "playwright-report/**/*"]
 }
