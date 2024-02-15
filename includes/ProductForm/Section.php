@@ -27,8 +27,9 @@ class Section extends Component {
      */
     public function __construct( string $id, array $args = [] ) {
         $data       = [
-            'type'   => 'default', // field type, accept value can be 'default', 'custom'
-            'fields' => [],
+            'type'         => 'default', // field type, accept value can be 'default', 'custom'
+            'fields'       => [],
+            'product_type' => '',
         ];
         $this->data = array_merge( $this->data, $data );
 
@@ -134,6 +135,32 @@ class Section extends Component {
      */
     public function set_type( string $type ): Section {
         $this->data['type'] = in_array( $type, [ 'default', 'custom' ], true ) ? sanitize_key( $type ) : 'other';
+
+        return $this;
+    }
+
+    /**
+     * Get product type for the current section.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return string
+     */
+    public function get_product_type(): string {
+        return $this->data['product_type'];
+    }
+
+    /**
+     * Set product type for the current section.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $product_type
+     *
+     * @return $this
+     */
+    public function set_product_type( string $product_type ): Section {
+        $this->data['product_type'] = ! empty( $product_type ) ? $product_type : '';
 
         return $this;
     }
