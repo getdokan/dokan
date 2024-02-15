@@ -19,7 +19,7 @@ test.describe('refunds api test', () => {
     test.beforeAll(async () => {
         apiUtils = new ApiUtils(await request.newContext());
         [, orderResponseBody] = await apiUtils.createOrderWithStatus(payloads.createProduct(), payloads.createOrder, 'wc-processing', payloads.vendorAuth);
-        [, refundId] = await dbUtils.createRefund(orderResponseBody);
+        [, refundId] = await dbUtils.createRefundRequest(orderResponseBody);
     });
 
     test.afterAll(async () => {

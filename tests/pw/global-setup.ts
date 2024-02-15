@@ -9,10 +9,10 @@ async function globalSetup(config: FullConfig) {
     console.log('Global Setup running....');
 
     // rewrite permalink structure
-    !CI && helpers.execommand(data.command.permalinkLocal);
+    !CI && helpers.exeCommand(data.command.permalinkLocal);
 
     // activate theme: storefront
-    !CI && helpers.execommand(data.command.activateTheme);
+    !CI && helpers.exeCommand(data.command.activateTheme);
 
     // get site url structure
     let serverUrl = config.projects[0]?.use.baseURL as string;

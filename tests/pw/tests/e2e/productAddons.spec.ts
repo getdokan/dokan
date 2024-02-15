@@ -17,7 +17,6 @@ test.describe('Product addon functionality test', () => {
     async function createVendorProductAddon(): Promise<[string, string, string]> {
         const [, addonId, addonName, addonFieldTitle] = await apiUtils.createProductAddon(payloads.createProductAddons(), payloads.adminAuth);
         await dbUtils.updateCell(addonId, VENDOR_ID);
-        console.log(addonId, addonName, addonFieldTitle);
         return [addonId, addonName, addonFieldTitle];
     }
 

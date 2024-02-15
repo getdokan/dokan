@@ -87,9 +87,9 @@ test.describe('Request for quotation test vendor', () => {
         vPage = await vendorContext.newPage();
         vendor = new RequestForQuotationsPage(vPage);
 
-        // apiUtils = new ApiUtils(await request.newContext());
-        // [, productId[0], productName] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendorAuth);
-        // [, quoteId, quoteTitle] = await apiUtils.createQuoteRequest({ ...payloads.createQuoteRequest(), product_ids: productId, user_id: CUSTOMER_ID }, payloads.adminAuth);
+        apiUtils = new ApiUtils(await request.newContext());
+        [, productId[0], productName] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendorAuth);
+        [, quoteId, quoteTitle] = await apiUtils.createQuoteRequest({ ...payloads.createQuoteRequest(), product_ids: productId, user_id: CUSTOMER_ID }, payloads.adminAuth);
     });
 
     test.afterAll(async () => {
