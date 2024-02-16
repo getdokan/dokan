@@ -72,6 +72,29 @@
             this.setCorrectProductId();
 
             $( 'body' ).trigger( 'dokan-product-editor-loaded', this );
+
+            this.renderCustomSectionBasedOnCategory();
+
+            wp.hooks.addAction(
+                'dokan_selected_multistep_category',
+                'render_custom_section_based_on_chosen_category',
+                Dokan_Editor.renderCustomSectionBasedOnCategory
+            );
+        },
+
+        renderCustomSectionBasedOnCategory: function( categoryId ) {
+            let productCatSelectorVal = $( '.dokan_chosen_product_cat' ).val();
+            let productCustomSections = $( '.dokan-product-custom-section' );
+
+            productCustomSections.each( function() {
+                let sectionCatId = $( this ).data( 'category-id' );
+
+                if ( sectionCatId == productCatSelectorVal || 0 == sectionCatId ) {
+                    $( this ).removeClass( 'dokan-hide' );
+                } else {
+                    $( this ).addClass( 'dokan-hide' );
+                }
+            } );
         },
 
         setCorrectProductId : function () {
