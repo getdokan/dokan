@@ -31,13 +31,12 @@ test.describe('announcements api test', () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllAnnouncements);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
-        // expect(responseBody).toMatchSchema(schemas.announcementsSchema.announcementsSchema);
-        // expect('2024-02-15 18:29:19').toMatchSchema(schemas.announcementsSchema.announcementsSchema);
+        console.log(responseBody);
+        expect(responseBody).toMatchSchema(schemas.announcementsSchema.announcementsSchema);
     });
 
     test('get single announcement @pro', async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getSingleAnnouncement(announcementId));
-        console.log(responseBody);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
         expect(responseBody).toMatchSchema(schemas.announcementsSchema.announcementSchema);

@@ -11,7 +11,6 @@ test.describe('Booking Product test', () => {
     let aPage: Page, vPage: Page, cPage: Page;
     let apiUtils: ApiUtils;
     let bookableProductName: string;
-    const bookingResourceName = data.product.booking.resource.resourceName();
 
     test.beforeAll(async ({ browser }) => {
         const adminContext = await browser.newContext(data.auth.adminAuth);
@@ -28,7 +27,6 @@ test.describe('Booking Product test', () => {
 
         apiUtils = new ApiUtils(await request.newContext());
         [, , bookableProductName] = await apiUtils.createBookableProduct(payloads.createBookableProduct(), payloads.vendorAuth);
-        await vendor.addBookingResource(bookingResourceName); // todo: convert with api or db
     });
 
     test.afterAll(async () => {
@@ -104,12 +102,14 @@ test.describe('Booking Product test', () => {
     });
 
     test('vendor can edit booking resource @pro @v', async () => {
+        const bookingResourceName = data.product.booking.resource.resourceName();
+        await vendor.addBookingResource(bookingResourceName); // todo: convert with api
         await vendor.editBookingResource({ ...data.product.booking.resource, name: bookingResourceName });
     });
 
     test('vendor can delete booking resource @pro @v', async () => {
         const bookingResourceName = data.product.booking.resource.resourceName();
-        await vendor.addBookingResource(bookingResourceName);
+        await vendor.addBookingResource(bookingResourceName); // todo: convert with api
         await vendor.deleteBookingResource(bookingResourceName);
     });
 
