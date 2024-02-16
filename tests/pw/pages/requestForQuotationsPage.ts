@@ -97,7 +97,7 @@ export class RequestForQuotationsPage extends AdminPage {
 
     // update quote rule
     async updateQuoteRule(quoteTitle: string, action: string) {
-        await this.goto(data.subUrls.backend.dokan.requestForQuoteRules);
+        await this.goIfNotThere(data.subUrls.backend.dokan.requestForQuoteRules);
 
         switch (action) {
             case 'trash':

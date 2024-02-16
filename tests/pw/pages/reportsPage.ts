@@ -62,7 +62,7 @@ export class ReportsPage extends AdminPage {
 
         await this.clearInputField(selector.admin.dokan.reports.allLogs.search);
         await this.typeAndWaitForResponseAndLoadState(data.subUrls.api.dokan.logs, selector.admin.dokan.reports.allLogs.search, orderId);
-        await this.wait(1); // todo: add dynamic wait instead of this
+        await this.notToBeVisible(selector.admin.dokan.loader);
         await this.toBeVisible(selector.admin.dokan.reports.allLogs.orderIdCell(orderId));
         const count = (await this.getElementText(selector.admin.dokan.reports.allLogs.numberOfRowsFound))?.split(' ')[0];
         expect(Number(count)).toBe(1);

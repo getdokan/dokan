@@ -237,7 +237,8 @@ export class vendorVerificationsPage extends AdminPage {
 
         // id verification
         await this.click(selector.vendor.vVerificationSettings.id.startIdVerification);
-        await this.wait(0.5); // todo: resolve this
+        // await this.wait(0.5); // todo: resolve this
+        await this.waitForVisibleLocator(selector.vendor.vVerificationSettings.id.submitId);
 
         // remove previously uploaded image
         const uploadPhotoBtnIsVisible = await this.isVisible(selector.vendor.vVerificationSettings.id.uploadPhoto);
@@ -303,7 +304,9 @@ export class vendorVerificationsPage extends AdminPage {
 
         // company verification
         await this.click(selector.vendor.vVerificationSettings.company.startCompanyVerification);
-        await this.wait(1);
+        // await this.wait(1); // todo: need to resolve this
+        await this.waitForVisibleLocator(selector.vendor.vVerificationSettings.company.submitCompanyInfo);
+        
 
         // remove previously uploaded company file
         const UploadedCompanyFileIsVisible = await this.isVisible(selector.vendor.vVerificationSettings.company.uploadedFileFirst);
@@ -316,19 +319,5 @@ export class vendorVerificationsPage extends AdminPage {
 
         await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vVerificationSettings.company.submitCompanyInfo);
         await this.toContainText(selector.vendor.vVerificationSettings.company.companyInfoUpdateSuccessMessage, verification.companyRequestSubmitSuccessMessage);
-    }
-
-    // upload media // todo: move to base-page and merge with wpUploadFile
-    async uploadMedia(file: string) {
-        await this.wait(0.5);
-        const uploadedMediaIsVisible = await this.isVisible(selector.wpMedia.uploadedMediaFirst);
-        if (uploadedMediaIsVisible) {
-            await this.click(selector.wpMedia.uploadedMediaFirst);
-        } else {
-            await this.uploadFile(selector.wpMedia.selectFilesInput, file);
-            const isSelectDisabled = await this.isDisabled(selector.wpMedia.select);
-            isSelectDisabled && (await this.click(selector.wpMedia.selectUploadedMedia));
-            await this.click(selector.wpMedia.select);
-        }
     }
 }

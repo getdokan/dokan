@@ -93,8 +93,8 @@ jobs:
                   cd tests/pw 
                   npm ci
 
-            # Create php debuglog filev f
-            - name: Create php debuglog file
+            # Create wp debuglog file
+            - name: Create wp debuglog file
               if: success()
               run: |
                   cd tests/pw 

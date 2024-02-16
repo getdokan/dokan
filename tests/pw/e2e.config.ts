@@ -44,7 +44,7 @@ export default defineConfig({
         ...devices['Desktop Chrome'],
         acceptDownloads: true /* Whether to automatically download all the attachments. */,
         actionTimeout: 25 * 1000 /* Maximum time each action such as `click()` can take. Defaults to 0 (no limit). */,
-        navigationTimeout: 25 * 1000 /* Maximum time each navigation such as 'goto()' can take. */,
+        navigationTimeout: 30 * 1000 /* Maximum time each navigation such as 'goto()' can take. */,
         baseURL: process.env.BASE_URL ? process.env.BASE_URL : 'http://localhost:9999' /* Base URL */,
         // browserName: 'chromium' /* Name of the browser that runs tests. */,
         bypassCSP: true /* Toggles bypassing page's Content-Security-Policy. */,
@@ -55,7 +55,7 @@ export default defineConfig({
         trace: 'on-first-retry' /* Record trace only when retrying a test for the first time. */,
         screenshot: 'only-on-failure' /* Capture screenshot after each test failure. */,
         // video: 'retain-on-failure' /* Record video only when retrying a test for the first time. */,
-        video: 'on-first-retry' /* Record video only when retrying a test for the first time. */,
+        // video: 'on-first-retry' /* Record video only when retrying a test for the first time. */,
         // viewport         : { width: 1280, height: 720 }, /* Size of viewport */
         launchOptions: { slowMo: process.env.SLOWMO ? Number(process.env.SLOWMO) * 1000 : 0 /* whether to slow down test execution by provided seconds */ },
     },

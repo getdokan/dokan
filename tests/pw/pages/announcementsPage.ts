@@ -76,11 +76,12 @@ export class AnnouncementsPage extends AdminPage {
 
     // update announcement
     async updateAnnouncement(announcementTitle: string, action: string) {
-        await this.goto(data.subUrls.backend.dokan.announcements);
-        // await this.goIfNotThere(data.subUrls.backend.dokan.announcements);
+        // await this.goto(data.subUrls.backend.dokan.announcements);
+        await this.goIfNotThere(data.subUrls.backend.dokan.announcements);
 
         switch (action) {
             case 'trash':
+                await this.clickAndWaitForResponse(data.subUrls.api.dokan.announcements, selector.admin.dokan.announcements.navTabs.published);
                 await this.hover(selector.admin.dokan.announcements.announcementCellPublished(announcementTitle));
                 await this.clickAndWaitForResponse(data.subUrls.api.dokan.announcements, selector.admin.dokan.announcements.announcementDelete(announcementTitle));
                 break;

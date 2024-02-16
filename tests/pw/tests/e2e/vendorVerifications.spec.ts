@@ -28,11 +28,11 @@ test.describe('Verifications test', () => {
         await vendor.vendorVerificationsSettingsRenderProperly();
     });
 
-    test.skip('vendor can send id verification request @pro @v', async () => {
+    test('vendor can send id verification request @pro @v', async () => {
         await vendor.sendIdVerificationRequest(data.vendor.verification);
     });
 
-    test.skip('vendor can send address verification request @pro @v', async () => {
+    test('vendor can send address verification request @pro @v', async () => {
         await vendor.sendAddressVerificationRequest(data.vendor.verification);
     });
 

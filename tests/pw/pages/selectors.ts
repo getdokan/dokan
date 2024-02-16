@@ -226,6 +226,9 @@ export const selector = {
                 closePromoBanner: '.close-banner',
             },
 
+            //table loader
+            loader: 'div.table-loader',
+
             // Dashboard
             dashboard: {
                 // admin header

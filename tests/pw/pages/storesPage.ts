@@ -103,6 +103,7 @@ export class StoresPage extends AdminPage {
         }
         await this.click(selector.admin.dokan.vendors.newVendor.next);
         // address
+        await this.waitForVisibleLocator(selector.admin.dokan.vendors.newVendor.street1);
         await this.type(selector.admin.dokan.vendors.newVendor.street1, vendorInfo.street1);
         await this.type(selector.admin.dokan.vendors.newVendor.street2, vendorInfo.street2);
         await this.type(selector.admin.dokan.vendors.newVendor.city, vendorInfo.city);
