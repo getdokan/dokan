@@ -4,14 +4,8 @@
             "port": 9999,
             "core": null,
             "phpVersion": "7.4",
-            "plugins": [
-                "WP-API/Basic-Auth",
-                "https://downloads.wordpress.org/plugin/woocommerce.latest-stable.zip", 
-                "../../"
-             ],
-            "themes": [
-                "https://downloads.wordpress.org/theme/storefront.latest-stable.zip"
-            ],
+            "plugins": ["WP-API/Basic-Auth", "https://downloads.wordpress.org/plugin/woocommerce.latest-stable.zip", "../../"],
+            "themes": ["https://downloads.wordpress.org/theme/storefront.latest-stable.zip"],
             "config": {
                 "WP_DEBUG": "true",
                 "SCRIPT_DEBUG": "true",
@@ -20,7 +14,8 @@
             },
             "mappings": {
                 ".htaccess": ".htaccess",
-                "wp-content/debug.log": "./debuglog/debug.log"
+                "wp-content/debug.log": "./debuglog/debug.log",
+                "db/db.sql": "./db/db.sql"
             }
         }
     }

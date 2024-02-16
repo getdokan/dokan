@@ -227,8 +227,8 @@ jobs:
               if: success()
               run: |
                   cd tests/pw
-                  mkdir -p database
-                  npm run wp-env run tests-cli wp db export --add-drop-table database/db-backup.sql
+                  mkdir -p db && touch db/db.sql
+                  npm run wp-env run tests-cli wp db export db/db.sql
 
             # Upload artifacts
             - name: Archive test artifacts (screenshots, HTML snapshots, Reports)
@@ -237,7 +237,7 @@ jobs:
               with:
                   name: test-artifact
                   path: |
-                      tests/pw/database
+                      tests/pw/db
                       tests/pw/debuglog
                       tests/pw/playwright
                       tests/pw/playwright-report
