@@ -26,8 +26,8 @@ test.describe('Auction Product test', () => {
         customer = new AuctionsPage(cPage);
 
         apiUtils = new ApiUtils(await request.newContext());
-        // [, , auctionProductName] = await apiUtils.createProduct(payloads.createAuctionProduct(), payloads.vendorAuth);
-        // await customer.bidAuctionProduct(auctionProductName);
+        [, , auctionProductName] = await apiUtils.createProduct(payloads.createAuctionProduct(), payloads.vendorAuth);
+        await customer.bidAuctionProduct(auctionProductName);
     });
 
     test.afterAll(async () => {

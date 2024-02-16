@@ -264,18 +264,13 @@ export class BasePage {
 
     // type & wait for response
     async typeViaPageAndWaitForResponse(subUrl: string, selector: string, text: string, code = 200): Promise<Response> {
-        const [response] = await Promise.all([
-            this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code),
-             this.page.locator(selector).pressSequentially(text, { delay: 100 })]);
+        const [response] = await Promise.all([this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code), this.page.locator(selector).pressSequentially(text, { delay: 100 })]);
         return response;
     }
 
     // type & wait for response
     async typeAndWaitForResponse(subUrl: string, selector: string, text: string, code = 200): Promise<Response> {
-        const [response] = await Promise.all([
-            this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code),
-            this.clearAndFill(selector, text),
-        ]);
+        const [response] = await Promise.all([this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code), this.clearAndFill(selector, text)]);
         return response;
     }
 

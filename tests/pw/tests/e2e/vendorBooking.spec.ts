@@ -103,13 +103,13 @@ test.describe('Booking Product test', () => {
 
     test('vendor can edit booking resource @pro @v', async () => {
         const bookingResourceName = data.product.booking.resource.resourceName();
-        await vendor.addBookingResource(bookingResourceName); // todo: convert with api
+        await vendor.addBookingResource(bookingResourceName); // todo: convert with woo api :fatal error exits on api
         await vendor.editBookingResource({ ...data.product.booking.resource, name: bookingResourceName });
     });
 
     test('vendor can delete booking resource @pro @v', async () => {
         const bookingResourceName = data.product.booking.resource.resourceName();
-        await vendor.addBookingResource(bookingResourceName); // todo: convert with api
+        await vendor.addBookingResource(bookingResourceName); // todo: convert with woo api:fatal error exits on api
         await vendor.deleteBookingResource(bookingResourceName);
     });
 

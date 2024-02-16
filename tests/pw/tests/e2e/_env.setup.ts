@@ -49,7 +49,7 @@ setup.describe('setup site & woocommerce & user settings', () => {
         // delete previous shipping zones
         const allShippingZoneIds = (await apiUtils.getAllShippingZones()).map((a: { id: string }) => a.id);
         // allShippingZoneIds = helpers.removeItem(allShippingZoneIds, 0) // avoid remove default zone id
-        if (allShippingZoneIds.length) {
+        if (allShippingZoneIds?.length) {
             for (const shippingZoneId of allShippingZoneIds) {
                 await apiUtils.deleteShippingZone(shippingZoneId);
             }

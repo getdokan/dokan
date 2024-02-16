@@ -2,15 +2,12 @@ import { test, Page } from '@playwright/test';
 import { VendorDeliveryTimePage } from '@pages/vendorDeliveryTimePage';
 import { dbData } from '@utils/dbData';
 import { dbUtils } from '@utils/dbUtils';
-// import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
-// import { payloads } from '@utils/payloads';
 
 test.describe('Vendor delivery time test', () => {
     let vendor: VendorDeliveryTimePage;
     let customer: VendorDeliveryTimePage;
     let vPage: Page, cPage: Page;
-    // let apiUtils: ApiUtils;
 
     test.beforeAll(async ({ browser }) => {
         const vendorContext = await browser.newContext(data.auth.vendorAuth);
@@ -20,14 +17,11 @@ test.describe('Vendor delivery time test', () => {
         const customerContext = await browser.newContext(data.auth.customerAuth);
         cPage = await customerContext.newPage();
         customer = new VendorDeliveryTimePage(cPage);
-
-        // apiUtils = new ApiUtils(await request.newContext());
     });
 
     test.afterAll(async () => {
         await vPage.close();
         await cPage.close();
-        // await apiUtils.dispose();
     });
 
     test('vendor delivery time menu page is rendering properly @pro @exp @v', async () => {

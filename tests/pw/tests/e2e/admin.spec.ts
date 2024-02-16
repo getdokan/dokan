@@ -1,12 +1,10 @@
 import { test, Page } from '@playwright/test';
 import { LoginPage } from '@pages/loginPage';
-import { AdminPage } from '@pages/adminPage';
 import { TaxPage } from '@pages/taxPage';
 import { ShippingPage } from '@pages/shippingPage';
 import { data } from '@utils/testData';
 
 test.describe('Admin functionality test', () => {
-    let adminPage: AdminPage;
     let taxPage: TaxPage;
     let shippingPage: ShippingPage;
     let aPage: Page;
@@ -14,7 +12,6 @@ test.describe('Admin functionality test', () => {
     test.beforeAll(async ({ browser }) => {
         const adminContext = await browser.newContext(data.auth.adminAuth);
         aPage = await adminContext.newPage();
-        adminPage = new AdminPage(aPage);
         taxPage = new TaxPage(aPage);
         shippingPage = new ShippingPage(aPage);
     });

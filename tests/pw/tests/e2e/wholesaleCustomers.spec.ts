@@ -69,12 +69,12 @@ test.describe('Wholesale customers test (admin)', () => {
         await admin.wholesaleCustomerBulkAction('activate');
     });
 
-    test('customer can become a wholesale customer @c', async () => {
+    test('customer can become a wholesale customer @pro  @c', async () => {
         await customerPage.customerRegister(data.customer.customerInfo);
         await customer.customerBecomeWholesaleCustomer();
     });
 
-    test('customer can request for become a wholesale customer @c', async () => {
+    test('customer can request for become a wholesale customer @pro  @c', async () => {
         await dbUtils.setDokanSettings(dbData.dokan.optionName.wholesale, { ...dbData.dokan.wholesaleSettings, need_approval_for_wholesale_customer: 'on' });
         await customerPage.customerRegister(data.customer.customerInfo);
         await customer.customerRequestForBecomeWholesaleCustomer();
@@ -109,11 +109,11 @@ test.describe.skip('Wholesale customers test customer', () => {
         await cPage.close();
     });
 
-    test('customer can see wholesale price on shop archive @c', async () => {
+    test('customer can see wholesale price on shop archive  @pro @c', async () => {
         await customer.viewWholeSalePrice(productName);
     });
 
-    test('customer can buy wholesale product @c', async () => {
+    test('customer can buy wholesale product @pro @c', async () => {
         await customerPage.addProductToCart(productName, 'single-product', true, minimumWholesaleQuantity);
         await customer.assertWholesalePrice(wholesalePrice, minimumWholesaleQuantity);
         await customerPage.paymentOrder();

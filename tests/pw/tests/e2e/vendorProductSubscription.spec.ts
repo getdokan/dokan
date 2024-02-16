@@ -9,6 +9,7 @@ test.describe('Product subscriptions test', () => {
     let customer: VendorProductSubscriptionPage;
     let vPage: Page, cPage: Page;
     let apiUtils: ApiUtils;
+    let subscriptionId: string;
 
     test.beforeAll(async ({ browser }) => {
         const vendorContext = await browser.newContext(data.auth.vendorAuth);
@@ -54,27 +55,27 @@ test.describe('Product subscriptions test', () => {
     // customer
 
     test.skip('customer can view product subscription details @pro @exp @c', async () => {
-        await customer.customerViewProductSubscription('2328');
+        await customer.customerViewProductSubscription(subscriptionId);
     });
 
     test.skip('customer can cancel subscription @pro @c', async () => {
-        await customer.cancelProductSubscription('2328');
+        await customer.cancelProductSubscription(subscriptionId);
     });
 
     test.skip('customer can reactivate subscription @pro @c', async () => {
-        await customer.reactivateProductSubscription('2328');
+        await customer.reactivateProductSubscription(subscriptionId);
     });
 
     test.skip('customer can change address of subscription @pro @c', async () => {
-        await customer.changeAddressOfProductSubscription('2328', data.customer.customerInfo.shipping);
+        await customer.changeAddressOfProductSubscription(subscriptionId, data.customer.customerInfo.shipping);
     });
 
     test.skip('customer can change payment of subscription @pro @c', async () => {
-        await customer.changePaymentOfProductSubscription('2328');
+        await customer.changePaymentOfProductSubscription(subscriptionId);
     });
 
     test.skip('customer can renew subscription @pro @c', async () => {
-        await customer.renewProductSubscription('2328');
+        await customer.renewProductSubscription(subscriptionId);
     });
 
     test.skip('customer can buy product subscription @pro @c', async () => {

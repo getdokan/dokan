@@ -9,7 +9,7 @@ export default defineConfig({
     // globalTeardown: './global-teardown' /* Path to the global teardown file. This file will be required and run after all the tests. */,
     globalTimeout: process.env.CI ? 40 * (60 * 1000) : 40 * (60 * 1000) /* Maximum time in milliseconds the whole test suite can run */,
     maxFailures: process.env.CI ? 40 : 30 /* The maximum number of test failures for the whole test suite run. After reaching this number, testing will stop and exit with an error. */,
-    timeout: process.env.CI ? 60 * 1000 : 45 * 1000 /* Maximum time one test can run for. */,
+    timeout: process.env.CI ? 50 * 1000 : 45 * 1000 /* Maximum time one test can run for. */,
     expect: {
         timeout: 15 * 1000 /* Maximum time expect() should wait for the condition to be met.  For example in `await expect(locator).toHaveText();`*/,
         toHaveScreenshot: {
@@ -43,8 +43,8 @@ export default defineConfig({
     use: {
         ...devices['Desktop Chrome'],
         acceptDownloads: true /* Whether to automatically download all the attachments. */,
-        actionTimeout: 30 * 1000 /* Maximum time each action such as `click()` can take. Defaults to 0 (no limit). */,
-        navigationTimeout: 30 * 1000 /* Maximum time each navigation such as 'goto()' can take. */,
+        actionTimeout: 25 * 1000 /* Maximum time each action such as `click()` can take. Defaults to 0 (no limit). */,
+        navigationTimeout: 25 * 1000 /* Maximum time each navigation such as 'goto()' can take. */,
         baseURL: process.env.BASE_URL ? process.env.BASE_URL : 'http://localhost:9999' /* Base URL */,
         // browserName: 'chromium' /* Name of the browser that runs tests. */,
         bypassCSP: true /* Toggles bypassing page's Content-Security-Policy. */,

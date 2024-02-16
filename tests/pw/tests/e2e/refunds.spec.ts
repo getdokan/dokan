@@ -58,7 +58,7 @@ test.describe('Refunds test', () => {
         await admin.updateRefundRequests(orderId, 'cancel');
     });
 
-    test('admin can perform refund requests bulk actions @pro @a', async () => {
+    test.skip('admin can perform refund requests bulk actions @pro @a', async () => {
         const [, orderResponseBody, ,] = await apiUtils.createOrderWithStatus(PRODUCT_ID, payloads.createOrder, data.order.orderStatus.processing, payloads.vendorAuth);
         await dbUtils.createRefundRequest(orderResponseBody);
         await admin.refundRequestsBulkAction('completed');

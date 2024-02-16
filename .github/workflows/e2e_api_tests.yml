@@ -13,15 +13,15 @@ on:
 
     # workflow can be manually triggered
     workflow_dispatch:
-      inputs:
-        testsuite:
-          description: Choose which test suite to run
-          default: All
-          type: choice
-          options:
-            - E2E
-            - API
-            - All
+        inputs:
+            testsuite:
+                description: Choose which test suite to run
+                default: All
+                type: choice
+                options:
+                    - E2E
+                    - API
+                    - All
 
 # Cancels all previous workflow runs for pull requests that have not completed.
 concurrency:
@@ -78,7 +78,7 @@ jobs:
             - name: Composer install and build (Dokan-lite)
               if: success()
               run: |
-                composer install --no-dev -o
+                  composer install --no-dev -o
 
             - name: Npm install and build (Dokan-lite)
               if: success()
@@ -221,6 +221,13 @@ jobs:
                   body: ${{ steps.prepare-test-summary.outputs.result }}
                   reactions: hooray
                   edit-mode: replace
+
+            # Backup Database
+            - name: Backup Database
+              if: success()
+              run: |
+                  cd tests/pw
+                  npm run wp-env run tests-cli wp db export --add-drop-table playwright/db-backup.sql
 
             # Upload artifacts
             - name: Archive test artifacts (screenshots, HTML snapshots, Reports)
