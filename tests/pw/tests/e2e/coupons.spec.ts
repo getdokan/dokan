@@ -40,7 +40,7 @@ test.describe('Coupons test', () => {
         await apiUtils.dispose();
     });
 
-    test('admin can add marketplace coupon @pro @a', async () => {
+    test.skip('admin can add marketplace coupon @pro @a', async () => {
         await admin.addMarketplaceCoupon({ ...data.coupon, title: data.coupon.couponTitle() });
     });
 

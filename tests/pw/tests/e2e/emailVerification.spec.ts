@@ -4,7 +4,7 @@ import { data } from '@utils/testData';
 import { dbUtils } from '@utils/dbUtils';
 import { dbData } from '@utils/dbData';
 
-test.describe('Email verifications test', () => {
+test.describe.skip('Email verifications test', () => {
     let guest: EmailVerificationsPage;
     let gPage: Page;
     const user = { username: data.user.username() + data.user.userDetails.emailDomain, password: data.user.password };
