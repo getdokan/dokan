@@ -217,7 +217,6 @@ if ( is_wp_error( $section ) ) {
                     $data                    = Helper::get_saved_products_category( $product->get_id() );
                     $data['from']            = 'edit_product';
                     $data['required_symbol'] = $category->print_required_symbol( false );
-                    $data['chosen_cat']      = $category->get_value( $product );
 
                     dokan_get_template_part( 'products/dokan-category-header-ui', '', $data );
                     ?>
