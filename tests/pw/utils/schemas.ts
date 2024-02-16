@@ -652,6 +652,7 @@ export const schemas = {
             }),
         }),
 
+        m: z.coerce.date(),
         announcementsSchema: z.array(
             z.object({
                 id: z.number(),
@@ -662,7 +663,7 @@ export const schemas = {
                 status: z.enum(['all', 'publish', 'pending', 'draft', 'future', 'trash']),
                 read_status: z.enum(['read', 'unread', '']),
                 date: z.coerce.date(),
-                date_gmt: z.coerce.date(),
+                date_gmt: z.coerce.date().or(z.string()),
                 human_readable_date: z.string(),
                 announcement_sellers: z.array(
                     z.object({

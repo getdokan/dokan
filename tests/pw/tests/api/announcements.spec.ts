@@ -31,7 +31,6 @@ test.describe('announcements api test', () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllAnnouncements);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
-        console.log(responseBody);
         expect(responseBody).toMatchSchema(schemas.announcementsSchema.announcementsSchema);
     });
 

@@ -7466,8 +7466,8 @@ export const selector = {
 
         cWooSelector: {
             wooCommerceSuccessMessage: '.woocommerce-message',
-            wooCommerceError: '.woocommerce .is-error',
-            wooCommerceInfo: '.woocommerce .is-info',
+            wooCommerceError: '.woocommerce-error',
+            wooCommerceInfo: '.woocommerce-info',
             wooCommerceNoriceBanner: 'div.wc-block-components-notice-banner',
             wooCommerceNoriceBannerContent: 'div.wc-block-components-notice-banner__content',
         },
