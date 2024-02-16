@@ -98,8 +98,7 @@ jobs:
               if: success()
               run: |
                   cd tests/pw 
-                  mkdir -p debuglog && touch debuglog/debug.log
-                  mkdir -p db && touch db/db.sql
+                  mkdir -p wp-data && touch wp-data/debug.log
 
             # Start wordpress environment
             - name: Start WordPress Env
@@ -228,7 +227,7 @@ jobs:
               if: success()
               run: |
                   cd tests/pw
-                  npm run wp-env run tests-cli wp db export db/db.sql
+                  npm run wp-env run tests-cli wp db export wp-data/db.sql
 
             # Upload artifacts
             - name: Archive test artifacts (screenshots, HTML snapshots, Reports)
@@ -237,8 +236,7 @@ jobs:
               with:
                   name: test-artifact
                   path: |
-                      tests/pw/db
-                      tests/pw/debuglog
+                      tests/pw/wp-data
                       tests/pw/playwright
                       tests/pw/playwright-report
                   if-no-files-found: ignore

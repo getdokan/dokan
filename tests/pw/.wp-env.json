@@ -14,8 +14,8 @@
             },
             "mappings": {
                 ".htaccess": ".htaccess",
-                "wp-content/debug.log": "./debuglog/debug.log",
-                "db/db.sql": "./db/db.sql"
+                "wp-content/debug.log": "./wp-data/debug.log",
+                "wp-data": "./wp-data"
             }
         }
     }
