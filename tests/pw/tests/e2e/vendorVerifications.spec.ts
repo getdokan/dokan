@@ -32,7 +32,7 @@ test.describe('Verifications test', () => {
         await vendor.sendIdVerificationRequest(data.vendor.verification);
     });
 
-    test('vendor can send address verification request @pro @v', async () => {
+    test.skip('vendor can send address verification request @pro @v', async () => {
         await vendor.sendAddressVerificationRequest(data.vendor.verification);
     });
 

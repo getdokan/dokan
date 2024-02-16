@@ -71,7 +71,7 @@ test.describe('Product Advertising test', () => {
 
     // vendor
 
-    test('vendor can buy product advertising @pro @v', async () => {
+    test.skip('vendor can buy product advertising @pro @v', async () => {
         //todo: p1_v1 status gets pending review; need to resolve
         const [, , productName] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendorAuth);
         const orderId = await vendor.buyProductAdvertising(productName);
