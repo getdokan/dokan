@@ -93,7 +93,7 @@ jobs:
                   cd tests/pw 
                   npm ci
 
-            # Create php debuglog file
+            # Create php debuglog filev f
             - name: Create php debuglog file
               if: success()
               run: |
@@ -227,7 +227,8 @@ jobs:
               if: success()
               run: |
                   cd tests/pw
-                  npm run wp-env run tests-cli wp db export --add-drop-table playwright/db-backup.sql
+                  mkdir -p database
+                  npm run wp-env run tests-cli wp db export --add-drop-table database/db-backup.sql
 
             # Upload artifacts
             - name: Archive test artifacts (screenshots, HTML snapshots, Reports)
@@ -236,6 +237,7 @@ jobs:
               with:
                   name: test-artifact
                   path: |
+                      tests/pw/database
                       tests/pw/debuglog
                       tests/pw/playwright
                       tests/pw/playwright-report
