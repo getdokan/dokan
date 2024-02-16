@@ -99,6 +99,7 @@ jobs:
               run: |
                   cd tests/pw 
                   mkdir -p debuglog && touch debuglog/debug.log
+                  mkdir -p db && touch db/db.sql
 
             # Start wordpress environment
             - name: Start WordPress Env
@@ -227,7 +228,6 @@ jobs:
               if: success()
               run: |
                   cd tests/pw
-                  mkdir -p db && touch db/db.sql
                   npm run wp-env run tests-cli wp db export db/db.sql
 
             # Upload artifacts
