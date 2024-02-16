@@ -4056,7 +4056,7 @@ export const selector = {
                 approveThisQuote: 'button[name="approved_by_vendor_button"]',
                 convertToOrder: 'button[name="dokan_convert_to_order_customer"]',
 
-                message: '.woocommerce .is-success',
+                message: '.woocommerce-message',
             },
         },
 
@@ -5009,7 +5009,7 @@ export const selector = {
 
                 addBooking: 'input[value="Add Booking"][type="submit"]',
 
-                successMessage: '.woocommerce .is-success',
+                successMessage: '.woocommerce-message',
             },
 
             // Manage Booking
@@ -6314,7 +6314,7 @@ export const selector = {
                 billingEmailAddress: '#billing_email',
                 billingSaveAddress: '//button[@name="save_address"]',
                 // Success Message
-                successMessage: '.woocommerce .is-success',
+                successMessage: '.woocommerce-message',
             },
 
             // Shipping Address
@@ -6338,7 +6338,7 @@ export const selector = {
                 shippingSaveAddress: '//button[@name="save_address"]',
 
                 // Success Message
-                successMessage: '.woocommerce .is-success',
+                successMessage: '.woocommerce-message',
             },
         },
 
@@ -7154,7 +7154,7 @@ export const selector = {
 
                     updateQuote: 'button[name="dokan_update_quote"]',
 
-                    message: '.woocommerce .is-success',
+                    message: '.woocommerce-message',
                 },
             },
         },
@@ -7465,7 +7465,7 @@ export const selector = {
         },
 
         cWooSelector: {
-            wooCommerceSuccessMessage: '.woocommerce .is-success',
+            wooCommerceSuccessMessage: '.woocommerce-message',
             wooCommerceError: '.woocommerce .is-error',
             wooCommerceInfo: '.woocommerce .is-info',
             wooCommerceNoriceBanner: 'div.wc-block-components-notice-banner',
