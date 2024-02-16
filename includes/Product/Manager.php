@@ -5,6 +5,7 @@ namespace WeDevs\Dokan\Product;
 use WC_Product;
 use WC_Product_Download;
 use WeDevs\Dokan\Cache;
+use WeDevs\Dokan\Commission\Utils\CommissionSettings;
 use WP_Query;
 use WP_Error;
 
@@ -727,7 +728,7 @@ class Manager {
      * @return int
      */
     public function validate_product_id( $product_id ) {
-        $product = wc_get_product( $product_id );
+        $product = $this->get( $product_id );
         if ( ! $product ) {
             return 0;
         }
@@ -735,5 +736,33 @@ class Manager {
         $parent_id = $product->get_parent_id();
 
         return $parent_id ? $parent_id : $product_id;
+    }
+
+    /**
+     * Returns vendor commission settings data.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return \WeDevs\Dokan\Commission\Utils\CommissionSettings
+     */
+    public function get_commission_settings( $product_id = 0 ) {
+        $product = $this->get( $product_id );
+
+        $commission_percentage = '';
+        $commission_type       = '';
+        $additional_flat       = '';
+
+        if ( ! empty( $product ) ) {
+            $commission_percentage = $product->get_meta( '_per_product_admin_commission', true );
+            $commission_type       = $product->get_meta( '_per_product_admin_commission_type', true );
+            $additional_flat       = $product->get_meta( '_per_product_admin_additional_fee', true );
+        }
+
+        $settings = new CommissionSettings();
+        $settings->set_type( $commission_type )
+                ->set_flat( $additional_flat )
+                ->set_percentage( $commission_percentage );
+
+        return $settings;
     }
 }

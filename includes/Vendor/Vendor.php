@@ -631,8 +631,6 @@ class Vendor {
                             // get extra information
                             $display_type            = get_term_meta( $term->term_id, 'display_type', true );
                             $thumbnail_id            = absint( get_term_meta( $term->term_id, 'thumbnail_id', true ) );
-                            $category_commision_type = get_term_meta( $term->term_id, 'per_category_admin_commission_type', true ); // TODO: commission-restructure
-                            $category_commision      = get_term_meta( $term->term_id, 'per_category_admin_commission', true ); // TODO: commission-restructure
                             $category_icon           = get_term_meta( $term->term_id, 'dokan_cat_icon', true );
                             $category_icon_color     = get_term_meta( $term->term_id, 'dokan_cat_icon_color', true );
 
@@ -646,9 +644,6 @@ class Vendor {
                                 $image = $thumbnail = wc_placeholder_img_src();
                             }
 
-                            // fix commission
-                            $category_commision = ! empty( $category_commision ) ? wc_format_decimal( $category_commision ) : 0.00; // TODO: commission-restructure
-
                             // set extra fields to term object
                             $term->thumbnail = $thumbnail;
                             $term->image     = $image;
@@ -656,9 +651,6 @@ class Vendor {
                             $term->icon         = $category_icon;
                             $term->icon_color   = $category_icon_color;
                             $term->display_type = $display_type;
-                            // set commissions
-                            $term->admin_commission_type = $category_commision_type; // TODO: commission-restructure
-                            $term->admin_commission      = $category_commision; // TODO: commission-restructure
 
                             // finally store category data
                             $all_categories[] = $term;
@@ -1565,11 +1557,26 @@ class Vendor {
      * @return \WeDevs\Dokan\Commission\Utils\CommissionSettings
      */
     public function get_commission_settings() {
-        $percentage = $this->get_meta( 'dokan_admin_percentage', true );
-        $type       = $this->get_meta( 'dokan_admin_percentage_type', true );
-        $flat       = $this->get_meta( 'dokan_admin_additional_fee', true );
-        $category  = $this->get_meta( 'admin_category_commission', true ) ?? [];
+        $commission_percentage = '';
+        $commission_type       = '';
+        $additional_flat       = '';
+        $category_commissions  = [];
 
-        return new CommissionSettings( $type, $flat, $percentage, $category, '' );
+        if ( ! empty( $this->get_id() ) ) {
+            $commission_percentage = $this->get_meta( 'dokan_admin_percentage', true );
+            $commission_type       = $this->get_meta( 'dokan_admin_percentage_type', true );
+            $additional_flat       = $this->get_meta( 'dokan_admin_additional_fee', true );
+            $category_commissions  = $this->get_meta( 'admin_category_commission', true );
+
+            $category_commissions = empty( $category_commissions ) ? [] : $category_commissions;
+        }
+
+        $settings = new CommissionSettings();
+        $settings->set_type( $commission_type )
+                 ->set_flat( $additional_flat )
+                 ->set_percentage( $commission_percentage )
+                 ->set_category_commissions( $category_commissions );
+
+        return $settings;
     }
 }

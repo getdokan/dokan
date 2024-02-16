@@ -23,8 +23,7 @@ class PercentageCommissionCalculator implements CommissionCalculatorInterface {
         $this->per_item_admin_commission = $this->admin_commission / $total_quantity;
         $this->vendor_earning            = $total_amount - $this->admin_commission;
 
-        // vendor will get 100 percent if commission rate > 100
-        // TODO: commission-restructure need to re-consider this about the vendor earning and admin commission.
+        // Admin will get 100 percent if commission rate > 100
         if ( $this->settings->get_percentage() > 100 ) {
             $this->admin_commission = $total_amount;
             $this->vendor_earning   = 0;
@@ -57,7 +56,7 @@ class PercentageCommissionCalculator implements CommissionCalculatorInterface {
     }
 
     public function get_per_item_admin_commission(): float {
-        return dokan()->commission->validate_rate( $this->per_item_admin_commission );
+        return dokan()->commission->validate_rate( $this->per_item_admin_commission ?? 0 );
     }
 
     public function get_items_total_quantity(): int {

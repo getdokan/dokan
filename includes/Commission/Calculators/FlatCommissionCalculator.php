@@ -21,14 +21,15 @@ class FlatCommissionCalculator implements CommissionCalculatorInterface {
     public function calculate( $total_amount, $total_quantity = 1 ) {
         $total_quantity = max( $total_quantity, 1 );
 
-        $this->per_item_admin_commission = dokan()->commission->validate_rate( $this->settings->get_flat() );
+        $this->per_item_admin_commission = dokan()->commission->validate_rate( $this->settings->get_flat() ) ?? 0;
+        $this->flat_commission = $this->per_item_admin_commission;
         if ( (int) $total_quantity > 1 ) {
             $this->flat_commission = $this->per_item_admin_commission * apply_filters( 'dokan_commission_multiply_by_order_quantity', $total_quantity );
         }
 
         $this->admin_commission = $this->flat_commission;
 
-        if ( $this->admin_commission > $total_amount ) { // TODO: commission-restruture need discussion that if total amount is less then commission then admin commission will be 0/vendor earning is 0, here admin commissin is 0 in percentage vendor earnig was 0
+        if ( $this->admin_commission > $total_amount ) {
             $this->admin_commission = $total_amount;
         }
 

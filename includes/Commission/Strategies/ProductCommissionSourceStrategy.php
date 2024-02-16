@@ -9,12 +9,12 @@ class ProductCommissionSourceStrategy extends AbstractCommissionSourceStrategy {
     /**
      * @var false|\WC_Product|null
      */
-    private $product;
+    private $product_id;
 
     const SOURCE = 'product';
 
     public function __construct( $product_id ) {
-        $this->product = dokan()->product->get( $product_id );
+        $this->product_id = $product_id;
     }
 
     public function get_source(): string {
@@ -22,14 +22,7 @@ class ProductCommissionSourceStrategy extends AbstractCommissionSourceStrategy {
     }
 
     public function get_settings(): CommissionSettings {
-        $percentage = $this->product ? $this->product->get_meta( '_per_product_admin_commission', true ) : '';
-        $type       = $this->product ? $this->product->get_meta( '_per_product_admin_commission_type', true ) : '';
-        $flat       = $this->product ? $this->product->get_meta( '_per_product_admin_additional_fee', true ) : '';
-
-        $settings = new CommissionSettings();
-        $settings->set_type( $type )
-                ->set_flat( $flat )
-                ->set_percentage( $percentage );
+        $settings = dokan()->product->get_commission_settings( $this->product_id );
 
         return $settings;
     }

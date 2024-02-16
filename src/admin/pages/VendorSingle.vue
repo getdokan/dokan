@@ -234,7 +234,7 @@
                         <ul class="counts">
                             <li class="commision">
                                 <span class="count" v-html="getEearningRate"></span>
-                                <span class="subhead">{{ __( 'Admin Commission Rate', 'dokan' ) }}</span>
+                                <span class="subhead">{{ __( 'Admin Commission', 'dokan' ) }}</span>
                             </li>
                             <li class="balance">
                                 <span class="count">
@@ -490,21 +490,11 @@ export default {
         },
 
         getEearningRate() {
-            let commissionRate = this.stats.others.commission_rate ? this.stats.others.commission_rate : 0;
-            let additionalFee  = this.stats.others.additional_fee ? this.stats.others.additional_fee : 0;
-            let commissionType = this.stats.others.commission_type;
-
-            if ( '' === this.store.admin_commission ) {
+            if ( ! this.store.admin_commission_type || ! window.dokanAdmin.commission_types ) {
                 return this.__( 'Not Set', 'dokan' );
             }
 
-            if ( commissionType === 'flat' ) {
-                return accounting.formatMoney( commissionRate, dokan.currency.symbol, dokan.currency.precision, dokan.currency.thousand, dokan.currency.decimal, dokan.currency.format );
-            } else if ( commissionType === 'percentage' ) {
-                return `${commissionRate}%`;
-            } else {
-                return `${(commissionRate)}% &nbsp; + ${accounting.formatMoney( additionalFee, dokan.currency.symbol, dokan.currency.precision, dokan.currency.thousand, dokan.currency.decimal, dokan.currency.format )}`;
-            }
+            return window.dokanAdmin.commission_types[this.store.admin_commission_type] ?? '';
         },
 
         saveBtn() {

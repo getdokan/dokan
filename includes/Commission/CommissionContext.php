@@ -23,6 +23,10 @@ class CommissionContext {
             $total_quantity = 1;
         }
 
+        if ( ! is_numeric( $total_amount ) ) {
+            $total_quantity = 0;
+        }
+
         foreach ( $this->strategies as $strategy ) {
             $calculator = $strategy->get_commission_calculator();
             if ( $calculator !== null ) {

@@ -942,7 +942,22 @@ class StoreController extends WP_REST_Controller {
         }
 
         $category_data = $store->get_store_categories( $best_selling );
-        $response      = rest_ensure_response( $category_data );
+        $commission_settings = $store->get_commission_settings();
+        $category_commissions = $commission_settings->get_category_commissions();
+
+        foreach ( $category_data as $term ) {
+            $term->admin_commission_type = $commission_settings->get_type();
+
+            if ( isset( $category_commissions['items'][ $term->term_id ] ) ) {
+                $term->commission = $category_commissions['items'][ $term->term_id ];
+            } elseif ( $category_commissions['all'] ) {
+                $term->commission = $category_commissions['all'];
+            } else {
+                $term->commission = [];
+            }
+        }
+
+        $response = rest_ensure_response( $category_data );
 
         return $response;
     }

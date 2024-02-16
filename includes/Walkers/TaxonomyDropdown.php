@@ -51,16 +51,16 @@ class TaxonomyDropdown extends Walker {
      * @return void
      */
     public function start_el( &$output, $category, $depth = 0, $args = [], $id = 0 ) {
-        if ( defined( 'DOKAN_PRO_PLUGIN_VERSION' ) && version_compare( DOKAN_PRO_PLUGIN_VERSION, '2.9.14', '<' ) ) {
-            $commission_val  = dokan_get_seller_percentage( dokan_get_current_user_id(), $this->post_id, $category->term_id );
-            $commission_type = dokan_get_commission_type( dokan_get_current_user_id(), $this->post_id, $category->term_id );
-        } else {
-            $commission_val = dokan()->commission->get_earning_by_product( $this->post_id );
+        $commission_data = dokan()->commission->get_commission(
+            [
+                'product_id'  => $this->post_id,
+                'category_id' => $category->term_id,
+                'vendor_id'   => dokan_get_current_user_id(),
+            ]
+        );
 
-            if ( is_wp_error( $commission_val ) ) {
-                $commission_val = 0;
-            }
-        }
+        $commission_val = $commission_data['vendor_earning'];
+        $commission_type = $commission_data['type'];
 
         $pad      = str_repeat( '&nbsp;&#8212;', $depth * 1 );
         $cat_name = apply_filters( 'list_cats', $category->name, $category );

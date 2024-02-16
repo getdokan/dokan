@@ -564,18 +564,25 @@ class Commission {
      * @return array
      */
     public function get_commission( $args = [], $auto_save = false ) {
-        $order_item_id  = $args['order_item_id'] ?? '';
-        $total_amount   = $args['total_amount'] ?? 0;
-        $total_quantity = $args['total_quantity'] ?? 1;
-        $product_id     = $args['product_id'] ?? 0;
-        $vendor_id      = $args['vendor_id'] ?? '';
-        $category_id    = $args['category_id'] ?? 0;
+        $order_item_id  = ! empty( $args['order_item_id'] ) ? $args['order_item_id'] :  '';
+        $total_amount   = ! empty( $args['total_amount'] ) ? $args['total_amount'] : 0;
+        $total_quantity = ! empty( $args['total_quantity'] ) ? $args['total_quantity'] :  1;
+        $product_id     = ! empty( $args['product_id'] ) ? $args['product_id'] :  0;
+        $vendor_id      = ! empty( $args['vendor_id'] ) ? $args['vendor_id'] :  '';
+        $category_id    = ! empty( $args['category_id'] ) ? $args['category_id'] :  0;
 
         // Category commission will not applicable if 'Product Category Selection' is set as 'Multiple' in Dokan settings.
 		if ( ! empty( $product_id ) && Helper::product_category_selection_is_single() && empty( $category_id ) ) {
             $product_categories = Helper::get_saved_products_category( 105 );
             $chosen_categories  = Helper::generate_chosen_categories( $product_categories );
             $category_id        = reset( $chosen_categories ) ? reset( $chosen_categories ) : 0;
+        }
+
+        if ( ! empty( $product_id ) && empty( $total_amount ) ) {
+            $total_amount = dokan()->product->get( $product_id )->get_price();
+
+            // If product price is empty the setting the price as 0
+            $total_amount = empty( $total_amount ) ? 0 : $total_amount;
         }
 
         $order_item_strategy = new OrderItemCommissionSourceStrategy( $order_item_id, $total_amount, $total_quantity );
