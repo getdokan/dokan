@@ -405,9 +405,11 @@ export const payloads = {
         featured: true,
         description: 'test description',
         short_description: 'test short description',
-        // regular_price: faker.finance.amount({ min: 200, max: 400, dec: 2 }),
-        // price            : '2232',
-        regular_price: '2232',
+        price: '2000',
+        regular_price: '2000',
+        purchasable: true,
+        virtual: false,
+        downloadable: false,
         categories: [{}],
         meta_data: [
             {

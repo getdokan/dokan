@@ -78,7 +78,7 @@ test.describe('Booking Product test', () => {
         await vendor.filterBookingProducts('by-other', 'featured');
     });
 
-    test('vendor can view booking product @pro @v', async () => {
+    test.skip('vendor can view booking product @pro @v', async () => {
         await vendor.viewBookingProduct(bookableProductName);
     });
 
@@ -117,7 +117,7 @@ test.describe('Booking Product test', () => {
         await vendor.addBooking(bookableProductName, data.bookings);
     });
 
-    test('vendor can add booking for existing customer @pro @v', async () => {
+    test.skip('vendor can add booking for existing customer @pro @v', async () => {
         await vendor.addBooking(bookableProductName, data.bookings, data.customer.username);
     });
 

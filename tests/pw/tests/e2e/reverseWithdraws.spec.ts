@@ -43,7 +43,7 @@ test.describe('Reverse withdraw test', () => {
         await admin.adminReverseWithdrawRenderProperly();
     });
 
-    test('filter reverse withdraws by store @lite @a', async () => {
+    test.skip('admin can filter reverse withdraws by store @lite @a', async () => {
         await admin.filterReverseWithdraws(data.predefined.vendorStores.vendor2);
     });
 

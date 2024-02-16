@@ -1,62 +1,43 @@
-import { test, Page, request, BrowserContext } from '@playwright/test';
+import { test, Page, BrowserContext } from '@playwright/test';
 import { LoginPage } from '@pages/loginPage';
 import { CustomerPage } from '@pages/customerPage';
-// import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
-// import { payloads } from '@utils/payloads';
-
-test.describe('Customer user functionality test', () => {
-    test.use(data.auth.noAuth);
-
-    let loginPage: LoginPage;
-    let customer: CustomerPage;
-    let page: Page;
-
-    test.beforeAll(async ({ browser }) => {
-        const context = await browser.newContext();
-        page = await context.newPage();
-        loginPage = new LoginPage(page);
-        customer = new CustomerPage(page);
-    });
-
-    test.afterAll(async () => {
-        await page.close();
-    });
-
-    test('customer can register @lite @c', async () => {
-        await customer.customerRegister(data.customer.customerInfo);
-    });
-
-    test('customer can login @lite @c', async () => {
-        await loginPage.login(data.customer);
-    });
-
-    test('customer can logout @lite @c', async () => {
-        await loginPage.login(data.customer);
-        await loginPage.logout();
-    });
-
-    test('customer can become a vendor @lite @c', async () => {
-        await customer.customerRegister(data.customer.customerInfo);
-        await customer.customerBecomeVendor(data.customer.customerInfo);
-    });
-});
 
 test.describe('Customer functionality test', () => {
     let customer: CustomerPage;
     let cPage: Page;
     let customerContext: BrowserContext;
-    // let apiUtils: ApiUtils;
 
     test.beforeAll(async ({ browser }) => {
         customerContext = await browser.newContext(data.auth.customerAuth);
         cPage = await customerContext.newPage();
         customer = new CustomerPage(cPage);
-        // apiUtils = new ApiUtils(await request.newContext());
     });
 
     test.afterAll(async () => {
         await cPage.close();
+    });
+
+    test('customer can register @lite @c', async ({ page }) => {
+        const customer = new CustomerPage(page);
+        await customer.customerRegister(data.customer.customerInfo);
+    });
+
+    test('customer can login @lite @c', async ({ page }) => {
+        const loginPage = new LoginPage(page);
+        await loginPage.login(data.customer);
+    });
+
+    test('customer can logout @lite @c', async ({ page }) => {
+        const loginPage = new LoginPage(page);
+        await loginPage.login(data.customer);
+        await loginPage.logout();
+    });
+
+    test('customer can become a vendor @lite @c', async ({ page }) => {
+        const customer = new CustomerPage(page);
+        await customer.customerRegister(data.customer.customerInfo);
+        await customer.customerBecomeVendor(data.customer.customerInfo);
     });
 
     test('customer can add billing details @lite @c', async () => {
@@ -88,7 +69,5 @@ test.describe('Customer functionality test', () => {
         await customer.placeOrder();
     });
 
-    // test.skip('customer can download downloadables @lite', async ( ) => {
-    // pre: complete download product
-    // });
+    // todo: customer can download downloadable product
 });

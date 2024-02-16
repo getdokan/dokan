@@ -800,44 +800,44 @@ export interface vendor {
         shippingCountry: string;
         methods: string;
 
-        shippingMethod: {
-            shippingZone: string;
-            shippingCountry: string;
-            selectShippingMethod: string;
-            shippingMethod: string;
-            taxStatus: string;
-            shippingCost: string;
-            description: string;
-            calculationType: string;
-            shippingMethodSaveSuccessMessage: string;
-            zoneSaveSuccessMessage: string;
-            saveSuccessMessage: string;
+        // shippingMethod: {
+        //     shippingZone: string;
+        //     shippingCountry: string;
+        //     selectShippingMethod: string;
+        //     shippingMethod: string;
+        //     taxStatus: string;
+        //     shippingCost: string;
+        //     description: string;
+        //     calculationType: string;
+        //     shippingMethodSaveSuccessMessage: string;
+        //     zoneSaveSuccessMessage: string;
+        //     saveSuccessMessage: string;
 
-            freeShippingRequires: string;
-            freeShippingMinimumOrderAmount: string;
+        //     freeShippingRequires: string;
+        //     freeShippingMinimumOrderAmount: string;
 
-            taxIncludedInShippingCosts: string;
-            handlingFee: string;
-            maximumShippingCost: string;
+        //     taxIncludedInShippingCosts: string;
+        //     handlingFee: string;
+        //     maximumShippingCost: string;
 
-            handlingFeePerOrder: string;
-            minimumCostPerOrder: string;
-            maximumCostPerOrder: string;
+        //     handlingFeePerOrder: string;
+        //     minimumCostPerOrder: string;
+        //     maximumCostPerOrder: string;
 
-            tableRateSaveSuccessMessage: string;
+        //     tableRateSaveSuccessMessage: string;
 
-            transportationMode: string;
-            avoid: string;
-            distanceUnit: string;
-            street1: string;
-            street2: string;
-            city: string;
-            zipCode: string;
-            state: string;
-            country: string;
+        //     transportationMode: string;
+        //     avoid: string;
+        //     distanceUnit: string;
+        //     street1: string;
+        //     street2: string;
+        //     city: string;
+        //     zipCode: string;
+        //     state: string;
+        //     country: string;
 
-            distanceRateSaveSuccessMessage: string;
-        };
+        //     distanceRateSaveSuccessMessage: string;
+        // };
 
         shippingMethods: {
             flatRate: {

@@ -47,7 +47,7 @@ test.describe('Withdraw test', () => {
         await admin.filterWithdraws(data.vendor.withdraw.defaultWithdrawMethod.paypal, 'by-payment-method');
     });
 
-    test('admin can export withdraws @a', async () => {
+    test('admin can export withdraws @lite @a', async () => {
         await admin.exportWithdraws();
     });
 

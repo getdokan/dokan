@@ -1,24 +1,19 @@
-import { test, request, Page } from '@playwright/test';
+import { test, Page } from '@playwright/test';
 import { StoreListingPage } from '@pages/storeListingPage';
-// import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
-// import { payloads } from '@utils/payloads';
 
 test.describe('Store listing functionality test', () => {
     let customer: StoreListingPage;
     let cPage: Page;
-    // let apiUtils: ApiUtils;
 
     test.beforeAll(async ({ browser }) => {
         const customerContext = await browser.newContext(data.auth.customerAuth);
         cPage = await customerContext.newPage();
         customer = new StoreListingPage(cPage);
-        // apiUtils = new ApiUtils(await request.newContext());
     });
 
     test.afterAll(async () => {
         await cPage.close();
-        // await apiUtils.dispose();
     });
 
     // store listing
