@@ -296,17 +296,18 @@ export class StoresPage extends AdminPage {
     }
 
     // search vendor
-    async searchVendor(vendorName: string) {
+    async searchVendor(vendorName: string, neg: boolean = false) {
         await this.goIfNotThere(data.subUrls.backend.dokan.vendors);
 
         await this.clearInputField(selector.admin.dokan.vendors.search);
-
         await this.typeAndWaitForResponseAndLoadState(data.subUrls.api.dokan.stores, selector.admin.dokan.vendors.search, vendorName);
         await this.toBeVisible(selector.admin.dokan.vendors.vendorCell(vendorName));
 
         // negative scenario
-        // await this.typeAndWaitForResponse(data.subUrls.api.dokan.stores, selector.admin.dokan.vendors.search, vendorName + 'abcdefgh');
-        // await this.toBeVisible(selector.admin.dokan.vendors.noRowsFound);
+        if (neg) {
+            await this.typeAndWaitForResponse(data.subUrls.api.dokan.stores, selector.admin.dokan.vendors.search, vendorName + 'abcdefgh');
+            await this.toBeVisible(selector.admin.dokan.vendors.noRowsFound);
+        }
     }
 
     // update vendor

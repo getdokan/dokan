@@ -41,6 +41,7 @@ declare global {
             DB_PREFIX: string;
             API_TEST_RESULT: string;
             E2E_TEST_RESULT: string;
+            API_COVERAGE: string;
         }
     }
 }

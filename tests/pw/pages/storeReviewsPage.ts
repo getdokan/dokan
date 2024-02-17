@@ -65,30 +65,31 @@ export class StoreReviewsPage extends AdminPage {
         await this.clickAndWaitForResponse(data.subUrls.api.dokan.storeReviews, selector.admin.dokan.storeReviews.editReview.update);
     }
 
-    // delete store review
-    async deleteStoreReview() {
+    async updateStoreReview(action: string) {
         await this.goto(data.subUrls.backend.dokan.storeReviews);
-        await this.hover(selector.admin.dokan.storeReviews.storeReviewFirstCell);
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.api.dokan.storeReviews, selector.admin.dokan.storeReviews.storeReviewDelete);
-    }
 
-    // restore store review
-    async restoreStoreReview() {
-        await this.goto(data.subUrls.backend.dokan.storeReviews);
-        // await this.goIfNotThere(data.subUrls.backend.dokan.storeReviews);
-        await this.clickAndWaitForResponse(data.subUrls.api.dokan.storeReviews, selector.admin.dokan.storeReviews.navTabs.trash);
+        switch (action) {
+            case 'trash':
+                await this.hover(selector.admin.dokan.storeReviews.storeReviewFirstCell);
+                await this.clickAndWaitForResponseAndLoadState(data.subUrls.api.dokan.storeReviews, selector.admin.dokan.storeReviews.storeReviewDelete);
+                break;
 
-        await this.hover(selector.admin.dokan.storeReviews.storeReviewFirstCell);
-        await this.clickAndWaitForResponse(data.subUrls.api.dokan.storeReviews, selector.admin.dokan.storeReviews.storeReviewRestore);
-    }
+            case 'permanently-delete':
+                await this.clickAndWaitForResponse(data.subUrls.api.dokan.storeReviews, selector.admin.dokan.storeReviews.navTabs.trash);
+                await this.hover(selector.admin.dokan.storeReviews.storeReviewFirstCell);
+                await this.clickAndWaitForResponse(data.subUrls.api.dokan.storeReviews, selector.admin.dokan.storeReviews.storeReviewPermanentlyDelete);
 
-    // permanently delete store review
-    async permanentlyDeleteStoreReview() {
-        await this.goto(data.subUrls.backend.dokan.storeReviews);
-        await this.clickAndWaitForResponse(data.subUrls.api.dokan.storeReviews, selector.admin.dokan.storeReviews.navTabs.trash);
+                break;
 
-        await this.hover(selector.admin.dokan.storeReviews.storeReviewFirstCell);
-        await this.clickAndWaitForResponse(data.subUrls.api.dokan.storeReviews, selector.admin.dokan.storeReviews.storeReviewPermanentlyDelete);
+            case 'restore':
+                await this.clickAndWaitForResponse(data.subUrls.api.dokan.storeReviews, selector.admin.dokan.storeReviews.navTabs.trash);
+                await this.hover(selector.admin.dokan.storeReviews.storeReviewFirstCell);
+                await this.clickAndWaitForResponse(data.subUrls.api.dokan.storeReviews, selector.admin.dokan.storeReviews.storeReviewRestore);
+                break;
+
+            default:
+                break;
+        }
     }
 
     // store reviews bulk action

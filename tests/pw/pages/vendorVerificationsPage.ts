@@ -306,7 +306,6 @@ export class vendorVerificationsPage extends AdminPage {
         await this.click(selector.vendor.vVerificationSettings.company.startCompanyVerification);
         // await this.wait(1); // todo: need to resolve this
         await this.waitForVisibleLocator(selector.vendor.vVerificationSettings.company.submitCompanyInfo);
-        
 
         // remove previously uploaded company file
         const UploadedCompanyFileIsVisible = await this.isVisible(selector.vendor.vVerificationSettings.company.uploadedFileFirst);

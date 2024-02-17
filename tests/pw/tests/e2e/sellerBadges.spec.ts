@@ -54,10 +54,12 @@ test.describe('Seller badge test', () => {
     });
 
     test.skip('admin can filter vendors by seller badge @pro @a', async () => {
+        // todo: need to wait 1 min after badge create; run via background process;
         await admin.filterVendorsByBadge(data.sellerBadge.eventName.productsPublished);
     });
 
     test.skip('admin can view seller badge vendors @pro @a', async () => {
+        // todo: need to wait 1 min after badge create; run via background process;
         await admin.sellerBadgeVendors(data.sellerBadge.eventName.productsPublished);
     });
 

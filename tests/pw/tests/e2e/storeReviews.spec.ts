@@ -58,15 +58,15 @@ test.describe('Store Reviews test', () => {
     });
 
     test('admin can delete store review @pro @a', async () => {
-        await admin.deleteStoreReview();
+        await admin.updateStoreReview('trash');
     });
 
     test('admin can restore deleted store review @pro @a', async () => {
-        await admin.restoreStoreReview();
+        await admin.updateStoreReview('permanently-delete');
     });
 
     test('admin can permanently delete store review @pro @a', async () => {
-        await admin.permanentlyDeleteStoreReview();
+        await admin.updateStoreReview('restore');
     });
 
     test('admin can perform store reviews bulk action @pro @a', async () => {

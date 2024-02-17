@@ -70,7 +70,7 @@ export class RequestForQuotationsPage extends AdminPage {
     // add quote rule
     async addQuoteRule(rule: requestForQuotation['quoteRule']) {
         await this.goIfNotThere(data.subUrls.backend.dokan.requestForQuoteRules);
-
+        //todo : move to base page
         await Promise.all([
             this.page.waitForResponse(resp => resp.url().includes(data.subUrls.api.dokan.quotes) && resp.status() === 200),
             this.page.waitForResponse(resp => resp.url().includes(data.subUrls.api.dokan.products) && resp.status() === 200),

@@ -161,10 +161,6 @@ setup.describe('setup user settings', () => {
         await apiUtils.createProduct({ ...product, status: 'pending', in_stock: true }, payloads.vendorAuth);
         await apiUtils.createProduct({ ...product, status: 'publish', in_stock: true }, payloads.vendorAuth);
     });
-
-    setup.skip('add test vendor orders @lite', async () => {
-        await apiUtils.createOrder(payloads.createProduct(), { ...payloads.createOrder, customer_id: CUSTOMER_ID }, payloads.vendorAuth);
-    });
 });
 
 setup.describe('setup dokan settings', () => {

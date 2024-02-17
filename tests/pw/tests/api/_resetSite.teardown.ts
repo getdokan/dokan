@@ -46,14 +46,10 @@ test.describe('test environment', () => {
     });
 
     test('delete all announcements', async () => {
-        // await apiUtils.deleteAllAnnouncements(payloads.adminAuth);
-    });
-
-    test('delete all support tickets', async () => {
-        // await apiUtils.deleteAllSupportTickets(payloads.adminAuth);
+        await apiUtils.deleteAllAnnouncements(payloads.adminAuth);
     });
 
     test('delete all abuse report tickets', async () => {
-        // await apiUtils.deleteAllAbuseReports(payloads.adminAuth);
+        await apiUtils.deleteAllAbuseReports(payloads.adminAuth);
     });
 });

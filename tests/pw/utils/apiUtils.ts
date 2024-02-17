@@ -870,6 +870,18 @@ export class ApiUtils {
         return abuseReportId;
     }
 
+    // delete all abuse reports
+    async deleteAllAbuseReports(auth?: auth): Promise<responseBody> {
+        const allAbuseReports = await this.getAllAbuseReports(auth);
+        if (!allAbuseReports?.length) {
+            console.log('No abuse report exists');
+            return;
+        }
+        const allAbuseReportIds = allAbuseReports.map((o: { id: unknown }) => o.id);
+        const [, responseBody] = await this.delete(endPoints.deleteBatchAbuseReports, { data: { items: allAbuseReportIds }, headers: auth });
+        return responseBody;
+    }
+
     /**
      * announcements api methods
      */
@@ -915,6 +927,17 @@ export class ApiUtils {
         }
         const [, responseBody] = await this.put(endPoints.updateBatchAnnouncements, { data: { [action]: allIds }, headers: auth });
         return responseBody;
+    }
+
+    // delete all announcements
+    async deleteAllAnnouncements(auth?: auth): Promise<responseBody> {
+        const allAnnouncemens = await this.getAllAnnouncements(auth);
+        if (!allAnnouncemens?.length) {
+            console.log('No announcement exists');
+            return;
+        }
+        const allAnnouncementIds = allAnnouncemens.map((o: { id: unknown }) => o.id);
+        await this.updateBatchAnnouncements('delete', allAnnouncementIds, auth);
     }
 
     /**
@@ -1040,22 +1063,24 @@ export class ApiUtils {
 
     // delete all quote rules
     async deleteAllQuoteRules(auth?: auth): Promise<responseBody> {
-        const allQuoteRuleIds = (await this.getAllQuoteRules(auth)).map((o: { id: unknown }) => o.id);
-        if (!allQuoteRuleIds?.length) {
+        const allQuoteRules = await this.getAllQuoteRules(auth);
+        if (!allQuoteRules?.length) {
             console.log('No quote rule exists');
             return;
         }
+        const allQuoteRuleIds = allQuoteRules.map((o: { id: unknown }) => o.id);
         const [, responseBody] = await this.put(endPoints.updateBatchQuoteRules, { data: { trash: allQuoteRuleIds }, headers: auth });
         return responseBody;
     }
 
     // delete all quote rules trashed
     async deleteAllQuoteRulesTrashed(auth?: auth): Promise<responseBody> {
-        const allQuoteRuleIds = (await this.getAllQuoteRules({ status: 'trash', per_page: 100 }, auth)).map((o: { id: unknown }) => o.id);
-        if (!allQuoteRuleIds?.length) {
+        const allQuoteRules = await this.getAllQuoteRules({ status: 'trash', per_page: 100 }, auth);
+        if (!allQuoteRules?.length) {
             console.log('No quote rule exists');
             return;
         }
+        const allQuoteRuleIds = allQuoteRules.map((o: { id: unknown }) => o.id);
         const [, responseBody] = await this.put(endPoints.updateBatchQuoteRules, { data: { delete: allQuoteRuleIds }, headers: auth });
         return responseBody;
     }
@@ -1086,11 +1111,12 @@ export class ApiUtils {
 
     // delete all quote requests
     async deleteAllQuoteRequests(auth?: auth): Promise<responseBody> {
-        const allQuoteIds = (await this.getAllQuoteRequests(auth)).map((o: { id: unknown }) => o.id);
-        if (!allQuoteIds?.length) {
+        const allQuotes = await this.getAllQuoteRequests(auth);
+        if (!allQuotes?.length) {
             console.log('No quote request exists');
             return;
         }
+        const allQuoteIds = allQuotes.map((o: { id: unknown }) => o.id);
         const [, responseBody] = await this.put(endPoints.updateBatchRequestQuotes, { data: { trash: allQuoteIds }, headers: auth });
         return responseBody;
     }
@@ -1249,11 +1275,12 @@ export class ApiUtils {
 
     // delete all product questions
     async deleteAllProductQuestions(auth?: auth): Promise<responseBody> {
-        const allProductQuestionIds = (await this.getAllProductQuestions()).map((a: { id: unknown }) => a.id);
-        if (!allProductQuestionIds?.length) {
+        const allProductQuestions = await this.getAllProductQuestions();
+        if (!allProductQuestions?.length) {
             console.log('No product question exists');
             return;
         }
+        const allProductQuestionIds = allProductQuestions.map((o: { id: unknown }) => o.id);
         const [, responseBody] = await this.put(endPoints.updateBatchProductQuestions, { data: { action: 'delete', ids: allProductQuestionIds }, headers: auth });
         return responseBody;
     }

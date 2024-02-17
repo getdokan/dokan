@@ -240,6 +240,20 @@ export class BasePage {
         return response;
     }
 
+    // click & wait for multiple responses
+    async clickAndWaitForMultipleResponses(subUrls: string[][], selector: string, code = 200): Promise<void[] | Response[]> {
+        // todo: fix this; also update for same and different subUrls
+        const promises = [];
+        subUrls.forEach(subUrl => {
+            console.log('subUls: ', subUrl[0], ' code: ', subUrl[1]);
+            const promise = this.page.waitForResponse(resp => resp.url().includes(subUrl[0] as string) && resp.status() === (subUrl[1] ?? code));
+            promises.push(promise);
+        });
+        promises.push(this.page.locator(selector).click());
+        const response = await Promise.all([...promises, this.page.locator(selector).click()]);
+        return response;
+    }
+
     // click & accept
     async clickAndAccept(selector: string): Promise<void> {
         await Promise.all([this.acceptAlert(), this.page.locator(selector).click()]);
@@ -754,7 +768,7 @@ export class BasePage {
     async uploadFile(selector: string, files: string | string[]): Promise<void> {
         // await this.page.setInputFiles(selector, files, { noWaitAfter: true });
         await this.page.setInputFiles(selector, files);
-        await this.wait(1.5);
+        await this.wait(1.5); //todo: resolve this
     }
 
     // upload file
@@ -1306,13 +1320,14 @@ export class BasePage {
 
     // assert any element to be visible
     async toBeVisibleAnyOfThem(selectors: string[]) {
-        // todo: extend nd improve this method
+        // todo: extend and improve this method
         const res = [];
         for (const selector of selectors) {
             res.push(await this.isVisible(selector));
         }
         const result = res.includes(true);
         expect(result).toBeTruthy();
+        // todo:  return which elements are true for further operation
     }
 
     // assert element to be visible
