@@ -106,7 +106,7 @@ setup.describe('setup site & woocommerce & user settings', () => {
 
     setup('disable simple-auction ajax bid check @pro', async () => {
         setup.skip(!process.env.CI || !DOKAN_PRO, 'skip on local');
-        const [, , status] = await apiUtils.getSinglePlugin('wa/woocommerce-simple-auctions', payloads.adminAuth);
+        const [, , status] = await apiUtils.getSinglePlugin('woocommerce-simple-auctions/woocommerce-simple-auctions', payloads.adminAuth);
         status === 'active' && (await dbUtils.updateWpOptionTable('simple_auctions_live_check', 'no'));
     });
 });

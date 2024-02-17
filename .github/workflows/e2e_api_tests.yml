@@ -87,7 +87,7 @@ jobs:
                   npm run build
 
             # Install test dependencies
-            - name: Install dependencies
+            - name: Install test dependencies
               if: success()
               run: |
                   cd tests/pw 

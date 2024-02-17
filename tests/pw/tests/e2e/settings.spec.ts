@@ -4,7 +4,7 @@ import { dbData } from '@utils/dbData';
 import { dbUtils } from '@utils/dbUtils';
 import { data } from '@utils/testData';
 
-test.describe.skip('Settings test', () => {
+test.describe('Settings test', () => {
     let admin: SettingsPage;
     let aPage: Page;
 
