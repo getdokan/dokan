@@ -597,17 +597,19 @@ export class BasePage {
     }
 
     // Or
-    async clearInputField1(selector: string): Promise<void> {
+
+    async clearInputFieldByMultipleClick(selector: string): Promise<void> {
         const element = this.getElement(selector);
         await element.click({ clickCount: 3 });
         await this.press('Backspace');
     }
 
     // Or
-    // async clearInputField2(selector): Promise<void>  {
-    // 	let element = await this.getElement(selector)
-    // 	await this.page.evaluate(element => element.value = '', element)
-    // }
+
+    async clearInputFieldByEvaluate(selector: string): Promise<void> {
+        const element = this.getElement(selector);
+        await this.page.evaluate(element => (element.value = ''), element); // todo: fix
+    }
 
     // clear input field and type
     async clearAndType(selector: string, text: string): Promise<void> {
