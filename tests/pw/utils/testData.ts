@@ -1361,15 +1361,13 @@ export const data = {
         },
 
         // addon
-        addon: {
-            randomName: () => 'Addons Group_' + faker.string.nanoid(10),
-            randomTitle: () => 'Add-on Title_' + faker.string.nanoid(10),
-            name: 'Addons Group_',
+        addon: () => ({
+            name: 'Test Addons Group_' + faker.string.nanoid(10),
             priority: '10',
             category: 'Uncategorized',
             type: 'multiple_choice', // 'multiple_choice', 'checkbox', 'custom_text', 'custom_textarea', 'file_upload', 'custom_price', 'input_multiplier', 'heading'
             displayAs: 'select', // 'select', 'radiobutton', 'images'
-            titleRequired: 'Add-on Title_',
+            title: 'Test Add-on Title_' + faker.string.nanoid(10),
             formatTitle: 'label', // 'label', 'heading', 'hide'
             addDescription: 'Add-on description',
             enterAnOption: 'Option 1',
@@ -1377,7 +1375,7 @@ export const data = {
             optionPriceInput: '30',
             saveSuccessMessage: 'Add-on saved successfully',
             deleteSuccessMessage: 'Add-on deleted successfully',
-        },
+        }),
 
         registrationErrorMessage: 'Error: An account is already registered with your email address. Please log in.',
     },

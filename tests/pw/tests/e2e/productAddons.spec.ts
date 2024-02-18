@@ -12,12 +12,14 @@ test.describe('Product addon functionality test', () => {
     let vPage: Page;
     let addonName: string;
     let addonFieldTitle: string;
+    let categoryName: string;
     let apiUtils: ApiUtils;
 
-    async function createVendorProductAddon(): Promise<[string, string, string]> {
-        const [, addonId, addonName, addonFieldTitle] = await apiUtils.createProductAddon(payloads.createProductAddons(), payloads.adminAuth);
+    async function createVendorProductAddon(): Promise<[string, string, string, string]> {
+        const [, categoryId, categoryName] = await apiUtils.createCategory(payloads.createCategoryRandom(), payloads.adminAuth);
+        const [, addonId, addonName, addonFieldTitle] = await apiUtils.createProductAddon({ ...payloads.createProductAddons(), restrict_to_categories: [categoryId] }, payloads.adminAuth);
         await dbUtils.updateCell(addonId, VENDOR_ID);
-        return [addonId, addonName, addonFieldTitle];
+        return [addonId, addonName, addonFieldTitle, categoryName];
     }
 
     test.beforeAll(async ({ browser }) => {
@@ -26,7 +28,7 @@ test.describe('Product addon functionality test', () => {
         vendor = new ProductAddonsPage(vPage);
 
         apiUtils = new ApiUtils(await request.newContext());
-        [, addonName, addonFieldTitle] = await createVendorProductAddon();
+        [, addonName, addonFieldTitle, categoryName] = await createVendorProductAddon();
     });
 
     test.afterAll(async () => {
@@ -40,15 +42,15 @@ test.describe('Product addon functionality test', () => {
     });
 
     test('vendor can add addons @pro @v', async () => {
-        await vendor.addAddon({ ...data.vendor.addon, name: data.vendor.addon.randomName() });
+        await vendor.addAddon({ ...data.vendor.addon(), category: categoryName });
     });
 
     test('vendor can edit addon @pro @v', async () => {
-        await vendor.editAddon({ ...data.vendor.addon, name: addonName, titleRequired: addonFieldTitle });
+        await vendor.editAddon({ ...data.vendor.addon(), name: addonName, title: addonFieldTitle });
     });
 
     test('vendor can delete addon @pro @v', async () => {
         const [, addonName] = await createVendorProductAddon();
-        await vendor.deleteAddon({ ...data.vendor.addon, name: addonName });
+        await vendor.deleteAddon({ ...data.vendor.addon(), name: addonName });
     });
 });

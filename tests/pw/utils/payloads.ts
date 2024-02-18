@@ -550,6 +550,10 @@ export const payloads = {
 
     // product category
 
+    createCategoryRandom: () => ({
+        name: faker.string.nanoid(10),
+    }),
+
     createCategory: {
         name: 'Clothing',
     },

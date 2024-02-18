@@ -1033,13 +1033,12 @@ export interface vendor {
 
     // addon
     addon: {
-        randomName: () => string;
         name: string;
         priority: string;
         category: string;
         type: string;
         displayAs: string;
-        titleRequired: string;
+        title: string;
         formatTitle: string;
         addDescription: string;
         enterAnOption: string;

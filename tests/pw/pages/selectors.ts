@@ -5694,6 +5694,7 @@ export const selector = {
                 name: '#addon-reference',
                 priority: '#addon-priority',
                 productCategories: '.select2-search__field',
+                result: 'li.select2-results__option.select2-results__option--highlighted',
 
                 // Addon fields
                 addonFieldsRow: (addonField: string) => `//h3[@class="wc-pao-addon-name" and contains(text(), "${addonField}")]/../..//span[@class="wc-pao-addon-toggle"]`,

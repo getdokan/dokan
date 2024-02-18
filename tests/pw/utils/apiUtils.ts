@@ -1571,10 +1571,11 @@ export class ApiUtils {
     }
 
     // create category
-    async createCategory(payload: object, auth?: auth): Promise<[responseBody, string]> {
+    async createCategory(payload: object, auth?: auth): Promise<[responseBody, string, string]> {
         const [, responseBody] = await this.post(endPoints.wc.createCategory, { data: payload, headers: auth });
         const categoryId = String(responseBody?.id);
-        return [responseBody, categoryId];
+        const categoryName = String(responseBody?.name);
+        return [responseBody, categoryId, categoryName];
     }
 
     // update category

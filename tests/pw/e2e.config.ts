@@ -63,7 +63,7 @@ export default defineConfig({
         /* Whether to automatically download all the attachments. */
         acceptDownloads: true,
         /* Maximum time each action such as `click()` can take. Defaults to 0 (no limit). */
-        actionTimeout: 25 * 1000,
+        actionTimeout: 30 * 1000,
         /* Maximum time each navigation such as 'goto()' can take. */
         navigationTimeout: 30 * 1000,
         /* Base URL */

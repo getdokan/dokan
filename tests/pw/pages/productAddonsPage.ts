@@ -4,7 +4,6 @@ import { selector } from '@pages/selectors';
 import { data } from '@utils/testData';
 import { vendor } from '@utils/interfaces';
 
-
 // selectors
 const addonsVendor = selector.vendor.vAddonSettings;
 
@@ -37,7 +36,7 @@ export class ProductAddonsPage extends VendorPage {
         await this.check(addonsVendor.addon.enableDescription);
 
         // product addon fields elements are visible
-        const { addonFieldsRow, addonUpdateSuccessMessage, ...addonFields } = addonsVendor.addon;
+        const { result, addonFieldsRow, addonUpdateSuccessMessage, ...addonFields } = addonsVendor.addon;
         await this.multipleElementVisible(addonFields);
 
         await this.clickAndWaitForLoadState(addonsVendor.backToAddonLists);
@@ -49,15 +48,16 @@ export class ProductAddonsPage extends VendorPage {
         await this.clearAndType(addonsVendor.addon.priority, addon.priority);
 
         // skipped category
-        // await this.click(addonsVendor.addon.productCategories);
-        // await this.clearAndType(addonsVendor.addon.productCategories, addon.category);
-        // await this.press(data.key.enter);
+        await this.click(addonsVendor.addon.productCategories);
+        await this.clearAndType(addonsVendor.addon.productCategories, addon.category);
+        await this.toContainText(addonsVendor.addon.result, addon.category);
+        await this.press(data.key.enter);
 
         add ? await this.click(addonsVendor.addon.addField) : await this.click(addonsVendor.addon.addonFieldsRow('Add-on Title'));
 
         await this.selectByValue(addonsVendor.addon.type, addon.type);
         await this.selectByValue(addonsVendor.addon.displayAs, addon.displayAs);
-        await this.clearAndType(addonsVendor.addon.titleRequired, addon.titleRequired);
+        await this.clearAndType(addonsVendor.addon.titleRequired, addon.title);
         await this.selectByValue(addonsVendor.addon.formatTitle, addon.formatTitle);
         await this.check(addonsVendor.addon.enableDescription);
         await this.clearAndType(addonsVendor.addon.addDescription, addon.addDescription);
