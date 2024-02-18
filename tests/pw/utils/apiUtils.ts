@@ -271,8 +271,11 @@ export class ApiUtils {
     }
 
     // delete all products
-    async deleteAllProducts(productName?: string, auth?: auth): Promise<responseBody> {
-        // todo: apply multiple optional parameter
+    async deleteAllProducts(productName?: any, auth?: auth): Promise<responseBody> {
+        if (arguments.length === 1 && typeof productName === 'object') {
+            auth = productName as auth;
+            productName = undefined;
+        }
         const allProducts = await this.getAllProducts(auth);
         if (!allProducts?.length) {
             console.log('No product exists');

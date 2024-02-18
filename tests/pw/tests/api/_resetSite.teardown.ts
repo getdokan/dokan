@@ -22,7 +22,8 @@ test.describe('test environment', () => {
     });
 
     test('delete all products', async () => {
-        await apiUtils.deleteAllProducts('', payloads.adminAuth);
+        await apiUtils.deleteAllProducts(payloads.adminAuth);
+        await apiUtils.deleteAllProducts(payloads.vendorAuth);
     });
 
     test('delete all stores', async () => {

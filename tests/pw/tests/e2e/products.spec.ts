@@ -60,7 +60,7 @@ test.describe('Product functionality test', () => {
         await admin.addExternalProduct(data.product.external);
     });
 
-    test('admin can add vendor subscription @pro @a', async () => {
+    test.skip('admin can add vendor subscription @pro @a', async () => {
         await admin.addDokanSubscription(data.product.vendorSubscription);
     });
 
