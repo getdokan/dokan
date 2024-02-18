@@ -1056,7 +1056,6 @@ export class BasePage {
 
     // get last matching locator
     lastLocator(selector: string): Locator {
-        // todo: update all selector parameter to both selector or locator
         const locator = this.page.locator(selector);
         return locator.last();
     }

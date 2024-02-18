@@ -11,8 +11,7 @@ const { VENDOR_ID, CUSTOMER_ID } = process.env;
 test.describe('Abuse report test', () => {
     let admin: AbuseReportsPage;
     let customer: AbuseReportsPage;
-    let guest: AbuseReportsPage;
-    let aPage: Page, cPage: Page, gPage: Page;
+    let aPage: Page, cPage: Page;
     let apiUtils: ApiUtils;
 
     test.beforeAll(async ({ browser }) => {
@@ -23,10 +22,6 @@ test.describe('Abuse report test', () => {
         const customerContext = await browser.newContext(data.auth.customerAuth);
         cPage = await customerContext.newPage();
         customer = new AbuseReportsPage(cPage);
-
-        const guestContext = await browser.newContext(data.auth.noAuth);
-        gPage = await guestContext.newPage();
-        guest = new AbuseReportsPage(gPage);
 
         apiUtils = new ApiUtils(await request.newContext());
         const productId = await apiUtils.getProductId(data.predefined.simpleProduct.product1.name, payloads.vendorAuth);
@@ -72,13 +67,12 @@ test.describe('Abuse report test', () => {
     });
 
     test('guest customer can report product @pro @g', async ({ page }) => {
-        guest = new AbuseReportsPage(page); //todo: apply guest user like this where every test need seperate guest user
+        const guest = new AbuseReportsPage(page);
         await guest.reportProduct(data.predefined.simpleProduct.product1.name, data.product.report);
     });
 
-    test.skip('guest customer need to log-in to report product @pro @g', async ({ page }) => {
-        // todo: might cause other tests to fail in parallel
-        guest = new AbuseReportsPage(page);
+    test('guest customer need to log-in to report product @pro @g', async ({ page }) => {
+        const guest = new AbuseReportsPage(page);
         await dbUtils.setDokanSettings(dbData.dokan.optionName.productReportAbuse, { ...dbData.dokan.productReportAbuseSettings, reported_by_logged_in_users_only: 'on' });
         await guest.reportProduct(data.predefined.simpleProduct.product1.name, data.product.report);
         await dbUtils.setDokanSettings(dbData.dokan.optionName.productReportAbuse, dbData.dokan.productReportAbuseSettings);
