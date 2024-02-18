@@ -4,7 +4,6 @@ import { selector } from '@pages/selectors';
 import { data } from '@utils/testData';
 import { vendor, shipping } from '@utils/interfaces';
 
-
 // selectors
 const vendorShipping = selector.vendor.vShippingSettings;
 

@@ -4,7 +4,6 @@ import { selector } from '@pages/selectors';
 import { data } from '@utils/testData';
 import { staff } from '@utils/interfaces';
 
-
 // selectors
 const vendorStaff = selector.vendor.vStaff;
 

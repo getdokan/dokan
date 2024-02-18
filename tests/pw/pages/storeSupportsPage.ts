@@ -6,7 +6,6 @@ import { helpers } from '@utils/helpers';
 import { data } from '@utils/testData';
 import { customer, date } from '@utils/interfaces';
 
-
 // selectors
 const storeSupportsAdmin = selector.admin.dokan.storeSupport;
 const storeSupportsVendor = selector.vendor.vSupport;

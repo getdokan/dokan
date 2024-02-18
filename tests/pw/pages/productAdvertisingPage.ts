@@ -4,7 +4,6 @@ import { selector } from '@pages/selectors';
 import { data } from '@utils/testData';
 import { productAdvertisement } from '@utils/interfaces';
 
-
 // selectors
 const productAdvertisingAdmin = selector.admin.dokan.productAdvertising;
 

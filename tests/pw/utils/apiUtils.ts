@@ -1469,9 +1469,10 @@ export class ApiUtils {
     }
 
     // create post
-    async createPost(payload: object, auth?: auth): Promise<responseBody> {
+    async createPost(payload: object, auth?: auth): Promise<[responseBody, string]> {
         const [, responseBody] = await this.post(endPoints.wp.createPost, { data: payload, headers: auth });
-        return responseBody;
+        const postId = String(responseBody?.id);
+        return [responseBody, postId];
     }
 
     // get all pages

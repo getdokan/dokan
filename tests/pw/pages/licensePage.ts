@@ -3,7 +3,6 @@ import { AdminPage } from '@pages/adminPage';
 import { selector } from '@pages/selectors';
 import { data } from '@utils/testData';
 
-
 // selectors
 const licenseAdmin = selector.admin.dokan.license;
 

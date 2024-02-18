@@ -5,7 +5,6 @@ import { selector } from '@pages/selectors';
 import { data } from '@utils/testData';
 import { sellerBadge } from '@utils/interfaces';
 
-
 // selectors
 const sellerBadgeAdmin = selector.admin.dokan.sellerBadge;
 const sellerBadgeVendor = selector.vendor.vBadges;

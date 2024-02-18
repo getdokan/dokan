@@ -3,7 +3,6 @@ import { VendorPage } from '@pages/vendorPage';
 import { selector } from '@pages/selectors';
 import { data } from '@utils/testData';
 
-
 // selectors
 const vendorTools = selector.vendor.vTools;
 

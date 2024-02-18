@@ -4,7 +4,6 @@ import { selector } from '@pages/selectors';
 import { data } from '@utils/testData';
 import { helpers } from '@utils/helpers';
 
-
 // selectors
 const pluginsAdmin = selector.admin.plugins;
 

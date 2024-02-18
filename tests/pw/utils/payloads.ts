@@ -382,8 +382,8 @@ export const payloads = {
         // max_date_unit            : 'month'
     }),
 
-    createBookingResource: {
-        name: 'resource1',
+    createBookingResource: () => ({
+        name: 'resource_' + faker.string.nanoid(10),
         qty: '1',
         availability: [
             {
@@ -396,7 +396,15 @@ export const payloads = {
         ],
         base_cost: 5,
         block_cost: 6,
-    },
+    }),
+
+    createBookingResourceByDb: () => ({
+        author: 1,
+        title: 'resource_' + faker.string.nanoid(10),
+        status: 'publish',
+        comment_status: 'closed',
+        ping_status: 'closed',
+    }),
 
     createAuctionProduct: () => ({
         name: faker.commerce.productName() + ' (Auction)',

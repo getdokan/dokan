@@ -5,7 +5,6 @@ import { data } from '@utils/testData';
 import { helpers } from '@utils/helpers';
 import { reverseWithdraw, date } from '@utils/interfaces';
 
-
 // selectors
 const reverseWithdrawAdmin = selector.admin.dokan.reverseWithdraw;
 const reverseWithdrawVendor = selector.vendor.vReverseWithdrawal;

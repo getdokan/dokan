@@ -176,11 +176,6 @@ test-results/
 playwright-report/
 playwright/.cache/
 visual.spec.ts-snapshots/
-storageState.json
-adminStorageState.json
-customerStorageState.json
-vendorStorageState.json
-systemInfo.json
 
 # vscode
 .vscode/

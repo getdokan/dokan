@@ -5,7 +5,6 @@ import { selector } from '@pages/selectors';
 import { data } from '@utils/testData';
 import { vendor, deliveryTime } from '@utils/interfaces';
 
-
 // selectors
 const deliveryTimeCustomer = selector.customer.cDeliveryTime;
 const deliveryTimeVendor = selector.vendor.vDeliveryTime;

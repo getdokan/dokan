@@ -4,7 +4,6 @@ import { selector } from '@pages/selectors';
 import { data } from '@utils/testData';
 import { tools } from '@utils/interfaces';
 
-
 // selectors
 const toolsAdmin = selector.admin.dokan.tools;
 

@@ -6,7 +6,6 @@ import { selector } from '@pages/selectors';
 import { data } from '@utils/testData';
 import { requestForQuotation } from '@utils/interfaces';
 
-
 // selectors
 const requestForQuotationAdmin = selector.admin.dokan.requestForQuotation;
 const requestForQuotationVendor = selector.vendor.vRequestQuotes;

@@ -9,7 +9,6 @@ import { helpers } from '@utils/helpers';
 const announcementsAdmin = selector.admin.dokan.announcements;
 const announcementsVendor = selector.vendor.vAnnouncement;
 
-
 export class AnnouncementsPage extends AdminPage {
     constructor(page: Page) {
         super(page);

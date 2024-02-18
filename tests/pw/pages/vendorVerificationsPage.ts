@@ -4,7 +4,6 @@ import { selector } from '@pages/selectors';
 import { data } from '@utils/testData';
 import { vendor } from '@utils/interfaces';
 
-
 // selectors
 const verificationsAdmin = selector.admin.dokan.verifications;
 const verificationsVendor = selector.vendor.vVerificationSettings;

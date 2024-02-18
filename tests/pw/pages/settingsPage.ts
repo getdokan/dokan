@@ -6,7 +6,6 @@ import { dokanSettings } from '@utils/interfaces';
 
 const { DOKAN_PRO } = process.env;
 
-
 // selectors
 const settingsAdmin = selector.admin.dokan.settings;
 
