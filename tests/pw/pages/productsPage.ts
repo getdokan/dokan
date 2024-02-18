@@ -8,6 +8,10 @@ import { product, vendor } from '@utils/interfaces';
 
 const { DOKAN_PRO } = process.env;
 
+// selectors
+const productsAdmin = selector.admin.products;
+const productsVendor = selector.vendor.product;
+
 export class ProductsPage extends AdminPage {
     constructor(page: Page) {
         super(page);
@@ -16,27 +20,27 @@ export class ProductsPage extends AdminPage {
     // admin add product category
     async addCategory(categoryName: string) {
         await this.goIfNotThere(data.subUrls.backend.wc.addNewCategories);
-        await this.fill(selector.admin.products.category.name, categoryName);
-        await this.fill(selector.admin.products.category.slug, categoryName);
-        await this.clickAndWaitForResponse(data.subUrls.ajax, selector.admin.products.category.addNewCategory);
-        await this.toBeVisible(selector.admin.products.category.categoryCell(categoryName));
+        await this.fill(productsAdmin.category.name, categoryName);
+        await this.fill(productsAdmin.category.slug, categoryName);
+        await this.clickAndWaitForResponse(data.subUrls.ajax, productsAdmin.category.addNewCategory);
+        await this.toBeVisible(productsAdmin.category.categoryCell(categoryName));
     }
 
     // admin add product attribute
     async addAttribute(attribute: product['attribute']) {
         await this.goIfNotThere(data.subUrls.backend.wc.addNewAttributes);
-        await this.fill(selector.admin.products.attribute.name, attribute.attributeName);
-        await this.fill(selector.admin.products.attribute.slug, attribute.attributeName);
-        await this.clickAndWaitForResponse(data.subUrls.backend.wc.addNewAttributes, selector.admin.products.attribute.addAttribute);
-        await this.toBeVisible(selector.admin.products.attribute.attributeCell(attribute.attributeName));
-        await this.clickAndWaitForResponse(data.subUrls.backend.wc.taxonomy, selector.admin.products.attribute.configureTerms(attribute.attributeName));
+        await this.fill(productsAdmin.attribute.name, attribute.attributeName);
+        await this.fill(productsAdmin.attribute.slug, attribute.attributeName);
+        await this.clickAndWaitForResponse(data.subUrls.backend.wc.addNewAttributes, productsAdmin.attribute.addAttribute);
+        await this.toBeVisible(productsAdmin.attribute.attributeCell(attribute.attributeName));
+        await this.clickAndWaitForResponse(data.subUrls.backend.wc.taxonomy, productsAdmin.attribute.configureTerms(attribute.attributeName));
 
         // add new term
         for (const attributeTerm of attribute.attributeTerms) {
-            await this.fill(selector.admin.products.attribute.attributeTerm, attributeTerm);
-            await this.fill(selector.admin.products.attribute.attributeTermSlug, attributeTerm);
-            await this.clickAndWaitForResponse(data.subUrls.ajax, selector.admin.products.attribute.addAttributeTerm);
-            await this.toBeVisible(selector.admin.products.attribute.attributeTermCell(attributeTerm));
+            await this.fill(productsAdmin.attribute.attributeTerm, attributeTerm);
+            await this.fill(productsAdmin.attribute.attributeTermSlug, attributeTerm);
+            await this.clickAndWaitForResponse(data.subUrls.ajax, productsAdmin.attribute.addAttributeTerm);
+            await this.toBeVisible(productsAdmin.attribute.attributeTermCell(attributeTerm));
         }
     }
 
@@ -45,38 +49,38 @@ export class ProductsPage extends AdminPage {
         await this.goIfNotThere(data.subUrls.backend.wc.addNewProducts);
 
         // product basic info
-        await this.type(selector.admin.products.product.productName, product.productName());
-        await this.selectByValue(selector.admin.products.product.productType, product.productType);
-        await this.click(selector.admin.products.product.general);
-        await this.type(selector.admin.products.product.regularPrice, product.regularPrice());
-        await this.click(selector.admin.products.product.category(product.category));
+        await this.type(productsAdmin.product.productName, product.productName());
+        await this.selectByValue(productsAdmin.product.productType, product.productType);
+        await this.click(productsAdmin.product.general);
+        await this.type(productsAdmin.product.regularPrice, product.regularPrice());
+        await this.click(productsAdmin.product.category(product.category));
 
         // stock status
         if (product.stockStatus) {
-            await this.click(selector.admin.products.product.inventory);
-            await this.selectByValue(selector.admin.products.product.stockStatus, data.product.stockStatus.outOfStock);
+            await this.click(productsAdmin.product.inventory);
+            await this.selectByValue(productsAdmin.product.stockStatus, data.product.stockStatus.outOfStock);
         }
 
         // vendor Store Name
-        await this.select2ByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameInput, product.storeName);
+        await this.select2ByText(productsAdmin.product.storeName, productsAdmin.product.storeNameInput, product.storeName);
         await this.scrollToTop();
 
         switch (product.status) {
             case 'publish':
-                await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.admin.products.product.publish);
-                await this.toContainText(selector.admin.products.product.updatedSuccessMessage, data.product.publishSuccessMessage);
+                await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, productsAdmin.product.publish);
+                await this.toContainText(productsAdmin.product.updatedSuccessMessage, data.product.publishSuccessMessage);
                 break;
 
             case 'draft':
-                await this.clickAndWaitForResponseAndLoadState(data.subUrls.post, selector.admin.products.product.saveDraft, 302);
-                await this.toContainText(selector.admin.products.product.updatedSuccessMessage, data.product.draftUpdateSuccessMessage);
+                await this.clickAndWaitForResponseAndLoadState(data.subUrls.post, productsAdmin.product.saveDraft, 302);
+                await this.toContainText(productsAdmin.product.updatedSuccessMessage, data.product.draftUpdateSuccessMessage);
                 break;
 
             case 'pending':
-                await this.click(selector.admin.products.product.editStatus);
-                await this.selectByValue(selector.admin.products.product.status, data.product.status.pending);
-                await this.clickAndWaitForResponseAndLoadState(data.subUrls.post, selector.admin.products.product.saveDraft, 302);
-                await this.toContainText(selector.admin.products.product.updatedSuccessMessage, data.product.pendingProductUpdateSuccessMessage);
+                await this.click(productsAdmin.product.editStatus);
+                await this.selectByValue(productsAdmin.product.status, data.product.status.pending);
+                await this.clickAndWaitForResponseAndLoadState(data.subUrls.post, productsAdmin.product.saveDraft, 302);
+                await this.toContainText(productsAdmin.product.updatedSuccessMessage, data.product.pendingProductUpdateSuccessMessage);
                 break;
 
             default:
@@ -89,41 +93,41 @@ export class ProductsPage extends AdminPage {
         await this.goIfNotThere(data.subUrls.backend.wc.addNewProducts);
 
         // name
-        await this.type(selector.admin.products.product.productName, product.productName());
-        await this.selectByValue(selector.admin.products.product.productType, product.productType);
+        await this.type(productsAdmin.product.productName, product.productName());
+        await this.selectByValue(productsAdmin.product.productType, product.productType);
 
         // add attributes
-        await this.click(selector.admin.products.product.attributes);
+        await this.click(productsAdmin.product.attributes);
 
-        if (await this.isVisibleLocator(selector.admin.products.product.customProductAttribute)) {
-            await this.selectByValue(selector.admin.products.product.customProductAttribute, `pa_${product.attribute}`);
-            await this.click(selector.admin.products.product.addAttribute);
+        if (await this.isVisibleLocator(productsAdmin.product.customProductAttribute)) {
+            await this.selectByValue(productsAdmin.product.customProductAttribute, `pa_${product.attribute}`);
+            await this.click(productsAdmin.product.addAttribute);
         } else {
-            await this.clickAndWaitForResponse(data.subUrls.backend.wc.searchAttribute, selector.admin.products.product.addExistingAttribute);
-            await this.typeAndWaitForResponse(data.subUrls.backend.wc.term, selector.admin.products.product.addExistingAttributeInput, product.attribute);
+            await this.clickAndWaitForResponse(data.subUrls.backend.wc.searchAttribute, productsAdmin.product.addExistingAttribute);
+            await this.typeAndWaitForResponse(data.subUrls.backend.wc.term, productsAdmin.product.addExistingAttributeInput, product.attribute);
             await this.pressAndWaitForResponse(data.subUrls.ajax, data.key.enter);
         }
 
-        await this.clickAndWaitForResponse(data.subUrls.backend.wc.taxonomyTerms, selector.admin.products.product.selectAll);
-        await this.check(selector.admin.products.product.usedForVariations);
-        await this.clickAndWaitForResponse(data.subUrls.ajax, selector.admin.products.product.saveAttributes);
+        await this.clickAndWaitForResponse(data.subUrls.backend.wc.taxonomyTerms, productsAdmin.product.selectAll);
+        await this.check(productsAdmin.product.usedForVariations);
+        await this.clickAndWaitForResponse(data.subUrls.ajax, productsAdmin.product.saveAttributes);
 
         // add variations
-        await this.click(selector.admin.products.product.variations);
-        await this.clickAndAcceptAndWaitForResponse(data.subUrls.ajax, selector.admin.products.product.generateVariations);
+        await this.click(productsAdmin.product.variations);
+        await this.clickAndAcceptAndWaitForResponse(data.subUrls.ajax, productsAdmin.product.generateVariations);
         this.fillAlert('100');
-        await this.selectByValue(selector.admin.products.product.addVariations, product.variations.variableRegularPrice);
+        await this.selectByValue(productsAdmin.product.addVariations, product.variations.variableRegularPrice);
 
         // category
-        await this.click(selector.admin.products.product.category(product.category));
+        await this.click(productsAdmin.product.category(product.category));
 
         // Vendor Store Name
-        await this.select2ByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameInput, product.storeName);
+        await this.select2ByText(productsAdmin.product.storeName, productsAdmin.product.storeNameInput, product.storeName);
         await this.scrollToTop();
 
         // Publish
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.post, selector.admin.products.product.publish, 302);
-        await this.toContainText(selector.admin.products.product.updatedSuccessMessage, data.product.publishSuccessMessage);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.post, productsAdmin.product.publish, 302);
+        await this.toContainText(productsAdmin.product.updatedSuccessMessage, data.product.publishSuccessMessage);
     }
 
     // Admin Add Simple Subscription Product
@@ -131,27 +135,27 @@ export class ProductsPage extends AdminPage {
         await this.goIfNotThere(data.subUrls.backend.wc.addNewProducts);
 
         // Name
-        await this.type(selector.admin.products.product.productName, product.productName());
-        await this.selectByValue(selector.admin.products.product.productType, product.productType);
-        await this.click(selector.admin.products.product.general);
-        await this.type(selector.admin.products.product.subscriptionPrice, product.subscriptionPrice());
-        await this.selectByValue(selector.admin.products.product.subscriptionPeriodInterval, product.subscriptionPeriodInterval);
-        await this.selectByValue(selector.admin.products.product.subscriptionPeriod, product.subscriptionPeriod);
-        await this.selectByValue(selector.admin.products.product.expireAfter, product.expireAfter);
-        await this.type(selector.admin.products.product.subscriptionTrialLength, product.subscriptionTrialLength);
-        await this.selectByValue(selector.admin.products.product.subscriptionTrialPeriod, product.subscriptionTrialPeriod);
+        await this.type(productsAdmin.product.productName, product.productName());
+        await this.selectByValue(productsAdmin.product.productType, product.productType);
+        await this.click(productsAdmin.product.general);
+        await this.type(productsAdmin.product.subscriptionPrice, product.subscriptionPrice());
+        await this.selectByValue(productsAdmin.product.subscriptionPeriodInterval, product.subscriptionPeriodInterval);
+        await this.selectByValue(productsAdmin.product.subscriptionPeriod, product.subscriptionPeriod);
+        await this.selectByValue(productsAdmin.product.expireAfter, product.expireAfter);
+        await this.type(productsAdmin.product.subscriptionTrialLength, product.subscriptionTrialLength);
+        await this.selectByValue(productsAdmin.product.subscriptionTrialPeriod, product.subscriptionTrialPeriod);
 
         // Category
-        await this.click(selector.admin.products.product.category(product.category));
+        await this.click(productsAdmin.product.category(product.category));
 
         // Vendor Store Name
-        await this.select2ByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameInput, product.storeName);
+        await this.select2ByText(productsAdmin.product.storeName, productsAdmin.product.storeNameInput, product.storeName);
         await this.scrollToTop();
 
         // Publish
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.post, selector.admin.products.product.publish, 302);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.post, productsAdmin.product.publish, 302);
 
-        await this.toContainText(selector.admin.products.product.updatedSuccessMessage, data.product.publishSuccessMessage);
+        await this.toContainText(productsAdmin.product.updatedSuccessMessage, data.product.publishSuccessMessage);
     }
 
     // admin add variable product
@@ -159,42 +163,42 @@ export class ProductsPage extends AdminPage {
         await this.goIfNotThere(data.subUrls.backend.wc.addNewProducts);
 
         // name
-        await this.type(selector.admin.products.product.productName, product.productName());
-        await this.selectByValue(selector.admin.products.product.productType, product.productType);
+        await this.type(productsAdmin.product.productName, product.productName());
+        await this.selectByValue(productsAdmin.product.productType, product.productType);
 
         // add attributes
-        await this.click(selector.admin.products.product.attributes);
+        await this.click(productsAdmin.product.attributes);
 
-        if (await this.isVisibleLocator(selector.admin.products.product.customProductAttribute)) {
-            await this.selectByValue(selector.admin.products.product.customProductAttribute, `pa_${product.attribute}`);
-            await this.click(selector.admin.products.product.addAttribute);
+        if (await this.isVisibleLocator(productsAdmin.product.customProductAttribute)) {
+            await this.selectByValue(productsAdmin.product.customProductAttribute, `pa_${product.attribute}`);
+            await this.click(productsAdmin.product.addAttribute);
         } else {
-            await this.clickAndWaitForResponse(data.subUrls.backend.wc.searchAttribute, selector.admin.products.product.addExistingAttribute);
-            await this.typeAndWaitForResponse(data.subUrls.backend.wc.term, selector.admin.products.product.addExistingAttributeInput, product.attribute);
+            await this.clickAndWaitForResponse(data.subUrls.backend.wc.searchAttribute, productsAdmin.product.addExistingAttribute);
+            await this.typeAndWaitForResponse(data.subUrls.backend.wc.term, productsAdmin.product.addExistingAttributeInput, product.attribute);
             await this.pressAndWaitForResponse(data.subUrls.ajax, data.key.enter);
         }
 
-        await this.clickAndWaitForResponse(data.subUrls.backend.wc.taxonomyTerms, selector.admin.products.product.selectAll);
-        await this.check(selector.admin.products.product.usedForVariations);
-        await this.clickAndWaitForResponse(data.subUrls.ajax, selector.admin.products.product.saveAttributes);
+        await this.clickAndWaitForResponse(data.subUrls.backend.wc.taxonomyTerms, productsAdmin.product.selectAll);
+        await this.check(productsAdmin.product.usedForVariations);
+        await this.clickAndWaitForResponse(data.subUrls.ajax, productsAdmin.product.saveAttributes);
         // await this.wait(2);
 
         // add variations
-        await this.click(selector.admin.products.product.variations);
-        await this.clickAndAcceptAndWaitForResponse(data.subUrls.ajax, selector.admin.products.product.generateVariations);
+        await this.click(productsAdmin.product.variations);
+        await this.clickAndAcceptAndWaitForResponse(data.subUrls.ajax, productsAdmin.product.generateVariations);
         this.fillAlert('100');
-        await this.selectByValue(selector.admin.products.product.addVariations, product.variations.variableRegularPrice);
+        await this.selectByValue(productsAdmin.product.addVariations, product.variations.variableRegularPrice);
 
         // category
-        await this.click(selector.admin.products.product.category(product.category));
+        await this.click(productsAdmin.product.category(product.category));
 
         // Vendor Store Name
-        await this.select2ByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameInput, product.storeName);
+        await this.select2ByText(productsAdmin.product.storeName, productsAdmin.product.storeNameInput, product.storeName);
         await this.scrollToTop();
 
         // Publish
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.post, selector.admin.products.product.publish, 302);
-        await this.toContainText(selector.admin.products.product.updatedSuccessMessage, data.product.publishSuccessMessage);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.post, productsAdmin.product.publish, 302);
+        await this.toContainText(productsAdmin.product.updatedSuccessMessage, data.product.publishSuccessMessage);
     }
 
     // Admin Add External Product
@@ -202,23 +206,23 @@ export class ProductsPage extends AdminPage {
         await this.goIfNotThere(data.subUrls.backend.wc.addNewProducts);
 
         // Name
-        await this.type(selector.admin.products.product.productName, product.productName());
-        await this.selectByValue(selector.admin.products.product.productType, product.productType);
-        await this.click(selector.admin.products.product.general);
-        await this.type(selector.admin.products.product.productUrl, this.getBaseUrl() + product.productUrl);
-        await this.type(selector.admin.products.product.buttonText, product.buttonText);
-        await this.type(selector.admin.products.product.regularPrice, product.regularPrice());
+        await this.type(productsAdmin.product.productName, product.productName());
+        await this.selectByValue(productsAdmin.product.productType, product.productType);
+        await this.click(productsAdmin.product.general);
+        await this.type(productsAdmin.product.productUrl, this.getBaseUrl() + product.productUrl);
+        await this.type(productsAdmin.product.buttonText, product.buttonText);
+        await this.type(productsAdmin.product.regularPrice, product.regularPrice());
 
         // Category
-        await this.click(selector.admin.products.product.category(product.category));
+        await this.click(productsAdmin.product.category(product.category));
 
         // Vendor Store Name
-        await this.select2ByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameInput, product.storeName);
+        await this.select2ByText(productsAdmin.product.storeName, productsAdmin.product.storeNameInput, product.storeName);
         await this.scrollToTop();
 
         // Publish
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.post, selector.admin.products.product.publish, 302);
-        await this.toContainText(selector.admin.products.product.updatedSuccessMessage, data.product.publishSuccessMessage);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.post, productsAdmin.product.publish, 302);
+        await this.toContainText(productsAdmin.product.updatedSuccessMessage, data.product.publishSuccessMessage);
     }
 
     // Admin Add Dokan Subscription Product
@@ -226,28 +230,28 @@ export class ProductsPage extends AdminPage {
         await this.goIfNotThere(data.subUrls.backend.wc.addNewProducts);
 
         // Name
-        await this.type(selector.admin.products.product.productName, product.productName());
-        await this.selectByValue(selector.admin.products.product.productType, product.productType);
-        await this.click(selector.admin.products.product.general);
-        await this.type(selector.admin.products.product.regularPrice, product.regularPrice());
+        await this.type(productsAdmin.product.productName, product.productName());
+        await this.selectByValue(productsAdmin.product.productType, product.productType);
+        await this.click(productsAdmin.product.general);
+        await this.type(productsAdmin.product.regularPrice, product.regularPrice());
 
         // Category
-        await this.click(selector.admin.products.product.category(product.category));
+        await this.click(productsAdmin.product.category(product.category));
 
         // Subscription Details
-        await this.type(selector.admin.products.product.numberOfProducts, product.numberOfProducts);
-        await this.type(selector.admin.products.product.packValidity, product.packValidity);
-        await this.type(selector.admin.products.product.advertisementSlot, product.advertisementSlot);
-        await this.type(selector.admin.products.product.expireAfterDays, product.expireAfterDays);
-        await this.click(selector.admin.products.product.recurringPayment);
+        await this.type(productsAdmin.product.numberOfProducts, product.numberOfProducts);
+        await this.type(productsAdmin.product.packValidity, product.packValidity);
+        await this.type(productsAdmin.product.advertisementSlot, product.advertisementSlot);
+        await this.type(productsAdmin.product.expireAfterDays, product.expireAfterDays);
+        await this.click(productsAdmin.product.recurringPayment);
 
         // // Vendor Store Name
-        // await this.select2ByText(selector.admin.products.product.storeName, selector.admin.products.product.storeNameInput, product.storeName);
+        // await this.select2ByText(productsAdmin.product.storeName, productsAdmin.product.storeNameInput, product.storeName);
         // await this.scrollToTop();
 
         // Publish
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.post, selector.admin.products.product.publish, 302);
-        await this.toContainText(selector.admin.products.product.updatedSuccessMessage, data.product.publishSuccessMessage);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.post, productsAdmin.product.publish, 302);
+        await this.toContainText(productsAdmin.product.updatedSuccessMessage, data.product.publishSuccessMessage);
     }
 
     // vendor
@@ -257,29 +261,29 @@ export class ProductsPage extends AdminPage {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.products);
 
         // product nav menus are visible
-        const { draft, pendingReview, ...menus } = selector.vendor.product.menus;
+        const { draft, pendingReview, ...menus } = productsVendor.menus;
         await this.multipleElementVisible(menus);
 
         // add new product is visible
-        await this.toBeVisible(selector.vendor.product.create.addNewProduct);
+        await this.toBeVisible(productsVendor.create.addNewProduct);
 
         // import export is visible
-        DOKAN_PRO && (await this.multipleElementVisible(selector.vendor.product.importExport));
+        DOKAN_PRO && (await this.multipleElementVisible(productsVendor.importExport));
 
         // product filters elements are visible
-        const { filterByType, filterByOther, ...filters } = selector.vendor.product.filters;
+        const { filterByType, filterByOther, ...filters } = productsVendor.filters;
         await this.multipleElementVisible(filters);
         DOKAN_PRO && (await this.toBeVisible(filterByType));
         DOKAN_PRO && (await this.toBeVisible(filterByOther));
 
         // product search elements are visible
-        await this.multipleElementVisible(selector.vendor.product.search);
+        await this.multipleElementVisible(productsVendor.search);
 
         // bulk action elements are visible
-        await this.multipleElementVisible(selector.vendor.product.bulkActions);
+        await this.multipleElementVisible(productsVendor.bulkActions);
 
         // table elements are visible
-        const { productAdvertisementColumn, ...table } = selector.vendor.product.table;
+        const { productAdvertisementColumn, ...table } = productsVendor.table;
         await this.multipleElementVisible(table);
     }
 
@@ -288,8 +292,8 @@ export class ProductsPage extends AdminPage {
     // vendor add product
     async addProduct(productName: string): Promise<void> {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.products);
-        await this.clickAndWaitForLoadState(selector.vendor.product.create.addNewProduct);
-        await this.clearAndType(selector.vendor.product.edit.title, productName);
+        await this.clickAndWaitForLoadState(productsVendor.create.addNewProduct);
+        await this.clearAndType(productsVendor.edit.title, productName);
     }
 
     // vendor add simple product
@@ -298,25 +302,25 @@ export class ProductsPage extends AdminPage {
         const productPrice = product.regularPrice();
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.products);
         if (productPopup) {
-            await this.click(selector.vendor.product.create.addNewProduct);
-            await this.waitForVisibleLocator(selector.vendor.product.create.productName);
-            await this.clearAndType(selector.vendor.product.create.productName, productName);
-            await this.clearAndType(selector.vendor.product.create.productPrice, productPrice);
+            await this.click(productsVendor.create.addNewProduct);
+            await this.waitForVisibleLocator(productsVendor.create.productName);
+            await this.clearAndType(productsVendor.create.productName, productName);
+            await this.clearAndType(productsVendor.create.productPrice, productPrice);
             // await this.addProductCategory(product.category);
 
-            await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.vendor.product.create.createProduct);
-            const createdProduct = await this.getElementValue(selector.vendor.product.edit.title);
+            await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, productsVendor.create.createProduct);
+            const createdProduct = await this.getElementValue(productsVendor.edit.title);
             expect(createdProduct.toLowerCase()).toBe(productName.toLowerCase());
         } else {
-            await this.clickAndWaitForLoadState(selector.vendor.product.create.addNewProduct);
-            await this.clearAndType(selector.vendor.product.edit.title, productName);
-            await this.clearAndType(selector.vendor.product.edit.price, productPrice);
+            await this.clickAndWaitForLoadState(productsVendor.create.addNewProduct);
+            await this.clearAndType(productsVendor.edit.title, productName);
+            await this.clearAndType(productsVendor.edit.price, productPrice);
             // await this.addProductCategory(product.category);
 
-            await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.products, selector.vendor.product.saveProduct, 302);
-            await this.toContainText(selector.vendor.product.dokanMessage, 'The product has been saved successfully. ');
-            await this.toHaveValue(selector.vendor.product.edit.title, productName);
-            await this.toHaveValue(selector.vendor.product.create.productPrice, productPrice);
+            await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.products, productsVendor.saveProduct, 302);
+            await this.toContainText(productsVendor.dokanMessage, 'The product has been saved successfully. ');
+            await this.toHaveValue(productsVendor.edit.title, productName);
+            await this.toHaveValue(productsVendor.create.productPrice, productPrice);
         }
     }
 
@@ -325,25 +329,25 @@ export class ProductsPage extends AdminPage {
         const productName = product.productName();
         const productPrice = product.regularPrice();
         productPopup ? await this.vendorAddSimpleProduct(product, productPopup) : await this.addProduct(productName);
-        await this.clearAndType(selector.vendor.product.create.productPrice, productPrice);
-        await this.check(selector.vendor.product.edit.downloadable);
+        await this.clearAndType(productsVendor.create.productPrice, productPrice);
+        await this.check(productsVendor.edit.downloadable);
         // await this.addProductCategory(product.category);
 
-        await this.click(selector.vendor.product.downloadableOptions.addFile);
-        await this.clearAndType(selector.vendor.product.downloadableOptions.fileName, product.downloadableOptions.fileName);
-        await this.click(selector.vendor.product.downloadableOptions.chooseFile);
+        await this.click(productsVendor.downloadableOptions.addFile);
+        await this.clearAndType(productsVendor.downloadableOptions.fileName, product.downloadableOptions.fileName);
+        await this.click(productsVendor.downloadableOptions.chooseFile);
         await this.uploadMedia(product.downloadableOptions.fileUrl);
-        await this.clearAndType(selector.vendor.product.downloadableOptions.downloadLimit, product.downloadableOptions.downloadLimit);
-        await this.clearAndType(selector.vendor.product.downloadableOptions.downloadExpiry, product.downloadableOptions.downloadExpiry);
+        await this.clearAndType(productsVendor.downloadableOptions.downloadLimit, product.downloadableOptions.downloadLimit);
+        await this.clearAndType(productsVendor.downloadableOptions.downloadExpiry, product.downloadableOptions.downloadExpiry);
 
-        await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.products, selector.vendor.product.saveProduct, 302);
-        await this.toContainText(selector.vendor.product.updatedSuccessMessage, product.saveSuccessMessage);
-        await this.toHaveValue(selector.vendor.product.edit.title, productName);
-        await this.toHaveValue(selector.vendor.product.create.productPrice, productPrice);
-        await this.toBeChecked(selector.vendor.product.edit.downloadable);
-        await this.toHaveValue(selector.vendor.product.downloadableOptions.fileName, product.downloadableOptions.fileName);
-        await this.toHaveValue(selector.vendor.product.downloadableOptions.downloadLimit, product.downloadableOptions.downloadLimit);
-        await this.toHaveValue(selector.vendor.product.downloadableOptions.downloadExpiry, product.downloadableOptions.downloadExpiry);
+        await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.products, productsVendor.saveProduct, 302);
+        await this.toContainText(productsVendor.updatedSuccessMessage, product.saveSuccessMessage);
+        await this.toHaveValue(productsVendor.edit.title, productName);
+        await this.toHaveValue(productsVendor.create.productPrice, productPrice);
+        await this.toBeChecked(productsVendor.edit.downloadable);
+        await this.toHaveValue(productsVendor.downloadableOptions.fileName, product.downloadableOptions.fileName);
+        await this.toHaveValue(productsVendor.downloadableOptions.downloadLimit, product.downloadableOptions.downloadLimit);
+        await this.toHaveValue(productsVendor.downloadableOptions.downloadExpiry, product.downloadableOptions.downloadExpiry);
     }
 
     // vendor add vitual product
@@ -351,16 +355,16 @@ export class ProductsPage extends AdminPage {
         const productName = product.productName();
         const productPrice = product.regularPrice();
         productPopup ? await this.vendorAddSimpleProduct(product, productPopup) : await this.addProduct(productName);
-        await this.clearAndType(selector.vendor.product.create.productPrice, productPrice);
-        await this.check(selector.vendor.product.edit.virtual);
+        await this.clearAndType(productsVendor.create.productPrice, productPrice);
+        await this.check(productsVendor.edit.virtual);
         // await this.addProductCategory(product.category);
 
-        await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.products, selector.vendor.product.saveProduct, 302);
-        await this.toContainText(selector.vendor.product.updatedSuccessMessage, product.saveSuccessMessage);
-        await this.toHaveValue(selector.vendor.product.edit.title, productName);
-        await this.toHaveValue(selector.vendor.product.create.productPrice, productPrice);
-        await this.toBeChecked(selector.vendor.product.edit.virtual);
-        await this.notToBeVisible(selector.vendor.product.shipping.shippingContainer);
+        await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.products, productsVendor.saveProduct, 302);
+        await this.toContainText(productsVendor.updatedSuccessMessage, product.saveSuccessMessage);
+        await this.toHaveValue(productsVendor.edit.title, productName);
+        await this.toHaveValue(productsVendor.create.productPrice, productPrice);
+        await this.toBeChecked(productsVendor.edit.virtual);
+        await this.notToBeVisible(productsVendor.shipping.shippingContainer);
     }
 
     // vendor add variable product
@@ -369,24 +373,24 @@ export class ProductsPage extends AdminPage {
         productPopup ? await this.vendorAddSimpleProduct(product, productPopup) : await this.addProduct(productName);
 
         // edit product
-        await this.selectByValue(selector.vendor.product.edit.productType, product.productType);
+        await this.selectByValue(productsVendor.edit.productType, product.productType);
         // add variation
-        await this.selectByValue(selector.vendor.product.attribute.customProductAttribute, `pa_${product.attribute}`);
-        await this.click(selector.vendor.product.attribute.addAttribute);
-        await this.click(selector.vendor.product.attribute.selectAll);
-        await this.click(selector.vendor.product.attribute.usedForVariations);
-        await this.click(selector.vendor.product.attribute.saveAttributes);
-        await this.selectByValue(selector.vendor.product.attribute.addVariations, product.variations.linkAllVariation);
-        await this.click(selector.vendor.product.attribute.go);
-        await this.click(selector.vendor.product.attribute.confirmGo);
-        await this.click(selector.vendor.product.attribute.okSuccessAlertGo);
-        await this.selectByValue(selector.vendor.product.attribute.addVariations, product.variations.variableRegularPrice);
-        await this.click(selector.vendor.product.attribute.go);
-        await this.type(selector.vendor.product.attribute.variationPrice, product.regularPrice());
-        await this.click(selector.vendor.product.attribute.okVariationPrice);
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, selector.vendor.product.saveProduct, 302);
-        await this.toContainText(selector.vendor.product.updatedSuccessMessage, product.saveSuccessMessage);
-        await this.toHaveValue(selector.vendor.product.edit.title, productName);
+        await this.selectByValue(productsVendor.attribute.customProductAttribute, `pa_${product.attribute}`);
+        await this.click(productsVendor.attribute.addAttribute);
+        await this.click(productsVendor.attribute.selectAll);
+        await this.click(productsVendor.attribute.usedForVariations);
+        await this.click(productsVendor.attribute.saveAttributes);
+        await this.selectByValue(productsVendor.attribute.addVariations, product.variations.linkAllVariation);
+        await this.click(productsVendor.attribute.go);
+        await this.click(productsVendor.attribute.confirmGo);
+        await this.click(productsVendor.attribute.okSuccessAlertGo);
+        await this.selectByValue(productsVendor.attribute.addVariations, product.variations.variableRegularPrice);
+        await this.click(productsVendor.attribute.go);
+        await this.type(productsVendor.attribute.variationPrice, product.regularPrice());
+        await this.click(productsVendor.attribute.okVariationPrice);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, productsVendor.saveProduct, 302);
+        await this.toContainText(productsVendor.updatedSuccessMessage, product.saveSuccessMessage);
+        await this.toHaveValue(productsVendor.edit.title, productName);
     }
 
     // vendor add simple subscription product
@@ -394,16 +398,16 @@ export class ProductsPage extends AdminPage {
         const productName = product.productName();
         productPopup ? await this.vendorAddSimpleProduct(product, productPopup) : await this.addProduct(productName);
         // edit product
-        await this.selectByValue(selector.vendor.product.edit.productType, product.productType);
-        await this.type(selector.vendor.product.edit.subscriptionPrice, product.subscriptionPrice());
-        await this.selectByValue(selector.vendor.product.edit.subscriptionPeriodInterval, product.subscriptionPeriodInterval);
-        await this.selectByValue(selector.vendor.product.edit.subscriptionPeriod, product.subscriptionPeriod);
-        await this.selectByValue(selector.vendor.product.edit.expireAfter, product.expireAfter);
-        await this.type(selector.vendor.product.edit.subscriptionTrialLength, product.subscriptionTrialLength);
-        await this.selectByValue(selector.vendor.product.edit.subscriptionTrialPeriod, product.subscriptionTrialPeriod);
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, selector.vendor.product.saveProduct, 302);
-        await this.toContainText(selector.vendor.product.updatedSuccessMessage, product.saveSuccessMessage);
-        await this.toHaveValue(selector.vendor.product.edit.title, productName);
+        await this.selectByValue(productsVendor.edit.productType, product.productType);
+        await this.type(productsVendor.edit.subscriptionPrice, product.subscriptionPrice());
+        await this.selectByValue(productsVendor.edit.subscriptionPeriodInterval, product.subscriptionPeriodInterval);
+        await this.selectByValue(productsVendor.edit.subscriptionPeriod, product.subscriptionPeriod);
+        await this.selectByValue(productsVendor.edit.expireAfter, product.expireAfter);
+        await this.type(productsVendor.edit.subscriptionTrialLength, product.subscriptionTrialLength);
+        await this.selectByValue(productsVendor.edit.subscriptionTrialPeriod, product.subscriptionTrialPeriod);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, productsVendor.saveProduct, 302);
+        await this.toContainText(productsVendor.updatedSuccessMessage, product.saveSuccessMessage);
+        await this.toHaveValue(productsVendor.edit.title, productName);
         //todo: add more assettions
     }
 
@@ -412,24 +416,24 @@ export class ProductsPage extends AdminPage {
         const productName = product.productName();
         productPopup ? await this.vendorAddSimpleProduct(product, productPopup) : await this.addProduct(productName);
         // edit product
-        await this.selectByValue(selector.vendor.product.edit.productType, product.productType);
+        await this.selectByValue(productsVendor.edit.productType, product.productType);
         // add variation
-        await this.selectByValue(selector.vendor.product.attribute.customProductAttribute, `pa_${product.attribute}`);
-        await this.click(selector.vendor.product.attribute.addAttribute);
-        await this.click(selector.vendor.product.attribute.selectAll);
-        await this.click(selector.vendor.product.attribute.usedForVariations);
-        await this.click(selector.vendor.product.attribute.saveAttributes);
-        await this.selectByValue(selector.vendor.product.attribute.addVariations, product.variations.linkAllVariation);
-        await this.click(selector.vendor.product.attribute.go);
-        await this.click(selector.vendor.product.attribute.confirmGo);
-        await this.click(selector.vendor.product.attribute.okSuccessAlertGo);
-        await this.selectByValue(selector.vendor.product.attribute.addVariations, product.variations.variableRegularPrice);
-        await this.click(selector.vendor.product.attribute.go);
-        await this.type(selector.vendor.product.attribute.variationPrice, product.regularPrice());
-        await this.click(selector.vendor.product.attribute.okVariationPrice);
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, selector.vendor.product.saveProduct, 302);
-        await this.toContainText(selector.vendor.product.updatedSuccessMessage, product.saveSuccessMessage);
-        await this.toHaveValue(selector.vendor.product.edit.title, productName);
+        await this.selectByValue(productsVendor.attribute.customProductAttribute, `pa_${product.attribute}`);
+        await this.click(productsVendor.attribute.addAttribute);
+        await this.click(productsVendor.attribute.selectAll);
+        await this.click(productsVendor.attribute.usedForVariations);
+        await this.click(productsVendor.attribute.saveAttributes);
+        await this.selectByValue(productsVendor.attribute.addVariations, product.variations.linkAllVariation);
+        await this.click(productsVendor.attribute.go);
+        await this.click(productsVendor.attribute.confirmGo);
+        await this.click(productsVendor.attribute.okSuccessAlertGo);
+        await this.selectByValue(productsVendor.attribute.addVariations, product.variations.variableRegularPrice);
+        await this.click(productsVendor.attribute.go);
+        await this.type(productsVendor.attribute.variationPrice, product.regularPrice());
+        await this.click(productsVendor.attribute.okVariationPrice);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, productsVendor.saveProduct, 302);
+        await this.toContainText(productsVendor.updatedSuccessMessage, product.saveSuccessMessage);
+        await this.toHaveValue(productsVendor.edit.title, productName);
         //todo: add more assettions
     }
 
@@ -438,38 +442,38 @@ export class ProductsPage extends AdminPage {
         const productName = product.productName();
         productPopup ? await this.vendorAddSimpleProduct(product, productPopup) : await this.addProduct(productName);
         // edit product
-        await this.selectByValue(selector.vendor.product.edit.productType, product.productType);
-        await this.type(selector.vendor.product.edit.productUrl, this.getBaseUrl() + product.productUrl);
-        await this.type(selector.vendor.product.edit.buttonText, product.buttonText);
-        await this.clearAndType(selector.vendor.product.edit.price, product.regularPrice());
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, selector.vendor.product.saveProduct, 302);
-        await this.toContainText(selector.vendor.product.updatedSuccessMessage, product.saveSuccessMessage);
-        await this.toHaveValue(selector.vendor.product.edit.title, productName);
+        await this.selectByValue(productsVendor.edit.productType, product.productType);
+        await this.type(productsVendor.edit.productUrl, this.getBaseUrl() + product.productUrl);
+        await this.type(productsVendor.edit.buttonText, product.buttonText);
+        await this.clearAndType(productsVendor.edit.price, product.regularPrice());
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, productsVendor.saveProduct, 302);
+        await this.toContainText(productsVendor.updatedSuccessMessage, product.saveSuccessMessage);
+        await this.toHaveValue(productsVendor.edit.title, productName);
         //todo: add more assettions
     }
 
     // go to product edit
     async goToProductEdit(productName: string): Promise<void> {
         await this.searchProduct(productName);
-        await this.hover(selector.vendor.product.productCell(productName));
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, selector.vendor.product.editProduct(productName));
-        await this.toHaveValue(selector.vendor.product.edit.title, productName);
+        await this.hover(productsVendor.productCell(productName));
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, productsVendor.editProduct(productName));
+        await this.toHaveValue(productsVendor.edit.title, productName);
     }
 
     // vendor add product category
     async addProductCategory(category: string): Promise<void> {
-        const productPopup = await this.isVisible(selector.vendor.product.create.productPopup);
-        productPopup ? await this.click(selector.vendor.product.category.productCategoryModalOnProductPopup) : await this.click(selector.vendor.product.category.productCategoryModal);
-        await this.waitForVisibleLocator(selector.vendor.product.category.productCategorySearchInput);
-        await this.type(selector.vendor.product.category.productCategorySearchInput, category);
-        await this.toContainText(selector.vendor.product.category.searchedResultText, category);
-        await this.click(selector.vendor.product.category.productCategorySearchResult);
-        await this.click(selector.vendor.product.category.productCategoryDone);
+        const productPopup = await this.isVisible(productsVendor.create.productPopup);
+        productPopup ? await this.click(productsVendor.category.productCategoryModalOnProductPopup) : await this.click(productsVendor.category.productCategoryModal);
+        await this.waitForVisibleLocator(productsVendor.category.productCategorySearchInput);
+        await this.type(productsVendor.category.productCategorySearchInput, category);
+        await this.toContainText(productsVendor.category.searchedResultText, category);
+        await this.click(productsVendor.category.productCategorySearchResult);
+        await this.click(productsVendor.category.productCategoryDone);
 
-        const categoryAlreadySelectedPopup = await this.isVisible(selector.vendor.product.category.productCategoryAlreadySelectedPopup);
+        const categoryAlreadySelectedPopup = await this.isVisible(productsVendor.category.productCategoryAlreadySelectedPopup);
         if (categoryAlreadySelectedPopup) {
-            await this.click(selector.vendor.product.category.productCategoryAlreadySelectedPopup);
-            await this.click(selector.vendor.product.category.productCategoryModalClose);
+            await this.click(productsVendor.category.productCategoryAlreadySelectedPopup);
+            await this.click(productsVendor.category.productCategoryModalClose);
         }
         // todo: add multiple category selection
     }
@@ -478,14 +482,14 @@ export class ProductsPage extends AdminPage {
     async vendorAddProductCategory(productName: string, category: string): Promise<void> {
         await this.goToProductEdit(productName);
         await this.addProductCategory(category);
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, selector.vendor.product.saveProduct, 302);
-        await this.toContainText(selector.vendor.product.updatedSuccessMessage, 'Success! The product has been saved successfully.');
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, productsVendor.saveProduct, 302);
+        await this.toContainText(productsVendor.updatedSuccessMessage, 'Success! The product has been saved successfully.');
     }
 
     // export product
     async exportProducts(): Promise<void> {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.products);
-        await this.clickAndWaitForLoadState(selector.vendor.product.importExport.export);
+        await this.clickAndWaitForLoadState(productsVendor.importExport.export);
         await this.clickAndWaitForDownload(selector.vendor.vTools.export.csv.generateCsv);
     }
 
@@ -493,9 +497,9 @@ export class ProductsPage extends AdminPage {
     async searchProduct(productName: string): Promise<void> {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.products);
 
-        await this.clearAndType(selector.vendor.product.search.searchInput, productName);
-        await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.products, selector.vendor.product.search.searchBtn);
-        await this.toBeVisible(selector.vendor.product.productLink(productName));
+        await this.clearAndType(productsVendor.search.searchInput, productName);
+        await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.products, productsVendor.search.searchBtn);
+        await this.toBeVisible(productsVendor.productLink(productName));
     }
 
     // filter products
@@ -504,34 +508,34 @@ export class ProductsPage extends AdminPage {
 
         switch (filterBy) {
             case 'by-date':
-                await this.selectByNumber(selector.vendor.product.filters.filterByDate, value);
+                await this.selectByNumber(productsVendor.filters.filterByDate, value);
                 break;
 
             case 'by-category':
-                await this.selectByLabel(selector.vendor.product.filters.filterByCategory, value);
+                await this.selectByLabel(productsVendor.filters.filterByCategory, value);
                 break;
 
             case 'by-type':
-                await this.selectByValue(selector.vendor.product.filters.filterByType, value);
+                await this.selectByValue(productsVendor.filters.filterByType, value);
                 break;
 
             case 'by-other':
-                await this.selectByValue(selector.vendor.product.filters.filterByOther, value);
+                await this.selectByValue(productsVendor.filters.filterByOther, value);
                 break;
 
             default:
                 break;
         }
 
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, selector.vendor.product.filters.filter);
-        await this.notToHaveCount(selector.vendor.product.numberOfRowsFound, 0);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, productsVendor.filters.filter);
+        await this.notToHaveCount(productsVendor.numberOfRowsFound, 0);
     }
 
     // view product
     async viewProduct(productName: string): Promise<void> {
         await this.searchProduct(productName);
-        await this.hover(selector.vendor.product.productCell(productName));
-        await this.clickAndWaitForLoadState(selector.vendor.product.view(productName));
+        await this.hover(productsVendor.productCell(productName));
+        await this.clickAndWaitForLoadState(productsVendor.view(productName));
         await expect(this.page).toHaveURL(data.subUrls.frontend.productDetails(helpers.slugify(productName)) + '/');
         const { quantity, addToCart, viewCart, ...productDetails } = selector.customer.cSingleProduct.productDetails;
         await this.multipleElementVisible(productDetails);
@@ -548,12 +552,12 @@ export class ProductsPage extends AdminPage {
     async editProduct(product: product['simple']): Promise<void> {
         await this.goToProductEdit(product.editProduct);
 
-        await this.clearAndType(selector.vendor.product.edit.title, product.editProduct); // don't update name below test needs same product
-        await this.clearAndType(selector.vendor.product.edit.price, product.regularPrice());
+        await this.clearAndType(productsVendor.edit.title, product.editProduct); // don't update name below test needs same product
+        await this.clearAndType(productsVendor.edit.price, product.regularPrice());
         // todo:  add more fields
 
-        await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.products, selector.vendor.product.saveProduct, 302);
-        await this.toContainText(selector.vendor.product.dokanMessage, 'The product has been saved successfully. ');
+        await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.products, productsVendor.saveProduct, 302);
+        await this.toContainText(productsVendor.dokanMessage, 'The product has been saved successfully. ');
     }
 
     // product edit
@@ -561,157 +565,157 @@ export class ProductsPage extends AdminPage {
     // add product description
     async addProductDescription(productName: string, description: product['productInfo']['description']): Promise<void> {
         await this.goToProductEdit(productName);
-        await this.typeFrameSelector(selector.vendor.product.shortDescription.shortDescriptionIframe, selector.vendor.product.shortDescription.shortDescriptionHtmlBody, description.shortDescription);
-        await this.typeFrameSelector(selector.vendor.product.description.descriptionIframe, selector.vendor.product.description.descriptionHtmlBody, description.description);
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, selector.vendor.product.saveProduct, 302);
-        await this.toContainText(selector.vendor.product.updatedSuccessMessage, data.product.createUpdateSaveSuccessMessage);
+        await this.typeFrameSelector(productsVendor.shortDescription.shortDescriptionIframe, productsVendor.shortDescription.shortDescriptionHtmlBody, description.shortDescription);
+        await this.typeFrameSelector(productsVendor.description.descriptionIframe, productsVendor.description.descriptionHtmlBody, description.description);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, productsVendor.saveProduct, 302);
+        await this.toContainText(productsVendor.updatedSuccessMessage, data.product.createUpdateSaveSuccessMessage);
         // todo: add more assertions
     }
 
     // add product quantity discount
     async addProductQuantityDiscount(productName: string, quantityDiscount: product['productInfo']['quantityDiscount']): Promise<void> {
         await this.goToProductEdit(productName);
-        await this.check(selector.vendor.product.discount.enableBulkDiscount); // todo: need to fix
-        await this.clearAndType(selector.vendor.product.discount.lotMinimumQuantity, quantityDiscount.minimumQuantity);
-        await this.clearAndType(selector.vendor.product.discount.lotDiscountInPercentage, quantityDiscount.discountPercentage);
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, selector.vendor.product.saveProduct, 302);
-        await this.toContainText(selector.vendor.product.updatedSuccessMessage, data.product.createUpdateSaveSuccessMessage);
+        await this.check(productsVendor.discount.enableBulkDiscount); // todo: need to fix
+        await this.clearAndType(productsVendor.discount.lotMinimumQuantity, quantityDiscount.minimumQuantity);
+        await this.clearAndType(productsVendor.discount.lotDiscountInPercentage, quantityDiscount.discountPercentage);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, productsVendor.saveProduct, 302);
+        await this.toContainText(productsVendor.updatedSuccessMessage, data.product.createUpdateSaveSuccessMessage);
         // todo: add more assertions
     }
 
     // vendor add product rma options
     async addProductRmaOptions(productName: string, rma: vendor['rma']): Promise<void> {
         await this.goToProductEdit(productName);
-        await this.check(selector.vendor.product.rma.overrideYourDefaultRmaSettingsForThisProduct);
-        await this.clearAndType(selector.vendor.product.rma.label, rma.label);
-        await this.selectByValue(selector.vendor.product.rma.type, rma.type);
-        await this.selectByValue(selector.vendor.product.rma.length, rma.rmaLength);
+        await this.check(productsVendor.rma.overrideYourDefaultRmaSettingsForThisProduct);
+        await this.clearAndType(productsVendor.rma.label, rma.label);
+        await this.selectByValue(productsVendor.rma.type, rma.type);
+        await this.selectByValue(productsVendor.rma.length, rma.rmaLength);
         // todo: add rma as addon
         if (rma.rmaLength === 'limited') {
-            await this.clearAndType(selector.vendor.product.rma.lengthValue, rma.lengthValue);
-            await this.selectByValue(selector.vendor.product.rma.lengthDuration, rma.lengthDuration);
+            await this.clearAndType(productsVendor.rma.lengthValue, rma.lengthValue);
+            await this.selectByValue(productsVendor.rma.lengthDuration, rma.lengthDuration);
         }
-        const refundReasonIsVisible = await this.isVisible(selector.vendor.product.rma.refundReasonsFirst);
+        const refundReasonIsVisible = await this.isVisible(productsVendor.rma.refundReasonsFirst);
         if (refundReasonIsVisible) {
-            await this.checkMultiple(selector.vendor.product.rma.refundReasons);
+            await this.checkMultiple(productsVendor.rma.refundReasons);
         }
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, selector.vendor.product.saveProduct, 302);
-        await this.toContainText(selector.vendor.product.updatedSuccessMessage, data.product.createUpdateSaveSuccessMessage);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, productsVendor.saveProduct, 302);
+        await this.toContainText(productsVendor.updatedSuccessMessage, data.product.createUpdateSaveSuccessMessage);
         //todo: add more assertions
     }
 
     // add product Wholesale options
     async addProductWholesaleOptions(productName: string, wholesaleOption: product['productInfo']['wholesaleOption']): Promise<void> {
         await this.goToProductEdit(productName);
-        await this.check(selector.vendor.product.wholesale.enableWholeSaleForThisProduct);
-        await this.clearAndType(selector.vendor.product.wholesale.wholesalePrice, wholesaleOption.wholesalePrice);
-        await this.clearAndType(selector.vendor.product.wholesale.minimumQuantityForWholesale, wholesaleOption.minimumWholesaleQuantity);
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, selector.vendor.product.saveProduct, 302);
-        await this.toContainText(selector.vendor.product.updatedSuccessMessage, data.product.createUpdateSaveSuccessMessage);
-        await this.toHaveValue(selector.vendor.product.wholesale.wholesalePrice, wholesaleOption.wholesalePrice);
-        await this.toHaveValue(selector.vendor.product.wholesale.minimumQuantityForWholesale, wholesaleOption.minimumWholesaleQuantity);
+        await this.check(productsVendor.wholesale.enableWholeSaleForThisProduct);
+        await this.clearAndType(productsVendor.wholesale.wholesalePrice, wholesaleOption.wholesalePrice);
+        await this.clearAndType(productsVendor.wholesale.minimumQuantityForWholesale, wholesaleOption.minimumWholesaleQuantity);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, productsVendor.saveProduct, 302);
+        await this.toContainText(productsVendor.updatedSuccessMessage, data.product.createUpdateSaveSuccessMessage);
+        await this.toHaveValue(productsVendor.wholesale.wholesalePrice, wholesaleOption.wholesalePrice);
+        await this.toHaveValue(productsVendor.wholesale.minimumQuantityForWholesale, wholesaleOption.minimumWholesaleQuantity);
     }
 
     // add product min-max options
     async addProductMinMaxOptions(productName: string, minMaxOption: product['productInfo']['minMax']): Promise<void> {
         await this.goToProductEdit(productName);
-        await this.check(selector.vendor.product.minMax.enableMinMaxRulesThisProduct);
-        await this.clearAndType(selector.vendor.product.minMax.minimumQuantity, minMaxOption.minimumProductQuantity);
-        await this.clearAndType(selector.vendor.product.minMax.maximumQuantity, minMaxOption.maximumProductQuantity);
-        await this.clearAndType(selector.vendor.product.minMax.minimumAmount, minMaxOption.minimumAmount);
-        await this.clearAndType(selector.vendor.product.minMax.maximumAmount, minMaxOption.maximumAmount);
-        await this.check(selector.vendor.product.minMax.orderRulesDoNotCount);
-        await this.check(selector.vendor.product.minMax.categoryRulesExclude);
+        await this.check(productsVendor.minMax.enableMinMaxRulesThisProduct);
+        await this.clearAndType(productsVendor.minMax.minimumQuantity, minMaxOption.minimumProductQuantity);
+        await this.clearAndType(productsVendor.minMax.maximumQuantity, minMaxOption.maximumProductQuantity);
+        await this.clearAndType(productsVendor.minMax.minimumAmount, minMaxOption.minimumAmount);
+        await this.clearAndType(productsVendor.minMax.maximumAmount, minMaxOption.maximumAmount);
+        await this.check(productsVendor.minMax.orderRulesDoNotCount);
+        await this.check(productsVendor.minMax.categoryRulesExclude);
 
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, selector.vendor.product.saveProduct, 302);
-        await this.toContainText(selector.vendor.product.updatedSuccessMessage, data.product.createUpdateSaveSuccessMessage);
-        await this.toBeChecked(selector.vendor.product.minMax.enableMinMaxRulesThisProduct);
-        await this.toHaveValue(selector.vendor.product.minMax.minimumQuantity, minMaxOption.minimumProductQuantity);
-        await this.toHaveValue(selector.vendor.product.minMax.maximumQuantity, minMaxOption.maximumProductQuantity);
-        await this.toHaveValue(selector.vendor.product.minMax.minimumAmount, minMaxOption.minimumAmount);
-        await this.toHaveValue(selector.vendor.product.minMax.maximumAmount, minMaxOption.maximumAmount);
-        await this.toBeChecked(selector.vendor.product.minMax.orderRulesDoNotCount);
-        await this.toBeChecked(selector.vendor.product.minMax.categoryRulesExclude);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, productsVendor.saveProduct, 302);
+        await this.toContainText(productsVendor.updatedSuccessMessage, data.product.createUpdateSaveSuccessMessage);
+        await this.toBeChecked(productsVendor.minMax.enableMinMaxRulesThisProduct);
+        await this.toHaveValue(productsVendor.minMax.minimumQuantity, minMaxOption.minimumProductQuantity);
+        await this.toHaveValue(productsVendor.minMax.maximumQuantity, minMaxOption.maximumProductQuantity);
+        await this.toHaveValue(productsVendor.minMax.minimumAmount, minMaxOption.minimumAmount);
+        await this.toHaveValue(productsVendor.minMax.maximumAmount, minMaxOption.maximumAmount);
+        await this.toBeChecked(productsVendor.minMax.orderRulesDoNotCount);
+        await this.toBeChecked(productsVendor.minMax.categoryRulesExclude);
     }
 
     // add product other (product status, visibility, purchase note, reviews) options
     async addProductOtherOptions(productName: string, otherOption: product['productInfo']['otherOptions']): Promise<void> {
         await this.goToProductEdit(productName);
-        await this.selectByValue(selector.vendor.product.otherOptions.productStatus, otherOption.productStatus);
-        await this.selectByValue(selector.vendor.product.otherOptions.visibility, otherOption.visibility);
-        await this.clearAndType(selector.vendor.product.otherOptions.purchaseNote, otherOption.purchaseNote);
-        await this.check(selector.vendor.product.otherOptions.enableProductReviews);
+        await this.selectByValue(productsVendor.otherOptions.productStatus, otherOption.productStatus);
+        await this.selectByValue(productsVendor.otherOptions.visibility, otherOption.visibility);
+        await this.clearAndType(productsVendor.otherOptions.purchaseNote, otherOption.purchaseNote);
+        await this.check(productsVendor.otherOptions.enableProductReviews);
 
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, selector.vendor.product.saveProduct, 302);
-        await this.toContainText(selector.vendor.product.updatedSuccessMessage, data.product.createUpdateSaveSuccessMessage);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, productsVendor.saveProduct, 302);
+        await this.toContainText(productsVendor.updatedSuccessMessage, data.product.createUpdateSaveSuccessMessage);
         //todo: add more assertion
-        await this.toHaveValue(selector.vendor.product.otherOptions.purchaseNote, otherOption.purchaseNote);
-        await this.toBeChecked(selector.vendor.product.otherOptions.enableProductReviews);
+        await this.toHaveValue(productsVendor.otherOptions.purchaseNote, otherOption.purchaseNote);
+        await this.toBeChecked(productsVendor.otherOptions.enableProductReviews);
     }
 
     // add product description
     async addCatalogMode(productName: string): Promise<void> {
         await this.goToProductEdit(productName);
-        await this.check(selector.vendor.product.catalogMode.removeAddToCart);
-        await this.check(selector.vendor.product.catalogMode.hideProductPrice);
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, selector.vendor.product.saveProduct, 302);
-        await this.toContainText(selector.vendor.product.updatedSuccessMessage, data.product.createUpdateSaveSuccessMessage);
-        await this.toBeChecked(selector.vendor.product.catalogMode.removeAddToCart);
-        await this.toBeChecked(selector.vendor.product.catalogMode.hideProductPrice);
+        await this.check(productsVendor.catalogMode.removeAddToCart);
+        await this.check(productsVendor.catalogMode.hideProductPrice);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, productsVendor.saveProduct, 302);
+        await this.toContainText(productsVendor.updatedSuccessMessage, data.product.createUpdateSaveSuccessMessage);
+        await this.toBeChecked(productsVendor.catalogMode.removeAddToCart);
+        await this.toBeChecked(productsVendor.catalogMode.hideProductPrice);
     }
 
     // quick edit product
     async quickEditProduct(product: product['simple']): Promise<void> {
         await this.searchProduct(product.editProduct);
-        await this.hover(selector.vendor.product.productCell(product.editProduct));
-        await this.click(selector.vendor.product.quickEdit(product.editProduct));
+        await this.hover(productsVendor.productCell(product.editProduct));
+        await this.click(productsVendor.quickEdit(product.editProduct));
 
-        await this.clearAndType(selector.vendor.product.quickEditProduct.title, product.editProduct);
+        await this.clearAndType(productsVendor.quickEditProduct.title, product.editProduct);
         // todo:  add more fields
 
-        await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.product.quickEditProduct.update);
+        await this.clickAndWaitForResponse(data.subUrls.ajax, productsVendor.quickEditProduct.update);
     }
 
     // duplicate product
     async duplicateProduct(productName: string): Promise<void> {
         await this.searchProduct(productName);
-        await this.hover(selector.vendor.product.productCell(productName));
-        await this.clickAndAcceptAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, selector.vendor.product.duplicate(productName));
-        await this.toContainText(selector.vendor.product.dokanSuccessMessage, 'Product successfully duplicated');
+        await this.hover(productsVendor.productCell(productName));
+        await this.clickAndAcceptAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, productsVendor.duplicate(productName));
+        await this.toContainText(productsVendor.dokanSuccessMessage, 'Product successfully duplicated');
     }
 
     // permanently delete product
     async permanentlyDeleteProduct(productName: string): Promise<void> {
         await this.searchProduct(productName);
-        await this.hover(selector.vendor.product.productCell(productName));
-        await this.click(selector.vendor.product.permanentlyDelete(productName));
-        await this.clickAndWaitForLoadState(selector.vendor.product.confirmAction);
-        await this.toContainText(selector.vendor.product.dokanSuccessMessage, 'Product successfully deleted');
+        await this.hover(productsVendor.productCell(productName));
+        await this.click(productsVendor.permanentlyDelete(productName));
+        await this.clickAndWaitForLoadState(productsVendor.confirmAction);
+        await this.toContainText(productsVendor.dokanSuccessMessage, 'Product successfully deleted');
     }
 
     // product bulk action
     async productBulkAction(action: string, productName?: string): Promise<void> {
         productName ? await this.searchProduct(productName) : await this.goIfNotThere(data.subUrls.frontend.vDashboard.products);
 
-        await this.click(selector.vendor.product.bulkActions.selectAll);
+        await this.click(productsVendor.bulkActions.selectAll);
         switch (action) {
             case 'edit':
-                await this.selectByValue(selector.vendor.product.bulkActions.selectAction, 'edit');
+                await this.selectByValue(productsVendor.bulkActions.selectAction, 'edit');
                 // todo:
                 break;
 
             case 'permanently-delete':
-                await this.selectByValue(selector.vendor.product.bulkActions.selectAction, 'permanently-delete');
+                await this.selectByValue(productsVendor.bulkActions.selectAction, 'permanently-delete');
                 break;
 
             case 'publish':
-                await this.selectByValue(selector.vendor.product.bulkActions.selectAction, 'publish');
+                await this.selectByValue(productsVendor.bulkActions.selectAction, 'publish');
                 break;
 
             default:
                 break;
         }
 
-        await this.clickAndAcceptAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, selector.vendor.product.bulkActions.applyAction);
+        await this.clickAndAcceptAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, productsVendor.bulkActions.applyAction);
     }
 }

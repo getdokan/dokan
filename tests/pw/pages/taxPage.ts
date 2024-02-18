@@ -4,6 +4,9 @@ import { selector } from '@pages/selectors';
 import { data } from '@utils/testData';
 import { tax } from '@utils/interfaces';
 
+// selectors
+const woocommerceSettings = selector.admin.wooCommerce.settings;
+
 export class TaxPage extends AdminPage {
     constructor(page: Page) {
         super(page);
@@ -14,9 +17,9 @@ export class TaxPage extends AdminPage {
     // Admin Enable-Disable Tax
     async enableTax(enable = true) {
         await this.goToWooCommerceSettings();
-        enable ? await this.check(selector.admin.wooCommerce.settings.enableTaxes) : await this.uncheck(selector.admin.wooCommerce.settings.enableTaxes);
-        await this.click(selector.admin.wooCommerce.settings.generalSaveChanges);
-        await this.toContainText(selector.admin.wooCommerce.settings.updatedSuccessMessage, data.tax.saveSuccessMessage);
+        enable ? await this.check(woocommerceSettings.enableTaxes) : await this.uncheck(woocommerceSettings.enableTaxes);
+        await this.click(woocommerceSettings.generalSaveChanges);
+        await this.toContainText(woocommerceSettings.updatedSuccessMessage, data.tax.saveSuccessMessage);
     }
 
     // Admin Add Standard Tax Rate
@@ -27,18 +30,18 @@ export class TaxPage extends AdminPage {
         await this.enableTax();
 
         // Set Tax Rate
-        await this.click(selector.admin.wooCommerce.settings.tax);
-        await this.click(selector.admin.wooCommerce.settings.standardRates);
-        const taxIsVisible = await this.isVisible(selector.admin.wooCommerce.settings.taxRate);
+        await this.click(woocommerceSettings.tax);
+        await this.click(woocommerceSettings.standardRates);
+        const taxIsVisible = await this.isVisible(woocommerceSettings.taxRate);
         if (!taxIsVisible) {
-            await this.click(selector.admin.wooCommerce.settings.insertRow);
+            await this.click(woocommerceSettings.insertRow);
         }
-        await this.clearAndType(selector.admin.wooCommerce.settings.taxRate, tax.taxRate);
-        await this.click(selector.admin.wooCommerce.settings.taxTable);
+        await this.clearAndType(woocommerceSettings.taxRate, tax.taxRate);
+        await this.click(woocommerceSettings.taxTable);
 
-        await this.click(selector.admin.wooCommerce.settings.taxRateSaveChanges);
+        await this.click(woocommerceSettings.taxRateSaveChanges);
 
-        const newTaxRate = await this.getElementValue(selector.admin.wooCommerce.settings.taxRate);
+        const newTaxRate = await this.getElementValue(woocommerceSettings.taxRate);
         // expect(newTaxRate).toBe(String(Number(tax.taxRate).toPrecision(5)))
         expect(newTaxRate).toBe(tax.taxRate);
     }

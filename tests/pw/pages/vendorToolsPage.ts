@@ -3,6 +3,10 @@ import { VendorPage } from '@pages/vendorPage';
 import { selector } from '@pages/selectors';
 import { data } from '@utils/testData';
 
+
+// selectors
+const vendorTools = selector.vendor.vTools;
+
 export class VendorToolsPage extends VendorPage {
     constructor(page: Page) {
         super(page);
@@ -15,42 +19,42 @@ export class VendorToolsPage extends VendorPage {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.tools);
 
         // tools text is visible
-        await this.toBeVisible(selector.vendor.vTools.toolsText);
+        await this.toBeVisible(vendorTools.toolsText);
 
         // tools menus are visible
-        await this.multipleElementVisible(selector.vendor.vTools.menus);
+        await this.multipleElementVisible(vendorTools.menus);
 
         // import
 
         // import xml elements are visible
-        const { completionMessage, ...xml } = selector.vendor.vTools.import.xml;
+        const { completionMessage, ...xml } = vendorTools.import.xml;
         await this.multipleElementVisible(xml);
 
         // csv
 
         // import csv text is visible
-        await this.toBeVisible(selector.vendor.vTools.import.csv.importCsvText);
+        await this.toBeVisible(vendorTools.import.csv.importCsvText);
 
         // import csv button is visible
-        await this.toBeVisible(selector.vendor.vTools.import.csv.csv);
+        await this.toBeVisible(vendorTools.import.csv.csv);
 
         // export
 
-        await this.click(selector.vendor.vTools.menus.export);
+        await this.click(vendorTools.menus.export);
 
         // export xml elements are visible
-        await this.multipleElementVisible(selector.vendor.vTools.export.xml);
+        await this.multipleElementVisible(vendorTools.export.xml);
 
         // export csv text is visible
-        await this.toBeVisible(selector.vendor.vTools.export.csv.exportCsvText);
+        await this.toBeVisible(vendorTools.export.csv.exportCsvText);
 
         // export csv button is visible
-        await this.toBeVisible(selector.vendor.vTools.export.csv.exportCsv);
+        await this.toBeVisible(vendorTools.export.csv.exportCsv);
 
-        await this.click(selector.vendor.vTools.export.csv.exportCsv);
+        await this.click(vendorTools.export.csv.exportCsv);
 
         // export csv elements are visible
-        const { exportCsvText, exportCsv, ...csv } = selector.vendor.vTools.export.csv;
+        const { exportCsvText, exportCsv, ...csv } = vendorTools.export.csv;
         await this.multipleElementVisible(csv);
     }
 
@@ -59,18 +63,18 @@ export class VendorToolsPage extends VendorPage {
 
         switch (importType) {
             case 'xml':
-                await this.uploadFile(selector.vendor.vTools.import.xml.chooseXmlFile, filePath);
-                await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.tools, selector.vendor.vTools.import.xml.xml);
-                await this.toBeVisible(selector.vendor.vTools.import.xml.completionMessage);
+                await this.uploadFile(vendorTools.import.xml.chooseXmlFile, filePath);
+                await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.tools, vendorTools.import.xml.xml);
+                await this.toBeVisible(vendorTools.import.xml.completionMessage);
                 break;
 
             case 'csv': // todo: add wait for uploading file, add api level assertion
-                await this.clickAndWaitForLoadState(selector.vendor.vTools.import.csv.csv);
-                await this.uploadFile(selector.vendor.vTools.import.csv.chooseCsv, filePath);
-                await this.click(selector.vendor.vTools.import.csv.updateExistingProducts);
-                await this.clickAndWaitForLoadState(selector.vendor.vTools.import.csv.continue);
-                await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.csvImport, selector.vendor.vTools.import.csv.runTheImporter);
-                await this.toContainText(selector.vendor.vTools.import.csv.completionMessage, 'Import complete!');
+                await this.clickAndWaitForLoadState(vendorTools.import.csv.csv);
+                await this.uploadFile(vendorTools.import.csv.chooseCsv, filePath);
+                await this.click(vendorTools.import.csv.updateExistingProducts);
+                await this.clickAndWaitForLoadState(vendorTools.import.csv.continue);
+                await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.csvImport, vendorTools.import.csv.runTheImporter);
+                await this.toContainText(vendorTools.import.csv.completionMessage, 'Import complete!');
                 break;
 
             default:
@@ -83,14 +87,14 @@ export class VendorToolsPage extends VendorPage {
 
         switch (exportType) {
             case 'xml':
-                await this.click(selector.vendor.vTools.export.xml.all);
-                await this.clickAndWaitForDownload(selector.vendor.vTools.export.xml.exportXml);
+                await this.click(vendorTools.export.xml.all);
+                await this.clickAndWaitForDownload(vendorTools.export.xml.exportXml);
                 break;
 
             case 'csv':
-                await this.clickAndWaitForLoadState(selector.vendor.vTools.export.csv.exportCsv);
-                await this.click(selector.vendor.vTools.export.csv.customMeta);
-                await this.clickAndWaitForDownload(selector.vendor.vTools.export.csv.generateCsv);
+                await this.clickAndWaitForLoadState(vendorTools.export.csv.exportCsv);
+                await this.click(vendorTools.export.csv.customMeta);
+                await this.clickAndWaitForDownload(vendorTools.export.csv.generateCsv);
                 break;
 
             default:

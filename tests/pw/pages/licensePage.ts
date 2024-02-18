@@ -3,6 +3,10 @@ import { AdminPage } from '@pages/adminPage';
 import { selector } from '@pages/selectors';
 import { data } from '@utils/testData';
 
+
+// selectors
+const licenseAdmin = selector.admin.dokan.license;
+
 export class LicensePage extends AdminPage {
     constructor(page: Page) {
         super(page);
@@ -15,25 +19,25 @@ export class LicensePage extends AdminPage {
         await this.goIfNotThere(data.subUrls.backend.dokan.license);
 
         // license settings text is visible
-        await this.toBeVisible(selector.admin.dokan.license.licenseText);
+        await this.toBeVisible(licenseAdmin.licenseText);
 
         // license section elements are visible
-        await this.multipleElementVisible(selector.admin.dokan.license.activateSection);
+        await this.multipleElementVisible(licenseAdmin.activateSection);
     }
 
     // activate license
     async activateLicense(key: string, type = 'correct') {
         await this.goIfNotThere(data.subUrls.backend.dokan.license);
-        const alreadyActivated = await this.isVisible(selector.admin.dokan.license.deactivateLicense);
+        const alreadyActivated = await this.isVisible(licenseAdmin.deactivateLicense);
         if (!alreadyActivated) {
-            await this.clearAndType(selector.admin.dokan.license.activateSection.licenseKeyInput, key);
-            await this.clickAndWaitForResponse(data.subUrls.backend.dokan.license, selector.admin.dokan.license.activateSection.activateLicense);
+            await this.clearAndType(licenseAdmin.activateSection.licenseKeyInput, key);
+            await this.clickAndWaitForResponse(data.subUrls.backend.dokan.license, licenseAdmin.activateSection.activateLicense);
             if (type === 'correct') {
-                await this.toContainText(selector.admin.dokan.license.successNotice, 'License activated successfully.');
-                await this.toBeVisible(selector.admin.dokan.license.activateLicenseInfo);
-                await this.toBeVisible(selector.admin.dokan.license.refreshLicense);
+                await this.toContainText(licenseAdmin.successNotice, 'License activated successfully.');
+                await this.toBeVisible(licenseAdmin.activateLicenseInfo);
+                await this.toBeVisible(licenseAdmin.refreshLicense);
             } else {
-                await this.toContainText(selector.admin.dokan.license.errorNotice, 'Invalid License Key');
+                await this.toContainText(licenseAdmin.errorNotice, 'Invalid License Key');
             }
         } else {
             console.log('License already activated!!');
@@ -43,8 +47,8 @@ export class LicensePage extends AdminPage {
     // deactivate license
     async deactivateLicense() {
         await this.goIfNotThere(data.subUrls.backend.dokan.license);
-        await this.clickAndWaitForResponse(data.subUrls.backend.dokan.license, selector.admin.dokan.license.deactivateLicense);
-        await this.toContainText(selector.admin.dokan.license.successNotice, 'License deactivated successfully.');
-        await this.notToBeVisible(selector.admin.dokan.license.refreshLicense);
+        await this.clickAndWaitForResponse(data.subUrls.backend.dokan.license, licenseAdmin.deactivateLicense);
+        await this.toContainText(licenseAdmin.successNotice, 'License deactivated successfully.');
+        await this.notToBeVisible(licenseAdmin.refreshLicense);
     }
 }

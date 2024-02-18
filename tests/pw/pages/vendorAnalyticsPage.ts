@@ -3,6 +3,10 @@ import { VendorPage } from '@pages/vendorPage';
 import { selector } from '@pages/selectors';
 import { data } from '@utils/testData';
 
+
+// selectors
+const vendorAnalytics = selector.vendor.vAnalytics;
+
 export class VendorAnalyticsPage extends VendorPage {
     constructor(page: Page) {
         super(page);
@@ -15,28 +19,28 @@ export class VendorAnalyticsPage extends VendorPage {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.analytics);
 
         // analytics text is visible
-        await this.toBeVisible(selector.vendor.vAnalytics.analyticsText);
+        await this.toBeVisible(vendorAnalytics.analyticsText);
 
         // analytics menu elements are visible
-        await this.multipleElementVisible(selector.vendor.vAnalytics.menus);
+        await this.multipleElementVisible(vendorAnalytics.menus);
 
         // date-picker elements are visible
-        const { dateRangePickerinput, show } = selector.vendor.vAnalytics.datePicker;
+        const { dateRangePickerinput, show } = vendorAnalytics.datePicker;
         await this.multipleElementVisible({ dateRangePickerinput, show });
 
-        await this.clickAndWaitForLoadState(selector.vendor.vAnalytics.menus.topPages);
-        await this.toBeVisible(selector.vendor.vAnalytics.noAnalyticsFound);
+        await this.clickAndWaitForLoadState(vendorAnalytics.menus.topPages);
+        await this.toBeVisible(vendorAnalytics.noAnalyticsFound);
 
-        await this.clickAndWaitForLoadState(selector.vendor.vAnalytics.menus.location);
-        await this.toBeVisible(selector.vendor.vAnalytics.noAnalyticsFound);
+        await this.clickAndWaitForLoadState(vendorAnalytics.menus.location);
+        await this.toBeVisible(vendorAnalytics.noAnalyticsFound);
 
-        await this.clickAndWaitForLoadState(selector.vendor.vAnalytics.menus.system);
-        await this.toBeVisible(selector.vendor.vAnalytics.noAnalyticsFound);
+        await this.clickAndWaitForLoadState(vendorAnalytics.menus.system);
+        await this.toBeVisible(vendorAnalytics.noAnalyticsFound);
 
-        await this.clickAndWaitForLoadState(selector.vendor.vAnalytics.menus.promotions);
-        await this.toBeVisible(selector.vendor.vAnalytics.noAnalyticsFound);
+        await this.clickAndWaitForLoadState(vendorAnalytics.menus.promotions);
+        await this.toBeVisible(vendorAnalytics.noAnalyticsFound);
 
-        await this.clickAndWaitForLoadState(selector.vendor.vAnalytics.menus.keyword);
-        await this.toBeVisible(selector.vendor.vAnalytics.noAnalyticsFound);
+        await this.clickAndWaitForLoadState(vendorAnalytics.menus.keyword);
+        await this.toBeVisible(vendorAnalytics.noAnalyticsFound);
     }
 }

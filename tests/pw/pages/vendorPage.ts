@@ -9,6 +9,10 @@ import { vendor, vendorSetupWizard } from '@utils/interfaces';
 
 const { DOKAN_PRO } = process.env;
 
+// selectors
+const productsVendor = selector.vendor.product;
+const ordersVendor = selector.vendor.orders;
+
 export class VendorPage extends BasePage {
     constructor(page: Page) {
         super(page);

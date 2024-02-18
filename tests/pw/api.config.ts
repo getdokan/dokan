@@ -86,7 +86,7 @@ export default defineConfig({
             name: 'api_tests',
             testMatch: /.*\.spec\.ts/,
             /* whether not to run setup tests before running actual tests */
-            dependencies: NO_SETUP ? [] : ['api_setup'] ,
+            dependencies: NO_SETUP ? [] : ['api_setup'],
             /* whether not to run teardown tests after running actual tests */
             teardown: NO_SETUP ? undefined : 'coverage_report',
             // teardown: 'global_teardown',

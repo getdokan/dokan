@@ -2354,7 +2354,7 @@ export const selector = {
             },
 
             // Dokan Setup Wizard
-            dokanSetupWizard: {
+            setupWizard: {
                 letsGo: '.button-primary',
                 notWrightNow: '//a[contains(text(),"Not right now")]',
 
