@@ -76,7 +76,7 @@ test.describe('Booking Product test', () => {
         await vendor.filterBookingProducts('by-other', 'featured');
     });
 
-    test.skip('vendor can view booking product @pro @v', async () => {
+    test('vendor can view booking product @pro @v', async () => {
         await vendor.viewBookingProduct(bookableProductName);
     });
 

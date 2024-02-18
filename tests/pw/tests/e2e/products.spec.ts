@@ -96,7 +96,7 @@ test.describe('Product functionality test', () => {
         await vendor.vendorAddVirtualProduct(data.product.virtual, false);
     });
 
-    test.skip('vendor can add product category @lite @v', async () => {
+    test('vendor can add product category @lite @v', async () => {
         await vendor.vendorAddProductCategory(data.predefined.simpleProduct.product1.name, data.product.category.unCategorized);
     });
 
