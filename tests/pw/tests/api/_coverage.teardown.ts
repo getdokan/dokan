@@ -42,7 +42,7 @@ function getCoverage(coverageArray: any[], outputFile?: string) {
     const coverageReport: any = {
         total_endpoints: 0,
         covered_endpoints: 0,
-        coverage: 0,
+        coverage: '',
         uncovered_Endpoints: [],
     };
 
@@ -55,7 +55,7 @@ function getCoverage(coverageArray: any[], outputFile?: string) {
         const output = execSync(`grep -irl -E '${pattern}' tests/api | cat  `, { encoding: 'utf-8' });
         output.toString() != '' ? (coveredEndPoints += 1) : uncoveredEndpoints.push(route);
     }
-    const percentCovered = Number(((coveredEndPoints / totalEndPoints) * 100).toFixed(2));
+    const percentCovered = ((coveredEndPoints / totalEndPoints) * 100).toFixed(2) + '%';
 
     if (outputFile) {
         coverageReport.total_endpoints = totalEndPoints;

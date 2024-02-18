@@ -97,7 +97,7 @@ export default defineConfig({
         /* Record video only when retrying a test for the first time. */
         video: 'on-first-retry',
         /* Size of viewport */
-        viewport: { width: 1420, height: 900 }, // default 1280x720
+        // viewport: { width: 1420, height: 900 }, // default 1280x720
         /* whether to slow down test execution by provided seconds */
         launchOptions: { slowMo: SLOWMO ? Number(SLOWMO) * 1000 : 0 },
     },
