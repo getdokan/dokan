@@ -24,6 +24,7 @@ test.describe('test environment', () => {
     test('delete all products', async () => {
         await apiUtils.deleteAllProducts(payloads.adminAuth);
         await apiUtils.deleteAllProducts(payloads.vendorAuth);
+        await apiUtils.deleteAllProducts(payloads.vendor2Auth);
     });
 
     test('delete all stores', async () => {
