@@ -9,6 +9,12 @@ import { vendor, vendorSetupWizard } from '@utils/interfaces';
 
 const { DOKAN_PRO } = process.env;
 
+// selectors
+const registrationVendor = selector.vendor.vRegistration;
+const setupWizardVendor = selector.vendor.vSetup;
+const productsVendor = selector.vendor.product;
+const ordersVendor = selector.vendor.orders;
+
 export class VendorPage extends BasePage {
     constructor(page: Page) {
         super(page);
@@ -34,16 +40,25 @@ export class VendorPage extends BasePage {
     // go to order details
     async goToOrderDetails(orderNumber: string): Promise<void> {
         await this.searchOrder(orderNumber);
-        await this.clickAndWaitForLoadState(selector.vendor.orders.view(orderNumber));
-        await this.toContainText(selector.vendor.orders.orderDetails.orderNumber, orderNumber);
+        await this.clickAndWaitForLoadState(ordersVendor.view(orderNumber));
+        await this.toContainText(ordersVendor.orderDetails.orderNumber, orderNumber);
     }
 
     // go to product edit
     async goToProductEdit(productName: string): Promise<void> {
         await this.searchProduct(productName);
-        await this.hover(selector.vendor.product.productCell(productName));
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, selector.vendor.product.editProduct(productName));
-        await this.toHaveValue(selector.vendor.product.edit.title, productName);
+        await this.hover(productsVendor.productCell(productName));
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, productsVendor.editProduct(productName));
+        await this.toHaveValue(productsVendor.edit.title, productName);
+    }
+
+    // open vendor registration form
+    async openVendorRegistrationForm() {
+        await this.goto(data.subUrls.frontend.myAccount);
+        const regIsVisible = await this.isVisible(selector.customer.cRegistration.regEmail);
+        !regIsVisible && (await this.loginPage.logout());
+        await this.focusAndClick(registrationVendor.regVendor);
+        await this.waitForVisibleLocator(registrationVendor.firstName);
     }
 
     // vendor registration
@@ -53,38 +68,38 @@ export class VendorPage extends BasePage {
         await this.goToMyAccount();
         const regIsVisible = await this.isVisible(selector.customer.cRegistration.regEmail);
         !regIsVisible && (await this.loginPage.logout());
-        await this.clearAndType(selector.vendor.vRegistration.regEmail, username + data.vendor.vendorInfo.emailDomain);
-        await this.clearAndType(selector.vendor.vRegistration.regPassword, vendorInfo.password);
-        await this.focusAndClick(selector.vendor.vRegistration.regVendor);
-        await this.waitForVisibleLocator(selector.vendor.vRegistration.firstName);
-        await this.clearAndType(selector.vendor.vRegistration.firstName, username);
-        await this.clearAndType(selector.vendor.vRegistration.lastName, vendorInfo.lastName());
-        await this.clearAndType(selector.vendor.vRegistration.shopName, vendorInfo.shopName());
-        await this.click(selector.vendor.vRegistration.shopUrl);
+        await this.clearAndType(registrationVendor.regEmail, username + data.vendor.vendorInfo.emailDomain);
+        await this.clearAndType(registrationVendor.regPassword, vendorInfo.password);
+        await this.focusAndClick(registrationVendor.regVendor);
+        await this.waitForVisibleLocator(registrationVendor.firstName);
+        await this.clearAndType(registrationVendor.firstName, username);
+        await this.clearAndType(registrationVendor.lastName, vendorInfo.lastName());
+        await this.clearAndType(registrationVendor.shopName, vendorInfo.shopName());
+        await this.click(registrationVendor.shopUrl);
 
         // fill address if enabled on registration
-        const addressInputIsVisible = await this.isVisible(selector.vendor.vRegistration.street1);
-        if (addressInputIsVisible) {
-            await this.clearAndType(selector.vendor.vRegistration.street1, vendorInfo.street1);
-            await this.clearAndType(selector.vendor.vRegistration.street2, vendorInfo.street2);
-            await this.clearAndType(selector.vendor.vRegistration.city, vendorInfo.city);
-            await this.clearAndType(selector.vendor.vRegistration.zipCode, vendorInfo.zipCode);
-            await this.selectByValue(selector.vendor.vRegistration.country, vendorInfo.countrySelectValue);
-            await this.selectByValue(selector.vendor.vRegistration.state, vendorInfo.stateSelectValue);
+        if (vendorInfo.addressFieldsEnabled) {
+            await this.clearAndType(registrationVendor.street1, vendorInfo.street1);
+            await this.clearAndType(registrationVendor.street2, vendorInfo.street2);
+            await this.clearAndType(registrationVendor.city, vendorInfo.city);
+            await this.clearAndType(registrationVendor.zipCode, vendorInfo.zipCode);
+            await this.selectByValue(registrationVendor.country, vendorInfo.countrySelectValue);
+            await this.selectByValue(registrationVendor.state, vendorInfo.stateSelectValue);
         }
         if (DOKAN_PRO) {
-            await this.clearAndType(selector.vendor.vRegistration.companyName, vendorInfo.companyName);
-            await this.clearAndType(selector.vendor.vRegistration.companyId, vendorInfo.companyId);
-            await this.clearAndType(selector.vendor.vRegistration.vatNumber, vendorInfo.vatNumber);
-            await this.clearAndType(selector.vendor.vRegistration.bankName, vendorInfo.bankName);
-            await this.clearAndType(selector.vendor.vRegistration.bankIban, vendorInfo.bankIban);
+            await this.clearAndType(registrationVendor.companyName, vendorInfo.companyName);
+            await this.clearAndType(registrationVendor.companyId, vendorInfo.companyId);
+            await this.clearAndType(registrationVendor.vatNumber, vendorInfo.vatNumber);
+            await this.clearAndType(registrationVendor.bankName, vendorInfo.bankName);
+            await this.clearAndType(registrationVendor.bankIban, vendorInfo.bankIban);
         }
-        await this.clearAndType(selector.vendor.vRegistration.phone, vendorInfo.phoneNumber);
+        await this.clearAndType(registrationVendor.phone, vendorInfo.phoneNumber);
         await this.checkIfVisible(selector.customer.cDashboard.termsAndConditions);
-        // await this.checkIfVisible(selector.customer.cDashboard.termsAndConditions); // todo: fix
-        const subscriptionPackIsVisible = await this.isVisible(selector.vendor.vRegistration.subscriptionPack);
-        subscriptionPackIsVisible && (await this.selectByLabel(selector.vendor.vRegistration.subscriptionPack, data.predefined.vendorSubscription.nonRecurring));
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.setupWizard, selector.vendor.vRegistration.register);
+        const subscriptionPackIsVisible = await this.isVisible(registrationVendor.subscriptionPack);
+        subscriptionPackIsVisible && (await this.selectByLabel(registrationVendor.subscriptionPack, data.predefined.vendorSubscription.nonRecurring));
+        setupWizardData.setupWizardEnabled
+            ? await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.setupWizard, registrationVendor.register)
+            : await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.dashboard, registrationVendor.register);
         const registrationErrorIsVisible = await this.isVisible(selector.customer.cWooSelector.wooCommerceError);
         if (registrationErrorIsVisible) {
             const hasError = await this.hasText(selector.customer.cWooSelector.wooCommerceError, data.customer.registration.registrationErrorMessage);
@@ -94,74 +109,75 @@ export class VendorPage extends BasePage {
             }
         }
         subscriptionPackIsVisible && (await this.customer.placeOrder('bank', false, true, false));
-        await this.vendorSetupWizard(setupWizardData);
+        setupWizardData.setupWizardEnabled && (await this.vendorSetupWizard(setupWizardData));
     }
 
     // vendor setup wizard
     async vendorSetupWizard(setupWizardData: vendorSetupWizard): Promise<void> {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.setupWizard);
+
         if (setupWizardData.choice) {
-            await this.click(selector.vendor.vSetup.letsGo);
-            await this.clearAndType(selector.vendor.vSetup.street1, setupWizardData.street1);
-            await this.clearAndType(selector.vendor.vSetup.street2, setupWizardData.street2);
-            await this.clearAndType(selector.vendor.vSetup.city, setupWizardData.city);
-            await this.clearAndType(selector.vendor.vSetup.zipCode, setupWizardData.zipCode);
-            await this.click(selector.vendor.vSetup.country);
-            await this.type(selector.vendor.vSetup.countryInput, setupWizardData.country);
-            await this.toContainText(selector.vendor.vSetup.highlightedResult, setupWizardData.country);
+            await this.click(setupWizardVendor.letsGo);
+            await this.clearAndType(setupWizardVendor.street1, setupWizardData.street1);
+            await this.clearAndType(setupWizardVendor.street2, setupWizardData.street2);
+            await this.clearAndType(setupWizardVendor.city, setupWizardData.city);
+            await this.clearAndType(setupWizardVendor.zipCode, setupWizardData.zipCode);
+            await this.click(setupWizardVendor.country);
+            await this.type(setupWizardVendor.countryInput, setupWizardData.country);
+            await this.toContainText(setupWizardVendor.highlightedResult, setupWizardData.country);
             await this.press(data.key.enter);
-            await this.click(selector.vendor.vSetup.state);
-            await this.type(selector.vendor.vSetup.stateInput, setupWizardData.state);
-            await this.toContainText(selector.vendor.vSetup.highlightedResult, setupWizardData.state);
+            await this.click(setupWizardVendor.state);
+            await this.type(setupWizardVendor.stateInput, setupWizardData.state);
+            await this.toContainText(setupWizardVendor.highlightedResult, setupWizardData.state);
             await this.press(data.key.enter);
 
             // store categories
-            const storeCategoriesEnabled = await this.isVisible(selector.vendor.vSetup.storeCategories);
+            const storeCategoriesEnabled = await this.isVisible(setupWizardVendor.storeCategories);
             if (storeCategoriesEnabled) {
-                const allStoreCategories = await this.getMultipleElementTexts(selector.vendor.vSetup.selectedStoreCategories);
+                const allStoreCategories = await this.getMultipleElementTexts(setupWizardVendor.selectedStoreCategories);
                 const categoryIsSelected = allStoreCategories.includes('×' + setupWizardData.storeCategory);
                 if (!categoryIsSelected) {
-                    await this.click(selector.vendor.vSetup.storeCategories);
-                    await this.type(selector.vendor.vSetup.storeCategoriesInput, setupWizardData.storeCategory);
-                    await this.toContainText(selector.vendor.vSetup.highlightedResult, setupWizardData.storeCategory);
-                    await this.click(selector.vendor.vSetup.highlightedResult);
+                    await this.click(setupWizardVendor.storeCategories);
+                    await this.type(setupWizardVendor.storeCategoriesInput, setupWizardData.storeCategory);
+                    await this.toContainText(setupWizardVendor.highlightedResult, setupWizardData.storeCategory);
+                    await this.click(setupWizardVendor.highlightedResult);
                 }
             }
 
             // map
-            const geoLocationEnabled = await this.isVisible(selector.vendor.vSetup.map);
+            const geoLocationEnabled = await this.isVisible(setupWizardVendor.map);
             if (geoLocationEnabled) {
-                await this.typeAndWaitForResponse(data.subUrls.gmap, selector.vendor.vSetup.map, setupWizardData.mapLocation);
+                await this.typeAndWaitForResponse(data.subUrls.gmap, setupWizardVendor.map, setupWizardData.mapLocation);
                 // await this.press(data.key.arrowDown);
                 // await this.press(data.key.enter);
-                await this.click(selector.vendor.vSetup.mapResultFirst);
+                await this.click(setupWizardVendor.mapResultFirst);
             }
 
-            await this.check(selector.vendor.vSetup.email);
-            await this.click(selector.vendor.vSetup.continueStoreSetup);
+            await this.check(setupWizardVendor.email);
+            await this.click(setupWizardVendor.continueStoreSetup);
 
             // payment
 
             // paypal
-            await this.clearAndType(selector.vendor.vSetup.paypal, setupWizardData.paypal());
+            await this.clearAndType(setupWizardVendor.paypal, setupWizardData.paypal());
             // bank transfer
-            await this.clearAndType(selector.vendor.vSetup.bankAccountName, setupWizardData.bankAccountName);
-            await this.selectByValue(selector.vendor.vSetup.bankAccountType, setupWizardData.bankAccountType);
-            await this.clearAndType(selector.vendor.vSetup.bankAccountNumber, setupWizardData.bankAccountNumber);
-            await this.clearAndType(selector.vendor.vSetup.bankRoutingNumber, setupWizardData.bankRoutingNumber);
-            await this.clearAndType(selector.vendor.vSetup.bankName, setupWizardData.bankName);
-            await this.clearAndType(selector.vendor.vSetup.bankAddress, setupWizardData.bankAddress);
-            await this.clearAndType(selector.vendor.vSetup.bankIban, setupWizardData.bankIban);
-            await this.clearAndType(selector.vendor.vSetup.bankSwiftCode, setupWizardData.bankSwiftCode);
-            await this.check(selector.vendor.vSetup.declaration);
+            await this.clearAndType(setupWizardVendor.bankAccountName, setupWizardData.bankAccountName);
+            await this.selectByValue(setupWizardVendor.bankAccountType, setupWizardData.bankAccountType);
+            await this.clearAndType(setupWizardVendor.bankAccountNumber, setupWizardData.bankAccountNumber);
+            await this.clearAndType(setupWizardVendor.bankRoutingNumber, setupWizardData.bankRoutingNumber);
+            await this.clearAndType(setupWizardVendor.bankName, setupWizardData.bankName);
+            await this.clearAndType(setupWizardVendor.bankAddress, setupWizardData.bankAddress);
+            await this.clearAndType(setupWizardVendor.bankIban, setupWizardData.bankIban);
+            await this.clearAndType(setupWizardVendor.bankSwiftCode, setupWizardData.bankSwiftCode);
+            await this.check(setupWizardVendor.declaration);
             // custom method
-            await this.typeIfVisible(selector.vendor.vSetup.customPayment, setupWizardData.customPayment);
+            await this.typeIfVisible(setupWizardVendor.customPayment, setupWizardData.customPayment);
             // skrill
-            await this.typeIfVisible(selector.vendor.vSetup.skrill, setupWizardData.skrill);
-            await this.click(selector.vendor.vSetup.continuePaymentSetup);
-            await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.dashboard, selector.vendor.vSetup.goToStoreDashboard);
+            await this.typeIfVisible(setupWizardVendor.skrill, setupWizardData.skrill);
+            await this.click(setupWizardVendor.continuePaymentSetup);
+            await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.dashboard, setupWizardVendor.goToStoreDashboard);
         } else {
-            await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.dashboard, selector.vendor.vSetup.notRightNow);
+            await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.dashboard, setupWizardVendor.notRightNow);
         }
         await this.toBeVisible(selector.vendor.vDashboard.menus.dashboard);
     }
@@ -224,42 +240,42 @@ export class VendorPage extends BasePage {
             refunded: 0,
         };
 
-        orderDetails.vendorEarning = helpers.price((await this.getElementText(selector.vendor.orders.vendorEarningTable(orderNumber))) as string);
-        await this.clickAndWaitForLoadState(selector.vendor.orders.view(orderNumber));
+        orderDetails.vendorEarning = helpers.price((await this.getElementText(ordersVendor.vendorEarningTable(orderNumber))) as string);
+        await this.clickAndWaitForLoadState(ordersVendor.view(orderNumber));
 
-        orderDetails.orderNumber = ((await this.getElementText(selector.vendor.orders.orderDetails.orderNumber)) as string).split('#')[1] as string;
+        orderDetails.orderNumber = ((await this.getElementText(ordersVendor.orderDetails.orderNumber)) as string).split('#')[1] as string;
 
-        const refundedOrderTotalIsVisible = await this.isVisible(selector.vendor.orders.orderDetails.orderTotalAfterRefund);
+        const refundedOrderTotalIsVisible = await this.isVisible(ordersVendor.orderDetails.orderTotalAfterRefund);
         if (refundedOrderTotalIsVisible) {
-            orderDetails.orderTotalBeforeRefund = helpers.price((await this.getElementText(selector.vendor.orders.orderDetails.orderTotalBeforeRefund)) as string);
-            orderDetails.orderTotal = helpers.price((await this.getElementText(selector.vendor.orders.orderDetails.orderTotalAfterRefund)) as string);
+            orderDetails.orderTotalBeforeRefund = helpers.price((await this.getElementText(ordersVendor.orderDetails.orderTotalBeforeRefund)) as string);
+            orderDetails.orderTotal = helpers.price((await this.getElementText(ordersVendor.orderDetails.orderTotalAfterRefund)) as string);
         } else {
-            orderDetails.orderTotal = helpers.price((await this.getElementText(selector.vendor.orders.orderDetails.orderTotal)) as string);
+            orderDetails.orderTotal = helpers.price((await this.getElementText(ordersVendor.orderDetails.orderTotal)) as string);
         }
 
-        orderDetails.orderStatus = ((await this.getElementText(selector.vendor.orders.status.currentOrderStatus)) as string).replace('-', ' ');
+        orderDetails.orderStatus = ((await this.getElementText(ordersVendor.status.currentOrderStatus)) as string).replace('-', ' ');
 
-        const orderDate = ((await this.getElementText(selector.vendor.orders.orderDetails.orderDate)) as string)?.split(':')[1]?.trim() as string;
+        const orderDate = ((await this.getElementText(ordersVendor.orderDetails.orderDate)) as string)?.split(':')[1]?.trim() as string;
         orderDetails.orderDate = orderDate?.substring(0, orderDate.indexOf(',', orderDate.indexOf(',') + 1));
 
-        const discountIsVisible = await this.isVisible(selector.vendor.orders.orderDetails.discount);
+        const discountIsVisible = await this.isVisible(ordersVendor.orderDetails.discount);
         if (discountIsVisible) {
-            orderDetails.discount = helpers.price((await this.getElementText(selector.vendor.orders.orderDetails.discount)) as string);
+            orderDetails.discount = helpers.price((await this.getElementText(ordersVendor.orderDetails.discount)) as string);
         }
 
-        const shippingMethodIsVisible = await this.isVisible(selector.vendor.orders.orderDetails.shippingMethod);
+        const shippingMethodIsVisible = await this.isVisible(ordersVendor.orderDetails.shippingMethod);
         if (shippingMethodIsVisible) {
-            orderDetails.shippingCost = helpers.price((await this.getElementText(selector.vendor.orders.orderDetails.shippingCost)) as string);
+            orderDetails.shippingCost = helpers.price((await this.getElementText(ordersVendor.orderDetails.shippingCost)) as string);
         }
 
-        const taxIsVisible = await this.isVisible(selector.vendor.orders.orderDetails.tax);
+        const taxIsVisible = await this.isVisible(ordersVendor.orderDetails.tax);
         if (taxIsVisible) {
-            orderDetails.tax = helpers.price((await this.getElementText(selector.vendor.orders.orderDetails.tax)) as string);
+            orderDetails.tax = helpers.price((await this.getElementText(ordersVendor.orderDetails.tax)) as string);
         }
 
-        const refundIsVisible = await this.isVisible(selector.vendor.orders.orderDetails.refunded);
+        const refundIsVisible = await this.isVisible(ordersVendor.orderDetails.refunded);
         if (refundIsVisible) {
-            orderDetails.refunded = helpers.price((await this.getElementText(selector.vendor.orders.orderDetails.refunded)) as string);
+            orderDetails.refunded = helpers.price((await this.getElementText(ordersVendor.orderDetails.refunded)) as string);
         }
 
         console.log(orderDetails);
@@ -281,45 +297,46 @@ export class VendorPage extends BasePage {
     async searchProduct(productName: string): Promise<void> {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.products);
 
-        await this.clearAndType(selector.vendor.product.search.searchInput, productName);
-        await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.products, selector.vendor.product.search.searchBtn);
-        await this.toBeVisible(selector.vendor.product.productLink(productName));
+        await this.clearAndType(productsVendor.search.searchInput, productName);
+        await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.products, productsVendor.search.searchBtn);
+        await this.toBeVisible(productsVendor.productLink(productName));
     }
 
     // search order
     async searchOrder(orderNumber: string): Promise<void> {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.orders);
 
-        await this.clearAndType(selector.vendor.orders.search.searchInput, orderNumber);
-        await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.orders, selector.vendor.orders.search.searchBtn);
-        await this.toBeVisible(selector.vendor.orders.orderLink(orderNumber));
-        await this.toHaveCount(selector.vendor.orders.numberOfRowsFound, 1);
+        await this.clearAndType(ordersVendor.search.searchInput, orderNumber);
+        await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.orders, ordersVendor.search.searchBtn);
+        await this.toBeVisible(ordersVendor.orderLink(orderNumber));
+        await this.toHaveCount(ordersVendor.numberOfRowsFound, 1);
     }
 
     async buyProductAdvertising(productName: string) {
         await this.searchProduct(productName);
-        const advertisementStatus = await this.hasColor(selector.vendor.product.advertisementStatus(productName), 'rgb(255, 99, 71)');
+        const advertisementStatus = await this.hasColor(productsVendor.advertisementStatus(productName), 'rgb(255, 99, 71)');
         if (advertisementStatus) {
             console.log('Product advertisement is currently ongoing.');
             test.skip();
             // throw new Error('Product advertisement is currently ongoing.');
         }
-        await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.product.buyAdvertisement(productName));
-        await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.product.confirmAction);
-        await this.click(selector.vendor.product.successMessage);
+        await this.clickAndWaitForResponse(data.subUrls.ajax, productsVendor.buyAdvertisement(productName));
+        await this.clickAndWaitForResponse(data.subUrls.ajax, productsVendor.confirmAction);
+        await this.click(productsVendor.successMessage);
         const orderId = await this.customer.paymentOrder();
         return orderId;
     }
 
     // vendor set banner and profile picture settings
-    // async bannerAndProfilePictureSettings(banner: string, profilePicture: string): Promise<void> { // todo:  fix banner and profile update
-    // 	// upload banner and profile picture
-    // 	await this.removePreviouslyUploadedImage(selector.vendor.vStoreSettings.bannerImage, selector.vendor.vStoreSettings.removeBannerImage);
-    // 	await this.click(selector.vendor.vStoreSettings.banner);
-    // 	await this.wpUploadFile(banner);
+    async bannerAndProfilePictureSettings(banner: string, profilePicture: string): Promise<void> {
+        // todo:  fix banner and profile update
+        // upload banner and profile picture
+        await this.removePreviouslyUploadedImage(selector.vendor.vStoreSettings.bannerImage, selector.vendor.vStoreSettings.removeBannerImage);
+        await this.click(selector.vendor.vStoreSettings.banner);
+        await this.wpUploadFile(banner);
 
-    // 	await this.removePreviouslyUploadedImage(selector.vendor.vStoreSettings.profilePictureImage, selector.vendor.vStoreSettings.removeProfilePictureImage);
-    // 	await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vStoreSettings.profilePicture);
-    // 	await this.wpUploadFile(profilePicture);
-    // }
+        await this.removePreviouslyUploadedImage(selector.vendor.vStoreSettings.profilePictureImage, selector.vendor.vStoreSettings.removeProfilePictureImage);
+        await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vStoreSettings.profilePicture);
+        await this.wpUploadFile(profilePicture);
+    }
 }

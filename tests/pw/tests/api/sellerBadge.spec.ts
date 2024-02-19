@@ -10,7 +10,7 @@
 //COVERAGE_TAG: DELETE /dokan/v1/seller-badge/(?P<id>[\d]+)
 //COVERAGE_TAG: PUT /dokan/v1/seller-badge/bulk-actions
 
-import { test, expect } from '@playwright/test';
+import { test, expect, request } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
@@ -21,12 +21,16 @@ test.describe('seller badge api test', () => {
     let badgeId: string;
     let currentUserId: string;
 
-    test.beforeAll(async ({ request }) => {
-        apiUtils = new ApiUtils(request);
+    test.beforeAll(async () => {
+        apiUtils = new ApiUtils(await request.newContext());
         // delete previous badges
         await apiUtils.deleteAllSellerBadges();
         [, currentUserId] = await apiUtils.getCurrentUser();
         [, badgeId] = await apiUtils.createSellerBadge(payloads.createSellerBadgeExclusiveToPlatform);
+    });
+
+    test.afterAll(async () => {
+        await apiUtils.dispose();
     });
 
     test('get verified-seller verification types @pro', async () => {

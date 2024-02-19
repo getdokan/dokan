@@ -1,4 +1,4 @@
-import { test as setup, expect, Page } from '@playwright/test';
+import { test as setup, expect, request, Page } from '@playwright/test';
 import { ProductAdvertisingPage } from '@pages/productAdvertisingPage';
 import { ReverseWithdrawsPage } from '@pages/reverseWithdrawsPage';
 import { VendorSettingsPage } from '@pages/vendorSettingsPage';
@@ -16,8 +16,12 @@ setup.describe('setup site & woocommerce & user settings', () => {
 
     let apiUtils: ApiUtils;
 
-    setup.beforeAll(async ({ request }) => {
-        apiUtils = new ApiUtils(request);
+    setup.beforeAll(async () => {
+        apiUtils = new ApiUtils(await request.newContext());
+    });
+
+    setup.afterAll(async () => {
+        await apiUtils.dispose();
     });
 
     setup('check active plugins @lite', async () => {
@@ -45,7 +49,7 @@ setup.describe('setup site & woocommerce & user settings', () => {
         // delete previous shipping zones
         const allShippingZoneIds = (await apiUtils.getAllShippingZones()).map((a: { id: string }) => a.id);
         // allShippingZoneIds = helpers.removeItem(allShippingZoneIds, 0) // avoid remove default zone id
-        if (allShippingZoneIds.length) {
+        if (allShippingZoneIds?.length) {
             for (const shippingZoneId of allShippingZoneIds) {
                 await apiUtils.deleteShippingZone(shippingZoneId);
             }
@@ -102,7 +106,7 @@ setup.describe('setup site & woocommerce & user settings', () => {
 
     setup('disable simple-auction ajax bid check @pro', async () => {
         setup.skip(!process.env.CI || !DOKAN_PRO, 'skip on local');
-        const [, , status] = await apiUtils.getSinglePlugin('wa/woocommerce-simple-auctions', payloads.adminAuth);
+        const [, , status] = await apiUtils.getSinglePlugin('woocommerce-simple-auctions/woocommerce-simple-auctions', payloads.adminAuth);
         status === 'active' && (await dbUtils.updateWpOptionTable('simple_auctions_live_check', 'no'));
     });
 });
@@ -112,8 +116,12 @@ setup.describe('setup user settings', () => {
 
     let apiUtils: ApiUtils;
 
-    setup.beforeAll(async ({ request }) => {
-        apiUtils = new ApiUtils(request);
+    setup.beforeAll(async () => {
+        apiUtils = new ApiUtils(await request.newContext());
+    });
+
+    setup.afterAll(async () => {
+        await apiUtils.dispose();
     });
 
     // Vendor Details
@@ -122,8 +130,7 @@ setup.describe('setup user settings', () => {
         await apiUtils.deleteAllProducts(data.predefined.simpleProduct.product1.name, payloads.vendorAuth);
 
         // create store product
-        const product = { ...payloads.createProduct(), name: data.predefined.simpleProduct.product1.name };
-        const [, productId] = await apiUtils.createProduct(product, payloads.vendorAuth);
+        const [, productId] = await apiUtils.createProduct({ ...payloads.createProduct(), name: data.predefined.simpleProduct.product1.name }, payloads.vendorAuth);
         console.log('PRODUCT_ID', productId);
         process.env.PRODUCT_ID = productId;
         helpers.appendEnv(`PRODUCT_ID=${productId}`); // for local testing
@@ -134,8 +141,7 @@ setup.describe('setup user settings', () => {
         await apiUtils.deleteAllProducts(data.predefined.vendor2.simpleProduct.product1.name, payloads.vendor2Auth);
 
         // create store product
-        const product = { ...payloads.createProduct(), name: data.predefined.vendor2.simpleProduct.product1.name };
-        const [, productId] = await apiUtils.createProduct(product, payloads.vendor2Auth);
+        const [, productId] = await apiUtils.createProduct({ ...payloads.createProduct(), name: data.predefined.vendor2.simpleProduct.product1.name }, payloads.vendor2Auth);
         console.log('V2_PRODUCT_ID:', productId);
         process.env.V2_PRODUCT_ID = productId;
         helpers.appendEnv(`V2_PRODUCT_ID=${productId}`); // for local testing
@@ -155,17 +161,17 @@ setup.describe('setup user settings', () => {
         await apiUtils.createProduct({ ...product, status: 'pending', in_stock: true }, payloads.vendorAuth);
         await apiUtils.createProduct({ ...product, status: 'publish', in_stock: true }, payloads.vendorAuth);
     });
-
-    setup.skip('add test vendor orders @lite', async () => {
-        await apiUtils.createOrder(payloads.createProduct(), { ...payloads.createOrder, customer_id: CUSTOMER_ID }, payloads.vendorAuth);
-    });
 });
 
 setup.describe('setup dokan settings', () => {
     let apiUtils: ApiUtils;
 
-    setup.beforeAll(async ({ request }) => {
-        apiUtils = new ApiUtils(request);
+    setup.beforeAll(async () => {
+        apiUtils = new ApiUtils(await request.newContext());
+    });
+
+    setup.afterAll(async () => {
+        await apiUtils.dispose();
     });
 
     setup('set dokan general settings @lite', async () => {
@@ -274,7 +280,7 @@ setup.describe('setup dokan settings e2e', () => {
     let aPage: Page, vPage: Page;
     let apiUtils: ApiUtils;
 
-    setup.beforeAll(async ({ browser, request }) => {
+    setup.beforeAll(async ({ browser }) => {
         const adminContext = await browser.newContext(data.auth.adminAuth);
         aPage = await adminContext.newPage();
         productAdvertisingPage = new ProductAdvertisingPage(aPage);
@@ -284,12 +290,13 @@ setup.describe('setup dokan settings e2e', () => {
         vPage = await vendorContext.newPage();
         vendorPage = new VendorSettingsPage(vPage);
 
-        apiUtils = new ApiUtils(request);
+        apiUtils = new ApiUtils(await request.newContext());
     });
 
     setup.afterAll(async () => {
         await aPage.close();
         await vPage.close();
+        await apiUtils.dispose();
     });
 
     setup('recreate reverse withdrawal payment product via settings save @lite', async () => {

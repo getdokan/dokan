@@ -3,6 +3,9 @@ import { AdminPage } from '@pages/adminPage';
 import { selector } from '@pages/selectors';
 import { data } from '@utils/testData';
 
+// selectors
+const reportsAdmin = selector.admin.dokan.reports;
+
 export class ReportsPage extends AdminPage {
     constructor(page: Page) {
         super(page);
@@ -15,22 +18,22 @@ export class ReportsPage extends AdminPage {
         await this.goIfNotThere(data.subUrls.backend.dokan.reports);
 
         // report Menus are visible
-        await this.multipleElementVisible(selector.admin.dokan.reports.menus);
+        await this.multipleElementVisible(reportsAdmin.menus);
 
         // filter Menus are visible
-        await this.multipleElementVisible(selector.admin.dokan.reports.reports.filterMenus);
+        await this.multipleElementVisible(reportsAdmin.reports.filterMenus);
 
         // calendar input is visible
-        await this.toBeVisible(selector.admin.dokan.reports.reports.calendar);
+        await this.toBeVisible(reportsAdmin.reports.calendar);
 
         // show button is visible
-        await this.toBeVisible(selector.admin.dokan.reports.reports.show);
+        await this.toBeVisible(reportsAdmin.reports.show);
 
         // at a glance elements are visible
-        await this.multipleElementVisible(selector.admin.dokan.reports.reports.atAGlance);
+        await this.multipleElementVisible(reportsAdmin.reports.atAGlance);
 
         // overview elements are visible
-        await this.multipleElementVisible(selector.admin.dokan.reports.reports.overview);
+        await this.multipleElementVisible(reportsAdmin.reports.overview);
     }
 
     // all logs
@@ -40,65 +43,67 @@ export class ReportsPage extends AdminPage {
         await this.goIfNotThere(data.subUrls.backend.dokan.allLogs);
 
         // report Menus are visible
-        await this.multipleElementVisible(selector.admin.dokan.reports.menus);
+        await this.multipleElementVisible(reportsAdmin.menus);
 
         // filter elements are visible
-        const { filterByStoreInput, filterByStatusInput, searchedResult, ...filters } = selector.admin.dokan.reports.allLogs.filters;
+        const { filterByStoreInput, filterByStatusInput, searchedResult, ...filters } = reportsAdmin.allLogs.filters;
         await this.multipleElementVisible(filters);
 
         // search is visible
-        await this.toBeVisible(selector.admin.dokan.reports.allLogs.search);
+        await this.toBeVisible(reportsAdmin.allLogs.search);
 
         // export log is visible
-        await this.toBeVisible(selector.admin.dokan.reports.allLogs.exportLogs);
+        await this.toBeVisible(reportsAdmin.allLogs.exportLogs);
 
         // all logs table elements are visible
-        await this.multipleElementVisible(selector.admin.dokan.reports.allLogs.table);
+        await this.multipleElementVisible(reportsAdmin.allLogs.table);
     }
 
     // search all logs
     async searchAllLogs(orderId: string) {
         await this.goIfNotThere(data.subUrls.backend.dokan.allLogs);
 
-        await this.clearInputField(selector.admin.dokan.reports.allLogs.search);
-        await this.typeViaPageAndWaitForResponse(data.subUrls.api.dokan.logs, selector.admin.dokan.reports.allLogs.search, orderId);
-        await this.toBeVisible(selector.admin.dokan.reports.allLogs.orderIdCell(orderId));
-        const count = (await this.getElementText(selector.admin.dokan.reports.allLogs.numberOfRowsFound))?.split(' ')[0];
+        await this.clearInputField(reportsAdmin.allLogs.search);
+        await this.typeAndWaitForResponseAndLoadState(data.subUrls.api.dokan.logs, reportsAdmin.allLogs.search, orderId);
+        await this.notToBeVisible(selector.admin.dokan.loader);
+        await this.wait(2); // todo: resolve this
+        await this.toBeVisible(reportsAdmin.allLogs.orderIdCell(orderId));
+        const count = (await this.getElementText(reportsAdmin.allLogs.numberOfRowsFound))?.split(' ')[0];
         expect(Number(count)).toBe(1);
-        // await this.clickAndWaitForResponseAndLoadState(data.subUrls.api.dokan.logs, selector.admin.dokan.reports.allLogs.filters.clear);
+        // await this.clickAndWaitForResponseAndLoadState(data.subUrls.api.dokan.logs, reportsAdmin.allLogs.filters.clear);
     }
 
     // export all logs
     async exportAllLogs(orderId?: string) {
         orderId && (await this.searchAllLogs(orderId));
-        await this.clickAndWaitForDownload(selector.admin.dokan.reports.allLogs.exportLogs);
+        await this.clickAndWaitForDownload(reportsAdmin.allLogs.exportLogs);
     }
 
     // filter all logs by store
     async filterAllLogsByStore(storeName: string) {
         await this.goIfNotThere(data.subUrls.backend.dokan.allLogs);
 
-        await this.click(selector.admin.dokan.reports.allLogs.filters.filterByStore);
-        await this.typeAndWaitForResponse(data.subUrls.api.dokan.stores, selector.admin.dokan.reports.allLogs.filters.filterByStoreInput, storeName);
+        await this.click(reportsAdmin.allLogs.filters.filterByStore);
+        await this.typeAndWaitForResponse(data.subUrls.api.dokan.stores, reportsAdmin.allLogs.filters.filterByStoreInput, storeName);
         await this.press(data.key.arrowDown);
-        // await this.toContainText(selector.admin.dokan.reports.allLogs.filters.searchedResult, (storeName));
+        // await this.toContainText(reportsAdmin.allLogs.filters.searchedResult, (storeName));
         await this.pressAndWaitForResponse(data.subUrls.api.dokan.logs, data.key.enter);
 
-        const count = (await this.getElementText(selector.admin.dokan.reports.allLogs.numberOfRowsFound))?.split(' ')[0];
+        const count = (await this.getElementText(reportsAdmin.allLogs.numberOfRowsFound))?.split(' ')[0];
         expect(Number(count)).toBeGreaterThan(0);
-        // await this.clickAndWaitForResponseAndLoadState(data.subUrls.api.dokan.logs, selector.admin.dokan.reports.allLogs.filters.clear);
+        // await this.clickAndWaitForResponseAndLoadState(data.subUrls.api.dokan.logs, reportsAdmin.allLogs.filters.clear);
     }
 
     // filter all logs by status
     async filterAllLogsByStatus(orderStatus: string) {
         await this.goIfNotThere(data.subUrls.backend.dokan.allLogs);
 
-        await this.click(selector.admin.dokan.reports.allLogs.filters.filterByStatus); // todo:  add multiselect option
-        await this.type(selector.admin.dokan.reports.allLogs.filters.filterByStatusInput, orderStatus);
-        // await this.toContainText(selector.admin.dokan.reports.allLogs.filters.searchedResult, (orderStatus));
-        await this.clickAndAcceptAndWaitForResponse(data.subUrls.api.dokan.logs, selector.admin.dokan.reports.allLogs.filters.searchedResult);
-        const count = (await this.getElementText(selector.admin.dokan.reports.allLogs.numberOfRowsFound))?.split(' ')[0];
+        await this.click(reportsAdmin.allLogs.filters.filterByStatus); // todo:  add multiselect option
+        await this.type(reportsAdmin.allLogs.filters.filterByStatusInput, orderStatus);
+        // await this.toContainText(reportsAdmin.allLogs.filters.searchedResult, (orderStatus));
+        await this.clickAndAcceptAndWaitForResponse(data.subUrls.api.dokan.logs, reportsAdmin.allLogs.filters.searchedResult);
+        const count = (await this.getElementText(reportsAdmin.allLogs.numberOfRowsFound))?.split(' ')[0];
         expect(Number(count)).toBeGreaterThan(0);
-        // await this.clickAndWaitForResponseAndLoadState(data.subUrls.api.dokan.logs, selector.admin.dokan.reports.allLogs.filters.clear);
+        // await this.clickAndWaitForResponseAndLoadState(data.subUrls.api.dokan.logs, reportsAdmin.allLogs.filters.clear);
     }
 }

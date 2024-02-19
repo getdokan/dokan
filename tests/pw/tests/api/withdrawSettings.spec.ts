@@ -4,7 +4,7 @@
 //COVERAGE_TAG: POST /dokan/v2/withdraw/disbursement
 //COVERAGE_TAG: POST /dokan/v2/withdraw/disbursement/disable
 
-import { test, expect } from '@playwright/test';
+import { test, expect, request } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
@@ -12,8 +12,12 @@ import { payloads } from '@utils/payloads';
 test.describe('withdraw api test', () => {
     let apiUtils: ApiUtils;
 
-    test.beforeAll(({ request }) => {
-        apiUtils = new ApiUtils(request);
+    test.beforeAll(async () => {
+        apiUtils = new ApiUtils(await request.newContext());
+    });
+
+    test.afterAll(async () => {
+        await apiUtils.dispose();
     });
 
     test('get withdraw settings @v2 @lite', async () => {

@@ -1,59 +1,64 @@
-import { test as setup, expect } from '@playwright/test';
+import { test as setup, expect, request } from '@playwright/test';
 import { LoginPage } from '@pages/loginPage';
-// import { WpPage } from '@pages/wpPage';
+import { WpPage } from '@pages/wpPage';
 import { ApiUtils } from '@utils/apiUtils';
 import { payloads } from '@utils/payloads';
 import { data } from '@utils/testData';
 import { helpers } from '@utils/helpers';
 
-const { DOKAN_PRO } = process.env;
+const { DOKAN_PRO, BASE_URL } = process.env;
 
 setup.describe('authenticate users & set permalink', () => {
-    // setup.skip('get server url @lite', async ({ request }) => {
-    //     const apiUtils = new ApiUtils(request);
-    //     const headers = await apiUtils.getSiteHeaders(BASE_URL);
-    //     if (headers.link) {
-    //         const serverUrl = headers.link.includes('rest_route') ? BASE_URL + '/?rest_route=' : BASE_URL + '/wp-json';
-    //         console.log('ServerUrl:', serverUrl);
-    //         process.env.SERVER_URL = serverUrl;
-    //     } else {
-    //         console.log("Headers link doesn't exists");
-    //     }
-    // });
+    let apiUtils: ApiUtils;
+
+    setup.beforeAll(async () => {
+        apiUtils = new ApiUtils(await request.newContext());
+    });
+
+    setup.afterAll(async () => {
+        await apiUtils.dispose();
+    });
+
+    setup.skip('get server url @lite', async () => {
+        const apiUtils = new ApiUtils(await request.newContext());
+        const headers = await apiUtils.getSiteHeaders(BASE_URL);
+        if (headers.link) {
+            const serverUrl = headers.link.includes('rest_route') ? BASE_URL + '/?rest_route=' : BASE_URL + '/wp-json';
+            console.log('ServerUrl:', serverUrl);
+            process.env.SERVER_URL = serverUrl;
+        } else {
+            console.log("Headers link doesn't exists");
+        }
+    });
 
     setup('authenticate admin @lite', async ({ page }) => {
         const loginPage = new LoginPage(page);
         await loginPage.adminLogin(data.admin, data.auth.adminAuthFile);
     });
 
-    // setup('admin set WpSettings @lite', async ({ page }) => {
-    //     const loginPage = new LoginPage(page);
-    //     const wpPage = new WpPage(page);
-    //     await loginPage.adminLogin(data.admin);
-    //     await wpPage.setPermalinkSettings(data.wpSettings.permalink);
-    // });
+    setup.skip('admin set WpSettings @lite', async ({ page }) => {
+        const loginPage = new LoginPage(page);
+        const wpPage = new WpPage(page);
+        await loginPage.adminLogin(data.admin);
+        await wpPage.setPermalinkSettings(data.wpSettings.permalink);
+    });
 
-    setup('add customer1 @lite', async ({ request }) => {
-        const apiUtils = new ApiUtils(request);
+    setup('add customer1 @lite', async () => {
         const [, customerId] = await apiUtils.createCustomer(payloads.createCustomer1, payloads.adminAuth);
         console.log('CUSTOMER_ID:', customerId);
         process.env.CUSTOMER_ID = customerId;
         helpers.appendEnv(`CUSTOMER_ID=${customerId}`); // for local testing
     });
 
-    setup('add vendor1 @lite', async ({ request }) => {
-        const apiUtils = new ApiUtils(request);
-        const [, sellerId] = await apiUtils.createStore(payloads.createStore1, payloads.adminAuth);
-        await apiUtils.updateCustomer(sellerId, payloads.updateAddress, payloads.adminAuth);
+    setup('add vendor1 @lite', async () => {
+        const [, sellerId] = await apiUtils.createStore(payloads.createStore1, payloads.adminAuth, true);
         console.log('VENDOR_ID:', sellerId);
         process.env.VENDOR_ID = sellerId;
         helpers.appendEnv(`VENDOR_ID=${sellerId}`); // for local testing
     });
 
-    setup('add vendor2 @lite', async ({ request }) => {
-        const apiUtils = new ApiUtils(request);
-        const [, sellerId] = await apiUtils.createStore(payloads.createStore2, payloads.adminAuth);
-        await apiUtils.updateCustomer(sellerId, payloads.updateAddress, payloads.adminAuth);
+    setup('add vendor2 @lite', async () => {
+        const [, sellerId] = await apiUtils.createStore(payloads.createStore2, payloads.adminAuth, true);
         console.log('VENDOR2_ID:', sellerId);
         process.env.VENDOR2_ID = sellerId;
         helpers.appendEnv(`VENDOR2_ID=${sellerId}`); // for local testing
@@ -69,8 +74,12 @@ setup.describe('authenticate users & set permalink', () => {
         await loginPage.login(data.vendor, data.auth.vendorAuthFile);
     });
 
-    setup('dokan pro enabled or not @lite', async ({ request }) => {
-        const apiUtils = new ApiUtils(request);
+    setup('authenticate vendor2 @lite', async ({ page }) => {
+        const loginPage = new LoginPage(page);
+        await loginPage.login(data.vendor.vendor2, data.auth.vendor2AuthFile);
+    });
+
+    setup('dokan pro enabled or not @lite', async () => {
         let res = await apiUtils.checkPluginsExistence(data.plugin.dokanPro, payloads.adminAuth);
         if (res) {
             res = await apiUtils.pluginsActiveOrNot(data.plugin.dokanPro, payloads.adminAuth);
@@ -78,8 +87,7 @@ setup.describe('authenticate users & set permalink', () => {
         DOKAN_PRO ? expect(res).toBeTruthy() : expect(res).toBeFalsy();
     });
 
-    setup('get test environment info @lite', async ({ request }) => {
-        const apiUtils = new ApiUtils(request);
+    setup('get test environment info @lite', async () => {
         const [, systemInfo] = await apiUtils.getSystemStatus(payloads.adminAuth);
         helpers.writeFile(data.systemInfo, JSON.stringify(systemInfo));
     });

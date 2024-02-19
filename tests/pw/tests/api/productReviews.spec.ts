@@ -2,7 +2,7 @@
 //COVERAGE_TAG: GET /dokan/v1/reviews/summary
 //COVERAGE_TAG: PUT /dokan/v1/reviews/(?P<id>[\d]+)
 
-import { test, expect } from '@playwright/test';
+import { test, expect, request } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
@@ -11,9 +11,13 @@ test.describe('product review api test', () => {
     let apiUtils: ApiUtils;
     let reviewId: string;
 
-    test.beforeAll(async ({ request }) => {
-        apiUtils = new ApiUtils(request);
+    test.beforeAll(async () => {
+        apiUtils = new ApiUtils(await request.newContext());
         [, reviewId] = await apiUtils.createProductReview(payloads.createProduct(), payloads.createProductReview());
+    });
+
+    test.afterAll(async () => {
+        await apiUtils.dispose();
     });
 
     test('get all product reviews @pro', async () => {

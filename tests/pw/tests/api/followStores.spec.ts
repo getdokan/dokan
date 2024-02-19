@@ -2,7 +2,7 @@
 //COVERAGE_TAG: POST /dokan/v1/follow-store
 //COVERAGE_TAG: GET /dokan/v1/follow-store/followers
 
-import { test, expect } from '@playwright/test';
+import { test, expect, request } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { schemas } from '@utils/schemas';
@@ -12,11 +12,15 @@ test.describe('follow store api test', () => {
     let apiUtils: ApiUtils;
     let sellerId: string;
 
-    test.beforeAll(async ({ request }) => {
-        apiUtils = new ApiUtils(request);
+    test.beforeAll(async () => {
+        apiUtils = new ApiUtils(await request.newContext());
         // [, sellerId,] = await apiUtils.createStore(payloads.createStore());
         [, sellerId] = await apiUtils.getCurrentUser();
         // await apiUtils.followUnfollowStore(sellerId);
+    });
+
+    test.afterAll(async () => {
+        await apiUtils.dispose();
     });
 
     test('get store follow status @pro', async () => {

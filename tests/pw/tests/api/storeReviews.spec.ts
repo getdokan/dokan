@@ -7,7 +7,7 @@
 //COVERAGE_TAG: PUT /dokan/v1/store-reviews/(?P<id>[\d]+)/restore
 //COVERAGE_TAG: PUT /dokan/v1/store-reviews/batch
 
-import { test, expect } from '@playwright/test';
+import { test, expect, request } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
@@ -17,11 +17,15 @@ test.describe('store reviews api test', () => {
     let sellerId: string;
     let reviewId: string;
 
-    test.beforeAll(async ({ request }) => {
-        apiUtils = new ApiUtils(request);
+    test.beforeAll(async () => {
+        apiUtils = new ApiUtils(await request.newContext());
         // let [, sId,] = await apiUtils.createStore(payloads.createStore())
         [, sellerId] = await apiUtils.getCurrentUser();
         [, reviewId] = await apiUtils.createStoreReview(sellerId, payloads.createStoreReview, payloads.customerAuth);
+    });
+
+    test.afterAll(async () => {
+        await apiUtils.dispose();
     });
 
     test('get store reviews @pro', async () => {
