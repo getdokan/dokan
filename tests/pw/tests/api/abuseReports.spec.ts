@@ -3,7 +3,7 @@
 //COVERAGE_TAG: DELETE /dokan/v1/abuse-reports/(?P<id>[\d]+)
 //COVERAGE_TAG: DELETE /dokan/v1/abuse-reports/batch
 
-import { test, expect } from '@playwright/test';
+import { test, expect, request } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
@@ -16,11 +16,15 @@ const { VENDOR_ID, CUSTOMER_ID } = process.env;
 test.describe('abuse report api test', () => {
     let apiUtils: ApiUtils;
 
-    test.beforeAll(async ({ request }) => {
-        apiUtils = new ApiUtils(request);
+    test.beforeAll(async () => {
+        apiUtils = new ApiUtils(await request.newContext());
         const [, productId] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendorAuth);
         await dbUtils.createAbuseReport(dbData.dokan.createAbuseReport, productId, VENDOR_ID, CUSTOMER_ID);
         await dbUtils.createAbuseReport(dbData.dokan.createAbuseReport, productId, VENDOR_ID, CUSTOMER_ID);
+    });
+
+    test.afterAll(async () => {
+        await apiUtils.dispose();
     });
 
     test('get all abuse report reasons @pro', async () => {

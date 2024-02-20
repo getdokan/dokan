@@ -78,8 +78,6 @@ export default class summaryReport implements Reporter {
         summary.skipped = results.filter(x => x === 'skipped').length;
         // console.log(summary);
 
-        // fs.writeFileSync('results.json', JSON.stringify(summary));
-
         if (this.options.outputFile) {
             const outputFile = this.options.outputFile;
             if (!fs.existsSync(path.dirname(outputFile))) {
