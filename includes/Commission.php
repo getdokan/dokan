@@ -196,7 +196,7 @@ class Commission {
      * @since  3.7.19 Shipping tax recipient support added.
      *
      * @param int|WC_Order $order Order.
-     * @param string       $context
+     * @param string       $context Accepted values are `admin`, `seller`
      *
      * @return float|void|WP_Error|null on failure
      */
@@ -226,7 +226,7 @@ class Commission {
         // get earning from order table
         $earning_or_commission = $this->get_earning_from_order_table( $order->get_id(), $context );
         if ( ! is_null( $earning_or_commission ) ) {
-//            return $earning_or_commission;
+            return $earning_or_commission;
         }
 
         $earning_or_commission   = 0;
@@ -564,18 +564,19 @@ class Commission {
      * @return array
      */
     public function get_commission( $args = [], $auto_save = false ) {
-        $order_item_id  = ! empty( $args['order_item_id'] ) ? $args['order_item_id'] :  '';
+        $order_item_id  = ! empty( $args['order_item_id'] ) ? $args['order_item_id'] : '';
         $total_amount   = ! empty( $args['total_amount'] ) ? $args['total_amount'] : 0;
-        $total_quantity = ! empty( $args['total_quantity'] ) ? $args['total_quantity'] :  1;
-        $product_id     = ! empty( $args['product_id'] ) ? $args['product_id'] :  0;
-        $vendor_id      = ! empty( $args['vendor_id'] ) ? $args['vendor_id'] :  '';
-        $category_id    = ! empty( $args['category_id'] ) ? $args['category_id'] :  0;
+        $total_quantity = ! empty( $args['total_quantity'] ) ? $args['total_quantity'] : 1;
+        $product_id     = ! empty( $args['product_id'] ) ? $args['product_id'] : 0;
+        $vendor_id      = ! empty( $args['vendor_id'] ) ? $args['vendor_id'] : '';
+        $category_id    = ! empty( $args['category_id'] ) ? $args['category_id'] : 0;
 
         // Category commission will not applicable if 'Product Category Selection' is set as 'Multiple' in Dokan settings.
-		if ( ! empty( $product_id ) && Helper::product_category_selection_is_single() && empty( $category_id ) ) {
-            $product_categories = Helper::get_saved_products_category( 105 );
-            $chosen_categories  = Helper::generate_chosen_categories( $product_categories );
-            $category_id        = reset( $chosen_categories ) ? reset( $chosen_categories ) : 0;
+		if ( ! empty( $product_id ) && empty( $category_id ) ) {
+            $product_categories = Helper::get_saved_products_category( $product_id );
+            $chosen_categories  = $product_categories['chosen_cat'];
+            $category_id        = reset( $chosen_categories );
+            $category_id        = $category_id ? $category_id : 0;
         }
 
         if ( ! empty( $product_id ) && empty( $total_amount ) ) {

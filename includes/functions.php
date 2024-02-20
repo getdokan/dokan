@@ -997,7 +997,8 @@ function dokan_edit_product_url( $product, bool $is_new_product = false ) {
  * @return array
  */
 function dokan_admin_product_columns( $columns ) {
-    $columns['author'] = __( 'Author', 'dokan-lite' );
+    $columns['admin_commission'] = __( 'Commission', 'dokan-lite' );
+    $columns['author']           = __( 'Author', 'dokan-lite' );
 
     return $columns;
 }

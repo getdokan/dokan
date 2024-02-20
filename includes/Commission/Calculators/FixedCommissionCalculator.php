@@ -35,7 +35,15 @@ class FixedCommissionCalculator implements CommissionCalculatorInterface {
             $this->admin_commission          += $percentage_calculator->get_admin_commission();
         }
 
-        $this->vendor_earning            = $total_amount - $this->admin_commission;
+        if ( $this->get_per_item_admin_commission() > $total_amount ) {
+            $this->per_item_admin_commission = $total_amount;
+        }
+
+        if ( $this->get_admin_commission() > $total_amount ) {
+            $this->admin_commission = $total_amount;
+        }
+
+        $this->vendor_earning            = $total_amount - $this->get_admin_commission();
         $this->items_total_quantity      = $total_quantity;
     }
 

@@ -217,9 +217,27 @@ function dokan_vendor_quick_edit_data( $column, $post_id ) {
             </div>
             <?php
             break;
+
+        case 'admin_commission':
+            $commission = dokan()->commission->get_earning_by_product( $post_id, 'admin' );
+            echo is_numeric( $commission ) ? wc_price( $commission ) : '';
+
+            break;
+
         default:
             break;
     }
+
+    ?>
+        <script>
+            jQuery(document).ready(function($) {
+                // Target the Products page
+                if($('body').hasClass('edit-php') && $('body').hasClass('post-type-product')) {
+                    $("th.column-admin_commission").css( 'width', '10%' );
+                }
+            });
+        </script>
+    <?php
 }
 
 add_action( 'manage_product_posts_custom_column', 'dokan_vendor_quick_edit_data', 99, 2 );

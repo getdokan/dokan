@@ -586,6 +586,9 @@ class Assets {
             }
         }
 
+        $vendor = dokan()->vendor->get( dokan_get_current_user_id() );
+        $commision_settings = $vendor->get_commission_settings();
+
         $default_script = [
             'ajaxurl'                      => admin_url( 'admin-ajax.php' ),
             'nonce'                        => wp_create_nonce( 'dokan_reviews' ),
@@ -596,8 +599,8 @@ class Assets {
             ],
             'delete_confirm'               => __( 'Are you sure?', 'dokan-lite' ),
             'wrong_message'                => __( 'Something went wrong. Please try again.', 'dokan-lite' ),
-            'vendor_percentage'            => dokan_get_seller_percentage( dokan_get_current_user_id() ),
-            'commission_type'              => dokan_get_commission_type( dokan_get_current_user_id() ),
+            'vendor_percentage'            => $commision_settings->get_percentage(),
+            'commission_type'              => $commision_settings->get_type(),
             'rounding_precision'           => wc_get_rounding_precision(),
             'mon_decimal_point'            => wc_get_price_decimal_separator(),
             'currency_format_num_decimals' => wc_get_price_decimals(),

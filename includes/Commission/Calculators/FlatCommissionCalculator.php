@@ -22,6 +22,10 @@ class FlatCommissionCalculator implements CommissionCalculatorInterface {
         $total_quantity = max( $total_quantity, 1 );
 
         $this->per_item_admin_commission = dokan()->commission->validate_rate( $this->settings->get_flat() ) ?? 0;
+        if ( $this->per_item_admin_commission > $total_amount ) {
+            $this->per_item_admin_commission = $total_amount;
+        }
+
         $this->flat_commission = $this->per_item_admin_commission;
         if ( (int) $total_quantity > 1 ) {
             $this->flat_commission = $this->per_item_admin_commission * apply_filters( 'dokan_commission_multiply_by_order_quantity', $total_quantity );

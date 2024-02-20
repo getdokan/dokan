@@ -89,9 +89,10 @@ class Hooks {
         }
 
         $column_to_insert = [
-            'seller'     => __( 'Vendor', 'dokan-lite' ),
-            'wc_actions' => __( 'Actions', 'dokan-lite' ),
-            'suborder'   => __( 'Sub Order', 'dokan-lite' ),
+            'admin_commission' => __( 'Commission', 'dokan-lite' ),
+            'seller'           => __( 'Vendor', 'dokan-lite' ),
+            'wc_actions'       => __( 'Actions', 'dokan-lite' ),
+            'suborder'         => __( 'Sub Order', 'dokan-lite' ),
         ];
         $columns          = dokan_array_insert_after( $existing_columns, $column_to_insert );
 
@@ -120,7 +121,7 @@ class Hooks {
             return;
         }
 
-        if ( ! in_array( $col, [ 'order_number', 'suborder', 'seller' ], true ) ) {
+        if ( ! in_array( $col, [ 'order_number', 'suborder', 'seller', 'admin_commission' ], true ) ) {
             return;
         }
 
@@ -154,6 +155,15 @@ class Hooks {
                     $output = esc_html__( '(no name)', 'dokan-lite' );
                 }
 
+                break;
+
+            case 'admin_commission':
+                if ( '1' === $order->get_meta( 'has_sub_order', true ) ) {
+                    $output = '--';
+                } else {
+                    $commission = dokan()->commission->get_earning_by_order( $order->get_id(), 'admin' );
+                    $output = wc_price( $commission );
+                }
                 break;
         }
 

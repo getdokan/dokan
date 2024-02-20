@@ -2,6 +2,9 @@
 
 namespace WeDevs\Dokan\REST;
 
+use WP_Error;
+use WP_HTTP_Response;
+use WP_REST_Response;
 use WP_REST_Server;
 use WP_REST_Request;
 use WeDevs\Dokan\ProductCategory\Helper;
@@ -52,6 +55,55 @@ class ProductControllerV2 extends ProductController {
                     'permission_callback' => [ $this, 'get_product_permissions_check' ],
                 ],
                 'schema' => [ $this, 'get_filter_data_schema' ],
+            ]
+        );
+
+        register_rest_route(
+            $this->namespace, '/' . $this->base . '/get-commission', [
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_commission' ],
+                    'args'                => [
+                        'product_id' => [
+                            'description'       => __( 'Products price', 'dokan-lite' ),
+                            'type'              => 'integer',
+                            'default'           => 0,
+                            'required'          => true,
+                            'sanitize_callback' => 'absint',
+                        ],
+                        'amount' => [
+                            'description'       => __( 'The amount on that the commission will be calculated.', 'dokan-lite' ),
+                            'type'              => 'number',
+                            'default'           => 0,
+                            'required'          => true,
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'vendor_id' => [
+                            'description'       => __( 'Vendor id', 'dokan-lite' ),
+                            'type'              => 'integer',
+                            'default'           => 0,
+                            'required'          => true,
+                            'sanitize_callback' => 'absint',
+                        ],
+                        'category_ids' => [
+                            'description'       => __( 'Category ids', 'dokan-lite' ),
+                            'type'              => 'array',
+                            'sanitize_callback' => 'wc_clean',
+                            'items'             => array(
+                                'type' => 'integer',
+                            ),
+                        ],
+                        'context' => [
+                            'required'    => false,
+                            'description' => __( 'In which context the commission will be calculated', 'dokan-lite' ),
+                            'type'        => 'string',
+                            'enum'        => [ 'admin', 'seller' ],
+                            'context'     => [ 'view', 'edit' ],
+                            'default'     => 'seller',
+                        ],
+                    ],
+                    'permission_callback' => [ $this, 'get_product_permissions_check' ],
+                ],
             ]
         );
     }
@@ -200,6 +252,47 @@ class ProductControllerV2 extends ProductController {
         return [
             'allDates'   => $months,
         ];
+    }
+
+    /**
+     * Returns commission or earning based on context.
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return WP_Error|WP_HTTP_Response|WP_REST_Response
+     */
+    public function get_commission( $request ) {
+        $product_id   = $request->get_param( 'product_id' );
+        $amount       = $request->get_param( 'amount' );
+        $vendor_id    = $request->get_param( 'vendor_id' );
+        $category_ids = $request->get_param( 'category_ids' );
+        $context      = $request->get_param( 'context' );
+
+        $chosen_cats = Helper::generate_chosen_categories( $category_ids );
+        $category_id = reset( $chosen_cats );
+
+        if ( ! $category_id ) {
+            $category_id = 0;
+        }
+
+        if ( ! $vendor_id ) {
+            $vendor_id = dokan_get_vendor_by_product( $product_id, true );
+            $vendor_id = $vendor_id ? $vendor_id : 0;
+        }
+
+        $commission_or_earning = dokan()->commission->get_commission(
+            [
+                'total_amount'   => $amount,
+                'total_quantity' => 1,
+                'product_id'     => $product_id,
+                'vendor_id'      => $vendor_id,
+                'category_id'    => $category_id,
+            ]
+        );
+
+        $data = 'seller' === $context ? $commission_or_earning['vendor_earning'] : $commission_or_earning['admin_commission'];
+
+        return rest_ensure_response( $data );
     }
 
     /**
