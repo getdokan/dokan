@@ -17,16 +17,19 @@ class Categories {
      *
      * @since 3.6.4
      *
+     * @param bool  $ret  Return
+     * @param array $args Arguments
+     *
      * @return void|array
      */
-    public function get_all_categories( $ret = false ) {
+    public function get_all_categories( bool $ret = false, array $args = [] ) {
         $transient_key = function_exists( 'wpml_get_current_language' ) && ! empty( wpml_get_current_language() ) ? 'multistep_categories_' . wpml_get_current_language() : 'multistep_categories';
 
         $this->categories = Cache::get_transient( $transient_key );
 
         if ( false === $this->categories ) {
             //calculate category data
-            $this->get_categories();
+            $this->get_categories( $args );
             // set category data to cache
             Cache::set_transient( $transient_key, $this->categories, '', MONTH_IN_SECONDS );
         }
@@ -39,13 +42,15 @@ class Categories {
     /**
      * This method will return category data
      *
-     * @sience 3.6.2
+     * @since 3.6.2
+     *
+     * @param array $args
      *
      * @return array
      */
-    public function get() {
+    public function get( array $args = [] ): array {
         // check if categories are already loaded
-        return apply_filters( 'dokan_multistep_product_categories', $this->get_all_categories( true ) );
+        return apply_filters( 'dokan_multistep_product_categories', $this->get_all_categories( true, $args ) );
     }
 
     /**
@@ -131,9 +136,11 @@ class Categories {
      *
      * @since 3.6.2
      *
+     * @param array $args
+     *
      * @return void
      */
-    private function get_categories() {
+    private function get_categories( array $args = [] ) {
         global $wpdb;
 
         // get all categories
@@ -148,6 +155,14 @@ class Categories {
 
             $join .= " INNER JOIN `{$wpdb->prefix}icl_translations` AS tr ON terms.term_id = tr.element_id";
             $where .= " AND tr.language_code = '{$current_language}' AND tr.element_type = 'tax_product_cat'";
+        }
+
+        // If there is a searching keyword.
+        if ( ! empty( $args['search'] ) ) {
+            $where .= ' AND ' . $wpdb->prepare(
+                'terms.name LIKE %s',
+                '%' . $wpdb->esc_like( $args['search'] ) . '%'
+            );
         }
 
         // @codingStandardsIgnoreStart
