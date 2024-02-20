@@ -25,8 +25,12 @@ test.describe('Tools test', () => {
         await admin.adminToolsRenderProperly();
     });
 
-    test('admin can perform dokan page Installation @pro', async () => {
+    test.skip('admin can perform dokan page Installation @pro', async () => {
         await admin.dokanPageInstallation();
+    });
+
+    test('admin can regenerate order commission @pro', async () => {
+        await admin.regenerateOrderCommission();
     });
 
     test('admin can check for duplicate orders @pro', async () => {

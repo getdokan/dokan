@@ -4,6 +4,8 @@
  *
  * @since   2.4
  *
+ * @var $withdraw_requests WeDevs\Dokan\Withdraw\Withdraw[]
+ *
  * @package dokan
  */
 
@@ -21,15 +23,15 @@ if ( $withdraw_requests ) :
         <?php foreach ( $withdraw_requests as $request ) : ?>
 
             <tr>
-                <td><?php echo wp_kses_post( wc_price( $request->amount ) ); ?></td>
-                <td><?php echo esc_html( dokan_withdraw_get_method_title( $request->method, $request ) ); ?></td>
-                <td><?php echo esc_html( dokan_format_datetime( $request->date ) ); ?></td>
+                <td><?php echo wp_kses_post( wc_price( $request->get_amount() ) ); ?></td>
+                <td><?php echo esc_html( dokan_withdraw_get_method_title( $request->get_method(), $request->get_data() ) ); ?></td>
+                <td><?php echo esc_html( dokan_format_datetime( $request->get_date() ) ); ?></td>
                 <td>
                     <?php
                     $url = add_query_arg(
                         [
 							'dokan_handle_withdraw_request' => 'cancel',
-							'id'                            => $request->id,
+							'id'                            => $request->get_id(),
 						], dokan_get_navigation_url( 'withdraw-requests' )
                     );
                     ?>
@@ -39,9 +41,9 @@ if ( $withdraw_requests ) :
                 </td>
                 <td>
                     <?php
-                    if ( $request->status === 0 ) {
+                    if ( $request->get_status() === 0 ) {
                         echo '<span class="label label-danger">' . esc_html__( 'Pending Review', 'dokan-lite' ) . '</span>';
-                    } elseif ( $request->status === 1 ) {
+                    } elseif ( $request->get_status() === 1 ) {
                         echo '<span class="label label-warning">' . esc_html__( 'Accepted', 'dokan-lite' ) . '</span>';
                     }
                     ?>

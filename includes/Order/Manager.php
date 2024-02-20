@@ -814,7 +814,7 @@ class Manager {
      * @return void
      */
     private function create_coupons( $order, $parent_order, $products ) {
-        if ( dokan()->is_pro_exists() ) {
+        if ( dokan()->is_pro_exists() && property_exists( dokan_pro(), 'vendor_discount' ) ) {
             // remove vendor discount coupon code changes
             remove_filter( 'woocommerce_order_get_items', [ dokan_pro()->vendor_discount->woocommerce_hooks, 'replace_coupon_name' ], 10 );
         }
@@ -881,7 +881,13 @@ class Manager {
      * @return void
      */
     public function maybe_split_orders( $parent_order_id, $force_create = false ) {
-        $parent_order = $this->get( $parent_order_id );
+        if ( is_a( $parent_order_id, 'WC_Order' ) ) {
+            $parent_order    = $parent_order_id;
+            $parent_order_id = $parent_order->get_id();
+        } else {
+            $parent_order = $this->get( $parent_order_id );
+        }
+
         if ( ! $parent_order ) {
             //dokan_log( sprintf( 'Invalid Order ID #%d found. Skipping from here.', $parent_order_id ) );
             return;

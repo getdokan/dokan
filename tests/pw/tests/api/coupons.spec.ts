@@ -8,6 +8,7 @@ import { test, expect } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
+import { schemas } from '@utils/schemas';
 
 test.describe('coupon api test', () => {
     let apiUtils: ApiUtils;
@@ -24,29 +25,34 @@ test.describe('coupon api test', () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllCoupons);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.couponsSchema.couponsSchema);
     });
 
     test('get single coupon @pro', async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getSingleCoupon(couponId));
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.couponsSchema.couponSchema);
     });
 
     test('create a coupon @pro', async () => {
         const [response, responseBody] = await apiUtils.post(endPoints.createCoupon, { data: { ...payloads.createCoupon(), product_ids: productId } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.couponsSchema.couponSchema);
     });
 
     test('update a coupon @pro', async () => {
         const [response, responseBody] = await apiUtils.put(endPoints.updateCoupon(couponId), { data: payloads.updateCoupon() });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.couponsSchema.couponSchema);
     });
 
     test('delete a coupon @pro', async () => {
         const [response, responseBody] = await apiUtils.delete(endPoints.deleteCoupon(couponId));
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.couponsSchema.couponSchema);
     });
 });

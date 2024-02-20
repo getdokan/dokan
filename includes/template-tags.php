@@ -161,7 +161,14 @@ function dokan_product_dashboard_errors() {
                 )
             );
             break;
-
+        case 'product_duplicated':
+            dokan_get_template_part(
+                'global/dokan-success', '', [
+                    'deleted' => false,
+                    'message' => __( 'Product successfully duplicated', 'dokan-lite' ),
+                ]
+            );
+            break;
         case 'error':
             dokan_get_template_part(
                 'global/dokan-error', '', array(
@@ -573,7 +580,7 @@ function dokan_dashboard_nav( $active_menu = '' ) {
          *
          * @param string $menu_key
          */
-        $filtered_key = apply_filters( 'dokan_dashboard_nav_menu_key', $key );
+        $filtered_key = rawurlencode_deep( apply_filters( 'dokan_dashboard_nav_menu_key', $key ) );
 
         $class     = $active_menu === $filtered_key || 0 === stripos( $active_menu, $filtered_key ) ? 'active ' . $key : $key;  // checking starts with the key
         $title     = isset( $item['title'] ) ? $item['title'] : __( 'No title', 'dokan-lite' );
@@ -595,7 +602,7 @@ function dokan_dashboard_nav( $active_menu = '' ) {
                  * @param string $submenu_key
                  * @param string $menu_key
                  */
-                $filtered_subkey = apply_filters( 'dokan_dashboard_nav_submenu_key', $sub_key, $key );
+                $filtered_subkey = rawurlencode_deep( apply_filters( 'dokan_dashboard_nav_submenu_key', $sub_key, $key ) );
 
                 $submenu_class = $active_submenu === $filtered_subkey || 0 === stripos( $active_submenu, $filtered_subkey ) ? "current $sub_key" : $sub_key;
 
@@ -975,7 +982,7 @@ function dokan_get_seller_registration_form_data() {
             'lname'    => isset( $_POST['lname'] ) ? sanitize_text_field( wp_unslash( $_POST['lname'] ) ) : '',
             'username' => isset( $_POST['username'] ) ? sanitize_user( wp_unslash( $_POST['username'] ) ) : '',
             'email'    => isset( $_POST['email'] ) ? sanitize_email( wp_unslash( $_POST['email'] ) ) : '',
-            'phone'    => isset( $_POST['phone'] ) ? dokan_sanitize_phone_number( wp_unslash( $_POST['phone'] ) ) : '',
+            'phone'    => isset( $_POST['phone'] ) ? dokan_sanitize_phone_number( wp_unslash( $_POST['phone'] ) ) : '', // phpcs:ignore
             'password' => isset( $_POST['password'] ) ? wp_unslash( $_POST['password'] ) : '', // phpcs:ignore
             'shopname' => isset( $_POST['shopname'] ) ? sanitize_text_field( wp_unslash( $_POST['shopname'] ) ) : '',
             'shopurl'  => isset( $_POST['shopurl'] ) ? sanitize_title( wp_unslash( $_POST['shopurl'] ) ) : '',

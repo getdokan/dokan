@@ -6,7 +6,7 @@ import { payloads } from '@utils/payloads';
 async function globalSetup() {
     console.log('Global Teardown running....');
 
-    const systemInfo = 'systemInfo.json';
+    const systemInfo = 'playwright/systemInfo.json';
 
     // get test environment info
     if (!helpers.fileExists(systemInfo)) {

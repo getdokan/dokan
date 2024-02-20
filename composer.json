@@ -11,22 +11,23 @@
   ],
   "minimum-stability": "dev",
   "require": {
-    "php": ">=7.3",
-    "appsero/client": "dev-develop",
-    "jakeasmith/http_build_url": "^1"
+    "php": ">=7.4",
+    "appsero/client": "^v2.0.2",
+    "jakeasmith/http_build_url": "^1",
+    "appsero/updater": "^v1.0.0"
   },
   "require-dev": {
     "wp-coding-standards/wpcs": "dev-develop",
     "dealerdirect/phpcodesniffer-composer-installer": "^0.7.2",
     "tareq1988/wp-php-cs-fixer": "dev-master",
     "phpcompatibility/phpcompatibility-wp": "dev-master",
-    "phpunit/phpunit": "^8.5.31",
+    "phpunit/phpunit": "^9.6",
     "wp-phpunit/wp-phpunit": "dev-master",
     "yoast/phpunit-polyfills": "^1.0@dev"
   },
   "config": {
     "platform": {
-      "php": "7.3"
+      "php": "7.4"
     },
     "allow-plugins": {
       "dealerdirect/phpcodesniffer-composer-installer": true

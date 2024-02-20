@@ -27,7 +27,6 @@ test.describe('Auction Product test', () => {
 
         apiUtils = new ApiUtils(request);
         [, , auctionProductName] = await apiUtils.createProduct(payloads.createAuctionProduct(), payloads.vendorAuth);
-
         await customer.bidAuctionProduct(auctionProductName);
     });
 

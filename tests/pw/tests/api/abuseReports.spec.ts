@@ -9,6 +9,7 @@ import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
 import { dbUtils } from '@utils/dbUtils';
 import { dbData } from '@utils/dbData';
+import { schemas } from '@utils/schemas';
 
 const { VENDOR_ID, CUSTOMER_ID } = process.env;
 
@@ -26,12 +27,14 @@ test.describe('abuse report api test', () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllAbuseReportReasons);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.abuseReportsSchema.abuseReportReasonsSchema);
     });
 
     test('get all abuse reports @pro', async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllAbuseReports);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.abuseReportsSchema.abuseReportsSchema);
     });
 
     test('delete a abuse report @pro', async () => {
@@ -39,6 +42,7 @@ test.describe('abuse report api test', () => {
         const [response, responseBody] = await apiUtils.delete(endPoints.deleteAbuseReport(abuseReportId));
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.abuseReportsSchema.abuseReportSchema);
     });
 
     test('delete batch abuse reports @pro', async () => {
@@ -46,5 +50,6 @@ test.describe('abuse report api test', () => {
         const [response, responseBody] = await apiUtils.delete(endPoints.deleteBatchAbuseReports, { data: { items: allAbuseReportIds } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.abuseReportsSchema.abuseReportsSchema);
     });
 });

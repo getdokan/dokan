@@ -263,7 +263,7 @@ export class BasePage {
 
     // type & wait for response
     async typeViaPageAndWaitForResponse(subUrl: string, selector: string, text: string, code = 200): Promise<Response> {
-        const [response] = await Promise.all([this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code), this.page.type(selector, text, { delay: 100 })]);
+        const [response] = await Promise.all([this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code), this.page.locator(selector).pressSequentially(text, { delay: 100 })]);
         return response;
     }
 
@@ -271,7 +271,7 @@ export class BasePage {
     async typeAndWaitForResponse(subUrl: string, selector: string, text: string, code = 200): Promise<Response> {
         const [response] = await Promise.all([
             this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code),
-            // await this.page.type(selector, text),
+            // await this.page.locator(selector).pressSequentially(text),
             this.clearAndFill(selector, text),
         ]);
         return response;
@@ -281,7 +281,7 @@ export class BasePage {
     async typeAndWaitForResponseAndLoadState(subUrl: string, selector: string, text: string, code = 200): Promise<Response> {
         const [response] = await Promise.all([
             this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code),
-            // await this.page.type(selector, text),
+            // await this.page.locator(selector).pressSequentially(text),
             this.page.waitForLoadState('networkidle'),
             this.clearAndFill(selector, text),
         ]);
@@ -371,7 +371,6 @@ export class BasePage {
     // wait for selector
     async waitForSelector(selector: string): Promise<void> {
         await this.page.locator(selector).waitFor();
-        // await this.page.waitForSelector(selector);
     }
 
     // get locator
@@ -632,7 +631,7 @@ export class BasePage {
 
     // type in input field
     async type(selector: string, text: string): Promise<void> {
-        await this.page.type(selector, text);
+        await this.page.locator(selector).pressSequentially(text);
     }
 
     // fill in input field
@@ -652,7 +651,7 @@ export class BasePage {
     async append(selector: string, text: string): Promise<void> {
         await this.focus(selector);
         await this.press('End');
-        await this.page.type(selector, text);
+        await this.page.locator(selector).pressSequentially(text);
     }
 
     // check if visible
@@ -846,7 +845,7 @@ export class BasePage {
     async typeFrameSelector(frame: string, frameSelector: string, text: string): Promise<void> {
         const locator = this.page.frameLocator(frame).locator(frameSelector);
         await locator.fill(text);
-        // await locator.type(text);
+        await locator.pressSequentially(text);
     }
 
     /**
@@ -1123,7 +1122,7 @@ export class BasePage {
     // type on input locator
     async typeOnLocator(selector: string, text: string): Promise<void> {
         const locator = this.page.locator(selector);
-        await locator.type(text);
+        await locator.pressSequentially(text);
     }
 
     // uncheck locator
@@ -1297,6 +1296,10 @@ export class BasePage {
         }
     }
 
+    async toHaveScreenshot(page: Page, locators?: Locator[]) {
+        await expect(page).toHaveScreenshot({ fullPage: true, mask: locators, maskColor: 'black', animations: 'disabled' });
+    }
+
     /**
      * Assertion methods
      */
@@ -1315,6 +1318,11 @@ export class BasePage {
     // assert element to be visible
     async toBeVisible(selector: string) {
         await expect(this.page.locator(selector)).toBeVisible();
+    }
+
+    // assert checkbox to be checked
+    async toBeChecked(selector: string) {
+        await expect(this.page.locator(selector)).toBeChecked();
     }
 
     // assert element to contain text

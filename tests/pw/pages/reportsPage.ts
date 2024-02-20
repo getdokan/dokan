@@ -21,7 +21,7 @@ export class ReportsPage extends AdminPage {
         await this.multipleElementVisible(selector.admin.dokan.reports.reports.filterMenus);
 
         // calendar input is visible
-        await this.multipleElementVisible(selector.admin.dokan.reports.reports.calendar);
+        await this.toBeVisible(selector.admin.dokan.reports.reports.calendar);
 
         // show button is visible
         await this.toBeVisible(selector.admin.dokan.reports.reports.show);

@@ -1,6 +1,6 @@
 // const open = require( 'open' );
 import fs from 'fs';
-import { Browser, BrowserContextOptions } from '@playwright/test';
+import { Browser, BrowserContextOptions, Page } from '@playwright/test';
 
 export const helpers = {
     // replace '_' to space & capitalize first letter of string
@@ -21,6 +21,8 @@ export const helpers = {
 
     // returns a random integer number between min (inclusive) and max (exclusive)
     getRandomArbitraryInteger: (min: number, max: number) => Math.floor(Math.random() * (max - min) + min),
+
+    getRandomNumber: (min: number, max: number) => Math.floor(Math.random() * (max - min + 1)) + min,
 
     // random number between 0 and 1000
     randomNumber: () => Math.floor(Math.random() * 1000),
@@ -127,7 +129,13 @@ export const helpers = {
 
     // calculate percentage
     percentage(number: number, percentage: number) {
+        // return this.roundToTwo(number * (percentage / 100));
+        return number * (percentage / 100);
+    },
+
+    percentageWithRound(number: number, percentage: number) {
         return this.roundToTwo(number * (percentage / 100));
+        // return number * (percentage / 100);
     },
 
     // calculate percentage
@@ -141,15 +149,57 @@ export const helpers = {
         return subtotal.reduce((a, b) => a + b, 0);
     },
 
+    // discount
+    discount(subTotal: number, discount: any) {
+        let discount_total = 0;
+        switch (discount.type) {
+            case 'coupon':
+                {
+                    switch (discount.coupon.type) {
+                        case 'percentage':
+                            for (const rate of discount.coupon.amount) {
+                                if (discount.coupon.applySequentially) {
+                                    const discount = this.percentageWithRound(Number(subTotal), Number(rate));
+                                    subTotal -= discount;
+                                    discount_total += discount;
+                                } else {
+                                    discount_total += this.percentageWithRound(Number(subTotal), Number(rate));
+                                }
+                            }
+                            break;
+
+                        case 'fixed':
+                            discount_total = Number(subTotal - discount.amount);
+                            break;
+
+                        default:
+                            break;
+                    }
+                }
+
+                break;
+
+            case 'amount_discount':
+                break;
+
+            case 'quantity_discount':
+                break;
+
+            default:
+                break;
+        }
+        return this.roundToTwo(discount_total);
+    },
+
     // product tax
     productTax(taxRate: number, subtotal: number) {
-        const productTax = this.percentage(subtotal, taxRate);
+        const productTax = this.percentage(Number(subtotal), Number(taxRate));
         return this.roundToTwo(productTax);
     },
 
     // product tax
     shippingTax(taxRate: number, shippingFee = 0) {
-        const shippingTax = this.percentage(shippingFee, taxRate);
+        const shippingTax = this.percentage(Number(shippingFee), Number(taxRate));
         return this.roundToTwo(shippingTax);
     },
 
@@ -235,13 +285,36 @@ export const helpers = {
         return fs.readFileSync(filePath, 'utf8');
     },
 
+    // read json
     readJson(filePath: string) {
-        return JSON.parse(this.readFile(filePath));
+        if (fs.existsSync(filePath)) {
+            return JSON.parse(this.readFile(filePath));
+        }
+    },
+
+    // read a single json data
+    readJsonData(filePath: string, propertyName: string) {
+        const data = this.readJson(filePath);
+        return data[propertyName];
+    },
+
+    // write a single json data
+    writeJsonData(filePath: string, property: string, value: string) {
+        const jsonData = this.readJson(filePath);
+        jsonData[property] = value;
+        this.writeFile(filePath, JSON.stringify(jsonData, null, 2));
     },
 
     // write file
     writeFile(filePath: string, content: string) {
         fs.writeFileSync(filePath, content, { encoding: 'utf8' });
+    },
+
+    // delete file
+    deleteFile(filePath: string) {
+        if (fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath);
+        }
     },
 
     // append file
@@ -260,8 +333,25 @@ export const helpers = {
         this.appendFile('.env', content);
     },
 
+    // write env json
+    writeEnvJson(property: string, value: string) {
+        const filePath = 'utils/data.json';
+        let envData: { [key: string]: string } = {};
+        if (fs.existsSync(filePath)) {
+            envData = this.readJson(filePath);
+        }
+        envData[property] = value;
+        this.writeFile(filePath, JSON.stringify(envData, null, 2));
+    },
+
     async createPage(browser: Browser, options?: BrowserContextOptions | undefined) {
         const browserContext = await browser.newContext(options);
         return browserContext.newPage();
+    },
+
+    async closePages(pages: Page[]): Promise<void> {
+        for (const page of pages) {
+            await page.close();
+        }
     },
 };

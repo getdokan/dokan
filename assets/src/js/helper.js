@@ -262,6 +262,7 @@
       showCancelButton  : true,
       confirmButtonColor:'#28a745',
       cancelButtonColor :'#dc3545',
+      ...dokan_helper.sweetalert_local
     };
 
     const args   = { ...defaults, ...options };
