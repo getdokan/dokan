@@ -9,7 +9,7 @@ import { dbData } from '@utils/dbData';
 import { data } from '@utils/testData';
 import { helpers } from '@utils/helpers';
 
-const { DOKAN_PRO, CUSTOMER_ID, HPOS } = process.env;
+const { DOKAN_PRO, HPOS } = process.env;
 
 setup.describe('setup site & woocommerce & user settings', () => {
     setup.use({ extraHTTPHeaders: { Authorization: payloads.adminAuth.Authorization } });
@@ -128,23 +128,17 @@ setup.describe('setup user settings', () => {
     setup('add vendor1 product @lite', async () => {
         // delete previous store products with predefined name if any
         await apiUtils.deleteAllProducts(data.predefined.simpleProduct.product1.name, payloads.vendorAuth);
-
         // create store product
         const [, productId] = await apiUtils.createProduct({ ...payloads.createProduct(), name: data.predefined.simpleProduct.product1.name }, payloads.vendorAuth);
-        console.log('PRODUCT_ID', productId);
-        process.env.PRODUCT_ID = productId;
-        helpers.appendEnv(`PRODUCT_ID=${productId}`); // for local testing
+        helpers.createEnvVar('PRODUCT_ID', productId);
     });
 
     setup('add vendor2 product @lite', async () => {
         // delete previous store products with predefined name if any
         await apiUtils.deleteAllProducts(data.predefined.vendor2.simpleProduct.product1.name, payloads.vendor2Auth);
-
         // create store product
         const [, productId] = await apiUtils.createProduct({ ...payloads.createProduct(), name: data.predefined.vendor2.simpleProduct.product1.name }, payloads.vendor2Auth);
-        console.log('V2_PRODUCT_ID:', productId);
-        process.env.V2_PRODUCT_ID = productId;
-        helpers.appendEnv(`V2_PRODUCT_ID=${productId}`); // for local testing
+        helpers.createEnvVar('PRODUCT_ID', productId);
     });
 
     setup('add vendor coupon @pro', async () => {
@@ -190,36 +184,9 @@ setup.describe('setup dokan settings', () => {
         await dbUtils.setDokanSettings(dbData.dokan.optionName.reverseWithdraw, dbData.dokan.reverseWithdrawSettings);
     });
 
-    setup('admin set dokan page settings @lite', async () => {
-        const [, pageId] = await apiUtils.createPage(payloads.tocPage, payloads.adminAuth);
-        const pageSettings = await dbUtils.getDokanSettings(dbData.dokan.optionName.page);
-        pageSettings['reg_tc_page'] = String(pageId);
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.page, pageSettings);
-    });
-
-    setup('admin set dokan appearance settings @lite', async () => {
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.appearance, dbData.dokan.appearanceSettings);
-    });
-
-    setup('admin set dokan privacy policy settings @lite', async () => {
-        const [, pageId] = await apiUtils.createPage(payloads.privacyPolicyPage, payloads.adminAuth);
-        dbData.dokan.privacyPolicySettings.privacy_page = String(pageId);
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.privacyPolicy, dbData.dokan.privacyPolicySettings);
-    });
-
-    setup('admin set dokan color settings @pro', async () => {
-        setup.skip(!DOKAN_PRO, 'skip on lite');
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.colors, dbData.dokan.colorsSettings);
-    });
-
     setup('admin set dokan store support settings @pro', async () => {
         setup.skip(!DOKAN_PRO, 'skip on lite');
         await dbUtils.setDokanSettings(dbData.dokan.optionName.storeSupport, dbData.dokan.storeSupportSettings);
-    });
-
-    setup('admin set dokan shipping status settings @pro', async () => {
-        setup.skip(!DOKAN_PRO, 'skip on lite');
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.shippingStatus, dbData.dokan.shippingStatusSettings);
     });
 
     setup('admin set dokan quote settings @pro', async () => {
@@ -227,24 +194,9 @@ setup.describe('setup dokan settings', () => {
         await dbUtils.setDokanSettings(dbData.dokan.optionName.quote, dbData.dokan.quoteSettings);
     });
 
-    setup('admin set dokan rma settings @pro', async () => {
-        setup.skip(!DOKAN_PRO, 'skip on lite');
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.rma, dbData.dokan.rmaSettings);
-    });
-
     setup('admin set dokan wholesale settings @pro', async () => {
         setup.skip(!DOKAN_PRO, 'skip on lite');
         await dbUtils.setDokanSettings(dbData.dokan.optionName.wholesale, dbData.dokan.wholesaleSettings);
-    });
-
-    setup('admin set dokan eu compliance settings @pro', async () => {
-        setup.skip(!DOKAN_PRO, 'skip on lite');
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.euCompliance, dbData.dokan.euComplianceSettings);
-    });
-
-    setup('admin set dokan delivery time settings @pro', async () => {
-        setup.skip(!DOKAN_PRO, 'skip on lite');
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.deliveryTime, dbData.dokan.deliveryTimeSettings);
     });
 
     setup('admin set dokan product advertising settings @pro', async () => {
@@ -252,24 +204,9 @@ setup.describe('setup dokan settings', () => {
         await dbUtils.setDokanSettings(dbData.dokan.optionName.productAdvertising, dbData.dokan.productAdvertisingSettings);
     });
 
-    setup('admin set dokan geolocation settings @pro', async () => {
-        setup.skip(!DOKAN_PRO, 'skip on lite');
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.geolocation, dbData.dokan.geolocationSettings);
-    });
-
     setup('admin set dokan product report abuse settings @pro', async () => {
         setup.skip(!DOKAN_PRO, 'skip on lite');
         await dbUtils.setDokanSettings(dbData.dokan.optionName.productReportAbuse, dbData.dokan.productReportAbuseSettings);
-    });
-
-    setup('admin set dokan spmv settings @pro', async () => {
-        setup.skip(!DOKAN_PRO, 'skip on lite');
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.spmv, dbData.dokan.spmvSettings);
-    });
-
-    setup('admin set dokan vendor subscription settings @pro', async () => {
-        setup.skip(!DOKAN_PRO, 'skip on lite');
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.vendorSubscription, dbData.dokan.vendorSubscriptionSettings);
     });
 });
 

@@ -3,7 +3,7 @@ export {};
 declare global {
     namespace NodeJS {
         interface ProcessEnv {
-            // [key: string]: string
+            [key: string]: string;
             ADMIN: string;
             ADMIN_PASSWORD: string;
             VENDOR: string;
