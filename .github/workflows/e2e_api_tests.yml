@@ -3,7 +3,7 @@ name: E2E_API Tests
 on:
     # workflow will run daily at 8:00 AM BDT (2:00 AM UTC)
     schedule:
-        - cron: '0 2 * * *'
+        - cron: 0 2 * * *
     # workflow will trigger on pull request
     pull_request:
         branches: [develop]
@@ -73,8 +73,8 @@ jobs:
               if: success()
               uses: actions/setup-node@v4
               with:
-                  node-version: '16'
-                  cache: 'npm'
+                  node-version: 16
+                  cache: npm
 
             - name: Composer install and build (Dokan-lite)
               if: success()
@@ -195,7 +195,7 @@ jobs:
             - name: Prepare test summary
               id: prepare-test-summary
               uses: actions/github-script@v7
-              if: always()
+              if: steps.e2e-test.outcome == 'success' || steps.api-test.outcome == 'success'
               with:
                   result-encoding: string
                   script: |
