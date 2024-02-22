@@ -6,10 +6,10 @@
                 "https://downloads.wordpress.org/plugin/woocommerce.latest-stable.zip",
                 "../../",
                 "../../../../",
-                "../../../woo-plugins/tests/plugins/woocommerce-bookings",
-                "../../../woo-plugins/tests/plugins/woocommerce-product-addons",
-                "../../../woo-plugins/tests/plugins/woocommerce-simple-auctions",
-                "../../../woo-plugins/tests/plugins/woocommerce-subscriptions"
+                "../../../../woo-plugins/tests/plugins/woocommerce-bookings",
+                "../../../../woo-plugins/tests/plugins/woocommerce-product-addons",
+                "../../../../woo-plugins/tests/plugins/woocommerce-simple-auctions",
+                "../../../../woo-plugins/tests/plugins/woocommerce-subscriptions"
             ]
         }
     }

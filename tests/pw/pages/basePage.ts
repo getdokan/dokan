@@ -1364,6 +1364,12 @@ export class BasePage {
         await expect(this.page.locator(selector)).toHaveClass(className);
     }
 
+    // assert element to have background color
+    async toHaveBackgroundColor(selector: string, backgroundColor: string) {
+        const value = await this.getElementBackgroundColor(selector);
+        expect(value).toBe(backgroundColor);
+    }
+
     // assert element not to be visible
     async notToBeVisible(selector: string) {
         await expect(this.page.locator(selector)).toBeHidden();

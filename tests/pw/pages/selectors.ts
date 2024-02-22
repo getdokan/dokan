@@ -1,4 +1,5 @@
 import { helpers } from '@utils/helpers';
+import { string } from 'zod';
 
 export const selector = {
     // Login
@@ -1855,6 +1856,7 @@ export const selector = {
                     reverseWithdrawal: '//div[@class="nav-title" and contains(text(),"Reverse Withdrawal")]',
                     pageSettings: '//div[@class="nav-title" and contains(text(),"Page Settings")]',
                     appearance: '//div[@class="nav-title" and contains(text(),"Appearance")]',
+                    menuManager: '//div[@class="nav-title" and contains(text(),"Menu Manager")]',
                     privacyPolicy: '//div[@class="nav-title" and contains(text(),"Privacy Policy")]',
                     colors: '//div[@class="nav-title" and contains(text(),"Colors")]',
                     liveSearch: '//div[@class="nav-title" and contains(text(),"Live Search")]',
@@ -2044,6 +2046,23 @@ export const selector = {
                     hideVendorInfoPhoneNumber: '//div[contains(text(),"Phone Number")]//label[@class="switch tips"]',
                     hideVendorInfoStoreAddress: '//div[contains(text(),"Store Address")]//label[@class="switch tips"]',
                     appearanceSaveChanges: '#submit',
+                },
+
+                // Menu Manager
+                menuManager: {
+                    leftMenu: '//a[contains(text(),"Left Menu")]',
+                    settingsSubMenu: '//a[contains(text(),"Settings Sub Menu")]',
+                    resetAll: 'div.menu-manager-reset-all',
+                    confirmReset: '.swal2-confirm',
+                    cancelReset: '.swal2-cancel',
+                    menuGrabber: (menuName: string) => `//span[text()='${menuName}']/..//div[@class='grabber-wrapper-placeholder']//div[@class='svg-pull-wrapper']`,
+                    menuEdit: (menuName: string) => `//span[text()='${menuName}']/../..//div[@class='action-icon-wrapper edit-icon-wrapper']`,
+                    menuNameInput: '//div[@class="first-part"]//input',
+                    menuNameConfirm: '//div[@class="menu-item"]//div[@class="action-icon-wrapper check-icon-wrapper"]',
+                    menuNameCancel: '//div[@class="menu-item"]//div[@class="action-icon-wrapper cancel-icon-wrapper"]',
+                    menuSwithcher: (menuName: string) => `//span[text()='${menuName}']/../..//label[@class="switch tips"]`,
+                    menuManagerSaveChanges: '#submit',
+                    noPermissionNotice: '//strong[text()="You have no permission to view this page"]',
                 },
 
                 // Privacy Policy
@@ -3289,29 +3308,43 @@ export const selector = {
 
             // Dashboard Menus
             menus: {
+                menuByText: (menu: string) => `//a[contains(text(), "${menu}")]`,
                 dashboard: '.dashboard a',
                 products: '.products a',
                 orders: '.orders a',
-                userSubscription: '.user-subscription a',
+                userSubscriptions: '.user-subscription a',
+                requestQuotes: '.requested-quotes a',
                 coupons: '.coupons a',
                 reports: '.reports a',
                 deliveryTime: '.delivery-time-dashboard a',
                 reviews: '.reviews a',
                 withdraw: '.withdraw a',
+                reverseWithdrawal: '.reverse-withdrawal a',
                 badges: '.seller-badge a',
                 productQA: '.product-questions-answers a',
                 returnRequest: '.return-request a',
                 staff: '.staffs a',
                 followers: '.followers a',
                 booking: '.booking a',
-                analytics: '.analytics a',
                 announcements: '.announcement a',
+                analytics: '.analytics a',
                 tools: '.tools a',
                 auction: '.auction a',
                 support: '.support a',
                 settings: '.settings a',
                 visitStore: '//i[@class="fas fa-external-link-alt"]/..',
                 editAccount: '.fa-user',
+
+                //submenus
+                store: '.submenu-item.store',
+                addons: '.submenu-item.product-addon',
+                payment: '.submenu-item.payment',
+                verification: '.submenu-item.verification',
+                shipping: '.submenu-item.shipping',
+                shipStation: '.submenu-item.shipstation',
+                social: '.submenu-item.social',
+                rma: '.submenu-item.rma',
+                seo: '.submenu-item.seo',
             },
 
             // profile Progress
@@ -6890,6 +6923,7 @@ export const selector = {
             storeSocialIcons: {
                 facebook: '.fa-facebook-square',
                 twitter: '.fa-twitter-square',
+                // twitter: '.fa-square-x-twitter', // todo: replace after PR is merged
                 pinterest: '.fa-pinterest-square',
                 linked: '.fa-linkedin',
                 youtube: '.fa-youtube-square',

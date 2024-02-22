@@ -1849,3 +1849,22 @@ export interface questionsAnswers {
         password: string;
     };
 }
+
+export interface dashboardMenu {
+        menu_key: string;
+        is_sortable: string;
+        previous_title: string;
+        menu_manager_title: string;
+        edit_now: string;
+        editable: string;
+        temporary_disable_edit: string;
+        switchable: string;
+        is_switched_on: string;
+        menu_manager_position: string;
+        title: string;
+        icon: string;
+        url: string;
+        pos: string;
+        permission: string;
+    
+}
