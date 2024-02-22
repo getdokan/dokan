@@ -258,7 +258,6 @@ class ProductController extends DokanRESTController {
                 [
                     'methods'             => WP_REST_Server::READABLE,
                     'callback'            => [ $this, 'get_multistep_categories' ],
-                    'args'                => $this->get_collection_params(),
                     'permission_callback' => [ $this, 'get_product_permissions_check' ],
                 ],
             ]
@@ -1654,13 +1653,11 @@ class ProductController extends DokanRESTController {
      *
      * @since 3.6.2
      *
-     * @param WP_REST_Request $request
-     *
      * @return WP_REST_Response|WP_Error
      */
-    public function get_multistep_categories( $request ) {
+    public function get_multistep_categories() {
         $categories_controller = new Categories();
-        $categories            = apply_filters( 'dokan_rest_product_categories', $categories_controller->get( $request->get_params() ) );
+        $categories = apply_filters( 'dokan_rest_product_categories', $categories_controller->get() );
 
         return rest_ensure_response( $categories );
     }
