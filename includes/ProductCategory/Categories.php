@@ -25,7 +25,11 @@ class Categories {
     public function get_all_categories( bool $ret = false, array $args = [] ) {
         $transient_key = function_exists( 'wpml_get_current_language' ) && ! empty( wpml_get_current_language() ) ? 'multistep_categories_' . wpml_get_current_language() : 'multistep_categories';
 
-        $this->categories = Cache::get_transient( $transient_key );
+        if ( ! empty( $args['search'] ) ) {
+            $this->get_categories( $args );
+        } else {
+            $this->categories = Cache::get_transient( $transient_key );
+        }
 
         if ( false === $this->categories ) {
             //calculate category data
