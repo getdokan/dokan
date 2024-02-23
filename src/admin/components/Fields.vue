@@ -193,7 +193,7 @@
                                 {{ optionVal }}
                                 <switches
                                     @input="setCheckedValue"
-                                    :enabled="isSwitchOptionChecked( optionKey )"
+                                    :enabled="isSwitchOptionCheckedComputed( optionKey )"
                                     :value="optionKey"
                                 ></switches>
                             </div>
@@ -678,7 +678,19 @@
                 }
 
                 return true;
-            }
+            },
+
+              isSwitchOptionCheckedComputed() {
+                  return function ( optionKey ) {
+                    if ( 'multicheck' === this.fieldData.type ) {
+                      return this.fieldValue[ this.fieldData.name ] && this.fieldValue[ this.fieldData.name ][ optionKey ] === optionKey;
+                    } else if ( 'radio' === this.fieldData.type ) {
+                      return this.fieldValue[ this.fieldData.name ] && this.fieldValue[ this.fieldData.name ] === optionKey;
+                    }
+
+                    return false;
+                  }
+              },
         },
 
         beforeMount() {
@@ -718,12 +730,15 @@
             },
 
             setCheckedValue( checked, value ) {
-                this.fieldValue[ this.fieldData.name ][ value ] = this.validateInputData(
-                  this.fieldData.name,
-                  checked ? value : '',
-                  this.fieldValue[ this.fieldData.name ][ value ],
-                  this.fieldData
+                let allValues = JSON.parse( JSON.stringify( this.fieldValue[ this.fieldData.name ] ) );
+                allValues[ value ] = this.validateInputData(
+                    this.fieldData.name,
+                    checked ? value : '',
+                    this.fieldValue[ this.fieldData.name ][ value ],
+                    this.fieldData
                 );
+
+                this.$set( this.fieldValue, this.fieldData.name, allValues );
             },
 
             addItem( type, name ) {
