@@ -55,7 +55,7 @@ setup.describe('setup site & woocommerce & user settings', () => {
         await apiUtils.deleteAllProducts(data.predefined.vendor2.simpleProduct.product1.name, payloads.vendor2Auth);
         // create store product
         const [, productId] = await apiUtils.createProduct({ ...payloads.createProduct(), name: data.predefined.vendor2.simpleProduct.product1.name }, payloads.vendor2Auth);
-        helpers.createEnvVar('PRODUCT_ID', productId);
+        helpers.createEnvVar('PRODUCT_ID_V2', productId);
     });
 });
 

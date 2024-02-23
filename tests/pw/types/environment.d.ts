@@ -15,7 +15,7 @@ declare global {
             VENDOR2_ID: string;
             CUSTOMER_ID: string;
             PRODUCT_ID: string;
-            V2_PRODUCT_ID: string;
+            PRODUCT_ID_V2: string;
             CI: string;
             GMAP: string;
             LICENSE_KEY: string;
