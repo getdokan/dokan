@@ -42,12 +42,10 @@ test.describe('Menu Manager test', () => {
     test("admin can't rename disabled menu @pro @a", async () => {
         await updateMenuStatusByDB('auction', 'false');
         await admin.cantRenameMenu('Auction');
-        //reset
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.menuManager, dbData.dokan.menuManagerSettings);
     });
 
-    test.skip('admin can redorder menu @pro @a', async () => {
-        await admin.reorderMenu('Orders');
+    test('admin can redorder menu @pro @a', async () => {
+        await admin.reorderMenu('Orders', 'Products');
     });
 
     test("admin can't redorder or toggle status of dashboard & store menu @pro @a", async () => {
@@ -61,6 +59,7 @@ test.describe('Menu Manager test', () => {
     });
 });
 
+// update menu switch status
 async function updateMenuStatusByDB(key: string, value: string) {
     const menuManagerSettings = dbData.dokan.menuManagerSettings;
     menuManagerSettings.dashboard_menu_manager.left_menus[key as keyof typeof menuManagerSettings.dashboard_menu_manager.left_menus].is_switched_on = value;

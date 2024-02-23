@@ -168,11 +168,11 @@ export class BasePage {
     // click on element
     async click(selector: string): Promise<void> {
         await this.clickLocator(selector);
-        // await this.clickViaPage(selector);
+        // await this.clickByPage(selector);
     }
 
     // click on element
-    async clickViaPage(selector: string): Promise<void> {
+    async clickByPage(selector: string): Promise<void> {
         await this.page.click(selector);
     }
 
@@ -277,7 +277,7 @@ export class BasePage {
     }
 
     // type & wait for response
-    async typeViaPageAndWaitForResponse(subUrl: string, selector: string, text: string, code = 200): Promise<Response> {
+    async typeByPageAndWaitForResponse(subUrl: string, selector: string, text: string, code = 200): Promise<Response> {
         const [response] = await Promise.all([this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code), this.page.locator(selector).pressSequentially(text, { delay: 100 })]);
         return response;
     }
@@ -399,11 +399,11 @@ export class BasePage {
     // returns whether the element is visible
     async isVisible(selector: string): Promise<boolean> {
         return await this.isVisibleLocator(selector);
-        // return await this.isVisibleViaPage(selector);
+        // return await this.isVisibleByPage(selector);
     }
 
     // returns whether the element is visible
-    async isVisibleViaPage(selector: string): Promise<boolean> {
+    async isVisibleByPage(selector: string): Promise<boolean> {
         return await this.page.isVisible(selector);
     }
 
@@ -429,7 +429,7 @@ export class BasePage {
     }
 
     // returns whether the element is disabled
-    async isDisabledViaPage(selector: string): Promise<boolean> {
+    async isDisabledByPage(selector: string): Promise<boolean> {
         return await this.page.isDisabled(selector);
     }
 
@@ -475,7 +475,7 @@ export class BasePage {
     }
 
     // get element text content
-    async getElementTextViaPage(selector: string): Promise<string | null> {
+    async getElementTextByPage(selector: string): Promise<string | null> {
         return await this.page.textContent(selector);
     }
 
@@ -628,12 +628,12 @@ export class BasePage {
     // clear input field and type
     async clearAndType(selector: string, text: string): Promise<void> {
         await this.fill(selector, text);
-        // await this.clearAndTypeViaPage(selector, text);
+        // await this.clearAndTypeByPage(selector, text);
     }
 
     // clear input field and type
-    async clearAndTypeViaPage(selector: string, text: string): Promise<void> {
-        await this.clearInputField1(selector);
+    async clearAndTypeByPage(selector: string, text: string): Promise<void> {
+        await this.clearInputFieldByMultipleClick(selector);
         await this.type(selector, text);
     }
 
@@ -681,18 +681,18 @@ export class BasePage {
     }
 
     // check input fields [checkbox/radio]
-    async check1(selector: string): Promise<void> {
+    async checkByPage(selector: string): Promise<void> {
         await this.page.check(selector);
     }
 
     // check input fields [checkbox/radio]
     async check(selector: string): Promise<void> {
         await this.checkLocator(selector);
-        // await this.checkViaPage(selector);
+        // await this.checkByPage(selector);
     }
 
     // check input fields [checkbox/radio]
-    async checkViaPage(selector: string): Promise<void> {
+    async checkBySetChecked(selector: string): Promise<void> {
         await this.page.setChecked(selector, true);
     }
 
@@ -713,19 +713,19 @@ export class BasePage {
      * Input field methods
      */
 
-    // // select option by value/text/index
-    // async select(selector: string, choice: string, value: string | number): Promise<string[]> {
-    //   switch (choice) {
-    //   case 'value':
-    //   return await this.page.selectOption(selector, {value: value})
-    //       case 'label':
-    //   return await this.page.selectOption(selector, {label: value})
-    //       case 'index':
-    //   return await this.page.selectOption(selector, {index: value})
-    //       default:
-    //       break
-    // }
-    // }
+    // select option by value/text/index
+    async select(selector: string, choice: string, value: string | number): Promise<string[]> {
+        switch (choice) {
+            case 'value':
+                return await this.page.selectOption(selector, { value: value as string });
+            case 'label':
+                return await this.page.selectOption(selector, { label: value as string });
+            case 'index':
+                return await this.page.selectOption(selector, { index: value as number });
+            default:
+                return [];
+        }
+    }
 
     // select by value
     async selectByValue(selector: string, value: string): Promise<string[]> {
@@ -753,12 +753,6 @@ export class BasePage {
         const [response] = await Promise.all([this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code), this.page.selectOption(selector, { label: value })]);
         return response;
     }
-
-    // set value based on select options text
-    // async selectByText(selectSelector: string, optionSelector: string, text: string): Promise<void> {
-    //   let optionValue = await this.page.$$eval(optionSelector, (options, text) => options.find(option => (option.innerText).toLowerCase() === text.toLowerCase())?.value, text)
-    //   await this.selectByValue(selectSelector, optionValue);
-    // }
 
     /**
      * Files & Media methods
@@ -950,6 +944,16 @@ export class BasePage {
     async evaluateHandle(selector: string, pageFunction: Function | string): Promise<JSHandle> {
         const locator = this.page.locator(selector);
         return await locator.evaluateHandle(pageFunction);
+    }
+
+    // get locator index relative to it's parent
+    async getLocatorIndex(parentSelector: string, childSelector: string): Promise<number> {
+        // const parent = await this.getElementHandle(parentSelector);
+        const parent = this.getElement(parentSelector);
+        const child = await this.getElementHandle(childSelector);
+        const index = await parent.evaluate((parent, child) => Array.from(parent.children).indexOf(child as HTMLElement), child);
+        console.log(index);
+        return index;
     }
 
     // fill input locator

@@ -1,4 +1,4 @@
-import { Page } from '@playwright/test';
+import { Page, expect } from '@playwright/test';
 import { BasePage } from '@pages/basePage';
 import { selector } from '@pages/selectors';
 import { data } from '@utils/testData';
@@ -20,17 +20,32 @@ export class MenuManagerPage extends BasePage {
     async updateMenuStatus(menu: string, action: string, menuLink: string) {
         await this.goIfNotThere(data.subUrls.backend.dokan.settings);
         await this.click(settingsAdmin.menus.menuManager);
-        action === 'activate' ? await this.enableSwitcher(settingsAdmin.menuManager.menuSwithcher(menu)) : await this.disableSwitcher(settingsAdmin.menuManager.menuSwithcher(menu));
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.menuManager.menuManagerSaveChanges);
-        const backgroundColor = action === 'activate' ? 'rgb(0, 144, 255)' : 'rgb(215, 218, 221)';
-        await this.toHaveBackgroundColor(settingsAdmin.menuManager.menuSwithcher(menu) + '//span', backgroundColor);
+        switch (action) {
+            case 'activate':
+                await this.enableSwitcher(settingsAdmin.menuManager.menuSwithcher(menu));
+                await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.menuManager.menuManagerSaveChanges);
+                await this.toHaveBackgroundColor(settingsAdmin.menuManager.menuSwithcher(menu) + '//span', 'rgb(0, 144, 255)');
+                //assertion
+                await this.goto(data.subUrls.frontend.vDashboard.dashboard);
+                await this.toBeVisible((selector.vendor.vDashboard.menus as any)[menuLink]);
+                await this.goto((data.subUrls.frontend.vDashboard as any)[menuLink]);
+                await this.notToBeVisible(settingsAdmin.menuManager.noPermissionNotice);
+                break;
 
-        await this.goto(data.subUrls.frontend.vDashboard.dashboard);
-        action === 'activate'
-            ? await this.toBeVisible(selector.vendor.vDashboard.menus[menuLink as keyof typeof selector.vendor.vDashboard.menus])
-            : await this.notToBeVisible(selector.vendor.vDashboard.menus[menuLink as keyof typeof selector.vendor.vDashboard.menus]);
-        await this.goto(data.subUrls.frontend.vDashboard[menuLink as keyof typeof data.subUrls.frontend.vDashboard]);
-        action === 'activate' ? await this.notToBeVisible(settingsAdmin.menuManager.noPermissionNotice) : await this.toBeVisible(settingsAdmin.menuManager.noPermissionNotice);
+            case 'deactivate':
+                await this.disableSwitcher(settingsAdmin.menuManager.menuSwithcher(menu));
+                await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.menuManager.menuManagerSaveChanges);
+                await this.toHaveBackgroundColor(settingsAdmin.menuManager.menuSwithcher(menu) + '//span', 'rgb(215, 218, 221)');
+                //assertion
+                await this.goto(data.subUrls.frontend.vDashboard.dashboard);
+                await this.notToBeVisible((selector.vendor.vDashboard.menus as any)[menuLink]);
+                await this.goto((data.subUrls.frontend.vDashboard as any)[menuLink]);
+                await this.toBeVisible(settingsAdmin.menuManager.noPermissionNotice);
+                break;
+
+            default:
+                break;
+        }
     }
 
     // rename menu
@@ -62,15 +77,32 @@ export class MenuManagerPage extends BasePage {
         await this.click(settingsAdmin.menus.menuManager);
         isSubmenu && (await this.click(settingsAdmin.menuManager.settingsSubMenu));
 
-        await this.notToBeVisible(settingsAdmin.menuManager.menuGrabber(menu));
+        await this.hasClass(settingsAdmin.menuManager.menuGrabber(menu), 'not-sortable');
         await this.notToBeVisible(settingsAdmin.menuManager.menuSwithcher(menu));
     }
 
     // reorderMenu
-    async reorderMenu(menu: string) {
+    async reorderMenu(source: string, target: string) {
         await this.goIfNotThere(data.subUrls.backend.dokan.settings);
         await this.click(settingsAdmin.menus.menuManager);
+        const initialSourceIndex = await this.getLocatorIndex(settingsAdmin.menuManager.menuParent, settingsAdmin.menuManager.menuGrabber(source));
+        const initialTargetIndex = await this.getLocatorIndex(settingsAdmin.menuManager.menuParent, settingsAdmin.menuManager.menuGrabber(target));
+
+        await this.dragToTargetLocator(settingsAdmin.menuManager.menuGrabber(source), settingsAdmin.menuManager.menuGrabber(target));
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.menuManager.menuManagerSaveChanges);
+
+        const newSourceIndex = await this.getLocatorIndex(settingsAdmin.menuManager.menuParent, settingsAdmin.menuManager.menuGrabber(source));
+        const newTargetIndex = await this.getLocatorIndex(settingsAdmin.menuManager.menuParent, settingsAdmin.menuManager.menuGrabber(target));
+
+        expect(newSourceIndex).toEqual(initialTargetIndex);
+        expect(newTargetIndex).toEqual(initialSourceIndex);
+
+        await this.goto(data.subUrls.frontend.vDashboard.dashboard);
+        const sourceIndexDashboard = await this.getLocatorIndex(selector.vendor.vDashboard.menuParent, selector.vendor.vDashboard.menus.menuByText(source) + '/..');
+        const targetIndexDashboard = await this.getLocatorIndex(selector.vendor.vDashboard.menuParent, selector.vendor.vDashboard.menus.menuByText(target) + '/..');
+
+        expect(sourceIndexDashboard).toEqual(newSourceIndex);
+        expect(targetIndexDashboard).toEqual(newTargetIndex);
     }
 
     // reset menu manager settings
