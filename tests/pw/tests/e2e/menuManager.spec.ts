@@ -25,7 +25,7 @@ test.describe('Menu Manager test', () => {
     test('admin can deactivate menu @pro @a', async () => {
         await admin.updateMenuStatus('Analytics', 'deactivate', 'analytics');
         //reset
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.menuManager, dbData.dokan.menuManagerSettings);
+        // await dbUtils.setDokanSettings(dbData.dokan.optionName.menuManager, dbData.dokan.menuManagerSettings);
     });
 
     test('admin can activate menu@pro @a', async () => {
@@ -36,13 +36,16 @@ test.describe('Menu Manager test', () => {
     test('admin can rename menu @pro @a', async () => {
         await admin.renameMenu('Request Quotes', 'Quotations');
         //reset
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.menuManager, dbData.dokan.menuManagerSettings);
+        // await dbUtils.setDokanSettings(dbData.dokan.optionName.menuManager, dbData.dokan.menuManagerSettings);
+    });
+
+    test("admin can't rename menu with more than 45 characters @pro @a", async () => {
+        await admin.cantRenameMenuBeyondLimit('Subscription', 'abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz');
     });
 
     test("admin can't rename disabled menu @pro @a", async () => {
-        await updateMenuStatusByDB('auction', 'false');
-        await admin.cantRenameMenu('Auction');
-    });
+        await admin.cantRenameMenu('Coupons');
+     });
 
     test('admin can redorder menu @pro @a', async () => {
         await admin.reorderMenu('Orders', 'Products');
@@ -54,14 +57,15 @@ test.describe('Menu Manager test', () => {
     });
 
     test('admin can reset menu manager settings @pro @a', async () => {
-        await updateMenuStatusByDB('auction', 'false');
-        await admin.resetMenuManagerSettings('Auction');
+        await updateMenuStatusByDB('tools', 'false');
+        await admin.resetMenuManagerSettings('Tools');
     });
 });
 
 // update menu switch status
 async function updateMenuStatusByDB(key: string, value: string) {
-    const menuManagerSettings = dbData.dokan.menuManagerSettings;
+    const menuManagerSettings = JSON.parse(JSON.stringify(dbData.dokan.menuManagerSettings));
     menuManagerSettings.dashboard_menu_manager.left_menus[key as keyof typeof menuManagerSettings.dashboard_menu_manager.left_menus].is_switched_on = value;
     await dbUtils.setDokanSettings(dbData.dokan.optionName.menuManager, menuManagerSettings);
 }
+

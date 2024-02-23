@@ -18,8 +18,9 @@ export class MenuManagerPage extends BasePage {
 
     // update menu status
     async updateMenuStatus(menu: string, action: string, menuLink: string) {
-        await this.goIfNotThere(data.subUrls.backend.dokan.settings);
+        await this.goto(data.subUrls.backend.dokan.settings);
         await this.click(settingsAdmin.menus.menuManager);
+
         switch (action) {
             case 'activate':
                 await this.enableSwitcher(settingsAdmin.menuManager.menuSwithcher(menu));
@@ -64,10 +65,24 @@ export class MenuManagerPage extends BasePage {
         await this.toBeVisible(selector.vendor.vDashboard.menus.menuByText(newMenu));
     }
 
-    async cantRenameMenu(menu: string) {
+    async cantRenameMenuBeyondLimit(currentMenu: string, newMenu: string) {
         await this.goIfNotThere(data.subUrls.backend.dokan.settings);
         await this.click(settingsAdmin.menus.menuManager);
 
+        //rename
+        await this.click(settingsAdmin.menuManager.menuEdit(currentMenu));
+        await this.clearAndType(settingsAdmin.menuManager.menuNameInput, newMenu);
+        await this.toHaveAttribute(settingsAdmin.menuManager.menuNameInput, 'maxlength', '45');
+        await this.click(settingsAdmin.menuManager.menuNameConfirm);
+        // await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.menuManager.menuManagerSaveChanges);
+        await this.toBeVisible(settingsAdmin.menuManager.menuEdit(newMenu.substring(0, 45)));
+        await this.notToBeVisible(settingsAdmin.menuManager.menuEdit(newMenu));
+    }
+
+    async cantRenameMenu(menu: string) {
+        await this.goIfNotThere(data.subUrls.backend.dokan.settings);
+        await this.click(settingsAdmin.menus.menuManager);
+        await this.disableSwitcher(settingsAdmin.menuManager.menuSwithcher(menu));
         await this.notToBeVisible(settingsAdmin.menuManager.menuEdit(menu));
     }
 

@@ -41,14 +41,14 @@ test.describe('product questions and answeres api test', () => {
     // questions
 
     test('get all product questions @pro', async () => {
-        const [response, responseBody] = await apiUtils.get(endPoints.getAllProductQuestions, { headers: payloads.vendorAuth });
+        const [response, responseBody] = await apiUtils.get(endPoints.getAllProductQuestions, { headers: payloads.adminAuth });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
         expect(responseBody).toMatchSchema(schemas.productQaSchema.productQuestionsSchema);
     });
 
     test('get single product question @pro', async () => {
-        const [response, responseBody] = await apiUtils.get(endPoints.getSingleProductQuestion(questionId), { headers: payloads.vendorAuth });
+        const [response, responseBody] = await apiUtils.get(endPoints.getSingleProductQuestion(questionId), { headers: payloads.adminAuth });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
         expect(responseBody).toMatchSchema(schemas.productQaSchema.productQuestionSchema);
@@ -87,14 +87,14 @@ test.describe('product questions and answeres api test', () => {
     // answers
 
     test('get all product question answers @pro', async () => {
-        const [response, responseBody] = await apiUtils.get(endPoints.getAllProductQuestionAnswers, { headers: payloads.vendorAuth });
+        const [response, responseBody] = await apiUtils.get(endPoints.getAllProductQuestionAnswers, { headers: payloads.adminAuth });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
         expect(responseBody).toMatchSchema(schemas.productQaSchema.productQuestionAnswersSchema);
     });
 
     test('get single product question answer @pro', async () => {
-        const [response, responseBody] = await apiUtils.get(endPoints.getSingleProductQuestionAnswer(answerId), { headers: payloads.vendorAuth });
+        const [response, responseBody] = await apiUtils.get(endPoints.getSingleProductQuestionAnswer(answerId), { headers: payloads.adminAuth });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
         expect(responseBody).toMatchSchema(schemas.productQaSchema.productQuestionAnswerSchema);

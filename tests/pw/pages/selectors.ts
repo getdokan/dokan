@@ -1584,7 +1584,7 @@ export const selector = {
                         editQuestion: '(//button[normalize-space()="Edit"])[1]',
                         questionInput: 'textarea#comment.block',
                         saveQuestion: '(//button[normalize-space()="Save"])[1]',
-                        questionText: 'div.break-words',
+                        questionText: '//div[ contains(@class, "break-words") and not(contains(@class, "prose")) ]',
                     },
 
                     status: {
@@ -2055,7 +2055,7 @@ export const selector = {
                     resetAll: 'div.menu-manager-reset-all',
                     confirmReset: '.swal2-confirm',
                     cancelReset: '.swal2-cancel',
-                    menuParent:'(//div[@class="tabs-details"]//div)[2]',
+                    menuParent: '(//div[@class="tabs-details"]//div)[2]',
                     allMenus: 'div.menu_manager_menu_tab div.menu-item',
                     menuGrabber: (menuName: string) => `//span[text()='${menuName}']/../..`,
                     menuEdit: (menuName: string) => `//span[text()='${menuName}']/../..//div[@class='action-icon-wrapper edit-icon-wrapper']`,

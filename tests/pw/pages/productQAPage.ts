@@ -56,7 +56,7 @@ export class ProductQAPage extends BasePage {
         await this.toBeVisible(productQAAdmin.questionDetails.goBack);
 
         // question details elements are visible
-        const { questionInput, saveQuestion, questionText, ...questionDetails } = productQAAdmin.questionDetails.questionDetails; // todo: need to add questiontext
+        const { questionInput, saveQuestion, ...questionDetails } = productQAAdmin.questionDetails.questionDetails;
         await this.multipleElementVisible(questionDetails);
 
         // status elements are visible
@@ -64,7 +64,7 @@ export class ProductQAPage extends BasePage {
         await this.multipleElementVisible(status);
 
         // answer elements are visible
-        const { questionAnswerHtmlBody, editAnswer, ...answer } = productQAAdmin.questionDetails.answer;
+        const { questionAnswerIframe, questionAnswerHtmlBody, saveAnswer, ...answer } = productQAAdmin.questionDetails.answer;
         await this.multipleElementVisible(answer);
     }
 
