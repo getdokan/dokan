@@ -594,7 +594,7 @@ export interface payment {
             card: string;
             ideal: string;
         };
-        iDealBanks: string;
+        iDealBanks: string[];
         disbursementMode: string;
         customerBankStatement: string;
         paymentRequestButtonType: string;
@@ -623,6 +623,7 @@ export interface dokanSetupWizard {
 // Vendor Setup Wizard
 export interface vendorSetupWizard {
     choice: boolean;
+    setupWizardEnabled: boolean;
     storeProductsPerPage: string;
     street1: string;
     street2: string;
@@ -666,6 +667,11 @@ export interface vendor {
     password: string;
     lastname: string;
     storeName: string;
+
+    vendor2: {
+        username: string;
+        password: string;
+    };
 
     vendorInfo: {
         email: () => string;
@@ -711,6 +717,8 @@ export interface vendor {
         termsAndConditions: string;
         biography: string;
         supportButtonText: string;
+
+        addressFieldsEnabled: boolean;
 
         openingClosingTime: {
             days: string[];
@@ -792,44 +800,44 @@ export interface vendor {
         shippingCountry: string;
         methods: string;
 
-        shippingMethod: {
-            shippingZone: string;
-            shippingCountry: string;
-            selectShippingMethod: string;
-            shippingMethod: string;
-            taxStatus: string;
-            shippingCost: string;
-            description: string;
-            calculationType: string;
-            shippingMethodSaveSuccessMessage: string;
-            zoneSaveSuccessMessage: string;
-            saveSuccessMessage: string;
+        // shippingMethod: {
+        //     shippingZone: string;
+        //     shippingCountry: string;
+        //     selectShippingMethod: string;
+        //     shippingMethod: string;
+        //     taxStatus: string;
+        //     shippingCost: string;
+        //     description: string;
+        //     calculationType: string;
+        //     shippingMethodSaveSuccessMessage: string;
+        //     zoneSaveSuccessMessage: string;
+        //     saveSuccessMessage: string;
 
-            freeShippingRequires: string;
-            freeShippingMinimumOrderAmount: string;
+        //     freeShippingRequires: string;
+        //     freeShippingMinimumOrderAmount: string;
 
-            taxIncludedInShippingCosts: string;
-            handlingFee: string;
-            maximumShippingCost: string;
+        //     taxIncludedInShippingCosts: string;
+        //     handlingFee: string;
+        //     maximumShippingCost: string;
 
-            handlingFeePerOrder: string;
-            minimumCostPerOrder: string;
-            maximumCostPerOrder: string;
+        //     handlingFeePerOrder: string;
+        //     minimumCostPerOrder: string;
+        //     maximumCostPerOrder: string;
 
-            tableRateSaveSuccessMessage: string;
+        //     tableRateSaveSuccessMessage: string;
 
-            transportationMode: string;
-            avoid: string;
-            distanceUnit: string;
-            street1: string;
-            street2: string;
-            city: string;
-            zipCode: string;
-            state: string;
-            country: string;
+        //     transportationMode: string;
+        //     avoid: string;
+        //     distanceUnit: string;
+        //     street1: string;
+        //     street2: string;
+        //     city: string;
+        //     zipCode: string;
+        //     state: string;
+        //     country: string;
 
-            distanceRateSaveSuccessMessage: string;
-        };
+        //     distanceRateSaveSuccessMessage: string;
+        // };
 
         shippingMethods: {
             flatRate: {
@@ -1025,13 +1033,12 @@ export interface vendor {
 
     // addon
     addon: {
-        randomName: () => string;
         name: string;
         priority: string;
         category: string;
         type: string;
         displayAs: string;
-        titleRequired: string;
+        title: string;
         formatTitle: string;
         addDescription: string;
         enterAnOption: string;
@@ -1787,6 +1794,8 @@ export interface reqOptions {
     timeout?: number | undefined;
 }
 
+export type params = Record<string, string | number | boolean> | undefined;
+
 export type headers = Record<string, string>;
 
 export interface storageState {
@@ -1828,4 +1837,15 @@ export interface storeContactData {
     name: string;
     email: string;
     message: string;
+}
+
+export interface questionsAnswers {
+    question: string;
+    editQuestion: string;
+    answer: string;
+    editAnswer: string;
+    user: {
+        username: string;
+        password: string;
+    };
 }

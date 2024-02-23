@@ -1,14 +1,16 @@
-import { test, Page } from '@playwright/test';
+import { test, request, Page } from '@playwright/test';
 import { FollowStorePage } from '@pages/followStorePage';
-// import { ApiUtils } from '@utils/apiUtils';
+import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
-// import { payloads } from '@utils/payloads';
+import { payloads } from '@utils/payloads';
+
+const { VENDOR_ID } = process.env;
 
 test.describe('Follow stores functionality test', () => {
     let vendor: FollowStorePage;
     let customer: FollowStorePage;
     let vPage: Page, cPage: Page;
-    // let apiUtils: ApiUtils;
+    let apiUtils: ApiUtils;
 
     test.beforeAll(async ({ browser }) => {
         const vendorContext = await browser.newContext(data.auth.vendorAuth);
@@ -19,34 +21,39 @@ test.describe('Follow stores functionality test', () => {
         cPage = await customerContext.newPage();
         customer = new FollowStorePage(cPage);
 
-        // apiUtils = new ApiUtils(request);
-        // todo: need followers
+        apiUtils = new ApiUtils(await request.newContext());
+        await apiUtils.followUnfollowStore(VENDOR_ID, payloads.customerAuth);
     });
 
     test.afterAll(async () => {
         await vPage.close();
         await cPage.close();
+        await apiUtils.dispose();
     });
 
     // follow store
 
-    test('customer followed vendors menu page is rendering properly @pro @explo', async () => {
+    // customer
+
+    test('customer followed vendors menu page is rendering properly @pro @exp @c', async () => {
         await customer.customerFollowedVendorsRenderProperly();
     });
 
-    test('customer can follow store on store listing @pro', async () => {
+    test('customer can follow store on store listing @pro @c', async () => {
         await customer.followStore(data.predefined.vendorStores.vendor1, data.predefined.vendorStores.followFromStoreListing);
     });
 
-    test('customer can follow store on single store @pro', async () => {
+    test('customer can follow store on single store @pro @c', async () => {
         await customer.followStore(data.predefined.vendorStores.vendor1, data.predefined.vendorStores.followFromSingleStore);
     });
 
-    test('vendor followers menu page is rendering properly @pro @explo', async () => {
+    //vendor
+
+    test('vendor followers menu page is rendering properly @pro @exp @v', async () => {
         await vendor.vendorFollowersRenderProperly();
     });
 
-    test('vendor can view followers @pro', async () => {
+    test('vendor can view followers @pro @v', async () => {
         await vendor.vendorViewFollowers();
     });
 });

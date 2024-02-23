@@ -1,4 +1,4 @@
-import { test, Page } from '@playwright/test';
+import { test, request, Page } from '@playwright/test';
 import { PrivacyPolicy } from '@pages/privacyPolicyPage';
 import { CustomerPage } from '@pages/customerPage';
 import { ApiUtils } from '@utils/apiUtils';
@@ -13,13 +13,13 @@ test.describe.skip('Privacy Policy & Store Contact form test', () => {
     let apiUtils: ApiUtils;
     let privacyPolicySettings: object;
 
-    test.beforeAll(async ({ browser, request }) => {
+    test.beforeAll(async ({ browser }) => {
         const customerContext = await browser.newContext(data.auth.customerAuth);
         cPage = await customerContext.newPage();
         customerPage = new CustomerPage(cPage);
         customer = new PrivacyPolicy(cPage);
 
-        apiUtils = new ApiUtils(request);
+        apiUtils = new ApiUtils(await request.newContext());
         privacyPolicySettings = await dbUtils.getDokanSettings(dbData.dokan.optionName.privacyPolicy);
     });
 
@@ -27,22 +27,23 @@ test.describe.skip('Privacy Policy & Store Contact form test', () => {
         await dbUtils.setDokanSettings(dbData.dokan.optionName.privacyPolicy, { ...privacyPolicySettings, enable_privacy: 'on' });
         await dbUtils.setDokanSettings(dbData.dokan.optionName.appearance, dbData.dokan.appearanceSettings);
         await cPage.close();
+        await apiUtils.dispose();
     });
 
-    test('customer can contact vendor @lite', async () => {
+    test('customer can contact vendor @lite @c', async () => {
         await customer.contactVendor(data.predefined.vendorStores.vendor1, data.storeContactData);
     });
 
-    test('customer can navigate to dokan privacy policy @lite', async () => {
+    test('customer can navigate to dokan privacy policy @lite @c', async () => {
         await customer.goToPrivacyPolicy(data.predefined.vendorStores.vendor1);
     });
 
-    test('privacy policy is disabled on store contact form @lite', async () => {
+    test('privacy policy is disabled on store contact form @lite @c', async () => {
         await dbUtils.setDokanSettings(dbData.dokan.optionName.privacyPolicy, { ...privacyPolicySettings, enable_privacy: 'off' });
         await customer.disablePrivacyPolicy(data.predefined.vendorStores.vendor1);
     });
 
-    test('store contact form is disabled on store sidebar @lite', async () => {
+    test('store contact form is disabled on store sidebar @lite @c', async () => {
         await dbUtils.setDokanSettings(dbData.dokan.optionName.appearance, { ...dbData.dokan.appearanceSettings, contact_seller: 'off' });
         await customer.disableStoreContactForm(data.predefined.vendorStores.vendor1);
     });

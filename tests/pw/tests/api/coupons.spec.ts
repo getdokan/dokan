@@ -4,7 +4,7 @@
 //COVERAGE_TAG: PUT /dokan/v1/coupons/(?P<id>[\d]+)
 //COVERAGE_TAG: DELETE /dokan/v1/coupons/(?P<id>[\d]+)
 
-import { test, expect } from '@playwright/test';
+import { test, expect, request } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
@@ -15,10 +15,14 @@ test.describe('coupon api test', () => {
     let couponId: string;
     let productId: string;
 
-    test.beforeAll(async ({ request }) => {
-        apiUtils = new ApiUtils(request);
+    test.beforeAll(async () => {
+        apiUtils = new ApiUtils(await request.newContext());
         [, productId] = await apiUtils.createProduct(payloads.createProduct());
         [, couponId] = await apiUtils.createCoupon([productId], payloads.createCoupon());
+    });
+
+    test.afterAll(async () => {
+        await apiUtils.dispose();
     });
 
     test('get all coupons @pro', async () => {

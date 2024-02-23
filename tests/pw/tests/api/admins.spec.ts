@@ -9,7 +9,7 @@
 //COVERAGE_TAG: GET /dokan/v1/admin/logs
 //COVERAGE_TAG: GET /dokan/v1/admin/logs/export
 
-import { test, expect } from '@playwright/test';
+import { test, expect, request } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { schemas } from '@utils/schemas';
@@ -17,8 +17,12 @@ import { schemas } from '@utils/schemas';
 test.describe('admin api test', () => {
     let apiUtils: ApiUtils;
 
-    test.beforeAll(({ request }) => {
-        apiUtils = new ApiUtils(request);
+    test.beforeAll(async () => {
+        apiUtils = new ApiUtils(await request.newContext());
+    });
+
+    test.afterAll(async () => {
+        await apiUtils.dispose();
     });
 
     test('get admin report overview @lite', async () => {

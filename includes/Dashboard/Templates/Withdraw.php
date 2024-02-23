@@ -437,13 +437,14 @@ class Withdraw {
         /**
          * @var $last_withdraw \WeDevs\Dokan\Withdraw\Withdraw[]
          */
-        $last_withdraw = dokan()->withdraw->get_withdraw_requests( dokan_get_current_user_id(), 1, 1 );
+        $last_withdraw   = dokan()->withdraw->get_withdraw_requests( dokan_get_current_user_id(), 1, 1 );
+        $last_withdraw   = reset( $last_withdraw );
         $payment_details = __( 'You do not have any approved withdraw yet.', 'dokan-lite' );
 
-        if ( ! empty( $last_withdraw ) ) {
-            $last_withdraw_amount      = '<strong>' . wc_price( $last_withdraw[0]->get_amount() ) . '</strong>';
-            $last_withdraw_date        = '<strong><em>' . dokan_format_date( $last_withdraw[0]->get_date() ) . '</em></strong>';
-            $last_withdraw_method_used = '<strong>' . dokan_withdraw_get_method_title( $last_withdraw[0]->get_method() ) . '</strong>';
+        if ( ! empty( $last_withdraw ) && is_a( $last_withdraw, '\WeDevs\Dokan\Withdraw\Withdraw' ) ) {
+            $last_withdraw_amount      = '<strong>' . wc_price( $last_withdraw->get_amount() ) . '</strong>';
+            $last_withdraw_date        = '<strong><em>' . dokan_format_date( $last_withdraw->get_date() ) . '</em></strong>';
+            $last_withdraw_method_used = '<strong>' . dokan_withdraw_get_method_title( $last_withdraw->get_method() ) . '</strong>';
 
             // translators: 1: Last formatted withdraw amount 2: Last formatted withdraw date 3: Last formatted withdraw method used.
             $payment_details = sprintf( __( '%1$s on %2$s to %3$s', 'dokan-lite' ), $last_withdraw_amount, $last_withdraw_date, $last_withdraw_method_used );
