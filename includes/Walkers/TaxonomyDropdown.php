@@ -59,8 +59,8 @@ class TaxonomyDropdown extends Walker {
             ]
         );
 
-        $commission_val = $commission_data['vendor_earning'];
-        $commission_type = $commission_data['type'];
+        $commission_val = $commission_data->get_vendor_earning();
+        $commission_type = $commission_data->get_type();
 
         $pad      = str_repeat( '&nbsp;&#8212;', $depth * 1 );
         $cat_name = apply_filters( 'list_cats', $category->name, $category );

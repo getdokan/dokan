@@ -12,6 +12,9 @@
  *
  * @package dokan
  */
+
+$all_commission_types = array_merge( dokan_commission_types(), dokan()->commission->get_legacy_commission_types() );
+$total_commission = 0 > $total_commission ? 0 : $total_commission;
 ?>
 
 <div id="woocommerce-order-items" class="postbox" style='border: none'>
@@ -51,7 +54,19 @@
                     $row_class    = apply_filters( 'woocommerce_admin_html_order_item_class', ! empty( $class ) ? $class : '', $item, $order );
                     $commission   = 0;
 
-                    $commission_type_html = $item->get_meta( '_dokan_commission_type' ) && isset( dokan_commission_types()[ $item->get_meta( '_dokan_commission_type' ) ] ) ? dokan_commission_types()[ $item->get_meta( '_dokan_commission_type' ) ] : '';
+                    $commission_data = dokan()->commission->get_commission(
+                        [
+                            'order_item_id' => $item->get_id(),
+                            'total_amount' => $item->get_total(),
+                            'total_quantity' => $item->get_quantity(),
+                        ]
+                    );
+
+                    $type                 = $commission_data->get_type();
+                    $admin_commission     = $commission_data->get_admin_commission();
+                    $percentage           = isset( $commission_data->get_parameters()['percentage'] ) ? $commission_data->get_parameters()['percentage'] : 0;
+                    $flat                 = isset( $commission_data->get_parameters()['flat'] ) ? $commission_data->get_parameters()['flat'] : 0;
+                    $commission_type_html = $all_commission_types[ $type ];
                     ?>
                     <tr class="item  <?php echo esc_attr( $row_class ); ?>" data-order_item_id="<?php echo $item->get_id(); ?>">
                         <td class="thumb">
@@ -86,13 +101,7 @@
                         </td>
                         <td width="1%">
                             <div class="view">
-                                <?php if ( 'flat' === $item->get_meta( '_dokan_commission_type' ) ) : ?>
-                                    <?php echo esc_html( $item->get_meta( '_dokan_commission_rate' ) . get_woocommerce_currency_symbol() ); ?>
-                                <?php elseif ( 'percentage' === $item->get_meta( '_dokan_commission_type' ) ) : ?>
-                                    <?php echo esc_html( $item->get_meta( '_dokan_commission_rate' ) . '%' ); ?>
-                                <?php elseif ( 'combine' === $item->get_meta( '_dokan_commission_type' ) ) : ?>
-                                    <?php echo esc_html( $item->get_meta( '_dokan_commission_rate' ) . '%' ); ?>&nbsp;+&nbsp;<?php echo esc_html( $item->get_meta( '_dokan_additional_fee' ) . get_woocommerce_currency_symbol() ); ?>
-                                <?php endif; ?>
+                                <?php echo esc_html( isset( $commission_data->get_parameters()['percentage'] ) ? $commission_data->get_parameters()['percentage'] : 0 . '%' ); ?>&nbsp;+&nbsp;<?php echo wc_price( isset( $commission_data->get_parameters()['flat'] ) ? $commission_data->get_parameters()['flat'] : 0 ); ?>
                             </div>
                         </td>
                         <td class="quantity" width="1%">
@@ -112,24 +121,15 @@
                             <div class="view">
                                 <?php
                                 $amount = $item->get_total();
-                                $refunded_amount = -1 * $order->get_total_refunded_for_item( $item_id );
+                                $original_commission = $commission_data->get_admin_commission();
 
-                                $original_commission = 0;
-                                if ( 'flat' === $item->get_meta( '_dokan_commission_type' ) ) {
-                                    $original_commission = (float) $item->get_meta( '_dokan_commission_rate' ) * (int) $item->get_quantity();
-                                } elseif ( 'percentage' === $item->get_meta( '_dokan_commission_type' ) ) {
-                                    $original_commission = ( (float) $item->get_meta( '_dokan_commission_rate' ) * (float) $amount ) / 100;
-                                } elseif ( 'combine' === $item->get_meta( '_dokan_commission_type' ) ) {
-                                    $original_commission = ( ( (float) $item->get_meta( '_dokan_commission_rate' ) * (float) $amount ) / 100 ) + (float) $item->get_meta( '_dokan_additional_fee' );
-                                }
-
-                                if ( $refunded_amount ) {
+                                if ( $order->get_total_refunded_for_item( $item_id ) ) {
                                     $commission_refunded = ( $order->get_total_refunded_for_item( $item_id ) / $amount ) * $original_commission;
                                 }
 
                                 echo '<bdi>' . wc_price( $original_commission, array( 'currency' => $order->get_currency() ) ) . '</bdi>';
 
-                                if ( $refunded_amount ) {
+                                if ( $order->get_total_refunded_for_item( $item_id ) ) {
                                     echo '<small class="refunded">' . wc_price( $commission_refunded, array( 'currency' => $order->get_currency() ) ) . '</small>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                                 }
                                 ?>
@@ -144,7 +144,7 @@
             <table class="wc-order-totals">
                 <tbody>
                 <tr>
-                    <td class="label"><?php esc_html_e( 'Order total:', 'dokan-lite' ); ?></td>
+                    <td class="label"><?php esc_html_e( 'Net total:', 'dokan-lite' ); ?></td>
                     <td width="1%"></td>
                     <td class="total">
                         <?php echo wc_price( $data->order_total, array( 'currency' => $order->get_currency() ) ); ?>

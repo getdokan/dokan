@@ -290,7 +290,7 @@ class ProductControllerV2 extends ProductController {
             ]
         );
 
-        $data = 'seller' === $context ? $commission_or_earning['vendor_earning'] : $commission_or_earning['admin_commission'];
+        $data = 'seller' === $context ? $commission_or_earning->get_vendor_earning() : $commission_or_earning->get_admin_commission();
 
         return rest_ensure_response( $data );
     }

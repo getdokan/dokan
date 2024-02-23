@@ -165,6 +165,12 @@ class Hooks {
                     $output = '--';
                 } else {
                     $commission = dokan()->commission->get_earning_by_order( $order->get_id(), 'admin' );
+                    /**
+                     * In case of refund, we are not excluding gateway fee; in case of stripe full/partial refund net amount can be negative
+                     */
+                    if ( $commission < 0 ) {
+                        $commission = 0;
+                    }
                     $output = wc_price( $commission );
                 }
                 break;

@@ -185,7 +185,7 @@ class Commission {
             ]
         );
 
-        $commission_or_earning = 'admin' === $context ? $commission['admin_commission'] : $commission['vendor_earning'];
+        $commission_or_earning = 'admin' === $context ? $commission->get_admin_commission() : $commission->get_vendor_earning();
         return apply_filters( 'dokan_get_earning_by_product', $commission_or_earning, $product, $context );
     }
 
@@ -252,7 +252,7 @@ class Commission {
                     ],
                     true
                 );
-                $item_earning_or_commission = 'admin' === $context ? $item_earning_or_commission['admin_commission'] : $item_earning_or_commission['vendor_earning'];
+                $item_earning_or_commission = 'admin' === $context ? $item_earning_or_commission->get_admin_commission() : $item_earning_or_commission->get_vendor_earning();
                 $earning_or_commission      += $item_earning_or_commission;
             }
         }
@@ -510,14 +510,14 @@ class Commission {
             true
         );
 
-        $parameters       = $commission_data['parameters'] ?? [];
+        $parameters       = $commission_data->get_parameters() ?? [];
         $percentage       = $parameters['percentage'] ?? 0;
         $flat             = $parameters['flat'] ?? 0;
 
         return apply_filters(
             'dokan_after_commission_calculation',
-            $commission_data['vendor_earning'] ?? 0,
-            $percentage, $commission_data['type'] ?? 'none',
+            $commission_data->get_vendor_earning() ?? 0,
+            $percentage, $commission_data->get_type() ?? 'none',
             $flat,
             $product_price,
             $this->get_order_id()
@@ -561,7 +561,7 @@ class Commission {
      * }
      * @param boolean $auto_save If true, it will save the calculated commission automatically to the given `$order_item_id`. Default 'false`. Accepted values boolean.
      *
-     * @return array
+     * @return \WeDevs\Dokan\Commission\Utils\CommissionData
      */
     public function get_commission( $args = [], $auto_save = false ) {
         $order_item_id  = ! empty( $args['order_item_id'] ) ? $args['order_item_id'] : '';
@@ -598,12 +598,12 @@ class Commission {
         $context = new CommissionContext( $strategies );
         $commission_data = $context->calculate_commission( $total_amount, $total_quantity );
 
-        if ( ! empty( $order_item_id ) && $auto_save && $commission_data['source'] !== $order_item_strategy::SOURCE ) {
-            $parameters       = $commission_data['parameters'] ?? [];
+        if ( ! empty( $order_item_id ) && $auto_save && $commission_data->get_source() !== $order_item_strategy::SOURCE ) {
+            $parameters       = $commission_data->get_parameters() ?? [];
             $percentage       = $parameters['percentage'] ?? 0;
             $flat             = $parameters['flat'] ?? 0;
 
-            $order_item_strategy->save_line_item_commission_to_meta( $commission_data['type'] ?? 'none', $percentage, $flat, $commission_data );
+            $order_item_strategy->save_line_item_commission_to_meta( $commission_data->get_type() ?? 'none', $percentage, $flat, $commission_data->get_data() );
         }
 
         return $commission_data;

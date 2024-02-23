@@ -447,7 +447,7 @@ if ( ! function_exists( 'dokan_get_seller_percentage' ) ) {
             ]
         );
 
-        $commission_val = $commission_data['vendor_earning'];
+        $commission_val = $commission_data->get_vendor_earning();
 
         return apply_filters( 'dokan_get_seller_percentage', $commission_val, $seller_id, $product_id );
     }
@@ -476,7 +476,7 @@ function dokan_get_commission_type( $seller_id = 0, $product_id = 0, $category_i
         ]
     );
 
-    return $commission_data['type'];
+    return $commission_data->get_type();
 }
 
 /**
