@@ -850,7 +850,14 @@
                     return;
                 }
 
-                let isChecked = this.validateInputData( this.fieldData[ 'enable_status' ]['name'], status ? 'on' : 'off', this.fieldValue[ this.fieldData[ 'enable_status' ]['name'] ], this.fieldData  );
+                let oldData = this.fieldValue[ this.fieldData[ 'enable_status' ]['name'] ] ? this.fieldValue[ this.fieldData[ 'enable_status' ]['name'] ] : this.fieldData[ 'enable_status' ]['default'];
+
+                let isChecked = this.validateInputData(
+                    this.fieldData[ 'enable_status' ]['name'],
+                    status ? 'on' : 'off',
+                    oldData,
+                    this.fieldData
+                );
 
                 this.socialChecked                                           = isChecked;
                 this.fieldValue[ this.fieldData[ 'enable_status' ]['name'] ] = isChecked;
