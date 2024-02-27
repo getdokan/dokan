@@ -101,7 +101,7 @@ $total_commission = 0 > $total_commission ? 0 : $total_commission;
                         </td>
                         <td width="1%">
                             <div class="view">
-                                <?php echo esc_html( isset( $commission_data->get_parameters()['percentage'] ) ? $commission_data->get_parameters()['percentage'] : 0 . '%' ); ?>&nbsp;+&nbsp;<?php echo wc_price( isset( $commission_data->get_parameters()['flat'] ) ? $commission_data->get_parameters()['flat'] : 0 ); ?>
+                                <?php echo esc_html( isset( $commission_data->get_parameters()['percentage'] ) ? $commission_data->get_parameters()['percentage'] : 0 ); ?>%&nbsp;+&nbsp;<?php echo wc_price( isset( $commission_data->get_parameters()['flat'] ) ? $commission_data->get_parameters()['flat'] : 0 ); ?>
                             </div>
                         </td>
                         <td class="quantity" width="1%">
