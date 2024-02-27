@@ -193,7 +193,7 @@
                                 {{ optionVal }}
                                 <switches
                                     @input="setCheckedValue"
-                                    :enabled="isSwitchOptionCheckedComputed( optionKey )"
+                                    :enabled="multiCheckValues.hasOwnProperty( optionKey ) && multiCheckValues[optionKey] !== ''"
                                     :value="optionKey"
                                 ></switches>
                             </div>
@@ -546,6 +546,7 @@
                 singleColorPicker     : { default: this.fieldData.default, label: '', show_pallete: false },
                 yourStringTimeValue   : '',
                 customFieldComponents : dokan.hooks.applyFilters( 'getDokanCustomFieldComponents', [] ),
+                multiCheckValues      : {},
             }
         },
 
@@ -679,23 +680,15 @@
 
                 return true;
             },
-
-              isSwitchOptionCheckedComputed() {
-                  return function ( optionKey ) {
-                    if ( 'multicheck' === this.fieldData.type ) {
-                      return this.fieldValue[ this.fieldData.name ] && this.fieldValue[ this.fieldData.name ][ optionKey ] === optionKey;
-                    } else if ( 'radio' === this.fieldData.type ) {
-                      return this.fieldValue[ this.fieldData.name ] && this.fieldValue[ this.fieldData.name ] === optionKey;
-                    }
-
-                    return false;
-                  }
-              },
         },
 
         beforeMount() {
             if ( 'multicheck' === this.fieldData.type && ! this.fieldValue[ this.fieldData.name ] ) {
                 this.fieldValue[ this.fieldData.name ] = this.fieldData.default;
+            }
+
+            if ( 'multicheck' === this.fieldData.type ) {
+                this.multiCheckValues = JSON.parse( JSON.stringify( this.fieldValue[ this.fieldData.name ] ) );
             }
         },
 
@@ -730,15 +723,15 @@
             },
 
             setCheckedValue( checked, value ) {
-                let allValues = JSON.parse( JSON.stringify( this.fieldValue[ this.fieldData.name ] ) );
-                allValues[ value ] = this.validateInputData(
+                let data = this.validateInputData(
                     this.fieldData.name,
                     checked ? value : '',
-                    this.fieldValue[ this.fieldData.name ][ value ],
+                    this.fieldValue[ this.fieldData.name ][ value ] ?? '',
                     this.fieldData
                 );
 
-                this.$set( this.fieldValue, this.fieldData.name, allValues );
+                this.$set( this.fieldValue[ this.fieldData.name ], value, data );
+                this.$set( this.multiCheckValues, value, data );
             },
 
             addItem( type, name ) {

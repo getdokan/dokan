@@ -89,7 +89,7 @@
                     this.fieldData.is_lite ?? false
                 );
 
-                this.fieldValue[this.fieldData.name] = data;
+                this.$set( this.fieldValue, this.fieldData.name, data );
             },
         },
     }
