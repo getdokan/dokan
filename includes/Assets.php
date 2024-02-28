@@ -277,7 +277,7 @@ class Assets {
                 'src' => DOKAN_PLUGIN_ASSEST . '/vendors/jquery-ui/jquery-ui-1.10.0.custom.css',
             ],
             'dokan-fontawesome'             => [
-                'src' => DOKAN_PLUGIN_ASSEST . '/vendors/font-awesome/font-awesome.min.css',
+                'src' => DOKAN_PLUGIN_ASSEST . '/vendors/font-awesome/css/font-awesome.min.css',
             ],
             'dokan-modal'                   => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/vendors/izimodal/iziModal.min.css',
