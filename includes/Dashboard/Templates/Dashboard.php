@@ -35,7 +35,7 @@ class Dashboard {
     }
 
     /**
-     * Get Seller Dhasboard Notice
+     * Get Seller Dashboard Notice
      *
      * @since 2.4
      *
@@ -55,6 +55,10 @@ class Dashboard {
      * @return void
      */
     public function get_big_counter_widgets() {
+        if ( ! apply_filters( 'dokan_dashboard_widget_applicable', true, 'reports' ) ) {
+            return;
+        }
+
         if ( ! current_user_can( 'dokan_view_sales_overview' ) ) {
             return;
         }
@@ -81,6 +85,10 @@ class Dashboard {
      * @return void
      */
     public function get_orders_widgets() {
+        if ( ! apply_filters( 'dokan_dashboard_widget_applicable', true, 'orders' ) ) {
+            return;
+        }
+
         if ( ! current_user_can( 'dokan_view_order_report' ) ) {
             return;
         }
@@ -190,6 +198,10 @@ class Dashboard {
      * @return void
      */
     public function get_products_widgets() {
+        if ( ! apply_filters( 'dokan_dashboard_widget_applicable', true, 'products' ) ) {
+            return;
+        }
+
         if ( ! current_user_can( 'dokan_view_product_status_report' ) ) {
             return;
         }
@@ -232,6 +244,10 @@ class Dashboard {
      * @return void
      */
     public function get_sales_report_chart_widget() {
+        if ( ! apply_filters( 'dokan_dashboard_widget_applicable', true, 'reports' ) ) {
+            return;
+        }
+
         if ( ! current_user_can( 'dokan_view_sales_report_chart' ) ) {
             return;
         }
