@@ -84,7 +84,7 @@ jobs:
             - name: Npm install and build (Dokan-lite)
               if: success()
               run: |
-                  npm ci 
+                  npm ci || npm i
                   npm run build
 
             # Install test dependencies

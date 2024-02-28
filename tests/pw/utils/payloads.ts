@@ -3206,7 +3206,7 @@ export const payloads = {
     }),
 
     createProductQuestionAnswer: () => ({
-        answer: 'test answer_' + faker.string.nanoid(10),
+        answer: '<p>test answer_' + faker.string.nanoid(10) + '</p>',
         question_id: '',
     }),
 

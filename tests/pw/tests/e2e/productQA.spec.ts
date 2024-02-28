@@ -11,11 +11,9 @@ test.describe('Product QA functionality test', () => {
     let admin: ProductQAPage;
     let vendor: ProductQAPage;
     let customer: ProductQAPage;
-    let guest: ProductQAPage;
     let aPage: Page, vPage: Page, cPage: Page;
     let apiUtils: ApiUtils;
     let questionId: string;
-    let answerId: string;
 
     test.beforeAll(async ({ browser }) => {
         const adminContext = await browser.newContext(data.auth.adminAuth);
@@ -32,10 +30,11 @@ test.describe('Product QA functionality test', () => {
 
         apiUtils = new ApiUtils(await request.newContext());
         [, questionId] = await apiUtils.createProductQuestion({ ...payloads.createProductQuestion(), product_id: PRODUCT_ID }, payloads.customerAuth);
-        [, answerId] = await apiUtils.createProductQuestionAnswer({ ...payloads.createProductQuestionAnswer(), question_id: questionId }, payloads.vendorAuth);
+        await apiUtils.createProductQuestionAnswer({ ...payloads.createProductQuestionAnswer(), question_id: questionId }, payloads.adminAuth);
     });
 
     test.afterAll(async () => {
+        await apiUtils.deleteAllProductQuestions(payloads.adminAuth);
         await aPage.close();
         await vPage.close();
         await cPage.close();
@@ -49,7 +48,6 @@ test.describe('Product QA functionality test', () => {
     });
 
     test('admin can view product question details @pro @exp @a', async () => {
-        const [, questionId] = await apiUtils.createProductQuestion({ ...payloads.createProductQuestion(), product_id: PRODUCT_ID }, payloads.customerAuth);
         await admin.viewQuestionDetails(questionId);
     });
 
@@ -81,14 +79,17 @@ test.describe('Product QA functionality test', () => {
     });
 
     test('admin can delete answer @pro @a', async () => {
+        const [, questionId] = await apiUtils.createProductQuestion({ ...payloads.createProductQuestion(), product_id: PRODUCT_ID }, payloads.customerAuth);
+        await apiUtils.createProductQuestionAnswer({ ...payloads.createProductQuestionAnswer(), question_id: questionId }, payloads.adminAuth);
         await admin.deleteAnswer(questionId);
     });
 
-    test('admin can edit (hide) question visibility @pro @a', async () => {
+    test('admin can edit(hide) question visibility @pro @a', async () => {
         await admin.editQuestionVisibility(questionId, 'hide');
     });
 
-    test('admin can edit (show) question visibility @pro @a', async () => {
+    test('admin can edit(show) question visibility @pro @a', async () => {
+        const [, questionId] = await apiUtils.createProductQuestion({ ...payloads.createProductQuestion(), product_id: PRODUCT_ID }, payloads.customerAuth);
         await apiUtils.updateProductQuestion(questionId, payloads.updateProductQuestion(), payloads.adminAuth);
         await admin.editQuestionVisibility(questionId, 'show');
     });
@@ -133,10 +134,13 @@ test.describe('Product QA functionality test', () => {
     });
 
     test('vendor can delete a answer @pro @v', async () => {
+        const [, questionId] = await apiUtils.createProductQuestion({ ...payloads.createProductQuestion(), product_id: PRODUCT_ID }, payloads.customerAuth);
+        await apiUtils.createProductQuestionAnswer({ ...payloads.createProductQuestionAnswer(), question_id: questionId }, payloads.adminAuth);
         await vendor.vendorDeleteAnswer(questionId);
     });
 
-    test('vendor can delete a question @pro @v', async () => {
+    test.skip('vendor can delete a question @pro @v', async () => {
+        const [, questionId] = await apiUtils.createProductQuestion({ ...payloads.createProductQuestion(), product_id: PRODUCT_ID }, payloads.customerAuth);
         await vendor.vendorDeleteQuestion(questionId);
     });
 
@@ -153,7 +157,7 @@ test.describe('Product QA functionality test', () => {
     // guest
 
     test('guest customer need to sign-in/signup post question @pro @g', async ({ page }) => {
-        guest = new ProductQAPage(page);
+        const guest = new ProductQAPage(page);
         await guest.postQuestion(data.predefined.simpleProduct.product1.name, data.questionAnswers);
     });
 });

@@ -1284,6 +1284,7 @@ export class ApiUtils {
             return;
         }
         const allProductQuestionIds = allProductQuestions.map((o: { id: unknown }) => o.id);
+        // console.log(allProductQuestionIds);
         const [, responseBody] = await this.put(endPoints.updateBatchProductQuestions, { data: { action: 'delete', ids: allProductQuestionIds }, headers: auth });
         return responseBody;
     }

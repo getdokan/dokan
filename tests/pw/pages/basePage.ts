@@ -55,7 +55,7 @@ export class BasePage {
 
     // goto subUrl
     async goto(subPath: string): Promise<void> {
-        await this.page.goto(subPath, { waitUntil: 'networkidle' });
+        await this.page.goto(subPath, { waitUntil: 'domcontentloaded' });
     }
 
     // go forward
@@ -94,6 +94,8 @@ export class BasePage {
             const url = this.createUrl(subPath);
             await this.page.goto(url, { waitUntil: 'networkidle' });
             // await this.page.goto(url, { waitUntil: 'domcontentloaded' }); //don't work for backend
+            // this.page.waitForURL(url, { waitUntil: 'networkidle' })
+            // this.page.waitForURL(url, { waitUntil: 'domcontentloaded' })
             const currentUrl = this.getCurrentUrl();
             expect(currentUrl).toMatch(subPath);
         }
