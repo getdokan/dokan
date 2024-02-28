@@ -53,6 +53,7 @@ import AdminNotice from "../admin/components/AdminNotice.vue";
 import CardFunFact from "../admin/components/CardFunFact.vue";
 
 import "vue-multiselect/dist/vue-multiselect.min.css"
+import Vuedraggable from "vuedraggable/src/vuedraggable";
 
 Vue.use(Notifications)
 
@@ -121,6 +122,7 @@ window.dokan.libs['RefreshSettingOptions'] = RefreshSettingOptions;
 window.dokan.libs['AdminNotice']         = AdminNotice;
 window.dokan.libs['CardFunFact']         = CardFunFact;
 window.dokan.libs['papaparse']           = parse;
+window.dokan.libs['Vuedraggable']        = Vuedraggable;
 
 window.dokan.libs['ContentLoading']  = {
   VclCode,
