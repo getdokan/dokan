@@ -615,9 +615,10 @@ class Hooks {
         } else {
             $orders_to_render = dokan()->order->all(
                 [
-					'parent' => $order->get_parent_id(),
-					'limit' => -1,
-				]
+                    'parent' => $order->get_parent_id(),
+                    'limit'  => -1,
+                    'type'   => 'shop_order',
+                ]
             );
 
             $parent_order = dokan()->order->get( $order->get_parent_id() );

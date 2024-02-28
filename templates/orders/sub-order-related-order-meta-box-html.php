@@ -45,14 +45,23 @@
                 <tbody id="order_line_items">
                 <?php foreach ( $orders_to_render as $order_item ) : ?>
                     <?php
-                    $woocommerce_list_table = new \Automattic\WooCommerce\Internal\Admin\Orders\ListTable();
-                    $woocommerce_list_table->init( new \Automattic\WooCommerce\Internal\Admin\Orders\PageController() );
-                    $vendor = dokan()->vendor->get( $order_item->get_meta( '_dokan_vendor_id' ) );
+                    $woocommerce_list_table = wc_get_container()->get( \Automattic\WooCommerce\Internal\Admin\Orders\ListTable::class );
+                    $vendor                 = dokan()->vendor->get( $order_item->get_meta( '_dokan_vendor_id' ) );
+                    $edit_url               = esc_url(
+                        add_query_arg(
+                            [
+                                'action' => 'edit',
+                                'post'   => $order_item->get_id(),
+                            ],
+                            admin_url( 'post.php' )
+                        )
+                    );
 
+                    $order_item = new WC_Order( $order_item->get_id() );
                     ?>
                     <tr class="item">
                         <td class="name">
-                            <?php $woocommerce_list_table->render_order_number_column( $order_item ); ?>
+                            <?php echo '<a href="' . esc_url( $edit_url ) . '" class="order-view"><strong>#' . esc_attr( $order_item->get_id() ) . '</strong></a>'; ?>
                             <?php
                             if ( ! $has_sub_order && $order_item->get_id() === $parent_order->get_id() ) {
                                 echo '<strong>' . esc_html_e( '(Parent order)', 'dokan-lite' ) . '</p>';
