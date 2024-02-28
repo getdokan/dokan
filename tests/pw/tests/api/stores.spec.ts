@@ -13,7 +13,7 @@
 //COVERAGE_TAG: POST /dokan/v1/stores/(?P<id>[\d]+)/email
 //COVERAGE_TAG: PUT /dokan/v1/stores/batch
 
-import { test, expect } from '@playwright/test';
+import { test, expect, request } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
@@ -22,10 +22,14 @@ test.describe('stores api test', () => {
     let apiUtils: ApiUtils;
     let sellerId: string;
 
-    test.beforeAll(async ({ request }) => {
-        apiUtils = new ApiUtils(request);
+    test.beforeAll(async () => {
+        apiUtils = new ApiUtils(await request.newContext());
         [, sellerId] = await apiUtils.createStore(payloads.createStore());
         // let [, id] = await apiUtils.getCurrentUser()
+    });
+
+    test.afterAll(async () => {
+        await apiUtils.dispose();
     });
 
     test('get all stores @lite', async () => {

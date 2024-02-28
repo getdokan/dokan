@@ -122,6 +122,26 @@ export interface product {
         status: string;
         stockStatus: boolean;
         editProduct: string;
+        saveSuccessMessage: string;
+    };
+
+    downloadable: {
+        productType: string;
+        productName: () => string;
+        category: string;
+        regularPrice: () => string;
+        storeName: string;
+        status: string;
+        stockStatus: boolean;
+        editProduct: string;
+        saveSuccessMessage: string;
+
+        downloadableOptions: {
+            fileName: string;
+            fileUrl: string;
+            downloadLimit: string;
+            downloadExpiry: string;
+        };
     };
 
     variable: {
@@ -275,6 +295,42 @@ export interface product {
 
         guestName: () => string;
         guestEmail: () => string;
+    };
+
+    productInfo: {
+        description: {
+            shortDescription: string;
+            description: string;
+        };
+
+        amountDiscount: {
+            minimumOrderAmount: string;
+            discountPercentage: string;
+        };
+
+        quantityDiscount: {
+            minimumQuantity: string;
+            discountPercentage: string;
+        };
+
+        wholesaleOption: {
+            wholesalePrice: string;
+            minimumWholesaleQuantity: string;
+        };
+
+        minMax: {
+            minimumProductQuantity: string;
+            maximumProductQuantity: string;
+            minimumAmount: string;
+            maximumAmount: string;
+            category: string;
+        };
+
+        otherOptions: {
+            productStatus: string;
+            visibility: string;
+            purchaseNote: string;
+        };
     };
 }
 
@@ -538,7 +594,7 @@ export interface payment {
             card: string;
             ideal: string;
         };
-        iDealBanks: string;
+        iDealBanks: string[];
         disbursementMode: string;
         customerBankStatement: string;
         paymentRequestButtonType: string;
@@ -567,6 +623,7 @@ export interface dokanSetupWizard {
 // Vendor Setup Wizard
 export interface vendorSetupWizard {
     choice: boolean;
+    setupWizardEnabled: boolean;
     storeProductsPerPage: string;
     street1: string;
     street2: string;
@@ -610,6 +667,11 @@ export interface vendor {
     password: string;
     lastname: string;
     storeName: string;
+
+    vendor2: {
+        username: string;
+        password: string;
+    };
 
     vendorInfo: {
         email: () => string;
@@ -656,6 +718,8 @@ export interface vendor {
         biography: string;
         supportButtonText: string;
 
+        addressFieldsEnabled: boolean;
+
         openingClosingTime: {
             days: string[];
             statusLite: string;
@@ -679,24 +743,6 @@ export interface vendor {
                 closingStyle: string;
                 vacationMessage: string;
             };
-        };
-
-        amountDiscount: {
-            minimumOrderAmount: string;
-            discountPercentage: string;
-        };
-
-        quantityDiscount: {
-            minimumQuantity: string;
-            discountPercentage: string;
-        };
-
-        minMax: {
-            minimumProductQuantity: string;
-            maximumProductQuantity: string;
-            minimumAmount: string;
-            maximumAmount: string;
-            category: string;
         };
 
         storeSettingsSaveSuccessMessage: string;
@@ -727,6 +773,19 @@ export interface vendor {
             subject: string;
             message: string;
         };
+
+        amountDiscount: {
+            minimumOrderAmount: string;
+            discountPercentage: string;
+        };
+
+        minMax: {
+            minimumProductQuantity: string;
+            maximumProductQuantity: string;
+            minimumAmount: string;
+            maximumAmount: string;
+            category: string;
+        };
     };
 
     shipping: {
@@ -741,44 +800,44 @@ export interface vendor {
         shippingCountry: string;
         methods: string;
 
-        shippingMethod: {
-            shippingZone: string;
-            shippingCountry: string;
-            selectShippingMethod: string;
-            shippingMethod: string;
-            taxStatus: string;
-            shippingCost: string;
-            description: string;
-            calculationType: string;
-            shippingMethodSaveSuccessMessage: string;
-            zoneSaveSuccessMessage: string;
-            saveSuccessMessage: string;
+        // shippingMethod: {
+        //     shippingZone: string;
+        //     shippingCountry: string;
+        //     selectShippingMethod: string;
+        //     shippingMethod: string;
+        //     taxStatus: string;
+        //     shippingCost: string;
+        //     description: string;
+        //     calculationType: string;
+        //     shippingMethodSaveSuccessMessage: string;
+        //     zoneSaveSuccessMessage: string;
+        //     saveSuccessMessage: string;
 
-            freeShippingRequires: string;
-            freeShippingMinimumOrderAmount: string;
+        //     freeShippingRequires: string;
+        //     freeShippingMinimumOrderAmount: string;
 
-            taxIncludedInShippingCosts: string;
-            handlingFee: string;
-            maximumShippingCost: string;
+        //     taxIncludedInShippingCosts: string;
+        //     handlingFee: string;
+        //     maximumShippingCost: string;
 
-            handlingFeePerOrder: string;
-            minimumCostPerOrder: string;
-            maximumCostPerOrder: string;
+        //     handlingFeePerOrder: string;
+        //     minimumCostPerOrder: string;
+        //     maximumCostPerOrder: string;
 
-            tableRateSaveSuccessMessage: string;
+        //     tableRateSaveSuccessMessage: string;
 
-            transportationMode: string;
-            avoid: string;
-            distanceUnit: string;
-            street1: string;
-            street2: string;
-            city: string;
-            zipCode: string;
-            state: string;
-            country: string;
+        //     transportationMode: string;
+        //     avoid: string;
+        //     distanceUnit: string;
+        //     street1: string;
+        //     street2: string;
+        //     city: string;
+        //     zipCode: string;
+        //     state: string;
+        //     country: string;
 
-            distanceRateSaveSuccessMessage: string;
-        };
+        //     distanceRateSaveSuccessMessage: string;
+        // };
 
         shippingMethods: {
             flatRate: {
@@ -974,13 +1033,12 @@ export interface vendor {
 
     // addon
     addon: {
-        randomName: () => string;
         name: string;
         priority: string;
         category: string;
         type: string;
         displayAs: string;
-        titleRequired: string;
+        title: string;
         formatTitle: string;
         addDescription: string;
         enterAnOption: string;
@@ -1409,6 +1467,12 @@ export interface dokanSettings {
     withdraw: {
         customMethodName: string;
         customMethodType: string;
+        charge: {
+            paypal: string;
+            bank: string;
+            skrill: string;
+            custom: string;
+        };
         minimumWithdrawAmount: string;
         withdrawThreshold: string;
         quarterlyScheduleMonth: string;
@@ -1730,6 +1794,8 @@ export interface reqOptions {
     timeout?: number | undefined;
 }
 
+export type params = Record<string, string | number | boolean> | undefined;
+
 export type headers = Record<string, string>;
 
 export interface storageState {
@@ -1754,3 +1820,32 @@ export interface storageState {
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type responseBody = any;
+
+export interface commission {
+    type: string;
+    amount: string;
+    additionalAmount: string;
+}
+
+export interface feeRecipient {
+    shippingFeeRecipient: string;
+    taxFeeRecipient: string;
+    shippingTaxFeeRecipient: string;
+}
+
+export interface storeContactData {
+    name: string;
+    email: string;
+    message: string;
+}
+
+export interface questionsAnswers {
+    question: string;
+    editQuestion: string;
+    answer: string;
+    editAnswer: string;
+    user: {
+        username: string;
+        password: string;
+    };
+}

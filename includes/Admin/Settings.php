@@ -319,7 +319,7 @@ class Settings {
                 'description'          => __( 'Withdraw Settings, Threshold', 'dokan-lite' ),
                 'document_link'        => 'https://wedevs.com/docs/dokan/settings/withdraw-options/',
                 'settings_title'       => __( 'Withdraw Settings', 'dokan-lite' ),
-                'settings_description' => __( 'You can configure your store\'s withdrawal methods, limits, order status and more.', 'dokan-lite' ),
+                'settings_description' => __( 'You can configure your store\'s withdrawal methods, charges, limits, order status and more.', 'dokan-lite' ),
             ],
             [
                 'id'                   => 'dokan_reverse_withdrawal',
@@ -617,6 +617,25 @@ class Settings {
                     'options' => dokan_withdraw_get_methods(),
                     'tooltip' => __( 'Check to add available payment methods for vendors to withdraw money.', 'dokan-lite' ),
                 ],
+                'withdraw_charges'      => [
+                    'name'               => 'withdraw_charges',
+                    'label'              => __( 'Withdraw Charges', 'dokan-lite' ),
+                    'desc'               => __( 'Select suitable withdraw charges for vendors', 'dokan-lite' ),
+                    'type'               => 'charges',
+                    'options'            => dokan_withdraw_get_methods(),
+                    'chargeable_methods' => dokan_withdraw_get_chargeable_methods(),
+                    'default'            => dokan_withdraw_get_method_charges(),
+                    'show_if'            => [
+                        'withdraw_methods' => [
+                            'contains-any' => array_keys( dokan_withdraw_get_methods() ),
+                        ],
+                    ],
+                    'items_show_if'      => [
+                        'key'       => 'withdraw_methods',
+                        'condition' => 'contains-key-value',
+                    ],
+                    'refresh_after_save' => true,
+                ],
                 'withdraw_limit'        => [
                     'name'                       => 'withdraw_limit',
                     'label'                      => __( 'Minimum Withdraw Limit', 'dokan-lite' ),
@@ -757,6 +776,7 @@ class Settings {
                         'label'        => __( 'Site Key', 'dokan-lite' ),
                         'tooltip'      => __( 'Insert Google reCAPTCHA v3 site key.', 'dokan-lite' ),
                         'social_field' => true,
+                        'is_lite'      => true,
                     ],
                     'recaptcha_secret_key' => [
                         'name'         => 'recaptcha_secret_key',
@@ -764,7 +784,9 @@ class Settings {
                         'type'         => 'text',
                         'tooltip'      => __( 'Insert Google reCAPTCHA v3 secret key.', 'dokan-lite' ),
                         'social_field' => true,
+                        'is_lite'      => true,
                     ],
+                    'is_lite'      => true,
                 ],
                 'contact_seller'             => [
                     'name'    => 'contact_seller',

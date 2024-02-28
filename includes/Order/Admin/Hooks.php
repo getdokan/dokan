@@ -181,7 +181,7 @@ class Hooks {
             return $classes;
         }
 
-        if ( is_search() || ! current_user_can( 'manage_woocommerce' ) ) {
+        if ( ! is_admin() || ! current_user_can( 'manage_woocommerce' ) ) {
             return $classes;
         }
 
@@ -211,6 +211,14 @@ class Hooks {
      * @return void
      */
     public function admin_shop_order_scripts() {
+        $current_screen = get_current_screen();
+        if ( ! $current_screen ) {
+            return;
+        }
+
+        if ( ( 'edit' === $current_screen->base && 'shop_order' !== $current_screen->post_type ) && OrderUtil::get_order_admin_screen() !== $current_screen->base ) {
+            return;
+        }
         ?>
         <script type="text/javascript">
             jQuery(function ($) {
@@ -261,7 +269,7 @@ class Hooks {
                     }
 
                     const urlParams = new URLSearchParams(window.location.search);
-                    if ( urlParams.get('s') ) {
+                    if ( urlParams.get('s') || urlParams.get('vendor_id') ) {
                         return;
                     }
 

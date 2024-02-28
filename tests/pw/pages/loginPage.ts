@@ -77,6 +77,7 @@ export class LoginPage extends BasePage {
 
     // admin logout
     async logoutBackend(): Promise<void> {
+        await this.goIfNotThere(data.subUrls.backend.adminLogin);
         await this.hover(selector.backend.userMenu);
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.backend.adminLogout, selector.backend.logout, 302);
         const loggedInUser = await this.getCurrentUser();

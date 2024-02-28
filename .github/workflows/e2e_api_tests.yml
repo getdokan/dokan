@@ -1,13 +1,27 @@
-name: End-to-End Tests Lite
+name: E2E_API Tests
 
 on:
+    # workflow will run daily at 8:00 AM BDT (2:00 AM UTC)
     schedule:
-        - cron: '0 8 * * *'
+        - cron: '0 2 * * *'
+    # workflow will trigger on pull request
     pull_request:
+        branches: [develop]
+    # workflow will trigger on push to develop branch
     push:
-        branches:
-            - develop
+        branches: [develop]
+
+    # workflow can be manually triggered
     workflow_dispatch:
+        inputs:
+            testsuite:
+                description: Choose which test suite to run
+                default: All
+                type: choice
+                options:
+                    - E2E
+                    - API
+                    - All
 
 # Cancels all previous workflow runs for pull requests that have not completed.
 concurrency:
@@ -15,12 +29,14 @@ concurrency:
     group: ${{ github.workflow }}-${{ github.event_name == 'pull_request' && github.head_ref || github.sha }}
     cancel-in-progress: true
 
+# workflow permissions
 permissions:
     checks: write
-    contents: read
+    contents: write
     issues: write
     pull-requests: write
 
+# workflow environment variables
 env:
     ADMIN: admin
     ADMIN_PASSWORD: password
@@ -39,24 +55,23 @@ env:
     DB_PREFIX: wp
     PR_NUMBER: ${{ github.event.number }}
     SHA: ${{ github.event.pull_request.head.sha }}
-    SYSTEM_INFO: ./tests/pw/systemInfo.json
+    SYSTEM_INFO: ./tests/pw/playwright/systemInfo.json
     API_TEST_RESULT: ./tests/pw/playwright-report/api/summary-report/results.json
     E2E_TEST_RESULT: ./tests/pw/playwright-report/e2e/summary-report/results.json
+    API_COVERAGE: ./tests/pw/playwright-report/api/coverage-report/coverage.json
 
 jobs:
     tests:
-        name: e2e tests
+        name: e2e_api tests
         runs-on: ubuntu-latest
-        # strategy:
-        #   fail-fast: false
 
         steps:
             - name: Checkout testing repo
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
 
             - name: Use desired version of NodeJS
               if: success()
-              uses: actions/setup-node@v3
+              uses: actions/setup-node@v4
               with:
                   node-version: '16'
                   cache: 'npm'
@@ -64,8 +79,7 @@ jobs:
             - name: Composer install and build (Dokan-lite)
               if: success()
               run: |
-                  composer install --no-dev
-                  composer dump-autoload -o
+                  composer install --no-dev -o
 
             - name: Npm install and build (Dokan-lite)
               if: success()
@@ -74,11 +88,18 @@ jobs:
                   npm run build
 
             # Install test dependencies
-            - name: Install dependencies
+            - name: Install test dependencies
               if: success()
               run: |
                   cd tests/pw 
                   npm ci
+
+            # Create wp debuglog file
+            - name: Create wp debuglog file
+              if: success()
+              run: |
+                  cd tests/pw 
+                  mkdir -p wp-data && touch wp-data/debug.log
 
             # Start wordpress environment
             - name: Start WordPress Env
@@ -102,7 +123,6 @@ jobs:
               run: |
                   cd tests/pw
                   echo "The value of test DB_PORT is ${{ env.DB_PORT }}"
-                  echo "The value of test DB_PORT is ${{ env.GMAP }}"
 
             # Set permalink structure
             - name: Set Permalink structure
@@ -130,7 +150,7 @@ jobs:
             - name: Cache playwright binaries
               id: playwright-cache
               if: success()
-              uses: actions/cache@v3
+              uses: actions/cache@v4
               with:
                   path: |
                       ~/.cache/ms-playwright
@@ -146,10 +166,17 @@ jobs:
                   cd tests/pw
                   npm run pw:browser-with-deps
 
+            # # Install only the OS dependencies if cache hit  not needed
+            # - name: Install Playwright OS dependencies
+            #   if: steps.playwright-cache.outputs.cache-hit == 'true'
+            #   run: |
+            #     cd tests/pw
+            #     npm run pw:deps-only
+
             # Run e2e tests
             - name: 🧪 Running the e2e tests
               id: e2e-test
-              if: steps.pw-install.outcome == 'success'
+              if: success() || ( success() && (github.event_name == 'workflow_dispatch' && (github.event.inputs.testsuite == 'E2E' || github.event.inputs.testsuite == 'All')))
               timeout-minutes: 40
               run: |
                   cd tests/pw 
@@ -158,7 +185,7 @@ jobs:
             # Run API tests
             - name: 🧪 Running the api tests
               id: api-test
-              if: always()
+              if: always() && steps.db-port.outcome == 'success' || ( always() && steps.db-port.outcome == 'success' && (github.event_name == 'workflow_dispatch' && (github.event.inputs.testsuite == 'API' || github.event.inputs.testsuite == 'All')))
               timeout-minutes: 5
               run: |
                   cd tests/pw 
@@ -167,7 +194,7 @@ jobs:
             # Prepare test summary
             - name: Prepare test summary
               id: prepare-test-summary
-              uses: actions/github-script@v6
+              uses: actions/github-script@v7
               if: always()
               with:
                   result-encoding: string
@@ -175,33 +202,42 @@ jobs:
                       const script = require("./tests/pw/utils/gitTestSummary.ts")
                       return await script({github, context, core})
 
-            # Find PR comment
-            - name: Find PR comment by github-actions[bot]
-              uses: peter-evans/find-comment@v2
-              id: find-comment
-              if: github.event_name == 'pull_request'
-              with:
-                  issue-number: ${{ github.event.pull_request.number }}
-                  comment-author: 'github-actions[bot]'
-                  body-includes: Tests Summary
+            # # Find PR comment
+            # - name: Find PR comment by github-actions[bot]
+            #   uses: peter-evans/find-comment@v3
+            #   id: find-comment
+            #   if: github.event_name == 'pull_request'
+            #   with:
+            #       issue-number: ${{ github.event.pull_request.number }}
+            #       comment-author: 'github-actions[bot]'
+            #       body-includes: Tests Summary
 
-            # Post test summary as PR comment
-            - name: Create or update PR comment
-              uses: peter-evans/create-or-update-comment@v2
-              if: github.event_name == 'pull_request'
-              with:
-                  comment-id: ${{ steps.find-comment.outputs.comment-id }}
-                  issue-number: ${{ github.event.pull_request.number }}
-                  body: ${{ steps.prepare-test-summary.outputs.result }}
-                  edit-mode: replace
+            # # Post test summary as PR comment
+            # - name: Create or update PR comment
+            #   uses: peter-evans/create-or-update-comment@v4
+            #   if: github.event_name == 'pull_request'
+            #   with:
+            #       comment-id: ${{ steps.find-comment.outputs.comment-id }}
+            #       issue-number: ${{ github.event.pull_request.number }}
+            #       body: ${{ steps.prepare-test-summary.outputs.result }}
+            #       reactions: hooray
+            #       edit-mode: replace
+
+            # Backup Database
+            - name: Backup Database
+              if: success()
+              run: |
+                  cd tests/pw
+                  npm run wp-env run tests-cli wp db export wp-data/db.sql
 
             # Upload artifacts
             - name: Archive test artifacts (screenshots, HTML snapshots, Reports)
-              uses: actions/upload-artifact@v3
+              uses: actions/upload-artifact@v4
               if: always()
               with:
                   name: test-artifact
                   path: |
+                      tests/pw/wp-data
                       tests/pw/playwright
                       tests/pw/playwright-report
                   if-no-files-found: ignore

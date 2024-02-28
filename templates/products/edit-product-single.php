@@ -50,7 +50,14 @@ if ( isset( $_GET['product_id'] ) && 0 === absint( $_GET['product_id'] ) ) {
 
     $product->set_name( $post_title );
     $product->set_status( $post_status );
-    $post_id        = $product->save();
+    $post_id = $product->save();
+    wp_update_post(
+        [
+            'ID'          => $post_id,
+            'post_author' => dokan_get_current_user_id(),
+        ]
+    );
+
     $post           = get_post( $post_id );
     $from_shortcode = true;
     $new_product    = true;

@@ -2110,6 +2110,63 @@ ul[data-v-525b077c] {
 }
 }
 
+.combine_fields[data-v-14248927] {
+  display: flex;
+  justify-content: right;
+  align-items: center;
+}
+.combine_fields .percent_fee[data-v-14248927] {
+  padding-right: 10px;
+}
+.combine_fields .fixed_fee input[data-v-14248927],
+.combine_fields .percent_fee input[data-v-14248927] {
+  width: 100px;
+}
+
+.wm-box-container[data-v-31bb288b] {
+  display: flex;
+  flex-direction: column;
+}
+.wm-box-container .wm-methods-box-container[data-v-31bb288b] {
+  margin-top: 15px;
+}
+.wm-box-container .wm-methods-box-container .wm-methods-box[data-v-31bb288b] {
+  border-bottom: 1px solid #f3f4f6;
+  padding: 0 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.wm-box-container .wm-methods-box-container .wm-methods-box[data-v-31bb288b]:last-child {
+  border-bottom: 0;
+}
+.wm-box-container .wm-methods-box-container .wm-methods-box .wm-method[data-v-31bb288b] {
+  display: flex;
+  align-items: center;
+}
+.wm-box-container .wm-methods-box-container .wm-methods-box .wm-charges[data-v-31bb288b] {
+  display: flex;
+  align-items: center;
+}
+.wm-box-container .wm-methods-box-container .wm-methods-box .wm-charges .wm-automated[data-v-31bb288b] {
+  border: 1px solid #dbdbdb;
+  color: #838181;
+  padding: 5px 8px;
+  border-radius: 12px;
+  background: #f5f5f6;
+}
+@media only screen and (max-width: 782px) {
+.wm-box-container .wm-methods-box-container .wm-methods-box[data-v-31bb288b] {
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
+}
+.wm-box-container .wm-methods-box-container .wm-methods-box .wm-charges[data-v-31bb288b] {
+    margin-left: -20px;
+    margin-bottom: 20px;
+}
+}
+
 span.repeatable-item-description {
   color: #999;
   font-size: 11px;
