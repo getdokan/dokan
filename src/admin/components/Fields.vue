@@ -511,6 +511,7 @@
     import SecretInput from './SecretInput.vue';
     import WithdrawCharges from './Fields/WithdrawCharges.vue'
     import DokanRadioGroup from "admin/components/DokanRadioGroup.vue";
+
     let Mapbox                = dokan_get_lib('Mapbox');
     let TextEditor            = dokan_get_lib('TextEditor');
     let GoogleMaps            = dokan_get_lib('GoogleMaps');
@@ -564,6 +565,14 @@
                     this.checked = value;
                 }
             });
+        },
+
+        watch: {
+            fieldValue: {
+                handler() {
+                },
+                deep: true,
+            }
         },
 
         computed: {
