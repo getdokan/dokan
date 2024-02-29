@@ -1,14 +1,18 @@
 //COVERAGE_TAG: GET /dokan/v1/request-for-quote/roles
 
-import { test, expect } from '@playwright/test';
+import { test, expect, request } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 
 test.describe('roles api test', () => {
     let apiUtils: ApiUtils;
 
-    test.beforeAll(({ request }) => {
-        apiUtils = new ApiUtils(request);
+    test.beforeAll(async () => {
+        apiUtils = new ApiUtils(await request.newContext());
+    });
+
+    test.afterAll(async () => {
+        await apiUtils.dispose();
     });
 
     test('get all user roles @pro', async () => {

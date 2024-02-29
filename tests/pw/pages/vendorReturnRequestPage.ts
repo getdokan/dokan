@@ -5,6 +5,9 @@ import { data } from '@utils/testData';
 import { order } from '@utils/interfaces';
 import { helpers } from '@utils/helpers';
 
+// selectors
+const vendorReturnRequest = selector.vendor.vReturnRequest;
+
 export class VendorReturnRequestPage extends VendorPage {
     constructor(page: Page) {
         super(page);
@@ -17,83 +20,83 @@ export class VendorReturnRequestPage extends VendorPage {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.returnRequest);
 
         // return request menu elements are visible
-        await this.toBeVisible(selector.vendor.vReturnRequest.menus.all);
+        await this.toBeVisible(vendorReturnRequest.menus.all);
 
         // return request table elements are visible
-        await this.multipleElementVisible(selector.vendor.vReturnRequest.table);
+        await this.multipleElementVisible(vendorReturnRequest.table);
 
-        const noRequestsFound = await this.isVisible(selector.vendor.vReturnRequest.noRowsFound);
+        const noRequestsFound = await this.isVisible(vendorReturnRequest.noRowsFound);
         if (noRequestsFound) {
             return;
         }
 
-        await this.notToHaveCount(selector.vendor.vReturnRequest.numberOfRowsFound, 0);
+        await this.notToHaveCount(vendorReturnRequest.numberOfRowsFound, 0);
     }
 
     // vendor view rma details
     async vendorViewRmaDetails(orderNumber: string): Promise<void> {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.returnRequest);
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.returnRequest, selector.vendor.vReturnRequest.view(orderNumber));
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.returnRequest, vendorReturnRequest.view(orderNumber));
 
         // back to list is visible
-        await this.toBeVisible(selector.vendor.vReturnRequest.returnRequestDetails.backToList);
+        await this.toBeVisible(vendorReturnRequest.returnRequestDetails.backToList);
 
         // basic details elements are visible
-        await this.multipleElementVisible(selector.vendor.vReturnRequest.returnRequestDetails.basicDetails);
+        await this.multipleElementVisible(vendorReturnRequest.returnRequestDetails.basicDetails);
 
         // additional details elements are visible
-        await this.multipleElementVisible(selector.vendor.vReturnRequest.returnRequestDetails.additionalDetails);
+        await this.multipleElementVisible(vendorReturnRequest.returnRequestDetails.additionalDetails);
 
         // status elements are visible
-        const { sendRefund, ...status } = selector.vendor.vReturnRequest.returnRequestDetails.status;
+        const { sendRefund, ...status } = vendorReturnRequest.returnRequestDetails.status;
         await this.multipleElementVisible(status);
 
         // conversations elements are visible
-        await this.multipleElementVisible(selector.vendor.vReturnRequest.returnRequestDetails.conversations);
+        await this.multipleElementVisible(vendorReturnRequest.returnRequestDetails.conversations);
     }
 
     // vendor send rma message
     async vendorSendRmaMessage(orderNumber: string, message: string): Promise<void> {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.returnRequest);
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.returnRequest, selector.vendor.vReturnRequest.view(orderNumber));
-        await this.clearAndType(selector.vendor.vReturnRequest.returnRequestDetails.conversations.message, message);
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.returnRequest, selector.vendor.vReturnRequest.returnRequestDetails.conversations.sendMessage, 302);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.returnRequest, vendorReturnRequest.view(orderNumber));
+        await this.clearAndType(vendorReturnRequest.returnRequestDetails.conversations.message, message);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.returnRequest, vendorReturnRequest.returnRequestDetails.conversations.sendMessage, 302);
         await this.toContainText(selector.customer.cWooSelector.wooCommerceSuccessMessage, data.customer.rma.sendMessage);
     }
 
     // vendor update rma status
     async vendorUpdateRmaStatus(orderNumber: string, status: string) {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.returnRequest);
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.returnRequest, selector.vendor.vReturnRequest.view(orderNumber));
-        await this.selectByValue(selector.vendor.vReturnRequest.returnRequestDetails.status.changeStatus, status);
-        await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vReturnRequest.returnRequestDetails.status.update);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.returnRequest, vendorReturnRequest.view(orderNumber));
+        await this.selectByValue(vendorReturnRequest.returnRequestDetails.status.changeStatus, status);
+        await this.clickAndWaitForResponse(data.subUrls.ajax, vendorReturnRequest.returnRequestDetails.status.update);
     }
 
     // vendor send rma refund
     async vendorRmaRefund(orderNumber: string, productName: string, status: string) {
         // await this.goIfNotThere(data.subUrls.frontend.vDashboard.returnRequest); // todo:
         await this.goto(data.subUrls.frontend.vDashboard.returnRequest);
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.returnRequest, selector.vendor.vReturnRequest.view(orderNumber));
-        const sendRefundIsVisible = await this.isVisible(selector.vendor.vReturnRequest.returnRequestDetails.status.sendRefund);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.returnRequest, vendorReturnRequest.view(orderNumber));
+        const sendRefundIsVisible = await this.isVisible(vendorReturnRequest.returnRequestDetails.status.sendRefund);
         !sendRefundIsVisible && (await this.vendorUpdateRmaStatus(orderNumber, status));
-        await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vReturnRequest.returnRequestDetails.status.sendRefund);
-        const taxIsVisible = await this.isVisible(selector.vendor.vReturnRequest.returnRequestDetails.modal.taxRefundColumn);
+        await this.clickAndWaitForResponse(data.subUrls.ajax, vendorReturnRequest.returnRequestDetails.status.sendRefund);
+        const taxIsVisible = await this.isVisible(vendorReturnRequest.returnRequestDetails.modal.taxRefundColumn);
         if (taxIsVisible) {
-            const tax = (await this.getElementText(selector.vendor.vReturnRequest.returnRequestDetails.modal.taxAmount(productName))) as string;
-            await this.type(selector.vendor.vReturnRequest.returnRequestDetails.modal.taxRefund(productName), helpers.removeCurrencySign(tax));
+            const tax = (await this.getElementText(vendorReturnRequest.returnRequestDetails.modal.taxAmount(productName))) as string;
+            await this.type(vendorReturnRequest.returnRequestDetails.modal.taxRefund(productName), helpers.removeCurrencySign(tax));
         }
-        const subtotal = (await this.getElementText(selector.vendor.vReturnRequest.returnRequestDetails.modal.subTotal(productName))) as string;
-        await this.type(selector.vendor.vReturnRequest.returnRequestDetails.modal.subTotalRefund(productName), helpers.removeCurrencySign(subtotal));
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.vendor.vReturnRequest.returnRequestDetails.modal.sendRequest);
-        await this.toContainText(selector.vendor.vReturnRequest.returnRequestDetails.modal.sendRequestSuccessMessage, 'Already send refund request. Wait for admin approval');
+        const subtotal = (await this.getElementText(vendorReturnRequest.returnRequestDetails.modal.subTotal(productName))) as string;
+        await this.type(vendorReturnRequest.returnRequestDetails.modal.subTotalRefund(productName), helpers.removeCurrencySign(subtotal));
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, vendorReturnRequest.returnRequestDetails.modal.sendRequest);
+        await this.toContainText(vendorReturnRequest.returnRequestDetails.modal.sendRequestSuccessMessage, 'Already send refund request. Wait for admin approval');
     }
 
     // vendor delete rma request
     async vendorDeleteRmaRequest(orderNumber: string) {
         // await this.goIfNotThere(data.subUrls.frontend.vDashboard.returnRequest); // todo:
         await this.goto(data.subUrls.frontend.vDashboard.returnRequest);
-        await this.hover(selector.vendor.vReturnRequest.returnRequestCell(orderNumber));
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.returnRequest, selector.vendor.vReturnRequest.delete(orderNumber));
+        await this.hover(vendorReturnRequest.returnRequestCell(orderNumber));
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.returnRequest, vendorReturnRequest.delete(orderNumber));
         await this.toContainText(selector.customer.cWooSelector.wooCommerceSuccessMessage, 'Return Request has been deleted successfully');
     }
 

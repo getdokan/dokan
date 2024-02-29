@@ -6,7 +6,7 @@
 //COVERAGE_TAG: PUT /dokan/v1/request-for-quote/quote-rule/(?P<id>[\d]+)/restore
 //COVERAGE_TAG: PUT /dokan/v1/request-for-quote/quote-rule/batch
 
-import { test, expect } from '@playwright/test';
+import { test, expect, request } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
@@ -15,9 +15,13 @@ test.describe('quote rules api test', () => {
     let apiUtils: ApiUtils;
     let quoteRuleId: string;
 
-    test.beforeAll(async ({ request }) => {
-        apiUtils = new ApiUtils(request);
+    test.beforeAll(async () => {
+        apiUtils = new ApiUtils(await request.newContext());
         [, quoteRuleId] = await apiUtils.createQuoteRule(payloads.createQuoteRule());
+    });
+
+    test.afterAll(async () => {
+        await apiUtils.dispose();
     });
 
     test('get all quote rules @pro', async () => {

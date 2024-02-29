@@ -5,6 +5,10 @@ import { data } from '@utils/testData';
 import { helpers } from '@utils/helpers';
 import { reverseWithdraw, date } from '@utils/interfaces';
 
+// selectors
+const reverseWithdrawAdmin = selector.admin.dokan.reverseWithdraw;
+const reverseWithdrawVendor = selector.vendor.vReverseWithdrawal;
+
 export class ReverseWithdrawsPage extends CustomerPage {
     constructor(page: Page) {
         super(page);
@@ -25,62 +29,62 @@ export class ReverseWithdrawsPage extends CustomerPage {
         await this.goIfNotThere(data.subUrls.backend.dokan.reverseWithdraws);
 
         // reverse withdraw text is visible
-        await this.toBeVisible(selector.admin.dokan.reverseWithdraw.reverseWithdrawText);
+        await this.toBeVisible(reverseWithdrawAdmin.reverseWithdrawText);
 
         // add new reverse withdrawal is visible
-        await this.toBeVisible(selector.admin.dokan.reverseWithdraw.addNewReverseWithdrawal);
+        await this.toBeVisible(reverseWithdrawAdmin.addNewReverseWithdrawal);
 
         // fact cards elements are visible
-        await this.multipleElementVisible(selector.admin.dokan.reverseWithdraw.reverseWithdrawFactCards);
+        await this.multipleElementVisible(reverseWithdrawAdmin.reverseWithdrawFactCards);
 
         // filter elements are visible
-        const { filterInput, clearFilter, filteredResult, ...filters } = selector.admin.dokan.reverseWithdraw.filters;
+        const { filterInput, clearFilter, filteredResult, ...filters } = reverseWithdrawAdmin.filters;
         await this.multipleElementVisible(filters);
 
         // reverse withdraw table elements are visible
-        await this.multipleElementVisible(selector.admin.dokan.reverseWithdraw.table);
+        await this.multipleElementVisible(reverseWithdrawAdmin.table);
     }
 
     // filter reverse withdraws
     async filterReverseWithdraws(vendorName: string) {
         await this.goIfNotThere(data.subUrls.backend.dokan.reverseWithdraws);
 
-        await this.clickIfVisible(selector.admin.dokan.reverseWithdraw.filters.clearFilter);
+        await this.clickIfVisible(reverseWithdrawAdmin.filters.clearFilter);
 
-        await this.click(selector.admin.dokan.reverseWithdraw.filters.filterByStore);
-        await this.typeAndWaitForResponse(data.subUrls.api.dokan.reverseWithdraws, selector.admin.dokan.reverseWithdraw.filters.filterInput, vendorName);
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.api.dokan.reverseWithdraws, selector.admin.dokan.reverseWithdraw.filters.filteredResult(vendorName));
-        await this.toBeVisible(selector.admin.dokan.reverseWithdraw.reverseWithdrawCell(vendorName));
+        await this.click(reverseWithdrawAdmin.filters.filterByStore);
+        await this.typeAndWaitForResponse(data.subUrls.api.dokan.reverseWithdraws, reverseWithdrawAdmin.filters.filterInput, vendorName);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.api.dokan.reverseWithdraws, reverseWithdrawAdmin.filters.filteredResult(vendorName));
+        await this.toBeVisible(reverseWithdrawAdmin.reverseWithdrawCell(vendorName));
     }
 
     // add new reverse withdrawal
     async addReverseWithdrawal(reverseWithdrawal: reverseWithdraw) {
         await this.goIfNotThere(data.subUrls.backend.dokan.reverseWithdraws);
 
-        await this.click(selector.admin.dokan.reverseWithdraw.addNewReverseWithdrawal);
+        await this.click(reverseWithdrawAdmin.addNewReverseWithdrawal);
 
-        await this.click(selector.admin.dokan.reverseWithdraw.addReverseWithdrawal.selectVendorDropdown);
-        await this.typeAndWaitForResponse(data.subUrls.api.dokan.stores, selector.admin.dokan.reverseWithdraw.addReverseWithdrawal.selectVendorInput, reverseWithdrawal.store);
-        await this.click(selector.admin.dokan.reverseWithdraw.addReverseWithdrawal.selectOption(reverseWithdrawal.store));
+        await this.click(reverseWithdrawAdmin.addReverseWithdrawal.selectVendorDropdown);
+        await this.typeAndWaitForResponse(data.subUrls.api.dokan.stores, reverseWithdrawAdmin.addReverseWithdrawal.selectVendorInput, reverseWithdrawal.store);
+        await this.click(reverseWithdrawAdmin.addReverseWithdrawal.selectOption(reverseWithdrawal.store));
 
-        // await this.toContainText(selector.admin.dokan.reverseWithdraw.addReverseWithdrawal.searchedResult, reverseWithdrawal.store);
+        // await this.toContainText(reverseWithdrawAdmin.addReverseWithdrawal.searchedResult, reverseWithdrawal.store);
         // await this.press(data.key.arrowDown);
         // await this.press(data.key.enter);
 
-        await this.click(selector.admin.dokan.reverseWithdraw.addReverseWithdrawal.transactionType(reverseWithdrawal.transactionType));
+        await this.click(reverseWithdrawAdmin.addReverseWithdrawal.transactionType(reverseWithdrawal.transactionType));
 
-        await this.click(selector.admin.dokan.reverseWithdraw.addReverseWithdrawal.selectProductDropdown);
-        await this.typeAndWaitForResponse(data.subUrls.api.dokan.products, selector.admin.dokan.reverseWithdraw.addReverseWithdrawal.selectProductInput, reverseWithdrawal.product);
-        await this.click(selector.admin.dokan.reverseWithdraw.addReverseWithdrawal.selectOption(reverseWithdrawal.product));
-        // await this.toContainText(selector.admin.dokan.reverseWithdraw.addReverseWithdrawal.searchedResult, reverseWithdrawal.product);
+        await this.click(reverseWithdrawAdmin.addReverseWithdrawal.selectProductDropdown);
+        await this.typeAndWaitForResponse(data.subUrls.api.dokan.products, reverseWithdrawAdmin.addReverseWithdrawal.selectProductInput, reverseWithdrawal.product);
+        await this.click(reverseWithdrawAdmin.addReverseWithdrawal.selectOption(reverseWithdrawal.product));
+        // await this.toContainText(reverseWithdrawAdmin.addReverseWithdrawal.searchedResult, reverseWithdrawal.product);
         // await this.press(data.key.enter);
 
-        await this.click(selector.admin.dokan.reverseWithdraw.addReverseWithdrawal.withdrawalBalanceType(reverseWithdrawal.withdrawalBalanceType));
+        await this.click(reverseWithdrawAdmin.addReverseWithdrawal.withdrawalBalanceType(reverseWithdrawal.withdrawalBalanceType));
 
-        await this.clearAndType(selector.admin.dokan.reverseWithdraw.addReverseWithdrawal.reverseWithdrawalAmount, reverseWithdrawal.amount);
-        await this.clearAndType(selector.admin.dokan.reverseWithdraw.addReverseWithdrawal.note, reverseWithdrawal.note);
+        await this.clearAndType(reverseWithdrawAdmin.addReverseWithdrawal.reverseWithdrawalAmount, reverseWithdrawal.amount);
+        await this.clearAndType(reverseWithdrawAdmin.addReverseWithdrawal.note, reverseWithdrawal.note);
 
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.api.dokan.reverseWithdraws, selector.admin.dokan.reverseWithdraw.addReverseWithdrawal.save);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.api.dokan.reverseWithdraws, reverseWithdrawAdmin.addReverseWithdrawal.save);
     }
 
     // vendor
@@ -90,28 +94,28 @@ export class ReverseWithdrawsPage extends CustomerPage {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.reverseWithdrawal);
 
         // reverse withdrawal text is visible
-        await this.toBeVisible(selector.vendor.vReverseWithdrawal.reverseWithdrawalText);
+        await this.toBeVisible(reverseWithdrawVendor.reverseWithdrawalText);
 
         // reverse balance section elements are visible
-        await this.multipleElementVisible(selector.vendor.vReverseWithdrawal.reverseBalanceSection);
+        await this.multipleElementVisible(reverseWithdrawVendor.reverseBalanceSection);
 
         // filter elements are visible
-        await this.toBeVisible(selector.vendor.vReverseWithdrawal.filters.dateRangeInput);
-        await this.toBeVisible(selector.vendor.vReverseWithdrawal.filters.filter);
+        await this.toBeVisible(reverseWithdrawVendor.filters.dateRangeInput);
+        await this.toBeVisible(reverseWithdrawVendor.filters.filter);
 
         // reverse withdrawal table elements are visible
-        await this.multipleElementVisible(selector.vendor.vReverseWithdrawal.table);
+        await this.multipleElementVisible(reverseWithdrawVendor.table);
 
         // opening balance row is visible
-        await this.toBeVisible(selector.vendor.vReverseWithdrawal.openingBalanceRow);
+        await this.toBeVisible(reverseWithdrawVendor.openingBalanceRow);
     }
 
     // reverse withdraw notice render properly
     async vendorViewReverseWithdrawalNotice() {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.reverseWithdrawal);
 
-        await this.toBeVisible(selector.vendor.vReverseWithdrawal.reverseWithdrawalNotice.noticeText);
-        // const noticeText = await this.getElementText(selector.vendor.vReverseWithdrawal.reverseWithdrawalNotice.noticeText);
+        await this.toBeVisible(reverseWithdrawVendor.reverseWithdrawalNotice.noticeText);
+        // const noticeText = await this.getElementText(reverseWithdrawVendor.reverseWithdrawalNotice.noticeText);
 
         // expect(noticeText).toContain('Your products add to cart will be hidden. Hence users will not be able to purchase any of your products.');
         // expect(noticeText).toContain('Withdraw menu will be hidden. Hence you will not be able to make any withdraw request from your account.');
@@ -133,19 +137,19 @@ export class ReverseWithdrawsPage extends CustomerPage {
     async vendorFilterReverseWithdrawals(inputValue: date['dateRange']) {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.reverseWithdrawal);
 
-        await this.setAttributeValue(selector.vendor.vReverseWithdrawal.filters.dateRangeInput, 'value', helpers.dateFormatFYJ(inputValue.startDate) + ' - ' + helpers.dateFormatFYJ(inputValue.endDate));
-        await this.setAttributeValue(selector.vendor.vReverseWithdrawal.filters.startDateInput, 'value', inputValue.startDate);
-        await this.setAttributeValue(selector.vendor.vReverseWithdrawal.filters.endDateInput, 'value', inputValue.endDate);
-        await this.clickAndWaitForLoadState(selector.vendor.vReverseWithdrawal.filters.filter);
-        await this.notToHaveCount(selector.vendor.vReverseWithdrawal.numberOfRowsFound, 3);
+        await this.setAttributeValue(reverseWithdrawVendor.filters.dateRangeInput, 'value', helpers.dateFormatFYJ(inputValue.startDate) + ' - ' + helpers.dateFormatFYJ(inputValue.endDate));
+        await this.setAttributeValue(reverseWithdrawVendor.filters.startDateInput, 'value', inputValue.startDate);
+        await this.setAttributeValue(reverseWithdrawVendor.filters.endDateInput, 'value', inputValue.endDate);
+        await this.clickAndWaitForLoadState(reverseWithdrawVendor.filters.filter);
+        await this.notToHaveCount(reverseWithdrawVendor.numberOfRowsFound, 3);
     }
 
     // pay reverse pay balance
     async vendorPayReversePayBalance() {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.reverseWithdrawal);
 
-        await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vReverseWithdrawal.payNow);
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.checkout, selector.vendor.vReverseWithdrawal.confirmAction);
+        await this.clickAndWaitForResponse(data.subUrls.ajax, reverseWithdrawVendor.payNow);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.checkout, reverseWithdrawVendor.confirmAction);
         const orderId = await this.paymentOrder();
         return orderId;
     }

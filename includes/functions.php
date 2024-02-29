@@ -1131,18 +1131,17 @@ add_action( 'login_init', 'dokan_redirect_to_register' );
 /**
  * Check if the seller is enabled
  *
+ * @since DOKAN_SINCE New filter added `dokan_is_seller_enabled`
+ *
  * @param int $user_id
  *
  * @return bool
  */
-function dokan_is_seller_enabled( $user_id ) {
-    $selling = get_user_meta( $user_id, 'dokan_enable_selling', true );
-
-    if ( $selling === 'yes' ) {
-        return true;
-    }
-
-    return false;
+function dokan_is_seller_enabled( $user_id ): bool {
+    return apply_filters(
+        'dokan_is_seller_enabled',
+        'yes' === get_user_meta( $user_id, 'dokan_enable_selling', 'no' )
+    );
 }
 
 /**
@@ -2358,7 +2357,7 @@ function dokan_get_social_profile_fields() {
             'title' => __( 'Facebook', 'dokan-lite' ),
         ],
         'twitter'   => [
-            'icon'  => 'twitter-square',
+            'icon'  => 'fa-brands fa-square-x-twitter',
             'title' => __( 'Twitter', 'dokan-lite' ),
         ],
         'pinterest' => [
@@ -2950,7 +2949,7 @@ function dokan_get_translations_for_plugin_domain( $domain, $language_dir = null
  */
 function dokan_get_jed_locale_data( $domain, $language_dir = null ) {
     // get transient key
-    $transient_key = sprintf( 'dokan_i18n-%s-%d', $domain, filectime( $language_dir ) );
+    $transient_key = sprintf( 'dokan_i18n-%s-%d-%s', $domain, filectime( $language_dir ), get_user_locale() );
 
     // check if data exists on cache or not
     $locale = Cache::get_transient( $transient_key );
@@ -4351,4 +4350,22 @@ if ( ! function_exists( 'dokan_user_update_to_seller' ) ) {
 
         do_action( 'dokan_new_seller_created', $user_id, $vendor->get_shop_info() );
     }
+}
+
+/**
+ * Get new product creation URL.
+ *
+ * @since 3.9.7
+ *
+ * @return false|string
+ */
+function dokan_get_new_product_url() {
+    $one_step_product_create = 'on' === dokan_get_option( 'one_step_product_create', 'dokan_selling', 'on' );
+
+    return $one_step_product_create ? dokan_edit_product_url( 0, true ) : add_query_arg(
+        [
+            '_dokan_add_product_nonce' => wp_create_nonce( 'dokan_add_product_nonce' ),
+        ],
+        dokan_get_navigation_url( 'new-product' )
+    );
 }

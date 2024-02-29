@@ -3,12 +3,12 @@
  * Plugin Name: Dokan
  * Plugin URI: https://dokan.co/wordpress/
  * Description: An e-commerce marketplace plugin for WordPress. Powered by WooCommerce and weDevs.
- * Version: 3.9.3
+ * Version: 3.9.9
  * Author: weDevs
  * Author URI: https://dokan.co/
  * Text Domain: dokan-lite
  * WC requires at least: 5.0.0
- * WC tested up to: 8.2.2
+ * WC tested up to: 8.5.2
  * Domain Path: /languages/
  * License: GPL2
  */
@@ -54,6 +54,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @property WeDevs\Dokan\Product\Manager $product Instance of Order Manager class
  * @property WeDevs\Dokan\Vendor\Manager $vendor Instance of Vendor Manager Class
  * @property WeDevs\Dokan\BackgroundProcess\Manager $bg_process Instance of WeDevs\Dokan\BackgroundProcess\Manager class
+ * @property WeDevs\Dokan\Withdraw\Manager $withdraw Instance of WeDevs\Dokan\Withdraw\Manager class
  * @property WeDevs\Dokan\Frontend\Frontend $frontend_manager Instance of \WeDevs\Dokan\Frontend\Frontend class
  */
 final class WeDevs_Dokan {
@@ -63,7 +64,7 @@ final class WeDevs_Dokan {
      *
      * @var string
      */
-    public $version = '3.9.3';
+    public $version = '3.9.9';
 
     /**
      * Instance of self
@@ -77,7 +78,7 @@ final class WeDevs_Dokan {
      *
      * @var string
      */
-    private $min_php = '7.2';
+    private $min_php = '7.4';
 
     /**
      * Holds various class instances
@@ -290,7 +291,7 @@ final class WeDevs_Dokan {
     public function declare_woocommerce_feature_compatibility() {
         if ( class_exists( \Automattic\WooCommerce\Utilities\FeaturesUtil::class ) ) {
             \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'custom_order_tables', __FILE__, true );
-            \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'cart_checkout_blocks', __FILE__, false );
+            \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility( 'cart_checkout_blocks', __FILE__, true );
         }
     }
 
@@ -584,9 +585,11 @@ final class WeDevs_Dokan {
  *
  * @return WeDevs_Dokan
  */
-function dokan() {
+function dokan() { // phpcs:ignore
     return WeDevs_Dokan::init();
 }
 
 // Lets Go....
 dokan();
+
+// Path: includes/Upgrade/Manager.php

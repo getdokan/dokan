@@ -5,6 +5,9 @@ import { data } from '@utils/testData';
 
 const { DOKAN_PRO } = process.env;
 
+// selectors
+const vendorDashboard = selector.vendor.vDashboard;
+
 export class VendorDashboardPage extends VendorPage {
     constructor(page: Page) {
         super(page);
@@ -17,26 +20,26 @@ export class VendorDashboardPage extends VendorPage {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.dashboard);
 
         // at a glance elements are visible
-        await this.multipleElementVisible(selector.vendor.vDashboard.atAGlance);
+        await this.multipleElementVisible(vendorDashboard.atAGlance);
 
         // graph elements are visible
-        await this.multipleElementVisible(selector.vendor.vDashboard.graph);
+        await this.multipleElementVisible(vendorDashboard.graph);
 
         // orders elements are visible
-        await this.multipleElementVisible(selector.vendor.vDashboard.orders);
+        await this.multipleElementVisible(vendorDashboard.orders);
 
         // products elements are visible
-        await this.multipleElementVisible(selector.vendor.vDashboard.products);
+        await this.multipleElementVisible(vendorDashboard.products);
 
         if (DOKAN_PRO) {
             // profile progress elements are visible
-            await this.multipleElementVisible(selector.vendor.vDashboard.profileProgress);
+            await this.multipleElementVisible(vendorDashboard.profileProgress);
 
             // reviews elements are visible
-            await this.multipleElementVisible(selector.vendor.vDashboard.reviews);
+            await this.multipleElementVisible(vendorDashboard.reviews);
 
             // announcement elements are visible
-            await this.multipleElementVisible(selector.vendor.vDashboard.announcement);
+            await this.multipleElementVisible(vendorDashboard.announcement);
         }
     }
 }
