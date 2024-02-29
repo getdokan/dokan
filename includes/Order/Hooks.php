@@ -328,10 +328,6 @@ class Hooks {
 
         $available_vendors = array_unique( $available_vendors );
 
-        if ( $coupon->is_type( 'fixed_cart' ) && count( $available_vendors ) > 1 ) {
-            throw new Exception( __( 'This coupon is invalid for multiple vendors.', 'dokan-lite' ) );
-        }
-
         // Make sure applied coupon created by admin
         if ( apply_filters( 'dokan_ensure_admin_have_create_coupon', $valid, $coupon, $available_vendors, $available_products ) ) {
             return true;
