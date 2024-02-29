@@ -78,7 +78,17 @@
                                                 :dokanAssetsUrl="dokanAssetsUrl" />
                                         </div>
                                     </div>
-                                    <p class="submit"><input type="submit" name="submit" id="submit" class="button button-primary" value="Save Changes" @click.prevent="saveSettings( settingValues[index], index )"></p>
+                                    <p class="submit">
+                                        <input
+                                            type="submit"
+                                            name="submit"
+                                            id="submit"
+                                            class="button button-primary"
+                                            :value="__( 'Save Changes', 'dokan-lite' )"
+                                            @click.prevent="saveSettings( settingValues[index], index )"
+                                            :disabled="disableSubmit"
+                                        >
+                                    </p>
                                 </form>
                             </div>
                         </template>
@@ -140,6 +150,7 @@
                 disbursementSchedule: {},
                 isSaveConfirm: false,
                 dokanAssetsUrl: dokan.urls.assetsUrl,
+                disableSubmit: false,
                 showMenu: false,
                 screenWidth: window.document.documentElement.clientWidth
             }
@@ -595,8 +606,11 @@
             this.settingFields   = dokan.settings_fields;
             window.addEventListener( 'scroll', this.handleScroll );
         },
-
         mounted() {
+            this.$root.$on('setting-submit-status', ( status ) => {
+                this.disableSubmit = status;
+            } );
+
             this.updateDocumentWidth();
             window.addEventListener('resize', this.updateDocumentWidth);
         },

@@ -1,4 +1,4 @@
-import { test, Page } from '@playwright/test';
+import { test, request, Page } from '@playwright/test';
 import { StoreAppearance } from '@pages/storeAppearance';
 import { CustomerPage } from '@pages/customerPage';
 import { ApiUtils } from '@utils/apiUtils';
@@ -15,32 +15,33 @@ test.describe.skip('Store Appearance test', () => {
 
     // todo: need to remove default dokan store sidebar content
 
-    test.beforeAll(async ({ browser, request }) => {
+    test.beforeAll(async ({ browser }) => {
         const customerContext = await browser.newContext(data.auth.customerAuth);
         cPage = await customerContext.newPage();
         customerPage = new CustomerPage(cPage);
         customer = new StoreAppearance(cPage);
 
-        apiUtils = new ApiUtils(request);
+        apiUtils = new ApiUtils(await request.newContext());
         privacyPolicySettings = await dbUtils.getDokanSettings(dbData.dokan.optionName.privacyPolicy);
     });
 
     test.afterAll(async () => {
         await dbUtils.setDokanSettings(dbData.dokan.optionName.appearance, dbData.dokan.appearanceSettings);
         await cPage.close();
+        await apiUtils.dispose();
     });
 
-    test('store map is disabled on store sidebar @lite', async () => {
+    test('store map is disabled on store sidebar @lite @c', async () => {
         await dbUtils.setDokanSettings(dbData.dokan.optionName.appearance, { ...dbData.dokan.appearanceSettings, store_map: 'off' });
         await customer.disableMapOnStoreSidebar(data.predefined.vendorStores.vendor1);
     });
 
-    test('store open-close time is disabled store sidebar @lite', async () => {
+    test('store open-close time is disabled store sidebar @lite @c', async () => {
         await dbUtils.setDokanSettings(dbData.dokan.optionName.appearance, { ...dbData.dokan.appearanceSettings, store_open_close: 'off' });
         await customer.disableStoreOpenCloseTimeOnStoreSidebar(data.predefined.vendorStores.vendor1);
     });
 
-    test.skip('vendor info is disabled on single store page @lite', async () => {
+    test.skip('vendor info is disabled on single store page @lite @c', async () => {
         // todo: need to fix
         console.log(await dbUtils.getDokanSettings(dbData.dokan.optionName.appearance));
         await dbUtils.setDokanSettings(dbData.dokan.optionName.appearance, {

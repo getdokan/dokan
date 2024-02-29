@@ -16,23 +16,23 @@ test.describe('Vendor tools test', () => {
         await vPage.close();
     });
 
-    test('vendor tools menu page is rendering properly @pro @explo', async () => {
+    test('vendor tools menu page is rendering properly @pro @exp @v', async () => {
         await vendor.vendorToolsRenderProperly();
     });
 
-    test('vendor can export product as xml @pro', async () => {
+    test('vendor can export product as xml @pro @v', async () => {
         await vendor.exportProduct('xml');
     });
 
-    test('vendor can export product as csv @pro', async () => {
+    test('vendor can export product as csv @pro @v', async () => {
         await vendor.exportProduct('csv');
     });
 
-    test('vendor can import product as xml @pro', async () => {
+    test('vendor can import product as xml @pro @v', async () => {
         await vendor.importProduct('xml', 'utils/sampleData/products.xml');
     });
 
-    test('vendor can import product as csv @pro', async () => {
+    test('vendor can import product as csv @pro @v', async () => {
         await vendor.importProduct('csv', 'utils/sampleData/products.csv');
     });
 });

@@ -385,6 +385,9 @@ body {
   width: 100%;
   height: 300px;
 }
+span.required {
+  color: #e2401c;
+}
 .wc-return-to-dashboard {
   text-align: center;
   display: block;

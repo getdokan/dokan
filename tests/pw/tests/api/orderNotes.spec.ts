@@ -7,7 +7,7 @@
 //COVERAGE_TAG: POST /dokan/v2/orders/(?P<id>[\d]+)/notes
 //COVERAGE_TAG: DELETE /dokan/v2/orders/(?P<id>[\d]+)/notes/(?P<note_id>[\d]+)
 
-import { test, expect } from '@playwright/test';
+import { test, expect, request } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
@@ -17,9 +17,13 @@ test.describe('order note api test', () => {
     let orderId: string;
     let orderNoteId: string;
 
-    test.beforeAll(async ({ request }) => {
-        apiUtils = new ApiUtils(request);
+    test.beforeAll(async () => {
+        apiUtils = new ApiUtils(await request.newContext());
         [, orderId, orderNoteId] = await apiUtils.createOrderNote(payloads.createProduct(), payloads.createOrder, payloads.createOrderNote);
+    });
+
+    test.afterAll(async () => {
+        await apiUtils.dispose();
     });
 
     test('get all order notes @lite', async () => {
