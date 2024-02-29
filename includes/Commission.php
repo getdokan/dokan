@@ -485,6 +485,7 @@ class Commission {
 
     /**
      * Calculate commission (commission priority [1.product, 2.category, 3.vendor, 4.global] wise)
+     * I this function the calculation was written for vendor perspective it is deprecated now it is recomanded to use `get_commission` method it works fo admin perspective.
      *
      * @deprecated DOKAN_SINCE Use get_commission() instead.
      *
