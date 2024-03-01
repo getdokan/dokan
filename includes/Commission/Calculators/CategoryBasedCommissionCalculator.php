@@ -102,6 +102,8 @@ class CategoryBasedCommissionCalculator implements CommissionCalculatorInterface
     /**
      * Class constructor.
      *
+     * @since DOKAN_SINCE
+     *
      * @param \WeDevs\Dokan\Commission\Utils\CommissionSettings $settings
      */
     public function __construct( CommissionSettings $settings ) {

@@ -7,10 +7,33 @@ use WeDevs\Dokan\Commission\CommissionCalculatorFactory;
 use WeDevs\Dokan\Commission\Utils\CommissionSettings;
 
 abstract class AbstractCommissionSourceStrategy {
+
+    /**
+     * Returns commission strategy source.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return string
+     */
     abstract public function get_source(): string;
+
+    /**
+     * Returns commission settings.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return CommissionSettings
+     */
     abstract public function get_settings(): CommissionSettings;
 
-    public function get_commission_calculator(  ): ?CommissionCalculatorInterface {
+    /**
+     * Returns commission calculator or null.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return \WeDevs\Dokan\Commission\Calculators\CommissionCalculatorInterface|null
+     */
+    public function get_commission_calculator(): ?CommissionCalculatorInterface {
         $settings = $this->get_settings();
 
         $commission_calculator = CommissionCalculatorFactory::createCalculator( $settings );

@@ -11,7 +11,7 @@ class CombineCommissionCalculator implements CommissionCalculatorInterface {
     private $vendor_earning = 0;
     private $items_total_quantity = 1;
     private CommissionSettings $settings;
-    const SOURCE = 'fixed';
+    const SOURCE = 'combine';
 
     public function __construct( CommissionSettings $settings ) {
         $this->settings = $settings;

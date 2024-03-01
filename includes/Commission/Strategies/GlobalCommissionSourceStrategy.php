@@ -8,27 +8,62 @@ use WeDevs\Dokan\Commission\Utils\CommissionSettings;
 
 class GlobalCommissionSourceStrategy extends AbstractCommissionSourceStrategy {
 
-    const SOURCE = 'global';
     /**
+     * Global commission strategy source.
+     *
+     * @since DOKAN_SINCE
+     */
+    const SOURCE = 'global';
+
+    /**
+     * Catgory id for category commission.
+     *
+     * @since DOKAN_SINCE
+     *
      * @var mixed
      */
     private $category_id;
 
+    /**
+     * Class constructor.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param $category_id
+     */
     public function __construct( $category_id ) {
         $this->category_id = $category_id;
     }
 
     /**
+     * Returns category id.
+     *
+     * @since DOKAN_SINCE
+     *
      * @return mixed
      */
     public function get_category_id() {
         return $this->category_id;
     }
 
+    /**
+     * Returns global strategy source.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return string
+     */
     public function get_source(): string {
         return self::SOURCE;
     }
 
+    /**
+     * Returns global commission settings.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return \WeDevs\Dokan\Commission\Utils\CommissionSettings
+     */
     public function get_settings(): CommissionSettings {
         $percentage = dokan_get_option( 'admin_percentage', 'dokan_selling', '' );
         $type       = dokan_get_option( 'commission_type', 'dokan_selling', '' );
