@@ -4,6 +4,10 @@ import { selector } from '@pages/selectors';
 import { data } from '@utils/testData';
 import { vendor } from '@utils/interfaces';
 
+// selectors
+const verificationsAdmin = selector.admin.dokan.verifications;
+const verificationsVendor = selector.vendor.vVerificationSettings;
+
 export class vendorVerificationsPage extends AdminPage {
     constructor(page: Page) {
         super(page);
@@ -16,51 +20,51 @@ export class vendorVerificationsPage extends AdminPage {
         await this.goIfNotThere(data.subUrls.backend.dokan.verifications);
 
         // tools text is visible
-        await this.toBeVisible(selector.admin.dokan.verifications.verificationRequestsText);
+        await this.toBeVisible(verificationsAdmin.verificationRequestsText);
 
         // navTab elements are visible
-        await this.multipleElementVisible(selector.admin.dokan.verifications.navTabs);
+        await this.multipleElementVisible(verificationsAdmin.navTabs);
 
         // verification table elements are visible
-        await this.multipleElementVisible(selector.admin.dokan.verifications.table);
+        await this.multipleElementVisible(verificationsAdmin.table);
     }
 
     // approve verification requests
     async approveVerificationRequest(storeName: string, verificationType: string, action: string) {
         await this.goIfNotThere(data.subUrls.backend.dokan.verifications);
 
-        const verificationRequestIsExists = await this.isVisible(selector.admin.dokan.verifications.vendorRow(storeName));
+        const verificationRequestIsExists = await this.isVisible(verificationsAdmin.vendorRow(storeName));
 
         if (!verificationRequestIsExists) {
             console.log('No pending verification request found!!');
             return;
         }
 
-        await this.hover(selector.admin.dokan.verifications.vendorRow(storeName));
+        await this.hover(verificationsAdmin.vendorRow(storeName));
 
         switch (verificationType) {
             case 'id':
                 if (action === 'approve') {
-                    await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.admin.dokan.verifications.idRequest.approveRequest(storeName));
+                    await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, verificationsAdmin.idRequest.approveRequest(storeName));
                 } else {
-                    await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.admin.dokan.verifications.idRequest.rejectRequest(storeName));
+                    await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, verificationsAdmin.idRequest.rejectRequest(storeName));
                 }
                 break;
 
             case 'address':
                 if (action === 'approve') {
-                    await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.admin.dokan.verifications.addressRequest.approveRequest(storeName));
+                    await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, verificationsAdmin.addressRequest.approveRequest(storeName));
                 } else {
-                    await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.admin.dokan.verifications.addressRequest.rejectRequest(storeName));
+                    await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, verificationsAdmin.addressRequest.rejectRequest(storeName));
                 }
 
                 break;
 
             case 'company':
                 if (action === 'approve') {
-                    await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.admin.dokan.verifications.companyRequest.approveRequest(storeName));
+                    await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, verificationsAdmin.companyRequest.approveRequest(storeName));
                 } else {
-                    await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.admin.dokan.verifications.companyRequest.rejectRequest(storeName));
+                    await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, verificationsAdmin.companyRequest.rejectRequest(storeName));
                 }
 
                 break;
@@ -74,27 +78,27 @@ export class vendorVerificationsPage extends AdminPage {
     async disapproveVerificationRequest(storeName: string, verificationType: string) {
         await this.goIfNotThere(data.subUrls.backend.dokan.verifications);
 
-        await this.clickAndWaitForLoadState(selector.admin.dokan.verifications.navTabs.approved);
+        await this.clickAndWaitForLoadState(verificationsAdmin.navTabs.approved);
 
-        const verificationRequestIsExists = await this.isVisible(selector.admin.dokan.verifications.vendorRow(storeName));
+        const verificationRequestIsExists = await this.isVisible(verificationsAdmin.vendorRow(storeName));
         if (!verificationRequestIsExists) {
             console.log('No approved verification request found!!');
             return;
         }
 
-        await this.hover(selector.admin.dokan.verifications.vendorRow(storeName));
+        await this.hover(verificationsAdmin.vendorRow(storeName));
 
         switch (verificationType) {
             case 'id':
-                await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.admin.dokan.verifications.idRequest.disapproveRequest(storeName));
+                await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, verificationsAdmin.idRequest.disapproveRequest(storeName));
                 break;
 
             case 'address':
-                await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.admin.dokan.verifications.addressRequest.disapproveRequest(storeName));
+                await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, verificationsAdmin.addressRequest.disapproveRequest(storeName));
                 break;
 
             case 'company':
-                await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, selector.admin.dokan.verifications.companyRequest.disapproveRequest(storeName));
+                await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, verificationsAdmin.companyRequest.disapproveRequest(storeName));
                 break;
 
             default:
@@ -109,113 +113,113 @@ export class vendorVerificationsPage extends AdminPage {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsVerification);
 
         // verification text is visible
-        await this.toBeVisible(selector.vendor.vVerificationSettings.verificationText);
+        await this.toBeVisible(verificationsVendor.verificationText);
 
         // visit store link is visible
-        await this.toBeVisible(selector.vendor.vVerificationSettings.visitStore);
+        await this.toBeVisible(verificationsVendor.visitStore);
 
         // verification div and heading text
 
         // id
-        await this.toBeVisible(selector.vendor.vVerificationSettings.id.idVerificationDiv);
-        await this.toBeVisible(selector.vendor.vVerificationSettings.id.idVerificationText);
+        await this.toBeVisible(verificationsVendor.id.idVerificationDiv);
+        await this.toBeVisible(verificationsVendor.id.idVerificationText);
 
         // address
-        await this.toBeVisible(selector.vendor.vVerificationSettings.address.addressVerificationDiv);
-        await this.toBeVisible(selector.vendor.vVerificationSettings.address.addressVerificationText);
+        await this.toBeVisible(verificationsVendor.address.addressVerificationDiv);
+        await this.toBeVisible(verificationsVendor.address.addressVerificationText);
 
         // company
-        await this.toBeVisible(selector.vendor.vVerificationSettings.company.companyVerificationDiv);
-        await this.toBeVisible(selector.vendor.vVerificationSettings.company.companyVerificationText);
+        await this.toBeVisible(verificationsVendor.company.companyVerificationDiv);
+        await this.toBeVisible(verificationsVendor.company.companyVerificationText);
 
         // verification request is pending
 
         // id
-        const idRequestIsPending = await this.isVisible(selector.vendor.vVerificationSettings.id.idPendingFeedback);
+        const idRequestIsPending = await this.isVisible(verificationsVendor.id.idPendingFeedback);
         if (idRequestIsPending) {
-            await this.toContainText(selector.vendor.vVerificationSettings.id.idPendingFeedback, 'Your ID verification request is pending');
-            await this.toBeVisible(selector.vendor.vVerificationSettings.id.cancelIdVerificationRequest);
+            await this.toContainText(verificationsVendor.id.idPendingFeedback, 'Your ID verification request is pending');
+            await this.toBeVisible(verificationsVendor.id.cancelIdVerificationRequest);
         }
 
         // address
-        const addressRequestIsPending = await this.isVisible(selector.vendor.vVerificationSettings.address.addressPendingFeedback);
+        const addressRequestIsPending = await this.isVisible(verificationsVendor.address.addressPendingFeedback);
         if (addressRequestIsPending) {
-            await this.toContainText(selector.vendor.vVerificationSettings.address.addressPendingFeedback, 'Your Address verification request is pending');
-            await this.toBeVisible(selector.vendor.vVerificationSettings.address.cancelAddressVerificationRequest);
+            await this.toContainText(verificationsVendor.address.addressPendingFeedback, 'Your Address verification request is pending');
+            await this.toBeVisible(verificationsVendor.address.cancelAddressVerificationRequest);
         }
 
         // company
-        const companyRequestIsPending = await this.isVisible(selector.vendor.vVerificationSettings.company.companyPendingFeedback);
+        const companyRequestIsPending = await this.isVisible(verificationsVendor.company.companyPendingFeedback);
         if (companyRequestIsPending) {
-            await this.toContainText(selector.vendor.vVerificationSettings.company.companyPendingFeedback, 'Your company verification request is pending');
-            await this.toBeVisible(selector.vendor.vVerificationSettings.company.cancelCompanyVerificationRequest);
+            await this.toContainText(verificationsVendor.company.companyPendingFeedback, 'Your company verification request is pending');
+            await this.toBeVisible(verificationsVendor.company.cancelCompanyVerificationRequest);
         }
 
         // verification request is approved
 
         // id
-        const idRequestIsApproved = await this.isVisible(selector.vendor.vVerificationSettings.id.idApproveFeedback);
+        const idRequestIsApproved = await this.isVisible(verificationsVendor.id.idApproveFeedback);
         if (idRequestIsApproved) {
-            await this.toContainText(selector.vendor.vVerificationSettings.id.idApproveFeedback, 'Your ID verification request is approved');
+            await this.toContainText(verificationsVendor.id.idApproveFeedback, 'Your ID verification request is approved');
         }
 
         // address
-        const addressRequestIsApproved = await this.isVisible(selector.vendor.vVerificationSettings.address.addressApproveFeedback);
+        const addressRequestIsApproved = await this.isVisible(verificationsVendor.address.addressApproveFeedback);
         if (addressRequestIsApproved) {
-            await this.toContainText(selector.vendor.vVerificationSettings.address.addressApproveFeedback, 'Your Address verification request is approved');
-            await this.toBeVisible(selector.vendor.vVerificationSettings.address.startAddressVerification);
+            await this.toContainText(verificationsVendor.address.addressApproveFeedback, 'Your Address verification request is approved');
+            await this.toBeVisible(verificationsVendor.address.startAddressVerification);
         }
 
         // company
-        const companyRequestIsApproved = await this.isVisible(selector.vendor.vVerificationSettings.company.companyApproveFeedback);
+        const companyRequestIsApproved = await this.isVisible(verificationsVendor.company.companyApproveFeedback);
         if (companyRequestIsApproved) {
-            await this.toContainText(selector.vendor.vVerificationSettings.company.companyApproveFeedback, 'Your company verification request is approved');
-            await this.toBeVisible(selector.vendor.vVerificationSettings.company.startCompanyVerification);
+            await this.toContainText(verificationsVendor.company.companyApproveFeedback, 'Your company verification request is approved');
+            await this.toBeVisible(verificationsVendor.company.startCompanyVerification);
         }
 
         // no verification request is submitted
 
         // id
         if (!idRequestIsPending && !idRequestIsApproved) {
-            await this.toBeVisible(selector.vendor.vVerificationSettings.id.startIdVerification);
+            await this.toBeVisible(verificationsVendor.id.startIdVerification);
 
-            await this.click(selector.vendor.vVerificationSettings.id.startIdVerification);
+            await this.click(verificationsVendor.id.startIdVerification);
 
-            await this.toBeVisible(selector.vendor.vVerificationSettings.id.passport);
-            await this.toBeVisible(selector.vendor.vVerificationSettings.id.nationalIdCard);
-            await this.toBeVisible(selector.vendor.vVerificationSettings.id.drivingLicense);
-            const previousUploadedPhotoIsVisible = await this.isVisible(selector.vendor.vVerificationSettings.id.previousUploadedPhoto);
-            previousUploadedPhotoIsVisible && (await this.toBeVisible(selector.vendor.vVerificationSettings.id.uploadPhoto));
-            await this.toBeVisible(selector.vendor.vVerificationSettings.id.submitId);
-            await this.toBeVisible(selector.vendor.vVerificationSettings.id.cancelSubmitId);
+            await this.toBeVisible(verificationsVendor.id.passport);
+            await this.toBeVisible(verificationsVendor.id.nationalIdCard);
+            await this.toBeVisible(verificationsVendor.id.drivingLicense);
+            const previousUploadedPhotoIsVisible = await this.isVisible(verificationsVendor.id.previousUploadedPhoto);
+            previousUploadedPhotoIsVisible && (await this.toBeVisible(verificationsVendor.id.uploadPhoto));
+            await this.toBeVisible(verificationsVendor.id.submitId);
+            await this.toBeVisible(verificationsVendor.id.cancelSubmitId);
         }
 
         // address
         if (!addressRequestIsPending && !addressRequestIsApproved) {
-            await this.toBeVisible(selector.vendor.vVerificationSettings.address.startAddressVerification);
+            await this.toBeVisible(verificationsVendor.address.startAddressVerification);
 
-            await this.click(selector.vendor.vVerificationSettings.address.startAddressVerification);
+            await this.click(verificationsVendor.address.startAddressVerification);
 
-            await this.toBeVisible(selector.vendor.vVerificationSettings.address.street);
-            await this.toBeVisible(selector.vendor.vVerificationSettings.address.street2);
-            await this.toBeVisible(selector.vendor.vVerificationSettings.address.city);
-            await this.toBeVisible(selector.vendor.vVerificationSettings.address.postOrZipCode);
-            await this.toBeVisible(selector.vendor.vVerificationSettings.address.country);
-            const previousUploadedResidenceProofIsVisible = await this.isVisible(selector.vendor.vVerificationSettings.address.previousUploadedResidenceProof);
-            !previousUploadedResidenceProofIsVisible && (await this.toBeVisible(selector.vendor.vVerificationSettings.address.uploadResidenceProof));
-            await this.toBeVisible(selector.vendor.vVerificationSettings.address.submitAddress);
-            await this.toBeVisible(selector.vendor.vVerificationSettings.address.cancelSubmitAddress);
+            await this.toBeVisible(verificationsVendor.address.street);
+            await this.toBeVisible(verificationsVendor.address.street2);
+            await this.toBeVisible(verificationsVendor.address.city);
+            await this.toBeVisible(verificationsVendor.address.postOrZipCode);
+            await this.toBeVisible(verificationsVendor.address.country);
+            const previousUploadedResidenceProofIsVisible = await this.isVisible(verificationsVendor.address.previousUploadedResidenceProof);
+            !previousUploadedResidenceProofIsVisible && (await this.toBeVisible(verificationsVendor.address.uploadResidenceProof));
+            await this.toBeVisible(verificationsVendor.address.submitAddress);
+            await this.toBeVisible(verificationsVendor.address.cancelSubmitAddress);
         }
 
         // company
         if (!companyRequestIsPending && !companyRequestIsApproved) {
-            await this.toBeVisible(selector.vendor.vVerificationSettings.company.startCompanyVerification);
+            await this.toBeVisible(verificationsVendor.company.startCompanyVerification);
 
-            await this.click(selector.vendor.vVerificationSettings.company.startCompanyVerification);
+            await this.click(verificationsVendor.company.startCompanyVerification);
 
-            await this.toBeVisible(selector.vendor.vVerificationSettings.company.uploadFiles);
-            await this.toBeVisible(selector.vendor.vVerificationSettings.company.submitCompanyInfo);
-            await this.toBeVisible(selector.vendor.vVerificationSettings.company.cancelSubmitCompanyInfo);
+            await this.toBeVisible(verificationsVendor.company.uploadFiles);
+            await this.toBeVisible(verificationsVendor.company.submitCompanyInfo);
+            await this.toBeVisible(verificationsVendor.company.cancelSubmitCompanyInfo);
         }
     }
 
@@ -223,37 +227,38 @@ export class vendorVerificationsPage extends AdminPage {
     async sendIdVerificationRequest(verification: vendor['verification']): Promise<void> {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsVerification);
 
-        const idRequestIsApproved = await this.isVisible(selector.vendor.vVerificationSettings.id.idApproveFeedback);
+        const idRequestIsApproved = await this.isVisible(verificationsVendor.id.idApproveFeedback);
         if (idRequestIsApproved) {
             return;
         }
 
         // cancel previous verification request if any
-        const cancelRequestIsVisible = await this.isVisible(selector.vendor.vVerificationSettings.id.cancelIdVerificationRequest);
+        const cancelRequestIsVisible = await this.isVisible(verificationsVendor.id.cancelIdVerificationRequest);
         if (cancelRequestIsVisible) {
-            await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vVerificationSettings.id.cancelIdVerificationRequest);
-            await this.toContainText(selector.vendor.vVerificationSettings.id.idUpdateSuccessMessage, verification.idRequestSubmitCancel);
+            await this.clickAndWaitForResponse(data.subUrls.ajax, verificationsVendor.id.cancelIdVerificationRequest);
+            await this.toContainText(verificationsVendor.id.idUpdateSuccessMessage, verification.idRequestSubmitCancel);
         }
 
         // id verification
-        await this.click(selector.vendor.vVerificationSettings.id.startIdVerification);
-        await this.wait(0.5); // todo: resolve this
+        await this.click(verificationsVendor.id.startIdVerification);
+        // await this.wait(0.5); // todo: resolve this
+        await this.waitForVisibleLocator(verificationsVendor.id.submitId);
 
         // remove previously uploaded image
-        const uploadPhotoBtnIsVisible = await this.isVisible(selector.vendor.vVerificationSettings.id.uploadPhoto);
+        const uploadPhotoBtnIsVisible = await this.isVisible(verificationsVendor.id.uploadPhoto);
         if (!uploadPhotoBtnIsVisible) {
-            // await this.hover(selector.vendor.vVerificationSettings.id.previousUploadedPhoto); // todo:  not working: playwright issue
-            // await this.click(selector.vendor.vVerificationSettings.id.removePreviousUploadedPhoto);
+            // await this.hover(verificationsVendor.id.previousUploadedPhoto); // todo:  not working: playwright issue
+            // await this.click(verificationsVendor.id.removePreviousUploadedPhoto);
 
             await this.setAttributeValue('.gravatar-wrap', 'class', 'gravatar-wrap dokan-hide');
             await this.setAttributeValue('.gravatar-button-area.dokan-hide', 'class', 'gravatar-button-area');
         }
 
-        await this.click(selector.vendor.vVerificationSettings.id.uploadPhoto);
+        await this.click(verificationsVendor.id.uploadPhoto);
         await this.uploadMedia(verification.file);
 
-        await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vVerificationSettings.id.submitId);
-        await this.toContainText(selector.vendor.vVerificationSettings.id.idUpdateSuccessMessage, verification.idRequestSubmitSuccessMessage);
+        await this.clickAndWaitForResponse(data.subUrls.ajax, verificationsVendor.id.submitId);
+        await this.toContainText(verificationsVendor.id.idUpdateSuccessMessage, verification.idRequestSubmitSuccessMessage);
     }
 
     // vendor send address verification request
@@ -261,33 +266,33 @@ export class vendorVerificationsPage extends AdminPage {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsVerification);
 
         // cancel previous verification request if any
-        const cancelRequestIsVisible = await this.isVisible(selector.vendor.vVerificationSettings.address.cancelAddressVerificationRequest);
+        const cancelRequestIsVisible = await this.isVisible(verificationsVendor.address.cancelAddressVerificationRequest);
         if (cancelRequestIsVisible) {
-            await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vVerificationSettings.address.cancelAddressVerificationRequest);
-            await this.toContainText(selector.vendor.vVerificationSettings.address.addressUpdateSuccessMessage, verification.addressRequestSubmitCancel);
+            await this.clickAndWaitForResponse(data.subUrls.ajax, verificationsVendor.address.cancelAddressVerificationRequest);
+            await this.toContainText(verificationsVendor.address.addressUpdateSuccessMessage, verification.addressRequestSubmitCancel);
         }
 
         // address verification
-        await this.click(selector.vendor.vVerificationSettings.address.startAddressVerification);
-        await this.clearAndType(selector.vendor.vVerificationSettings.address.street, verification.street1);
-        await this.clearAndType(selector.vendor.vVerificationSettings.address.street2, verification.street2);
-        await this.clearAndType(selector.vendor.vVerificationSettings.address.city, verification.city);
-        await this.clearAndType(selector.vendor.vVerificationSettings.address.postOrZipCode, verification.zipCode);
-        await this.selectByValue(selector.vendor.vVerificationSettings.address.country, verification.country);
-        await this.selectByValue(selector.vendor.vVerificationSettings.address.state, verification.state);
+        await this.click(verificationsVendor.address.startAddressVerification);
+        await this.clearAndType(verificationsVendor.address.street, verification.street1);
+        await this.clearAndType(verificationsVendor.address.street2, verification.street2);
+        await this.clearAndType(verificationsVendor.address.city, verification.city);
+        await this.clearAndType(verificationsVendor.address.postOrZipCode, verification.zipCode);
+        await this.selectByValue(verificationsVendor.address.country, verification.country);
+        await this.selectByValue(verificationsVendor.address.state, verification.state);
 
         // remove previously uploaded image
-        const uploadProofBtnIsVisible = await this.isVisible(selector.vendor.vVerificationSettings.address.uploadResidenceProof);
+        const uploadProofBtnIsVisible = await this.isVisible(verificationsVendor.address.uploadResidenceProof);
         if (!uploadProofBtnIsVisible) {
             await this.removeAttribute('div.proof-button-area', 'style');
             await this.setAttributeValue('div.vendor_img_container', 'style', 'display: none;');
         }
 
-        await this.click(selector.vendor.vVerificationSettings.address.uploadResidenceProof);
+        await this.click(verificationsVendor.address.uploadResidenceProof);
         await this.uploadMedia(verification.file);
 
-        await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vVerificationSettings.address.submitAddress);
-        await this.toContainText(selector.vendor.vVerificationSettings.address.addressUpdateSuccessMessage, verification.addressRequestSubmitSuccessMessage);
+        await this.clickAndWaitForResponse(data.subUrls.ajax, verificationsVendor.address.submitAddress);
+        await this.toContainText(verificationsVendor.address.addressUpdateSuccessMessage, verification.addressRequestSubmitSuccessMessage);
     }
 
     // vendor send company verification request
@@ -295,40 +300,27 @@ export class vendorVerificationsPage extends AdminPage {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsVerification);
 
         // cancel previous verification request if any
-        const cancelRequestIsVisible = await this.isVisible(selector.vendor.vVerificationSettings.company.cancelCompanyVerificationRequest);
+        const cancelRequestIsVisible = await this.isVisible(verificationsVendor.company.cancelCompanyVerificationRequest);
         if (cancelRequestIsVisible) {
-            await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vVerificationSettings.company.cancelCompanyVerificationRequest);
-            await this.toContainText(selector.vendor.vVerificationSettings.company.companyInfoUpdateSuccessMessage, verification.companyRequestSubmitCancel);
+            await this.clickAndWaitForResponse(data.subUrls.ajax, verificationsVendor.company.cancelCompanyVerificationRequest);
+            await this.toContainText(verificationsVendor.company.companyInfoUpdateSuccessMessage, verification.companyRequestSubmitCancel);
         }
 
         // company verification
-        await this.click(selector.vendor.vVerificationSettings.company.startCompanyVerification);
-        await this.wait(1);
+        await this.click(verificationsVendor.company.startCompanyVerification);
+        // await this.wait(1); // todo: need to resolve this
+        await this.waitForVisibleLocator(verificationsVendor.company.submitCompanyInfo);
 
         // remove previously uploaded company file
-        const UploadedCompanyFileIsVisible = await this.isVisible(selector.vendor.vVerificationSettings.company.uploadedFileFirst);
+        const UploadedCompanyFileIsVisible = await this.isVisible(verificationsVendor.company.uploadedFileFirst);
         if (UploadedCompanyFileIsVisible) {
-            await this.click(selector.vendor.vVerificationSettings.company.uploadedFileFirst);
+            await this.click(verificationsVendor.company.uploadedFileFirst);
         }
 
-        await this.click(selector.vendor.vVerificationSettings.company.uploadFiles);
+        await this.click(verificationsVendor.company.uploadFiles);
         await this.uploadMedia(verification.file);
 
-        await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vVerificationSettings.company.submitCompanyInfo);
-        await this.toContainText(selector.vendor.vVerificationSettings.company.companyInfoUpdateSuccessMessage, verification.companyRequestSubmitSuccessMessage);
-    }
-
-    // upload media // todo: move to base-page and merge with wpUploadFile
-    async uploadMedia(file: string) {
-        await this.wait(0.5);
-        const uploadedMediaIsVisible = await this.isVisible(selector.wpMedia.uploadedMediaFirst);
-        if (uploadedMediaIsVisible) {
-            await this.click(selector.wpMedia.uploadedMediaFirst);
-        } else {
-            await this.uploadFile(selector.wpMedia.selectFilesInput, file);
-            const isSelectDisabled = await this.isDisabled(selector.wpMedia.select);
-            isSelectDisabled && (await this.click(selector.wpMedia.selectUploadedMedia));
-            await this.click(selector.wpMedia.select);
-        }
+        await this.clickAndWaitForResponse(data.subUrls.ajax, verificationsVendor.company.submitCompanyInfo);
+        await this.toContainText(verificationsVendor.company.companyInfoUpdateSuccessMessage, verification.companyRequestSubmitSuccessMessage);
     }
 }

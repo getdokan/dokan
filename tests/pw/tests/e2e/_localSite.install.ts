@@ -1,4 +1,4 @@
-import { test } from '@playwright/test';
+import { test, request } from '@playwright/test';
 import { data } from '@utils/testData';
 import { LoginPage } from '@pages/loginPage';
 import { LocalSetupPage } from '@pages/localSetupPage';
@@ -11,7 +11,7 @@ import { dbData } from '@utils/dbData';
 test.describe('setup local site', () => {
     test.skip(!!process.env.CI, 'skip site setup on CI');
 
-    // test('download wordpress to desired folder', async ({ page }) => {
+    test('download wordpress to desired folder', async ({ page }) => {});
 
     // todo:
     /*
@@ -24,8 +24,7 @@ test.describe('setup local site', () => {
 
     // });
 
-    // test('delete database or all tables ', async ({ page }) => {
-    //  });
+    test('delete database or all tables', async ({ page }) => {});
 
     test('admin setup WP', async ({ page }) => {
         const loginPage = new LoginPage(page);
@@ -40,12 +39,12 @@ test.describe('setup local site', () => {
         // await dbUtils.updateWpOptionTable(dbData.dokan.optionName.dokanActiveModules, dbData.dokan.modules, 'serialize');
     });
 
-    // test('install and activate theme', async ({ request }) => {}
+    test('install and activate theme', async ({ request }) => {});
 
     // todo:  skip global setup for local_setup
 
-    test('activate dokan & woocommerce plugins', async ({ request }) => {
-        const apiUtils = new ApiUtils(request);
+    test('activate dokan & woocommerce plugins', async () => {
+        const apiUtils = new ApiUtils(await request.newContext());
         const plugins = [
             'woocommerce/woocommerce',
             'dokan/dokan',

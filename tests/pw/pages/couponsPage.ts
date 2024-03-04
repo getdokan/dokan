@@ -6,6 +6,9 @@ import { helpers } from '@utils/helpers';
 import { data } from '@utils/testData';
 import { coupon } from '@utils/interfaces';
 
+const couponsAdmin = selector.admin.marketing;
+const couponsVendor = selector.vendor.vCoupon;
+
 export class CouponsPage extends AdminPage {
     constructor(page: Page) {
         super(page);
@@ -15,20 +18,20 @@ export class CouponsPage extends AdminPage {
 
     // add marketplace coupon
     async addMarketplaceCoupon(coupon: coupon) {
-        await this.goIfNotThere(data.subUrls.backend.wc.coupons);
+        await this.goIfNotThere(data.subUrls.backend.wc.addCoupon);
 
-        await this.clickAndWaitForResponse(data.subUrls.backend.wc.addCoupon, selector.admin.marketing.addCoupon);
-        await this.clearAndType(selector.admin.marketing.addNewCoupon.couponCode, coupon.title);
-        await this.clearAndType(selector.admin.marketing.addNewCoupon.couponDescription, coupon.description);
-        await this.selectByValue(selector.admin.marketing.addNewCoupon.discountType, coupon.discountType);
-        await this.clearAndType(selector.admin.marketing.addNewCoupon.couponAmount, coupon.amount());
+        await this.clearAndType(couponsAdmin.addNewCoupon.couponCode, coupon.title);
+        await this.clearAndType(couponsAdmin.addNewCoupon.couponDescription, coupon.description);
+        await this.selectByValue(couponsAdmin.addNewCoupon.discountType, coupon.discountType);
+        await this.clearAndType(couponsAdmin.addNewCoupon.couponAmount, coupon.amount());
 
-        await this.click(selector.admin.marketing.addNewCoupon.vendorLimits);
-        await this.check(selector.admin.marketing.addNewCoupon.enableForAllVendors);
-        await this.check(selector.admin.marketing.addNewCoupon.showOnStores);
-        await this.check(selector.admin.marketing.addNewCoupon.notifyVendors);
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.post, selector.admin.marketing.addNewCoupon.publish);
-        await this.toContainText(selector.admin.marketing.addNewCoupon.publishSuccessMessage, 'Coupon updated.');
+        await this.click(couponsAdmin.addNewCoupon.vendorLimits);
+        await this.check(couponsAdmin.addNewCoupon.enableForAllVendors);
+        await this.check(couponsAdmin.addNewCoupon.showOnStores);
+        await this.check(couponsAdmin.addNewCoupon.notifyVendors);
+        await this.scrollToTop();
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.post, couponsAdmin.addNewCoupon.publish);
+        await this.toContainText(couponsAdmin.addNewCoupon.publishSuccessMessage, 'Coupon updated.');
     }
 
     // vendor coupons render properly
@@ -36,59 +39,59 @@ export class CouponsPage extends AdminPage {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.coupons);
 
         // coupon text is visible
-        await this.toBeVisible(selector.vendor.vCoupon.couponText);
+        await this.toBeVisible(couponsVendor.couponText);
 
         // add new coupon is visible
-        await this.toBeVisible(selector.vendor.vCoupon.addNewCoupon);
+        await this.toBeVisible(couponsVendor.addNewCoupon);
 
         // coupon menus are visible
-        await this.multipleElementVisible(selector.vendor.vCoupon.menus);
+        await this.multipleElementVisible(couponsVendor.menus);
 
         // table elements are visible
-        await this.multipleElementVisible(selector.vendor.vCoupon.table);
+        await this.multipleElementVisible(couponsVendor.table);
     }
 
     // vendor view marketplace coupon
     async viewMarketPlaceCoupon(marketplaceCoupon: string) {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.coupons);
-        await this.click(selector.vendor.vCoupon.menus.marketplaceCoupons);
-        await this.toBeVisible(selector.vendor.vCoupon.marketPlaceCoupon.marketPlaceCoupon);
-        marketplaceCoupon && (await this.toBeVisible(selector.vendor.vCoupon.marketPlaceCoupon.couponCell(marketplaceCoupon)));
+        await this.click(couponsVendor.menus.marketplaceCoupons);
+        await this.toBeVisible(couponsVendor.marketPlaceCoupon.marketPlaceCoupon);
+        marketplaceCoupon && (await this.toBeVisible(couponsVendor.marketPlaceCoupon.couponCell(marketplaceCoupon)));
     }
 
     // update coupon fields
     async updateCouponFields(coupon: coupon) {
-        await this.clearAndType(selector.vendor.vCoupon.couponTitle, coupon.title);
-        await this.clearAndType(selector.vendor.vCoupon.description, coupon.description);
-        await this.selectByValue(selector.vendor.vCoupon.discountType, coupon.discountType);
-        await this.clearAndType(selector.vendor.vCoupon.amount, coupon.amount());
-        await this.click(selector.vendor.vCoupon.selectAll);
-        await this.check(selector.vendor.vCoupon.applyForNewProducts);
-        await this.check(selector.vendor.vCoupon.showOnStore);
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.coupons, selector.vendor.vCoupon.createCoupon, 302);
+        await this.clearAndType(couponsVendor.couponTitle, coupon.title);
+        await this.clearAndType(couponsVendor.description, coupon.description);
+        await this.selectByValue(couponsVendor.discountType, coupon.discountType);
+        await this.clearAndType(couponsVendor.amount, coupon.amount());
+        await this.click(couponsVendor.selectAll);
+        await this.check(couponsVendor.applyForNewProducts);
+        await this.check(couponsVendor.showOnStore);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.coupons, couponsVendor.createCoupon, 302);
     }
 
     // vendor add coupon
     async addCoupon(coupon: coupon) {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.coupons);
-        await this.click(selector.vendor.vCoupon.addNewCoupon);
+        await this.click(couponsVendor.addNewCoupon);
         await this.updateCouponFields(coupon);
     }
 
     // vendor edit coupon
     async editCoupon(coupon: coupon) {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.coupons);
-        await this.clickAndWaitForLoadState(selector.vendor.vCoupon.couponLink(coupon.title));
+        await this.clickAndWaitForLoadState(couponsVendor.couponLink(coupon.title));
         await this.updateCouponFields(coupon);
-        await this.toContainText(selector.vendor.vCoupon.dokanMessage, selector.vendor.vCoupon.couponUpdateSuccessMessage);
+        await this.toContainText(couponsVendor.dokanMessage, couponsVendor.couponUpdateSuccessMessage);
     }
 
     // vendor edit coupon
     async deleteCoupon(couponCode: string) {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.coupons);
-        await this.hover(selector.vendor.vCoupon.couponCell(couponCode));
-        await this.clickAndAccept(selector.vendor.vCoupon.couponDelete(couponCode));
-        await this.toContainText(selector.vendor.vCoupon.dokanMessage, 'Coupon has been deleted successfully!');
+        await this.hover(couponsVendor.couponCell(couponCode));
+        await this.clickAndAccept(couponsVendor.couponDelete(couponCode));
+        await this.toContainText(couponsVendor.dokanMessage, 'Coupon has been deleted successfully!');
     }
 
     // customer

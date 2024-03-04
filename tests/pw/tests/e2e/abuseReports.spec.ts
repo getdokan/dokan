@@ -1,4 +1,4 @@
-import { test, Page } from '@playwright/test';
+import { test, request, Page } from '@playwright/test';
 import { AbuseReportsPage } from '@pages/abuseReportsPage';
 import { ApiUtils } from '@utils/apiUtils';
 import { dbUtils } from '@utils/dbUtils';
@@ -6,16 +6,15 @@ import { data } from '@utils/testData';
 import { dbData } from '@utils/dbData';
 import { payloads } from '@utils/payloads';
 
-const { VENDOR_ID, CUSTOMER_ID } = global as any;
+const { VENDOR_ID, CUSTOMER_ID } = process.env;
 
 test.describe('Abuse report test', () => {
     let admin: AbuseReportsPage;
     let customer: AbuseReportsPage;
-    let guest: AbuseReportsPage;
-    let aPage: Page, cPage: Page, uPage: Page;
+    let aPage: Page, cPage: Page;
     let apiUtils: ApiUtils;
 
-    test.beforeAll(async ({ browser, request }) => {
+    test.beforeAll(async ({ browser }) => {
         const adminContext = await browser.newContext(data.auth.adminAuth);
         aPage = await adminContext.newPage();
         admin = new AbuseReportsPage(aPage);
@@ -24,11 +23,7 @@ test.describe('Abuse report test', () => {
         cPage = await customerContext.newPage();
         customer = new AbuseReportsPage(cPage);
 
-        const guestContext = await browser.newContext(data.auth.noAuth);
-        uPage = await guestContext.newPage();
-        guest = new AbuseReportsPage(uPage);
-
-        apiUtils = new ApiUtils(request);
+        apiUtils = new ApiUtils(await request.newContext());
         const productId = await apiUtils.getProductId(data.predefined.simpleProduct.product1.name, payloads.vendorAuth);
         await dbUtils.createAbuseReport(dbData.dokan.createAbuseReport, productId, VENDOR_ID, CUSTOMER_ID);
     });
@@ -36,45 +31,50 @@ test.describe('Abuse report test', () => {
     test.afterAll(async () => {
         await aPage.close();
         await cPage.close();
-        await uPage.close();
+        // await gPage.close();
+        await apiUtils.dispose();
     });
 
-    test('dokan abuse report menu page is rendering properly @pro @explo', async () => {
+    test('dokan abuse report menu page is rendering properly @pro @exp @a', async () => {
         await admin.adminAbuseReportRenderProperly();
     });
 
-    test('admin can view abuse report details @pro @explo', async () => {
+    test('admin can view abuse report details @pro @exp @a', async () => {
         await admin.abuseReportDetails();
     });
 
-    test('admin can filter abuse reports by abuse reason @pro', async () => {
+    test('admin can filter abuse reports by abuse reason @pro @a', async () => {
         await admin.filterAbuseReports('This content is spam', 'by-reason');
     });
 
-    test('admin can filter abuse reports by product @pro', async () => {
+    test('admin can filter abuse reports by product @pro @a', async () => {
         await admin.filterAbuseReports(data.predefined.simpleProduct.product1.name, 'by-product');
     });
 
-    test('admin can filter abuse reports by vendor @pro', async () => {
+    test('admin can filter abuse reports by vendor @pro @a', async () => {
         await admin.filterAbuseReports(data.predefined.vendorStores.vendor1, 'by-vendor');
     });
 
-    test('admin can perform abuse report bulk action @pro', async () => {
+    test.skip('admin can perform abuse report bulk action @pro @a', async () => {
+        // todo: might cause other tests to fail in parallel
         await admin.abuseReportBulkAction('delete');
     });
 
     // customer
 
-    test('customer can report product @pro', async () => {
+    test('customer can report product @pro @c', async () => {
         await customer.reportProduct(data.predefined.simpleProduct.product1.name, data.product.report);
     });
 
-    test('guest customer can report product @pro', async () => {
+    test('guest customer can report product @pro @g', async ({ page }) => {
+        const guest = new AbuseReportsPage(page);
         await guest.reportProduct(data.predefined.simpleProduct.product1.name, data.product.report);
     });
 
-    test('only logged-in customer can report product @pro', async () => {
+    test('guest customer need to log-in to report product @pro @g', async ({ page }) => {
+        const guest = new AbuseReportsPage(page);
         await dbUtils.setDokanSettings(dbData.dokan.optionName.productReportAbuse, { ...dbData.dokan.productReportAbuseSettings, reported_by_logged_in_users_only: 'on' });
         await guest.reportProduct(data.predefined.simpleProduct.product1.name, data.product.report);
+        await dbUtils.setDokanSettings(dbData.dokan.optionName.productReportAbuse, dbData.dokan.productReportAbuseSettings);
     });
 });

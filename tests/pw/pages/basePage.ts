@@ -6,6 +6,7 @@
 
 import { expect, Page, BrowserContext, Cookie, Request, Response, Locator, Frame, FrameLocator, JSHandle, ElementHandle } from '@playwright/test';
 import { data } from '@utils/testData';
+import { selector } from '@pages/selectors';
 
 // This Page Contains All Necessary Playwright Automation Methods
 
@@ -239,6 +240,20 @@ export class BasePage {
         return response;
     }
 
+    // click & wait for multiple responses
+    async clickAndWaitForMultipleResponses(subUrls: string[][], selector: string, code = 200): Promise<void[] | Response[]> {
+        // todo: fix this; also update for same and different subUrls
+        const promises = [];
+        subUrls.forEach(subUrl => {
+            console.log('subUls: ', subUrl[0], ' code: ', subUrl[1]);
+            const promise = this.page.waitForResponse(resp => resp.url().includes(subUrl[0] as string) && resp.status() === (subUrl[1] ?? code));
+            promises.push(promise);
+        });
+        promises.push(this.page.locator(selector).click());
+        const response = await Promise.all([...promises, this.page.locator(selector).click()]);
+        return response;
+    }
+
     // click & accept
     async clickAndAccept(selector: string): Promise<void> {
         await Promise.all([this.acceptAlert(), this.page.locator(selector).click()]);
@@ -269,11 +284,7 @@ export class BasePage {
 
     // type & wait for response
     async typeAndWaitForResponse(subUrl: string, selector: string, text: string, code = 200): Promise<Response> {
-        const [response] = await Promise.all([
-            this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code),
-            // await this.page.locator(selector).pressSequentially(text),
-            this.clearAndFill(selector, text),
-        ]);
+        const [response] = await Promise.all([this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code), this.clearAndFill(selector, text)]);
         return response;
     }
 
@@ -600,17 +611,19 @@ export class BasePage {
     }
 
     // Or
-    async clearInputField1(selector: string): Promise<void> {
+
+    async clearInputFieldByMultipleClick(selector: string): Promise<void> {
         const element = this.getElement(selector);
         await element.click({ clickCount: 3 });
         await this.press('Backspace');
     }
 
     // Or
-    // async clearInputField2(selector): Promise<void>  {
-    // 	let element = await this.getElement(selector)
-    // 	await this.page.evaluate(element => element.value = '', element)
-    // }
+
+    async clearInputFieldByEvaluate(selector: string): Promise<void> {
+        const element = this.getElement(selector);
+        await this.page.evaluate(element => (element.value = ''), element); // todo: fix
+    }
 
     // clear input field and type
     async clearAndType(selector: string, text: string): Promise<void> {
@@ -755,7 +768,7 @@ export class BasePage {
     async uploadFile(selector: string, files: string | string[]): Promise<void> {
         // await this.page.setInputFiles(selector, files, { noWaitAfter: true });
         await this.page.setInputFiles(selector, files);
-        await this.wait(1.5);
+        await this.wait(1.5); //todo: resolve this
     }
 
     // upload file
@@ -845,7 +858,7 @@ export class BasePage {
     async typeFrameSelector(frame: string, frameSelector: string, text: string): Promise<void> {
         const locator = this.page.frameLocator(frame).locator(frameSelector);
         await locator.fill(text);
-        await locator.pressSequentially(text);
+        // await locator.pressSequentially(text);
     }
 
     /**
@@ -873,7 +886,8 @@ export class BasePage {
     // check locator
     async checkLocator(selector: string): Promise<void> {
         const locator = this.page.locator(selector);
-        await locator.check({ force: true }); // forced is used to avoid "locator.check: Clicking the checkbox did not change its state" error
+        await locator.check();
+        // await locator.check({ force: true }); // forced is used to avoid "locator.check: Clicking the checkbox did not change its state" error
     }
 
     // click locator
@@ -1042,7 +1056,6 @@ export class BasePage {
 
     // get last matching locator
     lastLocator(selector: string): Locator {
-        // todo: update all selector parameter to both selector or locator
         const locator = this.page.locator(selector);
         return locator.last();
     }
@@ -1306,13 +1319,14 @@ export class BasePage {
 
     // assert any element to be visible
     async toBeVisibleAnyOfThem(selectors: string[]) {
-        // todo: extend nd improve this method
+        // todo: extend and improve this method
         const res = [];
         for (const selector of selectors) {
             res.push(await this.isVisible(selector));
         }
         const result = res.includes(true);
         expect(result).toBeTruthy();
+        // todo:  return which elements are true for further operation
     }
 
     // assert element to be visible
@@ -1320,8 +1334,13 @@ export class BasePage {
         await expect(this.page.locator(selector)).toBeVisible();
     }
 
+    // assert checkbox to be checked
+    async toBeChecked(selector: string) {
+        await expect(this.page.locator(selector)).toBeChecked();
+    }
+
     // assert element to contain text
-    async toContainText(selector: string, text: string) {
+    async toContainText(selector: string, text: string | RegExp) {
         await expect(this.page.locator(selector)).toContainText(text);
     }
 
@@ -1501,6 +1520,19 @@ export class BasePage {
         if (elementExists) {
             const element = this.getElement(selector);
             await element.click();
+        }
+    }
+
+    async uploadMedia(file: string) {
+        // await this.wait(0.5);
+        const uploadedMediaIsVisible = await this.isVisible(selector.wpMedia.uploadedMediaFirst);
+        if (uploadedMediaIsVisible) {
+            await this.click(selector.wpMedia.uploadedMediaFirst);
+        } else {
+            await this.uploadFile(selector.wpMedia.selectFilesInput, file);
+            const isSelectDisabled = await this.isDisabled(selector.wpMedia.select);
+            isSelectDisabled && (await this.click(selector.wpMedia.selectUploadedMedia));
+            await this.click(selector.wpMedia.select);
         }
     }
 

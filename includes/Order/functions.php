@@ -215,7 +215,13 @@ function dokan_delete_sync_duplicate_order( $order_id, $seller_id ) {
 function dokan_sync_insert_order( $order_id ) {
     global $wpdb;
 
-    $order = wc_get_order( $order_id );
+    if ( is_a( $order_id, 'WC_Order' ) ) {
+        $order    = $order_id;
+        $order_id = $order->get_id();
+    } else {
+        $order = wc_get_order( $order_id );
+    }
+
     if ( ! $order || $order instanceof WC_Subscription ) {
         return;
     }

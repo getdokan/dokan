@@ -7,7 +7,7 @@
 //COVERAGE_TAG: POST /dokan/v1/request-for-quote/convert-to-order
 //COVERAGE_TAG: PUT /dokan/v1/request-for-quote/batch
 
-import { test, expect } from '@playwright/test';
+import { test, expect, request } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
@@ -17,11 +17,15 @@ test.describe('request quote api test', () => {
     let requestQuoteId: string;
     const productId: string[] = [];
 
-    test.beforeAll(async ({ request }) => {
-        apiUtils = new ApiUtils(request);
+    test.beforeAll(async () => {
+        apiUtils = new ApiUtils(await request.newContext());
         const [, pId] = await apiUtils.createProduct(payloads.createProduct());
         productId.push(pId);
         [, requestQuoteId] = await apiUtils.createQuoteRequest({ ...payloads.createQuoteRequest(), product_ids: productId });
+    });
+
+    test.afterAll(async () => {
+        await apiUtils.dispose();
     });
 
     test('get all request quotes @pro', async () => {
@@ -66,7 +70,7 @@ test.describe('request quote api test', () => {
         expect(responseBody).toBeTruthy();
     });
 
-    test('update batch request quote @pro ', async () => {
+    test('update batch request quote @pro', async () => {
         const allRequestQuoteIds = (await apiUtils.getAllQuoteRequests()).map((a: { id: unknown }) => a.id);
         const [response, responseBody] = await apiUtils.put(endPoints.updateBatchRequestQuotes, { data: { trash: allRequestQuoteIds } });
         expect(response.ok()).toBeTruthy();

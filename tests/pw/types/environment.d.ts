@@ -16,8 +16,11 @@ declare global {
             CUSTOMER_ID: string;
             PRODUCT_ID: string;
             V2_PRODUCT_ID: string;
+            CI: string;
             GMAP: string;
+            LICENSE_KEY: string;
             DOKAN_PRO: string;
+            SITE_PATH: string;
             BASE_URL: string;
             QUERY: string;
             HEADLESS: string;
@@ -38,6 +41,7 @@ declare global {
             DB_PREFIX: string;
             API_TEST_RESULT: string;
             E2E_TEST_RESULT: string;
+            API_COVERAGE: string;
         }
     }
 }

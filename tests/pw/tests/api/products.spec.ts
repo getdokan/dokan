@@ -23,7 +23,7 @@
 //COVERAGE_TAG: PUT /dokan/v2/products/(?P<id>[\d]+)
 //COVERAGE_TAG: DELETE /dokan/v2/products/(?P<id>[\d]+)
 
-import { test, expect } from '@playwright/test';
+import { test, expect, request } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
@@ -35,9 +35,13 @@ for (const version of versions) {
         let apiUtils: ApiUtils;
         let productId: string;
 
-        test.beforeAll(async ({ request }) => {
-            apiUtils = new ApiUtils(request);
+        test.beforeAll(async () => {
+            apiUtils = new ApiUtils(await request.newContext());
             [, productId] = await apiUtils.createProduct(payloads.createProduct());
+        });
+
+        test.afterAll(async () => {
+            await apiUtils.dispose();
         });
 
         test('get products summary @lite', async () => {

@@ -36,9 +36,11 @@ class Hooks {
 
         // create sub-orders
         add_action( 'woocommerce_checkout_update_order_meta', [ $this, 'split_vendor_orders' ] );
+        add_action( 'woocommerce_store_api_checkout_order_processed', [ $this, 'split_vendor_orders' ] );
 
         // order table synced for WooCommerce update order meta
         add_action( 'woocommerce_checkout_update_order_meta', 'dokan_sync_insert_order', 20 );
+        add_action( 'woocommerce_store_api_checkout_order_processed', 'dokan_sync_insert_order', 20 );
 
         // order table synced for dokan update order meta
         add_action( 'dokan_checkout_update_order_meta', 'dokan_sync_insert_order' );

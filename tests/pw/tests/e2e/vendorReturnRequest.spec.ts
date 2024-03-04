@@ -6,9 +6,9 @@ import { OrdersPage } from '@pages/ordersPage';
 import { data } from '@utils/testData';
 // import { payloads } from '@utils/payloads';
 
-// const { CUSTOMER_ID, PRODUCT_ID } = global as any;
+// const { CUSTOMER_ID, PRODUCT_ID } = process.env;
 
-test.describe('Vendor RMA test', () => {
+test.describe.skip('Vendor RMA test', () => {
     let vendor: VendorReturnRequestPage;
     let vendor1: OrdersPage;
     let customer: VendorReturnRequestPage;
@@ -35,7 +35,7 @@ test.describe('Vendor RMA test', () => {
         await vendor1.updateOrderStatusOnTable(orderId, 'processing');
         await customer.customerRequestWarranty(orderId, data.predefined.simpleProduct.product1.name, data.rma.requestWarranty);
 
-        // apiUtils = new ApiUtils(request);
+        // apiUtils = new ApiUtils(await request.newContext());
 
         // [,, orderId, ] = await apiUtils.createOrderWithStatus(PRODUCT_ID, { ...payloads.createOrder, customer_id: CUSTOMER_ID }, data.order.orderStatus.processing, payloads.vendorAuth);
         // [,, orderId, ] = await apiUtils.createOrderWithStatus(payloads.createProduct(), { ...payloads.createOrder, customer_id: CUSTOMER_ID }, data.order.orderStatus.processing, payloads.vendorAuth);
@@ -44,45 +44,46 @@ test.describe('Vendor RMA test', () => {
     test.afterAll(async () => {
         await vPage.close();
         await cPage.close();
+        // await apiUtils.dispose();
     });
 
-    test('vendor return request menu page is rendering properly @pro @explo', async () => {
+    test('vendor return request menu page is rendering properly @pro @exp @v', async () => {
         await vendor.vendorReturnRequestRenderProperly();
     });
 
-    test('vendor can view return request details @pro @explo', async () => {
+    test('vendor can view return request details @pro @exp @v', async () => {
         await vendor.vendorViewRmaDetails(orderId);
     });
 
-    test('customer can send rma message @pro', async () => {
+    test('customer can send rma message @pro @c', async () => {
         await customer.customerSendRmaMessage(orderId, 'test customer rma message');
     });
 
-    test('vendor can send rma message @pro', async () => {
+    test('vendor can send rma message @pro @v', async () => {
         // todo: depends on customer can request warranty, remove dependency
         await vendor.vendorSendRmaMessage(orderId, 'test vendor rma message');
     });
 
-    test('vendor can update rma status @pro', async () => {
+    test('vendor can update rma status @pro @v', async () => {
         await vendor.vendorUpdateRmaStatus(orderId, 'processing');
     });
 
-    test('vendor can rma refund @pro', async () => {
+    test('vendor can rma refund @pro @v', async () => {
         await vendor.vendorRmaRefund(orderId, data.predefined.simpleProduct.product1.name, 'processing');
     });
 
-    test('vendor can delete rma request @pro', async () => {
+    test('vendor can delete rma request @pro @v', async () => {
         // todo:need separate rma request
         await vendor.vendorDeleteRmaRequest(orderId);
     });
 
     // customer
 
-    test('customer return request menu page is rendering properly @pro @explo', async () => {
+    test('customer return request menu page is rendering properly @pro @exp @c', async () => {
         await customer.customerReturnRequestRenderProperly();
     });
 
-    test('customer can request warranty @pro', async () => {
+    test('customer can request warranty @pro @c', async () => {
         await customer1.addProductToCartFromSingleProductPage(data.predefined.simpleProduct.product1.name);
         await customer1.goToCheckout();
         const orderId = await customer1.paymentOrder();

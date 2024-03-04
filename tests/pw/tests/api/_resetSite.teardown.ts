@@ -1,4 +1,4 @@
-import { test as test, expect } from '@playwright/test';
+import { test, request } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { payloads } from '@utils/payloads';
 // import { endPoints } from '@utils/apiEndPoints';
@@ -6,22 +6,52 @@ import { payloads } from '@utils/payloads';
 // import { dbData } from '@utils/dbData';
 // import { helpers } from '@utils/helpers';
 
-test.describe(' test environment', () => {
+test.describe('test environment', () => {
     let apiUtils: ApiUtils;
 
-    test.beforeAll(async ({ request }) => {
-        apiUtils = new ApiUtils(request);
+    test.beforeAll(async () => {
+        apiUtils = new ApiUtils(await request.newContext());
     });
 
-    test('delete all products @lite', async () => {
-        await apiUtils.deleteAllProducts('', payloads.adminAuth);
+    test.afterAll(async () => {
+        await apiUtils.dispose();
     });
 
-    test('delete all stores @lite', async () => {
+    test('delete all media items', async () => {
+        await apiUtils.deleteAllMediaItems(payloads.adminAuth);
+    });
+
+    test('delete all products', async () => {
+        await apiUtils.deleteAllProducts(payloads.adminAuth);
+        await apiUtils.deleteAllProducts(payloads.vendorAuth);
+        await apiUtils.deleteAllProducts(payloads.vendor2Auth);
+    });
+
+    test('delete all stores', async () => {
         await apiUtils.deleteAllStores(payloads.adminAuth); //todo: don't work
     });
 
-    test('delete all customers @lite', async () => {
+    test('delete all customers', async () => {
         await apiUtils.deleteAllCustomers(payloads.adminAuth);
+    });
+
+    test('delete all seller badges', async () => {
+        await apiUtils.deleteAllSellerBadges();
+    });
+
+    test('delete all RFQ Rules', async () => {
+        await apiUtils.deleteAllQuoteRules(payloads.adminAuth);
+    });
+
+    test('delete all request quotes', async () => {
+        await apiUtils.deleteAllQuoteRequests(payloads.adminAuth);
+    });
+
+    test('delete all announcements', async () => {
+        await apiUtils.deleteAllAnnouncements(payloads.adminAuth);
+    });
+
+    test('delete all abuse report tickets', async () => {
+        await apiUtils.deleteAllAbuseReports(payloads.adminAuth);
     });
 });

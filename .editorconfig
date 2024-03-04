@@ -13,7 +13,7 @@ trim_trailing_whitespace = false
 
 [{.jshintrc,*.json,*.yml,*.js,*.less}]
 indent_style = space
-indent_size = 2
+indent_size = 4
 
 [{*.txt,wp-config-sample.php}]
 end_of_line = lf

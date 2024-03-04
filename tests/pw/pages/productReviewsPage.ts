@@ -3,6 +3,9 @@ import { VendorPage } from '@pages/vendorPage';
 import { selector } from '@pages/selectors';
 import { data } from '@utils/testData';
 
+// selectors
+const productReviewsVendor = selector.vendor.vReviews;
+
 export class ProductReviewsPage extends VendorPage {
     constructor(page: Page) {
         super(page);
@@ -13,30 +16,30 @@ export class ProductReviewsPage extends VendorPage {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.reviews);
 
         // settings text is visible
-        await this.toBeVisible(selector.vendor.vReviews.reviewsText);
+        await this.toBeVisible(productReviewsVendor.reviewsText);
 
         // product review menu elements are visible
-        await this.multipleElementVisible(selector.vendor.vReviews.menus);
+        await this.multipleElementVisible(productReviewsVendor.menus);
 
         // product review bulk action elements are visible
-        await this.multipleElementVisible(selector.vendor.vReviews.bulkActions);
+        await this.multipleElementVisible(productReviewsVendor.bulkActions);
 
         // product review table elements are visible
-        await this.multipleElementVisible(selector.vendor.vReviews.table);
+        await this.multipleElementVisible(productReviewsVendor.table);
 
-        const noReviewsFound = await this.isVisible(selector.vendor.vReviews.noReviewsFound);
+        const noReviewsFound = await this.isVisible(productReviewsVendor.noReviewsFound);
         if (noReviewsFound) {
             return;
         }
 
-        await this.notToHaveCount(selector.vendor.vReviews.numberOfRowsFound, 0);
+        await this.notToHaveCount(productReviewsVendor.numberOfRowsFound, 0);
     }
 
     // view product review
     async viewProductReview(reviewMessage: string) {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.reviews);
-        await this.clickAndWaitForLoadState(selector.vendor.vReviews.reviewLink(reviewMessage));
-        await this.toBeVisible(selector.vendor.vReviews.reviewDetails.reviewMessageByMessage(reviewMessage));
+        await this.clickAndWaitForLoadState(productReviewsVendor.reviewLink(reviewMessage));
+        await this.toBeVisible(productReviewsVendor.reviewDetails.reviewMessageByMessage(reviewMessage));
     }
 
     // update product review status
@@ -45,36 +48,36 @@ export class ProductReviewsPage extends VendorPage {
 
         switch (action) {
             case 'unApprove':
-                await this.hover(selector.vendor.vReviews.reviewMessageCell(reviewMessage));
-                await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vReviews.unApproveReview(reviewMessage));
+                await this.hover(productReviewsVendor.reviewMessageCell(reviewMessage));
+                await this.clickAndWaitForResponse(data.subUrls.ajax, productReviewsVendor.unApproveReview(reviewMessage));
                 break;
 
             case 'spam':
-                await this.hover(selector.vendor.vReviews.reviewMessageCell(reviewMessage));
-                await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vReviews.spamReview(reviewMessage));
+                await this.hover(productReviewsVendor.reviewMessageCell(reviewMessage));
+                await this.clickAndWaitForResponse(data.subUrls.ajax, productReviewsVendor.spamReview(reviewMessage));
                 break;
 
             case 'trash':
-                await this.hover(selector.vendor.vReviews.reviewMessageCell(reviewMessage));
-                await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vReviews.trashReview(reviewMessage));
+                await this.hover(productReviewsVendor.reviewMessageCell(reviewMessage));
+                await this.clickAndWaitForResponse(data.subUrls.ajax, productReviewsVendor.trashReview(reviewMessage));
                 break;
 
             case 'approve':
-                await this.clickAndWaitForLoadState(selector.vendor.vReviews.menus.pending);
-                await this.hover(selector.vendor.vReviews.reviewMessageCell(reviewMessage));
-                await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vReviews.approveReview(reviewMessage));
+                await this.clickAndWaitForLoadState(productReviewsVendor.menus.pending);
+                await this.hover(productReviewsVendor.reviewMessageCell(reviewMessage));
+                await this.clickAndWaitForResponse(data.subUrls.ajax, productReviewsVendor.approveReview(reviewMessage));
                 break;
 
             case 'restore':
-                await this.clickAndWaitForLoadState(selector.vendor.vReviews.menus.trash);
-                await this.hover(selector.vendor.vReviews.reviewMessageCell(reviewMessage));
-                await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vReviews.restoreReview(reviewMessage));
+                await this.clickAndWaitForLoadState(productReviewsVendor.menus.trash);
+                await this.hover(productReviewsVendor.reviewMessageCell(reviewMessage));
+                await this.clickAndWaitForResponse(data.subUrls.ajax, productReviewsVendor.restoreReview(reviewMessage));
                 break;
 
             case 'permanently-delete':
-                await this.clickAndWaitForLoadState(selector.vendor.vReviews.menus.trash);
-                await this.hover(selector.vendor.vReviews.reviewMessageCell(reviewMessage));
-                await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vReviews.permanentlyDeleteReview(reviewMessage));
+                await this.clickAndWaitForLoadState(productReviewsVendor.menus.trash);
+                await this.hover(productReviewsVendor.reviewMessageCell(reviewMessage));
+                await this.clickAndWaitForResponse(data.subUrls.ajax, productReviewsVendor.permanentlyDeleteReview(reviewMessage));
                 break;
 
             default:
@@ -87,10 +90,10 @@ export class ProductReviewsPage extends VendorPage {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.reviews);
 
         // ensure row exists
-        await this.notToBeVisible(selector.vendor.vReviews.noReviewsFound);
+        await this.notToBeVisible(productReviewsVendor.noReviewsFound);
 
-        await this.click(selector.vendor.vReviews.bulkActions.selectAll);
-        await this.selectByValue(selector.vendor.vReviews.bulkActions.selectAction, action);
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.reviews, selector.vendor.vReviews.bulkActions.applyAction);
+        await this.click(productReviewsVendor.bulkActions.selectAll);
+        await this.selectByValue(productReviewsVendor.bulkActions.selectAction, action);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.reviews, productReviewsVendor.bulkActions.applyAction);
     }
 }

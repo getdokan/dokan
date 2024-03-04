@@ -3,11 +3,11 @@
 **Donate Link:** http://tareq.co/donate/  
 **Tags:** WooCommerce multivendor marketplace, multi vendor marketplace, multi seller store, multi-vendor, multi seller, commissions, multivendor, marketplace, product vendors, woocommerce vendor, commission rate, e-commerce, woocommerce, ebay, ecommerce.  
 **Requires at least:** 5.6  
-**Tested up to:** 6.4.2  
+**Tested up to:** 6.4.3  
 **WC requires at least:** 5.0.0  
-**WC tested up to:** 8.2.2  
-**Requires PHP:** 7.3  
-**Stable tag:** 3.9.4  
+**WC tested up to:** 8.5.2  
+**Requires PHP:** 7.4  
+**Stable tag:** 3.9.9  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -338,10 +338,47 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 ## Changelog ##
 
+### v3.9.9 ( Feb 12, 2024 ) ###
+
+- **new:** Added PHP 8.2 support
+- **fix:** Fixed an issue where the Dokan seller setup wizard does not display a warning message when a seller fails to provide the state for a country that has a state.
+- **fix:** Vendor setup wizard issue [#1976] - Properly closed the style tag in the Store Setup step to avoid conflicts with customizations.
+- **fix:** Fixed a bug in the store-lists-filter.php template that used the wrong escaping function for the placeholder attribute. [#1984]
+- **fix:** Withdrawal class check-in Templates/Withdraw.php.
+  This fixes a fatal error that could occur when creating a withdrawal request with cache-enabled sites.
+- **fix:** The `Share Essentials` field’s description was missing from the Dokan admin setup wizard. This pull request fixes an issue where the description field was not showing up in the Dokan admin setup wizard. It also adds a new hook and admin options to store the `Share Essentials` settings.
+- **fix:** Fixed an issue where the sub-orders disappear from the WooCommerce order lists page when orders are filtered by a specific vendor or by sub-order ID when the HPOS feature is enabled.
+- **update:** Added validation for bank payments and address data in Dokan Seller Setup Wizard.
+
+### v3.9.8 ( Jan 30, 2024 ) ###
+
+- **fix:** Updated Appsero Client SDK library to version 2.0.2 which will fix a security issue with the previous version of the library and a fatal error caused by the library.
+
+### v3.9.7 ( Jan 29, 2024 ) ###
+
+- **update:** Added WooCommerce Cart and Checkout Block supports for Dokan Lite
+- **fix:** Fixed an issue where the vendor’s store map address was not saved during vendor setup wizard configuration
+- **fix:** Some links under the vendor dashboard weren't working properly due to a nonce mismatch. With this release, those issues have been fixed.
+- **fix:** Fixed an issue where the valid store name required check was missing from the customer-to-vendor migration form.
+- **fix:** Fixed an issue where the customer buys digital and physical products from different vendors, shipping charges are applied separately to each vendor.
+- **fix:** Fixed some translation-related issues with the date range picker
+- **fix:** Fixed some translation-related issues with Dokan Sweetalert
+
+
+### v3.9.6 ( Jan 11, 2024 ) ###
+
+- **new** Features: Withdraw Charge
+Dokan has introduced a new feature that allows the admin to set a withdrawal charge for vendors. This charge can be either a flat rate or a percentage of the withdrawal amount based on the payment gateway used. The charge will be reflected in the details report, and vendors can see how many charges will apply when they request a withdrawal. The vendor dashboard list will also show the charge and receivable amount. This feature provides greater flexibility and transparency in managing vendor withdrawals.
+
+### v3.9.5 ( Dec 28, 2023 ) ###
+
+- **fix:** API request on get all orders returns empty results for the endpoint http://dev.test/wp-json/dokan/v1/orders due to default customer id was set to 0.
+
 ### v3.9.4 ( Dec 12, 2023 ) ###
 
-**fix:** Fixed an issue where the Vendor class shop_data persistence is broken on save()
-**fix:** Fixed a fatal error while trying to edit a subscription under WordPress Admin Panel → WooCommerce → Subscription menu of the WooCommerce Subscription Plugin.
+- **fix:** Fixed an issue where the Vendor class shop_data persistence is broken on save()
+- **fix:** Fixed a fatal error while trying to edit a subscription under WordPress Admin Panel → WooCommerce → Subscription menu of the WooCommerce Subscription Plugin.
+- **fix:** Toggle Sub-Orders and Show Sub-Orders buttons are not working if HPOS feature is disabled.
 
 ### v3.9.3 ( Nov 30, 2023 ) ###
 
