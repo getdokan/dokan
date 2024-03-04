@@ -6,7 +6,7 @@
 //COVERAGE_TAG: PUT /dokan/v1/store-categories/(?P<id>[\d]+)
 //COVERAGE_TAG: DELETE /dokan/v1/store-categories/(?P<id>[\d]+)
 
-import { test, expect } from '@playwright/test';
+import { test, expect, request } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
@@ -16,9 +16,13 @@ test.describe('store categories api test', () => {
     let apiUtils: ApiUtils;
     let categoryId: string;
 
-    test.beforeAll(async ({ request }) => {
-        apiUtils = new ApiUtils(request);
+    test.beforeAll(async () => {
+        apiUtils = new ApiUtils(await request.newContext());
         [, categoryId] = await apiUtils.createStoreCategory(payloads.createStoreCategory());
+    });
+
+    test.afterAll(async () => {
+        await apiUtils.dispose();
     });
 
     test('get default store category @pro', async () => {

@@ -3,13 +3,39 @@ import { AdminPage } from '@pages/adminPage';
 import { selector } from '@pages/selectors';
 import { data } from '@utils/testData';
 
-export class ProPromoPage extends AdminPage {
+export class NoticeAndPromotionPage extends AdminPage {
     constructor(page: Page) {
         super(page);
     }
 
-    // dokan pro promo
-    async dokanProPromo() {
+    // dokan notice & promotion
+
+    // dokan notice
+    async dokanNoticeRenderProperly() {
+        await this.goto(data.subUrls.backend.dokan.dokan);
+
+        // dokan notice elements are visible
+        const isPromotionVisible = await this.isVisible(selector.admin.dokan.promotion.promotion);
+        isPromotionVisible ? await this.notToHaveCount(selector.admin.dokan.notice.noticeDiv1, 0) : await this.notToHaveCount(selector.admin.dokan.notice.noticeDiv, 0);
+        await this.notToHaveCount(selector.admin.dokan.notice.slider, 0);
+        await this.notToHaveCount(selector.admin.dokan.notice.sliderPrev, 0);
+        await this.notToHaveCount(selector.admin.dokan.notice.sliderNext, 0);
+    }
+
+    // dokan promotion
+    async dokanPromotionRenderProperly() {
+        await this.goto(data.subUrls.backend.dokan.dokan);
+        // dokan promotion elements are visible
+        const isPromotionVisible = await this.isVisible(selector.admin.dokan.promotion.promotion);
+        if (isPromotionVisible) {
+            await this.multipleElementVisible(selector.admin.dokan.promotion);
+        } else {
+            console.log('No promotion is ongoing');
+        }
+    }
+
+    // dokan pro promotion
+    async dokanProPromotionRenderProperly() {
         // dokan promo banner
         await this.goIfNotThere(data.subUrls.backend.dokan.dokan);
 

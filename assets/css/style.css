@@ -5284,6 +5284,9 @@ div.media-sidebar a.edit-attachment {
     font-size: 25px;
     text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.55);
   }
+  .dokan-single-store .profile-frame .profile-info-box .profile-info-summery-wrapper .profile-info-summery .profile-info .store-social-wrapper .store-social li a i.fa-square-x-twitter {
+    color: #000000;
+  }
   .dokan-single-store .profile-frame .profile-info-box.profile-layout-default img.profile-info-img {
     position: absolute;
     top: 0;
@@ -5524,6 +5527,10 @@ div.media-sidebar a.edit-attachment {
   .dokan-single-store .profile-frame .profile-info-box.profile-layout-layout1 .profile-info-summery-wrapper .profile-info-summery .profile-info .store-social-wrapper .store-social li a i {
     font-size: 25px;
     text-shadow: 1px 1px 1px rgba(255, 255, 255, 0.55);
+    color: #0B8379;
+  }
+  .dokan-single-store .profile-frame .profile-info-box.profile-layout-layout1 .profile-info-summery-wrapper .profile-info-summery .profile-info .store-social-wrapper .store-social li a i.fa-square-x-twitter {
+    color: #000000;
   }
   .dokan-single-store .profile-frame .profile-info-box.profile-layout-layout2 .profile-info-summery-wrapper .profile-info-summery .profile-info {
     margin-top: 0;
@@ -5995,7 +6002,6 @@ p.vendor-customer-registration .radio:hover {
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 9;
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.45);
@@ -6041,13 +6047,15 @@ p.vendor-customer-registration .radio:hover {
   margin: 0 0 5px 0;
   line-height: 23px;
 }
+#dokan-seller-listing-wrap.grid-view .store-content .store-data-container .store-data .store-address br {
+  display: none;
+}
 #dokan-seller-listing-wrap.grid-view .store-content .store-data-container .store-data .store-phone {
   margin: 0 0 5px 0;
 }
 #dokan-seller-listing-wrap.grid-view .store-footer {
   background: #fff;
   position: relative;
-  z-index: 99;
 }
 #dokan-seller-listing-wrap.grid-view .store-footer a:active,
 #dokan-seller-listing-wrap.grid-view .store-footer a:focus {

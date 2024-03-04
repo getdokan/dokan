@@ -42,6 +42,7 @@
                             @onChange="handleTransectionType"
                             :value="transectionType"
                             :items="transectionTypeItems"
+                            :id="'rw-transaction-type'"
                         />
                     </div>
                 </div>
@@ -112,6 +113,7 @@
                             @onChange="handleWithdrawalType"
                             :value="withdrawalType"
                             :items="withdrawalTypeItems"
+                            :id="'rw-withdrawal-balance'"
                         />
                     </div>
                 </div>

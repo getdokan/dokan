@@ -4,6 +4,30 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.10.0',
+        'released' => '2024-03-04',
+        'changes'  => [
+            'New'         => [
+                [
+                    'title'       => 'Added a new filter hook named `dokan_product_cache_delete_all_data`, by using this one can prevent deleting product cache if necessary.',
+                    'description' => '',
+                ],
+            ],
+            'Improvement' => [
+                [
+                    'title'       => 'Updated FontAwesome library to version 6.5.1',
+                    'description' => '',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => 'Fixed Elementor mega menu z-index conflict and removed line break from address fields',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.9.9',
         'released' => '2024-02-12',
         'changes'  => [

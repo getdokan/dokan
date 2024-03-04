@@ -1,4 +1,3 @@
-// import { request } from '@playwright/test';
 import { faker } from '@faker-js/faker';
 import { helpers } from '@utils/helpers';
 import 'dotenv/config';
@@ -34,6 +33,7 @@ export const data = {
     auth: {
         adminAuthFile: 'playwright/.auth/adminStorageState.json',
         vendorAuthFile: 'playwright/.auth/vendorStorageState.json',
+        vendor2AuthFile: 'playwright/.auth/vendor2StorageState.json',
         customerAuthFile: 'playwright/.auth/customerStorageState.json',
 
         adminAuth: {
@@ -42,6 +42,10 @@ export const data = {
 
         vendorAuth: {
             storageState: 'playwright/.auth/vendorStorageState.json',
+        },
+
+        vendor2Auth: {
+            storageState: 'playwright/.auth/vendor2StorageState.json',
         },
 
         customerAuth: {
@@ -67,7 +71,7 @@ export const data = {
         dokanPro: ['dokan-pro'],
         activeClass: 'active',
         pluginName: {
-            dokanlite: 'dokan-lite',
+            dokanLite: 'dokan-lite',
             dokanPro: 'dokan-pro',
         },
     },
@@ -135,11 +139,11 @@ export const data = {
         price: {
             // price           : faker.commerce.price(100, 200, 2),
             // price           : faker.number.int({ min: 1, max: 200, precision: 0.01 }),
-            // price           : faker.finance.amount(1, 200, 2),
-            price_int: () => faker.finance.amount(100, 200, 0),
-            price_random: () => faker.finance.amount(100, 200, faker.helpers.arrayElement([0, 2])), // 0 = no decimals, 2 = 2 decimals
-            price_frac: () => faker.finance.amount(100, 200, faker.helpers.arrayElement([1, 2])),
-            price_frac_comma: () => faker.finance.amount(100, 200, faker.helpers.arrayElement([1, 2])).replace('.', ','),
+            // price: faker.finance.amount({ min: 1, max: 200, dec: 2 }),
+            price_int: () => faker.finance.amount({ min: 100, max: 200, dec: 0 }),
+            price_random: () => faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([0, 2]) }), // 0 = no decimals, 2 = 2 decimals
+            price_frac: () => faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([1, 2]) }),
+            price_frac_comma: () => faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([1, 2]) }).replace('.', ','),
             auctionPrice: () => faker.commerce.price({ min: 10, max: 100, dec: 0 }),
             price: () => data.product.price.price_frac_comma(),
         },
@@ -178,7 +182,7 @@ export const data = {
             productType: 'simple',
             productName: () => faker.commerce.productName() + ' (Simple)',
             category: 'Uncategorized',
-            regularPrice: () => faker.finance.amount(100, 200, faker.helpers.arrayElement([1, 2])).replace('.', ','),
+            regularPrice: () => faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([1, 2]) }).replace('.', ','),
             storeName: String(process.env.VENDOR) + 'store',
             status: 'publish',
             stockStatus: false,
@@ -190,7 +194,7 @@ export const data = {
             productType: 'simple',
             productName: () => faker.commerce.productName() + ' (Downadable)',
             category: 'Uncategorized',
-            regularPrice: () => faker.finance.amount(100, 200, faker.helpers.arrayElement([1, 2])).replace('.', ','),
+            regularPrice: () => faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([1, 2]) }).replace('.', ','),
             storeName: String(process.env.VENDOR) + 'store',
             status: 'publish',
             stockStatus: false,
@@ -209,7 +213,7 @@ export const data = {
             productType: 'simple',
             productName: () => faker.commerce.productName() + ' (Virtual)',
             category: 'Uncategorized',
-            regularPrice: () => faker.finance.amount(100, 200, faker.helpers.arrayElement([1, 2])).replace('.', ','),
+            regularPrice: () => faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([1, 2]) }).replace('.', ','),
             storeName: String(process.env.VENDOR) + 'store',
             status: 'publish',
             stockStatus: false,
@@ -221,7 +225,7 @@ export const data = {
             productType: 'variable',
             productName: () => faker.commerce.productName() + ' (Variable)',
             category: 'Uncategorized',
-            regularPrice: () => faker.finance.amount(100, 200, faker.helpers.arrayElement([1, 2])).replace('.', ','),
+            regularPrice: () => faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([1, 2]) }).replace('.', ','),
             storeName: String(process.env.VENDOR) + 'store',
             status: 'publish',
             stockStatus: false,
@@ -240,7 +244,7 @@ export const data = {
             productUrl: '/product/p1_v1-simple/',
             buttonText: 'Buy product',
             category: 'Uncategorized',
-            regularPrice: () => faker.finance.amount(100, 200, faker.helpers.arrayElement([1, 2])).replace('.', ','),
+            regularPrice: () => faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([1, 2]) }).replace('.', ','),
             storeName: String(process.env.VENDOR) + 'store',
             status: 'publish',
             saveSuccessMessage: 'Success! The product has been saved successfully. View Product →',
@@ -250,8 +254,8 @@ export const data = {
             productType: 'subscription',
             productName: () => faker.commerce.productName() + ' (Simple Subscription)',
             category: 'Uncategorized',
-            regularPrice: () => faker.finance.amount(100, 200, faker.helpers.arrayElement([1, 2])).replace('.', ','),
-            subscriptionPrice: () => faker.finance.amount(100, 200, faker.helpers.arrayElement([1, 2])).replace('.', ','),
+            regularPrice: () => faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([1, 2]) }).replace('.', ','),
+            subscriptionPrice: () => faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([1, 2]) }).replace('.', ','),
             subscriptionPeriodInterval: '1', // '0', '1', '2', '3', '4', '5', '6'
             subscriptionPeriod: 'month', // 'day', 'week', 'month', 'year'
             expireAfter: '0', // '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24'
@@ -266,8 +270,8 @@ export const data = {
             productType: 'variable-subscription',
             productName: () => faker.commerce.productName() + ' (Variable Subscription)',
             category: 'Uncategorized',
-            regularPrice: () => faker.finance.amount(100, 200, faker.helpers.arrayElement([1, 2])).replace('.', ','),
-            subscriptionPrice: () => faker.finance.amount(100, 200, faker.helpers.arrayElement([1, 2])).replace('.', ','),
+            regularPrice: () => faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([1, 2]) }).replace('.', ','),
+            subscriptionPrice: () => faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([1, 2]) }).replace('.', ','),
             subscriptionPeriodInterval: '1',
             subscriptionPeriod: 'month',
             expireAfter: '0',
@@ -296,7 +300,7 @@ export const data = {
                 }) +
                 ' (Product Pack)',
             category: 'Uncategorized',
-            regularPrice: () => faker.finance.amount(100, 200, faker.helpers.arrayElement([1, 2])).replace('.', ','),
+            regularPrice: () => faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([1, 2]) }).replace('.', ','),
             numberOfProducts: '-1',
             packValidity: '0',
             advertisementSlot: '-1',
@@ -341,10 +345,10 @@ export const data = {
             category: 'Uncategorized',
             itemCondition: 'new', // 'new', 'used'
             auctionType: 'normal', // 'normal', 'reverse'
-            regularPrice: () => faker.finance.amount(10, 100, faker.helpers.arrayElement([1, 2])).replace('.', ','),
-            bidIncrement: () => faker.finance.amount(40, 50, faker.helpers.arrayElement([1, 2])).replace('.', ','),
-            reservedPrice: () => faker.finance.amount(400, 500, faker.helpers.arrayElement([1, 2])).replace('.', ','),
-            buyItNowPrice: () => faker.finance.amount(900, 1000, faker.helpers.arrayElement([1, 2])).replace('.', ','),
+            regularPrice: () => faker.finance.amount({ min: 10, max: 100, dec: faker.helpers.arrayElement([1, 2]) }).replace('.', ','),
+            bidIncrement: () => faker.finance.amount({ min: 40, max: 50, dec: faker.helpers.arrayElement([1, 2]) }).replace('.', ','),
+            reservedPrice: () => faker.finance.amount({ min: 400, max: 500, dec: faker.helpers.arrayElement([1, 2]) }).replace('.', ','),
+            buyItNowPrice: () => faker.finance.amount({ min: 900, max: 1000, dec: faker.helpers.arrayElement([1, 2]) }).replace('.', ','),
             startDate: helpers.currentDateTime,
             endDate: helpers.addDays(helpers.currentDateTime, 20, 'full'),
             storeName: String(process.env.VENDOR) + 'store',
@@ -739,6 +743,7 @@ export const data = {
 
     // Vendor Setup Wizard
     vendorSetupWizard: {
+        setupWizardEnabled: true,
         choice: true,
         storeProductsPerPage: '12',
         street1: 'abc street',
@@ -814,6 +819,8 @@ export const data = {
                 allLogs: 'wp-admin/admin.php?page=dokan#/reports?tab=logs',
                 modules: 'wp-admin/admin.php?page=dokan#/modules',
                 tools: 'wp-admin/admin.php?page=dokan#/tools',
+                productQA: 'wp-admin/admin.php?page=dokan#/product-qa',
+                questionDetails: (questionId: string) => `wp-admin/admin.php?page=dokan#/product-qa/${questionId}`,
                 verifications: 'wp-admin/admin.php?page=dokan-seller-verifications',
                 productAdvertising: 'wp-admin/admin.php?page=dokan#/product-advertising',
                 wholeSaleCustomer: 'wp-admin/admin.php?page=dokan#/wholesale-customer',
@@ -850,6 +857,7 @@ export const data = {
             requestForQuote: 'request-quote',
             requestedQuote: 'my-account/request-a-quote',
             accountMigration: 'my-account/account-migration',
+            myAccountToProductQA: 'my-account/?product_qa',
             orderCancel: 'cart/?cancel_order',
             orderAgain: 'cart/?order_again',
             orderPay: 'checkout/order-pay',
@@ -911,6 +919,8 @@ export const data = {
                 withdraw: 'dashboard/withdraw',
                 withdrawRequests: 'dashboard/withdraw-requests',
                 badges: 'dashboard/seller-badge',
+                productQA: 'dashboard/product-questions-answers',
+                questionDetails: (questionId: string) => `dashboard/product-questions-answers/?question_id=${questionId}`,
                 reverseWithdrawal: 'dashboard/reverse-withdrawal',
                 returnRequest: 'dashboard/return-request',
                 staff: 'dashboard/staffs',
@@ -970,6 +980,9 @@ export const data = {
                 quoteRules: 'dokan/v1/request-for-quote/quote-rule',
                 sellerBadge: 'dokan/v1/seller-badge',
                 sellerBadgeEvent: 'dokan/v1/seller-badge/events',
+                productQuestions: 'dokan/v1/product-questions',
+                productQuestionsBulkActions: 'dokan/v1/product-questions/bulk_action',
+                productAnswers: 'dokan/v1/product-answers',
             },
 
             wc: {
@@ -1007,6 +1020,11 @@ export const data = {
         password: String(process.env.USER_PASSWORD),
         lastname: (String(process.env.VENDOR)[0] as string) + String(process.env.VENDOR)[String(process.env.VENDOR).length - 1],
         storeName: String(process.env.VENDOR) + 'store',
+
+        vendor2: {
+            username: String(process.env.VENDOR2),
+            password: String(process.env.USER_PASSWORD),
+        },
 
         vendorInfo: {
             emailDomain: '@email.com',
@@ -1052,6 +1070,9 @@ export const data = {
             termsAndConditions: 'Vendor Terms and Conditions',
             biography: 'Vendor biography',
             supportButtonText: 'Get Support',
+
+            // address fields enable flag (on vendor registration)
+            addressFieldsEnabled: false,
 
             account: {
                 updateSuccessMessage: 'Account details changed successfully.',
@@ -1340,15 +1361,13 @@ export const data = {
         },
 
         // addon
-        addon: {
-            randomName: () => 'Addons Group_' + faker.string.nanoid(10),
-            randomTitle: () => 'Add-on Title_' + faker.string.nanoid(10),
-            name: 'Addons Group_',
+        addon: () => ({
+            name: 'Test Addons Group_' + faker.string.nanoid(10),
             priority: '10',
             category: 'Uncategorized',
             type: 'multiple_choice', // 'multiple_choice', 'checkbox', 'custom_text', 'custom_textarea', 'file_upload', 'custom_price', 'input_multiplier', 'heading'
             displayAs: 'select', // 'select', 'radiobutton', 'images'
-            titleRequired: 'Add-on Title_',
+            title: 'Test Add-on Title_' + faker.string.nanoid(10),
             formatTitle: 'label', // 'label', 'heading', 'hide'
             addDescription: 'Add-on description',
             enterAnOption: 'Option 1',
@@ -1356,7 +1375,7 @@ export const data = {
             optionPriceInput: '30',
             saveSuccessMessage: 'Add-on saved successfully',
             deleteSuccessMessage: 'Add-on deleted successfully',
-        },
+        }),
 
         registrationErrorMessage: 'Error: An account is already registered with your email address. Please log in.',
     },
@@ -1529,9 +1548,9 @@ export const data = {
 
     // Reverse withdraw
     reverseWithdraw: {
-        store: String(process.env.VENDOR) + 'store',
+        store: String(process.env.VENDOR2) + 'store',
         transactionType: 'manual_product', // manual_product, manual_order, other
-        product: 'p1_v1 (simple)',
+        product: '',
         withdrawalBalanceType: 'debit', // debit, credit
         amount: '500',
         note: 'test reverse withdraw note',
@@ -1554,8 +1573,8 @@ export const data = {
             guest: 'guest',
         },
 
-        quoteRule: {
-            title: () => 'test rule_' + faker.string.nanoid(10),
+        quoteRule: () => ({
+            title: 'test rule_' + faker.string.nanoid(10),
             userRole: 'customer',
             product: 'p1_v1 (simple)',
             category: 'Uncategorized',
@@ -1564,15 +1583,15 @@ export const data = {
             hideAddToCartButton: 'keep_and_add_new', // replace, keep_and_add_new
             customButtonLabel: 'Add to quote',
             order: '0',
-        },
+        }),
 
         trashedQuoteRule: {
-            title: 'trashed quote rule ',
+            title: 'trashed quote rule',
             status: 'trash',
         },
 
-        quote: {
-            title: () => 'test quote_' + faker.string.nanoid(10),
+        quote: () => ({
+            title: 'test quote_' + faker.string.nanoid(10),
             user: 'customer1', // todo: update customer data via env and email domain
             fullName: 'Jhon Doe',
             email: 'customer1@g.com',
@@ -1582,7 +1601,7 @@ export const data = {
             quantity: '5',
             offerPrice: '80',
             offerProductQuantity: '10',
-        },
+        }),
 
         trashedQuote: {
             title: 'trashed quote',
@@ -1655,6 +1674,23 @@ export const data = {
         },
 
         badgeStatus: 'published', // published, draft
+    },
+
+    //  question answeres
+    questionAnswers: {
+        question: 'test question',
+        editQuestion: 'edited test question',
+        answer: 'test answer',
+        editAnswer: 'edited test answer',
+        user: {
+            username: String(process.env.CUSTOMER),
+            password: String(process.env.USER_PASSWORD),
+        },
+
+        filter: {
+            byVendor: String(process.env.VENDOR) + 'store',
+            byProduct: 'p1_v1 (simple)',
+        },
     },
 
     // announcement
@@ -2077,6 +2113,7 @@ export const data = {
             followFromStoreListing: 'storeListing',
             followFromSingleStore: 'singleStore',
             vendor1: String(process.env.VENDOR) + 'store',
+            vendor2: String(process.env.VENDOR2) + 'store',
             vendor1FullName: String(process.env.VENDOR) + ' ' + 'v1',
             shopUrl: String(process.env.VENDOR) + 'store',
         },
@@ -2087,6 +2124,25 @@ export const data = {
             username: () => 'customer1',
             username1: 'customer1',
         },
+    },
+
+    status: {
+        on: 'on',
+        off: 'off',
+    },
+
+    // image
+    image: {
+        avatar: 'utils/sampleData/avatar.png',
+        dokan: 'utils/sampleData/dokan.png',
+        license: 'utils/sampleData/license.png',
+    },
+
+    // command
+    command: {
+        permalink: 'npm run wp-env run tests-cli wp rewrite structure /%postname%/',
+        permalinkLocal: `cd ${process.env.SITE_PATH} && wp rewrite structure /%postname%/ && wp rewrite flush`,
+        activateTheme: `cd ${process.env.SITE_PATH} && wp theme activate storefront`,
     },
 
     // install wordpress

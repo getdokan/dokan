@@ -1,4 +1,4 @@
-import { test as setup, expect } from '@playwright/test';
+import { test as setup, expect, request } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
@@ -7,26 +7,29 @@ import { dbUtils } from '@utils/dbUtils';
 import { dbData } from '@utils/dbData';
 import { data } from '@utils/testData';
 
-// const { BASE_URL } = process.env;
+const { BASE_URL } = process.env;
 
 setup.describe('setup test environment', () => {
     let apiUtils: ApiUtils;
 
-    setup.beforeAll(async ({ request }) => {
-        apiUtils = new ApiUtils(request);
+    setup.beforeAll(async () => {
+        apiUtils = new ApiUtils(await request.newContext());
     });
 
-    // setup.skip('get server url @lite', async ({ request }) => {
-    //     const apiUtils = new ApiUtils(request);
-    //     const headers = await apiUtils.getSiteHeaders(BASE_URL);
-    //     if (headers.link) {
-    //         const serverUrl = headers.link.includes('rest_route') ? BASE_URL + '/?rest_route=' : BASE_URL + '/wp-json';
-    //         console.log('ServerUrl:', serverUrl);
-    //         process.env.SERVER_URL = serverUrl;
-    //     } else {
-    //         console.log("Headers link doesn't exists");
-    //     }
-    // });
+    setup.afterAll(async () => {
+        await apiUtils.dispose();
+    });
+
+    setup.skip('get server url @lite', async () => {
+        const headers = await apiUtils.getSiteHeaders(BASE_URL);
+        if (headers.link) {
+            const serverUrl = headers.link.includes('rest_route') ? BASE_URL + '/?rest_route=' : BASE_URL + '/wp-json';
+            console.log('ServerUrl:', serverUrl);
+            process.env.SERVER_URL = serverUrl;
+        } else {
+            console.log("Headers link doesn't exists");
+        }
+    });
 
     setup('setup store settings @lite', async () => {
         const [response] = await apiUtils.put(endPoints.updateSettings, { data: payloads.setupStore });

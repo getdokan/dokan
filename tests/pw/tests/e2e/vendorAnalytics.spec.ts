@@ -5,7 +5,6 @@ import { data } from '@utils/testData';
 test.describe('Vendor analytics test', () => {
     let vendor: VendorAnalyticsPage;
     let vPage: Page;
-    // let apiUtils: ApiUtils;
 
     test.beforeAll(async ({ browser }) => {
         const vendorContext = await browser.newContext(data.auth.vendorAuth);
@@ -17,7 +16,7 @@ test.describe('Vendor analytics test', () => {
         await vPage.close();
     });
 
-    test('vendor analytics menu page is rendering properly @pro @explo', async () => {
+    test('vendor analytics menu page is rendering properly @pro @exp @v', async () => {
         await vendor.vendorAnalyticsRenderProperly();
     });
 });

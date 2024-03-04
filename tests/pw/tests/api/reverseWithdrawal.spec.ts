@@ -5,7 +5,7 @@
 //COVERAGE_TAG: GET /dokan/v1/reverse-withdrawal/vendor-due-status
 //COVERAGE_TAG: POST /dokan/v1/reverse-withdrawal/add-to-cart
 
-import { test, expect } from '@playwright/test';
+import { test, expect, request } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
@@ -16,8 +16,8 @@ import { dbData } from '@utils/dbData';
 test.describe('reverse withdrawal api test', () => {
     let apiUtils: ApiUtils;
 
-    test.beforeAll(async ({ request }) => {
-        apiUtils = new ApiUtils(request);
+    test.beforeAll(async () => {
+        apiUtils = new ApiUtils(await request.newContext());
         await dbUtils.setDokanSettings(dbData.dokan.optionName.reverseWithdraw, dbData.dokan.reverseWithdrawSettings);
 
         const [, , orderId] = await apiUtils.createOrderWithStatus(payloads.createProduct(), payloads.createOrderCod, data.order.orderStatus.processing, payloads.vendorAuth);
@@ -26,6 +26,7 @@ test.describe('reverse withdrawal api test', () => {
 
     test.afterAll(async () => {
         await dbUtils.setDokanSettings(dbData.dokan.optionName.reverseWithdraw, { ...dbData.dokan.reverseWithdrawSettings, enabled: 'off' });
+        await apiUtils.dispose();
     });
 
     test('get reverse withdrawal transaction types @lite', async () => {

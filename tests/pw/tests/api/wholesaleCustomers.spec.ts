@@ -3,7 +3,7 @@
 //COVERAGE_TAG: POST /dokan/v1/wholesale/customer/(?P<id>[\d]+)
 //COVERAGE_TAG: PUT /dokan/v1/wholesale/customers/batch
 
-import { test, expect } from '@playwright/test';
+import { test, expect, request } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
@@ -12,9 +12,13 @@ test.describe('wholesale customers api test', () => {
     let apiUtils: ApiUtils;
     let wholesaleCustomerId: string;
 
-    test.beforeAll(async ({ request }) => {
-        apiUtils = new ApiUtils(request);
+    test.beforeAll(async () => {
+        apiUtils = new ApiUtils(await request.newContext());
         [, wholesaleCustomerId] = await apiUtils.createWholesaleCustomer(payloads.createCustomer(), payloads.adminAuth);
+    });
+
+    test.afterAll(async () => {
+        await apiUtils.dispose();
     });
 
     test('get all wholesale customers @pro', async () => {
