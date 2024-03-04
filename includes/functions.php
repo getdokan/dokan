@@ -2515,7 +2515,7 @@ function dokan_get_seller_address( $seller_id = 0, $get_array = false ) {
  *
  * @return string
  */
-function dokan_get_seller_short_address( $store_id, $line_break = true ) {
+function dokan_get_seller_short_address( $store_id, $full=true, $line_break = true ) {
     $store_address     = dokan_get_seller_address( $store_id, true );
     $address_classes   = [
         'street_1',
@@ -2527,14 +2527,16 @@ function dokan_get_seller_short_address( $store_id, $line_break = true ) {
     $short_address     = [];
     $formatted_address = '';
 
-    if ( ! empty( $store_address['street_1'] ) && empty( $store_address['street_2'] ) ) {
-        $short_address[] = "<span class='{$address_classes[0]}'> {$store_address['street_1']},</span>";
-    } elseif ( empty( $store_address['street_1'] ) && ! empty( $store_address['street_2'] ) ) {
-        $short_address[] = "<span class='{$address_classes[1]}'> {$store_address['street_2']},</span>";
-    } elseif ( ! empty( $store_address['street_1'] ) && ! empty( $store_address['street_2'] ) ) {
-        $short_address[] = "<span class='{$address_classes[0]} {$address_classes[1]}'> {$store_address['street_1']}, {$store_address['street_2']}</span>";
+    if ( !$full ) {
+        if ( ! empty( $store_address['street_1'] ) && empty( $store_address['street_2'] ) ) {
+            $short_address[] = "<span class='{$address_classes[0]}'> {$store_address['street_1']},</span>";
+        } elseif ( empty( $store_address['street_1'] ) && ! empty( $store_address['street_2'] ) ) {
+            $short_address[] = "<span class='{$address_classes[1]}'> {$store_address['street_2']},</span>";
+        } elseif ( ! empty( $store_address['street_1'] ) && ! empty( $store_address['street_2'] ) ) {
+            $short_address[] = "<span class='{$address_classes[0]} {$address_classes[1]}'> {$store_address['street_1']}, {$store_address['street_2']}</span>";
+        }
     }
-
+    
     if ( ! empty( $store_address['city'] ) && ! empty( $store_address['city'] ) ) {
         $short_address[] = "<span class='{$address_classes[2]}'> {$store_address['city']},</span>";
     }
