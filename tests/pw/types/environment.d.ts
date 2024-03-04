@@ -1,4 +1,4 @@
-export { };
+export {};
 
 declare global {
     namespace NodeJS {
@@ -16,15 +16,19 @@ declare global {
             CUSTOMER_ID: string;
             PRODUCT_ID: string;
             V2_PRODUCT_ID: string;
+            CI: string;
             GMAP: string;
-            DOKAN_PRO: string
-            BASE_URL:string;
-            QUERY:string;
+            LICENSE_KEY: string;
+            DOKAN_PRO: string;
+            SITE_PATH: string;
+            BASE_URL: string;
+            QUERY: string;
             HEADLESS: string;
             SLOWMO: string;
             DEVTOOLS: string;
             RETRY_TIMES: string;
             TIME_OUT: string;
+            NO_SETUP: string;
             SERVER_URL: string;
             ADMIN_AUTH: string;
             VENDOR_AUTH: string;
@@ -35,10 +39,9 @@ declare global {
             DATABASE: string;
             DB_PORT: number;
             DB_PREFIX: string;
-            API_TEST_RESULT: string
-            E2E_TEST_RESULT: string
-
-
+            API_TEST_RESULT: string;
+            E2E_TEST_RESULT: string;
+            API_COVERAGE: string;
         }
     }
 }

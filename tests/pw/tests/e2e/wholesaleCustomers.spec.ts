@@ -1,4 +1,4 @@
-import { test, Page } from '@playwright/test';
+import { test, request, Page } from '@playwright/test';
 import { WholesaleCustomersPage } from '@pages/wholesaleCustomersPage';
 import { CustomerPage } from '@pages/customerPage';
 import { ApiUtils } from '@utils/apiUtils';
@@ -14,17 +14,17 @@ test.describe('Wholesale customers test (admin)', () => {
     let aPage: Page, cPage: Page;
     let apiUtils: ApiUtils;
 
-    test.beforeAll(async ({ browser, request }) => {
+    test.beforeAll(async ({ browser }) => {
         const adminContext = await browser.newContext(data.auth.adminAuth);
         aPage = await adminContext.newPage();
         admin = new WholesaleCustomersPage(aPage);
 
-        const customerContext = await browser.newContext({ storageState: { cookies: [], origins: [] } });
+        const customerContext = await browser.newContext(data.auth.noAuth);
         cPage = await customerContext.newPage();
         customerPage = new CustomerPage(cPage);
         customer = new WholesaleCustomersPage(cPage);
 
-        apiUtils = new ApiUtils(request);
+        apiUtils = new ApiUtils(await request.newContext());
 
         await apiUtils.createWholesaleCustomer(payloads.createCustomer(), payloads.adminAuth);
         await apiUtils.createWholesaleCustomer(payloads.createCustomer1, payloads.adminAuth);
@@ -34,46 +34,47 @@ test.describe('Wholesale customers test (admin)', () => {
     test.afterAll(async () => {
         await aPage.close();
         await cPage.close();
+        await apiUtils.dispose();
     });
 
-    test('dokan wholesale customers menu page is rendering properly @pro @explo', async () => {
+    test('dokan wholesale customers menu page is rendering properly @pro @exp @a', async () => {
         await admin.adminWholesaleCustomersRenderProperly();
     });
 
-    test('admin can search wholesale customer @pro', async () => {
+    test('admin can search wholesale customer @pro @a', async () => {
         await admin.searchWholesaleCustomer(data.predefined.customerInfo.username1);
     });
 
-    test("admin can disable customer's wholesale capability @pro", async () => {
+    test("admin can disable customer's wholesale capability @pro @a", async () => {
         await admin.updateWholesaleCustomer(data.predefined.customerInfo.username1, 'disable');
     });
 
-    test("admin can enable customer's wholesale capability @pro", async () => {
+    test("admin can enable customer's wholesale capability @pro @a", async () => {
         await admin.updateWholesaleCustomer(data.predefined.customerInfo.username1, 'enable');
     });
 
-    test('admin can edit wholesale customer @pro', async () => {
+    test('admin can edit wholesale customer @pro @a', async () => {
         await admin.editWholesaleCustomer(data.customer);
     });
 
-    test('admin can view wholesale customer orders @pro', async () => {
+    test('admin can view wholesale customer orders @pro @a', async () => {
         await admin.viewWholesaleCustomerOrders(data.predefined.customerInfo.username1);
     });
 
-    test('admin can delete wholesale customer @pro', async () => {
+    test('admin can delete wholesale customer @pro @a', async () => {
         await admin.updateWholesaleCustomer(data.predefined.customerInfo.username1, 'delete');
     });
 
-    test('admin can perform wholesale customer bulk action @pro', async () => {
+    test('admin can perform wholesale customer bulk action @pro @a', async () => {
         await admin.wholesaleCustomerBulkAction('activate');
     });
 
-    test('customer can become a wholesale customer', async () => {
+    test('customer can become a wholesale customer @pro  @c', async () => {
         await customerPage.customerRegister(data.customer.customerInfo);
         await customer.customerBecomeWholesaleCustomer();
     });
 
-    test('customer can request for become a wholesale customer', async () => {
+    test('customer can request for become a wholesale customer @pro  @c', async () => {
         await dbUtils.setDokanSettings(dbData.dokan.optionName.wholesale, { ...dbData.dokan.wholesaleSettings, need_approval_for_wholesale_customer: 'on' });
         await customerPage.customerRegister(data.customer.customerInfo);
         await customer.customerRequestForBecomeWholesaleCustomer();
@@ -89,14 +90,14 @@ test.describe.skip('Wholesale customers test customer', () => {
     let wholesalePrice: string;
     let minimumWholesaleQuantity: string;
 
-    test.beforeAll(async ({ browser, request }) => {
+    test.beforeAll(async ({ browser }) => {
         const customerContext = await browser.newContext(data.auth.customerAuth);
         cPage = await customerContext.newPage();
         customerPage = new CustomerPage(cPage);
         customer = new WholesaleCustomersPage(cPage);
 
-        apiUtils = new ApiUtils(request);
-        await apiUtils.createWholesaleCustomer(payloads.createCustomer1, payloads.adminAuth); // todo: need to update customer auth if crated wholesale or move to env setup
+        apiUtils = new ApiUtils(await request.newContext());
+        await apiUtils.createWholesaleCustomer(payloads.createCustomer1, payloads.adminAuth); // todo: need to update customer auth if created wholesale or move to env setup
 
         const [responseBody, ,] = await apiUtils.createProduct(payloads.createWholesaleProduct(), payloads.vendorAuth);
         productName = responseBody.name;
@@ -108,11 +109,11 @@ test.describe.skip('Wholesale customers test customer', () => {
         await cPage.close();
     });
 
-    test('customer can see wholesale price on shop archive', async () => {
+    test('customer can see wholesale price on shop archive  @pro @c', async () => {
         await customer.viewWholeSalePrice(productName);
     });
 
-    test('customer can buy wholesale product', async () => {
+    test('customer can buy wholesale product @pro @c', async () => {
         await customerPage.addProductToCart(productName, 'single-product', true, minimumWholesaleQuantity);
         await customer.assertWholesalePrice(wholesalePrice, minimumWholesaleQuantity);
         await customerPage.paymentOrder();

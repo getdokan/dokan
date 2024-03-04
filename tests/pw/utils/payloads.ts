@@ -24,6 +24,12 @@ export const payloads = {
         status: 'publish',
     }),
 
+    privacyPolicyPage: {
+        title: 'Privacy Policy',
+        content: 'This Privacy Policy describes how we collect, use, and disclose your personal information in connection with your use of our product.',
+        status: 'publish',
+    },
+
     tocPage: {
         title: 'Terms And Conditions',
         status: 'publish',
@@ -97,7 +103,7 @@ export const payloads = {
     createProduct: () => ({
         name: faker.commerce.productName() + ' (Simple)',
         type: 'simple',
-        regular_price: faker.finance.amount(100, 200, faker.helpers.arrayElement([0, 2])),
+        regular_price: faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([0, 2]) }),
         // regular_price: '114.15' , // failed for this price & 5% tax & 10% commission dokan .1 issue
         status: 'publish',
         categories: [
@@ -206,7 +212,7 @@ export const payloads = {
     createWholesaleProduct: () => ({
         name: faker.commerce.productName() + ' (wholesale)',
         type: 'simple',
-        regular_price: faker.finance.amount(100, 110, faker.helpers.arrayElement([0, 2])),
+        regular_price: { min: 100, max: 110, dec: faker.helpers.arrayElement([0, 2]) },
         // regular_price: '114.15' , // failed for this price & 5% tax & 10% commission dokan .1 issue
         status: 'publish',
         categories: [
@@ -224,7 +230,7 @@ export const payloads = {
                 key: '_dokan_wholesale_meta',
                 value: {
                     enable_wholesale: 'yes',
-                    price: faker.finance.amount(90, 99, faker.helpers.arrayElement([0, 2])),
+                    regular_price: { min: 90, max: 99, dec: faker.helpers.arrayElement([0, 2]) },
                     // price: '100',
                     quantity: '10',
                 },
@@ -235,7 +241,7 @@ export const payloads = {
     createVariableProduct: () => ({
         name: faker.commerce.productName() + ' (Variable)',
         type: 'variable',
-        regular_price: faker.finance.amount(100, 200, faker.helpers.arrayElement([0, 2])),
+        regular_price: faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([0, 2]) }),
         status: 'publish',
         categories: [
             {
@@ -260,7 +266,7 @@ export const payloads = {
 
     createProductVariation: {
         // id: '47',
-        regular_price: faker.finance.amount(100, 200, faker.helpers.arrayElement([0, 2])),
+        regular_price: faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([0, 2]) }),
         status: 'publish',
         categories: [
             {
@@ -287,7 +293,7 @@ export const payloads = {
         name: faker.commerce.productName() + ' (Downloadable)',
         type: 'simple',
         downloadable: true,
-        regular_price: faker.finance.amount(100, 200, faker.helpers.arrayElement([0, 2])),
+        regular_price: faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([0, 2]) }),
         downloads: [],
         // download_limit: 100,
         // download_expiry: 100,
@@ -376,8 +382,8 @@ export const payloads = {
         // max_date_unit            : 'month'
     }),
 
-    createBookingResource: {
-        name: 'resource1',
+    createBookingResource: () => ({
+        name: 'resource_' + faker.string.nanoid(10),
         qty: '1',
         availability: [
             {
@@ -390,7 +396,15 @@ export const payloads = {
         ],
         base_cost: 5,
         block_cost: 6,
-    },
+    }),
+
+    createBookingResourceByDb: () => ({
+        author: 1,
+        title: 'resource_' + faker.string.nanoid(10),
+        status: 'publish',
+        comment_status: 'closed',
+        ping_status: 'closed',
+    }),
 
     createAuctionProduct: () => ({
         name: faker.commerce.productName() + ' (Auction)',
@@ -399,9 +413,11 @@ export const payloads = {
         featured: true,
         description: 'test description',
         short_description: 'test short description',
-        // regular_price    : faker.finance.amount(200, 400, 2),
-        // price            : '2232',
-        regular_price: '2232',
+        price: '2000',
+        regular_price: '2000',
+        purchasable: true,
+        virtual: false,
+        downloadable: false,
         categories: [{}],
         meta_data: [
             {
@@ -415,7 +431,7 @@ export const payloads = {
 
             {
                 key: '_auction_start_price',
-                value: '10', // faker.finance.amount(10, 20, 2),
+                value: '10', // faker.finance.amount({min:10, max:20, dec:2}),
             },
             {
                 key: '_auction_bid_increment',
@@ -478,8 +494,8 @@ export const payloads = {
     }),
 
     createProductAddons: () => ({
-        name: 'Test Addons Group_1' + faker.string.nanoid(10),
-        priority: 1,
+        name: 'Test Addons Group_' + faker.string.nanoid(10),
+        priority: 10,
         restrict_to_categories: [],
         fields: [
             {
@@ -501,7 +517,13 @@ export const payloads = {
                 options: [
                     {
                         label: 'Option 1',
-                        price: '30',
+                        price: '10',
+                        image: '',
+                        price_type: 'flat_fee',
+                    },
+                    {
+                        label: 'Option 2',
+                        price: '20',
                         image: '',
                         price_type: 'flat_fee',
                     },
@@ -510,9 +532,9 @@ export const payloads = {
         ],
     }),
 
-    updateProduct: () => ({ regular_price: faker.finance.amount(100, 200, faker.helpers.arrayElement([0, 2])) }),
+    updateProduct: () => ({ regular_price: faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([0, 2]) }) }),
 
-    updateProductVariation: () => ({ regular_price: faker.finance.amount(100, 200, faker.helpers.arrayElement([0, 2])) }),
+    updateProductVariation: () => ({ regular_price: faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([0, 2]) }) }),
 
     createProductReview: () => ({
         product_id: '',
@@ -535,6 +557,10 @@ export const payloads = {
     },
 
     // product category
+
+    createCategoryRandom: () => ({
+        name: faker.string.nanoid(10),
+    }),
 
     createCategory: {
         name: 'Clothing',
@@ -614,7 +640,7 @@ export const payloads = {
             },
             {
                 key: 'coupon_commissions_type',
-                value: 'default',
+                value: 'default', // 'default', 'from_vendor', 'from_admin', 'shared_coupon'
             },
             {
                 key: 'admin_coupons_show_on_stores',
@@ -669,6 +695,10 @@ export const payloads = {
                 product_id: '',
                 quantity: 1,
             },
+            // {
+            //     product_id: '',
+            //     quantity: 1,
+            // },
         ],
 
         shipping_lines: [
@@ -678,6 +708,8 @@ export const payloads = {
                 total: '10.00',
             },
         ],
+
+        coupon_lines: [],
     },
 
     createOrderCod: {
@@ -761,6 +793,11 @@ export const payloads = {
         minimum: dbData.dokan.withdrawSettings.withdraw_limit, // should be equal to minimum limit
         reserve: 0,
         method: 'paypal',
+    },
+
+    withdrawCharge: {
+        method: 'paypal',
+        amount: '100',
     },
 
     // settings
@@ -2188,6 +2225,46 @@ export const payloads = {
 
     // module
 
+    moduleIds: {
+        booking: 'booking',
+        colorSchemeCustomize: 'color_scheme_customizer',
+        deliveryTime: 'delivery_time',
+        elementor: 'elementor',
+        exportImport: 'export_import',
+        followStore: 'follow_store',
+        geolocation: 'geolocation',
+        germanized: 'germanized',
+        liveChat: 'live_chat',
+        liveSearch: 'live_search',
+        moip: 'moip',
+        paypalMarketplace: 'paypal_marketplace',
+        productAddon: 'product_addon',
+        productEnquiry: 'product_enquiry',
+        reportAbuse: 'report_abuse',
+        rma: 'rma',
+        sellerVacation: 'seller_vacation',
+        shipstation: 'shipstation',
+        auction: 'auction',
+        spmv: 'spmv',
+        storeReviews: 'store_reviews',
+        storeSupport: 'store_support',
+        stripe: 'stripe',
+        productAdvertising: 'product_advertising',
+        productSubscription: 'product_subscription',
+        vendorAnalytics: 'vendor_analytics',
+        vendorStaff: 'vendor_staff',
+        vsp: 'vsp',
+        vendorVerification: 'vendor_verification',
+        wholesale: 'wholesale',
+        rankMath: 'rank_math',
+        tableRateShipping: 'table_rate_shipping',
+        mangopay: 'mangopay',
+        orderMinMax: 'order_min_max',
+        sellerBadge: 'seller_badge',
+        stripeExpress: 'stripe_express',
+        requestForQuotation: 'request_for_quotation',
+    },
+
     deactivateModule: {
         module: ['booking'],
     },
@@ -2211,6 +2288,10 @@ export const payloads = {
         content: '<p>updated This is announcement content</p>',
         status: 'publish',
         sender_type: 'all_seller',
+    },
+
+    updateAnnouncementNotice: {
+        read_status: 'read', // read, unread
     },
 
     // product review
@@ -2307,7 +2388,6 @@ export const payloads = {
         gravatar: '',
         gravatar_id: 0,
         shop_url: '',
-        products_per_page: 12,
         show_more_product_tab: true,
         toc_enabled: false,
         store_toc: '',
@@ -2389,7 +2469,6 @@ export const payloads = {
         gravatar: '',
         gravatar_id: 0,
         shop_url: '',
-        products_per_page: 12,
         show_more_product_tab: true,
         toc_enabled: false,
         store_toc: '',
@@ -2435,6 +2514,68 @@ export const payloads = {
         admin_commission_type: 'flat',
     }),
 
+    // always revert vendor settings to this after altering in tests
+    defaultStoreSettings: {
+        social: {
+            fb: 'http://dokan.test',
+            youtube: 'http://dokan.test',
+            twitter: 'http://dokan.test',
+            linkedin: 'http://dokan.test',
+            pinterest: 'http://dokan.test',
+            instagram: 'http://dokan.test',
+            flickr: 'http://dokan.test',
+        },
+        phone: '0123456789',
+        show_email: 'yes',
+        address: {
+            street_1: 'abc street',
+            street_2: 'xyz street',
+            city: 'New York',
+            zip: '10003',
+            state: 'NY',
+            country: 'US',
+        },
+        location: '40.7127753,-74.0059728',
+        banner: 0,
+        banner_id: 0,
+        gravatar: 0,
+        gravatar_id: 0,
+        show_more_product_tab: true,
+        enable_tnc: 'on',
+        store_tnc: 'test Vendor terms and conditions',
+        featured: 'yes',
+        // rating: {
+        //     rating: '4.00', // todo:  doesn't work on lite [might not implemented on lite]
+        //     count: 1,
+        // },
+        enabled: true,
+        payment: {
+            paypal: {
+                email: 'paypal@g.c',
+            },
+            bank: {
+                ac_name: 'account name',
+                ac_type: 'personal',
+                ac_number: '1234567',
+                bank_name: 'bank name',
+                bank_addr: 'bank address',
+                routing_number: '123456',
+                iban: '123456',
+                swift: '12345',
+            },
+        },
+        trusted: true,
+        company_name: 'company name',
+        vat_number: '123456789',
+        company_id_number: '123456789',
+        bank_name: 'bank name',
+        bank_iban: 'bank iban',
+        categories: [{}],
+        admin_commission: '',
+        admin_additional_fee: '0.00',
+        admin_commission_type: 'flat',
+    },
+
     createStoreReview: {
         title: 'Test store review',
         content: 'Test store review content',
@@ -2476,6 +2617,130 @@ export const payloads = {
             flickr: 'http://dokan.test',
         },
         phone: '0123456789',
+        show_email: 'yes',
+        address: {
+            street_1: 'abc street',
+            street_2: 'xyz street',
+            city: 'New York',
+            zip: '10003',
+            state: 'NY',
+            country: 'US',
+        },
+        location: '40.7127753,-74.0059728',
+        banner: 0,
+        banner_id: 0,
+        gravatar: 0,
+        gravatar_id: 0,
+        show_more_product_tab: true,
+        enable_tnc: 'on',
+        store_tnc: 'test Vendor terms and conditions',
+        featured: 'yes',
+        // rating: {
+        //     rating: '4.00', // todo:  doesn't work on lite [might not implemented on lite]
+        //     count: 1,
+        // },
+        enabled: true,
+        payment: {
+            paypal: {
+                email: 'paypal@g.c',
+            },
+            bank: {
+                ac_name: 'account name',
+                ac_type: 'personal',
+                ac_number: '1234567',
+                bank_name: 'bank name',
+                bank_addr: 'bank address',
+                routing_number: '123456',
+                iban: '123456',
+                swift: '12345',
+            },
+        },
+        trusted: true,
+        // store_open_close: {
+        // 	enabled: false,
+        // 	time: [],
+        // 	open_notice: 'Store is open',
+        // 	close_notice: 'Store is closed',
+        // },
+        // store_open_close: {
+        //     // todo:  isn't implemented on dokan create store api
+        //     enabled: 'yes', // todo:
+        //     time: {
+        //         monday: {
+        //             status: 'open', // 'close'
+        //             opening_time: ['12:00 am'], // []
+        //             closing_time: ['11:30 pm'], // []
+        //         },
+        //         tuesday: {
+        //             status: 'open',
+        //             opening_time: ['12:00 am'],
+        //             closing_time: ['11:30 pm'],
+        //         },
+        //         wednesday: {
+        //             status: 'open',
+        //             opening_time: ['12:00 am'],
+        //             closing_time: ['11:30 pm'],
+        //         },
+        //         thursday: {
+        //             status: 'open',
+        //             opening_time: ['12:00 am'],
+        //             closing_time: ['11:30 pm'],
+        //         },
+        //         friday: {
+        //             status: 'open',
+        //             opening_time: ['12:00 am'],
+        //             closing_time: ['11:30 pm'],
+        //         },
+        //         saturday: {
+        //             status: 'open',
+        //             opening_time: ['12:00 am'],
+        //             closing_time: ['11:30 pm'],
+        //         },
+        //         sunday: {
+        //             status: 'open',
+        //             opening_time: ['12:00 am'],
+        //             closing_time: ['11:30 pm'],
+        //         },
+        //     },
+        //     open_notice: 'Store is open',
+        //     close_notice: 'Store is closed',
+        // },
+        company_name: '',
+        vat_number: '',
+        company_id_number: '',
+        bank_name: '',
+        bank_iban: '',
+        categories: [
+            {
+                // id: 74,
+                // name: 'Uncategorized',
+                // slug: 'uncategorized'
+            },
+        ],
+        admin_commission: '',
+        admin_additional_fee: '',
+        admin_commission_type: '',
+    },
+
+    createStore2: {
+        user_login: process.env.VENDOR2,
+        user_pass: process.env.USER_PASSWORD,
+        user_nicename: process.env.VENDOR2 + 'store',
+        role: 'seller',
+        email: process.env.VENDOR2 + '@yopmail.com',
+        store_name: process.env.VENDOR2 + 'store',
+        first_name: process.env.VENDOR2,
+        last_name: 'v',
+        social: {
+            fb: 'http://dokan.test',
+            youtube: 'http://dokan.test',
+            twitter: 'http://dokan.test',
+            linkedin: 'http://dokan.test',
+            pinterest: 'http://dokan.test',
+            instagram: 'http://dokan.test',
+            flickr: 'http://dokan.test',
+        },
+        phone: '0123456789',
         show_email: true, // todo:  doesn't work on lite
         address: {
             street_1: 'abc street',
@@ -2490,7 +2755,6 @@ export const payloads = {
         banner_id: 0,
         gravatar: 0,
         gravatar_id: 0,
-        products_per_page: 12,
         show_more_product_tab: true,
         toc_enabled: true, // todo:  doesn't work on lite
         store_toc: 'test Vendor terms and conditions',
@@ -2584,15 +2848,15 @@ export const payloads = {
         admin_commission_type: '',
     },
 
-    createStore2: {
-        user_login: process.env.VENDOR2,
+    createStore3: {
+        user_login: process.env.VENDOR3,
         user_pass: process.env.USER_PASSWORD,
-        user_nicename: process.env.VENDOR2 + 'store',
+        user_nicename: process.env.VENDOR3 + 'store',
         role: 'seller',
-        email: process.env.VENDOR2 + '@yopmail.com',
-        store_name: process.env.VENDOR2 + 'store',
-        first_name: process.env.VENDOR2,
-        last_name: 'v1',
+        email: process.env.VENDOR3 + '@yopmail.com',
+        store_name: process.env.VENDOR3 + 'store',
+        first_name: process.env.VENDOR3,
+        last_name: 'v',
         social: {
             fb: 'http://dokan.test',
             youtube: 'http://dokan.test',
@@ -2617,7 +2881,6 @@ export const payloads = {
         banner_id: 0,
         gravatar: 0,
         gravatar_id: 0,
-        products_per_page: 12,
         show_more_product_tab: true,
         toc_enabled: true, // todo:  doesn't work on lite
         store_toc: 'test Vendor terms and conditions',
@@ -2748,7 +3011,7 @@ export const payloads = {
     updateAddress: {
         billing: {
             first_name: faker.person.firstName(),
-            last_name: 'c1',
+            last_name: faker.person.lastName(),
             company: '',
             address_1: 'abc street',
             address_2: 'xyz street',
@@ -2761,7 +3024,7 @@ export const payloads = {
         },
         shipping: {
             first_name: faker.person.firstName(),
-            last_name: 'c1',
+            last_name: faker.person.lastName(),
             company: '',
             address_1: 'abc street',
             address_2: 'xyz street',
@@ -2929,6 +3192,27 @@ export const payloads = {
             },
         ],
     },
+
+    // product questions answeres
+
+    createProductQuestion: () => ({
+        question: 'test question_' + faker.string.nanoid(10),
+        product_id: '',
+    }),
+
+    updateProductQuestion: () => ({
+        question: 'test question updated_' + faker.string.nanoid(10),
+        status: 'hidden',
+    }),
+
+    createProductQuestionAnswer: () => ({
+        answer: 'test answer_' + faker.string.nanoid(10),
+        question_id: '',
+    }),
+
+    updateProductQuestionAnswer: () => ({
+        answer: 'test anser updated_' + faker.string.nanoid(10),
+    }),
 
     // reverse withdrawal
 

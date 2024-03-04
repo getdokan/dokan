@@ -16,6 +16,7 @@ use WC_Email;
  * @extends     WC_Email
  */
 class VendorCompletedOrder extends WC_Email {
+    public $order_info;
 
     /**
      * Constructor.

@@ -1,4 +1,4 @@
-import { test, Page } from '@playwright/test';
+import { test, request, Page } from '@playwright/test';
 import { AuctionsPage } from '@pages/vendorAuctionsPage';
 import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
@@ -12,7 +12,7 @@ test.describe('Auction Product test', () => {
     let apiUtils: ApiUtils;
     let auctionProductName: string;
 
-    test.beforeAll(async ({ browser, request }) => {
+    test.beforeAll(async ({ browser }) => {
         const adminContext = await browser.newContext(data.auth.adminAuth);
         aPage = await adminContext.newPage();
         admin = new AuctionsPage(aPage);
@@ -25,9 +25,8 @@ test.describe('Auction Product test', () => {
         cPage = await customerContext.newPage();
         customer = new AuctionsPage(cPage);
 
-        apiUtils = new ApiUtils(request);
+        apiUtils = new ApiUtils(await request.newContext());
         [, , auctionProductName] = await apiUtils.createProduct(payloads.createAuctionProduct(), payloads.vendorAuth);
-
         await customer.bidAuctionProduct(auctionProductName);
     });
 
@@ -35,58 +34,59 @@ test.describe('Auction Product test', () => {
         await aPage.close();
         await vPage.close();
         await cPage.close();
+        await apiUtils.dispose();
     });
 
-    test('admin can add auction product @pro', async () => {
+    test('admin can add auction product @pro @a', async () => {
         await admin.adminAddAuctionProduct(data.product.auction);
     });
 
-    test('vendor auction menu page is rendering properly @pro @explo', async () => {
+    test('vendor auction menu page is rendering properly @pro @exp @v', async () => {
         await vendor.vendorAuctionRenderProperly();
     });
 
-    test('vendor can add auction product @pro', async () => {
+    test('vendor can add auction product @pro @v', async () => {
         await vendor.addAuctionProduct({ ...data.product.auction, name: data.product.auction.productName() });
     });
 
-    test('vendor can edit auction product @pro', async () => {
+    test('vendor can edit auction product @pro @v', async () => {
         await vendor.editAuctionProduct({ ...data.product.auction, name: auctionProductName });
     });
 
-    test('vendor can view auction product @pro', async () => {
+    test('vendor can view auction product @pro @v', async () => {
         await vendor.viewAuctionProduct(auctionProductName);
     });
 
-    test("vendor can't bid own product @pro", async () => {
+    test("vendor can't bid own product @pro @v", async () => {
         await vendor.cantBidOwnProduct(auctionProductName);
     });
 
-    test('vendor can search auction product @pro', async () => {
+    test('vendor can search auction product @pro @v', async () => {
         await vendor.searchAuctionProduct(auctionProductName);
     });
 
-    test('vendor can permanently delete auction product @pro', async () => {
+    test('vendor can permanently delete auction product @pro @v', async () => {
         const [, , auctionProductName] = await apiUtils.createProduct(payloads.createAuctionProduct(), payloads.vendorAuth);
         await vendor.deleteAuctionProduct(auctionProductName);
     });
 
-    test('vendor auction activity page is rendering properly @pro @explo', async () => {
+    test('vendor auction activity page is rendering properly @pro @exp @v', async () => {
         await vendor.vendorAuctionActivityRenderProperly();
     });
 
-    test('vendor can filter auction activity @pro', async () => {
+    test('vendor can filter auction activity @pro @v', async () => {
         await vendor.filterAuctionActivity(data.date.dateRange);
     });
 
-    test('vendor can search auction activity @pro', async () => {
+    test('vendor can search auction activity @pro @v', async () => {
         await vendor.searchAuctionActivity(data.customer.username);
     });
 
-    test('customer can bid auction product @pro', async () => {
+    test('customer can bid auction product @pro @c', async () => {
         await customer.bidAuctionProduct(auctionProductName);
     });
 
-    test.skip('customer can buy auction product with buy it now price @pro', async () => {
+    test.skip('customer can buy auction product with buy it now price @pro @c', async () => {
         const [, , auctionProductName] = await apiUtils.createProduct(payloads.createAuctionProduct(), payloads.vendorAuth); // todo: buy it now price is not saved by api
         await customer.buyAuctionProduct(auctionProductName);
     });

@@ -5,121 +5,122 @@ import { dbUtils } from '@utils/dbUtils';
 import { data } from '@utils/testData';
 
 test.describe('Settings test', () => {
-    let settingsPage: SettingsPage;
+    let admin: SettingsPage;
     let aPage: Page;
 
     test.beforeAll(async ({ browser }) => {
         const adminContext = await browser.newContext(data.auth.adminAuth);
         aPage = await adminContext.newPage();
-        settingsPage = new SettingsPage(aPage);
+        admin = new SettingsPage(aPage);
     });
 
     test.afterAll(async () => {
         await aPage.close();
     });
 
-    test('dokan settings menu page is rendering properly @lite @explo', async () => {
-        await settingsPage.dokanSettingsRenderProperly();
+    test('dokan settings menu page is rendering properly @lite @exp @a', async () => {
+        await admin.dokanSettingsRenderProperly();
     });
 
-    test('admin can scroll to top on settings @lite', async () => {
-        await settingsPage.scrollToTopSettings();
+    test('admin can scroll to top on settings @lite @a', async () => {
+        await admin.scrollToTopSettings();
     });
 
-    test('admin can search settings @lite', async () => {
-        await settingsPage.searchSettings('Selling Options');
+    test('admin can search settings @lite @a', async () => {
+        await admin.searchSettings('Selling Options');
     });
 
     // dokan settings
 
-    test('admin can set dokan general settings @lite', async () => {
-        await settingsPage.setDokanGeneralSettings(data.dokanSettings.general);
+    test('admin can set dokan general settings @lite @a', async () => {
+        await admin.setDokanGeneralSettings(data.dokanSettings.general);
     });
 
-    test('admin can set dokan selling settings @lite', async () => {
-        await settingsPage.setDokanSellingSettings(data.dokanSettings.selling);
+    test('admin can set dokan selling settings @lite @a', async () => {
+        await admin.setDokanSellingSettings(data.dokanSettings.selling);
     });
 
-    test('admin can set dokan withdraw settings @lite', async () => {
-        await settingsPage.setDokanWithdrawSettings(data.dokanSettings.withdraw);
+    test('admin can set dokan withdraw settings @lite @a', async () => {
+        await admin.setDokanWithdrawSettings(data.dokanSettings.withdraw);
     });
 
-    test('admin can set dokan reverse withdraw settings @lite', async () => {
-        await settingsPage.setDokanReverseWithdrawSettings(data.dokanSettings.reverseWithdraw);
+    test('admin can set dokan reverse withdraw settings @lite @a', async () => {
+        await admin.setDokanReverseWithdrawSettings(data.dokanSettings.reverseWithdraw);
     });
 
-    test('admin can set dokan page settings @lite', async () => {
-        await settingsPage.setPageSettings(data.dokanSettings.page);
+    test('admin can set dokan page settings @lite @a', async () => {
+        await admin.setPageSettings(data.dokanSettings.page);
     });
 
-    test('admin can set dokan appearance settings @lite', async () => {
-        await settingsPage.setDokanAppearanceSettings(data.dokanSettings.appearance);
+    test('admin can set dokan appearance settings @lite @a', async () => {
+        await admin.setDokanAppearanceSettings(data.dokanSettings.appearance);
     });
 
-    test('admin can set dokan privacy policy settings @lite', async () => {
-        await settingsPage.setDokanPrivacyPolicySettings(data.dokanSettings.privacyPolicy);
+    test('admin can set dokan privacy policy settings @lite @a', async () => {
+        const privacyPolicySettings = await dbUtils.getDokanSettings(dbData.dokan.optionName.privacyPolicy);
+        await admin.setDokanPrivacyPolicySettings({ ...data.dokanSettings.privacyPolicy, privacyPage: privacyPolicySettings.privacyPage });
     });
 
-    test('admin can set dokan color settings @pro', async () => {
-        await settingsPage.setDokanColorSettings(data.dokanSettings.colors);
+    test('admin can set dokan color settings @pro @a', async () => {
+        await admin.setDokanColorSettings(data.dokanSettings.colors);
     });
 
-    test('admin can set dokan live search settings @pro', async () => {
-        await settingsPage.setDokanLiveSearchSettings(data.dokanSettings.liveSearch);
+    test('admin can set dokan live search settings @pro @a', async () => {
+        await admin.setDokanLiveSearchSettings(data.dokanSettings.liveSearch);
     });
 
-    test('admin can set dokan store support settings @pro', async () => {
-        await settingsPage.setDokanStoreSupportSettings(data.dokanSettings.storeSupport);
+    test('admin can set dokan store support settings @pro @a', async () => {
+        await admin.setDokanStoreSupportSettings(data.dokanSettings.storeSupport);
     });
 
-    test('admin can set dokan email verification settings @pro', async () => {
-        await settingsPage.setDokanEmailVerificationSettings(data.dokanSettings.emailVerification);
+    test('admin can set dokan email verification settings @pro @a', async () => {
+        await admin.setDokanEmailVerificationSettings(data.dokanSettings.emailVerification);
         // reset  settings
         await dbUtils.setDokanSettings(dbData.dokan.optionName.emailVerification, dbData.dokan.emailVerificationSettings);
     });
 
-    test('admin can set dokan shipping status settings @pro', async () => {
-        await settingsPage.setDokanShippingStatusSettings(data.dokanSettings.shippingStatus);
+    test('admin can set dokan shipping status settings @pro @a', async () => {
+        await admin.setDokanShippingStatusSettings(data.dokanSettings.shippingStatus);
     });
 
-    test('admin can set dokan quote settings @pro', async () => {
-        await settingsPage.setDokanQuoteSettings(data.dokanSettings.quote);
+    test('admin can set dokan quote settings @pro @a', async () => {
+        await admin.setDokanQuoteSettings(data.dokanSettings.quote);
     });
 
-    test('admin can set dokan rma settings @pro', async () => {
-        await settingsPage.setDokanRmaSettings(data.dokanSettings.rma);
+    test('admin can set dokan rma settings @pro @a', async () => {
+        await admin.setDokanRmaSettings(data.dokanSettings.rma);
     });
 
-    test('admin can set dokan wholesale settings @pro', async () => {
-        await settingsPage.setDokanWholesaleSettings(data.dokanSettings.wholesale);
+    test('admin can set dokan wholesale settings @pro @a', async () => {
+        await admin.setDokanWholesaleSettings(data.dokanSettings.wholesale);
     });
 
-    test('admin can set dokan eu compliance settings @pro', async () => {
-        await settingsPage.setDokanEuComplianceSettings(data.dokanSettings.euCompliance);
+    test('admin can set dokan eu compliance settings @pro @a', async () => {
+        await admin.setDokanEuComplianceSettings(data.dokanSettings.euCompliance);
     });
 
-    test('admin can set dokan delivery time settings @pro', async () => {
-        await settingsPage.setDokanDeliveryTimeSettings(data.dokanSettings.deliveryTime);
+    test('admin can set dokan delivery time settings @pro @a', async () => {
+        await admin.setDokanDeliveryTimeSettings(data.dokanSettings.deliveryTime);
     });
 
-    test('admin can set dokan product advertising settings @pro', async () => {
-        await settingsPage.setDokanProductAdvertisingSettings(data.dokanSettings.productAdvertising);
+    test('admin can set dokan product advertising settings @pro @a', async () => {
+        await admin.setDokanProductAdvertisingSettings(data.dokanSettings.productAdvertising);
     });
 
-    test('admin can set dokan geolocation settings @pro', async () => {
-        await settingsPage.setDokanGeolocationSettings(data.dokanSettings.geolocation);
+    test('admin can set dokan geolocation settings @pro @a', async () => {
+        await admin.setDokanGeolocationSettings(data.dokanSettings.geolocation);
     });
 
-    test('admin can set dokan product report abuse settings @pro', async () => {
-        await settingsPage.setDokanProductReportAbuseSettings(data.dokanSettings.productReportAbuse);
+    test('admin can set dokan product report abuse settings @pro @a', async () => {
+        await admin.setDokanProductReportAbuseSettings(data.dokanSettings.productReportAbuse);
     });
 
-    test('admin can set dokan spmv settings @pro', async () => {
-        await settingsPage.setDokanSpmvSettings(data.dokanSettings.spmv);
+    test('admin can set dokan spmv settings @pro @a', async () => {
+        await admin.setDokanSpmvSettings(data.dokanSettings.spmv);
     });
 
-    test('admin can set dokan vendor subscription settings @pro', async () => {
-        await settingsPage.setDokanVendorSubscriptionSettings(data.dokanSettings.vendorSubscription);
+    test('admin can set dokan vendor subscription settings @pro @a', async () => {
+        await admin.setDokanVendorSubscriptionSettings(data.dokanSettings.vendorSubscription);
         await dbUtils.setDokanSettings(dbData.dokan.optionName.vendorSubscription, dbData.dokan.vendorSubscriptionSettings);
     });
 });

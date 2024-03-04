@@ -5,6 +5,10 @@ import { selector } from '@pages/selectors';
 import { data } from '@utils/testData';
 import { customer } from '@utils/interfaces';
 
+// selectors
+const subscriptionsVendor = selector.vendor.vUserSubscriptions;
+const subscriptionsCustomer = selector.customer.cSubscription;
+
 export class VendorProductSubscriptionPage extends VendorPage {
     constructor(page: Page) {
         super(page);
@@ -19,10 +23,10 @@ export class VendorProductSubscriptionPage extends VendorPage {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.userSubscriptions);
 
         // filter
-        const { filterByCustomerInput, result, ...filters } = selector.vendor.vUserSubscriptions.filters;
+        const { filterByCustomerInput, result, ...filters } = subscriptionsVendor.filters;
         await this.multipleElementVisible(filters);
 
-        const noSubscriptionsFound = await this.isVisible(selector.vendor.vUserSubscriptions.noSubscriptionsFound);
+        const noSubscriptionsFound = await this.isVisible(subscriptionsVendor.noSubscriptionsFound);
         if (noSubscriptionsFound) {
             return;
         }
@@ -31,7 +35,6 @@ export class VendorProductSubscriptionPage extends VendorPage {
     // vendor view product subscription
     async viewProductSubscription(value: string) {
         // todo: go to subscription details via link , get subscription id via api
-        // todo:
     }
 
     // filter product subscriptions
@@ -40,22 +43,22 @@ export class VendorProductSubscriptionPage extends VendorPage {
 
         switch (filterBy) {
             case 'by-customer':
-                await this.click(selector.vendor.vUserSubscriptions.filters.filterByCustomer);
-                await this.typeAndWaitForResponse(data.subUrls.ajax, selector.vendor.vUserSubscriptions.filters.filterByCustomerInput, inputValue);
-                await this.toContainText(selector.vendor.vUserSubscriptions.filters.result, inputValue);
+                await this.click(subscriptionsVendor.filters.filterByCustomer);
+                await this.typeAndWaitForResponse(data.subUrls.ajax, subscriptionsVendor.filters.filterByCustomerInput, inputValue);
+                await this.toContainText(subscriptionsVendor.filters.result, inputValue);
                 await this.press(data.key.enter);
                 break;
 
             case 'by-date':
-                await this.setAttributeValue(selector.vendor.vUserSubscriptions.filters.filterByDate, 'value', inputValue);
+                await this.setAttributeValue(subscriptionsVendor.filters.filterByDate, 'value', inputValue);
                 break;
 
             default:
                 break;
         }
 
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.userSubscriptions, selector.vendor.vUserSubscriptions.filters.filter);
-        await this.notToHaveCount(selector.vendor.vUserSubscriptions.numberOfRowsFound, 0);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.userSubscriptions, subscriptionsVendor.filters.filter);
+        await this.notToHaveCount(subscriptionsVendor.numberOfRowsFound, 0);
     }
 
     // customer
@@ -65,10 +68,10 @@ export class VendorProductSubscriptionPage extends VendorPage {
         await this.goIfNotThere(data.subUrls.frontend.productSubscriptionDetails(subscriptionId));
 
         // subscription heading is visible
-        await this.toBeVisible(selector.customer.cSubscription.subscriptionDetails.subscriptionHeading);
+        await this.toBeVisible(subscriptionsCustomer.subscriptionDetails.subscriptionHeading);
 
         // subscription action elements are visible
-        const { reActivate, ...actions } = selector.customer.cSubscription.subscriptionDetails.actions;
+        const { reActivate, ...actions } = subscriptionsCustomer.subscriptionDetails.actions;
         await this.multipleElementVisible(actions);
         // todo: add more fields
     }
@@ -77,17 +80,17 @@ export class VendorProductSubscriptionPage extends VendorPage {
     async cancelProductSubscription(subscriptionId: string) {
         await this.goIfNotThere(data.subUrls.frontend.productSubscriptionDetails(subscriptionId));
 
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.productSubscriptionDetails(subscriptionId), selector.customer.cSubscription.subscriptionDetails.actions.cancel, 302);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.productSubscriptionDetails(subscriptionId), subscriptionsCustomer.subscriptionDetails.actions.cancel, 302);
         await this.toContainText(selector.customer.cWooSelector.wooCommerceSuccessMessage, 'Your subscription has been cancelled.');
     }
 
     // reactivate product subscription
     async reactivateProductSubscription(subscriptionId: string) {
         await this.goIfNotThere(data.subUrls.frontend.productSubscriptionDetails(subscriptionId));
-        const subscriptionIsActive = await this.isVisible(selector.customer.cSubscription.subscriptionDetails.actions.cancel);
+        const subscriptionIsActive = await this.isVisible(subscriptionsCustomer.subscriptionDetails.actions.cancel);
         subscriptionIsActive && (await this.cancelProductSubscription(subscriptionId));
 
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.productSubscriptionDetails(subscriptionId), selector.customer.cSubscription.subscriptionDetails.actions.reActivate, 302);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.productSubscriptionDetails(subscriptionId), subscriptionsCustomer.subscriptionDetails.actions.reActivate, 302);
         await this.toContainText(selector.customer.cWooSelector.wooCommerceSuccessMessage, 'Your subscription has been reactivated.');
     }
 
@@ -95,7 +98,7 @@ export class VendorProductSubscriptionPage extends VendorPage {
     async changeAddressOfProductSubscription(subscriptionId: string, shippingInfo: customer['customerInfo']['shipping']) {
         await this.goIfNotThere(data.subUrls.frontend.productSubscriptionDetails(subscriptionId));
 
-        await this.clickAndWaitForLoadState(selector.customer.cSubscription.subscriptionDetails.actions.changeAddress);
+        await this.clickAndWaitForLoadState(subscriptionsCustomer.subscriptionDetails.actions.changeAddress);
         await this.customerPage.updateShippingFields(shippingInfo);
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.shippingAddress, selector.customer.cAddress.shipping.shippingSaveAddress, 302);
         await this.toContainText(selector.customer.cWooSelector.wooCommerceSuccessMessage, data.customer.address.addressChangeSuccessMessage);
@@ -104,16 +107,16 @@ export class VendorProductSubscriptionPage extends VendorPage {
     // change payment of product subscription
     async changePaymentOfProductSubscription(subscriptionId: string) {
         await this.goIfNotThere(data.subUrls.frontend.productSubscriptionDetails(subscriptionId));
-        await this.clickAndWaitForLoadState(selector.customer.cSubscription.subscriptionDetails.actions.changePayment);
+        await this.clickAndWaitForLoadState(subscriptionsCustomer.subscriptionDetails.actions.changePayment);
         // todo: change to new card
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.productSubscriptionDetails(subscriptionId), selector.customer.cSubscription.subscriptionDetails.changePaymentMethod);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.productSubscriptionDetails(subscriptionId), subscriptionsCustomer.subscriptionDetails.changePaymentMethod);
         await this.toContainText(selector.customer.cWooSelector.wooCommerceSuccessMessage, 'Payment method updated.');
     }
 
     // renew product subscription
     async renewProductSubscription(subscriptionId: string) {
         await this.goIfNotThere(data.subUrls.frontend.productSubscriptionDetails(subscriptionId));
-        await this.clickAndWaitForLoadState(selector.customer.cSubscription.subscriptionDetails.actions.renewNow);
+        await this.clickAndWaitForLoadState(subscriptionsCustomer.subscriptionDetails.actions.renewNow);
         await this.customerPage.paymentOrder('stripe');
     }
 

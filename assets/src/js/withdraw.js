@@ -11,10 +11,6 @@
                 Dokan_Withdraw.makeDefault( e );
             } );
 
-            $('#dokan-withdraw-request-submit').on( 'click', (e) => {
-                Dokan_Withdraw.handleWithdrawRequest( e );
-            } );
-
             $('#dokan-withdraw-display-schedule-popup').on( 'click', (e) => {
                 Dokan_Withdraw.opensScheduleWindow( e );
             } );
@@ -26,19 +22,63 @@
             $("input[name='withdraw-schedule']").on( 'change', (e) => {
                 Dokan_Withdraw.handleScheduleChange( e );
             });
+
+            Dokan_Withdraw.initModal();
+        },
+
+        withdrawTemplate: '',
+        withdrawModal: '',
+
+        loadModalTemplate: function() {
+            if ( ! Dokan_Withdraw.withdrawTemplate && $('#tmpl-withdraw-request-popup').length ) {
+              const template = window.wp.template( 'withdraw-request-popup' );
+              Dokan_Withdraw.withdrawTemplate = template();
+            }
+        },
+
+        initModal: function() {
+            Dokan_Withdraw.loadModalTemplate();
+             const modal = $( '#dokan-withdraw-request-popup' ).iziModal(
+                 {
+                     width       : 690,
+                     overlayColor: 'rgba(0, 0, 0, 0.8)',
+                     headerColor : dokan.modal_header_color,
+                     onOpening   : function ( modal ) {
+                        Dokan_Withdraw.calculateWithdrawCharges();
+                     },
+                 }
+            );
+
+            modal.iziModal( 'setContent', Dokan_Withdraw.withdrawTemplate );
+            $( "[name='withdraw_method'][id='withdraw-method']" ).on( 'change', ( e ) => {
+              Dokan_Withdraw.calculateWithdrawCharges();
+            } );
+
+            $( 'input#withdraw-amount' ).on( 'keyup', Dokan_Withdraw.debounce( Dokan_Withdraw.calculateWithdrawCharges, 500 ) );
+            $('#dokan-withdraw-request-submit').on( 'click', (e) => {
+                Dokan_Withdraw.handleWithdrawRequest( e );
+            } );
+
+            Dokan_Withdraw.withdrawModal = modal;
+        },
+
+        debounce( func, wait, immediate ) {
+            var timeout;
+            return function () {
+                var context = this,
+                    args = arguments;
+                var later = function () {
+                    timeout = null;
+                    if ( ! immediate ) func.apply( context, args );
+                };
+                var callNow = immediate && ! timeout;
+                clearTimeout( timeout );
+                timeout = setTimeout( later, wait );
+                if ( callNow ) func.apply( context, args );
+            };
         },
         openRequestWithdrawWindow: () => {
-            const withdrawTemplate = wp.template( 'withdraw-request-popup' ),
-                modal = $( '#dokan-withdraw-request-popup' ).iziModal( {
-                    width       : 690,
-                    overlayColor: 'rgba(0, 0, 0, 0.8)',
-                    headerColor : dokan.modal_header_color,
-                } );
-
-            modal.iziModal( 'setContent', withdrawTemplate().trim() );
-            modal.iziModal( 'open' );
-
-            Dokan_Withdraw.init();
+          Dokan_Withdraw.withdrawModal.iziModal( 'open' );
         },
         opensScheduleWindow: () => {
             const scheduleTemplate = wp.template( 'withdraw-schedule-popup' ),
@@ -200,6 +240,69 @@
             const nextDate = $(e.target).data('next-schedule');
             $( '#dokan-withdraw-next-scheduled-date').html(nextDate);
         },
+        calculateWithdrawCharges: () => {
+            let charges = $( "select[name='withdraw_method'][id='withdraw-method'] option:selected" ).data();
+            if (
+                $( '#dokan-send-withdraw-request-popup-form > .dokan-alert-danger' ).length
+                || ! charges
+            ) {
+                return;
+            }
+
+            let withdrawMethod = $( "[name='withdraw_method'][id='withdraw-method']" ).val();
+            let withdrawAmount = $( "[name='withdraw_amount'][id='withdraw-amount']" ).val();
+
+            withdrawAmount = accounting.unformat(
+                withdrawAmount,
+                dokan.mon_decimal_point
+            );
+            let { chargePercentage, chargeFixed } = $(
+                "select[name='withdraw_method'][id='withdraw-method'] option:selected"
+            ).data();
+            let chargeAmount = 0;
+            let chargeText = '';
+
+            if ( chargeFixed ) {
+                chargeText += Dokan_Withdraw.formatMoney( chargeFixed );
+                chargeAmount += chargeFixed;
+            }
+            if ( chargePercentage ) {
+                let percentageAmount = chargePercentage / 100 * withdrawAmount;
+                chargeAmount += percentageAmount;
+                chargeText += chargeText ? ' + ' : '';
+                chargeText += parseFloat( accounting.formatNumber( chargePercentage, dokan.rounding_precision, '' ) )
+                    .toString()
+                    .replace('.', dokan.mon_decimal_point ) + '%';
+                chargeText += ` = ${ Dokan_Withdraw.formatMoney( chargeAmount ) }`;
+            }
+
+            if ( ! chargeText ) {
+              chargeText = Dokan_Withdraw.formatMoney( chargeAmount, dokan.currency );
+            }
+
+            Dokan_Withdraw.showWithdrawChargeHtml( chargeText, chargeAmount, withdrawAmount );
+        },
+
+        formatMoney( money ) {
+            return accounting.formatMoney( money, {
+                symbol:    dokan.currency_format_symbol,
+                decimal:   dokan.currency_format_decimal_sep,
+                thousand:  dokan.currency_format_thousand_sep,
+                precision: dokan.currency_format_num_decimals,
+                format:    dokan.currency_format
+            } )
+        },
+
+        showWithdrawChargeHtml(chargeText, chargeAmount, withdrawAmount) {
+            let chargeSection    = $('#dokan-withdraw-charge-section');
+            let revivableSection = $('#dokan-withdraw-revivable-section');
+
+            $('#dokan-withdraw-charge-section-text').html(chargeText);
+            $('#dokan-withdraw-revivable-section-text').html(Dokan_Withdraw.formatMoney(withdrawAmount - chargeAmount));
+
+            chargeSection.show();
+            revivableSection.show();
+        }
     };
 
     $(document).ready(function() {

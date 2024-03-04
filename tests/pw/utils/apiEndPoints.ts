@@ -1,5 +1,6 @@
-// const { SERVER_URL  } = process.env;
+import 'dotenv/config';
 
+// const { BASE_URL, SERVER_URL } = process.env;
 const SERVER_URL = process.env.SERVER_URL ? process.env.SERVER_URL : process.env.BASE_URL + '/wp-json';
 
 export const endPoints = {
@@ -85,6 +86,8 @@ export const endPoints = {
     updateWithdraw: (withdrawId: string) => `${SERVER_URL}/dokan/v1/withdraw/${withdrawId}`,
     cancelWithdraw: (withdrawId: string) => `${SERVER_URL}/dokan/v1/withdraw/${withdrawId}`,
     updateBatchWithdraws: `${SERVER_URL}/dokan/v1/withdraw/batch`, // method: approved, pending, delete, cancelled
+    getAllWithdrawMethodCharges: `${SERVER_URL}/dokan/v1/withdraw/charges`,
+    getWithdrawCharge: `${SERVER_URL}/dokan/v1/withdraw/charge`,
 
     // store settings
     getSettings: `${SERVER_URL}/dokan/v1/settings`,
@@ -140,6 +143,11 @@ export const endPoints = {
     deleteAnnouncement: (announcementId: string) => `${SERVER_URL}/dokan/v1/announcement/${announcementId}`,
     restoreDeletedAnnouncement: (announcementId: string) => `${SERVER_URL}/dokan/v1/announcement/${announcementId}/restore`, // put
     updateBatchAnnouncements: `${SERVER_URL}/dokan/v1/announcement/batch`, // method: trash, delete, restore
+
+    // announcement notice
+    getSingleAnnouncementNotice: (noticeId: string) => `${SERVER_URL}/dokan/v1/announcement/notice/${noticeId}`,
+    updateAnnouncementNotice: (noticeId: string) => `${SERVER_URL}/dokan/v1/announcement/notice/${noticeId}`,
+    deleteAnnouncementNotice: (noticeId: string) => `${SERVER_URL}/dokan/v1/announcement/notice/${noticeId}`,
 
     // refunds
     getAllRefunds: `${SERVER_URL}/dokan/v1/refunds`,
@@ -221,7 +229,7 @@ export const endPoints = {
     createSupportTicketComment: (supportTicketId: string) => `${SERVER_URL}/dokan/v1/admin/support-ticket/${supportTicketId}`,
     updateSupportTicketStatus: (supportTicketId: string) => `${SERVER_URL}/dokan/v1/admin/support-ticket/${supportTicketId}/status`, // post
     updateSupportTicketEmailNotification: (supportTicketId: string) => `${SERVER_URL}/dokan/v1/admin/support-ticket/${supportTicketId}/email-notification`, // post
-    deleteSupportTicketComment: (supportTicketId: string) => `${SERVER_URL}/dokan/v1/admin/support-ticket/${supportTicketId}/comment`,
+    deleteSupportTicketComment: (supportTicketCommentId: string) => `${SERVER_URL}/dokan/v1/admin/support-ticket/${supportTicketCommentId}/comment`,
     updateBatchSupportTickets: `${SERVER_URL}/dokan/v1/admin/support-ticket/batch`, // method: close
 
     // admin
@@ -317,6 +325,20 @@ export const endPoints = {
     getSpmvSettings: `${SERVER_URL}/dokan/v1/spmv-product/settings`,
     getSpmvProducts: `${SERVER_URL}/dokan/v1/spmv-product/search`,
     addToStore: `${SERVER_URL}/dokan/v1/spmv-product/add-to-store`, // post
+
+    // product question answere
+    getAllProductQuestions: `${SERVER_URL}/dokan/v1/product-questions`,
+    getSingleProductQuestion: (questionId: string) => `${SERVER_URL}/dokan/v1/product-questions/${questionId}`,
+    createProductQuestion: `${SERVER_URL}/dokan/v1/product-questions`,
+    updateProductQuestion: (questionId: string) => `${SERVER_URL}/dokan/v1/product-questions/${questionId}`,
+    deleteProductQuestion: (questionId: string) => `${SERVER_URL}/dokan/v1/product-questions/${questionId}`,
+    updateBatchProductQuestions: `${SERVER_URL}/dokan/v1/product-questions/bulk_action`, // method: delete, read, unread
+
+    getAllProductQuestionAnswers: `${SERVER_URL}/dokan/v1/product-answers`,
+    getSingleProductQuestionAnswer: (answerId: string) => `${SERVER_URL}/dokan/v1/product-answers/${answerId}`,
+    createProductQuestionAnswer: `${SERVER_URL}/dokan/v1/product-answers`,
+    updateProductQuestionAnswer: (answerId: string) => `${SERVER_URL}/dokan/v1/product-answers/${answerId}`,
+    deleteProductQuestionAnswer: (answerId: string) => `${SERVER_URL}/dokan/v1/product-answers/${answerId}`,
 
     wc: {
         // coupons
@@ -471,7 +493,7 @@ export const endPoints = {
         getAllSettingsGroups: `${SERVER_URL}/wc/v3/settings`,
         getAllSettingOptions: (groupId: string) => `${SERVER_URL}/wc/v3/settings/${groupId}`,
         getSingleSettingOption: (groupId: string, optionId: string) => `${SERVER_URL}/wc/v3/settings/${groupId}/${optionId}`,
-        updateSettingOption: (groupId: string, optionId: string) => `${SERVER_URL}/wc/v3/settings/${groupId}/${optionId}`,
+        updateSingleSettingOption: (groupId: string, optionId: string) => `${SERVER_URL}/wc/v3/settings/${groupId}/${optionId}`,
         updateBatchSettingOptions: (groupId: string) => `${SERVER_URL}/wc/v3/settings/${groupId}/batch`,
 
         // system status
@@ -516,15 +538,14 @@ export const endPoints = {
 
         productAddons: {
             getAllProductAddons: `${SERVER_URL}/wc-product-add-ons/v1/product-add-ons`,
-            getSingleProductAddon: (productId: string) => `${SERVER_URL}/wc-product-add-ons/v1/product-add-ons${productId}`,
+            getSingleProductAddon: (productId: string) => `${SERVER_URL}/wc-product-add-ons/v1/product-add-ons/${productId}`,
             createProductAddon: `${SERVER_URL}/wc-product-add-ons/v1/product-add-ons`,
-            updateProductAddon: (productId: string) => `${SERVER_URL}/wc-product-add-ons/v1/product-add-ons${productId}`,
-            deleteProductAddon: (productId: string) => `${SERVER_URL}/wc-product-add-ons/v1/product-add-ons${productId}`,
+            updateProductAddon: (productId: string) => `${SERVER_URL}/wc-product-add-ons/v1/product-add-ons/${productId}`,
+            deleteProductAddon: (productId: string) => `${SERVER_URL}/wc-product-add-ons/v1/product-add-ons/${productId}`,
         },
     },
 
     wp: {
-        // todo : add all wp endpoints
         // users
         getAllUsers: `${SERVER_URL}/wp/v2/users`,
         getCurrentUser: `${SERVER_URL}/wp/v2/users/me`,
@@ -560,7 +581,7 @@ export const endPoints = {
         // posts
         getAllPosts: `${SERVER_URL}/wp/v2/posts`,
         getSinglePost: (postId: string) => `${SERVER_URL}/wp/v2/posts/${postId}`,
-        createPost: `${SERVER_URL}/wp/v2/pots/posts`,
+        createPost: `${SERVER_URL}/wp/v2/posts`,
         createCustomPost: (postType: string) => `${SERVER_URL}/wp/v2/${postType}`,
         updatePost: (postId: string) => `${SERVER_URL}/wp/v2/posts/${postId}`,
         deletePost: (postId: string) => `${SERVER_URL}/wp/v2/posts/${postId}`,

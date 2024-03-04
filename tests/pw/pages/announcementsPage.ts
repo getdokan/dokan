@@ -5,6 +5,10 @@ import { data } from '@utils/testData';
 import { announcement } from '@utils/interfaces';
 import { helpers } from '@utils/helpers';
 
+// selectors
+const announcementsAdmin = selector.admin.dokan.announcements;
+const announcementsVendor = selector.vendor.vAnnouncement;
+
 export class AnnouncementsPage extends AdminPage {
     constructor(page: Page) {
         super(page);
@@ -17,84 +21,85 @@ export class AnnouncementsPage extends AdminPage {
         await this.goIfNotThere(data.subUrls.backend.dokan.announcements);
 
         // announcement text is visible
-        await this.toBeVisible(selector.admin.dokan.announcements.announcementText);
+        await this.toBeVisible(announcementsAdmin.announcementText);
 
         // and announcement is visible
-        await this.toBeVisible(selector.admin.dokan.announcements.addNewAnnouncement);
+        await this.toBeVisible(announcementsAdmin.addNewAnnouncement);
 
         // nav tabs are visible
-        await this.multipleElementVisible(selector.admin.dokan.announcements.navTabs);
+        await this.multipleElementVisible(announcementsAdmin.navTabs);
 
         // bulk action elements are visible
-        await this.multipleElementVisible(selector.admin.dokan.announcements.bulkActions);
+        await this.multipleElementVisible(announcementsAdmin.bulkActions);
 
         // announcement table elements are visible
-        await this.multipleElementVisible(selector.admin.dokan.announcements.table);
+        await this.multipleElementVisible(announcementsAdmin.table);
 
         // add announcement fields are visible
-        await this.click(selector.admin.dokan.announcements.addNewAnnouncement);
-        const { contentHtmlBody, schedule, ...addAnnouncement } = selector.admin.dokan.announcements.addAnnouncement;
+        await this.click(announcementsAdmin.addNewAnnouncement);
+        const { contentHtmlBody, schedule, ...addAnnouncement } = announcementsAdmin.addAnnouncement;
         await this.multipleElementVisible(addAnnouncement);
         await this.goBack();
     }
 
     // update announcement fields
     async updateAnnouncementFields(announcement: announcement) {
-        await this.clearAndType(selector.admin.dokan.announcements.addAnnouncement.title, announcement.title);
-        await this.typeFrameSelector(selector.admin.dokan.announcements.addAnnouncement.contentIframe, selector.admin.dokan.announcements.addAnnouncement.contentHtmlBody, announcement.content);
-        await this.selectByValue(selector.admin.dokan.announcements.addAnnouncement.sendAnnouncementTo, announcement.receiver);
+        await this.clearAndType(announcementsAdmin.addAnnouncement.title, announcement.title);
+        await this.typeFrameSelector(announcementsAdmin.addAnnouncement.contentIframe, announcementsAdmin.addAnnouncement.contentHtmlBody, announcement.content);
+        await this.selectByValue(announcementsAdmin.addAnnouncement.sendAnnouncementTo, announcement.receiver);
         if (announcement.publishType === 'immediately') {
-            await this.clickAndWaitForResponseAndLoadState(data.subUrls.api.dokan.announcements, selector.admin.dokan.announcements.addAnnouncement.publish);
-            await this.toBeVisible(selector.admin.dokan.announcements.announcementStatusPublished(announcement.title));
+            await this.clickAndWaitForResponseAndLoadState(data.subUrls.api.dokan.announcements, announcementsAdmin.addAnnouncement.publish);
+            await this.toBeVisible(announcementsAdmin.announcementStatusPublished(announcement.title));
         } else {
-            await this.click(selector.admin.dokan.announcements.addAnnouncement.schedule.addSchedule);
-            await this.selectByNumber(selector.admin.dokan.announcements.addAnnouncement.schedule.month, announcement.scheduleDate.getMonth());
-            await this.clearAndType(selector.admin.dokan.announcements.addAnnouncement.schedule.day, String(announcement.scheduleDate.getDate()));
-            await this.clearAndType(selector.admin.dokan.announcements.addAnnouncement.schedule.year, String(announcement.scheduleDate.getFullYear()));
-            await this.clearAndType(selector.admin.dokan.announcements.addAnnouncement.schedule.hour, String(announcement.scheduleDate.getHours()));
-            await this.clearAndType(selector.admin.dokan.announcements.addAnnouncement.schedule.minute, String(announcement.scheduleDate.getMinutes()));
-            await this.click(selector.admin.dokan.announcements.addAnnouncement.schedule.ok);
-            await this.clickAndWaitForResponseAndLoadState(data.subUrls.api.dokan.announcements, selector.admin.dokan.announcements.addAnnouncement.publish);
-            await this.toBeVisible(selector.admin.dokan.announcements.announcementStatusScheduled(announcement.title));
+            await this.click(announcementsAdmin.addAnnouncement.schedule.addSchedule);
+            await this.selectByNumber(announcementsAdmin.addAnnouncement.schedule.month, announcement.scheduleDate.getMonth());
+            await this.clearAndType(announcementsAdmin.addAnnouncement.schedule.day, String(announcement.scheduleDate.getDate()));
+            await this.clearAndType(announcementsAdmin.addAnnouncement.schedule.year, String(announcement.scheduleDate.getFullYear()));
+            await this.clearAndType(announcementsAdmin.addAnnouncement.schedule.hour, String(announcement.scheduleDate.getHours()));
+            await this.clearAndType(announcementsAdmin.addAnnouncement.schedule.minute, String(announcement.scheduleDate.getMinutes()));
+            await this.click(announcementsAdmin.addAnnouncement.schedule.ok);
+            await this.clickAndWaitForResponseAndLoadState(data.subUrls.api.dokan.announcements, announcementsAdmin.addAnnouncement.publish);
+            await this.toBeVisible(announcementsAdmin.announcementStatusScheduled(announcement.title));
         }
     }
 
     // add announcement
     async addAnnouncement(announcement: announcement) {
         await this.goIfNotThere(data.subUrls.backend.dokan.announcements);
-        await this.click(selector.admin.dokan.announcements.addNewAnnouncement);
+        await this.click(announcementsAdmin.addNewAnnouncement);
         await this.updateAnnouncementFields(announcement);
     }
 
     // edit announcement
     async editAnnouncement(announcement: announcement) {
         await this.goto(data.subUrls.backend.dokan.announcements);
-        await this.hover(selector.admin.dokan.announcements.announcementCell(announcement.title));
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.api.dokan.announcements, selector.admin.dokan.announcements.announcementEdit(announcement.title));
+        await this.hover(announcementsAdmin.announcementCell(announcement.title));
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.api.dokan.announcements, announcementsAdmin.announcementEdit(announcement.title));
         await this.updateAnnouncementFields(announcement);
     }
 
     // update announcement
     async updateAnnouncement(announcementTitle: string, action: string) {
-        await this.goto(data.subUrls.backend.dokan.announcements);
-        // await this.goIfNotThere(data.subUrls.backend.dokan.announcements);
+        // await this.goto(data.subUrls.backend.dokan.announcements);
+        await this.goIfNotThere(data.subUrls.backend.dokan.announcements);
 
         switch (action) {
             case 'trash':
-                await this.hover(selector.admin.dokan.announcements.announcementCellPublished(announcementTitle));
-                await this.clickAndWaitForResponse(data.subUrls.api.dokan.announcements, selector.admin.dokan.announcements.announcementDelete(announcementTitle));
+                await this.clickAndWaitForResponse(data.subUrls.api.dokan.announcements, announcementsAdmin.navTabs.published);
+                await this.hover(announcementsAdmin.announcementCellPublished(announcementTitle));
+                await this.clickAndWaitForResponse(data.subUrls.api.dokan.announcements, announcementsAdmin.announcementDelete(announcementTitle));
                 break;
 
             case 'restore':
-                await this.clickAndWaitForResponse(data.subUrls.api.dokan.announcements, selector.admin.dokan.announcements.navTabs.trash);
-                await this.hover(selector.admin.dokan.announcements.announcementCell(announcementTitle));
-                await this.clickAndWaitForResponse(data.subUrls.api.dokan.announcements, selector.admin.dokan.announcements.announcementRestore(announcementTitle));
+                await this.clickAndWaitForResponse(data.subUrls.api.dokan.announcements, announcementsAdmin.navTabs.trash);
+                await this.hover(announcementsAdmin.announcementCellPublished(announcementTitle));
+                await this.clickAndWaitForResponse(data.subUrls.api.dokan.announcements, announcementsAdmin.announcementRestore(announcementTitle));
                 break;
 
             case 'permanently-delete':
-                await this.clickAndWaitForResponse(data.subUrls.api.dokan.announcements, selector.admin.dokan.announcements.navTabs.trash);
-                await this.hover(selector.admin.dokan.announcements.announcementCell(announcementTitle));
-                await this.clickAndWaitForResponse(data.subUrls.api.dokan.announcements, selector.admin.dokan.announcements.announcementPermanentlyDelete(announcementTitle));
+                await this.clickAndWaitForResponse(data.subUrls.api.dokan.announcements, announcementsAdmin.navTabs.trash);
+                await this.hover(announcementsAdmin.announcementCellPublished(announcementTitle));
+                await this.clickAndWaitForResponse(data.subUrls.api.dokan.announcements, announcementsAdmin.announcementPermanentlyDelete(announcementTitle));
                 break;
 
             default:
@@ -108,11 +113,11 @@ export class AnnouncementsPage extends AdminPage {
         // await this.goIfNotThere(data.subUrls.backend.dokan.announcements);
 
         // ensure row exists
-        await this.notToBeVisible(selector.admin.dokan.announcements.noRowsFound);
+        await this.notToBeVisible(announcementsAdmin.noRowsFound);
 
-        await this.click(selector.admin.dokan.announcements.bulkActions.selectAll);
-        await this.selectByValue(selector.admin.dokan.announcements.bulkActions.selectAction, action);
-        await this.clickAndWaitForResponse(data.subUrls.api.dokan.announcements, selector.admin.dokan.announcements.bulkActions.applyAction);
+        await this.click(announcementsAdmin.bulkActions.selectAll);
+        await this.selectByValue(announcementsAdmin.bulkActions.selectAction, action);
+        await this.clickAndWaitForResponse(data.subUrls.api.dokan.announcements, announcementsAdmin.bulkActions.applyAction);
     }
 
     // vendor
@@ -120,27 +125,27 @@ export class AnnouncementsPage extends AdminPage {
     // vendor announcements render properly
     async vendorAnnouncementsRenderProperly() {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.announcements);
-        await this.notToHaveCount(selector.vendor.vAnnouncement.announcementDiv, 0);
-        await this.notToHaveCount(selector.vendor.vAnnouncement.announcementDate, 0);
-        await this.notToHaveCount(selector.vendor.vAnnouncement.announcementHeading, 0);
-        await this.notToHaveCount(selector.vendor.vAnnouncement.announcementContent, 0);
-        await this.notToHaveCount(selector.vendor.vAnnouncement.removeAnnouncement, 0);
+        await this.notToHaveCount(announcementsVendor.announcementDiv, 0);
+        await this.notToHaveCount(announcementsVendor.announcementDate, 0);
+        await this.notToHaveCount(announcementsVendor.announcementHeading, 0);
+        await this.notToHaveCount(announcementsVendor.announcementContent, 0);
+        await this.notToHaveCount(announcementsVendor.removeAnnouncement, 0);
     }
 
     // vendor view announcement
     async vendorViewAnnouncement(announcement: { title: string; content: string }) {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.announcements);
-        await this.clickAndWaitForLoadState(selector.vendor.vAnnouncement.announcementLink(announcement.title));
-        await this.toContainText(selector.vendor.vAnnouncement.announcement.title, announcement.title);
-        await this.toContainText(selector.vendor.vAnnouncement.announcement.content, helpers.stringBetweenTags(announcement.content));
-        await this.toBeVisible(selector.vendor.vAnnouncement.announcement.date);
-        await this.toBeVisible(selector.vendor.vAnnouncement.announcement.backToAllNotice);
+        await this.clickAndWaitForLoadState(announcementsVendor.announcementLink(announcement.title));
+        await this.toContainText(announcementsVendor.announcement.title, announcement.title);
+        await this.toContainText(announcementsVendor.announcement.content, helpers.stringBetweenTags(announcement.content));
+        await this.toBeVisible(announcementsVendor.announcement.date);
+        await this.toBeVisible(announcementsVendor.announcement.backToAllNotice);
     }
 
     // vendor delete announcement
     async vendorDeleteAnnouncement(title: string) {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.announcements);
-        await this.click(selector.vendor.vAnnouncement.deleteAnnouncement(title));
-        await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vAnnouncement.confirmDeleteAnnouncement);
+        await this.click(announcementsVendor.deleteAnnouncement(title));
+        await this.clickAndWaitForResponse(data.subUrls.ajax, announcementsVendor.confirmDeleteAnnouncement);
     }
 }

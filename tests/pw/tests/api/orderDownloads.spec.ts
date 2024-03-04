@@ -2,7 +2,7 @@
 //COVERAGE_TAG: POST /dokan/v2/orders/(?P<id>[\d]+)/downloads
 //COVERAGE_TAG: DELETE /dokan/v2/orders/(?P<id>[\d]+)/downloads
 
-import { test, expect } from '@playwright/test';
+import { test, expect, request } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
@@ -13,8 +13,8 @@ test.describe('order downloads api test', () => {
     let orderId: string;
     let downloadId: string;
 
-    test.beforeAll(async ({ request }) => {
-        apiUtils = new ApiUtils(request);
+    test.beforeAll(async () => {
+        apiUtils = new ApiUtils(await request.newContext());
         const [responseBody] = await apiUtils.uploadMedia('../../tests/pw/utils/sampleData/avatar.png', payloads.mimeTypes.png, payloads.adminAuth); // todo: update image path
         const downloads = [
             {
@@ -26,6 +26,10 @@ test.describe('order downloads api test', () => {
         [, downloadableProductId] = await apiUtils.createProduct({ ...payloads.createDownloadableProduct(), downloads });
         [, , orderId] = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder);
         [, downloadId] = await apiUtils.createOrderDownload(orderId, [downloadableProductId]);
+    });
+
+    test.afterAll(async () => {
+        await apiUtils.dispose();
     });
 
     test('get all order downloads @v2 @lite', async () => {

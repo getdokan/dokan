@@ -22,6 +22,7 @@ class Installer {
         $this->create_reverse_withdrawal_base_product();
         $this->product_design();
         $this->add_store_name_meta_key_for_admin_users();
+        $this->schedule_cron_jobs();
 
         // does it needs any update?
         if ( dokan()->has_woocommerce() && dokan()->upgrades->is_upgrade_required() ) {
@@ -78,6 +79,34 @@ class Installer {
                 update_user_meta( $user_id, 'dokan_store_name', $user->display_name );
             }
         }
+    }
+
+    /**
+     * Schedule cron jobs
+     *
+     * @since 3.9.2
+     *
+     * @return void
+     */
+    private function schedule_cron_jobs() {
+        if ( ! function_exists( 'WC' ) || ! WC()->queue() ) {
+            return;
+        }
+
+        // schedule daily cron job
+        $hook = 'dokan_daily_midnight_cron';
+
+        // check if we've defined the cron hook
+        $cron_schedule = as_next_scheduled_action( $hook ); // this method will return false if the hook is not scheduled
+        if ( $cron_schedule ) {
+            as_unschedule_all_actions( $hook );
+        }
+
+        // schedule recurring cron action
+        $now = dokan_current_datetime()->modify( 'midnight' )->getTimestamp();
+        WC()->queue()->schedule_cron( $now, '0 0 * * *', $hook, [], 'dokan' );
+
+        // add cron jobs as needed
     }
 
     /**

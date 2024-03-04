@@ -282,7 +282,6 @@
             position: absolute;
             top: 0;
             left: 0;
-            z-index: 9;
             width: 100%;
             height: 100%;
             background: rgba(0,0,0,0.45);
@@ -335,6 +334,10 @@
                     .store-address {
                         margin: 0 0 5px 0;
                         line-height: 23px;
+
+                        br {
+                            display: none;
+                        }
                     }
                     .store-phone {
                         margin: 0 0 5px 0;
@@ -347,7 +350,6 @@
         .store-footer {
             background: #fff;
             position: relative;
-            z-index: 99;
 
             a {
                 &:active,
@@ -389,7 +391,7 @@
     .dokan-store-is-open-status {
         background-color: #1dbf73;
     }
-    
+
     .dokan-store-is-closed-status {
         background-color: #999;
     }

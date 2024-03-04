@@ -35,7 +35,7 @@ class Dashboard {
     }
 
     /**
-     * Get Seller Dhasboard Notice
+     * Get Seller Dashboard Notice
      *
      * @since 2.4
      *
@@ -55,6 +55,10 @@ class Dashboard {
      * @return void
      */
     public function get_big_counter_widgets() {
+        if ( ! apply_filters( 'dokan_dashboard_widget_applicable', true, 'reports' ) ) {
+            return;
+        }
+
         if ( ! current_user_can( 'dokan_view_sales_overview' ) ) {
             return;
         }
@@ -81,6 +85,10 @@ class Dashboard {
      * @return void
      */
     public function get_orders_widgets() {
+        if ( ! apply_filters( 'dokan_dashboard_widget_applicable', true, 'orders' ) ) {
+            return;
+        }
+
         if ( ! current_user_can( 'dokan_view_order_report' ) ) {
             return;
         }
@@ -122,11 +130,62 @@ class Dashboard {
             ],
         ];
 
+        $nonce          = wp_create_nonce( 'seller-order-filter-nonce' );
+        $order_url      = dokan_get_navigation_url( 'orders' );
+        $completed_url  = add_query_arg(
+            [
+                'order_status'              => 'wc-completed',
+                'seller_order_filter_nonce' => $nonce,
+            ],
+            $order_url
+        );
+        $pending_url    = add_query_arg(
+            [
+                'order_status'              => 'wc-pending',
+                'seller_order_filter_nonce' => $nonce,
+            ],
+            $order_url
+        );
+        $processing_url = add_query_arg(
+            [
+                'order_status'              => 'wc-processing',
+                'seller_order_filter_nonce' => $nonce,
+            ],
+            $order_url
+        );
+        $cancelled_url  = add_query_arg(
+            [
+                'order_status'              => 'wc-cancelled',
+                'seller_order_filter_nonce' => $nonce,
+            ],
+            $order_url
+        );
+        $refunded_url   = add_query_arg(
+            [
+                'order_status'              => 'wc-refunded',
+                'seller_order_filter_nonce' => $nonce,
+            ],
+            $order_url
+        );
+        $on_hold_url    = add_query_arg(
+            [
+                'order_status'              => 'wc-on-hold',
+                'seller_order_filter_nonce' => $nonce,
+            ],
+            $order_url
+        );
+
         dokan_get_template_part(
             'dashboard/orders-widget', '', [
-                'order_data'   => $order_data,
-                'orders_count' => $this->orders_count,
-                'orders_url'   => dokan_get_navigation_url( 'orders' ),
+                'order_data'     => $order_data,
+                'orders_count'   => $this->orders_count,
+                'orders_url'     => $order_url,
+                'completed_url'  => $completed_url,
+                'pending_url'    => $pending_url,
+                'processing_url' => $processing_url,
+                'cancelled_url'  => $cancelled_url,
+                'refunded_url'   => $refunded_url,
+                'on_hold_url'    => $on_hold_url,
             ]
         );
     }
@@ -139,14 +198,40 @@ class Dashboard {
      * @return void
      */
     public function get_products_widgets() {
-        if ( ! current_user_can( 'dokan_view_product_status_report' ) ) {
+        if ( ! apply_filters( 'dokan_dashboard_widget_applicable', true, 'products' ) ) {
             return;
         }
 
+        if ( ! current_user_can( 'dokan_view_product_status_report' ) ) {
+            return;
+        }
+        $nonce       = wp_create_nonce( 'product_listing_filter' );
+        $product_url = dokan_get_navigation_url( 'products' );
+        $online_url  = add_query_arg(
+            [
+                'post_status'                   => 'publish',
+                '_product_listing_filter_nonce' => $nonce,
+            ], $product_url
+        );
+        $draft_url   = add_query_arg(
+            [
+                'post_status'                   => 'draft',
+                '_product_listing_filter_nonce' => $nonce,
+            ], $product_url
+        );
+        $pending_url = add_query_arg(
+            [
+                'post_status'                   => 'pending',
+                '_product_listing_filter_nonce' => $nonce,
+            ], $product_url
+        );
         dokan_get_template_part(
             'dashboard/products-widget', '', [
                 'post_counts'  => $this->get_post_counts(),
-                'products_url' => dokan_get_navigation_url( 'products' ),
+                'products_url' => $product_url,
+                'online_url'   => $online_url,
+                'draft_url'    => $draft_url,
+                'pending_url'  => $pending_url,
             ]
         );
     }
@@ -159,6 +244,10 @@ class Dashboard {
      * @return void
      */
     public function get_sales_report_chart_widget() {
+        if ( ! apply_filters( 'dokan_dashboard_widget_applicable', true, 'reports' ) ) {
+            return;
+        }
+
         if ( ! current_user_can( 'dokan_view_sales_report_chart' ) ) {
             return;
         }

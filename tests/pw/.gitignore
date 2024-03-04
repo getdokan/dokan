@@ -120,6 +120,7 @@ dist
 .tern-port
 
 # Stores VSCode versions used for testing VSCode extensions
+.vscode/settings.json
 .vscode-test
 
 # yarn v2
@@ -174,11 +175,7 @@ playwright/
 test-results/
 playwright-report/
 playwright/.cache/
-storageState.json
-adminStorageState.json
-customerStorageState.json
-vendorStorageState.json
-systemInfo.json
+visual.spec.ts-snapshots/
 
 # vscode
 .vscode/

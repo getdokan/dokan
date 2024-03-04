@@ -9,74 +9,89 @@
 //COVERAGE_TAG: GET /dokan/v1/admin/logs
 //COVERAGE_TAG: GET /dokan/v1/admin/logs/export
 
-import { test, expect } from '@playwright/test';
+import { test, expect, request } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
+import { schemas } from '@utils/schemas';
 
 test.describe('admin api test', () => {
     let apiUtils: ApiUtils;
 
-    test.beforeAll(({ request }) => {
-        apiUtils = new ApiUtils(request);
+    test.beforeAll(async () => {
+        apiUtils = new ApiUtils(await request.newContext());
+    });
+
+    test.afterAll(async () => {
+        await apiUtils.dispose();
     });
 
     test('get admin report overview @lite', async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAdminReportOverview);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.admin.reportOverviewSchema);
     });
 
     test('get admin report summary @lite', async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAdminReportSummary);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.admin.reportSummarySchema);
     });
 
     test('get admin dashboard feed @lite', async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAdminDashboardFeed);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.admin.adminDashboardFeedSchema);
     });
 
     test('get admin help @lite', async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAdminHelp);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.admin.adminHelpSchema);
     });
 
     test('get changelog lite @lite', async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAdminChangelogLite);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.admin.changelogLiteSchema);
     });
 
     test('get changelog pro @pro', async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAdminChangelogPro);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.admin.changelogProSchema);
     });
 
     test('get admin notices @lite', async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAdminNotices);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.admin.adminNoticesSchema);
     });
 
     test('get admin promo notices @lite', async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAdminPromoNotices);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.admin.adminPromoNoticeSchema);
     });
 
     test('get admin logs @pro', async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAdminLogs);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.admin.adminLogsSchema);
     });
 
     test('get admin export logs @pro', async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAdminExportLogs);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.admin.adminExportLogsSchema);
     });
 });

@@ -4,6 +4,236 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.9.9',
+        'released' => '2024-02-12',
+        'changes'  => [
+            'New'         => [
+                [
+                    'title'       => 'Added PHP 8.2 support',
+                    'description' => '',
+                ],
+            ],
+            'Improvement' => [
+                [
+                    'title'       => 'Added validation for bank payments and address data in Dokan Seller Setup Wizard.',
+                    'description' => '',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => 'Fixed an issue where the Dokan seller setup wizard does not display a warning message when a seller fails to provide the state for a country that has a state.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Vendor setup wizard issue [#1976] - Properly closed the style tag in the Store Setup step to avoid conflicts with customizations.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed a bug in the store-lists-filter.php template that used the wrong escaping function for the placeholder attribute. [#1984]',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Withdrawal class check-in Templates/Withdraw.php.',
+                    'description' => 'This fixes a fatal error that could occur when creating a withdrawal request with cache-enabled sites.',
+                ],
+                [
+                    'title'       => 'The `Share Essentials` field’s description was missing from the Dokan admin setup wizard. This pull request fixes an issue where the description field was not showing up in the Dokan admin setup wizard. It also adds a new hook and admin options to store the `Share Essentials` settings.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed an issue where the sub-orders disappear from the WooCommerce order lists page when orders are filtered by a specific vendor or by sub-order ID when the HPOS feature is enabled.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.9.8',
+        'released' => '2024-01-30',
+        'changes'  => [
+            'Fix' => [
+                [
+                    'title'       => 'Updated Appsero Client SDK library to version 2.0.2 which will fix a security issue with the previous version of the library and a fatal error caused by the library.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.9.7',
+        'released' => '2024-01-29',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Added WooCommerce Cart and Checkout Block supports for Dokan Lite',
+                    'description' => '',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => 'Fixed an issue where the vendor’s store map address was not saved during vendor setup wizard configuration',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Some links under the vendor dashboard weren\'t working properly due to a nonce mismatch. With this release, those issues have been fixed.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed an issue where the valid store name required check was missing from the customer-to-vendor migration form.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed an issue where the customer buys digital and physical products from different vendors, shipping charges are applied separately to each vendor.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed some translation-related issues with the date range picker',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed some translation-related issues with Dokan Sweetalert',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.9.6',
+        'released' => '2024-01-11',
+        'changes'  => [
+            'New Feature' => [
+                [
+                    'title'       => 'Features: Withdraw Charge',
+                    'description' => 'Dokan has introduced a new feature that allows the admin to set a withdrawal charge for vendors. This charge can be either a flat rate or a percentage of the withdrawal amount based on the payment gateway used. The charge will be reflected in the details report, and vendors can see how many charges will apply when they request a withdrawal. The vendor dashboard list will also show the charge and receivable amount. This feature provides greater flexibility and transparency in managing vendor withdrawals.',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.9.5',
+        'released' => '2023-12-28',
+        'changes'  => [
+            'Fix' => [
+                [
+                    'title'       => 'API request on get all orders returns empty results for the endpoint http://dev.test/wp-json/dokan/v1/orders due to default customer id was set to 0.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.9.4',
+        'released' => '2023-12-12',
+        'changes'  => [
+            'Fix' => [
+                [
+                    'title'       => 'Fixed an issue where the Vendor class shop_data persistence is broken on save()',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed a fatal error while trying to edit a subscription under WordPress Admin Panel → WooCommerce → Subscription menu of the WooCommerce Subscription Plugin.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Toggle Sub-Orders and Show Sub-Orders buttons are not working if HPOS feature is disabled.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.9.3',
+        'released' => '2023-11-30',
+        'changes'  => [
+            'Fix' => [
+                [
+                    'title'       => 'Fixed an issue where the Tab fields under the product Add/Edit page don’t display predefined tags until users start typing to select tags.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.9.2',
+        'released' => '2023-11-13',
+        'changes'  => [
+            'New'         => [
+                [
+                    'title'       => 'A new email template has been introduced named Dokan Vendor Product Review. After a product has been reviewed, an email containing information about the review is sent to the vendor. The email includes details such as the reviewer’s name, product name, review rating, and text. The email also contains a link to the review page where the vendor can view the review and respond if necessary.',
+                    'description' => '',
+                ],
+            ],
+            'Improvement' => [
+                [
+                    'title'       => 'Display a non-purchasable notice for the vendor’s own products.',
+                    'description' => '',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => '[RestAPI] Fixed an issue where getting a single order via API gives an \'invalid ID\' error If the compatibility mode isn\'t enabled for the HPOS feature on WooCOmmerce Order data storage settings',
+                    'description' => '',
+                ],
+                [
+                    'title'       => '[ProductReview] Previously the email notification sent by WordPress when a review was added to a product, was sent to the product owner. This was wrong in the context of a marketplace. Because the email sent by WordPress includes some sensitive information, like the admin dashboard URL, customer email address, etc. With these changes, we are making sure that only the marketplace admin gets the new review emails sent by WordPress.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Previously, there was an issue where selecting “All,” then “None,” and subsequently “All” again didn’t function as expected. This occurred on the vendor product edit page for simple products, specifically within the Attributes section. However, following this update, all special cases of the “Select All” feature now work flawlessly.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.9.1',
+        'released' => '2023-10-17',
+        'changes'  => [
+            'New'         => [
+                [
+                    'title'       => '',
+                    'description' => '',
+                ],
+                [
+                    'title'       => '',
+                    'description' => '',
+                ],
+            ],
+            'Improvement' => [
+                [
+                    'title'       => 'Removed flaticon packages and replace used icons with fontAwesome icons. This will reduce the plugin zip size.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added a new settings to disable fontAwesome library',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Changed all the single date picker fields with daterange picker. This updates will keep the design consistent throughout the plugin.',
+                    'description' => '',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => '[StoreOpenCloseTime] An issue where invalid store opening or closing times generate warning and fatal error on single store page.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => '[Email] Fixed an issue where the product edit link on email template redirects to the products listing instead of single product edit page',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed some responsive issue under vendor dashboard product edit page.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed some responsive issue under vendor dashboard withdraw page.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.9.0',
         'released' => '2023-10-06',
         'changes'  => [
