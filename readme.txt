@@ -5,9 +5,9 @@ Tags: WooCommerce multivendor marketplace, multi vendor marketplace, multi selle
 Requires at least: 5.6
 Tested up to: 6.4.3
 WC requires at least: 5.0.0
-WC tested up to: 8.5.2
+WC tested up to: 8.6.1
 Requires PHP: 7.4
-Stable tag: 3.9.9
+Stable tag: 3.10.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -337,6 +337,12 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 == Changelog ==
+
+= v3.10.0 ( Mar 04, 2024 ) =
+
+- **new:** Added a new filter hook named `dokan_product_cache_delete_all_data`, by using this one can prevent deleting product cache if necessary.
+- **update:** Updated FontAwesome library to version 6.5.1
+- **fix:** Fixed Elementor mega menu z-index conflict and removed line break from address fields
 
 = v3.9.9 ( Feb 12, 2024 ) =
 
