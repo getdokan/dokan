@@ -47,6 +47,9 @@ export default {
 
     watch: {
         'selectedCategories'( value ) {
+            if ( this.selectedCategories === null ) {
+                this.selectedCategories = [];
+            }
             if ( ! this.isCategoryMultiple && ! Array.isArray( this.selectedCategories ) ) {
                 this.$emit( 'categories', [ this.selectedCategories ] );
             } else {
