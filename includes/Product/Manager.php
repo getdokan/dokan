@@ -739,7 +739,7 @@ class Manager {
     }
 
     /**
-     * Returns vendor commission settings data.
+     * Returns product commission settings data.
      *
      * @since DOKAN_SINCE
      *
@@ -756,6 +756,37 @@ class Manager {
             $commission_percentage = $product->get_meta( '_per_product_admin_commission', true );
             $commission_type       = $product->get_meta( '_per_product_admin_commission_type', true );
             $additional_flat       = $product->get_meta( '_per_product_admin_additional_fee', true );
+        }
+
+        $settings = new CommissionSettings();
+        $settings->set_type( $commission_type )
+                ->set_flat( $additional_flat )
+                ->set_percentage( $commission_percentage );
+
+        return $settings;
+    }
+
+    /**
+     * Saves and returns product commission settings data.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return \WeDevs\Dokan\Commission\Utils\CommissionSettings
+     */
+    public function save_commission_settings( $product_id, $commission ) {
+        $product = $this->get( $product_id );
+
+        $commission_percentage = isset( $commission['percentage'] ) ? $commission['percentage'] : '';
+        $commission_type       = isset( $commission['type'] ) ? $commission['type'] : '';
+        $additional_flat       = isset( $commission['flat'] ) ? $commission['flat'] : '';
+
+        if ( ! empty( $product ) ) {
+            $product->update_meta_data( '_per_product_admin_commission', $commission_percentage );
+            $product->update_meta_data( '_per_product_admin_commission_type', $commission_type );
+            $product->update_meta_data( '_per_product_admin_additional_fee', $additional_flat );
+
+            $product->save_meta_data();
+            $product->save();
         }
 
         $settings = new CommissionSettings();

@@ -141,7 +141,7 @@ class PercentageCommissionTest extends WP_UnitTestCase {
     /**
      * Test percentage commission for data sets.
      *
-     * @since DOKAN_SINCE
+     * @since        DOKAN_SINCE
      *
      * @test
      *
@@ -157,7 +157,7 @@ class PercentageCommissionTest extends WP_UnitTestCase {
         $settings = new CommissionSettings();
 
         $settings->set_type( $settings_data['type'] )
-            ->set_percentage( $settings_data['percentage'] );
+                 ->set_percentage( $settings_data['percentage'] );
 
         $fixed_commission = new PercentageCommissionCalculator( $settings );
 

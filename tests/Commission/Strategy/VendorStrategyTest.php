@@ -3,9 +3,10 @@
 namespace Commission\Strategy;
 
 use WeDevs\Dokan\Commission\Strategies\GlobalCommissionSourceStrategy;
+use WeDevs\Dokan\Commission\Strategies\VendorCommissionSourceStrategy;
 use WP_UnitTestCase;
 
-class GlobalStrategyTest extends WP_UnitTestCase {
+class VendorStrategyTest extends WP_UnitTestCase {
 
     /**
      * Test if no setting is saved before.
@@ -19,7 +20,15 @@ class GlobalStrategyTest extends WP_UnitTestCase {
     public function test_commission_calculation_for_no_settings() {
         $category_id = 15;
 
-        $global_strategy = new GlobalCommissionSourceStrategy( $category_id );
+        $vendor = $this->factory()->user->create_and_get(
+            [
+                'role' => 'seller',
+            ]
+        );
+
+        $vendor = dokan()->vendor->get( $vendor->ID );
+
+        $global_strategy = new VendorCommissionSourceStrategy( $vendor->get_id(), $category_id );
         $calculator      = $global_strategy->get_commission_calculator();
 
         $this->assertNull( $calculator );
@@ -485,16 +494,22 @@ class GlobalStrategyTest extends WP_UnitTestCase {
      * @return void
      */
     public function test_commission_for_different_data_set( $settings_data, $expected ) {
-        $settings = [
-            'admin_percentage'                 => $settings_data['percentage'],
-            'commission_type'                  => $settings_data['type'],
-            'additional_fee'                   => $settings_data['flat'],
-            'commission_category_based_values' => $settings_data['cat_commission'],
-        ];
+        $vendor = $this->factory()->user->create_and_get(
+            [
+                'role' => 'seller',
+            ]
+        );
 
-        update_option( 'dokan_selling', $settings );
+        $vendor = dokan()->vendor->get( $vendor->ID );
+        $vendor->update_meta( 'dokan_admin_percentage', $settings_data['percentage'] );
+        $vendor->update_meta( 'dokan_admin_percentage_type', $settings_data['type'] );
+        $vendor->update_meta( 'dokan_admin_additional_fee', $settings_data['flat'] );
+        $vendor->update_meta( 'admin_category_commission', $settings_data['cat_commission'] );
 
-        $global_strategy = new GlobalCommissionSourceStrategy( $settings_data['category_id'] );
+        $vendor->update_meta_data();
+        $vendor->save();
+
+        $global_strategy = new VendorCommissionSourceStrategy( $vendor->get_id(), $settings_data['category_id'] );
         $calculator      = $global_strategy->get_commission_calculator();
 
         if ( null === $expected['calculator'] ) {

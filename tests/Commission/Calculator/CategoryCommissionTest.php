@@ -73,16 +73,16 @@ class xCategoryCommissionTest extends WP_UnitTestCase {
                             ],
                         ],
                     ],
-                    'total_price' => 150,
-                    'total_quantity'=> 1,
+                    'total_price'    => 150,
+                    'total_quantity' => 1,
                 ],
                 [
-                    'is_applicable' => true,
-                    'source' => 'category_based',
-                    'admin_commission' => 0,
+                    'is_applicable'             => true,
+                    'source'                    => 'category_based',
+                    'admin_commission'          => 0,
                     'per_item_admin_commission' => 0,
-                    'vendor_earning' => 150,
-                    'total_quantity' => 1
+                    'vendor_earning'            => 150,
+                    'total_quantity'            => 1,
                 ],
             ],
             [
@@ -103,16 +103,16 @@ class xCategoryCommissionTest extends WP_UnitTestCase {
                             ],
                         ],
                     ],
-                    'total_price' => 150,
-                    'total_quantity'=> 1,
+                    'total_price'    => 150,
+                    'total_quantity' => 1,
                 ],
                 [
-                    'is_applicable' => true,
-                    'source' => 'category_based',
-                    'admin_commission' => 20,
+                    'is_applicable'             => true,
+                    'source'                    => 'category_based',
+                    'admin_commission'          => 20,
                     'per_item_admin_commission' => 20,
-                    'vendor_earning' => 130,
-                    'total_quantity' => 1
+                    'vendor_earning'            => 130,
+                    'total_quantity'            => 1,
                 ],
             ],
             [
@@ -122,16 +122,16 @@ class xCategoryCommissionTest extends WP_UnitTestCase {
                     'percentage'     => null,
                     'category_id'    => 20,
                     'cat_commission' => [],
-                    'total_price' => 150,
-                    'total_quantity'=> 1,
+                    'total_price'    => 150,
+                    'total_quantity' => 1,
                 ],
                 [
-                    'is_applicable' => false,
-                    'source' => 'category_based',
-                    'admin_commission' => 0,
+                    'is_applicable'             => false,
+                    'source'                    => 'category_based',
+                    'admin_commission'          => 0,
                     'per_item_admin_commission' => 0,
-                    'vendor_earning' => 0,
-                    'total_quantity' => 1
+                    'vendor_earning'            => 0,
+                    'total_quantity'            => 1,
                 ],
             ],
             [
@@ -152,16 +152,16 @@ class xCategoryCommissionTest extends WP_UnitTestCase {
                             ],
                         ],
                     ],
-                    'total_price' => 400,
-                    'total_quantity'=> 4,
+                    'total_price'    => 400,
+                    'total_quantity' => 4,
                 ],
                 [
-                    'is_applicable' => true,
-                    'source' => 'category_based',
-                    'admin_commission' => 80,
+                    'is_applicable'             => true,
+                    'source'                    => 'category_based',
+                    'admin_commission'          => 80,
                     'per_item_admin_commission' => 20,
-                    'vendor_earning' => 320,
-                    'total_quantity' => 4,
+                    'vendor_earning'            => 320,
+                    'total_quantity'            => 4,
                 ],
             ],
             [
@@ -182,16 +182,16 @@ class xCategoryCommissionTest extends WP_UnitTestCase {
                             ],
                         ],
                     ],
-                    'total_price' => 400,
-                    'total_quantity'=> 4,
+                    'total_price'    => 400,
+                    'total_quantity' => 4,
                 ],
                 [
-                    'is_applicable' => false,
-                    'source' => 'category_based',
-                    'admin_commission' => 0,
+                    'is_applicable'             => false,
+                    'source'                    => 'category_based',
+                    'admin_commission'          => 0,
                     'per_item_admin_commission' => 0,
-                    'vendor_earning' => 0,
-                    'total_quantity' => 4,
+                    'vendor_earning'            => 0,
+                    'total_quantity'            => 4,
                 ],
             ],
             [
@@ -212,16 +212,16 @@ class xCategoryCommissionTest extends WP_UnitTestCase {
                             ],
                         ],
                     ],
-                    'total_price' => 400,
-                    'total_quantity'=> 4,
+                    'total_price'    => 400,
+                    'total_quantity' => 4,
                 ],
                 [
-                    'is_applicable' => true,
-                    'source' => 'category_based',
-                    'admin_commission' => 80,
+                    'is_applicable'             => true,
+                    'source'                    => 'category_based',
+                    'admin_commission'          => 80,
                     'per_item_admin_commission' => 20,
-                    'vendor_earning' => 320,
-                    'total_quantity' => 4,
+                    'vendor_earning'            => 320,
+                    'total_quantity'            => 4,
                 ],
             ],
         ];
@@ -230,7 +230,7 @@ class xCategoryCommissionTest extends WP_UnitTestCase {
     /**
      * Test category commission for data sets.
      *
-     * @since DOKAN_SINCE
+     * @since        DOKAN_SINCE
      *
      * @test
      *
@@ -246,10 +246,10 @@ class xCategoryCommissionTest extends WP_UnitTestCase {
         $settings = new CommissionSettings();
 
         $settings->set_type( $settings_data['type'] )
-            ->set_flat( $settings_data['flat'] )
-            ->set_percentage( $settings_data['percentage'] )
-            ->set_category_id( $settings_data['category_id'] )
-            ->set_category_commissions( $settings_data['cat_commission'] );
+                 ->set_flat( $settings_data['flat'] )
+                 ->set_percentage( $settings_data['percentage'] )
+                 ->set_category_id( $settings_data['category_id'] )
+                 ->set_category_commissions( $settings_data['cat_commission'] );
 
         $category_commission = new CategoryBasedCommissionCalculator( $settings );
 

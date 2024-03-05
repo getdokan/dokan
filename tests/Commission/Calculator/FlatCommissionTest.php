@@ -40,7 +40,7 @@ class FlatCommissionTest extends WP_UnitTestCase {
      * @return void
      */
     public function test_that_commission_is_not_applicable_for_empty_settings() {
-        $settings         = new CommissionSettings();
+        $settings        = new CommissionSettings();
         $flat_commission = new FlatCommissionCalculator( $settings );
 
         $this->assertFalse( $flat_commission->is_applicable() );
@@ -141,7 +141,7 @@ class FlatCommissionTest extends WP_UnitTestCase {
     /**
      * Test flat commission for data sets.
      *
-     * @since DOKAN_SINCE
+     * @since        DOKAN_SINCE
      *
      * @test
      *
@@ -157,7 +157,7 @@ class FlatCommissionTest extends WP_UnitTestCase {
         $settings = new CommissionSettings();
 
         $settings->set_type( $settings_data['type'] )
-            ->set_flat( $settings_data['flat'] );
+                 ->set_flat( $settings_data['flat'] );
 
         $flat_commission = new FlatCommissionCalculator( $settings );
 

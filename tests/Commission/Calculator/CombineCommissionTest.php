@@ -163,7 +163,7 @@ class CombineCommissionTest extends WP_UnitTestCase {
     /**
      * Test combine commission for data sets.
      *
-     * @since DOKAN_SINCE
+     * @since        DOKAN_SINCE
      *
      * @test
      *
@@ -179,8 +179,8 @@ class CombineCommissionTest extends WP_UnitTestCase {
         $settings = new CommissionSettings();
 
         $settings->set_type( $settings_data['type'] )
-            ->set_flat( $settings_data['flat'] )
-            ->set_percentage( $settings_data['percentage'] );
+                 ->set_flat( $settings_data['flat'] )
+                 ->set_percentage( $settings_data['percentage'] );
 
         $fixed_commission = new CombineCommissionCalculator( $settings );
 
@@ -191,7 +191,7 @@ class CombineCommissionTest extends WP_UnitTestCase {
         $this->assertEquals( $expected['admin_commission'], $fixed_commission->get_admin_commission() );
         $this->assertEquals( $expected['vendor_earning'], $fixed_commission->get_vendor_earning() );
         $this->assertEquals( $expected['source'], $fixed_commission->get_source() );
-        $this->assertEquals( wc_format_decimal($expected['per_item_admin_commission'], 2), wc_format_decimal( $fixed_commission->get_per_item_admin_commission(), 2 ) );
+        $this->assertEquals( wc_format_decimal( $expected['per_item_admin_commission'], 2 ), wc_format_decimal( $fixed_commission->get_per_item_admin_commission(), 2 ) );
         $this->assertEquals( $expected['total_quantity'], $fixed_commission->get_items_total_quantity() );
     }
 }
