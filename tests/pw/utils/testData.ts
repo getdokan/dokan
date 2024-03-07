@@ -1883,8 +1883,9 @@ export const data = {
 
         // Appearance
         appearance: {
+            mapApiSource: 'google_maps', // 'google_maps', 'mapbox'
             googleMapApiKey: String(process.env.GMAP),
-            mapBoxApiKey: String(process.env.MAPBOX_API_KEY),
+            mapBoxApiKey: String(process.env.MAPBOX),
             storeBannerWidth: '625',
             storeBannerHeight: '300',
             saveSuccessMessage: 'Setting has been saved successfully.',

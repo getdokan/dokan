@@ -225,7 +225,7 @@ jobs:
 
             # Backup Database
             - name: Backup Database
-              if: success()
+              if: steps.wp-env.outcome == 'success'
               run: |
                   cd tests/pw
                   npm run wp-env run tests-cli wp db export wp-data/db.sql

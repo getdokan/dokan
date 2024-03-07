@@ -1915,9 +1915,9 @@ export const selector = {
                     // Commission
                     commissionType: '#dokan_selling\\[commission_type\\]',
                     adminCommission: '#dokan_selling\\[admin_percentage\\]',
-                    shippingFeeRecipient: (feeReceiver: string) => `//label[@for='dokan_selling[shipping_fee_recipient][${feeReceiver}]']`,
-                    productTaxFeeRecipient: (feeReceiver: string) => `//label[@for='dokan_selling[tax_fee_recipient][${feeReceiver}]']`,
-                    shippingTaxFeeRecipient: (feeReceiver: string) => `//label[@for='dokan_selling[shipping_tax_fee_recipient][${feeReceiver}]']`,
+                    shippingFeeRecipient: (feeReceiver: string) => `//label[contains(@for,'${feeReceiver}-shipping_fee_recipient')]`,
+                    productTaxFeeRecipient: (feeReceiver: string) => `//label[contains(@for,'${feeReceiver}-tax_fee_recipient')]`,
+                    shippingTaxFeeRecipient: (feeReceiver: string) => `//label[contains(@for,'${feeReceiver}-shipping_tax_fee_recipient')]`,
                     processRefundViaAPI: '#dokan_selling\\[automatic_process_api_refund\\]',
 
                     // Vendor Capability
@@ -1926,11 +1926,11 @@ export const selector = {
                     disableProductPopup: '.disable_product_popup .switch',
                     orderStatusChange: '.order_status_change .switch',
                     selectAnyCategory: '.dokan_any_category_selection .switch',
-                    newProductStatus: (status: string) => `//label[@for='dokan_selling[product_status][${status}]']`,
+                    newProductStatus: (status: string) => `//label[contains(@for,'${status}-product_status')]`,
                     duplicateProduct: '.vendor_duplicate_product .switch',
                     editedProductStatus: '.edited_product_status .switch',
                     productMailNotification: '.product_add_mail .switch',
-                    productCategorySelection: (category: string) => `//label[@for='dokan_selling[product_category_style][${category}]']`,
+                    productCategorySelection: (category: string) => `//label[contains(@for,'${category}-product_category_style')]`,
                     vendorsCanCreateTags: '.product_vendors_can_create_tags .switch',
                     orderDiscount: '//div[contains(text(),"Order Discount")]//label[@class="switch tips"]',
                     productDiscount: '//div[contains(text(),"Product Quantity Discount")]//label[@class="switch tips"]',
@@ -2014,10 +2014,10 @@ export const selector = {
                 // Pages
                 page: {
                     // Page Settings
-                    dashboard: '#dokan_pages\\[dashboard\\]',
-                    myOrders: '#dokan_pages\\[my_orders\\]',
-                    storeListing: '#dokan_pages\\[store_listing\\]',
-                    termsAndConditions: '#dokan_pages\\[reg_tc_page\\]',
+                    dashboard: 'select#dokan_pages\\[dashboard\\]',
+                    myOrders: 'select#dokan_pages\\[my_orders\\]',
+                    storeListing: 'select#dokan_pages\\[store_listing\\]',
+                    termsAndConditions: 'select#dokan_pages\\[reg_tc_page\\]',
                     pageSaveChanges: '#submit',
                 },
 
@@ -2025,8 +2025,7 @@ export const selector = {
                 appearance: {
                     // Appearance
                     showMapOnStorePage: '.store_map .switch',
-                    mapApiSourceGoogleMaps: '//div[@class="map_api_source dokan-settings-field-type-radio"] //label[@for="dokan_appearance[map_api_source][google_maps]"]',
-                    mapApiSourceMapBox: '//div[@class="map_api_source dokan-settings-field-type-radio"] //label[@for="dokan_appearance[map_api_source][mapbox]"]',
+                    mapApiSource: (source: string) => `//label[contains(@for,'${source}-map_api_source')]`,
                     googleMapApiKey: '#dokan_appearance\\[gmap_api_key\\]',
                     mapBoxAccessToken: '#dokan_appearance\\[mapbox_access_token\\]',
                     googleReCAPTCHA: '.recaptcha_validation_label .dashicons',

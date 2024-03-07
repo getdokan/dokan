@@ -184,9 +184,36 @@ setup.describe('setup dokan settings', () => {
         await dbUtils.setDokanSettings(dbData.dokan.optionName.reverseWithdraw, dbData.dokan.reverseWithdrawSettings);
     });
 
+    setup('admin set dokan page settings @lite', async () => {
+        const [, pageId] = await apiUtils.createPage(payloads.tocPage, payloads.adminAuth);
+        const pageSettings = await dbUtils.getDokanSettings(dbData.dokan.optionName.page);
+        pageSettings['reg_tc_page'] = String(pageId);
+        await dbUtils.setDokanSettings(dbData.dokan.optionName.page, pageSettings);
+    });
+
+    setup.skip('admin set dokan appearance settings @lite', async () => {
+        await dbUtils.setDokanSettings(dbData.dokan.optionName.appearance, dbData.dokan.appearanceSettings);
+    });
+
+    setup('admin set dokan privacy policy settings @lite', async () => {
+        const [, pageId] = await apiUtils.createPage(payloads.privacyPolicyPage, payloads.adminAuth);
+        dbData.dokan.privacyPolicySettings.privacy_page = String(pageId);
+        await dbUtils.setDokanSettings(dbData.dokan.optionName.privacyPolicy, dbData.dokan.privacyPolicySettings);
+    });
+
+    setup.skip('admin set dokan color settings @pro', async () => {
+        setup.skip(!DOKAN_PRO, 'skip on lite');
+        await dbUtils.setDokanSettings(dbData.dokan.optionName.colors, dbData.dokan.colorsSettings);
+    });
+
     setup('admin set dokan store support settings @pro', async () => {
         setup.skip(!DOKAN_PRO, 'skip on lite');
         await dbUtils.setDokanSettings(dbData.dokan.optionName.storeSupport, dbData.dokan.storeSupportSettings);
+    });
+
+    setup.skip('admin set dokan shipping status settings @pro', async () => {
+        setup.skip(!DOKAN_PRO, 'skip on lite');
+        await dbUtils.setDokanSettings(dbData.dokan.optionName.shippingStatus, dbData.dokan.shippingStatusSettings);
     });
 
     setup('admin set dokan quote settings @pro', async () => {
@@ -194,9 +221,24 @@ setup.describe('setup dokan settings', () => {
         await dbUtils.setDokanSettings(dbData.dokan.optionName.quote, dbData.dokan.quoteSettings);
     });
 
+    setup.skip('admin set dokan rma settings @pro', async () => {
+        setup.skip(!DOKAN_PRO, 'skip on lite');
+        await dbUtils.setDokanSettings(dbData.dokan.optionName.rma, dbData.dokan.rmaSettings);
+    });
+
     setup('admin set dokan wholesale settings @pro', async () => {
         setup.skip(!DOKAN_PRO, 'skip on lite');
         await dbUtils.setDokanSettings(dbData.dokan.optionName.wholesale, dbData.dokan.wholesaleSettings);
+    });
+
+    setup.skip('admin set dokan eu compliance settings @pro', async () => {
+        setup.skip(!DOKAN_PRO, 'skip on lite');
+        await dbUtils.setDokanSettings(dbData.dokan.optionName.euCompliance, dbData.dokan.euComplianceSettings);
+    });
+
+    setup.skip('admin set dokan delivery time settings @pro', async () => {
+        setup.skip(!DOKAN_PRO, 'skip on lite');
+        await dbUtils.setDokanSettings(dbData.dokan.optionName.deliveryTime, dbData.dokan.deliveryTimeSettings);
     });
 
     setup('admin set dokan product advertising settings @pro', async () => {
@@ -204,9 +246,24 @@ setup.describe('setup dokan settings', () => {
         await dbUtils.setDokanSettings(dbData.dokan.optionName.productAdvertising, dbData.dokan.productAdvertisingSettings);
     });
 
+    setup.skip('admin set dokan geolocation settings @pro', async () => {
+        setup.skip(!DOKAN_PRO, 'skip on lite');
+        await dbUtils.setDokanSettings(dbData.dokan.optionName.geolocation, dbData.dokan.geolocationSettings);
+    });
+
     setup('admin set dokan product report abuse settings @pro', async () => {
         setup.skip(!DOKAN_PRO, 'skip on lite');
         await dbUtils.setDokanSettings(dbData.dokan.optionName.productReportAbuse, dbData.dokan.productReportAbuseSettings);
+    });
+
+    setup.skip('admin set dokan spmv settings @pro', async () => {
+        setup.skip(!DOKAN_PRO, 'skip on lite');
+        await dbUtils.setDokanSettings(dbData.dokan.optionName.spmv, dbData.dokan.spmvSettings);
+    });
+
+    setup.skip('admin set dokan vendor subscription settings @pro', async () => {
+        setup.skip(!DOKAN_PRO, 'skip on lite');
+        await dbUtils.setDokanSettings(dbData.dokan.optionName.vendorSubscription, dbData.dokan.vendorSubscriptionSettings);
     });
 });
 

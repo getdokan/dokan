@@ -18,6 +18,7 @@ declare global {
             PRODUCT_ID_V2: string;
             CI: string;
             GMAP: string;
+            MAPBOX: string;
             LICENSE_KEY: string;
             DOKAN_PRO: string;
             SITE_PATH: string;

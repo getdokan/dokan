@@ -91,7 +91,7 @@ export class SettingsPage extends AdminPage {
         // commission settings
         await this.selectByValue(settingsAdmin.selling.commissionType, selling.commissionType);
         await this.clearAndType(settingsAdmin.selling.adminCommission, selling.adminCommission);
-        // await this.click(settingsAdmin.selling.shippingFeeRecipient(selling.shippingFeeRecipient)); //todo: makes test flaky
+        await this.click(settingsAdmin.selling.shippingFeeRecipient(selling.shippingFeeRecipient));
         await this.click(settingsAdmin.selling.productTaxFeeRecipient(selling.productTaxFeeRecipient));
         await this.click(settingsAdmin.selling.shippingTaxFeeRecipient(selling.shippingTaxFeeRecipient));
 
@@ -226,7 +226,7 @@ export class SettingsPage extends AdminPage {
 
         // Appearance Settings
         await this.enableSwitcher(settingsAdmin.appearance.showMapOnStorePage);
-        await this.click(settingsAdmin.appearance.mapApiSourceGoogleMaps);
+        await this.click(settingsAdmin.appearance.mapApiSource(appearance.mapApiSource));
         await this.clearAndType(settingsAdmin.appearance.googleMapApiKey, appearance.googleMapApiKey);
         await this.enableSwitcher(settingsAdmin.appearance.showContactFormOnStorePage);
         await this.click(settingsAdmin.appearance.storeHeaderTemplate2);

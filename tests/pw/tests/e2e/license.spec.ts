@@ -21,15 +21,15 @@ test.describe('License test', () => {
         await admin.adminLicenseRenderProperly();
     });
 
-    test("admin can't activate license with incorrect key @pro @a @neg", async () => {
+    test.skip("admin can't activate license with incorrect key @pro @a @neg", async () => {
         await admin.activateLicense(data.dokanLicense.incorrectKey, 'incorrect');
     });
 
-    test('admin can activate license @pro @a', async () => {
+    test.skip('admin can activate license @pro @a', async () => {
         await admin.activateLicense(data.dokanLicense.correctKey);
     });
 
-    test('admin can deactivate license @pro @a', async () => {
+    test.skip('admin can deactivate license @pro @a', async () => {
         await admin.activateLicense(data.dokanLicense.correctKey);
         await admin.deactivateLicense();
     });

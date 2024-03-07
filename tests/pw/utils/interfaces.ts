@@ -1505,6 +1505,7 @@ export interface dokanSettings {
 
     // Appearance
     appearance: {
+        mapApiSource: string;
         googleMapApiKey: string;
         mapBoxApiKey: string;
         storeBannerWidth: string;
