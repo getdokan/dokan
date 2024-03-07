@@ -1579,4 +1579,31 @@ class Vendor {
 
         return $settings;
     }
+
+    /**
+     * Saves commission settings.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $commission
+     *
+     * @return \WeDevs\Dokan\Commission\Utils\CommissionSettings
+     */
+    public function save_commission_settings( $commission = [] ) {
+        if ( empty( $this->get_id() ) ) {
+            return $this->get_commission_settings();
+        }
+
+        $percentage           = isset( $commission['percentage'] ) ? $commission['percentage'] : '';
+        $type                 = isset( $commission['type'] ) ? $commission['type'] : '';
+        $flat                 = isset( $commission['flat'] ) ? $commission['flat'] : '';
+        $category_commissions = isset( $commission['category_commissions'] ) ? $commission['category_commissions'] : [];
+
+        $this->update_meta( 'dokan_admin_percentage', $percentage );
+        $this->update_meta( 'dokan_admin_percentage_type', $type );
+        $this->update_meta( 'dokan_admin_additional_fee', $flat );
+        $this->update_meta( 'admin_category_commission', $category_commissions );
+
+        return $this->get_commission_settings();
+    }
 }
