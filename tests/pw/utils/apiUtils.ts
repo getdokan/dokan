@@ -296,7 +296,7 @@ export class ApiUtils {
 
     // get product exists or not
     async checkProductExistence(productName: string, auth?: auth): Promise<string | boolean> {
-        const allProducts = await this.getAllProducts(auth);
+        const allProducts = await this.getAllProductsWc(auth);
         const res = allProducts.find((o: { name: string }) => o.name.toLowerCase() === productName.toLowerCase())?.id ?? false;
         return res;
     }
@@ -1602,6 +1602,14 @@ export class ApiUtils {
         }
         const [response, responseBody] = await this.post(endPoints.wc.updateBatchCategories, { data: { [action]: allIds }, headers: auth });
         return [response, responseBody];
+    }
+
+    // product
+
+    // get all products
+    async getAllProductsWc(auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.get(endPoints.wc.getAllProducts, { params: { per_page: 100 }, headers: auth });
+        return responseBody;
     }
 
     // order

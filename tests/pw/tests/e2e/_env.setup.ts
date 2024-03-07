@@ -1,4 +1,5 @@
 import { test as setup, expect, request, Page } from '@playwright/test';
+import { LicensePage } from '@pages/licensePage';
 import { ProductAdvertisingPage } from '@pages/productAdvertisingPage';
 import { ReverseWithdrawsPage } from '@pages/reverseWithdrawsPage';
 import { VendorSettingsPage } from '@pages/vendorSettingsPage';
@@ -96,6 +97,17 @@ setup.describe('setup site & woocommerce & user settings', () => {
         await apiUtils.createAttributeTerm(attributeId, { name: 's' });
         await apiUtils.createAttributeTerm(attributeId, { name: 'l' });
         await apiUtils.createAttributeTerm(attributeId, { name: 'm' });
+    });
+
+    setup('set dokan license @pro', async () => {
+        setup.skip(!DOKAN_PRO, 'skip on lite');
+        await dbUtils.setDokanSettings(dbData.dokan.optionName.dokanProLicense, dbData.dokan.dokanProLicense);
+        await dbUtils.setDokanSettings(dbData.dokan.optionName.dokanProActiveModules, dbData.dokan.dokanProActiveModules);
+    });
+
+    setup('activate all dokan modules @pro', async () => {
+        setup.skip(!DOKAN_PRO, 'skip on lite');
+        await dbUtils.setDokanSettings(dbData.dokan.optionName.dokanProActiveModules, dbData.dokan.dokanProActiveModules);
     });
 
     setup('check active dokan modules @pro', async () => {
@@ -268,6 +280,7 @@ setup.describe('setup dokan settings', () => {
 });
 
 setup.describe('setup dokan settings e2e', () => {
+    let licensePage: LicensePage;
     let productAdvertisingPage: ProductAdvertisingPage;
     let reverseWithdrawsPage: ReverseWithdrawsPage;
     let vendorPage: VendorSettingsPage;
@@ -277,6 +290,7 @@ setup.describe('setup dokan settings e2e', () => {
     setup.beforeAll(async ({ browser }) => {
         const adminContext = await browser.newContext(data.auth.adminAuth);
         aPage = await adminContext.newPage();
+        licensePage = new LicensePage(aPage);
         productAdvertisingPage = new ProductAdvertisingPage(aPage);
         reverseWithdrawsPage = new ReverseWithdrawsPage(aPage);
 
@@ -291,6 +305,10 @@ setup.describe('setup dokan settings e2e', () => {
         await aPage.close();
         await vPage.close();
         await apiUtils.dispose();
+    });
+
+    setup('admin can refreseh license @pro @a', async () => {
+        await licensePage.refresehLicense();
     });
 
     setup('recreate reverse withdrawal payment product via settings save @lite', async () => {

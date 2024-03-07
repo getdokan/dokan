@@ -29,6 +29,10 @@ test.describe('License test', () => {
         await admin.activateLicense(data.dokanLicense.correctKey);
     });
 
+    test('admin can refreseh license @pro @a', async () => {
+        await admin.refresehLicense();
+    });
+
     test.skip('admin can deactivate license @pro @a', async () => {
         await admin.activateLicense(data.dokanLicense.correctKey);
         await admin.deactivateLicense();

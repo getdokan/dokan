@@ -92,7 +92,7 @@ jobs:
               if: success()
               run: |
                   cd tests/pw 
-                  npm ci
+                  npm ci || npm i
 
             # Create wp debuglog file
             - name: Create wp debuglog file

@@ -32,6 +32,10 @@ export const dbData = {
             vendorSubscription: 'dokan_product_subscription',
             // vendorAnalytics:
             dokanActiveModules: 'dokan_pro_active_modules',
+
+            // dokanPro
+            dokanProLicense: 'dokan_pro_license',
+            dokanProActiveModules: 'dokan_pro_active_modules',
         },
 
         generalSettings: {
@@ -1086,6 +1090,61 @@ export const dbData = {
             alert_email_subject: 'Subscription Ending Soon',
             alert_email_body: 'Dear subscriber, Your subscription will be ending soon. Please renew your package in a timely',
         },
+
+
+        // dokan pro license
+        dokanProLicense: {
+            key: '74c8654e-84a5-49b2-a3f5-81afba8e13fa',
+            status: 'activate',
+            remaining: 42,
+            activation_limit: 50,
+            expiry_days: 329,
+            title: 'Business',
+            source_id: 'dokan-business',
+            recurring: 1,
+        },
+
+        // dokan pro modules
+        dokanProActiveModules: [
+            'booking',
+            'auction',
+            'color_scheme_customizer',
+            'delivery_time',
+            'elementor',
+            'germanized',
+            'follow_store',
+            'geolocation',
+            'live_chat',
+            'live_search',
+            'mangopay',
+            'order_min_max',
+            'paypal_marketplace',
+            'product_addon',
+            'product_advertising',
+            'product_enquiry',
+            'vsp',
+            'rank_math',
+            'razorpay',
+            'report_abuse',
+            'request_for_quotation',
+            'rma',
+            'seller_badge',
+            'seller_vacation',
+            'shipstation',
+            'spmv',
+            'store_reviews',
+            'store_support',
+            'stripe',
+            'stripe_express',
+            'table_rate_shipping',
+            'vendor_analytics',
+            'export_import',
+            'vendor_staff',
+            'product_subscription',
+            'vendor_verification',
+            'wholesale',
+            'moip',
+        ],
 
         // modules
         modules: [

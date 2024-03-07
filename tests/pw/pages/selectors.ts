@@ -1130,7 +1130,7 @@ export const selector = {
             announcements: {
                 announcementText: '.dokan-announcement-wrapper h1',
 
-                addNewAnnouncement: '//a[normalize-space()="Add Announcement"]',
+                addNewAnnouncement: '//button[normalize-space()="Add Announcement"]',
 
                 // Nav Tabs
                 navTabs: {

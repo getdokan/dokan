@@ -2606,7 +2606,7 @@ export const payloads = {
         email: process.env.VENDOR + '@yopmail.com',
         store_name: process.env.VENDOR + 'store',
         first_name: process.env.VENDOR,
-        last_name: 'v1',
+        last_name: 'v',
         social: {
             fb: 'http://dokan.test',
             youtube: 'http://dokan.test',
