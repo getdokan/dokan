@@ -6925,8 +6925,7 @@ export const selector = {
             // Social icons
             storeSocialIcons: {
                 facebook: '.fa-facebook-square',
-                twitter: '.fa-twitter-square',
-                // twitter: '.fa-square-x-twitter', // todo: replace after PR is merged
+                twitter: '.fa-square-x-twitter', 
                 pinterest: '.fa-pinterest-square',
                 linked: '.fa-linkedin',
                 youtube: '.fa-youtube-square',
