@@ -34,8 +34,14 @@ if ( is_wp_error( $section ) ) {
                 <div id="dokan-product-title-area" class="dokan-form-group">
                     <input type="hidden" name="dokan_product_id" id="dokan-edit-product-id" value="<?php echo esc_attr( $product->get_id() ); ?>" />
 
-                    <label for="<?php echo esc_attr( $product_title->get_name() ); ?>" class="form-label"><?php echo esc_html( $product_title->get_title() ); ?>
+                    <label for="<?php echo esc_attr( $product_title->get_name() ); ?>" class="form-label">
+                        <?php echo esc_html( $product_title->get_title() ); ?>
                         <?php $product_title->print_required_symbol(); ?>
+                        <i
+                            class="fas fa-question-circle tips"
+                            aria-hidden="true"
+                            data-title="<?php echo esc_attr( $product_title->get_help_content() ); ?>">
+                        </i>
                     </label>
                     <?php
                     dokan_post_input_box(
@@ -98,11 +104,19 @@ if ( is_wp_error( $section ) ) {
                     if ( ! is_wp_error( $regular_price ) && $regular_price->is_visible() ) :
                         ?>
                         <div class="content-half-part regular-price">
-                            <label for="<?php echo esc_attr( $regular_price->get_name() ); ?>" class="form-label"><?php echo esc_html( $regular_price->get_title() ); ?>
+                            <label for="<?php echo esc_attr( $regular_price->get_name() ); ?>" class="form-label">
+                                <?php echo esc_html( $regular_price->get_title() ); ?>
                                 <?php $regular_price->print_required_symbol(); ?>
+                                <i
+                                    class="fas fa-question-circle tips"
+                                    aria-hidden="true"
+                                    data-title="<?php echo esc_attr( $regular_price->get_help_content() ); ?>">
+                                </i>
                             </label>
                             <div class="dokan-input-group">
-                                <span class="dokan-input-group-addon"><?php echo esc_html( get_woocommerce_currency_symbol() ); ?></span>
+                                <span class="dokan-input-group-addon">
+                                    <?php echo esc_html( get_woocommerce_currency_symbol() ); ?>
+                                </span>
                                 <?php
                                 dokan_post_input_box(
                                     $product->get_id(),
@@ -138,12 +152,19 @@ if ( is_wp_error( $section ) ) {
                             <label for="<?php echo esc_attr( $sale_price->get_name() ); ?>" class="form-label">
                                 <?php echo esc_html( $sale_price->get_title() ); ?>
                                 <?php $sale_price->print_required_symbol(); ?>
+                                <i
+                                    class="fas fa-question-circle tips"
+                                    aria-hidden="true"
+                                    data-title="<?php echo esc_attr( $sale_price->get_help_content() ); ?>">
+                                </i>
                                 <a href="#" class="sale_schedule <?php echo $show_schedule ? 'dokan-hide' : ''; ?>"><?php esc_html_e( 'Schedule', 'dokan-lite' ); ?></a>
                                 <a href="#" class="cancel_sale_schedule <?php echo ( ! $show_schedule ) ? 'dokan-hide' : ''; ?>"><?php esc_html_e( 'Cancel', 'dokan-lite' ); ?></a>
                             </label>
 
                             <div class="dokan-input-group">
-                                <span class="dokan-input-group-addon"><?php echo esc_html( get_woocommerce_currency_symbol() ); ?></span>
+                                <span class="dokan-input-group-addon">
+                                    <?php echo esc_html( get_woocommerce_currency_symbol() ); ?>
+                                </span>
                                 <?php
                                 dokan_post_input_box(
                                     $product->get_id(),
@@ -178,6 +199,11 @@ if ( is_wp_error( $section ) ) {
                                 <span class="dokan-input-group-addon">
                                     <?php echo esc_html( $date_on_sale_from->get_title() ); ?>
                                     <?php $date_on_sale_from->print_required_symbol(); ?>
+                                    <i
+                                        class="fas fa-question-circle tips"
+                                        aria-hidden="true"
+                                        data-title="<?php echo esc_attr( $date_on_sale_from->get_help_content() ); ?>">
+                                    </i>
                                 </span>
                                 <input
                                     type="text"
@@ -196,6 +222,11 @@ if ( is_wp_error( $section ) ) {
                                 <span class="dokan-input-group-addon">
                                     <?php echo esc_html( $date_on_sale_to->get_title() ); ?>
                                     <?php $date_on_sale_to->print_required_symbol(); ?>
+                                    <i
+                                        class="fas fa-question-circle tips"
+                                        aria-hidden="true"
+                                        data-title="<?php echo esc_attr( $date_on_sale_to->get_help_content() ); ?>">
+                                    </i>
                                 </span>
                                 <input
                                     type="text"
@@ -238,6 +269,11 @@ if ( is_wp_error( $section ) ) {
                     <label for="<?php echo esc_attr( $tags->get_name() ); ?>" class="form-label">
                         <?php echo $tags->get_title(); ?>
                         <?php $tags->print_required_symbol(); ?>
+                        <i
+                            class="fas fa-question-circle tips"
+                            aria-hidden="true"
+                            data-title="<?php echo esc_attr( $tags->get_help_content() ); ?>">
+                        </i>
                     </label>
                     <select multiple="multiple" id="<?php echo esc_attr( $tags->get_name() ); ?>" name="<?php echo esc_attr( $tags->get_name() ); ?>" class="product_tag_search dokan-form-control" data-placeholder="<?php echo esc_attr( $tags->get_placeholder() ); ?>" <?php echo $tags->is_required() ? 'required' : ''; ?>>
                         <?php if ( ! empty( $terms ) ) : ?>
@@ -281,6 +317,11 @@ if ( is_wp_error( $section ) ) {
                         <a href="#" class="dokan-feat-image-btn btn btn-sm">
                             <?php esc_html_e( 'Upload a product cover image', 'dokan-lite' ); ?>
                             <?php $featured_image->print_required_symbol(); ?>
+                            <i
+                                class="fas fa-question-circle tips"
+                                aria-hidden="true"
+                                data-title="<?php echo esc_attr( $featured_image->get_help_content() ); ?>">
+                            </i>
                         </a>
                     </div>
 
@@ -357,6 +398,11 @@ if ( is_wp_error( $section ) ) {
             <label for="<?php echo esc_attr( $short_description->get_name() ); ?>" class="form-label">
                 <?php echo esc_html( $short_description->get_title() ); ?>
                 <?php $short_description->print_required_symbol(); ?>
+                <i
+                    class="fas fa-question-circle tips"
+                    aria-hidden="true"
+                    data-title="<?php echo esc_attr( $short_description->get_help_content() ); ?>">
+                </i>
             </label>
             <?php
             wp_editor(
@@ -386,6 +432,11 @@ if ( is_wp_error( $section ) ) {
             <label for="<?php echo esc_attr( $description->get_name() ); ?>" class="form-label">
                 <?php echo esc_html( $description->get_title() ); ?>
                 <?php $description->print_required_symbol(); ?>
+                <i
+                    class="fas fa-question-circle tips"
+                    aria-hidden="true"
+                    data-title="<?php echo esc_attr( $description->get_help_content() ); ?>">
+                </i>
             </label>
             <?php
             wp_editor(
