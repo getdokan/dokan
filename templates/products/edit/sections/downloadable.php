@@ -91,9 +91,9 @@ $post = get_post( $product->get_id() ); // phpcs:ignore WordPress.WP.GlobalVaria
                                 <?php echo esc_html( $download_limit->get_title() ); ?>
                                 <?php $download_limit->print_required_symbol(); ?>
                                 <i
-                                    class="fas fa-question-circle tips"
+                                    class="fas fa-question-circle tips <?php echo empty( $download_limit->get_help_content() ) ? 'dokan-hide' : ''; ?>"
                                     aria-hidden="true"
-                                    data-title="<?php echo esc_attr( $download_limit->get_description() ); ?>">
+                                    data-title="<?php echo esc_attr( $download_limit->get_help_content() ); ?>">
                                 </i>
                             </label>
                             <?php
@@ -122,9 +122,9 @@ $post = get_post( $product->get_id() ); // phpcs:ignore WordPress.WP.GlobalVaria
                                 <?php echo esc_html( $download_expiry->get_title() ); ?>
                                 <?php $download_expiry->print_required_symbol(); ?>
                                 <i
-                                    class="fas fa-question-circle tips"
+                                    class="fas fa-question-circle tips <?php echo empty( $download_expiry->get_help_content() ) ? 'dokan-hide' : ''; ?>"
                                     aria-hidden="true"
-                                    data-title="<?php echo esc_attr( $download_expiry->get_description() ); ?>">
+                                    data-title="<?php echo esc_attr( $download_expiry->get_help_content() ); ?>">
                                 </i>
                             </label>
                             <?php

@@ -38,7 +38,7 @@ if ( is_wp_error( $section ) ) {
                         <?php echo esc_html( $product_title->get_title() ); ?>
                         <?php $product_title->print_required_symbol(); ?>
                         <i
-                            class="fas fa-question-circle tips"
+                            class="fas fa-question-circle tips <?php echo empty( $product_title->get_help_content() ) ? 'dokan-hide' : ''; ?>"
                             aria-hidden="true"
                             data-title="<?php echo esc_attr( $product_title->get_help_content() ); ?>">
                         </i>
@@ -81,7 +81,7 @@ if ( is_wp_error( $section ) ) {
                             $product_type->print_required_symbol();
                         ?>
                         <i
-                            class="fas fa-question-circle tips"
+                            class="fas fa-question-circle tips <?php echo empty( $product_type->get_help_content() ) ? 'dokan-hide' : ''; ?>"
                             aria-hidden="true"
                             data-title="<?php echo esc_attr( $product_type->get_help_content() ); ?>">
                         </i>
@@ -108,7 +108,7 @@ if ( is_wp_error( $section ) ) {
                                 <?php echo esc_html( $regular_price->get_title() ); ?>
                                 <?php $regular_price->print_required_symbol(); ?>
                                 <i
-                                    class="fas fa-question-circle tips"
+                                    class="fas fa-question-circle tips <?php echo empty( $regular_price->get_help_content() ) ? 'dokan-hide' : ''; ?>"
                                     aria-hidden="true"
                                     data-title="<?php echo esc_attr( $regular_price->get_help_content() ); ?>">
                                 </i>
@@ -153,7 +153,7 @@ if ( is_wp_error( $section ) ) {
                                 <?php echo esc_html( $sale_price->get_title() ); ?>
                                 <?php $sale_price->print_required_symbol(); ?>
                                 <i
-                                    class="fas fa-question-circle tips"
+                                    class="fas fa-question-circle tips <?php echo empty( $sale_price->get_help_content() ) ? 'dokan-hide' : ''; ?>"
                                     aria-hidden="true"
                                     data-title="<?php echo esc_attr( $sale_price->get_help_content() ); ?>">
                                 </i>
@@ -200,7 +200,7 @@ if ( is_wp_error( $section ) ) {
                                     <?php echo esc_html( $date_on_sale_from->get_title() ); ?>
                                     <?php $date_on_sale_from->print_required_symbol(); ?>
                                     <i
-                                        class="fas fa-question-circle tips"
+                                        class="fas fa-question-circle tips <?php echo empty( $date_on_sale_from->get_help_content() ) ? 'dokan-hide' : ''; ?>"
                                         aria-hidden="true"
                                         data-title="<?php echo esc_attr( $date_on_sale_from->get_help_content() ); ?>">
                                     </i>
@@ -223,7 +223,7 @@ if ( is_wp_error( $section ) ) {
                                     <?php echo esc_html( $date_on_sale_to->get_title() ); ?>
                                     <?php $date_on_sale_to->print_required_symbol(); ?>
                                     <i
-                                        class="fas fa-question-circle tips"
+                                        class="fas fa-question-circle tips <?php echo empty( $date_on_sale_to->get_help_content() ) ? 'dokan-hide' : ''; ?>"
                                         aria-hidden="true"
                                         data-title="<?php echo esc_attr( $date_on_sale_to->get_help_content() ); ?>">
                                     </i>
@@ -270,7 +270,7 @@ if ( is_wp_error( $section ) ) {
                         <?php echo $tags->get_title(); ?>
                         <?php $tags->print_required_symbol(); ?>
                         <i
-                            class="fas fa-question-circle tips"
+                            class="fas fa-question-circle tips <?php echo empty( $tags->get_help_content() ) ? 'dokan-hide' : ''; ?>"
                             aria-hidden="true"
                             data-title="<?php echo esc_attr( $tags->get_help_content() ); ?>">
                         </i>
@@ -318,7 +318,7 @@ if ( is_wp_error( $section ) ) {
                             <?php esc_html_e( 'Upload a product cover image', 'dokan-lite' ); ?>
                             <?php $featured_image->print_required_symbol(); ?>
                             <i
-                                class="fas fa-question-circle tips"
+                                class="fas fa-question-circle tips <?php echo empty( $featured_image->get_help_content() ) ? 'dokan-hide' : ''; ?>"
                                 aria-hidden="true"
                                 data-title="<?php echo esc_attr( $featured_image->get_help_content() ); ?>">
                             </i>
@@ -398,11 +398,11 @@ if ( is_wp_error( $section ) ) {
             <label for="<?php echo esc_attr( $short_description->get_name() ); ?>" class="form-label">
                 <?php echo esc_html( $short_description->get_title() ); ?>
                 <?php $short_description->print_required_symbol(); ?>
-                <i
-                    class="fas fa-question-circle tips"
-                    aria-hidden="true"
-                    data-title="<?php echo esc_attr( $short_description->get_help_content() ); ?>">
-                </i>
+                    <i
+                        class="fas fa-question-circle tips <?php echo empty( $short_description->get_help_content() ) ? 'dokan-hide' : ''; ?>"
+                        aria-hidden="true"
+                        data-title="<?php echo esc_attr( $short_description->get_help_content() ); ?>">
+                    </i>
             </label>
             <?php
             wp_editor(
@@ -433,7 +433,7 @@ if ( is_wp_error( $section ) ) {
                 <?php echo esc_html( $description->get_title() ); ?>
                 <?php $description->print_required_symbol(); ?>
                 <i
-                    class="fas fa-question-circle tips"
+                    class="fas fa-question-circle tips <?php echo empty( $description->get_help_content() ) ? 'dokan-hide' : ''; ?>"
                     aria-hidden="true"
                     data-title="<?php echo esc_attr( $description->get_help_content() ); ?>">
                 </i>

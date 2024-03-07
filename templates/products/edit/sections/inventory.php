@@ -39,9 +39,9 @@ $post = get_post( $product->get_id() ); // phpcs:ignore WordPress.WP.GlobalVaria
                     <?php echo wp_kses_post( $sku->get_title() ); ?>
                     <?php $sku->print_required_symbol(); ?>
                     <i
-                        class="fas fa-question-circle tips"
+                        class="fas fa-question-circle tips <?php echo empty( $sku->get_help_content() ) ? 'dokan-hide' : ''; ?>"
                         aria-hidden="true"
-                        data-title="<?php echo esc_attr( $sku->get_description() ); ?>">
+                        data-title="<?php echo esc_attr( $sku->get_help_content() ); ?>">
                     </i>
                 </label>
                 <?php
@@ -67,9 +67,9 @@ $post = get_post( $product->get_id() ); // phpcs:ignore WordPress.WP.GlobalVaria
                     <?php echo esc_html( $stock_status->get_title() ); ?>
                     <?php $stock_status->print_required_symbol(); ?>
                     <i
-                        class="fas fa-question-circle tips"
+                        class="fas fa-question-circle tips <?php echo empty( $stock_status->get_help_content() ) ? 'dokan-hide' : ''; ?>"
                         aria-hidden="true"
-                        data-title="<?php echo esc_attr( $stock_status->get_description() ); ?>">
+                        data-title="<?php echo esc_attr( $stock_status->get_help_content() ); ?>">
                     </i>
                 </label>
                 <?php
@@ -120,9 +120,9 @@ $post = get_post( $product->get_id() ); // phpcs:ignore WordPress.WP.GlobalVaria
                             <?php echo esc_html( $stock_quantity->get_title() ); ?>
                             <?php $stock_quantity->print_required_symbol(); ?>
                             <i
-                                class="fas fa-question-circle tips"
+                                class="fas fa-question-circle tips <?php echo empty( $stock_quantity->get_help_content() ) ? 'dokan-hide' : ''; ?>"
                                 aria-hidden="true"
-                                data-title="<?php echo esc_attr( $stock_quantity->get_description() ); ?>">
+                                data-title="<?php echo esc_attr( $stock_quantity->get_help_content() ); ?>">
                             </i>
                         </label>
                         <?php
@@ -154,9 +154,9 @@ $post = get_post( $product->get_id() ); // phpcs:ignore WordPress.WP.GlobalVaria
                             <?php echo esc_html( $low_stock_amount->get_title() ); ?>
                             <?php $low_stock_amount->print_required_symbol(); ?>
                             <i
-                                class="fas fa-question-circle tips"
+                                class="fas fa-question-circle tips <?php echo empty( $low_stock_amount->get_help_content() ) ? 'dokan-hide' : ''; ?>"
                                 aria-hidden="true"
-                                data-title="<?php echo esc_attr( $low_stock_amount->get_description() ); ?>">
+                                data-title="<?php echo esc_attr( $low_stock_amount->get_help_content() ); ?>">
                             </i>
                         </label>
                         <?php
@@ -186,9 +186,9 @@ $post = get_post( $product->get_id() ); // phpcs:ignore WordPress.WP.GlobalVaria
                             <?php echo esc_html( $backorders->get_title() ); ?>
                             <?php $backorders->print_required_symbol(); ?>
                             <i
-                                class="fas fa-question-circle tips"
+                                class="fas fa-question-circle tips <?php echo empty( $backorders->get_help_content() ) ? 'dokan-hide' : ''; ?>"
                                 aria-hidden="true"
-                                data-title="<?php echo esc_attr( $backorders->get_description() ); ?>">
+                                data-title="<?php echo esc_attr( $backorders->get_help_content() ); ?>">
                             </i>
                         </label>
 
