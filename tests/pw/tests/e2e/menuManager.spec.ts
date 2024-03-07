@@ -5,7 +5,6 @@ import { data } from '@utils/testData';
 import { dbData } from '@utils/dbData';
 
 test.describe('Menu Manager test', () => {
-    test.skip(true, 'feature not merged yet');
     let admin: MenuManagerPage;
     let aPage: Page;
 

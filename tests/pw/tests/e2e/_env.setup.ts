@@ -308,6 +308,7 @@ setup.describe('setup dokan settings e2e', () => {
     });
 
     setup('admin can refreseh license @pro @a', async () => {
+        setup.skip(!DOKAN_PRO, 'skip on lite');
         await licensePage.refresehLicense();
     });
 
