@@ -72,7 +72,7 @@ if ( is_wp_error( $section ) ) {
                     <label for="<?php echo esc_attr( $product_type->get_name() ); ?>" class="form-label">
                         <?php
                             echo esc_html( $product_type->get_title() );
-                            $product_title->print_required_symbol();
+                            $product_type->print_required_symbol();
                         ?>
                         <i
                             class="fas fa-question-circle tips"
@@ -99,7 +99,7 @@ if ( is_wp_error( $section ) ) {
                         ?>
                         <div class="content-half-part regular-price">
                             <label for="<?php echo esc_attr( $regular_price->get_name() ); ?>" class="form-label"><?php echo esc_html( $regular_price->get_title() ); ?>
-                                <?php $product_title->print_required_symbol(); ?>
+                                <?php $regular_price->print_required_symbol(); ?>
                             </label>
                             <div class="dokan-input-group">
                                 <span class="dokan-input-group-addon"><?php echo esc_html( get_woocommerce_currency_symbol() ); ?></span>
@@ -137,7 +137,7 @@ if ( is_wp_error( $section ) ) {
                         <div class="content-half-part sale-price">
                             <label for="<?php echo esc_attr( $sale_price->get_name() ); ?>" class="form-label">
                                 <?php echo esc_html( $sale_price->get_title() ); ?>
-                                <?php $product_title->print_required_symbol(); ?>
+                                <?php $sale_price->print_required_symbol(); ?>
                                 <a href="#" class="sale_schedule <?php echo $show_schedule ? 'dokan-hide' : ''; ?>"><?php esc_html_e( 'Schedule', 'dokan-lite' ); ?></a>
                                 <a href="#" class="cancel_sale_schedule <?php echo ( ! $show_schedule ) ? 'dokan-hide' : ''; ?>"><?php esc_html_e( 'Cancel', 'dokan-lite' ); ?></a>
                             </label>
@@ -175,7 +175,10 @@ if ( is_wp_error( $section ) ) {
                     <div class="sale_price_dates_fields dokan-clearfix dokan-form-group <?php echo ( ! $show_schedule ) ? 'dokan-hide' : ''; ?>">
                         <div class="content-half-part from">
                             <div class="dokan-input-group">
-                                <span class="dokan-input-group-addon"><?php echo esc_html( $date_on_sale_from->get_title() ); ?></span>
+                                <span class="dokan-input-group-addon">
+                                    <?php echo esc_html( $date_on_sale_from->get_title() ); ?>
+                                    <?php $date_on_sale_from->print_required_symbol(); ?>
+                                </span>
                                 <input
                                     type="text"
                                     name="<?php echo esc_attr( $date_on_sale_from->get_name() ); ?>"
@@ -190,7 +193,10 @@ if ( is_wp_error( $section ) ) {
 
                         <div class="content-half-part to">
                             <div class="dokan-input-group">
-                                <span class="dokan-input-group-addon"><?php echo esc_html( $date_on_sale_to->get_title() ); ?></span>
+                                <span class="dokan-input-group-addon">
+                                    <?php echo esc_html( $date_on_sale_to->get_title() ); ?>
+                                    <?php $date_on_sale_to->print_required_symbol(); ?>
+                                </span>
                                 <input
                                     type="text"
                                     name="<?php echo esc_attr( $date_on_sale_to->get_name() ); ?>"
@@ -231,7 +237,7 @@ if ( is_wp_error( $section ) ) {
                 <div class="dokan-form-group">
                     <label for="<?php echo esc_attr( $tags->get_name() ); ?>" class="form-label">
                         <?php echo $tags->get_title(); ?>
-                        <?php $product_title->print_required_symbol(); ?>
+                        <?php $tags->print_required_symbol(); ?>
                     </label>
                     <select multiple="multiple" id="<?php echo esc_attr( $tags->get_name() ); ?>" name="<?php echo esc_attr( $tags->get_name() ); ?>" class="product_tag_search dokan-form-control" data-placeholder="<?php echo esc_attr( $tags->get_placeholder() ); ?>" <?php echo $tags->is_required() ? 'required' : ''; ?>>
                         <?php if ( ! empty( $terms ) ) : ?>
