@@ -1,5 +1,6 @@
 <?php
-$post_statuses = dokan_get_available_post_status( $post->ID );
+$post_statuses            = dokan_get_available_post_status( $post->ID );
+$wc_product_review_status = get_option( 'woocommerce_enable_reviews', 'yes' ); // Product review enable status for woocommerce.
 ?>
 
 <div class="dokan-other-options dokan-edit-row dokan-clearfix <?php echo esc_attr( $class ); ?>">
@@ -42,18 +43,20 @@ $post_statuses = dokan_get_available_post_status( $post->ID );
             <?php dokan_post_input_box( $post_id, '_purchase_note', array( 'placeholder' => __( 'Customer will get this info in their order email', 'dokan-lite' ) ), 'textarea' ); ?>
         </div>
 
-        <div class="dokan-form-group">
-            <?php
-            dokan_post_input_box(
-                $post_id,
-                '_enable_reviews',
-                [
-                    'value' => 'open' === $post->comment_status ? 'yes' : 'no',
-                    'label' => __( 'Enable product reviews', 'dokan-lite' ),
-                ],
-                'checkbox'
-            );
-            ?>
-        </div>
+        <?php if ( $wc_product_review_status === 'yes' ) : ?>
+            <div class="dokan-form-group">
+                <?php
+                dokan_post_input_box(
+                    $post_id,
+                    '_enable_reviews',
+                    [
+                        'value' => 'open' === $post->comment_status ? 'yes' : 'no',
+                        'label' => __( 'Enable product reviews', 'dokan-lite' ),
+                    ],
+                    'checkbox'
+                );
+                ?>
+            </div>
+        <?php endif; ?>
     </div>
 </div><!-- .dokan-other-options -->
