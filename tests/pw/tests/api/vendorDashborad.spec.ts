@@ -6,15 +6,19 @@
 //COVERAGE_TAG: GET /dokan/v1/vendor-dashboard/preferences
 //COVERAGE_TAG: GET /dokan/v1/vendor-dashboard/profile-progressbar
 
-import { test, expect } from '@playwright/test';
+import { test, expect, request } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 
 test.describe('vendor dashboard api test', () => {
     let apiUtils: ApiUtils;
 
-    test.beforeAll(({ request }) => {
-        apiUtils = new ApiUtils(request);
+    test.beforeAll(async () => {
+        apiUtils = new ApiUtils(await request.newContext());
+    });
+
+    test.afterAll(async () => {
+        await apiUtils.dispose();
     });
 
     test('get vendor dashboard statistics @lite', async () => {

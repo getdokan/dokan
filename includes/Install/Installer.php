@@ -98,7 +98,7 @@ class Installer {
 
         // check if we've defined the cron hook
         $cron_schedule = as_next_scheduled_action( $hook ); // this method will return false if the hook is not scheduled
-        if ( ! $cron_schedule ) {
+        if ( $cron_schedule ) {
             as_unschedule_all_actions( $hook );
         }
 

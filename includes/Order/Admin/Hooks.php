@@ -269,7 +269,7 @@ class Hooks {
                     }
 
                     const urlParams = new URLSearchParams(window.location.search);
-                    if ( urlParams.get('s') ) {
+                    if ( urlParams.get('s') || urlParams.get('vendor_id') ) {
                         return;
                     }
 

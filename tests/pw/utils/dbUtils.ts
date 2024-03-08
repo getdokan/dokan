@@ -100,7 +100,7 @@ export const dbUtils = {
     },
 
     // create refund
-    async createRefund(responseBody: any): Promise<[any, string]> {
+    async createRefundRequest(responseBody: any): Promise<[any, string]> {
         const refundId = (await this.getMaxId('id', 'dokan_refund')) + 1;
 
         const refund = {
@@ -118,9 +118,28 @@ export const dbUtils = {
             method: 0,
         };
         // console.log('refund data:', refund);
-        const queryInsert = `INSERT INTO ${dbPrefix}_dokan_refund VALUES ( '${refund.id}', '${refund.orderId}', '${refund.sellerId}', ${refund.refundAmount}, '${refund.refundReason}', '${refund.itemQtys}', '${refund.itemTotals}', '${refund.itemTaxTotals}', '${refund.restockItems}', '${refund.date}', '${refund.status}', '${refund.method}' );`;
+        const queryInsert = `INSERT INTO ${dbPrefix}_dokan_refund VALUES ( '${refund.id}', '${refund.orderId}', '${refund.sellerId}', ${refund.refundAmount}, 
+        '${refund.refundReason}', '${refund.itemQtys}', '${refund.itemTotals}', '${refund.itemTaxTotals}', '${refund.restockItems}', '${refund.date}', 
+        '${refund.status}', '${refund.method}' );`;
         const res = await dbUtils.dbQuery(queryInsert);
         // console.log(res);
         return [res, refundId];
+    },
+
+    // update cell
+    async updateCell(id: any, value: any): Promise<any> {
+        const queryUpdate = `UPDATE ${dbPrefix}_posts SET post_author = '${value}' WHERE ID = '${id}';`;
+        const res = await dbUtils.dbQuery(queryUpdate);
+        // console.log(res);
+        return res;
+    },
+
+    // create booking resource
+    async createBookingResource(postId: string, url: string): Promise<any> {
+        const guid = url + '?post_type=bookable_resource&#038;p=' + postId;
+        const queryUpdate = `UPDATE ${dbPrefix}_posts SET guid = '${guid}', post_type = 'bookable_resource' WHERE ID = '${postId}';`;
+        const res = await dbUtils.dbQuery(queryUpdate);
+        // console.log(res);
+        return res;
     },
 };

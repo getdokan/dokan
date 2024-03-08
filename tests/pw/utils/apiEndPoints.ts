@@ -1,6 +1,7 @@
 import 'dotenv/config';
 
-const { SERVER_URL } = process.env;
+// const { BASE_URL, SERVER_URL } = process.env;
+const SERVER_URL = process.env.SERVER_URL ? process.env.SERVER_URL : process.env.BASE_URL + '/wp-json';
 
 export const endPoints = {
     serverUrl: `${SERVER_URL}`,
@@ -325,6 +326,20 @@ export const endPoints = {
     getSpmvProducts: `${SERVER_URL}/dokan/v1/spmv-product/search`,
     addToStore: `${SERVER_URL}/dokan/v1/spmv-product/add-to-store`, // post
 
+    // product question answere
+    getAllProductQuestions: `${SERVER_URL}/dokan/v1/product-questions`,
+    getSingleProductQuestion: (questionId: string) => `${SERVER_URL}/dokan/v1/product-questions/${questionId}`,
+    createProductQuestion: `${SERVER_URL}/dokan/v1/product-questions`,
+    updateProductQuestion: (questionId: string) => `${SERVER_URL}/dokan/v1/product-questions/${questionId}`,
+    deleteProductQuestion: (questionId: string) => `${SERVER_URL}/dokan/v1/product-questions/${questionId}`,
+    updateBatchProductQuestions: `${SERVER_URL}/dokan/v1/product-questions/bulk_action`, // method: delete, read, unread
+
+    getAllProductQuestionAnswers: `${SERVER_URL}/dokan/v1/product-answers`,
+    getSingleProductQuestionAnswer: (answerId: string) => `${SERVER_URL}/dokan/v1/product-answers/${answerId}`,
+    createProductQuestionAnswer: `${SERVER_URL}/dokan/v1/product-answers`,
+    updateProductQuestionAnswer: (answerId: string) => `${SERVER_URL}/dokan/v1/product-answers/${answerId}`,
+    deleteProductQuestionAnswer: (answerId: string) => `${SERVER_URL}/dokan/v1/product-answers/${answerId}`,
+
     wc: {
         // coupons
         getAllCoupons: `${SERVER_URL}/wc/v3/coupons`,
@@ -523,10 +538,10 @@ export const endPoints = {
 
         productAddons: {
             getAllProductAddons: `${SERVER_URL}/wc-product-add-ons/v1/product-add-ons`,
-            getSingleProductAddon: (productId: string) => `${SERVER_URL}/wc-product-add-ons/v1/product-add-ons${productId}`,
+            getSingleProductAddon: (productId: string) => `${SERVER_URL}/wc-product-add-ons/v1/product-add-ons/${productId}`,
             createProductAddon: `${SERVER_URL}/wc-product-add-ons/v1/product-add-ons`,
-            updateProductAddon: (productId: string) => `${SERVER_URL}/wc-product-add-ons/v1/product-add-ons${productId}`,
-            deleteProductAddon: (productId: string) => `${SERVER_URL}/wc-product-add-ons/v1/product-add-ons${productId}`,
+            updateProductAddon: (productId: string) => `${SERVER_URL}/wc-product-add-ons/v1/product-add-ons/${productId}`,
+            deleteProductAddon: (productId: string) => `${SERVER_URL}/wc-product-add-ons/v1/product-add-ons/${productId}`,
         },
     },
 
@@ -566,7 +581,7 @@ export const endPoints = {
         // posts
         getAllPosts: `${SERVER_URL}/wp/v2/posts`,
         getSinglePost: (postId: string) => `${SERVER_URL}/wp/v2/posts/${postId}`,
-        createPost: `${SERVER_URL}/wp/v2/pots/posts`,
+        createPost: `${SERVER_URL}/wp/v2/posts`,
         createCustomPost: (postType: string) => `${SERVER_URL}/wp/v2/${postType}`,
         updatePost: (postId: string) => `${SERVER_URL}/wp/v2/posts/${postId}`,
         deletePost: (postId: string) => `${SERVER_URL}/wp/v2/posts/${postId}`,

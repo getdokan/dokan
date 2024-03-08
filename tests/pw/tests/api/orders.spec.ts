@@ -8,7 +8,7 @@
 //COVERAGE_TAG: PUT /dokan/v2/orders/(?P<id>[\d]+)
 //COVERAGE_TAG: POST /dokan/v2/orders/bulk-actions
 
-import { test, expect } from '@playwright/test';
+import { test, expect, request } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
@@ -20,9 +20,13 @@ for (const version of versions) {
     test.describe(`order api test ${version}`, () => {
         let orderId: string;
 
-        test.beforeAll(async ({ request }) => {
-            apiUtils = new ApiUtils(request);
+        test.beforeAll(async () => {
+            apiUtils = new ApiUtils(await request.newContext());
             [, , orderId] = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder);
+        });
+
+        test.afterAll(async () => {
+            await apiUtils.dispose();
         });
 
         test('get all orders @lite', async () => {
@@ -57,8 +61,8 @@ for (const version of versions) {
     });
 }
 
-test('update batch orders @v2 @lite', async ({ request }) => {
-    apiUtils = new ApiUtils(request);
+test('update batch orders @v2 @lite', async () => {
+    apiUtils = new ApiUtils(await request.newContext());
     const allOrderIds = (await apiUtils.getAllOrders())?.map((a: { id: unknown }) => a.id);
     const [response, responseBody] = await apiUtils.post(endPoints.updateBatchOrders, { data: { order_ids: allOrderIds, status: 'wc-completed' } });
     expect(response.ok()).toBeTruthy();

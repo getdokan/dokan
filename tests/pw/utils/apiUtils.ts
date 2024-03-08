@@ -1,9 +1,9 @@
-import { expect, type APIRequestContext, APIResponse, Request } from '@playwright/test';
+import { expect, Request, APIRequestContext, APIResponse } from '@playwright/test';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
 import { helpers } from '@utils/helpers';
 import fs from 'fs';
-import { auth, user_api, taxRate, coupon_api, marketPlaceCoupon, reqOptions, headers, storageState, responseBody } from '@utils/interfaces';
+import { auth, user_api, taxRate, coupon_api, marketPlaceCoupon, reqOptions, params, headers, storageState, responseBody } from '@utils/interfaces';
 
 const { VENDOR_ID, CUSTOMER_ID } = process.env;
 
@@ -82,14 +82,14 @@ export class ApiUtils {
         return response;
     }
 
+    // dispose api request context
+    async dispose(): Promise<void> {
+        await this.request.dispose();
+    }
+
     // get storageState
     async storageState(path?: string | undefined): Promise<storageState> {
         return await this.request.storageState({ path: path });
-    }
-
-    // dispose api context
-    async disposeApiRequestContext(): Promise<void> {
-        await this.request.dispose();
     }
 
     // get responseBody
@@ -167,7 +167,7 @@ export class ApiUtils {
     }
 
     // create store
-    async createStore(payload: any, auth?: auth): Promise<[responseBody, string, string]> {
+    async createStore(payload: any, auth?: auth, addUserAddress: boolean = false): Promise<[responseBody, string, string]> {
         const [response, responseBody] = await this.post(endPoints.createStore, { data: payload, headers: auth }, false);
         let sellerId: string;
         let storeName: string;
@@ -185,6 +185,10 @@ export class ApiUtils {
             sellerId = String(responseBody?.id);
             storeName = String(responseBody?.store_name);
         }
+
+        // add vendor user address
+        addUserAddress && (await this.updateCustomer(sellerId, payloads.updateAddress, payloads.adminAuth));
+
         return [responseBody, sellerId, storeName];
     }
 
@@ -267,8 +271,11 @@ export class ApiUtils {
     }
 
     // delete all products
-    async deleteAllProducts(productName?: string, auth?: auth): Promise<responseBody> {
-        // todo: apply multiple optional parameter
+    async deleteAllProducts(productName?: any, auth?: auth): Promise<responseBody> {
+        if (arguments.length === 1 && typeof productName === 'object') {
+            auth = productName as auth;
+            productName = undefined;
+        }
         const allProducts = await this.getAllProducts(auth);
         if (!allProducts?.length) {
             console.log('No product exists');
@@ -732,14 +739,14 @@ export class ApiUtils {
     }
 
     // get activate modules
-    async activateModules(moduleIds: string, auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.put(endPoints.activateModule, { data: { module: [moduleIds] }, headers: auth });
+    async activateModules(moduleIds: string[], auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.put(endPoints.activateModule, { data: { module: moduleIds }, headers: auth });
         return responseBody;
     }
 
     // get deactivated modules
-    async deactivateModules(moduleIds: string, auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.put(endPoints.deactivateModule, { data: { module: [moduleIds] }, headers: auth });
+    async deactivateModules(moduleIds: string[], auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.put(endPoints.deactivateModule, { data: { module: moduleIds }, headers: auth });
         return responseBody;
     }
 
@@ -840,12 +847,13 @@ export class ApiUtils {
     }
 
     // create a product advertisement
-    async createProductAdvertisement(product: object, auth?: auth): Promise<[responseBody, string]> {
+    async createProductAdvertisement(product: object, auth?: auth): Promise<[responseBody, string, string]> {
         const [body, productId] = await this.createProduct(product, auth);
         const sellerId = body.store.id;
         const [, responseBody] = await this.post(endPoints.createProductAdvertisement, { data: { vendor_id: sellerId, product_id: productId }, headers: payloads.adminAuth });
-        const productAdvertisementId = String(responseBody?.id);
-        return [responseBody, productAdvertisementId];
+        const advertisementId = String(responseBody?.id);
+        const advertisedProduct = responseBody?.product_title;
+        return [responseBody, advertisementId, advertisedProduct];
     }
 
     /**
@@ -863,6 +871,18 @@ export class ApiUtils {
         const allAbuseReports = await this.getAllAbuseReports(auth);
         const abuseReportId = allAbuseReports[0]?.id;
         return abuseReportId;
+    }
+
+    // delete all abuse reports
+    async deleteAllAbuseReports(auth?: auth): Promise<responseBody> {
+        const allAbuseReports = await this.getAllAbuseReports(auth);
+        if (!allAbuseReports?.length) {
+            console.log('No abuse report exists');
+            return;
+        }
+        const allAbuseReportIds = allAbuseReports.map((o: { id: unknown }) => o.id);
+        const [, responseBody] = await this.delete(endPoints.deleteBatchAbuseReports, { data: { items: allAbuseReportIds }, headers: auth });
+        return responseBody;
     }
 
     /**
@@ -910,6 +930,17 @@ export class ApiUtils {
         }
         const [, responseBody] = await this.put(endPoints.updateBatchAnnouncements, { data: { [action]: allIds }, headers: auth });
         return responseBody;
+    }
+
+    // delete all announcements
+    async deleteAllAnnouncements(auth?: auth): Promise<responseBody> {
+        const allAnnouncemens = await this.getAllAnnouncements(auth);
+        if (!allAnnouncemens?.length) {
+            console.log('No announcement exists');
+            return;
+        }
+        const allAnnouncementIds = allAnnouncemens.map((o: { id: unknown }) => o.id);
+        await this.updateBatchAnnouncements('delete', allAnnouncementIds, auth);
     }
 
     /**
@@ -1010,16 +1041,21 @@ export class ApiUtils {
      */
 
     // get all quote rules
-    async getAllQuoteRules(auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.get(endPoints.getAllQuoteRules, { params: { per_page: 100 }, headers: auth });
+    async getAllQuoteRules(params: params = { per_page: 100 }, auth?: auth): Promise<responseBody> {
+        if (arguments.length === 1 && 'Authorization' in params) {
+            auth = params as auth;
+            params = undefined;
+        }
+        const [, responseBody] = await this.get(endPoints.getAllQuoteRules, { params, headers: auth });
         return responseBody;
     }
 
     // create quote rule
-    async createQuoteRule(payload: object, auth?: auth): Promise<[responseBody, string]> {
+    async createQuoteRule(payload: object, auth?: auth): Promise<[responseBody, string, string]> {
         const [, responseBody] = await this.post(endPoints.createQuoteRule, { data: payload, headers: auth });
         const quoteRuleId = String(responseBody?.id);
-        return [responseBody, quoteRuleId];
+        const quoteRuleName = responseBody?.rule_name;
+        return [responseBody, quoteRuleId, quoteRuleName];
     }
 
     // delete quote rule
@@ -1030,12 +1066,25 @@ export class ApiUtils {
 
     // delete all quote rules
     async deleteAllQuoteRules(auth?: auth): Promise<responseBody> {
-        const allQuoteRuleIds = (await this.getAllQuoteRules(auth)).map((o: { id: unknown }) => o.id);
-        if (!allQuoteRuleIds?.length) {
+        const allQuoteRules = await this.getAllQuoteRules(auth);
+        if (!allQuoteRules?.length) {
             console.log('No quote rule exists');
             return;
         }
+        const allQuoteRuleIds = allQuoteRules.map((o: { id: unknown }) => o.id);
         const [, responseBody] = await this.put(endPoints.updateBatchQuoteRules, { data: { trash: allQuoteRuleIds }, headers: auth });
+        return responseBody;
+    }
+
+    // delete all quote rules trashed
+    async deleteAllQuoteRulesTrashed(auth?: auth): Promise<responseBody> {
+        const allQuoteRules = await this.getAllQuoteRules({ status: 'trash', per_page: 100 }, auth);
+        if (!allQuoteRules?.length) {
+            console.log('No quote rule exists');
+            return;
+        }
+        const allQuoteRuleIds = allQuoteRules.map((o: { id: unknown }) => o.id);
+        const [, responseBody] = await this.put(endPoints.updateBatchQuoteRules, { data: { delete: allQuoteRuleIds }, headers: auth });
         return responseBody;
     }
 
@@ -1065,11 +1114,12 @@ export class ApiUtils {
 
     // delete all quote requests
     async deleteAllQuoteRequests(auth?: auth): Promise<responseBody> {
-        const allQuoteIds = (await this.getAllQuoteRequests(auth)).map((o: { id: unknown }) => o.id);
-        if (!allQuoteIds?.length) {
+        const allQuotes = await this.getAllQuoteRequests(auth);
+        if (!allQuotes?.length) {
             console.log('No quote request exists');
             return;
         }
+        const allQuoteIds = allQuotes.map((o: { id: unknown }) => o.id);
         const [, responseBody] = await this.put(endPoints.updateBatchRequestQuotes, { data: { trash: allQuoteIds }, headers: auth });
         return responseBody;
     }
@@ -1201,6 +1251,48 @@ export class ApiUtils {
             expect(response.ok()).toBeTruthy();
         }
         return [response, responseBody];
+    }
+
+    /**
+     * product questions answers
+     */
+
+    // get all product questions
+    async getAllProductQuestions(auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.get(endPoints.getAllProductQuestions, { params: { per_page: 100 }, headers: auth });
+        return responseBody;
+    }
+
+    // create product question
+    async createProductQuestion(payload: object, auth?: auth): Promise<[responseBody, string]> {
+        const [, responseBody] = await this.post(endPoints.createProductQuestion, { data: payload, headers: auth });
+        const questionId = String(responseBody?.id);
+        return [responseBody, questionId];
+    }
+
+    // update product question
+    async updateProductQuestion(questionId: string, payload: object, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.put(endPoints.updateProductQuestion(questionId), { data: payload, headers: auth });
+        return responseBody;
+    }
+
+    // delete all product questions
+    async deleteAllProductQuestions(auth?: auth): Promise<responseBody> {
+        const allProductQuestions = await this.getAllProductQuestions();
+        if (!allProductQuestions?.length) {
+            console.log('No product question exists');
+            return;
+        }
+        const allProductQuestionIds = allProductQuestions.map((o: { id: unknown }) => o.id);
+        const [, responseBody] = await this.put(endPoints.updateBatchProductQuestions, { data: { action: 'delete', ids: allProductQuestionIds }, headers: auth });
+        return responseBody;
+    }
+
+    // create product question answer
+    async createProductQuestionAnswer(payload: object, auth?: auth): Promise<[responseBody, string]> {
+        const [, responseBody] = await this.post(endPoints.createProductQuestionAnswer, { data: payload, headers: auth });
+        const answerId = String(responseBody?.id);
+        return [responseBody, answerId];
     }
 
     /**
@@ -1380,9 +1472,10 @@ export class ApiUtils {
     }
 
     // create post
-    async createPost(payload: object, auth?: auth): Promise<responseBody> {
+    async createPost(payload: object, auth?: auth): Promise<[responseBody, string]> {
         const [, responseBody] = await this.post(endPoints.wp.createPost, { data: payload, headers: auth });
-        return responseBody;
+        const postId = String(responseBody?.id);
+        return [responseBody, postId];
     }
 
     // get all pages
@@ -1482,10 +1575,11 @@ export class ApiUtils {
     }
 
     // create category
-    async createCategory(payload: object, auth?: auth): Promise<[responseBody, string]> {
+    async createCategory(payload: object, auth?: auth): Promise<[responseBody, string, string]> {
         const [, responseBody] = await this.post(endPoints.wc.createCategory, { data: payload, headers: auth });
         const categoryId = String(responseBody?.id);
-        return [responseBody, categoryId];
+        const categoryName = String(responseBody?.name);
+        return [responseBody, categoryId, categoryName];
     }
 
     // update category
@@ -1693,11 +1787,8 @@ export class ApiUtils {
     // get system status
     async getSystemStatus(auth?: auth): Promise<[responseBody, object]> {
         const [, responseBody] = await this.get(endPoints.wc.getAllSystemStatus, { headers: auth });
-        let activePlugins = responseBody.active_plugins.map((a: { plugin: string; version: string }) => a.plugin.split('/')[0] + ' v' + a.version);
+        const activePlugins = responseBody.active_plugins.map((a: { plugin: string; version: string }) => a.plugin.split('/')[0] + ' v' + a.version);
         activePlugins.sort();
-        const conditions = ['Basic-Auth', 'bookings', 'addons', 'auctions', 'subscriptions', 'ba', 'wa', 'wb', 'ws', 'wps'];
-        activePlugins = activePlugins.filter((e: string | string[]) => !conditions.some(el => e.includes(el)));
-        // activePlugins = activePlugins.slice(1, -4);
         const compactInfo = {
             wpVersion: 'WordPress Version: ' + responseBody?.environment.wp_version,
             phpVersion: 'PHP Version: ' + responseBody?.environment.php_version,
@@ -1707,5 +1798,82 @@ export class ApiUtils {
             activePlugins: activePlugins,
         };
         return [responseBody, compactInfo];
+    }
+
+    // get order details
+    orderDetails(responseBody: responseBody) {
+        const orderDetails = {
+            id: responseBody.id,
+            status: responseBody.status,
+            order: {
+                total: responseBody.total,
+            },
+            tax: {
+                prices_include_tax: responseBody.prices_include_tax,
+                cart_tax: responseBody.cart_tax,
+                shipping_tax: responseBody.shipping_tax,
+                discount_tax: responseBody.discount_tax,
+                total_tax: responseBody.total_tax,
+                // tax_total: responseBody.tax_lines.tax_total,
+                // shipping_tax_total: responseBody.tax_lines.shipping_tax_total,
+            },
+            shipping: {
+                shipping_total: responseBody.shipping_total,
+                shipping_tax: responseBody.shipping_tax,
+                // total: responseBody.shipping_lines.total,
+                // total_tax: responseBody.shipping_lines.total_tax,
+            },
+            discount: {
+                discount_total: responseBody.discount_total,
+                discount_tax: responseBody.discount_tax,
+            },
+            line_items: {
+                subtotal: responseBody.line_items.subtotal,
+                subtotal_tax: responseBody.line_items.subtotal_tax,
+                total: responseBody.line_items.total,
+                total_tax: responseBody.line_items.total_tax,
+                price: responseBody.line_items.price,
+            },
+        };
+
+        return orderDetails;
+    }
+
+    /**
+     * woocommerce product addon api methods
+     */
+
+    // get all product addons
+    async getAllProductAddons(auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.get(endPoints.wc.productAddons.getAllProductAddons, { headers: auth });
+        return responseBody;
+    }
+
+    // create product addon
+    async createProductAddon(payload: object, auth?: auth): Promise<[responseBody, string, string, string]> {
+        const [, responseBody] = await this.post(endPoints.wc.productAddons.createProductAddon, { data: payload, headers: auth });
+        const productAddonId = String(responseBody?.id);
+        const addonName = responseBody.name;
+        const addonFieldTitle = responseBody.fields[0].name;
+        return [responseBody, productAddonId, addonName, addonFieldTitle];
+    }
+
+    // delete product addon
+    async deleteProductAddon(productAddonId: string, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.delete(endPoints.wc.productAddons.deleteProductAddon(productAddonId), { headers: auth });
+        return responseBody;
+    }
+
+    // delete all product addons
+    async deleteAllProductAddons(auth?: auth): Promise<responseBody> {
+        const allProductAddons = await this.getAllProductAddons(auth);
+        if (!allProductAddons?.length) {
+            console.log('No product addon exists');
+            return;
+        }
+        const allProductAddonIds = allProductAddons.map((o: { id: unknown }) => o.id);
+        for (const productAddonId of allProductAddonIds) {
+            await this.deleteProductAddon(productAddonId, auth);
+        }
     }
 }
