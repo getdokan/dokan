@@ -954,7 +954,7 @@ export class BasePage {
         const parent = this.getElement(parentSelector);
         const child = await this.getElementHandle(childSelector);
         const index = await parent.evaluate((parent, child) => Array.from(parent.children).indexOf(child as HTMLElement), child);
-        console.log(index);
+        // console.log(index);
         return index;
     }
 

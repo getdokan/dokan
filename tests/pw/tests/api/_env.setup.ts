@@ -41,6 +41,23 @@ setup.describe('setup site & woocommerce & user settings', () => {
         HPOS && (await apiUtils.updateBatchWcSettingsOptions('advanced', payloads.advanced));
     });
 
+    setup('set dokan license @pro', async () => {
+        setup.skip(!DOKAN_PRO, 'skip on lite');
+        await dbUtils.setDokanSettings(dbData.dokan.optionName.dokanProLicense, dbData.dokan.dokanProLicense);
+        await dbUtils.setDokanSettings(dbData.dokan.optionName.dokanProActiveModules, dbData.dokan.dokanProActiveModules);
+    });
+
+    setup('activate all dokan modules @pro', async () => {
+        setup.skip(!DOKAN_PRO, 'skip on lite');
+        await dbUtils.setDokanSettings(dbData.dokan.optionName.dokanProActiveModules, dbData.dokan.dokanProActiveModules);
+    });
+
+    setup('check active dokan modules @pro', async () => {
+        setup.skip(!DOKAN_PRO, 'skip on lite');
+        const activeModules = await apiUtils.getAllModuleIds({ status: 'active' });
+        expect(activeModules).toEqual(expect.arrayContaining(data.modules.modules));
+    });
+
     // Vendor Details
     setup('add vendor1 product @lite', async () => {
         // delete previous store products with predefined name if any

@@ -12,7 +12,7 @@ import { helpers } from '@utils/helpers';
 
 const { DOKAN_PRO, HPOS } = process.env;
 
-setup.describe('setup site & woocommerce & user settings', () => {
+setup.describe('setup site & woocommerce & dokan settings', () => {
     setup.use({ extraHTTPHeaders: { Authorization: payloads.adminAuth.Authorization } });
 
     let apiUtils: ApiUtils;
@@ -40,6 +40,23 @@ setup.describe('setup site & woocommerce & user settings', () => {
         await apiUtils.updateBatchWcSettingsOptions('general', payloads.general);
         await apiUtils.updateBatchWcSettingsOptions('account', payloads.account);
         HPOS && (await apiUtils.updateBatchWcSettingsOptions('advanced', payloads.advanced));
+    });
+
+    setup('set dokan license @pro', async () => {
+        setup.skip(!DOKAN_PRO, 'skip on lite');
+        await dbUtils.setDokanSettings(dbData.dokan.optionName.dokanProLicense, dbData.dokan.dokanProLicense);
+        await dbUtils.setDokanSettings(dbData.dokan.optionName.dokanProActiveModules, dbData.dokan.dokanProActiveModules);
+    });
+
+    setup('activate all dokan modules @pro', async () => {
+        setup.skip(!DOKAN_PRO, 'skip on lite');
+        await dbUtils.setDokanSettings(dbData.dokan.optionName.dokanProActiveModules, dbData.dokan.dokanProActiveModules);
+    });
+
+    setup('check active dokan modules @pro', async () => {
+        setup.skip(!DOKAN_PRO, 'skip on lite');
+        const activeModules = await apiUtils.getAllModuleIds({ status: 'active' });
+        expect(activeModules).toEqual(expect.arrayContaining(data.modules.modules));
     });
 
     setup('set tax rate @lite', async () => {
@@ -97,23 +114,6 @@ setup.describe('setup site & woocommerce & user settings', () => {
         await apiUtils.createAttributeTerm(attributeId, { name: 's' });
         await apiUtils.createAttributeTerm(attributeId, { name: 'l' });
         await apiUtils.createAttributeTerm(attributeId, { name: 'm' });
-    });
-
-    setup('set dokan license @pro', async () => {
-        setup.skip(!DOKAN_PRO, 'skip on lite');
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.dokanProLicense, dbData.dokan.dokanProLicense);
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.dokanProActiveModules, dbData.dokan.dokanProActiveModules);
-    });
-
-    setup('activate all dokan modules @pro', async () => {
-        setup.skip(!DOKAN_PRO, 'skip on lite');
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.dokanProActiveModules, dbData.dokan.dokanProActiveModules);
-    });
-
-    setup('check active dokan modules @pro', async () => {
-        setup.skip(!DOKAN_PRO, 'skip on lite');
-        const activeModules = await apiUtils.getAllModuleIds({ status: 'active' });
-        expect(activeModules).toEqual(expect.arrayContaining(data.modules.modules));
     });
 
     setup('disable simple-auction ajax bid check @pro', async () => {
