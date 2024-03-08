@@ -50,6 +50,7 @@ $wc_product_review_status = get_option( 'woocommerce_enable_reviews', 'yes' ); /
                     $post_id,
                     '_enable_reviews',
                     [
+                        'class' => 'dokan-review-settings',
                         'value' => 'open' === $post->comment_status ? 'yes' : 'no',
                         'label' => __( 'Enable product reviews', 'dokan-lite' ),
                     ],
