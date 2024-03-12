@@ -1885,12 +1885,12 @@ export const selector = {
                     // Site settings
                     adminAreaAccess: '.admin_access .switch',
 
-                    vendorStoreUrl: '#dokan_general\\[custom_store_url\\]', // todo:  for CSS selector [ ] needs escaped with double back slash \\
+                    vendorStoreUrl: '#dokan_general\\[custom_store_url\\]',
                     vendorSetupWizardLogo: '#dokan_general\\[setup_wizard_logo_url\\]',
                     disableWelcomeWizard: '#dokan_general\\[disable_welcome_wizard\\]',
                     setupWizardMessageIframe: 'iframe',
                     setupWizardMessageHtmlBody: '#tinymce',
-                    sellingProductTypes: (type: string) => `//label[@for='dokan_general[global_digital_mode][${type}]']`,
+                    sellingProductTypes: (type: string) => `//label[contains(@for,'sell_${type}-global_digital_mode')]`,
                     logShipStationApiRequest: '#dokan_general\\[enable_shipstation_logging\\]',
                     dataClear: '#dokan_general\\[data_clear_on_uninstall\\]',
                     confirmDataClear: '.swal2-confirm',
@@ -1901,7 +1901,7 @@ export const selector = {
                     storeProductPerPage: '#dokan_general\\[store_products_per_page\\]',
                     enableTermsAndCondition: '.enable_tc_on_reg .switch',
                     enableSingSellerMode: '#dokan_general\\[enable_single_seller_mode\\]',
-                    storCategory: (category: string) => `//label[@for='dokan_general[store_category_type][${category}]']`,
+                    storCategory: (category: string) => `//label[contains(@for,'${category}-store_category_type')]`,
 
                     // product page settings
                     showVendorInfo: '.show_vendor_info .switch',
@@ -2240,7 +2240,7 @@ export const selector = {
 
                 // Wholesale
                 wholesale: {
-                    whoCanSeeWholesalePrice: (type: string) => `//div[@class='wholesale_price_display dokan-settings-field-type-radio'] //label[@for='dokan_wholesale[wholesale_price_display][${type}]']`,
+                    whoCanSeeWholesalePrice: (type: string) => `//label[contains(@for,'${type}_user-wholesale_price_display')]`,
                     showWholesalePriceOnShopArchive: '.display_price_in_shop_archieve .switch',
                     needApprovalForCustomer: '.need_approval_for_wholesale_customer .switch',
                     wholesaleSaveChanges: '#submit',
@@ -2298,11 +2298,11 @@ export const selector = {
 
                 // Geolocation
                 geolocation: {
-                    locationMapPosition: (position: string) => `//label[@for='dokan_geolocation[show_locations_map][${position}]']`,
-                    showMap: (type: string) => `//label[@for='dokan_geolocation[show_location_map_pages][${type}]']`,
+                    locationMapPosition: (position: string) => `//label[contains(@for,'${position}-show_locations_map')]`,
+                    showMap: (type: string) => `//label[contains(@for,'${type}-show_location_map_pages')]`,
                     showFiltersBeforeLocationMap: '.show_filters_before_locations_map .switch',
                     productLocationTab: '.show_product_location_in_wc_tab .switch',
-                    radiusSearchUnit: (unit: string) => `//label[@for='dokan_geolocation[distance_unit][${unit}]']`,
+                    radiusSearchUnit: (unit: string) => `//label[contains(@for,'${unit}-distance_unit')]`,
                     radiusSearchMinimumDistance: '#dokan_geolocation\\[distance_min\\]',
                     radiusSearchMaximumDistance: '#dokan_geolocation\\[distance_max\\]',
                     mapZoomLevel: '#dokan_geolocation\\[map_zoom\\]',
@@ -6740,9 +6740,7 @@ export const selector = {
 
                 // non logged User
                 nonLoggedUser: {
-                    // userName: '#login-name',
-                    // userPassword: '#login-password',
-                    // login: '#support-submit-btn',
+                    loginPopup: 'div#dokan-modal-login-form-popup',
                     userName: '#dokan-login-form-username',
                     userPassword: '#dokan-login-form-password',
                     login: '#dokan-login-form-submit-btn',
@@ -6924,7 +6922,7 @@ export const selector = {
             // Social icons
             storeSocialIcons: {
                 facebook: '.fa-facebook-square',
-                twitter: '.fa-square-x-twitter', 
+                twitter: '.fa-square-x-twitter',
                 pinterest: '.fa-pinterest-square',
                 linked: '.fa-linkedin',
                 youtube: '.fa-youtube-square',

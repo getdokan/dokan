@@ -31,7 +31,6 @@ test.describe('Abuse report test', () => {
     test.afterAll(async () => {
         await aPage.close();
         await cPage.close();
-        // await gPage.close();
         await apiUtils.dispose();
     });
 
@@ -74,7 +73,7 @@ test.describe('Abuse report test', () => {
     test('guest customer need to log-in to report product @pro @g', async ({ page }) => {
         const guest = new AbuseReportsPage(page);
         await dbUtils.setDokanSettings(dbData.dokan.optionName.productReportAbuse, { ...dbData.dokan.productReportAbuseSettings, reported_by_logged_in_users_only: 'on' });
-        await guest.reportProduct(data.predefined.simpleProduct.product1.name, data.product.report);
+        await guest.reportProduct(data.predefined.simpleProduct.product1.name, data.product.report, true);
         await dbUtils.setDokanSettings(dbData.dokan.optionName.productReportAbuse, dbData.dokan.productReportAbuseSettings);
     });
 });

@@ -33,13 +33,13 @@ test.describe('Menu Manager test', () => {
     });
 
     test('admin can rename menu @pro @a', async () => {
-        await admin.renameMenu('Request Quotes', 'Quotations');
+        await admin.renameMenu('Withdraw', 'Withdraws');
         //reset
         // await dbUtils.setDokanSettings(dbData.dokan.optionName.menuManager, dbData.dokan.menuManagerSettings);
     });
 
     test("admin can't rename menu with more than 45 characters @pro @a", async () => {
-        await admin.cantRenameMenuBeyondLimit('Subscription', 'abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz');
+        await admin.cantRenameMenuBeyondLimit('Staff', 'abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz');
     });
 
     test("admin can't rename disabled menu @pro @a", async () => {

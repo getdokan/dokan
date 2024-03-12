@@ -1823,7 +1823,7 @@ export const data = {
             vendorStoreUrl: 'store',
             setupWizardMessage:
                 "Thank you for choosing The Marketplace to power your online store! This quick setup wizard will help you configure the basic settings. It's completely optional and shouldn't take longer than two minutes.",
-            sellingProductTypes: 'sell_both', // 'sell_both', 'sell_physical', 'sell_digital'
+            sellingProductTypes: 'both', // 'both', 'physical', 'digital'
             storeProductPerPage: '12',
             storCategory: 'multiple', // 'none', 'single', 'multiple'
             saveSuccessMessage: 'Setting has been saved successfully.',
@@ -1947,7 +1947,7 @@ export const data = {
 
         // Wholesale
         wholesale: {
-            whoCanSeeWholesalePrice: 'all_user',
+            whoCanSeeWholesalePrice: 'all', // 'all', 'wholesale_customer'
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
 
@@ -2026,7 +2026,7 @@ export const data = {
 
     // dokan license
     dokanLicense: {
-        correctKey: String(process.env.LICENSE_KEY),
+        correctKey: process.env.LICENSE_KEY,
         incorrectKey: 'ABC-123-DEF-456-GHI-789',
     },
 
