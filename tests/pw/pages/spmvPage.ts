@@ -24,7 +24,7 @@ export class SpmvPage extends VendorPage {
         const alreadyAssigned = await this.isVisible(spmvAdmin.unassignVendor(storeName));
         alreadyAssigned && (await this.clickAndAcceptAndWaitForResponseAndLoadState(data.subUrls.ajax, spmvAdmin.unassignVendor(storeName)));
 
-        await this.typeViaPageAndWaitForResponse(data.subUrls.ajax, spmvAdmin.searchVendor, storeName);
+        await this.typeByPageAndWaitForResponse(data.subUrls.ajax, spmvAdmin.searchVendor, storeName);
         await this.toContainText(spmvAdmin.highlightedResult, storeName);
         await this.click(spmvAdmin.searchedResult(storeName));
         await this.click(spmvAdmin.spmvDiv);

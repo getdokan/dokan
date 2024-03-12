@@ -904,9 +904,7 @@ export const data = {
                 setupWizard: '?page=dokan-seller-setup',
                 dashboard: 'dashboard',
                 products: 'dashboard/products',
-                productSearch: 'products/?product_listing_search',
-                productAuction: 'dashboard/auction',
-                productBooking: 'dashboard/booking/new-product',
+                spmv: 'dashboard/products-search',
                 orders: 'dashboard/orders',
                 userSubscriptions: 'dashboard/user-subscription',
                 requestQuotes: 'dashboard/requested-quotes',
@@ -918,31 +916,39 @@ export const data = {
                 reviews: 'dashboard/reviews',
                 withdraw: 'dashboard/withdraw',
                 withdrawRequests: 'dashboard/withdraw-requests',
+                reverseWithdrawal: 'dashboard/reverse-withdrawal',
                 badges: 'dashboard/seller-badge',
                 productQA: 'dashboard/product-questions-answers',
                 questionDetails: (questionId: string) => `dashboard/product-questions-answers/?question_id=${questionId}`,
-                reverseWithdrawal: 'dashboard/reverse-withdrawal',
                 returnRequest: 'dashboard/return-request',
                 staff: 'dashboard/staffs',
                 followers: 'dashboard/followers',
-                analytics: 'dashboard/analytics',
+                booking: 'dashboard/booking',
+                addBookingProduct: 'dashboard/booking/new-product',
+                addBooking: 'dashboard/booking/add-booking',
+                manageBooking: 'dashboard/booking/my-bookings',
+                bookingCalendar: 'dashboard/booking/calendar',
+                manageResources: 'dashboard/booking/resources',
                 announcements: 'dashboard/announcement',
+                analytics: 'dashboard/analytics',
                 tools: 'dashboard/tools',
                 export: 'dashboard/tools/#export',
                 csvImport: 'dashboard/tools/csv-import',
                 csvExport: 'dashboard/tools/csv-export',
                 auction: 'dashboard/auction',
                 auctionActivity: 'dashboard/auction-activity',
-                booking: 'dashboard/booking',
-                addBooking: 'dashboard/booking/add-booking',
-                manageBooking: 'dashboard/booking/my-bookings',
-                bookingCalendar: 'dashboard/booking/calendar',
-                manageResources: 'dashboard/booking/resources',
                 storeSupport: 'dashboard/support',
-                spmv: 'dashboard/products-search',
+
+                // sub menus
                 settingsStore: 'dashboard/settings/store',
                 settingsAddon: 'dashboard/settings/product-addon',
                 settingsPayment: 'dashboard/settings/payment',
+                // payment settings
+                paypal: 'dashboard/settings/payment-manage-paypal',
+                bankTransfer: 'dashboard/settings/payment-manage-bank',
+                customPayment: 'dashboard/settings/payment-manage-dokan_custom',
+                skrill: 'dashboard/settings/payment-manage-skrill',
+
                 settingsVerification: 'dashboard/settings/verification',
                 settingsDeliveryTime: 'dashboard/settings/delivery-time',
                 settingsShipping: 'dashboard/settings/shipping',
@@ -950,11 +956,8 @@ export const data = {
                 settingsSocialProfile: 'dashboard/settings/social',
                 settingsRma: 'dashboard/settings/rma',
                 settingsSeo: 'dashboard/settings/seo',
+
                 editAccountVendor: 'dashboard/edit-account',
-                paypal: 'dashboard/settings/payment-manage-paypal',
-                bankTransfer: 'dashboard/settings/payment-manage-bank',
-                customPayment: 'dashboard/settings/payment-manage-dokan_custom',
-                skrill: 'dashboard/settings/payment-manage-skrill',
             },
         },
 
@@ -1820,7 +1823,7 @@ export const data = {
             vendorStoreUrl: 'store',
             setupWizardMessage:
                 "Thank you for choosing The Marketplace to power your online store! This quick setup wizard will help you configure the basic settings. It's completely optional and shouldn't take longer than two minutes.",
-            sellingProductTypes: 'sell_both', // 'sell_both', 'sell_physical', 'sell_digital'
+            sellingProductTypes: 'both', // 'both', 'physical', 'digital'
             storeProductPerPage: '12',
             storCategory: 'multiple', // 'none', 'single', 'multiple'
             saveSuccessMessage: 'Setting has been saved successfully.',
@@ -1880,8 +1883,9 @@ export const data = {
 
         // Appearance
         appearance: {
+            mapApiSource: 'google_maps', // 'google_maps', 'mapbox'
             googleMapApiKey: String(process.env.GMAP),
-            mapBoxApiKey: String(process.env.MAPBOX_API_KEY),
+            mapBoxApiKey: String(process.env.MAPBOX),
             storeBannerWidth: '625',
             storeBannerHeight: '300',
             saveSuccessMessage: 'Setting has been saved successfully.',
@@ -1943,7 +1947,7 @@ export const data = {
 
         // Wholesale
         wholesale: {
-            whoCanSeeWholesalePrice: 'all_user',
+            whoCanSeeWholesalePrice: 'all', // 'all', 'wholesale_customer'
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
 
@@ -2022,7 +2026,7 @@ export const data = {
 
     // dokan license
     dokanLicense: {
-        correctKey: String(process.env.LICENSE_KEY),
+        correctKey: process.env.LICENSE_KEY,
         incorrectKey: 'ABC-123-DEF-456-GHI-789',
     },
 
