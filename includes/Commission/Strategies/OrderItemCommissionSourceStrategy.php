@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\Commission\Strategies;
 
+use WeDevs\Dokan\Commission\Calculators\CategoryBasedCommissionCalculator;
 use WeDevs\Dokan\Commission\CommissionCalculatorFactory;
 use WeDevs\Dokan\Commission\Utils\CommissionSettings;
 use WeDevs\Dokan\Commission\Calculators\CommissionCalculatorInterface;
@@ -119,6 +120,31 @@ class OrderItemCommissionSourceStrategy extends AbstractCommissionSourceStrategy
                 ->set_flat( $additional_flat )
                 ->set_percentage( $commission_percentage )
                 ->set_meta_data( $commission_meta );
+
+        if ( $commission_type === CategoryBasedCommissionCalculator::SOURCE && isset( $commission_meta['parameters']['category_id'] ) ) {
+            $settings->set_category_id( $commission_meta['parameters']['category_id'] );
+            $settings->set_category_commissions(
+                [
+                    'all'   => [],
+                    'items' => [
+                        $settings->get_category_id() => [
+                            'flat'       => $settings->get_flat(),
+                            'percentage' => $settings->get_percentage(),
+                        ],
+                    ],
+                ]
+            );
+        } else {
+            $settings->set_category_commissions(
+                [
+                    'all'   => [
+                        'flat'       => $settings->get_flat(),
+                        'percentage' => $settings->get_percentage(),
+                    ],
+                    'items' => [],
+                ]
+            );
+        }
 
         return $settings;
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Commission\Calculator;
+namespace WeDevs\Dokan\Test\Commission\Calculator;
 
 use WeDevs\Dokan\Commission\Calculators\FixedCommissionCalculator;
 use WeDevs\Dokan\Commission\Utils\CommissionSettings;

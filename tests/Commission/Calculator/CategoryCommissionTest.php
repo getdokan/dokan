@@ -1,12 +1,12 @@
 <?php
 
-namespace Commission\Calculator;
+namespace WeDevs\Dokan\Test\Commission\Calculator;
 
 use WeDevs\Dokan\Commission\Calculators\CategoryBasedCommissionCalculator;
 use WeDevs\Dokan\Commission\Utils\CommissionSettings;
 use WP_UnitTestCase;
 
-class xCategoryCommissionTest extends WP_UnitTestCase {
+class CategoryCommissionTest extends WP_UnitTestCase {
 
     /**
      * Test if the class has overridden all the methods of the interface class.

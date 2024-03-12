@@ -1,6 +1,6 @@
 <?php
 
-namespace Commission\Strategy;
+namespace WeDevs\Dokan\Test\Commission\Strategy;
 
 use WeDevs\Dokan\Commission\Strategies\GlobalCommissionSourceStrategy;
 use WeDevs\Dokan\Commission\Strategies\VendorCommissionSourceStrategy;
