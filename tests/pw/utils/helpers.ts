@@ -1,7 +1,7 @@
-// const open = require( 'open' );
 import fs from 'fs';
 import { execSync } from 'child_process';
 import { Browser, BrowserContextOptions, Page } from '@playwright/test';
+import open from 'open';
 
 export const helpers = {
     // replace '_' to space & capitalize first letter of string
@@ -275,14 +275,6 @@ export const helpers = {
         ); // Remove trailing -
     },
 
-    // create env
-    createEnvVariable(key: string, value: string) {
-        const content = '\n' + key + '=' + value;
-        fs.appendFile('.env', content, 'utf8', err => {
-            if (err) throw err;
-        });
-    },
-
     // check file existence
     fileExists(filePath: string) {
         return fs.existsSync(filePath);
@@ -333,6 +325,14 @@ export const helpers = {
     // rename file
     renameFile(newFilePath: string, oldFilePath: string) {
         fs.renameSync(newFilePath, oldFilePath);
+    },
+
+    // create env
+    createEnvVar(key: string, value: string) {
+        console.log(`${key}=${value}`);
+        const content = '\n' + `${key}=${value}`;
+        process.env[key] = value;
+        this.appendFile('.env', content); // for local testing
     },
 
     // append content to .env file

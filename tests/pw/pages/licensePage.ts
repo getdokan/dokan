@@ -21,7 +21,17 @@ export class LicensePage extends AdminPage {
         await this.toBeVisible(licenseAdmin.licenseText);
 
         // license section elements are visible
-        await this.multipleElementVisible(licenseAdmin.activateSection);
+        const { activateLicense, ...activateSection } = licenseAdmin.activateSection;
+        await this.multipleElementVisible(activateSection);
+
+        // deactivate license is visible
+        await this.toBeVisible(licenseAdmin.deactivateLicense);
+
+        // refresh license is visible
+        await this.toBeVisible(licenseAdmin.refreshLicense);
+
+        // activated license info elements are visible
+        await this.toBeVisible(licenseAdmin.activateLicenseInfo);
     }
 
     // activate license
@@ -43,6 +53,12 @@ export class LicensePage extends AdminPage {
         }
     }
 
+    // refresh license
+    async refresehLicense() {
+        await this.goIfNotThere(data.subUrls.backend.dokan.license);
+        await this.clickAndWaitForResponse(data.subUrls.backend.dokan.license, licenseAdmin.refreshLicense);
+        await this.toContainText(licenseAdmin.successNotice, 'License refreshed successfully.');
+    }
     // deactivate license
     async deactivateLicense() {
         await this.goIfNotThere(data.subUrls.backend.dokan.license);

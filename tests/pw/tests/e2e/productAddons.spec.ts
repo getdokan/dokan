@@ -15,6 +15,7 @@ test.describe('Product addon functionality test', () => {
     let categoryName: string;
     let apiUtils: ApiUtils;
 
+    // create product addon
     async function createVendorProductAddon(): Promise<[string, string, string, string]> {
         const [, categoryId, categoryName] = await apiUtils.createCategory(payloads.createCategoryRandom(), payloads.adminAuth);
         const [, addonId, addonName, addonFieldTitle] = await apiUtils.createProductAddon({ ...payloads.createProductAddons(), restrict_to_categories: [categoryId] }, payloads.adminAuth);
