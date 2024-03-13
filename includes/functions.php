@@ -2380,6 +2380,10 @@ function dokan_get_social_profile_fields() {
             'icon'  => 'flickr',
             'title' => __( 'Flickr', 'dokan-lite' ),
         ],
+        'threads'   => [
+            'icon'  => 'fa-brands fa-threads',
+            'title' => __( 'Threads', 'dokan-lite' ),
+        ],
     ];
 
     return apply_filters( 'dokan_profile_social_fields', $fields );
