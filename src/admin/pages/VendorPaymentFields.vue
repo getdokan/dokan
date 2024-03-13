@@ -58,7 +58,7 @@
                 />
             </div>
 
-            <div class="dokan-form-group">
+            <div class="dokan-form-group flex-col">
 
                 <div :class="{'column': getId(), 'checkbox-group': ! getId()}">
                     <label for="paypal-email">{{ __( 'PayPal Email', 'dokan-lite') }}</label>

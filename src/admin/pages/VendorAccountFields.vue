@@ -6,19 +6,19 @@
 
         <div class="content-body">
             <div class="vendor-image" v-if="! getId()">
-                <div class="picture">
-                    <p class="picture-header">{{ __( 'Vendor Picture', 'dokan-lite' ) }}</p>
+                <div class="picture flex flex-col justify-center">
+                    <p class="picture-header mb-4">{{ __( 'Vendor Picture', 'dokan-lite' ) }}</p>
 
                     <div class="profile-image">
                         <upload-image @uploadedImage="uploadGravatar" :croppingWidth="150" :croppingHeight="150" />
                     </div>
 
-                    <p class="picture-footer"
+                    <p class="picture-footer mt-4"
                         v-html="sprintf( __( 'You can change your profile picture on %s', 'dokan-lite' ), '<a href=\'https://gravatar.com/\' target=\'_blank\'>Gravatar</a>' )"
                     />
                 </div>
 
-                <div :class="['picture banner', {'has-banner': vendorInfo.banner_id}]">
+                <div class='!pt-0 !flex !flex-col !justify-center !items-center' :class="['picture banner', {'has-banner': vendorInfo.banner_id}]">
                     <div class="banner-image">
                         <upload-image @uploadedImage="uploadBanner" :showButton="showButton" :buttonLabel="__( 'Upload Banner', 'dokan-lite' )" />
                     </div>

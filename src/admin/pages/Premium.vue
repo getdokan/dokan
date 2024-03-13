@@ -17,8 +17,8 @@
         <div class="vendor-capabilities-banner" :style="bannerBg">
             <img :src="bannerImage" :alt="__( 'Dokan Vendor Capabilities Banner', 'dokan-lite' )">
             <div class="content">
-                <p class="title">{{ __( 'Vendor Capabilities', 'dokan-lite' ) }}</p>
-                <p>
+                <p class="title pb-4">{{ __( 'Vendor Capabilities', 'dokan-lite' ) }}</p>
+                <p class='pb-3'>
                     {{ __( 'One of the finest attractions of Dokan PRO is the vast array of powerful vendor controls & functions it provides so sellers can enjoy ownership, automation & freedom to run their stores. To use these awesome vendor features listed below, consider Upgrading to PRO.', 'dokan-lite' ) }}
                 </p>
                 <router-link class="button" :to="{ name: 'VendorCapabilities' }">
@@ -44,13 +44,15 @@
             </div>
 
             <a href="https://dokan.co/wordpress/features/" class="btn" target="_blank">
-                {{ __( 'And Many More', 'dokan-lite' ) }}
-                <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                <p class='flex'>
+                    {{ __( 'And Many More', 'dokan-lite' ) }}
+                    <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
                          viewBox="0 0 17.5 12.5" style="enable-background:new 0 0 17.5 12.5;" xml:space="preserve">
                     <path class="st0" d="M10.6,1.5c-0.4-0.4-0.4-0.9,0-1.3c0.4-0.3,0.9-0.3,1.3,0l5.3,5.3c0.2,0.2,0.3,0.4,0.3,0.7s-0.1,0.5-0.3,0.7
                         l-5.3,5.3c-0.4,0.4-0.9,0.4-1.3,0c-0.4-0.4-0.4-0.9,0-1.3l3.8-3.8H0.9C0.4,7.1,0,6.7,0,6.2s0.4-0.9,0.9-0.9h13.5L10.6,1.5z
                          M10.6,1.5"/>
                 </svg>
+                </p>
             </a>
         </div>
         <!-- End of Service Section -->
@@ -187,7 +189,7 @@
                 <div class="guarantee-detail">
                     <h2>{{ __( '14 Days Money Back Guarantee', 'dokan-lite' ) }}</h2>
                     <p>{{ __( 'After successful purchase, you will be eligible for conditional refund', 'dokan-lite' ) }}</p>
-                    <a :href="payment.termsPolicyUrl" target="_blank"><img :src="payment.viewIcon" alt="Dokan"> {{ __( 'Terms & Condition Applied', 'dokan-lite' ) }}</a>
+                    <a class='flex items-center' :href="payment.termsPolicyUrl" target="_blank"><img class='h-[11px]' :src="payment.viewIcon" alt="Dokan"> {{ __( 'Terms & Condition Applied', 'dokan-lite' ) }}</a>
                 </div>
             </div>
             <div class="payment-area">
