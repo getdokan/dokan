@@ -6,6 +6,9 @@ const defaultConfig = require('@wordpress/scripts/config/webpack.config');
 const isProduction = process.env.NODE_ENV === 'production';
 
 const entryPoint = {
+  // Dokan tailwind css
+  'dokan-tailwind': './src/tailwind.css',
+
   'vue-frontend': './src/frontend/main.js',
   'vue-admin': './src/admin/main.js',
   'vue-bootstrap': './src/utils/Bootstrap.js',
@@ -94,16 +97,13 @@ const updatedConfig = {
 
   module: {
     rules: [
-      {
-        test: /\.js$/,
-        loader: 'babel-loader',
-      },
+      ...defaultConfig.module.rules,
       {
         test: /\.vue$/,
         loader: 'vue-loader',
       },
       {
-        test: /\.(less|css)$/i,
+        test: /\.(less)$/i,
         use: [
           MiniCssExtractPlugin.loader,
           {
@@ -137,7 +137,7 @@ const updatedConfig = {
         generator: {
           filename: '../font/[name].[ext]',
         },
-      },
+      }
     ]
   },
 }
