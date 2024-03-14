@@ -94,17 +94,8 @@ class Manager {
         unset( $args['status'] );
         unset( $args['featured'] );
 
-        $cache_group = 'vendors';
-        $cache_key   = 'vendors_' . md5( wp_json_encode( $args ) );
-        $user_query  = Cache::get( $cache_key, $cache_group );
-
-        if ( false === $user_query ) {
-            $user_query = new WP_User_Query( $args );
-
-            Cache::set( $cache_key, $user_query, $cache_group );
-        }
-
-        $results = $user_query->get_results();
+        $user_query = new WP_User_Query( $args );
+        $results    = $user_query->get_results();
 
         $this->total_users = $user_query->total_users;
 

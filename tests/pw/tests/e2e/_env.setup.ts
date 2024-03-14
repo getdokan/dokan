@@ -1,4 +1,5 @@
 import { test as setup, expect, request, Page } from '@playwright/test';
+import { LicensePage } from '@pages/licensePage';
 import { ProductAdvertisingPage } from '@pages/productAdvertisingPage';
 import { ReverseWithdrawsPage } from '@pages/reverseWithdrawsPage';
 import { VendorSettingsPage } from '@pages/vendorSettingsPage';
@@ -9,9 +10,9 @@ import { dbData } from '@utils/dbData';
 import { data } from '@utils/testData';
 import { helpers } from '@utils/helpers';
 
-const { DOKAN_PRO, CUSTOMER_ID, HPOS } = process.env;
+const { DOKAN_PRO, HPOS } = process.env;
 
-setup.describe('setup site & woocommerce & user settings', () => {
+setup.describe('setup site & woocommerce & dokan settings', () => {
     setup.use({ extraHTTPHeaders: { Authorization: payloads.adminAuth.Authorization } });
 
     let apiUtils: ApiUtils;
@@ -39,6 +40,22 @@ setup.describe('setup site & woocommerce & user settings', () => {
         await apiUtils.updateBatchWcSettingsOptions('general', payloads.general);
         await apiUtils.updateBatchWcSettingsOptions('account', payloads.account);
         HPOS && (await apiUtils.updateBatchWcSettingsOptions('advanced', payloads.advanced));
+    });
+
+    setup('set dokan license @pro', async () => {
+        setup.skip(!DOKAN_PRO, 'skip on lite');
+        await dbUtils.setDokanSettings(dbData.dokan.optionName.dokanProLicense, dbData.dokan.dokanProLicense);
+    });
+
+    setup('activate all dokan modules @pro', async () => {
+        setup.skip(!DOKAN_PRO, 'skip on lite');
+        await apiUtils.activateModules(dbData.dokan.modules);
+    });
+
+    setup('check active dokan modules @pro', async () => {
+        setup.skip(!DOKAN_PRO, 'skip on lite');
+        const activeModules = await apiUtils.getAllModuleIds({ status: 'active' });
+        expect(activeModules).toEqual(expect.arrayContaining(data.modules.modules));
     });
 
     setup('set tax rate @lite', async () => {
@@ -98,12 +115,6 @@ setup.describe('setup site & woocommerce & user settings', () => {
         await apiUtils.createAttributeTerm(attributeId, { name: 'm' });
     });
 
-    setup('check active dokan modules @pro', async () => {
-        setup.skip(!DOKAN_PRO, 'skip on lite');
-        const activeModules = await apiUtils.getAllModuleIds({ status: 'active' });
-        expect(activeModules).toEqual(expect.arrayContaining(data.modules.modules));
-    });
-
     setup('disable simple-auction ajax bid check @pro', async () => {
         setup.skip(!process.env.CI || !DOKAN_PRO, 'skip on local');
         const [, , status] = await apiUtils.getSinglePlugin('woocommerce-simple-auctions/woocommerce-simple-auctions', payloads.adminAuth);
@@ -128,23 +139,17 @@ setup.describe('setup user settings', () => {
     setup('add vendor1 product @lite', async () => {
         // delete previous store products with predefined name if any
         await apiUtils.deleteAllProducts(data.predefined.simpleProduct.product1.name, payloads.vendorAuth);
-
         // create store product
         const [, productId] = await apiUtils.createProduct({ ...payloads.createProduct(), name: data.predefined.simpleProduct.product1.name }, payloads.vendorAuth);
-        console.log('PRODUCT_ID', productId);
-        process.env.PRODUCT_ID = productId;
-        helpers.appendEnv(`PRODUCT_ID=${productId}`); // for local testing
+        helpers.createEnvVar('PRODUCT_ID', productId);
     });
 
     setup('add vendor2 product @lite', async () => {
         // delete previous store products with predefined name if any
         await apiUtils.deleteAllProducts(data.predefined.vendor2.simpleProduct.product1.name, payloads.vendor2Auth);
-
         // create store product
         const [, productId] = await apiUtils.createProduct({ ...payloads.createProduct(), name: data.predefined.vendor2.simpleProduct.product1.name }, payloads.vendor2Auth);
-        console.log('V2_PRODUCT_ID:', productId);
-        process.env.V2_PRODUCT_ID = productId;
-        helpers.appendEnv(`V2_PRODUCT_ID=${productId}`); // for local testing
+        helpers.createEnvVar('PRODUCT_ID_V2', productId);
     });
 
     setup('add vendor coupon @pro', async () => {
@@ -207,7 +212,7 @@ setup.describe('setup dokan settings', () => {
         await dbUtils.setDokanSettings(dbData.dokan.optionName.privacyPolicy, dbData.dokan.privacyPolicySettings);
     });
 
-    setup('admin set dokan color settings @pro', async () => {
+    setup.skip('admin set dokan color settings @pro', async () => {
         setup.skip(!DOKAN_PRO, 'skip on lite');
         await dbUtils.setDokanSettings(dbData.dokan.optionName.colors, dbData.dokan.colorsSettings);
     });
@@ -227,7 +232,7 @@ setup.describe('setup dokan settings', () => {
         await dbUtils.setDokanSettings(dbData.dokan.optionName.quote, dbData.dokan.quoteSettings);
     });
 
-    setup('admin set dokan rma settings @pro', async () => {
+    setup.skip('admin set dokan rma settings @pro', async () => {
         setup.skip(!DOKAN_PRO, 'skip on lite');
         await dbUtils.setDokanSettings(dbData.dokan.optionName.rma, dbData.dokan.rmaSettings);
     });
@@ -237,12 +242,12 @@ setup.describe('setup dokan settings', () => {
         await dbUtils.setDokanSettings(dbData.dokan.optionName.wholesale, dbData.dokan.wholesaleSettings);
     });
 
-    setup('admin set dokan eu compliance settings @pro', async () => {
+    setup.skip('admin set dokan eu compliance settings @pro', async () => {
         setup.skip(!DOKAN_PRO, 'skip on lite');
         await dbUtils.setDokanSettings(dbData.dokan.optionName.euCompliance, dbData.dokan.euComplianceSettings);
     });
 
-    setup('admin set dokan delivery time settings @pro', async () => {
+    setup.skip('admin set dokan delivery time settings @pro', async () => {
         setup.skip(!DOKAN_PRO, 'skip on lite');
         await dbUtils.setDokanSettings(dbData.dokan.optionName.deliveryTime, dbData.dokan.deliveryTimeSettings);
     });
@@ -252,7 +257,7 @@ setup.describe('setup dokan settings', () => {
         await dbUtils.setDokanSettings(dbData.dokan.optionName.productAdvertising, dbData.dokan.productAdvertisingSettings);
     });
 
-    setup('admin set dokan geolocation settings @pro', async () => {
+    setup.skip('admin set dokan geolocation settings @pro', async () => {
         setup.skip(!DOKAN_PRO, 'skip on lite');
         await dbUtils.setDokanSettings(dbData.dokan.optionName.geolocation, dbData.dokan.geolocationSettings);
     });
@@ -262,18 +267,19 @@ setup.describe('setup dokan settings', () => {
         await dbUtils.setDokanSettings(dbData.dokan.optionName.productReportAbuse, dbData.dokan.productReportAbuseSettings);
     });
 
-    setup('admin set dokan spmv settings @pro', async () => {
+    setup.skip('admin set dokan spmv settings @pro', async () => {
         setup.skip(!DOKAN_PRO, 'skip on lite');
         await dbUtils.setDokanSettings(dbData.dokan.optionName.spmv, dbData.dokan.spmvSettings);
     });
 
-    setup('admin set dokan vendor subscription settings @pro', async () => {
+    setup.skip('admin set dokan vendor subscription settings @pro', async () => {
         setup.skip(!DOKAN_PRO, 'skip on lite');
         await dbUtils.setDokanSettings(dbData.dokan.optionName.vendorSubscription, dbData.dokan.vendorSubscriptionSettings);
     });
 });
 
 setup.describe('setup dokan settings e2e', () => {
+    let licensePage: LicensePage;
     let productAdvertisingPage: ProductAdvertisingPage;
     let reverseWithdrawsPage: ReverseWithdrawsPage;
     let vendorPage: VendorSettingsPage;
@@ -283,6 +289,7 @@ setup.describe('setup dokan settings e2e', () => {
     setup.beforeAll(async ({ browser }) => {
         const adminContext = await browser.newContext(data.auth.adminAuth);
         aPage = await adminContext.newPage();
+        licensePage = new LicensePage(aPage);
         productAdvertisingPage = new ProductAdvertisingPage(aPage);
         reverseWithdrawsPage = new ReverseWithdrawsPage(aPage);
 
@@ -297,6 +304,11 @@ setup.describe('setup dokan settings e2e', () => {
         await aPage.close();
         await vPage.close();
         await apiUtils.dispose();
+    });
+
+    setup('admin can refreseh license @pro @a', async () => {
+        setup.skip(!DOKAN_PRO, 'skip on lite');
+        await licensePage.refresehLicense();
     });
 
     setup('recreate reverse withdrawal payment product via settings save @lite', async () => {
