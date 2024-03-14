@@ -17,10 +17,10 @@ class V_4_0_0 extends DokanUpgrader {
      */
     public static function update_global_commission_type() {
         $options         = get_option( 'dokan_selling', [] );
-        $commission_type = isset( $options['dokan_commission_type'] ) ? $options['dokan_commission_type'] : FixedCommissionCalculator::SOURCE;
+        $commission_type = isset( $options['commission_type'] ) ? $options['commission_type'] : FixedCommissionCalculator::SOURCE;
 
         if ( in_array( $commission_type, array_keys( dokan()->commission->get_legacy_commission_types() ), true ) ) {
-            $options['dokan_commission_type'] = 'fixed';
+            $options['commission_type'] = FixedCommissionCalculator::SOURCE;
             update_option( 'dokan_selling', $options );
         }
     }
@@ -72,7 +72,7 @@ class V_4_0_0 extends DokanUpgrader {
      *
      * @return void
      */
-    public function update_category_commission_of_vendors() {
+    public static function update_category_commission_of_vendors() {
         $page_number = 1;
         $has_vendors = true;
         $processor   = new V_4_0_0_UpdateCommissions();
@@ -107,7 +107,7 @@ class V_4_0_0 extends DokanUpgrader {
      *
      * @return void
      */
-    public function update_category_commission_of_products() {
+    public static function update_category_commission_of_products() {
         $page_number  = 1;
         $has_products = true;
         $processor    = new V_4_0_0_UpdateCommissions();

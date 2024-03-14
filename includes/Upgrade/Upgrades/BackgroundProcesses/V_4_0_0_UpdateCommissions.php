@@ -27,15 +27,15 @@ class V_4_0_0_UpdateCommissions extends DokanBackgroundProcesses {
             return false;
         }
 
-        if ( 'global-commission' === $item['task'] ) {
+        if ( isset( $item['task'] ) && 'global-commission' === $item['task'] ) {
             return $this->update_global_settings( $item['data'] );
         }
 
-        if ( 'vendors-commission' === $item['task'] ) {
+        if ( isset( $item['task'] ) && 'vendors-commission' === $item['task'] ) {
             return $this->update_vendors_settings( $item['data'] );
         }
 
-        if ( 'products-commission' === $item['task'] ) {
+        if ( isset( $item['task'] ) && 'products-commission' === $item['task'] ) {
             return $this->update_products_settings( $item['data'] );
         }
 

@@ -343,12 +343,6 @@ class CommissionTest extends WP_UnitTestCase {
                     'vendor_earning'            => 265,
                 ],
             ],
-
-
-
-
-
-
             [
                 [
                     'data_set'        => 4,
@@ -504,6 +498,343 @@ class CommissionTest extends WP_UnitTestCase {
                     'admin_commission'          => 20,
                     'per_item_admin_commission' => 20,
                     'vendor_earning'            => 280,
+                ],
+            ],
+            [
+                [
+                    'data_set'        => 9,
+                    'product_setting' => [
+                        'percentage' => 5,
+                        'type'       => CombineCommissionCalculator::SOURCE,
+                        'flat'       => 5,
+                    ],
+                    'global_setting'  => [
+                        "shipping_fee_recipient"           => "admin",
+                        "tax_fee_recipient"                => "admin",
+                        "shipping_tax_fee_recipient"       => "admin",
+                        "new_seller_enable_selling"        => "on",
+                        "commission_type"                  => CombineCommissionCalculator::SOURCE,
+                        "admin_percentage"                 => "10",
+                        "additional_fee"                   => "5",
+                        "order_status_change"              => "on",
+                        "product_category_style"           => 'single',
+                        "commission_category_based_values" => [],
+                    ],
+                    'vendor_settings' => [],
+                    'category_id'     => 'category_4',
+                    'total_price'     => 0,
+                ],
+                [
+                    'is_applicable'             => true,
+                    'calculator_source'         => CombineCommissionCalculator::SOURCE,
+                    'strategy_source'           => ProductCommissionSourceStrategy::SOURCE,
+                    'admin_commission'          => 0,
+                    'per_item_admin_commission' => 0,
+                    'vendor_earning'            => 0,
+                ],
+            ],
+            [
+                [
+                    'data_set'        => 10,
+                    'product_setting' => '',
+                    'global_setting'  => [
+                        "shipping_fee_recipient"           => "admin",
+                        "tax_fee_recipient"                => "admin",
+                        "shipping_tax_fee_recipient"       => "admin",
+                        "new_seller_enable_selling"        => "on",
+                        "commission_type"                  => "fixed",
+                        "admin_percentage"                 => "10",
+                        "additional_fee"                   => "5",
+                        "order_status_change"              => "on",
+                        "product_category_style"           => 'single',
+                        "commission_category_based_values" => [
+                            "all"   => [
+                                "flat"       => "",
+                                "percentage" => "",
+                            ],
+                            "items" => [
+                                'category_4' => [
+                                    "flat"       => "5",
+                                    "percentage" => "10",
+                                ],
+                            ],
+                        ],
+                    ],
+                    'vendor_settings' => [],
+                    'category_id'     => 'category_4',
+                    'total_price'     => 0,
+                ],
+                [
+                    'is_applicable'             => true,
+                    'calculator_source'         => FixedCommissionCalculator::SOURCE,
+                    'strategy_source'           => GlobalCommissionSourceStrategy::SOURCE,
+                    'admin_commission'          => 0,
+                    'per_item_admin_commission' => 0,
+                    'vendor_earning'            => 0,
+                ],
+            ],
+            [
+                [
+                    'data_set'        => 2,
+                    'product_setting' => '',
+                    'global_setting'  => [
+                        "shipping_fee_recipient"           => "admin",
+                        "tax_fee_recipient"                => "admin",
+                        "shipping_tax_fee_recipient"       => "admin",
+                        "new_seller_enable_selling"        => "on",
+                        "commission_type"                  => "fixed",
+                        "admin_percentage"                 => "5",
+                        "additional_fee"                   => "5",
+                        "order_status_change"              => "on",
+                        "product_category_style"           => 'single',
+                        "commission_category_based_values" => [
+                            "all"   => [
+                                "flat"       => "",
+                                "percentage" => "",
+                            ],
+                            "items" => [
+                                'category_0' => [
+                                    "flat"       => "5",
+                                    "percentage" => "10",
+                                ],
+                            ],
+                        ],
+                    ],
+                    'vendor_settings' => [
+                        'percentage'           => 5,
+                        'type'                 => CategoryBasedCommissionCalculator::SOURCE,
+                        'flat'                 => 5,
+                        'category_commissions' => [
+                            "all"   => [
+                                "flat"       => "",
+                                "percentage" => "",
+                            ],
+                            "items" => [
+                                'category_3' => [
+                                    "flat"       => "5",
+                                    "percentage" => "10",
+                                ],
+                            ],
+                        ],
+                    ],
+                    'category_id'     => 'category_3',
+                    'total_price'     => 0,
+                ],
+                [
+                    'is_applicable'             => true,
+                    'calculator_source'         => CategoryBasedCommissionCalculator::SOURCE,
+                    'strategy_source'           => VendorCommissionSourceStrategy::SOURCE,
+                    'admin_commission'          => 0,
+                    'per_item_admin_commission' => 0,
+                    'vendor_earning'            => 0,
+                ],
+            ],
+            [
+                [
+                    'data_set'        => 10,
+                    'product_setting' => '',
+                    'global_setting'  => [
+                        "shipping_fee_recipient"           => "admin",
+                        "tax_fee_recipient"                => "admin",
+                        "shipping_tax_fee_recipient"       => "admin",
+                        "new_seller_enable_selling"        => "on",
+                        "commission_type"                  => "fixed",
+                        "admin_percentage"                 => "10",
+                        "additional_fee"                   => "5",
+                        "order_status_change"              => "on",
+                        "product_category_style"           => 'single',
+                        "commission_category_based_values" => [
+                            "all"   => [
+                                "flat"       => "",
+                                "percentage" => "",
+                            ],
+                            "items" => [
+                                'category_4' => [
+                                    "flat"       => "5",
+                                    "percentage" => "10",
+                                ],
+                            ],
+                        ],
+                    ],
+                    'vendor_settings' => [],
+                    'category_id'     => 'category_4',
+                    'total_price'     => null,
+                ],
+                [
+                    'is_applicable'             => true,
+                    'calculator_source'         => FixedCommissionCalculator::SOURCE,
+                    'strategy_source'           => GlobalCommissionSourceStrategy::SOURCE,
+                    'admin_commission'          => 0,
+                    'per_item_admin_commission' => 0,
+                    'vendor_earning'            => 0,
+                ],
+            ],
+            [
+                [
+                    'data_set'        => 11,
+                    'product_setting' => '',
+                    'global_setting'  => [
+                        "shipping_fee_recipient"           => "admin",
+                        "tax_fee_recipient"                => "admin",
+                        "shipping_tax_fee_recipient"       => "admin",
+                        "new_seller_enable_selling"        => "on",
+                        "commission_type"                  => FixedCommissionCalculator::SOURCE,
+                        "admin_percentage"                 => "5",
+                        "additional_fee"                   => "5",
+                        "order_status_change"              => "on",
+                        "product_category_style"           => 'single',
+                        "commission_category_based_values" => [
+                            "all"   => [
+                                "flat"       => "",
+                                "percentage" => "",
+                            ],
+                            "items" => [
+                                'category_0' => [
+                                    "flat"       => "5",
+                                    "percentage" => "10",
+                                ],
+                            ],
+                        ],
+                    ],
+                    'vendor_settings' => [
+                        'percentage'           => 5,
+                        'type'                 => CategoryBasedCommissionCalculator::SOURCE,
+                        'flat'                 => 5,
+                        'category_commissions' => [
+                            "all"   => [
+                                "flat"       => "",
+                                "percentage" => "",
+                            ],
+                            "items" => [
+                                'category_3' => [
+                                    "flat"       => "5",
+                                    "percentage" => "10",
+                                ],
+                            ],
+                        ],
+                    ],
+                    'category_id'     => 'category_3',
+                    'total_price'     => null,
+                ],
+                [
+                    'is_applicable'             => true,
+                    'calculator_source'         => CategoryBasedCommissionCalculator::SOURCE,
+                    'strategy_source'           => VendorCommissionSourceStrategy::SOURCE,
+                    'admin_commission'          => 0,
+                    'per_item_admin_commission' => 0,
+                    'vendor_earning'            => 0,
+                ],
+            ],
+            [
+                [
+                    'data_set'        => 12,
+                    'product_setting' => '',
+                    'global_setting'  => [
+                        "shipping_fee_recipient"           => "admin",
+                        "tax_fee_recipient"                => "admin",
+                        "shipping_tax_fee_recipient"       => "admin",
+                        "new_seller_enable_selling"        => "on",
+                        "commission_type"                  => "fixed",
+                        "admin_percentage"                 => "5",
+                        "additional_fee"                   => "5",
+                        "order_status_change"              => "on",
+                        "product_category_style"           => 'single',
+                        "commission_category_based_values" => [
+                            "all"   => [
+                                "flat"       => "",
+                                "percentage" => "",
+                            ],
+                            "items" => [
+                                'category_0' => [
+                                    "flat"       => "5",
+                                    "percentage" => "10",
+                                ],
+                            ],
+                        ],
+                    ],
+                    'vendor_settings' => [
+                        'percentage'           => 5,
+                        'type'                 => FlatCommissionCalculator::SOURCE,
+                        'flat'                 => 5,
+                        'category_commissions' => [
+                            "all"   => [
+                                "flat"       => "",
+                                "percentage" => "",
+                            ],
+                            "items" => [
+                                'category_3' => [
+                                    "flat"       => "5",
+                                    "percentage" => "10",
+                                ],
+                            ],
+                        ],
+                    ],
+                    'category_id'     => 'category_3',
+                    'total_price'     => null,
+                ],
+                [
+                    'is_applicable'             => true,
+                    'calculator_source'         => FlatCommissionCalculator::SOURCE,
+                    'strategy_source'           => VendorCommissionSourceStrategy::SOURCE,
+                    'admin_commission'          => 0,
+                    'per_item_admin_commission' => 0,
+                    'vendor_earning'            => 0,
+                ],
+            ],
+            [
+                [
+                    'data_set'        => 13,
+                    'product_setting' => '',
+                    'global_setting'  => [
+                        "shipping_fee_recipient"           => "admin",
+                        "tax_fee_recipient"                => "admin",
+                        "shipping_tax_fee_recipient"       => "admin",
+                        "new_seller_enable_selling"        => "on",
+                        "commission_type"                  => "fixed",
+                        "admin_percentage"                 => "5",
+                        "additional_fee"                   => "5",
+                        "order_status_change"              => "on",
+                        "product_category_style"           => 'single',
+                        "commission_category_based_values" => [
+                            "all"   => [
+                                "flat"       => "",
+                                "percentage" => "",
+                            ],
+                            "items" => [
+                                'category_0' => [
+                                    "flat"       => "5",
+                                    "percentage" => "10",
+                                ],
+                            ],
+                        ],
+                    ],
+                    'vendor_settings' => [
+                        'percentage'           => 5,
+                        'type'                 => PercentageCommissionCalculator::SOURCE,
+                        'flat'                 => 5,
+                        'category_commissions' => [
+                            "all"   => [
+                                "flat"       => "",
+                                "percentage" => "",
+                            ],
+                            "items" => [
+                                'category_3' => [
+                                    "flat"       => "5",
+                                    "percentage" => "10",
+                                ],
+                            ],
+                        ],
+                    ],
+                    'category_id'     => 'category_3',
+                    'total_price'     => '',
+                ],
+                [
+                    'is_applicable'             => true,
+                    'calculator_source'         => PercentageCommissionCalculator::SOURCE,
+                    'strategy_source'           => VendorCommissionSourceStrategy::SOURCE,
+                    'admin_commission'          => 0,
+                    'per_item_admin_commission' => 0,
+                    'vendor_earning'            => 0,
                 ],
             ],
         ];

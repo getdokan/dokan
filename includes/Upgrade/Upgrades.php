@@ -43,7 +43,7 @@ class Upgrades {
         '3.6.5'  => Upgrades\V_3_6_5::class,
         '3.7.10' => Upgrades\V_3_7_10::class,
         '3.7.19' => Upgrades\V_3_7_19::class,
-        '4.0.0' => Upgrades\V_4_0_0::class,
+        '4.0.0'  => Upgrades\V_4_0_0::class,
     ];
 
     /**

@@ -25,8 +25,17 @@ class CombineCommissionCalculator implements CommissionCalculatorInterface {
         $per_item_percentage = $percent_commission / $total_quantity;
 
         $this->admin_commission          = $commission;
-        $this->vendor_earning            = $total_amount - $this->admin_commission;
         $this->per_item_admin_commission = $per_item_flat + $per_item_percentage;
+
+        if ( $this->get_per_item_admin_commission() > $total_amount ) {
+            $this->per_item_admin_commission = $total_amount;
+        }
+
+        if ( $this->get_admin_commission() > $total_amount ) {
+            $this->admin_commission = $total_amount;
+        }
+
+        $this->vendor_earning            = $total_amount - $this->admin_commission;
         $this->items_total_quantity      = $total_quantity;
     }
 
