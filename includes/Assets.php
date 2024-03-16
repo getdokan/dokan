@@ -638,9 +638,13 @@ class Assets {
         wp_localize_script( 'dokan-i18n-jed', 'dokan', $localize_data );
 
         // localized vendor-registration script
-        wp_localize_script( 'dokan-vendor-registration', 'dokanRegistrationI18n', [
-            'defaultRole' => dokan_get_seller_registration_default_role(),
-        ] );
+        wp_localize_script(
+            'dokan-vendor-registration',
+            'dokanRegistrationI18n',
+            [
+                'defaultRole' => dokan_get_seller_registration_default_role(),
+            ]
+        );
 
         // load only in dokan dashboard and product edit page
         if ( ( dokan_is_seller_dashboard() || ( get_query_var( 'edit' ) && is_singular( 'product' ) ) ) || apply_filters( 'dokan_forced_load_scripts', false ) ) {
