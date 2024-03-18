@@ -1,19 +1,21 @@
 <template>
     <div class="cta-section" v-bind:style="{ 'background-image': 'url(' + styles.bgPattern + '), linear-gradient( 45deg, rgb(255,125,144) 33%, rgb(255,173,111) 100%)' }">
-        <div class="feature-thumb">
+        <div class="feature-thumb flex justify-center items-center">
             <img :src="thumbnail" alt="Dokan Lite">
         </div>
         <div class="content-area">
             <h2>{{ __( 'Convinced?', 'dokan-lite' ) }}</h2>
             <p>{{ __( 'With all the advance features you get it’s hard to resist buying Dokan Pro.', 'dokan-lite' ) }}</p>
             <a :href="url" class="btn" target="_blank">
-                {{ __( 'Upgrade to Pro', 'dokan-lite' ) }}
-                <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-                     viewBox="0 0 17.5 12.5" style="enable-background:new 0 0 17.5 12.5;" xml:space="preserve">
+                <p class='flex !m-0'>
+                    {{ __( 'Upgrade to Pro', 'dokan-lite' ) }}
+                    <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+                         viewBox="0 0 17.5 12.5" style="enable-background:new 0 0 17.5 12.5;" xml:space="preserve">
                 <path class="st0" d="M10.6,1.5c-0.4-0.4-0.4-0.9,0-1.3c0.4-0.3,0.9-0.3,1.3,0l5.3,5.3c0.2,0.2,0.3,0.4,0.3,0.7s-0.1,0.5-0.3,0.7
                     l-5.3,5.3c-0.4,0.4-0.9,0.4-1.3,0c-0.4-0.4-0.4-0.9,0-1.3l3.8-3.8H0.9C0.4,7.1,0,6.7,0,6.2s0.4-0.9,0.9-0.9h13.5L10.6,1.5z
                      M10.6,1.5"/>
                 </svg>
+                </p>
             </a>
         </div>
     </div>

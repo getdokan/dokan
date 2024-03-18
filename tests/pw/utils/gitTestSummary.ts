@@ -32,12 +32,14 @@ const addSummaryHeadingAndTable = core => {
         { data: 'Duration  :alarm_clock:', header: true },
         { data: 'Coverage  :checkered_flag:', header: true },
     ];
-    const apiTesResult = getTestResult('API Tests', API_TEST_RESULT);
-    const e2eTesResult = getTestResult('E2E Tests', E2E_TEST_RESULT);
-    apiTesResult.push(getCoverageReport(API_COVERAGE));
-    e2eTesResult.push('-');
+    const apiTestResult = getTestResult('API Tests', API_TEST_RESULT);
+    const e2eTestResult = getTestResult('E2E Tests', E2E_TEST_RESULT);
+    apiTestResult && apiTestResult.push(getCoverageReport(API_COVERAGE));
+    e2eTestResult && e2eTestResult.push('-');
     const commit_sha = SHA ? `Commit SHA: ${SHA}` : '';
-    core.summary.addHeading('Tests Summary').addRaw(commit_sha).addBreak().addBreak().addTable([tableHeader, apiTesResult, e2eTesResult]);
+    if (apiTestResult || e2eTestResult) {
+        core.summary.addHeading('Tests Summary').addRaw(commit_sha).addBreak().addBreak().addTable([tableHeader, apiTestResult, e2eTestResult]);
+    }
 };
 
 const addList = core => {
