@@ -42,5 +42,9 @@ class Controller {
             $this->container['permission']  = new Admin\Permissions();
             $this->container['admin_hooks'] = new Admin\Hooks();
         }
+
+        if ( wp_doing_ajax() ) {
+            new Ajax();
+        }
     }
 }
