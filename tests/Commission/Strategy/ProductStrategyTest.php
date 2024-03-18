@@ -2,9 +2,11 @@
 
 namespace WeDevs\Dokan\Test\Commission\Strategy;
 
+use WeDevs\Dokan\Commission\Calculators\PercentageCommissionCalculator;
 use WeDevs\Dokan\Commission\Strategies\GlobalCommissionSourceStrategy;
 use WeDevs\Dokan\Commission\Strategies\ProductCommissionSourceStrategy;
 use WeDevs\Dokan\Commission\Strategies\VendorCommissionSourceStrategy;
+use WeDevs\Dokan\Test\Helpers\WC_Helper_Product;
 use WP_UnitTestCase;
 
 class ProductStrategyTest extends WP_UnitTestCase {
@@ -264,6 +266,40 @@ class ProductStrategyTest extends WP_UnitTestCase {
             $this->assertEquals( $expected['per_item_admin_commission'], $calculator->get_per_item_admin_commission() );
             $this->assertEquals( $expected['total_quantity'], $calculator->get_items_total_quantity() );
 
+        }
+    }
+
+    /**
+     * We are test here that for a variation product the commission value will be the same a the parent product.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @test
+     * @return void
+     */
+    public function test_that_we_can_get_commission_data_properly_of_a_variation_product() {
+        $product    = WC_Helper_Product::create_variation_product();
+        $percentage = 19;
+        $flat       = 7;
+
+        $parent_commission_data = dokan()->product->save_commission_settings(
+            $product->get_id(),
+            [
+                'percentage' => $percentage,
+                'type'       => PercentageCommissionCalculator::SOURCE,
+                'flat'       => $flat,
+            ]
+        );
+
+        foreach ( $product->get_children() as $variation_id ) {
+            $variation_commission_data = dokan()->product->get_commission_settings( $variation_id );
+
+            $this->assertEquals( $parent_commission_data->get_type(), $variation_commission_data->get_type() );
+            $this->assertEquals( $parent_commission_data->get_flat(), $variation_commission_data->get_flat() );
+            $this->assertEquals( $parent_commission_data->get_percentage(), $variation_commission_data->get_percentage() );
+            $this->assertEquals( $parent_commission_data->get_category_commissions(), $variation_commission_data->get_category_commissions() );
+            $this->assertEquals( $parent_commission_data->get_meta_data(), $variation_commission_data->get_meta_data() );
+            $this->assertEquals( $parent_commission_data->get_category_id(), $variation_commission_data->get_category_id() );
         }
     }
 }

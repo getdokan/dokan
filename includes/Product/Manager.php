@@ -746,7 +746,7 @@ class Manager {
      * @return \WeDevs\Dokan\Commission\Utils\CommissionSettings
      */
     public function get_commission_settings( $product_id = 0 ) {
-        $product = $this->get( $product_id );
+        $product = $this->get( dokan()->product->validate_product_id( $product_id ) );
 
         $commission_percentage = '';
         $commission_type       = '';
