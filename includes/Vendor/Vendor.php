@@ -438,12 +438,17 @@ class Vendor {
     /**
      * Get the shop banner
      *
-     * @return string
+     * @return string|false
      */
     public function get_banner() {
-        $banner_id = $this->get_banner_id();
+        if ( $this->get_banner_id() ) {
+            return wp_get_attachment_url( $this->get_banner_id() );
+        }
 
-        return $banner_id ? wp_get_attachment_url( $banner_id ) : '';
+        // get default banner set from admin settings
+        $default_store_banner = DOKAN_PLUGIN_ASSEST . '/images/default-store-banner.png';
+
+        return dokan_get_option( 'default_store_banner', 'dokan_appearance', $default_store_banner );
     }
 
     /**
@@ -469,11 +474,11 @@ class Vendor {
     public function get_avatar() {
         $avatar_id = $this->get_avatar_id();
 
-        if ( ! $avatar_id && ! empty( $this->data->user_email ) ) {
-            return get_avatar_url( $this->data->user_email, 96 );
+        if ( $avatar_id ) {
+            return wp_get_attachment_url( $avatar_id );
         }
 
-        return wp_get_attachment_url( $avatar_id );
+        return dokan_get_option( 'default_store_profile', 'dokan_appearance', DOKAN_PLUGIN_ASSEST . '/images/mystery-person.jpg' );
     }
 
     /**

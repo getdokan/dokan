@@ -565,6 +565,12 @@
                     this.checked = value;
                 }
             });
+
+            this.$root.$on( 'dokanRestoreDefault', ( fieldData ) => {
+                if ( this.fieldValue[ fieldData.name ] !== fieldData.default ) {
+                    this.fieldValue[ fieldData.name ] = fieldData.default
+                }
+            });
         },
 
         watch: {
@@ -1094,6 +1100,10 @@
                             box-shadow: 0 0 0 1px transparent;
                         }
                     }
+                }
+
+                .field_default {
+                    margin: 0;
                 }
             }
 
