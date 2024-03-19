@@ -17,7 +17,7 @@
 
         <div class='flex flex-col max-h-[500px] overflow-y-auto border-[1px] xs:text-[8px] sm:text-[14px] border-[#e9e9ea] border-solid' :class="! allCategroyEnabled ? 'border-b-[1px]': 'border-b-0'">
             <div class='flex flex-row'>
-                <div class='flex flex-row w-1/2 items-center min-h-[3rem] border-0 border-r-[1px] border-b-[1px] border-[#e9e9ea] border-solid'>
+                <div class='flex flex-row w-1/2 items-center min-h-[3rem] border-0 border-r-[1px] border-b-[1px] border-[#e9e9ea] border-solid pl-[5px]'>
                     <button type='button' class='p-1 xs:pl-1 md:pl-4 bg-transparent bg-co border-none cursor-pointer' @click='()=>allCategroyEnabled = !allCategroyEnabled'>
                         <i class="far" :class='! allCategroyEnabled ? "fa-minus-square text-black" : "fa-plus-square text-[#F05025]"'></i>
                     </button>
@@ -28,7 +28,7 @@
                     <div class='w-1/2 flex justify-start items-center box-border'>
                             <input
                                 type="text"
-                                class="wc_input_decimal !min-h-full focus:!border-none focus:!shadow-none focus:border-transparent !border-0 !p-0 !pl-1 !w-[100%]"
+                                class="wc_input_decimal !min-h-full focus:!border-none focus:!shadow-none focus:border-transparent !border-0 !w-[100%] !pl-[5px] !pr-0 !pt-0 !pb-0"
                                 id="percentage_commission"
                                 name="percentage_commission"
                                 ref='percentage'
@@ -44,7 +44,7 @@
                             <div class='h-full xs:border-r-0 xs:border-l-0 md:border-r-[1px] md:border-l-[1px] flex justify-center items-center xs:!bg-transparent md:!bg-gray-100'><span class='xs:pl-1 xs:pr-1 md:pl-2 md:pr-2'>{{ getCurrencySymbol }}</span></div>
                             <input
                                 type="text"
-                                class="wc_input_price !min-h-full focus:!border-none focus:!shadow-none !border-0 !p-0 !pl-1 !w-[100%]"
+                                class="wc_input_price !min-h-full focus:!border-none focus:!shadow-none !border-0 !w-[100%] xs:!pl-0 xs:!pr-[5px] xs:text-right md:text-left md:!pl-[5px] !pr-0 !pt-0 !pb-0"
                                 id="fixed_commission"
                                 name="fixed_commission"
                                 ref='fixed'
@@ -56,7 +56,7 @@
             </div>
 
             <div v-if='! allCategroyEnabled' class='flex flex-row border-0 border-b-[1px] last:border-b-0 border-[#e9e9ea] border-solid' :class='showCatRow(item) ? "flex" : "hidden"' v-for='(item, index) in renderCategories' :key='item.term_id'>
-                <div class='w-1/2 flex flex-row items-center min-h-[3rem] border-0 border-r-[1px] border-[#e9e9ea] border-solid' :title='item.name'>
+                <div class='w-1/2 flex flex-row items-center min-h-[3rem] border-0 border-r-[1px] border-[#e9e9ea] border-solid pl-[5px]' :title='item.name'>
                     <div class='xs:flex h-1/2'>
                         <span v-for='parent_id in item.parents' :key='parent_id' class='xs:bg-[#e5e7eb] md:bg-transparent block h-full w-[1px] xs:ml-1'></span>
                     </div>
@@ -70,7 +70,7 @@
                     <div class='w-1/2 flex justify-start items-center box-border'>
                         <input
                             type="text"
-                            class="wc_input_decimal !min-h-full focus:!border-none focus:!shadow-none focus:border-transparent !border-0  !p-0 !pl-1 !w-[100%]"
+                            class="wc_input_decimal !min-h-full focus:!border-none focus:!shadow-none focus:border-transparent !border-0 !pl-[5px] !pr-0 !pt-0 !pb-0 !w-[100%]"
                             id="percentage_commission"
                             name="percentage_commission"
                             ref='percentage'
@@ -86,7 +86,7 @@
                         <div class='h-full xs:border-r-0 xs:border-l-0 md:border-r-[1px] md:border-l-[1px] flex justify-center items-center xs:!bg-transparent md:!bg-gray-100'><span class='xs:pl-1 xs:pr-1 md:pl-2 md:pr-2'>{{ getCurrencySymbol }}</span></div>
                         <input
                             type="text"
-                            class="wc_input_price !min-h-full focus:!border-none focus:!shadow-none !border-0 !p-0 !pl-1 !w-[100%]"
+                            class="wc_input_price !min-h-full focus:!border-none focus:!shadow-none !border-0 xs:!pl-0 xs:!pr-[5px] xs:text-right md:text-left md:!pl-[5px] !pr-0 !pt-0 !pb-0 !w-[100%]"
                             id="fixed_commission"
                             name="fixed_commission"
                             ref='flat'
