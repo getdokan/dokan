@@ -255,7 +255,6 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                                         <div class="dokan-form-group dokan-clearfix dokan-price-container">
 
                                             <div class="content-half-part regular-price">
-<!--                                                <label for="_regular_price" class="form-label">--><?php //esc_html_e( 'Price', 'dokan-lite' ); ?><!--</label>-->
                                                 <label for="_regular_price" class="form-label"><?php esc_html_e( 'Price', 'dokan-lite' ); ?>
                                                     <span
                                                         class="vendor-earning simple-product"
