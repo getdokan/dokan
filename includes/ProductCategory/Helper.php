@@ -99,7 +99,7 @@ class Helper {
      *
      * @since 3.6.4
      *
-     * @param object $terms
+     * @param array $terms
      *
      * @return array
      */

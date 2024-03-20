@@ -36,6 +36,30 @@ class AdminMiscController extends DokanRESTAdminController {
 				),
             )
         );
+
+        register_rest_route(
+            $this->namespace, '/get-option', [
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_option' ],
+                    'args'                => [
+                        'section' => [
+                            'type'              => 'string',
+                            'description'       => __( 'Dokan setting section', 'dokan-lite' ),
+                            'required'          => true,
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                        'option'  => [
+                            'type'              => 'string',
+                            'description'       => __( 'Dokan setting section key', 'dokan-lite' ),
+                            'required'          => true,
+                            'sanitize_callback' => 'sanitize_text_field',
+                        ],
+                    ],
+                    'permission_callback' => [ $this, 'check_permission' ],
+                ],
+            ]
+        );
     }
 
     /**
@@ -51,4 +75,20 @@ class AdminMiscController extends DokanRESTAdminController {
         return rest_ensure_response( $help );
     }
 
+    /**
+     * Get dokan option.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param \WP_REST_Request $request
+     *
+     * @return \WP_REST_Response|\WP_Error
+     */
+    public function get_option( $request ) {
+        $section = $request->get_param( 'section' );
+        $option  = $request->get_param( 'option' );
+        $default = '';
+
+        return rest_ensure_response( dokan_get_option( $option, $section, $default ) );
+    }
 }

@@ -49,13 +49,15 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @class WeDevs_Dokan The class that holds the entire WeDevs_Dokan plugin
  *
- * @property WeDevs\Dokan\Commission    $commission Instance of Commission class
+ * @property WeDevs\Dokan\Commission $commission Instance of Commission class
+ * @property WeDevs\Dokan\Fees $fees Instance of Fees class
  * @property WeDevs\Dokan\Order\Manager $order Instance of Order Manager class
  * @property WeDevs\Dokan\Product\Manager $product Instance of Order Manager class
  * @property WeDevs\Dokan\Vendor\Manager $vendor Instance of Vendor Manager Class
  * @property WeDevs\Dokan\BackgroundProcess\Manager $bg_process Instance of WeDevs\Dokan\BackgroundProcess\Manager class
  * @property WeDevs\Dokan\Withdraw\Manager $withdraw Instance of WeDevs\Dokan\Withdraw\Manager class
  * @property WeDevs\Dokan\Frontend\Frontend $frontend_manager Instance of \WeDevs\Dokan\Frontend\Frontend class
+ * @property WeDevs\Dokan\Assets $scripts Instance of \WeDevs\Dokan\Assets class
  */
 final class WeDevs_Dokan {
 
@@ -404,6 +406,7 @@ final class WeDevs_Dokan {
         $this->container['withdraw']            = new \WeDevs\Dokan\Withdraw\Manager();
         $this->container['dashboard']           = new \WeDevs\Dokan\Dashboard\Manager();
         $this->container['commission']          = new \WeDevs\Dokan\Commission();
+        $this->container['fees']                = new \WeDevs\Dokan\Fees();
         $this->container['customizer']          = new \WeDevs\Dokan\Customizer();
         $this->container['upgrades']            = new \WeDevs\Dokan\Upgrade\Manager();
         $this->container['product_sections']    = new \WeDevs\Dokan\ProductSections\Manager();
