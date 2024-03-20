@@ -51,6 +51,7 @@ import VendorSocialFields from "admin/pages/VendorSocialFields.vue";
 import VendorPaymentFields from "admin/pages/VendorPaymentFields.vue";
 import AdminNotice from "../admin/components/AdminNotice.vue";
 import CardFunFact from "../admin/components/CardFunFact.vue";
+import StoreCategory from 'admin/components/StoreCategory.vue';
 
 import "vue-multiselect/dist/vue-multiselect.min.css"
 import Vuedraggable from "vuedraggable/src/vuedraggable";
@@ -121,6 +122,7 @@ window.dokan.libs['VendorPaymentFields'] = VendorPaymentFields;
 window.dokan.libs['RefreshSettingOptions'] = RefreshSettingOptions;
 window.dokan.libs['AdminNotice']         = AdminNotice;
 window.dokan.libs['CardFunFact']         = CardFunFact;
+window.dokan.libs['StoreCategory']       = StoreCategory;
 window.dokan.libs['papaparse']           = parse;
 window.dokan.libs['Vuedraggable']        = Vuedraggable;
 

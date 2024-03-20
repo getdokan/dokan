@@ -296,7 +296,7 @@ export class ApiUtils {
 
     // get product exists or not
     async checkProductExistence(productName: string, auth?: auth): Promise<string | boolean> {
-        const allProducts = await this.getAllProducts(auth);
+        const allProducts = await this.getAllProductsWc(auth);
         const res = allProducts.find((o: { name: string }) => o.name.toLowerCase() === productName.toLowerCase())?.id ?? false;
         return res;
     }
@@ -1284,6 +1284,7 @@ export class ApiUtils {
             return;
         }
         const allProductQuestionIds = allProductQuestions.map((o: { id: unknown }) => o.id);
+        // console.log(allProductQuestionIds);
         const [, responseBody] = await this.put(endPoints.updateBatchProductQuestions, { data: { action: 'delete', ids: allProductQuestionIds }, headers: auth });
         return responseBody;
     }
@@ -1603,6 +1604,14 @@ export class ApiUtils {
         return [response, responseBody];
     }
 
+    // product
+
+    // get all products
+    async getAllProductsWc(auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.get(endPoints.wc.getAllProducts, { params: { per_page: 100 }, headers: auth });
+        return responseBody;
+    }
+
     // order
 
     // get all site orders
@@ -1644,7 +1653,7 @@ export class ApiUtils {
         return [response, responseBody, orderId, productId];
     }
 
-    // create complete order
+    // create order with status
     async createOrderWithStatus(product: string | object, order: any, status: string, auth?: auth): Promise<[APIResponse, responseBody, string, string]> {
         const [response, responseBody, orderId, productId] = await this.createOrder(product, order, auth);
         await this.updateOrderStatus(orderId, status, auth);

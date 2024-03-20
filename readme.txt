@@ -7,7 +7,7 @@ Tested up to: 6.4.3
 WC requires at least: 5.0.0
 WC tested up to: 8.6.1
 Requires PHP: 7.4
-Stable tag: 3.10.0
+Stable tag: 3.10.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -337,6 +337,14 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 == Changelog ==
+
+= v3.10.1 ( Mar 18, 2024 ) =
+
+- **update:** Update Categories Easily from Vendor Edit Page
+    In earlier versions of the Dokan plugin for WordPress and WooCommerce, editing store categories was limited to the vendor details view page. This approach created confusion and made it difficult for users to manage their store categories effectively. However, with the latest update, a significant improvement has been introduced.
+    Now, you can conveniently edit and update your store categories directly from the vendor edit page in the admin dashboard. This enhancement provides a more intuitive and user-friendly experience, allowing you to efficiently manage and organize your store categories in one central location.
+- **update:** Threads social media platform added as a Store Socials Option. Thanks `@fisher2470`
+- **update:** Vendor Dashboard settings submenu translation support added
 
 = v3.10.0 ( Mar 04, 2024 ) =
 
@@ -1444,7 +1452,7 @@ v2.9.14 -> Apr 26, 2019
 -   **Fix:**  Schedule product price not showing correctly
 -   **Fix:**  Backward compatibility for banner and store time
 
-For the changelog history, view the full [changelog.txt](https://github.com/weDevsOfficial/dokan/blob/develop/changelog.txt).
+For the changelog history, view the full [changelog.txt](https://raw.githubusercontent.com/getdokan/dokan/develop/CHANGELOG.md).
 
 == Upgrade Notice ==
 

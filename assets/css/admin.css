@@ -177,6 +177,7 @@
   background-color: #ff5a40;
   border-radius: 53px;
   border: 2px solid #fff;
+  box-sizing: content-box;
 }
 .dokan-admin-header .dokan-admin-header-menu .menu-item .menu-icon:hover {
   background: #0C5F9A;

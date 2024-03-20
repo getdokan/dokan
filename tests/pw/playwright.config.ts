@@ -1,6 +1,6 @@
 import { defineConfig, devices, expect } from '@playwright/test';
 import { customExpect } from '@utils/pwMatchers';
-import 'dotenv/config';
+// import 'dotenv/config';
 const { CI, BASE_URL, SLOWMO, ADMIN, ADMIN_PASSWORD } = process.env;
 
 export default defineConfig({

@@ -27,12 +27,12 @@
                     <input type="text" id="zip" class="dokan-form-input" v-model="vendorInfo.address.zip" :placeholder="__( 'Zip', 'dokan-lite')">
                 </div>
 
-                <div class="address-multiselect">
+                <div class="address-multiselect w-full">
                     <label for="country">{{ __( 'Country', 'dokan-lite') }}</label>
                     <Multiselect id="country" @input="saveCountry" v-model="selectedCountry" :options="countries" :multiselect="false" label="name" track-by="name" :showLabels="false" :placeholder="__( 'Select Country', 'dokan-lite' )" />
                 </div>
 
-                <div class="address-multiselect">
+                <div class="address-multiselect w-full">
                     <label for="state">{{ __( 'State', 'dokan-lite') }}</label>
                     <template v-if="getStatesFromCountryCode(selectedCode).length < 1">
                         <input id="state" class="dokan-form-input" type="text" v-model="vendorInfo.address.state" :placeholder="__( 'State', 'dokan-lite' )">
@@ -194,7 +194,6 @@ export default {
 
 <style lang="less">
     .address-multiselect {
-
         input.multiselect__input {
             border: none;
         }

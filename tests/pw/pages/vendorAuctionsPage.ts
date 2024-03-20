@@ -95,7 +95,7 @@ export class AuctionsPage extends VendorPage {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.auction);
         await this.clickAndWaitForLoadState(auctionProductsVendor.addNewActionProduct);
         await this.updateAuctionProductFields(product);
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.productAuction, auctionProductsVendor.auction.addAuctionProduct, 302);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.auction, auctionProductsVendor.auction.addAuctionProduct, 302);
         await this.toContainText(selector.vendor.product.updatedSuccessMessage, product.saveSuccessMessage);
     }
 

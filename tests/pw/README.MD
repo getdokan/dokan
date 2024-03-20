@@ -14,6 +14,7 @@
  <br/>
 
 -   [Prep for tests :construction:](#prep-for-tests)
+    -   [Build Dokan plugin](#build-dokan-plugin)
     -   [Install Dependencies](#install-dependencies)
     -   [Start Wordpress Environment](#start-wordpress-environment)
     -   [Create Env file](#create-env-file)
@@ -53,6 +54,16 @@
 ## :construction: Prep for tests
 
 Preparation for running tests involves conducting necessary tasks and arrangements to ensure a smooth and efficient testing process. This may include setting up the testing environment, configuring dependencies, initializing resources, and performing any required setup actions.
+
+<br/>
+
+### :o: Build Dokan plugin
+
+<br/>
+
+:radio_button: Go to dokan project root directory and run
+
+    composer i --no-dev && composer du -o && npm i && npm run build
 
 <br/>
 
