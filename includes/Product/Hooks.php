@@ -538,13 +538,7 @@ class Hooks {
             $additional_fee = ( '' === $_POST['_per_product_admin_additional_fee'] ) ? '' : sanitize_text_field( $_POST['_per_product_admin_additional_fee'] ); // phpcs:ignore
         }
 
-        // Combine commission requires both fields to be field.
-        if ( 'combine' === $commission_type && ( '' === $admin_commission || '' === $additional_fee ) ) {
-            update_post_meta( $post_id, '_per_product_admin_commission', '' );
-            update_post_meta( $post_id, '_per_product_admin_additional_fee', '' );
-        } else {
-            update_post_meta( $post_id, '_per_product_admin_commission', wc_format_decimal( $admin_commission ) );
-            update_post_meta( $post_id, '_per_product_admin_additional_fee', wc_format_decimal( $additional_fee ) );
-        }
+        update_post_meta( $post_id, '_per_product_admin_commission', wc_format_decimal( $admin_commission ) );
+        update_post_meta( $post_id, '_per_product_admin_additional_fee', wc_format_decimal( $additional_fee ) );
     }
 }
