@@ -831,11 +831,13 @@ class Settings {
                         'email'   => '',
                         'phone'   => '',
                         'address' => '',
+                        'street_address' => '',
                     ],
                     'options' => [
                         'email'   => __( 'Email Address', 'dokan-lite' ),
                         'phone'   => __( 'Phone Number', 'dokan-lite' ),
                         'address' => __( 'Store Address', 'dokan-lite' ),
+                        'street_address' => __( 'Street Address', 'dokan-lite' ),
                     ],
                 ],
                 'disable_dokan_fontawesome' => [
