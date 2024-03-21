@@ -541,7 +541,7 @@ function dokan_get_chosen_taxonomy_attributes() {
 
 function dokan_seller_reg_form_fields() {
     $data       = dokan_get_seller_registration_form_data();
-    $role       = isset( $data['role'] ) ? $data['role'] : 'customer';
+    $role       = $data['role'];
     $role_style = ( $role === 'customer' ) ? 'display:none' : '';
 
     dokan_get_template_part(
@@ -683,6 +683,21 @@ function dokan_store_contact_widget() {
 }
 
 /**
+ * Get seller registration form default role
+ *
+ * @since DOKAN_SINCE
+ *
+ * @return string values can be 'customer' or 'seller'
+ */
+function dokan_get_seller_registration_default_role(): string {
+    $default_role = apply_filters( 'dokan_seller_registration_default_role', 'customer' );
+    if ( ! in_array( $default_role, [ 'customer', 'seller' ], true ) ) {
+        $default_role = 'customer';
+    }
+    return $default_role;
+}
+
+/**
  * Get Dokan seller registration form data
  *
  * @since 3.7.0
@@ -691,6 +706,7 @@ function dokan_store_contact_widget() {
  */
 function dokan_get_seller_registration_form_data() {
     $set_password = get_option( 'woocommerce_registration_generate_password', 'no' ) !== 'yes';
+    $default_role = dokan_get_seller_registration_default_role();
 
     // prepare form data
     $data = [
@@ -701,6 +717,7 @@ function dokan_get_seller_registration_form_data() {
         'phone'    => '',
         'shopname' => '',
         'shopurl'  => '',
+        'role'     => $default_role,
     ];
 
     if ( $set_password ) {
@@ -717,6 +734,7 @@ function dokan_get_seller_registration_form_data() {
             'password' => isset( $_POST['password'] ) ? wp_unslash( $_POST['password'] ) : '', // phpcs:ignore
             'shopname' => isset( $_POST['shopname'] ) ? sanitize_text_field( wp_unslash( $_POST['shopname'] ) ) : '',
             'shopurl'  => isset( $_POST['shopurl'] ) ? sanitize_title( wp_unslash( $_POST['shopurl'] ) ) : '',
+            'role'     => isset( $_POST['role'] ) && in_array( $_POST['role'], [ 'customer', 'seller' ], true ) ? sanitize_text_field( wp_unslash( $_POST['role'] ) ) : $default_role,
         ];
         if ( $set_password ) {
             $data['password'] = isset( $_POST['password'] ) ? wp_unslash( $_POST['password'] ) : ''; // phpcs:ignore;
