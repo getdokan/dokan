@@ -110,12 +110,12 @@ $post = get_post( $product->get_id() ); // phpcs:ignore WordPress.WP.GlobalVaria
                 </div>
             <?php endif; ?>
 
-            <div class="show_if_stock dokan-stock-management-wrapper dokan-form-group dokan-clearfix">
+            <div class="show_if_stock dokan-stock-management-wrapper dokan-clearfix">
                 <?php
                 $stock_quantity = $section->get_field( Elements::STOCK_QUANTITY );
                 if ( ! is_wp_error( $stock_quantity ) && $stock_quantity->is_visible() ) :
                     ?>
-                    <div class="content-half-part">
+                    <div class="dokan-form-group content-half-part">
                         <label for="<?php echo esc_attr( $stock_quantity->get_name() ); ?>" class="form-label">
                             <?php echo esc_html( $stock_quantity->get_title() ); ?>
                             <?php $stock_quantity->print_required_symbol(); ?>
@@ -149,7 +149,7 @@ $post = get_post( $product->get_id() ); // phpcs:ignore WordPress.WP.GlobalVaria
                 $low_stock_amount = $section->get_field( Elements::LOW_STOCK_AMOUNT );
                 if ( ! is_wp_error( $low_stock_amount ) && $low_stock_amount->is_visible() ) :
                     ?>
-                    <div class="content-half-part">
+                    <div class="dokan-form-group content-half-part">
                         <label for="<?php echo esc_attr( $low_stock_amount->get_name() ); ?>" class="form-label">
                             <?php echo esc_html( $low_stock_amount->get_title() ); ?>
                             <?php $low_stock_amount->print_required_symbol(); ?>
@@ -181,7 +181,7 @@ $post = get_post( $product->get_id() ); // phpcs:ignore WordPress.WP.GlobalVaria
                 $backorders = $section->get_field( Elements::BACKORDERS );
                 if ( ! is_wp_error( $backorders ) && $backorders->is_visible() ) :
                     ?>
-                    <div class="content-half-part last-child">
+                    <div class="dokan-form-group content-half-part last-child">
                         <label for="<?php echo esc_attr( $backorders->get_name() ); ?>" class="form-label">
                             <?php echo esc_html( $backorders->get_title() ); ?>
                             <?php $backorders->print_required_symbol(); ?>

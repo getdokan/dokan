@@ -98,12 +98,12 @@ if ( is_wp_error( $section ) ) {
             <?php do_action( 'dokan_product_edit_after_title', $post, $product->get_id(), $product ); ?>
 
             <div class="show_if_simple dokan-clearfix show_if_external">
-                <div class="dokan-form-group dokan-clearfix dokan-price-container">
+                <div class="dokan-clearfix dokan-price-container">
                     <?php
                     $regular_price = $section->get_field( Elements::REGULAR_PRICE );
                     if ( ! is_wp_error( $regular_price ) && $regular_price->is_visible() ) :
                         ?>
-                        <div class="content-half-part regular-price">
+                        <div class="dokan-form-group content-half-part regular-price">
                             <label for="<?php echo esc_attr( $regular_price->get_name() ); ?>" class="form-label">
                                 <?php echo esc_html( $regular_price->get_title() ); ?>
                                 <?php $regular_price->print_required_symbol(); ?>
@@ -148,7 +148,7 @@ if ( is_wp_error( $section ) ) {
 
                     if ( ! is_wp_error( $sale_price ) && $sale_price->is_visible() ) :
                         ?>
-                        <div class="content-half-part sale-price">
+                        <div class="dokan-form-group content-half-part sale-price">
                             <label for="<?php echo esc_attr( $sale_price->get_name() ); ?>" class="form-label">
                                 <?php echo esc_html( $sale_price->get_title() ); ?>
                                 <?php $sale_price->print_required_symbol(); ?>
@@ -184,7 +184,7 @@ if ( is_wp_error( $section ) ) {
                     <?php endif; ?>
                 </div>
 
-                <div class="dokan-form-group dokan-clearfix dokan-price-container">
+                <div class="dokan-clearfix dokan-price-container">
                     <div class="dokan-product-less-price-alert dokan-hide">
                         <?php esc_html_e( 'Product price can\'t be less than the vendor fee!', 'dokan-lite' ); ?>
                     </div>
@@ -193,8 +193,8 @@ if ( is_wp_error( $section ) ) {
                 <?php
                 if ( ! is_wp_error( $sale_price ) && $sale_price->is_visible() ) :
                     ?>
-                    <div class="sale_price_dates_fields dokan-clearfix dokan-form-group <?php echo ( ! $show_schedule ) ? 'dokan-hide' : ''; ?>">
-                        <div class="content-half-part from">
+                    <div class="sale_price_dates_fields dokan-clearfix <?php echo ( ! $show_schedule ) ? 'dokan-hide' : ''; ?>">
+                        <div class="dokan-form-group content-half-part from">
                             <div class="dokan-input-group">
                                 <span class="dokan-input-group-addon">
                                     <?php echo esc_html( $date_on_sale_from->get_title() ); ?>
@@ -217,7 +217,7 @@ if ( is_wp_error( $section ) ) {
                             </div>
                         </div>
 
-                        <div class="content-half-part to">
+                        <div class="dokan-form-group content-half-part to">
                             <div class="dokan-input-group">
                                 <span class="dokan-input-group-addon">
                                     <?php echo esc_html( $date_on_sale_to->get_title() ); ?>

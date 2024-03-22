@@ -17,12 +17,12 @@ defined( 'ABSPATH' ) || exit;
 
 $post = get_post( $product->get_id() ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 ?>
-<div class="dokan-form-group dokan-product-type-container <?php echo esc_attr( $class ); ?>">
+<div class="dokan-product-type-container <?php echo esc_attr( $class ); ?>">
     <?php
     $downloadable = $section->get_field( Elements::DOWNLOADABLE );
     if ( ! is_wp_error( $downloadable ) && $downloadable->is_visible() ) :
         ?>
-        <div class="content-half-part downloadable-checkbox">
+        <div class="dokan-form-group content-half-part downloadable-checkbox">
             <?php
             dokan_post_input_box(
                 $product->get_id(),
@@ -43,7 +43,7 @@ $post = get_post( $product->get_id() ); // phpcs:ignore WordPress.WP.GlobalVaria
     $virtual = $section->get_field( Elements::VIRTUAL );
     if ( ! is_wp_error( $virtual ) && $virtual->is_visible() ) :
         ?>
-        <div class="content-half-part virtual-checkbox">
+        <div class="dokan-form-group content-half-part virtual-checkbox">
             <?php
             dokan_post_input_box(
                 $product->get_id(),
