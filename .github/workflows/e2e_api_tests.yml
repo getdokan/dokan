@@ -73,7 +73,7 @@ jobs:
               if: success()
               uses: actions/setup-node@v4
               with:
-                  node-version: 18
+                  node-version: 16
                   cache: npm
 
             - name: Composer install and build (Dokan-lite)
@@ -173,6 +173,14 @@ jobs:
             #     cd tests/pw
             #     npm run pw:deps-only
 
+            - name: log 2
+              if: always()
+              run: |
+                  echo "wp-env outcome: " ${{ steps.wp-env.outcome }}
+                  echo "db-port outcome: " ${{ steps.db-port.outcome }}
+                  echo "playwright-version outcome: " ${{ steps.playwright-version.outcome }}
+                  echo "pw-install outcome: " ${{ steps.pw-install.outcome }}
+
             # Run e2e tests
             - name: 🧪 Running the e2e tests
               id: e2e-test
@@ -190,6 +198,12 @@ jobs:
               run: |
                   cd tests/pw 
                   npm run test:api:lite
+
+            - name: log 2
+              if: always()
+              run: |
+                  echo "E2E test outcome: " ${{ steps.e2e-test.outcome }}
+                  echo "API test outcome: " ${{ steps.api-test.outcome }}
 
             # Prepare test summary
             - name: Prepare test summary
