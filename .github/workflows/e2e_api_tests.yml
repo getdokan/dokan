@@ -73,7 +73,7 @@ jobs:
               if: success()
               uses: actions/setup-node@v4
               with:
-                  node-version: 16
+                  node-version: 18
                   cache: npm
 
             - name: Composer install and build (Dokan-lite)
