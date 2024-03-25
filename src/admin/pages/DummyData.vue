@@ -3,14 +3,14 @@
         <h1>{{ __( 'Import dummy data', 'dokan-lite' ) }}</h1>
         <div v-if="! statusLoader" class="dokan-importer-wrapper">
             <ol class="dokan-importer-progress-steps">
-                <li class="active">{{ __( 'Import', 'dokan-lite' ) }}</li>
-                <li :class="done ? 'active' : ''">{{ __( 'Done!', 'dokan-lite' ) }}</li>
+                <li class="active before:box-content">{{ __( 'Import', 'dokan-lite' ) }}</li>
+                <li class='before:box-content' :class="done ? 'active' : ''">{{ __( 'Done!', 'dokan-lite' ) }}</li>
             </ol>
             <div v-if="'' != errorMsg" class="error inline"><p>{{ errorMsg }}</p></div>
             <div v-if="! done" class="dokan-importer">
                 <header>
-                    <h2>{{ __( 'Import dummy vendors and products', 'dokan-lite' ) }}</h2>
-                    <p>{{ __( 'This tool allows you to import vendor and some products for vendors to your marketplace.', 'dokan-lite' ) }}</p>
+                    <h2 class='text-xl font-semibold m-[1em] ml-0 mr-0'>{{ __( 'Import dummy vendors and products', 'dokan-lite' ) }}</h2>
+                    <p class='m-[1em] ml-0 mr-0'>{{ __( 'This tool allows you to import vendor and some products for vendors to your marketplace.', 'dokan-lite' ) }}</p>
                 </header>
                 <section>
                     <div>

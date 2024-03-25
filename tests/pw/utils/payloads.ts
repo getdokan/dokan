@@ -1211,12 +1211,12 @@ export const payloads = {
                 //     "no": "WordPress post tables",
                 //     "yes": "High performance order storage (new)"
                 // },
-                value: 'no',
+                value: 'yes',
             },
             {
                 id: 'woocommerce_custom_orders_table_data_sync_enabled',
                 // description: "Keep the posts and orders tables in sync (compatibility mode).",
-                value: 'no',
+                value: 'yes',
             },
         ],
     },
@@ -2606,7 +2606,7 @@ export const payloads = {
         email: process.env.VENDOR + '@yopmail.com',
         store_name: process.env.VENDOR + 'store',
         first_name: process.env.VENDOR,
-        last_name: 'v1',
+        last_name: 'v',
         social: {
             fb: 'http://dokan.test',
             youtube: 'http://dokan.test',
@@ -3206,7 +3206,7 @@ export const payloads = {
     }),
 
     createProductQuestionAnswer: () => ({
-        answer: 'test answer_' + faker.string.nanoid(10),
+        answer: '<p>test answer_' + faker.string.nanoid(10) + '</p>',
         question_id: '',
     }),
 

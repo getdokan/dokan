@@ -1131,7 +1131,7 @@ add_action( 'login_init', 'dokan_redirect_to_register' );
 /**
  * Check if the seller is enabled
  *
- * @since DOKAN_SINCE New filter added `dokan_is_seller_enabled`
+ * @since 3.10.0 New filter added `dokan_is_seller_enabled`
  *
  * @param int $user_id
  *
@@ -2379,6 +2379,10 @@ function dokan_get_social_profile_fields() {
         'flickr'    => [
             'icon'  => 'flickr',
             'title' => __( 'Flickr', 'dokan-lite' ),
+        ],
+        'threads'   => [
+            'icon'  => 'fa-brands fa-threads',
+            'title' => __( 'Threads', 'dokan-lite' ),
         ],
     ];
 

@@ -2,7 +2,7 @@
 /**
  * Sort navigation menu items by position
  *
- * @since DOKAN_SINCE moved this method from includes/template-tags.php
+ * @since 3.10.0 moved this method from includes/template-tags.php
  *
  * @param array $a first item
  * @param array $b second item
@@ -20,7 +20,7 @@ function dokan_nav_sort_by_pos( $a, $b ) {
 /**
  * Get Dashboard Navigation menus
  *
- * @since DOKAN_SINCE moved this method from includes/template-tags.php
+ * @since 3.10.0 moved this method from includes/template-tags.php
  *
  * @return array
  */
@@ -151,7 +151,7 @@ function dokan_get_dashboard_nav(): array {
  * Checking menu permissions
  *
  * @since 2.7.3
- * @since DOKAN_SINCE moved this method from includes/template-tags.php
+ * @since 3.10.0 moved this method from includes/template-tags.php
  *
  * @return boolean
  */
@@ -171,7 +171,7 @@ function dokan_check_menu_permission( $menu ) {
  * with a settings sub menu array. If it's a match, the settings menu will be shown
  * only. Otherwise, the main navigation menu will be shown.
  *
- * @since DOKAN_SINCE moved this method from includes/template-tags.php
+ * @since 3.10.0 moved this method from includes/template-tags.php
  *
  * @param string $active_menu
  *
@@ -258,7 +258,7 @@ function dokan_dashboard_nav( $active_menu = '' ) {
                 $submenu .= sprintf(
                     '<li class="submenu-item %s"><a href="%s" class="submenu-link">%s %s</a></li>',
                     $submenu_class,
-                    isset( $sub['url'] ) ? $sub['url'] : dokan_get_navigation_url( "{$filtered_key}/{$filtered_subkey}" ),
+                    isset( $sub['url'] ) ? $sub['url'] : dokan_get_navigation_url( "{$key}/{$sub_key}" ),
                     isset( $sub['icon'] ) ? $sub['icon'] : '<i class="fab fa-staylinked"></i>',
                     $submenu_title
                 );

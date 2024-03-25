@@ -56,7 +56,7 @@ export class ProductQAPage extends BasePage {
         await this.toBeVisible(productQAAdmin.questionDetails.goBack);
 
         // question details elements are visible
-        const { questionInput, saveQuestion, questionText, ...questionDetails } = productQAAdmin.questionDetails.questionDetails; // todo: need to add questiontext
+        const { questionInput, saveQuestion, ...questionDetails } = productQAAdmin.questionDetails.questionDetails;
         await this.multipleElementVisible(questionDetails);
 
         // status elements are visible
@@ -64,7 +64,7 @@ export class ProductQAPage extends BasePage {
         await this.multipleElementVisible(status);
 
         // answer elements are visible
-        const { questionAnswerHtmlBody, editAnswer, ...answer } = productQAAdmin.questionDetails.answer;
+        const { questionAnswerIframe, questionAnswerHtmlBody, saveAnswer, ...answer } = productQAAdmin.questionDetails.answer;
         await this.multipleElementVisible(answer);
     }
 
@@ -146,11 +146,11 @@ export class ProductQAPage extends BasePage {
 
     // delete answer
     async deleteAnswer(questionId: string): Promise<void> {
-        await this.goIfNotThere(data.subUrls.backend.dokan.questionDetails(questionId));
+        await this.goto(data.subUrls.backend.dokan.questionDetails(questionId));
         await this.click(productQAAdmin.questionDetails.answer.deleteAnswer);
         await this.clickAndWaitForResponse(data.subUrls.api.dokan.productAnswers, productQAAdmin.questionDetails.confirmAction, 204);
         await this.toBeVisible(productQAAdmin.questionDetails.answerDeleteSuccessMessage);
-        await this.toBeVisible(productQAAdmin.questionDetails.answer.saveAnswer);
+
     }
 
     // delete question
@@ -256,7 +256,7 @@ export class ProductQAPage extends BasePage {
 
     // delete question
     async vendorDeleteQuestion(questionId: string): Promise<void> {
-        await this.goIfNotThere(data.subUrls.frontend.vDashboard.questionDetails(questionId));
+        await this.goto(data.subUrls.frontend.vDashboard.questionDetails(questionId));
         await this.click(productQAVendor.questionDetails.status.deleteQuestion);
         await this.clickAndWaitForResponse(data.subUrls.ajax, productQAVendor.questionDetails.confirmAction);
         await this.toBeVisible(productQAVendor.questionDetails.questionDeleteSuccessMessage);

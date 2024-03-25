@@ -86,12 +86,11 @@ export class AbuseReportsPage extends AdminPage {
     }
 
     // customer report product
-    async reportProduct(productName: string, report: product['report']): Promise<void> {
+    async reportProduct(productName: string, report: product['report'], needLogin = false): Promise<void> {
         await this.goto(data.subUrls.frontend.productDetails(helpers.slugify(productName)));
         await this.clickAndWaitForResponse(data.subUrls.ajax, abuseReportCustomer.reportAbuse);
         // non logged user
-        const isNonLoggedUser = await this.isVisible(abuseReportCustomer.nonLoggedUser.userName);
-        if (isNonLoggedUser) {
+        if (needLogin) {
             await this.clearAndType(abuseReportCustomer.nonLoggedUser.userName, report.username);
             await this.clearAndType(abuseReportCustomer.nonLoggedUser.userPassword, report.password);
             await this.clickAndWaitForResponse(data.subUrls.ajax, abuseReportCustomer.nonLoggedUser.login);
