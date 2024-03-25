@@ -36,7 +36,6 @@ export default {
             required: false,
             default: '#fff',
         },
-        disabled: false,
         value: {
             type: [String, Number, Boolean]
         }
