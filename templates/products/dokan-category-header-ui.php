@@ -20,7 +20,10 @@ if ( count( $chosen_cat ) < 1 ) {
 <!-- Trigger/Open The Modal -->
 <?php if ( ! $hide_cat_title ) : ?>
 <div class="dokan-form-group dokan-new-cat-ui-title">
-    <label for="product_cat" class="form-label"><?php esc_html_e( 'Category', 'dokan-lite' ); ?></label>
+    <label for="product_cat" class="form-label">
+        <?php esc_html_e( 'Category', 'dokan-lite' ); ?>
+        <?php echo wp_kses_post( $required_symbol ); ?>
+    </label>
 </div>
 <?php endif; ?>
 <span class="dokan-add-new-cat-box cat_box_for_<?php echo esc_attr( $from ); ?>">

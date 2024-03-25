@@ -6,6 +6,7 @@ use WeDevs\Dokan\Admin\Notices\Helper;
 use WeDevs\Dokan\ReverseWithdrawal\SettingsHelper;
 use WeDevs\Dokan\ProductCategory\Helper as CategoryHelper;
 use WeDevs\Dokan\Utilities\OrderUtil;
+use WeDevs\Dokan\ProductForm\Factory as ProductFormFactory;
 
 class Assets {
 
@@ -518,7 +519,7 @@ class Assets {
             ],
             'dokan-util-helper'         => [
                 'src'       => $asset_url . '/js/helper.js',
-                'deps'      => [ 'jquery', 'dokan-sweetalert2', 'moment' ],
+                'deps'      => [ 'jquery', 'dokan-sweetalert2', 'moment', 'jquery-tiptip' ],
                 'version'   => filemtime( $asset_path . 'js/helper.js' ),
                 'in_footer' => false,
             ],
@@ -556,6 +557,15 @@ class Assets {
         ];
 
         return $scripts;
+    }
+
+    public function get_product_fields() {
+        $temp_fields = [];
+        foreach ( ProductFormFactory::get_fields() as $field_id => $field ) {
+            $temp_fields[ $field_id ] = $field->toArray();
+        }
+
+        return json_encode( $temp_fields );
     }
 
     /**
@@ -600,6 +610,7 @@ class Assets {
             'currency_format'              => esc_attr( str_replace( [ '%1$s', '%2$s' ], [ '%s', '%v' ], get_woocommerce_price_format() ) ), // For accounting JS
             'round_at_subtotal'            => get_option( 'woocommerce_tax_round_at_subtotal', 'no' ),
             'product_types'                => apply_filters( 'dokan_product_types', [ 'simple' ] ),
+            'product_form_fields'        => apply_filters( 'dokan_product_form_fields', $this->get_product_fields() ),
             'loading_img'                  => DOKAN_PLUGIN_ASSEST . '/images/loading.gif',
             'store_product_search_nonce'   => wp_create_nonce( 'dokan_store_product_search_nonce' ),
             'i18n_download_permission'     => __( 'Are you sure you want to revoke access to this download?', 'dokan-lite' ),
@@ -1184,6 +1195,7 @@ class Assets {
                 'decimal_point'                     => $decimal,
                 'mon_decimal_point'                 => wc_get_price_decimal_separator(),
                 'i18n_date_format'                  => wc_date_format(),
+                'product_types'                     => apply_filters( 'dokan_product_types', [ 'simple' ] ),
             ]
         );
     }
