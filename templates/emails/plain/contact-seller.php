@@ -17,11 +17,11 @@ echo esc_html( wp_strip_all_tags( $email_heading ) );
 echo "\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n\n";
 
 // translators: 1) customer name 2) customer email
-echo sprintf( esc_html__( 'From : %1$s (%2$s)', 'dokan-lite' ), esc_html( $data['customer_name'] ), esc_html( $data['customer_email'] ) );
+echo sprintf( esc_html__( 'From : %1$s (%2$s)', 'dokan-lite' ), esc_html( $data['{customer_name}'] ), esc_html( $data['{customer_email}'] ) );
 
 echo "\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n\n";
 
-echo esc_html( wp_strip_all_tags( wptexturize( $data['message'] ) ) );
+echo esc_html( wp_strip_all_tags( wptexturize( $data['{message}'] ) ) );
 
 echo "\n\n----------------------------------------\n\n";
 

@@ -28,15 +28,15 @@ echo " \n";
 echo "\n\n----------------------------------------\n\n";
 
 // translators: 1) seller name
-echo sprintf( esc_html__( 'Vendor: %s', 'dokan-lite' ), esc_html( $data['seller_name'] ) );
+echo sprintf( esc_html__( 'Vendor: %s', 'dokan-lite' ), esc_html( $data['{seller_name}'] ) );
 echo " \n";
 
 // translators: 1) store name
-echo sprintf( esc_html__( 'Vendor Store: %s', 'dokan-lite' ), $data['store_name'] );
+echo sprintf( esc_html__( 'Vendor Store: %s', 'dokan-lite' ), $data['{store_name}'] );
 echo " \n";
 
 // translators: 1) seller edit url
-echo sprintf( esc_html__( 'To edit vendor access and details visit : %s', 'dokan-lite' ), esc_url( $data['seller_edit'] ) );
+echo sprintf( esc_html__( 'To edit vendor access and details visit : %s', 'dokan-lite' ), esc_url( $data['{seller_edit}'] ) );
 
 echo "\n\n----------------------------------------\n\n";
 
