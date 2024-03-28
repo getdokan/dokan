@@ -110,9 +110,11 @@ class Commission {
 
             $tmp_order->update_meta_data( 'dokan_gateway_fee', $gateway_fee );
             $tmp_order->save();
-            // translators: %s: Geteway fee
-            $tmp_order->add_order_note( sprintf( __( 'Payment gateway processing fee %s', 'dokan-lite' ), wc_format_decimal( $gateway_fee, 2 ) ) );
 
+            if ( apply_filters( 'dokan_commission_log_gateway_fee_to_order_note', true, $tmp_order ) ) {
+                // translators: %s: Geteway fee
+                $tmp_order->add_order_note( sprintf( __( 'Payment gateway processing fee %s', 'dokan-lite' ), wc_format_decimal( $gateway_fee, 2 ) ) );
+            }
             //remove cache for seller earning
             $cache_key = "get_earning_from_order_table_{$tmp_order->get_id()}_seller";
             Cache::delete( $cache_key );
