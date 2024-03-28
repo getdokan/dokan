@@ -220,6 +220,23 @@ function dokan_dashboard_nav( $active_menu = '' ) {
         $title = __( 'No Title', 'dokan-lite' );
         if ( ! empty( $item['menu_manager_title'] ) ) {
             $title = $item['menu_manager_title'];
+            if ( ! empty( $item['counts'] ) ) {
+                $notification_counts = (int) $item['counts'];
+                /**
+                 * Notification count filter
+                 *
+                 * @since DOKAN_LITE_SINCE
+                 *
+                 * @param int $notification_counts Number of notifications
+                 * @param string $filtered_key Filtered key by `dokan_dashboard_nav_menu_key` hook
+                 * @param string $key Key before filter
+                 */
+                $notification_counts = apply_filters(
+                    'dokan_vendor_dashboard_menu_notification_count',
+                    $notification_counts, $filtered_key, $key
+                );
+                $title .= ' (' . $notification_counts . ')';
+            }
         } elseif ( ! empty( $item['title'] ) ) {
             $title = $item['title'];
         }
@@ -252,6 +269,23 @@ function dokan_dashboard_nav( $active_menu = '' ) {
                 $submenu_title = __( 'No Title', 'dokan-lite' );
                 if ( ! empty( $sub['menu_manager_title'] ) ) {
                     $submenu_title = $sub['menu_manager_title'];
+                    if ( ! empty( $item['counts'] ) ) {
+                        $notification_counts = (int) $item['counts'];
+                        /**
+                         * Notification count filter for settings submenu
+                         *
+                         * @since DOKAN_LITE_SINCE
+                         *
+                         * @param int $notification_counts Number of notifications
+                         * @param string $filtered_subkey Filtered key by `dokan_dashboard_nav_menu_key` hook
+                         * @param string $key Key before filter
+                         */
+                        $notification_counts = apply_filters(
+                            'dokan_vendor_dashboard_settings_menu_notification_count',
+                            $notification_counts, $filtered_subkey, $key
+                        );
+                        $title .= ' (' . $notification_counts . ')';
+                    }
                 } elseif ( ! empty( $sub['title'] ) ) {
                     $submenu_title = $sub['title'];
                 }
