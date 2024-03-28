@@ -260,7 +260,9 @@ class Orders {
             $order_status     = isset( $_POST['order_status'] ) ? sanitize_text_field( wp_unslash( $_POST['order_status'] ) ) : 'all';
             $search           = isset( $_POST['search'] ) ? sanitize_text_field( wp_unslash( $_POST['search'] ) ) : '';
 
-            $query_args['customer_id']  = $customer_id;
+            if ( $customer_id ) {
+                $query_args['customer_id'] = $customer_id;
+            }
             $query_args['status']       = $order_status;
             $query_args['date']['from'] = $order_date_start;
             $query_args['date']['to']   = $order_date_end;
