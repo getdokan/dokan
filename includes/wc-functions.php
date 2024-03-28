@@ -1011,7 +1011,8 @@ function dokan_vendor_own_product_purchase_restriction( bool $is_purchasable, $p
     if ( false === $is_purchasable || dokan_is_product_author( $product->get_id() ) ) {
         $is_purchasable = false;
     }
-    return $is_purchasable;
+
+    return apply_filters( 'dokan_vendor_own_product_purchase_restriction', $is_purchasable, $product );
 }
 
 add_filter( 'woocommerce_is_purchasable', 'dokan_vendor_own_product_purchase_restriction', 10, 2 );
