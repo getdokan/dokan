@@ -39,7 +39,7 @@ echo esc_html( wp_strip_all_tags( wptexturize( $data['{review_text}'] ) ) );
 
 echo "\n\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n\n";
 
-esc_html_e( 'You can view the review and reply to it by visiting the following link:', 'dokan-lite' );
+esc_html_e( 'You can view the review by visiting the following link:', 'dokan-lite' );
 
 printf(
     ' %s',

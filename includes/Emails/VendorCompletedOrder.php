@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\Emails;
 
 use WC_Email;
+use WeDevs\Dokan\Vendor\Vendor;
 
 /**
  * Completed Order Email.
@@ -24,12 +25,11 @@ class VendorCompletedOrder extends WC_Email {
     public function __construct() {
         $this->id             = 'dokan_vendor_completed_order';
         $this->title          = __( 'Dokan Vendor Completed Order', 'dokan-lite' );
-        $this->description    = __( 'Completed order emails are sent to chosen recipient(s) when a order is completed.', 'dokan-lite' );
+        $this->description    = __( 'Completed order emails are sent to the vendor when a order is completed.', 'dokan-lite' );
         $this->template_html  = 'emails/vendor-completed-order.php';
         $this->template_plain = 'emails/plain/vendor-completed-order.php';
         $this->template_base  = DOKAN_DIR . '/templates/';
         $this->placeholders   = array(
-            '{site_title}'   => $this->get_blogname(),
             '{order_date}'   => '',
             '{order_number}' => '',
         );
@@ -76,16 +76,18 @@ class VendorCompletedOrder extends WC_Email {
             return;
         }
 
-        $this->setup_locale();
         if ( $order_id && ! is_a( $order, 'WC_Order' ) ) {
             $order = wc_get_order( $order_id );
         }
 
-        if ( is_a( $order, 'WC_Order' ) ) {
-            $this->object                         = $order;
-            $this->placeholders['{order_date}']   = wc_format_datetime( $this->object->get_date_created() );
-            $this->placeholders['{order_number}'] = $this->object->get_order_number();
+        if ( ! is_a( $order, 'WC_Order' ) ) {
+            return;
         }
+
+        $this->setup_locale();
+        $this->object                         = $order;
+        $this->placeholders['{order_date}']   = wc_format_datetime( $this->object->get_date_created() );
+        $this->placeholders['{order_number}'] = $this->object->get_order_number();
 
         $seller_id = dokan_get_seller_id_by_order( $order_id );
         if ( empty( $seller_id ) ) {
@@ -96,15 +98,15 @@ class VendorCompletedOrder extends WC_Email {
         if ( $order->get_meta( 'has_sub_order' ) ) {
             // same hook will be called again for sub-orders, so we don't need to process this from here.
             return;
-        } else {
-            $seller_info = get_userdata( $seller_id );
-            if ( ! $seller_info ) {
-                return;
-            }
-            $seller_email     = $seller_info->user_email;
-            $this->order_info = dokan_get_vendor_order_details( $order_id );
-            $this->send( $seller_email, $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
         }
+        $seller_info = new Vendor( $seller_id );
+        if ( ! $seller_info->get_id() ) {
+            return;
+        }
+        $seller_email     = $seller_info->get_email();
+        $this->order_info = dokan_get_vendor_order_details( $order_id );
+        $this->send( $seller_email, $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
+
         $this->restore_locale();
     }
 
@@ -117,12 +119,13 @@ class VendorCompletedOrder extends WC_Email {
     public function get_content_html() {
         return wc_get_template_html(
             $this->template_html, array(
-                'order'         => $this->object,
-                'email_heading' => $this->get_heading(),
-                'sent_to_admin' => true,
-                'plain_text'    => false,
-                'email'         => $this,
-                'order_info'    => $this->order_info,
+                'order'              => $this->object,
+                'email_heading'      => $this->get_heading(),
+                'additional_content' => $this->get_additional_content(),
+                'sent_to_admin'      => true,
+                'plain_text'         => false,
+                'email'              => $this,
+                'order_info'         => $this->order_info,
             ), 'dokan/', $this->template_base
         );
     }
@@ -136,12 +139,13 @@ class VendorCompletedOrder extends WC_Email {
     public function get_content_plain() {
         return wc_get_template_html(
             $this->template_plain, array(
-                'order'         => $this->object,
-                'email_heading' => $this->get_heading(),
-                'sent_to_admin' => true,
-                'plain_text'    => true,
-                'email'         => $this,
-                'order_info'    => $this->order_info,
+                'order'              => $this->object,
+                'email_heading'      => $this->get_heading(),
+                'additional_content' => $this->get_additional_content(),
+                'sent_to_admin'      => true,
+                'plain_text'         => true,
+                'email'              => $this,
+                'order_info'         => $this->order_info,
             ), 'dokan/', $this->template_base
         );
     }
@@ -150,6 +154,8 @@ class VendorCompletedOrder extends WC_Email {
      * Initialise settings form fields.
      */
     public function init_form_fields() {
+        /* translators: %s: list of placeholders */
+        $placeholder_text = sprintf( __( 'Available placeholders: %s', 'dokan-lite' ), '<code>' . esc_html( implode( '</code>, <code>', array_keys( $this->placeholders ) ) ) . '</code>' );
         $this->form_fields = array(
             'enabled'    => array(
                 'title'   => __( 'Enable/Disable', 'dokan-lite' ),
@@ -161,8 +167,7 @@ class VendorCompletedOrder extends WC_Email {
                 'title'       => __( 'Subject', 'dokan-lite' ),
                 'type'        => 'text',
                 'desc_tip'    => true,
-                /* translators: %s: list of placeholders */
-                'description' => sprintf( __( 'Available placeholders: %s', 'dokan-lite' ), '<code>{site_title}, {order_date}, {order_number}</code>' ),
+                'description' => $placeholder_text,
                 'placeholder' => $this->get_default_subject(),
                 'default'     => '',
             ),
@@ -170,10 +175,18 @@ class VendorCompletedOrder extends WC_Email {
                 'title'       => __( 'Email heading', 'dokan-lite' ),
                 'type'        => 'text',
                 'desc_tip'    => true,
-                /* translators: %s: list of placeholders */
-                'description' => sprintf( __( 'Available placeholders: %s', 'dokan-lite' ), '<code>{site_title}, {order_date}, {order_number}</code>' ),
+                'description' => $placeholder_text,
                 'placeholder' => $this->get_default_heading(),
                 'default'     => '',
+            ),
+            'additional_content' => array(
+                'title'       => __( 'Additional content', 'dokan-lite' ),
+                'description' => __( 'Text to appear below the main email content.', 'dokan-lite' ) . ' ' . $placeholder_text,
+                'css'         => 'width:400px; height: 75px;',
+                'placeholder' => __( 'N/A', 'dokan-lite' ),
+                'type'        => 'textarea',
+                'default'     => $this->get_default_additional_content(),
+                'desc_tip'    => true,
             ),
             'email_type' => array(
                 'title'       => __( 'Email type', 'dokan-lite' ),
