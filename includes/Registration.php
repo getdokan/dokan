@@ -215,7 +215,7 @@ class Registration {
         if ( empty( $new_dokan_settings['address']['country'] ) && ! empty( $new_dokan_settings['profile_completion']['address'] ) ) {
             unset( $new_dokan_settings['profile_completion']['address'] );
         } else {
-            $country = $new_dokan_settings['address']['country'];
+            $country = isset( $new_dokan_settings['address']['country'] ) ? $new_dokan_settings['address']['country'] : '';
 
             if ( isset( $states[ $country ] ) && is_array( $states[ $country ] ) && empty( $new_dokan_settings['address']['state'] ) && ! empty( $new_dokan_settings['profile_completion']['address'] ) ) {
                 unset( $new_dokan_settings['profile_completion']['address'] );
