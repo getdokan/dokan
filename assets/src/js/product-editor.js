@@ -91,13 +91,13 @@
             );
         },
 
-        productFormValidation: function(self) {
-            $("form.dokan-product-edit-form").validate({
+        productFormValidation: function( self ) {
+            window.dokanProductformValidator = $( "form.dokan-product-edit-form" ).validate( {
                 errorElement: 'span',
-                errorClass: 'error',
+                errorClass: 'error validation-error',
                 errorPlacement: validatorError,
-                success: validatorSuccess
-            });
+                success: validatorSuccess,
+            } );
         },
 
         renderCustomSectionBasedOnCategory: function( categoryId ) {
