@@ -326,9 +326,9 @@ class Hooks {
             }
         }
 
-        $available_vendors = array_unique( $available_vendors );
-
-        if ( $coupon->is_type( 'fixed_cart' ) && count( $available_vendors ) > 1 ) {
+        $available_vendors      = array_unique( $available_vendors );
+        $is_enabled_all_vendors = $coupon->get_meta( 'admin_coupons_enabled_for_vendor' ); // Get coupon availability settings value for all vendors.
+        if ( $coupon->is_type( 'fixed_cart' ) && $is_enabled_all_vendors !== 'yes' && count( $available_vendors ) > 1 ) {
             throw new Exception( __( 'This coupon is invalid for multiple vendors.', 'dokan-lite' ) );
         }
 
