@@ -185,7 +185,7 @@ setup.describe('setup dokan settings', () => {
     });
 });
 
-setup.describe.skip('setup dokan settings e2e', () => {
+setup.describe('setup dokan settings e2e', () => {
     let productAdvertisingPage: ProductAdvertisingPage;
     let reverseWithdrawsPage: ReverseWithdrawsPage;
     let aPage: Page;
@@ -194,7 +194,7 @@ setup.describe.skip('setup dokan settings e2e', () => {
     setup.beforeAll(async ({ browser, page }) => {
         const loginPage = new LoginPage(page);
         await loginPage.adminLogin(data.admin, data.auth.adminAuthFile);
-        
+
         const adminContext = await browser.newContext(data.auth.adminAuth);
         aPage = await adminContext.newPage();
         productAdvertisingPage = new ProductAdvertisingPage(aPage);
