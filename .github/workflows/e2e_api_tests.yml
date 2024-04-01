@@ -184,7 +184,7 @@ jobs:
             # Run e2e tests
             - name: 🧪 Running the e2e tests
               id: e2e-test
-              if: success() || ( success() && ${{ (github.event_name == 'workflow_dispatch' && (github.event.inputs.testsuite == 'E2E' || github.event.inputs.testsuite == 'All')) }} )
+              if: success() || ${{  ( success() &&  (github.event_name == 'workflow_dispatch' && (github.event.inputs.testsuite == 'E2E' || github.event.inputs.testsuite == 'All'))) }}
               timeout-minutes: 40
               run: |
                   cd tests/pw 
@@ -193,7 +193,7 @@ jobs:
             # Run API tests
             - name: 🧪 Running the api tests
               id: api-test
-              if: ${{ steps.db-port.outcome == 'success' || (steps.db-port.outcome == 'success' && (github.event_name == 'workflow_dispatch' && (github.event.inputs.testsuite == 'API' || github.event.inputs.testsuite == 'All')))  }}
+              if: ${{ steps.db-port.outcome == 'success' }} || ${{ (steps.db-port.outcome == 'success' && (github.event_name == 'workflow_dispatch' && (github.event.inputs.testsuite == 'API' || github.event.inputs.testsuite == 'All')))  }}
               timeout-minutes: 5
               run: |
                   cd tests/pw 
