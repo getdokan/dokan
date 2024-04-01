@@ -7,6 +7,7 @@
  * Author: weDevs
  * Author URI: https://dokan.co/
  * Text Domain: dokan-lite
+ * Requires Plugins: woocommerce
  * WC requires at least: 5.0.0
  * WC tested up to: 8.7.0
  * Domain Path: /languages/

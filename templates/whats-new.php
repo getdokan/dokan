@@ -16,6 +16,10 @@ $changelog = [
                     'title'       => 'Add requires plugin header for dokan so that required plugin check can be initiated',
                     'description' => '',
                 ],
+                [
+                    'title'       => '`dokan_commission_log_gateway_fee_to_order_note` filter hook added',
+                    'description' => '',
+                ],
             ],
             'Fix'         => [
                 [

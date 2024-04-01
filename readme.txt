@@ -342,6 +342,7 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 - **update:** Email placeholder, additional content support and formatting added
 - **update:** Add requires plugin header for dokan so that required plugin check can be initiated.
+- **update:** dokan_commission_log_gateway_fee_to_order_note filter hook added
 - **fix:** Vendor profile progress bar doesn't update if the address is filled from the vendor registration form
 - **fix:** Color synchronization issue in vendor dashboard order notes
 - **fix:** product review email cannot be disabled without also disabling Contact Vendor email
