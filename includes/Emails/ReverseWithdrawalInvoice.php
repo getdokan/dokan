@@ -43,23 +43,23 @@ class ReverseWithdrawalInvoice extends WC_Email {
      * @since 3.5.1
      */
     public function __construct() {
-        $this->id               = 'reverse_withdrawal_invoice';
-        $this->title            = __( 'Dokan Reverse Withdrawal Invoice', 'dokan-lite' );
-        $this->description      = __( 'These emails are sent to the vendor(s) who has a due reverse withdrawal payment based on settings.', 'dokan-lite' );
-        $this->template_html    = 'emails/reverse-withdrawal-invoice.php';
-        $this->template_plain   = 'emails/plain/reverse-withdrawal-invoice.php';
-        $this->template_base    = DOKAN_DIR . '/templates/';
-        $this->placeholders     = [
-            '{reverse_withdrawal_url}'  => dokan_get_navigation_url( 'reverse-withdrawal' ),
-            '{month}'                   => '',
-            '{year}'                    => '',
-            '{store_name}'              => '',
+        $this->id             = 'reverse_withdrawal_invoice';
+        $this->title          = __( 'Dokan Reverse Withdrawal Invoice', 'dokan-lite' );
+        $this->description    = __( 'These emails are sent to the vendor(s) who has a due reverse withdrawal payment based on settings.', 'dokan-lite' );
+        $this->template_html  = 'emails/reverse-withdrawal-invoice.php';
+        $this->template_plain = 'emails/plain/reverse-withdrawal-invoice.php';
+        $this->template_base  = DOKAN_DIR . '/templates/';
+        $this->placeholders   = [
+            '{reverse_withdrawal_url}' => dokan_get_navigation_url( 'reverse-withdrawal' ),
+            '{month}'                  => '',
+            '{year}'                   => '',
+            '{store_name}'             => '',
         ];
+
+        add_action( 'dokan_reverse_withdrawal_invoice_email_sent', [ $this, 'trigger' ], 30, 2 );
 
         // Call parent constructor.
         parent::__construct();
-
-        $this->manual = true; // this email will be triggered manually
     }
 
     /**
@@ -101,7 +101,7 @@ class ReverseWithdrawalInvoice extends WC_Email {
      * @since 3.5.1
      *
      * @param int $vendor_id
-     * @param array|array $due_status
+     * @param array $due_status
      *
      * @return void
      */
@@ -120,6 +120,7 @@ class ReverseWithdrawalInvoice extends WC_Email {
         if ( null === $due_status ) {
             $due_status = Helper::get_vendor_due_status( $vendor_id );
         }
+        $this->setup_locale();
 
         $this->due_status = $due_status;
 
@@ -129,8 +130,6 @@ class ReverseWithdrawalInvoice extends WC_Email {
         $this->placeholders['{month}']      = $last_month->format( 'F' );
         $this->placeholders['{year}']       = $last_month->format( 'Y' );
         $this->placeholders['{store_name}'] = $this->seller_info->get_shop_name();
-
-        $this->setup_locale();
 
         if ( $this->get_recipient() !== 'unpaid_vendor@ofthe.site' ) {
             $this->send( $this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
@@ -183,7 +182,7 @@ class ReverseWithdrawalInvoice extends WC_Email {
      */
     public function get_content_plain() {
         return wc_get_template_html(
-            $this->template_html,
+            $this->template_plain,
             [
                 'due_status'         => $this->due_status,
                 'seller_info'        => $this->seller_info,

@@ -20,6 +20,42 @@ echo "\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n\n";
 echo sprintf( __( 'You have received complete order from %s.', 'dokan-lite' ), $order->get_formatted_billing_full_name() ) . "\n\n";
 echo "\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n\n";
 
+esc_html_e( 'Product            | Quantity        | Price', 'dokan-lite' );
+echo "\n\n";
+echo wp_kses_post(
+    wc_get_email_order_items(
+        $order,
+        [
+            'show_sku'      => $sent_to_admin,
+            'show_image'    => false,
+            'image_size'    => [ 32, 32 ],
+            'plain_text'    => $plain_text,
+            'sent_to_admin' => $sent_to_admin,
+        ]
+    )
+);
+echo "\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n\n";
+$item_totals = $order->get_order_item_totals();
+
+if ( $item_totals ) {
+    foreach ( $item_totals as $total ) {
+        printf( '%s %s %s', esc_html( wp_strip_all_tags( wptexturize( $total['label'] ) ) ), esc_html( wp_strip_all_tags( wptexturize( $total['value'] ) ) ), "\n" );
+    }
+    echo "\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n\n";
+}
+if ( $order->get_customer_note() ) {
+    esc_html_e( 'Note:', 'dokan-lite' );
+    echo "\n\n";
+    echo wp_kses_post( wp_strip_all_tags( wptexturize( $order->get_customer_note() ) ) );
+    echo "\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n\n";
+}
+do_action( 'woocommerce_email_after_order_table', $order, $sent_to_admin, $plain_text, $email );
+
+/*
+ * @hooked WC_Emails::order_meta() Shows order meta data.
+ */
+do_action( 'woocommerce_email_order_meta', $order, $sent_to_admin, $plain_text, $email );
+
 /**
  * @hooked WC_Emails::customer_details() Shows customer details
  * @hooked WC_Emails::email_address() Shows email address
