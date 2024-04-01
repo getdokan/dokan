@@ -193,7 +193,7 @@ jobs:
             # Run API tests
             - name: 🧪 Running the api tests
               id: api-test
-              if: ${{ steps.db-port.outcome }} == 'success' 
+              if: steps.db-port.outcome == 'success' || (steps.db-port.outcome == 'success' && (github.event_name == 'workflow_dispatch' && (github.event.inputs.testsuite == 'API' || github.event.inputs.testsuite == 'All')))
               timeout-minutes: 5
               run: |
                   cd tests/pw 
