@@ -326,9 +326,9 @@ class Hooks {
             }
         }
 
-        $available_vendors      = array_unique( $available_vendors );
-        $is_enabled_all_vendors = apply_filters( 'dokan_ensure_coupon_enabled_for_all_vendors', false, $coupon );
-        if ( $coupon->is_type( 'fixed_cart' ) && $is_enabled_all_vendors && count( $available_vendors ) > 1 ) {
+        $available_vendors    = array_unique( $available_vendors );
+        $disabled_all_vendors = apply_filters( 'dokan_ensure_coupon_enabled_for_all_vendors', false, $coupon );
+        if ( $coupon->is_type( 'fixed_cart' ) && ! $disabled_all_vendors && count( $available_vendors ) > 1 ) {
             throw new Exception( __( 'This coupon is invalid for multiple vendors.', 'dokan-lite' ) );
         }
 
