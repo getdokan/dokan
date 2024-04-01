@@ -16,7 +16,7 @@ const getTestResult = (suiteName, filePath) => {
 const getCoverageReport = filePath => {
     const coverageReport = readFile(filePath);
     if (!coverageReport) {
-        return [];
+        return;
     }
     return String(coverageReport.coverage);
 };
@@ -34,8 +34,8 @@ const addSummaryHeadingAndTable = core => {
     ];
     const apiTestResult = getTestResult('API Tests', API_TEST_RESULT);
     const e2eTestResult = getTestResult('E2E Tests', E2E_TEST_RESULT);
-    apiTestResult && apiTestResult.push(getCoverageReport(API_COVERAGE));
-    e2eTestResult && e2eTestResult.push('-');
+    apiTestResult && apiTestResult?.push(getCoverageReport(API_COVERAGE));
+    e2eTestResult && e2eTestResult?.push('-');
     const commit_sha = SHA ? `Commit SHA: ${SHA}` : '';
     if (apiTestResult || e2eTestResult) {
         core.summary.addHeading('Tests Summary').addRaw(commit_sha).addBreak().addBreak().addTable([tableHeader, apiTestResult, e2eTestResult]);

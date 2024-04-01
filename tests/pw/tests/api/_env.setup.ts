@@ -185,7 +185,7 @@ setup.describe('setup dokan settings', () => {
     });
 });
 
-setup.describe.skip('setup dokan settings e2e', () => {
+setup.describe('setup dokan settings e2e', () => {
     let productAdvertisingPage: ProductAdvertisingPage;
     let reverseWithdrawsPage: ReverseWithdrawsPage;
     let aPage: Page;
