@@ -431,6 +431,12 @@ class Products {
                 continue;
             }
 
+            // Skip all of the "Downloads" section fields if "Downloadable" field disabled.
+            $downloadable_fields = array_keys( ProductFormFactory::get_fields_by_type( '', 'downloadable' ) );
+            if ( in_array( $field->get_id(), $downloadable_fields ) && 'no' === $_POST['_downloadable'] ) {
+                continue;
+            }
+
             // check if field is required
             if ( $field->is_required() && empty( $_POST[ $field_name ] ) ) {
                 self::$errors[ $field->get_id() ] = ! empty( $field->get_error_message() )
