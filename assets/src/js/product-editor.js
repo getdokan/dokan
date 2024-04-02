@@ -60,9 +60,6 @@
                 return false;
             });
 
-            // For new desing in product page
-            $( '.dokan-product-listing' ).on( 'click', 'a.dokan-add-new-product', this.addProductPopup );
-
             this.loadSelect2();
             this.bindProductTagDropdown();
             this.attribute.sortable();
@@ -331,53 +328,6 @@
                     }
                 },
             });
-        },
-
-        addProductPopup: function (e) {
-            e.preventDefault();
-            Dokan_Editor.openProductPopup();
-        },
-
-        openProductPopup: function() {
-            const productTemplate = wp.template( 'dokan-add-new-product' ),
-                modalElem = $( '#dokan-add-product-popup' );
-                Dokan_Editor.modal = modalElem.iziModal( {
-                headerColor : dokan.modal_header_color,
-                overlayColor: 'rgba(0, 0, 0, 0.8)',
-                width       : 690,
-                top         : 32,
-                onOpening   : () => {
-                  Dokan_Editor.reRenderPopupElements();
-                },
-                onClosed: () => {
-                    product_gallery_frame  = undefined;
-                    product_featured_frame = undefined;
-                    $( '#dokan-add-new-product-popup input[name="_sale_price_dates_from"], #dokan-add-new-product-popup input[name="_sale_price_dates_to"]' ).datepicker( 'destroy' );
-                },
-            } );
-            Dokan_Editor.modal.iziModal( 'setContent', productTemplate().trim() );
-            Dokan_Editor.modal.iziModal( 'open' );
-        },
-
-        reRenderPopupElements: function() {
-            Dokan_Editor.loadSelect2();
-            Dokan_Editor.bindProductTagDropdown();
-
-            $( '#dokan-add-new-product-popup .sale_price_dates_fields input' ).daterangepicker({
-                singleDatePicker: true,
-                showDropdowns: false,
-                autoApply: true,
-                parentEl: '#dokan-add-new-product-popup',
-                opens: 'left',
-                autoUpdateInput : false,
-            } ).on( 'apply.daterangepicker', function( ev, picker ) {
-                $( this ).val( picker.startDate.format( 'YYYY-MM-DD' ) );
-            } );
-
-            $( '.tips' ).tooltip();
-
-            Dokan_Editor.gallery.sortable();
-            $( 'body' ).trigger( 'dokan-product-editor-popup-opened', Dokan_Editor );
         },
 
         attribute: {
