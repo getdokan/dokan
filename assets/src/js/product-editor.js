@@ -982,6 +982,8 @@
             $wrap.find( '.cancel_sale_schedule' ).show();
             $wrap.find( '.sale_price_dates_fields' ).show();
 
+            $( '#is_discount_schedule_enabled' ).val( 1 );
+
             return false;
         });
 
@@ -992,6 +994,8 @@
             $wrap.find( '.sale_schedule' ).show();
             $wrap.find( '.sale_price_dates_fields' ).hide();
             $wrap.find( '.sale_price_dates_fields' ).find( 'input' ).val('');
+
+            $( '#is_discount_schedule_enabled' ).val( 0 );
 
             return false;
         });
