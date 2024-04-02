@@ -52,7 +52,7 @@ if ( ! function_exists( 'dokan_sales_overview_chart_data' ) ) :
 		}
 
 		// Get orders and dates in range - we want the SUM of order totals, COUNT of order items, COUNT of orders, and the date
-        $report = new \WeDevs\Dokan\DokanAdminReport();
+        $report = new \WeDevs\Dokan\AdminReport();
         $report->start_date = $start_date;
         $report->end_date = $end_date;
 

@@ -25,7 +25,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @package     WooCommerce\Admin\Reports
  * @version     2.1.0
  */
-class DokanAdminReport {
+class AdminReport {
 
 	/**
 	 * List of transients name that have been updated and need persisting.
