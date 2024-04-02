@@ -179,6 +179,7 @@ if ( is_wp_error( $section ) ) {
                                     'price'
                                 );
                                 ?>
+                                <input type="hidden" id="is_discount_schedule_enabled" name="is_discount_schedule_enabled" value="0">
                             </div>
                         </div>
                     <?php endif; ?>

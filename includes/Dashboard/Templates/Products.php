@@ -426,6 +426,11 @@ class Products {
 
             $field_name = sanitize_key( $field->get_name() );
 
+            // Skip the "Sale from" and "Sale to" date fields if "Discount Schedule" is disabled.
+            if ( empty( $_POST['is_discount_schedule_enabled'] ) && ( ProductFormElements::DATE_ON_SALE_FROM === $field->get_id() || ProductFormElements::DATE_ON_SALE_TO === $field->get_id() ) ) {
+                continue;
+            }
+
             // check if field is required
             if ( $field->is_required() && empty( $_POST[ $field_name ] ) ) {
                 self::$errors[ $field->get_id() ] = ! empty( $field->get_error_message() )
