@@ -437,6 +437,17 @@ class Products {
                 continue;
             }
 
+            // Skip "This product requires shipping" checkbox field if "Virtual" field enabled.
+            if ( ProductFormElements::DISABLE_SHIPPING_META === $field->get_id() && 'yes' === $_POST['_virtual'] ) {
+                continue;
+            }
+
+            // Skip shipping related fields if "This product requires shipping" field disabled.
+            $shipping_fields = [ 'weight', 'length', 'width', 'height', 'shipping_class_id' ];
+            if ( in_array( $field->get_id(), $shipping_fields ) && 'no' === $_POST['_disable_shipping'] ) {
+                continue;
+            }
+
             // check if field is required
             if ( $field->is_required() && empty( $_POST[ $field_name ] ) ) {
                 self::$errors[ $field->get_id() ] = ! empty( $field->get_error_message() )
