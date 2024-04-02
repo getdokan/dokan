@@ -1,14 +1,14 @@
 # Copyright (c) 2024 weDevs Pte. Ltd. All Rights Reserved.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 3.10.1\n"
+"Project-Id-Version: Dokan 3.10.2\n"
 "Report-Msgid-Bugs-To: https://dokan.co/contact/\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-03-18T04:37:57+00:00\n"
+"POT-Creation-Date: 2024-04-01T03:42:27+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.9.0\n"
 "X-Domain: dokan-lite\n"
@@ -38,15 +38,15 @@ msgid "https://dokan.co/"
 msgstr ""
 
 #. translators: 1: Required PHP Version 2: Running php version
-#: dokan.php:201
+#: dokan.php:203
 msgid "The Minimum PHP Version Requirement for <b>Dokan</b> is %1$s. You are Running PHP %2$s"
 msgstr ""
 
-#: dokan.php:510
+#: dokan.php:512
 msgid "Get Pro"
 msgstr ""
 
-#: dokan.php:513
+#: dokan.php:515
 #: includes/Admin/AdminBar.php:81
 #: includes/Admin/Menu.php:68
 #: includes/Dashboard/Templates/Settings.php:60
@@ -56,7 +56,7 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-#: dokan.php:514
+#: dokan.php:516
 #: templates/admin-header.php:63
 #: assets/js/vue-admin.js:2
 msgid "Documentation"
@@ -1242,7 +1242,7 @@ msgstr ""
 #: includes/Admin/SetupWizard.php:657
 #: includes/Admin/SetupWizardWCAdmin.php:232
 #: includes/Vendor/SetupWizard.php:368
-#: includes/Vendor/SetupWizard.php:607
+#: includes/Vendor/SetupWizard.php:575
 #: templates/admin-setup-wizard/step-selling.php:53
 #: templates/admin-setup-wizard/step-store.php:153
 msgid "Continue"
@@ -1250,7 +1250,7 @@ msgstr ""
 
 #: includes/Admin/SetupWizard.php:575
 #: includes/Vendor/SetupWizard.php:370
-#: includes/Vendor/SetupWizard.php:609
+#: includes/Vendor/SetupWizard.php:577
 #: templates/admin-setup-wizard/step-selling.php:54
 #: templates/admin-setup-wizard/step-store.php:154
 msgid "Skip this step"
@@ -2471,21 +2471,21 @@ msgid "Check to hide product price from your products."
 msgstr ""
 
 #. translators: %s: Geteway fee
-#: includes/Commission.php:114
+#: includes/Commission.php:116
 msgid "Payment gateway processing fee %s"
 msgstr ""
 
-#: includes/Commission.php:236
+#: includes/Commission.php:238
 #: includes/REST/ProductBlockController.php:69
 msgid "Product not found"
 msgstr ""
 
-#: includes/Commission.php:266
+#: includes/Commission.php:268
 msgid "Order not found"
 msgstr ""
 
-#: includes/Commission.php:769
-#: includes/Commission.php:801
+#: includes/Commission.php:771
+#: includes/Commission.php:803
 msgid "Please provide a valid order object."
 msgstr ""
 
@@ -2857,263 +2857,299 @@ msgstr ""
 msgid "Cleared all dummy data successfully."
 msgstr ""
 
-#: includes/Emails/ContactSeller.php:31
+#: includes/Emails/ContactSeller.php:32
 msgid "Dokan Contact Vendor"
 msgstr ""
 
-#: includes/Emails/ContactSeller.php:32
+#: includes/Emails/ContactSeller.php:33
 msgid "These emails are sent to a vendor who is contacted by customer via contact form widget "
 msgstr ""
 
-#: includes/Emails/ContactSeller.php:54
-msgid "[{customer_name}] sent you a message from your store at - {site_name}"
-msgstr ""
-
 #: includes/Emails/ContactSeller.php:64
-msgid "{customer_name} - Sent a message from {site_name}"
+msgid "[{customer_name}] sent you a message from your store at - {site_title}"
 msgstr ""
 
-#: includes/Emails/ContactSeller.php:155
-#: includes/Emails/NewProduct.php:170
-#: includes/Emails/NewProductPending.php:171
-#: includes/Emails/NewSeller.php:138
-#: includes/Emails/ProductPublished.php:150
-#: includes/Emails/ReverseWithdrawalInvoice.php:214
-#: includes/Emails/VendorCompletedOrder.php:155
-#: includes/Emails/VendorNewOrder.php:163
-#: includes/Emails/VendorProductReview.php:191
-#: includes/Emails/VendorWithdrawRequest.php:147
-#: includes/Emails/WithdrawApproved.php:143
-#: includes/Emails/WithdrawCancelled.php:143
-msgid "Enable/Disable"
-msgstr ""
-
-#: includes/Emails/ContactSeller.php:157
-#: includes/Emails/NewProduct.php:172
-#: includes/Emails/NewProductPending.php:173
-#: includes/Emails/NewSeller.php:140
-#: includes/Emails/ProductPublished.php:152
-#: includes/Emails/ReverseWithdrawalInvoice.php:216
-#: includes/Emails/VendorCompletedOrder.php:157
-#: includes/Emails/VendorNewOrder.php:165
-#: includes/Emails/VendorProductReview.php:193
-#: includes/Emails/VendorWithdrawRequest.php:149
-#: includes/Emails/WithdrawApproved.php:145
-#: includes/Emails/WithdrawCancelled.php:145
-msgid "Enable this email notification"
-msgstr ""
-
-#: includes/Emails/ContactSeller.php:162
-#: includes/Emails/NewProduct.php:185
-#: includes/Emails/NewProductPending.php:186
-#: includes/Emails/NewSeller.php:153
-#: includes/Emails/ProductPublished.php:157
-#: includes/Emails/ReverseWithdrawalInvoice.php:220
-#: includes/Emails/VendorCompletedOrder.php:161
-#: includes/Emails/VendorNewOrder.php:169
-#: includes/Emails/VendorProductReview.php:198
-#: includes/Emails/VendorWithdrawRequest.php:162
-#: includes/Emails/WithdrawApproved.php:149
-#: includes/Emails/WithdrawCancelled.php:149
-msgid "Subject"
+#: includes/Emails/ContactSeller.php:74
+msgid "{customer_name} - Sent a message from {site_title}"
 msgstr ""
 
 #. translators: %s: list of placeholders
-#: includes/Emails/ContactSeller.php:166
-#: includes/Emails/ContactSeller.php:175
-#: includes/Emails/NewProduct.php:189
-#: includes/Emails/NewProduct.php:198
-#: includes/Emails/NewProductPending.php:190
-#: includes/Emails/NewProductPending.php:199
-#: includes/Emails/NewSeller.php:157
-#: includes/Emails/NewSeller.php:166
-#: includes/Emails/ProductPublished.php:161
-#: includes/Emails/ProductPublished.php:170
-#: includes/Emails/ReverseWithdrawalInvoice.php:210
-#: includes/Emails/VendorCompletedOrder.php:165
-#: includes/Emails/VendorCompletedOrder.php:174
-#: includes/Emails/VendorNewOrder.php:173
-#: includes/Emails/VendorNewOrder.php:182
+#: includes/Emails/ContactSeller.php:154
+#: includes/Emails/NewProduct.php:175
+#: includes/Emails/NewProductPending.php:173
+#: includes/Emails/NewSeller.php:138
+#: includes/Emails/ProductPublished.php:152
+#: includes/Emails/ReverseWithdrawalInvoice.php:209
+#: includes/Emails/VendorCompletedOrder.php:158
+#: includes/Emails/VendorNewOrder.php:165
 #: includes/Emails/VendorProductReview.php:188
-#: includes/Emails/VendorWithdrawRequest.php:166
-#: includes/Emails/VendorWithdrawRequest.php:175
-#: includes/Emails/WithdrawApproved.php:153
-#: includes/Emails/WithdrawApproved.php:162
-#: includes/Emails/WithdrawCancelled.php:153
-#: includes/Emails/WithdrawCancelled.php:162
+#: includes/Emails/VendorWithdrawRequest.php:145
+#: includes/Emails/WithdrawApproved.php:143
+#: includes/Emails/WithdrawCancelled.php:148
 msgid "Available placeholders: %s"
 msgstr ""
 
-#: includes/Emails/ContactSeller.php:171
-#: includes/Emails/NewProduct.php:194
-#: includes/Emails/NewProductPending.php:195
-#: includes/Emails/NewSeller.php:162
-#: includes/Emails/ProductPublished.php:166
-#: includes/Emails/ReverseWithdrawalInvoice.php:228
-#: includes/Emails/VendorCompletedOrder.php:170
-#: includes/Emails/VendorNewOrder.php:178
+#: includes/Emails/ContactSeller.php:157
+#: includes/Emails/NewProduct.php:178
+#: includes/Emails/NewProductPending.php:176
+#: includes/Emails/NewSeller.php:141
+#: includes/Emails/ProductPublished.php:155
+#: includes/Emails/ReverseWithdrawalInvoice.php:213
+#: includes/Emails/VendorCompletedOrder.php:161
+#: includes/Emails/VendorNewOrder.php:168
+#: includes/Emails/VendorProductReview.php:191
+#: includes/Emails/VendorWithdrawRequest.php:148
+#: includes/Emails/WithdrawApproved.php:146
+#: includes/Emails/WithdrawCancelled.php:151
+msgid "Enable/Disable"
+msgstr ""
+
+#: includes/Emails/ContactSeller.php:159
+#: includes/Emails/NewProduct.php:180
+#: includes/Emails/NewProductPending.php:178
+#: includes/Emails/NewSeller.php:143
+#: includes/Emails/ProductPublished.php:157
+#: includes/Emails/ReverseWithdrawalInvoice.php:215
+#: includes/Emails/VendorCompletedOrder.php:163
+#: includes/Emails/VendorNewOrder.php:170
+#: includes/Emails/VendorProductReview.php:193
+#: includes/Emails/VendorWithdrawRequest.php:150
+#: includes/Emails/WithdrawApproved.php:148
+#: includes/Emails/WithdrawCancelled.php:153
+msgid "Enable this email notification"
+msgstr ""
+
+#: includes/Emails/ContactSeller.php:164
+#: includes/Emails/NewProduct.php:193
+#: includes/Emails/NewProductPending.php:191
+#: includes/Emails/NewSeller.php:156
+#: includes/Emails/ProductPublished.php:162
+#: includes/Emails/ReverseWithdrawalInvoice.php:219
+#: includes/Emails/VendorCompletedOrder.php:167
+#: includes/Emails/VendorNewOrder.php:174
+#: includes/Emails/VendorProductReview.php:198
+#: includes/Emails/VendorWithdrawRequest.php:163
+#: includes/Emails/WithdrawApproved.php:152
+#: includes/Emails/WithdrawCancelled.php:157
+msgid "Subject"
+msgstr ""
+
+#: includes/Emails/ContactSeller.php:172
+#: includes/Emails/NewProduct.php:201
+#: includes/Emails/NewProductPending.php:199
+#: includes/Emails/NewSeller.php:164
+#: includes/Emails/ProductPublished.php:170
+#: includes/Emails/ReverseWithdrawalInvoice.php:227
+#: includes/Emails/VendorCompletedOrder.php:175
+#: includes/Emails/VendorNewOrder.php:182
 #: includes/Emails/VendorProductReview.php:206
 #: includes/Emails/VendorWithdrawRequest.php:171
-#: includes/Emails/WithdrawApproved.php:158
-#: includes/Emails/WithdrawCancelled.php:158
+#: includes/Emails/WithdrawApproved.php:160
+#: includes/Emails/WithdrawCancelled.php:165
 msgid "Email heading"
 msgstr ""
 
 #: includes/Emails/ContactSeller.php:180
-#: includes/Emails/NewProduct.php:203
-#: includes/Emails/NewProductPending.php:204
-#: includes/Emails/NewSeller.php:171
-#: includes/Emails/ProductPublished.php:175
-#: includes/Emails/ReverseWithdrawalInvoice.php:245
-#: includes/Emails/VendorCompletedOrder.php:179
-#: includes/Emails/VendorNewOrder.php:187
-#: includes/Emails/VendorProductReview.php:223
+#: includes/Emails/NewProduct.php:209
+#: includes/Emails/NewProductPending.php:207
+#: includes/Emails/NewSeller.php:172
+#: includes/Emails/ProductPublished.php:178
+#: includes/Emails/ReverseWithdrawalInvoice.php:235
+#: includes/Emails/VendorCompletedOrder.php:183
+#: includes/Emails/VendorNewOrder.php:190
+#: includes/Emails/VendorProductReview.php:214
+#: includes/Emails/VendorWithdrawRequest.php:179
+#: includes/Emails/WithdrawApproved.php:168
+#: includes/Emails/WithdrawCancelled.php:173
+msgid "Additional content"
+msgstr ""
+
+#: includes/Emails/ContactSeller.php:181
+#: includes/Emails/NewProduct.php:210
+#: includes/Emails/NewProductPending.php:208
+#: includes/Emails/NewSeller.php:173
+#: includes/Emails/ProductPublished.php:179
+#: includes/Emails/ReverseWithdrawalInvoice.php:236
+#: includes/Emails/VendorCompletedOrder.php:184
+#: includes/Emails/VendorNewOrder.php:191
+#: includes/Emails/VendorProductReview.php:215
 #: includes/Emails/VendorWithdrawRequest.php:180
-#: includes/Emails/WithdrawApproved.php:167
-#: includes/Emails/WithdrawCancelled.php:167
+#: includes/Emails/WithdrawApproved.php:169
+#: includes/Emails/WithdrawCancelled.php:174
+msgid "Text to appear below the main email content."
+msgstr ""
+
+#: includes/Emails/ContactSeller.php:183
+#: includes/Emails/NewProduct.php:212
+#: includes/Emails/NewProductPending.php:210
+#: includes/Emails/NewSeller.php:175
+#: includes/Emails/ProductPublished.php:181
+#: includes/Emails/ReverseWithdrawalInvoice.php:238
+#: includes/Emails/VendorCompletedOrder.php:186
+#: includes/Emails/VendorNewOrder.php:193
+#: includes/Emails/VendorProductReview.php:217
+#: includes/Emails/VendorWithdrawRequest.php:182
+#: includes/Emails/WithdrawApproved.php:171
+#: includes/Emails/WithdrawCancelled.php:176
+#: templates/orders/order-tax-html.php:10
+msgid "N/A"
+msgstr ""
+
+#: includes/Emails/ContactSeller.php:189
+#: includes/Emails/NewProduct.php:218
+#: includes/Emails/NewProductPending.php:216
+#: includes/Emails/NewSeller.php:181
+#: includes/Emails/ProductPublished.php:187
+#: includes/Emails/ReverseWithdrawalInvoice.php:244
+#: includes/Emails/VendorCompletedOrder.php:192
+#: includes/Emails/VendorNewOrder.php:199
+#: includes/Emails/VendorProductReview.php:223
+#: includes/Emails/VendorWithdrawRequest.php:188
+#: includes/Emails/WithdrawApproved.php:177
+#: includes/Emails/WithdrawCancelled.php:182
 msgid "Email type"
 msgstr ""
 
-#: includes/Emails/ContactSeller.php:182
-#: includes/Emails/NewProduct.php:205
-#: includes/Emails/NewProductPending.php:206
-#: includes/Emails/NewSeller.php:173
-#: includes/Emails/ProductPublished.php:177
-#: includes/Emails/ReverseWithdrawalInvoice.php:247
-#: includes/Emails/VendorCompletedOrder.php:181
-#: includes/Emails/VendorNewOrder.php:189
+#: includes/Emails/ContactSeller.php:191
+#: includes/Emails/NewProduct.php:220
+#: includes/Emails/NewProductPending.php:218
+#: includes/Emails/NewSeller.php:183
+#: includes/Emails/ProductPublished.php:189
+#: includes/Emails/ReverseWithdrawalInvoice.php:246
+#: includes/Emails/VendorCompletedOrder.php:194
+#: includes/Emails/VendorNewOrder.php:201
 #: includes/Emails/VendorProductReview.php:225
-#: includes/Emails/VendorWithdrawRequest.php:182
-#: includes/Emails/WithdrawApproved.php:169
-#: includes/Emails/WithdrawCancelled.php:169
+#: includes/Emails/VendorWithdrawRequest.php:190
+#: includes/Emails/WithdrawApproved.php:179
+#: includes/Emails/WithdrawCancelled.php:184
 msgid "Choose which format of email to send."
 msgstr ""
 
 #. translators: %1: from name, %2: from name
-#: includes/Emails/Manager.php:204
+#: includes/Emails/Manager.php:207
 msgid "\"%1$s\" sent you a message from your \"%2$s\" store"
 msgstr ""
 
 #. translators: %1: from name, %2: status
-#: includes/Emails/Manager.php:256
+#: includes/Emails/Manager.php:259
 msgid "[%1$s] Refund Request %2$s"
 msgstr ""
 
 #. translators: %s: from name
-#: includes/Emails/Manager.php:290
+#: includes/Emails/Manager.php:293
 msgid "[%s] New Refund Request"
 msgstr ""
 
 #. translators: %s: from name
-#: includes/Emails/Manager.php:347
+#: includes/Emails/Manager.php:350
 msgid "[%s] New Withdraw Request"
 msgstr ""
 
 #. translators: %s: from name
-#: includes/Emails/Manager.php:370
+#: includes/Emails/Manager.php:373
 msgid "[%s] Your Withdraw Request has been approved"
 msgstr ""
 
 #. translators: %s: from name
-#: includes/Emails/Manager.php:394
+#: includes/Emails/Manager.php:397
 msgid "[%s] Your Withdraw Request has been cancelled"
 msgstr ""
 
 #. translators: %s: from name
-#: includes/Emails/Manager.php:433
+#: includes/Emails/Manager.php:436
 msgid "[%s] New Vendor Registered"
 msgstr ""
 
 #. translators: %s: from name
-#: includes/Emails/Manager.php:487
+#: includes/Emails/Manager.php:490
 msgid "[%s] New Product Added"
 msgstr ""
 
 #. translators: %s: from name
-#: includes/Emails/Manager.php:528
+#: includes/Emails/Manager.php:531
 msgid "[%s] Your product has been approved!"
 msgstr ""
 
-#: includes/Emails/NewProduct.php:24
+#: includes/Emails/NewProduct.php:25
 msgid "Dokan New Product"
 msgstr ""
 
-#: includes/Emails/NewProduct.php:25
+#: includes/Emails/NewProduct.php:26
 msgid "New Product emails are sent to chosen recipient(s) when a new product is created by vendors."
 msgstr ""
 
-#: includes/Emails/NewProduct.php:48
-msgid "[{site_name}] A New product is added by ({seller_name}) - {product_title}"
+#: includes/Emails/NewProduct.php:60
+msgid "[{site_title}] A New product is added by ({store_name}) - {product_title}"
 msgstr ""
 
-#: includes/Emails/NewProduct.php:58
-msgid "New product added by Vendor {seller_name}"
+#: includes/Emails/NewProduct.php:70
+msgid "New product added by Vendor {store_name}"
 msgstr ""
 
-#: includes/Emails/NewProduct.php:176
-#: includes/Emails/NewProductPending.php:177
-#: includes/Emails/NewSeller.php:144
-#: includes/Emails/VendorWithdrawRequest.php:153
+#: includes/Emails/NewProduct.php:184
+#: includes/Emails/NewProductPending.php:182
+#: includes/Emails/NewSeller.php:147
+#: includes/Emails/VendorWithdrawRequest.php:154
 msgid "Recipient(s)"
 msgstr ""
 
 #. translators: 1) Email recipients
-#: includes/Emails/NewProduct.php:179
-#: includes/Emails/NewSeller.php:147
-#: includes/Emails/VendorWithdrawRequest.php:156
+#: includes/Emails/NewProduct.php:187
+#: includes/Emails/NewSeller.php:150
+#: includes/Emails/VendorWithdrawRequest.php:157
 msgid "Enter recipients (comma separated) for this email. Defaults to %s."
 msgstr ""
 
-#: includes/Emails/NewProductPending.php:25
+#: includes/Emails/NewProductPending.php:26
 msgid "Dokan New Pending Product"
 msgstr ""
 
-#: includes/Emails/NewProductPending.php:26
+#: includes/Emails/NewProductPending.php:27
 msgid "New Pending Product emails are sent to chosen recipient(s) when a new product is created by vendors."
 msgstr ""
 
-#: includes/Emails/NewProductPending.php:49
-msgid "[{site_title}] A New product is pending from ({seller_name}) - {product_title}"
+#: includes/Emails/NewProductPending.php:61
+msgid "[{site_title}] A New product is pending from ({store_name}) - {product_title}"
 msgstr ""
 
-#: includes/Emails/NewProductPending.php:59
-msgid "New pending product added by Vendor {seller_name}"
+#: includes/Emails/NewProductPending.php:71
+msgid "New pending product added by Vendor {store_name}"
 msgstr ""
 
 #. translators: 1) admin email address
-#: includes/Emails/NewProductPending.php:180
+#: includes/Emails/NewProductPending.php:185
 msgid "Enter recipients (comma separated) for this email. Defaults to %1$s."
 msgstr ""
 
-#: includes/Emails/NewSeller.php:22
+#: includes/Emails/NewSeller.php:23
 msgid "Dokan New Seller Registered"
 msgstr ""
 
-#: includes/Emails/NewSeller.php:23
+#: includes/Emails/NewSeller.php:24
 msgid "These emails are sent to chosen recipient(s) when a new vendor registers in marketplace"
 msgstr ""
 
-#: includes/Emails/NewSeller.php:45
-msgid "[{site_name}] A New vendor has registered"
+#: includes/Emails/NewSeller.php:54
+msgid "[{site_title}] A New vendor has registered"
 msgstr ""
 
-#: includes/Emails/NewSeller.php:55
+#: includes/Emails/NewSeller.php:64
 msgid "New Vendor Registered - {seller_name}"
 msgstr ""
 
-#: includes/Emails/ProductPublished.php:24
+#: includes/Emails/ProductPublished.php:25
 msgid "Dokan Pending Product Published"
 msgstr ""
 
-#: includes/Emails/ProductPublished.php:25
+#: includes/Emails/ProductPublished.php:26
 msgid "These emails are sent to vendor of the product when a pending product is published."
 msgstr ""
 
-#: includes/Emails/ProductPublished.php:47
-msgid "[{site_name}] Your product - {product_title} - is now published"
+#: includes/Emails/ProductPublished.php:58
+msgid "[{site_title}] Your product - {product_title} - is now published"
 msgstr ""
 
-#: includes/Emails/ProductPublished.php:57
+#: includes/Emails/ProductPublished.php:68
 msgid "{product_title} - is published"
 msgstr ""
 
@@ -3137,28 +3173,12 @@ msgstr ""
 msgid "Thanks for using {site_url}!"
 msgstr ""
 
-#: includes/Emails/ReverseWithdrawalInvoice.php:236
-#: includes/Emails/VendorProductReview.php:214
-msgid "Additional content"
-msgstr ""
-
-#: includes/Emails/ReverseWithdrawalInvoice.php:237
-#: includes/Emails/VendorProductReview.php:215
-msgid "Text to appear below the main email content."
-msgstr ""
-
-#: includes/Emails/ReverseWithdrawalInvoice.php:239
-#: includes/Emails/VendorProductReview.php:217
-#: templates/orders/order-tax-html.php:10
-msgid "N/A"
-msgstr ""
-
-#: includes/Emails/VendorCompletedOrder.php:26
+#: includes/Emails/VendorCompletedOrder.php:27
 msgid "Dokan Vendor Completed Order"
 msgstr ""
 
-#: includes/Emails/VendorCompletedOrder.php:27
-msgid "Completed order emails are sent to chosen recipient(s) when a order is completed."
+#: includes/Emails/VendorCompletedOrder.php:28
+msgid "Completed order emails are sent to the vendor when a order is completed."
 msgstr ""
 
 #: includes/Emails/VendorCompletedOrder.php:55
@@ -3174,14 +3194,14 @@ msgid "Dokan Vendor New Order"
 msgstr ""
 
 #: includes/Emails/VendorNewOrder.php:27
-msgid "New order emails are sent to chosen recipient(s) when a new order is received."
+msgid "New order emails are sent to the vendor when a new order is received."
 msgstr ""
 
-#: includes/Emails/VendorNewOrder.php:63
+#: includes/Emails/VendorNewOrder.php:62
 msgid "[{site_title}] New customer order ({order_number}) - {order_date}"
 msgstr ""
 
-#: includes/Emails/VendorNewOrder.php:73
+#: includes/Emails/VendorNewOrder.php:72
 msgid "New Customer Order: #{order_number}"
 msgstr ""
 
@@ -3201,51 +3221,51 @@ msgstr ""
 msgid "New Product Review Alert From Your Store: {store_name} at - {site_title}"
 msgstr ""
 
-#: includes/Emails/VendorWithdrawRequest.php:24
+#: includes/Emails/VendorWithdrawRequest.php:25
 msgid "Dokan New Withdrawal Request"
 msgstr ""
 
-#: includes/Emails/VendorWithdrawRequest.php:25
+#: includes/Emails/VendorWithdrawRequest.php:26
 msgid "These emails are sent to chosen recipient(s) when a vendor send request to withdraw"
 msgstr ""
 
-#: includes/Emails/VendorWithdrawRequest.php:47
-msgid "[{site_name}] A New withdrawal request is made by {user_name}"
+#: includes/Emails/VendorWithdrawRequest.php:58
+msgid "[{site_title}] A New withdrawal request is made by {store_name}"
 msgstr ""
 
-#: includes/Emails/VendorWithdrawRequest.php:57
-msgid "New Withdraw Request from - {user_name}"
-msgstr ""
-
-#: includes/Emails/WithdrawApproved.php:24
-msgid "Dokan Withdraw Approved"
+#: includes/Emails/VendorWithdrawRequest.php:68
+msgid "New Withdraw Request from - {store_name}"
 msgstr ""
 
 #: includes/Emails/WithdrawApproved.php:25
+msgid "Dokan Withdraw Approved"
+msgstr ""
+
+#: includes/Emails/WithdrawApproved.php:26
 msgid "These emails are sent to vendor when a vendor withdraw request is approved"
 msgstr ""
 
-#: includes/Emails/WithdrawApproved.php:47
-msgid "[{site_name}] Your withdrawal request was approved"
+#: includes/Emails/WithdrawApproved.php:58
+msgid "[{site_title}] Your withdrawal request was approved"
 msgstr ""
 
-#: includes/Emails/WithdrawApproved.php:57
+#: includes/Emails/WithdrawApproved.php:68
 msgid "Withdrawal request for {amount} is approved"
 msgstr ""
 
-#: includes/Emails/WithdrawCancelled.php:24
+#: includes/Emails/WithdrawCancelled.php:25
 msgid "Dokan Withdraw cancelled"
 msgstr ""
 
-#: includes/Emails/WithdrawCancelled.php:25
+#: includes/Emails/WithdrawCancelled.php:26
 msgid "These emails are sent to vendor when a vendor withdraw request is cancelled"
 msgstr ""
 
-#: includes/Emails/WithdrawCancelled.php:47
-msgid "[{site_name}] Your withdrawal request was cancelled"
+#: includes/Emails/WithdrawCancelled.php:59
+msgid "[{site_title}] Your withdrawal request was cancelled"
 msgstr ""
 
-#: includes/Emails/WithdrawCancelled.php:57
+#: includes/Emails/WithdrawCancelled.php:69
 msgid "Withdrawal request for {amount} is cancelled"
 msgstr ""
 
@@ -7224,15 +7244,15 @@ msgstr ""
 msgid "Select an option&hellip;"
 msgstr ""
 
-#: includes/Vendor/SetupWizard.php:585
+#: includes/Vendor/SetupWizard.php:553
 msgid "Payment Setup"
 msgstr ""
 
-#: includes/Vendor/SetupWizard.php:691
+#: includes/Vendor/SetupWizard.php:659
 msgid "Your Store is Ready!"
 msgstr ""
 
-#: includes/Vendor/SetupWizard.php:696
+#: includes/Vendor/SetupWizard.php:664
 msgid "Go to your Store Dashboard!"
 msgstr ""
 
@@ -8126,10 +8146,8 @@ msgstr ""
 msgid "The product is currently in \"pending\" state."
 msgstr ""
 
-#. translators: 1) product url
-#: templates/emails/plain/new-product-pending.php:51
-#: templates/emails/plain/new-product.php:51
-msgid "In case it needs to be moderated  <a href=\"%s\"> click here </a>"
+#: templates/emails/plain/new-product-pending.php:48
+msgid "In case it needs to be moderated, please the follow URL below."
 msgstr ""
 
 #: templates/emails/plain/new-product.php:22
@@ -8143,6 +8161,10 @@ msgstr ""
 
 #: templates/emails/plain/new-product.php:45
 msgid "The product is currently in \"publish\" state. So everyone can view the product."
+msgstr ""
+
+#: templates/emails/plain/new-product.php:48
+msgid "In case it needs to be moderated, please follow the URL below."
 msgstr ""
 
 #: templates/emails/plain/new-seller-registered.php:22
@@ -8228,6 +8250,19 @@ msgstr ""
 msgid "You have received complete order from %s."
 msgstr ""
 
+#: templates/emails/plain/vendor-completed-order.php:23
+#: templates/emails/plain/vendor-new-order.php:23
+msgid "Product            | Quantity        | Price"
+msgstr ""
+
+#: templates/emails/plain/vendor-completed-order.php:47
+#: templates/emails/plain/vendor-new-order.php:47
+#: templates/emails/vendor-completed-order.php:92
+#: templates/emails/vendor-new-order.php:93
+#: templates/sub-orders.php:23
+msgid "Note:"
+msgstr ""
+
 #. translators: 1) order billing full name
 #. translators: 1) order formatted billing full name
 #: templates/emails/plain/vendor-new-order.php:20
@@ -8247,7 +8282,7 @@ msgstr ""
 
 #: templates/emails/plain/vendor-product-review.php:42
 #: templates/emails/vendor-product-review.php:39
-msgid "You can view the review and reply to it by visiting the following link:"
+msgid "You can view the review by visiting the following link:"
 msgstr ""
 
 #: templates/emails/plain/vendor-product-review.php:51
@@ -8298,7 +8333,8 @@ msgid "Method : %s"
 msgstr ""
 
 #: templates/emails/plain/withdraw-approve.php:37
-msgid "We'll transfer this amount to your preferred destination shortly."
+#: templates/emails/withdraw-approve.php:37
+msgid "We'll transfer this amount to your preferred withdrawal method shortly."
 msgstr ""
 
 #: templates/emails/plain/withdraw-approve.php:40
@@ -8337,7 +8373,7 @@ msgstr ""
 
 #. translators: 1) user name
 #: templates/emails/plain/withdraw-new.php:35
-msgid "Username : %s"
+msgid "Store Name : %s"
 msgstr ""
 
 #. translators: 1) vendor profile url
@@ -8405,12 +8441,6 @@ msgstr ""
 msgid "Price"
 msgstr ""
 
-#: templates/emails/vendor-completed-order.php:92
-#: templates/emails/vendor-new-order.php:93
-#: templates/sub-orders.php:23
-msgid "Note:"
-msgstr ""
-
 #. translators: 1) product name, 2) customer name, 3) rating
 #: templates/emails/vendor-product-review.php:26
 msgid "We are happy to inform you that your product <strong>%1$s</strong> has received a new review on our website. The review was written by <strong>%2$s</strong> and has a rating of <strong>%3$s</strong> out of 5 stars."
@@ -8418,10 +8448,6 @@ msgstr ""
 
 #: templates/emails/withdraw-approve.php:28
 msgid "Amount : "
-msgstr ""
-
-#: templates/emails/withdraw-approve.php:37
-msgid "We'll transfer this amount to your preferred payment method shortly."
 msgstr ""
 
 #: templates/emails/withdraw-cancel.php:23
@@ -8433,7 +8459,7 @@ msgid "A new withdraw request has been made by"
 msgstr ""
 
 #: templates/emails/withdraw-new.php:26
-msgid "Username : "
+msgid "Store Name : "
 msgstr ""
 
 #: templates/emails/withdraw-new.php:34

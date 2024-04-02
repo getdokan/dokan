@@ -3,11 +3,11 @@ Contributors: tareq1988, wedevs, nizamuddinbabu
 Donate Link: http://tareq.co/donate/
 Tags: WooCommerce multivendor marketplace, multi vendor marketplace, multi seller store, multi-vendor, multi seller, commissions, multivendor, marketplace, product vendors, woocommerce vendor, commission rate, e-commerce, woocommerce, ebay, ecommerce.
 Requires at least: 5.6
-Tested up to: 6.4.3
+Tested up to: 6.5
 WC requires at least: 5.0.0
-WC tested up to: 8.6.1
+WC tested up to: 8.7.0
 Requires PHP: 7.4
-Stable tag: 3.10.1
+Stable tag: 3.10.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -337,6 +337,16 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 == Changelog ==
+
+= v3.10.2 ( Apr 01, 2024 ) =
+
+- **update:** Email placeholder, additional content support and formatting added
+- **update:** Add requires plugin header for dokan so that required plugin check can be initiated.
+- **update:** dokan_commission_log_gateway_fee_to_order_note filter hook added
+- **fix:** Vendor profile progress bar doesn't update if the address is filled from the vendor registration form
+- **fix:** Color synchronization issue in vendor dashboard order notes
+- **fix:** product review email cannot be disabled without also disabling Contact Vendor email
+- **fix:** Order Export to CSV on the filtered list not working
 
 = v3.10.1 ( Mar 18, 2024 ) =
 

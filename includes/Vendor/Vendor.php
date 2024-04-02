@@ -1566,4 +1566,18 @@ class Vendor {
     public function save() {
         $this->apply_changes();
     }
+
+    /**
+     * Get vendor profile url for admin
+     *
+     * @since 3.10.2
+     *
+     * @return string
+     */
+    public function get_profile_url(): string {
+        $is_pro   = dokan()->is_pro_exists();
+        $url_path = $is_pro ? 'admin.php?page=dokan#/vendors/' : 'user-edit.php?user_id=';
+
+        return apply_filters( 'dokan_vendor_profile_url', admin_url( $url_path . $this->get_id() ), $is_pro );
+    }
 }

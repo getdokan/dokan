@@ -4,6 +4,44 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.10.2',
+        'released' => '2024-04-01',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Email placeholder, additional content support and formatting added',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Add requires plugin header for dokan so that required plugin check can be initiated',
+                    'description' => '',
+                ],
+                [
+                    'title'       => '`dokan_commission_log_gateway_fee_to_order_note` filter hook added',
+                    'description' => '',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => 'Vendor profile progress bar doesn\'t update if the address is filled from the vendor registration form',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Color synchronization issue in vendor dashboard order notes',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Product review email cannot be disabled without also disabling Contact Vendor email',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Order Export to CSV on the filtered list not working',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.10.1',
         'released' => '2024-03-18',
         'changes'  => [

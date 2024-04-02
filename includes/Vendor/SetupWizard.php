@@ -532,40 +532,8 @@ class SetupWizard extends DokanSetupWizard {
             return;
         }
 
-        // Check address and add manually values on Profile Completion also increase progress value
-        if ( ! empty( $dokan_settings['profile_completion']['progress_vals']['address_val'] ) ) {
-            $dokan_settings['profile_completion']['address'] = $dokan_settings['profile_completion']['progress_vals']['address_val'];
-        }
-
-        if ( empty( $dokan_settings['address']['street_1'] ) ) {
-            unset( $dokan_settings['profile_completion']['address'] );
-        }
-
-        if ( empty( $dokan_settings['address']['city'] ) && ! empty( $dokan_settings['profile_completion']['address'] ) ) {
-            unset( $dokan_settings['profile_completion']['address'] );
-        }
-
-        if ( empty( $dokan_settings['address']['zip'] ) && ! empty( $dokan_settings['profile_completion']['address'] ) ) {
-            unset( $dokan_settings['profile_completion']['address'] );
-        }
-
-        if ( empty( $dokan_settings['address']['country'] ) && ! empty( $dokan_settings['profile_completion']['address'] ) ) {
-            unset( $dokan_settings['profile_completion']['address'] );
-        } else {
-            $country = $dokan_settings['address']['country'];
-
-            if ( isset( $states[ $country ] ) && is_array( $states[ $country ] ) && empty( $dokan_settings['address']['state'] ) && ! empty( $dokan_settings['profile_completion']['address'] ) ) {
-                unset( $dokan_settings['profile_completion']['address'] );
-            }
-        }
-
-        if ( ! empty( $dokan_settings['profile_completion']['address'] ) ) {
-            $profile_settings = get_user_meta( $this->store_id, 'dokan_profile_settings', true );
-
-            if ( ! empty( $profile_settings['profile_completion']['progress'] ) ) {
-                $dokan_settings['profile_completion']['progress'] = $profile_settings['profile_completion']['progress'] + $dokan_settings['profile_completion']['progress_vals']['address_val'];
-            }
-        }
+        $profile_settings = get_user_meta( $this->store_id, 'dokan_profile_settings', true );
+        $dokan_settings = dokan()->registration->check_and_set_address_profile_completion( $this->store_id, $dokan_settings, $profile_settings );
 
         update_user_meta( $this->store_id, 'dokan_profile_settings', $dokan_settings );
         do_action( 'dokan_store_profile_saved', $this->store_id, $dokan_settings );
