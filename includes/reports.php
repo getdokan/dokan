@@ -1,254 +1,7 @@
 <?php
 
 use WeDevs\Dokan\Cache;
-
-if ( ! function_exists( 'dokan_get_order_report_data' ) ) :
-	/**
-	 * Generate SQL query and fetch the report data based on the arguments passed
-	 *
-	 * This function was cloned from WC_Admin_Report class.
-	 *
-	 * @since 1.0
-	 *
-	 * @global WPDB $wpdb
-	 * @global WP_User $current_user
-	 * @param array $args
-	 * @param string $start_date
-	 * @param string $end_date
-	 * @return obj
-	 */
-	function dokan_get_order_report_data( $args, $start_date, $end_date ) {
-		global $wpdb;
-
-		$current_user = dokan_get_current_user_id();
-
-		$defaults = array(
-			'data'         => array(),
-			'where'        => array(),
-			'where_meta'   => array(),
-			'query_type'   => 'get_row',
-			'group_by'     => '',
-			'order_by'     => '',
-			'limit'        => '',
-			'filter_range' => false,
-			'nocache'      => false,
-			'debug'        => false,
-		);
-
-		$args = wp_parse_args( $args, $defaults );
-
-		extract( $args );
-
-		if ( empty( $data ) ) {
-			return false;
-		}
-
-		$select = array();
-
-		foreach ( $data as $key => $value ) {
-			$distinct = '';
-
-			if ( isset( $value['distinct'] ) ) {
-				$distinct = 'DISTINCT';
-			}
-
-			if ( $value['type'] == 'meta' ) {
-				$get_key = "meta_{$key}.meta_value";
-			} elseif ( $value['type'] == 'post_data' ) {
-				$get_key = "posts.{$key}";
-			} elseif ( $value['type'] == 'order_item_meta' ) {
-				$get_key = "order_item_meta_{$key}.meta_value";
-			} elseif ( $value['type'] == 'order_item' ) {
-				$get_key = "order_items.{$key}";
-			} elseif ( $value['type'] == 'dokan_orders' ) {
-				$get_key = "do.{$key}";
-			}
-
-			if ( $value['function'] ) {
-				$get = "{$value['function']}({$distinct} {$get_key})";
-			} else {
-				$get = "{$distinct} {$get_key}";
-            }
-
-			$select[] = "{$get} as {$value['name']}";
-		}
-
-		$query['select'] = 'SELECT ' . implode( ',', $select );
-		$query['from']   = "FROM {$wpdb->posts} AS posts";
-
-		// Joins
-		$joins         = array();
-		$joins['do']  = "LEFT JOIN {$wpdb->prefix}dokan_orders AS do ON posts.ID = do.order_id";
-
-		foreach ( $data as $key => $value ) {
-			if ( $value['type'] == 'meta' ) {
-				$joins[ "meta_{$key}" ] = "LEFT JOIN {$wpdb->postmeta} AS meta_{$key} ON posts.ID = meta_{$key}.post_id";
-			} elseif ( $value['type'] == 'order_item_meta' ) {
-				$joins['order_items'] = "LEFT JOIN {$wpdb->prefix}woocommerce_order_items AS order_items ON posts.ID = order_items.order_id";
-				$joins[ "order_item_meta_{$key}" ] = "LEFT JOIN {$wpdb->prefix}woocommerce_order_itemmeta AS order_item_meta_{$key} ON order_items.order_item_id = order_item_meta_{$key}.order_item_id";
-			} elseif ( $value['type'] == 'order_item' ) {
-				$joins['order_items'] = "LEFT JOIN {$wpdb->prefix}woocommerce_order_items AS order_items ON posts.ID = order_items.order_id";
-			}
-		}
-
-		if ( ! empty( $where_meta ) ) {
-			foreach ( $where_meta as $value ) {
-				if ( ! is_array( $value ) ) {
-					continue;
-				}
-
-				$key = is_array( $value['meta_key'] ) ? $value['meta_key'][0] : $value['meta_key'];
-
-				if ( isset( $value['type'] ) && $value['type'] == 'order_item_meta' ) {
-					$joins['order_items'] = "LEFT JOIN {$wpdb->prefix}woocommerce_order_items AS order_items ON posts.ID = order_items.order_id";
-					$joins[ "order_item_meta_{$key}" ] = "LEFT JOIN {$wpdb->prefix}woocommerce_order_itemmeta AS order_item_meta_{$key} ON order_items.order_item_id = order_item_meta_{$key}.order_item_id";
-				} else {
-					// If we have a where clause for meta, join the postmeta table
-					$joins[ "meta_{$key}" ] = "LEFT JOIN {$wpdb->postmeta} AS meta_{$key} ON posts.ID = meta_{$key}.post_id";
-				}
-			}
-		}
-
-		$query['join'] = implode( ' ', $joins );
-
-		$query['where'] = "
-        WHERE   posts.post_type     = 'shop_order'
-        AND     posts.post_status   != 'trash'
-        AND     do.seller_id = {$current_user}
-        AND     do.order_status IN ('" . implode( "','", esc_sql( apply_filters( 'woocommerce_reports_order_statuses', array( 'wc-completed', 'wc-processing', 'wc-on-hold' ) ) ) ) . "')
-        ";
-
-		if ( $filter_range && ! empty( $start_date ) && ! empty( $end_date ) ) {
-			$query['where'] .= "
-            AND     DATE(post_date) >= '" . $start_date . "'
-            AND     DATE(post_date) <= '" . $end_date . "'
-        ";
-		}
-
-		foreach ( $data as $key => $value ) {
-			if ( $value['type'] == 'meta' ) {
-				$query['where'] .= " AND meta_{$key}.meta_key = '{$key}'";
-			} elseif ( $value['type'] == 'order_item_meta' ) {
-				$query['where'] .= " AND order_items.order_item_type = '{$value['order_item_type']}'";
-				$query['where'] .= " AND order_item_meta_{$key}.meta_key = '{$key}'";
-			}
-		}
-
-		if ( ! empty( $where_meta ) ) {
-			$relation = isset( $where_meta['relation'] ) ? $where_meta['relation'] : 'AND';
-
-			$query['where'] .= ' AND (';
-
-			foreach ( $where_meta as $index => $value ) {
-				if ( ! is_array( $value ) ) {
-					continue;
-				}
-
-				$key = is_array( $value['meta_key'] ) ? $value['meta_key'][0] : $value['meta_key'];
-
-				if ( strtolower( $value['operator'] ) == 'in' ) {
-					if ( is_array( $value['meta_value'] ) ) {
-						$value['meta_value'] = implode( "','", $value['meta_value'] );
-					}
-					if ( ! empty( $value['meta_value'] ) ) {
-						$where_value = "IN ('{$value['meta_value']}')";
-					}
-				} else {
-					$where_value = "{$value['operator']} '{$value['meta_value']}'";
-				}
-
-				if ( ! empty( $where_value ) ) {
-					if ( $index > 0 ) {
-						$query['where'] .= ' ' . $relation;
-					}
-
-					if ( isset( $value['type'] ) && $value['type'] == 'order_item_meta' ) {
-						if ( is_array( $value['meta_key'] ) ) {
-							$query['where'] .= " ( order_item_meta_{$key}.meta_key   IN ('" . implode( "','", $value['meta_key'] ) . "')";
-						} else {
-							$query['where'] .= " ( order_item_meta_{$key}.meta_key   = '{$value['meta_key']}'";
-                        }
-
-						$query['where'] .= " AND order_item_meta_{$key}.meta_value {$where_value} )";
-					} else {
-						if ( is_array( $value['meta_key'] ) ) {
-							$query['where'] .= " ( meta_{$key}.meta_key   IN ('" . implode( "','", $value['meta_key'] ) . "')";
-						} else {
-							$query['where'] .= " ( meta_{$key}.meta_key   = '{$value['meta_key']}'";
-                        }
-
-						$query['where'] .= " AND meta_{$key}.meta_value {$where_value} )";
-					}
-				}
-			}
-
-			$query['where'] .= ')';
-		}
-
-		if ( ! empty( $where ) ) {
-			foreach ( $where as $value ) {
-				if ( strtolower( $value['operator'] ) == 'in' ) {
-					if ( is_array( $value['value'] ) ) {
-						$value['value'] = implode( "','", $value['value'] );
-					}
-					if ( ! empty( $value['value'] ) ) {
-						$where_value = "IN ('{$value['value']}')";
-					}
-				} else {
-					$where_value = "{$value['operator']} '{$value['value']}'";
-				}
-
-				if ( ! empty( $where_value ) ) {
-					$query['where'] .= " AND {$value['key']} {$where_value}";
-				}
-			}
-		}
-
-		if ( $group_by ) {
-			$query['group_by'] = "GROUP BY {$group_by}";
-		}
-
-		if ( $order_by ) {
-			$query['order_by'] = "ORDER BY {$order_by}";
-		}
-
-		if ( $limit ) {
-			$query['limit'] = "LIMIT {$limit}";
-		}
-
-		$query      = apply_filters( 'dokan_reports_get_order_report_query', $query );
-		$query      = implode( ' ', $query );
-		$query_hash = md5( $query_type . $query );
-
-		if ( $debug ) {
-			error_log( sprintf( '<pre>%s</pre>', print_r( $query, true ) ) );
-		}
-
-        $cache_group = "report_data_seller_{$current_user}";
-        $cache_key   = 'wc_report_' . $query_hash;
-
-        $result = Cache::get_transient( $cache_key, $cache_group );
-		if ( $debug || $nocache || ( false === $result ) ) {
-			$result = apply_filters( 'dokan_reports_get_order_report_data', $wpdb->$query_type( $query ), $data );
-
-			if ( $filter_range ) {
-				if ( $end_date == date( 'Y-m-d', current_time( 'timestamp' ) ) ) {
-					$expiration = 60 * 60 * 1; // 1 hour
-				} else {
-					$expiration = 60 * 60 * 24; // 24 hour
-				}
-			} else {
-				$expiration = 60 * 60 * 24; // 24 hour
-			}
-
-			Cache::set_transient( $cache_key, $result, $cache_group, $expiration );
-		}
-
-		return $result;
-	}
-
-endif;
-
+use WeDevs\Dokan\Utilities\OrderUtil;
 
 if ( ! function_exists( 'dokan_dashboard_sales_overview' ) ) :
 
@@ -299,7 +52,14 @@ if ( ! function_exists( 'dokan_sales_overview_chart_data' ) ) :
 		}
 
 		// Get orders and dates in range - we want the SUM of order totals, COUNT of order items, COUNT of orders, and the date
-		$orders = dokan_get_order_report_data(
+        $report = new \WeDevs\Dokan\DokanAdminReport();
+        $report->start_date = $start_date;
+        $report->end_date = $end_date;
+
+        $is_hpos_enabled = OrderUtil::is_hpos_enabled();
+        $date_col        = $is_hpos_enabled ? 'date_created_gmt' : 'post_date';
+
+		$orders = $report->get_order_report_data(
             array(
 				'data' => array(
 					'_order_total' => array(
@@ -313,18 +73,18 @@ if ( ! function_exists( 'dokan_sales_overview_chart_data' ) ) :
 						'name'     => 'total_orders',
 						'distinct' => true,
 					),
-					'post_date' => array(
+                    $date_col => [ // before it was 'post_date'. we need to update the start and end date to gmt date.
 						'type'     => 'post_data',
 						'function' => '',
 						'name'     => 'post_date',
-					),
+					],
 				),
-				'group_by'     => $group_by_query,
+				'group_by'     => 'post_date',
 				'order_by'     => 'post_date ASC',
 				'query_type'   => 'get_results',
 				'filter_range' => true,
 				'debug' => false,
-            ), $start_date, $end_date
+            ), $is_hpos_enabled
         );
 
 		// Prepare data for report
