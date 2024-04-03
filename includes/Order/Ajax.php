@@ -50,14 +50,13 @@ class Ajax {
         $args = [
             'status'       => 'publish',
             'downloadable' => true,
-            'author'       => get_current_user_id(),
+            'author'       => dokan_get_current_user_id(),
             'page'         => $page,
             'limit'        => $limit,
             's'            => $term,
         ];
 
-        $ids             = wc_get_products( $args );
-        $product_objects = array_filter( array_map( 'wc_get_product', $ids ), 'wc_products_array_filter_readable' );
+        $product_objects = wc_get_products( $args );
 
         $products = array();
         foreach ( $product_objects as $product_object ) {

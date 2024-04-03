@@ -942,12 +942,12 @@ class Assets {
      */
     public function conditional_localized_args( $default_args ) {
         if ( dokan_is_seller_dashboard()
-             || ( get_query_var( 'edit' ) && is_singular( 'product' ) )
-             || dokan_is_store_page()
-             || is_account_page()
-             || is_product()
-             || dokan_is_store_listing()
-             || apply_filters( 'dokan_force_load_extra_args', false )
+            || ( get_query_var( 'edit' ) && is_singular( 'product' ) )
+            || dokan_is_store_page()
+            || is_account_page()
+            || is_product()
+            || dokan_is_store_listing()
+            || apply_filters( 'dokan_force_load_extra_args', false )
         ) {
             $general_settings = get_option( 'dokan_general', [] );
 

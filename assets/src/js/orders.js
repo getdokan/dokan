@@ -178,9 +178,7 @@ jQuery(function($) {
             processResults: function( data ) {
                 var options = [];
                 if ( data ) {
-                    console.log(data)
                     $.each( data, function( index, text ) {
-                        console.log(index, text)
                         options.push( { id: index, text: text  } );
                     });
                 }
