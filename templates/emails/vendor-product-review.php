@@ -36,7 +36,7 @@ do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
     <hr>
     <p><?php echo wp_kses_post( $data['{review_text}'] ); ?></p>
     <hr>
-    <p><?php esc_html_e( 'You can view the review and reply to it by visiting the following link:', 'dokan-lite' ); ?></p>
+    <p><?php esc_html_e( 'You can view the review by visiting the following link:', 'dokan-lite' ); ?></p>
     <p>
         <?php
         printf(

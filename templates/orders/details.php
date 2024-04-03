@@ -313,7 +313,7 @@ $hide_customer_info = dokan_get_option( 'hide_customer_info', 'dokan_selling', '
                                         <input type="hidden" name="delete-note-security" id="delete-note-security" value="<?php echo esc_attr( wp_create_nonce( 'delete-order-note' ) ); ?>">
                                         <input type="hidden" name="post_id" value="<?php echo esc_attr( $order->get_id() ); ?>">
                                         <input type="hidden" name="action" value="dokan_add_order_note">
-                                        <input type="submit" name="add_order_note" class="add_note btn btn-sm btn-theme" value="<?php esc_attr_e( 'Add Note', 'dokan-lite' ); ?>">
+                                        <input type="submit" name="add_order_note" class="add_note btn btn-sm btn-theme dokan-btn-theme" value="<?php esc_attr_e( 'Add Note', 'dokan-lite' ); ?>">
                                     </div>
                                 </form>
                             <?php endif; ?>
