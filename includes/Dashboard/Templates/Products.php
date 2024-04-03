@@ -448,6 +448,22 @@ class Products {
                 continue;
             }
 
+            // Skip the "Stock Status" field if "Enable Product Stock Management" field enabled.
+            if ( 'yes' === $_POST['_manage_stock'] && ProductFormElements::STOCK_STATUS === $field->get_id() ) {
+                continue;
+            }
+
+            // Skip the "Stock Qty", "Low Stock Threshold" and "Allow Backorders" fields if "Enable Product Stock Management" field disabled.
+            $manage_stock_fields = [ ProductFormElements::STOCK_QUANTITY, ProductFormElements::LOW_STOCK_AMOUNT, ProductFormElements::BACKORDERS ];
+            if ( 'no' === $_POST['_manage_stock'] && in_array( $field->get_id(), $manage_stock_fields ) ) {
+                continue;
+            }
+
+            // Skip the "Minimum Quantity" and "Discount %" fields if "Enable Bulk Discount" field disabled.
+            if ( 'no' === $_POST['_is_lot_discount'] && ( '_lot_discount_quantity' === $field->get_id() || '_lot_discount_amount' === $field->get_id() ) ) {
+                continue;
+            }
+
             // check if field is required
             if ( $field->is_required() && empty( $_POST[ $field_name ] ) ) {
                 self::$errors[ $field->get_id() ] = ! empty( $field->get_error_message() )
