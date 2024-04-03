@@ -16,7 +16,7 @@ do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
 
 <p><?php esc_html_e( 'Hello,', 'dokan-lite' ); ?></p>
 
-<p><?php esc_html_e( 'A new product is submitted to your site and is pending review', 'dokan-lite' ); ?> <a href="<?php echo esc_url( $data['site_url'] ); ?>" ><?php echo esc_html( $data['site_name'] ); ?></a> </p>
+<p><?php esc_html_e( 'A new product is submitted to your site and is pending review', 'dokan-lite' ); ?> <a href="<?php echo esc_url( $data['{site_url}'] ); ?>" ><?php echo esc_html( $data['{site_title}'] ); ?></a> </p>
 <p><?php esc_html_e( 'Summary of the product:', 'dokan-lite' ); ?></p>
 <hr>
 <ul>
@@ -24,30 +24,35 @@ do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
         <strong>
             <?php esc_html_e( 'Title :', 'dokan-lite' ); ?>
         </strong>
-        <?php printf( '<a href="%s">%s</a>', esc_url( $data['product_link'] ), esc_html( $data['product-title'] ) ); ?>
+        <?php printf( '<a href="%s">%s</a>', esc_url( $data['{product_link}'] ), esc_html( $data['{product_title}'] ) ); ?>
     </li>
     <li>
         <strong>
             <?php esc_html_e( 'Price :', 'dokan-lite' ); ?>
         </strong>
-        <?php echo wp_kses_post( wc_price( $data['price'] ) ); ?>
+        <?php echo esc_html( $data['{price}'] ); ?>
     </li>
     <li>
         <strong>
             <?php esc_html_e( 'Vendor :', 'dokan-lite' ); ?>
         </strong>
-        <?php printf( '<a href="%s">%s</a>', esc_url( $data['seller_url'] ), esc_html( $data['seller-name'] ) ); ?>
+        <?php printf( '<a href="%s">%s</a>', esc_url( $data['{seller_url}'] ), esc_html( $data['{store_name}'] ) ); ?>
     </li>
     <li>
         <strong>
             <?php esc_html_e( 'Category :', 'dokan-lite' ); ?>
         </strong>
-        <?php echo esc_html( $data['category'] ); ?>
+        <?php echo esc_html( $data['{category}'] ); ?>
     </li>
 
 </ul>
 <p><?php esc_html_e( 'The product is currently in "pending" status.', 'dokan-lite' ); ?></p>
 
 <?php
-
+/**
+ * Show user-defined additional content - this is set in each email's settings.
+ */
+if ( $additional_content ) {
+    echo wp_kses_post( wpautop( wptexturize( $additional_content ) ) );
+}
 do_action( 'woocommerce_email_footer', $email );

@@ -17,7 +17,7 @@ echo esc_html( wp_strip_all_tags( $email_heading ) );
 echo "\n=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=\n\n";
 
 // translators: 1) user name
-echo sprintf( esc_html__( 'Hi %s', 'dokan-lite' ), esc_html( $data['username'] ) );
+echo sprintf( esc_html__( 'Hi %s', 'dokan-lite' ), esc_html( $data['{store_name}'] ) );
 echo " \n";
 
 esc_attr_e( 'Your withdraw request was cancelled', 'dokan-lite' );
@@ -27,17 +27,17 @@ esc_attr_e( 'You sent a withdraw request of:', 'dokan-lite' );
 echo " \n";
 
 // translators: 1) withdraw amount
-echo sprintf( esc_html__( 'Amount : %s', 'dokan-lite' ), esc_html( $data['amount'] ) );
+echo sprintf( esc_html__( 'Amount : %s', 'dokan-lite' ), esc_html( $data['{amount}'] ) );
 echo " \n";
 
 // translators: 1) withdraw method
-echo sprintf( esc_html__( 'Method : %s', 'dokan-lite' ), esc_html( $data['method'] ) );
+echo sprintf( esc_html__( 'Method : %s', 'dokan-lite' ), esc_html( $data['{method}'] ) );
 echo " \n";
 
 esc_attr_e( 'Here\'s the reason, why : ', 'dokan-lite' );
 echo " \n";
 
-echo esc_html( $data['note'] );
+echo esc_html( $data['{note}'] );
 echo " \n";
 
 echo "\n\n----------------------------------------\n\n";
