@@ -362,12 +362,6 @@ class Orders {
 
         if ( $pending_count ) {
             $menu['orders']['counts'] = $pending_count;
-            $menu['orders']['title']  = sprintf(
-                // translators: 1: Order Menu title 2: Pending Order count.
-                __( '%1$s (%2$s)', 'dokan-lite' ),
-                $menu['orders']['title'],
-                number_format_i18n( $pending_count )
-            );
         }
 
         return $menu;
