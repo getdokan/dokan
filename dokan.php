@@ -7,6 +7,7 @@
  * Author: weDevs
  * Author URI: https://dokan.co/
  * Text Domain: dokan-lite
+ * Requires Plugins: woocommerce
  * WC requires at least: 5.0.0
  * WC tested up to: 8.6.1
  * Domain Path: /languages/
@@ -56,6 +57,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @property WeDevs\Dokan\BackgroundProcess\Manager $bg_process Instance of WeDevs\Dokan\BackgroundProcess\Manager class
  * @property WeDevs\Dokan\Withdraw\Manager $withdraw Instance of WeDevs\Dokan\Withdraw\Manager class
  * @property WeDevs\Dokan\Frontend\Frontend $frontend_manager Instance of \WeDevs\Dokan\Frontend\Frontend class
+ * @property WeDevs\Dokan\Registration $registration Instance of WeDevs\Dokan\Registration class
  */
 final class WeDevs_Dokan {
 
