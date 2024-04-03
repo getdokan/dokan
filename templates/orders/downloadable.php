@@ -35,7 +35,7 @@ global $wpdb;
                 // Show file title instead of count if set.
                 $file = $product->get_file( $download->get_download_id() );
                 // translators: file name.
-                $file_count = isset( $file['name'] ) ? $file['name'] : sprintf( __( 'File %d', 'dokan-lite' ), $file_counter );
+                $file_count = number_format_i18n( $file_counter );
 
                 include 'order-download-permission-html.php';
 
