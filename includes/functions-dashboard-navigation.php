@@ -225,7 +225,7 @@ function dokan_dashboard_nav( $active_menu = '' ) {
                 /**
                  * Notification count filter
                  *
-                 * @since DOKAN_LITE_SINCE
+                 * @since DOKAN_SINCE
                  *
                  * @param int $notification_counts Number of notifications
                  * @param string $filtered_key Filtered key by `dokan_dashboard_nav_menu_key` hook
@@ -235,7 +235,12 @@ function dokan_dashboard_nav( $active_menu = '' ) {
                     'dokan_vendor_dashboard_menu_notification_count',
                     $notification_counts, $filtered_key, $key
                 );
-                $title .= ' (' . $notification_counts . ')';
+                // translators: 1) Title 2) Notification Count
+                $title = sprintf(
+                    __( '%1$s (%2$s)', 'dokan-lite' ),
+                    $title,
+                    number_format_i18n( $notification_counts )
+                );
             }
         } elseif ( ! empty( $item['title'] ) ) {
             $title = $item['title'];
@@ -257,7 +262,7 @@ function dokan_dashboard_nav( $active_menu = '' ) {
                 /**
                  * Filters a menu key according to slug if needed.
                  *
-                 * @since DOKAN_PRO_SINCE
+                 * @since DOKAN_SINCE
                  *
                  * @param string $submenu_key
                  * @param string $menu_key
@@ -274,7 +279,7 @@ function dokan_dashboard_nav( $active_menu = '' ) {
                         /**
                          * Notification count filter for settings submenu
                          *
-                         * @since DOKAN_LITE_SINCE
+                         * @since DOKAN_SINCE
                          *
                          * @param int $notification_counts Number of notifications
                          * @param string $filtered_subkey Filtered key by `dokan_dashboard_nav_menu_key` hook
@@ -284,7 +289,12 @@ function dokan_dashboard_nav( $active_menu = '' ) {
                             'dokan_vendor_dashboard_settings_menu_notification_count',
                             $notification_counts, $filtered_subkey, $key
                         );
-                        $title .= ' (' . $notification_counts . ')';
+                        // translators: 1) Title 2) Notification Count
+                        $submenu_title = sprintf(
+                            __( '%1$s (%2$s)', 'dokan-lite' ),
+                            $submenu_title,
+                            number_format_i18n( $notification_counts )
+                        );
                     }
                 } elseif ( ! empty( $sub['title'] ) ) {
                     $submenu_title = $sub['title'];
