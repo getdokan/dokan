@@ -3,20 +3,20 @@ const { SHA, PR_NUMBER, SYSTEM_INFO, API_TEST_RESULT, E2E_TEST_RESULT, API_COVER
 
 const replace = obj => Object.keys(obj).forEach(key => (typeof obj[key] == 'object' ? replace(obj[key]) : (obj[key] = String(obj[key]))));
 const readFile = filePath => (fs.existsSync(filePath) ? JSON.parse(fs.readFileSync(filePath, 'utf8')) : false);
-const getTestResult = (suiteName, filePath) => {
+const getTestResult = (suiteName, filePath, coverage) => {
     const testResult = readFile(filePath);
     if (!testResult) {
         return [];
     }
     replace(testResult);
-    const testSummary = [suiteName, testResult.total_tests, testResult.passed, testResult.failed, testResult.flaky, testResult.skipped, testResult.suite_duration_formatted];
+    const testSummary = [suiteName, testResult.total_tests, testResult.passed, testResult.failed, testResult.flaky, testResult.skipped, testResult.suite_duration_formatted, coverage];
     return testSummary;
 };
 
 const getCoverageReport = filePath => {
     const coverageReport = readFile(filePath);
     if (!coverageReport) {
-        return [];
+        return;
     }
     return String(coverageReport.coverage);
 };
@@ -32,12 +32,12 @@ const addSummaryHeadingAndTable = core => {
         { data: 'Duration  :alarm_clock:', header: true },
         { data: 'Coverage  :checkered_flag:', header: true },
     ];
-    const apiTesResult = getTestResult('API Tests', API_TEST_RESULT);
-    const e2eTesResult = getTestResult('E2E Tests', E2E_TEST_RESULT);
-    apiTesResult.push(getCoverageReport(API_COVERAGE));
-    e2eTesResult.push('-');
+    const apiTestResult = getTestResult('API Tests', API_TEST_RESULT, getCoverageReport(API_COVERAGE));
+    const e2eTestResult = getTestResult('E2E Tests', E2E_TEST_RESULT, '-');
     const commit_sha = SHA ? `Commit SHA: ${SHA}` : '';
-    core.summary.addHeading('Tests Summary').addRaw(commit_sha).addBreak().addBreak().addTable([tableHeader, apiTesResult, e2eTesResult]);
+    if (apiTestResult || e2eTestResult) {
+        core.summary.addHeading('Tests Summary').addRaw(commit_sha).addBreak().addBreak().addTable([tableHeader, apiTestResult, e2eTestResult]);
+    }
 };
 
 const addList = core => {

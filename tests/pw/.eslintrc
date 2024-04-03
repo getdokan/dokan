@@ -24,7 +24,8 @@
         // playwright rules
         "playwright/expect-expect": "off",
         "playwright/no-skipped-test": "off",
-        "playwright/no-conditional-in-test": "off"
+        "playwright/no-conditional-in-test": "off",
+        "playwright/no-standalone-expect": "off"
         // custom rules
         // "no-restricted-syntax": [
         //     "error",

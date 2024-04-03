@@ -164,7 +164,7 @@ export class BookingPage extends VendorPage {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.booking);
         await this.clickAndWaitForLoadState(bookingProductsVendor.addNewBookingProduct);
         await this.updateBookingProductFields(product);
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.productBooking, bookingProductsVendor.booking.saveProduct, 302);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.addBookingProduct, bookingProductsVendor.booking.saveProduct, 302);
         await this.toContainText(selector.vendor.product.updatedSuccessMessage, product.saveSuccessMessage);
     }
 

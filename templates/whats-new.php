@@ -4,6 +4,61 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.10.2',
+        'released' => '2024-04-01',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Email placeholder, additional content support and formatting added',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Add requires plugin header for dokan so that required plugin check can be initiated',
+                    'description' => '',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => 'Vendor profile progress bar doesn\'t update if the address is filled from the vendor registration form',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Color synchronization issue in vendor dashboard order notes',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Product review email cannot be disabled without also disabling Contact Vendor email',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Order Export to CSV on the filtered list not working',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.10.1',
+        'released' => '2024-03-18',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Update Categories Easily from Vendor Edit Page',
+                    'description' => 'In earlier versions of the Dokan plugin for WordPress and WooCommerce, editing store categories was limited to the vendor details view page. This approach created confusion and made it difficult for users to manage their store categories effectively. However, with the latest update, a significant improvement has been introduced.
+                    Now, you can conveniently edit and update your store categories directly from the vendor edit page in the admin dashboard. This enhancement provides a more intuitive and user-friendly experience, allowing you to efficiently manage and organize your store categories in one central location.',
+                ],
+                [
+                    'title'       => 'Threads social media platform added as a Store Socials Option. Thanks `@fisher2470`',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Vendor Dashboard settings submenu translation support added',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.10.0',
         'released' => '2024-03-04',
         'changes'  => [

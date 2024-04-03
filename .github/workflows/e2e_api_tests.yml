@@ -3,7 +3,7 @@ name: E2E_API Tests
 on:
     # workflow will run daily at 8:00 AM BDT (2:00 AM UTC)
     schedule:
-        - cron: '0 2 * * *'
+        - cron: 0 2 * * *
     # workflow will trigger on pull request
     pull_request:
         branches: [develop]
@@ -73,8 +73,8 @@ jobs:
               if: success()
               uses: actions/setup-node@v4
               with:
-                  node-version: '16'
-                  cache: 'npm'
+                  node-version: 16
+                  cache: npm
 
             - name: Composer install and build (Dokan-lite)
               if: success()
@@ -84,7 +84,7 @@ jobs:
             - name: Npm install and build (Dokan-lite)
               if: success()
               run: |
-                  npm ci 
+                  npm ci || npm i
                   npm run build
 
             # Install test dependencies
@@ -92,7 +92,7 @@ jobs:
               if: success()
               run: |
                   cd tests/pw 
-                  npm ci
+                  npm ci || npm i
 
             # Create wp debuglog file
             - name: Create wp debuglog file
@@ -115,7 +115,7 @@ jobs:
               if: success()
               run: |
                   cd tests/pw
-                  echo "DB_PORT=$(docker ps -f ancestor='mariadb' -f name='tests-mysql' --format='{{.Ports}}' | sed -E 's/.*:(.*)->.*/\1/')" >> $GITHUB_ENV
+                  echo "DB_PORT=$(docker ps -f ancestor='mariadb:lts' -f name='tests-mysql' --format='{{.Ports}}' | sed -E 's/.*:(.*)->.*/\1/')" >> $GITHUB_ENV
 
             # db port
             - name: DB PORT
@@ -176,7 +176,7 @@ jobs:
             # Run e2e tests
             - name: 🧪 Running the e2e tests
               id: e2e-test
-              if: success() || ( success() && (github.event_name == 'workflow_dispatch' && (github.event.inputs.testsuite == 'E2E' || github.event.inputs.testsuite == 'All')))
+              if: success() && (github.event_name != 'workflow_dispatch' || ( github.event_name == 'workflow_dispatch' && (github.event.inputs.testsuite == 'E2E' || github.event.inputs.testsuite == 'All')))
               timeout-minutes: 40
               run: |
                   cd tests/pw 
@@ -185,7 +185,7 @@ jobs:
             # Run API tests
             - name: 🧪 Running the api tests
               id: api-test
-              if: always() && steps.db-port.outcome == 'success' || ( always() && steps.db-port.outcome == 'success' && (github.event_name == 'workflow_dispatch' && (github.event.inputs.testsuite == 'API' || github.event.inputs.testsuite == 'All')))
+              if: steps.db-port.outcome == 'success' && ( github.event_name != 'workflow_dispatch'  || ( github.event_name == 'workflow_dispatch' && (github.event.inputs.testsuite == 'API' || github.event.inputs.testsuite == 'All')))
               timeout-minutes: 5
               run: |
                   cd tests/pw 
@@ -225,7 +225,7 @@ jobs:
 
             # Backup Database
             - name: Backup Database
-              if: success()
+              if: steps.db-port.outcome == 'success'
               run: |
                   cd tests/pw
                   npm run wp-env run tests-cli wp db export wp-data/db.sql

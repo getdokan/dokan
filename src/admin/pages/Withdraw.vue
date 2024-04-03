@@ -11,7 +11,7 @@
                 @close="showModal = false"
             >
                 <template slot="body">
-                    <textarea v-model="editing.note" rows="3"></textarea>
+                    <textarea class='p-2' v-model="editing.note" rows="3"></textarea>
                 </template>
 
                 <template slot="footer">
