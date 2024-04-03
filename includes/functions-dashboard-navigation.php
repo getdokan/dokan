@@ -225,29 +225,6 @@ function dokan_dashboard_nav( $active_menu = '' ) {
             $title = $item['title'];
         }
 
-        if ( ! empty( $item['counts'] ) ) {
-            $notification_counts = (int) $item['counts'];
-            /**
-             * Notification count filter
-             *
-             * @since DOKAN_SINCE
-             *
-             * @param int $notification_counts Number of notifications
-             * @param string $filtered_key Filtered key by `dokan_dashboard_nav_menu_key` hook
-             * @param string $key Key before filter
-             */
-            $notification_counts = apply_filters(
-                'dokan_vendor_dashboard_menu_notification_count',
-                $notification_counts, $filtered_key, $key
-            );
-            $title = sprintf(
-                // translators: 1) Title 2) Notification Count
-                __( '%1$s (%2$s)', 'dokan-lite' ),
-                $title,
-                number_format_i18n( $notification_counts )
-            );
-        }
-
         $menu_slug = $filtered_key;
         $submenu   = '';
 
@@ -281,35 +258,12 @@ function dokan_dashboard_nav( $active_menu = '' ) {
                     $submenu_title = $sub['title'];
                 }
 
-                if ( ! empty( $item['counts'] ) ) {
-                    $notification_counts = (int) $item['counts'];
-                    /**
-                     * Notification count filter for settings submenu
-                     *
-                     * @since DOKAN_SINCE
-                     *
-                     * @param int $notification_counts Number of notifications
-                     * @param string $filtered_subkey Filtered key by `dokan_dashboard_nav_menu_key` hook
-                     * @param string $key Key before filter
-                     */
-                    $notification_counts = apply_filters(
-                        'dokan_vendor_dashboard_settings_menu_notification_count',
-                        $notification_counts, $filtered_subkey, $key
-                    );
-                    $submenu_title = sprintf(
-                        // translators: 1) Title 2) Notification Count
-                        __( '%1$s (%2$s)', 'dokan-lite' ),
-                        $submenu_title,
-                        number_format_i18n( $notification_counts )
-                    );
-                }
-
                 $submenu .= sprintf(
                     '<li class="submenu-item %s"><a href="%s" class="submenu-link">%s %s</a></li>',
                     $submenu_class,
                     isset( $sub['url'] ) ? $sub['url'] : dokan_get_navigation_url( "{$key}/{$sub_key}" ),
                     isset( $sub['icon'] ) ? $sub['icon'] : '<i class="fab fa-staylinked"></i>',
-                    $submenu_title
+                    apply_filters( 'dokan_vendor_dashboard_menu_title', $submenu_title, $sub )
                 );
 
                 $subkey_slugs[] = $filtered_subkey;
@@ -328,7 +282,7 @@ function dokan_dashboard_nav( $active_menu = '' ) {
             $class,
             isset( $item['url'] ) ? $item['url'] : dokan_get_navigation_url( $menu_slug ),
             isset( $item['icon'] ) ? $item['icon'] : '<i class="fab fa-staylinked"></i>',
-            $title,
+            apply_filters( 'dokan_vendor_dashboard_menu_title', $title, $item ),
             $submenu
         );
     }
