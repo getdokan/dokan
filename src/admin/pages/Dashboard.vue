@@ -10,7 +10,7 @@
                 <postbox :title="__( 'At a Glance', 'dokan-lite' )" extraClass="dokan-status">
                     <div class="dokan-status" v-if="overview !== null">
                         <ul>
-                            <li class="sale">
+                            <li class="sale !mt-[13px]">
                                 <div class="dashicons dashicons-chart-bar"></div>
                                 <router-link :to="hasPro ? { name: 'Reports' } : ''">
                                     <strong>
@@ -21,7 +21,7 @@
                                     </div>
                                 </router-link>
                             </li>
-                            <li class="commission">
+                            <li class="commission !mt-[13px]">
                                 <div class="dashicons dashicons-chart-pie"></div>
                                 <router-link :to="hasPro ? {name: 'Reports'} : ''">
                                     <strong>
@@ -84,7 +84,7 @@
                                 <div class="loading" v-if="subscribe.loading">
                                     <loading></loading>
                                 </div>
-                                <h3>{{ __( 'Stay up-to-date', 'dokan-lite' ) }}</h3>
+                                <h3 class='text-xl'>{{ __( 'Stay up-to-date', 'dokan-lite' ) }}</h3>
                                 <p>
                                     {{ __( 'We\'re constantly developing new features, stay up-to-date by subscribing to our newsletter.', 'dokan-lite' ) }}
                                 </p>

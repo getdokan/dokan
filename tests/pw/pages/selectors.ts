@@ -1129,7 +1129,7 @@ export const selector = {
             announcements: {
                 announcementText: '.dokan-announcement-wrapper h1',
 
-                addNewAnnouncement: '//a[normalize-space()="Add Announcement"]',
+                addNewAnnouncement: '//button[normalize-space()="Add Announcement"]',
 
                 // Nav Tabs
                 navTabs: {
@@ -1175,8 +1175,8 @@ export const selector = {
                     contentIframe: '#postdivrich iframe',
                     contentHtmlBody: '#tinymce',
                     sendAnnouncementTo: '#announcement_sender_type', // all_seller, selected_seller, enabled_seller, disabled_seller, featured_seller
-                    saveAsDraft: '.draft-btn',
-                    publish: '.publish-btn',
+                    saveAsDraft: 'input.draft-btn',
+                    publish: 'input.publish-btn',
 
                     schedule: {
                         addSchedule: 'span#timestamp a',
@@ -1583,7 +1583,7 @@ export const selector = {
                         editQuestion: '(//button[normalize-space()="Edit"])[1]',
                         questionInput: 'textarea#comment.block',
                         saveQuestion: '(//button[normalize-space()="Save"])[1]',
-                        questionText: 'div.break-words',
+                        questionText: '//div[ contains(@class, "break-words") and not(contains(@class, "prose")) ]',
                     },
 
                     status: {
@@ -1855,6 +1855,7 @@ export const selector = {
                     reverseWithdrawal: '//div[@class="nav-title" and contains(text(),"Reverse Withdrawal")]',
                     pageSettings: '//div[@class="nav-title" and contains(text(),"Page Settings")]',
                     appearance: '//div[@class="nav-title" and contains(text(),"Appearance")]',
+                    menuManager: '//div[@class="nav-title" and contains(text(),"Menu Manager")]',
                     privacyPolicy: '//div[@class="nav-title" and contains(text(),"Privacy Policy")]',
                     colors: '//div[@class="nav-title" and contains(text(),"Colors")]',
                     liveSearch: '//div[@class="nav-title" and contains(text(),"Live Search")]',
@@ -1883,12 +1884,12 @@ export const selector = {
                     // Site settings
                     adminAreaAccess: '.admin_access .switch',
 
-                    vendorStoreUrl: '#dokan_general\\[custom_store_url\\]', // todo:  for CSS selector [ ] needs escaped with double back slash \\
+                    vendorStoreUrl: '#dokan_general\\[custom_store_url\\]',
                     vendorSetupWizardLogo: '#dokan_general\\[setup_wizard_logo_url\\]',
                     disableWelcomeWizard: '#dokan_general\\[disable_welcome_wizard\\]',
                     setupWizardMessageIframe: 'iframe',
                     setupWizardMessageHtmlBody: '#tinymce',
-                    sellingProductTypes: (type: string) => `//label[@for='dokan_general[global_digital_mode][${type}]']`,
+                    sellingProductTypes: (type: string) => `//label[contains(@for,'sell_${type}-global_digital_mode')]`,
                     logShipStationApiRequest: '#dokan_general\\[enable_shipstation_logging\\]',
                     dataClear: '#dokan_general\\[data_clear_on_uninstall\\]',
                     confirmDataClear: '.swal2-confirm',
@@ -1899,7 +1900,7 @@ export const selector = {
                     storeProductPerPage: '#dokan_general\\[store_products_per_page\\]',
                     enableTermsAndCondition: '.enable_tc_on_reg .switch',
                     enableSingSellerMode: '#dokan_general\\[enable_single_seller_mode\\]',
-                    storCategory: (category: string) => `//label[@for='dokan_general[store_category_type][${category}]']`,
+                    storCategory: (category: string) => `//label[contains(@for,'${category}-store_category_type')]`,
 
                     // product page settings
                     showVendorInfo: '.show_vendor_info .switch',
@@ -1913,9 +1914,9 @@ export const selector = {
                     // Commission
                     commissionType: '#dokan_selling\\[commission_type\\]',
                     adminCommission: '#dokan_selling\\[admin_percentage\\]',
-                    shippingFeeRecipient: (feeReceiver: string) => `//label[@for='dokan_selling[shipping_fee_recipient][${feeReceiver}]']`,
-                    productTaxFeeRecipient: (feeReceiver: string) => `//label[@for='dokan_selling[tax_fee_recipient][${feeReceiver}]']`,
-                    shippingTaxFeeRecipient: (feeReceiver: string) => `//label[@for='dokan_selling[shipping_tax_fee_recipient][${feeReceiver}]']`,
+                    shippingFeeRecipient: (feeReceiver: string) => `//label[contains(@for,'${feeReceiver}-shipping_fee_recipient')]`,
+                    productTaxFeeRecipient: (feeReceiver: string) => `//label[contains(@for,'${feeReceiver}-tax_fee_recipient')]`,
+                    shippingTaxFeeRecipient: (feeReceiver: string) => `//label[contains(@for,'${feeReceiver}-shipping_tax_fee_recipient')]`,
                     processRefundViaAPI: '#dokan_selling\\[automatic_process_api_refund\\]',
 
                     // Vendor Capability
@@ -1924,11 +1925,11 @@ export const selector = {
                     disableProductPopup: '.disable_product_popup .switch',
                     orderStatusChange: '.order_status_change .switch',
                     selectAnyCategory: '.dokan_any_category_selection .switch',
-                    newProductStatus: (status: string) => `//label[@for='dokan_selling[product_status][${status}]']`,
+                    newProductStatus: (status: string) => `//label[contains(@for,'${status}-product_status')]`,
                     duplicateProduct: '.vendor_duplicate_product .switch',
                     editedProductStatus: '.edited_product_status .switch',
                     productMailNotification: '.product_add_mail .switch',
-                    productCategorySelection: (category: string) => `//label[@for='dokan_selling[product_category_style][${category}]']`,
+                    productCategorySelection: (category: string) => `//label[contains(@for,'${category}-product_category_style')]`,
                     vendorsCanCreateTags: '.product_vendors_can_create_tags .switch',
                     orderDiscount: '//div[contains(text(),"Order Discount")]//label[@class="switch tips"]',
                     productDiscount: '//div[contains(text(),"Product Quantity Discount")]//label[@class="switch tips"]',
@@ -2012,10 +2013,10 @@ export const selector = {
                 // Pages
                 page: {
                     // Page Settings
-                    dashboard: '#dokan_pages\\[dashboard\\]',
-                    myOrders: '#dokan_pages\\[my_orders\\]',
-                    storeListing: '#dokan_pages\\[store_listing\\]',
-                    termsAndConditions: '#dokan_pages\\[reg_tc_page\\]',
+                    dashboard: 'select#dokan_pages\\[dashboard\\]',
+                    myOrders: 'select#dokan_pages\\[my_orders\\]',
+                    storeListing: 'select#dokan_pages\\[store_listing\\]',
+                    termsAndConditions: 'select#dokan_pages\\[reg_tc_page\\]',
                     pageSaveChanges: '#submit',
                 },
 
@@ -2023,8 +2024,7 @@ export const selector = {
                 appearance: {
                     // Appearance
                     showMapOnStorePage: '.store_map .switch',
-                    mapApiSourceGoogleMaps: '//div[@class="map_api_source dokan-settings-field-type-radio"] //label[@for="dokan_appearance[map_api_source][google_maps]"]',
-                    mapApiSourceMapBox: '//div[@class="map_api_source dokan-settings-field-type-radio"] //label[@for="dokan_appearance[map_api_source][mapbox]"]',
+                    mapApiSource: (source: string) => `//label[contains(@for,'${source}-map_api_source')]`,
                     googleMapApiKey: '#dokan_appearance\\[gmap_api_key\\]',
                     mapBoxAccessToken: '#dokan_appearance\\[mapbox_access_token\\]',
                     googleReCAPTCHA: '.recaptcha_validation_label .dashicons',
@@ -2044,6 +2044,25 @@ export const selector = {
                     hideVendorInfoPhoneNumber: '//div[contains(text(),"Phone Number")]//label[@class="switch tips"]',
                     hideVendorInfoStoreAddress: '//div[contains(text(),"Store Address")]//label[@class="switch tips"]',
                     appearanceSaveChanges: '#submit',
+                },
+
+                // Menu Manager
+                menuManager: {
+                    leftMenu: '//a[contains(text(),"Left Menu")]',
+                    settingsSubMenu: '//a[contains(text(),"Settings Sub Menu")]',
+                    resetAll: 'div.menu-manager-reset-all',
+                    confirmReset: '.swal2-confirm',
+                    cancelReset: '.swal2-cancel',
+                    menuParent: '(//div[@class="tabs-details"]//div)[2]',
+                    allMenus: 'div.menu_manager_menu_tab div.menu-item',
+                    menuGrabber: (menuName: string) => `//span[text()='${menuName}']/../..`,
+                    menuEdit: (menuName: string) => `//span[text()='${menuName}']/../..//div[@class='action-icon-wrapper edit-icon-wrapper']`,
+                    menuNameInput: '//div[@class="first-part"]//input',
+                    menuNameConfirm: '//div[@class="menu-item"]//div[@class="action-icon-wrapper check-icon-wrapper"]',
+                    menuNameCancel: '//div[@class="menu-item"]//div[@class="action-icon-wrapper cancel-icon-wrapper"]',
+                    menuSwithcher: (menuName: string) => `//span[text()='${menuName}']/../..//label[@class="switch tips"]`,
+                    menuManagerSaveChanges: '#submit',
+                    noPermissionNotice: '//strong[text()="You have no permission to view this page"]',
                 },
 
                 // Privacy Policy
@@ -2220,7 +2239,7 @@ export const selector = {
 
                 // Wholesale
                 wholesale: {
-                    whoCanSeeWholesalePrice: (type: string) => `//div[@class='wholesale_price_display dokan-settings-field-type-radio'] //label[@for='dokan_wholesale[wholesale_price_display][${type}]']`,
+                    whoCanSeeWholesalePrice: (type: string) => `//label[contains(@for,'${type}_user-wholesale_price_display')]`,
                     showWholesalePriceOnShopArchive: '.display_price_in_shop_archieve .switch',
                     needApprovalForCustomer: '.need_approval_for_wholesale_customer .switch',
                     wholesaleSaveChanges: '#submit',
@@ -2278,11 +2297,11 @@ export const selector = {
 
                 // Geolocation
                 geolocation: {
-                    locationMapPosition: (position: string) => `//label[@for='dokan_geolocation[show_locations_map][${position}]']`,
-                    showMap: (type: string) => `//label[@for='dokan_geolocation[show_location_map_pages][${type}]']`,
+                    locationMapPosition: (position: string) => `//label[contains(@for,'${position}-show_locations_map')]`,
+                    showMap: (type: string) => `//label[contains(@for,'${type}-show_location_map_pages')]`,
                     showFiltersBeforeLocationMap: '.show_filters_before_locations_map .switch',
                     productLocationTab: '.show_product_location_in_wc_tab .switch',
-                    radiusSearchUnit: (unit: string) => `//label[@for='dokan_geolocation[distance_unit][${unit}]']`,
+                    radiusSearchUnit: (unit: string) => `//label[contains(@for,'${unit}-distance_unit')]`,
                     radiusSearchMinimumDistance: '#dokan_geolocation\\[distance_min\\]',
                     radiusSearchMaximumDistance: '#dokan_geolocation\\[distance_max\\]',
                     mapZoomLevel: '#dokan_geolocation\\[map_zoom\\]',
@@ -3288,30 +3307,45 @@ export const selector = {
             dokanAlert: '.dokan-alert.dokan-alert-warning',
 
             // Dashboard Menus
+            menuParent: '#dokan-navigation ul.dokan-dashboard-menu',
             menus: {
-                dashboard: '.dashboard a',
-                products: '.products a',
-                orders: '.orders a',
-                userSubscription: '.user-subscription a',
-                coupons: '.coupons a',
-                reports: '.reports a',
-                deliveryTime: '.delivery-time-dashboard a',
-                reviews: '.reviews a',
-                withdraw: '.withdraw a',
-                badges: '.seller-badge a',
-                productQA: '.product-questions-answers a',
-                returnRequest: '.return-request a',
-                staff: '.staffs a',
-                followers: '.followers a',
-                booking: '.booking a',
-                analytics: '.analytics a',
-                announcements: '.announcement a',
-                tools: '.tools a',
-                auction: '.auction a',
-                support: '.support a',
-                settings: '.settings a',
+                menuByText: (menu: string) => `//div[@id='dokan-navigation']//ul//li//a[contains(text(), "${menu}")]`,
+                dashboard: 'ul.dokan-dashboard-menu li.dashboard a',
+                products: 'ul.dokan-dashboard-menu li.products a',
+                orders: 'ul.dokan-dashboard-menu li.orders a',
+                userSubscriptions: 'ul.dokan-dashboard-menu li.user-subscription a',
+                requestQuotes: 'ul.dokan-dashboard-menu li.requested-quotes a',
+                coupons: 'ul.dokan-dashboard-menu li.coupons a',
+                reports: 'ul.dokan-dashboard-menu li.reports a',
+                deliveryTime: 'ul.dokan-dashboard-menu li.delivery-time-dashboard a',
+                reviews: 'ul.dokan-dashboard-menu li.reviews a',
+                withdraw: 'ul.dokan-dashboard-menu li.withdraw a',
+                reverseWithdrawal: 'ul.dokan-dashboard-menu li.reverse-withdrawal a',
+                badges: 'ul.dokan-dashboard-menu li.seller-badge a',
+                productQA: 'ul.dokan-dashboard-menu li.product-questions-answers a',
+                returnRequest: 'ul.dokan-dashboard-menu li.return-request a',
+                staff: 'ul.dokan-dashboard-menu li.staffs a',
+                followers: 'ul.dokan-dashboard-menu li.followers a',
+                booking: 'ul.dokan-dashboard-menu li.booking a',
+                announcements: 'ul.dokan-dashboard-menu li.announcement a',
+                analytics: 'ul.dokan-dashboard-menu li.analytics a',
+                tools: 'ul.dokan-dashboard-menu li.tools a',
+                auction: 'ul.dokan-dashboard-menu li.auction a',
+                support: 'ul.dokan-dashboard-menu li.support a',
+                settings: 'ul.dokan-dashboard-menu li.settings a',
                 visitStore: '//i[@class="fas fa-external-link-alt"]/..',
                 editAccount: '.fa-user',
+
+                //submenus
+                store: '.submenu-item.store',
+                addons: '.submenu-item.product-addon',
+                payment: '.submenu-item.payment',
+                verification: '.submenu-item.verification',
+                shipping: '.submenu-item.shipping',
+                shipStation: '.submenu-item.shipstation',
+                social: '.submenu-item.social',
+                rma: '.submenu-item.rma',
+                seo: '.submenu-item.seo',
             },
 
             // profile Progress
@@ -6705,9 +6739,7 @@ export const selector = {
 
                 // non logged User
                 nonLoggedUser: {
-                    // userName: '#login-name',
-                    // userPassword: '#login-password',
-                    // login: '#support-submit-btn',
+                    loginPopup: 'div#dokan-modal-login-form-popup',
                     userName: '#dokan-login-form-username',
                     userPassword: '#dokan-login-form-password',
                     login: '#dokan-login-form-submit-btn',
@@ -6889,7 +6921,7 @@ export const selector = {
             // Social icons
             storeSocialIcons: {
                 facebook: '.fa-facebook-square',
-                twitter: '.fa-twitter-square',
+                twitter: '.fa-square-x-twitter',
                 pinterest: '.fa-pinterest-square',
                 linked: '.fa-linkedin',
                 youtube: '.fa-youtube-square',
