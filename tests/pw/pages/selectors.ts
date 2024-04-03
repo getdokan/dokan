@@ -1,5 +1,4 @@
 import { helpers } from '@utils/helpers';
-import { string } from 'zod';
 
 export const selector = {
     // Login
@@ -1176,8 +1175,8 @@ export const selector = {
                     contentIframe: '#postdivrich iframe',
                     contentHtmlBody: '#tinymce',
                     sendAnnouncementTo: '#announcement_sender_type', // all_seller, selected_seller, enabled_seller, disabled_seller, featured_seller
-                    saveAsDraft: '.draft-btn',
-                    publish: '.publish-btn',
+                    saveAsDraft: 'input.draft-btn',
+                    publish: 'input.publish-btn',
 
                     schedule: {
                         addSchedule: 'span#timestamp a',

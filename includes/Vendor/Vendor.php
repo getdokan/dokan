@@ -1570,7 +1570,7 @@ class Vendor {
     /**
      * Get vendor profile url for admin
      *
-     * @since DOKAN_SINCE
+     * @since 3.10.2
      *
      * @return string
      */
