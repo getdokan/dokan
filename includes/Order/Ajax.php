@@ -53,8 +53,13 @@ class Ajax {
             'author'       => dokan_get_current_user_id(),
             'page'         => $page,
             'limit'        => $limit,
-            's'            => $term,
         ];
+
+        if ( is_numeric( $term ) ) {
+            $args['include'] = (array) $term;
+        } else {
+            $args['s'] = $term;
+        }
 
         $product_objects = wc_get_products( $args );
 
