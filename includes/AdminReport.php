@@ -103,8 +103,8 @@ class AdminReport {
         $end_date   = $order_table ? dokan_current_datetime()->setTimestamp( $this->end_date )->setTimezone( new DateTimeZone( 'UTC' ) )->getTimestamp() : $this->end_date;
 
         $current_user        = dokan_get_current_user_id();
-        $table               = $order_table ? $wpdb->prefix . 'wc_orders' : $wpdb->posts;
-        $meta_table          = $order_table ? $wpdb->prefix . 'wc_orders_meta' : $wpdb->postmeta;
+        $table               = $order_table ? OrderUtil::get_order_table_name() : $wpdb->posts;
+        $meta_table          = $order_table ? OrderUtil::get_table_for_order_meta() : $wpdb->postmeta;
         $meta_table_join_key = $order_table ? 'order_id' : 'post_id';
         $id                  = $order_table ? 'id' : 'ID';
         $post_parent         = $order_table ? 'parent_order_id' : 'post_parent';
@@ -688,7 +688,7 @@ class AdminReport {
 			case 'year':
 				$this->start_date    = strtotime( date( 'Y-01-01', current_time( 'timestamp' ) ) );
 				$this->end_date      = strtotime( 'midnight', current_time( 'timestamp' ) );
-				$this->chart_groupby = 'month'; 
+				$this->chart_groupby = 'month';
 				break;
 
 			case 'last_month':
