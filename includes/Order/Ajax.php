@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Class Ajax
  *
- * @since DOKAN_SINCE
+ * @since 3.10.3
  *
  * @package WeDevs\Dokan\Order
  */
@@ -18,7 +18,7 @@ class Ajax {
     /**
      * Class constructor
      *
-     * @since DOKAN_SINCE
+     * @since 3.10.3
      *
      * @return void
      */
@@ -29,7 +29,7 @@ class Ajax {
     /**
      * Search downloadable products
      *
-     * @since DOKAN_SINCE
+     * @since 3.10.3
      *
      * @return void
      */

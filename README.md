@@ -7,7 +7,7 @@
 **WC requires at least:** 5.0.0  
 **WC tested up to:** 8.7.0  
 **Requires PHP:** 7.4  
-**Stable tag:** 3.10.2  
+**Stable tag:** 3.10.3  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -337,6 +337,21 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 ## Changelog ##
+
+### v3.10.3 ( Apr 04, 2024 ) ###
+
+- **update:** Notification count support added for vendor dashboard
+- **update:** added a new filter to set a default value for I am a customer / I am a vendor radio button
+- **update:** Processing Order count added for vendor dashboard orders menu
+- **update:** Performance improvements for vendor dashboard -> order details page -> downloadable product permission section
+- **update:** Admin can change product author from REST API
+    Previously, product_author was read-only property, now admin can change product_author for an existing product or create a new product for another author.
+- **update:** Warning message styling for selecting fixed cart discount on admin coupon add edit page
+- **fix:** Advertisement product not purchasable for own product purchasing restriction
+- **fix:** Header Template number one breaks without background image
+- **fix:** html entity showing in product tag selection in vendor dashboard.
+- **fix:** Vendor add notification switch in admin dashboard
+- **fix:** Under wooCommerce my-account registration section, `I am a customer` was forced to be set as the default value. With this PR this problem has been fixed.
 
 ### v3.10.2 ( Apr 01, 2024 ) ###
 
