@@ -16,7 +16,7 @@ do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
 <p>
     <?php
     // translators: user name
-    echo sprintf( esc_html__( 'Hi %s', 'dokan-lite' ), esc_html( $data['username'] ) );
+    echo sprintf( esc_html__( 'Hi %s', 'dokan-lite' ), esc_html( $data['{store_name}'] ) );
     ?>
 </p>
 <p>
@@ -26,18 +26,25 @@ do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
     <?php esc_html_e( 'You sent a withdraw request of:', 'dokan-lite' ); ?>
     <br>
     <?php esc_html_e( 'Amount : ', 'dokan-lite' ); ?>
-    <?php echo wp_kses_post( $data['amount'] ); ?>
+    <?php echo wp_kses_post( $data['{amount}'] ); ?>
     <br>
     <?php
     // translators: 1) withdraw method title
-    echo sprintf( esc_html__( 'Method : %s', 'dokan-lite' ), esc_html( $data['method'] ) );
+    echo sprintf( esc_html__( 'Method : %s', 'dokan-lite' ), esc_html( $data['{method}'] ) );
     ?>
 </p>
 <p>
-    <?php esc_html_e( 'We\'ll transfer this amount to your preferred payment method shortly.', 'dokan-lite' ); ?>
+    <?php esc_html_e( 'We\'ll transfer this amount to your preferred withdrawal method shortly.', 'dokan-lite' ); ?>
 
     <?php esc_html_e( 'Thanks for being with us.', 'dokan-lite' ); ?>
 </p>
 
 <?php
+/**
+ * Show user-defined additional content - this is set in each email's settings.
+ */
+if ( $additional_content ) {
+    echo wp_kses_post( wpautop( wptexturize( $additional_content ) ) );
+}
+
 do_action( 'woocommerce_email_footer', $email );

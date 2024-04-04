@@ -16,7 +16,7 @@ do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
 <p>
     <?php
     // translators: user name
-    echo sprintf( esc_html__( 'Hi %s', 'dokan-lite' ), esc_html( $data['username'] ) );
+    echo sprintf( esc_html__( 'Hi %s', 'dokan-lite' ), esc_html( $data['{store_name}'] ) );
     ?>
 </p>
 <p>
@@ -27,19 +27,26 @@ do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
     <br>
     <?php
     // translators: 1) withdraw amount
-    echo sprintf( esc_html__( 'Amount : %s', 'dokan-lite' ), esc_html( $data['amount'] ) );
+    echo sprintf( esc_html__( 'Amount : %s', 'dokan-lite' ), esc_html( $data['{amount}'] ) );
     ?>
     <br>
     <?php
     // translators: 1) withdraw method title
-    echo sprintf( esc_html__( 'Method : %s', 'dokan-lite' ), esc_html( $data['method'] ) );
+    echo sprintf( esc_html__( 'Method : %s', 'dokan-lite' ), esc_html( $data['{method}'] ) );
     ?>
 </p>
 <p>
     <?php esc_html_e( 'Here\'s the reason, why : ', 'dokan-lite' ); ?>
     <br>
-    <i><?php echo esc_html( $data['note'] ); ?></i>
+    <i><?php echo esc_html( $data['{note}'] ); ?></i>
 </p>
 
 <?php
+
+/**
+ * Show user-defined additional content - this is set in each email's settings.
+ */
+if ( $additional_content ) {
+    echo wp_kses_post( wpautop( wptexturize( $additional_content ) ) );
+}
 do_action( 'woocommerce_email_footer', $email );

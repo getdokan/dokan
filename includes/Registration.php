@@ -175,9 +175,58 @@ class Registration {
             ],
         ];
 
+        $dokan_settings = $this->check_and_set_address_profile_completion( $user_id, $dokan_settings, $dokan_settings );
+
         update_user_meta( $user_id, 'dokan_profile_settings', $dokan_settings );
         update_user_meta( $user_id, 'dokan_store_name', $dokan_settings['store_name'] );
 
         do_action( 'dokan_new_seller_created', $user_id, $dokan_settings );
+    }
+
+    /**
+     * Adds address profile completion value in dokan settings.
+     *
+     * @3.10.2
+     *
+     * @param int   $vendor_id
+     * @param array $new_dokan_settings
+     * @param array $old_profile_settings
+     *
+     * @return array
+     */
+    public function check_and_set_address_profile_completion( $vendor_id, $new_dokan_settings, $old_profile_settings ) {
+        // Check address and add manually values on Profile Completion also increase progress value
+        if ( ! empty( $new_dokan_settings['profile_completion']['progress_vals']['address_val'] ) ) {
+            $new_dokan_settings['profile_completion']['address'] = $new_dokan_settings['profile_completion']['progress_vals']['address_val'];
+        }
+
+        if ( empty( $new_dokan_settings['address']['street_1'] ) ) {
+            unset( $new_dokan_settings['profile_completion']['address'] );
+        }
+
+        if ( empty( $new_dokan_settings['address']['city'] ) && ! empty( $new_dokan_settings['profile_completion']['address'] ) ) {
+            unset( $new_dokan_settings['profile_completion']['address'] );
+        }
+
+        if ( empty( $new_dokan_settings['address']['zip'] ) && ! empty( $new_dokan_settings['profile_completion']['address'] ) ) {
+            unset( $new_dokan_settings['profile_completion']['address'] );
+        }
+
+        if ( empty( $new_dokan_settings['address']['country'] ) && ! empty( $new_dokan_settings['profile_completion']['address'] ) ) {
+            unset( $new_dokan_settings['profile_completion']['address'] );
+        } else {
+            $country = isset( $new_dokan_settings['address']['country'] ) ? $new_dokan_settings['address']['country'] : '';
+
+            if ( isset( $states[ $country ] ) && is_array( $states[ $country ] ) && empty( $new_dokan_settings['address']['state'] ) && ! empty( $new_dokan_settings['profile_completion']['address'] ) ) {
+                unset( $new_dokan_settings['profile_completion']['address'] );
+            }
+        }
+
+        if ( ! empty( $new_dokan_settings['profile_completion']['address'] ) ) {
+            $progress = empty( $old_profile_settings['profile_completion']['progress'] ) ? 0 : $old_profile_settings['profile_completion']['progress'];
+            $new_dokan_settings['profile_completion']['progress'] = $progress + $new_dokan_settings['profile_completion']['progress_vals']['address_val'];
+        }
+
+        return $new_dokan_settings;
     }
 }
