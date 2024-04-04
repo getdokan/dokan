@@ -46,7 +46,7 @@ class Ajax {
             $page = absint( $_GET['page'] );
         }
 
-        $term = isset( $_GET['term'] ) ? (string) wc_clean( wp_unslash( $_GET['term'] ) ) : '';
+        $term = isset( $_GET['q'] ) ? (string) wc_clean( wp_unslash( $_GET['q'] ) ) : '';
         $args = [
             'status'       => 'publish',
             'downloadable' => true,
