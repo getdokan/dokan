@@ -15,6 +15,9 @@
 
 $all_commission_types = array_merge( dokan_commission_types(), dokan()->commission->get_legacy_commission_types() );
 $total_commission = 0 > $total_commission ? 0 : $total_commission;
+
+$order_total = $data && property_exists( $data, 'order_total' ) ? $data->order_total : 0;
+$net_amount  = $data && property_exists( $data, 'net_amount' ) ? $data->net_amount : 0;
 ?>
 
 <div id="woocommerce-order-items" class="postbox" style='border: none'>
@@ -147,14 +150,14 @@ $total_commission = 0 > $total_commission ? 0 : $total_commission;
                     <td class="label"><?php esc_html_e( 'Net total:', 'dokan-lite' ); ?></td>
                     <td width="1%"></td>
                     <td class="total">
-                        <?php echo wc_price( $data->order_total, array( 'currency' => $order->get_currency() ) ); ?>
+                        <?php echo wc_price( $order_total, array( 'currency' => $order->get_currency() ) ); ?>
                     </td>
                 </tr>
                 <tr>
                     <td class="label"><?php esc_html_e( 'Vendor earning:', 'dokan-lite' ); ?></td>
                     <td width="1%"></td>
                     <td class="total">
-                        <?php echo wc_price( $data->net_amount, array( 'currency' => $order->get_currency() ) ); ?>
+                        <?php echo wc_price( $net_amount, array( 'currency' => $order->get_currency() ) ); ?>
                     </td>
                 </tr>
                 </tbody>
