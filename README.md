@@ -338,7 +338,7 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 ## Changelog ##
 
-### v3.10.3 ( Apr 04, 2024 ) ###
+### v3.10.3 ( Apr 05, 2024 ) ###
 
 - **update:** Notification count support added for vendor dashboard
 - **update:** added a new filter to set a default value for I am a customer / I am a vendor radio button
