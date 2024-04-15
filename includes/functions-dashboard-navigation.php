@@ -218,11 +218,13 @@ function dokan_dashboard_nav( $active_menu = '' ) {
 
         $class = $active_menu === $filtered_key || 0 === stripos( $active_menu, $filtered_key ) ? 'active ' . $key : $key;  // checking starts with the key
         $title = __( 'No Title', 'dokan-lite' );
+
         if ( ! empty( $item['menu_manager_title'] ) ) {
             $title = $item['menu_manager_title'];
         } elseif ( ! empty( $item['title'] ) ) {
             $title = $item['title'];
         }
+
         $menu_slug = $filtered_key;
         $submenu   = '';
 
@@ -240,7 +242,7 @@ function dokan_dashboard_nav( $active_menu = '' ) {
                 /**
                  * Filters a menu key according to slug if needed.
                  *
-                 * @since DOKAN_PRO_SINCE
+                 * @since DOKAN_SINCE
                  *
                  * @param string $submenu_key
                  * @param string $menu_key
@@ -248,19 +250,20 @@ function dokan_dashboard_nav( $active_menu = '' ) {
                 $filtered_subkey = apply_filters( 'dokan_dashboard_nav_submenu_key', $sub_key, $key );
 
                 $submenu_class = $active_submenu === $filtered_subkey || 0 === stripos( $active_submenu, $filtered_subkey ) ? "current $sub_key" : $sub_key;
-
                 $submenu_title = __( 'No Title', 'dokan-lite' );
+
                 if ( ! empty( $sub['menu_manager_title'] ) ) {
                     $submenu_title = $sub['menu_manager_title'];
                 } elseif ( ! empty( $sub['title'] ) ) {
                     $submenu_title = $sub['title'];
                 }
+
                 $submenu .= sprintf(
                     '<li class="submenu-item %s"><a href="%s" class="submenu-link">%s %s</a></li>',
                     $submenu_class,
                     isset( $sub['url'] ) ? $sub['url'] : dokan_get_navigation_url( "{$key}/{$sub_key}" ),
                     isset( $sub['icon'] ) ? $sub['icon'] : '<i class="fab fa-staylinked"></i>',
-                    $submenu_title
+                    apply_filters( 'dokan_vendor_dashboard_menu_title', $submenu_title, $sub )
                 );
 
                 $subkey_slugs[] = $filtered_subkey;
@@ -279,7 +282,7 @@ function dokan_dashboard_nav( $active_menu = '' ) {
             $class,
             isset( $item['url'] ) ? $item['url'] : dokan_get_navigation_url( $menu_slug ),
             isset( $item['icon'] ) ? $item['icon'] : '<i class="fab fa-staylinked"></i>',
-            $title,
+            apply_filters( 'dokan_vendor_dashboard_menu_title', $title, $item ),
             $submenu
         );
     }
