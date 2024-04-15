@@ -551,17 +551,28 @@
             },
 
             handleAction( sectionId ) {
-                if ( "dokan_product_form_manager" === sectionId ) {
+                if ( 'dokan_form_manager_product_form' === sectionId ) {
                     this.resetAllFields( sectionId );
                 }
             },
 
             resetAllFields( sectionId ) {
-                let settingValues = Object.entries(this.settingValues[sectionId]);
+                let settingFields              = Object.entries( this.settingFields[sectionId] );
+                let clonedSectionSettingValues = JSON.parse( JSON.stringify( this.settingValues[sectionId] ) );
 
-                settingValues.forEach( ( key, value) => {
-                    this.settingValues[sectionId][key[0]] = this.settingFields[sectionId][key[0]].default;
+                settingFields.forEach( ( key, value ) => {
+                    let blockId = key[0];
+
+                    if ( blockId ) {
+                        let sectionValue = key[1];
+                        for (const [FieldId, fieldData] of Object.entries(sectionValue.fields)) {
+                            clonedSectionSettingValues[blockId]['fields'][FieldId]['visibility'] = fieldData.default.visibility;
+                            clonedSectionSettingValues[blockId]['fields'][FieldId]['required']   = fieldData.default.required;
+                        }
+                    }
                 } );
+
+                this.settingValues[sectionId] = clonedSectionSettingValues;
             },
 
             scrollToTop() {
