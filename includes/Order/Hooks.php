@@ -265,14 +265,14 @@ class Hooks {
 
         foreach ( $sub_orders as $sub_order ) {
             // if the order is a downloadable and virtual product, then we need to update the status to completed
-            if ( $sub_order->get_status() === 'processing' && ! $sub_order->needs_processing() ) {
-                $sub_order->update_status( 'wc-completed', __( 'Mark current order completed when it has virtual products.', 'dokan-lite' ) );
+            if ( $order->is_paid() && ! $sub_order->needs_processing() ) {
+                $sub_order->set_status( 'completed', __( 'Mark as completed when it has digital products.', 'dokan-lite' ) );
+                $sub_order->save();
             }
 
             // if any child order is not completed, break the loop
             if ( $sub_order->get_status() !== 'completed' ) {
                 $all_complete = false;
-                break;
             }
         }
 
