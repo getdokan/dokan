@@ -231,7 +231,7 @@ function dokan_order_listing_status_filter() {
     }
     ?>
 
-    <ul class="list-inline order-statuses-filter">
+    <ul class="list-inline order-statuses-filter subsubsub">
         <li<?php echo $status_class === 'all' ? ' class="active"' : ''; ?>>
             <?php
             if ( $order_date ) {
