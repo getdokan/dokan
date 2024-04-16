@@ -264,7 +264,7 @@ class Hooks {
         $all_complete = true;
 
         // Exclude manual gateways from auto complete order status update for digital products.
-        $excluded_gateways = apply_filters('dokan_order_status_update_exclusion_payment_gateways', array( 'bacs', 'cheque', 'cod' ) );
+        $excluded_gateways = apply_filters( 'dokan_order_status_update_exclusion_payment_gateways', array( 'bacs', 'cheque', 'cod' ) );
 
         foreach ( $sub_orders as $sub_order ) {
             // if the order is a downloadable and virtual product, then we need to set the status to complete
