@@ -338,7 +338,7 @@ class Hooks {
         $available_vendors = array_unique( $available_vendors );
 
         if ( $coupon->is_type( 'fixed_cart' ) && count( $available_vendors ) > 1 ) {
-            throw new Exception( __( 'This coupon is invalid for multiple vendors.', 'dokan-lite' ) );
+            throw new Exception( esc_html__( 'This coupon is invalid for multiple vendors.', 'dokan-lite' ) );
         }
 
         // Make sure applied coupon created by admin
@@ -352,7 +352,7 @@ class Hooks {
 
         // A coupon must be bound with a product
         if ( ! dokan()->is_pro_exists() && count( $coupon->get_product_ids() ) === 0 ) {
-            throw new Exception( __( 'A coupon must be restricted with a vendor product.', 'dokan-lite' ) );
+            throw new Exception( esc_html__( 'A coupon must be restricted with a vendor product.', 'dokan-lite' ) );
         }
 
         $coupon_id = $coupon->get_id();
