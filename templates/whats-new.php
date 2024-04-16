@@ -5,7 +5,7 @@
 $changelog = [
     [
         'version'  => 'Version 3.10.3',
-        'released' => '2024-04-05',
+        'released' => '2024-04-16',
         'changes'  => [
             'Improvement' => [
                 [
