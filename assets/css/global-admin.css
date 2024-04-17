@@ -262,4 +262,9 @@
 .dokan-admin-notices-wrap .slide-prev-leave-to {
   transform: translate(100%);
 }
+#woocommerce-coupon-data #coupon_options #general_coupon_data #fixed-cart-discount-warning {
+  display: block;
+  padding: 0;
+  color: #cc0000;
+}
 

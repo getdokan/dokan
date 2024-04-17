@@ -454,7 +454,7 @@ abstract class DokanRESTController extends WP_REST_Controller {
     /**
      * Update post author if requested.
      *
-     * @since DOKAN_SINCE
+     * @since 3.10.3
      *
      * @param WP_REST_Request $request Request object.
      * @param int $object_id Object ID.

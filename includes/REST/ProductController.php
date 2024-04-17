@@ -599,7 +599,7 @@ class ProductController extends DokanRESTController {
     /**
      * Validate post author overrides.
      *
-     * @since DOKAN_SINCE
+     * @since 3.10.3
      *
      * @param WP_REST_Request $request Request object.
      * @param int $store_id fallback Store or author id.

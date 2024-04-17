@@ -685,7 +685,7 @@ function dokan_store_contact_widget() {
 /**
  * Get seller registration form default role
  *
- * @since DOKAN_SINCE
+ * @since 3.10.3
  *
  * @return string values can be 'customer' or 'seller'
  */
