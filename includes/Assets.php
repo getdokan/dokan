@@ -284,10 +284,10 @@ class Assets {
                 'version' => filemtime( DOKAN_DIR . '/assets/vendors/izimodal/iziModal.min.css' ),
             ],
             'dokan-minitoggle'              => [
-                'src'     => DOKAN_PLUGIN_ASSEST . '/vendors/minitoggle/minitoggle.css',
+                'src' => DOKAN_PLUGIN_ASSEST . '/vendors/minitoggle/minitoggle.css',
             ],
             'dokan-select2-css'             => [
-                'src'     => DOKAN_PLUGIN_ASSEST . '/vendors/select2/select2.css',
+                'src' => DOKAN_PLUGIN_ASSEST . '/vendors/select2/select2.css',
             ],
             'dokan-rtl-style'               => [
                 'src' => DOKAN_PLUGIN_ASSEST . '/css/rtl.css',
@@ -314,7 +314,7 @@ class Assets {
                 'deps'    => [ 'dokan-vue-vendor' ],
                 'version' => filemtime( DOKAN_DIR . '/assets/css/vue-bootstrap.css' ),
             ],
-            'dokan-sf-pro-text'              => [
+            'dokan-sf-pro-text'             => [
                 'src'     => DOKAN_PLUGIN_ASSEST . '/font/sf-pro-text/sf-pro-text.css',
                 'version' => filemtime( DOKAN_DIR . '/assets/font/sf-pro-text/sf-pro-text.css' ),
             ],
@@ -344,9 +344,9 @@ class Assets {
                 'src'     => DOKAN_PLUGIN_ASSEST . '/css/reverse-withdrawal-style.css',
                 'version' => filemtime( DOKAN_DIR . '/assets/css/reverse-withdrawal-style.css' ),
             ],
-            'dokan-admin-product' => [
-                'src'       => DOKAN_PLUGIN_ASSEST . '/css/dokan-admin-product-style.css',
-                'version'   => filemtime( DOKAN_DIR . '/assets/css/dokan-admin-product-style.css' ),
+            'dokan-admin-product'           => [
+                'src'     => DOKAN_PLUGIN_ASSEST . '/css/dokan-admin-product-style.css',
+                'version' => filemtime( DOKAN_DIR . '/assets/css/dokan-admin-product-style.css' ),
             ],
             'dokan-tailwind' => [
                 'src'       => DOKAN_PLUGIN_ASSEST . '/css/dokan-tailwind.css',
@@ -506,49 +506,49 @@ class Assets {
                 'version' => filemtime( $asset_path . 'js/vue-frontend.js' ),
             ],
 
-            'dokan-login-form-popup'    => [
+            'dokan-login-form-popup'   => [
                 'src'     => $asset_url . '/js/login-form-popup.js',
                 'deps'    => [ 'dokan-modal', 'dokan-i18n-jed' ],
                 'version' => filemtime( $asset_path . 'js/login-form-popup.js' ),
             ],
-            'dokan-sweetalert2'         => [
+            'dokan-sweetalert2'        => [
                 'src'     => $asset_url . '/vendors/sweetalert2/sweetalert2.all.min.js',
                 'deps'    => [ 'dokan-modal', 'dokan-i18n-jed' ],
                 'version' => filemtime( $asset_path . 'vendors/sweetalert2/sweetalert2.all.min.js' ),
             ],
-            'dokan-util-helper'         => [
+            'dokan-util-helper'        => [
                 'src'       => $asset_url . '/js/helper.js',
                 'deps'      => [ 'jquery', 'dokan-sweetalert2', 'moment' ],
                 'version'   => filemtime( $asset_path . 'js/helper.js' ),
                 'in_footer' => false,
             ],
-            'dokan-promo-notice-js'     => [
+            'dokan-promo-notice-js'    => [
                 'src'     => $asset_url . '/js/dokan-promo-notice.js',
                 'deps'    => [ 'jquery', 'dokan-vue-vendor' ],
                 'version' => filemtime( $asset_path . 'js/dokan-promo-notice.js' ),
             ],
-            'dokan-reverse-withdrawal'  => [
+            'dokan-reverse-withdrawal' => [
                 'src'     => $asset_url . '/js/reverse-withdrawal.js',
                 'deps'    => [ 'jquery', 'dokan-util-helper', 'dokan-vue-vendor', 'dokan-date-range-picker' ],
                 'version' => filemtime( $asset_path . 'js/reverse-withdrawal.js' ),
             ],
-            'product-category-ui'       => [
+            'product-category-ui'      => [
                 'src'     => $asset_url . '/js/product-category-ui.js',
                 'deps'    => [ 'jquery', 'dokan-vue-vendor' ],
                 'version' => filemtime( $asset_path . 'js/product-category-ui.js' ),
             ],
-            'dokan-vendor-address'      => [
+            'dokan-vendor-address'     => [
                 'src'     => $asset_url . '/js/vendor-address.js',
                 'deps'    => [ 'jquery', 'wc-address-i18n' ],
                 'version' => filemtime( $asset_path . 'js/vendor-address.js' ),
             ],
-            'dokan-admin-product'       => [
+            'dokan-admin-product'      => [
                 'src'       => $asset_url . '/js/dokan-admin-product.js',
                 'deps'      => [ 'jquery', 'dokan-vue-vendor', 'selectWoo' ],
                 'version'   => filemtime( $asset_path . 'js/dokan-admin-product.js' ),
                 'in_footer' => false,
             ],
-            'dokan-frontend'       => [
+            'dokan-frontend'           => [
                 'src'     => $asset_url . '/js/dokan-frontend.js',
                 'deps'    => [ 'jquery' ],
                 'version' => filemtime( $asset_path . 'js/dokan-frontend.js' ),
@@ -611,8 +611,8 @@ class Assets {
              *
              * @param integer default -1
              */
-            'maximum_tags_select_length' => apply_filters( 'dokan_product_tags_select_max_length', - 1 ),  // Filter of maximun a vendor can add tags
-            'modal_header_color' => '#F05025',
+            'maximum_tags_select_length'   => apply_filters( 'dokan_product_tags_select_max_length', - 1 ),  // Filter of maximun a vendor can add tags
+            'modal_header_color'           => '#F05025',
         ];
 
         $localize_script     = apply_filters( 'dokan_localized_args', $default_script );
@@ -636,6 +636,15 @@ class Assets {
         $localize_data = array_merge( $localize_script, $vue_localize_script );
 
         wp_localize_script( 'dokan-i18n-jed', 'dokan', $localize_data );
+
+        // localized vendor-registration script
+        wp_localize_script(
+            'dokan-vendor-registration',
+            'dokanRegistrationI18n',
+            [
+                'defaultRole' => dokan_get_seller_registration_default_role(),
+            ]
+        );
 
         // load only in dokan dashboard and product edit page
         if ( ( dokan_is_seller_dashboard() || ( get_query_var( 'edit' ) && is_singular( 'product' ) ) ) || apply_filters( 'dokan_forced_load_scripts', false ) ) {
@@ -958,87 +967,89 @@ class Assets {
             $has_flex_height = ! empty( $general_settings['store_banner_flex_height'] ) ? $general_settings['store_banner_flex_height'] : true;
 
             $custom_args = [
-                'i18n_choose_featured_img'            => __( 'Upload featured image', 'dokan-lite' ),
-                'i18n_choose_file'                    => __( 'Choose a file', 'dokan-lite' ),
-                'i18n_choose_gallery'                 => __( 'Add Images to Product Gallery', 'dokan-lite' ),
-                'i18n_choose_featured_img_btn_text'   => __( 'Set featured image', 'dokan-lite' ),
-                'i18n_choose_file_btn_text'           => __( 'Insert file URL', 'dokan-lite' ),
-                'i18n_choose_gallery_btn_text'        => __( 'Add to gallery', 'dokan-lite' ),
-                'duplicates_attribute_messg'          => __( 'Sorry, this attribute option already exists, Try a different one.', 'dokan-lite' ),
-                'variation_unset_warning'             => __( 'Warning! This product will not have any variations if this option is not checked.', 'dokan-lite' ),
-                'new_attribute_prompt'                => __( 'Enter a name for the new attribute term:', 'dokan-lite' ),
-                'remove_attribute'                    => __( 'Remove this attribute?', 'dokan-lite' ),
-                'dokan_placeholder_img_src'           => wc_placeholder_img_src(),
-                'add_variation_nonce'                 => wp_create_nonce( 'add-variation' ),
-                'link_variation_nonce'                => wp_create_nonce( 'link-variations' ),
-                'delete_variations_nonce'             => wp_create_nonce( 'delete-variations' ),
-                'load_variations_nonce'               => wp_create_nonce( 'load-variations' ),
-                'save_variations_nonce'               => wp_create_nonce( 'save-variations' ),
-                'bulk_edit_variations_nonce'          => wp_create_nonce( 'bulk-edit-variations' ),
+                'i18n_choose_featured_img'                 => __( 'Upload featured image', 'dokan-lite' ),
+                'i18n_choose_file'                         => __( 'Choose a file', 'dokan-lite' ),
+                'i18n_choose_gallery'                      => __( 'Add Images to Product Gallery', 'dokan-lite' ),
+                'i18n_choose_featured_img_btn_text'        => __( 'Set featured image', 'dokan-lite' ),
+                'i18n_choose_file_btn_text'                => __( 'Insert file URL', 'dokan-lite' ),
+                'i18n_choose_gallery_btn_text'             => __( 'Add to gallery', 'dokan-lite' ),
+                'duplicates_attribute_messg'               => __( 'Sorry, this attribute option already exists, Try a different one.', 'dokan-lite' ),
+                'variation_unset_warning'                  => __( 'Warning! This product will not have any variations if this option is not checked.', 'dokan-lite' ),
+                'new_attribute_prompt'                     => __( 'Enter a name for the new attribute term:', 'dokan-lite' ),
+                'remove_attribute'                         => __( 'Remove this attribute?', 'dokan-lite' ),
+                'dokan_placeholder_img_src'                => wc_placeholder_img_src(),
+                'add_variation_nonce'                      => wp_create_nonce( 'add-variation' ),
+                'link_variation_nonce'                     => wp_create_nonce( 'link-variations' ),
+                'delete_variations_nonce'                  => wp_create_nonce( 'delete-variations' ),
+                'load_variations_nonce'                    => wp_create_nonce( 'load-variations' ),
+                'save_variations_nonce'                    => wp_create_nonce( 'save-variations' ),
+                'bulk_edit_variations_nonce'               => wp_create_nonce( 'bulk-edit-variations' ),
                 /* translators: %d: max linked variation. */
-                'i18n_link_all_variations'            => esc_js( sprintf( __( 'Are you sure you want to link all variations? This will create a new variation for each and every possible combination of variation attributes (max %d per run).', 'dokan-lite' ), defined( 'WC_MAX_LINKED_VARIATIONS' ) ? WC_MAX_LINKED_VARIATIONS : 50 ) ),
-                'i18n_enter_a_value'                  => esc_js( __( 'Enter a value', 'dokan-lite' ) ),
-                'i18n_enter_menu_order'               => esc_js( __( 'Variation menu order (determines position in the list of variations)', 'dokan-lite' ) ),
-                'i18n_enter_a_value_fixed_or_percent' => esc_js( __( 'Enter a value (fixed or %)', 'dokan-lite' ) ),
-                'i18n_delete_all_variations'          => esc_js( __( 'Are you sure you want to delete all variations? This cannot be undone.', 'dokan-lite' ) ),
-                'i18n_last_warning'                   => esc_js( __( 'Last warning, are you sure?', 'dokan-lite' ) ),
-                'i18n_choose_image'                   => esc_js( __( 'Choose an image', 'dokan-lite' ) ),
-                'i18n_set_image'                      => esc_js( __( 'Set variation image', 'dokan-lite' ) ),
-                'i18n_variation_added'                => esc_js( __( 'variation added', 'dokan-lite' ) ),
-                'i18n_variations_added'               => esc_js( __( 'variations added', 'dokan-lite' ) ),
-                'i18n_no_variations_added'            => esc_js( __( 'No variations added', 'dokan-lite' ) ),
-                'i18n_remove_variation'               => esc_js( __( 'Are you sure you want to remove this variation?', 'dokan-lite' ) ),
-                'i18n_scheduled_sale_start'           => esc_js( __( 'Sale start date (YYYY-MM-DD format or leave blank)', 'dokan-lite' ) ),
-                'i18n_scheduled_sale_end'             => esc_js( __( 'Sale end date (YYYY-MM-DD format or leave blank)', 'dokan-lite' ) ),
-                'i18n_edited_variations'              => esc_js( __( 'Save changes before changing page?', 'dokan-lite' ) ),
-                'i18n_variation_count_single'         => esc_js( __( '%qty% variation', 'dokan-lite' ) ),
-                'i18n_variation_count_plural'         => esc_js( __( '%qty% variations', 'dokan-lite' ) ),
-                'i18n_no_result_found'                => esc_js( __( 'No Result Found', 'dokan-lite' ) ),
-                'i18n_sales_price_error'              => esc_js( __( 'Please insert value less than the regular price!', 'dokan-lite' ) ),
+                'i18n_link_all_variations'                 => esc_js( sprintf( __( 'Are you sure you want to link all variations? This will create a new variation for each and every possible combination of variation attributes (max %d per run).', 'dokan-lite' ), defined( 'WC_MAX_LINKED_VARIATIONS' ) ? WC_MAX_LINKED_VARIATIONS : 50 ) ),
+                'i18n_enter_a_value'                       => esc_js( __( 'Enter a value', 'dokan-lite' ) ),
+                'i18n_enter_menu_order'                    => esc_js( __( 'Variation menu order (determines position in the list of variations)', 'dokan-lite' ) ),
+                'i18n_enter_a_value_fixed_or_percent'      => esc_js( __( 'Enter a value (fixed or %)', 'dokan-lite' ) ),
+                'i18n_delete_all_variations'               => esc_js( __( 'Are you sure you want to delete all variations? This cannot be undone.', 'dokan-lite' ) ),
+                'i18n_last_warning'                        => esc_js( __( 'Last warning, are you sure?', 'dokan-lite' ) ),
+                'i18n_choose_image'                        => esc_js( __( 'Choose an image', 'dokan-lite' ) ),
+                'i18n_set_image'                           => esc_js( __( 'Set variation image', 'dokan-lite' ) ),
+                'i18n_variation_added'                     => esc_js( __( 'variation added', 'dokan-lite' ) ),
+                'i18n_variations_added'                    => esc_js( __( 'variations added', 'dokan-lite' ) ),
+                'i18n_no_variations_added'                 => esc_js( __( 'No variations added', 'dokan-lite' ) ),
+                'i18n_remove_variation'                    => esc_js( __( 'Are you sure you want to remove this variation?', 'dokan-lite' ) ),
+                'i18n_scheduled_sale_start'                => esc_js( __( 'Sale start date (YYYY-MM-DD format or leave blank)', 'dokan-lite' ) ),
+                'i18n_scheduled_sale_end'                  => esc_js( __( 'Sale end date (YYYY-MM-DD format or leave blank)', 'dokan-lite' ) ),
+                'i18n_edited_variations'                   => esc_js( __( 'Save changes before changing page?', 'dokan-lite' ) ),
+                'i18n_variation_count_single'              => esc_js( __( '%qty% variation', 'dokan-lite' ) ),
+                'i18n_variation_count_plural'              => esc_js( __( '%qty% variations', 'dokan-lite' ) ),
+                'i18n_no_result_found'                     => esc_js( __( 'No Result Found', 'dokan-lite' ) ),
+                'i18n_sales_price_error'                   => esc_js( __( 'Please insert value less than the regular price!', 'dokan-lite' ) ),
                 /* translators: %s: decimal */
-                'i18n_decimal_error'                  => sprintf( __( 'Please enter with one decimal point (%s) without thousand separators.', 'dokan-lite' ), $decimal ),
+                'i18n_decimal_error'                       => sprintf( __( 'Please enter with one decimal point (%s) without thousand separators.', 'dokan-lite' ), $decimal ),
                 /* translators: %s: price decimal separator */
-                'i18n_mon_decimal_error'              => sprintf( __( 'Please enter with one monetary decimal point (%s) without thousand separators and currency symbols.', 'dokan-lite' ), wc_get_price_decimal_separator() ),
-                'i18n_country_iso_error'              => __( 'Please enter in country code with two capital letters.', 'dokan-lite' ),
-                'i18n_sale_less_than_regular_error'   => __( 'Please enter in a value less than the regular price.', 'dokan-lite' ),
-                'i18n_delete_product_notice'          => __( 'This product has produced sales and may be linked to existing orders. Are you sure you want to delete it?', 'dokan-lite' ),
-                'i18n_remove_personal_data_notice'    => __( 'This action cannot be reversed. Are you sure you wish to erase personal data from the selected orders?', 'dokan-lite' ),
-                'decimal_point'                       => $decimal,
-                'mon_decimal_point'                   => wc_get_price_decimal_separator(),
-                'variations_per_page'                 => absint( apply_filters( 'dokan_product_variations_per_page', 10 ) ),
-                'store_banner_dimension'              => [
+                'i18n_mon_decimal_error'                   => sprintf( __( 'Please enter with one monetary decimal point (%s) without thousand separators and currency symbols.', 'dokan-lite' ), wc_get_price_decimal_separator() ),
+                'i18n_country_iso_error'                   => __( 'Please enter in country code with two capital letters.', 'dokan-lite' ),
+                'i18n_sale_less_than_regular_error'        => __( 'Please enter in a value less than the regular price.', 'dokan-lite' ),
+                'i18n_delete_product_notice'               => __( 'This product has produced sales and may be linked to existing orders. Are you sure you want to delete it?', 'dokan-lite' ),
+                'i18n_remove_personal_data_notice'         => __( 'This action cannot be reversed. Are you sure you wish to erase personal data from the selected orders?', 'dokan-lite' ),
+                'decimal_point'                            => $decimal,
+                'mon_decimal_point'                        => wc_get_price_decimal_separator(),
+                'variations_per_page'                      => absint( apply_filters( 'dokan_product_variations_per_page', 10 ) ),
+                'store_banner_dimension'                   => [
                     'width'       => $banner_width,
                     'height'      => $banner_height,
                     'flex-width'  => $has_flex_width,
                     'flex-height' => $has_flex_height,
                 ],
-                'selectAndCrop'                       => __( 'Select and Crop', 'dokan-lite' ),
-                'chooseImage'                         => __( 'Choose Image', 'dokan-lite' ),
-                'product_title_required'              => __( 'Product title is required', 'dokan-lite' ),
-                'product_category_required'           => __( 'Product category is required', 'dokan-lite' ),
-                'product_created_response'            => __( 'Product created successfully', 'dokan-lite' ),
-                'search_products_nonce'               => wp_create_nonce( 'search-products' ),
-                'search_products_tags_nonce'          => wp_create_nonce( 'search-products-tags' ),
-                'search_customer_nonce'               => wp_create_nonce( 'search-customer' ),
-                'i18n_matches_1'                      => __( 'One result is available, press enter to select it.', 'dokan-lite' ),
-                'i18n_matches_n'                      => __( '%qty% results are available, use up and down arrow keys to navigate.', 'dokan-lite' ),
-                'i18n_no_matches'                     => __( 'No matches found', 'dokan-lite' ),
-                'i18n_ajax_error'                     => __( 'Loading failed', 'dokan-lite' ),
-                'i18n_input_too_short_1'              => __( 'Please enter 1 or more characters', 'dokan-lite' ),
-                'i18n_input_too_short_n'              => __( 'Please enter %qty% or more characters', 'dokan-lite' ),
-                'i18n_input_too_long_1'               => __( 'Please delete 1 character', 'dokan-lite' ),
-                'i18n_input_too_long_n'               => __( 'Please delete %qty% characters', 'dokan-lite' ),
-                'i18n_selection_too_long_1'           => __( 'You can only select 1 item', 'dokan-lite' ),
-                'i18n_selection_too_long_n'           => __( 'You can only select %qty% items', 'dokan-lite' ),
-                'i18n_load_more'                      => __( 'Loading more results&hellip;', 'dokan-lite' ),
-                'i18n_searching'                      => __( 'Searching&hellip;', 'dokan-lite' ),
-                'i18n_calculating'                    => __( 'Calculating', 'dokan-lite' ),
-                'i18n_ok_text'                        => __( 'OK', 'dokan-lite' ),
-                'i18n_cancel_text'                    => __( 'Cancel', 'dokan-lite' ),
-                'i18n_attribute_label'                => __( 'Attribute Name', 'dokan-lite' ),
-                'i18n_date_format'                    => get_option( 'date_format' ),
-                'dokan_banner_added_alert_msg'        => __( 'Are you sure? You have uploaded banner but didn\'t click the Update Settings button!', 'dokan-lite' ),
-                'update_settings'                     => __( 'Update Settings', 'dokan-lite' ),
+                'selectAndCrop'                            => __( 'Select and Crop', 'dokan-lite' ),
+                'chooseImage'                              => __( 'Choose Image', 'dokan-lite' ),
+                'product_title_required'                   => __( 'Product title is required', 'dokan-lite' ),
+                'product_category_required'                => __( 'Product category is required', 'dokan-lite' ),
+                'product_created_response'                 => __( 'Product created successfully', 'dokan-lite' ),
+                'search_products_nonce'                    => wp_create_nonce( 'search-products' ),
+                'search_products_tags_nonce'               => wp_create_nonce( 'search-products-tags' ),
+                'search_customer_nonce'                    => wp_create_nonce( 'search-customer' ),
+                'i18n_matches_1'                           => __( 'One result is available, press enter to select it.', 'dokan-lite' ),
+                'i18n_matches_n'                           => __( '%qty% results are available, use up and down arrow keys to navigate.', 'dokan-lite' ),
+                'i18n_no_matches'                          => __( 'No matches found', 'dokan-lite' ),
+                'i18n_ajax_error'                          => __( 'Loading failed', 'dokan-lite' ),
+                'i18n_input_too_short_1'                   => __( 'Please enter 1 or more characters', 'dokan-lite' ),
+                'i18n_input_too_short_n'                   => __( 'Please enter %qty% or more characters', 'dokan-lite' ),
+                'i18n_input_too_long_1'                    => __( 'Please delete 1 character', 'dokan-lite' ),
+                'i18n_input_too_long_n'                    => __( 'Please delete %qty% characters', 'dokan-lite' ),
+                'i18n_selection_too_long_1'                => __( 'You can only select 1 item', 'dokan-lite' ),
+                'i18n_selection_too_long_n'                => __( 'You can only select %qty% items', 'dokan-lite' ),
+                'i18n_load_more'                           => __( 'Loading more results&hellip;', 'dokan-lite' ),
+                'i18n_searching'                           => __( 'Searching&hellip;', 'dokan-lite' ),
+                'i18n_calculating'                         => __( 'Calculating', 'dokan-lite' ),
+                'i18n_ok_text'                             => __( 'OK', 'dokan-lite' ),
+                'i18n_cancel_text'                         => __( 'Cancel', 'dokan-lite' ),
+                'i18n_attribute_label'                     => __( 'Attribute Name', 'dokan-lite' ),
+                'i18n_date_format'                         => get_option( 'date_format' ),
+                'dokan_banner_added_alert_msg'             => __( 'Are you sure? You have uploaded banner but didn\'t click the Update Settings button!', 'dokan-lite' ),
+                'update_settings'                          => __( 'Update Settings', 'dokan-lite' ),
+                'search_downloadable_products_nonce'       => wp_create_nonce( 'search-downloadable-products' ),
+                'search_downloadable_products_placeholder' => __( 'Please enter 3 or more characters', 'dokan-lite' ),
             ];
 
             $default_args = array_merge( $default_args, $custom_args );
@@ -1153,13 +1164,13 @@ class Assets {
                 'proVersion'                        => dokan()->is_pro_exists() ? dokan_pro()->version : '',
                 'i18n'                              => [ 'dokan-lite' => dokan_get_jed_locale_data( 'dokan-lite', DOKAN_DIR . '/languages/' ) ],
                 'urls'                              => [
-                    'adminRoot'    => admin_url(),
-                    'siteUrl'      => home_url( '/' ),
-                    'storePrefix'  => dokan_get_option( 'custom_store_url', 'dokan_general', 'store' ),
-                    'assetsUrl'    => DOKAN_PLUGIN_ASSEST,
-                    'buynowpro'    => dokan_pro_buynow_url(),
-                    'upgradeToPro' => 'https://dokan.co/wordpress/upgrade-to-pro/?utm_source=plugin&utm_medium=wp-admin&utm_campaign=dokan-lite',
-                    'dummy_data'   => DOKAN_PLUGIN_ASSEST . '/dummy-data/dokan_dummy_data.csv',
+                    'adminRoot'         => admin_url(),
+                    'siteUrl'           => home_url( '/' ),
+                    'storePrefix'       => dokan_get_option( 'custom_store_url', 'dokan_general', 'store' ),
+                    'assetsUrl'         => DOKAN_PLUGIN_ASSEST,
+                    'buynowpro'         => dokan_pro_buynow_url(),
+                    'upgradeToPro'      => 'https://dokan.co/wordpress/upgrade-to-pro/?utm_source=plugin&utm_medium=wp-admin&utm_campaign=dokan-lite',
+                    'dummy_data'        => DOKAN_PLUGIN_ASSEST . '/dummy-data/dokan_dummy_data.csv',
                     'adminOrderListUrl' => OrderUtil::get_admin_order_list_url(),
                     'adminOrderEditUrl' => OrderUtil::get_admin_order_edit_url(),
                 ],

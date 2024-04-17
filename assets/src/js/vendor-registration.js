@@ -39,22 +39,25 @@ var Dokan_Vendor_Registration = {
     },
 
     showSellerForm: function() {
-        var value = $(this).val();
+        let value = $(this).val();
+        if ( value.length === 0 ) {
+            value = dokanRegistrationI18n.defaultRole;
+        }
 
-        if ( value === 'seller') {
-            $('.show_if_seller').find( 'input, select' ).removeAttr( 'disabled' );
+        if ( value === 'seller' ) {
+            $('.show_if_seller').find( 'input, select' ).prop( 'disabled', false );
             $('.show_if_seller').slideDown();
 
             if ( $( '.tc_check_box' ).length > 0 ) {
-                $('button[name=register]').attr('disabled','disabled');
+                $('button[name=register]').prop('disabled',true);
             }
             $('.user-role .dokan-role-seller').prop("checked",true);
         } else {
-            $('.show_if_seller').find( 'input, select' ).attr( 'disabled', 'disabled' );
+            $('.show_if_seller').find( 'input, select' ).prop( 'disabled', true );
             $('.show_if_seller').slideUp();
 
             if ( $( '.tc_check_box' ).length > 0 ) {
-                $( 'button[name=register]' ).removeAttr( 'disabled' );
+                $( 'button[name=register]' ).prop( 'disabled', false );
             }
             $('.user-role .dokan-role-customer').prop("checked",true);
         }
@@ -196,8 +199,6 @@ var Dokan_Vendor_Registration = {
 $(function() {
     window.Dokan_Vendor_Registration = Dokan_Vendor_Registration;
     window.Dokan_Vendor_Registration.init();
-
-    $('.show_if_seller').find( 'input, select' ).attr( 'disabled', 'disabled' );
 
     // trigger change if there is an error while registering
     var shouldTrigger = $( '.woocommerce ul' ).hasClass( 'woocommerce-error' ) && ! $( '.show_if_seller' ).is( ':hidden' );

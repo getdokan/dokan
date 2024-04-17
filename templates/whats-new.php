@@ -4,6 +4,60 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.10.3',
+        'released' => '2024-04-17',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Notification count support added for vendor dashboard',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added a new filter to set a default value for I am a customer / I am a vendor radio button',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Processing Order count added for vendor dashboard orders menu',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Performance improvements for vendor dashboard -> order details page -> downloadable product permission section',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Admin can change product author from REST API',
+                    'description' => 'Previously, product_author was read-only property, now admin can change product_author for an existing product or create a new product for another author.',
+                ],
+                [
+                    'title'       => 'Warning message styling for selecting fixed cart discount on admin coupon add edit page',
+                    'description' => '',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => 'Advertisement product not purchasable for own product purchasing restriction',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Header Template number one breaks without background image',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'HTML entity showing in product tag selection in vendor dashboard',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Vendor add notification switch in admin dashboard',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Under wooCommerce my-account registration section, `I am a customer` was forced to be set as the default value. With this PR this problem has been fixed',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.10.2',
         'released' => '2024-04-01',
         'changes'  => [
@@ -14,10 +68,6 @@ $changelog = [
                 ],
                 [
                     'title'       => 'Add requires plugin header for dokan so that required plugin check can be initiated',
-                    'description' => '',
-                ],
-                [
-                    'title'       => '`dokan_commission_log_gateway_fee_to_order_note` filter hook added',
                     'description' => '',
                 ],
             ],
