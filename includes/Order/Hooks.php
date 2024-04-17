@@ -273,6 +273,12 @@ class Hooks {
                 $sub_order->save();
             }
 
+            // if the order contains any product(s) that need processing, then we need to set the status to processing.
+            if ( $order->is_paid() && ! in_array( $order->get_payment_method(), $excluded_gateways, true ) && $sub_order->needs_processing() ) {
+                $sub_order->set_status( 'processing', __( 'Marked as processing because payment is completed.', 'dokan-lite' ) );
+                $sub_order->save();
+            }
+
             // if any child order is not completed, break the loop
             if ( $sub_order->get_status() !== 'completed' ) {
                 $all_complete = false;
