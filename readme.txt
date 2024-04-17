@@ -3,7 +3,7 @@ Contributors: tareq1988, wedevs, nizamuddinbabu
 Donate Link: http://tareq.co/donate/
 Tags: WooCommerce multivendor marketplace, multi vendor marketplace, multi seller store, multi-vendor, multi seller, commissions, multivendor, marketplace, product vendors, woocommerce vendor, commission rate, e-commerce, woocommerce, ebay, ecommerce.
 Requires at least: 5.6
-Tested up to: 6.5
+Tested up to: 6.5.2
 WC requires at least: 5.0.0
 WC tested up to: 8.7.0
 Requires PHP: 7.4
@@ -338,7 +338,7 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
-= v3.10.3 ( Apr 16, 2024 ) =
+= v3.10.3 ( Apr 17, 2024 ) =
 
 - **update:** Notification count support added for vendor dashboard
 - **update:** added a new filter to set a default value for I am a customer / I am a vendor radio button
