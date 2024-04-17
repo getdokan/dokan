@@ -250,7 +250,7 @@ function dokan_order_listing_status_filter() {
             <li<?php echo $status_class === $status_key ? ' class="active"' : ''; ?>>
                 <a href="<?php echo esc_url( $status_url ); ?>">
                     <?php
-                    // Set formatted order counts data based on status.
+                    // Set formatted orders count data based on status.
                     $total_orders          = $orders_counts->total ?? 0;
                     $status_order_count    = $orders_counts->{$status_key} ?? 0;
                     $formatted_order_count = $status_key === 'all' ? number_format_i18n( $total_orders ) : number_format_i18n( $status_order_count );
