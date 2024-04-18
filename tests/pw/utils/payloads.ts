@@ -532,6 +532,47 @@ export const payloads = {
         ],
     }),
 
+    reverseWithdrawalPaymentProduct: {
+        name: 'Reverse Withdrawal Payment',
+        post_author: '1',
+        type: 'simple',
+        status: 'publish',
+        featured: false,
+        catalog_visibility: 'hidden',
+        description: '<p>This is Dokan reverse withdrawal payment product, do not delete.</p>\n',
+        regular_price: '0',
+        categories: [{}],
+        virtual: true,
+        tax_status: 'none',
+        sold_individually: true,
+        shipping_required: false,
+        shipping_taxable: false,
+        meta_data: [{}],
+    },
+
+    productAdvertisementPaymentProduct: {
+        name: 'Product Advertisement Payment',
+        post_author: '1',
+        type: 'simple',
+        status: 'publish',
+        featured: false,
+        catalog_visibility: 'hidden',
+        description: '<p>This is Dokan advertisement payment product, do not delete.</p>\n',
+        regular_price: '0',
+        categories: [{}],
+        virtual: true,
+        tax_status: 'taxable',
+        sold_individually: true,
+        shipping_required: false,
+        shipping_taxable: false,
+        meta_data: [
+            {
+                key: 'chosen_product_cat',
+                value: [false],
+            },
+        ],
+    },
+
     updateProduct: () => ({ regular_price: faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([0, 2]) }) }),
 
     updateProductVariation: () => ({ regular_price: faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([0, 2]) }) }),

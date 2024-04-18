@@ -230,3 +230,45 @@ setup.describe.skip('setup dokan settings e2e', () => {
         expect(product).toBeTruthy();
     });
 });
+
+setup.describe('setup dokan settings', () => {
+    let apiUtils: ApiUtils;
+
+    setup.beforeAll(async () => {
+        apiUtils = new ApiUtils(await request.newContext());
+    });
+
+    setup.afterAll(async () => {
+        await apiUtils.dispose();
+    });
+
+    setup('recreate reverse withdrawal payment product @lite', async () => {
+        const product = await apiUtils.checkProductExistence('Reverse Withdrawal Payment', payloads.adminAuth);
+        if (!product) {
+            console.log("Reverse Withdrawal Payment product doesn't exists!!");
+            const [, reverseWithdrawalPaymentProduct] = await apiUtils.createProduct(payloads.reverseWithdrawalPaymentProduct, payloads.adminAuth);
+            await dbUtils.setDokanSettings(dbData.dokan.paymentProducts.reverseWithdraw, reverseWithdrawalPaymentProduct);
+        }
+    });
+
+    setup('reverse Withdraw payment product exists @lite', async () => {
+        const product = await apiUtils.checkProductExistence('Reverse Withdrawal Payment', payloads.adminAuth);
+        expect(product).toBeTruthy();
+    });
+
+    setup('recreate product advertisement payment product @pro', async () => {
+        setup.skip(!DOKAN_PRO, 'skip on lite');
+        const product = await apiUtils.checkProductExistence('Product Advertisement Payment', payloads.adminAuth);
+        if (!product) {
+            console.log("Product advertisement payment product doesn't exists!!");
+            const [, productAdvertisementPaymentProduct] = await apiUtils.createProduct(payloads.productAdvertisementPaymentProduct, payloads.adminAuth);
+            await dbUtils.setDokanSettings(dbData.dokan.paymentProducts.ProductAdvertisement, productAdvertisementPaymentProduct);
+        }
+    });
+
+    setup('product advertisement payment product exists @pro', async () => {
+        setup.skip(!DOKAN_PRO, 'skip on lite');
+        const product = await apiUtils.checkProductExistence('Product Advertisement Payment', payloads.adminAuth);
+        expect(product).toBeTruthy();
+    });
+});

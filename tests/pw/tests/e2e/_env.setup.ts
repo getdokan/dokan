@@ -312,7 +312,11 @@ setup.describe('setup dokan settings e2e', () => {
     });
 
     setup('recreate reverse withdrawal payment product via settings save @lite', async () => {
-        await reverseWithdrawsPage.reCreateReverseWithdrawalPaymentViaSettingsSave();
+        const product = await apiUtils.checkProductExistence('Reverse Withdrawal Payment', payloads.adminAuth);
+        if (!product) {
+            console.log("Reverse Withdrawal Payment product doesn't exists!!");
+            await reverseWithdrawsPage.reCreateReverseWithdrawalPaymentViaSettingsSave();
+        }
     });
 
     setup('reverse Withdraw payment product exists @lite', async () => {
@@ -322,7 +326,11 @@ setup.describe('setup dokan settings e2e', () => {
 
     setup('recreate product advertisement payment product via settings save @pro', async () => {
         setup.skip(!DOKAN_PRO, 'skip on lite');
-        await productAdvertisingPage.recreateProductAdvertisementPaymentViaSettingsSave();
+        const product = await apiUtils.checkProductExistence('Product Advertisement Payment', payloads.adminAuth);
+        if (!product) {
+            console.log("Product advertisement payment product doesn't exists!!");
+            await productAdvertisingPage.recreateProductAdvertisementPaymentViaSettingsSave();
+        }
     });
 
     setup('product advertisement payment product exists @pro', async () => {
