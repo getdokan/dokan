@@ -186,7 +186,7 @@ class Registration {
     /**
      * Adds address profile completion value in dokan settings.
      *
-     * @DOKAN_SINCE
+     * @3.10.2
      *
      * @param int   $vendor_id
      * @param array $new_dokan_settings

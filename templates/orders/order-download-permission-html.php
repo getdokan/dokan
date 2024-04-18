@@ -19,7 +19,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                 . ' &mdash; '
                 . sprintf(
                     // translators: 1) download count, 2) download file name
-                    __( 'File %1$d: %2$s', 'dokan-lite' ),
+                    __( 'File %1$s: %2$s', 'dokan-lite' ),
                     $file_count,
                     wc_get_filename_from_url( $product->get_file_download_path( $download->download_id ) )
                 )

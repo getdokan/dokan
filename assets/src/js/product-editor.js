@@ -327,6 +327,13 @@
                         return dokan.i18n_searching;
                     }
                 },
+                escapeMarkup: function (markup) { return markup; },
+                templateResult: function (item) {
+                    return `<span>${item.text}</span>`;
+                },
+                templateSelection: function (item) {
+                    return item.text;
+                },
             });
         },
 
