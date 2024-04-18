@@ -1019,7 +1019,7 @@ function dokan_vendor_own_product_purchase_restriction( bool $is_purchasable, $p
      * the vendor is attempting to purchase their own product. It can be used to restrict
      * or allow such purchases according to business rules.
      *
-     * @since DOKAN_SINCE
+     * @since 3.10.3
      *
      * @param bool    $is_purchasable Indicates if the product is purchasable. True by default.
      * @param WP_Post $product        The product object being evaluated for purchasability.

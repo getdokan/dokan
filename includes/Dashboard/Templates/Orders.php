@@ -347,7 +347,7 @@ class Orders {
     /**
      * Add pending order count to dashboard menu.
      *
-     * @since DOKAN_SINCE
+     * @since 3.10.3
      *
      * @param array $menu Menu Array.
      *

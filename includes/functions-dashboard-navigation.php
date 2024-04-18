@@ -242,7 +242,7 @@ function dokan_dashboard_nav( $active_menu = '' ) {
                 /**
                  * Filters a menu key according to slug if needed.
                  *
-                 * @since DOKAN_SINCE
+                 * @since 3.10.3
                  *
                  * @param string $submenu_key
                  * @param string $menu_key

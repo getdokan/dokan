@@ -4644,6 +4644,16 @@ div.media-sidebar a.edit-attachment {
   background-size: 100% 100%;
   background-repeat: no-repeat;
 }
+.dokan-single-store .profile-frame .profile-info-box.profile-layout-default .profile-info-img {
+  height: 100% !important;
+  object-fit: cover;
+}
+.dokan-single-store .profile-frame .profile-info-box.profile-layout-default .profile-info-img.dummy-image {
+  position: absolute;
+  left: 0;
+  top: 0;
+  background-size: cover;
+}
 .dokan-single-store .profile-frame .profile-info-box .profile-info-summery-wrapper {
   position: absolute;
   top: 0;
