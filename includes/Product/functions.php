@@ -148,21 +148,6 @@ function dokan_product_output_variations() {
                 </div>
                 <div
                     class="dokan-variations-container wc-metaboxes"
-                    data-attributes="
-                    <?php
-                    echo esc_attr(
-                        htmlspecialchars(
-                            wp_json_encode(
-                                array_map(
-                                    function ( $attribute ) {
-                                        return $attribute->get_data();
-                                    }, $product_object->get_attributes()
-                                )
-                            )
-                        )
-                    );
-                    ?>
-                    "
                     data-total="<?php echo esc_attr( $variations_count ); ?>"
                     data-total_pages="<?php echo esc_attr( $variations_total_pages ); ?>"
                     data-page="1"
