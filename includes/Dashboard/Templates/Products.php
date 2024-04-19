@@ -433,34 +433,34 @@ class Products {
 
             // Skip all of the "Downloads" section fields if "Downloadable" field disabled.
             $downloadable_fields = array_keys( ProductFormFactory::get_fields_by_type( '', 'downloadable' ) );
-            if ( in_array( $field->get_id(), $downloadable_fields ) && 'no' === $_POST['_downloadable'] ) {
+            if ( in_array( $field->get_id(), $downloadable_fields, true ) && isset( $_POST['_downloadable'] ) && 'no' === $_POST['_downloadable'] ) {
                 continue;
             }
 
             // Skip "This product requires shipping" checkbox field if "Virtual" field enabled.
-            if ( ProductFormElements::DISABLE_SHIPPING_META === $field->get_id() && 'yes' === $_POST['_virtual'] ) {
+            if ( ProductFormElements::DISABLE_SHIPPING_META === $field->get_id() && isset( $_POST['_virtual'] ) && 'yes' === $_POST['_virtual'] ) {
                 continue;
             }
 
             // Skip shipping related fields if "This product requires shipping" field disabled.
             $shipping_fields = [ 'weight', 'length', 'width', 'height', 'shipping_class_id' ];
-            if ( in_array( $field->get_id(), $shipping_fields ) && 'no' === $_POST['_disable_shipping'] ) {
+            if ( in_array( $field->get_id(), $shipping_fields, true ) && isset( $_POST['_disable_shipping'] ) && 'no' === $_POST['_disable_shipping'] ) {
                 continue;
             }
 
             // Skip the "Stock Status" field if "Enable Product Stock Management" field enabled.
-            if ( 'yes' === $_POST['_manage_stock'] && ProductFormElements::STOCK_STATUS === $field->get_id() ) {
+            if ( isset( $_POST['_manage_stock'] ) && 'yes' === $_POST['_manage_stock'] && ProductFormElements::STOCK_STATUS === $field->get_id() ) {
                 continue;
             }
 
             // Skip the "Stock Qty", "Low Stock Threshold" and "Allow Backorders" fields if "Enable Product Stock Management" field disabled.
             $manage_stock_fields = [ ProductFormElements::STOCK_QUANTITY, ProductFormElements::LOW_STOCK_AMOUNT, ProductFormElements::BACKORDERS ];
-            if ( 'no' === $_POST['_manage_stock'] && in_array( $field->get_id(), $manage_stock_fields ) ) {
+            if ( isset( $_POST['_manage_stock'] ) && 'no' === $_POST['_manage_stock'] && in_array( $field->get_id(), $manage_stock_fields, true ) ) {
                 continue;
             }
 
             // Skip the "Minimum Quantity" and "Discount %" fields if "Enable Bulk Discount" field disabled.
-            if ( 'no' === $_POST['_is_lot_discount'] && ( '_lot_discount_quantity' === $field->get_id() || '_lot_discount_amount' === $field->get_id() ) ) {
+            if ( isset( $_POST['_is_lot_discount'] ) && 'no' === $_POST['_is_lot_discount'] && ( '_lot_discount_quantity' === $field->get_id() || '_lot_discount_amount' === $field->get_id() ) ) {
                 continue;
             }
 
