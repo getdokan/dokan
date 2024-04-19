@@ -212,6 +212,7 @@ function dokan_order_listing_status_filter() {
     $status_class  = 'all';
     $orders_url    = dokan_get_navigation_url( 'orders' );
     $orders_counts = dokan_count_orders( dokan_get_current_user_id() );
+    $total_orders  = $orders_counts->total ?? 0;
     $filter_nonce  = wp_create_nonce( 'seller-order-filter-nonce' );
 
     if ( isset( $_GET['seller_order_filter_nonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['seller_order_filter_nonce'] ) ), 'seller-order-filter-nonce' ) ) {
@@ -229,7 +230,7 @@ function dokan_order_listing_status_filter() {
      *
      * @param array $exclude_statuses Array of order status slugs to be excluded.
      */
-    $exclude_statuses = (array) apply_filters( 'dokan_exclude_dashboard_order_statuses', array( 'wc-checkout-draft' ) );
+    $exclude_statuses = (array) apply_filters( 'dokan_vendor_dashboard_excluded_order_statuses', [ 'wc-checkout-draft' ] );
 
     // Convert the indexed array to an associative array where the values become keys & Get WooCommerce order statuses.
     $exclude_statuses  = array_flip( $exclude_statuses );
@@ -239,7 +240,7 @@ function dokan_order_listing_status_filter() {
     $filtered_statuses = array_diff_key( $wc_order_statuses, $exclude_statuses );
 
     // Directly prepend the custom 'All' status to the WooCommerce order statuses.
-    $order_statuses = array_merge( array( 'all' => 'All' ), $filtered_statuses );
+    $order_statuses = array_merge( [ 'all' => 'All' ], $filtered_statuses );
 
     /**
      * Determine the order listing statuses on the Dokan dashboard.
@@ -252,7 +253,7 @@ function dokan_order_listing_status_filter() {
      *
      * @param array $order_statuses Array of order statuses with all. Key is the status slug, and value is the display label.
      */
-    $order_statuses = apply_filters( 'dokan_dashboard_order_listing_statuses', $order_statuses );
+    $order_statuses = apply_filters( 'dokan_vendor_dashboard_order_listing_statuses', $order_statuses );
     ?>
     <ul class='list-inline order-statuses-filter subsubsub'>
         <?php foreach ( $order_statuses as $status_key => $status_label ) : ?>
@@ -265,11 +266,10 @@ function dokan_order_listing_status_filter() {
             // Get filtered orders url based on order status.
             $status_url = add_query_arg( $url_args, $orders_url );
             ?>
-            <li<?php echo $status_class === $status_key ? ' class="active"' : ''; ?>>
+            <li <?php echo $status_class === $status_key ? 'class="active"' : ''; ?>>
                 <a href="<?php echo esc_url( $status_url ); ?>">
                     <?php
                     // Set formatted orders count data based on status.
-                    $total_orders          = $orders_counts->total ?? 0;
                     $status_order_count    = $orders_counts->{$status_key} ?? 0;
                     $formatted_order_count = $status_key === 'all' ? number_format_i18n( $total_orders ) : number_format_i18n( $status_order_count );
 
