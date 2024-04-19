@@ -20,7 +20,7 @@ test.describe('Admin functionality test', () => {
         await aPage.close();
     });
 
-    test('admin can login @lite @a', async ({ page }) => {
+    test.only('admin can login @lite @a', async ({ page }) => {
         test.fail('failed test');
         const loginPage = new LoginPage(page);
         await loginPage.adminLogin(data.admin);
