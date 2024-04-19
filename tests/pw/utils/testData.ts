@@ -782,7 +782,7 @@ export const data = {
         backend: {
             login: 'wp-login.php',
             adminLogin: 'wp-admin',
-            adminLogout: 'wp-login.php?action=logout',
+            adminLogout: 'wp-login.php?loggedout=true',
             adminDashboard: 'wp-admin',
             user: 'wp-admin/user-edit.php',
             setupWP: 'wp-admin/install.php',

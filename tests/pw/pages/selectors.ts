@@ -74,11 +74,11 @@ export const selector = {
         dashboardText: '.wrap h1',
 
         // Admin Logout
-        userMenu: '#wp-admin-bar-my-account',
-        logout: '#wp-admin-bar-logout a',
+        userMenu: 'li#wp-admin-bar-my-account',
+        logout: 'li#wp-admin-bar-logout',
 
         // Logout Message
-        logoutSuccessMessage: '#login p',
+        logoutSuccessMessage: 'div#login-message p',
 
         // Login Error
         loginError: '#login_error',
