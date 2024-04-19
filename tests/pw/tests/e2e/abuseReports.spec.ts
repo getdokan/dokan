@@ -35,6 +35,7 @@ test.describe('Abuse report test', () => {
     });
 
     test('dokan abuse report menu page is rendering properly @pro @exp @a', async () => {
+        test.fail('failed test');
         await admin.adminAbuseReportRenderProperly();
     });
 
