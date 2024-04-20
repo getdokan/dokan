@@ -23,7 +23,7 @@ test.describe('follow store api test', () => {
         await apiUtils.dispose();
     });
 
-    test('get store follow status @pro', async () => {
+    test('get store follow status', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getStoreFollowStatus, { params: { vendor_id: sellerId } });
         const headers = response.headers();
         expect(headers['content-type']).toBe('application/json; charset=UTF-8');
@@ -37,7 +37,7 @@ test.describe('follow store api test', () => {
         expect(responseBody).toMatchSchema(schemas.followStoresSchema.followstatusSchema);
     });
 
-    test('follow-unfollow a store @pro', async () => {
+    test('follow-unfollow a store', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.post(endPoints.followUnfollowStore, { data: { vendor_id: Number(sellerId) } });
         const headers = response.headers();
         expect(headers['content-type']).toBe('application/json; charset=UTF-8');
@@ -51,7 +51,7 @@ test.describe('follow store api test', () => {
         expect(responseBody).toMatchSchema(schemas.followStoresSchema.followUnfollowSchema);
     });
 
-    test('get followers @pro', async () => {
+    test('get followers', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getFollowers);
         const headers = response.headers();
         expect(headers['content-type']).toBe('application/json; charset=UTF-8');

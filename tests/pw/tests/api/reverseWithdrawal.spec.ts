@@ -29,38 +29,38 @@ test.describe('reverse withdrawal api test', () => {
         await apiUtils.dispose();
     });
 
-    test('get reverse withdrawal transaction types @lite', async () => {
+    test('get reverse withdrawal transaction types', { tag: ['@lite'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getReverseWithdrawalTransactionTypes);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
-    test('get all reverse withdrawal stores @lite', async () => {
+    test('get all reverse withdrawal stores', { tag: ['@lite'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllReverseWithdrawalStores);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
-    test('get all reverse withdrawal store balance @lite', async () => {
+    test('get all reverse withdrawal store balance', { tag: ['@lite'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllReverseWithdrawalStoreBalance);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
-    test('get all reverse withdrawal transactions @lite', async () => {
+    test('get all reverse withdrawal transactions', { tag: ['@lite'] }, async () => {
         const storeId = await apiUtils.getReverseWithdrawalStoreId();
         const [response, responseBody] = await apiUtils.get(endPoints.getAllReverseWithdrawalTransactions, { params: { ...payloads.paramsReverseWithdrawalTransactions, vendor_id: storeId } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
-    test('get reverse withdrawal vendor due status @lite', async () => {
+    test('get reverse withdrawal vendor due status', { tag: ['@lite'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getReverseWithdrawalVendorDueStatus);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
-    test('add reverse withdrawal payment product to cart @lite', async () => {
+    test('add reverse withdrawal payment product to cart', { tag: ['@lite'] }, async () => {
         const [response, responseBody] = await apiUtils.post(endPoints.getReverseWithdrawalAddProductToCart, { data: payloads.amountToPay, headers: payloads.vendorAuth });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();

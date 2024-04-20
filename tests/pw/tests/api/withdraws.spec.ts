@@ -29,56 +29,56 @@ test.describe('withdraw api test', () => {
         await apiUtils.dispose();
     });
 
-    test('get withdraw payment methods @lite', async () => {
+    test('get withdraw payment methods', { tag: ['@lite'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getWithdrawPaymentMethods);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
-    test('get balance details @lite', async () => {
+    test('get balance details', { tag: ['@lite'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getBalanceDetails);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
-    test('get all withdraws @lite', async () => {
+    test('get all withdraws', { tag: ['@lite'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllWithdraws);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
-    test('get all withdraws by status @lite', async () => {
+    test('get all withdraws by status', { tag: ['@lite'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllWithdraws, { params: { status: 'pending' } }); // pending, cancelled, approved
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
-    test('get single withdraw @lite', async () => {
+    test('get single withdraw', { tag: ['@lite'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getSingleWithdraw(withdrawId));
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
-    test('update a withdraw @lite', async () => {
+    test('update a withdraw', { tag: ['@lite'] }, async () => {
         const [response, responseBody] = await apiUtils.put(endPoints.updateWithdraw(withdrawId), { data: payloads.updateWithdraw });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
-    test('cancel a withdraw @lite', async () => {
+    test('cancel a withdraw', { tag: ['@lite'] }, async () => {
         const [response, responseBody] = await apiUtils.delete(endPoints.cancelWithdraw(withdrawId));
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
-    test('update batch withdraws @lite', async () => {
+    test('update batch withdraws', { tag: ['@lite'] }, async () => {
         const allWithdrawIds = (await apiUtils.getAllWithdraws()).map((a: { id: unknown }) => a.id);
         const [response, responseBody] = await apiUtils.put(endPoints.updateBatchWithdraws, { data: { approved: allWithdrawIds } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
-    test('create a withdraw @lite', async () => {
+    test('create a withdraw', { tag: ['@lite'] }, async () => {
         // cancel any pending withdraw
         const pendingRequest = await apiUtils.getAllWithdrawsByStatus('pending');
         helpers.isObjEmpty(pendingRequest) === false && (await apiUtils.cancelWithdraw(withdrawId));
@@ -89,13 +89,13 @@ test.describe('withdraw api test', () => {
         expect(responseBody).toBeTruthy();
     });
 
-    test('get all withdraw method charges @lite', async () => {
+    test('get all withdraw method charges', { tag: ['@lite'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllWithdrawMethodCharges);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
-    test('get withdraw charge details @lite', async () => {
+    test('get withdraw charge details', { tag: ['@lite'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getWithdrawCharge, { params: payloads.withdrawCharge });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();

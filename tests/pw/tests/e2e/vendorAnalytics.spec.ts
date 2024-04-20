@@ -16,7 +16,9 @@ test.describe('Vendor analytics test', () => {
         await vPage.close();
     });
 
-    test('vendor analytics menu page is rendering properly @pro @exp @v', async () => {
+    // vendor
+
+    test('vendor analytics menu page is rendering properly', { tag: ['@pro', '@exp', '@v'] }, async () => {
         await vendor.vendorAnalyticsRenderProperly();
     });
 });

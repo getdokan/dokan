@@ -26,23 +26,23 @@ test.describe('Stores test', () => {
 
     // stores
 
-    test('admin vendors menu page is rendering properly @lite @exp @a', async () => {
+    test('admin vendors menu page is rendering properly', { tag: ['@lite', '@exp', '@a'] }, async () => {
         await admin.adminVendorsRenderProperly();
     });
 
-    test('admin can view vendor details @pro @a', async () => {
+    test('admin can view vendor details', { tag: ['@pro', '@a'] }, async () => {
         await admin.viewVendorDetails(VENDOR_ID);
     });
 
-    test('admin can email vendor @pro @a', async () => {
+    test('admin can email vendor', { tag: ['@pro', '@a'] }, async () => {
         await admin.emailVendor(VENDOR_ID, data.vendor.vendorInfo.sendEmail);
     });
 
-    test('admin can add vendor @lite @a', async () => {
+    test('admin can add vendor', { tag: ['@lite', '@a'] }, async () => {
         await admin.addVendor(data.vendor.vendorInfo);
     });
 
-    test('admin can search vendors @lite @a', async () => {
+    test('admin can search vendors', { tag: ['@lite', '@a'] }, async () => {
         await admin.searchVendor(data.predefined.vendorStores.vendor1);
     });
 
@@ -56,19 +56,19 @@ test.describe('Stores test', () => {
         await admin.updateVendor(storeName, 'enable');
     });
 
-    test('admin can edit vendor info @lite @a', async () => {
+    test('admin can edit vendor info', { tag: ['@lite', '@a'] }, async () => {
         await admin.editVendor(data.vendor);
     });
 
-    test('admin can view vendor products @lite @a', async () => {
+    test('admin can view vendor products', { tag: ['@lite', '@a'] }, async () => {
         await admin.viewVendor(data.predefined.vendorStores.vendor1, 'products');
     });
 
-    test('admin can view vendor orders @lite @a', async () => {
+    test('admin can view vendor orders', { tag: ['@lite', '@a'] }, async () => {
         await admin.viewVendor(data.predefined.vendorStores.vendor1, 'orders');
     });
 
-    test('admin can perform vendor bulk actions @lite @a', async () => {
+    test('admin can perform vendor bulk actions', { tag: ['@lite', '@a'] }, async () => {
         await admin.vendorBulkAction('approved');
     });
 });

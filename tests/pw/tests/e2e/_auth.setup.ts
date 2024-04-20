@@ -19,7 +19,7 @@ setup.describe('authenticate users & set permalink', () => {
         await apiUtils.dispose();
     });
 
-    setup.skip('get server url @lite', async () => {
+    setup.skip('get server url', { tag: ['@lite'] }, async () => {
         const apiUtils = new ApiUtils(await request.newContext());
         const headers = await apiUtils.getSiteHeaders(BASE_URL);
         if (headers.link) {
@@ -30,49 +30,49 @@ setup.describe('authenticate users & set permalink', () => {
         }
     });
 
-    setup('authenticate admin @lite', async ({ page }) => {
+    setup('authenticate admin', { tag: ['@lite'] }, async ({ page }) => {
         const loginPage = new LoginPage(page);
         await loginPage.adminLogin(data.admin, data.auth.adminAuthFile);
     });
 
-    setup.skip('admin set WpSettings @lite', async ({ page }) => {
+    setup.skip('admin set WpSettings', { tag: ['@lite'] }, async ({ page }) => {
         const loginPage = new LoginPage(page);
         const wpPage = new WpPage(page);
         await loginPage.adminLogin(data.admin);
         await wpPage.setPermalinkSettings(data.wpSettings.permalink);
     });
 
-    setup('add customer1 @lite', async () => {
+    setup('add customer1', { tag: ['@lite'] }, async () => {
         const [, customerId] = await apiUtils.createCustomer(payloads.createCustomer1, payloads.adminAuth);
         helpers.createEnvVar('CUSTOMER_ID', customerId);
     });
 
-    setup('add vendor1 @lite', async () => {
+    setup('add vendor1', { tag: ['@lite'] }, async () => {
         const [, sellerId] = await apiUtils.createStore(payloads.createStore1, payloads.adminAuth, true);
         helpers.createEnvVar('VENDOR_ID', sellerId);
     });
 
-    setup('add vendor2 @lite', async () => {
+    setup('add vendor2', { tag: ['@lite'] }, async () => {
         const [, sellerId] = await apiUtils.createStore(payloads.createStore2, payloads.adminAuth, true);
         helpers.createEnvVar('VENDOR2_ID', sellerId);
     });
 
-    setup('authenticate customer @lite', async ({ page }) => {
+    setup('authenticate customer', { tag: ['@lite'] }, async ({ page }) => {
         const loginPage = new LoginPage(page);
         await loginPage.login(data.customer, data.auth.customerAuthFile);
     });
 
-    setup('authenticate vendor @lite', async ({ page }) => {
+    setup('authenticate vendor', { tag: ['@lite'] }, async ({ page }) => {
         const loginPage = new LoginPage(page);
         await loginPage.login(data.vendor, data.auth.vendorAuthFile);
     });
 
-    setup('authenticate vendor2 @lite', async ({ page }) => {
+    setup('authenticate vendor2', { tag: ['@lite'] }, async ({ page }) => {
         const loginPage = new LoginPage(page);
         await loginPage.login(data.vendor.vendor2, data.auth.vendor2AuthFile);
     });
 
-    setup('dokan pro enabled or not @lite', async () => {
+    setup('dokan pro enabled or not', { tag: ['@lite'] }, async () => {
         let res = await apiUtils.checkPluginsExistence(data.plugin.dokanPro, payloads.adminAuth);
         if (res) {
             res = await apiUtils.pluginsActiveOrNot(data.plugin.dokanPro, payloads.adminAuth);
@@ -80,7 +80,7 @@ setup.describe('authenticate users & set permalink', () => {
         DOKAN_PRO ? expect(res).toBeTruthy() : expect(res).toBeFalsy();
     });
 
-    setup('get test environment info @lite', async () => {
+    setup('get test environment info', { tag: ['@lite'] }, async () => {
         const [, systemInfo] = await apiUtils.getSystemStatus(payloads.adminAuth);
         helpers.writeFile(data.systemInfo, JSON.stringify(systemInfo));
     });

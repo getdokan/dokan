@@ -18,7 +18,7 @@ test.describe('Single product functionality test', () => {
 
     // single product page
 
-    test('single product is rendering properly @lite @exp @c', async () => {
+    test('single product is rendering properly', { tag: ['@lite', '@exp', '@c'] }, async () => {
         await customer.singleProductRenderProperly(data.predefined.simpleProduct.product1.name);
     });
 
@@ -30,11 +30,11 @@ test.describe('Single product functionality test', () => {
         await customer.productVendorInfo(data.predefined.simpleProduct.product1.name);
     });
 
-    test('customer can view product location @pro @c', async () => {
+    test('customer can view product location', { tag: ['@pro', '@c'] }, async () => {
         await customer.productLocation(data.predefined.simpleProduct.product1.name);
     });
 
-    test('customer can view product warranty policy @pro @c', async () => {
+    test('customer can view product warranty policy', { tag: ['@pro', '@c'] }, async () => {
         await customer.productWarrantyPolicy(data.predefined.simpleProduct.product1.name);
     });
 

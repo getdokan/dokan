@@ -27,7 +27,7 @@ test.describe.skip('calculation test', () => {
         await apiUtils.dispose();
     });
 
-    test('calculation test @pro', async () => {
+    test('calculation test', { tag: ['@pro'] }, async () => {
         // todo:  modify for lite as well
         const [, res, oid] = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder);
         // console.log( res );
@@ -97,7 +97,7 @@ test.describe.skip('Marketplace Coupon calculation test', () => {
         [commission, feeRecipient] = await dbUtils.getSellingInfo();
     });
 
-    test('coupon calculation test @pro', async () => {
+    test('coupon calculation test', { tag: ['@pro'] }, async () => {
         //todo: apply single coupon, multiple coupon, sequential coupon with options and make separate test
         const [, , code1, amount1] = await apiUtils.createMarketPlaceCoupon({ ...payloads.createMarketPlaceCoupon(), discount_type: 'percent' }, payloads.adminAuth);
         const [, , code2, amount2] = await apiUtils.createMarketPlaceCoupon({ ...payloads.createMarketPlaceCoupon(), discount_type: 'percent' }, payloads.adminAuth);
@@ -177,39 +177,39 @@ test.describe.skip('commission test', () => {
         await apiUtils.dispose();
     });
 
-    test('percentage commission (global) test @lite', async () => {
+    test('percentage commission (global) test', { tag: ['@lite'] }, async () => {
         // await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, commission_type: 'percentage' });
         // const [commission, feeRecipient] = await dbUtils.getSellingInfo();
         const [, res, oid] = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder);
         console.log(res);
     });
 
-    test('flat commission test (global) @lite', async () => {
+    test('flat commission test (global)', { tag: ['@lite'] }, async () => {
         await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, commission_type: 'flat' });
     });
 
-    test('combined commission (global) test @lite', async () => {
+    test('combined commission (global) test', { tag: ['@lite'] }, async () => {
         await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, commission_type: 'combine' });
     });
 
     // //todo: add vendorwise, categorywise, productwise commission
 
-    test('shipping fee recipient test @pro', async () => {
+    test('shipping fee recipient test', { tag: ['@pro'] }, async () => {
         await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, shipping_fee_recipient: 'seller' });
         await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, shipping_fee_recipient: 'admin' });
     });
 
-    test('product tax fee recipient test @pro', async () => {
+    test('product tax fee recipient test', { tag: ['@pro'] }, async () => {
         await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, tax_fee_recipient: 'seller' });
         await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, tax_fee_recipient: 'admin' });
     });
 
-    test('shipping tax fee recipient test @pro', async () => {
+    test('shipping tax fee recipient test', { tag: ['@pro'] }, async () => {
         await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, shipping_tax_fee_recipient: 'seller' });
         await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, shipping_tax_fee_recipient: 'admin' });
     });
 
-    test('calculation test @lite', async () => {
+    test('calculation test', { tag: ['@lite'] }, async () => {
         // provided data
         const [commission, feeRecipient] = await dbUtils.getSellingInfo();
         const providedShippingFee = Number(payloads.createOrder.shipping_lines[0]?.total);

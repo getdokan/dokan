@@ -16,7 +16,7 @@ test.describe('Vendor dashboard test', () => {
         await vPage.close();
     });
 
-    test('vendor dashboard is rendering properly @lite @exp @v', async () => {
+    test('vendor dashboard is rendering properly', { tag: ['@lite', '@exp', '@v'] }, async () => {
         await vendor.vendorDashboardRenderProperly();
     });
 });

@@ -26,38 +26,38 @@ test.describe('refunds api test', () => {
         await apiUtils.dispose();
     });
 
-    test('get all refunds @pro', async () => {
+    test('get all refunds', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllRefunds, { headers: payloads.vendorAuth });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
-    test('get all refunds by status @pro', async () => {
+    test('get all refunds by status', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllRefunds, { params: { status: 'pending' }, headers: payloads.vendorAuth }); // pending, cancelled, completed
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
-    test('cancel a refund @pro', async () => {
+    test('cancel a refund', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.put(endPoints.cancelRefund(refundId));
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
-    test('delete a refund @pro', async () => {
+    test('delete a refund', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.delete(endPoints.deleteRefund(refundId));
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
-    test('approve a refund @pro', async () => {
+    test('approve a refund', { tag: ['@pro'] }, async () => {
         const [, refundId] = await dbUtils.createRefundRequest(orderResponseBody);
         const [response, responseBody] = await apiUtils.put(endPoints.approveRefund(refundId));
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
-    test('update batch refunds @pro', async () => {
+    test('update batch refunds', { tag: ['@pro'] }, async () => {
         await dbUtils.createRefundRequest(orderResponseBody);
         const allPendingRefundsIds = (await apiUtils.getAllRefunds('pending', payloads.vendorAuth)).map((a: { id: unknown }) => a.id);
         const [response, responseBody] = await apiUtils.put(endPoints.updateBatchRefunds, { data: { cancelled: allPendingRefundsIds } });

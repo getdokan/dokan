@@ -18,7 +18,7 @@ test.describe('Single store functionality test', () => {
 
     // single store page
 
-    test('dokan single store page is rendering properly @lite @exp @c', async () => {
+    test('dokan single store page is rendering properly', { tag: ['@lite', '@exp', '@c'] }, async () => {
         await customer.singleStoreRenderProperly(data.predefined.vendorStores.vendor1);
     });
 
@@ -40,7 +40,7 @@ test.describe('Single store functionality test', () => {
         await customer.storeTermsAndCondition(data.predefined.vendorStores.vendor1, data.vendor.toc);
     });
 
-    test('customer can share store @pro @c', async () => {
+    test('customer can share store', { tag: ['@pro', '@c'] }, async () => {
         await customer.storeShare(data.predefined.vendorStores.vendor1, data.storeShare.facebook);
     });
 });

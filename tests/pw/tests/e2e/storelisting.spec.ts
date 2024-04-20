@@ -18,7 +18,7 @@ test.describe('Store listing functionality test', () => {
 
     // store listing
 
-    test('dokan store list page is rendering properly @lite @exp @c', async () => {
+    test('dokan store list page is rendering properly', { tag: ['@lite', '@exp', '@c'] }, async () => {
         await customer.storeListRenderProperly();
     });
 
@@ -34,27 +34,27 @@ test.describe('Store listing functionality test', () => {
         await customer.searchStore(data.predefined.vendorStores.vendor1);
     });
 
-    test('customer can filter stores by category @pro @c', async () => {
+    test('customer can filter stores by category', { tag: ['@pro', '@c'] }, async () => {
         await customer.filterStores('by-category', 'Uncategorized');
     });
 
-    test('customer can filter stores by location @pro @c', async () => {
+    test('customer can filter stores by location', { tag: ['@pro', '@c'] }, async () => {
         await customer.filterStores('by-location', 'New York, NY, USA');
     });
 
-    test.skip('customer can filter stores by ratings @pro @c', async () => {
+    test.skip('customer can filter stores by ratings', { tag: ['@pro', '@c'] }, async () => {
         await customer.filterStores('by-ratings', '1');
     });
 
-    test('customer can filter featured stores @pro @c', async () => {
+    test('customer can filter featured stores', { tag: ['@pro', '@c'] }, async () => {
         await customer.filterStores('featured');
     });
 
-    test.skip('customer can filter open now stores @pro @c', async () => {
+    test.skip('customer can filter open now stores', { tag: ['@pro', '@c'] }, async () => {
         await customer.filterStores('open-now');
     });
 
-    test('customer can view stores on map @pro @c', async () => {
+    test('customer can view stores on map', { tag: ['@pro', '@c'] }, async () => {
         await customer.storeOnMap();
     });
 

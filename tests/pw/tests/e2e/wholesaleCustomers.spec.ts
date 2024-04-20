@@ -37,35 +37,37 @@ test.describe('Wholesale customers test (admin)', () => {
         await apiUtils.dispose();
     });
 
-    test('dokan wholesale customers menu page is rendering properly @pro @exp @a', async () => {
+    // admin
+
+    test('dokan wholesale customers menu page is rendering properly', { tag: ['@pro', '@exp', '@a'] }, async () => {
         await admin.adminWholesaleCustomersRenderProperly();
     });
 
-    test('admin can search wholesale customer @pro @a', async () => {
+    test('admin can search wholesale customer', { tag: ['@pro', '@a'] }, async () => {
         await admin.searchWholesaleCustomer(data.predefined.customerInfo.username1);
     });
 
-    test("admin can disable customer's wholesale capability @pro @a", async () => {
+    test("admin can disable customer's wholesale capability", { tag: ['@pro', '@a'] }, async () => {
         await admin.updateWholesaleCustomer(data.predefined.customerInfo.username1, 'disable');
     });
 
-    test("admin can enable customer's wholesale capability @pro @a", async () => {
+    test("admin can enable customer's wholesale capability", { tag: ['@pro', '@a'] }, async () => {
         await admin.updateWholesaleCustomer(data.predefined.customerInfo.username1, 'enable');
     });
 
-    test('admin can edit wholesale customer @pro @a', async () => {
+    test('admin can edit wholesale customer', { tag: ['@pro', '@a'] }, async () => {
         await admin.editWholesaleCustomer(data.customer);
     });
 
-    test('admin can view wholesale customer orders @pro @a', async () => {
+    test('admin can view wholesale customer orders', { tag: ['@pro', '@a'] }, async () => {
         await admin.viewWholesaleCustomerOrders(data.predefined.customerInfo.username1);
     });
 
-    test('admin can delete wholesale customer @pro @a', async () => {
+    test('admin can delete wholesale customer', { tag: ['@pro', '@a'] }, async () => {
         await admin.updateWholesaleCustomer(data.predefined.customerInfo.username1, 'delete');
     });
 
-    test('admin can perform wholesale customer bulk action @pro @a', async () => {
+    test('admin can perform wholesale customer bulk action', { tag: ['@pro', '@a'] }, async () => {
         await admin.wholesaleCustomerBulkAction('activate');
     });
 
@@ -109,11 +111,11 @@ test.describe.skip('Wholesale customers test customer', () => {
         await cPage.close();
     });
 
-    test('customer can see wholesale price on shop archive  @pro @c', async () => {
+    test('customer can see wholesale price on shop archive', { tag: ['@pro', '@c'] }, async () => {
         await customer.viewWholeSalePrice(productName);
     });
 
-    test('customer can buy wholesale product @pro @c', async () => {
+    test('customer can buy wholesale product', { tag: ['@pro', '@c'] }, async () => {
         await customerPage.addProductToCart(productName, 'single-product', true, minimumWholesaleQuantity);
         await customer.assertWholesalePrice(wholesalePrice, minimumWholesaleQuantity);
         await customerPage.paymentOrder();

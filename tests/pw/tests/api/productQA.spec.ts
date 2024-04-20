@@ -40,28 +40,28 @@ test.describe('product questions and answeres api test', () => {
 
     // questions
 
-    test('get all product questions @pro', async () => {
+    test('get all product questions', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllProductQuestions, { headers: payloads.adminAuth });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
         expect(responseBody).toMatchSchema(schemas.productQaSchema.productQuestionsSchema);
     });
 
-    test('get single product question @pro', async () => {
+    test('get single product question', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getSingleProductQuestion(questionId), { headers: payloads.adminAuth });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
         expect(responseBody).toMatchSchema(schemas.productQaSchema.productQuestionSchema);
     });
 
-    test('create a product question @pro', async () => {
+    test('create a product question', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.post(endPoints.createProductQuestion, { data: { ...payloads.createProductQuestion(), product_id: PRODUCT_ID }, headers: payloads.customerAuth });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
         expect(responseBody).toMatchSchema(schemas.productQaSchema.productQuestionSchema);
     });
 
-    test('update a product question @pro', async () => {
+    test('update a product question', { tag: ['@pro'] }, async () => {
         test.skip(true, 'PR has Issue');
         const [response, responseBody] = await apiUtils.put(endPoints.updateProductQuestion(questionId), { data: payloads.updateProductQuestion() });
         expect(response.ok()).toBeTruthy();
@@ -69,13 +69,13 @@ test.describe('product questions and answeres api test', () => {
         expect(responseBody).toMatchSchema(schemas.productQaSchema.productQuestionSchema);
     });
 
-    test('delete a product question @pro', async () => {
+    test('delete a product question', { tag: ['@pro'] }, async () => {
         const [, questionId] = await apiUtils.createProductQuestion({ ...payloads.createProductQuestion(), product_id: PRODUCT_ID }, payloads.customerAuth);
         const [response] = await apiUtils.delete(endPoints.deleteProductQuestion(questionId));
         expect(response.ok()).toBeTruthy();
     });
 
-    test('update batch product questions @pro', async () => {
+    test('update batch product questions', { tag: ['@pro'] }, async () => {
         const allProductQuestionIds = (await apiUtils.getAllProductQuestions()).map((a: { id: unknown }) => a.id);
 
         const [response, responseBody] = await apiUtils.put(endPoints.updateBatchProductQuestions, { data: { action: 'read', ids: allProductQuestionIds } });
@@ -86,35 +86,35 @@ test.describe('product questions and answeres api test', () => {
 
     // answers
 
-    test('get all product question answers @pro', async () => {
+    test('get all product question answers', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllProductQuestionAnswers, { headers: payloads.adminAuth });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
         expect(responseBody).toMatchSchema(schemas.productQaSchema.productQuestionAnswersSchema);
     });
 
-    test('get single product question answer @pro', async () => {
+    test('get single product question answer', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getSingleProductQuestionAnswer(answerId), { headers: payloads.adminAuth });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
         expect(responseBody).toMatchSchema(schemas.productQaSchema.productQuestionAnswerSchema);
     });
 
-    test('create a product question answer @pro', async () => {
+    test('create a product question answer', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.post(endPoints.createProductQuestionAnswer, { data: { ...payloads.createProductQuestionAnswer(), question_id: questionId }, headers: payloads.adminAuth });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
         expect(responseBody).toMatchSchema(schemas.productQaSchema.productQuestionAnswerSchema);
     });
 
-    test('update a product question answer @pro', async () => {
+    test('update a product question answer', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.put(endPoints.updateProductQuestionAnswer(answerId), { data: payloads.updateProductQuestionAnswer() });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
         expect(responseBody).toMatchSchema(schemas.productQaSchema.productQuestionAnswerSchema);
     });
 
-    test('delete a product question answer @pro', async () => {
+    test('delete a product question answer', { tag: ['@pro'] }, async () => {
         const [response] = await apiUtils.delete(endPoints.deleteProductQuestionAnswer(answerId));
         expect(response.ok()).toBeTruthy();
     });
