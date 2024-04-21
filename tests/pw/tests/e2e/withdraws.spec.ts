@@ -89,7 +89,7 @@ test.describe('Withdraw test', () => {
         await vendor.requestWithdraw({ ...data.vendor.withdraw, minimumWithdrawAmount: minimumWithdrawLimit, currentBalance: currentBalance });
     });
 
-    test("vendor can't request withdraw when pending request exits @lite @v", async () => {
+    test("vendor can't request withdraw when pending request exits", { tag: ['@lite', '@vendor'] }, async () => {
         await apiUtils.createWithdraw({ ...payloads.createWithdraw, amount: minimumWithdrawLimit }, payloads.vendorAuth);
         await vendor.cantRequestWithdraw();
     });

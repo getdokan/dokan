@@ -33,7 +33,7 @@ test.describe('Product Enquiry test', () => {
         await customer.enquireProduct(data.predefined.simpleProduct.product1.name, data.product.enquiry);
     });
 
-    test('guest customer can enquire product @pro @g', async ({ page }) => {
+    test('guest customer can enquire product', { tag: ['@pro', '@guest'] }, async ({ page }) => {
         guest = new ProductEnquiryPage(page);
         await guest.enquireProduct(data.predefined.simpleProduct.product1.name, data.product.enquiry);
     });

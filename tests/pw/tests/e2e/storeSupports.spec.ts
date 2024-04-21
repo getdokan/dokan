@@ -151,12 +151,12 @@ test.describe('Store Support test (customer)', () => {
         await customer.sendMessageToSupportTicket(supportTicketId, data.customer.supportTicket);
     });
 
-    test("customer can't send message to closed support ticket @pro @c", async () => {
+    test("customer can't send message to closed support ticket", { tag: ['@pro', '@customer'] }, async () => {
         const [, supportTicketId] = await apiUtils.createSupportTicket({ ...payloads.createSupportTicket, status: 'closed', author: CUSTOMER_ID, meta: { store_id: VENDOR_ID, order_id: orderId } });
         await customer.cantSendMessageToSupportTicket(supportTicketId);
     });
 
-    test('guest customer need to login before asking for store support @pro @g', async ({ page }) => {
+    test('guest customer need to login before asking for store support', { tag: ['@pro', '@guest'] }, async ({ page }) => {
         guest = new StoreSupportsPage(page);
         await guest.storeSupport(data.predefined.vendorStores.vendor1, data.customer.getSupport, 'store');
     });

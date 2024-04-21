@@ -67,12 +67,12 @@ test.describe('Abuse report test', () => {
         await customer.reportProduct(data.predefined.simpleProduct.product1.name, data.product.report);
     });
 
-    test('guest customer can report product @pro @g', async ({ page }) => {
+    test('guest customer can report product', { tag: ['@pro', '@guest'] }, async ({ page }) => {
         const guest = new AbuseReportsPage(page);
         await guest.reportProduct(data.predefined.simpleProduct.product1.name, data.product.report);
     });
 
-    test('guest customer need to log-in to report product @pro @g', async ({ page }) => {
+    test('guest customer need to log-in to report product', { tag: ['@pro', '@guest'] }, async ({ page }) => {
         const guest = new AbuseReportsPage(page);
         await dbUtils.setDokanSettings(dbData.dokan.optionName.productReportAbuse, { ...dbData.dokan.productReportAbuseSettings, reported_by_logged_in_users_only: 'on' });
         await guest.reportProduct(data.predefined.simpleProduct.product1.name, data.product.report, true);

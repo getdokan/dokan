@@ -70,7 +70,7 @@ test.describe.skip('Settings test', () => {
         await admin.vendorSetupWizardLogoAndMessageSetting(logoUrl, dbData.testData.dokan.generalSettings.setup_wizard_message_without_html);
     });
 
-    test('admin can disable vendor setup wizard (general settings) @lite @g', async () => {
+    test('admin can disable vendor setup wizard (general settings)', { tag: ['@lite', '@guest'] }, async () => {
         await dbUtils.setDokanSettings(dbData.dokan.optionName.general, { ...dbData.dokan.generalSettings, disable_welcome_wizard: 'on' });
         await guest.disableVendorSetupWizardSetting();
     });
@@ -88,7 +88,7 @@ test.describe.skip('Settings test', () => {
         await customer.setStoreProductsPerPage(data.predefined.vendorStores.vendor1, 1);
     });
 
-    test('admin can enable address fields on registration (general settings) @lite @g', async () => {
+    test('admin can enable address fields on registration (general settings)', { tag: ['@lite', '@guest'] }, async () => {
         await dbUtils.setDokanSettings(dbData.dokan.optionName.general, { ...dbData.dokan.generalSettings, enabled_address_on_reg: 'on' });
         await guest.enableAddressFieldsOnRegistration('on');
 
@@ -122,7 +122,7 @@ test.describe.skip('Settings test', () => {
 
     // selling settings
 
-    test('admin can enable vendor selling (selling settings) @lite @g', async () => {
+    test('admin can enable vendor selling (selling settings)', { tag: ['@lite', '@guest'] }, async () => {
         await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, new_seller_enable_selling: 'on' });
         await guest.enableVendorSelling('on');
 

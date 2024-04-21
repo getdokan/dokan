@@ -177,7 +177,7 @@ test.describe('Request for quotation test customer', () => {
 
     //guest
 
-    test('guest customer can quote product @pro @g', async ({ page }) => {
+    test('guest customer can quote product', { tag: ['@pro', '@guest'] }, async ({ page }) => {
         guest = new RequestForQuotationsPage(page);
         await guest.customerQuoteProduct({ ...data.requestForQuotation.customerQuoteProduct, productName: productName }, data.requestForQuotation.guest());
     });

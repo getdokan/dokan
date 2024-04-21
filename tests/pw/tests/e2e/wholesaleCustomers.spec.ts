@@ -71,12 +71,14 @@ test.describe('Wholesale customers test (admin)', () => {
         await admin.wholesaleCustomerBulkAction('activate');
     });
 
-    test('customer can become a wholesale customer @pro  @c', async () => {
+    //customer
+
+    test('customer can become a wholesale customer', { tag: ['@pro', '@customer'] }, async () => {
         await customerPage.customerRegister(data.customer.customerInfo);
         await customer.customerBecomeWholesaleCustomer();
     });
 
-    test('customer can request for become a wholesale customer @pro  @c', async () => {
+    test('customer can request for become a wholesale customer', { tag: ['@pro', '@customer'] }, async () => {
         await dbUtils.setDokanSettings(dbData.dokan.optionName.wholesale, { ...dbData.dokan.wholesaleSettings, need_approval_for_wholesale_customer: 'on' });
         await customerPage.customerRegister(data.customer.customerInfo);
         await customer.customerRequestForBecomeWholesaleCustomer();
