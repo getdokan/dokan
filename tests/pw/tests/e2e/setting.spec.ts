@@ -83,7 +83,7 @@ test.describe.skip('Settings test', () => {
         await vendor.setStoreTermsAndConditions('off');
     });
 
-    test('admin can set store products per page (general settings) @lite @c', async () => {
+    test('admin can set store products per page (general settings)', { tag: ['@lite', '@customer'] }, async () => {
         await dbUtils.setDokanSettings(dbData.dokan.optionName.general, { ...dbData.dokan.generalSettings, store_products_per_page: '1' });
         await customer.setStoreProductsPerPage(data.predefined.vendorStores.vendor1, 1);
     });
@@ -104,7 +104,7 @@ test.describe.skip('Settings test', () => {
         await vendor.enableStoreTermsAndConditionsOnRegistration('off');
     });
 
-    test('admin can set show vendor info (general settings) @lite @c', async () => {
+    test('admin can set show vendor info (general settings)', { tag: ['@lite', '@customer'] }, async () => {
         await dbUtils.setDokanSettings(dbData.dokan.optionName.general, { ...dbData.dokan.generalSettings, show_vendor_info: 'on' });
         await customer.setShowVendorInfo(data.predefined.simpleProduct.product1.name, 'on');
 
@@ -112,7 +112,7 @@ test.describe.skip('Settings test', () => {
         await customer.setShowVendorInfo(data.predefined.simpleProduct.product1.name, 'off');
     });
 
-    test('admin can enable more products tab (general settings) @lite @c', async () => {
+    test('admin can enable more products tab (general settings)', { tag: ['@lite', '@customer'] }, async () => {
         await dbUtils.setDokanSettings(dbData.dokan.optionName.general, { ...dbData.dokan.generalSettings, enabled_more_products_tab: 'on' });
         await customer.enableMoreProductsTab(data.predefined.simpleProduct.product1.name, 'on');
 

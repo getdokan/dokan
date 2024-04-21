@@ -22,11 +22,11 @@ test.describe('Single product functionality test', () => {
         await customer.singleProductRenderProperly(data.predefined.simpleProduct.product1.name);
     });
 
-    test('customer can view highlighted vendor info @lite @c', async () => {
+    test('customer can view highlighted vendor info', { tag: ['@lite', '@customer'] }, async () => {
         await customer.viewHighlightedVendorInfo(data.predefined.simpleProduct.product1.name);
     });
 
-    test('customer can view product vendor info @lite @c', async () => {
+    test('customer can view product vendor info', { tag: ['@lite', '@customer'] }, async () => {
         await customer.productVendorInfo(data.predefined.simpleProduct.product1.name);
     });
 
@@ -38,15 +38,15 @@ test.describe('Single product functionality test', () => {
         await customer.productWarrantyPolicy(data.predefined.simpleProduct.product1.name);
     });
 
-    test('customer can view more products @lite @c', async () => {
+    test('customer can view more products', { tag: ['@lite', '@customer'] }, async () => {
         await customer.viewMoreProducts(data.predefined.simpleProduct.product1.name);
     });
 
-    test('customer can view related products @lite @c', async () => {
+    test('customer can view related products', { tag: ['@lite', '@customer'] }, async () => {
         await customer.viewRelatedProducts(data.predefined.simpleProduct.product1.name);
     });
 
-    test('customer can review product @lite @c', async () => {
+    test('customer can review product', { tag: ['@lite', '@customer'] }, async () => {
         await customer.reviewProduct(data.predefined.simpleProduct.product1.name, data.product.review);
     });
 });

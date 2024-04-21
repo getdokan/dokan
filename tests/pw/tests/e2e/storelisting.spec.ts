@@ -22,15 +22,15 @@ test.describe('Store listing functionality test', () => {
         await customer.storeListRenderProperly();
     });
 
-    test('customer can sort stores @lite @c', async () => {
+    test('customer can sort stores', { tag: ['@lite', '@customer'] }, async () => {
         await customer.sortStores(data.storeList.sort);
     });
 
-    test('customer can change store view layout @lite @c', async () => {
+    test('customer can change store view layout', { tag: ['@lite', '@customer'] }, async () => {
         await customer.storeViewLayout(data.storeList.layout.list);
     });
 
-    test('customer can search store @lite @c', async () => {
+    test('customer can search store', { tag: ['@lite', '@customer'] }, async () => {
         await customer.searchStore(data.predefined.vendorStores.vendor1);
     });
 
@@ -58,7 +58,7 @@ test.describe('Store listing functionality test', () => {
         await customer.storeOnMap();
     });
 
-    test('customer can go to single store from store list @lite @c', async () => {
+    test('customer can go to single store from store list', { tag: ['@lite', '@customer'] }, async () => {
         await customer.goToSingleStoreFromStoreListing(data.predefined.vendorStores.vendor1);
     });
 });

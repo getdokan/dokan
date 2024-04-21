@@ -75,7 +75,7 @@ export const selector = {
 
         // Admin Logout
         userMenu: 'li#wp-admin-bar-my-account',
-        logout: 'li#wp-admin-bar-logout',
+        logout: 'li#wp-admin-bar-logout a',
 
         // Logout Message
         logoutSuccessMessage: 'div#login-message p',
