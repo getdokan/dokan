@@ -39,37 +39,37 @@ test.describe('Reverse withdraw test', () => {
         await apiUtils.dispose();
     });
 
-    test('dokan admin reverse withdraw menu page is rendering properly', { tag: ['@lite', '@exp', '@a'] }, async () => {
+    test('dokan admin reverse withdraw menu page is rendering properly', { tag: ['@lite', '@exp', '@admin'] }, async () => {
         await admin.adminReverseWithdrawRenderProperly();
     });
 
-    test.skip('admin can filter reverse withdraws by store', { tag: ['@lite', '@a'] }, async () => {
+    test.skip('admin can filter reverse withdraws by store', { tag: ['@lite', '@admin'] }, async () => {
         await admin.filterReverseWithdraws(data.predefined.vendorStores.vendor2);
     });
 
-    test('admin can crete reverse withdraws', { tag: ['@lite', '@a'] }, async () => {
+    test('admin can crete reverse withdraws', { tag: ['@lite', '@admin'] }, async () => {
         await admin.addReverseWithdrawal({ ...data.reverseWithdraw, store: data.predefined.vendorStores.vendor2, product: productName });
     });
 
     // vendor
 
-    test('vendor reverse withdrawal menu page is rendering properly', { tag: ['@lite', '@exp', '@v'] }, async () => {
+    test('vendor reverse withdrawal menu page is rendering properly', { tag: ['@lite', '@exp', '@vendor'] }, async () => {
         await vendor.vendorReverseWithdrawalRenderProperly();
     });
 
-    test('vendor can view reverse withdrawal notice', { tag: ['@lite', '@exp', '@v'] }, async () => {
+    test('vendor can view reverse withdrawal notice', { tag: ['@lite', '@exp', '@vendor'] }, async () => {
         await vendor.vendorViewReverseWithdrawalNotice();
     });
 
-    test('vendor can view reverse withdrawal announcement', { tag: ['@pro', '@exp', '@v'] }, async () => {
+    test('vendor can view reverse withdrawal announcement', { tag: ['@pro', '@exp', '@vendor'] }, async () => {
         await vendor.vendorViewReverseWithdrawalAnnouncement();
     });
 
-    test('vendor can filter reverse withdrawals', { tag: ['@lite', '@v'] }, async () => {
+    test('vendor can filter reverse withdrawals', { tag: ['@lite', '@vendor'] }, async () => {
         await vendor.vendorFilterReverseWithdrawals(data.date.dateRange);
     });
 
-    test('vendor can pay reverse pay balance', { tag: ['@lite', '@v'] }, async () => {
+    test('vendor can pay reverse pay balance', { tag: ['@lite', '@vendor'] }, async () => {
         const orderId = await vendor.vendorPayReversePayBalance();
         await apiUtils.updateOrderStatus(orderId, data.order.orderStatus.completed, payloads.adminAuth);
     });

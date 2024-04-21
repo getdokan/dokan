@@ -40,44 +40,44 @@ test.describe('Coupons test', () => {
         await apiUtils.dispose();
     });
 
-    test.skip('admin can add marketplace coupon', { tag: ['@pro', '@a'] }, async () => {
+    test.skip('admin can add marketplace coupon', { tag: ['@pro', '@admin'] }, async () => {
         await admin.addMarketplaceCoupon({ ...data.coupon, title: data.coupon.couponTitle() });
     });
 
     //vendor
 
-    test('vendor coupon menu page is rendering properly', { tag: ['@pro', '@exp', '@v'] }, async () => {
+    test('vendor coupon menu page is rendering properly', { tag: ['@pro', '@exp', '@vendor'] }, async () => {
         await vendor.vendorCouponsRenderProperly();
     });
 
-    test('vendor can view marketPlace coupon', { tag: ['@pro', '@exp', '@v'] }, async () => {
+    test('vendor can view marketPlace coupon', { tag: ['@pro', '@exp', '@vendor'] }, async () => {
         await vendor.viewMarketPlaceCoupon(marketplaceCouponCode);
     });
 
-    test('vendor can add coupon', { tag: ['@pro', '@v'] }, async () => {
+    test('vendor can add coupon', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.addCoupon({ ...data.coupon, title: data.coupon.couponTitle() });
     });
 
-    test('vendor can edit coupon', { tag: ['@pro', '@v'] }, async () => {
+    test('vendor can edit coupon', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.editCoupon({ ...data.coupon, title: couponCode });
     });
 
-    test('vendor can delete coupon', { tag: ['@pro', '@v'] }, async () => {
+    test('vendor can delete coupon', { tag: ['@pro', '@vendor'] }, async () => {
         const [, , couponCode] = await apiUtils.createCoupon([PRODUCT_ID], payloads.createCoupon(), payloads.vendorAuth);
         await vendor.deleteCoupon(couponCode);
     });
 
     //customer
 
-    test('customer can view coupon on single store', { tag: ['@pro', '@c'] }, async () => {
+    test('customer can view coupon on single store', { tag: ['@pro', '@customer'] }, async () => {
         await customer.viewStoreCoupon(data.predefined.vendorStores.vendor1, couponCode);
     });
 
-    test('customer can apply coupon', { tag: ['@pro', '@c'] }, async () => {
+    test('customer can apply coupon', { tag: ['@pro', '@customer'] }, async () => {
         await customer.applyCoupon(data.predefined.simpleProduct.product1.name, data.predefined.coupon.couponCode);
     });
 
-    test('customer can buy product with coupon', { tag: ['@pro', '@c'] }, async () => {
+    test('customer can buy product with coupon', { tag: ['@pro', '@customer'] }, async () => {
         await customer.buyProductWithCoupon(data.predefined.simpleProduct.product1.name, data.predefined.coupon.couponCode);
     });
 });

@@ -18,11 +18,11 @@ test.describe('Vendor analytics test', () => {
 
     //vendor
 
-    test('vendor reports menu page is rendering properly', { tag: ['@pro', '@exp', '@v'] }, async () => {
+    test('vendor reports menu page is rendering properly', { tag: ['@pro', '@exp', '@vendor'] }, async () => {
         await vendor.vendorReportsRenderProperly();
     });
 
-    test('vendor can export statement', { tag: ['@pro', '@v'] }, async () => {
+    test('vendor can export statement', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.exportStatement();
     });
 });

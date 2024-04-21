@@ -24,23 +24,23 @@ test.describe('Vendor staff test', () => {
         await apiUtils.dispose();
     });
 
-    test('vendor staff menu page is rendering properly', { tag: ['@pro',  '@exp', '@v'] }, async () => {
+    test('vendor staff menu page is rendering properly', { tag: ['@pro', '@exp', '@vendor'] }, async () => {
         await vendor.vendorStaffRenderProperly();
     });
 
-    test('vendor can add new staff', { tag: ['@pro', '@v'] }, async () => {
+    test('vendor can add new staff', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.addStaff(data.staff());
     });
 
-    test('vendor can edit staff', { tag: ['@pro', '@v'] }, async () => {
+    test('vendor can edit staff', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.editStaff(staff);
     });
 
-    test('vendor can manage staff permission', { tag: ['@pro', '@v'] }, async () => {
+    test('vendor can manage staff permission', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.manageStaffPermission(staff.firstName + ' ' + staff.lastName);
     });
 
-    test('vendor can delete staff', { tag: ['@pro', '@v'] }, async () => {
+    test('vendor can delete staff', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.deleteStaff(staff.firstName + ' ' + staff.lastName);
     });
 });

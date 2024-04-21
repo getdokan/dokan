@@ -49,43 +49,43 @@ test.describe.skip('Vendor RMA test', () => {
 
     //vendor
 
-    test('vendor return request menu page is rendering properly', { tag: ['@pro', '@exp', '@v'] }, async () => {
+    test('vendor return request menu page is rendering properly', { tag: ['@pro', '@exp', '@vendor'] }, async () => {
         await vendor.vendorReturnRequestRenderProperly();
     });
 
-    test('vendor can view return request details', { tag: ['@pro', '@exp', '@v'] }, async () => {
+    test('vendor can view return request details', { tag: ['@pro', '@exp', '@vendor'] }, async () => {
         await vendor.vendorViewRmaDetails(orderId);
     });
 
-    test('customer can send rma message', { tag: ['@pro', '@c'] }, async () => {
+    test('customer can send rma message', { tag: ['@pro', '@customer'] }, async () => {
         await customer.customerSendRmaMessage(orderId, 'test customer rma message');
     });
 
-    test('vendor can send rma message', { tag: ['@pro', '@v'] }, async () => {
+    test('vendor can send rma message', { tag: ['@pro', '@vendor'] }, async () => {
         // todo: depends on customer can request warranty, remove dependency
         await vendor.vendorSendRmaMessage(orderId, 'test vendor rma message');
     });
 
-    test('vendor can update rma status', { tag: ['@pro', '@v'] }, async () => {
+    test('vendor can update rma status', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.vendorUpdateRmaStatus(orderId, 'processing');
     });
 
-    test('vendor can rma refund', { tag: ['@pro', '@v'] }, async () => {
+    test('vendor can rma refund', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.vendorRmaRefund(orderId, data.predefined.simpleProduct.product1.name, 'processing');
     });
 
-    test('vendor can delete rma request', { tag: ['@pro', '@v'] }, async () => {
+    test('vendor can delete rma request', { tag: ['@pro', '@vendor'] }, async () => {
         // todo:need separate rma request
         await vendor.vendorDeleteRmaRequest(orderId);
     });
 
     // customer
 
-    test('customer return request menu page is rendering properly', { tag: ['@pro', '@exp', '@c'] }, async () => {
+    test('customer return request menu page is rendering properly', { tag: ['@pro', '@exp', '@customer'] }, async () => {
         await customer.customerReturnRequestRenderProperly();
     });
 
-    test('customer can request warranty', { tag: ['@pro', '@c'] }, async () => {
+    test('customer can request warranty', { tag: ['@pro', '@customer'] }, async () => {
         await customer1.addProductToCartFromSingleProductPage(data.predefined.simpleProduct.product1.name);
         await customer1.goToCheckout();
         const orderId = await customer1.paymentOrder();

@@ -29,7 +29,7 @@ test.describe('Product Enquiry test', () => {
         await apiUtils.dispose();
     });
 
-    test('customer can enquire product', { tag: ['@pro', '@c'] }, async () => {
+    test('customer can enquire product', { tag: ['@pro', '@customer'] }, async () => {
         await customer.enquireProduct(data.predefined.simpleProduct.product1.name, data.product.enquiry);
     });
 

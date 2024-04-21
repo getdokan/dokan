@@ -36,29 +36,29 @@ test.describe('Refunds test', () => {
 
     //admin
 
-    test('admin refunds menu page is rendering properly', { tag: ['@pro', '@exp', '@a'] }, async () => {
+    test('admin refunds menu page is rendering properly', { tag: ['@pro', '@exp', '@admin'] }, async () => {
         await admin.adminRefundRequestsRenderProperly();
     });
 
-    test('admin can search refund requests by order-id', { tag: ['@pro', '@a'] }, async () => {
+    test('admin can search refund requests by order-id', { tag: ['@pro', '@admin'] }, async () => {
         await admin.searchRefundRequests(orderId);
     });
 
-    test('admin can search refund requests by vendor', { tag: ['@pro', '@a'] }, async () => {
+    test('admin can search refund requests by vendor', { tag: ['@pro', '@admin'] }, async () => {
         await admin.searchRefundRequests(data.predefined.vendorStores.vendor1);
     });
 
-    test('admin can approve refund request', { tag: ['@pro', '@a'] }, async () => {
+    test('admin can approve refund request', { tag: ['@pro', '@admin'] }, async () => {
         await admin.updateRefundRequests(orderId, 'approve');
     });
 
-    test('admin can cancel refund requests', { tag: ['@pro', '@a'] }, async () => {
+    test('admin can cancel refund requests', { tag: ['@pro', '@admin'] }, async () => {
         const [, orderResponseBody, orderId] = await apiUtils.createOrderWithStatus(PRODUCT_ID, payloads.createOrder, data.order.orderStatus.processing, payloads.vendorAuth);
         await dbUtils.createRefundRequest(orderResponseBody);
         await admin.updateRefundRequests(orderId, 'cancel');
     });
 
-    test.skip('admin can perform refund requests bulk actions', { tag: ['@pro', '@a'] }, async () => {
+    test.skip('admin can perform refund requests bulk actions', { tag: ['@pro', '@admin'] }, async () => {
         const [, orderResponseBody, ,] = await apiUtils.createOrderWithStatus(PRODUCT_ID, payloads.createOrder, data.order.orderStatus.processing, payloads.vendorAuth);
         await dbUtils.createRefundRequest(orderResponseBody);
         await admin.refundRequestsBulkAction('completed');
@@ -66,12 +66,12 @@ test.describe('Refunds test', () => {
 
     //vendor
 
-    test('vendor can full refund', { tag: ['@pro', '@v'] }, async () => {
+    test('vendor can full refund', { tag: ['@pro', '@vendor'] }, async () => {
         const [, , orderId] = await apiUtils.createOrderWithStatus(PRODUCT_ID, { ...payloads.createOrder, customer_id: CUSTOMER_ID }, data.order.orderStatus.completed, payloads.vendorAuth);
         await vendor.refundOrder(orderId, data.predefined.simpleProduct.product1.name);
     });
 
-    test('vendor can partial refund', { tag: ['@pro', '@v'] }, async () => {
+    test('vendor can partial refund', { tag: ['@pro', '@vendor'] }, async () => {
         const [, , orderId] = await apiUtils.createOrderWithStatus(PRODUCT_ID, { ...payloads.createOrder, customer_id: CUSTOMER_ID }, data.order.orderStatus.completed, payloads.vendorAuth);
         await vendor.refundOrder(orderId, data.predefined.simpleProduct.product1.name, true);
     });

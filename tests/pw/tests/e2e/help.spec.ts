@@ -16,11 +16,11 @@ test.describe('Dokan help test', () => {
         await aPage.close();
     });
 
-    test('dokan help menu page is rendering properly', { tag: ['@lite', '@exp', '@a'] }, async () => {
+    test('dokan help menu page is rendering properly', { tag: ['@lite', '@exp', '@admin'] }, async () => {
         await admin.adminHelpRenderProperly();
     });
 
-    test('dokan get help dropdown is rendering properly', { tag: ['@lite', '@exp', '@a'] }, async () => {
+    test('dokan get help dropdown is rendering properly', { tag: ['@lite', '@exp', '@admin'] }, async () => {
         await admin.adminGetHelpDropdownRenderProperly();
     });
 });

@@ -18,7 +18,7 @@ test.describe('Store listing functionality test', () => {
 
     // store listing
 
-    test('dokan store list page is rendering properly', { tag: ['@lite', '@exp', '@c'] }, async () => {
+    test('dokan store list page is rendering properly', { tag: ['@lite', '@exp', '@customer'] }, async () => {
         await customer.storeListRenderProperly();
     });
 
@@ -34,27 +34,27 @@ test.describe('Store listing functionality test', () => {
         await customer.searchStore(data.predefined.vendorStores.vendor1);
     });
 
-    test('customer can filter stores by category', { tag: ['@pro', '@c'] }, async () => {
+    test('customer can filter stores by category', { tag: ['@pro', '@customer'] }, async () => {
         await customer.filterStores('by-category', 'Uncategorized');
     });
 
-    test('customer can filter stores by location', { tag: ['@pro', '@c'] }, async () => {
+    test('customer can filter stores by location', { tag: ['@pro', '@customer'] }, async () => {
         await customer.filterStores('by-location', 'New York, NY, USA');
     });
 
-    test.skip('customer can filter stores by ratings', { tag: ['@pro', '@c'] }, async () => {
+    test.skip('customer can filter stores by ratings', { tag: ['@pro', '@customer'] }, async () => {
         await customer.filterStores('by-ratings', '1');
     });
 
-    test('customer can filter featured stores', { tag: ['@pro', '@c'] }, async () => {
+    test('customer can filter featured stores', { tag: ['@pro', '@customer'] }, async () => {
         await customer.filterStores('featured');
     });
 
-    test.skip('customer can filter open now stores', { tag: ['@pro', '@c'] }, async () => {
+    test.skip('customer can filter open now stores', { tag: ['@pro', '@customer'] }, async () => {
         await customer.filterStores('open-now');
     });
 
-    test('customer can view stores on map', { tag: ['@pro', '@c'] }, async () => {
+    test('customer can view stores on map', { tag: ['@pro', '@customer'] }, async () => {
         await customer.storeOnMap();
     });
 

@@ -32,44 +32,44 @@ test.describe('Request for quotation test admin', () => {
 
     //admin
 
-    test('admin quotes menu page is rendering properly', { tag: ['@pro', '@exp', '@a'] }, async () => {
+    test('admin quotes menu page is rendering properly', { tag: ['@pro', '@exp', '@admin'] }, async () => {
         await admin.adminQuotesRenderProperly();
     });
 
-    test('admin can add quote', { tag: ['@pro', '@a'] }, async () => {
+    test('admin can add quote', { tag: ['@pro', '@admin'] }, async () => {
         await admin.addQuote(data.requestForQuotation.quote());
     });
 
-    test('admin can edit quote', { tag: ['@pro', '@a'] }, async () => {
+    test('admin can edit quote', { tag: ['@pro', '@admin'] }, async () => {
         await admin.editQuote({ ...data.requestForQuotation.quote(), title: quoteTitle });
     });
 
-    test('admin can trash quote', { tag: ['@pro', '@a'] }, async () => {
+    test('admin can trash quote', { tag: ['@pro', '@admin'] }, async () => {
         const [, , quoteTitle] = await apiUtils.createQuoteRequest({ ...payloads.createQuoteRequest(), product_ids: productId, user_id: CUSTOMER_ID }, payloads.adminAuth);
         await admin.updateQuote(quoteTitle, 'trash');
     });
 
-    test('admin can restore quote', { tag: ['@pro', '@a'] }, async () => {
+    test('admin can restore quote', { tag: ['@pro', '@admin'] }, async () => {
         const [, , quoteTitle] = await apiUtils.createQuoteRequest({ ...payloads.createQuoteRequest(), product_ids: productId, status: 'trash', user_id: CUSTOMER_ID }, payloads.adminAuth);
         await admin.updateQuote(quoteTitle, 'restore');
     });
 
-    test('admin can permanently delete quote', { tag: ['@pro', '@a'] }, async () => {
+    test('admin can permanently delete quote', { tag: ['@pro', '@admin'] }, async () => {
         const [, , quoteTitle] = await apiUtils.createQuoteRequest({ ...payloads.createQuoteRequest(), product_ids: productId, status: 'trash', user_id: CUSTOMER_ID }, payloads.adminAuth);
         await admin.updateQuote(quoteTitle, 'permanently-delete');
     });
 
-    test('admin can approve quote', { tag: ['@pro', '@a'] }, async () => {
+    test('admin can approve quote', { tag: ['@pro', '@admin'] }, async () => {
         const [, , quoteTitle] = await apiUtils.createQuoteRequest({ ...payloads.createQuoteRequest(), product_ids: productId, user_id: CUSTOMER_ID }, payloads.adminAuth);
         await admin.approveQuote(quoteTitle);
     });
 
-    test('admin can convert quote to order', { tag: ['@pro', '@a'] }, async () => {
+    test('admin can convert quote to order', { tag: ['@pro', '@admin'] }, async () => {
         const [, , quoteTitle] = await apiUtils.createQuoteRequest({ ...payloads.createQuoteRequest(), product_ids: productId, status: 'approve', user_id: CUSTOMER_ID }, payloads.adminAuth);
         await admin.convertQuoteToOrder(quoteTitle);
     });
 
-    test.skip('admin can perform quote bulk actions', { tag: ['@pro', '@a'] }, async () => {
+    test.skip('admin can perform quote bulk actions', { tag: ['@pro', '@admin'] }, async () => {
         // todo: might cause other tests to fail in parallel
         await admin.quotesBulkAction('trash');
     });
@@ -99,24 +99,24 @@ test.describe('Request for quotation test vendor', () => {
         await apiUtils.dispose();
     });
 
-    test('vendor request quotes menu page is rendering properly', { tag: ['@pro', '@exp', '@v'] }, async () => {
+    test('vendor request quotes menu page is rendering properly', { tag: ['@pro', '@exp', '@vendor'] }, async () => {
         await vendor.vendorRequestQuotesRenderProperly();
     });
 
-    test('vendor can view request quote details', { tag: ['@pro', '@exp', '@v'] }, async () => {
+    test('vendor can view request quote details', { tag: ['@pro', '@exp', '@vendor'] }, async () => {
         await vendor.vendorViewQuoteDetails(quoteTitle);
     });
 
-    test('vendor can update quote request', { tag: ['@pro', '@v'] }, async () => {
+    test('vendor can update quote request', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.vendorUpdateQuoteRequest(quoteId, { ...data.requestForQuotation.vendorUpdateQuote, productName: productName });
     });
 
-    test('vendor can approve quote request', { tag: ['@pro', '@v'] }, async () => {
+    test('vendor can approve quote request', { tag: ['@pro', '@vendor'] }, async () => {
         const [, quoteId] = await apiUtils.createQuoteRequest({ ...payloads.createQuoteRequest(), product_ids: productId, user_id: CUSTOMER_ID }, payloads.adminAuth);
         await vendor.vendorApproveQuoteRequest(quoteId);
     });
 
-    test('vendor can convert quote request to order', { tag: ['@pro', '@v'] }, async () => {
+    test('vendor can convert quote request to order', { tag: ['@pro', '@vendor'] }, async () => {
         const [, quoteId] = await apiUtils.createQuoteRequest({ ...payloads.createQuoteRequest(), product_ids: productId, status: 'approve', user_id: CUSTOMER_ID }, payloads.adminAuth);
         await vendor.vendorConvertQuoteToOrder(quoteId);
     });
@@ -150,28 +150,28 @@ test.describe('Request for quotation test customer', () => {
 
     //customer
 
-    test('customer request for quote menu page is rendering properly', { tag: ['@pro', '@exp', '@c'] }, async () => {
+    test('customer request for quote menu page is rendering properly', { tag: ['@pro', '@exp', '@customer'] }, async () => {
         await customer.requestForQuoteRenderProperly();
     });
 
-    test('customer requested quote page is rendering properly', { tag: ['@pro', '@exp', '@c'] }, async () => {
+    test('customer requested quote page is rendering properly', { tag: ['@pro', '@exp', '@customer'] }, async () => {
         await customer.requestedQuotesRenderProperly();
     });
 
-    test('customer can view requested quote details', { tag: ['@pro', '@exp', '@c'] }, async () => {
+    test('customer can view requested quote details', { tag: ['@pro', '@exp', '@customer'] }, async () => {
         await customer.customerViewRequestedQuoteDetails(quoteId);
     });
 
-    test('customer can update quote request', { tag: ['@pro', '@c'] }, async () => {
+    test('customer can update quote request', { tag: ['@pro', '@customer'] }, async () => {
         await customer.customerUpdateRequestedQuote(quoteId, { ...data.requestForQuotation.customerQuoteProduct, productName: productName });
     });
 
-    test('customer can pay for order converted from quote request', { tag: ['@pro', '@c'] }, async () => {
+    test('customer can pay for order converted from quote request', { tag: ['@pro', '@customer'] }, async () => {
         await apiUtils.convertQuoteToOrder(quoteId, payloads.adminAuth);
         await customer.payConvertedQuote(quoteId);
     });
 
-    test('customer can quote product', { tag: ['@pro', '@c'] }, async () => {
+    test('customer can quote product', { tag: ['@pro', '@customer'] }, async () => {
         await customer.customerQuoteProduct({ ...data.requestForQuotation.customerQuoteProduct, productName: productName });
     });
 

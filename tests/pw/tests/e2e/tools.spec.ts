@@ -24,27 +24,27 @@ test.describe('Tools test', () => {
 
     //admin
 
-    test('dokan tools menu page is rendering properly', { tag: ['@pro', '@exp', '@a'] }, async () => {
+    test('dokan tools menu page is rendering properly', { tag: ['@pro', '@exp', '@admin'] }, async () => {
         await admin.adminToolsRenderProperly();
     });
 
-    test.skip('admin can perform dokan page Installation', { tag: ['@pro', '@a'] }, async () => {
+    test.skip('admin can perform dokan page Installation', { tag: ['@pro', '@admin'] }, async () => {
         await admin.dokanPageInstallation();
     });
 
-    test('admin can regenerate order commission', { tag: ['@pro', '@a'] }, async () => {
+    test('admin can regenerate order commission', { tag: ['@pro', '@admin'] }, async () => {
         await admin.regenerateOrderCommission();
     });
 
-    test('admin can check for duplicate orders', { tag: ['@pro', '@a'] }, async () => {
+    test('admin can check for duplicate orders', { tag: ['@pro', '@admin'] }, async () => {
         await admin.checkForDuplicateOrders();
     });
 
-    test('admin can set dokan setup wizard', { tag: ['@lite', '@a'] }, async () => {
+    test('admin can set dokan setup wizard', { tag: ['@lite', '@admin'] }, async () => {
         await admin.setDokanSetupWizard(data.dokanSetupWizard);
     });
 
-    test('admin can regenerate variable product variations author IDs', { tag: ['@pro', '@a'] }, async () => {
+    test('admin can regenerate variable product variations author IDs', { tag: ['@pro', '@admin'] }, async () => {
         await admin.regenerateVariableProductVariationsAuthorIds();
     });
 
@@ -53,12 +53,12 @@ test.describe('Tools test', () => {
         await admin.importDummyData();
     });
 
-    test('admin can clear dummy data', { tag: ['@pro', '@a'] }, async () => {
+    test('admin can clear dummy data', { tag: ['@pro', '@admin'] }, async () => {
         await apiUtils.importDummyData(payloads.dummyData, payloads.adminAuth);
         await admin.clearDummyData();
     });
 
-    test('admin can test distance matrix API', { tag: ['@pro', '@a'] }, async () => {
+    test('admin can test distance matrix API', { tag: ['@pro', '@admin'] }, async () => {
         await admin.testDistanceMatrixApi(data.tools.distanceMatrixApi);
     });
 });

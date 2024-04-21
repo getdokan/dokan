@@ -43,56 +43,56 @@ test.describe('Store Reviews test', () => {
 
     //admin
 
-    test('dokan store reviews menu page is rendering properly', { tag: ['@pro', '@exp', '@a'] }, async () => {
+    test('dokan store reviews menu page is rendering properly', { tag: ['@pro', '@exp', '@admin'] }, async () => {
         await admin.adminStoreReviewsRenderProperly();
     });
 
-    test('admin can view store review', { tag: ['@pro', '@exp', '@a'] }, async () => {
+    test('admin can view store review', { tag: ['@pro', '@exp', '@admin'] }, async () => {
         await admin.viewStoreReview();
     });
 
-    test('admin can edit store review', { tag: ['@pro', '@a'] }, async () => {
+    test('admin can edit store review', { tag: ['@pro', '@admin'] }, async () => {
         await admin.editStoreReview(data.storeReview.review());
     });
 
-    test('admin can filter store reviews by vendor', { tag: ['@pro', '@a'] }, async () => {
+    test('admin can filter store reviews by vendor', { tag: ['@pro', '@admin'] }, async () => {
         await admin.filterStoreReviews(data.storeReview.filter.byVendor);
     });
 
-    test('admin can delete store review', { tag: ['@pro', '@a'] }, async () => {
+    test('admin can delete store review', { tag: ['@pro', '@admin'] }, async () => {
         await admin.updateStoreReview('trash');
     });
 
-    test('admin can restore deleted store review', { tag: ['@pro', '@a'] }, async () => {
+    test('admin can restore deleted store review', { tag: ['@pro', '@admin'] }, async () => {
         await admin.updateStoreReview('permanently-delete');
     });
 
-    test('admin can permanently delete store review', { tag: ['@pro', '@a'] }, async () => {
+    test('admin can permanently delete store review', { tag: ['@pro', '@admin'] }, async () => {
         await admin.updateStoreReview('restore');
     });
 
-    test('admin can perform store reviews bulk action', { tag: ['@pro', '@a'] }, async () => {
+    test('admin can perform store reviews bulk action', { tag: ['@pro', '@admin'] }, async () => {
         await apiUtils.createStoreReview(VENDOR_ID, payloads.createStoreReview, payloads.customerAuth);
         await admin.storeReviewsBulkAction('trash');
     });
 
-    test('customer can review store', { tag: ['@pro', '@c'] }, async () => {
+    test('customer can review store', { tag: ['@pro', '@customer'] }, async () => {
         // remove any previous reviews
         await apiUtils.updateBatchStoreReviews('trash', [], payloads.adminAuth);
         await customer.reviewStore(data.predefined.vendorStores.vendor1, data.storeReview.review(), 'create');
     });
 
-    test('customer can edit store review', { tag: ['@pro', '@c'] }, async () => {
+    test('customer can edit store review', { tag: ['@pro', '@customer'] }, async () => {
         await customer.reviewStore(data.predefined.vendorStores.vendor1, data.storeReview.review(), 'edit');
     });
 
-    test('customer can view own review', { tag: ['@pro', '@c'] }, async () => {
+    test('customer can view own review', { tag: ['@pro', '@customer'] }, async () => {
         await apiUtils.updateBatchStoreReviews('trash', [], payloads.adminAuth);
         await apiUtils.createStoreReview(VENDOR_ID, payloads.createStoreReview, payloads.customerAuth);
         await customer.viewOwnReview(data.predefined.vendorStores.vendor1);
     });
 
-    test("vendor can't review own store", { tag: ['@pro', '@v'] }, async () => {
+    test("vendor can't review own store", { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.cantReviewOwnStore(data.predefined.vendorStores.vendor1);
     });
 });

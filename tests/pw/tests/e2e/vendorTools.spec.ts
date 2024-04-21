@@ -18,23 +18,23 @@ test.describe('Vendor tools test', () => {
 
     //vendor
 
-    test('vendor tools menu page is rendering properly', { tag: ['@pro', '@exp', '@v'] }, async () => {
+    test('vendor tools menu page is rendering properly', { tag: ['@pro', '@exp', '@vendor'] }, async () => {
         await vendor.vendorToolsRenderProperly();
     });
 
-    test('vendor can export product as xml', { tag: ['@pro', '@v'] }, async () => {
+    test('vendor can export product as xml', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.exportProduct('xml');
     });
 
-    test('vendor can export product as csv', { tag: ['@pro', '@v'] }, async () => {
+    test('vendor can export product as csv', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.exportProduct('csv');
     });
 
-    test('vendor can import product as xml', { tag: ['@pro', '@v'] }, async () => {
+    test('vendor can import product as xml', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.importProduct('xml', 'utils/sampleData/products.xml');
     });
 
-    test('vendor can import product as csv', { tag: ['@pro', '@v'] }, async () => {
+    test('vendor can import product as csv', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.importProduct('csv', 'utils/sampleData/products.csv');
     });
 });

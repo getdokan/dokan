@@ -20,12 +20,12 @@ test.describe('Admin functionality test', () => {
         await aPage.close();
     });
 
-    test('admin can login', { tag: ['@lite', '@a'] }, async ({ page }) => {
+    test('admin can login', { tag: ['@lite', '@admin'] }, async ({ page }) => {
         const loginPage = new LoginPage(page);
         await loginPage.adminLogin(data.admin);
     });
 
-    test('admin can logout', { tag: ['@lite', '@a'] }, async ({ page }) => {
+    test('admin can logout', { tag: ['@lite', '@admin'] }, async ({ page }) => {
         const loginPage = new LoginPage(page);
         await loginPage.adminLogin(data.admin);
         await loginPage.logoutBackend();
@@ -35,33 +35,33 @@ test.describe('Admin functionality test', () => {
 
     // tax settings
 
-    test('admin can set standard tax rate', { tag: ['@lite', '@a'] }, async () => {
+    test('admin can set standard tax rate', { tag: ['@lite', '@admin'] }, async () => {
         await taxPage.addStandardTaxRate(data.tax);
     });
 
     // shipping settings
 
-    test.skip('admin can set flat rate shipping', { tag: ['@lite', '@a'] }, async () => {
+    test.skip('admin can set flat rate shipping', { tag: ['@lite', '@admin'] }, async () => {
         await shippingPage.addShippingMethod(data.shipping.shippingMethods.flatRate);
     });
 
-    test.skip('admin can set free shipping', { tag: ['@lite', '@a'] }, async () => {
+    test.skip('admin can set free shipping', { tag: ['@lite', '@admin'] }, async () => {
         await shippingPage.addShippingMethod(data.shipping.shippingMethods.freeShipping);
     });
 
-    test.skip('admin can set local pickup shipping', { tag: ['@lite', '@a'] }, async () => {
+    test.skip('admin can set local pickup shipping', { tag: ['@lite', '@admin'] }, async () => {
         await shippingPage.addShippingMethod(data.shipping.shippingMethods.localPickup);
     });
 
-    test.skip('admin can set table rate shipping', { tag: ['@pro', '@a'] }, async () => {
+    test.skip('admin can set table rate shipping', { tag: ['@pro', '@admin'] }, async () => {
         await shippingPage.addShippingMethod(data.shipping.shippingMethods.tableRateShipping);
     });
 
-    test.skip('admin can set distance rate shipping', { tag: ['@pro', '@a'] }, async () => {
+    test.skip('admin can set distance rate shipping', { tag: ['@pro', '@admin'] }, async () => {
         await shippingPage.addShippingMethod(data.shipping.shippingMethods.distanceRateShipping);
     });
 
-    test.skip('admin can set vendor shipping', { tag: ['@pro', '@a'] }, async () => {
+    test.skip('admin can set vendor shipping', { tag: ['@pro', '@admin'] }, async () => {
         await shippingPage.addShippingMethod(data.shipping.shippingMethods.vendorShipping);
     });
 });

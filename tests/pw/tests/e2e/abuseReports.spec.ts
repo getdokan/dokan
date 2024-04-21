@@ -36,34 +36,34 @@ test.describe('Abuse report test', () => {
 
     // admin
 
-    test('dokan abuse report menu page is rendering properly', { tag: ['@pro', '@exp', '@a'] }, async () => {
+    test('dokan abuse report menu page is rendering properly', { tag: ['@pro', '@exp', '@admin'] }, async () => {
         await admin.adminAbuseReportRenderProperly();
     });
 
-    test('admin can view abuse report details', { tag: ['@pro', '@exp', '@a'] }, async () => {
+    test('admin can view abuse report details', { tag: ['@pro', '@exp', '@admin'] }, async () => {
         await admin.abuseReportDetails();
     });
 
-    test('admin can filter abuse reports by abuse reason', { tag: ['@pro', '@a'] }, async () => {
+    test('admin can filter abuse reports by abuse reason', { tag: ['@pro', '@admin'] }, async () => {
         await admin.filterAbuseReports('This content is spam', 'by-reason');
     });
 
-    test('admin can filter abuse reports by product', { tag: ['@pro', '@a'] }, async () => {
+    test('admin can filter abuse reports by product', { tag: ['@pro', '@admin'] }, async () => {
         await admin.filterAbuseReports(data.predefined.simpleProduct.product1.name, 'by-product');
     });
 
-    test('admin can filter abuse reports by vendor', { tag: ['@pro', '@a'] }, async () => {
+    test('admin can filter abuse reports by vendor', { tag: ['@pro', '@admin'] }, async () => {
         await admin.filterAbuseReports(data.predefined.vendorStores.vendor1, 'by-vendor');
     });
 
-    test.skip('admin can perform abuse report bulk action', { tag: ['@pro', '@a'] }, async () => {
+    test.skip('admin can perform abuse report bulk action', { tag: ['@pro', '@admin'] }, async () => {
         // todo: might cause other tests to fail in parallel
         await admin.abuseReportBulkAction('delete');
     });
 
     // customer
 
-    test('customer can report product', { tag: ['@pro', '@c'] }, async () => {
+    test('customer can report product', { tag: ['@pro', '@customer'] }, async () => {
         await customer.reportProduct(data.predefined.simpleProduct.product1.name, data.product.report);
     });
 

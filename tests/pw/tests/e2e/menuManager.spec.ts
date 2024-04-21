@@ -21,7 +21,7 @@ test.describe('Menu Manager test', () => {
 
     //admin
 
-    test('admin can deactivate menu', { tag: ['@pro', '@a'] }, async () => {
+    test('admin can deactivate menu', { tag: ['@pro', '@admin'] }, async () => {
         await admin.updateMenuStatus('Analytics', 'deactivate', 'analytics');
         //reset
         // await dbUtils.setDokanSettings(dbData.dokan.optionName.menuManager, dbData.dokan.menuManagerSettings);
@@ -32,30 +32,30 @@ test.describe('Menu Manager test', () => {
         await admin.updateMenuStatus('User Subscriptions', 'activate', 'userSubscriptions');
     });
 
-    test('admin can rename menu', { tag: ['@pro', '@a'] }, async () => {
+    test('admin can rename menu', { tag: ['@pro', '@admin'] }, async () => {
         await admin.renameMenu('Withdraw', 'Withdraws');
         //reset
         // await dbUtils.setDokanSettings(dbData.dokan.optionName.menuManager, dbData.dokan.menuManagerSettings);
     });
 
-    test("admin can't rename menu with more than 45 characters", { tag: ['@pro', '@a'] }, async () => {
+    test("admin can't rename menu with more than 45 characters", { tag: ['@pro', '@admin'] }, async () => {
         await admin.cantRenameMenuBeyondLimit('Staff', 'abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz');
     });
 
-    test("admin can't rename disabled menu", { tag: ['@pro', '@a'] }, async () => {
+    test("admin can't rename disabled menu", { tag: ['@pro', '@admin'] }, async () => {
         await admin.cantRenameMenu('Coupons');
     });
 
-    test('admin can redorder menu', { tag: ['@pro', '@a'] }, async () => {
+    test('admin can redorder menu', { tag: ['@pro', '@admin'] }, async () => {
         await admin.reorderMenu('Orders', 'Products');
     });
 
-    test("admin can't redorder or toggle status of dashboard & store menu", { tag: ['@pro', '@a'] }, async () => {
+    test("admin can't redorder or toggle status of dashboard & store menu", { tag: ['@pro', '@admin'] }, async () => {
         await admin.cantAlterMenu('Dashboard');
         await admin.cantAlterMenu('Store', true);
     });
 
-    test('admin can reset menu manager settings', { tag: ['@pro', '@a'] }, async () => {
+    test('admin can reset menu manager settings', { tag: ['@pro', '@admin'] }, async () => {
         await updateMenuStatusByDB('tools', 'false');
         await admin.resetMenuManagerSettings('Tools');
     });

@@ -18,7 +18,7 @@ test.describe('Shop functionality test', () => {
 
     // shop page
 
-    test('shop page is rendering properly', { tag: ['@lite', '@exp', '@c'] }, async () => {
+    test('shop page is rendering properly', { tag: ['@lite', '@exp', '@customer'] }, async () => {
         await customer.shopRenderProperly();
     });
 
@@ -30,15 +30,15 @@ test.describe('Shop functionality test', () => {
         await customer.searchProduct(data.predefined.simpleProduct.product1.name);
     });
 
-    test('customer can filter products by category', { tag: ['@pro', '@c'] }, async () => {
+    test('customer can filter products by category', { tag: ['@pro', '@customer'] }, async () => {
         await customer.filterProducts('by-category', 'uncategorized');
     });
 
-    test('customer can filter products by location', { tag: ['@pro', '@c'] }, async () => {
+    test('customer can filter products by location', { tag: ['@pro', '@customer'] }, async () => {
         await customer.filterProducts('by-location', 'New York, NY, USA');
     });
 
-    test('customer can view products list on map', { tag: ['@pro', '@c'] }, async () => {
+    test('customer can view products list on map', { tag: ['@pro', '@customer'] }, async () => {
         await customer.productOnMap();
     });
 

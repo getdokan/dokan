@@ -47,7 +47,7 @@ test.describe.skip('Settings test', () => {
 
     // general settings
 
-    test.skip('admin can set vendor store url (general settings)', { tag: ['@lite', '@a'] }, async () => {
+    test.skip('admin can set vendor store url (general settings)', { tag: ['@lite', '@admin'] }, async () => {
         // todo: need to run on serial mode, will fail other tests
         await dbUtils.setDokanSettings(dbData.dokan.optionName.general, { ...dbData.dokan.generalSettings, custom_store_url: 'stores' });
         CI ? await helpers.exeCommand(data.command.permalink) : await helpers.exeCommand(data.command.permalinkLocal);
@@ -58,7 +58,7 @@ test.describe.skip('Settings test', () => {
         CI ? await helpers.exeCommand(data.command.permalink) : await helpers.exeCommand(data.command.permalinkLocal);
     });
 
-    test('admin can set vendor setup wizard logo & message (general settings)', { tag: ['@lite', '@a'] }, async () => {
+    test('admin can set vendor setup wizard logo & message (general settings)', { tag: ['@lite', '@admin'] }, async () => {
         apiUtils = new ApiUtils(await request.newContext());
         const [responseBody] = await apiUtils.uploadFile(data.image.dokan, payloads.adminAuth);
         const logoUrl = responseBody.source_url;
@@ -75,7 +75,7 @@ test.describe.skip('Settings test', () => {
         await guest.disableVendorSetupWizardSetting();
     });
 
-    test('admin can set store terms and conditions (general settings)', { tag: ['@lite', '@v'] }, async () => {
+    test('admin can set store terms and conditions (general settings)', { tag: ['@lite', '@vendor'] }, async () => {
         await dbUtils.setDokanSettings(dbData.dokan.optionName.general, { ...dbData.dokan.generalSettings, seller_enable_terms_and_conditions: 'on' });
         await vendor.setStoreTermsAndConditions('on');
 
@@ -96,7 +96,7 @@ test.describe.skip('Settings test', () => {
         await guest.enableAddressFieldsOnRegistration('off');
     });
 
-    test('admin can enable store terms and conditions on registration (general settings)', { tag: ['@pro', '@v'] }, async () => {
+    test('admin can enable store terms and conditions on registration (general settings)', { tag: ['@pro', '@vendor'] }, async () => {
         await dbUtils.setDokanSettings(dbData.dokan.optionName.general, { ...dbData.dokan.generalSettings, enable_tc_on_reg: 'on' });
         await vendor.enableStoreTermsAndConditionsOnRegistration('on');
 
@@ -130,7 +130,7 @@ test.describe.skip('Settings test', () => {
         await guest.enableVendorSelling('off');
     });
 
-    test('admin can set order status change capability (selling settings)', { tag: ['@lite', '@v'] }, async () => {
+    test('admin can set order status change capability (selling settings)', { tag: ['@lite', '@vendor'] }, async () => {
         apiUtils = new ApiUtils(await request.newContext());
         const [, , orderId] = await apiUtils.createOrderWithStatus(PRODUCT_ID, { ...payloads.createOrder, customer_id: CUSTOMER_ID }, data.order.orderStatus.onhold, payloads.vendorAuth);
 
