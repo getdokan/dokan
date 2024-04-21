@@ -80,7 +80,7 @@ export class LoginPage extends BasePage {
         await this.goIfNotThere(data.subUrls.backend.adminLogin);
         await this.hover(selector.backend.userMenu);
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.backend.adminLogout, selector.backend.logout);
-        await this.toContainText(selector.backend.logoutSuccessMessage, 'You are now logged out.')
+        await this.toContainText(selector.backend.logoutSuccessMessage, 'You are now logged out.');
         const loggedInUser = await this.getCurrentUser();
         expect(loggedInUser).toBeUndefined();
     }

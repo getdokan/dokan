@@ -63,7 +63,7 @@ export const dbUtils = {
 
     // set dokan settings
     async setDokanSettings(optionName: string, optionValue: object | string): Promise<any> {
-        optionValue = typeof optionValue == 'object' ? serialize(optionValue) : optionValue ;
+        optionValue = typeof optionValue == 'object' ? serialize(optionValue) : optionValue;
         const queryInsert = `INSERT INTO ${dbPrefix}_options VALUES ( NULL, '${optionName}', '${optionValue}', 'yes');`;
         let res = await dbUtils.dbQuery(queryInsert);
         if (res.code === 'ER_DUP_ENTRY') {

@@ -41,8 +41,6 @@ export class TaxPage extends AdminPage {
 
         await this.click(woocommerceSettings.taxRateSaveChanges);
 
-        const newTaxRate = await this.getElementValue(woocommerceSettings.taxRate);
-        // expect(newTaxRate).toBe(String(Number(tax.taxRate).toPrecision(5)))
-        expect(newTaxRate).toBe(tax.taxRate);
+        await this.toHaveValue(woocommerceSettings.taxRate, tax.taxRate);
     }
 }

@@ -150,7 +150,6 @@ export class ProductQAPage extends BasePage {
         await this.click(productQAAdmin.questionDetails.answer.deleteAnswer);
         await this.clickAndWaitForResponse(data.subUrls.api.dokan.productAnswers, productQAAdmin.questionDetails.confirmAction, 204);
         await this.toBeVisible(productQAAdmin.questionDetails.answerDeleteSuccessMessage);
-
     }
 
     // delete question
