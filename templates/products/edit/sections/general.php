@@ -72,10 +72,10 @@ if ( is_wp_error( $section ) ) {
                 $product_type_options = $product_type->get_options();
                 ?>
                 <?php if ( count( $product_type_options ) === 1 && array_key_exists( 'simple', $product_type_options ) ) : ?>
-                <input type="hidden" id="<?php echo esc_attr( $product_type->get_name() ); ?>" name="<?php echo esc_attr( $product_type->get_name() ); ?>" value="simple">
+                <input type="hidden" id="<?php echo esc_attr( $product_type->get_id() ); ?>" name="<?php echo esc_attr( $product_type->get_name() ); ?>" value="simple">
             <?php else : ?>
                 <div class="dokan-form-group">
-                    <label for="<?php echo esc_attr( $product_type->get_name() ); ?>" class="form-label">
+                    <label for="<?php echo esc_attr( $product_type->get_id() ); ?>" class="form-label">
                         <?php
                             echo esc_html( $product_type->get_title() );
                             $product_type->print_required_symbol();
@@ -86,7 +86,7 @@ if ( is_wp_error( $section ) ) {
                             data-title="<?php echo esc_attr( $product_type->get_help_content() ); ?>">
                         </i>
                     </label>
-                    <select name="<?php echo esc_attr( $product_type->get_name() ); ?>" class="dokan-form-control" id="<?php echo esc_attr( $product_type->get_name() ); ?>">
+                    <select name="<?php echo esc_attr( $product_type->get_name() ); ?>" class="dokan-form-control" id="<?php echo esc_attr( $product_type->get_id() ); ?>">
                         <?php foreach ( $product_type_options as $key => $value ) : ?>
                             <option value="<?php echo esc_attr( $key ); ?>" <?php selected( $product_type->get_value( $product ), $key ); ?>><?php echo esc_html( $value ); ?></option>
                         <?php endforeach; ?>

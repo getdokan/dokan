@@ -111,6 +111,7 @@ class Init {
                 'title'          => __( 'Product Type', 'dokan-lite' ),
                 'field_type'     => 'select',
                 'type'           => 'other',
+                'id'             => 'product_type',
                 'name'           => 'product-type',
                 'options'        => apply_filters(
                     'dokan_product_types',
