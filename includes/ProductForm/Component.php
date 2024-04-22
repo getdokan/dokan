@@ -26,15 +26,16 @@ abstract class Component {
      * @var array $data
      */
     protected $data = [
-        'id'                   => '', // html id attribute of the field, required
-        'title'                => '', // label for the field
-        'description'          => '', // description of the field
-        'help_content'         => '', // help content for the field
-        'visibility'           => true, // field visibility, if the field is visible under frontend
-        'required'             => false, // by default, all fields are not required
-        'dependency_condition' => [], // dependency condition for the field
-        'order'                => 30,
-        'error_message'        => '',
+        'id'                     => '', // html id attribute of the field, required
+        'title'                  => '', // label for the field
+        'description'            => '', // description of the field
+        'help_content'           => '', // help content for the field
+        'visibility'             => true, // field visibility, if the field is visible under frontend
+        'required'               => false, // by default, all fields are not required
+        'dependency_condition'   => [], // dependency condition for the field
+        'order'                  => 30,
+        'error_message'          => '',
+        'show_in_admin_settings' => true,
     ];
 
     public function __construct( string $id, array $args = [] ) {
@@ -320,6 +321,41 @@ abstract class Component {
         $this->data['error_message'] = wp_kses_post( $error_message );
 
         return $this;
+    }
+
+    /**
+     * Get show in admin settings
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param bool $show_in_admin_settings
+     *
+     * @return void
+     */
+    public function set_show_in_admin_settings( bool $show_in_admin_settings ): void {
+        $this->data['show_in_admin_settings'] = $show_in_admin_settings;
+    }
+
+    /**
+     * Set show in admin settings
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return bool
+     */
+    public function get_show_in_admin_settings(): bool {
+        return wc_string_to_bool( $this->data['show_in_admin_settings'] );
+    }
+
+    /**
+     * Check the field is shown in admin settings or not
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return bool
+     */
+    public function is_shown_in_admin_settings(): bool {
+        return $this->get_show_in_admin_settings();
     }
 
     /**
