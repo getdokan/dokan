@@ -187,7 +187,6 @@ export class BookingPage extends VendorPage {
         // booking product elements are visible
         const { bookingCalendar, bookNow, getSupport, price, ...viewBooking } = bookingProductsVendor.viewBooking;
         await this.multipleElementVisible(viewBooking);
-        // todo: actual value can be asserted
     }
 
     // vendor can't buy own booking product
