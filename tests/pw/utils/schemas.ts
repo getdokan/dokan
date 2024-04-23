@@ -791,7 +791,7 @@ export const schemas = {
         updateProductAttributeSchema: z.boolean(),
     },
 
-    attributeTeermsSchema: {
+    attributeTermsSchema: {
         attributeTermSchema: z.object({
             id: z.number(),
             name: z.string(),
