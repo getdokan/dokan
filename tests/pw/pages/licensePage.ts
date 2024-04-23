@@ -54,7 +54,7 @@ export class LicensePage extends AdminPage {
     }
 
     // refresh license
-    async refresehLicense() {
+    async refreshLicense() {
         await this.goIfNotThere(data.subUrls.backend.dokan.license);
         await this.clickAndWaitForResponse(data.subUrls.backend.dokan.license, licenseAdmin.refreshLicense);
         await this.toContainText(licenseAdmin.successNotice, 'License refreshed successfully.');

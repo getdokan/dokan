@@ -17,7 +17,7 @@ test.describe('product filter api test', () => {
         await apiUtils.dispose();
     });
 
-    test('get products filter by data @v2 @lite', async () => {
+    test('get products filter by data', { tag: ['@lite', '@v2'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getProductsFilterByData);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();

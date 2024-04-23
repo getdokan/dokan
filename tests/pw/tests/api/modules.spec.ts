@@ -22,21 +22,21 @@ test.describe('modules api test', () => {
         await apiUtils.dispose();
     });
 
-    test('get all modules @pro', async () => {
+    test('get all modules', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllModules);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
         expect(responseBody).toMatchSchema(schemas.modulesSchema);
     });
 
-    test('deactivate a module @pro', async () => {
+    test('deactivate a module', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.put(endPoints.deactivateModule, { data: { module: [randomModule] } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
         expect(responseBody).toMatchSchema(schemas.modulesSchema);
     });
 
-    test('activate a module @pro', async () => {
+    test('activate a module', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.put(endPoints.activateModule, { data: { module: [randomModule] } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();

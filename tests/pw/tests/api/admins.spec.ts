@@ -25,70 +25,70 @@ test.describe('admin api test', () => {
         await apiUtils.dispose();
     });
 
-    test('get admin report overview @lite', async () => {
+    test('get admin report overview', { tag: ['@lite'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAdminReportOverview);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
         expect(responseBody).toMatchSchema(schemas.admin.reportOverviewSchema);
     });
 
-    test('get admin report summary @lite', async () => {
+    test('get admin report summary', { tag: ['@lite'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAdminReportSummary);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
         expect(responseBody).toMatchSchema(schemas.admin.reportSummarySchema);
     });
 
-    test('get admin dashboard feed @lite', async () => {
+    test('get admin dashboard feed', { tag: ['@lite'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAdminDashboardFeed);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
         expect(responseBody).toMatchSchema(schemas.admin.adminDashboardFeedSchema);
     });
 
-    test('get admin help @lite', async () => {
+    test('get admin help', { tag: ['@lite'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAdminHelp);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
         expect(responseBody).toMatchSchema(schemas.admin.adminHelpSchema);
     });
 
-    test('get changelog lite @lite', async () => {
+    test('get changelog lite', { tag: ['@lite'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAdminChangelogLite);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
         expect(responseBody).toMatchSchema(schemas.admin.changelogLiteSchema);
     });
 
-    test('get changelog pro @pro', async () => {
+    test('get changelog pro', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAdminChangelogPro);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
         expect(responseBody).toMatchSchema(schemas.admin.changelogProSchema);
     });
 
-    test('get admin notices @lite', async () => {
+    test('get admin notices', { tag: ['@lite'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAdminNotices);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
         expect(responseBody).toMatchSchema(schemas.admin.adminNoticesSchema);
     });
 
-    test('get admin promo notices @lite', async () => {
+    test('get admin promo notices', { tag: ['@lite'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAdminPromoNotices);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
         expect(responseBody).toMatchSchema(schemas.admin.adminPromoNoticeSchema);
     });
 
-    test('get admin logs @pro', async () => {
+    test('get admin logs', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAdminLogs);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
         expect(responseBody).toMatchSchema(schemas.admin.adminLogsSchema);
     });
 
-    test('get admin export logs @pro', async () => {
+    test('get admin export logs', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAdminExportLogs);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();

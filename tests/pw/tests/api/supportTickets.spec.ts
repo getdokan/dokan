@@ -27,31 +27,31 @@ test.describe('support ticket api test', () => {
         await apiUtils.dispose();
     });
 
-    test('get all support ticket customers @pro', async () => {
+    test('get all support ticket customers', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllSupportTicketCustomers);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
-    test('get all support tickets @pro', async () => {
+    test('get all support tickets', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllSupportTickets);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
-    test('get single support ticket @pro', async () => {
+    test('get single support ticket', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getSingleSupportTicket(supportTicketId), { params: { vendor_id: VENDOR_ID } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
-    test('create a support ticket comment @pro', async () => {
+    test('create a support ticket comment', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.post(endPoints.createSupportTicketComment(supportTicketId), { data: payloads.createSupportTicketComment });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
-    test('update a support ticket status @pro', async () => {
+    test('update a support ticket status', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.post(endPoints.updateSupportTicketStatus(supportTicketId), { data: payloads.updateSupportTicketStatus });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
@@ -60,20 +60,20 @@ test.describe('support ticket api test', () => {
         await apiUtils.updateSupportTicketStatus(supportTicketId, 'open');
     });
 
-    test('update a support ticket email notification @pro', async () => {
+    test('update a support ticket email notification', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.post(endPoints.updateSupportTicketEmailNotification(supportTicketId), { data: payloads.updateSupportTicketEmailNotification });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
-    test('delete a support ticket comment @pro', async () => {
+    test('delete a support ticket comment', { tag: ['@pro'] }, async () => {
         const supportTicketCommentId = await apiUtils.createSupportTicketComment(supportTicketId, payloads.createSupportTicketComment);
         const [response, responseBody] = await apiUtils.delete(endPoints.deleteSupportTicketComment(supportTicketCommentId));
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
-    test('update batch support tickets @pro', async () => {
+    test('update batch support tickets', { tag: ['@pro'] }, async () => {
         const allSupportTicketIds = (await apiUtils.getAllSupportTickets()).map((a: { ID: unknown }) => a.ID);
         const [response, responseBody] = await apiUtils.put(endPoints.updateBatchSupportTickets, { data: { close: allSupportTicketIds } });
         expect(response.ok()).toBeTruthy();

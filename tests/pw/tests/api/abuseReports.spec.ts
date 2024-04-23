@@ -27,21 +27,21 @@ test.describe('abuse report api test', () => {
         await apiUtils.dispose();
     });
 
-    test('get all abuse report reasons @pro', async () => {
+    test('get all abuse report reasons', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllAbuseReportReasons);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
         expect(responseBody).toMatchSchema(schemas.abuseReportsSchema.abuseReportReasonsSchema);
     });
 
-    test('get all abuse reports @pro', async () => {
+    test('get all abuse reports', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllAbuseReports);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
         expect(responseBody).toMatchSchema(schemas.abuseReportsSchema.abuseReportsSchema);
     });
 
-    test('delete a abuse report @pro', async () => {
+    test('delete a abuse report', { tag: ['@pro'] }, async () => {
         const abuseReportId = await apiUtils.getAbuseReportId();
         const [response, responseBody] = await apiUtils.delete(endPoints.deleteAbuseReport(abuseReportId));
         expect(response.ok()).toBeTruthy();
@@ -49,7 +49,7 @@ test.describe('abuse report api test', () => {
         expect(responseBody).toMatchSchema(schemas.abuseReportsSchema.abuseReportSchema);
     });
 
-    test('delete batch abuse reports @pro', async () => {
+    test('delete batch abuse reports', { tag: ['@pro'] }, async () => {
         const allAbuseReportIds = (await apiUtils.getAllAbuseReports())?.map((a: { id: unknown }) => a.id);
         const [response, responseBody] = await apiUtils.delete(endPoints.deleteBatchAbuseReports, { data: { items: allAbuseReportIds } });
         expect(response.ok()).toBeTruthy();
