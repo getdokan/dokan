@@ -268,7 +268,7 @@ class Hooks {
 
         foreach ( $sub_orders as $sub_order ) {
             // if the order is a downloadable and virtual product, then we need to set the status to complete
-            if ( $sub_order->get_status() !== 'completed' && $order->is_paid() && ! in_array( $order->get_payment_method(), $excluded_gateways, true ) && ! $sub_order->needs_processing() ) {
+            if ( 'processing' === $sub_order->get_status() && $order->is_paid() && ! in_array( $order->get_payment_method(), $excluded_gateways, true ) && ! $sub_order->needs_processing() ) {
                 $sub_order->set_status( 'completed', __( 'Marked as completed because it contains digital products only.', 'dokan-lite' ) );
                 $sub_order->save();
             }
