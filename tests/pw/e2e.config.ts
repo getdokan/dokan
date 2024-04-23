@@ -45,7 +45,7 @@ export default defineConfig({
     /* Configure reporters */
     reporter: CI
         ? [
-            //   ['github'],
+              //   ['github'],
               ['html', { open: 'never', outputFolder: 'playwright-report/e2e/html/html-report-e2e' }],
               //   ['junit', { outputFile: 'playwright-report/e2e/junit-report/e2e-results.xml' }],
               ['list', { printSteps: true }],

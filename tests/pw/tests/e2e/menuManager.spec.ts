@@ -27,7 +27,7 @@ test.describe('Menu Manager test', () => {
         // await dbUtils.setDokanSettings(dbData.dokan.optionName.menuManager, dbData.dokan.menuManagerSettings);
     });
 
-    test('admin can activate menu@pro @a', async () => {
+    test('admin can activate menu', { tag: ['@pro', '@admin'] }, async () => {
         await updateMenuStatusByDB('user-subscription', 'false');
         await admin.updateMenuStatus('User Subscriptions', 'activate', 'userSubscriptions');
     });

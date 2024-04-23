@@ -449,7 +449,7 @@ export class BasePage {
     async hover(selector: string): Promise<void> {
         await this.page.locator(selector).hover();
         // await this.page.hover(selector);
-        await this.wait(0.3);
+        await this.wait(0.2);
     }
 
     // drag and drop

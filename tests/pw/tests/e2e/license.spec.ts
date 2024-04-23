@@ -23,7 +23,7 @@ test.describe('License test', () => {
         await admin.adminLicenseRenderProperly();
     });
 
-    test.skip("admin can't activate license with incorrect key", { tag: ['@pro', '@neg', '@admin'] }, async () => {
+    test.skip("admin can't activate license with incorrect key", { tag: ['@pro', '@negative', '@admin'] }, async () => {
         await admin.activateLicense(data.dokanLicense.incorrectKey, 'incorrect');
     });
 

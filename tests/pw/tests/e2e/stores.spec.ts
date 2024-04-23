@@ -46,12 +46,12 @@ test.describe('Stores test', () => {
         await admin.searchVendor(data.predefined.vendorStores.vendor1);
     });
 
-    test("admin can disable vendor's selling capability @lite @a", async () => {
+    test("admin can disable vendor's selling capability", { tag: ['@lite', '@admin'] }, async () => {
         const [, , storeName] = await apiUtils.createStore(payloads.createStore(), payloads.adminAuth);
         await admin.updateVendor(storeName, 'disable');
     });
 
-    test("admin can enable vendor's selling capability @lite @a", async () => {
+    test("admin can enable vendor's selling capability", { tag: ['@lite', '@admin'] }, async () => {
         const [, , storeName] = await apiUtils.createStore(payloads.createStore(), payloads.adminAuth);
         await admin.updateVendor(storeName, 'enable');
     });

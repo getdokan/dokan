@@ -45,18 +45,17 @@ test.describe('Vendor SPMV test', () => {
     });
 
     test('admin can assign SPMV product to other vendor', { tag: ['@pro', '@admin'] }, async () => {
-        test.skip(true, 'test is failing for woocommerce booking v2.0.8');
         const [, productId] = await apiUtils.createProduct({ ...payloads.createProduct(), name: data.predefined.spmv.productName() }, payloads.vendor2Auth);
         await admin.assignSpmvProduct(productId, data.predefined.vendorStores.vendor1);
     });
 
     //vendor
 
-    test('vendor spmv menu page is rendering properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+    test('vendor SPMV menu page is rendering properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorSpmvRenderProperly();
     });
 
-    test('vendor can search similar product on spmv page', { tag: ['@pro', '@vendor'] }, async () => {
+    test('vendor can search similar product on SPMV page', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.searchSimilarProduct(productName, 'spmv');
     });
 
@@ -74,11 +73,11 @@ test.describe('Vendor SPMV test', () => {
         await vendor.searchSimilarProduct(auctionProductName, 'auction');
     });
 
-    test('vendor can go to own product edit from spmv page', { tag: ['@pro', '@vendor'] }, async () => {
+    test('vendor can go to own product edit from SPMV page', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.goToProductEditFromSpmv(data.predefined.simpleProduct.product1.name);
     });
 
-    test('vendor can sort spmv products', { tag: ['@pro', '@vendor'] }, async () => {
+    test('vendor can sort SPMV products', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.sortSpmvProduct('price');
     });
 
