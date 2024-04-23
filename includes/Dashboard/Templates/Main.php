@@ -45,7 +45,7 @@ class Main {
     /**
      * Adds notification count to menu and submenu of vendor dashboard
      *
-     * @since DOKAN_SINCE
+     * @since 3.10.3
      *
      * @param string $menu_title Menu title
      * @param array $menu_details Menu details array
@@ -58,7 +58,7 @@ class Main {
             /**
              * Notification count filter
              *
-             * @since DOKAN_SINCE
+             * @since 3.10.3
              *
              * @param int $notification_counts Number of notifications for menu & submenu
              * @param array $menu_details Details for menu and submenu
