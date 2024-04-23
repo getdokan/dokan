@@ -3795,7 +3795,7 @@ export const selector = {
                 all: '//ul[contains(@class,"order-statuses-filter")]//a[contains(text(), "All")]',
                 completed: '//ul[contains(@class,"order-statuses-filter")]//a[contains(text(), "Completed")]',
                 processing: '//ul[contains(@class,"order-statuses-filter")]//a[contains(text(), "Processing")]',
-                onHold: '//ul[contains(@class,"order-statuses-filter")]//a[contains(text(), "On-hold")]',
+                onHold: '//ul[contains(@class,"order-statuses-filter")]//a[contains(text(), "On hold")]',
                 pending: '//ul[contains(@class,"order-statuses-filter")]//a[contains(text(), "Pending")]',
                 cancelled: '//ul[contains(@class,"order-statuses-filter")]//a[contains(text(), "Cancelled")]',
                 refunded: '//ul[contains(@class,"order-statuses-filter")]//a[contains(text(), "Refunded")]',
