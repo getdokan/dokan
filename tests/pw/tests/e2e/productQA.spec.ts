@@ -43,11 +43,11 @@ test.describe('Product QA functionality test', () => {
 
     // admin
 
-    test('admin product QA menu page is rendering properly', { tag: ['@pro', '@exp', '@admin'] }, async () => {
+    test('admin product QA menu page is rendering properly', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
         await admin.adminProductQARenderProperly();
     });
 
-    test('admin can view product question details', { tag: ['@pro', '@exp', '@admin'] }, async () => {
+    test('admin can view product question details', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
         await admin.viewQuestionDetails(questionId);
     });
 
@@ -105,11 +105,11 @@ test.describe('Product QA functionality test', () => {
 
     // vendor
 
-    test('vendor product QA menu page is rendering properly', { tag: ['@pro', '@exp', '@vendor'] }, async () => {
+    test('vendor product QA menu page is rendering properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorProductQARenderProperly();
     });
 
-    test('vendor can view product question details', { tag: ['@pro', '@exp', '@vendor'] }, async () => {
+    test('vendor can view product question details', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         const [, questionId] = await apiUtils.createProductQuestion({ ...payloads.createProductQuestion(), product_id: PRODUCT_ID }, payloads.customerAuth);
         await vendor.vendorViewQuestionDetails(questionId);
     });

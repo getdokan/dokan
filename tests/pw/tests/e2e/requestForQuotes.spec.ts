@@ -32,7 +32,7 @@ test.describe('Request for quotation test admin', () => {
 
     //admin
 
-    test('admin quotes menu page is rendering properly', { tag: ['@pro', '@exp', '@admin'] }, async () => {
+    test('admin quotes menu page is rendering properly', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
         await admin.adminQuotesRenderProperly();
     });
 
@@ -99,11 +99,11 @@ test.describe('Request for quotation test vendor', () => {
         await apiUtils.dispose();
     });
 
-    test('vendor request quotes menu page is rendering properly', { tag: ['@pro', '@exp', '@vendor'] }, async () => {
+    test('vendor request quotes menu page is rendering properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorRequestQuotesRenderProperly();
     });
 
-    test('vendor can view request quote details', { tag: ['@pro', '@exp', '@vendor'] }, async () => {
+    test('vendor can view request quote details', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorViewQuoteDetails(quoteTitle);
     });
 
@@ -150,15 +150,15 @@ test.describe('Request for quotation test customer', () => {
 
     //customer
 
-    test('customer request for quote menu page is rendering properly', { tag: ['@pro', '@exp', '@customer'] }, async () => {
+    test('customer request for quote menu page is rendering properly', { tag: ['@pro', '@exploratory', '@customer'] }, async () => {
         await customer.requestForQuoteRenderProperly();
     });
 
-    test('customer requested quote page is rendering properly', { tag: ['@pro', '@exp', '@customer'] }, async () => {
+    test('customer requested quote page is rendering properly', { tag: ['@pro', '@exploratory', '@customer'] }, async () => {
         await customer.requestedQuotesRenderProperly();
     });
 
-    test('customer can view requested quote details', { tag: ['@pro', '@exp', '@customer'] }, async () => {
+    test('customer can view requested quote details', { tag: ['@pro', '@exploratory', '@customer'] }, async () => {
         await customer.customerViewRequestedQuoteDetails(quoteId);
     });
 

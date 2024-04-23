@@ -29,7 +29,7 @@ test.describe('Store Support test (admin)', () => {
 
     //admin
 
-    test('dokan store support menu page is rendering properly', { tag: ['@pro', '@exp', '@admin'] }, async () => {
+    test('dokan store support menu page is rendering properly', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
         await admin.adminStoreSupportRenderProperly();
     });
 
@@ -37,7 +37,7 @@ test.describe('Store Support test (admin)', () => {
         await admin.decreaseUnreadSupportTicketCount(supportTicketId);
     });
 
-    test('admin can view support ticket details', { tag: ['@pro', '@exp', '@admin'] }, async () => {
+    test('admin can view support ticket details', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
         await admin.adminViewSupportTicketDetails(supportTicketId);
     });
 
@@ -114,11 +114,11 @@ test.describe('Store Support test (customer)', () => {
         await apiUtils.dispose();
     });
 
-    test('customer store support menu page is rendering properly', { tag: ['@pro', '@exp', '@customer'] }, async () => {
+    test('customer store support menu page is rendering properly', { tag: ['@pro', '@exploratory', '@customer'] }, async () => {
         await customer.customerStoreSupportRenderProperly();
     });
 
-    test('customer can view support ticket details', { tag: ['@pro', '@exp', '@customer'] }, async () => {
+    test('customer can view support ticket details', { tag: ['@pro', '@exploratory', '@customer'] }, async () => {
         await customer.customerViewSupportTicketDetails(supportTicketId);
     });
 
@@ -185,11 +185,11 @@ test.describe('Store Support test (vendor)', () => {
 
     // vendor
 
-    test('vendor store support menu page is rendering properly', { tag: ['@pro', '@exp', '@vendor'] }, async () => {
+    test('vendor store support menu page is rendering properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorStoreSupportRenderProperly();
     });
 
-    test('vendor can view support ticket details', { tag: ['@pro', '@exp', '@vendor'] }, async () => {
+    test('vendor can view support ticket details', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorViewSupportTicketDetails(supportTicketId);
     });
 

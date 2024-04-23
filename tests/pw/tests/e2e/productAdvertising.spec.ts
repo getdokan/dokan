@@ -35,7 +35,7 @@ test.describe('Product Advertising test', () => {
 
     //admin
 
-    test('dokan product advertising menu page is rendering properly', { tag: ['@pro', '@exp', '@admin'] }, async () => {
+    test('dokan product advertising menu page is rendering properly', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
         await admin.adminProductAdvertisingRenderProperly();
     });
 

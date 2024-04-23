@@ -21,7 +21,7 @@ test.describe('Admin dashboard test', () => {
         await apiUtils.dispose();
     });
 
-    test('dokan admin dashboard is rendering properly', { tag: ['@lite', '@exp', '@admin'] }, async () => {
+    test('dokan admin dashboard is rendering properly', { tag: ['@lite', '@exploratory', '@admin'] }, async () => {
         await admin.adminDashboardRenderProperly();
     });
 

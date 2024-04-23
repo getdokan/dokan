@@ -39,7 +39,7 @@ test.describe('Reverse withdraw test', () => {
         await apiUtils.dispose();
     });
 
-    test('dokan admin reverse withdraw menu page is rendering properly', { tag: ['@lite', '@exp', '@admin'] }, async () => {
+    test('dokan admin reverse withdraw menu page is rendering properly', { tag: ['@lite', '@exploratory', '@admin'] }, async () => {
         await admin.adminReverseWithdrawRenderProperly();
     });
 
@@ -53,15 +53,15 @@ test.describe('Reverse withdraw test', () => {
 
     // vendor
 
-    test('vendor reverse withdrawal menu page is rendering properly', { tag: ['@lite', '@exp', '@vendor'] }, async () => {
+    test('vendor reverse withdrawal menu page is rendering properly', { tag: ['@lite', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorReverseWithdrawalRenderProperly();
     });
 
-    test('vendor can view reverse withdrawal notice', { tag: ['@lite', '@exp', '@vendor'] }, async () => {
+    test('vendor can view reverse withdrawal notice', { tag: ['@lite', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorViewReverseWithdrawalNotice();
     });
 
-    test('vendor can view reverse withdrawal announcement', { tag: ['@pro', '@exp', '@vendor'] }, async () => {
+    test('vendor can view reverse withdrawal announcement', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorViewReverseWithdrawalAnnouncement();
     });
 

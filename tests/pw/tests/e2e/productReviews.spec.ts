@@ -28,11 +28,11 @@ test.describe('Product Reviews test', () => {
 
     //vendor
 
-    test('vendor product reviews menu page is rendering properly', { tag: ['@pro', '@exp', '@vendor'] }, async () => {
+    test('vendor product reviews menu page is rendering properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorProductReviewsRenderProperly();
     });
 
-    test('vendor can view product review', { tag: ['@pro', '@exp', '@vendor'] }, async () => {
+    test('vendor can view product review', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.viewProductReview(reviewMessage);
     });
 

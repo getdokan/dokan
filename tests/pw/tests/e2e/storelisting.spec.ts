@@ -18,7 +18,7 @@ test.describe('Store listing functionality test', () => {
 
     // store listing
 
-    test('dokan store list page is rendering properly', { tag: ['@lite', '@exp', '@customer'] }, async () => {
+    test('dokan store list page is rendering properly', { tag: ['@lite', '@exploratory', '@customer'] }, async () => {
         await customer.storeListRenderProperly();
     });
 

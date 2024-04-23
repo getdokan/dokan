@@ -46,7 +46,7 @@ test.describe('Vendor functionality test', () => {
         await vendor.vendorSetupWizard(data.vendorSetupWizard);
     });
 
-    test('vendor account details menu page is rendering properly', { tag: ['@lite', '@exp', '@vendor'] }, async () => {
+    test('vendor account details menu page is rendering properly', { tag: ['@lite', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorAccountDetailsRenderProperly();
     });
 

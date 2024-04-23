@@ -43,11 +43,11 @@ test.describe('Store Reviews test', () => {
 
     //admin
 
-    test('dokan store reviews menu page is rendering properly', { tag: ['@pro', '@exp', '@admin'] }, async () => {
+    test('dokan store reviews menu page is rendering properly', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
         await admin.adminStoreReviewsRenderProperly();
     });
 
-    test('admin can view store review', { tag: ['@pro', '@exp', '@admin'] }, async () => {
+    test('admin can view store review', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
         await admin.viewStoreReview();
     });
 

@@ -49,11 +49,11 @@ test.describe.skip('Vendor RMA test', () => {
 
     //vendor
 
-    test('vendor return request menu page is rendering properly', { tag: ['@pro', '@exp', '@vendor'] }, async () => {
+    test('vendor return request menu page is rendering properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorReturnRequestRenderProperly();
     });
 
-    test('vendor can view return request details', { tag: ['@pro', '@exp', '@vendor'] }, async () => {
+    test('vendor can view return request details', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorViewRmaDetails(orderId);
     });
 
@@ -81,7 +81,7 @@ test.describe.skip('Vendor RMA test', () => {
 
     // customer
 
-    test('customer return request menu page is rendering properly', { tag: ['@pro', '@exp', '@customer'] }, async () => {
+    test('customer return request menu page is rendering properly', { tag: ['@pro', '@exploratory', '@customer'] }, async () => {
         await customer.customerReturnRequestRenderProperly();
     });
 

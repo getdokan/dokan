@@ -39,7 +39,7 @@ test.describe('Product addon functionality test', () => {
     });
 
     // vendor
-    test('vendor product addons menu page is rendering properly', { tag: ['@pro', '@exp', '@vendor'] }, async () => {
+    test('vendor product addons menu page is rendering properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorProductAddonsSettingsRenderProperly();
     });
 

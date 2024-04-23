@@ -52,7 +52,7 @@ test.describe('Vendor SPMV test', () => {
 
     //vendor
 
-    test('vendor spmv menu page is rendering properly', { tag: ['@pro', '@exp', '@vendor'] }, async () => {
+    test('vendor spmv menu page is rendering properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorSpmvRenderProperly();
     });
 

@@ -31,15 +31,15 @@ test.describe('Seller badge test', () => {
 
     // admin
 
-    test('dokan seller badge menu page is rendering properly', { tag: ['@pro', '@exp', '@admin'] }, async () => {
+    test('dokan seller badge menu page is rendering properly', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
         await admin.adminSellerBadgeRenderProperly();
     });
 
-    test('admin can preview seller badge', { tag: ['@pro', '@exp', '@admin'] }, async () => {
+    test('admin can preview seller badge', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
         await admin.previewSellerBadge(data.sellerBadge.eventName.productsPublished);
     });
 
-    test('admin can view seller badge details', { tag: ['@pro', '@exp', '@admin'] }, async () => {
+    test('admin can view seller badge details', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
         await admin.viewSellerBadge(data.sellerBadge.eventName.productsPublished);
     });
 
@@ -86,7 +86,7 @@ test.describe('Seller badge test', () => {
 
     // vendor
 
-    test('vendor badges menu page is rendering properly', { tag: ['@pro', '@exp', '@vendor'] }, async () => {
+    test('vendor badges menu page is rendering properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorSellerBadgeRenderProperly();
     });
 

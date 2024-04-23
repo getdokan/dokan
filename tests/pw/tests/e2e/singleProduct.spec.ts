@@ -18,7 +18,7 @@ test.describe('Single product functionality test', () => {
 
     // single product page
 
-    test('single product is rendering properly', { tag: ['@lite', '@exp', '@customer'] }, async () => {
+    test('single product is rendering properly', { tag: ['@lite', '@exploratory', '@customer'] }, async () => {
         await customer.singleProductRenderProperly(data.predefined.simpleProduct.product1.name);
     });
 

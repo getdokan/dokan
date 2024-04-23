@@ -56,7 +56,7 @@ test.describe('Payments test', () => {
 
     //vendor
 
-    test('vendor payment menu is rendering properly', { tag: ['@lite', '@exp', '@vendor'] }, async () => {
+    test('vendor payment menu is rendering properly', { tag: ['@lite', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorPaymentSettingsRenderProperly();
     });
 

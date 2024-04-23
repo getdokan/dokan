@@ -46,11 +46,11 @@ test.describe('Coupons test', () => {
 
     //vendor
 
-    test('vendor coupon menu page is rendering properly', { tag: ['@pro', '@exp', '@vendor'] }, async () => {
+    test('vendor coupon menu page is rendering properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorCouponsRenderProperly();
     });
 
-    test('vendor can view marketPlace coupon', { tag: ['@pro', '@exp', '@vendor'] }, async () => {
+    test('vendor can view marketPlace coupon', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.viewMarketPlaceCoupon(marketplaceCouponCode);
     });
 

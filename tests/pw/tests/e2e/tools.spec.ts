@@ -24,7 +24,7 @@ test.describe('Tools test', () => {
 
     //admin
 
-    test('dokan tools menu page is rendering properly', { tag: ['@pro', '@exp', '@admin'] }, async () => {
+    test('dokan tools menu page is rendering properly', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
         await admin.adminToolsRenderProperly();
     });
 

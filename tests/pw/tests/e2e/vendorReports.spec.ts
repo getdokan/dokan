@@ -18,7 +18,7 @@ test.describe('Vendor analytics test', () => {
 
     //vendor
 
-    test('vendor reports menu page is rendering properly', { tag: ['@pro', '@exp', '@vendor'] }, async () => {
+    test('vendor reports menu page is rendering properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorReportsRenderProperly();
     });
 

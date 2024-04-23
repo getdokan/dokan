@@ -26,7 +26,7 @@ test.describe('Announcements test (admin)', () => {
 
     //admin
 
-    test('dokan announcements menu page is rendering properly', { tag: ['@pro', '@exp', '@admin'] }, async () => {
+    test('dokan announcements menu page is rendering properly', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
         await admin.adminAnnouncementsRenderProperly();
     });
 
@@ -88,7 +88,7 @@ test.describe('Announcements test (vendor)', () => {
 
     // vendor
 
-    test('vendor announcement menu page is rendering properly', { tag: ['@pro', '@exp', '@vendor'] }, async () => {
+    test('vendor announcement menu page is rendering properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorAnnouncementsRenderProperly();
     });
 

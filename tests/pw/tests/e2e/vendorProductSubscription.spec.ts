@@ -32,11 +32,11 @@ test.describe('Product subscriptions test', () => {
 
     //vendor
 
-    test('vendor user subscriptions menu page is rendering properly', { tag: ['@pro', '@exp', '@vendor'] }, async () => {
+    test('vendor user subscriptions menu page is rendering properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorUserSubscriptionsRenderProperly();
     });
 
-    test.skip('vendor can view product subscription details', { tag: ['@pro', '@exp', '@vendor'] }, async () => {
+    test.skip('vendor can view product subscription details', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.filterProductSubscriptions('by-customer', data.customer.username);
     });
 
@@ -54,7 +54,7 @@ test.describe('Product subscriptions test', () => {
 
     // customer
 
-    test.skip('customer can view product subscription details', { tag: ['@pro', '@exp', '@customer'] }, async () => {
+    test.skip('customer can view product subscription details', { tag: ['@pro', '@exploratory', '@customer'] }, async () => {
         await customer.customerViewProductSubscription(subscriptionId);
     });
 
