@@ -2,12 +2,12 @@
 **Contributors:** [tareq1988](https://profiles.wordpress.org/tareq1988/), [wedevs](https://profiles.wordpress.org/wedevs/), [nizamuddinbabu](https://profiles.wordpress.org/nizamuddinbabu/)  
 **Donate Link:** http://tareq.co/donate/  
 **Tags:** WooCommerce multivendor marketplace, multi vendor marketplace, multi seller store, multi-vendor, multi seller, commissions, multivendor, marketplace, product vendors, woocommerce vendor, commission rate, e-commerce, woocommerce, ebay, ecommerce.  
-**Requires at least:** 5.6  
+**Requires at least:** 6.4  
 **Tested up to:** 6.5.2  
-**WC requires at least:** 5.0.0  
-**WC tested up to:** 8.7.0  
+**WC requires at least:** 8.0.0  
+**WC tested up to:** 8.8.2  
 **Requires PHP:** 7.4  
-**Stable tag:** 3.10.3  
+**Stable tag:** 3.10.4  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -337,6 +337,11 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 ## Changelog ##
+
+### v3.10.4 ( Apr 25, 2024 ) ###
+
+- **fix:** Vendor dashboard Order status filter menu displayed a duplicate border.
+- **fix:** Vendor dashboard withdraw page display get hidden.
 
 ### v3.10.3 ( Apr 17, 2024 ) ###
 

@@ -1,14 +1,14 @@
 # Copyright (c) 2024 weDevs Pte. Ltd. All Rights Reserved.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 3.10.3\n"
+"Project-Id-Version: Dokan 3.10.4\n"
 "Report-Msgid-Bugs-To: https://dokan.co/contact/\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-04-17T07:36:26+00:00\n"
+"POT-Creation-Date: 2024-04-23T04:11:52+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.9.0\n"
 "X-Domain: dokan-lite\n"
@@ -2620,8 +2620,10 @@ msgid "On Hold"
 msgstr ""
 
 #. translators: 1) Title 2) Notification Count
+#. translators: 1: Order status label 2: Order count
 #. translators: 1: currency name 2: currency code
 #: includes/Dashboard/Templates/Main.php:72
+#: includes/template-tags.php:277
 #: templates/admin-setup-wizard/step-store-wc-fields.php:92
 msgid "%1$s (%2$s)"
 msgstr ""
@@ -6676,68 +6678,26 @@ msgstr ""
 msgid "Product successfully duplicated"
 msgstr ""
 
-#. translators: %d : order count total
-#. translators: 1) All product count
-#: includes/template-tags.php:249
-#: templates/products/listing-status-filter.php:23
-msgid "All (%s)"
-msgstr ""
-
-#. translators: %d : order count completed status
-#: includes/template-tags.php:267
-msgid "Completed (%s)"
-msgstr ""
-
-#. translators: %d : order count processing status
-#: includes/template-tags.php:285
-msgid "Processing (%s)"
-msgstr ""
-
-#. translators: %d : order count on hold status
-#: includes/template-tags.php:303
-msgid "On-hold (%s)"
-msgstr ""
-
-#. translators: %d : order count pending status
-#: includes/template-tags.php:321
-msgid "Pending (%s)"
-msgstr ""
-
-#. translators: %d : order count cancelled status
-#: includes/template-tags.php:339
-msgid "Cancelled (%s)"
-msgstr ""
-
-#. translators: %d : order count refunded status
-#: includes/template-tags.php:357
-msgid "Refunded (%s)"
-msgstr ""
-
-#. translators: %d : order count failed status
-#: includes/template-tags.php:376
-msgid "Failed (%s)"
-msgstr ""
-
-#: includes/template-tags.php:642
+#: includes/template-tags.php:543
 #: includes/Widgets/StoreCategoryMenu.php:37
 #: includes/Widgets/StoreCategoryMenu.php:81
 msgid "Store Product Category"
 msgstr ""
 
-#: includes/template-tags.php:655
+#: includes/template-tags.php:556
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:238
 #: includes/Widgets/StoreLocation.php:40
 #: includes/Widgets/StoreLocation.php:101
 msgid "Store Location"
 msgstr ""
 
-#: includes/template-tags.php:668
+#: includes/template-tags.php:569
 #: includes/Widgets/StoreOpenClose.php:39
 #: includes/Widgets/StoreOpenClose.php:110
 msgid "Store Time"
 msgstr ""
 
-#: includes/template-tags.php:681
+#: includes/template-tags.php:582
 #: includes/Widgets/StoreContactForm.php:40
 #: includes/Widgets/StoreContactForm.php:118
 msgid "Contact Vendor"
@@ -9174,6 +9134,11 @@ msgstr ""
 
 #: templates/products/listing-filter.php:90
 msgid "Search Products"
+msgstr ""
+
+#. translators: 1) All product count
+#: templates/products/listing-status-filter.php:23
+msgid "All (%s)"
 msgstr ""
 
 #: templates/products/listing-status-filter.php:40
