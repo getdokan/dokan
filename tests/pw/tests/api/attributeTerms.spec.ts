@@ -71,6 +71,6 @@ test.describe('attribute term api test', () => {
         const [response, responseBody] = await apiUtils.put(endPoints.updateBatchAttributeTerms(attributeId), { data: { update: batchAttributeTerms } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
-        expect(responseBody).toMatchSchema(schemas.attributeTermsSchema.batchupdateAttributesSchema);
+        expect(responseBody).toMatchSchema(schemas.attributeTermsSchema.batchUpdateAttributesSchema);
     });
 });

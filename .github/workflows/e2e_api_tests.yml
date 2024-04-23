@@ -79,7 +79,7 @@ jobs:
             - name: Composer install and build (Dokan-lite)
               if: success()
               run: |
-                  composer install --no-dev -o
+                composer i --no-dev -o || composer update --no-dev -o
 
             - name: Npm install and build (Dokan-lite)
               if: success()

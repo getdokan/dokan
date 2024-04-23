@@ -30,13 +30,13 @@ test.describe('dummy Data api test', () => {
         const [response, responseBody] = await apiUtils.post(endPoints.importDummyData, { data: payloads.dummyData });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
-        expect(responseBody).toMatchSchema(schemas.dummyDataSchema.importdummyDataSchema);
+        expect(responseBody).toMatchSchema(schemas.dummyDataSchema.importDummyDataSchema);
     });
 
     test('clear dummy data', { tag: ['@lite'] }, async () => {
         const [response, responseBody] = await apiUtils.delete(endPoints.clearDummyData);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
-        expect(responseBody).toMatchSchema(schemas.dummyDataSchema.cleardummyDataClearSchema);
+        expect(responseBody).toMatchSchema(schemas.dummyDataSchema.clearDummyDataClearSchema);
     });
 });

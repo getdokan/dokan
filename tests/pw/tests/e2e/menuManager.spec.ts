@@ -46,11 +46,11 @@ test.describe('Menu Manager test', () => {
         await admin.cantRenameMenu('Coupons');
     });
 
-    test('admin can redorder menu', { tag: ['@pro', '@admin'] }, async () => {
+    test('admin can reorder menu', { tag: ['@pro', '@admin'] }, async () => {
         await admin.reorderMenu('Orders', 'Products');
     });
 
-    test("admin can't redorder or toggle status of dashboard & store menu", { tag: ['@pro', '@admin'] }, async () => {
+    test("admin can't reorder or toggle status of dashboard & store menu", { tag: ['@pro', '@admin'] }, async () => {
         await admin.cantAlterMenu('Dashboard');
         await admin.cantAlterMenu('Store', true);
     });

@@ -49,7 +49,7 @@ test.describe('Product subscriptions test', () => {
     });
 
     test.skip('vendor can view user subscription', { tag: ['@pro', '@vendor'] }, async () => {
-        await vendor.viewProductSubscription(data.customer.username);
+        // await vendor.viewProductSubscription(data.customer.username);
     });
 
     // customer

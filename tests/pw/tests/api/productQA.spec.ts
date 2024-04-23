@@ -81,7 +81,7 @@ test.describe('product questions and answeres api test', () => {
         const [response, responseBody] = await apiUtils.put(endPoints.updateBatchProductQuestions, { data: { action: 'read', ids: allProductQuestionIds } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
-        expect(responseBody).toMatchSchema(schemas.productQaSchema.batchUpdateproductQuestionsSchema);
+        expect(responseBody).toMatchSchema(schemas.productQaSchema.batchUpdateProductQuestionsSchema);
     });
 
     // answers

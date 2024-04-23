@@ -19,7 +19,7 @@ test.describe('attribute api test', () => {
     let attributeId: string;
     let attribute: any;
     let attributeTerm: any;
-    let attributeTermId: string; //todo: why attributetermId is needed here
+    let attributeTermId: string; //todo: why attributeTermId is needed here
 
     test.beforeAll(async () => {
         apiUtils = new ApiUtils(await request.newContext());
@@ -79,7 +79,7 @@ test.describe('attribute api test', () => {
         const [response, responseBody] = await apiUtils.put(endPoints.batchUpdateAttributes, { data: { update: batchAttributes } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
-        expect(responseBody).toMatchSchema(schemas.attributesSchema.batchupdateAttributesSchema);
+        expect(responseBody).toMatchSchema(schemas.attributesSchema.batchUpdateAttributesSchema);
     });
 
     test('set default attribute', { tag: ['@lite'] }, async () => {

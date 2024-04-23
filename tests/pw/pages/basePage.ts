@@ -1360,7 +1360,7 @@ export class BasePage {
         await expect(this.page.locator(selector)).toHaveValue(value);
     }
 
-    // assert element to have attribute along with attirbute value
+    // assert element to have attribute along with attribute value
     async toHaveAttribute(selector: string, attribute: string, value: string) {
         await expect(this.page.locator(selector)).toHaveAttribute(attribute, value);
     }

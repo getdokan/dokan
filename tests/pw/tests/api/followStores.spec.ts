@@ -34,7 +34,7 @@ test.describe('follow store api test', () => {
         expect(response.statusText()).toBe('OK');
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
-        expect(responseBody).toMatchSchema(schemas.followStoresSchema.followstatusSchema);
+        expect(responseBody).toMatchSchema(schemas.followStoresSchema.followStatusSchema);
     });
 
     test('follow-unfollow a store', { tag: ['@pro'] }, async () => {

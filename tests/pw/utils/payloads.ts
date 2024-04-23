@@ -1678,13 +1678,13 @@ export const payloads = {
             {
                 id: 'disbursement_delay_period',
                 // label: 'Delay Period (Days)',
-                // description: 'Specify after how many days funds will be disburse to corresponding vendor. The funcds will be transferred to vendors after this period automatically',
+                // description: 'Specify after how many days funds will be disburse to corresponding vendor. The funds will be transferred to vendors after this period automatically',
                 value: '14',
             },
             {
                 id: 'instant_payout',
                 // label: 'Enable instant payout mode',
-                // description: 'Enable instant payout so that the payout can be processed within 25 seconds, whereas, the standard payouts get processed within 48 hours. This feature is limited and requires some prerequisites to be fulfiled. Please check out the requirements <a href="https://docs.mangopay.com/guide/instant-payment-payout" target="_blank">here</a>.',
+                // description: 'Enable instant payout so that the payout can be processed within 25 seconds, whereas, the standard payouts get processed within 48 hours. This feature is limited and requires some prerequisites to be fulfilled. Please check out the requirements <a href="https://docs.mangopay.com/guide/instant-payment-payout" target="_blank">here</a>.',
                 value: 'yes',
             },
             {
@@ -1915,7 +1915,7 @@ export const payloads = {
             {
                 id: 'enabled_payment_methods',
                 // label: 'Choose Payment Methods',
-                // description: 'Selected payment methods will be appeared on checkout if requiorements are fulfilled.',
+                // description: 'Selected payment methods will be appeared on checkout if requirements are fulfilled.',
                 value: ['card'],
                 // "options": {
                 //     "card": "Credit/Debit Card",
@@ -1954,7 +1954,7 @@ export const payloads = {
             {
                 id: 'disbursement_delay_period',
                 // label: 'Delay Period (Days)',
-                // description: 'Specify after how many days funds will be disburse to corresponding vendor. The funcds will be transferred to vendors after this period automatically',
+                // description: 'Specify after how many days funds will be disburse to corresponding vendor. The funds will be transferred to vendors after this period automatically',
                 value: '14',
             },
             {
@@ -2083,7 +2083,7 @@ export const payloads = {
             {
                 id: 'debug',
                 // label: 'Enable logging',
-                // description: 'Log gateway events such as Webhook requests, Payment oprations etc. inside <code>/Users/rk/Sites/dokan1/wp-content/uploads/wc-logs/dokan-2023-09-03-1a1ff23f40df3a5c66b67fcd8d3942ef.log</code>. Note: this may log personal information. We recommend using this for debugging purposes only and deleting the logs when finished.',
+                // description: 'Log gateway events such as Webhook requests, Payment operations etc. inside <code>/Users/rk/Sites/dokan1/wp-content/uploads/wc-logs/dokan-2023-09-03-1a1ff23f40df3a5c66b67fcd8d3942ef.log</code>. Note: this may log personal information. We recommend using this for debugging purposes only and deleting the logs when finished.',
                 value: 'yes',
             },
         ],
@@ -3234,7 +3234,7 @@ export const payloads = {
         ],
     },
 
-    // product questions answeres
+    // product questions answers
 
     createProductQuestion: () => ({
         question: 'test question_' + faker.string.nanoid(10),
@@ -3252,7 +3252,7 @@ export const payloads = {
     }),
 
     updateProductQuestionAnswer: () => ({
-        answer: 'test anser updated_' + faker.string.nanoid(10),
+        answer: 'test answer updated_' + faker.string.nanoid(10),
     }),
 
     // reverse withdrawal

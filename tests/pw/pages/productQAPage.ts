@@ -1,6 +1,4 @@
 import { Page, expect } from '@playwright/test';
-import { AdminPage } from '@pages/adminPage';
-// import { VendorPage } from '@pages/vendorPage';
 import { selector } from '@pages/selectors';
 import { data } from '@utils/testData';
 import { helpers } from '@utils/helpers';
@@ -38,7 +36,7 @@ export class ProductQAPage extends BasePage {
         await this.multipleElementVisible(bulkActions);
 
         // filter elements are visible
-        const { filterInput, result, resetFilterByVensors, ...filters } = productQAAdmin.filters;
+        const { filterInput, result, resetFilterByVendors, ...filters } = productQAAdmin.filters;
         await this.multipleElementVisible(filters);
 
         // product question & answers table elements are visible

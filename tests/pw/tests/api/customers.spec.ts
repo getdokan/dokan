@@ -71,6 +71,6 @@ test.describe('customers api test', () => {
         const [response, responseBody] = await apiUtils.put(endPoints.updateBatchCustomers, { data: { update: batchCustomers } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
-        expect(responseBody).toMatchSchema(schemas.customersSchema.batchupdateCustomersSchema);
+        expect(responseBody).toMatchSchema(schemas.customersSchema.batchUpdateCustomersSchema);
     });
 });

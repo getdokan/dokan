@@ -192,7 +192,7 @@ export const data = {
 
         downloadable: {
             productType: 'simple',
-            productName: () => faker.commerce.productName() + ' (Downadable)',
+            productName: () => faker.commerce.productName() + ' (Downloadable)',
             category: 'Uncategorized',
             regularPrice: () => faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([1, 2]) }).replace('.', ','),
             storeName: String(process.env.VENDOR) + 'store',
@@ -1679,7 +1679,7 @@ export const data = {
         badgeStatus: 'published', // published, draft
     },
 
-    //  question answeres
+    //  question answers
     questionAnswers: {
         question: 'test question',
         editQuestion: 'edited test question',

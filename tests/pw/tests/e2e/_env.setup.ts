@@ -306,9 +306,9 @@ setup.describe('setup dokan settings e2e', () => {
         await apiUtils.dispose();
     });
 
-    setup('admin can refreseh license', { tag: ['@pro', '@admin'] }, async () => {
+    setup('admin can refresh license', { tag: ['@pro', '@admin'] }, async () => {
         setup.skip(!DOKAN_PRO, 'skip on lite');
-        await licensePage.refresehLicense();
+        await licensePage.refreshLicense();
     });
 
     setup('recreate reverse withdrawal payment product via settings save', { tag: ['@lite'] }, async () => {

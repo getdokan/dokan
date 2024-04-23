@@ -32,7 +32,7 @@ test.describe('License test', () => {
     });
 
     test('admin can refreseh license', { tag: ['@pro', '@admin'] }, async () => {
-        await admin.refresehLicense();
+        await admin.refreshLicense();
     });
 
     test.skip('admin can deactivate license', { tag: ['@pro', '@admin'] }, async () => {

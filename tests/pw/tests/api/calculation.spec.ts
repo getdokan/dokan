@@ -92,7 +92,7 @@ test.describe.skip('Marketplace Coupon calculation test', () => {
         taxRate = await apiUtils.setUpTaxRate(payloads.enableTaxRate, payloads.createTaxRate);
         // taxRate = await apiUtils.updateSingleWcSettingOptions('general', 'woocommerce_calc_discounts_sequentially', { value: 'no' });
         sequentialCoupon = await apiUtils.getSingleWcSettingOptions('general', 'woocommerce_calc_discounts_sequentially');
-        sequentialCoupon = sequentialCoupon.value === 'yes' ? true : false;
+        sequentialCoupon = sequentialCoupon?.value === 'yes' ? true : false;
         // console.log('applySequentially:', sequentialCoupon);
         [commission, feeRecipient] = await dbUtils.getSellingInfo();
     });
@@ -192,7 +192,7 @@ test.describe.skip('commission test', () => {
         await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, commission_type: 'combine' });
     });
 
-    // //todo: add vendorwise, categorywise, productwise commission
+    // //todo: add vendor-wise, category-wise, product-wise commission
 
     test('shipping fee recipient test', { tag: ['@pro'] }, async () => {
         await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, shipping_fee_recipient: 'seller' });
@@ -245,7 +245,7 @@ test.describe.skip('commission test', () => {
             // todo: add discount scenario
 
             const table = [
-                [`OID: ${oid}`, 'OrderTotal', 'VendorEarning', 'AdmminCommission', 'GatewayFee', 'ShippingFee', 'ShippingTax', 'ProductTax'],
+                [`OID: ${oid}`, 'OrderTotal', 'VendorEarning', 'AdminCommission', 'GatewayFee', 'ShippingFee', 'ShippingTax', 'ProductTax'],
                 ['Expected', calculatedOrderTotal, calculatedVendorEarning, calculatedAdminCommission, gatewayFee, providedShippingFee, calculatedShippingTax, calculatedProductTax],
                 ['Received', order_total, vendor_earning, admin_commission, gateway_fee, shipping_fee, shipping_tax, tax_total],
             ];
@@ -253,7 +253,7 @@ test.describe.skip('commission test', () => {
         } else {
             // todo:  modify for lite as well
             const table = [
-                [`OID: ${oid}`, 'OrderTotal', 'VendorEarning', 'AdmminCommission', 'GatewayFee', 'ShippingFee', 'ShippingTax', 'ProductTax'],
+                [`OID: ${oid}`, 'OrderTotal', 'VendorEarning', 'AdminCommission', 'GatewayFee', 'ShippingFee', 'ShippingTax', 'ProductTax'],
                 ['Expected', calculatedOrderTotal, calculatedVendorEarning, calculatedAdminCommission, gatewayFee, providedShippingFee, calculatedShippingTax, calculatedProductTax],
                 ['Received', orderTotal, '-', '-', gatewayFee, shippingFee, shippingTax, cartTax],
             ];
