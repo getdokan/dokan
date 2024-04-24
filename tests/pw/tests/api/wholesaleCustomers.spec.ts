@@ -21,32 +21,32 @@ test.describe('wholesale customers api test', () => {
         await apiUtils.dispose();
     });
 
-    test('get all wholesale customers @pro', async () => {
+    test('get all wholesale customers', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllWholesaleCustomers);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
-    test('create a wholesale customer @pro', async () => {
+    test('create a wholesale customer', { tag: ['@pro'] }, async () => {
         const [, customerId] = await apiUtils.createCustomer(payloads.createCustomer());
         const [response, responseBody] = await apiUtils.post(endPoints.createWholesaleCustomer, { data: { id: String(customerId) } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
-    test('update a wholesale customer @pro', async () => {
+    test('update a wholesale customer', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.post(endPoints.updateCustomer(wholesaleCustomerId), { data: payloads.updateWholesaleCustomer });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
-    test('delete a wholesale customer @pro', async () => {
+    test('delete a wholesale customer', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.post(endPoints.updateCustomer(wholesaleCustomerId), { data: payloads.deleteWholesaleCustomer });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
-    test('update batch wholesale customers @pro', async () => {
+    test('update batch wholesale customers', { tag: ['@pro'] }, async () => {
         const allWholesaleCustomerIds = (await apiUtils.getAllWholesaleCustomers()).map((a: { id: unknown }) => a.id);
         const [response, responseBody] = await apiUtils.put(endPoints.updateBatchWholesaleCustomer, { data: { activate: allWholesaleCustomerIds } });
         expect(response.ok()).toBeTruthy();

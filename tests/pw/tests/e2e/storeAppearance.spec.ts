@@ -31,17 +31,17 @@ test.describe.skip('Store Appearance test', () => {
         await apiUtils.dispose();
     });
 
-    test('store map is disabled on store sidebar @lite @c', async () => {
+    test('store map is disabled on store sidebar', { tag: ['@lite', '@customer'] }, async () => {
         await dbUtils.setDokanSettings(dbData.dokan.optionName.appearance, { ...dbData.dokan.appearanceSettings, store_map: 'off' });
         await customer.disableMapOnStoreSidebar(data.predefined.vendorStores.vendor1);
     });
 
-    test('store open-close time is disabled store sidebar @lite @c', async () => {
+    test('store open-close time is disabled store sidebar', { tag: ['@lite', '@customer'] }, async () => {
         await dbUtils.setDokanSettings(dbData.dokan.optionName.appearance, { ...dbData.dokan.appearanceSettings, store_open_close: 'off' });
         await customer.disableStoreOpenCloseTimeOnStoreSidebar(data.predefined.vendorStores.vendor1);
     });
 
-    test.skip('vendor info is disabled on single store page @lite @c', async () => {
+    test.skip('vendor info is disabled on single store page', { tag: ['@lite', '@customer'] }, async () => {
         // todo: need to fix
         console.log(await dbUtils.getDokanSettings(dbData.dokan.optionName.appearance));
         await dbUtils.setDokanSettings(dbData.dokan.optionName.appearance, {

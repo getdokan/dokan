@@ -1,4 +1,4 @@
-import { Page, expect } from '@playwright/test';
+import { Page } from '@playwright/test';
 import { AdminPage } from '@pages/adminPage';
 import { selector } from '@pages/selectors';
 import { data } from '@utils/testData';
@@ -125,8 +125,7 @@ export class ShippingPage extends AdminPage {
         await this.hover(woocommerceSettings.shippingZoneCell(shippingZone));
         await this.clickAndAccept(woocommerceSettings.deleteShippingZone(shippingZone));
 
-        const shippingZoneIsVisible = await this.isVisible(woocommerceSettings.shippingZoneCell(shippingZone));
-        expect(shippingZoneIsVisible).toBe(false);
+        await this.notToBeVisible(woocommerceSettings.shippingZoneCell(shippingZone));
     }
 
     // Admin Delete Shipping Method
@@ -139,7 +138,6 @@ export class ShippingPage extends AdminPage {
         await this.click(woocommerceSettings.deleteShippingMethod(shipping.shippingMethod));
         await this.click(woocommerceSettings.shippingZoneSaveChanges);
 
-        const shippingMethodIsVisible = await this.isVisible(woocommerceSettings.shippingMethodCell(shipping.shippingMethod));
-        expect(shippingMethodIsVisible).toBe(false);
+        await this.notToBeVisible(woocommerceSettings.shippingMethodCell(shipping.shippingMethod));
     }
 }

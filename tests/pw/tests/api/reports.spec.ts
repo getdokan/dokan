@@ -20,25 +20,25 @@ test.describe('report api test', () => {
         await apiUtils.dispose();
     });
 
-    test('get sales overview report @pro', async () => {
+    test('get sales overview report', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getSalesOverviewReport);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
-    test('get summary report @pro', async () => {
+    test('get summary report', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getSummaryReport);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
-    test('get top earners report @pro', async () => {
+    test('get top earners report', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getTopEarnersReport);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
-    test('get top selling products report @pro', async () => {
+    test('get top selling products report', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getTopSellingProductsReport);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();

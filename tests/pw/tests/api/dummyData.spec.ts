@@ -19,24 +19,24 @@ test.describe('dummy Data api test', () => {
         await apiUtils.dispose();
     });
 
-    test('get dummy data status @lite', async () => {
+    test('get dummy data status', { tag: ['@lite'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getDummyDataStatus);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
         expect(responseBody).toMatchSchema(schemas.dummyDataSchema.dummyDataStatusSchema);
     });
 
-    test('import dummy data @lite', async () => {
+    test('import dummy data', { tag: ['@lite'] }, async () => {
         const [response, responseBody] = await apiUtils.post(endPoints.importDummyData, { data: payloads.dummyData });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
-        expect(responseBody).toMatchSchema(schemas.dummyDataSchema.importdummyDataSchema);
+        expect(responseBody).toMatchSchema(schemas.dummyDataSchema.importDummyDataSchema);
     });
 
-    test('clear dummy data @lite', async () => {
+    test('clear dummy data', { tag: ['@lite'] }, async () => {
         const [response, responseBody] = await apiUtils.delete(endPoints.clearDummyData);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
-        expect(responseBody).toMatchSchema(schemas.dummyDataSchema.cleardummyDataClearSchema);
+        expect(responseBody).toMatchSchema(schemas.dummyDataSchema.clearDummyDataClearSchema);
     });
 });

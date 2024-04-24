@@ -16,11 +16,13 @@ test.describe('Vendor analytics test', () => {
         await vPage.close();
     });
 
-    test('vendor reports menu page is rendering properly @pro @exp @v', async () => {
+    //vendor
+
+    test('vendor reports menu page is rendering properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorReportsRenderProperly();
     });
 
-    test('vendor can export statement @pro @v', async () => {
+    test('vendor can export statement', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.exportStatement();
     });
 });

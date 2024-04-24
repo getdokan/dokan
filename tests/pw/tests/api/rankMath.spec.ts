@@ -18,7 +18,7 @@ test.describe.skip('rank math api test', () => {
         await apiUtils.dispose();
     });
 
-    test('rank math @pro', async () => {
+    test('rank math', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.post(endPoints.rankMath(productId), { data: {} });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
