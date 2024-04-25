@@ -24,7 +24,7 @@ test.describe('Vendor shipping test', () => {
 
     //vendor
 
-    test('vendor shipping settings menu page is rendering properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+    test('vendor shipping settings menu page renders properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorShippingSettingsRenderProperly();
     });
 

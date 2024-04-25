@@ -31,7 +31,7 @@ test.describe('Seller badge test', () => {
 
     // admin
 
-    test('dokan seller badge menu page is rendering properly', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
+    test('dokan seller badge menu page renders properly', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
         await admin.adminSellerBadgeRenderProperly();
     });
 
@@ -86,7 +86,7 @@ test.describe('Seller badge test', () => {
 
     // vendor
 
-    test('vendor badges menu page is rendering properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+    test('vendor badges menu page renders properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorSellerBadgeRenderProperly();
     });
 

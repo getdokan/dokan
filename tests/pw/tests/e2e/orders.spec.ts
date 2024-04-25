@@ -30,7 +30,7 @@ test.describe('Order functionality test', () => {
 
     // orders
 
-    test('vendor order menu page is rendering properly', { tag: ['@lite', '@exploratory', '@vendor'] }, async () => {
+    test('vendor order menu page renders properly', { tag: ['@lite', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorOrdersRenderProperly();
     });
 

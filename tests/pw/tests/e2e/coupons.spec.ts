@@ -46,7 +46,7 @@ test.describe('Coupons test', () => {
 
     //vendor
 
-    test('vendor coupon menu page is rendering properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+    test('vendor coupon menu page renders properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorCouponsRenderProperly();
     });
 

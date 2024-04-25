@@ -43,7 +43,7 @@ test.describe('Product QA functionality test', () => {
 
     // admin
 
-    test('admin product QA menu page is rendering properly', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
+    test('admin product QA menu page renders properly', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
         await admin.adminProductQARenderProperly();
     });
 
@@ -105,7 +105,7 @@ test.describe('Product QA functionality test', () => {
 
     // vendor
 
-    test('vendor product QA menu page is rendering properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+    test('vendor product QA menu page renders properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorProductQARenderProperly();
     });
 
