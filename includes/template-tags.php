@@ -226,7 +226,7 @@ function dokan_order_listing_status_filter() {
      * should be excluded from the displayed list. It is useful for removing
      * statuses dynamically based on specific conditions or configurations.
      *
-     * @since DOKAN_SINCE
+     * @since 3.10.4
      *
      * @param array $exclude_statuses Array of order status slugs to be excluded.
      */
@@ -249,7 +249,7 @@ function dokan_order_listing_status_filter() {
      * used in the order listing on the Dokan vendor dashboard. It can be used to
      * add new statuses or modify existing ones to customize the dashboard functionality.
      *
-     * @since DOKAN_SINCE
+     * @since 3.10.4
      *
      * @param array $order_statuses Array of order statuses with all. Key is the status slug, and value is the display label.
      */
