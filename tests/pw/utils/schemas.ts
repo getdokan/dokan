@@ -736,7 +736,7 @@ export const schemas = {
             }),
         ),
 
-        batchupdateAttributesSchema: z.object({
+        batchUpdateAttributesSchema: z.object({
             create: z
                 .array(
                     z.object({
@@ -791,7 +791,7 @@ export const schemas = {
         updateProductAttributeSchema: z.boolean(),
     },
 
-    attributeTeermsSchema: {
+    attributeTermsSchema: {
         attributeTermSchema: z.object({
             id: z.number(),
             name: z.string(),
@@ -820,7 +820,7 @@ export const schemas = {
             }),
         ),
 
-        batchupdateAttributesSchema: z.object({
+        batchUpdateAttributesSchema: z.object({
             update: z.array(
                 z.object({
                     id: z.number(),
@@ -1055,7 +1055,7 @@ export const schemas = {
             }),
         ),
 
-        batchupdateCustomersSchema: z.object({
+        batchUpdateCustomersSchema: z.object({
             create: z
                 .array(
                     z.object({
@@ -1243,7 +1243,7 @@ export const schemas = {
         dummyDataStatusSchema: z.object({
             import_status: z.enum(['yes', 'no']),
         }),
-        importdummyDataSchema: z.object({
+        importDummyDataSchema: z.object({
             result: z.object({
                 imported: z.array(z.number()),
                 failed: z.array(z.unknown()),
@@ -1252,13 +1252,13 @@ export const schemas = {
             }),
             vendor_index: z.number(),
         }),
-        cleardummyDataClearSchema: z.object({
+        clearDummyDataClearSchema: z.object({
             message: z.string(),
         }),
     },
 
     followStoresSchema: {
-        followstatusSchema: z.object({
+        followStatusSchema: z.object({
             status: z.boolean(),
         }),
         followUnfollowSchema: z.object({
@@ -2017,7 +2017,7 @@ export const schemas = {
                     description: z.string(),
                 }),
             ),
-            active_methods: z.array(z.enum(['PayPal', 'Bank Transfer', 'Skrill', 'bkash'])),
+            active_methods: z.array(z.enum(['PayPal', 'Bank Transfer', 'Skrill', 'bkash'])), //todo: 'bkash' shouldn't be in the enum
             method_additional_info: z.array(z.enum(['paypal', 'bank', 'skrill', 'dokan_custom'])),
             minimum_amount_needed: z.number(),
             is_schedule_selected: z.boolean(),
@@ -2032,7 +2032,7 @@ export const schemas = {
         productQuestionSchema: productQuestionSchema,
         productQuestionsSchema: z.array(productQuestionSchema),
 
-        batchUpdateproductQuestionsSchema: z.object({
+        batchUpdateProductQuestionsSchema: z.object({
             message: z.string(),
         }),
 

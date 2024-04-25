@@ -18,7 +18,7 @@ test.describe('product duplicate api test', () => {
         await apiUtils.dispose();
     });
 
-    test('create duplicate product @v2 @pro', async () => {
+    test('create duplicate product', { tag: ['@pro', '@v2'] }, async () => {
         const [response, responseBody] = await apiUtils.post(endPoints.createDuplicateProduct(productId));
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();

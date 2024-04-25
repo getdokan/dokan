@@ -270,12 +270,12 @@ export class CustomerPage extends BasePage {
         const couponIsApplied = await this.isVisible(selector.customer.cCart.removeCoupon(couponCode));
         if (couponIsApplied) {
             await this.clickAndWaitForResponse(data.subUrls.api.wc.store, selector.customer.cCart.removeCoupon(couponCode), 207);
-            await this.toContainText(selector.customer.cWooSelector.wooCommerceNoriceBannerContent, `Coupon code "${couponCode}" has been removed from your cart.`);
+            await this.toContainText(selector.customer.cWooSelector.wooCommerceNoticeBannerContent, `Coupon code "${couponCode}" has been removed from your cart.`);
         }
         await this.click(selector.customer.cCart.addCoupon);
         await this.clearAndType(selector.customer.cCart.couponCode, couponCode);
         await this.clickAndWaitForResponse(data.subUrls.api.wc.store, selector.customer.cCart.applyCoupon, 207);
-        await this.toContainText(selector.customer.cWooSelector.wooCommerceNoriceBannerContent, `Coupon code "${couponCode}" has been applied to your cart.`);
+        await this.toContainText(selector.customer.cWooSelector.wooCommerceNoticeBannerContent, `Coupon code "${couponCode}" has been applied to your cart.`);
     }
 
     // add billing address in checkout

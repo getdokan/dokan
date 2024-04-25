@@ -26,37 +26,37 @@ test.describe('product variation api test', () => {
         await apiUtils.dispose();
     });
 
-    test('get all product variations @pro', async () => {
+    test('get all product variations', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllProductVariations(productId));
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
-    test('get single product variation @pro', async () => {
+    test('get single product variation', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getSingleProductVariation(productId, variationId));
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
-    test('create a product variation @pro', async () => {
+    test('create a product variation', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.post(endPoints.createProductVariation(productId), { data: payloads.createProductVariation });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
-    test('update a product variation @pro', async () => {
+    test('update a product variation', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.put(endPoints.updateProductVariation(productId, variationId), { data: payloads.updateProductVariation() });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
-    test('delete a product variation @pro', async () => {
+    test('delete a product variation', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.delete(endPoints.deleteProductVariation(productId, variationId));
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
-    test('update batch product variations @pro', async () => {
+    test('update batch product variations', { tag: ['@pro'] }, async () => {
         test.skip(true, 'fatal error exists');
         const [productId] = await apiUtils.createVariableProductWithVariation(payloads.createAttribute(), payloads.createAttributeTerm(), payloads.createVariableProduct());
         // console.log(productId);

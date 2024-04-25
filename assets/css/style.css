@@ -712,9 +712,9 @@ a.dokan-btn-theme .badge,
 input[type='submit'].dokan-btn-success,
 a.dokan-btn-success,
 .dokan-btn-success {
-  color: #fff;
-  background-color: #5cb85c;
-  border-color: #4cae4c;
+  color: #fff !important;
+  background-color: #5cb85c !important;
+  border-color: #4cae4c !important;
 }
 input[type='submit'].dokan-btn-success:hover,
 a.dokan-btn-success:hover,
@@ -731,9 +731,9 @@ a.dokan-btn-success.active,
 .open .dropdown-toggleinput[type='submit'].dokan-btn-success,
 .open .dropdown-togglea.dokan-btn-success,
 .open .dropdown-toggle.dokan-btn-success {
-  color: #fff;
-  background-color: #47a447;
-  border-color: #398439;
+  color: #fff !important;
+  background-color: #47a447 !important;
+  border-color: #398439 !important;
 }
 input[type='submit'].dokan-btn-success:active,
 a.dokan-btn-success:active,
@@ -744,7 +744,7 @@ a.dokan-btn-success.active,
 .open .dropdown-toggleinput[type='submit'].dokan-btn-success,
 .open .dropdown-togglea.dokan-btn-success,
 .open .dropdown-toggle.dokan-btn-success {
-  background-image: none;
+  background-image: none !important;
 }
 input[type='submit'].dokan-btn-success.disabled,
 a.dokan-btn-success.disabled,
@@ -791,14 +791,14 @@ a.dokan-btn-success[disabled].active,
 fieldset[disabled] input[type='submit'].dokan-btn-success.active,
 fieldset[disabled] a.dokan-btn-success.active,
 fieldset[disabled] .dokan-btn-success.active {
-  background-color: #80c780;
-  border-color: #6ec06e;
+  background-color: #80c780 !important;
+  border-color: #6ec06e !important;
 }
 input[type='submit'].dokan-btn-success .badge,
 a.dokan-btn-success .badge,
 .dokan-btn-success .badge {
-  color: #5cb85c;
-  background-color: #fff;
+  color: #5cb85c !important;
+  background-color: #fff !important;
 }
 input[type='submit'].dokan-btn-default,
 a.dokan-btn-default,
@@ -3003,7 +3003,7 @@ div.media-sidebar a.edit-attachment {
 }
 .dokan-product-listing .dokan-product-listing-area .product-listing-top ul.dokan-listing-filter li {
   display: inline-block;
-  padding: 0px 10px 0px 0px;
+  padding: 0 5px;
 }
 .dokan-product-listing .dokan-product-listing-area .product-listing-top span.dokan-add-product-link {
   width: 36%;
@@ -4643,6 +4643,16 @@ div.media-sidebar a.edit-attachment {
   background-image: url(../js/../images/default-store-banner.png);
   background-size: 100% 100%;
   background-repeat: no-repeat;
+}
+.dokan-single-store .profile-frame .profile-info-box.profile-layout-default .profile-info-img {
+  height: 100% !important;
+  object-fit: cover;
+}
+.dokan-single-store .profile-frame .profile-info-box.profile-layout-default .profile-info-img.dummy-image {
+  position: absolute;
+  left: 0;
+  top: 0;
+  background-size: cover;
 }
 .dokan-single-store .profile-frame .profile-info-box .profile-info-summery-wrapper {
   position: absolute;

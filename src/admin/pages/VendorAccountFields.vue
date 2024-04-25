@@ -103,7 +103,11 @@
 
 
                         <div class="checkbox-left notify-vendor">
-                            <switches @input="sendEmail" :enabled="true" value="notify_vendor"></switches>
+                            <switches
+                                @input="sendEmail"
+                                :enabled="true === vendorInfo.notify_vendor"
+                                value="notify_vendor"
+                            ></switches>
                             <span class="desc">{{ __( 'Send the vendor an email about their account.', 'dokan-lite' ) }}</span>
                         </div>
                     </div>

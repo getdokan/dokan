@@ -47,7 +47,7 @@ test.describe.skip('Settings test', () => {
 
     // general settings
 
-    test.skip('admin can set vendor store url (general settings) @lite @a', async () => {
+    test.skip('admin can set vendor store url (general settings)', { tag: ['@lite', '@admin'] }, async () => {
         // todo: need to run on serial mode, will fail other tests
         await dbUtils.setDokanSettings(dbData.dokan.optionName.general, { ...dbData.dokan.generalSettings, custom_store_url: 'stores' });
         CI ? await helpers.exeCommand(data.command.permalink) : await helpers.exeCommand(data.command.permalinkLocal);
@@ -58,7 +58,7 @@ test.describe.skip('Settings test', () => {
         CI ? await helpers.exeCommand(data.command.permalink) : await helpers.exeCommand(data.command.permalinkLocal);
     });
 
-    test('admin can set vendor setup wizard logo & message (general settings) @lite @a', async () => {
+    test('admin can set vendor setup wizard logo & message (general settings)', { tag: ['@lite', '@admin'] }, async () => {
         apiUtils = new ApiUtils(await request.newContext());
         const [responseBody] = await apiUtils.uploadFile(data.image.dokan, payloads.adminAuth);
         const logoUrl = responseBody.source_url;
@@ -70,12 +70,12 @@ test.describe.skip('Settings test', () => {
         await admin.vendorSetupWizardLogoAndMessageSetting(logoUrl, dbData.testData.dokan.generalSettings.setup_wizard_message_without_html);
     });
 
-    test('admin can disable vendor setup wizard (general settings) @lite @g', async () => {
+    test('admin can disable vendor setup wizard (general settings)', { tag: ['@lite', '@guest'] }, async () => {
         await dbUtils.setDokanSettings(dbData.dokan.optionName.general, { ...dbData.dokan.generalSettings, disable_welcome_wizard: 'on' });
         await guest.disableVendorSetupWizardSetting();
     });
 
-    test('admin can set store terms and conditions (general settings) @lite @v', async () => {
+    test('admin can set store terms and conditions (general settings)', { tag: ['@lite', '@vendor'] }, async () => {
         await dbUtils.setDokanSettings(dbData.dokan.optionName.general, { ...dbData.dokan.generalSettings, seller_enable_terms_and_conditions: 'on' });
         await vendor.setStoreTermsAndConditions('on');
 
@@ -83,12 +83,12 @@ test.describe.skip('Settings test', () => {
         await vendor.setStoreTermsAndConditions('off');
     });
 
-    test('admin can set store products per page (general settings) @lite @c', async () => {
+    test('admin can set store products per page (general settings)', { tag: ['@lite', '@customer'] }, async () => {
         await dbUtils.setDokanSettings(dbData.dokan.optionName.general, { ...dbData.dokan.generalSettings, store_products_per_page: '1' });
         await customer.setStoreProductsPerPage(data.predefined.vendorStores.vendor1, 1);
     });
 
-    test('admin can enable address fields on registration (general settings) @lite @g', async () => {
+    test('admin can enable address fields on registration (general settings)', { tag: ['@lite', '@guest'] }, async () => {
         await dbUtils.setDokanSettings(dbData.dokan.optionName.general, { ...dbData.dokan.generalSettings, enabled_address_on_reg: 'on' });
         await guest.enableAddressFieldsOnRegistration('on');
 
@@ -96,7 +96,7 @@ test.describe.skip('Settings test', () => {
         await guest.enableAddressFieldsOnRegistration('off');
     });
 
-    test('admin can enable store terms and conditions on registration (general settings) @pro @v', async () => {
+    test('admin can enable store terms and conditions on registration (general settings)', { tag: ['@pro', '@vendor'] }, async () => {
         await dbUtils.setDokanSettings(dbData.dokan.optionName.general, { ...dbData.dokan.generalSettings, enable_tc_on_reg: 'on' });
         await vendor.enableStoreTermsAndConditionsOnRegistration('on');
 
@@ -104,7 +104,7 @@ test.describe.skip('Settings test', () => {
         await vendor.enableStoreTermsAndConditionsOnRegistration('off');
     });
 
-    test('admin can set show vendor info (general settings) @lite @c', async () => {
+    test('admin can set show vendor info (general settings)', { tag: ['@lite', '@customer'] }, async () => {
         await dbUtils.setDokanSettings(dbData.dokan.optionName.general, { ...dbData.dokan.generalSettings, show_vendor_info: 'on' });
         await customer.setShowVendorInfo(data.predefined.simpleProduct.product1.name, 'on');
 
@@ -112,7 +112,7 @@ test.describe.skip('Settings test', () => {
         await customer.setShowVendorInfo(data.predefined.simpleProduct.product1.name, 'off');
     });
 
-    test('admin can enable more products tab (general settings) @lite @c', async () => {
+    test('admin can enable more products tab (general settings)', { tag: ['@lite', '@customer'] }, async () => {
         await dbUtils.setDokanSettings(dbData.dokan.optionName.general, { ...dbData.dokan.generalSettings, enabled_more_products_tab: 'on' });
         await customer.enableMoreProductsTab(data.predefined.simpleProduct.product1.name, 'on');
 
@@ -122,7 +122,7 @@ test.describe.skip('Settings test', () => {
 
     // selling settings
 
-    test('admin can enable vendor selling (selling settings) @lite @g', async () => {
+    test('admin can enable vendor selling (selling settings)', { tag: ['@lite', '@guest'] }, async () => {
         await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, new_seller_enable_selling: 'on' });
         await guest.enableVendorSelling('on');
 
@@ -130,7 +130,7 @@ test.describe.skip('Settings test', () => {
         await guest.enableVendorSelling('off');
     });
 
-    test('admin can set order status change capability (selling settings) @lite @v', async () => {
+    test('admin can set order status change capability (selling settings)', { tag: ['@lite', '@vendor'] }, async () => {
         apiUtils = new ApiUtils(await request.newContext());
         const [, , orderId] = await apiUtils.createOrderWithStatus(PRODUCT_ID, { ...payloads.createOrder, customer_id: CUSTOMER_ID }, data.order.orderStatus.onhold, payloads.vendorAuth);
 

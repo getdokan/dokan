@@ -327,6 +327,13 @@ export const helpers = {
         fs.renameSync(newFilePath, oldFilePath);
     },
 
+    // replace data in file
+    replaceData(filePath: string, data: string, replaceData: string) {
+        const fileData = this.readFile(filePath);
+        const updatedData = fileData.replace(data, replaceData);
+        this.writeFile(filePath, updatedData);
+    },
+
     // create env
     createEnvVar(key: string, value: string) {
         console.log(`${key}=${value}`);

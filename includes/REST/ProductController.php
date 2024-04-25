@@ -20,6 +20,8 @@ use WeDevs\Dokan\Product\ProductAttribute;
 /**
  * Store API Controller
  *
+ * phpcs:disable WordPress.WP.Capabilities.Unknown
+ *
  * @package dokan
  *
  * @author weDevs <info@wedevs.com>
@@ -285,13 +287,13 @@ class ProductController extends DokanRESTController {
      * @return bool|WP_Error
      */
     public function validation_before_create_item( $request ) {
-        $store_id = dokan_get_current_user_id();
+        $store_id = $this->validate_post_author_override( $request, dokan_get_current_user_id() );
 
         if ( empty( $store_id ) ) {
             return new WP_Error( 'no_store_found', __( 'No seller found', 'dokan-lite' ), [ 'status' => 404 ] );
         }
 
-        if ( ! dokan_is_seller_enabled( $store_id ) ) {
+        if ( ! dokan_is_seller_enabled( $store_id ) && ! current_user_can( 'manage_options' ) ) {
             return new WP_Error( 'invalid_request', __( 'Error! Your account is not enabled for selling, please contact the admin', 'dokan-lite' ), [ 'status' => 400 ] );
         }
 
@@ -329,7 +331,7 @@ class ProductController extends DokanRESTController {
      * @return bool|WP_Error
      */
     public function validation_before_update_item( $request ) {
-        $store_id = dokan_get_current_user_id();
+        $store_id = $this->validate_post_author_override( $request, dokan_get_current_user_id() );
 
         if ( empty( $store_id ) ) {
             return new WP_Error( 'no_store_found', __( 'No seller found', 'dokan-lite' ), [ 'status' => 404 ] );
@@ -343,7 +345,7 @@ class ProductController extends DokanRESTController {
 
         $product_author = (int) get_post_field( 'post_author', $object->get_id() );
 
-        if ( $store_id !== $product_author ) {
+        if ( $store_id !== $product_author && ! current_user_can( 'manage_options' ) ) {
             return new WP_Error( "dokan_rest_{$this->post_type}_invalid_id", __( 'Sorry, you have no permission to do this. Since it\'s not your product.', 'dokan-lite' ), [ 'status' => 400 ] );
         }
 
@@ -358,7 +360,7 @@ class ProductController extends DokanRESTController {
      * @return WP_Error|Boolean
      */
     public function validation_before_delete_item( $request ) {
-        $store_id = dokan_get_current_user_id();
+        $store_id = $this->validate_post_author_override( $request, dokan_get_current_user_id() );
         $object   = $this->get_object( (int) $request['id'] );
         $result   = false;
 
@@ -368,7 +370,7 @@ class ProductController extends DokanRESTController {
 
         $product_author = (int) get_post_field( 'post_author', $object->get_id() );
 
-        if ( $store_id !== $product_author ) {
+        if ( $store_id !== $product_author && ! current_user_can( 'manage_options' ) ) {
             return new WP_Error( "dokan_rest_{$this->post_type}_invalid_id", __( 'Sorry, you have no permission to do this. Since it\'s not your product.', 'dokan-lite' ), [ 'status' => 400 ] );
         }
 
@@ -383,7 +385,7 @@ class ProductController extends DokanRESTController {
      * @return bool
      */
     public function get_product_permissions_check() {
-        return current_user_can( 'dokan_view_product_menu' );
+        return current_user_can( 'dokan_view_product_menu' ) || current_user_can( 'manage_options' );
     }
 
     /**
@@ -394,7 +396,7 @@ class ProductController extends DokanRESTController {
      * @return bool
      */
     public function create_product_permissions_check() {
-        return current_user_can( 'dokan_add_product' );
+        return current_user_can( 'dokan_add_product' ) || current_user_can( 'manage_options' );
     }
 
     /**
@@ -405,7 +407,7 @@ class ProductController extends DokanRESTController {
      * @return bool
      */
     public function get_single_product_permissions_check() {
-        return current_user_can( 'dokandar' );
+        return current_user_can( 'dokandar' ) || current_user_can( 'manage_options' );
     }
 
     /**
@@ -416,7 +418,7 @@ class ProductController extends DokanRESTController {
      * @return bool
      */
     public function update_product_permissions_check() {
-        return current_user_can( 'dokan_edit_product' );
+        return current_user_can( 'dokan_edit_product' ) || current_user_can( 'manage_options' );
     }
 
     /**
@@ -427,7 +429,7 @@ class ProductController extends DokanRESTController {
      * @return bool
      */
     public function delete_product_permissions_check() {
-        return current_user_can( 'dokan_delete_product' );
+        return current_user_can( 'dokan_delete_product' ) || current_user_can( 'manage_options' );
     }
 
     /**
@@ -592,6 +594,28 @@ class ProductController extends DokanRESTController {
         }
 
         return $response;
+    }
+
+    /**
+     * Validate post author overrides.
+     *
+     * @since 3.10.3
+     *
+     * @param WP_REST_Request $request Request object.
+     * @param int $store_id fallback Store or author id.
+     *
+     * @return int
+     */
+    public function validate_post_author_override( WP_REST_Request $request, int $store_id ): int {
+        if ( ! current_user_can( 'manage_options' ) ) {
+            return $store_id;
+        }
+
+        $post_author = absint( $request->get_param( 'post_author' ) );
+        $author      = new \WP_User( $post_author );
+
+        // phpcs:ignore WordPress.WP.Capabilities.Unknown
+        return ( ! empty( $post_author ) && $author->exists() ) ? $author->ID : $store_id;
     }
 
     /**
@@ -829,7 +853,7 @@ class ProductController extends DokanRESTController {
     /**
      * Prepare object for database mapping
      *
-     * @param object $request
+     * @param WP_REST_Request $request
      * @param boolean $creating
      *
      * @return object

@@ -209,175 +209,76 @@ function dokan_product_listing_status_filter() {
 }
 
 function dokan_order_listing_status_filter() {
-    $orders_url = dokan_get_navigation_url( 'orders' );
-
-    $status_class         = 'all';
-    $orders_counts        = dokan_count_orders( dokan_get_current_user_id() );
-    $order_date           = '';
-    $date_filter          = array();
-    $all_order_url        = array();
-    $complete_order_url   = array();
-    $processing_order_url = array();
-    $pending_order_url    = array();
-    $on_hold_order_url    = array();
-    $canceled_order_url   = array();
-    $refund_order_url     = array();
-    $failed_order_url     = array();
-    $filter_nonce         = wp_create_nonce( 'seller-order-filter-nonce' );
+    $status_class  = 'all';
+    $orders_url    = dokan_get_navigation_url( 'orders' );
+    $orders_counts = dokan_count_orders( dokan_get_current_user_id() );
+    $total_orders  = $orders_counts->total ?? 0;
+    $filter_nonce  = wp_create_nonce( 'seller-order-filter-nonce' );
 
     if ( isset( $_GET['seller_order_filter_nonce'] ) && wp_verify_nonce( sanitize_key( wp_unslash( $_GET['seller_order_filter_nonce'] ) ), 'seller-order-filter-nonce' ) ) {
         $status_class = isset( $_GET['order_status'] ) ? sanitize_text_field( wp_unslash( $_GET['order_status'] ) ) : $status_class;
-        $order_date   = isset( $_GET['order_date'] ) ? sanitize_text_field( wp_unslash( $_GET['order_date'] ) ) : $order_date;
     }
+
+    /**
+     * Filter the list of order statuses to exclude.
+     *
+     * This filter allows developers to modify the array of order statuses that
+     * should be excluded from the displayed list. It is useful for removing
+     * statuses dynamically based on specific conditions or configurations.
+     *
+     * @since 3.10.4
+     *
+     * @param array $exclude_statuses Array of order status slugs to be excluded.
+     */
+    $exclude_statuses = (array) apply_filters( 'dokan_vendor_dashboard_excluded_order_statuses', [ 'wc-checkout-draft' ] );
+
+    // Convert the indexed array to an associative array where the values become keys & Get WooCommerce order statuses.
+    $exclude_statuses  = array_flip( $exclude_statuses );
+    $wc_order_statuses = wc_get_order_statuses();
+
+    // Remove keys from $wc_order_statuses that are found in $exclude_statuses.
+    $filtered_statuses = array_diff_key( $wc_order_statuses, $exclude_statuses );
+
+    // Directly prepend the custom 'All' status to the WooCommerce order statuses.
+    $order_statuses = array_merge( [ 'all' => 'All' ], $filtered_statuses );
+
+    /**
+     * Determine the order listing statuses on the Dokan dashboard.
+     *
+     * This hook allows developers to modify or extend the list of order statuses
+     * used in the order listing on the Dokan vendor dashboard. It can be used to
+     * add new statuses or modify existing ones to customize the dashboard functionality.
+     *
+     * @since 3.10.4
+     *
+     * @param array $order_statuses Array of order statuses with all. Key is the status slug, and value is the display label.
+     */
+    $order_statuses = apply_filters( 'dokan_vendor_dashboard_order_listing_statuses', $order_statuses );
     ?>
+    <ul class='list-inline order-statuses-filter subsubsub'>
+        <?php foreach ( $order_statuses as $status_key => $status_label ) : ?>
+            <?php
+            $url_args = array(
+                'order_status'              => $status_key,
+                'seller_order_filter_nonce' => $filter_nonce,
+            );
 
-    <ul class="list-inline order-statuses-filter">
-        <li<?php echo $status_class === 'all' ? ' class="active"' : ''; ?>>
-            <?php
-            if ( $order_date ) {
-                $date_filter = array(
-                    'order_date' => $order_date,
-                    'dokan_order_filter' => 'Filter',
-                );
-            }
-            $all_order_url = array_merge( $date_filter, array( 'order_status' => 'all', 'seller_order_filter_nonce' => $filter_nonce ) ); // phpcs:ignore
-            $all_order_url = ( empty( $all_order_url ) ) ? $orders_url : add_query_arg( $complete_order_url, $orders_url );
+            // Get filtered orders url based on order status.
+            $status_url = add_query_arg( $url_args, $orders_url );
             ?>
-            <a href="<?php echo esc_url( $all_order_url ); ?>">
-                <?php
-                // translators: %d : order count total
-                printf( esc_html__( 'All (%s)', 'dokan-lite' ), number_format_i18n( $orders_counts->total ) );
-                ?>
-                </span>
-            </a>
-        </li>
-        <li<?php echo $status_class === 'wc-completed' ? ' class="active"' : ''; ?>>
-            <?php
-            if ( $order_date ) {
-                $date_filter = array(
-                    'order_date' => $order_date,
-                    'dokan_order_filter' => 'Filter',
-                );
-            }
-            $complete_order_url = array_merge( array( 'order_status' => 'wc-completed', 'seller_order_filter_nonce' => $filter_nonce ), $date_filter ); // phpcs:ignore
-            ?>
-            <a href="<?php echo esc_url( add_query_arg( $complete_order_url, $orders_url ) ); ?>">
-                <?php
-                // translators: %d : order count completed status
-                printf( esc_html__( 'Completed (%s)', 'dokan-lite' ), number_format_i18n( $orders_counts->{'wc-completed'} ) );
-                ?>
-                </span>
-            </a>
-        </li>
-        <li<?php echo $status_class === 'wc-processing' ? ' class="active"' : ''; ?>>
-            <?php
-            if ( $order_date ) {
-                $date_filter = array(
-                    'order_date' => $order_date,
-                    'dokan_order_filter' => 'Filter',
-                );
-            }
-            $processing_order_url = array_merge( $date_filter, array( 'order_status' => 'wc-processing', 'seller_order_filter_nonce' => $filter_nonce ) ); // phpcs:ignore
-            ?>
-            <a href="<?php echo esc_url( add_query_arg( $processing_order_url, $orders_url ) ); ?>">
-                <?php
-                // translators: %d : order count processing status
-                printf( esc_html__( 'Processing (%s)', 'dokan-lite' ), number_format_i18n( $orders_counts->{'wc-processing'} ) );
-                ?>
-                </span>
-            </a>
-        </li>
-        <li<?php echo $status_class === 'wc-on-hold' ? ' class="active"' : ''; ?>>
-            <?php
-            if ( $order_date ) {
-                $date_filter = array(
-                    'order_date' => $order_date,
-                    'dokan_order_filter' => 'Filter',
-                );
-            }
-            $on_hold_order_url = array_merge( $date_filter, array( 'order_status' => 'wc-on-hold', 'seller_order_filter_nonce' => $filter_nonce ) ); // phpcs:ignore
-            ?>
-            <a href="<?php echo esc_url( add_query_arg( $on_hold_order_url, $orders_url ) ); ?>">
-                <?php
-                // translators: %d : order count on hold status
-                printf( esc_html__( 'On-hold (%s)', 'dokan-lite' ), number_format_i18n( $orders_counts->{'wc-on-hold'} ) );
-                ?>
-                </span>
-            </a>
-        </li>
-        <li<?php echo $status_class === 'wc-pending' ? ' class="active"' : ''; ?>>
-            <?php
-            if ( $order_date ) {
-                $date_filter = array(
-                    'order_date' => $order_date,
-                    'dokan_order_filter' => 'Filter',
-                );
-            }
-            $pending_order_url = array_merge( $date_filter, array( 'order_status' => 'wc-pending', 'seller_order_filter_nonce' => $filter_nonce ) ); // phpcs:ignore
-            ?>
-            <a href="<?php echo esc_url( add_query_arg( $pending_order_url, $orders_url ) ); ?>">
-                <?php
-                // translators: %d : order count pending status
-                printf( esc_html__( 'Pending (%s)', 'dokan-lite' ), number_format_i18n( $orders_counts->{'wc-pending'} ) );
-                ?>
-                </span>
-            </a>
-        </li>
-        <li<?php echo $status_class === 'wc-cancelled' ? ' class="active"' : ''; ?>>
-            <?php
-            if ( $order_date ) {
-                $date_filter = array(
-                    'order_date' => $order_date,
-                    'dokan_order_filter' => 'Filter',
-                );
-            }
-            $canceled_order_url = array_merge( $date_filter, array( 'order_status' => 'wc-cancelled', 'seller_order_filter_nonce' => $filter_nonce ) ); // phpcs:ignore
-            ?>
-            <a href="<?php echo esc_url( add_query_arg( $canceled_order_url, $orders_url ) ); ?>">
-                <?php
-                // translators: %d : order count cancelled status
-                printf( esc_html__( 'Cancelled (%s)', 'dokan-lite' ), number_format_i18n( $orders_counts->{'wc-cancelled'} ) );
-                ?>
-                </span>
-            </a>
-        </li>
-        <li<?php echo $status_class === 'wc-refunded' ? ' class="active"' : ''; ?>>
-            <?php
-            if ( $order_date ) {
-                $date_filter = array(
-                    'order_date' => $order_date,
-                    'dokan_order_filter' => 'Filter',
-                );
-            }
-            $refund_order_url = array_merge( $date_filter, array( 'order_status' => 'wc-refunded', 'seller_order_filter_nonce' => $filter_nonce ) ); // phpcs:ignore
-            ?>
-            <a href="<?php echo esc_url( add_query_arg( $refund_order_url, $orders_url ) ); ?>">
-                <?php
-                // translators: %d : order count refunded status
-                printf( esc_html__( 'Refunded (%s)', 'dokan-lite' ), number_format_i18n( $orders_counts->{'wc-refunded'} ) );
-                ?>
-                </span>
-            </a>
-        </li>
-        <li<?php echo $status_class === 'wc-failed' ? ' class="active"' : ''; ?>>
-            <?php
-            if ( $order_date ) {
-                $date_filter = array(
-                    'order_date'         => $order_date,
-                    'dokan_order_filter' => 'Filter',
-                );
-            }
+            <li <?php echo $status_class === $status_key ? 'class="active"' : ''; ?>>
+                <a href="<?php echo esc_url( $status_url ); ?>">
+                    <?php
+                    // Set formatted orders count data based on status.
+                    $status_order_count    = $orders_counts->{$status_key} ?? 0;
+                    $formatted_order_count = $status_key === 'all' ? number_format_i18n( $total_orders ) : number_format_i18n( $status_order_count );
 
-            $failed_order_url = array_merge( $date_filter, array( 'order_status' => 'wc-failed', 'seller_order_filter_nonce' => $filter_nonce ) ); // phpcs:ignore
-            ?>
-            <a href="<?php echo esc_url( add_query_arg( $failed_order_url, $orders_url ) ); ?>">
-                <?php
-                // translators: %d : order count failed status
-                printf( esc_html__( 'Failed (%s)', 'dokan-lite' ), number_format_i18n( $orders_counts->{'wc-failed'} ) );
-                ?>
-                </span>
-            </a>
-        </li>
+                    /* translators: 1: Order status label 2: Order count */
+                    printf( esc_html__( '%1$s (%2$s)', 'dokan-lite' ), $status_label, $formatted_order_count );
+                    ?>
+                </a>
+            </li>
+        <?php endforeach; ?>
 
         <?php do_action( 'dokan_status_listing_item', $orders_counts ); ?>
     </ul>
@@ -541,7 +442,7 @@ function dokan_get_chosen_taxonomy_attributes() {
 
 function dokan_seller_reg_form_fields() {
     $data       = dokan_get_seller_registration_form_data();
-    $role       = isset( $data['role'] ) ? $data['role'] : 'customer';
+    $role       = $data['role'];
     $role_style = ( $role === 'customer' ) ? 'display:none' : '';
 
     dokan_get_template_part(
@@ -683,6 +584,21 @@ function dokan_store_contact_widget() {
 }
 
 /**
+ * Get seller registration form default role
+ *
+ * @since 3.10.3
+ *
+ * @return string values can be 'customer' or 'seller'
+ */
+function dokan_get_seller_registration_default_role(): string {
+    $default_role = apply_filters( 'dokan_seller_registration_default_role', 'customer' );
+    if ( ! in_array( $default_role, [ 'customer', 'seller' ], true ) ) {
+        $default_role = 'customer';
+    }
+    return $default_role;
+}
+
+/**
  * Get Dokan seller registration form data
  *
  * @since 3.7.0
@@ -691,6 +607,7 @@ function dokan_store_contact_widget() {
  */
 function dokan_get_seller_registration_form_data() {
     $set_password = get_option( 'woocommerce_registration_generate_password', 'no' ) !== 'yes';
+    $default_role = dokan_get_seller_registration_default_role();
 
     // prepare form data
     $data = [
@@ -701,6 +618,7 @@ function dokan_get_seller_registration_form_data() {
         'phone'    => '',
         'shopname' => '',
         'shopurl'  => '',
+        'role'     => $default_role,
     ];
 
     if ( $set_password ) {
@@ -717,6 +635,7 @@ function dokan_get_seller_registration_form_data() {
             'password' => isset( $_POST['password'] ) ? wp_unslash( $_POST['password'] ) : '', // phpcs:ignore
             'shopname' => isset( $_POST['shopname'] ) ? sanitize_text_field( wp_unslash( $_POST['shopname'] ) ) : '',
             'shopurl'  => isset( $_POST['shopurl'] ) ? sanitize_title( wp_unslash( $_POST['shopurl'] ) ) : '',
+            'role'     => isset( $_POST['role'] ) && in_array( $_POST['role'], [ 'customer', 'seller' ], true ) ? sanitize_text_field( wp_unslash( $_POST['role'] ) ) : $default_role,
         ];
         if ( $set_password ) {
             $data['password'] = isset( $_POST['password'] ) ? wp_unslash( $_POST['password'] ) : ''; // phpcs:ignore;

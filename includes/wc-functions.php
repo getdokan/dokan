@@ -1011,7 +1011,22 @@ function dokan_vendor_own_product_purchase_restriction( bool $is_purchasable, $p
     if ( false === $is_purchasable || dokan_is_product_author( $product->get_id() ) ) {
         $is_purchasable = false;
     }
-    return $is_purchasable;
+
+    /**
+     * Determines if a vendor can purchase their own products.
+     *
+     * This filter allows altering the purchasable status of a product based on whether
+     * the vendor is attempting to purchase their own product. It can be used to restrict
+     * or allow such purchases according to business rules.
+     *
+     * @since 3.10.3
+     *
+     * @param bool    $is_purchasable Indicates if the product is purchasable. True by default.
+     * @param WP_Post $product        The product object being evaluated for purchasability.
+     *
+     * @return bool Modified purchasability status.
+     */
+    return apply_filters( 'dokan_vendor_own_product_purchase_restriction', $is_purchasable, $product );
 }
 
 add_filter( 'woocommerce_is_purchasable', 'dokan_vendor_own_product_purchase_restriction', 10, 2 );

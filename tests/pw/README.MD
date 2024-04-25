@@ -124,7 +124,7 @@ Create .env file according to .env.example file
 ADMIN=John_Doe                          [Admin username]
 ADMIN_PASSWORD=AdminPass123             [Password for the admin account]
 VENDOR=David_Johnson                    [Vendor username]
-VENDOR2=jhonathon_Smith                 [Vendor username]
+VENDOR2=Johnathon_Smith                 [Vendor username]
 CUSTOMER=Michael_Williams               [Customer username]
 USER_PASSWORD=Passw0rd123               [Password for all other users]
 GMAP=ABCD1234EFGH5678                   [Google Maps API key]

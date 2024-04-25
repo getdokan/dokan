@@ -324,7 +324,7 @@ export class ProductsPage extends AdminPage {
         }
     }
 
-    // vendor add downloadble product
+    // vendor add downloadable product
     async vendorAddDownloadableProduct(product: product['downloadable'], productPopup = false): Promise<void> {
         const productName = product.productName();
         const productPrice = product.regularPrice();
@@ -350,7 +350,7 @@ export class ProductsPage extends AdminPage {
         await this.toHaveValue(productsVendor.downloadableOptions.downloadExpiry, product.downloadableOptions.downloadExpiry);
     }
 
-    // vendor add vitual product
+    // vendor add virtual product
     async vendorAddVirtualProduct(product: product['simple'], productPopup = false): Promise<void> {
         const productName = product.productName();
         const productPrice = product.regularPrice();
@@ -408,7 +408,7 @@ export class ProductsPage extends AdminPage {
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, productsVendor.saveProduct, 302);
         await this.toContainText(productsVendor.updatedSuccessMessage, product.saveSuccessMessage);
         await this.toHaveValue(productsVendor.edit.title, productName);
-        //todo: add more assettions
+        //todo: add more assertions
     }
 
     // vendor add variable subscription product
@@ -434,7 +434,7 @@ export class ProductsPage extends AdminPage {
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, productsVendor.saveProduct, 302);
         await this.toContainText(productsVendor.updatedSuccessMessage, product.saveSuccessMessage);
         await this.toHaveValue(productsVendor.edit.title, productName);
-        //todo: add more assettions
+        //todo: add more assertions
     }
 
     // vendor add external product
@@ -449,7 +449,7 @@ export class ProductsPage extends AdminPage {
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, productsVendor.saveProduct, 302);
         await this.toContainText(productsVendor.updatedSuccessMessage, product.saveSuccessMessage);
         await this.toHaveValue(productsVendor.edit.title, productName);
-        //todo: add more assettions
+        //todo: add more assertions
     }
 
     // go to product edit

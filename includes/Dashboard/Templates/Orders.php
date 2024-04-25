@@ -24,6 +24,7 @@ class Orders {
         add_action( 'dokan_order_inside_content', [ $this, 'order_details_content' ], 15 );
         add_action( 'dokan_order_inside_content', [ $this, 'order_main_content' ], 15 );
         add_filter( 'body_class', [ $this, 'add_css_class_to_body' ] );
+        add_filter( 'dokan_get_dashboard_nav', [ $this, 'add_pending_order_count' ] );
     }
 
     /**
@@ -260,7 +261,9 @@ class Orders {
             $order_status     = isset( $_POST['order_status'] ) ? sanitize_text_field( wp_unslash( $_POST['order_status'] ) ) : 'all';
             $search           = isset( $_POST['search'] ) ? sanitize_text_field( wp_unslash( $_POST['search'] ) ) : '';
 
-            $query_args['customer_id']  = $customer_id;
+            if ( $customer_id ) {
+                $query_args['customer_id'] = $customer_id;
+            }
             $query_args['status']       = $order_status;
             $query_args['date']['from'] = $order_date_start;
             $query_args['date']['to']   = $order_date_end;
@@ -339,5 +342,28 @@ class Orders {
         ];
 
         return $args;
+    }
+
+    /**
+     * Add pending order count to dashboard menu.
+     *
+     * @since 3.10.3
+     *
+     * @param array $menu Menu Array.
+     *
+     * @return array
+     */
+    public function add_pending_order_count( $menu ) {
+        if ( empty( $menu['orders'] ) ) {
+            return $menu;
+        }
+        $order_count   = (array) dokan_count_orders( dokan_get_current_user_id() );
+        $pending_count = $order_count['wc-processing'];
+
+        if ( $pending_count ) {
+            $menu['orders']['counts'] = $pending_count;
+        }
+
+        return $menu;
     }
 }
