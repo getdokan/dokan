@@ -2,7 +2,7 @@ import { test, Page } from '@playwright/test';
 import { VendorReportsPage } from '@pages/vendorReportsPage';
 import { data } from '@utils/testData';
 
-test.describe('Vendor analytics test', () => {
+test.describe('Vendor reports test', () => {
     let vendor: VendorReportsPage;
     let vPage: Page;
 

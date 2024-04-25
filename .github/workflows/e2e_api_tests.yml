@@ -59,6 +59,7 @@ env:
     API_TEST_RESULT: ./tests/pw/playwright-report/api/summary-report/results.json
     E2E_TEST_RESULT: ./tests/pw/playwright-report/e2e/summary-report/results.json
     API_COVERAGE: ./tests/pw/playwright-report/api/coverage-report/coverage.json
+    E2E_COVERAGE: ./tests/pw/playwright-report/e2e/coverage-report/coverage.json
 
 jobs:
     tests:

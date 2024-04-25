@@ -27,13 +27,12 @@ test.describe('get api test coverage', () => {
             allRoutes.push(...Object.keys(responseBody.routes));
             allRouteObjValues.push(...Object.values(responseBody.routes));
         }
-        const allRouteMethods: string[][] = allRouteObjValues.map(route => route.methods);
+        const allRouteMethods: string[][] = allRouteObjValues.map((route: any) => route.methods);
         let coverageArray = allRouteMethods.flatMap((methods, i) => methods.map(method => `${method} ${allRoutes[i]}`));
         coverageArray = [...new Set(coverageArray)];
         coverageArray = coverageArray.filter(e => !e.includes('PATCH'));
         // console.log(coverageArray);
         // console.log(coverageArray.length);
-
         getCoverage(coverageArray, outputFile);
     });
 });

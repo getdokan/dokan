@@ -31,7 +31,7 @@ test.describe('License test', () => {
         await admin.activateLicense(data.dokanLicense.correctKey);
     });
 
-    test('admin can refreseh license', { tag: ['@pro', '@admin'] }, async () => {
+    test('admin can refresh license', { tag: ['@pro', '@admin'] }, async () => {
         await admin.refreshLicense();
     });
 
