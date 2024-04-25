@@ -1150,6 +1150,11 @@ export const dbData = {
             reason: 'This content is spam',
             description: 'spam product',
         },
+
+        paymentProducts: {
+            reverseWithdraw: 'dokan_reverse_withdrawal_product_id',
+            ProductAdvertisement: 'dokan_advertisement_product_id',
+        },
     },
 
     // wp

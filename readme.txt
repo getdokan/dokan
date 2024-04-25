@@ -1,28 +1,29 @@
 === Dokan - Best WooCommerce Multivendor Marketplace Solution - Build Your Own Amazon, eBay, Etsy ===
 Contributors: tareq1988, wedevs, nizamuddinbabu
 Donate Link: http://tareq.co/donate/
-Tags: WooCommerce multivendor marketplace, multi vendor marketplace, multi seller store, multi-vendor, multi seller, commissions, multivendor, marketplace, product vendors, woocommerce vendor, commission rate, e-commerce, woocommerce, ebay, ecommerce.
-Requires at least: 5.6
+Tags: WooCommerce multivendor marketplace, multivendor marketplace, multivendor, multi seller, multi vendor, WooCommerce marketplace, WooCommerce product vendors
+Requires at least: 6.4
 Tested up to: 6.5.2
-WC requires at least: 5.0.0
-WC tested up to: 8.7.0
+WC requires at least: 8.0.0
+WC tested up to: 8.8.2
 Requires PHP: 7.4
-Stable tag: 3.10.3
+Stable tag: 3.10.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-The pioneer multi-vendor plugin for WordPress. Start your own marketplace in minutes!
+Transform your WooCommerce site into a robust multivendor marketplace with Dokan - the #1 WooCommerce multivendor marketplace solution!
 
 == Description ==
 
-= DOKAN MULTIVENDOR MARKETPLACE PLUGIN FOR WORDPRESS - POWERED BY WOOCOMMERCE =
+= THE BEST MULTIVENDOR MARKETPLACE PLUGIN FOR WORDPRESS – POWERED BY WOOCOMMERCE =
 
 
-[Dokan](https://dokan.co/wordpress/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) is the best frontend multi-vendor marketplace plugin on WordPress, powered by WooCommerce. It helps you build your own marketplace similar to Amazon, Shopify, eBay, and Magento in under 30 minutes.
+[Dokan](https://dokan.co/wordpress/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) is the best frontend multivendor marketplace plugin for WordPress, powered by WooCommerce. It helps you build your own multivendor marketplace similar to Amazon, Shopify, eBay, and Magento in under 30 minutes.
 
-Dokan is the fastest way to launch an eCommerce business and earn through commissions with products ranging from digital, and physical to variable products.
+Moreover, Plus, with Dokan, you don't need any coding skills to create a thriving WooCommerce multivendor marketplace. Trusted by over 60,000 entrepreneurs globally for more than a decade, Dokan makes multivendor marketplace setup effortless and accessible to all.
+Dokan is the fastest way to launch an eCommerce business and earn through commissions for products ranging from digital and physical to variable products.
 
-Hear what reputed WordPress influencer and online business strategist, Darrel Wilson, has to say about Dokan.
+Hear what reputed WordPress influencer and online business strategist, Darrel Wilson, has to say about Dokan Multivendor Marketplace.
 
 [youtube https://www.youtube.com/watch?v=nDAxNypVxdw]
 
@@ -36,8 +37,17 @@ Hear what reputed WordPress influencer and online business strategist, Darrel Wi
 
 👉 **Confused about how to get started?** Read our blogs from [weDevs](https://wedevs.com/blog/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) and [Dokan](https://dokan.co/blog/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org)
 
+Here is how you can build your multivendor marketplace with Dokan.
+
+[youtube https://www.youtube.com/watch?v=_Vv5T7qqhoE]
 
 = PLACES WHERE DOKAN HAS BEEN FEATURED =
+
+🏆 [Dokan Multivendor Marketplace featured by Cloudways](https://www.cloudways.com/blog/dokan-woocommerce-marketplace-plugin-review/)
+
+🏆 [Dokan for WooCommerce Multivendor Marketplace featured by Astra Themes](https://wpastra.com/guides-and-tutorials/create-online-marketplace/)
+
+🏆 [Dokan wins the Best Plugin in the Temple Monster Award 2023 for WooCommerce through public voting](https://www.templatemonster.com/awards/category/woocommerce-plugins/)
 
 🏆 [Dokan wins two prestigious awards with 99% user satisfaction](https://reviews.financesonline.com/p/dokan)
 
@@ -59,7 +69,7 @@ Hear what reputed WordPress influencer and online business strategist, Darrel Wi
 
 👏 “Best investment we made last year.”
 
-👏 “Excellent product. Ease of use. Saved hundreds of work hours with lots of additional benefits.”
+👏 [“Excellent product. Ease of use. Saved hundreds of work hours with lots of additional benefits.”] (https://www.capterra.com/p/168004/Dokan-Multivendor-Marketplace/reviews/543139/)
 
 = SUCCESS STORIES WE ARE PROUD TO BE A PART OF =
 
@@ -81,11 +91,11 @@ Dokan is also compatible with the [Otel theme](https://dokan.co/wordpress/otel-t
 
 = IT’S FAST AND EASY TO USE =
 
-Your business operation with Dokan comes with the assurance of a smooth and fast experience. The setup process takes less than an hour, and you can get your marketplace up and running within a day. Everything is bound to match your expectation because that is how the experience is designed, taking into account the best intuitive practices from popular eCommerce activators like WooCommerce, Bigcommerce, and others.
+With Dokan, experience a smooth, fast setup process in under an hour and have your WooCommerce multivendor marketplace running within a day. It perfectly matches your expectations and is designed with intuitive practices from eCommerce leaders like WooCommerce and others.
 
 = A RELIABLE GROWING PLATFORM & COMMUNITY =
 
-We regularly update our versions and integrations with dependable services for flawless, uninterrupted operation. We don’t just work on keeping things compatible in Dokan, we keep it ahead of the game by following the latest industry trends and bringing new features with every update.
+We continuously update Dokan with reliable services for flawless operation, staying ahead of industry trends and introducing new features with each update.
 
 See Our Official GitHub page: [Official Dokan GitHub](https://github.com/weDevsOfficial/dokan/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org)
 
@@ -104,7 +114,7 @@ Profit doesn’t only rely on sales. Dokan offers multiple ways to earn money, i
 
 = PUTS YOU IN CONTROL =
 
-As an admin, Dokan gives you complete control over everything that happens in your marketplace. Define standout features of marketplace operations like product publishing, vendor registration, subscription renewal, and every other vendor activity.
+Dokan empowers admins with full control over marketplace operations, including product publishing, vendor registration, subscription renewal, and all other vendor activities.
 
 In the [Pro Version](https://dokan.co/wordpress/pricing/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org), there are additional stunning features, updates, and scope for powerful modules to provide more admin power and control while improving the marketplace functionality.
 
@@ -122,8 +132,7 @@ Admin can extend flexibility to individual vendors to take control over their sh
 
 = PLAYS NICELY WITH OTHER PLUGINS =
 
-Dokan is compatible with more than 70+ plugins & 71+ themes so you don’t have to worry about anything when it comes to compatibility.
-From shipping plugins to payment plugins to wallets, you have complete peace of mind when building an eCommerce business with Dokan for a global audience.
+Dokan is compatible with 70+ plugins and 71+ themes, ensuring worry-free compatibility. Whether it's shipping, payment, or wallets, rest assured when building your global eCommerce business with Dokan.
 
 ➡️ [Check Out Dokan Compatible Plugins & Themes](https://dokan.co/wordpress/compatible-plugins/)  ⬅️
 
@@ -131,9 +140,9 @@ From shipping plugins to payment plugins to wallets, you have complete peace of 
 
 Never get bored with the old-fashioned appearance of your store. Have full control over your store customization and give life to your imagination with Dokan integrations.
 
-* [Elementor Customizer](https://dokan.co/wordpress/modules/elementor/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) (Pro): Get the complete store customization authority for the vendor store page to change its default appearance hassle-free. Simply get the customizer and modify the global outlook of the vendor store pages. Drag & drop more than 12 incredible store widgets **made exclusively for Dokan** and place them anywhere you want it. Save as many customized templates as you want.
+* [Elementor Customizer](https://dokan.co/wordpress/modules/elementor/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) (Pro): Customize vendor store pages effortlessly and access over 12 exclusive Dokan widgets, drag and drop them anywhere, and Save as many customized templates as you want.
 
-= 🎯🎯 FEATURES 🎯🎯 =
+= 🎯🎯 Dokan’s Superior Features for Your WooCommerce Marketplace 🎯🎯 =
 
 **Marketplace with Independent Stores**
 
@@ -165,7 +174,7 @@ Never get bored with the old-fashioned appearance of your store. Have full contr
 
 * [Reverse Withdrawal](https://dokan.co/docs/wordpress/withdraw/dokan-reverse-withdrawal/) facilitates commission collection for admins in instances when it cannot be collected via the regular commission system, such as when vendors ship orders with **cash on delivery**.
 
-* Automatic Payment Disbursement eases the trouble of manually calculating commissions of each vendor. The feature enables customer payments to be split right away and be disbursed to admin and vendors based on marketplace settings.
+* Automatic Payment Disbursement simplifies vendor commission calculations, splitting customer payments instantly based on marketplace settings.
 
 **Simple Product Management**
 
@@ -216,47 +225,47 @@ Never get bored with the old-fashioned appearance of your store. Have full contr
 
 = 💥💥 EXTENDED FEATURES BY SIMPLY ENABLING A TOGGLE BUTTON 💥💥 =
 
-Dokan comes with a number of advanced features & modules that boost your marketplace position, always keeping you one step ahead of the competition. Continuous innovations and features are brought with regular and timely releases. Check out the changelog [here](https://wedevs.com/docs/dokan/changelog/)
+Dokan comes with a number of advanced features & modules that boost your WooCommerce marketplace position, always keeping you one step ahead of the competition. Continuous innovations and features are brought with regular and timely releases. Check out the changelog [here](https://wedevs.com/docs/dokan/changelog/)
 
-* [Stripe Express ](https://dokan.co/wordpress/modules/stripe-express/?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=module)(Pro): Utilize popular payment gateways – Apple Pay and Google Pay, to execute transactions like scheduled payouts, request payments, and more.
-* [Minimum Maximum Order](https://dokan.co/wordpress/modules/minimum-maximum-order/?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=modules) (Pro): Let your merchants set a minimum or maximum limit on order amounts (quantity or price).
-* [Product Advertising](https://dokan.co/wordpress/modules/product-advertising/?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=modules) (Pro): Let the Vendors promote their selected products. This will enhance their chance of attracting more customers, and you as the admin can charge for this, thus resulting in more income for both Admin and Vendors.
-* [Product Subscription](https://dokan.co/wordpress/modules/product-subscription/?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=modules) (Pro): Let your vendors sell subscription-based products and services easily from the frontend of your website.
-* [Request for Quotation](https://dokan.co/wordpress/modules/request-for-quotation/?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=modules) (Pro): Customers can communicate with vendors by requesting quoted prices on wholesale orders.
-* [Rank Math SEO](https://dokan.co/wordpress/modules/rank-math-seo/?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=modules) (Pro): Let your vendors manage their product SEO with an easy-to-navigate frontend dashboard and drive traffic to your eCommerce site.
-* [Dokan MANGOPAY Integration](https://dokan.co/wordpress/modules/dokan-mangopay-integration/?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=modules) (Pro): Make smooth transactions with split payments, multi vendor support, and run your business operations in Europe with ease using Mangopay.
-* [Dokan Paypal Marketplace](https://dokan.co/wordpress/modules/dokan-paypal-marketplace/?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=modules) (Pro): Make your marketplace payment system smoother than ever with the advanced PayPal integration with all PayPal Commerce Platform (PCP) features.
-* [PDF Invoice](https://dokan.co/wordpress/modules/pdf-invoice-2/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org): Create automated multi-seller invoices with templates & download them in PDF.
-* [Product Duplicator](https://dokan.co/wordpress/modules/product-duplicator/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org): Enable vendors to copy a product that another seller is already selling.
-* [Ajax Live Search](https://dokan.co/wordpress/modules/ajax-live-search/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) (Pro): Turn your regular search bar into an instant advanced product searching tool.
-* [Geolocation](https://dokan.co/wordpress/modules/geolocation/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) (Pro): Let your customers search by location.
-* [Live Chat](https://dokan.co/wordpress/modules/live-chat/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) (Pro): Allow your vendors to provide registered users and customers with real-time support.
-* [Seller Verification](https://dokan.co/wordpress/modules/seller-verification/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) (Pro): Verify your vendors using their social profiles, phone, and even their photo ID.
-* [Stripe Connect](https://dokan.co/wordpress/modules/stripe-connect/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) (Pro): Famous for its low fees, use Stripe to handle all your payments in real time and much more.
-* [Wirecard(Moip)](https://dokan.co/wordpress/modules/moip/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) (Pro): Get to use the popular payment system Wirecard previously known as Moip with Dokan.
-* [Subscriptions](https://dokan.co/wordpress/modules/subscriptions/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) (Pro): Create highly customized subscription packs and charge vendors as you like.
-* [Vendor Review](https://dokan.co/wordpress/modules/dokan-vendor-review/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) (Pro): This feature enables your customers to post a review for each store available on your site.
-* [Vendor Staff Manager](https://dokan.co/wordpress/modules/vendor-staff-manager/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) (Pro): Let the sellers of your multivendor marketplace have a unique opportunity to appoint an unlimited number of staff to manage their personal eCommerce stores.
-* [Dokan WooCommerce Booking](https://dokan.co/wordpress/modules/woocommerce-booking-integration/) (Pro): Allows vendors to create & sell bookable products and customers to customize their booking orders.
-* [Dokan Simple Auctions](https://dokan.co/wordpress/modules/dokan-simple-auctions/) (Pro): Offer your vendors to enable auction-able products selling features.
-* [Report Abuse](https://dokan.co/wordpress/modules/report-abuse/) (Pro): Allows your customers to report fraudulent products to maintain a reliable and honest marketplace, where vendors are not able to take advantage of customers or engage in wrongdoings.
-* [Follow Store](https://dokan.co/wordpress/modules/follow-store/) (Pro): Allows customers to follow their favorite vendor store. It helps keep the customer updated about the vendor.
-* [Razorpay Integration](https://dokan.co/wordpress/modules/razorpay/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) (Pro): Get a competitive advantage with the route and various international & local payment modes using Razorpay Integration.
-* [EU Compliance Fields](https://dokan.co/wordpress/modules/eu-compliance-fields/) (Pro): Provide the fields required by EU law for both customers and vendors with this module. Integration with invoicing lets you control what to display in the invoices.
-* [Dokan Product Addon](https://dokan.co/wordpress/modules/product-addon/) (Pro): Let customers add additional items to a product and be billed separately for those items. This module makes your marketplace more sophisticated and exclusive.
-* [Colour Scheme Customizer](https://dokan.co/wordpress/modules/color-scheme-customizer/) (Pro): Using the Color Scheme Customizer, you can customize the dashboard attributes and make the vendor dashboards more appealing.
-* [Product Enquiry](https://dokan.co/wordpress/modules/product-enquiry/) (Pro): Allow your visitors and customers to contact vendors about the product from a product page with this module. This will let customers/visitors send an email inquiry to the vendor asking questions.
-* [Return and Warranty Request](https://dokan.co/wordpress/modules/return-and-warranty-request/) (Pro): Dokan Return and Warranty Request module enables you to allow vendors to offer customized return and warranty facilities for their sold products to customers.
-* [Single Product Multivendor](https://dokan.co/wordpress/modules/single-product-multivendor/) (Pro):  This module allows a vendor to sell other vendors' products. Any vendor can add a product from another vendor's store to their own store with a single click and customize it as they like.
-* [Product Store Support](https://dokan.co/wordpress/modules/store-support/) (Pro): Using this module you can provide your customers with a ticket-based support system right from the store page.
-* [Vendor Vacation](https://dokan.co/wordpress/modules/vendor-vacation/) (Pro): Vendors can close their stores and put all their products offline temporarily using the Vendor Vacation module.
-* [Wholesale Module](https://dokan.co/wordpress/modules/wholesale/) (Pro): Using this module, the admin of the marketplace will be able to allow the vendors to sell products in a bulk wholesale quantity.
-* [Vendor Analytics](https://dokan.co/wordpress/modules/vendor-analytics/) (Pro): Your vendors can easily see the analytics for their stores right from the frontend. Using this module vendors can improve their performance with data-driven decisions.
-* [WPML Integration](https://dokan.co/wordpress/modules/wpml-integration/): Using this module with the famous WPML plugin you can enable multiple languages on your marketplace.
-* [WC Vendor Migrator](https://dokan.co/docs/wordpress/free-modules/wc-vendors-to-dokan-importer/): Using this feature, you will be able to import all of your sellers and order data from your WC Vendors-enabled marketplace to a Dokan-powered marketplace.
-* [Seller Badge](https://dokan.co/wordpress/modules/seller-badge/) (Pro): Give your sellers a boost of motivation with this module. Badges allow vendors to show off their achievements to store visitors and aspire for higher badges with more active marketplace activities
-* [Vendor Dashboard](https://dokan.co/wordpress/modules/vendor-dashboard/):  Researching industry best standards and experimenting with countless UI designs, the Dokan Vendor Dashboard add-on provides an organized look with categorized functions so that your vendors can reach optimal efficiency easily
-* [Dokan Delivery Driver App](https://dokan.co/wordpress/delivery-driver-app/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) (Pro): Ensure a smooth, risk-free delivery of products with verified drivers and live tracking ensuring admin, vendor, and customers can follow their products from the warehouse to customers doorsteps.
+* [Stripe Express](https://dokan.co/wordpress/modules/stripe-express/?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=module)(Pro)
+* [Minimum Maximum Order](https://dokan.co/wordpress/modules/minimum-maximum-order/?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=modules) (Pro)
+* [Product Advertising](https://dokan.co/wordpress/modules/product-advertising/?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=modules) (Pro)
+* [Product Subscription](https://dokan.co/wordpress/modules/product-subscription/?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=modules) (Pro)
+* [Request for Quotation](https://dokan.co/wordpress/modules/request-for-quotation/?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=modules) (Pro)
+* [Rank Math SEO](https://dokan.co/wordpress/modules/rank-math-seo/?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=modules) (Pro)
+* [Dokan MANGOPAY Integration](https://dokan.co/wordpress/modules/dokan-mangopay-integration/?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=modules) (Pro)
+* [Dokan Paypal Marketplace](https://dokan.co/wordpress/modules/dokan-paypal-marketplace/?utm_medium=dokan-lite&utm_source=wordpress.org&utm_campaign=modules) (Pro)
+* [PDF Invoice](https://dokan.co/wordpress/modules/pdf-invoice-2/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org)
+* [Product Duplicator](https://dokan.co/wordpress/modules/product-duplicator/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org)
+* [Ajax Live Search](https://dokan.co/wordpress/modules/ajax-live-search/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) (Pro)
+* [Geolocation](https://dokan.co/wordpress/modules/geolocation/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) (Pro)
+* [Live Chat](https://dokan.co/wordpress/modules/live-chat/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) (Pro)
+* [Seller Verification](https://dokan.co/wordpress/modules/seller-verification/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) (Pro)
+* [Stripe Connect](https://dokan.co/wordpress/modules/stripe-connect/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) (Pro)
+* [Wirecard(Moip)](https://dokan.co/wordpress/modules/moip/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) (Pro)
+* [Subscriptions](https://dokan.co/wordpress/modules/subscriptions/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) (Pro)
+* [Vendor Review](https://dokan.co/wordpress/modules/dokan-vendor-review/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) (Pro)
+* [Vendor Staff Manager](https://dokan.co/wordpress/modules/vendor-staff-manager/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) (Pro)
+* [Dokan WooCommerce Booking](https://dokan.co/wordpress/modules/woocommerce-booking-integration/) (Pro)
+* [Dokan Simple Auctions](https://dokan.co/wordpress/modules/dokan-simple-auctions/) (Pro)
+* [Report Abuse](https://dokan.co/wordpress/modules/report-abuse/) (Pro)
+* [Follow Store](https://dokan.co/wordpress/modules/follow-store/) (Pro)
+* [Razorpay Integration](https://dokan.co/wordpress/modules/razorpay/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) (Pro)
+* [EU Compliance Fields](https://dokan.co/wordpress/modules/eu-compliance-fields/) (Pro)
+* [Dokan Product Addon](https://dokan.co/wordpress/modules/product-addon/) (Pro)
+* [Colour Scheme Customizer](https://dokan.co/wordpress/modules/color-scheme-customizer/) (Pro)
+* [Product Enquiry](https://dokan.co/wordpress/modules/product-enquiry/) (Pro)
+* [Return and Warranty Request](https://dokan.co/wordpress/modules/return-and-warranty-request/) (Pro)
+* [Single Product Multivendor](https://dokan.co/wordpress/modules/single-product-multivendor/) (Pro)
+* [Product Store Support](https://dokan.co/wordpress/modules/store-support/) (Pro)
+* [Vendor Vacation](https://dokan.co/wordpress/modules/vendor-vacation/) (Pro)
+* [Wholesale Module](https://dokan.co/wordpress/modules/wholesale/) (Pro)
+* [Vendor Analytics](https://dokan.co/wordpress/modules/vendor-analytics/) (Pro)
+* [WPML Integration](https://dokan.co/wordpress/modules/wpml-integration/)
+* [WC Vendor Migrator](https://dokan.co/docs/wordpress/free-modules/wc-vendors-to-dokan-importer/)
+* [Seller Badge](https://dokan.co/wordpress/modules/seller-badge/) (Pro)
+* [Vendor Dashboard](https://dokan.co/wordpress/modules/vendor-dashboard/)
+* [Dokan Delivery Driver App](https://dokan.co/wordpress/delivery-driver-app/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) (Pro)
 
 [AND MANY MORE](https://dokan.co/wordpress/modules/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) ⏩
 
@@ -337,6 +346,11 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 == Changelog ==
+
+= v3.10.4 ( Apr 25, 2024 ) =
+
+- **fix:** Vendor dashboard Order status filter menu displayed a duplicate border.
+- **fix:** Vendor dashboard withdraw page display get hidden.
 
 = v3.10.3 ( Apr 17, 2024 ) =
 

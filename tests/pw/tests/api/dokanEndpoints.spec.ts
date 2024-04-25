@@ -17,19 +17,19 @@ test.describe('dokan api endpoints test', () => {
         await apiUtils.dispose();
     });
 
-    test('get all dokan v1 endpoints @lite', async () => {
+    test('get all dokan v1 endpoints', { tag: ['@lite'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllDokanEndpointsV1);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
-    test('get all dokan v2 endpoints @lite', async () => {
+    test('get all dokan v2 endpoints', { tag: ['@lite'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllDokanEndpointsV2);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
-    test('get all dokan v1 admin endpoints @lite', async () => {
+    test('get all dokan v1 admin endpoints', { tag: ['@lite'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllDokanEndpointsAdmin);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
