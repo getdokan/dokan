@@ -44,6 +44,7 @@ class Field extends Component {
             'field_type'            => '', // html field type
             'placeholder'           => '', // html placeholder attribute value for the field
             'options'               => [], // if the field is select, radio, checkbox, etc
+            'options_callback'      => '', // callback function to get field options via a callback
             'dependency_condition'  => [], // dependency condition for the field
             'additional_properties' => [], // additional arguments for the field
             'sanitize_callback'     => '', // callback function for sanitizing the field value
@@ -97,6 +98,7 @@ class Field extends Component {
 
         return $this;
     }
+
     /**
      * Get callable function to get field value
      *
@@ -173,6 +175,69 @@ class Field extends Component {
      */
     public function set_value( $value ): Field {
         $this->data['value'] = $value;
+
+        return $this;
+    }
+
+    /**
+     * Get callable function to get field options
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return callable|string
+     */
+    public function get_options_callback() {
+        return $this->data['options_callback'];
+    }
+
+    /**
+     * Set callable function to get field options
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param callable|string $method
+     *
+     * @return $this
+     */
+    public function set_options_callback( $method ): Field {
+        $this->data['options_callback'] = $method;
+
+        return $this;
+    }
+
+    /**
+     * Get field value
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return mixed
+     */
+    public function get_options( ...$value ) {
+        $callback = $this->get_options_callback();
+        if ( ! empty( $callback ) && is_callable( $callback ) ) {
+            $value[] = $this->data['options'];
+            return call_user_func( $callback, ...$value );
+        }
+
+        // if options are set under the field, return that options
+        if ( '' !== $this->data['options'] || empty( $value ) ) {
+            return $this->data['options'];
+        }
+
+        return $value;
+    }
+
+    /**
+     * Set field options
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $options
+     *
+     * @return $this
+     */
+    public function set_options( array $options ): Field {
+        $this->data['options'] = $options;
 
         return $this;
     }
@@ -352,32 +417,6 @@ class Field extends Component {
      */
     public function set_placeholder( string $placeholder ): Field {
         $this->data['placeholder'] = wp_kses_post( $placeholder );
-
-        return $this;
-    }
-
-    /**
-     * Get field options
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return array
-     */
-    public function get_options(): array {
-        return $this->data['options'];
-    }
-
-    /**
-     * Set field options
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param array $options
-     *
-     * @return $this
-     */
-    public function set_options( array $options ): Field {
-        $this->data['options'] = $options;
 
         return $this;
     }

@@ -305,15 +305,10 @@ class Products {
             return;
         }
 
-        // set new post status
-        $post_status = dokan_get_default_product_status( dokan_get_current_user_id() );
-        $post_status = $product->get_status() === 'auto-draft' ? $post_status : $product->get_status();
-
         dokan_get_template_part(
             'products/edit/sections/others', '', [
                 'section'     => $section,
                 'product'     => $product,
-                'post_status' => apply_filters( 'dokan_post_edit_default_status', $post_status, $product ),
                 'class'       => '',
             ]
         );
@@ -427,7 +422,7 @@ class Products {
             $field_name = sanitize_key( $field->get_name() );
 
             // Skip the "Sale from" and "Sale to" date fields if "Discount Schedule" is disabled.
-            if ( empty( $_POST['is_discount_schedule_enabled'] ) && ( ProductFormElements::DATE_ON_SALE_FROM === $field->get_id() || ProductFormElements::DATE_ON_SALE_TO === $field->get_id() ) ) {
+            if ( in_array( $field->get_id(), [ ProductFormElements::DATE_ON_SALE_FROM, ProductFormElements::DATE_ON_SALE_TO ], true ) && empty( $_POST['is_discount_schedule_enabled'] ) ) {
                 continue;
             }
 
@@ -449,18 +444,18 @@ class Products {
             }
 
             // Skip the "Stock Status" field if "Enable Product Stock Management" field enabled.
-            if ( isset( $_POST['_manage_stock'] ) && 'yes' === $_POST['_manage_stock'] && ProductFormElements::STOCK_STATUS === $field->get_id() ) {
+            if ( ProductFormElements::STOCK_STATUS === $field->get_id() && isset( $_POST['_manage_stock'] ) && 'yes' === $_POST['_manage_stock'] ) {
                 continue;
             }
 
             // Skip the "Stock Qty", "Low Stock Threshold" and "Allow Backorders" fields if "Enable Product Stock Management" field disabled.
             $manage_stock_fields = [ ProductFormElements::STOCK_QUANTITY, ProductFormElements::LOW_STOCK_AMOUNT, ProductFormElements::BACKORDERS ];
-            if ( isset( $_POST['_manage_stock'] ) && 'no' === $_POST['_manage_stock'] && in_array( $field->get_id(), $manage_stock_fields, true ) ) {
+            if ( in_array( $field->get_id(), $manage_stock_fields, true ) && isset( $_POST['_manage_stock'] ) && 'no' === $_POST['_manage_stock'] ) {
                 continue;
             }
 
             // Skip the "Minimum Quantity" and "Discount %" fields if "Enable Bulk Discount" field disabled.
-            if ( isset( $_POST['_is_lot_discount'] ) && 'no' === $_POST['_is_lot_discount'] && ( '_lot_discount_quantity' === $field->get_id() || '_lot_discount_amount' === $field->get_id() ) ) {
+            if ( in_array( $field->get_id(), [ '_lot_discount_quantity', '_lot_discount_amount' ], true ) && isset( $_POST['_is_lot_discount'] ) && 'no' === $_POST['_is_lot_discount'] ) {
                 continue;
             }
 

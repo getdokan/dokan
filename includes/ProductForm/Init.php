@@ -649,7 +649,36 @@ class Init {
                 'title'      => __( 'Product Status', 'dokan-lite' ),
                 'field_type' => 'select',
                 'name'       => 'status',
-                'options'    => dokan_get_available_post_status(), // get it with product_id param
+                'options'    => [],
+                'options_callback' => function ( $product, $value = [] ) {
+                    if ( ! empty( $value ) ) {
+                        return $value;
+                    }
+
+                    return dokan_get_available_post_status( $product instanceof WC_Product ? $product->get_id() : 0 );
+                },
+                'value_callback' => function ( $product ) {
+                    if ( ! $product instanceof WC_Product ) {
+                        return 'pending';
+                    }
+
+                    if ( 'auto-draft' !== $product->get_status() ) {
+                        return $product->get_status();
+                    }
+
+                    // set new post-status based on vendor settings
+                    $seller_id          = dokan_get_vendor_by_product( $product->get_id(), true );
+                    $new_product_status = dokan_get_default_product_status( $seller_id );
+                    if ( 'publish' === $new_product_status ) {
+                        $current_status = 'publish';
+                    } elseif ( 'pending' === $new_product_status ) {
+                        $current_status = 'pending';
+                    } else {
+                        $current_status = 'draft';
+                    }
+
+                    return apply_filters( 'dokan_post_edit_default_status', $current_status, $product );
+                },
             ]
         );
 

@@ -6,7 +6,6 @@
  *
  * @var Section    $section
  * @var WC_Product $product
- * @var string     $post_status
  * @var string     $class
  *
  * @package WeDevs\Dokan
@@ -46,7 +45,7 @@ $post = get_post( $product->get_id() ); // phpcs:ignore WordPress.WP.GlobalVaria
                     </i>
                 </label>
                 <select id="<?php echo esc_attr( $product_status->get_name() ); ?>" class="dokan-form-control" name="<?php echo esc_attr( $product_status->get_name() ); ?>" <?php echo $product_status->get_required() ? 'required' : ''; ?>>
-                    <?php foreach ( $product_status->get_options() as $status => $label ) : // phpcs:ignore ?>
+                    <?php foreach ( $product_status->get_options( $product ) as $status => $label ) : // phpcs:ignore ?>
                         <option value="<?php echo esc_attr( $status ); ?>" <?php selected( $status, $product_status->get_value( $product ) ); ?>>
                             <?php echo esc_html( $label ); ?>
                         </option>
