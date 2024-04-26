@@ -25,14 +25,14 @@ test.describe('store categories api test', () => {
         await apiUtils.dispose();
     });
 
-    test('get default store category @pro', async () => {
+    test('get default store category', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getDefaultStoreCategory);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
         expect(responseBody).toMatchSchema(schemas.storeCategoriesSchema.storyCategorySchema);
     });
 
-    test('set default store category @pro', async () => {
+    test('set default store category', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.put(endPoints.setDefaultStoreCategory, { data: { id: categoryId } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
@@ -42,21 +42,21 @@ test.describe('store categories api test', () => {
         await apiUtils.setDefaultStoreCategory('Uncategorized', payloads.adminAuth);
     });
 
-    test('get all store categories @pro', async () => {
+    test('get all store categories', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllStoreCategories);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
         expect(responseBody).toMatchSchema(schemas.storeCategoriesSchema.storeCategoriesSchema);
     });
 
-    test('get single store category @pro', async () => {
+    test('get single store category', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getSingleStoreCategory(categoryId));
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
         expect(responseBody).toMatchSchema(schemas.storeCategoriesSchema.storyCategorySchema);
     });
 
-    test('create a store category @pro', async () => {
+    test('create a store category', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.post(endPoints.createStoreCategory, { data: payloads.createStoreCategory() });
         expect(response.status()).toBe(201);
         expect(response.ok()).toBeTruthy();
@@ -64,14 +64,14 @@ test.describe('store categories api test', () => {
         expect(responseBody).toMatchSchema(schemas.storeCategoriesSchema.storyCategorySchema);
     });
 
-    test('update a store category @pro', async () => {
+    test('update a store category', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.put(endPoints.updateStoreCategory(categoryId), { data: payloads.updateStoreCategory() });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
         expect(responseBody).toMatchSchema(schemas.storeCategoriesSchema.storyCategorySchema);
     });
 
-    test('delete a store category @pro', async () => {
+    test('delete a store category', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.delete(endPoints.deleteStoreCategory(categoryId), { params: payloads.paramsDeleteStoreCategory });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();

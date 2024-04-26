@@ -41,7 +41,7 @@ export class SettingPage extends AdminPage {
     async vendorSetupWizardLogoAndMessageSetting(logoUrl: string, setupWizardMessage: string) {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.setupWizard);
         await this.toHaveAttribute(selector.vendor.vSetup.setupLogoImage, 'src', logoUrl);
-        await this.toContainText(selector.vendor.vSetup.setupwizardContent, setupWizardMessage);
+        await this.toContainText(selector.vendor.vSetup.setupWizardContent, setupWizardMessage);
     }
 
     async disableVendorSetupWizardSetting() {

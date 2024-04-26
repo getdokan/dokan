@@ -21,43 +21,43 @@ test.describe('vendor dashboard api test', () => {
         await apiUtils.dispose();
     });
 
-    test('get vendor dashboard statistics @lite', async () => {
+    test('get vendor dashboard statistics', { tag: ['@lite'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getVendorDashboardStatistics);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
-    test('get vendor profile information @lite', async () => {
+    test('get vendor profile information', { tag: ['@lite'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getVendorProfileInformation);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
-    test('get vendor sales report @lite', async () => {
+    test('get vendor sales report', { tag: ['@lite'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getVendorSalesReport);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
-    test('get vendor product reports summary @lite', async () => {
+    test('get vendor product reports summary', { tag: ['@lite'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getVendorProductReportsSummary);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
-    test('get vendor order reports summary @lite', async () => {
+    test('get vendor order reports summary', { tag: ['@lite'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getVendorOrderReportsSummary);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
-    test('get vendor store preferences @lite', async () => {
+    test('get vendor store preferences', { tag: ['@lite'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getVendorStorePreferences);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
-    test('get vendor profile progress bar data @pro', async () => {
+    test('get vendor profile progress bar data', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getVendorProfileProgressBarData);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();

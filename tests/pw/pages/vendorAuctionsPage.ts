@@ -116,7 +116,7 @@ export class AuctionsPage extends VendorPage {
         await this.clickAndWaitForLoadState(auctionProductsVendor.view(productName));
 
         // auction product elements are visible
-        const { bidQuantity, bidButton, ...viewAuction } = auctionProductsVendor.viewAuction;
+        const { bidQuantity, bidButton, buyNow, getSupport, ...viewAuction } = auctionProductsVendor.viewAuction;
         await this.multipleElementVisible(viewAuction);
     }
 

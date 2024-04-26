@@ -24,43 +24,43 @@ test.describe('quote rules api test', () => {
         await apiUtils.dispose();
     });
 
-    test('get all quote rules @pro', async () => {
+    test('get all quote rules', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllQuoteRules);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
-    test('get single quote rule @pro', async () => {
+    test('get single quote rule', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getSingleQuoteRule(quoteRuleId));
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
-    test('create a quote rule @pro', async () => {
+    test('create a quote rule', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.post(endPoints.createQuoteRule, { data: payloads.createQuoteRule() });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
-    test('update a quote rule @pro', async () => {
+    test('update a quote rule', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.put(endPoints.updateQuoteRule(quoteRuleId), { data: payloads.updateQuoteRule });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
-    test('delete a quote rule @pro', async () => {
+    test('delete a quote rule', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.delete(endPoints.deleteQuoteRule(quoteRuleId));
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
-    test('restore a deleted quote rule @pro', async () => {
+    test('restore a deleted quote rule', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.put(endPoints.restoreQuoteRule(quoteRuleId));
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
-    test('update batch quote rules @pro', async () => {
+    test('update batch quote rules', { tag: ['@pro'] }, async () => {
         const allQuoteRuleIds = (await apiUtils.getAllQuoteRules()).map((a: { id: unknown }) => a.id);
         const [response, responseBody] = await apiUtils.put(endPoints.updateBatchQuoteRules, { data: { trash: allQuoteRuleIds } });
         expect(response.ok()).toBeTruthy();

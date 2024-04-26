@@ -934,12 +934,12 @@ export class ApiUtils {
 
     // delete all announcements
     async deleteAllAnnouncements(auth?: auth): Promise<responseBody> {
-        const allAnnouncemens = await this.getAllAnnouncements(auth);
-        if (!allAnnouncemens?.length) {
+        const allAnnouncements = await this.getAllAnnouncements(auth);
+        if (!allAnnouncements?.length) {
             console.log('No announcement exists');
             return;
         }
-        const allAnnouncementIds = allAnnouncemens.map((o: { id: unknown }) => o.id);
+        const allAnnouncementIds = allAnnouncements.map((o: { id: unknown }) => o.id);
         await this.updateBatchAnnouncements('delete', allAnnouncementIds, auth);
     }
 
