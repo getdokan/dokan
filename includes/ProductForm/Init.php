@@ -112,7 +112,7 @@ class Init {
                 'field_type'     => 'select',
                 'type'           => 'other',
                 'id'             => 'product_type',
-                'name'           => 'product-type',
+                'name'           => 'product_type',
                 'options'        => apply_filters(
                     'dokan_product_types',
                     [
