@@ -699,8 +699,7 @@ function dokan_post_input_box( $post_id, $meta_key, $attr = [], $type = 'text' )
                 id="<?php echo esc_attr( $name ); ?>"
                 rows="<?php echo esc_attr( $rows ); ?>"
                 class="<?php echo esc_attr( $class ); ?>"
-                placeholder="<?php echo esc_attr( $placeholder ); ?>"><?php echo esc_textarea( $value ); ?>
-            </textarea>
+                placeholder="<?php echo esc_attr( $placeholder ); ?>"><?php echo esc_textarea( $value ); ?></textarea>
             <?php
             break;
 
