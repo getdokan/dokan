@@ -32,19 +32,19 @@ test.describe('order downloads api test', () => {
         await apiUtils.dispose();
     });
 
-    test('get all order downloads @v2 @lite', async () => {
+    test('get all order downloads', { tag: ['@lite', '@v2'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllOrderDownloads(orderId));
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
-    test('create order downloads @v2 @lite', async () => {
+    test('create order downloads', { tag: ['@lite', '@v2'] }, async () => {
         const [response, responseBody] = await apiUtils.post(endPoints.createOrderDownload(orderId), { data: { ids: [downloadableProductId] } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
-    test('delete order downloads @v2 @lite', async () => {
+    test('delete order downloads', { tag: ['@lite', '@v2'] }, async () => {
         const [response, responseBody] = await apiUtils.delete(endPoints.deleteOrderDownload(orderId), { data: { permission_id: downloadId } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();

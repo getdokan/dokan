@@ -27,7 +27,7 @@ export default defineConfig({
     preserveOutput: 'always',
     /* Run tests in files in parallel */
     // fullyParallel  : true,
-    /* Fail the build on CI if you accidentally left testonly in the source code. */
+    /* Fail the build on CI if you accidentally left test.only in the source code. */
     // forbidOnly     : !!CI,
     /* The number of times to repeat each test, useful for debugging flaky tests. */
     repeatEach: CI ? 1 : 0,

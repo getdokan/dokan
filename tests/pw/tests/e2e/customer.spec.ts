@@ -18,52 +18,52 @@ test.describe('Customer functionality test', () => {
         await cPage.close();
     });
 
-    test('customer can register @lite @c', async ({ page }) => {
+    test('customer can register', { tag: ['@lite', '@customer'] }, async ({ page }) => {
         const customer = new CustomerPage(page);
         await customer.customerRegister(data.customer.customerInfo);
     });
 
-    test('customer can login @lite @c', async ({ page }) => {
+    test('customer can login', { tag: ['@lite', '@customer'] }, async ({ page }) => {
         const loginPage = new LoginPage(page);
         await loginPage.login(data.customer);
     });
 
-    test('customer can logout @lite @c', async ({ page }) => {
+    test('customer can logout', { tag: ['@lite', '@customer'] }, async ({ page }) => {
         const loginPage = new LoginPage(page);
         await loginPage.login(data.customer);
         await loginPage.logout();
     });
 
-    test('customer can become a vendor @lite @c', async ({ page }) => {
+    test('customer can become a vendor', { tag: ['@lite', '@customer'] }, async ({ page }) => {
         const customer = new CustomerPage(page);
         await customer.customerRegister(data.customer.customerInfo);
         await customer.customerBecomeVendor(data.customer.customerInfo);
     });
 
-    test('customer can add billing details @lite @c', async () => {
+    test('customer can add billing details', { tag: ['@lite', '@customer'] }, async () => {
         await customer.addBillingAddress(data.customer.customerInfo.billing);
     });
 
-    test('customer can add shipping details @lite @c', async () => {
+    test('customer can add shipping details', { tag: ['@lite', '@customer'] }, async () => {
         await customer.addShippingAddress(data.customer.customerInfo.shipping);
     });
 
-    test('customer can add customer details @lite @c', async () => {
+    test('customer can add customer details', { tag: ['@lite', '@customer'] }, async () => {
         await customer.addCustomerDetails(data.customer);
     });
 
-    test('customer can add product to cart @lite @c', async () => {
+    test('customer can add product to cart', { tag: ['@lite', '@customer'] }, async () => {
         const productName = data.predefined.simpleProduct.product1.name;
         await customer.addProductToCart(productName, 'single-product');
         await customer.productIsOnCart(productName);
     });
 
-    test('customer can buy product @lite @c', async () => {
+    test('customer can buy product', { tag: ['@lite', '@customer'] }, async () => {
         await customer.addProductToCart(data.predefined.simpleProduct.product1.name, 'single-product');
         await customer.placeOrder();
     });
 
-    test('customer can buy multi-vendor products @lite @c', async () => {
+    test('customer can buy multi-vendor products', { tag: ['@lite', '@customer'] }, async () => {
         await customer.addProductToCart(data.predefined.simpleProduct.product1.name, 'single-product');
         await customer.addProductToCart(data.predefined.vendor2.simpleProduct.product1.name, 'single-product', false);
         await customer.placeOrder();

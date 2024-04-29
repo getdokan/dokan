@@ -2925,12 +2925,20 @@ function dokan_get_translations_for_plugin_domain( $domain, $language_dir = null
         $language_dir = DOKAN_DIR . '/languages/';
     }
 
-    $languages     = get_available_languages( $language_dir );
-    $get_site_lang = is_admin() ? get_user_locale() : get_locale();
-    $mo_file_name  = $domain . '-' . $get_site_lang;
-    $translations  = [];
+    $get_site_lang         = is_admin() ? get_user_locale() : get_locale();
+    $mo_file_name          = $domain . '-' . $get_site_lang;
+    $plugin_language_dir   = WP_LANG_DIR . '/plugins/';
+    $languages             = get_available_languages( $language_dir );
+    $languages_in_lang_dir = get_available_languages( $plugin_language_dir );
+    $translations          = [];
 
-    if ( in_array( $mo_file_name, $languages, true ) && file_exists( $language_dir . $mo_file_name . '.mo' ) ) {
+    if ( in_array( $mo_file_name, $languages_in_lang_dir, true ) && file_exists( $plugin_language_dir . $mo_file_name . '.mo' ) ) {
+        $mo = new MO();
+
+        if ( $mo->import_from_file( $plugin_language_dir . $mo_file_name . '.mo' ) ) {
+            $translations = $mo->entries;
+        }
+    } elseif ( in_array( $mo_file_name, $languages, true ) && file_exists( $language_dir . $mo_file_name . '.mo' ) ) {
         $mo = new MO();
 
         if ( $mo->import_from_file( $language_dir . $mo_file_name . '.mo' ) ) {

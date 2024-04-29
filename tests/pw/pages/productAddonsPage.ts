@@ -32,7 +32,7 @@ export class ProductAddonsPage extends VendorPage {
         await this.multipleElementVisible(addonsVendor.table);
 
         await this.clickAndWaitForLoadState(addonsVendor.createNewAddon);
-        await this.click(addonsVendor.addon.addField);
+        await this.clickAndWaitForResponse(data.subUrls.ajax, addonsVendor.addon.addField);
         await this.check(addonsVendor.addon.enableDescription);
 
         // product addon fields elements are visible
@@ -53,7 +53,7 @@ export class ProductAddonsPage extends VendorPage {
         await this.toContainText(addonsVendor.addon.result, addon.category);
         await this.press(data.key.enter);
 
-        add ? await this.click(addonsVendor.addon.addField) : await this.click(addonsVendor.addon.addonFieldsRow('Add-on Title'));
+        add ? await this.clickAndWaitForResponse(data.subUrls.ajax, addonsVendor.addon.addField) : await this.click(addonsVendor.addon.addonFieldsRow('Add-on Title'));
 
         await this.selectByValue(addonsVendor.addon.type, addon.type);
         await this.selectByValue(addonsVendor.addon.displayAs, addon.displayAs);

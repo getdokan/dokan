@@ -22,11 +22,11 @@ test.describe.skip('Email verifications test', () => {
         await gPage.close();
     });
 
-    test('user can see registration notice (2-step auth) while registering as customer @pro @g', async () => {
+    test('user can see registration notice (2-step auth) while registering as customer', { tag: ['@pro', '@guest'] }, async () => {
         await guest.register(user);
     });
 
-    test('user can see registration notice (2-step auth) while loggingIn @pro @g', async () => {
+    test('user can see registration notice (2-step auth) while loggingIn', { tag: ['@pro', '@guest'] }, async () => {
         await guest.login(user);
     });
 });
