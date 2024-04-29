@@ -131,6 +131,12 @@ export default defineConfig({
             // teardown: 'global_teardown',
         },
 
+        // coverage_report
+        {
+            name: 'coverage_report',
+            testMatch: '_coverage.teardown.ts',
+        },
+
         // local site setup project
         {
             name: 'site_setup',
