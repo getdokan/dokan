@@ -16,7 +16,7 @@ test.describe('Dokan help test', () => {
         await aPage.close();
     });
 
-    test('dokan help menu page is rendering properly', { tag: ['@lite', '@exploratory', '@admin'] }, async () => {
+    test('dokan help menu page renders properly', { tag: ['@lite', '@exploratory', '@admin'] }, async () => {
         await admin.adminHelpRenderProperly();
     });
 

@@ -44,7 +44,7 @@ test.describe('Booking Product test', () => {
 
     // vendor
 
-    test('vendor booking menu page is rendering properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+    test('vendor booking menu page renders properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorBookingRenderProperly();
     });
 
