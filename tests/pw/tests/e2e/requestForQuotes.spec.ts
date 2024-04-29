@@ -32,7 +32,7 @@ test.describe('Request for quotation test admin', () => {
 
     //admin
 
-    test('admin quotes menu page is rendering properly', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
+    test('admin quotes menu page renders properly', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
         await admin.adminQuotesRenderProperly();
     });
 
@@ -99,7 +99,7 @@ test.describe('Request for quotation test vendor', () => {
         await apiUtils.dispose();
     });
 
-    test('vendor request quotes menu page is rendering properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+    test('vendor request quotes menu page renders properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorRequestQuotesRenderProperly();
     });
 
@@ -150,7 +150,7 @@ test.describe('Request for quotation test customer', () => {
 
     //customer
 
-    test('customer request for quote menu page is rendering properly', { tag: ['@pro', '@exploratory', '@customer'] }, async () => {
+    test('customer request for quote menu page renders properly', { tag: ['@pro', '@exploratory', '@customer'] }, async () => {
         await customer.requestForQuoteRenderProperly();
     });
 

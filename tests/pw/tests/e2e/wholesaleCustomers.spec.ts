@@ -39,7 +39,7 @@ test.describe('Wholesale customers test (admin)', () => {
 
     // admin
 
-    test('dokan wholesale customers menu page is rendering properly', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
+    test('dokan wholesale customers menu page renders properly', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
         await admin.adminWholesaleCustomersRenderProperly();
     });
 

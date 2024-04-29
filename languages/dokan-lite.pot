@@ -1,14 +1,14 @@
 # Copyright (c) 2024 weDevs Pte. Ltd. All Rights Reserved.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 3.10.3\n"
+"Project-Id-Version: Dokan 3.10.4\n"
 "Report-Msgid-Bugs-To: https://dokan.co/contact/\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-04-17T07:36:26+00:00\n"
+"POT-Creation-Date: 2024-04-25T03:52:39+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.9.0\n"
 "X-Domain: dokan-lite\n"
@@ -1079,7 +1079,7 @@ msgid "Select a page to show your privacy policy"
 msgstr ""
 
 #: includes/Admin/Settings.php:869
-#: includes/functions.php:3343
+#: includes/functions.php:3351
 msgid "Your personal data will be used to support your experience throughout this website, to manage access to your account, and for other purposes described in our [dokan_privacy_policy]"
 msgstr ""
 
@@ -2620,8 +2620,10 @@ msgid "On Hold"
 msgstr ""
 
 #. translators: 1) Title 2) Notification Count
+#. translators: 1: Order status label 2: Order count
 #. translators: 1: currency name 2: currency code
 #: includes/Dashboard/Templates/Main.php:72
+#: includes/template-tags.php:277
 #: templates/admin-setup-wizard/step-store-wc-fields.php:92
 msgid "%1$s (%2$s)"
 msgstr ""
@@ -3773,92 +3775,92 @@ msgstr ""
 msgid "Menu"
 msgstr ""
 
-#: includes/functions.php:3010
+#: includes/functions.php:3018
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:350
 msgid "Sunday"
 msgstr ""
 
-#: includes/functions.php:3011
+#: includes/functions.php:3019
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:302
 msgid "Monday"
 msgstr ""
 
-#: includes/functions.php:3012
+#: includes/functions.php:3020
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:310
 msgid "Tuesday"
 msgstr ""
 
-#: includes/functions.php:3013
+#: includes/functions.php:3021
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:318
 msgid "Wednesday"
 msgstr ""
 
-#: includes/functions.php:3014
+#: includes/functions.php:3022
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:326
 msgid "Thursday"
 msgstr ""
 
-#: includes/functions.php:3015
+#: includes/functions.php:3023
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:334
 msgid "Friday"
 msgstr ""
 
-#: includes/functions.php:3016
+#: includes/functions.php:3024
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:342
 msgid "Saturday"
 msgstr ""
 
-#: includes/functions.php:3021
+#: includes/functions.php:3029
 msgid "Sun"
 msgstr ""
 
-#: includes/functions.php:3022
+#: includes/functions.php:3030
 msgid "Mon"
 msgstr ""
 
-#: includes/functions.php:3023
+#: includes/functions.php:3031
 msgid "Tue"
 msgstr ""
 
-#: includes/functions.php:3024
+#: includes/functions.php:3032
 msgid "Wed"
 msgstr ""
 
-#: includes/functions.php:3025
+#: includes/functions.php:3033
 msgid "Thu"
 msgstr ""
 
-#: includes/functions.php:3026
+#: includes/functions.php:3034
 msgid "Fri"
 msgstr ""
 
-#: includes/functions.php:3027
+#: includes/functions.php:3035
 msgid "Sat"
 msgstr ""
 
-#: includes/functions.php:3321
+#: includes/functions.php:3329
 msgid "privacy policy"
 msgstr ""
 
-#: includes/functions.php:3368
+#: includes/functions.php:3376
 #: assets/js/vue-admin.js:2
 #: assets/js/vue-bootstrap.js:2
 msgid "Flat"
 msgstr ""
 
-#: includes/functions.php:3369
+#: includes/functions.php:3377
 #: assets/js/vue-admin.js:2
 #: assets/js/vue-bootstrap.js:2
 msgid "Percentage"
 msgstr ""
 
 #. translators: 1) plugin slug
-#: includes/functions.php:3543
+#: includes/functions.php:3551
 msgid "Unable to fetch plugin information from wordpress.org for %s."
 msgstr ""
 
 #. translators: 1) plugin slug
-#: includes/functions.php:3556
+#: includes/functions.php:3564
 msgid "Unable to install %s from wordpress.org"
 msgstr ""
 
@@ -6676,68 +6678,26 @@ msgstr ""
 msgid "Product successfully duplicated"
 msgstr ""
 
-#. translators: %d : order count total
-#. translators: 1) All product count
-#: includes/template-tags.php:249
-#: templates/products/listing-status-filter.php:23
-msgid "All (%s)"
-msgstr ""
-
-#. translators: %d : order count completed status
-#: includes/template-tags.php:267
-msgid "Completed (%s)"
-msgstr ""
-
-#. translators: %d : order count processing status
-#: includes/template-tags.php:285
-msgid "Processing (%s)"
-msgstr ""
-
-#. translators: %d : order count on hold status
-#: includes/template-tags.php:303
-msgid "On-hold (%s)"
-msgstr ""
-
-#. translators: %d : order count pending status
-#: includes/template-tags.php:321
-msgid "Pending (%s)"
-msgstr ""
-
-#. translators: %d : order count cancelled status
-#: includes/template-tags.php:339
-msgid "Cancelled (%s)"
-msgstr ""
-
-#. translators: %d : order count refunded status
-#: includes/template-tags.php:357
-msgid "Refunded (%s)"
-msgstr ""
-
-#. translators: %d : order count failed status
-#: includes/template-tags.php:376
-msgid "Failed (%s)"
-msgstr ""
-
-#: includes/template-tags.php:642
+#: includes/template-tags.php:543
 #: includes/Widgets/StoreCategoryMenu.php:37
 #: includes/Widgets/StoreCategoryMenu.php:81
 msgid "Store Product Category"
 msgstr ""
 
-#: includes/template-tags.php:655
+#: includes/template-tags.php:556
 #: includes/Vendor/SettingsApi/Settings/Pages/Store.php:238
 #: includes/Widgets/StoreLocation.php:40
 #: includes/Widgets/StoreLocation.php:101
 msgid "Store Location"
 msgstr ""
 
-#: includes/template-tags.php:668
+#: includes/template-tags.php:569
 #: includes/Widgets/StoreOpenClose.php:39
 #: includes/Widgets/StoreOpenClose.php:110
 msgid "Store Time"
 msgstr ""
 
-#: includes/template-tags.php:681
+#: includes/template-tags.php:582
 #: includes/Widgets/StoreContactForm.php:40
 #: includes/Widgets/StoreContactForm.php:118
 msgid "Contact Vendor"
@@ -9174,6 +9134,11 @@ msgstr ""
 
 #: templates/products/listing-filter.php:90
 msgid "Search Products"
+msgstr ""
+
+#. translators: 1) All product count
+#: templates/products/listing-status-filter.php:23
+msgid "All (%s)"
 msgstr ""
 
 #: templates/products/listing-status-filter.php:40

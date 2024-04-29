@@ -45,7 +45,7 @@ test.describe('Auction Product test', () => {
 
     //vendor
 
-    test('vendor auction menu page is rendering properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+    test('vendor auction menu page renders properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorAuctionRenderProperly();
     });
 

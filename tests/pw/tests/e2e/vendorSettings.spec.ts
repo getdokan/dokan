@@ -27,23 +27,23 @@ test.describe('Vendor settings test', () => {
 
     //vendor
 
-    test('vendor store settings menu page is rendering properly', { tag: ['@lite', '@exploratory', '@vendor'] }, async () => {
+    test('vendor store settings menu page renders properly', { tag: ['@lite', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorStoreSettingsRenderProperly();
     });
 
-    test('vendor shipstation settings menu page is rendering properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+    test('vendor shipstation settings menu page renders properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorShipstationSettingsRenderProperly();
     });
 
-    test('vendor social profile settings menu page is rendering properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+    test('vendor social profile settings menu page renders properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorSocialProfileSettingsRenderProperly();
     });
 
-    test('vendor rma settings menu page is rendering properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+    test('vendor rma settings menu page renders properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorRmaSettingsRenderProperly();
     });
 
-    test('vendor store seo settings menu page is rendering properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+    test('vendor store seo settings menu page renders properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorStoreSeoSettingsRenderProperly();
     });
 

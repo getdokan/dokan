@@ -104,7 +104,7 @@ test.describe('Product functionality test', () => {
     // todo: add multistep product categories test
     // todo: add product categories settings test
 
-    test('vendor product menu page is rendering properly', { tag: ['@lite', '@exploratory', '@vendor'] }, async () => {
+    test('vendor product menu page renders properly', { tag: ['@lite', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorProductsRenderProperly();
     });
 

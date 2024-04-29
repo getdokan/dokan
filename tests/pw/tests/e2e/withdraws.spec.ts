@@ -35,7 +35,7 @@ test.describe('Withdraw test', () => {
         await apiUtils.dispose();
     });
 
-    test('admin withdraw menu page is rendering properly', { tag: ['@lite', '@exploratory', '@admin'] }, async () => {
+    test('admin withdraw menu page renders properly', { tag: ['@lite', '@exploratory', '@admin'] }, async () => {
         await admin.adminWithdrawsRenderProperly();
     });
 
@@ -76,7 +76,7 @@ test.describe('Withdraw test', () => {
 
     // vendor
 
-    test('vendor withdraw menu page is rendering properly', { tag: ['@lite', '@exploratory', '@vendor'] }, async () => {
+    test('vendor withdraw menu page renders properly', { tag: ['@lite', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorWithdrawRenderProperly();
     });
 

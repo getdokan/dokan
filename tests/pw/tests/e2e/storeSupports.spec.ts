@@ -29,7 +29,7 @@ test.describe('Store Support test (admin)', () => {
 
     //admin
 
-    test('dokan store support menu page is rendering properly', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
+    test('dokan store support menu page renders properly', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
         await admin.adminStoreSupportRenderProperly();
     });
 
@@ -114,7 +114,7 @@ test.describe('Store Support test (customer)', () => {
         await apiUtils.dispose();
     });
 
-    test('customer store support menu page is rendering properly', { tag: ['@pro', '@exploratory', '@customer'] }, async () => {
+    test('customer store support menu page renders properly', { tag: ['@pro', '@exploratory', '@customer'] }, async () => {
         await customer.customerStoreSupportRenderProperly();
     });
 
@@ -185,7 +185,7 @@ test.describe('Store Support test (vendor)', () => {
 
     // vendor
 
-    test('vendor store support menu page is rendering properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+    test('vendor store support menu page renders properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorStoreSupportRenderProperly();
     });
 
