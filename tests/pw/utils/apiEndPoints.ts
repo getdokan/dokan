@@ -326,7 +326,7 @@ export const endPoints = {
     getSpmvProducts: `${SERVER_URL}/dokan/v1/spmv-product/search`,
     addToStore: `${SERVER_URL}/dokan/v1/spmv-product/add-to-store`, // post
 
-    // product question answere
+    // product question answers
     getAllProductQuestions: `${SERVER_URL}/dokan/v1/product-questions`,
     getSingleProductQuestion: (questionId: string) => `${SERVER_URL}/dokan/v1/product-questions/${questionId}`,
     createProductQuestion: `${SERVER_URL}/dokan/v1/product-questions`,

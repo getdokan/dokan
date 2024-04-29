@@ -27,49 +27,49 @@ test.describe('announcements api test', () => {
         await apiUtils.dispose();
     });
 
-    test('get all announcements @pro', async () => {
+    test('get all announcements', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllAnnouncements);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
         expect(responseBody).toMatchSchema(schemas.announcementsSchema.announcementsSchema);
     });
 
-    test('get single announcement @pro', async () => {
+    test('get single announcement', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getSingleAnnouncement(announcementId));
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
         expect(responseBody).toMatchSchema(schemas.announcementsSchema.announcementSchema);
     });
 
-    test('create an announcement @pro', async () => {
+    test('create an announcement', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.post(endPoints.createAnnouncement, { data: payloads.createAnnouncement() });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
         expect(responseBody).toMatchSchema(schemas.announcementsSchema.announcementSchema);
     });
 
-    test('update an announcement @pro', async () => {
+    test('update an announcement', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.post(endPoints.updateAnnouncement(announcementId), { data: payloads.updateAnnouncement });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
         expect(responseBody).toMatchSchema(schemas.announcementsSchema.announcementSchema);
     });
 
-    test('trash an announcement @pro', async () => {
+    test('trash an announcement', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.delete(endPoints.deleteAnnouncement(announcementId));
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
         expect(responseBody).toMatchSchema(schemas.announcementsSchema.announcementSchema);
     });
 
-    test('restore a trashed announcement @pro', async () => {
+    test('restore a trashed announcement', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.put(endPoints.restoreDeletedAnnouncement(announcementId));
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
         expect(responseBody).toMatchSchema(schemas.announcementsSchema.announcementSchema);
     });
 
-    test('update batch announcements @pro', async () => {
+    test('update batch announcements', { tag: ['@pro'] }, async () => {
         const allAnnouncementIds = (await apiUtils.getAllAnnouncements()).map((a: { id: unknown }) => a.id);
         const [response, responseBody] = await apiUtils.put(endPoints.updateBatchAnnouncements, { data: { trash: allAnnouncementIds } });
         expect(response.ok()).toBeTruthy();
@@ -82,21 +82,21 @@ test.describe('announcements api test', () => {
 
     // announcement notice
 
-    test('get single announcement notice @pro', async () => {
+    test('get single announcement notice', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getSingleAnnouncementNotice(announcementNoticeId), { headers: payloads.vendorAuth });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
         expect(responseBody).toMatchSchema(schemas.announcementsSchema.announcementNoticeSchema);
     });
 
-    test('update an announcement notice @pro', async () => {
+    test('update an announcement notice', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.post(endPoints.updateAnnouncementNotice(announcementNoticeId), { data: payloads.updateAnnouncementNotice, headers: payloads.vendorAuth });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
         expect(responseBody).toMatchSchema(schemas.announcementsSchema.announcementNoticeSchema);
     });
 
-    test('delete an announcement notice @pro', async () => {
+    test('delete an announcement notice', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.delete(endPoints.deleteAnnouncementNotice(announcementNoticeId), { headers: payloads.vendorAuth });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();

@@ -44,79 +44,79 @@ for (const version of versions) {
             await apiUtils.dispose();
         });
 
-        test('get products summary @lite', async () => {
+        test('get products summary', { tag: ['@lite'] }, async () => {
             const [response, responseBody] = await apiUtils.get(endPoints.getProductsSummary.replace('v1', version));
             expect(response.ok()).toBeTruthy();
             expect(responseBody).toBeTruthy();
         });
 
-        test('get top rated products @lite', async () => {
+        test('get top rated products', { tag: ['@lite'] }, async () => {
             const [response, responseBody] = await apiUtils.get(endPoints.getTopRatedProducts.replace('v1', version));
             expect(response.ok()).toBeTruthy();
             expect(responseBody).toBeTruthy();
         });
 
-        test('get best selling products @lite', async () => {
+        test('get best selling products', { tag: ['@lite'] }, async () => {
             const [response, responseBody] = await apiUtils.get(endPoints.getBestSellingProducts.replace('v1', version));
             expect(response.ok()).toBeTruthy();
             expect(responseBody).toBeTruthy();
         });
 
-        test('get featured products @lite', async () => {
+        test('get featured products', { tag: ['@lite'] }, async () => {
             const [response, responseBody] = await apiUtils.get(endPoints.getFeaturedProducts.replace('v1', version));
             expect(response.ok()).toBeTruthy();
             expect(responseBody).toBeTruthy();
         });
 
-        test('get latest products @lite', async () => {
+        test('get latest products', { tag: ['@lite'] }, async () => {
             const [response, responseBody] = await apiUtils.get(endPoints.getLatestProducts.replace('v1', version));
             expect(response.ok()).toBeTruthy();
             expect(responseBody).toBeTruthy();
         });
 
-        test('get all multiStep categories @lite', async () => {
+        test('get all multiStep categories', { tag: ['@lite'] }, async () => {
             const [response, responseBody] = await apiUtils.get(endPoints.getAllMultiStepCategories.replace('v1', version));
             expect(response.ok()).toBeTruthy();
             expect(responseBody).toBeTruthy();
         });
 
-        test('get all products @lite', async () => {
+        test('get all products', { tag: ['@lite'] }, async () => {
             const [response, responseBody] = await apiUtils.get(endPoints.getAllProducts.replace('v1', version));
             expect(response.ok()).toBeTruthy();
             expect(responseBody).toBeTruthy();
         });
 
-        test('get single product @lite', async () => {
+        test('get single product', { tag: ['@lite'] }, async () => {
             const [response, responseBody] = await apiUtils.get(endPoints.getSingleProduct(productId).replace('v1', version));
             expect(response.ok()).toBeTruthy();
             expect(responseBody).toBeTruthy();
         });
 
-        test('get all related products @lite', async () => {
+        test('get all related products', { tag: ['@lite'] }, async () => {
             const [response, responseBody] = await apiUtils.get(endPoints.getAllRelatedProducts(productId).replace('v1', version));
             expect(response.ok()).toBeTruthy();
             expect(responseBody).toBeTruthy();
         });
 
-        test('create a product @lite', async () => {
+        test('create a product', { tag: ['@lite'] }, async () => {
             const [response, responseBody] = await apiUtils.post(endPoints.createProduct.replace('v1', version), { data: payloads.createProduct() });
             expect(response.ok()).toBeTruthy();
             expect(responseBody).toBeTruthy();
         });
 
-        test('update a product @lite', async () => {
+        test('update a product', { tag: ['@lite'] }, async () => {
             const [response, responseBody] = await apiUtils.put(endPoints.updateProduct(productId).replace('v1', version), { data: payloads.updateProduct() });
             expect(response.ok()).toBeTruthy();
             expect(responseBody).toBeTruthy();
         });
 
-        test('delete a product @lite', async () => {
+        test('delete a product', { tag: ['@lite'] }, async () => {
             const [response, responseBody] = await apiUtils.delete(endPoints.deleteProduct(productId).replace('v1', version));
             expect(response.ok()).toBeTruthy();
             expect(responseBody).toBeTruthy();
         });
 
-        test('get filtered products @v2 @lite', async () => {
+        test('get filtered products', { tag: ['@lite', '@v2'] }, async () => {
             const [response, responseBody] = await apiUtils.get(endPoints.getAllProducts.replace('v1', version), { params: payloads.filterParams });
             expect(response.ok()).toBeTruthy();
             expect(responseBody).toBeTruthy();
