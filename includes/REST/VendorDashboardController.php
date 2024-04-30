@@ -123,6 +123,25 @@ class VendorDashboardController extends \WP_REST_Controller {
                 ],
             ]
         );
+        register_rest_route(
+            $this->namespace, '/' . $this->base . '/ui-switch', [
+                [
+                    'methods'             => WP_REST_Server::EDITABLE,
+                    'callback'            => [ $this, 'set_ui_switching' ],
+                    'args'                => [
+                        'status' => [
+                            'required'    => true,
+                            'description' => __( 'If on vendor dashboard ui will active, if false ui will be de activated', 'dokan-lite' ),
+                            'type'        => 'string',
+                            'enum'        => [ 'on', 'off' ],
+                            'context'     => [ 'view', 'edit' ],
+                            'default'     => 'on',
+                        ],
+                    ],
+                    'permission_callback' => 'is_user_logged_in',
+                ],
+            ]
+        );
     }
 
     /**
@@ -578,5 +597,22 @@ class VendorDashboardController extends \WP_REST_Controller {
         );
 
         return $query_params;
+    }
+
+    /**
+     * Updates vendor switching data.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param WP_REST_Request $request
+     *
+     * @return void
+     */
+    public function set_ui_switching( $request ) {
+        $status = $request->get_param( 'status' );
+
+        update_user_meta( dokan_get_current_user_id(), 'dokan_vendor_dashboard_ui_switching', $status );
+
+        return $status;
     }
 }
