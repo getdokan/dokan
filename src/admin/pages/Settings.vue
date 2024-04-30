@@ -551,7 +551,7 @@
             },
 
             handleAction( sectionId ) {
-                if ( 'dokan_form_manager_product_form' === sectionId ) {
+                if ( 'dokan_form_manager' === sectionId ) {
                     this.resetAllFields( sectionId );
                 }
             },
