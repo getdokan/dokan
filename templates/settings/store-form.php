@@ -59,15 +59,15 @@ $args     = apply_filters( 'dokan_store_time_arguments', $args, $all_times );
 
     <div class="dokan-banner">
 
-        <div class="image-wrap<?php echo $banner_id ? '' : ' dokan-hide'; ?>">
-            <?php $banner_url = $banner_id ? wp_get_attachment_url( $banner_id ) : ''; ?>
+        <?php $banner_url = $banner_id ? wp_get_attachment_url( $banner_id ) : DOKAN_PLUGIN_ASSEST . '/images/default-store-banner.png'; ?>
+        <div class="image-wrap<?php echo esc_url( $banner_url ) ? '' : ' dokan-hide'; ?>">
             <input type="hidden" class="dokan-file-field" value="<?php echo esc_attr( $banner_id ); ?>" name="dokan_banner">
             <img class="dokan-banner-img" src="<?php echo esc_url( $banner_url ); ?>">
 
             <a class="close dokan-remove-banner-image">&times;</a>
         </div>
 
-        <div class="button-area<?php echo $banner_id ? ' dokan-hide' : ''; ?>">
+        <div class="button-area<?php echo esc_url( $banner_url ) ? ' dokan-hide' : ''; ?>">
             <i class="fas fa-cloud-upload-alt"></i>
             <a href="#" class="dokan-banner-drag dokan-btn dokan-btn-info dokan-theme dokan-btn-theme"><?php esc_html_e( 'Upload banner', 'dokan-lite' ); ?></a>
             <p class="help-block">
@@ -99,13 +99,13 @@ $args     = apply_filters( 'dokan_store_time_arguments', $args, $all_times );
         <label class="dokan-w3 dokan-control-label" for="dokan_gravatar"><?php esc_html_e( 'Profile Picture', 'dokan-lite' ); ?></label>
 
         <div class="dokan-w5 dokan-gravatar">
-            <div class="dokan-left gravatar-wrap<?php echo $gravatar_id ? '' : ' dokan-hide'; ?>">
-                <?php $gravatar_url = $gravatar_id ? wp_get_attachment_url( $gravatar_id ) : ''; ?>
+            <?php $gravatar_url = $gravatar_id ? wp_get_attachment_url( $gravatar_id ) : DOKAN_PLUGIN_ASSEST . '/images/mystery-person.jpg'; ?>
+            <div class="dokan-left gravatar-wrap<?php echo esc_url( $gravatar_url ) ? '' : ' dokan-hide'; ?>">
                 <input type="hidden" class="dokan-file-field" value="<?php echo esc_attr( $gravatar_id ); ?>" name="dokan_gravatar">
                 <img class="dokan-gravatar-img" src="<?php echo esc_url( $gravatar_url ); ?>">
                 <a class="dokan-close dokan-remove-gravatar-image">&times;</a>
             </div>
-            <div class="gravatar-button-area<?php echo esc_attr( $gravatar_id ) ? ' dokan-hide' : ''; ?>">
+            <div class="gravatar-button-area<?php echo esc_url( $gravatar_url ) ? ' dokan-hide' : ''; ?>">
                 <a href="#" class="dokan-pro-gravatar-drag dokan-btn dokan-btn-default"><i class="fas fa-cloud-upload-alt"></i> <?php esc_html_e( 'Upload Photo', 'dokan-lite' ); ?></a>
             </div>
         </div>
