@@ -96,7 +96,7 @@ class AdminReport {
 	 * @param  array $args arguments for the report.
 	 * @return mixed depending on query_type
 	 */
-	public function get_order_report_data( $args, $order_table = false  ) {
+	public function get_order_report_data( $args, $order_table = false, $query_wrapper_start = '', $query_wrapper_end = '' ) {
         global $wpdb;
 
         $start_date = $order_table ? dokan_current_datetime()->setTimestamp( $this->start_date )->setTimezone( new DateTimeZone( 'UTC' ) )->getTimestamp() : $this->start_date;
@@ -376,10 +376,18 @@ class AdminReport {
 
         $result = Cache::get_transient( $cache_key, $cache_group );
         if ( $debug || $nocache || ( false === $result ) ) {
+            if ( ! empty( $query_wrapper_start ) ) {
+                $query = $query_wrapper_start . $query;
+            }
+
+            if ( ! empty( $query_wrapper_end ) ) {
+                $query .= $query_wrapper_end;
+            }
+
             $result = apply_filters( 'dokan_reports_get_order_report_data', $wpdb->$query_type( $query ), $data );
 
             if ( $filter_range ) {
-                if ( $end_date == date( 'Y-m-d', current_time( 'timestamp' ) ) ) {
+                if ( $end_date == date( 'Y-m-d H:i:s', current_time( 'timestamp' ) ) ) {
                     $expiration = 60 * 60 * 1; // 1 hour
                 } else {
                     $expiration = 60 * 60 * 24; // 24 hour
