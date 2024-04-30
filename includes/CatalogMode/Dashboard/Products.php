@@ -27,7 +27,7 @@ class Products {
             return;
         }
         // render catalog mode section under single product edit page
-        add_action( 'dokan_product_edit_after_options', [ $this, 'render_product_section' ], 99, 2 );
+        add_action( 'dokan_product_edit_after_options', [ $this, 'render_product_section' ], 99, 1 );
         // save catalog mode section data
         add_filter( 'dokan_product_edit_meta_data', [ $this, 'save_catalog_mode_data' ], 13, 1 );
     }
@@ -38,13 +38,17 @@ class Products {
      * @since 3.6.4
      *
      * @param $product_id int
-     * @param $product    \WC_Product
      *
      * @return void
      */
-    public function render_product_section( $product_id, $product ) {
+    public function render_product_section( $product_id ) {
         // check permission, don't let vendor staff view this section
         if ( ! current_user_can( 'dokandar' ) ) {
+            return;
+        }
+
+        $product = wc_get_product( $product_id );
+        if ( ! $product ) {
             return;
         }
 

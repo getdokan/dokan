@@ -459,6 +459,10 @@ class Products {
                 continue;
             }
 
+            if ( apply_filters( 'dokan_product_form_skip_field_validation', false, $field ) ) {
+                continue;
+            }
+
             // check if field is required
             if ( $field->is_required() && empty( $_POST[ $field_name ] ) ) {
                 self::$errors[ $field->get_id() ] = ! empty( $field->get_error_message() )
