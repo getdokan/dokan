@@ -2501,7 +2501,7 @@ export const selector = {
                 // Add Tax
                 taxTable: '.wc_tax_rates',
                 insertRow: '.plus',
-                taxRate: '.rate input',
+                taxRate: 'td.rate input',
                 taxRateSaveChanges: '.woocommerce-save-button',
 
                 // Shipping

@@ -34,7 +34,7 @@ test.describe.skip('Privacy Policy & Store Contact form test', () => {
         await customer.contactVendor(data.predefined.vendorStores.vendor1, data.storeContactData);
     });
 
-    test('customer can navigate to dokan privacy policy', { tag: ['@lite', '@customer'] }, async () => {
+    test('customer can navigate to Dokan privacy policy', { tag: ['@lite', '@customer'] }, async () => {
         await customer.goToPrivacyPolicy(data.predefined.vendorStores.vendor1);
     });
 

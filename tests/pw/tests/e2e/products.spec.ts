@@ -101,10 +101,10 @@ test.describe('Product functionality test', () => {
     });
 
     // todo: move to other files: product categories
-    // todo: add multistep product categories test
+    // todo: add multi-step product categories test
     // todo: add product categories settings test
 
-    test('vendor product menu page renders properly', { tag: ['@lite', '@exploratory', '@vendor'] }, async () => {
+    test('vendor can view product menu page', { tag: ['@lite', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorProductsRenderProperly();
     });
 

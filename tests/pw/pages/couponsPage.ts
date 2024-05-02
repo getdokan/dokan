@@ -52,7 +52,7 @@ export class CouponsPage extends AdminPage {
     }
 
     // vendor view marketplace coupon
-    async viewMarketPlaceCoupon(marketplaceCoupon: string) {
+    async viewMarketPlaceCoupons(marketplaceCoupon: string) {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.coupons);
         await this.click(couponsVendor.menus.marketplaceCoupons);
         await this.toBeVisible(couponsVendor.marketPlaceCoupon.marketPlaceCoupon);

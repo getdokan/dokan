@@ -45,7 +45,7 @@ test.describe('Auction Product test', () => {
 
     //vendor
 
-    test('vendor auction menu page renders properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+    test('vendor can view auction menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorAuctionRenderProperly();
     });
 
@@ -74,7 +74,7 @@ test.describe('Auction Product test', () => {
         await vendor.deleteAuctionProduct(auctionProductName);
     });
 
-    test('vendor auction activity page is rendering properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+    test('vendor can view auction activity page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorAuctionActivityRenderProperly();
     });
 
