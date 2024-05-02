@@ -49,9 +49,7 @@ class Manager {
         add_action( 'admin_notices', [ $this, 'render_global_admin_notices_html' ] );
         add_filter( 'dokan_admin_notices', [ $this, 'show_permalink_setting_notice' ] );
         add_filter( 'dokan_admin_notices', [ $this, 'show_admin_logo_update_notice' ] );
-        add_filter( 'dokan_admin_notices', [ $this, 'show_one_step_product_add_notice' ] );
         add_action( 'wp_ajax_dismiss_dokan_admin_logo_update_notice', [ $this, 'dismiss_dokan_admin_logo_update_notice' ] );
-        add_action( 'wp_ajax_dismiss_dokan_one_step_product_notice', [ $this, 'dismiss_dokan_one_step_product_notice' ] );
     }
 
     /**
@@ -130,33 +128,6 @@ class Manager {
     }
 
     /**
-     * Display single page product page create notice.
-     *
-     * @since 3.8.2
-     *
-     * @param array $notices
-     *
-     * @return array
-     */
-    public function show_one_step_product_add_notice( $notices ) {
-        if ( 'yes' !== get_option( 'dismiss_dokan_one_step_product_nonce', 'no' ) ) {
-            $notices[] = [
-                'priority'          => 1,
-                'show_close_button' => true,
-                'type'              => 'alert',
-                'title'             => __( 'New One-Step Product Form', 'dokan-lite' ),
-                'description'       => __( 'Try it now to enhance your vendor\'s product upload experience, the older two-step version will be retired in one month.', 'dokan-lite' ),
-                'ajax_data'         => [
-                    'action' => 'dismiss_dokan_one_step_product_notice',
-                    'nonce'  => wp_create_nonce( 'dismiss_dokan_one_step_product_nonce' ),
-                ],
-            ];
-        }
-
-        return $notices;
-    }
-
-    /**
      * Display dokan admin logo update notice.
      *
      * @since DOKAN_SINCE
@@ -166,33 +137,21 @@ class Manager {
      * @return array
      */
     public function show_admin_logo_update_notice( array $notices ): array {
-        if ( 'yes' !== get_option( 'dismiss_dokan_admin_logo_nonce', 'no' ) ) {
+        if ( 'yes' !== get_option( 'dismiss_dokan_admin_logo_update_notice', 'no' ) ) {
             $notices[] = [
                 'priority'          => 1,
                 'show_close_button' => true,
                 'type'              => 'info',
                 'title'             => __( 'New Dokan Logo!', 'dokan-lite' ),
-                'description'       => __( 'Introducing our fresh new logo! Keep an eye for out for it in your admin dashboard.', 'dokan-lite' ),
+                'description'       => __( 'Introducing the new freshly designed Dokan Logo. Keep an eye on your admin dashboard!!', 'dokan-lite' ),
                 'ajax_data'         => [
                     'action' => 'dismiss_dokan_admin_logo_update_notice',
-                    'nonce'  => wp_create_nonce( 'dismiss_dokan_admin_logo_nonce' ),
+                    'nonce'  => wp_create_nonce( 'dismiss_dokan_admin_logo_update_notice_nonce' ),
                 ],
             ];
         }
 
         return $notices;
-    }
-
-    /**
-     * Dismisses one-step product create notice.
-     *
-     * @since 3.8.2
-     *
-     * @return void
-     */
-    public function dismiss_dokan_one_step_product_notice() {
-        // Check nonce actions, permissions & dismiss dokan admin logo notice.
-        $this->dismiss_notice( 'dismiss_dokan_one_step_product_nonce' );
     }
 
     /**
@@ -203,8 +162,7 @@ class Manager {
      * @return void
      */
     public function dismiss_dokan_admin_logo_update_notice() {
-        // Check nonce actions, permissions & dismiss dokan admin logo notice.
-        $this->dismiss_notice( 'dismiss_dokan_admin_logo_nonce' );
+        $this->dismiss_notice( 'dismiss_dokan_admin_logo_update_notice' );
     }
 
     /**
@@ -217,15 +175,17 @@ class Manager {
      * @return void
      */
     private function dismiss_notice( string $option_name ) {
-        if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['nonce'] ) ), $option_name ) ) {
+        // Check nonce actions.
+        if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( sanitize_key( wp_unslash( $_POST['nonce'] ) ), $option_name . '_nonce' ) ) {
             wp_send_json_error( __( 'Invalid nonce', 'dokan-lite' ) );
         }
 
-        // phpcs:ignore
+        // Check permission.
         if ( ! current_user_can( 'manage_woocommerce' ) ) {
             wp_send_json_error( __( 'You have no permission to do that', 'dokan-lite' ) );
         }
 
+        // Dismiss dokan admin logo notice.
         update_option( $option_name, 'yes' );
         wp_send_json_success();
     }
