@@ -181,7 +181,7 @@ class Manager {
         }
 
         // Check permission.
-        if ( ! current_user_can( 'manage_woocommerce' ) ) {
+        if ( ! current_user_can( 'manage_woocommerce' ) ) { // phpcs:ignore
             wp_send_json_error( __( 'You have no permission to do that', 'dokan-lite' ) );
         }
 
