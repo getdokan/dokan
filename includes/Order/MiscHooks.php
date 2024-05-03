@@ -27,7 +27,6 @@ class MiscHooks {
 
         // Exclude suborders in woocommerce analytics.
         add_filter( 'woocommerce_analytics_orders_select_query', [ $this, 'trim_child_order_for_analytics_order' ] );
-        add_filter( 'woocommerce_analytics_update_order_stats_data', [ $this, 'trim_child_order_for_analytics_order_stats' ], 10, 2 );
 
         // remove customer info from order export based on setting
         add_filter( 'dokan_csv_export_headers', [ $this, 'hide_customer_info_from_vendor_order_export' ], 20, 1 );
@@ -66,7 +65,7 @@ class MiscHooks {
      */
     public function trim_child_order_for_analytics_order( $orders ) {
         foreach ( $orders->data as $key => $order ) {
-            if ( $order['parent_id'] ) {
+            if ( $order['parent_id'] && $order['net_total'] > 0 ) {
                 unset( $orders->data[ $key ] );
             }
         }
@@ -192,29 +191,5 @@ class MiscHooks {
         }
 
         return $counts;
-    }
-
-    /**
-     * Exclude suborders and include dokan subscription product orders when generate woocommerce analytics data.
-     *
-     * @see https://github.com/getdokan/dokan-pro/issues/2735
-     *
-     * @param array     $data
-     * @param \WC_Order $order
-     *
-     * @return array
-     */
-    public function trim_child_order_for_analytics_order_stats( $data, $order ) {
-        if ( ! $order->get_parent_id() ||
-            (
-                dokan()->is_pro_exists()
-                && dokan_pro()->module->is_active( 'product_subscription' )
-                && \DokanPro\Modules\Subscription\Helper::is_vendor_subscription_order( $order )
-            )
-        ) {
-            return $data;
-        }
-
-        return [];
     }
 }
