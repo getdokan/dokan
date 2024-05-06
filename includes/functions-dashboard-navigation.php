@@ -287,35 +287,11 @@ function dokan_dashboard_nav( $active_menu = '' ) {
         );
     }
 
-    $common_links_items = apply_filters( 'dokan_dashboard_nav_common_link_items',
-        [
-            [
-                'tip' => __( 'Visit Store', 'dokan-lite' ),
-                'link' => dokan_get_store_url( dokan_get_current_user_id() ),
-                'icon' => '<i class="fas fa-external-link-alt"></i>',
-                'class' => '',
-            ],
-            [
-                'tip' => __( 'Edit Account', 'dokan-lite' ),
-                'link' => dokan_get_navigation_url( 'edit-account' ),
-                'icon' => '<i class="fas fa-user"></i>',
-                'class' => '',
-            ],
-            [
-                'tip' => __( 'Log out', 'dokan-lite' ),
-                'link' => wp_logout_url( home_url() ),
-                'icon' => '<i class="fas fa-power-off"></i>',
-                'class' => '',
-            ],
-        ]
-    );
-
-    $links_text = '';
-    foreach ( $common_links_items as $item ) {
-        $links_text .= '<a title="' . $item['tip'] . '" class="tips '. $item['class'] .'" data-placement="top" href="' . $item['link'] . '">' . $item['icon']  . '</a>';
-    }
-
-    $common_links = '<li class="dokan-common-links dokan-clearfix">' . $links_text  . '</li>';
+    $common_links = '<li class="dokan-common-links dokan-clearfix">
+            <a title="' . __( 'Visit Store', 'dokan-lite' ) . '" class="tips" data-placement="top" href="' . dokan_get_store_url( dokan_get_current_user_id() ) . '" target="_blank"><i class="fas fa-external-link-alt"></i></a>
+            <a title="' . __( 'Edit Account', 'dokan-lite' ) . '" class="tips" data-placement="top" href="' . dokan_get_navigation_url( 'edit-account' ) . '"><i class="fas fa-user"></i></a>
+            <a title="' . __( 'Log out', 'dokan-lite' ) . '" class="tips" data-placement="top" href="' . wp_logout_url( home_url() ) . '"><i class="fas fa-power-off"></i></a>
+        </li>';
 
     $menu .= apply_filters( 'dokan_dashboard_nav_common_link', $common_links );
 
