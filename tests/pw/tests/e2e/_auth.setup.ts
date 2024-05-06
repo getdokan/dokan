@@ -1,4 +1,4 @@
-import { test as setup, expect, request } from '@playwright/test';
+import test, { test as setup, expect, request } from '@playwright/test';
 import { LoginPage } from '@pages/loginPage';
 import { WpPage } from '@pages/wpPage';
 import { ApiUtils } from '@utils/apiUtils';
@@ -6,7 +6,7 @@ import { payloads } from '@utils/payloads';
 import { data } from '@utils/testData';
 import { helpers } from '@utils/helpers';
 
-const { DOKAN_PRO, BASE_URL } = process.env;
+const { LOCAL, DOKAN_PRO, BASE_URL } = process.env;
 
 setup.describe('authenticate users & set permalink', () => {
     let apiUtils: ApiUtils;
@@ -75,6 +75,7 @@ setup.describe('authenticate users & set permalink', () => {
     });
 
     setup('dokan pro enabled or not', { tag: ['@lite'] }, async () => {
+        setup.skip(LOCAL, 'Skip on Local testing');
         let res = await apiUtils.checkPluginsExistence(data.plugin.dokanPro, payloads.adminAuth);
         if (res) {
             res = await apiUtils.pluginsActiveOrNot(data.plugin.dokanPro, payloads.adminAuth);
