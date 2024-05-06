@@ -61,7 +61,7 @@ test.describe('Announcements test (admin)', () => {
 
     test.skip('admin can perform bulk action on announcements', { tag: ['@pro', '@admin'] }, async () => {
         // todo: might cause other tests to fail in parallel
-        // await apiUtils.createAnnouncement(payloads.createAnnouncement(), payloads.adminAuth);
+        await apiUtils.createAnnouncement(payloads.createAnnouncement(), payloads.adminAuth);
         await admin.announcementBulkAction('trash');
     });
 });
