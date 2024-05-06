@@ -2,15 +2,10 @@ import { test } from '@playwright/test';
 import yaml from 'js-yaml';
 import fs from 'fs';
 import path from 'path';
+import { helpers } from '@utils/helpers';
 
-test.describe('get api test coverage', () => {
-    const feature_map = 'feature-map/feature-map.yml';
-    const outputFile = 'playwright-report/e2e/coverage-report/coverage.json';
-
-    test('get coverage', { tag: ['@lite'] }, async () => {
-        getCoverage(feature_map, outputFile);
-    });
-});
+const { E2E_TEST_RESULT } = process.env;
+let executed_tests: string[] = [];
 
 let totalProductFeatures = 0;
 let coveredProductFeatures = 0;
@@ -18,6 +13,17 @@ let totalPageFeatures = 0;
 let coveredPageFeatures = 0;
 const coveredFeatures: string[] = [];
 const uncoveredFeatures: string[] = [];
+
+test.describe('get api test coverage', () => {
+    const feature_map = 'feature-map/feature-map.yml';
+    const outputFile = 'playwright-report/e2e/coverage-report/coverage.json';
+
+    test('get coverage', { tag: ['@lite'] }, async () => {
+        const testResult = helpers.readJson(E2E_TEST_RESULT);
+        executed_tests = testResult.tests;
+        getCoverage(feature_map, outputFile);
+    });
+});
 
 function getCoverage(filePath: string, outputFile?: string) {
     const obj = yaml.load(fs.readFileSync(filePath, { encoding: 'utf-8' }));
@@ -66,11 +72,14 @@ function getCoverage(filePath: string, outputFile?: string) {
 
 function iterateThroughFeature(feature: any) {
     // console.log(feature);
-    
+
     Object.entries(feature).forEach(([key, value]) => {
         if (typeof value === 'object') {
             iterateThroughFeature(feature[key]);
         } else {
+            if (!executed_tests.includes(key)) {
+                return;
+            }
             totalPageFeatures++;
             totalProductFeatures++;
             if (value) {
