@@ -17,5 +17,7 @@ $active_class = ' class="active"'
     }
 
     echo wp_kses( dokan_dashboard_nav( $active_menu ), $allowedposttags );
+
+    do_action( 'dokan_dash_sidebar' );
     ?>
 </div>
