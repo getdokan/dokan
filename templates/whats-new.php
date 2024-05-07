@@ -4,6 +4,18 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.11.0',
+        'released' => '2024-05-10',
+        'changes'  => [
+            'Fix'         => [
+                [
+                    'title'       => 'The status of sub-orders does not update to completed if it contains only virtual products.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.10.4',
         'released' => '2024-04-25',
         'changes'  => [
