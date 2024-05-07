@@ -4,7 +4,7 @@ import fs from 'fs';
 import path from 'path';
 import { helpers } from '@utils/helpers';
 
-const { E2E_TEST_RESULT } = process.env;
+// const { E2E_TEST_RESULT } = process.env;
 let executed_tests: string[] = [];
 
 let totalProductFeatures = 0;
@@ -17,10 +17,10 @@ const uncoveredFeatures: string[] = [];
 test.describe('get e2e test coverage', () => {
     const feature_map = 'feature-map/feature-map.yml';
     const outputFile = 'playwright-report/e2e/coverage-report/coverage.json';
-    // const testReport = 'playwright-report/e2e/summary-report/results.json';
+    const testReport = 'playwright-report/e2e/summary-report/results.json';
 
     test('get coverage', { tag: ['@lite'] }, async () => {
-        const testResult = helpers.readJson(E2E_TEST_RESULT);
+        const testResult = helpers.readJson(testReport);
         executed_tests = testResult.tests;
         getCoverage(feature_map, outputFile);
     });
