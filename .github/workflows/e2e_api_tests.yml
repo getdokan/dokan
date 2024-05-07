@@ -184,6 +184,7 @@ jobs:
               run: |
                   cd tests/pw 
                   npm run test:e2e:lite
+                  npm run e2e_coverage
 
             # Run API tests
             - name: 🧪 Running the api tests

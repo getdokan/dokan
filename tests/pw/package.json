@@ -22,6 +22,7 @@
         "test:e2e:visual": "npx playwright test --project=e2e_tests --grep @visual --config=e2e.config.ts",
         "test:e2e:explo": "npx playwright test --project=e2e_tests --grep @exp --config=e2e.config.ts",
         "test:e2e:core": "npx playwright test --project=e2e_tests --grep @core --config=e2e.config.ts",
+        "e2e_coverage": "npx playwright test _coverage.teardown.spec.ts --reporter=null",
         "test:grep": "npx playwright test --grep",
         "test:debug": "npx playwright test --debug",
         "test:codegen": "playwright codegen",

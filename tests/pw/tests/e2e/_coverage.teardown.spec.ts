@@ -14,9 +14,10 @@ let coveredPageFeatures = 0;
 const coveredFeatures: string[] = [];
 const uncoveredFeatures: string[] = [];
 
-test.describe('get api test coverage', () => {
+test.describe('get e2e test coverage', () => {
     const feature_map = 'feature-map/feature-map.yml';
     const outputFile = 'playwright-report/e2e/coverage-report/coverage.json';
+    // const testReport = 'playwright-report/e2e/summary-report/results.json';
 
     test('get coverage', { tag: ['@lite'] }, async () => {
         const testResult = helpers.readJson(E2E_TEST_RESULT);
@@ -39,10 +40,13 @@ function getCoverage(filePath: string, outputFile?: string) {
         uncovered_features: [],
     };
 
-    pages.forEach(page => {
+    pages.forEach((page: any) => {
         iterateThroughFeature(page.features);
         const pageCoverage = Math.round((coveredPageFeatures / totalPageFeatures) * 100 * 100) / 100;
-        coverageReport.page_coverage[page.page] = pageCoverage;
+        if (!isNaN(pageCoverage)) {
+            coverageReport.page_coverage[page.page] = pageCoverage;
+        }
+
         // resetting count for the current page
         totalPageFeatures = 0;
         coveredPageFeatures = 0;
