@@ -69,7 +69,7 @@ Here is how you can build your multivendor marketplace with Dokan.
 
 👏 “Best investment we made last year.”
 
-👏 [“Excellent product. Ease of use. Saved hundreds of work hours with lots of additional benefits.”] (https://www.capterra.com/p/168004/Dokan-Multivendor-Marketplace/reviews/543139/)
+👏 “[Excellent product. Ease of use. Saved hundreds of work hours with lots of additional benefits] (https://www.capterra.com/p/168004/Dokan-Multivendor-Marketplace/reviews/543139/)”
 
 = SUCCESS STORIES WE ARE PROUD TO BE A PART OF =
 
