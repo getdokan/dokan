@@ -25,7 +25,7 @@ test.describe('Modules test', () => {
     //admin
 
     test('admin can view modules menu page', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
-        await admin.adminModulesRenderProperly();
+        await admin.adminModulesRenderProperly(data.modules.moduleStats);
     });
 
     test('admin can search module', { tag: ['@pro', '@admin'] }, async () => {
