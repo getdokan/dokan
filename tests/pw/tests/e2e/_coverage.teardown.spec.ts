@@ -1,4 +1,4 @@
-import { test } from '@playwright/test';
+import { test as teardown } from '@playwright/test';
 import yaml from 'js-yaml';
 import fs from 'fs';
 import path from 'path';
@@ -14,12 +14,12 @@ let coveredPageFeatures = 0;
 const coveredFeatures: string[] = [];
 const uncoveredFeatures: string[] = [];
 
-test.describe('get e2e test coverage', () => {
+teardown.describe('get e2e test coverage', () => {
     const feature_map = 'feature-map/feature-map.yml';
     const outputFile = 'playwright-report/e2e/coverage-report/coverage.json';
     const testReport = 'playwright-report/e2e/summary-report/results.json';
 
-    test('get coverage', { tag: ['@lite'] }, async () => {
+    teardown('get coverage', { tag: ['@lite'] }, async () => {
         const testResult = helpers.readJson(testReport);
         executed_tests = testResult.tests;
         getCoverage(feature_map, outputFile);

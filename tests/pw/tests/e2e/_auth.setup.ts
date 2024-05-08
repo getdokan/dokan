@@ -1,4 +1,4 @@
-import test, { test as setup, expect, request } from '@playwright/test';
+import { test as setup, expect, request } from '@playwright/test';
 import { LoginPage } from '@pages/loginPage';
 import { WpPage } from '@pages/wpPage';
 import { ApiUtils } from '@utils/apiUtils';
