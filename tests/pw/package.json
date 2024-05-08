@@ -4,8 +4,8 @@
     "description": "dokan e2e & api endpoints test automation using playwright",
     "main": "index.js",
     "scripts": {
-        "nip": "npm install --omit=dev",
         "nid": "npm install --include=dev",
+        "nip": "npm install --omit=dev",
         "pw:chrome-only": "playwright install chromium",
         "pw:browser-with-deps": "playwright install --with-deps chromium",
         "pw:deps-only": "playwright install-deps chromium",

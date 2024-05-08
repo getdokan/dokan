@@ -108,9 +108,13 @@ jobs:
             - name: Start WordPress Env
               id: wp-env
               if: success()
-              run: |
-                  cd tests/pw
-                  npm run start:env
+              uses: nick-fields/retry@v3
+              with:
+                  max_attempts: 2
+                  retry_on: error
+                  command: |
+                      cd tests/pw
+                      npm run start:env
 
             # Grab test db port
             - name: Get Test DB PORT
