@@ -13,14 +13,14 @@
             </div>
 
             <div class="dokan-settings-wrap" ref='settingsWrapper'>
-                <div class='flex xs:flex-col md:flex-row w-full'>
-                    <div class="nav-tab-wrapper xs:!pb-5 xs:!pt-5 xs:w-full md:w-[340px]">
-                        <div class='xs:flex justify-between md:hidden font-bold'>
+                <div class='flex d-xs:flex-col md:flex-row w-full'>
+                    <div class="nav-tab-wrapper d-xs:!pb-5 d-xs:!pt-5 d-xs:w-full md:w-[340px]">
+                        <div class='d-xs:flex justify-between md:hidden font-bold'>
                             <p class='font-bold'>{{ __( 'Settings', 'dokan' ) }}</p>
                             <label v-if="screenWidth < 753" for='dokan-setting-show'><i :class="showMenu || screenWidth >= 753 ? 'fas fa-chevron-down' : 'fas fa-chevron-up'"></i></label>
                             <input v-if="screenWidth < 753" class='!hidden' id='dokan-setting-show' checked :value='showMenu' @click='() => showMenu = !showMenu' type='checkbox'>
                         </div>
-                        <div class="nab-section md:block" :class="showMenu || screenWidth >= 753 ? 'xs:block' : 'xs:hidden'">
+                        <div class="nab-section md:block" :class="showMenu || screenWidth >= 753 ? 'd-xs:block' : 'd-xs:hidden'">
                             <div class="search-box">
                                 <label for="dokan-admin-search" class="dashicons dashicons-search"></label>
                                 <input type="text" id="dokan-admin-search" class="dokan-admin-search-settings"
@@ -46,7 +46,7 @@
                         </div>
                     </div>
 
-                    <div class="metabox-holder  xs:w-full">
+                    <div class="metabox-holder  d-xs:w-full">
                         <fieldset class="settings-header" v-for="section in settingSections" v-if="currentTab === section.id">
                             <div class="settings-content">
                                 <h2 class="settings-title font-bold">{{ section.settings_title }}</h2>

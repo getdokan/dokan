@@ -1,29 +1,8 @@
 <?php
 
-namespace WeDevs\Dokan\Commission\Utils;
+namespace WeDevs\Dokan\Commission\Model;
 
-class CommissionSettings {
-
-    /**
-     * Class constructor.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param string           $type
-     * @param int|float|string $flat
-     * @param int|float|string $percentage
-     * @param array            $category_commissions
-     * @param int|string       $category_id
-     * @param array           $meta_data
-     */
-    public function __construct( $type = '', $flat = '', $percentage = '', $category_commissions = [], $category_id = '', $meta_data = [] ) {
-        $this->set_type( $type );
-        $this->set_flat( $flat );
-        $this->set_percentage( $percentage );
-        $this->set_category_commissions( $category_commissions );
-        $this->set_category_id( $category_id );
-        $this->set_meta_data( $meta_data );
-    }
+class Setting {
 
     /**
      * Commission type.
@@ -32,7 +11,7 @@ class CommissionSettings {
      *
      * @var null|string
      */
-    private $type = null;
+    protected $type = null;
 
     /**
      * Flat commission amount
@@ -41,7 +20,7 @@ class CommissionSettings {
      *
      * @var string|float|int
      */
-    private $flat = '';
+    protected $flat = '';
 
     /**
      * Commissin percentage amount.
@@ -50,7 +29,7 @@ class CommissionSettings {
      *
      * @var string|int|float
      */
-    private $percentage = '';
+    protected $percentage = '';
 
     /**
      * The category id for which the commission will be applied.
@@ -58,7 +37,7 @@ class CommissionSettings {
      * @since DOKAN_SINCE
      * @var string|int
      */
-    private $category_id = '';
+    protected $category_id = '';
 
     /**
      * The category commission data.
@@ -67,7 +46,7 @@ class CommissionSettings {
      *
      * @var array
      */
-    private $category_commissions = [];
+    protected $category_commissions = [];
 
     /**
      * Applied commission meta data.
@@ -76,7 +55,7 @@ class CommissionSettings {
      *
      * @var array
      */
-    private $meta_data = [];
+    protected $meta_data = [];
 
     /**
      * Returns the commission meta data.
@@ -98,7 +77,7 @@ class CommissionSettings {
      *
      * @return $this
      */
-    public function set_meta_data( array $meta_data ): CommissionSettings {
+    public function set_meta_data( array $meta_data ): Setting {
         $this->meta_data = $meta_data;
 
         return $this;
@@ -113,7 +92,7 @@ class CommissionSettings {
      *
      * @return $this
      */
-    public function set_type( $type ): CommissionSettings {
+    public function set_type( $type ): Setting {
         $this->type = $type;
 
         return $this;
@@ -128,7 +107,7 @@ class CommissionSettings {
      *
      * @return $this
      */
-    public function set_flat( $flat ): CommissionSettings {
+    public function set_flat( $flat ): Setting {
         $this->flat = $flat;
 
         return $this;
@@ -143,7 +122,7 @@ class CommissionSettings {
      *
      * @return $this
      */
-    public function set_percentage( $percentage ): CommissionSettings {
+    public function set_percentage( $percentage ): Setting {
         $this->percentage = $percentage;
 
         return $this;
@@ -158,7 +137,7 @@ class CommissionSettings {
      *
      * @return $this
      */
-    public function set_category_id( $category_id ): CommissionSettings {
+    public function set_category_id( $category_id ): Setting {
         $this->category_id = $category_id;
 
         return $this;
@@ -173,7 +152,7 @@ class CommissionSettings {
      *
      * @return $this
      */
-    public function set_category_commissions( $category_commissions ): CommissionSettings {
+    public function set_category_commissions( $category_commissions ): Setting {
         $this->category_commissions = $category_commissions;
 
         return $this;

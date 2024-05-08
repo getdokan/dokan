@@ -2,16 +2,17 @@
 
 namespace WeDevs\Dokan\Test\Commission;
 
-use WeDevs\Dokan\Commission\Calculators\CategoryBasedCommissionCalculator;
-use WeDevs\Dokan\Commission\Calculators\CombineCommissionCalculator;
-use WeDevs\Dokan\Commission\Calculators\FixedCommissionCalculator;
-use WeDevs\Dokan\Commission\Calculators\FlatCommissionCalculator;
-use WeDevs\Dokan\Commission\Calculators\PercentageCommissionCalculator;
-use WeDevs\Dokan\Commission\CommissionContext;
-use WeDevs\Dokan\Commission\Strategies\GlobalCommissionSourceStrategy;
-use WeDevs\Dokan\Commission\Strategies\OrderItemCommissionSourceStrategy;
-use WeDevs\Dokan\Commission\Strategies\ProductCommissionSourceStrategy;
-use WeDevs\Dokan\Commission\Strategies\VendorCommissionSourceStrategy;
+use WeDevs\Dokan\Commission\Formula\CategoryBased;
+use WeDevs\Dokan\Commission\Formula\Combine;
+use WeDevs\Dokan\Commission\Formula\Fixed;
+use WeDevs\Dokan\Commission\Formula\Flat;
+use WeDevs\Dokan\Commission\Formula\Percentage;
+use WeDevs\Dokan\Commission\Context;
+use WeDevs\Dokan\Commission\Settings\Builder;
+use WeDevs\Dokan\Commission\Strategies\GlobalStrategy;
+use WeDevs\Dokan\Commission\Strategies\OrderItem;
+use WeDevs\Dokan\Commission\Strategies\Product;
+use WeDevs\Dokan\Commission\Strategies\Vendor;
 use WeDevs\Dokan\ProductCategory\Helper;
 use WeDevs\Dokan\Test\Helpers\WC_Helper_Order;
 use WeDevs\Dokan\Test\Helpers\WC_Helper_Product;
@@ -75,19 +76,19 @@ class CommissionTest extends WP_UnitTestCase {
         $productId   = 103;
         $vendorId    = 2;
         $category_id = 15;     // Example cat
+        $productPrice = 100.00; // Example product price
 
         $strategies = [
-            new OrderItemCommissionSourceStrategy( $orderItemId ),
-            new ProductCommissionSourceStrategy( $productId ),
-            new VendorCommissionSourceStrategy( $vendorId, $category_id ),
-            new GlobalCommissionSourceStrategy( $category_id ),
+            new OrderItem( $orderItemId ),
+            new Product( $productId, $productPrice ),
+            new Vendor( $vendorId, $category_id ),
+            new GlobalStrategy( $category_id ),
         ];
 
-        $context      = new CommissionContext( $strategies );
-        $productPrice = 100.00; // Example product price
+        $context      = new Context( $strategies );
         $commission   = $context->calculate_commission( $productPrice, 1 );
 
-        $this->assertTrue( is_a( $commission, 'WeDevs\Dokan\Commission\Utils\CommissionData' ) );
+        $this->assertTrue( is_a( $commission, 'WeDevs\Dokan\Commission\Model\Commission' ) );
         $this->assertIsArray( $commission->get_data() );
         $this->assertEquals( 'none', $commission->get_source() );
         $this->assertEquals( 0, $commission->get_per_item_admin_commission() );
@@ -238,8 +239,8 @@ class CommissionTest extends WP_UnitTestCase {
 
                 ],
                 [
-                    'strategy_source'           => ProductCommissionSourceStrategy::SOURCE,
-                    'calculator_source'         => FixedCommissionCalculator::SOURCE,
+                    'strategy_source'           => Product::SOURCE,
+                    'calculator_source'         => Fixed::SOURCE,
                     'is_applicable'             => true,
                     'admin_commission'          => 12.5,
                     'per_item_admin_commission' => 12.5,
@@ -276,7 +277,7 @@ class CommissionTest extends WP_UnitTestCase {
                     ],
                     'vendor_settings' => [
                         'percentage'           => 5,
-                        'type'                 => CategoryBasedCommissionCalculator::SOURCE,
+                        'type'                 => CategoryBased::SOURCE,
                         'flat'                 => 5,
                         'category_commissions' => [
                             "all"   => [
@@ -296,8 +297,8 @@ class CommissionTest extends WP_UnitTestCase {
                 ],
                 [
                     'is_applicable'             => true,
-                    'calculator_source'         => CategoryBasedCommissionCalculator::SOURCE,
-                    'strategy_source'           => VendorCommissionSourceStrategy::SOURCE,
+                    'calculator_source'         => CategoryBased::SOURCE,
+                    'strategy_source'           => Vendor::SOURCE,
                     'admin_commission'          => 35,
                     'per_item_admin_commission' => 15,
                     'vendor_earning'            => 265,
@@ -336,8 +337,8 @@ class CommissionTest extends WP_UnitTestCase {
                 ],
                 [
                     'is_applicable'             => true,
-                    'calculator_source'         => FixedCommissionCalculator::SOURCE,
-                    'strategy_source'           => GlobalCommissionSourceStrategy::SOURCE,
+                    'calculator_source'         => Fixed::SOURCE,
+                    'strategy_source'           => GlobalStrategy::SOURCE,
                     'admin_commission'          => 35,
                     'per_item_admin_commission' => 15,
                     'vendor_earning'            => 265,
@@ -352,7 +353,7 @@ class CommissionTest extends WP_UnitTestCase {
                         "tax_fee_recipient"                => "admin",
                         "shipping_tax_fee_recipient"       => "admin",
                         "new_seller_enable_selling"        => "on",
-                        "commission_type"                  => FlatCommissionCalculator::SOURCE,
+                        "commission_type"                  => Flat::SOURCE,
                         "admin_percentage"                 => "10",
                         "additional_fee"                   => "5",
                         "order_status_change"              => "on",
@@ -365,8 +366,8 @@ class CommissionTest extends WP_UnitTestCase {
                 ],
                 [
                     'is_applicable'             => true,
-                    'calculator_source'         => FlatCommissionCalculator::SOURCE,
-                    'strategy_source'           => GlobalCommissionSourceStrategy::SOURCE,
+                    'calculator_source'         => Flat::SOURCE,
+                    'strategy_source'           => GlobalStrategy::SOURCE,
                     'admin_commission'          => 5,
                     'per_item_admin_commission' => 5,
                     'vendor_earning'            => 295,
@@ -381,7 +382,7 @@ class CommissionTest extends WP_UnitTestCase {
                         "tax_fee_recipient"                => "admin",
                         "shipping_tax_fee_recipient"       => "admin",
                         "new_seller_enable_selling"        => "on",
-                        "commission_type"                  => FlatCommissionCalculator::SOURCE,
+                        "commission_type"                  => Flat::SOURCE,
                         "admin_percentage"                 => "10",
                         "additional_fee"                   => "5",
                         "order_status_change"              => "on",
@@ -390,7 +391,7 @@ class CommissionTest extends WP_UnitTestCase {
                     ],
                     'vendor_settings' => [
                         'percentage'           => 10,
-                        'type'                 => PercentageCommissionCalculator::SOURCE,
+                        'type'                 => Percentage::SOURCE,
                         'flat'                 => 5,
                     ],
                     'category_id'     => 'category_4',
@@ -398,8 +399,8 @@ class CommissionTest extends WP_UnitTestCase {
                 ],
                 [
                     'is_applicable'             => true,
-                    'calculator_source'         => PercentageCommissionCalculator::SOURCE,
-                    'strategy_source'           => VendorCommissionSourceStrategy::SOURCE,
+                    'calculator_source'         => Percentage::SOURCE,
+                    'strategy_source'           => Vendor::SOURCE,
                     'admin_commission'          => 30,
                     'per_item_admin_commission' => 30,
                     'vendor_earning'            => 270,
@@ -414,7 +415,7 @@ class CommissionTest extends WP_UnitTestCase {
                         "tax_fee_recipient"                => "admin",
                         "shipping_tax_fee_recipient"       => "admin",
                         "new_seller_enable_selling"        => "on",
-                        "commission_type"                  => FlatCommissionCalculator::SOURCE,
+                        "commission_type"                  => Flat::SOURCE,
                         "admin_percentage"                 => "10",
                         "additional_fee"                   => "5",
                         "order_status_change"              => "on",
@@ -423,7 +424,7 @@ class CommissionTest extends WP_UnitTestCase {
                     ],
                     'vendor_settings' => [
                         'percentage'           => 10,
-                        'type'                 => PercentageCommissionCalculator::SOURCE,
+                        'type'                 => Percentage::SOURCE,
                         'flat'                 => 5,
                     ],
                     'category_id'     => 'category_4',
@@ -431,8 +432,8 @@ class CommissionTest extends WP_UnitTestCase {
                 ],
                 [
                     'is_applicable'             => true,
-                    'calculator_source'         => PercentageCommissionCalculator::SOURCE,
-                    'strategy_source'           => VendorCommissionSourceStrategy::SOURCE,
+                    'calculator_source'         => Percentage::SOURCE,
+                    'strategy_source'           => Vendor::SOURCE,
                     'admin_commission'          => 30,
                     'per_item_admin_commission' => 30,
                     'vendor_earning'            => 270,
@@ -447,7 +448,7 @@ class CommissionTest extends WP_UnitTestCase {
                         "tax_fee_recipient"                => "admin",
                         "shipping_tax_fee_recipient"       => "admin",
                         "new_seller_enable_selling"        => "on",
-                        "commission_type"                  => CombineCommissionCalculator::SOURCE,
+                        "commission_type"                  => Combine::SOURCE,
                         "admin_percentage"                 => "10",
                         "additional_fee"                   => "5",
                         "order_status_change"              => "on",
@@ -460,8 +461,8 @@ class CommissionTest extends WP_UnitTestCase {
                 ],
                 [
                     'is_applicable'             => true,
-                    'calculator_source'         => CombineCommissionCalculator::SOURCE,
-                    'strategy_source'           => GlobalCommissionSourceStrategy::SOURCE,
+                    'calculator_source'         => Combine::SOURCE,
+                    'strategy_source'           => GlobalStrategy::SOURCE,
                     'admin_commission'          => 35,
                     'per_item_admin_commission' => 35,
                     'vendor_earning'            => 265,
@@ -472,7 +473,7 @@ class CommissionTest extends WP_UnitTestCase {
                     'data_set'        => 8,
                     'product_setting' => [
                         'percentage' => 5,
-                        'type'       => CombineCommissionCalculator::SOURCE,
+                        'type'       => Combine::SOURCE,
                         'flat'       => 5,
                     ],
                     'global_setting'  => [
@@ -480,7 +481,7 @@ class CommissionTest extends WP_UnitTestCase {
                         "tax_fee_recipient"                => "admin",
                         "shipping_tax_fee_recipient"       => "admin",
                         "new_seller_enable_selling"        => "on",
-                        "commission_type"                  => CombineCommissionCalculator::SOURCE,
+                        "commission_type"                  => Combine::SOURCE,
                         "admin_percentage"                 => "10",
                         "additional_fee"                   => "5",
                         "order_status_change"              => "on",
@@ -493,8 +494,8 @@ class CommissionTest extends WP_UnitTestCase {
                 ],
                 [
                     'is_applicable'             => true,
-                    'calculator_source'         => CombineCommissionCalculator::SOURCE,
-                    'strategy_source'           => ProductCommissionSourceStrategy::SOURCE,
+                    'calculator_source'         => Combine::SOURCE,
+                    'strategy_source'           => Product::SOURCE,
                     'admin_commission'          => 20,
                     'per_item_admin_commission' => 20,
                     'vendor_earning'            => 280,
@@ -505,7 +506,7 @@ class CommissionTest extends WP_UnitTestCase {
                     'data_set'        => 9,
                     'product_setting' => [
                         'percentage' => 5,
-                        'type'       => CombineCommissionCalculator::SOURCE,
+                        'type'       => Combine::SOURCE,
                         'flat'       => 5,
                     ],
                     'global_setting'  => [
@@ -513,7 +514,7 @@ class CommissionTest extends WP_UnitTestCase {
                         "tax_fee_recipient"                => "admin",
                         "shipping_tax_fee_recipient"       => "admin",
                         "new_seller_enable_selling"        => "on",
-                        "commission_type"                  => CombineCommissionCalculator::SOURCE,
+                        "commission_type"                  => Combine::SOURCE,
                         "admin_percentage"                 => "10",
                         "additional_fee"                   => "5",
                         "order_status_change"              => "on",
@@ -526,8 +527,8 @@ class CommissionTest extends WP_UnitTestCase {
                 ],
                 [
                     'is_applicable'             => true,
-                    'calculator_source'         => CombineCommissionCalculator::SOURCE,
-                    'strategy_source'           => ProductCommissionSourceStrategy::SOURCE,
+                    'calculator_source'         => Combine::SOURCE,
+                    'strategy_source'           => Product::SOURCE,
                     'admin_commission'          => 0,
                     'per_item_admin_commission' => 0,
                     'vendor_earning'            => 0,
@@ -566,8 +567,8 @@ class CommissionTest extends WP_UnitTestCase {
                 ],
                 [
                     'is_applicable'             => true,
-                    'calculator_source'         => FixedCommissionCalculator::SOURCE,
-                    'strategy_source'           => GlobalCommissionSourceStrategy::SOURCE,
+                    'calculator_source'         => Fixed::SOURCE,
+                    'strategy_source'           => GlobalStrategy::SOURCE,
                     'admin_commission'          => 0,
                     'per_item_admin_commission' => 0,
                     'vendor_earning'            => 0,
@@ -602,7 +603,7 @@ class CommissionTest extends WP_UnitTestCase {
                     ],
                     'vendor_settings' => [
                         'percentage'           => 5,
-                        'type'                 => CategoryBasedCommissionCalculator::SOURCE,
+                        'type'                 => CategoryBased::SOURCE,
                         'flat'                 => 5,
                         'category_commissions' => [
                             "all"   => [
@@ -622,8 +623,8 @@ class CommissionTest extends WP_UnitTestCase {
                 ],
                 [
                     'is_applicable'             => true,
-                    'calculator_source'         => CategoryBasedCommissionCalculator::SOURCE,
-                    'strategy_source'           => VendorCommissionSourceStrategy::SOURCE,
+                    'calculator_source'         => CategoryBased::SOURCE,
+                    'strategy_source'           => Vendor::SOURCE,
                     'admin_commission'          => 0,
                     'per_item_admin_commission' => 0,
                     'vendor_earning'            => 0,
@@ -662,8 +663,8 @@ class CommissionTest extends WP_UnitTestCase {
                 ],
                 [
                     'is_applicable'             => true,
-                    'calculator_source'         => FixedCommissionCalculator::SOURCE,
-                    'strategy_source'           => GlobalCommissionSourceStrategy::SOURCE,
+                    'calculator_source'         => Fixed::SOURCE,
+                    'strategy_source'           => GlobalStrategy::SOURCE,
                     'admin_commission'          => 0,
                     'per_item_admin_commission' => 0,
                     'vendor_earning'            => 0,
@@ -678,7 +679,7 @@ class CommissionTest extends WP_UnitTestCase {
                         "tax_fee_recipient"                => "admin",
                         "shipping_tax_fee_recipient"       => "admin",
                         "new_seller_enable_selling"        => "on",
-                        "commission_type"                  => FixedCommissionCalculator::SOURCE,
+                        "commission_type"                  => Fixed::SOURCE,
                         "admin_percentage"                 => "5",
                         "additional_fee"                   => "5",
                         "order_status_change"              => "on",
@@ -698,7 +699,7 @@ class CommissionTest extends WP_UnitTestCase {
                     ],
                     'vendor_settings' => [
                         'percentage'           => 5,
-                        'type'                 => CategoryBasedCommissionCalculator::SOURCE,
+                        'type'                 => CategoryBased::SOURCE,
                         'flat'                 => 5,
                         'category_commissions' => [
                             "all"   => [
@@ -718,8 +719,8 @@ class CommissionTest extends WP_UnitTestCase {
                 ],
                 [
                     'is_applicable'             => true,
-                    'calculator_source'         => CategoryBasedCommissionCalculator::SOURCE,
-                    'strategy_source'           => VendorCommissionSourceStrategy::SOURCE,
+                    'calculator_source'         => CategoryBased::SOURCE,
+                    'strategy_source'           => Vendor::SOURCE,
                     'admin_commission'          => 0,
                     'per_item_admin_commission' => 0,
                     'vendor_earning'            => 0,
@@ -754,7 +755,7 @@ class CommissionTest extends WP_UnitTestCase {
                     ],
                     'vendor_settings' => [
                         'percentage'           => 5,
-                        'type'                 => FlatCommissionCalculator::SOURCE,
+                        'type'                 => Flat::SOURCE,
                         'flat'                 => 5,
                         'category_commissions' => [
                             "all"   => [
@@ -774,8 +775,8 @@ class CommissionTest extends WP_UnitTestCase {
                 ],
                 [
                     'is_applicable'             => true,
-                    'calculator_source'         => FlatCommissionCalculator::SOURCE,
-                    'strategy_source'           => VendorCommissionSourceStrategy::SOURCE,
+                    'calculator_source'         => Flat::SOURCE,
+                    'strategy_source'           => Vendor::SOURCE,
                     'admin_commission'          => 0,
                     'per_item_admin_commission' => 0,
                     'vendor_earning'            => 0,
@@ -810,7 +811,7 @@ class CommissionTest extends WP_UnitTestCase {
                     ],
                     'vendor_settings' => [
                         'percentage'           => 5,
-                        'type'                 => PercentageCommissionCalculator::SOURCE,
+                        'type'                 => Percentage::SOURCE,
                         'flat'                 => 5,
                         'category_commissions' => [
                             "all"   => [
@@ -830,8 +831,8 @@ class CommissionTest extends WP_UnitTestCase {
                 ],
                 [
                     'is_applicable'             => true,
-                    'calculator_source'         => PercentageCommissionCalculator::SOURCE,
-                    'strategy_source'           => VendorCommissionSourceStrategy::SOURCE,
+                    'calculator_source'         => Percentage::SOURCE,
+                    'strategy_source'           => Vendor::SOURCE,
                     'admin_commission'          => 0,
                     'per_item_admin_commission' => 0,
                     'vendor_earning'            => 0,
@@ -1034,9 +1035,28 @@ class CommissionTest extends WP_UnitTestCase {
 
         $product = dokan()->product->get( $product->get_id() );
 
-        dokan()->product->save_commission_settings( $product->get_id(), $settings['product_setting'] );
-        $vendor->save_commission_settings( $settings['vendor_settings'] );
-        update_option( 'dokan_selling', $settings['global_setting'] );
+        // Saving settings...
+        $product_setting = Builder::build( Builder::TYPE_PRODUCT, $product->get_id() );
+        $vendor_setting  = Builder::build( Builder::TYPE_VENDOR, $vendor->get_id() );
+        $global_setting  = Builder::build( Builder::TYPE_GLOBAL, $chosen_cat );
+
+        $product_setting->save( [
+            'type'                 => isset( $settings[ 'product_setting' ]['type'] ) ? $settings[ 'product_setting' ]['type'] : '',
+            'percentage'           => isset( $settings[ 'product_setting' ]['percentage'] ) ? $settings[ 'product_setting' ]['percentage'] : '',
+            'flat'                 => isset( $settings[ 'product_setting' ]['flat'] ) ? $settings[ 'product_setting' ]['flat'] : '',
+        ] );
+        $vendor_setting->save( [
+            'type'                 => isset( $settings[ 'vendor_settings' ]['type'] ) ? $settings[ 'vendor_settings' ]['type'] : '',
+            'percentage'           => isset( $settings[ 'vendor_settings' ]['percentage'] ) ? $settings[ 'vendor_settings' ]['percentage'] : '',
+            'flat'                 => isset( $settings[ 'vendor_settings' ]['flat'] ) ? $settings[ 'vendor_settings' ]['flat'] : '',
+            'category_commissions' => isset( $settings[ 'vendor_settings' ]['category_commissions'] ) ? $settings[ 'vendor_settings' ]['category_commissions'] : '',
+        ] );
+        $global_setting->save( [
+            'type'                 => isset( $settings[ 'global_setting' ]['commission_type'] ) ? $settings[ 'global_setting' ]['commission_type'] : '',
+            'percentage'           => isset( $settings[ 'global_setting' ]['admin_percentage'] ) ? $settings[ 'global_setting' ]['admin_percentage'] : '',
+            'flat'                 => isset( $settings[ 'global_setting' ]['additional_fee'] ) ? $settings[ 'global_setting' ]['additional_fee'] : '',
+            'category_commissions' => isset( $settings[ 'global_setting' ]['commission_category_based_values'] ) ? $settings[ 'global_setting' ]['commission_category_based_values'] : '',
+        ] );
 
         dokan_override_product_author( $product, $vendor->get_id() );
 
@@ -1065,11 +1085,10 @@ class CommissionTest extends WP_UnitTestCase {
         $this->assertEquals( $expected['admin_commission'], $commission->get_admin_commission() );
         $this->assertEquals( $expected['vendor_earning'], $commission->get_vendor_earning() );
 
-
         // Resetting the settings
-        dokan()->product->save_commission_settings( $product->get_id(), '' );
-        $vendor->save_commission_settings( '' );
-        update_option( 'dokan_selling', [] );
+        $global_setting->save( [] );
+        $vendor_setting->save( [] );
+        $product_setting->save( [] );
 
         $saved_commission = dokan()->commission->get_commission(
             [
@@ -1082,14 +1101,13 @@ class CommissionTest extends WP_UnitTestCase {
             ],
         );
 
-        $this->assertEquals( OrderItemCommissionSourceStrategy::SOURCE, $saved_commission->get_source() );
+        $this->assertEquals( OrderItem::SOURCE, $saved_commission->get_source() );
         $this->assertEquals( $expected['calculator_source'], $saved_commission->get_type() );
         $this->assertEquals( $expected['admin_commission'], $saved_commission->get_admin_commission() );
         $this->assertEquals( $expected['vendor_earning'], $saved_commission->get_vendor_earning() );
 
         $this->assertEquals( $commission->get_admin_commission(), $saved_commission->get_admin_commission() );
         $this->assertEquals( $commission->get_vendor_earning(), $saved_commission->get_vendor_earning() );
-
 
         $saved_commission_cross_check = dokan()->commission->get_commission(
             [
@@ -1102,7 +1120,7 @@ class CommissionTest extends WP_UnitTestCase {
             ],
         );
 
-        $this->assertEquals( OrderItemCommissionSourceStrategy::SOURCE, $saved_commission_cross_check->get_source() );
+        $this->assertEquals( OrderItem::SOURCE, $saved_commission_cross_check->get_source() );
         $this->assertEquals( $expected['calculator_source'], $saved_commission_cross_check->get_type() );
         $this->assertEquals( $expected['admin_commission'], $saved_commission_cross_check->get_admin_commission() );
         $this->assertEquals( $expected['vendor_earning'], $saved_commission_cross_check->get_vendor_earning() );

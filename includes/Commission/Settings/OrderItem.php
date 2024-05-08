@@ -1,88 +1,23 @@
 <?php
 
-namespace WeDevs\Dokan\Commission\Strategies;
+namespace WeDevs\Dokan\Commission\Settings;
 
-use WeDevs\Dokan\Commission\Calculators\CategoryBasedCommissionCalculator;
-use WeDevs\Dokan\Commission\CommissionCalculatorFactory;
-use WeDevs\Dokan\Commission\Utils\CommissionSettings;
-use WeDevs\Dokan\Commission\Calculators\CommissionCalculatorInterface;
+use WeDevs\Dokan\Commission\Formula\CategoryBased;
+use WeDevs\Dokan\Commission\Model\Setting;
 
-/**
- * If an order has been purchased previously, calculate the earning with the previously stated commission rate.
- * It's important cause commission rate may get changed by admin during the order table `re-generation`.
- */
-class OrderItemCommissionSourceStrategy extends AbstractCommissionSourceStrategy {
+class OrderItem implements InterfaceSetting {
 
-    /**
-     * Order item commission strategy source.
-     *
-     * @since DOKAN_SINCE
-     */
-    const SOURCE = 'order_item';
 
-    /**
-     * Order item id.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @var mixed|string $order_item_id
-     */
-    private $order_item_id;
+    protected $order_item_id;
 
-    /**
-     * Total price amount.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @var int|mixed $product_price_to_calculate_commission
-     */
-    private $product_price_to_calculate_commission;
+    protected $product_price_to_calculate_commission;
 
-    /**
-     * Total order quantity.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @var int|mixed $total_order_item_quantity
-     */
-    private $total_order_item_quantity;
-
-    /**
-     * Class constructor.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param int|string $order_item_id
-     * @param int|float  $product_price_to_calculate_commission
-     * @param int        $total_order_item_quantity
-     *
-     * @return void
-     */
-    public function __construct( $order_item_id = '', $product_price_to_calculate_commission = 0, $total_order_item_quantity = 1 ) {
-        $this->order_item_id                         = $order_item_id;
-        $this->product_price_to_calculate_commission = $product_price_to_calculate_commission;
-        $this->total_order_item_quantity             = $total_order_item_quantity;
+    public function __construct( array $data ) {
+        $this->order_item_id = $data['id'];
+        $this->product_price_to_calculate_commission = $data['price'];
     }
 
-    /**
-     * Returns order item strategy source.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return string
-     */
-    public function get_source(): string {
-        return self::SOURCE;
-    }
-
-    /**
-     * Returns order item commission settings.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @return \WeDevs\Dokan\Commission\Utils\CommissionSettings
-     */
-    public function get_settings(): CommissionSettings {
+    public function get(): Setting {
         $commission_percentage = '';
         $commission_type       = '';
         $additional_flat       = '';
@@ -115,13 +50,13 @@ class OrderItemCommissionSourceStrategy extends AbstractCommissionSourceStrategy
             $additional_flat = ( $additional_flat / $item_total ) * $product_price;
         }
 
-        $settings = new CommissionSettings();
+        $settings = new Setting();
         $settings->set_type( $commission_type )
                 ->set_flat( $additional_flat )
                 ->set_percentage( $commission_percentage )
                 ->set_meta_data( $commission_meta );
 
-        if ( $commission_type === CategoryBasedCommissionCalculator::SOURCE && isset( $commission_meta['parameters']['category_id'] ) ) {
+        if ( $commission_type === CategoryBased::SOURCE && isset( $commission_meta['parameters']['category_id'] ) ) {
             $settings->set_category_id( $commission_meta['parameters']['category_id'] );
             $settings->set_category_commissions(
                 [
@@ -149,26 +84,17 @@ class OrderItemCommissionSourceStrategy extends AbstractCommissionSourceStrategy
         return $settings;
     }
 
-    /**
-     * Save order item commission meta data.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @param string    $type
-     * @param int|float $percentage
-     * @param int|float $flat
-     * @param array     $meta_data
-     *
-     * @return void
-     */
-    public function save_line_item_commission_to_meta( $type, $percentage, $flat, $meta_data ) {
-        if ( empty( $this->order_item_id ) ) {
-            return;
-        }
+    public function save( array $setting ): Setting {
+        $percentage           = isset( $setting['percentage'] ) ? $setting['percentage'] : '';
+        $type                 = isset( $setting['type'] ) ? $setting['type'] : '';
+        $flat                 = isset( $setting['flat'] ) ? $setting['flat'] : '';
+        $meta_data            = isset( $setting['meta_data'] ) ? $setting['meta_data'] : [];
 
         wc_add_order_item_meta( $this->order_item_id, '_dokan_commission_type', $type );
         wc_add_order_item_meta( $this->order_item_id, '_dokan_commission_rate', $percentage );
         wc_add_order_item_meta( $this->order_item_id, '_dokan_additional_fee', $flat );
         wc_add_order_item_meta( $this->order_item_id, 'dokan_commission_meta', $meta_data );
+
+        return $this->get();
     }
 }

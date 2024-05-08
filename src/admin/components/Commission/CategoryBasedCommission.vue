@@ -1,6 +1,6 @@
 <template>
     <div class='relative'>
-        <div class='xs:hidden md:flex bg-gray-100 min-h-[3rem] text-gray-500 border-[0.957434px] border-b-0 items-center'>
+        <div class='d-xs:hidden md:flex bg-gray-100 min-h-[3rem] text-gray-500 border-[0.957434px] border-b-0 items-center'>
             <div class='w-1/2 pl-3 flex h-[3rem] items-center border-r-[0.957434px]'>
                 <p class='text-xs'>{{ __( 'Catgory', 'dokan' ) }}</p>
             </div>
@@ -15,13 +15,13 @@
             </div>
         </div>
 
-        <div class='flex flex-col max-h-[500px] overflow-y-auto border-[1px] xs:text-[8px] sm:text-[14px] border-[#e9e9ea] border-solid' :class="! allCategroyEnabled ? 'border-b-[1px]': 'border-b-0'">
+        <div class='flex flex-col max-h-[500px] overflow-y-auto border-[1px] d-xs:text-[8px] sm:text-[14px] border-[#e9e9ea] border-solid' :class="! allCategroyEnabled ? 'border-b-[1px]': 'border-b-0'">
             <div class='flex flex-row'>
                 <div class='flex flex-row w-1/2 items-center min-h-[3rem] border-0 border-r-[1px] border-b-[1px] border-[#e9e9ea] border-solid pl-[5px]'>
-                    <button type='button' class='p-1 xs:pl-1 md:pl-4 bg-transparent bg-co border-none cursor-pointer' @click='()=>allCategroyEnabled = !allCategroyEnabled'>
+                    <button type='button' class='p-1 d-xs:pl-1 md:pl-4 bg-transparent bg-co border-none cursor-pointer' @click='()=>allCategroyEnabled = !allCategroyEnabled'>
                         <i class="far" :class='! allCategroyEnabled ? "fa-minus-square text-black" : "fa-plus-square text-[#F05025]"'></i>
                     </button>
-                    <p class='xs:text-[8px] sm:text-[14px] !m-0'>{{__( 'All Categories', 'dokan' )}}</p>
+                    <p class='d-xs:text-[8px] sm:text-[14px] !m-0'>{{__( 'All Categories', 'dokan' )}}</p>
                 </div>
 
                 <div class='flex flex-row w-1/2 border-0 border-b-[1px] border-[#e9e9ea] border-solid'>
@@ -35,16 +35,16 @@
                                 :value="commission.all.percentage"
                                 v-on:input="e => handleAllCategoryInput(e.target.value, 'percentage' )"
                             />
-                            <div class='h-full xs:border-l-0 xs:border-r-0 md:border-l-[1px] md:border-r-[1px] flex justify-center items-center xs:!bg-transparent md:!bg-gray-100'><span class='xs:pl-1 xs:pr-1 md:pl-2 md:pr-2'>{{ '%' }}</span></div>
+                            <div class='h-full d-xs:border-l-0 d-xs:border-r-0 md:border-l-[1px] md:border-r-[1px] flex justify-center items-center d-xs:!bg-transparent md:!bg-gray-100'><span class='d-xs:pl-1 d-xs:pr-1 md:pl-2 md:pr-2'>{{ '%' }}</span></div>
                         </div>
-                    <div class='h-full border-l-[1px] border-r-[1px] md:border-0 xs:bg-gray-100 md:bg-transparent  flex justify-center items-center'>
-                            <span class='xs:p-1 md:p-2'>{{ '+' }}</span>
+                    <div class='h-full border-l-[1px] border-r-[1px] md:border-0 d-xs:bg-gray-100 md:bg-transparent  flex justify-center items-center'>
+                            <span class='d-xs:p-1 md:p-2'>{{ '+' }}</span>
                         </div>
                     <div class='w-1/2 flex justify-start items-center box-border'>
-                            <div class='h-full xs:border-r-0 xs:border-l-0 md:border-r-[1px] md:border-l-[1px] flex justify-center items-center xs:!bg-transparent md:!bg-gray-100'><span class='xs:pl-1 xs:pr-1 md:pl-2 md:pr-2'>{{ getCurrencySymbol }}</span></div>
+                            <div class='h-full d-xs:border-r-0 d-xs:border-l-0 md:border-r-[1px] md:border-l-[1px] flex justify-center items-center d-xs:!bg-transparent md:!bg-gray-100'><span class='d-xs:pl-1 d-xs:pr-1 md:pl-2 md:pr-2'>{{ getCurrencySymbol }}</span></div>
                             <input
                                 type="text"
-                                class="wc_input_price !min-h-full focus:!border-none focus:!shadow-none !border-0 !w-[100%] xs:!pl-0 xs:!pr-[5px] xs:text-right md:text-left md:!pl-[5px] !pr-0 !pt-0 !pb-0"
+                                class="wc_input_price !min-h-full focus:!border-none focus:!shadow-none !border-0 !w-[100%] d-xs:!pl-0 d-xs:!pr-[5px] d-xs:text-right md:text-left md:!pl-[5px] !pr-0 !pt-0 !pb-0"
                                 id="fixed_commission"
                                 name="fixed_commission"
                                 ref='fixed'
@@ -57,13 +57,13 @@
 
             <div v-if='! allCategroyEnabled' class='flex flex-row border-0 border-b-[1px] last:border-b-0 border-[#e9e9ea] border-solid' :class='showCatRow(item) ? "flex" : "hidden"' v-for='(item, index) in renderCategories' :key='item.term_id'>
                 <div class='w-1/2 flex flex-row items-center min-h-[3rem] border-0 border-r-[1px] border-[#e9e9ea] border-solid pl-[5px]' :title='item.name'>
-                    <div class='xs:flex h-1/2'>
-                        <span v-for='parent_id in item.parents' :key='parent_id' class='xs:bg-[#e5e7eb] md:bg-transparent block h-full w-[1px] xs:ml-1'></span>
+                    <div class='d-xs:flex h-1/2'>
+                        <span v-for='parent_id in item.parents' :key='parent_id' class='d-xs:bg-[#e5e7eb] md:bg-transparent block h-full w-[1px] d-xs:ml-1'></span>
                     </div>
-                    <button type='button' class='p-1 xs:pl-1 md:pl-6 bg-transparent border-none cursor-pointer' :disabled='!item.children.length' :class='!item.children.length ? "disabled:cursor-not-allowed text-gray-300" : "cursor-pointer text-[#F05025]"' @click='()=> catRowClick( item, index )'>
+                    <button type='button' class='p-1 d-xs:pl-1 md:pl-6 bg-transparent border-none cursor-pointer' :disabled='!item.children.length' :class='!item.children.length ? "disabled:cursor-not-allowed text-gray-300" : "cursor-pointer text-[#F05025]"' @click='()=> catRowClick( item, index )'>
                         <i class="far" :class='openRows.includes( Number( item.term_id ) ) ? "fa-minus-square text-black" : "fa-plus-square"'></i>
                     </button>
-                    <p class='xs:text-[8px] sm:text-[14px] text-black !m-0' v-html="`${item.name} (${item.term_id})`"></p>
+                    <p class='d-xs:text-[8px] sm:text-[14px] text-black !m-0' v-html="`${item.name} (${item.term_id})`"></p>
                 </div>
 
                 <div class='w-1/2 flex min-h-[3rem] border-0 border-solid border-[#e9e9ea]'>
@@ -77,16 +77,16 @@
                             :value="getCommissionValue( 'percentage', item.term_id )"
                             v-on:input="e => commissinItemHandler( e.target.value, 'percentage', item.term_id )"
                         />
-                        <div class='h-full xs:border-l-0 xs:border-r-0 md:border-l-[1px] md:border-r-[1px] flex justify-center items-center xs:!bg-transparent md:!bg-gray-100'><span class='xs:pl-1 xs:pr-1 md:pl-2 md:pr-2'>{{ '%' }}</span></div>
+                        <div class='h-full d-xs:border-l-0 d-xs:border-r-0 md:border-l-[1px] md:border-r-[1px] flex justify-center items-center d-xs:!bg-transparent md:!bg-gray-100'><span class='d-xs:pl-1 d-xs:pr-1 md:pl-2 md:pr-2'>{{ '%' }}</span></div>
                     </div>
-                    <div class='h-full border-l-[1px] border-r-[1px] md:border-0 xs:bg-gray-100 md:bg-transparent  flex justify-center items-center'>
-                        <span class='xs:p-1 md:p-2'>{{ '+' }}</span>
+                    <div class='h-full border-l-[1px] border-r-[1px] md:border-0 d-xs:bg-gray-100 md:bg-transparent  flex justify-center items-center'>
+                        <span class='d-xs:p-1 md:p-2'>{{ '+' }}</span>
                     </div>
                     <div class='w-1/2 flex justify-start items-center box-border'>
-                        <div class='h-full xs:border-r-0 xs:border-l-0 md:border-r-[1px] md:border-l-[1px] flex justify-center items-center xs:!bg-transparent md:!bg-gray-100'><span class='xs:pl-1 xs:pr-1 md:pl-2 md:pr-2'>{{ getCurrencySymbol }}</span></div>
+                        <div class='h-full d-xs:border-r-0 d-xs:border-l-0 md:border-r-[1px] md:border-l-[1px] flex justify-center items-center d-xs:!bg-transparent md:!bg-gray-100'><span class='d-xs:pl-1 d-xs:pr-1 md:pl-2 md:pr-2'>{{ getCurrencySymbol }}</span></div>
                         <input
                             type="text"
-                            class="wc_input_price !min-h-full focus:!border-none focus:!shadow-none !border-0 xs:!pl-0 xs:!pr-[5px] xs:text-right md:text-left md:!pl-[5px] !pr-0 !pt-0 !pb-0 !w-[100%]"
+                            class="wc_input_price !min-h-full focus:!border-none focus:!shadow-none !border-0 d-xs:!pl-0 d-xs:!pr-[5px] d-xs:text-right md:text-left md:!pl-[5px] !pr-0 !pt-0 !pb-0 !w-[100%]"
                             id="fixed_commission"
                             name="fixed_commission"
                             ref='flat'

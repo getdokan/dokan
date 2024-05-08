@@ -551,8 +551,8 @@ class Settings {
 
         $selling_option_fees = apply_filters(
             'dokan_settings_selling_option_fees', [
-                'ree-recipients' => [
-                    'name'        => 'ree-recipients',
+                'fee-recipients' => [
+                    'name'        => 'fee-recipients',
                     'label'       => __( 'Fee Recipients', 'dokan-lite' ),
                     'type'        => 'sub_section',
                     'description' => __( 'Define the fees that admin or vendor will recive', 'dokan-lite' ),

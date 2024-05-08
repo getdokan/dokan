@@ -49,17 +49,19 @@
         },
 
         created() {
-            let $ = window.jQuery;
+            let element = document.getElementById( 'dokan-setup-wizard-commission-data' );
 
-            if ( $('#dokan-setup-wizard-commission-data').data('commission') ) {
-                let commission = $('#dokan-setup-wizard-commission-data').data('commission');
-
-                this.commissionTypes = commission.dokanCommission;
-                this.fixedCommission.fixed = commission.additional_fee ? Number( commission.additional_fee ) : 0;
-                this.fixedCommission.percentage = commission.admin_percentage ? Number( commission.admin_percentage ) : 0;
-                this.selectedCommission = commission.commission_type ? String(commission.commission_type) : 'fixed';
-                this.commission = commission.commission_category_based_values;
+            if ( ! element || ! element.dataset || ! element.dataset.commission ) {
+                return;
             }
+
+            let commission = JSON.parse( element.dataset.commission );
+
+            this.commissionTypes = commission.dokanCommission;
+            this.fixedCommission.fixed = commission.additional_fee ? Number( commission.additional_fee ) : 0;
+            this.fixedCommission.percentage = commission.admin_percentage ? Number( commission.admin_percentage ) : 0;
+            this.selectedCommission = commission.commission_type ? String(commission.commission_type) : 'fixed';
+            this.commission = commission.commission_category_based_values;
         },
 
         methods: {

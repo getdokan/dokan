@@ -2,9 +2,10 @@
 
 namespace WeDevs\Dokan\Commission\Strategies;
 
-use WeDevs\Dokan\Commission\Utils\CommissionSettings;
+use WeDevs\Dokan\Commission\Model\Setting;
+use WeDevs\Dokan\Commission\Settings\Builder;
 
-class ProductCommissionSourceStrategy extends AbstractCommissionSourceStrategy {
+class Product extends AbstractStrategy {
 
     /**
      * Product id
@@ -13,7 +14,7 @@ class ProductCommissionSourceStrategy extends AbstractCommissionSourceStrategy {
      *
      * @var int
      */
-    private $product_id;
+    protected $product_id;
 
     /**
      * Product strategy source
@@ -49,11 +50,11 @@ class ProductCommissionSourceStrategy extends AbstractCommissionSourceStrategy {
      *
      * @since DOKAN_SINCE
      *
-     * @return \WeDevs\Dokan\Commission\Utils\CommissionSettings
+     * @return \WeDevs\Dokan\Commission\Model\Setting
      */
-    public function get_settings(): CommissionSettings {
-        $settings = dokan()->product->get_commission_settings( $this->product_id );
+    public function get_settings(): Setting {
+        $settings = Builder::build( Builder::TYPE_PRODUCT, $this->product_id );
 
-        return $settings;
+        return $settings->get();
     }
 }

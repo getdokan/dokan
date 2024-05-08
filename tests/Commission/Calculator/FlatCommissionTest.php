@@ -2,8 +2,8 @@
 
 namespace WeDevs\Dokan\Test\Commission\Calculator;
 
-use WeDevs\Dokan\Commission\Calculators\FlatCommissionCalculator;
-use WeDevs\Dokan\Commission\Utils\CommissionSettings;
+use WeDevs\Dokan\Commission\Formula\Flat;
+use WeDevs\Dokan\Commission\Model\Setting;
 use WP_UnitTestCase;
 
 class FlatCommissionTest extends WP_UnitTestCase {
@@ -18,7 +18,7 @@ class FlatCommissionTest extends WP_UnitTestCase {
      * @return void
      */
     public function test_that_the_mandatory_methods_exists_in_the_class() {
-        $class = 'WeDevs\Dokan\Commission\Calculators\FlatCommissionCalculator';
+        $class = 'WeDevs\Dokan\Commission\Formula\Flat';
 
         $this->assertTrue( method_exists( $class, 'calculate' ) );
         $this->assertTrue( method_exists( $class, 'get_admin_commission' ) );
@@ -40,8 +40,8 @@ class FlatCommissionTest extends WP_UnitTestCase {
      * @return void
      */
     public function test_that_commission_is_not_applicable_for_empty_settings() {
-        $settings        = new CommissionSettings();
-        $flat_commission = new FlatCommissionCalculator( $settings );
+        $settings        = new Setting();
+        $flat_commission = new Flat( $settings );
 
         $this->assertFalse( $flat_commission->is_applicable() );
     }
@@ -154,12 +154,12 @@ class FlatCommissionTest extends WP_UnitTestCase {
      * @return void
      */
     public function test_flat_commission_functionality_works_properly_for_different_settings( $settings_data, $expected ) {
-        $settings = new CommissionSettings();
+        $settings = new Setting();
 
         $settings->set_type( $settings_data['type'] )
                  ->set_flat( $settings_data['flat'] );
 
-        $flat_commission = new FlatCommissionCalculator( $settings );
+        $flat_commission = new Flat( $settings );
 
         $this->assertEquals( $expected['is_applicable'], $flat_commission->is_applicable() );
 

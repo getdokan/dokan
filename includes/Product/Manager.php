@@ -5,9 +5,9 @@ namespace WeDevs\Dokan\Product;
 use WC_Product;
 use WC_Product_Download;
 use WeDevs\Dokan\Cache;
-use WeDevs\Dokan\Commission\Utils\CommissionSettings;
-use WP_Query;
+use WeDevs\Dokan\Commission\Model\Setting;
 use WP_Error;
+use WP_Query;
 
 /**
  * Product manager Class
@@ -743,7 +743,7 @@ class Manager {
      *
      * @since DOKAN_SINCE
      *
-     * @return \WeDevs\Dokan\Commission\Utils\CommissionSettings
+     * @return \WeDevs\Dokan\Commission\Model\Setting
      */
     public function get_commission_settings( $product_id = 0 ) {
         $product = $this->get( dokan()->product->validate_product_id( $product_id ) );
@@ -758,7 +758,7 @@ class Manager {
             $additional_flat       = $product->get_meta( '_per_product_admin_additional_fee', true );
         }
 
-        $settings = new CommissionSettings();
+        $settings = new Setting();
         $settings->set_type( $commission_type )
                 ->set_flat( $additional_flat )
                 ->set_percentage( $commission_percentage );
@@ -771,7 +771,7 @@ class Manager {
      *
      * @since DOKAN_SINCE
      *
-     * @return \WeDevs\Dokan\Commission\Utils\CommissionSettings
+     * @return \WeDevs\Dokan\Commission\Model\Setting
      */
     public function save_commission_settings( $product_id, $commission ) {
         $product = $this->get( $product_id );
@@ -789,7 +789,7 @@ class Manager {
             $product->save();
         }
 
-        $settings = new CommissionSettings();
+        $settings = new Setting();
         $settings->set_type( $commission_type )
                 ->set_flat( $additional_flat )
                 ->set_percentage( $commission_percentage );

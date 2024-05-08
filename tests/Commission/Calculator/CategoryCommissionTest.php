@@ -2,8 +2,8 @@
 
 namespace WeDevs\Dokan\Test\Commission\Calculator;
 
-use WeDevs\Dokan\Commission\Calculators\CategoryBasedCommissionCalculator;
-use WeDevs\Dokan\Commission\Utils\CommissionSettings;
+use WeDevs\Dokan\Commission\Formula\CategoryBased;
+use WeDevs\Dokan\Commission\Model\Setting;
 use WP_UnitTestCase;
 
 class CategoryCommissionTest extends WP_UnitTestCase {
@@ -18,7 +18,7 @@ class CategoryCommissionTest extends WP_UnitTestCase {
      * @return void
      */
     public function test_that_the_mandatory_methods_exists_in_the_class() {
-        $class = 'WeDevs\Dokan\Commission\Calculators\CategoryBasedCommissionCalculator';
+        $class = 'WeDevs\Dokan\Commission\Formula\CategoryBased';
 
         $this->assertTrue( method_exists( $class, 'calculate' ) );
         $this->assertTrue( method_exists( $class, 'get_admin_commission' ) );
@@ -40,8 +40,8 @@ class CategoryCommissionTest extends WP_UnitTestCase {
      * @return void
      */
     public function test_that_commission_is_not_applicable_for_empty_settings() {
-        $settings            = new CommissionSettings();
-        $category_commission = new CategoryBasedCommissionCalculator( $settings );
+        $settings            = new Setting();
+        $category_commission = new CategoryBased( $settings );
 
         $this->assertFalse( $category_commission->is_applicable() );
     }
@@ -243,7 +243,7 @@ class CategoryCommissionTest extends WP_UnitTestCase {
      * @return void
      */
     public function test_category_commission_functionality_works_properly_for_different_settings( $settings_data, $expected ) {
-        $settings = new CommissionSettings();
+        $settings = new Setting();
 
         $settings->set_type( $settings_data['type'] )
                  ->set_flat( $settings_data['flat'] )
@@ -251,7 +251,7 @@ class CategoryCommissionTest extends WP_UnitTestCase {
                  ->set_category_id( $settings_data['category_id'] )
                  ->set_category_commissions( $settings_data['cat_commission'] );
 
-        $category_commission = new CategoryBasedCommissionCalculator( $settings );
+        $category_commission = new CategoryBased( $settings );
 
         $this->assertEquals( $expected['is_applicable'], $category_commission->is_applicable() );
 

@@ -2,9 +2,9 @@
 
 namespace WeDevs\Dokan\Test\Commission;
 
-use WeDevs\Dokan\Commission\Calculators\FixedCommissionCalculator;
-use WeDevs\Dokan\Commission\Strategies\GlobalCommissionSourceStrategy;
-use WeDevs\Dokan\Commission\Utils\CommissionData;
+use WeDevs\Dokan\Commission\Formula\Fixed;
+use WeDevs\Dokan\Commission\Strategies\GlobalStrategy;
+use WeDevs\Dokan\Commission\Model\Commission;
 use WP_UnitTestCase;
 
 class CommissionDataTest extends WP_UnitTestCase {
@@ -19,7 +19,7 @@ class CommissionDataTest extends WP_UnitTestCase {
      * @return void
      */
     public function test_that_commission_data_class_has_all_the_required_methods() {
-        $data = new CommissionData();
+        $data = new Commission();
 
         $this->assertTrue( method_exists( $data, 'get_source' ) );
         $this->assertTrue( method_exists( $data, 'set_source' ) );
@@ -50,7 +50,7 @@ class CommissionDataTest extends WP_UnitTestCase {
      * @return void
      */
     public function test_that_we_can_set_and_get_commission_data() {
-        $data = new CommissionData();
+        $data = new Commission();
 
         $this->assertEquals( 'none', $data->get_source() );
         $this->assertEquals( 0, $data->get_per_item_admin_commission() );
@@ -74,33 +74,33 @@ class CommissionDataTest extends WP_UnitTestCase {
             $data->get_data()
         );
 
-        $data->set_type( FixedCommissionCalculator::SOURCE )
+        $data->set_type( Fixed::SOURCE )
             ->set_admin_commission( 10 )
             ->set_vendor_earning( 100 )
             ->set_per_item_admin_commission( 10 )
             ->set_parameters( [ 'flat' => 10, 'percentage' => 0 ] )
             ->set_total_amount( 100 )
             ->set_total_quantity(1)
-            ->set_source( GlobalCommissionSourceStrategy::SOURCE );
+            ->set_source( GlobalStrategy::SOURCE );
 
 
-        $this->assertEquals( GlobalCommissionSourceStrategy::SOURCE, $data->get_source() );
+        $this->assertEquals( GlobalStrategy::SOURCE, $data->get_source() );
         $this->assertEquals( 10, $data->get_per_item_admin_commission() );
         $this->assertEquals( 10, $data->get_admin_commission() );
         $this->assertEquals( 100, $data->get_vendor_earning() );
         $this->assertEquals( 1, $data->get_total_quantity() );
         $this->assertEquals( 100, $data->get_total_amount() );
-        $this->assertEquals( FixedCommissionCalculator::SOURCE, $data->get_type() );
+        $this->assertEquals( Fixed::SOURCE, $data->get_type() );
         $this->assertEquals( [ 'flat' => 10, 'percentage' => 0 ], $data->get_parameters() );
         $this->assertEquals(
             [
-                'source'                    => GlobalCommissionSourceStrategy::SOURCE,
+                'source'                    => GlobalStrategy::SOURCE,
                 'per_item_admin_commission' => 10,
                 'admin_commission'          => 10,
                 'vendor_earning'            => 100,
                 'total_quantity'            => 1,
                 'total_amount'              => '100',
-                'type'                      => FixedCommissionCalculator::SOURCE,
+                'type'                      => Fixed::SOURCE,
                 'parameters'                => [ 'flat' => 10, 'percentage' => 0 ],
             ],
             $data->get_data()

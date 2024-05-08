@@ -3,7 +3,7 @@
 namespace WeDevs\Dokan\Upgrade\Upgrades;
 
 use WeDevs\Dokan\Abstracts\DokanUpgrader;
-use WeDevs\Dokan\Commission\Calculators\FixedCommissionCalculator;
+use WeDevs\Dokan\Commission\Formula\Fixed;
 use WeDevs\Dokan\Upgrade\Upgrades\BackgroundProcesses\V_4_0_0_UpdateCommissions;
 
 class V_4_0_0 extends DokanUpgrader {
@@ -17,10 +17,10 @@ class V_4_0_0 extends DokanUpgrader {
      */
     public static function update_global_commission_type() {
         $options         = get_option( 'dokan_selling', [] );
-        $commission_type = isset( $options['commission_type'] ) ? $options['commission_type'] : FixedCommissionCalculator::SOURCE;
+        $commission_type = isset( $options['commission_type'] ) ? $options['commission_type'] : Fixed::SOURCE;
 
         if ( in_array( $commission_type, array_keys( dokan()->commission->get_legacy_commission_types() ), true ) ) {
-            $options['commission_type'] = FixedCommissionCalculator::SOURCE;
+            $options['commission_type'] = Fixed::SOURCE;
             update_option( 'dokan_selling', $options );
         }
     }

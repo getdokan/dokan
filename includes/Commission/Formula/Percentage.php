@@ -1,10 +1,10 @@
 <?php
 
-namespace WeDevs\Dokan\Commission\Calculators;
+namespace WeDevs\Dokan\Commission\Formula;
 
-use WeDevs\Dokan\Commission\Utils\CommissionSettings;
+use WeDevs\Dokan\Commission\Model\Setting;
 
-class PercentageCommissionCalculator implements CommissionCalculatorInterface {
+class Percentage extends AbstractFormula {
 
     /**
      * Commission type source.
@@ -20,7 +20,7 @@ class PercentageCommissionCalculator implements CommissionCalculatorInterface {
      *
      * @since DOKAN_SINCE
      */
-    private $admin_commission = 0;
+    protected $admin_commission = 0;
 
     /**
      * Per item admin commission amount.
@@ -29,7 +29,7 @@ class PercentageCommissionCalculator implements CommissionCalculatorInterface {
      *
      * @var int|float $per_item_admin_commission
      */
-    private $per_item_admin_commission = 0;
+    protected $per_item_admin_commission = 0;
 
     /**
      * Total vendor earning amount.
@@ -38,7 +38,7 @@ class PercentageCommissionCalculator implements CommissionCalculatorInterface {
      *
      * @var int|float $vendor_earning
      */
-    private $vendor_earning = 0;
+    protected $vendor_earning = 0;
 
     /**
      * Total items quantity, on it the commission will be calculated.
@@ -47,19 +47,10 @@ class PercentageCommissionCalculator implements CommissionCalculatorInterface {
      *
      * @var int $items_total_quantity
      */
-    private $items_total_quantity = 1;
+    protected $items_total_quantity = 1;
 
-    /**
-     * Commission setting.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @var \WeDevs\Dokan\Commission\Utils\CommissionSettings $settings
-     */
-    private CommissionSettings $settings;
-
-    public function __construct( CommissionSettings $settings ) {
-        $this->settings = $settings;
+    public function __construct( Setting $settings ) {
+        $this->set_settings( $settings );
     }
 
     /**
@@ -67,15 +58,15 @@ class PercentageCommissionCalculator implements CommissionCalculatorInterface {
      *
      * @since DOKAN_SINCE
      *
-     * @param \WeDevs\Dokan\Commission\Utils\CommissionSettings $settings
+     * @param \WeDevs\Dokan\Commission\Model\Setting $settings
      */
     public function calculate( $total_amount, $total_quantity = 1 ) {
-        $this->admin_commission          = ( $total_amount * dokan()->commission->validate_rate( $this->settings->get_percentage() ) ) / 100;
+        $this->admin_commission          = ( $total_amount * dokan()->commission->validate_rate( $this->get_settings()->get_percentage() ) ) / 100;
         $this->per_item_admin_commission = $this->admin_commission / $total_quantity;
         $this->vendor_earning            = $total_amount - $this->admin_commission;
 
         // Admin will get 100 percent if commission rate > 100
-        if ( $this->settings->get_percentage() > 100 ) {
+        if ( $this->get_settings()->get_percentage() > 100 ) {
             $this->admin_commission = $total_amount;
             $this->vendor_earning   = 0;
         }
@@ -92,8 +83,8 @@ class PercentageCommissionCalculator implements CommissionCalculatorInterface {
      */
     public function get_parameters(): array {
         return [
-            'percentage' => $this->settings->get_percentage(),
-            'meta_data'  => $this->settings->get_meta_data(),
+            'percentage' => $this->get_settings()->get_percentage(),
+            'meta_data'  => $this->get_settings()->get_meta_data(),
         ];
     }
 
@@ -116,7 +107,7 @@ class PercentageCommissionCalculator implements CommissionCalculatorInterface {
      * @return bool
      */
     public function is_applicable(): bool {
-        return is_numeric( $this->settings->get_percentage() );
+        return is_numeric( $this->get_settings()->get_percentage() );
     }
 
     /**

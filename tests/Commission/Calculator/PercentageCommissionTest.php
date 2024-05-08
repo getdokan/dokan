@@ -2,8 +2,8 @@
 
 namespace WeDevs\Dokan\Test\Commission\Calculator;
 
-use WeDevs\Dokan\Commission\Calculators\PercentageCommissionCalculator;
-use WeDevs\Dokan\Commission\Utils\CommissionSettings;
+use WeDevs\Dokan\Commission\Formula\Percentage;
+use WeDevs\Dokan\Commission\Model\Setting;
 use WP_UnitTestCase;
 
 class PercentageCommissionTest extends WP_UnitTestCase {
@@ -18,7 +18,7 @@ class PercentageCommissionTest extends WP_UnitTestCase {
      * @return void
      */
     public function test_that_the_mandatory_methods_exists_in_the_class() {
-        $class = 'WeDevs\Dokan\Commission\Calculators\PercentageCommissionCalculator';
+        $class = 'WeDevs\Dokan\Commission\Formula\Percentage';
 
         $this->assertTrue( method_exists( $class, 'calculate' ) );
         $this->assertTrue( method_exists( $class, 'get_admin_commission' ) );
@@ -40,8 +40,8 @@ class PercentageCommissionTest extends WP_UnitTestCase {
      * @return void
      */
     public function test_that_commission_is_not_applicable_for_empty_settings() {
-        $settings         = new CommissionSettings();
-        $fixed_commission = new PercentageCommissionCalculator( $settings );
+        $settings         = new Setting();
+        $fixed_commission = new Percentage( $settings );
 
         $this->assertFalse( $fixed_commission->is_applicable() );
     }
@@ -154,12 +154,12 @@ class PercentageCommissionTest extends WP_UnitTestCase {
      * @return void
      */
     public function test_fixed_commission_functionality_works_properly_for_different_settings( $settings_data, $expected ) {
-        $settings = new CommissionSettings();
+        $settings = new Setting();
 
         $settings->set_type( $settings_data['type'] )
                  ->set_percentage( $settings_data['percentage'] );
 
-        $fixed_commission = new PercentageCommissionCalculator( $settings );
+        $fixed_commission = new Percentage( $settings );
 
         $this->assertEquals( $expected['is_applicable'], $fixed_commission->is_applicable() );
 

@@ -1,15 +1,15 @@
 <?php
 
-namespace WeDevs\Dokan\Commission\Calculators;
+namespace WeDevs\Dokan\Commission\Formula;
 
-use WeDevs\Dokan\Commission\Utils\CommissionSettings;
+use WeDevs\Dokan\Commission\Model\Setting;
 
 /**
  * Category based commission calculator class.
  *
  * @since DOKAN_SINCE
  */
-class CategoryBasedCommissionCalculator implements CommissionCalculatorInterface {
+class CategoryBased extends AbstractFormula {
 
     /**
      * Commission type source.
@@ -25,7 +25,7 @@ class CategoryBasedCommissionCalculator implements CommissionCalculatorInterface
      *
      * @var int|float $admin_commission
      */
-    private $admin_commission = 0;
+    protected $admin_commission = 0;
 
     /**
      * Per item admin commission amount.
@@ -34,7 +34,7 @@ class CategoryBasedCommissionCalculator implements CommissionCalculatorInterface
      *
      * @var int|float $per_item_admin_commission
      */
-    private $per_item_admin_commission = 0;
+    protected $per_item_admin_commission = 0;
 
     /**
      * Total vendor earning amount.
@@ -43,7 +43,7 @@ class CategoryBasedCommissionCalculator implements CommissionCalculatorInterface
      *
      * @var int|float $vendor_earning
      */
-    private $vendor_earning = 0;
+    protected $vendor_earning = 0;
 
     /**
      * Total items quantity, on it the commission will be calculated.
@@ -52,7 +52,7 @@ class CategoryBasedCommissionCalculator implements CommissionCalculatorInterface
      *
      * @var int $items_total_quantity
      */
-    private $items_total_quantity = 1;
+    protected $items_total_quantity = 1;
 
     /**
      * Commission meta data.
@@ -61,25 +61,16 @@ class CategoryBasedCommissionCalculator implements CommissionCalculatorInterface
      *
      * @var array $meta_data
      */
-    private $meta_data = [];
-
-    /**
-     * Commission setting.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @var \WeDevs\Dokan\Commission\Utils\CommissionSettings $settings
-     */
-    private CommissionSettings $settings;
+    protected $meta_data = [];
 
     /**
      * Fixed commission calculator classs instance.
      *
      * @since DOKAN_SINCE
      *
-     * @var \WeDevs\Dokan\Commission\Calculators\FixedCommissionCalculator $fixed_commission_calculator
+     * @var \WeDevs\Dokan\Commission\Formula\Fixed $fixed_commission_calculator
      */
-    private FixedCommissionCalculator $fixed_commission_calculator;
+    protected Fixed $fixed_commission_calculator;
 
     /**
      * Commission type.
@@ -88,26 +79,19 @@ class CategoryBasedCommissionCalculator implements CommissionCalculatorInterface
      *
      * @var mixed
      */
-    private $type;
-
-    /**
-     * Category id by which the commission will be calculated.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @var mixed
-     */
-    private $category_id = '';
+    protected $type;
 
     /**
      * Class constructor.
      *
      * @since DOKAN_SINCE
      *
-     * @param \WeDevs\Dokan\Commission\Utils\CommissionSettings $settings
+     * @param \WeDevs\Dokan\Commission\Model\Setting $settings
      */
-    public function __construct( CommissionSettings $settings ) {
-        $this->settings = $settings;
+    public function __construct( Setting $settings ) {
+        $this->set_settings( $settings );
+        $this->set_settings( $this->get_valid_commission_settings() );
+        $this->fixed_commission_calculator = new Fixed( $this->get_settings() );
     }
 
     /**
@@ -121,13 +105,16 @@ class CategoryBasedCommissionCalculator implements CommissionCalculatorInterface
      * @return void
      */
     public function calculate( $total_amount, $total_quantity = 1 ) {
-        $total_quantity            = max( $total_quantity, 1 );
-        $valid_commission_settings = $this->get_valid_commission_settings();
+        $total_quantity = max( $total_quantity, 1 );
 
-        // Use FixedCommissionCalculator for the calculation
-        $this->fixed_commission_calculator = new FixedCommissionCalculator( $valid_commission_settings );
+        // Changing the type here another wise fixed commission is applicable will always be false, we will set back the type to category later.
+        $this->set_settings( $this->get_settings()->set_type( Fixed::SOURCE ) );
+        $applicable = $this->fixed_commission_calculator->is_applicable();
 
-        if ( $this->fixed_commission_calculator->is_applicable() ) {
+        // Setting the commission type back to category based.
+        $this->set_settings( $this->get_settings()->set_type( self::SOURCE ) );
+
+        if ( $applicable ) {
             $this->fixed_commission_calculator->calculate( $total_amount, $total_quantity );
             $this->per_item_admin_commission = $this->fixed_commission_calculator->get_per_item_admin_commission();
             $this->admin_commission          = $this->fixed_commission_calculator->get_admin_commission();
@@ -155,10 +142,12 @@ class CategoryBasedCommissionCalculator implements CommissionCalculatorInterface
      *
      * @param array $meta_data
      *
-     * @return void
+     * @return \WeDevs\Dokan\Commission\Formula\CategoryBased
      */
-    public function set_meta_data( array $meta_data ): void {
+    public function set_meta_data( array $meta_data ): CategoryBased {
         $this->meta_data = $meta_data;
+
+        return $this;
     }
 
     /**
@@ -182,8 +171,8 @@ class CategoryBasedCommissionCalculator implements CommissionCalculatorInterface
     public function get_parameters(): array {
         $parameters = $this->fixed_commission_calculator->get_parameters();
 
-        $parameters['category_id'] = $this->settings->get_category_id();
-        $parameters['meta_data'] = $this->settings->get_meta_data();
+        $parameters['category_id'] = $this->get_settings()->get_category_id();
+        $parameters['meta_data'] = $this->get_settings()->get_meta_data();
 
         return $parameters;
     }
@@ -208,13 +197,16 @@ class CategoryBasedCommissionCalculator implements CommissionCalculatorInterface
      */
     public function is_applicable(): bool {
         if ( $this->valid_commission_type() && $this->is_valid_commission() ) {
-            $fixed_settings = $this->get_valid_commission_settings();
-            $fixed_commission = new FixedCommissionCalculator( $fixed_settings );
+            // Changing the type here another wise fixed commission is applicable will always be false, we will set back the type to category later.
+            $this->set_settings( $this->get_settings()->set_type( Fixed::SOURCE ) );
+            $applicable = $this->fixed_commission_calculator->is_applicable();
 
-            return $fixed_commission->is_applicable();
-        } else {
-            return false;
+            // Setting the commission type back to category based.
+            $this->set_settings( $this->get_settings()->set_type( self::SOURCE ) );
+            return $applicable;
         }
+
+        return false;
     }
 
     /**
@@ -224,8 +216,8 @@ class CategoryBasedCommissionCalculator implements CommissionCalculatorInterface
      *
      * @return bool
      */
-    private function valid_commission_type(): bool {
-        return $this->settings->get_type() === $this->get_source();
+    protected function valid_commission_type(): bool {
+        return $this->get_settings()->get_type() === $this->get_source();
     }
 
     /**
@@ -235,10 +227,10 @@ class CategoryBasedCommissionCalculator implements CommissionCalculatorInterface
      *
      * @return bool
      */
-    private function is_valid_commission(): bool {
-        if ( is_numeric( $this->settings->get_category_id() ) && isset( $this->settings->get_category_commissions()['items'][ $this->settings->get_category_id() ] ) ) {
+    protected function is_valid_commission(): bool {
+        if ( is_numeric( $this->get_settings()->get_category_id() ) && isset( $this->get_settings()->get_category_commissions()['items'][ $this->get_settings()->get_category_id() ] ) ) {
             return true;
-        } elseif ( isset( $this->settings->get_category_commissions()['all'] ) && ( is_numeric( $this->settings->get_category_commissions()['all']['flat'] ) || is_numeric( $this->settings->get_category_commissions()['all']['percentage'] ) ) ) {
+        } elseif ( isset( $this->get_settings()->get_category_commissions()['all'] ) && ( is_numeric( $this->get_settings()->get_category_commissions()['all']['flat'] ) || is_numeric( $this->get_settings()->get_category_commissions()['all']['percentage'] ) ) ) {
             return true;
         }
 
@@ -250,21 +242,21 @@ class CategoryBasedCommissionCalculator implements CommissionCalculatorInterface
      *
      * @since DOKAN_SINCE
      *
-     * @return \WeDevs\Dokan\Commission\Utils\CommissionSettings
+     * @return \WeDevs\Dokan\Commission\Model\Setting
      */
-    private function get_valid_commission_settings(): CommissionSettings {
-        $fixed_cat_settings = new CommissionSettings();
-        if ( is_numeric( $this->settings->get_category_id() ) && isset( $this->settings->get_category_commissions()['items'][ $this->settings->get_category_id() ] ) ) {
-            $commissions = $this->settings->get_category_commissions();
+    protected function get_valid_commission_settings(): Setting {
+        $fixed_cat_settings = new Setting();
+        if ( is_numeric( $this->get_settings()->get_category_id() ) && isset( $this->get_settings()->get_category_commissions()['items'][ $this->get_settings()->get_category_id() ] ) ) {
+            $commissions = $this->get_settings()->get_category_commissions();
 
             $items = $commissions['items'];
-            $item = $items[ $this->settings->get_category_id() ];
+            $item = $items[ $this->get_settings()->get_category_id() ];
 
             $fixed_cat_settings->set_flat( $item['flat'] ?? '' );
             $fixed_cat_settings->set_percentage( $item['percentage'] ?? '' );
             $fixed_cat_settings->set_category_commissions( $commissions );
-        } elseif ( isset( $this->settings->get_category_commissions()['all'] ) && ( is_numeric( $this->settings->get_category_commissions()['all']['flat'] ) || is_numeric( $this->settings->get_category_commissions()['all']['percentage'] ) ) ) {
-            $commissions = $this->settings->get_category_commissions();
+        } elseif ( isset( $this->get_settings()->get_category_commissions()['all'] ) && ( is_numeric( $this->get_settings()->get_category_commissions()['all']['flat'] ) || is_numeric( $this->get_settings()->get_category_commissions()['all']['percentage'] ) ) ) {
+            $commissions = $this->get_settings()->get_category_commissions();
             $all = $commissions['all'];
 
             $fixed_cat_settings->set_flat( $all['flat'] ?? '' );
@@ -272,7 +264,8 @@ class CategoryBasedCommissionCalculator implements CommissionCalculatorInterface
             $fixed_cat_settings->set_category_commissions( $commissions );
         }
 
-        $fixed_cat_settings->set_type( FixedCommissionCalculator::SOURCE );
+        $fixed_cat_settings->set_category_id( $this->get_settings()->get_category_id() );
+        $fixed_cat_settings->set_type( $this->get_settings()->get_type() );
 
         return $fixed_cat_settings;
     }

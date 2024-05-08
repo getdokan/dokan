@@ -1,10 +1,10 @@
 <?php
 
-namespace WeDevs\Dokan\Commission\Calculators;
+namespace WeDevs\Dokan\Commission\Formula;
 
-use WeDevs\Dokan\Commission\Utils\CommissionSettings;
+use WeDevs\Dokan\Commission\Model\Setting;
 
-class FlatCommissionCalculator implements CommissionCalculatorInterface {
+class Flat extends AbstractFormula {
 
     /**
      * Commission type source.
@@ -20,16 +20,7 @@ class FlatCommissionCalculator implements CommissionCalculatorInterface {
      *
      * @since DOKAN_SINCE
      */
-    private $flat_commission = 0;
-
-    /**
-     * Commission setting.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @var \WeDevs\Dokan\Commission\Utils\CommissionSettings $settings
-     */
-    private CommissionSettings $settings;
+    protected $flat_commission = 0;
 
     /**
      * Per item admin commission amount.
@@ -38,7 +29,7 @@ class FlatCommissionCalculator implements CommissionCalculatorInterface {
      *
      * @var int|float $per_item_admin_commission
      */
-    private $per_item_admin_commission = 0;
+    protected $per_item_admin_commission = 0;
 
     /**
      * Admin commission amount.
@@ -47,7 +38,7 @@ class FlatCommissionCalculator implements CommissionCalculatorInterface {
      *
      * @var int|float $admin_commission
      */
-    private $admin_commission = 0;
+    protected $admin_commission = 0;
 
     /**
      * Total vendor earning amount.
@@ -56,7 +47,7 @@ class FlatCommissionCalculator implements CommissionCalculatorInterface {
      *
      * @var int|float $vendor_earning
      */
-    private $vendor_earning = 0;
+    protected $vendor_earning = 0;
 
     /**
      * Total items quantity, on it the commission will be calculated.
@@ -65,17 +56,17 @@ class FlatCommissionCalculator implements CommissionCalculatorInterface {
      *
      * @var int $items_total_quantity
      */
-    private $items_total_quantity = 1;
+    protected $items_total_quantity = 1;
 
     /**
      * Class constructor.
      *
      * @since DOKAN_SINCE
      *
-     * @param \WeDevs\Dokan\Commission\Utils\CommissionSettings $settings
+     * @param \WeDevs\Dokan\Commission\Model\Setting $settings
      */
-    public function __construct( CommissionSettings $settings ) {
-        $this->settings = $settings;
+    public function __construct( Setting $settings ) {
+        $this->set_settings( $settings );
     }
 
     /**
@@ -91,7 +82,7 @@ class FlatCommissionCalculator implements CommissionCalculatorInterface {
     public function calculate( $total_amount, $total_quantity = 1 ) {
         $total_quantity = max( $total_quantity, 1 );
 
-        $this->per_item_admin_commission = dokan()->commission->validate_rate( $this->settings->get_flat() ) ?? 0;
+        $this->per_item_admin_commission = dokan()->commission->validate_rate( $this->get_settings()->get_flat() ) ?? 0;
         if ( $this->per_item_admin_commission > $total_amount ) {
             $this->per_item_admin_commission = $total_amount;
         }
@@ -120,8 +111,8 @@ class FlatCommissionCalculator implements CommissionCalculatorInterface {
      */
     public function get_parameters(): array {
         return [
-            'flat'      => $this->settings->get_flat(),
-            'meta_data' => $this->settings->get_meta_data(),
+            'flat'      => $this->get_settings()->get_flat(),
+            'meta_data' => $this->get_settings()->get_meta_data(),
         ];
     }
 
@@ -144,7 +135,7 @@ class FlatCommissionCalculator implements CommissionCalculatorInterface {
      * @return bool
      */
     public function is_applicable(): bool {
-        return is_numeric( $this->settings->get_flat() );
+        return is_numeric( $this->get_settings()->get_flat() );
     }
 
     /**

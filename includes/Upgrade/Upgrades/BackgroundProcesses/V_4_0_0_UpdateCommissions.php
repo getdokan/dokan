@@ -3,7 +3,7 @@
 namespace WeDevs\Dokan\Upgrade\Upgrades\BackgroundProcesses;
 
 use WeDevs\Dokan\Abstracts\DokanBackgroundProcesses;
-use WeDevs\Dokan\Commission\Calculators\FixedCommissionCalculator;
+use WeDevs\Dokan\Commission\Formula\Fixed;
 use WP_Term;
 
 /**
@@ -86,7 +86,7 @@ class V_4_0_0_UpdateCommissions extends DokanBackgroundProcesses {
     private function update_vendors_settings( $vendors ) {
         foreach ( $vendors as $vendor ) {
             $commission = $vendor->get_commission_settings();
-            $commission->set_type( FixedCommissionCalculator::SOURCE );
+            $commission->set_type( Fixed::SOURCE );
 
             $vendor->save_commission_settings(
                 [
@@ -113,7 +113,7 @@ class V_4_0_0_UpdateCommissions extends DokanBackgroundProcesses {
     private function update_products_settings( $posts ) {
         foreach ( $posts as $post ) {
             $commission = dokan()->product->get_commission_settings( $post->ID );
-            $commission->set_type( FixedCommissionCalculator::SOURCE );
+            $commission->set_type( Fixed::SOURCE );
 
             dokan()->product->save_commission_settings(
                 $post->ID,

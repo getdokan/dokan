@@ -2,18 +2,19 @@
 
 namespace WeDevs\Dokan\Commission\Strategies;
 
-use WeDevs\Dokan\Commission\Utils\CommissionSettings;
+use WeDevs\Dokan\Commission\Model\Setting;
+use WeDevs\Dokan\Commission\Settings\Builder;
 
-class VendorCommissionSourceStrategy extends AbstractCommissionSourceStrategy {
+class Vendor extends AbstractStrategy {
 
     /**
      * Vendor data.
      *
      * @since DOKAN_SINCE
      *
-     * @var object|\WeDevs\Dokan\Vendor\Vendor
+     * @var int
      */
-    private $vendor;
+    protected int $vendor_id;
 
     /**
      * Vendor strategy source.
@@ -29,7 +30,7 @@ class VendorCommissionSourceStrategy extends AbstractCommissionSourceStrategy {
      *
      * @var mixed
      */
-    private $category_id;
+    protected $category_id;
 
     /**
      * Class constructor.
@@ -42,7 +43,7 @@ class VendorCommissionSourceStrategy extends AbstractCommissionSourceStrategy {
      * @return void
      */
     public function __construct( $vendor_id, $category_id ) {
-        $this->vendor = dokan()->vendor->get( $vendor_id );
+        $this->vendor_id = $vendor_id;
         $this->category_id = $category_id;
     }
 
@@ -73,12 +74,13 @@ class VendorCommissionSourceStrategy extends AbstractCommissionSourceStrategy {
      *
      * @since DOKAN_SINCE
      *
-     * @return \WeDevs\Dokan\Commission\Utils\CommissionSettings
+     * @return \WeDevs\Dokan\Commission\Model\Setting
      */
-    public function get_settings(): CommissionSettings {
-        $commission_settings = $this->vendor->get_commission_settings();
-        $commission_settings->set_category_id( $this->get_category_id() );
+    public function get_settings(): Setting {
+        $settings = Builder::build( Builder::TYPE_VENDOR, $this->vendor_id );
+        $settings = $settings->get();
+        $settings->set_category_id( $this->get_category_id() );
 
-        return $commission_settings;
+        return $settings;
     }
 }

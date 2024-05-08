@@ -5,10 +5,8 @@ namespace WeDevs\Dokan\Vendor;
 use Automattic\WooCommerce\Utilities\NumberUtil;
 use WC_Order;
 use WeDevs\Dokan\Cache;
-use WeDevs\Dokan\Commission\Utils\CommissionSettings;
-use WeDevs\Dokan\Product\ProductCache;
+use WeDevs\Dokan\Commission\Model\Setting;
 use WP_Error;
-use WP_Query;
 use WP_User;
 
 /**
@@ -1554,7 +1552,7 @@ class Vendor {
      *
      * @since DOKAN_SINCE
      *
-     * @return \WeDevs\Dokan\Commission\Utils\CommissionSettings
+     * @return \WeDevs\Dokan\Commission\Model\Setting
      */
     public function get_commission_settings() {
         $commission_percentage = '';
@@ -1571,7 +1569,7 @@ class Vendor {
             $category_commissions = empty( $category_commissions ) ? [] : $category_commissions;
         }
 
-        $settings = new CommissionSettings();
+        $settings = new Setting();
         $settings->set_type( $commission_type )
                  ->set_flat( $additional_flat )
                  ->set_percentage( $commission_percentage )
@@ -1587,7 +1585,7 @@ class Vendor {
      *
      * @param array $commission
      *
-     * @return \WeDevs\Dokan\Commission\Utils\CommissionSettings
+     * @return \WeDevs\Dokan\Commission\Model\Setting
      */
     public function save_commission_settings( $commission = [] ) {
         if ( empty( $this->get_id() ) ) {

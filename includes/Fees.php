@@ -4,11 +4,11 @@ namespace WeDevs\Dokan;
 
 use WC_Order;
 use WC_Product;
-use WeDevs\Dokan\Commission\CommissionContext;
-use WeDevs\Dokan\Commission\Strategies\GlobalCommissionSourceStrategy;
-use WeDevs\Dokan\Commission\Strategies\OrderItemCommissionSourceStrategy;
-use WeDevs\Dokan\Commission\Strategies\ProductCommissionSourceStrategy;
-use WeDevs\Dokan\Commission\Strategies\VendorCommissionSourceStrategy;
+use WeDevs\Dokan\Commission\Context;
+use WeDevs\Dokan\Commission\Strategies\GlobalStrategy;
+use WeDevs\Dokan\Commission\Strategies\OrderItem;
+use WeDevs\Dokan\Commission\Strategies\Product;
+use WeDevs\Dokan\Commission\Strategies\Vendor;
 use WeDevs\Dokan\ProductCategory\Helper;
 use WP_Error;
 use WooCommerce\PayPalCommerce\WcGateway\Gateway\PayPalGateway;

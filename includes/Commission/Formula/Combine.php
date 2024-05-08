@@ -1,10 +1,10 @@
 <?php
 
-namespace WeDevs\Dokan\Commission\Calculators;
+namespace WeDevs\Dokan\Commission\Formula;
 
-use WeDevs\Dokan\Commission\Utils\CommissionSettings;
+use WeDevs\Dokan\Commission\Model\Setting;
 
-class CombineCommissionCalculator implements CommissionCalculatorInterface {
+class Combine extends AbstractFormula {
 
     /**
      * Per item admin commission value.
@@ -13,7 +13,7 @@ class CombineCommissionCalculator implements CommissionCalculatorInterface {
      *
      * @var int|float
      */
-    private $per_item_admin_commission = 0;
+    protected $per_item_admin_commission = 0;
 
     /**
      * Admin commission value.
@@ -22,7 +22,7 @@ class CombineCommissionCalculator implements CommissionCalculatorInterface {
      *
      * @var int|float
      */
-    private $admin_commission = 0;
+    protected $admin_commission = 0;
 
     /**
      * Vendor earning amount.
@@ -31,7 +31,7 @@ class CombineCommissionCalculator implements CommissionCalculatorInterface {
      *
      * @var int|float
      */
-    private $vendor_earning = 0;
+    protected $vendor_earning = 0;
 
     /**
      * The quantity on which the commission will be calculated.
@@ -40,16 +40,7 @@ class CombineCommissionCalculator implements CommissionCalculatorInterface {
      *
      * @var int
      */
-    private $items_total_quantity = 1;
-
-    /**
-     * Commission settings.
-     *
-     * @since DOKAN_SINCE
-     *
-     * @var \WeDevs\Dokan\Commission\Utils\CommissionSettings
-     */
-    private CommissionSettings $settings;
+    protected $items_total_quantity = 1;
 
     /**
      * Combine commission source text.
@@ -63,10 +54,10 @@ class CombineCommissionCalculator implements CommissionCalculatorInterface {
      *
      * @since DOKAN_SINCE
      *
-     * @param \WeDevs\Dokan\Commission\Utils\CommissionSettings $settings
+     * @param \WeDevs\Dokan\Commission\Model\Setting $settings
      */
-    public function __construct( CommissionSettings $settings ) {
-        $this->settings = $settings;
+    public function __construct( Setting $settings ) {
+        $this->set_settings( $settings );
     }
 
     /**
@@ -80,10 +71,10 @@ class CombineCommissionCalculator implements CommissionCalculatorInterface {
      * @return void
      */
     public function calculate( $total_amount, $total_quantity = 1 ) {
-        $percent_commission = $total_amount * ( dokan()->commission->validate_rate( $this->settings->get_percentage() ) / 100 );
-        $commission         = (float) dokan()->commission->validate_rate( $this->settings->get_flat() ) + $percent_commission;
+        $percent_commission = $total_amount * ( dokan()->commission->validate_rate( $this->get_settings()->get_percentage() ) / 100 );
+        $commission         = (float) dokan()->commission->validate_rate( $this->get_settings()->get_flat() ) + $percent_commission;
 
-        $per_item_flat       = dokan()->commission->validate_rate( $this->settings->get_flat() ) / $total_quantity;
+        $per_item_flat       = dokan()->commission->validate_rate( $this->get_settings()->get_flat() ) / $total_quantity;
         $per_item_percentage = $percent_commission / $total_quantity;
 
         $this->admin_commission          = $commission;
@@ -110,9 +101,9 @@ class CombineCommissionCalculator implements CommissionCalculatorInterface {
      */
     public function get_parameters(): array {
         return [
-            'flat'       => $this->settings->get_flat(),
-            'percentage' => $this->settings->get_percentage(),
-            'meta_data'  => $this->settings->get_meta_data(),
+            'flat'       => $this->get_settings()->get_flat(),
+            'percentage' => $this->get_settings()->get_percentage(),
+            'meta_data'  => $this->get_settings()->get_meta_data(),
         ];
     }
 
@@ -145,12 +136,12 @@ class CombineCommissionCalculator implements CommissionCalculatorInterface {
      *
      * @return bool
      */
-    private function valid_commission_type(): bool {
+    protected function valid_commission_type(): bool {
         $legacy_types = dokan()->commission->get_legacy_commission_types();
 
         $all_types = array_keys( $legacy_types );
 
-        return in_array( $this->settings->get_type(), $all_types, true ) || $this->settings->get_type() === self::SOURCE;
+        return in_array( $this->get_settings()->get_type(), $all_types, true ) || $this->get_settings()->get_type() === self::SOURCE;
     }
 
     /**
@@ -160,8 +151,8 @@ class CombineCommissionCalculator implements CommissionCalculatorInterface {
      *
      * @return bool
      */
-    private function valid_commission(): bool {
-        return is_numeric( $this->settings->get_flat() ) || is_numeric( $this->settings->get_percentage() );
+    protected function valid_commission(): bool {
+        return is_numeric( $this->get_settings()->get_flat() ) || is_numeric( $this->get_settings()->get_percentage() );
     }
 
     /**

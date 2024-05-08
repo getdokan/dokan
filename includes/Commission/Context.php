@@ -2,24 +2,24 @@
 
 namespace WeDevs\Dokan\Commission;
 
-use WeDevs\Dokan\Commission\Strategies\AbstractCommissionSourceStrategy;
-use WeDevs\Dokan\Commission\Utils\CommissionData;
+use WeDevs\Dokan\Commission\Strategies\AbstractStrategy;
+use WeDevs\Dokan\Commission\Model\Commission;
 
-class CommissionContext {
+class Context {
 
     /**
-     * @var AbstractCommissionSourceStrategy[]
+     * @var AbstractStrategy[]
      */
-    private array $strategies;
+    protected array $strategies;
 
     /**
-     * @param AbstractCommissionSourceStrategy[] $strategies
+     * @param AbstractStrategy[] $strategies
      */
     public function __construct( array $strategies ) {
         $this->strategies = $strategies;
     }
 
-    public function calculate_commission( $total_amount, $total_quantity = 1 ): CommissionData {
+    public function calculate_commission( $total_amount, $total_quantity = 1 ): Commission {
         if ( ! is_numeric( $total_quantity ) || $total_quantity < 1 ) {
             $total_quantity = 1;
         }
@@ -28,7 +28,7 @@ class CommissionContext {
             $total_quantity = 0;
         }
 
-        $commission_data = new CommissionData();
+        $commission_data = new Commission();
         $commission_data->set_vendor_earning( $total_amount )
             ->set_total_quantity( $total_quantity )
             ->set_total_amount( $total_amount );

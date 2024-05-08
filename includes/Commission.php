@@ -4,11 +4,11 @@ namespace WeDevs\Dokan;
 
 use WC_Order;
 use WC_Product;
-use WeDevs\Dokan\Commission\CommissionContext;
-use WeDevs\Dokan\Commission\Strategies\GlobalCommissionSourceStrategy;
-use WeDevs\Dokan\Commission\Strategies\OrderItemCommissionSourceStrategy;
-use WeDevs\Dokan\Commission\Strategies\ProductCommissionSourceStrategy;
-use WeDevs\Dokan\Commission\Strategies\VendorCommissionSourceStrategy;
+use WeDevs\Dokan\Commission\Context;
+use WeDevs\Dokan\Commission\Strategies\GlobalStrategy;
+use WeDevs\Dokan\Commission\Strategies\OrderItem;
+use WeDevs\Dokan\Commission\Strategies\Product;
+use WeDevs\Dokan\Commission\Strategies\Vendor;
 use WeDevs\Dokan\ProductCategory\Helper;
 use WP_Error;
 
@@ -258,7 +258,7 @@ class Commission {
         }
 
         if ( $context === dokan()->fees->get_shipping_fee_recipient( $order ) ) {
-            $earning_or_commission += wc_format_decimal( floatval( $order->get_shipping_total() ) ) - $order->get_total_shipping_refunded();
+            $earning_or_commission += $order->get_shipping_total() - $order->get_total_shipping_refunded();
         }
 
         if ( $context === dokan()->fees->get_tax_fee_recipient( $order->get_id() ) ) {
@@ -562,7 +562,7 @@ class Commission {
      * }
      * @param boolean $auto_save If true, it will save the calculated commission automatically to the given `$order_item_id`. Default 'false`. Accepted values boolean.
      *
-     * @return \WeDevs\Dokan\Commission\Utils\CommissionData
+     * @return \WeDevs\Dokan\Commission\Model\Commission
      */
     public function get_commission( $args = [], $auto_save = false ) {
         $order_item_id  = ! empty( $args['order_item_id'] ) ? $args['order_item_id'] : '';
@@ -587,16 +587,16 @@ class Commission {
             $total_amount = empty( $total_amount ) ? 0 : $total_amount;
         }
 
-        $order_item_strategy = new OrderItemCommissionSourceStrategy( $order_item_id, $total_amount, $total_quantity );
+        $order_item_strategy = new OrderItem( $order_item_id, $total_amount, $total_quantity );
 
         $strategies = [
             $order_item_strategy,
-            new ProductCommissionSourceStrategy( $product_id ),
-            new VendorCommissionSourceStrategy( $vendor_id, $category_id ),
-            new GlobalCommissionSourceStrategy( $category_id ),
+            new Product( $product_id ),
+            new Vendor( $vendor_id, $category_id ),
+            new GlobalStrategy( $category_id ),
         ];
 
-        $context = new CommissionContext( $strategies );
+        $context = new Context( $strategies );
         $commission_data = $context->calculate_commission( $total_amount, $total_quantity );
 
         if ( ! empty( $order_item_id ) && $auto_save && $commission_data->get_source() !== $order_item_strategy::SOURCE ) {

@@ -2,10 +2,10 @@
 
 namespace WeDevs\Dokan\Test\Commission\Strategy;
 
-use WeDevs\Dokan\Commission\Calculators\PercentageCommissionCalculator;
-use WeDevs\Dokan\Commission\Strategies\GlobalCommissionSourceStrategy;
-use WeDevs\Dokan\Commission\Strategies\ProductCommissionSourceStrategy;
-use WeDevs\Dokan\Commission\Strategies\VendorCommissionSourceStrategy;
+use WeDevs\Dokan\Commission\Formula\Percentage;
+use WeDevs\Dokan\Commission\Strategies\GlobalStrategy;
+use WeDevs\Dokan\Commission\Strategies\Product;
+use WeDevs\Dokan\Commission\Strategies\Vendor;
 use WeDevs\Dokan\Test\Helpers\WC_Helper_Product;
 use WP_UnitTestCase;
 
@@ -28,7 +28,7 @@ class ProductStrategyTest extends WP_UnitTestCase {
             ]
         );
 
-        $global_strategy = new ProductCommissionSourceStrategy( $product->get_id() );
+        $global_strategy = new Product( $product->get_id() );
         $calculator      = $global_strategy->get_commission_calculator();
 
         $this->assertNull( $calculator );
@@ -60,7 +60,7 @@ class ProductStrategyTest extends WP_UnitTestCase {
                     'per_item_admin_commission' => 0,
                     'vendor_earning'            => 150,
                     'total_quantity'            => 1,
-                    'calculator'                => 'WeDevs\Dokan\Commission\Calculators\FixedCommissionCalculator',
+                    'calculator'                => 'WeDevs\Dokan\Commission\Formula\Fixed',
                 ],
             ],
             [
@@ -79,7 +79,7 @@ class ProductStrategyTest extends WP_UnitTestCase {
                     'per_item_admin_commission' => 10,
                     'vendor_earning'            => 140,
                     'total_quantity'            => 1,
-                    'calculator'                => 'WeDevs\Dokan\Commission\Calculators\FixedCommissionCalculator',
+                    'calculator'                => 'WeDevs\Dokan\Commission\Formula\Fixed',
                 ],
             ],
             [
@@ -98,7 +98,7 @@ class ProductStrategyTest extends WP_UnitTestCase {
                     'per_item_admin_commission' => 15,
                     'vendor_earning'            => 135,
                     'total_quantity'            => 1,
-                    'calculator'                => 'WeDevs\Dokan\Commission\Calculators\FixedCommissionCalculator',
+                    'calculator'                => 'WeDevs\Dokan\Commission\Formula\Fixed',
                 ],
             ],
             [
@@ -138,7 +138,7 @@ class ProductStrategyTest extends WP_UnitTestCase {
                     'per_item_admin_commission' => 0,
                     'vendor_earning'            => 150,
                     'total_quantity'            => 1,
-                    'calculator'                => 'WeDevs\Dokan\Commission\Calculators\CombineCommissionCalculator',
+                    'calculator'                => 'WeDevs\Dokan\Commission\Formula\Combine',
                 ],
             ],
             [
@@ -157,7 +157,7 @@ class ProductStrategyTest extends WP_UnitTestCase {
                     'per_item_admin_commission' => 10,
                     'vendor_earning'            => 140,
                     'total_quantity'            => 1,
-                    'calculator'                => 'WeDevs\Dokan\Commission\Calculators\CombineCommissionCalculator',
+                    'calculator'                => 'WeDevs\Dokan\Commission\Formula\Combine',
                 ],
             ],
             [
@@ -176,7 +176,7 @@ class ProductStrategyTest extends WP_UnitTestCase {
                     'per_item_admin_commission' => 15,
                     'vendor_earning'            => 135,
                     'total_quantity'            => 1,
-                    'calculator'                => 'WeDevs\Dokan\Commission\Calculators\CombineCommissionCalculator',
+                    'calculator'                => 'WeDevs\Dokan\Commission\Formula\Combine',
                 ],
             ],
             [
@@ -214,7 +214,7 @@ class ProductStrategyTest extends WP_UnitTestCase {
                     'per_item_admin_commission' => 11.25,
                     'vendor_earning'            => 355,
                     'total_quantity'            => 4,
-                    'calculator'                => 'WeDevs\Dokan\Commission\Calculators\CombineCommissionCalculator',
+                    'calculator'                => 'WeDevs\Dokan\Commission\Formula\Combine',
                 ],
             ],
         ];
@@ -247,7 +247,7 @@ class ProductStrategyTest extends WP_UnitTestCase {
             ]
         );
 
-        $global_strategy = new ProductCommissionSourceStrategy( $product->get_id() );
+        $global_strategy = new Product( $product->get_id() );
         $calculator      = $global_strategy->get_commission_calculator();
 
         if ( null === $expected['calculator'] ) {
@@ -255,7 +255,7 @@ class ProductStrategyTest extends WP_UnitTestCase {
         } else {
             $this->assertEquals( $expected['is_applicable'], $calculator->is_applicable() );
             $this->assertNotNull( $calculator );
-            $this->assertTrue( is_a( $calculator, 'WeDevs\Dokan\Commission\Calculators\CommissionCalculatorInterface' ) );
+            $this->assertTrue( is_a( $calculator, 'WeDevs\Dokan\Commission\Formula\AbstractFormula' ) );
             $this->assertTrue( is_a( $calculator, $expected['calculator'] ) );
 
             $calculator->calculate( $settings_data['total_price'], $settings_data['total_quantity'] );
@@ -286,7 +286,7 @@ class ProductStrategyTest extends WP_UnitTestCase {
             $product->get_id(),
             [
                 'percentage' => $percentage,
-                'type'       => PercentageCommissionCalculator::SOURCE,
+                'type'       => Percentage::SOURCE,
                 'flat'       => $flat,
             ]
         );

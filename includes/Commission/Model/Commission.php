@@ -1,8 +1,8 @@
 <?php
 
-namespace WeDevs\Dokan\Commission\Utils;
+namespace WeDevs\Dokan\Commission\Model;
 
-class CommissionData {
+class Commission {
 
     /**
      * Applied commission source or scope.
@@ -11,7 +11,7 @@ class CommissionData {
      *
      * @var string
      */
-    private $source = 'none';
+    protected $source = 'none';
 
     /**
      * Per item admin commission.
@@ -20,7 +20,7 @@ class CommissionData {
      *
      * @var int|float $per_item_admin_commission
      */
-    private $per_item_admin_commission = 0;
+    protected $per_item_admin_commission = 0;
 
     /**
      * Admin commission aount
@@ -29,7 +29,7 @@ class CommissionData {
      *
      * @var int|float $admin_commission
      */
-    private $admin_commission = 0;
+    protected $admin_commission = 0;
 
     /**
      * Vendor earning amount.
@@ -38,7 +38,7 @@ class CommissionData {
      *
      * @var int|float $vendor_earning
      */
-    private $vendor_earning = 0;
+    protected $vendor_earning = 0;
 
     /**
      * Total quantity on which the commission will be calculated.
@@ -47,7 +47,7 @@ class CommissionData {
      *
      * @var int $total_quantity
      */
-    private $total_quantity = 1;
+    protected $total_quantity = 1;
 
     /**
      * Total commission amount.
@@ -56,7 +56,7 @@ class CommissionData {
      *
      * @var int|float $total_amount
      */
-    private $total_amount = 0;
+    protected $total_amount = 0;
 
     /**
      * Applied commission type.
@@ -65,7 +65,7 @@ class CommissionData {
      *
      * @var string
      */
-    private $type = 'none';
+    protected $type = 'none';
 
     /**
      * Applied commission data parameters.
@@ -74,7 +74,7 @@ class CommissionData {
      *
      * @var array
      */
-    private $parameters = [];
+    protected $parameters = [];
 
     /**
      * Returns applied commission source. example order_item/product/vendor/global.
@@ -94,9 +94,9 @@ class CommissionData {
      *
      * @param string $source
      *
-     * @return CommissionData
+     * @return Commission
      */
-    public function set_source( string $source ): CommissionData {
+    public function set_source( string $source ): Commission {
         $this->source = $source;
 
         return $this;
@@ -120,9 +120,9 @@ class CommissionData {
      *
      * @param int|float $per_item_admin_commission
      *
-     * @return CommissionData
+     * @return Commission
      */
-    public function set_per_item_admin_commission( $per_item_admin_commission ): CommissionData {
+    public function set_per_item_admin_commission( $per_item_admin_commission ): Commission {
         $this->per_item_admin_commission = $per_item_admin_commission;
 
         return $this;
@@ -146,9 +146,9 @@ class CommissionData {
      *
      * @param $admin_commission
      *
-     * @return CommissionData
+     * @return Commission
      */
-    public function set_admin_commission( $admin_commission ): CommissionData {
+    public function set_admin_commission( $admin_commission ): Commission {
         $this->admin_commission = $admin_commission;
 
         return $this;
@@ -172,9 +172,9 @@ class CommissionData {
      *
      * @param int|float $vendor_earning
      *
-     * @return CommissionData
+     * @return Commission
      */
-    public function set_vendor_earning( $vendor_earning ): CommissionData {
+    public function set_vendor_earning( $vendor_earning ): Commission {
         $this->vendor_earning = $vendor_earning;
 
         return $this;
@@ -198,9 +198,9 @@ class CommissionData {
      *
      * @param int $total_quantity
      *
-     * @return CommissionData
+     * @return Commission
      */
-    public function set_total_quantity( int $total_quantity ): CommissionData {
+    public function set_total_quantity( int $total_quantity ): Commission {
         $this->total_quantity = $total_quantity;
 
         return $this;
@@ -224,9 +224,9 @@ class CommissionData {
      *
      * @param int $total_amount
      *
-     * @return CommissionData
+     * @return Commission
      */
-    public function set_total_amount( int $total_amount ): CommissionData {
+    public function set_total_amount( int $total_amount ): Commission {
         $this->total_amount = $total_amount;
 
         return $this;
@@ -248,9 +248,9 @@ class CommissionData {
      *
      * @param string $type
      *
-     * @return CommissionData
+     * @return Commission
      */
-    public function set_type( string $type ): CommissionData {
+    public function set_type( string $type ): Commission {
         $this->type = $type;
 
         return $this;
@@ -274,9 +274,9 @@ class CommissionData {
      *
      * @param array $parameters
      *
-     * @return CommissionData
+     * @return Commission
      */
-    public function set_parameters( array $parameters ): CommissionData {
+    public function set_parameters( array $parameters ): Commission {
         $this->parameters = $parameters;
 
         return $this;
