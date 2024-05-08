@@ -110,6 +110,7 @@ jobs:
               if: success()
               uses: nick-fields/retry@v3
               with:
+                  timeout_minutes: 4
                   max_attempts: 2
                   retry_on: error
                   command: |

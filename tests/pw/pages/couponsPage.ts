@@ -6,6 +6,7 @@ import { helpers } from '@utils/helpers';
 import { data } from '@utils/testData';
 import { coupon } from '@utils/interfaces';
 
+// selectors
 const couponsAdmin = selector.admin.marketing;
 const couponsVendor = selector.vendor.vCoupon;
 
