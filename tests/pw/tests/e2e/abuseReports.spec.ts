@@ -36,7 +36,7 @@ test.describe('Abuse report test', () => {
 
     // admin
 
-    test('dokan abuse report menu page is rendering properly', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
+    test('dokan abuse report menu page renders properly', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
         await admin.adminAbuseReportRenderProperly();
     });
 

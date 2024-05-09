@@ -93,9 +93,9 @@ export class BasePage {
         if (!this.isCurrentUrl(subPath)) {
             const url = this.createUrl(subPath);
             await this.page.goto(url, { waitUntil: 'networkidle' });
-            // await this.page.goto(url, { waitUntil: 'domcontentloaded' }); //don't work for backend
-            // this.page.waitForURL(url, { waitUntil: 'networkidle' })
-            // this.page.waitForURL(url, { waitUntil: 'domcontentloaded' })
+            // await this.page.goto(url, { waitUntil: 'domcontentloaded' }); //doesn't work for backend
+            // this.page.waitForURL(url + '/**', { waitUntil: 'networkidle' });
+            // this.page.waitForURL(url + '/**', { waitUntil: 'domcontentloaded' });
             const currentUrl = this.getCurrentUrl();
             expect(currentUrl).toMatch(subPath);
         }

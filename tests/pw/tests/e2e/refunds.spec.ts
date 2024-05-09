@@ -36,7 +36,7 @@ test.describe('Refunds test', () => {
 
     //admin
 
-    test('admin refunds menu page is rendering properly', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
+    test('admin refunds menu page renders properly', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
         await admin.adminRefundRequestsRenderProperly();
     });
 

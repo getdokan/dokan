@@ -126,6 +126,15 @@ export default defineConfig({
             testMatch: /.*\.spec\.ts/,
             /* whether not to run setup tests before running actual tests */
             dependencies: NO_SETUP ? [] : ['e2e_setup'],
+            /* whether not to run teardown tests after running actual tests */
+            teardown: NO_SETUP ? undefined : 'coverage_report',
+            // teardown: 'global_teardown',
+        },
+
+        // coverage_report
+        {
+            name: 'coverage_report',
+            testMatch: '_coverage.teardown.ts',
         },
 
         // local site setup project

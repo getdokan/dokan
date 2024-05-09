@@ -18,7 +18,7 @@ test.describe('Settings test', () => {
         await aPage.close();
     });
 
-    test('dokan settings menu page is rendering properly', { tag: ['@lite', '@exploratory', '@admin'] }, async () => {
+    test('dokan settings menu page renders properly', { tag: ['@lite', '@exploratory', '@admin'] }, async () => {
         await admin.dokanSettingsRenderProperly();
     });
 

@@ -24,7 +24,7 @@ test.describe('Modules test', () => {
 
     //admin
 
-    test('dokan modules menu page is rendering properly', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
+    test('dokan modules menu page renders properly', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
         await admin.adminModulesRenderProperly();
     });
 

@@ -7,7 +7,6 @@ import { payloads } from '@utils/payloads';
 const { PRODUCT_ID } = process.env;
 
 test.describe('Product QA functionality test', () => {
-    test.skip(true, 'feature is not merged yet');
     let admin: ProductQAPage;
     let vendor: ProductQAPage;
     let customer: ProductQAPage;
@@ -34,7 +33,7 @@ test.describe('Product QA functionality test', () => {
     });
 
     test.afterAll(async () => {
-        await apiUtils.deleteAllProductQuestions(payloads.adminAuth);
+        // await apiUtils.deleteAllProductQuestions(payloads.adminAuth);
         await aPage.close();
         await vPage.close();
         await cPage.close();
@@ -43,18 +42,12 @@ test.describe('Product QA functionality test', () => {
 
     // admin
 
-    test('admin product QA menu page is rendering properly', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
+    test('admin product QA menu page renders properly', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
         await admin.adminProductQARenderProperly();
     });
 
     test('admin can view product question details', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
         await admin.viewQuestionDetails(questionId);
-    });
-
-    // todo: admin receive notification for new question
-
-    test.skip('unread count decrease after admin viewing a question', { tag: ['@pro'] }, async () => {
-        await admin.decreaseUnreadQuestionCount();
     });
 
     test('admin can filter questions by vendor', { tag: ['@pro', '@admin'] }, async () => {
@@ -99,25 +92,19 @@ test.describe('Product QA functionality test', () => {
         await admin.deleteQuestion(questionId);
     });
 
-    test('admin can perform store support bulk action', { tag: ['@pro', '@admin'] }, async () => {
+    test('admin can perform product QA bulk action', { tag: ['@pro', '@admin'] }, async () => {
         await admin.productQuestionsBulkAction('read');
     });
 
     // vendor
 
-    test('vendor product QA menu page is rendering properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+    test('vendor product QA menu page renders properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorProductQARenderProperly();
     });
 
     test('vendor can view product question details', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         const [, questionId] = await apiUtils.createProductQuestion({ ...payloads.createProductQuestion(), product_id: PRODUCT_ID }, payloads.customerAuth);
         await vendor.vendorViewQuestionDetails(questionId);
-    });
-
-    // todo: vendor receive notification for new question
-
-    test.skip('unread count decrease after vendor viewing a question', { tag: ['@pro', '@admin'] }, async () => {
-        await admin.decreaseUnreadQuestionCount();
     });
 
     test('vendor can filter questions', { tag: ['@pro', '@vendor'] }, async () => {
@@ -139,7 +126,7 @@ test.describe('Product QA functionality test', () => {
         await vendor.vendorDeleteAnswer(questionId);
     });
 
-    test.skip('vendor can delete a question', { tag: ['@pro', '@vendor'] }, async () => {
+    test('vendor can delete a question', { tag: ['@pro', '@vendor'] }, async () => {
         const [, questionId] = await apiUtils.createProductQuestion({ ...payloads.createProductQuestion(), product_id: PRODUCT_ID }, payloads.customerAuth);
         await vendor.vendorDeleteQuestion(questionId);
     });
@@ -158,6 +145,6 @@ test.describe('Product QA functionality test', () => {
 
     test('guest customer need to sign-in/signup post question', { tag: ['@pro', '@guest'] }, async ({ page }) => {
         const guest = new ProductQAPage(page);
-        await guest.postQuestion(data.predefined.simpleProduct.product1.name, data.questionAnswers);
+        await guest.postQuestion(data.predefined.simpleProduct.product1.name, data.questionAnswers, true);
     });
 });

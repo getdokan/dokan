@@ -1,5 +1,5 @@
 const fs = require('fs');
-const { SHA, PR_NUMBER, SYSTEM_INFO, API_TEST_RESULT, E2E_TEST_RESULT, API_COVERAGE } = process.env;
+const { SHA, PR_NUMBER, SYSTEM_INFO, API_TEST_RESULT, E2E_TEST_RESULT, API_COVERAGE, E2E_COVERAGE } = process.env;
 
 const replace = obj => Object.keys(obj).forEach(key => (typeof obj[key] == 'object' ? replace(obj[key]) : (obj[key] = String(obj[key]))));
 const readFile = filePath => (fs.existsSync(filePath) ? JSON.parse(fs.readFileSync(filePath, 'utf8')) : false);
@@ -33,7 +33,7 @@ const addSummaryHeadingAndTable = core => {
         { data: 'Coverage  :checkered_flag:', header: true },
     ];
     const apiTestResult = getTestResult('API Tests', API_TEST_RESULT, getCoverageReport(API_COVERAGE));
-    const e2eTestResult = getTestResult('E2E Tests', E2E_TEST_RESULT, '-');
+    const e2eTestResult = getTestResult('E2E Tests', E2E_TEST_RESULT, getCoverageReport(E2E_COVERAGE));
     const commit_sha = SHA ? `Commit SHA: ${SHA}` : '';
     if (apiTestResult || e2eTestResult) {
         core.summary.addHeading('Tests Summary').addRaw(commit_sha).addBreak().addBreak().addTable([tableHeader, apiTestResult, e2eTestResult]);

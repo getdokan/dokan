@@ -18,9 +18,7 @@ import { schemas } from '@utils/schemas';
 
 const { PRODUCT_ID } = process.env;
 
-test.describe('product questions and answeres api test', () => {
-    test.skip(true, 'feature is not merged yet');
-
+test.describe('product Q&A api test', () => {
     let apiUtils: ApiUtils;
     let questionId: string;
     let answerId: string;
@@ -28,13 +26,11 @@ test.describe('product questions and answeres api test', () => {
     test.beforeAll(async () => {
         apiUtils = new ApiUtils(await request.newContext());
         [, questionId] = await apiUtils.createProductQuestion({ ...payloads.createProductQuestion(), product_id: PRODUCT_ID }, payloads.customerAuth);
-        // todo: vendor can't create answer
         [, answerId] = await apiUtils.createProductQuestionAnswer({ ...payloads.createProductQuestionAnswer(), question_id: questionId }, payloads.adminAuth);
-        console.log(questionId, answerId);
     });
 
     test.afterAll(async () => {
-        // await apiUtils.deleteAllProductQuestions(payloads.adminAuth);
+        await apiUtils.deleteAllProductQuestions(payloads.adminAuth);
         await apiUtils.dispose();
     });
 
@@ -62,7 +58,6 @@ test.describe('product questions and answeres api test', () => {
     });
 
     test('update a product question', { tag: ['@pro'] }, async () => {
-        test.skip(true, 'PR has Issue');
         const [response, responseBody] = await apiUtils.put(endPoints.updateProductQuestion(questionId), { data: payloads.updateProductQuestion() });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
