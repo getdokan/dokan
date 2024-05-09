@@ -24,7 +24,7 @@ test.describe('Dokan pro feature promo test', () => {
         await admin.dokanPromotionRenderProperly();
     });
 
-    test('admin can view Dokan premium features promotions', { tag: ['@liteOnly', '@exploratory', '@admin'] }, async () => {
+    test('admin can view Dokan premium features promotions', { tag: ['@lite', '@liteOnly', '@exploratory', '@admin'] }, async () => {
         await admin.dokanProPromotionRenderProperly();
     });
 });

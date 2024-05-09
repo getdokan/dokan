@@ -34,7 +34,7 @@ test.describe('Payments test', () => {
         await admin.setupBasicPaymentMethods(data.payment);
     });
 
-    test.skip('admin can add strip payment method', { tag: ['@pro', '@admin'] }, async () => {
+    test.skip('admin can add stripe payment method', { tag: ['@pro', '@admin'] }, async () => {
         await admin.setupStripeConnect(data.payment);
     });
 

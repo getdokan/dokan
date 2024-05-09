@@ -4,7 +4,7 @@ import fs from 'fs';
 import path from 'path';
 import { helpers } from '@utils/helpers';
 
-// const { E2E_TEST_RESULT } = process.env;
+const { DOKAN_PRO } = process.env;
 let executed_tests: string[] = [];
 
 let totalProductFeatures = 0;
@@ -20,8 +20,7 @@ teardown.describe('get e2e test coverage', () => {
     const testReport = 'playwright-report/e2e/summary-report/results.json';
 
     teardown('get coverage', { tag: ['@lite'] }, async () => {
-        const testResult = helpers.readJson(testReport);
-        executed_tests = testResult.tests;
+        executed_tests = (helpers.readJson(testReport))?.tests;
         getCoverage(feature_map, outputFile);
     });
 });
@@ -68,25 +67,24 @@ function getCoverage(filePath: string, outputFile?: string) {
         console.log('\n total features:', totalProductFeatures);
         console.log('\n total covered features:', coveredProductFeatures);
         console.log('\n total coverage:', totalCoverage + '%');
-        console.log('\n page coverage:', coverageReport.covered_features);
+        console.log('\n page coverage:', coverageReport.page_coverage);
         console.log('\n covered features:', coveredFeatures);
         console.log('\n uncovered features:', uncoveredFeatures);
     }
 }
 
 function iterateThroughFeature(feature: any) {
-    // console.log(feature);
-
     Object.entries(feature).forEach(([key, value]) => {
         if (typeof value === 'object') {
             iterateThroughFeature(feature[key]);
         } else {
-            if (!executed_tests.includes(key)) {
+            if (!DOKAN_PRO && !key.includes('[lite]')) {
                 return;
             }
             totalPageFeatures++;
             totalProductFeatures++;
-            if (value) {
+            key = key.replace(' [lite]', '');
+            if (value && executed_tests.includes(key)) {
                 coveredPageFeatures++;
                 coveredProductFeatures++;
                 coveredFeatures.push(key);
