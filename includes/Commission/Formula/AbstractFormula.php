@@ -21,6 +21,16 @@ abstract class AbstractFormula {
      */
     protected Setting $settings;
 
+    /**
+     * @var int|float
+     */
+    protected $total_amount = 0;
+
+    /**
+     * @var int
+     */
+    protected $total_quantity = 1;
+
     abstract public function __construct( Setting $settings );
 
     /**
@@ -50,6 +60,58 @@ abstract class AbstractFormula {
     }
 
     /**
+     * Sets the total amount on which the commission will be calculated.
+     *
+     * @param float|int $amount
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return AbstractFormula
+     */
+    public function set_amount( $amount ): AbstractFormula {
+        $this->total_amount = $amount;
+
+        return $this;
+    }
+
+    /**
+     * Sets the total quantity on which the commission will be calculated.
+     *
+     * @param int $quantity
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return AbstractFormula
+     */
+    public function set_quantity( $quantity ): AbstractFormula {
+        $this->total_quantity = $quantity;
+
+        return $this;
+    }
+
+    /**
+     * Returns the total amount on which the commission will be calculated.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return float|int
+     */
+    public function get_amount() {
+        return $this->total_amount;
+    }
+
+    /**
+     * Returns the total quantity on which the commission will be calculated.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @return int
+     */
+    public function get_quantity(): int {
+        return $this->total_quantity;
+    }
+
+    /**
      * Calculate the commission here and set the commission values.
      *
      * @since DOKAN_SINCE
@@ -60,7 +122,7 @@ abstract class AbstractFormula {
      *
      * @return void
      */
-    abstract public function calculate( $total_amount, $total_quantity = 1 );
+    abstract public function calculate();
 
     /**
      * Returns admin commission.

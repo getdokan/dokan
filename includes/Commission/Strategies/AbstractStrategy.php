@@ -2,7 +2,7 @@
 
 namespace WeDevs\Dokan\Commission\Strategies;
 
-use WeDevs\Dokan\Commission\Factory;
+use WeDevs\Dokan\Commission\FormulaFactory;
 use WeDevs\Dokan\Commission\Formula\AbstractFormula;
 use WeDevs\Dokan\Commission\Model\Setting;
 
@@ -33,15 +33,9 @@ abstract class AbstractStrategy {
      *
      * @return \WeDevs\Dokan\Commission\Formula\AbstractFormula|null
      */
-    public function get_commission_calculator(): ?AbstractFormula {
+    public function get_commission_formula(): AbstractFormula {
         $settings = $this->get_settings();
 
-        $formula = Factory::getFormula( $settings );
-
-        if ( $formula && $formula->is_applicable() ) {
-            return $formula;
-        }
-
-        return null;
+        return FormulaFactory::get_formula( $settings );
     }
 }

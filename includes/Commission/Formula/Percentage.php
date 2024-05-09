@@ -60,18 +60,21 @@ class Percentage extends AbstractFormula {
      *
      * @param \WeDevs\Dokan\Commission\Model\Setting $settings
      */
-    public function calculate( $total_amount, $total_quantity = 1 ) {
-        $this->admin_commission          = ( $total_amount * dokan()->commission->validate_rate( $this->get_settings()->get_percentage() ) ) / 100;
-        $this->per_item_admin_commission = $this->admin_commission / $total_quantity;
-        $this->vendor_earning            = $total_amount - $this->admin_commission;
+    public function calculate() {
+        if ( $this->is_applicable() ) {
+            $this->admin_commission = ( $this->get_amount() * dokan()->commission->validate_rate( $this->get_settings()->get_percentage() ) ) / 100;
+        }
+
+        $this->per_item_admin_commission = $this->admin_commission / $this->get_quantity();
+        $this->vendor_earning            = $this->get_amount() - $this->admin_commission;
 
         // Admin will get 100 percent if commission rate > 100
         if ( $this->get_settings()->get_percentage() > 100 ) {
-            $this->admin_commission = $total_amount;
+            $this->admin_commission = $this->get_amount();
             $this->vendor_earning   = 0;
         }
 
-        $this->items_total_quantity = $total_quantity;
+        $this->items_total_quantity = $this->get_quantity();
     }
 
     /**

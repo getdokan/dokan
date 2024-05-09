@@ -7,8 +7,10 @@ use WeDevs\Dokan\Commission\Formula\Combine;
 use WeDevs\Dokan\Commission\Formula\Fixed;
 use WeDevs\Dokan\Commission\Formula\Flat;
 use WeDevs\Dokan\Commission\Formula\Percentage;
-use WeDevs\Dokan\Commission\Context;
+use WeDevs\Dokan\Commission\Calculator;
 use WeDevs\Dokan\Commission\Settings\Builder;
+use WeDevs\Dokan\Commission\Settings\DefaultSetting;
+use WeDevs\Dokan\Commission\Strategies\DefaultStrategy;
 use WeDevs\Dokan\Commission\Strategies\GlobalStrategy;
 use WeDevs\Dokan\Commission\Strategies\OrderItem;
 use WeDevs\Dokan\Commission\Strategies\Product;
@@ -83,21 +85,21 @@ class CommissionTest extends WP_UnitTestCase {
             new Product( $productId, $productPrice ),
             new Vendor( $vendorId, $category_id ),
             new GlobalStrategy( $category_id ),
+            new DefaultStrategy(),
         ];
 
-        $context      = new Context( $strategies );
+        $context      = new Calculator( $strategies );
         $commission   = $context->calculate_commission( $productPrice, 1 );
 
         $this->assertTrue( is_a( $commission, 'WeDevs\Dokan\Commission\Model\Commission' ) );
         $this->assertIsArray( $commission->get_data() );
-        $this->assertEquals( 'none', $commission->get_source() );
+        $this->assertEquals( DefaultStrategy::SOURCE, $commission->get_source() );
         $this->assertEquals( 0, $commission->get_per_item_admin_commission() );
         $this->assertEquals( 0, $commission->get_admin_commission() );
         $this->assertEquals( $productPrice, $commission->get_vendor_earning() );
         $this->assertEquals( 1, $commission->get_total_quantity() );
         $this->assertEquals( $productPrice, $commission->get_total_amount() );
-        $this->assertEquals( 'none', $commission->get_type() );
-        $this->assertEquals( [], $commission->get_parameters() );
+        $this->assertEquals( DefaultSetting::DEFAULT_COMMISSION_TYPE, $commission->get_type() );
     }
 
     /**

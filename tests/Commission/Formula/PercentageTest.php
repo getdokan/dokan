@@ -2,11 +2,11 @@
 
 namespace WeDevs\Dokan\Test\Commission\Calculator;
 
-use WeDevs\Dokan\Commission\Formula\Fixed;
+use WeDevs\Dokan\Commission\Formula\Percentage;
 use WeDevs\Dokan\Commission\Model\Setting;
 use WP_UnitTestCase;
 
-class FixedCommissionTest extends WP_UnitTestCase {
+class PercentageTest extends WP_UnitTestCase {
 
     /**
      * Test if the class has overridden all the methods of the interface class.
@@ -18,7 +18,7 @@ class FixedCommissionTest extends WP_UnitTestCase {
      * @return void
      */
     public function test_that_the_mandatory_methods_exists_in_the_class() {
-        $class = 'WeDevs\Dokan\Commission\Formula\Fixed';
+        $class = 'WeDevs\Dokan\Commission\Formula\Percentage';
 
         $this->assertTrue( method_exists( $class, 'calculate' ) );
         $this->assertTrue( method_exists( $class, 'get_admin_commission' ) );
@@ -31,7 +31,7 @@ class FixedCommissionTest extends WP_UnitTestCase {
     }
 
     /**
-     * Test that fixed commission is not applicable for empty settings.
+     * Test that percentage commission is not applicable for empty settings.
      *
      * @since DOKAN_SINCE
      *
@@ -41,13 +41,13 @@ class FixedCommissionTest extends WP_UnitTestCase {
      */
     public function test_that_commission_is_not_applicable_for_empty_settings() {
         $settings         = new Setting();
-        $fixed_commission = new Fixed( $settings );
+        $fixed_commission = new Percentage( $settings );
 
         $this->assertFalse( $fixed_commission->is_applicable() );
     }
 
     /**
-     * Fixed commission data provider.
+     * percentage commission data provider.
      *
      * @since DOKAN_SINCE
      *
@@ -57,15 +57,14 @@ class FixedCommissionTest extends WP_UnitTestCase {
         return [
             [
                 [
-                    'type'           => 'fixed',
-                    'flat'           => 0,
+                    'type'           => 'percentage',
                     'percentage'     => 0,
                     'total_price'    => 150,
                     'total_quantity' => 1,
                 ],
                 [
                     'is_applicable'             => true,
-                    'source'                    => 'fixed',
+                    'source'                    => 'percentage',
                     'admin_commission'          => 0,
                     'per_item_admin_commission' => 0,
                     'vendor_earning'            => 150,
@@ -74,77 +73,73 @@ class FixedCommissionTest extends WP_UnitTestCase {
             ],
             [
                 [
-                    'type'           => 'fixed',
-                    'flat'           => 10,
+                    'type'           => 'percentage',
                     'percentage'     => null,
                     'total_price'    => 300,
                     'total_quantity' => 2,
                 ],
                 [
-                    'is_applicable'             => true,
-                    'source'                    => 'fixed',
-                    'admin_commission'          => 20,
-                    'per_item_admin_commission' => 10,
-                    'vendor_earning'            => 280,
+                    'is_applicable'             => false,
+                    'source'                    => 'percentage',
+                    'admin_commission'          => 0,
+                    'per_item_admin_commission' => 0,
+                    'vendor_earning'            => 300,
                     'total_quantity'            => 2,
                 ],
             ],
             [
                 [
-                    'type'           => 'fixed',
-                    'flat'           => '---',
-                    'percentage'     => null,
+                    'type'           => 'percentage',
+                    'percentage'     => 5,
                     'total_price'    => 150,
                     'total_quantity' => 1,
                 ],
                 [
-                    'is_applicable'             => false,
-                    'source'                    => 'fixed',
-                    'admin_commission'          => 0,
-                    'per_item_admin_commission' => 0,
-                    'vendor_earning'            => 150,
+                    'is_applicable'             => true,
+                    'source'                    => 'percentage',
+                    'admin_commission'          => 7.5,
+                    'per_item_admin_commission' => 7.5,
+                    'vendor_earning'            => 142.5,
                     'total_quantity'            => 1,
                 ],
             ],
             [
                 [
-                    'type'           => 'fixed',
-                    'flat'           => 10,
+                    'type'           => 'percentage',
                     'percentage'     => 10,
                     'total_price'    => 400,
                     'total_quantity' => 4,
                 ],
                 [
                     'is_applicable'             => true,
-                    'source'                    => 'fixed',
-                    'admin_commission'          => 80,
-                    'per_item_admin_commission' => 20,
-                    'vendor_earning'            => 320,
+                    'source'                    => 'percentage',
+                    'admin_commission'          => 40,
+                    'per_item_admin_commission' => 10,
+                    'vendor_earning'            => 360,
                     'total_quantity'            => 4,
                 ],
             ],
             [
                 [
-                    'type'           => 'fixed',
-                    'flat'           => '--',
-                    'percentage'     => 30,
-                    'total_price'    => 120,
-                    'total_quantity' => 1,
+                    'type'           => 'percentage',
+                    'percentage'     => '',
+                    'total_price'    => 300,
+                    'total_quantity' => 2,
                 ],
                 [
-                    'is_applicable'             => true,
-                    'source'                    => 'fixed',
-                    'admin_commission'          => 36,
-                    'per_item_admin_commission' => 36,
-                    'vendor_earning'            => 84,
-                    'total_quantity'            => 1,
+                    'is_applicable'             => false,
+                    'source'                    => 'percentage',
+                    'admin_commission'          => 0,
+                    'per_item_admin_commission' => 0,
+                    'vendor_earning'            => 300,
+                    'total_quantity'            => 2,
                 ],
             ],
         ];
     }
 
     /**
-     * Test fixed commission for data sets.
+     * Test percentage commission for data sets.
      *
      * @since        DOKAN_SINCE
      *
@@ -162,14 +157,15 @@ class FixedCommissionTest extends WP_UnitTestCase {
         $settings = new Setting();
 
         $settings->set_type( $settings_data['type'] )
-                 ->set_flat( $settings_data['flat'] )
                  ->set_percentage( $settings_data['percentage'] );
 
-        $fixed_commission = new Fixed( $settings );
+        $fixed_commission = new Percentage( $settings );
 
         $this->assertEquals( $expected['is_applicable'], $fixed_commission->is_applicable() );
 
-        $fixed_commission->calculate( $settings_data['total_price'], $settings_data['total_quantity'] );
+        $fixed_commission->set_amount( $settings_data['total_price'] )
+            ->set_quantity( $settings_data['total_quantity'] )
+            ->calculate();
 
         $this->assertEquals( $expected['admin_commission'], $fixed_commission->get_admin_commission() );
         $this->assertEquals( $expected['vendor_earning'], $fixed_commission->get_vendor_earning() );

@@ -4,7 +4,8 @@ namespace WeDevs\Dokan;
 
 use WC_Order;
 use WC_Product;
-use WeDevs\Dokan\Commission\Context;
+use WeDevs\Dokan\Commission\Calculator;
+use WeDevs\Dokan\Commission\Strategies\DefaultStrategy;
 use WeDevs\Dokan\Commission\Strategies\GlobalStrategy;
 use WeDevs\Dokan\Commission\Strategies\OrderItem;
 use WeDevs\Dokan\Commission\Strategies\Product;
@@ -594,9 +595,10 @@ class Commission {
             new Product( $product_id ),
             new Vendor( $vendor_id, $category_id ),
             new GlobalStrategy( $category_id ),
+            new DefaultStrategy(),
         ];
 
-        $context = new Context( $strategies );
+        $context = new Calculator( $strategies );
         $commission_data = $context->calculate_commission( $total_amount, $total_quantity );
 
         if ( ! empty( $order_item_id ) && $auto_save && $commission_data->get_source() !== $order_item_strategy::SOURCE ) {

@@ -49,7 +49,18 @@ class Fixed extends AbstractFormula {
      */
     protected $items_total_quantity = 1;
 
+    /**
+     * @since DOKAN_SINCE
+     *
+     * @var \WeDevs\Dokan\Commission\Formula\Flat
+     */
     protected Flat $flat_calculator;
+
+    /**
+     * @since DOKAN_SINCE
+     *
+     * @var \WeDevs\Dokan\Commission\Formula\Percentage
+     */
     protected Percentage $percentage_calculator;
 
     /**
@@ -71,36 +82,39 @@ class Fixed extends AbstractFormula {
      *
      * @since DOKAN_SINCE
      *
-     * @param int|float $total_amount
-     * @param int       $total_quantity
-     *
      * @return void
      */
-    public function calculate( $total_amount, $total_quantity = 1 ) {
-        $total_quantity = max( $total_quantity, 1 );
+    public function calculate() {
+        $this->set_quantity( max( $this->get_quantity(), 1 ) );
 
         if ( $this->flat_calculator->is_applicable() ) {
-            $this->flat_calculator->calculate( $total_amount, $total_quantity );
+            $this->flat_calculator->set_amount( $this->get_amount() );
+            $this->flat_calculator->set_quantity( $this->get_quantity() );
+            $this->flat_calculator->calculate();
+
             $this->per_item_admin_commission += $this->flat_calculator->get_per_item_admin_commission();
             $this->admin_commission          += $this->flat_calculator->get_admin_commission();
         }
 
         if ( $this->percentage_calculator->is_applicable() ) {
-            $this->percentage_calculator->calculate( $total_amount, $total_quantity );
+            $this->percentage_calculator->set_amount( $this->get_amount() );
+            $this->percentage_calculator->set_quantity( $this->get_quantity() );
+            $this->percentage_calculator->calculate();
+
             $this->per_item_admin_commission += $this->percentage_calculator->get_per_item_admin_commission();
             $this->admin_commission          += $this->percentage_calculator->get_admin_commission();
         }
 
-        if ( $this->get_per_item_admin_commission() > $total_amount ) {
-            $this->per_item_admin_commission = $total_amount;
+        if ( $this->get_per_item_admin_commission() > $this->get_amount() ) {
+            $this->per_item_admin_commission = $this->get_amount();
         }
 
-        if ( $this->get_admin_commission() > $total_amount ) {
-            $this->admin_commission = $total_amount;
+        if ( $this->get_admin_commission() > $this->get_amount() ) {
+            $this->admin_commission = $this->get_amount();
         }
 
-        $this->vendor_earning            = $total_amount - $this->get_admin_commission();
-        $this->items_total_quantity      = $total_quantity;
+        $this->vendor_earning            = $this->get_amount() - $this->get_admin_commission();
+        $this->items_total_quantity      = $this->get_quantity();
     }
 
     /**
@@ -137,7 +151,7 @@ class Fixed extends AbstractFormula {
      * @return bool
      */
     public function is_applicable(): bool {
-        return $this->valid_commission_type() && $this->valid_commission();
+        return $this->is_valid_commission_type() && $this->is_valid_commission_data();
     }
 
     /**
@@ -147,7 +161,7 @@ class Fixed extends AbstractFormula {
      *
      * @return bool
      */
-    protected function valid_commission_type(): bool {
+    protected function is_valid_commission_type(): bool {
         $legacy_types = dokan()->commission->get_legacy_commission_types();
 
         $all_types = array_keys( $legacy_types );
@@ -162,7 +176,7 @@ class Fixed extends AbstractFormula {
      *
      * @return bool
      */
-    protected function valid_commission(): bool {
+    protected function is_valid_commission_data(): bool {
         return is_numeric( $this->get_settings()->get_flat() ) || is_numeric( $this->get_settings()->get_percentage() );
     }
 

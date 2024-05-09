@@ -4,7 +4,7 @@ namespace WeDevs\Dokan;
 
 use WC_Order;
 use WC_Product;
-use WeDevs\Dokan\Commission\Context;
+use WeDevs\Dokan\Commission\Calculator;
 use WeDevs\Dokan\Commission\Strategies\GlobalStrategy;
 use WeDevs\Dokan\Commission\Strategies\OrderItem;
 use WeDevs\Dokan\Commission\Strategies\Product;

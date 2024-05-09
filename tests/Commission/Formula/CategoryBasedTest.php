@@ -130,7 +130,7 @@ class CategoryCommissionTest extends WP_UnitTestCase {
                     'source'                    => 'category_based',
                     'admin_commission'          => 0,
                     'per_item_admin_commission' => 0,
-                    'vendor_earning'            => 0,
+                    'vendor_earning'            => 150,
                     'total_quantity'            => 1,
                 ],
             ],
@@ -190,7 +190,7 @@ class CategoryCommissionTest extends WP_UnitTestCase {
                     'source'                    => 'category_based',
                     'admin_commission'          => 0,
                     'per_item_admin_commission' => 0,
-                    'vendor_earning'            => 0,
+                    'vendor_earning'            => 400,
                     'total_quantity'            => 4,
                 ],
             ],
@@ -255,7 +255,9 @@ class CategoryCommissionTest extends WP_UnitTestCase {
 
         $this->assertEquals( $expected['is_applicable'], $category_commission->is_applicable() );
 
-        $category_commission->calculate( $settings_data['total_price'], $settings_data['total_quantity'] );
+        $category_commission->set_amount( $settings_data['total_price'] )
+            ->set_quantity( $settings_data['total_quantity'] )
+            ->calculate();
 
         $this->assertEquals( $expected['admin_commission'], $category_commission->get_admin_commission() );
         $this->assertEquals( $expected['vendor_earning'], $category_commission->get_vendor_earning() );

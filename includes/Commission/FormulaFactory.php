@@ -9,8 +9,16 @@ use WeDevs\Dokan\Commission\Formula\Flat;
 use WeDevs\Dokan\Commission\Formula\AbstractFormula;
 use WeDevs\Dokan\Commission\Formula\Percentage;
 use WeDevs\Dokan\Commission\Model\Setting;
+use WeDevs\Dokan\Commission\Settings\DefaultSetting;
+use WeDevs\Dokan\Commission\Settings\GlobalSetting;
+use function DeepCopy\deep_copy;
 
-class Factory {
+/**
+ * This is the factory class that determines the commission formula.
+ *
+ * @since DOKAN_SINCE
+ */
+class FormulaFactory {
 
     /**
      * Returns the applicable formula class or null.
@@ -21,7 +29,7 @@ class Factory {
      *
      * @return \WeDevs\Dokan\Commission\Formula\AbstractFormula|null
      */
-    public static function getFormula( Setting $settings ): ?AbstractFormula {
+    public static function get_formula( Setting $settings ): AbstractFormula {
         switch ( $settings->get_type() ) {
             case Flat::SOURCE:
                 // In Dokan before DOKAN_SINCE version if the commission type was flat the flat value used to be saved in the percentage key, that is why we are passing the percentage value.
@@ -35,7 +43,8 @@ class Factory {
             case CategoryBased::SOURCE:
                 return new CategoryBased( $settings );
             default:
-                return null;
+                $default_setting = new DefaultSetting();
+                return new Percentage( $default_setting->get() );
         }
     }
 }

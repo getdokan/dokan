@@ -5,20 +5,41 @@ namespace WeDevs\Dokan\Commission;
 use WeDevs\Dokan\Commission\Strategies\AbstractStrategy;
 use WeDevs\Dokan\Commission\Model\Commission;
 
-class Context {
+/**
+ * Calculates and returns commission
+ *
+ * @since DOKAN_SINCE
+ */
+class Calculator {
 
     /**
+     * @since DOKAN_SINCE
+     *
      * @var AbstractStrategy[]
      */
     protected array $strategies;
 
     /**
+     * Class constructor.
+     *
+     * @since DOKAN_SINCE
+     *
      * @param AbstractStrategy[] $strategies
      */
     public function __construct( array $strategies ) {
         $this->strategies = $strategies;
     }
 
+    /**
+     * Returns applied commission data
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param $total_amount
+     * @param $total_quantity
+     *
+     * @return \WeDevs\Dokan\Commission\Model\Commission
+     */
     public function calculate_commission( $total_amount, $total_quantity = 1 ): Commission {
         if ( ! is_numeric( $total_quantity ) || $total_quantity < 1 ) {
             $total_quantity = 1;
@@ -34,18 +55,20 @@ class Context {
             ->set_total_amount( $total_amount );
 
         foreach ( $this->strategies as $strategy ) {
-            $calculator = $strategy->get_commission_calculator();
-            if ( $calculator !== null ) {
-                $calculator->calculate( $total_amount, $total_quantity );
+            $formula = $strategy->get_commission_formula();
+            if ( $formula->is_applicable() ) {
+                $formula->set_amount( $total_amount )
+                    ->set_quantity( $total_quantity )
+                    ->calculate();
 
                 $commission_data->set_source( $strategy->get_source() )
-                    ->set_per_item_admin_commission( $calculator->get_per_item_admin_commission() )
-                    ->set_admin_commission( $calculator->get_admin_commission() )
-                    ->set_vendor_earning( $calculator->get_vendor_earning() )
-                    ->set_total_quantity( $calculator->get_items_total_quantity() )
+                    ->set_per_item_admin_commission( $formula->get_per_item_admin_commission() )
+                    ->set_admin_commission( $formula->get_admin_commission() )
+                    ->set_vendor_earning( $formula->get_vendor_earning() )
+                    ->set_total_quantity( $formula->get_items_total_quantity() )
                     ->set_total_amount( $total_amount )
-                    ->set_type( $calculator->get_source() )
-                    ->set_parameters( $calculator->get_parameters() );
+                    ->set_type( $formula->get_source() )
+                    ->set_parameters( $formula->get_parameters() );
 
                 return $commission_data;
             }

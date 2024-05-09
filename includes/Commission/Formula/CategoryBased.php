@@ -68,9 +68,16 @@ class CategoryBased extends AbstractFormula {
      *
      * @since DOKAN_SINCE
      *
-     * @var \WeDevs\Dokan\Commission\Formula\Fixed $fixed_commission_calculator
+     * @var \WeDevs\Dokan\Commission\Formula\Fixed $fixed_formula
      */
-    protected Fixed $fixed_commission_calculator;
+    protected Fixed $fixed_formula;
+
+    /**
+     * @since DOKAN_SINCE
+     *
+     * @var \WeDevs\Dokan\Commission\Model\Setting
+     */
+    protected Setting $fixed_commission_setting;
 
     /**
      * Commission type.
@@ -89,9 +96,8 @@ class CategoryBased extends AbstractFormula {
      * @param \WeDevs\Dokan\Commission\Model\Setting $settings
      */
     public function __construct( Setting $settings ) {
-        $this->set_settings( $settings );
-        $this->set_settings( $this->get_valid_commission_settings() );
-        $this->fixed_commission_calculator = new Fixed( $this->get_settings() );
+        $this->set_settings( $this->get_valid_commission_settings( $settings ) );
+        $this->fixed_formula = new Fixed( $this->fixed_commission_setting );
     }
 
     /**
@@ -99,29 +105,26 @@ class CategoryBased extends AbstractFormula {
      *
      * @since DOKAN_SINCE
      *
-     * @param int|float $total_amount
-     * @param int       $total_quantity
-     *
      * @return void
      */
-    public function calculate( $total_amount, $total_quantity = 1 ) {
-        $total_quantity = max( $total_quantity, 1 );
+    public function calculate() {
+        $this->set_quantity( max( $this->get_quantity(), 1 ) );
 
-        // Changing the type here another wise fixed commission is applicable will always be false, we will set back the type to category later.
-        $this->set_settings( $this->get_settings()->set_type( Fixed::SOURCE ) );
-        $applicable = $this->fixed_commission_calculator->is_applicable();
+        if ( $this->is_applicable() && $this->fixed_formula->is_applicable() ) {
+            $this->fixed_formula->set_amount( $this->get_amount() );
+            $this->fixed_formula->set_quantity( $this->get_quantity() );
+            $this->fixed_formula->calculate();
 
-        // Setting the commission type back to category based.
-        $this->set_settings( $this->get_settings()->set_type( self::SOURCE ) );
-
-        if ( $applicable ) {
-            $this->fixed_commission_calculator->calculate( $total_amount, $total_quantity );
-            $this->per_item_admin_commission = $this->fixed_commission_calculator->get_per_item_admin_commission();
-            $this->admin_commission          = $this->fixed_commission_calculator->get_admin_commission();
-            $this->vendor_earning            = $this->fixed_commission_calculator->get_vendor_earning();
+            $this->per_item_admin_commission = $this->fixed_formula->get_per_item_admin_commission();
+            $this->admin_commission          = $this->fixed_formula->get_admin_commission();
+            $this->vendor_earning            = $this->fixed_formula->get_vendor_earning();
+        } else {
+            $this->per_item_admin_commission = 0;
+            $this->admin_commission          = 0;
+            $this->vendor_earning            = $this->get_amount();
         }
 
-        $this->items_total_quantity = $total_quantity;
+        $this->items_total_quantity = $this->get_quantity();
     }
 
     /**
@@ -169,7 +172,7 @@ class CategoryBased extends AbstractFormula {
      * @return array
      */
     public function get_parameters(): array {
-        $parameters = $this->fixed_commission_calculator->get_parameters();
+        $parameters = $this->fixed_formula->get_parameters();
 
         $parameters['category_id'] = $this->get_settings()->get_category_id();
         $parameters['meta_data'] = $this->get_settings()->get_meta_data();
@@ -196,10 +199,10 @@ class CategoryBased extends AbstractFormula {
      * @return bool
      */
     public function is_applicable(): bool {
-        if ( $this->valid_commission_type() && $this->is_valid_commission() ) {
+        if ( $this->is_valid_commission_type() && $this->is_valid_commission_data() ) {
             // Changing the type here another wise fixed commission is applicable will always be false, we will set back the type to category later.
             $this->set_settings( $this->get_settings()->set_type( Fixed::SOURCE ) );
-            $applicable = $this->fixed_commission_calculator->is_applicable();
+            $applicable = $this->fixed_formula->is_applicable();
 
             // Setting the commission type back to category based.
             $this->set_settings( $this->get_settings()->set_type( self::SOURCE ) );
@@ -216,7 +219,7 @@ class CategoryBased extends AbstractFormula {
      *
      * @return bool
      */
-    protected function valid_commission_type(): bool {
+    protected function is_valid_commission_type(): bool {
         return $this->get_settings()->get_type() === $this->get_source();
     }
 
@@ -227,10 +230,33 @@ class CategoryBased extends AbstractFormula {
      *
      * @return bool
      */
-    protected function is_valid_commission(): bool {
-        if ( is_numeric( $this->get_settings()->get_category_id() ) && isset( $this->get_settings()->get_category_commissions()['items'][ $this->get_settings()->get_category_id() ] ) ) {
+    protected function is_valid_commission_data(): bool {
+        $valid_category_id = is_numeric( $this->get_settings()->get_category_id() );
+        $has_category_setting = isset( $this->get_settings()->get_category_commissions()['items'][ $this->get_settings()->get_category_id() ] );
+        $category_flat_value = $has_category_setting && isset( $this->get_settings()->get_category_commissions()['items'][ $this->get_settings()->get_category_id() ]['flat'] )
+            ? $this->get_settings()->get_category_commissions()['items'][ $this->get_settings()->get_category_id() ]['flat']
+            : '';
+        $category_percentage_value = $has_category_setting && isset( $this->get_settings()->get_category_commissions()['items'][ $this->get_settings()->get_category_id() ]['percentage'] )
+            ? $this->get_settings()->get_category_commissions()['items'][ $this->get_settings()->get_category_id() ]['percentage']
+            : '';
+
+        $has_all_setting = isset( $this->get_settings()->get_category_commissions()['all'] );
+        $has_all_flat_setting = $has_all_setting && isset( $this->get_settings()->get_category_commissions()['all']['flat'] ) ? $this->get_settings()->get_category_commissions()['all']['flat'] : '';
+        $has_all_percentage_setting = $has_all_setting && isset( $this->get_settings()->get_category_commissions()['all']['percentage'] ) ? $this->get_settings()->get_category_commissions()['all']['percentage'] : '';
+
+        if (
+            $valid_category_id &&
+            $has_category_setting &&
+            ( is_numeric( $category_flat_value ) || is_numeric( $category_percentage_value ) )
+        ) {
             return true;
-        } elseif ( isset( $this->get_settings()->get_category_commissions()['all'] ) && ( is_numeric( $this->get_settings()->get_category_commissions()['all']['flat'] ) || is_numeric( $this->get_settings()->get_category_commissions()['all']['percentage'] ) ) ) {
+        } elseif (
+            $valid_category_id &&
+            $has_category_setting &&
+            ( ! is_numeric( $category_flat_value ) && ! is_numeric( $category_percentage_value ) )
+        ) {
+            return false;
+        } elseif ( $has_all_setting && ( is_numeric( $has_all_flat_setting ) || is_numeric( $has_all_percentage_setting ) ) ) {
             return true;
         }
 
@@ -242,32 +268,43 @@ class CategoryBased extends AbstractFormula {
      *
      * @since DOKAN_SINCE
      *
-     * @return \WeDevs\Dokan\Commission\Model\Setting
+     * @param Setting $setting
+     *
+     * @return Setting
      */
-    protected function get_valid_commission_settings(): Setting {
-        $fixed_cat_settings = new Setting();
-        if ( is_numeric( $this->get_settings()->get_category_id() ) && isset( $this->get_settings()->get_category_commissions()['items'][ $this->get_settings()->get_category_id() ] ) ) {
-            $commissions = $this->get_settings()->get_category_commissions();
+    protected function get_valid_commission_settings( Setting $setting ): Setting {
+        $this->set_settings( $setting );
 
-            $items = $commissions['items'];
-            $item = $items[ $this->get_settings()->get_category_id() ];
+        $this->fixed_commission_setting = new Setting();
+        $this->fixed_commission_setting->set_type( Fixed::SOURCE )
+            ->set_flat( $this->get_settings()->get_flat() )
+            ->set_percentage( $this->get_settings()->get_percentage() )
+            ->set_category_id( $this->get_settings()->get_category_id() )
+            ->set_category_commissions( $this->get_settings()->get_category_commissions() )
+            ->set_meta_data( $this->get_settings()->get_meta_data() );
 
-            $fixed_cat_settings->set_flat( $item['flat'] ?? '' );
-            $fixed_cat_settings->set_percentage( $item['percentage'] ?? '' );
-            $fixed_cat_settings->set_category_commissions( $commissions );
-        } elseif ( isset( $this->get_settings()->get_category_commissions()['all'] ) && ( is_numeric( $this->get_settings()->get_category_commissions()['all']['flat'] ) || is_numeric( $this->get_settings()->get_category_commissions()['all']['percentage'] ) ) ) {
-            $commissions = $this->get_settings()->get_category_commissions();
-            $all = $commissions['all'];
-
-            $fixed_cat_settings->set_flat( $all['flat'] ?? '' );
-            $fixed_cat_settings->set_percentage( $all['percentage'] ?? '' );
-            $fixed_cat_settings->set_category_commissions( $commissions );
+        if ( ! $this->is_valid_commission_data() ) {
+            return $setting;
         }
 
-        $fixed_cat_settings->set_category_id( $this->get_settings()->get_category_id() );
-        $fixed_cat_settings->set_type( $this->get_settings()->get_type() );
+		//        $validated_setting = new Setting();
+        $commissions = $setting->get_category_commissions();
+        if ( is_numeric( $setting->get_category_id() ) && isset( $setting->get_category_commissions()['items'][ $setting->get_category_id() ] ) ) {
+            $items = $commissions['items'];
+            $item = $items[ $setting->get_category_id() ];
 
-        return $fixed_cat_settings;
+            $this->fixed_commission_setting->set_flat( isset( $item['flat'] ) ? $item['flat'] : '' );
+            $this->fixed_commission_setting->set_percentage( isset( $item['percentage'] ) ? $item['percentage'] : '' );
+            $this->fixed_commission_setting->set_category_commissions( $commissions );
+        } elseif ( isset( $setting->get_category_commissions()['all'] ) && ( is_numeric( $setting->get_category_commissions()['all']['flat'] ) || is_numeric( $setting->get_category_commissions()['all']['percentage'] ) ) ) {
+            $all = $commissions['all'];
+
+            $this->fixed_commission_setting->set_flat( isset( $all['flat'] ) ? $all['flat'] : '' );
+            $this->fixed_commission_setting->set_percentage( isset( $all['percentage'] ) ? $all['percentage'] : '' );
+            $this->fixed_commission_setting->set_category_commissions( $commissions );
+        }
+
+        return $setting;
     }
 
     /**

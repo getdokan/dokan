@@ -2,6 +2,11 @@
 
 namespace WeDevs\Dokan\Commission\Settings;
 
+/**
+ * Setting builder class.
+ *
+ * @since DOKAN_SINCE
+ */
 class Builder {
 
     const TYPE_ORDER_ITEM = 'order_item';
@@ -9,6 +14,16 @@ class Builder {
     const TYPE_VENDOR = 'vendor';
     const TYPE_PRODUCT = 'product';
 
+    /**
+     * Builds setting for different strategies.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $type
+     * @param        $param
+     *
+     * @return InterfaceSetting
+     */
     public static function build( string $type, $param ): InterfaceSetting {
         switch ( $type ) {
             case self::TYPE_ORDER_ITEM:

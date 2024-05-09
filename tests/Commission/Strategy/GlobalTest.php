@@ -3,10 +3,9 @@
 namespace WeDevs\Dokan\Test\Commission\Strategy;
 
 use WeDevs\Dokan\Commission\Strategies\GlobalStrategy;
-use WeDevs\Dokan\Commission\Strategies\Vendor;
 use WP_UnitTestCase;
 
-class VendorStrategyTest extends WP_UnitTestCase {
+class GlobalTest extends WP_UnitTestCase {
 
     /**
      * Test if no setting is saved before.
@@ -20,18 +19,11 @@ class VendorStrategyTest extends WP_UnitTestCase {
     public function test_commission_calculation_for_no_settings() {
         $category_id = 15;
 
-        $vendor = $this->factory()->user->create_and_get(
-            [
-                'role' => 'seller',
-            ]
-        );
+        $global_strategy = new GlobalStrategy( $category_id );
+        $calculator      = $global_strategy->get_commission_formula();
 
-        $vendor = dokan()->vendor->get( $vendor->ID );
-
-        $global_strategy = new Vendor( $vendor->get_id(), $category_id );
-        $calculator      = $global_strategy->get_commission_calculator();
-
-        $this->assertNull( $calculator );
+        $this->assertNotNull( $calculator );
+        $this->assertFalse( $calculator->is_applicable() );
     }
 
     /**
@@ -121,9 +113,9 @@ class VendorStrategyTest extends WP_UnitTestCase {
                     'source'                    => 'category_based',
                     'admin_commission'          => 0,
                     'per_item_admin_commission' => 0,
-                    'vendor_earning'            => 0,
+                    'vendor_earning'            => 150,
                     'total_quantity'            => 1,
-                    'calculator'                => null,
+                    'calculator'                => 'WeDevs\Dokan\Commission\Formula\CategoryBased',
                 ],
             ],
             [
@@ -183,9 +175,9 @@ class VendorStrategyTest extends WP_UnitTestCase {
                     'source'                    => 'category_based',
                     'admin_commission'          => 0,
                     'per_item_admin_commission' => 0,
-                    'vendor_earning'            => 0,
+                    'vendor_earning'            => 400,
                     'total_quantity'            => 4,
-                    'calculator'                => null,
+                    'calculator'                => 'WeDevs\Dokan\Commission\Formula\CategoryBased',
                 ],
             ],
             [
@@ -331,7 +323,7 @@ class VendorStrategyTest extends WP_UnitTestCase {
                     'per_item_admin_commission' => 0,
                     'vendor_earning'            => 400,
                     'total_quantity'            => 4,
-                    'calculator'                => null,
+                    'calculator'                => 'WeDevs\Dokan\Commission\Formula\Fixed',
                 ],
             ],
 
@@ -446,7 +438,7 @@ class VendorStrategyTest extends WP_UnitTestCase {
                     'per_item_admin_commission' => 0,
                     'vendor_earning'            => 400,
                     'total_quantity'            => 4,
-                    'calculator'                => null,
+                    'calculator'                => 'WeDevs\Dokan\Commission\Formula\Combine',
                 ],
             ],
             [
@@ -494,40 +486,33 @@ class VendorStrategyTest extends WP_UnitTestCase {
      * @return void
      */
     public function test_commission_for_different_data_set( $settings_data, $expected ) {
-        $vendor = $this->factory()->user->create_and_get(
-            [
-                'role' => 'seller',
-            ]
-        );
+        $settings = [
+            'admin_percentage'                 => $settings_data['percentage'],
+            'commission_type'                  => $settings_data['type'],
+            'additional_fee'                   => $settings_data['flat'],
+            'commission_category_based_values' => $settings_data['cat_commission'],
+        ];
 
-        $vendor = dokan()->vendor->get( $vendor->ID );
-        $vendor->update_meta( 'dokan_admin_percentage', $settings_data['percentage'] );
-        $vendor->update_meta( 'dokan_admin_percentage_type', $settings_data['type'] );
-        $vendor->update_meta( 'dokan_admin_additional_fee', $settings_data['flat'] );
-        $vendor->update_meta( 'admin_category_commission', $settings_data['cat_commission'] );
+        update_option( 'dokan_selling', $settings );
 
-        $vendor->update_meta_data();
-        $vendor->save();
+        $global_strategy = new GlobalStrategy( $settings_data['category_id'] );
+        $calculator      = $global_strategy->get_commission_formula();
 
-        $global_strategy = new Vendor( $vendor->get_id(), $settings_data['category_id'] );
-        $calculator      = $global_strategy->get_commission_calculator();
+        $this->assertNotNull( $calculator );
 
-        if ( null === $expected['calculator'] ) {
-            $this->assertNull( $calculator );
-        } else {
-            $this->assertEquals( $expected['is_applicable'], $calculator->is_applicable() );
-            $this->assertNotNull( $calculator );
-            $this->assertTrue( is_a( $calculator, 'WeDevs\Dokan\Commission\Formula\AbstractFormula' ) );
-            $this->assertTrue( is_a( $calculator, $expected['calculator'] ) );
+        $this->assertEquals( $expected['is_applicable'], $calculator->is_applicable() );
+        $this->assertNotNull( $calculator );
+        $this->assertTrue( is_a( $calculator, 'WeDevs\Dokan\Commission\Formula\AbstractFormula' ) );
+        $this->assertTrue( is_a( $calculator, $expected['calculator'] ) );
 
-            $calculator->calculate( $settings_data['total_price'], $settings_data['total_quantity'] );
+        $calculator->set_amount( $settings_data['total_price'] )
+                   ->set_quantity( $settings_data['total_quantity'] )
+                   ->calculate();
 
-            $this->assertEquals( $expected['admin_commission'], $calculator->get_admin_commission() );
-            $this->assertEquals( $expected['vendor_earning'], $calculator->get_vendor_earning() );
-            $this->assertEquals( $expected['source'], $calculator->get_source() );
-            $this->assertEquals( $expected['per_item_admin_commission'], $calculator->get_per_item_admin_commission() );
-            $this->assertEquals( $expected['total_quantity'], $calculator->get_items_total_quantity() );
-
-        }
+        $this->assertEquals( $expected['admin_commission'], $calculator->get_admin_commission() );
+        $this->assertEquals( $expected['vendor_earning'], $calculator->get_vendor_earning() );
+        $this->assertEquals( $expected['source'], $calculator->get_source() );
+        $this->assertEquals( $expected['per_item_admin_commission'], $calculator->get_per_item_admin_commission() );
+        $this->assertEquals( $expected['total_quantity'], $calculator->get_items_total_quantity() );
     }
 }

@@ -6,7 +6,7 @@ use WeDevs\Dokan\Commission\Formula\Flat;
 use WeDevs\Dokan\Commission\Model\Setting;
 use WP_UnitTestCase;
 
-class FlatCommissionTest extends WP_UnitTestCase {
+class FlatTest extends WP_UnitTestCase {
 
     /**
      * Test if the class has overridden all the methods of the interface class.
@@ -163,7 +163,9 @@ class FlatCommissionTest extends WP_UnitTestCase {
 
         $this->assertEquals( $expected['is_applicable'], $flat_commission->is_applicable() );
 
-        $flat_commission->calculate( $settings_data['total_price'], $settings_data['total_quantity'] );
+        $flat_commission->set_amount( $settings_data['total_price'] )
+            ->set_quantity( $settings_data['total_quantity'] )
+            ->calculate();
 
         $this->assertEquals( $expected['admin_commission'], $flat_commission->get_admin_commission() );
         $this->assertEquals( $expected['vendor_earning'], $flat_commission->get_vendor_earning() );

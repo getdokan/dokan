@@ -3,11 +3,13 @@
 namespace WeDevs\Dokan\Test\Commission;
 
 use WeDevs\Dokan\Commission\Formula\Fixed;
+use WeDevs\Dokan\Commission\Settings\DefaultSetting;
+use WeDevs\Dokan\Commission\Strategies\DefaultStrategy;
 use WeDevs\Dokan\Commission\Strategies\GlobalStrategy;
 use WeDevs\Dokan\Commission\Model\Commission;
 use WP_UnitTestCase;
 
-class CommissionDataTest extends WP_UnitTestCase {
+class CommissionModelTest extends WP_UnitTestCase {
 
     /**
      * Test if commission data class has all the required methods.
@@ -52,23 +54,23 @@ class CommissionDataTest extends WP_UnitTestCase {
     public function test_that_we_can_set_and_get_commission_data() {
         $data = new Commission();
 
-        $this->assertEquals( 'none', $data->get_source() );
+        $this->assertEquals( DefaultStrategy::SOURCE, $data->get_source() );
         $this->assertEquals( 0, $data->get_per_item_admin_commission() );
         $this->assertEquals( 0, $data->get_admin_commission() );
         $this->assertEquals( 0, $data->get_vendor_earning() );
         $this->assertEquals( 1, $data->get_total_quantity() );
         $this->assertEquals( 0, $data->get_total_amount() );
-        $this->assertEquals( 'none', $data->get_type() );
+        $this->assertEquals( DefaultSetting::DEFAULT_COMMISSION_TYPE, $data->get_type() );
         $this->assertEquals( [], $data->get_parameters() );
         $this->assertEquals(
             [
-            'source'                    => 'none',
+            'source'                    => DefaultStrategy::SOURCE,
             'per_item_admin_commission' => 0,
             'admin_commission'          => 0,
             'vendor_earning'            => 0,
             'total_quantity'            => 1,
             'total_amount'              => '0',
-            'type'                      => 'none',
+            'type'                      => DefaultSetting::DEFAULT_COMMISSION_TYPE,
             'parameters'                => [],
             ],
             $data->get_data()

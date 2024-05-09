@@ -65,31 +65,28 @@ class Combine extends AbstractFormula {
      *
      * @since DOKAN_SINCE
      *
-     * @param int|float $total_amount
-     * @param int       $total_quantity
-     *
      * @return void
      */
-    public function calculate( $total_amount, $total_quantity = 1 ) {
-        $percent_commission = $total_amount * ( dokan()->commission->validate_rate( $this->get_settings()->get_percentage() ) / 100 );
+    public function calculate() {
+        $percent_commission = $this->get_amount() * ( dokan()->commission->validate_rate( $this->get_settings()->get_percentage() ) / 100 );
         $commission         = (float) dokan()->commission->validate_rate( $this->get_settings()->get_flat() ) + $percent_commission;
 
-        $per_item_flat       = dokan()->commission->validate_rate( $this->get_settings()->get_flat() ) / $total_quantity;
-        $per_item_percentage = $percent_commission / $total_quantity;
+        $per_item_flat       = dokan()->commission->validate_rate( $this->get_settings()->get_flat() ) / $this->get_quantity();
+        $per_item_percentage = $percent_commission / $this->get_quantity();
 
         $this->admin_commission          = $commission;
         $this->per_item_admin_commission = $per_item_flat + $per_item_percentage;
 
-        if ( $this->get_per_item_admin_commission() > $total_amount ) {
-            $this->per_item_admin_commission = $total_amount;
+        if ( $this->get_per_item_admin_commission() > $this->get_amount() ) {
+            $this->per_item_admin_commission = $this->get_amount();
         }
 
-        if ( $this->get_admin_commission() > $total_amount ) {
-            $this->admin_commission = $total_amount;
+        if ( $this->get_admin_commission() > $this->get_amount() ) {
+            $this->admin_commission = $this->get_amount();
         }
 
-        $this->vendor_earning            = $total_amount - $this->admin_commission;
-        $this->items_total_quantity      = $total_quantity;
+        $this->vendor_earning            = $this->get_amount() - $this->admin_commission;
+        $this->items_total_quantity      = $this->get_quantity();
     }
 
     /**
@@ -126,7 +123,7 @@ class Combine extends AbstractFormula {
      * @return bool
      */
     public function is_applicable(): bool {
-        return $this->valid_commission_type() && $this->valid_commission();
+        return $this->is_valid_commission_type() && $this->is_valid_commission_data();
     }
 
     /**
@@ -136,7 +133,7 @@ class Combine extends AbstractFormula {
      *
      * @return bool
      */
-    protected function valid_commission_type(): bool {
+    protected function is_valid_commission_type(): bool {
         $legacy_types = dokan()->commission->get_legacy_commission_types();
 
         $all_types = array_keys( $legacy_types );
@@ -151,7 +148,7 @@ class Combine extends AbstractFormula {
      *
      * @return bool
      */
-    protected function valid_commission(): bool {
+    protected function is_valid_commission_data(): bool {
         return is_numeric( $this->get_settings()->get_flat() ) || is_numeric( $this->get_settings()->get_percentage() );
     }
 

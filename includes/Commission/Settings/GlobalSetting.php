@@ -15,10 +15,16 @@ class GlobalSetting implements InterfaceSetting {
      */
     protected int $category_id;
 
+    /**
+     * Class constructor.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param int $category_id
+     */
     public function __construct( int $category_id ) {
         $this->category_id = $category_id;
     }
-
 
     /**
      * Returns product commission settings data.

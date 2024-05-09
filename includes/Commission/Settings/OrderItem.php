@@ -12,11 +12,27 @@ class OrderItem implements InterfaceSetting {
 
     protected $product_price_to_calculate_commission;
 
+    /**
+     * Class constructor.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $data
+     */
     public function __construct( array $data ) {
         $this->order_item_id = $data['id'];
         $this->product_price_to_calculate_commission = $data['price'];
     }
 
+    /**
+     * Rrturns order item commission settings.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @throws \Exception
+     *
+     * @return \WeDevs\Dokan\Commission\Model\Setting
+     */
     public function get(): Setting {
         $commission_percentage = '';
         $commission_type       = '';
@@ -84,6 +100,17 @@ class OrderItem implements InterfaceSetting {
         return $settings;
     }
 
+    /**
+     * Saves order item commission settings.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param array $setting
+     *
+     * @throws \Exception
+     *
+     * @return \WeDevs\Dokan\Commission\Model\Setting
+     */
     public function save( array $setting ): Setting {
         $percentage           = isset( $setting['percentage'] ) ? $setting['percentage'] : '';
         $type                 = isset( $setting['type'] ) ? $setting['type'] : '';

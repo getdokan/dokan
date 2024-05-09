@@ -74,32 +74,32 @@ class Flat extends AbstractFormula {
      *
      * @since DOKAN_SINCE
      *
-     * @param int|float $total_amount
-     * @param int       $total_quantity
-     *
      * @return void
      */
-    public function calculate( $total_amount, $total_quantity = 1 ) {
-        $total_quantity = max( $total_quantity, 1 );
+    public function calculate() {
+        $this->set_quantity( max( $this->get_quantity(), 1 ) );
 
-        $this->per_item_admin_commission = dokan()->commission->validate_rate( $this->get_settings()->get_flat() ) ?? 0;
-        if ( $this->per_item_admin_commission > $total_amount ) {
-            $this->per_item_admin_commission = $total_amount;
+        if ( $this->is_applicable() ) {
+            $this->per_item_admin_commission = dokan()->commission->validate_rate( $this->get_settings()->get_flat() );
+        }
+
+        if ( $this->per_item_admin_commission > $this->get_amount() ) {
+            $this->per_item_admin_commission = $this->get_amount();
         }
 
         $this->flat_commission = $this->per_item_admin_commission;
-        if ( (int) $total_quantity > 1 ) {
-            $this->flat_commission = $this->per_item_admin_commission * apply_filters( 'dokan_commission_multiply_by_order_quantity', $total_quantity );
+        if ( (int) $this->get_quantity() > 1 ) {
+            $this->flat_commission = $this->per_item_admin_commission * apply_filters( 'dokan_commission_multiply_by_order_quantity', $this->get_quantity() );
         }
 
         $this->admin_commission = $this->flat_commission;
 
-        if ( $this->admin_commission > $total_amount ) {
-            $this->admin_commission = $total_amount;
+        if ( $this->admin_commission > $this->get_amount() ) {
+            $this->admin_commission = $this->get_amount();
         }
 
-        $this->vendor_earning = $total_amount - $this->admin_commission;
-        $this->items_total_quantity = $total_quantity;
+        $this->vendor_earning = $this->get_amount() - $this->admin_commission;
+        $this->items_total_quantity = $this->get_quantity();
     }
 
     /**

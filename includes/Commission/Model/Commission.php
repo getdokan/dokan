@@ -2,6 +2,10 @@
 
 namespace WeDevs\Dokan\Commission\Model;
 
+use WeDevs\Dokan\Commission\Formula\Percentage;
+use WeDevs\Dokan\Commission\Settings\DefaultSetting;
+use WeDevs\Dokan\Commission\Strategies\DefaultStrategy;
+
 class Commission {
 
     /**
@@ -11,7 +15,7 @@ class Commission {
      *
      * @var string
      */
-    protected $source = 'none';
+    protected $source = DefaultStrategy::SOURCE;
 
     /**
      * Per item admin commission.
@@ -65,7 +69,7 @@ class Commission {
      *
      * @var string
      */
-    protected $type = 'none';
+    protected $type = DefaultSetting::DEFAULT_COMMISSION_TYPE;
 
     /**
      * Applied commission data parameters.
