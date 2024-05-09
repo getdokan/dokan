@@ -4,6 +4,7 @@ namespace WeDevs\Dokan\Commission\Settings;
 
 use WeDevs\Dokan\Commission\Formula\CategoryBased;
 use WeDevs\Dokan\Commission\Model\Setting;
+use WeDevs\Dokan\Utilities\OrderUtil;
 
 class OrderItem implements InterfaceSetting {
 
@@ -59,8 +60,15 @@ class OrderItem implements InterfaceSetting {
          * @see https://github.com/getdokan/dokan/blob/28888e6824d96747ed65004fbd6de80d0eee5161/includes/Commission.php#L567-L653
          * @see https://github.com/getdokan/dokan/blob/28888e6824d96747ed65004fbd6de80d0eee5161/includes/Commission.php
          */
-        $order_id      = wc_get_order_id_by_order_item_id( $this->order_item_id );
-        $item_total    = get_post_meta( $order_id, '_dokan_item_total', true );
+        $order_id = wc_get_order_id_by_order_item_id( $this->order_item_id );
+
+        if ( OrderUtil::is_hpos_enabled() ) {
+            $order = dokan()->order->get( $order_id );
+            $item_total = $order->get_meta( '_dokan_item_total' );
+        } else {
+            $item_total = get_post_meta( $order_id, '_dokan_item_total', true );
+        }
+
         $product_price = (float) wc_format_decimal( $this->product_price_to_calculate_commission );
         if ( $order_id && $item_total ) {
             $additional_flat = ( $additional_flat / $item_total ) * $product_price;

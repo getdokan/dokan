@@ -29,7 +29,7 @@ class ProductTest extends WP_UnitTestCase {
         );
 
         $prodict_strategy = new Product( $product->get_id() );
-        $calculator       = $prodict_strategy->get_commission_formula();
+        $calculator       = $prodict_strategy->create_formula();
 
         $this->assertNotNull( $calculator );
         $this->assertFalse(  $calculator->is_applicable() );
@@ -249,7 +249,7 @@ class ProductTest extends WP_UnitTestCase {
         );
 
         $strategy = new Product( $product->get_id() );
-        $formula = $strategy->get_commission_formula();
+        $formula = $strategy->create_formula();
 
         $this->assertNotNull( $formula );
         $this->assertEquals( $expected['is_applicable'], $formula->is_applicable() );

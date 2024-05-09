@@ -55,7 +55,7 @@ class Calculator {
             ->set_total_amount( $total_amount );
 
         foreach ( $this->strategies as $strategy ) {
-            $formula = $strategy->get_commission_formula();
+            $formula = $strategy->create_formula();
             if ( $formula->is_applicable() ) {
                 $formula->set_amount( $total_amount )
                     ->set_quantity( $total_quantity )

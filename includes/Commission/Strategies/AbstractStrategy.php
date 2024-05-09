@@ -33,7 +33,7 @@ abstract class AbstractStrategy {
      *
      * @return \WeDevs\Dokan\Commission\Formula\AbstractFormula|null
      */
-    public function get_commission_formula(): AbstractFormula {
+    public function create_formula(): AbstractFormula {
         $settings = $this->get_settings();
 
         return FormulaFactory::get_formula( $settings );

@@ -29,7 +29,7 @@ class VendorTest extends WP_UnitTestCase {
         $vendor = dokan()->vendor->get( $vendor->ID );
 
         $strategy   = new Vendor( $vendor->get_id(), $category_id );
-        $formula = $strategy->get_commission_formula();
+        $formula = $strategy->create_formula();
 
         $this->assertNotNull( $formula );
         $this->assertTrue( is_a( $formula, Percentage::class ) );
@@ -512,7 +512,7 @@ class VendorTest extends WP_UnitTestCase {
         $vendor->save();
 
         $global_strategy = new Vendor( $vendor->get_id(), $settings_data['category_id'] );
-        $formula      = $global_strategy->get_commission_formula();
+        $formula      = $global_strategy->create_formula();
 
         $this->assertNotNull( $formula );
         $this->assertEquals( $expected['is_applicable'], $formula->is_applicable() );

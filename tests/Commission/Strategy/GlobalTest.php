@@ -20,7 +20,7 @@ class GlobalTest extends WP_UnitTestCase {
         $category_id = 15;
 
         $global_strategy = new GlobalStrategy( $category_id );
-        $calculator      = $global_strategy->get_commission_formula();
+        $calculator      = $global_strategy->create_formula();
 
         $this->assertNotNull( $calculator );
         $this->assertFalse( $calculator->is_applicable() );
@@ -496,7 +496,7 @@ class GlobalTest extends WP_UnitTestCase {
         update_option( 'dokan_selling', $settings );
 
         $global_strategy = new GlobalStrategy( $settings_data['category_id'] );
-        $calculator      = $global_strategy->get_commission_formula();
+        $calculator      = $global_strategy->create_formula();
 
         $this->assertNotNull( $calculator );
 
