@@ -32,18 +32,18 @@ class OrderItem extends AbstractStrategy {
      *
      * @since DOKAN_SINCE
      *
-     * @var int|mixed $product_price_to_calculate_commission
+     * @var int|mixed $total_amount
      */
-    protected $product_price_to_calculate_commission;
+    protected $total_amount;
 
     /**
      * Total order quantity.
      *
      * @since DOKAN_SINCE
      *
-     * @var int|mixed $total_order_item_quantity
+     * @var int|mixed $total_quantity
      */
-    protected $total_order_item_quantity;
+    protected $total_quantity;
 
     /**
      * Class constructor.
@@ -51,15 +51,15 @@ class OrderItem extends AbstractStrategy {
      * @since DOKAN_SINCE
      *
      * @param int|string $order_item_id
-     * @param int|float  $product_price_to_calculate_commission
-     * @param int        $total_order_item_quantity
+     * @param int|float  $total_amount
+     * @param int        $total_quantity
      *
      * @return void
      */
-    public function __construct( $order_item_id = '', $product_price_to_calculate_commission = 0, $total_order_item_quantity = 1 ) {
-        $this->order_item_id                         = $order_item_id;
-        $this->product_price_to_calculate_commission = $product_price_to_calculate_commission;
-        $this->total_order_item_quantity             = $total_order_item_quantity;
+    public function __construct( $order_item_id = '', $total_amount = 0, $total_quantity = 1 ) {
+        $this->order_item_id             = $order_item_id;
+        $this->total_amount              = $total_amount;
+        $this->total_quantity = $total_quantity;
     }
 
     /**
@@ -85,7 +85,7 @@ class OrderItem extends AbstractStrategy {
             Builder::TYPE_ORDER_ITEM,
             [
                 'id' => $this->order_item_id,
-                'price' => $this->product_price_to_calculate_commission,
+                'price' => $this->total_amount,
             ]
         );
 
@@ -109,7 +109,7 @@ class OrderItem extends AbstractStrategy {
             Builder::TYPE_ORDER_ITEM,
             [
                 'id'    => $this->order_item_id,
-                'price' => $this->product_price_to_calculate_commission,
+                'price' => $this->total_amount,
             ]
         );
 
