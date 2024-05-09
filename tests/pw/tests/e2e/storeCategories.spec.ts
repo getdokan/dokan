@@ -32,7 +32,7 @@ test.describe('Store categories test', () => {
 
     // store categories
 
-    test('admin store category page is rendering properly', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
+    test('admin can view store category page', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
         await admin.adminStoreCategoryRenderProperly();
     });
 

@@ -1,16 +1,11 @@
-import { test } from '@playwright/test';
+import { test as teardown } from '@playwright/test';
 import yaml from 'js-yaml';
 import fs from 'fs';
 import path from 'path';
+import { helpers } from '@utils/helpers';
 
-test.describe('get api test coverage', () => {
-    const feature_map = 'feature-map/feature-map.yml';
-    const outputFile = 'playwright-report/e2e/coverage-report/coverage.json';
-
-    test('get coverage', { tag: ['@lite'] }, async () => {
-        getCoverage(feature_map, outputFile);
-    });
-});
+const { DOKAN_PRO } = process.env;
+let executed_tests: string[] = [];
 
 let totalProductFeatures = 0;
 let coveredProductFeatures = 0;
@@ -18,6 +13,17 @@ let totalPageFeatures = 0;
 let coveredPageFeatures = 0;
 const coveredFeatures: string[] = [];
 const uncoveredFeatures: string[] = [];
+
+teardown.describe('get e2e test coverage', () => {
+    const feature_map = 'feature-map/feature-map.yml';
+    const outputFile = 'playwright-report/e2e/coverage-report/coverage.json';
+    const testReport = 'playwright-report/e2e/summary-report/results.json';
+
+    teardown('get coverage', { tag: ['@lite'] }, async () => {
+        executed_tests = (helpers.readJson(testReport))?.tests;
+        getCoverage(feature_map, outputFile);
+    });
+});
 
 function getCoverage(filePath: string, outputFile?: string) {
     const obj = yaml.load(fs.readFileSync(filePath, { encoding: 'utf-8' }));
@@ -33,10 +39,13 @@ function getCoverage(filePath: string, outputFile?: string) {
         uncovered_features: [],
     };
 
-    pages.forEach(page => {
+    pages.forEach((page: any) => {
         iterateThroughFeature(page.features);
         const pageCoverage = Math.round((coveredPageFeatures / totalPageFeatures) * 100 * 100) / 100;
-        coverageReport.page_coverage[page.page] = pageCoverage;
+        if (!isNaN(pageCoverage)) {
+            coverageReport.page_coverage[page.page] = pageCoverage;
+        }
+
         // resetting count for the current page
         totalPageFeatures = 0;
         coveredPageFeatures = 0;
@@ -58,22 +67,24 @@ function getCoverage(filePath: string, outputFile?: string) {
         console.log('\n total features:', totalProductFeatures);
         console.log('\n total covered features:', coveredProductFeatures);
         console.log('\n total coverage:', totalCoverage + '%');
-        console.log('\n page coverage:', coverageReport.covered_features);
+        console.log('\n page coverage:', coverageReport.page_coverage);
         console.log('\n covered features:', coveredFeatures);
         console.log('\n uncovered features:', uncoveredFeatures);
     }
 }
 
 function iterateThroughFeature(feature: any) {
-    // console.log(feature);
-    
     Object.entries(feature).forEach(([key, value]) => {
         if (typeof value === 'object') {
             iterateThroughFeature(feature[key]);
         } else {
+            if (!DOKAN_PRO && !key.includes('[lite]')) {
+                return;
+            }
             totalPageFeatures++;
             totalProductFeatures++;
-            if (value) {
+            key = key.replace(' [lite]', '');
+            if (value && executed_tests.includes(key)) {
                 coveredPageFeatures++;
                 coveredProductFeatures++;
                 coveredFeatures.push(key);

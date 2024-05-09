@@ -6,6 +6,7 @@ const readFile = filePath => (fs.existsSync(filePath) ? JSON.parse(fs.readFileSy
 const getTestResult = (suiteName, filePath, coverage) => {
     const testResult = readFile(filePath);
     if (!testResult) {
+        console.log(`Coverage Report File ${filePath.split('/').pop()} does not exists!!`);
         return [];
     }
     replace(testResult);
@@ -16,7 +17,8 @@ const getTestResult = (suiteName, filePath, coverage) => {
 const getCoverageReport = filePath => {
     const coverageReport = readFile(filePath);
     if (!coverageReport) {
-        return;
+        console.log(`Coverage Report File ${filePath.split('/').pop()} does not exists!!`);
+        return '';
     }
     return String(coverageReport.coverage);
 };

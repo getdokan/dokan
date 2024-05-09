@@ -30,7 +30,7 @@ test.describe('Request for quotation Rules test', () => {
 
     //admin
 
-    test('admin quote rules menu page renders properly', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
+    test('admin can view quote rules menu page', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
         await admin.adminQuoteRulesRenderProperly();
     });
 

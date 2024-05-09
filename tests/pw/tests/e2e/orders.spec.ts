@@ -30,7 +30,7 @@ test.describe('Order functionality test', () => {
 
     // orders
 
-    test('vendor order menu page renders properly', { tag: ['@lite', '@exploratory', '@vendor'] }, async () => {
+    test('vendor can view order menu page', { tag: ['@lite', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorOrdersRenderProperly();
     });
 
@@ -92,7 +92,7 @@ test.describe('Order functionality test', () => {
         await vendor.removeDownloadableProduct(orderId, downloadableProductName);
     });
 
-    test('vendor can perform order bulk action', { tag: ['@lite', '@vendor'] }, async () => {
+    test('vendor can perform bulk action on orders', { tag: ['@lite', '@vendor'] }, async () => {
         await vendor.orderBulkAction('completed', orderId);
     });
 });

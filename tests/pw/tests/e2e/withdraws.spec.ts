@@ -35,66 +35,66 @@ test.describe('Withdraw test', () => {
         await apiUtils.dispose();
     });
 
-    test('admin withdraw menu page renders properly', { tag: ['@lite', '@exploratory', '@admin'] }, async () => {
+    test('admin can view withdraw menu page', { tag: ['@lite', '@exploratory', '@admin'] }, async () => {
         await admin.adminWithdrawsRenderProperly();
     });
 
-    test('admin can filter withdraws by vendor', { tag: ['@lite', '@admin'] }, async () => {
+    test('admin can filter withdrawal requests by vendor', { tag: ['@lite', '@admin'] }, async () => {
         await admin.filterWithdraws(data.predefined.vendorStores.vendor1, 'by-vendor');
     });
 
-    test('admin can filter withdraws by payment methods', { tag: ['@lite', '@admin'] }, async () => {
+    test('admin can filter withdrawal requests by payment methods', { tag: ['@lite', '@admin'] }, async () => {
         await admin.filterWithdraws(data.vendor.withdraw.defaultWithdrawMethod.paypal, 'by-payment-method');
     });
 
-    test('admin can export withdraws', { tag: ['@lite', '@admin'] }, async () => {
+    test('admin can export withdrawal requests', { tag: ['@lite', '@admin'] }, async () => {
         await admin.exportWithdraws();
     });
 
-    test('admin can add note to withdraw request', { tag: ['@lite', '@admin'] }, async () => {
+    test('admin can add note to withdrawal request', { tag: ['@lite', '@admin'] }, async () => {
         await admin.addNoteWithdrawRequest(data.predefined.vendorStores.vendor1, 'test withdraw note');
     });
 
-    test('admin can approve withdraw request', { tag: ['@lite', '@admin'] }, async () => {
+    test('admin can approve withdrawal request', { tag: ['@lite', '@admin'] }, async () => {
         await admin.updateWithdrawRequest(data.predefined.vendorStores.vendor1, 'approve');
     });
 
-    test('admin can cancel withdraw request', { tag: ['@lite', '@admin'] }, async () => {
+    test('admin can cancel withdrawal request', { tag: ['@lite', '@admin'] }, async () => {
         await apiUtils.createWithdraw({ ...payloads.createWithdraw, amount: minimumWithdrawLimit }, payloads.vendorAuth);
         await admin.updateWithdrawRequest(data.predefined.vendorStores.vendor1, 'cancel');
     });
 
-    test('admin can delete withdraw request', { tag: ['@lite', '@admin'] }, async () => {
+    test('admin can delete withdrawal request', { tag: ['@lite', '@admin'] }, async () => {
         await apiUtils.createWithdraw({ ...payloads.createWithdraw, amount: minimumWithdrawLimit }, payloads.vendorAuth);
         await admin.updateWithdrawRequest(data.predefined.vendorStores.vendor1, 'delete');
     });
 
-    test('admin can perform withdraw bulk actions', { tag: ['@lite', '@admin'] }, async () => {
+    test('admin can perform bulk action on withdrawal requests', { tag: ['@lite', '@admin'] }, async () => {
         await apiUtils.createWithdraw({ ...payloads.createWithdraw, amount: minimumWithdrawLimit }, payloads.vendorAuth);
         await admin.withdrawBulkAction('cancelled');
     });
 
     // vendor
 
-    test('vendor withdraw menu page renders properly', { tag: ['@lite', '@exploratory', '@vendor'] }, async () => {
+    test('vendor can view withdraw menu page', { tag: ['@lite', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorWithdrawRenderProperly();
     });
 
-    test('vendor withdraw requests page is rendering properly', { tag: ['@lite', '@exploratory', '@vendor'] }, async () => {
+    test('vendor can view withdrawal requests page', { tag: ['@lite', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorWithdrawRequestsRenderProperly();
     });
 
-    test.skip('vendor can request withdraw', { tag: ['@lite', '@vendor'] }, async () => {
+    test('vendor can send withdrawal request', { tag: ['@lite', '@vendor'] }, async () => {
         await apiUtils.cancelWithdraw('', payloads.vendorAuth);
         await vendor.requestWithdraw({ ...data.vendor.withdraw, minimumWithdrawAmount: minimumWithdrawLimit, currentBalance: currentBalance });
     });
 
-    test("vendor can't request withdraw when pending request exits", { tag: ['@lite', '@vendor'] }, async () => {
+    test("vendor can't send withdrawal request when pending request exists", { tag: ['@lite', '@vendor'] }, async () => {
         await apiUtils.createWithdraw({ ...payloads.createWithdraw, amount: minimumWithdrawLimit }, payloads.vendorAuth);
         await vendor.cantRequestWithdraw();
     });
 
-    test('vendor can cancel request withdraw', { tag: ['@lite', '@vendor'] }, async () => {
+    test('vendor can cancel withdrawal request', { tag: ['@lite', '@vendor'] }, async () => {
         await apiUtils.createWithdraw({ ...payloads.createWithdraw, amount: minimumWithdrawLimit }, payloads.vendorAuth);
         await vendor.cancelWithdrawRequest();
     });

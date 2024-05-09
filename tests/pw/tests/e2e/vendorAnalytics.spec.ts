@@ -18,7 +18,7 @@ test.describe('Vendor analytics test', () => {
 
     // vendor
 
-    test('vendor analytics menu page renders properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+    test('vendor can view analytics menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorAnalyticsRenderProperly();
     });
 });

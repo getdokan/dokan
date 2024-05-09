@@ -19,7 +19,7 @@ test.describe('License test', () => {
 
     // admin
 
-    test('dokan license menu page renders properly', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
+    test('admin can view license menu page', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
         await admin.adminLicenseRenderProperly();
     });
 

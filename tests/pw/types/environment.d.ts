@@ -16,6 +16,7 @@ declare global {
             CUSTOMER_ID: string;
             PRODUCT_ID: string;
             PRODUCT_ID_V2: string;
+            LOCAL: boolean
             CI: string;
             GMAP: string;
             MAPBOX: string;

@@ -1380,6 +1380,20 @@ export interface announcement {
 export interface modules {
     noModuleMessage: string;
     modules: string[];
+
+    moduleStats: {
+        totalModules: number;
+        modulesVideoLink: number;
+        productManagement: number;
+        integration: number;
+        uiUx: number;
+        shipping: number;
+        storeManagement: number;
+        payment: number;
+        orderManagement: number;
+        vendorManagement: number;
+    };
+
     modulesName: {
         AuctionIntegration: string;
         ColorSchemeCustomize: string;

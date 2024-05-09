@@ -24,8 +24,8 @@ test.describe('Modules test', () => {
 
     //admin
 
-    test('dokan modules menu page renders properly', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
-        await admin.adminModulesRenderProperly();
+    test('admin can view modules menu page', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
+        await admin.adminModulesRenderProperly(data.modules.moduleStats);
     });
 
     test('admin can search module', { tag: ['@pro', '@admin'] }, async () => {
@@ -45,7 +45,7 @@ test.describe('Modules test', () => {
         await admin.activateDeactivateModule(data.modules.modulesName.AuctionIntegration);
     });
 
-    test('admin can perform module bulk action', { tag: ['@pro', '@admin'] }, async () => {
+    test('admin can perform bulk action on modules', { tag: ['@pro', '@admin'] }, async () => {
         await admin.moduleBulkAction('activate');
     });
 
