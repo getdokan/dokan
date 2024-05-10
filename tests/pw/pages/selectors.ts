@@ -4480,9 +4480,6 @@ export const selector = {
                 answer: {
                     answerDiv: '//div[normalize-space()="Answer"]/..',
                     answerTitle: '//div[normalize-space()="Answer"]',
-
-                    textButton: 'button#dokan-product-qa-answer-html',
-
                     questionAnswerIframe: 'iframe#dokan-product-qa-answer_ifr',
                     questionAnswerHtmlBody: '#tinymce',
                     saveAnswer: 'button#dokan_product_qa_save_answer',
