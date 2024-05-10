@@ -94,6 +94,7 @@ class Hooks {
             return;
         }
 
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $balance_result = $wpdb->get_row(
             $wpdb->prepare(
                 "select * from {$wpdb->dokan_vendor_balance} where trn_id = %d and trn_type = %s",
@@ -129,6 +130,7 @@ class Hooks {
                 ]
             );
         }
+        // phpcs:enable
     }
 
     /**
