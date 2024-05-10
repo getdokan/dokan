@@ -466,7 +466,6 @@ class Hooks {
      * @return void
      */
     public function add_per_product_commission_options() {
-        // phpcs:ignore
         if ( ! current_user_can( 'manage_woocommerce' ) ) {
             return;
         }
@@ -516,7 +515,6 @@ class Hooks {
      * @return void
      */
     public static function save_per_product_commission_options( $post_id ) {
-        // phpcs:ignore
         if ( ! current_user_can( 'manage_woocommerce' ) ) {
             return;
         }

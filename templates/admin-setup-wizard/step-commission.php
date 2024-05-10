@@ -1,11 +1,12 @@
 <?php
 /**
  * @var array $args
+ * @var object $setup_wizard
  */
 ?>
 <h1><?php esc_html_e( 'Commission Setup', 'dokan-lite' ); ?></h1>
 <form method="post" id="dokan-setup-wizard-commission-form">
-    <div id="dokan-setup-wizard-commission-data" data-commission="<?php echo esc_html( wp_json_encode( $args ) ); ?>"></div>
+    <div id="dokan-setup-wizard-commission-data" data-commission="<?php echo esc_attr( wp_json_encode( $args ) ); ?>"></div>
     <div id="dokan-setup-wizard-commission-wrapper"></div>
     <p class="wc-setup-actions step">
         <input type="submit" class="button-primary button button-large button-next" value="<?php esc_attr_e( 'Continue', 'dokan-lite' ); ?>" name="save_step" />

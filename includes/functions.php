@@ -437,7 +437,7 @@ if ( ! function_exists( 'dokan_get_seller_percentage' ) ) {
      * @return int
      */
     function dokan_get_seller_percentage( $seller_id = 0, $product_id = 0, $category_id = 0 ) {
-        wc_deprecated_function( __FUNCTION__, '3.9.9', 'dokan()->commission->get_commission()' );
+        wc_deprecated_function( __FUNCTION__, 'DOKAN_SINCE', 'dokan()->commission->get_commission()' );
 
         $commission_data = dokan()->commission->get_commission(
             [

@@ -597,14 +597,16 @@ class Hooks {
         $order_total = $data && property_exists( $data, 'order_total' ) ? $data->order_total : 0;
         $net_amount = $data && property_exists( $data, 'net_amount' ) ? $data->net_amount : 0;
 
-        $total_commission = (float) $order_total - (float) $net_amount;
+        $total_commission     = (float) $order_total - (float) $net_amount;
+        $all_commission_types = array_merge( dokan_commission_types(), dokan()->commission->get_legacy_commission_types() );
 
         dokan_get_template_part(
-            'orders/commission-meta-box-html', '', array(
-                'order'            => $order,
-                'data'             => $data,
-                'total_commission' => $total_commission,
-            )
+            'orders/commission-meta-box-html', '', [
+                'order'                => $order,
+                'data'                 => $data,
+                'total_commission'     => $total_commission,
+                'all_commission_types' => $all_commission_types,
+            ]
         );
     }
 

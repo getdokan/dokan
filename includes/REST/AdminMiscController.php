@@ -38,7 +38,7 @@ class AdminMiscController extends DokanRESTAdminController {
         );
 
         register_rest_route(
-            $this->namespace, '/get-option', [
+            $this->namespace, '/option', [
                 [
                     'methods'             => WP_REST_Server::READABLE,
                     'callback'            => [ $this, 'get_option' ],

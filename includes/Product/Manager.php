@@ -6,6 +6,7 @@ use WC_Product;
 use WC_Product_Download;
 use WeDevs\Dokan\Cache;
 use WeDevs\Dokan\Commission\Model\Setting;
+use WeDevs\Dokan\Commission\Settings\Product;
 use WP_Error;
 use WP_Query;
 
@@ -746,24 +747,9 @@ class Manager {
      * @return \WeDevs\Dokan\Commission\Model\Setting
      */
     public function get_commission_settings( $product_id = 0 ) {
-        $product = $this->get( dokan()->product->validate_product_id( $product_id ) );
+        $settings = new Product( $product_id );
 
-        $commission_percentage = '';
-        $commission_type       = '';
-        $additional_flat       = '';
-
-        if ( ! empty( $product ) ) {
-            $commission_percentage = $product->get_meta( '_per_product_admin_commission', true );
-            $commission_type       = $product->get_meta( '_per_product_admin_commission_type', true );
-            $additional_flat       = $product->get_meta( '_per_product_admin_additional_fee', true );
-        }
-
-        $settings = new Setting();
-        $settings->set_type( $commission_type )
-                ->set_flat( $additional_flat )
-                ->set_percentage( $commission_percentage );
-
-        return $settings;
+        return $settings->get();
     }
 
     /**

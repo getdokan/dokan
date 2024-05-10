@@ -7,13 +7,13 @@
  * @var WC_Order $order
  * @var object $data
  * @var float $total_commission
+ * @var array $all_commission_types
  *
  * @since DOKAN_LITE
  *
  * @package dokan
  */
 
-$all_commission_types = array_merge( dokan_commission_types(), dokan()->commission->get_legacy_commission_types() );
 $total_commission = 0 > $total_commission ? 0 : $total_commission;
 
 $order_total = $data && property_exists( $data, 'order_total' ) ? $data->order_total : 0;
@@ -65,34 +65,51 @@ $net_amount  = $data && property_exists( $data, 'net_amount' ) ? $data->net_amou
                         ]
                     );
 
-                    $type                 = $commission_data->get_type();
+                    $commission_type      = $commission_data->get_type();
                     $admin_commission     = $commission_data->get_admin_commission();
                     $percentage           = isset( $commission_data->get_parameters()['percentage'] ) ? $commission_data->get_parameters()['percentage'] : 0;
                     $flat                 = isset( $commission_data->get_parameters()['flat'] ) ? $commission_data->get_parameters()['flat'] : 0;
-                    $commission_type_html = $all_commission_types[ $type ];
+                    $commission_type_html = $all_commission_types[ $commission_type ];
                     ?>
                     <tr class="item  <?php echo esc_attr( $row_class ); ?>" data-order_item_id="<?php echo $item->get_id(); ?>">
                         <td class="thumb">
-                            <?php echo '<div class="wc-order-item-thumbnail">' . wp_kses_post( $thumbnail ) . '</div>'; ?>
+                            <div class="wc-order-item-thumbnail"> <?php echo wp_kses_post( $thumbnail ); ?> </div>
                         </td>
                         <td class="name">
                             <?php
-                            echo $product_link ? '<a href="' . esc_url( $product_link ) . '" class="wc-order-item-name">' . wp_kses_post( $item->get_name() ) . '</a>' : '<div class="wc-order-item-name">' . wp_kses_post( $item->get_name() ) . '</div>';
+                            if ( $product_link ) :
+                                ?>
+                                    <a href="<?php echo esc_url( $product_link ); ?>" class="wc-order-item-name"><?php echo wp_kses_post( $item->get_name() ); ?></a>
+                                <?php
+                            else :
+                                ?>
+                                    <div class="wc-order-item-name"><?php echo wp_kses_post( $item->get_name() ); ?></div>
+                                <?php
+                            endif;
 
-                            if ( $product && $product->get_sku() ) {
-                                echo '<div class="wc-order-item-sku"><strong>' . esc_html__( 'SKU:', 'dokan-lite' ) . '</strong> ' . esc_html( $product->get_sku() ) . '</div>';
-                            }
+                            if ( $product && $product->get_sku() ) :
+                                ?>
+                                    <div class="wc-order-item-sku"><strong><?php echo esc_html__( 'SKU:', 'dokan-lite' ); ?></strong><?php echo esc_html( $product->get_sku() ); ?></div>
+                                <?php
+                            endif;
 
-                            if ( $item->get_variation_id() ) {
-                                echo '<div class="wc-order-item-variation"><strong>' . esc_html__( 'Variation ID:', 'dokan-lite' ) . '</strong> ';
-                                if ( 'product_variation' === get_post_type( $item->get_variation_id() ) ) {
-                                    echo esc_html( $item->get_variation_id() );
-                                } else {
-                                    /* translators: %s: variation id */
-                                    printf( esc_html__( '%s (No longer exists)', 'dokan-lite' ), esc_html( $item->get_variation_id() ) );
-                                }
-                                echo '</div>';
-                            }
+                            if ( $item->get_variation_id() ) :
+                                ?>
+                                    <div class="wc-order-item-variation">
+                                        <strong>
+                                            <?php
+                                            echo esc_html__( 'Variation ID:', 'dokan-lite' );
+
+											if ( 'product_variation' === get_post_type( $item->get_variation_id() ) ) :
+												echo esc_html( $item->get_variation_id() );
+                                            else :
+                                                /* translators: %s: variation id */
+                                                printf( esc_html__( '%s (No longer exists)', 'dokan-lite' ), esc_html( $item->get_variation_id() ) );
+                                            endif;
+											?>
+                                    </div>
+                                <?php
+                            endif;
                             ?>
                         </td>
 

@@ -14,7 +14,7 @@ class Vendor extends AbstractStrategy {
      *
      * @var int
      */
-    protected int $vendor_id;
+    protected $vendor_id;
 
     /**
      * Vendor strategy source.
