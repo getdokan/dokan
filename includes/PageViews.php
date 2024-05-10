@@ -19,31 +19,13 @@ class PageViews {
     }
 
     public function load_scripts() {
-        $nonce = wp_create_nonce( 'dokan_pageview' );
-
-        echo '<script type="text/javascript">
-            jQuery(document).ready( function($) {
-                if(localStorage){
-                    let new_date = new Date().toISOString().slice(0, 10);
-                    let dokan_pageview_count = JSON.parse(localStorage.getItem("dokan_pageview_count"));
-                    let post_id = ' . get_the_ID() . ';
-
-                    if ( dokan_pageview_count === null || ( dokan_pageview_count.today && dokan_pageview_count.today !== new_date ) ) {
-                        dokan_pageview_count = { "today": new_date, "post_ids": [] };
-                    }
-                    if ( ! dokan_pageview_count.post_ids.includes( post_id )  ) {
-                        var data = {
-                            action: "dokan_pageview",
-                            _ajax_nonce: "' . esc_html( $nonce ) . '",
-                            post_id: ' . get_the_ID() . ',
-                        }
-                        $.post( "' . esc_url( admin_url( 'admin-ajax.php' ) ) . '", data );
-                        dokan_pageview_count.post_ids.push( post_id );
-                        localStorage.setItem("dokan_pageview_count", JSON.stringify(dokan_pageview_count));
-                    }
-                }
-            } );
-            </script>';
+        dokan_get_template(
+            'page-views', array(
+                'nonce' => wp_create_nonce( 'dokan_pageview' ),
+                'post_id' => get_the_ID(),
+                'ajax_url' => admin_url( 'admin-ajax.php' ),
+            )
+        );
     }
 
     public function load_views() {
@@ -81,5 +63,4 @@ class PageViews {
 
         wp_die();
     }
-
 }
