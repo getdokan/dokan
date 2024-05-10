@@ -76,8 +76,8 @@ class StoreLocation extends WP_Widget {
      * Deals with the settings when they are saved by the admin. Here is
      * where any validation should be dealt with.
      *
-     * @param array  An array of new settings as submitted by the admin
-     * @param array  An array of the previous settings
+     * @param array $new_instance array of new settings as submitted by the admin
+     * @param array $old_instance array of the previous settings
      *
      * @return array The validated and (if necessary) amended settings
      */
@@ -91,7 +91,7 @@ class StoreLocation extends WP_Widget {
     /**
      * Displays the form for this widget on the Widgets page of the WP Admin area.
      *
-     * @param array  An array of the current settings for this widget
+     * @param array $instance array of the current settings for this widget
      *
      * @return void Echoes it's output
      */
