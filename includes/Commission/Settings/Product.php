@@ -18,6 +18,10 @@ class Product implements InterfaceSetting {
 
     public function __construct( $product_id ) {
         $this->product = dokan()->product->get( $product_id );
+
+        if ( $this->product && $this->product->is_type( 'variation' ) ) {
+            $this->product = dokan()->product->get( $this->product->get_parent_id() );
+        }
     }
 
 

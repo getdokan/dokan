@@ -147,11 +147,15 @@ $net_amount  = $data && property_exists( $data, 'net_amount' ) ? $data->net_amou
                                     $commission_refunded = ( $order->get_total_refunded_for_item( $item_id ) / $amount ) * $original_commission;
                                 }
 
-                                echo '<bdi>' . wc_price( $original_commission, array( 'currency' => $order->get_currency() ) ) . '</bdi>';
+                                ?>
+                                    <bdi><?php echo wc_price( $original_commission, array( 'currency' => $order->get_currency() ) ); ?></bdi>
+                                <?php
 
-                                if ( $order->get_total_refunded_for_item( $item_id ) ) {
-                                    echo '<small class="refunded">' . wc_price( $commission_refunded, array( 'currency' => $order->get_currency() ) ) . '</small>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-                                }
+                                if ( $order->get_total_refunded_for_item( $item_id ) ) :
+                                    ?>
+                                        <small class="refunded"><?php echo wc_price( $commission_refunded, array( 'currency' => $order->get_currency() ) ); ?></small>
+                                    <?php
+                                endif;
                                 ?>
                             </div>
                         </td>

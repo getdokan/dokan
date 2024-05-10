@@ -57,15 +57,16 @@
                         )
                     );
 
-                    $order_item = new WC_Order( $order_item->get_id() );
+                    $sub_order = new WC_Order( $order_item->get_id() );
                     ?>
                     <tr class="item">
                         <td class="name">
-                            <?php echo '<a href="' . esc_url( $edit_url ) . '" class="order-view"><strong>#' . esc_attr( $order_item->get_id() ) . '</strong></a>'; ?>
+                            <a href="<?php echo esc_url( $edit_url ); ?>" class="order-view"><strong># <?php echo esc_attr( $sub_order->get_id() ); ?></strong></a>
+
                             <?php
-                            if ( ! $has_sub_order && $order_item->get_id() === $parent_order->get_id() ) {
-                                echo '<strong>' . esc_html_e( '(Parent order)', 'dokan-lite' ) . '</p>';
-                            }
+							if ( ! $has_sub_order && $sub_order->get_id() === $parent_order->get_id() ) :
+								echo '<strong>' . esc_html_e( '(Parent order)', 'dokan-lite' ) . '</p>';
+                            endif;
                             ?>
                         </td>
                         <td width="1%"></td>
@@ -73,18 +74,18 @@
 
                         <td class=''>
                             <div class="view">
-                                <?php echo $woocommerce_list_table->render_order_date_column( $order_item ); ?>
+                                <?php echo $woocommerce_list_table->render_order_date_column( $sub_order ); ?>
                             </div>
                         </td>
 
                         <td class="">
                             <div class="view">
-                                <?php echo $woocommerce_list_table->render_order_status_column( $order_item ); ?>
+                                <?php echo $woocommerce_list_table->render_order_status_column( $sub_order ); ?>
                             </div>
                         </td>
                         <td>
                             <div class="view">
-                                <?php echo $woocommerce_list_table->render_order_total_column( $order_item ); ?>
+                                <?php echo $woocommerce_list_table->render_order_total_column( $sub_order ); ?>
                             </div>
                         </td>
                         <td>

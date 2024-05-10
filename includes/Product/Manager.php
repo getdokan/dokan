@@ -760,26 +760,11 @@ class Manager {
      * @return \WeDevs\Dokan\Commission\Model\Setting
      */
     public function save_commission_settings( $product_id, $commission ) {
-        $product = $this->get( $product_id );
+        $data['percentage'] = isset( $commission['percentage'] ) ? $commission['percentage'] : '';
+        $data['type']       = isset( $commission['type'] ) ? $commission['type'] : '';
+        $data['flat']       = isset( $commission['flat'] ) ? $commission['flat'] : '';
 
-        $commission_percentage = isset( $commission['percentage'] ) ? $commission['percentage'] : '';
-        $commission_type       = isset( $commission['type'] ) ? $commission['type'] : '';
-        $additional_flat       = isset( $commission['flat'] ) ? $commission['flat'] : '';
-
-        if ( ! empty( $product ) ) {
-            $product->update_meta_data( '_per_product_admin_commission', $commission_percentage );
-            $product->update_meta_data( '_per_product_admin_commission_type', $commission_type );
-            $product->update_meta_data( '_per_product_admin_additional_fee', $additional_flat );
-
-            $product->save_meta_data();
-            $product->save();
-        }
-
-        $settings = new Setting();
-        $settings->set_type( $commission_type )
-                ->set_flat( $additional_flat )
-                ->set_percentage( $commission_percentage );
-
-        return $settings;
+        $setting = new Product( $product_id );
+        return $setting->save( $data );
     }
 }
