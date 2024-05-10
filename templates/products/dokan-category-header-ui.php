@@ -13,7 +13,7 @@ if ( count( $chosen_cat ) < 1 && ! empty( $default_product_cat->term_id ) ) {
 
 // If no category is set then add a empty category box.
 if ( count( $chosen_cat ) < 1 ) {
-    array_push( $chosen_cat, $initial_category_for_modal );
+    $chosen_cat[] = $initial_category_for_modal;
 }
 ?>
 
@@ -27,7 +27,9 @@ if ( count( $chosen_cat ) < 1 ) {
     <?php foreach ( $chosen_cat as $key => $term_id ) : ?>
         <div data-activate="no" class="dokan-select-product-category-container dokan_select_cat_for_<?php echo esc_attr( $from ); ?>_<?php echo esc_attr( $key ); ?>">
             <div data-selectfor="<?php echo esc_attr( $from ); ?>" class="dokan-form-group dokan-select-product-category dokan-category-open-modal" data-dokansclevel="<?php echo esc_attr( $key ); ?>" id="dokan-category-open-modal">
-                <span id="dokan_product_cat_res" class="dokan-select-product-category-title dokan-ssct-level-<?php echo esc_attr( $key ); ?>"><?php echo empty( $term_id ) ? __( '- Select a category -', 'dokan-lite' ) : Helper::get_ancestors_html( $term_id ); ?></span>
+                <span id="dokan_product_cat_res" class="dokan-select-product-category-title dokan-ssct-level-<?php echo esc_attr( $key ); ?>">
+                    <?php echo empty( $term_id ) ? esc_html__( '- Select a category -', 'dokan-lite' ) : esc_html( Helper::get_ancestors_html( $term_id ) ); ?>
+                </span>
                 <span class="dokan-select-product-category-icon"><i class="fas fa-edit"></i></span>
 
             </div>
