@@ -28,13 +28,13 @@ test.describe('Reports test', () => {
 
     // reports
 
-    test('admin reports menu page is rendering properly', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
+    test('admin can view reports menu page', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
         await admin.adminReportsRenderProperly();
     });
 
     // all logs
 
-    test('admin all Logs menu page is rendering properly', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
+    test('admin can view all Logs menu page', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
         await admin.adminAllLogsRenderProperly();
     });
 

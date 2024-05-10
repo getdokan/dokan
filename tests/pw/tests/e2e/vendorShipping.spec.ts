@@ -24,11 +24,11 @@ test.describe('Vendor shipping test', () => {
 
     //vendor
 
-    test('vendor shipping settings menu page is rendering properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+    test('vendor can view shipping settings menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorShippingSettingsRenderProperly();
     });
 
-    test('vendor can set shipping policy', { tag: ['@pro', '@vendor'] }, async () => {
+    test('vendor can add shipping policy', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.setShippingPolicies(data.vendor.shipping.shippingPolicy);
     });
 
@@ -48,7 +48,7 @@ test.describe('Vendor shipping test', () => {
         await vendor.addShippingMethod(data.vendor.shipping.shippingMethods.tableRateShipping);
     });
 
-    test('vendor can add dokan distance rate shipping', { tag: ['@pro', '@vendor'] }, async () => {
+    test('vendor can add distance rate shipping', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.addShippingMethod(data.vendor.shipping.shippingMethods.distanceRateShipping);
     });
 

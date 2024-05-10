@@ -36,7 +36,7 @@ test.describe('Abuse report test', () => {
 
     // admin
 
-    test('dokan abuse report menu page is rendering properly', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
+    test('admin can view abuse reports menu page', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
         await admin.adminAbuseReportRenderProperly();
     });
 
@@ -56,7 +56,7 @@ test.describe('Abuse report test', () => {
         await admin.filterAbuseReports(data.predefined.vendorStores.vendor1, 'by-vendor');
     });
 
-    test.skip('admin can perform abuse report bulk action', { tag: ['@pro', '@admin'] }, async () => {
+    test.skip('admin can perform bulk action on abuse reports', { tag: ['@pro', '@admin'] }, async () => {
         // todo: might cause other tests to fail in parallel
         await admin.abuseReportBulkAction('delete');
     });

@@ -2,7 +2,7 @@ import { test, Page } from '@playwright/test';
 import { VendorReportsPage } from '@pages/vendorReportsPage';
 import { data } from '@utils/testData';
 
-test.describe('Vendor analytics test', () => {
+test.describe('Vendor reports test', () => {
     let vendor: VendorReportsPage;
     let vPage: Page;
 
@@ -18,7 +18,7 @@ test.describe('Vendor analytics test', () => {
 
     //vendor
 
-    test('vendor reports menu page is rendering properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+    test('vendor can view reports menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorReportsRenderProperly();
     });
 

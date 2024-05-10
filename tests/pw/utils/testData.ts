@@ -1717,6 +1717,19 @@ export const data = {
     // modules
     modules: {
         noModuleMessage: 'No modules found.',
+        moduleStats: {
+            totalModules: 39,
+            modulesVideoLink: 17,
+            productManagement: 14,
+            integration: 6,
+            uiUx: 2,
+            shipping: 3,
+            storeManagement: 10,
+            payment: 6,
+            orderManagement: 2,
+            vendorManagement: 1,
+        },
+
         modules: [
             'booking',
             'color_scheme_customizer',

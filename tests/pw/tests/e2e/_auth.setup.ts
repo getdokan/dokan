@@ -6,7 +6,7 @@ import { payloads } from '@utils/payloads';
 import { data } from '@utils/testData';
 import { helpers } from '@utils/helpers';
 
-const { DOKAN_PRO, BASE_URL } = process.env;
+const { LOCAL, DOKAN_PRO, BASE_URL } = process.env;
 
 setup.describe('authenticate users & set permalink', () => {
     let apiUtils: ApiUtils;
@@ -34,6 +34,8 @@ setup.describe('authenticate users & set permalink', () => {
         const loginPage = new LoginPage(page);
         await loginPage.adminLogin(data.admin, data.auth.adminAuthFile);
     });
+
+    //todo: add plugin activation for local setup
 
     setup.skip('admin set WpSettings', { tag: ['@lite'] }, async ({ page }) => {
         const loginPage = new LoginPage(page);
@@ -73,6 +75,7 @@ setup.describe('authenticate users & set permalink', () => {
     });
 
     setup('dokan pro enabled or not', { tag: ['@lite'] }, async () => {
+        setup.skip(LOCAL, 'Skip on Local testing');
         let res = await apiUtils.checkPluginsExistence(data.plugin.dokanPro, payloads.adminAuth);
         if (res) {
             res = await apiUtils.pluginsActiveOrNot(data.plugin.dokanPro, payloads.adminAuth);

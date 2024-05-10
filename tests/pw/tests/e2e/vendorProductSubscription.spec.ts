@@ -32,7 +32,7 @@ test.describe('Product subscriptions test', () => {
 
     //vendor
 
-    test('vendor user subscriptions menu page is rendering properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+    test('vendor can view user subscriptions menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorUserSubscriptionsRenderProperly();
     });
 

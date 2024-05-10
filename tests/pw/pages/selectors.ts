@@ -2501,7 +2501,7 @@ export const selector = {
                 // Add Tax
                 taxTable: '.wc_tax_rates',
                 insertRow: '.plus',
-                taxRate: '.rate input',
+                taxRate: 'td.rate input',
                 taxRateSaveChanges: '.woocommerce-save-button',
 
                 // Shipping
@@ -4481,7 +4481,6 @@ export const selector = {
                     answerDiv: '//div[normalize-space()="Answer"]/..',
                     answerTitle: '//div[normalize-space()="Answer"]',
 
-                    addMedia: 'button#insert-media-button',
                     visualButton: 'button#dokan-product-qa-answer-tmce',
                     textButton: 'button#dokan-product-qa-answer-html',
 

@@ -26,11 +26,11 @@ test.describe('Vendor delivery time test', () => {
 
     //vendor
 
-    test('vendor delivery time menu page is rendering properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+    test('vendor can view delivery time menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorDeliveryTimeRenderProperly();
     });
 
-    test('vendor delivery time settings menu page is rendering properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+    test('vendor can view delivery time settings menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorDeliveryTimeSettingsRenderProperly();
     });
 

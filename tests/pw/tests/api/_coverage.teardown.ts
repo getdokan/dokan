@@ -1,4 +1,4 @@
-import { test, request } from '@playwright/test';
+import { test as teardown, request } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { helpers } from '@utils/helpers';
@@ -6,19 +6,19 @@ import { execSync } from 'child_process';
 import fs from 'fs';
 import path from 'path';
 
-test.describe('get api test coverage', () => {
+teardown.describe('get api test coverage', () => {
     const outputFile = 'playwright-report/api/coverage-report/coverage.json';
     let apiUtils: ApiUtils;
 
-    test.beforeAll(async () => {
+    teardown.beforeAll(async () => {
         apiUtils = new ApiUtils(await request.newContext());
     });
 
-    test.afterAll(async () => {
+    teardown.afterAll(async () => {
         await apiUtils.dispose();
     });
 
-    test('get coverage', async () => {
+    teardown('get coverage', async () => {
         const endpoints = [endPoints.getAllDokanEndpointsAdmin, endPoints.getAllDokanEndpointsV1, endPoints.getAllDokanEndpointsV2];
         const allRoutes: string[] = [];
         const allRouteObjValues = [];
@@ -27,13 +27,12 @@ test.describe('get api test coverage', () => {
             allRoutes.push(...Object.keys(responseBody.routes));
             allRouteObjValues.push(...Object.values(responseBody.routes));
         }
-        const allRouteMethods: string[][] = allRouteObjValues.map(route => route.methods);
+        const allRouteMethods: string[][] = allRouteObjValues.map((route: any) => route.methods);
         let coverageArray = allRouteMethods.flatMap((methods, i) => methods.map(method => `${method} ${allRoutes[i]}`));
         coverageArray = [...new Set(coverageArray)];
         coverageArray = coverageArray.filter(e => !e.includes('PATCH'));
         // console.log(coverageArray);
         // console.log(coverageArray.length);
-
         getCoverage(coverageArray, outputFile);
     });
 });
@@ -49,7 +48,7 @@ function getCoverage(coverageArray: any[], outputFile?: string) {
     const totalEndPoints = coverageArray.length;
     let coveredEndPoints = 0;
     const uncoveredEndpoints: string[] = [];
-    //Iterates through the coverageArray to grep each file in the test directory looking for matches
+    // Iterates through the coverageArray to grep each file in the test directory looking for matches
     for (const route of coverageArray) {
         const pattern = `COVERAGE_TAG: ${helpers.escapeRegex(route)}$`;
         const output = execSync(`grep -irl -E '${pattern}' tests/api | cat  `, { encoding: 'utf-8' });

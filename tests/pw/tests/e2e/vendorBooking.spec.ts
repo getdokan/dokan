@@ -44,19 +44,19 @@ test.describe('Booking Product test', () => {
 
     // vendor
 
-    test('vendor booking menu page is rendering properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+    test('vendor can view booking menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorBookingRenderProperly();
     });
 
-    test('vendor manage booking page is rendering properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+    test('vendor can view manage booking page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorManageBookingRenderProperly();
     });
 
-    test('vendor booking calendar page is rendering properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+    test('vendor can view booking calendar page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorBookingCalendarRenderProperly();
     });
 
-    test('vendor manage booking resource page is rendering properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+    test('vendor can view manage booking resource page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorManageResourcesRenderProperly();
     });
 

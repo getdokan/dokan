@@ -24,7 +24,7 @@ test.describe('Verifications test', () => {
 
     // vendor
 
-    test('vendor verifications settings menu page is rendering properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+    test('vendor can view verifications settings menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorVerificationsSettingsRenderProperly();
     });
 
@@ -44,7 +44,7 @@ test.describe('Verifications test', () => {
 
     //admin
 
-    test('admin verifications menu page is rendering properly', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
+    test('admin can view verifications menu page', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
         await admin.adminVerificationsRenderProperly();
     });
 

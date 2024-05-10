@@ -39,7 +39,7 @@ test.describe('Wholesale customers test (admin)', () => {
 
     // admin
 
-    test('dokan wholesale customers menu page is rendering properly', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
+    test('admin can view wholesale customers menu page', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
         await admin.adminWholesaleCustomersRenderProperly();
     });
 
@@ -67,7 +67,7 @@ test.describe('Wholesale customers test (admin)', () => {
         await admin.updateWholesaleCustomer(data.predefined.customerInfo.username1, 'delete');
     });
 
-    test('admin can perform wholesale customer bulk action', { tag: ['@pro', '@admin'] }, async () => {
+    test('admin can perform bulk action on wholesale customers', { tag: ['@pro', '@admin'] }, async () => {
         await admin.wholesaleCustomerBulkAction('activate');
     });
 
