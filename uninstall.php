@@ -48,7 +48,7 @@ class Dokan_Uninstaller {
             }
 
             // Delete Dokan related options
-            $wpdb->query( "DELETE FROM $wpdb->options WHERE option_name LIKE '%dokan%' AND option_name NOT LIKE '{$wpdb->prefix}user_roles'" );
+            $wpdb->query( "DELETE FROM $wpdb->options WHERE option_name LIKE '%dokan%' AND option_name NOT LIKE '{$wpdb->prefix}user_roles'" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
             // Clear any cached data that has been removed.
             wp_cache_flush();
