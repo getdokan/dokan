@@ -77,7 +77,7 @@ $order_url = esc_url(
             if ( $item_totals ) {
                 $i = 0;
                 foreach ( $item_totals as $total ) {
-                    $i ++;
+                    ++$i;
                     ?>
                     <tr>
                         <th class="td" scope="row" colspan="2" style="text-align:<?php echo esc_attr( $text_align ); ?>; <?php echo ( 1 === $i ) ? 'border-top-width: 4px;' : ''; ?>"><?php echo wp_kses_post( $total['label'] ); ?></th>
