@@ -265,8 +265,8 @@ class Ajax {
 
                         include dirname( __DIR__ ) . '/templates/orders/order-download-permission-html.php';
 
-                        $loop ++;
-                        $file_count ++;
+                        $loop++;
+                        $file_count++;
                     }
                 }
             }
@@ -692,6 +692,7 @@ class Ajax {
 
         $drop_down_tags = apply_filters(
             'dokan_search_product_tags_for_vendor_products', [
+                'taxonomy'   => 'product_tag',
                 'name__like' => $name,
                 'hide_empty' => 0,
                 'orderby'    => 'name',
@@ -701,7 +702,7 @@ class Ajax {
             ]
         );
 
-        $product_tags = get_terms( 'product_tag', $drop_down_tags );
+        $product_tags = get_terms( $drop_down_tags );
 
         if ( $product_tags ) {
             foreach ( $product_tags as $pro_term ) {
