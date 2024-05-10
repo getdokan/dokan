@@ -115,7 +115,10 @@
         <type>warning</type>
     </rule>
     <rule ref="WordPress.Security.EscapeOutput.OutputNotEscaped">
-        <severity>0</severity>
+        <severity>9</severity>
+    </rule>
+    <rule ref="WordPress.Security.EscapeOutput.ExceptionNotEscaped">
+        <severity>9</severity>
     </rule>
     <rule ref="WordPress.PHP.DevelopmentFunctions.error_log_var_export">
         <severity>0</severity>
