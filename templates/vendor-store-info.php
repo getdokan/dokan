@@ -29,7 +29,7 @@
         </div>
         <?php if ( $store_rating['count'] ) : ?>
             <?php // translators: %d reviews count ?>
-            <p class="dokan-ratings-count">(<?php echo sprintf( _n( '%s Review', '%s Reviews', $store_rating['count'], 'dokan-lite' ), number_format_i18n( $store_rating['count'] ) ); ?>)</p>
+            <p class="dokan-ratings-count">(<?php echo esc_html( sprintf( _n( '%s Review', '%s Reviews', $store_rating['count'], 'dokan-lite' ), esc_html( number_format_i18n( $store_rating['count'] ) ) ) ); ?>)</p>
         <?php endif; ?>
     </div>
 </div>

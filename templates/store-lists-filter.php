@@ -25,7 +25,7 @@ defined( 'ABSPATH' ) || exit; ?>
         <p class="item store-count">
             <?php
             // translators: 1) number of stores
-            printf( _n( 'Total store showing: %s', 'Total stores showing: %s', $number_of_store, 'dokan-lite' ), number_format_i18n( $number_of_store ) );
+            printf( esc_html( _n( 'Total store showing: %s', 'Total stores showing: %s', $number_of_store, 'dokan-lite' ) ), esc_html( number_format_i18n( $number_of_store ) ) );
             ?>
         </p>
     </div>
@@ -51,7 +51,7 @@ defined( 'ABSPATH' ) || exit; ?>
                 <?php
                 foreach ( $sort_filters as $key => $filter ) {
                     $optoins = "<option value='{$key}'" . selected( $sort_by, $key, false ) . ">{$filter}</option>";
-                    printf( $optoins );
+                    echo wp_kses_post( $optoins );
                 }
                 ?>
             </select>

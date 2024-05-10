@@ -33,7 +33,7 @@ $order_url = esc_url(
     <p>
         <?php
         // translators: 1) order formatted billing full name
-        printf( __( 'You have received an order from %s.', 'dokan-lite' ), $order->get_formatted_billing_full_name() );
+        printf( esc_html__( 'You have received an order from %s.', 'dokan-lite' ), esc_html( $order->get_formatted_billing_full_name() ) );
         ?>
     </p>
 
