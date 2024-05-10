@@ -89,6 +89,7 @@ class Commission {
             $net_amount = $vendor_earning - $gateway_fee;
             $net_amount = apply_filters( 'dokan_orders_vendor_net_amount', $net_amount, $vendor_earning, $gateway_fee, $tmp_order, $order );
 
+            // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $wpdb->update(
                 $wpdb->dokan_orders,
                 [ 'net_amount' => (float) $net_amount ],
@@ -107,6 +108,7 @@ class Commission {
                 [ '%f' ],
                 [ '%d', '%s' ]
             );
+            // phpcs:enable
 
             $tmp_order->update_meta_data( 'dokan_gateway_fee', $gateway_fee );
             $tmp_order->save();
@@ -735,12 +737,14 @@ class Commission {
             return $earning;
         }
 
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $result = $wpdb->get_row(
             $wpdb->prepare(
                 "SELECT `net_amount`, `order_total` FROM {$wpdb->dokan_orders} WHERE `order_id` = %d",
                 $order_id
             )
         );
+        // phpcs:enable
 
         if ( ! $result ) {
             return null;
