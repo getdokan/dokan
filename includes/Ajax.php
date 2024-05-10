@@ -414,7 +414,7 @@ class Ajax {
                 echo 'customer-note';
             }
             echo '"><div class="note_content">';
-            echo wpautop( wptexturize( $note ) ); // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
+            echo wp_kses_post( wpautop( wptexturize( $note ) ) );
             echo '</div><p class="meta"><a href="#" class="delete_note">' . esc_html__( 'Delete note', 'dokan-lite' ) . '</a></p>';
             echo '</li>';
         }
@@ -484,7 +484,7 @@ class Ajax {
             echo '<li rel="' . esc_attr( $comment_id ) . '" class="note ';
             echo 'customer-note';
             echo '"><div class="note_content">';
-            echo wpautop( wptexturize( $ship_info ) ); // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
+            echo wp_kses_post( wpautop( wptexturize( $ship_info ) ) );
             echo '</div><p class="meta"><a href="#" class="delete_note">' . esc_html__( 'Delete', 'dokan-lite' ) . '</a></p>';
             echo '</li>';
 
