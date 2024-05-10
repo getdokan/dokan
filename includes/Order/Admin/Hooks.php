@@ -158,7 +158,7 @@ class Hooks {
         }
 
         if ( ! empty( $output ) ) {
-            echo apply_filters( "dokan_manage_shop_order_custom_columns_{$col}", $output, $order );
+            echo wp_kses_post( apply_filters( "dokan_manage_shop_order_custom_columns_{$col}", $output, $order ) );
         }
     }
 
