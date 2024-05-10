@@ -62,7 +62,7 @@ class OrderItem implements InterfaceSetting {
          */
         $order_id = wc_get_order_id_by_order_item_id( $this->order_item_id );
 
-        if ( OrderUtil::is_hpos_enabled() ) {
+        if ( $order_id && OrderUtil::is_hpos_enabled() ) {
             $order = dokan()->order->get( $order_id );
             $item_total = $order->get_meta( '_dokan_item_total' );
         } else {

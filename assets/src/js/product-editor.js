@@ -948,7 +948,7 @@
             }).get();
 
             jQuery.ajax({
-                url: window.dokan.rest.root + `dokan/v2/products/get-commission`,
+                url: window.dokan.rest.root + `dokan/v1/commission`,
                 beforeSend: function ( xhr ) {
                     xhr.setRequestHeader( 'X-WP-Nonce', window.dokan.rest.nonce );
                 },
