@@ -38,7 +38,14 @@
             <label for="seller-url" class="pull-left"><?php esc_html_e( 'Shop URL', 'dokan-lite' ); ?> <span class="required">*</span></label>
             <strong id="url-alart-mgs" class="pull-right"></strong>
             <input type="text" class="input-text form-control" name="shopurl" id="seller-url" value="<?php echo esc_attr( $shop_url ); ?>" required="required" />
-            <small><?php echo home_url() . '/' . dokan_get_option( 'custom_store_url', 'dokan_general', 'store' ); ?>/<strong id="url-alart"></strong></small>
+            <small>
+                <?php
+                $store_url = home_url() . '/' . dokan_get_option( 'custom_store_url', 'dokan_general', 'store' );
+                echo esc_url( $store_url );
+                ?>
+                /
+                <strong id="url-alart"></strong>
+            </small>
         </p>
 
         <p class="form-row form-group form-row-wide">
@@ -63,7 +70,7 @@
                     <?php
                     $tc_link = sprintf( '<a target="_blank" href="%1$s">%2$s</a>', esc_url( $toc_page_url ), __( 'Terms &amp; Conditions', 'dokan-lite' ) );
                     // translators: 1. Terms and conditions of agreement link.
-                    echo sprintf( __( 'I have read and agree to the %1$s.', 'dokan-lite' ), $tc_link );
+                    printf( esc_html__( 'I have read and agree to the %1$s.', 'dokan-lite' ), wp_kses_post( $tc_link ) );
                     ?>
                 </label>
             </p>

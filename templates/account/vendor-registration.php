@@ -28,7 +28,7 @@
         <input type="email" class="input-text form-control" name="email" id="reg_email" value="<?php echo ! empty( $data['email'] ) ? esc_attr( $data['email'] ) : ''; ?>" required="required" />
         <label class="reg_email_error"></label>
         <?php if ( get_option( 'woocommerce_registration_generate_password', 'no' ) === 'yes' ) : ?>
-        <small><?php echo __( 'A link to set a new password will be sent to your email address.', 'dokan-lite' ); ?></small>
+        <small><?php echo esc_html__( 'A link to set a new password will be sent to your email address.', 'dokan-lite' ); ?></small>
         <?php endif; ?>
     </p>
 
@@ -89,7 +89,7 @@
                 <?php
                 printf(
                     /* translators: %1$s: opening anchor tag with link, %2$s: an ampersand %3$s: closing anchor tag */
-                    __( 'I have read and agree to the %1$sTerms %2$s Conditions%3$s.', 'dokan-lite' ),
+                    esc_html__( 'I have read and agree to the %1$sTerms %2$s Conditions%3$s.', 'dokan-lite' ),
                     sprintf( '<a target="_blank" href="%s">', esc_url( $terms_condition_url ) ),
                     '&amp;',
                     '</a>'
