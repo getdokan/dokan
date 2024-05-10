@@ -23,8 +23,8 @@ class ProductCategoryMenu extends WP_Widget {
     /**
      * Outputs the HTML for this widget.
      *
-     * @param array  An array of standard parameters for widgets in this theme
-     * @param array  An array of settings for this widget instance
+     * @param array $args       An array of standard parameters for widgets in this theme
+     * @param array $instance   An array of settings for this widget instance
      * @return void Echoes it's output
      **/
     public function widget( $args, $instance ) {
@@ -67,8 +67,8 @@ class ProductCategoryMenu extends WP_Widget {
      * Deals with the settings when they are saved by the admin. Here is
      * where any validation should be dealt with.
      *
-     * @param array  An array of new settings as submitted by the admin
-     * @param array  An array of the previous settings
+     * @param array $new_instance   An array of new settings as submitted by the admin
+     * @param array $old_instance   An array of the previous settings
      * @return array The validated and (if necessary) amended settings
      **/
     public function update( $new_instance, $old_instance ) {
@@ -80,7 +80,7 @@ class ProductCategoryMenu extends WP_Widget {
     /**
      * Displays the form for this widget on the Widgets page of the WP Admin area.
      *
-     * @param array  An array of the current settings for this widget
+     * @param array $instance  array of the current settings for this widget
      * @return void Echoes it's output
      **/
     public function form( $instance ) {
