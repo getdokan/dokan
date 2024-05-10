@@ -140,27 +140,11 @@
             <severity>0</severity>
     </rule>
 
-    <rule ref="WordPress.WP.Capabilities">
+    <!-- Define the custom capability 'manage_woocommerce' -->
+    <rule ref="WordPress.WP.Capabilities.CustomCapabilities">
         <properties>
-            <property name="customCapabilities" type="array">
-                <element value="manage_woocommerce"/>
-                <element value="dokan_view_store_review"/>
-                <element value="dokan_manage_product"/>
-                <element value="dokan_add_product"/>
-                <element value="dokan_delete_product"/>
-                <element value="dokan_edit_product"/>
-                <element value="dokan_view_product"/>
-                <element value="dokan_view_order"/>
-                <element value="dokan_manage_order"/>
-                <element value="dokan_view_reports"/>
-                <element value="dokan_view_store_settings"/>
-                <element value="dokan_manage_store_settings"/>
-                <element value="dokan_view_store_shipping"/>
-                <element value="dokan_manage_store_shipping"/>
-                <element value="dokan_view_store_payment"/>
-                <element value="dokan_manage_store_payment"/>
-                <element value="dokan_view_store_coupon"/>
-            </property>
+            <property name="customCapabilities" type="array" value="manage_woocommerce"/>
         </properties>
     </rule>
+
 </ruleset>
