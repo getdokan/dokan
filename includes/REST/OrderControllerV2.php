@@ -130,6 +130,7 @@ class OrderControllerV2 extends OrderController {
         $downloads = [];
 
         // TODO: Need to move this into a separate function.
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $download_permissions = $wpdb->get_results(
             $wpdb->prepare(
                 "
@@ -138,6 +139,7 @@ class OrderControllerV2 extends OrderController {
             ", $requests->get_param( 'id' )
             )
         );
+        // phpcs:enable
 
         foreach ( $download_permissions as $download ) {
             $product = wc_get_product( absint( $download->product_id ) );
