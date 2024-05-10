@@ -4252,7 +4252,7 @@ export const selector = {
                 next: '.fc-next-button',
             },
 
-            deliveryTimeCalender: 'div#delivery-time-calendar',
+            deliveryTimeCalendar: 'div#delivery-time-calendar',
         },
 
         // Review
