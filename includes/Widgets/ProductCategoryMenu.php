@@ -33,33 +33,34 @@ class ProductCategoryMenu extends WP_Widget {
 
         $title = isset( $instance['title'] ) ? apply_filters( 'widget_title', $instance['title'] ) : '';
 
-        echo $args['before_widget']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
+        echo $args['before_widget']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped,WordPress.Security.EscapeOutput.OutputNotEscaped
 
         if ( ! empty( $title ) ) {
-            echo $args['before_title'] . $title . $args['after_title']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
+            echo $args['before_title'] . $title . $args['after_title']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped,WordPress.Security.EscapeOutput.OutputNotEscaped
         }
         ?>
             <div class="product-cat-stack-dokan cat-drop-stack">
                 <?php
                 $term_args = apply_filters(
                     'dokan_category_widget', array(
+						'taxonomy' => 'product_cat',
 						'hide_empty' => false,
 						'orderby' => 'name',
 						'depth' => 3,
                     )
                 );
 
-                $categories = get_terms( 'product_cat', $term_args );
+                $categories = get_terms( $term_args );
 
                 $walker = new CategoryWalker();
                 echo '<ul>';
-                echo call_user_func_array( array( &$walker, 'walk' ), array( $categories, 0, array() ) ); // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
+                echo call_user_func_array( array( &$walker, 'walk' ), array( $categories, 0, array() ) ); // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped,WordPress.Security.EscapeOutput.OutputNotEscaped
                 echo '</ul>';
                 ?>
             </div>
         <?php
 
-        echo isset( $args['after_widget'] ) ? $args['after_widget'] : ''; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
+        echo isset( $args['after_widget'] ) ? $args['after_widget'] : ''; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped,WordPress.Security.EscapeOutput.OutputNotEscaped
     }
 
     /**
