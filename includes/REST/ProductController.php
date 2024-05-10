@@ -1505,7 +1505,7 @@ class ProductController extends DokanRESTController {
 
                     if ( is_wp_error( $upload ) ) {
                         if ( ! apply_filters( 'woocommerce_rest_suppress_image_upload_error', false, $upload, $product->get_id(), $images ) ) {
-                            throw new WC_REST_Exception( 'woocommerce_product_image_upload_error', $upload->get_error_message(), 400 );
+                            throw new WC_REST_Exception( 'woocommerce_product_image_upload_error', esc_html( $upload->get_error_message() ), 400 );
                         } else {
                             continue;
                         }
@@ -1516,7 +1516,7 @@ class ProductController extends DokanRESTController {
 
                 if ( ! wp_attachment_is_image( $attachment_id ) ) {
                     /* translators: %s: attachment id */
-                    throw new WC_REST_Exception( 'woocommerce_product_invalid_image_id', sprintf( __( '#%s is an invalid image ID.', 'dokan-lite' ), $attachment_id ), 400 );
+                    throw new WC_REST_Exception( 'woocommerce_product_invalid_image_id', sprintf( esc_html__( '#%s is an invalid image ID.', 'dokan-lite' ), esc_html( $attachment_id ) ), 400 );
                 }
 
                 if ( isset( $image['position'] ) && 0 === absint( $image['position'] ) ) {
@@ -2308,5 +2308,4 @@ class ProductController extends DokanRESTController {
 
         return $this->add_additional_fields_schema( $schema );
     }
-
 }
