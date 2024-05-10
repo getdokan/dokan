@@ -92,12 +92,8 @@ class CommissionControllerV1 extends DokanRESTController {
      * @return boolean
      */
     public function get_permissions_check() {
-        //phpcs:ignore
-        if ( ! current_user_can( 'manage_woocommerce' ) ) {
-            return false;
-        }
-
-        return true;
+        // phpcs:ignore WordPress.WP.Capabilities.Unknown
+        return current_user_can( 'dokandar' ) || current_user_can( 'manage_options' );
     }
 
     /**
