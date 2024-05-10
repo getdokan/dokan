@@ -28,7 +28,9 @@ class HeadingControl extends WP_Customize_Control {
         <?php } ?>
 
         <?php if ( ! empty( $this->description ) ) { ?>
-            <span class="description customize-control-description"><?php echo $this->description; ?></span>
+            <span class="description customize-control-description">
+                <?php echo wp_kses( $this->description, wp_kses_allowed_html( 'user_description' ) ); ?>
+            </span>
         <?php } ?>
         <?php
     }
