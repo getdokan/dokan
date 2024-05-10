@@ -48,12 +48,9 @@ defined( 'ABSPATH' ) || exit; ?>
             <label><?php esc_html_e( 'Sort by', 'dokan-lite' ); ?>:</label>
 
             <select name="stores_orderby" id="stores_orderby" aria-label="<?php esc_html_e( 'Sort by', 'dokan-lite' ); ?>">
-                <?php
-                foreach ( $sort_filters as $key => $filter ) {
-                    $optoins = "<option value='{$key}'" . selected( $sort_by, $key, false ) . ">{$filter}</option>";
-                    echo wp_kses_post( $optoins );
-                }
-                ?>
+                <?php foreach ( $sort_filters as $key => $filter ) : ?>
+                    <option value="<?php echo esc_attr( $key ); ?>" <?php selected( $sort_by, $key ); ?> ><?php echo esc_html( $filter ); ?></option>
+                <?php endforeach; ?>
             </select>
         </form>
 
