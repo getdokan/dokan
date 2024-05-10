@@ -189,7 +189,7 @@ function dokan_product_output_variations() {
         }
     }
 
-    $variations_count       = absint( $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(ID) FROM $wpdb->posts WHERE post_parent = %d AND post_type = 'product_variation' AND post_status IN ('publish', 'private', 'pending')", $post->ID ) ) );
+    $variations_count       = absint( $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(ID) FROM $wpdb->posts WHERE post_parent = %d AND post_type = 'product_variation' AND post_status IN ('publish', 'private', 'pending')", $post->ID ) ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
     $variations_per_page    = absint( apply_filters( 'woocommerce_admin_meta_boxes_variations_per_page', 15 ) );
     $variations_total_pages = ceil( $variations_count / $variations_per_page ); ?>
     <div id="dokan-variable-product-options" class="">
@@ -403,9 +403,8 @@ function dokan_search_seller_products( $term, $user_ids = false, $type = '', $in
             $query_args[] = $user_ids;
         }
     }
-    // phpcs:ignore WordPress.DB.PreparedSQL
+    // phpcs:disable WordPress.DB.PreparedSQL, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
     $product_ids = $wpdb->get_col(
-        // phpcs:disable
         $wpdb->prepare( "
             SELECT DISTINCT posts.ID FROM {$wpdb->posts} posts
             LEFT JOIN {$wpdb->postmeta} postmeta ON posts.ID = postmeta.post_id
@@ -425,8 +424,8 @@ function dokan_search_seller_products( $term, $user_ids = false, $type = '', $in
             ",
             $query_args
         )
-        // phpcs:enable
     );
+    // phpcs:enable
 
     if ( is_numeric( $term ) ) {
         $post_id   = absint( $term );
