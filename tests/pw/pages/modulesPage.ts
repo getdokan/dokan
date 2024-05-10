@@ -2,6 +2,7 @@ import { Page, expect } from '@playwright/test';
 import { AdminPage } from '@pages/adminPage';
 import { selector } from '@pages/selectors';
 import { data } from '@utils/testData';
+import { modules } from '@utils/interfaces';
 
 // selectors
 const modulesAdmin = selector.admin.dokan.modules;
@@ -14,7 +15,7 @@ export class ModulesPage extends AdminPage {
     // modules
 
     // modules render properly
-    async adminModulesRenderProperly() {
+    async adminModulesRenderProperly(moduleStats: modules['moduleStats']) {
         await this.goIfNotThere(data.subUrls.backend.dokan.modules);
 
         // modules text is visible
@@ -36,24 +37,24 @@ export class ModulesPage extends AdminPage {
         await this.toBeVisible(modulesAdmin.pro.moduleViewMode);
 
         // module cards and card details are visible
-        await this.toHaveCount(modulesAdmin.pro.moduleCard, 38);
-        await this.toHaveCount(modulesAdmin.pro.moduleIcon, 38);
-        await this.toHaveCount(modulesAdmin.pro.moduleCheckbox, 38);
-        await this.toHaveCount(modulesAdmin.pro.moduleName, 38);
-        await this.toHaveCount(modulesAdmin.pro.moduleDescription, 38);
-        await this.toHaveCount(modulesAdmin.pro.moduleActivationSwitch, 38);
-        await this.toHaveCount(modulesAdmin.pro.moduleDocs, 38);
-        await this.toHaveCount(modulesAdmin.pro.moduleVideos, 17);
+        await this.toHaveCount(modulesAdmin.pro.moduleCard, moduleStats.totalModules);
+        await this.toHaveCount(modulesAdmin.pro.moduleIcon, moduleStats.totalModules);
+        await this.toHaveCount(modulesAdmin.pro.moduleCheckbox, moduleStats.totalModules);
+        await this.toHaveCount(modulesAdmin.pro.moduleName, moduleStats.totalModules);
+        await this.toHaveCount(modulesAdmin.pro.moduleDescription, moduleStats.totalModules);
+        await this.toHaveCount(modulesAdmin.pro.moduleActivationSwitch, moduleStats.totalModules);
+        await this.toHaveCount(modulesAdmin.pro.moduleDocs, moduleStats.totalModules);
+        await this.toHaveCount(modulesAdmin.pro.moduleVideos, moduleStats.modulesVideoLink);
 
         // module category tags are visible
-        await this.toHaveCount(modulesAdmin.pro.moduleCategoryTypes.productManagement, 13);
-        await this.toHaveCount(modulesAdmin.pro.moduleCategoryTypes.integration, 6);
-        await this.toHaveCount(modulesAdmin.pro.moduleCategoryTypes.uiUx, 2);
-        await this.toHaveCount(modulesAdmin.pro.moduleCategoryTypes.shipping, 3);
-        await this.toHaveCount(modulesAdmin.pro.moduleCategoryTypes.storeManagement, 10);
-        await this.toHaveCount(modulesAdmin.pro.moduleCategoryTypes.payment, 6);
-        await this.toHaveCount(modulesAdmin.pro.moduleCategoryTypes.orderManagement, 2);
-        await this.toHaveCount(modulesAdmin.pro.moduleCategoryTypes.vendorManagement, 1);
+        await this.toHaveCount(modulesAdmin.pro.moduleCategoryTypes.productManagement, moduleStats.productManagement);
+        await this.toHaveCount(modulesAdmin.pro.moduleCategoryTypes.integration, moduleStats.integration);
+        await this.toHaveCount(modulesAdmin.pro.moduleCategoryTypes.uiUx, moduleStats.uiUx);
+        await this.toHaveCount(modulesAdmin.pro.moduleCategoryTypes.shipping, moduleStats.shipping);
+        await this.toHaveCount(modulesAdmin.pro.moduleCategoryTypes.storeManagement, moduleStats.storeManagement);
+        await this.toHaveCount(modulesAdmin.pro.moduleCategoryTypes.payment, moduleStats.payment);
+        await this.toHaveCount(modulesAdmin.pro.moduleCategoryTypes.orderManagement, moduleStats.orderManagement);
+        await this.toHaveCount(modulesAdmin.pro.moduleCategoryTypes.vendorManagement, moduleStats.vendorManagement);
     }
 
     // search module

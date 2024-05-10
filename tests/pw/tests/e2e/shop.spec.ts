@@ -18,7 +18,7 @@ test.describe('Shop functionality test', () => {
 
     // shop page
 
-    test('shop page is rendering properly', { tag: ['@lite', '@exploratory', '@customer'] }, async () => {
+    test('customer can view shop page', { tag: ['@lite', '@exploratory', '@customer'] }, async () => {
         await customer.shopRenderProperly();
     });
 
