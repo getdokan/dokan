@@ -50,10 +50,10 @@ class StoreLocation extends WP_Widget {
                 return;
             }
 
-            echo $args['before_widget']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
+            echo $args['before_widget']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped,WordPress.Security.EscapeOutput.OutputNotEscaped
 
             if ( ! empty( $title ) ) {
-                echo $args['before_title'] . $title . $args['after_title']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
+                echo $args['before_title'] . $title . $args['after_title']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped,WordPress.Security.EscapeOutput.OutputNotEscaped
             }
             do_action( 'dokan_store_widget_before_map', $store_info );
 
@@ -66,7 +66,7 @@ class StoreLocation extends WP_Widget {
 
             do_action( 'dokan_store_widget_after_map', $store_info );
 
-            echo $args['after_widget']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
+            echo $args['after_widget']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped,WordPress.Security.EscapeOutput.OutputNotEscaped
         }
 
         do_action( 'dokan_widget_store_location_render', $args, $instance, $this );
