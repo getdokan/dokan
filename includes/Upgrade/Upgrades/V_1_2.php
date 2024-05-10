@@ -19,7 +19,7 @@ class V_1_2 extends DokanUpgrader {
     private static function dokan_generate_sync_table() {
         global $wpdb;
 
-        $orders = $wpdb->get_results(
+        $orders = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $wpdb->prepare(
                 "SELECT oi.order_id, p.ID as product_id, p.post_title, p.post_author as seller_id,
                 oim2.meta_value as order_total, p.post_status as order_status
@@ -42,7 +42,7 @@ class V_1_2 extends DokanUpgrader {
 
         foreach ( $orders as $order ) {
             $net_amount = dokan()->commission->get_earning_by_order( $order->order_id, 'seller' );
-            $wpdb->insert(
+            $wpdb->insert( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
                 $table_name,
                 [
                     'order_id'     => $order->order_id,
