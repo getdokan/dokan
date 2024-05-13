@@ -72,7 +72,7 @@ class Tracker {
      * Gets custom deactivation reasons
      *
      * @since 3.0.15
-     * 
+     *
      * @param string[] $reasons
      * @param null|\AppSero\Client $client
      *
