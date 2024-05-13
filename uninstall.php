@@ -63,7 +63,7 @@ class Dokan_Uninstaller {
      * @return string[]
      */
     private function get_dokan_capabilities() {
-        require_once dirname( __FILE__ ) . '/includes/functions.php';
+        require_once __DIR__ . '/includes/functions.php';
 
         $capabilities = [];
         foreach ( dokan_get_all_caps() as $cap ) {
