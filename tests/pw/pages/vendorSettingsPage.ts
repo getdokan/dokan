@@ -409,7 +409,7 @@ export class VendorSettingsPage extends VendorPage {
         }
     }
 
-    // vendor set shipstation settings
+    // vendor set Shipstation settings
     async setShipStation(shipStation: vendor['shipStation']): Promise<void> {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsShipstation);
 

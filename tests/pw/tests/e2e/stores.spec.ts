@@ -26,7 +26,7 @@ test.describe('Stores test', () => {
 
     // stores
 
-    test('admin vendors menu page renders properly', { tag: ['@lite', '@exploratory', '@admin'] }, async () => {
+    test('admin can view vendors menu page', { tag: ['@lite', '@exploratory', '@admin'] }, async () => {
         await admin.adminVendorsRenderProperly();
     });
 

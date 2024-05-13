@@ -3,11 +3,11 @@ Contributors: tareq1988, wedevs, nizamuddinbabu
 Donate Link: http://tareq.co/donate/
 Tags: WooCommerce multivendor marketplace, multivendor marketplace, multivendor, multi seller, multi vendor, WooCommerce marketplace, WooCommerce product vendors
 Requires at least: 6.4
-Tested up to: 6.5.2
+Tested up to: 6.5.3
 WC requires at least: 8.0.0
-WC tested up to: 8.8.2
+WC tested up to: 8.8.3
 Requires PHP: 7.4
-Stable tag: 3.10.4
+Stable tag: 3.11.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -346,6 +346,10 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 == Changelog ==
+
+= v3.11.0 ( May 10, 2024 ) =
+
+- **fix:** The status of sub-orders does not update to completed if it contains only virtual products.
 
 = v3.10.4 ( Apr 25, 2024 ) =
 

@@ -24,7 +24,7 @@ test.describe('Vendor staff test', () => {
         await apiUtils.dispose();
     });
 
-    test('vendor staff menu page renders properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+    test('vendor can view staff menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorStaffRenderProperly();
     });
 

@@ -67,6 +67,9 @@ test.describe('Product functionality test', () => {
     // vendors
 
     // todo: move create product in separate files, or product functionality to another page
+    test('vendor can view product menu page', { tag: ['@lite', '@exploratory', '@vendor'] }, async () => {
+        await vendor.vendorProductsRenderProperly();
+    });
 
     test('vendor can add simple product', { tag: ['@lite', '@vendor'] }, async () => {
         await vendor.vendorAddSimpleProduct(data.product.simple, false);
@@ -101,12 +104,8 @@ test.describe('Product functionality test', () => {
     });
 
     // todo: move to other files: product categories
-    // todo: add multistep product categories test
+    // todo: add multi-step product categories test
     // todo: add product categories settings test
-
-    test('vendor product menu page renders properly', { tag: ['@lite', '@exploratory', '@vendor'] }, async () => {
-        await vendor.vendorProductsRenderProperly();
-    });
 
     test('vendor can export products', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.exportProducts();

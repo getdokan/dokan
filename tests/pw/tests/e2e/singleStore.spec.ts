@@ -18,7 +18,7 @@ test.describe('Single store functionality test', () => {
 
     // single store page
 
-    test('dokan single store page is rendering properly', { tag: ['@lite', '@exploratory', '@customer'] }, async () => {
+    test('customer can view single store page', { tag: ['@lite', '@exploratory', '@customer'] }, async () => {
         await customer.singleStoreRenderProperly(data.predefined.vendorStores.vendor1);
     });
 

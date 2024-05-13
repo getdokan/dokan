@@ -92,13 +92,13 @@ test.describe('Product QA functionality test', () => {
         await admin.deleteQuestion(questionId);
     });
 
-    test('admin can perform product QA bulk action', { tag: ['@pro', '@admin'] }, async () => {
+    test('admin can perform bulk action on product QAs', { tag: ['@pro', '@admin'] }, async () => {
         await admin.productQuestionsBulkAction('read');
     });
 
     // vendor
 
-    test('vendor product QA menu page renders properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+    test('vendor can view product QA menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorProductQARenderProperly();
     });
 
@@ -143,7 +143,7 @@ test.describe('Product QA functionality test', () => {
 
     // guest
 
-    test('guest customer need to sign-in/signup post question', { tag: ['@pro', '@guest'] }, async ({ page }) => {
+    test('guest customer need to signin/signup post question', { tag: ['@pro', '@guest'] }, async ({ page }) => {
         const guest = new ProductQAPage(page);
         await guest.postQuestion(data.predefined.simpleProduct.product1.name, data.questionAnswers, true);
     });

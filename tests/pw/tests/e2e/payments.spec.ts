@@ -34,29 +34,29 @@ test.describe('Payments test', () => {
         await admin.setupBasicPaymentMethods(data.payment);
     });
 
-    test.skip('admin can add strip payment method', { tag: ['@pro', '@admin'] }, async () => {
+    test.skip('admin can add stripe payment method', { tag: ['@pro', '@admin'] }, async () => {
         await admin.setupStripeConnect(data.payment);
     });
 
-    test.skip('admin can add paypal marketplace payment method', { tag: ['@pro', '@admin'] }, async () => {
+    test.skip('admin can add Paypal Marketplace payment method', { tag: ['@pro', '@admin'] }, async () => {
         await admin.setupPaypalMarketPlace(data.payment);
     });
 
-    test.skip('admin can add mangopay payment method', { tag: ['@pro', '@admin'] }, async () => {
+    test.skip('admin can add Mangopay payment method', { tag: ['@pro', '@admin'] }, async () => {
         await admin.setupMangoPay(data.payment);
     });
 
-    test.skip('admin can add razorpay payment method', { tag: ['@pro', '@admin'] }, async () => {
+    test.skip('admin can add Razorpay payment method', { tag: ['@pro', '@admin'] }, async () => {
         await admin.setupRazorpay(data.payment);
     });
 
-    test.skip('admin can add strip express payment method', { tag: ['@pro', '@admin'] }, async () => {
+    test.skip('admin can add Strip Express payment method', { tag: ['@pro', '@admin'] }, async () => {
         await admin.setupStripeExpress(data.payment);
     });
 
     //vendor
 
-    test('vendor payment menu is rendering properly', { tag: ['@lite', '@exploratory', '@vendor'] }, async () => {
+    test('vendor can view payment settings menu page', { tag: ['@lite', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorPaymentSettingsRenderProperly();
     });
 
@@ -68,7 +68,7 @@ test.describe('Payments test', () => {
         await vendor.setBankTransfer(data.vendor.payment);
     });
 
-    test('vendor can add skrill payment method', { tag: ['@pro', '@vendor'] }, async () => {
+    test('vendor can add Skrill payment method', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.setBasicPayment({ ...data.vendor.payment, methodName: 'skrill' });
     });
 
@@ -88,7 +88,7 @@ test.describe('Payments test', () => {
         await apiUtils.setStoreSettings(payloads.defaultStoreSettings, payloads.vendorAuth);
     });
 
-    test('vendor can disconnect skrill payment method', { tag: ['@pro', '@vendor'] }, async () => {
+    test('vendor can disconnect Skrill payment method', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.disconnectBasicPayment({ ...data.vendor.payment, methodName: 'skrill' });
     });
 

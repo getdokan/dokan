@@ -18,7 +18,7 @@ test.describe('Vendor tools test', () => {
 
     //vendor
 
-    test('vendor tools menu page renders properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+    test('vendor can view tools menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorToolsRenderProperly();
     });
 
