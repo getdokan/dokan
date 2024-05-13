@@ -213,7 +213,7 @@ class OrderControllerV2 extends OrderController {
                 $inserted_id = wc_downloadable_file_permission( $download_id, $product_id, $order );
 
                 if ( $inserted_id ) {
-                    $file_counter ++;
+                    $file_counter++;
                     if ( $file->get_name() ) {
                         $file_count = $file->get_name();
                     } else {
