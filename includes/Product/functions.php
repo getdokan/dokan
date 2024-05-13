@@ -38,10 +38,8 @@ function dokan_save_product( $args ) {
             if ( absint( $data['product_cat'] ) < 0 ) {
                 return new WP_Error( 'no-category', __( 'Please select a category', 'dokan-lite' ) );
             }
-        } else {
-            if ( ! isset( $data['product_cat'] ) && empty( $data['product_cat'] ) ) {
-                return new WP_Error( 'no-category', __( 'Please select at least one category', 'dokan-lite' ) );
-            }
+        } elseif ( ! isset( $data['product_cat'] ) && empty( $data['product_cat'] ) ) {
+            return new WP_Error( 'no-category', __( 'Please select at least one category', 'dokan-lite' ) );
         }
     } elseif ( empty( $data['chosen_product_cat'] ) ) {
         return new WP_Error( 'no-category', __( 'Please select a category', 'dokan-lite' ) );
@@ -89,10 +87,8 @@ function dokan_save_product( $args ) {
     if ( ! isset( $data['chosen_product_cat'] ) ) {
         if ( Helper::product_category_selection_is_single() ) {
             $cat_ids[] = $data['product_cat'];
-        } else {
-            if ( ! empty( $data['product_cat'] ) ) {
-                $cat_ids = array_map( 'absint', (array) $data['product_cat'] );
-            }
+        } elseif ( ! empty( $data['product_cat'] ) ) {
+            $cat_ids = array_map( 'absint', (array) $data['product_cat'] );
         }
         $post_data['categories'] = $cat_ids;
     }
