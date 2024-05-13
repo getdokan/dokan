@@ -54,6 +54,8 @@ const entryPoint = {
   'dokan-product-category-ui': '/assets/src/less/dokan-product-category-ui.less',
   'dokan-admin-product-style': '/assets/src/less/dokan-admin-product.less',
   'dokan-setup-wizard-commission': './assets/src/js/setup-wizard/commission/index.js',
+  // Category commission component styles.
+  'dokan-category-commission': '/src/admin/components/Commission/index.js',
 };
 
 const updatedConfig = {

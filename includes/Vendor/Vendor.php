@@ -1555,27 +1555,8 @@ class Vendor {
      * @return \WeDevs\Dokan\Commission\Model\Setting
      */
     public function get_commission_settings() {
-        $commission_percentage = '';
-        $commission_type       = '';
-        $additional_flat       = '';
-        $category_commissions  = [];
-
-        if ( ! empty( $this->get_id() ) ) {
-            $commission_percentage = $this->get_meta( 'dokan_admin_percentage', true );
-            $commission_type       = $this->get_meta( 'dokan_admin_percentage_type', true );
-            $additional_flat       = $this->get_meta( 'dokan_admin_additional_fee', true );
-            $category_commissions  = $this->get_meta( 'admin_category_commission', true );
-
-            $category_commissions = empty( $category_commissions ) ? [] : $category_commissions;
-        }
-
-        $settings = new Setting();
-        $settings->set_type( $commission_type )
-                 ->set_flat( $additional_flat )
-                 ->set_percentage( $commission_percentage )
-                 ->set_category_commissions( $category_commissions );
-
-        return $settings;
+        $settings = new \WeDevs\Dokan\Commission\Settings\Vendor( $this->get_id() );
+        return $settings->get();
     }
 
     /**
@@ -1588,21 +1569,8 @@ class Vendor {
      * @return \WeDevs\Dokan\Commission\Model\Setting
      */
     public function save_commission_settings( $commission = [] ) {
-        if ( empty( $this->get_id() ) ) {
-            return $this->get_commission_settings();
-        }
-
-        $percentage           = isset( $commission['percentage'] ) ? $commission['percentage'] : '';
-        $type                 = isset( $commission['type'] ) ? $commission['type'] : '';
-        $flat                 = isset( $commission['flat'] ) ? $commission['flat'] : '';
-        $category_commissions = isset( $commission['category_commissions'] ) ? $commission['category_commissions'] : [];
-
-        $this->update_meta( 'dokan_admin_percentage', $percentage );
-        $this->update_meta( 'dokan_admin_percentage_type', $type );
-        $this->update_meta( 'dokan_admin_additional_fee', $flat );
-        $this->update_meta( 'admin_category_commission', $category_commissions );
-
-        return $this->get_commission_settings();
+        $settings = new \WeDevs\Dokan\Commission\Settings\Vendor( $this->get_id() );
+        return  $settings->save( $commission );
     }
 
     /**

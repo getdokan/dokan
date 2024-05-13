@@ -120,6 +120,13 @@ class SetupWizard {
             DOKAN_PLUGIN_VERSION
         );
 
+        wp_enqueue_style(
+            'dokan-category-commission',
+            DOKAN_PLUGIN_ASSEST . '/css/dokan-category-commission.css',
+            [],
+            DOKAN_PLUGIN_VERSION
+        );
+
         if ( 'off' === dokan_get_option( 'disable_dokan_fontawesome', 'dokan_appearance', 'off' ) ) {
             wp_enqueue_style( 'dokan-fontawesome' );
         }
