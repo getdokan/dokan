@@ -401,8 +401,8 @@ function dokan_search_seller_products( $term, $user_ids = false, $type = '', $in
     }
     // phpcs:disable WordPress.DB.PreparedSQL, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
     $product_ids = $wpdb->get_col(
-        $wpdb->prepare( "
-            SELECT DISTINCT posts.ID FROM {$wpdb->posts} posts
+        $wpdb->prepare(
+            "SELECT DISTINCT posts.ID FROM {$wpdb->posts} posts
             LEFT JOIN {$wpdb->postmeta} postmeta ON posts.ID = postmeta.post_id
             $type_join
             WHERE (
@@ -416,8 +416,7 @@ function dokan_search_seller_products( $term, $user_ids = false, $type = '', $in
             AND posts.post_status IN ('" . implode( "','", $post_statuses ) . "')
             $type_where
             $users_where
-            ORDER BY posts.post_parent ASC, posts.post_title ASC
-            ",
+            ORDER BY posts.post_parent ASC, posts.post_title ASC",
             $query_args
         )
     );
