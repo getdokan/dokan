@@ -130,14 +130,13 @@
         <properties>
             <property name="customSanitizingFunctions" type="array">
                 <element value="wc_clean"/>
-            </property>
-            <property name="customSanitizingFunctions" type="string">
+                <element value="wc_esc_json"/>
                 <element value="dokan_sanitize_phone_number"/>
             </property>
         </properties>
     </rule>
     <rule ref="Squiz.PHP.CommentedOutCode.Found">
-            <severity>0</severity>
+        <severity>0</severity>
     </rule>
 
     <!-- Define the custom capability for woocommerce -->
