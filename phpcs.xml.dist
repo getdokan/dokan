@@ -163,6 +163,48 @@
                 <element key="15" value="manage_woocommerce"/>
                 <element key="16" value="manage_product_terms"/>
                 <element key="17" value="view_woocommerce_reports"/>
+                <element key="18" value="dokandar"/>
+                <element key="19" value="dokan_view_sales_overview"/>
+                <element key="20" value="dokan_view_sales_report_chart"/>
+                <element key="21" value="dokan_view_announcement"/>
+                <element key="22" value="dokan_view_order_report"/>
+                <element key="23" value="dokan_view_review_reports"/>
+                <element key="24" value="dokan_view_product_status_report"/>
+                <element key="25" value="dokan_view_overview_report"/>
+                <element key="26" value="dokan_view_daily_sale_report"/>
+                <element key="27" value="dokan_view_top_selling_report"/>
+                <element key="28" value="dokan_view_top_earning_report"/>
+                <element key="29" value="dokan_view_statement_report"/>
+                <element key="30" value="dokan_view_order"/>
+                <element key="31" value="dokan_manage_order"/>
+                <element key="32" value="dokan_manage_order_note"/>
+                <element key="33" value="dokan_manage_refund"/>
+                <element key="34" value="dokan_export_order"/>
+                <element key="35" value="dokan_add_coupon"/>
+                <element key="36" value="dokan_edit_coupon"/>
+                <element key="37" value="dokan_delete_coupon"/>
+                <element key="38" value="dokan_view_reviews"/>
+                <element key="39" value="dokan_manage_reviews"/>
+                <element key="40" value="dokan_manage_withdraw"/>
+                <element key="41" value="dokan_add_product"/>
+                <element key="42" value="dokan_edit_product"/>
+                <element key="43" value="dokan_delete_product"/>
+                <element key="44" value="dokan_view_product"/>
+                <element key="45" value="dokan_duplicate_product"/>
+                <element key="46" value="dokan_import_product"/>
+                <element key="47" value="dokan_export_product"/>
+                <element key="48" value="dokan_view_overview_menu"/>
+                <element key="49" value="dokan_view_product_menu"/>
+                <element key="50" value="dokan_view_order_menu"/>
+                <element key="51" value="dokan_view_coupon_menu"/>
+                <element key="52" value="dokan_view_report_menu"/>
+                <element key="53" value="dokan_view_review_menu"/>
+                <element key="54" value="dokan_view_withdraw_menu"/>
+                <element key="55" value="dokan_view_store_settings_menu"/>
+                <element key="56" value="dokan_view_store_payment_menu"/>
+                <element key="57" value="dokan_view_store_shipping_menu"/>
+                <element key="58" value="dokan_view_store_social_menu"/>
+                <element key="59" value="dokan_view_store_seo_menu"/>
             </property>
         </properties>
     </rule>
