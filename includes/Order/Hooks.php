@@ -93,7 +93,7 @@ class Hooks {
         }
 
         // insert on dokan sync table
-        $wpdb->update(
+        $wpdb->update( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $wpdb->dokan_orders,
             [ 'order_status' => $new_status ],
             [ 'order_id' => $order_id ],
@@ -123,7 +123,7 @@ class Hooks {
         }
 
         // update on vendor-balance table
-        $wpdb->update(
+        $wpdb->update( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $wpdb->dokan_vendor_balance,
             [ 'status' => $new_status ],
             [
@@ -168,6 +168,7 @@ class Hooks {
             return;
         }
 
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $balance_data = $wpdb->get_var(
             $wpdb->prepare(
                 "SELECT 1 FROM $wpdb->dokan_vendor_balance WHERE trn_id = %d AND trn_type = %s AND status = 'approved'",
@@ -182,6 +183,7 @@ class Hooks {
         $seller_id  = dokan_get_seller_id_by_order( $order_id );
         $net_amount = dokan()->commission->get_earning_by_order( $order );
 
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
         $wpdb->insert(
             $wpdb->dokan_vendor_balance,
             [
@@ -207,7 +209,7 @@ class Hooks {
         );
 
         // update the order table with new refund amount
-        $order_data = $wpdb->get_row(
+        $order_data = $wpdb->get_row( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $wpdb->prepare(
                 "select * from $wpdb->dokan_orders where order_id = %d",
                 $order_id
@@ -216,7 +218,7 @@ class Hooks {
 
         if ( isset( $order_data->order_total, $order_data->net_amount ) ) {
             // insert on dokan sync table
-            $wpdb->update(
+            $wpdb->update( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
                 $wpdb->dokan_orders,
                 [
                     'order_total' => 0,
