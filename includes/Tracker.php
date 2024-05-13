@@ -19,10 +19,10 @@ class Tracker {
 
     /**
      * Class constructor
-     *
-     * @return void
+
      * @since 2.8.7
      *
+     * @return void
      */
     public function __construct() {
         $this->appsero_init_tracker_dokan();
@@ -30,10 +30,10 @@ class Tracker {
 
     /**
      * Initialize the plugin tracker
-     *
-     * @return void
+
      * @since 2.8.7
      *
+     * @return void
      */
     public function appsero_init_tracker_dokan() {
         $client = new \Appsero\Client( '559bcc0d-21b4-4b34-8317-3e072badf46d', 'Dokan Multivendor Marketplace', DOKAN_FILE );
@@ -66,18 +66,17 @@ class Tracker {
         global $wpdb;
 
         return (int) $wpdb->get_var( "SELECT count(id) FROM {$wpdb->prefix}dokan_orders WHERE order_status IN ('wc-completed', 'wc-processing', 'wc-on-hold', 'wc-refunded');" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-
     }
 
     /**
      * Gets custom deactivation reasons
      *
+     * @since 3.0.15
+     * 
      * @param string[] $reasons
      * @param null|\AppSero\Client $client
      *
      * @return \array
-     * @since 3.0.15
-     *
      */
     public function get_custom_deactivation_reasons( $reasons, $client = null ) {
         // return if old version of appsero client is loaded, where corresponding hooks provides only one argument
