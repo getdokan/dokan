@@ -1355,7 +1355,7 @@ class Vendor {
      * @param string $key
      * @param bool $single  Whether to return a single value
      *
-     * @return Mix
+     * @return mixed|null|false
      */
     public function get_meta( $key, $single = false ) {
         return get_user_meta( $this->get_id(), $key, $single );

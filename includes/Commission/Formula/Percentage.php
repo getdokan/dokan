@@ -58,7 +58,7 @@ class Percentage extends AbstractFormula {
      *
      * @since DOKAN_SINCE
      *
-     * @param \WeDevs\Dokan\Commission\Model\Setting $settings
+     * @return void
      */
     public function calculate() {
         if ( $this->is_applicable() ) {
@@ -143,7 +143,7 @@ class Percentage extends AbstractFormula {
      * @return float
      */
     public function get_per_item_admin_commission(): float {
-        return dokan()->commission->validate_rate( $this->per_item_admin_commission ?? 0 );
+        return dokan()->commission->validate_rate( $this->per_item_admin_commission ) ?? 0;
     }
 
     /**

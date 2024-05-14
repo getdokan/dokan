@@ -31,7 +31,7 @@ abstract class AbstractStrategy {
      *
      * @since DOKAN_SINCE
      *
-     * @return \WeDevs\Dokan\Commission\Formula\AbstractFormula|null
+     * @return \WeDevs\Dokan\Commission\Formula\AbstractFormula
      */
     public function create_formula(): AbstractFormula {
         $settings = $this->get_settings();

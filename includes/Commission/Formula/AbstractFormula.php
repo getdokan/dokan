@@ -40,7 +40,7 @@ abstract class AbstractFormula {
      *
      * @param \WeDevs\Dokan\Commission\Model\Setting $setting
      *
-     * @return
+     * @return \WeDevs\Dokan\Commission\Formula\AbstractFormula
      */
     public function set_settings( Setting $setting ): AbstractFormula {
         $this->settings = $setting;
@@ -147,7 +147,7 @@ abstract class AbstractFormula {
      *
      * @since DOKAN_SINCE
      *
-     * @return array
+     * @return array<string, mixed>
      */
     abstract public function get_parameters(): array;
 

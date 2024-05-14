@@ -33,13 +33,13 @@ class Vendor implements InterfaceSetting {
         $flat       = '';
         $category_commissions  = [];
 
-        if ( is_a( $this->vendor, \WeDevs\Dokan\Vendor\Vendor::class ) && $this->vendor->get_id() ) {
+        if ( 0 !== $this->vendor->get_id() ) {
             $percentage = $this->vendor->get_meta( 'dokan_admin_percentage', true );
             $type       = $this->vendor->get_meta( 'dokan_admin_percentage_type', true );
             $flat       = $this->vendor->get_meta( 'dokan_admin_additional_fee', true );
             $category_commissions  = $this->vendor->get_meta( 'admin_category_commission', true );
 
-            $category_commissions = empty( $category_commissions ) ? [] : $category_commissions;
+            $category_commissions = ! is_array( $category_commissions ) ? [] : $category_commissions;
         }
 
         $settings = new Setting();
@@ -67,7 +67,7 @@ class Vendor implements InterfaceSetting {
      * @return \WeDevs\Dokan\Commission\Model\Setting
      */
     public function save( array $setting ): Setting {
-        if ( ! is_a( $this->vendor, \WeDevs\Dokan\Vendor\Vendor::class ) || ! $this->vendor || ! $this->vendor->get_id() ) {
+        if ( 0 !== $this->vendor->get_id() ) {
             return $this->get();
         }
 

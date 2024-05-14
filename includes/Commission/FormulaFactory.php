@@ -25,7 +25,7 @@ class FormulaFactory {
      *
      * @param \WeDevs\Dokan\Commission\Model\Setting $settings
      *
-     * @return \WeDevs\Dokan\Commission\Formula\AbstractFormula|null
+     * @return \WeDevs\Dokan\Commission\Formula\AbstractFormula
      */
     public static function get_formula( Setting $settings ): AbstractFormula {
         switch ( $settings->get_type() ) {

@@ -35,8 +35,8 @@ class Calculator {
      *
      * @since DOKAN_SINCE
      *
-     * @param $total_amount
-     * @param $total_quantity
+     * @param int|float $total_amount
+     * @param int       $total_quantity
      *
      * @return \WeDevs\Dokan\Commission\Model\Commission
      */
