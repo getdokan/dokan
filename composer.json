@@ -23,7 +23,10 @@
     "phpcompatibility/phpcompatibility-wp": "dev-master",
     "phpunit/phpunit": "^9.6",
     "wp-phpunit/wp-phpunit": "dev-master",
-    "yoast/phpunit-polyfills": "^1.0@dev"
+    "yoast/phpunit-polyfills": "^1.0@dev",
+    "phpstan/phpstan": "2.0.x-dev",
+    "php-stubs/woocommerce-stubs": "dev-master",
+    "php-stubs/wordpress-stubs": "^6.5"
   },
   "config": {
     "platform": {
@@ -51,6 +54,9 @@
     ],
     "phpcbf": [
       "vendor/bin/phpcbf -p"
+    ],
+    "phpstan": [
+        "vendor/bin/phpstan analyse"
     ]
   }
 }
