@@ -60,18 +60,18 @@ class CommissionModelTest extends WP_UnitTestCase {
         $this->assertEquals( 0, $data->get_vendor_earning() );
         $this->assertEquals( 1, $data->get_total_quantity() );
         $this->assertEquals( 0, $data->get_total_amount() );
-        $this->assertEquals( DefaultSetting::DEFAULT_COMMISSION_TYPE, $data->get_type() );
+        $this->assertEquals( DefaultSetting::TYPE, $data->get_type() );
         $this->assertEquals( [], $data->get_parameters() );
         $this->assertEquals(
             [
-            'source'                    => DefaultStrategy::SOURCE,
-            'per_item_admin_commission' => 0,
-            'admin_commission'          => 0,
-            'vendor_earning'            => 0,
-            'total_quantity'            => 1,
-            'total_amount'              => '0',
-            'type'                      => DefaultSetting::DEFAULT_COMMISSION_TYPE,
-            'parameters'                => [],
+                'source'                    => DefaultStrategy::SOURCE,
+                'per_item_admin_commission' => 0,
+                'admin_commission'          => 0,
+                'vendor_earning'            => 0,
+                'total_quantity'            => 1,
+                'total_amount'              => '0',
+                'type'                      => DefaultSetting::TYPE,
+                'parameters'                => [],
             ],
             $data->get_data()
         );

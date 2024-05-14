@@ -10,8 +10,6 @@ use WeDevs\Dokan\Commission\Formula\AbstractFormula;
 use WeDevs\Dokan\Commission\Formula\Percentage;
 use WeDevs\Dokan\Commission\Model\Setting;
 use WeDevs\Dokan\Commission\Settings\DefaultSetting;
-use WeDevs\Dokan\Commission\Settings\GlobalSetting;
-use function DeepCopy\deep_copy;
 
 /**
  * This is the factory class that determines the commission formula.

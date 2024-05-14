@@ -40,7 +40,7 @@ class DefaultStrategy extends AbstractStrategy {
         $builder = Builder::build( '', '' );
         $setting = $builder->get();
 
-        $setting->set_type( DefaultSetting::DEFAULT_COMMISSION_TYPE )
+        $setting->set_type( DefaultSetting::TYPE )
             ->set_flat( 0 )
             ->set_percentage( 0 )
             ->set_category_commissions( [] );

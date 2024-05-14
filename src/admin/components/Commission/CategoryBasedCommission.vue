@@ -2,15 +2,15 @@
     <div class='relative'>
         <div class='d-xs:hidden md:flex bg-gray-100 min-h-[3rem] text-gray-500 border-[0.957434px] border-b-0 items-center'>
             <div class='w-1/2 pl-3 flex h-[3rem] items-center border-r-[0.957434px]'>
-                <p class='text-xs'>{{ __( 'Catgory', 'dokan' ) }}</p>
+                <p class='text-xs'>{{ __( 'Category', 'dokan-lite' ) }}</p>
             </div>
 
             <div class='flex w-1/2'>
                 <div class='w-1/2 mr-20'>
-                    <p class='text-xs text-center'>{{ __( 'Percentage', 'dokan' ) }}</p>
+                    <p class='text-xs text-center'>{{ __( 'Percentage', 'dokan-lite' ) }}</p>
                 </div>
                 <div class='w-1/2'>
-                    <p class='text-xs text-center'>{{ __( 'Flat', 'dokan' ) }}</p>
+                    <p class='text-xs text-center'>{{ __( 'Flat', 'dokan-lite' ) }}</p>
                 </div>
             </div>
         </div>
@@ -21,7 +21,7 @@
                     <button type='button' class='p-1 d-xs:pl-1 md:pl-4 bg-transparent bg-co border-none cursor-pointer' @click='()=>allCategroyEnabled = !allCategroyEnabled'>
                         <i class="far" :class='! allCategroyEnabled ? "fa-minus-square text-black" : "fa-plus-square text-[#F05025]"'></i>
                     </button>
-                    <p class='d-xs:text-[8px] sm:text-[14px] !m-0'>{{__( 'All Categories', 'dokan' )}}</p>
+                    <p class='d-xs:text-[8px] sm:text-[14px] !m-0'>{{__( 'All Categories', 'dokan-lite' )}}</p>
                 </div>
 
                 <div class='flex flex-row w-1/2 border-0 border-b-[1px] border-[#e9e9ea] border-solid'>
@@ -35,10 +35,10 @@
                                 :value="commission.all.percentage"
                                 v-on:input="e => handleAllCategoryInput(e.target.value, 'percentage' )"
                             />
-                            <div class='h-full d-xs:border-l-0 d-xs:border-r-0 md:border-l-[1px] md:border-r-[1px] flex justify-center items-center d-xs:!bg-transparent md:!bg-gray-100'><span class='d-xs:pl-1 d-xs:pr-1 md:pl-2 md:pr-2'>{{ '%' }}</span></div>
+                            <div class='h-full d-xs:border-l-0 d-xs:border-r-0 md:border-l-[1px] md:border-r-[1px] flex justify-center items-center d-xs:!bg-transparent md:!bg-gray-100'><span class='d-xs:pl-1 d-xs:pr-1 md:pl-2 md:pr-2'>{{ __( '%', 'dokan-lite' ) }}</span></div>
                         </div>
                     <div class='h-full border-l-[1px] border-r-[1px] md:border-0 d-xs:bg-gray-100 md:bg-transparent  flex justify-center items-center'>
-                            <span class='d-xs:p-1 md:p-2'>{{ '+' }}</span>
+                            <span class='d-xs:p-1 md:p-2'>{{ __( '+', 'dokan-lite' ) }}</span>
                         </div>
                     <div class='w-1/2 flex justify-start items-center box-border'>
                             <div class='h-full d-xs:border-r-0 d-xs:border-l-0 md:border-r-[1px] md:border-l-[1px] flex justify-center items-center d-xs:!bg-transparent md:!bg-gray-100'><span class='d-xs:pl-1 d-xs:pr-1 md:pl-2 md:pr-2'>{{ getCurrencySymbol }}</span></div>
@@ -77,10 +77,10 @@
                             :value="getCommissionValue( 'percentage', item.term_id )"
                             v-on:input="e => commissinItemHandler( e.target.value, 'percentage', item.term_id )"
                         />
-                        <div class='h-full d-xs:border-l-0 d-xs:border-r-0 md:border-l-[1px] md:border-r-[1px] flex justify-center items-center d-xs:!bg-transparent md:!bg-gray-100'><span class='d-xs:pl-1 d-xs:pr-1 md:pl-2 md:pr-2'>{{ '%' }}</span></div>
+                        <div class='h-full d-xs:border-l-0 d-xs:border-r-0 md:border-l-[1px] md:border-r-[1px] flex justify-center items-center d-xs:!bg-transparent md:!bg-gray-100'><span class='d-xs:pl-1 d-xs:pr-1 md:pl-2 md:pr-2'>{{ __( '%', 'dokan-lite' ) }}</span></div>
                     </div>
                     <div class='h-full border-l-[1px] border-r-[1px] md:border-0 d-xs:bg-gray-100 md:bg-transparent  flex justify-center items-center'>
-                        <span class='d-xs:p-1 md:p-2'>{{ '+' }}</span>
+                        <span class='d-xs:p-1 md:p-2'>{{ __( '+', 'dokan-lite' ) }}</span>
                     </div>
                     <div class='w-1/2 flex justify-start items-center box-border'>
                         <div class='h-full d-xs:border-r-0 d-xs:border-l-0 md:border-r-[1px] md:border-l-[1px] flex justify-center items-center d-xs:!bg-transparent md:!bg-gray-100'><span class='d-xs:pl-1 d-xs:pr-1 md:pl-2 md:pr-2'>{{ getCurrencySymbol }}</span></div>

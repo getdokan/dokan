@@ -456,7 +456,7 @@ if ( ! function_exists( 'dokan_get_seller_percentage' ) ) {
 /**
  * Get Dokan commission type by seller or product or both
  *
- * @deprecated 3.9.9 Do Not Use This Function
+ * @deprecated DOKAN_SINCE Do Not Use This Function
  *
  * @since 2.6.9
  *
@@ -466,7 +466,7 @@ if ( ! function_exists( 'dokan_get_seller_percentage' ) ) {
  * @return string $type
  */
 function dokan_get_commission_type( $seller_id = 0, $product_id = 0, $category_id = 0 ) {
-    wc_deprecated_function( __FUNCTION__, '3.9.9', 'dokan()->commission->get_commission()' );
+    wc_deprecated_function( __FUNCTION__, 'DOKAN_SINCE', 'dokan()->commission->get_commission()' );
 
     $commission_data = dokan()->commission->get_commission(
         [

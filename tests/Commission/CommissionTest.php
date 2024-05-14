@@ -99,7 +99,7 @@ class CommissionTest extends WP_UnitTestCase {
         $this->assertEquals( $productPrice, $commission->get_vendor_earning() );
         $this->assertEquals( 1, $commission->get_total_quantity() );
         $this->assertEquals( $productPrice, $commission->get_total_amount() );
-        $this->assertEquals( DefaultSetting::DEFAULT_COMMISSION_TYPE, $commission->get_type() );
+        $this->assertEquals( DefaultSetting::TYPE, $commission->get_type() );
     }
 
     /**

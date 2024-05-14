@@ -2,6 +2,8 @@
 
 namespace WeDevs\Dokan\Commission\Model;
 
+use WeDevs\Dokan\Commission\Settings\DefaultSetting;
+
 class Setting {
 
     /**
@@ -11,7 +13,7 @@ class Setting {
      *
      * @var null|string
      */
-    protected $type = null;
+    protected $type = DefaultSetting::TYPE;
 
     /**
      * Flat commission amount

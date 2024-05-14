@@ -548,10 +548,11 @@ class Hooks {
             return;
         }
 
-        $order = dokan()->order->get( OrderUtil::get_post_or_order_id( $post ) );
+        $order         = dokan()->order->get( OrderUtil::get_post_or_order_id( $post ) );
+        $has_sub_order = '1' === $order->get_meta( 'has_sub_order', true );
 
         // Check if the screen is order details page and if it is a child order.
-        if ( '1' !== $order->get_meta( 'has_sub_order', true ) ) {
+        if ( ! $has_sub_order ) {
             add_meta_box(
                 'dokan_commission_box',
                 __( 'Commissions', 'dokan-lite' ),
@@ -563,8 +564,8 @@ class Hooks {
         }
 
         // If the order has is a parent order or a child order, avoid those order that has no parent order or child order.
-        if ( '1' === $order->get_meta( 'has_sub_order', true ) || ! empty( $order->get_parent_id() ) ) {
-            $title = '1' === $order->get_meta( 'has_sub_order', true ) ? __( 'Sub orders', 'dokan-lite' ) : __( 'Related orders', 'dokan-lite' );
+        if ( $has_sub_order || ! empty( $order->get_parent_id() ) ) {
+            $title = $has_sub_order ? __( 'Sub orders', 'dokan-lite' ) : __( 'Related orders', 'dokan-lite' );
 
             add_meta_box(
                 'dokan_sub_or_related_orders',
@@ -610,6 +611,13 @@ class Hooks {
         );
     }
 
+    /**
+     * Content of suborder or related order meta-box.
+     *
+     * @param $post_or_order
+     *
+     * @return void
+     */
     public function sub_or_related_orders_meta_box( $post_or_order ) {
         $order = dokan()->order->get( OrderUtil::get_post_or_order_id( $post_or_order ) );
         $parent_order  = new WC_Order();
@@ -630,7 +638,7 @@ class Hooks {
 
             $orders_to_render = array_filter(
                 $orders_to_render,
-                function ( $item ) use( $order ) {
+                function ( $item ) use ( $order ) {
                     return $item->get_id() !== $order->get_id();
                 }
             );

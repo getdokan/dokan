@@ -16,7 +16,7 @@
                 <div class='flex d-xs:flex-col md:flex-row w-full'>
                     <div class="nav-tab-wrapper d-xs:!pb-5 d-xs:!pt-5 d-xs:w-full md:w-[340px]">
                         <div class='d-xs:flex justify-between md:hidden font-bold'>
-                            <p class='font-bold'>{{ __( 'Settings', 'dokan' ) }}</p>
+                            <p class='font-bold'>{{ __( 'Settings', 'dokan-lite' ) }}</p>
                             <label v-if="screenWidth < 753" for='dokan-setting-show'><i :class="showMenu || screenWidth >= 753 ? 'fas fa-chevron-down' : 'fas fa-chevron-up'"></i></label>
                             <input v-if="screenWidth < 753" class='!hidden' id='dokan-setting-show' checked :value='showMenu' @click='() => showMenu = !showMenu' type='checkbox'>
                         </div>

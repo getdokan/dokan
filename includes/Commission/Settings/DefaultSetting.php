@@ -12,7 +12,7 @@ use WeDevs\Dokan\Commission\Model\Setting;
  */
 class DefaultSetting implements InterfaceSetting {
 
-    const DEFAULT_COMMISSION_TYPE = Fixed::SOURCE;
+    const TYPE = Fixed::SOURCE;
 
     /**
      * Returns default setting.
@@ -23,7 +23,7 @@ class DefaultSetting implements InterfaceSetting {
      */
     public function get(): Setting {
         $setting = new Setting();
-        $setting->set_type( self::DEFAULT_COMMISSION_TYPE );
+        $setting->set_type( self::TYPE );
 
         return $setting;
     }

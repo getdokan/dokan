@@ -5,6 +5,7 @@ namespace WeDevs\Dokan;
 use WC_Order;
 use WC_Product;
 use WeDevs\Dokan\Commission\Calculator;
+use WeDevs\Dokan\Commission\Settings\DefaultSetting;
 use WeDevs\Dokan\Commission\Strategies\DefaultStrategy;
 use WeDevs\Dokan\Commission\Strategies\GlobalStrategy;
 use WeDevs\Dokan\Commission\Strategies\OrderItem;
@@ -606,7 +607,12 @@ class Commission {
             $percentage       = $parameters['percentage'] ?? 0;
             $flat             = $parameters['flat'] ?? 0;
 
-            $order_item_strategy->save_line_item_commission_to_meta( $commission_data->get_type() ?? 'none', $percentage, $flat, $commission_data->get_data() );
+            $order_item_strategy->save_line_item_commission_to_meta(
+                $commission_data->get_type() ?? DefaultSetting::TYPE,
+                $percentage,
+                $flat,
+                $commission_data->get_data()
+            );
         }
 
         return $commission_data;

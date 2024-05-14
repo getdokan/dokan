@@ -69,7 +69,7 @@ class Commission {
      *
      * @var string
      */
-    protected $type = DefaultSetting::DEFAULT_COMMISSION_TYPE;
+    protected $type = DefaultSetting::TYPE;
 
     /**
      * Applied commission data parameters.

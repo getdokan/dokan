@@ -14,10 +14,10 @@
       />
       <div
         class="d-xs:border-l-0 md:border-l-[0.957434px] flex justify-center items-center d-xs:!bg-transparent md:!bg-gray-100 !min-h-full">
-        <span class="d-xs:pl-1 d-xs:pr-1 md:pl-2 md:pr-2">{{ "%" }}</span></div>
+        <span class="d-xs:pl-1 d-xs:pr-1 md:pl-2 md:pr-2">{{ __( '%', 'dokan-lite' ) }}</span></div>
     </div>
     <div class="d-xs:border-[0.957434px] md:border-0 d-xs:bg-gray-100 md:bg-transparent  flex justify-center items-center">
-      <span class="d-xs:p-1 md:p-2">{{ "+" }}</span>
+      <span class="d-xs:p-1 md:p-2">{{ __( '+', 'dokan-lite' ) }}</span>
     </div>
     <div
       class="md:shadow-md border-[0.957434px] d-xs:!border-l-0 md:!border-l-[0.957434px] rounded-[5px] d-xs:!rounded-l-none md:!rounded-l-[5px] !p-0 !m-0 w-[110px] flex justify-start items-center box-border">
