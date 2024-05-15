@@ -815,7 +815,7 @@ class Settings {
                     'default' => DOKAN_PLUGIN_ASSEST . '/images/default-store-banner.png',
                     'restore' => true,
                 ],
-                'default_store_profile'       => [
+                'default_store_profile'      => [
                     'name'    => 'default_store_profile',
                     'label'   => __( 'Default Store Profile Picture', 'dokan-lite' ),
                     'type'    => 'file',

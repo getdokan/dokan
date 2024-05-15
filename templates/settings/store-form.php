@@ -4,8 +4,7 @@
  *
  * @since 2.4
  */
-?>
-<?php
+
 $gravatar_id    = ! empty( $profile_info['gravatar'] ) ? $profile_info['gravatar'] : 0;
 $banner_id      = ! empty( $profile_info['banner'] ) ? $profile_info['banner'] : 0;
 $storename      = isset( $profile_info['store_name'] ) ? $profile_info['store_name'] : '';
@@ -50,6 +49,11 @@ $args = [
  */
 $location = apply_filters( 'dokan_store_time_template', 'settings/store-time' );
 $args     = apply_filters( 'dokan_store_time_arguments', $args, $all_times );
+
+// Get vendor default banner URL.
+$vendor                    = dokan()->vendor->get( $current_user );
+$store_default_banner_url  = $vendor->get_default_banner();
+$store_default_profile_url = $vendor->get_default_avatar();
 ?>
 <?php do_action( 'dokan_settings_before_form', $current_user, $profile_info ); ?>
 
@@ -59,7 +63,7 @@ $args     = apply_filters( 'dokan_store_time_arguments', $args, $all_times );
 
     <div class="dokan-banner">
 
-        <?php $banner_url = $banner_id ? wp_get_attachment_url( $banner_id ) : DOKAN_PLUGIN_ASSEST . '/images/default-store-banner.png'; ?>
+        <?php $banner_url = $banner_id ? wp_get_attachment_url( $banner_id ) : $store_default_banner_url; ?>
         <div class="image-wrap<?php echo esc_url( $banner_url ) ? '' : ' dokan-hide'; ?>">
             <input type="hidden" class="dokan-file-field" value="<?php echo esc_attr( $banner_id ); ?>" name="dokan_banner">
             <img class="dokan-banner-img" src="<?php echo esc_url( $banner_url ); ?>">
@@ -99,7 +103,7 @@ $args     = apply_filters( 'dokan_store_time_arguments', $args, $all_times );
         <label class="dokan-w3 dokan-control-label" for="dokan_gravatar"><?php esc_html_e( 'Profile Picture', 'dokan-lite' ); ?></label>
 
         <div class="dokan-w5 dokan-gravatar">
-            <?php $gravatar_url = $gravatar_id ? wp_get_attachment_url( $gravatar_id ) : DOKAN_PLUGIN_ASSEST . '/images/mystery-person.jpg'; ?>
+            <?php $gravatar_url = $gravatar_id ? wp_get_attachment_url( $gravatar_id ) : $store_default_profile_url; ?>
             <div class="dokan-left gravatar-wrap<?php echo esc_url( $gravatar_url ) ? '' : ' dokan-hide'; ?>">
                 <input type="hidden" class="dokan-file-field" value="<?php echo esc_attr( $gravatar_id ); ?>" name="dokan_gravatar">
                 <img class="dokan-gravatar-img" src="<?php echo esc_url( $gravatar_url ); ?>">

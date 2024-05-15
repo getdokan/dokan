@@ -49,7 +49,7 @@ if ( 'layout3' === $profile_layout ) {
                     title="<?php echo esc_attr( $store_user->get_shop_name() ); ?>"
                     class="profile-info-img">
             <?php } else { ?>
-                <div class="profile-info-img dummy-image" style="background-image:url(<?php esc_url_raw( $store_banner_url ); ?>)">&nbsp;</div>
+                <div class="profile-info-img dummy-image" style="background-image: url(<?php esc_url_raw( $store_banner_url ); ?>);">&nbsp;</div>
             <?php } ?>
 
             <div class="profile-info-summery-wrapper dokan-clearfix">
