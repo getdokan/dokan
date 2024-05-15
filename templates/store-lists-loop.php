@@ -17,12 +17,12 @@
                     $dokan_store_time_enabled = isset( $store_info['dokan_store_time_enabled'] ) ? $store_info['dokan_store_time_enabled'] : '';
                     $store_open_is_on         = ( 'on' === $show_store_open_close && 'yes' === $dokan_store_time_enabled && ! $is_store_featured ) ? 'store_open_is_on' : '';
 
-                    // get default banner set from admin settings
+                    // Get default banner set from admin settings.
                     $default_store_banner   = DOKAN_PLUGIN_ASSEST . '/images/default-store-banner.png';
-                    $no_bannar_image_needed = $default_store_banner === $store_banner_url;
+                    $no_banner_image_needed = $default_store_banner === $store_banner_url;
                     ?>
 
-                    <li class="dokan-single-seller woocommerce coloum-<?php echo esc_attr( $per_row ); ?> <?php echo esc_attr( $no_bannar_image_needed ? 'no-banner-img' : '' ); ?>">
+                    <li class="dokan-single-seller woocommerce coloum-<?php echo esc_attr( $per_row ); ?> <?php echo esc_attr( $no_banner_image_needed ? 'no-banner-img' : '' ); ?>">
                         <div class="store-wrapper">
                             <div class="store-header">
                                 <div class="store-banner">
@@ -32,7 +32,7 @@
                                 </div>
                             </div>
 
-                            <div class="store-content <?php echo $no_bannar_image_needed ? esc_attr( 'default-store-banner' ) : ''; ?>">
+                            <div class="store-content <?php echo $no_banner_image_needed ? esc_attr( 'default-store-banner' ) : ''; ?>">
                                 <div class="store-data-container">
                                     <div class="featured-favourite">
                                         <?php if ( $is_store_featured ) : ?>
@@ -102,7 +102,7 @@
                                     <a href="<?php echo esc_url( $store_url ); ?>">
                                         <img src="<?php echo esc_url( $vendor->get_avatar() ); ?>"
                                             alt="<?php echo esc_attr( $vendor->get_shop_name() ); ?>"
-                                            size="150">
+                                            size="150" />
                                     </a>
                                 </div>
                                 <a href="<?php echo esc_url( $store_url ); ?>" title="<?php esc_attr_e( 'Visit Store', 'dokan-lite' ); ?>">
