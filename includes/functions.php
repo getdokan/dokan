@@ -429,7 +429,7 @@ if ( ! function_exists( 'dokan_get_seller_percentage' ) ) {
     /**
      * Get store seller percentage settings
      *
-     * @deprecated 3.9.9 Do Not Use This Function
+     * @deprecated DOKAN_SINCE Do Not Use This Function
      *
      * @param int $seller_id
      * @param int $product_id
@@ -2579,7 +2579,7 @@ add_action( 'widgets_init', 'dokan_register_store_widget' );
 /**
  * Calculate category wise commission for given product.
  *
- * @deprecated 3.9.9 Do Not Use This Function
+ * @deprecated DOKAN_SINCE Do Not Use This Function
  *
  * @since 2.6.8
  *
@@ -2588,7 +2588,7 @@ add_action( 'widgets_init', 'dokan_register_store_widget' );
  * @return int $commission_rate
  */
 function dokan_get_category_wise_seller_commission( $product_id, $category_id = 0 ) {
-    wc_deprecated_function( __FUNCTION__, '3.9.9' );
+    wc_deprecated_function( __FUNCTION__, 'DOKAN_SINCE' );
 
     return 0;
 }
@@ -2596,7 +2596,7 @@ function dokan_get_category_wise_seller_commission( $product_id, $category_id = 
 /**
  * Calculate category wise commission type for given product.
  *
- * @deprecated 3.9.9 Do Not Use This Function
+ * @deprecated DOKAN_SINCE Do Not Use This Function
  *
  * @since 2.6.9
  *
@@ -2605,7 +2605,7 @@ function dokan_get_category_wise_seller_commission( $product_id, $category_id = 
  * @return int $commission_rate
  */
 function dokan_get_category_wise_seller_commission_type( $product_id, $category_id = 0 ) {
-    wc_deprecated_function( __FUNCTION__, '3.9.9' );
+    wc_deprecated_function( __FUNCTION__, 'DOKAN_SINCE' );
 
     return '';
 }

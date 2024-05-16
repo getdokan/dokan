@@ -38,7 +38,6 @@
 </template>
 
 <script>
-import { fixed } from "lodash/fp/_falseOptions";
 import Debounce from "debounce";
 
 export default {
