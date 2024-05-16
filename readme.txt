@@ -7,7 +7,7 @@ Tested up to: 6.5.3
 WC requires at least: 8.0.0
 WC tested up to: 8.8.3
 Requires PHP: 7.4
-Stable tag: 3.11.0
+Stable tag: 3.11.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -346,6 +346,11 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 == Changelog ==
+
+= v3.11.1 ( May 16, 2024 ) =
+
+- **new:** Action hook `dokan_dashboard_sidebar_start` added.
+- **new:** Action hook `dokan_dashboard_sidebar_end` added.
 
 = v3.11.0 ( May 10, 2024 ) =
 
