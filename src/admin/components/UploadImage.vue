@@ -274,6 +274,7 @@ export default {
         width: 100%;
 
         img {
+            width: 100%;
             cursor: pointer;
         }
     }

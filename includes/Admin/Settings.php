@@ -594,6 +594,10 @@ class Settings {
             ]
         );
 
+        // Collect store banner dimensions for croppable fields.
+        $store_banner_width  = dokan()->is_pro_exists() ? dokan_get_option( 'store_banner_width', 'dokan_appearance', 625 ) : 625;
+        $store_banner_height = dokan()->is_pro_exists() ? dokan_get_option( 'store_banner_height', 'dokan_appearance', 300 ) : 300;
+
         $settings_fields = [
             'dokan_general'    => array_merge(
                 $general_site_options,
@@ -809,18 +813,24 @@ class Settings {
                     'default' => 'default',
                 ],
                 'default_store_banner'       => [
-                    'name'    => 'default_store_banner',
-                    'label'   => __( 'Default Store Banner', 'dokan-lite' ),
-                    'type'    => 'file',
-                    'default' => DOKAN_PLUGIN_ASSEST . '/images/default-store-banner.png',
-                    'restore' => true,
+                    'name'            => 'default_store_banner',
+                    'label'           => __( 'Default Store Banner', 'dokan-lite' ),
+                    'type'            => 'croppable_image',
+                    'default'         => DOKAN_PLUGIN_ASSEST . '/images/default-store-banner.png',
+                    'restore'         => true,
+                    'render_width'    => 625,
+                    'cropping_width'  => $store_banner_width,
+                    'cropping_height' => $store_banner_height,
                 ],
                 'default_store_profile'      => [
-                    'name'    => 'default_store_profile',
-                    'label'   => __( 'Default Store Profile Picture', 'dokan-lite' ),
-                    'type'    => 'file',
-                    'default' => DOKAN_PLUGIN_ASSEST . '/images/mystery-person.jpg',
-                    'restore' => true,
+                    'name'            => 'default_store_profile',
+                    'label'           => __( 'Default Store Profile Picture', 'dokan-lite' ),
+                    'type'            => 'croppable_image',
+                    'default'         => DOKAN_PLUGIN_ASSEST . '/images/mystery-person.jpg',
+                    'restore'         => true,
+                    'render_width'    => 120,
+                    'cropping_width'  => 625,
+                    'cropping_height' => 625,
                 ],
                 'store_open_close'           => [
                     'name'    => 'store_open_close',

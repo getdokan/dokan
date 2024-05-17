@@ -13,7 +13,7 @@
             </span>
         </h3>
         <p class="field_desc" v-if="fieldData.desc" v-html="fieldData.desc"></p>
-        <p class="field_default" v-if="fieldData.type === 'file' && fieldData.restore === true">
+        <p class="field_default" v-if="fieldData.type === 'croppable_image' && fieldData.restore === true">
             <a href="" v-on:click.prevent="restoreDefaultImage()">{{ __( 'Restore Default', 'dokan-lite' ) }}</a>
         </p>
     </div>

@@ -272,6 +272,27 @@
             </div>
         </template>
 
+        <template v-if="'croppable_image' === fieldData.type">
+            <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
+                <fieldset>
+                    <FieldHeading :fieldData="fieldData"></FieldHeading>
+                    <div class="field add_files">
+                        <label :style="{ maxWidth: fieldData.render_width + 'px' }" :for="sectionId + '[' + fieldData.name + ']'">
+                            <UploadImage
+                                :croppingWidth="parseInt( fieldData.cropping_width )"
+                                :croppingHeight="parseInt( fieldData.cropping_height )"
+                                :src="fieldValue[fieldData.name]"
+                                @uploadedImage="uploadedImage"
+                                :showButton="false" />
+                        </label>
+                    </div>
+                </fieldset>
+                <p v-if="hasError( fieldData.name )" class="dokan-error">
+                    {{ getError( fieldData.label ) }}
+                </p>
+            </div>
+        </template>
+
         <template v-if="'color' === fieldData.type">
             <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
@@ -511,6 +532,7 @@
     import SecretInput from './SecretInput.vue';
     import WithdrawCharges from './Fields/WithdrawCharges.vue'
     import DokanRadioGroup from "admin/components/DokanRadioGroup.vue";
+    import UploadImage from "admin/components/UploadImage.vue";
 
     let Mapbox                = dokan_get_lib('Mapbox');
     let TextEditor            = dokan_get_lib('TextEditor');
@@ -521,7 +543,8 @@
         name: 'Fields',
 
         components: {
-          DokanRadioGroup,
+            UploadImage,
+            DokanRadioGroup,
             Mapbox,
             Switches,
             TextEditor,
@@ -548,6 +571,7 @@
                 yourStringTimeValue   : '',
                 customFieldComponents : dokan.hooks.applyFilters( 'getDokanCustomFieldComponents', [] ),
                 multiCheckValues      : {},
+                dokanProExists        : dokan.hasPro,
             }
         },
 
@@ -729,6 +753,11 @@
                   fieldData.is_lite ?? false
                 );
             },
+
+            uploadedImage( image ) {
+                this.fieldValue[ this.id ] = this.validateInputData( this.id, image.src, this.fieldValue[ this.id ], this.fieldData );
+            },
+
             inputValueHandler( name, newValue, oldValue ) {
               this.fieldValue[ name ] = this.validateInputData( name, newValue, oldValue, this.fieldData );
             },
