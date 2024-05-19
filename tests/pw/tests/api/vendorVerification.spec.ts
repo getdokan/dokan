@@ -19,6 +19,7 @@ import { data } from '@utils/testData';
 const { VENDOR_ID } = process.env;
 
 test.describe('vendor verification api test', () => {
+    test.skip(true, 'feature not merged yet');
     let apiUtils: ApiUtils;
     let methodId: string;
     let requestId: string;
@@ -27,11 +28,12 @@ test.describe('vendor verification api test', () => {
     test.beforeAll(async () => {
         apiUtils = new ApiUtils(await request.newContext());
         [, methodId] = await apiUtils.createVerificationMethod(payloads.createVerificationMethod());
-        [, mediaId] = await apiUtils.uploadMedia(data.image.dokan, payloads.mimeTypes.png, payloads.adminAuth);
+        [, mediaId] = await apiUtils.uploadMedia(data.image.avatar, payloads.mimeTypes.png, payloads.adminAuth);
         [, requestId] = await apiUtils.createVerificationRequest({ ...payloads.createVerificationRequest(), vendor_id: VENDOR_ID, method_id: methodId, documents: [mediaId] });
     });
 
     test.afterAll(async () => {
+        // await apiUtils.deleteAllVerificationMethods();
         await apiUtils.dispose();
     });
 

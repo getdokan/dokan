@@ -55,7 +55,7 @@ export class BasePage {
 
     // goto subUrl
     async goto(subPath: string): Promise<void> {
-        await this.page.goto(subPath, { waitUntil: 'domcontentloaded' });
+        await this.page.goto(subPath, { waitUntil: 'networkidle' });
     }
 
     // go forward
@@ -71,6 +71,14 @@ export class BasePage {
     // reload page
     async reload(): Promise<void> {
         await this.page.reload();
+    }
+
+    // reload if visible
+    async reloadIfVisible(selector: string): Promise<void> {
+        const isVisible = await this.isVisible(selector);
+        if (isVisible) {
+            await this.reload();
+        }
     }
 
     // returns whether the current URL is expected
@@ -269,12 +277,7 @@ export class BasePage {
 
     // click & wait for response
     async clickAndAcceptAndWaitForResponseAndLoadState(subUrl: string, selector: string, code = 200): Promise<Response> {
-        const [response] = await Promise.all([
-            this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code),
-            this.acceptAlert(),
-            this.page.waitForLoadState('networkidle'),
-            this.page.locator(selector).click(),
-        ]);
+        const [response] = await Promise.all([this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code), this.acceptAlert(), this.page.waitForLoadState('networkidle'), this.page.locator(selector).click()]);
         return response;
     }
 
@@ -345,7 +348,7 @@ export class BasePage {
         }
     }
 
-    // click if visible
+    // click if exists
     async clickIfExists(selector: string): Promise<void> {
         const isExists = await this.isLocatorExists(selector);
         if (isExists) {
@@ -460,6 +463,12 @@ export class BasePage {
     // get element
     getElement(selector: string): Locator {
         return this.page.locator(selector);
+    }
+
+    // get element count
+    async getElementCount(selector: string): Promise<number> {
+        return await this.countLocator(selector);
+        // return this.page.locator(selector).count();
     }
 
     // get element text content

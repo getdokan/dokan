@@ -287,7 +287,7 @@ export class VendorPage extends BasePage {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.dashboard);
         // ensure page suppose to open on new tab
         await this.toHaveAttribute(selector.vendor.vDashboard.menus.visitStore, 'target', '_blank');
-        // force page to open on same tab
+        // force page to open on the same tab
         await this.setAttributeValue(selector.vendor.vDashboard.menus.visitStore, 'target', '_self');
         await this.click(selector.vendor.vDashboard.menus.visitStore);
         await expect(this.page).toHaveURL(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)) + '/');

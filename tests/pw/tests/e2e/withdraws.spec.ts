@@ -39,6 +39,10 @@ test.describe('Withdraw test', () => {
         await admin.adminWithdrawsRenderProperly();
     });
 
+    // test('admin can filter withdrawal requests by pending status', { tag: ['@lite', '@admin'] }, async () => {
+    //     await admin.filterWithdraws(data.predefined.vendorStores.vendor1, 'by-pending');
+    // });  // todo: need to implement
+
     test('admin can filter withdrawal requests by vendor', { tag: ['@lite', '@admin'] }, async () => {
         await admin.filterWithdraws(data.predefined.vendorStores.vendor1, 'by-vendor');
     });

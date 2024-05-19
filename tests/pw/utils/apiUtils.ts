@@ -1300,6 +1300,13 @@ export class ApiUtils {
      * vendor verification methods
      */
 
+    // get verification methodId
+    async getVerificationMethodId(methodName: string, auth?: auth): Promise<string> {
+        const allVerificationMethods = await this.getAllVerificationMethods(auth);
+        const methodId = allVerificationMethods.find((o: { title: string }) => o.title.toLowerCase() === methodName.toLowerCase())?.id;
+        return methodId;
+    }
+
     // get all verification methods
     async getAllVerificationMethods(auth?: auth): Promise<responseBody> {
         const [, responseBody] = await this.get(endPoints.getAllVerificationMethods, { params: { per_page: 100 }, headers: auth });
@@ -1307,10 +1314,17 @@ export class ApiUtils {
     }
 
     // create verification method
-    async createVerificationMethod(payload: object, auth?: auth): Promise<[responseBody, string]> {
+    async createVerificationMethod(payload: object, auth?: auth): Promise<[responseBody, string, string]> {
         const [, responseBody] = await this.post(endPoints.createVerificationMethod, { data: payload, headers: auth });
         const methodId = String(responseBody?.id);
-        return [responseBody, methodId];
+        const methodTitle = String(responseBody?.title);
+        return [responseBody, methodId, methodTitle];
+    }
+
+    // get all verification requests
+    async getAllVerificationRequests(params = {}, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.get(endPoints.getAllVerificationRequests, { params: { ...params, per_page: 100 }, headers: auth });
+        return responseBody;
     }
 
     // create verification request
@@ -1318,6 +1332,12 @@ export class ApiUtils {
         const [, responseBody] = await this.post(endPoints.createVerificationRequest, { data: payload, headers: auth });
         const requestId = String(responseBody?.id);
         return [responseBody, requestId];
+    }
+
+    // update verification request
+    async updateVerificationRequest(requestId: string, payload: object, auth?: auth): Promise<[responseBody]> {
+        const [, responseBody] = await this.put(endPoints.updateVerificationRequest(requestId), { data: payload, headers: auth });
+        return responseBody;
     }
 
     // delete all verification methods
@@ -1329,7 +1349,20 @@ export class ApiUtils {
         }
         const allmethodIds = allVerificationMethods.map((o: { id: unknown }) => o.id);
         for (const methodId of allmethodIds) {
-            await this.delete(endPoints.updateVerificationMethod(methodId), { headers: auth });
+            await this.delete(endPoints.deleteVerificationMethod(methodId), { headers: auth });
+        }
+    }
+
+    // delete all verification methods
+    async deleteAllVerificationRequests(params = {}, auth?: auth) {
+        const allVerificationRequests = await this.getAllVerificationRequests(params, auth);
+        if (!allVerificationRequests?.length) {
+            console.log('No verification requests exists');
+            return;
+        }
+        const allRequestIds = allVerificationRequests.map((o: { id: unknown }) => o.id);
+        for (const requestId of allRequestIds) {
+            await this.delete(endPoints.deleteVerificationRequest(requestId), { headers: auth });
         }
     }
 

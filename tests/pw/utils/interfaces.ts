@@ -947,19 +947,8 @@ export interface vendor {
     };
 
     verification: {
+        method: string;
         file: string;
-        street1: string;
-        street2: string;
-        city: string;
-        zipCode: string;
-        country: string;
-        state: string;
-        idRequestSubmitSuccessMessage: string;
-        idRequestSubmitCancel: string;
-        addressRequestSubmitSuccessMessage: string;
-        addressRequestSubmitCancel: string;
-        companyRequestSubmitSuccessMessage: string;
-        companyRequestSubmitCancel: string;
     };
 
     deliveryTime: {
@@ -1563,6 +1552,44 @@ export interface dokanSettings {
     storeSupport: {
         displayOnSingleProductPage: string;
         supportButtonLabel: string;
+        saveSuccessMessage: string;
+    };
+
+    // Vendor Verification
+    vendorVerification: {
+        verifiedIcons: {
+            circleSolid: string;
+            circleRegular: string;
+            solid: string;
+            doubleSolid: string;
+            squireRegular: string;
+            userCheckSolid: string;
+            certificateSolid: string;
+
+            byIcon: {
+                circleSolid: string;
+                circleRegular: string;
+                solid: string;
+                doubleSolid: string;
+                squireRegular: string;
+                userCheckSolid: string;
+                certificateSolid: string;
+            };
+        };
+
+        verificationMethods: {
+            nationalId: string;
+            drivingLicense: string;
+            address: string;
+            company: string;
+        };
+
+        verificationMethodDetails: {
+            title: string;
+            help_text: string;
+            required: boolean;
+        };
+
         saveSuccessMessage: string;
     };
 

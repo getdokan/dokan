@@ -22,7 +22,7 @@ export class WithdrawsPage extends AdminPage {
     async adminWithdrawsRenderProperly(): Promise<void> {
         await this.goIfNotThere(data.subUrls.backend.dokan.withdraw);
 
-        // withdraw  text is visible
+        // withdraw text is visible
         await this.toBeVisible(withdrawsAdmin.withdrawText);
 
         // nav tabs elements are visible
@@ -80,7 +80,7 @@ export class WithdrawsPage extends AdminPage {
         await this.clickAndWaitForResponse(data.subUrls.api.dokan.withdraws, withdrawsAdmin.updateNote);
     }
 
-    // add note to withdraw request
+    // update withdraw request
     async updateWithdrawRequest(vendorName: string, action: string): Promise<void> {
         await this.filterWithdraws(vendorName, 'by-vendor');
 

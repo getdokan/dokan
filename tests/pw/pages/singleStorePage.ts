@@ -92,7 +92,7 @@ export class SingleStorePage extends CustomerPage {
         await this.click(singleStoreCustomer.storeTabs.share);
         // ensure page suppose to open on new tab
         await this.toHaveAttribute(singleStoreCustomer.sharePlatForms[site as keyof typeof singleStoreCustomer.sharePlatForms], 'target', '_blank');
-        // force page to open on same tab
+        // force page to open on the same tab
         await this.setAttributeValue(singleStoreCustomer.sharePlatForms[site as keyof typeof singleStoreCustomer.sharePlatForms], 'target', '_self');
         await this.clickAndWaitForUrl(new RegExp('.*' + site + '.*'), singleStoreCustomer.sharePlatForms[site as keyof typeof singleStoreCustomer.sharePlatForms]);
     }
