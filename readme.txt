@@ -308,7 +308,7 @@ A. Not for the moment. We have plans to integrate with BuddyPress via an add-on 
 A. Yes, Dokan is fully responsive. We take mobile first approach and it displays very well in mobile and tablet devices. We are using Twitter Bootstrap as a framework and it just works.
 
 = Q. Does it supports variable products? =
-A. The **Pro** version does! You can seller normal products, downloadable products and variable products with your own attributes.
+A. The **Pro** version does! You can sell normal products, downloadable products, and variable products with your own attributes.
 
 = Q. Can each vendor customize his store? =
 A. Right now we have options for only changing the store banner page. We are working on a better customizable seller store page.
