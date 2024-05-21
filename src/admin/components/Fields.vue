@@ -279,8 +279,8 @@
                     <div class="field add_files">
                         <label :style="{ maxWidth: fieldData.render_width + 'px' }" :for="sectionId + '[' + fieldData.name + ']'">
                             <UploadImage
-                                :croppingWidth="parseInt( fieldData.cropping_width )"
-                                :croppingHeight="parseInt( fieldData.cropping_height )"
+                                :croppingWidth="parseInt( croppingWidth )"
+                                :croppingHeight="parseInt( croppingHeight )"
                                 :src="fieldValue[fieldData.name]"
                                 @uploadedImage="uploadedImage"
                                 :showButton="false" />
@@ -565,6 +565,8 @@
                 checked               : this.isChecked(),
                 socialChecked         : this.isSocialChecked(),
                 expandSocials         : false,
+                croppingWidth         : this.fieldData.cropping_width,
+                croppingHeight        : this.fieldData.cropping_height,
                 repeatableItem        : {},
                 repeatableTime        : [],
                 singleColorPicker     : { default: this.fieldData.default, label: '', show_pallete: false },
@@ -599,7 +601,11 @@
 
         watch: {
             fieldValue: {
-                handler() {
+                handler( newValue ) {
+                    if ( this.id === 'default_store_banner' ) {
+                        this.croppingWidth = newValue.store_banner_width;
+                        this.croppingHeight = newValue.store_banner_height;
+                    }
                 },
                 deep: true,
             }
