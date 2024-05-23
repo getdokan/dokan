@@ -273,8 +273,14 @@ export default {
     .dokan-upload-image {
         width: 100%;
 
+        .dokan-upload-image-container {
+            background: #496a94;
+            border-radius: 50%;
+        }
+
         img {
             width: 100%;
+            display: flex;
             cursor: pointer;
         }
     }

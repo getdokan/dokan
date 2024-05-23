@@ -434,6 +434,7 @@ export default {
     td.store_name img {
         float: left;
         margin-right: 10px;
+        border-radius: 12px;
         margin-top: 1px;
         width: 24px;
         height: auto;
