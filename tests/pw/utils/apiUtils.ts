@@ -534,6 +534,12 @@ export class ApiUtils {
         return [responseBody, withdrawId];
     }
 
+    // update withdraw
+    async updateWithdraw(withdrawId: string, payload: object, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.put(endPoints.updateWithdraw(withdrawId), { data: payload, headers: auth });
+        return responseBody;
+    }
+
     // cancel withdraw
     async cancelWithdraw(withdrawId: string, auth?: auth): Promise<responseBody> {
         if (!withdrawId) {

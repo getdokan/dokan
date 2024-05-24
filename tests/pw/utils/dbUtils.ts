@@ -44,9 +44,20 @@ export const dbUtils = {
 
     // update option table
     async updateWpOptionTable(optionName: string, optionValue: object | string, serializeData?: string): Promise<any> {
-        const queryUpdate = serializeData
-            ? `UPDATE ${dbPrefix}_options SET option_value = '${serialize(optionValue)}' WHERE option_name = '${optionName}';`
-            : `UPDATE ${dbPrefix}_options SET option_value = '${optionValue}' WHERE option_name = '${optionName}';`;
+        optionValue = serializeData ? serialize(optionValue) : optionValue;
+        const queryUpdate = `UPDATE ${dbPrefix}_options SET option_value = '${optionValue}' WHERE option_name = '${optionName}';`;
+        const res = await dbUtils.dbQuery(queryUpdate);
+        // console.log(res);
+        return res;
+    },
+
+    // create user meta
+    async createUserMeta(userId: string, metaKey: string, metaValue: object | string, serializeData?: string): Promise<any> {
+        metaValue = serializeData ? serialize(metaValue) : metaValue;
+        const metaExists = await dbUtils.dbQuery(`SELECT EXISTS (SELECT 1 FROM ${dbPrefix}_usermeta WHERE user_id = '${userId}' AND meta_key = '${metaKey}') AS row_exists;`);
+        const queryUpdate = metaExists[0].row_exists
+            ? `UPDATE ${dbPrefix}_usermeta SET meta_value = '${metaValue}'  WHERE user_id = '${userId}' AND meta_key = '${metaKey}';`
+            : `INSERT INTO ${dbPrefix}_usermeta VALUES ( NULL, '${userId}', '${metaKey}', '${metaValue}');`;
         const res = await dbUtils.dbQuery(queryUpdate);
         // console.log(res);
         return res;

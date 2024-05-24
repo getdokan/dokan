@@ -22,7 +22,8 @@ export class SingleStorePage extends CustomerPage {
         await this.goIfNotThere(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)));
 
         // store profile elements are visible
-        await this.multipleElementVisible(singleStoreCustomer.storeProfile);
+        const { verifiedIcon, verifiedIconByIcon, ...storeProfile } = singleStoreCustomer.storeProfile;
+        await this.multipleElementVisible(storeProfile);
 
         // store tab elements are visible
         if (!DOKAN_PRO) {

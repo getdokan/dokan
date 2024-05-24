@@ -19,7 +19,6 @@ import { data } from '@utils/testData';
 const { VENDOR_ID } = process.env;
 
 test.describe('vendor verification api test', () => {
-    test.skip(true, 'feature not merged yet');
     let apiUtils: ApiUtils;
     let methodId: string;
     let requestId: string;

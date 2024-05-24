@@ -765,6 +765,7 @@ export const data = {
         bankSwiftCode: faker.string.alphanumeric(10),
         customPayment: '1234567890',
         skrill: faker.internet.email(),
+        file: 'utils/sampleData/avatar.png',
     },
 
     storeShare: {

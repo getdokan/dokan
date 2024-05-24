@@ -297,6 +297,7 @@ export const selector = {
                     pending: '//ul[@class="subsubsub"]//li//a[contains(text(),"Pending")]',
                     approved: '//ul[@class="subsubsub"]//li//a[contains(text(),"Approved")]',
                     cancelled: '//ul[@class="subsubsub"]//li//a[contains(text(),"Cancelled")]',
+                    tabByStatus: (status: string) => `//ul[@class="subsubsub"]//li//a[contains(text(),"${status}")]`,
                 },
 
                 // Bulk Actions
@@ -331,13 +332,10 @@ export const selector = {
                     actionsColumn: 'thead th.actions',
                 },
 
-                withdrawStatus: {
-                    pending: 'td.column.status .pending',
-                    approved: 'td.column.status .approved',
-                    cancelled: 'td.column.status .cancelled',
-                },
+                statusColumnValue: (status: string) => `td.column.status .${status}`, // pending, approved, rejected, cancelled
 
                 numberOfRowsFound: '.tablenav.top .displaying-num',
+                currentNoOfRows: 'table tbody tr',
                 noRowsFound: '//td[normalize-space()="No requests found."]',
                 withdrawCell: (storeName: string) => `//td//a[contains(text(), '${storeName}')]/../..`,
                 withdrawDelete: (storeName: string) => `//td//a[contains(text(), '${storeName}')]/../..//span[@class="trash"]//a`,
@@ -3349,6 +3347,10 @@ export const selector = {
             continuePaymentSetup: '.payment-continue-btn',
             skipTheStepPaymentSetup: '.payment-step-skip-btn',
 
+            //verification
+
+            skipTheStepVerifications: '.payment-step-skip-btn',
+
             // Last Step
             goToStoreDashboard: '.wc-setup-actions.step .button',
             returnToMarketplace: '.wc-return-to-dashboard',
@@ -5955,6 +5957,9 @@ export const selector = {
             verificationText: '.dokan-settings-content h1',
             visitStore: '//a[normalize-space()="Visit Store"]',
 
+            verificationMethodAllDiv: '.dokan-verification-content .dokan-panel',
+            requiredText: '//small[text()="(Required)"]',
+            firtstVerificationMethod: '(//div[@class="dokan-panel-heading"]//strong)[1]',
             verificationMethodDiv: (methodName: string) => `//strong[text()='${methodName}']/../..`,
             verificationMethodHelpText: (methodName: string) => `//strong[text()='${methodName}']/../..//p`,
             startVerification: (methodName: string) => `//strong[text()='${methodName}']/../..//button[contains(@class,'dokan-vendor-verification-start')]`,
@@ -5964,6 +5969,8 @@ export const selector = {
             submit: (methodName: string) => `//strong[text()='${methodName}']/../..//input[contains(@class,'dokan_vendor_verification_submit')]`,
             cancelSubmit: (methodName: string) => `//strong[text()='${methodName}']/../..//input[contains(@class,'dokan_vendor_verification_cancel')]`,
             verificationStatus: (methodName: string, staus: string) => `//strong[text()='${methodName}']/../..//p//label[contains(@class,'${staus}')]`,
+            verificationRequestDocument: (methodName: string) => `(//strong[text()='${methodName}']/../..//div[@class='dokan-vendor-verification-file-item']//a)[1]`,
+            verificationRequestNote: (methodName: string) => `(//strong[text()='${methodName}']/../..//p[text()='Note:']/..//p)[2]`,
 
             confirmCancelRequest: '.swal2-confirm',
             cancelPopup: '.swal2-cancel',

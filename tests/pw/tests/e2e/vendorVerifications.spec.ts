@@ -1,13 +1,13 @@
 import { test, request, Page } from '@playwright/test';
 import { VendorVerificationsPage } from '@pages/vendorVerificationsPage';
 import { ApiUtils } from '@utils/apiUtils';
+import { dbUtils } from '@utils/dbUtils';
 import { payloads } from '@utils/payloads';
 import { data } from '@utils/testData';
 
 const { VENDOR_ID, VENDOR2_ID } = process.env;
 
 test.describe('Verifications test', () => {
-    test.skip(true, 'feature not merged yet');
     let admin: VendorVerificationsPage;
     let vendor: VendorVerificationsPage;
     let customer: VendorVerificationsPage;
@@ -38,6 +38,8 @@ test.describe('Verifications test', () => {
     });
 
     test.afterAll(async () => {
+        // await apiUtils.deleteAllVerificationMethods(payloads.adminAuth);
+        // await apiUtils.deleteAllVerificationRequests(payloads.adminAuth);
         await aPage.close();
         await vPage.close();
         await cPage.close();
@@ -47,18 +49,28 @@ test.describe('Verifications test', () => {
 
     // verification methods
 
+    test('admin can change verified icon', { tag: ['@pro', '@admin'] }, async () => {
+        await dbUtils.createUserMeta(VENDOR2_ID, 'dokan_verification_status', 'approved');
+        await admin.changeVerifiedIcon(data.dokanSettings.vendorVerification.verifiedIcons.byIcon.certificateSolid, data.predefined.vendorStores.vendor2);
+    });
+
     test('admin can add vendor verification method', { tag: ['@pro', '@admin'] }, async () => {
         await admin.addVendoVerificationMethod(data.dokanSettings.vendorVerification.customMethod);
     });
 
     test('admin can edit vendor verification method', { tag: ['@pro', '@admin'] }, async () => {
-        const [, , methodTitle] = await apiUtils.createVerificationMethod(payloads.createVerificationMethod(), payloads.adminAuth);
-        await admin.editVendoVerificationMethod(methodTitle, data.dokanSettings.vendorVerification.updateMethod);
+        const [, , methodName] = await apiUtils.createVerificationMethod(payloads.createVerificationMethod(), payloads.adminAuth);
+        await admin.editVendoVerificationMethod(methodName, data.dokanSettings.vendorVerification.updateMethod);
     });
 
     test('admin can delete vendor verification method', { tag: ['@pro', '@admin'] }, async () => {
-        const [, , methodTitle] = await apiUtils.createVerificationMethod(payloads.createVerificationMethod(), payloads.adminAuth);
-        await admin.deleteVendoVerificationMethod(methodTitle);
+        const [, , methodName] = await apiUtils.createVerificationMethod(payloads.createVerificationMethod(), payloads.adminAuth);
+        await admin.deleteVendoVerificationMethod(methodName);
+    });
+
+    test('admin can update verificaiton method status', { tag: ['@pro', '@admin'] }, async () => {
+        const [, , methodName] = await apiUtils.createVerificationMethod(payloads.createVerificationMethod(), payloads.adminAuth);
+        await admin.updateVerificationMethodStatus(methodName, 'disable');
     });
 
     // verification requests
@@ -94,8 +106,12 @@ test.describe('Verifications test', () => {
     });
 
     test('admin can filter verification requests by verification methods', { tag: ['@pro', '@admin'] }, async () => {
-        test.skip(true, 'has issue');
         await admin.filterVerificationRequests(methodName, 'by-verification-method');
+    });
+
+    test('admin can reset filter', { tag: ['@pro', '@admin'] }, async () => {
+        await admin.filterVerificationRequests(data.predefined.vendorStores.vendor1, 'by-vendor');
+        await admin.resetFilter();
     });
 
     test('admin can add note to verification request', { tag: ['@pro', '@admin'] }, async () => {
@@ -141,19 +157,58 @@ test.describe('Verifications test', () => {
 
     test('vendor can cancel verification request', { tag: ['@pro', '@vendor'] }, async () => {
         const [, methodId, methodName] = await apiUtils.createVerificationMethod(payloads.createVerificationMethod(), payloads.adminAuth);
-        [, requestId] = await apiUtils.createVerificationRequest({ ...payloads.createVerificationRequest(), vendor_id: VENDOR_ID, method_id: methodId, documents: [mediaId] }, payloads.adminAuth);
+        await apiUtils.createVerificationRequest({ ...payloads.createVerificationRequest(), vendor_id: VENDOR_ID, method_id: methodId, documents: [mediaId] }, payloads.adminAuth);
         await vendor.cancelVerificationRequest(methodName);
+    });
+
+    test('vendor can view verification request documents', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.vendorViewVerificationRequestDocument(methodName);
+    });
+
+    test('vendor can view verification request notes', { tag: ['@pro', '@vendor'] }, async () => {
+        const note = 'test verification note';
+        await apiUtils.createVerificationRequest({ ...payloads.createVerificationRequest(), vendor_id: VENDOR_ID, method_id: methodId, documents: [mediaId], note: note }, payloads.adminAuth);
+        await vendor.viewVerificationRequestNote(methodName, note);
+    });
+
+    test('vendor can view only required verificaiton method on setup wizard', { tag: ['@pro', '@vendor'] }, async () => {
+        const [, , nonRequiredMethodName] = await apiUtils.createVerificationMethod({ ...payloads.createVerificationMethod(), required: false }, payloads.adminAuth);
+        await vendor.viewRequiredVerificationMethod(methodName, nonRequiredMethodName);
+    });
+
+    test('vendor can submit verification request on setup wizard', { tag: ['@pro', '@vendor'] }, async () => {
+        const [, , methodName] = await apiUtils.createVerificationMethod(payloads.createVerificationMethod(), payloads.adminAuth);
+        await vendor.submitVerificationRequest({ ...data.vendor.verification, method: methodName }, true);
+    });
+
+    test('vendor can re-submit verification request on setup wizard', { tag: ['@pro', '@vendor'] }, async () => {
+        const [, methodId, methodName] = await apiUtils.createVerificationMethod(payloads.createVerificationMethod(), payloads.adminAuth);
+        await apiUtils.createVerificationRequest({ ...payloads.createVerificationRequest(), vendor_id: VENDOR_ID, method_id: methodId, documents: [mediaId], status: 'rejected' }, payloads.adminAuth);
+        await vendor.submitVerificationRequest({ ...data.vendor.verification, method: methodName }, true);
+    });
+
+    test('vendor can cancel verification request on setup wizard', { tag: ['@pro', '@vendor'] }, async () => {
+        const [, methodId, methodName] = await apiUtils.createVerificationMethod(payloads.createVerificationMethod(), payloads.adminAuth);
+        await apiUtils.createVerificationRequest({ ...payloads.createVerificationRequest(), vendor_id: VENDOR_ID, method_id: methodId, documents: [mediaId] }, payloads.adminAuth);
+        await vendor.cancelVerificationRequest(methodName, true);
+    });
+
+    test('vendor can view verification request documents on setup wizard', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.vendorViewVerificationRequestDocument(methodName, true);
     });
 
     // customer
 
     test('customer can view verified badge', { tag: ['@pro', '@customer'] }, async () => {
-        //TODO: need verified vendor
-        await customer.viewVerifiedBadge(data.predefined.vendorStores.vendor1);
+        await dbUtils.createUserMeta(VENDOR2_ID, 'dokan_verification_status', 'approved');
+        await customer.viewVerifiedBadge(data.predefined.vendorStores.vendor2);
     });
 
-    test('admin can change verified icon', { tag: ['@pro', '@customer'] }, async () => {
-        //TODO: need verified vendor
-        await admin.changeVerifiedIcon(data.dokanSettings.vendorVerification.verifiedIcons.byIcon.certificateSolid, data.predefined.vendorStores.vendor1);
+    test.skip('admin receive notification for verification request', { tag: ['@pro', '@admin'] }, async () => {});
+    test.skip('vendor need all required method to be verified to get verification badge', { tag: ['@pro', '@vendor'] }, async () => {});
+    test.skip('vendor need to be verified only one method when no required method is exists', { tag: ['@pro', '@vendor'] }, async () => {});
+    test.skip('vendor address verification gets reset when he update address', { tag: ['@pro', '@vendor'] }, async () => {
+        const [, methodId] = await apiUtils.getVerificationMethodId('address', payloads.adminAuth);
+        await apiUtils.createVerificationRequest({ ...payloads.createVerificationRequest(), vendor_id: VENDOR_ID, method_id: methodId, documents: [mediaId], status: 'approved' }, payloads.adminAuth);
     });
 });

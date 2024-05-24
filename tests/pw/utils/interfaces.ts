@@ -644,6 +644,7 @@ export interface vendorSetupWizard {
     bankSwiftCode: string;
     customPayment: string;
     skrill: string;
+    file: string;
 }
 
 // user

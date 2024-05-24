@@ -912,12 +912,42 @@
 - page: 'Vendor Verification'
   features:
       admin:
+          admin can change verified icon: true
+          admin can add vendor verification method: true
+          admin can edit vendor verification method: true
+          admin can delete vendor verification method: true
+          admin can update verificaiton method status: true
           admin can view verifications menu page: true
+          admin can filter verification requests by pending status: true
+          admin can filter verification requests by approved status: true
+          admin can filter verification requests by rejected status: true
+          admin can filter verification requests by cancelled status: true
+          admin can filter verification requests by vendor: true
+          admin can filter verification requests by verification methods: true
+          admin can reset filter: true
+          admin can add note to verification request: true
+          admin can view verification request documents: true
+          admin can approve verification request: true
+          admin can reject verification request: true
+          admin can perform bulk action on verification requests: true
+          admin receive notification for verification request: false
       vendor:
           vendor can view verifications settings menu page: true
-          vendor can send id verification request: true
-          vendor can send address verification request: true
-          vendor can send company verification request: true
+          vendor can submit verification request: true
+          vendor can re-submit verification request: true
+          vendor can cancel verification request: true
+          vendor can view verification request documents: true
+          vendor can view verification request notes: true
+          vendor can view only required verificaiton method on setup wizard: true
+          vendor can submit verification request on setup wizard: true
+          vendor can re-submit verification request on setup wizard: true
+          vendor can cancel verification request on setup wizard: true
+          vendor can view verification request documents on setup wizard: true
+          vendor need all required method to be verified to get verification badge: false
+          vendor need to be verified only one method when no required method is exists: false
+          vendor address verification gets reset when he update address: false
+      customer:
+          customer can view verified badge: true
 
 - page: 'Wholesale'
   features:
