@@ -301,12 +301,15 @@ export class SettingsPage extends AdminPage {
     }
 
     // Admin Set Dokan Vendor Verificaton Settings
-    async setDokanVendoVerificationSettings(vendorVerification: dokanSettings['vendorVerification']) {
+    async setDokanVendorVerificationSettings(vendorVerification: dokanSettings['vendorVerification']) {
         await this.goToDokanSettings();
         await this.click(settingsAdmin.menus.vendorVerification);
 
         await this.click(settingsAdmin.vendorVerification.verifiedIcon(vendorVerification.verifiedIcons.userCheckSolid));
-        const response = await this.enableSwitcherAndWaitForResponse(data.subUrls.api.dokan.verificationMethods, settingsAdmin.vendorVerification.enableVerificationMethod(vendorVerification.verificationMethods.nationalId));
+        const response = await this.enableSwitcherAndWaitForResponse(
+            data.subUrls.api.dokan.verificationMethods,
+            settingsAdmin.vendorVerification.enableVerificationMethod(vendorVerification.verificationMethods.nationalId),
+        );
         response && (await this.toBeVisible(settingsAdmin.vendorVerification.methodUpdateSuccessMessage));
 
         // save settings

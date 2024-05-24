@@ -390,7 +390,7 @@ const vendorSchema = z.object({
     enable_tnc: z.string(),
     store_tnc: z.string(),
     show_min_order_discount: z.string(),
-    store_seo: z.unknown(), 
+    store_seo: z.unknown(),
     dokan_store_time_enabled: z.string(),
     dokan_store_open_notice: z.string(),
     dokan_store_close_notice: z.string(),

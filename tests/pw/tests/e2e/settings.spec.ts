@@ -74,8 +74,7 @@ test.describe('Settings test', () => {
     });
 
     test('admin can set Dokan vendor verification settings', { tag: ['@pro', '@admin'] }, async () => {
-        test.skip(true, 'feature not merged yet');
-        await admin.setDokanVendoVerificationSettings(data.dokanSettings.vendorVerification); //todo: need to resolve
+        await admin.setDokanVendorVerificationSettings(data.dokanSettings.vendorVerification); //todo: need to resolve
     });
 
     test('admin can set Dokan email verification settings', { tag: ['@pro', '@admin'] }, async () => {

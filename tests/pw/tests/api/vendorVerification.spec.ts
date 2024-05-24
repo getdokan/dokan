@@ -96,7 +96,9 @@ test.describe('vendor verification api test', () => {
     });
 
     test('update a verification request', { tag: ['@pro'] }, async () => {
-        const [response, responseBody] = await apiUtils.put(endPoints.updateVerificationRequest(requestId), { data: { ...payloads.updateVerificationRequest(), vendor_id: VENDOR_ID, method_id: methodId, documents: [mediaId] } });
+        const [response, responseBody] = await apiUtils.put(endPoints.updateVerificationRequest(requestId), {
+            data: { ...payloads.updateVerificationRequest(), vendor_id: VENDOR_ID, method_id: methodId, documents: [mediaId] },
+        });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
         expect(responseBody).toMatchSchema(schemas.vendorVerificationSchema.verificationRequestSchema);
