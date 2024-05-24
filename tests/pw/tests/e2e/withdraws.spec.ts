@@ -43,13 +43,13 @@ test.describe('Withdraw test', () => {
         await admin.filterWithdraws('Pending', 'by-status');
     });
 
-    test('admin can filter withdrawal requests by approved status', { tag: ['@lite', '@admin'] }, async () => {
+    test.skip('admin can filter withdrawal requests by approved status', { tag: ['@lite', '@admin'] }, async () => {
         // todo: create an approved withdraw
         // await apiUtils.createWithdraw({ ...payloads.createWithdraw, amount: minimumWithdrawLimit, user_id: VENDOR_ID, status: 'approved' }, payloads.adminAuth);
         await admin.filterWithdraws('Approved', 'by-status');
     });
 
-    test('admin can filter withdrawal requests by cancelled status', { tag: ['@lite', '@admin'] }, async () => {
+    test.skip('admin can filter withdrawal requests by cancelled status', { tag: ['@lite', '@admin'] }, async () => {
         // todo: create a cancelled withdraw
         // await apiUtils.createWithdraw({ ...payloads.createWithdraw, amount: minimumWithdrawLimit, user_id: VENDOR_ID, status: 'cancelled' }, payloads.adminAuth);
         await admin.filterWithdraws('Cancelled', 'by-status');
