@@ -534,6 +534,12 @@ export class ApiUtils {
         return [responseBody, withdrawId];
     }
 
+    // update withdraw
+    async updateWithdraw(withdrawId: string, payload: object, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.put(endPoints.updateWithdraw(withdrawId), { data: payload, headers: auth });
+        return responseBody;
+    }
+
     // cancel withdraw
     async cancelWithdraw(withdrawId: string, auth?: auth): Promise<responseBody> {
         if (!withdrawId) {
@@ -1254,7 +1260,7 @@ export class ApiUtils {
     }
 
     /**
-     * product questions answers
+     * product questions answers methods
      */
 
     // get all product questions
@@ -1294,6 +1300,86 @@ export class ApiUtils {
         const [, responseBody] = await this.post(endPoints.createProductQuestionAnswer, { data: payload, headers: auth });
         const answerId = String(responseBody?.id);
         return [responseBody, answerId];
+    }
+
+    /**
+     * vendor verification methods
+     */
+
+    // get verification methodId
+    async getVerificationMethodId(methodName: string, auth?: auth): Promise<string> {
+        const allVerificationMethods = await this.getAllVerificationMethods(auth);
+        const methodId = allVerificationMethods.find((o: { title: string }) => o.title.toLowerCase() === methodName.toLowerCase())?.id;
+        return methodId;
+    }
+
+    // get all verification methods
+    async getAllVerificationMethods(auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.get(endPoints.getAllVerificationMethods, { params: { per_page: 100 }, headers: auth });
+        return responseBody;
+    }
+
+    // create verification method
+    async createVerificationMethod(payload: object, auth?: auth): Promise<[responseBody, string, string]> {
+        const [, responseBody] = await this.post(endPoints.createVerificationMethod, { data: payload, headers: auth });
+        const methodId = String(responseBody?.id);
+        const methodTitle = String(responseBody?.title);
+        return [responseBody, methodId, methodTitle];
+    }
+
+    // get all verification requests
+    async getAllVerificationRequests(params = {}, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.get(endPoints.getAllVerificationRequests, { params: { ...params, per_page: 100 }, headers: auth });
+        return responseBody;
+    }
+
+    // create verification request
+    async createVerificationRequest(payload: object, auth?: auth): Promise<[responseBody, string]> {
+        const [, responseBody] = await this.post(endPoints.createVerificationRequest, { data: payload, headers: auth });
+        const requestId = String(responseBody?.id);
+        return [responseBody, requestId];
+    }
+
+    // update verification request
+    async updateVerificationRequest(requestId: string, payload: object, auth?: auth): Promise<[responseBody]> {
+        const [, responseBody] = await this.put(endPoints.updateVerificationRequest(requestId), { data: payload, headers: auth });
+        return responseBody;
+    }
+
+    // delete all verification methods
+    async deleteAllVerificationMethods(auth?: auth) {
+        const allVerificationMethods = await this.getAllVerificationMethods(auth);
+        if (!allVerificationMethods?.length) {
+            console.log('No verification method exists');
+            return;
+        }
+        const allmethodIds = allVerificationMethods.map((o: { id: unknown }) => o.id);
+        for (const methodId of allmethodIds) {
+            await this.delete(endPoints.deleteVerificationMethod(methodId), { headers: auth });
+        }
+    }
+
+    // delete all verification methods
+    async deleteAllVerificationRequests(params = {}, auth?: auth) {
+        const allVerificationRequests = await this.getAllVerificationRequests(params, auth);
+        if (!allVerificationRequests?.length) {
+            console.log('No verification requests exists');
+            return;
+        }
+        const allRequestIds = allVerificationRequests.map((o: { id: unknown }) => o.id);
+        for (const requestId of allRequestIds) {
+            await this.delete(endPoints.deleteVerificationRequest(requestId), { headers: auth });
+        }
+    }
+
+    /**
+     * vendor subscription methods
+     */
+
+    // get all vendor subscriptions
+    async getAllVendorSubscriptions(auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.get(endPoints.getAllVendorSubscriptions, { params: { per_page: 100 }, headers: auth });
+        return responseBody;
     }
 
     /**

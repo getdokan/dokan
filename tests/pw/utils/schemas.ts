@@ -71,17 +71,17 @@ const badgeCreateUpdateSchema = z.object({
 
 // store settings
 const socialSchema = z.object({
-    fb: z.string().url(),
-    youtube: z.string().url(),
-    twitter: z.string().url(),
-    linkedin: z.string().url(),
-    pinterest: z.string().url(),
-    instagram: z.string().url(),
-    flickr: z.string().url(),
+    fb: z.string().url().or(z.string().nullish()),
+    youtube: z.string().url().or(z.string().nullish()),
+    twitter: z.string().url().or(z.string().nullish()),
+    linkedin: z.string().url().or(z.string().nullish()),
+    pinterest: z.string().url().or(z.string().nullish()),
+    instagram: z.string().url().or(z.string().nullish()),
+    flickr: z.string().url().or(z.string().nullish()),
 });
 
 const paypalSchema = z.object({
-    email: z.string().email(),
+    email: z.string().email().or(z.string().nullish()),
 });
 
 const bankSchema = z.object({
@@ -100,10 +100,10 @@ const skrillSchema = z.object({
 });
 
 const paymentSchema = z.object({
-    paypal: paypalSchema,
-    bank: bankSchema,
-    stripe: z.boolean(),
-    skrill: skrillSchema,
+    paypal: paypalSchema.optional(),
+    bank: bankSchema.optional(),
+    stripe: z.boolean().optional(),
+    skrill: skrillSchema.optional(),
 });
 
 const addressSchema = z.object({
@@ -215,16 +215,8 @@ const ratingSchema = z.object({
 });
 
 const linksSchema = z.object({
-    self: z.array(
-        z.object({
-            href: z.string().url(),
-        }),
-    ),
-    collection: z.array(
-        z.object({
-            href: z.string().url(),
-        }),
-    ),
+    self: z.array(z.object({ href: z.string().url() })),
+    collection: z.array(z.object({ href: z.string().url() })),
 });
 
 const storyCategorySchema = z.object({
@@ -369,6 +361,91 @@ const productQuestionAnswerSchema = z.object({
     human_readable_created_at: z.string(),
     human_readable_updated_at: z.string(),
     user_display_name: z.string(),
+    _links: linksSchema,
+});
+
+const verificationMethodSchema = z.object({
+    id: z.number(),
+    title: z.string(),
+    help_text: z.string(),
+    status: z.boolean(),
+    required: z.boolean(),
+    kind: z.string(),
+    created_at: z.coerce.date(),
+    updated_at: z.coerce.date(),
+    _links: linksSchema,
+});
+
+const vendorSchema = z.object({
+    store_name: z.string(),
+    social: socialSchema,
+    payment: paymentSchema.or(z.array(z.any())),
+    phone: z.string(),
+    show_email: z.string(),
+    address: addressSchema.or(z.array(z.any())),
+    location: z.string(),
+    banner: z.number(),
+    icon: z.number().or(z.string()),
+    gravatar: z.number(),
+    enable_tnc: z.string(),
+    store_tnc: z.string(),
+    show_min_order_discount: z.string(),
+    store_seo: z.unknown(),
+    dokan_store_time_enabled: z.string(),
+    dokan_store_open_notice: z.string(),
+    dokan_store_close_notice: z.string(),
+    find_address: z.string().nullish(),
+    dokan_category: z.string().nullish(),
+    sale_only_here: z.boolean(),
+    company_name: z.string(),
+    vat_number: z.string(),
+    company_id_number: z.string(),
+    bank_name: z.string(),
+    bank_iban: z.string(),
+    profile_completion: z.object({
+        store_name: z.number(),
+        phone: z.number(),
+        next_todo: z.string(),
+        progress: z.number(),
+        progress_vals: z.object({
+            closed_by_user: z.boolean().nullish(),
+            banner_val: z.number(),
+            profile_picture_val: z.number(),
+            store_name_val: z.number(),
+            address_val: z.number(),
+            phone_val: z.number(),
+            map_val: z.number().nullish(),
+            payment_method_val: z.number(),
+            social_val: z.object({
+                fb: z.number(),
+                twitter: z.number(),
+                youtube: z.number(),
+                linkedin: z.number(),
+            }),
+        }),
+    }),
+});
+
+const verificationRequestSchema = z.object({
+    id: z.number(),
+    vendor_id: z.number(),
+    method_id: z.number(),
+    status: z.string(),
+    status_title: z.string(),
+    documents: z.array(z.string().or(z.number())),
+    note: z.string(),
+    additional_info: z.array(z.unknown()),
+    checked_by: z.number(),
+    created_at: z.coerce.date(),
+    updated_at: z.coerce.date(),
+    vendor: vendorSchema,
+    method: verificationMethodSchema.omit({ _links: true }),
+    document_urls: z.record(
+        z.object({
+            url: z.string().url(),
+            title: z.string(),
+        }),
+    ),
     _links: linksSchema,
 });
 
@@ -2038,5 +2115,12 @@ export const schemas = {
 
         productQuestionAnswerSchema: productQuestionAnswerSchema,
         productQuestionAnswersSchema: z.array(productQuestionAnswerSchema),
+    },
+
+    vendorVerificationSchema: {
+        verificationMethodSchema: verificationMethodSchema,
+        verificationMethodsSchema: z.array(verificationMethodSchema),
+        verificationRequestSchema: verificationRequestSchema,
+        verificationRequestsSchema: z.array(verificationRequestSchema),
     },
 };

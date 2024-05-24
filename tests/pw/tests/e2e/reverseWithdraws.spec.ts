@@ -43,11 +43,11 @@ test.describe('Reverse withdraw test', () => {
         await admin.adminReverseWithdrawRenderProperly();
     });
 
-    test.skip('admin can filter reverse withdraws by store', { tag: ['@lite', '@admin'] }, async () => {
+    test.skip('admin can filter reverse withdrawal by store', { tag: ['@lite', '@admin'] }, async () => {
         await admin.filterReverseWithdraws(data.predefined.vendorStores.vendor2);
     });
 
-    test('admin can crete reverse withdraws', { tag: ['@lite', '@admin'] }, async () => {
+    test('admin can add reverse withdrawal', { tag: ['@lite', '@admin'] }, async () => {
         await admin.addReverseWithdrawal({ ...data.reverseWithdraw, store: data.predefined.vendorStores.vendor2, product: productName });
     });
 

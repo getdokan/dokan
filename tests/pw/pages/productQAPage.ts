@@ -266,6 +266,7 @@ export class ProductQAPage extends BasePage {
     async postQuestion(productName: string, questionsAnswers: questionsAnswers, guest = false): Promise<void> {
         await this.goToProductDetails(productName);
         await this.click(selector.customer.cSingleProduct.menus.questionsAnswers);
+        await this.focus(productQACustomer.searchInput);
         await this.clearAndType(productQACustomer.searchInput, '....');
         if (guest) {
             await this.click(productQACustomer.loginPostQuestion);

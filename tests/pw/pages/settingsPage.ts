@@ -300,6 +300,23 @@ export class SettingsPage extends AdminPage {
         await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, storeSupport.saveSuccessMessage);
     }
 
+    // Admin Set Dokan Vendor Verificaton Settings
+    async setDokanVendorVerificationSettings(vendorVerification: dokanSettings['vendorVerification']) {
+        await this.goToDokanSettings();
+        await this.click(settingsAdmin.menus.vendorVerification);
+
+        await this.click(settingsAdmin.vendorVerification.verifiedIcon(vendorVerification.verifiedIcons.userCheckSolid));
+        const response = await this.enableSwitcherAndWaitForResponse(
+            data.subUrls.api.dokan.verificationMethods,
+            settingsAdmin.vendorVerification.enableVerificationMethod(vendorVerification.verificationMethods.nationalId),
+        );
+        response && (await this.toBeVisible(settingsAdmin.vendorVerification.methodUpdateSuccessMessage));
+
+        // save settings
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.vendorVerification.saveChanges);
+        await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, vendorVerification.saveSuccessMessage);
+    }
+
     // Admin Set Dokan Email Verification Settings
     async setDokanEmailVerificationSettings(emailVerification: dokanSettings['emailVerification']) {
         await this.goToDokanSettings();

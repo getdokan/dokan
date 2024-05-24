@@ -28,7 +28,7 @@ export class PrivacyPolicy extends BasePage {
         await this.goIfNotThere(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)));
         // ensure page suppose to open on new tab
         await this.toHaveAttribute(singleStoreCustomer.storeContactForm.privacyPolicyLink, 'target', '_blank');
-        // force page to open on same tab
+        // force page to open on the same tab
         await this.setAttributeValue(singleStoreCustomer.storeContactForm.privacyPolicyLink, 'target', '_self');
         await this.clickAndWaitForUrl(helpers.stringToRegex('privacy-policy'), singleStoreCustomer.storeContactForm.privacyPolicyLink);
     }
