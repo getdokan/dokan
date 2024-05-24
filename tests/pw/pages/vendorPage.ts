@@ -178,16 +178,18 @@ export class VendorPage extends BasePage {
             await this.clickAndWaitForLoadState(setupWizardVendor.continuePaymentSetup);
 
             // verifications
-            const method = await this.getElementText(verificationsVendor.firtstVerificationMethod);
-            if (method) {
-                await this.click(verificationsVendor.startVerification(method));
-                await this.click(verificationsVendor.uploadFiles(method));
-                await this.uploadMedia(setupWizardData.file);
-                await this.clickAndWaitForResponse(data.subUrls.ajax, verificationsVendor.submit(method));
-                await this.toBeVisible(verificationsVendor.requestCreateSuccessMessage);
-                await this.toBeVisible(verificationsVendor.verificationStatus(method, 'pending'));
+            if (DOKAN_PRO) {
+                const method = await this.getElementText(verificationsVendor.firtstVerificationMethod);
+                if (method) {
+                    await this.click(verificationsVendor.startVerification(method));
+                    await this.click(verificationsVendor.uploadFiles(method));
+                    await this.uploadMedia(setupWizardData.file);
+                    await this.clickAndWaitForResponse(data.subUrls.ajax, verificationsVendor.submit(method));
+                    await this.toBeVisible(verificationsVendor.requestCreateSuccessMessage);
+                    await this.toBeVisible(verificationsVendor.verificationStatus(method, 'pending'));
+                }
+                await this.click(setupWizardVendor.skipTheStepVerifications);
             }
-            await this.click(setupWizardVendor.skipTheStepVerifications);
             await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.dashboard, setupWizardVendor.goToStoreDashboard);
         } else {
             await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.dashboard, setupWizardVendor.notRightNow);
