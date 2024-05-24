@@ -19,8 +19,8 @@ class PageViews {
     }
 
     public function load_scripts() {
-        dokan_get_template(
-            'page-views', array(
+        dokan_get_template_part(
+            'page-views', false, array(
                 'nonce' => wp_create_nonce( 'dokan_pageview' ),
                 'post_id' => get_the_ID(),
                 'ajax_url' => admin_url( 'admin-ajax.php' ),
