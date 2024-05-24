@@ -19,7 +19,7 @@
     <div class="dokan-vendor-info">
         <div class="dokan-vendor-name">
             <a href="<?php echo esc_attr( $vendor->get_shop_url() ); ?>"><h5><?php echo esc_html( $store_info['store_name'] ); ?></h5></a>
-            <?php apply_filters( 'dokan_product_single_after_store_name', $vendor ); ?>
+            <?php do_action( 'dokan_product_single_after_store_name', $vendor ); ?>
         </div>
         <div class="dokan-vendor-rating">
             <?php if ( $store_rating['count'] ) : ?>
