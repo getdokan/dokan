@@ -25,7 +25,7 @@ test.describe('Withdraw test', () => {
 
         apiUtils = new ApiUtils(await request.newContext());
         [currentBalance, minimumWithdrawLimit] = await apiUtils.getMinimumWithdrawLimit(payloads.vendorAuth);
-        await apiUtils.createOrderWithStatus(PRODUCT_ID, { ...payloads.createOrder, line_items: [{ quantity: 10 }] }, 'wc-completed', payloads.vendorAuth);
+        await apiUtils.createOrderWithStatus(PRODUCT_ID, { ...payloads.createOrder, line_items: [{ quantity: 100 }] }, 'wc-completed', payloads.vendorAuth);
         await apiUtils.createWithdraw({ ...payloads.createWithdraw, amount: minimumWithdrawLimit }, payloads.vendorAuth);
     });
 
@@ -37,6 +37,22 @@ test.describe('Withdraw test', () => {
 
     test('admin can view withdraw menu page', { tag: ['@lite', '@exploratory', '@admin'] }, async () => {
         await admin.adminWithdrawsRenderProperly();
+    });
+
+    test('admin can filter withdrawal requests by pending status', { tag: ['@lite', '@admin'] }, async () => {
+        await admin.filterWithdraws('Pending', 'by-status');
+    });
+
+    test.skip('admin can filter withdrawal requests by approved status', { tag: ['@lite', '@admin'] }, async () => {
+        // todo: create an approved withdraw
+        // await apiUtils.createWithdraw({ ...payloads.createWithdraw, amount: minimumWithdrawLimit, user_id: VENDOR_ID, status: 'approved' }, payloads.adminAuth);
+        await admin.filterWithdraws('Approved', 'by-status');
+    });
+
+    test.skip('admin can filter withdrawal requests by cancelled status', { tag: ['@lite', '@admin'] }, async () => {
+        // todo: create a cancelled withdraw
+        // await apiUtils.createWithdraw({ ...payloads.createWithdraw, amount: minimumWithdrawLimit, user_id: VENDOR_ID, status: 'cancelled' }, payloads.adminAuth);
+        await admin.filterWithdraws('Cancelled', 'by-status');
     });
 
     test('admin can filter withdrawal requests by vendor', { tag: ['@lite', '@admin'] }, async () => {
