@@ -325,7 +325,7 @@ $args     = apply_filters( 'dokan_store_time_arguments', $args, $all_times );
                 lang          : dokan_helper.timepicker_locale,
                 minTime       : '12:00 am',
                 maxTime       : '11:30 pm',
-                timeFormat    : '<?php echo esc_attr( addcslashes( wc_time_format(), '\\' ) ); ?>',
+                timeFormat    : '<?php echo esc_js( wc_time_format() ); ?>',
                 scrollDefault : 'now',
             });
 
