@@ -3255,6 +3255,40 @@ export const payloads = {
         answer: 'test answer updated_' + faker.string.nanoid(10),
     }),
 
+    // vendor verification
+
+    createVerificationMethod: () => ({
+        title: 'test verification method_' + faker.string.nanoid(10),
+        help_text: 'test help-text',
+        status: true,
+        required: true,
+        kind: 'custom', // custom, address
+    }),
+
+    updateVerificationMethod: () => ({
+        title: 'test verification method updated_' + faker.string.nanoid(10),
+        help_text: 'test help-text updated',
+        status: false,
+        required: false,
+        kind: 'custom', // custom, address
+    }),
+
+    createVerificationRequest: () => ({
+        vendor_id: 0,
+        method_id: 0,
+        status: 'pending',
+        note: 'test-note',
+        documents: [],
+    }),
+
+    updateVerificationRequest: () => ({
+        vendor_id: 0,
+        method_id: 0,
+        status: 'approved',
+        note: 'test-note updated',
+        documents: [],
+    }),
+
     // reverse withdrawal
 
     amountToPay: {

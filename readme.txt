@@ -5,9 +5,9 @@ Tags: WooCommerce multivendor marketplace, multivendor marketplace, multivendor,
 Requires at least: 6.4
 Tested up to: 6.5.3
 WC requires at least: 8.0.0
-WC tested up to: 8.8.3
+WC tested up to: 8.9.1
 Requires PHP: 7.4
-Stable tag: 3.11.1
+Stable tag: 3.11.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -308,7 +308,7 @@ A. Not for the moment. We have plans to integrate with BuddyPress via an add-on 
 A. Yes, Dokan is fully responsive. We take mobile first approach and it displays very well in mobile and tablet devices. We are using Twitter Bootstrap as a framework and it just works.
 
 = Q. Does it supports variable products? =
-A. The **Pro** version does! You can seller normal products, downloadable products and variable products with your own attributes.
+A. The **Pro** version does! You can sell normal products, downloadable products, and variable products with your own attributes.
 
 = Q. Can each vendor customize his store? =
 A. Right now we have options for only changing the store banner page. We are working on a better customizable seller store page.
@@ -346,6 +346,10 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 == Changelog ==
+
+= v3.11.2 ( May 27, 2024 ) =
+
+- **update:** WooCommerce 8.9.1 Compatibility added.
 
 = v3.11.1 ( May 16, 2024 ) =
 

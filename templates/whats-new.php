@@ -4,6 +4,18 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.11.2',
+        'released' => '2024-05-27',
+        'changes'  => [
+            'Improvement'         => [
+                [
+                    'title'       => 'WooCommerce 8.9.1 Compatibility added.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.11.1',
         'released' => '2024-05-16',
         'changes'  => [

@@ -42,7 +42,7 @@ test.describe('Vendor delivery time test', () => {
         await vendor.filterDeliveryTime('delivery');
     });
 
-    test('vendor can change view style of delivery time calender', { tag: ['@pro', '@vendor'] }, async () => {
+    test('vendor can change view style of delivery time calendar', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.updateCalendarView('week');
     });
 
