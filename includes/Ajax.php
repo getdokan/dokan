@@ -265,8 +265,8 @@ class Ajax {
 
                         include dirname( __DIR__ ) . '/templates/orders/order-download-permission-html.php';
 
-                        $loop++;
-                        $file_count++;
+                        ++$loop;
+                        ++$file_count;
                     }
                 }
             }
