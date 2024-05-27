@@ -311,7 +311,7 @@
   features:
       admin:
           admin can view help menu page [lite]: true
-          admin can view get help dropdown [lite]:
+          admin can view get help dropdown [lite]: true
 
 - page: 'Shortcode'
   features:
@@ -547,7 +547,7 @@
 
 - page: 'Delivery Time'
   features:
-      admin: 
+      admin:
           admin can update delivery time on order details: false
       vendor:
           vendor can view delivery time menu page: true
@@ -646,8 +646,8 @@
           vendor can edit addon: true
           vendor can delete addon: true
       customer:
-            customer can view product addons on single product page: false
-            customer can buy product with addons: false
+          customer can view product addons on single product page: false
+          customer can buy product with addons: false
 
 - page: 'Product Advertising'
   features:
@@ -664,7 +664,7 @@
           vendor can buy product advertising: false
           vendor can buy booking product advertising: false
           vendor can buy auction product advertising: false
-      customer: 
+      customer:
           customer can view advertised product on shop page: false
 
 - page: 'Product Enquiry'
