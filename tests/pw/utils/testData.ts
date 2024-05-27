@@ -35,6 +35,7 @@ export const data = {
         vendorAuthFile: 'playwright/.auth/vendorStorageState.json',
         vendor2AuthFile: 'playwright/.auth/vendor2StorageState.json',
         customerAuthFile: 'playwright/.auth/customerStorageState.json',
+        customer2AuthFile: 'playwright/.auth/customer2StorageState.json',
 
         adminAuth: {
             storageState: 'playwright/.auth/adminStorageState.json',
@@ -50,6 +51,10 @@ export const data = {
 
         customerAuth: {
             storageState: 'playwright/.auth/customerStorageState.json',
+        },
+
+        customer2Auth: {
+            storageState: 'playwright/.auth/customer2StorageState.json',
         },
 
         noAuth: {
@@ -1388,6 +1393,11 @@ export const data = {
         username: String(process.env.CUSTOMER),
         password: String(process.env.USER_PASSWORD),
         lastname: (String(process.env.CUSTOMER)[0] as string) + String(process.env.CUSTOMER)[String(process.env.CUSTOMER).length - 1],
+
+        customer2: {
+            username: String(process.env.CUSTOMER2),
+            password: String(process.env.USER_PASSWORD),
+        },
 
         customerInfo: {
             emailDomain: '@email.com',

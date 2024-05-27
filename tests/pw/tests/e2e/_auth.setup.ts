@@ -54,6 +54,11 @@ setup.describe('authenticate users & set permalink', () => {
         helpers.createEnvVar('VENDOR_ID', sellerId);
     });
 
+    setup('add customer2', { tag: ['@lite'] }, async () => {
+        const [, customerId] = await apiUtils.createCustomer(payloads.createCustomer2, payloads.adminAuth);
+        helpers.createEnvVar('CUSTOMER2_ID', customerId);
+    });
+
     setup('add vendor2', { tag: ['@lite'] }, async () => {
         const [, sellerId] = await apiUtils.createStore(payloads.createStore2, payloads.adminAuth, true);
         helpers.createEnvVar('VENDOR2_ID', sellerId);
@@ -67,6 +72,11 @@ setup.describe('authenticate users & set permalink', () => {
     setup('authenticate vendor', { tag: ['@lite'] }, async ({ page }) => {
         const loginPage = new LoginPage(page);
         await loginPage.login(data.vendor, data.auth.vendorAuthFile);
+    });
+
+    setup('authenticate customer2', { tag: ['@lite'] }, async ({ page }) => {
+        const loginPage = new LoginPage(page);
+        await loginPage.login(data.customer.customer2, data.auth.customer2AuthFile);
     });
 
     setup('authenticate vendor2', { tag: ['@lite'] }, async ({ page }) => {

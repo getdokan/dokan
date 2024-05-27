@@ -8,12 +8,14 @@ declare global {
             ADMIN_PASSWORD: string;
             VENDOR: string;
             VENDOR2: string;
-            USER_PASSWORD: string;
             CUSTOMER: string;
+            CUSTOMER2: string;
+            USER_PASSWORD: string;
             ADMIN_ID: string;
             VENDOR_ID: string;
             VENDOR2_ID: string;
             CUSTOMER_ID: string;
+            CUSTOMER2_ID: string;
             PRODUCT_ID: string;
             PRODUCT_ID_V2: string;
             LOCAL: boolean
