@@ -313,7 +313,7 @@ export class VendorSettingsPage extends VendorPage {
                 case 'datewise': {
                     const vacationDayFrom = vacation.datewise.vacationDayFrom();
                     const vacationDayTo = vacation.datewise.vacationDayTo(vacationDayFrom);
-                    await this.setAttributeValue(settingsVendor.vacationDateRange, 'value', helpers.dateFormatFYJ(vacationDayFrom) + ' - ' + helpers.dateFormatFYJ(vacationDayTo));
+                    await this.setAttributeValue(settingsVendor.vacationDateRange, 'value', `${helpers.dateFormatFYJ(vacationDayFrom)} - ${helpers.dateFormatFYJ(vacationDayTo)}`);
                     await this.setAttributeValue(settingsVendor.vacationDateRangeFrom, 'value', vacationDayFrom);
                     await this.setAttributeValue(settingsVendor.vacationDateRangeTo, 'value', vacationDayTo);
                     await this.clearAndType(settingsVendor.setVacationMessageDatewise, vacation.datewise.vacationMessage);

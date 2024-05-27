@@ -120,6 +120,12 @@ setup.describe('setup site & woocommerce & dokan settings', () => {
         const [, , status] = await apiUtils.getSinglePlugin('woocommerce-simple-auctions/woocommerce-simple-auctions', payloads.adminAuth);
         status === 'active' && (await dbUtils.updateWpOptionTable('simple_auctions_live_check', 'no'));
     });
+
+    setup('disable storefront sticky add to cart', { tag: ['@lite'] }, async () => {
+        const storefrontSettings = await dbUtils.getDokanSettings('theme_mods_storefront');
+        storefrontSettings['storefront_sticky_add_to_cart'] = false;
+        await dbUtils.setDokanSettings('theme_mods_storefront', storefrontSettings);
+    });
 });
 
 setup.describe('setup user settings', () => {
