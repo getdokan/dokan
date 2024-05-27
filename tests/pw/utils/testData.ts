@@ -1906,6 +1906,42 @@ export const data = {
         colors: {
             paletteChoice: 'pre-defined',
             colorPalette: 'default',
+            predefinedPalette: {
+                default: 'default',
+                petalParty: 'petal party',
+                pinky: 'pinky',
+                ocean: 'ocean',
+                sweety: 'sweety',
+                summerSplash: 'summer splash',
+                tree: 'tree',
+            },
+
+            paletteValues: {
+                default: {
+                    buttonText: '#FFFFFF',
+                    buttonBackground: '#F05025',
+                    buttonBorder: '#DA502B',
+                    buttonHoverText: '#FFFFFF',
+                    buttonHoverBackground: '#DD3B0F',
+                    buttonHoverBorder: '#C83811',
+                    dashboardSidebarMenuText: '#CFCFCF',
+                    dashboardSidebarBackground: '#1B233B',
+                    dashboardSidebarActiveMenuText: '#FFFFFF',
+                    dashboardSidebarActiveMenuBackground: '#F05025',
+                },
+                tree: {
+                    buttonText: '#FFFFFF', // rgb(255, 255, 255)
+                    buttonBackground: '#1CB6A7', // rgb(28, 182, 167)
+                    buttonBorder: '#1AA89B', // rgb(26, 168, 155)
+                    buttonHoverText: '#FFFFFF', // rgb(255, 255, 255)
+                    buttonHoverBackground: '#1DADA0', // rgb(29, 173, 160)
+                    buttonHoverBorder: '#148C81', //rgb(20, 140, 129)
+                    dashboardSidebarMenuText: '#ABF5EE', // rgb(171, 245, 238)',
+                    dashboardSidebarBackground: '#1BAC9E', // rgb(27, 172, 158)
+                    dashboardSidebarActiveMenuText: '#FFFFFF', // rgb(255, 255, 255)
+                    dashboardSidebarActiveMenuBackground: '#167D7F', // rgb(22, 125, 127)
+                },
+            },
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
 

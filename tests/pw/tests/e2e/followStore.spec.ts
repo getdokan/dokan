@@ -39,7 +39,7 @@ test.describe('Follow stores functionality test', () => {
         await customer.customerFollowedVendorsRenderProperly();
     });
 
-    test('customer can follow store on store listing', { tag: ['@pro', '@customer'] }, async () => {
+    test('customer can follow store on store list page', { tag: ['@pro', '@customer'] }, async () => {
         await customer.followStore(data.predefined.vendorStores.vendor1, data.predefined.vendorStores.followFromStoreListing);
     });
 

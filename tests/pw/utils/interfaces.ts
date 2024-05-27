@@ -1910,3 +1910,18 @@ export interface dashboardMenu {
     pos: string;
     permission: string;
 }
+
+export interface paletteValues {
+    buttonText: string;
+    buttonBackground: string;
+    buttonBorder: string;
+
+    buttonHoverText: string;
+    buttonHoverBackground: string;
+    buttonHoverBorder: string;
+
+    dashboardSidebarMenuText: string;
+    dashboardSidebarBackground: string;
+    dashboardSidebarActiveMenuText: string;
+    dashboardSidebarActiveMenuBackground: string;
+}

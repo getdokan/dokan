@@ -2094,19 +2094,15 @@ export const selector = {
                 colors: {
                     predefineColorPalette: '//h3[normalize-space()="Pre-defined Color Palette"]/../..',
                     customColorPalette: '//h3[normalize-space()="Custom Color Palette"]/../..',
+                    predefinedPalette: (paletteName: string) => `//label[text()='${paletteName}']/..//input[@name='store_color_pallete']`,
+                    // Button Text
+                    openColorPicker: (option: string) => `//h4[text()='${option}']//..//div[@class='color-picker-container']`,
+                    // colorInput: '//input[@class="hex-input"]//div',
+                    colorInput: '.hex-input div',
+                    saveColor: 'button.dashicons-saved',
 
-                    colorPalette: {
-                        default: '#default',
-                        petalParty: '//input[@id="petal party"]',
-                        pinky: '#pinky',
-                        ocean: '#ocean',
-                        sweety: '#sweety',
-                        summerSplash: '//input[@id="summer splash"]',
-                        tree: '#tree',
-                    },
-
-                    customColors: {
-                        // todo: need to update all locators
+                    customPalette: {
+                        resetAll: 'btnReset',
                         buttonTextColor: '.btn_text span',
                         buttonBackgroundColor: '.btn_primary span',
                         buttonBorderColor: '.btn_primary_border span',
@@ -2118,7 +2114,6 @@ export const selector = {
                         dashboardNavigationBackground: '.dash_nav_bg span',
                         dashboardMenuBorder: '.dash_nav_border span',
                     },
-
                     colorsSaveChanges: '#submit',
                 },
 
@@ -3363,6 +3358,8 @@ export const selector = {
             // Dashboard Menus
             menuParent: '#dokan-navigation ul.dokan-dashboard-menu',
             menus: {
+                menus: '#primary ul.dokan-dashboard-menu',
+                activeMenu: '#primary .dokan-dashboard-menu li.active',
                 menuByText: (menu: string) => `//div[@id='dokan-navigation']//ul//li//a[contains(text(), "${menu}")]`,
                 dashboard: 'ul.dokan-dashboard-menu li.dashboard a',
                 products: 'ul.dokan-dashboard-menu li.products a',
@@ -3386,7 +3383,7 @@ export const selector = {
                 tools: 'ul.dokan-dashboard-menu li.tools a',
                 auction: 'ul.dokan-dashboard-menu li.auction a',
                 support: 'ul.dokan-dashboard-menu li.support a',
-                settings: 'ul.dokan-dashboard-menu li.settings a',
+                settings: '(//ul[@class="dokan-dashboard-menu"]//li[contains(@class,"settings has-submenu")]//a)[1]',
                 visitStore: '//i[@class="fas fa-external-link-alt"]/..',
                 editAccount: '.fa-user',
 
