@@ -32,53 +32,53 @@ test.describe('Product subscriptions test', () => {
 
     //vendor
 
-    test('vendor user subscriptions menu page is rendering properly @pro @exp @v', async () => {
+    test('vendor can view user subscriptions menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorUserSubscriptionsRenderProperly();
     });
 
-    test.skip('vendor can view product subscription details @pro @exp @v', async () => {
+    test.skip('vendor can view product subscription details', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.filterProductSubscriptions('by-customer', data.customer.username);
     });
 
-    test.skip('vendor can filter user subscriptions by customer @pro @v', async () => {
+    test.skip('vendor can filter user subscriptions by customer', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.filterProductSubscriptions('by-customer', data.customer.username);
     });
 
-    test.skip('vendor can filter user subscriptions by date @pro @v', async () => {
+    test.skip('vendor can filter user subscriptions by date', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.filterProductSubscriptions('by-date', data.date.previousDate);
     });
 
-    test.skip('vendor can view user subscription @pro @v', async () => {
-        await vendor.viewProductSubscription(data.customer.username);
+    test.skip('vendor can view user subscription', { tag: ['@pro', '@vendor'] }, async () => {
+        // await vendor.viewProductSubscription(data.customer.username);
     });
 
     // customer
 
-    test.skip('customer can view product subscription details @pro @exp @c', async () => {
+    test.skip('customer can view product subscription details', { tag: ['@pro', '@exploratory', '@customer'] }, async () => {
         await customer.customerViewProductSubscription(subscriptionId);
     });
 
-    test.skip('customer can cancel subscription @pro @c', async () => {
+    test.skip('customer can cancel subscription', { tag: ['@pro', '@customer'] }, async () => {
         await customer.cancelProductSubscription(subscriptionId);
     });
 
-    test.skip('customer can reactivate subscription @pro @c', async () => {
+    test.skip('customer can reactivate subscription', { tag: ['@pro', '@customer'] }, async () => {
         await customer.reactivateProductSubscription(subscriptionId);
     });
 
-    test.skip('customer can change address of subscription @pro @c', async () => {
+    test.skip('customer can change address of subscription', { tag: ['@pro', '@customer'] }, async () => {
         await customer.changeAddressOfProductSubscription(subscriptionId, data.customer.customerInfo.shipping);
     });
 
-    test.skip('customer can change payment of subscription @pro @c', async () => {
+    test.skip('customer can change payment of subscription', { tag: ['@pro', '@customer'] }, async () => {
         await customer.changePaymentOfProductSubscription(subscriptionId);
     });
 
-    test.skip('customer can renew subscription @pro @c', async () => {
+    test.skip('customer can renew subscription', { tag: ['@pro', '@customer'] }, async () => {
         await customer.renewProductSubscription(subscriptionId);
     });
 
-    test.skip('customer can buy product subscription @pro @c', async () => {
+    test.skip('customer can buy product subscription', { tag: ['@pro', '@customer'] }, async () => {
         await customer.buyProductSubscription(data.predefined.simpleSubscription.product1);
     });
 });

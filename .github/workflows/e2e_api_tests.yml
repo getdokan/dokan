@@ -59,6 +59,7 @@ env:
     API_TEST_RESULT: ./tests/pw/playwright-report/api/summary-report/results.json
     E2E_TEST_RESULT: ./tests/pw/playwright-report/e2e/summary-report/results.json
     API_COVERAGE: ./tests/pw/playwright-report/api/coverage-report/coverage.json
+    E2E_COVERAGE: ./tests/pw/playwright-report/e2e/coverage-report/coverage.json
 
 jobs:
     tests:
@@ -67,19 +68,20 @@ jobs:
 
         steps:
             - name: Checkout testing repo
+              id: clone-dokan-lite
               uses: actions/checkout@v4
 
             - name: Use desired version of NodeJS
               if: success()
               uses: actions/setup-node@v4
               with:
-                  node-version: 16
+                  node-version: 20
                   cache: npm
 
             - name: Composer install and build (Dokan-lite)
               if: success()
               run: |
-                  composer install --no-dev -o
+                  composer i --no-dev -o || composer update --no-dev -o
 
             - name: Npm install and build (Dokan-lite)
               if: success()
@@ -96,6 +98,7 @@ jobs:
 
             # Create wp debuglog file
             - name: Create wp debuglog file
+              id: debug-log
               if: success()
               run: |
                   cd tests/pw 
@@ -105,9 +108,14 @@ jobs:
             - name: Start WordPress Env
               id: wp-env
               if: success()
-              run: |
-                  cd tests/pw
-                  npm run start:env
+              uses: nick-fields/retry@v3
+              with:
+                  timeout_minutes: 4
+                  max_attempts: 2
+                  retry_on: error
+                  command: |
+                      cd tests/pw
+                      npm run start:env
 
             # Grab test db port
             - name: Get Test DB PORT
@@ -181,11 +189,12 @@ jobs:
               run: |
                   cd tests/pw 
                   npm run test:e2e:lite
+                  npm run e2e_coverage
 
             # Run API tests
             - name: 🧪 Running the api tests
               id: api-test
-              if: steps.db-port.outcome == 'success' && ( github.event_name != 'workflow_dispatch'  || ( github.event_name == 'workflow_dispatch' && (github.event.inputs.testsuite == 'API' || github.event.inputs.testsuite == 'All')))
+              if: always() && steps.db-port.outcome == 'success' && ( github.event_name != 'workflow_dispatch'  || ( github.event_name == 'workflow_dispatch' && (github.event.inputs.testsuite == 'API' || github.event.inputs.testsuite == 'All')))
               timeout-minutes: 5
               run: |
                   cd tests/pw 
@@ -195,7 +204,7 @@ jobs:
             - name: Prepare test summary
               id: prepare-test-summary
               uses: actions/github-script@v7
-              if: always()
+              if: always() && steps.clone-dokan-lite.outcome == 'success'
               with:
                   result-encoding: string
                   script: |
@@ -225,7 +234,7 @@ jobs:
 
             # Backup Database
             - name: Backup Database
-              if: steps.db-port.outcome == 'success'
+              if: always() && steps.db-port.outcome == 'success'
               run: |
                   cd tests/pw
                   npm run wp-env run tests-cli wp db export wp-data/db.sql
@@ -233,7 +242,7 @@ jobs:
             # Upload artifacts
             - name: Archive test artifacts (screenshots, HTML snapshots, Reports)
               uses: actions/upload-artifact@v4
-              if: always()
+              if: always() && steps.debug-log.outcome == 'success'
               with:
                   name: test-artifact
                   path: |

@@ -30,20 +30,20 @@ test.describe.skip('Privacy Policy & Store Contact form test', () => {
         await apiUtils.dispose();
     });
 
-    test('customer can contact vendor @lite @c', async () => {
+    test('customer can contact vendor', { tag: ['@lite', '@customer'] }, async () => {
         await customer.contactVendor(data.predefined.vendorStores.vendor1, data.storeContactData);
     });
 
-    test('customer can navigate to dokan privacy policy @lite @c', async () => {
+    test('customer can navigate to Dokan privacy policy', { tag: ['@lite', '@customer'] }, async () => {
         await customer.goToPrivacyPolicy(data.predefined.vendorStores.vendor1);
     });
 
-    test('privacy policy is disabled on store contact form @lite @c', async () => {
+    test('admin can disable privacy policy on store contact form', { tag: ['@lite', '@customer'] }, async () => {  //todo: mighit need to update title form customer perspective
         await dbUtils.setDokanSettings(dbData.dokan.optionName.privacyPolicy, { ...privacyPolicySettings, enable_privacy: 'off' });
         await customer.disablePrivacyPolicy(data.predefined.vendorStores.vendor1);
     });
 
-    test('store contact form is disabled on store sidebar @lite @c', async () => {
+    test('admin can disable store contact form from store sidebar', { tag: ['@lite', '@customer'] }, async () => {
         await dbUtils.setDokanSettings(dbData.dokan.optionName.appearance, { ...dbData.dokan.appearanceSettings, contact_seller: 'off' });
         await customer.disableStoreContactForm(data.predefined.vendorStores.vendor1);
     });

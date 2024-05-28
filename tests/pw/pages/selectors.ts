@@ -74,11 +74,11 @@ export const selector = {
         dashboardText: '.wrap h1',
 
         // Admin Logout
-        userMenu: '#wp-admin-bar-my-account',
-        logout: '#wp-admin-bar-logout a',
+        userMenu: 'li#wp-admin-bar-my-account',
+        logout: 'li#wp-admin-bar-logout a',
 
         // Logout Message
-        logoutSuccessMessage: '#login p',
+        logoutSuccessMessage: 'div#login-message p',
 
         // Login Error
         loginError: '#login_error',
@@ -1554,7 +1554,7 @@ export const selector = {
                 filters: {
                     filterByVendors: '(//select[@id="filter-vendors"]/..//span[@class="select2-selection__arrow"])[1]',
                     filterByProducts: '(//select[@id="filter-products"]/..//span[@class="select2-selection__arrow"])[2]',
-                    resetFilterByVensors: '//select[@id="filter-products"]/..//button[@class="button"]',
+                    resetFilterByVendors: '//select[@id="filter-products"]/..//button[@class="button"]',
                     filterInput: '.select2-search.select2-search--dropdown .select2-search__field',
                     result: 'li.select2-results__option.select2-results__option--highlighted',
                 },
@@ -1967,7 +1967,7 @@ export const selector = {
                     skrillChargePercentage: '//h4[@class="field_heading" and text()="Skrill"]/../..//input[@id="percentage-val-id"]',
                     skrillChargeFixed: '//h4[@class="field_heading" and text()="Skrill"]/../..//input[@id="fixed-val-id"]',
                     customChargePercentage: '//h4[@class="field_heading" and text()="Custom"]/../..//input[@id="percentage-val-id"]',
-                    custompayPalChargeFixed: '//h4[@class="field_heading" and text()="Custom"]/../..//input[@id="fixed-val-id"]',
+                    customPayPalChargeFixed: '//h4[@class="field_heading" and text()="Custom"]/../..//input[@id="fixed-val-id"]',
                     minimumWithdrawAmount: '#dokan_withdraw\\[withdraw_limit\\]',
                     orderStatusForWithdrawCompleted: '//div[contains(text(),"Completed")]//label',
                     orderStatusForWithdrawProcessing: '//div[contains(text(),"Processing")]//label',
@@ -2060,7 +2060,7 @@ export const selector = {
                     menuNameInput: '//div[@class="first-part"]//input',
                     menuNameConfirm: '//div[@class="menu-item"]//div[@class="action-icon-wrapper check-icon-wrapper"]',
                     menuNameCancel: '//div[@class="menu-item"]//div[@class="action-icon-wrapper cancel-icon-wrapper"]',
-                    menuSwithcher: (menuName: string) => `//span[text()='${menuName}']/../..//label[@class="switch tips"]`,
+                    menuSwitcher: (menuName: string) => `//span[text()='${menuName}']/../..//label[@class="switch tips"]`,
                     menuManagerSaveChanges: '#submit',
                     noPermissionNotice: '//strong[text()="You have no permission to view this page"]',
                 },
@@ -2501,7 +2501,7 @@ export const selector = {
                 // Add Tax
                 taxTable: '.wc_tax_rates',
                 insertRow: '.plus',
-                taxRate: '.rate input',
+                taxRate: 'td.rate input',
                 taxRateSaveChanges: '.woocommerce-save-button',
 
                 // Shipping
@@ -3245,7 +3245,7 @@ export const selector = {
             // Intro
             setupLogo: 'h1#wc-logo',
             setupLogoImage: 'h1#wc-logo img',
-            setupwizardContent: '//div[@class="wc-setup-content"]//div//p',
+            setupWizardContent: '//div[@class="wc-setup-content"]//div//p',
             letsGo: '.lets-go-btn',
             notRightNow: '.not-right-now-btn',
 
@@ -3795,7 +3795,7 @@ export const selector = {
                 all: '//ul[contains(@class,"order-statuses-filter")]//a[contains(text(), "All")]',
                 completed: '//ul[contains(@class,"order-statuses-filter")]//a[contains(text(), "Completed")]',
                 processing: '//ul[contains(@class,"order-statuses-filter")]//a[contains(text(), "Processing")]',
-                onHold: '//ul[contains(@class,"order-statuses-filter")]//a[contains(text(), "On-hold")]',
+                onHold: '//ul[contains(@class,"order-statuses-filter")]//a[contains(text(), "On hold")]',
                 pending: '//ul[contains(@class,"order-statuses-filter")]//a[contains(text(), "Pending")]',
                 cancelled: '//ul[contains(@class,"order-statuses-filter")]//a[contains(text(), "Cancelled")]',
                 refunded: '//ul[contains(@class,"order-statuses-filter")]//a[contains(text(), "Refunded")]',
@@ -4183,7 +4183,7 @@ export const selector = {
 
             // date picker
             datePicker: {
-                dateRangePickerinput: 'input.dokan-daterangepicker',
+                dateRangePickerInput: 'input.dokan-daterangepicker',
                 dateRangePickerFromInputHidden: 'input.dokan-daterangepicker-start-date',
                 dateRangePickerToInputHidden: 'input.dokan-daterangepicker-end-date',
                 show: 'input[value="Show"]',
@@ -4428,7 +4428,7 @@ export const selector = {
             },
         },
 
-        // product question and answeres
+        // product question and answers
         vProductQA: {
             productQuestionAnswersText: '.dokan-dashboard-header h1.entry-title',
 
@@ -4481,7 +4481,6 @@ export const selector = {
                     answerDiv: '//div[normalize-space()="Answer"]/..',
                     answerTitle: '//div[normalize-space()="Answer"]',
 
-                    addMedia: 'button#insert-media-button',
                     visualButton: 'button#dokan-product-qa-answer-tmce',
                     textButton: 'button#dokan-product-qa-answer-html',
 
@@ -5144,7 +5143,7 @@ export const selector = {
             },
 
             datePicker: {
-                dateRangePickerinput: 'input.dokan-daterangepicker',
+                dateRangePickerInput: 'input.dokan-daterangepicker',
                 dateRangePickerFromInputHidden: 'input.dokan-daterangepicker-start-date',
                 dateRangePickerToInputHidden: 'input.dokan-daterangepicker-end-date',
                 show: 'input[value="Show"]',
@@ -6650,13 +6649,13 @@ export const selector = {
                 backFromDuplicateCommentAlert: '//a[contains(text(),"« Back")]',
             },
 
-            // question and answeres
+            // question and answers
             questionsAnswers: {
                 searchInput: 'input[placeholder="Search Questions & Answers"]',
                 loginPostQuestion: '//button[text()="Login to post your Question"]',
                 postQuestion: '//button[text()="Post your Question"]',
                 questionInput: 'textarea#comment.block',
-                cacelButton: '//span[text()="Close"]//..',
+                cancelButton: '//span[text()="Close"]//..',
                 cancelPost: '//button[text()="Cancel"]',
                 post: '//button[text()="Post"]',
                 clearResult: '//button[text()="Clear Result"]',
@@ -7504,8 +7503,8 @@ export const selector = {
             wooCommerceSuccessMessage: '.woocommerce-message',
             wooCommerceError: '.woocommerce-error',
             wooCommerceInfo: '.woocommerce-info',
-            wooCommerceNoriceBanner: 'div.wc-block-components-notice-banner',
-            wooCommerceNoriceBannerContent: 'div.wc-block-components-notice-banner__content',
+            wooCommerceNoticeBanner: 'div.wc-block-components-notice-banner',
+            wooCommerceNoticeBannerContent: 'div.wc-block-components-notice-banner__content',
         },
     },
 };

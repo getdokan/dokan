@@ -16,15 +16,15 @@ test.describe('Dokan pro feature promo test', () => {
         await aPage.close();
     });
 
-    test('dokan notice is rendering properly @lite @exp @a', async () => {
+    test('admin can view Dokan notice', { tag: ['@lite', '@exploratory', '@admin'] }, async () => {
         await admin.dokanNoticeRenderProperly();
     });
 
-    test('dokan promotion is rendering properly @lite @exp @a', async () => {
+    test('admin can view Dokan promotion', { tag: ['@lite', '@exploratory', '@admin'] }, async () => {
         await admin.dokanPromotionRenderProperly();
     });
 
-    test('dokan pro features promotions are rendering properly @liteOnly @exp @a', async () => {
+    test('admin can view Dokan premium features promotions', { tag: ['@lite', '@liteOnly', '@exploratory', '@admin'] }, async () => {
         await admin.dokanProPromotionRenderProperly();
     });
 });

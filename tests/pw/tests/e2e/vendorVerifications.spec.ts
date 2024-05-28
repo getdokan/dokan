@@ -24,51 +24,53 @@ test.describe('Verifications test', () => {
 
     // vendor
 
-    test('vendor verifications settings menu page is rendering properly @pro @exp @v', async () => {
+    test('vendor can view verifications settings menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorVerificationsSettingsRenderProperly();
     });
 
-    test('vendor can send id verification request @pro @v', async () => {
+    test('vendor can send id verification request', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.sendIdVerificationRequest(data.vendor.verification);
     });
 
-    test('vendor can send address verification request @pro @v', async () => {
+    test('vendor can send address verification request', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.sendAddressVerificationRequest(data.vendor.verification);
     });
 
-    test('vendor can send company verification request @pro @v', async () => {
+    test('vendor can send company verification request', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.sendCompanyVerificationRequest(data.vendor.verification);
     });
 
     // todo: remove dependency: admin tests depends on vendor tests
 
-    test('admin verifications menu page is rendering properly @pro @exp @a', async () => {
+    //admin
+
+    test('admin can view verifications menu page', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
         await admin.adminVerificationsRenderProperly();
     });
 
-    // test('admin can approve ID verification request @pro @a', async ( ) => {
+    // test('admin can approve ID verification request', { tag: ['@pro', '@admin'] }, async ( ) => {
     // 	await admin.approveVerificationRequest(data.predefined.vendorInfo.username, 'id', 'approve');
     // });
 
-    // test('admin can approve address verification request @pro @a', async ( ) => {
+    // test('admin can approve address verification request', { tag: ['@pro',  '@admin'] }, async ( ) => {
     // 	await admin.approveVerificationRequest(data.predefined.vendorInfo.username, 'address', 'approve');
     // });
 
-    // test('admin can approve company verification request @pro @a', async ( ) => {
+    // test('admin can approve company verification request', { tag: ['@pro',  '@admin'] }, async ( ) => {
     // 	await admin.approveVerificationRequest(data.predefined.vendorInfo.username, 'company', 'approve');
     // });
 
     // todo: admin can reject requests
 
-    // test('admin can disapprove approved ID verification request @pro @a', async ( ) => {
+    // test('admin can disapprove approved ID verification request', { tag: ['@pro',  '@admin'] }, async ( ) => {
     // 	await admin.disapproveVerificationRequest(data.predefined.vendorInfo.username, 'id');
     // });
 
-    // test('admin can disapprove approved address verification request @pro @a', async ( ) => {
+    // test('admin can disapprove approved address verification request', { tag: ['@pro',  '@admin'] }, async ( ) => {
     // 	await admin.disapproveVerificationRequest(data.predefined.vendorInfo.username, 'address');
     // });
 
-    // test('admin can disapprove approved company verification request @pro @a', async ( ) => {
+    // test('admin can disapprove approved company verification request', { tag: ['@pro',  '@admin'] }, async ( ) => {
     // 	await admin.disapproveVerificationRequest(data.predefined.vendorInfo.username, 'company');
     // });
 });

@@ -26,42 +26,42 @@ test.describe('Announcements test (admin)', () => {
 
     //admin
 
-    test('dokan announcements menu page is rendering properly @pro @exp @a', async () => {
+    test('admin can view announcements menu page', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
         await admin.adminAnnouncementsRenderProperly();
     });
 
-    test('admin can send announcement @pro @a', async () => {
+    test('admin can send announcement', { tag: ['@pro', '@admin'] }, async () => {
         await admin.addAnnouncement({ ...data.announcement, title: data.announcement.randomTitle() });
     });
 
-    test('admin can schedule announcement @pro @a', async () => {
+    test('admin can schedule announcement', { tag: ['@pro', '@admin'] }, async () => {
         await admin.addAnnouncement({ ...data.announcement, title: data.announcement.randomTitle(), publishType: 'schedule' });
     });
 
-    test('admin can edit announcement @pro @a', async () => {
+    test('admin can edit announcement', { tag: ['@pro', '@admin'] }, async () => {
         await admin.editAnnouncement({ ...data.announcement, title: announcementTitle });
     });
 
-    test('admin can trash announcement @pro @a', async () => {
+    test('admin can trash announcement', { tag: ['@pro', '@admin'] }, async () => {
         const [, , announcementTitle] = await apiUtils.createAnnouncement(payloads.createAnnouncement(), payloads.adminAuth);
         await admin.updateAnnouncement(announcementTitle, 'trash');
     });
 
-    test('admin can restore announcement @pro @a', async () => {
+    test('admin can restore announcement', { tag: ['@pro', '@admin'] }, async () => {
         const [, announcementId, announcementTitle] = await apiUtils.createAnnouncement(payloads.createAnnouncement(), payloads.adminAuth);
         await apiUtils.deleteAnnouncement(announcementId, payloads.adminAuth);
         await admin.updateAnnouncement(announcementTitle, 'restore');
     });
 
-    test('admin can permanently delete announcement @pro @a', async () => {
+    test('admin can permanently delete announcement', { tag: ['@pro', '@admin'] }, async () => {
         const [, announcementId, announcementTitle] = await apiUtils.createAnnouncement(payloads.createAnnouncement(), payloads.adminAuth);
         await apiUtils.deleteAnnouncement(announcementId, payloads.adminAuth);
         await admin.updateAnnouncement(announcementTitle, 'permanently-delete');
     });
 
-    test.skip('admin can perform announcements bulk action @pro @a', async () => {
+    test.skip('admin can perform bulk action on announcements', { tag: ['@pro', '@admin'] }, async () => {
         // todo: might cause other tests to fail in parallel
-        // await apiUtils.createAnnouncement(payloads.createAnnouncement(), payloads.adminAuth);
+        await apiUtils.createAnnouncement(payloads.createAnnouncement(), payloads.adminAuth);
         await admin.announcementBulkAction('trash');
     });
 });
@@ -88,15 +88,15 @@ test.describe('Announcements test (vendor)', () => {
 
     // vendor
 
-    test('vendor announcement menu page is rendering properly @pro @exp @v', async () => {
+    test('vendor can view announcements menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorAnnouncementsRenderProperly();
     });
 
-    test('vendor can view announcement details @pro @v', async () => {
+    test('vendor can view announcement details', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.vendorViewAnnouncement(announcement);
     });
 
-    test('vendor can delete announcement @pro @v', async () => {
+    test('vendor can delete announcement', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.vendorDeleteAnnouncement(announcement.title);
     });
 });

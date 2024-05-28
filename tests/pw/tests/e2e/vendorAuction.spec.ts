@@ -37,56 +37,60 @@ test.describe('Auction Product test', () => {
         await apiUtils.dispose();
     });
 
-    test('admin can add auction product @pro @a', async () => {
+    // admin
+
+    test('admin can add auction product', { tag: ['@pro', '@admin'] }, async () => {
         await admin.adminAddAuctionProduct(data.product.auction);
     });
 
-    test('vendor auction menu page is rendering properly @pro @exp @v', async () => {
+    //vendor
+
+    test('vendor can view auction menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorAuctionRenderProperly();
     });
 
-    test('vendor can add auction product @pro @v', async () => {
+    test('vendor can add auction product', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.addAuctionProduct({ ...data.product.auction, name: data.product.auction.productName() });
     });
 
-    test('vendor can edit auction product @pro @v', async () => {
+    test('vendor can edit auction product', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.editAuctionProduct({ ...data.product.auction, name: auctionProductName });
     });
 
-    test('vendor can view auction product @pro @v', async () => {
+    test('vendor can view auction product', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.viewAuctionProduct(auctionProductName);
     });
 
-    test("vendor can't bid own product @pro @v", async () => {
+    test("vendor can't bid own product", { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.cantBidOwnProduct(auctionProductName);
     });
 
-    test('vendor can search auction product @pro @v', async () => {
+    test('vendor can search auction product', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.searchAuctionProduct(auctionProductName);
     });
 
-    test('vendor can permanently delete auction product @pro @v', async () => {
+    test('vendor can permanently delete auction product', { tag: ['@pro', '@vendor'] }, async () => {
         const [, , auctionProductName] = await apiUtils.createProduct(payloads.createAuctionProduct(), payloads.vendorAuth);
         await vendor.deleteAuctionProduct(auctionProductName);
     });
 
-    test('vendor auction activity page is rendering properly @pro @exp @v', async () => {
+    test('vendor can view auction activity page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorAuctionActivityRenderProperly();
     });
 
-    test('vendor can filter auction activity @pro @v', async () => {
+    test('vendor can filter auction activity', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.filterAuctionActivity(data.date.dateRange);
     });
 
-    test('vendor can search auction activity @pro @v', async () => {
+    test('vendor can search auction activity', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.searchAuctionActivity(data.customer.username);
     });
 
-    test('customer can bid auction product @pro @c', async () => {
+    test('customer can bid auction product', { tag: ['@pro', '@customer'] }, async () => {
         await customer.bidAuctionProduct(auctionProductName);
     });
 
-    test.skip('customer can buy auction product with buy it now price @pro @c', async () => {
+    test.skip('customer can buy auction product with buy it now price', { tag: ['@pro', '@customer'] }, async () => {
         const [, , auctionProductName] = await apiUtils.createProduct(payloads.createAuctionProduct(), payloads.vendorAuth); // todo: buy it now price is not saved by api
         await customer.buyAuctionProduct(auctionProductName);
     });

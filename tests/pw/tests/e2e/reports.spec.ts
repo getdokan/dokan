@@ -28,29 +28,29 @@ test.describe('Reports test', () => {
 
     // reports
 
-    test('admin reports menu page is rendering properly @pro @exp @a', async () => {
+    test('admin can view reports menu page', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
         await admin.adminReportsRenderProperly();
     });
 
     // all logs
 
-    test('admin all Logs menu page is rendering properly @pro @exp @a', async () => {
+    test('admin can view all Logs menu page', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
         await admin.adminAllLogsRenderProperly();
     });
 
-    test('admin can search all logs @pro @a', async () => {
+    test('admin can search all logs', { tag: ['@pro', '@admin'] }, async () => {
         await admin.searchAllLogs(orderId);
     });
 
-    test('admin can export all logs @pro @a', async () => {
+    test('admin can export all logs', { tag: ['@pro', '@admin'] }, async () => {
         await admin.exportAllLogs();
     });
 
-    test('admin can filter all logs by store name @pro @a', async () => {
+    test('admin can filter all logs by store name', { tag: ['@pro', '@admin'] }, async () => {
         await admin.filterAllLogsByStore(data.predefined.vendorStores.vendor1);
     });
 
-    test('admin can filter all logs by order status @pro @a', async () => {
+    test('admin can filter all logs by order status', { tag: ['@pro', '@admin'] }, async () => {
         await admin.filterAllLogsByStatus('completed');
     });
 });

@@ -18,31 +18,31 @@ test.describe('Shop functionality test', () => {
 
     // shop page
 
-    test('shop page is rendering properly @lite @exp @c', async () => {
+    test('customer can view shop page', { tag: ['@lite', '@exploratory', '@customer'] }, async () => {
         await customer.shopRenderProperly();
     });
 
-    test('customer can sort products @lite @c', async () => {
+    test('customer can sort products', { tag: ['@lite', '@customer'] }, async () => {
         await customer.sortProducts('price');
     });
 
-    test('customer can search product @lite @c', async () => {
+    test('customer can search product', { tag: ['@lite', '@customer'] }, async () => {
         await customer.searchProduct(data.predefined.simpleProduct.product1.name);
     });
 
-    test('customer can filter products by category @pro @c', async () => {
+    test('customer can filter products by category', { tag: ['@pro', '@customer'] }, async () => {
         await customer.filterProducts('by-category', 'uncategorized');
     });
 
-    test('customer can filter products by location @pro @c', async () => {
+    test('customer can filter products by location', { tag: ['@pro', '@customer'] }, async () => {
         await customer.filterProducts('by-location', 'New York, NY, USA');
     });
 
-    test('customer can view products list on map @pro @c', async () => {
+    test('customer can view products list on map', { tag: ['@pro', '@customer'] }, async () => {
         await customer.productOnMap();
     });
 
-    test('customer can go to product details from shop @lite @c', async () => {
+    test('customer can go to product details from shop', { tag: ['@lite', '@customer'] }, async () => {
         await customer.goToProductDetailsFromShop(data.predefined.simpleProduct.product1.name);
     });
 });

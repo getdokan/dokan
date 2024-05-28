@@ -34,43 +34,45 @@ test.describe('Abuse report test', () => {
         await apiUtils.dispose();
     });
 
-    test('dokan abuse report menu page is rendering properly @pro @exp @a', async () => {
+    // admin
+
+    test('admin can view abuse reports menu page', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
         await admin.adminAbuseReportRenderProperly();
     });
 
-    test('admin can view abuse report details @pro @exp @a', async () => {
+    test('admin can view abuse report details', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
         await admin.abuseReportDetails();
     });
 
-    test('admin can filter abuse reports by abuse reason @pro @a', async () => {
+    test('admin can filter abuse reports by abuse reason', { tag: ['@pro', '@admin'] }, async () => {
         await admin.filterAbuseReports('This content is spam', 'by-reason');
     });
 
-    test('admin can filter abuse reports by product @pro @a', async () => {
+    test('admin can filter abuse reports by product', { tag: ['@pro', '@admin'] }, async () => {
         await admin.filterAbuseReports(data.predefined.simpleProduct.product1.name, 'by-product');
     });
 
-    test('admin can filter abuse reports by vendor @pro @a', async () => {
+    test('admin can filter abuse reports by vendor', { tag: ['@pro', '@admin'] }, async () => {
         await admin.filterAbuseReports(data.predefined.vendorStores.vendor1, 'by-vendor');
     });
 
-    test.skip('admin can perform abuse report bulk action @pro @a', async () => {
+    test.skip('admin can perform bulk action on abuse reports', { tag: ['@pro', '@admin'] }, async () => {
         // todo: might cause other tests to fail in parallel
         await admin.abuseReportBulkAction('delete');
     });
 
     // customer
 
-    test('customer can report product @pro @c', async () => {
+    test('customer can report product', { tag: ['@pro', '@customer'] }, async () => {
         await customer.reportProduct(data.predefined.simpleProduct.product1.name, data.product.report);
     });
 
-    test('guest customer can report product @pro @g', async ({ page }) => {
+    test('guest customer can report product', { tag: ['@pro', '@guest'] }, async ({ page }) => {
         const guest = new AbuseReportsPage(page);
         await guest.reportProduct(data.predefined.simpleProduct.product1.name, data.product.report);
     });
 
-    test('guest customer need to log-in to report product @pro @g', async ({ page }) => {
+    test('guest customer need to log-in to report product', { tag: ['@pro', '@guest'] }, async ({ page }) => {
         const guest = new AbuseReportsPage(page);
         await dbUtils.setDokanSettings(dbData.dokan.optionName.productReportAbuse, { ...dbData.dokan.productReportAbuseSettings, reported_by_logged_in_users_only: 'on' });
         await guest.reportProduct(data.predefined.simpleProduct.product1.name, data.product.report, true);

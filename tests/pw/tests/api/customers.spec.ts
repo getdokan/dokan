@@ -24,21 +24,21 @@ test.describe('customers api test', () => {
         await apiUtils.dispose();
     });
 
-    test('get all customers @pro', async () => {
+    test('get all customers', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllCustomers);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
         expect(responseBody).toMatchSchema(schemas.customersSchema.customersSchema);
     });
 
-    test('get single customer @pro', async () => {
+    test('get single customer', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getSingleCustomer(customerId));
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
         expect(responseBody).toMatchSchema(schemas.customersSchema.customerSchema);
     });
 
-    test('create a customer @pro', async () => {
+    test('create a customer', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.post(endPoints.createCustomer, { data: payloads.createCustomer() });
         expect(response.status()).toBe(201);
         expect(response.ok()).toBeTruthy();
@@ -46,21 +46,21 @@ test.describe('customers api test', () => {
         expect(responseBody).toMatchSchema(schemas.customersSchema.customerSchema);
     });
 
-    test('update a customer @pro', async () => {
+    test('update a customer', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.put(endPoints.updateCustomer(customerId), { data: payloads.updateCustomer() });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
         expect(responseBody).toMatchSchema(schemas.customersSchema.customerSchema);
     });
 
-    test('delete a customer @pro', async () => {
+    test('delete a customer', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.delete(endPoints.deleteCustomer(customerId), { params: payloads.paramsForceDelete });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
         expect(responseBody).toMatchSchema(schemas.customersSchema.customerSchema);
     });
 
-    test('update batch customers @pro', async () => {
+    test('update batch customers', { tag: ['@pro'] }, async () => {
         const allCustomerIds = (await apiUtils.getAllCustomers()).map((a: { id: unknown }) => a.id);
 
         const batchCustomers: object[] = [];
@@ -71,6 +71,6 @@ test.describe('customers api test', () => {
         const [response, responseBody] = await apiUtils.put(endPoints.updateBatchCustomers, { data: { update: batchCustomers } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
-        expect(responseBody).toMatchSchema(schemas.customersSchema.batchupdateCustomersSchema);
+        expect(responseBody).toMatchSchema(schemas.customersSchema.batchUpdateCustomersSchema);
     });
 });

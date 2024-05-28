@@ -30,69 +30,69 @@ test.describe('Order functionality test', () => {
 
     // orders
 
-    test('vendor order menu page is rendering properly @lite @exp @v', async () => {
+    test('vendor can view order menu page', { tag: ['@lite', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorOrdersRenderProperly();
     });
 
-    test('vendor can export all orders @lite @v', async () => {
+    test('vendor can export all orders', { tag: ['@lite', '@vendor'] }, async () => {
         await vendor.exportOrders('all');
     });
 
-    test('vendor can export filtered orders @lite @v', async () => {
+    test('vendor can export filtered orders', { tag: ['@lite', '@vendor'] }, async () => {
         await vendor.filterOrders('by-customer', data.customer.username);
         await vendor.exportOrders('filtered');
     });
 
-    test('vendor can search order @lite @v', async () => {
+    test('vendor can search order', { tag: ['@lite', '@vendor'] }, async () => {
         await vendor.searchOrder(orderId);
     });
 
-    test('vendor can filter orders by customer @lite @v', async () => {
+    test('vendor can filter orders by customer', { tag: ['@lite', '@vendor'] }, async () => {
         await vendor.filterOrders('by-customer', data.customer.username);
     });
 
-    test('vendor can filter orders by date range @lite @v', async () => {
+    test('vendor can filter orders by date range', { tag: ['@lite', '@vendor'] }, async () => {
         await vendor.filterOrders('by-date', data.date.dateRange);
     });
 
-    test('vendor can view order details @lite @v', async () => {
+    test('vendor can view order details', { tag: ['@lite', '@vendor'] }, async () => {
         await vendor.viewOrderDetails(orderId);
     });
 
-    test('vendor can update order status on order table @lite @v', async () => {
+    test('vendor can update order status on order table', { tag: ['@lite', '@vendor'] }, async () => {
         await vendor.updateOrderStatusOnTable(orderId, data.order.orderStatus.processing);
     });
 
-    test('vendor can update order status on order details @lite @v', async () => {
+    test('vendor can update order status on order details', { tag: ['@lite', '@vendor'] }, async () => {
         [, , orderId] = await apiUtils.createOrderWithStatus(PRODUCT_ID, { ...payloads.createOrder, customer_id: CUSTOMER_ID }, data.order.orderStatus.onhold, payloads.vendorAuth);
         await vendor.updateOrderStatus(orderId, data.order.orderStatus.completed);
     });
 
-    test('vendor can add order note @lite @v', async () => {
+    test('vendor can add order note', { tag: ['@lite', '@vendor'] }, async () => {
         await vendor.addOrderNote(orderId, data.orderNote.customer);
     });
 
-    test('vendor can add private order note @lite @v', async () => {
+    test('vendor can add private order note', { tag: ['@lite', '@vendor'] }, async () => {
         await vendor.addOrderNote(orderId, data.orderNote.private);
     });
 
-    test('vendor can add tracking details to order @lite @v', async () => {
+    test('vendor can add tracking details to order', { tag: ['@lite', '@vendor'] }, async () => {
         DOKAN_PRO && (await dbUtils.setDokanSettings(dbData.dokan.optionName.shippingStatus, { ...dbData.dokan.shippingStatusSettings, enabled: 'off' }));
         await vendor.addTrackingDetails(orderId, data.orderTrackingDetails);
         DOKAN_PRO && (await dbUtils.setDokanSettings(dbData.dokan.optionName.shippingStatus, { ...dbData.dokan.shippingStatusSettings, enabled: 'on' }));
     });
 
-    test('vendor can add shipment to order @pro @v', async () => {
+    test('vendor can add shipment to order', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.addShipment(orderId, data.orderShipmentDetails);
     });
 
-    test.skip('vendor can add downloadable product permission to order @lite @v', async () => {
+    test.skip('vendor can add downloadable product permission to order', { tag: ['@lite', '@vendor'] }, async () => {
         const [, , downloadableProductName] = await apiUtils.createProduct(payloads.createDownloadableProduct(), payloads.vendorAuth);
         await vendor.addDownloadableProduct(orderId, downloadableProductName);
         await vendor.removeDownloadableProduct(orderId, downloadableProductName);
     });
 
-    test('vendor can perform order bulk action @lite @v', async () => {
+    test('vendor can perform bulk action on orders', { tag: ['@lite', '@vendor'] }, async () => {
         await vendor.orderBulkAction('completed', orderId);
     });
 });

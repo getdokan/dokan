@@ -11,7 +11,7 @@ export class MenuManagerPage extends BasePage {
         super(page);
     }
 
-    // seave settings
+    // save settings
     async saveSettings() {
         await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, 'Setting has been saved successfully.');
     }
@@ -23,9 +23,9 @@ export class MenuManagerPage extends BasePage {
 
         switch (action) {
             case 'activate':
-                await this.enableSwitcher(settingsAdmin.menuManager.menuSwithcher(menu));
+                await this.enableSwitcher(settingsAdmin.menuManager.menuSwitcher(menu));
                 await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.menuManager.menuManagerSaveChanges);
-                await this.toHaveBackgroundColor(settingsAdmin.menuManager.menuSwithcher(menu) + '//span', 'rgb(0, 144, 255)');
+                await this.toHaveBackgroundColor(settingsAdmin.menuManager.menuSwitcher(menu) + '//span', 'rgb(0, 144, 255)');
                 //assertion
                 await this.goto(data.subUrls.frontend.vDashboard.dashboard);
                 await this.toBeVisible((selector.vendor.vDashboard.menus as any)[menuLink]);
@@ -34,9 +34,9 @@ export class MenuManagerPage extends BasePage {
                 break;
 
             case 'deactivate':
-                await this.disableSwitcher(settingsAdmin.menuManager.menuSwithcher(menu));
+                await this.disableSwitcher(settingsAdmin.menuManager.menuSwitcher(menu));
                 await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.menuManager.menuManagerSaveChanges);
-                await this.toHaveBackgroundColor(settingsAdmin.menuManager.menuSwithcher(menu) + '//span', 'rgb(215, 218, 221)');
+                await this.toHaveBackgroundColor(settingsAdmin.menuManager.menuSwitcher(menu) + '//span', 'rgb(215, 218, 221)');
                 //assertion
                 await this.goto(data.subUrls.frontend.vDashboard.dashboard);
                 await this.notToBeVisible((selector.vendor.vDashboard.menus as any)[menuLink]);
@@ -82,18 +82,18 @@ export class MenuManagerPage extends BasePage {
     async cantRenameMenu(menu: string) {
         await this.goIfNotThere(data.subUrls.backend.dokan.settings);
         await this.click(settingsAdmin.menus.menuManager);
-        await this.disableSwitcher(settingsAdmin.menuManager.menuSwithcher(menu));
+        await this.disableSwitcher(settingsAdmin.menuManager.menuSwitcher(menu));
         await this.notToBeVisible(settingsAdmin.menuManager.menuEdit(menu));
     }
 
-    // dashboard cant be alterd
+    // dashboard cant be altered
     async cantAlterMenu(menu: string, isSubmenu?: boolean) {
         await this.goIfNotThere(data.subUrls.backend.dokan.settings);
         await this.click(settingsAdmin.menus.menuManager);
         isSubmenu && (await this.click(settingsAdmin.menuManager.settingsSubMenu));
 
         await this.hasClass(settingsAdmin.menuManager.menuGrabber(menu), 'not-sortable');
-        await this.notToBeVisible(settingsAdmin.menuManager.menuSwithcher(menu));
+        await this.notToBeVisible(settingsAdmin.menuManager.menuSwitcher(menu));
     }
 
     // reorderMenu
@@ -130,6 +130,6 @@ export class MenuManagerPage extends BasePage {
         await this.click(settingsAdmin.menuManager.confirmReset);
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.menuManager.menuManagerSaveChanges);
 
-        await this.toHaveBackgroundColor(settingsAdmin.menuManager.menuSwithcher(menu) + '//span', 'rgb(0, 144, 255)');
+        await this.toHaveBackgroundColor(settingsAdmin.menuManager.menuSwitcher(menu) + '//span', 'rgb(0, 144, 255)');
     }
 }

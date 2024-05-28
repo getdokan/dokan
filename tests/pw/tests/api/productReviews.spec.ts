@@ -20,19 +20,19 @@ test.describe('product review api test', () => {
         await apiUtils.dispose();
     });
 
-    test('get all product reviews @pro', async () => {
+    test('get all product reviews', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllProductReviews);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
-    test('get product reviews summary @pro', async () => {
+    test('get product reviews summary', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getProductReviewSummary);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
-    test('update a product review @pro', async () => {
+    test('update a product review', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.put(endPoints.updateStoreReview(reviewId), { data: payloads.updateProductReview });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();

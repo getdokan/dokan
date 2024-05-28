@@ -17,23 +17,25 @@ test.describe('License test', () => {
         await aPage.close();
     });
 
-    test('dokan license menu page is rendering properly @pro @exp @a', async () => {
+    // admin
+
+    test('admin can view license menu page', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
         await admin.adminLicenseRenderProperly();
     });
 
-    test.skip("admin can't activate license with incorrect key @pro @a @neg", async () => {
+    test.skip("admin can't activate license with incorrect key", { tag: ['@pro', '@negative', '@admin'] }, async () => {
         await admin.activateLicense(data.dokanLicense.incorrectKey, 'incorrect');
     });
 
-    test.skip('admin can activate license @pro @a', async () => {
+    test.skip('admin can activate license', { tag: ['@pro', '@admin'] }, async () => {
         await admin.activateLicense(data.dokanLicense.correctKey);
     });
 
-    test('admin can refreseh license @pro @a', async () => {
-        await admin.refresehLicense();
+    test('admin can refresh license', { tag: ['@pro', '@admin'] }, async () => {
+        await admin.refreshLicense();
     });
 
-    test.skip('admin can deactivate license @pro @a', async () => {
+    test.skip('admin can deactivate license', { tag: ['@pro', '@admin'] }, async () => {
         await admin.activateLicense(data.dokanLicense.correctKey);
         await admin.deactivateLicense();
     });

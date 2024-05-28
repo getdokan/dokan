@@ -5,7 +5,7 @@ import { payloads } from '@utils/payloads';
 import { helpers } from '@utils/helpers';
 import { data } from '@utils/testData';
 
-const { DOKAN_PRO, BASE_URL } = process.env;
+const { LOCAL, DOKAN_PRO, BASE_URL } = process.env;
 
 setup.describe('setup test environment', () => {
     let apiUtils: ApiUtils;
@@ -18,7 +18,7 @@ setup.describe('setup test environment', () => {
         await apiUtils.dispose();
     });
 
-    setup.skip('get server url @lite', async () => {
+    setup.skip('get server url', { tag: ['@lite'] }, async () => {
         const headers = await apiUtils.getSiteHeaders(BASE_URL);
         if (headers.link) {
             const serverUrl = headers.link.includes('rest_route') ? BASE_URL + '/?rest_route=' : BASE_URL + '/wp-json';
@@ -28,27 +28,28 @@ setup.describe('setup test environment', () => {
         }
     });
 
-    setup('setup store settings @lite', async () => {
+    setup('setup store settings', { tag: ['@lite'] }, async () => {
         const [response] = await apiUtils.put(endPoints.updateSettings, { data: payloads.setupStore });
         expect(response.ok()).toBeTruthy();
     });
 
-    setup('create customer @lite', async () => {
+    setup('create customer', { tag: ['@lite'] }, async () => {
         const [, customerId] = await apiUtils.createCustomer(payloads.createCustomer1, payloads.adminAuth);
         helpers.createEnvVar('CUSTOMER_ID', customerId);
     });
 
-    setup('create vendor @lite', async () => {
+    setup('create vendor', { tag: ['@lite'] }, async () => {
         const [, sellerId] = await apiUtils.createStore(payloads.createStore1, payloads.adminAuth);
         helpers.createEnvVar('VENDOR_ID', sellerId);
     });
 
-    setup('add vendor2 @lite', async () => {
+    setup('add vendor2', { tag: ['@lite'] }, async () => {
         const [, sellerId] = await apiUtils.createStore(payloads.createStore2, payloads.adminAuth);
         helpers.createEnvVar('VENDOR2_ID', sellerId);
     });
 
-    setup('dokan pro enabled or not @lite', async () => {
+    setup('dokan pro enabled or not', { tag: ['@lite'] }, async () => {
+        setup.skip(LOCAL, 'Skip on Local testing');
         let res = await apiUtils.checkPluginsExistence(data.plugin.dokanPro, payloads.adminAuth);
         if (res) {
             res = await apiUtils.pluginsActiveOrNot(data.plugin.dokanPro, payloads.adminAuth);
@@ -56,7 +57,7 @@ setup.describe('setup test environment', () => {
         DOKAN_PRO ? expect(res).toBeTruthy() : expect(res).toBeFalsy();
     });
 
-    setup('get test environment info @lite', async () => {
+    setup('get test environment info', { tag: ['@lite'] }, async () => {
         const [, systemInfo] = await apiUtils.getSystemStatus(payloads.adminAuth);
         helpers.writeFile(data.systemInfo, JSON.stringify(systemInfo));
     });

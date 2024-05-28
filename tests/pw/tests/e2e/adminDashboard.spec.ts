@@ -21,16 +21,16 @@ test.describe('Admin dashboard test', () => {
         await apiUtils.dispose();
     });
 
-    test('dokan admin dashboard is rendering properly @lite @exp @a', async () => {
+    test('admin can view Dokan dashboard', { tag: ['@lite', '@exploratory', '@admin'] }, async () => {
         await admin.adminDashboardRenderProperly();
     });
 
-    test('admin dashboard at a glance values are accurate @lite @a', async () => {
+    test('admin can evaluate dashboard at a glance values', { tag: ['@lite', '@admin'] }, async () => {
         const summary = await apiUtils.getAdminReportSummary(payloads.adminAuth);
         await admin.dokanAtAGlanceValueAccuracy(summary);
     });
 
-    test('admin can add dokan news subscriber @lite @a', async () => {
+    test('admin can add Dokan news subscriber', { tag: ['@lite', '@admin'] }, async () => {
         await admin.addDokanNewsSubscriber(data.user.userDetails);
     });
 });

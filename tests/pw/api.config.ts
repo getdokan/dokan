@@ -27,7 +27,7 @@ export default defineConfig({
     preserveOutput: 'always',
     /* Run tests in files in parallel */
     // fullyParallel  : true,
-    /* Fail the build on CI if you accidentally left testonly in the source code. */
+    /* Fail the build on CI if you accidentally left test.only in the source code. */
     // forbidOnly     : !!CI,
     /* The number of times to repeat each test, useful for debugging flaky tests. */
     repeatEach: CI ? 1 : 0,
@@ -41,13 +41,13 @@ export default defineConfig({
     reporter: CI
         ? [
               ['github'],
-              ['html', { open: 'never', outputFolder: 'playwright-report/api/html/html-report-api' }],
+              ['html', { open: 'never', outputFolder: 'playwright-report/api/html-report' }],
               //   ['junit', { outputFile: 'playwright-report/api/junit-report/api-results.xml' }],
               ['list', { printSteps: true }],
               ['./utils/summaryReporter.ts', { outputFile: 'playwright-report/api/summary-report/results.json' }],
           ]
         : [
-              ['html', { open: 'never', outputFolder: 'playwright-report/api/html/html-report-api' }],
+              ['html', { open: 'never', outputFolder: 'playwright-report/api/html-report' }],
               //   ['junit', { outputFile: 'playwright-report/api/junit-report/api-results.xml' }],
               ['list', { printSteps: true }],
               ['./utils/summaryReporter.ts', { outputFile: 'playwright-report/api/summary-report/results.json' }],

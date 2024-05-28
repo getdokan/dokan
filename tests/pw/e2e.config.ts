@@ -45,14 +45,14 @@ export default defineConfig({
     /* Configure reporters */
     reporter: CI
         ? [
-              ['github'],
-              ['html', { open: 'never', outputFolder: 'playwright-report/e2e/html/html-report-e2e' }],
+              //   ['github'],
+              ['html', { open: 'never', outputFolder: 'playwright-report/e2e/html-report' }],
               //   ['junit', { outputFile: 'playwright-report/e2e/junit-report/e2e-results.xml' }],
               ['list', { printSteps: true }],
               ['./utils/summaryReporter.ts', { outputFile: 'playwright-report/e2e/summary-report/results.json' }],
           ]
         : [
-              ['html', { open: 'never', outputFolder: 'playwright-report/e2e/html/html-report-e2e' }],
+              ['html', { open: 'never', outputFolder: 'playwright-report/e2e/html-report' }],
               //   ['junit', { outputFile: 'playwright-report/e2e/junit-report/e2e-results.xml' }],
               ['list', { printSteps: true }],
               ['./utils/summaryReporter.ts', { outputFile: 'playwright-report/e2e/summary-report/results.json' }],
@@ -124,8 +124,18 @@ export default defineConfig({
         {
             name: 'e2e_tests',
             testMatch: /.*\.spec\.ts/,
+            testIgnore: /.*\.teardown\.spec\.ts/,
             /* whether not to run setup tests before running actual tests */
             dependencies: NO_SETUP ? [] : ['e2e_setup'],
+            /* whether not to run teardown tests after running actual tests */
+            // teardown: NO_SETUP ? undefined : 'coverage_report',
+            // teardown: 'global_teardown',
+        },
+
+        // coverage_report
+        {
+            name: 'coverage_report',
+            testMatch: '_coverage.teardown.ts',
         },
 
         // local site setup project

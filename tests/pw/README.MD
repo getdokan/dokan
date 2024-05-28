@@ -124,7 +124,7 @@ Create .env file according to .env.example file
 ADMIN=John_Doe                          [Admin username]
 ADMIN_PASSWORD=AdminPass123             [Password for the admin account]
 VENDOR=David_Johnson                    [Vendor username]
-VENDOR2=jhonathon_Smith                 [Vendor username]
+VENDOR2=Johnathon_Smith                 [Vendor username]
 CUSTOMER=Michael_Williams               [Customer username]
 USER_PASSWORD=Passw0rd123               [Password for all other users]
 GMAP=ABCD1234EFGH5678                   [Google Maps API key]
@@ -136,6 +136,7 @@ BASE_URL=https://example.com            [Base URL of the test site]
 CI=true                                 [CI/CD environment indicator]
 SLOWMO=10                               [Slow down test execution by provided seconds] [optional]
 NO_SETUP=true                           [Whether not to run setup tests before actual tests] [optional]
+LOCAL=true                              [Local testing indicator] [optional]
 SITE_PATH=/users/rk/sites/dokan         [Path of the local test site][only for local testing]
 
 # Database Configuration

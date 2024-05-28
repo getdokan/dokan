@@ -36,72 +36,76 @@ test.describe('Booking Product test', () => {
         await apiUtils.dispose();
     });
 
-    test('admin can add booking product @pro @a', async () => {
+    // admin
+
+    test('admin can add booking product', { tag: ['@pro', '@admin'] }, async () => {
         await admin.adminAddBookingProduct(data.product.booking);
     });
 
-    test('vendor booking menu page is rendering properly @pro @exp @v', async () => {
+    // vendor
+
+    test('vendor can view booking menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorBookingRenderProperly();
     });
 
-    test('vendor manage booking page is rendering properly @pro @exp @v', async () => {
+    test('vendor can view manage booking page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorManageBookingRenderProperly();
     });
 
-    test('vendor booking calendar page is rendering properly @pro @exp @v', async () => {
+    test('vendor can view booking calendar page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorBookingCalendarRenderProperly();
     });
 
-    test('vendor manage booking resource page is rendering properly @pro @exp @v', async () => {
+    test('vendor can view manage booking resource page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorManageResourcesRenderProperly();
     });
 
-    test('vendor can add booking product @pro @v', async () => {
+    test('vendor can add booking product', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.addBookingProduct({ ...data.product.booking, name: data.product.booking.productName() });
     });
 
-    test('vendor can edit booking product @pro @v', async () => {
+    test('vendor can edit booking product', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.editBookingProduct({ ...data.product.booking, name: bookableProductName });
     });
 
-    test('vendor can filter booking products by date @pro @v', async () => {
+    test('vendor can filter booking products by date', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.filterBookingProducts('by-date', '1');
     });
 
-    test('vendor can filter booking products by category @pro @v', async () => {
+    test('vendor can filter booking products by category', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.filterBookingProducts('by-category', 'Uncategorized');
     });
 
-    test('vendor can filter booking products by other @pro @v', async () => {
+    test('vendor can filter booking products by other', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.filterBookingProducts('by-other', 'featured');
     });
 
-    test('vendor can view booking product @pro @v', async () => {
+    test('vendor can view booking product', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.viewBookingProduct(bookableProductName);
     });
 
-    test("vendor can't buy own booking product @pro @v", async () => {
+    test("vendor can't buy own booking product", { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.cantBuyOwnBookingProduct(bookableProductName);
     });
 
-    test('vendor can search booking product @pro @v', async () => {
+    test('vendor can search booking product', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.searchBookingProduct(bookableProductName);
     });
 
-    test('vendor can duplicate booking product @pro @v', async () => {
+    test('vendor can duplicate booking product', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.duplicateBookingProduct(bookableProductName);
     });
 
-    test('vendor can permanently delete booking product @pro @v', async () => {
+    test('vendor can permanently delete booking product', { tag: ['@pro', '@vendor'] }, async () => {
         const [, , bookableProductName] = await apiUtils.createBookableProduct(payloads.createBookableProduct(), payloads.vendorAuth);
         await vendor.deleteBookingProduct(bookableProductName);
     });
 
-    test('vendor can add booking resource @pro @v', async () => {
+    test('vendor can add booking resource', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.addBookingResource(data.product.booking.resource.resourceName());
     });
 
-    test('vendor can edit booking resource @pro @v', async () => {
+    test('vendor can edit booking resource', { tag: ['@pro', '@vendor'] }, async () => {
         const bookingResourceName = data.product.booking.resource.resourceName();
         await vendor.addBookingResource(bookingResourceName); // todo: convert with woo api :fatal error exits on api
         // const [responseBody, id] = await apiUtils.createPost({ ...payloads.createBookingResourceByDb(), author: process.env.VENDOR_ID }, payloads.adminAuth);
@@ -110,21 +114,21 @@ test.describe('Booking Product test', () => {
         await vendor.editBookingResource({ ...data.product.booking.resource, name: bookingResourceName });
     });
 
-    test('vendor can delete booking resource @pro @v', async () => {
+    test('vendor can delete booking resource', { tag: ['@pro', '@vendor'] }, async () => {
         const bookingResourceName = data.product.booking.resource.resourceName();
         await vendor.addBookingResource(bookingResourceName); // todo: convert with woo api:fatal error exits on api
         await vendor.deleteBookingResource(bookingResourceName);
     });
 
-    test('vendor can add booking for guest customer @pro @v', async () => {
+    test('vendor can add booking for guest customer', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.addBooking(bookableProductName, data.bookings);
     });
 
-    test.skip('vendor can add booking for existing customer @pro @v', async () => {
+    test.skip('vendor can add booking for existing customer', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.addBooking(bookableProductName, data.bookings, data.customer.username);
     });
 
-    test.skip('customer can buy bookable product @pro @c', async () => {
+    test.skip('customer can buy bookable product', { tag: ['@pro', '@customer'] }, async () => {
         // todo: customer storage state gets reset from previous tests
         await customer.buyBookableProduct(bookableProductName, data.bookings);
     });

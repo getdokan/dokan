@@ -192,7 +192,7 @@ export const data = {
 
         downloadable: {
             productType: 'simple',
-            productName: () => faker.commerce.productName() + ' (Downadable)',
+            productName: () => faker.commerce.productName() + ' (Downloadable)',
             category: 'Uncategorized',
             regularPrice: () => faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([1, 2]) }).replace('.', ','),
             storeName: String(process.env.VENDOR) + 'store',
@@ -782,7 +782,7 @@ export const data = {
         backend: {
             login: 'wp-login.php',
             adminLogin: 'wp-admin',
-            adminLogout: 'wp-login.php?action=logout',
+            adminLogout: 'wp-login.php?loggedout=true',
             adminDashboard: 'wp-admin',
             user: 'wp-admin/user-edit.php',
             setupWP: 'wp-admin/install.php',
@@ -1679,7 +1679,7 @@ export const data = {
         badgeStatus: 'published', // published, draft
     },
 
-    //  question answeres
+    //  question answers
     questionAnswers: {
         question: 'test question',
         editQuestion: 'edited test question',
@@ -1717,6 +1717,19 @@ export const data = {
     // modules
     modules: {
         noModuleMessage: 'No modules found.',
+        moduleStats: {
+            totalModules: 39,
+            modulesVideoLink: 17,
+            productManagement: 14,
+            integration: 6,
+            uiUx: 2,
+            shipping: 3,
+            storeManagement: 10,
+            payment: 6,
+            orderManagement: 2,
+            vendorManagement: 1,
+        },
+
         modules: [
             'booking',
             'color_scheme_customizer',

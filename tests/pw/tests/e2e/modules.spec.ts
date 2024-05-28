@@ -22,32 +22,34 @@ test.describe('Modules test', () => {
         await apiUtils.dispose();
     });
 
-    test('dokan modules menu page is rendering properly @pro @exp @a', async () => {
-        await admin.adminModulesRenderProperly();
+    //admin
+
+    test('admin can view modules menu page', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
+        await admin.adminModulesRenderProperly(data.modules.moduleStats);
     });
 
-    test('admin can search module @pro @a', async () => {
+    test('admin can search module', { tag: ['@pro', '@admin'] }, async () => {
         await admin.searchModule(data.modules.modulesName.AuctionIntegration);
     });
 
-    test('admin can filter modules by category @pro @a', async () => {
+    test('admin can filter modules by category', { tag: ['@pro', '@admin'] }, async () => {
         await admin.filterModules(data.modules.moduleCategory.productManagement);
     });
 
-    test('admin can deactivate module @pro @a', async () => {
+    test('admin can deactivate module', { tag: ['@pro', '@admin'] }, async () => {
         await admin.activateDeactivateModule(data.modules.modulesName.AuctionIntegration);
     });
 
-    test('admin can activate module @pro @a', async () => {
+    test('admin can activate module', { tag: ['@pro', '@admin'] }, async () => {
         await apiUtils.deactivateModules([payloads.moduleIds.auction], payloads.adminAuth);
         await admin.activateDeactivateModule(data.modules.modulesName.AuctionIntegration);
     });
 
-    test('admin can perform module bulk action @pro @a', async () => {
+    test('admin can perform bulk action on modules', { tag: ['@pro', '@admin'] }, async () => {
         await admin.moduleBulkAction('activate');
     });
 
-    test('admin can change module view layout @pro @a', async () => {
+    test('admin can change module view layout', { tag: ['@pro', '@admin'] }, async () => {
         await admin.moduleViewLayout(data.modules.layout.list);
     });
 });

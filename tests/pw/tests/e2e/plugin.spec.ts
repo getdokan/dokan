@@ -24,41 +24,41 @@ test.describe.skip('Plugin functionality test', () => {
 
     //todo: install plugin
 
-    test('activate dokan lite plugin @lite @a', async () => {
+    test('activate Dokan lite plugin', { tag: ['@lite', '@admin'] }, async () => {
         await apiUtils.updatePlugin('dokan/dokan', { status: 'inactive' }, payloads.adminAuth);
         await admin.activatePlugin(data.plugin.pluginName.dokanLite);
     });
 
-    test('deactivate dokan lite plugin @lite @a', async () => {
+    test('deactivate Dokan lite plugin', { tag: ['@lite', '@admin'] }, async () => {
         await apiUtils.updatePlugin('dokan/dokan', { status: 'active' }, payloads.adminAuth);
         await admin.deactivateDokanPlugin(data.plugin.pluginName.dokanLite, false);
     });
 
-    test('deactivate dokan lite plugin with deactivate reason @lite @a', async () => {
+    test('deactivate Dokan lite plugin with deactivate reason', { tag: ['@lite', '@admin'] }, async () => {
         await apiUtils.updatePlugin('dokan/dokan', { status: 'active' }, payloads.adminAuth);
         await admin.deactivateDokanPlugin(data.plugin.pluginName.dokanLite, true);
     });
 
-    test('activate dokan pro plugin @pro @a', async () => {
+    test('activate Dokan pro plugin', { tag: ['@pro', '@admin'] }, async () => {
         await apiUtils.updatePlugin('dokan-pro/dokan-pro', { status: 'inactive' }, payloads.adminAuth);
         await admin.activatePlugin(data.plugin.pluginName.dokanPro);
     });
 
-    test('deactivate dokan pro plugin @pro @a', async () => {
+    test('deactivate Dokan pro plugin', { tag: ['@pro', '@admin'] }, async () => {
         await apiUtils.updatePlugin('dokan-pro/dokan-pro', { status: 'active' }, payloads.adminAuth);
         await admin.deactivateDokanPlugin(data.plugin.pluginName.dokanPro, false);
     });
 
-    test('deactivate dokan pro plugin with deactivate reason @pro @a', async () => {
+    test('deactivate Dokan pro plugin with deactivate reason', { tag: ['@pro', '@admin'] }, async () => {
         await apiUtils.updatePlugin('dokan-pro/dokan-pro', { status: 'active' }, payloads.adminAuth);
         await admin.deactivateDokanPlugin(data.plugin.pluginName.dokanPro, true);
     });
 
-    test('delete dokan lite plugin @lite @a', async () => {
+    test('delete Dokan lite plugin', { tag: ['@lite', '@admin'] }, async () => {
         await admin.activatePlugin(data.plugin.pluginName.dokanLite);
     });
 
-    test('delete dokan pro plugin @pro @a', async () => {
+    test('delete Dokan pro plugin', { tag: ['@pro', '@admin'] }, async () => {
         await admin.activatePlugin(data.plugin.pluginName.dokanLite);
     });
 });

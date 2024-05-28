@@ -38,19 +38,20 @@ test.describe('Product addon functionality test', () => {
         await apiUtils.dispose();
     });
 
-    test('vendor product addons menu page is rendering properly @pro @exp @v', async () => {
+    // vendor
+    test('vendor can view product addons menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorProductAddonsSettingsRenderProperly();
     });
 
-    test('vendor can add addons @pro @v', async () => {
+    test('vendor can add addons', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.addAddon({ ...data.vendor.addon(), category: categoryName });
     });
 
-    test('vendor can edit addon @pro @v', async () => {
+    test('vendor can edit addon', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.editAddon({ ...data.vendor.addon(), name: addonName, title: addonFieldTitle });
     });
 
-    test('vendor can delete addon @pro @v', async () => {
+    test('vendor can delete addon', { tag: ['@pro', '@vendor'] }, async () => {
         const [, addonName] = await createVendorProductAddon();
         await vendor.deleteAddon({ ...data.vendor.addon(), name: addonName });
     });

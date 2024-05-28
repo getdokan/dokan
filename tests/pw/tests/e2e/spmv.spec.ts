@@ -44,68 +44,67 @@ test.describe('Vendor SPMV test', () => {
         await apiUtils.dispose();
     });
 
-    test('admin can assign SPMV product to other vendor @pro @a', async () => {
-        test.skip(true, 'test is failing for woocommerce booking v2.0.8');
+    test('admin can assign SPMV product to other vendor', { tag: ['@pro', '@admin'] }, async () => {
         const [, productId] = await apiUtils.createProduct({ ...payloads.createProduct(), name: data.predefined.spmv.productName() }, payloads.vendor2Auth);
         await admin.assignSpmvProduct(productId, data.predefined.vendorStores.vendor1);
     });
 
     //vendor
 
-    test('vendor spmv menu page is rendering properly @pro @exp @v', async () => {
+    test('vendor can view SPMV menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorSpmvRenderProperly();
     });
 
-    test('vendor can search similar product on spmv page @pro @v', async () => {
+    test('vendor can search similar product on SPMV page', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.searchSimilarProduct(productName, 'spmv');
     });
 
-    test('vendor can search similar product on product popup @pro @v', async () => {
+    test('vendor can search similar product on product popup', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.searchSimilarProduct(productName, 'popup');
     });
 
-    test('vendor can search similar booking product @pro @v', async () => {
+    test('vendor can search similar booking product', { tag: ['@pro', '@vendor'] }, async () => {
         const [, , bookableProductName] = await apiUtils.createBookableProduct(payloads.createBookableProduct(), payloads.vendor2Auth);
         await vendor.searchSimilarProduct(bookableProductName, 'booking');
     });
 
-    test('vendor can search similar auction product @pro @v', async () => {
+    test('vendor can search similar auction product', { tag: ['@pro', '@vendor'] }, async () => {
         const [, , auctionProductName] = await apiUtils.createProduct(payloads.createAuctionProduct(), payloads.vendor2Auth);
         await vendor.searchSimilarProduct(auctionProductName, 'auction');
     });
 
-    test('vendor can go to own product edit from spmv page @pro @v', async () => {
+    test('vendor can go to own product edit from SPMV page', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.goToProductEditFromSpmv(data.predefined.simpleProduct.product1.name);
     });
 
-    test('vendor can sort spmv products @pro @v', async () => {
+    test('vendor can sort SPMV products', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.sortSpmvProduct('price');
     });
 
-    test('vendor can clone product @pro @v', async () => {
+    test('vendor can clone product', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.cloneProduct(productName);
     });
 
-    test('vendor can clone product via sell item button @pro @v', async () => {
+    test('vendor can clone product via sell item button', { tag: ['@pro', '@vendor'] }, async () => {
         const [, , productName] = await apiUtils.createProduct({ ...payloads.createProduct(), name: data.predefined.spmv.productName() }, payloads.vendor2Auth);
         await vendor.cloneProductViaSellItemButton(productName);
     });
 
     // customer
 
-    test('customer can view other available vendors @pro @c', async () => {
+    test('customer can view other available vendors', { tag: ['@pro', '@customer'] }, async () => {
         await customer.viewOtherAvailableVendors(productName2);
     });
 
-    test('customer can view other available vendor @pro @c', async () => {
+    test('customer can view other available vendor', { tag: ['@pro', '@customer'] }, async () => {
         await customer.viewOtherAvailableVendor(productName2, data.predefined.vendorStores.vendor1);
     });
 
-    test('customer can view other available vendor product @pro @c', async () => {
+    test('customer can view other available vendor product', { tag: ['@pro', '@customer'] }, async () => {
         await customer.viewOtherAvailableVendorProduct(productName2, data.predefined.vendorStores.vendor1);
     });
 
-    test('customer can add to cart other available vendor product @pro @c', async () => {
+    test('customer can add to cart other available vendor product', { tag: ['@pro', '@customer'] }, async () => {
         await customer.addToCartOtherAvailableVendorsProduct(productName2, data.predefined.vendorStores.vendor1);
     });
 });

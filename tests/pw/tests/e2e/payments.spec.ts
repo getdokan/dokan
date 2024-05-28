@@ -30,69 +30,69 @@ test.describe('Payments test', () => {
 
     //admin
 
-    test.skip('admin can add basic payment methods @lite @a', async () => {
+    test.skip('admin can add basic payment methods', { tag: ['@lite', '@admin'] }, async () => {
         await admin.setupBasicPaymentMethods(data.payment);
     });
 
-    test.skip('admin can add strip payment method @pro @a', async () => {
+    test.skip('admin can add stripe payment method', { tag: ['@pro', '@admin'] }, async () => {
         await admin.setupStripeConnect(data.payment);
     });
 
-    test.skip('admin can add paypal marketplace payment method @pro @a', async () => {
+    test.skip('admin can add Paypal Marketplace payment method', { tag: ['@pro', '@admin'] }, async () => {
         await admin.setupPaypalMarketPlace(data.payment);
     });
 
-    test.skip('admin can add mangopay payment method @pro @a', async () => {
+    test.skip('admin can add Mangopay payment method', { tag: ['@pro', '@admin'] }, async () => {
         await admin.setupMangoPay(data.payment);
     });
 
-    test.skip('admin can add razorpay payment method @pro @a', async () => {
+    test.skip('admin can add Razorpay payment method', { tag: ['@pro', '@admin'] }, async () => {
         await admin.setupRazorpay(data.payment);
     });
 
-    test.skip('admin can add strip express payment method @pro @a', async () => {
+    test.skip('admin can add Strip Express payment method', { tag: ['@pro', '@admin'] }, async () => {
         await admin.setupStripeExpress(data.payment);
     });
 
     //vendor
 
-    test('vendor payment menu is rendering properly @lite @exp @v', async () => {
+    test('vendor can view payment settings menu page', { tag: ['@lite', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorPaymentSettingsRenderProperly();
     });
 
-    test('vendor can add paypal payment method @lite @v', async () => {
+    test('vendor can add paypal payment method', { tag: ['@lite', '@vendor'] }, async () => {
         await vendor.setBasicPayment({ ...data.vendor.payment, methodName: 'paypal' });
     });
 
-    test('vendor can add bank payment method @lite @v', async () => {
+    test('vendor can add bank payment method', { tag: ['@lite', '@vendor'] }, async () => {
         await vendor.setBankTransfer(data.vendor.payment);
     });
 
-    test('vendor can add skrill payment method @pro @v', async () => {
+    test('vendor can add Skrill payment method', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.setBasicPayment({ ...data.vendor.payment, methodName: 'skrill' });
     });
 
-    test('vendor can add custom payment method @pro @v', async () => {
+    test('vendor can add custom payment method', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.setBasicPayment({ ...data.vendor.payment, methodName: 'custom' });
     });
 
-    test('vendor can disconnect paypal payment method @lite @v', async () => {
+    test('vendor can disconnect paypal payment method', { tag: ['@lite', '@vendor'] }, async () => {
         await vendor.disconnectBasicPayment({ ...data.vendor.payment, methodName: 'paypal' });
         //reset
         await apiUtils.setStoreSettings(payloads.defaultStoreSettings, payloads.vendorAuth);
     });
 
-    test('vendor can disconnect bank payment method @lite @v', async () => {
+    test('vendor can disconnect bank payment method', { tag: ['@lite', '@vendor'] }, async () => {
         await vendor.disconnectBasicPayment({ ...data.vendor.payment, methodName: 'bank' });
         // reset
         await apiUtils.setStoreSettings(payloads.defaultStoreSettings, payloads.vendorAuth);
     });
 
-    test('vendor can disconnect skrill payment method @pro @v', async () => {
+    test('vendor can disconnect Skrill payment method', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.disconnectBasicPayment({ ...data.vendor.payment, methodName: 'skrill' });
     });
 
-    test('vendor can disconnect custom payment method @pro @v', async () => {
+    test('vendor can disconnect custom payment method', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.disconnectBasicPayment({ ...data.vendor.payment, methodName: 'custom' });
     });
 });

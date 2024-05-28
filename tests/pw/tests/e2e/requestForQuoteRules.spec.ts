@@ -30,34 +30,34 @@ test.describe('Request for quotation Rules test', () => {
 
     //admin
 
-    test('admin quote rules menu page is rendering properly @pro @exp @a', async () => {
+    test('admin can view quote rules menu page', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
         await admin.adminQuoteRulesRenderProperly();
     });
 
-    test('admin can add quote rule @pro @a', async () => {
+    test('admin can add quote rule', { tag: ['@pro', '@admin'] }, async () => {
         await admin.addQuoteRule(data.requestForQuotation.quoteRule());
     });
 
-    test('admin can edit quote rule @pro @a', async () => {
+    test('admin can edit quote rule', { tag: ['@pro', '@admin'] }, async () => {
         await admin.editQuoteRule({ ...data.requestForQuotation.quoteRule(), title: quoteRuleTitle });
     });
 
-    test('admin can trash quote rule @pro @a', async () => {
+    test('admin can trash quote rule', { tag: ['@pro', '@admin'] }, async () => {
         const [, , quoteRuleTitle] = await apiUtils.createQuoteRule(payloads.createQuoteRule(), payloads.adminAuth);
         await admin.updateQuoteRule(quoteRuleTitle, 'trash');
     });
 
-    test('admin can restore quote rule @pro @a', async () => {
+    test('admin can restore quote rule', { tag: ['@pro', '@admin'] }, async () => {
         const [, , quoteRuleTitle] = await apiUtils.createQuoteRule({ ...payloads.createQuoteRule(), status: 'trash' }, payloads.adminAuth);
         await admin.updateQuoteRule(quoteRuleTitle, 'restore');
     });
 
-    test('admin can permanently delete quote rule @pro @a', async () => {
+    test('admin can permanently delete quote rule', { tag: ['@pro', '@admin'] }, async () => {
         const [, , quoteRuleTitle] = await apiUtils.createQuoteRule({ ...payloads.createQuoteRule(), status: 'trash' }, payloads.adminAuth);
         await admin.updateQuoteRule(quoteRuleTitle, 'permanently-delete');
     });
 
-    test.skip('admin can perform quote rule bulk actions @pro @a', async () => {
+    test.skip('admin can perform quote rule bulk actions', { tag: ['@pro', '@admin'] }, async () => {
         // todo: might cause other tests to fail in parallel
         await admin.quoteRulesBulkAction('trash');
     });

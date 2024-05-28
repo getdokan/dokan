@@ -33,9 +33,9 @@ export class VendorProductSubscriptionPage extends VendorPage {
     }
 
     // vendor view product subscription
-    async viewProductSubscription(value: string) {
-        // todo: go to subscription details via link , get subscription id via api
-    }
+    // async viewProductSubscription(value: string) {
+    // todo: go to subscription details via link , get subscription id via api
+    // }
 
     // filter product subscriptions
     async filterProductSubscriptions(filterBy: string, inputValue: string): Promise<void> {

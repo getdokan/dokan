@@ -26,45 +26,47 @@ test.describe('Product Reviews test', () => {
         await apiUtils.dispose();
     });
 
-    test('vendor product reviews menu page is rendering properly @pro @exp @v', async () => {
+    //vendor
+
+    test('vendor can view product reviews menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorProductReviewsRenderProperly();
     });
 
-    test('vendor can view product review @pro @exp @v', async () => {
+    test('vendor can view product review', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.viewProductReview(reviewMessage);
     });
 
-    test('vendor can unApprove product review @pro @v', async () => {
+    test('vendor can unApprove product review', { tag: ['@pro', '@vendor'] }, async () => {
         const [, , reviewMessage] = await apiUtils.createProductReview(PRODUCT_ID, payloads.createProductReview(), payloads.vendorAuth);
         await vendor.updateProductReview('unApprove', reviewMessage);
     });
 
-    test('vendor can spam product review @pro @v', async () => {
+    test('vendor can spam product review', { tag: ['@pro', '@vendor'] }, async () => {
         const [, , reviewMessage] = await apiUtils.createProductReview(PRODUCT_ID, payloads.createProductReview(), payloads.vendorAuth);
         await vendor.updateProductReview('spam', reviewMessage);
     });
 
-    test('vendor can trash product review @pro @v', async () => {
+    test('vendor can trash product review', { tag: ['@pro', '@vendor'] }, async () => {
         const [, , reviewMessage] = await apiUtils.createProductReview(PRODUCT_ID, payloads.createProductReview(), payloads.vendorAuth);
         await vendor.updateProductReview('trash', reviewMessage);
     });
 
-    test('vendor can approve product review @pro @v', async () => {
+    test('vendor can approve product review', { tag: ['@pro', '@vendor'] }, async () => {
         const [, , reviewMessage] = await apiUtils.createProductReview(PRODUCT_ID, { ...payloads.createProductReview(), status: 'hold' }, payloads.vendorAuth);
         await vendor.updateProductReview('approve', reviewMessage);
     });
 
-    test('vendor can restore trashed product review @pro @v', async () => {
+    test('vendor can restore trashed product review', { tag: ['@pro', '@vendor'] }, async () => {
         const [, , reviewMessage] = await apiUtils.createProductReview(PRODUCT_ID, { ...payloads.createProductReview(), status: 'trash' }, payloads.vendorAuth);
         await vendor.updateProductReview('restore', reviewMessage);
     });
 
-    test('vendor can permanently-delete product review @pro @v', async () => {
+    test('vendor can permanently-delete product review', { tag: ['@pro', '@vendor'] }, async () => {
         const [, , reviewMessage] = await apiUtils.createProductReview(PRODUCT_ID, { ...payloads.createProductReview(), status: 'trash' }, payloads.vendorAuth);
         await vendor.updateProductReview('permanently-delete', reviewMessage);
     });
 
-    test.skip('vendor can perform product reviews bulk action @pro @v', async () => {
+    test.skip('vendor can perform bulk action on product reviews', { tag: ['@pro', '@vendor'] }, async () => {
         // todo: might cause other tests to fail in parallel
         await vendor.productReviewsBulkActions('hold');
     });

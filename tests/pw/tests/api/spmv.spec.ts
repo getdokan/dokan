@@ -20,19 +20,19 @@ test.describe('spmv API test', () => {
         await apiUtils.dispose();
     });
 
-    test('get spmv settings @pro', async () => {
+    test('get spmv settings', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getSpmvSettings);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
-    test('get spmv products @pro', async () => {
+    test('get spmv products', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getSpmvProducts, { data: payloads.spmvSearch });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
     });
 
-    test('add spmv product to store @pro', async () => {
+    test('add spmv product to store', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.post(endPoints.addToStore, { data: { product_id: productId } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();

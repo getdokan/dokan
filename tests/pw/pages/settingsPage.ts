@@ -47,8 +47,7 @@ export class SettingsPage extends AdminPage {
 
     // scroll to top settings
     async scrollToTopSettings() {
-        await this.goIfNotThere(data.subUrls.backend.dokan.settings);
-
+        await this.goto(data.subUrls.backend.dokan.settings);
         await this.scrollToBottom();
         await this.toBeVisible(settingsAdmin.backToTop);
     }

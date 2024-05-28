@@ -23,32 +23,32 @@ test.describe('My orders functionality test', () => {
         await apiUtils.dispose();
     });
 
-    test('customer my orders page is rendering properly @lite @c', async () => {
+    test('customer can view my orders page', { tag: ['@lite', '@customer'] }, async () => {
         await customer.myOrdersRenderProperly();
     });
 
-    test('customer can view order details @lite @c', async () => {
+    test('customer can view order details', { tag: ['@lite', '@customer'] }, async () => {
         const [, , orderId] = await apiUtils.createOrderWithStatus(PRODUCT_ID, { ...payloads.createOrder, customer_id: CUSTOMER_ID }, data.order.orderStatus.completed, payloads.vendorAuth);
         await customer.viewOrderDetails(orderId);
     });
 
-    test('customer can view order note @lite @c', async () => {
+    test('customer can view order note', { tag: ['@lite', '@customer'] }, async () => {
         const orderNote = data.orderNote.note();
         const [, orderId] = await apiUtils.createOrderNote(PRODUCT_ID, { ...payloads.createOrder, customer_id: CUSTOMER_ID }, { ...payloads.createOrderNoteForCustomer, note: orderNote }, payloads.vendorAuth);
         await customer.viewOrderNote(orderId, orderNote);
     });
 
-    test('customer can pay pending payment order @lite @c', async () => {
+    test('customer can pay pending payment order', { tag: ['@lite', '@customer'] }, async () => {
         const [, , orderId] = await apiUtils.createOrderWithStatus(PRODUCT_ID, { ...payloads.createOrder, customer_id: CUSTOMER_ID }, data.order.orderStatus.pending, payloads.vendorAuth);
         await customer.payPendingOrder(orderId, 'bank');
     });
 
-    test('customer can cancel order @lite @c', async () => {
+    test('customer can cancel order', { tag: ['@lite', '@customer'] }, async () => {
         const [, , orderId] = await apiUtils.createOrderWithStatus(PRODUCT_ID, { ...payloads.createOrder, customer_id: CUSTOMER_ID }, data.order.orderStatus.pending, payloads.vendorAuth);
         await customer.cancelPendingOrder(orderId);
     });
 
-    test.skip('customer can order again @lite @c', async () => {
+    test.skip('customer can order again', { tag: ['@lite', '@customer'] }, async () => {
         const [, , orderId] = await apiUtils.createOrderWithStatus(PRODUCT_ID, { ...payloads.createOrder, customer_id: CUSTOMER_ID }, data.order.orderStatus.completed, payloads.vendorAuth);
         await customer.orderAgain(orderId);
     });
