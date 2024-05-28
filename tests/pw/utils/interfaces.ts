@@ -720,6 +720,9 @@ export interface vendor {
 
         addressFieldsEnabled: boolean;
 
+        commissionType: string;
+        adminCommission: string;
+
         openingClosingTime: {
             days: string[];
             statusLite: string;

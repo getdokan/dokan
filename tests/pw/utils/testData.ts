@@ -736,7 +736,7 @@ export const data = {
         mapApiSource: 'google_maps', // 'google_maps', 'mapbox'
         googleMapApiKey: String(process.env.GMAP),
         sellingProductTypes: 'sell_both', // 'physical', 'digital', 'sell_both',
-        commissionType: 'percentage', // 'flat','percentage' 'combine',
+        commissionType: 'fixed', // 'fixed','category_based'
         adminCommission: '10',
         minimumWithdrawLimit: '5',
     },
@@ -1076,6 +1076,10 @@ export const data = {
 
             // address fields enable flag (on vendor registration)
             addressFieldsEnabled: false,
+
+            // commission
+            commissionType: 'fixed', // 'fixed','category_based'
+            adminCommission: '10',
 
             account: {
                 updateSuccessMessage: 'Account details changed successfully.',
@@ -1844,7 +1848,7 @@ export const data = {
 
         // Selling Options Settings
         selling: {
-            commissionType: 'percentage', // 'flat', 'percentage', 'combine'
+            commissionType: 'fixed', // 'fixed','category_based'
             adminCommission: '10',
             shippingFeeRecipient: 'seller', // 'seller', 'admin'
             productTaxFeeRecipient: 'seller', // 'seller', 'admin'

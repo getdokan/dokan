@@ -116,11 +116,14 @@ export class AdminPage extends BasePage {
 
         // Selling
         await this.enableSwitcherSetupWizard(setupWizardAdmin.newVendorEnableSelling);
-        await this.selectByValue(setupWizardAdmin.commissionType, dokanSetupWizard.commissionType);
-        await this.clearAndType(setupWizardAdmin.adminCommission, dokanSetupWizard.adminCommission);
         await this.enableSwitcherSetupWizard(setupWizardAdmin.orderStatusChange);
         await this.click(setupWizardAdmin.continue);
         // await this.click(setupWizardAdmin.skipThisStep)
+
+        // Commission
+        await this.selectByValue(setupWizardAdmin.commissionType, dokanSetupWizard.commissionType);
+        await this.clearAndType(setupWizardAdmin.percentage, dokanSetupWizard.adminCommission);
+        await this.click(setupWizardAdmin.continue);
 
         // Withdraw
         await this.enableSwitcherSetupWizard(setupWizardAdmin.payPal);

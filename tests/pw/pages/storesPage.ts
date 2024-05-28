@@ -144,159 +144,69 @@ export class StoresPage extends AdminPage {
         await this.hover(vendors.vendorRow(vendor.storeName));
         await this.clickAndWaitForLoadState(vendors.vendorEdit(vendor.storeName));
 
-        if (!DOKAN_PRO) {
-            // basic info
-            await this.selectByValue(userInfo.role, vendor.vendorInfo.role);
-            await this.clearAndType(userInfo.firstName, vendor.username);
-            await this.clearAndType(userInfo.lastName, vendor.lastname);
-            await this.clearAndType(userInfo.nickname, vendor.username);
+        // basic
+        await this.clearAndType(vendors.editVendor.firstName, vendor.username);
+        await this.clearAndType(vendors.editVendor.lastName, vendor.lastname);
+        await this.clearAndType(vendors.editVendor.storeName, vendor.vendorInfo.storeName);
+        await this.clearAndType(vendors.editVendor.phoneNumber, vendor.vendorInfo.phoneNumber);
+        await this.clearAndType(vendors.editVendor.email, vendor.username + data.vendor.vendorInfo.emailDomain);
 
-            // contact info
-            await this.clearAndType(userInfo.email, vendor.username + data.vendor.vendorInfo.emailDomain);
-
-            // About the user
-            await this.clearAndType(userInfo.biographicalInfo, vendor.vendorInfo.biography);
-
-            // vendor address
-
-            // billing
-            await this.clearAndType(userInfo.billingAddress.firstName, vendor.username);
-            await this.clearAndType(userInfo.billingAddress.lastName, vendor.lastname);
-            await this.clearAndType(userInfo.billingAddress.company, vendor.vendorInfo.companyName);
-            await this.clearAndType(userInfo.billingAddress.address1, vendor.vendorInfo.street1);
-            await this.clearAndType(userInfo.billingAddress.address2, vendor.vendorInfo.street2);
-            await this.clearAndType(userInfo.billingAddress.city, vendor.vendorInfo.city);
-            await this.clearAndType(userInfo.billingAddress.postcode, vendor.vendorInfo.zipCode);
-            await this.click(userInfo.billingAddress.country);
-            await this.clearAndType(userInfo.billingAddress.countryInput, vendor.vendorInfo.country);
-            await this.press(data.key.enter);
-            await this.click(userInfo.billingAddress.state);
-            await this.clearAndType(userInfo.billingAddress.stateInput, vendor.vendorInfo.state);
-            await this.press(data.key.enter);
-            await this.clearAndType(userInfo.billingAddress.phone, vendor.vendorInfo.phoneNumber);
-            await this.clearAndType(userInfo.billingAddress.email, vendor.username + data.vendor.vendorInfo.emailDomain);
-
-            // pro edit user
-            // await this.clearAndType(userInfo.billingAddress.companyIdOrEuidNumber, vendor.vendorInfo.companyId);
-            // await this.clearAndType(userInfo.billingAddress.vatOrTaxNumber, vendor.vendorInfo.vatNumber);
-            // await this.clearAndType(userInfo.billingAddress.bank, vendor.vendorInfo.bankName);
-            // await this.clearAndType(userInfo.billingAddress.bankIban, vendor.vendorInfo.bankIban);
-
-            // shipping
-            await this.clearAndType(userInfo.shippingAddress.firstName, vendor.username);
-            await this.clearAndType(userInfo.shippingAddress.lastName, vendor.lastname);
-            await this.clearAndType(userInfo.shippingAddress.company, vendor.vendorInfo.companyName);
-            await this.clearAndType(userInfo.shippingAddress.address1, vendor.vendorInfo.street1);
-            await this.clearAndType(userInfo.shippingAddress.address2, vendor.vendorInfo.street2);
-            await this.clearAndType(userInfo.shippingAddress.city, vendor.vendorInfo.city);
-            await this.clearAndType(userInfo.shippingAddress.postcode, vendor.vendorInfo.zipCode);
-            await this.click(userInfo.shippingAddress.country);
-            await this.clearAndType(userInfo.shippingAddress.countryInput, vendor.vendorInfo.country);
-            await this.press(data.key.enter);
-            await this.click(userInfo.shippingAddress.state);
-            await this.clearAndType(userInfo.shippingAddress.stateInput, vendor.vendorInfo.state);
-            await this.press(data.key.enter);
-            await this.clearAndType(userInfo.shippingAddress.phone, vendor.vendorInfo.phoneNumber);
-
-            // dokan options
-            await this.clearAndType(userInfo.dokanOptions.storeName, vendor.vendorInfo.storeName);
-            await this.clearAndType(userInfo.dokanOptions.storeUrl, vendor.vendorInfo.storeName);
-            // store address
-            await this.clearAndType(userInfo.dokanOptions.address1, vendor.vendorInfo.street1);
-            await this.clearAndType(userInfo.dokanOptions.address2, vendor.vendorInfo.street2);
-            await this.clearAndType(userInfo.dokanOptions.city, vendor.vendorInfo.city);
-            await this.clearAndType(userInfo.dokanOptions.postcode, vendor.vendorInfo.zipCode);
-            await this.click(userInfo.dokanOptions.country);
-            await this.clearAndType(userInfo.dokanOptions.countryInput, vendor.vendorInfo.country);
-            await this.press(data.key.enter);
-            await this.click(userInfo.dokanOptions.state);
-            await this.clearAndType(userInfo.dokanOptions.stateInput, vendor.vendorInfo.state);
-            await this.press(data.key.enter);
-            await this.clearAndType(userInfo.dokanOptions.phone, vendor.vendorInfo.phoneNumber);
-
-            // pro edit user
-            // await this.clearAndType(userInfo.dokanOptions.companyName, vendor.vendorInfo.companyName);
-            // await this.clearAndType(userInfo.dokanOptions.companyIdOrEuidNumber, vendor.vendorInfo.companyId);
-            // await this.clearAndType(userInfo.dokanOptions.vatOrTaxNumber, vendor.vendorInfo.vatNumber);
-            // await this.clearAndType(userInfo.dokanOptions.bank, vendor.vendorInfo.bankName);
-            // await this.clearAndType(userInfo.dokanOptions.bankIban, vendor.vendorInfo.bankIban);
-
-            // social profiles
-            await this.clearAndType(userInfo.dokanOptions.facebook, vendor.vendorInfo.socialProfileUrls.facebook);
-            await this.clearAndType(userInfo.dokanOptions.twitter, vendor.vendorInfo.socialProfileUrls.twitter);
-            await this.clearAndType(userInfo.dokanOptions.pinterest, vendor.vendorInfo.socialProfileUrls.pinterest);
-            await this.clearAndType(userInfo.dokanOptions.linkedin, vendor.vendorInfo.socialProfileUrls.linkedin);
-            await this.clearAndType(userInfo.dokanOptions.youtube, vendor.vendorInfo.socialProfileUrls.youtube);
-            await this.clearAndType(userInfo.dokanOptions.instagram, vendor.vendorInfo.socialProfileUrls.instagram);
-            await this.clearAndType(userInfo.dokanOptions.flickr, vendor.vendorInfo.socialProfileUrls.flickr);
-
-            // other settings
-            await this.check(userInfo.dokanOptions.selling);
-            await this.check(userInfo.dokanOptions.publishing);
-            await this.check(userInfo.dokanOptions.featuredVendor);
-
-            // update user
-            await this.clickAndWaitForResponse(data.subUrls.backend.user, selector.admin.users.updateUser, 302);
-            await this.toContainText(selector.admin.users.updateSuccessMessage, 'User updated.');
-        } else {
-            // basic
-            await this.clearAndType(vendors.editVendor.firstName, vendor.username);
-            await this.clearAndType(vendors.editVendor.lastName, vendor.lastname);
-            await this.clearAndType(vendors.editVendor.storeName, vendor.vendorInfo.storeName);
-            await this.clearAndType(vendors.editVendor.phoneNumber, vendor.vendorInfo.phone); // todo:  change input after fix
-            await this.clearAndType(vendors.editVendor.email, vendor.username + data.vendor.vendorInfo.emailDomain);
+        if (DOKAN_PRO) {
             await this.clearAndType(vendors.editVendor.companyName, vendor.vendorInfo.companyName);
             await this.clearAndType(vendors.editVendor.companyIdEuidNumber, vendor.vendorInfo.companyId);
             await this.clearAndType(vendors.editVendor.vatOrTaxNumber, vendor.vendorInfo.vatNumber);
             await this.clearAndType(vendors.editVendor.nameOfBank, vendor.vendorInfo.bankName);
             await this.clearAndType(vendors.editVendor.bankIban, vendor.vendorInfo.bankIban);
-
-            // address
-            await this.clearAndType(vendors.editVendor.street1, vendor.vendorInfo.street1);
-            await this.clearAndType(vendors.editVendor.street2, vendor.vendorInfo.street2);
-            await this.clearAndType(vendors.editVendor.city, vendor.vendorInfo.city);
-            await this.clearAndType(vendors.editVendor.zipCode, vendor.vendorInfo.zipCode);
-            await this.click(vendors.editVendor.country);
-            await this.clearAndType(vendors.editVendor.countryInput, vendor.vendorInfo.country);
-            await this.press(data.key.enter);
-            await this.click(vendors.editVendor.state);
-            await this.clearAndType(vendors.editVendor.stateInput, vendor.vendorInfo.state);
-            await this.press(data.key.enter);
-
-            // social options
-            await this.clearAndType(vendors.editVendor.facebook, vendor.vendorInfo.socialProfileUrls.facebook);
-            await this.clearAndType(vendors.editVendor.flickr, vendor.vendorInfo.socialProfileUrls.flickr);
-            await this.clearAndType(vendors.editVendor.twitter, vendor.vendorInfo.socialProfileUrls.twitter);
-            await this.clearAndType(vendors.editVendor.youtube, vendor.vendorInfo.socialProfileUrls.youtube);
-            await this.clearAndType(vendors.editVendor.linkedin, vendor.vendorInfo.socialProfileUrls.linkedin);
-            await this.clearAndType(vendors.editVendor.pinterest, vendor.vendorInfo.socialProfileUrls.pinterest);
-            await this.clearAndType(vendors.editVendor.instagram, vendor.vendorInfo.socialProfileUrls.instagram);
-
-            // payment options
-            // bank
-            await this.clearAndType(vendors.editVendor.accountName, vendor.vendorInfo.payment.bankAccountName);
-            await this.clearAndType(vendors.editVendor.accountNumber, vendor.vendorInfo.payment.bankAccountNumber);
-            await this.selectByValue(vendors.editVendor.accountType, vendor.vendorInfo.payment.bankAccountType);
-            await this.clearAndType(vendors.editVendor.bankName, vendor.vendorInfo.payment.bankName);
-            await this.clearAndType(vendors.editVendor.bankAddress, vendor.vendorInfo.payment.bankAddress);
-            await this.clearAndType(vendors.editVendor.routingNumber, vendor.vendorInfo.payment.bankRoutingNumber);
-            await this.clearAndType(vendors.editVendor.iban, vendor.vendorInfo.payment.bankIban);
-            await this.clearAndType(vendors.editVendor.swift, vendor.vendorInfo.payment.bankSwiftCode);
-
-            // paypal
-            await this.clearAndType(vendors.editVendor.payPalEmail, vendor.vendorInfo.payment.email());
-
-            // todo:  admin commission
-            // todo:  vendor subscription
-
-            // other settings
-            await this.enableSwitcher(vendors.editVendor.enableSelling);
-            await this.enableSwitcher(vendors.editVendor.publishProductDirectly);
-            await this.enableSwitcher(vendors.editVendor.makeVendorFeature);
-
-            await this.clickAndWaitForResponse(data.subUrls.api.dokan.stores, vendors.editVendor.saveChanges);
-            await this.click(vendors.editVendor.confirmSaveChanges);
         }
+
+        // address
+        await this.clearAndType(vendors.editVendor.street1, vendor.vendorInfo.street1);
+        await this.clearAndType(vendors.editVendor.street2, vendor.vendorInfo.street2);
+        await this.clearAndType(vendors.editVendor.city, vendor.vendorInfo.city);
+        await this.clearAndType(vendors.editVendor.zipCode, vendor.vendorInfo.zipCode);
+        await this.click(vendors.editVendor.country);
+        await this.clearAndType(vendors.editVendor.countryInput, vendor.vendorInfo.country);
+        await this.press(data.key.enter);
+        await this.click(vendors.editVendor.state);
+        await this.clearAndType(vendors.editVendor.stateInput, vendor.vendorInfo.state);
+        await this.press(data.key.enter);
+
+        // social options
+        await this.clearAndType(vendors.editVendor.facebook, vendor.vendorInfo.socialProfileUrls.facebook);
+        await this.clearAndType(vendors.editVendor.flickr, vendor.vendorInfo.socialProfileUrls.flickr);
+        await this.clearAndType(vendors.editVendor.twitter, vendor.vendorInfo.socialProfileUrls.twitter);
+        await this.clearAndType(vendors.editVendor.youtube, vendor.vendorInfo.socialProfileUrls.youtube);
+        await this.clearAndType(vendors.editVendor.linkedin, vendor.vendorInfo.socialProfileUrls.linkedin);
+        await this.clearAndType(vendors.editVendor.pinterest, vendor.vendorInfo.socialProfileUrls.pinterest);
+        await this.clearAndType(vendors.editVendor.instagram, vendor.vendorInfo.socialProfileUrls.instagram);
+
+        // payment options
+        // bank
+        await this.clearAndType(vendors.editVendor.accountName, vendor.vendorInfo.payment.bankAccountName);
+        await this.clearAndType(vendors.editVendor.accountNumber, vendor.vendorInfo.payment.bankAccountNumber);
+        await this.selectByValue(vendors.editVendor.accountType, vendor.vendorInfo.payment.bankAccountType);
+        await this.clearAndType(vendors.editVendor.bankName, vendor.vendorInfo.payment.bankName);
+        await this.clearAndType(vendors.editVendor.bankAddress, vendor.vendorInfo.payment.bankAddress);
+        await this.clearAndType(vendors.editVendor.routingNumber, vendor.vendorInfo.payment.bankRoutingNumber);
+        await this.clearAndType(vendors.editVendor.iban, vendor.vendorInfo.payment.bankIban);
+        await this.clearAndType(vendors.editVendor.swift, vendor.vendorInfo.payment.bankSwiftCode);
+
+        // paypal
+        await this.clearAndType(vendors.editVendor.payPalEmail, vendor.vendorInfo.payment.email());
+
+        // other settings
+        await this.enableSwitcher(vendors.editVendor.enableSelling);
+        await this.enableSwitcher(vendors.editVendor.publishProductDirectly);
+        await this.enableSwitcher(vendors.editVendor.makeVendorFeature);
+
+        // commission
+        await this.selectByValue(vendors.editVendor.commissionType, vendor.vendorInfo.commissionType);
+        await this.clearAndType(vendors.editVendor.percentage, vendor.vendorInfo.adminCommission);
+
+        // todo:  vendor subscription
+
+        await this.clickAndWaitForResponse(data.subUrls.api.dokan.stores, vendors.editVendor.saveChanges);
+        await this.click(vendors.editVendor.confirmSaveChanges);
     }
 
     // search vendor

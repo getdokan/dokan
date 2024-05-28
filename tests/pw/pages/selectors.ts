@@ -641,12 +641,21 @@ export const selector = {
                     AdminCommissionFlat: '.wc_input_price',
                     AdminCommissionPercentage: '.wc_input_decimal',
 
+                    // other options
                     enableSelling: '//span[contains(text(), "Enable Selling")]/..//label[@class="switch tips"]',
                     publishProductDirectly: '//span[contains(text(), "Publish Product Directly")]/..//label[@class="switch tips"]',
                     makeVendorFeature: '//span[contains(text(), "Make Vendor Featured")]/..//label[@class="switch tips"]',
 
                     // Vendor Subscription
                     AssignSubscriptionPack: '.multiselect--active > .multiselect__tags',
+
+                    // Commission
+                    commissionType: 'select#_subscription_product_admin_commission_type', // fixed, category_based
+                    percentage: 'input#percentage-val-id',
+                    fixed: 'input#fixed-val-id',
+                    expandCategories: '//i[contains(@class,"far fa-plus-square")]/..',
+                    categoryPerntage: (category: string) => `//p[contains(text(),'${category} ')]/../..//input[@id='percentage_commission']`,
+                    categoryFixed: (category: string) => `//p[contains(text(),'${category} ')]/../..//input[@id='fixed_commission']`,
 
                     // Edit Options
                     cancelEdit: '//div[contains(@class, "action-links footer")]//button[contains(text(),"Cancel")]',
@@ -1912,8 +1921,12 @@ export const selector = {
                 // Selling
                 selling: {
                     // Commission
-                    commissionType: '#dokan_selling\\[commission_type\\]',
-                    adminCommission: '#dokan_selling\\[admin_percentage\\]',
+                    commissionType: 'select#dokan_selling\\[commission_type\\]', // fixed, category_based
+                    percentage: 'input#percentage-val-id',
+                    fixed: 'input#fixed-val-id',
+                    expandCategories: '//i[contains(@class,"far fa-plus-square")]/..',
+                    categoryPerntage: (category: string) => `//p[contains(text(),'${category} ')]/../..//input[@id='percentage_commission']`,
+                    categoryFixed: (category: string) => `//p[contains(text(),'${category} ')]/../..//input[@id='fixed_commission']`,
                     shippingFeeRecipient: (feeReceiver: string) => `//label[contains(@for,'${feeReceiver}-shipping_fee_recipient')]`,
                     productTaxFeeRecipient: (feeReceiver: string) => `//label[contains(@for,'${feeReceiver}-tax_fee_recipient')]`,
                     shippingTaxFeeRecipient: (feeReceiver: string) => `//label[contains(@for,'${feeReceiver}-shipping_tax_fee_recipient')]`,
@@ -2399,10 +2412,15 @@ export const selector = {
 
                 // Selling
                 newVendorEnableSelling: '//label[@for="new_seller_enable_selling" and @class="switch-label"]',
-                commissionType: '.commission_type.wc-enhanced-select',
-                commissionTypeValues: '.select2-results ul li',
-                adminCommission: '#admin_percentage',
                 orderStatusChange: '//label[@for="order_status_change" and @class="switch-label"]',
+
+                // Commission
+                commissionType: 'select#_subscription_product_admin_commission_type', // fixed, category_based
+                percentage: 'input#percentage-val-id',
+                fixed: 'input#fixed-val-id',
+                expandCategories: '//i[contains(@class,"far fa-plus-square")]/..',
+                categoryPerntage: (category: string) => `//p[text()='${category}']/../..//input[@id='percentage_commission']`,
+                categoryFixed: (category: string) => `//p[text()='${category}']/../..//input[@id='fixed_commission']`,
 
                 // Withdraw
                 payPal: '//label[@for="withdraw_methods[paypal]" and @class="switch-label"]',
