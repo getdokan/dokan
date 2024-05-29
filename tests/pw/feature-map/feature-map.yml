@@ -313,6 +313,11 @@
           admin can view help menu page [lite]: true
           admin can view get help dropdown [lite]: true
 
+- page: 'Shortcode'
+  features:
+      admin:
+          admin can add vendor registration shortcode: false
+
 - page: 'Vendor Settings'
   features:
       vendor:
@@ -536,16 +541,21 @@
 - page: 'Color Scheme Customizer'
   features:
       admin:
-          admin can change predefine color scheme: false
+          admin can switch predefined color palette: true
+          admin can add custom color palette: false
+          admin can update custom color palette: false
 
 - page: 'Delivery Time'
   features:
+      admin:
+          admin can update delivery time on order details: false
       vendor:
           vendor can view delivery time menu page: true
           vendor can view delivery time settings menu page: true
           vendor can set delivery time settings: true
           vendor can filter delivery time: true
           vendor can change view style of delivery time calendar: true
+          vendor can update delivery time on order details: false
       customer:
           customer can buy product with delivery time: false
           customer can buy product with store pickup: false
@@ -553,12 +563,36 @@
 - page: 'Elementor'
   features:
       admin:
-          no test is written for this feature: false
+          no test is written for elementor module (out of scope): false
 
 - page: 'EU Compliance Fields'
   features:
       admin:
-          no test is written for this feature: false
+          admin can enable EU complicance fields for vendors: false
+          admin can enable EU complicance fields on vendor registration: false
+          admin can add EU complicance data while adding a vendor: false
+          admin can add EU complicance data on user profile edit: false
+          admin can update update EU complicance data on vendor profile edit: false
+          admin can update update EU complicance data on user profile edit: false
+          admin can enable EU complicance fields for customers: false
+          admin can enable germanized support for vendors: false
+          admin can enable orverride invoice number premission for vendors: false
+          admin can hide vendor's EU complicance data from single store page: false
+          admin can view customer EU complicance data on order details: false
+      vendor:
+          vendor can add EU complicance data on store settings: false
+          vendor can add EU complicance data on registration: false
+          vendor can update EU complicance data: false
+          vendor can add product EU complicance data: false
+          vendor can update product EU complicance data: false
+          vendor can view customer EU complicance data on order details: false
+          vendor can override invoice number: false
+      customer:
+          customer can add EU complicance data on billing address: false
+          customer can update EU complicance data: false
+          customer can view vendor's EU complicance data on store list: false
+          customer can view vendor's EU complicance data on single store page: false
+          customer can view product EU complicance data on single product page: false
 
 - page: 'Follow Store'
   features:
@@ -567,38 +601,42 @@
           vendor can view followers: true
       customer:
           customer can view followed vendors menu page: true
-          customer can follow store on store listing: true
+          customer can view followed vendors: false
+          customer can follow store on store list page: true
           customer can follow store on single store: true
 
 - page: 'Geolocation'
   features:
       admin:
-          no test is written for this feature: false
+          no test is written for geolocation module: false
 
 - page: 'Live Chat'
   features:
       admin:
-          no test is written for this feature: false
+          no test is written for live chat module (out of scope): false
 
 - page: 'Live Search'
   features:
       admin:
-          no test is written for this feature: false
+          admin can set live search options: false
+      customer:
+          customer can search product using live search - suggestin box: false
+          customer can search product using live search - autoload content: false
 
 - page: 'MangoPay'
   features:
       admin:
-          no test is written for this feature: false
+          no test is written for mangopay module: false
 
 - page: 'Min Max Quantities'
   features:
       admin:
-          no test is written for this feature: false
+          no test is written for min-max module: false
 
 - page: 'PayPal Marketplace'
   features:
       admin:
-          no test is written for this feature: false
+          no test is written for paypal marketplace module: false
 
 - page: 'Product Addon'
   features:
@@ -607,6 +645,9 @@
           vendor can add addons: true
           vendor can edit addon: true
           vendor can delete addon: true
+      customer:
+          customer can view product addons on single product page: false
+          customer can buy product with addons: false
 
 - page: 'Product Advertising'
   features:
@@ -623,6 +664,8 @@
           vendor can buy product advertising: false
           vendor can buy booking product advertising: false
           vendor can buy auction product advertising: false
+      customer:
+          customer can view advertised product on shop page: false
 
 - page: 'Product Enquiry'
   features:
@@ -680,12 +723,12 @@
 - page: 'Rank Math SEO'
   features:
       admin:
-          no test is written for this feature: false
+          no test is written for rank math seo module: false
 
 - page: 'Razorpay'
   features:
       admin:
-          no test is written for this feature: false
+          no test is written for razorpay module: false
 
 - page: 'Report Abuse'
   features:
@@ -775,15 +818,10 @@
           vendor can search seller badge: true
           vendor can filter seller badges: true
 
-- page: 'Seller Vacation'
-  features:
-      admin:
-          no test is written for this feature: false
-
 - page: 'ShipStation Integration'
   features:
       admin:
-          no test is written for this feature: false
+          no test is written for shipstation integration: false
 
 - page: 'Single Product Multiple Vendor (SPMV)'
   features:
@@ -869,17 +907,17 @@
 - page: 'Stripe Connect'
   features:
       admin:
-          no test is written for this feature: false
+          no test is written for stripe connect: false
 
 - page: 'Stripe Express'
   features:
       admin:
-          no test is written for this feature: false
+          no test is written for stripe express: false
 
 - page: 'Table Rate Shipping'
   features:
       admin:
-          no test is written for this feature: false
+          no test is written for table rate shipping: false
 
 - page: 'Vendor Analytics'
   features:
@@ -903,11 +941,13 @@
           vendor can edit staff: true
           vendor can manage staff permission: true
           vendor can delete staff: true
+      vendorStaff:
+          vendorStaff can view allowed menus: false
 
 - page: 'Vendor Subscription'
   features:
       admin:
-          no test is written for this feature: false
+          no test is written for vendor subscription: false
 
 - page: 'Vendor Verification'
   features:

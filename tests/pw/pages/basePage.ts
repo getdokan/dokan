@@ -552,6 +552,22 @@ export class BasePage {
         await element.evaluate((element, attribute) => element.removeAttribute(attribute), attribute);
     }
 
+    // get element css value
+    async getElementCssStyle(selector: string): Promise<CSSStyleDeclaration> {
+        const element = this.getElement(selector);
+        const value = await element.evaluate(element => window.getComputedStyle(element));
+        // console.log(value)
+        return value;
+    }
+
+    // get element property value
+    async getElementPropertyValue(selector: string, property: string): Promise<string> {
+        const element = this.getElement(selector);
+        const value = await element.evaluate((element, property) => window.getComputedStyle(element).getPropertyValue(property), property);
+        // console.log(value)
+        return value;
+    }
+
     // get element property value: background color
     async getElementBackgroundColor(selector: string): Promise<string> {
         const element = this.getElement(selector);
