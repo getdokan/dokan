@@ -127,8 +127,6 @@
         <properties>
             <property name="customSanitizingFunctions" type="array">
                 <element value="wc_clean"/>
-            </property>
-            <property name="customSanitizingFunctions" type="string">
                 <element value="dokan_sanitize_phone_number"/>
             </property>
         </properties>
