@@ -38,7 +38,8 @@ test.describe.skip('Privacy Policy & Store Contact form test', () => {
         await customer.goToPrivacyPolicy(data.predefined.vendorStores.vendor1);
     });
 
-    test('admin can disable privacy policy on store contact form', { tag: ['@lite', '@customer'] }, async () => {  //todo: mighit need to update title form customer perspective
+    test('admin can disable privacy policy on store contact form', { tag: ['@lite', '@customer'] }, async () => {
+        //todo: mighit need to update title form customer perspective
         await dbUtils.setDokanSettings(dbData.dokan.optionName.privacyPolicy, { ...privacyPolicySettings, enable_privacy: 'off' });
         await customer.disablePrivacyPolicy(data.predefined.vendorStores.vendor1);
     });

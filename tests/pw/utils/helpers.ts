@@ -365,14 +365,30 @@ export const helpers = {
         console.log(output);
     },
 
+    // create a new page
     async createPage(browser: Browser, options?: BrowserContextOptions | undefined) {
         const browserContext = await browser.newContext(options);
         return browserContext.newPage();
     },
 
+    // close pages
     async closePages(pages: Page[]): Promise<void> {
         for (const page of pages) {
             await page.close();
         }
+    },
+
+    // rgb (rgb(r, g, b)) to hex (#rrggbb) color
+    rgbToHex(rgb: string): string {
+        const [r, g, b]: number[] = rgb.match(/\d+/g)!.map(Number);
+        return `#${((1 << 24) + (r! << 16) + (g! << 8) + b!).toString(16).slice(1).toUpperCase()}`;
+    },
+
+    // hex (#rrggbb) to rgb (rgb(r, g, b)) color
+    hexToRgb(hex: string): string {
+        const r = parseInt(hex.substring(1, 3), 16);
+        const g = parseInt(hex.substring(3, 5), 16);
+        const b = parseInt(hex.substring(5, 7), 16);
+        return `rgb(${r}, ${g}, ${b})`;
     },
 };

@@ -21,7 +21,7 @@ declare global {
             GMAP: string;
             MAPBOX: string;
             LICENSE_KEY: string;
-            DOKAN_PRO: string;
+            DOKAN_PRO: boolean;
             SITE_PATH: string;
             BASE_URL: string;
             QUERY: string;
@@ -44,6 +44,7 @@ declare global {
             API_TEST_RESULT: string;
             E2E_TEST_RESULT: string;
             API_COVERAGE: string;
+            E2E_COVERAGE: string;
         }
     }
 }

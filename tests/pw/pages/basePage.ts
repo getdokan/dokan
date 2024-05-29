@@ -55,7 +55,7 @@ export class BasePage {
 
     // goto subUrl
     async goto(subPath: string): Promise<void> {
-        await this.page.goto(subPath, { waitUntil: 'domcontentloaded' });
+        await this.page.goto(subPath, { waitUntil: 'networkidle' });
     }
 
     // go forward
@@ -71,6 +71,14 @@ export class BasePage {
     // reload page
     async reload(): Promise<void> {
         await this.page.reload();
+    }
+
+    // reload if visible
+    async reloadIfVisible(selector: string): Promise<void> {
+        const isVisible = await this.isVisible(selector);
+        if (isVisible) {
+            await this.reload();
+        }
     }
 
     // returns whether the current URL is expected
@@ -345,7 +353,7 @@ export class BasePage {
         }
     }
 
-    // click if visible
+    // click if exists
     async clickIfExists(selector: string): Promise<void> {
         const isExists = await this.isLocatorExists(selector);
         if (isExists) {
@@ -462,6 +470,12 @@ export class BasePage {
         return this.page.locator(selector);
     }
 
+    // get element count
+    async getElementCount(selector: string): Promise<number> {
+        return await this.countLocator(selector);
+        // return this.page.locator(selector).count();
+    }
+
     // get element text content
     async getElementText(selector: string): Promise<string | null> {
         return await this.textContentOfLocator(selector);
@@ -536,6 +550,22 @@ export class BasePage {
     async removeAttribute(selector: string, attribute: string): Promise<void> {
         const element = this.getElement(selector);
         await element.evaluate((element, attribute) => element.removeAttribute(attribute), attribute);
+    }
+
+    // get element css value
+    async getElementCssStyle(selector: string): Promise<CSSStyleDeclaration> {
+        const element = this.getElement(selector);
+        const value = await element.evaluate(element => window.getComputedStyle(element));
+        // console.log(value)
+        return value;
+    }
+
+    // get element property value
+    async getElementPropertyValue(selector: string, property: string): Promise<string> {
+        const element = this.getElement(selector);
+        const value = await element.evaluate((element, property) => window.getComputedStyle(element).getPropertyValue(property), property);
+        // console.log(value)
+        return value;
     }
 
     // get element property value: background color

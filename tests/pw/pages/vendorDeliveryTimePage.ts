@@ -25,7 +25,7 @@ export class VendorDeliveryTimePage extends CustomerPage {
         await this.toBeVisible(deliveryTimeVendor.deliveryTimeAndStorePickup);
 
         // delivery time calendar is visible
-        await this.toBeVisible(deliveryTimeVendor.deliveryTimeCalender);
+        await this.toBeVisible(deliveryTimeVendor.deliveryTimeCalendar);
 
         // delivery time filter elements are visible
         await this.multipleElementVisible(deliveryTimeVendor.filter);
@@ -90,7 +90,7 @@ export class VendorDeliveryTimePage extends CustomerPage {
         // todo: need order via delivery time; via api for assertion
     }
 
-    // update calender views
+    // update calendar views
     async updateCalendarView(value: string) {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.deliveryTime);
 
