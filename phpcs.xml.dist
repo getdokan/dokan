@@ -13,11 +13,10 @@
     <exclude-pattern>*/dist/*</exclude-pattern>
     <exclude-pattern>*/build/*</exclude-pattern>
     <exclude-pattern>*/node_modules/*</exclude-pattern>
-    <exclude-pattern>*/vendor/*</exclude-pattern>
+    <exclude-pattern>^vendor/</exclude-pattern>
+    <exclude-pattern>(^includes)(\/vendor)</exclude-pattern>
     <exclude-pattern>*/tests/*</exclude-pattern>
     <exclude-pattern>*.js</exclude-pattern>
-    <exclude-pattern>*.mo</exclude-pattern>
-    <exclude-pattern>*.po</exclude-pattern>
     <exclude-pattern>*.twig</exclude-pattern>
     <exclude-pattern>*.css</exclude-pattern>
     <exclude-pattern>*.scss</exclude-pattern>
@@ -123,6 +122,8 @@
     <rule ref="Universal.Arrays.DisallowShortArraySyntax">
         <severity>0</severity>
     </rule>
+
+    <!-- Ref: https://github.com/WordPress/WordPress-Coding-Standards/wiki/Sanitizing-array-input-data -->
     <rule ref="WordPress.Security.ValidatedSanitizedInput">
         <properties>
             <property name="customSanitizingFunctions" type="array">
@@ -132,6 +133,75 @@
         </properties>
     </rule>
     <rule ref="Squiz.PHP.CommentedOutCode.Found">
-            <severity>0</severity>
+        <severity>0</severity>
+    </rule>
+
+    <!-- Define the custom capability for woocommerce -->
+    <!-- Ref: https://github.com/woocommerce/woocommerce/blob/trunk/plugins/woocommerce/phpcs.xml#L57 -->
+    <rule ref="WordPress.WP.Capabilities">
+        <properties>
+            <property name="custom_capabilities" type="array">
+                <element value="download_file"/>
+                <element value="read_product"/>
+                <element value="edit_products"/>
+                <element value="edit_private_products"/>
+                <element value="edit_others_products"/>
+                <element value="edit_product"/>
+                <element value="publish_shop_orders"/>
+                <element value="edit_shop_orders"/>
+                <element value="edit_others_shop_orders"/>
+                <element value="view_order"/>
+                <element value="pay_for_order"/>
+                <element value="order_again"/>
+                <element value="cancel_order"/>
+                <element value="read_private_shop_orders"/>
+                <element value="customer"/>
+                <element value="manage_woocommerce"/>
+                <element value="manage_product_terms"/>
+                <element value="view_woocommerce_reports"/>
+                <element value="dokandar"/>
+                <element value="dokan_view_sales_overview"/>
+                <element value="dokan_view_sales_report_chart"/>
+                <element value="dokan_view_announcement"/>
+                <element value="dokan_view_order_report"/>
+                <element value="dokan_view_review_reports"/>
+                <element value="dokan_view_product_status_report"/>
+                <element value="dokan_view_overview_report"/>
+                <element value="dokan_view_daily_sale_report"/>
+                <element value="dokan_view_top_selling_report"/>
+                <element value="dokan_view_top_earning_report"/>
+                <element value="dokan_view_statement_report"/>
+                <element value="dokan_view_order"/>
+                <element value="dokan_manage_order"/>
+                <element value="dokan_manage_order_note"/>
+                <element value="dokan_manage_refund"/>
+                <element value="dokan_export_order"/>
+                <element value="dokan_add_coupon"/>
+                <element value="dokan_edit_coupon"/>
+                <element value="dokan_delete_coupon"/>
+                <element value="dokan_view_reviews"/>
+                <element value="dokan_manage_reviews"/>
+                <element value="dokan_manage_withdraw"/>
+                <element value="dokan_add_product"/>
+                <element value="dokan_edit_product"/>
+                <element value="dokan_delete_product"/>
+                <element value="dokan_view_product"/>
+                <element value="dokan_duplicate_product"/>
+                <element value="dokan_import_product"/>
+                <element value="dokan_export_product"/>
+                <element value="dokan_view_overview_menu"/>
+                <element value="dokan_view_product_menu"/>
+                <element value="dokan_view_order_menu"/>
+                <element value="dokan_view_coupon_menu"/>
+                <element value="dokan_view_report_menu"/>
+                <element value="dokan_view_review_menu"/>
+                <element value="dokan_view_withdraw_menu"/>
+                <element value="dokan_view_store_settings_menu"/>
+                <element value="dokan_view_store_payment_menu"/>
+                <element value="dokan_view_store_shipping_menu"/>
+                <element value="dokan_view_store_social_menu"/>
+                <element value="dokan_view_store_seo_menu"/>
+            </property>
+        </properties>
     </rule>
 </ruleset>
