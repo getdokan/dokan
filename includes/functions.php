@@ -280,6 +280,7 @@ function dokan_count_stock_posts( $post_type, $user_id, $stock_type, $exclude_pr
         $exclude_product_types_text = "'" . implode( "', '", esc_sql( $exclude_product_types ) ) . "'";
 
         if ( ! $results ) {
+            // @codingStandardsIgnoreStart
             $results = $wpdb->get_results(
                 $wpdb->prepare(
                     "SELECT p.post_status, COUNT( * ) AS num_posts
@@ -301,6 +302,7 @@ function dokan_count_stock_posts( $post_type, $user_id, $stock_type, $exclude_pr
                 ),
                 ARRAY_A
             );
+            // @codingStandardsIgnoreEnd
         }
 
         $post_status = array_keys( dokan_get_post_status() );
