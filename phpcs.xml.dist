@@ -13,11 +13,10 @@
     <exclude-pattern>*/dist/*</exclude-pattern>
     <exclude-pattern>*/build/*</exclude-pattern>
     <exclude-pattern>*/node_modules/*</exclude-pattern>
-    <exclude-pattern>*/vendor/*</exclude-pattern>
+    <exclude-pattern>^vendor/</exclude-pattern>
+    <exclude-pattern>(^includes)(\/vendor)</exclude-pattern>
     <exclude-pattern>*/tests/*</exclude-pattern>
     <exclude-pattern>*.js</exclude-pattern>
-    <exclude-pattern>*.mo</exclude-pattern>
-    <exclude-pattern>*.po</exclude-pattern>
     <exclude-pattern>*.twig</exclude-pattern>
     <exclude-pattern>*.css</exclude-pattern>
     <exclude-pattern>*.scss</exclude-pattern>
@@ -34,7 +33,7 @@
 
     <!-- Rules: Check PHP version compatibility -->
     <!-- https://github.com/PHPCompatibility/PHPCompatibility#sniffing-your-code-for-compatibility-with-specific-php-versions -->
-    <config name="testVersion" value="7.0-"/>
+    <config name="testVersion" value="7.4-"/>
 
     <!-- Rules: Check PHP version compatibility-->
     <!-- https://github.com/PHPCompatibility/PHPCompatibilityWP -->
@@ -43,7 +42,7 @@
     <!-- Rules: WordPress Coding Standards -->
     <!-- https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards -->
     <!-- https://github.com/WordPress-Coding-Standards/WordPress-Coding-Standards/wiki/Customizable-sniff-properties -->
-    <config name="minimum_supported_wp_version" value="5.4"/>
+    <config name="minimum_supported_wp_version" value="6.4"/>
     <rule ref="WordPress-Extra"/>
     <rule ref="WordPress">
         <exclude name="Generic.WhiteSpace.DisallowSpaceIndent"/>
@@ -115,10 +114,7 @@
         <type>warning</type>
     </rule>
     <rule ref="WordPress.Security.EscapeOutput.OutputNotEscaped">
-        <severity>9</severity>
-    </rule>
-    <rule ref="WordPress.Security.EscapeOutput.ExceptionNotEscaped">
-        <severity>9</severity>
+        <severity>0</severity>
     </rule>
     <rule ref="WordPress.PHP.DevelopmentFunctions.error_log_var_export">
         <severity>0</severity>
@@ -126,6 +122,8 @@
     <rule ref="Universal.Arrays.DisallowShortArraySyntax">
         <severity>0</severity>
     </rule>
+
+    <!-- Ref: https://github.com/WordPress/WordPress-Coding-Standards/wiki/Sanitizing-array-input-data -->
     <rule ref="WordPress.Security.ValidatedSanitizedInput">
         <properties>
             <property name="customSanitizingFunctions" type="array">
@@ -144,68 +142,67 @@
     <rule ref="WordPress.WP.Capabilities">
         <properties>
             <property name="custom_capabilities" type="array">
-                <element key="0" value="download_file"/>
-                <element key="1" value="read_product"/>
-                <element key="2" value="edit_products"/>
-                <element key="3" value="edit_private_products"/>
-                <element key="4" value="edit_others_products"/>
-                <element key="5" value="edit_product"/>
-                <element key="6" value="publish_shop_orders"/>
-                <element key="7" value="edit_shop_orders"/>
-                <element key="8" value="edit_others_shop_orders"/>
-                <element key="9" value="view_order"/>
-                <element key="10" value="pay_for_order"/>
-                <element key="11" value="order_again"/>
-                <element key="12" value="cancel_order"/>
-                <element key="13" value="read_private_shop_orders"/>
-                <element key="14" value="customer"/>
-                <element key="15" value="manage_woocommerce"/>
-                <element key="16" value="manage_product_terms"/>
-                <element key="17" value="view_woocommerce_reports"/>
-                <element key="18" value="dokandar"/>
-                <element key="19" value="dokan_view_sales_overview"/>
-                <element key="20" value="dokan_view_sales_report_chart"/>
-                <element key="21" value="dokan_view_announcement"/>
-                <element key="22" value="dokan_view_order_report"/>
-                <element key="23" value="dokan_view_review_reports"/>
-                <element key="24" value="dokan_view_product_status_report"/>
-                <element key="25" value="dokan_view_overview_report"/>
-                <element key="26" value="dokan_view_daily_sale_report"/>
-                <element key="27" value="dokan_view_top_selling_report"/>
-                <element key="28" value="dokan_view_top_earning_report"/>
-                <element key="29" value="dokan_view_statement_report"/>
-                <element key="30" value="dokan_view_order"/>
-                <element key="31" value="dokan_manage_order"/>
-                <element key="32" value="dokan_manage_order_note"/>
-                <element key="33" value="dokan_manage_refund"/>
-                <element key="34" value="dokan_export_order"/>
-                <element key="35" value="dokan_add_coupon"/>
-                <element key="36" value="dokan_edit_coupon"/>
-                <element key="37" value="dokan_delete_coupon"/>
-                <element key="38" value="dokan_view_reviews"/>
-                <element key="39" value="dokan_manage_reviews"/>
-                <element key="40" value="dokan_manage_withdraw"/>
-                <element key="41" value="dokan_add_product"/>
-                <element key="42" value="dokan_edit_product"/>
-                <element key="43" value="dokan_delete_product"/>
-                <element key="44" value="dokan_view_product"/>
-                <element key="45" value="dokan_duplicate_product"/>
-                <element key="46" value="dokan_import_product"/>
-                <element key="47" value="dokan_export_product"/>
-                <element key="48" value="dokan_view_overview_menu"/>
-                <element key="49" value="dokan_view_product_menu"/>
-                <element key="50" value="dokan_view_order_menu"/>
-                <element key="51" value="dokan_view_coupon_menu"/>
-                <element key="52" value="dokan_view_report_menu"/>
-                <element key="53" value="dokan_view_review_menu"/>
-                <element key="54" value="dokan_view_withdraw_menu"/>
-                <element key="55" value="dokan_view_store_settings_menu"/>
-                <element key="56" value="dokan_view_store_payment_menu"/>
-                <element key="57" value="dokan_view_store_shipping_menu"/>
-                <element key="58" value="dokan_view_store_social_menu"/>
-                <element key="59" value="dokan_view_store_seo_menu"/>
+                <element value="download_file"/>
+                <element value="read_product"/>
+                <element value="edit_products"/>
+                <element value="edit_private_products"/>
+                <element value="edit_others_products"/>
+                <element value="edit_product"/>
+                <element value="publish_shop_orders"/>
+                <element value="edit_shop_orders"/>
+                <element value="edit_others_shop_orders"/>
+                <element value="view_order"/>
+                <element value="pay_for_order"/>
+                <element value="order_again"/>
+                <element value="cancel_order"/>
+                <element value="read_private_shop_orders"/>
+                <element value="customer"/>
+                <element value="manage_woocommerce"/>
+                <element value="manage_product_terms"/>
+                <element value="view_woocommerce_reports"/>
+                <element value="dokandar"/>
+                <element value="dokan_view_sales_overview"/>
+                <element value="dokan_view_sales_report_chart"/>
+                <element value="dokan_view_announcement"/>
+                <element value="dokan_view_order_report"/>
+                <element value="dokan_view_review_reports"/>
+                <element value="dokan_view_product_status_report"/>
+                <element value="dokan_view_overview_report"/>
+                <element value="dokan_view_daily_sale_report"/>
+                <element value="dokan_view_top_selling_report"/>
+                <element value="dokan_view_top_earning_report"/>
+                <element value="dokan_view_statement_report"/>
+                <element value="dokan_view_order"/>
+                <element value="dokan_manage_order"/>
+                <element value="dokan_manage_order_note"/>
+                <element value="dokan_manage_refund"/>
+                <element value="dokan_export_order"/>
+                <element value="dokan_add_coupon"/>
+                <element value="dokan_edit_coupon"/>
+                <element value="dokan_delete_coupon"/>
+                <element value="dokan_view_reviews"/>
+                <element value="dokan_manage_reviews"/>
+                <element value="dokan_manage_withdraw"/>
+                <element value="dokan_add_product"/>
+                <element value="dokan_edit_product"/>
+                <element value="dokan_delete_product"/>
+                <element value="dokan_view_product"/>
+                <element value="dokan_duplicate_product"/>
+                <element value="dokan_import_product"/>
+                <element value="dokan_export_product"/>
+                <element value="dokan_view_overview_menu"/>
+                <element value="dokan_view_product_menu"/>
+                <element value="dokan_view_order_menu"/>
+                <element value="dokan_view_coupon_menu"/>
+                <element value="dokan_view_report_menu"/>
+                <element value="dokan_view_review_menu"/>
+                <element value="dokan_view_withdraw_menu"/>
+                <element value="dokan_view_store_settings_menu"/>
+                <element value="dokan_view_store_payment_menu"/>
+                <element value="dokan_view_store_shipping_menu"/>
+                <element value="dokan_view_store_social_menu"/>
+                <element value="dokan_view_store_seo_menu"/>
             </property>
         </properties>
     </rule>
-
 </ruleset>
