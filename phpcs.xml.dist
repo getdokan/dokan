@@ -202,6 +202,7 @@
                 <element value="dokan_view_store_shipping_menu"/>
                 <element value="dokan_view_store_social_menu"/>
                 <element value="dokan_view_store_seo_menu"/>
+                <element value="vendor_staff"/>
             </property>
         </properties>
     </rule>

@@ -61,10 +61,10 @@ class StoreOpenClose extends WP_Widget {
                 return;
             }
 
-            echo $args['before_widget']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped,WordPress.Security.EscapeOutput.OutputNotEscaped
+            echo wp_kses_post( $args['before_widget'] );
 
             if ( ! empty( $title ) ) {
-                echo $args['before_title'] . $title . $args['after_title']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped,WordPress.Security.EscapeOutput.OutputNotEscaped
+                echo wp_kses_post( $args['before_title'] . $title . $args['after_title'] );
             }
 
             dokan_get_template_part(
@@ -75,7 +75,7 @@ class StoreOpenClose extends WP_Widget {
                 ]
             );
 
-            echo $args['after_widget']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped,WordPress.Security.EscapeOutput.OutputNotEscaped
+            echo wp_kses_post( $args['after_widget'] );
         }
 
         do_action( 'dokan_widget_store_open_close_render', $args, $instance, $this );

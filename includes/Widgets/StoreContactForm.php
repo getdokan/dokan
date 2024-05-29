@@ -59,10 +59,10 @@ class StoreContactForm extends WP_Widget {
 
             $store_info = dokan_get_store_info( $seller_id );
 
-            echo $args['before_widget']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped,WordPress.Security.EscapeOutput.OutputNotEscaped
+            echo wp_kses_post( $args['before_widget'] );
 
             if ( ! empty( $title ) ) {
-                echo $args['before_title'] . $title . $args['after_title']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped,WordPress.Security.EscapeOutput.OutputNotEscaped
+                echo wp_kses_post( $args['before_title'] . $title . $args['after_title'] );
             }
 
             $username = '';
@@ -83,7 +83,7 @@ class StoreContactForm extends WP_Widget {
                 )
             );
 
-            echo $args['after_widget']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped,WordPress.Security.EscapeOutput.OutputNotEscaped
+            echo wp_kses_post( $args['after_widget'] );
         }
 
         do_action( 'dokan_widget_store_contact_form_render', $args, $instance, $this );
@@ -99,7 +99,6 @@ class StoreContactForm extends WP_Widget {
      * @return array The validated and (if necessary) amended settings
      */
     public function update( $new_instance, $old_instance ) {
-
         // update logic goes here
         $updated_instance = $new_instance;
         return $updated_instance;

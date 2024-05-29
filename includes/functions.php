@@ -838,7 +838,7 @@ function dokan_get_post_status_label_class( $status = '' ) {
  *
  * @param string $status
  *
- * @return array
+ * @return string
  */
 function dokan_get_product_types( $status = '' ) {
     $types = apply_filters(
@@ -1095,11 +1095,11 @@ add_filter( 'manage_edit-product_columns', 'dokan_admin_product_columns' );
  *
  * @param string $option  settings field name
  * @param string $section the section name this field belongs to
- * @param string $default default text if it's not found
+ * @param string $default_value default text if it's not found
  *
  * @return mixed
  */
-function dokan_get_option( $option, $section, $default = '' ) {
+function dokan_get_option( $option, $section, $default_value = '' ) {
     [ $option, $section ] = dokan_admin_settings_rearrange_map( $option, $section );
 
     $options = get_option( $section );
@@ -1108,7 +1108,7 @@ function dokan_get_option( $option, $section, $default = '' ) {
         return $options[ $option ];
     }
 
-    return $default;
+    return $default_value;
 }
 
 /**
@@ -1154,11 +1154,7 @@ function dokan_is_seller_enabled( $user_id ): bool {
 function dokan_is_seller_trusted( $user_id ) {
     $publishing = get_user_meta( $user_id, 'dokan_publishing', true );
 
-    if ( $publishing === 'yes' ) {
-        return true;
-    }
-
-    return false;
+    return $publishing === 'yes';
 }
 
 /**
@@ -1199,7 +1195,11 @@ function dokan_get_store_url( $user_id ) {
 function dokan_get_current_page_url() {
     global $wp;
 
-    return add_query_arg( $_SERVER['QUERY_STRING'], '', home_url( $wp->request ) );
+    if ( ! empty( $_SERVER['QUERY_STRING'] ) ) {
+        return add_query_arg( wc_clean( wp_unslash( $_SERVER['QUERY_STRING'] ) ), '', home_url( $wp->request ) );
+    }
+
+    return home_url( $wp->request );
 }
 
 /**
@@ -1210,11 +1210,7 @@ function dokan_get_current_page_url() {
  * @return bool
  */
 function dokan_is_store_review_page() {
-    if ( get_query_var( 'store_review' ) === 'true' ) {
-        return true;
-    }
-
-    return false;
+    return get_query_var( 'store_review' ) === 'true';
 }
 
 /**
@@ -1481,7 +1477,7 @@ function dokan_get_percentage_of( $this_period = 0, $last_period = 0 ) {
     $this_period = intval( $this_period );
     $last_period = intval( $last_period );
 
-    if ( 0 === $this_period && 0 === $last_period || $this_period === $last_period ) {
+    if ( ( 0 === $this_period && 0 === $last_period ) || $this_period === $last_period ) {
         $class = 'up';
     } elseif ( 0 === $this_period ) {
         $parcent = $last_period * 100;

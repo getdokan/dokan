@@ -733,7 +733,13 @@ class SetupWizard {
         $options                          = get_option( 'dokan_withdraw', [] );
         $options['withdraw_methods']      = ! empty( $_POST['withdraw_methods'] ) ? wc_clean( wp_unslash( $_POST['withdraw_methods'] ) ) : [];
         $options['withdraw_order_status'] = ! empty( $_POST['withdraw_order_status'] ) ? wc_clean( wp_unslash( $_POST['withdraw_order_status'] ) ) : [];
-        $options['withdraw_limit']        = ! empty( $_POST['withdraw_limit'] ) ? (float) wc_format_decimal( sanitize_text_field( wp_unslash( $_POST['withdraw_limit'] ) ) ) < 0 ? 0 : wc_format_decimal( sanitize_text_field( wp_unslash( $_POST['withdraw_limit'] ) ) ) : 0;
+
+		if ( ! empty( $_POST['withdraw_limit'] ) ) {
+				$input_limit                = sanitize_text_field( wp_unslash( $_POST['withdraw_limit'] ) );
+				$options['withdraw_limit']  = is_numeric( $input_limit ) && $input_limit >= 0 ? wc_format_decimal( $input_limit ) : 0;
+		} else {
+			$options['withdraw_limit'] = 0;
+		}
 
         /**
          * Filter dokan_withdraw options before saving in setup wizard

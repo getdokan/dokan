@@ -33,10 +33,10 @@ class ProductCategoryMenu extends WP_Widget {
 
         $title = isset( $instance['title'] ) ? apply_filters( 'widget_title', $instance['title'] ) : '';
 
-        echo $args['before_widget']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped,WordPress.Security.EscapeOutput.OutputNotEscaped
+        echo wp_kses_post( $args['before_widget'] );
 
         if ( ! empty( $title ) ) {
-            echo $args['before_title'] . $title . $args['after_title']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped,WordPress.Security.EscapeOutput.OutputNotEscaped
+            echo wp_kses_post( $args['before_title'] . $title . $args['after_title'] );
         }
         ?>
             <div class="product-cat-stack-dokan cat-drop-stack">
@@ -54,13 +54,13 @@ class ProductCategoryMenu extends WP_Widget {
 
                 $walker = new CategoryWalker();
                 echo '<ul>';
-                echo call_user_func_array( array( &$walker, 'walk' ), array( $categories, 0, array() ) ); // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped,WordPress.Security.EscapeOutput.OutputNotEscaped
+                echo wp_kses_post( call_user_func_array( array( &$walker, 'walk' ), array( $categories, 0, array() ) ) );
                 echo '</ul>';
                 ?>
             </div>
         <?php
 
-        echo isset( $args['after_widget'] ) ? $args['after_widget'] : ''; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped,WordPress.Security.EscapeOutput.OutputNotEscaped
+        echo wp_kses_post( ! empty( $args['after_widget'] ) ? $args['after_widget'] : '' );
     }
 
     /**
