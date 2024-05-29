@@ -287,7 +287,7 @@ class SetupWizardWCAdmin extends \WC_Admin_Setup_Wizard {
                     type="checkbox"
                     name="wc-wizard-service-<?php echo esc_attr( $item_id ); ?>-enabled"
                     value="yes" <?php checked( $should_enable_toggle ); ?>
-                    data-plugins="<?php echo wc_esc_json( wp_json_encode( $plugins ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>"
+                    data-plugins="<?php echo wc_esc_json( wp_json_encode( $plugins ) ); ?>"
                 >
                 <label for="wc-wizard-service-<?php echo esc_attr( $item_id ); ?>-enabled" class="switch-label"></label>
 
@@ -331,7 +331,7 @@ class SetupWizardWCAdmin extends \WC_Admin_Setup_Wizard {
                                     placeholder="<?php echo esc_attr( $setting['placeholder'] ); ?>"
                                     <?php echo ( $setting['required'] ) ? 'required' : ''; ?>
                                     <?php echo $is_checkbox ? checked( isset( $checked ) && $checked, true, false ) : ''; ?>
-                                    data-plugins="<?php echo wc_esc_json( wp_json_encode( isset( $setting['plugins'] ) ? $setting['plugins'] : null ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>"
+                                    data-plugins="<?php echo wc_esc_json( wp_json_encode( isset( $setting['plugins'] ) ? $setting['plugins'] : null ) ); ?>"
                                 />
                                 <?php if ( ! empty( $setting['description'] ) ) : ?>
                                     <span class="wc-wizard-service-settings-description"><?php echo esc_html( $setting['description'] ); ?></span>

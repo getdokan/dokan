@@ -106,11 +106,7 @@ function dokan_is_product_author( $product_id = 0 ) {
         $author = get_post_field( 'post_author', $product_id );
     }
 
-    if ( absint( $author ) === apply_filters( 'dokan_is_product_author', dokan_get_current_user_id(), $product_id ) ) {
-        return true;
-    }
-
-    return false;
+    return absint( $author ) === apply_filters( 'dokan_is_product_author', dokan_get_current_user_id(), $product_id );
 }
 
 /**
@@ -136,11 +132,7 @@ function dokan_is_store_page() {
  * @return bool
  */
 function dokan_is_product_edit_page() {
-    if ( get_query_var( 'edit' ) && is_singular( 'product' ) ) {
-        return true;
-    }
-
-    return false;
+    return get_query_var( 'edit' ) && is_singular( 'product' );
 }
 
 /**
@@ -2390,7 +2382,8 @@ function dokan_get_social_profile_fields() {
  *
  * @since 2.3
  *
- * @param bool verified
+ * @param bool $verified verified
+ * @param bool $required required
  *
  * @return void
  */
@@ -2468,7 +2461,6 @@ function dokan_get_seller_address( $seller_id = 0, $get_array = false ) {
 
         $zip          = isset( $address['zip'] ) ? $address['zip'] : '';
         $country_code = isset( $address['country'] ) ? $address['country'] : '';
-        $state_code   = isset( $address['state'] ) ? $address['state'] : '';
         $state_code   = isset( $address['state'] ) ? ( $address['state'] === 'N/A' ) ? '' : $address['state'] : '';
 
         $country_name = isset( $countries[ $country_code ] ) ? $countries[ $country_code ] : '';

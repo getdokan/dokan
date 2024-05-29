@@ -228,15 +228,15 @@ class SetupWizardNoWC extends DokanSetupWizard {
     public static function save_wc_store_setup_data() {
         check_admin_referer( 'dokan-setup' );
 
-        $address        = isset( $_POST['store_address'] ) ? sanitize_text_field( wp_unslash( $_POST['store_address'] ) ) : '';
-        $address_2      = isset( $_POST['store_address_2'] ) ? sanitize_text_field( wp_unslash( $_POST['store_address_2'] ) ) : '';
-        $city           = isset( $_POST['store_city'] ) ? sanitize_text_field( wp_unslash( $_POST['store_city'] ) ) : '';
-        $country        = isset( $_POST['store_country'] ) ? sanitize_text_field( wp_unslash( $_POST['store_country'] ) ) : '';
-        $state          = isset( $_POST['store_state'] ) ? sanitize_text_field( wp_unslash( $_POST['store_state'] ) ) : '*';
-        $postcode       = isset( $_POST['store_postcode'] ) ? sanitize_text_field( wp_unslash( $_POST['store_postcode'] ) ) : '';
-        $currency_code  = isset( $_POST['currency_code'] ) ? sanitize_text_field( wp_unslash( $_POST['currency_code'] ) ) : '';
-        $product_type   = isset( $_POST['product_type'] ) ? sanitize_text_field( wp_unslash( $_POST['product_type'] ) ) : '';
-        $sell_in_person = isset( $_POST['sell_in_person'] ) && ( 'on' === sanitize_text_field( wp_unslash( $_POST['sell_in_person'] ) ) );
+        $address        = isset( $_POST['store_address'] ) ? wc_clean( wp_unslash( $_POST['store_address'] ) ) : '';
+        $address_2      = isset( $_POST['store_address_2'] ) ? wc_clean( wp_unslash( $_POST['store_address_2'] ) ) : '';
+        $city           = isset( $_POST['store_city'] ) ? wc_clean( wp_unslash( $_POST['store_city'] ) ) : '';
+        $country        = isset( $_POST['store_country'] ) ? wc_clean( wp_unslash( $_POST['store_country'] ) ) : '';
+        $state          = isset( $_POST['store_state'] ) ? wc_clean( wp_unslash( $_POST['store_state'] ) ) : '*';
+        $postcode       = isset( $_POST['store_postcode'] ) ? wc_clean( wp_unslash( $_POST['store_postcode'] ) ) : '';
+        $currency_code  = isset( $_POST['currency_code'] ) ? wc_clean( wp_unslash( $_POST['currency_code'] ) ) : '';
+        $product_type   = isset( $_POST['product_type'] ) ? wc_clean( wp_unslash( $_POST['product_type'] ) ) : '';
+        $sell_in_person = isset( $_POST['sell_in_person'] ) && ( 'on' === wc_clean( wp_unslash( $_POST['sell_in_person'] ) ) );
 
         update_option( 'woocommerce_store_address', $address );
         update_option( 'woocommerce_store_address_2', $address_2 );
