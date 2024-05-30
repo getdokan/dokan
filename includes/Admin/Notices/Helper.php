@@ -117,14 +117,10 @@ class Helper {
         }
 
         try {
-            if ( ! dokan_pro()->license ) {
-                return false;
-            }
+            return dokan_pro()->license->is_valid();
         } catch ( \Exception $e ) {
             return false;
         }
-
-        return dokan_pro()->license->is_valid();
     }
 
     /**
