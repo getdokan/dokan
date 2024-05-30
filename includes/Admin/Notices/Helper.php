@@ -118,14 +118,12 @@ class Helper {
 
         try {
             if ( ! dokan_pro()->license ) {
-                // This is old version of dokan pro.
                 return false;
             }
         } catch ( \Exception $e ) {
             return false;
         }
 
-        // Check dokan pro license is valid or not.
         return dokan_pro()->license->is_valid();
     }
 
