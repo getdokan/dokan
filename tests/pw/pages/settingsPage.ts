@@ -299,7 +299,7 @@ export class SettingsPage extends AdminPage {
     }
 
     // Admin Set Dokan Vendor Verificaton Settings
-    async setDokanVendorVerificationSettings(vendorVerification: dokanSettings['vendorVerification']) {
+    async setDokanVendorVerificationSettings(vendorVerification: Pick<dokanSettings['vendorVerification'], 'verifiedIcons' | 'verificationMethods' | 'saveSuccessMessage'>) {
         await this.goToDokanSettings();
         await this.click(settingsAdmin.menus.vendorVerification);
 

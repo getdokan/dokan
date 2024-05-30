@@ -208,6 +208,110 @@ export const payloads = {
         ],
     }),
 
+    createProductEuCompliance: () => ({
+        name: faker.commerce.productName() + ' (Simple)',
+        type: 'simple',
+        regular_price: '100',
+        status: 'publish',
+        categories: [
+            {
+                // id: 48
+                name: 'Uncategorized',
+                slug: 'uncategorized',
+            },
+        ],
+        featured: true,
+        description: '<p>test description</p>',
+        short_description: '<p>test short description</p>',
+        meta_data: [
+            {
+                key: '_dokan_geolocation_use_store_settings',
+                value: 'yes',
+            },
+            {
+                key: 'dokan_geo_latitude',
+                value: '40.7127753',
+            },
+            {
+                key: 'dokan_geo_longitude',
+                value: '-74.0059728',
+            },
+            {
+                key: 'dokan_geo_public',
+                value: '1',
+            },
+            {
+                key: 'dokan_geo_address',
+                value: 'New York, NY, USA',
+            },
+            {
+                key: '_dokan_rma_override_product',
+                value: 'yes',
+            },
+            {
+                key: '_dokan_rma_settings',
+                value: {
+                    label: 'Warranty',
+                    type: 'included_warranty',
+                    policy: 'test refund policy',
+                    reasons: ['defective'],
+                    length: 'lifetime',
+                    length_value: '',
+                    length_duration: '',
+                    addon_settings: [],
+                },
+            },
+            {
+                key: '_sale_price_label',
+                value: 'old-price',
+            },
+            {
+                key: '_sale_price_regular_label',
+                value: 'new-price',
+            },
+            {
+                key: '_unit',
+                value: 'kg',
+            },
+            {
+                key: '_min_age',
+                value: 18,
+            },
+            {
+                key: '_unit_product',
+                value: '1',
+            },
+            {
+                key: '_unit_base',
+                value: '80',
+            },
+            {
+                key: '_default_delivery_time',
+                value: -1,
+            },
+            {
+                key: '_delivery_time_countries',
+                value: [],
+            },
+            {
+                key: '_free_shipping',
+                value: 'yes',
+            },
+            {
+                key: '_unit_price_regular',
+                value: '50',
+            },
+            {
+                key: '_unit_price_sale',
+                value: '20',
+            },
+            {
+                key: '_mini_desc',
+                value: 'test mini description',
+            },
+        ],
+    }),
+
     // wholesale product
     createWholesaleProduct: () => ({
         name: faker.commerce.productName() + ' (wholesale)',
@@ -846,13 +950,14 @@ export const payloads = {
     updateSettings: {
         // store_name: 'vendorStore',
         social: {
-            fb: 'http://dokan.test',
-            youtube: 'http://dokan.test',
-            twitter: 'http://dokan.test',
-            linkedin: 'http://dokan.test',
-            pinterest: 'http://dokan.test',
-            instagram: 'http://dokan.test',
-            flickr: 'http://dokan.test',
+            fb: 'https://www.facebook.com/',
+            twitter: 'https://www.twitter.com/',
+            pinterest: 'https://www.pinterest.com/',
+            linkedin: 'https://www.linkedin.com/',
+            youtube: 'https://www.youtube.com/',
+            instagram: 'https://www.instagram.com/',
+            flickr: 'https://www.flickr.com/',
+            threads: 'https://www.threads.net/',
         },
         payment: {
             bank: {
@@ -980,14 +1085,14 @@ export const payloads = {
 
     // user
 
-    createUser: {
-        username: '',
-        first_name: '',
-        last_name: '',
-        email: '',
-        roles: '',
-        password: '',
-    },
+    createUser: () => ({
+        username: faker.person.firstName(),
+        first_name: faker.person.firstName(),
+        last_name: faker.person.lastName(),
+        email: faker.internet.email(),
+        roles: 'customer',
+        password: process.env.USER_PASSWORD,
+    }),
 
     // vendor
 
@@ -2096,7 +2201,7 @@ export const payloads = {
         first_name: faker.person.firstName(),
         last_name: faker.person.lastName(),
         role: 'customer',
-        username: faker.person.firstName() + faker.string.nanoid(10),
+        username: faker.person.firstName() + faker.string.nanoid(5),
         password: String(process.env.USER_PASSWORD),
         billing: {
             first_name: 'customer1',
@@ -2164,6 +2269,27 @@ export const payloads = {
             phone: '0123456789',
         },
     }),
+
+    customerMeta: {
+        meta_data: [
+            {
+                key: 'billing_dokan_company_id_number',
+                value: faker.string.alphanumeric(5),
+            },
+            {
+                key: 'billing_dokan_vat_number',
+                value: faker.string.alphanumeric(10),
+            },
+            {
+                key: 'billing_dokan_bank_name',
+                value: faker.string.alphanumeric(7),
+            },
+            {
+                key: 'billing_dokan_bank_iban',
+                value: faker.finance.iban(),
+            },
+        ],
+    },
 
     // wholesale customer
 
@@ -2397,7 +2523,7 @@ export const payloads = {
     // store
 
     createStore: () => ({
-        user_login: faker.person.firstName() + faker.string.nanoid(10),
+        user_login: faker.person.firstName() + faker.string.nanoid(5),
         user_pass: String(process.env.USER_PASSWORD),
         role: 'seller',
         email: faker.internet.email(),
@@ -2405,16 +2531,17 @@ export const payloads = {
         first_name: faker.person.firstName(),
         last_name: faker.person.lastName(),
         social: {
-            fb: 'http://dokan.test',
-            youtube: 'http://dokan.test',
-            twitter: 'http://dokan.test',
-            linkedin: 'http://dokan.test',
-            pinterest: 'http://dokan.test',
-            instagram: 'http://dokan.test',
-            flickr: 'http://dokan.test',
+            fb: 'https://www.facebook.com/',
+            twitter: 'https://www.twitter.com/',
+            pinterest: 'https://www.pinterest.com/',
+            linkedin: 'https://www.linkedin.com/',
+            youtube: 'https://www.youtube.com/',
+            instagram: 'https://www.instagram.com/',
+            flickr: 'https://www.flickr.com/',
+            threads: 'https://www.threads.net/',
         },
         phone: '0123456789',
-        show_email: false,
+        show_email: 'yes',
         address: {
             street_1: 'abc street',
             street_2: 'xyz street',
@@ -2423,25 +2550,22 @@ export const payloads = {
             state: 'NY',
             country: 'US',
         },
-        location: '',
-        banner: '',
+        location: '40.7127753,-74.0059728',
+        banner: 0,
         banner_id: 0,
-        gravatar: '',
+        gravatar: 0,
         gravatar_id: 0,
-        shop_url: '',
         show_more_product_tab: true,
-        toc_enabled: false,
-        store_toc: '',
-        featured: true,
+        enable_tnc: 'on',
+        store_tnc: 'test Vendor terms and conditions',
+        featured: 'yes',
         rating: {
             rating: '0.00',
             count: 1,
         },
         enabled: true,
-        registered: '',
         payment: {
             paypal: {
-                0: 'email',
                 email: 'paypal@g.c',
             },
             bank: {
@@ -2454,7 +2578,6 @@ export const payloads = {
                 iban: '123456',
                 swift: '12345',
             },
-            stripe: false,
         },
         trusted: true,
         store_open_close: {
@@ -2470,14 +2593,14 @@ export const payloads = {
         bank_iban: '',
         categories: [
             {
-                id: 74,
-                name: 'Uncategorized',
-                slug: 'uncategorized',
+                // id: 74,
+                // name: 'Uncategorized',
+                // slug: 'uncategorized',
             },
         ],
         admin_commission: '',
-        admin_additional_fee: '0.00',
-        admin_commission_type: 'flat',
+        admin_additional_fee: '',
+        admin_commission_type: '',
     }),
 
     updateStore: () => ({
@@ -2486,13 +2609,14 @@ export const payloads = {
         // first_name: faker.person.firstName(),
         // last_name: faker.person.lastName(),
         social: {
-            fb: 'http://dokan.test',
-            youtube: 'http://dokan.test',
-            twitter: 'http://dokan.test',
-            linkedin: 'http://dokan.test',
-            pinterest: 'http://dokan.test',
-            instagram: 'http://dokan.test',
-            flickr: 'http://dokan.test',
+            fb: 'https://www.facebook.com/',
+            twitter: 'https://www.twitter.com/',
+            pinterest: 'https://www.pinterest.com/',
+            linkedin: 'https://www.linkedin.com/',
+            youtube: 'https://www.youtube.com/',
+            instagram: 'https://www.instagram.com/',
+            flickr: 'https://www.flickr.com/',
+            threads: 'https://www.threads.net/',
         },
         phone: '0123456789',
         show_email: false,
@@ -2558,13 +2682,14 @@ export const payloads = {
     // always revert vendor settings to this after altering in tests
     defaultStoreSettings: {
         social: {
-            fb: 'http://dokan.test',
-            youtube: 'http://dokan.test',
-            twitter: 'http://dokan.test',
-            linkedin: 'http://dokan.test',
-            pinterest: 'http://dokan.test',
-            instagram: 'http://dokan.test',
-            flickr: 'http://dokan.test',
+            fb: 'https://www.facebook.com/',
+            twitter: 'https://www.twitter.com/',
+            pinterest: 'https://www.pinterest.com/',
+            linkedin: 'https://www.linkedin.com/',
+            youtube: 'https://www.youtube.com/',
+            instagram: 'https://www.instagram.com/',
+            flickr: 'https://www.flickr.com/',
+            threads: 'https://www.threads.net/',
         },
         phone: '0123456789',
         show_email: 'yes',
@@ -2639,6 +2764,14 @@ export const payloads = {
         body: 'Test email body',
     },
 
+    vendorEuCompliance: {
+        company_name: faker.company.name(),
+        company_id_number: faker.string.alphanumeric(5),
+        vat_number: faker.string.alphanumeric(10),
+        bank_name: faker.string.alphanumeric(7),
+        bank_iban: faker.finance.iban(),
+    },
+
     createStore1: {
         user_login: process.env.VENDOR,
         user_pass: process.env.USER_PASSWORD,
@@ -2649,13 +2782,14 @@ export const payloads = {
         first_name: process.env.VENDOR,
         last_name: 'v',
         social: {
-            fb: 'http://dokan.test',
-            youtube: 'http://dokan.test',
-            twitter: 'http://dokan.test',
-            linkedin: 'http://dokan.test',
-            pinterest: 'http://dokan.test',
-            instagram: 'http://dokan.test',
-            flickr: 'http://dokan.test',
+            fb: 'https://www.facebook.com/',
+            twitter: 'https://www.twitter.com/',
+            pinterest: 'https://www.pinterest.com/',
+            linkedin: 'https://www.linkedin.com/',
+            youtube: 'https://www.youtube.com/',
+            instagram: 'https://www.instagram.com/',
+            flickr: 'https://www.flickr.com/',
+            threads: 'https://www.threads.net/',
         },
         phone: '0123456789',
         show_email: 'yes',
@@ -2746,11 +2880,11 @@ export const payloads = {
         //     open_notice: 'Store is open',
         //     close_notice: 'Store is closed',
         // },
-        company_name: '',
-        vat_number: '',
-        company_id_number: '',
-        bank_name: '',
-        bank_iban: '',
+        company_name: faker.company.name(), // todo: eu compliance doesn't save on post request works on update endpoint
+        company_id_number: faker.string.alphanumeric(5),
+        vat_number: faker.string.alphanumeric(10),
+        bank_name: faker.string.alphanumeric(7),
+        bank_iban: faker.finance.iban(),
         categories: [
             {
                 // id: 74,
@@ -2773,13 +2907,14 @@ export const payloads = {
         first_name: process.env.VENDOR2,
         last_name: 'v',
         social: {
-            fb: 'http://dokan.test',
-            youtube: 'http://dokan.test',
-            twitter: 'http://dokan.test',
-            linkedin: 'http://dokan.test',
-            pinterest: 'http://dokan.test',
-            instagram: 'http://dokan.test',
-            flickr: 'http://dokan.test',
+            fb: 'https://www.facebook.com/',
+            twitter: 'https://www.twitter.com/',
+            pinterest: 'https://www.pinterest.com/',
+            linkedin: 'https://www.linkedin.com/',
+            youtube: 'https://www.youtube.com/',
+            instagram: 'https://www.instagram.com/',
+            flickr: 'https://www.flickr.com/',
+            threads: 'https://www.threads.net/',
         },
         phone: '0123456789',
         show_email: true, // todo:  doesn't work on lite
@@ -2899,13 +3034,14 @@ export const payloads = {
         first_name: process.env.VENDOR3,
         last_name: 'v',
         social: {
-            fb: 'http://dokan.test',
-            youtube: 'http://dokan.test',
-            twitter: 'http://dokan.test',
-            linkedin: 'http://dokan.test',
-            pinterest: 'http://dokan.test',
-            instagram: 'http://dokan.test',
-            flickr: 'http://dokan.test',
+            fb: 'https://www.facebook.com/',
+            twitter: 'https://www.twitter.com/',
+            pinterest: 'https://www.pinterest.com/',
+            linkedin: 'https://www.linkedin.com/',
+            youtube: 'https://www.youtube.com/',
+            instagram: 'https://www.instagram.com/',
+            flickr: 'https://www.flickr.com/',
+            threads: 'https://www.threads.net/',
         },
         phone: '0123456789',
         show_email: true, // todo:  doesn't work on lite
@@ -2998,11 +3134,11 @@ export const payloads = {
             open_notice: 'Store is open',
             close_notice: 'Store is closed',
         },
-        company_name: '',
-        vat_number: '',
-        company_id_number: '',
-        bank_name: '',
-        bank_iban: '',
+        company_name: faker.company.name(), // todo: eu compliance doesn't save on post request works on update endpoint
+        company_id_number: faker.string.alphanumeric(5),
+        vat_number: faker.string.alphanumeric(10),
+        bank_name: faker.string.alphanumeric(7),
+        bank_iban: faker.finance.iban(),
         categories: [
             {
                 // id: 74,

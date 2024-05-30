@@ -466,39 +466,40 @@ export const selector = {
 
                     vendorPicture: '.profile-image .dokan-upload-image',
                     banner: '.banner-image .dokan-upload-image button',
-                    firstName: '#first-name',
-                    lastName: '#last-name',
-                    storeName: '#store-name',
-                    storeUrl: '#user-nicename',
-                    phoneNumber: '#store-phone',
-                    email: '#store-email',
-                    username: '#user-login',
+                    firstName: 'input#first-name',
+                    lastName: 'input#last-name',
+                    storeName: 'input#store-name',
+                    storeUrl: 'input#user-nicename',
+                    phoneNumber: 'input#store-phone',
+                    email: 'input#store-email',
+                    username: 'input#user-login',
                     generatePassword: '.button.button-secondary',
-                    password: '#store-password',
-                    companyName: '#company-name',
-                    companyIdEuidNumber: '#company-id-number',
-                    vatOrTaxNumber: '#vat-tax-number',
-                    nameOfBank: '#dokan-bank-name',
-                    bankIban: '#dokan-bank-iban',
+                    password: 'input#store-password',
+                    companyName: 'input#company-name',
+                    companyIdEuidNumber: 'input#company-id-number',
+                    vatOrTaxNumber: 'input#vat-tax-number',
+                    nameOfBank: 'input#dokan-bank-name',
+                    bankIban: 'input#dokan-bank-iban',
                     // Address
-                    street1: '#street-1',
-                    street2: '#street-2',
-                    city: '#city',
-                    zip: '#zip',
+                    street1: 'input#street-1',
+                    street2: 'input#street-2',
+                    city: 'input#city',
+                    zip: 'input#zip',
                     // country: '.multiselect__single',
                     country: '//label[@for="country"]/..//div[@class="multiselect__select"]',
                     countryInput: '#country',
                     state: '//label[@for="state"]/..//div[@class="multiselect__select"]',
                     stateInput: '#state',
                     // Payment Options
-                    accountName: '#account-name',
-                    accountNumber: '#account-number',
-                    bankName: '#bank-name',
-                    bankAddress: '#bank-address',
-                    routingNumber: '#routing-number',
-                    iban: '#iban',
-                    swift: '#swift',
-                    payPalEmail: '#paypal-email',
+                    accountName: 'input#account-name',
+                    accountNumber: 'input#account-number',
+                    accountType: 'select#account-type', // personal, business
+                    bankName: 'input#bank-name',
+                    bankAddress: 'input#bank-address',
+                    routingNumber: 'input#routing-number',
+                    iban: 'input#iban',
+                    swift: 'input#swift',
+                    payPalEmail: 'input#paypal-email',
                     enableSelling: '//span[contains(text(),"Enable Selling")]/..//span[@class="slider round"]',
                     publishProductDirectly: '//span[contains(text(), "Publish Product Directly")]/..//span[@class="slider round"]',
                     makeVendorFeature: '//span[contains(text(), "Make Vendor Featured")]/..//span[@class="slider round"]',
@@ -2097,8 +2098,7 @@ export const selector = {
                     predefinedPalette: (paletteName: string) => `//label[text()='${paletteName}']/..//input[@name='store_color_pallete']`,
                     // Button Text
                     openColorPicker: (option: string) => `//h4[text()='${option}']//..//div[@class='color-picker-container']`,
-                    // colorInput: '//input[@class="hex-input"]//div',
-                    colorInput: '.hex-input div',
+                    colorInput: 'input.hex-input',
                     saveColor: 'button.dashicons-saved',
 
                     customPalette: {
@@ -3680,6 +3680,31 @@ export const selector = {
             geolocation: {
                 sameAsStore: '#\\_dokan_geolocation_use_store_settings',
                 productLocation: '#\\_dokan_geolocation_product_location',
+            },
+
+            // Eu Compliance Fields
+            euComplianceFields: {
+                saleLabel: 'select#_sale_price_label', // new-price, old-price, rrp
+                saleRegularLabel: 'select#_sale_price_regular_label', // new-price, old-price, rrp
+                unit: 'select#_unit', // cm, g, in, kcal, kg, kj, l, lbs, m, ml, mm, oz, yd, %c2%b5g
+                minimumAge: 'select#_min_age', // 12, 16,18, 19, 25
+                productUnits: 'input#_unit_product',
+                basePriceUnits: 'input#_unit_base',
+
+                deliveryTime: {
+                    dropDown: 'div#dokan-germanized-options .select2-selection .select2-selection__arrow',
+                    input: '.select2-search__field',
+                    searchedResult: '.select2-results__option--highlighted',
+                },
+
+                freeShipping: 'input#_free_shipping',
+
+                regularUnitPrice: 'input#_unit_price_regular',
+                saleUnitPrice: 'input#_unit_price_sale',
+                optionalMiniDescription: {
+                    descriptionIframe: '.dokan-product-description iframe',
+                    descriptionHtmlBody: '#tinymce',
+                },
             },
 
             // Add-Ons
@@ -6613,10 +6638,18 @@ export const selector = {
             productDetails: {
                 productImage: '.woocommerce-product-gallery__wrapper img.wp-post-image',
                 productTitle: '.product_title.entry-title',
+                price: '//div[@class="summary entry-summary"]//p[@class="price"]',
                 quantity: '.quantity input.qty',
                 addToCart: '.single_add_to_cart_button',
                 viewCart: '.woocommerce .woocommerce-message > .button',
                 category: '.product_meta .posted_in',
+
+                euComplianceData: {
+                    price: '//div[@class="summary entry-summary"]//p[@class="price"]',
+                    unitPrice: 'div.summary p.wc-gzd-additional-info.price-unit',
+                    productUnit: 'div.summary p.wc-gzd-additional-info.product-units',
+                    deliveryTime: 'div.summary p.wc-gzd-additional-info.delivery-time-info',
+                },
             },
 
             // Sub menus
@@ -6916,6 +6949,14 @@ export const selector = {
                 // storeRating: '.dokan-store-rating',
                 // storeOpenClose: '.dokan-store-open-close',
                 storeSocial: '.store-social',
+
+                euComplianceData: {
+                    companyName: 'li.dokan-company-name',
+                    companyId: 'li.dokan-company-id-number',
+                    vatNumber: 'li.dokan-vat-number',
+                    bankName: 'li.dokan-bank-name',
+                    bankIban: 'li.dokan-bank-iban',
+                },
             },
 
             // Store open close time

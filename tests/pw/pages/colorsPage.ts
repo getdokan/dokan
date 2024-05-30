@@ -25,7 +25,28 @@ export class ColorsPage extends AdminPage {
             await this.click(settingsAdmin.colors.predefineColorPalette);
             await this.click(settingsAdmin.colors.predefinedPalette(paletteName));
         } else {
-            // todo: add custom color palette
+            const fieldNames = {
+                buttonText: 'Button Text',
+                buttonBackground: 'Button Background',
+                buttonBorder: 'Button Border',
+                buttonHoverText: 'Button Hover Text',
+                buttonHoverBackground: 'Button Hover Background',
+                buttonHoverBorder: 'Button Hover Border',
+                dashboardSidebarMenuText: 'Dashboard Sidebar Menu Text',
+                dashboardSidebarBackground: 'Dashboard Sidebar Background',
+                dashboardSidebarActiveMenuText: 'Dashboard Sidebar Active/Hover Menu Text',
+                dashboardSidebarActiveMenuBackground: 'Dashboard Sidebar Active Menu Background',
+            };
+
+            await this.click(settingsAdmin.colors.customColorPalette);
+
+            for (const key of Object.keys(paletteValues)) {
+                await this.click(settingsAdmin.colors.openColorPicker(fieldNames[key as keyof paletteValues]));
+                await this.clearAndType(settingsAdmin.colors.colorInput, paletteValues[key as keyof paletteValues]);
+                await this.click(settingsAdmin.colors.saveColor);
+            }
+
+            console.log('fsdfasd');
         }
 
         // save settings
@@ -62,25 +83,5 @@ export class ColorsPage extends AdminPage {
         expect(dashboardSidebarBackground).toEqual(paletteValues.dashboardSidebarBackground);
         expect(dashboardSidebarActiveHoverMenuText).toEqual(paletteValues.dashboardSidebarActiveMenuText);
         expect(dashboardSidebarActiveMenuBackground).toEqual(paletteValues.dashboardSidebarActiveMenuBackground);
-    }
-
-    // add custom color palette
-    async addCustomColorPalette() {
-        await this.goToDokanSettings();
-        await this.click(settingsAdmin.menus.colors);
-
-        // Colors Settings
-
-        // if (colors.paletteChoice === 'pre-defined') {
-        await this.click(settingsAdmin.colors.customColorPalette);
-        await this.click(settingsAdmin.colors.openColorPicker('Button Text'));
-        const root = this.getElement(settingsAdmin.colors.colorInput);
-        // await this.fillLocator(settingsAdmin.colors.colorInput, '#88FF00');
-        // await this.click(settingsAdmin.colors.saveColor);
-        // }
-
-        // save settings
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.colors.colorsSaveChanges);
-        await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, data.dokanSettings.colors.saveSuccessMessage);
     }
 }
