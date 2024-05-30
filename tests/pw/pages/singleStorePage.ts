@@ -22,7 +22,7 @@ export class SingleStorePage extends CustomerPage {
         await this.goIfNotThere(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)));
 
         // store profile elements are visible
-        const { verifiedIcon, verifiedIconByIcon, euCompilanceData, ...storeProfile } = singleStoreCustomer.storeProfile;
+        const { verifiedIcon, verifiedIconByIcon, euComplianceData, ...storeProfile } = singleStoreCustomer.storeProfile;
         await this.multipleElementVisible(storeProfile);
 
         // store tab elements are visible
@@ -34,7 +34,7 @@ export class SingleStorePage extends CustomerPage {
             await this.multipleElementVisible(storeTabs);
 
             // eu compliance data is visible
-            await this.multipleElementVisible(singleStoreCustomer.storeProfile.euCompilanceData);
+            await this.multipleElementVisible(singleStoreCustomer.storeProfile.euComplianceData);
         }
 
         // search elements are visible
