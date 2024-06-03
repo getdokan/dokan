@@ -587,11 +587,7 @@ export class ProductsPage extends AdminPage {
         euCompliance.freeShipping && (await this.check(productsVendor.euComplianceFields.freeShipping));
         await this.clearAndType(productsVendor.euComplianceFields.regularUnitPrice, euCompliance.regularUnitPrice);
         await this.clearAndType(productsVendor.euComplianceFields.saleUnitPrice, euCompliance.saleUnitPrice);
-        await this.typeFrameSelector(
-            productsVendor.euComplianceFields.optionalMiniDescription.descriptionIframe,
-            productsVendor.euComplianceFields.optionalMiniDescription.descriptionHtmlBody,
-            euCompliance.optionalMiniDescription,
-        );
+        await this.typeFrameSelector(productsVendor.euComplianceFields.optionalMiniDescription.descriptionIframe, productsVendor.euComplianceFields.optionalMiniDescription.descriptionHtmlBody, euCompliance.optionalMiniDescription);
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, productsVendor.saveProduct, 302);
 
         await this.toContainText(productsVendor.updatedSuccessMessage, data.product.createUpdateSaveSuccessMessage);
@@ -605,11 +601,7 @@ export class ProductsPage extends AdminPage {
         await this.toBeChecked(productsVendor.euComplianceFields.freeShipping);
         await this.toHaveValue(productsVendor.euComplianceFields.regularUnitPrice, euCompliance.regularUnitPrice);
         await this.toHaveValue(productsVendor.euComplianceFields.saleUnitPrice, euCompliance.saleUnitPrice);
-        await this.toContainTextFrameLocator(
-            productsVendor.euComplianceFields.optionalMiniDescription.descriptionIframe,
-            productsVendor.euComplianceFields.optionalMiniDescription.descriptionHtmlBody,
-            euCompliance.optionalMiniDescription,
-        );
+        await this.toContainTextFrameLocator(productsVendor.euComplianceFields.optionalMiniDescription.descriptionIframe, productsVendor.euComplianceFields.optionalMiniDescription.descriptionHtmlBody, euCompliance.optionalMiniDescription);
     }
 
     // add product quantity discount

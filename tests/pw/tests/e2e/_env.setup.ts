@@ -126,6 +126,23 @@ setup.describe('setup site & woocommerce & dokan settings', () => {
         storefrontSettings['storefront_sticky_add_to_cart'] = false;
         await dbUtils.setDokanSettings('theme_mods_storefront', storefrontSettings);
     });
+
+    setup.skip('disable germanized settings', { tag: ['@pro', '@admin'] }, async () => {
+        // disbale all legal checkboxes
+        await dbUtils.setDokanSettings('woocommerce_gzd_legal_checkboxes_settings', dbData.germanized.legalCheckboxes);
+        // disable theme supported notice
+        await dbUtils.setDokanSettings('_wc_gzd_hide_theme_supported_notice', 'yes');
+        // disable all fields from product loop
+        await dbUtils.setDokanSettings('woocommerce_gzd_display_product_loop_unit_price', 'no');
+        await dbUtils.setDokanSettings('woocommerce_gzd_display_product_loop_tax', 'no');
+        await dbUtils.setDokanSettings('woocommerce_gzd_display_product_loop_shipping_costs', 'no');
+        await dbUtils.setDokanSettings('woocommerce_gzd_display_product_loop_delivery_time', 'no');
+        await dbUtils.setDokanSettings('woocommerce_gzd_display_product_loop_units', 'no');
+        await dbUtils.setDokanSettings('woocommerce_gzd_display_product_loop_deposit', 'no');
+        await dbUtils.setDokanSettings('woocommerce_gzd_display_product_loop_nutri_score', 'no');
+        // disable all emails
+        await apiUtils.updateBatchWcSettingsOptions('germanized', payloads.germanized);
+    });
 });
 
 setup.describe('setup user settings', () => {

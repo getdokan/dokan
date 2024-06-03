@@ -45,8 +45,6 @@ export class ColorsPage extends AdminPage {
                 await this.clearAndType(settingsAdmin.colors.colorInput, paletteValues[key as keyof paletteValues]);
                 await this.click(settingsAdmin.colors.saveColor);
             }
-
-            console.log('fsdfasd');
         }
 
         // save settings

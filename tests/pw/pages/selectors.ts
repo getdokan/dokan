@@ -6684,8 +6684,7 @@ export const selector = {
                 reviewMessage: '#comment',
                 submitReview: '#submit',
                 submittedReview: (reviewMessage: string) => `//div[@class='comment_container']//div[@class='description']// p[text()='${reviewMessage}']`,
-                awaitingApprovalReview: (reviewMessage: string) =>
-                    `//div[@class='comment_container']//div[@class='description']// p[text()='${reviewMessage}']/../..//p//em[@class='woocommerce-review__awaiting-approval']`,
+                awaitingApprovalReview: (reviewMessage: string) => `//div[@class='comment_container']//div[@class='description']// p[text()='${reviewMessage}']/../..//p//em[@class='woocommerce-review__awaiting-approval']`,
                 duplicateCommentAlert: '#error-page .wp-die-message p',
                 backFromDuplicateCommentAlert: '//a[contains(text(),"« Back")]',
             },

@@ -31,8 +31,8 @@ test.describe('calculation test', () => {
 
     test('calculation test', { tag: ['@pro'] }, async () => {
         // todo:  modify for lite as well
-        const [, res, oid] = await apiUtils.createOrder(payloads.createProductInterger(), payloads.createOrder);
-        console.log(res);
+        const [, res, oid] = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder);
+        // console.log( res );
         console.log('Cal: order id:', oid);
 
         // const discountTotal = res.discount_total;

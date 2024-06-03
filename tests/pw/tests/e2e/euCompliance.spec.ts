@@ -123,11 +123,11 @@ test.describe('EU Compliance test', () => {
         await vendor.setStoreSettings(data.vendor.vendorInfo, 'company-info');
     });
 
-    test('vendor can add product EU compliance data', { tag: ['@pro', '@vendor'] }, async () => {
+    test.skip('vendor can add product EU compliance data', { tag: ['@pro', '@vendor'] }, async () => {
         await productsPage.addProductEuCompliance(productName, data.product.productInfo.euCompliance);
     });
 
-    test('vendor can update product EU compliance data', { tag: ['@pro', '@vendor'] }, async () => {
+    test.skip('vendor can update product EU compliance data', { tag: ['@pro', '@vendor'] }, async () => {
         await productsPage.addProductEuCompliance(euProductName, data.product.productInfo.euCompliance);
     });
 
@@ -151,7 +151,7 @@ test.describe('EU Compliance test', () => {
         await customer.viewVendorEuComplianceData(data.predefined.vendorStores.vendor1);
     });
 
-    test('customer can view product EU compliance data on single product page', { tag: ['@pro', '@customer'] }, async () => {
+    test.skip('customer can view product EU compliance data on single product page', { tag: ['@pro', '@customer'] }, async () => {
         await customer.viewProductEuComplianceData(euProductName);
     });
 

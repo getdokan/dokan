@@ -304,10 +304,7 @@ export class SettingsPage extends AdminPage {
         await this.click(settingsAdmin.menus.vendorVerification);
 
         await this.click(settingsAdmin.vendorVerification.verifiedIcon(vendorVerification.verifiedIcons.userCheckSolid));
-        const response = await this.enableSwitcherAndWaitForResponse(
-            data.subUrls.api.dokan.verificationMethods,
-            settingsAdmin.vendorVerification.enableVerificationMethod(vendorVerification.verificationMethods.nationalId),
-        );
+        const response = await this.enableSwitcherAndWaitForResponse(data.subUrls.api.dokan.verificationMethods, settingsAdmin.vendorVerification.enableVerificationMethod(vendorVerification.verificationMethods.nationalId));
         response && (await this.toBeVisible(settingsAdmin.vendorVerification.methodUpdateSuccessMessage));
 
         // save settings

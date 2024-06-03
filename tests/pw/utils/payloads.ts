@@ -1477,6 +1477,56 @@ export const payloads = {
         ],
     },
 
+    // germanized
+    germanized: {
+        update: [
+            // Emails
+
+            {
+                id: 'woocommerce_gzd_mail_attach_terms',
+                // label: 'Attach Terms & Conditions',
+                // description: 'Attach Terms & Conditions to the following email templates',
+                // default: ['customer_processing_order', 'customer_new_account', 'customer_new_account_activation'],
+                value: [],
+            },
+            {
+                id: 'woocommerce_gzd_mail_attach_revocation',
+                // label: 'Attach Cancellation Policy',
+                // description: 'Attach Cancellation Policy to the following email templates',
+                // default: ['customer_processing_order'],
+                value: [],
+            },
+            {
+                id: 'woocommerce_gzd_mail_attach_data_security',
+                // label: 'Attach Privacy Policy',
+                // description: 'Attach Privacy Policy to the following email templates',
+                // default: ['customer_processing_order', 'customer_new_account', 'customer_new_account_activation'],
+                value: [],
+            },
+            {
+                id: 'woocommerce_gzd_mail_attach_imprint',
+                // label: 'Attach Imprint',
+                // description: 'Attach Imprint to the following email templates',
+                // default: [],
+                value: [],
+            },
+            {
+                id: 'woocommerce_gzd_mail_attach_warranties',
+                // label: 'Attach Product Warranties',
+                // description: 'Attach Product Warranties to the following email templates',
+                // default: ['customer_completed_order'],
+                value: [],
+            },
+            {
+                id: 'woocommerce_gzd_mail_attach_review_authenticity',
+                // label: 'Attach ',
+                // description: 'Attach  to the following email templates',
+                // default: []
+                value: [],
+            },
+        ],
+    },
+
     bcs: {
         id: 'bacs',
         // title: 'Direct bank transfer',
