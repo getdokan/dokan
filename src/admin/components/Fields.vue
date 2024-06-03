@@ -846,10 +846,22 @@
                     return;
                 }
 
-                let isChecked = this.validateInputData( this.fieldData.name, status ? 'on' : 'off', this.fieldValue[ this.fieldData.name ], this.fieldData  );
+                let isChecked = this.validateInputData( this.fieldData.name, status ? 'on' : 'off', this.fieldValue[ this.fieldData.name ], this.fieldData );
 
                 this.checked                           = isChecked;
                 this.fieldValue[ this.fieldData.name ] = isChecked;
+
+                // Load shipping receive status if marked as receive.
+                if ( this.fieldData.name === 'allow_mark_received' ) {
+                    this.loadReceiveStatus( status );
+                }
+
+                // this.fieldValue[ this.fieldData.name ] = dokan.hooks.applyFilters(
+                //     'dokanFieldComponentSwitcherValue',
+                //     isChecked,
+                //     this.fieldValue,
+                //     this.fieldData.name
+                // );
 
                 this.$root.$emit( 'onFieldSwitched', this.fieldValue[ this.fieldData.name ], this.fieldData.name );
             },
@@ -923,6 +935,23 @@
                 }
 
                 this.fieldData[ key ] = value;
+            },
+
+            loadReceiveStatus( status ) {
+                if ( status ) {
+                    return this.fieldValue?.[ 'shipping_status_list' ]?.push( {
+                        'id'       : 'ss_mark_received',
+                        'desc'     : '(This is must use item)',
+                        'value'    : 'Received',
+                        'must_use' : true,
+                    } );
+                }
+
+                const updatedStatus = this.fieldValue?.[ 'shipping_status_list' ].filter(
+                    shippingStatus => shippingStatus.id !== 'ss_mark_received'
+                );
+
+                this.fieldValue.shipping_status_list = [ ...updatedStatus ];
             },
         },
     };
