@@ -20,12 +20,11 @@ test.describe('Color scheme customizer test', () => {
         await admin.addColorPalette(data.dokanSettings.colors.predefinedPalette.tree, data.dokanSettings.colors.paletteValues.tree, 'predefined');
     });
 
-    test.skip('admin can add custom color palette', { tag: ['@pro', '@admin'] }, async () => {
-        //todo: need access to closed shadow dom
-        await admin.addCustomColorPalette();
+    test('admin can add custom color palette', { tag: ['@pro', '@admin'] }, async () => {
+        await admin.addColorPalette('custom', data.dokanSettings.colors.paletteValues.custom, 'custom');
     });
 
-    test.skip('admin can update custom color palette', { tag: ['@pro', '@admin'] }, async () => {
-        await admin.addCustomColorPalette();
+    test('admin can update custom color palette', { tag: ['@pro', '@admin'] }, async () => {
+        await admin.addColorPalette('custom', data.dokanSettings.colors.paletteValues.custom2, 'custom');
     });
 });

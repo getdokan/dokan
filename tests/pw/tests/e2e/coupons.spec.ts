@@ -73,7 +73,8 @@ test.describe('Coupons test', () => {
         await customer.viewStoreCoupon(data.predefined.vendorStores.vendor1, couponCode);
     });
 
-    test('customer can apply coupon', { tag: ['@pro', '@customer'] }, async () => {
+    test('customer can apply coupon', { tag: ['@pro', '@customer'] }, async ({ page }) => {
+        const customer = new CouponsPage(page); // Used guest customer to avoid conlict with other tests
         await customer.applyCoupon(data.predefined.simpleProduct.product1.name, data.predefined.coupon.couponCode);
     });
 
