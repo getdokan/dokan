@@ -59,8 +59,8 @@ test.describe('Vendor settings test', () => {
         await vendor.setStoreSettings(data.vendor.vendorInfo, 'address');
     });
 
-    test('vendor can set company info settings', { tag: ['@pro', '@vendor'] }, async () => {
-        await vendor.setStoreSettings(data.vendor.vendorInfo, 'company-info');
+    test('vendor can set euComplicance info settings', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.setStoreSettings(data.vendor.vendorInfo, 'euComplicance');
     });
 
     test('vendor can set map settings', { tag: ['@lite', '@vendor'] }, async () => {

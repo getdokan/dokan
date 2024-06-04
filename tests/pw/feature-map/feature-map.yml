@@ -542,8 +542,8 @@
   features:
       admin:
           admin can switch predefined color palette: true
-          admin can add custom color palette: false
-          admin can update custom color palette: false
+          admin can add custom color palette: true
+          admin can update custom color palette: true
 
 - page: 'Delivery Time'
   features:
@@ -568,31 +568,43 @@
 - page: 'EU Compliance Fields'
   features:
       admin:
-          admin can enable EU complicance fields for vendors: false
-          admin can enable EU complicance fields on vendor registration: false
-          admin can add EU complicance data while adding a vendor: false
-          admin can add EU complicance data on user profile edit: false
-          admin can update update EU complicance data on vendor profile edit: false
-          admin can update update EU complicance data on user profile edit: false
-          admin can enable EU complicance fields for customers: false
-          admin can enable germanized support for vendors: false
-          admin can enable orverride invoice number premission for vendors: false
-          admin can hide vendor's EU complicance data from single store page: false
-          admin can view customer EU complicance data on order details: false
+          admin can enable EU compliance fields for vendors: true
+          admin can enable EU compliance fields on vendor registration: true
+          admin can enable EU compliance fields for customers: true
+          admin can enable germanized support for vendors: true
+          admin can enable orverride invoice number premission for vendors: true
+          admin can add EU compliance data while adding a vendor: true
+          admin can add EU compliance data on user profile (customer) edit: true
+          admin can update EU compliance data on user profile (customer) edit: true
+          admin can add EU compliance data on user profile (vendor) edit: true
+          admin can update EU compliance data on user profile (vendor) edit: true
+          admin can update update EU compliance data on vendor profile edit: true
+          admin can hide vendor EU compliance data from single store page: true
+          admin can view customer EU compliance data on order details: false
+          admin can view vendor EU compliance data on order details: false
+          admin can disable EU compliance fields for vendors: false
+          admin can disable EU compliance fields on vendor registration: false
+          admin can disable EU compliance fields for customers: false
+          admin can disable germanized support for vendors: false
+          admin can disable orverride invoice number premission for vendors: false
       vendor:
-          vendor can add EU complicance data on store settings: false
-          vendor can add EU complicance data on registration: false
-          vendor can update EU complicance data: false
-          vendor can add product EU complicance data: false
-          vendor can update product EU complicance data: false
-          vendor can view customer EU complicance data on order details: false
+          vendor can add EU compliance data on store settings: true
+          vendor can add EU compliance data on registration: true
+          vendor can add EU compliance data on registration page (shortcode generated): false
+          vendor can update EU compliance data: true
+          vendor can add product EU compliance data: true
+          vendor can update product EU compliance data: true
+          vendor can view customer EU compliance data on order details: false
           vendor can override invoice number: false
       customer:
-          customer can add EU complicance data on billing address: false
-          customer can update EU complicance data: false
-          customer can view vendor's EU complicance data on store list: false
-          customer can view vendor's EU complicance data on single store page: false
-          customer can view product EU complicance data on single product page: false
+          customer can add EU compliance data on billing address: true
+          customer can add EU compliance data while chechout: false
+          customer can update EU compliance data: true
+          customer can add EU compliance data (vendor) while become a vendor: true
+          customer can view vendor EU compliance data on single store page: true
+          customer can view product EU compliance data on single product page: true
+      guest:
+          guest customer can add EU compliance data while chechout: false
 
 - page: 'Follow Store'
   features:

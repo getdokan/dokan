@@ -87,6 +87,7 @@ export class VendorPage extends BasePage {
             await this.selectByValue(registrationVendor.country, vendorInfo.countrySelectValue);
             await this.selectByValue(registrationVendor.state, vendorInfo.stateSelectValue);
         }
+        // eu compliance fields
         if (DOKAN_PRO) {
             await this.clearAndType(registrationVendor.companyName, vendorInfo.companyName);
             await this.clearAndType(registrationVendor.companyId, vendorInfo.companyId);
