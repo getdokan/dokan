@@ -1,4 +1,4 @@
-=== Dokan - Best WooCommerce Multivendor Marketplace Solution - Build Your Own Amazon, eBay, Etsy ===
+=== Dokan - Powerful WooCommerce Multivendor Marketplace Solution - Build Your Own Amazon, eBay, Etsy ===
 Contributors: tareq1988, wedevs, nizamuddinbabu
 Donate Link: http://tareq.co/donate/
 Tags: WooCommerce multivendor marketplace, multivendor marketplace, multivendor, multi seller, multi vendor, WooCommerce marketplace, WooCommerce product vendors
@@ -11,7 +11,7 @@ Stable tag: 3.11.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Transform your WooCommerce site into a robust multivendor marketplace with Dokan - the #1 WooCommerce multivendor marketplace solution!
+Transform your WooCommerce site into a multivendor marketplace with Dokan - a powerful and advanced WooCommerce multivendor marketplace solution
 
 == Description ==
 
