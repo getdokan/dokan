@@ -25,9 +25,9 @@ do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
             // translators: 1) product name, 2) customer name, 3) rating
                 __( 'We are happy to inform you that your product <strong>%1$s</strong> has received a new review on our website. The review was written by <strong>%2$s</strong> and has a rating of <strong>%3$s</strong> out of 5 stars.', 'dokan-lite' )
             ),
-            $data['{product_name}'],
-            $data['{customer_name}'],
-            $data['{rating}']
+            esc_html( $data['{product_name}'] ),
+            esc_html( $data['{customer_name}'] ),
+            esc_html( $data['{rating}'] )
         );
         ?>
     </p>
@@ -42,7 +42,7 @@ do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
         printf(
             '<a href="%1$s">%2$s</a>',
             esc_url( $data['{review_link}'] ),
-            $data['{product_name}']
+            esc_html( $data['{product_name}'] )
         );
         ?>
     </p>
