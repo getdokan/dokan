@@ -17,13 +17,16 @@ class V_3_3_7 extends DokanUpgrader {
     public static function update_withdraw_table_column() {
         global $wpdb;
 
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $existing_columns = $wpdb->get_results( "DESC `{$wpdb->prefix}dokan_withdraw`" );
 
         foreach ( (array) $existing_columns as $existing_column ) {
             if ( 'details' === $existing_column->Field && 'NO' === $existing_column->Null ) { // phpcs:ignore
-                $wpdb->query(
-                    "ALTER TABLE `{$wpdb->prefix}dokan_withdraw` MODIFY COLUMN {$existing_column->Field} longtext NULL" // phpcs:ignore
-                );
+                $table = $wpdb->prefix . 'dokan_withdraw';
+                $column = $existing_column->Field; // phpcs:ignore WordPress.NamingConventions.ValidVariableName.UsedPropertyNotSnakeCase
+
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, WordPress.DB.PreparedSQLPlaceholders.UnsupportedIdentifierPlaceholder
+                $wpdb->query( $wpdb->prepare( 'ALTER TABLE %i MODIFY COLUMN %i longtext NULL', $table, $column ) );
             }
         }
     }
