@@ -846,10 +846,18 @@
                     return;
                 }
 
-                let isChecked = this.validateInputData( this.fieldData.name, status ? 'on' : 'off', this.fieldValue[ this.fieldData.name ], this.fieldData  );
+                let isChecked = this.validateInputData( this.fieldData.name, status ? 'on' : 'off', this.fieldValue[ this.fieldData.name ], this.fieldData );
 
                 this.checked                           = isChecked;
                 this.fieldValue[ this.fieldData.name ] = isChecked;
+
+                // Make field value editable from premium version. (on switcher udpate)
+                this.fieldValue[ this.fieldData.name ] = dokan.hooks.applyFilters(
+                    'dokanFieldComponentSwitcherValue',
+                    isChecked,
+                    this.fieldValue,
+                    this.fieldData.name
+                );
 
                 this.$root.$emit( 'onFieldSwitched', this.fieldValue[ this.fieldData.name ], this.fieldData.name );
             },
