@@ -74,7 +74,7 @@ test.describe('Settings test', () => {
     });
 
     test('admin can set Dokan vendor verification settings', { tag: ['@pro', '@admin'] }, async () => {
-        await admin.setDokanVendorVerificationSettings(data.dokanSettings.vendorVerification); //todo: need to resolve
+        await admin.setDokanVendorVerificationSettings(data.dokanSettings.vendorVerification);
     });
 
     test('admin can set Dokan email verification settings', { tag: ['@pro', '@admin'] }, async () => {

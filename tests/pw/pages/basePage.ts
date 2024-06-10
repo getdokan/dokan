@@ -277,12 +277,7 @@ export class BasePage {
 
     // click & wait for response
     async clickAndAcceptAndWaitForResponseAndLoadState(subUrl: string, selector: string, code = 200): Promise<Response> {
-        const [response] = await Promise.all([
-            this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code),
-            this.acceptAlert(),
-            this.page.waitForLoadState('networkidle'),
-            this.page.locator(selector).click(),
-        ]);
+        const [response] = await Promise.all([this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code), this.acceptAlert(), this.page.waitForLoadState('networkidle'), this.page.locator(selector).click()]);
         return response;
     }
 
@@ -870,7 +865,7 @@ export class BasePage {
     }
 
     // get frame
-    getFrameSelector(frame: string, frameSelector: string): FrameLocator {
+    getFrameSelector(frame: string, frameSelector: string): Locator {
         return this.page.frameLocator(frame).locator(frameSelector);
     }
 
@@ -1345,6 +1340,13 @@ export class BasePage {
         }
     }
 
+    // multiple elements to be visible
+    async multipleElementnotVisible(selectors: any) {
+        for (const selector in selectors) {
+            await this.notToBeVisible(selectors[selector]);
+        }
+    }
+
     async toHaveScreenshot(page: Page, locators?: Locator[]) {
         await expect(page).toHaveScreenshot({ fullPage: true, mask: locators, maskColor: 'black', animations: 'disabled' });
     }
@@ -1406,6 +1408,12 @@ export class BasePage {
         expect(value).toBe(backgroundColor);
     }
 
+    // assert element to have  color
+    async toHaveColor(selector: string, backgroundColor: string) {
+        const value = await this.getElementColor(selector);
+        expect(value).toBe(backgroundColor);
+    }
+
     // assert element not to be visible
     async notToBeVisible(selector: string) {
         await expect(this.page.locator(selector)).toBeHidden();
@@ -1434,6 +1442,22 @@ export class BasePage {
     // assert element not to have class
     async notToHaveClass(selector: string, className: string) {
         await expect(this.page.locator(selector)).not.toHaveClass(className);
+    }
+
+    // assert element to contain text
+    async toContainTextFrameLocator(frame: string, frameSelector: string, text: string | RegExp): Promise<void> {
+        const locator = this.page.frameLocator(frame).locator(frameSelector);
+        await expect(locator).toContainText(text);
+    }
+
+    /**
+     * custom assertion methods
+     */
+
+    // admin enable switcher , if enabled then Skip : admin settings switcher
+    async switcherHasColor(selector: string, color: string): Promise<void> {
+        /^(\/\/|\(\/\/)/.test(selector) ? (selector += '//span') : (selector += ' span');
+        await this.toHaveBackgroundColor(selector, color);
     }
 
     /**

@@ -303,6 +303,20 @@ export interface product {
             description: string;
         };
 
+        euCompliance: {
+            saleLabel: string;
+            saleRegularLabel: string;
+            unit: string;
+            minimumAge: string;
+            productUnits: string;
+            basePriceUnits: string;
+            deliveryTime: string;
+            freeShipping: boolean;
+            regularUnitPrice: string;
+            saleUnitPrice: string;
+            optionalMiniDescription: string;
+        };
+
         amountDiscount: {
             minimumOrderAmount: string;
             discountPercentage: string;
@@ -701,6 +715,7 @@ export interface vendor {
         state: string;
         accountName: string;
         accountNumber: string;
+        accountType: string;
         bankName: string;
         bankAddress: string;
         routingNumber: string;
@@ -1022,7 +1037,7 @@ export interface vendor {
     };
 
     // addon
-    addon: {
+    addon: () => {
         name: string;
         priority: string;
         category: string;
@@ -1924,4 +1939,12 @@ export interface paletteValues {
     dashboardSidebarBackground: string;
     dashboardSidebarActiveMenuText: string;
     dashboardSidebarActiveMenuBackground: string;
+}
+
+export interface eUComplianceData {
+    companyName?: string;
+    companyId: string;
+    vatNumber: string;
+    bankName: string;
+    bankIban: string;
 }

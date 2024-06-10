@@ -1434,11 +1434,11 @@ export class ApiUtils {
         return userId;
     }
 
-    // create user
-    async createUser(payload: object, auth?: auth): Promise<responseBody> {
-        // administrator,  customer, seller
+    // create user [administrator,  customer, seller]
+    async createUser(payload: object, auth?: auth): Promise<[responseBody, string]> {
         const [, responseBody] = await this.post(endPoints.wp.createUser, { data: payload, headers: auth });
-        return responseBody;
+        const userId = String(responseBody?.id);
+        return [responseBody, userId];
     }
 
     // update user

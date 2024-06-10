@@ -519,6 +519,7 @@ ul.dokan_tabs {
   border-bottom: 1px solid #EDEDED;
   margin-bottom: 20px;
   line-height: 24px;
+  margin-left: 0;
 }
 ul.dokan_tabs > li {
   margin-bottom: -1px !important;
@@ -2367,6 +2368,7 @@ div.media-sidebar a.edit-attachment {
   margin: 0 0 10px 0;
   border-bottom: 1px solid #EDEDED;
   padding: 0 0 10px 0;
+  line-height: 1.25;
 }
 .dokan-dashboard header.dokan-dashboard-header .dokan-add-product-link .dokan-btn {
   margin-right: 10px;
@@ -6372,6 +6374,23 @@ p.vendor-customer-registration .radio:hover {
   .dokan-dashboard .dokan-dashboard-content {
     float: none;
     width: 100%;
+  }
+  .dokan-dashboard .dokan-dash-sidebar ul.dokan_tabs,
+  .dokan-dashboard .dokan-dashboard-content ul.dokan_tabs {
+    border: 0;
+    gap: 0.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+  .dokan-dashboard .dokan-dash-sidebar ul.dokan_tabs li,
+  .dokan-dashboard .dokan-dashboard-content ul.dokan_tabs li {
+    margin: auto 0 !important;
+    border-bottom: 1px solid #EDEDED;
+  }
+  .dokan-dashboard .dokan-dash-sidebar ul.dokan_tabs li.active a,
+  .dokan-dashboard .dokan-dashboard-content ul.dokan_tabs li.active a {
+    border-bottom: 1px solid #EDEDED;
   }
   .dokan-dashboard .product-edit-new-container .dokan-edit-row .dokan-side-left,
   .dokan-dashboard .product-edit-new-container .dokan-edit-row .dokan-side-right {

@@ -1,14 +1,14 @@
 # Copyright (c) 2024 weDevs Pte. Ltd. All Rights Reserved.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 3.11.2\n"
+"Project-Id-Version: Dokan 3.11.3\n"
 "Report-Msgid-Bugs-To: https://dokan.co/contact/\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-05-27T10:12:19+00:00\n"
+"POT-Creation-Date: 2024-06-07T09:14:47+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.9.0\n"
 "X-Domain: dokan-lite\n"
@@ -1606,7 +1606,7 @@ msgstr ""
 #: templates/orders/listing.php:83
 #: templates/products/products-listing-row.php:67
 #: templates/products/products-listing.php:121
-#: templates/sub-orders.php:45
+#: templates/sub-orders.php:47
 #: templates/withdraw/pending-request-listing-dashboard.php:25
 #: templates/withdraw/pending-request-listing.php:20
 #: templates/withdraw/pending-request-listing.php:64
@@ -1631,7 +1631,7 @@ msgstr ""
 #: templates/products/products-listing-row.php:125
 #: templates/products/products-listing.php:130
 #: templates/reverse-withdrawal/transaction-listing.php:19
-#: templates/sub-orders.php:44
+#: templates/sub-orders.php:46
 #: templates/withdraw/approved-request-listing.php:20
 #: templates/withdraw/cancelled-request-listing.php:20
 #: templates/withdraw/pending-request-listing-dashboard.php:21
@@ -1930,7 +1930,7 @@ msgstr ""
 #: includes/Assets.php:746
 #: templates/orders/listing.php:20
 #: templates/products/products-listing.php:108
-#: templates/store-lists-filter.php:87
+#: templates/store-lists-filter.php:84
 #: assets/js/vue-admin.js:2
 msgid "Apply"
 msgstr ""
@@ -2030,7 +2030,7 @@ msgstr ""
 #: templates/products/new-product.php:232
 #: templates/products/tmpl-add-product-popup.php:68
 #: templates/settings/bank-payment-method-settings.php:203
-#: templates/store-lists-filter.php:86
+#: templates/store-lists-filter.php:83
 #: templates/withdraw/pending-request-listing-dashboard.php:24
 #: templates/withdraw/pending-request-listing-dashboard.php:46
 #: templates/withdraw/pending-request-listing.php:19
@@ -3751,7 +3751,7 @@ msgstr ""
 #: templates/orders/details.php:19
 #: templates/orders/listing.php:30
 #: templates/orders/listing.php:57
-#: templates/sub-orders.php:43
+#: templates/sub-orders.php:45
 #: assets/js/vue-admin.js:2
 msgid "Order"
 msgstr ""
@@ -4509,7 +4509,7 @@ msgstr ""
 #: includes/Product/functions.php:510
 #: templates/my-orders.php:101
 #: templates/orders/listing.php:150
-#: templates/sub-orders.php:96
+#: templates/sub-orders.php:99
 msgid "View"
 msgstr ""
 
@@ -4696,7 +4696,7 @@ msgstr ""
 #: templates/dashboard/products-widget.php:32
 #: templates/my-orders.php:28
 #: templates/orders/order-fee-html.php:24
-#: templates/sub-orders.php:49
+#: templates/sub-orders.php:51
 msgid "Total"
 msgstr ""
 
@@ -8551,7 +8551,7 @@ msgstr ""
 #. translators: 1) order total amount 2) item count
 #. translators: 1) order total amount 2) order item count
 #: templates/my-orders.php:63
-#: templates/sub-orders.php:85
+#: templates/sub-orders.php:88
 msgid "%1$s for %2$s item"
 msgid_plural "%1$s for %2$s items"
 msgstr[0] ""
@@ -8750,7 +8750,7 @@ msgid "Customer"
 msgstr ""
 
 #: templates/orders/listing.php:37
-#: templates/sub-orders.php:47
+#: templates/sub-orders.php:49
 msgid "Shipment"
 msgstr ""
 
@@ -8785,7 +8785,7 @@ msgid "%s ago"
 msgstr ""
 
 #: templates/orders/listing.php:116
-#: templates/sub-orders.php:76
+#: templates/sub-orders.php:79
 msgid "Shipping Status"
 msgstr ""
 
@@ -9484,7 +9484,7 @@ msgstr[1] ""
 msgid "Sort by"
 msgstr ""
 
-#: templates/store-lists-filter.php:77
+#: templates/store-lists-filter.php:74
 #: assets/js/vue-admin.js:2
 msgid "Search Vendors"
 msgstr ""
@@ -9531,7 +9531,7 @@ msgstr ""
 msgid "Sub Orders"
 msgstr ""
 
-#: templates/sub-orders.php:33
+#: templates/sub-orders.php:34
 msgid "This order has products from multiple vendors. So we divided this order into multiple vendor orders. Each order will be handled by their respective vendor independently."
 msgstr ""
 
