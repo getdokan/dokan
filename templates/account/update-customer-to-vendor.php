@@ -13,6 +13,9 @@
  * @var string $phone
  * @var string $toc_page_id
  */
+
+$home_url         = untrailingslashit( home_url() );
+$custom_store_url = dokan_get_option( 'custom_store_url', 'dokan_general', 'store' );
 ?>
 
 <h2><?php esc_html_e( 'Update account to Vendor', 'dokan-lite' ); ?></h2>
@@ -38,7 +41,10 @@
             <label for="seller-url" class="pull-left"><?php esc_html_e( 'Shop URL', 'dokan-lite' ); ?> <span class="required">*</span></label>
             <strong id="url-alart-mgs" class="pull-right"></strong>
             <input type="text" class="input-text form-control" name="shopurl" id="seller-url" value="<?php echo esc_attr( $shop_url ); ?>" required="required" />
-            <small><?php echo home_url() . '/' . dokan_get_option( 'custom_store_url', 'dokan_general', 'store' ); ?>/<strong id="url-alart"></strong></small>
+            <small>
+                <?php echo esc_url( $home_url . '/' . $custom_store_url ) . '/'; ?>
+                <strong id="url-alart"></strong>
+            </small>
         </p>
 
         <p class="form-row form-group form-row-wide">
@@ -63,7 +69,7 @@
                     <?php
                     $tc_link = sprintf( '<a target="_blank" href="%1$s">%2$s</a>', esc_url( $toc_page_url ), __( 'Terms &amp; Conditions', 'dokan-lite' ) );
                     // translators: 1. Terms and conditions of agreement link.
-                    echo sprintf( __( 'I have read and agree to the %1$s.', 'dokan-lite' ), $tc_link );
+                    printf( __( 'I have read and agree to the %1$s.', 'dokan-lite' ), $tc_link );
                     ?>
                 </label>
             </p>
