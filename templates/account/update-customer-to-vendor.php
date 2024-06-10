@@ -63,7 +63,7 @@
                     <?php
                     $tc_link = sprintf( '<a target="_blank" href="%1$s">%2$s</a>', esc_url( $toc_page_url ), __( 'Terms &amp; Conditions', 'dokan-lite' ) );
                     // translators: 1. Terms and conditions of agreement link.
-                    echo sprintf( __( 'I have read and agree to the %1$s.', 'dokan-lite' ), $tc_link );
+                    printf( __( 'I have read and agree to the %1$s.', 'dokan-lite' ), $tc_link );
                     ?>
                 </label>
             </p>
