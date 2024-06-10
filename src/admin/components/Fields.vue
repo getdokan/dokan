@@ -851,7 +851,7 @@
                 this.checked                           = isChecked;
                 this.fieldValue[ this.fieldData.name ] = isChecked;
 
-                // Load shipping receive status if marked as receive.
+                // Make field value editable from premium version. (on switcher udpate)
                 this.fieldValue[ this.fieldData.name ] = dokan.hooks.applyFilters(
                     'dokanFieldComponentSwitcherValue',
                     isChecked,
