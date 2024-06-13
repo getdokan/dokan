@@ -83,7 +83,7 @@ class V_2_8_3_VendorBalance extends DokanBackgroundProcesses {
         $count         = $limit * $paged;
         $threshold_day = dokan_get_option( 'withdraw_date_limit', 'dokan_withdraw', 0 );
 
-        $results = $wpdb->get_results(
+        $results = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $wpdb->prepare(
                 "SELECT `order`.*, post.post_date from {$wpdb->prefix}dokan_orders as `order` left join {$wpdb->prefix}posts as post on post.ID = order.order_id LIMIT %d OFFSET %d",
                 $limit, $count
@@ -127,7 +127,7 @@ class V_2_8_3_VendorBalance extends DokanBackgroundProcesses {
 
         $limit   = 100;
         $count   = $limit * $paged;
-        $results = $wpdb->get_results(
+        $results = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $wpdb->prepare(
                 "SELECT * from {$wpdb->prefix}dokan_withdraw WHERE `status` = 1 LIMIT %d OFFSET %d",
                 $limit, $count
@@ -166,7 +166,7 @@ class V_2_8_3_VendorBalance extends DokanBackgroundProcesses {
     private function insert_vendor_balance_data_283( $data ) {
         global $wpdb;
 
-        $wpdb->insert(
+        $wpdb->insert( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
             $wpdb->prefix . 'dokan_vendor_balance', $data,
             array(
                 '%d',
