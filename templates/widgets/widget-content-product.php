@@ -39,7 +39,7 @@ $img_kses = apply_filters(
 
                 <?php
                 if ( ! empty( $show_rating ) ) {
-                    echo wc_get_rating_html( $product->get_average_rating() );
+                    echo wc_get_rating_html( $product->get_average_rating() ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                 }
                 ?>
 

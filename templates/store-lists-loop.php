@@ -53,9 +53,9 @@
                                             <div class="dokan-seller-rating"
                                                 title="
                                                 <?php
-                                                    echo sprintf(
+                                                    printf(
                                                         // translators: 1) seller rating
-                                                        esc_attr__( 'Rated %s out of 5', 'dokan-lite' ), number_format_i18n( $store_rating['rating'] )
+                                                        esc_attr__( 'Rated %s out of 5', 'dokan-lite' ), esc_html( number_format_i18n( $store_rating['rating'] ) )
                                                     );
                                                 ?>
                                                 ">
