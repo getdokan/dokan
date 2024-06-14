@@ -77,6 +77,8 @@ class ProductBlockController extends ProductController {
             $chosen_cat = Helper::generate_and_set_chosen_categories( $product_id );
         }
 
+        $catalog_mode_data = $product->get_meta( '_dokan_catalog_mode' );
+
         return apply_filters(
             'dokan_rest_get_product_block_data',
             [
@@ -120,6 +122,7 @@ class ProductBlockController extends ProductController {
                     'purchase_note'   => 'view' === $context ? wpautop( do_shortcode( wp_kses_post( $product->get_purchase_note() ) ) ) : $product->get_purchase_note( $context ),
                     'reviews_allowed' => $product->get_reviews_allowed( $context ),
                 ],
+                'catalogMode' => ! empty( $catalog_mode_data ) ? $catalog_mode_data : [],
             ],
             $product,
             $context

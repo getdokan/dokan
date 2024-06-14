@@ -86,16 +86,9 @@ class Products {
             return;
         }
 
-        $catalog_mode_data = [
-            'hide_add_to_cart_button' => isset( $_POST['catalog_mode']['hide_add_to_cart_button'] ) ? 'on' : 'off',
-            'hide_product_price'      => isset( $_POST['catalog_mode']['hide_product_price'] ) ? 'on' : 'off',
-        ];
+        $hide_add_to_cart_button = isset( $_POST['catalog_mode']['hide_add_to_cart_button'] ) ? 'on' : 'off';
+        $hide_product_price      = isset( $_POST['catalog_mode']['hide_product_price'] ) ? 'on' : 'off';
 
-        // set hide price to off if add to cart button is off
-        if ( 'off' === $catalog_mode_data['hide_add_to_cart_button'] ) {
-            $catalog_mode_data['hide_product_price'] = 'off';
-        }
-
-        update_post_meta( $product_id, '_dokan_catalog_mode', $catalog_mode_data );
+        Helper::save_products_catalog_mode( $product_id, $hide_add_to_cart_button, $hide_product_price );
     }
 }

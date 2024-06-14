@@ -2,6 +2,9 @@
 
 namespace WeDevs\Dokan\CatalogMode;
 
+use WC_Product;
+use WP_REST_Request;
+
 /**
  * Class Hooks
  *
@@ -27,6 +30,7 @@ class Hooks {
 
         add_filter( 'woocommerce_is_purchasable', [ $this, 'hide_add_to_cart_button' ], 20, 2 );
         add_filter( 'woocommerce_get_price_html', [ $this, 'hide_product_price' ], 9, 2 );
+        add_action( 'dokan_rest_insert_product_object', array( $this, 'save_catalog_mode_data' ), 10, 3 );
     }
 
     /**
@@ -104,5 +108,23 @@ class Hooks {
         }
 
         return $price;
+    }
+
+    /**
+     * Saves catalog data for product api.
+     *
+     * @param WC_Product      $object
+     * @param WP_REST_Request $request
+     * @param boolean         $creating
+     *
+     * @return void
+     */
+    public function save_catalog_mode_data( $object, $request, $creating ) {
+        $data = $request->get_params();
+
+        $hide_add_to_cart_button = isset( $data['hide_add_to_cart_button'] ) ? 'on' : 'off';
+        $hide_product_price      = isset( $data['hide_product_price'] ) ? 'on' : 'off';
+
+        Helper::save_products_catalog_mode( $object->get_id(), $hide_add_to_cart_button, $hide_product_price );
     }
 }

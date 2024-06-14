@@ -185,4 +185,31 @@ class Helper {
 
         return $catalog_mode_data;
     }
+
+    /**
+     * Saves a products catalog mode data.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param numeric $product_id
+     * @param string  $hide_add_to_cart_button
+     * @param string  $hide_product_price
+     *
+     * @return void
+     */
+    public static function save_products_catalog_mode( $product_id, $hide_add_to_cart_button = 'off', $hide_product_price = 'off' ) {
+        $accepted_data = [ 'on', 'off' ];
+
+        $catalog_mode_data = [
+            'hide_add_to_cart_button' => in_array( $hide_add_to_cart_button, $accepted_data, true ) ? $hide_add_to_cart_button : 'off',
+            'hide_product_price'      => in_array( $hide_product_price, $accepted_data, true ) ? $hide_product_price : 'off',
+        ];
+
+        // set hide price to off if add to cart button is off
+        if ( 'off' === $catalog_mode_data['hide_add_to_cart_button'] ) {
+            $catalog_mode_data['hide_product_price'] = 'off';
+        }
+
+        update_post_meta( $product_id, '_dokan_catalog_mode', $catalog_mode_data );
+    }
 }
