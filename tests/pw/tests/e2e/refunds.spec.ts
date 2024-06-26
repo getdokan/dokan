@@ -36,7 +36,7 @@ test.describe('Refunds test', () => {
 
     //admin
 
-    test('admin refunds menu page is rendering properly', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
+    test('admin can view refunds menu page', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
         await admin.adminRefundRequestsRenderProperly();
     });
 
@@ -58,7 +58,7 @@ test.describe('Refunds test', () => {
         await admin.updateRefundRequests(orderId, 'cancel');
     });
 
-    test.skip('admin can perform refund requests bulk actions', { tag: ['@pro', '@admin'] }, async () => {
+    test.skip('admin can perform bulk action on refund requests', { tag: ['@pro', '@admin'] }, async () => {
         const [, orderResponseBody, ,] = await apiUtils.createOrderWithStatus(PRODUCT_ID, payloads.createOrder, data.order.orderStatus.processing, payloads.vendorAuth);
         await dbUtils.createRefundRequest(orderResponseBody);
         await admin.refundRequestsBulkAction('completed');

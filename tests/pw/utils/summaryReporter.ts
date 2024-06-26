@@ -19,7 +19,9 @@ const getFormattedDuration = (milliseconds: number) => {
     return `${hours < 1 ? '' : hours + 'h '}${min < 1 ? '' : min + 'm '}${sec < 1 ? '' : sec + 's'}`;
 };
 
-const summary = {
+const summary: {
+    [key: string]: any | { [key: string]: any };
+} = {
     suite_name: '',
     total_tests: 0,
     passed: 0,
@@ -28,6 +30,11 @@ const summary = {
     skipped: 0,
     suite_duration: 0,
     suite_duration_formatted: '',
+    tests: [],
+    passed_tests: [],
+    failed_tests: [],
+    flaky_tests: [],
+    skipped_tests: [],
 };
 export default class summaryReport implements Reporter {
     private testResults: TestResults = {};
@@ -64,6 +71,10 @@ export default class summaryReport implements Reporter {
 
     onTestEnd(test: TestCase, result: TestResult): void {
         this.testResults[test.id] = test.outcome();
+        test.outcome() !== 'skipped' ? summary.tests.push(test.title) : summary.skipped_tests.push(test.title);
+        test.outcome() == 'expected' && summary.passed_tests.push(test.title);
+        test.outcome() == 'unexpected' && summary.failed_tests.push(test.title);
+        test.outcome() == 'flaky' && summary.flaky_tests.push(test.title);
     }
 
     onEnd(result: FullResult): void {

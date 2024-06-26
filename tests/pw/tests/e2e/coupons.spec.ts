@@ -46,12 +46,12 @@ test.describe('Coupons test', () => {
 
     //vendor
 
-    test('vendor coupon menu page is rendering properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+    test('vendor can view coupons menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorCouponsRenderProperly();
     });
 
-    test('vendor can view marketPlace coupon', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
-        await vendor.viewMarketPlaceCoupon(marketplaceCouponCode);
+    test('vendor can view marketPlace coupons', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+        await vendor.viewMarketPlaceCoupons(marketplaceCouponCode);
     });
 
     test('vendor can add coupon', { tag: ['@pro', '@vendor'] }, async () => {
@@ -73,7 +73,8 @@ test.describe('Coupons test', () => {
         await customer.viewStoreCoupon(data.predefined.vendorStores.vendor1, couponCode);
     });
 
-    test('customer can apply coupon', { tag: ['@pro', '@customer'] }, async () => {
+    test('customer can apply coupon', { tag: ['@pro', '@customer'] }, async ({ page }) => {
+        const customer = new CouponsPage(page); // Used guest customer to avoid conlict with other tests
         await customer.applyCoupon(data.predefined.simpleProduct.product1.name, data.predefined.coupon.couponCode);
     });
 

@@ -14,6 +14,7 @@ const registrationVendor = selector.vendor.vRegistration;
 const setupWizardVendor = selector.vendor.vSetup;
 const productsVendor = selector.vendor.product;
 const ordersVendor = selector.vendor.orders;
+const verificationsVendor = selector.vendor.vVerificationSettings;
 
 export class VendorPage extends BasePage {
     constructor(page: Page) {
@@ -86,6 +87,7 @@ export class VendorPage extends BasePage {
             await this.selectByValue(registrationVendor.country, vendorInfo.countrySelectValue);
             await this.selectByValue(registrationVendor.state, vendorInfo.stateSelectValue);
         }
+        // eu compliance fields
         if (DOKAN_PRO) {
             await this.clearAndType(registrationVendor.companyName, vendorInfo.companyName);
             await this.clearAndType(registrationVendor.companyId, vendorInfo.companyId);
@@ -154,7 +156,7 @@ export class VendorPage extends BasePage {
             }
 
             await this.check(setupWizardVendor.email);
-            await this.click(setupWizardVendor.continueStoreSetup);
+            await this.clickAndWaitForLoadState(setupWizardVendor.continueStoreSetup);
 
             // payment
 
@@ -174,7 +176,21 @@ export class VendorPage extends BasePage {
             await this.typeIfVisible(setupWizardVendor.customPayment, setupWizardData.customPayment);
             // skrill
             await this.typeIfVisible(setupWizardVendor.skrill, setupWizardData.skrill);
-            await this.click(setupWizardVendor.continuePaymentSetup);
+            await this.clickAndWaitForLoadState(setupWizardVendor.continuePaymentSetup);
+
+            // verifications
+            if (DOKAN_PRO) {
+                const method = await this.getElementText(verificationsVendor.firtstVerificationMethod);
+                if (method) {
+                    await this.click(verificationsVendor.startVerification(method));
+                    await this.click(verificationsVendor.uploadFiles(method));
+                    await this.uploadMedia(setupWizardData.file);
+                    await this.clickAndWaitForResponse(data.subUrls.ajax, verificationsVendor.submit(method));
+                    await this.toBeVisible(verificationsVendor.requestCreateSuccessMessage);
+                    await this.toBeVisible(verificationsVendor.verificationStatus(method, 'pending'));
+                }
+                await this.click(setupWizardVendor.skipTheStepVerifications);
+            }
             await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.dashboard, setupWizardVendor.goToStoreDashboard);
         } else {
             await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.dashboard, setupWizardVendor.notRightNow);
@@ -287,7 +303,7 @@ export class VendorPage extends BasePage {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.dashboard);
         // ensure page suppose to open on new tab
         await this.toHaveAttribute(selector.vendor.vDashboard.menus.visitStore, 'target', '_blank');
-        // force page to open on same tab
+        // force page to open on the same tab
         await this.setAttributeValue(selector.vendor.vDashboard.menus.visitStore, 'target', '_self');
         await this.click(selector.vendor.vDashboard.menus.visitStore);
         await expect(this.page).toHaveURL(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)) + '/');

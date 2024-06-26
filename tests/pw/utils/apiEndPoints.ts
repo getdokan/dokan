@@ -282,6 +282,14 @@ export const endPoints = {
     getVendorStaffCapabilities: (staffId: string) => `${SERVER_URL}/dokan/v1/vendor-staff/${staffId}/capabilities`,
     updateVendorStaffCapabilities: (staffId: string) => `${SERVER_URL}/dokan/v1/vendor-staff/${staffId}/capabilities`,
 
+    // vendor subscriptions
+    getAllVendorSubscriptions: `${SERVER_URL}/dokan/v1/subscription`,
+    getAllVendorSubscriptionPackages: `${SERVER_URL}/dokan/v1/subscription/packages`,
+    getAllVendorSubscriptionNonRecurringPackages: `${SERVER_URL}/dokan/v1/subscription/nonrecurring-packages`,
+    getVendorActiveSubscriptionPack: (vendorId: string) => `${SERVER_URL}/dokan/v1/subscription/vendor/${vendorId}`,
+    updateVendorSubscription: (packId: string) => `${SERVER_URL}/wp-json/dokan/v1/subscription/${packId}`,
+    updateBatchVendorSubscriptions: `${SERVER_URL}/dokan/v1/subscription/batch`, // method: delete, read, unread
+
     // v2
 
     // rank math
@@ -339,6 +347,19 @@ export const endPoints = {
     createProductQuestionAnswer: `${SERVER_URL}/dokan/v1/product-answers`,
     updateProductQuestionAnswer: (answerId: string) => `${SERVER_URL}/dokan/v1/product-answers/${answerId}`,
     deleteProductQuestionAnswer: (answerId: string) => `${SERVER_URL}/dokan/v1/product-answers/${answerId}`,
+
+    // vendor verification
+    getAllVerificationMethods: `${SERVER_URL}/dokan/v1/verification-methods`,
+    getSingleVerificationMethod: (methodId: string) => `${SERVER_URL}/dokan/v1/verification-methods/${methodId}`,
+    createVerificationMethod: `${SERVER_URL}/dokan/v1/verification-methods`,
+    updateVerificationMethod: (methodId: string) => `${SERVER_URL}/dokan/v1/verification-methods/${methodId}`,
+    deleteVerificationMethod: (methodId: string) => `${SERVER_URL}/dokan/v1/verification-methods/${methodId}`,
+
+    getAllVerificationRequests: `${SERVER_URL}/dokan/v1/verification-requests`,
+    getSingleVerificationRequest: (requestId: string) => `${SERVER_URL}/dokan/v1/verification-requests/${requestId}`,
+    createVerificationRequest: `${SERVER_URL}/dokan/v1/verification-requests`,
+    updateVerificationRequest: (requestId: string) => `${SERVER_URL}/dokan/v1/verification-requests/${requestId}`,
+    deleteVerificationRequest: (requestId: string) => `${SERVER_URL}/dokan/v1/verification-requests/${requestId}`,
 
     wc: {
         // coupons

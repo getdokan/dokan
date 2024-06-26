@@ -43,7 +43,7 @@ test.describe('Store Reviews test', () => {
 
     //admin
 
-    test('dokan store reviews menu page is rendering properly', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
+    test('admin can view store reviews menu page', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
         await admin.adminStoreReviewsRenderProperly();
     });
 
@@ -71,7 +71,7 @@ test.describe('Store Reviews test', () => {
         await admin.updateStoreReview('restore');
     });
 
-    test('admin can perform store reviews bulk action', { tag: ['@pro', '@admin'] }, async () => {
+    test('admin can perform bulk action on store reviews', { tag: ['@pro', '@admin'] }, async () => {
         await apiUtils.createStoreReview(VENDOR_ID, payloads.createStoreReview, payloads.customerAuth);
         await admin.storeReviewsBulkAction('trash');
     });

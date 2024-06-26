@@ -35,7 +35,7 @@ test.describe('Product Advertising test', () => {
 
     //admin
 
-    test('dokan product advertising menu page is rendering properly', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
+    test('admin can view product advertising menu page', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
         await admin.adminProductAdvertisingRenderProperly();
     });
 
@@ -64,7 +64,7 @@ test.describe('Product Advertising test', () => {
         await admin.updateAdvertisedProduct(advertisedProduct, 'delete');
     });
 
-    test.skip('admin can perform product advertising bulk action', { tag: ['@pro', '@admin'] }, async () => {
+    test.skip('admin can perform bulk action on product advertisements', { tag: ['@pro', '@admin'] }, async () => {
         // todo: might cause other tests to fail in parallel
         await admin.productAdvertisingBulkAction('delete');
     });

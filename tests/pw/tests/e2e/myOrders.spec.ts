@@ -23,7 +23,7 @@ test.describe('My orders functionality test', () => {
         await apiUtils.dispose();
     });
 
-    test('customer my orders page is rendering properly', { tag: ['@lite', '@customer'] }, async () => {
+    test('customer can view my orders page', { tag: ['@lite', '@customer'] }, async () => {
         await customer.myOrdersRenderProperly();
     });
 

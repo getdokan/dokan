@@ -2,7 +2,7 @@ import { test, Page } from '@playwright/test';
 import { StoreListingPage } from '@pages/storeListingPage';
 import { data } from '@utils/testData';
 
-test.describe('Store listing functionality test', () => {
+test.describe('Store list functionality test', () => {
     let customer: StoreListingPage;
     let cPage: Page;
 
@@ -18,7 +18,7 @@ test.describe('Store listing functionality test', () => {
 
     // store listing
 
-    test('dokan store list page is rendering properly', { tag: ['@lite', '@exploratory', '@customer'] }, async () => {
+    test('customer can view store list page', { tag: ['@lite', '@exploratory', '@customer'] }, async () => {
         await customer.storeListRenderProperly();
     });
 

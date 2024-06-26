@@ -4,6 +4,58 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.11.3',
+        'released' => '2024-06-10',
+        'changes'  => [
+            'Fix'         => [
+                [
+                    'title'       => 'Responsive issue on vendor dashboard tabs preview.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.11.2',
+        'released' => '2024-05-27',
+        'changes'  => [
+            'Improvement'         => [
+                [
+                    'title'       => 'WooCommerce 8.9.1 Compatibility added.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.11.1',
+        'released' => '2024-05-16',
+        'changes'  => [
+            'New'         => [
+                [
+                    'title'       => 'Action hook `dokan_dashboard_sidebar_start` added.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Action hook `dokan_dashboard_sidebar_end` added.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.11.0',
+        'released' => '2024-05-10',
+        'changes'  => [
+            'Fix'         => [
+                [
+                    'title'       => 'The status of sub-orders does not update to completed if it contains only virtual products.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.10.4',
         'released' => '2024-04-25',
         'changes'  => [

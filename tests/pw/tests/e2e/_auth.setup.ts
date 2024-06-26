@@ -6,7 +6,7 @@ import { payloads } from '@utils/payloads';
 import { data } from '@utils/testData';
 import { helpers } from '@utils/helpers';
 
-const { DOKAN_PRO, BASE_URL } = process.env;
+const { LOCAL, DOKAN_PRO, BASE_URL } = process.env;
 
 setup.describe('authenticate users & set permalink', () => {
     let apiUtils: ApiUtils;
@@ -35,6 +35,8 @@ setup.describe('authenticate users & set permalink', () => {
         await loginPage.adminLogin(data.admin, data.auth.adminAuthFile);
     });
 
+    //todo: add plugin activation for local setup
+
     setup.skip('admin set WpSettings', { tag: ['@lite'] }, async ({ page }) => {
         const loginPage = new LoginPage(page);
         const wpPage = new WpPage(page);
@@ -52,6 +54,11 @@ setup.describe('authenticate users & set permalink', () => {
         helpers.createEnvVar('VENDOR_ID', sellerId);
     });
 
+    setup('add customer2', { tag: ['@lite'] }, async () => {
+        const [, customerId] = await apiUtils.createCustomer(payloads.createCustomer2, payloads.adminAuth);
+        helpers.createEnvVar('CUSTOMER2_ID', customerId);
+    });
+
     setup('add vendor2', { tag: ['@lite'] }, async () => {
         const [, sellerId] = await apiUtils.createStore(payloads.createStore2, payloads.adminAuth, true);
         helpers.createEnvVar('VENDOR2_ID', sellerId);
@@ -67,12 +74,18 @@ setup.describe('authenticate users & set permalink', () => {
         await loginPage.login(data.vendor, data.auth.vendorAuthFile);
     });
 
+    setup('authenticate customer2', { tag: ['@lite'] }, async ({ page }) => {
+        const loginPage = new LoginPage(page);
+        await loginPage.login(data.customer.customer2, data.auth.customer2AuthFile);
+    });
+
     setup('authenticate vendor2', { tag: ['@lite'] }, async ({ page }) => {
         const loginPage = new LoginPage(page);
         await loginPage.login(data.vendor.vendor2, data.auth.vendor2AuthFile);
     });
 
     setup('dokan pro enabled or not', { tag: ['@lite'] }, async () => {
+        setup.skip(LOCAL, 'Skip on Local testing');
         let res = await apiUtils.checkPluginsExistence(data.plugin.dokanPro, payloads.adminAuth);
         if (res) {
             res = await apiUtils.pluginsActiveOrNot(data.plugin.dokanPro, payloads.adminAuth);

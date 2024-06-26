@@ -20,14 +20,14 @@ test.describe('Vendor functionality test', () => {
     });
 
     test('vendor can register', { tag: ['@lite', '@vendor'] }, async ({ page }) => {
-        const vendorPage = new VendorPage(page);
-        await vendorPage.vendorRegister(data.vendor.vendorInfo, { ...data.vendorSetupWizard, choice: false });
+        const vendor = new VendorPage(page);
+        await vendor.vendorRegister(data.vendor.vendorInfo, { ...data.vendorSetupWizard, choice: false });
     });
 
     test('vendor can register (address fields are enabled)', { tag: ['@lite', '@vendor'] }, async ({ page }) => {
-        const vendorPage = new VendorPage(page);
+        const vendor = new VendorPage(page);
         await dbUtils.setDokanSettings(dbData.dokan.optionName.general, { ...dbData.dokan.generalSettings, enabled_address_on_reg: 'on' });
-        await vendorPage.vendorRegister({ ...data.vendor.vendorInfo, addressFieldsEnabled: true }, { ...data.vendorSetupWizard, choice: false });
+        await vendor.vendorRegister({ ...data.vendor.vendorInfo, addressFieldsEnabled: true }, { ...data.vendorSetupWizard, choice: false });
         await dbUtils.setDokanSettings(dbData.dokan.optionName.general, { ...dbData.dokan.generalSettings, enabled_address_on_reg: 'off' });
     });
 
@@ -46,7 +46,7 @@ test.describe('Vendor functionality test', () => {
         await vendor.vendorSetupWizard(data.vendorSetupWizard);
     });
 
-    test('vendor account details menu page is rendering properly', { tag: ['@lite', '@exploratory', '@vendor'] }, async () => {
+    test('vendor can view account details menu page', { tag: ['@lite', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorAccountDetailsRenderProperly();
     });
 

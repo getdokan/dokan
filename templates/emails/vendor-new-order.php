@@ -33,7 +33,7 @@ $order_url = esc_url(
     <p>
         <?php
         // translators: 1) order formatted billing full name
-        printf( __( 'You have received an order from %s.', 'dokan-lite' ), $order->get_formatted_billing_full_name() );
+        printf( esc_html__( 'You have received an order from %s.', 'dokan-lite' ), esc_html( $order->get_formatted_billing_full_name() ) );
         ?>
     </p>
 
@@ -78,7 +78,7 @@ $order_url = esc_url(
             if ( $item_totals ) {
                 $i = 0;
                 foreach ( $item_totals as $total ) {
-                    $i ++;
+                    ++$i;
                     ?>
                     <tr>
                         <th class="td" scope="row" colspan="2" style="text-align:<?php echo esc_attr( $text_align ); ?>; <?php echo ( 1 === $i ) ? 'border-top-width: 4px;' : ''; ?>"><?php echo wp_kses_post( $total['label'] ); ?></th>

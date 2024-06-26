@@ -88,49 +88,61 @@ export class StoresPage extends AdminPage {
 
         // add new vendor
         await this.click(vendors.addNewVendor);
+
         // account info
-        await this.type(vendors.newVendor.firstName, firstName);
-        await this.type(vendors.newVendor.lastName, vendorInfo.lastName());
-        await this.type(vendors.newVendor.storeName, shopName);
+        await this.clearAndType(vendors.newVendor.firstName, firstName); //todo: why type instead of clearAndType
+        await this.clearAndType(vendors.newVendor.lastName, vendorInfo.lastName());
+        await this.clearAndType(vendors.newVendor.storeName, shopName);
         await this.typeAndWaitForResponse(data.subUrls.api.dokan.stores, vendors.newVendor.storeUrl, shopName);
-        await this.type(vendors.newVendor.phoneNumber, vendorInfo.phoneNumber);
+        await this.clearAndType(vendors.newVendor.phoneNumber, vendorInfo.phoneNumber);
         await this.typeAndWaitForResponse(data.subUrls.api.dokan.stores, vendors.newVendor.email, email);
         await this.click(vendors.newVendor.generatePassword);
         await this.clearAndType(vendors.newVendor.password, vendorInfo.password);
         await this.typeAndWaitForResponse(data.subUrls.api.dokan.stores, vendors.newVendor.username, username);
+
+        // eu compliance data
         if (DOKAN_PRO) {
-            await this.type(vendors.newVendor.companyName, vendorInfo.companyName);
-            await this.type(vendors.newVendor.companyIdEuidNumber, vendorInfo.companyId);
-            await this.type(vendors.newVendor.vatOrTaxNumber, vendorInfo.vatNumber);
-            await this.type(vendors.newVendor.nameOfBank, vendorInfo.bankName);
-            await this.type(vendors.newVendor.bankIban, vendorInfo.bankIban);
+            await this.clearAndType(vendors.newVendor.companyName, vendorInfo.companyName);
+            await this.clearAndType(vendors.newVendor.companyIdEuidNumber, vendorInfo.companyId);
+            await this.clearAndType(vendors.newVendor.vatOrTaxNumber, vendorInfo.vatNumber);
+            await this.clearAndType(vendors.newVendor.nameOfBank, vendorInfo.bankName);
+            await this.clearAndType(vendors.newVendor.bankIban, vendorInfo.bankIban);
         }
+
         await this.click(vendors.newVendor.next);
+        await this.click(vendors.newVendor.address); // added to avoid flakiness
+
         // address
         await this.waitForVisibleLocator(vendors.newVendor.street1);
-        await this.type(vendors.newVendor.street1, vendorInfo.street1);
-        await this.type(vendors.newVendor.street2, vendorInfo.street2);
-        await this.type(vendors.newVendor.city, vendorInfo.city);
-        await this.type(vendors.newVendor.zip, vendorInfo.zipCode);
+        await this.clearAndType(vendors.newVendor.street1, vendorInfo.street1);
+        await this.clearAndType(vendors.newVendor.street2, vendorInfo.street2);
+        await this.clearAndType(vendors.newVendor.city, vendorInfo.city);
+        await this.clearAndType(vendors.newVendor.zip, vendorInfo.zipCode);
         await this.click(vendors.newVendor.country);
         await this.type(vendors.newVendor.countryInput, vendorInfo.country);
         await this.press(data.key.enter);
         await this.click(vendors.newVendor.state);
         await this.type(vendors.newVendor.stateInput, vendorInfo.state);
         await this.press(data.key.enter);
+
         await this.click(vendors.newVendor.next);
+        await this.click(vendors.newVendor.paymentOptions); // added to avoid flakiness
+
         // payment options
-        await this.type(vendors.newVendor.accountName, vendorInfo.accountName);
-        await this.type(vendors.newVendor.accountNumber, vendorInfo.accountNumber);
-        await this.type(vendors.newVendor.bankName, vendorInfo.bankName);
-        await this.type(vendors.newVendor.bankAddress, vendorInfo.bankAddress);
-        await this.type(vendors.newVendor.routingNumber, vendorInfo.routingNumber);
-        await this.type(vendors.newVendor.iban, vendorInfo.iban);
-        await this.type(vendors.newVendor.swift, vendorInfo.swiftCode);
-        await this.fill(vendors.newVendor.payPalEmail, vendorInfo.email());
+        await this.clearAndType(vendors.newVendor.accountName, vendorInfo.accountName);
+        await this.clearAndType(vendors.newVendor.accountNumber, vendorInfo.accountNumber);
+        await this.selectByValue(vendors.newVendor.accountType, vendorInfo.accountType);
+        await this.clearAndType(vendors.newVendor.bankName, vendorInfo.bankName);
+        await this.clearAndType(vendors.newVendor.bankAddress, vendorInfo.bankAddress);
+        await this.clearAndType(vendors.newVendor.routingNumber, vendorInfo.routingNumber);
+        await this.clearAndType(vendors.newVendor.iban, vendorInfo.iban);
+        await this.clearAndType(vendors.newVendor.swift, vendorInfo.swiftCode);
+        await this.clearAndType(vendors.newVendor.payPalEmail, vendorInfo.email());
+
         await this.check(vendors.newVendor.enableSelling);
         await this.check(vendors.newVendor.publishProductDirectly);
         await this.check(vendors.newVendor.makeVendorFeature);
+
         // create vendor
         await this.clickAndWaitForResponse(data.subUrls.api.dokan.stores, vendors.newVendor.createVendor);
         await this.toContainText(vendors.sweetAlertTitle, 'Vendor Created');

@@ -5,7 +5,7 @@ import { payloads } from '@utils/payloads';
 import { helpers } from '@utils/helpers';
 import { data } from '@utils/testData';
 
-const { DOKAN_PRO, BASE_URL } = process.env;
+const { LOCAL, DOKAN_PRO, BASE_URL } = process.env;
 
 setup.describe('setup test environment', () => {
     let apiUtils: ApiUtils;
@@ -49,6 +49,7 @@ setup.describe('setup test environment', () => {
     });
 
     setup('dokan pro enabled or not', { tag: ['@lite'] }, async () => {
+        setup.skip(LOCAL, 'Skip on Local testing');
         let res = await apiUtils.checkPluginsExistence(data.plugin.dokanPro, payloads.adminAuth);
         if (res) {
             res = await apiUtils.pluginsActiveOrNot(data.plugin.dokanPro, payloads.adminAuth);

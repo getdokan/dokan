@@ -263,10 +263,19 @@ class Hooks {
         // return if any child order is not completed
         $all_complete = true;
 
+        // Exclude manual gateways from auto complete order status update for digital products.
+        $excluded_gateways = apply_filters( 'dokan_excluded_payment_gateways_on_order_status_update', array( 'bacs', 'cheque', 'cod' ) );
+
         foreach ( $sub_orders as $sub_order ) {
+            // if the order is a downloadable and virtual product, then we need to set the status to complete
+            if ( 'processing' === $sub_order->get_status() && $order->is_paid() && ! in_array( $order->get_payment_method(), $excluded_gateways, true ) && ! $sub_order->needs_processing() ) {
+                $sub_order->set_status( 'completed', __( 'Marked as completed because it contains digital products only.', 'dokan-lite' ) );
+                $sub_order->save();
+            }
+
+            // if any child order is not completed, break the loop
             if ( $sub_order->get_status() !== 'completed' ) {
                 $all_complete = false;
-                break;
             }
         }
 
@@ -329,7 +338,7 @@ class Hooks {
         $available_vendors = array_unique( $available_vendors );
 
         if ( $coupon->is_type( 'fixed_cart' ) && count( $available_vendors ) > 1 ) {
-            throw new Exception( __( 'This coupon is invalid for multiple vendors.', 'dokan-lite' ) );
+            throw new Exception( esc_html__( 'This coupon is invalid for multiple vendors.', 'dokan-lite' ) );
         }
 
         // Make sure applied coupon created by admin
@@ -343,7 +352,7 @@ class Hooks {
 
         // A coupon must be bound with a product
         if ( ! dokan()->is_pro_exists() && count( $coupon->get_product_ids() ) === 0 ) {
-            throw new Exception( __( 'A coupon must be restricted with a vendor product.', 'dokan-lite' ) );
+            throw new Exception( esc_html__( 'A coupon must be restricted with a vendor product.', 'dokan-lite' ) );
         }
 
         $coupon_id = $coupon->get_id();

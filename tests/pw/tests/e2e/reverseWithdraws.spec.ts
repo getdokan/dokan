@@ -39,21 +39,21 @@ test.describe('Reverse withdraw test', () => {
         await apiUtils.dispose();
     });
 
-    test('dokan admin reverse withdraw menu page is rendering properly', { tag: ['@lite', '@exploratory', '@admin'] }, async () => {
+    test('admin can view reverse withdrawal menu page', { tag: ['@lite', '@exploratory', '@admin'] }, async () => {
         await admin.adminReverseWithdrawRenderProperly();
     });
 
-    test.skip('admin can filter reverse withdraws by store', { tag: ['@lite', '@admin'] }, async () => {
+    test.skip('admin can filter reverse withdrawal by store', { tag: ['@lite', '@admin'] }, async () => {
         await admin.filterReverseWithdraws(data.predefined.vendorStores.vendor2);
     });
 
-    test('admin can crete reverse withdraws', { tag: ['@lite', '@admin'] }, async () => {
+    test('admin can add reverse withdrawal', { tag: ['@lite', '@admin'] }, async () => {
         await admin.addReverseWithdrawal({ ...data.reverseWithdraw, store: data.predefined.vendorStores.vendor2, product: productName });
     });
 
     // vendor
 
-    test('vendor reverse withdrawal menu page is rendering properly', { tag: ['@lite', '@exploratory', '@vendor'] }, async () => {
+    test('vendor can view reverse withdrawal menu page', { tag: ['@lite', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorReverseWithdrawalRenderProperly();
     });
 
@@ -65,15 +65,15 @@ test.describe('Reverse withdraw test', () => {
         await vendor.vendorViewReverseWithdrawalAnnouncement();
     });
 
-    test('vendor can filter reverse withdrawals', { tag: ['@lite', '@vendor'] }, async () => {
+    test('vendor can filter reverse withdrawals by date', { tag: ['@lite', '@vendor'] }, async () => {
         await vendor.vendorFilterReverseWithdrawals(data.date.dateRange);
     });
 
-    test('vendor can pay reverse pay balance', { tag: ['@lite', '@vendor'] }, async () => {
+    test('vendor can pay reverse withdrawal balance', { tag: ['@lite', '@vendor'] }, async () => {
         const orderId = await vendor.vendorPayReversePayBalance();
         await apiUtils.updateOrderStatus(orderId, data.order.orderStatus.completed, payloads.adminAuth);
     });
 
-    // todo: vendor cant withdraw when reverse withdrawal rule applied
+    // todo: vendor can't withdraw when reverse withdrawal rule applied
     // todo: add to cart button removed when reverse withdrawal rule applied
 });

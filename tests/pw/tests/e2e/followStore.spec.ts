@@ -35,11 +35,11 @@ test.describe('Follow stores functionality test', () => {
 
     // customer
 
-    test('customer followed vendors menu page is rendering properly', { tag: ['@pro', '@exploratory', '@customer'] }, async () => {
+    test('customer can view followed vendors menu page', { tag: ['@pro', '@exploratory', '@customer'] }, async () => {
         await customer.customerFollowedVendorsRenderProperly();
     });
 
-    test('customer can follow store on store listing', { tag: ['@pro', '@customer'] }, async () => {
+    test('customer can follow store on store list page', { tag: ['@pro', '@customer'] }, async () => {
         await customer.followStore(data.predefined.vendorStores.vendor1, data.predefined.vendorStores.followFromStoreListing);
     });
 
@@ -49,7 +49,7 @@ test.describe('Follow stores functionality test', () => {
 
     //vendor
 
-    test('vendor followers menu page is rendering properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+    test('vendor can view followers menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorFollowersRenderProperly();
     });
 

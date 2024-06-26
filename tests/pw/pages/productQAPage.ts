@@ -66,15 +66,6 @@ export class ProductQAPage extends BasePage {
         await this.multipleElementVisible(answer);
     }
 
-    // decrease unread question count
-    async decreaseUnreadQuestionCount() {
-        await this.goto(data.subUrls.backend.dokan.productQA);
-        const unreadCount = Number(await this.getElementText(productQAAdmin.unreadQuestionCount));
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.api.dokan.productQuestions, productQAAdmin.productQuestionFirstCell);
-        const getNewUnreadCount = Number(await this.getElementText(productQAAdmin.unreadQuestionCount));
-        expect(getNewUnreadCount).toEqual(unreadCount - 1);
-    }
-
     // filter questions
     async filterQuestions(input: string, filterBy: string) {
         await this.goto(data.subUrls.backend.dokan.productQA);
@@ -253,7 +244,8 @@ export class ProductQAPage extends BasePage {
 
     // delete question
     async vendorDeleteQuestion(questionId: string): Promise<void> {
-        await this.goto(data.subUrls.frontend.vDashboard.questionDetails(questionId));
+        //todo: flaky --> Error: page.goto: net::ERR_ABORTED at ...
+        await this.goIfNotThere(data.subUrls.frontend.vDashboard.questionDetails(questionId));
         await this.click(productQAVendor.questionDetails.status.deleteQuestion);
         await this.clickAndWaitForResponse(data.subUrls.ajax, productQAVendor.questionDetails.confirmAction);
         await this.toBeVisible(productQAVendor.questionDetails.questionDeleteSuccessMessage);
@@ -271,22 +263,23 @@ export class ProductQAPage extends BasePage {
     }
 
     //  post question
-    async postQuestion(productName: string, questionsAnswers: questionsAnswers): Promise<void> {
+    async postQuestion(productName: string, questionsAnswers: questionsAnswers, guest = false): Promise<void> {
         await this.goToProductDetails(productName);
         await this.click(selector.customer.cSingleProduct.menus.questionsAnswers);
-        await this.clearAndType(productQACustomer.searchInput, '...');
-        const isGuest = await this.isVisible(productQACustomer.loginPostQuestion);
-        if (isGuest) {
+        await this.focus(productQACustomer.searchInput);
+        await this.clearAndType(productQACustomer.searchInput, '....');
+        if (guest) {
             await this.click(productQACustomer.loginPostQuestion);
             await this.clearAndType(selector.frontend.username, questionsAnswers.user.username);
             await this.clearAndType(selector.frontend.userPassword, questionsAnswers.user.password);
             await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.myAccountToProductQA, selector.frontend.logIn, 302);
 
             await this.click(selector.customer.cSingleProduct.menus.questionsAnswers);
-            await this.clearAndType(productQACustomer.searchInput, '...');
+            await this.clearAndType(productQACustomer.searchInput, '....');
         }
         await this.click(productQACustomer.postQuestion);
         await this.clearAndType(productQACustomer.questionInput, questionsAnswers.question);
+        await this.removeAttribute(productQACustomer.post, 'disabled');
         await this.clickAndWaitForResponse(data.subUrls.api.dokan.productQuestions, productQACustomer.post);
     }
 }

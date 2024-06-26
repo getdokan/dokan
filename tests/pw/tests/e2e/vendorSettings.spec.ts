@@ -27,23 +27,23 @@ test.describe('Vendor settings test', () => {
 
     //vendor
 
-    test('vendor store settings menu page is rendering properly', { tag: ['@lite', '@exploratory', '@vendor'] }, async () => {
+    test('vendor can view store settings menu page', { tag: ['@lite', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorStoreSettingsRenderProperly();
     });
 
-    test('vendor shipstation settings menu page is rendering properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+    test('vendor can view Shipstation settings menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorShipstationSettingsRenderProperly();
     });
 
-    test('vendor social profile settings menu page is rendering properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+    test('vendor can view social profile settings menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorSocialProfileSettingsRenderProperly();
     });
 
-    test('vendor rma settings menu page is rendering properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+    test('vendor can view rma settings menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorRmaSettingsRenderProperly();
     });
 
-    test('vendor store seo settings menu page is rendering properly', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
+    test('vendor can view store seo settings menu page', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorStoreSeoSettingsRenderProperly();
     });
 
@@ -59,8 +59,8 @@ test.describe('Vendor settings test', () => {
         await vendor.setStoreSettings(data.vendor.vendorInfo, 'address');
     });
 
-    test('vendor can set company info settings', { tag: ['@pro', '@vendor'] }, async () => {
-        await vendor.setStoreSettings(data.vendor.vendorInfo, 'company-info');
+    test('vendor can set euComplicance info settings', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.setStoreSettings(data.vendor.vendorInfo, 'euComplicance');
     });
 
     test('vendor can set map settings', { tag: ['@lite', '@vendor'] }, async () => {
