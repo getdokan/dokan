@@ -332,6 +332,8 @@ class Importer extends \WC_Product_Importer {
 
         global $wpdb;
 
+
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         // Deleting orders from dokan orders table.
         $wpdb->delete(
             $wpdb->prefix . 'dokan_orders',
@@ -352,5 +354,6 @@ class Importer extends \WC_Product_Importer {
             [ 'user_id' => $vendor_id ],
             [ '%d' ]
         );
+        // phpcs:enable
     }
 }
