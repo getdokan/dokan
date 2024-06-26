@@ -84,7 +84,7 @@ class Hooks {
         $search_key          = '%' . $wpdb->esc_like( $category_id ) . '%';
 
         while ( null !== $results ) {
-            $results = $wpdb->get_results(
+            $results = $wpdb->get_results( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
                 $wpdb->prepare( "SELECT post_id, meta_value FROM {$wpdb->prefix}postmeta where meta_key='chosen_product_cat' AND meta_value LIKE %s LIMIT %d OFFSET %d", $search_key, $limit, $offset ),
                 ARRAY_A
             );

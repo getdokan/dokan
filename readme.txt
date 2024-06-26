@@ -1,17 +1,17 @@
-=== Dokan - Best WooCommerce Multivendor Marketplace Solution - Build Your Own Amazon, eBay, Etsy ===
+=== Dokan - Powerful WooCommerce Multivendor Marketplace Solution - Build Your Own Amazon, eBay, Etsy ===
 Contributors: tareq1988, wedevs, nizamuddinbabu
 Donate Link: http://tareq.co/donate/
 Tags: WooCommerce multivendor marketplace, multivendor marketplace, multivendor, multi seller, multi vendor, WooCommerce marketplace, WooCommerce product vendors
 Requires at least: 6.4
-Tested up to: 6.5.3
+Tested up to: 6.5.4
 WC requires at least: 8.0.0
-WC tested up to: 8.8.3
+WC tested up to: 8.9.2
 Requires PHP: 7.4
-Stable tag: 3.11.0
+Stable tag: 3.11.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Transform your WooCommerce site into a robust multivendor marketplace with Dokan - the #1 WooCommerce multivendor marketplace solution!
+Transform your WooCommerce site into a multivendor marketplace with Dokan - a powerful and advanced WooCommerce multivendor marketplace solution
 
 == Description ==
 
@@ -69,7 +69,7 @@ Here is how you can build your multivendor marketplace with Dokan.
 
 👏 “Best investment we made last year.”
 
-👏 [“Excellent product. Ease of use. Saved hundreds of work hours with lots of additional benefits.”] (https://www.capterra.com/p/168004/Dokan-Multivendor-Marketplace/reviews/543139/)
+👏 “[Excellent product. Ease of use. Saved hundreds of work hours with lots of additional benefits] (https://www.capterra.com/p/168004/Dokan-Multivendor-Marketplace/reviews/543139/)”
 
 = SUCCESS STORIES WE ARE PROUD TO BE A PART OF =
 
@@ -308,7 +308,7 @@ A. Not for the moment. We have plans to integrate with BuddyPress via an add-on 
 A. Yes, Dokan is fully responsive. We take mobile first approach and it displays very well in mobile and tablet devices. We are using Twitter Bootstrap as a framework and it just works.
 
 = Q. Does it supports variable products? =
-A. The **Pro** version does! You can seller normal products, downloadable products and variable products with your own attributes.
+A. The **Pro** version does! You can sell normal products, downloadable products, and variable products with your own attributes.
 
 = Q. Can each vendor customize his store? =
 A. Right now we have options for only changing the store banner page. We are working on a better customizable seller store page.
@@ -346,6 +346,19 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 == Changelog ==
+
+= v3.11.3 ( Jun 10, 2024 ) =
+
+- **fix:** Responsive issue on vendor dashboard tabs preview.
+
+= v3.11.2 ( May 27, 2024 ) =
+
+- **update:** WooCommerce 8.9.1 Compatibility added.
+
+= v3.11.1 ( May 16, 2024 ) =
+
+- **new:** Action hook `dokan_dashboard_sidebar_start` added.
+- **new:** Action hook `dokan_dashboard_sidebar_end` added.
 
 = v3.11.0 ( May 10, 2024 ) =
 

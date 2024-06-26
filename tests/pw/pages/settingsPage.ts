@@ -257,19 +257,17 @@ export class SettingsPage extends AdminPage {
     }
 
     // Admin Set Dokan Color Settings
-    async setDokanColorSettings(colors: dokanSettings['colors']) {
+    async setDokanColorSettings(paletteName: string) {
         await this.goToDokanSettings();
         await this.click(settingsAdmin.menus.colors);
 
         // Colors Settings
-        if (colors.paletteChoice === 'pre-defined') {
-            await this.click(settingsAdmin.colors.predefineColorPalette);
-            await this.click(settingsAdmin.colors.colorPalette[colors.colorPalette as keyof typeof settingsAdmin.colors.colorPalette]);
-        }
+        await this.click(settingsAdmin.colors.predefineColorPalette);
+        await this.click(settingsAdmin.colors.predefinedPalette(paletteName));
 
         // save settings
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.colors.colorsSaveChanges);
-        await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, colors.saveSuccessMessage);
+        await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, data.dokanSettings.colors.saveSuccessMessage);
     }
 
     // Admin Set Dokan Live Search Settings
@@ -298,6 +296,20 @@ export class SettingsPage extends AdminPage {
         // save settings
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.storeSupport.storeSupportSaveChanges);
         await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, storeSupport.saveSuccessMessage);
+    }
+
+    // Admin Set Dokan Vendor Verificaton Settings
+    async setDokanVendorVerificationSettings(vendorVerification: Pick<dokanSettings['vendorVerification'], 'verifiedIcons' | 'verificationMethods' | 'saveSuccessMessage'>) {
+        await this.goToDokanSettings();
+        await this.click(settingsAdmin.menus.vendorVerification);
+
+        await this.click(settingsAdmin.vendorVerification.verifiedIcon(vendorVerification.verifiedIcons.userCheckSolid));
+        const response = await this.enableSwitcherAndWaitForResponse(data.subUrls.api.dokan.verificationMethods, settingsAdmin.vendorVerification.enableVerificationMethod(vendorVerification.verificationMethods.nationalId));
+        response && (await this.toBeVisible(settingsAdmin.vendorVerification.methodUpdateSuccessMessage));
+
+        // save settings
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.vendorVerification.saveChanges);
+        await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, vendorVerification.saveSuccessMessage);
     }
 
     // Admin Set Dokan Email Verification Settings

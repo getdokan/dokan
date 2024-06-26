@@ -35,6 +35,7 @@ class V_2_9_4 extends DokanUpgrader {
 
         $table_name = $wpdb->prefix . 'dokan_refund';
 
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange
         if ( $wpdb->get_var( $wpdb->prepare( 'SHOW TABLES LIKE %s', $table_name ) ) !== $table_name ) {
             return;
         }
