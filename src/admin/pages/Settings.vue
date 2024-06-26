@@ -49,6 +49,9 @@
                         <div v-if="section.document_link" class="settings-document-button">
                             <a :href="section.document_link" target="_blank" class="doc-link">{{ __( 'Documentation', 'dokan-lite' ) }}</a>
                         </div>
+                        <div v-if="'on' === section.action_button" class="settings-action-link">
+                            <a class="action-link" href="#" @click.prevent="handleAction( section.id )">{{ section.action_button_label }}</a>
+                        </div>
                     </fieldset>
                     <template v-for="(fields, index) in settingFields" v-if="isLoaded">
                         <div :id="index" class="group" v-if="currentTab === index" :key="index">
@@ -64,6 +67,7 @@
                                             :field-data="field"
                                             :field-value="settingValues[index]"
                                             :all-settings-values="settingValues"
+                                            :setting-fields='settingFields'
                                             @openMedia="showMedia"
                                             :key="fieldId"
                                             :errors="errors"
@@ -546,6 +550,31 @@
                 this.$root.$emit('reinitWpTextEditor');
             },
 
+            handleAction( sectionId ) {
+                if ( 'dokan_form_manager' === sectionId ) {
+                    this.resetAllFields( sectionId );
+                }
+            },
+
+            resetAllFields( sectionId ) {
+                let settingFields              = Object.entries( this.settingFields[sectionId] );
+                let clonedSectionSettingValues = JSON.parse( JSON.stringify( this.settingValues[sectionId] ) );
+
+                settingFields.forEach( ( key, value ) => {
+                    let blockId = key[0];
+
+                    if ( blockId ) {
+                        let sectionValue = key[1];
+                        for (const [FieldId, fieldData] of Object.entries(sectionValue.fields)) {
+                            clonedSectionSettingValues[blockId]['fields'][FieldId]['visibility'] = fieldData.default.visibility;
+                            clonedSectionSettingValues[blockId]['fields'][FieldId]['required']   = fieldData.default.required;
+                        }
+                    }
+                } );
+
+                this.settingValues[sectionId] = clonedSectionSettingValues;
+            },
+
             scrollToTop() {
                 this.$refs.settingsWrapper.scrollIntoView({ behavior: 'smooth' });
             },
@@ -713,11 +742,13 @@
 
             .settings-header {
                 display: flex;
-                margin-bottom: 50px;
+                margin-bottom: 30px;
                 justify-content: space-between;
+                flex-wrap: wrap;
 
                 .settings-content {
                     flex: 4;
+                    margin: 0 auto 20px;
 
                     .settings-title {
                         margin: 30px 0 20px 0;
@@ -740,7 +771,7 @@
                 .settings-document-button {
                     flex: 2.5;
                     text-align: right;
-                    margin-top: 35px;
+                    margin: 35px 0 20px;
 
                     a.doc-link {
                         color: #033AA3D9;
@@ -757,6 +788,30 @@
 
                         &:hover {
                             background: #033aa30f;
+                        }
+                    }
+                }
+
+                .settings-action-link {
+                    flex: 0 0 100%;
+                    margin: 10px auto -10px;
+                    text-align: right;
+
+                    a.action-link {
+                        color: #033AA3D9;
+                        border: 1px solid #F3F4F6;
+                        padding: 10px 15px 8px;
+                        font-size: 12px;
+                        background: #FFF;
+                        box-sizing: border-box;
+                        box-shadow: 2px 2px 3px 0px rgba(0, 0, 0, 0.1);
+                        font-family: Roboto, sans-serif;
+                        line-height: 15px;
+                        border-radius: 6.56px;
+                        text-decoration: none;
+
+                        &:hover, &:active, &:focus {
+                            background-color: #F6F7F7;
                         }
                     }
                 }

@@ -22,7 +22,7 @@ class Categories {
     public function get_all_categories( $ret = false ) {
         $transient_key = function_exists( 'wpml_get_current_language' ) && ! empty( wpml_get_current_language() ) ? 'multistep_categories_' . wpml_get_current_language() : 'multistep_categories';
 
-        $this->categories = Cache::get_transient( $transient_key );
+        $this->get_categories();
 
         if ( false === $this->categories ) {
             //calculate category data
@@ -39,7 +39,7 @@ class Categories {
     /**
      * This method will return category data
      *
-     * @sience 3.6.2
+     * @since 3.6.2
      *
      * @return array
      */

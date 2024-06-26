@@ -57,6 +57,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @property WeDevs\Dokan\BackgroundProcess\Manager $bg_process Instance of WeDevs\Dokan\BackgroundProcess\Manager class
  * @property WeDevs\Dokan\Withdraw\Manager $withdraw Instance of WeDevs\Dokan\Withdraw\Manager class
  * @property WeDevs\Dokan\Frontend\Frontend $frontend_manager Instance of \WeDevs\Dokan\Frontend\Frontend class
+ * @property WeDevs\Dokan\Dashboard\Manager $dashboard Instance of \WeDevs\Dokan\Dashboard\Manager class
  * @property WeDevs\Dokan\Registration $registration Instance of WeDevs\Dokan\Registration class
  */
 final class WeDevs_Dokan {
@@ -259,6 +260,7 @@ final class WeDevs_Dokan {
         $this->define( 'DOKAN_FILE', __FILE__ );
         $this->define( 'DOKAN_DIR', __DIR__ );
         $this->define( 'DOKAN_INC_DIR', __DIR__ . '/includes' );
+        $this->define( 'DOKAN_TEMPLATE_DIR', __DIR__ . '/templates' );
         $this->define( 'DOKAN_LIB_DIR', __DIR__ . '/lib' );
         $this->define( 'DOKAN_PLUGIN_ASSEST', plugins_url( 'assets', __FILE__ ) );
 
@@ -376,6 +378,7 @@ final class WeDevs_Dokan {
         new \WeDevs\Dokan\Vendor\UserSwitch();
         new \WeDevs\Dokan\CacheInvalidate();
         new \WeDevs\Dokan\Shipping\Hooks();
+        new \WeDevs\Dokan\ProductForm\Init();
 
         if ( is_admin() ) {
             new \WeDevs\Dokan\Admin\Hooks();
