@@ -1,5 +1,7 @@
 <?php
 
+use WeDevs\Dokan\Test\Helpers\Dokan_Test_Helpers;
+
 class Dokan_Test_Seller extends WP_UnitTestCase {
 
     private $seller_one = 0;
@@ -13,17 +15,21 @@ class Dokan_Test_Seller extends WP_UnitTestCase {
     }
 
     public function create_sellers() {
-        $this->seller_one = $this->factory()->user->create( [
-            'role'        => 'seller',
-            'user_login'  => 'seller_one',
-            'description' => 'seller_one',
-        ] );
+        $this->seller_one = $this->factory()->user->create(
+            [
+				'role'        => 'seller',
+				'user_login'  => 'seller_one',
+				'description' => 'seller_one',
+			]
+        );
 
-        $this->seller_two = $this->factory()->user->create( [
-            'role'        => 'seller',
-            'user_login'  => 'seller_two',
-            'description' => 'seller_two',
-        ] );
+        $this->seller_two = $this->factory()->user->create(
+            [
+				'role'        => 'seller',
+				'user_login'  => 'seller_two',
+				'description' => 'seller_two',
+			]
+        );
     }
 
     public function test_create_seller() {

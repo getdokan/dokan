@@ -22,7 +22,6 @@ class ProductFactory extends WP_UnitTest_Factory_For_Thing {
         $product = $this->create_simple_product( $args );
 
         if ( $this->seller_id ) {
-            
             $post_data = [
                 'ID'          => $product->get_id(),
                 'post_author' => $this->seller_id,

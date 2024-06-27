@@ -13,7 +13,7 @@ class ShippingFactory extends WP_UnitTest_Factory_For_Thing {
             // 'order_id' => 1, // Required
             'method_title' => new WP_UnitTest_Generator_Sequence( 'Shipping Method %s' ),
             'method_id' => new WP_UnitTest_Generator_Sequence( 'shipping_method_%s' ),
-            'total' => 10
+            'total' => 10,
         ];
     }
 
@@ -44,7 +44,9 @@ class ShippingFactory extends WP_UnitTest_Factory_For_Thing {
         if ( isset( $fields['total'] ) ) {
             $shipping_item->set_total( $fields['total'] );
         }
+
         $shipping_item->save();
+
         return $shipping_id;
     }
 

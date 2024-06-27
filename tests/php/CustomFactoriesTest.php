@@ -10,47 +10,59 @@ class CustomFactoriesTest extends DokanTestCase {
     public function test_create_order() {
         $order_id = $this->factory()
             ->order
-            ->set_item_fee( [ 'name' => 'Extra Charge', 'amount' => 10 ] )
-            ->set_item_shipping( [ 'name' => 'Shipping Fee', 'amount' => 10 ] )
-            ->set_item_coupon( 
-                $this->factory()->coupon->create_and_get( [ 'meta' => [ 'coupon_amount' => 15 ] ] ) 
+            ->set_item_fee(
+                [
+					'name' => 'Extra Charge',
+					'amount' => 10,
+				]
             )
-            ->create( [
-                'status'      => 'pending',
-                'customer_id' => $this->factory()->customer->create([]),
-                'line_items'  => array(
-                    array(
-                        'product_id' => $this->factory()->product
-                            ->set_seller_id(4)
-                            ->create( 
-                                [
-                                    'name' => 'Test Product 1',
-                                    'regular_price' => 5,
-                                    'price' => 5,
-                                ]
-                            ),
-                        'quantity'   => 2,
-                    ),
-                    array(
-                        'product_id' => $this->factory()->product
-                            ->set_seller_id(5)
-                            ->create( 
-                                [ 
-                                    'name' => 'Test Product 2',
-                                    'regular_price' => 5,
-                                    'price' => 5,
-                                ]
-                            ),
-                        'quantity'   => 1,
-                    ),
-                ),
-            ] );
+            ->set_item_shipping(
+                [
+					'name' => 'Shipping Fee',
+					'amount' => 10,
+				]
+            )
+            ->set_item_coupon(
+                $this->factory()->coupon->create_and_get( [ 'meta' => [ 'coupon_amount' => 15 ] ] )
+            )
+            ->create(
+                [
+					'status'      => 'pending',
+					'customer_id' => $this->factory()->customer->create( [] ),
+					'line_items'  => array(
+						array(
+							'product_id' => $this->factory()->product
+								->set_seller_id( 4 )
+								->create(
+									[
+										'name' => 'Test Product 1',
+										'regular_price' => 5,
+										'price' => 5,
+									]
+								),
+							'quantity'   => 2,
+						),
+						array(
+							'product_id' => $this->factory()->product
+								->set_seller_id( 5 )
+								->create(
+									[
+										'name' => 'Test Product 2',
+										'regular_price' => 5,
+										'price' => 5,
+									]
+								),
+							'quantity'   => 1,
+						),
+					),
+				]
+            );
 
         $order = wc_get_order( $order_id );
         $this->assertInstanceOf( 'WC_Order', $order );
         $this->assertEquals( 'pending', $order->get_status() );
         $this->assertEquals( 2, $order->get_customer_id() );
-        $this->assertEquals( 10, $order->get_total_fees());
+        $this->assertEquals( 10, $order->get_total_fees() );
         $this->assertEquals( 10, $order->get_shipping_total() );
         $this->assertEquals( 15, $order->get_subtotal() );
         $this->assertEquals( 15, $order->get_discount_total() );
@@ -64,16 +76,18 @@ class CustomFactoriesTest extends DokanTestCase {
 
         $this->assertNotEmpty( $order->get_meta( 'has_sub_order' ) );
 
-        $this->assertDatabaseCount( 'posts', 3, [ 'post_type' => 'shop_order'] );
-        $this->assertDatabaseCount( 'posts', 2, [ 'post_type' => 'product'] );
+        $this->assertDatabaseCount( 'posts', 3, [ 'post_type' => 'shop_order' ] );
+        $this->assertDatabaseCount( 'posts', 2, [ 'post_type' => 'product' ] );
     }
 
     public function test_create_customer() {
-        $customer_id = $this->factory()->customer->create( array(
-            'email' => 'testcustomer@example.com',
-            'first_name' => 'Test',
-            'last_name' => 'Customer',
-        ) );
+        $customer_id = $this->factory()->customer->create(
+            array(
+				'email' => 'testcustomer@example.com',
+				'first_name' => 'Test',
+				'last_name' => 'Customer',
+            )
+        );
 
         $customer = new WC_Customer( $customer_id );
 
@@ -84,10 +98,12 @@ class CustomFactoriesTest extends DokanTestCase {
     }
 
     public function test_create_seller() {
-        $seller_id = $this->factory()->seller->create( array(
-            'email' => 'seller@example.com',
-            'shopname' => 'my_shop',
-        ) );
+        $seller_id = $this->factory()->seller->create(
+            array(
+				'email' => 'seller@example.com',
+				'shopname' => 'my_shop',
+            )
+        );
 
         $seller = new Vendor( $seller_id );
 
@@ -98,12 +114,14 @@ class CustomFactoriesTest extends DokanTestCase {
 
     public function test_create_shipping() {
         $order_id = $this->factory()->order->create();
-        $shipping_id = $this->factory()->shipping->create( array(
-            'order_id' => $order_id,
-            'method_title' => 'Flat Rate',
-            'method_id' => 'flat_rate',
-            'total' => 10.00,
-        ) );
+        $shipping_id = $this->factory()->shipping->create(
+            array(
+				'order_id' => $order_id,
+				'method_title' => 'Flat Rate',
+				'method_id' => 'flat_rate',
+				'total' => 10.00,
+            )
+        );
 
         $shipping_item = new WC_Order_Item_Shipping( $shipping_id );
 
@@ -114,13 +132,15 @@ class CustomFactoriesTest extends DokanTestCase {
     }
 
     public function test_create_coupon() {
-        $coupon_id = $this->factory()->coupon->create( array(
-            'code' => 'testcoupon',
-            'meta' => [
-                'discount_type'=> 'percent',
-                'coupon_amount' => 20,
-            ]
-        ) );
+        $coupon_id = $this->factory()->coupon->create(
+            array(
+				'code' => 'testcoupon',
+				'meta' => [
+					'discount_type' => 'percent',
+					'coupon_amount' => 20,
+				],
+            )
+        );
 
         $coupon = new WC_Coupon( $coupon_id );
 
@@ -135,10 +155,12 @@ class CustomFactoriesTest extends DokanTestCase {
 
         $product_id = self::factory()->product
             ->set_seller_id( $seller_id )
-            ->create( array(
-                'name' => 'Test Product',
-                'regular_price' => '19.99',
-            ) );
+            ->create(
+                array(
+					'name' => 'Test Product',
+					'regular_price' => '19.99',
+                )
+            );
 
         $product = wc_get_product( $product_id );
 

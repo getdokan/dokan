@@ -18,17 +18,17 @@ class CustomerFactory extends WP_UnitTest_Factory_For_Thing {
 
     public function create_object( $args ) {
         add_filter( 'dokan_register_nonce_check', '__return_false' ); // Disable Dokan nonce verification.
-        
-        if (! isset( $_POST['role'] ) ) { // 'role' is required to pass the Dokan Validation.
+
+        if ( ! isset( $_POST['role'] ) ) { // 'role' is required to pass the Dokan Validation.
             $_POST['role'] = 'customer';
         }
 
-        $customer = $this->create_customer( $args['email'], $args[ 'password' ], $args['email'] );
+        $customer = $this->create_customer( $args['email'], $args['password'], $args['email'] );
 
         if ( ! is_wp_error( $customer ) ) {
-            return $this->update_object( $customer->get_id(), $args );;
+            return $this->update_object( $customer->get_id(), $args );
         }
-        
+
         return 0;
     }
 
@@ -36,7 +36,12 @@ class CustomerFactory extends WP_UnitTest_Factory_For_Thing {
         $customer = new WC_Customer( $customer_id );
 
         if ( isset( $fields['email'] ) ) {
-            wp_update_user( array( 'ID' => $customer_id, 'user_email' => $fields['email'] ) );
+            wp_update_user(
+                array(
+					'ID' => $customer_id,
+					'user_email' => $fields['email'],
+                )
+            );
         }
 
         if ( isset( $fields['first_name'] ) ) {
@@ -137,5 +142,4 @@ class CustomerFactory extends WP_UnitTest_Factory_For_Thing {
         WC_Helper_Customer::set_tax_based_on( $default_shipping_method );
     }
     /************ End of WC Wrapper  ***************/
-
 }

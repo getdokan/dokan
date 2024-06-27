@@ -25,7 +25,7 @@ class OrderFactory extends WP_UnitTest_Factory_For_Thing {
      * Factory Instance.
      *
      * @param DokanFactory $factory
-     */    
+     */
     public function __construct( $factory = null ) {
         parent::__construct( $factory );
         $this->default_generation_definitions = array(
@@ -42,7 +42,7 @@ class OrderFactory extends WP_UnitTest_Factory_For_Thing {
         }
 
         $line_items = isset( $args['line_items'] ) ? $args['line_items'] : $this->get_default_line_items();
-        
+
         if ( ! empty( $line_items ) ) {
             foreach ( $line_items as $item_data ) {
                 $product = wc_get_product( $item_data['product_id'] );
@@ -54,13 +54,13 @@ class OrderFactory extends WP_UnitTest_Factory_For_Thing {
             $order->set_status( $args['status'] );
         }
 
-        foreach ($this->order_items as $item) {
+        foreach ( $this->order_items as $item ) {
             $item->set_order_id( $order->get_id() );
 
             $order->add_item( $item );
         }
 
-        foreach ($this->coupon_items as $item) {
+        foreach ( $this->coupon_items as $item ) {
             $order->apply_coupon( $item->get_code() );
         }
 
@@ -70,7 +70,7 @@ class OrderFactory extends WP_UnitTest_Factory_For_Thing {
 
         // Dispatch the action to create the Dokan Suborder.
         do_action( 'woocommerce_checkout_update_order_meta', $order->get_id() );
-        
+
         return $order->get_id();
     }
 
@@ -103,7 +103,7 @@ class OrderFactory extends WP_UnitTest_Factory_For_Thing {
     }
 
     public function remove_all_items( WC_Abstract_Order $order ) {
-        foreach ($order->get_items() as $item) {
+        foreach ( $order->get_items() as $item ) {
             wc_delete_order_item( $item->get_id() );
         }
     }
@@ -129,7 +129,7 @@ class OrderFactory extends WP_UnitTest_Factory_For_Thing {
      * @param array $coupon_data
      * @return WC_Order
      */
-    public function add_discount( \WC_Order $order , \WC_Coupon  $coupon ) {
+    public function add_discount( \WC_Order $order, \WC_Coupon $coupon ) {
         $order->apply_coupon( $coupon->get_code() );
 
         // Calculate totals
@@ -141,38 +141,45 @@ class OrderFactory extends WP_UnitTest_Factory_For_Thing {
         return $order;
     }
 
-    public function set_item_coupon( WC_Coupon $coupon  ) {
+    public function set_item_coupon( WC_Coupon $coupon ) {
         $this->coupon_items[] = $coupon;
 
         return $this;
     }
 
-    public function set_item_fee( array $args =  [ 'name' => 'Extra Fee', 'amount' => 100 ] ) {
-        $args = wp_parse_args($args, [
-            'name' => 'Extra Fee',
-            'amount' => 100
-        ]);
+    public function set_item_fee( array $args = [
+		'name' => 'Extra Fee',
+		'amount' => 100,
+	] ) {
+        $args = wp_parse_args(
+            $args, [
+				'name' => 'Extra Fee',
+				'amount' => 100,
+			]
+        );
 
         $fee_item = new WC_Order_Item_Fee();
-        $fee_item->set_name( $args[ 'name' ] );
-        $fee_item->set_total( $args[ 'amount' ] );
-        
-        $this->order_items[] = $fee_item; 
+        $fee_item->set_name( $args['name'] );
+        $fee_item->set_total( $args['amount'] );
+
+        $this->order_items[] = $fee_item;
 
         return $this;
     }
 
     public function set_item_shipping( array $args = [] ) {
-        $args = wp_parse_args($args, [
-            'name' => 'Flat shipping',
-            'amount' => 25
-        ]);
-      
+        $args = wp_parse_args(
+            $args, [
+				'name' => 'Flat shipping',
+				'amount' => 25,
+			]
+        );
+
         $shipping_item = new WC_Order_Item_Shipping();
         $shipping_item->set_name( $args['name'] );
         $shipping_item->set_total( $args['amount'] );
 
-        $this->order_items[] = $shipping_item; 
+        $this->order_items[] = $shipping_item;
 
         return $this;
     }
@@ -213,6 +220,6 @@ class OrderFactory extends WP_UnitTest_Factory_For_Thing {
      * @return WC_Order
      */
     public static function create_order_with_fees_and_shipping( $customer_id = 1, $product = null ) {
-       return WC_Helper_Order::create_order_with_fees_and_shipping( $customer_id, $product );
+		return WC_Helper_Order::create_order_with_fees_and_shipping( $customer_id, $product );
     }
 }

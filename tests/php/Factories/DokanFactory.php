@@ -11,7 +11,7 @@ class DokanFactory extends WP_UnitTest_Factory {
      */
     public $customer;
 
-     /**
+    /**
 	 * Generates customer fixtures for use in tests.
      *
      * @var SellerFactory
@@ -46,8 +46,7 @@ class DokanFactory extends WP_UnitTest_Factory {
     */
     public $shipping;
 
-    public function __construct()
-    {
+    public function __construct() {
         parent::__construct();
         $this->customer = new CustomerFactory( $this );
         $this->seller = new SellerFactory( $this );

@@ -16,10 +16,12 @@ class CouponFactory extends WP_UnitTest_Factory_For_Thing {
     }
 
     public function create_object( $args ) {
-        $meta = wp_parse_args( $args[ 'meta' ] ?? [], [
-            'discount_type'              => 'fixed_cart',
-            'coupon_amount'              => '10',
-        ] );
+        $meta = wp_parse_args(
+            $args['meta'] ?? [], [
+				'discount_type'              => 'fixed_cart',
+				'coupon_amount'              => '10',
+			]
+        );
 
         $coupon = $this->create_coupon( $args['code'], $args['status'], $meta );
 
@@ -43,7 +45,7 @@ class CouponFactory extends WP_UnitTest_Factory_For_Thing {
         return $coupon_id;
     }
 
-     /**
+    /**
      * Get the coupon by ID.
      *
      * @param string $coupon_code

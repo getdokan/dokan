@@ -8,7 +8,7 @@ use WP_UnitTestCase;
 abstract class DokanTestCase extends WP_UnitTestCase {
 	/**
 	 * @
-     * 
+     *
 	 *
 	 * @return DokanFactory The fixture factory.
 	 */
@@ -23,20 +23,25 @@ abstract class DokanTestCase extends WP_UnitTestCase {
     protected function getDatabaseCount( string $table, array $data ) {
         global $wpdb;
 
-        $placeholder = '%d';
+        $placeholders = '%d';
 
-        if ( count($data) ) {
+        if ( count( $data ) ) {
             // $data = ['field1' => 'val1', 'field1' => 'val1'];
-            $separator = "='%s' and ";
-            $placeholder = implode( $separator , array_keys($data)); // $placeholder = "field1='%s' and field2";
-            $placeholder = $placeholder . "='%s' "; // $placeholder = "field1='%s' and field2='%s' ";
-
+            // $placeholders = "field1='%s' AND field2='%s' ";
+            $placeholders = implode(
+                ' AND ', array_map(
+                    function ( $key ) {
+                        return "{$key} = %s";
+                    }, array_keys( $data )
+                )
+            );
         } else {
-            $data = [1];
+            $data = [ 1 ];
         }
 
         $sql = $wpdb->prepare(
-            "SELECT COUNT(*) FROM {$wpdb->prefix}{$table} WHERE $placeholder ", array_values($data)
+            "SELECT COUNT(*) FROM {$wpdb->prefix}{$table} WHERE $placeholders ",
+            array_values( $data )
         );
 
         $rows_count = $wpdb->get_var( $sql );
@@ -46,14 +51,14 @@ abstract class DokanTestCase extends WP_UnitTestCase {
 
 
     public function assertDatabaseHas( string $table, array $data = [] ) {
-        $rows_count = $this->getDatabaseCount($table, $data);
+        $rows_count = $this->getDatabaseCount( $table, $data );
 
-        $this->assertGreaterThanOrEqual(1, $rows_count, "No rows found in `$table` for given data " . json_encode( $data ) );
+        $this->assertGreaterThanOrEqual( 1, $rows_count, "No rows found in `$table` for given data " . json_encode( $data ) );
     }
 
-    public function assertDatabaseCount( string $table, int $count,  array $data = [] ) {
-        $rows_count = $this->getDatabaseCount($table, $data);
+    public function assertDatabaseCount( string $table, int $count, array $data = [] ) {
+        $rows_count = $this->getDatabaseCount( $table, $data );
 
-        $this->assertEquals($count, $rows_count, "No rows found in `$table` for given data " . json_encode( $data ) );
+        $this->assertEquals( $count, $rows_count, "No rows found in `$table` for given data " . json_encode( $data ) );
     }
 }
