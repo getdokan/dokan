@@ -832,7 +832,7 @@ function dokan_get_post_status_label_class( $status = '' ) {
  *
  * @param string $status
  *
- * @return string
+ * @return array
  */
 function dokan_get_product_types( $status = '' ) {
     $types = apply_filters(
