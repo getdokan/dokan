@@ -35,7 +35,8 @@
   },
   "autoload": {
     "psr-4": {
-      "WeDevs\\Dokan\\": "includes/"
+      "WeDevs\\Dokan\\": "includes/",
+      "WeDevs\\Dokan\\Test\\": "tests/php/"
     },
     "files": [
       "includes/functions-rest-api.php",
@@ -51,6 +52,12 @@
     ],
     "phpcbf": [
       "vendor/bin/phpcbf -p"
+    ],
+    "test": [
+      "phpunit"
+    ],
+    "test-f": [
+      "phpunit --filter"
     ]
   }
 }
