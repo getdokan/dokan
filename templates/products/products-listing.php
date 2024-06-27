@@ -135,7 +135,7 @@
                                         <?php
                                         $post_statuses  = apply_filters( 'dokan_product_listing_post_statuses', [ 'publish', 'draft', 'pending', 'future' ] );
                                         $stock_statuses = apply_filters( 'dokan_product_stock_statuses', [ 'instock', 'outofstock' ] );
-                                        $product_types  = apply_filters( 'dokan_product_types', [ 'simple' => __( 'Simple', 'dokan-lite' ) ] );
+                                        $product_types  = apply_filters( 'dokan_product_types', [ 'simple' => esc_html__( 'Simple', 'dokan-lite' ) ] );
 
                                         $args = array(
                                             'posts_per_page' => 15,
@@ -251,13 +251,13 @@
                                         '_product_listing_filter_nonce' => wp_create_nonce( 'product_listing_filter' ),
                                     ],
                                     'type'      => 'array',
-                                    'prev_text' => __( '&laquo; Previous', 'dokan-lite' ),
-                                    'next_text' => __( 'Next &raquo;', 'dokan-lite' ),
+                                    'prev_text' => esc_html__( '&laquo; Previous', 'dokan-lite' ),
+                                    'next_text' => esc_html__( 'Next &raquo;', 'dokan-lite' ),
                                 )
                             );
 
                             echo '<ul class="pagination"><li>';
-                            echo join( "</li>\n\t<li>", $page_links ); // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
+                            echo implode( "</li>\n\t<li>", $page_links ); // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped,WordPress.Security.EscapeOutput.OutputNotEscaped
                             echo "</li>\n</ul>\n";
                             echo '</div>';
                         }

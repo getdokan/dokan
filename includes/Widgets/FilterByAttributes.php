@@ -38,9 +38,9 @@ class FilterByAttributes extends WP_Widget {
         // load frontend script
         wp_enqueue_script( 'dokan-frontend' );
 
-        $taxonomy     = $this->get_instance_taxonomy( $instance );
-        $seller_id = empty( $seller_id ) ? get_query_var( 'author' ) : $seller_id;
-        $vendor    = dokan()->vendor->get( $seller_id );
+        $taxonomy   = $this->get_instance_taxonomy( $instance );
+        $seller_id  = empty( $seller_id ) ? get_query_var( 'author' ) : $seller_id;
+        $vendor     = dokan()->vendor->get( $seller_id );
 
         if ( ! $vendor instanceof Vendor ) {
             return;
@@ -54,16 +54,17 @@ class FilterByAttributes extends WP_Widget {
         $title        = isset( $instance['title'] ) ? apply_filters( 'widget_title', $instance['title'] ) : '';
         $query_type   = isset( $instance['query_type'] ) ? apply_filters( 'widget_query_type', $instance['query_type'] ) : '';
 
-        echo $args['before_widget']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
+        echo wp_kses_post( $args['before_widget'] );
+
         if ( ! empty( $title ) ) {
-            echo $args['before_title'] . $title . $args['after_title']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
+            echo wp_kses_post( $args['before_title'] . $title . $args['after_title'] );
         }
 
         $seller_id = empty( $seller_id ) ? get_query_var( 'author' ) : $seller_id;
 
         dokan_store_term_menu_list( $seller_id, $taxonomy, $query_type );
 
-        echo $args['after_widget']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
+        echo wp_kses_post( $args['after_widget'] );
 
         wp_reset_postdata();
     }
@@ -110,7 +111,7 @@ class FilterByAttributes extends WP_Widget {
             <input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $title ); ?>">
         </p>
         <p>
-            <label for="<?php echo esc_attr( $this->get_field_id( 'attribute' ) ); ?>"><?php echo __( 'Attribute', 'dokan-lite' ); ?></label>
+            <label for="<?php echo esc_attr( $this->get_field_id( 'attribute' ) ); ?>"><?php esc_html_e( 'Attribute', 'dokan-lite' ); ?></label>
             <select class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'attribute' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'attribute' ) ); ?>">
                 <?php foreach ( $attribute_array as $option_key => $option_value ) : ?>
                     <option value="<?php echo esc_attr( $option_key ); ?>" <?php selected( $option_key, $attribute_value ); ?>><?php echo esc_html( $option_value ); ?></option>
@@ -118,7 +119,7 @@ class FilterByAttributes extends WP_Widget {
             </select>
         </p>
         <p>
-            <label for="<?php echo esc_attr( $this->get_field_id( 'query_type' ) ); ?>"><?php echo __( 'Query Type', 'dokan-lite' ); ?></label>
+            <label for="<?php echo esc_attr( $this->get_field_id( 'query_type' ) ); ?>"><?php esc_html_e( 'Query Type', 'dokan-lite' ); ?></label>
             <select class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'query_type' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'query_type' ) ); ?>">
                 <?php foreach ( $query_type as $option_key => $option_value ) : ?>
                     <option value="<?php echo esc_attr( $option_key ); ?>" <?php selected( $option_key, $query_value ); ?>><?php echo esc_html( $option_value ); ?></option>
@@ -177,5 +178,4 @@ class FilterByAttributes extends WP_Widget {
 
         return '';
     }
-
 }
