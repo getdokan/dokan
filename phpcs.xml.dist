@@ -4,23 +4,24 @@
 
     <!-- What to scan -->
     <file>.</file>
-    <exclude-pattern>*/.git/*</exclude-pattern>
-    <exclude-pattern>*/.githooks/*</exclude-pattern>
-    <exclude-pattern>*/.make/*</exclude-pattern>
-    <exclude-pattern>*/assets/*</exclude-pattern>
-    <exclude-pattern>*/src/*</exclude-pattern>
-    <exclude-pattern>*/lib/*</exclude-pattern>
-    <exclude-pattern>*/dist/*</exclude-pattern>
-    <exclude-pattern>*/build/*</exclude-pattern>
-    <exclude-pattern>*/node_modules/*</exclude-pattern>
-    <exclude-pattern>^vendor/</exclude-pattern>
-    <exclude-pattern>(^includes)(\/vendor)</exclude-pattern>
-    <exclude-pattern>*/tests/*</exclude-pattern>
-    <exclude-pattern>*.js</exclude-pattern>
-    <exclude-pattern>*.twig</exclude-pattern>
-    <exclude-pattern>*.css</exclude-pattern>
-    <exclude-pattern>*.scss</exclude-pattern>
-    <exclude-pattern>languages/*</exclude-pattern>
+    <exclude-pattern type="relative">^/\.git/*</exclude-pattern>
+    <exclude-pattern type="relative">^/\.githooks/*</exclude-pattern>
+    <exclude-pattern type="relative">^/\.make/*</exclude-pattern>
+    <exclude-pattern type="relative">*\.asset\.php$</exclude-pattern>
+    <exclude-pattern type="relative">^/assets/*</exclude-pattern>
+    <exclude-pattern type="relative">^/src/*</exclude-pattern>
+    <exclude-pattern type="relative">^/lib/*</exclude-pattern>
+    <exclude-pattern type="relative">^/dist/*</exclude-pattern>
+    <exclude-pattern type="relative">^/build/*</exclude-pattern>
+    <exclude-pattern type="relative">^/node_modules/*</exclude-pattern>
+    <exclude-pattern type="relative">^/vendor/*</exclude-pattern>
+    <exclude-pattern type="relative">(^includes)(\/vendor)</exclude-pattern>
+    <exclude-pattern type="relative">^/tests/*</exclude-pattern>
+    <exclude-pattern type="relative">^/dependencies/*</exclude-pattern>
+    <exclude-pattern type="relative">*\.twig$</exclude-pattern>
+    <exclude-pattern type="relative">*\.css$</exclude-pattern>
+    <exclude-pattern type="relative">*\.scss$</exclude-pattern>
+    <exclude-pattern type="relative">^/languages/*</exclude-pattern>
 
     <!-- How to scan -->
     <!-- Usage instructions: https://github.com/squizlabs/PHP_CodeSniffer/wiki/Usage -->

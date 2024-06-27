@@ -10,7 +10,7 @@ const { DOKAN_PRO } = process.env;
 
 test.use({ extraHTTPHeaders: { Authorization: payloads.adminAuth.Authorization } });
 
-test.describe.skip('calculation test', () => {
+test.describe('calculation test', () => {
     let apiUtils: ApiUtils;
     let taxRate: number;
     let commission: commission;
@@ -18,8 +18,10 @@ test.describe.skip('calculation test', () => {
 
     test.beforeAll(async () => {
         apiUtils = new ApiUtils(await request.newContext());
-        taxRate = await apiUtils.setUpTaxRate(payloads.enableTaxRate, payloads.createTaxRate);
+        // taxRate = await apiUtils.setUpTaxRate(payloads.enableTaxRate, payloads.createTaxRate);
+        taxRate = await apiUtils.setUpTaxRate(payloads.enableTaxRate, { ...payloads.createTaxRate, rate: '10' });
         // todo:  get tax rate instead of setup if possible
+        // todo: add tax type inclusive/exclusive
         [commission, feeRecipient] = await dbUtils.getSellingInfo();
     });
 

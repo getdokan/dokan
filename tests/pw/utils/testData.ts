@@ -35,6 +35,7 @@ export const data = {
         vendorAuthFile: 'playwright/.auth/vendorStorageState.json',
         vendor2AuthFile: 'playwright/.auth/vendor2StorageState.json',
         customerAuthFile: 'playwright/.auth/customerStorageState.json',
+        customer2AuthFile: 'playwright/.auth/customer2StorageState.json',
 
         adminAuth: {
             storageState: 'playwright/.auth/adminStorageState.json',
@@ -50,6 +51,10 @@ export const data = {
 
         customerAuth: {
             storageState: 'playwright/.auth/customerStorageState.json',
+        },
+
+        customer2Auth: {
+            storageState: 'playwright/.auth/customer2StorageState.json',
         },
 
         noAuth: {
@@ -402,6 +407,20 @@ export const data = {
                 description: 'test long description',
             },
 
+            euCompliance: {
+                saleLabel: 'old-price', // new-price, old-price, rrp
+                saleRegularLabel: 'new-price', // new-price, old-price, rrp
+                unit: 'kg', // cm, g, in, kcal, kg, kj, l, lbs, m, ml, mm, oz, yd, %c2%b5g
+                minimumAge: '18', // 12, 16,18, 19, 25
+                productUnits: '1',
+                basePriceUnits: '20',
+                deliveryTime: '-1',
+                freeShipping: true,
+                regularUnitPrice: '50',
+                saleUnitPrice: '',
+                optionalMiniDescription: 'test mini description',
+            },
+
             amountDiscount: {
                 minimumOrderAmount: '200',
                 discountPercentage: '10',
@@ -538,7 +557,7 @@ export const data = {
 
     // coupon
     coupon: {
-        // title                     : () => 'VC_' + faker.string.alpha({ count: 5, casing: 'upper' },),
+        // title: () => 'VC_' + faker.string.alpha({ count: 5, casing: 'upper' }),
         couponTitle: () => 'VC_' + faker.string.nanoid(10),
         title: '',
         amount: () => faker.number.int({ min: 1, max: 10 }).toString(),
@@ -761,7 +780,7 @@ export const data = {
         bankName: 'bankName',
         bankAddress: 'bankAddress',
         bankRoutingNumber: faker.string.alphanumeric(10),
-        bankIban: faker.string.alphanumeric(10),
+        bankIban: faker.finance.iban(),
         bankSwiftCode: faker.string.alphanumeric(10),
         customPayment: '1234567890',
         skrill: faker.internet.email(),
@@ -793,6 +812,7 @@ export const data = {
             activatePlugin: 'wp-admin/plugins.php?action=activate',
             deactivatePlugin: 'wp-admin/plugins.php?action=deactivate',
             widgets: 'wp-admin/widgets.php',
+            editUser: (userId: string) => `wp-admin/user-edit.php?user_id=${userId}`,
 
             dokan: {
                 setupWizard: 'wp-admin/admin.php?page=dokan-setup',
@@ -1043,10 +1063,13 @@ export const data = {
             userName: faker.person.firstName('male'),
             shopName: () => faker.company.name(),
             shopUrl: () => faker.company.name(),
+
+            // eu compliance data
             companyName: faker.company.name(),
             companyId: faker.string.alphanumeric(5),
             vatNumber: faker.string.alphanumeric(10),
             bankIban: faker.finance.iban(),
+
             phoneNumber: faker.phone.number(),
             phone: '0123456789',
             street1: 'abc street',
@@ -1059,6 +1082,7 @@ export const data = {
             state: 'New York',
             accountName: 'accountName',
             accountNumber: faker.string.alphanumeric(10),
+            accountType: 'personal', //'personal' 'business',
             bankName: 'bankName',
             bankAddress: 'bankAddress',
             routingNumber: faker.string.alphanumeric(10),
@@ -1130,7 +1154,7 @@ export const data = {
                 bankName: 'bankName',
                 bankAddress: 'bankAddress',
                 bankRoutingNumber: faker.string.alphanumeric(10),
-                bankIban: faker.string.alphanumeric(10),
+                bankIban: faker.finance.iban(),
                 bankSwiftCode: faker.string.alphanumeric(10),
             },
 
@@ -1272,7 +1296,7 @@ export const data = {
             bankName: 'bankName',
             bankAddress: 'bankAddress',
             bankRoutingNumber: faker.string.alphanumeric(10),
-            bankIban: faker.string.alphanumeric(10),
+            bankIban: faker.finance.iban(),
             bankSwiftCode: faker.string.alphanumeric(10),
             saveSuccessMessage: 'Your information has been saved successfully',
         },
@@ -1388,6 +1412,11 @@ export const data = {
         username: String(process.env.CUSTOMER),
         password: String(process.env.USER_PASSWORD),
         lastname: (String(process.env.CUSTOMER)[0] as string) + String(process.env.CUSTOMER)[String(process.env.CUSTOMER).length - 1],
+
+        customer2: {
+            username: String(process.env.CUSTOMER2),
+            password: String(process.env.USER_PASSWORD),
+        },
 
         customerInfo: {
             emailDomain: '@email.com',
@@ -1825,8 +1854,7 @@ export const data = {
         // General Settings
         general: {
             vendorStoreUrl: 'store',
-            setupWizardMessage:
-                "Thank you for choosing The Marketplace to power your online store! This quick setup wizard will help you configure the basic settings. It's completely optional and shouldn't take longer than two minutes.",
+            setupWizardMessage: "Thank you for choosing The Marketplace to power your online store! This quick setup wizard will help you configure the basic settings. It's completely optional and shouldn't take longer than two minutes.",
             sellingProductTypes: 'both', // 'both', 'physical', 'digital'
             storeProductPerPage: '12',
             storCategory: 'multiple', // 'none', 'single', 'multiple'
@@ -1940,6 +1968,30 @@ export const data = {
                     dashboardSidebarBackground: '#1BAC9E', // rgb(27, 172, 158)
                     dashboardSidebarActiveMenuText: '#FFFFFF', // rgb(255, 255, 255)
                     dashboardSidebarActiveMenuBackground: '#167D7F', // rgb(22, 125, 127)
+                },
+                custom: {
+                    buttonText: '#FFFFFF', // White
+                    buttonBackground: '#007BFF', // Azure
+                    buttonBorder: '#0056B3', // Egyptian Blue
+                    buttonHoverText: '#FFFFFF', // White
+                    buttonHoverBackground: '#0056B3', // Egyptian Blue
+                    buttonHoverBorder: '#004085', // Indigo Dye
+                    dashboardSidebarMenuText: '#CFCFCF', // Silver
+                    dashboardSidebarBackground: '#343A40', // Oil
+                    dashboardSidebarActiveMenuText: '#FFFFFF', // White
+                    dashboardSidebarActiveMenuBackground: '#007BFF', // Azure
+                },
+                custom2: {
+                    buttonText: '#FFFFFF', // White
+                    buttonBackground: '#3498DB', // Sky Blue
+                    buttonBorder: '#2980B9', // Dark Sky Blue
+                    buttonHoverText: '#FFFFFF', // White
+                    buttonHoverBackground: '#2980B9', // Dark Sky Blue
+                    buttonHoverBorder: '#1F618D', // Navy Blue
+                    dashboardSidebarMenuText: '#555555', // Dark Gray
+                    dashboardSidebarBackground: '#F2F2F2', // Light Gray
+                    dashboardSidebarActiveMenuText: '#FFFFFF', // White
+                    dashboardSidebarActiveMenuBackground: '#3498DB', // Sky Blue
                 },
             },
             saveSuccessMessage: 'Setting has been saved successfully.',
@@ -2113,6 +2165,20 @@ export const data = {
         name: String(process.env.CUSTOMER),
         email: String(process.env.CUSTOMER) + '@yopmail.com',
         message: 'Test Message',
+    },
+
+    // eu compliance data
+    euComplianceData: () => ({
+        companyName: faker.company.name(),
+        companyId: faker.string.alphanumeric(5),
+        vatNumber: faker.string.alphanumeric(10),
+        bankName: faker.string.alphanumeric(7),
+        bankIban: faker.finance.iban(),
+    }),
+
+    colorCode: {
+        blue: 'rgb(0, 144, 255)',
+        gray: 'rgb(215, 218, 221)',
     },
 
     // dokan license

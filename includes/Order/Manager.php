@@ -369,6 +369,7 @@ class Manager {
             return false;
         }
 
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $order_id = $wpdb->get_var( $wpdb->prepare( "SELECT 1 FROM {$wpdb->prefix}dokan_orders WHERE order_id=%d LIMIT 1", $order_id ) );
 
         return wc_string_to_bool( $order_id );
@@ -387,12 +388,12 @@ class Manager {
     public function is_seller_has_order( $seller_id, $order_id ) {
         global $wpdb;
 
-        return 1 === (int) $wpdb->get_var(
-                $wpdb->prepare(
-                    "SELECT 1 FROM {$wpdb->prefix}dokan_orders WHERE seller_id = %d AND order_id = %d LIMIT 1",
-                    [ $seller_id, $order_id ]
-                )
-            );
+        return 1 === (int) $wpdb->get_var( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+            $wpdb->prepare(
+                "SELECT 1 FROM {$wpdb->prefix}dokan_orders WHERE seller_id = %d AND order_id = %d LIMIT 1",
+                [ $seller_id, $order_id ]
+            )
+        );
     }
 
     /**
@@ -487,6 +488,7 @@ class Manager {
             $where_format[]     = '%d';
         }
 
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $deleted = $wpdb->delete( $wpdb->prefix . 'dokan_orders', $where, $where_format );
         if ( false === $deleted ) {
             dokan_log( sprintf( '[DeleteSellerOrder] Error while deleting dokan order table data, order_id: %d, Database Error: %s  ', $order_id, $wpdb->last_error ) );
@@ -495,7 +497,7 @@ class Manager {
         }
 
         // delete from dokan refund table -> order_id
-        $deleted = $wpdb->query(
+        $deleted = $wpdb->query(  // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $wpdb->prepare(
                 "DELETE FROM `{$wpdb->prefix}dokan_refund` WHERE order_id = %d",
                 [ $order_id ]
@@ -508,7 +510,7 @@ class Manager {
         do_action( 'dokan_after_deleting_seller_order', $order_id );
 
         // delete data from vendor balance table -> trn_id, trn_type: dokan_orders, dokan_refund, dokan_withdraw
-        $deleted = $wpdb->query(
+        $deleted = $wpdb->query( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $wpdb->prepare(
                 "DELETE FROM `{$wpdb->prefix}dokan_vendor_balance`
                 WHERE trn_id = %d AND trn_type in ( %s, %s, %s )",
@@ -520,7 +522,7 @@ class Manager {
         }
 
         // delete data from reverse withdrawal table -> order_id, trn_type: order_commission, manual_order_commission, order_refund
-        $deleted = $wpdb->query(
+        $deleted = $wpdb->query( // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $wpdb->prepare(
                 "DELETE FROM `{$wpdb->prefix}dokan_reverse_withdrawal`
                 WHERE trn_id = %d AND trn_type in ( %s, %s, %s )",
