@@ -1,6 +1,8 @@
 <?php
 
-class WithdrawChargeApi extends \WP_UnitTestCase {
+namespace WeDevs\Dokan\Test\Withdrawal;
+
+class WithdrawChargeApiTest extends \WP_UnitTestCase {
 
     /**
      * Rest Api Server.
@@ -36,65 +38,65 @@ class WithdrawChargeApi extends \WP_UnitTestCase {
      */
     public function save_withdraw_data_to_database() {
         $data = [
-            "withdraw_methods"                                   => [
-                "paypal"       => "paypal",
-                "bank"         => "bank",
-                "dokan_custom" => "dokan_custom",
-                "skrill"       => "skrill",
+            'withdraw_methods'                                   => [
+                'paypal'       => 'paypal',
+                'bank'         => 'bank',
+                'dokan_custom' => 'dokan_custom',
+                'skrill'       => 'skrill',
             ],
-            "withdraw_method_name"                               => "bKash",
-            "withdraw_method_type"                               => "Phone",
-            "withdraw_charges"                                   => [
-                "paypal"       => [
-                    "fixed"      => "5",
-                    "percentage" => "10",
+            'withdraw_method_name'                               => 'bKash',
+            'withdraw_method_type'                               => 'Phone',
+            'withdraw_charges'                                   => [
+                'paypal'       => [
+                    'fixed'      => '5',
+                    'percentage' => '10',
                 ],
-                "bank"         => [
-                    "fixed"      => "10",
-                    "percentage" => "",
+                'bank'         => [
+                    'fixed'      => '10',
+                    'percentage' => '',
                 ],
-                "skrill"       => [
-                    "fixed"      => "",
-                    "percentage" => "20",
+                'skrill'       => [
+                    'fixed'      => '',
+                    'percentage' => '20',
                 ],
-                "dokan_custom" => [
-                    "fixed"      => "",
-                    "percentage" => "10",
+                'dokan_custom' => [
+                    'fixed'      => '',
+                    'percentage' => '10',
                 ],
             ],
-            "withdraw_limit"                                     => "2",
-            "withdraw_order_status"                              => [
-                "wc-completed" => "wc-completed",
+            'withdraw_limit'                                     => '2',
+            'withdraw_order_status'                              => [
+                'wc-completed' => 'wc-completed',
             ],
-            "exclude_cod_payment"                                => "off",
-            "withdraw_date_limit"                                => "0",
-            "hide_withdraw_option"                               => "off",
-            "disbursement_schedule_settings"                     => "",
-            "disbursement"                                       => [
-                "manual" => "manual",
+            'exclude_cod_payment'                                => 'off',
+            'withdraw_date_limit'                                => '0',
+            'hide_withdraw_option'                               => 'off',
+            'disbursement_schedule_settings'                     => '',
+            'disbursement'                                       => [
+                'manual' => 'manual',
             ],
-            "disbursement_schedule"                              => [
-                "quarterly" => "",
-                "monthly"   => "",
-                "biweekly"  => "",
-                "weekly"    => "",
+            'disbursement_schedule'                              => [
+                'quarterly' => '',
+                'monthly'   => '',
+                'biweekly'  => '',
+                'weekly'    => '',
             ],
-            "quarterly_schedule"                                 => [
-                "month" => "march",
-                "week"  => "1",
-                "days"  => "monday",
+            'quarterly_schedule'                                 => [
+                'month' => 'march',
+                'week'  => '1',
+                'days'  => 'monday',
             ],
-            "monthly_schedule"                                   => [
-                "week" => "1",
-                "days" => "monday",
+            'monthly_schedule'                                   => [
+                'week' => '1',
+                'days' => 'monday',
             ],
-            "biweekly_schedule"                                  => [
-                "week" => "1",
-                "days" => "monday",
+            'biweekly_schedule'                                  => [
+                'week' => '1',
+                'days' => 'monday',
             ],
-            "weekly_schedule"                                    => "monday",
-            "send_announcement_for_payment_change"               => "false",
-            "send_announcement_for_disbursement_schedule_change" => "false",
+            'weekly_schedule'                                    => 'monday',
+            'send_announcement_for_payment_change'               => 'false',
+            'send_announcement_for_disbursement_schedule_change' => 'false',
         ];
 
         update_option( 'dokan_withdraw', $data, true );
@@ -102,7 +104,6 @@ class WithdrawChargeApi extends \WP_UnitTestCase {
 
     /**
      *  Test that the endpoint exist.
-     *
      */
     public function test_if_get_all_charges_api_exists() {
         $this->save_withdraw_data_to_database();
@@ -119,7 +120,6 @@ class WithdrawChargeApi extends \WP_UnitTestCase {
 
     /**
      *  Test that the endpoint exist.
-     *
      */
     public function test_if_get_method_withdraw_charge_api_exists() {
         $this->save_withdraw_data_to_database();
@@ -173,7 +173,10 @@ class WithdrawChargeApi extends \WP_UnitTestCase {
                 [
                     'charge'      => 15,
                     'receivable'  => 85,
-                    'charge_data' => ['fixed' => 5, 'percentage' => 10]
+                    'charge_data' => [
+						'fixed' => 5,
+						'percentage' => 10,
+					],
                 ],
             ],
             [
@@ -184,7 +187,10 @@ class WithdrawChargeApi extends \WP_UnitTestCase {
                 [
                     'charge'      => 10,
                     'receivable'  => 190,
-                    'charge_data' => ['fixed' => 10, 'percentage' => '']
+                    'charge_data' => [
+						'fixed' => 10,
+						'percentage' => 0,
+					],
                 ],
             ],
         ];

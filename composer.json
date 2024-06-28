@@ -35,13 +35,17 @@
   },
   "autoload": {
     "psr-4": {
-      "WeDevs\\Dokan\\": "includes/",
-      "WeDevs\\Dokan\\Test\\": "tests/php/"
+      "WeDevs\\Dokan\\": "includes/"
     },
     "files": [
       "includes/functions-rest-api.php",
       "includes/functions-dashboard-navigation.php"
     ]
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "WeDevs\\Dokan\\Test\\": "tests/php/src"
+    }
   },
   "scripts": {
     "phpcs": [

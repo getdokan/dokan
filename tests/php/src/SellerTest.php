@@ -2,7 +2,7 @@
 
 use WeDevs\Dokan\Test\Helpers\Dokan_Test_Helpers;
 
-class Dokan_Test_Seller extends WP_UnitTestCase {
+class SellerTest extends WP_UnitTestCase {
 
     private $seller_one = 0;
 

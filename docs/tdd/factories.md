@@ -9,9 +9,9 @@
 
 When writing unit tests for various functionalities in Dokan, it's essential to have factories for different entities such as Vendor, Vendor specific Products, Coupons, Shipping, Orders, etc. These factories make it easier to create test data and ensure your tests are readable and maintainable.
 
-**Extending [DokanTestCase](./../../tests/php/DokanTestCase.php#L14)**
+**Extending [DokanUnitTestCase](./../../tests/php/src/DokanUnitTestCase.php#L14)**
 
-To write unit tests in Dokan smoothly, your test class should extend the `WeDevs\Dokan\Test\DokanTestCase` abstract class. This class contains a method and property named `factory` to return the [DokanFactory](./../../tests/php/Factories/DokanFactory.php), allowing you to access factories for various entities.
+To write unit tests in Dokan smoothly, your test class should extend the `WeDevs\Dokan\Test\DokanUnitTestCase` abstract class. This class contains a method and property named `factory` to return the [DokanFactory](./../../tests/php/src/Factories/DokanFactory.php), allowing you to access factories for various entities.
 
 **Usage**  
 
@@ -20,18 +20,18 @@ You can access these factories using the following syntax:
 $this->factory()->{entity}->{method}
 ```
 
-All Dokan factory classes extend **WP_UnitTest_Factory_For_Thing** and also has wrapper methods of respective [**Woocommerce Factories**](https://github.com/woocommerce/woocommerce/tree/trunk/plugins/woocommerce/tests/legacy/framework/helpers).
+All Dokan factory classes extend **WP_UnitTest_Factory_For_Thing** and also have wrapper methods of respective [**Woocommerce Factories**](https://github.com/woocommerce/woocommerce/tree/trunk/plugins/woocommerce/tests/legacy/framework/helpers).
 
-### [Product Factory](./../../tests/php/Factories/ProductFactory.php)
+### [Product Factory](./../../tests/php/src/Factories/ProductFactory.php)
 Example of Product factory:
 
 ```
 
-class ProductTest extends \WeDevs\Dokan\Test\DokanTestCase {
+class ProductTest extends \WeDevs\Dokan\Test\DokanUnitTestCase {
     public function test_coupon_creation() {
-        $seller_id = 5;
+        $seller_id = $this->factory()->seller->create();
 
-        $product_id = self::factory()->product
+        $product_id = $this->factory()->product
             ->set_seller_id( $seller_id )
             ->create( array(
                 'name' => 'Test Product',
@@ -48,13 +48,16 @@ class ProductTest extends \WeDevs\Dokan\Test\DokanTestCase {
 }
 ```
 
-### [Order Factory](./../../tests/php/Factories/OrderFactory.php) 
+### [Order Factory](./../../tests/php/src/Factories/OrderFactory.php) 
 
 Example of Order Factory:
 
 ```
-class DokanOrderTest extends \WeDevs\Dokan\Test\DokanTestCase {
+class DokanOrderTest extends \WeDevs\Dokan\Test\DokanUnitTestCase {
     public function test_order_creation() {
+        $seller_id1 = $this->factory()->seller->create();
+        $seller_id2 = $this->factory()->seller->create();
+
         $order_id = $this->factory()
             ->order
             ->set_item_fee( [ 'name' => 'Extra Charge', 'amount' => 10 ] )
@@ -68,7 +71,7 @@ class DokanOrderTest extends \WeDevs\Dokan\Test\DokanTestCase {
                 'line_items'  => array(
                     array(
                         'product_id' => $this->factory()->product
-                            ->set_seller_id(4)
+                            ->set_seller_id( $seller_id1 )
                             ->create( 
                                 [
                                     'name' => 'Test Product 1',
@@ -80,7 +83,7 @@ class DokanOrderTest extends \WeDevs\Dokan\Test\DokanTestCase {
                     ),
                     array(
                         'product_id' => $this->factory()->product
-                            ->set_seller_id(5)
+                            ->set_seller_id( seller_id2 )
                             ->create( 
                                 [ 
                                     'name' => 'Test Product 2',
@@ -121,11 +124,11 @@ class DokanOrderTest extends \WeDevs\Dokan\Test\DokanTestCase {
 
 > The methods `set_item_fee`, `set_item_shipping` and `set_item_coupon` are optional. So, we may use them when needs.
 
-### [Coupon Factory](./../../tests/php/Factories/CouponFactory.php)
+### [Coupon Factory](./../../tests/php/src/Factories/CouponFactory.php)
 
 You can create coupon using `coupon` factory.
 ```
-class MyCouponTest extends \WeDevs\Dokan\Test\DokanTestCase {
+class MyCouponTest extends \WeDevs\Dokan\Test\DokanUnitTestCase {
     public function test_coupon_creation() {
         $coupon_id = $this->factory()->coupon->create(
             'code' => 'test_coupon_code',
@@ -139,10 +142,10 @@ class MyCouponTest extends \WeDevs\Dokan\Test\DokanTestCase {
 }
 ```
 
-You can pass [meta](./../../tests/php/Helpers/WC_Helper_Coupon.php#L33) as per your requirements.
+You can pass [meta](./../../tests/php/src/Helpers/WC_Helper_Coupon.php#L33) as per your requirements.
 
 ### Why WooCommerce Helper Methods are Wrapped
 
 Dokan factory classes utilize the WC Factories so that we can adapt to future changes in WooCommerce. By wrapping WooCommerce helper methods, we ensure that our application test code remains consistent and compatible with any updates in WooCommerce. This approach allows us to modify the wrapper methods as needed to align with WooCommerce changes, maintaining the stability and reliability of our tests.
 
-Dokan factory classes utilizes the [WC Factories](https://github.com/woocommerce/woocommerce/tree/trunk/plugins/woocommerce/tests/legacy/framework/helpers) so that we can adapt the future changes of Woocommerce. Our application test code will be consistent because well will be to change wrapper method to make compatible with WC changes.
+Dokan factory classes utilize the [WC Factories](https://github.com/woocommerce/woocommerce/tree/trunk/plugins/woocommerce/tests/legacy/framework/helpers) so that we can adapt the future changes of Woocommerce. Our application test code will be consistent because well will be to change wrapper method to make compatible with WC changes.
