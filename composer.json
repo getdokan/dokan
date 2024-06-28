@@ -43,6 +43,11 @@
       "includes/functions-dashboard-navigation.php"
     ]
   },
+  "autoload-dev": {
+    "psr-4": {
+      "WeDevs\\Dokan\\Test\\": "tests/php/src"
+    }
+  },
   "scripts": {
     "phpcs": [
       "vendor/bin/phpcs -p -s"
