@@ -22,8 +22,17 @@ class SellerFactory extends CustomerFactory {
     }
 
     public function create_object( $args ) {
+        $temp = $_POST;
         $_POST = $args; // $_POST global variable is required in Dokan Registration.
         // Todo: Need to handle the nonce verification in Dokan includes/Registration.php class.
-        return parent::create_object( $args );
+        $seller_id = parent::create_object( $args );
+
+        $_POST = $temp;
+
+        $user = get_user_by( 'id', $seller_id );
+
+        $user->set_role( 'seller' );
+
+        return $seller_id;
     }
 }

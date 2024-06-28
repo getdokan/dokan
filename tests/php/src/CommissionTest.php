@@ -5,7 +5,7 @@
  *
  * @since 2.9.21
  */
-class Dokan_Commission_Test extends WP_UnitTestCase {
+class CommissionTest extends WP_UnitTestCase {
 
     /**
      * Vendor id holder
@@ -40,7 +40,7 @@ class Dokan_Commission_Test extends WP_UnitTestCase {
      *
      * @var float
      */
-    protected $admin_earning  = 35;
+    protected $admin_earning = 35;
 
     /**
      * Set global wise commission type
@@ -61,7 +61,7 @@ class Dokan_Commission_Test extends WP_UnitTestCase {
      *
      * @var string
      */
-    protected $global_additional_fee  = '30';
+    protected $global_additional_fee = '30';
 
     /**
      * Set vendor wise commision type
@@ -82,7 +82,7 @@ class Dokan_Commission_Test extends WP_UnitTestCase {
      *
      * @var string
      */
-    protected $vendor_wise_additional_fee  = '5';
+    protected $vendor_wise_additional_fee = '5';
 
     /**
      * Set category wise commission type
@@ -183,11 +183,13 @@ class Dokan_Commission_Test extends WP_UnitTestCase {
      * @return void
      */
     public function create_vendor() {
-        $this->vendor_id = $this->factory->user->create( [
-            'role'        => 'seller',
-            'user_login'  => 'vendor',
-            'description' => 'vendor',
-        ] );
+        $this->vendor_id = $this->factory->user->create(
+            [
+				'role'        => 'seller',
+				'user_login'  => 'vendor',
+				'description' => 'vendor',
+			]
+        );
     }
 
     /**
@@ -214,6 +216,7 @@ class Dokan_Commission_Test extends WP_UnitTestCase {
         update_post_meta( $this->product_id, '_per_product_admin_commission_type', $this->product_wise_commission_type );
         update_post_meta( $this->product_id, '_per_product_admin_commission', $this->product_wise_commission_rate );
         update_post_meta( $this->product_id, '_per_product_admin_additional_fee', $this->product_wise_additional_fee );
+        update_post_meta( $this->product_id, 'chosen_product_cat', [ $this->category_id ] );
     }
 
     /**
@@ -316,10 +319,12 @@ class Dokan_Commission_Test extends WP_UnitTestCase {
         $product->set_category_ids( [ $this->category_id ] );
         $product->save();
 
-        wp_update_post( [
-            'ID'          => $product->get_id(),
-            'post_author' => $this->vendor_id,
-        ] );
+        wp_update_post(
+            [
+				'ID'          => $product->get_id(),
+				'post_author' => $this->vendor_id,
+			]
+        );
 
         $this->product_id = $product->get_id();
     }

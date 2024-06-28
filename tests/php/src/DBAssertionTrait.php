@@ -2,24 +2,7 @@
 
 namespace WeDevs\Dokan\Test;
 
-use WeDevs\Dokan\Test\Factories\DokanFactory;
-use WP_UnitTestCase;
-
-abstract class DokanTestCase extends WP_UnitTestCase {
-	/**
-	 * @
-     *
-	 *
-	 * @return DokanFactory The fixture factory.
-	 */
-	protected static function factory() {
-		static $factory = null;
-		if ( ! $factory ) {
-			$factory = new DokanFactory();
-		}
-		return $factory;
-	}
-
+trait DBAssertionTrait {
     protected function getDatabaseCount( string $table, array $data ) {
         global $wpdb;
 
@@ -48,7 +31,6 @@ abstract class DokanTestCase extends WP_UnitTestCase {
 
         return $rows_count;
     }
-
 
     public function assertDatabaseHas( string $table, array $data = [] ) {
         $rows_count = $this->getDatabaseCount( $table, $data );

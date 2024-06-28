@@ -6,7 +6,7 @@ use WC_Customer;
 use WC_Order_Item_Shipping;
 use WeDevs\Dokan\Vendor\Vendor;
 
-class CustomFactoriesTest extends DokanTestCase {
+class CustomFactoriesTest extends DokanUnitTestCase {
     public function test_create_order() {
         $order_id = $this->factory()
             ->order
