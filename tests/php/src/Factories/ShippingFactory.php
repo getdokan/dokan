@@ -1,6 +1,7 @@
 <?php
 namespace WeDevs\Dokan\Test\Factories;
 
+use Exception;
 use WC_Order_Item_Shipping;
 use WP_UnitTest_Factory;
 use WP_UnitTest_Factory_For_Thing;
@@ -19,31 +20,27 @@ class ShippingFactory extends WP_UnitTest_Factory_For_Thing {
 
     public function create_object( $args ) {
         $order = wc_get_order( $args['order_id'] );
-        if ( $order ) {
-            $shipping_item = new WC_Order_Item_Shipping();
-            $shipping_item->set_method_title( $args['method_title'] );
-            $shipping_item->set_method_id( $args['method_id'] );
-            $shipping_item->set_total( $args['total'] );
-            $order->add_item( $shipping_item );
-            $order->save();
 
-            return $shipping_item->get_id();
+        if ( ! $order ) {
+            throw new Exception( 'Order found for ID ' . (int) $args['order_id'] );
         }
 
-        return 0;
+        $shipping_item = new WC_Order_Item_Shipping();
+        $shipping_item->set_props( $args );
+
+        $order->add_item( $shipping_item );
+        $order->save();
+
+        return $shipping_item->get_id();
     }
 
     public function update_object( $shipping_id, $fields ) {
         $shipping_item = new WC_Order_Item_Shipping( $shipping_id );
-        if ( isset( $fields['method_title'] ) ) {
-            $shipping_item->set_method_title( $fields['method_title'] );
+
+        if ( ! $shipping_item ) {
+            throw new Exception( 'Shipping item not found for ID ' . (int) $shipping_id );
         }
-        if ( isset( $fields['method_id'] ) ) {
-            $shipping_item->set_method_id( $fields['method_id'] );
-        }
-        if ( isset( $fields['total'] ) ) {
-            $shipping_item->set_total( $fields['total'] );
-        }
+        $shipping_item->set_props( $fields );
 
         $shipping_item->save();
 
