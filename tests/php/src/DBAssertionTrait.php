@@ -2,8 +2,20 @@
 
 namespace WeDevs\Dokan\Test;
 
+/**
+ * Trait DBAssertionTrait
+ *
+ * Provides database assertion methods for unit testing.
+ */
 trait DBAssertionTrait {
-    protected function getDatabaseCount( string $table, array $data ) {
+    /**
+     * Get the count of rows in a given table matching the specified criteria.
+     *
+     * @param string $table The name of the table (without the prefix).
+     * @param array  $data  An associative array of field-value pairs to match.
+     * @return int The count of rows matching the criteria.
+     */
+    protected function getDatabaseCount( string $table, array $data ): int {
         global $wpdb;
 
         $placeholders = '%d';
@@ -32,13 +44,28 @@ trait DBAssertionTrait {
         return $rows_count;
     }
 
-    public function assertDatabaseHas( string $table, array $data = [] ) {
+    /**
+     * Assert that a table contains at least one row matching the specified criteria.
+     *
+     * @param string $table The name of the table (without the prefix).
+     * @param array  $data  An associative array of field-value pairs to match.
+     * @return void
+     */
+    public function assertDatabaseHas( string $table, array $data = [] ): void {
         $rows_count = $this->getDatabaseCount( $table, $data );
 
         $this->assertGreaterThanOrEqual( 1, $rows_count, "No rows found in `$table` for given data " . json_encode( $data ) );
     }
 
-    public function assertDatabaseCount( string $table, int $count, array $data = [] ) {
+    /**
+     * Assert that a table contains the specified number of rows matching the criteria.
+     *
+     * @param string $table The name of the table (without the prefix).
+     * @param int    $count The expected number of matching rows.
+     * @param array  $data  An associative array of field-value pairs to match.
+     * @return void
+     */
+    public function assertDatabaseCount( string $table, int $count, array $data = [] ): void {
         $rows_count = $this->getDatabaseCount( $table, $data );
 
         $this->assertEquals( $count, $rows_count, "No rows found in `$table` for given data " . json_encode( $data ) );
