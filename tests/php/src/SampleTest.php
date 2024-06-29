@@ -1,5 +1,9 @@
 <?php
 
+namespace WeDevs\Dokan\Test;
+
+use WP_UnitTestCase;
+
 class SampleTest extends WP_UnitTestCase {
 
     public function set_up() {
