@@ -33,7 +33,7 @@
                                 name="percentage_commission"
                                 ref='percentage'
                                 :value="commission.all.percentage"
-                                v-on:input="e => handleAllCategoryInput(e.target.value, 'percentage' )"
+                                v-on:input="e => handleAllCategoryInput(e.target.value, 'percentage', commission.all.percentage )"
                             />
                             <div class='h-full d-xs:border-l-0 d-xs:border-r-0 md:border-l-[1px] md:!border-r-[1px] flex justify-center items-center d-xs:!bg-transparent md:!bg-gray-100'><span class='d-xs:pl-1 d-xs:pr-1 md:pl-2 md:pr-2'>{{ __( '%', 'dokan-lite' ) }}</span></div>
                         </div>
@@ -49,7 +49,7 @@
                                 name="fixed_commission"
                                 ref='fixed'
                                 :value="commission.all.flat"
-                                v-on:input="e => handleAllCategoryInput(e.target.value, 'flat' )"
+                                v-on:input="e => handleAllCategoryInput(e.target.value, 'flat', commission.all.flat )"
                             />
                         </div>
                 </div>
@@ -75,7 +75,7 @@
                             name="percentage_commission"
                             ref='percentage'
                             :value="getCommissionValue( 'percentage', item.term_id )"
-                            v-on:input="e => commissinItemHandler( e.target.value, 'percentage', item.term_id )"
+                            v-on:input="e => commissinItemHandler( e.target.value, 'percentage', item.term_id, getCommissionValue( 'percentage', item.term_id ) )"
                         />
                         <div class='h-full d-xs:border-l-0 d-xs:border-r-0 md:border-l-[1px] md:!border-r-[1px] flex justify-center items-center d-xs:!bg-transparent md:!bg-gray-100'><span class='d-xs:pl-1 d-xs:pr-1 md:pl-2 md:pr-2'>{{ __( '%', 'dokan-lite' ) }}</span></div>
                     </div>
@@ -91,7 +91,7 @@
                             name="fixed_commission"
                             ref='flat'
                             :value="getCommissionValue( 'flat', item.term_id )"
-                            v-on:input="e => commissinItemHandler( e.target.value, 'flat', item.term_id )"
+                            v-on:input="e => commissinItemHandler( e.target.value, 'flat', item.term_id, getCommissionValue( 'percentage', item.term_id ) )"
                         />
                     </div>
                 </div>
@@ -246,7 +246,10 @@
                 return this.commission.all[comission_type];
             },
 
-            commissinItemHandler( value, commission_type, term_id ) {
+            commissinItemHandler( value, commission_type, term_id, oldValue = '' ) {
+                if (isNaN( value )) {
+                    value = oldValue
+                }
                 let commissions = JSON.parse( JSON.stringify( this.commission.items ) );
 
                 let data = JSON.parse( JSON.stringify( this.commission.all ) );
@@ -266,7 +269,10 @@
                 this.emitComponentChange( JSON.parse( JSON.stringify( this.commission ) ) )
             },
 
-            handleAllCategoryInput( value, commission_type ) {
+            handleAllCategoryInput( value, commission_type, oldValue = '' ) {
+                if (isNaN( value )) {
+                    value = oldValue
+                }
                 this.$set( this.commission.all, commission_type, value );
 
                 this.deleteDuplicateCategories( JSON.parse( JSON.stringify( this.commission.items ) ) );

@@ -929,6 +929,13 @@
             },
 
             commissionUpdated( data ) {
+                if (isNaN( data.fixed )) {
+                    data.fixed = this.fieldValue[this.fieldData.fields.fixed_fee.name] ?? '';
+                }
+                if (isNaN( data.percentage )) {
+                    data.percentage = this.fieldValue[this.fieldData.fields.percent_fee.name] ?? '';
+                }
+
                 this.fieldValue[this.fieldData.fields.percent_fee.name] = data.percentage;
                 this.fieldValue[this.fieldData.fields.fixed_fee.name] = data.fixed;
             },
