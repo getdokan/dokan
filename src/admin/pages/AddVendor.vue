@@ -183,12 +183,7 @@ export default {
                         if ( result.value ) {
                             this.$root.$emit( 'addAnotherVendor' );
                         } else if ( result.dismiss === Swal.DismissReason.cancel ) {
-
-                            if ( this.hasPro ) {
-                                this.$router.push( { path: 'vendors/' + response.id, query:{ edit: 'true' } } );
-                            } else {
-                                window.location.replace( `${dokan.urls.adminRoot}user-edit.php?user_id=${response.id}` );
-                            }
+                            this.$router.push( { path: 'vendors/' + response.id, query:{ edit: 'true' } } );
                         }
                     } );
                 } )
