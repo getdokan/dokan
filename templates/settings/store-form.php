@@ -57,7 +57,7 @@ $args     = apply_filters( 'dokan_store_time_arguments', $args, $all_times );
 
     <?php wp_nonce_field( 'dokan_store_settings_nonce' ); ?>
 
-    <div class="dokan-banner">
+    <div id="dokan-banner-wrapper" class="dokan-banner">
 
         <div class="image-wrap<?php echo $banner_id ? '' : ' dokan-hide'; ?>">
             <?php $banner_url = $banner_id ? wp_get_attachment_url( $banner_id ) : ''; ?>
@@ -98,7 +98,7 @@ $args     = apply_filters( 'dokan_store_time_arguments', $args, $all_times );
     <div class="dokan-form-group">
         <label class="dokan-w3 dokan-control-label" for="dokan_gravatar"><?php esc_html_e( 'Profile Picture', 'dokan-lite' ); ?></label>
 
-        <div class="dokan-w5 dokan-gravatar">
+        <div id="dokan-profile-picture-wrapper" class="dokan-w5 dokan-gravatar">
             <div class="dokan-left gravatar-wrap<?php echo $gravatar_id ? '' : ' dokan-hide'; ?>">
                 <?php $gravatar_url = $gravatar_id ? wp_get_attachment_url( $gravatar_id ) : ''; ?>
                 <input type="hidden" class="dokan-file-field" value="<?php echo esc_attr( $gravatar_id ); ?>" name="dokan_gravatar">

@@ -12,7 +12,7 @@ do_action( 'dokan_payment_settings_before_form', $current_user, $profile_info );
 
 <div class="dokan-payment-settings-summary">
     <h2 id="vendor-dashboard-payment-settings-error"></h2>
-    <div class="payment-methods-listing-header">
+    <div id="dokan-payment-methods-listing-wrapper" class="payment-methods-listing-header">
         <h2> <?php esc_html_e( 'Payment Methods', 'dokan-lite' ); ?></h2>
         <div>
             <div id="vendor-dashboard-payment-settings-toggle-dropdown">
