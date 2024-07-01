@@ -2,8 +2,10 @@
 
 namespace WeDevs\Dokan\REST;
 
+use Cassandra\Date;
 use Exception;
 use WeDevs\Dokan\Cache;
+use WeDevs\Dokan\Withdraw\Withdraw;
 use WP_Error;
 use WP_REST_Controller;
 use WP_REST_Request;
@@ -11,6 +13,7 @@ use WP_REST_Response;
 use WP_REST_Server;
 use WeDevs\Dokan\Exceptions\DokanException;
 use WeDevs\Dokan\Traits\RESTResponseError;
+use WeDevs\Dokan\Admin\WithdrawLogExporter;
 
 class WithdrawController extends WP_REST_Controller {
 
@@ -31,7 +34,7 @@ class WithdrawController extends WP_REST_Controller {
     protected $rest_base = 'withdraw';
 
     /**
-     * Register all routes releated with stores
+     * Register all routes related with withdraw.
      *
      * @return void
      */
@@ -51,6 +54,12 @@ class WithdrawController extends WP_REST_Controller {
 									'type'    => 'integer',
 								],
 							],
+                            'is_export' => [
+                                'description' => __( 'Is withdraws exportable', 'dokan-lite' ),
+                                'type'        => 'boolean',
+                                'context'     => [ 'view' ],
+                                'default'     => false,
+                            ],
 						]
 					),
 					'permission_callback' => [ $this, 'get_items_permissions_check' ],
@@ -103,6 +112,17 @@ class WithdrawController extends WP_REST_Controller {
 			]
         );
 
+        register_rest_route(
+            $this->namespace, '/' . $this->rest_base . '/payment_methods', [
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_payment_method_items' ],
+                    'permission_callback' => [ $this, 'get_payment_method_items_permissions_check' ],
+                ],
+                'schema' => [ $this, 'get_payment_method_item_schema' ],
+            ]
+        );
+
         $batch_items_schema = $this->get_public_batch_schema();
         register_rest_route(
             $this->namespace, '/' . $this->rest_base . '/batch', [
@@ -114,6 +134,43 @@ class WithdrawController extends WP_REST_Controller {
 				],
 				'schema' => [ $this, 'get_public_batch_schema' ],
 			]
+        );
+
+        register_rest_route(
+            $this->namespace, '/' . $this->rest_base . '/charges', [
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_all_method_charges' ],
+                    'permission_callback' => [ $this, 'get_items_permissions_check' ],
+                ],
+            ]
+        );
+
+        $methods = array_keys( dokan_withdraw_get_methods() );
+
+        register_rest_route(
+            $this->namespace, '/' . $this->rest_base . '/charge', [
+                [
+                    'methods'             => WP_REST_Server::READABLE,
+                    'callback'            => [ $this, 'get_method_charge' ],
+                    'permission_callback' => [ $this, 'get_items_permissions_check' ],
+                    'args'                => [
+                        'method' => [
+                            'description' => __( 'Withdraw method key', 'dokan-lite' ),
+                            'type'        => 'string',
+                            'context'     => [ 'view' ],
+                            'enum'        => $methods,
+                            'required'    => true,
+                        ],
+                        'amount' => [
+                            'description' => __( 'Withdraw amount', 'dokan-lite' ),
+                            'type'        => 'number',
+                            'context'     => [ 'view' ],
+                            'required'    => true,
+                        ],
+                    ],
+                ],
+            ]
         );
     }
 
@@ -185,6 +242,17 @@ class WithdrawController extends WP_REST_Controller {
      */
     public function delete_item_permissions_check( $request ) {
         return current_user_can( 'manage_woocommerce' );
+    }
+
+    /**
+     * Check Permission for Wthdraw Payment Method Items.
+     *
+     * @since 3.8.3
+     *
+     * @return bool
+     */
+    public function get_payment_method_items_permissions_check( $request ) {
+        return current_user_can( 'dokan_manage_withdraw' );
     }
 
     /**
@@ -271,31 +339,68 @@ class WithdrawController extends WP_REST_Controller {
             $args['ids'] = $request['ids'];
         }
 
-        $cache_group = 'withdraws';
-        $cache_key   = 'withdraw_requests_' . md5( wp_json_encode( $args ) );
-        $withdraws   = Cache::get( $cache_key, $cache_group );
-
-        if ( false === $withdraws ) {
-            $withdraws = dokan()->withdraw->all( $args );
-
-            Cache::set( $cache_key, $withdraws, $cache_group );
+        if ( ! empty( $request['payment_method'] ) ) {
+            $args['method'] = $request['payment_method'];
         }
 
-        $data = [];
+        if ( ! empty( $request['start_date'] ) && ! empty( $request['end_date'] ) ) {
+            $args['start_date'] = $request['start_date'];
+            $args['end_date']   = $request['end_date'];
+        }
+
+        $withdraws = dokan()->withdraw->all( $args );
+        $data      = [];
         foreach ( $withdraws->withdraws as $withdraw ) {
             $item   = $this->prepare_item_for_response( $withdraw, $request );
             $data[] = $this->prepare_response_for_collection( $item );
         }
 
-        $response       = rest_ensure_response( $data );
-        $withdraw_count = dokan_get_withdraw_count();
+        // Get withdraw counts.
+        $args['return'] = 'count';
+        $withdraw_count = dokan()->withdraw->all( $args );
 
-        $response->header( 'X-Status-Pending', $withdraw_count['pending'] );
-        $response->header( 'X-Status-Completed', $withdraw_count['completed'] );
-        $response->header( 'X-Status-Cancelled', $withdraw_count['cancelled'] );
+        // Check if not exportable.
+        if ( empty( $request['is_export'] ) ) {
+            $response = rest_ensure_response( $data );
 
-        $response = $this->format_collection_response( $response, $request, $withdraws->total );
-        return $response;
+            $response->header( 'X-Status-Pending', $withdraw_count['pending'] );
+            $response->header( 'X-Status-Completed', $withdraw_count['completed'] );
+            $response->header( 'X-Status-Cancelled', $withdraw_count['cancelled'] );
+
+            return $this->format_collection_response( $response, $request, $withdraws->total );
+        }
+
+        // Export items.
+        $exporter = new WithdrawLogExporter();
+        $step     = isset( $params['page'] ) ? absint( $params['page'] ) : 1;
+        $statuses = [ 'pending', 'completed', 'cancelled' ];
+
+        $exporter->set_items( $data );
+        $exporter->set_page( $step );
+        $exporter->set_limit( $args['limit'] );
+        $exporter->set_total_rows( $statuses[ $args['status'] ] );
+        $exporter->generate_file();
+
+        $percent     = $exporter->get_percent_complete();
+        $export_data = [
+            'percentage' => $percent,
+        ];
+
+        if ( $percent >= 100 ) {
+            $export_data['step'] = 'done';
+            $export_data['url']  = add_query_arg(
+                [
+                    'download-withdraw-log-csv'  => wp_create_nonce( 'download-withdraw-log-csv-nonce' ),
+                ],
+                admin_url( 'admin.php' )
+            );
+        } else {
+            $export_data['step']       = ++$step;
+            $export_data['percentage'] = $exporter->get_percent_complete();
+            $export_data['columns']    = $exporter->get_column_names();
+        }
+
+        return rest_ensure_response( $export_data );
     }
 
     /**
@@ -307,7 +412,7 @@ class WithdrawController extends WP_REST_Controller {
         $data = [];
 
         $data['current_balance']    = dokan_get_seller_balance( dokan_get_current_user_id(), false );
-        $data['withdraw_limit']     = dokan_get_option( 'withdraw_limit', 'dokan_withdraw', - 1 );
+        $data['withdraw_limit']     = dokan_get_option( 'withdraw_limit', 'dokan_withdraw', 0 );
         $data['withdraw_threshold'] = dokan_get_withdraw_threshold( dokan_get_current_user_id() );
         $data['withdraw_methods']   = array_filter( dokan_get_seller_active_withdraw_methods( dokan_get_current_user_id() ) );
         $data['last_withdraw']      = dokan()->withdraw->get_withdraw_requests(
@@ -350,32 +455,40 @@ class WithdrawController extends WP_REST_Controller {
                 throw new DokanException( 'dokan_rest_withdraw_error', __( 'No vendor found', 'dokan-lite' ), 404 );
             }
 
-            $args = [
-                'user_id' => $user_id,
-                'amount'  => $request['amount'],
-                'date'    => current_time( 'mysql' ),
-                'method'  => $request['method'],
-                'note'    => $note,
-                'ip'      => dokan_get_client_ip(),
-            ];
-
             if ( dokan()->withdraw->has_pending_request( $user_id ) ) {
                 throw new DokanException( 'dokan_rest_withdraw_error', __( 'You already have a pending withdraw request', 'dokan-lite' ), 400 );
             }
 
-            $validate_request = dokan()->withdraw->is_valid_approval_request( $args );
+            $validate_request = dokan()->withdraw->is_valid_approval_request(
+                [
+			        'user_id' => $user_id,
+			        'amount'  => $request['amount'],
+			        'method'  => $request['method'],
+                    ]
+            );
 
             if ( is_wp_error( $validate_request ) ) {
                 throw new DokanException( 'dokan_rest_withdraw_error', $validate_request->get_error_message(), 400 );
             }
 
-            $withdraw = dokan()->withdraw->create( $args );
+            $withdraw = new Withdraw();
 
-            if ( is_wp_error( $withdraw ) ) {
-                throw new DokanException( $withdraw->get_error_code(), $withdraw->get_error_message(), 400 );
+            $withdraw
+                ->set_user_id( $user_id )
+                ->set_amount( $request['amount'] )
+                ->set_date( dokan_current_datetime()->format( 'Y-m-d H:i:s' ) )
+                ->set_status( dokan()->withdraw->get_status_code( 'pending' ) )
+                ->set_method( $request['method'] )
+                ->set_ip( dokan_get_client_ip() )
+                ->set_note( $note );
+
+            $result = $withdraw->save();
+
+            if ( is_wp_error( $result ) ) {
+                throw new DokanException( $result->get_error_code(), $result->get_error_message(), 400 );
             }
 
-            $response = $this->prepare_item_for_response( $withdraw, $request );
+            $response = $this->prepare_item_for_response( $result, $request );
             $response = rest_ensure_response( $response );
 
             $response->set_status( 201 );
@@ -413,19 +526,26 @@ class WithdrawController extends WP_REST_Controller {
      */
     public function update_item( $request ) {
         try {
-            global $wpdb;
+            /**
+             * @var $withdraw_manager \WeDevs\Dokan\Withdraw\Manager()
+             */
+            $withdraw_manager = dokan()->withdraw;
 
-            $withdraw = dokan()->withdraw->get( $request['id'] );
+            /**
+             * @var $withdraw \WeDevs\Dokan\Withdraw\Withdraw()
+             */
+            $withdraw = $withdraw_manager->get( $request['id'] );
 
+            // phpcs:ignore WordPress.WP.Capabilities.Unknown
             if ( ! current_user_can( 'manage_woocommerce' ) ) {
-                $validate_request = dokan()->withdraw->is_valid_cancellation_request( $withdraw->get_withdraw() );
+                $validate_request = $withdraw_manager->is_valid_cancellation_request( $withdraw->get_withdraw() );
 
                 if ( is_wp_error( $validate_request ) ) {
                     throw new DokanException( 'dokan_rest_withdraw_error', $validate_request->get_error_message(), 422 );
                 }
 
                 // Vendors are allowed to cancel request only
-                $withdraw->set_status( dokan()->withdraw->get_status_code( 'cancelled' ) );
+                $withdraw->set_status( $withdraw_manager->get_status_code( 'cancelled' ) );
             } else {
                 if ( isset( $request['user_id'] ) ) {
                     $withdraw->set_user_id( $request['user_id'] );
@@ -435,24 +555,35 @@ class WithdrawController extends WP_REST_Controller {
                     $withdraw->set_amount( $request['amount'] );
                 }
 
-                if ( isset( $request['status'] ) ) {
-                    if ( 'approved' === $request['status'] ) {
-                        $validate_request = dokan()->withdraw->is_valid_approval_request( $withdraw->get_withdraw() );
-
-                        if ( is_wp_error( $validate_request ) ) {
-                            throw new DokanException( 'dokan_rest_withdraw_error', $validate_request->get_error_message(), 422 );
-                        }
-                    }
-
-                    $withdraw->set_status( dokan()->withdraw->get_status_code( $request['status'] ) );
-                }
-
                 if ( isset( $request['method'] ) ) {
                     $withdraw->set_method( $request['method'] );
                 }
 
                 if ( isset( $request['note'] ) ) {
                     $withdraw->set_note( $request['note'] );
+                }
+
+                /**
+                 * We are temporarily setting the withdrawal status null because in the `is_valid_approval_request` function
+                 * it throws error as 'Withdraw is already approved.' when status is 'approved'. If we don't set null we can't validate
+                 * the vendor's withdraw balance and withdrawal limit. If all this information validates properly we will set the real status code
+                 * that came from request.
+                 */
+                if ( isset( $request['status'] ) ) {
+                    $withdraw->set_status( $withdraw_manager->get_status_code( null ) );
+                }
+
+                $validate_request = $withdraw_manager->is_valid_approval_request( $withdraw->get_withdraw() );
+
+                if ( is_wp_error( $validate_request ) ) {
+                    throw new DokanException( 'dokan_rest_withdraw_error', $validate_request->get_error_message(), 400 );
+                }
+
+                /**
+                 * Setting the real status code that came from request.
+                 */
+                if ( isset( $request['status'] ) ) {
+                    $withdraw->set_status( $withdraw_manager->get_status_code( $request['status'] ) );
                 }
             }
 
@@ -495,6 +626,29 @@ class WithdrawController extends WP_REST_Controller {
         } catch ( Exception $e ) {
             return $this->send_response_error( $e );
         }
+    }
+
+    /**
+     * Get Withdraw Payment Method Items.
+     *
+     * @since 3.8.3
+     *
+     * @param  WP_REST_Request $request
+     *
+     * @return WP_REST_Response
+     */
+    public function get_payment_method_items( $request ) {
+        global $wpdb;
+
+        $payment_methods = $wpdb->get_col( "SELECT DISTINCT method FROM {$wpdb->prefix}dokan_withdraw" ); //phpcs:ignore
+        $data            = [];
+
+        foreach ( $payment_methods as $payment_method ) {
+            $item   = $this->prepare_payment_method_item_for_response( $payment_method, $request );
+            $data[] = $this->prepare_response_for_collection( $item );
+        }
+
+        return rest_ensure_response( $data );
     }
 
     /**
@@ -595,9 +749,59 @@ class WithdrawController extends WP_REST_Controller {
     }
 
     /**
+     * Get all withdraw method charges.
+     *
+     * @since 3.9.6
+     *
+     * @return WP_Error|\WP_HTTP_Response|WP_REST_Response
+     */
+    public function get_all_method_charges() {
+        $all_charges = dokan_withdraw_get_method_charges();
+
+        return rest_ensure_response( $all_charges );
+    }
+
+    /**
+     * Get withdraw method charge.
+     *
+     * @since 3.9.6
+     *
+     * @return WP_Error|\WP_HTTP_Response|WP_REST_Response
+     */
+    public function get_method_charge( $request ) {
+        $method = $request->get_param( 'method' );
+        $amount = wc_format_decimal( $request->get_param( 'amount' ) );
+
+        $withdraw = new Withdraw();
+
+        $withdraw->set_method( $method )
+                ->set_amount( $amount )
+                ->calculate_charge();
+
+        $response = [
+            'charge'      => $withdraw->get_charge(),
+            'receivable'  => $withdraw->get_receivable_amount(),
+            'charge_data' => $withdraw->get_charge_data(),
+        ];
+
+        if ( $withdraw->get_receivable_amount() < 0 ) {
+            return new WP_Error(
+                'invalid-withdraw-amount',
+                __( 'Invalid withdraw amount. The withdraw charge is greater than the withdraw amount', 'dokan-lite' ),
+                $response
+            );
+        }
+
+        return rest_ensure_response( $response );
+    }
+
+    /**
      * Prepare data for response
      *
      * @since 2.8.0
+     *
+     * @param $withdraw \WeDevs\Dokan\Withdraw\Withdraw
+     * @param $request \WP_REST_Request
      *
      * @return WP_REST_Response|WP_Error
      */
@@ -627,12 +831,36 @@ class WithdrawController extends WP_REST_Controller {
             'note'         => $withdraw->get_note(),
             'details'      => $details,
             'ip'           => $withdraw->get_ip(),
+            'charge'       => $withdraw->get_charge(),
+            'receivable'   => $withdraw->get_receivable_amount(),
+            'charge_data'  => $withdraw->get_charge_data(),
         ];
 
         $response = rest_ensure_response( $data );
         $response->add_links( $this->prepare_links( $withdraw, $request ) );
 
         return apply_filters( 'dokan_rest_prepare_withdraw_object', $response, $withdraw, $request );
+    }
+
+    /**
+     * Prepare Payment Method Item Data for Response.
+     *
+     * @since 3.8.3
+     *
+     * @param string          $payment_method
+     * @param WP_REST_Request $request
+     *
+     * @return WP_REST_Response|WP_Error
+     */
+    public function prepare_payment_method_item_for_response( $payment_method, $request ) {
+        $data = [
+            'id'    => $payment_method,
+            'title' => dokan_withdraw_get_method_title( $payment_method ),
+        ];
+
+        $response = rest_ensure_response( $data );
+
+        return apply_filters( 'dokan_rest_prepare_withdraw_payment_method_object', $response, $payment_method, $request );
     }
 
     /**
@@ -772,6 +1000,39 @@ class WithdrawController extends WP_REST_Controller {
                     'type'        => 'string',
                     'context'     => [ 'view' ],
                     'readonly'    => true,
+                ],
+            ],
+        ];
+
+        return $this->add_additional_fields_schema( $schema );
+    }
+
+    /**
+     * Item Schema for Withdraw Payment Methods.
+     *
+     * @since DOKAN_LITE
+     *
+     * @return array
+     */
+    public function get_payment_method_item_schema() {
+        $schema = [
+            '$schema'    => 'http://json-schema.org/draft-04/schema#',
+            'title'      => 'Withdraw Payment Methods',
+            'type'       => 'object',
+            'properties' => [
+                'id' => [
+                    'description' => __( 'Unique identifier for the payment method.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => [ 'view' ],
+                    'readonly'    => true,
+                    'required'    => true,
+                ],
+                'title' => [
+                    'description' => __( 'Title for the payment method.', 'dokan-lite' ),
+                    'type'        => 'string',
+                    'context'     => [ 'view' ],
+                    'readonly'    => true,
+                    'required'    => false,
                 ],
             ],
         ];

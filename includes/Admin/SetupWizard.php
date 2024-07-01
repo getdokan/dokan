@@ -64,8 +64,7 @@ class SetupWizard {
      * @return void
      */
     public function enqueue_scripts() {
-        $suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-
+        $suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '' : '.min';
         if ( ! is_admin() ) {
             wp_register_script( 'selectWoo', WC()->plugin_url() . '/assets/js/selectWoo/selectWoo.full' . $suffix . '.js', [ 'jquery' ], '1.0.1', true );
             wp_register_script( 'wc-enhanced-select', WC()->plugin_url() . '/assets/js/admin/wc-enhanced-select' . $suffix . '.js', [ 'jquery', 'selectWoo' ], WC_VERSION, true );
@@ -90,7 +89,11 @@ class SetupWizard {
         }
 
         wp_enqueue_style( 'wc-setup', WC()->plugin_url() . '/assets/css/wc-setup.css', [ 'dashicons', 'install' ], WC_VERSION );
-        wp_enqueue_style( 'dokan-setup', DOKAN_PLUGIN_ASSEST . '/css/setup.css', [ 'wc-setup', 'dokan-fontawesome' ], DOKAN_PLUGIN_VERSION );
+        wp_enqueue_style( 'dokan-setup', DOKAN_PLUGIN_ASSEST . '/css/setup.css', [ 'wc-setup' ], DOKAN_PLUGIN_VERSION );
+
+        if ( 'off' === dokan_get_option( 'disable_dokan_fontawesome', 'dokan_appearance', 'off' ) ) {
+            wp_enqueue_style( 'dokan-fontawesome' );
+        }
 
         wp_register_script( 'jquery-tiptip', WC()->plugin_url() . '/assets/js/jquery-tiptip/jquery.tipTip.min.js', [ 'jquery' ], WC_VERSION, true );
         wp_register_script( 'wc-setup', WC()->plugin_url() . '/assets/js/admin/wc-setup.min.js', [ 'jquery', 'wc-enhanced-select', 'jquery-blockui', 'wp-util', 'jquery-tiptip', 'dokan-util-helper' ], WC_VERSION, true );
@@ -130,7 +133,7 @@ class SetupWizard {
      * Add admin menus/screens.
      */
     public function admin_menus() {
-        add_submenu_page( null, '', '', 'manage_woocommerce', 'dokan-setup', '' );
+        add_submenu_page( '', '', '', 'manage_woocommerce', 'dokan-setup', '' );
     }
 
     /**
@@ -275,7 +278,7 @@ class SetupWizard {
         <?php
         $logo_url = ( ! empty( $this->custom_logo ) ) ? $this->custom_logo : plugins_url( 'assets/images/dokan-logo.png', DOKAN_FILE );
         ?>
-        <h1 id="wc-logo"><a href="https://wedevs.com/dokan/"><img src="<?php echo esc_url( $logo_url ); ?>" alt="Dokan Logo" width="135" height="auto"/></a></h1>
+        <h1 id="wc-logo"><a href="https://dokan.co/wordpress/"><img src="<?php echo esc_url( $logo_url ); ?>" alt="Dokan Logo" width="135" height="auto"/></a></h1>
         <?php
     }
 
@@ -351,12 +354,13 @@ class SetupWizard {
         $general_options  = get_option( 'dokan_general', [] );
         $custom_store_url = ! empty( $general_options['custom_store_url'] ) ? $general_options['custom_store_url'] : 'store';
 
-        $selling_options        = get_option( 'dokan_selling', [] );
-        $shipping_fee_recipient = ! empty( $selling_options['shipping_fee_recipient'] ) ? $selling_options['shipping_fee_recipient'] : 'seller';
-        $tax_fee_recipient      = ! empty( $selling_options['tax_fee_recipient'] ) ? $selling_options['tax_fee_recipient'] : 'seller';
-        $map_api_source         = dokan_get_option( 'map_api_source', 'dokan_appearance', 'google_maps' );
-        $gmap_api_key           = dokan_get_option( 'gmap_api_key', 'dokan_appearance', '' );
-        $mapbox_access_token    = dokan_get_option( 'mapbox_access_token', 'dokan_appearance', '' );
+        $selling_options            = get_option( 'dokan_selling', [] );
+        $shipping_fee_recipient     = ! empty( $selling_options['shipping_fee_recipient'] ) ? $selling_options['shipping_fee_recipient'] : 'seller';
+        $tax_fee_recipient          = ! empty( $selling_options['tax_fee_recipient'] ) ? $selling_options['tax_fee_recipient'] : 'seller';
+        $shipping_tax_fee_recipient = ! empty( $selling_options['shipping_tax_fee_recipient'] ) ? $selling_options['shipping_tax_fee_recipient'] : 'seller';
+        $map_api_source             = dokan_get_option( 'map_api_source', 'dokan_appearance', 'google_maps' );
+        $gmap_api_key               = dokan_get_option( 'gmap_api_key', 'dokan_appearance', '' );
+        $mapbox_access_token        = dokan_get_option( 'mapbox_access_token', 'dokan_appearance', '' );
 
         $recipients = [
             'seller' => __( 'Vendor', 'dokan-lite' ),
@@ -365,18 +369,19 @@ class SetupWizard {
 
         $args = apply_filters(
             'dokan_admin_setup_wizard_step_setup_store_template_args', [
-                'custom_store_url'       => $custom_store_url,
-                'recipients'             => $recipients,
-                'shipping_fee_recipient' => $shipping_fee_recipient,
-                'tax_fee_recipient'      => $tax_fee_recipient,
-                'map_api_source'         => $map_api_source,
-                'gmap_api_key'           => $gmap_api_key,
-                'mapbox_access_token'    => $mapbox_access_token,
-                'map_api_source_options' => [
+                'custom_store_url'           => $custom_store_url,
+                'recipients'                 => $recipients,
+                'shipping_fee_recipient'     => $shipping_fee_recipient,
+                'tax_fee_recipient'          => $tax_fee_recipient,
+                'shipping_tax_fee_recipient' => $shipping_tax_fee_recipient,
+                'map_api_source'             => $map_api_source,
+                'gmap_api_key'               => $gmap_api_key,
+                'mapbox_access_token'        => $mapbox_access_token,
+                'map_api_source_options'     => [
                     'google_maps' => __( 'Google Maps', 'dokan-lite' ),
                     'mapbox'      => __( 'Mapbox', 'dokan-lite' ),
                 ],
-                'setup_wizard'           => $this,
+                'setup_wizard'               => $this,
             ]
         );
 
@@ -393,12 +398,13 @@ class SetupWizard {
         $selling_options = get_option( 'dokan_selling', [] );
         $appearance      = get_option( 'dokan_appearance', [] );
 
-        $general_options['custom_store_url']       = ! empty( $_POST['custom_store_url'] ) ? sanitize_text_field( wp_unslash( $_POST['custom_store_url'] ) ) : '';
-        $selling_options['shipping_fee_recipient'] = ! empty( $_POST['shipping_fee_recipient'] ) ? sanitize_text_field( wp_unslash( $_POST['shipping_fee_recipient'] ) ) : '';
-        $selling_options['tax_fee_recipient']      = ! empty( $_POST['tax_fee_recipient'] ) ? sanitize_text_field( wp_unslash( $_POST['tax_fee_recipient'] ) ) : '';
-        $appearance['map_api_source']              = ! empty( $_POST['map_api_source'] ) ? sanitize_text_field( wp_unslash( $_POST['map_api_source'] ) ) : '';
-        $appearance['gmap_api_key']                = ! empty( $_POST['gmap_api_key'] ) ? sanitize_text_field( wp_unslash( $_POST['gmap_api_key'] ) ) : '';
-        $appearance['mapbox_access_token']         = ! empty( $_POST['mapbox_access_token'] ) ? sanitize_text_field( wp_unslash( $_POST['mapbox_access_token'] ) ) : '';
+        $general_options['custom_store_url']           = ! empty( $_POST['custom_store_url'] ) ? sanitize_text_field( wp_unslash( $_POST['custom_store_url'] ) ) : '';
+        $selling_options['shipping_fee_recipient']     = ! empty( $_POST['shipping_fee_recipient'] ) ? sanitize_text_field( wp_unslash( $_POST['shipping_fee_recipient'] ) ) : '';
+        $selling_options['tax_fee_recipient']          = ! empty( $_POST['tax_fee_recipient'] ) ? sanitize_text_field( wp_unslash( $_POST['tax_fee_recipient'] ) ) : '';
+        $selling_options['shipping_tax_fee_recipient'] = ! empty( $_POST['shipping_tax_fee_recipient'] ) ? sanitize_text_field( wp_unslash( $_POST['shipping_tax_fee_recipient'] ) ) : '';
+        $appearance['map_api_source']                  = ! empty( $_POST['map_api_source'] ) ? sanitize_text_field( wp_unslash( $_POST['map_api_source'] ) ) : '';
+        $appearance['gmap_api_key']                    = ! empty( $_POST['gmap_api_key'] ) ? sanitize_text_field( wp_unslash( $_POST['gmap_api_key'] ) ) : '';
+        $appearance['mapbox_access_token']             = ! empty( $_POST['mapbox_access_token'] ) ? sanitize_text_field( wp_unslash( $_POST['mapbox_access_token'] ) ) : '';
 
         $share_essentials = isset( $_POST['share_essentials'] );
 
@@ -407,6 +413,12 @@ class SetupWizard {
         } else {
             dokan()->tracker->insights->optout();
         }
+
+        // store this value for later use
+        update_option( 'dokan_share_essentials', $share_essentials );
+
+        // call a hook for other plugins to do their thing
+        do_action( 'dokan_share_essentials_updated', $share_essentials );
 
         update_option( 'dokan_general', $general_options );
         update_option( 'dokan_selling', $selling_options );
@@ -479,6 +491,7 @@ class SetupWizard {
         $withdraw_methods      = ! empty( $options['withdraw_methods'] ) ? $options['withdraw_methods'] : [];
         $withdraw_limit        = ! empty( $options['withdraw_limit'] ) ? $options['withdraw_limit'] : 0;
         $withdraw_order_status = ! empty( $options['withdraw_order_status'] ) ? $options['withdraw_order_status'] : [];
+        $hide_custom_method    = empty( $options['withdraw_method_name'] ) || empty( $options['withdraw_method_type'] );
         ?>
         <h1><?php esc_html_e( 'Withdraw Setup', 'dokan-lite' ); ?></h1>
         <form method="post">
@@ -489,7 +502,12 @@ class SetupWizard {
                 <tr>
                     <td colspan="2">
                         <ul class="wc-wizard-payment-gateways wc-wizard-services">
-                            <?php foreach ( dokan_withdraw_register_methods() as $key => $method ) : ?>
+                            <?php
+                            foreach ( dokan_withdraw_register_methods() as $key => $method ) :
+                                if ( 'dokan_custom' === $key && $hide_custom_method ) {
+                                    continue;
+                                }
+                                ?>
                                 <li class="wc-wizard-service-item <?php echo ( in_array( $key, array_values( $withdraw_methods ), true ) ) ? 'checked="checked"' : ''; ?>">
                                     <div class="wc-wizard-service-name">
                                         <p><?php echo esc_html( dokan_withdraw_get_method_title( $key ) ); ?></p>

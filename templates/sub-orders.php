@@ -28,11 +28,13 @@ $wc_shipping_enabled = get_option( 'woocommerce_calc_shipping' ) === 'yes' ? tru
      * @args WC_Order[] $sub_orders
      * @args array $statuses
      */
-    echo apply_filters(
-        'dokan_suborder_notice_to_customer',
-        esc_html__(
-            'This order has products from multiple vendors. So we divided this order into multiple vendor orders. Each order will be handled by their respective vendor independently.', 'dokan-lite'
-        ), $parent_order, $sub_orders, $statuses
+    echo esc_html(
+        apply_filters(
+            'dokan_suborder_notice_to_customer',
+            esc_html__(
+                'This order has products from multiple vendors. So we divided this order into multiple vendor orders. Each order will be handled by their respective vendor independently.', 'dokan-lite'
+            ), $parent_order, $sub_orders, $statuses
+        )
     );
     ?>
 </div>
@@ -53,18 +55,15 @@ $wc_shipping_enabled = get_option( 'woocommerce_calc_shipping' ) === 'yes' ? tru
     <tbody>
     <?php
     $now = dokan_current_datetime();
-    foreach ( $sub_orders as $order_post ) {
-        $order      = wc_get_order( $order_post->ID ); // phpcs:ignore
-        if ( ! $order ) {
-            continue;
-        }
+    // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+    foreach ( $sub_orders as $order ) {
         $item_count = $order->get_item_count();
         $order_date = $order->get_date_created();
         $order_date = is_a( $order_date, 'WC_DateTime' ) ? $now->setTimestamp( $order_date->getTimestamp() ) : $now;
         ?>
             <tr class="order">
                 <td class="order-number">
-                    <a href="<?php echo esc_url( $order->get_view_order_url() ); ?>">
+                    <a href="<?php echo esc_url( is_callable( [ $order, 'get_view_order_url' ] ) ? $order->get_view_order_url() : '#' ); ?>">
                         <?php echo esc_html( $order->get_order_number() ); ?>
                     </a>
                 </td>
@@ -78,7 +77,7 @@ $wc_shipping_enabled = get_option( 'woocommerce_calc_shipping' ) === 'yes' ? tru
                 </td>
                 <?php if ( function_exists( 'dokan_get_order_shipment_current_status' ) && 'on' === $allow_shipment && $wc_shipping_enabled ) : ?>
                     <td class="dokan-order-shipping-status" data-title="<?php esc_attr_e( 'Shipping Status', 'dokan-lite' ); ?>" >
-                        <?php echo dokan_get_order_shipment_current_status( $order->get_id() ); ?>
+                        <?php echo wp_kses_post( dokan_get_order_shipment_current_status( $order->get_id() ) ); ?>
                     </td>
                 <?php endif; ?>
                 <td class="order-total">

@@ -2,7 +2,7 @@
   position: absolute;
   width: 20px;
   height: 20px;
-  background: url('../images/spinner-2x.gif') center center no-repeat;
+  background: url(../js/../images/spinner-2x.gif) center center no-repeat;
   z-index: 99;
   background-size: 20px;
 }
@@ -177,6 +177,7 @@
   background-color: #ff5a40;
   border-radius: 53px;
   border: 2px solid #fff;
+  box-sizing: content-box;
 }
 .dokan-admin-header .dokan-admin-header-menu .menu-item .menu-icon:hover {
   background: #0C5F9A;
@@ -599,3 +600,4 @@ td.combine-tips-style {
 .dokan-admin-notices a {
   text-decoration: none;
 }
+

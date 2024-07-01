@@ -6,6 +6,7 @@ $active_class = ' class="active"'
 <div class="dokan-dash-sidebar">
     <?php
     global $allowedposttags;
+    do_action( 'dokan_dashboard_sidebar_start' );
 
     // These are required for the hamburger menu.
     if ( is_array( $allowedposttags ) ) {
@@ -17,5 +18,7 @@ $active_class = ' class="active"'
     }
 
     echo wp_kses( dokan_dashboard_nav( $active_menu ), $allowedposttags );
+
+    do_action( 'dokan_dashboard_sidebar_end' );
     ?>
 </div>

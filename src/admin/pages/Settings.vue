@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="dokan-settings">
-            <h2 style="margin-bottom: 15px;">{{ __( 'Settings', 'dokan-lite' ) }}</h2>
+            <h1 style="margin-bottom: 15px;">{{ __( 'Settings', 'dokan-lite' ) }}</h1>
             <AdminNotice></AdminNotice>
             <UpgradeBanner v-if="! hasPro"></UpgradeBanner>
 
@@ -43,7 +43,7 @@
                 <div class="metabox-holder">
                     <fieldset class="settings-header" v-for="section in settingSections" v-if="currentTab === section.id">
                         <div class="settings-content">
-                            <h2 class="settings-title">{{ section.settings_title }}</h2>
+                            <h2 class="settings-title font-bold">{{ section.settings_title }}</h2>
                             <p class="settings-description">{{ section.settings_description }}</p>
                         </div>
                         <div v-if="section.document_link" class="settings-document-button">
@@ -72,7 +72,17 @@
                                             :dokanAssetsUrl="dokanAssetsUrl" />
                                     </div>
                                 </div>
-                                <p class="submit"><input type="submit" name="submit" id="submit" class="button button-primary" value="Save Changes" @click.prevent="saveSettings( settingValues[index], index )"></p>
+                                <p class="submit">
+                                    <input
+                                        type="submit"
+                                        name="submit"
+                                        id="submit"
+                                        class="button button-primary"
+                                        :value="__( 'Save Changes', 'dokan-lite' )"
+                                        @click.prevent="saveSettings( settingValues[index], index )"
+                                        :disabled="disableSubmit"
+                                    >
+                                </p>
                             </form>
                         </div>
                     </template>
@@ -134,6 +144,7 @@
                 disbursementSchedule: {},
                 isSaveConfirm: false,
                 dokanAssetsUrl: dokan.urls.assetsUrl,
+                disableSubmit: false,
             }
         },
 
@@ -576,6 +587,11 @@
             this.settingFields   = dokan.settings_fields;
             window.addEventListener( 'scroll', this.handleScroll );
         },
+        mounted() {
+            this.$root.$on('setting-submit-status', ( status ) => {
+                this.disableSubmit = status;
+            } );
+        },
     };
 
 </script>
@@ -609,11 +625,9 @@
 
         div.nav-tab-wrapper {
             width: 340px;
-            border: 1px solid #c8d7e1;
             padding: 14px 16px 30px 24px;
             overflow: hidden;
-            background: #FAFBFF;
-            box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+            background: #F9FAFB;
             box-sizing: border-box;
             margin-right: 12px;
             border-bottom: none;
@@ -635,7 +649,7 @@
                 transition:none;
                 background: transparent;
                 font-weight: bold;
-                border-bottom: 1px solid #cecaca;
+                border-bottom: 1px solid #e9e9ea;
                 transition-property: none;
 
                 img {
@@ -671,7 +685,7 @@
                     position: relative;
                     transition: .3s linear;
                     background: #fff !important;
-                    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+                    //box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
                     transition-property: none;
 
                     &:before {
@@ -684,15 +698,6 @@
                         top: 0;
                     }
 
-                    &::after {
-                        content: '';
-                        position: absolute;
-                        width: 100%;
-                        height: 1px;
-                        background: #cecaca;
-                        left: 0;
-                        top: -1px;
-                    }
                 }
 
                 &:last-child {
@@ -739,16 +744,20 @@
 
                     a.doc-link {
                         color: #033AA3D9;
-                        border: 0.82px solid #033AA3;
+                        border: 1px solid #f3f4f6;
                         padding: 10px 15px;
                         font-size: 12px;
                         background: #FFF;
                         box-sizing: border-box;
-                        box-shadow: 0px 3.28px 3.28px rgba(0, 0, 0, 0.25);
+                        box-shadow: 2px 2px 3px 0px rgba(0, 0, 0, 0.1);
                         font-family: Roboto, sans-serif;
                         line-height: 15px;
                         border-radius: 6.56px;
                         text-decoration: none;
+
+                        &:hover {
+                            background: #033aa30f;
+                        }
                     }
                 }
             }
@@ -758,17 +767,20 @@
                     .dokan-settings-fields {
                         .dokan-settings-field-type-sub_section,
                         .dokan-settings-field-type-disbursement_sub_section {
-                            border-bottom: 1px solid #b0a7a7;
+                            border-bottom: 1px solid #f3f4f6;
 
                             .sub-section-styles {
-                                margin-top: 50px;
+                                margin-top: 20px;
+                                margin-bottom:0;
+                                padding: 20px;
+                                background: #f9fafb;
                             }
                         }
 
                         div {
                             &:not(.dokan-settings-field-type-sub_section) {
                                 .field_contents {
-                                    border: 1px solid #b0a7a7;
+                                    border: 1px solid #f3f4f6;
                                     border-top: none;
                                 }
                             }
@@ -777,7 +789,7 @@
                         > div {
                             &:not(.dokan-settings-field-type-sub_section) {
                                 &:first-child {
-                                    border-top: 1px solid #b0a7a7;
+                                    border-top: 1px solid #f3f4f6;
                                 }
                             }
                         }
@@ -817,7 +829,7 @@
                 height: 100%;
                 content: "";
                 position: absolute;
-                background: #E5E5E5;
+                background: #fff;
             }
         }
 

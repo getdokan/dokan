@@ -22,11 +22,11 @@
                         endif;
                         ?>
                     </strong><br>
-                    <?php if ( $withdraw_limit !== - 1 ) : ?>
+                    <?php if ( $withdraw_limit !== 0 ) : ?>
                         <?php esc_html_e( 'Minimum Withdraw Amount:', 'dokan-lite' ); ?> <strong><?php echo wc_price( $withdraw_limit ); ?></strong><br>
 						<?php
                     endif;
-                    if ( $threshold !== - 1 ) :
+                    if ( $threshold !== 0 ) :
                         ?>
                         <?php esc_html_e( 'Withdraw Threshold:', 'dokan-lite' ); ?>
                         <strong>
@@ -102,12 +102,12 @@
                     <small><?php echo esc_html( $method_info ); ?></small>
                 </div>
                 <div class="dokan-w5">
-                    <?php if ( $default_method === $method ) : ?>
+                    <?php if ( $has_information && $default_method === $method ) : ?>
                         <button class="dokan-btn dokan-btn-default" disabled data-method="<?php echo esc_attr( $method ); ?>"><?php esc_html_e( 'Default', 'dokan-lite' ); ?></button>
-                    <?php elseif ( ! $has_information ) : ?>
-                        <a href="<?php echo esc_url( dokan_get_navigation_url( 'settings/payment' ) ); ?>" class="dokan-btn" data-method="<?php echo esc_attr( $method ); ?>"><?php esc_html_e( 'Setup', 'dokan-lite' ); ?></a>
-                    <?php else : ?>
+                    <?php elseif ( $has_information && $default_method !== $method ) : ?>
                         <button class="dokan-btn dokan-withdraw-make-default-button" data-method="<?php echo esc_attr( $method ); ?>"><?php esc_html_e( 'Make Default', 'dokan-lite' ); ?></button>
+                    <?php else : ?>
+                        <a href="<?php echo esc_url( dokan_get_navigation_url( 'settings/payment' ) ); ?>" class="dokan-btn" data-method="<?php echo esc_attr( $method ); ?>"><?php esc_html_e( 'Setup', 'dokan-lite' ); ?></a>
                     <?php endif; ?>
                 </div>
             </div>

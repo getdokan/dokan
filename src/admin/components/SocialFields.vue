@@ -10,20 +10,24 @@
             <p class="field_desc" v-html="fieldData.desc"></p>
         </div>
         <div class="fields" v-bind:class="[fieldData.type === 'radio' ? 'radio_fields' : '']" v-if="fieldData.url || fieldData.type !== 'html'">
-            <input
-                disabled
-                type='text'
-                class='regular-text large'
+            <secret-input
+                v-model="fieldData.url"
+                :type="'text'"
                 v-if="fieldData.url"
-                :value='fieldData.url' />
-            <input
-                class="regular-text large"
-                :type="fieldData.type"
-                v-model="fieldValue[fieldData.name]"
-                v-if="fieldData.type === 'text'" />
+                :copy-btn="true"
+                :disabled="true"
+                :is-secret="false"
+            />
+            <secret-input
+                :value="fieldValue[fieldData.name]"
+                @input="event => inputValueHandler( event )"
+                :type='fieldData.type'
+                v-if="fieldData.type === 'text'"
+            />
             <textarea
                 class="large"
-                v-model="fieldValue[fieldData.name]"
+                :value="fieldValue[fieldData.name]"
+                @input="event => inputValueHandler( event.target.value )"
                 v-if="fieldData.type === 'textarea'"
             ></textarea>
             <template v-if="fieldData.type === 'radio'">
@@ -43,7 +47,12 @@
 </template>
 
 <script>
+    import SecretInput from './SecretInput.vue';
+
     export default {
+        components: {
+            SecretInput
+        },
         props: {
             fieldData: {
                 type: Object,
@@ -56,6 +65,12 @@
             },
         },
 
+        data() {
+            return {
+                copied: false,
+            }
+        },
+
         methods: {
             isSocialOptionChecked( optionKey ) {
                 if ( 'radio' === this.fieldData.type ) {
@@ -63,6 +78,18 @@
                 }
 
                 return false;
+            },
+
+            inputValueHandler( value ) {
+                let data = dokan.hooks.applyFilters(
+                    'dokanFieldComponentInputValue',
+                    value,
+                    this.fieldValue[this.fieldData.name],
+                    this.fieldData.name,
+                    this.fieldData.is_lite ?? false
+                );
+
+                this.$set( this.fieldValue, this.fieldData.name, data );
             },
         },
     }

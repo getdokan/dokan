@@ -44,7 +44,7 @@
             $( 'body' ).append( '<div id="dokan-modal-login-form-popup"></div>' );
 
             const modal = $( '#dokan-modal-login-form-popup' ).iziModal( {
-                headerColor : '#b11d1db8',
+                headerColor : dokan.modal_header_color,
                 overlayColor: 'rgba(0, 0, 0, 0.8)',
                 width       : 690,
                 onOpened    : () => {
@@ -77,7 +77,7 @@
                 }
             } ).done( function ( response ) {
                 $( 'body' ).trigger( 'dokan:login_form_popup:logged_in', response );
-                $( '#dokan-login-form-popup' ).iziModal( 'close' );
+                $( '#dokan-modal-login-form-popup' ).iziModal( 'close' );
             } ).always( function () {
                 $( 'body' ).trigger( 'dokan:login_form_popup:done_working' );
             } ).fail( function ( jqXHR ) {

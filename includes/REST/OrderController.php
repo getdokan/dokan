@@ -199,6 +199,26 @@ class OrderController extends DokanRESTController {
     }
 
     /**
+     * Get Item for an object
+     *
+     * @since 3.9.2
+     *
+     * @return object
+     */
+    public function get_item( $request ) {
+        $order = dokan()->order->get( $request->get_param( 'id' ) );
+
+        if ( empty( $order ) ) {
+            return new WP_Error( "dokan_rest_invalid_order_id", __( 'Invalid Order ID.', 'dokan-lite' ), array( 'status' => 404 ) );
+        }
+
+        $data     = $this->prepare_data_for_response( $order, $request );
+        $response = rest_ensure_response( $data );
+
+        return $response;
+    }
+
+    /**
      * Validation before update product
      *
      * @since 2.8.0
@@ -435,12 +455,21 @@ class OrderController extends DokanRESTController {
             'limit'       => $request['per_page'],
             'paged'       => isset( $request['page'] ) ? absint( $request['page'] ) : 1,
             'customer_id' => $request['customer_id'],
-            'seller_id'   => dokan_get_current_user_id(),
             'date'        => [
                 'from' => isset( $request['after'] ) ? sanitize_text_field( wp_unslash( $request['after'] ) ) : '',
                 'to'   => isset( $request['before'] ) ? sanitize_text_field( wp_unslash( $request['before'] ) ) : '',
-            ]
+            ],
+            'return'      => 'objects',
         ];
+
+        if ( is_numeric( $request->get_param( 'seller_id' ) ) ) {
+            $args['seller_id'] = absint( $request['seller_id'] );
+        }
+
+        // Admin can get any vendor orders but vendor can't get other vendors orders.
+        if ( ! current_user_can( 'manage_options' ) ) {
+            $args['seller_id'] = dokan_get_current_user_id();
+        }
 
         if ( ! empty( $request['search'] ) ) {
             $args['search'] = absint( $request['search'] );
@@ -545,15 +574,16 @@ class OrderController extends DokanRESTController {
      * @return array|WP_Error
      */
     public function get_order_notes( $request ) {
-        $order           = wc_get_order( (int) $request['id'] );
+        $order = wc_get_order( (int) $request['id'] );
+
+        if ( ! $order || $this->post_type !== $order->get_type() ) {
+            return new WP_Error( "dokan_rest_{$this->post_type}_invalid_id", __( 'Invalid order ID.', 'dokan-lite' ), array( 'status' => 404 ) );
+        }
+
         $order_author_id = (int) dokan_get_seller_id_by_order( $order->get_id() );
 
         if ( $order_author_id !== dokan_get_current_user_id() ) {
             return new WP_Error( "dokan_rest_{$this->post_type}_incorrect_order_author", __( 'You have no permission to view this notes', 'dokan-lite' ), array( 'status' => 404 ) );
-        }
-
-        if ( ! $order || $this->post_type !== $order->get_type() ) {
-            return new WP_Error( "dokan_rest_{$this->post_type}_invalid_id", __( 'Invalid order ID.', 'dokan-lite' ), array( 'status' => 404 ) );
         }
 
         $args = array(
@@ -605,7 +635,7 @@ class OrderController extends DokanRESTController {
      */
     public function create_order_note( $request ) {
         if ( ! empty( $request['note_id'] ) ) {
-            // translators: 1) post type name
+            // translators: 1) %s: post type name
             return new WP_Error( "dokan_rest_{$this->post_type}_exists", sprintf( __( 'Cannot create existing %s.', 'dokan-lite' ), $this->post_type ), array( 'status' => 400 ) );
         }
 
@@ -896,9 +926,10 @@ class OrderController extends DokanRESTController {
                     'context'     => array( 'view' ),
                 ),
                 'seller_id'            => array(
-                    'description' => __( 'Orders belongs to specific seller', 'dokan-lite' ),
-                    'type'        => 'integer',
-                    'context'     => array( 'view' ),
+                    'description'       => __( 'Orders belongs to specific seller', 'dokan-lite' ),
+                    'type'              => 'integer',
+                    'context'           => array( 'view' ),
+                    'sanitize_callback' => 'absint',
                 ),
                 'number'               => array(
                     'description' => __( 'Order number.', 'dokan-lite' ),
@@ -1013,8 +1044,8 @@ class OrderController extends DokanRESTController {
                 ),
                 'customer_id'          => array(
                     'description' => __( 'User ID who owns the order. 0 for guests.', 'dokan-lite' ),
-                    'type'        => 'integer',
-                    'default'     => 0,
+                    'type'        => 'string',
+                    'default'     => '',
                     'context'     => array( 'view' ),
                 ),
                 'search'          => array(
@@ -1716,6 +1747,28 @@ class OrderController extends DokanRESTController {
     }
 
     /**
+     * Validating the customer id to query orders.
+     *
+     * @since 3.9.5
+     *
+     * @param string $param
+     * @param WP_REST_Request $request
+     * @param string $key
+     *
+     * @return boolean|WP_Error
+     */
+    public function rest_validate_customer_id( $param, $request, $key ) {
+        if ( is_numeric( $param ) || empty( $param ) ) {
+            return true;
+        }
+
+        return new WP_Error(
+            'rest_invalid_param',
+            __( 'The customer_id must be an integer, accepted value is 0 or any integer value', 'dokan-lite' )
+        );
+    }
+
+    /**
      * Retrieves the query params for the posts collection.
      *
      * @since 4.7.0
@@ -1752,10 +1805,11 @@ class OrderController extends DokanRESTController {
         );
 
         $query_params['customer_id'] = array(
-            'required'    => false,
-            'default'     => $schema_properties['customer_id']['default'],
-            'description' => $schema_properties['customer_id']['description'],
-            'type'        => $schema_properties['customer_id']['type'],
+            'required'          => false,
+            'default'           => $schema_properties['customer_id']['default'],
+            'description'       => $schema_properties['customer_id']['description'],
+            'type'              => $schema_properties['customer_id']['type'],
+            'validate_callback' => [ $this, 'rest_validate_customer_id' ],
         );
 
         $query_params['search'] = array(

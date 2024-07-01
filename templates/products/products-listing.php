@@ -34,21 +34,28 @@
             ?>
 
                 <article class="dokan-product-listing-area">
-
                     <?php
-                    $disable_product_popup = 'on' === dokan_get_option( 'disable_product_popup', 'dokan_selling', 'off' );
-                    $new_product_url       = add_query_arg(
+                    $one_step_product_create = 'on' === dokan_get_option( 'one_step_product_create', 'dokan_selling', 'on' );
+                    $disable_product_popup   = $one_step_product_create || 'on' === dokan_get_option( 'disable_product_popup', 'dokan_selling', 'off' );
+                    $new_product_url         = $one_step_product_create ? dokan_edit_product_url( 0, true ) : add_query_arg(
                         [
                             '_dokan_add_product_nonce' => wp_create_nonce( 'dokan_add_product_nonce' ),
                         ],
                         dokan_get_navigation_url( 'new-product' )
                     );
-                    $product_listing_args  = [
-                        'author'            => dokan_get_current_user_id(),
-                        'posts_per_page'    => 1,
-                        'post_status'       => apply_filters( 'dokan_product_listing_post_statuses', [ 'publish', 'draft', 'pending', 'future' ] ),
+                    $product_listing_args    = [
+                        'author'         => dokan_get_current_user_id(),
+                        'posts_per_page' => 1,
+                        'post_status'    => apply_filters(
+                            'dokan_product_listing_post_statuses', [
+                                'publish',
+                                'draft',
+                                'pending',
+                                'future',
+                            ]
+                        ),
                     ];
-                    $product_query = dokan()->product->all( $product_listing_args );
+                    $product_query           = dokan()->product->all( $product_listing_args );
 
                     if ( $product_query->have_posts() ) {
                         ?>
@@ -81,7 +88,7 @@
                         <div class="dokan-dashboard-product-listing-wrapper">
 
                             <form id="product-filter" method="POST" class="dokan-form-inline">
-                                <div class="dokan-form-group">
+                                <div id="dokan-bulk-action-selector" class="dokan-form-group">
                                     <label for="bulk-product-action-selector" class="screen-reader-text"><?php esc_html_e( 'Select bulk action', 'dokan-lite' ); ?></label>
 
                                     <select name="status" id="bulk-product-action-selector" class="dokan-form-control chosen">
@@ -91,9 +98,16 @@
                                     </select>
                                 </div>
 
-                                <div class="dokan-form-group">
+                                <div id="dokan-bulk-action-submit" class="dokan-form-group">
                                     <?php wp_nonce_field( 'bulk_product_status_change', 'security' ); ?>
-                                    <input type="submit" name="bulk_product_status_change" id="bulk-product-action" class="dokan-btn dokan-btn-theme" value="<?php esc_attr_e( 'Apply', 'dokan-lite' ); ?>">
+                                    <input
+                                        type="submit"
+                                        name="bulk_product_status_change"
+                                        id="bulk-product-action"
+                                        class="dokan-btn dokan-btn-theme"
+                                        value="<?php esc_attr_e( 'Apply', 'dokan-lite' ); ?>"
+                                        onClick="dokan_bulk_delete_prompt( event, '<?php esc_attr_e( 'Are you sure?', 'dokan-lite' ); ?>', '#bulk-product-action-selector', '#product-filter' )"
+                                    />
                                 </div>
                                 <table class="dokan-table dokan-table-striped product-listing-table dokan-inline-editable-table" id="dokan-product-list-table">
                                     <thead>
@@ -111,7 +125,6 @@
                                             <th><?php esc_html_e( 'SKU', 'dokan-lite' ); ?></th>
                                             <th><?php esc_html_e( 'Stock', 'dokan-lite' ); ?></th>
                                             <th><?php esc_html_e( 'Price', 'dokan-lite' ); ?></th>
-                                            <th><?php esc_html_e( 'Earning', 'dokan-lite' ); ?><?php echo '<span class="tips earning-info" title="' . esc_html__( 'Earning could be greater than or less than the calculated value based on different criteria like tax and shipping fee receiver', 'dokan-lite' ) . '"></span>'; ?></th>
                                             <th><?php esc_html_e( 'Type', 'dokan-lite' ); ?></th>
                                             <th><?php esc_html_e( 'Views', 'dokan-lite' ); ?></th>
                                             <th><?php esc_html_e( 'Date', 'dokan-lite' ); ?></th>
@@ -133,8 +146,8 @@
                                                 array(
                                                     'taxonomy' => 'product_type',
                                                     'field'    => 'slug',
-                                                    'terms'    => apply_filters( 'dokan_product_listing_exclude_type', array() ),
-                                                    'operator' => 'NOT IN',
+                                                    'terms'    => ! dokan()->is_pro_exists() ? [ 'simple' ] : apply_filters( 'dokan_product_listing_exclude_type', array() ),
+                                                    'operator' => ! dokan()->is_pro_exists() ? 'IN' : 'NOT IN',
                                                 ),
                                             ),
                                         );

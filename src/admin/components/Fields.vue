@@ -14,9 +14,23 @@
                 <fieldset>
                     <FieldHeading :fieldData="fieldData"></FieldHeading>
                     <div class="field">
-                        <input :type="fieldData.type || 'text'" class="regular-text medium" :id="sectionId + '[' + fieldData.name + ']'"
+                        <secret-input
+                            v-if="fieldData.secret_text"
+                            :type="fieldData.type || 'text'"
+                            :id="sectionId + '[' + fieldData.name + ']'"
+                            :name="sectionId + '[' + fieldData.name + ']'"
+                            :value="fieldValue[fieldData.name]"
+                            @input="value => inputValueHandler( fieldData.name, value, fieldValue[fieldData.name] )"
+                        />
+                        <input
+                            v-else
+                            :type="fieldData.type || 'text'"
+                            class="regular-text medium" :id="sectionId + '[' + fieldData.name + ']'"
                             :class="[ { 'dokan-input-validation-error': hasValidationError( fieldData.name ) }, fieldData.class ]"
-                            :name="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]" />
+                            :name="sectionId + '[' + fieldData.name + ']'"
+                            :value="fieldValue[fieldData.name]"
+                            @input="event => inputValueHandler( fieldData.name, event.target.value, fieldValue[fieldData.name] )"
+                        />
                     </div>
                 </fieldset>
                 <p v-if="hasError( fieldData.name )" class="dokan-error">
@@ -34,10 +48,18 @@
                     <FieldHeading :fieldData="fieldData"></FieldHeading>
                     <div class="field">
                         <label :for="sectionId + '[' + fieldData.name + ']'">
-                            <input type="number" :min="fieldData.min" :max="fieldData.max" :step="fieldData.step"
-                                class="regular-text medium" v-model="fieldValue[fieldData.name]"
+                            <input
+                                type="number"
+                                :min="fieldData.min"
+                                :max="fieldData.max"
+                                :step="fieldData.step"
+                                class="regular-text medium"
                                 :class="[ { 'dokan-input-validation-error': hasValidationError( fieldData.name ) }, fieldData.class ]"
-                                :id="sectionId + '[' + fieldData.name + ']'" :name="sectionId + '[' + fieldData.name + ']'"/>
+                                :id="sectionId + '[' + fieldData.name + ']'"
+                                :name="sectionId + '[' + fieldData.name + ']'"
+                                :value="fieldValue[fieldData.name]"
+                                @input="event => inputValueHandler( fieldData.name, event.target.value, fieldValue[fieldData.name] )"
+                            />
                         </label>
                     </div>
                 </fieldset>
@@ -58,7 +80,10 @@
                         <label :for="sectionId + '[' + fieldData.name + ']'">
                             <input type="text" :min="fieldData.min" class="regular-text medium" :id="sectionId + '[' + fieldData.name + ']'"
                                 :class="{ wc_input_decimal: allSettingsValues.dokan_selling.commission_type=='percentage', 'wc_input_price': allSettingsValues.dokan_selling.commission_type=='flat' }"
-                                :name="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]"/>
+                                :name="sectionId + '[' + fieldData.name + ']'"
+                                :value="fieldValue[fieldData.name]"
+                                @input="event => inputValueHandler( fieldData.name, event.target.value, fieldValue[fieldData.name] )"
+                            />
                         </label>
                     </div>
                 </fieldset>
@@ -77,12 +102,26 @@
                     <FieldHeading :fieldData="fieldData"></FieldHeading>
                     <div class="field combine_fields">
                         <div class="percent_fee">
-                            <input type="text" class="wc_input_decimal regular-text medium" :id="sectionId + '[' + fieldData.name + ']' + '[' + 'percent_fee' + ']'" :name="sectionId + '[' + fieldData.fields.percent_fee.name + ']'" v-model="fieldValue[fieldData.fields.percent_fee.name]">
+                            <input
+                                type="text"
+                                class="wc_input_decimal regular-text medium"
+                                :id="sectionId + '[' + fieldData.name + ']' + '[' + 'percent_fee' + ']'"
+                                :name="sectionId + '[' + fieldData.fields.percent_fee.name + ']'"
+                                :value="fieldValue[fieldData.fields.percent_fee.name]"
+                                @input="event => inputValueHandler( fieldData.fields.percent_fee.name, event.target.value, fieldValue[fieldData.fields.percent_fee.name] )"
+                            />
                             {{ '%' }}
                         </div>
                         <div class="fixed_fee">
                             {{ '+' }}
-                            <input type="text" class="wc_input_price regular-text medium" :id="sectionId + '[' + fieldData.name + ']' + '[' + 'fixed_fee' + ']'" :name="sectionId + '[' + fieldData.fields.fixed_fee.name + ']'" v-model="fieldValue[fieldData.fields.fixed_fee.name]">
+                            <input
+                                type="text"
+                                class="wc_input_price regular-text medium"
+                                :id="sectionId + '[' + fieldData.name + ']' + '[' + 'fixed_fee' + ']'"
+                                :name="sectionId + '[' + fieldData.fields.fixed_fee.name + ']'"
+                                :value="fieldValue[fieldData.fields.fixed_fee.name]"
+                                @input="event => inputValueHandler( fieldData.fields.fixed_fee.name, event.target.value, fieldValue[fieldData.fields.fixed_fee.name] )"
+                            />
                         </div>
                     </div>
                 </fieldset>
@@ -103,7 +142,16 @@
                 <fieldset>
                     <FieldHeading :fieldData="fieldData"></FieldHeading>
                     <div class="field">
-                        <textarea type="textarea" :rows="fieldData.rows" :cols="fieldData.cols" class="regular-text medium" :id="sectionId + '[' + fieldData.name + ']'" :name="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]"></textarea>
+                        <textarea
+                          type="textarea"
+                          :rows="fieldData.rows"
+                          :cols="fieldData.cols"
+                          class="regular-text medium"
+                          :id="sectionId + '[' + fieldData.name + ']'"
+                          :name="sectionId + '[' + fieldData.name + ']'"
+                          :value="fieldValue[fieldData.name]"
+                          @input="event => inputValueHandler( fieldData.name, event.target.value, fieldValue[fieldData.name] )"
+                        ></textarea>
                     </div>
                 </fieldset>
                 <p v-if="hasError( fieldData.name )" class="dokan-error">
@@ -145,7 +193,7 @@
                                 {{ optionVal }}
                                 <switches
                                     @input="setCheckedValue"
-                                    :enabled="isSwitchOptionChecked( optionKey )"
+                                    :enabled="multiCheckValues.hasOwnProperty( optionKey ) && multiCheckValues[optionKey] !== ''"
                                     :value="optionKey"
                                 ></switches>
                             </div>
@@ -163,12 +211,24 @@
                 <fieldset>
                     <FieldHeading :fieldData="fieldData"></FieldHeading>
                     <div class="field">
-                        <select v-if="!fieldData.grouped" class="regular medium" :name="sectionId + '[' + fieldData.name + ']'" :id="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]">
+                        <select
+                            v-if="!fieldData.grouped"
+                            class="regular medium"
+                            :name="sectionId + '[' + fieldData.name + ']'"
+                            :id="sectionId + '[' + fieldData.name + ']'"
+                            :value="fieldValue[fieldData.name] ?? fieldData.default ?? ''"
+                            @input="event => inputValueHandler( fieldData.name, event.target.value, fieldValue[fieldData.name] ?? fieldData.default ?? '' )"
+                        >
                             <option v-if="fieldData.placeholder" value="" v-html="fieldData.placeholder"></option>
                             <option v-for="( optionVal, optionKey ) in fieldData.options" :key="optionKey" :value="optionKey" v-html="optionVal"></option>
                         </select>
-
-                        <select v-else class="regular medium" :name="sectionId + '[' + fieldData.name + ']'" :id="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]">
+                        <select
+                            v-else class="regular medium"
+                            :id="sectionId + '[' + fieldData.name + ']'"
+                            :name="sectionId + '[' + fieldData.name + ']'"
+                            :value="fieldValue[fieldData.name] ? fieldValue[fieldData.name] : fieldData.default ?? ''"
+                            @input="event => inputValueHandler( fieldData.name, event.target.value, fieldValue[fieldData.name] ?? '' )"
+                        >
                             <option v-if="fieldData.placeholder" value="" disabled v-html="fieldData.placeholder"></option>
                             <optgroup v-for="( optionGroup, optionGroupKey ) in fieldData.options" :key="optionGroupKey" :label="optionGroup.group_label">
                                 <option v-for="(option, optionKey ) in optionGroup.group_values" :key="optionKey" :value="option.value" v-html="option.label" />
@@ -195,7 +255,14 @@
                     <div class="field add_files">
                         <label :for="sectionId + '[' + fieldData.name + ']'">
                             <input type="button" class="button wpsa-browse" value="Choose File" v-on:click.prevent="$emit( 'openMedia', { sectionId: sectionId, name: fieldData.name }, $event )">
-                            <input type="text" class="regular-text medium wpsa-url" :id="sectionId + '[' + fieldData.name + ']'" :name="sectionId + '[' + fieldData.name + ']'" v-model="fieldValue[fieldData.name]">
+                            <input
+                              type="text"
+                              class="regular-text medium wpsa-url"
+                              :id="sectionId + '[' + fieldData.name + ']'"
+                              :name="sectionId + '[' + fieldData.name + ']'"
+                              :value="fieldValue[fieldData.name]"
+                              @input="event => inputValueHandler( fieldData.name, event.target.value, fieldValue[fieldData.name] )"
+                            >
                         </label>
                     </div>
                 </fieldset>
@@ -211,11 +278,12 @@
                     <FieldHeading :fieldData="fieldData"></FieldHeading>
                     <div class="field">
                         <color-picker
-                            v-model="fieldValue[fieldData.name]"
                             :itemKey="fieldData.name"
                             :customData="singleColorPicker"
                             @custom-change="e => setCustomColor( e, fieldData.name )"
                             @toggleColorPicker="toggleColorPicker"
+                            :value="fieldValue[fieldData.name]"
+                            @input="event => inputValueHandler( fieldData.name, event.target.value, fieldValue[fieldData.name] )"
                         ></color-picker>
                     </div>
                 </fieldset>
@@ -256,15 +324,13 @@
             <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
                     <FieldHeading :fieldData="fieldData"></FieldHeading>
-                    <div class="field radio_fields">
-                        <template v-for="( optionVal, optionKey ) in fieldData.options">
-                            <label :class="isSwitchOptionChecked( optionKey ) ? 'checked' : ''" :key="optionKey" :for="sectionId + '[' + fieldData.name + '][' + optionKey + ']'">
-                                <span class="dashicons dashicons-yes"></span>
-                                <input type="radio" class="radio" :name="optionKey" :value="optionKey" v-model="fieldValue[fieldData.name]"
-                                    :id="sectionId + '[' + fieldData.name + '][' + optionKey + ']'"/>
-                                {{ optionVal }}
-                            </label>
-                        </template>
+                    <div class="radio_fields">
+                      <dokan-radio-group
+                        :items="formatDokanRadioData( fieldData.options )"
+                        :value="fieldValue[fieldData.name]"
+                        @onChange="data => inputValueHandler( fieldData.name, data, fieldValue[fieldData.name] )"
+                        :id="fieldData.name"
+                      />
                     </div>
                 </fieldset>
                 <p v-if="hasError( fieldData.name )" class="dokan-error">
@@ -279,7 +345,10 @@
                     <FieldHeading :fieldData="fieldData"></FieldHeading>
                 </fieldset>
                 <div class="field editor_field">
-                    <text-editor v-model="fieldValue[fieldData.name]" v-html="fieldData.default"></text-editor>
+                    <text-editor
+                      :value="fieldValue[fieldData.name] ?? fieldData.default"
+                      @input="data => inputValueHandler( fieldData.name, data, fieldValue[fieldData.name] )"
+                    ></text-editor>
                 </div>
             </div>
         </template>
@@ -289,7 +358,11 @@
                 <fieldset>
                     <FieldHeading :fieldData="fieldData"></FieldHeading>
                     <div class="field repeatable_fields">
-                        <input type="text" class="regular-text medium" v-model="repeatableItem[fieldData.name]">
+                        <input
+                          type="text"
+                          class="regular-text medium"
+                          v-model="repeatableItem[fieldData.name]"
+                        />
                         <a href="#" class="button dokan-repetable-add-item-btn" @click.prevent="addItem( fieldData.type, fieldData.name )">
                             <span class="dashicons dashicons-plus-alt2"></span>
                         </a>
@@ -316,7 +389,13 @@
                 <div class="field radio-image-container">
                      <template v-for="( image, name ) in fieldData.options">
                         <label class="radio-image" :key="name" :class="{ 'active' : fieldValue[fieldData.name] === name, 'not-active' : fieldValue[fieldData.name] !== name }">
-                            <input type="radio" class="radio" :name="fieldData.name" v-model="fieldValue[fieldData.name]" :value="name">
+                            <input
+                              type="radio"
+                              class="radio"
+                              :name="fieldData.name"
+                              :value="fieldValue[fieldData.name] ? fieldValue[fieldData.name] : name"
+                              @input="event => inputValueHandler( fieldData.name, event.target.value, fieldValue[fieldData.name] )"
+                            />
                             <span class="current-option-indicator">
                                 <span class="dashicons dashicons-yes"></span>
                                 {{ __( 'Active', 'dokan-lite' ) }}
@@ -365,17 +444,24 @@
             <div class="field_contents" v-bind:class="[fieldData.content_class ? fieldData.content_class : '']">
                 <fieldset>
                     <FieldHeading :fieldData="fieldData"></FieldHeading>
+                    <label class="social-switch-wraper" v-if="fieldData.enable_status">
+                        <switches
+                            @input="onSocialToggleSwitch"
+                            :enabled="socialChecked === 'on' ? true : false"
+                            value="isSocialChecked"
+                        ></switches>
+                    </label>
                 </fieldset>
-                <div class="field scl_fields">
+                <div class="field scl_fields" :class="fieldData.enable_status && 'off' === socialChecked ? 'scl_fields_disable' : ''">
                     <div class="scl_header">
-                        <div class="scl_contents">
+                        <div class="scl_contents ">
                             <div class="scl_icon">
                                 <img :src="fieldData.icon_url" :alt="fieldData.label" />
                             </div>
                             <p class="scl_desc">{{ fieldData.social_desc }}</p>
                         </div>
                         <div class="expand_btn" @click="expandSocial">
-                            <span class="dashicons" v-bind:class="[ ! this.expandSocials ? 'dashicons-arrow-down-alt2' : 'dashicons-arrow-up-alt2']"></span>
+                            <span class="dashicons" v-bind:class="[ ! this.expandSocials ? 'dashicons-arrow-down-alt2' : 'dashicons-arrow-up-alt2', isSocialFieldActivated ? 'active-social-expend-btn' : '']"></span>
                         </div>
                     </div>
                     <template v-for="( fields, index ) in fieldData">
@@ -390,6 +476,15 @@
                     </template>
                 </div>
             </div>
+        </template>
+
+        <template v-if="'charges' === fieldData.type">
+            <withdraw-charges
+                :section-id="sectionId"
+                :fieldData='fieldData'
+                :field-value='fieldValue'
+                :should-show='shouldShow'
+            />
         </template>
 
         <template v-if="customFieldComponents">
@@ -413,6 +508,10 @@
     import Switches from "admin/components/Switches.vue";
     import SocialFields from './SocialFields.vue';
     import FieldHeading from './FieldHeading.vue';
+    import SecretInput from './SecretInput.vue';
+    import WithdrawCharges from './Fields/WithdrawCharges.vue'
+    import DokanRadioGroup from "admin/components/DokanRadioGroup.vue";
+
     let Mapbox                = dokan_get_lib('Mapbox');
     let TextEditor            = dokan_get_lib('TextEditor');
     let GoogleMaps            = dokan_get_lib('GoogleMaps');
@@ -422,6 +521,7 @@
         name: 'Fields',
 
         components: {
+          DokanRadioGroup,
             Mapbox,
             Switches,
             TextEditor,
@@ -429,7 +529,9 @@
             colorPicker,
             FieldHeading,
             SocialFields,
-            RefreshSettingOptions
+            RefreshSettingOptions,
+            SecretInput,
+            WithdrawCharges
         },
 
         props: ['id', 'fieldData', 'sectionId', 'fieldValue', 'allSettingsValues', 'errors', 'toggleLoadingState', 'validationErrors', 'dokanAssetsUrl'],
@@ -438,12 +540,14 @@
             return {
                 hideMap               : false,
                 checked               : this.isChecked(),
+                socialChecked         : this.isSocialChecked(),
                 expandSocials         : false,
                 repeatableItem        : {},
                 repeatableTime        : [],
                 singleColorPicker     : { default: this.fieldData.default, label: '', show_pallete: false },
                 yourStringTimeValue   : '',
                 customFieldComponents : dokan.hooks.applyFilters( 'getDokanCustomFieldComponents', [] ),
+                multiCheckValues      : {},
             }
         },
 
@@ -461,6 +565,14 @@
                     this.checked = value;
                 }
             });
+        },
+
+        watch: {
+            fieldValue: {
+                handler() {
+                },
+                deep: true,
+            }
         },
 
         computed: {
@@ -510,7 +622,14 @@
                                 }
                                 break;
 
+                            case 'contains-any':
+                                if ( ! value.some(item => Object.values( dependencyValue ).includes(item)) ) {
+                                    shouldShow = false;
+                                }
+                                break;
+
                             case 'equal':
+
                             default:
                                 if ( dependencyValue !== value ) {
                                     shouldShow = false;
@@ -559,22 +678,69 @@
 
             mapboxAccessToken() {
                 return this.allSettingsValues?.dokan_appearance?.mapbox_access_token;
-            }
+            },
+
+            isSocialFieldActivated() {
+                for (const data in this.fieldData) {
+                    if (this.fieldData[data].social_field && 'html' !== this.fieldData[data].type && ! this.fieldValue[this.fieldData[data].name]) {
+                        return false;
+                    }
+                }
+
+                return true;
+            },
         },
 
         beforeMount() {
             if ( 'multicheck' === this.fieldData.type && ! this.fieldValue[ this.fieldData.name ] ) {
                 this.fieldValue[ this.fieldData.name ] = this.fieldData.default;
             }
+
+            if ( 'multicheck' === this.fieldData.type ) {
+                this.multiCheckValues = JSON.parse( JSON.stringify( this.fieldValue[ this.fieldData.name ] ) );
+            }
         },
 
         methods: {
+            formatDokanRadioData( options ) {
+              let data = [];
+              Object.keys( options ).map( item => {
+                data.push({
+                  label: options[item],
+                  value: item
+                });
+              } );
+
+              return data;
+            },
+
+            validateInputData( name, newValue, oldValue, fieldData ) {
+                return dokan.hooks.applyFilters(
+                  'dokanFieldComponentInputValue',
+                  newValue,
+                  oldValue,
+                  name,
+                  fieldData.is_lite ?? false
+                );
+            },
+            inputValueHandler( name, newValue, oldValue ) {
+              this.fieldValue[ name ] = this.validateInputData( name, newValue, oldValue, this.fieldData );
+            },
+
             containCommonFields( type ) {
                 return _.contains( [ undefined, 'text', 'email', 'url', 'phone', 'time' ], type );
             },
 
             setCheckedValue( checked, value ) {
-                this.fieldValue[ this.fieldData.name ][ value ] = checked ? value : '';
+                let data = this.validateInputData(
+                    this.fieldData.name,
+                    checked ? value : '',
+                    this.fieldValue[ this.fieldData.name ][ value ] ?? '',
+                    this.fieldData
+                );
+
+                this.$set( this.fieldValue[ this.fieldData.name ], value, data );
+                this.$set( this.multiCheckValues, value, data );
             },
 
             addItem( type, name ) {
@@ -584,16 +750,28 @@
                     return;
                 }
 
-                this.fieldValue[ name ].push( {
+                let oldData = JSON.parse( JSON.stringify( this.fieldValue[ name ] ) );
+                let newData = [
+                    ...oldData,
+                    {
                         id    : this.repeatableItem[ name ].trim().replace(/\s+/g, '_').toLowerCase(),
                         value : this.repeatableItem[ name ]
                     }
-                );
+                ];
+
+                newData = this.validateInputData( this.fieldData.name, newData, oldData, this.fieldData );
+
+                this.fieldValue[ name ] = newData;
                 this.repeatableItem[ name ] = '';
             },
 
             removeItem( optionVal, name ) {
-                this.fieldValue[name].splice( optionVal, 1 );
+                let oldData = JSON.parse( JSON.stringify( this.fieldValue[name] ) );
+                let newData = JSON.parse( JSON.stringify( this.fieldValue[name] ) );
+                newData.splice( optionVal, 1 );
+
+
+                this.fieldValue[name] = this.validateInputData( this.fieldData.name, newData, oldData, this.fieldData );
             },
 
             haveCondition( fieldData ) {
@@ -622,8 +800,20 @@
             },
 
             isSocialChecked() {
-                return ! this.fieldValue[ this.fieldData.name ] ? this.fieldData.default : this.fieldValue[ this.fieldData.name ];
+                /**
+                 * If social field has enabled status saved return it or return the default value or return 'on'
+                 *
+                 * @since 3.7.24
+                 */
+                if ( this.fieldData[ 'enable_status' ] && this.fieldData[ 'enable_status' ]['name'] && this.fieldValue[ this.fieldData[ 'enable_status' ]['name'] ] ) {
+                    return this.fieldValue[ this.fieldData[ 'enable_status' ]['name'] ];
+                } else if ( this.fieldData[ 'enable_status' ] && this.fieldData[ 'enable_status' ]['default'] ) {
+                    return this.fieldData[ 'enable_status' ]['default'];
+                }
+
+                return 'on';
             },
+
 
             thisSomeEvent(value) {
                 console.log('hello priting...', value);
@@ -656,10 +846,30 @@
                     return;
                 }
 
-                this.checked                           = status ? 'on' : 'off';
-                this.fieldValue[ this.fieldData.name ] = status ? 'on' : 'off';
+                let isChecked = this.validateInputData( this.fieldData.name, status ? 'on' : 'off', this.fieldValue[ this.fieldData.name ], this.fieldData  );
+
+                this.checked                           = isChecked;
+                this.fieldValue[ this.fieldData.name ] = isChecked;
 
                 this.$root.$emit( 'onFieldSwitched', this.fieldValue[ this.fieldData.name ], this.fieldData.name );
+            },
+
+            onSocialToggleSwitch( status, key ) {
+                if ( 'isSocialChecked' !== key ) {
+                    return;
+                }
+
+                let oldData = this.fieldValue[ this.fieldData[ 'enable_status' ]['name'] ] ? this.fieldValue[ this.fieldData[ 'enable_status' ]['name'] ] : this.fieldData[ 'enable_status' ]['default'];
+
+                let isChecked = this.validateInputData(
+                    this.fieldData[ 'enable_status' ]['name'],
+                    status ? 'on' : 'off',
+                    oldData,
+                    this.fieldData
+                );
+
+                this.socialChecked                                           = isChecked;
+                this.fieldValue[ this.fieldData[ 'enable_status' ]['name'] ] = isChecked;
             },
 
             hasError( key ) {
@@ -791,23 +1001,27 @@
         margin-left: 10px;
     }
     .dokan-settings-sub-section {
-        margin-bottom: 30px;
+        padding: 20px;
+        border: 1px solid #f3f4f6;
+        border-bottom: 0;
+        background: #f9fafb;
 
         .sub-section-title {
             margin: 0;
-            font-size: 22px;
+            font-size: 14px;
             font-family: Roboto, sans-serif;
             font-weight: 600;
-            line-height: 26px;
+            line-height: 1.2;
             margin-bottom: 8px;
         }
 
         .sub-section-description {
             margin: 0;
-            font-size: 15px;
+            font-size: 13px;
             font-weight: 300;
             line-height: 21px;
             font-family: Roboto, sans-serif;
+            color: #6B7280;
 
             .learn-more-btn {
                 cursor: pointer;
@@ -824,10 +1038,10 @@
         }
     }
     .field_contents {
-        border: 1px solid #B0A7A7;
-        padding: 14px 30px 18px 27px;
+        border: 1px solid #f3f4f6;
+        padding: 15px 20px 15px 20px;
         border-top: 0;
-        background: rgba(244, 246, 250, 0.17);
+        background: #fff;
 
         fieldset {
             display: flex;
@@ -837,17 +1051,17 @@
                 flex: 2;
 
                 .field_heading {
-                    color: #000000;
+                    color: #111827;
                     margin: 0;
-                    font-size: 17px;
+                    font-size: 14px;
                     font-style: normal;
                     font-weight: 600;
-                    line-height: 35px;
+                    line-height: 1.25;
                     font-family: 'Roboto', sans-serif;
 
                     span {
                         i {
-                            margin: 5px 0 0 5px;
+                            margin: -3px 0 0 5px;
                         }
 
                         .tooltip {
@@ -857,17 +1071,19 @@
                 }
 
                 .field_desc {
-                    color: #000;
+                    color: #6B7280;
                     margin: 0;
+                    margin-top: 5px;
                     font-size: 13px;
                     font-style: normal;
                     font-weight: 300;
-                    line-height: 17px;
+                    line-height: 1.2;
                     font-family: 'Roboto', sans-serif;
 
                     a {
                         display: inline-block;
-                        
+                        text-decoration: underline;
+
                         &:hover {
                             box-shadow: 0 0 0 1px transparent;
                         }
@@ -879,6 +1095,11 @@
                         }
                     }
                 }
+            }
+
+            .social-switch-wraper {
+                display: flex;
+                align-items: center;
             }
         }
 
@@ -908,7 +1129,6 @@
                     color: #000;
                     cursor: inherit;
                     margin: 9px 0 9px 15px;
-                    border: 1px solid rgba(0, 0, 0, 0.10);
                     display: inline-block;
                     font-size: 12px;
                     font-style: normal;
@@ -926,7 +1146,7 @@
 
         .radio_fields {
             label {
-                border: 0.882967px solid #B0A7A7;
+                border: 0.882967px solid #f3f4f6;
                 padding: 10px 15px;
                 display: inline-block;
                 overflow: hidden;
@@ -943,7 +1163,7 @@
                 }
 
                 &:last-child {
-                    border-right: 0.882967px solid #B0A7A7;
+                    border-right: 0.882967px solid #f3f4f6;
                     border-top-right-radius: 5px;
                     border-bottom-right-radius: 5px;
                 }
@@ -953,13 +1173,13 @@
                     background: rgba(182, 206, 254, 0.38);
                     box-sizing: border-box;
                     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.10);
-                    border-color: rgba(3, 58, 163, 0.81);
+                    border-color: rgba(3, 58, 163, 0.41);
                 }
             }
 
             .checked {
                 color: rgba(3, 58, 163, 0.85);
-                border: 1px solid rgba(3, 58, 163, 0.81);
+                border: 1px solid rgba(3, 58, 163, 0.21);
                 background: rgba(182, 206, 254, 0.38);
                 box-sizing: border-box;
                 box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.10);
@@ -1036,7 +1256,7 @@
             input[type='text'],
             input[type='number'],
             input[type='button'] {
-                border: 0.957434px solid #686666;
+                border: 0.957434px solid #E9E9E9;
                 min-height: 32px;
                 box-shadow: 0px 3.82974px 3.82974px rgba(0, 0, 0, 0.10);
                 border-radius: 5px;
@@ -1061,7 +1281,7 @@
 
             label.checked {
                 color: rgba(3, 58, 163, 0.85);
-                border: 1px solid rgba(3, 58, 163, 0.81);
+                border: 1px solid rgba(3, 58, 163, 0.41);
                 background: rgba(182, 206, 254, 0.38);
                 box-sizing: border-box;
                 box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.10);
@@ -1085,12 +1305,16 @@
             }
         }
 
+        .scl_fields_disable {
+            filter: grayscale(1);
+        }
+
         .scl_fields {
             margin: 15px 0 4px 0px;
             border: 0.82px solid #E5E5E5;
             padding: 10px 25px;
             background: rgba(220, 232, 254, 0.38);
-            box-shadow: 0px 3.28px 3.28px rgba(0, 0, 0, 0.10);
+            //box-shadow: 0px 3.28px 3.28px rgba(0, 0, 0, 0.10);
             border-radius: 6.56px;
 
             .scl_header {
@@ -1099,7 +1323,6 @@
                 justify-content: space-between;
 
                 .scl_contents {
-                    flex: 2;
                     display: flex;
                     align-items: center;
 
@@ -1153,6 +1376,10 @@
                             transform: translate(-50%, -50%);
                         }
                     }
+
+                    .active-social-expend-btn {
+                        background: #4CAF4F;
+                    }
                 }
             }
 
@@ -1161,7 +1388,7 @@
 
                 .scl_text,
                 .scl_html {
-                    border: 1px solid #b0a7a7;
+                    border: 1px solid #f3f4f6;
                     display: flex;
                     padding: 10px 30px 15px 27px;
                     border-top: 0;
@@ -1229,7 +1456,7 @@
 
                 &:nth-child(2) {
                     margin-top: 15px;
-                    border-top: 1px solid #b0a7a7;
+                    border-top: 1px solid #f3f4f6;
                 }
 
                 &:last-child {
@@ -1326,14 +1553,6 @@
 
                     .large {
                         max-width: 100% !important;
-                    }
-                }
-
-                .radio_fields {
-                    label {
-                        &:first-child {
-                            display: flex;
-                        }
                     }
                 }
             }

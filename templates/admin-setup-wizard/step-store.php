@@ -24,7 +24,7 @@
             </td>
         </tr>
         <tr>
-            <th scope="row"><label for="tax_fee_recipient"><?php esc_html_e( 'Tax Fee Recipient', 'dokan-lite' ); ?></label></th>
+            <th scope="row"><label for="tax_fee_recipient"><?php esc_html_e( 'Product Tax Fee Recipient', 'dokan-lite' ); ?></label></th>
             <td>
                 <select class="wc-enhanced-select" id="tax_fee_recipient" name="tax_fee_recipient">
                     <?php foreach ( $recipients as $key => $value ) : ?>
@@ -33,7 +33,22 @@
                     </option>
                     <?php endforeach; ?>
                 </select>
-                <p class="description"><?php esc_html_e( 'Tax fees will go to', 'dokan-lite' ); ?></p>
+                <p class="description"><?php esc_html_e( 'Product Tax fees will go to', 'dokan-lite' ); ?></p>
+            </td>
+        </tr>
+        <tr>
+            <th scope='row'><label
+                    for='tax_fee_recipient'><?php esc_html_e( 'Shipping Tax Fee Recipient', 'dokan-lite' ); ?></label>
+            </th>
+            <td>
+                <select class="wc-enhanced-select" id="shipping_tax_fee_recipient" name="shipping_tax_fee_recipient">
+                    <?php foreach ( $recipients as $key => $value ) : ?>
+                        <option value="<?php echo esc_attr( $key ); ?>" <?php selected( $key, $shipping_tax_fee_recipient ); ?>>
+                            <?php echo esc_html( $value ); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+                <p class="description"><?php esc_html_e( 'Shipping Tax fees will go to', 'dokan-lite' ); ?></p>
             </td>
         </tr>
         <tr>
@@ -92,7 +107,7 @@
                 </label>
                 <span class="description">
                     <?php
-                    wp_kses(
+                    echo wp_kses(
                         sprintf(
                             /* translators: %1$s: opening anchor tag with link, %2$s: closing anchor tag */
                             __( 'Want to help make Dokan even more awesome? Allow Dokan Multivendor Marketplace to collect non-sensitive diagnostic data and usage information. %1$sWhat we collect%2$s', 'dokan-lite' ),
@@ -111,7 +126,7 @@
                 </span>
                 <p id="collection-info" class="description" style="display:none;">
                     <?php
-                    wp_kses(
+                    echo wp_kses(
                         sprintf(
                             /* translators: %1$s: Appsero hypertext with link, %2$s: opening anchor tag with link, %3$s: closing anchor tag */
                             __( 'Server environment details (php, mysql, server, WordPress versions), Number of users in your site, Site language, Number of active and inactive plugins, Site name and url, Your name and email address. No sensitive data is tracked. We are using %1$s to collect your data. %2$sLearn more%3$s about how %1$s collects and handles your data.', 'dokan-lite' ),

@@ -5,6 +5,7 @@
 * [ ] My code is tested
 * [ ] My code passes the PHPCS tests
 * [ ] My code has proper inline documentation
+* [ ] I've included related pull request(s) (optional)
 * [ ] I've included developer documentation (optional)
 * [ ] I've added proper labels to this pull request
 
@@ -16,19 +17,42 @@
 
 <!-- Describe the changes made to this Pull Request and the reason for such changes. -->
 
-Closes # .
+### Related Pull Request(s)
+
+* Full PR Link
+
+
+### Closes 
+
+* Closes #
+
 
 ### How to test the changes in this Pull Request:
 
-1.
-2.
-3.
-
+* Steps or issue link
 
 
 ### Changelog entry
 
-> Enter a summary of all changes on this Pull Request. This will appear in the changelog if accepted.
+*Title*
+
+Detailed Description of the pull request. What was previous behaviour
+and what will be changed in this PR.
+
+
+### Before Changes
+
+Describe the issue before changes with screenshots(s).
+
+
+### After Changes
+
+Describe the issue after changes with screenshot(s).
+
+
+### Feature Video (optional)
+
+Link of detailed video if this PR is for a feature.
 
 
 ### PR Self Review Checklist:

@@ -12,12 +12,14 @@ use WeDevs\Dokan\Cache;
 function dokan_withdraw_register_methods() {
     $methods = [
         'paypal' => [
-            'title'    => __( 'PayPal', 'dokan-lite' ),
-            'callback' => 'dokan_withdraw_method_paypal',
+            'title'        => __( 'PayPal', 'dokan-lite' ),
+            'callback'     => 'dokan_withdraw_method_paypal',
+            'apply_charge' => true,
         ],
         'bank'   => [
-            'title'    => __( 'Bank Transfer', 'dokan-lite' ),
-            'callback' => 'dokan_withdraw_method_bank',
+            'title'        => __( 'Bank Transfer', 'dokan-lite' ),
+            'callback'     => 'dokan_withdraw_method_bank',
+            'apply_charge' => true,
         ],
     ];
 
@@ -66,9 +68,9 @@ function dokan_get_seller_active_withdraw_methods( $vendor_id = 0 ) {
     $vendor_id = $vendor_id ? $vendor_id : dokan_get_current_user_id();
 
     $payment_methods = get_user_meta( $vendor_id, 'dokan_profile_settings' );
-    $paypal          = isset( $payment_methods[0]['payment']['paypal']['email'] ) && $payment_methods[0]['payment']['paypal']['email'] !== false ? 'paypal' : '';
-    $bank            = isset( $payment_methods[0]['payment']['bank']['ac_number'] ) && $payment_methods[0]['payment']['bank']['ac_number'] !== '' ? 'bank' : '';
-    $skrill          = isset( $payment_methods[0]['payment']['skrill']['email'] ) && $payment_methods[0]['payment']['skrill']['email'] !== false ? 'skrill' : '';
+    $paypal          = ! empty( $payment_methods[0]['payment']['paypal']['email'] ) ? 'paypal' : '';
+    $bank            = ! empty( $payment_methods[0]['payment']['bank']['ac_number'] ) ? 'bank' : '';
+    $skrill          = ! empty( $payment_methods[0]['payment']['skrill']['email'] ) ? 'skrill' : '';
 
     $payment_methods        = [ $paypal, $bank, $skrill ];
     $active_payment_methods = [];
@@ -113,7 +115,7 @@ function dokan_withdraw_get_method_title( $method_key, $request = null ) {
     /**
      * @since 3.3.7 added filter dokan_get_withdraw_method_title
      */
-    return apply_filters( 'dokan_get_withdraw_method_title', isset( $registered[ $method_key ] ) ?  $registered[ $method_key ]['title'] : ucfirst( $method_key ), $method_key, $request );
+    return apply_filters( 'dokan_get_withdraw_method_title', isset( $registered[ $method_key ] ) ? $registered[ $method_key ]['title'] : ucfirst( $method_key ), $method_key, $request );
 }
 
 /**
@@ -228,7 +230,7 @@ function dokan_bank_payment_required_fields() {
     // Filtering out all payment fields except dokan bank payment available fields.
     $fields = array_filter(
         $required_fields,
-        function( $key ) use ( $available ) {
+        function ( $key ) use ( $available ) {
             return in_array( $key, $available, true );
         },
         ARRAY_FILTER_USE_KEY
@@ -313,7 +315,7 @@ function dokan_bank_payment_fields_placeholders() {
             ],
             'declaration' => [
                 'label'       => __( 'I attest that I am the owner and have full authorization to this bank account', 'dokan-lite' ),
-                'placeholder' => __( '', 'dokan-lite' ),
+                'placeholder' => __( '', 'dokan-lite' ), // phpcs:ignore
             ],
             'form_caution' => [
                 'label'       => __( 'Please double-check your account information!', 'dokan-lite' ),
@@ -326,46 +328,21 @@ function dokan_bank_payment_fields_placeholders() {
 /**
  * Get withdraw counts, used in admin area
  *
- * @global WPDB $wpdb
+ * @param int $user_id User ID
  *
  * @return array
  */
 function dokan_get_withdraw_count( $user_id = null ) {
-    global $wpdb;
+    $args = [
+        'return' => 'count',
+    ];
 
-    $cache_group = empty( $user_id ) ? 'withdraws' : "withdraws_seller_$user_id";
-    $cache_key   = "get_withdraw_count_{$user_id}";
-    $counts      = Cache::get( $cache_key, $cache_group );
-
-    if ( false === $counts ) {
-        $counts = [
-            'pending'   => 0,
-            'completed' => 0,
-            'cancelled' => 0,
-        ];
-
-        if ( ! empty( $user_id ) ) {
-            $result = $wpdb->get_results( $wpdb->prepare( "SELECT COUNT(id) as count, status FROM {$wpdb->dokan_withdraw} WHERE user_id=%d GROUP BY status", $user_id ) );
-        } else {
-            $result = $wpdb->get_results( "SELECT COUNT(id) as count, status FROM {$wpdb->dokan_withdraw} WHERE 1=1 GROUP BY status" );
-        }
-
-        if ( $result ) {
-            foreach ( $result as $row ) {
-                if ( $row->status === '0' ) {
-                    $counts['pending'] = (int) $row->count;
-                } elseif ( $row->status === '1' ) {
-                    $counts['completed'] = (int) $row->count;
-                } elseif ( $row->status === '2' ) {
-                    $counts['cancelled'] = (int) $row->count;
-                }
-            }
-        }
-
-        Cache::set( $cache_key, $counts, $cache_group );
+    if ( is_numeric( $user_id ) ) {
+        $args['user_id'] = $user_id;
     }
 
-    return $counts;
+    // Return withdraw status counts.
+    return dokan()->withdraw->all( $args );
 }
 
 /**
@@ -536,4 +513,50 @@ function dokan_is_withdraw_method_enabled( $method_id ) {
     return is_array( $payment_methods )
             && array_key_exists( $method_id, $payment_methods )
             && ! empty( $payment_methods[ $method_id ] );
+}
+
+/**
+ * Get registered withdraw methods suitable for Settings Api
+ *
+ * @return array
+ */
+function dokan_withdraw_get_chargeable_methods() {
+    $methods    = [];
+    $registered = dokan_withdraw_register_methods();
+
+    foreach ( $registered as $key => $value ) {
+        if ( ! empty( $value['apply_charge'] ) ) {
+            $methods[ $key ] = $value['title'];
+        }
+    }
+
+    return $methods;
+}
+
+/**
+ * Returns all withdraw methods charges saved.
+ *
+ * @since 3.9.6
+ *
+ * @return array
+ */
+function dokan_withdraw_get_method_charges() {
+    $charges           = dokan_get_option( 'withdraw_charges', 'dokan_withdraw', [] );
+    $all_methods       = array_keys( dokan_withdraw_get_methods() );
+    $chargeable_methods = array_keys( dokan_withdraw_get_chargeable_methods() );
+    $default_val       = [
+        'fixed'      => 0.00,
+        'percentage' => 0.00,
+    ];
+
+    foreach ( $all_methods as $method ) {
+        if ( empty( $charges ) || ! is_array( $charges ) || ! in_array( $method, $chargeable_methods, true ) ) {
+            $charges[ $method ] = $default_val;
+        } else {
+            $charges[ $method ]['fixed']      = ! empty( $charges[ $method ]['fixed'] ) ? (float) wc_format_decimal( $charges[ $method ]['fixed'] ) : 0.00;
+            $charges[ $method ]['percentage'] = ! empty( $charges[ $method ]['percentage'] ) ? (float) wc_format_decimal( $charges[ $method ]['percentage'] ) : 0.00;
+        }
+    }
+
+    return $charges;
 }

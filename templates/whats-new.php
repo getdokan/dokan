@@ -4,6 +4,872 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.11.3',
+        'released' => '2024-06-10',
+        'changes'  => [
+            'Fix'         => [
+                [
+                    'title'       => 'Responsive issue on vendor dashboard tabs preview.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.11.2',
+        'released' => '2024-05-27',
+        'changes'  => [
+            'Improvement'         => [
+                [
+                    'title'       => 'WooCommerce 8.9.1 Compatibility added.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.11.1',
+        'released' => '2024-05-16',
+        'changes'  => [
+            'New'         => [
+                [
+                    'title'       => 'Action hook `dokan_dashboard_sidebar_start` added.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Action hook `dokan_dashboard_sidebar_end` added.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.11.0',
+        'released' => '2024-05-10',
+        'changes'  => [
+            'Fix'         => [
+                [
+                    'title'       => 'The status of sub-orders does not update to completed if it contains only virtual products.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.10.4',
+        'released' => '2024-04-25',
+        'changes'  => [
+            'Fix'         => [
+                [
+                    'title'       => 'Vendor dashboard Order status filter menu displayed a duplicate border',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Vendor dashboard withdraw page display get hidden',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.10.3',
+        'released' => '2024-04-17',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Notification count support added for vendor dashboard',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added a new filter to set a default value for I am a customer / I am a vendor radio button',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Processing Order count added for vendor dashboard orders menu',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Performance improvements for vendor dashboard -> order details page -> downloadable product permission section',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Admin can change product author from REST API',
+                    'description' => 'Previously, product_author was read-only property, now admin can change product_author for an existing product or create a new product for another author.',
+                ],
+                [
+                    'title'       => 'Warning message styling for selecting fixed cart discount on admin coupon add edit page',
+                    'description' => '',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => 'Advertisement product not purchasable for own product purchasing restriction',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Header Template number one breaks without background image',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'HTML entity showing in product tag selection in vendor dashboard',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Vendor add notification switch in admin dashboard',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Under wooCommerce my-account registration section, `I am a customer` was forced to be set as the default value. With this PR this problem has been fixed',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.10.2',
+        'released' => '2024-04-01',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Email placeholder, additional content support and formatting added',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Add requires plugin header for dokan so that required plugin check can be initiated',
+                    'description' => '',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => 'Vendor profile progress bar doesn\'t update if the address is filled from the vendor registration form',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Color synchronization issue in vendor dashboard order notes',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Product review email cannot be disabled without also disabling Contact Vendor email',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Order Export to CSV on the filtered list not working',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.10.1',
+        'released' => '2024-03-18',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Update Categories Easily from Vendor Edit Page',
+                    'description' => 'In earlier versions of the Dokan plugin for WordPress and WooCommerce, editing store categories was limited to the vendor details view page. This approach created confusion and made it difficult for users to manage their store categories effectively. However, with the latest update, a significant improvement has been introduced.
+                    Now, you can conveniently edit and update your store categories directly from the vendor edit page in the admin dashboard. This enhancement provides a more intuitive and user-friendly experience, allowing you to efficiently manage and organize your store categories in one central location.',
+                ],
+                [
+                    'title'       => 'Threads social media platform added as a Store Socials Option. Thanks `@fisher2470`',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Vendor Dashboard settings submenu translation support added',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.10.0',
+        'released' => '2024-03-04',
+        'changes'  => [
+            'New'         => [
+                [
+                    'title'       => 'Added a new filter hook named `dokan_product_cache_delete_all_data`, by using this one can prevent deleting product cache if necessary.',
+                    'description' => '',
+                ],
+            ],
+            'Improvement' => [
+                [
+                    'title'       => 'Updated FontAwesome library to version 6.5.1',
+                    'description' => '',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => 'Fixed Elementor mega menu z-index conflict and removed line break from address fields',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.9.9',
+        'released' => '2024-02-12',
+        'changes'  => [
+            'New'         => [
+                [
+                    'title'       => 'Added PHP 8.2 support',
+                    'description' => '',
+                ],
+            ],
+            'Improvement' => [
+                [
+                    'title'       => 'Added validation for bank payments and address data in Dokan Seller Setup Wizard.',
+                    'description' => '',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => 'Fixed an issue where the Dokan seller setup wizard does not display a warning message when a seller fails to provide the state for a country that has a state.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Vendor setup wizard issue [#1976] - Properly closed the style tag in the Store Setup step to avoid conflicts with customizations.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed a bug in the store-lists-filter.php template that used the wrong escaping function for the placeholder attribute. [#1984]',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Withdrawal class check-in Templates/Withdraw.php.',
+                    'description' => 'This fixes a fatal error that could occur when creating a withdrawal request with cache-enabled sites.',
+                ],
+                [
+                    'title'       => 'The `Share Essentials` field’s description was missing from the Dokan admin setup wizard. This pull request fixes an issue where the description field was not showing up in the Dokan admin setup wizard. It also adds a new hook and admin options to store the `Share Essentials` settings.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed an issue where the sub-orders disappear from the WooCommerce order lists page when orders are filtered by a specific vendor or by sub-order ID when the HPOS feature is enabled.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.9.8',
+        'released' => '2024-01-30',
+        'changes'  => [
+            'Fix' => [
+                [
+                    'title'       => 'Updated Appsero Client SDK library to version 2.0.2 which will fix a security issue with the previous version of the library and a fatal error caused by the library.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.9.7',
+        'released' => '2024-01-29',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Added WooCommerce Cart and Checkout Block supports for Dokan Lite',
+                    'description' => '',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => 'Fixed an issue where the vendor’s store map address was not saved during vendor setup wizard configuration',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Some links under the vendor dashboard weren\'t working properly due to a nonce mismatch. With this release, those issues have been fixed.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed an issue where the valid store name required check was missing from the customer-to-vendor migration form.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed an issue where the customer buys digital and physical products from different vendors, shipping charges are applied separately to each vendor.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed some translation-related issues with the date range picker',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed some translation-related issues with Dokan Sweetalert',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.9.6',
+        'released' => '2024-01-11',
+        'changes'  => [
+            'New Feature' => [
+                [
+                    'title'       => 'Features: Withdraw Charge',
+                    'description' => 'Dokan has introduced a new feature that allows the admin to set a withdrawal charge for vendors. This charge can be either a flat rate or a percentage of the withdrawal amount based on the payment gateway used. The charge will be reflected in the details report, and vendors can see how many charges will apply when they request a withdrawal. The vendor dashboard list will also show the charge and receivable amount. This feature provides greater flexibility and transparency in managing vendor withdrawals.',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.9.5',
+        'released' => '2023-12-28',
+        'changes'  => [
+            'Fix' => [
+                [
+                    'title'       => 'API request on get all orders returns empty results for the endpoint http://dev.test/wp-json/dokan/v1/orders due to default customer id was set to 0.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.9.4',
+        'released' => '2023-12-12',
+        'changes'  => [
+            'Fix' => [
+                [
+                    'title'       => 'Fixed an issue where the Vendor class shop_data persistence is broken on save()',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed a fatal error while trying to edit a subscription under WordPress Admin Panel → WooCommerce → Subscription menu of the WooCommerce Subscription Plugin.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Toggle Sub-Orders and Show Sub-Orders buttons are not working if HPOS feature is disabled.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.9.3',
+        'released' => '2023-11-30',
+        'changes'  => [
+            'Fix' => [
+                [
+                    'title'       => 'Fixed an issue where the Tab fields under the product Add/Edit page don’t display predefined tags until users start typing to select tags.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.9.2',
+        'released' => '2023-11-13',
+        'changes'  => [
+            'New'         => [
+                [
+                    'title'       => 'A new email template has been introduced named Dokan Vendor Product Review. After a product has been reviewed, an email containing information about the review is sent to the vendor. The email includes details such as the reviewer’s name, product name, review rating, and text. The email also contains a link to the review page where the vendor can view the review and respond if necessary.',
+                    'description' => '',
+                ],
+            ],
+            'Improvement' => [
+                [
+                    'title'       => 'Display a non-purchasable notice for the vendor’s own products.',
+                    'description' => '',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => '[RestAPI] Fixed an issue where getting a single order via API gives an \'invalid ID\' error If the compatibility mode isn\'t enabled for the HPOS feature on WooCOmmerce Order data storage settings',
+                    'description' => '',
+                ],
+                [
+                    'title'       => '[ProductReview] Previously the email notification sent by WordPress when a review was added to a product, was sent to the product owner. This was wrong in the context of a marketplace. Because the email sent by WordPress includes some sensitive information, like the admin dashboard URL, customer email address, etc. With these changes, we are making sure that only the marketplace admin gets the new review emails sent by WordPress.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Previously, there was an issue where selecting “All,” then “None,” and subsequently “All” again didn’t function as expected. This occurred on the vendor product edit page for simple products, specifically within the Attributes section. However, following this update, all special cases of the “Select All” feature now work flawlessly.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.9.1',
+        'released' => '2023-10-17',
+        'changes'  => [
+            'New'         => [
+                [
+                    'title'       => '',
+                    'description' => '',
+                ],
+                [
+                    'title'       => '',
+                    'description' => '',
+                ],
+            ],
+            'Improvement' => [
+                [
+                    'title'       => 'Removed flaticon packages and replace used icons with fontAwesome icons. This will reduce the plugin zip size.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added a new settings to disable fontAwesome library',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Changed all the single date picker fields with daterange picker. This updates will keep the design consistent throughout the plugin.',
+                    'description' => '',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => '[StoreOpenCloseTime] An issue where invalid store opening or closing times generate warning and fatal error on single store page.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => '[Email] Fixed an issue where the product edit link on email template redirects to the products listing instead of single product edit page',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed some responsive issue under vendor dashboard product edit page.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed some responsive issue under vendor dashboard withdraw page.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.9.0',
+        'released' => '2023-10-06',
+        'changes'  => [
+            'New'         => [
+                [
+                    'title'       => 'Added two new hooks named `dokan_get_admin_report_data` and `dokan_get_overview_data` to extend Dokan reports functionality.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => '',
+                    'description' => '',
+                ],
+            ],
+            'Improvement' => [
+                [
+                    'title'       => 'Added a new filter named `dokan_get_store_url` to filter store URLs for a single store.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Removed some redundant or not required settings from vendor store settings page, also rearranged some admin settings and added some settings under Admin dashboard.',
+                    'description' => 'Details:
+1. Removed `Show Vendor Info` settings under the `WordPress Admin Dashboard → Dokan → Settings → Appearance` and added it back under the `WordPress Admin Dashboard → Dokan → Settings → General → Product Page Settings` section.
+2. Removed the  `More Products` setting under `Vendor Dashboard → Settings → Store Settings` and added it back as a new Admin setting under `WordPress Admin Dashboard → Dokan → Settings → General → Product Page Settings` section. Now, only the admin can control this setting.
+3. Removed redundant `Store Products Per Page` setting under `Vendor Dashboard → Settings → Store Settings`. Since the admin already has this setting under `WordPress Admin Dashboard → Dokan → Settings → General`, this setting will be used from now on and only the admin can control this setting.
+4. Removed redundant `Store Page Product Section` settings under `Vendor Dashboard → Settings → Store Page Product Section`. Now, only the admin can control these settings under Theme Customizer settings.
+',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => 'Resolved an issue where the `Tracking Number` button was still visible under the `Vendor Dashboard → Order Details → Order Note section` even after the `Shipment Tracking` feature was enabled by the admin.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => '[WidgetProductAttribute] Fixed an issue where the `Filter Products by Attribute` widget was not working for Multi-Word Attributes.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.8.3',
+        'released' => '2023-09-26',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Added advanced filtering and CSV export feature for vendor withdraws under Admin Dashboard → Dokan → Withdraw menu.',
+                    'description' => 'The ‘Withdraw’ page on the admin dashboard has been updated with advanced filtering and log exporting features. This allows admins to filter transactions based on payment method and date range, which enhances their ability to analyze and manage withdrawals. The feature to export CSV logs is also included, which makes tracking and record-keeping easier. These integrations aim to empower marketplace owners with comprehensive tools for efficient withdrawal management within the dashboard.',
+                ],
+                [
+                    'title'       => '[Dokan Invoice] Added PDF invoice links on Sub Order section',
+                    'description' => 'Previously PDF invoice links  was not visible on Sub Order section under customer order view. After this update customer will be able to view invoice link on sub order section.',
+                ],
+                [
+                    'title'       => 'Added backend validation of phone number used on entire Dokan plugin.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Store category widget list default state set to collapse.',
+                    'description' => 'Previously, if a store has a product count over 100 or more and the store has many product categories, the store category widget would display those categories and subcategories in an open state rather than collapsed state that the sidebar style gets broken. Now the list has a max height of 500px, which will be visible, and other elements will be visible by scrolling and the parent category that has a submenu will be in collapse mode.',
+                ],
+                [
+                    'title'       => 'Various style improvements of Dokan frontend including Vendor Dashboard, Single Store Page, Single Product Page etc.',
+                    'description' => '',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => '[Refund] Earlier, when refunding an order under the vendor dashboard, the tax amount decimal point rounding precision was inconsistent with WooCommerce. However, it has now been updated to be consistent with WooCommerce.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed an issue where the order status label was missing on vendor dashboard for draft orders.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.8.2',
+        'released' => '2023-09-13',
+        'changes'  => [
+            'New Feature' => [
+                [
+                    'title'       => 'Feature: Single-page product creation form.',
+                    'description' => 'Before this release, vendors had to go through a two-step process to create a product. However, with this release, a single-page product creation form has been introduced. To enable this feature, you need to navigate to the WordPress admin panel → Dokan → Settings → Selling Options → One Page Product Creation.
+It’s important to note that in the next version of Dokan, the Add New Product popup and the Add New Product form will be removed. After that, the Single-Page product form will be the default system for creating a product from the vendor dashboard.',
+                ],
+                [
+                    'title'       => 'Feature: Ask for product review',
+                    'description' => 'The Ask for Product Review feature in Dokan allows vendors to set the product status to draft while creating a product using the single-page product creation form. After the vendor is satisfied with the edit, they can either ask for a review or publish the product directly based on the admin settings and vendor capability.',
+                ],
+            ],
+            'Improvement' => [
+                [
+                    'title'       => 'Removed unnecessary product type filter from Vendor Dashboard product list page since there is only one product type available in Dokan Lite',
+                    'description' => '',
+                ],
+                [
+                    'title'       => '[VendorRegistration] Improved Compatibility with WooCommerce Password Settings',
+                    'description' => 'In the past, when vendors registered using the [dokan-vendor-registration] shortcode, the process did not align with WooCommerce\'s automatic password generation settings. However, in the latest update, we\'ve enhanced this process. The vendor registration form presented through the [dokan-vendor-registration] shortcode now seamlessly adheres to WooCommerce\'s automatic password generation settings. This enhancement ensures a more unified and user-friendly registration experience for vendors, in line with WooCommerce\'s standard practices.',
+                ],
+                [
+                    'title'       => 'Added shipping tax fee recipient field setting under admin setup wizard.',
+                    'description' => '',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => 'Fixed an issue where orders can’t be filtered by vendor under Admin Dashboard → WooCommerce → Order lists page if HPOS feature is enabled',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed an issue where multiple sub-orders has been created for a single parent order.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed and issue while trying to delete all demo products also deleting non-dummy products while calling the API endpoints multiple times',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed an issue where Dokan Pro’s Product Status setting were used even though Dokan Pro plugin is deactivated.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed an issue where products were visible beyond Simple Products in the product list page under the vendor dashboard when Dokan Pro was deactivated or not installed.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.8.1',
+        'released' => '2023-08-25',
+        'changes'  => [
+            'Fix' => [
+                [
+                    'title'       => 'Fixed a console warning under Dokan admin settings for Google Map integration',
+                    'description' => '',
+                ],
+                [
+                    'title'       => '[ReverseWithdrawal] Fixed an issue where Vendor/Admin cannot pay for reverse withdrawal balance due to a rule that vendor’s can’t purchase their own products.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.8.0',
+        'released' => '2023-08-18',
+        'changes'  => [
+            'Update' => [
+                [
+                    'title'       => 'Added HPOS (High-Performance Order Storage) support for Dokan Lite',
+                    'description' => 'The High-Performance Order Storage (HPOS) feature is a solution that provides an easy-to-understand and solid database structure specifically designed for eCommerce needs. It uses the WooCommerce CRUD design to store order data in custom tables optimized for WooCommerce queries with minimal impact on the store’s performance. This feature enables eCommerce stores of all shapes and sizes to scale their business to their maximum potential without expert intervention. It also facilitates implementing read/write locks and prevents race conditions. You can enable High-Performance Order Storage by navigating to WooCommerce > Settings > Advanced > Features and choosing the suitable data storage options for orders.',
+                ],
+                [
+                    'title'       => 'Updated minimum PHP version requirement to 7.3',
+                    'description' => '',
+                ],
+            ],
+            'Fix'    => [
+                [
+                    'title'       => 'Resolved an issue where traces of order data were left on the Dokan end even after the order had been deleted from the WordPress admin panel.',
+                    'description' => 'Previously, deleted orders were still visible under the Dashboard Overview menu, Reports menu, and under Withdraw menu. This issue has been fixed in the current release.',
+                ],
+                [
+                    'title'       => 'Multiple issues have been fixed after a product of an order has been deleted.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.7.24',
+        'released' => '2023-07-25',
+        'changes'  => [
+            'Update' => [
+                [
+                    'title'       => 'Restrictions added for vendors to review and purchase their own products.',
+                    'description' => 'Previously, vendors could purchase and post reviews for their own product. Which is not logical and could manipulate the search results of a product in a marketplace. With this update, vendors will not be able to purchase or post reviews for their own product.',
+                ],
+                [
+                    'title'       => '[ReverseWithdrawal] Now Admin can request payment from vendors using the Reverse Withdrawal feature',
+                    'description' => "Currently, there is no way for Site admins to request payments from vendors. For some use cases, it is essential for admins to request money from vendors. For example: In Stripe 3DS mode, if customers ask for a refund, refund will be given from the admin Stripe account, after that vendor transfer will be reversed. But if the vendor doesn't have enough money in their stripe account transfer reversal will fail, in that case, vendor balance will be negative. Another case would be for non-connected vendors, in that case, admin will be responsible for refund and admin needs to request money from vendors.",
+                ],
+                [
+                    'title'       => '[AdminSettings] Added a toggle switch for Google ReCaptcha in the appearance settings for better control.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => '[AdminSettings] Sensitive information like API keys, client secrets, etc., are now displayed as password fields with an unhide button to improve security.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => '[AdminCommission] Now, "percentage" is selected by default if the admin setup wizard is skipped in the commission setting.',
+                    'description' => '',
+                ],
+            ],
+            'Fix'    => [
+                [
+                    'title'       => 'Added some missing translations.',
+                    'description' => 'Previously, the template folder at dokan-lite was missing when the .pot file was generated. With this fix template folder will be respected while generating the pot file.',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.7.23',
+        'released' => '2023-07-14',
+        'changes'  => [
+            'Fix' => [
+                [
+                    'title'       => 'Fixed an issue where the withdraw request could not be approved from the Admin Dashboard via REST API.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.7.22',
+        'released' => '2023-07-12',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Updated vendor store API to support profile picture and banner delete feature. To delete one of these fields, one needs to set a 0 (zero) value while making the API request.',
+                    'description' => 'endpoint: {{SERVER_URL}}/wp-json/dokan/{{version}}/stores/{store_Id}',
+                ],
+                [
+                    'title'       => 'Added various html tag support for rich text editors on various places of vendor dashboard.',
+                    'description' => 'Previously, the product editor on the vendor\'s side was a lot more limited than the one available on the admin side. With this update, we’ve included various tags, like heading elements, paragraphs, etc support for rich text editors.',
+                ],
+                [
+                    'title'       => 'Added random ordering for store REST API endpoint.',
+                    'description' => 'Previously, random ordering for stores wasn’t available for store API. With this update, we’ve added this feature. <br>endpoint: {{SERVER_URL}}/wp-json/dokan/v1/stores/',
+                ],
+                [
+                    'title'       => 'Added phone number validation for vendor dashboard store settings page and vendor registration form.',
+                    'description' => 'Previously, for phone numbers only numeric values were accepted, now a valid phone number including spaces, -, _, (, ), etc also supports phone number fields.',
+                ],
+                [
+                    'title'       => '[Withdraw] Fixed an issue where withdraw payment method wasn\'t enabled but can be used for both manual withdrawal and auto withdraw disbursement schedules from the vendor dashboard payment settings page.',
+                    'description' => '',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => 'Fixed an issue where multiple withdrawal requests can be placed via API.',
+                    'description' => 'If a withdrawal request was placed by a vendor until that request was approved or rejected by Admin, making another withdrawal request wasn’t possible via frontend. However, the admin was able to make a withdrawal request via REST API. With this fix, this problem now has been resolved.',
+                ],
+                [
+                    'title'       => 'Fixed a PHP notice for importing dummy data without providing any data via REST API',
+                    'description' => 'endpoint: {{SERVER_URL}}/wp-json/dokan/v1/dummy-data/import',
+                ],
+                [
+                    'title'       => 'While updating the withdrawal request via REST API, the minimum withdrawal amount limit wasn’t considered. For example, if the minimum withdrawal limit was set to 50, for an existing withdrawal request, the admin can set the withdrawal value to less than 50. This issue has been fixed now.',
+                    'description' => 'endpoint: {{SERVER_URL}}/wp-json/dokan/v1/withdraw/{withdraw_id}',
+                ],
+                [
+                    'title'       => 'Fixed an issue where store products API was returning all products instead of published products.',
+                    'description' => 'endpoint: {{SERVER_URL}}/wp-json/dokan/v1/stores/{store_id}/products',
+                ],
+                [
+                    'title'       => 'Fixed some CSS issues on the vendor store settings page for the store banner image.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => '[Withdraw] Fixed an issue where PayPal withdraw method status was displaying default but the corresponding vendor didn’t set up the payment method yet. With this fix, we marked the payment method as needing setup instead of the default payment method.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => '[Withdraw] After connecting to a payment method, the button text changes from `Setup` to `Make default` or `default` if selected. But after disconnecting that method button text doesn\'t change back to `Setup`. Now this issue has been fixed.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.7.21',
+        'released' => '2023-06-23',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Added `Become A Vendor` feature to Dokan Lite.',
+                    'description' => 'Previously, this option was only available in Dokan Pro. This enhancement ensures that even customers of the Lite version can easily become vendors and start selling their products through the platform.',
+                ],
+                [
+                    'title'       => '[SellerSetupWizard] Added store location map on the seller setup wizard',
+                    'description' => 'Introducing a new enhancement in the seller setup wizard: seamless integration of a store location map. This enhancement allows sellers to effortlessly navigate and locate their store\'s position within the wizard interface.',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => 'Fixed an issue where gateway fees from WooCommerce PayPal Payments were not being deducted from vendors’ earnings.',
+                    'description' => 'Previously, Dokan deducted PayPal Checkout fees from vendors’ earnings but did not deduct PayPal Payments fees. This was due to the fact that PayPal Payments did not set transaction fee metadata at the time. With this fix, Dokan now correctly deducts PayPal Payments fees from vendors’ earnings.',
+                ],
+                [
+                    'title'       => '[VendorDashboard] Fixed some CSS issues under the vendor dashboard.',
+                    'description' => 'Previously, the positioning of the mobile navigation icon on the vendor dashboard was problematic on mobile screens. Additionally, there were inconsistencies in some table columns, including the order ID column, causing visual issues. These issues have now been fixed.',
+                ],
+                [
+                    'title'       => '[DokanVendorRegistration] Registration page\'s user selection modal is not working properly when any theme tries to use the modal for the vendor registration form.',
+                    'description' => 'In earlier versions, there was a lack of synchronization between the user registration form on the "My Account" page and the user registration forms inside the modal implemented within the theme. This inconsistency created confusion and hindered the seamless registration process. However, with the latest update, significant improvements have been made to address this issue.',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.7.20',
+        'released' => '2023-06-08',
+        'changes'  => [
+            'New' => [
+                [
+                    'title'       => 'Added two new filter hooks named `dokan_get_vendor_orders_args` and `dokan_get_vendor_orders` to filter vendor’s order data.',
+                    'description' => 'You can now filter orders returned by the `dokan()->order->all()` method using the dokan_get_vendor_orders hook.',
+                ],
+                [
+                    'title'       => 'Added a new filter named `dokan_get_new_post_status` for the function dokan_get_new_post_status()',
+                    'description' => 'Now you’ll be able to use your desired status for new products created by vendors using this filter.',
+                ],
+            ],
+            'Fix' => [
+                [
+                    'title'       => 'Fixed a security issue related to insecure deserialization in the Dummy Data importer API endpoint.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Resolved an issue where the dokan_is_seller_dashboard() method was returning false when called from a WP Post Query Loop.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Ensured that the correct order status is displayed for vendors after updating an order.',
+                    'description' => 'Previously, in some cases, plugin or theme authors would hook into actions like woocommerce_order_status_changed and change the order status after it had been updated by the vendor. This update ensures that the correct order status is displayed to vendors after they update an order. Thanks to https://github.com/rmilesson for your contribution to fixing this issue.',
+                ],
+                [
+                    'title'       => 'Resolved an issue where store categories filtering was not showing proper results due to nonce validation fails.',
+                    'description' => 'Previously, when using store categories as a direct link to filter vendors with no valid nonce key attached to it, the filtering was not working correctly and vendors were not being displayed under their assigned store category. This issue has been addressed and store categories filtering now shows the correct results.',
+                ],
+                [
+                    'title'       => 'Resolved inconsistent behavior of pagination on the Single Store Page.',
+                    'description' => 'Previously, there were several issues with the pagination on the Single Store Page, including the “Previous” text displaying like the “Next” icon, the Last Page Menu icon not showing when all menus were visible, and the Active Page Menu background color not changing from the 4th page. These issues have been addressed and the pagination behavior is now consistent.',
+                ],
+                [
+                    'title'       => 'Resolved an issue where the discounted price field was not displayed correctly according to the theme used.',
+                    'description' => 'Previously, when viewing the “Add/Edit a product” page on the Vendor Dashboard, the discounted price field was not displayed in the same way as the price field box when using certain themes. This issue has been addressed and the discounted price field now displays correctly according to the theme used.',
+                ],
+                [
+                    'title'       => '[AdminSetupWizard] The custom withdrawal method is now conditionally displayed in the admin setup wizard.',
+                    'description' => 'Previously, the custom withdrawal method could not be enabled in the wizard because it required the method name and type to be populated. Now, if the admin has previously saved these values, the custom withdrawal method will be displayed and can be activated in the wizard.',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.7.19',
+        'released' => '2023-05-24',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Separated shipping tax fee recipient from the product tax fee recipient.',
+                    'description' => 'According to the <a href="https://wedevs.com/docs/dokan/settings/selling-options/">Selling Options</a> section of the Dokan documentation, you can set the recipient (Admin or Vendor) who will be receiving the shipping fee using the “Shipping Fee Recipient” option. Similarly, you can set the recipient (Admin or Vendor) who will be receiving the Tax fee using the “Tax Fee Recipient” option. <br>
+                                      It seems that there was a <a href="https://github.com/weDevsOfficial/dokan/issues/1384">bug</a>  where if the Shipping Fee Recipient is the Admin and Tax Fee Recipient is the Vendor, then the Shipping Tax adds to the Vendor Earnings instead of Admin Commission. This issue has been resolved by separating shipping tax fee recipient from tax fee recipient by adding a new settings field named: Shipping Tax Fee Recipient under Dokan —> Settings —> Selling Options —> Commission section where admin will be able to select who will receive the shipping tax fee.',
+                ],
+                [
+                    'title'       => 'Added support for multiple shipping line items for suborders',
+                    'description' => 'It seems that when products from two or more sellers are placed in the cart and two products from the same seller with two different shipping methods are ordered, the sub-order that should have two shipping methods ends up losing the second freight. More details on the issue are mentioned <a href="https://github.com/weDevsOfficial/dokan/issues/1690">here</a>',
+                ],
+                [
+                    'title'       => 'Moved shipping splitting functionality to Dokan Lite from Dokan Pro. Previously, this feature was only available on Dokan Pro.',
+                    'description' => 'With this release, we have moved this feature to Dokan Lite. Note that the built-in <a href="https://woocommerce.com/documentation/plugins/woocommerce/getting-started/shipping/core-shipping-options/">shipping gateways</a> of WooCommerce can only be configured by the admin and will be automatically applied to the vendor order. Vendors will not be able to configure any shipping methods. The Dokan <a href="https://wedevs.com/docs/dokan/dokan-zone-wise-shipping/">Vendor Shipping</a> feature is still available with Dokan Pro.',
+                ],
+                [
+                    'title'       => 'Improved the responsiveness of tables on the Vendor Dashboard by making them horizontally scrollable on smaller-sized screens.',
+                    'description' => 'Previously, the order listing, product listing, and all other tables on the Vendor Dashboard were not responsive on smaller-sized screens. With this update, all of the tables are now made horizontally scrollable on smaller-sized screens.',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => 'Disabling product review from WooCommerce settings doesn’t remove the review section from the vendor profile.',
+                    'description' => 'Fixed an issue where disabling product reviews in WooCommerce by going to WP-Admin > WooCommerce > Settings > Products does not remove the review section from the vendor profile. Additionally, disabling product reviews in WooCommerce does not hide the message “No ratings found yet!” from the single product page under the vendor info tab.',
+                ],
+                [
+                    'title'       => 'Broken layout of Discounted Price section in Vendor Dashboard product edit page on full-width page layout themes.',
+                    'description' => 'Fixed an issue where the layout of the Discounted Price section in the Vendor Dashboard product edit page was broken on full-width page layout themes. The issue was caused by the CSS styles of the theme that were conflicting with the Dokan plugin styles. With this fix, the Discounted Price section will now display correctly on full-width page layout themes.',
+                ],
+                [
+                    'title'       => 'Fixed some warnings and fatal errors for PHP versions 8.1 and 8.2.',
+                    'description' => 'The issue was caused by the Dokan plugin code that was not compatible with the latest PHP versions. With this fix, the Dokan plugin code is now compatible with PHP versions 8.1 and 8.2. Note that, WordPress and WooCommerce still doesn’t support PHP version 8.1 and 8.2',
+                ],
+                [
+                    'title'       => 'Fixed incorrectly closed product category menu after_widget args',
+                    'description' => 'Fixed an issue where the product category menu was incorrectly closed due to reassigned arguments that left after_widget undefined and broke the layout.',
+                ],
+                [
+                    'title'       => '[VendorSetupWizard] Fixed an issue where the ‘Hide Email Address’ option was still displayed on the Vendor Setup wizard page even when it was enabled from Dokan Admin Settings.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Email notification for withdrawal approval no longer shows HTML code in its header.',
+                    'description' => 'Previously when the site admin approves a withdrawal request, an email is sent to the corresponding vendor. However, in the email header, the text appears including its HTML elements. This issue now has been fixed.',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.7.18',
+        'released' => '2023-05-10',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => ' [ReverseWithdrawal] Added sold individually param to true for advertisement base product when creating it, so that quantity can\'t be changed',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Remove expected earning calculation from product listing and editing pages',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added a notice before deleting products via bulk action under Vendor Dashboard → Product listing page',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added dokan_store_name meta-key for all users with administrator and shop_manager roles during plugin activation',
+                    'description' => '',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => 'Fixed product getting published after enabling vendor selling status from admin dashboard',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.7.17',
         'released' => '2023-04-17',
         'changes'  => [
@@ -226,9 +1092,8 @@ $changelog = [
 -- https://example.com/wp-json/dokan/v2/withdraw/settings
 -- https://example.com/wp-json/dokan/v2/withdraw/summary
 -- https://example.com/wp-json/dokan/v2/products  (new param added: author, post_status, date, product_cat, product_type, stock_status, filter_by_other)
--- https://example.com/wp-json/dokan/v2/products/filter-by-data'
-                    ,
-                ]
+-- https://example.com/wp-json/dokan/v2/products/filter-by-data',
+                ],
             ],
             'Fix' => [
                 [

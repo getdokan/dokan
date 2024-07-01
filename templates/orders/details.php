@@ -7,9 +7,8 @@ if ( ! dokan_is_seller_has_order( dokan_get_current_user_id(), $order_id ) ) {
 }
 
 $statuses = wc_get_order_statuses();
-$order    = new WC_Order( $order_id ); // phpcs:ignore
+$order    = wc_get_order( $order_id ); // phpcs:ignore
 $hide_customer_info = dokan_get_option( 'hide_customer_info', 'dokan_selling', 'off' );
-$customer_ip        = get_post_meta( $order->get_id(), '_customer_ip_address', true );
 ?>
 <div class="dokan-clearfix dokan-order-details-wrap">
     <div class="dokan-w8 dokan-order-left-content">
@@ -44,11 +43,7 @@ $customer_ip        = get_post_meta( $order->get_id(), '_customer_ip_address', t
                                 foreach ( $order_items as $item_id => $item ) {
                                     switch ( $item['type'] ) {
                                         case 'line_item':
-                                            if ( version_compare( WC_VERSION, '4.4.0', '>=' ) ) {
-                                                $_product = $item->get_product();
-                                            } else {
-                                                $_product = $order->get_product_from_item( $item );
-                                            }
+                                            $_product = $item->get_product();
                                             dokan_get_template_part(
                                                 'orders/order-item-html', '', array(
                                                     'order' => $order,
@@ -90,7 +85,7 @@ $customer_ip        = get_post_meta( $order->get_id(), '_customer_ip_address', t
                             </table>
 
                             <?php
-                            $coupons = $order->get_items( array( 'coupon' ) );
+                            $coupons = $order->get_items( 'coupon' );
 
                             if ( $coupons ) {
                                 ?>
@@ -216,29 +211,20 @@ $customer_ip        = get_post_meta( $order->get_id(), '_customer_ip_address', t
                             <ul class="list-unstyled customer-details">
                                 <li>
                                     <span><?php esc_html_e( 'Customer:', 'dokan-lite' ); ?></span>
-                                    <?php
-                                    $customer_user = absint( get_post_meta( $order->get_id(), '_customer_user', true ) );
-                                    if ( $customer_user && $customer_user !== 0 ) {
-                                        $customer_userdata = get_userdata( $customer_user );
-                                        $display_name = $customer_userdata->display_name;
-                                    } else {
-                                        $display_name = get_post_meta( $order->get_id(), '_billing_first_name', true ) . ' ' . get_post_meta( $order->get_id(), '_billing_last_name', true );
-                                    }
-                                    ?>
-                                    <?php echo esc_html( $display_name ); ?><br>
+                                    <?php echo esc_html( $order->get_formatted_billing_full_name() ); ?><br>
                                 </li>
                                 <li>
                                     <span><?php esc_html_e( 'Email:', 'dokan-lite' ); ?></span>
-                                    <?php echo esc_html( get_post_meta( $order->get_id(), '_billing_email', true ) ); ?>
+                                    <?php echo esc_html( $order->get_billing_email() ); ?>
                                 </li>
                                 <li>
                                     <span><?php esc_html_e( 'Phone:', 'dokan-lite' ); ?></span>
-                                    <?php echo esc_html( get_post_meta( $order->get_id(), '_billing_phone', true ) ); ?>
+                                    <?php echo esc_html( $order->get_billing_phone() ); ?>
                                 </li>
                                 <li>
                                     <span><?php esc_html_e( 'Customer IP:', 'dokan-lite' ); ?></span>
-                                    <a href="<?php echo esc_url( 'https://tools.keycdn.com/geo?host=' . $customer_ip ); ?>" target="_blank">
-                                        <?php echo esc_html( $customer_ip ); ?>
+                                    <a href="<?php echo esc_url( 'https://tools.keycdn.com/geo?host=' . $order->get_customer_ip_address() ); ?>" target="_blank">
+                                        <?php echo esc_html( $order->get_customer_ip_address() ); ?>
                                     </a>
                                 </li>
 
@@ -247,8 +233,7 @@ $customer_ip        = get_post_meta( $order->get_id(), '_customer_ip_address', t
                         <?php endif; ?>
                         <?php
                         if ( get_option( 'woocommerce_enable_order_comments' ) !== 'no' ) {
-                            $customer_note = get_post_field( 'post_excerpt', $order->get_id() );
-
+                            $customer_note = $order->get_customer_note();
                             if ( ! empty( $customer_note ) ) {
                                 ?>
                                 <div class="alert alert-success customer-note">
@@ -328,40 +313,42 @@ $customer_ip        = get_post_meta( $order->get_id(), '_customer_ip_address', t
                                         <input type="hidden" name="delete-note-security" id="delete-note-security" value="<?php echo esc_attr( wp_create_nonce( 'delete-order-note' ) ); ?>">
                                         <input type="hidden" name="post_id" value="<?php echo esc_attr( $order->get_id() ); ?>">
                                         <input type="hidden" name="action" value="dokan_add_order_note">
-                                        <input type="submit" name="add_order_note" class="add_note btn btn-sm btn-theme" value="<?php esc_attr_e( 'Add Note', 'dokan-lite' ); ?>">
+                                        <input type="submit" name="add_order_note" class="add_note btn btn-sm btn-theme dokan-btn-theme" value="<?php esc_attr_e( 'Add Note', 'dokan-lite' ); ?>">
                                     </div>
                                 </form>
                             <?php endif; ?>
 
-                            <div class="clearfix dokan-form-group" style="margin-top: 10px;">
-                                <!-- Trigger the modal with a button -->
-                                <input type="button" id="dokan-add-tracking-number" name="add_tracking_number" class="dokan-btn dokan-btn-success" value="<?php esc_attr_e( 'Tracking Number', 'dokan-lite' ); ?>">
+                            <?php if ( ! dokan()->is_pro_exists() || 'on' !== dokan_get_option( 'enabled', 'dokan_shipping_status_setting' ) ) : ?>
+                                <div class="clearfix dokan-form-group" style="margin-top: 10px;">
+                                    <!-- Trigger the modal with a button -->
+                                    <input type="button" id="dokan-add-tracking-number" name="add_tracking_number" class="dokan-btn dokan-btn-success" value="<?php esc_attr_e( 'Tracking Number', 'dokan-lite' ); ?>">
 
-                                <form id="add-shipping-tracking-form" method="post" class="dokan-hide" style="margin-top: 10px;">
-                                    <div class="dokan-form-group">
-                                        <label class="dokan-control-label"><?php esc_html_e( 'Shipping Provider Name / URL', 'dokan-lite' ); ?></label>
-                                        <input type="text" name="shipping_provider" id="shipping_provider" class="dokan-form-control" value="">
-                                    </div>
+                                    <form id="add-shipping-tracking-form" method="post" class="dokan-hide" style="margin-top: 10px;">
+                                        <div class="dokan-form-group">
+                                            <label class="dokan-control-label"><?php esc_html_e( 'Shipping Provider Name / URL', 'dokan-lite' ); ?></label>
+                                            <input type="text" name="shipping_provider" id="shipping_provider" class="dokan-form-control" value="">
+                                        </div>
 
-                                    <div class="dokan-form-group">
-                                        <label class="dokan-control-label"><?php esc_html_e( 'Tracking Number', 'dokan-lite' ); ?></label>
-                                        <input type="text" name="tracking_number" id="tracking_number" class="dokan-form-control" value="">
-                                    </div>
+                                        <div class="dokan-form-group">
+                                            <label class="dokan-control-label"><?php esc_html_e( 'Tracking Number', 'dokan-lite' ); ?></label>
+                                            <input type="text" name="tracking_number" id="tracking_number" class="dokan-form-control" value="">
+                                        </div>
 
-                                    <div class="dokan-form-group">
-                                        <label class="dokan-control-label"><?php esc_html_e( 'Date Shipped', 'dokan-lite' ); ?></label>
-                                        <input type="text" name="shipped_date" id="shipped-date" class="dokan-form-control" value="" placeholder="<?php echo esc_attr( get_option( 'date_format' ) ); ?>">
-                                    </div>
-                                    <input type="hidden" name="security" id="security" value="<?php echo esc_attr( wp_create_nonce( 'add-shipping-tracking-info' ) ); ?>">
-                                    <input type="hidden" name="post_id" id="post-id" value="<?php echo esc_attr( $order->get_id() ); ?>">
-                                    <input type="hidden" name="action" id="action" value="dokan_add_shipping_tracking_info">
+                                        <div class="dokan-form-group">
+                                            <label class="dokan-control-label"><?php esc_html_e( 'Date Shipped', 'dokan-lite' ); ?></label>
+                                            <input type="text" name="shipped_date" id="shipped-date" class="dokan-form-control" value="" placeholder="<?php echo esc_attr( get_option( 'date_format' ) ); ?>">
+                                        </div>
+                                        <input type="hidden" name="security" id="security" value="<?php echo esc_attr( wp_create_nonce( 'add-shipping-tracking-info' ) ); ?>">
+                                        <input type="hidden" name="post_id" id="post-id" value="<?php echo esc_attr( $order->get_id() ); ?>">
+                                        <input type="hidden" name="action" id="action" value="dokan_add_shipping_tracking_info">
 
-                                    <div class="dokan-form-group">
-                                        <input id="add-tracking-details" type="button" class="btn btn-primary" value="<?php esc_attr_e( 'Add Tracking Details', 'dokan-lite' ); ?>">
-                                        <button type="button" class="btn btn-default" id="dokan-cancel-tracking-note"><?php esc_html_e( 'Close', 'dokan-lite' ); ?></button>
-                                    </div>
-                                </form>
-                            </div>
+                                        <div class="dokan-form-group">
+                                            <input id="add-tracking-details" type="button" class="btn btn-primary" value="<?php esc_attr_e( 'Add Tracking Details', 'dokan-lite' ); ?>">
+                                            <button type="button" class="btn btn-default" id="dokan-cancel-tracking-note"><?php esc_html_e( 'Close', 'dokan-lite' ); ?></button>
+                                        </div>
+                                    </form>
+                                </div>
+                            <?php endif; ?>
                         </div> <!-- .add_note -->
                     </div> <!-- .dokan-panel-body -->
                 </div> <!-- .dokan-panel -->

@@ -103,7 +103,7 @@
             height: 70px !important;
 
             input[name="settings[bank][routing_number]"], input[name="settings[bank][ac_number]"] {
-                width: 48% !important;
+                width: 100%;
             }
 
             textarea[name="settings[bank][bank_addr]"] {
@@ -328,4 +328,35 @@
             max-width:100%;
         }
     }
+
+    .wc-setup-content {
+        .dokan-seller-setup-form {
+            .dokan-map-wrap {
+                .dokan-map-search-bar {
+                    input {
+                        &#dokan-map-add {
+                            width: 100%;
+                        }
+                    }
+
+                    a {
+                        &#dokan-location-find-btn {
+                            display: none;
+                        }
+                    }
+                }
+
+                .dokan-google-map {
+                    width: 100%;
+                    height: 300px;
+                }
+            }
+        }
+    }
+}
+
+span {
+  &.required {
+    color: #e2401c;
+  }
 }

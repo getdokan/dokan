@@ -33,14 +33,14 @@ class Hooks {
         // remove withdraw menu - reverse withdrawal action
         add_filter( 'dokan_get_dashboard_nav', array( $this, 'unset_withdraw_menu' ) );
         // enable catalog mode - reverse withdrawal action
-        add_filter( 'woocommerce_is_purchasable', array( $this, 'hide_add_to_cart_button' ), 10, 2 );
+        add_filter( 'woocommerce_is_purchasable', array( $this, 'hide_add_to_cart_button' ), 20, 2 );
         add_filter( 'woocommerce_get_price_html', array( $this, 'hide_product_price' ), 20, 2 );
 
         // after order status changed
         add_action( 'woocommerce_order_status_changed', [ $this, 'process_order_status_changed' ], 10, 3 );
 
         // vendor dashboard navigation url
-        add_filter( 'dokan_get_dashboard_nav', [ $this, 'add_reverse_withdrawal_nav' ], 10, 2 );
+        add_filter( 'dokan_get_dashboard_nav', [ $this, 'add_reverse_withdrawal_nav' ], 10 );
     }
 
     /**
@@ -104,12 +104,16 @@ class Hooks {
      * @return bool
      */
     public function hide_add_to_cart_button( $purchasable, $product ) {
+        // exclude reverse withdrawal product
+        if ( Helper::is_reverse_withdrawal_product( $product->get_id() ) ) {
+            return true;
+        }
+
         if ( false === $purchasable ) {
             return $purchasable;
         }
 
         $vendor_id = dokan_get_vendor_by_product( $product, true );
-
         if ( ! $vendor_id ) {
             return $purchasable;
         }

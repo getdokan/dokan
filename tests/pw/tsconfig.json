@@ -1,0 +1,62 @@
+{
+    // "compileOnSave": true,
+    "compilerOptions": {
+        // project options
+        "lib": ["ESNext", "dom"] /* specifies which default set of type definitions to use ("DOM", "ES6", etc)*/,
+        "outDir": "lib" /* .js (as well as .d.ts, .js.map, etc.) files will be emitted into this directory.*/,
+        "removeComments": true /* Strips all comments from TypeScript files when converting into JavaScript- you rarely read compiled code so this saves space*/,
+        // "target": "ES6", /* Target environment. Most modern browsers support ES6, but you may want to set it to newer or older. (defaults to ES3)*/
+        "target": "ES2017" /* Target environment. Most modern browsers support ES6, but you may want to set it to newer or older. (defaults to ES3)*/,
+        "module": "es2022" /* Specify module code generation: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', or 'ESNext'. */,
+        "allowJs": true /* Allow javascript files to be compiled. */,
+        "checkJs": true /* Report errors in .js files. */,
+        "declaration": true /* Generates corresponding '.d.ts' file. */,
+        "declarationMap": true /* Generates a sourcemap for each corresponding '.d.ts' file. */,
+        // Module resolution
+        "rootDir": "." /* Specify the root directory of input files. */,
+        "baseUrl": "." /* Lets you set a base directory to resolve non-absolute module names.*/,
+        "paths": {
+            "@pages/*": ["pages/*"],
+            "@utils/*": ["utils/*"],
+            "@apiEndPoints": ["utils/apiEndPoints"],
+            "@apiUtils": ["utils/apiUtils"],
+            "@dbData": ["utils/dbData"],
+            "@dbUtils": ["utils/dbUtils"],
+            "@helpers": ["utils/helpers"],
+            "@interfaces": ["utils/interfaces"],
+            "@payloads": ["utils/payloads"],
+            "@schemas": ["utils/schemas"],
+            "@testData": ["utils/testData"],
+            "@pwMatchers": ["utils/pwMatchers"]
+        },
+        "esModuleInterop": true /* fixes some issues TS originally had with the ES6 spec where TypeScript treats CommonJS/AMD/UMD modules similar to ES6 module*/,
+        "moduleResolution": "node" /* Pretty much always node for modern JS. Other option is "classic"*/,
+        "typeRoots": ["node_modules/@types", "types/**/*"] /* List of folders to include type definitions from. */,
+        "resolveJsonModule": true,
+        "importHelpers": true /* Import emit helpers from 'tslib'. */,
+        "downlevelIteration": true /* Provide full support for iterables in 'for-of', spread, and destructuring when targeting 'ES5' or 'ES3'. */,
+        // "allowSyntheticDefaultImports": true   /* Allow default imports from modules with no default export. This does not affect code emit, just typechecking. */,
+        // Source Map
+        "sourceMap": true /* enables the use of source maps for debuggers and error reporting etc*/,
+        "sourceRoot": "/" /* Specify the location where a debugger should locate TypeScript files instead of relative source locations.*/,
+        // Strict Checks
+        "alwaysStrict": true /* Ensures that your files are parsed in the ECMAScript strict mode, and emit “use strict” for each source file.*/,
+        "strict": true /* Enable all strict type-checking options. */,
+        "allowUnreachableCode": false /* pick up dead code paths*/,
+        "noImplicitAny": true /* In some cases where no type annotations are present, TypeScript will fall back to a type of any for a variable when it cannot infer the type.*/,
+        "strictNullChecks": true /* When strictNullChecks is true, null and undefined have their own distinct types and you’ll get a type error if you try to use them where a concrete value is expected.*/,
+        "strictFunctionTypes": true /* Enable strict checking of function types. */,
+        "strictBindCallApply": true /* Enable strict 'bind', 'call', and 'apply' methods on functions. */,
+        "strictPropertyInitialization": true /* Enable strict checking of property initialization in classes. */,
+        "noImplicitThis": true /* Raise error on 'this' expressions with an implied 'any' type. */,
+        "skipLibCheck": true /* Skip type checking of declaration files. */,
+        // Linter Checks
+        "noUnusedLocals": true /* Report errors on unused local variables.*/,
+        "noUnusedParameters": true /* Report errors on unused parameters in functions*/,
+        "noImplicitReturns": true /* Report error when not all code paths in function return a value. */,
+        "noUncheckedIndexedAccess": true /* accessing index must always check for undefined*/,
+        "noFallthroughCasesInSwitch": true /* Report errors for fallthrough cases in switch statement. */,
+        "forceConsistentCasingInFileNames": true /* Force consistent Casing In File Names */
+    },
+    "exclude": ["node_modules/**/*", "playwright/**/*", "playwright-report/**/*"]
+}

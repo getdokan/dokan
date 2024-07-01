@@ -58,7 +58,7 @@
                 />
             </div>
 
-            <div class="dokan-form-group">
+            <div class="dokan-form-group flex-col">
 
                 <div :class="{'column': getId(), 'checkbox-group': ! getId()}">
                     <label for="paypal-email">{{ __( 'PayPal Email', 'dokan-lite') }}</label>
@@ -205,27 +205,18 @@ export default {
     methods: {
         setValue( status, key ) {
             if ( 'enabled' === key ) {
-                if ( status ) {
-                    this.vendorInfo.enabled = true;
-                } else {
-                    this.vendorInfo.enabled = false;
-                }
+                this.vendorInfo.enabled = status;
+                this.enabled = status;
             }
 
             if ( 'trusted' === key ) {
-                if ( status ) {
-                    this.vendorInfo.trusted = true;
-                } else {
-                    this.vendorInfo.trusted = false;
-                }
+                this.vendorInfo.trusted = status;
+                this.trusted = status;
             }
 
             if ( 'featured' === key ) {
-                if ( status ) {
-                    this.vendorInfo.featured = true;
-                } else {
-                    this.vendorInfo.featured = false;
-                }
+                this.vendorInfo.featured = status;
+                this.featured = status;
             }
         },
 

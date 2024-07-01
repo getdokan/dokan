@@ -434,25 +434,29 @@ class Withdraw {
             return;
         }
 
-        $last_withdraw = dokan()->withdraw->get_withdraw_requests( dokan_get_current_user_id(), 1, 1 );
+        /**
+         * @var $last_withdraw \WeDevs\Dokan\Withdraw\Withdraw[]
+         */
+        $last_withdraw   = dokan()->withdraw->get_withdraw_requests( dokan_get_current_user_id(), 1, 1 );
+        $last_withdraw   = reset( $last_withdraw );
         $payment_details = __( 'You do not have any approved withdraw yet.', 'dokan-lite' );
 
-        if ( ! empty( $last_withdraw ) ) {
-            $last_withdraw_amount      = '<strong>' . wc_price( $last_withdraw[0]->amount ) . '</strong>';
-            $last_withdraw_date        = '<strong><em>' . dokan_format_date( $last_withdraw[0]->date ) . '</em></strong>';
-            $last_withdraw_method_used = '<strong>' . dokan_withdraw_get_method_title( $last_withdraw[0]->method ) . '</strong>';
+        if ( ! empty( $last_withdraw ) && is_a( $last_withdraw, '\WeDevs\Dokan\Withdraw\Withdraw' ) ) {
+            $last_withdraw_amount      = '<strong>' . wc_price( $last_withdraw->get_amount() ) . '</strong>';
+            $last_withdraw_date        = '<strong><em>' . dokan_format_date( $last_withdraw->get_date() ) . '</em></strong>';
+            $last_withdraw_method_used = '<strong>' . dokan_withdraw_get_method_title( $last_withdraw->get_method() ) . '</strong>';
 
             // translators: 1: Last formatted withdraw amount 2: Last formatted withdraw date 3: Last formatted withdraw method used.
             $payment_details = sprintf( __( '%1$s on %2$s to %3$s', 'dokan-lite' ), $last_withdraw_amount, $last_withdraw_date, $last_withdraw_method_used );
         }
 
         $args = [
-            'balance'         => dokan_get_seller_balance( dokan_get_current_user_id(), true ),
-            'withdraw_limit'  => dokan_get_option( 'withdraw_limit', 'dokan_withdraw', -1 ),
-            'threshold'       => dokan_get_withdraw_threshold( dokan_get_current_user_id() ),
-            'payment_details' => $payment_details,
-            'active_methods'  => dokan_withdraw_get_withdrawable_active_methods(),
-            'default_method'  => dokan_withdraw_get_default_method(),
+            'balance'                 => dokan_get_seller_balance( dokan_get_current_user_id(), true ),
+            'withdraw_limit'          => dokan_get_option( 'withdraw_limit', 'dokan_withdraw', 0 ),
+            'threshold'               => dokan_get_withdraw_threshold( dokan_get_current_user_id() ),
+            'payment_details'         => $payment_details,
+            'active_methods'          => dokan_withdraw_get_withdrawable_active_methods(),
+            'default_method'          => dokan_withdraw_get_default_method(),
         ];
         dokan_get_template_part( 'withdraw/withdraw-dashboard', '', $args );
     }
@@ -502,9 +506,10 @@ class Withdraw {
         $default_withdraw_method = dokan_withdraw_get_default_method( $current_user_id );
         dokan_get_template_part(
             'withdraw/request-form', '', array(
-				'amount'          => NumberUtil::round( $balance, wc_get_price_decimals(), PHP_ROUND_HALF_DOWN ), // we are setting 12.3456 to 12.34 not 12.35
-				'withdraw_method' => $default_withdraw_method,
-				'payment_methods' => $payment_methods,
+				'amount'           => NumberUtil::round( $balance, wc_get_price_decimals(), PHP_ROUND_HALF_DOWN ), // we are setting 12.3456 to 12.34 not 12.35
+				'withdraw_method'  => $default_withdraw_method,
+				'payment_methods'  => $payment_methods,
+                'withdraw_charges' => dokan_withdraw_get_method_charges(),
             )
         );
     }

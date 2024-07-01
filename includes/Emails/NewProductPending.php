@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\Emails;
 
 use WC_Email;
+use WeDevs\Dokan\Vendor\Vendor;
 
 /**
  * New Product Email.
@@ -21,15 +22,27 @@ class NewProductPending extends WC_Email {
      * Constructor.
      */
     public function __construct() {
-        $this->id               = 'new_product_pending';
-        $this->title            = __( 'Dokan New Pending Product', 'dokan-lite' );
-        $this->description      = __( 'New Pending Product emails are sent to chosen recipient(s) when a new product is created by vendors.', 'dokan-lite' );
-        $this->template_html    = 'emails/new-product-pending.php';
-        $this->template_plain   = 'emails/plain/new-product-pending.php';
-        $this->template_base    = DOKAN_DIR . '/templates/';
+        $this->id             = 'new_product_pending';
+        $this->title          = __( 'Dokan New Pending Product', 'dokan-lite' );
+        $this->description    = __( 'New Pending Product emails are sent to chosen recipient(s) when a new product is created by vendors.', 'dokan-lite' );
+        $this->template_html  = 'emails/new-product-pending.php';
+        $this->template_plain = 'emails/plain/new-product-pending.php';
+        $this->template_base  = DOKAN_DIR . '/templates/';
+        $this->placeholders   = [
+            '{product_title}' => '',
+            '{price}'         => '',
+            '{store_name}'    => '',
+            '{seller_url}'    => '',
+            '{category}'      => '',
+            '{product_link}'  => '',
+            // only for backward compatibility
+            '{site_name}'     => $this->get_from_name(),
+            '{seller_name}'   => '',
+        ];
 
         // Triggers for this email
-        add_action( 'dokan_email_trigger_new_pending_product', array( $this, 'trigger' ), 30, 2 );
+        add_action( 'dokan_new_product_added', array( $this, 'trigger' ), 30, 1 );
+        add_action( 'dokan_product_updated', array( $this, 'trigger' ), 30, 1 );
 
         // Call parent constructor
         parent::__construct();
@@ -45,7 +58,7 @@ class NewProductPending extends WC_Email {
      * @return string
      */
     public function get_default_subject() {
-            return __( '[{site_title}] A New product is pending from ({seller_name}) - {product_title}', 'dokan-lite' );
+            return __( '[{site_title}] A New product is pending from ({store_name}) - {product_title}', 'dokan-lite' );
     }
 
     /**
@@ -55,51 +68,55 @@ class NewProductPending extends WC_Email {
      * @return string
      */
     public function get_default_heading() {
-            return __( 'New pending product added by Vendor {seller_name}', 'dokan-lite' );
+            return __( 'New pending product added by Vendor {store_name}', 'dokan-lite' );
     }
 
     /**
      * Trigger the sending of this email.
      *
      * @param int $product_id The product ID.
-     * @param array $postdata.
      */
-    public function trigger( $product_id, $postdata ) {
-		if ( ! $this->is_enabled() || ! $this->get_recipient() ) {
-			return;
-		}
+    public function trigger( $product_id ) {
+        $product = wc_get_product( $product_id );
+        if ( ! $product ) {
+            return;
+        }
 
-            $product       = wc_get_product( $product_id );
-            $seller_id     = get_post_field( 'post_author', $product_id );
-            $seller        = get_user_by( 'id', $seller_id );
-            $category      = wp_get_post_terms( dokan_get_prop( $product, 'id' ), 'product_cat', array( 'fields' => 'names' ) );
-            $category_name = $category ? reset( $category ) : 'N/A';
+        // we've added _dokan_new_product_email_sent from version 3.8.2
+        // so, we are assuming if the meta doesn't exist, email was already sent to the client
+        $email_sent = $product->get_meta( '_dokan_new_product_email_sent' );
+        if ( empty( $email_sent ) || true === wc_string_to_bool( $email_sent ) ) {
+            return;
+        }
 
-		if ( is_a( $product, 'WC_Product' ) ) {
-			$this->object = $product;
+        if ( 'pending' !== $product->get_status() ) {
+            return;
+        }
 
-			$this->find['product-title'] = '{product_title}';
-			$this->find['price']         = '{price}';
-			$this->find['seller-name']   = '{seller_name}';
-			$this->find['seller_url']    = '{seller_url}';
-			$this->find['category']      = '{category}';
-			$this->find['product_link']  = '{product_link}';
-			$this->find['site_name']     = '{site_name}';
-			$this->find['site_url']      = '{site_url}';
+        $product->update_meta_data( '_dokan_new_product_email_sent', 'yes' );
+        $product->save();
 
-			$this->replace['product-title'] = $product->get_title();
-			$this->replace['price']         = $product->get_price();
-			$this->replace['seller-name']   = $seller->display_name;
-			$this->replace['seller_url']    = dokan_get_store_url( $seller->ID );
-			$this->replace['category']      = $category_name;
-			$this->replace['product_link']  = admin_url( 'post.php?action=edit&post=' . $product_id );
-			$this->replace['site_name']     = $this->get_from_name();
-			$this->replace['site_url']      = site_url();
-		}
+        if ( ! $this->is_enabled() || ! $this->get_recipient() ) {
+            return;
+        }
 
-            $this->setup_locale();
-            $this->send( $this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
-            $this->restore_locale();
+        $this->setup_locale();
+        $seller_id     = get_post_field( 'post_author', $product_id );
+        $seller        = new Vendor( $seller_id );
+        $category      = wp_get_post_terms( $product_id, 'product_cat', array( 'fields' => 'names' ) );
+        $category_name = $category ? implode( ', ', $category ) : 'N/A';
+        $this->object  = $product;
+
+        $this->placeholders['{product_title}'] = $product->get_title();
+        $this->placeholders['{price}']         = dokan()->email->currency_symbol( $product->get_price() );
+        $this->placeholders['{store_name}']    = $seller->get_shop_name();
+        $this->placeholders['{seller_url}']    = $seller->get_shop_url();
+        $this->placeholders['{category}']      = $category_name;
+        $this->placeholders['{product_link}']  = admin_url( 'post.php?action=edit&post=' . $product_id );
+        $this->placeholders['{seller_name}']   = $seller->get_shop_name(); // only for backward compatibility.
+
+        $this->send( $this->get_recipient(), $this->get_subject(), $this->get_content(), $this->get_headers(), $this->get_attachments() );
+        $this->restore_locale();
     }
 
         /**
@@ -112,12 +129,13 @@ class NewProductPending extends WC_Email {
             ob_start();
                 wc_get_template(
                     $this->template_html, array(
-						'product'       => $this->object,
-						'email_heading' => $this->get_heading(),
-						'sent_to_admin' => true,
-						'plain_text'    => false,
-						'email'         => $this,
-						'data'          => $this->replace,
+                        'product'            => $this->object,
+                        'email_heading'      => $this->get_heading(),
+                        'additional_content' => $this->get_additional_content(),
+                        'sent_to_admin'      => true,
+                        'plain_text'         => false,
+                        'email'              => $this,
+                        'data'               => $this->placeholders,
                     ), 'dokan/', $this->template_base
                 );
             return ob_get_clean();
@@ -132,13 +150,14 @@ class NewProductPending extends WC_Email {
     public function get_content_plain() {
             ob_start();
                 wc_get_template(
-                    $this->template_html, array(
-						'product'       => $this->object,
-						'email_heading' => $this->get_heading(),
-						'sent_to_admin' => true,
-						'plain_text'    => true,
-						'email'         => $this,
-						'data'          => $this->replace,
+                    $this->template_plain, array(
+                        'product'            => $this->object,
+                        'email_heading'      => $this->get_heading(),
+                        'additional_content' => $this->get_additional_content(),
+                        'sent_to_admin'      => true,
+                        'plain_text'         => true,
+                        'email'              => $this,
+                        'data'               => $this->placeholders,
                     ), 'dokan/', $this->template_base
                 );
             return ob_get_clean();
@@ -148,6 +167,10 @@ class NewProductPending extends WC_Email {
      * Initialise settings form fields.
      */
     public function init_form_fields() {
+        $placeholders = $this->placeholders;
+        unset( $placeholders['{site_name}'], $placeholders['{seller_name}'] );
+        /* translators: %s: list of placeholders */
+        $placeholder_text  = sprintf( __( 'Available placeholders: %s', 'dokan-lite' ), '<code>' . implode( '</code>, <code>', array_keys( $placeholders ) ) . '</code>' );
         $this->form_fields = array(
             'enabled' => array(
                 'title'         => __( 'Enable/Disable', 'dokan-lite' ),
@@ -168,8 +191,7 @@ class NewProductPending extends WC_Email {
                 'title'         => __( 'Subject', 'dokan-lite' ),
                 'type'          => 'text',
                 'desc_tip'      => true,
-                /* translators: %s: list of placeholders */
-                'description'   => sprintf( __( 'Available placeholders: %s', 'dokan-lite' ), '<code>{site_title}, {product_title}, {seller_name}</code>' ),
+                'description'   => $placeholder_text,
                 'placeholder'   => $this->get_default_subject(),
                 'default'       => '',
             ),
@@ -177,10 +199,18 @@ class NewProductPending extends WC_Email {
                 'title'         => __( 'Email heading', 'dokan-lite' ),
                 'type'          => 'text',
                 'desc_tip'      => true,
-                /* translators: %s: list of placeholders */
-                'description'   => sprintf( __( 'Available placeholders: %s', 'dokan-lite' ), '<code>{site_title}, {product_title}, {seller_name}</code>' ),
+                'description'   => $placeholder_text,
                 'placeholder'   => $this->get_default_heading(),
                 'default'       => '',
+            ),
+            'additional_content' => array(
+                'title'       => __( 'Additional content', 'dokan-lite' ),
+                'description' => __( 'Text to appear below the main email content.', 'dokan-lite' ) . ' ' . $placeholder_text,
+                'css'         => 'width:400px; height: 75px;',
+                'placeholder' => __( 'N/A', 'dokan-lite' ),
+                'type'        => 'textarea',
+                'default'     => $this->get_default_additional_content(),
+                'desc_tip'    => true,
             ),
             'email_type' => array(
                 'title'         => __( 'Email type', 'dokan-lite' ),

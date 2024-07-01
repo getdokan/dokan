@@ -401,8 +401,8 @@ class Manager {
             'trn_date'  => isset( $args['trn_date'] ) && ! $this->is_empty( $args['trn_date'] ) ? $args['trn_date'] : $default_transactions_date,
             'per_page'  => isset( $args['per_page'] ) ? $args['per_page'] : -1,
             'page'      => isset( $args['page'] ) ? $args['page'] : 1,
-            'orderby'   => isset( $args['orderby'] ) ? $args['orderby'] : 'id',
-            'order'     => isset( $args['order'] ) ? $args['order'] : 'DESC',
+            'orderby'   => 'id',
+            'order'     => 'ASC',
         ];
 
         if ( empty( $query_params['vendor_id'] ) || ! is_numeric( $query_params['vendor_id'] ) ) {
@@ -522,7 +522,7 @@ class Manager {
         $args = wp_parse_args( $args, $default );
 
         // validate required fields
-        if ( empty( $args['trn_id'] ) ) {
+        if ( isset( $args['trn_id'] ) && ! is_numeric( $args['trn_id'] ) ) {
             return new WP_Error( 'insert_rw_invalid_transaction_id', esc_html__( 'Transaction id is required.', 'dokan-lite' ) );
         }
 
@@ -556,7 +556,7 @@ class Manager {
         ];
 
         // add data into database
-        $inserted  = $wpdb->insert( $this->get_table(), $data, $format );
+        $inserted  = $wpdb->insert( $this->get_table(), $data, $format ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
         $insert_id = $wpdb->insert_id;
 
         if ( false === $inserted ) {

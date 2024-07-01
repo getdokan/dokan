@@ -50,14 +50,14 @@ class Importer extends \WC_Product_Importer {
         $data['featured']                = isset( $data['featured'] ) ? sanitize_text_field( $data['featured'] ) : '';
         $data['description']             = isset( $data['description'] ) ? sanitize_text_field( $data['description'] ) : '';
         $data['email']                   = isset( $data['email'] ) ? sanitize_text_field( $data['email'] ) : '';
-        $data['password']                = isset( $data['password'] ) ? sanitize_text_field( $data['password'] ) : '';
+        $data['user_pass']               = isset( $data['user_pass'] ) ? sanitize_text_field( $data['user_pass'] ) : '';
         $data['store_name']              = isset( $data['store_name'] ) ? sanitize_text_field( $data['store_name'] ) : '';
         $data['user_login']              = $data['store_name'];
-        $data['social']                  = isset( $data['social'] ) ? maybe_unserialize( sanitize_text_field( $data['social'] ) ) : [];
-        $data['payment']                 = isset( $data['payment'] ) ? maybe_unserialize( sanitize_text_field( $data['payment'] ) ) : [];
+        $data['social']                  = isset( $data['social'] ) ? json_decode( sanitize_text_field( $data['social'] ), true ) : [];
+        $data['payment']                 = isset( $data['payment'] ) ? json_decode( sanitize_text_field( $data['payment'] ), true ) : [];
         $data['phone']                   = isset( $data['phone'] ) ? sanitize_text_field( $data['phone'] ) : '';
         $data['show_email']              = isset( $data['show_email'] ) ? sanitize_text_field( $data['show_email'] ) : '';
-        $data['address']                 = isset( $data['address'] ) ? maybe_unserialize( sanitize_text_field( $data['address'] ) ) : [];
+        $data['address']                 = isset( $data['address'] ) ? json_decode( sanitize_text_field( $data['address'] ), true ) : [];
         $data['location']                = isset( $data['location'] ) ? sanitize_text_field( $data['location'] ) : '';
         $data['banner']                  = isset( $data['banner'] ) ? sanitize_text_field( $data['banner'] ) : '';
         $data['icon']                    = isset( $data['icon'] ) ? sanitize_text_field( $data['icon'] ) : '';
@@ -67,8 +67,8 @@ class Importer extends \WC_Product_Importer {
         $data['enable_tnc']              = isset( $data['enable_tnc'] ) ? sanitize_text_field( $data['enable_tnc'] ) : '';
         $data['store_tnc']               = isset( $data['store_tnc'] ) ? sanitize_text_field( $data['store_tnc'] ) : '';
         $data['show_min_order_discount'] = isset( $data['show_min_order_discount'] ) ? sanitize_text_field( $data['show_min_order_discount'] ) : '';
-        $data['store_seo']               = isset( $data['store_seo'] ) ? maybe_unserialize( sanitize_text_field( $data['store_seo'] ) ) : '';
-        $data['dokan_store_time']        = isset( $data['dokan_store_time'] ) ? maybe_unserialize( sanitize_text_field( $data['dokan_store_time'] ) ) : [];
+        $data['store_seo']               = isset( $data['store_seo'] ) ? json_decode( sanitize_text_field( $data['store_seo'] ), true ) : '';
+        $data['dokan_store_time']        = isset( $data['dokan_store_time'] ) ? json_decode( sanitize_text_field( $data['dokan_store_time'] ), true ) : [];
         $data['enabled']                 = isset( $data['enabled'] ) ? sanitize_text_field( $data['enabled'] ) : '';
         $data['trusted']                 = isset( $data['trusted'] ) ? sanitize_text_field( $data['trusted'] ) : '';
 
@@ -269,16 +269,19 @@ class Importer extends \WC_Product_Importer {
      */
     public function clear_all_dummy_data() {
         $args = [
-            'post_type'   => 'product',
-            'numberposts' => -1,
-            'post_status' => 'any',
+            'post_type'      => 'product',
+            'posts_per_page' => - 1,
+            'post_status'    => 'any',
+            'fields'         => 'ids',
+            'meta_key'       => 'dokan_dummy_data',
+            'meta_value'     => '1'
         ];
 
-        $query = new WP_query( $args );
+        $query = new WP_Query( $args );
         $all_products = $query->posts;
 
-        foreach ( $all_products as $product ) {
-            wp_delete_post( $product->ID, true );
+        foreach ( $all_products as $product_id ) {
+            wp_delete_post( $product_id, true );
         }
 
         $all_vendors = dokan()->vendor->get_vendors(
@@ -321,23 +324,10 @@ class Importer extends \WC_Product_Importer {
             return;
         }
 
-        $args = [
-            'post_type'   => 'shop_order',
-            'post_status' => 'any',
-            'fields'      => 'all',
-            'meta_query'  => [  // phpcs:ignore
-                [
-                    'key'     => '_dokan_vendor_id',
-                    'value'   => $vendor_id,
-                    'compare' => '=',
-                ],
-            ],
-        ];
-        $query = new WP_query( $args );
-
+        $orders = dokan()->order->all( [ 'seller_id' => $vendor_id, 'return' => 'objects' ] );
         // Deleting vendors orders.
-        foreach ( $query->posts as $order ) {
-            wc_get_order( $order )->delete( true );
+        foreach ( $orders as $order ) {
+            $order->delete( true );
         }
 
         global $wpdb;

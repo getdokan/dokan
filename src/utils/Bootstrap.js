@@ -9,6 +9,7 @@ import ChartJS from 'vue-chartjs'
 import Mixin from './Mixin'
 import Debounce from 'debounce'
 import VersionCompare from '@/utils/VersionCompare'
+import { parse } from 'papaparse'
 
 window.__ = function( text, domain ) {
   return __( text, domain );
@@ -50,8 +51,10 @@ import VendorSocialFields from "admin/pages/VendorSocialFields.vue";
 import VendorPaymentFields from "admin/pages/VendorPaymentFields.vue";
 import AdminNotice from "../admin/components/AdminNotice.vue";
 import CardFunFact from "../admin/components/CardFunFact.vue";
+import StoreCategory from 'admin/components/StoreCategory.vue';
 
 import "vue-multiselect/dist/vue-multiselect.min.css"
+import Vuedraggable from "vuedraggable/src/vuedraggable";
 
 Vue.use(Notifications)
 
@@ -119,6 +122,9 @@ window.dokan.libs['VendorPaymentFields'] = VendorPaymentFields;
 window.dokan.libs['RefreshSettingOptions'] = RefreshSettingOptions;
 window.dokan.libs['AdminNotice']         = AdminNotice;
 window.dokan.libs['CardFunFact']         = CardFunFact;
+window.dokan.libs['StoreCategory']       = StoreCategory;
+window.dokan.libs['papaparse']           = parse;
+window.dokan.libs['Vuedraggable']        = Vuedraggable;
 
 window.dokan.libs['ContentLoading']  = {
   VclCode,
@@ -131,7 +137,7 @@ window.dokan.libs['ContentLoading']  = {
 };
 
 // wp npm packages with backward compatibility
-dokan.hooks = (wp && wp.hooks) ? wp.hooks : dokan.wpPackages.hooks;
+dokan.hooks = window.wp.hooks;
 
 if ( dokan.hooks ) {
     dokan.addFilterComponent = (hookName, namespace, component, priority = 10) => {

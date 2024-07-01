@@ -1,7 +1,7 @@
 <template>
     <div class="notice dokan-admin-notices-wrap">
         <div class="dokan-admin-notices" v-if="notices && notices.length">
-            <transition-group :name="transitionName" tag="div" class="dokan-notice-slides">
+            <transition-group :name="transitionName" tag="div" class="dokan-notice-slides leading-[1.5em] box-content">
                 <template v-for="(notice, index) in notices">
                     <div class="dokan-admin-notice" :key="index" v-show="(index + 1) === current_notice" :class="`dokan-${notice.type}`" @mouseenter="stopAutoSlide" @mouseleave="startAutoSlide">
                         <div class="notice-content" :style="! notice.title || ! notice.actions || ! notice.description ? 'align-items: center' : 'align-items: start'">

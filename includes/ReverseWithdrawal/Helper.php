@@ -69,6 +69,9 @@ class Helper {
             // vendor paid to admin (credit)
             'vendor_payment'           => esc_html__( 'Payment', 'dokan-lite' ),
             'order_refund'             => esc_html__( 'Refund', 'dokan-lite' ),
+            'manual_product'           => esc_html__( 'Manual', 'dokan-lite' ),
+            'manual_order'             => esc_html__( 'Manual', 'dokan-lite' ),
+            'other'                    => esc_html__( 'Other', 'dokan-lite' ),
         ];
 
         if ( $transaction_type ) {
@@ -192,7 +195,35 @@ class Helper {
      */
     public static function get_reverse_withdrawal_base_product() {
         // get product id from option table
-        return (int) get_option( static::get_base_product_option_key(), 0 );
+        $base_product_id = (int) get_option( static::get_base_product_option_key(), 0 );
+
+        $product = wc_get_product( $base_product_id );
+        if ( $product ) {
+            // temporary adding this code to set sold individually to true, will remove this after some time
+            if ( ! $product->is_sold_individually() ) {
+                $product->set_sold_individually( true );
+                $product->save();
+            }
+
+            return $base_product_id;
+        }
+
+        return 0;
+    }
+
+    /**
+     * This method will check if a product is reverse withdrawal product
+     *
+     * @since 3.8.1
+     *
+     * @param int $product_id
+     *
+     * @return bool
+     */
+    public static function is_reverse_withdrawal_product( $product_id ) {
+        $base_product_id = static::get_reverse_withdrawal_base_product();
+
+        return $base_product_id === $product_id;
     }
 
     /**
@@ -289,16 +320,17 @@ class Helper {
         }
 
         return [
-            'id'        => $id,
-            'trn_id'    => $trn_id,
-            'trn_url'   => $trn_url,
-            'trn_date'  => $trn_date,
-            'trn_type'  => $trn_type,
-            'vendor_id' => $vendor_id,
-            'note'      => $note,
-            'debit'     => $debit,
-            'credit'    => $credit,
-            'balance'   => $current_balance,
+            'id'           => $id,
+            'trn_id'       => $trn_id,
+            'trn_url'      => $trn_url,
+            'trn_date'     => $trn_date,
+            'trn_type'     => $trn_type,
+            'trn_type_raw' => $item['trn_type'],
+            'vendor_id'    => $vendor_id,
+            'note'         => $note,
+            'debit'        => $debit,
+            'credit'       => $credit,
+            'balance'      => $current_balance,
         ];
     }
 

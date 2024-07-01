@@ -1,0 +1,38 @@
+{
+    "extends": [
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended", // recommended, recommended-type-checked, strict, strict-type-checked
+        // "plugin:@typescript-eslint/recommended-type-checked", // for ts typed check
+        // "plugin:@typescript-eslint/stylistic", // stylistic, stylistic-type-checked
+        // "plugin:@typescript-eslint/stylistic-type-checked", // for ts typed check
+        "plugin:playwright/recommended",
+        "prettier"
+    ],
+    "plugins": ["@typescript-eslint"],
+    "parser": "@typescript-eslint/parser",
+    // for ts typed check
+    // "parserOptions": {
+    //     "project": true,
+    //     "tsconfigRootDir": "__dirname"
+    // },
+    "root": true,
+    "rules": {
+        // eslint rules
+        "@typescript-eslint/no-var-requires": "off",
+        "@typescript-eslint/no-unused-vars": "off",
+        "@typescript-eslint/no-explicit-any": "off",
+        // playwright rules
+        "playwright/expect-expect": "off",
+        "playwright/no-skipped-test": "off",
+        "playwright/no-conditional-in-test": "off",
+        "playwright/no-standalone-expect": "off"
+        // custom rules
+        // "no-restricted-syntax": [
+        //     "error",
+        //     {
+        //         "selector": "CallExpression[callee.property.name='only']",
+        //         "message": "test.only is not allowed."
+        //     },
+        // ],
+    }
+}

@@ -53,7 +53,6 @@ class Ajax {
 
         add_action( 'wp_ajax_nopriv_dokan_get_login_form', [ $this, 'get_login_form' ] );
         add_action( 'wp_ajax_nopriv_dokan_login_user', [ $this, 'login_user' ] );
-        add_action( 'wp_ajax_get_vendor_earning', [ $this, 'get_vendor_earning' ] );
 
         add_action( 'wp_ajax_dokan-upgrade-dissmiss', [ $this, 'dismiss_pro_notice' ] );
     }
@@ -295,6 +294,12 @@ class Ajax {
 
         $order = dokan()->order->get( $order_id );
         $order->update_status( $order_status );
+
+        // Get the new order status. This is needed since plugin/theme authors might
+        // change the order status behind the scenes in certain cases.
+        // For example by moving `wc-paused` to `wc-cancelled` automatically or by
+        // moving `wc-pending` to `wc-processing`.
+        $order_status = "wc-{$order->get_status()}";
 
         $statuses     = wc_get_order_statuses();
         $status_label = isset( $statuses[ $order_status ] ) ? $statuses[ $order_status ] : $order_status;
@@ -961,32 +966,6 @@ class Ajax {
         );
 
         wp_send_json_success( $response );
-    }
-
-    /**
-     * Get vendor earning
-     *
-     * @since DOKAN_LITE_SINCE
-     *
-     * @return void
-     */
-    public function get_vendor_earning() {
-        check_ajax_referer( 'dokan_reviews' );
-
-        $product_id    = ! empty( $_GET['product_id'] ) ? absint( $_GET['product_id'] ) : 0;
-        $product_price = ! empty( $_GET['product_price'] ) ? (float) $_GET['product_price'] : 0;
-
-        $vendor = dokan_get_vendor_by_product( $product_id );
-
-        if ( ! $vendor ) {
-            return;
-        }
-
-        $vendor_id = $vendor->get_id();
-
-        $vendor_earning = dokan()->commission->calculate_commission( $product_id, $product_price, $vendor_id );
-
-        wp_send_json( wc_format_localized_price( $vendor_earning ) );
     }
 
     /**

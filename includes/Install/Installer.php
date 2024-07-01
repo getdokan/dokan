@@ -21,6 +21,8 @@ class Installer {
         $this->create_tables();
         $this->create_reverse_withdrawal_base_product();
         $this->product_design();
+        $this->add_store_name_meta_key_for_admin_users();
+        $this->schedule_cron_jobs();
 
         // does it needs any update?
         if ( dokan()->has_woocommerce() && dokan()->upgrades->is_upgrade_required() ) {
@@ -45,6 +47,66 @@ class Installer {
             update_option( 'dokan_admin_setup_wizard_ready', false );
             set_transient( '_dokan_setup_page_redirect', true, 30 );
         }
+    }
+
+    /**
+     * Add store name meta key for admin users
+     *
+     * Since we are assuming admin/shop_manager users as vendors by default, and since dokan_store_name meta key is used for
+     * various sql queries, we are assigning dokan_store_name meta key for admin users as well.
+     *
+     * @since 3.7.18
+     *
+     * @return void
+     */
+    public function add_store_name_meta_key_for_admin_users() {
+        // get admin only users via WP_User_Query
+        $args = [
+            'role__in'    => [ 'administrator', 'shop_manager' ],
+            'fields'  => 'ID',
+        ];
+
+        $users = new \WP_User_Query( $args );
+
+        if ( ! empty( $users->get_results() ) ) {
+            foreach ( $users->get_results() as $user_id ) {
+                $meta = get_user_meta( $user_id, 'dokan_store_name', true );
+                if ( ! empty( $meta ) ) {
+                    continue;
+                }
+
+                $user = get_user_by( 'id', $user_id );
+                update_user_meta( $user_id, 'dokan_store_name', $user->display_name );
+            }
+        }
+    }
+
+    /**
+     * Schedule cron jobs
+     *
+     * @since 3.9.2
+     *
+     * @return void
+     */
+    private function schedule_cron_jobs() {
+        if ( ! function_exists( 'WC' ) || ! WC()->queue() ) {
+            return;
+        }
+
+        // schedule daily cron job
+        $hook = 'dokan_daily_midnight_cron';
+
+        // check if we've defined the cron hook
+        $cron_schedule = as_next_scheduled_action( $hook ); // this method will return false if the hook is not scheduled
+        if ( $cron_schedule ) {
+            as_unschedule_all_actions( $hook );
+        }
+
+        // schedule recurring cron action
+        $now = dokan_current_datetime()->modify( 'midnight' )->getTimestamp();
+        WC()->queue()->schedule_cron( $now, '0 0 * * *', $hook, [], 'dokan' );
+
+        // add cron jobs as needed
     }
 
     /**

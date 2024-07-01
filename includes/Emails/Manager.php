@@ -92,6 +92,7 @@ class Manager {
         $wc_emails['Dokan_Email_New_Order']                  = new VendorNewOrder();
         $wc_emails['Dokan_Email_Completed_Order']            = new VendorCompletedOrder();
         $wc_emails['Dokan_Email_Reverse_Withdrawal_Invoice'] = new ReverseWithdrawalInvoice();
+        $wc_emails['Dokan_Email_Vendor_Product_Review']      = new VendorProductReview();
 
         return apply_filters( 'dokan_email_classes', $wc_emails );
     }
@@ -121,6 +122,7 @@ class Manager {
                 'withdraw-approve.php',
                 'vendor-new-order.php',
                 'vendor-completed-order.php',
+                'reverse-withdrawal-invoice.php',
             )
         );
 
@@ -146,13 +148,17 @@ class Manager {
         $dokan_email_actions = apply_filters(
             'dokan_email_actions', array(
 				'dokan_new_product_added',
-				'dokan_email_trigger_new_pending_product',
+                'dokan_product_updated',
 				'dokan_new_seller_created',
 				'dokan_after_withdraw_request',
 				'dokan_withdraw_request_approved',
 				'dokan_withdraw_request_cancelled',
 				'dokan_pending_product_published_notification',
 				'dokan_trigger_contact_seller_mail',
+				'dokan_reverse_withdrawal_invoice_email_sent',
+				'woocommerce_order_status_completed_notification',
+                'wp_set_comment_status',
+                'comment_post',
             )
         );
 

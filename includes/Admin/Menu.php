@@ -36,6 +36,7 @@ class Menu {
 
         // phpcs:disable
         if ( $withdraw['pending'] ) {
+            // translators: %s: withdraw count
             $withdraw_text = sprintf( __( 'Withdraw %s', 'dokan-lite' ), '<span class="awaiting-mod count-1"><span class="pending-count">' . $withdraw['pending'] . '</span></span>' );
         }
 

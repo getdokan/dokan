@@ -14,6 +14,7 @@ class Hooks {
      * @return void
      */
     public function __construct() {
+        add_action( 'init', [ $this, 'download_withdraw_log_export_file' ] );
         add_action( 'dokan_withdraw_request_approved', [ $this, 'update_vendor_balance' ], 11 );
         // change custom withdraw method title
         add_filter( 'dokan_get_withdraw_method_title', [ $this, 'dokan_withdraw_dokan_custom_method_title' ], 10, 3 );
@@ -28,13 +29,34 @@ class Hooks {
     }
 
     /**
+     * Download Withdraw Log Export File.
+     *
+     * @since 3.8.3
+     *
+     * @return void
+     */
+    public function download_withdraw_log_export_file() {
+        if ( ! isset( $_GET['download-withdraw-log-csv'] ) || ! wp_verify_nonce( wp_unslash( $_GET['download-withdraw-log-csv'] ), 'download-withdraw-log-csv-nonce' ) ) { // phpcs:ignore
+            return;
+        }
+
+        if ( ! current_user_can( 'dokan_manage_withdraw' ) ) {
+            return;
+        }
+
+        // Export withdraw logs.
+        $exporter = new \WeDevs\Dokan\Admin\WithdrawLogExporter();
+        $exporter->export();
+    }
+
+    /**
      * Dokan Custom Withdraw Method Title
      *
      * @since 3.3.7
      *
      * @param string      $title
      * @param string      $method_key
-     * @param object|null $request
+     * @param Withdraw $request
      *
      * @return string
      */
@@ -45,8 +67,8 @@ class Hooks {
             if ( empty( $title ) ) {
                 $title = __( 'Custom', 'dokan-lite' );
             }
-            if ( null !== $request ) {
-                $details = maybe_unserialize( $request->details );
+            if ( null !== $request && null !== $request->get_details() ) {
+                $details = maybe_unserialize( $request->get_details() );
                 if ( isset( $details['value'] ) ) {
                     $title .= ' - ' . $details['value'];
                 }
@@ -162,19 +184,21 @@ class Hooks {
             wp_send_json_error( $validate_request->get_error_message(), $validate_request->get_error_code() );
         }
 
-        $data = [
-            'user_id' => $user_id,
-            'amount'  => $amount,
-            'status'  => dokan()->withdraw->get_status_code( 'pending' ),
-            'method'  => $method,
-            'ip'      => dokan_get_client_ip(),
-            'note'    => '',
-        ];
+        $withdraw = new Withdraw();
 
-        $withdraw = dokan()->withdraw->create( $data );
+        $withdraw
+            ->set_user_id( $user_id )
+            ->set_amount( $amount )
+            ->set_date( dokan_current_datetime()->format( 'Y-m-d H:i:s' ) )
+            ->set_status( dokan()->withdraw->get_status_code( 'pending' ) )
+            ->set_method( $method )
+            ->set_ip( dokan_get_client_ip() )
+            ->set_note( '' );
 
-        if ( is_wp_error( $withdraw ) ) {
-            wp_send_json_error( $withdraw->get_error_message(), $withdraw->get_error_code() );
+        $result = $withdraw->save();
+
+        if ( is_wp_error( $result ) ) {
+            wp_send_json_error( $result->get_error_message(), $result->get_error_code() );
         }
 
         do_action( 'dokan_after_withdraw_request', $user_id, $amount, $method );

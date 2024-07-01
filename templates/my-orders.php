@@ -8,16 +8,10 @@
 <?php
 global $woocommerce;
 
-$customer_orders = get_posts(
-    apply_filters(
-        'woocommerce_my_account_my_orders_query', [
-            'numberposts' => - 1,
-            'meta_key'    => '_customer_user', // phpcs:ignore
-            'meta_value'  => get_current_user_id(), // phpcs:ignore
-            'post_type'   => 'shop_order',
-            'post_status' => 'wc-publish',
-        ]
-    )
+$customer_orders = dokan()->order->get_customer_orders(
+    [
+        'limit' => -1,
+    ]
 );
 
 if ( $customer_orders ) :
@@ -27,14 +21,14 @@ if ( $customer_orders ) :
 
     <table class="shop_table my_account_orders table table-striped">
         <thead>
-            <tr>
-                <th class="order-number"><span class="nobr"><?php esc_html_e( 'Order', 'dokan-lite' ); ?></span></th>
-                <th class="order-date"><span class="nobr"><?php esc_html_e( 'Date', 'dokan-lite' ); ?></span></th>
-                <th class="order-status"><span class="nobr"><?php esc_html_e( 'Status', 'dokan-lite' ); ?></span></th>
-                <th class="order-total"><span class="nobr"><?php esc_html_e( 'Total', 'dokan-lite' ); ?></span></th>
-                <th class="order-total"><span class="nobr"><?php esc_html_e( 'Vendor', 'dokan-lite' ); ?></span></th>
-                <th class="order-actions">&nbsp;</th>
-            </tr>
+        <tr>
+            <th class="order-number"><span class="nobr"><?php esc_html_e( 'Order', 'dokan-lite' ); ?></span></th>
+            <th class="order-date"><span class="nobr"><?php esc_html_e( 'Date', 'dokan-lite' ); ?></span></th>
+            <th class="order-status"><span class="nobr"><?php esc_html_e( 'Status', 'dokan-lite' ); ?></span></th>
+            <th class="order-total"><span class="nobr"><?php esc_html_e( 'Total', 'dokan-lite' ); ?></span></th>
+            <th class="order-total"><span class="nobr"><?php esc_html_e( 'Vendor', 'dokan-lite' ); ?></span></th>
+            <th class="order-actions">&nbsp;</th>
+        </tr>
         </thead>
 
         <tbody>
@@ -42,7 +36,7 @@ if ( $customer_orders ) :
         $statuses = wc_get_order_statuses();
         $now      = dokan_current_datetime();
         foreach ( $customer_orders as $customer_order ) {
-            $order      = new WC_Order( $customer_order ); // phpcs:ignore
+            $order      = wc_get_order( $customer_order ); // phpcs:ignore
             $item_count = $order->get_item_count();
             $order_date = $order->get_date_created();
             $order_date = is_a( $order_date, 'WC_DateTime' ) ? $now->setTimestamp( $order_date->getTimestamp() ) : $now;
@@ -55,11 +49,11 @@ if ( $customer_orders ) :
                 </td>
                 <td class="order-date">
                     <time datetime="<?php echo esc_attr( $order_date->format( 'Y-m-dTH:i:s' ) ); ?>">
-                    <?php echo dokan_format_date( $order_date ); ?>
+                        <?php echo esc_html( dokan_format_date( $order_date ) ); ?>
                     </time>
                 </td>
                 <td class="order-status" style="text-align:left; white-space:nowrap;">
-                    <?php echo isset( $statuses[ 'wc-' . dokan_get_prop( $order, 'status' ) ] ) ? esc_html( $statuses[ 'wc-' . dokan_get_prop( $order, 'status' ) ] ) : esc_html( dokan_get_prop( $order, 'status' ) ); ?>
+                    <?php echo isset( $statuses[ 'wc-' . $order->get_status() ] ) ? esc_html( $statuses[ 'wc-' . $order->get_status() ] ) : esc_html( $order->get_status() ); ?>
                 </td>
                 <td class="order-total">
                     <?php
