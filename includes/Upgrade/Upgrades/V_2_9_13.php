@@ -16,6 +16,7 @@ class V_2_9_13 extends DokanUpgrader {
 
         $map_table = $wpdb->prefix . 'dokan_product_map';
 
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         if ( $wpdb->get_var( $wpdb->prepare( 'show tables like %s', $map_table ) ) !== $map_table ) {
             return;
         }

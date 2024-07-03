@@ -1,21 +1,26 @@
-import { test, Page, BrowserContext } from '@playwright/test';
+import { test, Page } from '@playwright/test';
 import { LoginPage } from '@pages/loginPage';
 import { CustomerPage } from '@pages/customerPage';
 import { data } from '@utils/testData';
 
 test.describe('Customer functionality test', () => {
     let customer: CustomerPage;
-    let cPage: Page;
-    let customerContext: BrowserContext;
+    let customer2: CustomerPage;
+    let cPage: Page, c2Page: Page;
 
     test.beforeAll(async ({ browser }) => {
-        customerContext = await browser.newContext(data.auth.customerAuth);
+        const customerContext = await browser.newContext(data.auth.customerAuth);
         cPage = await customerContext.newPage();
         customer = new CustomerPage(cPage);
+
+        const customer2Context = await browser.newContext(data.auth.customer2Auth);
+        c2Page = await customer2Context.newPage();
+        customer2 = new CustomerPage(c2Page);
     });
 
     test.afterAll(async () => {
         await cPage.close();
+        await c2Page.close();
     });
 
     test('customer can register', { tag: ['@lite', '@customer'] }, async ({ page }) => {
@@ -52,7 +57,8 @@ test.describe('Customer functionality test', () => {
         await customer.addCustomerDetails(data.customer);
     });
 
-    test('customer can add product to cart', { tag: ['@lite', '@customer'] }, async () => {
+    test('customer can add product to cart', { tag: ['@lite', '@customer'] }, async ({ page }) => {
+        const customer = new CustomerPage(page); // Used guest customer to avoid conlict with other tests
         const productName = data.predefined.simpleProduct.product1.name;
         await customer.addProductToCart(productName, 'single-product');
         await customer.productIsOnCart(productName);
@@ -64,9 +70,9 @@ test.describe('Customer functionality test', () => {
     });
 
     test('customer can buy multi-vendor products', { tag: ['@lite', '@customer'] }, async () => {
-        await customer.addProductToCart(data.predefined.simpleProduct.product1.name, 'single-product');
-        await customer.addProductToCart(data.predefined.vendor2.simpleProduct.product1.name, 'single-product', false);
-        await customer.placeOrder();
+        await customer2.addProductToCart(data.predefined.simpleProduct.product1.name, 'single-product');
+        await customer2.addProductToCart(data.predefined.vendor2.simpleProduct.product1.name, 'single-product', false);
+        await customer2.placeOrder();
     });
 
     // todo: customer can download downloadable product

@@ -51,7 +51,7 @@ class Registration {
         $allowed_roles = apply_filters( 'dokan_register_user_role', [ 'customer', 'seller' ] );
 
         // is the role name allowed or user is trying to manipulate?
-        if ( isset( $_POST['role'] ) && ! in_array( $_POST['role'], $allowed_roles, true ) ) {
+        if ( empty( $_POST['role'] ) || ( ! in_array( $_POST['role'], $allowed_roles, true ) ) ) {
             return new WP_Error( 'role-error', __( 'Cheating, eh?', 'dokan-lite' ) );
         }
 

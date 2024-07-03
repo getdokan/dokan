@@ -35,6 +35,7 @@ export const data = {
         vendorAuthFile: 'playwright/.auth/vendorStorageState.json',
         vendor2AuthFile: 'playwright/.auth/vendor2StorageState.json',
         customerAuthFile: 'playwright/.auth/customerStorageState.json',
+        customer2AuthFile: 'playwright/.auth/customer2StorageState.json',
 
         adminAuth: {
             storageState: 'playwright/.auth/adminStorageState.json',
@@ -50,6 +51,10 @@ export const data = {
 
         customerAuth: {
             storageState: 'playwright/.auth/customerStorageState.json',
+        },
+
+        customer2Auth: {
+            storageState: 'playwright/.auth/customer2StorageState.json',
         },
 
         noAuth: {
@@ -402,6 +407,20 @@ export const data = {
                 description: 'test long description',
             },
 
+            euCompliance: {
+                saleLabel: 'old-price', // new-price, old-price, rrp
+                saleRegularLabel: 'new-price', // new-price, old-price, rrp
+                unit: 'kg', // cm, g, in, kcal, kg, kj, l, lbs, m, ml, mm, oz, yd, %c2%b5g
+                minimumAge: '18', // 12, 16,18, 19, 25
+                productUnits: '1',
+                basePriceUnits: '20',
+                deliveryTime: '-1',
+                freeShipping: true,
+                regularUnitPrice: '50',
+                saleUnitPrice: '',
+                optionalMiniDescription: 'test mini description',
+            },
+
             amountDiscount: {
                 minimumOrderAmount: '200',
                 discountPercentage: '10',
@@ -538,7 +557,7 @@ export const data = {
 
     // coupon
     coupon: {
-        // title                     : () => 'VC_' + faker.string.alpha({ count: 5, casing: 'upper' },),
+        // title: () => 'VC_' + faker.string.alpha({ count: 5, casing: 'upper' }),
         couponTitle: () => 'VC_' + faker.string.nanoid(10),
         title: '',
         amount: () => faker.number.int({ min: 1, max: 10 }).toString(),
@@ -761,10 +780,11 @@ export const data = {
         bankName: 'bankName',
         bankAddress: 'bankAddress',
         bankRoutingNumber: faker.string.alphanumeric(10),
-        bankIban: faker.string.alphanumeric(10),
+        bankIban: faker.finance.iban(),
         bankSwiftCode: faker.string.alphanumeric(10),
         customPayment: '1234567890',
         skrill: faker.internet.email(),
+        file: 'utils/sampleData/avatar.png',
     },
 
     storeShare: {
@@ -782,7 +802,7 @@ export const data = {
         backend: {
             login: 'wp-login.php',
             adminLogin: 'wp-admin',
-            adminLogout: 'wp-login.php?loggedout=true',
+            adminLogout: 'wp-login.php?action=logout',
             adminDashboard: 'wp-admin',
             user: 'wp-admin/user-edit.php',
             setupWP: 'wp-admin/install.php',
@@ -792,6 +812,7 @@ export const data = {
             activatePlugin: 'wp-admin/plugins.php?action=activate',
             deactivatePlugin: 'wp-admin/plugins.php?action=deactivate',
             widgets: 'wp-admin/widgets.php',
+            editUser: (userId: string) => `wp-admin/user-edit.php?user_id=${userId}`,
 
             dokan: {
                 setupWizard: 'wp-admin/admin.php?page=dokan-setup',
@@ -821,7 +842,7 @@ export const data = {
                 tools: 'wp-admin/admin.php?page=dokan#/tools',
                 productQA: 'wp-admin/admin.php?page=dokan#/product-qa',
                 questionDetails: (questionId: string) => `wp-admin/admin.php?page=dokan#/product-qa/${questionId}`,
-                verifications: 'wp-admin/admin.php?page=dokan-seller-verifications',
+                verifications: 'wp-admin/admin.php?page=dokan#/verifications?status=pending',
                 productAdvertising: 'wp-admin/admin.php?page=dokan#/product-advertising',
                 wholeSaleCustomer: 'wp-admin/admin.php?page=dokan#/wholesale-customer',
                 help: 'wp-admin/admin.php?page=dokan#/help',
@@ -986,6 +1007,8 @@ export const data = {
                 productQuestions: 'dokan/v1/product-questions',
                 productQuestionsBulkActions: 'dokan/v1/product-questions/bulk_action',
                 productAnswers: 'dokan/v1/product-answers',
+                verifications: '/dokan/v1/verification-requests',
+                verificationMethods: '/dokan/v1/verification-methods',
             },
 
             wc: {
@@ -1040,10 +1063,13 @@ export const data = {
             userName: faker.person.firstName('male'),
             shopName: () => faker.company.name(),
             shopUrl: () => faker.company.name(),
+
+            // eu compliance data
             companyName: faker.company.name(),
             companyId: faker.string.alphanumeric(5),
             vatNumber: faker.string.alphanumeric(10),
             bankIban: faker.finance.iban(),
+
             phoneNumber: faker.phone.number(),
             phone: '0123456789',
             street1: 'abc street',
@@ -1056,6 +1082,7 @@ export const data = {
             state: 'New York',
             accountName: 'accountName',
             accountNumber: faker.string.alphanumeric(10),
+            accountType: 'personal', //'personal' 'business',
             bankName: 'bankName',
             bankAddress: 'bankAddress',
             routingNumber: faker.string.alphanumeric(10),
@@ -1131,7 +1158,7 @@ export const data = {
                 bankName: 'bankName',
                 bankAddress: 'bankAddress',
                 bankRoutingNumber: faker.string.alphanumeric(10),
-                bankIban: faker.string.alphanumeric(10),
+                bankIban: faker.finance.iban(),
                 bankSwiftCode: faker.string.alphanumeric(10),
             },
 
@@ -1273,26 +1300,14 @@ export const data = {
             bankName: 'bankName',
             bankAddress: 'bankAddress',
             bankRoutingNumber: faker.string.alphanumeric(10),
-            bankIban: faker.string.alphanumeric(10),
+            bankIban: faker.finance.iban(),
             bankSwiftCode: faker.string.alphanumeric(10),
             saveSuccessMessage: 'Your information has been saved successfully',
         },
 
         verification: {
+            method: 'National ID',
             file: 'utils/sampleData/avatar.png',
-            // file2: 'tests/e2e/utils/sampleData/avatar.png',
-            street1: 'abc street',
-            street2: 'xyz street',
-            city: 'New York',
-            zipCode: '10006',
-            country: 'US',
-            state: 'NY',
-            idRequestSubmitSuccessMessage: 'Your ID verification request is Sent and pending approval',
-            idRequestSubmitCancel: 'Your ID Verification request is cancelled',
-            addressRequestSubmitSuccessMessage: 'Your Address verification request is Sent and Pending approval',
-            addressRequestSubmitCancel: 'Your Address Verification request is cancelled',
-            companyRequestSubmitSuccessMessage: 'Your company verification request is sent and pending approval',
-            companyRequestSubmitCancel: 'Your company verification request is cancelled',
         },
 
         toc: 'test Vendor terms and conditions',
@@ -1401,6 +1416,11 @@ export const data = {
         username: String(process.env.CUSTOMER),
         password: String(process.env.USER_PASSWORD),
         lastname: (String(process.env.CUSTOMER)[0] as string) + String(process.env.CUSTOMER)[String(process.env.CUSTOMER).length - 1],
+
+        customer2: {
+            username: String(process.env.CUSTOMER2),
+            password: String(process.env.USER_PASSWORD),
+        },
 
         customerInfo: {
             emailDomain: '@email.com',
@@ -1838,8 +1858,7 @@ export const data = {
         // General Settings
         general: {
             vendorStoreUrl: 'store',
-            setupWizardMessage:
-                "Thank you for choosing The Marketplace to power your online store! This quick setup wizard will help you configure the basic settings. It's completely optional and shouldn't take longer than two minutes.",
+            setupWizardMessage: "Thank you for choosing The Marketplace to power your online store! This quick setup wizard will help you configure the basic settings. It's completely optional and shouldn't take longer than two minutes.",
             sellingProductTypes: 'both', // 'both', 'physical', 'digital'
             storeProductPerPage: '12',
             storCategory: 'multiple', // 'none', 'single', 'multiple'
@@ -1919,6 +1938,66 @@ export const data = {
         colors: {
             paletteChoice: 'pre-defined',
             colorPalette: 'default',
+            predefinedPalette: {
+                default: 'default',
+                petalParty: 'petal party',
+                pinky: 'pinky',
+                ocean: 'ocean',
+                sweety: 'sweety',
+                summerSplash: 'summer splash',
+                tree: 'tree',
+            },
+
+            paletteValues: {
+                default: {
+                    buttonText: '#FFFFFF',
+                    buttonBackground: '#F05025',
+                    buttonBorder: '#DA502B',
+                    buttonHoverText: '#FFFFFF',
+                    buttonHoverBackground: '#DD3B0F',
+                    buttonHoverBorder: '#C83811',
+                    dashboardSidebarMenuText: '#CFCFCF',
+                    dashboardSidebarBackground: '#1B233B',
+                    dashboardSidebarActiveMenuText: '#FFFFFF',
+                    dashboardSidebarActiveMenuBackground: '#F05025',
+                },
+                tree: {
+                    buttonText: '#FFFFFF', // rgb(255, 255, 255)
+                    buttonBackground: '#1CB6A7', // rgb(28, 182, 167)
+                    buttonBorder: '#1AA89B', // rgb(26, 168, 155)
+                    buttonHoverText: '#FFFFFF', // rgb(255, 255, 255)
+                    buttonHoverBackground: '#1DADA0', // rgb(29, 173, 160)
+                    buttonHoverBorder: '#148C81', //rgb(20, 140, 129)
+                    dashboardSidebarMenuText: '#ABF5EE', // rgb(171, 245, 238)',
+                    dashboardSidebarBackground: '#1BAC9E', // rgb(27, 172, 158)
+                    dashboardSidebarActiveMenuText: '#FFFFFF', // rgb(255, 255, 255)
+                    dashboardSidebarActiveMenuBackground: '#167D7F', // rgb(22, 125, 127)
+                },
+                custom: {
+                    buttonText: '#FFFFFF', // White
+                    buttonBackground: '#007BFF', // Azure
+                    buttonBorder: '#0056B3', // Egyptian Blue
+                    buttonHoverText: '#FFFFFF', // White
+                    buttonHoverBackground: '#0056B3', // Egyptian Blue
+                    buttonHoverBorder: '#004085', // Indigo Dye
+                    dashboardSidebarMenuText: '#CFCFCF', // Silver
+                    dashboardSidebarBackground: '#343A40', // Oil
+                    dashboardSidebarActiveMenuText: '#FFFFFF', // White
+                    dashboardSidebarActiveMenuBackground: '#007BFF', // Azure
+                },
+                custom2: {
+                    buttonText: '#FFFFFF', // White
+                    buttonBackground: '#3498DB', // Sky Blue
+                    buttonBorder: '#2980B9', // Dark Sky Blue
+                    buttonHoverText: '#FFFFFF', // White
+                    buttonHoverBackground: '#2980B9', // Dark Sky Blue
+                    buttonHoverBorder: '#1F618D', // Navy Blue
+                    dashboardSidebarMenuText: '#555555', // Dark Gray
+                    dashboardSidebarBackground: '#F2F2F2', // Light Gray
+                    dashboardSidebarActiveMenuText: '#FFFFFF', // White
+                    dashboardSidebarActiveMenuBackground: '#3498DB', // Sky Blue
+                },
+            },
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
 
@@ -1944,6 +2023,57 @@ export const data = {
         storeSupport: {
             displayOnSingleProductPage: 'above_tab', // 'above_tab', 'inside_tab', 'dont_show'
             supportButtonLabel: 'Get Support',
+            saveSuccessMessage: 'Setting has been saved successfully.',
+        },
+
+        // Vendor Verification
+        vendorVerification: {
+            verifiedIcons: {
+                circleSolid: 'check_circle_solid',
+                circleRegular: 'check_circle_regular',
+                solid: 'check_solid',
+                doubleSolid: 'check_double_solid',
+                squireRegular: 'check_squire_regular',
+                userCheckSolid: 'user_check_solid',
+                certificateSolid: 'certificate_solid',
+
+                byIcon: {
+                    circleSolid: 'fas fa-check-circle',
+                    circleRegular: 'far fa-check-circle',
+                    solid: 'fas fa-check',
+                    doubleSolid: 'fas fa-check-double',
+                    squireRegular: 'fas fa-check-square',
+                    userCheckSolid: 'fas fa-user-check',
+                    certificateSolid: 'fas fa-certificate',
+                },
+            },
+
+            verificationMethods: {
+                nationalId: 'National ID',
+                drivingLicense: 'Driving License',
+                address: 'Address',
+                company: 'Company',
+            },
+
+            customMethod: {
+                title: 'test verification method_' + faker.string.nanoid(10),
+                help_text: 'test help-text',
+                required: false,
+            },
+
+            updateMethod: {
+                title: 'test verification method updated_' + faker.string.nanoid(10),
+                help_text: 'test help-text updated',
+                required: true,
+            },
+
+            socialProfile: {
+                facebook: 'facebook_app_details',
+                twitter: 'twitter_app_details',
+                google: 'google_details',
+                linkedin: 'linkedin_details',
+            },
+
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
 
@@ -2039,6 +2169,20 @@ export const data = {
         name: String(process.env.CUSTOMER),
         email: String(process.env.CUSTOMER) + '@yopmail.com',
         message: 'Test Message',
+    },
+
+    // eu compliance data
+    euComplianceData: () => ({
+        companyName: faker.company.name(),
+        companyId: faker.string.alphanumeric(5),
+        vatNumber: faker.string.alphanumeric(10),
+        bankName: faker.string.alphanumeric(7),
+        bankIban: faker.finance.iban(),
+    }),
+
+    colorCode: {
+        blue: 'rgb(0, 144, 255)',
+        gray: 'rgb(215, 218, 221)',
     },
 
     // dokan license

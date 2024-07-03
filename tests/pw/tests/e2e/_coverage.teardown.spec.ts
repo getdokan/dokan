@@ -20,7 +20,7 @@ teardown.describe('get e2e test coverage', () => {
     const testReport = 'playwright-report/e2e/summary-report/results.json';
 
     teardown('get coverage', { tag: ['@lite'] }, async () => {
-        executed_tests = (helpers.readJson(testReport))?.tests;
+        executed_tests = helpers.readJson(testReport)?.tests;
         getCoverage(feature_map, outputFile);
     });
 });

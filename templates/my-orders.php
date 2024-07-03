@@ -49,7 +49,7 @@ if ( $customer_orders ) :
                 </td>
                 <td class="order-date">
                     <time datetime="<?php echo esc_attr( $order_date->format( 'Y-m-dTH:i:s' ) ); ?>">
-                        <?php echo dokan_format_date( $order_date ); ?>
+                        <?php echo esc_html( dokan_format_date( $order_date ) ); ?>
                     </time>
                 </td>
                 <td class="order-status" style="text-align:left; white-space:nowrap;">

@@ -556,7 +556,7 @@ class Manager {
         ];
 
         // add data into database
-        $inserted  = $wpdb->insert( $this->get_table(), $data, $format );
+        $inserted  = $wpdb->insert( $this->get_table(), $data, $format ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery
         $insert_id = $wpdb->insert_id;
 
         if ( false === $inserted ) {

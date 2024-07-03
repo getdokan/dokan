@@ -62,7 +62,7 @@ test.describe('Settings test', () => {
     });
 
     test('admin can set Dokan color settings', { tag: ['@pro', '@admin'] }, async () => {
-        await admin.setDokanColorSettings(data.dokanSettings.colors);
+        await admin.setDokanColorSettings(data.dokanSettings.colors.predefinedPalette.tree);
     });
 
     test('admin can set Dokan live search settings', { tag: ['@pro', '@admin'] }, async () => {
@@ -71,6 +71,10 @@ test.describe('Settings test', () => {
 
     test('admin can set Dokan store support settings', { tag: ['@pro', '@admin'] }, async () => {
         await admin.setDokanStoreSupportSettings(data.dokanSettings.storeSupport);
+    });
+
+    test('admin can set Dokan vendor verification settings', { tag: ['@pro', '@admin'] }, async () => {
+        await admin.setDokanVendorVerificationSettings(data.dokanSettings.vendorVerification);
     });
 
     test('admin can set Dokan email verification settings', { tag: ['@pro', '@admin'] }, async () => {

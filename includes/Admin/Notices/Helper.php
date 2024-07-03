@@ -116,18 +116,11 @@ class Helper {
             return false;
         }
 
-        if ( ! property_exists( dokan_pro(), 'license' ) ) {
-            // this is old version of dokan pro
+        try {
+            return dokan_pro()->license->is_valid();
+        } catch ( \Exception $e ) {
             return false;
         }
-
-        $license = dokan_pro()->license->plugin_update_message();
-        if ( ! empty( $license ) ) {
-            // if the plugin update message is not empty, then the license is not active
-            return false;
-        }
-
-        return true;
     }
 
     /**

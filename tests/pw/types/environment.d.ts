@@ -8,12 +8,14 @@ declare global {
             ADMIN_PASSWORD: string;
             VENDOR: string;
             VENDOR2: string;
-            USER_PASSWORD: string;
             CUSTOMER: string;
+            CUSTOMER2: string;
+            USER_PASSWORD: string;
             ADMIN_ID: string;
             VENDOR_ID: string;
             VENDOR2_ID: string;
             CUSTOMER_ID: string;
+            CUSTOMER2_ID: string;
             PRODUCT_ID: string;
             PRODUCT_ID_V2: string;
             LOCAL: boolean
@@ -21,7 +23,7 @@ declare global {
             GMAP: string;
             MAPBOX: string;
             LICENSE_KEY: string;
-            DOKAN_PRO: string;
+            DOKAN_PRO: boolean;
             SITE_PATH: string;
             BASE_URL: string;
             QUERY: string;
@@ -44,6 +46,7 @@ declare global {
             API_TEST_RESULT: string;
             E2E_TEST_RESULT: string;
             API_COVERAGE: string;
+            E2E_COVERAGE: string;
         }
     }
 }

@@ -297,6 +297,7 @@ export const selector = {
                     pending: '//ul[@class="subsubsub"]//li//a[contains(text(),"Pending")]',
                     approved: '//ul[@class="subsubsub"]//li//a[contains(text(),"Approved")]',
                     cancelled: '//ul[@class="subsubsub"]//li//a[contains(text(),"Cancelled")]',
+                    tabByStatus: (status: string) => `//ul[@class="subsubsub"]//li//a[contains(text(),"${status}")]`,
                 },
 
                 // Bulk Actions
@@ -308,7 +309,6 @@ export const selector = {
 
                 // Filters
                 filters: {
-                    // filterByVendor: '//select[@id="filter-vendors"]/..//span[@class="select2-selection__arrow"]',
                     filterByVendor: '//span[@id="select2-filter-vendors-container"]/..//span[@class="select2-selection__arrow"]',
                     filterByPaymentMethods: '//span[@id="select2-filter-payment-methods-container"]/..//span[@class="select2-selection__arrow"]',
                     filterInput: '.select2-search.select2-search--dropdown .select2-search__field',
@@ -332,7 +332,10 @@ export const selector = {
                     actionsColumn: 'thead th.actions',
                 },
 
+                statusColumnValue: (status: string) => `td.column.status .${status}`, // pending, approved, rejected, cancelled
+
                 numberOfRowsFound: '.tablenav.top .displaying-num',
+                currentNoOfRows: 'table tbody tr',
                 noRowsFound: '//td[normalize-space()="No requests found."]',
                 withdrawCell: (storeName: string) => `//td//a[contains(text(), '${storeName}')]/../..`,
                 withdrawDelete: (storeName: string) => `//td//a[contains(text(), '${storeName}')]/../..//span[@class="trash"]//a`,
@@ -463,39 +466,40 @@ export const selector = {
 
                     vendorPicture: '.profile-image .dokan-upload-image',
                     banner: '.banner-image .dokan-upload-image button',
-                    firstName: '#first-name',
-                    lastName: '#last-name',
-                    storeName: '#store-name',
-                    storeUrl: '#user-nicename',
-                    phoneNumber: '#store-phone',
-                    email: '#store-email',
-                    username: '#user-login',
+                    firstName: 'input#first-name',
+                    lastName: 'input#last-name',
+                    storeName: 'input#store-name',
+                    storeUrl: 'input#user-nicename',
+                    phoneNumber: 'input#store-phone',
+                    email: 'input#store-email',
+                    username: 'input#user-login',
                     generatePassword: '.button.button-secondary',
-                    password: '#store-password',
-                    companyName: '#company-name',
-                    companyIdEuidNumber: '#company-id-number',
-                    vatOrTaxNumber: '#vat-tax-number',
-                    nameOfBank: '#dokan-bank-name',
-                    bankIban: '#dokan-bank-iban',
+                    password: 'input#store-password',
+                    companyName: 'input#company-name',
+                    companyIdEuidNumber: 'input#company-id-number',
+                    vatOrTaxNumber: 'input#vat-tax-number',
+                    nameOfBank: 'input#dokan-bank-name',
+                    bankIban: 'input#dokan-bank-iban',
                     // Address
-                    street1: '#street-1',
-                    street2: '#street-2',
-                    city: '#city',
-                    zip: '#zip',
+                    street1: 'input#street-1',
+                    street2: 'input#street-2',
+                    city: 'input#city',
+                    zip: 'input#zip',
                     // country: '.multiselect__single',
                     country: '//label[@for="country"]/..//div[@class="multiselect__select"]',
                     countryInput: '#country',
                     state: '//label[@for="state"]/..//div[@class="multiselect__select"]',
                     stateInput: '#state',
                     // Payment Options
-                    accountName: '#account-name',
-                    accountNumber: '#account-number',
-                    bankName: '#bank-name',
-                    bankAddress: '#bank-address',
-                    routingNumber: '#routing-number',
-                    iban: '#iban',
-                    swift: '#swift',
-                    payPalEmail: '#paypal-email',
+                    accountName: 'input#account-name',
+                    accountNumber: 'input#account-number',
+                    accountType: 'select#account-type', // personal, business
+                    bankName: 'input#bank-name',
+                    bankAddress: 'input#bank-address',
+                    routingNumber: 'input#routing-number',
+                    iban: 'input#iban',
+                    swift: 'input#swift',
+                    payPalEmail: 'input#paypal-email',
                     enableSelling: '//span[contains(text(),"Enable Selling")]/..//span[@class="slider round"]',
                     publishProductDirectly: '//span[contains(text(), "Publish Product Directly")]/..//span[@class="slider round"]',
                     makeVendorFeature: '//span[contains(text(), "Make Vendor Featured")]/..//span[@class="slider round"]',
@@ -1625,49 +1629,61 @@ export const selector = {
 
             // Verifications
             verifications: {
-                verificationRequestsText: '//h2[normalize-space()="Verification Requests"]',
+                verificationRequestsText: '//h1[normalize-space()="Verification Requests"]',
 
                 // Nav Tabs
                 navTabs: {
                     pending: '//ul[@class="subsubsub"]//li//a[contains(text(),"Pending")]',
                     approved: '//ul[@class="subsubsub"]//li//a[contains(text(),"Approved")]',
                     rejected: '//ul[@class="subsubsub"]//li//a[contains(text(),"Rejected")]',
+                    cancelled: '//ul[@class="subsubsub"]//li//a[contains(text(),"Cancelled")]',
+                    tabByStatus: (status: string) => `//ul[@class="subsubsub"]//li//a[contains(text(),"${status}")]`,
+                },
+
+                // Bulk Actions
+                bulkActions: {
+                    selectAll: 'thead .manage-column input',
+                    selectAction: '.tablenav.top #bulk-action-selector-top', // approved, cancelled, rejected
+                    applyAction: '//div[@class="tablenav top"]//button[normalize-space()="Apply"]',
+                },
+
+                // Filters
+                filters: {
+                    filterByVendors: '(//select[@id="filter-vendors"]/..//span[@class="select2-selection__arrow"])[1]',
+                    filterByMethods: '(//select[@id="filter-methods"]/..//span[@class="select2-selection__arrow"])[2]',
+                    resetFilterByVendors: '(//select[@id="filter-vendors"]/..//button[@class="button"])[1]',
+                    resetFilterByMethods: '(//select[@id="filter-methods"]/..//button[@class="button"])[1]',
+                    reset: '//button[text()="×"]',
+                    filterInput: '.select2-search.select2-search--dropdown .select2-search__field',
+                    result: 'li.select2-results__option.select2-results__option--highlighted',
                 },
 
                 // Table
                 table: {
-                    verificationTable: '.verification-table',
-                    storeNameColumn: '//thead//th[contains(text(),"Store Name")]',
-                    photoIdColumn: '//thead//th[contains(text(),"Photo ID")]',
-                    addressColumn: '//thead//th[contains(text(),"Address")]',
-                    phoneNumberColumn: '//thead//th[contains(text(),"Phone Number")]',
-                    companyColumn: '//thead//th[contains(text(),"Company")]',
+                    verificationTable: '.verification-requests table',
+                    requestIdColumn: 'thead th.id',
+                    methodColumn: 'thead th.method_title',
+                    documentsColumn: 'thead th.documents',
+                    statusColumn: 'thead th.status',
+                    vendorColumn: 'thead th.seller',
+                    noteColumn: 'thead th.note',
+                    dateColumn: 'thead th.created',
+                    actionsColumn: 'thead th.actions',
                 },
+                statusColumnValue: (status: string) => `td.column.status .${status}`, // pending, approved, rejected, cancelled
 
-                vendorRow: (storeName: string) => `//a[normalize-space()="${storeName}"]/../../..`,
-
-                idRequest: {
-                    approveRequest: (storeName: string) => `(//a[normalize-space()="${storeName}"]/../../..//a[@data-status="approved"])[1]`,
-                    rejectRequest: (storeName: string) => `(//a[normalize-space()="${storeName}"]/../../..//a[@data-status="rejected"])[1]`,
-                    disapproveRequest: (storeName: string) => `(//a[normalize-space()="${storeName}"]/../../..//a[@data-status="disapproved"])[1]`,
-                },
-
-                addressRequest: {
-                    approveRequest: (storeName: string) => `//a[normalize-space()="${storeName}"]/../../..//a[@data-type="address"][normalize-space()="Approve"]`,
-                    rejectRequest: (storeName: string) => `//a[normalize-space()="${storeName}"]/../../..//a[@data-type="address"][normalize-space()="Reject"]`,
-                    disapproveRequest: (storeName: string) => `//a[normalize-space()="${storeName}"]/../../..//a[@data-type="address"][normalize-space()="Disapprove"]`,
-                    proofOfResidence: (storeName: string) => `//a[normalize-space()="${storeName}"]/../../..//a[normalize-space()="Proof of residence"]`,
-                },
-
-                phoneRequest: {
-                    // todo:
-                },
-
-                companyRequest: {
-                    approveRequest: (storeName: string) => `//a[normalize-space()="${storeName}"]/../../..//a[@data-type="company_verification_files"][normalize-space()="Approve"]`,
-                    rejectRequest: (storeName: string) => `//a[normalize-space()="${storeName}"]/../../..//a[@data-type="company_verification_files"][normalize-space()="Reject"]`,
-                    disapproveRequest: (storeName: string) => `//a[normalize-space()="${storeName}"]/../../..//a[@data-type="company_verification_files"][normalize-space()="Disapprove"]`,
-                },
+                numberOfRowsFound: '.tablenav.top .displaying-num',
+                noRowsFound: '//td[normalize-space()="No requests found."]',
+                currentNoOfRows: 'table tbody tr',
+                vendorRequestFirstCell: '(//tbody//tr//td//strong)[1]',
+                verificationRequestCell: (requestId: string) => `//td//strong[contains(text(), '#${requestId}')]/..`,
+                verificationRequestDocument: (requestId: string) => `(//td//strong[contains(text(), '#${requestId}')]/../..//a[@target])[1]`,
+                verificationRequestApprove: (requestId: string) => `//td//strong[contains(text(), '#${requestId}')]/../..//button[@title='Approve Request']`,
+                verificationRequestReject: (requestId: string) => `//td//strong[contains(text(), '#${requestId}')]/../..//button[@title='Reject Request']`,
+                verificationRequestAddNote: (requestId: string) => `//td//strong[contains(text(), '#${requestId}')]/../..//button[@title='Add Note']`,
+                vendorRequestNoteModalClose: '.dokan-modal-content .modal-header button',
+                addNote: '.dokan-modal-content .modal-body textarea',
+                updateNote: '.dokan-modal-content .modal-footer button',
             },
 
             // Advertising
@@ -1869,7 +1885,7 @@ export const selector = {
                     colors: '//div[@class="nav-title" and contains(text(),"Colors")]',
                     liveSearch: '//div[@class="nav-title" and contains(text(),"Live Search")]',
                     storeSupport: '//div[@class="nav-title" and contains(text(),"Store Support")]',
-                    sellerVerification: '//div[@class="nav-title" and contains(text(),"Seller Verification")]',
+                    vendorVerification: '//div[@class="nav-title" and contains(text(),"Vendor Verification")]',
                     verificationSmsGateways: '//div[@class="nav-title" and contains(text(),"Verification SMS Gateways")]',
                     emailVerification: '//div[@class="nav-title" and contains(text(),"Email Verification")]',
                     socialApi: '//div[@class="nav-title" and contains(text(),"Social API")]',
@@ -2092,19 +2108,14 @@ export const selector = {
                 colors: {
                     predefineColorPalette: '//h3[normalize-space()="Pre-defined Color Palette"]/../..',
                     customColorPalette: '//h3[normalize-space()="Custom Color Palette"]/../..',
+                    predefinedPalette: (paletteName: string) => `//label[text()='${paletteName}']/..//input[@name='store_color_pallete']`,
+                    // Button Text
+                    openColorPicker: (option: string) => `//h4[text()='${option}']//..//div[@class='color-picker-container']`,
+                    colorInput: 'input.hex-input',
+                    saveColor: 'button.dashicons-saved',
 
-                    colorPalette: {
-                        default: '#default',
-                        petalParty: '//input[@id="petal party"]',
-                        pinky: '#pinky',
-                        ocean: '#ocean',
-                        sweety: '#sweety',
-                        summerSplash: '//input[@id="summer splash"]',
-                        tree: '#tree',
-                    },
-
-                    customColors: {
-                        // todo: need to update all locators
+                    customPalette: {
+                        resetAll: 'btnReset',
                         buttonTextColor: '.btn_text span',
                         buttonBackgroundColor: '.btn_primary span',
                         buttonBorderColor: '.btn_primary_border span',
@@ -2116,7 +2127,6 @@ export const selector = {
                         dashboardNavigationBackground: '.dash_nav_bg span',
                         dashboardMenuBorder: '.dash_nav_border span',
                     },
-
                     colorsSaveChanges: '#submit',
                 },
 
@@ -2135,21 +2145,56 @@ export const selector = {
                     storeSupportSaveChanges: '#submit',
                 },
 
-                // Seller Verification
-                sellerVerifications: {
-                    // Seller Verification
-                    // Facebook
-                    facebookAppId: '#dokan_verification\\[fb_app_id\\]',
-                    facebookAppSecret: '#dokan_verification\\[fb_app_secret\\]',
-                    // Twitter
-                    consumerKey: '#dokan_verification\\[twitter_app_id\\]',
-                    consumerSecret: '#dokan_verification\\[twitter_app_secret\\]',
-                    // Google
-                    googleClientId: '#dokan_verification\\[google_app_id\\]',
-                    googleClientSecret: '#dokan_verification\\[google_app_secret\\]',
-                    // Linkedin
-                    linkedinClientId: '#dokan_verification\\[linkedin_app_id\\]',
-                    linkedinClientSecret: '#dokan_verification\\[linkedin_app_secret\\]',
+                vendorVerification: {
+                    verifiedIcon: (iconName: string) => `//label[@for='dokan_verification[verified_icon][${iconName}]']`,
+                    verifiedIconByIcon: (iconName: string) => `//i[@class='${iconName}']//../..`,
+                    verificationMethodRow: (methodName: string) => `//p[text()[normalize-space()='${methodName}']]/../../..`,
+                    enableVerificationMethod: (methodName: string) => `//p[text()[normalize-space()='${methodName}']]/../../..//label[@class="switch tips"]`,
+                    editVerificationMethod: (methodName: string) => `//p[text()[normalize-space()='${methodName}']]/../../..//button[contains(@class, 'rounded-full bg-violet')]`,
+                    deleteVerificationMethod: (methodName: string) => `//p[text()[normalize-space()='${methodName}']]/../../..//button[contains(@class, 'rounded-full bg-red')]`,
+
+                    confirmDelete: '.swal2-confirm',
+                    cancelDelete: '.swal2-cancel',
+                    methodCreateSuccessMessage: '//div[text()="Created Successfully."]',
+                    methodUpdateSuccessMessage: '//div[text()="Updated Successfully."]',
+                    methodDeleteSuccessMessage: '//div[text()="Deleted Successfully."]',
+
+                    addNewVerification: {
+                        addNewVerification: '//button[text()[normalize-space()="Add New"]]',
+                        closeModal: '//button[text()[normalize-space()="×"]]',
+                        label: 'input#label-text',
+                        helpText: 'input#label-help',
+                        required: 'input#field-required',
+                        cancel: '//button[text()[normalize-space()="Cancel"]]',
+                        create: '//span[text()[normalize-space()="Create"]]/..',
+                        update: '//span[text()[normalize-space()="Update"]]',
+                    },
+
+                    // Social Connect
+                    socialConnect: {
+                        enableMehod: (methodName: string) => `//div[@class='${methodName} dokan-settings-field-type-social']//label[@class='switch tips']`,
+                        settings: (methodName: string) => `//div[@class='${methodName} dokan-settings-field-type-social']//span[contains(@class,"active-social-expend-btn")]`,
+
+                        //todo: need to update all social connect locators
+                        facebook: {
+                            facebookAppId: '#dokan_verification\\[fb_app_id\\]',
+                            facebookAppSecret: '#dokan_verification\\[fb_app_secret\\]',
+                        },
+                        twitter: {
+                            consumerKey: '#dokan_verification\\[twitter_app_id\\]',
+                            consumerSecret: '#dokan_verification\\[twitter_app_secret\\]',
+                        },
+                        google: {
+                            googleClientId: '#dokan_verification\\[google_app_id\\]',
+                            googleClientSecret: '#dokan_verification\\[google_app_secret\\]',
+                        },
+                        linked: {
+                            linkedinClientId: '#dokan_verification\\[linkedin_app_id\\]',
+                            linkedinClientSecret: '#dokan_verification\\[linkedin_app_secret\\]',
+                        },
+                    },
+
+                    saveChanges: '#submit',
                 },
 
                 // Verification Sms Gateways
@@ -2392,12 +2437,12 @@ export const selector = {
 
                 // Store
                 vendorStoreURL: '#custom_store_url',
-                // shippingFeeRecipient: "#select2-shipping_fee_recipient-container",
-                // shippingFeeRecipientValues: ".select2-results ul li",
-                // taxFeeRecipient: "#select2-tax_fee_recipient-container",
-                // taxFeeRecipientValues: ".select2-results ul li",
-                // mapApiSource: "#select2-map_api_source-container",
-                // mapApiSourceValues: ".select2-results ul li",
+                // shippingFeeRecipient: '#select2-shipping_fee_recipient-container',
+                // shippingFeeRecipientValues: '.select2-results ul li',
+                // taxFeeRecipient: '#select2-tax_fee_recipient-container',
+                // taxFeeRecipientValues: '.select2-results ul li',
+                // mapApiSource: '#select2-map_api_source-container',
+                // mapApiSourceValues: '.select2-results ul li',
                 shippingFeeRecipient: '#shipping_fee_recipient',
                 taxFeeRecipient: '#tax_fee_recipient',
                 mapApiSource: '#map_api_source',
@@ -2405,8 +2450,8 @@ export const selector = {
                 mapBoxAccessToken: '#mapbox_access_token',
                 shareEssentialsOff: '.switch-label',
                 sellingProductTypes: '#dokan_digital_product',
-                // sellingProductTypes: "#select2-dokan_digital_product-container",
-                // Values: ".select2-results ul li",
+                // sellingProductTypes: '#select2-dokan_digital_product-container',
+                // Values: '.select2-results ul li',
                 continue: '//input[@value="Continue"]',
                 skipThisStep: '//a[contains(text(),"Skip this step")]',
 
@@ -2525,7 +2570,7 @@ export const selector = {
                 // Shipping
                 addShippingZone: '.page-title-action',
                 zoneName: '#zone_name',
-                // zoneRegions: ".select2-search__field",
+                // zoneRegions: '.select2-search__field',
                 zoneRegions: '#zone_locations',
                 shippingZoneCell: (shippingZone: string) => `//a[contains(text(), '${shippingZone}')]/..`,
                 editShippingZone: (shippingZone: string) => `//a[contains(text(), '${shippingZone}')]/..//div//a[contains(text(), 'Edit')]`,
@@ -3315,6 +3360,10 @@ export const selector = {
             continuePaymentSetup: '.payment-continue-btn',
             skipTheStepPaymentSetup: '.payment-step-skip-btn',
 
+            //verification
+
+            skipTheStepVerifications: '.payment-step-skip-btn',
+
             // Last Step
             goToStoreDashboard: '.wc-setup-actions.step .button',
             returnToMarketplace: '.wc-return-to-dashboard',
@@ -3327,6 +3376,8 @@ export const selector = {
             // Dashboard Menus
             menuParent: '#dokan-navigation ul.dokan-dashboard-menu',
             menus: {
+                menus: '#primary ul.dokan-dashboard-menu',
+                activeMenu: '#primary .dokan-dashboard-menu li.active',
                 menuByText: (menu: string) => `//div[@id='dokan-navigation']//ul//li//a[contains(text(), "${menu}")]`,
                 dashboard: 'ul.dokan-dashboard-menu li.dashboard a',
                 products: 'ul.dokan-dashboard-menu li.products a',
@@ -3350,7 +3401,7 @@ export const selector = {
                 tools: 'ul.dokan-dashboard-menu li.tools a',
                 auction: 'ul.dokan-dashboard-menu li.auction a',
                 support: 'ul.dokan-dashboard-menu li.support a',
-                settings: 'ul.dokan-dashboard-menu li.settings a',
+                settings: '(//ul[@class="dokan-dashboard-menu"]//li[contains(@class,"settings has-submenu")]//a)[1]',
                 visitStore: '//i[@class="fas fa-external-link-alt"]/..',
                 editAccount: '.fa-user',
 
@@ -3647,6 +3698,31 @@ export const selector = {
             geolocation: {
                 sameAsStore: '#\\_dokan_geolocation_use_store_settings',
                 productLocation: '#\\_dokan_geolocation_product_location',
+            },
+
+            // Eu Compliance Fields
+            euComplianceFields: {
+                saleLabel: 'select#_sale_price_label', // new-price, old-price, rrp
+                saleRegularLabel: 'select#_sale_price_regular_label', // new-price, old-price, rrp
+                unit: 'select#_unit', // cm, g, in, kcal, kg, kj, l, lbs, m, ml, mm, oz, yd, %c2%b5g
+                minimumAge: 'select#_min_age', // 12, 16,18, 19, 25
+                productUnits: 'input#_unit_product',
+                basePriceUnits: 'input#_unit_base',
+
+                deliveryTime: {
+                    dropDown: 'div#dokan-germanized-options .select2-selection .select2-selection__arrow',
+                    input: '.select2-search__field',
+                    searchedResult: '.select2-results__option--highlighted',
+                },
+
+                freeShipping: 'input#_free_shipping',
+
+                regularUnitPrice: 'input#_unit_price_regular',
+                saleUnitPrice: 'input#_unit_price_sale',
+                optionalMiniDescription: {
+                    descriptionIframe: '.dokan-product-description iframe',
+                    descriptionHtmlBody: '#tinymce',
+                },
             },
 
             // Add-Ons
@@ -4270,7 +4346,7 @@ export const selector = {
                 next: '.fc-next-button',
             },
 
-            deliveryTimeCalender: 'div#delivery-time-calendar',
+            deliveryTimeCalendar: 'div#delivery-time-calendar',
         },
 
         // Review
@@ -4498,10 +4574,6 @@ export const selector = {
                 answer: {
                     answerDiv: '//div[normalize-space()="Answer"]/..',
                     answerTitle: '//div[normalize-space()="Answer"]',
-
-                    visualButton: 'button#dokan-product-qa-answer-tmce',
-                    textButton: 'button#dokan-product-qa-answer-html',
-
                     questionAnswerIframe: 'iframe#dokan-product-qa-answer_ifr',
                     questionAnswerHtmlBody: '#tinymce',
                     saveAnswer: 'button#dokan_product_qa_save_answer',
@@ -5925,71 +5997,32 @@ export const selector = {
             verificationText: '.dokan-settings-content h1',
             visitStore: '//a[normalize-space()="Visit Store"]',
 
-            // Id Verification
-            id: {
-                idVerificationDiv: 'div#dokan_v_id',
-                idVerificationText: '//strong[normalize-space()="ID Verification"]',
+            verificationMethodAllDiv: '.dokan-verification-content .dokan-panel',
+            requiredText: '//small[text()="(Required)"]',
+            firtstVerificationMethod: '(//div[@class="dokan-panel-heading"]//strong)[1]',
+            verificationMethodDiv: (methodName: string) => `//strong[text()='${methodName}']/../..`,
+            verificationMethodHelpText: (methodName: string) => `//strong[text()='${methodName}']/../..//p`,
+            startVerification: (methodName: string) => `//strong[text()='${methodName}']/../..//button[contains(@class,'dokan-vendor-verification-start')]`,
+            cancelVerification: (methodName: string) => `//strong[text()='${methodName}']/../..//button[contains(@class,'dokan-vendor-verification-cancel-request')]`,
+            uploadFiles: (methodName: string) => `//strong[text()='${methodName}']/../..//a[@data-uploader_button_text='Add File']`,
+            removeuploadedFile: (methodName: string) => `(//strong[text()='${methodName}']/../..//a[contains(@class,'dokan-btn-danger')])[1]`,
+            submit: (methodName: string) => `//strong[text()='${methodName}']/../..//input[contains(@class,'dokan_vendor_verification_submit')]`,
+            cancelSubmit: (methodName: string) => `//strong[text()='${methodName}']/../..//input[contains(@class,'dokan_vendor_verification_cancel')]`,
+            verificationStatus: (methodName: string, staus: string) => `//strong[text()='${methodName}']/../..//p//label[contains(@class,'${staus}')]`,
+            verificationRequestDocument: (methodName: string) => `(//strong[text()='${methodName}']/../..//div[@class='dokan-vendor-verification-file-item']//a)[1]`,
+            verificationRequestNote: (methodName: string) => `(//strong[text()='${methodName}']/../..//p[text()='Note:']/..//p)[2]`,
 
-                idPendingFeedback: 'div#dokan_v_id_feedback.dokan-alert-warning',
-                cancelIdVerificationRequest: 'button#dokan_v_id_cancel',
+            confirmCancelRequest: '.swal2-confirm',
+            cancelPopup: '.swal2-cancel',
+            requestCreateSuccessMessage: '//div[text()="Verification Request Creation Successfully."]',
+            requestCancelSuccessMessage: '//div[text()="Verification Request Cancelled Successfully."]',
 
-                idApproveFeedback: 'div#dokan_v_id_feedback.dokan-alert-success',
-                startIdVerification: '#dokan_v_id_click',
-                passport: '//input[@value="passport"]',
-                nationalIdCard: '//input[@value="national_id"]',
-                drivingLicense: '//input[@value="driving_license"]',
-                uploadPhoto: 'a.dokan-gravatar-drag',
-                previousUploadedPhoto: '//div[@class="gravatar-wrap"]//img[@class="dokan-gravatar-img"]',
-                removePreviousUploadedPhoto: '.dokan-close.dokan-remove-gravatar-image',
-                submitId: '#dokan_v_id_submit',
-                cancelSubmitId: '#dokan_v_id_cancel_form',
-
-                idUpdateSuccessMessage: 'div#feedback.dokan-alert.dokan-alert-success',
-            },
-
-            // Address Verification
-            address: {
-                addressVerificationDiv: '//strong[normalize-space()="Address Verification"]/../..',
-                addressVerificationText: '//strong[normalize-space()="Address Verification"]',
-
-                addressPendingFeedback: 'div#d_v_address_feedback.dokan-alert-warning',
-                cancelAddressVerificationRequest: 'button#dokan_v_address_cancel',
-
-                addressApproveFeedback: 'div#d_v_address_feedback.dokan-alert-success',
-                startAddressVerification: '#dokan_v_address_click',
-                street: '#dokan_address\\[street_1\\]',
-                street2: '#dokan_address\\[street_2\\]',
-                city: '#dokan_address\\[city\\]',
-                postOrZipCode: '#dokan_address\\[zip\\]',
-                country: '#dokan_address_country',
-                state: '#dokan_address_state',
-                uploadResidenceProof: '#vendor-proof',
-                previousUploadedResidenceProof: '.vendor_img_container img',
-                removePreviousUploadedResidenceProof: '.dokan-close.dokan-remove-proof-image',
-                submitAddress: '#dokan_v_address_submit',
-                cancelSubmitAddress: '.dokan-form-group > #dokan_v_address_cancel',
-
-                addressUpdateSuccessMessage: 'div#feedback.dokan-alert.dokan-alert-success',
-            },
-
-            // Company Verification
-            company: {
-                companyVerificationDiv: '//strong[normalize-space()="Company Verification"]/../..',
-                companyVerificationText: '//strong[normalize-space()="Company Verification"]',
-
-                companyPendingFeedback: 'div#d_v_company_feedback.dokan-alert-warning',
-                cancelCompanyVerificationRequest: 'button#dokan_v_company_cancel',
-
-                companyApproveFeedback: 'div#d_v_company_feedback.dokan-alert-success',
-                startCompanyVerification: '#dokan_v_company_click',
-                uploadedCompanyFileClose: '.dokan-btn.dokan-btn-danger',
-                uploadFiles: 'a.dokan-files-drag',
-                uploadedFileFirst: '(//a[@onclick="companyVerificationRemoveList(event)"])[1]',
-                cancelSelectedInfo: '.fa-times',
-                submitCompanyInfo: '#dokan_v_company_submit',
-                cancelSubmitCompanyInfo: '.dokan-w5 > #dokan_v_company_cancel',
-
-                companyInfoUpdateSuccessMessage: 'div#feedback.dokan-alert.dokan-alert-success',
+            noSocialProfileMessage: '//div[text()[normalize-space()="No Social App is configured by website Admin"]]',
+            socialProfile: {
+                connectFacebook: "//button[text()[normalize-space()='Connect Facebook']]",
+                connectGoogle: "//button[text()[normalize-space()='Connect Google']]",
+                connectLinkedin: "//button[text()[normalize-space()='Connect Linkedin']]",
+                connectTwitter: "//button[text()[normalize-space()='Connect Twitter']]",
             },
         },
 
@@ -6353,14 +6386,14 @@ export const selector = {
                 billingVatOrTaxNumber: '#billing_dokan_vat_number',
                 billingNameOfBank: '#billing_dokan_bank_name',
                 billingBankIban: '#billing_dokan_bank_iban',
-                // billingCountryOrRegion: "#select2-billing_country-container",
+                // billingCountryOrRegion: '#select2-billing_country-container',
                 billingCountryOrRegion: '(//span[@class="select2-selection__arrow"])[1]',
                 billingCountryOrRegionInput: '.select2-search.select2-search--dropdown .select2-search__field',
                 billingCountryOrRegionValues: '.select2-results ul li',
                 billingStreetAddress: '#billing_address_1',
                 billingStreetAddress2: '#billing_address_2',
                 billingTownCity: '#billing_city',
-                // billingState: "#select2-billing_state-container",
+                // billingState: '#select2-billing_state-container',
                 billingState: '(//span[@class="select2-selection__arrow"])[2]',
                 billingStateInput: '.select2-search.select2-search--dropdown .select2-search__field',
                 billingStateValues: '.select2-results ul li',
@@ -6378,14 +6411,14 @@ export const selector = {
                 shippingFirstName: '#shipping_first_name',
                 shippingLastName: '#shipping_last_name',
                 shippingCompanyName: '#shipping_company',
-                // shippingCountryOrRegion: "#select2-shipping_country-container",
+                // shippingCountryOrRegion: '#select2-shipping_country-container',
                 shippingCountryOrRegion: '(//span[@class="select2-selection__arrow"])[1]',
                 shippingCountryOrRegionInput: '.select2-search.select2-search--dropdown .select2-search__field',
                 shippingCountryOrRegionValues: '.select2-results ul li',
                 shippingStreetAddress: '#shipping_address_1',
                 shippingStreetAddress2: '#shipping_address_2',
                 shippingTownCity: '#shipping_city',
-                // shippingState: "#select2-shipping_state-container",
+                // shippingState: '#select2-shipping_state-container',
                 shippingState: '(//span[@class="select2-selection__arrow"])[2]',
                 shippingStateInput: '.select2-search.select2-search--dropdown .select2-search__field',
                 shippingStateValues: '.select2-results ul li',
@@ -6623,10 +6656,18 @@ export const selector = {
             productDetails: {
                 productImage: '.woocommerce-product-gallery__wrapper img.wp-post-image',
                 productTitle: '.product_title.entry-title',
+                price: '//div[@class="summary entry-summary"]//p[@class="price"]',
                 quantity: '.quantity input.qty',
                 addToCart: '.single_add_to_cart_button',
                 viewCart: '.woocommerce .woocommerce-message > .button',
                 category: '.product_meta .posted_in',
+
+                euComplianceData: {
+                    price: '//div[@class="summary entry-summary"]//p[@class="price"]',
+                    unitPrice: 'div.summary p.wc-gzd-additional-info.price-unit',
+                    productUnit: 'div.summary p.wc-gzd-additional-info.product-units',
+                    deliveryTime: 'div.summary p.wc-gzd-additional-info.delivery-time-info',
+                },
             },
 
             // Sub menus
@@ -6661,8 +6702,7 @@ export const selector = {
                 reviewMessage: '#comment',
                 submitReview: '#submit',
                 submittedReview: (reviewMessage: string) => `//div[@class='comment_container']//div[@class='description']// p[text()='${reviewMessage}']`,
-                awaitingApprovalReview: (reviewMessage: string) =>
-                    `//div[@class='comment_container']//div[@class='description']// p[text()='${reviewMessage}']/../..//p//em[@class='woocommerce-review__awaiting-approval']`,
+                awaitingApprovalReview: (reviewMessage: string) => `//div[@class='comment_container']//div[@class='description']// p[text()='${reviewMessage}']/../..//p//em[@class='woocommerce-review__awaiting-approval']`,
                 duplicateCommentAlert: '#error-page .wp-die-message p',
                 backFromDuplicateCommentAlert: '//a[contains(text(),"« Back")]',
             },
@@ -6915,6 +6955,8 @@ export const selector = {
                 profileInfoHead: '.profile-info-head',
                 profileImage: '.profile-img.profile-img-circle',
                 storeName: '.profile-info-head .store-name',
+                verifiedIcon: '//div[@data-original-title="Verified"]',
+                verifiedIconByIcon: (icon: string) => `//div[@data-original-title="Verified"]//i[@class="${icon}"]`,
 
                 profileInfo: '.profile-info',
                 storeInfo: '.dokan-store-info',
@@ -6924,6 +6966,14 @@ export const selector = {
                 // storeRating: '.dokan-store-rating',
                 // storeOpenClose: '.dokan-store-open-close',
                 storeSocial: '.store-social',
+
+                euComplianceData: {
+                    companyName: 'li.dokan-company-name',
+                    companyId: 'li.dokan-company-id-number',
+                    vatNumber: 'li.dokan-vat-number',
+                    bankName: 'li.dokan-bank-name',
+                    bankIban: 'li.dokan-bank-iban',
+                },
             },
 
             // Store open close time
@@ -7293,7 +7343,7 @@ export const selector = {
                 billingVatOrTaxNumber: '#billing_dokan_vat_number',
                 billingNameOfBank: '#billing_dokan_bank_name',
                 billingBankIban: '#billing_dokan_bank_iban',
-                // billingCountryOrRegion: "#select2-billing_country-container",
+                // billingCountryOrRegion: '#select2-billing_country-container',
                 billingCountryOrRegion: '.select2-selection__arrow',
                 billingCountryOrRegionValues: '.select2-results ul li',
                 billingStreetAddress: '#billing_address_1',
@@ -7312,14 +7362,14 @@ export const selector = {
                 shippingFirstName: '#shipping_first_name',
                 shippingLastName: '#shipping_last_name',
                 shippingCompanyName: '#shipping_company',
-                // shippingCountryOrRegion: "#select2-shipping_country-container",
+                // shippingCountryOrRegion: '#select2-shipping_country-container',
                 shippingCountryOrRegion: '.select2-selection__arrow',
 
                 shippingCountryOrRegionValues: '.select2-results ul li',
                 shippingStreetAddress: '#shipping_address_1',
                 shippingStreetAddress2: '#shipping_address_2',
                 shippingTownCity: '#shipping_city',
-                // shippingState: "#select2-shipping_state-container",
+                // shippingState: '#select2-shipping_state-container',
                 shippingState: '.select2-selection__arrow',
                 shippingStateValues: '.select2-results ul li',
                 shippingZipCode: '#shipping_postcode',

@@ -47,6 +47,7 @@ test.describe('Stores test', () => {
     });
 
     test("admin can disable vendor's selling capability", { tag: ['@lite', '@admin'] }, async () => {
+        //todo: might need to combine with enable
         const [, , storeName] = await apiUtils.createStore(payloads.createStore(), payloads.adminAuth);
         await admin.updateVendor(storeName, 'disable');
     });
@@ -57,6 +58,7 @@ test.describe('Stores test', () => {
     });
 
     test('admin can edit vendor info', { tag: ['@lite', '@admin'] }, async () => {
+        //todo: implement option to edit particular chunk of data: social profile, address, etc
         await admin.editVendor(data.vendor);
     });
 
@@ -68,7 +70,7 @@ test.describe('Stores test', () => {
         await admin.viewVendor(data.predefined.vendorStores.vendor1, 'orders');
     });
 
-    test('admin can perform vendor bulk actions', { tag: ['@lite', '@admin'] }, async () => {
+    test('admin can perform bulk action on vendors', { tag: ['@lite', '@admin'] }, async () => {
         await admin.vendorBulkAction('approved');
     });
 });
