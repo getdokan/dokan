@@ -171,14 +171,13 @@ class BecomeAVendor {
         }
 
         if ( $error_message ) {
-            if ( defined( 'REST_REQUEST' ) && REST_REQUEST ) {
-                wp_send_json_error( [ 'message' => $error_message ] );
-            } elseif ( function_exists( 'wc_add_notice' ) && function_exists( 'wc_print_notices' ) ) {
+            if ( WC()->session && function_exists( 'wc_add_notice' ) && function_exists( 'wc_print_notices' ) ) {
                 wc_add_notice( $error_message, 'error' );
                 // print error message
                 wc_print_notices();
-                return;
             }
+
+            return;
         }
 
         wp_enqueue_script( 'dokan-vendor-registration' );
