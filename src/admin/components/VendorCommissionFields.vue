@@ -7,23 +7,23 @@
     <div class="content-body">
         <div class="p-3">
             <div class="mb-5">
-                <p class="!p-0 !m-0 !font-semibold" for="_subscription_product_admin_commission_type">Admin Commission type</p>
+                <label class="!p-0 m-0 !mb-[6px] block" for="_subscription_product_admin_commission_type">{{__( 'Admin Commission type', 'dokan-lite' )}}</label>
                 <div class="flex flex-col">
                     <select v-model="selectedCommission" @change="commissionUpdated" id="_subscription_product_admin_commission_type" name="_subscription_product_admin_commission_type" class="select short">
                         <option v-for="(commissionData, key) in commissionTypes" :value="key">{{commissionData}}</option>
                     </select>
-                    <span class="description">Set the commission type admin will get under this subscription</span>
+                    <span class="description !mt-[6px] block">{{__( 'Set the commission type admin will get under this subscription', 'dokan-lite' )}}</span>
                 </div>
             </div>
             <div v-if="'category_based' === selectedCommission">
-                <p class="!p-0 !m-0 !font-semibold" for="_subscription_product_admin_commission_type">Admin Commission</p>
+                <label class="!p-0 m-0 !mb-[6px] block" for="_subscription_product_admin_commission_type">{{__( 'Admin Commission', 'dokan-lite' )}}</label>
                 <category-based-commission
                     :value="categoryCommission"
                     @change="onCategoryUpdate"
                 />
             </div>
             <div v-else-if="'fixed' === selectedCommission">
-                <p class="!p-0 !m-0 !font-semibold" for="_subscription_product_admin_commission_type">Admin Commission</p>
+                <label class="!p-0 m-0 !mb-[6px] block" for="_subscription_product_admin_commission_type">{{__( 'Admin Commission', 'dokan-lite' )}}</label>
                 <combine-input
                     :value="fixedCommission"
                     v-on:change="fixedCOmmissionhandler"

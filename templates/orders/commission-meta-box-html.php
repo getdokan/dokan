@@ -18,6 +18,25 @@ $total_commission = 0 > $total_commission ? 0 : $total_commission;
 
 $order_total = $data && property_exists( $data, 'order_total' ) ? $data->order_total : 0;
 $net_amount  = $data && property_exists( $data, 'net_amount' ) ? $data->net_amount : 0;
+
+$shipping_fee_recipient     = $order->get_meta( 'shipping_fee_recipient' );
+$shipping_tax_fee_recipient = $order->get_meta( 'shipping_tax_fee_recipient' );
+$product_tax_fee_recipient  = $order->get_meta( 'tax_fee_recipient' );
+$admin                      = 'admin';
+
+$shipping_fee     = $order->get_shipping_total();
+$product_tax_fee  = $order->get_shipping_tax();
+$shipping_tax_fee = $order->get_cart_tax();
+
+$shipping_fee_refunded     = 0;
+$product_tax_fee_refunded  = 0;
+$shipping_tax_fee_refunded = 0;
+
+foreach ( $order->get_refunds() as $refund ) {
+    $shipping_fee_refunded += (float) $refund->get_shipping_total();
+    $product_tax_fee_refunded += (float) $refund->get_shipping_tax();
+    $shipping_tax_fee_refunded += (float) $refund->get_cart_tax();
+}
 ?>
 
 <div id="woocommerce-order-items" class="postbox" style='border: none'>
@@ -181,6 +200,54 @@ $net_amount  = $data && property_exists( $data, 'net_amount' ) ? $data->net_amou
                         <?php echo wc_price( $net_amount, array( 'currency' => $order->get_currency() ) ); ?>
                     </td>
                 </tr>
+                <?php if ( $shipping_fee_recipient === $admin ) : ?>
+                <tr>
+                    <td class="label"><?php esc_html_e( 'Shipping Fee:', 'dokan-lite' ); ?></td>
+                    <td width="1%"></td>
+                    <td class="total">
+                        <?php echo wc_price( $shipping_fee, array( 'currency' => $order->get_currency() ) ); ?>
+                        <?php
+                        if ( $shipping_fee_refunded ) :
+                            ?>
+                            <small class="refunded refunded-recipient"><?php echo wc_price( $shipping_fee_refunded, array( 'currency' => $order->get_currency() ) ); ?></small>
+							<?php
+                        endif;
+                        ?>
+                    </td>
+                </tr>
+                <?php endif; ?>
+                <?php if ( $product_tax_fee_recipient === $admin ) : ?>
+                    <tr>
+                        <td class="label"><?php esc_html_e( 'Product Tax Fee:', 'dokan-lite' ); ?></td>
+                        <td width="1%"></td>
+                        <td class="total">
+                            <?php echo wc_price( $product_tax_fee, array( 'currency' => $order->get_currency() ) ); ?>
+                            <?php
+                            if ( $product_tax_fee_refunded ) :
+                                ?>
+                                <small class="refunded refunded-recipient"><?php echo wc_price( $product_tax_fee_refunded, array( 'currency' => $order->get_currency() ) ); ?></small>
+								<?php
+                            endif;
+                            ?>
+                        </td>
+                    </tr>
+                <?php endif; ?>
+                <?php if ( $shipping_tax_fee_recipient === $admin ) : ?>
+                    <tr>
+                        <td class="label"><?php esc_html_e( 'Shipping Tax Fee:', 'dokan-lite' ); ?></td>
+                        <td width="1%"></td>
+                        <td class="total">
+                            <?php echo wc_price( $shipping_tax_fee, array( 'currency' => $order->get_currency() ) ); ?>
+                            <?php
+                            if ( $shipping_tax_fee_refunded ) :
+                                ?>
+                                <small class="refunded refunded-recipient"><?php echo wc_price( $shipping_tax_fee_refunded, array( 'currency' => $order->get_currency() ) ); ?></small>
+								<?php
+                            endif;
+                            ?>
+                        </td>
+                    </tr>
+                <?php endif; ?>
                 </tbody>
             </table>
 
@@ -201,3 +268,39 @@ $net_amount  = $data && property_exists( $data, 'net_amount' ) ? $data->net_amou
         </div>
     </div>
 </div>
+
+<style>
+    small.refunded-recipient {
+        display: block;
+        color: #a00;
+        white-space: nowrap;
+        font-size: smaller;
+        padding: 0;
+        margin: 0
+    }
+
+    small.refunded-recipient::before {
+        font-family: Dashicons;
+        speak: never;
+        font-weight: 400;
+        font-variant: normal;
+        text-transform: none;
+        line-height: 1;
+        -webkit-font-smoothing: antialiased;
+        margin: 0;
+        text-indent: 0;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        content: "\f171";
+        position: relative;
+        top: auto;
+        left: auto;
+        margin: -1px 4px 0 0;
+        vertical-align: middle;
+        line-height: 1em;
+    }
+</style>

@@ -78,13 +78,15 @@
                 Dokan_Editor.dokan_show_earning_suggestion( Dokan_Editor.earning_suggestion_callbak );
             }, 750 ) );
 
-            wp.hooks.addAction( 'dokan_selected_multistep_category', 'dokan-get-product-earning-suggestion', function() {
-                Dokan_Editor.dokan_show_earning_suggestion( Dokan_Editor.earning_suggestion_callbak );
-            } );
+            if ( wp && wp.hooks && wp.hooks.addAction ) {
+                wp.hooks.addAction( 'dokan_selected_multistep_category', 'dokan-get-product-earning-suggestion', function() {
+                    Dokan_Editor.dokan_show_earning_suggestion( Dokan_Editor.earning_suggestion_callbak );
+                } );
 
-            wp.hooks.addAction( 'dokan_removed_multistep_category', 'dokan-get-product-earning-suggestion', function() {
-                Dokan_Editor.dokan_show_earning_suggestion( Dokan_Editor.earning_suggestion_callbak );
-            } );
+                wp.hooks.addAction( 'dokan_removed_multistep_category', 'dokan-get-product-earning-suggestion', function() {
+                    Dokan_Editor.dokan_show_earning_suggestion( Dokan_Editor.earning_suggestion_callbak );
+                } );
+            }
         },
 
         setCorrectProductId : function () {

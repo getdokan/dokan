@@ -28,12 +28,13 @@
                     <div class='w-1/2 flex justify-start items-center box-border'>
                             <input
                                 type="text"
-                                class="wc_input_decimal !min-h-full focus:!border-none focus:!shadow-none focus:border-transparent !border-0 !w-[100%] !pl-[5px] !pr-0 !pt-0 !pb-0"
+                                class="wc_input_decimal !min-h-full focus:!shadow-none focus:border-transparent !border-0 !w-[100%] !pl-[5px] !pr-0 !pt-0 !pb-0"
                                 id="percentage_commission"
                                 name="percentage_commission"
                                 ref='percentage'
                                 :value="commission.all.percentage"
                                 v-on:input="e => handleAllCategoryInput(e.target.value, 'percentage', commission.all.percentage )"
+                                style="border: none !important;"
                             />
                             <div class='h-full d-xs:border-l-0 d-xs:border-r-0 md:border-l-[1px] md:!border-r-[1px] flex justify-center items-center d-xs:!bg-transparent md:!bg-gray-100'><span class='d-xs:pl-1 d-xs:pr-1 md:pl-2 md:pr-2'>{{ __( '%', 'dokan-lite' ) }}</span></div>
                         </div>
@@ -44,12 +45,13 @@
                             <div class='h-full d-xs:border-r-0 d-xs:border-l-0 md:!border-r-[1px] md:border-l-[1px] flex justify-center items-center d-xs:!bg-transparent md:!bg-gray-100'><span class='d-xs:pl-1 d-xs:pr-1 md:pl-2 md:pr-2'>{{ getCurrencySymbol }}</span></div>
                             <input
                                 type="text"
-                                class="wc_input_price !min-h-full focus:!border-none focus:!shadow-none !border-0 !w-[100%] d-xs:!pl-0 d-xs:!pr-[5px] d-xs:text-right md:text-left md:!pl-[5px] !pr-0 !pt-0 !pb-0"
+                                class="wc_input_price !min-h-full focus:!shadow-none !border-0 !w-[100%] d-xs:!pl-0 d-xs:!pr-[5px] d-xs:text-right md:text-left md:!pl-[5px] !pr-0 !pt-0 !pb-0"
                                 id="fixed_commission"
                                 name="fixed_commission"
                                 ref='fixed'
                                 :value="commission.all.flat"
                                 v-on:input="e => handleAllCategoryInput(e.target.value, 'flat', commission.all.flat )"
+                                style="border: none !important;"
                             />
                         </div>
                 </div>
@@ -70,12 +72,13 @@
                     <div class='w-1/2 flex justify-start items-center box-border'>
                         <input
                             type="text"
-                            class="wc_input_decimal !min-h-full focus:!border-none focus:!shadow-none focus:border-transparent !border-0 !pl-[5px] !pr-0 !pt-0 !pb-0 !w-[100%]"
+                            class="wc_input_decimal !min-h-full focus:!shadow-none focus:border-transparent !border-0 !pl-[5px] !pr-0 !pt-0 !pb-0 !w-[100%]"
                             id="percentage_commission"
                             name="percentage_commission"
                             ref='percentage'
                             :value="getCommissionValue( 'percentage', item.term_id )"
                             v-on:input="e => commissinItemHandler( e.target.value, 'percentage', item.term_id, getCommissionValue( 'percentage', item.term_id ) )"
+                            style="border: none !important;"
                         />
                         <div class='h-full d-xs:border-l-0 d-xs:border-r-0 md:border-l-[1px] md:!border-r-[1px] flex justify-center items-center d-xs:!bg-transparent md:!bg-gray-100'><span class='d-xs:pl-1 d-xs:pr-1 md:pl-2 md:pr-2'>{{ __( '%', 'dokan-lite' ) }}</span></div>
                     </div>
@@ -86,12 +89,13 @@
                         <div class='h-full d-xs:border-r-0 d-xs:border-l-0 md:!border-r-[1px] md:border-l-[1px] flex justify-center items-center d-xs:!bg-transparent md:!bg-gray-100'><span class='d-xs:pl-1 d-xs:pr-1 md:pl-2 md:pr-2'>{{ getCurrencySymbol }}</span></div>
                         <input
                             type="text"
-                            class="wc_input_price !min-h-full focus:!border-none focus:!shadow-none !border-0 d-xs:!pl-0 d-xs:!pr-[5px] d-xs:text-right md:text-left md:!pl-[5px] !pr-0 !pt-0 !pb-0 !w-[100%]"
+                            class="wc_input_price !min-h-full focus:!shadow-none !border-0 d-xs:!pl-0 d-xs:!pr-[5px] d-xs:text-right md:text-left md:!pl-[5px] !pr-0 !pt-0 !pb-0 !w-[100%]"
                             id="fixed_commission"
                             name="fixed_commission"
                             ref='flat'
                             :value="getCommissionValue( 'flat', item.term_id )"
                             v-on:input="e => commissinItemHandler( e.target.value, 'flat', item.term_id, getCommissionValue( 'percentage', item.term_id ) )"
+                            style="border: none !important;"
                         />
                     </div>
                 </div>
