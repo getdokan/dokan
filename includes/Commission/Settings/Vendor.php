@@ -67,7 +67,7 @@ class Vendor implements InterfaceSetting {
      * @return \WeDevs\Dokan\Commission\Model\Setting
      */
     public function save( array $setting ): Setting {
-        if ( 0 !== $this->vendor->get_id() ) {
+        if ( ! $this->vendor->get_id() ) {
             return $this->get();
         }
 
@@ -82,5 +82,16 @@ class Vendor implements InterfaceSetting {
         $this->vendor->update_meta( 'admin_category_commission', $category_commissions );
 
         return $this->get();
+    }
+
+    public function delete() {
+        if ( ! $this->vendor->get_id() ) {
+            return $this->get();
+        }
+
+        delete_user_meta( $this->vendor->get_id(), 'dokan_admin_percentage' );
+        delete_user_meta( $this->vendor->get_id(), 'dokan_admin_percentage_type' );
+        delete_user_meta( $this->vendor->get_id(), 'dokan_admin_additional_fee' );
+        delete_user_meta( $this->vendor->get_id(), 'admin_category_commission' );
     }
 }
