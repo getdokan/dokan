@@ -226,11 +226,11 @@ class Commission {
      *
      * @since DOKAN_SINCE
      *
-     * @param int $total_amount
+     * @param int|float $total_amount
      *
      * @return Commission
      */
-    public function set_total_amount( int $total_amount ): Commission {
+    public function set_total_amount( $total_amount ): Commission {
         $this->total_amount = $total_amount;
 
         return $this;
