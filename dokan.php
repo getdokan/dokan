@@ -45,6 +45,10 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
+require_once __DIR__ . '/vendor/autoload.php';
+
+use WeDevs\Dokan\DependencyManagement\Container;
+
 /**
  * WeDevs_Dokan class
  *
@@ -107,8 +111,6 @@ final class WeDevs_Dokan {
      * within our plugin.
      */
     private function __construct() {
-        require_once __DIR__ . '/vendor/autoload.php';
-
         $this->define_constants();
 
         register_activation_hook( __FILE__, [ $this, 'activate' ] );
@@ -119,7 +121,7 @@ final class WeDevs_Dokan {
         add_action( 'woocommerce_flush_rewrite_rules', [ $this, 'flush_rewrite_rules' ] );
 
         // Register admin notices to container and load notices
-        $this->container['admin_notices'] = new \WeDevs\Dokan\Admin\Notices\Manager();
+        $this->get_service_container()->get( 'admin_notices' );
 
         $this->init_appsero_tracker();
 
@@ -150,6 +152,10 @@ final class WeDevs_Dokan {
      * @return object Class Instance
      */
     public function __get( $prop ) {
+        if ( $this->get_service_container()->has( $prop ) ) {
+            return $this->get_service_container()->get( $prop );
+        }
+
         if ( array_key_exists( $prop, $this->container ) ) {
             return $this->container[ $prop ];
         }
@@ -207,8 +213,8 @@ final class WeDevs_Dokan {
         require_once __DIR__ . '/includes/functions.php';
         require_once __DIR__ . '/includes/functions-compatibility.php';
 
-        $this->container['upgrades'] = new \WeDevs\Dokan\Upgrade\Manager();
-        $installer                   = new \WeDevs\Dokan\Install\Installer();
+        $this->get_service_container()->get( 'upgrades' );
+        $installer = new \WeDevs\Dokan\Install\Installer();
         $installer->do_install();
 
         // rewrite rules during dokan activation
@@ -224,10 +230,7 @@ final class WeDevs_Dokan {
      */
     public function flush_rewrite_rules() {
         // fix rewrite rules
-        if ( ! isset( $this->container['rewrite'] ) ) {
-            $this->container['rewrite'] = new \WeDevs\Dokan\Rewrites();
-        }
-        $this->container['rewrite']->register_rule();
+        $this->get_service_container()->get( 'rewrite' )->register_rule();
         flush_rewrite_rules();
     }
 
@@ -255,32 +258,16 @@ final class WeDevs_Dokan {
      * @return void
      */
     public function define_constants() {
-        $this->define( 'DOKAN_PLUGIN_VERSION', $this->version );
-        $this->define( 'DOKAN_FILE', __FILE__ );
-        $this->define( 'DOKAN_DIR', __DIR__ );
-        $this->define( 'DOKAN_INC_DIR', __DIR__ . '/includes' );
-        $this->define( 'DOKAN_LIB_DIR', __DIR__ . '/lib' );
-        $this->define( 'DOKAN_PLUGIN_ASSEST', plugins_url( 'assets', __FILE__ ) );
+        defined( 'DOKAN_PLUGIN_VERSION' ) || define( 'DOKAN_PLUGIN_VERSION', $this->version );
+        defined( 'DOKAN_FILE' ) || define( 'DOKAN_FILE', __FILE__ );
+        defined( 'DOKAN_DIR' ) || define( 'DOKAN_DIR', __DIR__ );
+        defined( 'DOKAN_INC_DIR' ) || define( 'DOKAN_INC_DIR', __DIR__ . '/includes' );
+        defined( 'DOKAN_LIB_DIR' ) || define( 'DOKAN_LIB_DIR', __DIR__ . '/lib' );
+        defined( 'DOKAN_PLUGIN_ASSEST' ) || define( 'DOKAN_PLUGIN_ASSEST', plugins_url( 'assets', __FILE__ ) );
 
         // give a way to turn off loading styles and scripts from parent theme
-        $this->define( 'DOKAN_LOAD_STYLE', true );
-        $this->define( 'DOKAN_LOAD_SCRIPTS', true );
-    }
-
-    /**
-     * Define constant if not already defined
-     *
-     * @since 2.9.16
-     *
-     * @param string      $name
-     * @param string|bool $value
-     *
-     * @return void
-     */
-    private function define( $name, $value ) {
-        if ( ! defined( $name ) ) {
-            define( $name, $value );
-        }
+        defined( 'DOKAN_LOAD_STYLE' ) || define( 'DOKAN_LOAD_STYLE', true );
+        defined( 'DOKAN_LOAD_SCRIPTS' ) || define( 'DOKAN_LOAD_SCRIPTS', true );
     }
 
     /**
@@ -368,65 +355,21 @@ final class WeDevs_Dokan {
      * @return void
      */
     public function init_classes() {
-        new \WeDevs\Dokan\Withdraw\Hooks();
-        new \WeDevs\Dokan\Product\Hooks();
-        new \WeDevs\Dokan\ProductCategory\Hooks();
-        new \WeDevs\Dokan\Vendor\Hooks();
-        new \WeDevs\Dokan\Upgrade\Hooks();
-        new \WeDevs\Dokan\Vendor\UserSwitch();
-        new \WeDevs\Dokan\CacheInvalidate();
-        new \WeDevs\Dokan\Shipping\Hooks();
+        $common_services = $this->get_service_container()->get( 'common-service' );
 
         if ( is_admin() ) {
-            new \WeDevs\Dokan\Admin\Hooks();
-            new \WeDevs\Dokan\Admin\Menu();
-            new \WeDevs\Dokan\Admin\AdminBar();
-            new \WeDevs\Dokan\Admin\Pointers();
-            new \WeDevs\Dokan\Admin\Settings();
-            new \WeDevs\Dokan\Admin\UserProfile();
-            new \WeDevs\Dokan\Admin\SetupWizard();
+            $admin_services = $this->get_service_container()->get( 'admin-service' );
         } else {
-            new \WeDevs\Dokan\Vendor\StoreListsFilter();
-            new \WeDevs\Dokan\ThemeSupport\Manager();
+            $frontend_services = $this->get_service_container()->get( 'frontend-service' );
         }
 
-        $this->container['product_block']       = new \WeDevs\Dokan\Blocks\ProductBlock();
-        $this->container['pageview']            = new \WeDevs\Dokan\PageViews();
-        $this->container['seller_wizard']       = new \WeDevs\Dokan\Vendor\SetupWizard();
-        $this->container['core']                = new \WeDevs\Dokan\Core();
-        $this->container['scripts']             = new \WeDevs\Dokan\Assets();
-        $this->container['email']               = new \WeDevs\Dokan\Emails\Manager();
-        $this->container['vendor']              = new \WeDevs\Dokan\Vendor\Manager();
-        $this->container['product']             = new \WeDevs\Dokan\Product\Manager();
-        $this->container['shortcodes']          = new \WeDevs\Dokan\Shortcodes\Shortcodes();
-        $this->container['registration']        = new \WeDevs\Dokan\Registration();
-        $this->container['order']               = new \WeDevs\Dokan\Order\Manager();
-        $this->container['order_controller']    = new \WeDevs\Dokan\Order\Controller();
-        $this->container['api']                 = new \WeDevs\Dokan\REST\Manager();
-        $this->container['withdraw']            = new \WeDevs\Dokan\Withdraw\Manager();
-        $this->container['dashboard']           = new \WeDevs\Dokan\Dashboard\Manager();
-        $this->container['commission']          = new \WeDevs\Dokan\Commission();
-        $this->container['customizer']          = new \WeDevs\Dokan\Customizer();
-        $this->container['upgrades']            = new \WeDevs\Dokan\Upgrade\Manager();
-        $this->container['product_sections']    = new \WeDevs\Dokan\ProductSections\Manager();
-        $this->container['reverse_withdrawal']  = new \WeDevs\Dokan\ReverseWithdrawal\ReverseWithdrawal();
-        $this->container['dummy_data_importer'] = new \WeDevs\Dokan\DummyData\Importer();
-        $this->container['catalog_mode']        = new \WeDevs\Dokan\CatalogMode\Controller();
-        $this->container['bg_process']          = new \WeDevs\Dokan\BackgroundProcess\Manager();
-        $this->container['frontend_manager']    = new \WeDevs\Dokan\Frontend\Frontend();
-
-        //fix rewrite rules
-        if ( ! isset( $this->container['rewrite'] ) ) {
-            $this->container['rewrite'] = new \WeDevs\Dokan\Rewrites();
-        }
+        $container_services = $this->get_service_container()->get( 'container-service' );
 
         $this->container = apply_filters( 'dokan_get_class_container', $this->container );
 
         if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
-            new \WeDevs\Dokan\Ajax();
+            $ajax_services = $this->get_service_container()->get( 'ajax-service' );
         }
-
-        new \WeDevs\Dokan\Privacy();
     }
 
     /**
@@ -484,7 +427,7 @@ final class WeDevs_Dokan {
      * @return void
      */
     public function register_widgets() {
-        $this->container['widgets'] = new \WeDevs\Dokan\Widgets\Manager();
+        $this->get_service_container()->get( 'widgets' );
     }
 
     /**
@@ -524,7 +467,7 @@ final class WeDevs_Dokan {
      * @return void
      */
     public function init_appsero_tracker() {
-        $this->container['tracker'] = new \WeDevs\Dokan\Tracker();
+        $this->get_service_container()->get( 'tracker' );
     }
 
     /**
@@ -580,6 +523,25 @@ final class WeDevs_Dokan {
     public function get_db_version_key() {
         return $this->db_version_key;
     }
+
+    public function get_service_container(): Container {
+		return welabs_dokan_get_container();
+    }
+}
+
+// Instantiate the container
+$GLOBALS['welabs_dokan_container'] = new Container();
+
+// Register the service providers
+$GLOBALS['welabs_dokan_container']->addServiceProvider( new \WeDevs\Dokan\Providers\ServiceProvider() );
+
+/**
+ * Get the container.
+ *
+ * @return Container
+ */
+function welabs_dokan_get_container(): Container {
+	return $GLOBALS['welabs_dokan_container'];
 }
 
 /**

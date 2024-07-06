@@ -1,0 +1,69 @@
+<?php
+
+namespace WeDevs\Dokan\Providers;
+
+use WeDevs\Dokan\DependencyManagement\BootableServiceProvider;
+
+class ServiceProvider extends BootableServiceProvider {
+	public const TAG = 'container-service';
+
+	protected $services = [
+		'product_block'       => \WeDevs\Dokan\Blocks\ProductBlock::class, //
+        'pageview'            => \WeDevs\Dokan\PageViews::class,
+        'seller_wizard'       => \WeDevs\Dokan\Vendor\SetupWizard::class,
+        'core'                => \WeDevs\Dokan\Core::class,
+        'scripts'             => \WeDevs\Dokan\Assets::class,
+        'email'               => \WeDevs\Dokan\Emails\Manager::class,
+        'vendor'              => \WeDevs\Dokan\Vendor\Manager::class, //
+        'product'             => \WeDevs\Dokan\Product\Manager::class, //
+        'shortcodes'          => \WeDevs\Dokan\Shortcodes\Shortcodes::class,
+        'registration'        => \WeDevs\Dokan\Registration::class,
+        'order'               => \WeDevs\Dokan\Order\Manager::class, //
+        'order_controller'    => \WeDevs\Dokan\Order\Controller::class,
+        'api'                 => \WeDevs\Dokan\REST\Manager::class,
+        'withdraw'            => \WeDevs\Dokan\Withdraw\Manager::class, //
+        'dashboard'           => \WeDevs\Dokan\Dashboard\Manager::class, //
+        'commission'          => \WeDevs\Dokan\Commission::class,
+        'customizer'          => \WeDevs\Dokan\Customizer::class,
+        'upgrades'            => \WeDevs\Dokan\Upgrade\Manager::class, //
+        'product_sections'    => \WeDevs\Dokan\ProductSections\Manager::class,
+        'reverse_withdrawal'  => \WeDevs\Dokan\ReverseWithdrawal\ReverseWithdrawal::class,
+        'dummy_data_importer' => \WeDevs\Dokan\DummyData\Importer::class,
+        'catalog_mode'        => \WeDevs\Dokan\CatalogMode\Controller::class,
+        'bg_process'          => \WeDevs\Dokan\BackgroundProcess\Manager::class,
+        'frontend_manager'    => \WeDevs\Dokan\Frontend\Frontend::class,
+		'rewrite'             => \WeDevs\Dokan\Rewrites::class,
+        'widgets'             => \WeDevs\Dokan\Widgets\Manager::class, //
+        'admin_notices'       => \WeDevs\Dokan\Admin\Notices\Manager::class,
+        'tracker'             => \WeDevs\Dokan\Tracker::class,
+	];
+
+	/**
+	 * @inheritDoc
+	 *
+	 * @return void
+	 */
+	public function boot(): void {
+		$this->getContainer()->addServiceProvider( new AdminServiceProvider() );
+		$this->getContainer()->addServiceProvider( new CommonServiceProvider() );
+		$this->getContainer()->addServiceProvider( new FrontendServiceProvider() );
+		$this->getContainer()->addServiceProvider( new AjaxServiceProvider() );
+	}
+
+	public function provides( string $alias ): bool {
+		if ( isset( $this->services[ $alias ] ) ) {
+			return true;
+		}
+
+		return parent::provides( $alias );
+	}
+
+	/**
+     * Register the classes.
+     */
+	public function register(): void {
+		foreach ( $this->services as $key => $class_name ) {
+			$this->getContainer()->addShared( $key, $class_name )->addTag( self::TAG );
+		}
+    }
+}
