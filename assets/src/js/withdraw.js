@@ -252,20 +252,28 @@
             let withdrawMethod = $( "[name='withdraw_method'][id='withdraw-method']" ).val();
             let withdrawAmount = $( "[name='withdraw_amount'][id='withdraw-amount']" ).val();
 
+            let { chargePercentage, chargeFixed } = $(
+                "select[name='withdraw_method'][id='withdraw-method'] option:selected"
+            ).data();
+
             withdrawAmount = accounting.unformat(
                 withdrawAmount,
                 dokan.mon_decimal_point
             );
-            let { chargePercentage, chargeFixed } = $(
-                "select[name='withdraw_method'][id='withdraw-method'] option:selected"
-            ).data();
+
+            chargeFixed = accounting.unformat(
+                chargeFixed,
+                dokan.mon_decimal_point
+            );
+
             let chargeAmount = 0;
             let chargeText = '';
 
             if ( chargeFixed ) {
-                chargeText += Dokan_Withdraw.formatMoney( chargeFixed );
+                chargeText += chargeFixed;
                 chargeAmount += chargeFixed;
             }
+
             if ( chargePercentage ) {
                 let percentageAmount = chargePercentage / 100 * withdrawAmount;
                 chargeAmount += percentageAmount;
@@ -297,7 +305,7 @@
             let chargeSection    = $('#dokan-withdraw-charge-section');
             let revivableSection = $('#dokan-withdraw-revivable-section');
 
-            $('#dokan-withdraw-charge-section-text').html(chargeText);
+            $('#dokan-withdraw-charge-section-text').html(Dokan_Withdraw.formatMoney(chargeText));
             $('#dokan-withdraw-revivable-section-text').html(Dokan_Withdraw.formatMoney(withdrawAmount - chargeAmount));
 
             chargeSection.show();
