@@ -4,6 +4,32 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.11.4',
+        'released' => '2024-07-10',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Direct links to the relevant settings from vendor progress bar added.',
+                    'description' => '',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => 'Some deprecation warning resolved.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Shop URL rendered double slash when using WPML on vendor registration.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fatal error in block editor on adding and editing page with customer-migration shortcode.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.11.3',
         'released' => '2024-06-10',
         'changes'  => [
