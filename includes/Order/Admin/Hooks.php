@@ -158,7 +158,7 @@ class Hooks {
         }
 
         if ( ! empty( $output ) ) {
-            echo apply_filters( "dokan_manage_shop_order_custom_columns_{$col}", $output, $order );
+            echo wp_kses_post( apply_filters( "dokan_manage_shop_order_custom_columns_{$col}", $output, $order ) );
         }
     }
 
@@ -168,15 +168,15 @@ class Hooks {
      * @since 3.8.0 Moved from includes/Admin/Hooks.php file
      * @since 3.8.0 Rewritten for HPOS
      *
-     * @param string[] $classes An array of post class names.
-     * @param string[] $class   An array of additional class names added to the post.
+     * @param string[] $classes     An array of post class names.
+     * @param string[] $css_class   An array of additional class names added to the post.
      * @param int      $post_id The post ID.
      *
      * @global WP_Post $post
      *
      * @return array
      */
-    public function admin_shop_order_row_classes( $classes, $class, $post_id ) {
+    public function admin_shop_order_row_classes( $classes, $css_class, $post_id ) {
         if ( ! OrderUtil::is_order( $post_id ) ) {
             return $classes;
         }

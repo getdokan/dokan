@@ -34,9 +34,10 @@ class TopratedProducts extends WP_Widget {
 
         $r = dokan_get_top_rated_products( $no_of_product );
 
-        echo $args['before_widget']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
+        echo wp_kses_post( $args['before_widget'] );
+
         if ( ! empty( $title ) ) {
-            echo $args['before_title'] . $title . $args['after_title']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
+            echo wp_kses_post( $args['before_title'] . $title . $args['after_title'] );
         }
 
         dokan_get_template_part(
@@ -46,7 +47,7 @@ class TopratedProducts extends WP_Widget {
             )
         );
 
-        echo $args['after_widget']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
+        echo wp_kses_post( $args['after_widget'] );
 
         wp_reset_postdata();
     }
@@ -103,5 +104,4 @@ class TopratedProducts extends WP_Widget {
         $instance['show_rating']   = ( ! empty( $new_instance['show_rating'] ) ) ? sanitize_text_field( $new_instance['show_rating'] ) : '';
         return $instance;
     }
-
-} // class Dokan best selling product widget
+}
