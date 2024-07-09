@@ -1,4 +1,29 @@
 <?php
+
+/**
+ * Template Name: Product listing row template
+ *
+ * @since 2.4
+ *
+ * @package Dokan
+ *
+ * @var WP_Post $post Product post object
+ * @var WC_Product $product Product object
+ * @var string $tr_class Table row class
+ * @var string $row_actions Row actions HTML
+ * @var string $product_type Product type
+ * @var string $product_status Product status
+ */
+
+
+/**
+ * Filter the product image attributes
+ *
+ * @since 2.9.3
+ *
+ * @param array $img_kses Image attributes
+ * @return array
+ */
 $img_kses = apply_filters(
     'dokan_product_image_attributes',
     [
@@ -15,6 +40,14 @@ $img_kses = apply_filters(
     ]
 );
 
+/**
+ * Filter the row actions
+ *
+ * @since 2.9.3
+ *
+ * @param string $row_actions Row actions HTML
+ * @return string
+ */
 $row_actions_kses = apply_filters(
     'dokan_row_actions_kses',
     [
@@ -28,6 +61,14 @@ $row_actions_kses = apply_filters(
     ]
 );
 
+/**
+ * Filter the price HTML
+ *
+ * @since 2.9.3
+ *
+ * @param array $price_kses Price HTML
+ * @return array
+ */
 $price_kses = apply_filters(
     'dokan_price_kses',
     [
@@ -49,17 +90,16 @@ $price_kses = apply_filters(
             <?php echo wp_kses( $product->get_image( 'thumbnail' ), $img_kses ); ?>
         <?php } ?>
         <?php
-        /**
-         * Fire an action dokan_product_posts_column to add extra content in product listing table
-         *
-         * @since DOKAN_SINCE
-         *
-         * @param string $column column name
-         * @param int $post_id post id
-         *
-         * @return void
-         */
-        do_action( 'dokan_product_posts_column', 'image', $product->get_id() );
+            /**
+             * Fire an action to add extra content after product image column in product listing table
+             *
+             * @since DOKAN_SINCE
+             *
+             * @param \WC_Product $product Current product.
+             *
+             * @return void
+             */
+            do_action( 'dokan_product_list_table_after_column_content_image', $product );
         ?>
     </td>
     <td data-title="<?php esc_attr_e( 'Name', 'dokan-lite' ); ?>" class="column-primary">
@@ -69,6 +109,19 @@ $price_kses = apply_filters(
             <strong><a href=""><?php echo esc_html( $product->get_title() ); ?></a></strong>
         <?php } ?>
 
+        <?php
+            /**
+             * Fire an action to add extra content after product name column in product listing table
+             *
+             * @since DOKAN_SINCE
+             *
+             * @param \WC_Product $product Current product.
+             *
+             * @return void
+             */
+            do_action( 'dokan_product_list_table_after_column_content_name', $product );
+        ?>
+
         <?php if ( ! empty( $row_actions ) ) { ?>
             <div class="row-actions">
                 <?php echo wp_kses( $row_actions, $row_actions_kses ); ?>
@@ -77,25 +130,50 @@ $price_kses = apply_filters(
 
         <button type="button" class="toggle-row"></button>
         <?php
-        /**
-         * Fire an action dokan_product_posts_column to add extra content in product listing table
-         *
-         * @since DOKAN_SINCE
-         *
-         * @param string $column column name
-         * @param int $post_id post id
-         *
-         * @return void
-         */
-        do_action( 'dokan_product_posts_column', 'name', $product->get_id() );
+            /**
+             * Fire an action to add extra content after product name column in product listing table
+             *
+             * @since DOKAN_SINCE
+             *
+             * @param \WC_Product $product Current product.
+             *
+             * @return void
+             */
+            do_action( 'dokan_product_list_table_after_column_content_name_row_actions', $product );
         ?>
     </td>
     <td class="post-status" data-title="<?php esc_attr_e( 'Status', 'dokan-lite' ); ?>">
         <label class="dokan-label <?php echo esc_attr( dokan_get_post_status_label_class( $post->post_status ) ); ?>"><?php echo esc_html( dokan_get_post_status( $post->post_status ) ); ?></label>
-        <?php do_action( 'dokan_product_posts_column', 'status', $product->get_id() ); ?>
+
+        <?php
+            /**
+             * Fire an action to add extra content after product status column in product listing table
+             *
+             * @since DOKAN_SINCE
+             *
+             * @param \WC_Product $product Current product.
+             *
+             * @return void
+             */
+            do_action( 'dokan_product_list_table_after_column_content_status', $product );
+        ?>
     </td>
 
-    <?php do_action( 'dokan_product_list_table_after_status_table_data', $post, $product, $tr_class, $row_actions ); ?>
+    <?php
+        /**
+         * Fire an action to add extra content after product status column in product listing table
+         *
+         * @since ?
+         *
+         * @param \WP_Post $post Current post.
+         * @param \WC_Product $product Current product.
+         * @param string $tr_class Table row class.
+         * @param string $row_actions Row actions HTML.
+         *
+         * @return void
+         */
+        do_action( 'dokan_product_list_table_after_status_table_data', $post, $product, $tr_class, $row_actions );
+    ?>
 
     <td data-title="<?php esc_attr_e( 'SKU', 'dokan-lite' ); ?>">
         <?php
@@ -107,16 +185,15 @@ $price_kses = apply_filters(
         ?>
         <?php
             /**
-             * Fire an action dokan_product_posts_column to add extra content in product listing table
+             * Fire an action to add extra content after product sku column in product listing table
              *
              * @since DOKAN_SINCE
              *
-             * @param string $column column name
-             * @param int $post_id post id
+             * @param \WC_Product $product Current product.
              *
              * @return void
              */
-            do_action( 'dokan_product_posts_column', 'sku', $product->get_id() );
+            do_action( 'dokan_product_list_table_after_column_content_sku', $product );
         ?>
     </td>
     <td data-title="<?php esc_attr_e( 'Stock', 'dokan-lite' ); ?>">
@@ -129,16 +206,15 @@ $price_kses = apply_filters(
         ?>
         <?php
             /**
-             * Fire an action dokan_product_posts_column to add extra content in product listing table
+             * Fire an action to add extra content after product stock column in product listing table
              *
              * @since DOKAN_SINCE
              *
-             * @param string $column column name
-             * @param int $post_id post id
+             * @param \WC_Product $product Current product.
              *
              * @return void
              */
-            do_action( 'dokan_product_posts_column', 'stock', $product->get_id() );
+            do_action( 'dokan_product_list_table_after_column_content_stock', $product );
         ?>
     </td>
     <td data-title="<?php esc_attr_e( 'Price', 'dokan-lite' ); ?>">
@@ -151,16 +227,15 @@ $price_kses = apply_filters(
         ?>
         <?php
             /**
-             * Fire an action dokan_product_posts_column to add extra content in product listing table
+             * Fire an action to add extra content after product price column in product listing table
              *
              * @since DOKAN_SINCE
              *
-             * @param string $column column name
-             * @param int $post_id post id
+             * @param \WC_Product $product Current product.
              *
              * @return void
              */
-            do_action( 'dokan_product_posts_column', 'price', $product->get_id() );
+            do_action( 'dokan_product_list_table_after_column_content_price', $product );
         ?>
     </td>
     <td data-title="<?php esc_attr_e( 'Type', 'dokan-lite' ); ?>">
@@ -186,32 +261,30 @@ $price_kses = apply_filters(
         ?>
         <?php
             /**
-             * Fire an action dokan_product_posts_column to add extra content in product listing table
+             * Fire an action to add extra content after product type column in product listing table
              *
              * @since DOKAN_SINCE
              *
-             * @param string $column column name
-             * @param int $post_id post id
+             * @param \WC_Product $product Current product.
              *
              * @return void
              */
-            do_action( 'dokan_product_posts_column', 'type', $product->get_id() );
+            do_action( 'dokan_product_list_table_after_column_content_type', $product );
         ?>
     </td>
     <td data-title="<?php esc_attr_e( 'Views', 'dokan-lite' ); ?>">
         <?php echo (int) get_post_meta( $post->ID, 'pageview', true ); ?>
         <?php
             /**
-             * Fire an action dokan_product_posts_column to add extra content in product listing table
+             * Fire an action to add extra content after product views column in product listing table
              *
              * @since DOKAN_SINCE
              *
-             * @param string $column column name
-             * @param int $post_id post id
+             * @param \WC_Product $product Current product.
              *
              * @return void
              */
-            do_action( 'dokan_product_posts_column', 'views', $product->get_id() );
+            do_action( 'dokan_product_list_table_after_column_content_views', $product );
         ?>
     </td>
     <td class="post-date" data-title="<?php esc_attr_e( 'Date', 'dokan-lite' ); ?>">
@@ -261,16 +334,15 @@ $price_kses = apply_filters(
         ?>
         <?php
             /**
-             * Fire an action dokan_product_posts_column to add extra content in product listing table
+             * Fire an action to add extra content after product date column in product listing table
              *
              * @since DOKAN_SINCE
              *
-             * @param string $column column name
-             * @param int $post_id post id
+             * @param \WC_Product $product Current product.
              *
              * @return void
              */
-            do_action( 'dokan_product_posts_column', 'date', $product->get_id() );
+            do_action( 'dokan_product_list_table_after_column_content_date', $product );
         ?>
         </div>
     </td>
