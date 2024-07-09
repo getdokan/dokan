@@ -11,6 +11,14 @@ class CommonServiceProvider extends BaseServiceProvider {
 		self::TAG,
 	];
 
+    /**
+     * {@inheritDoc}
+     *
+     * Check if the service provider can provide the given service alias.
+     *
+     * @param string $alias The service alias to check.
+     * @return bool True if the service provider can provide the service, false otherwise.
+     */
 	public function provides( string $alias ): bool {
 		return in_array( $alias, $this->services, true );
 	}
