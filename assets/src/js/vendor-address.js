@@ -50,7 +50,7 @@
                         $( 'select#dokan_address_state' ).html( '<option value="">' + wc_country_select_params.i18n_select_state_text + '</option>' + options );
                     }
                     if ( $statebox.is( 'input' ) ) {
-                        $( 'input#dokan_address_state' ).replaceWith( '<select type="text" class="' + input_class + '" name="' + input_name + '" id="' + input_id + '" required ></select>' );
+                        $( 'input#dokan_address_state' ).replaceWith( '<select type="text" class="wc-enhanced-select ' + input_class + '" name="' + input_name + '" id="' + input_id + '" required ></select>' );
                         $( 'select#dokan_address_state' ).html( '<option value="">' + wc_country_select_params.i18n_select_state_text + '</option>' + options );
                     }
                     $( '#dokan_address_state' ).removeClass( 'dokan-hide' );
