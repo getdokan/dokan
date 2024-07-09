@@ -1,6 +1,6 @@
 <?php
 
-namespace WeDevs\Dokan\Providers;
+namespace WeDevs\Dokan\DependencyManagement\Providers;
 
 use WeDevs\Dokan\DependencyManagement\BaseServiceProvider;
 
