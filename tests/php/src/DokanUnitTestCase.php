@@ -2,7 +2,11 @@
 
 namespace WeDevs\Dokan\Test;
 
+use ActionScheduler_QueueRunner;
+use ActionScheduler_Store;
+use WC_Helper;
 use WeDevs\Dokan\Test\Factories\DokanFactory;
+use WeDevs\Dokan\Test\Helpers\WC_Helper_Queue;
 use WP_UnitTestCase;
 
 abstract class DokanUnitTestCase extends WP_UnitTestCase {
@@ -21,6 +25,16 @@ abstract class DokanUnitTestCase extends WP_UnitTestCase {
      * @var string Dokan API Namespace
      */
     protected $namespace = 'dokan/v1/';
+
+    /**
+	 * This method is called before the first test of this test class is run.
+	 *
+	 * @codeCoverageIgnore
+	 *
+	 * @return void
+	 */
+	public static function setUpBeforeClass(): void {
+    }
 
     /**
      * Setup a rest server for test.
@@ -57,5 +71,32 @@ abstract class DokanUnitTestCase extends WP_UnitTestCase {
 			$factory = new DokanFactory();
 		}
 		return $factory;
+	}
+
+    /**
+	 * Get all pending queued actions.
+	 *
+	 * @return array Pending jobs.
+	 */
+	public function get_all_pending() {
+		return WC_Helper_Queue::get_all_pending();
+	}
+
+	/**
+	 * Run all pending queued actions.
+	 *
+	 * @return void
+	 */
+	public function run_all_pending() {
+		WC_Helper_Queue::run_all_pending();
+	}
+
+	/**
+	 * Cancel all pending actions.
+	 *
+	 * @return void
+	 */
+	public function cancel_all_pending() {
+		WC_Helper_Queue::cancel_all_pending();
 	}
 }

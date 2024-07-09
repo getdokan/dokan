@@ -34,8 +34,12 @@ trait DBAssertionTrait {
             $data = [ 1 ];
         }
 
+        if ( ! str_starts_with( $table, $wpdb->prefix ) ) {
+            $table = $wpdb->prefix . $table;
+        }
+
         $sql = $wpdb->prepare(
-            "SELECT COUNT(*) FROM {$wpdb->prefix}{$table} WHERE $placeholders ",
+            "SELECT COUNT(*) FROM $table WHERE $placeholders ",
             array_values( $data )
         );
 
