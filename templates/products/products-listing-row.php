@@ -3,7 +3,7 @@
 /**
  * Template Name: Product listing row template
  *
- * @since 2.4
+ * @since 2.9.0
  *
  * @package Dokan
  *
@@ -19,10 +19,9 @@
 /**
  * Filter the product image attributes
  *
- * @since 2.9.3
+ * @since 3.11
  *
  * @param array $img_kses Image attributes
- * @return array
  */
 $img_kses = apply_filters(
     'dokan_product_image_attributes',
@@ -43,10 +42,9 @@ $img_kses = apply_filters(
 /**
  * Filter the row actions
  *
- * @since 2.9.3
+ * @since 2.9.13
  *
- * @param string $row_actions Row actions HTML
- * @return string
+ * @param array $row_actions Row actions HTML
  */
 $row_actions_kses = apply_filters(
     'dokan_row_actions_kses',
@@ -64,10 +62,9 @@ $row_actions_kses = apply_filters(
 /**
  * Filter the price HTML
  *
- * @since 2.9.3
+ * @since 2.9.13
  *
  * @param array $price_kses Price HTML
- * @return array
  */
 $price_kses = apply_filters(
     'dokan_price_kses',
@@ -163,7 +160,7 @@ $price_kses = apply_filters(
         /**
          * Fire an action to add extra content after product status column in product listing table
          *
-         * @since ?
+         * @since 2.9.4
          *
          * @param \WP_Post $post Current post.
          * @param \WC_Product $product Current product.
