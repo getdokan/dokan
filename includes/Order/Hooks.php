@@ -349,10 +349,10 @@ class Hooks {
         if ( ! apply_filters( 'dokan_ensure_vendor_coupon', true ) ) {
             return $valid;
         }
-      
+
         // A coupon must be bound with a product if pro is deactivated
         if ( ! dokan()->is_pro_exists() && count( $coupon->get_product_ids() ) === 0 ) {
-            throw new Exception( __( 'A coupon must be restricted with a vendor product.', 'dokan-lite' ) );
+            throw new Exception( esc_html__( 'A coupon must be restricted with a vendor product.', 'dokan-lite' ) );
         }
 
         $coupon_id = $coupon->get_id();
