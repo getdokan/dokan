@@ -7,9 +7,12 @@ use WeDevs\Dokan\Test\Helpers\WC_Helper_Queue;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_UnitTestCase;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Brain\Monkey;
 
 abstract class DokanUnitTestCase extends WP_UnitTestCase {
     use DBAssertionTrait;
+    use MockeryPHPUnitIntegration;
 
     /**
      * @var int
@@ -53,6 +56,8 @@ abstract class DokanUnitTestCase extends WP_UnitTestCase {
         global $wp_rest_server;
 
         parent::setUp();
+        Monkey\setUp();
+
         $wp_rest_server = new \WP_REST_Server();
         $this->server   = $wp_rest_server;
         do_action( 'rest_api_init' );
@@ -170,5 +175,11 @@ abstract class DokanUnitTestCase extends WP_UnitTestCase {
         $request->set_body_params( $params );
 
         return $this->server->dispatch( $request );
+    }
+
+
+    protected function tearDown(): void {
+        Monkey\tearDown();
+        parent::tearDown();
     }
 }
