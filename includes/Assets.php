@@ -13,6 +13,7 @@ class Assets {
      * The constructor
      */
     public function __construct() {
+        error_log( 'loading lite assets' );
         add_action( 'init', [ $this, 'register_all_scripts' ], 10 );
         add_filter( 'dokan_localized_args', [ $this, 'conditional_localized_args' ] );
 

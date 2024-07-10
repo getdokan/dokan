@@ -2,13 +2,16 @@
 
 namespace WeDevs\Dokan\DependencyManagement\Providers;
 
+use WeDevs\Dokan\Analytics\Reports\Orders\FilterQuery;
 use WeDevs\Dokan\DependencyManagement\BaseServiceProvider;
+use WeDevs\Dokan\ThirdParty\Packages\League\Container\Definition\DefinitionInterface;
 
 class AnalyticsServiceProvider extends BaseServiceProvider {
     public const TAGS = [ 'analytics-service', 'common-service' ];
 
 	protected $services = [
-        \WeDevs\Dokan\Analytics\ScheduleListener::class,
+        \WeDevs\Dokan\Analytics\Reports\Orders\ScheduleListener::class,
+        FilterQuery::class,
     ];
 
     /**
@@ -36,6 +39,12 @@ class AnalyticsServiceProvider extends BaseServiceProvider {
                 );
 
             $this->add_tags( $definition, self::TAGS );
+        }
+    }
+
+    private function add_tags( DefinitionInterface $definition, $tags ) {
+        foreach ( $tags as $tag ) {
+			$definition = $definition->addTag( $tag );
         }
     }
 }

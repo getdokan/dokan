@@ -28,7 +28,7 @@ class CustomFactoriesTest extends DokanUnitTestCase {
             ->create(
                 [
 					'status'      => 'pending',
-					'customer_id' => $this->factory()->customer->create( [] ),
+					'customer_id' => $this->customer_id,
 					'line_items'  => array(
 						array(
 							'product_id' => $this->factory()->product
@@ -61,7 +61,7 @@ class CustomFactoriesTest extends DokanUnitTestCase {
         $order = wc_get_order( $order_id );
         $this->assertInstanceOf( 'WC_Order', $order );
         $this->assertEquals( 'pending', $order->get_status() );
-        $this->assertEquals( 2, $order->get_customer_id() );
+        $this->assertEquals( $this->customer_id, $order->get_customer_id() );
         $this->assertEquals( 10, $order->get_total_fees() );
         $this->assertEquals( 10, $order->get_shipping_total() );
         $this->assertEquals( 15, $order->get_subtotal() );

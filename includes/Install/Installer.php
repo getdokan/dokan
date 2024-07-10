@@ -327,6 +327,7 @@ class Installer {
         $this->create_refund_table();
         $this->create_vendor_balance_table();
         $this->create_reverse_withdrawal_table();
+        $this->create_dokan_order_stats_table();
     }
 
     /**
@@ -535,5 +536,27 @@ class Installer {
         }
 
         return wp_kses_post( $upgrade_notice );
+    }
+
+    protected function create_dokan_order_stats_table() {
+        global $wpdb;
+
+        $sql = "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}dokan_order_stats` (
+                `order_id` bigint UNSIGNED NOT NULL,
+                `seller_id` bigint UNSIGNED NOT NULL DEFAULT '0',
+                `is_suborder` tinyint(1) NOT NULL DEFAULT '0' COMMENT 'Flag set to 1 if order_id is a Dokan suborder or a refund of a Dokan suborder, otherwise 0',
+                `seller_earning` double NOT NULL DEFAULT '0',
+                `seller_gateway_fee` double NOT NULL DEFAULT '0',
+                `seller_discount` double NOT NULL DEFAULT '0',
+                `admin_commission` double NOT NULL DEFAULT '0',
+                `admin_gateway_fee` double NOT NULL DEFAULT '0',
+                `admin_discount` double NOT NULL DEFAULT '0',
+                `admin_subsidy` double NOT NULL DEFAULT '0',
+                PRIMARY KEY (order_id),
+                KEY seller_id (seller_id),
+                KEY is_suborder (is_suborder)
+            ) ENGINE=InnoDB {$wpdb->get_charset_collate()};";
+
+        dbDelta( $sql );
     }
 }

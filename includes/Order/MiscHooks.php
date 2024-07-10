@@ -23,11 +23,11 @@ class MiscHooks {
      */
     public function __construct() {
         //Wc remove child order from wc_order_product_lookup & trim child order from posts for analytics
-        add_action( 'wc-admin_import_orders', [ $this, 'delete_child_order_from_wc_order_product' ] );
+        // add_action( 'wc-admin_import_orders', [ $this, 'delete_child_order_from_wc_order_product' ] );
 
         // Exclude suborders in woocommerce analytics.
         add_filter( 'woocommerce_analytics_orders_select_query', [ $this, 'trim_child_order_for_analytics_order' ] );
-        add_filter( 'woocommerce_analytics_update_order_stats_data', [ $this, 'trim_child_order_for_analytics_order_stats' ], 10, 2 );
+        // add_filter( 'woocommerce_analytics_update_order_stats_data', [ $this, 'trim_child_order_for_analytics_order_stats' ], 10, 2 );
 
         // remove customer info from order export based on setting
         add_filter( 'dokan_csv_export_headers', [ $this, 'hide_customer_info_from_vendor_order_export' ], 20, 1 );
