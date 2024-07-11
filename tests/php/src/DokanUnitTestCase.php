@@ -266,4 +266,108 @@ abstract class DokanUnitTestCase extends WP_UnitTestCase {
             [ $order_id, $seller_id1, $seller_id2 ],
         ];
     }
+
+
+
+    /**
+     * Data provider for multi-vendor order.
+     *
+     * @see https://docs.phpunit.de/en/9.6/writing-tests-for-phpunit.html#writing-tests-for-phpunit-data-providers
+     * @return array The data for the multi-vendor order tests.
+     */
+    protected function get_multi_vendor_order_data() {
+        $seller_id1 = $this->seller_id1;
+        $seller_id2 = $this->seller_id2;
+        $customer_id = $this->customer_id;
+
+        return [
+			'item_fee_list' => [
+				[
+					'name' => 'Extra Charge',
+					'amount' => 10,
+				],
+			],
+			'shipping_item_list' => [
+				[
+					'name' => 'Shipping Fee 1',
+					'amount' => 15,
+					'seller_id' => $seller_id1,
+				],
+                [
+					'name' => 'Shipping Fee 2',
+					'amount' => 5,
+					'seller_id' => $seller_id2,
+				],
+			],
+			'status'      => 'processing',
+			'customer_id' => $customer_id,
+			'line_items'  => array(
+				array(
+					'product' => [
+						'name' => 'Test Product 1',
+						'regular_price' => 5,
+						'price' => 5,
+						'seller_id' => $seller_id1,
+					],
+					'quantity'   => 3,
+				),
+				array(
+					'product' => [
+						'name' => 'Test Product 2',
+						'regular_price' => 10,
+						'price' => 10,
+						'seller_id' => $seller_id2,
+					],
+					'quantity'   => 2,
+				),
+			),
+
+		];
+    }
+
+    /**
+     * Create multi vendor order. The data structure should be like the method of get_multi_vendor_order_data.
+     *
+     * @param array $order_data
+     * @return int The parent order ID.
+     */
+    protected function create_multi_vendor_order( array $order_data = [] ) {
+        $default_data = $this->get_multi_vendor_order_data();
+
+        $order_data = wp_parse_args( $order_data, $default_data );
+
+        $order_factory = $this->factory()->order;
+
+        foreach ( $order_data['item_fee_list'] ?? []  as $fee_data ) {
+            $order_factory = $order_factory->set_item_fee( $fee_data );
+        }
+
+        foreach ( $order_data['shipping_item_list'] ?? []  as $shipping_data ) {
+            $order_factory = $order_factory->set_item_shipping( $shipping_data );
+        }
+
+        $order_raw_data = [
+            'status' => $order_data['status'],
+            'customer_id' => $order_data['customer_id'],
+        ];
+
+        $seller_ids = [];
+
+        foreach ( $order_data['line_items']  as $line_item_data ) {
+            $prod_data = $line_item_data['product'];
+            $slr_id = $prod_data['seller_id'];
+            $seller_ids[] = $slr_id;
+            unset( $prod_data['seller_id'] );
+            unset( $line_item_data['product'] );
+
+            $line_item_data['product_id'] = $this->factory()
+                ->product
+                ->set_seller_id( $slr_id )
+                ->create( $prod_data );
+
+            $order_raw_data['line_items'][] = $line_item_data;
+        }
+
+        return $order_factory->create( $order_raw_data );
+    }
 }
