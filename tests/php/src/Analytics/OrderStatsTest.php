@@ -1,60 +1,115 @@
 <?php
 namespace WeDevs\Dokan\Test\Analytics;
 
+use Mockery;
+use WeDevs\Dokan\Analytics\Reports\Orders\FilterQuery;
+use WeDevs\Dokan\Analytics\Reports\Orders\ScheduleListener;
 use WeDevs\Dokan\Test\DokanUnitTestCase;
 
+/**
+ * Class OrderStatsTest
+ *
+ * Unit tests for Order statistics in the Dokan plugin.
+ */
 class OrderStatsTest extends DokanUnitTestCase {
-    public function test_mock_class() {
-        $seller_id1 = $this->factory()->seller->create();
-        $seller_id2 = $this->factory()->seller->create();
+    /**
+     * Test that the order statistics hooks are registered correctly.
+     *
+     * @see https://giuseppe-mazzapica.gitbook.io/brain-monkey/wordpress-specific-tools/wordpress-hooks-added
+     *
+     * @return void
+     */
+    public function test_order_stats_hook_registered() {
+        $order_stats_table_listener = dokan_get_container()->get( ScheduleListener::class );
+        self::assertNotFalse( has_action( 'woocommerce_analytics_update_order_stats', [ $order_stats_table_listener, 'sync_dokan_order' ] ) );
 
-        $order_id = $this->factory()
-            ->order
-            ->set_item_fee(
-                [
-					'name' => 'Extra Charge',
-					'amount' => 10,
-				]
-            )
-            ->set_item_shipping(
-                [
-					'name' => 'Shipping Fee',
-					'amount' => 10,
-				]
-            )
-            ->create(
-                [
-					'status'      => 'processing',
-					'customer_id' => $this->factory()->customer->create( [] ),
-					'line_items'  => array(
-						array(
-							'product_id' => $this->factory()->product
-								->set_seller_id( $seller_id1 )
-								->create(
-									[
-										'name' => 'Test Product 1',
-										'regular_price' => 5,
-										'price' => 5,
-									]
-								),
-							'quantity'   => 2,
-						),
-						array(
-							'product_id' => $this->factory()->product
-								->set_seller_id( $seller_id2 )
-								->create(
-									[
-										'name' => 'Test Product 2',
-										'regular_price' => 5,
-										'price' => 5,
-									]
-								),
-							'quantity'   => 1,
-						),
-					),
-				]
+        $order_stats_query_filter = dokan_get_container()->get( FilterQuery::class );
+        // Assert the Join Clause filters are registered
+        self::assertNotFalse( has_filter( 'woocommerce_analytics_clauses_join_orders_subquery', [ $order_stats_query_filter, 'add_join_subquery' ] ) );
+        self::assertNotFalse( has_filter( 'woocommerce_analytics_clauses_join_orders_stats_total', [ $order_stats_query_filter, 'add_join_subquery' ] ) );
+        self::assertNotFalse( has_filter( 'woocommerce_analytics_clauses_join_orders_stats_interval', [ $order_stats_query_filter, 'add_join_subquery' ] ) );
+        // Assert the Where Clause filters are registered
+        self::assertNotFalse( has_filter( 'woocommerce_analytics_clauses_where_orders_subquery', [ $order_stats_query_filter, 'add_where_subquery' ] ) );
+        self::assertNotFalse( has_filter( 'woocommerce_analytics_clauses_where_orders_stats_total', [ $order_stats_query_filter, 'add_where_subquery' ] ) );
+        self::assertNotFalse( has_filter( 'woocommerce_analytics_clauses_where_orders_stats_interval', [ $order_stats_query_filter, 'add_where_subquery' ] ) );
+    }
+
+	/**
+	 * Test the dokan_order_stats table update hooks are executed by ScheduleListener class.
+	 *
+	 * Method(partial) mocking @see http://docs.mockery.io/en/latest/reference/partial_mocks.html
+	 *
+     * @dataProvider get_multi_vendor_order
+     *
+     * @param int $order_id   The order ID.
+     * @param int $seller_id1 The first seller ID.
+     * @param int $seller_id2 The second seller ID.
+     * @return void
+	 */
+	public function test_dokan_order_states_update_hook_execute_on_order_stats_update( $order_id, $seller_id1, $seller_id2 ) {
+		$service = Mockery::mock( ScheduleListener::class . '[sync_dokan_order]' );
+		dokan_get_container()->extend( ScheduleListener::class )->setConcrete( $service );
+
+        $service->shouldReceive( 'sync_dokan_order' )
+            ->atLeast()
+			->once()
+            ->andReturn( 1 );
+
+        $this->run_all_pending();
+	}
+
+	/**
+	 * Test dokan_order_stats JOIN and WHERE clauses are applied on order_stats select Query.
+	 *
+	 * Method(partial) mocking @see http://docs.mockery.io/en/latest/reference/partial_mocks.html
+	 *
+     * @dataProvider get_multi_vendor_order
+     *
+     * @param int $order_id   The order ID.
+     * @param int $seller_id1 The first seller ID.
+     * @param int $seller_id2 The second seller ID.
+     * @return void
+	 */
+	public function test_dokan_order_states_query_filter_hooks_are_order_stats_update( $order_id, $seller_id1, $seller_id2 ) {
+        $this->run_all_pending();
+
+		$service = Mockery::mock( FilterQuery::class . '[add_join_subquery, add_where_subquery]' );
+		dokan_get_container()->extend( FilterQuery::class )->setConcrete( $service );
+
+        $service->shouldReceive( 'add_join_subquery' )
+            ->atLeast()
+			->once()
+			->andReturnUsing(
+                function ( $clauses ) {
+					return $clauses;
+				}
             );
 
+		$service->shouldReceive( 'add_where_subquery' )
+            ->atLeast()
+			->once()
+            ->andReturnUsing(
+                function ( $clauses ) {
+					return $clauses;
+				}
+            );
+
+		$wc_stats_query = new \Automattic\WooCommerce\Admin\API\Reports\Orders\Stats\Query();
+
+		$wc_stats_query->get_data();
+	}
+
+    /**
+     * Test the mock class for multi-vendor order statistics.
+     *
+     * @dataProvider get_multi_vendor_order
+     *
+     * @param int $order_id   The order ID.
+     * @param int $seller_id1 The first seller ID.
+     * @param int $seller_id2 The second seller ID.
+     * @return void
+     */
+    public function test_mock_class( $order_id, $seller_id1, $seller_id2 ) {
         $this->run_all_pending();
 
         $wc_order_stats_table = \Automattic\WooCommerce\Admin\API\Reports\Orders\Stats\DataStore::get_db_table_name();
@@ -66,36 +121,20 @@ class OrderStatsTest extends DokanUnitTestCase {
 
         $this->assertDatabaseCount(
             $dokan_order_stats_table, 2, [
-				'is_suborder' => 1,
-			]
+                'is_suborder' => 1,
+            ]
         );
 
         $this->assertDatabaseCount(
             $dokan_order_stats_table, 1, [
-				'seller_id' => $seller_id1,
-			]
+                'seller_id' => $seller_id1,
+            ]
         );
 
         $this->assertDatabaseCount(
             $dokan_order_stats_table, 1, [
-				'seller_id' => $seller_id2,
-			]
+                'seller_id' => $seller_id2,
+            ]
         );
-
-        $query = new \Automattic\WooCommerce\Admin\API\Reports\Orders\Query();
-
-        $result = $query->get_data();
-
-		$qr = new \Automattic\WooCommerce\Admin\API\Reports\Orders\Stats\Query();
-
-		$data = $qr->get_data();
-
-		$order = wc_get_order( $order_id );
-
-		// var_dump( 'Order Status -->', $order->get_status() );
-
-		$dokan_order = wc_get_order( $order_id + 1 );
-
-		// var_dump( 'Order Stats -->', $data );
-	}
+    }
 }

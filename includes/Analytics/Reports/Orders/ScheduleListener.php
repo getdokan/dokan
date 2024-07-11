@@ -14,6 +14,6 @@ class ScheduleListener implements Hookable {
 	}
 
 	public function sync_dokan_order( $order_id ) {
-		\WeDevs\Dokan\Analytics\Reports\Orders\Stats\DataStore::sync_order( $order_id );
+		return \WeDevs\Dokan\Analytics\Reports\Orders\Stats\DataStore::sync_order( $order_id );
 	}
 }
