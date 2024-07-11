@@ -169,4 +169,24 @@ class CustomFactoriesTest extends DokanUnitTestCase {
         $this->assertEquals( '19.99', $product->get_regular_price() );
         $this->assertEquals( $seller_id, dokan_get_vendor_by_product( $product, true ) );
     }
+
+    /**
+     * Test the dokan multi vendor order is created.
+     *
+     * @return void
+     */
+    public function test_multi_vendor_order_create_method_of_DokanUnitTestCase_class() {
+        $parent_order_id = $this->create_multi_vendor_order();
+        $order = wc_get_order( $parent_order_id );
+        $this->assertCount( 2, $order->get_shipping_methods() );
+
+        $sub_order_ids = dokan_get_suborder_ids_by( $parent_order_id );
+
+        $this->assertGreaterThan( 1, count( $sub_order_ids ) );
+
+        foreach ( $sub_order_ids as $sub_id ) {
+            $sub_order = wc_get_order( $sub_id );
+            $this->assertCount( 1, $sub_order->get_shipping_methods() );
+        }
+    }
 }

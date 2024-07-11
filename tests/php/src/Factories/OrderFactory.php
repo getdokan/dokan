@@ -56,7 +56,6 @@ class OrderFactory extends WP_UnitTest_Factory_For_Thing {
 
         foreach ( $this->order_items as $item ) {
             $item->set_order_id( $order->get_id() );
-
             $order->add_item( $item );
         }
 
@@ -178,6 +177,10 @@ class OrderFactory extends WP_UnitTest_Factory_For_Thing {
         $shipping_item = new WC_Order_Item_Shipping();
         $shipping_item->set_name( $args['name'] );
         $shipping_item->set_total( $args['amount'] );
+
+        if ( $args['seller_id'] ) {
+            $shipping_item->add_meta_data( 'seller_id', $args['seller_id'], true );
+        }
 
         $this->order_items[] = $shipping_item;
 
