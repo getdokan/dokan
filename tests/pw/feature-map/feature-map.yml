@@ -316,7 +316,17 @@
 - page: 'Shortcode'
   features:
       admin:
-          admin can add vendor registration shortcode: false
+          admin can create page with dokan shortcode: false
+          vendor can view dokan dashboard (shortcode): true
+          vendor can view dokan subscription packs (shortcode): true
+          guest user can view vendor registration form (shortcode): true
+          customer can view best selling products (shortcode): true
+          customer can view top rated products (shortcode): true
+          customer can view customer migration form (shortcode): true
+          customer can view geolocation filter form (shortcode): true
+          customer can view stores (shortcode): true
+          customer can view my orders (shortcode): true
+          customer can view request for quote (shortcode): true
 
 - page: 'Vendor Settings'
   features:
@@ -572,7 +582,7 @@
           admin can enable EU compliance fields on vendor registration: true
           admin can enable EU compliance fields for customers: true
           admin can enable germanized support for vendors: true
-          admin can enable orverride invoice number premission for vendors: true
+          admin can enable override invoice number permission for vendors: true
           admin can add EU compliance data while adding a vendor: true
           admin can add EU compliance data on user profile (customer) edit: true
           admin can update EU compliance data on user profile (customer) edit: true
@@ -586,7 +596,7 @@
           admin can disable EU compliance fields on vendor registration: false
           admin can disable EU compliance fields for customers: false
           admin can disable germanized support for vendors: false
-          admin can disable orverride invoice number premission for vendors: false
+          admin can disable override invoice number permission for vendors: false
       vendor:
           vendor can add EU compliance data on store settings: true
           vendor can add EU compliance data on registration: true
@@ -598,13 +608,13 @@
           vendor can override invoice number: false
       customer:
           customer can add EU compliance data on billing address: true
-          customer can add EU compliance data while chechout: false
+          customer can add EU compliance data while checkout: false
           customer can update EU compliance data: true
           customer can add EU compliance data (vendor) while become a vendor: true
           customer can view vendor EU compliance data on single store page: true
           customer can view product EU compliance data on single product page: true
       guest:
-          guest customer can add EU compliance data while chechout: false
+          guest customer can add EU compliance data while checkout: false
 
 - page: 'Follow Store'
   features:
@@ -632,7 +642,7 @@
       admin:
           admin can set live search options: false
       customer:
-          customer can search product using live search - suggestin box: false
+          customer can search product using live search - suggestion box: false
           customer can search product using live search - autoload content: false
 
 - page: 'MangoPay'
@@ -713,7 +723,7 @@
           customer can search question: true
           customer can post question: true
       guest:
-          guest customer need to signin/signup post question: true
+          guest customer need to signIn/signUp post question: true
 
 - page: 'Product Subscription'
   features:
@@ -968,7 +978,7 @@
           admin can add vendor verification method: true
           admin can edit vendor verification method: true
           admin can delete vendor verification method: true
-          admin can update verificaiton method status: true
+          admin can update verification method status: true
           admin can view verifications menu page: true
           admin can filter verification requests by pending status: true
           admin can filter verification requests by approved status: true
@@ -990,7 +1000,7 @@
           vendor can cancel verification request: true
           vendor can view verification request documents: true
           vendor can view verification request notes: true
-          vendor can view only required verificaiton method on setup wizard: true
+          vendor can view only required verification method on setup wizard: true
           vendor can submit verification request on setup wizard: true
           vendor can re-submit verification request on setup wizard: true
           vendor can cancel verification request on setup wizard: true

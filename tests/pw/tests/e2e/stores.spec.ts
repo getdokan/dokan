@@ -47,7 +47,7 @@ test.describe('Stores test', () => {
     });
 
     test("admin can disable vendor's selling capability", { tag: ['@lite', '@admin'] }, async () => {
-        //todo: might need to combine with enable
+        // todo: might need to combine with enable
         const [, , storeName] = await apiUtils.createStore(payloads.createStore(), payloads.adminAuth);
         await admin.updateVendor(storeName, 'disable');
     });
@@ -58,7 +58,7 @@ test.describe('Stores test', () => {
     });
 
     test('admin can edit vendor info', { tag: ['@lite', '@admin'] }, async () => {
-        //todo: implement option to edit particular chunk of data: social profile, address, etc
+        // todo: implement option to edit particular chunk of data: social profile, address, etc
         await admin.editVendor(data.vendor);
     });
 

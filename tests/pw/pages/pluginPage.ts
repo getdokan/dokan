@@ -15,7 +15,7 @@ export class PluginPage extends BasePage {
     // navigation
 
     async goToPlugins() {
-        await this.goIfNotThere(data.subUrls.backend.plugins);
+        await this.goto(data.subUrls.backend.plugins);
     }
 
     // activate plugin
@@ -36,17 +36,13 @@ export class PluginPage extends BasePage {
     async deactivateDokanPlugin(plugin: string, submitReason: boolean) {
         await this.goToPlugins();
         await this.click(pluginsAdmin.deactivatePlugin(plugin));
-        const isDeactivateModalVisible = await this.isVisible(pluginsAdmin.deactivateReason.deactivateReasonModal(plugin));
-        console.log(isDeactivateModalVisible);
-
-        if (isDeactivateModalVisible) {
-            if (submitReason) {
-                await this.click(pluginsAdmin.deactivateReason.reason(helpers.getRandomNumber(1, 7)));
-                await this.clickAndAcceptAndWaitForResponseAndLoadState(data.subUrls.backend.deactivatePlugin, pluginsAdmin.deactivateReason.submitAndDeactivate, 302);
-            } else {
-                await this.clickAndAcceptAndWaitForResponseAndLoadState(data.subUrls.backend.deactivatePlugin, pluginsAdmin.deactivateReason.skipAndDeactivate, 302);
-            }
-            await this.toBeVisible(pluginsAdmin.activatePlugin(plugin));
+        if (submitReason) {
+            await this.click(pluginsAdmin.deactivateReason.reason(helpers.getRandomNumber(1, 7)));
+            await this.clearAndType(pluginsAdmin.deactivateReason.reasonInput, reason);
+            await this.clickAndAcceptAndWaitForResponseAndLoadState(data.subUrls.backend.deactivatePlugin, pluginsAdmin.deactivateReason.submitAndDeactivate, 302);
+        } else {
+            await this.clickAndAcceptAndWaitForResponseAndLoadState(data.subUrls.backend.deactivatePlugin, pluginsAdmin.deactivateReason.skipAndDeactivate, 302);
         }
+        await this.toBeVisible(pluginsAdmin.activatePlugin(plugin));
     }
 }

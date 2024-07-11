@@ -32,7 +32,7 @@ export class SettingsPage extends AdminPage {
         // settings field is visible
         await this.toBeVisible(settingsAdmin.fields);
 
-        // settings save Changes is visible
+        // settings save changes is visible
         await this.toBeVisible(settingsAdmin.saveChanges);
     }
 
@@ -298,7 +298,7 @@ export class SettingsPage extends AdminPage {
         await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, storeSupport.saveSuccessMessage);
     }
 
-    // Admin Set Dokan Vendor Verificaton Settings
+    // Admin Set Dokan Vendor Verification Settings
     async setDokanVendorVerificationSettings(vendorVerification: Pick<dokanSettings['vendorVerification'], 'verifiedIcons' | 'verificationMethods' | 'saveSuccessMessage'>) {
         await this.goToDokanSettings();
         await this.click(settingsAdmin.menus.vendorVerification);
