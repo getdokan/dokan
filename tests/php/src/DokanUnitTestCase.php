@@ -9,35 +9,51 @@ use WP_REST_Response;
 use WP_UnitTestCase;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Brain\Monkey;
+use WP_REST_Server;
 
+/**
+ * Abstract base class for Dokan unit test cases.
+ *
+ * PHPUnit Docs: @see https://docs.phpunit.de/en/9.6/
+ * Brain Monkey: @see https://giuseppe-mazzapica.gitbook.io/brain-monkey  A unit test utility for WP and PHP to Mock.
+ * Mockery: @see http://docs.mockery.io/en/latest/
+ */
 abstract class DokanUnitTestCase extends WP_UnitTestCase {
     use DBAssertionTrait;
     use MockeryPHPUnitIntegration;
 
     /**
+     * Admin user ID.
+     *
      * @var int
      */
     protected $admin_id;
 
     /**
+     * First seller user ID.
+     *
      * @var int
      */
     protected $seller_id1;
 
     /**
+     * Second seller user ID.
+     *
      * @var int
      */
     protected $seller_id2;
 
     /**
+     * Customer user ID.
+     *
      * @var int
      */
     protected $customer_id;
 
     /**
-     * Rest Api Server.
+     * REST API server instance.
      *
-     * @var \WP_REST_Server The REST server instance.
+     * @var WP_REST_Server The REST server instance.
      */
     protected $server;
 
@@ -49,7 +65,9 @@ abstract class DokanUnitTestCase extends WP_UnitTestCase {
     protected $namespace = 'dokan/v1/';
 
     /**
-     * Setup a rest server for test.
+     * Setup a REST server for test.
+     *
+     * @return void
      */
     public function setUp(): void {
         // Initiating the REST API.
@@ -58,11 +76,21 @@ abstract class DokanUnitTestCase extends WP_UnitTestCase {
         parent::setUp();
         Monkey\setUp();
 
-        $wp_rest_server = new \WP_REST_Server();
+        $wp_rest_server = new WP_REST_Server();
         $this->server   = $wp_rest_server;
         do_action( 'rest_api_init' );
-		$this->setup_users();
-	}
+        $this->setup_users();
+    }
+
+    /**
+     * Tear down the test case.
+     *
+     * @return void
+     */
+    protected function tearDown(): void {
+        Monkey\tearDown();
+        parent::tearDown();
+    }
 
     /**
      * Set up users for testing.
@@ -86,68 +114,68 @@ abstract class DokanUnitTestCase extends WP_UnitTestCase {
     /**
      * Get the full route namespace for the given route.
      *
-     * @param string $route
-     * @return string
+     * @param string $route The REST API route.
+     * @return string The full route with namespace.
      */
     protected function get_rest_namespace( string $route ): string {
         return $this->namespace . $route;
     }
 
-	/**
-	 * @inheritDoc
+    /**
+     * {@inheritDoc}
      *
-	 * @return DokanFactory The fixture factory.
-	 */
-	protected static function factory() {
-		static $factory = null;
+     * @return DokanFactory The fixture factory.
+     */
+    protected static function factory() {
+        static $factory = null;
 
-		if ( ! $factory ) {
-			$factory = new DokanFactory();
-		}
-		return $factory;
-	}
-
-    /**
-	 * Get all pending queued actions.
-	 *
-	 * @return array Pending jobs.
-	 */
-	public function get_all_pending() {
-		return WC_Helper_Queue::get_all_pending();
-	}
-
-	/**
-	 * Run all pending queued actions.
-	 *
-	 * @return void
-	 */
-	public function run_all_pending() {
-		WC_Helper_Queue::run_all_pending();
-	}
-
-	/**
-	 * Cancel all pending actions.
-	 *
-	 * @return void
-	 */
-	public function cancel_all_pending() {
-		WC_Helper_Queue::cancel_all_pending();
-	}
+        if ( ! $factory ) {
+            $factory = new DokanFactory();
+        }
+        return $factory;
+    }
 
     /**
-	 * Get route with namespace.
-	 *
-	 * @param string $route_name REST API route name.
-	 * @return string The full route with namespace.
-	 */
-	protected function get_route( string $route_name ): string {
+     * Get all pending queued actions.
+     *
+     * @return array Pending jobs.
+     */
+    public function get_all_pending(): array {
+        return WC_Helper_Queue::get_all_pending();
+    }
+
+    /**
+     * Run all pending queued actions.
+     *
+     * @return void
+     */
+    public function run_all_pending(): void {
+        WC_Helper_Queue::run_all_pending();
+    }
+
+    /**
+     * Cancel all pending actions.
+     *
+     * @return void
+     */
+    public function cancel_all_pending(): void {
+        WC_Helper_Queue::cancel_all_pending();
+    }
+
+    /**
+     * Get route with namespace.
+     *
+     * @param string $route_name REST API route name.
+     * @return string The full route with namespace.
+     */
+    protected function get_route( string $route_name ): string {
         // If namespace is already exist.
         if ( str_starts_with( $route_name, $this->namespace ) ) {
             return $route_name;
         }
 
-		return $this->namespace . '/' . untrailingslashit( $route_name );
-	}
+        return $this->namespace . '/' . untrailingslashit( $route_name );
+    }
 
     /**
      * Perform a GET request on the given route with parameters.
@@ -177,9 +205,65 @@ abstract class DokanUnitTestCase extends WP_UnitTestCase {
         return $this->server->dispatch( $request );
     }
 
+    /**
+     * Data provider for multi-vendor orders.
+     *
+     * @see https://docs.phpunit.de/en/9.6/writing-tests-for-phpunit.html#writing-tests-for-phpunit-data-providers
+     * @return array The data for the multi-vendor order tests.
+     */
+    public function get_multi_vendor_order() {
+        $seller_id1 = $this->factory()->seller->create();
+        $seller_id2 = $this->factory()->seller->create();
 
-    protected function tearDown(): void {
-        Monkey\tearDown();
-        parent::tearDown();
+        $order_id = $this->factory()
+            ->order
+            ->set_item_fee(
+                [
+                    'name' => 'Extra Charge',
+                    'amount' => 10,
+                ]
+            )
+            ->set_item_shipping(
+                [
+                    'name' => 'Shipping Fee',
+                    'amount' => 10,
+                ]
+            )
+            ->create(
+                [
+                    'status'      => 'processing',
+                    'customer_id' => $this->factory()->customer->create( [] ),
+                    'line_items'  => array(
+                        array(
+                            'product_id' => $this->factory()->product
+                                ->set_seller_id( $seller_id1 )
+                                ->create(
+                                    [
+                                        'name' => 'Test Product 1',
+                                        'regular_price' => 5,
+                                        'price' => 5,
+                                    ]
+                                ),
+                            'quantity'   => 2,
+                        ),
+                        array(
+                            'product_id' => $this->factory()->product
+                                ->set_seller_id( $seller_id2 )
+                                ->create(
+                                    [
+                                        'name' => 'Test Product 2',
+                                        'regular_price' => 5,
+                                        'price' => 5,
+                                    ]
+                                ),
+                            'quantity'   => 1,
+                        ),
+                    ),
+                ]
+            );
+
+        return [
+            [ $order_id, $seller_id1, $seller_id2 ],
+        ];
     }
 }
