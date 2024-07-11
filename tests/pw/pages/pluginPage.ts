@@ -33,7 +33,7 @@ export class PluginPage extends BasePage {
     }
 
     // deactivate dokan plugin
-    async deactivateDokanPlugin(plugin: string, submitReason: boolean) {
+    async deactivateDokanPlugin(plugin: string, submitReason: boolean, reason: string = 'test deactivate reason') {
         await this.goToPlugins();
         await this.click(pluginsAdmin.deactivatePlugin(plugin));
         if (submitReason) {

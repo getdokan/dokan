@@ -453,7 +453,7 @@ export const endPoints = {
         createTag: `${SERVER_URL}/wc/v3/products/tags`,
         updateTag: (tagId: string) => `${SERVER_URL}/wc/v3/products/tags/${tagId}`,
         deleteTag: (tagId: string) => `${SERVER_URL}/wc/v3/products/tags/${tagId}`,
-        updateBatchTag: `${SERVER_URL}/wc/v3/products/tags/batch`,
+        updateBatchTags: `${SERVER_URL}/wc/v3/products/tags/batch`,
 
         // product reviews
         getAllReviews: `${SERVER_URL}/wc/v3/products/reviews`,
