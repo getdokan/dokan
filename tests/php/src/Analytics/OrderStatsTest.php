@@ -113,28 +113,31 @@ class OrderStatsTest extends DokanUnitTestCase {
         $this->run_all_pending();
 
         $wc_order_stats_table = \Automattic\WooCommerce\Admin\API\Reports\Orders\Stats\DataStore::get_db_table_name();
-        $this->assertDatabaseCount( $wc_order_stats_table, 3 );
 
         $dokan_order_stats_table = \WeDevs\Dokan\Analytics\Reports\Orders\Stats\DataStore::get_db_table_name();
 
-        $this->assertDatabaseCount( $dokan_order_stats_table, 3 );
-
         $this->assertDatabaseCount(
-            $dokan_order_stats_table, 2, [
-                'is_suborder' => 1,
-            ]
+            $wc_order_stats_table, 1, [
+				'order_id' => $order_id,
+			]
         );
 
-        $this->assertDatabaseCount(
+		$this->assertDatabaseCount(
             $dokan_order_stats_table, 1, [
-                'seller_id' => $seller_id1,
-            ]
+				'order_id' => $order_id,
+				'is_suborder' => 0,
+			]
         );
 
-        $this->assertDatabaseCount(
-            $dokan_order_stats_table, 1, [
-                'seller_id' => $seller_id2,
-            ]
-        );
+		$sub_order_ids = dokan_get_suborder_ids_by( $order_id );
+
+		foreach ( $sub_order_ids as $sub_id ) {
+			$this->assertDatabaseCount(
+				$dokan_order_stats_table, 1, [
+					'order_id' => $sub_id,
+					'is_suborder' => 1,
+				]
+			);
+		}
     }
 }
