@@ -37,8 +37,8 @@ test.describe('vendor subscription api test', () => {
         expect(responseBody).toMatchSchema(schemas.admin.reportSummarySchema);
     });
 
-    test('get all vendor-subscription non-recucrring packages', { tag: ['@pro'] }, async () => {
-        // todo: need non-recucrring subscription pack
+    test('get all vendor-subscription non-recurring packages', { tag: ['@pro'] }, async () => {
+        // todo: need non-recurring subscription pack
         const [response, responseBody] = await apiUtils.get(endPoints.getAllVendorSubscriptionNonRecurringPackages);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();

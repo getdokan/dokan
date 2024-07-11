@@ -12,6 +12,7 @@ import { payloads } from '@utils/payloads';
 import { dbUtils } from '@utils/dbUtils';
 import { data } from '@utils/testData';
 import { dbData } from '@utils/dbData';
+import { schemas } from '@utils/schemas';
 
 test.describe('reverse withdrawal api test', () => {
     let apiUtils: ApiUtils;
@@ -33,18 +34,21 @@ test.describe('reverse withdrawal api test', () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getReverseWithdrawalTransactionTypes);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.reverseWithdrawalSchema.transactionTypesSchema);
     });
 
     test('get all reverse withdrawal stores', { tag: ['@lite'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllReverseWithdrawalStores);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.reverseWithdrawalSchema.reverseWithdrawalStoresSchema);
     });
 
     test('get all reverse withdrawal store balance', { tag: ['@lite'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllReverseWithdrawalStoreBalance);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.reverseWithdrawalSchema.reverseWithdrawalStoreBalanceSchema);
     });
 
     test('get all reverse withdrawal transactions', { tag: ['@lite'] }, async () => {
@@ -52,17 +56,20 @@ test.describe('reverse withdrawal api test', () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllReverseWithdrawalTransactions, { params: { ...payloads.paramsReverseWithdrawalTransactions, vendor_id: storeId } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.reverseWithdrawalSchema.reverseWithdrawalTransactionsSchema);
     });
 
     test('get reverse withdrawal vendor due status', { tag: ['@lite'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getReverseWithdrawalVendorDueStatus);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.reverseWithdrawalSchema.reverseWithdrawalVendorDueStatusSchema);
     });
 
     test('add reverse withdrawal payment product to cart', { tag: ['@lite'] }, async () => {
         const [response, responseBody] = await apiUtils.post(endPoints.getReverseWithdrawalAddProductToCart, { data: payloads.amountToPay, headers: payloads.vendorAuth });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.reverseWithdrawalSchema.reverseWithdrawalAddProductToCartSchema);
     });
 });
