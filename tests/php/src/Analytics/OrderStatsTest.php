@@ -39,14 +39,13 @@ class OrderStatsTest extends DokanUnitTestCase {
 	 *
 	 * Method(partial) mocking @see http://docs.mockery.io/en/latest/reference/partial_mocks.html
 	 *
-     * @dataProvider get_multi_vendor_order
-     *
      * @param int $order_id   The order ID.
      * @param int $seller_id1 The first seller ID.
      * @param int $seller_id2 The second seller ID.
      * @return void
 	 */
-	public function test_dokan_order_states_update_hook_execute_on_order_stats_update( $order_id, $seller_id1, $seller_id2 ) {
+	public function test_dokan_order_states_update_hook_execute_on_order_stats_update() {
+		$order_id = $this->create_multi_vendor_order();
 		$service = Mockery::mock( ScheduleListener::class . '[sync_dokan_order]' );
 		dokan_get_container()->extend( ScheduleListener::class )->setConcrete( $service );
 
@@ -63,15 +62,15 @@ class OrderStatsTest extends DokanUnitTestCase {
 	 *
 	 * Method(partial) mocking @see http://docs.mockery.io/en/latest/reference/partial_mocks.html
 	 *
-     * @dataProvider get_multi_vendor_order
-     *
      * @param int $order_id   The order ID.
      * @param int $seller_id1 The first seller ID.
      * @param int $seller_id2 The second seller ID.
      * @return void
 	 */
-	public function test_dokan_order_states_query_filter_hooks_are_order_stats_update( $order_id, $seller_id1, $seller_id2 ) {
-        $this->run_all_pending();
+	public function test_dokan_order_states_query_filter_hooks_are_order_stats_update() {
+		$order_id = $this->create_multi_vendor_order();
+
+		$this->run_all_pending();
 
 		$service = Mockery::mock( FilterQuery::class . '[add_join_subquery, add_where_subquery]' );
 		dokan_get_container()->extend( FilterQuery::class )->setConcrete( $service );
@@ -102,14 +101,14 @@ class OrderStatsTest extends DokanUnitTestCase {
     /**
      * Test the mock class for multi-vendor order statistics.
      *
-     * @dataProvider get_multi_vendor_order
-     *
      * @param int $order_id   The order ID.
      * @param int $seller_id1 The first seller ID.
      * @param int $seller_id2 The second seller ID.
      * @return void
      */
-    public function test_mock_class( $order_id, $seller_id1, $seller_id2 ) {
+    public function test_data_is_inserted_in_dokan_order_stats_table() {
+		$order_id = $this->create_multi_vendor_order();
+
         $this->run_all_pending();
 
         $wc_order_stats_table = \Automattic\WooCommerce\Admin\API\Reports\Orders\Stats\DataStore::get_db_table_name();
