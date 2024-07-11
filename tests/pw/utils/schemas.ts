@@ -17,7 +17,7 @@ const productReviewSchema = z.object({
 });
 
 const productImageSchema = z.object({
-    id: z.number(),
+    id: z.string().or(z.number()),
     date_created: z.string(),
     date_created_gmt: z.string(),
     date_modified: z.string(),
@@ -35,26 +35,26 @@ const productDimensionsSchema = z.object({
 });
 
 const productCategorySchema = z.object({
-    id: z.number(),
+    id: z.string().or(z.number()),
     name: z.string(),
     slug: z.string(),
 });
 
 const productAttributeSchema = z.object({
-    id: z.number(),
+    id: z.string().or(z.number()),
     slug: z.string(),
     name: z.string(),
     option: z.string().optional(),
 });
 
 const productMetaDataSchema = z.object({
-    id: z.number().optional(),
+    id: z.string().or(z.number()).optional(),
     key: z.string().optional(),
     value: z.any().optional(),
 });
 
 const productSchema = z.object({
-    id: z.number(),
+    id: z.string().or(z.number()),
     name: z.string(),
     slug: z.string(),
     permalink: z.string().url(),
@@ -100,13 +100,13 @@ const productSchema = z.object({
     shipping_required: z.boolean(),
     shipping_taxable: z.boolean(),
     shipping_class: z.string().optional(),
-    shipping_class_id: z.number(),
+    shipping_class_id: z.string().or(z.number()),
     reviews_allowed: z.boolean(),
     average_rating: z.string().regex(/^\d+(\.\d+)?$/),
     rating_count: z.number(),
     upsell_ids: z.array(z.unknown()),
     cross_sell_ids: z.array(z.unknown()),
-    parent_id: z.number(),
+    parent_id: z.string().or(z.number()).optional(),
     purchase_note: z.string().optional(),
     categories: z.array(productCategorySchema),
     tags: z.array(z.unknown()),
@@ -130,7 +130,7 @@ const productSchema = z.object({
 });
 
 const productVariationSchema = z.object({
-    id: z.number(),
+    id: z.string().or(z.number()),
     date_created: z.string(),
     date_created_gmt: z.string(),
     date_modified: z.string(),
@@ -164,11 +164,11 @@ const productVariationSchema = z.object({
     weight: z.string(),
     dimensions: productDimensionsSchema,
     shipping_class: z.string(),
-    shipping_class_id: z.number(),
+    shipping_class_id: z.string().or(z.number()),
     image: productImageSchema,
     attributes: z.array(
         z.object({
-            id: z.number(),
+            id: z.string().or(z.number()),
             slug: z.string(),
             name: z.string(),
             option: z.string(),
@@ -299,11 +299,11 @@ const orderMinMaxSchema = z.object({
 });
 
 const categorySchema = z.object({
-    term_id: z.number(),
+    term_id: z.string().or(z.number()).optional(),
     name: z.string(),
     slug: z.string(),
     term_group: z.number(),
-    term_taxonomy_id: z.number(),
+    term_taxonomy_id: z.string().or(z.number()).optional(),
     taxonomy: z.string(),
     description: z.string(),
     parent: z.number(),
@@ -365,7 +365,7 @@ const ratingSchema = z.object({
 });
 
 const storyCategorySchema = z.object({
-    id: z.number().optional(),
+    id: z.string().or(z.number()).optional(),
     count: z.number(),
     description: z.string(),
     link: z.string().url(),
@@ -391,7 +391,7 @@ const storeSeo = z
     .or(z.array(z.unknown()));
 
 const storeSchema = z.object({
-    id: z.number().optional(),
+    id: z.string().or(z.number()).optional(),
     store_name: z.string(),
     first_name: z.string().optional(),
     last_name: z.string().optional(),
@@ -433,7 +433,7 @@ const storeSchema = z.object({
     categories: z
         .array(
             z.object({
-                id: z.number().optional(),
+                id: z.string().or(z.number()).optional(),
                 name: z.string(),
                 slug: z.string(),
             }),
@@ -447,13 +447,13 @@ const storeSchema = z.object({
 });
 
 const metaDataSchema = z.object({
-    id: z.number(),
+    id: z.string().or(z.number()),
     key: z.string(),
     value: z.unknown(),
 });
 
 const taxSchema = z.object({
-    id: z.number(),
+    id: z.string().or(z.number()),
     total: z.string(),
     subtotal: z.string(),
 });
@@ -461,8 +461,8 @@ const taxSchema = z.object({
 const lineItemSchema = z.object({
     id: z.string().or(z.number()),
     name: z.string(),
-    product_id: z.number(),
-    variation_id: z.number(),
+    product_id: z.string().or(z.number()),
+    variation_id: z.string().or(z.number()),
     quantity: z.number(),
     tax_class: z.string(),
     subtotal: z.string(),
@@ -471,7 +471,7 @@ const lineItemSchema = z.object({
     total_tax: z.string(),
     taxes: z.array(taxSchema),
     meta_data: z.array(z.any()), // Assuming meta_data can have various structures
-    sku: z.string().optional(),
+    sku: z.string().nullable().optional(),
     price: z.number(),
     image: z
         .object({
@@ -484,9 +484,9 @@ const lineItemSchema = z.object({
 });
 
 const taxLineSchema = z.object({
-    id: z.number(),
+    id: z.string().or(z.number()),
     rate_code: z.string(),
-    rate_id: z.number(),
+    rate_id: z.string().or(z.number()),
     label: z.string(),
     compound: z.boolean(),
     tax_total: z.string(),
@@ -496,10 +496,10 @@ const taxLineSchema = z.object({
 });
 
 const shippingLineSchema = z.object({
-    id: z.number(),
+    id: z.string().or(z.number()),
     method_title: z.string(),
-    method_id: z.string(),
-    instance_id: z.string().optional(),
+    method_id: z.string().or(z.number()).optional(),
+    instance_id: z.string().or(z.number()).optional(),
     total: z.string(),
     total_tax: z.string(),
     taxes: z.array(taxSchema),
@@ -521,8 +521,8 @@ const userAddressSchema = z.object({
 });
 
 const orderSchema = z.object({
-    id: z.number(),
-    parent_id: z.number(),
+    id: z.string().or(z.number()),
+    parent_id: z.string().or(z.number()),
     status: z.string(),
     currency: z.string(),
     version: z.string(),
@@ -536,19 +536,19 @@ const orderSchema = z.object({
     cart_tax: z.string(),
     total: z.string(),
     total_tax: z.string(),
-    customer_id: z.number(),
+    customer_id: z.string().or(z.number()),
     order_key: z.string(),
     billing: userAddressSchema.optional(),
     shipping: userAddressSchema.optional(),
     payment_method: z.string(),
     payment_method_title: z.string(),
-    transaction_id: z.string().optional(),
+    transaction_id: z.string().or(z.number()).optional(),
     customer_ip_address: z.string().optional(),
     customer_user_agent: z.string().optional(),
     created_via: z.string(),
     customer_note: z.string().optional(),
     date_completed: z.string().nullable().optional(),
-    date_paid: z.string(),
+    date_paid: z.string().nullable().optional(),
     cart_hash: z.string().optional(),
     number: z.string(),
     meta_data: z.array(metaDataSchema).optional(),
@@ -565,7 +565,7 @@ const orderSchema = z.object({
     date_created_gmt: z.string(),
     date_modified_gmt: z.string(),
     date_completed_gmt: z.string().nullable().optional(),
-    date_paid_gmt: z.string(),
+    date_paid_gmt: z.string().nullable().optional(),
     currency_symbol: z.string().optional(),
     _links: linksSchema,
 });
@@ -605,7 +605,7 @@ const orderNoteSchema = z.object({
 });
 
 const customerSchema = z.object({
-    id: z.number(),
+    id: z.string().or(z.number()),
     date_created: z.string(),
     date_created_gmt: z.string(),
     date_modified: z.string(),
@@ -626,7 +626,7 @@ const customerSchema = z.object({
 });
 
 const couponSchema = z.object({
-    id: z.number(),
+    id: z.string().or(z.number()),
     code: z.string(),
     amount: z.string(),
     date_created: z.coerce.date(),
@@ -663,10 +663,10 @@ const dateEntrySchema = z.object({
 });
 
 const refundSchema = z.object({
-    id: z.number(),
-    order_id: z.number(),
+    id: z.string().or(z.number()),
+    order_id: z.string().or(z.number()),
     vendor: z.object({
-        id: z.number(),
+        id: z.string().or(z.number()),
         store_name: z.string(),
         first_name: z.string(),
         last_name: z.string(),
@@ -677,9 +677,9 @@ const refundSchema = z.object({
         address: addressSchema,
         location: z.string(),
         banner: z.string(),
-        banner_id: z.number(),
+        banner_id: z.string().or(z.number()),
         gravatar: z.string().url(),
-        gravatar_id: z.number(),
+        gravatar_id: z.string().or(z.number()),
         shop_url: z.string().url(),
         toc_enabled: z.boolean(),
         store_toc: z.string(),
@@ -700,7 +700,7 @@ const refundSchema = z.object({
         assigned_subscription: z.number().optional(),
         assigned_subscription_info: z
             .object({
-                subscription_id: z.number(),
+                subscription_id: z.string().or(z.number()),
                 has_subscription: z.boolean(),
                 expiry_date: z.string(),
                 published_products: z.number(),
@@ -731,7 +731,7 @@ const refundSchema = z.object({
 });
 
 const transactionTypeSchema = z.object({
-    id: z.string(),
+    id: z.string().or(z.number()).optional(),
     title: z.string(),
 });
 
@@ -810,7 +810,7 @@ const withdrawSchema = z.object({
 });
 
 const paymentMethodSchema = z.object({
-    id: z.string(),
+    id: z.string().or(z.number()).optional(),
     title: z.string(),
 });
 
@@ -820,10 +820,10 @@ const chargeDataSchema = z.object({
 });
 
 const settingV2Schema = z.object({
-    id: z.string(),
+    id: z.string().or(z.number()).optional(),
     label: z.string(),
     description: z.string(),
-    parent_id: z.string(),
+    parent_id: z.string().or(z.number()).optional(),
     sub_groups: z.array(z.any()), // Adjust the type of sub_groups if you know the specific structure
     _links: z.object({
         options: z.object({ href: z.string().url() }),
@@ -848,13 +848,13 @@ const infoSchema = z.object({
 });
 
 const settingV2GroupSchema = z.object({
-    id: z.string(),
+    id: z.string().or(z.number()).optional(),
     title: z.string(),
     desc: z.string(),
     icon: z.string(),
     info: z.array(infoSchema).optional(),
     type: z.string(),
-    parent_id: z.string(),
+    parent_id: z.string().or(z.number()).optional(),
     tab: z.string().optional(),
     card: z.string().optional(),
     editable: z.boolean().optional(),
@@ -869,7 +869,7 @@ const settingV2GroupSchema = z.object({
 });
 
 const attributeSchema = z.object({
-    id: z.number(),
+    id: z.string().or(z.number()),
     name: z.string(),
     slug: z.string(),
     type: z.enum(['select']),
@@ -879,7 +879,7 @@ const attributeSchema = z.object({
 });
 
 const attributeTermSchema = z.object({
-    id: z.number(),
+    id: z.string().or(z.number()),
     name: z.string(),
     slug: z.string(),
     description: z.string(),
@@ -889,21 +889,21 @@ const attributeTermSchema = z.object({
 });
 
 const abuseReportSchema = z.object({
-    id: z.number(),
+    id: z.string().or(z.number()),
     reason: z.string(),
     product: z.object({
-        id: z.number(),
+        id: z.string().or(z.number()),
         title: z.string(),
         admin_url: z.string().url(),
     }),
     vendor: z.object({
-        id: z.number(),
+        id: z.string().or(z.number()),
         name: z.string(),
         admin_url: z.string().url(),
     }),
     reported_by: z
         .object({
-            id: z.number(),
+            id: z.string().or(z.number()),
             name: z.string(),
             email: z.string().email(),
             admin_url: z.string().url(),
@@ -914,9 +914,9 @@ const abuseReportSchema = z.object({
 });
 
 const announcementSchema = z.object({
-    id: z.number(),
-    notice_id: z.number(),
-    vendor_id: z.number(),
+    id: z.string().or(z.number()),
+    notice_id: z.string().or(z.number()),
+    vendor_id: z.string().or(z.number()),
     title: z.string(),
     content: z.string(),
     status: z.enum(['all', 'publish', 'pending', 'draft', 'future', 'trash']),
@@ -930,7 +930,7 @@ const announcementSchema = z.object({
                 id: z.string().or(z.number()),
                 name: z.string(),
                 shop_name: z.string(),
-                email: z.string(),
+                email: z.string().nullable(),
             }),
         )
         .optional(),
@@ -955,7 +955,7 @@ const advertisedProductSchema = z.object({
 });
 
 const quoteRuleSchema = z.object({
-    id: z.string(),
+    id: z.string().or(z.number()).optional(),
     rule_name: z.string(),
     selected_user_role: z.any(),
     category_ids: z.any(),
@@ -972,7 +972,7 @@ const quoteRuleSchema = z.object({
 });
 
 const quoteRequestSchema = z.object({
-    id: z.string(),
+    id: z.string().or(z.number()).optional(),
     title: z.string(),
     customer_name: z.string(),
     customer_email: z.string(),
@@ -982,13 +982,13 @@ const quoteRequestSchema = z.object({
 });
 
 const verificationTypeSchema = z.object({
-    id: z.string(),
+    id: z.string().or(z.number()).optional(),
     title: z.string(),
     disabled: z.boolean(),
 });
 
 const badgeEventSchema = z.object({
-    id: z.string(),
+    id: z.string().or(z.number()).optional(),
     title: z.string(),
     description: z.string(),
     condition_text: z.object({
@@ -1014,7 +1014,7 @@ const badgeEventSchema = z.object({
 });
 
 const badgeSchema = z.object({
-    id: z.number(),
+    id: z.string().or(z.number()),
     badge_name: z.string(),
     badge_logo: z.string().url(),
     badge_logo_raw: z.string(),
@@ -1046,15 +1046,15 @@ const badgeSchema = z.object({
 });
 
 const badgeCreateUpdateSchema = z.object({
-    id: z.number(),
+    id: z.string().or(z.number()),
     action: z.enum(['insert', 'update']),
 });
 
 const productQuestionAnswerSchema = z.object({
-    id: z.number(),
-    question_id: z.number(),
+    id: z.string().or(z.number()),
+    question_id: z.string().or(z.number()),
     answer: z.string(),
-    user_id: z.number(),
+    user_id: z.string().or(z.number()),
     created_at: z.string(),
     updated_at: z.string(),
     human_readable_created_at: z.string(),
@@ -1064,10 +1064,10 @@ const productQuestionAnswerSchema = z.object({
 });
 
 const productQuestionSchema = z.object({
-    id: z.number(),
-    product_id: z.number(),
+    id: z.string().or(z.number()),
+    product_id: z.string().or(z.number()),
     question: z.string(),
-    user_id: z.number(),
+    user_id: z.string().or(z.number()),
     read: z.number(),
     status: z.string(),
     created_at: z.string(),
@@ -1079,12 +1079,12 @@ const productQuestionSchema = z.object({
     display_human_readable_created_at: z.boolean(),
     display_human_readable_updated_at: z.boolean(),
     product: z.object({
-        id: z.number(),
+        id: z.string().or(z.number()),
         title: z.string(),
         image: z.string(),
     }),
     vendor: z.object({
-        id: z.number(),
+        id: z.string().or(z.number()),
         name: z.string(),
         avatar: z.string(),
     }),
@@ -1092,9 +1092,9 @@ const productQuestionSchema = z.object({
 });
 
 const storeReviewSchemaStoreEndpoint = z.object({
-    id: z.number(),
+    id: z.string().or(z.number()),
     author: z.object({
-        id: z.number(),
+        id: z.string().or(z.number()),
         name: z.string(),
         email: z.string().email(),
         url: z.string().optional(),
@@ -1110,20 +1110,20 @@ const storeReviewSchemaStoreEndpoint = z.object({
 });
 
 const storeReviewSchema = z.object({
-    id: z.number(),
+    id: z.string().or(z.number()),
     title: z.string(),
     content: z.string(),
     status: z.string(),
     created_at: z.coerce.date(),
     customer: z.object({
-        id: z.number(),
+        id: z.string().or(z.number()),
         first_name: z.string(),
         last_name: z.string(),
         email: z.string().email(),
         display_name: z.string(),
     }),
     vendor: z.object({
-        id: z.number(),
+        id: z.string().or(z.number()),
         first_name: z.string(),
         last_name: z.string(),
         shop_name: z.string(),
@@ -1162,7 +1162,7 @@ const supportTicketSchema = z.object({
     filter: z.string(),
     vendor_name: z.string().optional(),
     customer_name: z.string().optional(),
-    vendor_id: z.string().optional(),
+    vendor_id: z.string().or(z.number()).optional(),
     store_url: z.string().optional(),
     ticket_date: z.string().optional(),
     reading: z.string().optional(),
@@ -1235,7 +1235,7 @@ const vendorStaffSchema = z.object({
 });
 
 const verificationMethodSchema = z.object({
-    id: z.number(),
+    id: z.string().or(z.number()),
     title: z.string(),
     help_text: z.string(),
     status: z.boolean(),
@@ -1247,9 +1247,9 @@ const verificationMethodSchema = z.object({
 });
 
 const verificationRequestSchema = z.object({
-    id: z.number(),
-    vendor_id: z.number(),
-    method_id: z.number(),
+    id: z.string().or(z.number()),
+    vendor_id: z.string().or(z.number()),
+    method_id: z.string().or(z.number()),
     status: z.string(),
     status_title: z.string(),
     documents: z.array(z.string().or(z.number())),
@@ -1262,7 +1262,7 @@ const verificationRequestSchema = z.object({
     method: verificationMethodSchema.omit({ _links: true }),
     document_urls: z.record(
         z.object({
-            url: z.string().url(),
+            url: z.any(),
             title: z.string(),
         }),
     ),
@@ -1457,7 +1457,7 @@ export const schemas = {
         adminLogsSchema: z.array(
             z.object({
                 order_id: z.string().or(z.number()),
-                vendor_id: z.string(),
+                vendor_id: z.string().or(z.number()).optional(),
                 vendor_name: z.string(),
                 previous_order_total: z.string(),
                 order_total: z.string(),
@@ -1492,8 +1492,8 @@ export const schemas = {
             percentage: z.number(),
             columns: z
                 .object({
-                    order_id: z.string(),
-                    vendor_id: z.string(),
+                    order_id: z.string().or(z.number()).optional(),
+                    vendor_id: z.string().or(z.number()).optional(),
                     vendor_name: z.string(),
                     previous_order_total: z.string(),
                     order_total: z.string(),
@@ -1580,9 +1580,9 @@ export const schemas = {
                 'wc-failed': z.number().optional(),
                 'wc-checkout-draft': z.number(),
                 complete: z.number().optional(),
-                paid: z.number().optional(),
+                paid: z.string().or(z.number()).optional(),
                 confirmed: z.number().optional(),
-                unpaid: z.number().optional(),
+                unpaid: z.string().or(z.number()).optional(),
                 'pending-confirmation': z.number().optional(),
                 cancelled: z.number().optional(),
                 'in-cart': z.number().optional(),
@@ -1597,9 +1597,9 @@ export const schemas = {
 
         multistepCategories: z.record(
             z.object({
-                term_id: z.string(),
+                term_id: z.string().or(z.number()).optional(),
                 name: z.string(),
-                parent_id: z.string(),
+                parent_id: z.string().or(z.number()).optional(),
                 children: z.array(z.any()),
                 parents: z.array(z.any()),
                 breadcumb: z.array(z.string()),
@@ -1651,7 +1651,7 @@ export const schemas = {
                 date_on_sale_to: z.null().optional(),
                 images: z.array(
                     z.object({
-                        id: z.number(),
+                        id: z.string().or(z.number()),
                         date_created: z.string(),
                         date_created_gmt: z.string(),
                         date_modified: z.string(),
@@ -1670,7 +1670,7 @@ export const schemas = {
                 catalog_visibility: z.string(),
                 categories: z.array(
                     z.object({
-                        id: z.number(),
+                        id: z.string().or(z.number()),
                         name: z.string(),
                         slug: z.string(),
                     }),
@@ -1713,8 +1713,8 @@ export const schemas = {
                 .object({
                     advertisement_data: z
                         .object({
-                            vendor_id: z.number(),
-                            product_id: z.number(),
+                            vendor_id: z.string().or(z.number()),
+                            product_id: z.string().or(z.number()),
                             subscription_status: z.boolean(),
                             remaining_slot: z.number(),
                             global_remaining_slot: z.number(),
@@ -1837,11 +1837,11 @@ export const schemas = {
 
         storeCategoriesSchema: z
             .object({
-                term_id: z.number(),
+                term_id: z.string().or(z.number()),
                 name: z.string(),
                 slug: z.string(),
                 term_group: z.number(),
-                term_taxonomy_id: z.number(),
+                term_taxonomy_id: z.string().or(z.number()),
                 taxonomy: z.string(),
                 description: z.string(),
                 parent: z.number(),
@@ -1860,7 +1860,7 @@ export const schemas = {
         storeReviewsSchema: z.array(storeReviewSchemaStoreEndpoint),
         storeSlugCheckSchema: z.object({ url: z.string(), available: z.boolean() }),
         clientContactStoreSchema: z.object({
-            store_id: z.number(),
+            store_id: z.string().or(z.number()),
             data: z.string(),
             sender_name: z.string(),
             sender_email: z.string(),
@@ -1929,7 +1929,7 @@ export const schemas = {
     reportsSchema: {
         // sales overview schema
         salesOverviewSchema: z.object({
-            seller_id: z.number(),
+            seller_id: z.string().or(z.number()),
             order_counts: z.array(z.unknown()), // Assuming it can contain any data type
             coupons: z.array(z.unknown()), // Assuming it can contain any data type
             order_items: z.array(z.unknown()), // Assuming it can contain any data type
@@ -1965,10 +1965,10 @@ export const schemas = {
         // top earners schema
         topEarnersSchema: z.array(
             z.object({
-                id: z.number(),
+                id: z.string().or(z.number()),
                 title: z.string(),
-                url: z.string().url(),
-                edit_url: z.string().url(),
+                url: z.string(),
+                edit_url: z.string(),
                 sold_qty: z.string().optional(), // Assuming sold_qty can be any string format
             }),
         ),
@@ -1993,8 +1993,8 @@ export const schemas = {
                 .array(
                     z
                         .object({
-                            id: z.string().optional(),
-                            user_id: z.string().optional(),
+                            id: z.string().or(z.number()).optional(),
+                            user_id: z.string().or(z.number()).optional(),
                             amount: z.string().optional(),
                             date: z.string().optional(),
                             status: z.string().optional(),
@@ -2099,7 +2099,7 @@ export const schemas = {
         reverseWithdrawalStoreBalanceSchema: z.array(
             z.object({
                 store_name: z.string(),
-                vendor_id: z.number(),
+                vendor_id: z.string().or(z.number()),
                 debit: z.string(), // Assuming debit and credit can be represented as strings with decimal places
                 credit: z.string(),
                 balance: z.number(), // Assuming balance is represented as a number
@@ -2192,9 +2192,9 @@ export const schemas = {
                 'wc-failed': z.number(),
                 'wc-checkout-draft': z.number(),
                 complete: z.number().optional(),
-                paid: z.number().optional(),
+                paid: z.string().or(z.number()).optional(),
                 confirmed: z.number().optional(),
-                unpaid: z.number().optional(),
+                unpaid: z.string().or(z.number()).optional(),
                 'pending-confirmation': z.number().optional(),
                 cancelled: z.number().optional(),
                 'in-cart': z.number().optional(),
@@ -2245,7 +2245,7 @@ export const schemas = {
             assigned_subscription: z.number().optional(),
             assigned_subscription_info: z
                 .object({
-                    subscription_id: z.number(),
+                    subscription_id: z.string().or(z.number()),
                     has_subscription: z.boolean(),
                     expiry_date: z.string(),
                     published_products: z.number(),
@@ -2295,9 +2295,9 @@ export const schemas = {
             'wc-failed': z.number(),
             'wc-checkout-draft': z.number(),
             complete: z.number().optional(),
-            paid: z.number().optional(),
+            paid: z.string().or(z.number()).optional(),
             confirmed: z.number().optional(),
-            unpaid: z.number().optional(),
+            unpaid: z.string().or(z.number()).optional(),
             'pending-confirmation': z.number().optional(),
             cancelled: z.number().optional(),
             'in-cart': z.number().optional(),
@@ -2401,7 +2401,7 @@ export const schemas = {
         }),
 
         setStoreSchema: z.object({
-            id: z.number(),
+            id: z.string().or(z.number()),
             store_name: z.string(),
             first_name: z.string(),
             last_name: z.string(),
@@ -2412,9 +2412,9 @@ export const schemas = {
             address: addressSchema,
             location: z.string(),
             banner: z.string(),
-            banner_id: z.number(),
+            banner_id: z.string().or(z.number()),
             gravatar: z.string(),
-            gravatar_id: z.number(),
+            gravatar_id: z.string().or(z.number()),
             shop_url: z.string().url(),
             toc_enabled: z.boolean(),
             store_toc: z.string(),
@@ -2443,7 +2443,7 @@ export const schemas = {
     // modules schema
     modulesSchema: z.array(
         z.object({
-            id: z.string(),
+            id: z.string().or(z.number()).optional(),
             name: z.string(),
             description: z.string(),
             thumbnail: z.string().url(),
@@ -2463,7 +2463,7 @@ export const schemas = {
     abuseReportsSchema: {
         abuseReportReasonsSchema: z.array(
             z.object({
-                id: z.string(),
+                id: z.string().or(z.number()).optional(),
                 value: z.string(),
             }),
         ),
@@ -2485,7 +2485,7 @@ export const schemas = {
         followUnfollowSchema: z.object({ status: z.enum(['following', 'unfollowed']) }),
         followersSchema: z.array(
             z.object({
-                id: z.number(),
+                id: z.string().or(z.number()),
                 first_name: z.string(),
                 last_name: z.string(),
                 full_name: z.string(),
@@ -2502,7 +2502,7 @@ export const schemas = {
         // advertised product stores schema
         advertisedProductStoresSchema: z.array(
             z.object({
-                vendor_id: z.string(),
+                vendor_id: z.string().or(z.number()).optional(),
                 store_name: z.string(),
             }),
         ),
@@ -2542,7 +2542,7 @@ export const schemas = {
         quoteRequestsSchema: z.array(quoteRequestSchema),
 
         singleQuoteRequestSchema: z.object({
-            quote_id: z.string(),
+            quote_id: z.string().or(z.number()).optional(),
             title: z.string(),
             customer_info: z.object({
                 name_field: z.string(),
@@ -2552,7 +2552,7 @@ export const schemas = {
             }),
 
             customer: z.object({
-                user_id: z.number(),
+                user_id: z.string().or(z.number()),
                 user_login: z.string(),
                 user_email: z.string(),
             }),
@@ -2572,9 +2572,9 @@ export const schemas = {
 
             quote_details: z.array(
                 z.object({
-                    id: z.string(),
-                    quote_id: z.string(),
-                    product_id: z.string(),
+                    id: z.string().or(z.number()).optional(),
+                    quote_id: z.string().or(z.number()).optional(),
+                    product_id: z.string().or(z.number()).optional(),
                     quantity: z.string(),
                 }),
             ),
@@ -2633,7 +2633,7 @@ export const schemas = {
                 permalink: z.string(),
                 review_count: z.number(),
                 type: z.string(),
-                id: z.number(),
+                id: z.string().or(z.number()),
                 price: z.string(),
                 price_html: z.string(),
                 category_list: z.string(),
@@ -2756,5 +2756,9 @@ export const schemas = {
         wholesaleCustomerSchema: wholesaleCustomerSchema,
         wholesaleCustomersSchema: z.array(wholesaleCustomerSchema),
         updateWholesaleCustomerSchema: customerSchema,
+        batchUpdateWholesaleCustomersSchema: z.object({
+            approved: z.array(z.number()).optional(),
+            pending: z.array(z.number()).optional(),
+        }),
     },
 };

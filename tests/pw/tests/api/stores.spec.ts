@@ -132,6 +132,6 @@ test.describe('stores api test', () => {
         const [response, responseBody] = await apiUtils.put(endPoints.updateBatchStores, { data: { approved: allStoreIds } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
-        // expect(responseBody).toMatchSchema(schemas.storesSchema.batchUpdateStoreSchema);
+        expect(responseBody).toMatchSchema(schemas.storesSchema.batchUpdateStoreSchema);
     });
 });

@@ -56,5 +56,7 @@ test.describe('wholesale customers api test', () => {
         const [response, responseBody] = await apiUtils.put(endPoints.updateBatchWholesaleCustomer, { data: { activate: allWholesaleCustomerIds } });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.wholesaleCustomersSchema.batchUpdateWholesaleCustomersSchema);
     });
+    
 });
