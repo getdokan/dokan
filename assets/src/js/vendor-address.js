@@ -7,8 +7,10 @@
         state_select: function () {
             let states_json = wc_country_select_params.countries.replace( /&quot;/g, '"' ),
                 states = $.parseJSON( states_json ),
-                $statebox = $( '#dokan_address_state' ),
-                input_name = $statebox.attr( 'name' ),
+                $statebox = $( '#dokan_address_state' );
+
+            $statebox.addClass( 'wc-enhanced-select' );
+            let input_name = $statebox.attr( 'name' ),
                 input_id = $statebox.attr( 'id' ),
                 input_class = $statebox.attr( 'class' ),
                 value = $statebox.val(),
@@ -50,7 +52,7 @@
                         $( 'select#dokan_address_state' ).html( '<option value="">' + wc_country_select_params.i18n_select_state_text + '</option>' + options );
                     }
                     if ( $statebox.is( 'input' ) ) {
-                        $( 'input#dokan_address_state' ).replaceWith( '<select type="text" class="wc-enhanced-select ' + input_class + '" name="' + input_name + '" id="' + input_id + '" required ></select>' );
+                        $( 'input#dokan_address_state' ).replaceWith( '<select type="text" class="' + input_class + '" name="' + input_name + '" id="' + input_id + '" required ></select>' );
                         $( 'select#dokan_address_state' ).html( '<option value="">' + wc_country_select_params.i18n_select_state_text + '</option>' + options );
                     }
                     $( '#dokan_address_state' ).removeClass( 'dokan-hide' );
