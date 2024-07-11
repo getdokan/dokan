@@ -1,11 +1,10 @@
 import { test as setup, expect, request } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
-import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
 import { helpers } from '@utils/helpers';
 import { data } from '@utils/testData';
 
-const { LOCAL, DOKAN_PRO, BASE_URL } = process.env;
+const { CI, LOCAL, DOKAN_PRO, BASE_URL } = process.env;
 
 setup.describe('setup test environment', () => {
     let apiUtils: ApiUtils;
@@ -28,9 +27,19 @@ setup.describe('setup test environment', () => {
         }
     });
 
-    setup('setup store settings', { tag: ['@lite'] }, async () => {
-        const [response] = await apiUtils.put(endPoints.updateSettings, { data: payloads.setupStore });
-        expect(response.ok()).toBeTruthy();
+    setup('activate Dokan Lite', { tag: ['@lite'] }, async () => {
+        setup.skip(CI, 'skip plugin activation on CI');
+        await apiUtils.updatePlugin('dokan/dokan', { status: 'active' }, payloads.adminAuth);
+    });
+
+    setup('activate Dokan Pro', { tag: ['@pro'] }, async () => {
+        setup.skip(CI, 'skip plugin activation on CI');
+        await apiUtils.updatePlugin('dokan-pro/dokan-pro', { status: 'active' }, payloads.adminAuth);
+    });
+
+    setup('enable admin selling status', { tag: ['@lite'] }, async () => {
+        const responseBody = await apiUtils.setStoreSettings(payloads.setupStore, payloads.adminAuth);
+        expect(responseBody).toBeTruthy();
     });
 
     setup('create customer', { tag: ['@lite'] }, async () => {
