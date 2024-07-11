@@ -17,38 +17,52 @@ if ( ! file_exists( $_tests_dir . '/includes/functions.php' ) ) {
     exit( 1 );
 }
 
+function dokan_truncate_table_data(): void {
+	$tables = [
+		'dokan_withdraw',
+		'dokan_orders',
+		'dokan_announcement',
+		'dokan_refund',
+		'dokan_vendor_balance',
+    ];
+    global $wpdb;
+    foreach ( $tables as $table_name ) {
+		$wpdb->query( "TRUNCATE TABLE {$wpdb->prefix}{$table_name}" );
+    }
+}
+
 // Give access to tests_add_filter() function.
 require_once $_tests_dir . '/includes/functions.php';
 
 function _manually_load_plugin() {
-    define( 'WC_TAX_ROUNDING_MODE', 'auto' );
-    define( 'WC_USE_TRANSACTIONS', false );
+	define( 'WC_TAX_ROUNDING_MODE', 'auto' );
+	define( 'WC_USE_TRANSACTIONS', false );
 
-    require TEST_WC_DIR . '/woocommerce.php';
-    require TEST_DOKAN_PLUGIN_DIR . '/dokan.php';
+	require TEST_WC_DIR . '/woocommerce.php';
+	require TEST_DOKAN_PLUGIN_DIR . '/dokan.php';
 }
 
 tests_add_filter( 'muplugins_loaded', '_manually_load_plugin' );
 
 function install_wc() {
-    define( 'WP_UNINSTALL_PLUGIN', true );
-    define( 'WC_REMOVE_ALL_DATA', true );
+	define( 'WP_UNINSTALL_PLUGIN', true );
+	define( 'WC_REMOVE_ALL_DATA', true );
 
-    // include TEST_WC_DIR . '/uninstall.php';
+	include TEST_WC_DIR . '/uninstall.php';
 
-    // WC_Install::install();
+	WC_Install::install();
 
-    WC()->init();
+	WC()->init();
 
-    // Reload capabilities after install, see https://core.trac.wordpress.org/ticket/28374.
-    if ( version_compare( $GLOBALS['wp_version'], '4.7', '<' ) ) {
-        $GLOBALS['wp_roles']->reinit();
-    } else {
-        $GLOBALS['wp_roles'] = null; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
-        wp_roles();
-    }
+	// Reload capabilities after install, see https://core.trac.wordpress.org/ticket/28374.
+	if ( version_compare( $GLOBALS['wp_version'], '4.7', '<' ) ) {
+		$GLOBALS['wp_roles']->reinit();
+	} else {
+		$GLOBALS['wp_roles'] = null; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+		wp_roles();
+	}
 
-    echo esc_html( 'Installing WooCommerce...' . PHP_EOL );
+	echo esc_html( 'Installing WooCommerce...' . PHP_EOL );
 }
 
 /**
@@ -57,9 +71,10 @@ function install_wc() {
  * Nothing being called here yet.
  */
 function install_dokan() {
-    echo 'Installing Dokan...' . PHP_EOL;
+	echo 'Installing Dokan...' . PHP_EOL;
+    dokan_truncate_table_data();
 
-    dokan()->activate();
+	dokan()->activate();
 }
 
 // install WC
