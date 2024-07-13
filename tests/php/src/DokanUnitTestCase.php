@@ -332,9 +332,9 @@ abstract class DokanUnitTestCase extends WP_UnitTestCase {
      * @return int The parent order ID.
      */
     protected function create_multi_vendor_order( array $order_data = [] ) {
-        $default_data = $this->get_multi_vendor_order_data();
-
-        $order_data = wp_parse_args( $order_data, $default_data );
+        if ( empty( $order_data ) ) {
+            $order_data = $this->get_multi_vendor_order_data();
+        }
 
         $order_factory = $this->factory()->order;
 
