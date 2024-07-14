@@ -78,11 +78,14 @@ namespace WeDevs\Dokan\Test\Unit;
 use WeDevs\Dokan\Test\DokanTestCase;
 
 class SampleTest extends DokanTestCase {
+    protected $unit_test = true; // For unit test.
+
     public function test_sample_method() {
         $this->assertTrue( true );
     }
 }
 ```
+> If `$unit_test` is `true` then `DokanTestCase` will not create utility for the API and Database.
 
 #### API Test
 There are two utility methods named `get_request` and `post_request` in the `DokanTestCase` class.
