@@ -10,7 +10,7 @@
     - [Database Assertion](#database-assertion)
 - [Mocking](./mocking.md)
 
-### Introduction
+## Introduction
    
 Our test case class should extend the [DokanTestCase](./../../tests/php/src/DokanTestCase.php#L14) class.
 
@@ -66,7 +66,7 @@ We can follow the same file path of the source. For example, the test case file 
 - **Environment**: Set up a controlled environment for integration testing to avoid side effects and ensure repeatability.
 
 
-### Write Test Case
+## Write Test Case
 
 To write unit tests in Dokan smoothly, your test class should extend the `WeDevs\Dokan\Test\DokanTestCase` abstract class. For example
 
@@ -161,7 +161,7 @@ class SampleTest extends DokanAjaxTestCase {
 }
 ```
 
-### Available Assertion
+## Available Assertion
 
 Since `WeDevs\Dokan\Test\DokanTestCase` class composes the [PHPUnit](https://docs.phpunit.de/en/9.6/), [Mockery](http://docs.mockery.io/en/latest/) and [Brain Monkey](https://giuseppe-mazzapica.gitbook.io/brain-monkey) so all methods of these packages are available in your test class. 
 

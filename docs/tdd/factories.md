@@ -9,9 +9,8 @@
 - [Example of Factories](#example-of-factories)
 - [Why Woocommerce Helper](#why-woocommerce-helper-methods-are-wrapped)
 
----
 
-### Introduction
+## Introduction
 
 When writing unit tests for various functionalities in Dokan, it's essential to have factories for different entities such as Vendor, Vendor specific Products, Coupons, Shipping, Orders, etc. These factories make it easier to create test data and ensure your tests are readable and maintainable.
 
@@ -30,7 +29,7 @@ $this->factory()->{entity}->{method}
 All Dokan factory classes extend **WP_UnitTest_Factory_For_Thing** and also have wrapper methods of respective [**Woocommerce Factories**](https://github.com/woocommerce/woocommerce/tree/trunk/plugins/woocommerce/tests/legacy/framework/helpers).
 
 
-### [User Factory](./../../tests/php/src/Factories/CustomerFactory.php)
+## [User Factory](./../../tests/php/src/Factories/CustomerFactory.php)
 ```php
 // Get the user ID.
 $admin_id = $this->factory()->user->create(
@@ -47,7 +46,7 @@ $admin_user = $this->factory()->user->create_and_get(
 );
 ```
 
-### [Customer Factory](./../../tests/php/src/Factories/CustomerFactory.php)
+## [Customer Factory](./../../tests/php/src/Factories/CustomerFactory.php)
 ```php
  $customer_id = $this->customer->create(); // Create customer with default data.
  
@@ -62,7 +61,7 @@ $admin_user = $this->factory()->user->create_and_get(
 ```
 
 
-### [Seller Factory](./../../tests/php/src/Factories/SellerFactory.php)
+## [Seller Factory](./../../tests/php/src/Factories/SellerFactory.php)
 
 ```php
 $seller_id = $this->seller->create(); // Create seller with default data.
@@ -82,7 +81,7 @@ $seller_id = $this->seller->create(
 ```
 The array keys are optional. You can assign any of them others will be filled by the factory.
 
-### [Product Factory](./../../tests/php/src/Factories/ProductFactory.php)
+## [Product Factory](./../../tests/php/src/Factories/ProductFactory.php)
 Example of Product factory:
 
 ```php
@@ -99,7 +98,7 @@ $product_id = $this->factory()->product
 $product = wc_get_product( $product_id );
 ```
 
-### [Coupon Factory](./../../tests/php/src/Factories/CouponFactory.php)
+## [Coupon Factory](./../../tests/php/src/Factories/CouponFactory.php)
 
 You can create coupon using `coupon` factory.
 
@@ -115,7 +114,7 @@ $coupon_instance = $this->factory()->coupon->create_and_get(
 ```
 
 
-### [Order Factory](./../../tests/php/src/Factories/OrderFactory.php) 
+## [Order Factory](./../../tests/php/src/Factories/OrderFactory.php) 
 
 **Option 1:**
 
@@ -184,11 +183,11 @@ The assertion `$this->assertDatabaseCount('posts', 3, [ 'post_type' => 'shop_ord
 
 You can pass [meta](./../../tests/php/src/Helpers/WC_Helper_Coupon.php#L33) as per your requirements.
 
-### Example of Factories
+## Example of Factories
 
 There is a test class named [CustomFactoriesTest](./../../tests/php/src/CustomFactoriesTest.php) which covers the test cases for most of the Dokan factories.
 
-### Why WooCommerce Helper Methods are Wrapped
+## Why WooCommerce Helper Methods are Wrapped
 
 Dokan factory classes utilize the WC Factories so that we can adapt to future changes in WooCommerce. By wrapping WooCommerce helper methods, we ensure that our application test code remains consistent and compatible with any updates in WooCommerce. This approach allows us to modify the wrapper methods as needed to align with WooCommerce changes, maintaining the stability and reliability of our tests.
 

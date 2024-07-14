@@ -23,6 +23,7 @@ Writing test cases for your code ensures code quality, proper implementation of 
 6. **Repeat**: Continue this process for each new feature.
 
 #### TDD Libraries
+---
 The following libraries are used for TDD. All methods and features of these libraries are available for writing test cases:
 
 - [PHPUnit](https://docs.phpunit.de/en/9.6/writing-tests-for-phpunit.html)
@@ -30,6 +31,7 @@ The following libraries are used for TDD. All methods and features of these libr
 - [Brain Monkey](https://giuseppe-mazzapica.gitbook.io/brain-monkey): A unit test utility for PHP, specifically for mocking and testing WordPress code.
 
 ### How to Run
+---
 You can run the test cases from the plugin's root directory terminal using one of the following methods:
 
 **Option 1:**
@@ -50,6 +52,6 @@ composer test
 composer test-f {your-filter-key}
 ```
 
-### Why Not Latest PHPUnit
+## Why Not Latest PHPUnit
 
 We can only use PHPUnit versions that are supported by [WP PHPUnit](https://github.com/wp-phpunit/docs?tab=readme-ov-file#phpunit-compatibility).
