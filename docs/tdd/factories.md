@@ -185,7 +185,7 @@ You can pass [meta](./../../tests/php/src/Helpers/WC_Helper_Coupon.php#L33) as p
 
 ## Example of Factories
 
-There is a test class named [CustomFactoriesTest](./../../tests/php/src/CustomFactoriesTest.php) which covers the test cases for most of the Dokan factories.
+There is a test class named [DokanFactoryTest](./../../tests/php/src/DokanFactoryTest.php) which covers the test cases for most of the Dokan factories.
 
 ## Why WooCommerce Helper Methods are Wrapped
 

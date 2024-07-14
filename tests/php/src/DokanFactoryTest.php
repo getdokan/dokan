@@ -7,7 +7,7 @@ use WC_Order_Item_Shipping;
 use WeDevs\Dokan\Test\Factories\DokanFactory;
 use WeDevs\Dokan\Vendor\Vendor;
 
-class CustomFactories extends DokanTestCase {
+class DokanFactoryTest extends DokanTestCase {
     /**
      * System under test.
      *
