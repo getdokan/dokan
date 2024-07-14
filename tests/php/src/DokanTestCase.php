@@ -18,7 +18,7 @@ use WP_REST_Server;
  * Brain Monkey: @see https://giuseppe-mazzapica.gitbook.io/brain-monkey  A unit test utility for WP and PHP to Mock.
  * Mockery: @see http://docs.mockery.io/en/latest/
  */
-abstract class DokanUnitTestCase extends WP_UnitTestCase {
+abstract class DokanTestCase extends WP_UnitTestCase {
     use DBAssertionTrait;
     use MockeryPHPUnitIntegration;
 
@@ -204,70 +204,6 @@ abstract class DokanUnitTestCase extends WP_UnitTestCase {
 
         return $this->server->dispatch( $request );
     }
-
-    /**
-     * Data provider for multi-vendor orders.
-     *
-     * @see https://docs.phpunit.de/en/9.6/writing-tests-for-phpunit.html#writing-tests-for-phpunit-data-providers
-     * @return array The data for the multi-vendor order tests.
-     */
-    public function get_multi_vendor_order() {
-        $seller_id1 = $this->factory()->seller->create();
-        $seller_id2 = $this->factory()->seller->create();
-
-        $order_id = $this->factory()
-            ->order
-            ->set_item_fee(
-                [
-                    'name' => 'Extra Charge',
-                    'amount' => 10,
-                ]
-            )
-            ->set_item_shipping(
-                [
-                    'name' => 'Shipping Fee',
-                    'amount' => 10,
-                ]
-            )
-            ->create(
-                [
-                    'status'      => 'processing',
-                    'customer_id' => $this->factory()->customer->create( [] ),
-                    'line_items'  => array(
-                        array(
-                            'product_id' => $this->factory()->product
-                                ->set_seller_id( $seller_id1 )
-                                ->create(
-                                    [
-                                        'name' => 'Test Product 1',
-                                        'regular_price' => 5,
-                                        'price' => 5,
-                                    ]
-                                ),
-                            'quantity'   => 2,
-                        ),
-                        array(
-                            'product_id' => $this->factory()->product
-                                ->set_seller_id( $seller_id2 )
-                                ->create(
-                                    [
-                                        'name' => 'Test Product 2',
-                                        'regular_price' => 5,
-                                        'price' => 5,
-                                    ]
-                                ),
-                            'quantity'   => 1,
-                        ),
-                    ),
-                ]
-            );
-
-        return [
-            [ $order_id, $seller_id1, $seller_id2 ],
-        ];
-    }
-
-
 
     /**
      * Data provider for multi-vendor order.

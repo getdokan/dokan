@@ -1,7 +1,6 @@
 <?php
 namespace WeDevs\Dokan\Test\Factories;
 
-use Moip\Resource\Customer;
 use WC_Customer;
 use WP_UnitTest_Generator_Sequence;
 

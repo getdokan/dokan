@@ -1,11 +1,11 @@
 <?php
 namespace WeDevs\Dokan\Test\Withdrawal;
 
-use WeDevs\Dokan\Test\DokanUnitTestCase;
+use WeDevs\Dokan\Test\DokanTestCase;
 use WeDevs\Dokan\Withdraw\Withdraw;
 use WP_UnitTestCase;
 
-class WithdrawChargeTest extends DokanUnitTestCase {
+class WithdrawChargeTest extends DokanTestCase {
 
     /**
      * Set up
