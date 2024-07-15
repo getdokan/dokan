@@ -1027,7 +1027,23 @@
 - page: 'Vendor Subscription'
   features:
       admin:
-          no test is written for vendor subscription: false
+          admin can view dokan subscription menu page: false
+          admin can filter dokan subscriptions by vendor: false
+          admin can filter dokan subscriptions by package: false
+          admin can cancel dokan subscription: false
+          admin can perform bulk action on subscribed vendors: false
+          admin can create dokan subscription pack (non-recurring): false
+          admin can create dokan subscription pack (recurring): false
+          admin can assign non-rucurring dokan subscription pack to vendor: false
+      vendor:
+          vendor can view subscription menu page: false
+          vendor can buy dokan subscription pack (non-recurring): false
+          vendor can buy dokan subscription pack (recurring): false
+          vendor can buy dokan subscription pack on registration (non-recurring): false
+          vendor can buy dokan subscription pack on registration (recurring): false
+          vendor can view dokan subscription details on subscription page: false
+          vendor can cancel dokan subscription pack: false
+          vendor can switch dokan subscription pack: false
 
 - page: 'Vendor Verification'
   features:

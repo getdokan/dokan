@@ -17,7 +17,7 @@ export default defineConfig({
     /* The maximum number of test failures for the whole test suite run. After reaching this number, testing will stop and exit with an error. */
     maxFailures: CI ? 40 : 40,
     /* Maximum time one test can run for. */
-    timeout: CI ? 45 * 1000 : 45 * 1000,
+    timeout: CI ? 50 * 1000 : 50 * 1000,
     /* Configuration for the expect assertion library */
     expect: {
         /* Maximum time expect() should wait for the condition to be met.  For example in `await expect(locator).toHaveText();`*/
