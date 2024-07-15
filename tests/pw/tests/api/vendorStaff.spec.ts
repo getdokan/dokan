@@ -11,6 +11,7 @@ import { test, expect, request } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
+import { schemas } from '@utils/schemas';
 
 test.describe('vendor staff api test', () => {
     let apiUtils: ApiUtils;
@@ -31,12 +32,14 @@ test.describe('vendor staff api test', () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllVendorStaffs);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.vendorStaffSchema.vendorStaffsSchema);
     });
 
     test('get single vendor staff', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getSingleVendorStaff(staffId));
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.vendorStaffSchema.vendorStaffSchema);
     });
 
     test('create a vendor staff', { tag: ['@pro'] }, async () => {
@@ -44,30 +47,35 @@ test.describe('vendor staff api test', () => {
         expect(response.status()).toBe(201);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.vendorStaffSchema.vendorStaffSchema);
     });
 
     test('update a vendor staff', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.put(endPoints.updateVendorStaff(staffId), { data: payloads.updateStaff() });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.vendorStaffSchema.vendorStaffSchema);
     });
 
     test('get all vendor staff capabilities', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllVendorStaffCapabilities);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.vendorStaffSchema.staffCapabilitiesSchema);
     });
 
     test('get vendor staff capabilities', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getVendorStaffCapabilities(staffId));
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.vendorStaffSchema.staffCapabilities);
     });
 
     test('update vendor staff capabilities', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.put(endPoints.updateVendorStaffCapabilities(staffId), { data: payloads.updateCapabilities });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.vendorStaffSchema.staffCapabilities);
     });
 
     test('delete a vendor staff', { tag: ['@pro'] }, async () => {

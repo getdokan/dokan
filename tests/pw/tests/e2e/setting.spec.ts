@@ -50,12 +50,12 @@ test.describe.skip('Settings test', () => {
     test.skip('admin can set vendor store url (general settings)', { tag: ['@lite', '@admin'] }, async () => {
         // todo: need to run on serial mode, will fail other tests
         await dbUtils.setDokanSettings(dbData.dokan.optionName.general, { ...dbData.dokan.generalSettings, custom_store_url: 'stores' });
-        CI ? await helpers.exeCommand(data.command.permalink) : await helpers.exeCommand(data.command.permalinkLocal);
+        CI ? await helpers.exeCommand(data.commands.permalink) : await helpers.exeCommand(data.commands.permalinkLocal);
         await admin.vendorStoreUrlSetting(data.predefined.vendorStores.vendor1, 'stores');
 
         //reset
         await dbUtils.setDokanSettings(dbData.dokan.optionName.general, dbData.dokan.generalSettings);
-        CI ? await helpers.exeCommand(data.command.permalink) : await helpers.exeCommand(data.command.permalinkLocal);
+        CI ? await helpers.exeCommand(data.commands.permalink) : await helpers.exeCommand(data.commands.permalinkLocal);
     });
 
     test('admin can set vendor setup wizard logo & message (general settings)', { tag: ['@lite', '@admin'] }, async () => {

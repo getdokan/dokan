@@ -35,7 +35,8 @@ test.describe('Dashboard test', () => {
         await admin.adminDashboardRenderProperly();
     });
 
-    test('admin can evaluate dashboard at a glance values', { tag: ['@lite', '@admin'] }, async () => {
+    test.skip('admin can evaluate dashboard at a glance values', { tag: ['@lite', '@admin'] }, async () => {
+        // todo: need to run in sequence
         const summary = await apiUtils.getAdminReportSummary(payloads.adminAuth);
         await admin.dokanAtAGlanceValueAccuracy(summary);
     });

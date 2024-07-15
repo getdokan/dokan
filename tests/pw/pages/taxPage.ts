@@ -32,15 +32,15 @@ export class TaxPage extends AdminPage {
         // Set Tax Rate
         await this.click(woocommerceSettings.tax);
         await this.click(woocommerceSettings.standardRates);
-        const taxIsVisible = await this.isVisible(woocommerceSettings.taxRate);
-        if (!taxIsVisible) {
-            await this.click(woocommerceSettings.insertRow);
-        }
-        await this.clearAndType(woocommerceSettings.taxRate, tax.taxRate);
+        await this.click(woocommerceSettings.insertRow);
+
+        const rowCount = await this.getElementCount(woocommerceSettings.taxTableRow);
+        await this.clearAndType(woocommerceSettings.taxRate(rowCount), tax.taxRate);
+        await this.clearAndType(woocommerceSettings.priority(rowCount), tax.priority);
         await this.click(woocommerceSettings.taxTable);
 
         await this.click(woocommerceSettings.taxRateSaveChanges);
-
-        await this.toHaveValue(woocommerceSettings.taxRate, tax.taxRate);
+        const taxRate = await this.getElementValue(woocommerceSettings.taxRate(rowCount));
+        this.toBeEqual(Number(taxRate), Number(tax.taxRate));
     }
 }

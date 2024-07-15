@@ -28,7 +28,7 @@ test.describe('Admin functionality test', () => {
     });
 
     test('admin can logout', { tag: ['@lite', '@admin'] }, async ({ page }) => {
-        test.skip(DOKAN_PRO, 'skip on pro'); //todo: need to fix
+        test.skip(DOKAN_PRO, 'skip on pro'); // todo: need to fix
         const loginPage = new LoginPage(page);
         await loginPage.adminLogin(data.admin);
         await loginPage.logoutBackend();

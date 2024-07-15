@@ -90,7 +90,7 @@ export class StoresPage extends AdminPage {
         await this.click(vendors.addNewVendor);
 
         // account info
-        await this.clearAndType(vendors.newVendor.firstName, firstName); //todo: why type instead of clearAndType
+        await this.clearAndType(vendors.newVendor.firstName, firstName);
         await this.clearAndType(vendors.newVendor.lastName, vendorInfo.lastName());
         await this.clearAndType(vendors.newVendor.storeName, shopName);
         await this.typeAndWaitForResponse(data.subUrls.api.dokan.stores, vendors.newVendor.storeUrl, shopName);
