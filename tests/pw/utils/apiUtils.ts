@@ -222,10 +222,34 @@ export class ApiUtils {
      * follow store methods
      */
 
-    // follow un-follow store
-    async followUnfollowStore(sellerId: string, auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.post(endPoints.followUnfollowStore, { data: { vendor_id: Number(sellerId) }, headers: auth });
-        return responseBody;
+    // follow  store
+    async followStore(sellerId: string, auth?: auth): Promise<responseBody> {
+        const maxRetries = 3; // to avoid infinite loop
+        let retries = 0;
+        while (retries < maxRetries) {
+            const [, responseBody] = await this.post(endPoints.followUnfollowStore, { data: { vendor_id: Number(sellerId) }, headers: auth });
+            if (responseBody.status === 'unfollowed') {
+                retries += 1;
+                continue;
+            }
+            expect(responseBody.status).toBe('following');
+            return responseBody;
+        }
+    }
+
+    // unfollow store
+    async unfollowStore(sellerId: string, auth?: auth): Promise<responseBody> {
+        const maxRetries = 3; // to avoid infinite loop
+        let retries = 0;
+        while (retries < maxRetries) {
+            const [, responseBody] = await this.post(endPoints.followUnfollowStore, { data: { vendor_id: Number(sellerId) }, headers: auth });
+            if (responseBody.status === 'following') {
+                retries += 1;
+                continue;
+            }
+            expect(responseBody.status).toBe('unfollowed');
+            return responseBody;
+        }
     }
 
     /**
