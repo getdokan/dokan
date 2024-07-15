@@ -451,7 +451,7 @@
           admin can export all logs: true
           admin can filter all logs by store name: true
           admin can filter all logs by order status: true
-        #   admin can filter all logs by calander: true
+          #   admin can filter all logs by calander: true
       vendor:
           vendor can view reports menu page: true
           vendor can export statement: true
@@ -650,17 +650,17 @@
           admin can add geolocation widget (store location) widget: false
           admin can add geolocation widget (geolocation filter form) widget: false
           #   admin can add geolocation filters shortcode [duplicate]: false
-    #   vendor:
-          #   vendor can add location to store [duplicate]: false
-          #   vendor can add location to product [duplicate]: false
-    #   customer:
-          #   customer can view map on shop page [duplicate]: false
-          #   customer can view map on store list page [duplicate]: false
-          #   customer can view map on single product page [duplicate]: false
-          #   customer can view product location on map [duplicate]: false
-          #   customer can view store location on map [duplicate]: false
-          #   customer can use filters on shop page [duplicate]: false
-          #   customer can use filters on store list page [duplicate]: false
+      #   vendor:
+      #   vendor can add location to store [duplicate]: false
+      #   vendor can add location to product [duplicate]: false
+      #   customer:
+      #   customer can view map on shop page [duplicate]: false
+      #   customer can view map on store list page [duplicate]: false
+      #   customer can view map on single product page [duplicate]: false
+      #   customer can view product location on map [duplicate]: false
+      #   customer can view store location on map [duplicate]: false
+      #   customer can use filters on shop page [duplicate]: false
+      #   customer can use filters on store list page [duplicate]: false
 
 - page: 'Live Chat'
   features:
@@ -734,7 +734,7 @@
           admin can search advertised product by order: false
           admin can filter advertised product by stores: true
           admin can filter advertised product by creation process: true
-        #   admin can filter advertised product by calander: false
+          #   admin can filter advertised product by calander: false
           admin can expire advertised product: true
           admin can delete advertised product: true
           admin can perform bulk action on product advertisements: false
@@ -950,7 +950,7 @@
           admin can search support ticket by ticket title: true
           admin can filter support tickets by vendor: true
           admin can filter support tickets by customer: true
-        #   admin can filter support tickets by calander: false
+          #   admin can filter support tickets by calander: false
           admin can reply to support ticket as admin: true
           admin can reply to support ticket as vendor: true
           admin can disable support ticket email notification: true
@@ -1072,10 +1072,10 @@
 - page: 'Wholesale'
   features:
       admin:
-        #   admin can set Dokan wholesale settings [duplicate]: true
+          #   admin can set Dokan wholesale settings [duplicate]: true
           admin can set wholesale price viewer: false
-          admin can set show wholsesale price on shop archive : false
-          admin can set need approval for becoming wholesale customer : false
+          admin can set show wholsesale price on shop archive: false
+          admin can set need approval for becoming wholesale customer: false
           admin can view wholesale customers menu page: true
           admin can search wholesale customer: true
           admin can disable customer's wholesale capability: true
@@ -1084,8 +1084,8 @@
           admin can view wholesale customer orders: true
           admin can delete wholesale customer: true
           admin can perform bulk action on wholesale customers: true
-       vendor: 
-          vendor can create wholesale product : false   
+      vendor:
+          vendor can create wholesale product: false
       customer:
           customer can become a wholesale customer: true
           customer can request for become a wholesale customer: true

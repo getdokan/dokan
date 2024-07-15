@@ -58,5 +58,4 @@ test.describe('wholesale customers api test', () => {
         expect(responseBody).toBeTruthy();
         expect(responseBody).toMatchSchema(schemas.wholesaleCustomersSchema.batchUpdateWholesaleCustomersSchema);
     });
-    
 });
