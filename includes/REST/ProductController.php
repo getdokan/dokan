@@ -1197,24 +1197,24 @@ class ProductController extends DokanRESTController {
     /**
      * Prepare links for the request.
      *
-     * @param WC_Data $object Object data.
-     * @param WP_REST_Request $request Request object.
+     * @param WC_Data           $data_object Object data.
+     * @param WP_REST_Request   $request Request object.
      *
-     * @return array                   Links for the given post.
+     * @return array Links for the given post.
      */
-    protected function prepare_links( $object, $request ) {
+    protected function prepare_links( $data_object, $request ) {
         $links = [
             'self'       => [
-                'href' => rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->base, $object->get_id() ) ),
+                'href' => rest_url( sprintf( '/%s/%s/%d', $this->namespace, $this->base, $data_object->get_id() ) ),
             ],
             'collection' => [
                 'href' => rest_url( sprintf( '/%s/%s', $this->namespace, $this->base ) ),
             ],
         ];
 
-        if ( $object->get_parent_id() ) {
+        if ( $data_object->get_parent_id() ) {
             $links['up'] = [
-                'href' => rest_url( sprintf( '/%s/products/%d', $this->namespace, $object->get_parent_id() ) ),
+                'href' => rest_url( sprintf( '/%s/products/%d', $this->namespace, $data_object->get_parent_id() ) ),
             ];
         }
 
@@ -1343,9 +1343,7 @@ class ProductController extends DokanRESTController {
 
         // Taxonomy attribute name.
         if ( $attribute->is_taxonomy() ) {
-            $taxonomy = $attribute->get_taxonomy_object();
-
-            return $taxonomy->attribute_label;
+            return $attribute->get_taxonomy_object()->attribute_label;
         }
 
         // Custom product attribute name.
@@ -1398,7 +1396,9 @@ class ProductController extends DokanRESTController {
                     'fields' => 'names',
                 ]
             );
-        } elseif ( isset( $attribute['value'] ) ) {
+        }
+
+        if ( isset( $attribute['value'] ) ) {
             return array_map( 'trim', explode( '|', $attribute['value'] ) );
         }
 
@@ -1505,7 +1505,8 @@ class ProductController extends DokanRESTController {
 
                     if ( is_wp_error( $upload ) ) {
                         if ( ! apply_filters( 'woocommerce_rest_suppress_image_upload_error', false, $upload, $product->get_id(), $images ) ) {
-                            throw new WC_REST_Exception( 'woocommerce_product_image_upload_error', $upload->get_error_message(), 400 );
+                            dokan_log( 'Error uploading image: ' . $upload->get_error_message() );
+                            throw new WC_REST_Exception( 'woocommerce_product_image_upload_error', esc_html( $upload->get_error_message() ), 400 );
                         } else {
                             continue;
                         }
@@ -1514,9 +1515,9 @@ class ProductController extends DokanRESTController {
                     $attachment_id = wc_rest_set_uploaded_image_as_attachment( $upload, $product->get_id() );
                 }
 
-                if ( ! wp_attachment_is_image( $attachment_id ) ) {
+                if ( $attachment_id && ! wp_attachment_is_image( $attachment_id ) ) {
                     /* translators: %s: attachment id */
-                    throw new WC_REST_Exception( 'woocommerce_product_invalid_image_id', sprintf( __( '#%s is an invalid image ID.', 'dokan-lite' ), $attachment_id ), 400 );
+                    throw new WC_REST_Exception( 'woocommerce_product_invalid_image_id', sprintf( esc_html__( '#%s is an invalid image ID.', 'dokan-lite' ), esc_html( $attachment_id ) ), 400 );
                 }
 
                 if ( isset( $image['position'] ) && 0 === absint( $image['position'] ) ) {
@@ -2308,5 +2309,4 @@ class ProductController extends DokanRESTController {
 
         return $this->add_additional_fields_schema( $schema );
     }
-
 }

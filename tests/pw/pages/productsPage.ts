@@ -408,7 +408,7 @@ export class ProductsPage extends AdminPage {
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, productsVendor.saveProduct, 302);
         await this.toContainText(productsVendor.updatedSuccessMessage, product.saveSuccessMessage);
         await this.toHaveValue(productsVendor.edit.title, productName);
-        //todo: add more assertions
+        // todo: add more assertions
     }
 
     // vendor add variable subscription product
@@ -434,7 +434,7 @@ export class ProductsPage extends AdminPage {
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, productsVendor.saveProduct, 302);
         await this.toContainText(productsVendor.updatedSuccessMessage, product.saveSuccessMessage);
         await this.toHaveValue(productsVendor.edit.title, productName);
-        //todo: add more assertions
+        // todo: add more assertions
     }
 
     // vendor add external product
@@ -449,7 +449,7 @@ export class ProductsPage extends AdminPage {
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, productsVendor.saveProduct, 302);
         await this.toContainText(productsVendor.updatedSuccessMessage, product.saveSuccessMessage);
         await this.toHaveValue(productsVendor.edit.title, productName);
-        //todo: add more assertions
+        // todo: add more assertions
     }
 
     // go to product edit
@@ -636,7 +636,7 @@ export class ProductsPage extends AdminPage {
         }
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, productsVendor.saveProduct, 302);
         await this.toContainText(productsVendor.updatedSuccessMessage, data.product.createUpdateSaveSuccessMessage);
-        //todo: add more assertions
+        // todo: add more assertions
     }
 
     // add product Wholesale options
@@ -685,7 +685,7 @@ export class ProductsPage extends AdminPage {
 
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, productsVendor.saveProduct, 302);
         await this.toContainText(productsVendor.updatedSuccessMessage, data.product.createUpdateSaveSuccessMessage);
-        //todo: add more assertion
+        // todo: add more assertion
         await this.toHaveValue(productsVendor.otherOptions.purchaseNote, otherOption.purchaseNote);
         await this.toBeChecked(productsVendor.otherOptions.enableProductReviews);
     }
