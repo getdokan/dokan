@@ -10,6 +10,13 @@ export class MyOrdersPage extends CustomerPage {
         super(page);
     }
 
+    // navigation
+
+    async goToMyOrders() {
+        await this.goIfNotThere(data.subUrls.frontend.myOrders);
+        await this.reload(); // todo: resolve this
+    }
+
     // my orders
 
     // my orders render properly
@@ -54,14 +61,14 @@ export class MyOrdersPage extends CustomerPage {
 
     //  pay pending order
     async payPendingOrder(orderId: string, paymentMethod = 'bank') {
-        await this.goIfNotThere(data.subUrls.frontend.myOrders);
+        await this.goToMyOrders();
         await this.clickAndWaitForResponse(data.subUrls.frontend.orderPay, selector.customer.cMyOrders.orderPay(orderId));
         await this.paymentOrder(paymentMethod);
     }
 
     //  cancel order
     async cancelPendingOrder(orderId: string) {
-        await this.goIfNotThere(data.subUrls.frontend.myOrders);
+        await this.goToMyOrders();
         await this.clickAndWaitForResponse(data.subUrls.frontend.orderCancel, selector.customer.cMyOrders.orderCancel(orderId), 302);
         await this.toContainText(selector.customer.cWooSelector.wooCommerceInfo, 'Your order was cancelled.');
     }

@@ -6,7 +6,7 @@ import { payloads } from '@utils/payloads';
 import { data } from '@utils/testData';
 import { helpers } from '@utils/helpers';
 
-const { LOCAL, DOKAN_PRO, BASE_URL } = process.env;
+const { CI, LOCAL, DOKAN_PRO, BASE_URL } = process.env;
 
 setup.describe('authenticate users & set permalink', () => {
     let apiUtils: ApiUtils;
@@ -30,18 +30,31 @@ setup.describe('authenticate users & set permalink', () => {
         }
     });
 
+    setup('activate Dokan Lite', { tag: ['@lite'] }, async () => {
+        setup.skip(CI, 'skip plugin activation on CI');
+        await apiUtils.updatePlugin('dokan/dokan', { status: 'active' }, payloads.adminAuth);
+    });
+
+    setup('activate Dokan Pro', { tag: ['@pro'] }, async () => {
+        setup.skip(CI, 'skip plugin activation on CI');
+        await apiUtils.updatePlugin('dokan-pro/dokan-pro', { status: 'active' }, payloads.adminAuth);
+    });
+
     setup('authenticate admin', { tag: ['@lite'] }, async ({ page }) => {
         const loginPage = new LoginPage(page);
         await loginPage.adminLogin(data.admin, data.auth.adminAuthFile);
     });
-
-    //todo: add plugin activation for local setup
 
     setup.skip('admin set WpSettings', { tag: ['@lite'] }, async ({ page }) => {
         const loginPage = new LoginPage(page);
         const wpPage = new WpPage(page);
         await loginPage.adminLogin(data.admin);
         await wpPage.setPermalinkSettings(data.wpSettings.permalink);
+    });
+
+    setup('enable admin selling status', { tag: ['@lite'] }, async () => {
+        const responseBody = await apiUtils.setStoreSettings(payloads.setupStore, payloads.adminAuth);
+        expect(responseBody).toBeTruthy();
     });
 
     setup('add customer1', { tag: ['@lite'] }, async () => {

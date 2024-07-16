@@ -180,7 +180,7 @@ export class VendorPage extends BasePage {
 
             // verifications
             if (DOKAN_PRO) {
-                const method = await this.getElementText(verificationsVendor.firtstVerificationMethod);
+                const method = await this.getElementText(verificationsVendor.firstVerificationMethod);
                 if (method) {
                     await this.click(verificationsVendor.startVerification(method));
                     await this.click(verificationsVendor.uploadFiles(method));
@@ -223,9 +223,9 @@ export class VendorPage extends BasePage {
 
     // vendor update password
     async updatePassword(currentPassword: string, newPassword: string, saveChanges = false): Promise<void> {
-        await this.type(selector.vendor.vAccountDetails.currentPassword, currentPassword);
-        await this.type(selector.vendor.vAccountDetails.NewPassword, newPassword);
-        await this.type(selector.vendor.vAccountDetails.confirmNewPassword, newPassword);
+        await this.clearAndType(selector.vendor.vAccountDetails.currentPassword, currentPassword);
+        await this.clearAndType(selector.vendor.vAccountDetails.newPassword, newPassword);
+        await this.clearAndType(selector.vendor.vAccountDetails.confirmNewPassword, newPassword);
         if (saveChanges) {
             await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.editAccountVendor, selector.vendor.vAccountDetails.saveChanges, 302);
             await expect(this.page.getByText(selector.vendor.vAccountDetails.saveSuccessMessage)).toBeVisible();
