@@ -4,8 +4,9 @@
     - [Organize Test Cases](#organize-test-cases)
     - [Unit Test and Integration Test](#when-to-use-unit-test-and-integration-test)
 - [Write Test Case](#write-test-case)
-    - [API Tests](#api-test)
-    - [AJAX Tests](#ajax-test)
+    - [API Test](#api-test)
+    - [AJAX Test](#ajax-test)
+    - [Unit Test](#unit-test)
 - [Available Assertion](#available-assertion)
     - [Database Assertion](#database-assertion)
 - [Mocking](./mocking.md)
@@ -14,7 +15,7 @@
    
 Our test case class should extend the [DokanTestCase](./../../tests/php/src/DokanTestCase.php#L14) class.
 
-#### Recommendations for Writing Effective Test Cases
+### Recommendations for Writing Effective Test Cases
 
 1. **Isolate the SUT**: Ensure that your tests are isolated and only test the SUT (*System under test*) without external dependencies.
 2. **Use Meaningful Test Names**: Use descriptive names for your test methods to indicate what they are testing.
@@ -22,7 +23,7 @@ Our test case class should extend the [DokanTestCase](./../../tests/php/src/Doka
 4. **Maintain Readability**: Write clean and readable test code. Use comments if necessary to explain complex logic.
 5. **Keep Tests Independent**: Ensure that each test is independent of others and does not rely on any shared state.
 
-#### Organize Test Cases
+### Organize Test Cases
 
 A well-organized directory structure is crucial for maintaining clarity and manageability. Here’s an example structure:
 
@@ -47,14 +48,16 @@ plugin-dir/
 
 We can follow the same file path of the source. For example, the test case file for `includes/Services/MyService.php` could be `tests/php/src/Unit/MyServiceTest.php` or `tests/php/src/Integration/MyServiceTest.php`.
 
-#### When to Use Unit Test and Integration Test
+### When to Use Unit Test and Integration Test
 
 #### Unit Tests
+
 - Use unit tests for core logic, utility functions, and isolated classes.
 - Aim to cover as much of your code as possible with unit tests.
 - Run unit tests frequently during development to catch issues early.
 
 #### Integration Tests
+
 - Use integration tests for verifying interactions between components.
 - Test scenarios that involve multiple units working together.
 - Run integration tests to ensure that different parts of your system work well together, especially after major changes or before releases.
@@ -78,16 +81,17 @@ namespace WeDevs\Dokan\Test\Unit;
 use WeDevs\Dokan\Test\DokanTestCase;
 
 class SampleTest extends DokanTestCase {
-    protected $unit_test = true; // For unit test.
+    protected $is_unit_test = true; // For unit test.
 
     public function test_sample_method() {
         $this->assertTrue( true );
     }
 }
 ```
-> If `$unit_test` is `true` then `DokanTestCase` will not create utility for the API and Database.
+> If `$is_unit_test` is `true` then `DokanTestCase` will not create utility for the API and Database.
 
-#### API Test
+### API Test
+
 There are two utility methods named `get_request` and `post_request` in the `DokanTestCase` class.
 
 ```php
@@ -114,9 +118,8 @@ class SampleTest extends DokanTestCase {
 ```
 `$filter_params` and `$request_params` are the array of `key => value`.
 
-#### Ajax Test
+### Ajax Test
 You should extend the `DokanAjaxTestCase` to write the the ajax test.
-
 
 ```php
 
@@ -160,6 +163,31 @@ class SampleTest extends DokanAjaxTestCase {
         if ( json_last_error() !== JSON_ERROR_NONE ) {
             $this->fail( 'Invalid JSON response: ' . json_last_error_msg() );
         }
+    }
+}
+```
+
+### Unit Test
+
+Unit tests should be independent of external sources such as databases, APIs, etc. They must always return the expected result. Set the `$is_unit_test` property to `true` when writing unit tests by extending the `DokanTestCase` class.
+
+```php
+<?php
+
+namespace WeDevs\Dokan\Test\Unit; // Unit test namespace.
+
+use WeDevs\Dokan\Test\DokanTestCase;
+
+class SampleTest extends DokanTestCase {
+    /**
+     * Indicates if the test is a unit test.
+     *
+     * @var bool
+     */
+    protected $is_unit_test = true;
+
+    public function test_sample_method() {
+        // Your test cases.
     }
 }
 ```

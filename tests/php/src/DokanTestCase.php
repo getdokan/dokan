@@ -65,11 +65,11 @@ abstract class DokanTestCase extends WP_UnitTestCase {
     protected $namespace = 'dokan/v1/';
 
     /**
-     * The SUT is unit test.
+     * Indicates whether the feature is enabled only for unit testing purposes.
      *
-     * @var bool Dokan API Namespace
+     * @var bool
      */
-    protected $unit_test = false;
+    protected $is_unit_test_only = false;
 
     /**
      * Setup a REST server for test.
@@ -81,7 +81,7 @@ abstract class DokanTestCase extends WP_UnitTestCase {
         Monkey\setUp();
 
         // There is no need of REST and DB for Unit test.
-        if ( $this->unit_test ) {
+        if ( $this->is_unit_test ) {
             return;
         }
 
