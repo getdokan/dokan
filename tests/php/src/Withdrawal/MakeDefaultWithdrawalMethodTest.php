@@ -2,11 +2,11 @@
 
 namespace WeDevs\Dokan\Test\Withdrawal;
 
-use WeDevs\Dokan\Test\DokanAjaxUnitTestCase;
+use WeDevs\Dokan\Test\DokanAjaxTestCase;
 use WeDevs\Dokan\Withdraw\Hooks;
 use WPAjaxDieContinueException;
 
-class MakeDefaultWithdrawalMethodTest extends DokanAjaxUnitTestCase {
+class MakeDefaultWithdrawalMethodTest extends DokanAjaxTestCase {
 
     public function setUp(): void {
         parent::setUp();

@@ -5,7 +5,7 @@ namespace WeDevs\Dokan\Test;
 use WeDevs\Dokan\Test\Factories\DokanFactory;
 use WP_Ajax_UnitTestCase;
 
-abstract class DokanAjaxUnitTestCase extends WP_Ajax_UnitTestCase {
+abstract class DokanAjaxTestCase extends WP_Ajax_UnitTestCase {
     use DBAssertionTrait;
 
 	public function setUp(): void {
@@ -29,6 +29,7 @@ abstract class DokanAjaxUnitTestCase extends WP_Ajax_UnitTestCase {
 		if ( ! $factory ) {
 			$factory = new DokanFactory();
 		}
+
 		return $factory;
 	}
 }

@@ -10,6 +10,8 @@ class CustomerFactory extends WP_UnitTest_Factory_For_Thing {
     public function __construct( $factory = null ) {
         parent::__construct( $factory );
         $this->default_generation_definitions = array(
+            'first_name' => new WP_UnitTest_Generator_Sequence( 'First Name %s' ),
+            'last_name' => new WP_UnitTest_Generator_Sequence( 'Last Name %s' ),
             'email' => new WP_UnitTest_Generator_Sequence( 'customer%s@example.com' ),
             'username' => new WP_UnitTest_Generator_Sequence( 'customer%s' ),
             'password' => new WP_UnitTest_Generator_Sequence( 'customer%s' ),

@@ -4,11 +4,25 @@ namespace WeDevs\Dokan\Test;
 use WC_Coupon;
 use WC_Customer;
 use WC_Order_Item_Shipping;
+use WeDevs\Dokan\Test\Factories\DokanFactory;
 use WeDevs\Dokan\Vendor\Vendor;
 
-class CustomFactoriesTest extends DokanUnitTestCase {
+class DokanFactoryTest extends DokanTestCase {
+    /**
+     * System under test.
+     *
+     * @var DokanFactory
+     */
+    private $sut;
+
+    public function setUp(): void {
+        parent::setUp();
+        $this->sut = new DokanFactory();
+    }
+
     public function test_create_order() {
-        $order_id = $this->factory()
+        $customer_id = $this->sut->customer->create( [] );
+        $order_id = $this->sut
             ->order
             ->set_item_fee(
                 [
@@ -23,15 +37,15 @@ class CustomFactoriesTest extends DokanUnitTestCase {
 				]
             )
             ->set_item_coupon(
-                $this->factory()->coupon->create_and_get( [ 'meta' => [ 'coupon_amount' => 15 ] ] )
+                $this->sut->coupon->create_and_get( [ 'meta' => [ 'coupon_amount' => 15 ] ] )
             )
             ->create(
                 [
 					'status'      => 'pending',
-					'customer_id' => $this->customer_id,
+					'customer_id' => $customer_id,
 					'line_items'  => array(
 						array(
-							'product_id' => $this->factory()->product
+							'product_id' => $this->sut->product
 								->set_seller_id( 4 )
 								->create(
 									[
@@ -43,7 +57,7 @@ class CustomFactoriesTest extends DokanUnitTestCase {
 							'quantity'   => 2,
 						),
 						array(
-							'product_id' => $this->factory()->product
+							'product_id' => $this->sut->product
 								->set_seller_id( 5 )
 								->create(
 									[
@@ -61,7 +75,7 @@ class CustomFactoriesTest extends DokanUnitTestCase {
         $order = wc_get_order( $order_id );
         $this->assertInstanceOf( 'WC_Order', $order );
         $this->assertEquals( 'pending', $order->get_status() );
-        $this->assertEquals( $this->customer_id, $order->get_customer_id() );
+        $this->assertEquals( $customer_id, $order->get_customer_id() );
         $this->assertEquals( 10, $order->get_total_fees() );
         $this->assertEquals( 10, $order->get_shipping_total() );
         $this->assertEquals( 15, $order->get_subtotal() );
@@ -81,7 +95,7 @@ class CustomFactoriesTest extends DokanUnitTestCase {
     }
 
     public function test_create_customer() {
-        $customer_id = $this->factory()->customer->create(
+        $customer_id = $this->sut->customer->create(
             array(
 				'email' => 'testcustomer@example.com',
 				'first_name' => 'Test',
@@ -98,7 +112,7 @@ class CustomFactoriesTest extends DokanUnitTestCase {
     }
 
     public function test_create_seller() {
-        $seller_id = $this->factory()->seller->create(
+        $seller_id = $this->sut->seller->create(
             array(
 				'email' => 'seller@example.com',
 				'shopname' => 'my_shop',
@@ -113,8 +127,8 @@ class CustomFactoriesTest extends DokanUnitTestCase {
     }
 
     public function test_create_shipping() {
-        $order_id = $this->factory()->order->create();
-        $shipping_id = $this->factory()->shipping->create(
+        $order_id = $this->sut->order->create();
+        $shipping_id = $this->sut->shipping->create(
             array(
 				'order_id' => $order_id,
 				'method_title' => 'Flat Rate',
@@ -132,7 +146,7 @@ class CustomFactoriesTest extends DokanUnitTestCase {
     }
 
     public function test_create_coupon() {
-        $coupon_id = $this->factory()->coupon->create(
+        $coupon_id = $this->sut->coupon->create(
             array(
 				'code' => 'testcoupon',
 				'meta' => [
@@ -175,7 +189,7 @@ class CustomFactoriesTest extends DokanUnitTestCase {
      *
      * @return void
      */
-    public function test_multi_vendor_order_create_method_of_DokanUnitTestCase_class() {
+    public function test_multi_vendor_order_create_method_of_DokanTestCase_class() {
         $parent_order_id = $this->create_multi_vendor_order();
         $order = wc_get_order( $parent_order_id );
         $this->assertCount( 2, $order->get_shipping_methods() );

@@ -18,7 +18,7 @@ use WP_REST_Server;
  * Brain Monkey: @see https://giuseppe-mazzapica.gitbook.io/brain-monkey  A unit test utility for WP and PHP to Mock.
  * Mockery: @see http://docs.mockery.io/en/latest/
  */
-abstract class DokanUnitTestCase extends WP_UnitTestCase {
+abstract class DokanTestCase extends WP_UnitTestCase {
     use DBAssertionTrait;
     use MockeryPHPUnitIntegration;
 
@@ -65,16 +65,28 @@ abstract class DokanUnitTestCase extends WP_UnitTestCase {
     protected $namespace = 'dokan/v1/';
 
     /**
+     * Indicates whether the feature is enabled only for unit testing purposes.
+     *
+     * @var bool
+     */
+    protected $is_unit_test = false;
+
+    /**
      * Setup a REST server for test.
      *
      * @return void
      */
     public function setUp(): void {
-        // Initiating the REST API.
-        global $wp_rest_server;
-
         parent::setUp();
         Monkey\setUp();
+
+        // There is no need of REST and DB for Unit test.
+        if ( $this->is_unit_test ) {
+            return;
+        }
+
+        // Initiating the REST API.
+        global $wp_rest_server;
 
         $wp_rest_server = new WP_REST_Server();
         $this->server   = $wp_rest_server;
@@ -206,70 +218,6 @@ abstract class DokanUnitTestCase extends WP_UnitTestCase {
     }
 
     /**
-     * Data provider for multi-vendor orders.
-     *
-     * @see https://docs.phpunit.de/en/9.6/writing-tests-for-phpunit.html#writing-tests-for-phpunit-data-providers
-     * @return array The data for the multi-vendor order tests.
-     */
-    public function get_multi_vendor_order() {
-        $seller_id1 = $this->factory()->seller->create();
-        $seller_id2 = $this->factory()->seller->create();
-
-        $order_id = $this->factory()
-            ->order
-            ->set_item_fee(
-                [
-                    'name' => 'Extra Charge',
-                    'amount' => 10,
-                ]
-            )
-            ->set_item_shipping(
-                [
-                    'name' => 'Shipping Fee',
-                    'amount' => 10,
-                ]
-            )
-            ->create(
-                [
-                    'status'      => 'processing',
-                    'customer_id' => $this->factory()->customer->create( [] ),
-                    'line_items'  => array(
-                        array(
-                            'product_id' => $this->factory()->product
-                                ->set_seller_id( $seller_id1 )
-                                ->create(
-                                    [
-                                        'name' => 'Test Product 1',
-                                        'regular_price' => 5,
-                                        'price' => 5,
-                                    ]
-                                ),
-                            'quantity'   => 2,
-                        ),
-                        array(
-                            'product_id' => $this->factory()->product
-                                ->set_seller_id( $seller_id2 )
-                                ->create(
-                                    [
-                                        'name' => 'Test Product 2',
-                                        'regular_price' => 5,
-                                        'price' => 5,
-                                    ]
-                                ),
-                            'quantity'   => 1,
-                        ),
-                    ),
-                ]
-            );
-
-        return [
-            [ $order_id, $seller_id1, $seller_id2 ],
-        ];
-    }
-
-
-
-    /**
      * Data provider for multi-vendor order.
      *
      * @see https://docs.phpunit.de/en/9.6/writing-tests-for-phpunit.html#writing-tests-for-phpunit-data-providers
@@ -332,9 +280,9 @@ abstract class DokanUnitTestCase extends WP_UnitTestCase {
      * @return int The parent order ID.
      */
     protected function create_multi_vendor_order( array $order_data = [] ) {
-        $default_data = $this->get_multi_vendor_order_data();
-
-        $order_data = wp_parse_args( $order_data, $default_data );
+        if ( empty( $order_data ) ) {
+            $order_data = $this->get_multi_vendor_order_data();
+        }
 
         $order_factory = $this->factory()->order;
 
