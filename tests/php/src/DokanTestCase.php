@@ -69,7 +69,7 @@ abstract class DokanTestCase extends WP_UnitTestCase {
      *
      * @var bool
      */
-    protected $is_unit_test_only = false;
+    protected $is_unit_test = false;
 
     /**
      * Setup a REST server for test.
