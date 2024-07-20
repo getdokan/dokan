@@ -50,11 +50,19 @@ $price_kses = apply_filters(
         <?php } ?>
     </td>
     <td data-title="<?php esc_attr_e( 'Name', 'dokan-lite' ); ?>" class="column-primary">
+        <?php do_action( 'dokan_before_product_name_in_product_list_table', $product, $tr_class ); ?>
+
         <?php if ( current_user_can( 'dokan_edit_product' ) ) { ?>
-            <strong><a href="<?php echo esc_url( dokan_edit_product_url( $post->ID ) ); ?>"><?php echo esc_html( $product->get_title() ); ?></a></strong>
+            <strong>
+                <a href="<?php echo esc_url( dokan_edit_product_url( $post->ID ) ); ?>">
+                    <?php echo esc_html( $product->get_title() ); ?>
+                </a>
+            </strong>
         <?php } else { ?>
             <strong><a href=""><?php echo esc_html( $product->get_title() ); ?></a></strong>
         <?php } ?>
+
+        <?php do_action( 'dokan_after_product_name_in_product_list_table', $product, $tr_class ); ?>
 
         <?php if ( ! empty( $row_actions ) ) { ?>
             <div class="row-actions">
