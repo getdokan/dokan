@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\Analytics\Reports\Orders;
 
+use WeDevs\Dokan\Analytics\Reports\OrderType;
 use WeDevs\Dokan\Contracts\Hookable;
 
 class FilterQuery implements Hookable {
@@ -32,7 +33,14 @@ class FilterQuery implements Hookable {
 	public function add_where_subquery( $clauses ) {
 		$dokan_order_state_table = Stats\DataStore::get_db_table_name();
 
-		$clauses[] = "AND {$dokan_order_state_table}.is_suborder = 0";
+		$admin_order_type = implode(
+            ',', [
+				OrderType::ORDER_TYPE_WC_ORDER,
+				OrderType::ORDER_TYPE_WC_ORDER_REFUND,
+			]
+        );
+
+		$clauses[] = "AND {$dokan_order_state_table}.order_type in (  $admin_order_type ) ";
 
 		return $clauses;
 	}

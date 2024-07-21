@@ -124,7 +124,7 @@ class OrderStatsTest extends DokanTestCase {
 		$this->assertDatabaseCount(
             $dokan_order_stats_table, 1, [
 				'order_id' => $order_id,
-				'is_suborder' => 0,
+				'order_type' => 0,
 			]
         );
 
@@ -134,7 +134,7 @@ class OrderStatsTest extends DokanTestCase {
 			$this->assertDatabaseCount(
 				$dokan_order_stats_table, 1, [
 					'order_id' => $sub_id,
-					'is_suborder' => 1,
+					'order_type' => 1,
 				]
 			);
 		}
