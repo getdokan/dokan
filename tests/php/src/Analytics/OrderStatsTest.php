@@ -4,14 +4,14 @@ namespace WeDevs\Dokan\Test\Analytics;
 use Mockery;
 use WeDevs\Dokan\Analytics\Reports\Orders\FilterQuery;
 use WeDevs\Dokan\Analytics\Reports\Orders\ScheduleListener;
-use WeDevs\Dokan\Test\DokanUnitTestCase;
+use WeDevs\Dokan\Test\DokanTestCase;
 
 /**
  * Class OrderStatsTest
  *
  * Unit tests for Order statistics in the Dokan plugin.
  */
-class OrderStatsTest extends DokanUnitTestCase {
+class OrderStatsTest extends DokanTestCase {
     /**
      * Test that the order statistics hooks are registered correctly.
      *
