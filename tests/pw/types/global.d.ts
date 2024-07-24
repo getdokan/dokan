@@ -6,6 +6,7 @@ declare global {
             toMatchSchema(schema: ZodTypeAny): Promise<R>;
             toBeWithinRange(a: number, b: number): R;
             toBeSecureHeader(): R;
+            toBeApproximately(a: number | undefined, b: number, c?: any): R;
         }
     }
 }

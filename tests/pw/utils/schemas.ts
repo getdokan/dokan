@@ -292,7 +292,7 @@ const orderMinMaxSchema = z.object({
     min_quantity_to_order: z.string(),
     max_quantity_to_order: z.string(),
     vendor_min_max_products: z.array(z.any()), // Adjust this based on the actual structure
-    vendor_min_max_product_cat: z.array(z.any()), // Adjust this based on the actual structure
+    vendor_min_max_product_cat: z.array(z.any()).or(z.string()), // Adjust this based on the actual structure
     enable_vendor_min_max_amount: z.string(),
     min_amount_to_order: z.string(),
     max_amount_to_order: z.string(),
@@ -439,7 +439,7 @@ const storeSchema = z.object({
             }),
         )
         .optional(),
-    admin_category_commission: z.array(z.any()).optional(),
+    admin_category_commission: z.any().optional(),
     admin_commission: z.string().optional(),
     admin_additional_fee: z.string().optional(),
     admin_commission_type: z.string().optional(),
@@ -843,7 +843,7 @@ const settingV2LinksSchema = z.object({
 
 const infoSchema = z.object({
     text: z.string(),
-    url: z.string().url(),
+    url: z.string(),
     icon: z.string(),
 });
 
@@ -2228,7 +2228,7 @@ export const schemas = {
             dokan_store_time_enabled: z.string(),
             dokan_store_open_notice: z.string(),
             dokan_store_close_notice: z.string(),
-            dokan_store_time: z.array(z.unknown()).optional(),
+            dokan_store_time: z.any().optional(),
             sale_only_here: z.boolean().optional(),
             company_name: z.string().optional(),
             vat_number: z.string().optional(),

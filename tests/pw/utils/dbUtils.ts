@@ -55,9 +55,7 @@ export const dbUtils = {
     async createUserMeta(userId: string, metaKey: string, metaValue: object | string, serializeData?: string): Promise<any> {
         metaValue = serializeData ? serialize(metaValue) : metaValue;
         const metaExists = await dbUtils.dbQuery(`SELECT EXISTS (SELECT 1 FROM ${dbPrefix}_usermeta WHERE user_id = '${userId}' AND meta_key = '${metaKey}') AS row_exists;`);
-        const queryUpdate = metaExists[0].row_exists
-            ? `UPDATE ${dbPrefix}_usermeta SET meta_value = '${metaValue}'  WHERE user_id = '${userId}' AND meta_key = '${metaKey}';`
-            : `INSERT INTO ${dbPrefix}_usermeta VALUES ( NULL, '${userId}', '${metaKey}', '${metaValue}');`;
+        const queryUpdate = metaExists[0].row_exists ? `UPDATE ${dbPrefix}_usermeta SET meta_value = '${metaValue}'  WHERE user_id = '${userId}' AND meta_key = '${metaKey}';` : `INSERT INTO ${dbPrefix}_usermeta VALUES ( NULL, '${userId}', '${metaKey}', '${metaValue}');`;
         const res = await dbUtils.dbQuery(queryUpdate);
         // console.log(res);
         return res;
@@ -92,6 +90,7 @@ export const dbUtils = {
             type: res.commission_type,
             amount: res.admin_percentage,
             additionalAmount: res.additional_fee,
+            commission_category_based_values: res?.commission_category_based_values,
         };
         const feeRecipient = {
             shippingFeeRecipient: res.shipping_fee_recipient,

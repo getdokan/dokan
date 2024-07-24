@@ -123,6 +123,49 @@ export class ApiUtils {
      */
 
     /**
+     * commission api methods
+     */
+
+    // get admin commission
+    async getCommission(params = {}, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.get(endPoints.getCommission, { params: { ...params, context: 'admin' }, headers: auth });
+        return responseBody;
+    }
+
+    // get vendor earning
+    async getEarning(params = {}, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.get(endPoints.getCommission, { params: { ...params, context: 'seller' }, headers: auth });
+        return responseBody;
+    }
+
+    // get admin commission
+    async getCommissionLineItems(lineItems: any, auth?: auth) {
+        const productIds = lineItems.map((item: any) => item.product_id);
+        let totalCommission = (await Promise.all(productIds.map((productId: any) => this.getCommission({ product_id: productId }, auth)))).reduce((sum, commission) => sum + commission, 0);
+        totalCommission = helpers.roundToTwo(totalCommission);
+        return totalCommission;
+    }
+
+    // get vendor earning
+    async getEarningLineItems(lineItems: any, auth?: auth) {
+        const productIds = lineItems.map((item: any) => item.product_id);
+        let totalEarning = (await Promise.all(productIds.map((productId: any) => this.getEarning({ product_id: productId }, auth)))).reduce((sum, commission) => sum + commission, 0);
+        totalEarning = helpers.roundToTwo(totalEarning);
+        return totalEarning;
+    }
+
+    // get fee recipient
+    async getFeeRecipient(responseBody: any) {
+        const feeRecipients = {};
+        responseBody.meta_data.forEach((item: any) => {
+            if (item.key.includes('fee_recipient')) {
+                feeRecipients[helpers.toCamelCase(item.key)] = item.value; //todo: fix
+            }
+        });
+        return feeRecipients;
+    }
+
+    /**
      * dummy data api methods
      */
 
@@ -462,9 +505,9 @@ export class ApiUtils {
     }
 
     // create coupon
-    async createCoupon(productIds: (string | undefined)[], coupon: coupon_api, auth?: auth): Promise<[responseBody, string, string]> {
+    async createCoupon(productIds: (string | undefined)[], coupon: coupon_api, auth?: auth): Promise<[responseBody, string, string, string]> {
         // create product if invalid productId exists
-        if (productIds.includes(undefined)) {
+        if (productIds.includes(undefined) || productIds.length === 0) {
             const [, productId] = await this.createProduct(payloads.createProduct(), auth);
             productIds = [productId];
         }
@@ -485,7 +528,7 @@ export class ApiUtils {
             couponId = String(responseBody?.id);
             couponCode = String(responseBody?.code);
         }
-        return [responseBody, couponId, couponCode];
+        return [responseBody, couponId, couponCode, coupon.amount];
     }
 
     // update coupon
@@ -610,9 +653,9 @@ export class ApiUtils {
     }
 
     // get single order
-    async getSingleOrder(orderId: string, auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.get(endPoints.getSingleOrder(orderId), { headers: auth });
-        return responseBody;
+    async getSingleOrder(orderId: string, auth?: auth): Promise<[APIResponse, responseBody]> {
+        const [response, responseBody] = await this.get(endPoints.getSingleOrder(orderId), { headers: auth });
+        return [response, responseBody];
     }
 
     // get orderId
@@ -1813,7 +1856,7 @@ export class ApiUtils {
         const payload = orderPayload;
         payload.line_items[0].product_id = productId;
 
-        // Post the order and return the results // Todo: add comment for all methods
+        // Post the order and return the results
         const [response, responseBody] = await this.post(endPoints.wc.createOrder, { data: payload, headers: payloads.adminAuth }, false);
         const orderId = String(responseBody?.id);
         return [response, responseBody, orderId, productId];
