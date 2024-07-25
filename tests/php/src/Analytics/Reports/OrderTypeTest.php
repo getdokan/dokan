@@ -1,6 +1,6 @@
 <?php
 
-namespace WeDevs\Dokan\Test\Analytics;
+namespace WeDevs\Dokan\Test\Analytics\Reports;
 
 use Exception;
 use WeDevs\Dokan\Analytics\Reports\OrderType;

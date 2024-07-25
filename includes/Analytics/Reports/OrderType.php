@@ -11,7 +11,6 @@ class OrderType {
 	public const WC_ORDER_REFUND = 3;
 	public const DOKAN_SUBORDER_REFUND = 4;
 
-
 	public function is_dokan_suborder_related( \WC_Abstract_Order $order ) {
 		if ( ! $order->get_parent_id() ) {
 			return false;
@@ -68,6 +67,13 @@ class OrderType {
         return [
             self::DOKAN_SINGLE_ORDER,
             self::DOKAN_SUBORDER,
+            self::DOKAN_SUBORDER_REFUND,
+        ];
+    }
+
+    public function get_types_for_refund(): array {
+        return [
+            self::WC_ORDER_REFUND,
             self::DOKAN_SUBORDER_REFUND,
         ];
     }

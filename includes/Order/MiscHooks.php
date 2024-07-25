@@ -26,14 +26,14 @@ class MiscHooks {
         // add_action( 'wc-admin_import_orders', [ $this, 'delete_child_order_from_wc_order_product' ] );
 
         // Exclude suborders in woocommerce analytics.
-        add_filter( 'woocommerce_analytics_orders_select_query', [ $this, 'trim_child_order_for_analytics_order' ] );
+        // add_filter( 'woocommerce_analytics_orders_select_query', [ $this, 'trim_child_order_for_analytics_order' ] );
         // add_filter( 'woocommerce_analytics_update_order_stats_data', [ $this, 'trim_child_order_for_analytics_order_stats' ], 10, 2 );
 
         // remove customer info from order export based on setting
-        add_filter( 'dokan_csv_export_headers', [ $this, 'hide_customer_info_from_vendor_order_export' ], 20, 1 );
+        // add_filter( 'dokan_csv_export_headers', [ $this, 'hide_customer_info_from_vendor_order_export' ], 20, 1 );
 
-        add_filter( 'woocommerce_rest_prepare_shop_order_object', [ $this, 'add_vendor_info_in_rest_order' ], 10, 1 );
-        add_filter( 'wp_count_posts', [ $this, 'modify_vendor_order_counts' ], 10, 1 ); // no need to add hpos support for this filter
+        // add_filter( 'woocommerce_rest_prepare_shop_order_object', [ $this, 'add_vendor_info_in_rest_order' ], 10, 1 );
+        // add_filter( 'wp_count_posts', [ $this, 'modify_vendor_order_counts' ], 10, 1 ); // no need to add hpos support for this filter
     }
 
     /**

@@ -2,7 +2,9 @@
 
 namespace WeDevs\Dokan\DependencyManagement\Providers;
 
-use WeDevs\Dokan\Analytics\Reports\Orders\FilterQuery;
+use WeDevs\Dokan\Analytics\Reports\Orders\QueryFilter;
+use WeDevs\Dokan\Analytics\Reports\Orders\Stats\QueryFilter as StatsQueryFilter;
+use WeDevs\Dokan\Analytics\Reports\Orders\Stats\ScheduleListener;
 use WeDevs\Dokan\DependencyManagement\BaseServiceProvider;
 use WeDevs\Dokan\ThirdParty\Packages\League\Container\Definition\DefinitionInterface;
 
@@ -10,8 +12,9 @@ class AnalyticsServiceProvider extends BaseServiceProvider {
     public const TAGS = [ 'analytics-service', 'common-service' ];
 
 	protected $services = [
-        \WeDevs\Dokan\Analytics\Reports\Orders\ScheduleListener::class,
-        FilterQuery::class,
+        ScheduleListener::class,
+        QueryFilter::class,
+        StatsQueryFilter::class,
     ];
 
     /**
