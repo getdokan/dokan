@@ -3747,6 +3747,8 @@ export const payloads = {
         product_id: '',
     },
 
+    randormNumber: faker.number.int({ min: 2, max: 100 }),
+
     paramsReverseWithdrawalTransactions: {
         'trn_date[from]': `${helpers.currentYear}-01-01 00:00:00`,
         'trn_date[to]': `${helpers.currentYear}-12-31 00:00:00`,

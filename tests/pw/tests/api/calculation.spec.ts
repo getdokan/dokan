@@ -4,12 +4,12 @@ import { payloads } from '@utils/payloads';
 import { dbUtils } from '@utils/dbUtils';
 import { dbData } from '@utils/dbData';
 import { assertOrderCalculation } from '@utils/calculationHelpers';
-const { VENDOR_ID, CATEGORY_ID } = process.env;
+
+const { VENDOR_ID, VENDOR2_ID, CATEGORY_ID } = process.env;
 
 test.use({ extraHTTPHeaders: { Authorization: payloads.adminAuth.Authorization } });
 
-test.describe('commission test', () => {
-    // TODO: update whole suite for single vendor and multiple vendor, single
+test.describe('commission calculation test', () => {
     let apiUtils: ApiUtils;
 
     test.beforeAll(async () => {
@@ -25,10 +25,9 @@ test.describe('commission test', () => {
     });
 
     test.skip('calculation (debug)', { tag: ['@lite'] }, async () => {
-        const orderId = '3528';
+        const orderId = '4100';
         const [orderResponse, orderResponsebody] = await apiUtils.getSingleOrder(orderId);
-        // console.log(orderResponsebody);
-        await assertOrderCalculation([orderResponse, orderResponsebody, orderId], { percentage: '10', flat: '0' });
+        await assertOrderCalculation([orderResponse, orderResponsebody, orderId]);
     });
 
     test('global commission fixed (only percentage)', { tag: ['@lite'] }, async () => {
@@ -37,7 +36,7 @@ test.describe('commission test', () => {
 
         // place order and assert order calculation
         const order = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder, payloads.vendorAuth);
-        await assertOrderCalculation(order, { percentage: '10', flat: '0' });
+        await assertOrderCalculation(order);
     });
 
     test('global commission fixed (only flat)', { tag: ['@lite'] }, async () => {
@@ -46,7 +45,7 @@ test.describe('commission test', () => {
 
         // place order and assert order calculation
         const order = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder, payloads.vendorAuth);
-        await assertOrderCalculation(order, { percentage: '0', flat: '10' });
+        await assertOrderCalculation(order);
     });
 
     test('global commission fixed (both percentage & flat)', { tag: ['@lite'] }, async () => {
@@ -55,7 +54,7 @@ test.describe('commission test', () => {
 
         // place order and assert order calculation
         const order = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder, payloads.vendorAuth);
-        await assertOrderCalculation(order, { percentage: '10', flat: '10' });
+        await assertOrderCalculation(order);
     });
 
     test('global commission category based (only percentage)', { tag: ['@lite'] }, async () => {
@@ -64,7 +63,7 @@ test.describe('commission test', () => {
 
         // place order and assert order calculation
         const order = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder, payloads.vendorAuth);
-        await assertOrderCalculation(order, { percentage: '10', flat: '0' });
+        await assertOrderCalculation(order);
     });
 
     test('global commission category based (only flat)', { tag: ['@lite'] }, async () => {
@@ -73,7 +72,7 @@ test.describe('commission test', () => {
 
         // place order and assert order calculation
         const order = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder, payloads.vendorAuth);
-        await assertOrderCalculation(order, { percentage: '0', flat: '10' });
+        await assertOrderCalculation(order);
     });
 
     test('global commission category based (both percentage & flat)', { tag: ['@lite'] }, async () => {
@@ -82,7 +81,7 @@ test.describe('commission test', () => {
 
         // place order and assert order calculation
         const order = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder, payloads.vendorAuth);
-        await assertOrderCalculation(order, { percentage: '10', flat: '10' });
+        await assertOrderCalculation(order);
     });
 
     test('global commission specific category based (only percentage)', { tag: ['@lite'] }, async () => {
@@ -95,7 +94,7 @@ test.describe('commission test', () => {
 
         // place order and assert order calculation
         const order = await apiUtils.createOrder({ ...payloads.createProduct(), categories: [{ id: CATEGORY_ID }] }, payloads.createOrder, payloads.vendorAuth);
-        await assertOrderCalculation(order, { percentage: '10', flat: '0' });
+        await assertOrderCalculation(order);
     });
 
     test('global commission specific category based (only flat)', { tag: ['@lite'] }, async () => {
@@ -108,7 +107,7 @@ test.describe('commission test', () => {
 
         // place order and assert order calculation
         const order = await apiUtils.createOrder({ ...payloads.createProduct(), categories: [{ id: CATEGORY_ID }] }, payloads.createOrder, payloads.vendorAuth);
-        await assertOrderCalculation(order, { percentage: '0', flat: '10' });
+        await assertOrderCalculation(order);
     });
 
     test('global commission specific category based (both percentage & flat)', { tag: ['@lite'] }, async () => {
@@ -121,7 +120,7 @@ test.describe('commission test', () => {
 
         // place order and assert order calculation
         const order = await apiUtils.createOrder({ ...payloads.createProduct(), categories: [{ id: CATEGORY_ID }] }, payloads.createOrder, payloads.vendorAuth);
-        await assertOrderCalculation(order, { percentage: '10', flat: '10' });
+        await assertOrderCalculation(order);
     });
 
     test('vendorwise commission fixed (only percentage)', { tag: ['@lite'] }, async () => {
@@ -132,7 +131,7 @@ test.describe('commission test', () => {
 
         // place order and assert order calculation
         const order = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder, payloads.vendorAuth);
-        await assertOrderCalculation(order, { percentage: '10', flat: '0' });
+        await assertOrderCalculation(order);
     });
 
     test('vendorwise commission fixed (only flat)', { tag: ['@lite'] }, async () => {
@@ -143,7 +142,7 @@ test.describe('commission test', () => {
 
         // place order and assert order calculation
         const order = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder, payloads.vendorAuth);
-        await assertOrderCalculation(order, { percentage: '0', flat: '10' });
+        await assertOrderCalculation(order);
     });
 
     test('vendorwise commission fixed (both percentage & flat)', { tag: ['@lite'] }, async () => {
@@ -154,7 +153,7 @@ test.describe('commission test', () => {
 
         // place order and assert order calculation
         const order = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder, payloads.vendorAuth);
-        await assertOrderCalculation(order, { percentage: '10', flat: '10' });
+        await assertOrderCalculation(order);
     });
 
     test('vendorwise commission category based (only percentage)', { tag: ['@lite'] }, async () => {
@@ -165,7 +164,7 @@ test.describe('commission test', () => {
 
         // place order and assert order calculation
         const order = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder, payloads.vendorAuth);
-        await assertOrderCalculation(order, { percentage: '10', flat: '0' });
+        await assertOrderCalculation(order);
     });
 
     test('vendorwise commission category based (only flat)', { tag: ['@lite'] }, async () => {
@@ -176,7 +175,7 @@ test.describe('commission test', () => {
 
         // place order and assert order calculation
         const order = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder, payloads.vendorAuth);
-        await assertOrderCalculation(order, { percentage: '0', flat: '10' });
+        await assertOrderCalculation(order);
     });
 
     test('vendorwise commission category based (both percentage & flat)', { tag: ['@lite'] }, async () => {
@@ -187,7 +186,7 @@ test.describe('commission test', () => {
 
         // place order and assert order calculation
         const order = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder, payloads.vendorAuth);
-        await assertOrderCalculation(order, { percentage: '10', flat: '10' });
+        await assertOrderCalculation(order);
     });
 
     test('vendorwise commission specific category based (only percentage)', { tag: ['@lite'] }, async () => {
@@ -207,7 +206,7 @@ test.describe('commission test', () => {
 
         // place order and assert order calculation
         const order = await apiUtils.createOrder({ ...payloads.createProduct(), categories: [{ id: CATEGORY_ID }] }, payloads.createOrder, payloads.vendorAuth);
-        await assertOrderCalculation(order, { percentage: '10', flat: '0' });
+        await assertOrderCalculation(order);
     });
 
     test('vendorwise commission specific category based (only flat)', { tag: ['@lite'] }, async () => {
@@ -227,7 +226,7 @@ test.describe('commission test', () => {
 
         // place order and assert order calculation
         const order = await apiUtils.createOrder({ ...payloads.createProduct(), categories: [{ id: CATEGORY_ID }] }, payloads.createOrder, payloads.vendorAuth);
-        await assertOrderCalculation(order, { percentage: '0', flat: '10' });
+        await assertOrderCalculation(order);
     });
 
     test('vendorwise commission specific category based (both percentage & flat)', { tag: ['@lite'] }, async () => {
@@ -248,7 +247,7 @@ test.describe('commission test', () => {
 
         // place order and assert order calculation
         const order = await apiUtils.createOrder({ ...payloads.createProduct(), categories: [{ id: CATEGORY_ID }] }, payloads.createOrder, payloads.vendorAuth);
-        await assertOrderCalculation(order, { percentage: '10', flat: '10' });
+        await assertOrderCalculation(order);
     });
 
     test('productwise commission fixed (only percentage)', { tag: ['@lite'] }, async () => {
@@ -258,7 +257,7 @@ test.describe('commission test', () => {
         await apiUtils.updateStore(VENDOR_ID, { ...store, ...payloads.vendorwiseCommission, admin_commission: '5', admin_additional_fee: '0' });
         // place order and assert order calculation
         const order = await apiUtils.createOrder({ ...payloads.createProduct(), meta_data: [...payloads.createProduct().meta_data, ...payloads.productCommissionOnlyPercent] }, payloads.createOrder, payloads.vendorAuth);
-        await assertOrderCalculation(order, { percentage: '10', flat: '0' });
+        await assertOrderCalculation(order);
     });
 
     test('productwise commission fixed (only flat)', { tag: ['@lite'] }, async () => {
@@ -269,7 +268,7 @@ test.describe('commission test', () => {
 
         // place order and assert order calculation
         const order = await apiUtils.createOrder({ ...payloads.createProduct(), meta_data: [...payloads.createProduct().meta_data, ...payloads.productCommissionOnlyFixed] }, payloads.createOrder, payloads.vendorAuth);
-        await assertOrderCalculation(order, { percentage: '0', flat: '10' });
+        await assertOrderCalculation(order);
     });
 
     test('productwise commission fixed (both percentage & flat)', { tag: ['@lite'] }, async () => {
@@ -280,11 +279,11 @@ test.describe('commission test', () => {
 
         // place order and assert order calculation
         const order = await apiUtils.createOrder({ ...payloads.createProduct(), meta_data: [...payloads.createProduct().meta_data, ...payloads.productCommissionBothPercentageAndFixed] }, payloads.createOrder, payloads.vendorAuth);
-        await assertOrderCalculation(order, { percentage: '10', flat: '10' });
+        await assertOrderCalculation(order);
     });
 });
 
-test.describe('fee receipient test', () => {
+test.describe('fee receipient calculation test', () => {
     let apiUtils: ApiUtils;
 
     test.beforeAll(async () => {
@@ -299,80 +298,80 @@ test.describe('fee receipient test', () => {
         await apiUtils.dispose();
     });
 
-    test('fee receipient test: shippingFee=seller, shippingTax=seller, productTax=seller', { tag: ['@lite'] }, async () => {
+    test('fee receipient: shippingFee=seller, shippingTax=seller, productTax=seller', { tag: ['@lite'] }, async () => {
         // set order condition
         await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, shipping_fee_recipient: 'seller', tax_fee_recipient: 'seller', shipping_tax_fee_recipient: 'seller' });
 
         // place order and assert order calculation
         const order = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder, payloads.vendorAuth);
-        await assertOrderCalculation(order, { percentage: '10', flat: '0' });
+        await assertOrderCalculation(order);
     });
 
-    test('fee receipient test: shippingFee=seller, shippingTax=seller, productTax=admin', { tag: ['@lite'] }, async () => {
+    test('fee receipient: shippingFee=seller, shippingTax=seller, productTax=admin', { tag: ['@lite'] }, async () => {
         // set order condition
         await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, shipping_fee_recipient: 'seller', tax_fee_recipient: 'seller', shipping_tax_fee_recipient: 'admin' });
 
         // place order and assert order calculation
         const order = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder, payloads.vendorAuth);
-        await assertOrderCalculation(order, { percentage: '10', flat: '0' });
+        await assertOrderCalculation(order);
     });
 
-    test('fee receipient test: shippingFee=seller, shippingTax=admin, productTax=seller', { tag: ['@lite'] }, async () => {
+    test('fee receipient: shippingFee=seller, shippingTax=admin, productTax=seller', { tag: ['@lite'] }, async () => {
         // set order condition
         await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, shipping_fee_recipient: 'seller', tax_fee_recipient: 'admin', shipping_tax_fee_recipient: 'seller' });
 
         // place order and assert order calculation
         const order = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder, payloads.vendorAuth);
-        await assertOrderCalculation(order, { percentage: '10', flat: '0' });
+        await assertOrderCalculation(order);
     });
 
-    test('fee receipient test: shippingFee=seller, shippingTax=admin, productTax=admin', { tag: ['@lite'] }, async () => {
+    test('fee receipient: shippingFee=seller, shippingTax=admin, productTax=admin', { tag: ['@lite'] }, async () => {
         // set order condition
         await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, shipping_fee_recipient: 'seller', tax_fee_recipient: 'admin', shipping_tax_fee_recipient: 'admin' });
 
         // place order and assert order calculation
         const order = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder, payloads.vendorAuth);
-        await assertOrderCalculation(order, { percentage: '10', flat: '0' });
+        await assertOrderCalculation(order);
     });
 
-    test('fee receipient test: shippingFee=admin, shippingTax=seller, productTax=seller', { tag: ['@lite'] }, async () => {
+    test('fee receipient: shippingFee=admin, shippingTax=seller, productTax=seller', { tag: ['@lite'] }, async () => {
         // set order condition
         await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, shipping_fee_recipient: 'admin', tax_fee_recipient: 'seller', shipping_tax_fee_recipient: 'seller' });
 
         // place order and assert order calculation
         const order = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder, payloads.vendorAuth);
-        await assertOrderCalculation(order, { percentage: '10', flat: '0' });
+        await assertOrderCalculation(order);
     });
 
-    test('fee receipient test: shippingFee=admin, shippingTax=seller, productTax=admin', { tag: ['@lite'] }, async () => {
+    test('fee receipient: shippingFee=admin, shippingTax=seller, productTax=admin', { tag: ['@lite'] }, async () => {
         // set order condition
         await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, shipping_fee_recipient: 'admin', tax_fee_recipient: 'seller', shipping_tax_fee_recipient: 'admin' });
 
         // place order and assert order calculation
         const order = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder, payloads.vendorAuth);
-        await assertOrderCalculation(order, { percentage: '10', flat: '0' });
+        await assertOrderCalculation(order);
     });
 
-    test('fee receipient test: shippingFee=admin, shippingTax=admin, productTax=seller', { tag: ['@lite'] }, async () => {
+    test('fee receipient: shippingFee=admin, shippingTax=admin, productTax=seller', { tag: ['@lite'] }, async () => {
         // set order condition
         await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, shipping_fee_recipient: 'admin', tax_fee_recipient: 'admin', shipping_tax_fee_recipient: 'seller' });
 
         // place order and assert order calculation
         const order = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder, payloads.vendorAuth);
-        await assertOrderCalculation(order, { percentage: '10', flat: '0' });
+        await assertOrderCalculation(order);
     });
 
-    test('fee receipient test: shippingFee=admin, shippingTax=admin, productTax=admin', { tag: ['@lite'] }, async () => {
+    test('fee receipient: shippingFee=admin, shippingTax=admin, productTax=admin', { tag: ['@lite'] }, async () => {
         // set order condition
         await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, shipping_fee_recipient: 'admin', tax_fee_recipient: 'admin', shipping_tax_fee_recipient: 'admin' });
 
         // place order and assert order calculation
         const order = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder, payloads.vendorAuth);
-        await assertOrderCalculation(order, { percentage: '10', flat: '0' });
+        await assertOrderCalculation(order);
     });
 });
 
-test.describe('marketplace coupon test', () => {
+test.describe('marketplace coupon calculation test', () => {
     let apiUtils: ApiUtils;
 
     test.beforeAll(async () => {
@@ -384,62 +383,62 @@ test.describe('marketplace coupon test', () => {
         await apiUtils.updateSingleWcSettingOptions('general', 'woocommerce_calc_discounts_sequentially', { value: 'no' });
     });
 
-    test('marketplace coupon calculation test: single coupon', { tag: ['@pro'] }, async () => {
+    test('marketplace coupon: single coupon', { tag: ['@lite'] }, async () => {
         const [, , code1] = await apiUtils.createMarketPlaceCoupon({ ...payloads.createMarketPlaceCoupon(), discount_type: 'percent' }, payloads.adminAuth);
 
         // place order and assert order calculation
         const order = await apiUtils.createOrder(payloads.createProduct(), { ...payloads.createOrder, coupon_lines: [{ code: code1 }] }, payloads.vendorAuth);
-        await assertOrderCalculation(order, { percentage: '10', flat: '0' });
+        await assertOrderCalculation(order);
     });
 
-    test('marketplace coupon calculation test: multiple coupon', { tag: ['@pro'] }, async () => {
+    test('marketplace coupon: multiple coupon', { tag: ['@lite'] }, async () => {
         const [, , code1] = await apiUtils.createMarketPlaceCoupon({ ...payloads.createMarketPlaceCoupon(), discount_type: 'percent' }, payloads.adminAuth);
         const [, , code2] = await apiUtils.createMarketPlaceCoupon({ ...payloads.createMarketPlaceCoupon(), discount_type: 'percent' }, payloads.adminAuth);
         await apiUtils.updateSingleWcSettingOptions('general', 'woocommerce_calc_discounts_sequentially', { value: 'no' });
 
         // place order and assert order calculation
         const order = await apiUtils.createOrder(payloads.createProduct(), { ...payloads.createOrder, coupon_lines: [{ code: code1 }, { code: code2 }] }, payloads.vendorAuth);
-        await assertOrderCalculation(order, { percentage: '10', flat: '0' });
+        await assertOrderCalculation(order);
     });
 
-    test('marketplace coupon calculation test: multiple coupon nonsequential', { tag: ['@pro'] }, async () => {
+    test('marketplace coupon: multiple coupon nonsequential', { tag: ['@lite'] }, async () => {
         const [, , code1] = await apiUtils.createMarketPlaceCoupon({ ...payloads.createMarketPlaceCoupon(), discount_type: 'percent' }, payloads.adminAuth);
         const [, , code2] = await apiUtils.createMarketPlaceCoupon({ ...payloads.createMarketPlaceCoupon(), discount_type: 'percent' }, payloads.adminAuth);
         await apiUtils.updateSingleWcSettingOptions('general', 'woocommerce_calc_discounts_sequentially', { value: 'no' });
 
         // place order and assert order calculation
         const order = await apiUtils.createOrder(payloads.createProduct(), { ...payloads.createOrder, coupon_lines: [{ code: code1 }, { code: code2 }] }, payloads.vendorAuth);
-        await assertOrderCalculation(order, { percentage: '10', flat: '0' });
+        await assertOrderCalculation(order);
     });
 
-    test('marketplace coupon calculation test: multiple coupon sequential', { tag: ['@pro'] }, async () => {
+    test('marketplace coupon: multiple coupon sequential', { tag: ['@lite'] }, async () => {
         const [, , code1] = await apiUtils.createMarketPlaceCoupon({ ...payloads.createMarketPlaceCoupon(), discount_type: 'percent' }, payloads.adminAuth);
         const [, , code2] = await apiUtils.createMarketPlaceCoupon({ ...payloads.createMarketPlaceCoupon(), discount_type: 'percent' }, payloads.adminAuth);
         await apiUtils.updateSingleWcSettingOptions('general', 'woocommerce_calc_discounts_sequentially', { value: 'yes' });
 
         // place order and assert order calculation
         const order = await apiUtils.createOrder(payloads.createProduct(), { ...payloads.createOrder, coupon_lines: [{ code: code1 }, { code: code2 }] }, payloads.vendorAuth);
-        await assertOrderCalculation(order, { percentage: '10', flat: '0' });
+        await assertOrderCalculation(order);
     });
 
-    test('marketplace coupon calculation test: percent coupon', { tag: ['@pro'] }, async () => {
+    test('marketplace coupon: percent coupon', { tag: ['@lite'] }, async () => {
         const [, , code1] = await apiUtils.createMarketPlaceCoupon({ ...payloads.createMarketPlaceCoupon(), discount_type: 'percent' }, payloads.adminAuth);
 
         // place order and assert order calculation
         const order = await apiUtils.createOrder(payloads.createProduct(), { ...payloads.createOrder, coupon_lines: [{ code: code1 }] }, payloads.vendorAuth);
-        await assertOrderCalculation(order, { percentage: '10', flat: '0' });
+        await assertOrderCalculation(order);
     });
 
-    test('marketplace coupon calculation test: fixed_cart coupon', { tag: ['@pro'] }, async () => {
+    test('marketplace coupon: fixed_cart coupon', { tag: ['@lite'] }, async () => {
         const [, , code1] = await apiUtils.createMarketPlaceCoupon({ ...payloads.createMarketPlaceCoupon(), discount_type: 'fixed_cart' }, payloads.adminAuth);
 
         // place order and assert order calculation
         const order = await apiUtils.createOrder(payloads.createProduct(), { ...payloads.createOrder, coupon_lines: [{ code: code1 }] }, payloads.vendorAuth);
-        await assertOrderCalculation(order, { percentage: '10', flat: '0' });
+        await assertOrderCalculation(order);
     });
 });
 
-test.describe('tax test', () => {
+test.describe('tax calculation test', () => {
     let apiUtils: ApiUtils;
 
     test.beforeAll(async () => {
@@ -456,39 +455,148 @@ test.describe('tax test', () => {
         await apiUtils.dispose();
     });
 
-    test('tax test: exclusive', { tag: ['@lite'] }, async () => {
+    test('tax: exclusive', { tag: ['@lite'] }, async () => {
         // set order condition
         await apiUtils.updateBatchWcSettingsOptions('tax', payloads.tax.exclusive);
 
         // place order and assert order calculation
         const order = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder, payloads.vendorAuth);
-        await assertOrderCalculation(order, { percentage: '10', flat: '0' });
+        await assertOrderCalculation(order);
     });
 
-    test('tax test: inclusive', { tag: ['@lite'] }, async () => {
+    test('tax: inclusive', { tag: ['@lite'] }, async () => {
         // set order condition
         await apiUtils.updateBatchWcSettingsOptions('tax', payloads.tax.inclusive);
 
         // place order and assert order calculation
         const order = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder, payloads.vendorAuth);
-        await assertOrderCalculation(order, { percentage: '10', flat: '0' });
+        await assertOrderCalculation(order);
     });
 
-    test('tax test: exclusive round (tax at subtotal level)', { tag: ['@lite'] }, async () => {
+    test('tax: exclusive round (tax at subtotal level)', { tag: ['@lite'] }, async () => {
         // set order condition
         await apiUtils.updateBatchWcSettingsOptions('tax', payloads.tax.exclusive);
 
         // place order and assert order calculation
         const order = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder, payloads.vendorAuth);
-        await assertOrderCalculation(order, { percentage: '10', flat: '0' });
+        await assertOrderCalculation(order);
     });
 
-    test('tax test: inclusive (tax at subtotal level)', { tag: ['@lite'] }, async () => {
+    test('tax: inclusive (tax at subtotal level)', { tag: ['@lite'] }, async () => {
         // set order condition
         await apiUtils.updateBatchWcSettingsOptions('tax', payloads.tax.inclusive);
 
         // place order and assert order calculation
         const order = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder, payloads.vendorAuth);
-        await assertOrderCalculation(order, { percentage: '10', flat: '0' });
+        await assertOrderCalculation(order);
+    });
+});
+
+test.describe('product quantity calculation test', () => {
+    let apiUtils: ApiUtils;
+
+    test.beforeAll(async () => {
+        apiUtils = new ApiUtils(await request.newContext());
+        await apiUtils.setUpTaxRate(payloads.enableTaxRate, { ...payloads.createTaxRate, rate: '10' });
+        await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, dbData.dokan.sellingSettings);
+        const store = await apiUtils.getSingleStore(VENDOR_ID);
+        await apiUtils.updateStore(VENDOR_ID, { ...store, ...payloads.vendorwiseCommission, admin_commission: '', admin_additional_fee: '' });
+    });
+
+    test.afterAll(async () => {
+        await apiUtils.dispose();
+    });
+
+    test('product quantity: single', { tag: ['@lite'] }, async () => {
+        // place order and assert order calculation
+        const order = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder, payloads.vendorAuth);
+        await assertOrderCalculation(order);
+    });
+
+    test('product quantity: multiple', { tag: ['@lite'] }, async () => {
+        // set order condition
+        const [, productId] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendorAuth);
+        const lineItems = [{ product_id: productId, quantity: payloads.randormNumber }];
+
+        // place order and assert order calculation
+        const order = await apiUtils.createOrderWc({ ...payloads.createOrder, line_items: lineItems });
+        await assertOrderCalculation(order);
+    });
+});
+
+test.describe('product variety calculation test', () => {
+    let apiUtils: ApiUtils;
+
+    test.beforeAll(async () => {
+        apiUtils = new ApiUtils(await request.newContext());
+        await apiUtils.setUpTaxRate(payloads.enableTaxRate, { ...payloads.createTaxRate, rate: '10' });
+        await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, dbData.dokan.sellingSettings);
+        const store = await apiUtils.getSingleStore(VENDOR_ID);
+        await apiUtils.updateStore(VENDOR_ID, { ...store, ...payloads.vendorwiseCommission, admin_commission: '', admin_additional_fee: '' });
+    });
+
+    test.afterAll(async () => {
+        await apiUtils.dispose();
+    });
+
+    test('product variety: single', { tag: ['@lite'] }, async () => {
+        // place order and assert order calculation
+        const order = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder, payloads.vendorAuth);
+        await assertOrderCalculation(order);
+    });
+
+    test('product variety: multiple', { tag: ['@lite'] }, async () => {
+        // set order condition
+        const [, productId1] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendorAuth);
+        const [, productId2] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendorAuth);
+        const lineItems = [
+            { product_id: productId1, quantity: 1 },
+            { product_id: productId2, quantity: 1 },
+        ];
+
+        // place order and assert order calculation
+        const order = await apiUtils.createOrderWc({ ...payloads.createOrder, line_items: lineItems });
+        await assertOrderCalculation(order);
+    });
+});
+
+test.describe('product owner calculation test', () => {
+    let apiUtils: ApiUtils;
+
+    test.beforeAll(async () => {
+        apiUtils = new ApiUtils(await request.newContext());
+        await apiUtils.setUpTaxRate(payloads.enableTaxRate, { ...payloads.createTaxRate, rate: '10' });
+        await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, dbData.dokan.sellingSettings);
+        const store = await apiUtils.getSingleStore(VENDOR_ID);
+        await apiUtils.updateStore(VENDOR_ID, { ...store, ...payloads.vendorwiseCommission, admin_commission: '', admin_additional_fee: '' });
+        const store2 = await apiUtils.getSingleStore(VENDOR2_ID);
+        await apiUtils.updateStore(VENDOR_ID, { ...store2, ...payloads.vendorwiseCommission, admin_commission: '', admin_additional_fee: '' });
+    });
+
+    test.afterAll(async () => {
+        await apiUtils.dispose();
+    });
+
+    test('product owner: single vendor', { tag: ['@lite'] }, async () => {
+        // place order and assert order calculation
+        const order = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder, payloads.vendorAuth);
+        await assertOrderCalculation(order);
+    });
+
+    test.skip('product owner: multivendor', { tag: ['@lite'] }, async () => {
+        // set order condition
+        const [, productId1] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendorAuth);
+        const [, productId2] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendor2Auth);
+        const lineItems = [
+            { product_id: productId1, quantity: 1 },
+            { product_id: productId2, quantity: 1 },
+        ];
+
+        // place order and assert order calculation
+        const order = await apiUtils.createOrderWc({ ...payloads.createOrder, line_items: lineItems });
+        // todo: implement seperate calculation for parent order
+        // todo: get suborder id
+        // await assertOrderCalculation(suborder1);
+        // await assertOrderCalculation(suborder2);
     });
 });

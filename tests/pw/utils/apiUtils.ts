@@ -156,10 +156,10 @@ export class ApiUtils {
 
     // get fee recipient
     async getFeeRecipient(responseBody: any) {
-        const feeRecipients = {};
+        const feeRecipients: { [key: string]: any } = {};
         responseBody.meta_data.forEach((item: any) => {
             if (item.key.includes('fee_recipient')) {
-                feeRecipients[helpers.toCamelCase(item.key)] = item.value; //todo: fix
+                feeRecipients[helpers.toCamelCase(item.key)] = item.value;
             }
         });
         return feeRecipients;
@@ -1835,31 +1835,34 @@ export class ApiUtils {
         return responseBody;
     }
 
-    // create order
-    async createOrder(product: string | object, orderPayload: any, auth?: auth): Promise<[APIResponse, responseBody, string, string]> {
-        let productId: string;
-        if (!product) {
-            [, productId] = await this.createProduct(payloads.createProduct(), auth);
-        } else {
-            if (typeof product === 'object') {
-                [, productId] = await this.createProduct(product, auth);
-            } else {
-                const responseBody = await this.getSingleProduct(product, payloads.adminAuth);
-                if (responseBody.code === 'dokan_rest_invalid_product_id') {
-                    [, productId] = await this.createProduct(payloads.createProduct(), auth);
-                } else {
-                    productId = product;
-                }
-            }
-        }
-        // Set the product ID in the order payload
-        const payload = orderPayload;
-        payload.line_items[0].product_id = productId;
-
+    // create order woocommerce
+    async createOrderWc(payload: object): Promise<[APIResponse, responseBody, string]> {
         // Post the order and return the results
         const [response, responseBody] = await this.post(endPoints.wc.createOrder, { data: payload, headers: payloads.adminAuth }, false);
         const orderId = String(responseBody?.id);
-        return [response, responseBody, orderId, productId];
+        return [response, responseBody, orderId];
+    }
+
+    // create order [single product]
+    async createOrder(product: string | object, orderPayload: any, auth?: auth): Promise<[APIResponse, responseBody, string, string]> {
+        let productId: string;
+
+        if (typeof product === 'object') {
+            [, productId] = await this.createProduct(product, auth);
+        } else if (!isNaN(Number(product))) {
+            const responseBody = await this.getSingleProduct(product, payloads.adminAuth); // check if product exists
+            productId = responseBody.code === 'dokan_rest_invalid_product_id' ? (await this.createProduct(payloads.createProduct(), auth))[1] : product;
+        } else {
+            [, productId] = await this.createProduct(payloads.createProduct(), auth);
+        }
+
+        // set the product Id in the order payload
+        const payload = orderPayload;
+        payload.line_items[0].product_id = productId;
+
+        // create order
+        const order = await this.createOrderWc(payload);
+        return [...order, productId];
     }
 
     // create order with status
