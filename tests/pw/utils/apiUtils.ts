@@ -856,8 +856,8 @@ export class ApiUtils {
 
     // get all customers
     async getAllCustomers(auth?: auth): Promise<responseBody> {
-        const responseBody1 = await this.getAllItems(endPoints.getAllCustomers, {}, auth);
-        const responseBody2 = await this.getAllItems(endPoints.getAllCustomers, { role: 'subscriber' }, auth);
+        const responseBody1 = await this.getAllItems(endPoints.wc.getAllCustomers, {}, auth);
+        const responseBody2 = await this.getAllItems(endPoints.wc.getAllCustomers, { role: 'subscriber' }, auth);
         const responseBody = [...responseBody1, ...responseBody2];
         return responseBody;
     }

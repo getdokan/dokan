@@ -10,6 +10,10 @@ const { VENDOR_ID, VENDOR2_ID, CATEGORY_ID } = process.env;
 
 test.use({ extraHTTPHeaders: { Authorization: payloads.adminAuth.Authorization } });
 
+test.slow(true, 'all calculation tests are slow');
+
+// todo: need to run this file in single worker
+
 test.describe.serial('commission calculation test', () => {
     let apiUtils: ApiUtils;
 
