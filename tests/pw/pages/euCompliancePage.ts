@@ -139,13 +139,13 @@ export class EuCompliancePage extends AdminPage {
     // hide vendor EU compliance data
     async hideEuComplianceVendor(storeName: string) {
         await this.goIfNotThere(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)));
-        await this.multipleElementnotVisible(singleStoreCustomer.storeProfile.euComplianceData);
+        await this.multipleElementNotVisible(singleStoreCustomer.storeProfile.euComplianceData);
     }
 
     // customer
 
     // add or update EU compliance data
-    async customerAddEuComplicancedata(euData: eUComplianceData): Promise<void> {
+    async customerAddEuComplianceData(euData: eUComplianceData): Promise<void> {
         await this.goIfNotThere(data.subUrls.frontend.billingAddress);
         await this.clearAndType(customerAddress.billing.billingCompanyID, euData.companyId);
         await this.clearAndType(customerAddress.billing.billingVatOrTaxNumber, euData.vatNumber);
@@ -170,7 +170,7 @@ export class EuCompliancePage extends AdminPage {
     // view product EU compliance data
     async viewProductEuComplianceData(productName: string) {
         await this.goIfNotThere(data.subUrls.frontend.productDetails(helpers.slugify(productName)));
-        const { deliveryTime, ...euComplianceData } = singleProductCustomer.productDetails.euComplianceData; //todo: skip delivery time for data is not saved via api
+        const { deliveryTime, ...euComplianceData } = singleProductCustomer.productDetails.euComplianceData; // todo: skip delivery time for data is not saved via api
         await this.multipleElementVisible(euComplianceData);
     }
 }

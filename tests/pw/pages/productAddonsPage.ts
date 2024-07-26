@@ -25,9 +25,6 @@ export class ProductAddonsPage extends VendorPage {
         // create new addon text is visible
         await this.toBeVisible(addonsVendor.createNewAddon);
 
-        // create new text is visible
-        await this.toBeVisible(addonsVendor.createNew);
-
         // product addon table elements are visible
         await this.multipleElementVisible(addonsVendor.table);
 

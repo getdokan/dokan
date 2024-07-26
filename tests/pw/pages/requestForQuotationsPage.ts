@@ -75,28 +75,15 @@ export class RequestForQuotationsPage extends AdminPage {
     // add quote rule
     async addQuoteRule(rule: requestForQuotation['quoteRule']) {
         await this.goIfNotThere(data.subUrls.backend.dokan.requestForQuoteRules);
-        //todo : move to base page
-        await Promise.all([
-            this.page.waitForResponse(resp => resp.url().includes(data.subUrls.api.dokan.quotes) && resp.status() === 200),
-            this.page.waitForResponse(resp => resp.url().includes(data.subUrls.api.dokan.products) && resp.status() === 200),
-            this.page.locator(requestForQuotationAdmin.quoteRules.newQuoteRule).click(),
-        ]);
-
+        await this.clickAndWaitForResponses([data.subUrls.api.dokan.quotes, data.subUrls.api.dokan.products], requestForQuotationAdmin.quoteRules.newQuoteRule);
         await this.updateQuoteRuleFields(rule);
     }
 
     // edit quote rule
     async editQuoteRule(rule: requestForQuotation['quoteRule']) {
         await this.goIfNotThere(data.subUrls.backend.dokan.requestForQuoteRules);
-
         await this.hover(requestForQuotationAdmin.quoteRules.quoteRulesCell(rule.title));
-
-        await Promise.all([
-            this.page.waitForResponse(resp => resp.url().includes(data.subUrls.api.dokan.quotes) && resp.status() === 200),
-            this.page.waitForResponse(resp => resp.url().includes(data.subUrls.api.dokan.products) && resp.status() === 200),
-            this.page.locator(requestForQuotationAdmin.quoteRules.quoteRulesEdit(rule.title)).click(),
-        ]);
-
+        await this.clickAndWaitForResponses([data.subUrls.api.dokan.quotes, data.subUrls.api.dokan.products], requestForQuotationAdmin.quoteRules.quoteRulesEdit(rule.title));
         await this.updateQuoteRuleFields(rule);
     }
 

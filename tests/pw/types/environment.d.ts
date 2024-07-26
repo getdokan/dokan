@@ -19,7 +19,7 @@ declare global {
             PRODUCT_ID: string;
             PRODUCT_ID_V2: string;
             LOCAL: boolean
-            CI: string;
+            CI: boolean;
             GMAP: string;
             MAPBOX: string;
             LICENSE_KEY: string;

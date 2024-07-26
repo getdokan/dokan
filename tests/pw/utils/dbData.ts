@@ -1,4 +1,4 @@
-const { BASE_URL } = process.env;
+const { BASE_URL, GMAP, LICENSE_KEY } = process.env;
 
 export const dbData = {
     dokan: {
@@ -202,7 +202,7 @@ export const dbData = {
             appearance_options: '',
             store_map: 'on',
             map_api_source: 'google_maps',
-            gmap_api_key: process.env.GMAP,
+            gmap_api_key: GMAP,
             mapbox_access_token: '',
             recaptcha_validation_label: '',
             contact_seller: 'on',
@@ -1098,7 +1098,7 @@ export const dbData = {
 
         // dokan pro license
         dokanProLicense: {
-            key: process.env.LICENSE_KEY,
+            key: LICENSE_KEY,
             status: 'activate',
             remaining: 42,
             activation_limit: 50,

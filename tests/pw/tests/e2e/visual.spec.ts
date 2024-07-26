@@ -3,8 +3,10 @@ import { VisualPage } from '@pages/visualPage';
 import { data } from '@utils/testData';
 import { selector } from '@pages/selectors';
 
+const { CI } = process.env;
+
 test.describe('dokan visual test', () => {
-    test.skip(!!process.env.CI, 'skip visual test on CI');
+    test.skip(CI, 'skip visual test on CI');
     let admin: VisualPage;
     let aPage: Page;
 
@@ -177,7 +179,7 @@ test.describe('dokan visual test', () => {
     });
 
     test('dokan settings sellerVerification menu @visual', async () => {
-        await admin.dokanSettingsMenu(selector.admin.dokan.settings.menus.sellerVerification);
+        await admin.dokanSettingsMenu(selector.admin.dokan.settings.menus.vendorVerification);
     });
 
     test('dokan settings verificationSmsGateways menu @visual', async () => {

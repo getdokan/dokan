@@ -1,11 +1,14 @@
-//COVERAGE_TAG: GET /dokan/v1/request-for-quote/roles
+//COVERAGE_TAG: GET /dokan/v1/commission
 
 import { test, expect, request } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { schemas } from '@utils/schemas';
 
-test.describe('roles api test', () => {
+const { PRODUCT_ID } = process.env;
+
+test.describe('commission api test', () => {
+    test.skip(true, 'feature not merged yet');
     let apiUtils: ApiUtils;
 
     test.beforeAll(async () => {
@@ -16,10 +19,11 @@ test.describe('roles api test', () => {
         await apiUtils.dispose();
     });
 
-    test('get all user roles', { tag: ['@pro'] }, async () => {
-        const [response, responseBody] = await apiUtils.get(endPoints.getAllUserRoles);
+    test('get admin report overview', { tag: ['@lite'] }, async () => {
+        const [response, responseBody] = await apiUtils.get(endPoints.getCommission, { params: { product_id: PRODUCT_ID } });
+        console.log('responseBody', responseBody);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
-        expect(responseBody).toMatchSchema(schemas.rolesSchema);
+        expect(responseBody).toMatchSchema(schemas.commission);
     });
 });
