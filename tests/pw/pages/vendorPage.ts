@@ -292,7 +292,7 @@ export class VendorPage extends BasePage {
             orderDetails.refunded = helpers.price((await this.getElementText(ordersVendor.orderDetails.refunded)) as string);
         }
 
-        console.log(orderDetails);
+        // console.log(orderDetails);
         return orderDetails;
     }
 

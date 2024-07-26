@@ -265,7 +265,7 @@ export class BasePage {
         // todo: fix this; also update for same and different subUrls
         const promises = [];
         subUrls.forEach(subUrl => {
-            console.log('subUls: ', subUrl[0], ' code: ', subUrl[1]);
+            // console.log('subUls: ', subUrl[0], ' code: ', subUrl[1]);
             const promise = this.page.waitForResponse(resp => resp.url().includes(subUrl[0] as string) && resp.status() === (subUrl[1] ?? code));
             promises.push(promise);
         });

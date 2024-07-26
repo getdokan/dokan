@@ -3,13 +3,14 @@ import { ApiUtils } from '@utils/apiUtils';
 import { payloads } from '@utils/payloads';
 import { dbUtils } from '@utils/dbUtils';
 import { dbData } from '@utils/dbData';
+
 import { assertOrderCalculation } from '@utils/calculationHelpers';
 
 const { VENDOR_ID, VENDOR2_ID, CATEGORY_ID } = process.env;
 
 test.use({ extraHTTPHeaders: { Authorization: payloads.adminAuth.Authorization } });
 
-test.describe('commission calculation test', () => {
+test.describe.serial('commission calculation test', () => {
     let apiUtils: ApiUtils;
 
     test.beforeAll(async () => {
@@ -283,7 +284,7 @@ test.describe('commission calculation test', () => {
     });
 });
 
-test.describe('fee receipient calculation test', () => {
+test.describe.serial('fee receipient calculation test', () => {
     let apiUtils: ApiUtils;
 
     test.beforeAll(async () => {
@@ -371,7 +372,7 @@ test.describe('fee receipient calculation test', () => {
     });
 });
 
-test.describe('marketplace coupon calculation test', () => {
+test.describe.serial('marketplace coupon calculation test', () => {
     let apiUtils: ApiUtils;
 
     test.beforeAll(async () => {
@@ -438,7 +439,7 @@ test.describe('marketplace coupon calculation test', () => {
     });
 });
 
-test.describe('tax calculation test', () => {
+test.describe.serial('tax calculation test', () => {
     let apiUtils: ApiUtils;
 
     test.beforeAll(async () => {
@@ -492,7 +493,7 @@ test.describe('tax calculation test', () => {
     });
 });
 
-test.describe('product quantity calculation test', () => {
+test.describe.serial('product quantity calculation test', () => {
     let apiUtils: ApiUtils;
 
     test.beforeAll(async () => {
@@ -524,7 +525,7 @@ test.describe('product quantity calculation test', () => {
     });
 });
 
-test.describe('product variety calculation test', () => {
+test.describe.serial('product variety calculation test', () => {
     let apiUtils: ApiUtils;
 
     test.beforeAll(async () => {
@@ -547,12 +548,7 @@ test.describe('product variety calculation test', () => {
 
     test('product variety: multiple', { tag: ['@lite'] }, async () => {
         // set order condition
-        const [, productId1] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendorAuth);
-        const [, productId2] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendorAuth);
-        const lineItems = [
-            { product_id: productId1, quantity: 1 },
-            { product_id: productId2, quantity: 1 },
-        ];
+        const lineItems = await apiUtils.createLineItems(2);
 
         // place order and assert order calculation
         const order = await apiUtils.createOrderWc({ ...payloads.createOrder, line_items: lineItems });
@@ -560,7 +556,7 @@ test.describe('product variety calculation test', () => {
     });
 });
 
-test.describe('product owner calculation test', () => {
+test.describe.serial('product owner calculation test', () => {
     let apiUtils: ApiUtils;
 
     test.beforeAll(async () => {
@@ -583,14 +579,9 @@ test.describe('product owner calculation test', () => {
         await assertOrderCalculation(order);
     });
 
-    test.skip('product owner: multivendor', { tag: ['@lite'] }, async () => {
+    test('product owner: multivendor', { tag: ['@lite'] }, async () => {
         // set order condition
-        const [, productId1] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendorAuth);
-        const [, productId2] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendor2Auth);
-        const lineItems = [
-            { product_id: productId1, quantity: 1 },
-            { product_id: productId2, quantity: 1 },
-        ];
+        const lineItems = await apiUtils.createLineItems(2, [1], [payloads.vendorAuth, payloads.vendor2Auth]);
 
         // place order and assert order calculation
         const order = await apiUtils.createOrderWc({ ...payloads.createOrder, line_items: lineItems });

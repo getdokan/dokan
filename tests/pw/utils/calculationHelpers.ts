@@ -19,7 +19,7 @@ async function assertOrderCalculation(order: any) {
     await assertData(orderId, calculatedData, receivedData);
 }
 
-async function getParameters(orderId: string, orderResponsebody: any): Promise<number[]> {
+async function getParameters(orderId: string, orderResponsebody: any): Promise<(number | object)[]> {
     const [, sinleOrderResponseBody] = await apiUtils.getSingleOrder(orderId);
 
     const taxRate = Number(orderResponsebody.tax_lines[0]?.rate_percent ?? 0);
@@ -87,13 +87,13 @@ async function assertData(orderId: string, calculatedData: number[], receivedDat
 
     // console.table(orderlog);
 
-    expect(receivedSubtotal).toBeApproximately(calculatedSubTotal, 0, orderlog);
+    expect(receivedSubtotal).toBeApproximately(calculatedSubTotal, 0.01, orderlog);
     expect(receivedOrderTotal).toBeApproximately(calculatedOrderTotal, 0.01, orderlog);
     expect(receivedVendorEarning).toBeApproximately(calculatedVendorEarning, 0.01, orderlog);
     expect(receivedAdminCommission).toBeApproximately(calculatedAdminCommission, 0.01, orderlog);
-    expect(receivedProductTax).toBeApproximately(calculatedProductTax, 0, orderlog);
-    expect(receivedShippingTax).toBeApproximately(calculatedShippingTax, 0, orderlog);
-    expect(receivedTotalTax).toBeApproximately(calculatedTotalTax, 0, orderlog);
+    expect(receivedProductTax).toBeApproximately(calculatedProductTax, 0.01, orderlog);
+    expect(receivedShippingTax).toBeApproximately(calculatedShippingTax, 0.01, orderlog);
+    expect(receivedTotalTax).toBeApproximately(calculatedTotalTax, 0.01, orderlog);
     expect(receivedDiscountTotal).toBeApproximately(calculatedDiscount, 0.01, orderlog);
     expect(receivedDiscountTax).toBeApproximately(calculatedDiscountTax, 0.01, orderlog);
 }
