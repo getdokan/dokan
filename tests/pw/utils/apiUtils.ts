@@ -123,7 +123,7 @@ export class ApiUtils {
      */
 
     // todo: maxPageLimit is not handled properly while calling this function
-    async getAllItems(endPoint: string, params = {}, auth?: auth, maxPageLimit = 1): Promise<responseBody> {
+    async getAllItems(endPoint: string, params = {}, auth?: auth, maxPageLimit = 2): Promise<responseBody> {
         let responseBody: object[] = [];
         let page = 1;
         let hasMoreItems = true;
@@ -1669,7 +1669,7 @@ export class ApiUtils {
 
     // get all pages
     async getAllPages(auth?: auth): Promise<responseBody> {
-        const responseBody = await this.getAllItems(endPoints.wp.getAllPages, {}, auth);
+        const [, responseBody] = await this.get(endPoints.wp.getAllPages, { params: { per_page: 100 }, headers: auth });
         return responseBody;
     }
 
