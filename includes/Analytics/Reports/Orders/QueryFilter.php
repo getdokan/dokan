@@ -5,95 +5,189 @@ namespace WeDevs\Dokan\Analytics\Reports\Orders;
 use WeDevs\Dokan\Analytics\Reports\OrderType;
 use WeDevs\Dokan\Contracts\Hookable;
 
+/**
+ * Class QueryFilter
+ *
+ * Filters and modifies WooCommerce analytics queries for Dokan orders.
+ */
 class QueryFilter implements Hookable {
-	public function __construct() {
-		$this->register_hooks();
-	}
+    /**
+     * @var string The context of the query filter.
+     */
+    protected $context = 'orders';
 
-	public function register_hooks(): void {
-		add_filter( 'woocommerce_analytics_clauses_join_orders_subquery', [ $this, 'add_join_subquery' ] );
+    /**
+     * QueryFilter constructor.
+     * Registers the hooks on instantiation.
+     */
+    public function __construct() {
+        $this->register_hooks();
+    }
 
-		add_filter( 'woocommerce_analytics_clauses_where_orders_subquery', [ $this, 'add_where_subquery' ], 30 );
+    /**
+     * Register hooks for filtering WooCommerce analytics queries.
+     *
+     * @return void
+     */
+    public function register_hooks(): void {
+        add_filter( 'woocommerce_analytics_clauses_join_orders_subquery', [ $this, 'add_join_subquery' ] );
+        add_filter( 'woocommerce_analytics_clauses_where_orders_subquery', [ $this, 'add_where_subquery' ], 30 );
+        add_filter( 'woocommerce_analytics_clauses_select_orders_subquery', [ $this, 'add_select_subquery' ] );
+        add_filter( 'woocommerce_analytics_order_excludes', [ $this, 'exclude_order_ids' ], 12, 4 );
+        add_filter( 'woocommerce_analytics_order_includes', [ $this, 'exclude_order_ids' ], 12, 4 );
+        add_filter( 'woocommerce_admin_report_columns', [ $this, 'modify_admin_report_columns' ], 20, 3 );
+    }
 
-		add_filter( 'woocommerce_analytics_clauses_select_orders_subquery', [ $this, 'add_select_subquery' ] );
+    /**
+     * Modify WooCommerce admin report columns for orders.
+     *
+     * @param array $column The existing columns.
+     * @param string $context The context of the report.
+     * @param string $wc_table_name The WooCommerce table name.
+     *
+     * @return array The modified columns.
+     */
+    public function modify_admin_report_columns( array $column, string $context, string $wc_table_name ): array {
+        if ( $context !== 'orders' ) {
+            return $column;
+        }
 
-		add_filter( 'woocommerce_analytics_order_excludes', [ $this, 'exclude_order_ids' ], 12, 4 );
-		add_filter( 'woocommerce_analytics_order_includes', [ $this, 'exclude_order_ids' ], 12, 4 );
+        $order_type = new OrderType();
+        $refund_types = implode( ',', $order_type->get_refund_types() );
+        $table_name = Stats\DataStore::get_db_table_name();
 
-		add_filter( 'woocommerce_admin_report_columns', [ $this, 'modify_admin_report_columns' ], 20, 3 );
-	}
+        /**
+         * Parent order ID need to be set to 0 for Dokan suborder.
+         * Because, WC orders analytics generates order details link against the parent order
+         * assuming the order having parent ID as a refund order.
+         */
+        $column['parent_id'] = "(CASE WHEN {$table_name}.order_type NOT IN ($refund_types) THEN 0 ELSE {$wc_table_name}.parent_id END ) as parent_id";
 
-	public function modify_admin_report_columns( array $column, $context, $wc_table_name ) {
-		if ( $context !== 'orders' ) {
-			return $column;
-		}
+        return $column;
+    }
 
-		$order_type = new OrderType();
-		$refund_types = implode( ',', $order_type->get_types_for_refund() );
-		$table_name = Stats\DataStore::get_db_table_name();
+    /**
+     * Exclude order IDs from WooCommerce analytics queries based on seller or admin context.
+     *
+     * @param array $ids The existing excluded order IDs.
+     * @param array $query_args The query arguments.
+     * @param string $field The field being queried.
+     * @param string $context The context of the query.
+     *
+     * @return array The modified excluded order IDs.
+     */
+    public function exclude_order_ids( array $ids, array $query_args, string $field, $context ): array {
+        if ( $context !== 'orders' || ! $this->should_filter_by_seller_id() ) {
+            return $ids;
+        }
 
-		/**
-		 * Parent order ID need to be set to 0 for Dokan suborder.
-		 * Because, WC orders analytics generates order details link against the parent order
-		 * assuming the order having parent ID as a refund order.
-		 */
-		$column['parent_id'] = "(CASE WHEN {$table_name}.order_type NOT IN ($refund_types) THEN 0 ELSE {$wc_table_name}.parent_id END ) as parent_id";
+        return [];
+    }
 
-		return $column;
-	}
-
-	/**
-	 * Disable suborder id exclusion if current user in Seller or Filter by seller.
-	 * It is applied in
-	 * Line 128: $excluded_orders = $this->get_excluded_orders( $query_args );
-	 * Method: add_sql_query_params( $query_args )
-	 * Class: \Automattic\WooCommerce\Admin\API\Reports\Orders\DataStore
-	 * @param array $ids
-	 * @param array $query_args
-	 * @param string $field
-	 * @param string $context
-	 * @return void
-	 */
-	public function exclude_order_ids( $ids, $query_args, $field, $context ) {
-		if ( $context !== 'orders' || ! $this->should_filter_by_seller_id() ) {
-			return $ids;
-		}
-
-		return [];
-	}
-
-    public function add_select_subquery( $clauses ) {
+    /**
+     * Add custom columns to the select clause of WooCommerce analytics queries.
+     *
+     * @param array $clauses The existing select clauses.
+     *
+     * @return array The modified select clauses.
+     */
+    public function add_select_subquery( array $clauses ): array {
         $clauses[] = ', seller_earning, seller_gateway_fee, seller_discount, admin_commission, admin_gateway_fee, admin_discount, admin_subsidy';
 
         return array_unique( $clauses );
     }
 
-	public function add_join_subquery( $clauses ) {
-		global $wpdb;
+    /**
+     * Add join clause for Dokan order state table in WooCommerce analytics queries.
+     *
+     * @param array $clauses The existing join clauses.
+     *
+     * @return array The modified join clauses.
+     */
+    public function add_join_subquery( array $clauses ): array {
+        global $wpdb;
 
-		$dokan_order_state_table = Stats\DataStore::get_db_table_name();
+        $dokan_order_state_table = Stats\DataStore::get_db_table_name();
 
-		$clauses[] = "JOIN {$dokan_order_state_table} ON {$wpdb->prefix}wc_order_stats.order_id = {$dokan_order_state_table}.order_id";
+        $clauses[] = "JOIN {$dokan_order_state_table} ON {$wpdb->prefix}wc_order_stats.order_id = {$dokan_order_state_table}.order_id";
 
-		return array_unique( $clauses );
-	}
+        return array_unique( $clauses );
+    }
 
-	public function add_where_subquery( $clauses ) {
-		$dokan_order_state_table = Stats\DataStore::get_db_table_name();
-		$order_type = new OrderType();
+    /**
+     * Add where clause for Dokan order state in WooCommerce analytics queries.
+     *
+     * @param array $clauses The existing where clauses.
+     *
+     * @return array The modified where clauses.
+     */
+    public function add_where_subquery( array $clauses ): array {
+        $dokan_order_state_table = Stats\DataStore::get_db_table_name();
+        $order_types = $this->get_order_types_to_include();
 
-		if ( $this->should_filter_by_seller_id() ) {
-			$seller_order_type = implode( ',', $order_type->get_types_for_seller() );
-			$clauses[] = "AND {$dokan_order_state_table}.order_type in (  $seller_order_type ) ";
-		} else {
-			$admin_order_type = implode( ',', $order_type->get_types_for_admin() );
-			$clauses[] = "AND {$dokan_order_state_table}.order_type in (  $admin_order_type ) ";
-		}
+        $clauses[] = "AND {$dokan_order_state_table}.order_type in ( $order_types ) ";
 
-		return array_unique( $clauses );
-	}
+        $clauses = $this->add_where_subquery_for_refund( $clauses );
 
-	public function should_filter_by_seller_id(): bool {
-		return true;
-	}
+        return array_unique( $clauses );
+    }
+
+    /**
+     * Add where clause for refunds in WooCommerce analytics queries.
+     *
+     * @param array $clauses The existing where clauses.
+     *
+     * @return array The modified where clauses.
+     */
+    protected function add_where_subquery_for_refund( array $clauses ): array {
+        if ( ! isset( $_GET['refunds'] ) ) {
+            return $clauses;
+        }
+
+        $dokan_order_state_table = Stats\DataStore::get_db_table_name();
+        $order_types = $this->get_refund_types_to_include();
+
+        $clauses[] = "AND {$dokan_order_state_table}.order_type in ( $order_types ) ";
+
+        return $clauses;
+    }
+
+    /**
+     * Determine if the query should be filtered by seller ID.
+     *
+     * @return bool True if the query should be filtered by seller ID, false otherwise.
+     */
+    public function should_filter_by_seller_id(): bool {
+        return true;
+    }
+
+    /**
+     * Get the order types to include in WooCommerce analytics queries.
+     *
+     * @return string The order types to include.
+     */
+    protected function get_order_types_to_include(): string {
+        $order_type = new OrderType();
+
+        if ( $this->should_filter_by_seller_id() ) {
+            return implode( ',', $order_type->get_types_for_seller() );
+        }
+
+        return implode( ',', $order_type->get_types_for_admin() );
+    }
+
+    /**
+     * Get the refund types to include in WooCommerce analytics queries.
+     *
+     * @return string The refund types to include.
+     */
+    protected function get_refund_types_to_include(): string {
+        $order_type = new OrderType();
+
+        if ( $this->should_filter_by_seller_id() ) {
+            return implode( ',', $order_type->get_refund_types_for_seller() );
+        }
+
+        return implode( ',', $order_type->get_refund_types_for_admin() );
+    }
 }

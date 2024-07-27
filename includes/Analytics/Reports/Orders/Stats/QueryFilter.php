@@ -6,6 +6,8 @@ use WeDevs\Dokan\Analytics\Reports\OrderType;
 use WeDevs\Dokan\Analytics\Reports\Orders\QueryFilter as OrdersQueryFilter;
 
 class QueryFilter extends OrdersQueryFilter {
+	protected $context = 'order_stats';
+
 	public function __construct() {
 		$this->register_hooks();
 	}
@@ -26,7 +28,7 @@ class QueryFilter extends OrdersQueryFilter {
 		add_filter( 'woocommerce_admin_report_columns', [ $this, 'modify_admin_report_columns' ], 20, 3 );
 	}
 
-	public function modify_admin_report_columns( array $column, $context, $wc_table_name ) {
+    public function modify_admin_report_columns( array $column, string $context, string $wc_table_name ): array {
 		if ( $context !== 'orders_stats' ) {
 			return $column;
 		}

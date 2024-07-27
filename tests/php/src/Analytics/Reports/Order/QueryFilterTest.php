@@ -1,13 +1,9 @@
 <?php
 namespace WeDevs\Dokan\Test\Analytics\Reports\Order;
 
-use Automattic\Jetpack\VideoPress\Data;
 use Mockery;
-use SebastianBergmann\Environment\Console;
 use WeDevs\Dokan\Analytics\Reports\Orders\QueryFilter;
 use WeDevs\Dokan\Test\Analytics\Reports\ReportTestCase;
-
-use function WPML\FP\Strings\remove;
 
 /**
  * Class OrderStatsTest
@@ -56,7 +52,7 @@ class QueryFilterTest extends ReportTestCase {
      * @param int $seller_id2 The second seller ID.
      * @return void
 	 */
-	public function test_dokan_orders_query_filter_hooks_are_order_stats_update() {
+	public function test_filter_hooks_are_applied_for_orders_query() {
 		$order_id = $this->create_multi_vendor_order();
 
 		$this->run_all_pending();
@@ -106,9 +102,9 @@ class QueryFilterTest extends ReportTestCase {
 
 		dokan_get_container()->extend( QueryFilter::class )->setConcrete( $service );
 
+        remove_filter( 'woocommerce_analytics_clauses_where_orders_subquery', [ $this->sut, 'add_where_subquery' ], 30 );
+
         $service->shouldReceive( 'should_filter_by_seller_id' )
-            ->atLeast()
-            ->once()
             ->andReturnTrue();
 
 		$wc_stats_query = new \Automattic\WooCommerce\Admin\API\Reports\Orders\Query();
@@ -173,5 +169,96 @@ class QueryFilterTest extends ReportTestCase {
         foreach ( $expected_data as $key => $val ) {
             $this->assertArrayHasKey( $key, $report_data );
         }
+	}
+
+    public function test_orders_for_dokan_suborder_refund() {
+		$order_id = $this->create_multi_vendor_order();
+        $sub_ids = dokan_get_suborder_ids_by( $order_id );
+
+        $refund = $this->create_refund( $sub_ids[0] );
+
+		$this->run_all_pending();
+
+        remove_filter( 'woocommerce_analytics_clauses_where_orders_subquery', [ $this->sut, 'add_where_subquery' ], 30 );
+
+		$service = Mockery::mock( QueryFilter::class . '[should_filter_by_seller_id]' );
+		dokan_get_container()->extend( QueryFilter::class )->setConcrete( $service );
+
+        $service->shouldReceive( 'should_filter_by_seller_id' )
+            ->andReturnTrue();
+
+        $_GET['refunds'] = 'all';
+
+		$wc_stats_query = new \Automattic\WooCommerce\Admin\API\Reports\Orders\Query( [ 'refunds' => 'all' ] );
+		$data = $wc_stats_query->get_data();
+
+        $report_data = $data->data;
+
+        $this->assertEquals( 1, count( $report_data ) );
+
+        $report_data = $report_data[0];
+
+        $this->assertEquals( $refund->get_id(), $report_data['order_id'] );
+	}
+
+    public function test_orders_for_dokan_parent_order_refund() {
+		$order_id = $this->create_multi_vendor_order();
+        $sub_ids = dokan_get_suborder_ids_by( $order_id );
+
+        $parent_refund = $this->create_refund( $sub_ids[0], true, true );
+
+		$this->run_all_pending();
+
+        remove_filter( 'woocommerce_analytics_clauses_where_orders_subquery', [ $this->sut, 'add_where_subquery' ], 30 );
+
+		$service = Mockery::mock( QueryFilter::class . '[should_filter_by_seller_id]' );
+		dokan_get_container()->extend( QueryFilter::class )->setConcrete( $service );
+
+        $service->shouldReceive( 'should_filter_by_seller_id' )
+            ->andReturnFalse();
+
+        $_GET['refunds'] = 'all';
+
+		$wc_stats_query = new \Automattic\WooCommerce\Admin\API\Reports\Orders\Query( [ 'refunds' => 'all' ] );
+		$data = $wc_stats_query->get_data();
+
+        $report_data = $data->data;
+
+        $this->assertEquals( 1, count( $report_data ) );
+
+        $report_data = $report_data[0];
+
+        $this->assertEquals( $parent_refund->get_id(), $report_data['order_id'] );
+	}
+
+    public function test_orders_for_dokan_single_order_refund() {
+        $this->seller_id2 = $this->seller_id1;
+
+		$order_id = $this->create_multi_vendor_order();
+
+        $refund = $this->create_refund( $order_id );
+
+		$this->run_all_pending();
+
+        remove_filter( 'woocommerce_analytics_clauses_where_orders_subquery', [ $this->sut, 'add_where_subquery' ], 30 );
+
+		$service = Mockery::mock( QueryFilter::class . '[should_filter_by_seller_id]' );
+		dokan_get_container()->extend( QueryFilter::class )->setConcrete( $service );
+
+        $service->shouldReceive( 'should_filter_by_seller_id' )
+            ->andReturnFalse();
+
+        $_GET['refunds'] = 'all';
+
+		$wc_stats_query = new \Automattic\WooCommerce\Admin\API\Reports\Orders\Query( [ 'refunds' => 'all' ] );
+		$data = $wc_stats_query->get_data();
+
+        $report_data = $data->data;
+
+        $this->assertEquals( 1, count( $report_data ) );
+
+        $report_data = $report_data[0];
+
+        $this->assertEquals( $refund->get_id(), $report_data['order_id'] );
 	}
 }

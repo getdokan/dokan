@@ -24,6 +24,7 @@ function dokan_truncate_table_data(): void {
 		'dokan_announcement',
 		'dokan_refund',
 		'dokan_vendor_balance',
+		'dokan_order_stats',
     ];
     global $wpdb;
     foreach ( $tables as $table_name ) {
