@@ -10,6 +10,7 @@ class OrderType {
 	public const DOKAN_SUBORDER = 2;
 	public const WC_ORDER_REFUND = 3;
 	public const DOKAN_SUBORDER_REFUND = 4;
+	public const DOKAN_SINGLE_ORDER_REFUND = 5;
 
 	public function is_dokan_suborder_related( \WC_Abstract_Order $order ) {
 		if ( ! $order->get_parent_id() ) {
@@ -41,7 +42,15 @@ class OrderType {
 		if ( ! $is_suborder_related ) {
 		    // Refund of WC order.
             if ( $order instanceof WC_Order_Refund ) {
-				return self::WC_ORDER_REFUND;
+                $suborder_ids = array_filter(
+                    (array) dokan_get_suborder_ids_by( $order->get_parent_id() )
+                );
+
+                if ( count( $suborder_ids ) ) {
+					return self::WC_ORDER_REFUND;
+                }
+
+                return self::DOKAN_SINGLE_ORDER_REFUND;
 			}
 
             $suborder_ids = dokan_get_suborder_ids_by( $order->get_id() );
@@ -60,6 +69,7 @@ class OrderType {
             self::WC_ORDER,
             self::DOKAN_SINGLE_ORDER,
             self::WC_ORDER_REFUND,
+            self::DOKAN_SINGLE_ORDER_REFUND,
         ];
     }
 
@@ -68,13 +78,29 @@ class OrderType {
             self::DOKAN_SINGLE_ORDER,
             self::DOKAN_SUBORDER,
             self::DOKAN_SUBORDER_REFUND,
+            self::DOKAN_SINGLE_ORDER_REFUND,
         ];
     }
 
-    public function get_types_for_refund(): array {
+    public function get_refund_types(): array {
         return [
             self::WC_ORDER_REFUND,
             self::DOKAN_SUBORDER_REFUND,
+            self::DOKAN_SINGLE_ORDER_REFUND,
+        ];
+    }
+
+    public function get_refund_types_for_seller() {
+        return [
+            self::DOKAN_SUBORDER_REFUND,
+            self::DOKAN_SINGLE_ORDER_REFUND,
+        ];
+    }
+
+    public function get_refund_types_for_admin() {
+        return [
+            self::WC_ORDER_REFUND,
+            self::DOKAN_SINGLE_ORDER_REFUND,
         ];
     }
 }
