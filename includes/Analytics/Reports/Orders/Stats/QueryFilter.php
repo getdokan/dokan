@@ -8,10 +8,6 @@ use WeDevs\Dokan\Analytics\Reports\Orders\QueryFilter as OrdersQueryFilter;
 class QueryFilter extends OrdersQueryFilter {
 	protected $context = 'order_stats';
 
-	public function __construct() {
-		$this->register_hooks();
-	}
-
 	public function register_hooks(): void {
 		add_filter( 'woocommerce_analytics_clauses_join_orders_stats_total', [ $this, 'add_join_subquery' ] );
 		add_filter( 'woocommerce_analytics_clauses_join_orders_stats_interval', [ $this, 'add_join_subquery' ] );
