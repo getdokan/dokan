@@ -15,6 +15,8 @@ class AnalyticsServiceProvider extends BaseServiceProvider {
         ScheduleListener::class,
         QueryFilter::class,
         StatsQueryFilter::class,
+        \WeDevs\Dokan\Analytics\Reports\Products\QueryFilter::class,
+        \WeDevs\Dokan\Analytics\Reports\Products\Stats\QueryFilter::class,
     ];
 
     /**
