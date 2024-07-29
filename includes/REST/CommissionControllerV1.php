@@ -122,6 +122,10 @@ class CommissionControllerV1 extends DokanRESTController {
             $vendor_id = $vendor_id ? $vendor_id : 0;
         }
 
+        if ( ! is_numeric( $amount ) ) {
+            $amount = 0;
+        }
+
         $commission_or_earning = dokan()->commission->get_commission(
             [
                 'total_amount'   => $amount,

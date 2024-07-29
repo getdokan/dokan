@@ -583,10 +583,10 @@ class Commission {
         }
 
         if ( ! empty( $product_id ) && empty( $total_amount ) ) {
-            $total_amount = dokan()->product->get( $product_id )->get_price();
+            $product = dokan()->product->get( $product_id );
 
             // If product price is empty the setting the price as 0
-            $total_amount = empty( $total_amount ) ? 0 : $total_amount;
+            $total_amount = $product && $product->get_price() && ! empty( $product->get_price() ) ? $product->get_price() : 0;
         }
 
         $order_item_strategy = new OrderItem( $order_item_id, $total_amount, $total_quantity );
