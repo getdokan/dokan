@@ -266,6 +266,11 @@
                 dokan.mon_decimal_point
             );
 
+            chargePercentage = accounting.unformat(
+                chargePercentage,
+                dokan.mon_decimal_point
+            );
+
             let chargeAmount = 0;
             let chargeText = '';
 
