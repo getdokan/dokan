@@ -1,4 +1,4 @@
-const { BASE_URL, GMAP, LICENSE_KEY } = process.env;
+const { BASE_URL, GMAP, LICENSE_KEY, CATEGORY_ID } = process.env;
 
 export const dbData = {
     dokan: {
@@ -44,8 +44,7 @@ export const dbData = {
             admin_access: 'on', // vendor edit product test needs it to disable
             custom_store_url: 'store',
             setup_wizard_logo_url: '',
-            setup_wizard_message:
-                '<p>Thank you for choosing The Marketplace to power your online store! This quick setup wizard will help you configure the basic settings. <strong>It&rsquo;s completely optional and shouldn&rsquo;t take longer than two minutes.<strong></p>',
+            setup_wizard_message: '<p>Thank you for choosing The Marketplace to power your online store! This quick setup wizard will help you configure the basic settings. <strong>It&rsquo;s completely optional and shouldn&rsquo;t take longer than two minutes.<strong></p>',
             disable_welcome_wizard: 'off',
             global_digital_mode: 'sell_both',
             enable_shipstation_logging: 'off',
@@ -69,15 +68,36 @@ export const dbData = {
         sellingSettings: {
             // commission
             selling_capabilities: '',
-            commission_type: 'percentage',
+            commission_type: 'fixed', // 'fixed', 'category_based'
             admin_percentage: '10',
-            shipping_fee_recipient: 'seller',
+            additional_fee: '0',
+            commission_fixed_values: '',
+            commission_category_based_values: {
+                all: {
+                    percentage: '5',
+                    flat: '5',
+                },
+                items: {
+                    [CATEGORY_ID]: {
+                        percentage: '5',
+                        flat: '5',
+                    },
+                    // '27': {
+                    //     percentage: '5',
+                    //     flat: '5',
+                    // },
+                },
+            },
+
+            // fee recipient
+            'fee-recipients': '',
+            shipping_fee_recipient: 'seller', // 'seller', 'admin'
             tax_fee_recipient: 'seller',
             shipping_tax_fee_recipient: 'seller',
+
             automatic_process_api_refund: 'off',
 
             // vendor capabilities
-            additional_fee: '10',
             new_seller_enable_selling: 'on',
             one_step_product_create: 'on',
             disable_product_popup: 'off',
@@ -88,14 +108,21 @@ export const dbData = {
             product_category_style: 'single',
             product_vendors_can_create_tags: 'on',
             add_new_attribute: 'on',
+
+            // discount edit
+            discount_edit_section: '',
             discount_edit: {
                 'order-discount': 'order-discount',
                 'product-discount': 'product-discount',
             },
+
             hide_customer_info: 'off',
             seller_review_manage: 'on',
             new_seller_enable_auction: 'on',
             enable_guest_user_enquiry: 'on',
+
+            // min max settings
+            min_max_sub_section: '',
             enable_min_max_quantity: 'on',
             enable_min_max_amount: 'on',
             disable_shipping_tab: 'off',
@@ -1310,8 +1337,7 @@ export const dbData = {
                 setup_wizard_logo_url: '',
                 setup_wizard_message:
                     '<p>Thank you for choosing The Marketplace to power your online store! This quick setup wizard will help you configure the basic settings. <strong>It&rsquo;s completely optional and shouldn&rsquo;t take longer than two minutes.</strong> Test wizard message.</p>',
-                setup_wizard_message_without_html:
-                    'Thank you for choosing The Marketplace to power your online store! This quick setup wizard will help you configure the basic settings. It’s completely optional and shouldn’t take longer than two minutes. Test wizard message.',
+                setup_wizard_message_without_html: 'Thank you for choosing The Marketplace to power your online store! This quick setup wizard will help you configure the basic settings. It’s completely optional and shouldn’t take longer than two minutes. Test wizard message.',
                 disable_welcome_wizard: 'off',
                 global_digital_mode: 'sell_both',
                 enable_shipstation_logging: 'off',

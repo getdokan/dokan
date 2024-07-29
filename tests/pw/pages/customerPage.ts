@@ -512,7 +512,7 @@ export class CustomerPage extends BasePage {
         orderDetails.paymentMethod = (await this.getElementText(selector.customer.cOrders.orderDetails.paymentMethod)) as string;
         orderDetails.orderTotal = helpers.price((await this.getElementText(selector.customer.cOrders.orderDetails.orderTotal)) as string);
 
-        console.log(orderDetails);
+        // console.log(orderDetails);
         return orderDetails;
     }
 

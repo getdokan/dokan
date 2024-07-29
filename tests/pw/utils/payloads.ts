@@ -112,8 +112,6 @@ export const payloads = {
         categories: [
             {
                 // id: 48
-                name: 'Uncategorized',
-                slug: 'uncategorized',
             },
         ],
         featured: true,
@@ -208,6 +206,18 @@ export const payloads = {
             // 	key  : '_overwrite_shipping',
             // 	value: 'no'
             // },
+            // {
+            //     key: '_per_product_admin_commission_type',
+            //     value: 'fixed',
+            // },
+            // {
+            //     key: '_per_product_admin_commission',
+            //     value: '50',
+            // },
+            // {
+            //     key: '_per_product_admin_additional_fee',
+            //     value: '5',
+            // },
         ],
     }),
 
@@ -221,8 +231,6 @@ export const payloads = {
         categories: [
             {
                 // id: 48
-                name: 'Uncategorized',
-                slug: 'uncategorized',
             },
         ],
         featured: true,
@@ -328,8 +336,6 @@ export const payloads = {
         categories: [
             {
                 // id: 48
-                name: 'Uncategorized',
-                slug: 'uncategorized',
             },
         ],
         featured: true,
@@ -434,8 +440,6 @@ export const payloads = {
         categories: [
             {
                 // id: 48
-                name: 'Uncategorized',
-                slug: 'uncategorized',
             },
         ],
         featured: true,
@@ -462,8 +466,6 @@ export const payloads = {
         categories: [
             {
                 // id: 48
-                name: 'Uncategorized',
-                slug: 'uncategorized',
             },
         ],
         // attributes: [
@@ -485,8 +487,6 @@ export const payloads = {
         categories: [
             {
                 //  id: 48
-                name: 'Uncategorized',
-                slug: 'uncategorized',
             },
         ],
         attributes: [
@@ -890,7 +890,8 @@ export const payloads = {
 
     createMarketPlaceCoupon: () => ({
         code: `AC_${faker.string.nanoid(10)}`,
-        discount_type: faker.helpers.arrayElement(['percent', 'fixed_product', 'fixed_cart']),
+        // discount_type: faker.helpers.arrayElement(['percent', 'fixed_product', 'fixed_cart']),
+        discount_type: 'percent',
         amount: faker.number.int({ min: 1, max: 10 }).toString(),
         individual_use: false,
         meta_data: [
@@ -1458,6 +1459,58 @@ export const payloads = {
                 // value: 'yes',
             },
         ],
+    },
+
+    tax: {
+        exclusive: {
+            update: [
+                {
+                    id: 'woocommerce_prices_include_tax',
+                    // label: 'Prices entered with tax',
+                    value: 'no', // 'no', 'yes'
+                },
+                {
+                    id: 'woocommerce_tax_round_at_subtotal',
+                    label: 'Rounding',
+                    value: 'no', // 'no', 'yes'
+                },
+                {
+                    id: 'woocommerce_tax_display_shop',
+                    // label: 'Display prices in the shop',
+                    value: 'excl', // 'excl', 'incl
+                },
+                {
+                    id: 'woocommerce_tax_display_cart',
+                    // label: 'Display prices during cart and checkout',
+                    value: 'excl', // 'excl', 'incl
+                },
+            ],
+        },
+
+        inclusive: {
+            update: [
+                {
+                    id: 'woocommerce_prices_include_tax',
+                    // label: 'Prices entered with tax',
+                    value: 'yes', // 'no', 'yes'
+                },
+                {
+                    id: 'woocommerce_tax_round_at_subtotal',
+                    label: 'Rounding',
+                    value: 'no', // 'no', 'yes'
+                },
+                {
+                    id: 'woocommerce_tax_display_shop',
+                    // label: 'Display prices in the shop',
+                    value: 'incl', // 'excl', 'incl'
+                },
+                {
+                    id: 'woocommerce_tax_display_cart',
+                    // label: 'Display prices during cart and checkout',
+                    value: 'incl', // 'excl', 'incl
+                },
+            ],
+        },
     },
 
     // enable HPOS
@@ -2839,9 +2892,22 @@ export const payloads = {
         bank_name: '',
         bank_iban: '',
         categories: [{}],
+        // vendorwise commission
+        admin_commission_type: '', // fixed, category_based
         admin_commission: '',
-        admin_additional_fee: '0.00',
-        admin_commission_type: 'flat',
+        admin_additional_fee: '',
+        admin_category_commission: {
+            all: {
+                flat: '7',
+                percentage: '7',
+            },
+            items: {
+                '27': {
+                    flat: '7',
+                    percentage: '7',
+                },
+            },
+        },
     }),
 
     // always revert vendor settings to this after altering in tests
@@ -3057,9 +3123,23 @@ export const payloads = {
                 slug: 'uncategorized',
             },
         ],
+
+        // vendorwise commission
+        admin_commission_type: '', // fixed, category_based
         admin_commission: '',
         admin_additional_fee: '',
-        admin_commission_type: '',
+        admin_category_commission: {
+            all: {
+                flat: '7',
+                percentage: '7',
+            },
+            items: {
+                '27': {
+                    flat: '7',
+                    percentage: '7',
+                },
+            },
+        },
     },
 
     createStore2: {
@@ -3184,9 +3264,23 @@ export const payloads = {
                 slug: 'uncategorized',
             },
         ],
+
+        // vendorwise commission
+        admin_commission_type: '', // fixed, category_based
         admin_commission: '',
         admin_additional_fee: '',
-        admin_commission_type: '',
+        admin_category_commission: {
+            all: {
+                flat: '7',
+                percentage: '7',
+            },
+            items: {
+                '27': {
+                    flat: '7',
+                    percentage: '7',
+                },
+            },
+        },
     },
 
     createStore3: {
@@ -3311,9 +3405,22 @@ export const payloads = {
                 // slug: 'uncategorized'
             },
         ],
+        // vendorwise commission
+        admin_commission_type: '', // fixed, category_based
         admin_commission: '',
         admin_additional_fee: '',
-        admin_commission_type: '',
+        admin_category_commission: {
+            all: {
+                flat: '7',
+                percentage: '7',
+            },
+            items: {
+                '27': {
+                    flat: '7',
+                    percentage: '7',
+                },
+            },
+        },
     },
 
     createCustomer1: {
@@ -3640,6 +3747,8 @@ export const payloads = {
         product_id: '',
     },
 
+    randormNumber: faker.number.int({ min: 2, max: 100 }),
+
     paramsReverseWithdrawalTransactions: {
         'trn_date[from]': `${helpers.currentYear}-01-01 00:00:00`,
         'trn_date[to]': `${helpers.currentYear}-12-31 00:00:00`,
@@ -3680,6 +3789,69 @@ export const payloads = {
         category_ids: 0,
         context: 'admin',
     },
+
+    vendorwiseCommission: {
+        admin_commission_type: 'fixed', // fixed, category_based
+        admin_commission: '5',
+        admin_additional_fee: '5',
+        admin_category_commission: {
+            all: {
+                flat: '7',
+                percentage: '7',
+            },
+            items: {
+                '27': {
+                    flat: '7',
+                    percentage: '7',
+                },
+            },
+        },
+    },
+
+    productCommissionOnlyPercent: [
+        {
+            key: '_per_product_admin_commission_type',
+            value: 'fixed',
+        },
+        {
+            key: '_per_product_admin_commission',
+            value: '10',
+        },
+        {
+            key: '_per_product_admin_additional_fee',
+            value: '0',
+        },
+    ],
+
+    productCommissionOnlyFixed: [
+        {
+            key: '_per_product_admin_commission_type',
+            value: 'fixed',
+        },
+        {
+            key: '_per_product_admin_commission',
+            value: '0',
+        },
+        {
+            key: '_per_product_admin_additional_fee',
+            value: '10',
+        },
+    ],
+
+    productCommissionBothPercentageAndFixed: [
+        {
+            key: '_per_product_admin_commission_type',
+            value: 'fixed',
+        },
+        {
+            key: '_per_product_admin_commission',
+            value: '10',
+        },
+        {
+            key: '_per_product_admin_additional_fee',
+            value: '10',
+        },
+    ],
 
     // shortcodes
 
