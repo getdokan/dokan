@@ -181,12 +181,15 @@ abstract class DokanTestCase extends WP_UnitTestCase {
      * @return string The full route with namespace.
      */
     protected function get_route( string $route_name ): string {
+        $namespace = '/' . trim( $this->namespace, '/' );
+        $route_name = '/' . trim( $route_name, '/' );
+
         // If namespace is already exist.
-        if ( str_starts_with( $route_name, $this->namespace ) ) {
+        if ( str_starts_with( $route_name, $namespace ) ) {
             return $route_name;
         }
 
-        return $this->namespace . '/' . untrailingslashit( $route_name );
+        return $namespace . $route_name;
     }
 
     /**
