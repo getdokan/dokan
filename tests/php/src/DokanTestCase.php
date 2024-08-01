@@ -9,6 +9,8 @@ use WP_REST_Response;
 use WP_UnitTestCase;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Brain\Monkey;
+use WeDevs\Dokan\Test\Support\DBAssertionTrait;
+use WeDevs\Dokan\Test\Support\NestedArrayAssertionTrait;
 use WP_REST_Server;
 
 /**
@@ -20,6 +22,7 @@ use WP_REST_Server;
  */
 abstract class DokanTestCase extends WP_UnitTestCase {
     use DBAssertionTrait;
+    use NestedArrayAssertionTrait;
     use MockeryPHPUnitIntegration;
 
     /**
@@ -62,7 +65,7 @@ abstract class DokanTestCase extends WP_UnitTestCase {
      *
      * @var string Dokan API Namespace
      */
-    protected $namespace = 'dokan/v1/';
+    protected $namespace = 'dokan/v1';
 
     /**
      * Indicates whether the feature is enabled only for unit testing purposes.

@@ -1,6 +1,6 @@
 <?php
 
-namespace WeDevs\Dokan\Test;
+namespace WeDevs\Dokan\Test\Support;
 
 /**
  * Trait DBAssertionTrait

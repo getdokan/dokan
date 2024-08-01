@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\Test;
 
 use WeDevs\Dokan\Test\Factories\DokanFactory;
+use WeDevs\Dokan\Test\Support\DBAssertionTrait;
 use WP_Ajax_UnitTestCase;
 
 abstract class DokanAjaxTestCase extends WP_Ajax_UnitTestCase {
