@@ -18,8 +18,8 @@ test.describe('calculation test', () => {
 
     test.beforeAll(async () => {
         apiUtils = new ApiUtils(await request.newContext());
-        // taxRate = await apiUtils.setUpTaxRate(payloads.enableTaxRate, payloads.createTaxRate);
-        taxRate = await apiUtils.setUpTaxRate(payloads.enableTaxRate, { ...payloads.createTaxRate, rate: '10' });
+        // taxRate = await apiUtils.setUpTaxRate(payloads.enableTax, payloads.createTaxRate);
+        taxRate = await apiUtils.setUpTaxRate(payloads.enableTax, { ...payloads.createTaxRate, rate: '10' });
         // todo:  get tax rate instead of setup if possible
         // todo: add tax type inclusive/exclusive
         [commission, feeRecipient] = await dbUtils.getSellingInfo();
@@ -91,7 +91,7 @@ test.describe.skip('Marketplace Coupon calculation test', () => {
 
     test.beforeAll(async () => {
         apiUtils = new ApiUtils(await request.newContext());
-        taxRate = await apiUtils.setUpTaxRate(payloads.enableTaxRate, payloads.createTaxRate);
+        taxRate = await apiUtils.setUpTaxRate(payloads.enableTax, payloads.createTaxRate);
         // taxRate = await apiUtils.updateSingleWcSettingOptions('general', 'woocommerce_calc_discounts_sequentially', { value: 'no' });
         sequentialCoupon = await apiUtils.getSingleWcSettingOptions('general', 'woocommerce_calc_discounts_sequentially');
         sequentialCoupon = sequentialCoupon?.value === 'yes' ? true : false;
@@ -171,7 +171,7 @@ test.describe.skip('commission test', () => {
 
     test.beforeAll(async () => {
         apiUtils = new ApiUtils(await request.newContext());
-        // taxRate = await apiUtils.setUpTaxRate(payloads.enableTaxRate, { ...payloads.createTaxRate, rate: '10' });
+        // taxRate = await apiUtils.setUpTaxRate(payloads.enableTax, { ...payloads.createTaxRate, rate: '10' });
     });
 
     test.afterAll(async () => {

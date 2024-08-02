@@ -19,6 +19,7 @@ export class ShortcodePage extends AdminPage {
         super(page);
     }
 
+    // create page with shortcode
     async createPageWithShortcode(pageTitle: string, shortcode: string) {
         await this.goto(data.subUrls.backend.addNewPage, 'domcontentloaded');
         const isModalVisible = await this.isVisible(selector.admin.pages.closeModal);
@@ -61,6 +62,7 @@ export class ShortcodePage extends AdminPage {
         }
     }
 
+    // view dokan subscription packs
     async viewDokanSubscriptionPacks(link: string) {
         await this.goto(link);
 
@@ -103,7 +105,7 @@ export class ShortcodePage extends AdminPage {
         await this.toBeVisible(registrationVendor.registerDokanButton);
     }
 
-    // view  best selling products
+    // view best selling products
     async viewBestSellingProducts(link: string) {
         await this.goto(link);
 

@@ -1260,6 +1260,11 @@ export const payloads = {
         order: 0,
     },
 
+    createRandomShippingZone: () => ({
+        name: faker.string.alpha(3).toUpperCase(),
+        order: 0,
+    }),
+
     addShippingZoneLocation: [
         {
             code: 'US',
@@ -1273,10 +1278,6 @@ export const payloads = {
 
     addShippingMethodFreeShipping: {
         method_id: 'free_shipping',
-    },
-
-    addShippingMethodLocalPickup: {
-        method_id: 'local_pickup',
     },
 
     addShippingMethodDokanTableRateShipping: {
@@ -1385,8 +1386,19 @@ export const payloads = {
         ],
     },
 
-    // enable tax rate
-    enableTaxRate: {
+    // currency
+    currency: {
+        update: [
+            {
+                id: 'woocommerce_currency',
+                // label: 'Currency',
+                value: 'USD', // 'USD', 'EUR', 'INR'
+            },
+        ],
+    },
+
+    // enable tax
+    enableTax: {
         update: [
             {
                 id: 'woocommerce_calc_taxes',

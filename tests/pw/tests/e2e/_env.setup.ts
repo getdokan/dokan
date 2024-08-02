@@ -59,7 +59,7 @@ setup.describe('setup site & woocommerce & dokan settings', () => {
     });
 
     setup('set tax rate', { tag: ['@lite'] }, async () => {
-        await apiUtils.setUpTaxRate(payloads.enableTaxRate, payloads.createTaxRate);
+        await apiUtils.setUpTaxRate(payloads.enableTax, payloads.createTaxRate);
     });
 
     setup('set shipping methods', { tag: ['@lite'] }, async () => {
@@ -76,8 +76,8 @@ setup.describe('setup site & woocommerce & dokan settings', () => {
         const [, zoneId] = await apiUtils.createShippingZone(payloads.createShippingZone);
         await apiUtils.addShippingZoneLocation(zoneId, payloads.addShippingZoneLocation);
         await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodFlatRate);
-        // await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodFreeShipping);
-        // await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodLocalPickup);
+        await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodFreeShipping);
+
         if (DOKAN_PRO) {
             await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodDokanTableRateShipping);
             await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodDokanDistanceRateShipping);

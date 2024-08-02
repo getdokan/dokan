@@ -160,7 +160,7 @@ export const selector = {
             contentPlaceholder: 'p[aria-label="Add default block"]',
             addContent: '//p[@data-title="Paragraph"]',
 
-            publish: '//div[@class="edit-post-header__settings"]//button[text()="Publish"]',
+            publish: '//div[@class="editor-header__settings"]//button[text()="Publish"]',
             publishFromPanel: '//div[@class="editor-post-publish-panel"]//button[text()="Publish"]',
 
             publishMessage: '//div[@class="components-snackbar__content" and text()="Page published."]',
@@ -2504,266 +2504,292 @@ export const selector = {
             // Woocommerce Settings
             settings: {
                 // Settings Menu
-                general: '//a[contains(@class,"nav-tab") and text()="General"]',
-                products: '//a[contains(@class,"nav-tab") and text()="Products"]',
-                tax: '//a[contains(@class,"nav-tab") and text()="Tax"]',
-                shipping: '//a[contains(@class,"nav-tab") and text()="Shipping"]',
-                payments: '//a[contains(@class,"nav-tab") and text()="Payments"]',
-                accounts: '//a[contains(text(),"Accounts & Privacy")]',
+                menus: {
+                    general: '//a[contains(@class,"nav-tab") and text()="General"]',
+                    products: '//a[contains(@class,"nav-tab") and text()="Products"]',
+                    tax: '//a[contains(@class,"nav-tab") and text()="Tax"]',
+                    shipping: '//a[contains(@class,"nav-tab") and text()="Shipping"]',
+                    payments: '//a[contains(@class,"nav-tab") and text()="Payments"]',
+                    accounts: '//a[contains(text(),"Accounts & Privacy")]',
+                },
 
                 // General
-                // Store Address
-                addressLine1: '#woocommerce_store_address',
-                addressLine2: '#woocommerce_store_address_2',
-                city: '#woocommerce_store_city',
-                countryOrState: '#select2-woocommerce_default_country-g1-container',
-                PostcodeOrZip: '#woocommerce_store_postcode',
-                // General Options
-                sellingLocation: '#select2-woocommerce_allowed_countries-container',
-                shippingLocation: '#select2-woocommerce_ship_to_countries-container',
-                defaultCustomerLocation: '#select2-woocommerce_default_customer_address-container',
-                enableTaxes: '#woocommerce_calc_taxes',
-                enableShipping: '#select2-woocommerce_ship_to_countries-container',
-                enableShippingValues: '.select2-results ul li',
-                enableCoupon: '#woocommerce_enable_coupons',
-                calculateCouponDiscountsSequentially: '#woocommerce_calc_discounts_sequentially',
-                // Currency Options
-                currency: '#select2-woocommerce_currency-container',
-                currencyPosition: '#select2-woocommerce_currency_pos-container',
-                currencyPositionValues: '.select2-results ul li',
-                thousandSeparator: '#woocommerce_price_thousand_sep',
-                decimalSeparator: '#woocommerce_price_decimal_sep',
-                numberOfDecimals: '#woocommerce_price_num_decimals',
-                generalSaveChanges: '.woocommerce-save-button',
+                general: {
+                    // Store Address
+                    addressLine1: '#woocommerce_store_address',
+                    addressLine2: '#woocommerce_store_address_2',
+                    city: '#woocommerce_store_city',
+                    countryOrState: '#select2-woocommerce_default_country-g1-container',
+                    PostcodeOrZip: '#woocommerce_store_postcode',
+
+                    // General Options
+                    sellingLocation: '#select2-woocommerce_allowed_countries-container',
+                    shippingLocation: '#select2-woocommerce_ship_to_countries-container',
+                    defaultCustomerLocation: '#select2-woocommerce_default_customer_address-container',
+                    enableTaxes: '#woocommerce_calc_taxes',
+                    enableShipping: '#select2-woocommerce_ship_to_countries-container',
+                    enableShippingValues: '.select2-results ul li',
+                    enableCoupon: '#woocommerce_enable_coupons',
+                    calculateCouponDiscountsSequentially: '#woocommerce_calc_discounts_sequentially',
+
+                    // Currency Options
+                    currency: '//span[@id="select2-woocommerce_currency-container"]/..//span[@class="select2-selection__arrow"]',
+                    currencyInput: '.select2-search.select2-search--dropdown .select2-search__field',
+                    result: 'li.select2-results__option.select2-results__option--highlighted',
+                    currencyPosition: '#select2-woocommerce_currency_pos-container',
+                    currencyPositionValues: '.select2-results ul li',
+                    thousandSeparator: '#woocommerce_price_thousand_sep',
+                    decimalSeparator: '#woocommerce_price_decimal_sep',
+                    numberOfDecimals: '#woocommerce_price_num_decimals',
+
+                    generalSaveChanges: '.woocommerce-save-button',
+                },
 
                 // Tax
-                // Tax Menus
-                taxOptions: '//ul[@class="subsubsub"]//a[contains(text(),"Tax options")]',
-                standardRates: '//ul[@class="subsubsub"]//a[contains(text(),"Standard rates")]',
-                reducedRateRates: '//ul[@class="subsubsub"]//a[contains(text(),"Reduced rate rates")]',
-                zeroRateRates: '//ul[@class="subsubsub"]//a[contains(text(),"Zero rate rates")]',
+                tax: {
+                    // Tax Menus
+                    taxOptions: '//ul[@class="subsubsub"]//a[contains(text(),"Tax options")]',
+                    standardRates: '//ul[@class="subsubsub"]//a[contains(text(),"Standard rates")]',
+                    reducedRateRates: '//ul[@class="subsubsub"]//a[contains(text(),"Reduced rate rates")]',
+                    zeroRateRates: '//ul[@class="subsubsub"]//a[contains(text(),"Zero rate rates")]',
 
-                // Tax Options
-                pricesEnteredWithTaxPricesInclusiveOfTax: '//label[contains(text(),"Yes, I will enter prices inclusive of tax")]//input[@name="woocommerce_prices_include_tax"]',
-                pricesEnteredWithTaxPricesExclusiveOfTax: '//label[contains(text(),"No, I will enter prices exclusive of tax")]//input[@name="woocommerce_prices_include_tax"]',
-                calculateTaxBasedOn: '#select2-woocommerce_tax_based_on-container',
-                shippingTaxClass: '#select2-woocommerce_shipping_tax_class-container',
-                rounding: '#woocommerce_tax_round_at_subtotal',
-                additionalTaxClasses: '#woocommerce_tax_classes',
-                displayPricesInTheShop: '#select2-woocommerce_tax_display_shop-container',
-                displayPricesDuringCartAndCheckout: '#select2-woocommerce_tax_display_cart-container',
-                priceDisplaySuffix: '#woocommerce_price_display_suffix',
-                displayTaxTotals: '#select2-woocommerce_tax_total_display-container',
-                taxSaveChanges: '.woocommerce-save-button',
+                    // Tax Options
+                    pricesEnteredWithTaxPricesInclusiveOfTax: '//label[contains(text(),"Yes, I will enter prices inclusive of tax")]//input[@name="woocommerce_prices_include_tax"]',
+                    pricesEnteredWithTaxPricesExclusiveOfTax: '//label[contains(text(),"No, I will enter prices exclusive of tax")]//input[@name="woocommerce_prices_include_tax"]',
+                    calculateTaxBasedOn: '#select2-woocommerce_tax_based_on-container',
+                    shippingTaxClass: '#select2-woocommerce_shipping_tax_class-container',
+                    rounding: '#woocommerce_tax_round_at_subtotal',
+                    additionalTaxClasses: '#woocommerce_tax_classes',
+                    displayPricesInTheShop: '#select2-woocommerce_tax_display_shop-container',
+                    displayPricesDuringCartAndCheckout: '#select2-woocommerce_tax_display_cart-container',
+                    priceDisplaySuffix: '#woocommerce_price_display_suffix',
+                    displayTaxTotals: '#select2-woocommerce_tax_total_display-container',
+                    taxSaveChanges: '.woocommerce-save-button',
 
-                // Add Tax
-                taxTable: '.wc_tax_rates',
-                taxTableRow: 'tbody#rates tr',
-                insertRow: '.plus',
-                taxRate: (row: number) => `(//td[@class="rate"]//input)[${row}]`,
-                priority: (row: number) => `(//td[@class="priority"]//input)[${row}]`,
-                taxRateSaveChanges: '.woocommerce-save-button',
+                    // Add Tax
+                    taxTable: '.wc_tax_rates',
+                    taxTableRow: 'tbody#rates tr',
+                    insertRow: '.plus',
+                    taxRate: (row: number) => `(//td[@class="rate"]//input)[${row}]`,
+                    priority: (row: number) => `(//td[@class="priority"]//input)[${row}]`,
+
+                    taxRateSaveChanges: '.woocommerce-save-button',
+                },
 
                 // Shipping
-                addShippingZone: '.page-title-action',
-                zoneName: '#zone_name',
-                // zoneRegions: '.select2-search__field',
-                zoneRegions: '#zone_locations',
-                shippingZoneCell: (shippingZone: string) => `//a[contains(text(), '${shippingZone}')]/..`,
-                editShippingZone: (shippingZone: string) => `//a[contains(text(), '${shippingZone}')]/..//div//a[contains(text(), 'Edit')]`,
-                deleteShippingZone: (shippingZone: string) => `//a[contains(text(), '${shippingZone}')]/..//div//a[contains(text(), 'Delete')]`,
-                addShippingMethods: '.wc-shipping-zone-add-method',
-                shippingMethod: '.wc-shipping-zone-method-selector select',
-                addShippingMethod: '#btn-ok',
-                shippingMethodCell: (shippingMethodName: string) => `//a[contains(text(),'${shippingMethodName}')]/..`,
-                editShippingMethod: (shippingMethodName: string) => `//a[contains(text(),'${shippingMethodName}')]/..//div//a[contains(text(), 'Edit')]`,
-                deleteShippingMethod: (shippingMethodName: string) => `//a[contains(text(),'${shippingMethodName}')]/..//div//a[contains(text(), 'Delete')]`,
+                shipping: {
+                    // Shipping Zone & regions
+                    addShippingZone: '//a[normalize-space(text())="Add zone"]',
 
-                // Edit Shipping Methods
-                // Flat Rate
-                flatRateMethodTitle: '#woocommerce_flat_rate_title',
-                flatRateTaxStatus: '#woocommerce_flat_rate_tax_status',
-                flatRateCost: '#woocommerce_flat_rate_cost',
-                // Free Shipping
-                freeShippingTitle: '#woocommerce_free_shipping_title',
-                freeShippingRequires: '#woocommerce_free_shipping_requires',
-                freeShippingMinimumOrderAmount: '#woocommerce_free_shipping_min_amount',
-                freeShippingCouponsDiscounts: '#woocommerce_free_shipping_ignore_discounts',
-                // Local Pickup
-                localPickupTitle: '#woocommerce_local_pickup_title',
-                localPickupTaxStatus: '#woocommerce_local_pickup_tax_status',
-                localPickupCost: '#woocommerce_local_pickup_cost',
-                // Dokan Table Rate Shipping
-                dokanTableRateShippingMethodTitle: '#woocommerce_dokan_table_rate_shipping_title',
-                // Dokan Distance Rate Shipping
-                dokanDistanceRateShippingMethodTitle: '#woocommerce_dokan_distance_rate_shipping_title',
-                // Vendor Shipping
-                vendorShippingMethodTitle: '#woocommerce_dokan_vendor_shipping_title',
-                vendorShippingTaxStatus: '#woocommerce_dokan_vendor_shipping_tax_status',
+                    zoneName: 'input#zone_name',
+                    zoneRegionsInput: '//div[@id="wc-shipping-zone-region-picker-root"]//input[@type="search"]',
+                    zoneRegionsSearchedResult: (zoneRegion: string) => `(//strong[normalize-space(text())='${zoneRegion}']/../..)[1]`,
 
-                // Shipping Method save Changes
-                shippingMethodSaveChanges: '#btn-ok',
-                // Shipping Zone save Changes
-                shippingZoneSaveChanges: '.button.wc-shipping-zone-method-save',
+                    shippingZoneRow: (shippingZone: string) => `//td[@class='wc-shipping-zone-name' and normalize-space(text())='${shippingZone}']/..`,
+                    editShippingZone: (shippingZone: string) => `//td[@class='wc-shipping-zone-name' and normalize-space(text())='${shippingZone}']/..//div//a[contains(text(), 'Edit')]`,
+                    deleteShippingZone: (shippingZone: string) => `//td[@class='wc-shipping-zone-name' and normalize-space(text())='${shippingZone}']/..//div//a[contains(text(), 'Delete')]`,
+
+                    // Shipping Methods
+                    addShippingMethods: '.wc-shipping-zone-add-method',
+                    shippingMethod: (shippingMethodName: string) => `//label[@for='${shippingMethodName}']`,
+                    continue: 'button#btn-next',
+
+                    shippingMethodRow: (shippingMethodName: string) => `//td[@class="wc-shipping-zone-method-title" and normalize-space(text())="${shippingMethodName}"]/..`,
+                    editShippingMethod: (shippingMethodName: string) => `//td[@class="wc-shipping-zone-method-title" and normalize-space(text())="${shippingMethodName}"]/..//div//a[contains(text(), 'Edit')]`,
+                    deleteShippingMethod: (shippingMethodName: string) => `//td[@class="wc-shipping-zone-method-title" and normalize-space(text())="${shippingMethodName}"]/..//div//a[contains(text(), 'Delete')]`,
+
+                    // Flat Rate
+                    flatRateMethodTitle: '#woocommerce_flat_rate_title',
+                    flatRateTaxStatus: '#woocommerce_flat_rate_tax_status',
+                    flatRateCost: '#woocommerce_flat_rate_cost',
+
+                    // Free Shipping
+                    freeShippingTitle: '#woocommerce_free_shipping_title',
+                    freeShippingRequires: '#woocommerce_free_shipping_requires',
+                    freeShippingMinimumOrderAmount: '#woocommerce_free_shipping_min_amount',
+                    freeShippingCouponsDiscounts: '#woocommerce_free_shipping_ignore_discounts',
+
+                    // Vendor Table Rate Shipping
+                    vendorTableRateShippingMethodTitle: '#woocommerce_dokan_table_rate_shipping_title',
+
+                    // Vendor Distance Rate Shipping
+                    vendorDistanceRateShippingMethodTitle: '#woocommerce_dokan_distance_rate_shipping_title',
+
+                    // Vendor Shipping
+                    vendorShippingMethodTitle: '#woocommerce_dokan_vendor_shipping_title',
+                    vendorShippingTaxStatus: '#woocommerce_dokan_vendor_shipping_tax_status',
+
+                    // Shipping Method save Changes
+                    createAndSave: '#btn-ok',
+
+                    // Shipping Zone save Changes
+                    shippingZoneSaveChanges: '.button.wc-shipping-zone-method-save',
+                },
 
                 // Payments
-                // Enable Methods
-                enableDirectBankTransfer: '//a[contains(text(),"Direct bank transfer")]/../..//span',
-                enableCheckPayments: '//a[contains(text(),"Check payments")]/../..//span',
-                enableCashOnDelivery: '//a[contains(text(),"Cash on delivery")]/../..//span',
-                enableDokanWireCardConnect: '//a[contains(text(),"Dokan Wirecard Connect")]/../..//td[@class="status"]//span',
-                enableDokanPayPalAdaptivePayments: '//a[contains(text(),"Dokan PayPal Adaptive Payments")]/../..//td[@class="status"]//span',
-                enableDokanPayPalMarketplace: '//a[contains(text(),"Dokan PayPal Marketplace")]/../..//td[@class="status"]//span',
-                enableDokanStripeConnect: '//a[contains(text(),"Dokan Stripe Connect")]/../..//td[@class="status"]//span',
-                enableDokanMangoPay: '//a[contains(text(),"Dokan MangoPay")]/../..//td[@class="status"]//span',
-                enableDokanRazorpay: '//a[contains(text(),"Dokan Razorpay")]/../..//td[@class="status"]//span',
-                enableDokanStripeExpress: '//a[contains(text(),"Dokan Stripe Express")]/../..//td[@class="status"]//span',
-                // Setup or Manage Payment Methods
-                setupDirectBankTransfer: '//a[contains(text(),"Direct bank transfer")]/../..//td[@class="action"]//a',
-                setupCheckPayments: '//a[contains(text(),"Check payments")]/../..//td[@class="action"]//a',
-                setupCashOnDelivery: '//a[contains(text(),"Cash on delivery")]/../..//td[@class="action"]//a',
-                setupDokanWireCardConnect: '//a[contains(text(),"Dokan Wirecard Connect")]/../..//td[@class="action"]//a',
-                setupDokanPayPalAdaptivePayments: '//a[contains(text(),"Dokan PayPal Adaptive Payments")]/../..//td[@class="action"]//a',
-                setupDokanPayPalMarketplace: '//a[contains(text(),"Dokan PayPal Marketplace")]/../..//td[@class="action"]//a',
-                setupDokanStripeConnect: '//a[contains(text(),"Dokan Stripe Connect")]/../..//td[@class="action"]//a',
-                setupDokanMangoPay: '//a[contains(text(),"Dokan MangoPay")]/../..//td[@class="action"]//a',
-                setupDokanRazorpay: '//a[contains(text(),"Dokan Razorpay")]/../..//td[@class="action"]//a',
-                setupDokanStripeExpress: '//a[contains(text(),"Dokan Stripe Express")]/../..//td[@class="action"]//a',
-                paymentMethodsSaveChanges: '.woocommerce-save-button',
+                payments: {
+                    // Enable Methods
+                    enableDirectBankTransfer: '//a[contains(text(),"Direct bank transfer")]/../..//span',
+                    enableCheckPayments: '//a[contains(text(),"Check payments")]/../..//span',
+                    enableCashOnDelivery: '//a[contains(text(),"Cash on delivery")]/../..//span',
+                    enableDokanWireCardConnect: '//a[contains(text(),"Dokan Wirecard Connect")]/../..//td[@class="status"]//span',
+                    enableDokanPayPalAdaptivePayments: '//a[contains(text(),"Dokan PayPal Adaptive Payments")]/../..//td[@class="status"]//span',
+                    enableDokanPayPalMarketplace: '//a[contains(text(),"Dokan PayPal Marketplace")]/../..//td[@class="status"]//span',
+                    enableDokanStripeConnect: '//a[contains(text(),"Dokan Stripe Connect")]/../..//td[@class="status"]//span',
+                    enableDokanMangoPay: '//a[contains(text(),"Dokan MangoPay")]/../..//td[@class="status"]//span',
+                    enableDokanRazorpay: '//a[contains(text(),"Dokan Razorpay")]/../..//td[@class="status"]//span',
+                    enableDokanStripeExpress: '//a[contains(text(),"Dokan Stripe Express")]/../..//td[@class="status"]//span',
 
-                // Stripe
-                stripe: {
-                    // Stripe Connect
-                    enableDisableStripe: '#woocommerce_dokan-stripe-connect_enabled',
-                    title: '#woocommerce_dokan-stripe-connect_title',
-                    description: '#woocommerce_dokan-stripe-connect_description',
-                    nonConnectedSellers: '#woocommerce_dokan-stripe-connect_allow_non_connected_sellers',
-                    displayNoticeToConnectSeller: '#woocommerce_dokan-stripe-connect_display_notice_to_non_connected_sellers',
-                    displayNoticeInterval: '#woocommerce_dokan-stripe-connect_display_notice_interval',
-                    threeDSecureAndSca: '#woocommerce_dokan-stripe-connect_enable_3d_secure',
-                    sellerPaysTheProcessingFeeIn3DsMode: '#woocommerce_dokan-stripe-connect_seller_pays_the_processing_fee',
-                    testMode: '#woocommerce_dokan-stripe-connect_testmode',
-                    stripeCheckout: '#woocommerce_dokan-stripe-connect_stripe_checkout',
-                    stripeCheckoutLocale: '#select2-woocommerce_dokan-stripe-connect_stripe_checkout_locale-container',
-                    checkoutImage: '#woocommerce_dokan-stripe-connect_stripe_checkout_image',
-                    checkoutButtonLabel: '#woocommerce_dokan-stripe-connect_stripe_checkout_label',
-                    savedCards: '#woocommerce_dokan-stripe-connect_saved_cards',
-                    // Test Credentials
-                    testPublishableKey: '#woocommerce_dokan-stripe-connect_test_publishable_key',
-                    testSecretKey: '#woocommerce_dokan-stripe-connect_test_secret_key',
-                    testClientId: '#woocommerce_dokan-stripe-connect_test_client_id',
-                    stripeSaveChanges: '.woocommerce-save-button',
-                },
+                    // Setup or Manage Payment Methods
+                    setupDirectBankTransfer: '//a[contains(text(),"Direct bank transfer")]/../..//td[@class="action"]//a',
+                    setupCheckPayments: '//a[contains(text(),"Check payments")]/../..//td[@class="action"]//a',
+                    setupCashOnDelivery: '//a[contains(text(),"Cash on delivery")]/../..//td[@class="action"]//a',
+                    setupDokanWireCardConnect: '//a[contains(text(),"Dokan Wirecard Connect")]/../..//td[@class="action"]//a',
+                    setupDokanPayPalAdaptivePayments: '//a[contains(text(),"Dokan PayPal Adaptive Payments")]/../..//td[@class="action"]//a',
+                    setupDokanPayPalMarketplace: '//a[contains(text(),"Dokan PayPal Marketplace")]/../..//td[@class="action"]//a',
+                    setupDokanStripeConnect: '//a[contains(text(),"Dokan Stripe Connect")]/../..//td[@class="action"]//a',
+                    setupDokanMangoPay: '//a[contains(text(),"Dokan MangoPay")]/../..//td[@class="action"]//a',
+                    setupDokanRazorpay: '//a[contains(text(),"Dokan Razorpay")]/../..//td[@class="action"]//a',
+                    setupDokanStripeExpress: '//a[contains(text(),"Dokan Stripe Express")]/../..//td[@class="action"]//a',
+                    paymentMethodsSaveChanges: '.woocommerce-save-button',
 
-                // Paypal Marketplace
-                paypalMarketPlace: {
-                    enableDisablePayPalMarketplace: '#woocommerce_dokan_paypal_marketplace_enabled',
-                    title: '#woocommerce_dokan_paypal_marketplace_title',
-                    description: '#woocommerce_dokan_paypal_marketplace_description',
-                    payPalMerchantId: '#woocommerce_dokan_paypal_marketplace_partner_id',
-                    // API Credentials
-                    payPalSandbox: '#woocommerce_dokan_paypal_marketplace_test_mode',
-                    sandboxClientId: '#woocommerce_dokan_paypal_marketplace_test_app_user',
-                    sandBoxClientSecret: '#woocommerce_dokan_paypal_marketplace_test_app_pass',
-                    payPalPartnerAttributionId: '#woocommerce_dokan_paypal_marketplace_bn_code',
-                    disbursementMode: '#select2-woocommerce_dokan_paypal_marketplace_disbursement_mode-container',
-                    disbursementModeValues: '.select2-results ul li',
-                    paymentButtonType: '#select2-woocommerce_dokan_paypal_marketplace_button_type-container',
-                    paymentButtonTypeValues: '.select2-results ul li',
-                    allowUnbrandedCreditCard: '#woocommerce_dokan_paypal_marketplace_ucc_mode',
-                    marketplaceLogo: '#woocommerce_dokan_paypal_marketplace_marketplace_logo',
-                    displayNoticeToConnectSeller: '#woocommerce_dokan_paypal_marketplace_display_notice_on_vendor_dashboard',
-                    sendAnnouncementToConnectSeller: '#woocommerce_dokan_paypal_marketplace_display_notice_to_non_connected_sellers',
-                    sendAnnouncementInterval: '#woocommerce_dokan_paypal_marketplace_display_notice_interval',
-                    paypalMarketPlaceSaveChanges: '.woocommerce-save-button',
-                },
+                    // Stripe
+                    stripe: {
+                        // Stripe Connect
+                        enableDisableStripe: '#woocommerce_dokan-stripe-connect_enabled',
+                        title: '#woocommerce_dokan-stripe-connect_title',
+                        description: '#woocommerce_dokan-stripe-connect_description',
+                        nonConnectedSellers: '#woocommerce_dokan-stripe-connect_allow_non_connected_sellers',
+                        displayNoticeToConnectSeller: '#woocommerce_dokan-stripe-connect_display_notice_to_non_connected_sellers',
+                        displayNoticeInterval: '#woocommerce_dokan-stripe-connect_display_notice_interval',
+                        threeDSecureAndSca: '#woocommerce_dokan-stripe-connect_enable_3d_secure',
+                        sellerPaysTheProcessingFeeIn3DsMode: '#woocommerce_dokan-stripe-connect_seller_pays_the_processing_fee',
+                        testMode: '#woocommerce_dokan-stripe-connect_testmode',
+                        savedCards: '#woocommerce_dokan-stripe-connect_saved_cards',
 
-                // Dokan Mangopay
-                dokanMangoPay: {
-                    enableDisableMangoPayPayment: '#woocommerce_dokan_mangopay_enabled',
-                    title: '#woocommerce_dokan_mangopay_title',
-                    description: '#woocommerce_dokan_mangopay_description',
-                    // API Credentials
-                    mangoPaySandbox: '#woocommerce_dokan_mangopay_sandbox_mode',
-                    sandboxClientId: '#woocommerce_dokan_mangopay_sandbox_client_id',
-                    sandBoxApiKey: '#woocommerce_dokan_mangopay_sandbox_api_key',
-                    // Payment Options
-                    chooseAvailableCreditCards: '//label[contains(text(),"Choose Available Credit Cards ")]/../..//input[@class="select2-search__field"]',
-                    chooseAvailableCreditCardsValues: '.select2-results ul li',
-                    chooseAvailableDirectPaymentServices: '//label[contains(text(),"Choose Available Direct Payment Services")]/../..//input[@class="select2-search__field"]',
-                    chooseAvailableDirectPaymentServicesValues: '.select2-results ul li',
-                    savedCards: '#woocommerce_dokan_mangopay_saved_cards',
-                    threeDs2: '#woocommerce_dokan_mangopay_disabled_3DS2',
-                    // Fund Transfers and Payouts
-                    transferFunds: '#select2-woocommerce_dokan_mangopay_disburse_mode-container',
-                    transferFundsValues: '.select2-results ul li',
-                    payoutMode: '#woocommerce_dokan_mangopay_instant_payout',
-                    // Types and Requirements of Vendors
-                    typeOfVendors: '#select2-woocommerce_dokan_mangopay_default_vendor_status-container',
-                    typeOfVendorsValues: '.select2-results ul li',
-                    businessRequirement: '#select2-woocommerce_dokan_mangopay_default_business_type-container',
-                    businessRequirementValues: '.select2-results ul li',
-                    // Advanced Settings
-                    displayNoticeToNonConnectedSellers: '#woocommerce_dokan_mangopay_notice_on_vendor_dashboard',
-                    sendAnnouncementToNonConnectedSellers: '#woocommerce_dokan_mangopay_announcement_to_sellers',
-                    announcementInterval: '#woocommerce_dokan_mangopay_notice_interval',
-                    dokanMangopaySaveChanges: '.woocommerce-save-button',
-                },
+                        // Test Credentials
+                        testPublishableKey: '#woocommerce_dokan-stripe-connect_test_publishable_key',
+                        testSecretKey: '#woocommerce_dokan-stripe-connect_test_secret_key',
+                        testClientId: '#woocommerce_dokan-stripe-connect_test_client_id',
+                        stripeSaveChanges: '.woocommerce-save-button',
+                    },
 
-                dokanRazorpay: {
-                    enableDisableDokanRazorpay: '#woocommerce_dokan_razorpay_enabled',
-                    title: '#woocommerce_dokan_razorpay_title',
-                    description: '#woocommerce_dokan_razorpay_description',
-                    // API Credentials
-                    razorpaySandbox: '#woocommerce_dokan_razorpay_test_mode',
-                    testKeyId: '#woocommerce_dokan_razorpay_test_key_id',
-                    testKeySecret: '#woocommerce_dokan_razorpay_test_key_secret',
-                    disbursementMode: '#select2-woocommerce_dokan_razorpay_disbursement_mode-container',
-                    disbursementModeValues: '.select2-results ul li',
-                    sellerPaysTheProcessingFee: '#woocommerce_dokan_razorpay_seller_pays_the_processing_fee',
-                    displayNoticeToConnectSeller: '#woocommerce_dokan_razorpay_display_notice_on_vendor_dashboard',
-                    sendAnnouncementToConnectSeller: '#woocommerce_dokan_razorpay_display_notice_to_non_connected_sellers',
-                    sendAnnouncementInterval: '#woocommerce_dokan_razorpay_display_notice_interval',
-                    dokanRazorpaySaveChanges: '.woocommerce-save-button',
-                },
+                    // Paypal Marketplace
+                    paypalMarketPlace: {
+                        enableDisablePayPalMarketplace: '#woocommerce_dokan_paypal_marketplace_enabled',
+                        title: '#woocommerce_dokan_paypal_marketplace_title',
+                        description: '#woocommerce_dokan_paypal_marketplace_description',
+                        payPalMerchantId: '#woocommerce_dokan_paypal_marketplace_partner_id',
 
-                stripeExpress: {
-                    // Stripe Express
-                    enableOrDisableStripeExpress: '#woocommerce_dokan_stripe_express_enabled',
-                    title: '#woocommerce_dokan_stripe_express_title',
-                    description: '#woocommerce_dokan_stripe_express_description',
-                    // API Credentials
-                    testMode: '#woocommerce_dokan_stripe_express_testmode',
-                    testPublishableKey: '#woocommerce_dokan_stripe_express_test_publishable_key',
-                    testSecretKey: '#woocommerce_dokan_stripe_express_test_secret_key',
-                    testWebhookSecret: '#woocommerce_dokan_stripe_express_test_webhook_key',
-                    // Payment and Disbursement
-                    choosePaymentMethods: '//select[@id="woocommerce_dokan_stripe_express_enabled_payment_methods"]/..//span[@class="select2-selection select2-selection--multiple"]',
-                    choosePaymentMethodsValues: '.select2-results ul li',
-                    takeProcessingFeesFromSellers: '#woocommerce_dokan_stripe_express_sellers_pay_processing_fee',
-                    savedCards: '#woocommerce_dokan_stripe_express_saved_cards',
-                    capturePaymentsManually: '#woocommerce_dokan_stripe_express_capture',
-                    disburseFunds: '#select2-woocommerce_dokan_stripe_express_disburse_mode-container',
-                    disbursementModeValues: '.select2-results ul li',
-                    customerBankStatement: '#woocommerce_dokan_stripe_express_statement_descriptor',
-                    // Payment Request Options (Apple Pay / Google Pay)
-                    paymentRequestButtons: '#woocommerce_dokan_stripe_express_payment_request',
-                    buttonType: '#woocommerce_dokan_stripe_express_payment_request_button_type',
-                    buttonTheme: '#woocommerce_dokan_stripe_express_payment_request_button_theme',
-                    buttonLocations: '//select[@id="woocommerce_dokan_stripe_express_payment_request_button_locations"]/..//span[@class="select2-selection select2-selection--multiple"]',
-                    buttonLocationsValues: '.select2-results ul li',
-                    buttonSize: '#woocommerce_dokan_stripe_express_payment_request_button_size',
-                    // Advanced Settings
-                    displayNoticeToNonConnectedSellers: '#woocommerce_dokan_stripe_express_notice_on_vendor_dashboard',
-                    sendAnnouncementToNonConnectedSellers: '#woocommerce_dokan_stripe_express_announcement_to_sellers',
-                    announcementInterval: '#woocommerce_dokan_stripe_express_notice_interval',
-                    debugLog: '#woocommerce_dokan_stripe_express_debug',
-                    stripeExpressSaveChanges: '.woocommerce-save-button',
+                        // API Credentials
+                        payPalSandbox: '#woocommerce_dokan_paypal_marketplace_test_mode',
+                        sandboxClientId: '#woocommerce_dokan_paypal_marketplace_test_app_user',
+                        sandBoxClientSecret: '#woocommerce_dokan_paypal_marketplace_test_app_pass',
+                        payPalPartnerAttributionId: '#woocommerce_dokan_paypal_marketplace_bn_code',
+                        disbursementMode: '#select2-woocommerce_dokan_paypal_marketplace_disbursement_mode-container',
+                        disbursementModeValues: '.select2-results ul li',
+                        paymentButtonType: '#select2-woocommerce_dokan_paypal_marketplace_button_type-container',
+                        paymentButtonTypeValues: '.select2-results ul li',
+                        allowUnbrandedCreditCard: '#woocommerce_dokan_paypal_marketplace_ucc_mode',
+                        marketplaceLogo: '#woocommerce_dokan_paypal_marketplace_marketplace_logo',
+                        displayNoticeToConnectSeller: '#woocommerce_dokan_paypal_marketplace_display_notice_on_vendor_dashboard',
+                        sendAnnouncementToConnectSeller: '#woocommerce_dokan_paypal_marketplace_display_notice_to_non_connected_sellers',
+                        sendAnnouncementInterval: '#woocommerce_dokan_paypal_marketplace_display_notice_interval',
+                        paypalMarketPlaceSaveChanges: '.woocommerce-save-button',
+                    },
+
+                    // Dokan Mangopay
+                    dokanMangoPay: {
+                        enableDisableMangoPayPayment: '#woocommerce_dokan_mangopay_enabled',
+                        title: '#woocommerce_dokan_mangopay_title',
+                        description: '#woocommerce_dokan_mangopay_description',
+                        // API Credentials
+                        mangoPaySandbox: '#woocommerce_dokan_mangopay_sandbox_mode',
+                        sandboxClientId: '#woocommerce_dokan_mangopay_sandbox_client_id',
+                        sandBoxApiKey: '#woocommerce_dokan_mangopay_sandbox_api_key',
+                        // Payment Options
+                        currentAvailableCreditCards: (cards: string) => `//select[@id="woocommerce_dokan_mangopay_cards"]/..//li[@title="${cards}"]`,
+                        chooseAvailableCreditCards: '//label[contains(text(),"Choose Available Credit Cards ")]/../..//input[@class="select2-search__field"]',
+                        chooseAvailableCreditCardsValues: '.select2-results ul li',
+                        currentPaymentServices: (cards: string) => `//select[@id="woocommerce_dokan_mangopay_direct_pay"]/..//li[@title="${cards}"]`,
+                        chooseAvailableDirectPaymentServices: '//label[contains(text(),"Choose Available Direct Payment Services")]/../..//input[@class="select2-search__field"]',
+                        chooseAvailableDirectPaymentServicesValues: '.select2-results ul li',
+                        searchedResult: '.select2-results__option.select2-results__option--highlighted',
+                        savedCards: '#woocommerce_dokan_mangopay_saved_cards',
+                        threeDs2: '#woocommerce_dokan_mangopay_disabled_3DS2',
+                        // Fund Transfers and Payouts
+                        transferFunds: '#select2-woocommerce_dokan_mangopay_disburse_mode-container',
+                        transferFundsValues: '.select2-results ul li',
+                        payoutMode: '#woocommerce_dokan_mangopay_instant_payout',
+                        // Types and Requirements of Vendors
+                        typeOfVendors: '#select2-woocommerce_dokan_mangopay_default_vendor_status-container',
+                        typeOfVendorsValues: '.select2-results ul li',
+                        businessRequirement: '#select2-woocommerce_dokan_mangopay_default_business_type-container',
+                        businessRequirementValues: '.select2-results ul li',
+                        // Advanced Settings
+                        displayNoticeToNonConnectedSellers: '#woocommerce_dokan_mangopay_notice_on_vendor_dashboard',
+                        sendAnnouncementToNonConnectedSellers: '#woocommerce_dokan_mangopay_announcement_to_sellers',
+                        announcementInterval: '#woocommerce_dokan_mangopay_notice_interval',
+                        dokanMangopaySaveChanges: '.woocommerce-save-button',
+                    },
+
+                    dokanRazorpay: {
+                        enableDisableDokanRazorpay: '#woocommerce_dokan_razorpay_enabled',
+                        title: '#woocommerce_dokan_razorpay_title',
+                        description: '#woocommerce_dokan_razorpay_description',
+                        // API Credentials
+                        razorpaySandbox: '#woocommerce_dokan_razorpay_test_mode',
+                        testKeyId: '#woocommerce_dokan_razorpay_test_key_id',
+                        testKeySecret: '#woocommerce_dokan_razorpay_test_key_secret',
+                        disbursementMode: '#select2-woocommerce_dokan_razorpay_disbursement_mode-container',
+                        disbursementModeValues: '.select2-results ul li',
+                        sellerPaysTheProcessingFee: '#woocommerce_dokan_razorpay_seller_pays_the_processing_fee',
+                        displayNoticeToConnectSeller: '#woocommerce_dokan_razorpay_display_notice_on_vendor_dashboard',
+                        sendAnnouncementToConnectSeller: '#woocommerce_dokan_razorpay_display_notice_to_non_connected_sellers',
+                        sendAnnouncementInterval: '#woocommerce_dokan_razorpay_display_notice_interval',
+                        dokanRazorpaySaveChanges: '.woocommerce-save-button',
+                    },
+
+                    stripeExpress: {
+                        // Stripe Express
+                        enableOrDisableStripeExpress: '#woocommerce_dokan_stripe_express_enabled',
+                        title: '#woocommerce_dokan_stripe_express_title',
+                        description: '#woocommerce_dokan_stripe_express_description',
+                        // API Credentials
+                        testMode: '#woocommerce_dokan_stripe_express_testmode',
+                        testPublishableKey: '#woocommerce_dokan_stripe_express_test_publishable_key',
+                        testSecretKey: '#woocommerce_dokan_stripe_express_test_secret_key',
+                        testWebhookSecret: '#woocommerce_dokan_stripe_express_test_webhook_key',
+                        // Payment and Disbursement
+                        choosePaymentMethods: '//select[@id="woocommerce_dokan_stripe_express_enabled_payment_methods"]/..//span[@class="select2-selection select2-selection--multiple"]',
+                        choosePaymentMethodsValues: '.select2-results ul li',
+                        takeProcessingFeesFromSellers: '#woocommerce_dokan_stripe_express_sellers_pay_processing_fee',
+                        savedCards: '#woocommerce_dokan_stripe_express_saved_cards',
+                        capturePaymentsManually: '#woocommerce_dokan_stripe_express_capture',
+                        disburseFunds: '#select2-woocommerce_dokan_stripe_express_disburse_mode-container',
+                        disbursementModeValues: '.select2-results ul li',
+                        customerBankStatement: '#woocommerce_dokan_stripe_express_statement_descriptor',
+                        // Payment Request Options (Apple Pay / Google Pay)
+                        paymentRequestButtons: '#woocommerce_dokan_stripe_express_payment_request',
+                        buttonType: '#woocommerce_dokan_stripe_express_payment_request_button_type',
+                        buttonTheme: '#woocommerce_dokan_stripe_express_payment_request_button_theme',
+                        buttonLocations: '//select[@id="woocommerce_dokan_stripe_express_payment_request_button_locations"]/..//span[@class="select2-selection select2-selection--multiple"]',
+                        buttonLocationsValues: '.select2-results ul li',
+                        buttonSize: '#woocommerce_dokan_stripe_express_payment_request_button_size',
+                        // Advanced Settings
+                        displayNoticeToNonConnectedSellers: '#woocommerce_dokan_stripe_express_notice_on_vendor_dashboard',
+                        sendAnnouncementToNonConnectedSellers: '#woocommerce_dokan_stripe_express_announcement_to_sellers',
+                        announcementInterval: '#woocommerce_dokan_stripe_express_notice_interval',
+                        debugLog: '#woocommerce_dokan_stripe_express_debug',
+                        stripeExpressSaveChanges: '.woocommerce-save-button',
+                    },
                 },
 
                 // Accounts
-                automaticPasswordGeneration: '#woocommerce_registration_generate_password',
-                accountSaveChanges: '.woocommerce-save-button',
+                accounts: {
+                    automaticPasswordGeneration: '#woocommerce_registration_generate_password',
+                    accountSaveChanges: '.woocommerce-save-button',
+                },
 
                 // Update Success Message
                 updatedSuccessMessage: '#message.updated.inline p',

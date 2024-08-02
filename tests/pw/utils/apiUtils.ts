@@ -1858,10 +1858,15 @@ export class ApiUtils {
         return responseBody;
     }
 
+    // enable tax
+    async enableTax(enableTaxPayload: object, auth?: auth): Promise<void> {
+        await this.updateBatchWcSettingsOptions('general', enableTaxPayload, auth);
+    }
+
     // setup tax
     async setUpTaxRate(enableTaxPayload: object, taxPayload: taxRate, auth?: auth): Promise<number> {
         // enable tax rate
-        await this.updateBatchWcSettingsOptions('general', enableTaxPayload, auth);
+        await this.enableTax(enableTaxPayload, auth);
 
         // delete previous tax rates
         const allTaxRateIds = (await this.getAllTaxRates(auth)).map((o: { id: unknown }) => o.id);
@@ -1891,10 +1896,11 @@ export class ApiUtils {
     }
 
     // create shipping zone
-    async createShippingZone(payload: object, auth?: auth): Promise<[responseBody, string]> {
+    async createShippingZone(payload: object, auth?: auth): Promise<[responseBody, string, string]> {
         const [, responseBody] = await this.post(endPoints.wc.createShippingZone, { data: payload, headers: auth });
-        const shippingZoneId = String(responseBody?.id);
-        return [responseBody, shippingZoneId];
+        const zoneId = String(responseBody?.id);
+        const zoneName = String(responseBody?.name);
+        return [responseBody, zoneId, zoneName];
     }
 
     // delete shipping zone

@@ -64,6 +64,7 @@ export const data = {
 
     // keyboard key
     key: {
+        escape: 'Escape',
         arrowDown: 'ArrowDown',
         enter: 'Enter',
         home: 'Home',
@@ -585,56 +586,45 @@ export const data = {
     shipping: {
         enableShipping: 'Ship to all countries you sell to',
         disableShipping: 'Disable shipping & shipping calculations',
-        shippingZone: 'US',
 
-        shippingMethods: {
-            methods: faker.helpers.arrayElement(['flat_rate', 'free_shipping', 'local_pickup', 'dokan_table_rate_shipping', 'dokan_distance_rate_shipping', 'dokan_vendor_shipping']),
+        methods: {
             flatRate: {
-                shippingZone: 'US',
-                shippingCountry: 'United States (US)',
-                selectShippingMethod: 'flat_rate',
-                shippingMethod: 'Flat rate',
-                taxStatus: 'taxable', // 'none
+                zoneName: 'USA',
+                zoneRegion: 'United States (US)',
+                selectMethodName: 'flat_rate',
+                methodName: 'Flat rate',
+                taxStatus: 'taxable', // 'none', 'taxable'
                 shippingCost: '20',
             },
 
             freeShipping: {
-                shippingZone: 'US',
-                shippingCountry: 'United States (US)',
-                selectShippingMethod: 'free_shipping',
-                shippingMethod: 'Free shipping',
-                freeShippingRequires: 'min_amount', // 'coupon', 'min_amount', 'either', 'both'
+                zoneName: 'USA',
+                zoneRegion: 'United States (US)',
+                selectMethodName: 'free_shipping',
+                methodName: 'Free shipping',
+                freeShippingRequires: 'both', // 'coupon', 'min_amount', 'either', 'both'
                 freeShippingMinimumOrderAmount: '200',
             },
 
-            localPickup: {
-                shippingZone: 'US',
-                shippingCountry: 'United States (US)',
-                selectShippingMethod: 'local_pickup',
-                shippingMethod: 'Local pickup',
-                taxStatus: 'taxable', // 'none
-                shippingCost: '20',
-            },
-
             tableRateShipping: {
-                shippingZone: 'US',
-                shippingCountry: 'United States (US)',
-                selectShippingMethod: 'dokan_table_rate_shipping',
-                shippingMethod: 'Vendor Table Rate',
+                zoneName: 'USA',
+                zoneRegion: 'United States (US)',
+                selectMethodName: 'dokan_table_rate_shipping',
+                methodName: 'Vendor Table Rate',
             },
 
             distanceRateShipping: {
-                shippingZone: 'US',
-                shippingCountry: 'United States (US)',
-                selectShippingMethod: 'dokan_distance_rate_shipping',
-                shippingMethod: 'Vendor Distance Rate',
+                zoneName: 'USA',
+                zoneRegion: 'United States (US)',
+                selectMethodName: 'dokan_distance_rate_shipping',
+                methodName: 'Vendor Distance Rate',
             },
 
             vendorShipping: {
-                shippingZone: 'US',
-                shippingCountry: 'United States (US)',
-                selectShippingMethod: 'dokan_vendor_shipping',
-                shippingMethod: 'Vendor Shipping',
+                zoneName: 'USA',
+                zoneRegion: 'United States (US)',
+                selectMethodName: 'dokan_vendor_shipping',
+                methodName: 'Vendor Shipping',
                 taxStatus: 'taxable', // 'none
             },
         },
@@ -646,9 +636,9 @@ export const data = {
     payment: {
         saveSuccessMessage: 'Your settings have been saved.',
         currency: {
-            dollar: 'United States (US) dollar ($)',
-            euro: 'Euro (€)',
-            rupee: 'Indian rupee (₹)',
+            dollar: 'United States (US) dollar ($) — USD',
+            euro: 'Euro (€) — EUR',
+            rupee: 'Indian rupee (₹) — INR',
             currencyOptions: {
                 thousandSeparator: ',',
                 decimalSeparator: ',',
@@ -666,7 +656,6 @@ export const data = {
             title: 'Dokan Credit card (Stripe)',
             description: 'Pay with your credit card via Stripe.',
             displayNoticeInterval: '7',
-            stripeCheckoutLocale: 'English',
             testPublishableKey: 'pk_test_',
             testSecretKey: 'sk_test_',
             testClientId: 'ca_',
@@ -853,6 +842,10 @@ export const data = {
                 addCoupon: 'wp-admin/post-new.php?post_type=shop_coupon',
                 orders: 'wp-admin/edit.php?post_type=shop_order',
                 settings: 'wp-admin/admin.php?page=wc-settings',
+                taxSettings: 'wp-admin/admin.php?page=wc-settings&tab=tax',
+                shippingSettings: 'wp-admin/admin.php?page=wc-settings&tab=shipping',
+                paymentSettings: 'wp-admin/admin.php?page=wc-settings&tab=checkout',
+                accountSettings: 'wp-admin/admin.php?page=wc-settings&tab=account',
             },
         },
 
