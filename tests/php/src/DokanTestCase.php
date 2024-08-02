@@ -9,8 +9,8 @@ use WP_REST_Response;
 use WP_UnitTestCase;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Brain\Monkey;
-use WeDevs\Dokan\Test\Support\DBAssertionTrait;
-use WeDevs\Dokan\Test\Support\NestedArrayAssertionTrait;
+use WeDevs\Dokan\Test\CustomAssertion\DBAssertionTrait;
+use WeDevs\Dokan\Test\CustomAssertion\NestedArrayAssertionTrait;
 use WP_REST_Server;
 
 /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace WeDevs\Dokan\Test\Support;
+namespace WeDevs\Dokan\Test\CustomAssertion;
 
 trait NestedArrayAssertionTrait {
     /**
