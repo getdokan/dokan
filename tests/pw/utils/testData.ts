@@ -1,8 +1,9 @@
 import { faker } from '@faker-js/faker';
 import { helpers } from '@utils/helpers';
 import 'dotenv/config';
-
 const { ADMIN, ADMIN_PASSWORD, VENDOR, VENDOR2, CUSTOMER, CUSTOMER2, USER_PASSWORD, SITE_PATH, GMAP, MAPBOX, LICENSE_KEY } = process.env;
+
+const basicAuth = (username: string, password: string) => 'Basic ' + Buffer.from(username + ':' + password).toString('base64');
 
 interface user {
     username: string;
@@ -29,6 +30,17 @@ export const data = {
     },
 
     systemInfo: 'playwright/systemInfo.json',
+
+    header: {
+        userAuth: (username: string, password: string = USER_PASSWORD) => {
+            return { extraHTTPHeaders: { Authorization: basicAuth(username, password) } };
+        },
+
+        adminAuth: { extraHTTPHeaders: { Authorization: basicAuth(ADMIN, ADMIN_PASSWORD) } },
+        vendorAuth: { extraHTTPHeaders: { Authorization: basicAuth(VENDOR, ADMIN_PASSWORD) } },
+        vendor2Auth: { extraHTTPHeaders: { Authorization: basicAuth(VENDOR2, ADMIN_PASSWORD) } },
+        customerAuth: { extraHTTPHeaders: { Authorization: basicAuth(CUSTOMER, ADMIN_PASSWORD) } },
+    },
 
     auth: {
         adminAuthFile: 'playwright/.auth/adminStorageState.json',

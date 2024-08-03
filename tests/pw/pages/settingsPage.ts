@@ -113,6 +113,10 @@ export class SettingsPage extends AdminPage {
             await this.enableSwitcher(settingsAdmin.selling.enableMinMaxAmount);
         }
 
+        // catalog mode
+        await this.enableSwitcher(settingsAdmin.selling.removeAddToCartButton);
+        await this.enableSwitcher(settingsAdmin.selling.hideProductPrice);
+
         // save settings
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.selling.sellingOptionsSaveChanges);
         await this.toHaveValue(settingsAdmin.selling.adminCommission, selling.adminCommission);

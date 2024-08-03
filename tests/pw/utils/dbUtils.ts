@@ -51,8 +51,21 @@ export const dbUtils = {
         return res;
     },
 
+    // get user meta
+    async getUserMeta(userId: string, metaKey: string): Promise<any> {
+        const querySelect = `Select meta_value FROM ${dbPrefix}_usermeta WHERE user_id = '${userId}' AND meta_key = '${metaKey}';`;
+        const res = await dbUtils.dbQuery(querySelect);
+        const userMeta = unserialize(res[0].meta_value, {
+            WP_Term: function () {
+                return {};
+            },
+        }); //todo: added to handle WP_Term error, test if it works for further cases
+        // console.log(userMeta);
+        return userMeta;
+    },
+
     // create user meta
-    async createUserMeta(userId: string, metaKey: string, metaValue: object | string, serializeData?: string): Promise<any> {
+    async setUserMeta(userId: string, metaKey: string, metaValue: object | string, serializeData?: boolean): Promise<any> {
         metaValue = serializeData ? serialize(metaValue) : metaValue;
         const metaExists = await dbUtils.dbQuery(`SELECT EXISTS (SELECT 1 FROM ${dbPrefix}_usermeta WHERE user_id = '${userId}' AND meta_key = '${metaKey}') AS row_exists;`);
         const queryUpdate = metaExists[0].row_exists
@@ -61,6 +74,15 @@ export const dbUtils = {
         const res = await dbUtils.dbQuery(queryUpdate);
         // console.log(res);
         return res;
+    },
+
+    // update dokan settings
+    async updateUserMeta(userId: string, metaKey: string, updatedMetaValue: object): Promise<[object, object]> {
+        const currentMetaValue = await this.getUserMeta(userId, metaKey);
+        const newMetaValue = helpers.deepMergeObjects(currentMetaValue, updatedMetaValue); //todo: update method when updatedMetaValue is string
+        // console.log('newSettings:', newMetaValue);
+        await this.setUserMeta(userId, metaKey, newMetaValue, true);
+        return [currentMetaValue, newMetaValue];
     },
 
     // get dokan settings

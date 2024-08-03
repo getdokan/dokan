@@ -1969,6 +1969,10 @@ export const selector = {
                     newVendorEnableAuction: '.new_seller_enable_auction .switch',
                     enableMinMaxQuantities: '.enable_min_max_quantity .switch',
                     enableMinMaxAmount: '.enable_min_max_amount .switch',
+
+                    removeAddToCartButton: '.catalog_mode_hide_add_to_cart_button .switch',
+                    hideProductPrice: '.catalog_mode_hide_product_price .switch',
+
                     disableShipping: '.disable_shipping_tab .switch',
                     sellingOptionsSaveChanges: '#submit',
                 },
@@ -6682,6 +6686,7 @@ export const selector = {
                 productTitle: '#main .products .woocommerce-loop-product__title',
                 productPrice: '#main .products .price',
                 addToCart: '#main .products a.add_to_cart_button',
+                addToQuote: '#main .products .dokan_add_to_quote_button',
                 viewCart: 'a.added_to_cart',
                 bidNow: '.button.product_type_auction',
             },
@@ -7071,6 +7076,7 @@ export const selector = {
                 productTitle: '.seller-items .product .woocommerce-loop-product__title',
                 productPrice: '.seller-items .product .price',
                 addToCart: '.seller-items .product .add_to_cart_button',
+                addToQuote: '.seller-items .product .dokan_add_to_quote_button',
             },
 
             // Pagination

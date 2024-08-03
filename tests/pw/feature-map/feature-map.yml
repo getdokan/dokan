@@ -130,7 +130,7 @@
           customer can view order note [lite]: true
           customer can pay pending payment order [lite]: true
           customer can cancel order [lite]: true
-          customer can order again [lite]: false
+          customer can order again [lite]: true
 
 - page: 'Orders'
   features:
@@ -283,13 +283,15 @@
 - page: 'Catalog Mode'
   features:
       admin:
-          admin can set catalog settings [lite]: false
+          admin can set catalog settings [lite]: true
+          admin can disable hide product price in catalog mode [lite]: true
       vendor:
-          vendor can set catalog settings [lite]: true
-          vendor can add catalog mode [lite]: false
-          vendor can hide product price in catalog mode [lite]: false
+          vendor can set catalog mode (storewide) [lite]: true
+          vendor can set catalog mode (single product) [lite]: true
+          vendor can disable hide product price in catalog mode [lite]: true
+          vendor can enable RFQ in catalog mode: false
       customer:
-          customer can view product in catalog mode [lite]: false
+          customer can view product in catalog mode [lite]: true
 
 - page: 'Privacy Policy'
   features:
@@ -594,7 +596,7 @@
           admin can add EU compliance data on user profile (vendor) edit: true
           admin can update EU compliance data on user profile (vendor) edit: true
           admin can update update EU compliance data on vendor profile edit: true
-          admin can hide vendor EU compliance data from single store page: true
+          admin can hide vendors EU compliance data from single store page: true
           admin can view customer EU compliance data on order details: false
           admin can view vendor EU compliance data on order details: false
           admin can disable EU compliance fields for vendors: false

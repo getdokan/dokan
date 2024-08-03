@@ -1350,6 +1350,12 @@ export const dbData = {
                 dokan_bank_name: 'dokan_bank_name',
                 dokan_bank_iban: 'dokan_bank_iban',
             },
+
+            CatalogMode: {
+                catalog_mode_settings: '',
+                catalog_mode_hide_add_to_cart_button: 'on',
+                catalog_mode_hide_product_price: 'on',
+            },
         },
     },
 };

@@ -55,23 +55,21 @@ export const payloads = {
         zip: 'application/zip',
     },
 
+    // headers
+    authHeader: (username: string, password: string = USER_PASSWORD) => {
+        return { extraHTTPHeaders: { Authorization: basicAuth(username, password) } };
+    },
+
     // user auth
 
-    adminAuth: {
-        Authorization: basicAuth(ADMIN, ADMIN_PASSWORD),
+    userAuth: (username: string, password: string = USER_PASSWORD) => {
+        return { Authorization: basicAuth(username, password) };
     },
 
-    vendorAuth: {
-        Authorization: basicAuth(VENDOR, USER_PASSWORD),
-    },
-
-    vendor2Auth: {
-        Authorization: basicAuth(VENDOR2, USER_PASSWORD),
-    },
-
-    customerAuth: {
-        Authorization: basicAuth(CUSTOMER, USER_PASSWORD),
-    },
+    adminAuth: { Authorization: basicAuth(ADMIN, ADMIN_PASSWORD) },
+    vendorAuth: { Authorization: basicAuth(VENDOR, USER_PASSWORD) },
+    vendor2Auth: { Authorization: basicAuth(VENDOR2, USER_PASSWORD) },
+    customerAuth: { Authorization: basicAuth(CUSTOMER, USER_PASSWORD) },
 
     admin: {
         username: ADMIN,
@@ -98,6 +96,21 @@ export const payloads = {
                 email: 'paypal@g.c',
             },
         },
+    },
+
+    // product meta data
+
+    // catalog mode
+    catalogMode: {
+        meta_data: [
+            {
+                key: '_dokan_catalog_mode',
+                value: {
+                    hide_add_to_cart_button: 'on',
+                    hide_product_price: 'on',
+                },
+            },
+        ],
     },
 
     // product
@@ -1150,6 +1163,11 @@ export const payloads = {
         setting_minimum_order_amount: '',
         setting_order_percentage: '',
         find_address: 'Dhaka',
+        catalog_mode: {
+            hide_add_to_cart_button: 'off',
+            hide_product_price: 'off',
+            request_a_quote_enabled: 'off',
+        },
         product_sections: {
             advertised: 'no',
             featured: 'no',
@@ -1180,6 +1198,13 @@ export const payloads = {
             default_location_name: 'Default',
         },
         store_locations: [],
+    },
+
+    // catalog mode settings
+    catalogModeSetting: {
+        hide_add_to_cart_button: 'on',
+        hide_product_price: 'on',
+        request_a_quote_enabled: 'on',
     },
 
     // attribute

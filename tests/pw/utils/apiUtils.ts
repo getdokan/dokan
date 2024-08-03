@@ -167,7 +167,7 @@ export class ApiUtils {
     }
 
     // create store
-    async createStore(payload: any, auth?: auth, addUserAddress: boolean = false): Promise<[responseBody, string, string]> {
+    async createStore(payload: any, auth?: auth, addUserAddress: boolean = false): Promise<[responseBody, string, string, string]> {
         const [response, responseBody] = await this.post(endPoints.createStore, { data: payload, headers: auth }, false);
         let sellerId: string;
         let storeName: string;
@@ -189,7 +189,7 @@ export class ApiUtils {
         // add vendor user address
         addUserAddress && (await this.updateCustomer(sellerId, payloads.updateAddress, payloads.adminAuth));
 
-        return [responseBody, sellerId, storeName];
+        return [responseBody, sellerId, storeName, payload.user_login];
     }
 
     // update store

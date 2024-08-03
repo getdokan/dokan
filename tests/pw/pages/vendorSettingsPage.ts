@@ -347,7 +347,7 @@ export class VendorSettingsPage extends VendorPage {
         const catalogModeEnabled = await this.isVisible(settingsVendor.removeAddToCartButton);
         if (catalogModeEnabled) {
             await this.check(settingsVendor.removeAddToCartButton);
-            await this.check(settingsVendor.hideProductPrice);
+            await this.checkIfVisible(settingsVendor.hideProductPrice);
             await this.checkIfVisible(settingsVendor.enableRequestQuoteSupport);
         }
     }
