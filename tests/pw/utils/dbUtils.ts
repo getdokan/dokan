@@ -85,6 +85,15 @@ export const dbUtils = {
         return res;
     },
 
+    // update dokan settings
+    async updateDokanSettings(optionName: string, updatedSettings: object): Promise<[object, object]> {
+        const currentSettings = await this.getDokanSettings(optionName);
+        const newSettings = helpers.deepMergeObjects(currentSettings, updatedSettings);
+        // console.log('newSettings:', newSettings);
+        await this.setDokanSettings(optionName, newSettings);
+        return [currentSettings, newSettings];
+    },
+
     // get selling info
     async getSellingInfo(): Promise<[commission, feeRecipient]> {
         const res = await this.getDokanSettings(dbData.dokan.optionName.selling);

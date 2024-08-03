@@ -102,6 +102,7 @@ export class BasePage {
     async goIfNotThere(subPath: string): Promise<void> {
         if (!this.isCurrentUrl(subPath)) {
             const url = this.createUrl(subPath);
+            // console.log('url: ', url);
             await this.page.goto(url, { waitUntil: 'networkidle' });
             // await this.page.goto(url, { waitUntil: 'domcontentloaded' }); //doesn't work for backend
             // this.page.waitForURL(url + '/**', { waitUntil: 'networkidle' });

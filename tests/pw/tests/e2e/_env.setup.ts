@@ -118,9 +118,7 @@ setup.describe('setup site & woocommerce & dokan settings', () => {
     });
 
     setup('disable storefront sticky add to cart', { tag: ['@lite'] }, async () => {
-        const storefrontSettings = await dbUtils.getDokanSettings('theme_mods_storefront');
-        storefrontSettings['storefront_sticky_add_to_cart'] = false;
-        await dbUtils.setDokanSettings('theme_mods_storefront', storefrontSettings);
+        await dbUtils.updateDokanSettings('theme_mods_storefront', { storefront_sticky_add_to_cart: false });
     });
 
     setup.skip('disable germanized settings', { tag: ['@pro', '@admin'] }, async () => {
@@ -208,9 +206,7 @@ setup.describe('setup dokan settings', () => {
 
     setup('admin set dokan page settings', { tag: ['@lite'] }, async () => {
         const [, pageId] = await apiUtils.createPage(payloads.tocPage, payloads.adminAuth);
-        const pageSettings = await dbUtils.getDokanSettings(dbData.dokan.optionName.page);
-        pageSettings['reg_tc_page'] = String(pageId);
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.page, pageSettings);
+        await dbUtils.updateDokanSettings(dbData.dokan.optionName.page, { reg_tc_page: pageId });
     });
 
     setup('admin set dokan appearance settings', { tag: ['@lite'] }, async () => {
@@ -219,8 +215,7 @@ setup.describe('setup dokan settings', () => {
 
     setup('admin set dokan privacy policy settings', { tag: ['@lite'] }, async () => {
         const [, pageId] = await apiUtils.createPage(payloads.privacyPolicyPage, payloads.adminAuth);
-        dbData.dokan.privacyPolicySettings.privacy_page = String(pageId);
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.privacyPolicy, dbData.dokan.privacyPolicySettings);
+        await dbUtils.setDokanSettings(dbData.dokan.optionName.privacyPolicy, { ...dbData.dokan.privacyPolicySettings, privacy_page: String(pageId) });
     });
 
     setup('admin set dokan color settings', { tag: ['@pro'] }, async () => {

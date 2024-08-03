@@ -407,4 +407,38 @@ export const helpers = {
         const b = parseInt(hex.substring(5, 7), 16);
         return `rgb(${r}, ${g}, ${b})`;
     },
+
+    // deep merge arrays
+    deepMergeArrays(targetArray: any[], sourceArray: any[]) {
+        if (targetArray.every((item: any) => item instanceof Object && !(item instanceof Array)) && sourceArray.every(item => item instanceof Object && !(item instanceof Array))) {
+            const mergedArray = [...targetArray];
+            sourceArray.forEach((item: { [key: string]: any }, index: number) => {
+                if (index < mergedArray.length && item instanceof Object && !(item instanceof Array)) {
+                    mergedArray[index] = this.deepMergeObjects(mergedArray[index], item);
+                } else {
+                    mergedArray.push(item);
+                }
+            });
+            return mergedArray;
+        } else {
+            return [...sourceArray];
+        }
+    },
+
+    // deep merge objects
+    deepMergeObjects(target: { [key: string]: any }, source: { [key: string]: any }) {
+        const result = { ...target };
+
+        for (const key of Object.keys(source)) {
+            if (source[key] instanceof Object && target[key] instanceof Object) {
+                result[key] = this.deepMergeObjects(target[key], source[key]);
+            } else if (Array.isArray(source[key]) && Array.isArray(target[key])) {
+                result[key] = this.deepMergeArrays(target[key], source[key]);
+            } else {
+                result[key] = source[key];
+            }
+        }
+
+        return result;
+    },
 };

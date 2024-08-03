@@ -55,6 +55,7 @@ test.describe('shipping test', () => {
         const [, zoneId, zoneName] = await apiUtils.createShippingZone({ ...payloads.createRandomShippingZone() }, payloads.adminAuth);
         await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodFlatRate, payloads.adminAuth);
         await admin.deleteShippingMethod(zoneName, 'Flat rate');
+        await apiUtils.deleteShippingZone(zoneId, payloads.adminAuth);
     });
 
     test('admin can delete shipping zone', { tag: ['@lite', '@admin'] }, async () => {
