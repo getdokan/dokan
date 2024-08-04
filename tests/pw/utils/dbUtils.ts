@@ -77,11 +77,11 @@ export const dbUtils = {
     },
 
     // update dokan settings
-    async updateUserMeta(userId: string, metaKey: string, updatedMetaValue: object): Promise<[object, object]> {
+    async updateUserMeta(userId: string, metaKey: string, updatedMetaValue: any, serializeData?: boolean): Promise<[object, object]> {
         const currentMetaValue = await this.getUserMeta(userId, metaKey);
-        const newMetaValue = helpers.deepMergeObjects(currentMetaValue, updatedMetaValue); //todo: update method when updatedMetaValue is string
+        const newMetaValue = typeof updatedMetaValue === 'object' ? helpers.deepMergeObjects(currentMetaValue, updatedMetaValue) : updatedMetaValue;
         // console.log('newSettings:', newMetaValue);
-        await this.setUserMeta(userId, metaKey, newMetaValue, true);
+        await this.setUserMeta(userId, metaKey, newMetaValue, serializeData);
         return [currentMetaValue, newMetaValue];
     },
 

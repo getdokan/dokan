@@ -382,6 +382,7 @@ export const selector = {
                 filters: {
                     filterByStore: '.multiselect__select',
                     filterInput: '.multiselect__input',
+                    clearFilterCrossButton: '//i[@class="dashicons dashicons-no"]/..',
                     clearFilter: '//button[normalize-space()="Clear"]',
                     filteredResult: (storeName: string) => `//span[contains(text(), '${storeName}')]/..`,
                 },
@@ -3400,7 +3401,7 @@ export const selector = {
 
         // Vendor Dashboard
         vDashboard: {
-            dokanAlert: '.dokan-alert.dokan-alert-warning',
+            dokanNotice: 'div.dokan-alert.dokan-alert-warning',
 
             // Dashboard Menus
             menuParent: '#dokan-navigation ul.dokan-dashboard-menu',
@@ -4628,6 +4629,8 @@ export const selector = {
             reverseWithdrawalNotice: {
                 noticeDiv: 'div.dokan-alert.dokan-alert-danger',
                 noticeText: 'div.dokan-alert.dokan-alert-danger strong',
+                noticeTextGracePeriod: '//strong[contains(text(),"You have a reverse withdrawal balance of")]/..',
+                noticeTextAfterGracePeriod: '//strong[contains(text(),"Below actions have been taken due to unpaid reverse withdrawal balance:")]/..',
             },
 
             reverseBalanceSection: {
@@ -6617,7 +6620,7 @@ export const selector = {
 
                 closedTicket: {
                     closedTicketHeading: '//strong[normalize-space()="Ticket Closed"]',
-                    closedTicketMessage: '.dokan-alert.dokan-alert-warning',
+                    closedTicketMessage: 'div.dokan-alert.dokan-alert-warning',
                 },
             },
         },
@@ -6995,6 +6998,9 @@ export const selector = {
         // Customer Single Store
         cSingleStore: {
             singleStoreDiv: 'div.dokan-single-store',
+
+            storeNotice: 'p.dokan-info',
+
             // Store Profile Summary
             storeProfile: {
                 storeProfileSummary: '.dokan-single-store .profile-info-summery',
@@ -7077,6 +7083,7 @@ export const selector = {
                 productPrice: '.seller-items .product .price',
                 addToCart: '.seller-items .product .add_to_cart_button',
                 addToQuote: '.seller-items .product .dokan_add_to_quote_button',
+                readMore: '//ul[contains(@class,"products")]//a[normalize-space(text())="Read more"]',
             },
 
             // Pagination
@@ -7172,7 +7179,7 @@ export const selector = {
                 actionsColumn: 'th.order-actions',
             },
 
-            noOrdersFound: '.dokan-info',
+            noOrdersFound: 'p.dokan-info',
             orderNumber: (orderNumber: string) => `//a[normalize-space()="${orderNumber}"]`,
             orderView: (orderNumber: string) => `//a[normalize-space()="${orderNumber}"]/../..//a[@class="button view"]`,
             orderPay: (orderNumber: string) => `//a[normalize-space()="${orderNumber}"]/../..//a[@class="button pay"]`,
@@ -7541,7 +7548,7 @@ export const selector = {
 
                 subOrders: {
                     subOrders: '//h2[normalize-space()="Sub Orders"]',
-                    multiVendorNote: '.dokan-info',
+                    multiVendorNote: 'p.dokan-info',
                     multiOrders: '.my_account_orders',
                     // note: 'This order has products from multiple vendors. So we divided this order into multiple vendor orders. Each order will be handled by their respective vendor independently.'
                 },

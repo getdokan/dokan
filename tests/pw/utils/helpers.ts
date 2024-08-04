@@ -82,6 +82,15 @@ export const helpers = {
     currentYear: new Date().getFullYear(),
 
     // current day [2023-06-02]
+    previousDate: (): string => {
+        const result = new Date();
+        result.setDate(result.getDate() - 1);
+        return result.toLocaleDateString('en-CA');
+    },
+
+    // (new Date() -1 ).toLocaleDateString('en-CA'),
+
+    // current day [2023-06-02]
     currentDate: new Date().toLocaleDateString('en-CA'),
 
     // current day [August 22, 2023]

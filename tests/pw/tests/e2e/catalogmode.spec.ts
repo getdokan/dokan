@@ -55,7 +55,7 @@ test.describe('Catalogmode test', () => {
     });
 
     test('admin can disable hide product price in catalog mode', { tag: ['@lite', '@admin'] }, async () => {
-        const [previouseSettings] = await dbUtils.updateDokanSettings(dbData.dokan.optionName.selling, { ...dbData.testData.dokan.CatalogMode, catalog_mode_hide_product_price: 'off' });
+        const [previouseSettings] = await dbUtils.updateDokanSettings(dbData.dokan.optionName.selling, { ...dbData.testData.dokan.catalogMode, catalog_mode_hide_product_price: 'off' });
         await vendor.accessCatalogModeSettings();
 
         // reset

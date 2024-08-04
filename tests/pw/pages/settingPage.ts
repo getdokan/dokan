@@ -119,10 +119,10 @@ export class SettingPage extends AdminPage {
     async enableVendorSelling(status: string) {
         await this.vendorPage.vendorRegister(data.vendor.vendorInfo, { ...data.vendorSetupWizard, choice: false });
         if (status == 'on') {
-            await this.notToBeVisible(selector.vendor.vDashboard.dokanAlert);
+            await this.notToBeVisible(selector.vendor.vDashboard.dokanNotice);
         } else {
-            await this.toBeVisible(selector.vendor.vDashboard.dokanAlert);
-            await this.toContainText(selector.vendor.vDashboard.dokanAlert, 'Error! Your account is not enabled for selling, please contact the admin');
+            await this.toBeVisible(selector.vendor.vDashboard.dokanNotice);
+            await this.toContainText(selector.vendor.vDashboard.dokanNotice, 'Error! Your account is not enabled for selling, please contact the admin');
         }
     }
 

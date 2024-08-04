@@ -1351,10 +1351,16 @@ export const dbData = {
                 dokan_bank_iban: 'dokan_bank_iban',
             },
 
-            CatalogMode: {
+            catalogMode: {
                 catalog_mode_settings: '',
                 catalog_mode_hide_add_to_cart_button: 'on',
                 catalog_mode_hide_product_price: 'on',
+            },
+
+            reverseWithdrawalFailedActions: {
+                enable_catalog_mode: 'enable_catalog_mode',
+                hide_withdraw_menu: 'hide_withdraw_menu',
+                status_inactive: 'status_inactive',
             },
         },
     },

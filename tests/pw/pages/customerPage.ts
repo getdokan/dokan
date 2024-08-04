@@ -65,7 +65,7 @@ export class CustomerPage extends BasePage {
 
     // got to checkout from cart
     async goToCheckoutFromCart(): Promise<void> {
-        await this.clickAndAcceptAndWaitForResponseAndLoadState(data.subUrls.frontend.checkout, customerCart.proceedToCheckout);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.checkout, customerCart.proceedToCheckout);
     }
 
     // customer details
@@ -344,7 +344,7 @@ export class CustomerPage extends BasePage {
     }
 
     // place order
-    async paymentOrder(paymentMethod = 'bank'): Promise<string> {
+    async paymentOrder(paymentMethod = 'bank'): Promise<string> {  //todo: refactor like place order after vendor subscription tests are merged
         switch (paymentMethod) {
             case 'bank':
                 await this.click(customerCheckout.directBankTransfer);
@@ -370,6 +370,7 @@ export class CustomerPage extends BasePage {
                 break;
         }
 
+        await this.focusOnLocator(customerCheckout.placeOrder);
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.orderReceived, customerCheckout.placeOrder);
         await this.toBeVisible(selector.customer.cOrderReceived.orderReceivedSuccessMessage);
         return (await this.getElementText(selector.customer.cOrderReceived.orderDetails.orderNumber)) as string; // remove after solving api issue in -> return request before all

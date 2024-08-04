@@ -269,13 +269,14 @@
   features:
       admin:
           admin can view reverse withdrawal menu page [lite]: true
-          admin can filter reverse withdrawal by store [lite]: false
+          admin can filter reverse withdrawal by store [lite]: true
           admin can filter reverse withdrawal by date [lite]: false
-          admin can clear reverse withdrawal filters: false
+          admin can clear reverse withdrawal filters: true
           admin can add reverse withdrawal [lite]: true
       vendor:
           vendor can view reverse withdrawal menu page [lite]: true
-          vendor can view reverse withdrawal notice [lite]: true
+          vendor can view reverse withdrawal notice (In grace period) [lite]: true
+          vendor can view reverse withdrawal notice (after grace period) [lite]: true
           vendor can view reverse withdrawal announcement [lite]: true
           vendor can filter reverse withdrawals by date [lite]: true
           vendor can pay reverse withdrawal balance [lite]: true
