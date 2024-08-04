@@ -95,11 +95,13 @@ export class ApiUtils {
     // get responseBody
     async getResponseBody(response: APIResponse, assert = true): Promise<responseBody> {
         try {
-            assert && expect(response.ok()).toBeTruthy();
+            if (assert) expect(response.ok()).toBeTruthy();
+            
             const responseBody = response.status() !== 204 && (await response.json()); // 204 is for No Content
 
             // console log responseBody if response code is not between 200-299
-            String(response.status())[0] != '2' && console.log('ResponseBody: ', responseBody);
+            if (String(response.status())[0] != '2') console.log('ResponseBody: ', responseBody);
+
             return responseBody;
         } catch (err: any) {
             console.log('End-point: ', response.url());
@@ -187,7 +189,9 @@ export class ApiUtils {
         }
 
         // add vendor user address
-        addUserAddress && (await this.updateCustomer(sellerId, payloads.updateAddress, payloads.adminAuth));
+        if (addUserAddress) {
+            await this.updateCustomer(sellerId, payloads.updateAddress, payloads.adminAuth);
+        }
 
         return [responseBody, sellerId, storeName, payload.user_login];
     }
@@ -432,8 +436,7 @@ export class ApiUtils {
 
     // create attribute term
     async createAttributeTerm(attribute: any, attributeTerm: object, auth?: auth): Promise<[responseBody, string, string]> {
-        let attributeId: string;
-        typeof attribute === 'object' ? ([, attributeId] = await this.createAttribute(attribute, auth)) : (attributeId = attribute);
+        const attributeId = typeof attribute === 'object' ? (await this.createAttribute(attribute, auth))[1] : attribute;
         const [, responseBody] = await this.post(endPoints.createAttributeTerm(attributeId), { data: attributeTerm, headers: auth });
         const attributeTermId = String(responseBody?.id);
         return [responseBody, attributeId, attributeTermId];
@@ -641,8 +644,7 @@ export class ApiUtils {
 
     // create order note
     async createOrderNote(product: string | object, order: object | string, orderNote: object, auth?: auth): Promise<[responseBody, string, string]> {
-        let orderId: string;
-        typeof order === 'object' ? ([, , orderId] = await this.createOrder(product, order, auth)) : (orderId = order);
+        const orderId = typeof order === 'object' ? (await this.createOrder(product, order, auth))[2] : order;
         const [, responseBody] = await this.post(endPoints.createOrderNote(orderId), { data: orderNote, headers: auth });
         const orderNoteId = String(responseBody?.id);
         return [responseBody, orderId, orderNoteId];
@@ -882,8 +884,7 @@ export class ApiUtils {
 
     // create a wholesale customer
     async createWholesaleCustomer(payload: string | object, auth?: auth): Promise<[responseBody, string]> {
-        let customerId: string;
-        typeof payload === 'object' ? ([, customerId] = await this.createCustomer(payload, auth)) : (customerId = payload);
+        const customerId = typeof payload === 'object' ? (await this.createCustomer(payload, auth))[1] : payload;
         const [, responseBody] = await this.post(endPoints.createWholesaleCustomer, { data: { id: String(customerId) }, headers: auth });
         return [responseBody, customerId];
     }
@@ -1696,8 +1697,7 @@ export class ApiUtils {
 
     // create product review
     async createProductReview(payload: string | object, review: object, auth?: auth): Promise<[responseBody, string, string]> {
-        let productId: string;
-        typeof payload === 'object' ? ([, productId] = await this.createProduct(payload, auth)) : (productId = payload);
+        const productId = typeof payload === 'object' ? (await this.createProduct(payload, auth))[1] : payload;
         const [, responseBody] = await this.post(endPoints.wc.createReview, { data: { ...review, product_id: productId }, headers: auth });
         const reviewId = String(responseBody?.id);
         const reviewMessage = String(responseBody?.review);

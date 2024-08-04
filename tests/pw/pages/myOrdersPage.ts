@@ -50,7 +50,9 @@ export class MyOrdersPage extends CustomerPage {
         // customer details are visible
         await this.multipleElementVisible(selector.customer.cOrderDetails.customerDetails);
 
-        DOKAN_PRO && (await this.toBeVisible(selector.customer.cOrderDetails.getSupport));
+        if (DOKAN_PRO) {
+            await this.toBeVisible(selector.customer.cOrderDetails.getSupport);
+        }
     }
 
     // view order note

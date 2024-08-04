@@ -103,7 +103,11 @@ setup.describe('authenticate users & set permalink', () => {
         if (res) {
             res = await apiUtils.pluginsActiveOrNot(data.plugin.dokanPro, payloads.adminAuth);
         }
-        DOKAN_PRO ? expect(res).toBeTruthy() : expect(res).toBeFalsy();
+        if (DOKAN_PRO) {
+            expect(res).toBeTruthy();
+        } else {
+            expect(res).toBeFalsy();
+        }
     });
 
     setup('get test environment info', { tag: ['@lite'] }, async () => {

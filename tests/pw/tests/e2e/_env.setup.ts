@@ -28,7 +28,11 @@ setup.describe('setup site & woocommerce & dokan settings', () => {
     setup('check active plugins', { tag: ['@lite'] }, async () => {
         setup.skip(LOCAL, 'skip plugin check on local');
         const activePlugins = (await apiUtils.getAllPlugins({ status: 'active' })).map((a: { plugin: string }) => a.plugin.split('/')[1]);
-        DOKAN_PRO ? expect(activePlugins).toEqual(expect.arrayContaining(data.plugin.plugins)) : expect(activePlugins).toEqual(expect.arrayContaining(data.plugin.pluginsLite));
+        if (DOKAN_PRO) {
+            expect(activePlugins).toEqual(expect.arrayContaining(data.plugin.plugins));
+        } else {
+            expect(activePlugins).toEqual(expect.arrayContaining(data.plugin.pluginsLite));
+        }
     });
 
     setup('set wordPress site settings', { tag: ['@lite'] }, async () => {
@@ -39,7 +43,9 @@ setup.describe('setup site & woocommerce & dokan settings', () => {
     setup('set woocommerce settings', { tag: ['@lite'] }, async () => {
         await apiUtils.updateBatchWcSettingsOptions('general', payloads.general);
         await apiUtils.updateBatchWcSettingsOptions('account', payloads.account);
-        HPOS && (await apiUtils.updateBatchWcSettingsOptions('advanced', payloads.advanced));
+        if (HPOS) {
+            await apiUtils.updateBatchWcSettingsOptions('advanced', payloads.advanced);
+        }
     });
 
     setup('set dokan license', { tag: ['@pro'] }, async () => {
@@ -114,7 +120,9 @@ setup.describe('setup site & woocommerce & dokan settings', () => {
     setup('disable simple-auction ajax bid check', { tag: ['@pro'] }, async () => {
         setup.skip(!DOKAN_PRO, 'skip on lite');
         const [, , status] = await apiUtils.getSinglePlugin('woocommerce-simple-auctions/woocommerce-simple-auctions', payloads.adminAuth);
-        status === 'active' && (await dbUtils.updateWpOptionTable('simple_auctions_live_check', 'no'));
+        if (status === 'active') {
+            await dbUtils.updateWpOptionTable('simple_auctions_live_check', 'no');
+        }
     });
 
     setup('disable storefront sticky add to cart', { tag: ['@lite'] }, async () => {

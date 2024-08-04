@@ -7353,7 +7353,7 @@ export const selector = {
             vendorShippingMethod: (shippingMethod: string) => `//label[contains(text(),'${shippingMethod}')]/..//input`, // For Unique Shipping Method
 
             // Proceed to Checkout
-            proceedToCheckout: '//div[@class="wc-block-cart__submit-container"]//a[@href="https://dokan4.test/checkout/"]',
+            proceedToCheckout: '//div[@class="wc-block-cart__submit-container"]//a[contains(@href,"/checkout/") and contains(@class,"wc-block-cart__submit-button")]',
 
             // Remove All Item
             productCrossIcon: '.product-remove a',

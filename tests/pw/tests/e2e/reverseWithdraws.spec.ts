@@ -23,8 +23,6 @@ test.describe('Reverse withdraw test', () => {
         aPage = await adminContext.newPage();
         admin = new ReverseWithdrawsPage(aPage);
 
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.reverseWithdraw, dbData.dokan.reverseWithdrawSettings);
-
         apiUtils = new ApiUtils(await request.newContext());
 
         [, sellerId, storeName, vendorName] = await apiUtils.createStore(payloads.createStore(), payloads.adminAuth, true);
@@ -42,7 +40,6 @@ test.describe('Reverse withdraw test', () => {
     });
 
     test.afterAll(async () => {
-        // await dbUtils.setDokanSettings(dbData.dokan.optionName.reverseWithdraw, { ...dbData.dokan.reverseWithdrawSettings, enabled: 'off' });
         await aPage.close();
         await vPage.close();
         await apiUtils.dispose();

@@ -65,9 +65,7 @@ export class CustomerPage extends BasePage {
 
     // got to checkout from cart
     async goToCheckoutFromCart(): Promise<void> {
-        // await this.goToCheckout()
-        // await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.checkout, customerCart.proceedToCheckout); // todo: resolve this
-        await this.click(customerCart.proceedToCheckout); // todo: resolve this
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.checkout, customerCart.proceedToCheckout); 
     }
 
     // customer details
