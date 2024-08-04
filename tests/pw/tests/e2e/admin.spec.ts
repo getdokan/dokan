@@ -1,19 +1,11 @@
 import { test, Page } from '@playwright/test';
 import { LoginPage } from '@pages/loginPage';
-import { TaxPage } from '@pages/taxPage';
 import { data } from '@utils/testData';
 
 const { DOKAN_PRO } = process.env;
 
 test.describe('Admin functionality test', () => {
-    let taxPage: TaxPage;
     let aPage: Page;
-
-    test.beforeAll(async ({ browser }) => {
-        const adminContext = await browser.newContext(data.auth.adminAuth);
-        aPage = await adminContext.newPage();
-        taxPage = new TaxPage(aPage);
-    });
 
     test.afterAll(async () => {
         await aPage.close();

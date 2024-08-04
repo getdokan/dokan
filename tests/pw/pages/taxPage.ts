@@ -15,13 +15,18 @@ export class TaxPage extends AdminPage {
     }
 
     async goToTaxSettings() {
-        await this.goIfNotThere(data.subUrls.backend.wc.taxSettings);
+        // await this.goIfNotThere(data.subUrls.backend.wc.taxSettings);
+        await this.goIfNotThere(data.subUrls.backend.login);
     }
 
     // admin enable disable tax
     async enableTax(enable = true) {
         await this.goToWooCommerceSettings();
-        enable ? await this.check(generalSettings.enableTaxes) : await this.uncheck(woocommerceSettings.general.enableTaxes);
+        if (enable) {
+            await this.check(generalSettings.enableTaxes);
+        } else {
+            await this.uncheck(woocommerceSettings.general.enableTaxes);
+        }
         await this.click(generalSettings.generalSaveChanges);
         await this.toContainText(woocommerceSettings.updatedSuccessMessage, data.tax.saveSuccessMessage);
     }

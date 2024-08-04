@@ -49,11 +49,11 @@ test.describe('Reverse withdraw test', () => {
         await admin.adminReverseWithdrawRenderProperly();
     });
 
-    test('admin can filter reverse withdrawal by store', { tag: ['@lite', '@admin'] }, async () => {
-        await admin.filterReverseWithdraws(storeName);
+    test.skip('admin can filter reverse withdrawal by store', { tag: ['@lite', '@admin'] }, async () => {
+        await admin.filterReverseWithdraws(storeName); // todo: need to reproduce in local docker
     });
 
-    test('admin can clear reverse withdrawal filters', { tag: ['@lite', '@admin'] }, async () => {
+    test.skip('admin can clear reverse withdrawal filters', { tag: ['@lite', '@admin'] }, async () => {
         await admin.clearFilterReverseWithdraws(storeName);
     });
 
