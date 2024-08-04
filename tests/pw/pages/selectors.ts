@@ -7548,8 +7548,8 @@ export const selector = {
 
                 subOrders: {
                     subOrders: '//h2[normalize-space()="Sub Orders"]',
-                    multiVendorNote: 'p.dokan-info',
-                    multiOrders: '.my_account_orders',
+                    multiVendorNote: 'div.dokan-info',
+                    multiOrders: 'table.my_account_orders',
                     // note: 'This order has products from multiple vendors. So we divided this order into multiple vendor orders. Each order will be handled by their respective vendor independently.'
                 },
             },

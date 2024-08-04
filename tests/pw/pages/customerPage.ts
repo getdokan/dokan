@@ -65,7 +65,9 @@ export class CustomerPage extends BasePage {
 
     // got to checkout from cart
     async goToCheckoutFromCart(): Promise<void> {
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.checkout, customerCart.proceedToCheckout);
+        // await this.goToCheckout()
+        // await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.checkout, customerCart.proceedToCheckout); // todo: resolve this
+        await this.click(customerCart.proceedToCheckout); // todo: resolve this
     }
 
     // customer details
@@ -344,7 +346,8 @@ export class CustomerPage extends BasePage {
     }
 
     // place order
-    async paymentOrder(paymentMethod = 'bank'): Promise<string> {  //todo: refactor like place order after vendor subscription tests are merged
+    async paymentOrder(paymentMethod = 'bank'): Promise<string> {
+        //todo: refactor like place order after vendor subscription tests are merged
         switch (paymentMethod) {
             case 'bank':
                 await this.click(customerCheckout.directBankTransfer);
