@@ -15,8 +15,7 @@ export class TaxPage extends AdminPage {
     }
 
     async goToTaxSettings() {
-        // await this.goIfNotThere(data.subUrls.backend.wc.taxSettings);
-        await this.goIfNotThere(data.subUrls.backend.login);
+        await this.goIfNotThere(data.subUrls.backend.wc.taxSettings);
     }
 
     // admin enable disable tax
