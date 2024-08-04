@@ -1,16 +1,11 @@
-import { test, Page } from '@playwright/test';
+import { test } from '@playwright/test';
 import { LoginPage } from '@pages/loginPage';
 import { data } from '@utils/testData';
 
 const { DOKAN_PRO } = process.env;
 
 test.describe('Admin functionality test', () => {
-    let aPage: Page;
-
-    test.afterAll(async () => {
-        await aPage.close();
-    });
-
+    
     test('admin can login', { tag: ['@lite', '@admin'] }, async ({ page }) => {
         const loginPage = new LoginPage(page);
         await loginPage.adminLogin(data.admin);
