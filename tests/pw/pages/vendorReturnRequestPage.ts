@@ -78,7 +78,9 @@ export class VendorReturnRequestPage extends VendorPage {
         await this.goto(data.subUrls.frontend.vDashboard.returnRequest);
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.returnRequest, vendorReturnRequest.view(orderNumber));
         const sendRefundIsVisible = await this.isVisible(vendorReturnRequest.returnRequestDetails.status.sendRefund);
-        !sendRefundIsVisible && (await this.vendorUpdateRmaStatus(orderNumber, status));
+        if (!sendRefundIsVisible) {
+            await this.vendorUpdateRmaStatus(orderNumber, status);
+        }
         await this.clickAndWaitForResponse(data.subUrls.ajax, vendorReturnRequest.returnRequestDetails.status.sendRefund);
         const taxIsVisible = await this.isVisible(vendorReturnRequest.returnRequestDetails.modal.taxRefundColumn);
         if (taxIsVisible) {
@@ -130,7 +132,9 @@ export class VendorReturnRequestPage extends VendorPage {
         await this.selectByValue(selector.customer.cOrders.requestWarranty.warrantyRequestItemQuantity(productName), refund.itemQuantity);
         await this.selectByValue(selector.customer.cOrders.requestWarranty.warrantyRequestType, refund.refundRequestType);
         const refundReasonIsVisible = await this.isVisible(selector.customer.cOrders.requestWarranty.warrantyRequestReason);
-        refundReasonIsVisible && (await this.selectByValue(selector.customer.cOrders.requestWarranty.warrantyRequestReason, refund.refundRequestReasons));
+        if (refundReasonIsVisible) {
+            await this.selectByValue(selector.customer.cOrders.requestWarranty.warrantyRequestReason, refund.refundRequestReasons);
+        }
         await this.clearAndType(selector.customer.cOrders.requestWarranty.warrantyRequestDetails, refund.refundRequestDetails);
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.requestWarranty, selector.customer.cOrders.requestWarranty.warrantySubmitRequest, 302);
         await this.toContainText(selector.customer.cWooSelector.wooCommerceSuccessMessage, refund.refundSubmitSuccessMessage);

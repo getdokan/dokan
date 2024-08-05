@@ -18,12 +18,16 @@ test.describe.skip('Plugin functionality test', () => {
 
         apiUtils = new ApiUtils(await request.newContext());
         await apiUtils.updatePlugin('dokan/dokan', { status: 'active' }, payloads.adminAuth);
-        DOKAN_PRO && (await apiUtils.updatePlugin('dokan-pro/dokan-pro', { status: 'inactive' }, payloads.adminAuth));
+        if (DOKAN_PRO) {
+            await apiUtils.updatePlugin('dokan-pro/dokan-pro', { status: 'inactive' }, payloads.adminAuth);
+        }
     });
 
     test.afterAll(async () => {
         await apiUtils.updatePlugin('dokan/dokan', { status: 'active' }, payloads.adminAuth);
-        DOKAN_PRO && (await apiUtils.updatePlugin('dokan-pro/dokan-pro', { status: 'active' }, payloads.adminAuth));
+        if (DOKAN_PRO) {
+            await apiUtils.updatePlugin('dokan-pro/dokan-pro', { status: 'active' }, payloads.adminAuth);
+        }
         await aPage.close();
         await apiUtils.dispose();
     });

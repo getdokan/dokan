@@ -143,7 +143,11 @@ export class WholesaleCustomersPage extends AdminPage {
 
     //  wholesale customers bulk action
     async wholesaleCustomerBulkAction(action: string, wholesaleCustomer?: string) {
-        wholesaleCustomer ? await this.searchWholesaleCustomer(wholesaleCustomer) : await this.goIfNotThere(data.subUrls.backend.dokan.wholeSaleCustomer);
+        if (wholesaleCustomer) {
+            await this.searchWholesaleCustomer(wholesaleCustomer);
+        } else {
+            await this.goIfNotThere(data.subUrls.backend.dokan.wholeSaleCustomer);
+        }
 
         // ensure row exists
         await this.notToBeVisible(wholesaleCustomersAdmin.noRowsFound);
@@ -187,8 +191,8 @@ export class WholesaleCustomersPage extends AdminPage {
 
     // assert wholesale price
     async assertWholesalePrice(wholesalePrice: string, minimumWholesaleQuantity: string) {
-        await this.customerPage.goToCheckout();
-        const subtotal = Number(helpers.price((await this.getElementText(selector.customer.cCheckout.orderDetails.cartTotal)) as string));
+        const subtotal = Number(helpers.price((await this.getElementText(selector.customer.cCart.cartDetails.cartTotal)) as string));
+        // const subtotal = Number(helpers.price((await this.getElementText(selector.customer.cCheckout.orderDetails.cartTotal)) as string));
         const calcSubTotal = helpers.roundToTwo(helpers.subtotal([Number(wholesalePrice)], [Number(minimumWholesaleQuantity)]));
         expect(subtotal).toEqual(calcSubTotal);
     }

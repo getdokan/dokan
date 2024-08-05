@@ -112,7 +112,9 @@ export class AdminPage extends BasePage {
         await this.selectByValue(setupWizardAdmin.mapApiSource, dokanSetupWizard.mapApiSource);
         await this.clearAndType(setupWizardAdmin.googleMapApiKey, dokanSetupWizard.googleMapApiKey);
         await this.enableSwitcherSetupWizard(setupWizardAdmin.shareEssentialsOff);
-        DOKAN_PRO && (await this.selectByValue(setupWizardAdmin.sellingProductTypes, dokanSetupWizard.sellingProductTypes));
+        if (DOKAN_PRO) {
+            await this.selectByValue(setupWizardAdmin.sellingProductTypes, dokanSetupWizard.sellingProductTypes);
+        }
         await this.click(setupWizardAdmin.continue);
         // await this.click(setupWizardAdmin.skipThisStep)
 
@@ -127,10 +129,12 @@ export class AdminPage extends BasePage {
         // Withdraw
         await this.enableSwitcherSetupWizard(setupWizardAdmin.payPal);
         await this.enableSwitcherSetupWizard(setupWizardAdmin.bankTransfer);
-        // await this.enableSwitcherSetupWizard(setupWizardAdmin.wirecard)
-        // await this.enableSwitcherSetupWizard(setupWizardAdmin.stripe)
-        DOKAN_PRO && (await this.enableSwitcherSetupWizard(setupWizardAdmin.custom));
-        DOKAN_PRO && (await this.enableSwitcherSetupWizard(setupWizardAdmin.skrill));
+        if (DOKAN_PRO) {
+            // await this.enableSwitcherSetupWizard(setupWizardAdmin.wirecard)
+            // await this.enableSwitcherSetupWizard(setupWizardAdmin.stripe)
+            await this.enableSwitcherSetupWizard(setupWizardAdmin.custom);
+            await this.enableSwitcherSetupWizard(setupWizardAdmin.skrill);
+        }
         await this.clearAndType(setupWizardAdmin.minimumWithdrawLimit, dokanSetupWizard.minimumWithdrawLimit);
         await this.enableSwitcherSetupWizard(setupWizardAdmin.orderStatusForWithdrawCompleted);
         await this.enableSwitcherSetupWizard(setupWizardAdmin.orderStatusForWithdrawProcessing);

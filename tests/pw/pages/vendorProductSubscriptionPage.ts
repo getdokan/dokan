@@ -88,7 +88,9 @@ export class VendorProductSubscriptionPage extends VendorPage {
     async reactivateProductSubscription(subscriptionId: string) {
         await this.goIfNotThere(data.subUrls.frontend.productSubscriptionDetails(subscriptionId));
         const subscriptionIsActive = await this.isVisible(subscriptionsCustomer.subscriptionDetails.actions.cancel);
-        subscriptionIsActive && (await this.cancelProductSubscription(subscriptionId));
+        if (subscriptionIsActive) {
+            await this.cancelProductSubscription(subscriptionId);
+        }
 
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.productSubscriptionDetails(subscriptionId), subscriptionsCustomer.subscriptionDetails.actions.reActivate, 302);
         await this.toContainText(selector.customer.cWooSelector.wooCommerceSuccessMessage, 'Your subscription has been reactivated.');

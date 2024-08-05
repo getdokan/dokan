@@ -23,7 +23,9 @@ export class ShortcodePage extends AdminPage {
     async createPageWithShortcode(pageTitle: string, shortcode: string) {
         await this.goto(data.subUrls.backend.addNewPage, 'domcontentloaded');
         const isModalVisible = await this.isVisible(selector.admin.pages.closeModal);
-        isModalVisible && (await this.click(selector.admin.pages.closeModal));
+        if (isModalVisible) {
+            await this.click(selector.admin.pages.closeModal);
+        }
 
         await this.clearAndType(selector.admin.pages.addTitle, pageTitle);
         await this.click(selector.admin.pages.contentPlaceholder);
@@ -204,7 +206,9 @@ export class ShortcodePage extends AdminPage {
         await this.notToHaveCount(storeList.storeCard.storeCardFooter, 0);
         await this.notToHaveCount(storeList.storeCard.storeAvatar, 0);
         await this.notToHaveCount(storeList.storeCard.visitStore, 0);
-        DOKAN_PRO && (await this.notToHaveCount(storeList.storeCard.followUnFollowButton, 0));
+        if (DOKAN_PRO) {
+            await this.notToHaveCount(storeList.storeCard.followUnFollowButton, 0);
+        }
     }
 
     // view my orders

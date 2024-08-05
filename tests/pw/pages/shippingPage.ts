@@ -23,7 +23,11 @@ export class ShippingPage extends AdminPage {
     async enableShipping(enable = true) {
         await this.goToWooCommerceSettings();
         await this.click(generalSettings.enableShipping);
-        enable ? await this.setDropdownOptionSpan(generalSettings.enableShippingValues, data.shipping.enableShipping) : await this.setDropdownOptionSpan(generalSettings.enableShippingValues, data.shipping.disableShipping);
+        if (enable) {
+            await this.setDropdownOptionSpan(generalSettings.enableShippingValues, data.shipping.enableShipping);
+        } else {
+            await this.setDropdownOptionSpan(generalSettings.enableShippingValues, data.shipping.disableShipping);
+        }
         await this.click(generalSettings.generalSaveChanges);
         await this.toContainText(woocommerceSettings.updatedSuccessMessage, data.shipping.saveSuccessMessage);
     }

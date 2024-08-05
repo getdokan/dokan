@@ -22,7 +22,9 @@ export class SpmvPage extends VendorPage {
         await this.focus(spmvAdmin.searchVendor);
 
         const alreadyAssigned = await this.isVisible(spmvAdmin.unassignVendor(storeName));
-        alreadyAssigned && (await this.clickAndAcceptAndWaitForResponseAndLoadState(data.subUrls.ajax, spmvAdmin.unassignVendor(storeName)));
+        if (alreadyAssigned) {
+            await this.clickAndAcceptAndWaitForResponseAndLoadState(data.subUrls.ajax, spmvAdmin.unassignVendor(storeName));
+        }
 
         await this.typeByPageAndWaitForResponse(data.subUrls.ajax, spmvAdmin.searchVendor, storeName);
         await this.toContainText(spmvAdmin.highlightedResult, storeName);

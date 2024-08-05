@@ -62,7 +62,7 @@ module.exports = async ({ github, context, core }) => {
     const plugins = addList(core);
     await core.summary.clear();
     addSummaryHeadingAndTable(core);
-    plugins && addSummaryFooter(core, plugins);
+    if (plugins) addSummaryFooter(core, plugins);
     const summary = core.summary.stringify();
     await core.summary.write();
     return summary;

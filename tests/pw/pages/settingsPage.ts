@@ -63,7 +63,9 @@ export class SettingsPage extends AdminPage {
         await this.enableSwitcher(settingsAdmin.general.adminAreaAccess);
         await this.clearAndType(settingsAdmin.general.vendorStoreUrl, general.vendorStoreUrl);
         await this.typeFrameSelector(settingsAdmin.general.setupWizardMessageIframe, settingsAdmin.general.setupWizardMessageHtmlBody, general.setupWizardMessage);
-        DOKAN_PRO && (await this.click(settingsAdmin.general.sellingProductTypes(general.sellingProductTypes)));
+        if (DOKAN_PRO) {
+            await this.click(settingsAdmin.general.sellingProductTypes(general.sellingProductTypes));
+        }
 
         // vendor store options
         await this.enableSwitcher(settingsAdmin.general.storeTermsAndConditions);
@@ -200,7 +202,9 @@ export class SettingsPage extends AdminPage {
         await this.enableSwitcher(settingsAdmin.reverseWithdraw.MakeVendorStatusInactive);
 
         await this.enableSwitcher(settingsAdmin.reverseWithdraw.displayNoticeDuringGracePeriod);
-        DOKAN_PRO && (await this.enableSwitcher(settingsAdmin.reverseWithdraw.sendAnnouncement));
+        if (DOKAN_PRO) {
+            await this.enableSwitcher(settingsAdmin.reverseWithdraw.sendAnnouncement);
+        }
 
         // save settings
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.reverseWithdraw.reverseWithdrawSaveChanges);
@@ -309,7 +313,9 @@ export class SettingsPage extends AdminPage {
 
         await this.click(settingsAdmin.vendorVerification.verifiedIcon(vendorVerification.verifiedIcons.userCheckSolid));
         const response = await this.enableSwitcherAndWaitForResponse(data.subUrls.api.dokan.verificationMethods, settingsAdmin.vendorVerification.enableVerificationMethod(vendorVerification.verificationMethods.nationalId));
-        response && (await this.toBeVisible(settingsAdmin.vendorVerification.methodUpdateSuccessMessage));
+        if (response) {
+            await this.toBeVisible(settingsAdmin.vendorVerification.methodUpdateSuccessMessage);
+        }
 
         // save settings
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.vendorVerification.saveChanges);

@@ -84,7 +84,11 @@ export class SettingPage extends AdminPage {
 
     async enableStoreTermsAndConditionsOnRegistration(status: string) {
         await this.vendorPage.openVendorRegistrationForm();
-        status == 'on' ? await this.toBeVisible(selector.customer.cDashboard.termsAndConditions) : await this.notToBeVisible(selector.customer.cDashboard.termsAndConditions);
+        if (status == 'on') {
+            await this.toBeVisible(selector.customer.cDashboard.termsAndConditions);
+        } else {
+            await this.notToBeVisible(selector.customer.cDashboard.termsAndConditions);
+        }
     }
 
     async setShowVendorInfo(productName: string, status: string) {

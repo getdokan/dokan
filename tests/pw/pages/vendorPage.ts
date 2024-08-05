@@ -57,7 +57,9 @@ export class VendorPage extends BasePage {
     async openVendorRegistrationForm() {
         await this.goto(data.subUrls.frontend.myAccount);
         const regIsVisible = await this.isVisible(selector.customer.cRegistration.regEmail);
-        !regIsVisible && (await this.loginPage.logout());
+        if (!regIsVisible) {
+            await this.loginPage.logout();
+        }
         await this.focusAndClick(registrationVendor.regVendor);
         await this.waitForVisibleLocator(registrationVendor.firstName);
     }
@@ -68,7 +70,9 @@ export class VendorPage extends BasePage {
 
         await this.goToMyAccount();
         const regIsVisible = await this.isVisible(selector.customer.cRegistration.regEmail);
-        !regIsVisible && (await this.loginPage.logout());
+        if (!regIsVisible) {
+            await this.loginPage.logout();
+        }
         await this.clearAndType(registrationVendor.regEmail, username + data.vendor.vendorInfo.emailDomain);
         await this.clearAndType(registrationVendor.regPassword, vendorInfo.password);
         await this.focusAndClick(registrationVendor.regVendor);

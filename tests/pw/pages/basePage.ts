@@ -971,7 +971,6 @@ export class BasePage {
     }
 
     // returns the return value of pageFunction as a JSHandle
-    // eslint-disable-next-line @typescript-eslint/ban-types
     async evaluateHandle(selector: string, pageFunction: any): Promise<JSHandle> {
         const locator = this.page.locator(selector);
         return await locator.evaluateHandle(pageFunction);
@@ -1623,7 +1622,7 @@ export class BasePage {
                 console.log('Media Selected');
                 break;
             }
-            isSelectDisabled && (await this.click(selector.wpMedia.selectUploadedMedia));
+            if (isSelectDisabled) await this.click(selector.wpMedia.selectUploadedMedia);
         }
 
         await this.click(selector.wpMedia.select);

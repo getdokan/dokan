@@ -27,7 +27,11 @@ setup.describe('setup site & woocommerce & user settings', () => {
     setup('check active plugins', { tag: ['@lite'] }, async () => {
         setup.skip(LOCAL, 'skip plugin check on local');
         const activePlugins = (await apiUtils.getAllPlugins({ status: 'active' })).map((a: { plugin: string }) => a.plugin.split('/')[1]);
-        DOKAN_PRO ? expect(activePlugins).toEqual(expect.arrayContaining(data.plugin.plugins)) : expect(activePlugins).toEqual(expect.arrayContaining(data.plugin.pluginsLite));
+        if (DOKAN_PRO) {
+            expect(activePlugins).toEqual(expect.arrayContaining(data.plugin.plugins));
+        } else {
+            expect(activePlugins).toEqual(expect.arrayContaining(data.plugin.pluginsLite));
+        }
     });
 
     setup('set wordPress site settings', { tag: ['@lite'] }, async () => {
@@ -38,7 +42,9 @@ setup.describe('setup site & woocommerce & user settings', () => {
     setup('set woocommerce settings', { tag: ['@lite'] }, async () => {
         await apiUtils.updateBatchWcSettingsOptions('general', payloads.general);
         await apiUtils.updateBatchWcSettingsOptions('account', payloads.account);
-        HPOS && (await apiUtils.updateBatchWcSettingsOptions('advanced', payloads.advanced));
+        if (HPOS) {
+            await apiUtils.updateBatchWcSettingsOptions('advanced', payloads.advanced);
+        }
     });
 
     setup('set dokan license', { tag: ['@pro'] }, async () => {

@@ -71,10 +71,14 @@ export default class summaryReport implements Reporter {
 
     onTestEnd(test: TestCase, result: TestResult): void {
         this.testResults[test.id] = test.outcome();
-        test.outcome() !== 'skipped' ? summary.tests.push(test.title) : summary.skipped_tests.push(test.title);
-        test.outcome() == 'expected' && summary.passed_tests.push(test.title);
-        test.outcome() == 'unexpected' && summary.failed_tests.push(test.title);
-        test.outcome() == 'flaky' && summary.flaky_tests.push(test.title);
+        if (test.outcome() !== 'skipped') {
+            summary.tests.push(test.title);
+        } else {
+            summary.skipped_tests.push(test.title);
+        }
+        if (test.outcome() == 'expected') summary.passed_tests.push(test.title);
+        if (test.outcome() == 'unexpected') summary.failed_tests.push(test.title);
+        if (test.outcome() == 'flaky') summary.flaky_tests.push(test.title);
     }
 
     onEnd(result: FullResult): void {

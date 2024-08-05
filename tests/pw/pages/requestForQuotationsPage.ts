@@ -324,7 +324,9 @@ export class RequestForQuotationsPage extends AdminPage {
     async vendorConvertQuoteToOrder(quoteId: string) {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.quoteDetails(quoteId));
         const needApproval = await this.isVisible(requestForQuotationVendor.quoteDetails.approveThisQuote);
-        needApproval && (await this.vendorApproveQuoteRequest(quoteId));
+        if (needApproval) {
+            await this.vendorApproveQuoteRequest(quoteId);
+        }
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.quoteDetails(quoteId), requestForQuotationVendor.quoteDetails.convertToOrder);
         await this.toContainText(requestForQuotationVendor.quoteDetails.message, `Your Quote# ${quoteId} has been converted to Order#`);
     }

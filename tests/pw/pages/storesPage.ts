@@ -54,7 +54,9 @@ export class StoresPage extends AdminPage {
 
         // badges acquired elements are visible
         const badgesAcquired = await this.isVisible(vendors.vendorDetails.vendorSummary.badgesAcquired.badgesAcquired);
-        badgesAcquired && (await this.toBeVisible(vendors.vendorDetails.vendorSummary.badgesAcquired.badgesAcquired));
+        if (badgesAcquired) {
+            await this.toBeVisible(vendors.vendorDetails.vendorSummary.badgesAcquired.badgesAcquired);
+        }
 
         // product & revenue elements are visible
         await this.toBeVisible(vendors.vendorDetails.vendorSummary.productRevenue.productRevenueSection);
@@ -369,7 +371,11 @@ export class StoresPage extends AdminPage {
 
     // vendor bulk action
     async vendorBulkAction(action: string, vendorName?: string) {
-        vendorName ? await this.searchVendor(vendorName) : await this.goIfNotThere(data.subUrls.backend.dokan.vendors);
+        if (vendorName) {
+            await this.searchVendor(vendorName);
+        } else {
+            await this.goIfNotThere(data.subUrls.backend.dokan.vendors);
+        }
 
         // ensure row exists
         await this.notToBeVisible(vendors.noRowsFound);
