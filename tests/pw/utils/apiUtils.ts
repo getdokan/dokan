@@ -883,10 +883,11 @@ export class ApiUtils {
     }
 
     // create a wholesale customer
-    async createWholesaleCustomer(payload: string | object, auth?: auth): Promise<[responseBody, string]> {
+    async createWholesaleCustomer(payload: string | object, auth?: auth): Promise<[responseBody, string, string]> {
         const customerId = typeof payload === 'object' ? (await this.createCustomer(payload, auth))[1] : payload;
         const [, responseBody] = await this.post(endPoints.createWholesaleCustomer, { data: { id: String(customerId) }, headers: auth });
-        return [responseBody, customerId];
+        const customerName = responseBody?.username;
+        return [responseBody, customerId, customerName];
     }
 
     /**

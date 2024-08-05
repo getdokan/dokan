@@ -441,8 +441,8 @@ export const payloads = {
     createWholesaleProduct: () => ({
         name: `${faker.commerce.productName()} (wholesale)`,
         type: 'simple',
-        regular_price: { min: 100, max: 110, dec: faker.helpers.arrayElement([0, 2]) },
-        // regular_price: '114.15' , // failed for this price & 5% tax & 10% commission dokan .1 issue
+        regular_price: faker.finance.amount({ min: 100, max: 110, dec: faker.helpers.arrayElement([0, 2]) }),
+        // regular_price: '100',
         status: 'publish',
         categories: [
             {
@@ -459,8 +459,8 @@ export const payloads = {
                 key: '_dokan_wholesale_meta',
                 value: {
                     enable_wholesale: 'yes',
-                    regular_price: { min: 90, max: 99, dec: faker.helpers.arrayElement([0, 2]) },
-                    // price: '100',
+                    price: faker.finance.amount({ min: 90, max: 99, dec: faker.helpers.arrayElement([0, 2]) }),
+                    // price: '90',
                     quantity: '10',
                 },
             },

@@ -7341,8 +7341,9 @@ export const selector = {
             applyCoupon: 'form#wc-block-components-totals-coupon__form  button',
             removeCoupon: (couponCode: string) => `//span[contains(text(), '${couponCode.toLowerCase()}')]/..//button`,
 
+            // todo: update all cart locators to with block cart locator
             cartDetails: {
-                cartTotal: 'tr.cart-subtotal span.woocommerce-Price-amount.amount',
+                cartTotal: '//span[normalize-space()="Subtotal"]/..//span[contains(@class, "wc-block-components-totals-item__value")]', 
                 shipping: '//ul[@id="shipping_method"]//input[@checked="checked"]/..//span[@class="woocommerce-Price-amount amount"]',
                 tax: 'tr.tax-rate span.woocommerce-Price-amount.amount',
                 orderTotal: 'tr.order-total span.woocommerce-Price-amount.amount',

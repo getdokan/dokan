@@ -65,7 +65,7 @@ export class CustomerPage extends BasePage {
 
     // got to checkout from cart
     async goToCheckoutFromCart(): Promise<void> {
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.checkout, customerCart.proceedToCheckout); 
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.checkout, customerCart.proceedToCheckout);
     }
 
     // customer details
@@ -75,7 +75,7 @@ export class CustomerPage extends BasePage {
         const username = (customerInfo.firstName() + customerInfo.lastName()).replace("'", '');
         await this.goToMyAccount();
         const regIsVisible = await this.isVisible(customerRegistration.regEmail);
-        !regIsVisible && (await this.loginPage.logout());
+        if (!regIsVisible) await this.loginPage.logout();
         await this.clearAndType(customerRegistration.regEmail, username + data.customer.customerInfo.emailDomain);
         await this.clearAndType(customerRegistration.regPassword, customerInfo.password);
         await this.click(customerRegistration.regAsCustomer);
@@ -115,9 +115,9 @@ export class CustomerPage extends BasePage {
 
         await this.clickIfVisible(customerDashboard.termsAndConditions);
         const subscriptionPackIsVisible = await this.isVisible(customerDashboard.subscriptionPack);
-        subscriptionPackIsVisible && (await this.selectByLabel(selector.vendor.vRegistration.subscriptionPack, data.predefined.vendorSubscription.nonRecurring));
+        if (subscriptionPackIsVisible) await this.selectByLabel(selector.vendor.vRegistration.subscriptionPack, data.predefined.vendorSubscription.nonRecurring);
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.becomeVendor, customerDashboard.becomeAVendor, 302);
-        subscriptionPackIsVisible && (await this.placeOrder('bank', false, true, false));
+        if (subscriptionPackIsVisible) await this.placeOrder('bank', false, true, false);
 
         // skip vendor setup wizard
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.dashboard, selector.vendor.vSetup.notRightNow);
@@ -223,8 +223,8 @@ export class CustomerPage extends BasePage {
     async addProductToCartFromSingleProductPage(productName: string, quantity?: string): Promise<void> {
         await this.goToProductDetails(productName);
         const addonIsVisible = await this.isVisible(selector.customer.cSingleProduct.productAddon.addOnSelect);
-        addonIsVisible && this.selectByNumber(selector.customer.cSingleProduct.productAddon.addOnSelect, 1);
-        quantity && (await this.clearAndType(selector.customer.cSingleProduct.productDetails.quantity, String(quantity)));
+        if (addonIsVisible) this.selectByNumber(selector.customer.cSingleProduct.productAddon.addOnSelect, 1);
+        if (quantity) await this.clearAndType(selector.customer.cSingleProduct.productDetails.quantity, String(quantity));
         await this.clickAndWaitForResponse(data.subUrls.frontend.productCustomerPage, selector.customer.cSingleProduct.productDetails.addToCart);
         if (!quantity) {
             await this.toContainText(selector.customer.cWooSelector.wooCommerceSuccessMessage, `“${productName}” has been added to your cart.`);
@@ -236,7 +236,7 @@ export class CustomerPage extends BasePage {
     // add product to cart
     async addProductToCart(productName: string, from: string, clearCart = true, quantity?: string) {
         // clear cart
-        clearCart && (await this.clearCart());
+        if (clearCart) await this.clearCart();
         switch (from) {
             case 'shop':
                 await this.addProductToCartFromShop(productName);
@@ -300,8 +300,8 @@ export class CustomerPage extends BasePage {
     // place order
     async placeOrder(paymentMethod = 'bank', getOrderDetails = false, billingAddress = false, shippingAddress = false): Promise<string | object> {
         await this.goToCheckout();
-        billingAddress && (await this.addBillingAddressInCheckout(data.customer.customerInfo.billing));
-        shippingAddress && (await this.addShippingAddressInCheckout(data.customer.customerInfo.shipping));
+        if (billingAddress) await this.addBillingAddressInCheckout(data.customer.customerInfo.billing);
+        if (shippingAddress) await this.addShippingAddressInCheckout(data.customer.customerInfo.shipping);
 
         switch (paymentMethod) {
             case 'bank':
@@ -380,7 +380,7 @@ export class CustomerPage extends BasePage {
     // buy product
     async buyProduct(productName: string, couponCode: string, applyCoupon = false, getOrderDetails = false, paymentMethod = 'bank'): Promise<string | object> {
         await this.addProductToCart(productName, 'single-product');
-        applyCoupon && (await this.applyCoupon(couponCode));
+        if (applyCoupon) await this.applyCoupon(couponCode);
         return await this.placeOrder(paymentMethod, getOrderDetails);
     }
 
