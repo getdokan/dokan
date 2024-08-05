@@ -415,10 +415,10 @@ export const helpers = {
 
     // deep merge arrays
     deepMergeArrays(targetArray: any[], sourceArray: any[]) {
-        if (targetArray.every((item: any) => item instanceof Object && !(item instanceof Array)) && sourceArray.every(item => item instanceof Object && !(item instanceof Array))) {
+        if (targetArray.every((item: any) => item instanceof Object && !Array.isArray(item)) && sourceArray.every(item => item instanceof Object && !Array.isArray(item))) {
             const mergedArray = [...targetArray];
             sourceArray.forEach((item: { [key: string]: any }, index: number) => {
-                if (index < mergedArray.length && item instanceof Object && !(item instanceof Array)) {
+                if (index < mergedArray.length && item instanceof Object && !Array.isArray(item)) {
                     mergedArray[index] = this.deepMergeObjects(mergedArray[index], item);
                 } else {
                     mergedArray.push(item);
