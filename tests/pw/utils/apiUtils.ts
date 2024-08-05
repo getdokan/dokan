@@ -96,7 +96,7 @@ export class ApiUtils {
     async getResponseBody(response: APIResponse, assert = true): Promise<responseBody> {
         try {
             if (assert) expect(response.ok()).toBeTruthy();
-            
+
             const responseBody = response.status() !== 204 && (await response.json()); // 204 is for No Content
 
             // console log responseBody if response code is not between 200-299

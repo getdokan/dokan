@@ -473,7 +473,7 @@ export interface shipping {
     taxStatus?: string;
     shippingCost?: string;
     freeShippingRequires?: string;
-    freeShippingMinimumOrderAmount?: string
+    freeShippingMinimumOrderAmount?: string;
 }
 
 export interface deliveryTime {

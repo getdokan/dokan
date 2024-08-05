@@ -5,7 +5,6 @@ import { data } from '@utils/testData';
 const { DOKAN_PRO } = process.env;
 
 test.describe('Admin functionality test', () => {
-    
     test('admin can login', { tag: ['@lite', '@admin'] }, async ({ page }) => {
         const loginPage = new LoginPage(page);
         await loginPage.adminLogin(data.admin);

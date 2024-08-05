@@ -406,11 +406,9 @@ export const test = base.extend<pages>({
     withdrawsPage: async ({ page }, use) => {
         await use(new WithdrawsPage(page));
     },
-
 });
 
 export { expect, request, Page } from '@playwright/test';
-
 
 // export const test = testpage;
 // export const expect = testpage.expect;
