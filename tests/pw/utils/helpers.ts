@@ -359,8 +359,24 @@ export const helpers = {
         this.writeFile(filePath, JSON.stringify(envData, null, 2));
     },
 
+    async createFolder(folderName: string) {
+        try {
+            fs.mkdirSync(folderName);
+            console.log(`Folder '${folderName}' created successfully.`);
+        } catch (error: any) {
+            if (error.code === 'EEXIST') {
+                console.log(`Folder '${folderName}' already exists.`);
+                return;
+            } else {
+                console.error(`Error creating folder '${folderName}':`, error);
+            }
+        }
+    },
+
     // execute command
-    async exeCommand(command: string) {
+    async exeCommand(command: string, directoryPath = process.cwd()) {
+        process.chdir(directoryPath);
+
         const output = execSync(command, { encoding: 'utf-8' });
         console.log(output);
     },

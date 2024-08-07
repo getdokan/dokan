@@ -42,7 +42,7 @@ function getCoverage(filePath: string, outputFile?: string) {
     pages.forEach((page: any) => {
         iterateThroughFeature(page.features);
         const pageCoverage = Math.round((coveredPageFeatures / totalPageFeatures) * 100 * 100) / 100;
-        if (!isNaN(pageCoverage)) {
+        if (!Number.isNaN(pageCoverage)) {
             coverageReport.page_coverage[page.page] = pageCoverage;
         }
 

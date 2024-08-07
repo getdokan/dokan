@@ -361,6 +361,9 @@ export const endPoints = {
     updateVerificationRequest: (requestId: string) => `${SERVER_URL}/dokan/v1/verification-requests/${requestId}`,
     deleteVerificationRequest: (requestId: string) => `${SERVER_URL}/dokan/v1/verification-requests/${requestId}`,
 
+    //commission
+    getCommission: `${SERVER_URL}/dokan/v1/commission`,
+
     wc: {
         // coupons
         getAllCoupons: `${SERVER_URL}/wc/v3/coupons`,
@@ -453,7 +456,7 @@ export const endPoints = {
         createTag: `${SERVER_URL}/wc/v3/products/tags`,
         updateTag: (tagId: string) => `${SERVER_URL}/wc/v3/products/tags/${tagId}`,
         deleteTag: (tagId: string) => `${SERVER_URL}/wc/v3/products/tags/${tagId}`,
-        updateBatchTag: `${SERVER_URL}/wc/v3/products/tags/batch`,
+        updateBatchTags: `${SERVER_URL}/wc/v3/products/tags/batch`,
 
         // product reviews
         getAllReviews: `${SERVER_URL}/wc/v3/products/reviews`,

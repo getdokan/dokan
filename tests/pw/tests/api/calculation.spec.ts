@@ -100,7 +100,7 @@ test.describe.skip('Marketplace Coupon calculation test', () => {
     });
 
     test('coupon calculation test', { tag: ['@pro'] }, async () => {
-        //todo: apply single coupon, multiple coupon, sequential coupon with options and make separate test
+        // todo: apply single coupon, multiple coupon, sequential coupon with options and make separate test
         const [, , code1, amount1] = await apiUtils.createMarketPlaceCoupon({ ...payloads.createMarketPlaceCoupon(), discount_type: 'percent' }, payloads.adminAuth);
         const [, , code2, amount2] = await apiUtils.createMarketPlaceCoupon({ ...payloads.createMarketPlaceCoupon(), discount_type: 'percent' }, payloads.adminAuth);
         const discount = {
@@ -113,7 +113,7 @@ test.describe.skip('Marketplace Coupon calculation test', () => {
             },
         };
         const [, res, oid] = await apiUtils.createOrder(payloads.createProduct(), { ...payloads.createOrder, coupon_lines: [{ code: code1 }, { code: code2 }] });
-        // const [, res, oid] = await apiUtils.createOrder('997', { ...payloads.createOrder, coupon_lines: [{ code: 'ac_66iu9e4awq' }, { code: 'ac_05taq2zkqo' }] });
+        // const [, res, oid] = await apiUtils.createOrder('997', { ...payloads.createOrder, coupon_lines: [{ code: 'ac_66iu9e4awq' }, { code: 'ewe' }] });
         // console.log(res);
         console.log('Order id:', oid);
         const discountTotal = res.discount_total;
@@ -194,7 +194,7 @@ test.describe.skip('commission test', () => {
         await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, commission_type: 'combine' });
     });
 
-    // //todo: add vendor-wise, category-wise, product-wise commission
+    // todo: add vendor-wise, category-wise, product-wise commission
 
     test('shipping fee recipient test', { tag: ['@pro'] }, async () => {
         await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, shipping_fee_recipient: 'seller' });
