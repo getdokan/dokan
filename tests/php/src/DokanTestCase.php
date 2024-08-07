@@ -280,6 +280,32 @@ abstract class DokanTestCase extends WP_UnitTestCase {
     }
 
     /**
+     * Create a single vendor order. The data structure should be similar to the method of get_multi_vendor_order_data.
+     *
+     * @param int $seller_id
+     * @param array $order_data
+     * @return int The order ID.
+     */
+    protected function create_single_vendor_order( $seller_id = 0, array $order_data = [] ) {
+        $seller_id1 = $this->seller_id1;
+        $seller_id2 = $this->seller_id2;
+
+        if ( $seller_id ) {
+            $this->seller_id1 = $seller_id;
+            $this->seller_id2 = $seller_id;
+        } else {
+            $this->seller_id2 = $this->seller_id1;
+        }
+
+        $order_id = $this->create_multi_vendor_order( $order_data );
+
+        $this->seller_id1 = $seller_id1;
+        $this->seller_id2 = $seller_id2;
+
+        return $order_id;
+    }
+
+    /**
      * Create multi vendor order. The data structure should be like the method of get_multi_vendor_order_data.
      *
      * @param array $order_data
