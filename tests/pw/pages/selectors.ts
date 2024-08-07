@@ -160,7 +160,7 @@ export const selector = {
             contentPlaceholder: 'p[aria-label="Add default block"]',
             addContent: '//p[@data-title="Paragraph"]',
 
-            publish: '//div[@class="edit-post-header__settings"]//button[text()="Publish"]',
+            publish: '//div[@class="editor-header__settings"]//button[text()="Publish"]',
             publishFromPanel: '//div[@class="editor-post-publish-panel"]//button[text()="Publish"]',
 
             publishMessage: '//div[@class="components-snackbar__content" and text()="Page published."]',
