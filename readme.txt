@@ -347,7 +347,7 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 == Changelog ==
 
-= v3.11.5 ( Aug 5, 2024 ) =
+= v3.11.5 ( Aug 7, 2024 ) =
 
 - **fix:** Fixed data updating issue on Admin color picker settings.
 - **fix:** Fixed extra slashes issue on store url when translated via WPML.

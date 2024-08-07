@@ -8,7 +8,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-08-01T06:35:55+00:00\n"
+"POT-Creation-Date: 2024-08-07T04:00:14+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.9.0\n"
 "X-Domain: dokan-lite\n"
@@ -1040,9 +1040,9 @@ msgstr ""
 
 #: includes/Admin/Settings.php:837
 #: includes/Admin/UserProfile.php:211
-#: templates/account/update-customer-to-vendor.php:51
-#: templates/account/vendor-registration.php:42
-#: templates/global/seller-registration-form.php:57
+#: templates/account/update-customer-to-vendor.php:48
+#: templates/account/vendor-registration.php:45
+#: templates/global/seller-registration-form.php:54
 #: assets/js/vue-admin.js:2
 #: assets/js/vue-bootstrap.js:2
 msgid "Phone Number"
@@ -7289,7 +7289,7 @@ msgstr ""
 
 #: includes/wc-functions.php:820
 #: templates/account/update-customer-to-vendor.php:26
-#: templates/account/vendor-registration.php:15
+#: templates/account/vendor-registration.php:18
 #: templates/global/seller-registration-form.php:16
 #: assets/js/vue-admin.js:2
 #: assets/js/vue-bootstrap.js:2
@@ -7298,7 +7298,7 @@ msgstr ""
 
 #: includes/wc-functions.php:821
 #: templates/account/update-customer-to-vendor.php:30
-#: templates/account/vendor-registration.php:20
+#: templates/account/vendor-registration.php:23
 #: templates/global/seller-registration-form.php:21
 #: assets/js/vue-admin.js:2
 #: assets/js/vue-bootstrap.js:2
@@ -7306,7 +7306,7 @@ msgid "Last Name"
 msgstr ""
 
 #: includes/wc-functions.php:822
-#: templates/account/vendor-registration.php:33
+#: templates/account/vendor-registration.php:36
 #: templates/dashboard/edit-account.php:65
 msgid "Email address"
 msgstr ""
@@ -7679,7 +7679,7 @@ msgstr ""
 
 #: templates/account/become-a-vendor-section.php:16
 #: templates/account/become-a-vendor-section.php:20
-#: templates/account/update-customer-to-vendor.php:81
+#: templates/account/update-customer-to-vendor.php:78
 msgid "Become a Vendor"
 msgstr ""
 
@@ -7692,51 +7692,51 @@ msgid "Update account to Vendor"
 msgstr ""
 
 #: templates/account/update-customer-to-vendor.php:36
-#: templates/account/vendor-registration.php:58
+#: templates/account/vendor-registration.php:61
 #: templates/global/seller-registration-form.php:27
 msgid "Shop Name"
 msgstr ""
 
 #: templates/account/update-customer-to-vendor.php:41
-#: templates/account/vendor-registration.php:63
+#: templates/account/vendor-registration.php:66
 #: templates/global/seller-registration-form.php:32
 msgid "Shop URL"
 msgstr ""
 
-#: templates/account/update-customer-to-vendor.php:70
+#: templates/account/update-customer-to-vendor.php:67
 msgid "Terms &amp; Conditions"
 msgstr ""
 
 #. translators: 1. Terms and conditions of agreement link.
-#: templates/account/update-customer-to-vendor.php:72
+#: templates/account/update-customer-to-vendor.php:69
 msgid "I have read and agree to the %1$s."
 msgstr ""
 
-#: templates/account/vendor-registration.php:27
+#: templates/account/vendor-registration.php:30
 #: templates/login-form/login-form.php:4
 #: assets/js/vue-admin.js:2
 #: assets/js/vue-bootstrap.js:2
 msgid "Username"
 msgstr ""
 
-#: templates/account/vendor-registration.php:37
+#: templates/account/vendor-registration.php:40
 msgid "A link to set a new password will be sent to your email address."
 msgstr ""
 
-#: templates/account/vendor-registration.php:49
+#: templates/account/vendor-registration.php:52
 #: templates/login-form/login-form.php:9
 #: assets/js/vue-admin.js:2
 #: assets/js/vue-bootstrap.js:2
 msgid "Password"
 msgstr ""
 
-#: templates/account/vendor-registration.php:55
+#: templates/account/vendor-registration.php:58
 msgid "Anti-spam"
 msgstr ""
 
 #. translators: %1$s: opening anchor tag with link, %2$s: an ampersand %3$s: closing anchor tag
 #: templates/account/vendor-registration.php:101
-#: templates/global/seller-registration-form.php:73
+#: templates/global/seller-registration-form.php:70
 msgid "I have read and agree to the %1$sTerms %2$s Conditions%3$s."
 msgstr ""
 
@@ -8495,11 +8495,11 @@ msgstr ""
 msgid "Address:"
 msgstr ""
 
-#: templates/global/seller-registration-form.php:93
+#: templates/global/seller-registration-form.php:90
 msgid "I am a customer"
 msgstr ""
 
-#: templates/global/seller-registration-form.php:98
+#: templates/global/seller-registration-form.php:95
 msgid "I am a vendor"
 msgstr ""
 
