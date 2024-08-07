@@ -118,7 +118,9 @@ $coupon_instance = $this->factory()->coupon->create_and_get(
 
 **Option 1:**
 
-There is a protected method to create a multi-vendor order in the simplest way. Our test classes should inherit from [DokanTestCase](./../../tests/php/src/DokanTestCase.php#L270) to access this method.
+To create a multi-vendor or single vendor order in the simplest way, you can use the protected methods provided. Your test classes should inherit from [DokanTestCase](./../../tests/php/src/DokanTestCase.php#L270) to access these methods: `create_multi_vendor_order` and `create_single_vendor_order`.
+
+#### Example Usage
 
 ```php
 use WeDevs\Dokan\Test\DokanTestCase;
@@ -126,11 +128,20 @@ use WeDevs\Dokan\Test\DokanTestCase;
 class MyClassTest extends DokanTestCase {
     public function test_multi_vendor_order() {
         $parent_order_id = $this->create_multi_vendor_order();
+        // Add assertions or additional test logic here
+    }
+
+    public function test_single_vendor_order() {
+        $order_id = $this->create_single_vendor_order();
+        // Add assertions or additional test logic here
     }
 }
 ```
 
-You can pass the `data` for the multi-order in this [format](./../../tests/php/src/DokanTestCase.php#L219).
+In the above example, the `test_multi_vendor_order` method demonstrates how to create a multi-vendor order, while the `test_single_vendor_order` method shows how to create a single vendor order. Both methods return the  ID of the order, which can be used for further assertions or test logic.
+
+
+> You can pass the `data` for the multi-order in this [format](./../../tests/php/src/DokanTestCase.php#L219).
 
 **Option 2:**
 
