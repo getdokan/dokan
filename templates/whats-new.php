@@ -4,6 +4,22 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.11.5',
+        'released' => '2024-08-07',
+        'changes'  => [
+            'Fix'         => [
+                [
+                    'title'       => 'Fixed data updating issue on Admin color picker settings.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed extra slashes issue on store url when translated via WPML.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.11.4',
         'released' => '2024-07-10',
         'changes'  => [

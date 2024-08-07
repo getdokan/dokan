@@ -64,7 +64,7 @@ test.describe('EU Compliance test', () => {
         await admin.setDokanEuComplianceSettings('germanizedSupport');
     });
 
-    test('admin can enable orverride invoice number premission for vendors', { tag: ['@pro', '@admin'] }, async () => {
+    test('admin can enable override invoice number permission for vendors', { tag: ['@pro', '@admin'] }, async () => {
         await admin.setDokanEuComplianceSettings('overrideInvoice');
     });
 
@@ -105,13 +105,13 @@ test.describe('EU Compliance test', () => {
         await admin.hideEuComplianceVendor(data.predefined.vendorStores.vendor1);
 
         // reset
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.appearance, appearanceSettings); //todo: should we reset to previous value or default value [dbData.dokan.appearanceSettings](need to check)
+        await dbUtils.setDokanSettings(dbData.dokan.optionName.appearance, appearanceSettings); // todo: should we reset to previous value or default value [dbData.dokan.appearanceSettings](need to check)
     });
 
     // vendor
 
     test('vendor can add EU compliance data on store settings', { tag: ['@pro', '@vendor'] }, async () => {
-        await vendor.setStoreSettings(data.vendor.vendorInfo, 'euComplicance');
+        await vendor.setStoreSettings(data.vendor.vendorInfo, 'euCompliance');
     });
 
     test('vendor can add EU compliance data on registration', { tag: ['@pro', '@vendor'] }, async ({ page }) => {
@@ -134,11 +134,11 @@ test.describe('EU Compliance test', () => {
     // customer
 
     test('customer can add EU Compliance data on billing address', { tag: ['@pro', '@customer'] }, async () => {
-        await customer.customerAddEuComplicancedata(data.euComplianceData());
+        await customer.customerAddEuComplianceData(data.euComplianceData());
     });
 
     test('customer can update EU compliance data', { tag: ['@pro', '@customer'] }, async () => {
-        await customer.customerAddEuComplicancedata(data.euComplianceData());
+        await customer.customerAddEuComplianceData(data.euComplianceData());
     });
 
     test('customer can add EU compliance data (vendor) while become a vendor', { tag: ['@pro', '@customer'] }, async ({ page }) => {

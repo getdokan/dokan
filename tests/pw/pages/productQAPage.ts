@@ -80,7 +80,7 @@ export class ProductQAPage extends BasePage {
 
             case 'by-product':
                 await this.click(productQAAdmin.filters.filterByProducts);
-                await this.typeAndWaitForResponse(data.subUrls.api.wc.wcProducts, productQAAdmin.filters.filterInput, input);
+                await this.typeAndWaitForResponse(data.subUrls.api.wc.products, productQAAdmin.filters.filterInput, input);
                 await this.toContainText(productQAAdmin.filters.result, input);
                 await this.pressAndWaitForResponse(data.subUrls.api.dokan.productQuestions, data.key.enter);
                 break;
@@ -146,7 +146,6 @@ export class ProductQAPage extends BasePage {
         await this.goIfNotThere(data.subUrls.backend.dokan.questionDetails(questionId));
         await this.click(productQAAdmin.questionDetails.status.deleteQuestion);
         await this.clickAndWaitForResponse(data.subUrls.api.dokan.productQuestions, productQAAdmin.questionDetails.confirmAction, 204);
-        // await this.toBeVisible(productQAAdmin.questionDetails.questionDeleteSuccessMessage); //todo: needed or not
     }
 
     // product questions bulk action
@@ -244,7 +243,7 @@ export class ProductQAPage extends BasePage {
 
     // delete question
     async vendorDeleteQuestion(questionId: string): Promise<void> {
-        //todo: flaky --> Error: page.goto: net::ERR_ABORTED at ...
+        // todo: flaky --> Error: page.goto: net::ERR_ABORTED at ...
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.questionDetails(questionId));
         await this.click(productQAVendor.questionDetails.status.deleteQuestion);
         await this.clickAndWaitForResponse(data.subUrls.ajax, productQAVendor.questionDetails.confirmAction);
