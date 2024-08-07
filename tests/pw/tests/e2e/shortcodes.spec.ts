@@ -69,7 +69,7 @@ test.describe('Shortcodes test', () => {
         await apiUtils.deletePage(pageId, payloads.adminAuth);
     });
 
-    test('customer can view customer migration form (shortcode)', { tag: ['@lite', '@admin'] }, async () => {
+    test('customer can view customer migration form (shortcode)', { tag: ['@pro', '@admin'] }, async () => {
         const [responseBody, pageId] = await apiUtils.createPage(payloads.customerMigrationShortcode, payloads.adminAuth);
         await customer.viewMigrationForm(responseBody.link);
         await apiUtils.deletePage(pageId, payloads.adminAuth);
