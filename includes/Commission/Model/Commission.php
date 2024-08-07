@@ -217,7 +217,7 @@ class Commission {
      *
      * @return int
      */
-    public function get_total_amount(): int {
+    public function get_total_amount() {
         return $this->total_amount;
     }
 

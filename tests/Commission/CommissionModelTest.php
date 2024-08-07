@@ -80,11 +80,15 @@ class CommissionModelTest extends WP_UnitTestCase {
             ->set_admin_commission( 10 )
             ->set_vendor_earning( 100 )
             ->set_per_item_admin_commission( 10 )
-            ->set_parameters( [ 'flat' => 10, 'percentage' => 0 ] )
+            ->set_parameters(
+                [
+					'flat' => 10,
+					'percentage' => 0,
+				]
+            )
             ->set_total_amount( 100 )
-            ->set_total_quantity(1)
+            ->set_total_quantity( 1 )
             ->set_source( GlobalStrategy::SOURCE );
-
 
         $this->assertEquals( GlobalStrategy::SOURCE, $data->get_source() );
         $this->assertEquals( 10, $data->get_per_item_admin_commission() );
@@ -93,7 +97,12 @@ class CommissionModelTest extends WP_UnitTestCase {
         $this->assertEquals( 1, $data->get_total_quantity() );
         $this->assertEquals( 100, $data->get_total_amount() );
         $this->assertEquals( Fixed::SOURCE, $data->get_type() );
-        $this->assertEquals( [ 'flat' => 10, 'percentage' => 0 ], $data->get_parameters() );
+        $this->assertEquals(
+            [
+				'flat' => 10,
+				'percentage' => 0,
+			], $data->get_parameters()
+        );
         $this->assertEquals(
             [
                 'source'                    => GlobalStrategy::SOURCE,
@@ -103,7 +112,10 @@ class CommissionModelTest extends WP_UnitTestCase {
                 'total_quantity'            => 1,
                 'total_amount'              => '100',
                 'type'                      => Fixed::SOURCE,
-                'parameters'                => [ 'flat' => 10, 'percentage' => 0 ],
+                'parameters'                => [
+					'flat' => 10,
+					'percentage' => 0,
+				],
             ],
             $data->get_data()
         );
