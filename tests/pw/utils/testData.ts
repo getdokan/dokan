@@ -79,6 +79,16 @@ export const data = {
             dokanLite: 'dokan-lite',
             dokanPro: 'dokan-pro',
         },
+        pluginList: {
+            basicAuth: 'Basic-Auth-master/basic-auth',
+            dokanLite: 'dokan/dokan',
+            dokanPro: 'dokan-pro/dokan-pro',
+            woocommerce: 'woocommerce/woocommerce',
+            woocommerceBookings: 'woocommerce-bookings/woocommerce-bookings',
+            woocommerceProductAddons: 'woocommerce-product-addons/woocommerce-product-addons',
+            woocommerceSimpleAuctions: 'woocommerce-simple-auctions/woocommerce-simple-auctions',
+            woocommerceSubscriptions: 'woocommerce-subscriptions/woocommerce-subscriptions',
+        },
     },
 
     woocommerce: {
@@ -2308,8 +2318,9 @@ export const data = {
     // command
     commands: {
         permalink: 'npm run wp-env run tests-cli wp rewrite structure /%postname%/',
+        activateTheme: 'npm run wp-env run tests-cli wp theme activate storefront',
         permalinkLocal: `cd ${SITE_PATH} && wp rewrite structure /%postname%/ && wp rewrite flush`,
-        activateTheme: `cd ${SITE_PATH} && wp theme activate storefront`,
+        activateThemeLocal: `cd ${SITE_PATH} && wp theme activate storefront`,
         cloneDokanPro: "git clone -b test_utils https://github.com/getdokan/dokan-pro.git && cd dokan-pro && sed -i '''' '''s/Requires Plugins: woocommerce, dokan-lite/Requires Plugins: woocommerce, dokan/''' dokan-pro.php",
         buildPlugin: 'composer i --no-dev && composer du -o && npm i && npm run build',
     },

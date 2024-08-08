@@ -68,7 +68,7 @@ test.describe('setup local site', () => {
             'woocommerce-subscriptions/woocommerce-subscriptions',
         ];
         for (const plugin of plugins) {
-            const activePlugins = await apiUtils.updatePlugin(plugin, { status: 'active' }, payloads.adminAuth);
+            const [, activePlugins] = await apiUtils.updatePlugin(plugin, { status: 'active' }, payloads.adminAuth);
             console.log(activePlugins);
         }
     });

@@ -17,26 +17,6 @@ setup.describe('setup test environment', () => {
         await apiUtils.dispose();
     });
 
-    setup.skip('get server url', { tag: ['@lite'] }, async () => {
-        const headers = await apiUtils.getSiteHeaders(BASE_URL);
-        if (headers.link) {
-            const serverUrl = headers.link.includes('rest_route') ? BASE_URL + '/?rest_route=' : BASE_URL + '/wp-json';
-            helpers.createEnvVar('SERVER_URL', serverUrl);
-        } else {
-            console.log("Headers link doesn't exists");
-        }
-    });
-
-    setup('activate Dokan Lite', { tag: ['@lite'] }, async () => {
-        setup.skip(CI, 'skip plugin activation on CI');
-        await apiUtils.updatePlugin('dokan/dokan', { status: 'active' }, payloads.adminAuth);
-    });
-
-    setup('activate Dokan Pro', { tag: ['@pro'] }, async () => {
-        setup.skip(CI, 'skip plugin activation on CI');
-        await apiUtils.updatePlugin('dokan-pro/dokan-pro', { status: 'active' }, payloads.adminAuth);
-    });
-
     setup('enable admin selling status', { tag: ['@lite'] }, async () => {
         const responseBody = await apiUtils.setStoreSettings(payloads.setupStore, payloads.adminAuth);
         expect(responseBody).toBeTruthy();

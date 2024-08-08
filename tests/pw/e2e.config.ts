@@ -1,7 +1,7 @@
 import { defineConfig, devices, expect } from '@playwright/test';
 import { customExpect } from '@utils/pwMatchers';
 import 'dotenv/config';
-const { CI, BASE_URL, SLOWMO, NO_SETUP } = process.env;
+const { CI, LOCAL, BASE_URL, SLOWMO, NO_SETUP } = process.env;
 
 export default defineConfig({
     /* test directory */
@@ -104,11 +104,17 @@ export default defineConfig({
 
     projects: [
         // E2e project
+        // plugin_setup
+        {
+            name: 'plugin_setup',
+            testMatch: '_auth.setup.ts',
+        },
+
         // auth_setup
         {
             name: 'auth_setup',
-            // testMatch: /.*\.setup\.ts/,
             testMatch: '_auth.setup.ts',
+            dependencies: LOCAL ? [] : ['plugin_setup'],
         },
 
         // e2e_setup
