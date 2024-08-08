@@ -2950,10 +2950,12 @@ function dokan_get_translations_for_plugin_domain( $domain, $language_dir = null
  * @return array
  */
 function dokan_get_jed_locale_data( $domain, $language_dir = null ) {
-    $plugin_language_dir = WP_LANG_DIR . '/plugins/';
+    $plugin_language_dir      = WP_LANG_DIR . '/plugins/';
+    $language_dir_time        = ! empty( $language_dir ) ? filectime( $language_dir ) : 0;
+    $plugin_language_dir_time = ! empty( $plugin_language_dir ) ? filectime( $plugin_language_dir ) : 0;
 
     // get transient key
-    $transient_key = sprintf( 'dokan_i18n-%s-%d-%d-%s', $domain, filectime( $language_dir ), filectime( $plugin_language_dir ), get_user_locale() );
+    $transient_key = sprintf( 'dokan_i18n-%s-%d-%d-%s', $domain, $language_dir_time, $plugin_language_dir_time, get_user_locale() );
 
     // check if data exists on cache or not
     $locale = Cache::get_transient( $transient_key );
