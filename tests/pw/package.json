@@ -53,6 +53,7 @@
     "license": "ISC",
     "devDependencies": {
         "@types/js-yaml": "^4.0.9",
+        "@types/node": "^22.1.0",
         "@typescript-eslint/eslint-plugin": "^7.8.0",
         "@typescript-eslint/parser": "^7.8.0",
         "eslint": "8.56",
@@ -68,7 +69,7 @@
         "@playwright/test": "1.44",
         "@wordpress/env": "^9.9.0",
         "dotenv": "^16.4.5",
-        "mysqlconnector": "^2.0.6",
+        "mysql2": "^3.11.0",
         "php-serialize": "^4.1.1",
         "zod": "^3.23.7"
     }

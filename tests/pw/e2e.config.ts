@@ -9,7 +9,7 @@ export default defineConfig({
     /* Folder for test artifacts such as screenshots, videos, traces, etc. */
     outputDir: 'playwright/e2e/test-artifacts/',
     /* Path to the global setup file. This file will be required and run before all the tests. */
-    globalSetup: './global-setup',
+    // globalSetup: './global-setup',
     /* Path to the global teardown file. This file will be required and run after all the tests. */
     // globalTeardown: './global-teardown' ,
     /* Maximum time in milliseconds the whole test suite can run */
