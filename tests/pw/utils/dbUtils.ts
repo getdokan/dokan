@@ -56,7 +56,7 @@ export const dbUtils = {
         return res;
     },
 
-    // get dokan settings
+    // get option value // todo: update method name getOptionValue 
     async getDokanSettings(optionName: string): Promise<any> {
         const query = `Select option_value FROM ${dbPrefix}_options WHERE option_name = '${optionName}';`;
         const res = await dbUtils.dbQuery(query);
@@ -65,9 +65,9 @@ export const dbUtils = {
         return optionValue;
     },
 
-    // set dokan settings
-    async setDokanSettings(optionName: string, optionValue: object | string, serializeData?: string): Promise<any> {
-        optionValue = typeof optionValue === 'object' ? serialize(optionValue) : optionValue;
+    // set option value //todo: update method name setOptionValue
+    async setDokanSettings(optionName: string, optionValue: object | string, serializeData: boolean = true): Promise<any> {
+        optionValue = serializeData ? serialize(optionValue) : optionValue; // todo: test if all calles are updated with serialize data
         const query = `
             INSERT INTO ${dbPrefix}_options (option_id, option_name, option_value, autoload)
             VALUES (NULL, '${optionName}', '${optionValue}', 'yes')
@@ -77,7 +77,7 @@ export const dbUtils = {
         return res;
     },
 
-    // update option value
+    // update option value //todo: update method name updateOptionValue
     async updateWpOptionTable(optionName: string, optionValue: object | string, serializeData?: boolean): Promise<any> {
         optionValue = serializeData ? serialize(optionValue) : optionValue;
         const query = `UPDATE ${dbPrefix}_options SET option_value = '${optionValue}' WHERE option_name = '${optionName}';`;
