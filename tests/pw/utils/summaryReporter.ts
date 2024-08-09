@@ -2,7 +2,7 @@ import { FullConfig, FullResult, Reporter, Suite, TestCase, TestError, TestResul
 import fs from 'fs';
 import path from 'path';
 
-// todo: update custom reporter, add more features like duration, failed tests list
+// todo: add more features
 
 type TestResults = {
     [key: string]: string;

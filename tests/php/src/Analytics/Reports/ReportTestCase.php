@@ -4,7 +4,7 @@ namespace WeDevs\Dokan\Test\Analytics\Reports;
 
 use WeDevs\Dokan\Test\DokanTestCase;
 
-class ReportTestCase extends DokanTestCase {
+abstract class ReportTestCase extends DokanTestCase {
     public function create_refund( int $order_id, bool $parent_refund = true, $return_parent_refund = false ): \WC_Order_Refund {
         $order = wc_get_order( $order_id );
         $order_items = $order->get_items();

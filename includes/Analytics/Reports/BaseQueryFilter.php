@@ -36,7 +36,6 @@ abstract class BaseQueryFilter implements Hookable {
         $dokan_order_state_table = DataStore::get_db_table_name();
 
         $clauses[] = "JOIN {$dokan_order_state_table} ON {$wpdb->prefix}{$this->wc_table}.order_id = {$dokan_order_state_table}.order_id";
-        error_log( $this->context . print_r( $clauses, true ) );
 
         return array_unique( $clauses );
     }

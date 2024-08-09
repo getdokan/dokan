@@ -7,8 +7,9 @@
     - [API Test](#api-test)
     - [AJAX Test](#ajax-test)
     - [Unit Test](#unit-test)
-- [Available Assertion](#available-assertion)
+- [Custom Assertion](#available-custom-assertion)
     - [Database Assertion](#database-assertion)
+    - [Nested Array Assertion](#nested-array-assertion)
 - [Mocking](./mocking.md)
 
 ## Introduction
@@ -103,6 +104,20 @@ namespace WeDevs\Dokan\Test\Integration;
 use WeDevs\Dokan\Test\DokanTestCase;
 
 class SampleTest extends DokanTestCase {
+    // Ensure route is registered.
+    public function test_ensure_my_route_is_registered()
+    {
+        $routes = $this->server->get_routes( $this->namespace );
+        $full_route = $this->get_route(  'my-route' );
+
+        // Assert route is registered.
+        $this->assertArrayHasKey( $full_route, $routes );
+
+        // Assert route is registered only for GET method.
+        $this->assertNestedContains( [ 'methods' => [ 'GET' => true ] ], $routes[ $full_route ] );
+    }
+
+    // GET & POST request test.
     public function test_sample_method() {
         // GET request.
         $response = $this->get_request( 'route', $filter_params );
@@ -192,7 +207,7 @@ class SampleTest extends DokanTestCase {
 }
 ```
 
-## Available Assertion
+## Available Custom Assertion
 
 Since `WeDevs\Dokan\Test\DokanTestCase` class composes the [PHPUnit](https://docs.phpunit.de/en/9.6/), [Mockery](http://docs.mockery.io/en/latest/) and [Brain Monkey](https://giuseppe-mazzapica.gitbook.io/brain-monkey) so all methods of these packages are available in your test class. 
 
@@ -216,3 +231,21 @@ $this->assertDatabaseHas( 'posts', [ 'status' => 'publish' ] );
 $this->assertDatabaseCount( 'posts', 1, [ 'ID' => $product_id ] );
 ```
 
+ 
+#### Nested Array Assertion
+
+We may use `assertNestedContains` if It is required to assert value to a nested Array.
+
+```php
+$array = [
+    'key1' => [
+        'subkey1' => 'value1',
+        'subkey2' => 'value2'
+    ],
+    'key2' => 'value3'
+];
+
+// Use the custom assertion method
+$this->assertNestedContains( [ 'subkey1' => 'value1' ], $array );
+$this->assertNestedContains( [ 'key2' => 'value3' ], $array );
+```

@@ -3,10 +3,14 @@
 namespace WeDevs\Dokan\Test;
 
 use WeDevs\Dokan\Test\Factories\DokanFactory;
+use WeDevs\Dokan\Test\CustomAssertion\DBAssertionTrait;
+use WeDevs\Dokan\Test\CustomAssertion\NestedArrayAssertionTrait;
+
 use WP_Ajax_UnitTestCase;
 
 abstract class DokanAjaxTestCase extends WP_Ajax_UnitTestCase {
     use DBAssertionTrait;
+	use NestedArrayAssertionTrait;
 
 	public function setUp(): void {
         parent::setUp();

@@ -1,3 +1,11 @@
+- [Installation](#installation)
+- [Method Expectations](#method-expectations)
+- [Partial Mocking](#partial-mocking)
+- [Argument Expectations](#argument-expectations)
+- [Return Values](#return-values)
+- [Method Call "Count" Expectations](#method-call-count-expectations)
+
+> **Most of following documentation is copied from https://github.com/pestphp/docs/blob/master/mocking.md**
 
 # Mocking
 > **Requirements:** [Mockery 1.0+](https://github.com/mockery/mockery/)
@@ -6,6 +14,7 @@ When testing your applications, you may want to "mock" specific classes to preve
 
 Before getting started, you will need to install a mocking library. We recommend [Mockery](https://github.com/mockery/mockery/), but you are free to choose any other library that suits your needs.
 
+## Installation
 To begin using Mockery, require it using the Composer package manager.
 
 ```bash
@@ -20,17 +29,18 @@ While comprehensive documentation for Mockery can be found on the [Mockery websi
 Mock objects are essential for isolating the code being tested and simulating specific behaviors or conditions from other pieces of the application. After creating a mock using the `Mockery::mock()` method, we can indicate that we expect a certain method to be invoked by calling the `shouldReceive()` method.
 
 ```php
-use App\Repositories\BookRepository;
+use Dokan\Repositories\BookRepository;
 use Mockery;
 
-it('may buy a book', function () {
-    $client = Mockery::mock(PaymentClient::class);
-    $client->shouldReceive('post');
+class SampleTest extends DokanTestCase {
+    public function test_sample_method() {
+        $client = Mockery::mock(PaymentClient::class);
+        $client->shouldReceive('post');
 
-    $books = new BookRepository($client);
-    $books->buy(); // The API is not actually invoked since `$client->post()` has been mocked...
-});
-
+        $books = new BookRepository($client);
+        $books->buy(); // The API is not actually invoked since `$client->post()` has been mocked...
+    }
+}
 ```
 
 It is possible to mock multiple method calls using the same syntax shown above.
@@ -176,5 +186,3 @@ $mock->shouldReceive('delete')->atMost()->times(3);
 ---
 
 The primary objective of this section is to provide you with an introduction to Mockery, the mocking library we prefer. However, for a more comprehensive understanding of Mockery, we suggest checking out its [official documentation](https://docs.mockery.io).
-
-> **This Documentation is copied from https://github.com/pestphp/docs/blob/master/mocking.md**

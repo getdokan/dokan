@@ -96,7 +96,7 @@ class Hooks {
             data-minimum_input_length="0"
             data-data='<?php echo wp_json_encode( $user ); ?>'
         >
-        </select> <?php echo wc_help_tip( __( 'You can search vendors and assign them.', 'dokan-lite' ) ); ?>
+        </select> <?php echo wp_kses( wc_help_tip( esc_html__( 'You can search vendors and assign them.', 'dokan-lite' ) ), wp_kses_allowed_html( 'user_description' ) ); ?>
         <?php
     }
 
@@ -165,9 +165,9 @@ class Hooks {
      *
      * @return void
      */
-    public function override_product_author_by_admin( $product_id, $post ) {
+    public function override_product_author_by_admin( $product_id ) {
         $product          = wc_get_product( $product_id );
-        $posted_vendor_id = ! empty( $_POST['dokan_product_author_override'] ) ? intval( wp_unslash( $_POST['dokan_product_author_override'] ) ) : 0; // phpcs:ignore
+        $posted_vendor_id = ! empty( $_POST['dokan_product_author_override'] ) ? (int) sanitize_key( wp_unslash( $_POST['dokan_product_author_override'] ) ) : 0; // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
         if ( ! $posted_vendor_id ) {
             return;

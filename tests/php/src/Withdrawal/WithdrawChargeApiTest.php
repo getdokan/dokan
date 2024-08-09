@@ -2,34 +2,15 @@
 
 namespace WeDevs\Dokan\Test\Withdrawal;
 
-class WithdrawChargeApiTest extends \WP_UnitTestCase {
+use WeDevs\Dokan\Test\DokanTestCase;
 
-    /**
-     * Rest Api Server.
-     *
-     * @var \WP_REST_Server The REST server instance.
-     */
-    protected $server;
-
+class WithdrawChargeApiTest extends DokanTestCase {
     /**
      * The namespace of the REST route.
      *
      * @var string Dokan API Namespace
      */
-    protected $namespace = 'dokan/v1/withdraw';
-
-    /**
-     * Setup a rest server for test.
-     */
-    public function setUp(): void {
-        // Initiating the REST API.
-        global $wp_rest_server;
-
-        parent::setUp();
-        $wp_rest_server = new \WP_REST_Server();
-        $this->server   = $wp_rest_server;
-        do_action( 'rest_api_init' );
-    }
+    protected $rest_base = 'withdraw';
 
     /**
      * Saves dokan withdraw data in database.
@@ -106,32 +87,20 @@ class WithdrawChargeApiTest extends \WP_UnitTestCase {
      *  Test that the endpoint exist.
      */
     public function test_if_get_all_charges_api_exists() {
-        $this->save_withdraw_data_to_database();
+        $routes = $this->server->get_routes( $this->namespace );
+        $full_route = $this->get_route( $this->rest_base . '/charges' );
 
-        $endpoint = '/' . $this->namespace . '/charges';
-
-        $request = new \WP_REST_Request( 'GET', $endpoint );
-
-        $response = $this->server->dispatch( $request );
-        $data     = $response->get_data();
-
-        $this->assertNotEquals( 'rest_no_route', $data['code'] );
+        $this->assertArrayHasKey( $full_route, $routes );
     }
 
     /**
      *  Test that the endpoint exist.
      */
     public function test_if_get_method_withdraw_charge_api_exists() {
-        $this->save_withdraw_data_to_database();
+        $routes = $this->server->get_routes( $this->namespace );
+        $full_route = $this->get_route( $this->rest_base . '/charge' );
 
-        $endpoint = '/' . $this->namespace . '/charge';
-
-        $request = new \WP_REST_Request( 'GET', $endpoint );
-
-        $response = $this->server->dispatch( $request );
-        $data     = $response->get_data();
-
-        $this->assertNotEquals( 'rest_no_route', $data['code'] );
+        $this->assertNestedContains( [ 'methods' => [ 'GET' => true ] ], $routes[ $full_route ] );
     }
 
     public function test_if_we_can_get_all_withdraw_charges() {
@@ -145,10 +114,7 @@ class WithdrawChargeApiTest extends \WP_UnitTestCase {
 
         wp_set_current_user( $user );
 
-        $endpoint = '/' . $this->namespace . '/charges';
-        $request = new \WP_REST_Request( 'GET', $endpoint );
-
-        $response = $this->server->dispatch( $request );
+        $response = $this->get_request( $this->rest_base . '/charges' );
 
         $all_charges = dokan_withdraw_get_method_charges();
         $data = $response->get_data();
@@ -214,17 +180,14 @@ class WithdrawChargeApiTest extends \WP_UnitTestCase {
 
         wp_set_current_user( $user );
 
-        $endpoint = '/' . $this->namespace . '/charge';
-        $request = new \WP_REST_Request( 'GET', $endpoint );
-        $request->set_query_params(
-            [
-                'method' => $input['method'],
-                'amount' => $input['amount'],
-            ]
+        $response = $this->get_request(
+            $this->rest_base . '/charge', [
+				'method' => $input['method'],
+				'amount' => $input['amount'],
+			]
         );
 
-        $response = $this->server->dispatch( $request );
-        $data     = $response->get_data();
+        $data = $response->get_data();
 
         $this->assertArrayNotHasKey( 'code', $data );
 

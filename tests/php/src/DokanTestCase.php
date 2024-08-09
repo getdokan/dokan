@@ -9,6 +9,8 @@ use WP_REST_Response;
 use WP_UnitTestCase;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Brain\Monkey;
+use WeDevs\Dokan\Test\CustomAssertion\DBAssertionTrait;
+use WeDevs\Dokan\Test\CustomAssertion\NestedArrayAssertionTrait;
 use WP_REST_Server;
 
 /**
@@ -20,6 +22,7 @@ use WP_REST_Server;
  */
 abstract class DokanTestCase extends WP_UnitTestCase {
     use DBAssertionTrait;
+    use NestedArrayAssertionTrait;
     use MockeryPHPUnitIntegration;
 
     /**
@@ -62,7 +65,7 @@ abstract class DokanTestCase extends WP_UnitTestCase {
      *
      * @var string Dokan API Namespace
      */
-    protected $namespace = 'dokan/v1/';
+    protected $namespace = 'dokan/v1';
 
     /**
      * Indicates whether the feature is enabled only for unit testing purposes.
@@ -181,12 +184,15 @@ abstract class DokanTestCase extends WP_UnitTestCase {
      * @return string The full route with namespace.
      */
     protected function get_route( string $route_name ): string {
+        $namespace = '/' . trim( $this->namespace, '/' );
+        $route_name = '/' . trim( $route_name, '/' );
+
         // If namespace is already exist.
-        if ( str_starts_with( $route_name, $this->namespace ) ) {
+        if ( str_starts_with( $route_name, $namespace ) ) {
             return $route_name;
         }
 
-        return $this->namespace . '/' . untrailingslashit( $route_name );
+        return $namespace . $route_name;
     }
 
     /**
@@ -271,6 +277,32 @@ abstract class DokanTestCase extends WP_UnitTestCase {
 			),
 
 		];
+    }
+
+    /**
+     * Create a single vendor order. The data structure should be similar to the method of get_multi_vendor_order_data.
+     *
+     * @param int $seller_id
+     * @param array $order_data
+     * @return int The order ID.
+     */
+    protected function create_single_vendor_order( $seller_id = 0, array $order_data = [] ) {
+        $seller_id1 = $this->seller_id1;
+        $seller_id2 = $this->seller_id2;
+
+        if ( $seller_id ) {
+            $this->seller_id1 = $seller_id;
+            $this->seller_id2 = $seller_id;
+        } else {
+            $this->seller_id2 = $this->seller_id1;
+        }
+
+        $order_id = $this->create_multi_vendor_order( $order_data );
+
+        $this->seller_id1 = $seller_id1;
+        $this->seller_id2 = $seller_id2;
+
+        return $order_id;
     }
 
     /**

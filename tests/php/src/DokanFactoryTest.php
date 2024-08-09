@@ -203,4 +203,20 @@ class DokanFactoryTest extends DokanTestCase {
             $this->assertCount( 1, $sub_order->get_shipping_methods() );
         }
     }
+
+    /**
+     * Test the dokan multi vendor order is created.
+     *
+     * @return void
+     */
+    public function test_single_vendor_order_create_method_of_DokanTestCase_class() {
+        $order_id = $this->create_single_vendor_order();
+        $order = wc_get_order( $order_id );
+
+        $this->assertEquals( $order_id, $order->get_id() );
+
+        $sub_order_ids = dokan_get_suborder_ids_by( $order_id );
+
+        $this->assertNull( $sub_order_ids );
+    }
 }

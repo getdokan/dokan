@@ -280,10 +280,9 @@
                         <color-picker
                             :itemKey="fieldData.name"
                             :customData="singleColorPicker"
-                            @custom-change="e => setCustomColor( e, fieldData.name )"
+                            v-model="fieldValue[fieldData.name]"
+                            @custom-change="e => setCustomColor( e, fieldData.name, fieldData.default )"
                             @toggleColorPicker="toggleColorPicker"
-                            :value="fieldValue[fieldData.name]"
-                            @input="event => inputValueHandler( fieldData.name, event.target.value, fieldValue[fieldData.name] )"
                         ></color-picker>
                     </div>
                 </fieldset>
@@ -723,6 +722,7 @@
                   fieldData.is_lite ?? false
                 );
             },
+
             inputValueHandler( name, newValue, oldValue ) {
               this.fieldValue[ name ] = this.validateInputData( name, newValue, oldValue, this.fieldData );
             },
@@ -846,10 +846,18 @@
                     return;
                 }
 
-                let isChecked = this.validateInputData( this.fieldData.name, status ? 'on' : 'off', this.fieldValue[ this.fieldData.name ], this.fieldData  );
+                let isChecked = this.validateInputData( this.fieldData.name, status ? 'on' : 'off', this.fieldValue[ this.fieldData.name ], this.fieldData );
 
                 this.checked                           = isChecked;
                 this.fieldValue[ this.fieldData.name ] = isChecked;
+
+                // Make field value editable from premium version. (on switcher udpate)
+                this.fieldValue[ this.fieldData.name ] = dokan.hooks.applyFilters(
+                    'dokanFieldComponentSwitcherValue',
+                    isChecked,
+                    this.fieldValue,
+                    this.fieldData.name
+                );
 
                 this.$root.$emit( 'onFieldSwitched', this.fieldValue[ this.fieldData.name ], this.fieldData.name );
             },
@@ -917,12 +925,15 @@
                 }
             },
 
-            setCustomColor( value, key ) {
+            setCustomColor( value, key, defaultValue ) {
                 if ( ! key ) {
                     return;
                 }
 
-                this.fieldData[ key ] = value;
+                // Regular expression to validate hex color code
+                const hexPattern = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
+
+                this.fieldData[ key ] = hexPattern.test( value ) ? value : defaultValue;
             },
         },
     };
