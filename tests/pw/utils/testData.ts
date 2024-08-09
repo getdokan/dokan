@@ -10,6 +10,7 @@ const {
     CUSTOMER,
     CUSTOMER2,
     USER_PASSWORD,
+    CATEGORY_ID,
     SITE_PATH,
     BASE_URL,
     SITE_LANGUAGE,
@@ -762,12 +763,34 @@ export const data = {
 
     // commission [for all dokan setup wizard, dokan selling settings, dokan subscription product]
     commission: {
-        commissionType: 'fixed', // 'fixed','category_based'
-        commissionPercentage: '10',
-        commissionFixed: '10',
-        commissionCategory: {
-            allCategory: true, // true for all category, false for specific category
-            category: 'All Categories',
+        fixed: {
+            commissionType: 'fixed', // 'fixed','category_based'
+            commissionPercentage: '10',
+            commissionFixed: '10',
+            commissionCategory: {
+                allCategory: true, // true for all category, false for specific category
+                category: 'All Categories',
+            },
+        },
+
+        allCategory: {
+            commissionType: 'category_based', // 'fixed','category_based'
+            commissionPercentage: '5',
+            commissionFixed: '5',
+            commissionCategory: {
+                allCategory: true, // true for all category, false for specific category
+                category: 'All Categories',
+            },
+        },
+
+        specficCategory: {
+            commissionType: 'category_based', // 'fixed','category_based'
+            commissionPercentage: '2',
+            commissionFixed: '2',
+            commissionCategory: {
+                allCategory: false, // true for all category, false for specific category
+                category: CATEGORY_ID,
+            },
         },
     },
 
@@ -2411,8 +2434,21 @@ export const data = {
         },
 
         // theme
-        theme: {
+        themes: {
             storefront: 'storefront',
+        },
+
+        // plugins
+        plugins: {
+            basicAuth: 'Basic-Auth-master',
+            woocommerce: 'woocommerce',
+            dokan: 'dokan',
+            dokanLite: 'dokan-lite',
+            dokanPro: 'dokan-pro',
+            woocommerceBookings: 'woocommerce-bookings',
+            woocommerceSubscriptions: 'woocommerce-subscriptions',
+            woocommerceProductAddons: 'woocommerce-product-addons',
+            woocommerceSimpleAuctions: 'woocommerce-simple-auctions',
         },
     },
 
@@ -2424,12 +2460,15 @@ export const data = {
         setDebugConfig: (key: string, value: boolean) => `cd ${SITE_PATH} && wp config set ${key} ${value} --add --raw`,
         installWp: (core: any) => `cd ${SITE_PATH} && wp core install --locale="${core.language}" --url="${core.url}" --title="${core.title}" --admin_user="${core.admin}" --admin_password="${core.password}" --admin_email="${core.email}"`,
         installTheme: (theme: string) => `cd ${SITE_PATH} && wp theme install ${theme} --activate`,
-        permalink: 'npm run wp-env run tests-cli wp rewrite structure /%postname%/',
-        activateTheme: 'npm run wp-env run tests-cli wp theme activate storefront',
+        installPlugin: (plugin: string) => `cd ${SITE_PATH} && wp plugin install ${plugin} --activate --force`,
+        activatePlugin: (plugin: string, skipPlugins?: string) => `cd ${SITE_PATH} && wp plugin activate ${plugin} --skip-plugins=${skipPlugins}`,
+        activateTheme: (theme: string) => `cd ${SITE_PATH} && wp theme activate ${theme}`,
         permalinkLocal: `cd ${SITE_PATH} && wp rewrite structure /%postname%/ && wp rewrite flush`,
-        activateThemeLocal: `cd ${SITE_PATH} && wp theme activate storefront`,
+        removeLiteRequired: `cd ${SITE_PATH}/wp-content/plugins/dokan-pro && sed -i '''' '''s/Requires Plugins: woocommerce, dokan-lite/Requires Plugins: woocommerce, dokan/''' dokan-pro.php`,
         cloneDokanPro: "git clone -b test_utils https://github.com/getdokan/dokan-pro.git && cd dokan-pro && sed -i '''' '''s/Requires Plugins: woocommerce, dokan-lite/Requires Plugins: woocommerce, dokan/''' dokan-pro.php",
         buildPlugin: 'composer i --no-dev && composer du -o && npm i && npm run build',
+        permalinkWpEnv: 'npm run wp-env run tests-cli wp rewrite structure /%postname%/',
+        activateThemeWpEnv: 'npm run wp-env run tests-cli wp theme activate storefront',
     },
 
     cssStyle: {

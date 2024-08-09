@@ -49,7 +49,20 @@ test.describe('setup local site', () => {
     });
 
     test('install and activate theme', async () => {
-        await helpers.exeCommand(data.commands.installTheme(data.installWp.theme.storefront));
+        await helpers.exeCommand(data.commands.installTheme(data.installWp.themes.storefront));
+    });
+
+    test('activate basic auth plugin', async () => {
+        await helpers.exeCommand(data.commands.activatePlugin(data.installWp.plugins.basicAuth));
+        // await dbUtils.updateWpOptionTable(dbData.optionName.activePlugins, dbData.plugins, true);
+    });
+
+    test('remove dokan pro plugin requirements (dokan-lite)', async () => {
+        await helpers.exeCommand(data.commands.removeLiteRequired);
+    });
+
+    test('activate dokan pro modules', async () => {
+        await dbUtils.updateWpOptionTable(dbData.dokan.optionName.dokanActiveModules, dbData.dokan.modules, true);
     });
 
     test.skip('admin setup wordpress', async ({ page }) => {
@@ -59,10 +72,5 @@ test.describe('setup local site', () => {
         await localSetupPage.setupWp(data.installWp);
         await loginPage.adminLogin(data.admin);
         await localSetupPage.setPermalinkSettings(data.wpSettings.permalink);
-    });
-
-    test.skip('activate basic auth plugin', async () => {
-        await dbUtils.updateWpOptionTable(dbData.optionName.activatePlugins, dbData.plugins, true);
-        await dbUtils.updateWpOptionTable(dbData.dokan.optionName.dokanActiveModules, dbData.dokan.modules, true);
     });
 });

@@ -3,6 +3,7 @@ import { serialize, unserialize } from 'php-serialize';
 import { dbData } from '@utils/dbData';
 import { helpers } from '@utils/helpers';
 import { commission, feeRecipient } from '@utils/interfaces';
+
 const { DB_HOST_NAME, DB_USER_NAME, DB_USER_PASSWORD, DATABASE, DB_PORT, DB_PREFIX } = process.env;
 const dbPrefix = DB_PREFIX;
 
@@ -56,7 +57,7 @@ export const dbUtils = {
         return res;
     },
 
-    // get option value // todo: update method name getOptionValue 
+    // get option value // todo: update method name getOptionValue
     async getDokanSettings(optionName: string): Promise<any> {
         const query = `Select option_value FROM ${dbPrefix}_options WHERE option_name = '${optionName}';`;
         const res = await dbUtils.dbQuery(query);
@@ -99,7 +100,7 @@ export const dbUtils = {
             taxFeeRecipient: res.tax_fee_recipient,
             shippingTaxFeeRecipient: res.shipping_tax_fee_recipient,
         };
-        return [commission, feeRecipient];
+        return [commission, feeRecipient]; //todo: fix type
     },
 
     // create abuse report

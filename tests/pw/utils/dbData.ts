@@ -108,6 +108,11 @@ export const dbData = {
             product_category_style: 'single',
             product_vendors_can_create_tags: 'on',
             add_new_attribute: 'on',
+            hide_customer_info: 'off',
+            seller_review_manage: 'on',
+            new_seller_enable_auction: 'on',
+            enable_guest_user_enquiry: 'on',
+            disable_shipping_tab: 'off',
 
             // discount edit
             discount_edit_section: '',
@@ -116,16 +121,10 @@ export const dbData = {
                 'product-discount': 'product-discount',
             },
 
-            hide_customer_info: 'off',
-            seller_review_manage: 'on',
-            new_seller_enable_auction: 'on',
-            enable_guest_user_enquiry: 'on',
-
             // min max settings
             min_max_sub_section: '',
             enable_min_max_quantity: 'on',
             enable_min_max_amount: 'on',
-            disable_shipping_tab: 'off',
 
             // catalog mode
             catalog_mode_settings: '',
@@ -1192,7 +1191,7 @@ export const dbData = {
     // wp
 
     optionName: {
-        activatePlugins: 'active_plugins',
+        activePlugins: 'active_plugins',
     },
 
     plugins: {
