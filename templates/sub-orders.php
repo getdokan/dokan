@@ -101,8 +101,6 @@ $wc_shipping_enabled = get_option( 'woocommerce_calc_shipping' ) === 'yes' ? tru
 
                         $actions = apply_filters( 'dokan_my_account_my_sub_orders_actions', $actions, $order );
 
-                        error_log( print_r( $actions, 1 ) );
-
                         foreach ( $actions as $key => $action ) { // phpcs:ignore
                             echo '<a href="' . esc_url( $action['url'] ) . '" class="button ' . sanitize_html_class( $key ) . '">' . esc_html( $action['name'] ) . '</a>';
                         }
