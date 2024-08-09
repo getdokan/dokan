@@ -817,11 +817,11 @@ export const payloads = {
     }),
 
     createCategory: {
-        name: 'Clothing',
+        name: 'Clothings',
     },
 
     updateCategory: {
-        name: 'Clothing',
+        name: 'Clothings',
     },
 
     // attribute

@@ -344,6 +344,8 @@ export interface product {
             visibility: string;
             purchaseNote: string;
         };
+
+        commission: commission;
     };
 }
 
@@ -629,8 +631,7 @@ export interface dokanSetupWizard {
     mapApiSource: string;
     googleMapApiKey: string;
     sellingProductTypes: string;
-    commissionType: string;
-    adminCommission: string;
+    commission: commission;
     minimumWithdrawLimit: string;
 }
 
@@ -736,8 +737,7 @@ export interface vendor {
 
         addressFieldsEnabled: boolean;
 
-        commissionType: string;
-        adminCommission: string;
+        commission: commission;
 
         openingClosingTime: {
             days: string[];
@@ -1475,8 +1475,7 @@ export interface dokanSettings {
 
     // Selling Options Settings
     selling: {
-        commissionType: string;
-        adminCommission: string;
+        commission: commission;
         shippingFeeRecipient: string;
         productTaxFeeRecipient: string;
         shippingTaxFeeRecipient: string;
@@ -1889,9 +1888,13 @@ export interface storageState {
 export type responseBody = any;
 
 export interface commission {
-    type: string;
-    amount: string;
-    additionalAmount: string;
+    commissionType: string;
+    commissionPercentage: string;
+    commissionFixed: string;
+    commissionCategory: {
+        allCategory: boolean;
+        category: string;
+    };
 }
 
 export interface feeRecipient {

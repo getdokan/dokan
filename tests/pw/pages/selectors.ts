@@ -670,9 +670,12 @@ export const selector = {
                     commissionType: 'select#_subscription_product_admin_commission_type', // fixed, category_based
                     percentage: 'input#percentage-val-id',
                     fixed: 'input#fixed-val-id',
-                    expandCategories: '//i[contains(@class,"far fa-plus-square")]/..',
-                    categoryPerntage: (category: string) => `//p[contains(text(),'${category} ')]/../..//input[@id='percentage_commission']`,
+                    expandCategories: '(//i[contains(@class,"far fa-plus-square")]/..)[1]',
+                    expandedCategories: '(//i[contains(@class,"far fa-minus-square")]/..)[1]',
+                    categoryPercentage: (category: string) => `//p[contains(text(),'${category} ')]/../..//input[@id='percentage_commission']`,
                     categoryFixed: (category: string) => `//p[contains(text(),'${category} ')]/../..//input[@id='fixed_commission']`,
+                    categoryPercentageById: (category: string) => `//p[contains(text(), '(${category})')]/../..//input[@id='percentage_commission']`,
+                    categoryFixedById: (category: string) => `//p[contains(text(), '(${category})')]/../..//input[@id='fixed_commission']`,
 
                     // Edit Options
                     cancelEdit: '//div[contains(@class, "action-links footer")]//button[contains(text(),"Cancel")]',
@@ -1953,9 +1956,12 @@ export const selector = {
                     commissionType: 'select#dokan_selling\\[commission_type\\]', // fixed, category_based
                     percentage: 'input#percentage-val-id',
                     fixed: 'input#fixed-val-id',
-                    expandCategories: '//i[contains(@class,"far fa-plus-square")]/..',
-                    categoryPerntage: (category: string) => `//p[contains(text(),'${category} ')]/../..//input[@id='percentage_commission']`,
-                    categoryFixed: (category: string) => `//p[contains(text(),'${category} ')]/../..//input[@id='fixed_commission']`,
+                    expandCategories: '(//i[contains(@class,"far fa-plus-square")]/..)[1]',
+                    expandedCategories: '(//i[contains(@class,"far fa-minus-square")]/..)[1]',
+                    categoryPercentage: (category: string) => `//p[contains(text(),'${category}')]/../..//input[@id='percentage_commission']`,
+                    categoryFixed: (category: string) => `//p[contains(text(),'${category}')]/../..//input[@id='fixed_commission']`,
+                    categoryPercentageById: (category: string) => `//p[contains(text(),'(${category})')]/../..//input[@id='percentage_commission']`,
+                    categoryFixedById: (category: string) => `//p[contains(text(),'(${category})')]/../..//input[@id='fixed_commission']`,
                     shippingFeeRecipient: (feeReceiver: string) => `//label[contains(@for,'${feeReceiver}-shipping_fee_recipient')]`,
                     productTaxFeeRecipient: (feeReceiver: string) => `//label[contains(@for,'${feeReceiver}-tax_fee_recipient')]`,
                     shippingTaxFeeRecipient: (feeReceiver: string) => `//label[contains(@for,'${feeReceiver}-shipping_tax_fee_recipient')]`,
@@ -2473,12 +2479,15 @@ export const selector = {
                 orderStatusChange: '//label[@for="order_status_change" and @class="switch-label"]',
 
                 // Commission
-                commissionType: 'select#_subscription_product_admin_commission_type', // fixed, category_based
+                commissionType: 'select#_subscription_product_admin_commission_type, select#dokan_selling\\[commission_type\\]', // fixed, category_based   [second one is for commission settings locator]
                 percentage: 'input#percentage-val-id',
                 fixed: 'input#fixed-val-id',
-                expandCategories: '//i[contains(@class,"far fa-plus-square")]/..',
-                categoryPerntage: (category: string) => `//p[text()='${category}']/../..//input[@id='percentage_commission']`,
+                expandCategories: '(//i[contains(@class,"far fa-plus-square")]/..)[1]',
+                expandedCategories: '(//i[contains(@class,"far fa-minus-square")]/..)[1]',
+                categoryPercentage: (category: string) => `//p[text()='${category}']/../..//input[@id='percentage_commission']`,
                 categoryFixed: (category: string) => `//p[text()='${category}']/../..//input[@id='fixed_commission']`,
+                categoryPercentageById: (category: string) => `//p[contains(text(), '(${category})')]/../..//input[@id='percentage_commission']`,
+                categoryFixedById: (category: string) => `//p[contains(text(), '(${category})')]/../..//input[@id='fixed_commission']`,
 
                 // Withdraw
                 payPal: '//label[@for="withdraw_methods[paypal]" and @class="switch-label"]',
@@ -2806,19 +2815,23 @@ export const selector = {
                 productType: '#product-type',
                 virtual: '#\\_virtual',
                 downloadable: '#\\_downloadable',
+                // todo: group below locators
 
                 // Add New Product Sub Menus
-                general: '.general_options a',
-                inventory: '.inventory_options a',
-                shipping: '.shipping_options a',
-                linkedProducts: '.linked_product_options a',
-                attributes: '.attribute_options a',
-                generateVariations: 'button.generate_variations',
-                variations: '.variations_options a',
-                advanced: '.advanced_options a',
-                auction: '.auction_tab_options a',
-                bookingAvailability: '.bookings_availability_options a',
-                bookingCosts: '.bookings_pricing_options a',
+                subMenus: {
+                    general: '.general_options a',
+                    inventory: '.inventory_options a',
+                    shipping: '.shipping_options a',
+                    linkedProducts: '.linked_product_options a',
+                    attributes: '.attribute_options a',
+                    generateVariations: 'button.generate_variations',
+                    variations: '.variations_options a',
+                    advanced: '.advanced_options a',
+                    auction: '.auction_tab_options a',
+                    bookingAvailability: '.bookings_availability_options a',
+                    bookingCosts: '.bookings_pricing_options a',
+                    commission: '.dokan_product_pack_commission_options.dokan_product_pack_commission_tab',
+                },
 
                 // General
                 regularPrice: 'div#general_product_data  input#\\_regular_price',
@@ -2945,13 +2958,29 @@ export const selector = {
                 productVariations: '.woocommerce_variation',
                 addVariations: '#field_to_edit',
                 go: '.bulk_edit', // invokes default js alert
+
                 // Advanced
-                purchaseNote: '#\\_purchase_note',
-                menuOrder: '#menu_order',
-                enableReviews: '#comment_status',
-                adminCommissionType: '#\\_per_product_admin_commission_type',
-                adminCommissionSingle: '.show_if_simple #admin_commission',
-                adminCommissionCombined: '.additional_fee > .input-text',
+                advanced: {
+                    purchaseNote: '#\\_purchase_note',
+                    menuOrder: '#menu_order',
+                    enableReviews: '#comment_status',
+                    commissionPercentage: '#admin_commission',
+                    commissionFixed: '.additional_fee > .input-text',
+                },
+
+                // Commission [only for dokan subscription]
+                commission: {
+                    commissionType: 'select#_subscription_product_admin_commission_type', // fixed, category_based
+                    percentage: 'input#percentage-val-id',
+                    fixed: 'input#fixed-val-id',
+                    expandCategories: '(//i[contains(@class,"far fa-plus-square")]/..)[1]',
+                    expandedCategories: '(//i[contains(@class,"far fa-minus-square")]/..)[1]',
+                    categoryPercentage: (category: string) => `//p[text()='${category}']/../..//input[@id='percentage_commission']`,
+                    categoryFixed: (category: string) => `//p[text()='${category}']/../..//input[@id='fixed_commission']`,
+                    categoryPercentageById: (category: string) => `//p[contains(text(), '(${category})')]/../..//input[@id='percentage_commission']`,
+                    categoryFixedById: (category: string) => `//p[contains(text(), '(${category})')]/../..//input[@id='fixed_commission']`,
+                },
+
                 // Vendor
                 // storeName: '#dokan_product_author_override',
                 // storeName: 'div#sellerdiv span.select2-selection__arrow', // todo: dokansellerdiv on git action nd sellerdiv on local why

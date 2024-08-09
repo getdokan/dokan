@@ -88,8 +88,9 @@ export class SettingsPage extends AdminPage {
         await this.click(settingsAdmin.menus.sellingOptions);
 
         // commission settings
-        await this.selectByValue(settingsAdmin.selling.commissionType, selling.commissionType);
-        await this.clearAndType(settingsAdmin.selling.percentage, selling.adminCommission);
+        await this.selectByValue(settingsAdmin.selling.commissionType, selling.commission.commissionType);
+        await this.clearAndType(settingsAdmin.selling.percentage, selling.commission.commissionPercentage);
+        await this.clearAndType(settingsAdmin.selling.fixed, selling.commission.commissionFixed);
         await this.click(settingsAdmin.selling.shippingFeeRecipient(selling.shippingFeeRecipient));
         await this.click(settingsAdmin.selling.productTaxFeeRecipient(selling.productTaxFeeRecipient));
         await this.click(settingsAdmin.selling.shippingTaxFeeRecipient(selling.shippingTaxFeeRecipient));
@@ -115,7 +116,8 @@ export class SettingsPage extends AdminPage {
 
         // save settings
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.selling.sellingOptionsSaveChanges);
-        await this.toHaveValue(settingsAdmin.selling.percentage, selling.adminCommission);
+        await this.toHaveValue(settingsAdmin.selling.percentage, selling.commission.commissionPercentage);
+        await this.toHaveValue(settingsAdmin.selling.percentage, selling.commission.commissionFixed);
     }
 
     // Admin Set Dokan Withdraw Settings

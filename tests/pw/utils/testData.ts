@@ -451,6 +451,16 @@ export const data = {
                 visibility: 'hidden', // visible, catalog, search, hidden
                 purchaseNote: 'test purchase note',
             },
+
+            commission: {
+                commissionType: 'fixed', // 'fixed','category_based'  [category commission will only be applicable to dokan subscription product]
+                commissionPercentage: '2',
+                commissionFixed: '2',
+                commissionCategory: {
+                    allCategory: true, // true for all category, false for specific category
+                    category: 'All Categories',
+                },
+            },
         },
     },
 
@@ -750,6 +760,17 @@ export const data = {
         },
     },
 
+    // commission [for all dokan setup wizard, dokan selling settings, dokan subscription product]
+    commission: {
+        commissionType: 'fixed', // 'fixed','category_based'
+        commissionPercentage: '10',
+        commissionFixed: '10',
+        commissionCategory: {
+            allCategory: true, // true for all category, false for specific category
+            category: 'All Categories',
+        },
+    },
+
     // Dokan Setup Wizard
     dokanSetupWizard: {
         vendorStoreURL: 'store',
@@ -758,8 +779,15 @@ export const data = {
         mapApiSource: 'google_maps', // 'google_maps', 'mapbox'
         googleMapApiKey: GMAP,
         sellingProductTypes: 'sell_both', // 'physical', 'digital', 'sell_both',
-        commissionType: 'fixed', // 'fixed','category_based'
-        adminCommission: '10',
+        commission: {
+            commissionType: 'fixed', // 'fixed','category_based'
+            commissionPercentage: '10',
+            commissionFixed: '0',
+            commissionCategory: {
+                allCategory: true, // true for all category, false for specific category
+                category: 'All Categories',
+            },
+        },
         minimumWithdrawLimit: '5',
     },
 
@@ -833,6 +861,7 @@ export const data = {
                 reverseWithdraws: 'wp-admin/admin.php?page=dokan#/reverse-withdrawal',
                 vendors: 'wp-admin/admin.php?page=dokan#/vendors',
                 vendorDetails: (vendorId: string) => `wp-admin/admin.php?page=dokan#/vendors/${vendorId}`,
+                vendorDetailsEdit: (sellerId: string) => `wp-admin/admin.php?page=dokan#/vendors/${sellerId}?edit=true`,
                 storeCategories: 'wp-admin/admin.php?page=dokan#/store-categories',
                 abuseReports: 'wp-admin/admin.php?page=dokan#/abuse-reports',
                 storeReviews: 'wp-admin/admin.php?page=dokan#/store-reviews',
@@ -1005,6 +1034,7 @@ export const data = {
                 dummyData: 'dokan/v1/dummy-data',
                 refunds: 'dokan/v1/refunds',
                 modules: 'dokan/v1/admin/modules',
+                multistepCategories: 'dokan/v1/products/multistep-categories',
                 storeReviews: 'dokan/v1/store-reviews',
                 productAdvertising: 'dokan/v1/product_adv',
                 wholesaleRegister: 'dokan/v1/wholesale/register',
@@ -1116,8 +1146,15 @@ export const data = {
             addressFieldsEnabled: false,
 
             // commission
-            commissionType: 'fixed', // 'fixed','category_based'
-            adminCommission: '10',
+            commission: {
+                commissionType: 'fixed', // 'fixed','category_based'
+                commissionPercentage: '5',
+                commissionFixed: '5',
+                commissionCategory: {
+                    allCategory: true, // true for all category, false for specific category
+                    category: 'All Categories',
+                },
+            },
 
             account: {
                 updateSuccessMessage: 'Account details changed successfully.',
@@ -1878,8 +1915,15 @@ export const data = {
 
         // Selling Options Settings
         selling: {
-            commissionType: 'fixed', // 'fixed','category_based'
-            adminCommission: '10',
+            commission: {
+                commissionType: 'fixed', // 'fixed','category_based'
+                commissionPercentage: '10',
+                commissionFixed: '10',
+                commissionCategory: {
+                    allCategory: true, // true for all category, false for specific category
+                    category: 'All Categories',
+                },
+            },
             shippingFeeRecipient: 'seller', // 'seller', 'admin'
             productTaxFeeRecipient: 'seller', // 'seller', 'admin'
             shippingTaxFeeRecipient: 'seller', // 'seller', 'admin'

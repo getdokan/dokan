@@ -8,7 +8,6 @@ const { DOKAN_PRO } = process.env;
 
 // selectors
 const vendors = selector.admin.dokan.vendors;
-const userInfo = selector.admin.users.userInfo;
 
 export class StoresPage extends AdminPage {
     constructor(page: Page) {
@@ -150,11 +149,8 @@ export class StoresPage extends AdminPage {
     }
 
     // edit vendor
-    async editVendor(vendor: vendor) {
-        await this.searchVendor(vendor.storeName);
-
-        await this.hover(vendors.vendorRow(vendor.storeName));
-        await this.clickAndWaitForLoadState(vendors.vendorEdit(vendor.storeName));
+    async editVendor(sellerId:string, vendor: vendor) {
+        await this.goto(data.subUrls.backend.dokan.vendorDetailsEdit(sellerId));
 
         // basic
         await this.clearAndType(vendors.editVendor.firstName, vendor.username);
@@ -212,8 +208,9 @@ export class StoresPage extends AdminPage {
         await this.enableSwitcher(vendors.editVendor.makeVendorFeature);
 
         // commission
-        await this.selectByValue(vendors.editVendor.commissionType, vendor.vendorInfo.commissionType);
-        await this.clearAndType(vendors.editVendor.percentage, vendor.vendorInfo.adminCommission);
+        await this.selectByValue(vendors.editVendor.commissionType, vendor.vendorInfo.commission.commissionType);
+        await this.clearAndType(vendors.editVendor.percentage, vendor.vendorInfo.commission.commissionType);
+        await this.clearAndType(vendors.editVendor.fixed, vendor.vendorInfo.commission.commissionFixed);
 
         // todo:  vendor subscription
 
