@@ -2,7 +2,28 @@ import { faker } from '@faker-js/faker';
 import { helpers } from '@utils/helpers';
 import 'dotenv/config';
 
-const { ADMIN, ADMIN_PASSWORD, VENDOR, VENDOR2, CUSTOMER, CUSTOMER2, USER_PASSWORD, SITE_PATH, GMAP, MAPBOX, LICENSE_KEY } = process.env;
+const {
+    ADMIN,
+    ADMIN_PASSWORD,
+    VENDOR,
+    VENDOR2,
+    CUSTOMER,
+    CUSTOMER2,
+    USER_PASSWORD,
+    SITE_PATH,
+    BASE_URL,
+    SITE_LANGUAGE,
+    SITE_TITLE,
+    ADMIN_EMAIL,
+    DB_HOST_NAME,
+    DATABASE,
+    DB_USER_NAME,
+    DB_USER_PASSWORD,
+    DB_PREFIX,
+    GMAP,
+    MAPBOX,
+    LICENSE_KEY,
+} = process.env;
 
 interface user {
     username: string;
@@ -17,17 +38,6 @@ interface admin {
 export { admin, user };
 
 export const data = {
-    envData: 'utils/data.json',
-    env: {
-        // db data
-        DB_HOST_NAME: process.env.DB_HOST_NAME,
-        DB_USER_NAME: process.env.DB_USER_NAME,
-        DB_USER_PASSWORD: process.env.DB_USER_PASSWORD,
-        DATABASE: process.env.DATABASE,
-        DB_PORT: process.env.DB_PORT,
-        DB_PREFIX: process.env.DB_PREFIX,
-    },
-
     systemInfo: 'playwright/systemInfo.json',
 
     auth: {
@@ -793,6 +803,7 @@ export const data = {
         gmap: '/maps/api',
 
         backend: {
+            DbSetup: 'wp-admin/install.php',
             login: 'wp-login.php',
             adminLogin: 'wp-admin',
             adminLogout: 'wp-login.php?action=logout',
@@ -2315,29 +2326,62 @@ export const data = {
         license: 'utils/sampleData/license.png',
     },
 
+    // install wordpress
+    installWp: {
+        // db info
+        dbInfo: {
+            dbHost: DB_HOST_NAME,
+            dbName: DATABASE,
+            dbUserName: DB_USER_NAME,
+            dbPassword: DB_USER_PASSWORD,
+            dbTablePrefix: `${DB_PREFIX}_`,
+            update: {
+                DB_HOST_NAME: DB_HOST_NAME,
+                DATABASE: DATABASE,
+                DB_USER_NAME: DB_USER_NAME,
+                DB_USER_PASSWORD: DB_USER_PASSWORD,
+                DB_PREFIX: `${DB_PREFIX}_`,
+            },
+        },
+
+        // debugInfo
+        debugInfo: {
+            WP_DEBUG: true,
+            SCRIPT_DEBUG: true,
+            WP_DEBUG_LOG: true,
+            WP_DEBUG_DISPLAY: true,
+        },
+
+        // site info
+        siteInfo: {
+            language: SITE_LANGUAGE ?? 'en_US',
+            url: BASE_URL ?? 'http://localhost:9999',
+            title: SITE_TITLE ?? 'Test Playground',
+            admin: ADMIN ?? 'admin',
+            password: ADMIN_PASSWORD ?? 'admin',
+            email: ADMIN_EMAIL ?? 'shashwata@wedevs.com',
+        },
+
+        // theme
+        theme: {
+            storefront: 'storefront',
+        },
+    },
+
     // command
     commands: {
+        resetSite: `cd ${SITE_PATH} && wp db reset --yes`,
+        createConfig: (db: any) => `cd ${SITE_PATH} && wp config create --dbhost="${db.dbHost}" --dbname="${db.dbName}" --dbuser="${db.dbUserName}" --dbpass="${db.dbPassword}"  --dbprefix="${db.dbTablePrefix}" --force`,
+        setConfig: (key: string, value: string) => `cd ${SITE_PATH} && wp config set ${key} ${value} --add`,
+        setDebugConfig: (key: string, value: boolean) => `cd ${SITE_PATH} && wp config set ${key} ${value} --add --raw`,
+        installWp: (core: any) => `cd ${SITE_PATH} && wp core install --locale="${core.language}" --url="${core.url}" --title="${core.title}" --admin_user="${core.admin}" --admin_password="${core.password}" --admin_email="${core.email}"`,
+        installTheme: (theme: string) => `cd ${SITE_PATH} && wp theme install ${theme} --activate`,
         permalink: 'npm run wp-env run tests-cli wp rewrite structure /%postname%/',
         activateTheme: 'npm run wp-env run tests-cli wp theme activate storefront',
         permalinkLocal: `cd ${SITE_PATH} && wp rewrite structure /%postname%/ && wp rewrite flush`,
         activateThemeLocal: `cd ${SITE_PATH} && wp theme activate storefront`,
         cloneDokanPro: "git clone -b test_utils https://github.com/getdokan/dokan-pro.git && cd dokan-pro && sed -i '''' '''s/Requires Plugins: woocommerce, dokan-lite/Requires Plugins: woocommerce, dokan/''' dokan-pro.php",
         buildPlugin: 'composer i --no-dev && composer du -o && npm i && npm run build',
-    },
-
-    // install wordpress
-    installWp: {
-        // db info
-        dbHost: process.env.DB_HOST_NAME,
-        dbUserName: process.env.DB_USER_NAME,
-        dbPassword: process.env.DB_USER_PASSWORD,
-        dbName: process.env.DATABASE,
-        dbTablePrefix: process.env.DB_PREFIX,
-        // site info
-        siteTitle: process.env.DATABASE,
-        adminUserName: ADMIN,
-        adminPassword: USER_PASSWORD,
-        adminEmail: 'shashwata@wedevs.com',
     },
 
     cssStyle: {

@@ -1165,7 +1165,7 @@ export const dbData = {
     // wp
 
     optionName: {
-        activePlugins: 'active_plugins',
+        activatePlugins: 'active_plugins',
     },
 
     plugins: {

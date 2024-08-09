@@ -369,9 +369,14 @@ export const helpers = {
     // execute command
     async exeCommand(command: string, directoryPath = process.cwd()) {
         process.chdir(directoryPath);
-
-        const output = execSync(command, { encoding: 'utf-8' });
-        console.log(output);
+        try {
+            const output = execSync(command, { encoding: 'utf-8' });
+            console.log(output);
+            return output;
+        } catch (error: any) {
+            console.log(error);
+            return error;
+        }
     },
 
     // create a new page

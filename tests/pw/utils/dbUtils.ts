@@ -23,7 +23,7 @@ export const dbUtils = {
         try {
             connection = await pool.getConnection();
             const [result] = await connection.execute(query, params);
-            console.log(result);
+            // console.log(result);
             return result;
         } catch (err) {
             console.error('Database query error:', err);
@@ -48,9 +48,10 @@ export const dbUtils = {
     async createUserMeta(userId: string, metaKey: string, metaValue: object | string, serializeData?: string): Promise<any> {
         metaValue = serializeData ? serialize(metaValue) : metaValue;
         const metaExists = await dbUtils.dbQuery(`SELECT COUNT(*) AS count FROM ${dbPrefix}_usermeta WHERE user_id = '${userId}' AND meta_key = '${metaKey}';`);
-        const query = metaExists[0].count > 0
-            ? `UPDATE ${dbPrefix}_usermeta SET meta_value = '${metaValue}'  WHERE user_id = '${userId}' AND meta_key = '${metaKey}';`
-            : `INSERT INTO ${dbPrefix}_usermeta VALUES ( NULL, '${userId}', '${metaKey}', '${metaValue}');`;
+        const query =
+            metaExists[0].count > 0
+                ? `UPDATE ${dbPrefix}_usermeta SET meta_value = '${metaValue}'  WHERE user_id = '${userId}' AND meta_key = '${metaKey}';`
+                : `INSERT INTO ${dbPrefix}_usermeta VALUES ( NULL, '${userId}', '${metaKey}', '${metaValue}');`;
         const res = await dbUtils.dbQuery(query);
         return res;
     },
@@ -77,7 +78,7 @@ export const dbUtils = {
     },
 
     // update option value
-    async updateWpOptionTable(optionName: string, optionValue: object | string, serializeData?: string): Promise<any> {
+    async updateWpOptionTable(optionName: string, optionValue: object | string, serializeData?: boolean): Promise<any> {
         optionValue = serializeData ? serialize(optionValue) : optionValue;
         const query = `UPDATE ${dbPrefix}_options SET option_value = '${optionValue}' WHERE option_name = '${optionName}';`;
         const res = await dbUtils.dbQuery(query);
@@ -127,7 +128,7 @@ export const dbUtils = {
             status: 0, // 0 for pending, 1 for completed
             method: 0,
         };
-        // console.log('refund data:', refund);
+
         const query = `INSERT INTO ${dbPrefix}_dokan_refund VALUES ( '${refund.id}', '${refund.orderId}', '${refund.sellerId}', ${refund.refundAmount}, 
         '${refund.refundReason}', '${refund.itemQtys}', '${refund.itemTotals}', '${refund.itemTaxTotals}', '${refund.restockItems}', '${refund.date}', 
         '${refund.status}', '${refund.method}' );`;

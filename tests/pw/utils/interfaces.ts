@@ -1781,17 +1781,23 @@ export interface storeShare {
 // install wordpress
 export interface installWp {
     // db info
-    dbHost: string;
-    dbUserName: string;
-    dbPassword: string;
-    dbName: string;
-    dbTablePrefix: string;
+    dbInfo: {
+        dbHost: string;
+        dbName: string;
+        dbUserName: string;
+        dbPassword: string;
+        dbTablePrefix: string;
+    };
 
     // site info
-    siteTitle: string;
-    adminUserName: string;
-    adminPassword: string;
-    adminEmail: string;
+    siteInfo: {
+        language: string;
+        url: string;
+        title: string;
+        admin: string;
+        password: string;
+        email: string;
+    };
 }
 
 // api interfaces
