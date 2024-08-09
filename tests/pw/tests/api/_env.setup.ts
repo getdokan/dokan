@@ -57,6 +57,60 @@ setup.describe('setup site & woocommerce & user settings', () => {
         expect(activeModules).toEqual(expect.arrayContaining(data.modules.modules));
     });
 
+    setup('set tax rate', { tag: ['@lite'] }, async () => {
+        await apiUtils.setUpTaxRate(payloads.enableTaxRate, payloads.createTaxRate);
+    });
+
+    setup('set shipping methods', { tag: ['@lite'] }, async () => {
+        // delete previous shipping zones
+        const allShippingZoneIds = (await apiUtils.getAllShippingZones()).map((a: { id: string }) => a.id);
+        // allShippingZoneIds = helpers.removeItem(allShippingZoneIds, 0) // avoid remove default zone id
+        if (allShippingZoneIds?.length) {
+            for (const shippingZoneId of allShippingZoneIds) {
+                await apiUtils.deleteShippingZone(shippingZoneId);
+            }
+        }
+
+        // create shipping zone, location and method
+        const [, zoneId] = await apiUtils.createShippingZone(payloads.createShippingZone);
+        await apiUtils.addShippingZoneLocation(zoneId, payloads.addShippingZoneLocation);
+        await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodFlatRate);
+        // await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodFreeShipping);
+        // await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodLocalPickup);
+        if (DOKAN_PRO) {
+            await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodDokanTableRateShipping);
+            await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodDokanDistanceRateShipping);
+            await apiUtils.addShippingZoneMethod(zoneId, payloads.addShippingMethodDokanVendorShipping);
+        }
+    });
+
+    setup('set basic payments', { tag: ['@lite'] }, async () => {
+        await apiUtils.updatePaymentGateway('bacs', payloads.bcs);
+        await apiUtils.updatePaymentGateway('cheque', payloads.cheque);
+        await apiUtils.updatePaymentGateway('cod', payloads.cod);
+        // await apiUtils.updatePaymentGateway('dokan-stripe-connect', payloads.stripeConnect);
+        // await apiUtils.updatePaymentGateway('dokan_paypal_marketplace', payloads.payPal);
+        // await apiUtils.updatePaymentGateway('dokan_mangopay', payloads.mangoPay);
+        // await apiUtils.updatePaymentGateway('dokan_razorpay', payloads.razorpay);
+        // await apiUtils.updatePaymentGateway('dokan_stripe_express', payloads.stripeExpress);
+    });
+
+    setup('add categories and attributes', { tag: ['@lite'] }, async () => {
+        // delete previous categories and attributes
+        await apiUtils.updateBatchCategories('delete', []);
+        await apiUtils.updateBatchAttributes('delete', []);
+
+        // create category
+        const [, categoryId] = await apiUtils.createCategory(payloads.createCategory);
+        helpers.createEnvVar('CATEGORY_ID', categoryId);
+
+        // create attribute, attribute term
+        const [, attributeId] = await apiUtils.createAttribute({ name: 'sizes' });
+        await apiUtils.createAttributeTerm(attributeId, { name: 's' });
+        await apiUtils.createAttributeTerm(attributeId, { name: 'l' });
+        await apiUtils.createAttributeTerm(attributeId, { name: 'm' });
+    });
+
     // Vendor Details
     setup('add vendor1 product', { tag: ['@lite'] }, async () => {
         // delete previous store products with predefined name if any

@@ -240,6 +240,23 @@
           admin can view vendor orders [lite]: true
           admin can perform bulk action on vendors [lite]: true
 
+- page: 'Commission'
+  features:
+      admin:
+          admin can set commission on Dokan setup wizard (fixed) [lite]: true
+          admin can set commission on Dokan setup wizard (category based) [lite]: true
+          admin can set commission on Dokan setup wizard (specific category based) [lite]: true
+          admin can set commission on Dokan selling settings (fixed) [lite]: true
+          admin can set commission on Dokan selling settings (category based) [lite]: true
+          admin can set commission on Dokan selling settings (specific category based) [lite]: true
+          admin can set commission for vendor (fixed) [lite]: true
+          admin can set commission for vendor (category based) [lite]: true
+          admin can set commission for vendor (specific category based) [lite]: true
+          admin can set commission for a product (fixed) [lite]: true
+          admin can set commission to Dokan subscription product (fixed): true
+          admin can set commission to Dokan subscription product (category based): true
+          admin can set commission to Dokan subscription product (specific category based): true
+
 - page: 'Withdraw'
   features:
       admin:
@@ -317,10 +334,10 @@
 - page: 'Shortcode'
   features:
       admin:
-          admin can create page with dokan shortcode: false
+          admin can create page with Dokan shortcode: false
       vendor:
-          vendor can view dokan dashboard (shortcode): true
-          vendor can view dokan subscription packs (shortcode): true
+          vendor can view Dokan dashboard (shortcode): true
+          vendor can view Dokan subscription packs (shortcode): true
           guest user can view vendor registration form (shortcode): true
       customer:
           customer can view best selling products (shortcode): true
@@ -722,7 +739,7 @@
           admin can set product advertising expiry days: false
           admin can enable vendor product advertising purchase permission: false
           admin can set product advertisement cost: false
-          admin can enable product advertising on dokan subscription: false
+          admin can enable product advertising on Dokan subscription: false
           admin can set advertised product as featured: false
           admin can set advertised product display pefeference: false
           admin can hide out of stock advertised product: false

@@ -1,7 +1,6 @@
 <?php
 
 use WeDevs\Dokan\ProductCategory\Helper;
-use WeDevs\Dokan\Walkers\TaxonomyDropdown;
 
 ?>
 <script type="text/html" id="tmpl-dokan-add-new-product">

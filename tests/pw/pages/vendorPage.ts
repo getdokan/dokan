@@ -99,9 +99,7 @@ export class VendorPage extends BasePage {
         await this.checkIfVisible(selector.customer.cDashboard.termsAndConditions);
         const subscriptionPackIsVisible = await this.isVisible(registrationVendor.subscriptionPack);
         subscriptionPackIsVisible && (await this.selectByLabel(registrationVendor.subscriptionPack, data.predefined.vendorSubscription.nonRecurring));
-        setupWizardData.setupWizardEnabled
-            ? await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.setupWizard, registrationVendor.register)
-            : await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.dashboard, registrationVendor.register);
+        setupWizardData.setupWizardEnabled ? await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.setupWizard, registrationVendor.register) : await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.dashboard, registrationVendor.register);
         const registrationErrorIsVisible = await this.isVisible(selector.customer.cWooSelector.wooCommerceError);
         if (registrationErrorIsVisible) {
             const hasError = await this.hasText(selector.customer.cWooSelector.wooCommerceError, data.customer.registration.registrationErrorMessage);
@@ -294,7 +292,7 @@ export class VendorPage extends BasePage {
             orderDetails.refunded = helpers.price((await this.getElementText(ordersVendor.orderDetails.refunded)) as string);
         }
 
-        console.log(orderDetails);
+        // console.log(orderDetails);
         return orderDetails;
     }
 

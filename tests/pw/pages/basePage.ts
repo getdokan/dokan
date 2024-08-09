@@ -103,7 +103,7 @@ export class BasePage {
         if (!this.isCurrentUrl(subPath)) {
             const url = this.createUrl(subPath);
             await this.page.goto(url, { waitUntil: 'networkidle' });
-            // await this.page.goto(url, { waitUntil: 'domcontentloaded' }); //doesn't work for backend
+            // await this.page.goto(url, { waitUntil: 'domcontentloaded' }); //doesn't work for backend // todo: re-test this
             // this.page.waitForURL(url + '/**', { waitUntil: 'networkidle' });
             // this.page.waitForURL(url + '/**', { waitUntil: 'domcontentloaded' });
             const currentUrl = this.getCurrentUrl();
@@ -265,7 +265,7 @@ export class BasePage {
         // todo: fix this; also update for same and different subUrls
         const promises = [];
         subUrls.forEach(subUrl => {
-            console.log('subUls: ', subUrl[0], ' code: ', subUrl[1]);
+            // console.log('subUls: ', subUrl[0], ' code: ', subUrl[1]);
             const promise = this.page.waitForResponse(resp => resp.url().includes(subUrl[0] as string) && resp.status() === (subUrl[1] ?? code));
             promises.push(promise);
         });
@@ -318,6 +318,12 @@ export class BasePage {
     // type & wait for load state
     async pressAndWaitForLoadState(key: string): Promise<void> {
         await Promise.all([this.waitForLoadState(), this.press(key)]);
+    }
+
+    // select & wait for response
+    async selectAndWaitForResponse(subUrl: string, selector: string, value: string, code = 200): Promise<Response> {
+        const [response] = await Promise.all([this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code), this.selectByValue(selector, value)]);
+        return response;
     }
 
     // type & wait for response

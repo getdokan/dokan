@@ -51,13 +51,13 @@ export class ProductsPage extends AdminPage {
         // product basic info
         await this.type(productsAdmin.product.productName, product.productName());
         await this.selectByValue(productsAdmin.product.productType, product.productType);
-        await this.click(productsAdmin.product.general);
+        await this.click(productsAdmin.product.subMenus.general);
         await this.type(productsAdmin.product.regularPrice, product.regularPrice());
         await this.click(productsAdmin.product.category(product.category));
 
         // stock status
         if (product.stockStatus) {
-            await this.click(productsAdmin.product.inventory);
+            await this.click(productsAdmin.product.subMenus.inventory);
             await this.selectByValue(productsAdmin.product.stockStatus, data.product.stockStatus.outOfStock);
         }
 
@@ -97,7 +97,7 @@ export class ProductsPage extends AdminPage {
         await this.selectByValue(productsAdmin.product.productType, product.productType);
 
         // add attributes
-        await this.click(productsAdmin.product.attributes);
+        await this.click(productsAdmin.product.subMenus.attributes);
 
         if (await this.isVisibleLocator(productsAdmin.product.customProductAttribute)) {
             await this.selectByValue(productsAdmin.product.customProductAttribute, `pa_${product.attribute}`);
@@ -113,8 +113,8 @@ export class ProductsPage extends AdminPage {
         await this.clickAndWaitForResponse(data.subUrls.ajax, productsAdmin.product.saveAttributes);
 
         // add variations
-        await this.click(productsAdmin.product.variations);
-        await this.clickAndAcceptAndWaitForResponse(data.subUrls.ajax, productsAdmin.product.generateVariations);
+        await this.click(productsAdmin.product.subMenus.variations);
+        await this.clickAndAcceptAndWaitForResponse(data.subUrls.ajax, productsAdmin.product.subMenus.generateVariations);
         this.fillAlert('100');
         await this.selectByValue(productsAdmin.product.addVariations, product.variations.variableRegularPrice);
 
@@ -137,7 +137,7 @@ export class ProductsPage extends AdminPage {
         // Name
         await this.type(productsAdmin.product.productName, product.productName());
         await this.selectByValue(productsAdmin.product.productType, product.productType);
-        await this.click(productsAdmin.product.general);
+        await this.click(productsAdmin.product.subMenus.general);
         await this.type(productsAdmin.product.subscriptionPrice, product.subscriptionPrice());
         await this.selectByValue(productsAdmin.product.subscriptionPeriodInterval, product.subscriptionPeriodInterval);
         await this.selectByValue(productsAdmin.product.subscriptionPeriod, product.subscriptionPeriod);
@@ -167,7 +167,7 @@ export class ProductsPage extends AdminPage {
         await this.selectByValue(productsAdmin.product.productType, product.productType);
 
         // add attributes
-        await this.click(productsAdmin.product.attributes);
+        await this.click(productsAdmin.product.subMenus.attributes);
 
         if (await this.isVisibleLocator(productsAdmin.product.customProductAttribute)) {
             await this.selectByValue(productsAdmin.product.customProductAttribute, `pa_${product.attribute}`);
@@ -184,8 +184,8 @@ export class ProductsPage extends AdminPage {
         // await this.wait(2);
 
         // add variations
-        await this.click(productsAdmin.product.variations);
-        await this.clickAndAcceptAndWaitForResponse(data.subUrls.ajax, productsAdmin.product.generateVariations);
+        await this.click(productsAdmin.product.subMenus.variations);
+        await this.clickAndAcceptAndWaitForResponse(data.subUrls.ajax, productsAdmin.product.subMenus.generateVariations);
         this.fillAlert('100');
         await this.selectByValue(productsAdmin.product.addVariations, product.variations.variableRegularPrice);
 
@@ -208,7 +208,7 @@ export class ProductsPage extends AdminPage {
         // Name
         await this.type(productsAdmin.product.productName, product.productName());
         await this.selectByValue(productsAdmin.product.productType, product.productType);
-        await this.click(productsAdmin.product.general);
+        await this.click(productsAdmin.product.subMenus.general);
         await this.type(productsAdmin.product.productUrl, this.getBaseUrl() + product.productUrl);
         await this.type(productsAdmin.product.buttonText, product.buttonText);
         await this.type(productsAdmin.product.regularPrice, product.regularPrice());
@@ -232,7 +232,7 @@ export class ProductsPage extends AdminPage {
         // Name
         await this.type(productsAdmin.product.productName, product.productName());
         await this.selectByValue(productsAdmin.product.productType, product.productType);
-        await this.click(productsAdmin.product.general);
+        await this.click(productsAdmin.product.subMenus.general);
         await this.type(productsAdmin.product.regularPrice, product.regularPrice());
 
         // Category

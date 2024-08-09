@@ -18,7 +18,8 @@ declare global {
             CUSTOMER2_ID: string;
             PRODUCT_ID: string;
             PRODUCT_ID_V2: string;
-            LOCAL: boolean
+            CATEGORY_ID: string;
+            LOCAL: boolean;
             CI: boolean;
             GMAP: string;
             MAPBOX: string;
@@ -31,7 +32,7 @@ declare global {
             ADMIN_EMAIL: string;
             QUERY: string;
             HEADLESS: string;
-            SLOWMO: string;
+            SLOWMO: number;
             DEVTOOLS: string;
             RETRY_TIMES: string;
             TIME_OUT: string;

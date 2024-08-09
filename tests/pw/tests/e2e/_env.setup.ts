@@ -102,7 +102,8 @@ setup.describe('setup site & woocommerce & dokan settings', () => {
         await apiUtils.updateBatchAttributes('delete', []);
 
         // create category
-        await apiUtils.createCategory(payloads.createCategory);
+        const [, categoryId] = await apiUtils.createCategory(payloads.createCategory);
+        helpers.createEnvVar('CATEGORY_ID', categoryId);
 
         // create attribute, attribute term
         const [, attributeId] = await apiUtils.createAttribute({ name: 'sizes' });
