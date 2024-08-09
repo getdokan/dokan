@@ -114,7 +114,7 @@ export default defineConfig({
         {
             name: 'auth_setup',
             testMatch: '_auth.setup.ts',
-            dependencies: LOCAL ? [] : ['plugin_setup'],
+            dependencies: LOCAL ? ['plugin_setup'] : [],
         },
 
         // e2e_setup
