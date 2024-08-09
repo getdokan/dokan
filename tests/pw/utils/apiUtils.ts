@@ -1576,9 +1576,9 @@ export class ApiUtils {
     }
 
     // update plugin
-    async updatePlugin(plugin: string, payload: object, auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.put(endPoints.wp.updatePlugin(plugin), { data: payload, headers: auth });
-        return responseBody;
+    async updatePlugin(plugin: string, payload: object, auth?: auth): Promise<[APIResponse, responseBody]> {
+        const [response, responseBody] = await this.put(endPoints.wp.updatePlugin(plugin), { data: payload, headers: auth });
+        return [response, responseBody];
     }
 
     // delete plugin

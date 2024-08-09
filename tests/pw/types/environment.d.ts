@@ -25,8 +25,11 @@ declare global {
             MAPBOX: string;
             LICENSE_KEY: string;
             DOKAN_PRO: boolean;
+            SITE_LANGUAGE: string;
+            SITE_TITLE: string;
             SITE_PATH: string;
             BASE_URL: string;
+            ADMIN_EMAIL: string;
             QUERY: string;
             HEADLESS: string;
             SLOWMO: string;
