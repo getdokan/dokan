@@ -1,5 +1,5 @@
 <?php
-namespace WeDevs\Dokan\Test\Analytics\Reports\Order;
+namespace WeDevs\Dokan\Test\Analytics\Reports\Orders;
 
 use Mockery;
 use WeDevs\Dokan\Analytics\Reports\Orders\QueryFilter;

@@ -1,6 +1,6 @@
 <?php
 
-namespace WeDevs\Dokan\Test\Analytics\Reports\Order\Stats;
+namespace WeDevs\Dokan\Test\Analytics\Reports\Orders\Stats;
 
 use Mockery;
 use WeDevs\Dokan\Analytics\Reports\Orders\Stats\ScheduleListener;
