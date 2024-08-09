@@ -1,7 +1,6 @@
 import fs from 'fs';
 import { execSync } from 'child_process';
 import { Browser, BrowserContextOptions, Page } from '@playwright/test';
-import open from 'open';
 
 export const helpers = {
     // replace '_' to space & capitalize first letter of string
@@ -42,12 +41,6 @@ export const helpers = {
 
     // check if object is empty
     isObjEmpty: (obj: object) => Object.keys(obj).length === 0,
-
-    // opens the url in the default browser
-    openUrl: (url: string) => open(url),
-
-    // opens test report in the default browser
-    openReport: () => open('playwright-report/html-report/index.html'),
 
     // string between two tags
     stringBetweenTags: (str: string): string => {
@@ -376,9 +369,14 @@ export const helpers = {
     // execute command
     async exeCommand(command: string, directoryPath = process.cwd()) {
         process.chdir(directoryPath);
-
-        const output = execSync(command, { encoding: 'utf-8' });
-        console.log(output);
+        try {
+            const output = execSync(command, { encoding: 'utf-8' });
+            console.log(output);
+            return output;
+        } catch (error: any) {
+            console.log(error);
+            return error;
+        }
     },
 
     // create a new page
