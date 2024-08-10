@@ -42,9 +42,6 @@ export const helpers = {
     // check if object is empty
     isObjEmpty: (obj: object) => Object.keys(obj).length === 0,
 
-    // opens test report in the default browser
-    openReport: () => open('playwright-report/html-report/index.html'),
-
     // string between two tags
     stringBetweenTags: (str: string): string => {
         const res = str.split(/<p>(.*?)<\/p>/g);
@@ -381,9 +378,14 @@ export const helpers = {
     // execute command
     async exeCommand(command: string, directoryPath = process.cwd()) {
         process.chdir(directoryPath);
-
-        const output = execSync(command, { encoding: 'utf-8' });
-        console.log(output);
+        try {
+            const output = execSync(command, { encoding: 'utf-8' });
+            console.log(output);
+            return output;
+        } catch (error: any) {
+            console.log(error);
+            return error;
+        }
     },
 
     // create a new page

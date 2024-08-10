@@ -130,18 +130,19 @@ setup.describe('setup site & woocommerce & dokan settings', () => {
     });
 
     setup.skip('disable germanized settings', { tag: ['@pro', '@admin'] }, async () => {
+        //todo: need to recheck
         // disable all legal checkboxes
         await dbUtils.setDokanSettings('woocommerce_gzd_legal_checkboxes_settings', dbData.germanized.legalCheckboxes);
         // disable theme supported notice
-        await dbUtils.setDokanSettings('_wc_gzd_hide_theme_supported_notice', 'yes');
+        await dbUtils.setDokanSettings('_wc_gzd_hide_theme_supported_notice', 'yes', false);
         // disable all fields from product loop
-        await dbUtils.setDokanSettings('woocommerce_gzd_display_product_loop_unit_price', 'no');
-        await dbUtils.setDokanSettings('woocommerce_gzd_display_product_loop_tax', 'no');
-        await dbUtils.setDokanSettings('woocommerce_gzd_display_product_loop_shipping_costs', 'no');
-        await dbUtils.setDokanSettings('woocommerce_gzd_display_product_loop_delivery_time', 'no');
-        await dbUtils.setDokanSettings('woocommerce_gzd_display_product_loop_units', 'no');
-        await dbUtils.setDokanSettings('woocommerce_gzd_display_product_loop_deposit', 'no');
-        await dbUtils.setDokanSettings('woocommerce_gzd_display_product_loop_nutri_score', 'no');
+        await dbUtils.setDokanSettings('woocommerce_gzd_display_product_loop_unit_price', 'no', false);
+        await dbUtils.setDokanSettings('woocommerce_gzd_display_product_loop_tax', 'no', false);
+        await dbUtils.setDokanSettings('woocommerce_gzd_display_product_loop_shipping_costs', 'no', false);
+        await dbUtils.setDokanSettings('woocommerce_gzd_display_product_loop_delivery_time', 'no', false);
+        await dbUtils.setDokanSettings('woocommerce_gzd_display_product_loop_units', 'no', false);
+        await dbUtils.setDokanSettings('woocommerce_gzd_display_product_loop_deposit', 'no', false);
+        await dbUtils.setDokanSettings('woocommerce_gzd_display_product_loop_nutri_score', 'no', false);
         // disable all emails
         await apiUtils.updateBatchWcSettingsOptions('germanized', payloads.germanized);
     });
@@ -308,7 +309,7 @@ setup.describe('setup dokan payment products', () => {
         if (!product) {
             console.log("Reverse Withdrawal Payment product doesn't exists!!");
             const [, reverseWithdrawalPaymentProduct] = await apiUtils.createProduct(payloads.reverseWithdrawalPaymentProduct, payloads.adminAuth);
-            await dbUtils.setDokanSettings(dbData.dokan.paymentProducts.reverseWithdraw, reverseWithdrawalPaymentProduct);
+            await dbUtils.setDokanSettings(dbData.dokan.paymentProducts.reverseWithdraw, reverseWithdrawalPaymentProduct, false);
         }
     });
 
@@ -323,7 +324,7 @@ setup.describe('setup dokan payment products', () => {
         if (!product) {
             console.log("Product advertisement payment product doesn't exists!!");
             const [, productAdvertisementPaymentProduct] = await apiUtils.createProduct(payloads.productAdvertisementPaymentProduct, payloads.adminAuth);
-            await dbUtils.setDokanSettings(dbData.dokan.paymentProducts.ProductAdvertisement, productAdvertisementPaymentProduct);
+            await dbUtils.setDokanSettings(dbData.dokan.paymentProducts.ProductAdvertisement, productAdvertisementPaymentProduct, false);
         }
     });
 

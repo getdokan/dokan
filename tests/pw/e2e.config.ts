@@ -1,7 +1,7 @@
 import { defineConfig, devices, expect } from '@playwright/test';
 import { customExpect } from '@utils/pwMatchers';
 import 'dotenv/config';
-const { CI, BASE_URL, SLOWMO, NO_SETUP } = process.env;
+const { CI, LOCAL, BASE_URL, SLOWMO, NO_SETUP } = process.env;
 
 export default defineConfig({
     /* test directory */
@@ -9,7 +9,7 @@ export default defineConfig({
     /* Folder for test artifacts such as screenshots, videos, traces, etc. */
     outputDir: 'playwright/e2e/test-artifacts/',
     /* Path to the global setup file. This file will be required and run before all the tests. */
-    globalSetup: './global-setup',
+    // globalSetup: './global-setup',
     /* Path to the global teardown file. This file will be required and run after all the tests. */
     // globalTeardown: './global-teardown' ,
     /* Maximum time in milliseconds the whole test suite can run */
@@ -67,7 +67,7 @@ export default defineConfig({
         /* Maximum time each navigation such as 'goto()' can take. */
         navigationTimeout: 30 * 1000,
         /* Base URL */
-        baseURL: BASE_URL ? BASE_URL : 'http://localhost:9999',
+        baseURL: BASE_URL ?? 'http://localhost:9999',
         /* Name of the browser that runs tests. */
         // browserName: 'chromium',
         /* Toggles bypassing page's Content-Security-Policy. */
@@ -104,11 +104,17 @@ export default defineConfig({
 
     projects: [
         // E2e project
+        // plugin_setup
+        {
+            name: 'plugin_setup',
+            testMatch: '_auth.setup.ts',
+        },
+
         // auth_setup
         {
             name: 'auth_setup',
-            // testMatch: /.*\.setup\.ts/,
             testMatch: '_auth.setup.ts',
+            dependencies: LOCAL ? [] : ['plugin_setup'],
         },
 
         // e2e_setup

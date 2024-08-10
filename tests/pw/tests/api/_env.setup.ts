@@ -204,7 +204,7 @@ setup.describe('setup dokan settings', () => {
         if (!product) {
             console.log("Reverse Withdrawal Payment product doesn't exists!!");
             const [, reverseWithdrawalPaymentProduct] = await apiUtils.createProduct(payloads.reverseWithdrawalPaymentProduct, payloads.adminAuth);
-            await dbUtils.setDokanSettings(dbData.dokan.paymentProducts.reverseWithdraw, reverseWithdrawalPaymentProduct);
+            await dbUtils.setDokanSettings(dbData.dokan.paymentProducts.reverseWithdraw, reverseWithdrawalPaymentProduct, false);
         }
     });
 
@@ -219,7 +219,7 @@ setup.describe('setup dokan settings', () => {
         if (!product) {
             console.log("Product advertisement payment product doesn't exists!!");
             const [, productAdvertisementPaymentProduct] = await apiUtils.createProduct(payloads.productAdvertisementPaymentProduct, payloads.adminAuth);
-            await dbUtils.setDokanSettings(dbData.dokan.paymentProducts.ProductAdvertisement, productAdvertisementPaymentProduct);
+            await dbUtils.setDokanSettings(dbData.dokan.paymentProducts.ProductAdvertisement, productAdvertisementPaymentProduct, false);
         }
     });
 
