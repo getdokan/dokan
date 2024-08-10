@@ -2349,7 +2349,7 @@ export const data = {
             WP_DEBUG: true,
             SCRIPT_DEBUG: true,
             WP_DEBUG_LOG: true,
-            WP_DEBUG_DISPLAY: true,
+            WP_DEBUG_DISPLAY: false,
         },
 
         // site info

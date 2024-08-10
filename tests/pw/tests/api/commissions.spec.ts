@@ -19,9 +19,8 @@ test.describe('commission api test', () => {
         await apiUtils.dispose();
     });
 
-    test('get admin report overview', { tag: ['@lite'] }, async () => {
+    test('get admin commission', { tag: ['@lite'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getCommission, { params: { product_id: PRODUCT_ID } });
-        console.log('responseBody', responseBody);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
         expect(responseBody).toMatchSchema(schemas.commission);

@@ -35,7 +35,7 @@ export default defineConfig({
     /* Fail the build on CI if you accidentally left test-only in the source code. */
     // forbidOnly     : !!CI,
     /* The number of times to repeat each test, useful for debugging flaky tests. */
-    repeatEach: CI ? 1 : 0,
+    repeatEach: CI ? 0 : 0,
     /* The maximum number of retry attempts given to failed tests.  */
     retries: CI ? 1 : 0,
     /* Opt out of parallel tests on CI. */
