@@ -758,6 +758,296 @@ export const payloads = {
         ],
     }),
 
+    createDokanSubscriptionProduct: () => ({
+        name: `dokan_sub_${faker.string.nanoid(5)}`,
+        post_author: '1',
+        // type: 'product_pack',
+        type: 'simple',
+        status: 'publish',
+        featured: false,
+        catalog_visibility: 'hidden',
+        description: 'dokan subscription',
+        short_description: 'dokan subscription',
+        regular_price: '100',
+        purchasable: false,
+        virtual: true,
+        tax_status: 'taxable',
+        tax_class: '',
+        sold_individually: true,
+        shipping_required: false,
+        shipping_taxable: false,
+        categories: [
+            {
+                name: 'Uncategorized',
+            },
+        ],
+        meta_data: [
+            // number of products
+            {
+                key: '_no_of_product',
+                value: '-1',
+            },
+
+            // pack validity
+            {
+                key: '_pack_validity',
+                value: '1000',
+            },
+
+            //product advertisement
+            {
+                key: '_dokan_advertisement_slot_count',
+                value: '',
+            },
+            {
+                key: '_dokan_advertisement_validity',
+                value: '',
+            },
+
+            // Allowed product types
+            {
+                key: 'dokan_subscription_allowed_product_types',
+                value: [], // 'simple', 'variable'
+            },
+
+            // Allowed product categories
+            {
+                key: '_vendor_allowed_categories',
+                value: [], // category ids
+            },
+
+            // Restrict gallery image upload
+            {
+                key: '_enable_gallery_restriction',
+                value: 'no',
+            },
+            // if above is yes then below will be used
+            // {
+            //     key: '_gallery_image_restriction_count',
+            //     value: '-1',
+            // },
+
+            // recurring subscription
+
+            {
+                key: '_enable_recurring_payment',
+                value: 'no',
+            },
+            {
+                key: '_dokan_subscription_period_interval',
+                value: '1',
+            },
+            {
+                key: '_dokan_subscription_period',
+                value: 'day',
+            },
+            {
+                key: '_dokan_subscription_length',
+                value: '0',
+            },
+
+            // Trial period
+            {
+                key: 'dokan_subscription_enable_trial',
+                value: 'no',
+            },
+            {
+                key: 'dokan_subscription_trail_range',
+                value: '1',
+            },
+            {
+                key: 'dokan_subscription_trial_period_types',
+                value: 'day',
+            },
+
+            {
+                key: '_dokan_min_max_meta',
+                value: [],
+            },
+            {
+                key: 'chosen_product_cat',
+                value: [],
+            },
+            {
+                key: '_product_addons',
+                value: [],
+            },
+            {
+                key: '_product_addons_exclude_global',
+                value: '0',
+            },
+            {
+                key: 'dokan_geo_latitude',
+                value: '',
+            },
+            {
+                key: 'dokan_geo_longitude',
+                value: '',
+            },
+            {
+                key: 'dokan_geo_address',
+                value: '',
+            },
+            {
+                key: 'dokan_geo_public',
+                value: '',
+            },
+            {
+                key: '_dokan_wholesale_meta',
+                value: {
+                    enable_wholesale: 'no',
+                    price: '',
+                    quantity: '',
+                },
+            },
+        ],
+    }),
+
+    createDokanSubscriptionProductRecurring: () => ({
+        name: `dokan_sub_${faker.string.nanoid(5)}`,
+        post_author: '1',
+        // type: 'product_pack',
+        type: 'simple',
+        status: 'publish',
+        featured: false,
+        catalog_visibility: 'hidden',
+        description: 'dokan subscription',
+        short_description: 'dokan subscription',
+        regular_price: '100',
+        purchasable: false,
+        virtual: true,
+        tax_status: 'taxable',
+        tax_class: '',
+        sold_individually: true,
+        shipping_required: false,
+        shipping_taxable: false,
+        categories: [
+            {
+                name: 'Uncategorized',
+            },
+        ],
+        meta_data: [
+            // number of products
+            {
+                key: '_no_of_product',
+                value: '-1',
+            },
+
+            // pack validity
+            {
+                key: '_pack_validity',
+                value: '1000',
+            },
+
+            //product advertisement
+            {
+                key: '_dokan_advertisement_slot_count',
+                value: '',
+            },
+            {
+                key: '_dokan_advertisement_validity',
+                value: '',
+            },
+
+            // Allowed product types
+            {
+                key: 'dokan_subscription_allowed_product_types',
+                value: [], // 'simple', 'variable'
+            },
+
+            // Allowed product categories
+            {
+                key: '_vendor_allowed_categories',
+                value: [], // category ids
+            },
+
+            // Restrict gallery image upload
+            {
+                key: '_enable_gallery_restriction',
+                value: 'no',
+            },
+            // if above is yes then below will be used
+            // {
+            //     key: '_gallery_image_restriction_count',
+            //     value: '-1',
+            // },
+
+            // recurring subscription
+
+            {
+                key: '_enable_recurring_payment',
+                value: 'yes',
+            },
+            {
+                key: '_dokan_subscription_period_interval',
+                value: '1',
+            },
+            {
+                key: '_dokan_subscription_period',
+                value: 'day',
+            },
+            {
+                key: '_dokan_subscription_length',
+                value: '1000',
+            },
+
+            // Trial period
+            {
+                key: 'dokan_subscription_enable_trial',
+                value: 'no',
+            },
+            {
+                key: 'dokan_subscription_trail_range',
+                value: '1',
+            },
+            {
+                key: 'dokan_subscription_trial_period_types',
+                value: 'day',
+            },
+
+            {
+                key: '_dokan_min_max_meta',
+                value: [],
+            },
+            {
+                key: 'chosen_product_cat',
+                value: [],
+            },
+            {
+                key: '_product_addons',
+                value: [],
+            },
+            {
+                key: '_product_addons_exclude_global',
+                value: '0',
+            },
+            {
+                key: 'dokan_geo_latitude',
+                value: '',
+            },
+            {
+                key: 'dokan_geo_longitude',
+                value: '',
+            },
+            {
+                key: 'dokan_geo_address',
+                value: '',
+            },
+            {
+                key: 'dokan_geo_public',
+                value: '',
+            },
+            {
+                key: '_dokan_wholesale_meta',
+                value: {
+                    enable_wholesale: 'no',
+                    price: '',
+                    quantity: '',
+                },
+            },
+        ],
+    }),
+
     reverseWithdrawalPaymentProduct: {
         name: 'Reverse Withdrawal Payment',
         post_author: '1',
@@ -3677,6 +3967,8 @@ export const payloads = {
         product_id: '',
     },
 
+    randormNumber: faker.number.int({ min: 2, max: 100 }),
+
     paramsReverseWithdrawalTransactions: {
         'trn_date[from]': `${helpers.currentYear}-01-01 00:00:00`,
         'trn_date[to]': `${helpers.currentYear}-12-31 00:00:00`,
@@ -3716,6 +4008,44 @@ export const payloads = {
         vendor_id: 0,
         category_ids: 0,
         context: 'admin',
+    },
+    // subscription
+
+    updateVendorSubscription: {
+        action: 'cancel', // 'activate', 'cancel'
+        immediately: false,
+    },
+
+    batchUpdateVendorSubscription: {
+        action: 'cancel', // 'activate', 'cancel'
+        user_ids: [],
+    },
+
+    saveVendorSubscriptionProductCommission: {
+        product_id: '',
+        commission_type: 'fixed',
+        commission: {
+            fixed: {
+                percentage: '5',
+                flat: '5',
+            },
+            category_based: {
+                all: {
+                    percentage: '5',
+                    flat: '5',
+                },
+                // items: {
+                //     'category-id1': {  // replace with actual category id
+                //         percentage: '5',
+                //         flat: '5',
+                //     },
+                //     'category-id2': {
+                //         percentage: '5',
+                //         flat: '5',
+                //     },
+                // },
+            },
+        },
     },
 
     // shortcodes

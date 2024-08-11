@@ -804,7 +804,7 @@ export const data = {
         gmap: '/maps/api',
 
         backend: {
-            DbSetup: 'wp-admin/install.php',
+            dbSetup: 'wp-admin/install.php',
             login: 'wp-login.php',
             adminLogin: 'wp-admin',
             adminLogout: 'wp-login.php?action=logout',
@@ -833,7 +833,8 @@ export const data = {
                 withdraw: 'wp-admin/admin.php?page=dokan#/withdraw?status=pending',
                 reverseWithdraws: 'wp-admin/admin.php?page=dokan#/reverse-withdrawal',
                 vendors: 'wp-admin/admin.php?page=dokan#/vendors',
-                vendorDetails: (vendorId: string) => `wp-admin/admin.php?page=dokan#/vendors/${vendorId}`,
+                vendorDetails: (sellerId: string) => `wp-admin/admin.php?page=dokan#/vendors/${sellerId}`,
+                vendorDetailsEdit: (sellerId: string) => `wp-admin/admin.php?page=dokan#/vendors/${sellerId}?edit=true`,
                 storeCategories: 'wp-admin/admin.php?page=dokan#/store-categories',
                 abuseReports: 'wp-admin/admin.php?page=dokan#/abuse-reports',
                 storeReviews: 'wp-admin/admin.php?page=dokan#/store-reviews',
@@ -849,6 +850,7 @@ export const data = {
                 tools: 'wp-admin/admin.php?page=dokan#/tools',
                 productQA: 'wp-admin/admin.php?page=dokan#/product-qa',
                 questionDetails: (questionId: string) => `wp-admin/admin.php?page=dokan#/product-qa/${questionId}`,
+                subscriptions: 'wp-admin/admin.php?page=dokan#/subscriptions',
                 verifications: 'wp-admin/admin.php?page=dokan#/verifications?status=pending',
                 productAdvertising: 'wp-admin/admin.php?page=dokan#/product-advertising',
                 wholeSaleCustomer: 'wp-admin/admin.php?page=dokan#/wholesale-customer',
@@ -963,6 +965,7 @@ export const data = {
                 manageResources: 'dashboard/booking/resources',
                 announcements: 'dashboard/announcement',
                 analytics: 'dashboard/analytics',
+                subscriptions: 'dashboard/subscription',
                 tools: 'dashboard/tools',
                 export: 'dashboard/tools/#export',
                 csvImport: 'dashboard/tools/csv-import',
@@ -1022,8 +1025,9 @@ export const data = {
                 productQuestions: 'dokan/v1/product-questions',
                 productQuestionsBulkActions: 'dokan/v1/product-questions/bulk_action',
                 productAnswers: 'dokan/v1/product-answers',
-                verifications: '/dokan/v1/verification-requests',
-                verificationMethods: '/dokan/v1/verification-methods',
+                subscriptions: 'dokan/v1/subscription',
+                verifications: 'dokan/v1/verification-requests',
+                verificationMethods: 'dokan/v1/verification-methods',
             },
 
             wc: {
@@ -1119,6 +1123,9 @@ export const data = {
 
             // address fields enable flag (on vendor registration)
             addressFieldsEnabled: false,
+
+            // subscription pack
+            vendorSubscriptionPack: 'Dokan_Subscription_Non_recurring',
 
             account: {
                 updateSuccessMessage: 'Account details changed successfully.',
@@ -1495,6 +1502,9 @@ export const data = {
                 state: 'New York',
                 phone: '0123456789',
             },
+
+            // subscription
+            vendorSubscriptionPack: 'Dokan_Subscription_Non_recurring',
         },
 
         getSupport: {
@@ -2354,7 +2364,7 @@ export const data = {
             WP_DEBUG: true,
             SCRIPT_DEBUG: true,
             WP_DEBUG_LOG: true,
-            WP_DEBUG_DISPLAY: true,
+            WP_DEBUG_DISPLAY: false,
         },
 
         // site info
@@ -2368,8 +2378,21 @@ export const data = {
         },
 
         // theme
-        theme: {
+        themes: {
             storefront: 'storefront',
+        },
+
+        // plugins
+        plugins: {
+            basicAuth: 'Basic-Auth-master',
+            woocommerce: 'woocommerce',
+            dokan: 'dokan',
+            dokanLite: 'dokan-lite',
+            dokanPro: 'dokan-pro',
+            woocommerceBookings: 'woocommerce-bookings',
+            woocommerceSubscriptions: 'woocommerce-subscriptions',
+            woocommerceProductAddons: 'woocommerce-product-addons',
+            woocommerceSimpleAuctions: 'woocommerce-simple-auctions',
         },
     },
 
@@ -2381,12 +2404,15 @@ export const data = {
         setDebugConfig: (key: string, value: boolean) => `cd ${SITE_PATH} && wp config set ${key} ${value} --add --raw`,
         installWp: (core: any) => `cd ${SITE_PATH} && wp core install --locale="${core.language}" --url="${core.url}" --title="${core.title}" --admin_user="${core.admin}" --admin_password="${core.password}" --admin_email="${core.email}"`,
         installTheme: (theme: string) => `cd ${SITE_PATH} && wp theme install ${theme} --activate`,
-        permalink: 'npm run wp-env run tests-cli wp rewrite structure /%postname%/',
-        activateTheme: 'npm run wp-env run tests-cli wp theme activate storefront',
+        installPlugin: (plugin: string) => `cd ${SITE_PATH} && wp plugin install ${plugin} --activate --force`,
+        activatePlugin: (plugin: string, skipPlugins?: string) => `cd ${SITE_PATH} && wp plugin activate ${plugin} --skip-plugins=${skipPlugins}`,
+        activateTheme: (theme: string) => `cd ${SITE_PATH} && wp theme activate ${theme}`,
         permalinkLocal: `cd ${SITE_PATH} && wp rewrite structure /%postname%/ && wp rewrite flush`,
-        activateThemeLocal: `cd ${SITE_PATH} && wp theme activate storefront`,
+        removeLiteRequired: `cd ${SITE_PATH}/wp-content/plugins/dokan-pro && sed -i '''' '''s/Requires Plugins: woocommerce, dokan-lite/Requires Plugins: woocommerce, dokan/''' dokan-pro.php`,
         cloneDokanPro: "git clone -b test_utils https://github.com/getdokan/dokan-pro.git && cd dokan-pro && sed -i '''' '''s/Requires Plugins: woocommerce, dokan-lite/Requires Plugins: woocommerce, dokan/''' dokan-pro.php",
         buildPlugin: 'composer i --no-dev && composer du -o && npm i && npm run build',
+        permalinkWpEnv: 'npm run wp-env run tests-cli wp rewrite structure /%postname%/',
+        activateThemeWpEnv: 'npm run wp-env run tests-cli wp theme activate storefront',
     },
 
     cssStyle: {

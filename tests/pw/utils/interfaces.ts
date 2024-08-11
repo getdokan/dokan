@@ -684,6 +684,8 @@ export interface vendor {
 
         addressFieldsEnabled: boolean;
 
+        vendorSubscriptionPack: string;
+
         openingClosingTime: {
             days: string[];
             statusLite: string;
@@ -1087,6 +1089,8 @@ export interface customer {
             state: string;
             phone: string;
         };
+
+        vendorSubscriptionPack: string;
     };
 
     getSupport: {

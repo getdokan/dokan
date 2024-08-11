@@ -243,7 +243,7 @@ const paymentSchema = z
         bank: bankSchema.optional(),
         skrill: skrillSchema.optional(),
         dokan_custom: dokan_custom.optional(),
-        stripe: z.boolean().optional(),
+        stripe: z.any().optional(),
         stripe_express: z.boolean().optional(),
         dokan_razorpay: z.boolean().optional(),
         dokan_moip_connect: z.boolean().optional(),
@@ -292,7 +292,7 @@ const orderMinMaxSchema = z.object({
     min_quantity_to_order: z.string(),
     max_quantity_to_order: z.string(),
     vendor_min_max_products: z.array(z.any()), // Adjust this based on the actual structure
-    vendor_min_max_product_cat: z.array(z.any()), // Adjust this based on the actual structure
+    vendor_min_max_product_cat: z.array(z.any()).or(z.string()), // Adjust this based on the actual structure
     enable_vendor_min_max_amount: z.string(),
     min_amount_to_order: z.string(),
     max_amount_to_order: z.string(),
@@ -412,7 +412,7 @@ const storeSchema = z.object({
     rating: ratingSchema.optional(),
     enabled: z.boolean().optional(),
     registered: z.string().optional(),
-    payment: paymentSchema.or(z.array(z.any())).optional(),
+    payment: paymentSchema.optional(),
     trusted: z.boolean().optional(),
     store_open_close: storeOpenClose.optional(),
     enable_tnc: z.string().optional(),
@@ -439,7 +439,7 @@ const storeSchema = z.object({
             }),
         )
         .optional(),
-    admin_category_commission: z.array(z.any()).optional(),
+    admin_category_commission: z.any().optional(),
     admin_commission: z.string().optional(),
     admin_additional_fee: z.string().optional(),
     admin_commission_type: z.string().optional(),
@@ -843,7 +843,7 @@ const settingV2LinksSchema = z.object({
 
 const infoSchema = z.object({
     text: z.string(),
-    url: z.string().url(),
+    url: z.string(),
     icon: z.string(),
 });
 
@@ -1267,6 +1267,33 @@ const verificationRequestSchema = z.object({
         }),
     ),
     _links: linksSchema,
+});
+
+const vendorSubscriptionPackageSchema = z.object({
+    id: z.number().or(z.string()),
+    title: z.string(),
+});
+
+const vendorSubscriptionNonRecurringPackageSchema = z.object({
+    name: z.number().or(z.string()),
+    label: z.string(),
+});
+
+const vendorSubscriptionSchema = z.object({
+    id: z.number().or(z.string()),
+    store_name: z.string(),
+    order_link: z.string(),
+    order_id: z.string(),
+    subscription_id: z.string(),
+    subscription_title: z.string(),
+    is_on_trial: z.boolean(),
+    subscription_trial_until: z.any(),
+    start_date: z.string(),
+    end_date: z.string(),
+    current_date: z.string(),
+    status: z.boolean(),
+    is_recurring: z.boolean(),
+    has_active_cancelled_sub: z.boolean(),
 });
 
 const wholesaleCustomerSchema = z.object({
@@ -2228,7 +2255,7 @@ export const schemas = {
             dokan_store_time_enabled: z.string(),
             dokan_store_open_notice: z.string(),
             dokan_store_close_notice: z.string(),
-            dokan_store_time: z.array(z.unknown()).optional(),
+            dokan_store_time: z.any().optional(),
             sale_only_here: z.boolean().optional(),
             company_name: z.string().optional(),
             vat_number: z.string().optional(),
@@ -2749,6 +2776,28 @@ export const schemas = {
         verificationMethodsSchema: z.array(verificationMethodSchema),
         verificationRequestSchema: verificationRequestSchema,
         verificationRequestsSchema: z.array(verificationRequestSchema),
+    },
+
+    // vendor subscriptions schema
+    vendorSubscriptionsSchema: {
+        vendorSubscriptionsSchema: z.array(vendorSubscriptionSchema),
+        vendorSubscriptionPackagesSchema: z.array(vendorSubscriptionPackageSchema),
+        vendorSubscriptionNonRecurringPackagesSchema: z.array(vendorSubscriptionNonRecurringPackageSchema),
+        activeSubscriptionPackSchema: z.object({
+            name: z.number().or(z.string()),
+            label: z.string(),
+        }),
+        updateSubscriptionSchema: vendorSubscriptionSchema.or(
+            z.object({
+                code: z.string(),
+                message: z.string(),
+                data: z.object({
+                    status: z.number(),
+                }),
+            }),
+        ),
+        batchUpdateSubscriptionSchema: z.array(z.number().or(z.string())),
+        saveCommissionSchema: z.number(),
     },
 
     // wholesale customers schema

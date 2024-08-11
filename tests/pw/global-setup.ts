@@ -8,13 +8,7 @@ const { LOCAL } = process.env;
 async function globalSetup(config: FullConfig) {
     console.log('Global Setup running....');
 
-    if (LOCAL) {
-        // rewrite permalink structure
-        await helpers.exeCommand(data.commands.permalinkLocal);
-        // activate theme: storefront
-        await helpers.exeCommand(data.commands.activateTheme);
-    }
-
+    
     // get site url structure
     let serverUrl = config.projects[0]?.use.baseURL as string;
     const apiUtils = new ApiUtils(await request.newContext({ ignoreHTTPSErrors: true }));

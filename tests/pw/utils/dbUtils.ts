@@ -69,7 +69,7 @@ export const dbUtils = {
         return res;
     },
 
-    // update dokan settings
+    // update user meta
     async updateUserMeta(userId: string, metaKey: string, updatedMetaValue: any, serializeData?: boolean): Promise<[object, object]> {
         const currentMetaValue = await this.getUserMeta(userId, metaKey);
         const newMetaValue = typeof updatedMetaValue === 'object' ? helpers.deepMergeObjects(currentMetaValue, updatedMetaValue) : updatedMetaValue;
@@ -78,7 +78,7 @@ export const dbUtils = {
         return [currentMetaValue, newMetaValue];
     },
 
-    // get option value // todo: update method name getOptionValue 
+    // get option value // todo: update method name getOptionValue
     async getDokanSettings(optionName: string): Promise<any> {
         const query = `Select option_value FROM ${dbPrefix}_options WHERE option_name = '${optionName}';`;
         const res = await dbUtils.dbQuery(query);
@@ -141,7 +141,7 @@ export const dbUtils = {
         return res;
     },
 
-    // create refund
+    // create refund request
     async createRefundRequest(responseBody: any): Promise<[any, string]> {
         const refundId = (await this.getMaxId('id', 'dokan_refund')) + 1;
 
@@ -179,6 +179,23 @@ export const dbUtils = {
         const guid = url + '?post_type=bookable_resource&#038;p=' + postId;
         const query = `UPDATE ${dbPrefix}_posts SET guid = '${guid}', post_type = 'bookable_resource' WHERE ID = '${postId}';`;
         const res = await dbUtils.dbQuery(query);
+        return res;
+    },
+
+    // update simple product type to subscription product type
+    async updateProductType(productId: string): Promise<any> {
+        // get term id
+        const simpleTermIdQuery = `SELECT term_id FROM ${dbPrefix}_terms WHERE name = 'simple';`;
+        const simpleTermIdQueryResult = await dbUtils.dbQuery(simpleTermIdQuery);
+        const simpleTermId = simpleTermIdQueryResult[0].term_id;
+
+        const subscriptionTermIdQuery = `SELECT term_id FROM ${dbPrefix}_terms WHERE name = 'product_pack';`;
+        const subscriptionTermIdQueryResult = await dbUtils.dbQuery(subscriptionTermIdQuery);
+        const subscriptionTermId = subscriptionTermIdQueryResult[0].term_id;
+
+        const queryUpdate = `UPDATE ${dbPrefix}_term_relationships SET term_taxonomy_id = '${subscriptionTermId}' WHERE object_id = '${productId}' AND term_taxonomy_id = ${simpleTermId};`;
+        const res = await dbUtils.dbQuery(queryUpdate);
+        // console.log(res);
         return res;
     },
 };

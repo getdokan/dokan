@@ -1029,23 +1029,22 @@
 - page: 'Vendor Subscription'
   features:
       admin:
-          admin can view dokan subscription menu page: false
-          admin can filter dokan subscriptions by vendor: false
-          admin can filter dokan subscriptions by package: false
-          admin can cancel dokan subscription: false
-          admin can perform bulk action on subscribed vendors: false
-          admin can create dokan subscription pack (non-recurring): false
-          admin can create dokan subscription pack (recurring): false
-          admin can assign non-rucurring dokan subscription pack to vendor: false
+          admin can view subscriptions menu page: true
+          admin can filter subscribed vendors by vendor: true
+          admin can filter subscribed vendors by subscription pack: true
+          admin can cancel subscription (immediately): true
+          admin can cancel subscription (end of the current period): true
+          admin can reactive recurring subscription (has active period ): false
+          admin can perform bulk action on subscribed vendors: true
+          admin can assign non recurring subscription pack to vendor: true
       vendor:
-          vendor can view subscription menu page: false
-          vendor can buy dokan subscription pack (non-recurring): false
-          vendor can buy dokan subscription pack (recurring): false
-          vendor can buy dokan subscription pack on registration (non-recurring): false
-          vendor can buy dokan subscription pack on registration (recurring): false
-          vendor can view dokan subscription details on subscription page: false
-          vendor can cancel dokan subscription pack: false
-          vendor can switch dokan subscription pack: false
+          vendor can view subscriptions menu page: true
+          vendor can buy non recurring subscription pack (on registration): true
+          vendor can buy non recurring subscription pack (on subscription page): true
+          vendor can buy recurring subscription pack (on registration): false
+          vendor can buy recurring subscription pack (on subscription page): false
+          vendor can switch subscription: true
+          vendor can cancel subscription: true
 
 - page: 'Vendor Verification'
   features:
