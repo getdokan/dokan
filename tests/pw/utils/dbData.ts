@@ -1,4 +1,4 @@
-const { BASE_URL, GMAP, LICENSE_KEY } = process.env;
+const { BASE_URL, GMAP, LICENSE_KEY, CATEGORY_ID } = process.env;
 
 export const dbData = {
     dokan: {

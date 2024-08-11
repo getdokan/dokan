@@ -109,7 +109,11 @@ export class VendorSubscriptionsPage extends VendorPage {
 
     // vendor subscriptions render properly
     async vendorSubscriptionsRenderProperly(link?: string) {
-        link ? await this.goto(link) : await this.goIfNotThere(data.subUrls.frontend.vDashboard.subscriptions);
+        if (link) {
+            await this.goto(link);
+        } else {
+            await this.goIfNotThere(data.subUrls.frontend.vDashboard.subscriptions);
+        }
 
         // subscribed pack info
         const hasSubscription = await this.isVisible(vendorSubscriptions.sellerSubscriptionInfo.sellerSubscriptionInfo);

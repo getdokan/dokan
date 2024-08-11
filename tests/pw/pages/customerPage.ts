@@ -152,53 +152,53 @@ export class CustomerPage extends BasePage {
 
     // update billing fields
     async updateBillingFields(billingInfo: customer['customerInfo']['billing']) {
-        await this.clearAndType(customerAddress.billing.billingFirstName, billingInfo.firstName);
-        await this.clearAndType(customerAddress.billing.billingLastName, billingInfo.lastName);
-        await this.clearAndType(customerAddress.billing.billingCompanyName, billingInfo.companyName);
+        await this.clearAndType(customerAddress.billing.firstName, billingInfo.firstName);
+        await this.clearAndType(customerAddress.billing.lastName, billingInfo.lastName);
+        await this.clearAndType(customerAddress.billing.companyName, billingInfo.companyName);
         if (DOKAN_PRO) {
-            await this.clearAndType(customerAddress.billing.billingCompanyID, billingInfo.companyId);
-            await this.clearAndType(customerAddress.billing.billingVatOrTaxNumber, billingInfo.vatNumber);
-            await this.clearAndType(customerAddress.billing.billingNameOfBank, billingInfo.bankName);
-            await this.clearAndType(customerAddress.billing.billingBankIban, billingInfo.bankIban);
+            await this.clearAndType(customerAddress.billing.companyID, billingInfo.companyId);
+            await this.clearAndType(customerAddress.billing.vatOrTaxNumber, billingInfo.vatNumber);
+            await this.clearAndType(customerAddress.billing.nameOfBank, billingInfo.bankName);
+            await this.clearAndType(customerAddress.billing.bankIban, billingInfo.bankIban);
         }
-        await this.click(customerAddress.billing.billingCountryOrRegion);
-        await this.clearAndType(customerAddress.billing.billingCountryOrRegionInput, billingInfo.country);
+        await this.click(customerAddress.billing.countryOrRegion);
+        await this.clearAndType(customerAddress.billing.countryOrRegionInput, billingInfo.country);
         await this.press(data.key.enter);
-        await this.clearAndType(customerAddress.billing.billingStreetAddress, billingInfo.street1);
-        await this.clearAndType(customerAddress.billing.billingStreetAddress2, billingInfo.street2);
-        await this.clearAndType(customerAddress.billing.billingTownCity, billingInfo.city);
-        await this.focus(customerAddress.billing.billingZipCode);
-        await this.click(customerAddress.billing.billingState);
-        await this.clearAndType(customerAddress.billing.billingStateInput, billingInfo.state);
+        await this.clearAndType(customerAddress.billing.streetAddress, billingInfo.street1);
+        await this.clearAndType(customerAddress.billing.streetAddress2, billingInfo.street2);
+        await this.clearAndType(customerAddress.billing.city, billingInfo.city);
+        await this.focus(customerAddress.billing.zipCode);
+        await this.click(customerAddress.billing.state);
+        await this.clearAndType(customerAddress.billing.stateInput, billingInfo.state);
         await this.press(data.key.enter);
-        await this.clearAndType(customerAddress.billing.billingZipCode, billingInfo.zipCode);
-        await this.clearAndType(customerAddress.billing.billingPhone, billingInfo.phone);
-        await this.clearAndType(customerAddress.billing.billingEmailAddress, billingInfo.email);
+        await this.clearAndType(customerAddress.billing.zipCode, billingInfo.zipCode);
+        await this.clearAndType(customerAddress.billing.phone, billingInfo.phone);
+        await this.clearAndType(customerAddress.billing.email, billingInfo.email);
     }
 
     // update shipping fields
     async updateShippingFields(shippingInfo: customer['customerInfo']['shipping']): Promise<void> {
-        await this.clearAndType(customerAddress.shipping.shippingFirstName, shippingInfo.firstName);
-        await this.clearAndType(customerAddress.shipping.shippingLastName, shippingInfo.lastName);
-        await this.clearAndType(customerAddress.shipping.shippingCompanyName, shippingInfo.companyName);
-        await this.click(customerAddress.shipping.shippingCountryOrRegion);
-        await this.clearAndType(customerAddress.shipping.shippingCountryOrRegionInput, shippingInfo.country);
+        await this.clearAndType(customerAddress.shipping.firstName, shippingInfo.firstName);
+        await this.clearAndType(customerAddress.shipping.lastName, shippingInfo.lastName);
+        await this.clearAndType(customerAddress.shipping.companyName, shippingInfo.companyName);
+        await this.click(customerAddress.shipping.countryOrRegion);
+        await this.clearAndType(customerAddress.shipping.countryOrRegionInput, shippingInfo.country);
         await this.press(data.key.enter);
-        await this.clearAndType(customerAddress.shipping.shippingStreetAddress, shippingInfo.street1);
-        await this.clearAndType(customerAddress.shipping.shippingStreetAddress2, shippingInfo.street2);
-        await this.clearAndType(customerAddress.shipping.shippingTownCity, shippingInfo.city);
-        await this.focus(customerAddress.shipping.shippingZipCode);
-        await this.click(customerAddress.shipping.shippingState);
-        await this.clearAndType(customerAddress.shipping.shippingStateInput, shippingInfo.state);
+        await this.clearAndType(customerAddress.shipping.streetAddress, shippingInfo.street1);
+        await this.clearAndType(customerAddress.shipping.streetAddress2, shippingInfo.street2);
+        await this.clearAndType(customerAddress.shipping.city, shippingInfo.city);
+        await this.focus(customerAddress.shipping.zipCode);
+        await this.click(customerAddress.shipping.state);
+        await this.clearAndType(customerAddress.shipping.stateInput, shippingInfo.state);
         await this.press(data.key.enter);
-        await this.clearAndType(customerAddress.shipping.shippingZipCode, shippingInfo.zipCode);
+        await this.clearAndType(customerAddress.shipping.zipCode, shippingInfo.zipCode);
     }
 
     // customer add billing address
     async addBillingAddress(billingInfo: customer['customerInfo']['billing']): Promise<void> {
         await this.goIfNotThere(data.subUrls.frontend.billingAddress);
         await this.updateBillingFields(billingInfo);
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.billingAddress, customerAddress.billing.billingSaveAddress, 302);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.billingAddress, customerAddress.billing.saveAddress, 302);
         await this.toContainText(selector.customer.cWooSelector.wooCommerceSuccessMessage, data.customer.address.addressChangeSuccessMessage);
     }
 
@@ -206,7 +206,7 @@ export class CustomerPage extends BasePage {
     async addShippingAddress(shippingInfo: customer['customerInfo']['shipping']): Promise<void> {
         await this.goIfNotThere(data.subUrls.frontend.shippingAddress);
         await this.updateShippingFields(shippingInfo);
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.shippingAddress, customerAddress.shipping.shippingSaveAddress, 302);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.shippingAddress, customerAddress.shipping.saveAddress, 302);
         await this.toContainText(selector.customer.cWooSelector.wooCommerceSuccessMessage, data.customer.address.addressChangeSuccessMessage);
     }
 
@@ -288,13 +288,42 @@ export class CustomerPage extends BasePage {
 
     // add billing address in checkout
     async addBillingAddressInCheckout(billingInfo: customer['customerInfo']['billing']): Promise<void> {
-        await this.updateBillingFields(billingInfo);
+        await this.clearAndType(customerCheckout.billing.email, billingInfo.email);
+        await this.click(customerCheckout.billing.country);
+        await this.clearAndType(customerCheckout.billing.country, billingInfo.country);
+        await this.press(data.key.enter);
+        await this.clearAndType(customerCheckout.billing.firstName, billingInfo.firstName);
+        await this.clearAndType(customerCheckout.billing.lastName, billingInfo.lastName);
+        await this.clearAndType(customerCheckout.billing.address, billingInfo.street1);
+        await this.clickIfVisible(customerCheckout.billing.address2toggle);
+        await this.clearAndType(customerCheckout.billing.address2, billingInfo.street2);
+        await this.clearAndType(customerCheckout.billing.city, billingInfo.city);
+        await this.click(customerCheckout.billing.stateInput);
+        await this.clearAndType(customerCheckout.billing.stateInput, billingInfo.state);
+        await this.press(data.key.enter);
+        await this.clearAndType(customerCheckout.billing.zipCode, billingInfo.zipCode);
+        // await this.clearAndType(customerCheckout.billing.phone, billingInfo.phone);
+        await this.typeAndWaitForResponse(data.subUrls.api.wc.store, customerCheckout.billing.phone, billingInfo.phone, 207);
     }
 
     // add shipping address in checkout
     async addShippingAddressInCheckout(shippingInfo: customer['customerInfo']['shipping']): Promise<void> {
-        await this.clickAndWaitForResponse(data.subUrls.frontend.shippingAddressCheckout, customerCheckout.shippingAddress.shipToADifferentAddress);
-        await this.updateShippingFields(shippingInfo);
+        await this.clearAndType(customerCheckout.shipping.email, shippingInfo.email);
+        await this.click(customerCheckout.shipping.country);
+        await this.clearAndType(customerCheckout.shipping.country, shippingInfo.country);
+        await this.press(data.key.enter);
+        await this.clearAndType(customerCheckout.shipping.firstName, shippingInfo.firstName);
+        await this.clearAndType(customerCheckout.shipping.lastName, shippingInfo.lastName);
+        await this.clearAndType(customerCheckout.shipping.address, shippingInfo.street1);
+        await this.clickIfVisible(customerCheckout.shipping.address2toggle);
+        await this.clearAndType(customerCheckout.shipping.address2, shippingInfo.street2);
+        await this.clearAndType(customerCheckout.shipping.city, shippingInfo.city);
+        await this.click(customerCheckout.shipping.stateInput);
+        await this.clearAndType(customerCheckout.shipping.stateInput, shippingInfo.state);
+        await this.press(data.key.enter);
+        await this.clearAndType(customerCheckout.shipping.zipCode, shippingInfo.zipCode);
+        // await this.clearAndType(customerCheckout.shipping.phone, shippingInfo.phone);
+        await this.typeAndWaitForResponse(data.subUrls.api.wc.store, customerCheckout.shipping.phone, shippingInfo.phone, 207);
     }
 
     // place order
@@ -327,6 +356,7 @@ export class CustomerPage extends BasePage {
             default:
                 break;
         }
+
         await this.focusOnLocator(customerCheckout.placeOrder);
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.orderReceived, customerCheckout.placeOrder);
         await this.toBeVisible(selector.customer.cOrderReceived.orderReceivedSuccessMessage);
@@ -514,7 +544,7 @@ export class CustomerPage extends BasePage {
         orderDetails.paymentMethod = (await this.getElementText(selector.customer.cOrders.orderDetails.paymentMethod)) as string;
         orderDetails.orderTotal = helpers.price((await this.getElementText(selector.customer.cOrders.orderDetails.orderTotal)) as string);
 
-        console.log(orderDetails);
+        // console.log(orderDetails);
         return orderDetails;
     }
 

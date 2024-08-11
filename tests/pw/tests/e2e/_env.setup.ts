@@ -108,7 +108,8 @@ setup.describe('setup site & woocommerce & dokan settings', () => {
         await apiUtils.updateBatchAttributes('delete', []);
 
         // create category
-        await apiUtils.createCategory(payloads.createCategory);
+        const [, categoryId] = await apiUtils.createCategory(payloads.createCategory);
+        helpers.createEnvVar('CATEGORY_ID', categoryId);
 
         // create attribute, attribute term
         const [, attributeId] = await apiUtils.createAttribute({ name: 'sizes' });
@@ -121,7 +122,7 @@ setup.describe('setup site & woocommerce & dokan settings', () => {
         setup.skip(!DOKAN_PRO, 'skip on lite');
         const [, , status] = await apiUtils.getSinglePlugin('woocommerce-simple-auctions/woocommerce-simple-auctions', payloads.adminAuth);
         if (status === 'active') {
-            await dbUtils.updateWpOptionTable('simple_auctions_live_check', 'no');
+            await dbUtils.updateOptionValue('simple_auctions_live_check', 'no');
         }
     });
 
@@ -130,7 +131,6 @@ setup.describe('setup site & woocommerce & dokan settings', () => {
     });
 
     setup.skip('disable germanized settings', { tag: ['@pro', '@admin'] }, async () => {
-        //todo: need to recheck
         // disable all legal checkboxes
         await dbUtils.setOptionValue('woocommerce_gzd_legal_checkboxes_settings', dbData.germanized.legalCheckboxes);
         // disable theme supported notice

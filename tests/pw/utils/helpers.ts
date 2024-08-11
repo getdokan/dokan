@@ -41,6 +41,8 @@ export const helpers = {
 
     // check if object is empty
     isObjEmpty: (obj: object) => Object.keys(obj).length === 0,
+    // snakecase to camelcase
+    toCamelCase: (str: string): string => str.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase()),
 
     // string between two tags
     stringBetweenTags: (str: string): string => {
@@ -84,8 +86,6 @@ export const helpers = {
         result.setDate(result.getDate() - 1);
         return result.toLocaleDateString('en-CA');
     },
-
-    // (new Date() -1 ).toLocaleDateString('en-CA'),
 
     // current day [2023-06-02]
     currentDate: new Date().toLocaleDateString('en-CA'),
@@ -132,18 +132,11 @@ export const helpers = {
 
     // calculate percentage
     percentage(number: number, percentage: number) {
-        // return this.roundToTwo(number * (percentage / 100));
         return number * (percentage / 100);
     },
 
     percentageWithRound(number: number, percentage: number) {
         return this.roundToTwo(number * (percentage / 100));
-        // return number * (percentage / 100);
-    },
-
-    // calculate percentage
-    percentage1(number: number, percentage: number) {
-        return (number * (percentage / 100)).toFixed(2);
     },
 
     // subtotal
@@ -152,11 +145,14 @@ export const helpers = {
         return subtotal.reduce((a, b) => a + b, 0);
     },
 
-    lineItemsToSubtotal(lineItems: object[]) {
-        const arrOfPriceQuantity = lineItems.map(({ price, quantity }) => [price, quantity]);
-        // const arrOfSubtotals = res.map(([price, quantity]) => price * quantity)
-        const subtotal = arrOfPriceQuantity.reduce((sum, [price, quantity]) => sum + price * quantity, 0);
-        return subtotal;
+    lineItemsToSubtotal(lineItems: { price: number; quantity: number }[]) {
+        const subtotal = lineItems.reduce((sum: number, { price, quantity }) => sum + price * quantity, 0);
+        return this.roundToTwo(subtotal);
+    },
+
+    lineItemsToSubtotalWithoutDiscount(lineItems: { subtotal: number }[]) {
+        const subtotalWithoutDiscount = lineItems.reduce((sum: number, { subtotal }) => sum + subtotal, 0);
+        return this.roundToTwo(subtotalWithoutDiscount);
     },
 
     // discount

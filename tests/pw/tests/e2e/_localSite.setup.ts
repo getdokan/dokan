@@ -54,7 +54,7 @@ test.describe('setup local site', () => {
 
     test('activate basic auth plugin', async () => {
         await helpers.exeCommand(data.commands.activatePlugin(data.installWp.plugins.basicAuth));
-        // await dbUtils.updateWpOptionTable(dbData.optionName.activePlugins, dbData.plugins, true);
+        // await dbUtils.updateOptionValue(dbData.optionName.activePlugins, dbData.plugins, true);
     });
 
     test('remove dokan pro plugin requirements (dokan-lite)', async () => {
@@ -62,7 +62,7 @@ test.describe('setup local site', () => {
     });
 
     test('activate dokan pro modules', async () => {
-        await dbUtils.updateWpOptionTable(dbData.dokan.optionName.dokanActiveModules, dbData.dokan.modules, true);
+        await dbUtils.updateOptionValue(dbData.dokan.optionName.dokanActiveModules, dbData.dokan.modules, true);
     });
 
     test.skip('admin setup wordpress', async ({ page }) => {

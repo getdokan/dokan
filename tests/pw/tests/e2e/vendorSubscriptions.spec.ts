@@ -8,7 +8,7 @@ import { dbUtils } from '@utils/dbUtils';
 
 test.slow();
 test.describe('Vendor subscription test', () => {
-    test.skip(true,' need to update create dokan subscription product')
+    test.skip(true, ' need to update create dokan subscription product');
     let admin: VendorSubscriptionsPage;
     let vendor: VendorSubscriptionsPage;
     let aPage: Page, vPage: Page;

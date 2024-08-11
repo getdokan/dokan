@@ -98,8 +98,8 @@ export const dbUtils = {
         return res;
     },
 
-    // update option value //todo: update method name updateOptionValue
-    async updateWpOptionTable(optionName: string, optionValue: object | string, serializeData?: boolean): Promise<any> {
+    // update option value
+    async updateOptionValue(optionName: string, optionValue: object | string, serializeData?: boolean): Promise<any> {
         optionValue = serializeData ? serialize(optionValue) : optionValue;
         const query = `UPDATE ${dbPrefix}_options SET option_value = '${optionValue}' WHERE option_name = '${optionName}';`;
         const res = await dbUtils.dbQuery(query);

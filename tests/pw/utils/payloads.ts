@@ -122,13 +122,7 @@ export const payloads = {
         // regular_price: faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([0, 2]) }),
         // regular_price: '114.15' , // failed for this price & 5% tax & 10% commission dokan .1 issue
         status: 'publish',
-        categories: [
-            {
-                // id: 48
-                name: 'Uncategorized',
-                slug: 'uncategorized',
-            },
-        ],
+        categories: [{}],
         featured: true,
         description: '<p>test description</p>',
         short_description: '<p>test short description</p>',
@@ -231,13 +225,7 @@ export const payloads = {
         // regular_price: faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([0, 2]) }),
         // regular_price: '114.15' , // failed for this price & 5% tax & 10% commission dokan .1 issue
         status: 'publish',
-        categories: [
-            {
-                // id: 48
-                name: 'Uncategorized',
-                slug: 'uncategorized',
-            },
-        ],
+        categories: [{}],
         featured: true,
         description: '<p>test description</p>',
         short_description: '<p>test short description</p>',
@@ -338,13 +326,7 @@ export const payloads = {
         type: 'simple',
         regular_price: '100',
         status: 'publish',
-        categories: [
-            {
-                // id: 48
-                name: 'Uncategorized',
-                slug: 'uncategorized',
-            },
-        ],
+        categories: [{}],
         featured: true,
         description: '<p>test description</p>',
         short_description: '<p>test short description</p>',
@@ -444,13 +426,7 @@ export const payloads = {
         regular_price: faker.finance.amount({ min: 100, max: 110, dec: faker.helpers.arrayElement([0, 2]) }),
         // regular_price: '100',
         status: 'publish',
-        categories: [
-            {
-                // id: 48
-                name: 'Uncategorized',
-                slug: 'uncategorized',
-            },
-        ],
+        categories: [{}],
         featured: true,
         description: '<p>test description</p>',
         short_description: '<p>test short description</p>',
@@ -472,13 +448,7 @@ export const payloads = {
         type: 'variable',
         regular_price: faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([0, 2]) }),
         status: 'publish',
-        categories: [
-            {
-                // id: 48
-                name: 'Uncategorized',
-                slug: 'uncategorized',
-            },
-        ],
+        categories: [{}],
         // attributes: [
         // 	{
         // 		'id'       : 28,
@@ -498,8 +468,6 @@ export const payloads = {
         categories: [
             {
                 //  id: 48
-                name: 'Uncategorized',
-                slug: 'uncategorized',
             },
         ],
         attributes: [
@@ -523,11 +491,7 @@ export const payloads = {
         downloads: [],
         // download_limit: 100,
         // download_expiry: 100,
-        categories: [
-            {
-                // id: 48
-            },
-        ],
+        categories: [{}],
     }),
 
     createSimpleSubscriptionProduct: () => ({
@@ -1193,7 +1157,8 @@ export const payloads = {
 
     createMarketPlaceCoupon: () => ({
         code: `AC_${faker.string.nanoid(10)}`,
-        discount_type: faker.helpers.arrayElement(['percent', 'fixed_product', 'fixed_cart']),
+        // discount_type: faker.helpers.arrayElement(['percent', 'fixed_product', 'fixed_cart']),
+        discount_type: 'percent',
         amount: faker.number.int({ min: 1, max: 10 }).toString(),
         individual_use: false,
         meta_data: [
@@ -1787,6 +1752,58 @@ export const payloads = {
         ],
     },
 
+    tax: {
+        exclusive: {
+            update: [
+                {
+                    id: 'woocommerce_prices_include_tax',
+                    // label: 'Prices entered with tax',
+                    value: 'no', // 'no', 'yes'
+                },
+                {
+                    id: 'woocommerce_tax_round_at_subtotal',
+                    label: 'Rounding',
+                    value: 'no', // 'no', 'yes'
+                },
+                {
+                    id: 'woocommerce_tax_display_shop',
+                    // label: 'Display prices in the shop',
+                    value: 'excl', // 'excl', 'incl
+                },
+                {
+                    id: 'woocommerce_tax_display_cart',
+                    // label: 'Display prices during cart and checkout',
+                    value: 'excl', // 'excl', 'incl
+                },
+            ],
+        },
+
+        inclusive: {
+            update: [
+                {
+                    id: 'woocommerce_prices_include_tax',
+                    // label: 'Prices entered with tax',
+                    value: 'yes', // 'no', 'yes'
+                },
+                {
+                    id: 'woocommerce_tax_round_at_subtotal',
+                    label: 'Rounding',
+                    value: 'no', // 'no', 'yes'
+                },
+                {
+                    id: 'woocommerce_tax_display_shop',
+                    // label: 'Display prices in the shop',
+                    value: 'incl', // 'excl', 'incl'
+                },
+                {
+                    id: 'woocommerce_tax_display_cart',
+                    // label: 'Display prices during cart and checkout',
+                    value: 'incl', // 'excl', 'incl
+                },
+            ],
+        },
+    },
+
     // enable HPOS
     advanced: {
         update: [
@@ -1927,45 +1944,7 @@ export const payloads = {
                 // description: "Place the payment gateway in test mode using test API keys.",
                 value: 'yes',
             },
-            {
-                id: 'stripe_checkout',
-                // label: "Enable Stripe Checkout",
-                // description: "(This only works when 3D Secure and SCA is disabled) If enabled, this option shows a \"pay\" button and modal credit card form on the checkout, instead of credit card fields directly on the page.",
-                value: 'yes',
-            },
-            {
-                id: 'stripe_checkout_locale',
-                // label: "Stripe Checkout locale",
-                // description: "Language to display in Stripe Checkout modal. Specify Auto to display Checkout in the user's preferred language, if available. English will be used by default.",
-                value: 'en',
-                // 'options': {
-                //     'auto': 'Auto',
-                //     'zh': 'Simplified Chinese',
-                //     'da': 'Danish',
-                //     'nl': 'Dutch',
-                //     'en': 'English',
-                //     'fi': 'Finnish',
-                //     'fr': 'French',
-                //     'de': 'German',
-                //     'it': 'Italian',
-                //     'ja': 'Japanese',
-                //     'no': 'Norwegian',
-                //     'es': 'Spanish',
-                //     'sv': 'Swedish'
-                // }
-            },
-            {
-                id: 'stripe_checkout_image',
-                // label: "Checkout Image",
-                // description: "Optionally enter the URL to a 128x128px image of your brand or product. e.g. <code>https://yoursite.com/wp-content/uploads/2013/09/yourimage.jpg</code>",
-                value: '',
-            },
-            {
-                id: 'stripe_checkout_label',
-                // label: "Checkout Button Label",
-                // description: "Optionally enter a Label for PAY button",
-                value: '',
-            },
+
             {
                 id: 'saved_cards',
                 // label: "Enable saved cards",

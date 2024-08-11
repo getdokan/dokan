@@ -1491,6 +1491,7 @@ export const data = {
                 phone: '0123456789',
             },
             shipping: {
+                email: `${CUSTOMER}@yopmail.com`,
                 firstName: CUSTOMER,
                 lastName: 'c1',
                 companyName: faker.company.name(),

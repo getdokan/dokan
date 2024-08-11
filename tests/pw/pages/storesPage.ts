@@ -259,11 +259,13 @@ export class StoresPage extends AdminPage {
             await this.clearAndType(vendors.editVendor.storeName, vendor.vendorInfo.storeName);
             await this.clearAndType(vendors.editVendor.phoneNumber, vendor.vendorInfo.phone); // todo:  change input after fix
             await this.clearAndType(vendors.editVendor.email, vendor.username + data.vendor.vendorInfo.emailDomain);
-            await this.clearAndType(vendors.editVendor.companyName, vendor.vendorInfo.companyName);
-            await this.clearAndType(vendors.editVendor.companyIdEuidNumber, vendor.vendorInfo.companyId);
-            await this.clearAndType(vendors.editVendor.vatOrTaxNumber, vendor.vendorInfo.vatNumber);
-            await this.clearAndType(vendors.editVendor.nameOfBank, vendor.vendorInfo.bankName);
-            await this.clearAndType(vendors.editVendor.bankIban, vendor.vendorInfo.bankIban);
+            if (DOKAN_PRO) {
+                await this.clearAndType(vendors.editVendor.companyName, vendor.vendorInfo.companyName);
+                await this.clearAndType(vendors.editVendor.companyIdEuidNumber, vendor.vendorInfo.companyId);
+                await this.clearAndType(vendors.editVendor.vatOrTaxNumber, vendor.vendorInfo.vatNumber);
+                await this.clearAndType(vendors.editVendor.nameOfBank, vendor.vendorInfo.bankName);
+                await this.clearAndType(vendors.editVendor.bankIban, vendor.vendorInfo.bankIban);
+            }
 
             // address
             await this.clearAndType(vendors.editVendor.street1, vendor.vendorInfo.street1);
@@ -300,16 +302,13 @@ export class StoresPage extends AdminPage {
             // paypal
             await this.clearAndType(vendors.editVendor.payPalEmail, vendor.vendorInfo.payment.email());
 
-            // todo:  admin commission
-            // todo:  vendor subscription
-
             // other settings
             await this.enableSwitcher(vendors.editVendor.enableSelling);
             await this.enableSwitcher(vendors.editVendor.publishProductDirectly);
             await this.enableSwitcher(vendors.editVendor.makeVendorFeature);
 
             await this.clickAndWaitForResponse(data.subUrls.api.dokan.stores, vendors.editVendor.saveChanges);
-            await this.click(vendors.editVendor.confirmSaveChanges);
+            await this.click(vendors.editVendor.closeUpdateSuccessModal);
         }
     }
 
