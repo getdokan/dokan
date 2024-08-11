@@ -50,7 +50,7 @@ test.describe.skip('Settings test', () => {
     test.skip('admin can set vendor store url (general settings)', { tag: ['@lite', '@admin'] }, async () => {
         // todo: need to run on serial mode, will fail other tests
         await dbUtils.setOptionValue(dbData.dokan.optionName.general, { ...dbData.dokan.generalSettings, custom_store_url: 'stores' });
-        const command = CI ? data.commands.permalink : data.commands.permalinkLocal;
+        const command = CI ? data.commands.permalinkWpEnv : data.commands.permalinkLocal;
         await helpers.exeCommand(command);
         await admin.vendorStoreUrlSetting(data.predefined.vendorStores.vendor1, 'stores');
 

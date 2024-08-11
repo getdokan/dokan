@@ -17,11 +17,14 @@ export class StoreListingPage extends CustomerPage {
     // store list
 
     // store list render properly
-    async storeListRenderProperly() {
-        await this.goIfNotThere(data.subUrls.frontend.storeListing);
-
-        // store list text is visible
-        await this.toBeVisible(storeList.storeListText);
+    async storeListRenderProperly(link?: string) {
+        if (link) {
+            await this.goto(link);
+        } else {
+            await this.goIfNotThere(data.subUrls.frontend.storeListing);
+            // store list text is visible
+            await this.toBeVisible(storeList.storeListText);
+        }
 
         // map elements are visible
         if (DOKAN_PRO) {
