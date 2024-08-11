@@ -76,17 +76,27 @@ export class VendorSubscriptionsPage extends VendorPage {
     // cancel subscriptions
     async cancelSubscription(vendor: string, option: string) {
         await this.goto(data.subUrls.backend.dokan.subscriptions);
-        await this.reload();
+        await this.reload(); // todo: fix this
 
         await this.click(adminSubscriptions.vendorSubscriptionsActions(vendor));
-        option === 'immediately' ? await this.click(adminSubscriptions.subscriptionAction.cancelImmediately) : await this.click(adminSubscriptions.subscriptionAction.cancelAfterEndOfCurrentPeriod);
-        await this.clickAndWaitForResponse(data.subUrls.api.dokan.subscriptions, adminSubscriptions.subscriptionAction.cancelSubscription, 200);
-        option === 'immediately' ? await this.notToBeVisible(adminSubscriptions.vendorSubscriptionsRow(vendor)) : await this.toBeVisible(adminSubscriptions.vendorSubscriptionsRow(vendor));
+        if (option === 'immediately') {
+            await this.click(adminSubscriptions.subscriptionAction.cancelImmediately);
+            await this.clickAndWaitForResponse(data.subUrls.api.dokan.subscriptions, adminSubscriptions.subscriptionAction.cancelSubscription, 200);
+            await this.notToBeVisible(adminSubscriptions.vendorSubscriptionsRow(vendor));
+        } else {
+            await this.click(adminSubscriptions.subscriptionAction.cancelAfterEndOfCurrentPeriod);
+            await this.clickAndWaitForResponse(data.subUrls.api.dokan.subscriptions, adminSubscriptions.subscriptionAction.cancelSubscription, 200);
+            await this.toBeVisible(adminSubscriptions.vendorSubscriptionsRow(vendor));
+        }
     }
 
     // subscriptions bulk action
     async subscriptionsBulkAction(action: string, storeName?: string) {
-        storeName ? await this.filterSubscribedVendors(storeName, 'by-vendor') : await this.goIfNotThere(data.subUrls.backend.dokan.subscriptions);
+        if (storeName) {
+            await this.filterSubscribedVendors(storeName, 'by-vendor');
+        } else {
+            await this.goIfNotThere(data.subUrls.backend.dokan.subscriptions);
+        }
 
         // ensure row exists
         await this.notToBeVisible(adminSubscriptions.noRowsFound);
@@ -165,7 +175,7 @@ export class VendorSubscriptionsPage extends VendorPage {
 
     // vendor cancel dokan subscription
     async vendorCancelSubscription(username: string, login = true) {
-        login && (await this.loginPage.login({ username: username, password: USER_PASSWORD }));
+        if (login) await this.loginPage.login({ username: username, password: USER_PASSWORD });
 
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.subscriptions);
         await this.click(vendorSubscriptions.sellerSubscriptionInfo.cancelSubscription);

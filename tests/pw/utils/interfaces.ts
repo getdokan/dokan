@@ -638,7 +638,6 @@ export interface vendor {
 
     vendorInfo: {
         email: () => string;
-        // emailDomain: string;
         emailDomain: string;
         password: string;
         password1: string;
@@ -1010,16 +1009,9 @@ export interface vendor {
 export interface staff {
     firstName: string;
     lastName: string;
-    // fullName: string;
     email: string;
     phone: string;
     password: string;
-    // firstName: () => string;
-    // lastName: () => string;
-    // fullName: () => string;
-    // email: () => string;
-    // phone: () => string;
-    // password: string;
 }
 
 // customer

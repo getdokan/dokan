@@ -4,7 +4,7 @@ import { payloads } from '@utils/payloads';
 import { data } from '@utils/testData';
 import { helpers } from '@utils/helpers';
 
-const { CI, LOCAL, DOKAN_PRO, BASE_URL } = process.env;
+const { LOCAL, DOKAN_PRO, BASE_URL } = process.env;
 
 setup.describe('authenticate users & set permalink', () => {
     let apiUtils: ApiUtils;
@@ -18,11 +18,19 @@ setup.describe('authenticate users & set permalink', () => {
     });
 
     setup('set permalinks (post_name)', { tag: ['@lite'] }, async () => {
-        LOCAL ? await helpers.exeCommand(data.commands.permalinkLocal) : await helpers.exeCommand(data.commands.permalinkWpEnv);
+        if (LOCAL) {
+            await helpers.exeCommand(data.commands.permalinkLocal);
+        } else {
+            await helpers.exeCommand(data.commands.permalinkWpEnv);
+        }
     });
 
     setup('activate theme (storefront)', { tag: ['@lite'] }, async () => {
-        LOCAL ? await helpers.exeCommand(data.commands.activateTheme(data.installWp.themes.storefront)) : await helpers.exeCommand(data.commands.activateThemeWpEnv);
+        if (LOCAL) {
+            await helpers.exeCommand(data.commands.activateTheme(data.installWp.themes.storefront));
+        } else {
+            await helpers.exeCommand(data.commands.activateThemeWpEnv);
+        }
     });
 
     setup('get server url', { tag: ['@lite'] }, async () => {
