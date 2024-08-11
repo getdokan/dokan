@@ -35,7 +35,7 @@ export default defineConfig({
     /* Fail the build on CI if you accidentally left test-only in the source code. */
     // forbidOnly     : !!CI,
     /* The number of times to repeat each test, useful for debugging flaky tests. */
-    repeatEach: CI ? 1 : 0,
+    repeatEach: CI ? 0 : 0,
     /* The maximum number of retry attempts given to failed tests.  */
     retries: CI ? 1 : 0,
     /* Opt out of parallel tests on CI. */
@@ -99,7 +99,7 @@ export default defineConfig({
         /* Size of viewport */
         // viewport: { width: 1420, height: 900 }, // default 1280x720
         /* whether to slow down test execution by provided seconds */
-        launchOptions: { slowMo: SLOWMO ? Number(SLOWMO) * 1000 : 0 },
+        launchOptions: { slowMo: (SLOWMO ?? 0) * 1000 },
     },
 
     projects: [
@@ -107,14 +107,14 @@ export default defineConfig({
         // plugin_setup
         {
             name: 'plugin_setup',
-            testMatch: '_auth.setup.ts',
+            testMatch: '_plugin.setup.ts',
         },
 
         // auth_setup
         {
             name: 'auth_setup',
             testMatch: '_auth.setup.ts',
-            dependencies: LOCAL ? [] : ['plugin_setup'],
+            dependencies: LOCAL ? ['plugin_setup'] : [],
         },
 
         // e2e_setup

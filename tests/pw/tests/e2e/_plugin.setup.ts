@@ -18,11 +18,11 @@ setup.describe('authenticate users & set permalink', () => {
     });
 
     setup('set permalinks (post_name)', { tag: ['@lite'] }, async () => {
-        LOCAL ? await helpers.exeCommand(data.commands.permalinkLocal) : await helpers.exeCommand(data.commands.permalink);
+        LOCAL ? await helpers.exeCommand(data.commands.permalinkLocal) : await helpers.exeCommand(data.commands.permalinkWpEnv);
     });
 
     setup('activate theme (storefront)', { tag: ['@lite'] }, async () => {
-        LOCAL ? await helpers.exeCommand(data.commands.activateThemeLocal) : await helpers.exeCommand(data.commands.activateTheme);
+        LOCAL ? await helpers.exeCommand(data.commands.activateTheme(data.installWp.themes.storefront)) : await helpers.exeCommand(data.commands.activateThemeWpEnv);
     });
 
     setup('get server url', { tag: ['@lite'] }, async () => {
