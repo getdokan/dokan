@@ -8,7 +8,7 @@ import { dbUtils } from '@utils/dbUtils';
 
 test.slow();
 test.describe('Vendor subscription test', () => {
-    test.skip(true,' need to update create dokan subscription product')
+    test.skip(true, ' need to update create dokan subscription product');
     let admin: VendorSubscriptionsPage;
     let vendor: VendorSubscriptionsPage;
     let aPage: Page, vPage: Page;
@@ -95,7 +95,7 @@ test.describe('Vendor subscription test', () => {
 
     test('vendor can buy non recurring subscription pack (on subscription page)', { tag: ['@pro', '@vendor'] }, async ({ page }) => {
         const [, sellerId, , vendorName] = await apiUtils.createStore(payloads.createStore(), payloads.adminAuth, true);
-        await dbUtils.createUserMeta(sellerId, 'dokan_vendor_seen_setup_wizard', '1'); // to avoid setup wizard trigger
+        await dbUtils.setUserMeta(sellerId, 'dokan_vendor_seen_setup_wizard', '1'); // to avoid setup wizard trigger
 
         const vendor = new VendorSubscriptionsPage(page);
         const orderId = await vendor.buySubscription(vendorName, subscriptionPack);
@@ -106,7 +106,7 @@ test.describe('Vendor subscription test', () => {
     test('vendor can switch subscription', { tag: ['@pro', '@vendor'] }, async ({ page }) => {
         const [, subscriptionPack2] = await createDokanSubscriptionProduct(payloads.createDokanSubscriptionProduct(), { ...payloads.saveVendorSubscriptionProductCommission, commission: { fixed: { percentage: '15', flat: '15' } } });
         const [sellerId, , vendorName] = await apiUtils.assignSubscriptionToVendor(subscriptionPackId);
-        await dbUtils.createUserMeta(sellerId, 'dokan_vendor_seen_setup_wizard', '1'); // to avoid setup wizard trigger
+        await dbUtils.setUserMeta(sellerId, 'dokan_vendor_seen_setup_wizard', '1'); // to avoid setup wizard trigger
 
         const vendor = new VendorSubscriptionsPage(page);
         const orderId = await vendor.buySubscription(vendorName, subscriptionPack2, true);

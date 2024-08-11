@@ -36,8 +36,8 @@ test.describe.skip('Settings test', () => {
     });
 
     test.afterAll(async () => {
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.general, dbData.dokan.generalSettings);
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, dbData.dokan.sellingSettings);
+        await dbUtils.setOptionValue(dbData.dokan.optionName.general, dbData.dokan.generalSettings);
+        await dbUtils.setOptionValue(dbData.dokan.optionName.selling, dbData.dokan.sellingSettings);
 
         await aPage.close();
         await vPage.close();
@@ -49,13 +49,13 @@ test.describe.skip('Settings test', () => {
 
     test.skip('admin can set vendor store url (general settings)', { tag: ['@lite', '@admin'] }, async () => {
         // todo: need to run on serial mode, will fail other tests
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.general, { ...dbData.dokan.generalSettings, custom_store_url: 'stores' });
+        await dbUtils.setOptionValue(dbData.dokan.optionName.general, { ...dbData.dokan.generalSettings, custom_store_url: 'stores' });
         const command = CI ? data.commands.permalink : data.commands.permalinkLocal;
         await helpers.exeCommand(command);
         await admin.vendorStoreUrlSetting(data.predefined.vendorStores.vendor1, 'stores');
 
         //reset
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.general, dbData.dokan.generalSettings);
+        await dbUtils.setOptionValue(dbData.dokan.optionName.general, dbData.dokan.generalSettings);
         await helpers.exeCommand(command);
     });
 
@@ -63,7 +63,7 @@ test.describe.skip('Settings test', () => {
         apiUtils = new ApiUtils(await request.newContext());
         const [responseBody] = await apiUtils.uploadFile(data.image.dokan, payloads.adminAuth);
         const logoUrl = responseBody.source_url;
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.general, {
+        await dbUtils.setOptionValue(dbData.dokan.optionName.general, {
             ...dbData.dokan.generalSettings,
             setup_wizard_logo_url: logoUrl,
             setup_wizard_message: dbData.testData.dokan.generalSettings.setup_wizard_message,
@@ -72,62 +72,62 @@ test.describe.skip('Settings test', () => {
     });
 
     test('admin can disable vendor setup wizard (general settings)', { tag: ['@lite', '@guest'] }, async () => {
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.general, { ...dbData.dokan.generalSettings, disable_welcome_wizard: 'on' });
+        await dbUtils.setOptionValue(dbData.dokan.optionName.general, { ...dbData.dokan.generalSettings, disable_welcome_wizard: 'on' });
         await guest.disableVendorSetupWizardSetting();
     });
 
     test('admin can set store terms and conditions (general settings)', { tag: ['@lite', '@vendor'] }, async () => {
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.general, { ...dbData.dokan.generalSettings, seller_enable_terms_and_conditions: 'on' });
+        await dbUtils.setOptionValue(dbData.dokan.optionName.general, { ...dbData.dokan.generalSettings, seller_enable_terms_and_conditions: 'on' });
         await vendor.setStoreTermsAndConditions('on');
 
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.general, { ...dbData.dokan.generalSettings, seller_enable_terms_and_conditions: 'off' });
+        await dbUtils.setOptionValue(dbData.dokan.optionName.general, { ...dbData.dokan.generalSettings, seller_enable_terms_and_conditions: 'off' });
         await vendor.setStoreTermsAndConditions('off');
     });
 
     test('admin can set store products per page (general settings)', { tag: ['@lite', '@customer'] }, async () => {
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.general, { ...dbData.dokan.generalSettings, store_products_per_page: '1' });
+        await dbUtils.setOptionValue(dbData.dokan.optionName.general, { ...dbData.dokan.generalSettings, store_products_per_page: '1' });
         await customer.setStoreProductsPerPage(data.predefined.vendorStores.vendor1, 1);
     });
 
     test('admin can enable address fields on registration (general settings)', { tag: ['@lite', '@guest'] }, async () => {
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.general, { ...dbData.dokan.generalSettings, enabled_address_on_reg: 'on' });
+        await dbUtils.setOptionValue(dbData.dokan.optionName.general, { ...dbData.dokan.generalSettings, enabled_address_on_reg: 'on' });
         await guest.enableAddressFieldsOnRegistration('on');
 
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.general, { ...dbData.dokan.generalSettings, enabled_address_on_reg: 'off' });
+        await dbUtils.setOptionValue(dbData.dokan.optionName.general, { ...dbData.dokan.generalSettings, enabled_address_on_reg: 'off' });
         await guest.enableAddressFieldsOnRegistration('off');
     });
 
     test('admin can enable store terms and conditions on registration (general settings)', { tag: ['@pro', '@vendor'] }, async () => {
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.general, { ...dbData.dokan.generalSettings, enable_tc_on_reg: 'on' });
+        await dbUtils.setOptionValue(dbData.dokan.optionName.general, { ...dbData.dokan.generalSettings, enable_tc_on_reg: 'on' });
         await vendor.enableStoreTermsAndConditionsOnRegistration('on');
 
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.general, { ...dbData.dokan.generalSettings, enable_tc_on_reg: 'off' });
+        await dbUtils.setOptionValue(dbData.dokan.optionName.general, { ...dbData.dokan.generalSettings, enable_tc_on_reg: 'off' });
         await vendor.enableStoreTermsAndConditionsOnRegistration('off');
     });
 
     test('admin can set show vendor info (general settings)', { tag: ['@lite', '@customer'] }, async () => {
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.general, { ...dbData.dokan.generalSettings, show_vendor_info: 'on' });
+        await dbUtils.setOptionValue(dbData.dokan.optionName.general, { ...dbData.dokan.generalSettings, show_vendor_info: 'on' });
         await customer.setShowVendorInfo(data.predefined.simpleProduct.product1.name, 'on');
 
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.general, { ...dbData.dokan.generalSettings, show_vendor_info: 'off' });
+        await dbUtils.setOptionValue(dbData.dokan.optionName.general, { ...dbData.dokan.generalSettings, show_vendor_info: 'off' });
         await customer.setShowVendorInfo(data.predefined.simpleProduct.product1.name, 'off');
     });
 
     test('admin can enable more products tab (general settings)', { tag: ['@lite', '@customer'] }, async () => {
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.general, { ...dbData.dokan.generalSettings, enabled_more_products_tab: 'on' });
+        await dbUtils.setOptionValue(dbData.dokan.optionName.general, { ...dbData.dokan.generalSettings, enabled_more_products_tab: 'on' });
         await customer.enableMoreProductsTab(data.predefined.simpleProduct.product1.name, 'on');
 
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.general, { ...dbData.dokan.generalSettings, enabled_more_products_tab: 'off' });
+        await dbUtils.setOptionValue(dbData.dokan.optionName.general, { ...dbData.dokan.generalSettings, enabled_more_products_tab: 'off' });
         await customer.enableMoreProductsTab(data.predefined.simpleProduct.product1.name, 'off');
     });
 
     // selling settings
 
     test('admin can enable vendor selling (selling settings)', { tag: ['@lite', '@guest'] }, async () => {
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, new_seller_enable_selling: 'on' });
+        await dbUtils.setOptionValue(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, new_seller_enable_selling: 'on' });
         await guest.enableVendorSelling('on');
 
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, new_seller_enable_selling: 'off' });
+        await dbUtils.setOptionValue(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, new_seller_enable_selling: 'off' });
         await guest.enableVendorSelling('off');
     });
 
@@ -135,10 +135,10 @@ test.describe.skip('Settings test', () => {
         apiUtils = new ApiUtils(await request.newContext());
         const [, , orderId] = await apiUtils.createOrderWithStatus(PRODUCT_ID, { ...payloads.createOrder, customer_id: CUSTOMER_ID }, data.order.orderStatus.onhold, payloads.vendorAuth);
 
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, order_status_change: 'on' });
+        await dbUtils.setOptionValue(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, order_status_change: 'on' });
         await vendor.setOrderStatusChangeCapability(orderId, 'on');
 
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, order_status_change: 'off' });
+        await dbUtils.setOptionValue(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, order_status_change: 'off' });
         await vendor.setOrderStatusChangeCapability(orderId, 'off');
     });
 });

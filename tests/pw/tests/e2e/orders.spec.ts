@@ -78,9 +78,9 @@ test.describe('Order functionality test', () => {
 
     test('vendor can add tracking details to order', { tag: ['@lite', '@vendor'] }, async () => {
         if (DOKAN_PRO) {
-            await dbUtils.setDokanSettings(dbData.dokan.optionName.shippingStatus, { ...dbData.dokan.shippingStatusSettings, enabled: 'off' });
+            await dbUtils.setOptionValue(dbData.dokan.optionName.shippingStatus, { ...dbData.dokan.shippingStatusSettings, enabled: 'off' });
             await vendor.addTrackingDetails(orderId, data.orderTrackingDetails);
-            await dbUtils.setDokanSettings(dbData.dokan.optionName.shippingStatus, { ...dbData.dokan.shippingStatusSettings, enabled: 'on' });
+            await dbUtils.setOptionValue(dbData.dokan.optionName.shippingStatus, { ...dbData.dokan.shippingStatusSettings, enabled: 'on' });
         } else {
             await vendor.addTrackingDetails(orderId, data.orderTrackingDetails);
         }

@@ -22,33 +22,33 @@ test.describe.skip('Store Appearance test', () => {
         customer = new StoreAppearance(cPage);
 
         apiUtils = new ApiUtils(await request.newContext());
-        privacyPolicySettings = await dbUtils.getDokanSettings(dbData.dokan.optionName.privacyPolicy);
+        privacyPolicySettings = await dbUtils.getOptionValue(dbData.dokan.optionName.privacyPolicy);
     });
 
     test.afterAll(async () => {
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.appearance, dbData.dokan.appearanceSettings);
+        await dbUtils.setOptionValue(dbData.dokan.optionName.appearance, dbData.dokan.appearanceSettings);
         await cPage.close();
         await apiUtils.dispose();
     });
 
     test('store map is disabled on store sidebar', { tag: ['@lite', '@customer'] }, async () => {
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.appearance, { ...dbData.dokan.appearanceSettings, store_map: 'off' });
+        await dbUtils.setOptionValue(dbData.dokan.optionName.appearance, { ...dbData.dokan.appearanceSettings, store_map: 'off' });
         await customer.disableMapOnStoreSidebar(data.predefined.vendorStores.vendor1);
     });
 
     test('store open-close time is disabled store sidebar', { tag: ['@lite', '@customer'] }, async () => {
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.appearance, { ...dbData.dokan.appearanceSettings, store_open_close: 'off' });
+        await dbUtils.setOptionValue(dbData.dokan.optionName.appearance, { ...dbData.dokan.appearanceSettings, store_open_close: 'off' });
         await customer.disableStoreOpenCloseTimeOnStoreSidebar(data.predefined.vendorStores.vendor1);
     });
 
     test.skip('vendor info is disabled on single store page', { tag: ['@lite', '@customer'] }, async () => {
         // todo: need to fix
-        console.log(await dbUtils.getDokanSettings(dbData.dokan.optionName.appearance));
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.appearance, {
+        console.log(await dbUtils.getOptionValue(dbData.dokan.optionName.appearance));
+        await dbUtils.setOptionValue(dbData.dokan.optionName.appearance, {
             ...dbData.dokan.appearanceSettings,
             hide_vendor_info: { email: 'email', phone: 'phone', address: 'address' },
         });
-        console.log(await dbUtils.getDokanSettings(dbData.dokan.optionName.appearance));
+        console.log(await dbUtils.getOptionValue(dbData.dokan.optionName.appearance));
         await customer.disableVendorInfoOnSingleStorePage(data.predefined.vendorStores.vendor1);
     });
 });

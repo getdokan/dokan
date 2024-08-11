@@ -4,6 +4,7 @@ import { dbData } from '@utils/dbData';
 import { helpers } from '@utils/helpers';
 import { commission, feeRecipient } from '@utils/interfaces';
 const { DB_HOST_NAME, DB_USER_NAME, DB_USER_PASSWORD, DATABASE, DB_PORT, DB_PREFIX } = process.env;
+
 const dbPrefix = DB_PREFIX;
 
 const pool = mysql.createPool({
@@ -53,7 +54,6 @@ export const dbUtils = {
                 return {};
             },
         }); //todo: added to handle WP_Term error, test if it works for further cases
-        // console.log(userMeta);
         return userMeta;
     },
 
@@ -78,18 +78,17 @@ export const dbUtils = {
         return [currentMetaValue, newMetaValue];
     },
 
-    // get option value // todo: update method name getOptionValue
-    async getDokanSettings(optionName: string): Promise<any> {
+    // get option value
+    async getOptionValue(optionName: string): Promise<any> {
         const query = `Select option_value FROM ${dbPrefix}_options WHERE option_name = '${optionName}';`;
         const res = await dbUtils.dbQuery(query);
         const optionValue = unserialize(res[0].option_value);
-        // console.log(optionValue);
         return optionValue;
     },
 
-    // set option value //todo: update method name setOptionValue
-    async setDokanSettings(optionName: string, optionValue: object | string, serializeData: boolean = true): Promise<any> {
-        optionValue = serializeData ? serialize(optionValue) : optionValue; // todo: test if all calles are updated with serialize data
+    // set option value
+    async setOptionValue(optionName: string, optionValue: object | string, serializeData: boolean = true): Promise<any> {
+        optionValue = serializeData ? serialize(optionValue) : optionValue;
         const query = `
             INSERT INTO ${dbPrefix}_options (option_id, option_name, option_value, autoload)
             VALUES (NULL, '${optionName}', '${optionValue}', 'yes')
@@ -109,16 +108,16 @@ export const dbUtils = {
 
     // update dokan settings
     async updateDokanSettings(optionName: string, updatedSettings: object): Promise<[object, object]> {
-        const currentSettings = await this.getDokanSettings(optionName);
+        const currentSettings = await this.getOptionValue(optionName);
         const newSettings = helpers.deepMergeObjects(currentSettings, updatedSettings);
         // console.log('newSettings:', newSettings);
-        await this.setDokanSettings(optionName, newSettings);
+        await this.setOptionValue(optionName, newSettings);
         return [currentSettings, newSettings];
     },
 
     // get selling info
     async getSellingInfo(): Promise<[commission, feeRecipient]> {
-        const res = await this.getDokanSettings(dbData.dokan.optionName.selling);
+        const res = await this.getOptionValue(dbData.dokan.optionName.selling);
         const commission = {
             type: res.commission_type,
             amount: res.admin_percentage,
@@ -193,9 +192,8 @@ export const dbUtils = {
         const subscriptionTermIdQueryResult = await dbUtils.dbQuery(subscriptionTermIdQuery);
         const subscriptionTermId = subscriptionTermIdQueryResult[0].term_id;
 
-        const queryUpdate = `UPDATE ${dbPrefix}_term_relationships SET term_taxonomy_id = '${subscriptionTermId}' WHERE object_id = '${productId}' AND term_taxonomy_id = ${simpleTermId};`;
-        const res = await dbUtils.dbQuery(queryUpdate);
-        // console.log(res);
+        const query = `UPDATE ${dbPrefix}_term_relationships SET term_taxonomy_id = '${subscriptionTermId}' WHERE object_id = '${productId}' AND term_taxonomy_id = ${simpleTermId};`;
+        const res = await dbUtils.dbQuery(query);
         return res;
     },
 };

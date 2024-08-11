@@ -14,11 +14,11 @@ test.describe.skip('Email verifications test', () => {
         gPage = await guestContext.newPage();
         guest = new EmailVerificationsPage(gPage);
 
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.emailVerification, { ...dbData.dokan.emailVerificationSettings, enabled: 'on' });
+        await dbUtils.setOptionValue(dbData.dokan.optionName.emailVerification, { ...dbData.dokan.emailVerificationSettings, enabled: 'on' });
     });
 
     test.afterAll(async () => {
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.emailVerification, dbData.dokan.emailVerificationSettings);
+        await dbUtils.setOptionValue(dbData.dokan.optionName.emailVerification, dbData.dokan.emailVerificationSettings);
         await gPage.close();
     });
 
