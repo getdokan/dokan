@@ -124,6 +124,66 @@ export class ApiUtils {
      * dokan api utility methods
      */
 
+    // todo: maxPageLimit is not handled properly while calling this function
+    async getAllItems(endPoint: string, params = {}, auth?: auth, maxPageLimit = 2): Promise<responseBody> {
+        let responseBody: object[] = [];
+        let page = 1;
+        let hasMoreItems = true;
+        while (hasMoreItems) {
+            const [, responseBodyChunk] = await this.get(endPoint, { params: { ...params, per_page: 100, page: page }, headers: auth });
+            if (responseBodyChunk.length === 0 || (maxPageLimit !== -1 && page >= maxPageLimit)) {
+                hasMoreItems = false;
+            } else {
+                responseBody = responseBody.concat(responseBodyChunk);
+                page++;
+            }
+        }
+        return responseBody;
+    }
+
+    /**
+     * commission api methods
+     */
+
+    // get admin commission
+    async getCommission(params = {}, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.get(endPoints.getCommission, { params: { ...params, context: 'admin' }, headers: auth });
+        return responseBody;
+    }
+
+    // get vendor earning
+    async getEarning(params = {}, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.get(endPoints.getCommission, { params: { ...params, context: 'seller' }, headers: auth });
+        return responseBody;
+    }
+
+    // get admin commission
+    async getCommissionLineItems(lineItems: any, auth?: auth) {
+        const productIds = lineItems.map((item: any) => item.product_id);
+        let totalCommission = (await Promise.all(productIds.map((productId: any) => this.getCommission({ product_id: productId }, auth)))).reduce((sum, commission) => sum + commission, 0);
+        totalCommission = helpers.roundToTwo(totalCommission);
+        return totalCommission;
+    }
+
+    // get vendor earning
+    async getEarningLineItems(lineItems: any, auth?: auth) {
+        const productIds = lineItems.map((item: any) => item.product_id);
+        let totalEarning = (await Promise.all(productIds.map((productId: any) => this.getEarning({ product_id: productId }, auth)))).reduce((sum, commission) => sum + commission, 0);
+        totalEarning = helpers.roundToTwo(totalEarning);
+        return totalEarning;
+    }
+
+    // get fee recipient
+    async getFeeRecipient(responseBody: any) {
+        const feeRecipients: { [key: string]: any } = {};
+        responseBody.meta_data.forEach((item: any) => {
+            if (item.key.includes('fee_recipient')) {
+                feeRecipients[helpers.toCamelCase(item.key)] = item.value;
+            }
+        });
+        return feeRecipients;
+    }
+
     /**
      * dummy data api methods
      */
@@ -146,7 +206,7 @@ export class ApiUtils {
 
     // get all stores
     async getAllStores(auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.get(endPoints.getAllStores, { params: { per_page: 100 }, headers: auth });
+        const responseBody = await this.getAllItems(endPoints.getAllStores, {}, auth);
         return responseBody;
     }
 
@@ -204,7 +264,6 @@ export class ApiUtils {
 
     // delete all stores
     async deleteAllStores(auth?: auth): Promise<responseBody> {
-        // todo: apply multiple optional parameter (implement from deleteAllProducts)
         const allStores = await this.getAllStores(auth);
         if (!allStores?.length) {
             console.log('No store exists');
@@ -262,18 +321,7 @@ export class ApiUtils {
 
     // get all products
     async getAllProducts(auth?: auth): Promise<responseBody> {
-        let responseBody: object[] = [];
-        let page = 1;
-        let hasMoreProducts = true;
-        while (hasMoreProducts) {
-            const [, productResponseBody] = await this.get(endPoints.getAllProducts, { params: { per_page: 100, page: page }, headers: auth });
-            if (productResponseBody.length === 0) {
-                hasMoreProducts = false;
-            } else {
-                responseBody = responseBody.concat(productResponseBody);
-                page++;
-            }
-        }
+        const responseBody = await this.getAllItems(endPoints.getAllProducts, {}, auth);
         return responseBody;
     }
 
@@ -334,12 +382,12 @@ export class ApiUtils {
         while (allProductIds.length > 0) {
             const chunkProductIds = allProductIds.splice(0, 100); // Unable to accept more than 100 items for batch update
             console.log('Deleting products: ', chunkProductIds);
-            const [response, body] = await this.put(endPoints.wc.updateBatchProducts, { data: { delete: chunkProductIds }, headers: payloads.adminAuth });
+            const [response, chunkResponseBody] = await this.put(endPoints.wc.updateBatchProducts, { data: { delete: chunkProductIds }, headers: payloads.adminAuth });
             if (!response.ok()) {
                 console.log('batch update failed');
                 break;
             }
-            responseBody = responseBody.concat(body);
+            responseBody = responseBody.concat(chunkResponseBody);
         }
 
         return responseBody;
@@ -360,7 +408,7 @@ export class ApiUtils {
     async getVariationIds(productId: string, auth?: auth): Promise<string[]> {
         const [, responseBody] = await this.get(endPoints.getAllProductVariations(productId), { headers: auth });
         const variationIds = responseBody.map((o: { id: unknown }) => o.id);
-        console.log(variationIds);
+        // console.log(variationIds);
         return variationIds;
     }
 
@@ -385,7 +433,7 @@ export class ApiUtils {
 
     // get all attributes
     async getAllAttributes(auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.get(endPoints.getAllAttributes, { headers: auth });
+        const responseBody = await this.getAllItems(endPoints.getAllAttributes, {}, auth);
         return responseBody;
     }
 
@@ -424,7 +472,7 @@ export class ApiUtils {
 
     // get all attribute terms
     async getAllAttributeTerms(attributeId: string, auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.get(endPoints.getAllAttributeTerms(attributeId), { params: { per_page: 100 }, headers: auth });
+        const responseBody = await this.getAllItems(endPoints.getAllAttributeTerms(attributeId), {}, auth);
         return responseBody;
     }
 
@@ -448,7 +496,7 @@ export class ApiUtils {
 
     // get all coupons
     async getAllCoupons(auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.get(endPoints.getAllCoupons, { params: { per_page: 100 }, headers: auth });
+        const responseBody = await this.getAllItems(endPoints.getAllCoupons, {}, auth);
         return responseBody;
     }
 
@@ -465,9 +513,9 @@ export class ApiUtils {
     }
 
     // create coupon
-    async createCoupon(productIds: (string | undefined)[], coupon: coupon_api, auth?: auth): Promise<[responseBody, string, string]> {
+    async createCoupon(productIds: (string | undefined)[], coupon: coupon_api, auth?: auth): Promise<[responseBody, string, string, string]> {
         // create product if invalid productId exists
-        if (productIds.includes(undefined)) {
+        if (productIds.includes(undefined) || productIds.length === 0) {
             const [, productId] = await this.createProduct(payloads.createProduct(), auth);
             productIds = [productId];
         }
@@ -488,7 +536,7 @@ export class ApiUtils {
             couponId = String(responseBody?.id);
             couponCode = String(responseBody?.code);
         }
-        return [responseBody, couponId, couponCode];
+        return [responseBody, couponId, couponCode, coupon.amount];
     }
 
     // update coupon
@@ -550,13 +598,13 @@ export class ApiUtils {
 
     // get all withdraws
     async getAllWithdraws(auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.get(endPoints.getAllWithdraws, { params: { per_page: 100 }, headers: auth });
+        const responseBody = await this.getAllItems(endPoints.getAllWithdraws, {}, auth);
         return responseBody;
     }
 
     // get all withdraws by status
     async getAllWithdrawsByStatus(status: string, auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.get(endPoints.getAllWithdraws, { params: { per_page: 100, status: status }, headers: auth });
+        const responseBody = await this.getAllItems(endPoints.getAllWithdraws, { status: status }, auth);
         return responseBody;
     }
 
@@ -606,16 +654,16 @@ export class ApiUtils {
      * order api methods
      */
 
-    // get all orders [of a vendor]
+    // get all orders [of a single vendor]
     async getAllOrders(auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.get(endPoints.getAllOrders, { params: { per_page: 100 }, headers: auth });
+        const responseBody = await this.getAllItems(endPoints.getAllOrders, {}, auth);
         return responseBody;
     }
 
     // get single order
-    async getSingleOrder(orderId: string, auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.get(endPoints.getSingleOrder(orderId), { headers: auth });
-        return responseBody;
+    async getSingleOrder(orderId: string, auth?: auth): Promise<[APIResponse, responseBody]> {
+        const [response, responseBody] = await this.get(endPoints.getSingleOrder(orderId), { headers: auth });
+        return [response, responseBody];
     }
 
     // get orderId
@@ -662,7 +710,7 @@ export class ApiUtils {
 
     // get all order logs
     async getAllOrderLogs(auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.get(endPoints.getAdminLogs, { params: { per_page: 100 }, headers: auth });
+        const responseBody = await this.getAllItems(endPoints.getAdminLogs, {}, auth);
         return responseBody;
     }
 
@@ -679,7 +727,7 @@ export class ApiUtils {
 
     // get all refunds
     async getAllRefunds(status: string, auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.get(endPoints.getAllRefunds, { params: { per_page: 100, status: status }, headers: auth });
+        const responseBody = await this.getAllItems(endPoints.getAllRefunds, { status: status }, auth);
         return responseBody;
     }
 
@@ -712,7 +760,7 @@ export class ApiUtils {
 
     // get all support tickets
     async getAllSupportTickets(auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.get(endPoints.getAllSupportTickets, { params: { per_page: 100 }, headers: auth });
+        const responseBody = await this.getAllItems(endPoints.getAllSupportTickets, {}, auth);
         return responseBody;
     }
 
@@ -758,7 +806,7 @@ export class ApiUtils {
 
     // get all reverse withdrawal stores
     async getAllReverseWithdrawalStores(auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.get(endPoints.getAllReverseWithdrawalStores, { headers: auth });
+        const responseBody = await this.getAllItems(endPoints.getAllReverseWithdrawalStores, {}, auth);
         return responseBody;
     }
 
@@ -810,8 +858,8 @@ export class ApiUtils {
 
     // get all customers
     async getAllCustomers(auth?: auth): Promise<responseBody> {
-        const [, responseBody1] = await this.get(endPoints.wc.getAllCustomers, { params: { per_page: 100 }, headers: auth });
-        const [, responseBody2] = await this.get(endPoints.wc.getAllCustomers, { params: { per_page: 100, role: 'subscriber' }, headers: auth }); // todo: those customers who is currently subscriber: remove after dokan fix
+        const responseBody1 = await this.getAllItems(endPoints.wc.getAllCustomers, {}, auth);
+        const responseBody2 = await this.getAllItems(endPoints.wc.getAllCustomers, { role: 'subscriber' }, auth);
         const responseBody = [...responseBody1, ...responseBody2];
         return responseBody;
     }
@@ -861,7 +909,6 @@ export class ApiUtils {
 
     // delete all customers
     async deleteAllCustomers(auth?: auth): Promise<responseBody> {
-        // todo: apply multiple optional parameter
         const allCustomers = await this.getAllCustomers(auth);
         if (!allCustomers?.length) {
             console.log('No customer exists');
@@ -878,7 +925,7 @@ export class ApiUtils {
 
     // get all wholesale customers
     async getAllWholesaleCustomers(auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.get(endPoints.getAllWholesaleCustomers, { params: { per_page: 100 }, headers: auth });
+        const responseBody = await this.getAllItems(endPoints.getAllWholesaleCustomers, {}, auth);
         return responseBody;
     }
 
@@ -896,7 +943,7 @@ export class ApiUtils {
 
     // get all product advertisements
     async getAllProductAdvertisements(auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.get(endPoints.getAllProductAdvertisements, { params: { per_page: 100 }, headers: auth });
+        const responseBody = await this.getAllItems(endPoints.getAllProductAdvertisements, {}, auth);
         return responseBody;
     }
 
@@ -916,7 +963,7 @@ export class ApiUtils {
 
     // get all abuse reports
     async getAllAbuseReports(auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.get(endPoints.getAllAbuseReports, { headers: auth });
+        const responseBody = await this.getAllItems(endPoints.getAllAbuseReports, {}, auth);
         return responseBody;
     }
 
@@ -945,7 +992,7 @@ export class ApiUtils {
 
     // get all announcements
     async getAllAnnouncements(auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.get(endPoints.getAllAnnouncements, { params: { per_page: 100 }, headers: auth });
+        const responseBody = await this.getAllItems(endPoints.getAllAnnouncements, {}, auth);
         return responseBody;
     }
 
@@ -1003,7 +1050,7 @@ export class ApiUtils {
 
     // get all product reviews
     async getAllProductReviews(auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.get(endPoints.getAllProductReviews, { params: { per_page: 100 }, headers: auth });
+        const responseBody = await this.getAllItems(endPoints.getAllProductReviews, {}, auth);
         return responseBody;
     }
 
@@ -1020,7 +1067,7 @@ export class ApiUtils {
 
     // get all store reviews
     async getAllStoreReviews(auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.get(endPoints.getAllStoreReviews, { params: { per_page: 100 }, headers: auth });
+        const responseBody = await this.getAllItems(endPoints.getAllStoreReviews, {}, auth);
         return responseBody;
     }
 
@@ -1052,7 +1099,7 @@ export class ApiUtils {
 
     // get all store categories
     async getAllStoreCategories(auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.get(endPoints.getAllStoreCategories, { params: { per_page: 100 }, headers: auth });
+        const responseBody = await this.getAllItems(endPoints.getAllStoreCategories, {}, auth);
         return responseBody;
     }
 
@@ -1095,12 +1142,8 @@ export class ApiUtils {
      */
 
     // get all quote rules
-    async getAllQuoteRules(params: params = { per_page: 100 }, auth?: auth): Promise<responseBody> {
-        if (params && 'Authorization' in params) {
-            auth = params as auth;
-            params = undefined;
-        }
-        const [, responseBody] = await this.get(endPoints.getAllQuoteRules, { params, headers: auth });
+    async getAllQuoteRules(params = {}, auth?: auth): Promise<responseBody> {
+        const responseBody = await this.getAllItems(endPoints.getAllQuoteRules, { ...params }, auth);
         return responseBody;
     }
 
@@ -1148,7 +1191,7 @@ export class ApiUtils {
 
     // get all quote requests
     async getAllQuoteRequests(auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.get(endPoints.getAllQuoteRequests, { params: { per_page: 100 }, headers: auth });
+        const responseBody = await this.getAllItems(endPoints.getAllQuoteRequests, {}, auth);
         return responseBody;
     }
 
@@ -1190,7 +1233,7 @@ export class ApiUtils {
 
     // get all order download
     async getAllOrderDownloads(orderId: string, auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.get(endPoints.getAllOrderDownloads(orderId), { params: { per_page: 100 }, headers: auth });
+        const responseBody = await this.getAllItems(endPoints.getAllOrderDownloads(orderId), {}, auth);
         return responseBody;
     }
 
@@ -1207,7 +1250,7 @@ export class ApiUtils {
 
     // get all seller badges
     async getAllSellerBadges(auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.get(endPoints.getAllSellerBadges, { params: { per_page: 100 }, headers: auth });
+        const responseBody = await this.getAllItems(endPoints.getAllSellerBadges, {}, auth);
         return responseBody;
     }
 
@@ -1257,7 +1300,7 @@ export class ApiUtils {
 
     // get all vendor staffs
     async getAllVendorStaffs(auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.get(endPoints.getAllVendorStaffs, { params: { per_page: 100 }, headers: auth });
+        const responseBody = await this.getAllItems(endPoints.getAllVendorStaffs, {}, auth);
         return responseBody;
     }
 
@@ -1313,7 +1356,7 @@ export class ApiUtils {
 
     // get all product questions
     async getAllProductQuestions(auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.get(endPoints.getAllProductQuestions, { params: { per_page: 100 }, headers: auth });
+        const responseBody = await this.getAllItems(endPoints.getAllProductQuestions, {}, auth);
         return responseBody;
     }
 
@@ -1363,7 +1406,7 @@ export class ApiUtils {
 
     // get all verification methods
     async getAllVerificationMethods(auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.get(endPoints.getAllVerificationMethods, { params: { per_page: 100 }, headers: auth });
+        const responseBody = await this.getAllItems(endPoints.getAllVerificationMethods, {}, auth);
         return responseBody;
     }
 
@@ -1377,7 +1420,7 @@ export class ApiUtils {
 
     // get all verification requests
     async getAllVerificationRequests(params = {}, auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.get(endPoints.getAllVerificationRequests, { params: { ...params, per_page: 100 }, headers: auth });
+        const responseBody = await this.getAllItems(endPoints.getAllVerificationRequests, { ...params }, auth);
         return responseBody;
     }
 
@@ -1426,7 +1469,7 @@ export class ApiUtils {
 
     // get all vendor subscriptions
     async getAllVendorSubscriptions(auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.get(endPoints.getAllVendorSubscriptions, { params: { per_page: 100 }, headers: auth });
+        const responseBody = await this.getAllItems(endPoints.getAllVendorSubscriptions, {}, auth);
         return responseBody;
     }
 
@@ -1465,13 +1508,13 @@ export class ApiUtils {
 
     // get all users
     async getAllUsers(auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.get(endPoints.wp.getAllUsers, { params: { per_page: 100 }, headers: auth });
+        const responseBody = await this.getAllItems(endPoints.wp.getAllUsers, {}, auth);
         return responseBody;
     }
 
     // get user by roles [ for multiple roles use comma separated string]
     async getAllUsersByRoles(roles: string, auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.get(endPoints.wp.getAllUsers, { params: { per_page: 100, roles: roles }, headers: auth });
+        const responseBody = await this.getAllItems(endPoints.wp.getAllUsers, { roles: roles }, auth);
         return responseBody;
     }
 
@@ -1531,7 +1574,7 @@ export class ApiUtils {
 
     // get all plugins
     async getAllPlugins(params = {}, auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.get(endPoints.wp.getAllPlugins, { params: { ...params, per_page: 100 }, headers: auth });
+        const responseBody = await this.getAllItems(endPoints.wp.getAllPlugins, { ...params }, auth);
         return responseBody;
     }
 
@@ -1606,9 +1649,9 @@ export class ApiUtils {
         return [responseBody, mediaId];
     }
 
-    // get all mediaItems
+    // get all media items
     async getAllMediaItems(auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.get(endPoints.wp.getAllMediaItems, { params: { per_page: 100 }, headers: auth });
+        const responseBody = await this.getAllItems(endPoints.wp.getAllMediaItems, {}, auth);
         return responseBody;
     }
 
@@ -1722,7 +1765,7 @@ export class ApiUtils {
 
     // get all categories
     async getAllCategories(auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.get(endPoints.wc.getAllCategories, { params: { per_page: 100 }, headers: auth });
+        const responseBody = await this.getAllItems(endPoints.wc.getAllCategories, {}, auth);
         return responseBody;
     }
 
@@ -1782,55 +1825,45 @@ export class ApiUtils {
 
     // get all products
     async getAllProductsWc(auth?: auth): Promise<responseBody> {
-        // todo: update all getall methods with loop and per_page
-        let responseBody: object[] = [];
-        let page = 1;
-        let hasMoreProducts = true;
-        while (hasMoreProducts) {
-            const [, productResponseBody] = await this.get(endPoints.wc.getAllProducts, { params: { per_page: 100, page: page }, headers: auth });
-            if (productResponseBody.length === 0) {
-                hasMoreProducts = false;
-            } else {
-                responseBody = responseBody.concat(productResponseBody);
-                page++;
-            }
-        }
+        const responseBody = await this.getAllItems(endPoints.wc.getAllProducts, {}, auth);
         return responseBody;
     }
 
     // order
 
-    // get all site orders
-    async getAllOrdersSite(auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.get(endPoints.wc.getAllOrders, { params: { per_page: 100 }, headers: auth });
+    // get all orders (from all vendors)
+    async getAllOrdersWc(auth?: auth): Promise<responseBody> {
+        const responseBody = await this.getAllItems(endPoints.wc.getAllOrders, {}, auth);
         return responseBody;
     }
 
-    // create order
+    // create order woocommerce
+    async createOrderWc(payload: object): Promise<[APIResponse, responseBody, string]> {
+        const [response, responseBody] = await this.post(endPoints.wc.createOrder, { data: payload, headers: payloads.adminAuth }, false);
+        const orderId = String(responseBody?.id);
+        return [response, responseBody, orderId];
+    }
+
+    // create order [single product]
     async createOrder(product: string | object, orderPayload: any, auth?: auth): Promise<[APIResponse, responseBody, string, string]> {
         let productId: string;
-        if (!product) {
-            [, productId] = await this.createProduct(payloads.createProduct(), auth);
+
+        if (typeof product === 'object') {
+            [, productId] = await this.createProduct(product, auth);
+        } else if (!isNaN(Number(product))) {
+            const responseBody = await this.getSingleProduct(product, payloads.adminAuth); // check if product exists
+            productId = responseBody.code === 'dokan_rest_invalid_product_id' ? (await this.createProduct(payloads.createProduct(), auth))[1] : product;
         } else {
-            if (typeof product === 'object') {
-                [, productId] = await this.createProduct(product, auth);
-            } else {
-                const responseBody = await this.getSingleProduct(product, payloads.adminAuth);
-                if (responseBody.code === 'dokan_rest_invalid_product_id') {
-                    [, productId] = await this.createProduct(payloads.createProduct(), auth);
-                } else {
-                    productId = product;
-                }
-            }
+            [, productId] = await this.createProduct(payloads.createProduct(), auth);
         }
-        // Set the product ID in the order payload
+
+        // set the product Id in the order payload
         const payload = orderPayload;
         payload.line_items[0].product_id = productId;
 
-        // Post the order and return the results // Todo: add comment for all methods
-        const [response, responseBody] = await this.post(endPoints.wc.createOrder, { data: payload, headers: payloads.adminAuth }, false);
-        const orderId = String(responseBody?.id);
-        return [response, responseBody, orderId, productId];
+        // create order
+        const order = await this.createOrderWc(payload);
+        return [...order, productId];
     }
 
     // create order with status
@@ -1838,6 +1871,20 @@ export class ApiUtils {
         const [response, responseBody, orderId, productId] = await this.createOrder(product, order, auth);
         await this.updateOrderStatus(orderId, status, auth);
         return [response, responseBody, orderId, productId];
+    }
+
+    // create line items
+    async createLineItems(products = 1, quantities = [1], authors = [payloads.vendorAuth]) {
+        const lineItems = [];
+
+        for (let i = 0; i < products; i++) {
+            const author = authors[i % authors.length];
+            const quantity = quantities[i % quantities.length];
+            const [, productId] = await this.createProduct(payloads.createProduct(), author);
+            lineItems.push({ product_id: productId, quantity: quantity });
+        }
+
+        return lineItems;
     }
 
     // refund
