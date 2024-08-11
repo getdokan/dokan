@@ -95,8 +95,6 @@ export const dbData = {
             tax_fee_recipient: 'seller',
             shipping_tax_fee_recipient: 'seller',
 
-            automatic_process_api_refund: 'off',
-
             // vendor capabilities
             new_seller_enable_selling: 'on',
             one_step_product_create: 'on',

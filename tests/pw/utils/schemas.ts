@@ -1269,6 +1269,33 @@ const verificationRequestSchema = z.object({
     _links: linksSchema,
 });
 
+const vendorSubscriptionPackageSchema = z.object({
+    id: z.number().or(z.string()),
+    title: z.string(),
+});
+
+const vendorSubscriptionNonRecurringPackageSchema = z.object({
+    name: z.number().or(z.string()),
+    label: z.string(),
+});
+
+const vendorSubscriptionSchema = z.object({
+    id: z.number().or(z.string()),
+    store_name: z.string(),
+    order_link: z.string(),
+    order_id: z.string(),
+    subscription_id: z.string(),
+    subscription_title: z.string(),
+    is_on_trial: z.boolean(),
+    subscription_trial_until: z.any(),
+    start_date: z.string(),
+    end_date: z.string(),
+    current_date: z.string(),
+    status: z.boolean(),
+    is_recurring: z.boolean(),
+    has_active_cancelled_sub: z.boolean(),
+});
+
 const wholesaleCustomerSchema = z.object({
     id: z.string().or(z.number()),
     first_name: z.string(),
@@ -2749,6 +2776,28 @@ export const schemas = {
         verificationMethodsSchema: z.array(verificationMethodSchema),
         verificationRequestSchema: verificationRequestSchema,
         verificationRequestsSchema: z.array(verificationRequestSchema),
+    },
+
+    // vendor subscriptions schema
+    vendorSubscriptionsSchema: {
+        vendorSubscriptionsSchema: z.array(vendorSubscriptionSchema),
+        vendorSubscriptionPackagesSchema: z.array(vendorSubscriptionPackageSchema),
+        vendorSubscriptionNonRecurringPackagesSchema: z.array(vendorSubscriptionNonRecurringPackageSchema),
+        activeSubscriptionPackSchema: z.object({
+            name: z.number().or(z.string()),
+            label: z.string(),
+        }),
+        updateSubscriptionSchema: vendorSubscriptionSchema.or(
+            z.object({
+                code: z.string(),
+                message: z.string(),
+                data: z.object({
+                    status: z.number(),
+                }),
+            }),
+        ),
+        batchUpdateSubscriptionSchema: z.array(z.number().or(z.string())),
+        saveCommissionSchema: z.number(),
     },
 
     // wholesale customers schema

@@ -739,6 +739,8 @@ export interface vendor {
 
         commission: commission;
 
+        vendorSubscriptionPack: string;
+
         openingClosingTime: {
             days: string[];
             statusLite: string;
@@ -1142,6 +1144,8 @@ export interface customer {
             state: string;
             phone: string;
         };
+
+        vendorSubscriptionPack: string;
     };
 
     getSupport: {

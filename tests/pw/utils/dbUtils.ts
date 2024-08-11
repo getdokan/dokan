@@ -152,4 +152,21 @@ export const dbUtils = {
         const res = await dbUtils.dbQuery(query);
         return res;
     },
+
+    // update simple product type to subscription product type
+    async updateProductType(productId: string): Promise<any> {
+        // get term id
+        const simpleTermIdQuery = `SELECT term_id FROM ${dbPrefix}_terms WHERE name = 'simple';`;
+        const simpleTermIdQueryResult = await dbUtils.dbQuery(simpleTermIdQuery);
+        const simpleTermId = simpleTermIdQueryResult[0].term_id;
+
+        const subscriptionTermIdQuery = `SELECT term_id FROM ${dbPrefix}_terms WHERE name = 'product_pack';`;
+        const subscriptionTermIdQueryResult = await dbUtils.dbQuery(subscriptionTermIdQuery);
+        const subscriptionTermId = subscriptionTermIdQueryResult[0].term_id;
+
+        const queryUpdate = `UPDATE ${dbPrefix}_term_relationships SET term_taxonomy_id = '${subscriptionTermId}' WHERE object_id = '${productId}' AND term_taxonomy_id = ${simpleTermId};`;
+        const res = await dbUtils.dbQuery(queryUpdate);
+        // console.log(res);
+        return res;
+    },
 };

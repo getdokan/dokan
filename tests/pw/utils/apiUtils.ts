@@ -227,7 +227,7 @@ export class ApiUtils {
     }
 
     // create store
-    async createStore(payload: any, auth?: auth, addUserAddress: boolean = false): Promise<[responseBody, string, string]> {
+    async createStore(payload: any, auth?: auth, addUserAddress: boolean = false): Promise<[responseBody, string, string, string]> {
         const [response, responseBody] = await this.post(endPoints.createStore, { data: payload, headers: auth }, false);
         let sellerId: string;
         let storeName: string;
@@ -249,7 +249,7 @@ export class ApiUtils {
         // add vendor user address
         addUserAddress && (await this.updateCustomer(sellerId, payloads.updateAddress, payloads.adminAuth));
 
-        return [responseBody, sellerId, storeName];
+        return [responseBody, sellerId, storeName, payload.user_login];
     }
 
     // update store
@@ -1470,6 +1470,19 @@ export class ApiUtils {
     async getAllVendorSubscriptions(auth?: auth): Promise<responseBody> {
         const responseBody = await this.getAllItems(endPoints.getAllVendorSubscriptions, {}, auth);
         return responseBody;
+    }
+
+    // save commission to subscription product
+    async saveCommissionToSubscriptionProduct(productId: string, payload: object, auth?: auth): Promise<void> {
+        const [, responseBody] = await this.post(endPoints.saveVendorSubscriptionProductCommission, { data: { ...payload, product_id: productId }, headers: auth });
+        return responseBody;
+    }
+
+    // assign subscription to vendor
+    async assignSubscriptionToVendor(subscriptionProductId: string): Promise<[string, string, string]> {
+        const [, sellerId, storeName, sellerName] = await this.createStore(payloads.createStore(), payloads.adminAuth, true);
+        await this.createOrderWithStatus(subscriptionProductId, { ...payloads.createOrder, customer_id: sellerId }, 'wc-completed', payloads.adminAuth);
+        return [sellerId, storeName, sellerName];
     }
 
     /**
