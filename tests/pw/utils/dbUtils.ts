@@ -1,5 +1,5 @@
 import mysql from 'mysql2/promise';
-import { serialize, unserialize } from 'php-serialize';
+import { serialize, unserialize, isSerialized } from 'php-serialize';
 import { dbData } from '@utils/dbData';
 import { helpers } from '@utils/helpers';
 import { commission, feeRecipient } from '@utils/interfaces';
@@ -59,7 +59,7 @@ export const dbUtils = {
 
     // set user meta
     async setUserMeta(userId: string, metaKey: string, metaValue: object | string, serializeData?: boolean): Promise<any> {
-        metaValue = serializeData ? serialize(metaValue) : metaValue;
+        metaValue = serializeData && !isSerialized(metaValue as string) ? serialize(metaValue) : metaValue;
         const metaExists = await dbUtils.dbQuery(`SELECT COUNT(*) AS count FROM ${dbPrefix}_usermeta WHERE user_id = '${userId}' AND meta_key = '${metaKey}';`);
         const query =
             metaExists[0].count > 0
@@ -80,7 +80,7 @@ export const dbUtils = {
 
     // insert option value
     async insertOptionValue(optionName: string, optionValue: object | string, serializeData: boolean = true): Promise<any> {
-        optionValue = serializeData ? serialize(optionValue) : optionValue;
+        optionValue = serializeData && !isSerialized(optionValue as string) ? serialize(optionValue) : optionValue;
         const query = `
                 INSERT INTO ${dbPrefix}_options (option_id, option_name, option_value, autoload)
                 VALUES (NULL, '${optionName}', '${optionValue}', 'yes')
@@ -100,7 +100,7 @@ export const dbUtils = {
 
     // set option value
     async setOptionValue(optionName: string, optionValue: object | string, serializeData: boolean = true): Promise<any> {
-        optionValue = serializeData ? serialize(optionValue) : optionValue;
+        optionValue = serializeData && !isSerialized(optionValue as string) ? serialize(optionValue) : optionValue;
         const query = `
                 INSERT INTO ${dbPrefix}_options (option_id, option_name, option_value, autoload)
                 VALUES (NULL, '${optionName}', '${optionValue}', 'yes')
@@ -115,6 +115,7 @@ export const dbUtils = {
     async updateOptionValue(optionName: string, updatedSettings: object | string, serializeData?: boolean): Promise<[any, any]> {
         const currentSettings = await this.getOptionValue(optionName);
         const newSettings = typeof updatedSettings === 'object' ? helpers.deepMergeObjects(currentSettings, updatedSettings) : updatedSettings;
+        // console.log('currentSettings:', currentSettings);
         // console.log('newSettings:', newSettings);
         await this.setOptionValue(optionName, newSettings, serializeData);
         return [currentSettings, newSettings];
