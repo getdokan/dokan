@@ -17,6 +17,10 @@ class AnalyticsServiceProvider extends BaseServiceProvider {
         StatsQueryFilter::class,
         \WeDevs\Dokan\Analytics\Reports\Products\QueryFilter::class,
         \WeDevs\Dokan\Analytics\Reports\Products\Stats\QueryFilter::class,
+        \WeDevs\Dokan\Analytics\Reports\Variations\QueryFilter::class,
+        \WeDevs\Dokan\Analytics\Reports\Variations\Stats\QueryFilter::class,
+        \WeDevs\Dokan\Analytics\Reports\Categories\QueryFilter::class,
+        \WeDevs\Dokan\Analytics\Reports\DataStoreModifier::class,
     ];
 
     /**
@@ -42,7 +46,6 @@ class AnalyticsServiceProvider extends BaseServiceProvider {
 						return new $service();
 					}
                 );
-
             $this->add_tags( $definition, self::TAGS );
         }
     }

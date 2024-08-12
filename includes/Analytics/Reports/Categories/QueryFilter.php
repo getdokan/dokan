@@ -1,9 +1,8 @@
 <?php
 
-namespace WeDevs\Dokan\Analytics\Reports\Products;
+namespace WeDevs\Dokan\Analytics\Reports\Categories;
 
 use WeDevs\Dokan\Analytics\Reports\BaseQueryFilter;
-use WeDevs\Dokan\Analytics\Reports\OrderType;
 
 /**
  * Class QueryFilter
@@ -16,7 +15,7 @@ class QueryFilter extends BaseQueryFilter {
     /**
      * @var string The context of the query filter.
      */
-    protected $context = 'products';
+    protected $context = 'categories';
 
     /**
      * Register hooks for filtering WooCommerce analytics queries.
@@ -24,9 +23,10 @@ class QueryFilter extends BaseQueryFilter {
      * @return void
      */
     public function register_hooks(): void {
+        //woocommerce_analytics_clauses_
         // add_filter( 'woocommerce_analytics_clauses_join_products', [ $this, 'add_join_subquery' ] );
-        add_filter( 'woocommerce_analytics_clauses_join_products_subquery', [ $this, 'add_join_subquery' ] );
-        add_filter( 'woocommerce_analytics_clauses_where_products_subquery', [ $this, 'add_where_subquery' ], 30 );
+        add_filter( 'woocommerce_analytics_clauses_join_categories_subquery', [ $this, 'add_join_subquery' ] );
+        add_filter( 'woocommerce_analytics_clauses_where_categories_subquery', [ $this, 'add_where_subquery' ], 30 );
         // add_filter( 'woocommerce_analytics_clauses_select_products_subquery', [ $this, 'add_select_subquery' ] );
         // add_filter( 'woocommerce_admin_report_columns', [ $this, 'modify_admin_report_columns' ], 20, 3 );
     }
