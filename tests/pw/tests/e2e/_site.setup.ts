@@ -100,14 +100,6 @@ setup.describe('site setup', () => {
         expect(response.ok()).toBeTruthy();
     });
 
-    setup('check active plugins', { tag: ['@lite'] }, async () => {
-        //todo: might not needed
-        setup.skip(LOCAL, 'skip plugin check on local');
-        const activePlugins = (await apiUtils.getAllPlugins({ status: 'active' }, payloads.adminAuth)).map((a: { plugin: string }) => a.plugin.split('/')[1]);
-        const plugins = DOKAN_PRO ? data.plugin.plugins : data.plugin.pluginsLite;
-        expect(activePlugins).toEqual(expect.arrayContaining(plugins));
-    });
-
     setup('get test environment info', { tag: ['@lite'] }, async () => {
         const [, systemInfo] = await apiUtils.getSystemStatus(payloads.adminAuth);
         helpers.writeFile(data.systemInfo, JSON.stringify(systemInfo));

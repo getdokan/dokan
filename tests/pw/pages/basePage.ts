@@ -56,7 +56,7 @@ export class BasePage {
     }
 
     // goto subUrl
-    async goto(subPath: string, waitUntil: 'load' | 'domcontentloaded' | 'networkidle' | 'commit' = 'networkidle'): Promise<void> {
+    async goto(subPath: string, waitUntil: 'load' | 'domcontentloaded' | 'networkidle' | 'commit' = 'domcontentloaded'): Promise<void> {
         await this.page.goto(subPath, { waitUntil: waitUntil });
     }
 
@@ -103,7 +103,8 @@ export class BasePage {
         if (!this.isCurrentUrl(subPath)) {
             const url = this.createUrl(subPath);
             // console.log('url: ', url);
-            await this.page.goto(url, { waitUntil: 'networkidle' }); // domcontentloaded doesn't work for  backend
+            // await this.page.goto(url, { waitUntil: 'networkidle' });
+            await this.page.goto(url, { waitUntil: 'domcontentloaded' });
             const currentUrl = this.getCurrentUrl();
             expect(currentUrl).toMatch(subPath);
         }
@@ -542,6 +543,15 @@ export class BasePage {
     async setAttributeValue(selector: string, attribute: string, value: string): Promise<void> {
         const element = this.getElement(selector);
         await element.evaluate((element, [attribute, value]) => element.setAttribute(attribute as string, value as string), [attribute, value]);
+    }
+
+    // add attribute/class value
+    async addAttributeValue(selector: string, attribute: string, value: string): Promise<void> {
+        const previousAttribute = await this.getAttributeValue(selector, attribute);
+        const newValue = `${previousAttribute} ${value}`;
+        console.log(newValue);
+        const element = this.getElement(selector);
+        await element.evaluate((element, [attribute, value]) => element.setAttribute(attribute as string, value as string), [attribute, newValue]);
     }
 
     // remove element attribute

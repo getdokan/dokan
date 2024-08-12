@@ -61,8 +61,8 @@ export const dbUtils = {
     async setUserMeta(userId: string, metaKey: string, metaValue: object | string, serializeData?: boolean): Promise<any> {
         metaValue = serializeData && !isSerialized(metaValue as string) ? serialize(metaValue) : metaValue;
         const metaExists = await dbUtils.dbQuery(`SELECT COUNT(*) AS count FROM ${dbPrefix}_usermeta WHERE user_id = ? AND meta_key = ?;`, [userId, metaKey]);
-        const query = metaExists[0].count > 0 ? `UPDATE ${dbPrefix}_usermeta SET meta_value = ? WHERE user_id = ? AND meta_key = ?;` : `INSERT INTO ${dbPrefix}_usermeta VALUES (NULL, ?, ?, ?);`;
-        const res = await dbUtils.dbQuery(query, [metaValue, userId, metaKey]);
+        const query = metaExists[0].count > 0 ? `UPDATE ${dbPrefix}_usermeta SET meta_value = ? WHERE user_id = ? AND meta_key = ?;` : `INSERT INTO ${dbPrefix}_usermeta (user_id, meta_key, meta_value) VALUES (?, ?, ?);`;
+        const res = await dbUtils.dbQuery(query, metaExists[0].count > 0 ? [metaValue, userId, metaKey] : [userId, metaKey, metaValue]);
         return res;
     },
 
@@ -103,7 +103,7 @@ export const dbUtils = {
                 ON DUPLICATE KEY UPDATE option_value = ?;
             `;
         // const query = `UPDATE ${dbPrefix}_options SET option_value = '${optionValue}' WHERE option_name = '${optionName}';`;
-        const res = await dbUtils.dbQuery(query, [, optionName, optionValue, optionValue]);
+        const res = await dbUtils.dbQuery(query, [optionName, optionValue, optionValue]);
         return res;
     },
 
