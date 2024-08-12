@@ -72,7 +72,7 @@ setup.describe('site setup', () => {
 
     setup('activate all dokan modules', { tag: ['@pro'] }, async () => {
         setup.skip(!DOKAN_PRO, 'skip on lite');
-        const [response] = await apiUtils.activateModules(dbData.dokan.modules);
+        const [response] = await apiUtils.activateModules(dbData.dokan.modules, payloads.adminAuth);
         expect(response.ok()).toBeTruthy();
     });
 
