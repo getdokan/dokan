@@ -89,14 +89,14 @@ setup.describe('setup site & woocommerce & dokan settings', () => {
         await apiUtils.createAttributeTerm(attributeId, { name: 'm' });
     });
 
+    setup('disable storefront sticky add to cart', { tag: ['@lite'] }, async () => {
+        await dbUtils.updateOptionValue('theme_mods_storefront', { storefront_sticky_add_to_cart: false });
+    });
+
     setup('disable simple-auction ajax bid check', { tag: ['@pro'] }, async () => {
         setup.skip(!DOKAN_PRO, 'skip on lite');
         const [, , status] = await apiUtils.getSinglePlugin('woocommerce-simple-auctions/woocommerce-simple-auctions', payloads.adminAuth);
         if (status === 'active') await dbUtils.updateOptionValue('simple_auctions_live_check', 'no', false);
-    });
-
-    setup('disable storefront sticky add to cart', { tag: ['@lite'] }, async () => {
-        await dbUtils.updateOptionValue('theme_mods_storefront', { storefront_sticky_add_to_cart: false });
     });
 
     setup.skip('disable germanized settings', { tag: ['@pro', '@admin'] }, async () => {
@@ -276,12 +276,13 @@ setup.describe('setup dokan payment products', () => {
     setup('recreate reverse withdrawal payment product', { tag: ['@lite'] }, async () => {
         let product = await apiUtils.checkProductExistence('Reverse Withdrawal Payment', payloads.adminAuth);
         if (!product) {
-            console.log("Reverse Withdrawal Payment product doesn't exists!!");
+            console.log("Reverse withdrawal payment product doesn't exists!!");
             const [, reverseWithdrawalPaymentProduct] = await apiUtils.createProduct(payloads.reverseWithdrawalPaymentProduct, payloads.adminAuth);
             await dbUtils.setOptionValue(dbData.dokan.paymentProducts.reverseWithdraw, reverseWithdrawalPaymentProduct, false);
             product = await apiUtils.checkProductExistence('Reverse Withdrawal Payment', payloads.adminAuth);
         }
         expect(product).toBeTruthy();
+        console.log('Recreated reverse withdrawal payment product');
     });
 
     setup('recreate product advertisement payment product', { tag: ['@pro'] }, async () => {
@@ -294,5 +295,6 @@ setup.describe('setup dokan payment products', () => {
             product = await apiUtils.checkProductExistence('Product Advertisement Payment', payloads.adminAuth);
         }
         expect(product).toBeTruthy();
+        console.log('Recreated advertisement payment product');
     });
 });

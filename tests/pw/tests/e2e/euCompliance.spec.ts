@@ -103,7 +103,7 @@ test.describe('EU Compliance test', () => {
         const [previousSettings] = await dbUtils.updateOptionValue(dbData.dokan.optionName.appearance, dbData.testData.dokan.hideVendorEuInfo);
         await admin.hideEuComplianceVendor(data.predefined.vendorStores.vendor1);
         // reset
-        await dbUtils.setOptionValue(dbData.dokan.optionName.appearance, previousSettings, false);
+        await dbUtils.setOptionValue(dbData.dokan.optionName.appearance, previousSettings);
     });
 
     // vendor

@@ -59,7 +59,7 @@ test.describe('Catalogmode test', () => {
         await vendor.accessCatalogModeSettings();
 
         // reset
-        await dbUtils.setOptionValue(dbData.dokan.optionName.selling, previousSettings, false);
+        await dbUtils.setOptionValue(dbData.dokan.optionName.selling, previousSettings);
     });
 
     //vendor
