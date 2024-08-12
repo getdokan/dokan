@@ -4,11 +4,7 @@ import { LoginPage } from '@pages/loginPage';
 import { LocalSetupPage } from '@pages/localSetupPage';
 import { helpers } from '@utils/helpers';
 
-const { CI } = process.env;
-
 test.describe('setup local site', () => {
-    test.skip(CI, 'skip site setup on CI');
-
     test('download wordpress to desired folder', async () => {});
     // todo: implement below steps
     /*

@@ -101,7 +101,12 @@ export const dbUtils = {
     // set option value
     async setOptionValue(optionName: string, optionValue: object | string, serializeData: boolean = true): Promise<any> {
         optionValue = serializeData ? serialize(optionValue) : optionValue;
-        const query = `UPDATE ${dbPrefix}_options SET option_value = '${optionValue}' WHERE option_name = '${optionName}';`;
+        const query = `
+                INSERT INTO ${dbPrefix}_options (option_id, option_name, option_value, autoload)
+                VALUES (NULL, '${optionName}', '${optionValue}', 'yes')
+                ON DUPLICATE KEY UPDATE option_value = '${optionValue}';
+            `;
+        // const query = `UPDATE ${dbPrefix}_options SET option_value = '${optionValue}' WHERE option_name = '${optionName}';`;
         const res = await dbUtils.dbQuery(query);
         return res;
     },

@@ -105,23 +105,23 @@ export default defineConfig({
     projects: [
         // E2e project
 
-        // local site setup project
+        // local site setup
         {
-            name: 'site_setup',
+            name: 'local_site_setup',
             testMatch: ['_localSite.setup.ts'],
         },
 
-        // plugin_setup
+        // site_setup
         {
-            name: 'plugin_setup',
-            testMatch: '_plugin.setup.ts',
+            name: 'site_setup',
+            testMatch: '_site.setup.ts',
         },
 
         // auth_setup
         {
             name: 'auth_setup',
             testMatch: '_auth.setup.ts',
-            dependencies: LOCAL ? ['plugin_setup'] : [],
+            dependencies: NO_SETUP ? [] : ['site_setup'],
         },
 
         // e2e_setup
