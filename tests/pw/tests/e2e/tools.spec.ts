@@ -3,6 +3,7 @@ import { ToolsPage } from '@pages/toolsPage';
 import { ApiUtils } from '@utils/apiUtils';
 import { payloads } from '@utils/payloads';
 import { data } from '@utils/testData';
+import { dbUtils } from '@utils/dbUtils';
 
 test.describe('Tools test', () => {
     let admin: ToolsPage;
@@ -28,8 +29,9 @@ test.describe('Tools test', () => {
         await admin.adminToolsRenderProperly();
     });
 
-    test.skip('admin can perform Dokan page installation', { tag: ['@pro', '@admin'] }, async () => {
-        await admin.dokanPageInstallation();
+    test('admin can perform Dokan page installation', { tag: ['@pro', '@admin'] }, async () => {
+        await dbUtils.updateOptionValue('dokan_pages_created', '0');
+        await admin.dokanPageInstallation(); 
     });
 
     test('admin can regenerate order commission', { tag: ['@pro', '@admin'] }, async () => {

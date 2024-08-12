@@ -104,6 +104,13 @@ export default defineConfig({
 
     projects: [
         // E2e project
+
+        // local site setup project
+        {
+            name: 'site_setup',
+            testMatch: ['_localSite.setup.ts'],
+        },
+
         // plugin_setup
         {
             name: 'plugin_setup',
@@ -142,12 +149,6 @@ export default defineConfig({
         {
             name: 'coverage_report',
             testMatch: '_coverage.teardown.ts',
-        },
-
-        // local site setup project
-        {
-            name: 'site_setup',
-            testMatch: /.*\.install\.ts/,
         },
     ],
 });

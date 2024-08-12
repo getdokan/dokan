@@ -44,8 +44,9 @@ setup.describe('authenticate users & set permalink', () => {
     });
 
     setup('activate basic auth', { tag: ['@lite'] }, async () => {
-        const [response] = await apiUtils.updatePlugin(data.plugin.pluginList.basicAuth, { status: 'active' }, payloads.adminAuth);
-        expect(response.ok()).toBeTruthy();
+        await helpers.exeCommand(data.commands.activatePlugin(data.installWp.plugins.basicAuth));
+        // const [response] = await apiUtils.updatePlugin(data.plugin.pluginList.basicAuth, { status: 'active' }, payloads.adminAuth);
+        // expect(response.ok()).toBeTruthy();
     });
 
     setup('activate Woocommerce', { tag: ['@lite'] }, async () => {
@@ -60,6 +61,9 @@ setup.describe('authenticate users & set permalink', () => {
 
     setup('activate Dokan Pro', { tag: ['@pro'] }, async () => {
         setup.skip(!DOKAN_PRO, 'skip on lite');
+        // remove dokan pro plugin requirements (dokan-lite)
+        await helpers.exeCommand(data.commands.removeLiteRequired);
+
         const [response] = await apiUtils.updatePlugin(data.plugin.pluginList.dokanPro, { status: 'active' }, payloads.adminAuth);
         expect(response.ok()).toBeTruthy();
     });

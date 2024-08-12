@@ -2,8 +2,6 @@ import { test } from '@playwright/test';
 import { data } from '@utils/testData';
 import { LoginPage } from '@pages/loginPage';
 import { LocalSetupPage } from '@pages/localSetupPage';
-import { dbUtils } from '@utils/dbUtils';
-import { dbData } from '@utils/dbData';
 import { helpers } from '@utils/helpers';
 
 const { CI } = process.env;
@@ -52,20 +50,7 @@ test.describe('setup local site', () => {
         await helpers.exeCommand(data.commands.installTheme(data.installWp.themes.storefront));
     });
 
-    test('activate basic auth plugin', async () => {
-        await helpers.exeCommand(data.commands.activatePlugin(data.installWp.plugins.basicAuth));
-        // await dbUtils.updateOptionValue(dbData.optionName.activePlugins, dbData.plugins, true);
-    });
-
-    test('remove dokan pro plugin requirements (dokan-lite)', async () => {
-        await helpers.exeCommand(data.commands.removeLiteRequired);
-    });
-
-    test('activate dokan pro modules', async () => {
-        await dbUtils.updateOptionValue(dbData.dokan.optionName.dokanActiveModules, dbData.dokan.modules, true);
-    });
-
-    test.skip('admin setup wordpress', async ({ page }) => {
+    test.skip('admin setup wordpress (e2e)', async ({ page }) => {
         const localSetupPage = new LocalSetupPage(page);
         const loginPage = new LoginPage(page);
 

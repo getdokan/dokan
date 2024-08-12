@@ -1491,20 +1491,16 @@ export const selector = {
                     pageInstallation: '//span[normalize-space()="Page Installation"]/../../..',
                     collapsibleButton: '//span[normalize-space()="Page Installation"]/../../..//button',
                     allPagesCreated: '//a[normalize-space()="All Pages Created"]',
-                },
-
-                // Regenerate Order Sync Tab
-                regenerateOrderSyncTable: {
-                    regenerateOrderSyncTable: '//span[normalize-space()="Regenerate Order Sync Table"]/../../..',
-                    collapsibleButton: '//span[normalize-space()="Regenerate Order Sync Table"]/../../..//button',
-                    reBuild: '//a[normalize-space()="Re-build"]',
+                    installDokanPages: '//a[normalize-space()="Install Dokan Pages"]',
+                    pageCreatedSuccessMessage: '//div[contains(text(), "All the default pages has been created!")]',
                 },
 
                 // Regenerate Order commission
                 regenerateOrderCommission: {
-                    regenerateOrderSyncTable: '//span[normalize-space()="Regenerate Order Commission"]/../../..',
+                    regenerateOrderCommission: '//span[normalize-space()="Regenerate Order Commission"]/../../..',
                     collapsibleButton: '//span[normalize-space()="Regenerate Order Commission"]/../../..//button',
                     regenerate: '//span[normalize-space()="Regenerate Order Commission"]/../../..//a[normalize-space()="Regenerate"]',
+                    regenerateOrderCommissionSuccessMessage: '//div[contains(text(), "Your orders have been successfully queued for processing. You will be notified once the task has been completed.")]',
                 },
 
                 // Check for Duplicate Orders

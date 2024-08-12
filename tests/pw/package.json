@@ -10,7 +10,7 @@
         "pw:browser-with-deps": "playwright install --with-deps chromium",
         "pw:deps-only": "playwright install-deps chromium",
         "test": "npx playwright test",
-        "test:site_setup": "npx playwright test --project=site_setup",
+        "test:site:setup": "npx playwright test --project=site_setup --config=e2e.config.ts",
         "test:api": "npx playwright test --project=api_tests --config=api.config.ts",
         "test:e2e": "npx playwright test --project=e2e_tests --config=e2e.config.ts",
         "test:e2e:headed": "npx playwright test --project=e2e_tests --headed",
