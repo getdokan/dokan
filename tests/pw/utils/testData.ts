@@ -2399,6 +2399,7 @@ export const data = {
 
     // command
     commands: {
+        //todo: combine ci & local commands
         resetSite: `cd ${SITE_PATH} && wp db reset --yes`,
         createConfig: (db: any) => `cd ${SITE_PATH} && wp config create --dbhost="${db.dbHost}" --dbname="${db.dbName}" --dbuser="${db.dbUserName}" --dbpass="${db.dbPassword}"  --dbprefix="${db.dbTablePrefix}" --force`,
         setConfig: (key: string, value: string) => `cd ${SITE_PATH} && wp config set ${key} ${value} --add`,
@@ -2413,7 +2414,8 @@ export const data = {
         cloneDokanPro: "git clone -b test_utils https://github.com/getdokan/dokan-pro.git && cd dokan-pro && sed -i '''' '''s/Requires Plugins: woocommerce, dokan-lite/Requires Plugins: woocommerce, dokan/''' dokan-pro.php",
         buildPlugin: 'composer i --no-dev && composer du -o && npm i && npm run build',
         permalinkWpEnv: 'npm run wp-env run tests-cli wp rewrite structure /%postname%/',
-        activateThemeWpEnv: 'npm run wp-env run tests-cli wp theme activate storefront',
+        activateThemeWpEnv: (theme: string) => `npm run wp-env run tests-cli wp theme activate ${theme}`,
+        activatePluginWpEnv: (plugin: string, skipPlugins?: string) => `npm run wp-env run tests-cli wp plugin activate ${plugin} --skip-plugins=${skipPlugins}`,
     },
 
     cssStyle: {

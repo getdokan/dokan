@@ -1,8 +1,4 @@
-import { test as setup, expect, request, Page } from '@playwright/test';
-import { LicensePage } from '@pages/licensePage';
-import { ProductAdvertisingPage } from '@pages/productAdvertisingPage';
-import { ReverseWithdrawsPage } from '@pages/reverseWithdrawsPage';
-import { VendorSettingsPage } from '@pages/vendorSettingsPage';
+import { test as setup, expect, request } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { payloads } from '@utils/payloads';
 import { dbUtils } from '@utils/dbUtils';
@@ -10,7 +6,7 @@ import { dbData } from '@utils/dbData';
 import { data } from '@utils/testData';
 import { helpers } from '@utils/helpers';
 
-const { DOKAN_PRO, HPOS, LOCAL } = process.env;
+const { DOKAN_PRO } = process.env;
 
 setup.describe('setup site & woocommerce & dokan settings', () => {
     setup.use({ extraHTTPHeaders: payloads.adminAuth });
@@ -25,17 +21,7 @@ setup.describe('setup site & woocommerce & dokan settings', () => {
         await apiUtils.dispose();
     });
 
-    setup('check active plugins', { tag: ['@lite'] }, async () => {
-        setup.skip(LOCAL, 'skip plugin check on local');
-        const activePlugins = (await apiUtils.getAllPlugins({ status: 'active' })).map((a: { plugin: string }) => a.plugin.split('/')[1]);
-        if (DOKAN_PRO) {
-            expect(activePlugins).toEqual(expect.arrayContaining(data.plugin.plugins));
-        } else {
-            expect(activePlugins).toEqual(expect.arrayContaining(data.plugin.pluginsLite));
-        }
-    });
-
-    setup('set wordPress site settings', { tag: ['@lite'] }, async () => {
+    setup('set site general settings', { tag: ['@lite'] }, async () => {
         const siteSettings = await apiUtils.setSiteSettings(payloads.siteSettings);
         expect(siteSettings).toEqual(expect.objectContaining(payloads.siteSettings));
     });
@@ -43,35 +29,16 @@ setup.describe('setup site & woocommerce & dokan settings', () => {
     setup('set woocommerce settings', { tag: ['@lite'] }, async () => {
         await apiUtils.updateBatchWcSettingsOptions('general', payloads.general);
         await apiUtils.updateBatchWcSettingsOptions('account', payloads.account);
-        if (HPOS) {
-            await apiUtils.updateBatchWcSettingsOptions('advanced', payloads.advanced);
-        }
     });
 
-    setup('set dokan license', { tag: ['@pro'] }, async () => {
-        setup.skip(!DOKAN_PRO, 'skip on lite');
-        await dbUtils.setOptionValue(dbData.dokan.optionName.dokanProLicense, dbData.dokan.dokanProLicense);
-    });
-
-    setup('activate all dokan modules', { tag: ['@pro'] }, async () => {
-        setup.skip(!DOKAN_PRO, 'skip on lite');
-        await apiUtils.activateModules(dbData.dokan.modules);
-        // await dbUtils.updateOptionValue(dbData.dokan.optionName.dokanActiveModules, dbData.dokan.modules, true);
-    });
-
-    setup('check active dokan modules', { tag: ['@pro'] }, async () => {
-        setup.skip(!DOKAN_PRO, 'skip on lite');
-        const activeModules = await apiUtils.getAllModuleIds({ status: 'active' });
-        expect(activeModules).toEqual(expect.arrayContaining(data.modules.modules));
-    });
-
-    setup('set tax rate', { tag: ['@lite'] }, async () => {
+    setup('add tax rate', { tag: ['@lite'] }, async () => {
         await apiUtils.setUpTaxRate(payloads.enableTax, payloads.createTaxRate);
     });
 
-    setup('set shipping methods', { tag: ['@lite'] }, async () => {
+    setup('add shipping methods', { tag: ['@lite'] }, async () => {
         // delete previous shipping zones
         const allShippingZoneIds = (await apiUtils.getAllShippingZones()).map((a: { id: string }) => a.id);
+
         // allShippingZoneIds = helpers.removeItem(allShippingZoneIds, 0) // avoid remove default zone id
         if (allShippingZoneIds?.length) {
             for (const shippingZoneId of allShippingZoneIds) {
@@ -92,15 +59,18 @@ setup.describe('setup site & woocommerce & dokan settings', () => {
         }
     });
 
-    setup('set basic payments', { tag: ['@lite'] }, async () => {
+    setup('add payments', { tag: ['@lite'] }, async () => {
         await apiUtils.updatePaymentGateway('bacs', payloads.bcs);
         await apiUtils.updatePaymentGateway('cheque', payloads.cheque);
         await apiUtils.updatePaymentGateway('cod', payloads.cod);
+
+        // if (DOKAN_PRO) {
         // await apiUtils.updatePaymentGateway('dokan-stripe-connect', payloads.stripeConnect);
         // await apiUtils.updatePaymentGateway('dokan_paypal_marketplace', payloads.payPal);
         // await apiUtils.updatePaymentGateway('dokan_mangopay', payloads.mangoPay);
         // await apiUtils.updatePaymentGateway('dokan_razorpay', payloads.razorpay);
         // await apiUtils.updatePaymentGateway('dokan_stripe_express', payloads.stripeExpress);
+        // }
     });
 
     setup('add categories and attributes', { tag: ['@lite'] }, async () => {
@@ -122,9 +92,7 @@ setup.describe('setup site & woocommerce & dokan settings', () => {
     setup('disable simple-auction ajax bid check', { tag: ['@pro'] }, async () => {
         setup.skip(!DOKAN_PRO, 'skip on lite');
         const [, , status] = await apiUtils.getSinglePlugin('woocommerce-simple-auctions/woocommerce-simple-auctions', payloads.adminAuth);
-        if (status === 'active') {
-            await dbUtils.updateOptionValue('simple_auctions_live_check', 'no', false);
-        }
+        if (status === 'active') await dbUtils.updateOptionValue('simple_auctions_live_check', 'no', false);
     });
 
     setup('disable storefront sticky add to cart', { tag: ['@lite'] }, async () => {

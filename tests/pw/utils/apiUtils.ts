@@ -3,7 +3,7 @@ import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
 import { helpers } from '@utils/helpers';
 import fs from 'fs';
-import { auth, user_api, taxRate, coupon_api, marketPlaceCoupon, reqOptions, params, headers, storageState, responseBody } from '@utils/interfaces';
+import { auth, user_api, taxRate, coupon_api, marketPlaceCoupon, reqOptions, headers, storageState, responseBody } from '@utils/interfaces';
 
 const { VENDOR_ID, CUSTOMER_ID } = process.env;
 
@@ -841,15 +841,15 @@ export class ApiUtils {
     }
 
     // get activate modules
-    async activateModules(moduleIds: string[], auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.put(endPoints.activateModule, { data: { module: moduleIds }, headers: auth });
-        return responseBody;
+    async activateModules(moduleIds: string[], auth?: auth): Promise<[APIResponse, responseBody]> {
+        const [response, responseBody] = await this.put(endPoints.activateModule, { data: { module: moduleIds }, headers: auth });
+        return [response, responseBody];
     }
 
     // get deactivated modules
-    async deactivateModules(moduleIds: string[], auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.put(endPoints.deactivateModule, { data: { module: moduleIds }, headers: auth });
-        return responseBody;
+    async deactivateModules(moduleIds: string[], auth?: auth): Promise<[APIResponse, responseBody]> {
+        const [response, responseBody] = await this.put(endPoints.deactivateModule, { data: { module: moduleIds }, headers: auth });
+        return [response, responseBody];
     }
 
     /**
