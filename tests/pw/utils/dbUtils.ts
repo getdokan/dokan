@@ -39,16 +39,16 @@ export const dbUtils = {
 
     // get max id
     async getMaxId(columnName: string, tableName: string): Promise<any> {
-        const query = `SELECT MAX(${columnName}) as id FROM ${dbPrefix}_${tableName};`;
-        const res = await dbUtils.dbQuery(query);
+        const query = `SELECT MAX(??) as id FROM ??;`;
+        const res = await dbUtils.dbQuery(query, [columnName, `${dbPrefix}_${tableName}`]);
         const id = res[0].id;
         return id;
     },
 
     // get user meta
     async getUserMeta(userId: string, metaKey: string): Promise<any> {
-        const querySelect = `Select meta_value FROM ${dbPrefix}_usermeta WHERE user_id = '${userId}' AND meta_key = '${metaKey}';`;
-        const res = await dbUtils.dbQuery(querySelect);
+        const querySelect = `SELECT meta_value FROM ?? WHERE user_id = ? AND meta_key = ?;`;
+        const res = await dbUtils.dbQuery(querySelect, [`${dbPrefix}_usermeta`, userId, metaKey]);
         const userMeta = unserialize(res[0].meta_value, {
             WP_Term: function () {
                 return {};
@@ -60,12 +60,9 @@ export const dbUtils = {
     // set user meta
     async setUserMeta(userId: string, metaKey: string, metaValue: object | string, serializeData?: boolean): Promise<any> {
         metaValue = serializeData && !isSerialized(metaValue as string) ? serialize(metaValue) : metaValue;
-        const metaExists = await dbUtils.dbQuery(`SELECT COUNT(*) AS count FROM ${dbPrefix}_usermeta WHERE user_id = '${userId}' AND meta_key = '${metaKey}';`);
-        const query =
-            metaExists[0].count > 0
-                ? `UPDATE ${dbPrefix}_usermeta SET meta_value = '${metaValue}'  WHERE user_id = '${userId}' AND meta_key = '${metaKey}';`
-                : `INSERT INTO ${dbPrefix}_usermeta VALUES ( NULL, '${userId}', '${metaKey}', '${metaValue}');`;
-        const res = await dbUtils.dbQuery(query);
+        const metaExists = await dbUtils.dbQuery(`SELECT COUNT(*) AS count FROM ?? WHERE user_id = ? AND meta_key = ?;`, [`${dbPrefix}_usermeta`, userId, metaKey]);
+        const query = metaExists[0].count > 0 ? `UPDATE ?? SET meta_value = ? WHERE user_id = ? AND meta_key = ?;` : `INSERT INTO ?? VALUES (NULL, ?, ?, ?);`;
+        const res = await dbUtils.dbQuery(query, [`${dbPrefix}_usermeta`, metaValue, userId, metaKey]);
         return res;
     },
 
@@ -73,7 +70,6 @@ export const dbUtils = {
     async updateUserMeta(userId: string, metaKey: string, updatedMetaValue: any, serializeData?: boolean): Promise<[object, object]> {
         const currentMetaValue = await this.getUserMeta(userId, metaKey);
         const newMetaValue = typeof updatedMetaValue === 'object' ? helpers.deepMergeObjects(currentMetaValue, updatedMetaValue) : updatedMetaValue;
-        // console.log('newSettings:', newMetaValue);
         await this.setUserMeta(userId, metaKey, newMetaValue, serializeData);
         return [currentMetaValue, newMetaValue];
     },
@@ -82,18 +78,18 @@ export const dbUtils = {
     async insertOptionValue(optionName: string, optionValue: object | string, serializeData: boolean = true): Promise<any> {
         optionValue = serializeData && !isSerialized(optionValue as string) ? serialize(optionValue) : optionValue;
         const query = `
-                INSERT INTO ${dbPrefix}_options (option_id, option_name, option_value, autoload)
-                VALUES (NULL, '${optionName}', '${optionValue}', 'yes')
-                ON DUPLICATE KEY UPDATE option_value = '${optionValue}';
+                INSERT INTO ?? (option_id, option_name, option_value, autoload)
+                VALUES (NULL, ?, ?, 'yes')
+                ON DUPLICATE KEY UPDATE option_value = ?;
             `;
-        const res = await dbUtils.dbQuery(query);
+        const res = await dbUtils.dbQuery(query, [`${dbPrefix}_options`, optionName, optionValue, optionValue]);
         return res;
     },
 
     // get option value
     async getOptionValue(optionName: string): Promise<any> {
-        const query = `Select option_value FROM ${dbPrefix}_options WHERE option_name = '${optionName}';`;
-        const res = await dbUtils.dbQuery(query);
+        const query = `Select option_value FROM ?? WHERE option_name = ?;`;
+        const res = await dbUtils.dbQuery(query, [`${dbPrefix}_options`, optionName]);
         const optionValue = unserialize(res[0].option_value);
         return optionValue;
     },
@@ -102,12 +98,12 @@ export const dbUtils = {
     async setOptionValue(optionName: string, optionValue: object | string, serializeData: boolean = true): Promise<any> {
         optionValue = serializeData && !isSerialized(optionValue as string) ? serialize(optionValue) : optionValue;
         const query = `
-                INSERT INTO ${dbPrefix}_options (option_id, option_name, option_value, autoload)
-                VALUES (NULL, '${optionName}', '${optionValue}', 'yes')
-                ON DUPLICATE KEY UPDATE option_value = '${optionValue}';
+                INSERT INTO ?? (option_id, option_name, option_value, autoload)
+                VALUES (NULL, ?, ?, 'yes')
+                ON DUPLICATE KEY UPDATE option_value = ?;
             `;
         // const query = `UPDATE ${dbPrefix}_options SET option_value = '${optionValue}' WHERE option_name = '${optionName}';`;
-        const res = await dbUtils.dbQuery(query);
+        const res = await dbUtils.dbQuery(query, [`${dbPrefix}_options`, optionName, optionValue, optionValue]);
         return res;
     },
 
@@ -139,10 +135,8 @@ export const dbUtils = {
 
     // create abuse report
     async createAbuseReport(abuseReport: any, productId: string, vendorId: string, customerId: string): Promise<any> {
-        const query = `
-        INSERT INTO ${dbPrefix}_dokan_report_abuse_reports (reason, product_id, vendor_id, customer_id, description, reported_at)
-        VALUES ('${abuseReport.reason}', ${parseInt(productId)}, ${parseInt(vendorId)}, ${parseInt(customerId)}, '${abuseReport.description}',  '${helpers.currentDateTimeFullFormat}');`;
-        const res = await dbUtils.dbQuery(query);
+        const query = `INSERT INTO ?? (reason, product_id, vendor_id, customer_id, description, reported_at) VALUES (?, ?, ?, ?, ?, ?);`;
+        const res = await dbUtils.dbQuery(query, [`${dbPrefix}_dokan_report_abuse_reports`, abuseReport.reason, parseInt(productId), parseInt(vendorId), parseInt(customerId), abuseReport.description, helpers.currentDateTimeFullFormat]);
         return res;
     },
 
@@ -165,25 +159,38 @@ export const dbUtils = {
             method: 0,
         };
 
-        const query = `INSERT INTO ${dbPrefix}_dokan_refund VALUES ( '${refund.id}', '${refund.orderId}', '${refund.sellerId}', ${refund.refundAmount}, 
-        '${refund.refundReason}', '${refund.itemQtys}', '${refund.itemTotals}', '${refund.itemTaxTotals}', '${refund.restockItems}', '${refund.date}', 
-        '${refund.status}', '${refund.method}' );`;
-        const res = await dbUtils.dbQuery(query);
+        const query = `INSERT INTO ?? VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`;
+        const res = await dbUtils.dbQuery(query, [
+            `${dbPrefix}_dokan_refund`,
+            refund.id,
+            refund.orderId,
+            refund.sellerId,
+            refund.refundAmount,
+            refund.refundReason,
+            refund.itemQtys,
+            refund.itemTotals,
+            refund.itemTaxTotals,
+            refund.restockItems,
+            refund.date,
+            refund.status,
+            refund.method,
+        ]);
+
         return [res, refundId];
     },
 
     // update cell
     async updateCell(id: any, value: any): Promise<any> {
-        const query = `UPDATE ${dbPrefix}_posts SET post_author = '${value}' WHERE ID = '${id}';`;
-        const res = await dbUtils.dbQuery(query);
+        const query = `UPDATE ?? SET post_author = ? WHERE ID = ?;`;
+        const res = await dbUtils.dbQuery(query, [`${dbPrefix}_posts`, value, id]);
         return res;
     },
 
     // create booking resource
     async createBookingResource(postId: string, url: string): Promise<any> {
         const guid = url + '?post_type=bookable_resource&#038;p=' + postId;
-        const query = `UPDATE ${dbPrefix}_posts SET guid = '${guid}', post_type = 'bookable_resource' WHERE ID = '${postId}';`;
-        const res = await dbUtils.dbQuery(query);
+        const query = `UPDATE ?? SET guid = ?, post_type = 'bookable_resource' WHERE ID = ?;`;
+        const res = await dbUtils.dbQuery(query, [`${dbPrefix}_posts`, guid, postId]);
         return res;
     },
 
