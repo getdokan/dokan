@@ -50,13 +50,12 @@ test.describe.skip('Settings test', () => {
     test.skip('admin can set vendor store url (general settings)', { tag: ['@lite', '@admin'] }, async () => {
         // todo: need to run on serial mode, will fail other tests
         await dbUtils.updateOptionValue(dbData.dokan.optionName.general, { custom_store_url: 'stores' });
-        const command = CI ? data.commands.permalinkWpEnv : data.commands.permalinkLocal;
-        await helpers.exeCommand(command);
+        await helpers.exeCommandWpcli(data.commands.wpcli.rewritePermalink);
         await admin.vendorStoreUrlSetting(data.predefined.vendorStores.vendor1, 'stores');
 
         //reset
         await dbUtils.setOptionValue(dbData.dokan.optionName.general, dbData.dokan.generalSettings);
-        await helpers.exeCommand(command);
+        await helpers.exeCommandWpcli(data.commands.wpcli.rewritePermalink);
     });
 
     test('admin can set vendor setup wizard logo & message (general settings)', { tag: ['@lite', '@admin'] }, async () => {

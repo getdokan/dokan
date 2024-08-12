@@ -31,7 +31,7 @@ declare global {
             BASE_URL: string;
             ADMIN_EMAIL: string;
             QUERY: string;
-            HEADLESS: string;
+            NON_HEADLESS: string;
             SLOWMO: number;
             DEVTOOLS: string;
             RETRY_TIMES: string;

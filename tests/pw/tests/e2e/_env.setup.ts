@@ -96,7 +96,7 @@ setup.describe('setup site & woocommerce & dokan settings', () => {
     setup('disable simple-auction ajax bid check', { tag: ['@pro'] }, async () => {
         setup.skip(!DOKAN_PRO, 'skip on lite');
         const [, , status] = await apiUtils.getSinglePlugin('woocommerce-simple-auctions/woocommerce-simple-auctions', payloads.adminAuth);
-        if (status === 'active') await dbUtils.updateOptionValue('simple_auctions_live_check', 'no', false);
+        if (status === 'active') await dbUtils.setOptionValue('simple_auctions_live_check', 'no', false);
     });
 
     setup.skip('disable germanized settings', { tag: ['@pro', '@admin'] }, async () => {

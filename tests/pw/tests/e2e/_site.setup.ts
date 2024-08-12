@@ -20,14 +20,11 @@ setup.describe('site setup', () => {
     });
 
     setup('set permalink (post_name)', { tag: ['@lite'] }, async () => {
-        const command = LOCAL ? data.commands.permalinkLocal : data.commands.permalinkWpEnv;
-        await helpers.exeCommand(command);
+        await helpers.exeCommandWpcli(data.commands.wpcli.rewritePermalink);
     });
 
     setup('activate theme (storefront)', { tag: ['@lite'] }, async () => {
-        const theme = data.installWp.themes.storefront;
-        const command = LOCAL ? data.commands.activateTheme(theme) : data.commands.activateThemeWpEnv(theme);
-        await helpers.exeCommand(command);
+        await helpers.exeCommandWpcli(data.commands.wpcli.activateTheme(data.installWp.themes.storefront));
     });
 
     setup('get server url', { tag: ['@lite'] }, async () => {
@@ -41,9 +38,7 @@ setup.describe('site setup', () => {
     });
 
     setup('activate basic auth', { tag: ['@lite'] }, async () => {
-        const plugin = data.installWp.plugins.basicAuth;
-        const command = LOCAL ? data.commands.activatePlugin(plugin) : data.commands.activatePluginWpEnv(plugin);
-        await helpers.exeCommand(command);
+        await helpers.exeCommandWpcli(data.commands.wpcli.activatePlugin(data.installWp.plugins.basicAuth));
     });
 
     setup('activate Woocommerce', { tag: ['@lite'] }, async () => {

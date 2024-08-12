@@ -549,7 +549,6 @@ export class BasePage {
     async addAttributeValue(selector: string, attribute: string, value: string): Promise<void> {
         const previousAttribute = await this.getAttributeValue(selector, attribute);
         const newValue = `${previousAttribute} ${value}`;
-        console.log(newValue);
         const element = this.getElement(selector);
         await element.evaluate((element, [attribute, value]) => element.setAttribute(attribute as string, value as string), [attribute, newValue]);
     }

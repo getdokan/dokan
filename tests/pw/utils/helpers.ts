@@ -2,6 +2,8 @@ import fs from 'fs';
 import { execSync } from 'child_process';
 import { Browser, BrowserContextOptions, Page } from '@playwright/test';
 
+const { LOCAL, SITE_PATH } = process.env;
+
 export const helpers = {
     // replace '_' to space & capitalize first letter of string
     replaceAndCapitalize: (str: string) =>
@@ -382,6 +384,14 @@ export const helpers = {
             console.log(error);
             return error;
         }
+    },
+
+    // execute wp cli command
+    async exeCommandWpcli(command: string, directoryPath = process.cwd()) {
+        process.chdir(directoryPath);
+        command = LOCAL ? `cd ${SITE_PATH} && ${command}` : `npm run wp-env run tests-cli  ${command}`;
+        // console.log(`Executing command: ${command}`);
+        await this.exeCommand(command);
     },
 
     // create a new page

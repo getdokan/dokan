@@ -28,7 +28,7 @@ test.describe('Vendor functionality test', () => {
         const vendor = new VendorPage(page);
         const [previousSettings] = await dbUtils.updateOptionValue(dbData.dokan.optionName.general, { enabled_address_on_reg: 'on' });
         await vendor.vendorRegister({ ...data.vendor.vendorInfo, addressFieldsEnabled: true }, { ...data.vendorSetupWizard, choice: false });
-        await dbUtils.setOptionValue(dbData.dokan.optionName.general, previousSettings, false);
+        await dbUtils.setOptionValue(dbData.dokan.optionName.general, previousSettings);
     });
 
     test('vendor can login', { tag: ['@lite', '@vendor'] }, async ({ page }) => {

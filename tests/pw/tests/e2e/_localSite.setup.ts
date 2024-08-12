@@ -1,57 +1,104 @@
 import { test } from '@playwright/test';
 import { data } from '@utils/testData';
-import { LoginPage } from '@pages/loginPage';
-import { LocalSetupPage } from '@pages/localSetupPage';
 import { helpers } from '@utils/helpers';
 
+const { SITE_PATH } = process.env;
+
 test.describe('setup local site', () => {
-    test('download wordpress to desired folder', async () => {});
-    // todo: implement below steps
-    /*
-	  1. create everything using bash script if needed
-	  2. get desired folder path
-	  3. download wordpress zip and unzip it
-	  4. clone desired plugins to wp-plugins
-	  5. clone theme to theme folder
-	*/
-
-    test.skip('clone dokan pro and build', { tag: ['@pro'] }, async () => {
-        await helpers.createFolder('plugins');
-        console.log('cloning dokan pro...');
-        await helpers.exeCommand(data.commands.cloneDokanPro, 'plugins');
-        console.log('cloning dokan pro done');
-        console.log('building dokan pro...');
-        await helpers.exeCommand(data.commands.buildPlugin, 'plugins/dokan-pro');
-        console.log('building dokan pro done');
+    test('download wordpress', async () => {
+        test.slow();
+        await helpers.exeCommand(data.commands.makePath(SITE_PATH));
+        await helpers.exeCommandWpcli(data.commands.wpcli.downloadWp);
     });
 
-    test('reset site', async () => {
-        await helpers.exeCommand(data.commands.resetSite);
-    });
-
-    test('install wordpress', async () => {
+    test('create config', async () => {
         // set wp-config (db info)
-        await helpers.exeCommand(data.commands.createConfig(data.installWp.dbInfo));
+        await helpers.exeCommandWpcli(data.commands.wpcli.createConfig(data.installWp.dbInfo));
 
         // set wp-config (debug info)
         for (const [key, value] of Object.entries(data.installWp.debugInfo)) {
-            await helpers.exeCommand(data.commands.setDebugConfig(key, value));
+            await helpers.exeCommandWpcli(data.commands.wpcli.setDebugConfig(key, value));
         }
-
-        // install wordpress
-        await helpers.exeCommand(data.commands.installWp(data.installWp.siteInfo));
     });
 
-    test('install and activate theme', async () => {
-        await helpers.exeCommand(data.commands.installTheme(data.installWp.themes.storefront));
+    test('create database', async () => {
+        // reset db command is used to create db
+        await helpers.exeCommandWpcli(data.commands.wpcli.resetSite);
     });
 
-    test.skip('admin setup wordpress (e2e)', async ({ page }) => {
-        const localSetupPage = new LocalSetupPage(page);
-        const loginPage = new LoginPage(page);
+    test('install wordpress', async () => {
+        await helpers.exeCommandWpcli(data.commands.wpcli.installWp(data.installWp.siteInfo));
+    });
 
-        await localSetupPage.setupWp(data.installWp);
-        await loginPage.adminLogin(data.admin);
-        await localSetupPage.setPermalinkSettings(data.wpSettings.permalink);
+    test('install theme', async () => {
+        await helpers.exeCommandWpcli(data.commands.wpcli.installTheme(data.installWp.themes.storefront));
+    });
+
+    test('install plugin (woocommece)', { tag: ['@pro'] }, async () => {
+        await helpers.exeCommandWpcli(data.commands.wpcli.installPlugin(data.installWp.plugins.woocommerce));
+    });
+
+    test('install plugin (dokan)', { tag: ['@pro'] }, async () => {
+        test.slow();
+        await helpers.exeCommand(data.commands.makePath(`${SITE_PATH}/plugins`));
+
+        console.log('Start: Cloning dokan');
+        await helpers.exeCommand(data.commands.cloneDokanLite(`${SITE_PATH}/wp-content/plugins`));
+        console.log('Success: Cloning dokan done');
+
+        console.log('building dokan...');
+        await helpers.exeCommand(data.commands.buildPlugin(`${SITE_PATH}/wp-content/plugins/dokan`));
+        console.log('Success: Building dokan done');
+
+        await helpers.exeCommandWpcli(data.commands.wpcli.activatePlugin(data.installWp.plugins.dokan));
+    });
+
+    test('install plugin (dokan-pro)', { tag: ['@pro'] }, async () => {
+        test.slow();
+        await helpers.exeCommand(data.commands.makePath(`${SITE_PATH}/plugins`));
+
+        console.log('Start: Cloning dokan pro');
+        await helpers.exeCommand(data.commands.cloneDokanPro(`${SITE_PATH}/wp-content/plugins`));
+        console.log('Success: Cloning dokan pro done');
+
+        console.log('building dokan pro...');
+        await helpers.exeCommand(data.commands.buildPlugin(`${SITE_PATH}/wp-content/plugins/dokan-pro`));
+        console.log('Success: Building dokan pro done');
+
+        // remove dokan pro plugin requirements (dokan-lite)
+        await helpers.exeCommand(data.commands.removeLiteRequired);
+
+        await helpers.exeCommandWpcli(data.commands.wpcli.activatePlugin(data.installWp.plugins.dokanPro));
+    });
+
+    test('install plugin (basic auth)', { tag: ['@pro'] }, async () => {
+        test.slow();
+        await helpers.exeCommand(data.commands.makePath(`${SITE_PATH}/plugins`));
+
+        console.log('Start: Cloning basic auth');
+        await helpers.exeCommand(data.commands.cloneBasicAuth(`${SITE_PATH}/wp-content/plugins`));
+        console.log('Success: Cloning basic auth done');
+
+        await helpers.exeCommandWpcli(data.commands.wpcli.activatePlugin(data.installWp.plugins.basicAuth));
+    });
+
+    test('install plugin (woocommerce product addons)', { tag: ['@pro'] }, async () => {
+        const pluginPath = `${SITE_PATH}/wp-content/plugins/dokan-pro/tests/plugins/woocommerce-product-addons.zip`;
+        await helpers.exeCommandWpcli(data.commands.wpcli.installPlugin(pluginPath));
+    });
+
+    test('install plugin (woocommerce subscriptions)', { tag: ['@pro'] }, async () => {
+        const pluginPath = `${SITE_PATH}/wp-content/plugins/dokan-pro/tests/plugins/woocommerce-subscriptions.zip`;
+        await helpers.exeCommandWpcli(data.commands.wpcli.installPlugin(pluginPath));
+    });
+
+    test('install plugin (woocommerce simple auctions)', { tag: ['@pro'] }, async () => {
+        const pluginPath = `${SITE_PATH}/wp-content/plugins/dokan-pro/tests/plugins/woocommerce-simple-auctions.zip`;
+        await helpers.exeCommandWpcli(data.commands.wpcli.installPlugin(pluginPath));
+    });
+
+    test('install plugin (woocommerce booking)', { tag: ['@pro'] }, async () => {
+        const pluginPath = `${SITE_PATH}/wp-content/plugins/dokan-pro/tests/plugins/woocommerce-bookings.zip`;
+        await helpers.exeCommandWpcli(data.commands.wpcli.installPlugin(pluginPath));
     });
 });
