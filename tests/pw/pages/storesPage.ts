@@ -215,7 +215,7 @@ export class StoresPage extends AdminPage {
         // todo:  vendor subscription
 
         await this.clickAndWaitForResponse(data.subUrls.api.dokan.stores, vendors.editVendor.saveChanges);
-        await this.click(vendors.editVendor.confirmSaveChanges);
+        await this.click(vendors.editVendor.closeUpdateSuccessModal);
     }
 
     // search vendor
