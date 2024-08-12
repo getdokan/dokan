@@ -2385,7 +2385,7 @@ export const data = {
 
         // plugins
         plugins: {
-            basicAuth: 'Basic-Auth-master',
+            basicAuth: 'Basic-Auth',
             woocommerce: 'woocommerce',
             dokan: 'dokan',
             dokanLite: 'dokan-lite',
