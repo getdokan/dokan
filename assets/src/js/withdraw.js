@@ -261,21 +261,11 @@
                 dokan.mon_decimal_point
             );
 
-            chargeFixed = accounting.unformat(
-                chargeFixed,
-                dokan.mon_decimal_point
-            );
-
-            chargePercentage = accounting.unformat(
-                chargePercentage,
-                dokan.mon_decimal_point
-            );
-
             let chargeAmount = 0;
             let chargeText = '';
 
             if ( chargeFixed ) {
-                chargeText += chargeFixed;
+                chargeText += Dokan_Withdraw.formatMoney( chargeFixed );
                 chargeAmount += chargeFixed;
             }
 
@@ -310,7 +300,7 @@
             let chargeSection    = $('#dokan-withdraw-charge-section');
             let revivableSection = $('#dokan-withdraw-revivable-section');
 
-            $('#dokan-withdraw-charge-section-text').html(Dokan_Withdraw.formatMoney(chargeText));
+            $('#dokan-withdraw-charge-section-text').html(chargeText);
             $('#dokan-withdraw-revivable-section-text').html(Dokan_Withdraw.formatMoney(withdrawAmount - chargeAmount));
 
             chargeSection.show();
