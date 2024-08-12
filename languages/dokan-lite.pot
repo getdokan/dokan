@@ -1,14 +1,14 @@
 # Copyright (c) 2024 weDevs Pte. Ltd. All Rights Reserved.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 3.11.4\n"
+"Project-Id-Version: Dokan 3.11.5\n"
 "Report-Msgid-Bugs-To: https://dokan.co/contact/\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-07-08T05:52:16+00:00\n"
+"POT-Creation-Date: 2024-08-07T04:00:14+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.9.0\n"
 "X-Domain: dokan-lite\n"
@@ -1040,9 +1040,9 @@ msgstr ""
 
 #: includes/Admin/Settings.php:837
 #: includes/Admin/UserProfile.php:211
-#: templates/account/update-customer-to-vendor.php:51
-#: templates/account/vendor-registration.php:36
-#: templates/global/seller-registration-form.php:57
+#: templates/account/update-customer-to-vendor.php:48
+#: templates/account/vendor-registration.php:45
+#: templates/global/seller-registration-form.php:54
 #: assets/js/vue-admin.js:2
 #: assets/js/vue-bootstrap.js:2
 msgid "Phone Number"
@@ -1604,7 +1604,7 @@ msgstr ""
 #: templates/my-orders.php:27
 #: templates/orders/listing.php:33
 #: templates/orders/listing.php:83
-#: templates/products/products-listing-row.php:67
+#: templates/products/products-listing-row.php:136
 #: templates/products/products-listing.php:121
 #: templates/sub-orders.php:47
 #: templates/withdraw/pending-request-listing-dashboard.php:25
@@ -1628,7 +1628,7 @@ msgstr ""
 #: templates/my-orders.php:26
 #: templates/orders/listing.php:35
 #: templates/orders/listing.php:93
-#: templates/products/products-listing-row.php:125
+#: templates/products/products-listing-row.php:268
 #: templates/products/products-listing.php:130
 #: templates/reverse-withdrawal/transaction-listing.php:19
 #: templates/sub-orders.php:46
@@ -3377,7 +3377,7 @@ msgid "Pending Review"
 msgstr ""
 
 #: includes/functions.php:771
-#: templates/products/products-listing-row.php:166
+#: templates/products/products-listing-row.php:307
 msgid "Scheduled"
 msgstr ""
 
@@ -3518,7 +3518,7 @@ msgstr ""
 #: includes/functions.php:2265
 #: includes/REST/ProductControllerV2.php:236
 #: templates/products/edit-product-single.php:225
-#: templates/products/products-listing-row.php:112
+#: templates/products/products-listing-row.php:233
 #: templates/products/products-listing.php:138
 msgid "Simple"
 msgstr ""
@@ -4393,7 +4393,7 @@ msgid "Toggle &quot;Manage stock&quot;"
 msgstr ""
 
 #: includes/Product/functions.php:231
-#: templates/products/products-listing-row.php:82
+#: templates/products/products-listing-row.php:185
 #: templates/products/products-listing.php:126
 msgid "Stock"
 msgstr ""
@@ -7289,7 +7289,7 @@ msgstr ""
 
 #: includes/wc-functions.php:820
 #: templates/account/update-customer-to-vendor.php:26
-#: templates/account/vendor-registration.php:9
+#: templates/account/vendor-registration.php:18
 #: templates/global/seller-registration-form.php:16
 #: assets/js/vue-admin.js:2
 #: assets/js/vue-bootstrap.js:2
@@ -7298,7 +7298,7 @@ msgstr ""
 
 #: includes/wc-functions.php:821
 #: templates/account/update-customer-to-vendor.php:30
-#: templates/account/vendor-registration.php:14
+#: templates/account/vendor-registration.php:23
 #: templates/global/seller-registration-form.php:21
 #: assets/js/vue-admin.js:2
 #: assets/js/vue-bootstrap.js:2
@@ -7306,7 +7306,7 @@ msgid "Last Name"
 msgstr ""
 
 #: includes/wc-functions.php:822
-#: templates/account/vendor-registration.php:27
+#: templates/account/vendor-registration.php:36
 #: templates/dashboard/edit-account.php:65
 msgid "Email address"
 msgstr ""
@@ -7679,7 +7679,7 @@ msgstr ""
 
 #: templates/account/become-a-vendor-section.php:16
 #: templates/account/become-a-vendor-section.php:20
-#: templates/account/update-customer-to-vendor.php:81
+#: templates/account/update-customer-to-vendor.php:78
 msgid "Become a Vendor"
 msgstr ""
 
@@ -7692,55 +7692,55 @@ msgid "Update account to Vendor"
 msgstr ""
 
 #: templates/account/update-customer-to-vendor.php:36
-#: templates/account/vendor-registration.php:52
+#: templates/account/vendor-registration.php:61
 #: templates/global/seller-registration-form.php:27
 msgid "Shop Name"
 msgstr ""
 
 #: templates/account/update-customer-to-vendor.php:41
-#: templates/account/vendor-registration.php:57
+#: templates/account/vendor-registration.php:66
 #: templates/global/seller-registration-form.php:32
 msgid "Shop URL"
 msgstr ""
 
-#: templates/account/update-customer-to-vendor.php:70
+#: templates/account/update-customer-to-vendor.php:67
 msgid "Terms &amp; Conditions"
 msgstr ""
 
 #. translators: 1. Terms and conditions of agreement link.
-#: templates/account/update-customer-to-vendor.php:72
+#: templates/account/update-customer-to-vendor.php:69
 msgid "I have read and agree to the %1$s."
 msgstr ""
 
-#: templates/account/vendor-registration.php:21
+#: templates/account/vendor-registration.php:30
 #: templates/login-form/login-form.php:4
 #: assets/js/vue-admin.js:2
 #: assets/js/vue-bootstrap.js:2
 msgid "Username"
 msgstr ""
 
-#: templates/account/vendor-registration.php:31
+#: templates/account/vendor-registration.php:40
 msgid "A link to set a new password will be sent to your email address."
 msgstr ""
 
-#: templates/account/vendor-registration.php:43
+#: templates/account/vendor-registration.php:52
 #: templates/login-form/login-form.php:9
 #: assets/js/vue-admin.js:2
 #: assets/js/vue-bootstrap.js:2
 msgid "Password"
 msgstr ""
 
-#: templates/account/vendor-registration.php:49
+#: templates/account/vendor-registration.php:58
 msgid "Anti-spam"
 msgstr ""
 
 #. translators: %1$s: opening anchor tag with link, %2$s: an ampersand %3$s: closing anchor tag
-#: templates/account/vendor-registration.php:92
-#: templates/global/seller-registration-form.php:73
+#: templates/account/vendor-registration.php:101
+#: templates/global/seller-registration-form.php:70
 msgid "I have read and agree to the %1$sTerms %2$s Conditions%3$s."
 msgstr ""
 
-#: templates/account/vendor-registration.php:107
+#: templates/account/vendor-registration.php:116
 msgid "Register"
 msgstr ""
 
@@ -8404,7 +8404,7 @@ msgstr ""
 #: templates/emails/vendor-new-order.php:55
 #: templates/products/edit-product-single.php:249
 #: templates/products/new-product.php:221
-#: templates/products/products-listing-row.php:91
+#: templates/products/products-listing-row.php:203
 #: templates/products/products-listing.php:127
 #: templates/products/tmpl-add-product-popup.php:57
 msgid "Price"
@@ -8495,11 +8495,11 @@ msgstr ""
 msgid "Address:"
 msgstr ""
 
-#: templates/global/seller-registration-form.php:93
+#: templates/global/seller-registration-form.php:90
 msgid "I am a customer"
 msgstr ""
 
-#: templates/global/seller-registration-form.php:98
+#: templates/global/seller-registration-form.php:95
 msgid "I am a vendor"
 msgstr ""
 
@@ -8772,15 +8772,15 @@ msgstr ""
 
 #: templates/orders/listing.php:96
 #: templates/orders/listing.php:97
-#: templates/products/products-listing-row.php:131
-#: templates/products/products-listing-row.php:132
+#: templates/products/products-listing-row.php:272
+#: templates/products/products-listing-row.php:273
 msgid "Unpublished"
 msgstr ""
 
 #. translators: 1)  human-readable date
 #. translators: %s: time difference
 #: templates/orders/listing.php:105
-#: templates/products/products-listing-row.php:153
+#: templates/products/products-listing-row.php:294
 msgid "%s ago"
 msgstr ""
 
@@ -8907,7 +8907,7 @@ msgid "Done"
 msgstr ""
 
 #: templates/products/download-virtual.php:4
-#: templates/products/products-listing-row.php:110
+#: templates/products/products-listing-row.php:231
 msgid "Downloadable"
 msgstr ""
 
@@ -8916,7 +8916,7 @@ msgid "Downloadable products give access to a file upon purchase."
 msgstr ""
 
 #: templates/products/download-virtual.php:9
-#: templates/products/products-listing-row.php:108
+#: templates/products/products-listing-row.php:229
 msgid "Virtual"
 msgstr ""
 
@@ -8937,7 +8937,7 @@ msgid "Add File"
 msgstr ""
 
 #: templates/products/downloadable.php:38
-#: templates/products/products-listing-row.php:52
+#: templates/products/products-listing-row.php:100
 #: templates/products/products-listing.php:120
 msgid "Name"
 msgstr ""
@@ -9085,7 +9085,7 @@ msgid "Manage inventory for this product."
 msgstr ""
 
 #: templates/products/inventory.php:14
-#: templates/products/products-listing-row.php:73
+#: templates/products/products-listing-row.php:167
 #: templates/products/products-listing.php:125
 msgid "SKU"
 msgstr ""
@@ -9205,42 +9205,42 @@ msgstr ""
 msgid "Enable product reviews"
 msgstr ""
 
-#: templates/products/products-listing-row.php:45
+#: templates/products/products-listing-row.php:83
 #: templates/products/products-listing.php:119
 msgid "Image"
 msgstr ""
 
-#: templates/products/products-listing-row.php:100
+#: templates/products/products-listing-row.php:221
 #: templates/products/products-listing.php:128
 msgid "Type"
 msgstr ""
 
-#: templates/products/products-listing-row.php:103
+#: templates/products/products-listing-row.php:224
 msgid "Grouped"
 msgstr ""
 
-#: templates/products/products-listing-row.php:105
+#: templates/products/products-listing-row.php:226
 msgid "External/Affiliate"
 msgstr ""
 
-#: templates/products/products-listing-row.php:115
+#: templates/products/products-listing-row.php:236
 msgid "Variable"
 msgstr ""
 
-#: templates/products/products-listing-row.php:122
+#: templates/products/products-listing-row.php:254
 #: templates/products/products-listing.php:129
 msgid "Views"
 msgstr ""
 
-#: templates/products/products-listing-row.php:161
+#: templates/products/products-listing-row.php:302
 msgid "Published"
 msgstr ""
 
-#: templates/products/products-listing-row.php:164
+#: templates/products/products-listing-row.php:305
 msgid "Missed schedule"
 msgstr ""
 
-#: templates/products/products-listing-row.php:169
+#: templates/products/products-listing-row.php:310
 msgid "Last Modified"
 msgstr ""
 

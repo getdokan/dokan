@@ -160,7 +160,7 @@ export const selector = {
             contentPlaceholder: 'p[aria-label="Add default block"]',
             addContent: '//p[@data-title="Paragraph"]',
 
-            publish: '//div[@class="edit-post-header__settings"]//button[text()="Publish"]',
+            publish: '//div[@class="editor-header__settings"]//button[text()="Publish"]',
             publishFromPanel: '//div[@class="editor-post-publish-panel"]//button[text()="Publish"]',
 
             publishMessage: '//div[@class="components-snackbar__content" and text()="Page published."]',
@@ -663,14 +663,15 @@ export const selector = {
                     makeVendorFeature: '//span[contains(text(), "Make Vendor Featured")]/..//label[@class="switch tips"]',
 
                     // Vendor Subscription
-                    AssignSubscriptionPack: '.multiselect--active > .multiselect__tags',
+                    assignSubscriptionPackDropdown: '//label[text()="Assign Subscription Pack"]/..//div[@class="multiselect__select"]',
+                    selectSubscriptionPack: (subscriptionPack: string) => `//li[contains(.,'${subscriptionPack}')]`,
 
                     // Edit Options
                     cancelEdit: '//div[contains(@class, "action-links footer")]//button[contains(text(),"Cancel")]',
                     saveChanges: '//div[contains(@class, "action-links footer")]//button[contains(text(),"Save Changes")]',
                     cancelEditOnTop: '//div[contains(@class, "profile-banner")]//button[contains(text(),"Cancel")]',
                     saveChangesOnTop: '//div[contains(@class, "profile-banner")]//button[contains(text(),"Save Changes")]',
-                    confirmSaveChanges: 'button.swal2-confirm',
+                    closeUpdateSuccessModal: 'button.swal2-confirm',
                 },
 
                 storeCategory: {
@@ -1628,6 +1629,55 @@ export const selector = {
                     answerUpdateSuccessMessage: '//h2[text()="Answer updated successfully."]',
                     answerDeleteSuccessMessage: '//h2[text()="Answer deleted successfully."]',
                     questionDeleteSuccessMessage: '//h2[text()="Question deleted successfully."]',
+                },
+            },
+
+            // subscriptions
+            subscriptions: {
+                subscribedVendorList: '//h1[text()="Subscribed Vendor List"]',
+
+                // Bulk Actions
+                bulkActions: {
+                    selectAll: 'thead .manage-column input',
+                    selectAction: '.tablenav.top #bulk-action-selector-top', // approved, cancelled, rejected
+                    applyAction: '//div[@class="tablenav top"]//button[normalize-space()="Apply"]',
+                },
+
+                // Filters
+                filters: {
+                    filterByVendors: '(//div[@class="multiselect__select"])[1]',
+                    filterByVendorsInput: '(//input[@class="multiselect__input"])[1]',
+                    filterBySubscriptionPack: '(//div[@class="multiselect__select"])[2]',
+                    filterBySubscriptionPackInput: '(//input[@class="multiselect__input"])[2]',
+                    filteredResult: (result: string) => `//span[text()='${result}']`,
+                },
+
+                // Table
+                table: {
+                    subscriptionTable: '.subscription-list table',
+                    storeColumn: 'thead th.store_name',
+                    subscriptionPackColumn: 'thead th.subscription_title',
+                    startDateColumn: 'thead th.start_date',
+                    endDateColumn: 'thead th.end_date',
+                    statusColumn: 'thead th.status',
+                    orderColumn: 'thead th.order_id',
+                    actionsColumn: 'thead th.action',
+                },
+
+                numberOfRowsFound: '.tablenav.top .displaying-num',
+                noRowsFound: '//td[normalize-space()="No subscribed vendors found."]',
+                currentNoOfRows: 'table tbody tr',
+
+                vendorSubscriptionsRow: (storeName: string) => `//td[@class="column store_name"]//a[contains(text(),'${storeName}')]/../../..`,
+                vendorSubscriptionsCell: (storeName: string) => `//td[@class="column store_name"]//a[contains(text(),'${storeName}')]`,
+                vendorSubscriptionsActions: (storeName: string) => `//td[@class="column store_name"]//a[contains(text(),'${storeName}')]/../../..//td[@class="column action"]//span`,
+
+                subscriptionAction: {
+                    cancelImmediately: '//input[@value="immediately"]',
+                    cancelAfterEndOfCurrentPeriod: '//input[@value="end_of_current_period"]',
+                    cancelSubscription: '.swal2-confirm',
+                    dontCancelSubscription: 'swal2-cancel',
+                    cancelSuccessMessage: '//h2[contains(text(),"Subscription has been cancelled")]', //todo: update locator
                 },
             },
 
@@ -5244,17 +5294,28 @@ export const selector = {
             noAnalyticsFound: '//div[@class="tab-pane active" and normalize-space()="There is no analytics found for your store."]',
         },
 
-        vSubscription: {
+        vSubscriptions: {
             dokanSubscriptionDiv: 'div.dokan-subscription-content',
             noSubscriptionMessage: '//h3[text()="No subscription pack has been found!"]',
 
-            subscribedSubscriptionInfo: 'div.seller_subs_info',
-            dokanSubscriptionProductContainer: 'div.pack_content_wrapper',
+            sellerSubscriptionInfo: {
+                sellerSubscriptionInfo: 'div.seller_subs_info',
+                subscribedPack: (pack: string) => `//div[@class='seller_subs_info']//p//span[text()='${pack}']`,
+                cancelSubscription: '//form[@id="dps_submit_form"]//input[@value="Cancel"]',
+                confirmCancelSubscription: '.swal2-confirm',
+                cancelCancelSubscription: '.swal2-cancel',
+                cancelSuccessMessage: '.dokan-message p',
+            },
 
-            dokanSubscriptionProduct: 'div.product_pack_item',
-            dokanSubscriptionProductPrice: 'div.pack_price',
-            dokanSubscriptionProductContent: 'div.pack_content',
-            dokanSubscriptionProductBuyButton: 'div.buy_pack_button',
+            productCardContainer: 'div.pack_content_wrapper',
+            productCard: {
+                item: 'div.product_pack_item',
+                price: 'div.pack_price',
+                content: 'div.pack_content',
+                buyButton: 'div.buy_pack_button',
+            },
+
+            buySubscription: (subscriptionPack: string) => `//div[@class="pack_content"]//h2[text()='${subscriptionPack}']/../..//div[@class='buy_pack_button']`,
         },
 
         // Announcements

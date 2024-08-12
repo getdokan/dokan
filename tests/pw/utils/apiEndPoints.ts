@@ -286,9 +286,10 @@ export const endPoints = {
     getAllVendorSubscriptions: `${SERVER_URL}/dokan/v1/subscription`,
     getAllVendorSubscriptionPackages: `${SERVER_URL}/dokan/v1/subscription/packages`,
     getAllVendorSubscriptionNonRecurringPackages: `${SERVER_URL}/dokan/v1/subscription/nonrecurring-packages`,
-    getVendorActiveSubscriptionPack: (vendorId: string) => `${SERVER_URL}/dokan/v1/subscription/vendor/${vendorId}`,
-    updateVendorSubscription: (packId: string) => `${SERVER_URL}/wp-json/dokan/v1/subscription/${packId}`,
-    updateBatchVendorSubscriptions: `${SERVER_URL}/dokan/v1/subscription/batch`, // method: delete, read, unread
+    getVendorActiveSubscriptionPackage: (sellerId: string) => `${SERVER_URL}/dokan/v1/subscription/vendor/${sellerId}`,
+    updateVendorSubscription: (sellerId: string) => `${SERVER_URL}/dokan/v1/subscription/${sellerId}`,
+    updateBatchVendorSubscriptions: `${SERVER_URL}/dokan/v1/subscription/batch`, // method: active, cancel
+    saveVendorSubscriptionProductCommission: `${SERVER_URL}/dokan/v1/subscription/save-commission`,
 
     // v2
 

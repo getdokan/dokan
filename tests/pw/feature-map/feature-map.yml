@@ -1027,7 +1027,22 @@
 - page: 'Vendor Subscription'
   features:
       admin:
-          no test is written for vendor subscription: false
+          admin can view subscriptions menu page: true
+          admin can filter subscribed vendors by vendor: true
+          admin can filter subscribed vendors by subscription pack: true
+          admin can cancel subscription (immediately): true
+          admin can cancel subscription (end of the current period): true
+          admin can reactive recurring subscription (has active period ): false
+          admin can perform bulk action on subscribed vendors: true
+          admin can assign non recurring subscription pack to vendor: true
+      vendor:
+          vendor can view subscriptions menu page: true
+          vendor can buy non recurring subscription pack (on registration): true
+          vendor can buy non recurring subscription pack (on subscription page): true
+          vendor can buy recurring subscription pack (on registration): false
+          vendor can buy recurring subscription pack (on subscription page): false
+          vendor can switch subscription: true
+          vendor can cancel subscription: true
 
 - page: 'Vendor Verification'
   features:

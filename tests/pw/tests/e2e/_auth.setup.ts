@@ -19,27 +19,6 @@ setup.describe('authenticate users & set permalink', () => {
         await apiUtils.dispose();
     });
 
-    setup.skip('get server url', { tag: ['@lite'] }, async () => {
-        const apiUtils = new ApiUtils(await request.newContext());
-        const headers = await apiUtils.getSiteHeaders(BASE_URL);
-        if (headers.link) {
-            const serverUrl = headers.link.includes('rest_route') ? BASE_URL + '/?rest_route=' : BASE_URL + '/wp-json';
-            helpers.createEnvVar('SERVER_URL', serverUrl);
-        } else {
-            console.log("Headers link doesn't exists");
-        }
-    });
-
-    setup('activate Dokan Lite', { tag: ['@lite'] }, async () => {
-        setup.skip(CI, 'skip plugin activation on CI');
-        await apiUtils.updatePlugin('dokan/dokan', { status: 'active' }, payloads.adminAuth);
-    });
-
-    setup('activate Dokan Pro', { tag: ['@pro'] }, async () => {
-        setup.skip(CI, 'skip plugin activation on CI');
-        await apiUtils.updatePlugin('dokan-pro/dokan-pro', { status: 'active' }, payloads.adminAuth);
-    });
-
     setup('authenticate admin', { tag: ['@lite'] }, async ({ page }) => {
         const loginPage = new LoginPage(page);
         await loginPage.adminLogin(data.admin, data.auth.adminAuthFile);

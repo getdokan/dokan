@@ -2,7 +2,28 @@ import { faker } from '@faker-js/faker';
 import { helpers } from '@utils/helpers';
 import 'dotenv/config';
 
-const { ADMIN, ADMIN_PASSWORD, VENDOR, VENDOR2, CUSTOMER, CUSTOMER2, USER_PASSWORD, SITE_PATH, GMAP, MAPBOX, LICENSE_KEY } = process.env;
+const {
+    ADMIN,
+    ADMIN_PASSWORD,
+    VENDOR,
+    VENDOR2,
+    CUSTOMER,
+    CUSTOMER2,
+    USER_PASSWORD,
+    SITE_PATH,
+    BASE_URL,
+    SITE_LANGUAGE,
+    SITE_TITLE,
+    ADMIN_EMAIL,
+    DB_HOST_NAME,
+    DATABASE,
+    DB_USER_NAME,
+    DB_USER_PASSWORD,
+    DB_PREFIX,
+    GMAP,
+    MAPBOX,
+    LICENSE_KEY,
+} = process.env;
 
 interface user {
     username: string;
@@ -17,17 +38,6 @@ interface admin {
 export { admin, user };
 
 export const data = {
-    envData: 'utils/data.json',
-    env: {
-        // db data
-        DB_HOST_NAME: process.env.DB_HOST_NAME,
-        DB_USER_NAME: process.env.DB_USER_NAME,
-        DB_USER_PASSWORD: process.env.DB_USER_PASSWORD,
-        DATABASE: process.env.DATABASE,
-        DB_PORT: process.env.DB_PORT,
-        DB_PREFIX: process.env.DB_PREFIX,
-    },
-
     systemInfo: 'playwright/systemInfo.json',
 
     auth: {
@@ -78,6 +88,16 @@ export const data = {
         pluginName: {
             dokanLite: 'dokan-lite',
             dokanPro: 'dokan-pro',
+        },
+        pluginList: {
+            basicAuth: 'Basic-Auth-master/basic-auth',
+            dokanLite: 'dokan/dokan',
+            dokanPro: 'dokan-pro/dokan-pro',
+            woocommerce: 'woocommerce/woocommerce',
+            woocommerceBookings: 'woocommerce-bookings/woocommerce-bookings',
+            woocommerceProductAddons: 'woocommerce-product-addons/woocommerce-product-addons',
+            woocommerceSimpleAuctions: 'woocommerce-simple-auctions/woocommerce-simple-auctions',
+            woocommerceSubscriptions: 'woocommerce-subscriptions/woocommerce-subscriptions',
         },
     },
 
@@ -783,6 +803,7 @@ export const data = {
         gmap: '/maps/api',
 
         backend: {
+            dbSetup: 'wp-admin/install.php',
             login: 'wp-login.php',
             adminLogin: 'wp-admin',
             adminLogout: 'wp-login.php?action=logout',
@@ -811,7 +832,8 @@ export const data = {
                 withdraw: 'wp-admin/admin.php?page=dokan#/withdraw?status=pending',
                 reverseWithdraws: 'wp-admin/admin.php?page=dokan#/reverse-withdrawal',
                 vendors: 'wp-admin/admin.php?page=dokan#/vendors',
-                vendorDetails: (vendorId: string) => `wp-admin/admin.php?page=dokan#/vendors/${vendorId}`,
+                vendorDetails: (sellerId: string) => `wp-admin/admin.php?page=dokan#/vendors/${sellerId}`,
+                vendorDetailsEdit: (sellerId: string) => `wp-admin/admin.php?page=dokan#/vendors/${sellerId}?edit=true`,
                 storeCategories: 'wp-admin/admin.php?page=dokan#/store-categories',
                 abuseReports: 'wp-admin/admin.php?page=dokan#/abuse-reports',
                 storeReviews: 'wp-admin/admin.php?page=dokan#/store-reviews',
@@ -827,6 +849,7 @@ export const data = {
                 tools: 'wp-admin/admin.php?page=dokan#/tools',
                 productQA: 'wp-admin/admin.php?page=dokan#/product-qa',
                 questionDetails: (questionId: string) => `wp-admin/admin.php?page=dokan#/product-qa/${questionId}`,
+                subscriptions: 'wp-admin/admin.php?page=dokan#/subscriptions',
                 verifications: 'wp-admin/admin.php?page=dokan#/verifications?status=pending',
                 productAdvertising: 'wp-admin/admin.php?page=dokan#/product-advertising',
                 wholeSaleCustomer: 'wp-admin/admin.php?page=dokan#/wholesale-customer',
@@ -937,6 +960,7 @@ export const data = {
                 manageResources: 'dashboard/booking/resources',
                 announcements: 'dashboard/announcement',
                 analytics: 'dashboard/analytics',
+                subscriptions: 'dashboard/subscription',
                 tools: 'dashboard/tools',
                 export: 'dashboard/tools/#export',
                 csvImport: 'dashboard/tools/csv-import',
@@ -996,8 +1020,9 @@ export const data = {
                 productQuestions: 'dokan/v1/product-questions',
                 productQuestionsBulkActions: 'dokan/v1/product-questions/bulk_action',
                 productAnswers: 'dokan/v1/product-answers',
-                verifications: '/dokan/v1/verification-requests',
-                verificationMethods: '/dokan/v1/verification-methods',
+                subscriptions: 'dokan/v1/subscription',
+                verifications: 'dokan/v1/verification-requests',
+                verificationMethods: 'dokan/v1/verification-methods',
             },
 
             wc: {
@@ -1093,6 +1118,9 @@ export const data = {
 
             // address fields enable flag (on vendor registration)
             addressFieldsEnabled: false,
+
+            // subscription pack
+            vendorSubscriptionPack: 'Dokan_Subscription_Non_recurring',
 
             account: {
                 updateSuccessMessage: 'Account details changed successfully.',
@@ -1469,6 +1497,9 @@ export const data = {
                 state: 'New York',
                 phone: '0123456789',
             },
+
+            // subscription
+            vendorSubscriptionPack: 'Dokan_Subscription_Non_recurring',
         },
 
         getSupport: {
@@ -2305,28 +2336,78 @@ export const data = {
         license: 'utils/sampleData/license.png',
     },
 
-    // command
-    commands: {
-        permalink: 'npm run wp-env run tests-cli wp rewrite structure /%postname%/',
-        permalinkLocal: `cd ${SITE_PATH} && wp rewrite structure /%postname%/ && wp rewrite flush`,
-        activateTheme: `cd ${SITE_PATH} && wp theme activate storefront`,
-        cloneDokanPro: "git clone -b test_utils https://github.com/getdokan/dokan-pro.git && cd dokan-pro && sed -i '''' '''s/Requires Plugins: woocommerce, dokan-lite/Requires Plugins: woocommerce, dokan/''' dokan-pro.php",
-        buildPlugin: 'composer i --no-dev && composer du -o && npm i && npm run build',
-    },
-
     // install wordpress
     installWp: {
         // db info
-        dbHost: process.env.DB_HOST_NAME,
-        dbUserName: process.env.DB_USER_NAME,
-        dbPassword: process.env.DB_USER_PASSWORD,
-        dbName: process.env.DATABASE,
-        dbTablePrefix: process.env.DB_PREFIX,
+        dbInfo: {
+            dbHost: DB_HOST_NAME,
+            dbName: DATABASE,
+            dbUserName: DB_USER_NAME,
+            dbPassword: DB_USER_PASSWORD,
+            dbTablePrefix: `${DB_PREFIX}_`,
+            update: {
+                DB_HOST_NAME: DB_HOST_NAME,
+                DATABASE: DATABASE,
+                DB_USER_NAME: DB_USER_NAME,
+                DB_USER_PASSWORD: DB_USER_PASSWORD,
+                DB_PREFIX: `${DB_PREFIX}_`,
+            },
+        },
+
+        // debugInfo
+        debugInfo: {
+            WP_DEBUG: true,
+            SCRIPT_DEBUG: true,
+            WP_DEBUG_LOG: true,
+            WP_DEBUG_DISPLAY: false,
+        },
+
         // site info
-        siteTitle: process.env.DATABASE,
-        adminUserName: ADMIN,
-        adminPassword: USER_PASSWORD,
-        adminEmail: 'shashwata@wedevs.com',
+        siteInfo: {
+            language: SITE_LANGUAGE ?? 'en_US',
+            url: BASE_URL ?? 'http://localhost:9999',
+            title: SITE_TITLE ?? 'Test Playground',
+            admin: ADMIN ?? 'admin',
+            password: ADMIN_PASSWORD ?? 'admin',
+            email: ADMIN_EMAIL ?? 'shashwata@wedevs.com',
+        },
+
+        // theme
+        themes: {
+            storefront: 'storefront',
+        },
+
+        // plugins
+        plugins: {
+            basicAuth: 'Basic-Auth-master',
+            woocommerce: 'woocommerce',
+            dokan: 'dokan',
+            dokanLite: 'dokan-lite',
+            dokanPro: 'dokan-pro',
+            woocommerceBookings: 'woocommerce-bookings',
+            woocommerceSubscriptions: 'woocommerce-subscriptions',
+            woocommerceProductAddons: 'woocommerce-product-addons',
+            woocommerceSimpleAuctions: 'woocommerce-simple-auctions',
+        },
+    },
+
+    // command
+    commands: {
+        resetSite: `cd ${SITE_PATH} && wp db reset --yes`,
+        createConfig: (db: any) => `cd ${SITE_PATH} && wp config create --dbhost="${db.dbHost}" --dbname="${db.dbName}" --dbuser="${db.dbUserName}" --dbpass="${db.dbPassword}"  --dbprefix="${db.dbTablePrefix}" --force`,
+        setConfig: (key: string, value: string) => `cd ${SITE_PATH} && wp config set ${key} ${value} --add`,
+        setDebugConfig: (key: string, value: boolean) => `cd ${SITE_PATH} && wp config set ${key} ${value} --add --raw`,
+        installWp: (core: any) => `cd ${SITE_PATH} && wp core install --locale="${core.language}" --url="${core.url}" --title="${core.title}" --admin_user="${core.admin}" --admin_password="${core.password}" --admin_email="${core.email}"`,
+        installTheme: (theme: string) => `cd ${SITE_PATH} && wp theme install ${theme} --activate`,
+        installPlugin: (plugin: string) => `cd ${SITE_PATH} && wp plugin install ${plugin} --activate --force`,
+        activatePlugin: (plugin: string, skipPlugins?: string) => `cd ${SITE_PATH} && wp plugin activate ${plugin} --skip-plugins=${skipPlugins}`,
+        activateTheme: (theme: string) => `cd ${SITE_PATH} && wp theme activate ${theme}`,
+        permalinkLocal: `cd ${SITE_PATH} && wp rewrite structure /%postname%/ && wp rewrite flush`,
+        removeLiteRequired: `cd ${SITE_PATH}/wp-content/plugins/dokan-pro && sed -i '''' '''s/Requires Plugins: woocommerce, dokan-lite/Requires Plugins: woocommerce, dokan/''' dokan-pro.php`,
+        cloneDokanPro: "git clone -b test_utils https://github.com/getdokan/dokan-pro.git && cd dokan-pro && sed -i '''' '''s/Requires Plugins: woocommerce, dokan-lite/Requires Plugins: woocommerce, dokan/''' dokan-pro.php",
+        buildPlugin: 'composer i --no-dev && composer du -o && npm i && npm run build',
+        permalinkWpEnv: 'npm run wp-env run tests-cli wp rewrite structure /%postname%/',
+        activateThemeWpEnv: 'npm run wp-env run tests-cli wp theme activate storefront',
     },
 
     cssStyle: {
