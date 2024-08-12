@@ -46,13 +46,13 @@ test.describe('Vendor delivery time test', () => {
         await vendor.updateCalendarView('week');
     });
 
-    test.skip('customer can buy product with delivery time', { tag: ['@pro', '@customer'] }, async () => {
+    test('customer can buy product with delivery time', { tag: ['@pro', '@customer'] }, async () => {
         await customer.addProductToCart(data.predefined.simpleProduct.product1.name, 'single-product');
         await customer.placeOrderWithDeliverTimeStorePickup('delivery-time', data.deliveryTime);
     });
 
-    test.skip('customer can buy product with store pickup', { tag: ['@pro', '@customer'] }, async () => {
-        await dbUtils.setOptionValue(dbData.dokan.optionName.deliveryTime, { ...dbData.dokan.deliveryTimeSettings, allow_vendor_override_settings: 'off' }); // todo: added for: previous test is disable store pickup
+    test('customer can buy product with store pickup', { tag: ['@pro', '@customer'] }, async () => {
+        // await dbUtils.setOptionValue(dbData.dokan.optionName.deliveryTime, { ...dbData.dokan.deliveryTimeSettings, allow_vendor_override_settings: 'off' }); // todo: resolve: previous test disable store pickup
         await customer.addProductToCart(data.predefined.simpleProduct.product1.name, 'single-product');
         await customer.placeOrderWithDeliverTimeStorePickup('store-pickup', data.deliveryTime);
     });

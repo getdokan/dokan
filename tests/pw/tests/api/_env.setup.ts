@@ -64,7 +64,7 @@ setup.describe('setup site & woocommerce & user settings', () => {
     });
 
     setup('set tax rate', { tag: ['@lite'] }, async () => {
-        await apiUtils.setUpTaxRate(payloads.enableTaxRate, payloads.createTaxRate);
+        await apiUtils.setUpTaxRate(payloads.enableTax, payloads.createTaxRate);
     });
 
     setup('set shipping methods', { tag: ['@lite'] }, async () => {
@@ -164,7 +164,7 @@ setup.describe('setup dokan settings', () => {
 
     setup('admin set dokan page settings', { tag: ['@lite'] }, async () => {
         const [, pageId] = await apiUtils.createPage(payloads.tocPage, payloads.adminAuth);
-        await dbUtils.updateDokanSettings(dbData.dokan.optionName.page, { reg_tc_page: pageId });
+        await dbUtils.updateOptionValue(dbData.dokan.optionName.page, { reg_tc_page: pageId });
     });
 
     setup('admin set dokan appearance settings', { tag: ['@lite'] }, async () => {
@@ -242,7 +242,7 @@ setup.describe('setup dokan settings', () => {
     });
 });
 
-setup.describe('setup dokan settings', () => {
+setup.describe('setup dokan payment products', () => {
     let apiUtils: ApiUtils;
 
     setup.beforeAll(async () => {
@@ -254,78 +254,25 @@ setup.describe('setup dokan settings', () => {
     });
 
     setup('recreate reverse withdrawal payment product', { tag: ['@lite'] }, async () => {
-        const product = await apiUtils.checkProductExistence('Reverse Withdrawal Payment', payloads.adminAuth);
+        let product = await apiUtils.checkProductExistence('Reverse Withdrawal Payment', payloads.adminAuth);
         if (!product) {
             console.log("Reverse Withdrawal Payment product doesn't exists!!");
             const [, reverseWithdrawalPaymentProduct] = await apiUtils.createProduct(payloads.reverseWithdrawalPaymentProduct, payloads.adminAuth);
             await dbUtils.setOptionValue(dbData.dokan.paymentProducts.reverseWithdraw, reverseWithdrawalPaymentProduct, false);
+            product = await apiUtils.checkProductExistence('Reverse Withdrawal Payment', payloads.adminAuth);
         }
-    });
-
-    setup('reverse Withdraw payment product exists', { tag: ['@lite'] }, async () => {
-        const product = await apiUtils.checkProductExistence('Reverse Withdrawal Payment', payloads.adminAuth);
         expect(product).toBeTruthy();
     });
 
     setup('recreate product advertisement payment product', { tag: ['@pro'] }, async () => {
         setup.skip(!DOKAN_PRO, 'skip on lite');
-        const product = await apiUtils.checkProductExistence('Product Advertisement Payment', payloads.adminAuth);
+        let product = await apiUtils.checkProductExistence('Product Advertisement Payment', payloads.adminAuth);
         if (!product) {
             console.log("Product advertisement payment product doesn't exists!!");
             const [, productAdvertisementPaymentProduct] = await apiUtils.createProduct(payloads.productAdvertisementPaymentProduct, payloads.adminAuth);
             await dbUtils.setOptionValue(dbData.dokan.paymentProducts.ProductAdvertisement, productAdvertisementPaymentProduct, false);
+            product = await apiUtils.checkProductExistence('Product Advertisement Payment', payloads.adminAuth);
         }
-    });
-
-    setup('product advertisement payment product exists', { tag: ['@pro'] }, async () => {
-        setup.skip(!DOKAN_PRO, 'skip on lite');
-        const product = await apiUtils.checkProductExistence('Product Advertisement Payment', payloads.adminAuth);
-        expect(product).toBeTruthy();
-    });
-});
-
-setup.describe.skip('setup dokan settings e2e', () => {
-    let productAdvertisingPage: ProductAdvertisingPage;
-    let reverseWithdrawsPage: ReverseWithdrawsPage;
-    let aPage: Page;
-    let apiUtils: ApiUtils;
-
-    setup.beforeAll(async ({ browser }) => {
-        const adminContext = await browser.newContext(data.auth.adminAuth);
-        aPage = await adminContext.newPage();
-        productAdvertisingPage = new ProductAdvertisingPage(aPage);
-        reverseWithdrawsPage = new ReverseWithdrawsPage(aPage);
-
-        apiUtils = new ApiUtils(await request.newContext());
-    });
-
-    setup.afterAll(async () => {
-        await aPage.close();
-        await apiUtils.dispose();
-    });
-
-    setup('authenticate admin', { tag: ['@lite'] }, async ({ page }) => {
-        const loginPage = new LoginPage(page);
-        await loginPage.adminLogin(data.admin, data.auth.adminAuthFile);
-    });
-
-    setup('recreate reverse withdrawal payment product via settings save', { tag: ['@lite'] }, async () => {
-        await reverseWithdrawsPage.reCreateReverseWithdrawalPaymentViaSettingsSave();
-    });
-
-    setup('reverse Withdraw payment product exists', { tag: ['@lite'] }, async () => {
-        const product = await apiUtils.checkProductExistence('Reverse Withdrawal Payment', payloads.adminAuth);
-        expect(product).toBeTruthy();
-    });
-
-    setup('recreate product advertisement payment product via settings save', { tag: ['@pro'] }, async () => {
-        setup.skip(!DOKAN_PRO, 'skip on lite');
-        await productAdvertisingPage.recreateProductAdvertisementPaymentViaSettingsSave();
-    });
-
-    setup('product advertisement payment product exists', { tag: ['@pro'] }, async () => {
-        setup.skip(!DOKAN_PRO, 'skip on lite');
-        const product = await apiUtils.checkProductExistence('Product Advertisement Payment', payloads.adminAuth);
         expect(product).toBeTruthy();
     });
 });

@@ -78,6 +78,18 @@ export const dbUtils = {
         return [currentMetaValue, newMetaValue];
     },
 
+    // insert option value
+    async insertOptionValue(optionName: string, optionValue: object | string, serializeData: boolean = true): Promise<any> {
+        optionValue = serializeData ? serialize(optionValue) : optionValue;
+        const query = `
+                INSERT INTO ${dbPrefix}_options (option_id, option_name, option_value, autoload)
+                VALUES (NULL, '${optionName}', '${optionValue}', 'yes')
+                ON DUPLICATE KEY UPDATE option_value = '${optionValue}';
+            `;
+        const res = await dbUtils.dbQuery(query);
+        return res;
+    },
+
     // get option value
     async getOptionValue(optionName: string): Promise<any> {
         const query = `Select option_value FROM ${dbPrefix}_options WHERE option_name = '${optionName}';`;
@@ -89,29 +101,17 @@ export const dbUtils = {
     // set option value
     async setOptionValue(optionName: string, optionValue: object | string, serializeData: boolean = true): Promise<any> {
         optionValue = serializeData ? serialize(optionValue) : optionValue;
-        const query = `
-            INSERT INTO ${dbPrefix}_options (option_id, option_name, option_value, autoload)
-            VALUES (NULL, '${optionName}', '${optionValue}', 'yes')
-            ON DUPLICATE KEY UPDATE option_value = '${optionValue}';
-        `;
-        const res = await dbUtils.dbQuery(query);
-        return res;
-    },
-
-    // update option value
-    async updateOptionValue(optionName: string, optionValue: object | string, serializeData?: boolean): Promise<any> {
-        optionValue = serializeData ? serialize(optionValue) : optionValue;
         const query = `UPDATE ${dbPrefix}_options SET option_value = '${optionValue}' WHERE option_name = '${optionName}';`;
         const res = await dbUtils.dbQuery(query);
         return res;
     },
 
     // update dokan settings
-    async updateDokanSettings(optionName: string, updatedSettings: object): Promise<[object, object]> {
+    async updateOptionValue(optionName: string, updatedSettings: object | string, serializeData?: boolean): Promise<[any, any]> {
         const currentSettings = await this.getOptionValue(optionName);
-        const newSettings = helpers.deepMergeObjects(currentSettings, updatedSettings);
+        const newSettings = typeof updatedSettings === 'object' ? helpers.deepMergeObjects(currentSettings, updatedSettings) : updatedSettings;
         // console.log('newSettings:', newSettings);
-        await this.setOptionValue(optionName, newSettings);
+        await this.setOptionValue(optionName, newSettings, serializeData);
         return [currentSettings, newSettings];
     },
 

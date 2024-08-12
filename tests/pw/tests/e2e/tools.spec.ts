@@ -31,7 +31,7 @@ test.describe('Tools test', () => {
 
     test('admin can perform Dokan page installation', { tag: ['@pro', '@admin'] }, async () => {
         await dbUtils.updateOptionValue('dokan_pages_created', '0');
-        await admin.dokanPageInstallation(); 
+        await admin.dokanPageInstallation();
     });
 
     test('admin can regenerate order commission', { tag: ['@pro', '@admin'] }, async () => {
