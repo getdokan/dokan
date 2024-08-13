@@ -24,7 +24,5 @@ class WcDataStore extends OrdersStateDataStore {
 		$this->interval_query = new WcSqlQuery( $this->context . '_interval' );
 		$this->interval_query->add_sql_clause( 'from', self::get_db_table_name() );
 		$this->interval_query->add_sql_clause( 'group_by', 'time_interval' );
-
-		error_log( 'Orders stats data store' );
 	}
 }
