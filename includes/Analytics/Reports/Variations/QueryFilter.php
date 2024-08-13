@@ -24,7 +24,6 @@ class QueryFilter extends BaseQueryFilter {
      * @return void
      */
     public function register_hooks(): void {
-        //woocommerce_analytics_clauses_
         // add_filter( 'woocommerce_analytics_clauses_join_products', [ $this, 'add_join_subquery' ] );
         add_filter( 'woocommerce_analytics_clauses_join_variations_subquery', [ $this, 'add_join_subquery' ] );
         add_filter( 'woocommerce_analytics_clauses_where_variations_subquery', [ $this, 'add_where_subquery' ], 30 );

@@ -4,54 +4,76 @@ namespace WeDevs\Dokan\Analytics\Reports;
 
 use WC_Order_Refund;
 
+/**
+ * Class OrderType
+ *
+ * Defines constants and methods to handle different types of Dokan orders and refunds.
+ *
+ * @package WeDevs\Dokan\Analytics\Reports
+ */
 class OrderType {
-	public const WC_ORDER = 0;
-	public const DOKAN_SINGLE_ORDER = 1;
-	public const DOKAN_SUBORDER = 2;
-	public const WC_ORDER_REFUND = 3;
-	public const DOKAN_SUBORDER_REFUND = 4;
-	public const DOKAN_SINGLE_ORDER_REFUND = 5;
+    // Order type constants
+    public const DOKAN_PARENT_ORDER = 0;
+    public const DOKAN_SINGLE_ORDER = 1;
+    public const DOKAN_SUBORDER = 2;
+    public const DOKAN_PARENT_ORDER_REFUND = 3;
+    public const DOKAN_SUBORDER_REFUND = 4;
+    public const DOKAN_SINGLE_ORDER_REFUND = 5;
 
-	public function is_dokan_suborder_related( \WC_Abstract_Order $order ) {
-		if ( ! $order->get_parent_id() ) {
-			return false;
-		}
+    /**
+     * Checks if the given order is related to a Dokan suborder.
+     *
+     * @param \WC_Abstract_Order $order The order object to check.
+     *
+     * @return bool True if the order is a Dokan suborder or related to one, false otherwise.
+     */
+    public function is_dokan_suborder_related( \WC_Abstract_Order $order ): bool {
+        if ( ! $order->get_parent_id() ) {
+            return false;
+        }
 
-		if ( $order instanceof \WC_Order ) {
-			return true;
-		}
+        if ( $order instanceof \WC_Order ) {
+            return true;
+        }
 
-		$parent_order = wc_get_order( $order->get_parent_id() );
+        $parent_order = wc_get_order( $order->get_parent_id() );
 
-		return $this->is_dokan_suborder_related( $parent_order );
-	}
+        return $this->is_dokan_suborder_related( $parent_order );
+    }
 
-	public function get_type( \WC_Abstract_Order $order ) {
-		$is_suborder_related = self::is_dokan_suborder_related( $order );
+    /**
+     * Determines the type of the given order based on its relation to Dokan suborders and refunds.
+     *
+     * @param \WC_Abstract_Order $order The order object to classify.
+     *
+     * @return int The order type constant.
+     */
+    public function get_type( \WC_Abstract_Order $order ): int {
+        $is_suborder_related = $this->is_dokan_suborder_related( $order );
 
-		if ( $is_suborder_related ) {
+        if ( $is_suborder_related ) {
             // Refund of Dokan suborder.
             if ( $order instanceof WC_Order_Refund ) {
                 return self::DOKAN_SUBORDER_REFUND;
             }
 
-		    // Dokan Suborder
-			return self::DOKAN_SUBORDER;
-		}
+            // Dokan Suborder
+            return self::DOKAN_SUBORDER;
+        }
 
-		if ( ! $is_suborder_related ) {
-		    // Refund of WC order.
+        if ( ! $is_suborder_related ) {
+            // Refund of WC order.
             if ( $order instanceof WC_Order_Refund ) {
                 $suborder_ids = array_filter(
                     (array) dokan_get_suborder_ids_by( $order->get_parent_id() )
                 );
 
                 if ( count( $suborder_ids ) ) {
-					return self::WC_ORDER_REFUND;
+                    return self::DOKAN_PARENT_ORDER_REFUND;
                 }
 
                 return self::DOKAN_SINGLE_ORDER_REFUND;
-			}
+            }
 
             $suborder_ids = dokan_get_suborder_ids_by( $order->get_id() );
 
@@ -59,21 +81,31 @@ class OrderType {
             if ( $suborder_ids === null || ( is_array( $suborder_ids ) && count( $suborder_ids ) === 0 ) ) {
                 return self::DOKAN_SINGLE_ORDER;
             }
-		}
+        }
 
-		return self::WC_ORDER;
-	}
+        return self::DOKAN_PARENT_ORDER;
+    }
 
-    public function get_types_for_admin(): array {
+    /**
+     * Gets the list of order types relevant to admin users.
+     *
+     * @return array List of admin order type constants.
+     */
+    public function get_admin_order_types(): array {
         return [
-            self::WC_ORDER,
+            self::DOKAN_PARENT_ORDER,
             self::DOKAN_SINGLE_ORDER,
-            self::WC_ORDER_REFUND,
+            self::DOKAN_PARENT_ORDER_REFUND,
             self::DOKAN_SINGLE_ORDER_REFUND,
         ];
     }
 
-    public function get_types_for_seller(): array {
+    /**
+     * Gets the list of order types relevant to sellers.
+     *
+     * @return array List of seller order type constants.
+     */
+    public function get_seller_order_types(): array {
         return [
             self::DOKAN_SINGLE_ORDER,
             self::DOKAN_SUBORDER,
@@ -82,24 +114,63 @@ class OrderType {
         ];
     }
 
+    /**
+     * Gets the list of order types (excluding refunds) relevant to admin users.
+     *
+     * @return array List of admin order type constants (non-refund).
+     */
+    public function get_admin_non_refund_order_types(): array {
+        return [
+            self::DOKAN_PARENT_ORDER,
+            self::DOKAN_SINGLE_ORDER,
+        ];
+    }
+
+    /**
+     * Gets the list of order types (excluding refunds) relevant to sellers.
+     *
+     * @return array List of seller order type constants (non-refund).
+     */
+    public function get_seller_non_refund_order_types(): array {
+        return [
+            self::DOKAN_SINGLE_ORDER,
+            self::DOKAN_SUBORDER,
+        ];
+    }
+
+    /**
+     * Gets the list of refund types relevant to all users.
+     *
+     * @return array List of refund type constants.
+     */
     public function get_refund_types(): array {
         return [
-            self::WC_ORDER_REFUND,
+            self::DOKAN_PARENT_ORDER_REFUND,
             self::DOKAN_SUBORDER_REFUND,
             self::DOKAN_SINGLE_ORDER_REFUND,
         ];
     }
 
-    public function get_refund_types_for_seller() {
+    /**
+     * Gets the list of refund types relevant to sellers.
+     *
+     * @return array List of seller refund type constants.
+     */
+    public function get_seller_refund_types(): array {
         return [
             self::DOKAN_SUBORDER_REFUND,
             self::DOKAN_SINGLE_ORDER_REFUND,
         ];
     }
 
-    public function get_refund_types_for_admin() {
+    /**
+     * Gets the list of refund types relevant to admin users.
+     *
+     * @return array List of admin refund type constants.
+     */
+    public function get_admin_refund_types(): array {
         return [
-            self::WC_ORDER_REFUND,
+            self::DOKAN_PARENT_ORDER_REFUND,
             self::DOKAN_SINGLE_ORDER_REFUND,
         ];
     }

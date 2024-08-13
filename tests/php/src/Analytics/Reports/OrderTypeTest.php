@@ -37,7 +37,7 @@ class OrderTypeTest extends ReportTestCase {
         $parent_id = $this->create_multi_vendor_order();
         $parent_order = wc_get_order( $parent_id );
 
-        $this->assertEquals( $this->sut::WC_ORDER, $this->sut->get_type( $parent_order ) );
+        $this->assertEquals( $this->sut::DOKAN_PARENT_ORDER, $this->sut->get_type( $parent_order ) );
 
         $sub_order_ids = dokan_get_suborder_ids_by( $parent_id );
 
@@ -77,7 +77,7 @@ class OrderTypeTest extends ReportTestCase {
 
         $refund = $this->create_refund( $parent_id );
 
-        $this->assertEquals( $this->sut::WC_ORDER_REFUND, $this->sut->get_type( $refund ) );
+        $this->assertEquals( $this->sut::DOKAN_PARENT_ORDER_REFUND, $this->sut->get_type( $refund ) );
     }
 
     public function test_order_type_for_dokan_single_order_refund() {

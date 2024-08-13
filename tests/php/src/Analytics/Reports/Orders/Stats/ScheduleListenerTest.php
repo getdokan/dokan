@@ -62,7 +62,7 @@ class ScheduleListenerTest extends DokanTestCase {
 		$this->assertDatabaseCount(
             $dokan_order_stats_table, 1, [
 				'order_id' => $order_id,
-				'order_type' => OrderType::WC_ORDER,
+				'order_type' => OrderType::DOKAN_PARENT_ORDER,
 			]
         );
 
