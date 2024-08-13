@@ -76,6 +76,7 @@ abstract class DokanTestCase extends WP_UnitTestCase {
 
     /**
      * Setup a REST server for test.
+     * @see https://make.wordpress.org/core/handbook/testing/automated-testing/writing-phpunit-tests/#shared-fixtures
      *
      * @return void
      */
@@ -99,6 +100,7 @@ abstract class DokanTestCase extends WP_UnitTestCase {
 
     /**
      * Tear down the test case.
+     * @see https://make.wordpress.org/core/handbook/testing/automated-testing/writing-phpunit-tests/#shared-fixtures
      *
      * @return void
      */
