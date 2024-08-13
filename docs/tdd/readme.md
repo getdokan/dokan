@@ -7,6 +7,7 @@
 - [Factories](./factories.md)
 - [Why Not Latest PHPUnit](#why-not-latest-phpunit)
 - [Woocommerce Developer Blog](https://developer.woocommerce.com/testing-extensions-and-maintaining-quality-code/setting-up-a-local-environment-for-testing/)
+- [Wordpress Writing PHP Tests](https://make.wordpress.org/core/handbook/testing/automated-testing/writing-phpunit-tests/)
 - [Get Started](./get-started.md)
 - [Mocking](./mocking.md)
 
