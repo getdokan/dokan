@@ -8,7 +8,7 @@ import { helpers } from '@utils/helpers';
 
 const { DOKAN_PRO } = process.env;
 
-setup.describe('setup site & woocommerce & dokan settings', () => {
+setup.describe('setup woocommerce settings', () => {
     setup.use({ extraHTTPHeaders: payloads.adminAuth });
 
     let apiUtils: ApiUtils;
@@ -19,11 +19,6 @@ setup.describe('setup site & woocommerce & dokan settings', () => {
 
     setup.afterAll(async () => {
         await apiUtils.dispose();
-    });
-
-    setup('set site general settings', { tag: ['@lite'] }, async () => {
-        const siteSettings = await apiUtils.setSiteSettings(payloads.siteSettings);
-        expect(siteSettings).toEqual(expect.objectContaining(payloads.siteSettings));
     });
 
     setup('set woocommerce settings', { tag: ['@lite'] }, async () => {
@@ -118,7 +113,7 @@ setup.describe('setup site & woocommerce & dokan settings', () => {
 });
 
 setup.describe('setup user settings', () => {
-    setup.use({ extraHTTPHeaders: { Authorization: payloads.adminAuth.Authorization } });
+    setup.use({ extraHTTPHeaders: payloads.adminAuth });
 
     let apiUtils: ApiUtils;
 
@@ -147,7 +142,7 @@ setup.describe('setup user settings', () => {
         helpers.createEnvVar('PRODUCT_ID_V2', productId);
     });
 
-    setup('add vendor coupon', { tag: ['@pro'] }, async () => {
+    setup('add vendor1 coupon', { tag: ['@pro'] }, async () => {
         setup.skip(!DOKAN_PRO, 'skip on lite');
         // create store coupon
         const allProductIds = (await apiUtils.getAllProducts(payloads.vendorAuth)).map((o: { id: string }) => o.id);
@@ -280,9 +275,10 @@ setup.describe('setup dokan payment products', () => {
             const [, reverseWithdrawalPaymentProduct] = await apiUtils.createProduct(payloads.reverseWithdrawalPaymentProduct, payloads.adminAuth);
             await dbUtils.setOptionValue(dbData.dokan.paymentProducts.reverseWithdraw, reverseWithdrawalPaymentProduct, false);
             product = await apiUtils.checkProductExistence('Reverse Withdrawal Payment', payloads.adminAuth);
+            expect(product).toBeTruthy();
+            console.log('Recreated reverse withdrawal payment product');
         }
         expect(product).toBeTruthy();
-        console.log('Recreated reverse withdrawal payment product');
     });
 
     setup('recreate product advertisement payment product', { tag: ['@pro'] }, async () => {
@@ -293,8 +289,9 @@ setup.describe('setup dokan payment products', () => {
             const [, productAdvertisementPaymentProduct] = await apiUtils.createProduct(payloads.productAdvertisementPaymentProduct, payloads.adminAuth);
             await dbUtils.setOptionValue(dbData.dokan.paymentProducts.ProductAdvertisement, productAdvertisementPaymentProduct, false);
             product = await apiUtils.checkProductExistence('Product Advertisement Payment', payloads.adminAuth);
+            expect(product).toBeTruthy();
+            console.log('Recreated advertisement payment product');
         }
         expect(product).toBeTruthy();
-        console.log('Recreated advertisement payment product');
     });
 });

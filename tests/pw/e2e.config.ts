@@ -114,13 +114,13 @@ export default defineConfig({
         // site_setup
         {
             name: 'site_setup',
-            testMatch: '_site.setup.ts',
+            testMatch: ['_site.setup.ts'],
         },
 
         // auth_setup
         {
             name: 'auth_setup',
-            testMatch: '_auth.setup.ts',
+            testMatch: ['_auth.setup.ts'],
             dependencies: NO_SETUP ? [] : ['site_setup'],
         },
 
@@ -128,8 +128,7 @@ export default defineConfig({
         {
             name: 'e2e_setup',
             // testMatch: /.*\.setup\.ts/,
-            testMatch: '_env.setup.ts',
-            /* whether not to run setup tests before running actual tests */
+            testMatch: ['_env.setup.ts'],
             dependencies: NO_SETUP ? [] : ['auth_setup'],
         },
 
@@ -148,7 +147,13 @@ export default defineConfig({
         // coverage_report
         {
             name: 'coverage_report',
-            testMatch: '_coverage.teardown.ts',
+            testMatch: ['_coverage.teardown.ts'],
+        },
+
+        // global_teardown
+        {
+            name: 'global_teardown',
+            testMatch: ['global-teardown.ts'],
         },
     ],
 });

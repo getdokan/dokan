@@ -5,7 +5,7 @@ import { payloads } from '@utils/payloads';
 import { data } from '@utils/testData';
 import { helpers } from '@utils/helpers';
 
-setup.describe('authenticate users', () => {
+setup.describe('add & authenticate users', () => {
     let apiUtils: ApiUtils;
 
     setup.beforeAll(async () => {
