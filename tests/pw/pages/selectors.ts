@@ -4120,14 +4120,14 @@ export const selector = {
                 createNewShipment: '#create-tracking-status-action',
                 shipmentOrderItem: (productName: string) => `//div[@id="dokan-order-shipping-status-tracking-panel"]//td//a[contains( text(),"${productName}")]/../..//input[@name="shipment_order_item_select"]`,
                 shipmentOrderItemQty: (productName: string) => `//div[@id="dokan-order-shipping-status-tracking-panel"]//td//a[contains( text(),"${productName}")]/../..//input[@class="shipping_order_item_qty"]`,
-                shippingStatus: '#shipping_status', // ss_delivered, ss_cancelled, ss_proceccing, ss_ready_for_pickup, ss_pickedup, ss_on_the_way
-                shippingProvider: '#shipping_status_provider', // sp-dhl, sp-dpd, sp-fedex, sp-polish-shipping-providers, sp-ups, sp-usps, sp-other
-                dateShipped: '#shipped_status_date',
-                trackingNumber: '#tracking_status_number',
-                comments: '#tracking_status_comments',
-                notifyCustomer: '#shipped_status_is_notify',
-                createShipment: '#add-tracking-status-details',
-                cancelCreateShipment: '#cancel-tracking-status-details',
+                shippingStatus: 'select#shipment-status', // ss_delivered, ss_cancelled, ss_proceccing, ss_ready_for_pickup, ss_pickedup, ss_on_the_way
+                shippingProvider: 'select#shipping_status_provider', // sp-dhl, sp-dpd, sp-fedex, sp-polish-shipping-providers, sp-ups, sp-usps, sp-other
+                dateShipped: 'input#shipped_status_date',
+                trackingNumber: 'input#tracking_status_number',
+                comments: 'textarea#tracking_status_comments',
+                notifyCustomer: 'input#shipped_status_is_notify',
+                createShipment: 'input#add-tracking-status-details',
+                cancelCreateShipment: 'input#cancel-tracking-status-details',
             },
 
             // downloadable product permission
@@ -6186,9 +6186,9 @@ export const selector = {
             },
 
             // Zone-wise Shipping Settings
-            ZonWiseAddShippingMethod: (zone: string) => `//a[contains(text(),'${zone}')]/../..//a[contains(text(),'Add Shipping Method')]`,
-            shippingZoneCell: (shippingZone: string) => `//a[contains(text(), '${shippingZone}')]/..`,
-            editShippingZone: (shippingZone: string) => `//a[contains(text(), '${shippingZone}')]/..//div//a[contains(text(), 'Edit')]`,
+            zonWiseAddShippingMethod: (zone: string) => `//a[normalize-space()='${zone}']/../..//a[contains(text(),'Add Shipping Method')]`,
+            shippingZoneCell: (shippingZone: string) => `//a[normalize-space()='${shippingZone}']/..`,
+            editShippingZone: (shippingZone: string) => `//a[normalize-space()='${shippingZone}']/..//div//a[contains(text(), 'Edit')]`,
             addShippingMethod: '//a[contains(text(),"Add Shipping Method")]',
             shippingMethod: '#shipping_method',
             shippingMethodPopupAddShippingMethod: '.button.button-primary.button-large',

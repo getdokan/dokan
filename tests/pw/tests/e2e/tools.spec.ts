@@ -30,7 +30,7 @@ test.describe('Tools test', () => {
     });
 
     test('admin can perform Dokan page installation', { tag: ['@pro', '@admin'] }, async () => {
-        await dbUtils.updateOptionValue('dokan_pages_created', '0');
+        await dbUtils.setOptionValue('dokan_pages_created', '0', false);
         await admin.dokanPageInstallation();
     });
 
@@ -50,7 +50,7 @@ test.describe('Tools test', () => {
         await admin.regenerateVariableProductVariationsAuthorIds();
     });
 
-    test('admin can import dummy data', { tag: ['@pro'] }, async () => {
+    test('admin can import dummy data', { tag: ['@pro', '@admin'] }, async () => {
         await apiUtils.clearDummyData(payloads.adminAuth);
         await admin.importDummyData();
     });

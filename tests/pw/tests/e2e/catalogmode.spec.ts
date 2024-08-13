@@ -11,7 +11,7 @@ import { dbData } from '@utils/dbData';
 import { ShopPage } from '@pages/shopPage';
 import { SingleStorePage } from '@pages/singleStorePage';
 
-test.describe('Catalogmode test', () => {
+test.describe('Catalog mode test', () => {
     let admin: CatalogModePage;
     let vendor: CatalogModePage;
     let customer: CatalogModePage;

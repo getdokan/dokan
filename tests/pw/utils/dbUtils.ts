@@ -67,7 +67,7 @@ export const dbUtils = {
     },
 
     // update user meta
-    async updateUserMeta(userId: string, metaKey: string, updatedMetaValue: any, serializeData?: boolean): Promise<[object, object]> {
+    async updateUserMeta(userId: string, metaKey: string, updatedMetaValue: any, serializeData: boolean = true): Promise<[object, object]> {
         const currentMetaValue = await this.getUserMeta(userId, metaKey);
         const newMetaValue = typeof updatedMetaValue === 'object' ? helpers.deepMergeObjects(currentMetaValue, updatedMetaValue) : updatedMetaValue;
         await this.setUserMeta(userId, metaKey, newMetaValue, serializeData);

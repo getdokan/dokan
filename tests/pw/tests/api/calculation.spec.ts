@@ -8,7 +8,7 @@ import { commission, feeRecipient } from '@utils/interfaces';
 
 const { DOKAN_PRO } = process.env;
 
-test.use({ extraHTTPHeaders: { Authorization: payloads.adminAuth.Authorization } });
+test.use({ extraHTTPHeaders: payloads.adminAuth });
 
 test.describe('calculation test', () => {
     let apiUtils: ApiUtils;

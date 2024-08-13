@@ -96,7 +96,7 @@ setup.describe('site setup', () => {
     });
 
     setup('set site general settings', { tag: ['@lite'] }, async () => {
-        const siteSettings = await apiUtils.setSiteSettings(payloads.siteSettings);
+        const siteSettings = await apiUtils.setSiteSettings(payloads.siteSettings, payloads.adminAuth);
         expect(siteSettings).toEqual(expect.objectContaining(payloads.siteSettings));
     });
 
