@@ -651,22 +651,15 @@ class Ajax {
             wp_die();
         }
 
-        $ids = dokan_search_seller_products( $term, $user_ids, '', true );
+        $product_objects = dokan()->product->get_linked_products(
+            $term,
+            $user_ids,
+            $_GET['exclude'] ?? '', // phpcs:ignore Squiz.WhiteSpace.SuperfluousWhitespace.EndLine, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+            $_GET['include'] ?? '', // phpcs:ignore Squiz.WhiteSpace.SuperfluousWhitespace.EndLine, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+            $_GET['limit'] ?? 0 // phpcs:ignore Squiz.WhiteSpace.SuperfluousWhitespace.EndLine, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+        );
 
-        if ( ! empty( $_GET['exclude'] ) ) {
-            $ids = array_diff( $ids, (array) sanitize_text_field( wp_unslash( $_GET['exclude'] ) ) );
-        }
-
-        if ( ! empty( $_GET['include'] ) ) {
-            $ids = array_intersect( $ids, (array) sanitize_text_field( wp_unslash( $_GET['include'] ) ) );
-        }
-
-        if ( ! empty( $_GET['limit'] ) ) {
-            $ids = array_slice( $ids, 0, absint( $_GET['limit'] ) );
-        }
-
-        $product_objects = array_filter( array_map( 'wc_get_product', $ids ), 'dokan_products_array_filter_editable' );
-        $products        = [];
+        $products = [];
 
         foreach ( $product_objects as $product_object ) {
             $products[ $product_object->get_id() ] = rawurldecode( $product_object->get_formatted_name() );
