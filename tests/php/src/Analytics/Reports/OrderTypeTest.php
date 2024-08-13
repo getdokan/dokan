@@ -5,6 +5,9 @@ namespace WeDevs\Dokan\Test\Analytics\Reports;
 use Exception;
 use WeDevs\Dokan\Analytics\Reports\OrderType;
 
+/**
+ * @group analytics
+ */
 class OrderTypeTest extends ReportTestCase {
     /**
      * System under test

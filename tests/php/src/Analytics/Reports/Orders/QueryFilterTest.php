@@ -7,6 +7,7 @@ use WeDevs\Dokan\Test\Analytics\Reports\ReportTestCase;
 
 /**
  * Class OrderStatsTest
+ * @group analytics
  *
  * Unit tests for Order statistics in the Dokan plugin.
  */

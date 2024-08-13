@@ -7,6 +7,9 @@ use WeDevs\Dokan\Analytics\Reports\Orders\Stats\ScheduleListener;
 use WeDevs\Dokan\Analytics\Reports\OrderType;
 use WeDevs\Dokan\Test\DokanTestCase;
 
+/**
+ * @group analytics
+ */
 class ScheduleListenerTest extends DokanTestCase {
     public function test_woocommerce_analytics_update_order_stats_hook_is_registered() {
         $order_stats_table_listener = dokan_get_container()->get( ScheduleListener::class );
