@@ -1,25 +1,20 @@
 import { test, Page } from '@playwright/test';
 import { VendorShippingPage } from '@pages/vendorShippingPage';
-// import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
-// import { payloads } from '@utils/payloads';
 
 test.describe('Vendor shipping test', () => {
     let vendor: VendorShippingPage;
     let vPage: Page;
-    // let apiUtils: ApiUtils;
 
     test.beforeAll(async ({ browser }) => {
         const vendorContext = await browser.newContext(data.auth.vendorAuth);
         vPage = await vendorContext.newPage();
         vendor = new VendorShippingPage(vPage);
 
-        // apiUtils = new ApiUtils(await request.newContext());
     });
 
     test.afterAll(async () => {
         await vPage.close();
-        // await apiUtils.dispose();
     });
 
     //vendor
@@ -58,7 +53,7 @@ test.describe('Vendor shipping test', () => {
     });
 
     test('vendor can delete shipping method', { tag: ['@pro', '@vendor'] }, async () => {
-        await vendor.addShippingMethod(data.vendor.shipping.shippingMethods.flatRate, true, true); // todo: add with api v2 settings group
+        await vendor.addShippingMethod(data.vendor.shipping.shippingMethods.flatRate, true, true); 
         await vendor.deleteShippingMethod(data.vendor.shipping.shippingMethods.flatRate);
     });
 });

@@ -1371,6 +1371,7 @@ export class BasePage {
     toBeEqual(received: any, expected: any) {
         expect(received).toEqual(expected);
     }
+    
     // assert element to be visible
     async toBeVisible(selector: string) {
         await expect(this.page.locator(selector)).toBeVisible();
