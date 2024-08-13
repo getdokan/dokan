@@ -42,6 +42,8 @@ test.describe('setup local site', () => {
         test.slow();
         await helpers.exeCommand(data.commands.makePath(`${SITE_PATH}/plugins`));
 
+        await helpers.exeCommand(data.commands.deleteFolder(`${SITE_PATH}/wp-content/plugins/dokan`));
+
         console.log('Start: Cloning dokan');
         await helpers.exeCommand(data.commands.cloneDokanLite(`${SITE_PATH}/wp-content/plugins`));
         console.log('Success: Cloning dokan done');
@@ -56,6 +58,8 @@ test.describe('setup local site', () => {
     test('install plugin (dokan-pro)', { tag: ['@pro'] }, async () => {
         test.slow();
         await helpers.exeCommand(data.commands.makePath(`${SITE_PATH}/plugins`));
+
+        await helpers.exeCommand(data.commands.deleteFolder(`${SITE_PATH}/wp-content/plugins/dokan-pro`));
 
         console.log('Start: Cloning dokan pro');
         await helpers.exeCommand(data.commands.cloneDokanPro(`${SITE_PATH}/wp-content/plugins`));

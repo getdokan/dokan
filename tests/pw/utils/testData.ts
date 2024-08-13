@@ -1,6 +1,7 @@
 import { faker } from '@faker-js/faker';
 import { helpers } from '@utils/helpers';
 import 'dotenv/config';
+import path from 'path';
 const {
     ADMIN,
     ADMIN_PASSWORD,
@@ -2416,6 +2417,7 @@ export const data = {
             rewritePermalink: `wp rewrite structure /%postname%/`,
         },
         makePath: (path: string) => `mkdir -p ${path}`,
+        deleteFolder: (path: string) => `rm -rf ${path}`,
         removeLiteRequired: `cd ${SITE_PATH}/wp-content/plugins/dokan-pro && sed -i '''' '''s/Requires Plugins: woocommerce, dokan-lite/Requires Plugins: woocommerce, dokan/''' dokan-pro.php`,
         cloneBasicAuth: (path: string) => `cd ${path} && git clone https://github.com/WP-API/Basic-Auth.git`,
         cloneDokanLite: (path: string) => `cd ${path} && git clone -b develop https://github.com/getdokan/dokan.git`,
