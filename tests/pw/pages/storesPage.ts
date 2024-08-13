@@ -257,7 +257,7 @@ export class StoresPage extends AdminPage {
             await this.clearAndType(vendors.editVendor.firstName, vendor.username);
             await this.clearAndType(vendors.editVendor.lastName, vendor.lastname);
             await this.clearAndType(vendors.editVendor.storeName, vendor.vendorInfo.storeName);
-            await this.clearAndType(vendors.editVendor.phoneNumber, vendor.vendorInfo.phone); // todo:  change input after fix
+            await this.clearAndType(vendors.editVendor.phoneNumber, vendor.vendorInfo.phone);
             await this.clearAndType(vendors.editVendor.email, vendor.username + data.vendor.vendorInfo.emailDomain);
             if (DOKAN_PRO) {
                 await this.clearAndType(vendors.editVendor.companyName, vendor.vendorInfo.companyName);

@@ -50,8 +50,8 @@ test.describe('Tools test', () => {
         await admin.regenerateVariableProductVariationsAuthorIds();
     });
 
-    test.skip('admin can import dummy data', { tag: ['@pro'] }, async () => {
-        // todo: need to fix
+    test('admin can import dummy data', { tag: ['@pro'] }, async () => {
+        await apiUtils.clearDummyData(payloads.adminAuth);
         await admin.importDummyData();
     });
 

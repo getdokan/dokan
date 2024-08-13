@@ -375,7 +375,7 @@ export class CustomerPage extends BasePage {
 
     // place order
     async paymentOrder(paymentMethod = 'bank'): Promise<string> {
-        //todo: refactor like place order after vendor subscription tests are merged
+        // todo: refactor like place order after vendor subscription tests are merged
         switch (paymentMethod) {
             case 'bank':
                 await this.click(customerCheckout.directBankTransfer);

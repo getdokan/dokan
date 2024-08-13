@@ -212,7 +212,7 @@ export class VendorVerificationsPage extends AdminPage {
 
     // update verification request
     async updateVerificationRequest(requestId: string, action: string): Promise<void> {
-        await this.goIfNotThere(data.subUrls.backend.dokan.verifications);
+        await this.goto(data.subUrls.backend.dokan.verifications);
         await this.reload();
         await this.reloadIfVisible(verificationsAdmin.filters.reset);
 

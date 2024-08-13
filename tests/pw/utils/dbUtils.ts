@@ -53,7 +53,7 @@ export const dbUtils = {
             WP_Term: function () {
                 return {};
             },
-        }); //todo: added to handle WP_Term error, test if it works for further cases
+        }); // todo: added to handle WP_Term error, test if it works for further cases
         return userMeta;
     },
 

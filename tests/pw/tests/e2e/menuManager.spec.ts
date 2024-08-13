@@ -59,7 +59,7 @@ test.describe('Menu Manager test', () => {
 
 // update menu switch status
 async function updateMenuStatusByDB(key: string, value: string) {
-    const menuManagerSettings = JSON.parse(JSON.stringify(dbData.dokan.menuManagerSettings)); //todo: might not needed, recheck this
+    const menuManagerSettings = JSON.parse(JSON.stringify(dbData.dokan.menuManagerSettings)); // todo: might not needed, recheck this
     menuManagerSettings.dashboard_menu_manager.left_menus[key as keyof typeof menuManagerSettings.dashboard_menu_manager.left_menus].is_switched_on = value;
     await dbUtils.setOptionValue(dbData.dokan.optionName.menuManager, menuManagerSettings);
 }

@@ -1012,6 +1012,7 @@ export const data = {
                 logs: 'dokan/v1/admin/logs',
                 announcements: 'dokan/v1/announcement',
                 dummyData: 'dokan/v1/dummy-data',
+                dummyDataImport: 'dokan/v1/dummy-data/import',
                 refunds: 'dokan/v1/refunds',
                 modules: 'dokan/v1/admin/modules',
                 storeReviews: 'dokan/v1/store-reviews',

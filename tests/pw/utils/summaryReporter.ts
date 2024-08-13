@@ -2,8 +2,6 @@ import { FullConfig, FullResult, Reporter, Suite, TestCase, TestError, TestResul
 import fs from 'fs';
 import path from 'path';
 
-// todo: add more features
-
 type TestResults = {
     [key: string]: string;
 };

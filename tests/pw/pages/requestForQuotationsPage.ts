@@ -124,13 +124,6 @@ export class RequestForQuotationsPage extends AdminPage {
 
         await this.check(requestForQuotationAdmin.quoteRules.bulkActions.selectAll);
 
-        // only to remove flakiness // todo: need different solution and make generic , don't work need custom solution
-        // const isDisabled = await this.hasAttribute(requestForQuotationAdmin.quoteRules.bulkActions.applyAction, 'disabled');
-        // if(isDisabled){
-        // 	await this.uncheck(requestForQuotationAdmin.quoteRules.bulkActions.selectAll);
-        // 	await this.check(requestForQuotationAdmin.quoteRules.bulkActions.selectAll);
-        // }
-
         await this.selectByValue(requestForQuotationAdmin.quoteRules.bulkActions.selectAction, action);
         await this.clickAndWaitForResponse(data.subUrls.api.dokan.quoteRules, requestForQuotationAdmin.quoteRules.bulkActions.applyAction);
     }
@@ -334,7 +327,7 @@ export class RequestForQuotationsPage extends AdminPage {
     // customer
 
     // customer request for quote render properly
-    async requestForQuoteRenderProperly(link: string) {
+    async requestForQuoteRenderProperly(link?: string) {
         if (link) {
             await this.goto(link);
         } else {

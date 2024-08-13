@@ -1675,7 +1675,7 @@ export const selector = {
                     cancelAfterEndOfCurrentPeriod: '//input[@value="end_of_current_period"]',
                     cancelSubscription: '.swal2-confirm',
                     dontCancelSubscription: 'swal2-cancel',
-                    cancelSuccessMessage: '//h2[contains(text(),"Subscription has been cancelled")]', //todo: update locator
+                    cancelSuccessMessage: '//h2[contains(text(),"Subscription has been cancelled")]', // todo: update locator
                 },
             },
 
@@ -7457,7 +7457,7 @@ export const selector = {
                 stateInput: '#billing-state input',
                 zipCode: '#billing-postcode',
                 phone: '#billing-phone',
-                //todo: add eu compliance fields locator after dokan implement it & also update test methods
+                // todo: add eu compliance fields locator after dokan implement it & also update test methods
                 // companyName: '#billing_company',
                 // companyIDOrEuidNumber: '#billing_dokan_company_id_number',
                 // vatOrTaxNumber: '#billing_dokan_vat_number',

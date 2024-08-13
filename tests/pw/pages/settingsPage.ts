@@ -388,7 +388,7 @@ export class SettingsPage extends AdminPage {
         await this.enableSwitcher(settingsAdmin.rma.enableCouponRequests);
 
         for (const rmaReason of rma.rmaReasons) {
-            await this.deleteIfExists(settingsAdmin.rma.reasonsForRmaSingle(rmaReason));
+            await this.clickIfVisible(settingsAdmin.rma.reasonsForRmaSingle(rmaReason));
             await this.clearAndType(settingsAdmin.rma.reasonsForRmaInput, rmaReason);
             await this.click(settingsAdmin.rma.reasonsForRmaAdd);
         }
@@ -522,7 +522,7 @@ export class SettingsPage extends AdminPage {
         await this.click(settingsAdmin.menus.productReportAbuse);
 
         // Product Report Abuse Settings
-        await this.deleteIfExists(settingsAdmin.productReportAbuse.reasonsForAbuseReportSingle(productReportAbuse.reasonsForAbuseReport));
+        await this.clickIfVisible(settingsAdmin.productReportAbuse.reasonsForAbuseReportSingle(productReportAbuse.reasonsForAbuseReport));
         await this.clearAndType(settingsAdmin.productReportAbuse.reasonsForAbuseReportInput, productReportAbuse.reasonsForAbuseReport);
         await this.click(settingsAdmin.productReportAbuse.reasonsForAbuseReportAdd);
 

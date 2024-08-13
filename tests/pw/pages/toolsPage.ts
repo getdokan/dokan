@@ -85,12 +85,10 @@ export class ToolsPage extends AdminPage {
     // import dummy data
     async importDummyData() {
         await this.goIfNotThere(data.subUrls.backend.dokan.tools);
-        await this.clickAndWaitForResponse(data.subUrls.api.dokan.dummyData, toolsAdmin.importDummyData.import);
-        // await this.clickAndWaitForResponse(data.subUrls.api.dokan.dummyData, selector.admin.dokan.dummyData.runTheImporter);
-        // todo:  wait for multiple request one after another
-        // const subUrls = [[data.subUrls.api.dokan.dummyData], [data.subUrls.api.dokan.dummyData], [data.subUrls.api.dokan.dummyData], [data.subUrls.api.dokan.dummyData], [data.subUrls.api.dokan.dummyData]];
-        // await this.clickAndWaitForResponses(subUrls, selector.admin.dokan.dummyData.runTheImporter);
-        // await this.toBeVisible(selector.admin.dokan.dummyData.importComplete);
+        await this.clickAndWaitForLoadState( toolsAdmin.importDummyData.import);
+        const urls = [data.subUrls.api.dokan.dummyDataImport, data.subUrls.api.dokan.dummyDataImport, data.subUrls.api.dokan.dummyDataImport, data.subUrls.api.dokan.dummyDataImport, data.subUrls.api.dokan.dummyDataImport];
+        await this.clickAndWaitForResponsesSequentially(urls, selector.admin.dokan.dummyData.runTheImporter);
+        await this.toBeVisible(selector.admin.dokan.dummyData.importComplete);
     }
 
     // test distance matrix API

@@ -251,7 +251,7 @@ export class ProductQAPage extends BasePage {
 
     // delete question
     async vendorDeleteQuestion(questionId: string): Promise<void> {
-        // todo: flaky --> Error: page.goto: net::ERR_ABORTED at ...
+        // todo: flaky --> Error: page.goto: net::ERR_ABORTED at ... (need to resolve race condition another goto url is envocked from the previous action)
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.questionDetails(questionId));
         await this.click(productQAVendor.questionDetails.status.deleteQuestion);
         await this.clickAndWaitForResponse(data.subUrls.ajax, productQAVendor.questionDetails.confirmAction);
