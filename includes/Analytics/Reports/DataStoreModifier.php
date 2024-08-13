@@ -2,7 +2,6 @@
 
 namespace WeDevs\Dokan\Analytics\Reports;
 
-use WeDevs\Dokan\Analytics\Reports\Products\Stats\WcDataStore;
 use WeDevs\Dokan\Contracts\Hookable;
 
 /**
@@ -35,7 +34,11 @@ class DataStoreModifier implements Hookable {
      */
 	public function modify_wc_products_stats_datastore( $wc_stores ) {
 		if ( isset( $wc_stores['report-products-stats'] ) ) {
-			$wc_stores['report-products-stats'] = WcDataStore::class;
+			$wc_stores['report-products-stats'] = \WeDevs\Dokan\Analytics\Reports\Products\Stats\WcDataStore::class;
+		}
+
+        if ( isset( $wc_stores['report-taxes-stats'] ) ) {
+			$wc_stores['report-taxes-stats'] = \WeDevs\Dokan\Analytics\Reports\Taxes\Stats\WcDataStore::class;
 		}
 
 		return $wc_stores;
