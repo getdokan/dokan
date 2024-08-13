@@ -7,6 +7,7 @@
     - [API Test](#api-test)
     - [AJAX Test](#ajax-test)
     - [Unit Test](#unit-test)
+    - [Grouping Test Cases](#grouping-test-cases-in-phpunit)
 - [Custom Assertion](#available-custom-assertion)
     - [Database Assertion](#database-assertion)
     - [Nested Array Assertion](#nested-array-assertion)
@@ -206,7 +207,59 @@ class SampleTest extends DokanTestCase {
     }
 }
 ```
+### Grouping Test Cases in PHPUnit
 
+Grouping test cases in PHPUnit allows you to organize and execute specific sets of tests conveniently. You can use the `@group` annotation to tag methods or entire classes with a group name. This makes it easier to run only the relevant test cases without executing the entire test suite.
+
+> In our case, We may group our test cases by `module-name`.
+
+#### How to Group Test Cases
+
+To group test cases, simply add the `@group your-group-name` annotation above your test method or class. Here's an example:
+
+```php
+<?php
+
+namespace WeDevs\Dokan\Test\Unit; // Unit test namespace.
+
+use WeDevs\Dokan\Test\DokanTestCase;
+
+/**
+ * @group my-module
+ */
+class SampleTest extends DokanTestCase {
+    /**
+     * Indicates if the test is a unit test.
+     *
+     * @var bool
+     */
+    protected $is_unit_test = true;
+
+    public function test_sample_method() {
+        // Your test cases.
+    }
+}
+```
+
+In this example, the `SampleTest` class is grouped under the `my-module` group.
+
+#### Running Grouped Test Cases
+
+To run test cases for a specific group, use the following command in your terminal:
+
+```bash
+./vendor/bin/phpunit --group my-module
+```
+
+This command will execute all the test cases tagged with the `my-module` group.
+
+#### Additional Resources
+
+For more detailed information on using groups in PHPUnit, refer to the official documentation:
+- [WordPress PHPUnit Docs](https://make.wordpress.org/core/handbook/testing/automated-testing/writing-phpunit-tests/#annotations)
+- [PHPUnit Annotations Documentation](https://docs.phpunit.de/en/9.6/annotations.html#group)
+
+This approach helps you organize your tests more efficiently, especially in larger projects where running the entire test suite might be time-consuming.
 ## Available Custom Assertion
 
 Since `WeDevs\Dokan\Test\DokanTestCase` class composes the [PHPUnit](https://docs.phpunit.de/en/9.6/), [Mockery](http://docs.mockery.io/en/latest/) and [Brain Monkey](https://giuseppe-mazzapica.gitbook.io/brain-monkey) so all methods of these packages are available in your test class. 
