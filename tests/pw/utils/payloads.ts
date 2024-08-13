@@ -3734,7 +3734,7 @@ export const payloads = {
         hide_price_text: 'Price is hidden',
         hide_cart_button: 'replace',
         button_text: 'Add to quote',
-        apply_on_all_product: '1',
+        apply_on_all_product: '0',
         rule_priority: '0',
         status: 'publish',
     }),

@@ -1143,7 +1143,7 @@ export class ApiUtils {
 
     // get all quote rules
     async getAllQuoteRules(params = {}, auth?: auth): Promise<responseBody> {
-        const responseBody = await this.getAllItems(endPoints.getAllQuoteRules, { ...params }, auth);
+        const responseBody = await this.getAllItems(endPoints.getAllQuoteRules, params, auth);
         return responseBody;
     }
 
@@ -1163,7 +1163,7 @@ export class ApiUtils {
 
     // delete all quote rules
     async deleteAllQuoteRules(auth?: auth): Promise<responseBody> {
-        const allQuoteRules = await this.getAllQuoteRules(auth);
+        const allQuoteRules = await this.getAllQuoteRules({}, auth);
         if (!allQuoteRules?.length) {
             console.log('No quote rule exists');
             return;
@@ -1175,7 +1175,7 @@ export class ApiUtils {
 
     // delete all quote rules trashed
     async deleteAllQuoteRulesTrashed(auth?: auth): Promise<responseBody> {
-        const allQuoteRules = await this.getAllQuoteRules({ status: 'trash', per_page: 100 }, auth);
+        const allQuoteRules = await this.getAllQuoteRules({ status: 'trash' }, auth);
         if (!allQuoteRules?.length) {
             console.log('No quote rule exists');
             return;
