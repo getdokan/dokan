@@ -169,4 +169,12 @@ export const dbUtils = {
         // console.log(res);
         return res;
     },
+
+    // get child order ids
+    async getChildOrderIds(orderId: string): Promise<string[]> {
+        const query = `SELECT id FROM ${dbPrefix}_wc_orders WHERE parent_order_id = ?;`;
+        const res = await dbUtils.dbQuery(query, [orderId]);
+        const ids = res.map((row: { id: number }) => row.id);
+        return ids;
+    },
 };

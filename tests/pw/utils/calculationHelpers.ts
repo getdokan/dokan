@@ -17,6 +17,7 @@ async function assertOrderCalculation(order: any) {
     const calculatedData = await getCalculatedData(parmeters);
     const receivedData = await getReceivedData(orderId, parmeters);
     await assertData(orderId, calculatedData, receivedData);
+    return [orderId, calculatedData, receivedData];
 }
 
 async function getParameters(orderId: string, orderResponsebody: any): Promise<(number | object)[]> {
@@ -43,7 +44,7 @@ async function getParameters(orderId: string, orderResponsebody: any): Promise<(
 }
 
 async function getCalculatedData(parmeters: any): Promise<number[]> {
-    const [orderTotal, gatewayDetails, shippingFee, shippingTax, productTax, totalTax, lineItems, feeRecipient, taxRate, discountTotal, discountTax, couponLines, applySequentially] = parmeters;
+    const [, gatewayDetails, shippingFee, , , , lineItems, feeRecipient, taxRate, , , couponLines, applySequentially] = parmeters;
 
     const [calculatedSubtotal, calculatedProductTax, calculatedSubtotalCommission, calculatedSubtotalEarning] = helpers.lineItemsToSalesMetrics(lineItems, taxRate);
     const calculatedShippingTax = helpers.tax(taxRate, shippingFee);
@@ -59,7 +60,7 @@ async function getCalculatedData(parmeters: any): Promise<number[]> {
 }
 
 async function getReceivedData(orderId: string, parmeters: any): Promise<number[]> {
-    const [orderTotal, gatewayDetails, shippingFee, shippingTax, productTax, totalTax, lineItems, feeRecipient, taxRate, discountTotal, discountTax] = parmeters;
+    const [orderTotal, gatewayDetails, shippingFee, shippingTax, productTax, totalTax, lineItems, feeRecipient, , discountTotal, discountTax] = parmeters;
     let receivedData = [];
     if (DOKAN_PRO) {
         const orderlog = await apiUtils.getSingleOrderLog(String(orderId));
@@ -98,4 +99,44 @@ async function assertData(orderId: string, calculatedData: number[], receivedDat
     expect(receivedDiscountTax).toBeApproximately(calculatedDiscountTax, 0.01, orderlog);
 }
 
-export { assertOrderCalculation, getParameters, getCalculatedData, getReceivedData, assertData };
+async function assertParentOrderCalculation(parentOrder: any, childOrders: any, parentOrderId: string, childOrderIds: string[]) {
+    const parentOrderData = [parentOrder.total, parentOrder.cart_tax, parentOrder.total_tax, parentOrder.discount_total, parentOrder.discount_tax].map(Number);
+
+    let childOrderData = childOrders.map(([_, calculatedData]: [any, any]) => {
+        const [, calculatedOrderTotal, , , , , , calculatedProductTax, calculatedTotalTax, calculatedDiscount, calculatedDiscountTax] = calculatedData;
+        return [calculatedOrderTotal, calculatedProductTax, calculatedTotalTax, calculatedDiscount, calculatedDiscountTax];
+    });
+
+    let sumOfChildOrders = new Array(childOrderData[0].length).fill(0);
+
+    // Sum the corresponding elements from all arrays, skipping the first element (orderid)
+    childOrderData.forEach((childOrder: any[]) => {
+        childOrder.forEach((value, index) => {
+            sumOfChildOrders[index] += value;
+        });
+    });
+
+    // Adding shipping fee and tax to the order total
+    sumOfChildOrders[0] += Number(parentOrder.shipping_total) + Number(parentOrder.shipping_tax);
+    // Adding shipping tax to the total tax
+    sumOfChildOrders[2] += Number(parentOrder.shipping_tax);
+    // round to two decimal places
+    sumOfChildOrders = sumOfChildOrders.map(helpers.roundToTwo);
+
+    childOrderData = childOrderIds.map((id, index) => [id, ...childOrderData[index]]);
+
+    const orderlog = [['OrderId', 'OrderTotal', 'ProductTax', 'TotalTax', 'Discount', 'DiscountTax'], ...childOrderData, ['-', ...sumOfChildOrders], [Number(parentOrderId), ...parentOrderData]];
+
+    console.table(orderlog);
+
+    const [parentOrderTotal, parentProductTax, parentTotalTax, parentDiscount, parentDiscountTax] = parentOrderData;
+    const [calculatedOrderTotal, calculatedProductTax, calculatedTotalTax, calculatedDiscount, calculatedDiscountTax] = sumOfChildOrders;
+
+    expect(parentOrderTotal).toBeApproximately(calculatedOrderTotal, 0.01, orderlog);
+    expect(parentProductTax).toBeApproximately(calculatedProductTax, 0.01, orderlog);
+    expect(parentTotalTax).toBeApproximately(calculatedTotalTax, 0.01, orderlog);
+    expect(parentDiscount).toBeApproximately(calculatedDiscount, 0.01, orderlog);
+    expect(parentDiscountTax).toBeApproximately(calculatedDiscountTax, 0.01, orderlog);
+}
+
+export { assertOrderCalculation, assertParentOrderCalculation, getParameters, getCalculatedData, getReceivedData, assertData };

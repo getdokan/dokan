@@ -24,7 +24,7 @@ test.describe('Commission test', () => {
 
         if (DOKAN_PRO) {
             // enable dokan subscription
-            await dbUtils.setDokanSettings(dbData.dokan.optionName.vendorSubscription, { ...dbData.dokan.vendorSubscriptionSettings, enable_pricing: 'on', enable_subscription_pack_in_reg: 'on' });
+            // await dbUtils.setDokanSettings(dbData.dokan.optionName.vendorSubscription, { ...dbData.dokan.vendorSubscriptionSettings, enable_pricing: 'on', enable_subscription_pack_in_reg: 'on' });
             await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, enable_min_max_quantity: 'off', enable_min_max_amount: 'off' }); //todo: after dokan issue fixed, remove this line
             // [subscriptionProductId] = await createDokanSubscriptionProduct();
         }
@@ -32,7 +32,10 @@ test.describe('Commission test', () => {
     });
 
     test.afterAll(async () => {
-        if (DOKAN_PRO) await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, enable_min_max_quantity: 'on', enable_min_max_amount: 'on' }); //todo: after dokan issue fixed, remove this line
+        if (DOKAN_PRO) {
+            // await dbUtils.setDokanSettings(dbData.dokan.optionName.vendorSubscription, { ...dbData.dokan.vendorSubscriptionSettings, enable_pricing: 'off', enable_subscription_pack_in_reg: 'off' });
+            await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, enable_min_max_quantity: 'on', enable_min_max_amount: 'on' }); //todo: after dokan issue fixed, remove this line
+        }
         await aPage.close();
         await apiUtils.dispose();
     });

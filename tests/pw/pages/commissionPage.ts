@@ -26,7 +26,7 @@ export class CommissionPage extends AdminPage {
                 await this.clearAndType(setupWizardAdmin.categoryPercentage(commission.commissionCategory.category), commission.commissionPercentage);
                 await this.clearAndType(setupWizardAdmin.categoryFixed(commission.commissionCategory.category), commission.commissionFixed);
             } else {
-                const categoryExpanded = await this.isVisible(setupWizardAdmin.expandedCategories); //todo: might need needed
+                const categoryExpanded = await this.isVisible(setupWizardAdmin.expandedCategories);
                 if (!categoryExpanded) await this.clickIfVisible(setupWizardAdmin.expandCategories);
                 await this.clearAndType(setupWizardAdmin.categoryPercentageById(commission.commissionCategory.category), commission.commissionPercentage);
                 await this.clearAndType(setupWizardAdmin.categoryFixedById(commission.commissionCategory.category), commission.commissionFixed);
@@ -36,19 +36,20 @@ export class CommissionPage extends AdminPage {
 
     // assert commission values
     async assertCommission(commission: commission) {
-        // if (commission.commissionType === 'fixed') {
-        //     await this.toHaveValue(settingsAdmin.selling.percentage, commission.commissionPercentage);
-        //     await this.toHaveValue(settingsAdmin.selling.fixed, commission.commissionFixed);
-        // } else {
-        //     if (commission.commissionCategory.allCategory) {
-        //         await this.toHaveValue(settingsAdmin.selling.categoryPercentage(commission.commissionCategory.category), commission.commissionPercentage);
-        //         await this.toHaveValue(settingsAdmin.selling.categoryFixed(commission.commissionCategory.category), commission.commissionFixed);
-        //     } else {
-        //         await this.click(settingsAdmin.selling.expandCategories);
-        //         await this.toHaveValue(settingsAdmin.selling.categoryPercentageById(commission.commissionCategory.category), commission.commissionPercentage);
-        //         await this.toHaveValue(settingsAdmin.selling.categoryFixedById(commission.commissionCategory.category), commission.commissionFixed);
-        //     }
-        // }
+        if (commission.commissionType === 'fixed') {
+            await this.toHaveValue(settingsAdmin.selling.percentage, commission.commissionPercentage);
+            await this.toHaveValue(settingsAdmin.selling.fixed, commission.commissionFixed);
+        } else {
+            if (commission.commissionCategory.allCategory) {
+                await this.toHaveValue(settingsAdmin.selling.categoryPercentage(commission.commissionCategory.category), commission.commissionPercentage);
+                await this.toHaveValue(settingsAdmin.selling.categoryFixed(commission.commissionCategory.category), commission.commissionFixed);
+            } else {
+                const categoryExpanded = await this.isVisible(setupWizardAdmin.expandedCategories);
+                if (!categoryExpanded) await this.clickIfVisible(setupWizardAdmin.expandCategories);
+                await this.toHaveValue(settingsAdmin.selling.categoryPercentageById(commission.commissionCategory.category), commission.commissionPercentage);
+                await this.toHaveValue(settingsAdmin.selling.categoryFixedById(commission.commissionCategory.category), commission.commissionFixed);
+            }
+        }
     }
 
     // set commission on dokan setup wizard
@@ -111,7 +112,7 @@ export class CommissionPage extends AdminPage {
         await this.addCommission(commission);
 
         await this.clickAndWaitForResponse(data.subUrls.api.dokan.stores, vendors.editVendor.saveChanges);
-        await this.click(vendors.editVendor.confirmSaveChanges);
+        await this.click(vendors.editVendor.closeUpdateSuccessModal);
 
         // assert values
         await this.click(vendors.editVendor.editVendorIcon);

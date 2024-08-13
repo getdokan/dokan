@@ -4,15 +4,13 @@ import { payloads } from '@utils/payloads';
 import { dbUtils } from '@utils/dbUtils';
 import { dbData } from '@utils/dbData';
 
-import { assertOrderCalculation } from '@utils/calculationHelpers';
+import { assertOrderCalculation, assertParentOrderCalculation } from '@utils/calculationHelpers';
 
 const { VENDOR_ID, VENDOR2_ID, CATEGORY_ID } = process.env;
 
-test.use({ extraHTTPHeaders: { Authorization: payloads.adminAuth.Authorization } });
+test.use({ extraHTTPHeaders: payloads.adminAuth });
 
 test.slow(true, 'all calculation tests are slow');
-
-// todo: need to run this file in single worker
 
 test.describe.serial('commission calculation test', () => {
     let apiUtils: ApiUtils;
@@ -588,10 +586,20 @@ test.describe.serial('product owner calculation test', () => {
         const lineItems = await apiUtils.createLineItems(2, [1], [payloads.vendorAuth, payloads.vendor2Auth]);
 
         // place order and assert order calculation
-        const order = await apiUtils.createOrderWc({ ...payloads.createOrder, line_items: lineItems });
-        // todo: implement seperate calculation for parent order
-        // todo: get suborder id
-        // await assertOrderCalculation(suborder1);
-        // await assertOrderCalculation(suborder2);
+        const [, parentOrder, parentOrderId] = await apiUtils.createOrderWc({ ...payloads.createOrder, line_items: lineItems });
+
+        // get child order ids
+        const childOrderIds = await dbUtils.getChildOrderIds(parentOrderId);
+
+        // console.log('parentOrderId:', parentOrderId, 'childOrderIds:', childOrderIds);
+
+        const allChildOrderDetails = [];
+        for (const childOrderId of childOrderIds) {
+            const [orderResponse, orderResponseBody] = await apiUtils.getSingleOrder(childOrderId);
+            const childOrderDetails = await assertOrderCalculation([orderResponse, orderResponseBody, childOrderId]);
+            allChildOrderDetails.push(childOrderDetails);
+        }
+
+        await assertParentOrderCalculation(parentOrder, allChildOrderDetails, parentOrderId, childOrderIds);
     });
 });
