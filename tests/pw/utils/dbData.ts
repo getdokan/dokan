@@ -1132,6 +1132,7 @@ export const dbData = {
             'product_addon',
             'product_advertising',
             'product_enquiry',
+            'product_qa',
             'product_subscription',
             'rank_math',
             'razorpay',

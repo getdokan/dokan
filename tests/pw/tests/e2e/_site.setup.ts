@@ -19,6 +19,12 @@ setup.describe('site setup', () => {
         await apiUtils.dispose();
     });
 
+    setup('set wp debug config', async () => {
+        for (const [key, value] of Object.entries(data.installWp.debugInfo)) {
+            await helpers.exeCommandWpcli(data.commands.wpcli.setDebugConfig(key, value));
+        }
+    });
+
     setup('set permalink (post_name)', { tag: ['@lite'] }, async () => {
         await helpers.exeCommandWpcli(data.commands.wpcli.rewritePermalink);
     });

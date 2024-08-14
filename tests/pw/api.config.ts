@@ -86,7 +86,7 @@ export default defineConfig({
             name: 'api_setup',
             // testMatch: /.*\.setup\.ts/,
             testMatch: ['_env.setup.ts'],
-            dependencies: NO_SETUP ? [] : ['site_setup'],
+            dependencies: NO_SETUP ? [] : ['auth_setup'],
         },
 
         // api_tests
