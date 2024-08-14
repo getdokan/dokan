@@ -2810,4 +2810,65 @@ export const schemas = {
             pending: z.array(z.number()).optional(),
         }),
     },
+
+    // shipping status schema
+    shippingStatusSchema: {
+        shippingStatusSchema: z.object({
+            enabled: z.boolean(),
+            status_list: z.array(
+                z.object({
+                    id: z.string(),
+                    value: z.string(),
+                    must_use: z.string().optional(),
+                    desc: z.string().optional(),
+                }),
+            ),
+            providers: z.record(z.string(), z.string()),
+        }),
+
+        shipmentSchema: z
+            .object({
+                id: z.number().or(z.string()),
+                order_id: z.number().or(z.string()),
+                shipping_provider: z.string(),
+                shipping_provider_label: z.string(),
+                shipping_status: z.string(),
+                shipping_status_label: z.string(),
+                shipment_description: z.array(
+                    z.object({
+                        id: z.number().or(z.string()),
+                        content: z.string(),
+                    }),
+                ),
+                shipping_number: z.string(),
+                shipped_date: z.string().datetime(),
+                is_notify: z.string(),
+                item_id: z.array(z.number()),
+                item_qty: z.record(z.string(), z.number()),
+                other_provider: z.string(),
+                other_p_url: z.string().url(),
+                items: z.record(
+                    z.string(),
+                    z.object({
+                        id: z.number(),
+                        order_id: z.number(),
+                        name: z.string(),
+                        product_id: z.number(),
+                        variation_id: z.number(),
+                        quantity: z.number(),
+                        tax_class: z.string(),
+                        subtotal: z.string(),
+                        subtotal_tax: z.string(),
+                        total: z.string(),
+                        total_tax: z.string(),
+                        taxes: z.object({
+                            total: z.record(z.string(), z.string()),
+                            subtotal: z.record(z.string(), z.string()),
+                        }),
+                    }),
+                ),
+                _links: linksSchema,
+            })
+            .or(z.array(z.any())),
+    },
 };

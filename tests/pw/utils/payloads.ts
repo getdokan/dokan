@@ -4,7 +4,7 @@ import { dbData } from '@utils/dbData';
 
 const basicAuth = (username: string, password: string) => 'Basic ' + Buffer.from(username + ':' + password).toString('base64');
 
-const { ADMIN, VENDOR, VENDOR2, VENDOR3, CUSTOMER, CUSTOMER2, ADMIN_PASSWORD, USER_PASSWORD } = process.env;
+const { ADMIN, VENDOR, VENDOR2, VENDOR3, CUSTOMER, CUSTOMER2, ADMIN_PASSWORD, USER_PASSWORD, PRODUCT_ID } = process.env;
 
 export const payloads = {
     // wp
@@ -4009,6 +4009,28 @@ export const payloads = {
                 // },
             },
         },
+    },
+
+    // shipping status
+
+    createShipment: {
+        shipping_provider: 'sp-dhl',
+        shipping_number: '#1234',
+        shipped_status: 'ss_proceccing',
+        shipped_date: '2024-08-14T15:04:32+06:00',
+        shipment_comments: 'test shipment comment',
+        is_notify: 'yes',
+        item_id: ['lineitemid'], // replace with actual line item id
+        item_qty: {
+            lineitemid: 1,
+        },
+    },
+
+    updateShipment: {
+        shipping_provider: 'sp-dhl',
+        shipping_number: '#1234',
+        shipped_status: 'ss_proceccing',
+        shipped_date: '2024-08-14T15:04:32+06:00',
     },
 
     // shortcodes
