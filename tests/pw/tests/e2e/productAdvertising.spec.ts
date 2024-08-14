@@ -64,8 +64,7 @@ test.describe('Product Advertising test', () => {
         await admin.updateAdvertisedProduct(advertisedProduct, 'delete');
     });
 
-    test.skip('admin can perform bulk action on product advertisements', { tag: ['@pro', '@admin'] }, async () => {
-        // todo: might cause other tests to fail in parallel
+    test('admin can perform bulk action on product advertisements', { tag: ['@pro', '@admin', '@serial'] }, async () => {
         await admin.productAdvertisingBulkAction('delete');
     });
 

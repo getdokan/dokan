@@ -116,7 +116,6 @@ setup.describe('setup user settings', () => {
     });
 
     setup('add vendor1 coupon', { tag: ['@pro'] }, async () => {
-        setup.skip(!DOKAN_PRO, 'skip on lite');
         // create store coupon
         const allProductIds = (await apiUtils.getAllProducts(payloads.vendorAuth)).map((o: { id: string }) => o.id);
         await apiUtils.createCoupon(allProductIds, payloads.createCoupon1, payloads.vendorAuth);
@@ -165,67 +164,54 @@ setup.describe('setup dokan settings', () => {
     });
 
     setup('admin set dokan color settings', { tag: ['@pro'] }, async () => {
-        setup.skip(!DOKAN_PRO, 'skip on lite');
         await dbUtils.setOptionValue(dbData.dokan.optionName.colors, dbData.dokan.colorsSettings);
     });
 
     setup('admin set dokan store support settings', { tag: ['@pro'] }, async () => {
-        setup.skip(!DOKAN_PRO, 'skip on lite');
         await dbUtils.setOptionValue(dbData.dokan.optionName.storeSupport, dbData.dokan.storeSupportSettings);
     });
 
     setup('admin set dokan shipping status settings', { tag: ['@pro'] }, async () => {
-        setup.skip(!DOKAN_PRO, 'skip on lite');
         await dbUtils.setOptionValue(dbData.dokan.optionName.shippingStatus, dbData.dokan.shippingStatusSettings);
     });
 
     setup('admin set dokan quote settings', { tag: ['@pro'] }, async () => {
-        setup.skip(!DOKAN_PRO, 'skip on lite');
         await dbUtils.setOptionValue(dbData.dokan.optionName.quote, dbData.dokan.quoteSettings);
     });
 
     setup('admin set dokan rma settings', { tag: ['@pro'] }, async () => {
-        setup.skip(!DOKAN_PRO, 'skip on lite');
         await dbUtils.setOptionValue(dbData.dokan.optionName.rma, dbData.dokan.rmaSettings);
     });
 
     setup('admin set dokan wholesale settings', { tag: ['@pro'] }, async () => {
-        setup.skip(!DOKAN_PRO, 'skip on lite');
         await dbUtils.setOptionValue(dbData.dokan.optionName.wholesale, dbData.dokan.wholesaleSettings);
     });
 
     setup('admin set dokan eu compliance settings', { tag: ['@pro'] }, async () => {
-        setup.skip(!DOKAN_PRO, 'skip on lite');
         await dbUtils.setOptionValue(dbData.dokan.optionName.euCompliance, dbData.dokan.euComplianceSettings);
     });
 
     setup('admin set dokan delivery time settings', { tag: ['@pro'] }, async () => {
-        setup.skip(!DOKAN_PRO, 'skip on lite');
         await dbUtils.setOptionValue(dbData.dokan.optionName.deliveryTime, dbData.dokan.deliveryTimeSettings);
     });
 
     setup('admin set dokan product advertising settings', { tag: ['@pro'] }, async () => {
-        setup.skip(!DOKAN_PRO, 'skip on lite');
         await dbUtils.setOptionValue(dbData.dokan.optionName.productAdvertising, dbData.dokan.productAdvertisingSettings);
     });
 
     setup('admin set dokan geolocation settings', { tag: ['@pro'] }, async () => {
-        setup.skip(!DOKAN_PRO, 'skip on lite');
         await dbUtils.setOptionValue(dbData.dokan.optionName.geolocation, dbData.dokan.geolocationSettings);
     });
 
     setup('admin set dokan product report abuse settings', { tag: ['@pro'] }, async () => {
-        setup.skip(!DOKAN_PRO, 'skip on lite');
         await dbUtils.setOptionValue(dbData.dokan.optionName.productReportAbuse, dbData.dokan.productReportAbuseSettings);
     });
 
     setup('admin set dokan spmv settings', { tag: ['@pro'] }, async () => {
-        setup.skip(!DOKAN_PRO, 'skip on lite');
         await dbUtils.setOptionValue(dbData.dokan.optionName.spmv, dbData.dokan.spmvSettings);
     });
 
     setup('admin set dokan vendor subscription settings', { tag: ['@pro'] }, async () => {
-        setup.skip(!DOKAN_PRO, 'skip on lite');
         await dbUtils.setOptionValue(dbData.dokan.optionName.vendorSubscription, dbData.dokan.vendorSubscriptionSettings);
     });
 });
@@ -255,7 +241,6 @@ setup.describe('setup dokan payment products', () => {
     });
 
     setup('recreate product advertisement payment product', { tag: ['@pro'] }, async () => {
-        setup.skip(!DOKAN_PRO, 'skip on lite');
         let product = await apiUtils.checkProductExistence('Product Advertisement Payment', payloads.adminAuth);
         if (!product) {
             console.log("Product advertisement payment product doesn't exists!!");

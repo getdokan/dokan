@@ -57,8 +57,7 @@ test.describe('Request for quotation Rules test', () => {
         await admin.updateQuoteRule(quoteRuleTitle, 'permanently-delete');
     });
 
-    test.skip('admin can perform bulk action on quote rules', { tag: ['@pro', '@admin'] }, async () => {
-        // todo: might cause other tests to fail in parallel
+    test('admin can perform bulk action on quote rules', { tag: ['@pro', '@admin', '@serial'] }, async () => {
         await admin.quoteRulesBulkAction('trash');
     });
 });

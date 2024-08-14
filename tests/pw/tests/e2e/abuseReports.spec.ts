@@ -56,8 +56,7 @@ test.describe('Abuse report test', () => {
         await admin.filterAbuseReports(data.predefined.vendorStores.vendor1, 'by-vendor');
     });
 
-    test.skip('admin can perform bulk action on abuse reports', { tag: ['@pro', '@admin'] }, async () => {
-        // todo: might cause other tests to fail in parallel
+    test('admin can perform bulk action on abuse reports', { tag: ['@pro', '@admin', '@serial'] }, async () => {
         await admin.abuseReportBulkAction('delete');
     });
 

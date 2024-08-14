@@ -1,11 +1,15 @@
 import { defineConfig, devices, expect } from '@playwright/test';
 import { customExpect } from '@utils/pwMatchers';
 import 'dotenv/config';
-const { CI, NON_HEADLESS, BASE_URL, SLOWMO, NO_SETUP } = process.env;
+const { CI, NON_HEADLESS, BASE_URL, SLOWMO, NO_SETUP, DOKAN_PRO } = process.env;
 
 export default defineConfig({
     /* test directory */
     testDir: './tests/e2e',
+    /* Include tests based on the pattern */
+    grep: [/@lite/, /@liteOnly/, /@pro/],
+    /* Exclude tests based on the pattern */
+    grepInvert: DOKAN_PRO ? [/@liteOnly/, /@serial/] : [/@pro/, /@serial/],
     /* Folder for test artifacts such as screenshots, videos, traces, etc. */
     outputDir: 'playwright/e2e/test-artifacts/',
     /* Path to the global setup file. This file will be required and run before all the tests. */
@@ -17,7 +21,7 @@ export default defineConfig({
     /* The maximum number of test failures for the whole test suite run. After reaching this number, testing will stop and exit with an error. */
     maxFailures: CI ? 40 : 40,
     /* Maximum time one test can run for. */
-    timeout: CI ? 45 * 1000 : 45 * 1000,
+    timeout: CI ? 40 * 1000 : 40 * 1000,
     /* Configuration for the expect assertion library */
     expect: {
         /* Maximum time expect() should wait for the condition to be met.  For example in `await expect(locator).toHaveText();`*/
@@ -103,9 +107,9 @@ export default defineConfig({
     },
 
     projects: [
-        // E2e project
+        // E2E project
 
-        // local site setup
+        // local_site_setup
         {
             name: 'local_site_setup',
             testMatch: ['_localSite.setup.ts'],
@@ -127,7 +131,6 @@ export default defineConfig({
         // e2e_setup
         {
             name: 'e2e_setup',
-            // testMatch: /.*\.setup\.ts/,
             testMatch: ['_env.setup.ts'],
             dependencies: NO_SETUP ? [] : ['auth_setup'],
         },
@@ -136,12 +139,11 @@ export default defineConfig({
         {
             name: 'e2e_tests',
             testMatch: /.*\.spec\.ts/,
-            testIgnore: /.*\.teardown\.spec\.ts/,
+            testIgnore: ['_coverage.teardown.spec.ts'],
             /* whether not to run setup tests before running actual tests */
             dependencies: NO_SETUP ? [] : ['e2e_setup'],
             /* whether not to run teardown tests after running actual tests */
             // teardown: NO_SETUP ? undefined : 'coverage_report',
-            // teardown: 'global_teardown',
         },
 
         // coverage_report
