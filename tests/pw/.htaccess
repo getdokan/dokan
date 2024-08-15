@@ -17,7 +17,8 @@ php_value max_input_vars 10000
 php_value memory_limit 1G
 php_value post_max_size 1G
 php_value upload_max_filesize 1G
-php_value error_reporting E_ERROR
+php_flag display_errors Off
+php_flag log_errors On
 <IfModule mod_php7.c>
     php_flag opcache.enable Off
 </IfModule>
