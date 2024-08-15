@@ -5,13 +5,13 @@ import { helpers } from '@utils/helpers';
 const { SITE_PATH } = process.env;
 
 test.describe('setup local site', () => {
-    test('download wordpress', async () => {
+    test('download wordpress', { tag: ['@lite'] }, async () => {
         test.slow();
         await helpers.exeCommand(data.commands.makePath(SITE_PATH));
         await helpers.exeCommandWpcli(data.commands.wpcli.downloadWp);
     });
 
-    test('create config', async () => {
+    test('create config', { tag: ['@lite'] }, async () => {
         // set wp-config (db info)
         await helpers.exeCommandWpcli(data.commands.wpcli.createConfig(data.installWp.dbInfo));
 
@@ -21,16 +21,16 @@ test.describe('setup local site', () => {
         }
     });
 
-    test('create database', async () => {
+    test('create database', { tag: ['@lite'] }, async () => {
         // reset db command is used to create db
         await helpers.exeCommandWpcli(data.commands.wpcli.resetSite);
     });
 
-    test('install wordpress', async () => {
+    test('install wordpress', { tag: ['@lite'] }, async () => {
         await helpers.exeCommandWpcli(data.commands.wpcli.installWp(data.installWp.siteInfo));
     });
 
-    test('install theme', async () => {
+    test('install theme', { tag: ['@lite'] }, async () => {
         await helpers.exeCommandWpcli(data.commands.wpcli.installTheme(data.installWp.themes.storefront));
     });
 
