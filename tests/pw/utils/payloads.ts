@@ -4,7 +4,7 @@ import { dbData } from '@utils/dbData';
 
 const basicAuth = (username: string, password: string) => 'Basic ' + Buffer.from(username + ':' + password).toString('base64');
 
-const { ADMIN, VENDOR, VENDOR2, VENDOR3, CUSTOMER, CUSTOMER2, ADMIN_PASSWORD, USER_PASSWORD, PRODUCT_ID } = process.env;
+const { ADMIN, VENDOR, VENDOR2, VENDOR3, CUSTOMER, CUSTOMER2, ADMIN_PASSWORD, USER_PASSWORD, CUSTOMER_ID, PRODUCT_ID } = process.env;
 
 export const payloads = {
     // wp
@@ -1215,7 +1215,7 @@ export const payloads = {
         payment_method: 'bacs',
         payment_method_title: 'Direct Bank Transfer',
         set_paid: true,
-        customer_id: 0,
+        customer_id: CUSTOMER_ID ?? 0,
         billing: {
             first_name: 'customer1',
             last_name: 'c1',
@@ -1242,7 +1242,7 @@ export const payloads = {
 
         line_items: [
             {
-                product_id: '',
+                product_id: PRODUCT_ID ?? '',
                 quantity: 1,
             },
             // {
@@ -4014,23 +4014,24 @@ export const payloads = {
     // shipping status
 
     createShipment: {
-        shipping_provider: 'sp-dhl',
-        shipping_number: '#1234',
-        shipped_status: 'ss_proceccing',
-        shipped_date: '2024-08-14T15:04:32+06:00',
+        shipped_status: 'ss_proceccing', 
+        shipping_provider: 'sp-dhl', 
+        shipped_date: new Date().toISOString(), 
+        shipping_number: '#001', 
         shipment_comments: 'test shipment comment',
-        is_notify: 'yes',
-        item_id: ['lineitemid'], // replace with actual line item id
+        is_notify: 'yes', 
+        item_id: ['lineitemid'], // replace with actual line item id 
         item_qty: {
+            
             lineitemid: 1,
         },
     },
 
     updateShipment: {
-        shipping_provider: 'sp-dhl',
-        shipping_number: '#1234',
-        shipped_status: 'ss_proceccing',
-        shipped_date: '2024-08-14T15:04:32+06:00',
+        shipping_provider: 'sp-fedex', // sp-dhl, sp-dpd, sp-fedex, sp-ups, sp-usps (has more options)
+        shipping_number: '#002',
+        shipped_status: 'ss_pickedup', // ss_delivered, ss_cancelled, ss_proceccing, ss_ready_for_pickup, ss_pickedup (has more options)
+        shipped_date: new Date(new Date().setDate(new Date().getDate() + 2)).toISOString(),
     },
 
     // shortcodes

@@ -1445,10 +1445,10 @@ export class ApiUtils {
      * shipping status methods
      */
 
-    async createOrderShipment(orderId: string, payload: object, auth?: auth): Promise<[responseBody, string]> {
-        const [, responseBody] = await this.post(endPoints.createOrderShipment(orderId), { data: payload, headers: auth });
-        const shipmentId = responseBody[0]?.id;
-        return [responseBody, shipmentId];
+    async createShipment(orderId: string, payload: object, auth?: auth): Promise<[responseBody, string, string]> {
+        const [, responseBody] = await this.post(endPoints.createShipment(orderId), { data: payload, headers: auth });
+        const shipmentId = responseBody?.id;
+        return [responseBody, orderId, shipmentId];
     }
 
     /**
