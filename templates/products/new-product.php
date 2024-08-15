@@ -128,11 +128,11 @@ do_action( 'dokan_new_product_wrap_before' );
                         <?php
                         printf(
                             /* translators: %s: product title with edit link */
-                            __( 'You have successfully created %s product', 'dokan-lite' ),
+                            esc_html__( 'You have successfully created %s product', 'dokan-lite' ),
                             sprintf(
                                 '<a href="%s"><strong>%s</strong></a>',
                                 esc_url( dokan_edit_product_url( $created_product ) ),
-                                get_the_title( $created_product )
+                                esc_html( get_the_title( $created_product ) )
                             )
                         );
                         ?>

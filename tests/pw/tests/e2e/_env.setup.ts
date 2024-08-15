@@ -10,10 +10,10 @@ import { dbData } from '@utils/dbData';
 import { data } from '@utils/testData';
 import { helpers } from '@utils/helpers';
 
-const { DOKAN_PRO, HPOS } = process.env;
+const { DOKAN_PRO, HPOS, LOCAL } = process.env;
 
 setup.describe('setup site & woocommerce & dokan settings', () => {
-    setup.use({ extraHTTPHeaders: { Authorization: payloads.adminAuth.Authorization } });
+    setup.use({ extraHTTPHeaders: payloads.adminAuth });
 
     let apiUtils: ApiUtils;
 
@@ -26,7 +26,7 @@ setup.describe('setup site & woocommerce & dokan settings', () => {
     });
 
     setup('check active plugins', { tag: ['@lite'] }, async () => {
-        setup.skip(!process.env.CI, 'skip plugin check on local');
+        setup.skip(LOCAL, 'skip plugin check on local');
         const activePlugins = (await apiUtils.getAllPlugins({ status: 'active' })).map((a: { plugin: string }) => a.plugin.split('/')[1]);
         DOKAN_PRO ? expect(activePlugins).toEqual(expect.arrayContaining(data.plugin.plugins)) : expect(activePlugins).toEqual(expect.arrayContaining(data.plugin.pluginsLite));
     });
@@ -97,13 +97,9 @@ setup.describe('setup site & woocommerce & dokan settings', () => {
     });
 
     setup('add categories and attributes', { tag: ['@lite'] }, async () => {
-        // delete previous categories
-        const allCategoryIds = (await apiUtils.getAllCategories()).map((a: { id: string }) => a.id);
-        await apiUtils.updateBatchCategories('delete', allCategoryIds);
-
-        // delete previous attributes
-        const allAttributeIds = (await apiUtils.getAllAttributes()).map((a: { id: string }) => a.id);
-        await apiUtils.updateBatchAttributes('delete', allAttributeIds);
+        // delete previous categories and attributes
+        await apiUtils.updateBatchCategories('delete', []);
+        await apiUtils.updateBatchAttributes('delete', []);
 
         // create category
         await apiUtils.createCategory(payloads.createCategory);
@@ -116,7 +112,7 @@ setup.describe('setup site & woocommerce & dokan settings', () => {
     });
 
     setup('disable simple-auction ajax bid check', { tag: ['@pro'] }, async () => {
-        setup.skip(!process.env.CI || !DOKAN_PRO, 'skip on local');
+        setup.skip(!DOKAN_PRO, 'skip on lite');
         const [, , status] = await apiUtils.getSinglePlugin('woocommerce-simple-auctions/woocommerce-simple-auctions', payloads.adminAuth);
         status === 'active' && (await dbUtils.updateWpOptionTable('simple_auctions_live_check', 'no'));
     });
@@ -128,18 +124,19 @@ setup.describe('setup site & woocommerce & dokan settings', () => {
     });
 
     setup.skip('disable germanized settings', { tag: ['@pro', '@admin'] }, async () => {
-        // disbale all legal checkboxes
+        //todo: need to recheck
+        // disable all legal checkboxes
         await dbUtils.setDokanSettings('woocommerce_gzd_legal_checkboxes_settings', dbData.germanized.legalCheckboxes);
         // disable theme supported notice
-        await dbUtils.setDokanSettings('_wc_gzd_hide_theme_supported_notice', 'yes');
+        await dbUtils.setDokanSettings('_wc_gzd_hide_theme_supported_notice', 'yes', false);
         // disable all fields from product loop
-        await dbUtils.setDokanSettings('woocommerce_gzd_display_product_loop_unit_price', 'no');
-        await dbUtils.setDokanSettings('woocommerce_gzd_display_product_loop_tax', 'no');
-        await dbUtils.setDokanSettings('woocommerce_gzd_display_product_loop_shipping_costs', 'no');
-        await dbUtils.setDokanSettings('woocommerce_gzd_display_product_loop_delivery_time', 'no');
-        await dbUtils.setDokanSettings('woocommerce_gzd_display_product_loop_units', 'no');
-        await dbUtils.setDokanSettings('woocommerce_gzd_display_product_loop_deposit', 'no');
-        await dbUtils.setDokanSettings('woocommerce_gzd_display_product_loop_nutri_score', 'no');
+        await dbUtils.setDokanSettings('woocommerce_gzd_display_product_loop_unit_price', 'no', false);
+        await dbUtils.setDokanSettings('woocommerce_gzd_display_product_loop_tax', 'no', false);
+        await dbUtils.setDokanSettings('woocommerce_gzd_display_product_loop_shipping_costs', 'no', false);
+        await dbUtils.setDokanSettings('woocommerce_gzd_display_product_loop_delivery_time', 'no', false);
+        await dbUtils.setDokanSettings('woocommerce_gzd_display_product_loop_units', 'no', false);
+        await dbUtils.setDokanSettings('woocommerce_gzd_display_product_loop_deposit', 'no', false);
+        await dbUtils.setDokanSettings('woocommerce_gzd_display_product_loop_nutri_score', 'no', false);
         // disable all emails
         await apiUtils.updateBatchWcSettingsOptions('germanized', payloads.germanized);
     });
@@ -180,14 +177,6 @@ setup.describe('setup user settings', () => {
         // create store coupon
         const allProductIds = (await apiUtils.getAllProducts(payloads.vendorAuth)).map((o: { id: string }) => o.id);
         await apiUtils.createCoupon(allProductIds, payloads.createCoupon1, payloads.vendorAuth);
-    });
-
-    setup.skip('admin add vendor products', { tag: ['@lite'] }, async () => {
-        const product = payloads.createProduct();
-        await apiUtils.createProduct({ ...product, status: 'publish', in_stock: false }, payloads.vendorAuth);
-        await apiUtils.createProduct({ ...product, status: 'draft', in_stock: true }, payloads.vendorAuth);
-        await apiUtils.createProduct({ ...product, status: 'pending', in_stock: true }, payloads.vendorAuth);
-        await apiUtils.createProduct({ ...product, status: 'publish', in_stock: true }, payloads.vendorAuth);
     });
 });
 
@@ -235,7 +224,7 @@ setup.describe('setup dokan settings', () => {
         await dbUtils.setDokanSettings(dbData.dokan.optionName.privacyPolicy, dbData.dokan.privacyPolicySettings);
     });
 
-    setup.skip('admin set dokan color settings', { tag: ['@pro'] }, async () => {
+    setup('admin set dokan color settings', { tag: ['@pro'] }, async () => {
         setup.skip(!DOKAN_PRO, 'skip on lite');
         await dbUtils.setDokanSettings(dbData.dokan.optionName.colors, dbData.dokan.colorsSettings);
     });
@@ -255,7 +244,7 @@ setup.describe('setup dokan settings', () => {
         await dbUtils.setDokanSettings(dbData.dokan.optionName.quote, dbData.dokan.quoteSettings);
     });
 
-    setup.skip('admin set dokan rma settings', { tag: ['@pro'] }, async () => {
+    setup('admin set dokan rma settings', { tag: ['@pro'] }, async () => {
         setup.skip(!DOKAN_PRO, 'skip on lite');
         await dbUtils.setDokanSettings(dbData.dokan.optionName.rma, dbData.dokan.rmaSettings);
     });
@@ -265,7 +254,7 @@ setup.describe('setup dokan settings', () => {
         await dbUtils.setDokanSettings(dbData.dokan.optionName.wholesale, dbData.dokan.wholesaleSettings);
     });
 
-    setup.skip('admin set dokan eu compliance settings', { tag: ['@pro'] }, async () => {
+    setup('admin set dokan eu compliance settings', { tag: ['@pro'] }, async () => {
         setup.skip(!DOKAN_PRO, 'skip on lite');
         await dbUtils.setDokanSettings(dbData.dokan.optionName.euCompliance, dbData.dokan.euComplianceSettings);
     });
@@ -280,7 +269,7 @@ setup.describe('setup dokan settings', () => {
         await dbUtils.setDokanSettings(dbData.dokan.optionName.productAdvertising, dbData.dokan.productAdvertisingSettings);
     });
 
-    setup.skip('admin set dokan geolocation settings', { tag: ['@pro'] }, async () => {
+    setup('admin set dokan geolocation settings', { tag: ['@pro'] }, async () => {
         setup.skip(!DOKAN_PRO, 'skip on lite');
         await dbUtils.setDokanSettings(dbData.dokan.optionName.geolocation, dbData.dokan.geolocationSettings);
     });
@@ -290,7 +279,7 @@ setup.describe('setup dokan settings', () => {
         await dbUtils.setDokanSettings(dbData.dokan.optionName.productReportAbuse, dbData.dokan.productReportAbuseSettings);
     });
 
-    setup.skip('admin set dokan spmv settings', { tag: ['@pro'] }, async () => {
+    setup('admin set dokan spmv settings', { tag: ['@pro'] }, async () => {
         setup.skip(!DOKAN_PRO, 'skip on lite');
         await dbUtils.setDokanSettings(dbData.dokan.optionName.spmv, dbData.dokan.spmvSettings);
     });
@@ -301,7 +290,49 @@ setup.describe('setup dokan settings', () => {
     });
 });
 
-setup.describe('setup dokan settings e2e', () => {
+setup.describe('setup dokan payment products', () => {
+    let apiUtils: ApiUtils;
+
+    setup.beforeAll(async () => {
+        apiUtils = new ApiUtils(await request.newContext());
+    });
+
+    setup.afterAll(async () => {
+        await apiUtils.dispose();
+    });
+
+    setup('recreate reverse withdrawal payment product', { tag: ['@lite'] }, async () => {
+        const product = await apiUtils.checkProductExistence('Reverse Withdrawal Payment', payloads.adminAuth);
+        if (!product) {
+            console.log("Reverse Withdrawal Payment product doesn't exists!!");
+            const [, reverseWithdrawalPaymentProduct] = await apiUtils.createProduct(payloads.reverseWithdrawalPaymentProduct, payloads.adminAuth);
+            await dbUtils.setDokanSettings(dbData.dokan.paymentProducts.reverseWithdraw, reverseWithdrawalPaymentProduct, false);
+        }
+    });
+
+    setup('reverse Withdraw payment product exists', { tag: ['@lite'] }, async () => {
+        const product = await apiUtils.checkProductExistence('Reverse Withdrawal Payment', payloads.adminAuth);
+        expect(product).toBeTruthy();
+    });
+
+    setup('recreate product advertisement payment product', { tag: ['@pro'] }, async () => {
+        setup.skip(!DOKAN_PRO, 'skip on lite');
+        const product = await apiUtils.checkProductExistence('Product Advertisement Payment', payloads.adminAuth);
+        if (!product) {
+            console.log("Product advertisement payment product doesn't exists!!");
+            const [, productAdvertisementPaymentProduct] = await apiUtils.createProduct(payloads.productAdvertisementPaymentProduct, payloads.adminAuth);
+            await dbUtils.setDokanSettings(dbData.dokan.paymentProducts.ProductAdvertisement, productAdvertisementPaymentProduct, false);
+        }
+    });
+
+    setup('product advertisement payment product exists', { tag: ['@pro'] }, async () => {
+        setup.skip(!DOKAN_PRO, 'skip on lite');
+        const product = await apiUtils.checkProductExistence('Product Advertisement Payment', payloads.adminAuth);
+        expect(product).toBeTruthy();
+    });
+});
+
+setup.describe.skip('setup dokan settings e2e', () => {
     let licensePage: LicensePage;
     let productAdvertisingPage: ProductAdvertisingPage;
     let reverseWithdrawsPage: ReverseWithdrawsPage;

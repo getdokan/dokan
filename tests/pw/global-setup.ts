@@ -3,17 +3,12 @@ import { ApiUtils } from '@utils/apiUtils';
 import { helpers } from '@utils/helpers';
 import { data } from '@utils/testData';
 
-const { CI } = process.env;
+const { LOCAL } = process.env;
 
 async function globalSetup(config: FullConfig) {
     console.log('Global Setup running....');
 
-    // rewrite permalink structure
-    !CI && helpers.exeCommand(data.command.permalinkLocal);
-
-    // activate theme: storefront
-    !CI && helpers.exeCommand(data.command.activateTheme);
-
+    
     // get site url structure
     let serverUrl = config.projects[0]?.use.baseURL as string;
     const apiUtils = new ApiUtils(await request.newContext({ ignoreHTTPSErrors: true }));

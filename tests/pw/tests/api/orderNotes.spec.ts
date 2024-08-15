@@ -11,6 +11,7 @@ import { test, expect, request } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
+import { schemas } from '@utils/schemas';
 
 test.describe('order note api test', () => {
     let apiUtils: ApiUtils;
@@ -30,12 +31,14 @@ test.describe('order note api test', () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllOrderNotes(orderId));
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.orderNotesSchema.orderNotesSchema);
     });
 
     test('get single order note', { tag: ['@lite'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getSingleOrderNote(orderId, orderNoteId));
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.orderNotesSchema.orderNoteSchema);
     });
 
     test('create an order note', { tag: ['@lite'] }, async () => {
@@ -43,11 +46,13 @@ test.describe('order note api test', () => {
         expect(response.status()).toBe(201);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.orderNotesSchema.createOrderNoteSchema);
     });
 
     test('delete an order note', { tag: ['@lite'] }, async () => {
         const [response, responseBody] = await apiUtils.delete(endPoints.deleteOrderNote(orderId, orderNoteId));
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.orderNotesSchema.deleteOrderNoteSchema);
     });
 });

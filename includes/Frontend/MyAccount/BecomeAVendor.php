@@ -158,6 +158,10 @@ class BecomeAVendor {
         $user_id       = get_current_user_id();
         $error_message = '';
 
+        if ( is_admin() ) {
+            return;
+        }
+
         if ( ! $user_id ) {
             $error_message = __( 'You need to login before applying for vendor.', 'dokan-lite' );
         } elseif ( $user_id && dokan_is_user_seller( $user_id ) ) {
@@ -167,7 +171,7 @@ class BecomeAVendor {
         }
 
         if ( $error_message ) {
-            if ( function_exists( 'wc_add_notice' ) && function_exists( 'wc_print_notices' ) ) {
+            if ( WC()->session && function_exists( 'wc_add_notice' ) && function_exists( 'wc_print_notices' ) ) {
                 wc_add_notice( $error_message, 'error' );
                 // print error message
                 wc_print_notices();

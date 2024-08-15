@@ -1,5 +1,4 @@
 import fs from 'fs';
-
 export interface admin {
     username: string;
     password: string;
@@ -461,6 +460,7 @@ export interface wpSettings {
 
 export interface tax {
     taxRate: string;
+    priority: string;
     enableTax: boolean;
     saveSuccessMessage: string;
 }
@@ -549,7 +549,7 @@ export interface payment {
     };
 
     basicPayment: {
-        toggleEanbledClass: string;
+        toggleEnabledClass: string;
         toggleDisabledClass: string;
     };
 
@@ -735,6 +735,8 @@ export interface vendor {
         supportButtonText: string;
 
         addressFieldsEnabled: boolean;
+
+        vendorSubscriptionPack: string;
 
         openingClosingTime: {
             days: string[];
@@ -1037,7 +1039,7 @@ export interface vendor {
     };
 
     // addon
-    addon: () => {
+    addon: {
         name: string;
         priority: string;
         category: string;
@@ -1139,6 +1141,8 @@ export interface customer {
             state: string;
             phone: string;
         };
+
+        vendorSubscriptionPack: string;
     };
 
     getSupport: {
@@ -1400,12 +1404,12 @@ export interface modules {
     };
 
     modulesName: {
-        AuctionIntegration: string;
-        ColorSchemeCustomize: string;
-        DeliveryTime: string;
-        Elementor: string;
-        EUComplianceFields: string;
-        FollowStore: string;
+        auctionIntegration: string;
+        colorSchemeCustomize: string;
+        deliveryTime: string;
+        elementor: string;
+        eUComplianceFields: string;
+        followStore: string;
     };
 
     moduleCategory: {
@@ -1781,17 +1785,23 @@ export interface storeShare {
 // install wordpress
 export interface installWp {
     // db info
-    dbHost: string;
-    dbUserName: string;
-    dbPassword: string;
-    dbName: string;
-    dbTablePrefix: string;
+    dbInfo: {
+        dbHost: string;
+        dbName: string;
+        dbUserName: string;
+        dbPassword: string;
+        dbTablePrefix: string;
+    };
 
     // site info
-    siteTitle: string;
-    adminUserName: string;
-    adminPassword: string;
-    adminEmail: string;
+    siteInfo: {
+        language: string;
+        url: string;
+        title: string;
+        admin: string;
+        password: string;
+        email: string;
+    };
 }
 
 // api interfaces

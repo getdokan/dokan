@@ -110,6 +110,7 @@ export class VendorShippingPage extends VendorPage {
             // free shipping
             case 'free_shipping':
                 await this.clearAndType(vendorShipping.freeShippingTitle, shipping.shippingMethodTitle);
+                await this.selectByValue(vendorShipping.freeShippingOptions, shipping.freeShippingOption);
                 await this.clearAndType(vendorShipping.freeShippingMinimumOrderAmount, shipping.freeShippingMinimumOrderAmount);
                 break;
 

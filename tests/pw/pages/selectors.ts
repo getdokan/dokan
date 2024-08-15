@@ -85,6 +85,8 @@ export const selector = {
     },
 
     wpMedia: {
+        uploadFiles: '//div[@class="supports-drag-drop" and @style="position: relative;"]//button[@id="menu-item-upload"]',
+        mediaLibrary: '//div[@class="supports-drag-drop" and @style="position: relative;"]//button[@id="menu-item-browse"]',
         // Wp Image Upload
         wpUploadFiles: '#menu-item-upload',
         uploadedMedia: 'div.attachment-preview',
@@ -151,6 +153,17 @@ export const selector = {
             // Menus
             allPages: '//li[@id="menu-pages"]//a[contains(text(),"All Pages")]',
             addNew: '//li[@id="menu-pages"]//a[contains(text(),"Add New")]',
+
+            closeModal: 'div.components-modal__content button[aria-label="Close"]',
+
+            addTitle: '//h1[@aria-label="Add title"]',
+            contentPlaceholder: 'p[aria-label="Add default block"]',
+            addContent: '//p[@data-title="Paragraph"]',
+
+            publish: '//div[@class="editor-header__settings"]//button[text()="Publish"]',
+            publishFromPanel: '//div[@class="editor-post-publish-panel"]//button[text()="Publish"]',
+
+            publishMessage: '//div[@class="components-snackbar__content" and text()="Page published."]',
         },
         // Comments
         comments: {
@@ -650,14 +663,15 @@ export const selector = {
                     makeVendorFeature: '//span[contains(text(), "Make Vendor Featured")]/..//label[@class="switch tips"]',
 
                     // Vendor Subscription
-                    AssignSubscriptionPack: '.multiselect--active > .multiselect__tags',
+                    assignSubscriptionPackDropdown: '//label[text()="Assign Subscription Pack"]/..//div[@class="multiselect__select"]',
+                    selectSubscriptionPack: (subscriptionPack: string) => `//li[contains(.,'${subscriptionPack}')]`,
 
                     // Edit Options
                     cancelEdit: '//div[contains(@class, "action-links footer")]//button[contains(text(),"Cancel")]',
                     saveChanges: '//div[contains(@class, "action-links footer")]//button[contains(text(),"Save Changes")]',
                     cancelEditOnTop: '//div[contains(@class, "profile-banner")]//button[contains(text(),"Cancel")]',
                     saveChangesOnTop: '//div[contains(@class, "profile-banner")]//button[contains(text(),"Save Changes")]',
-                    confirmSaveChanges: 'button.swal2-confirm',
+                    closeUpdateSuccessModal: 'button.swal2-confirm',
                 },
 
                 storeCategory: {
@@ -1618,6 +1632,55 @@ export const selector = {
                 },
             },
 
+            // subscriptions
+            subscriptions: {
+                subscribedVendorList: '//h1[text()="Subscribed Vendor List"]',
+
+                // Bulk Actions
+                bulkActions: {
+                    selectAll: 'thead .manage-column input',
+                    selectAction: '.tablenav.top #bulk-action-selector-top', // approved, cancelled, rejected
+                    applyAction: '//div[@class="tablenav top"]//button[normalize-space()="Apply"]',
+                },
+
+                // Filters
+                filters: {
+                    filterByVendors: '(//div[@class="multiselect__select"])[1]',
+                    filterByVendorsInput: '(//input[@class="multiselect__input"])[1]',
+                    filterBySubscriptionPack: '(//div[@class="multiselect__select"])[2]',
+                    filterBySubscriptionPackInput: '(//input[@class="multiselect__input"])[2]',
+                    filteredResult: (result: string) => `//span[text()='${result}']`,
+                },
+
+                // Table
+                table: {
+                    subscriptionTable: '.subscription-list table',
+                    storeColumn: 'thead th.store_name',
+                    subscriptionPackColumn: 'thead th.subscription_title',
+                    startDateColumn: 'thead th.start_date',
+                    endDateColumn: 'thead th.end_date',
+                    statusColumn: 'thead th.status',
+                    orderColumn: 'thead th.order_id',
+                    actionsColumn: 'thead th.action',
+                },
+
+                numberOfRowsFound: '.tablenav.top .displaying-num',
+                noRowsFound: '//td[normalize-space()="No subscribed vendors found."]',
+                currentNoOfRows: 'table tbody tr',
+
+                vendorSubscriptionsRow: (storeName: string) => `//td[@class="column store_name"]//a[contains(text(),'${storeName}')]/../../..`,
+                vendorSubscriptionsCell: (storeName: string) => `//td[@class="column store_name"]//a[contains(text(),'${storeName}')]`,
+                vendorSubscriptionsActions: (storeName: string) => `//td[@class="column store_name"]//a[contains(text(),'${storeName}')]/../../..//td[@class="column action"]//span`,
+
+                subscriptionAction: {
+                    cancelImmediately: '//input[@value="immediately"]',
+                    cancelAfterEndOfCurrentPeriod: '//input[@value="end_of_current_period"]',
+                    cancelSubscription: '.swal2-confirm',
+                    dontCancelSubscription: 'swal2-cancel',
+                    cancelSuccessMessage: '//h2[contains(text(),"Subscription has been cancelled")]', //todo: update locator
+                },
+            },
+
             // Verifications
             verifications: {
                 verificationRequestsText: '//h1[normalize-space()="Verification Requests"]',
@@ -2159,10 +2222,10 @@ export const selector = {
 
                     // Social Connect
                     socialConnect: {
-                        enableMehod: (methodName: string) => `//div[@class='${methodName} dokan-settings-field-type-social']//label[@class='switch tips']`,
+                        enableMethod: (methodName: string) => `//div[@class='${methodName} dokan-settings-field-type-social']//label[@class='switch tips']`,
                         settings: (methodName: string) => `//div[@class='${methodName} dokan-settings-field-type-social']//span[contains(@class,"active-social-expend-btn")]`,
 
-                        //todo: need to update all social connect locators
+                        // todo: need to update all social connect locators
                         facebook: {
                             facebookAppId: '#dokan_verification\\[fb_app_id\\]',
                             facebookAppSecret: '#dokan_verification\\[fb_app_secret\\]',
@@ -2545,8 +2608,10 @@ export const selector = {
 
                 // Add Tax
                 taxTable: '.wc_tax_rates',
+                taxTableRow: 'tbody#rates tr',
                 insertRow: '.plus',
-                taxRate: 'td.rate input',
+                taxRate: (row: number) => `(//td[@class="rate"]//input)[${row}]`,
+                priority: (row: number) => `(//td[@class="priority"]//input)[${row}]`,
                 taxRateSaveChanges: '.woocommerce-save-button',
 
                 // Shipping
@@ -3062,11 +3127,12 @@ export const selector = {
             deactivatePlugin: (plugin: string) => `a#deactivate-${plugin}`,
 
             deactivateReason: {
-                deactivateReasonModal: (plugin: string) => `div#${plugin}-wd-dr-modal`,
-                reason: (reasonNumber: number) => `//div[contains(@class, 'wd-dr-modal')]//ul[@class="wd-de-reasons"]//li[${reasonNumber}]`,
-                skipAndDeactivate: `div.wd-dr-modal div.wd-dr-modal-footer a.dont-bother-me`,
-                cancel: `div.wd-dr-modal div.wd-dr-modal-footer button.wd-dr-cancel-modal`,
-                submitAndDeactivate: `div.wd-dr-modal div.wd-dr-modal-footer button.wd-dr-submit-modal`,
+                deactivateReasonModal: 'div.wd-dr-modal.modal-active',
+                reason: (reasonNumber: number) => `//div[contains(@class, 'wd-dr-modal modal-active')]//ul[@class="wd-de-reasons"]//li[${reasonNumber}]`,
+                reasonInput: 'div.wd-dr-modal.modal-active div.wd-dr-modal-reason-input textarea',
+                skipAndDeactivate: `div.wd-dr-modal.modal-active div.wd-dr-modal-footer a.dont-bother-me`,
+                cancel: `div.wd-dr-modal.modal-active div.wd-dr-modal-footer button.wd-dr-cancel-modal`,
+                submitAndDeactivate: `div.wd-dr-modal.modal-active div.wd-dr-modal-footer button.wd-dr-submit-modal`,
             },
         },
 
@@ -3283,6 +3349,7 @@ export const selector = {
             subscriptionPackOptions: '#dokan-subscription-pack option',
             // Register Button
             register: 'button.woocommerce-Button',
+            registerDokanButton: 'input[name="register"]', // button shows only dokan registration form generated by dokan short code
         },
 
         // Vendor Setup Wizard
@@ -3383,6 +3450,9 @@ export const selector = {
                 tools: 'ul.dokan-dashboard-menu li.tools a',
                 auction: 'ul.dokan-dashboard-menu li.auction a',
                 support: 'ul.dokan-dashboard-menu li.support a',
+                inbox: 'ul.dokan-dashboard-menu li.inbox a',
+                subscription: 'ul.dokan-dashboard-menu li.subscription a',
+                wepos: 'ul.dokan-dashboard-menu li.wepos a', // only available if wepos is plugin is activated
                 settings: '(//ul[@class="dokan-dashboard-menu"]//li[contains(@class,"settings has-submenu")]//a)[1]',
                 visitStore: '//i[@class="fas fa-external-link-alt"]/..',
                 editAccount: '.fa-user',
@@ -5224,6 +5294,30 @@ export const selector = {
             noAnalyticsFound: '//div[@class="tab-pane active" and normalize-space()="There is no analytics found for your store."]',
         },
 
+        vSubscriptions: {
+            dokanSubscriptionDiv: 'div.dokan-subscription-content',
+            noSubscriptionMessage: '//h3[text()="No subscription pack has been found!"]',
+
+            sellerSubscriptionInfo: {
+                sellerSubscriptionInfo: 'div.seller_subs_info',
+                subscribedPack: (pack: string) => `//div[@class='seller_subs_info']//p//span[text()='${pack}']`,
+                cancelSubscription: '//form[@id="dps_submit_form"]//input[@value="Cancel"]',
+                confirmCancelSubscription: '.swal2-confirm',
+                cancelCancelSubscription: '.swal2-cancel',
+                cancelSuccessMessage: '.dokan-message p',
+            },
+
+            productCardContainer: 'div.pack_content_wrapper',
+            productCard: {
+                item: 'div.product_pack_item',
+                price: 'div.pack_price',
+                content: 'div.pack_content',
+                buyButton: 'div.buy_pack_button',
+            },
+
+            buySubscription: (subscriptionPack: string) => `//div[@class="pack_content"]//h2[text()='${subscriptionPack}']/../..//div[@class='buy_pack_button']`,
+        },
+
         // Announcements
         vAnnouncement: {
             announcementText: '.dokan-notice-listing h1',
@@ -5568,7 +5662,7 @@ export const selector = {
             lastName: '#account_last_name',
             email: '#account_email',
             currentPassword: '#password_current',
-            NewPassword: '#password_1',
+            newPassword: '#password_1',
             confirmNewPassword: '#password_2',
             saveChanges: '.dokan-btn',
             saveSuccessMessage: 'Account details changed successfully.',
@@ -5776,7 +5870,6 @@ export const selector = {
             visitStore: '//a[normalize-space()="Visit Store"]',
 
             createNewAddon: '.dokan-pa-all-addons .dokan-btn',
-            createNew: '//a[normalize-space()="Create New"]',
 
             // table
             table: {
@@ -5981,16 +6074,16 @@ export const selector = {
 
             verificationMethodAllDiv: '.dokan-verification-content .dokan-panel',
             requiredText: '//small[text()="(Required)"]',
-            firtstVerificationMethod: '(//div[@class="dokan-panel-heading"]//strong)[1]',
+            firstVerificationMethod: '(//div[@class="dokan-panel-heading"]//strong)[1]',
             verificationMethodDiv: (methodName: string) => `//strong[text()='${methodName}']/../..`,
             verificationMethodHelpText: (methodName: string) => `//strong[text()='${methodName}']/../..//p`,
             startVerification: (methodName: string) => `//strong[text()='${methodName}']/../..//button[contains(@class,'dokan-vendor-verification-start')]`,
             cancelVerification: (methodName: string) => `//strong[text()='${methodName}']/../..//button[contains(@class,'dokan-vendor-verification-cancel-request')]`,
             uploadFiles: (methodName: string) => `//strong[text()='${methodName}']/../..//a[@data-uploader_button_text='Add File']`,
-            removeuploadedFile: (methodName: string) => `(//strong[text()='${methodName}']/../..//a[contains(@class,'dokan-btn-danger')])[1]`,
+            removeUploadedFile: (methodName: string) => `(//strong[text()='${methodName}']/../..//a[contains(@class,'dokan-btn-danger')])[1]`,
             submit: (methodName: string) => `//strong[text()='${methodName}']/../..//input[contains(@class,'dokan_vendor_verification_submit')]`,
             cancelSubmit: (methodName: string) => `//strong[text()='${methodName}']/../..//input[contains(@class,'dokan_vendor_verification_cancel')]`,
-            verificationStatus: (methodName: string, staus: string) => `//strong[text()='${methodName}']/../..//p//label[contains(@class,'${staus}')]`,
+            verificationStatus: (methodName: string, status: string) => `//strong[text()='${methodName}']/../..//p//label[contains(@class,'${status}')]`,
             verificationRequestDocument: (methodName: string) => `(//strong[text()='${methodName}']/../..//div[@class='dokan-vendor-verification-file-item']//a)[1]`,
             verificationRequestNote: (methodName: string) => `(//strong[text()='${methodName}']/../..//p[text()='Note:']/..//p)[2]`,
 
@@ -6082,6 +6175,8 @@ export const selector = {
             flatRateCalculationType: '#calculation_type',
             // Free Shipping
             freeShippingTitle: '#method_title',
+            freeShippingOptions: '//label[@for="dokan-free-shipping-options"]/..//select', // coupon, min_amount, either, both
+            freeShippingMinAmountRule: 'input#apply_min_amount_rule_before_discount',
             freeShippingMinimumOrderAmount: '#minimum_order_amount',
             // Local Pickup
             localPickupTitle: '#method_title',
@@ -6599,7 +6694,7 @@ export const selector = {
 
             // Filter
             filters: {
-                searchProduct: '.dokan-form-control',
+                searchProduct: 'input.dokan-form-control[placeholder="Search Products"]',
                 location: '.location-address input',
                 selectCategory: '#product_cat',
                 radiusSlider: '.dokan-range-slider',
@@ -6613,10 +6708,12 @@ export const selector = {
             // sort
             sort: '.woocommerce-ordering .orderby', // popularity, rating, date, price, price-desc
 
+            products: '#main ul.products',
+
             // Product Card
             productCard: {
-                card: '#main .products',
-                productDetailsLink: '#main .products .woocommerce-LoopProduct-link',
+                card: '#main ul.products li',
+                productDetailsLink: '#main ul.products li.product a.woocommerce-LoopProduct-link',
                 productTitle: '#main .products .woocommerce-loop-product__title',
                 productPrice: '#main .products .price',
                 addToCart: '#main .products a.add_to_cart_button',
@@ -7261,7 +7358,7 @@ export const selector = {
             cartItem: (productName: string) => `//tr[@class='wc-block-cart-items__row']//a[@class= 'wc-block-components-product-name' and contains(text(),'${productName}')]`,
             removeItem: (productName: string) => `//a[contains(text(),'${productName}')]/..//button[@class='wc-block-cart-item__remove-link']`,
             quantity: (productName: string) => `//a[contains(text(),'${productName}')]/..//input[@class='wc-block-components-quantity-selector__input']`,
-            addCoupon: 'a[aria-label="Add a coupon"]',
+            addCoupon: '//button[text()="Add a coupon"]',
             couponCode: 'form#wc-block-components-totals-coupon__form input',
             applyCoupon: 'form#wc-block-components-totals-coupon__form  button',
             removeCoupon: (couponCode: string) => `//span[contains(text(), '${couponCode.toLowerCase()}')]/..//button`,
@@ -7278,7 +7375,7 @@ export const selector = {
             vendorShippingMethod: (shippingMethod: string) => `//label[contains(text(),'${shippingMethod}')]/..//input`, // For Unique Shipping Method
 
             // Proceed to Checkout
-            // proceedToCheckout: '.checkout-button.button.wc-forward, .wp-block-woocommerce-proceed-to-checkout-block a', //todo: remove in future
+            // proceedToCheckout: '.checkout-button.button.wc-forward, .wp-block-woocommerce-proceed-to-checkout-block a', // todo: remove in future
             // proceedToCheckout: 'div.wc-block-cart__submit-container a.wc-block-cart__submit-button',
             proceedToCheckout: '//a[.="Proceed to Checkout"]',
             // proceedToCheckout: '//span[contains (text(), "Proceed to Checkout")]/..',

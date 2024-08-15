@@ -6,7 +6,7 @@ import { payloads } from '@utils/payloads';
 import { data } from '@utils/testData';
 import { helpers } from '@utils/helpers';
 
-const { LOCAL, DOKAN_PRO, BASE_URL } = process.env;
+const { CI, LOCAL, DOKAN_PRO, BASE_URL } = process.env;
 
 setup.describe('authenticate users & set permalink', () => {
     let apiUtils: ApiUtils;
@@ -19,29 +19,21 @@ setup.describe('authenticate users & set permalink', () => {
         await apiUtils.dispose();
     });
 
-    setup.skip('get server url', { tag: ['@lite'] }, async () => {
-        const apiUtils = new ApiUtils(await request.newContext());
-        const headers = await apiUtils.getSiteHeaders(BASE_URL);
-        if (headers.link) {
-            const serverUrl = headers.link.includes('rest_route') ? BASE_URL + '/?rest_route=' : BASE_URL + '/wp-json';
-            helpers.createEnvVar('SERVER_URL', serverUrl);
-        } else {
-            console.log("Headers link doesn't exists");
-        }
-    });
-
     setup('authenticate admin', { tag: ['@lite'] }, async ({ page }) => {
         const loginPage = new LoginPage(page);
         await loginPage.adminLogin(data.admin, data.auth.adminAuthFile);
     });
-
-    //todo: add plugin activation for local setup
 
     setup.skip('admin set WpSettings', { tag: ['@lite'] }, async ({ page }) => {
         const loginPage = new LoginPage(page);
         const wpPage = new WpPage(page);
         await loginPage.adminLogin(data.admin);
         await wpPage.setPermalinkSettings(data.wpSettings.permalink);
+    });
+
+    setup('enable admin selling status', { tag: ['@lite'] }, async () => {
+        const responseBody = await apiUtils.setStoreSettings(payloads.setupStore, payloads.adminAuth);
+        expect(responseBody).toBeTruthy();
     });
 
     setup('add customer1', { tag: ['@lite'] }, async () => {

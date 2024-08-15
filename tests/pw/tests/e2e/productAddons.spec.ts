@@ -43,15 +43,15 @@ test.describe('Product addon functionality test', () => {
         await vendor.vendorProductAddonsSettingsRenderProperly();
     });
 
-    test('vendor can add addons', { tag: ['@pro', '@vendor'] }, async () => {
+    test('vendor can add global product addon', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.addAddon({ ...data.vendor.addon(), category: categoryName });
     });
 
-    test('vendor can edit addon', { tag: ['@pro', '@vendor'] }, async () => {
+    test('vendor can edit product addon', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.editAddon({ ...data.vendor.addon(), name: addonName, title: addonFieldTitle });
     });
 
-    test('vendor can delete addon', { tag: ['@pro', '@vendor'] }, async () => {
+    test('vendor can delete product addon', { tag: ['@pro', '@vendor'] }, async () => {
         const [, addonName] = await createVendorProductAddon();
         await vendor.deleteAddon({ ...data.vendor.addon(), name: addonName });
     });

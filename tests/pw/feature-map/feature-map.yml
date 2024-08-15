@@ -110,6 +110,7 @@
           vendor can edit product [lite]: true
           vendor can quick edit product: true
           vendor can add product description [lite]: true
+          vendor can add product addon options [duplicate]: false
           vendor can add product quantity discount: false
           vendor can add product rma options: false
           vendor can add product wholesale options: true
@@ -316,7 +317,20 @@
 - page: 'Shortcode'
   features:
       admin:
-          admin can add vendor registration shortcode: false
+          admin can create page with dokan shortcode: false
+      vendor:
+          vendor can view dokan dashboard (shortcode): true
+          vendor can view dokan subscription packs (shortcode): true
+          guest user can view vendor registration form (shortcode): true
+      customer:
+          customer can view best selling products (shortcode): true
+          customer can view top rated products (shortcode): true
+          customer can view customer migration form (shortcode): true
+          customer can view geolocation filter form (shortcode): true
+          customer can view advertised products (shortcode): false
+          customer can view stores (shortcode): true
+          customer can view my orders (shortcode): true
+          customer can view request for quote (shortcode): true
 
 - page: 'Vendor Settings'
   features:
@@ -335,6 +349,7 @@
           vendor can set vacation settings: true
           vendor can set discount settings: true
           vendor can set biography settings: true
+          vendor can set live chat settings: false
           vendor can set store support settings: true
           vendor can set min-max settings: true
           vendor can set shipStation settings: true
@@ -436,6 +451,7 @@
           admin can export all logs: true
           admin can filter all logs by store name: true
           admin can filter all logs by order status: true
+          #   admin can filter all logs by calander: true
       vendor:
           vendor can view reports menu page: true
           vendor can export statement: true
@@ -572,7 +588,7 @@
           admin can enable EU compliance fields on vendor registration: true
           admin can enable EU compliance fields for customers: true
           admin can enable germanized support for vendors: true
-          admin can enable orverride invoice number premission for vendors: true
+          admin can enable override invoice number permission for vendors: true
           admin can add EU compliance data while adding a vendor: true
           admin can add EU compliance data on user profile (customer) edit: true
           admin can update EU compliance data on user profile (customer) edit: true
@@ -586,7 +602,7 @@
           admin can disable EU compliance fields on vendor registration: false
           admin can disable EU compliance fields for customers: false
           admin can disable germanized support for vendors: false
-          admin can disable orverride invoice number premission for vendors: false
+          admin can disable override invoice number permission for vendors: false
       vendor:
           vendor can add EU compliance data on store settings: true
           vendor can add EU compliance data on registration: true
@@ -598,13 +614,13 @@
           vendor can override invoice number: false
       customer:
           customer can add EU compliance data on billing address: true
-          customer can add EU compliance data while chechout: false
+          customer can add EU compliance data while checkout: false
           customer can update EU compliance data: true
           customer can add EU compliance data (vendor) while become a vendor: true
           customer can view vendor EU compliance data on single store page: true
           customer can view product EU compliance data on single product page: true
       guest:
-          guest customer can add EU compliance data while chechout: false
+          guest customer can add EU compliance data while checkout: false
 
 - page: 'Follow Store'
   features:
@@ -616,23 +632,57 @@
           customer can view followed vendors: false
           customer can follow store on store list page: true
           customer can follow store on single store: true
+          customer can unfollow store on store list page: true
+          customer can unfollow store on single store: true
 
 - page: 'Geolocation'
   features:
       admin:
-          no test is written for geolocation module: false
+          #   admin can set Dokan geolocation settings [duplicate]: false
+          admin can set map location position: false
+          admin can set where to display store map: false
+          admin can enable filters before location map: false
+          admin can enable product location tab on single product page: false
+          admin can set map radius search unit and distance: false
+          admin can set map zoom level: false
+          admin can set map default location: false
+          admin can add geolocation widget (product location) widget: false
+          admin can add geolocation widget (store location) widget: false
+          admin can add geolocation widget (geolocation filter form) widget: false
+          #   admin can add geolocation filters shortcode [duplicate]: false
+      #   vendor:
+      #   vendor can add location to store [duplicate]: false
+      #   vendor can add location to product [duplicate]: false
+      #   customer:
+      #   customer can view map on shop page [duplicate]: false
+      #   customer can view map on store list page [duplicate]: false
+      #   customer can view map on single product page [duplicate]: false
+      #   customer can view product location on map [duplicate]: false
+      #   customer can view store location on map [duplicate]: false
+      #   customer can use filters on shop page [duplicate]: false
+      #   customer can use filters on store list page [duplicate]: false
 
 - page: 'Live Chat'
   features:
       admin:
-          no test is written for live chat module (out of scope): false
+          admin can set chat provider: false
+          admin can enable chat button on vendor page: false
+          admin can enable chat button on product page: false
+      vendor:
+          #  vendor can set live chat settings [duplicate]: false
+          vendor can set inbox menu page: false
+          vendor can view inbox menu page: false
+          vendor can chat with customer: false
+      customer:
+          customer can chat with vendor: false
 
 - page: 'Live Search'
   features:
       admin:
           admin can set live search options: false
+          admin can add live search widget: false
       customer:
-          customer can search product using live search - suggestin box: false
+          customer can search product using live search - suggestion box: false
           customer can search product using live search - autoload content: false
 
 - page: 'MangoPay'
@@ -654,9 +704,12 @@
   features:
       vendor:
           vendor can view product addons menu page: true
-          vendor can add addons: true
-          vendor can edit addon: true
-          vendor can delete addon: true
+          vendor can add global product addon: true
+          vendor can edit global product addon: true
+          vendor can delete product addon: true
+          vendor can add individual product addon [duplicate]: false
+          vendor can edit individual product product addon: false
+          vendor can delete individual productproduct addon: false
       customer:
           customer can view product addons on single product page: false
           customer can buy product with addons: false
@@ -664,16 +717,30 @@
 - page: 'Product Advertising'
   features:
       admin:
+          #   admin can set Dokan product advertising settings [duplicate]: true
+          admin can set product advertising slot: false
+          admin can set product advertising expiry days: false
+          admin can enable vendor product advertising purchase permission: false
+          admin can set product advertisement cost: false
+          admin can enable product advertising on dokan subscription: false
+          admin can set advertised product as featured: false
+          admin can set advertised product display pefeference: false
+          admin can hide out of stock advertised product: false
+          admin can add product advertising widget: false
+          #    admin can add product advertising shortcode [duplicate]: false
           admin can view product advertising menu page: true
           admin can add product advertisement: true
-          admin can search advertised product: true
+          admin can search advertised product by product: true
+          admin can search advertised product by order: false
           admin can filter advertised product by stores: true
           admin can filter advertised product by creation process: true
+          #   admin can filter advertised product by calander: false
           admin can expire advertised product: true
           admin can delete advertised product: true
           admin can perform bulk action on product advertisements: false
       vendor:
-          vendor can buy product advertising: false
+          vendor can buy product advertising (product list page): false
+          vendor can buy product advertising (product edit page): false
           vendor can buy booking product advertising: false
           vendor can buy auction product advertising: false
       customer:
@@ -713,7 +780,7 @@
           customer can search question: true
           customer can post question: true
       guest:
-          guest customer need to signin/signup post question: true
+          guest customer need to signIn/signUp post question: true
 
 - page: 'Product Subscription'
   features:
@@ -883,6 +950,7 @@
           admin can search support ticket by ticket title: true
           admin can filter support tickets by vendor: true
           admin can filter support tickets by customer: true
+          #   admin can filter support tickets by calander: false
           admin can reply to support ticket as admin: true
           admin can reply to support ticket as vendor: true
           admin can disable support ticket email notification: true
@@ -959,7 +1027,22 @@
 - page: 'Vendor Subscription'
   features:
       admin:
-          no test is written for vendor subscription: false
+          admin can view subscriptions menu page: true
+          admin can filter subscribed vendors by vendor: true
+          admin can filter subscribed vendors by subscription pack: true
+          admin can cancel subscription (immediately): true
+          admin can cancel subscription (end of the current period): true
+          admin can reactive recurring subscription (has active period ): false
+          admin can perform bulk action on subscribed vendors: true
+          admin can assign non recurring subscription pack to vendor: true
+      vendor:
+          vendor can view subscriptions menu page: true
+          vendor can buy non recurring subscription pack (on registration): true
+          vendor can buy non recurring subscription pack (on subscription page): true
+          vendor can buy recurring subscription pack (on registration): false
+          vendor can buy recurring subscription pack (on subscription page): false
+          vendor can switch subscription: true
+          vendor can cancel subscription: true
 
 - page: 'Vendor Verification'
   features:
@@ -968,7 +1051,7 @@
           admin can add vendor verification method: true
           admin can edit vendor verification method: true
           admin can delete vendor verification method: true
-          admin can update verificaiton method status: true
+          admin can update verification method status: true
           admin can view verifications menu page: true
           admin can filter verification requests by pending status: true
           admin can filter verification requests by approved status: true
@@ -990,7 +1073,7 @@
           vendor can cancel verification request: true
           vendor can view verification request documents: true
           vendor can view verification request notes: true
-          vendor can view only required verificaiton method on setup wizard: true
+          vendor can view only required verification method on setup wizard: true
           vendor can submit verification request on setup wizard: true
           vendor can re-submit verification request on setup wizard: true
           vendor can cancel verification request on setup wizard: true
@@ -1004,6 +1087,10 @@
 - page: 'Wholesale'
   features:
       admin:
+          #   admin can set Dokan wholesale settings [duplicate]: true
+          admin can set wholesale price viewer: false
+          admin can set show wholsesale price on shop archive: false
+          admin can set need approval for becoming wholesale customer: false
           admin can view wholesale customers menu page: true
           admin can search wholesale customer: true
           admin can disable customer's wholesale capability: true
@@ -1012,6 +1099,8 @@
           admin can view wholesale customer orders: true
           admin can delete wholesale customer: true
           admin can perform bulk action on wholesale customers: true
+      vendor:
+          vendor can create wholesale product: false
       customer:
           customer can become a wholesale customer: true
           customer can request for become a wholesale customer: true
