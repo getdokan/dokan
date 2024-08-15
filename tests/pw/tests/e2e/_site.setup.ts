@@ -6,7 +6,7 @@ import { data } from '@utils/testData';
 import { dbData } from '@utils/dbData';
 import { helpers } from '@utils/helpers';
 
-const { LOCAL, DOKAN_PRO, BASE_URL } = process.env;
+const { LOCAL, BASE_URL } = process.env;
 
 setup.describe('site setup', () => {
     let apiUtils: ApiUtils;

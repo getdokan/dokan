@@ -126,6 +126,7 @@ export default defineConfig({
             name: 'auth_setup',
             testMatch: ['_auth.setup.ts'],
             dependencies: NO_SETUP ? [] : ['site_setup'],
+            fullyParallel: true,
         },
 
         // e2e_setup
@@ -133,13 +134,13 @@ export default defineConfig({
             name: 'e2e_setup',
             testMatch: ['_env.setup.ts'],
             dependencies: NO_SETUP ? [] : ['auth_setup'],
+             fullyParallel: true,
         },
 
         // e2e_tests
         {
             name: 'e2e_tests',
             testMatch: /.*\.spec\.ts/,
-            testIgnore: ['_coverage.teardown.spec.ts'],
             /* whether not to run setup tests before running actual tests */
             dependencies: NO_SETUP ? [] : ['e2e_setup'],
             /* whether not to run teardown tests after running actual tests */
