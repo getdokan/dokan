@@ -40,7 +40,7 @@ test.describe('vendor subscription api test', () => {
         await apiUtils.dispose();
     });
 
-    test.only('get all vendor subscriptions', { tag: ['@pro'] }, async () => {
+    test('get all vendor subscriptions', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllVendorSubscriptions);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
