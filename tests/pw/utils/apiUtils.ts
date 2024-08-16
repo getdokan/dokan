@@ -1442,6 +1442,16 @@ export class ApiUtils {
     }
 
     /**
+     * shipping status methods
+     */
+
+    async createShipment(orderId: string, payload: object, auth?: auth): Promise<[responseBody, string, string]> {
+        const [, responseBody] = await this.post(endPoints.createShipment(orderId), { data: payload, headers: auth });
+        const shipmentId = responseBody?.id;
+        return [responseBody, orderId, shipmentId];
+    }
+
+    /**
      * wp api methods
      */
 

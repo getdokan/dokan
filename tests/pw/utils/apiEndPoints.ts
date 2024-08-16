@@ -365,6 +365,13 @@ export const endPoints = {
     //commission
     getCommission: `${SERVER_URL}/dokan/v1/commission`,
 
+    // shipping status
+    getShippingStatus: `${SERVER_URL}/dokan/v1/shipping-status`,
+    getAllShipments: (orderId: string) => `${SERVER_URL}/dokan/v1/shipping-status/orders/${orderId}`,
+    createShipment: (orderId: string) => `${SERVER_URL}/dokan/v1/shipping-status/orders/${orderId}`,
+    getSingleShipment: (orderId: string, shipmentId: string) => `${SERVER_URL}/dokan/v1/shipping-status/orders/${orderId}/shipment/${shipmentId}`,
+    updateShipment: (orderId: string, shipmentId: string) => `${SERVER_URL}/dokan/v1/shipping-status/orders/${orderId}/shipment/${shipmentId}`,
+
     wc: {
         // coupons
         getAllCoupons: `${SERVER_URL}/wc/v3/coupons`,
