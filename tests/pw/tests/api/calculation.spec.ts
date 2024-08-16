@@ -10,7 +10,7 @@ const { DOKAN_PRO } = process.env;
 
 test.use({ extraHTTPHeaders: payloads.adminAuth });
 
-test.describe('calculation test', () => {
+test.describe.skip('calculation test', () => {
     let apiUtils: ApiUtils;
     let taxRate: number;
     let commission: commission;

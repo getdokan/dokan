@@ -75,22 +75,22 @@ setup.describe('site setup', () => {
         expect(response.ok()).toBeTruthy();
     });
 
-    setup('activate Woocommerce booking', { tag: ['@lite'] }, async () => {
+    setup('activate Woocommerce booking', { tag: ['@pro'] }, async () => {
         const [response] = await apiUtils.updatePlugin(data.plugin.pluginList.woocommerceBookings, { status: 'active' }, payloads.adminAuth);
         expect(response.ok()).toBeTruthy();
     });
 
-    setup('activate Woocommerce product addons', { tag: ['@lite'] }, async () => {
+    setup('activate Woocommerce product addons', { tag: ['@pro'] }, async () => {
         const [response] = await apiUtils.updatePlugin(data.plugin.pluginList.woocommerceProductAddons, { status: 'active' }, payloads.adminAuth);
         expect(response.ok()).toBeTruthy();
     });
 
-    setup('activate Woocommerce simple auctions', { tag: ['@lite'] }, async () => {
+    setup('activate Woocommerce simple auctions', { tag: ['@pro'] }, async () => {
         const [response] = await apiUtils.updatePlugin(data.plugin.pluginList.woocommerceSimpleAuctions, { status: 'active' }, payloads.adminAuth);
         expect(response.ok()).toBeTruthy();
     });
 
-    setup('activate Woocommerce subscriptions', { tag: ['@lite'] }, async () => {
+    setup('activate Woocommerce subscriptions', { tag: ['@pro'] }, async () => {
         const [response] = await apiUtils.updatePlugin(data.plugin.pluginList.woocommerceSubscriptions, { status: 'active' }, payloads.adminAuth);
         expect(response.ok()).toBeTruthy();
     });
