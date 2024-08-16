@@ -11,6 +11,7 @@ import { payloads } from '@utils/payloads';
 import { schemas } from '@utils/schemas';
 
 test.describe('shipping status test', () => {
+    test.skip(true, 'feature not merged yet');
     let apiUtils: ApiUtils;
     let orderId: string;
     let shipmentId: string;
