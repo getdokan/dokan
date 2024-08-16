@@ -4,7 +4,7 @@ import { dbUtils } from '@utils/dbUtils';
 import { data } from '@utils/testData';
 import { dbData } from '@utils/dbData';
 
-test.describe.only('License test', () => {
+test.describe('License test', () => {
     let admin: LicensePage;
     let aPage: Page;
 
