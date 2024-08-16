@@ -237,8 +237,9 @@ setup.describe('setup dokan settings', () => {
         await dbUtils.setOptionValue(dbData.dokan.optionName.spmv, dbData.dokan.spmvSettings);
     });
 
-    setup.skip('admin set dokan vendor subscription settings', { tag: ['@pro'] }, async () => {
+    setup('admin set dokan vendor subscription settings', { tag: ['@pro'] }, async () => {
         await dbUtils.setOptionValue(dbData.dokan.optionName.vendorSubscription, dbData.dokan.vendorSubscriptionSettings);
+        await dbUtils.setSubscriptionProductType();
     });
 });
 

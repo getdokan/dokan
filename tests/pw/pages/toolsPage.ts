@@ -85,7 +85,7 @@ export class ToolsPage extends AdminPage {
     // import dummy data
     async importDummyData() {
         await this.goIfNotThere(data.subUrls.backend.dokan.tools);
-        await this.clickAndWaitForLoadState( toolsAdmin.importDummyData.import);
+        await this.clickAndWaitForLoadState(toolsAdmin.importDummyData.import);
         const urls = [data.subUrls.api.dokan.dummyDataImport, data.subUrls.api.dokan.dummyDataImport, data.subUrls.api.dokan.dummyDataImport, data.subUrls.api.dokan.dummyDataImport, data.subUrls.api.dokan.dummyDataImport];
         await this.clickAndWaitForResponsesSequentially(urls, selector.admin.dokan.dummyData.runTheImporter);
         await this.toBeVisible(selector.admin.dokan.dummyData.importComplete);

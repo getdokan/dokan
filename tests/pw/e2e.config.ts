@@ -134,7 +134,7 @@ export default defineConfig({
             name: 'e2e_setup',
             testMatch: ['_env.setup.ts'],
             dependencies: NO_SETUP ? [] : ['auth_setup'],
-             fullyParallel: true,
+            fullyParallel: true,
         },
 
         // e2e_tests

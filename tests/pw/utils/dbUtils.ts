@@ -193,19 +193,45 @@ export const dbUtils = {
         return res;
     },
 
+    // set subscription product type
+    async setSubscriptionProductType(): Promise<void> {
+        const termInsertQuery = `INSERT INTO ${dbPrefix}_terms (term_id, name, slug, term_group) SELECT NULL, ?, ?, ? WHERE NOT EXISTS (SELECT 1 FROM ${dbPrefix}_terms WHERE name = ?);`;
+        await dbUtils.dbQuery(termInsertQuery, ['product_pack', 'product_pack', 0, 'product_pack']);
+
+        const termIdQuery = `SELECT term_id FROM ${dbPrefix}_terms WHERE name = ?;`;
+        const [termIdQueryResult] = await dbUtils.dbQuery(termIdQuery, ['product_pack']);
+        const termId = termIdQueryResult.term_id;
+        // console.log('termId:', termId);
+
+        const termTaxonomyInsertQuery = `INSERT INTO ${dbPrefix}_term_taxonomy (term_taxonomy_id, term_id, taxonomy, description, parent, count) SELECT NULL, ?, ?, ?, ?, ? WHERE NOT EXISTS (SELECT 1 FROM ${dbPrefix}_term_taxonomy WHERE term_id = ?);`;
+        await dbUtils.dbQuery(termTaxonomyInsertQuery, [termId, 'product_type', '', 0, 0, termId]);
+    },
+
     // update simple product type to subscription product type
-    async updateProductType(productId: string): Promise<any> {
-        // get term id
-        const simpleTermIdQuery = `SELECT term_id FROM ${dbPrefix}_terms WHERE name = 'simple';`;
-        const simpleTermIdQueryResult = await dbUtils.dbQuery(simpleTermIdQuery);
-        const simpleTermId = simpleTermIdQueryResult[0].term_id;
+    async updateProductType(productId?: string): Promise<void> {
+        // get term ids
+        const termIdQuery = `SELECT t1.term_id AS simple_term_id, t2.term_id AS subscription_term_id
+                    FROM (SELECT term_id FROM ${dbPrefix}_terms WHERE name = ? ORDER BY term_id DESC LIMIT 1) t1, ${dbPrefix}_terms t2 
+                    WHERE t2.name = ?;
+                `;
+        const [termIdQueryResult] = await dbUtils.dbQuery(termIdQuery, ['simple', 'product_pack']);
+        let simpleTermId = termIdQueryResult.simple_term_id;
+        const subscriptionTermId = termIdQueryResult.subscription_term_id;
+        // console.log('simpleTermId:', simpleTermId, 'subscriptionTermId:', subscriptionTermId);
 
-        const subscriptionTermIdQuery = `SELECT term_id FROM ${dbPrefix}_terms WHERE name = 'product_pack';`;
-        const subscriptionTermIdQueryResult = await dbUtils.dbQuery(subscriptionTermIdQuery);
-        const subscriptionTermId = subscriptionTermIdQueryResult[0].term_id;
+        const termTaxonomyIdQuery = `SELECT  t1.term_taxonomy_id AS simple_term_taxonomy_id,  t2.term_taxonomy_id AS subscription_term_taxonomy_id 
+                    FROM ${dbPrefix}_term_taxonomy t1, ${dbPrefix}_term_taxonomy t2 
+                    WHERE  t1.term_id = ? AND t2.term_id = ?;    
+                `;
+        const [termTaxonomyIdQueryResult] = await dbUtils.dbQuery(termTaxonomyIdQuery, [simpleTermId, subscriptionTermId]);
+        const simpleTermTaxonomyId = termTaxonomyIdQueryResult.simple_term_taxonomy_id;
+        const subscriptionTermTaxonomyId = termTaxonomyIdQueryResult.subscription_term_taxonomy_id;
+        // console.log('simpleTermTaxonomyId:', simpleTermTaxonomyId, 'subscriptionTermTaxonomyId:', subscriptionTermTaxonomyId);
 
-        const query = `UPDATE ${dbPrefix}_term_relationships SET term_taxonomy_id = '${subscriptionTermId}' WHERE object_id = '${productId}' AND term_taxonomy_id = ${simpleTermId};`;
-        const res = await dbUtils.dbQuery(query);
-        return res;
+        const updateProductTypeQuery = `UPDATE ${dbPrefix}_term_relationships SET term_taxonomy_id = ? WHERE object_id = ? AND term_taxonomy_id = ?;`;
+        await dbUtils.dbQuery(updateProductTypeQuery, [subscriptionTermTaxonomyId, productId, simpleTermTaxonomyId]);
+
+        const updateCountQuery = `UPDATE ${dbPrefix}_term_taxonomy SET count = count + 1 WHERE term_taxonomy_id = ?;`;
+        await dbUtils.dbQuery(updateCountQuery, [subscriptionTermTaxonomyId]);
     },
 };

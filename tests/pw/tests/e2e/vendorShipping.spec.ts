@@ -10,7 +10,6 @@ test.describe('Vendor shipping test', () => {
         const vendorContext = await browser.newContext(data.auth.vendorAuth);
         vPage = await vendorContext.newPage();
         vendor = new VendorShippingPage(vPage);
-
     });
 
     test.afterAll(async () => {
@@ -53,7 +52,7 @@ test.describe('Vendor shipping test', () => {
     });
 
     test('vendor can delete shipping method', { tag: ['@pro', '@vendor'] }, async () => {
-        await vendor.addShippingMethod(data.vendor.shipping.shippingMethods.flatRate, true, true); 
+        await vendor.addShippingMethod(data.vendor.shipping.shippingMethods.flatRate, true, true);
         await vendor.deleteShippingMethod(data.vendor.shipping.shippingMethods.flatRate);
     });
 });

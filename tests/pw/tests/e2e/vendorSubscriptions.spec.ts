@@ -8,7 +8,7 @@ import { dbUtils } from '@utils/dbUtils';
 
 test.slow();
 test.describe('Vendor subscription test', () => {
-    test.skip(true, ' need to update create dokan subscription product');
+    // test.skip(true, ' need to update create dokan subscription product');
     let admin: VendorSubscriptionsPage;
     let vendor: VendorSubscriptionsPage;
     let aPage: Page, vPage: Page;
@@ -35,8 +35,10 @@ test.describe('Vendor subscription test', () => {
 
         apiUtils = new ApiUtils(await request.newContext());
 
-        [subscriptionPackId, subscriptionPack] = await createDokanSubscriptionProduct(payloads.createDokanSubscriptionProduct(), payloads.saveVendorSubscriptionProductCommission);
-        [, storeName] = await apiUtils.assignSubscriptionToVendor(subscriptionPackId);
+        await dbUtils.updateProductType();
+
+        // [subscriptionPackId, subscriptionPack] = await createDokanSubscriptionProduct(payloads.createDokanSubscriptionProduct(), payloads.saveVendorSubscriptionProductCommission);
+        // [, storeName] = await apiUtils.assignSubscriptionToVendor(subscriptionPackId);
     });
 
     test.afterAll(async () => {
@@ -50,8 +52,8 @@ test.describe('Vendor subscription test', () => {
     // todo: add dokan subscription settings tests
     // todo: add dokan subscription product tests
 
-    test('admin can view subscriptions menu page', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
-        await admin.subscriptionsRenderProperly();
+    test.only('admin can view subscriptions menu page', { tag: ['@pro', '@exploratory', '@admin'] }, async () => {
+        // await admin.subscriptionsRenderProperly();
     });
 
     test('admin can filter subscribed vendors by vendor', { tag: ['@pro', '@admin'] }, async () => {

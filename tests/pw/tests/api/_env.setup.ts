@@ -213,6 +213,7 @@ setup.describe('setup dokan settings', () => {
 
     setup('admin set dokan vendor subscription settings', { tag: ['@pro'] }, async () => {
         await dbUtils.setOptionValue(dbData.dokan.optionName.vendorSubscription, dbData.dokan.vendorSubscriptionSettings);
+        await dbUtils.setSubscriptionProductType();
     });
 });
 
