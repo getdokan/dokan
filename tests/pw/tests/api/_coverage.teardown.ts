@@ -20,7 +20,7 @@ teardown.describe('get api test coverage', () => {
         await apiUtils.dispose();
     });
 
-    teardown('get coverage', async () => {
+    teardown('get coverage', { tag: ['@lite'] }, async () => {
         const endpoints = [endPoints.getAllDokanEndpointsAdmin, endPoints.getAllDokanEndpointsV1, endPoints.getAllDokanEndpointsV2];
         const allRoutes: string[] = [];
         const allRouteObjValues = [];

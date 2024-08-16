@@ -40,7 +40,7 @@ export class ShippingPage extends AdminPage {
         const zoneIsVisible = await this.isVisible(shippingSettings.shippingZoneRow(shipping.zoneName));
         if (!zoneIsVisible) {
             // add shipping zone
-            await this.click(shippingSettings.addShippingZone);
+            await this.clickAndWaitForLoadState(shippingSettings.addShippingZone);
             // zone
             await this.clearAndType(shippingSettings.zoneName, shipping.zoneName);
             // zone regions
@@ -50,7 +50,7 @@ export class ShippingPage extends AdminPage {
             await this.press(data.key.escape);
         } else {
             // edit shipping zone
-            await this.click(shippingSettings.editShippingZone(shipping.zoneName));
+            await this.clickAndWaitForLoadState(shippingSettings.editShippingZone(shipping.zoneName));
         }
 
         // shipping method

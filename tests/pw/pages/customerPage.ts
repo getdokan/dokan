@@ -199,6 +199,7 @@ export class CustomerPage extends BasePage {
         await this.goIfNotThere(data.subUrls.frontend.billingAddress);
         await this.updateBillingFields(billingInfo);
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.billingAddress, customerAddress.billing.saveAddress, 302);
+        await this.toBeVisible(selector.customer.cWooSelector.wooCommerceSuccessMessage);
         await this.toContainText(selector.customer.cWooSelector.wooCommerceSuccessMessage, data.customer.address.addressChangeSuccessMessage);
     }
 
@@ -207,6 +208,7 @@ export class CustomerPage extends BasePage {
         await this.goIfNotThere(data.subUrls.frontend.shippingAddress);
         await this.updateShippingFields(shippingInfo);
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.shippingAddress, customerAddress.shipping.saveAddress, 302);
+        await this.toBeVisible(selector.customer.cWooSelector.wooCommerceSuccessMessage);
         await this.toContainText(selector.customer.cWooSelector.wooCommerceSuccessMessage, data.customer.address.addressChangeSuccessMessage);
     }
 
