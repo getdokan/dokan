@@ -230,8 +230,8 @@ jobs:
             # Backup Database
             - name: Backup Database
               if: always() && steps.db-port.outcome == 'success'
+              working-directory: tests/pw
               run: |
-                  cd tests/pw
                   npm run wp-env run tests-cli wp db export wp-data/db.sql
 
             # Upload artifacts
