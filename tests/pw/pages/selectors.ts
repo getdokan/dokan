@@ -6764,8 +6764,8 @@ export const selector = {
                 productImage: '.woocommerce-product-gallery__wrapper img.wp-post-image',
                 productTitle: '.product_title.entry-title',
                 price: '//div[@class="summary entry-summary"]//p[@class="price"]',
-                quantity: '.quantity input.qty',
-                addToCart: '.single_add_to_cart_button',
+                quantity: 'div.quantity input.qty',
+                addToCart: 'button.single_add_to_cart_button',
                 viewCart: '.woocommerce .woocommerce-message > .button',
                 category: '.product_meta .posted_in',
 
