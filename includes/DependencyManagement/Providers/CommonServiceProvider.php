@@ -44,6 +44,10 @@ class CommonServiceProvider extends BaseServiceProvider {
             ->addTag( self::TAG );
 
         $this->getContainer()
+            ->addShared( \WeDevs\Dokan\Vendor\Hooks::class, \WeDevs\Dokan\Vendor\Hooks::class )
+            ->addTag( self::TAG );
+
+        $this->getContainer()
             ->addShared( \WeDevs\Dokan\Vendor\UserSwitch::class, \WeDevs\Dokan\Vendor\UserSwitch::class )
             ->addTag( self::TAG );
 
