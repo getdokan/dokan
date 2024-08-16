@@ -10,7 +10,7 @@ import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
 import { schemas } from '@utils/schemas';
 
-test.describe.only('shipping status test', () => {
+test.describe('shipping status test', () => {
     let apiUtils: ApiUtils;
     let orderId: string;
     let shipmentId: string;
