@@ -227,7 +227,7 @@ export class CustomerPage extends BasePage {
     async addProductToCartFromSingleProductPage(productName: string, quantity?: string): Promise<void> {
         await this.goToProductDetails(productName);
         const addonIsVisible = await this.isVisible(selector.customer.cSingleProduct.productAddon.addOnSelect);
-        if (addonIsVisible) this.selectByNumber(selector.customer.cSingleProduct.productAddon.addOnSelect, 1);
+        if (addonIsVisible) await this.selectByNumber(selector.customer.cSingleProduct.productAddon.addOnSelect, 1);
         if (quantity) await this.clearAndType(selector.customer.cSingleProduct.productDetails.quantity, String(quantity));
         await this.clickAndWaitForResponse(data.subUrls.frontend.productCustomerPage, selector.customer.cSingleProduct.productDetails.addToCart);
         await this.toBeVisible(selector.customer.cWooSelector.wooCommerceSuccessMessage);

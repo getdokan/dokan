@@ -929,9 +929,9 @@ export class BasePage {
     }
 
     // dispatches event('click', 'dragstart',...) on the element
-    dispatchEvent(selector: string, event: string): void {
+    async dispatchEvent(selector: string, event: string): Promise<void> {
         const locator = this.page.locator(selector);
-        locator.dispatchEvent(event);
+        await locator.dispatchEvent(event);
     }
 
     // drag locator to target locator
@@ -1191,54 +1191,27 @@ export class BasePage {
 
     // accept alert
     acceptAlert(): void {
+        // page.once is used avoid future alerts to be accepted
         this.page.once('dialog', dialog => {
-            // page.once is used avoid future alerts to be accepted
-            dialog.accept();
+            void dialog.accept();
         });
     }
 
     // dismiss alert
     dismissAlert(): void {
+        // page.once is used avoid future alerts to be dismissed
         this.page.once('dialog', dialog => {
-            // page.once is used avoid future alerts to be dismissed
-            dialog.dismiss();
+            void dialog.dismiss();
         });
     }
 
     // type on prompt box/alert
     fillAlert(value: string): void {
+        // page.once is used avoid future prompts to be filled
         this.page.once('dialog', dialog => {
-            // page.once is used avoid future prompts to be filled
-            dialog.accept(value);
+            void dialog.accept(value);
         });
     }
-
-    // get default prompt value. Otherwise, returns empty string.
-    // getDefaultPromptValue(): string {
-    // 	let value: string;
-    // 	this.page.on('dialog', (dialog) => {
-    // 		value = dialog.defaultValue();
-    // 	});
-    // 	return value;
-    // }
-
-    // get dialog's type [alert, beforeunload, confirm or prompt]
-    // async getDialogType(): Promise<string> {
-    // 	let type: string;
-    // 	this.page.on('dialog', (dialog) => {
-    // 		type = dialog.type();
-    // 	});
-    // 	return type;
-    // }
-
-    // get dialog's message
-    // async getDialogMessage(): Promise<string> {
-    // 	let message: string;
-    // 	this.page.on('dialog', (dialog) => {
-    // 		message = dialog.message();
-    // 	});
-    // 	return message;
-    // }
 
     /**
      * Cookies methods

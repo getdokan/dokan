@@ -94,7 +94,7 @@ test.describe.skip('Marketplace Coupon calculation test', () => {
         taxRate = await apiUtils.setUpTaxRate(payloads.enableTax, payloads.createTaxRate);
         // taxRate = await apiUtils.updateSingleWcSettingOptions('general', 'woocommerce_calc_discounts_sequentially', { value: 'no' });
         sequentialCoupon = await apiUtils.getSingleWcSettingOptions('general', 'woocommerce_calc_discounts_sequentially');
-        // @ts-ignore
+        // @ts-expect-error skip error for now
         sequentialCoupon = sequentialCoupon?.value === 'yes' ? true : false;
         // console.log('applySequentially:', sequentialCoupon);
         [commission, feeRecipient] = await dbUtils.getSellingInfo();
