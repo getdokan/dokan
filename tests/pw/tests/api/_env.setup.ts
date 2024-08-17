@@ -99,7 +99,7 @@ setup.describe('setup user settings', () => {
     });
 
     setup('set tax rate', { tag: ['@lite'] }, async () => {
-        await apiUtils.setUpTaxRate(payloads.enableTaxRate, payloads.createTaxRate);
+        await apiUtils.setUpTaxRate(payloads.enableTax, payloads.createTaxRate);
     });
 
     setup('set shipping methods', { tag: ['@lite'] }, async () => {

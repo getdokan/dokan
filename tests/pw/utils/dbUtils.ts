@@ -1,8 +1,6 @@
 import mysql from 'mysql2/promise';
 import { serialize, unserialize, isSerialized } from 'php-serialize';
-import { dbData } from '@utils/dbData';
 import { helpers } from '@utils/helpers';
-import { commission, feeRecipient } from '@utils/interfaces';
 
 const { DB_HOST_NAME, DB_USER_NAME, DB_USER_PASSWORD, DATABASE, DB_PORT, DB_PREFIX } = process.env;
 
@@ -118,23 +116,6 @@ export const dbUtils = {
         return [currentSettings, newSettings];
     },
 
-    // get selling info
-    async getSellingInfo(): Promise<[commission, feeRecipient]> {
-        const res = await this.getOptionValue(dbData.dokan.optionName.selling);
-        const commission = {
-            type: res.commission_type,
-            amount: res.admin_percentage,
-            additionalAmount: res.additional_fee,
-            commission_category_based_values: res?.commission_category_based_values,
-        };
-        const feeRecipient = {
-            shippingFeeRecipient: res.shipping_fee_recipient,
-            taxFeeRecipient: res.tax_fee_recipient,
-            shippingTaxFeeRecipient: res.shipping_tax_fee_recipient,
-        };
-        return [commission, feeRecipient]; //todo: fix type
-    },
-
     // create abuse report
     async createAbuseReport(abuseReport: any, productId: string, vendorId: string, customerId: string): Promise<any> {
         const query = `INSERT INTO ${dbPrefix}_dokan_report_abuse_reports (reason, product_id, vendor_id, customer_id, description, reported_at) VALUES (?, ?, ?, ?, ?, ?);`;
@@ -162,20 +143,7 @@ export const dbUtils = {
         };
 
         const query = `INSERT INTO ${dbPrefix}_dokan_refund VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);`;
-        const res = await dbUtils.dbQuery(query, [
-            refund.id,
-            refund.orderId,
-            refund.sellerId,
-            refund.refundAmount,
-            refund.refundReason,
-            refund.itemQtys,
-            refund.itemTotals,
-            refund.itemTaxTotals,
-            refund.restockItems,
-            refund.date,
-            refund.status,
-            refund.method,
-        ]);
+        const res = await dbUtils.dbQuery(query, [refund.id, refund.orderId, refund.sellerId, refund.refundAmount, refund.refundReason, refund.itemQtys, refund.itemTotals, refund.itemTaxTotals, refund.restockItems, refund.date, refund.status, refund.method]);
 
         return [res, refundId];
     },

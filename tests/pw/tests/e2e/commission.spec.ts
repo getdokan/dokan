@@ -6,7 +6,7 @@ import { payloads } from '@utils/payloads';
 import { dbUtils } from '@utils/dbUtils';
 import { dbData } from '@utils/dbData';
 
-const { DOKAN_PRO, VENDOR_ID, CATEGORY_ID } = process.env;
+const { DOKAN_PRO } = process.env;
 
 test.describe('Commission test', () => {
     let admin: CommissionPage;
@@ -24,8 +24,8 @@ test.describe('Commission test', () => {
 
         if (DOKAN_PRO) {
             // enable dokan subscription
-            // await dbUtils.setDokanSettings(dbData.dokan.optionName.vendorSubscription, { ...dbData.dokan.vendorSubscriptionSettings, enable_pricing: 'on', enable_subscription_pack_in_reg: 'on' });
-            await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, enable_min_max_quantity: 'off', enable_min_max_amount: 'off' }); //todo: after dokan issue fixed, remove this line
+            // await dbUtils.updateOptionValue(dbData.dokan.optionName.vendorSubscription, { ...dbData.dokan.vendorSubscriptionSettings, enable_pricing: 'on', enable_subscription_pack_in_reg: 'on' });
+            await dbUtils.updateOptionValue(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, enable_min_max_quantity: 'off', enable_min_max_amount: 'off' }); //todo: after dokan issue fixed, remove this line
             // [subscriptionProductId] = await createDokanSubscriptionProduct();
         }
         [, sellerId] = await apiUtils.createStore(payloads.createStore(), payloads.adminAuth);
@@ -33,8 +33,8 @@ test.describe('Commission test', () => {
 
     test.afterAll(async () => {
         if (DOKAN_PRO) {
-            // await dbUtils.setDokanSettings(dbData.dokan.optionName.vendorSubscription, { ...dbData.dokan.vendorSubscriptionSettings, enable_pricing: 'off', enable_subscription_pack_in_reg: 'off' });
-            await dbUtils.setDokanSettings(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, enable_min_max_quantity: 'on', enable_min_max_amount: 'on' }); //todo: after dokan issue fixed, remove this line
+            // await dbUtils.updateOptionValue(dbData.dokan.optionName.vendorSubscription, { ...dbData.dokan.vendorSubscriptionSettings, enable_pricing: 'off', enable_subscription_pack_in_reg: 'off' });
+            await dbUtils.updateOptionValue(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, enable_min_max_quantity: 'on', enable_min_max_amount: 'on' }); //todo: after dokan issue fixed, remove this line
         }
         await aPage.close();
         await apiUtils.dispose();

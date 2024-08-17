@@ -101,10 +101,22 @@ export class VendorPage extends BasePage {
         }
         await this.clearAndType(registrationVendor.phone, vendorInfo.phoneNumber);
         await this.checkIfVisible(selector.customer.cDashboard.termsAndConditions);
+
+        // add subscription pack if enabled
         const subscriptionPackIsVisible = await this.isVisible(registrationVendor.subscriptionPack);
-        subscriptionPackIsVisible && (await this.selectByLabel(registrationVendor.subscriptionPack, data.predefined.vendorSubscription.nonRecurring));
-        setupWizardData.setupWizardEnabled ? await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.setupWizard, registrationVendor.register) : await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.dashboard, registrationVendor.register);
+        if (subscriptionPackIsVisible) {
+            await this.selectByLabel(registrationVendor.subscriptionPack, data.predefined.vendorSubscription.nonRecurring);
+        }
+
+        // complete setup wizard if enabled
+        if (setupWizardData.setupWizardEnabled) {
+            await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.setupWizard, registrationVendor.register);
+        } else {
+            await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.dashboard, registrationVendor.register);
+        }
+
         const registrationErrorIsVisible = await this.isVisible(selector.customer.cWooSelector.wooCommerceError);
+
         if (registrationErrorIsVisible) {
             const hasError = await this.hasText(selector.customer.cWooSelector.wooCommerceError, data.customer.registration.registrationErrorMessage);
             if (hasError) {
@@ -112,8 +124,8 @@ export class VendorPage extends BasePage {
                 return;
             }
         }
-        subscriptionPackIsVisible && (await this.customer.placeOrder('bank', false, true, false));
-        setupWizardData.setupWizardEnabled && (await this.vendorSetupWizard(setupWizardData));
+        if (subscriptionPackIsVisible) await this.customer.placeOrder('bank', false, true, false);
+        if (setupWizardData.setupWizardEnabled) await this.vendorSetupWizard(setupWizardData);
     }
 
     // vendor setup wizard

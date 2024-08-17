@@ -151,7 +151,7 @@ export class StoresPage extends AdminPage {
     }
 
     // edit vendor
-    async editVendor(sellerId:string, vendor: vendor) {
+    async editVendor(sellerId: string, vendor: vendor) {
         await this.goto(data.subUrls.backend.dokan.vendorDetailsEdit(sellerId));
 
         // basic
