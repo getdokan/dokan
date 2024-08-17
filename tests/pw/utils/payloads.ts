@@ -4030,15 +4030,15 @@ export const payloads = {
     // shipping status
 
     createShipment: {
-        shipped_status: 'ss_proceccing', 
-        shipping_provider: 'sp-dhl', 
-        shipped_date: new Date().toISOString(), 
-        shipping_number: '#001', 
+        shipped_status: 'ss_proceccing',
+        shipping_provider: 'sp-dhl',
+        shipped_date: new Date().toISOString(),
+        shipping_number: '#001',
         shipment_comments: 'test shipment comment',
-        is_notify: 'on', 
-        item_id: ['lineitemid'], // replace with actual line item id 
+        is_notify: 'on',
+        item_id: ['lineitemid'], // replace with actual line item id
         item_qty: {
-            lineitemid: 1, // replace with actual line item id 
+            lineitemid: 1, // replace with actual line item id
         },
     },
 

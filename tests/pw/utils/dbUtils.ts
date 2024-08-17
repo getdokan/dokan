@@ -215,7 +215,7 @@ export const dbUtils = {
                     WHERE t2.name = ?;
                 `;
         const [termIdQueryResult] = await dbUtils.dbQuery(termIdQuery, ['simple', 'product_pack']);
-        let simpleTermId = termIdQueryResult.simple_term_id;
+        const simpleTermId = termIdQueryResult.simple_term_id;
         const subscriptionTermId = termIdQueryResult.subscription_term_id;
         // console.log('simpleTermId:', simpleTermId, 'subscriptionTermId:', subscriptionTermId);
 
