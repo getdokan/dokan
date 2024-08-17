@@ -183,7 +183,7 @@ test.describe.skip('commission test', () => {
     test('percentage commission (global) test', { tag: ['@lite'] }, async () => {
         // await dbUtils.setOptionValue(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, commission_type: 'percentage' });
         // const [commission, feeRecipient] = await dbUtils.getSellingInfo();
-        const [, res,] = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder);
+        const [, res] = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder);
         console.log(res);
     });
 
