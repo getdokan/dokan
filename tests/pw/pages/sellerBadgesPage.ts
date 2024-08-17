@@ -217,7 +217,6 @@ export class SellerBadgesPage extends AdminPage {
 
         await this.clickAndWaitForResponse(data.subUrls.api.dokan.sellerBadge, selector.admin.dokan.vendors.vendorViewDetails(vendorName));
         await this.toBeVisible(selector.admin.dokan.vendors.vendorDetails.vendorSummary.badgesAcquired.badgesAcquired);
-        // todo: add assertions for achieved badges
     }
 
     // update seller badge
@@ -249,7 +248,11 @@ export class SellerBadgesPage extends AdminPage {
 
     // seller badge bulk action
     async sellerBadgeBulkAction(action: string, badgeName?: string) {
-        badgeName ? await this.searchSellerBadge(badgeName) : await this.goIfNotThere(data.subUrls.backend.dokan.sellerBadge);
+        if (badgeName) {
+            await this.searchSellerBadge(badgeName);
+        } else {
+            await this.goIfNotThere(data.subUrls.backend.dokan.sellerBadge);
+        }
 
         // ensure row exists
         await this.notToBeVisible(sellerBadgeAdmin.noRowsFound);

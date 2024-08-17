@@ -75,7 +75,7 @@ test.describe.skip('Vendor RMA test', () => {
     });
 
     test('vendor can delete rma request', { tag: ['@pro', '@vendor'] }, async () => {
-        // todo:need separate rma request
+        // todo: need separate rma request
         await vendor.vendorDeleteRmaRequest(orderId);
     });
 

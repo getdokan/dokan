@@ -90,7 +90,7 @@ export class MenuManagerPage extends BasePage {
     async cantAlterMenu(menu: string, isSubmenu?: boolean) {
         await this.goIfNotThere(data.subUrls.backend.dokan.settings);
         await this.click(settingsAdmin.menus.menuManager);
-        isSubmenu && (await this.click(settingsAdmin.menuManager.settingsSubMenu));
+        if (isSubmenu) await this.click(settingsAdmin.menuManager.settingsSubMenu);
 
         await this.hasClass(settingsAdmin.menuManager.menuGrabber(menu), 'not-sortable');
         await this.notToBeVisible(settingsAdmin.menuManager.menuSwitcher(menu));

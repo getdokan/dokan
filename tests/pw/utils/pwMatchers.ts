@@ -87,9 +87,10 @@ export const customMatchers = {
 
 export const customExpect = {
     toMatchSchema: customMatchers.toMatchSchema,
-    // toBeSecureHeader: customMatchers.toBeSecureHeader,
+    toBeSecureHeader: customMatchers.toBeSecureHeader,
     toBeWithinRange: customMatchers.toBeWithinRange,
     toBeApproximately: customMatchers.toBeApproximately,
 };
 
+// todo: add basepase assertions to custom matchers
 // todo: add more custom matchers

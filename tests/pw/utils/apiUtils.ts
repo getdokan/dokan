@@ -3,7 +3,7 @@ import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
 import { helpers } from '@utils/helpers';
 import fs from 'fs';
-import { auth, user_api, taxRate, coupon_api, marketPlaceCoupon, reqOptions, params, headers, storageState, responseBody } from '@utils/interfaces';
+import { auth, user_api, taxRate, coupon_api, marketPlaceCoupon, reqOptions, headers, storageState, responseBody } from '@utils/interfaces';
 
 const { VENDOR_ID, CUSTOMER_ID } = process.env;
 
@@ -95,11 +95,13 @@ export class ApiUtils {
     // get responseBody
     async getResponseBody(response: APIResponse, assert = true): Promise<responseBody> {
         try {
-            assert && expect(response.ok()).toBeTruthy();
+            if (assert) expect(response.ok()).toBeTruthy();
+
             const responseBody = response.status() !== 204 && (await response.json()); // 204 is for No Content
 
             // console log responseBody if response code is not between 200-299
-            String(response.status())[0] != '2' && console.log('ResponseBody: ', responseBody);
+            if (String(response.status())[0] != '2') console.log('ResponseBody: ', responseBody);
+
             return responseBody;
         } catch (err: any) {
             console.log('End-point: ', response.url());
@@ -247,7 +249,9 @@ export class ApiUtils {
         }
 
         // add vendor user address
-        addUserAddress && (await this.updateCustomer(sellerId, payloads.updateAddress, payloads.adminAuth));
+        if (addUserAddress) {
+            await this.updateCustomer(sellerId, payloads.updateAddress, payloads.adminAuth);
+        }
 
         return [responseBody, sellerId, storeName, payload.user_login];
     }
@@ -480,8 +484,7 @@ export class ApiUtils {
 
     // create attribute term
     async createAttributeTerm(attribute: any, attributeTerm: object, auth?: auth): Promise<[responseBody, string, string]> {
-        let attributeId: string;
-        typeof attribute === 'object' ? ([, attributeId] = await this.createAttribute(attribute, auth)) : (attributeId = attribute);
+        const attributeId = typeof attribute === 'object' ? (await this.createAttribute(attribute, auth))[1] : attribute;
         const [, responseBody] = await this.post(endPoints.createAttributeTerm(attributeId), { data: attributeTerm, headers: auth });
         const attributeTermId = String(responseBody?.id);
         return [responseBody, attributeId, attributeTermId];
@@ -689,8 +692,7 @@ export class ApiUtils {
 
     // create order note
     async createOrderNote(product: string | object, order: object | string, orderNote: object, auth?: auth): Promise<[responseBody, string, string]> {
-        let orderId: string;
-        typeof order === 'object' ? ([, , orderId] = await this.createOrder(product, order, auth)) : (orderId = order);
+        const orderId = typeof order === 'object' ? (await this.createOrder(product, order, auth))[2] : order;
         const [, responseBody] = await this.post(endPoints.createOrderNote(orderId), { data: orderNote, headers: auth });
         const orderNoteId = String(responseBody?.id);
         return [responseBody, orderId, orderNoteId];
@@ -839,15 +841,15 @@ export class ApiUtils {
     }
 
     // get activate modules
-    async activateModules(moduleIds: string[], auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.put(endPoints.activateModule, { data: { module: moduleIds }, headers: auth });
-        return responseBody;
+    async activateModules(moduleIds: string[], auth?: auth): Promise<[APIResponse, responseBody]> {
+        const [response, responseBody] = await this.put(endPoints.activateModule, { data: { module: moduleIds }, headers: auth });
+        return [response, responseBody];
     }
 
     // get deactivated modules
-    async deactivateModules(moduleIds: string[], auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.put(endPoints.deactivateModule, { data: { module: moduleIds }, headers: auth });
-        return responseBody;
+    async deactivateModules(moduleIds: string[], auth?: auth): Promise<[APIResponse, responseBody]> {
+        const [response, responseBody] = await this.put(endPoints.deactivateModule, { data: { module: moduleIds }, headers: auth });
+        return [response, responseBody];
     }
 
     /**
@@ -929,11 +931,11 @@ export class ApiUtils {
     }
 
     // create a wholesale customer
-    async createWholesaleCustomer(payload: string | object, auth?: auth): Promise<[responseBody, string]> {
-        let customerId: string;
-        typeof payload === 'object' ? ([, customerId] = await this.createCustomer(payload, auth)) : (customerId = payload);
+    async createWholesaleCustomer(payload: string | object, auth?: auth): Promise<[responseBody, string, string]> {
+        const customerId = typeof payload === 'object' ? (await this.createCustomer(payload, auth))[1] : payload;
         const [, responseBody] = await this.post(endPoints.createWholesaleCustomer, { data: { id: String(customerId) }, headers: auth });
-        return [responseBody, customerId];
+        const customerName = responseBody?.username;
+        return [responseBody, customerId, customerName];
     }
 
     /**
@@ -1142,7 +1144,7 @@ export class ApiUtils {
 
     // get all quote rules
     async getAllQuoteRules(params = {}, auth?: auth): Promise<responseBody> {
-        const responseBody = await this.getAllItems(endPoints.getAllQuoteRules, { ...params }, auth);
+        const responseBody = await this.getAllItems(endPoints.getAllQuoteRules, params, auth);
         return responseBody;
     }
 
@@ -1162,7 +1164,7 @@ export class ApiUtils {
 
     // delete all quote rules
     async deleteAllQuoteRules(auth?: auth): Promise<responseBody> {
-        const allQuoteRules = await this.getAllQuoteRules(auth);
+        const allQuoteRules = await this.getAllQuoteRules({}, auth);
         if (!allQuoteRules?.length) {
             console.log('No quote rule exists');
             return;
@@ -1174,7 +1176,7 @@ export class ApiUtils {
 
     // delete all quote rules trashed
     async deleteAllQuoteRulesTrashed(auth?: auth): Promise<responseBody> {
-        const allQuoteRules = await this.getAllQuoteRules({ status: 'trash', per_page: 100 }, auth);
+        const allQuoteRules = await this.getAllQuoteRules({ status: 'trash' }, auth);
         if (!allQuoteRules?.length) {
             console.log('No quote rule exists');
             return;
@@ -1486,6 +1488,16 @@ export class ApiUtils {
     }
 
     /**
+     * shipping status methods
+     */
+
+    async createShipment(orderId: string, payload: object, auth?: auth): Promise<[responseBody, string, string]> {
+        const [, responseBody] = await this.post(endPoints.createShipment(orderId), { data: payload, headers: auth });
+        const shipmentId = responseBody?.id;
+        return [responseBody, orderId, shipmentId];
+    }
+
+    /**
      * wp api methods
      */
 
@@ -1753,8 +1765,7 @@ export class ApiUtils {
 
     // create product review
     async createProductReview(payload: string | object, review: object, auth?: auth): Promise<[responseBody, string, string]> {
-        let productId: string;
-        typeof payload === 'object' ? ([, productId] = await this.createProduct(payload, auth)) : (productId = payload);
+        const productId = typeof payload === 'object' ? (await this.createProduct(payload, auth))[1] : payload;
         const [, responseBody] = await this.post(endPoints.wc.createReview, { data: { ...review, product_id: productId }, headers: auth });
         const reviewId = String(responseBody?.id);
         const reviewMessage = String(responseBody?.review);
@@ -1850,7 +1861,7 @@ export class ApiUtils {
 
         if (typeof product === 'object') {
             [, productId] = await this.createProduct(product, auth);
-        } else if (!Number.isNaN(Number(product))) {
+        } else if (!isNaN(Number(product))) {
             const responseBody = await this.getSingleProduct(product, payloads.adminAuth); // check if product exists
             productId = responseBody.code === 'dokan_rest_invalid_product_id' ? (await this.createProduct(payloads.createProduct(), auth))[1] : product;
         } else {
@@ -1919,10 +1930,15 @@ export class ApiUtils {
         return responseBody;
     }
 
+    // enable tax
+    async enableTax(enableTaxPayload: object, auth?: auth): Promise<void> {
+        await this.updateBatchWcSettingsOptions('general', enableTaxPayload, auth);
+    }
+
     // setup tax
     async setUpTaxRate(enableTaxPayload: object, taxPayload: taxRate, auth?: auth): Promise<number> {
         // enable tax rate
-        await this.updateBatchWcSettingsOptions('general', enableTaxPayload, auth);
+        await this.enableTax(enableTaxPayload, auth);
 
         // delete previous tax rates
         const allTaxRateIds = (await this.getAllTaxRates(auth)).map((o: { id: unknown }) => o.id);
@@ -1952,10 +1968,11 @@ export class ApiUtils {
     }
 
     // create shipping zone
-    async createShippingZone(payload: object, auth?: auth): Promise<[responseBody, string]> {
+    async createShippingZone(payload: object, auth?: auth): Promise<[responseBody, string, string]> {
         const [, responseBody] = await this.post(endPoints.wc.createShippingZone, { data: payload, headers: auth });
-        const shippingZoneId = String(responseBody?.id);
-        return [responseBody, shippingZoneId];
+        const zoneId = String(responseBody?.id);
+        const zoneName = String(responseBody?.name);
+        return [responseBody, zoneId, zoneName];
     }
 
     // delete shipping zone

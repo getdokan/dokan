@@ -177,14 +177,14 @@ jobs:
               timeout-minutes: 40
               working-directory: tests/pw
               run: |
-                  npm run test:e2e:lite
+                  npm run test:e2e
 
             # Run e2e coverage
             - name: 🧪 Running e2e coverage
               if: always() && (steps.e2e-test.outcome == 'success' || steps.e2e-test.outcome == 'failure')
               working-directory: tests/pw
               run: |
-                npm run e2e_coverage
+                npm run test:e2e:coverage
 
             # Run API tests
             - name: 🧪 Running the api tests
@@ -193,7 +193,7 @@ jobs:
               timeout-minutes: 5
               working-directory: tests/pw
               run: |
-                  npm run test:api:lite
+                  npm run test:api
 
             # Prepare test summary
             - name: Prepare test summary
@@ -230,8 +230,8 @@ jobs:
             # Backup Database
             - name: Backup Database
               if: always() && steps.db-port.outcome == 'success'
+              working-directory: tests/pw
               run: |
-                  cd tests/pw
                   npm run wp-env run tests-cli wp db export wp-data/db.sql
 
             # Upload artifacts

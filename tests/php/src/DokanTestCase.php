@@ -76,11 +76,12 @@ abstract class DokanTestCase extends WP_UnitTestCase {
 
     /**
      * Setup a REST server for test.
+     * @see https://make.wordpress.org/core/handbook/testing/automated-testing/writing-phpunit-tests/#shared-fixtures
      *
      * @return void
      */
-    public function setUp(): void {
-        parent::setUp();
+    public function set_up() {
+        parent::set_up();
         Monkey\setUp();
 
         // There is no need of REST and DB for Unit test.
@@ -99,13 +100,16 @@ abstract class DokanTestCase extends WP_UnitTestCase {
 
     /**
      * Tear down the test case.
+     * @see https://make.wordpress.org/core/handbook/testing/automated-testing/writing-phpunit-tests/#shared-fixtures
      *
      * @return void
      */
-    protected function tearDown(): void {
+    public function tear_down() {
         Monkey\tearDown();
-        parent::tearDown();
+
+        parent::tear_down();
     }
+
 
     /**
      * Set up users for testing.

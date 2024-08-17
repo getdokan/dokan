@@ -2,6 +2,8 @@ import fs from 'fs';
 import { execSync } from 'child_process';
 import { Browser, BrowserContextOptions, Page } from '@playwright/test';
 
+const { LOCAL, SITE_PATH } = process.env;
+
 export const helpers = {
     // replace '_' to space & capitalize first letter of string
     replaceAndCapitalize: (str: string) =>
@@ -41,7 +43,6 @@ export const helpers = {
 
     // check if object is empty
     isObjEmpty: (obj: object) => Object.keys(obj).length === 0,
-
     // snakecase to camelcase
     toCamelCase: (str: string): string => str.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase()),
 
@@ -80,6 +81,13 @@ export const helpers = {
 
     // current year
     currentYear: new Date().getFullYear(),
+
+    // current day [2023-06-02]
+    previousDate: (): string => {
+        const result = new Date();
+        result.setDate(result.getDate() - 1);
+        return result.toLocaleDateString('en-CA');
+    },
 
     // current day [2023-06-02]
     currentDate: new Date().toLocaleDateString('en-CA'),
@@ -414,6 +422,14 @@ export const helpers = {
         }
     },
 
+    // execute wp cli command
+    async exeCommandWpcli(command: string, directoryPath = process.cwd()) {
+        process.chdir(directoryPath);
+        command = LOCAL ? `cd ${SITE_PATH} && ${command}` : `npm run wp-env run tests-cli  ${command}`;
+        // console.log(`Executing command: ${command}`);
+        await this.exeCommand(command);
+    },
+
     // create a new page
     async createPage(browser: Browser, options?: BrowserContextOptions | undefined) {
         const browserContext = await browser.newContext(options);
@@ -439,5 +455,39 @@ export const helpers = {
         const g = parseInt(hex.substring(3, 5), 16);
         const b = parseInt(hex.substring(5, 7), 16);
         return `rgb(${r}, ${g}, ${b})`;
+    },
+
+    // deep merge arrays
+    deepMergeArrays(targetArray: any[], sourceArray: any[]) {
+        if (targetArray.every((item: any) => item instanceof Object && !Array.isArray(item)) && sourceArray.every(item => item instanceof Object && !Array.isArray(item))) {
+            const mergedArray = [...targetArray];
+            sourceArray.forEach((item: { [key: string]: any }, index: number) => {
+                if (index < mergedArray.length && item instanceof Object && !Array.isArray(item)) {
+                    mergedArray[index] = this.deepMergeObjects(mergedArray[index], item);
+                } else {
+                    mergedArray.push(item);
+                }
+            });
+            return mergedArray;
+        } else {
+            return [...sourceArray];
+        }
+    },
+
+    // deep merge objects
+    deepMergeObjects(target: { [key: string]: any }, source: { [key: string]: any }) {
+        const result = { ...target };
+
+        for (const key of Object.keys(source)) {
+            if (source[key] instanceof Object && target[key] instanceof Object) {
+                result[key] = this.deepMergeObjects(target[key], source[key]);
+            } else if (Array.isArray(source[key]) && Array.isArray(target[key])) {
+                result[key] = this.deepMergeArrays(target[key], source[key]);
+            } else {
+                result[key] = source[key];
+            }
+        }
+
+        return result;
     },
 };
