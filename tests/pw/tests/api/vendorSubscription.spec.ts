@@ -14,7 +14,8 @@ import { payloads } from '@utils/payloads';
 import { dbUtils } from '@utils/dbUtils';
 
 test.describe('vendor subscription api test', () => {
-    test.skip(true, 'not implemented all tests yet');
+    test.skip(true, 'need subscription product');
+    test.slow();
     let apiUtils: ApiUtils;
     let subscriptionPackId: string;
     let sellerId: string;
@@ -28,7 +29,9 @@ test.describe('vendor subscription api test', () => {
 
     test.beforeAll(async () => {
         apiUtils = new ApiUtils(await request.newContext());
+        await dbUtils.setSubscriptionProductType();
         [subscriptionPackId] = await createDokanSubscriptionProduct(payloads.createDokanSubscriptionProduct(), payloads.saveVendorSubscriptionProductCommission);
+
         await createDokanSubscriptionProduct(payloads.createDokanSubscriptionProductRecurring(), payloads.saveVendorSubscriptionProductCommission);
         [sellerId] = await apiUtils.assignSubscriptionToVendor(subscriptionPackId);
     });
@@ -51,7 +54,7 @@ test.describe('vendor subscription api test', () => {
         expect(responseBody).toMatchSchema(schemas.vendorSubscriptionsSchema.vendorSubscriptionPackagesSchema);
     });
 
-    test('get all vendor-subscription non-recurring packages', { tag: ['@pro'] }, async () => {
+    test('get all vendor subscription non-recurring packages', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllVendorSubscriptionNonRecurringPackages);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();

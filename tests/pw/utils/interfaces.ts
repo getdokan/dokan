@@ -466,65 +466,14 @@ export interface tax {
 }
 
 export interface shipping {
-    enableShipping: string;
-    disableShipping: string;
-    shippingZone: string;
-
-    shippingMethods: {
-        methods: string;
-
-        flatRate: {
-            shippingZone: string;
-            shippingCountry: string;
-            selectShippingMethod: string;
-            shippingMethod: string;
-            taxStatus: string;
-            shippingCost: string;
-        };
-
-        freeShipping: {
-            shippingZone: string;
-            shippingCountry: string;
-            selectShippingMethod: string;
-            shippingMethod: string;
-            freeShippingRequires: string;
-            freeShippingMinimumOrderAmount: string;
-        };
-
-        localPickup: {
-            shippingZone: string;
-            shippingCountry: string;
-            selectShippingMethod: string;
-            shippingMethod: string;
-            taxStatus: string;
-            shippingCost: string;
-        };
-
-        tableRateShipping: {
-            shippingZone: string;
-            shippingCountry: string;
-            selectShippingMethod: string;
-            shippingMethod: string;
-        };
-
-        distanceRateShipping: {
-            shippingZone: string;
-            shippingCountry: string;
-            selectShippingMethod: string;
-            shippingMethod: string;
-        };
-
-        vendorShipping: {
-            shippingZone: string;
-            shippingCountry: string;
-            selectShippingMethod: string;
-            shippingMethod: string;
-            taxStatus: string;
-        };
-    };
-
-    shippingTaxStatus: string;
-    saveSuccessMessage: string;
+    zoneName: string;
+    zoneRegion: string;
+    selectMethodName: string;
+    methodName: string;
+    taxStatus?: string;
+    shippingCost?: string;
+    freeShippingRequires?: string;
+    freeShippingMinimumOrderAmount?: string;
 }
 
 export interface deliveryTime {
@@ -557,7 +506,6 @@ export interface payment {
         title: string;
         description: string;
         displayNoticeInterval: string;
-        stripeCheckoutLocale: string;
         testPublishableKey: string;
         testSecretKey: string;
         testClientId: string;
@@ -690,7 +638,6 @@ export interface vendor {
 
     vendorInfo: {
         email: () => string;
-        // emailDomain: string;
         emailDomain: string;
         password: string;
         password1: string;
@@ -1039,39 +986,34 @@ export interface vendor {
     };
 
     // addon
-    addon: {
-        name: string;
-        priority: string;
-        category: string;
-        type: string;
-        displayAs: string;
-        title: string;
-        formatTitle: string;
-        addDescription: string;
-        enterAnOption: string;
-        optionPriceType: string;
-        optionPriceInput: string;
-        saveSuccessMessage: string;
-        deleteSuccessMessage: string;
-    };
-
+    addon: () => addon;
     registrationErrorMessage: string;
+}
+
+// addon
+export interface addon {
+    name: string;
+    priority: string;
+    category: string;
+    type: string;
+    displayAs: string;
+    title: string;
+    formatTitle: string;
+    addDescription: string;
+    enterAnOption: string;
+    optionPriceType: string;
+    optionPriceInput: string;
+    saveSuccessMessage: string;
+    deleteSuccessMessage: string;
 }
 
 // staff
 export interface staff {
     firstName: string;
     lastName: string;
-    // fullName: string;
     email: string;
     phone: string;
     password: string;
-    // firstName: () => string;
-    // lastName: () => string;
-    // fullName: () => string;
-    // email: () => string;
-    // phone: () => string;
-    // password: string;
 }
 
 // customer
@@ -1130,6 +1072,7 @@ export interface customer {
         };
 
         shipping: {
+            email: string;
             firstName: string;
             lastName: string;
             companyName: string;

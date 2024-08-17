@@ -50,7 +50,7 @@ test.describe('Verifications test', () => {
     // verification methods
 
     test('admin can change verified icon', { tag: ['@pro', '@admin'] }, async () => {
-        await dbUtils.createUserMeta(VENDOR2_ID, 'dokan_verification_status', 'approved');
+        await dbUtils.setUserMeta(VENDOR2_ID, 'dokan_verification_status', 'approved');
         await admin.changeVerifiedIcon(data.dokanSettings.vendorVerification.verifiedIcons.byIcon.certificateSolid, data.predefined.vendorStores.vendor2);
     });
 
@@ -200,7 +200,7 @@ test.describe('Verifications test', () => {
     // customer
 
     test('customer can view verified badge', { tag: ['@pro', '@customer'] }, async () => {
-        await dbUtils.createUserMeta(VENDOR2_ID, 'dokan_verification_status', 'approved');
+        await dbUtils.setUserMeta(VENDOR2_ID, 'dokan_verification_status', 'approved');
         await customer.viewVerifiedBadge(data.predefined.vendorStores.vendor2);
     });
 

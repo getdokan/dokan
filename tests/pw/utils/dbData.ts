@@ -1,4 +1,4 @@
-const { BASE_URL, GMAP, LICENSE_KEY } = process.env;
+const { BASE_URL, GMAP, MAPBOX, LICENSE_KEY } = process.env;
 
 export const dbData = {
     dokan: {
@@ -206,8 +206,8 @@ export const dbData = {
             appearance_options: '',
             store_map: 'on',
             map_api_source: 'google_maps',
-            gmap_api_key: GMAP,
-            mapbox_access_token: '',
+            gmap_api_key: GMAP ?? '',
+            mapbox_access_token: MAPBOX ?? '',
             recaptcha_validation_label: '',
             contact_seller: 'on',
             store_header_template: 'default',
@@ -1132,6 +1132,7 @@ export const dbData = {
             'product_addon',
             'product_advertising',
             'product_enquiry',
+            'product_qa',
             'product_subscription',
             'rank_math',
             'razorpay',
@@ -1302,6 +1303,49 @@ export const dbData = {
         },
     },
 
+    // widget
+
+    widget: {
+        name: {
+            widgetBlock: 'widget_block',
+            sidebarsWidgets: 'sidebars_widgets',
+        },
+        widgetBlock: {
+            '2': {
+                content: '<!-- wp:search /-->',
+            },
+            '3': {
+                content: '<!-- wp:group --><div class="wp-block-group"><!-- wp:heading --><h2>Recent Posts</h2><!-- /wp:heading --><!-- wp:latest-posts /--></div><!-- /wp:group -->',
+            },
+            '4': {
+                content:
+                    '<!-- wp:group --><div class="wp-block-group"><!-- wp:heading --><h2>Recent Comments</h2><!-- /wp:heading --><!-- wp:latest-comments {"displayAvatar":false,"displayDate":false,"displayExcerpt":false} /--></div><!-- /wp:group -->',
+            },
+            '5': {
+                content: '<!-- wp:group --><div class="wp-block-group"><!-- wp:heading --><h2>Archives</h2><!-- /wp:heading --><!-- wp:archives /--></div><!-- /wp:group -->',
+            },
+            '6': {
+                content: '<!-- wp:group --><div class="wp-block-group"><!-- wp:heading --><h2>Categories</h2><!-- /wp:heading --><!-- wp:categories /--></div><!-- /wp:group -->',
+            },
+            '9': {
+                content: '<!-- wp:legacy-widget /-->',
+            },
+            _multiwidget: 1,
+        },
+        sideBarsWidgets: {
+            wp_inactive_widgets: ['block-8', 'block-2', 'block-3', 'block-4', 'block-5', 'block-6'],
+            'sidebar-store': ['dokan-category-menu-2', 'dokan-store-location-2', 'dokan-store-contact-widget-2'],
+            'sidebar-1': [],
+            'header-1': [],
+            'footer-1': [],
+            'footer-2': [],
+            'footer-3': [],
+            'footer-4': [],
+            array_version: 3,
+        },
+        multiwidget: { _multiwidget: 1 },
+    },
+
     // test db data
 
     testData: {
@@ -1353,6 +1397,18 @@ export const dbData = {
                 dokan_vat_number: 'dokan_vat_number',
                 dokan_bank_name: 'dokan_bank_name',
                 dokan_bank_iban: 'dokan_bank_iban',
+            },
+
+            catalogMode: {
+                catalog_mode_settings: '',
+                catalog_mode_hide_add_to_cart_button: 'on',
+                catalog_mode_hide_product_price: 'on',
+            },
+
+            reverseWithdrawalFailedActions: {
+                enable_catalog_mode: 'enable_catalog_mode',
+                hide_withdraw_menu: 'hide_withdraw_menu',
+                status_inactive: 'status_inactive',
             },
         },
     },

@@ -14,6 +14,8 @@ import { payloads } from '@utils/payloads';
 import { schemas } from '@utils/schemas';
 
 test.describe('vendor staff api test', () => {
+    test.use({ extraHTTPHeaders: payloads.vendorAuth });
+
     let apiUtils: ApiUtils;
     let staffId: string;
 
@@ -25,8 +27,6 @@ test.describe('vendor staff api test', () => {
     test.afterAll(async () => {
         await apiUtils.dispose();
     });
-
-    test.use({ extraHTTPHeaders: { Authorization: payloads.vendorAuth.Authorization } });
 
     test('get all vendor staffs', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllVendorStaffs);

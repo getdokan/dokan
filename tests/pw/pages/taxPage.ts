@@ -6,41 +6,45 @@ import { tax } from '@utils/interfaces';
 
 // selectors
 const woocommerceSettings = selector.admin.wooCommerce.settings;
+const generalSettings = selector.admin.wooCommerce.settings.general;
+const taxSettings = selector.admin.wooCommerce.settings.tax;
 
 export class TaxPage extends AdminPage {
     constructor(page: Page) {
         super(page);
     }
 
-    // Tax methods
+    async goToTaxSettings() {
+        await this.goIfNotThere(data.subUrls.backend.wc.taxSettings);
+    }
 
-    // Admin Enable-Disable Tax
+    // admin enable disable tax
     async enableTax(enable = true) {
         await this.goToWooCommerceSettings();
-        enable ? await this.check(woocommerceSettings.enableTaxes) : await this.uncheck(woocommerceSettings.enableTaxes);
-        await this.click(woocommerceSettings.generalSaveChanges);
+        if (enable) {
+            await this.check(generalSettings.enableTaxes);
+        } else {
+            await this.uncheck(woocommerceSettings.general.enableTaxes);
+        }
+        await this.click(generalSettings.generalSaveChanges);
         await this.toContainText(woocommerceSettings.updatedSuccessMessage, data.tax.saveSuccessMessage);
     }
 
-    // Admin Add Standard Tax Rate
+    // admin add standard tax rate
     async addStandardTaxRate(tax: tax) {
-        await this.goToWooCommerceSettings();
+        await this.goToTaxSettings();
 
-        // Enable Tax
-        await this.enableTax();
+        // set tax rate
+        await this.click(taxSettings.standardRates);
+        await this.click(taxSettings.insertRow);
 
-        // Set Tax Rate
-        await this.click(woocommerceSettings.tax);
-        await this.click(woocommerceSettings.standardRates);
-        await this.click(woocommerceSettings.insertRow);
+        const rowCount = await this.getElementCount(taxSettings.taxTableRow);
+        await this.clearAndType(taxSettings.taxRate(rowCount), tax.taxRate);
+        await this.clearAndType(taxSettings.priority(rowCount), tax.priority);
+        await this.click(taxSettings.taxTable);
 
-        const rowCount = await this.getElementCount(woocommerceSettings.taxTableRow);
-        await this.clearAndType(woocommerceSettings.taxRate(rowCount), tax.taxRate);
-        await this.clearAndType(woocommerceSettings.priority(rowCount), tax.priority);
-        await this.click(woocommerceSettings.taxTable);
-
-        await this.click(woocommerceSettings.taxRateSaveChanges);
-        const taxRate = await this.getElementValue(woocommerceSettings.taxRate(rowCount));
+        await this.click(taxSettings.taxRateSaveChanges);
+        const taxRate = await this.getElementValue(taxSettings.taxRate(rowCount));
         this.toBeEqual(Number(taxRate), Number(tax.taxRate));
     }
 }

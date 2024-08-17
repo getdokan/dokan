@@ -15,17 +15,20 @@
 - page: 'Tax'
   features:
       admin:
-          admin can add standard tax rate [lite]: false
+          admin can enable tax [lite]: true
+          admin can add standard tax rate [lite]: true
 
 - page: 'Shipping'
   features:
       admin:
-          admin can add flat rate shipping [lite]: false
-          admin can add free shipping [lite]: false
-          admin can add local pickup shipping [lite]: false
-          admin can add table rate shipping: false
-          admin can add distance rate shipping: false
-          admin can add vendor shipping: false
+          admin can enable shipping method [lite]: true
+          admin can add flat rate shipping method [lite]: true
+          admin can add free shipping method [lite]: true
+          admin can add vendor table rate shipping method: true
+          admin can add vendor distance rate shipping method: true
+          admin can add vendor shipping method: true
+          admin can delete shipping method [lite]: true
+          admin can delete shipping zone  [lite]: true
       vendor:
           vendor can view shipping settings menu page: true
           vendor can add shipping policy: true
@@ -110,7 +113,7 @@
           vendor can edit product [lite]: true
           vendor can quick edit product: true
           vendor can add product description [lite]: true
-          vendor can add product addon options [duplicate]: false
+          #   vendor can add product addon options [duplicate]: false
           vendor can add product quantity discount: false
           vendor can add product rma options: false
           vendor can add product wholesale options: true
@@ -127,7 +130,7 @@
           customer can view order note [lite]: true
           customer can pay pending payment order [lite]: true
           customer can cancel order [lite]: true
-          customer can order again [lite]: false
+          customer can order again [lite]: true
 
 - page: 'Orders'
   features:
@@ -151,12 +154,8 @@
 - page: 'Payments'
   features:
       admin:
-          admin can add basic payment methods [lite]: false
-          admin can add stripe payment method: false
-          admin can add Paypal Marketplace payment method: false
-          admin can add Mangopay payment method: false
-          admin can add Razorpay payment method: false
-          admin can add Strip Express payment method: false
+          admin can change currency [lite]: true
+          admin can add basic payment methods [lite]: true
       vendor:
           vendor can view payment settings menu page [lite]: true
           vendor can add paypal payment method [lite]: true
@@ -270,13 +269,14 @@
   features:
       admin:
           admin can view reverse withdrawal menu page [lite]: true
-          admin can filter reverse withdrawal by store [lite]: false
+          admin can filter reverse withdrawal by store [lite]: true
           admin can filter reverse withdrawal by date [lite]: false
-          admin can clear reverse withdrawal filters: false
+          admin can clear reverse withdrawal filters: true
           admin can add reverse withdrawal [lite]: true
       vendor:
           vendor can view reverse withdrawal menu page [lite]: true
-          vendor can view reverse withdrawal notice [lite]: true
+          vendor can view reverse withdrawal notice (In grace period) [lite]: true
+          vendor can view reverse withdrawal notice (after grace period) [lite]: true
           vendor can view reverse withdrawal announcement [lite]: true
           vendor can filter reverse withdrawals by date [lite]: true
           vendor can pay reverse withdrawal balance [lite]: true
@@ -284,13 +284,15 @@
 - page: 'Catalog Mode'
   features:
       admin:
-          admin can set catalog settings [lite]: false
+          admin can set catalog settings [lite]: true
+          admin can disable hide product price in catalog mode [lite]: true
       vendor:
-          vendor can set catalog settings [lite]: true
-          vendor can add catalog mode [lite]: false
-          vendor can hide product price in catalog mode [lite]: false
+          vendor can set catalog mode (storewide) [lite]: true
+          vendor can set catalog mode (single product) [lite]: true
+          vendor can disable hide product price in catalog mode [lite]: true
+          vendor can enable RFQ in catalog mode: false
       customer:
-          customer can view product in catalog mode [lite]: false
+          customer can view product in catalog mode [lite]: true
 
 - page: 'Privacy Policy'
   features:
@@ -595,7 +597,7 @@
           admin can add EU compliance data on user profile (vendor) edit: true
           admin can update EU compliance data on user profile (vendor) edit: true
           admin can update update EU compliance data on vendor profile edit: true
-          admin can hide vendor EU compliance data from single store page: true
+          admin can hide vendors EU compliance data from single store page: true
           admin can view customer EU compliance data on order details: false
           admin can view vendor EU compliance data on order details: false
           admin can disable EU compliance fields for vendors: false
@@ -688,7 +690,7 @@
 - page: 'MangoPay'
   features:
       admin:
-          no test is written for mangopay module: false
+          admin can add Mangopay payment method: false
 
 - page: 'Min Max Quantities'
   features:
@@ -698,7 +700,7 @@
 - page: 'PayPal Marketplace'
   features:
       admin:
-          no test is written for paypal marketplace module: false
+          admin can add Paypal Marketplace payment method: false
 
 - page: 'Product Addon'
   features:
@@ -807,7 +809,7 @@
 - page: 'Razorpay'
   features:
       admin:
-          no test is written for razorpay module: false
+          admin can add Razorpay payment method: false
 
 - page: 'Report Abuse'
   features:
@@ -987,12 +989,12 @@
 - page: 'Stripe Connect'
   features:
       admin:
-          no test is written for stripe connect: false
+          admin can add stripe payment method: false
 
 - page: 'Stripe Express'
   features:
       admin:
-          no test is written for stripe express: false
+          admin can add Strip Express payment method: false
 
 - page: 'Table Rate Shipping'
   features:
