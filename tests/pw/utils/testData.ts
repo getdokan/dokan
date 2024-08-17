@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
 import { helpers } from '@utils/helpers';
 import 'dotenv/config';
-import path from 'path';
+
 const {
     ADMIN,
     ADMIN_PASSWORD,

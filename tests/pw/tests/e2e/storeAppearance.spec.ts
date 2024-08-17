@@ -1,13 +1,13 @@
 import { test, Page } from '@playwright/test';
 import { StoreAppearance } from '@pages/storeAppearance';
-import { CustomerPage } from '@pages/customerPage';
+// import { CustomerPage } from '@pages/customerPage';
 import { dbUtils } from '@utils/dbUtils';
 import { data } from '@utils/testData';
 import { dbData } from '@utils/dbData';
 
 test.describe.skip('Store Appearance test', () => {
     let customer: StoreAppearance;
-    let customerPage: CustomerPage;
+    // let customerPage: CustomerPage;
     let cPage: Page;
 
     // todo: need to remove default dokan store sidebar content
@@ -15,7 +15,7 @@ test.describe.skip('Store Appearance test', () => {
     test.beforeAll(async ({ browser }) => {
         const customerContext = await browser.newContext(data.auth.customerAuth);
         cPage = await customerContext.newPage();
-        customerPage = new CustomerPage(cPage);
+        // customerPage = new CustomerPage(cPage);
         customer = new StoreAppearance(cPage);
     });
 

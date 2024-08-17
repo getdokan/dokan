@@ -170,6 +170,7 @@ export class WholesaleCustomersPage extends AdminPage {
         const currentUser = await this.getCurrentUser();
         await this.clickAndWaitForResponse(data.subUrls.api.dokan.wholesaleRegister, selector.customer.cDashboard.becomeWholesaleCustomer);
         const neeApproval = await this.isVisible(selector.customer.cDashboard.wholesaleRequestReturnMessage);
+        await this.toBeVisible(selector.customer.cWooSelector.wooCommerceSuccessMessage);
         if (!neeApproval) {
             await this.toContainText(selector.customer.cWooSelector.wooCommerceSuccessMessage, data.wholesale.becomeWholesaleCustomerSuccessMessage);
         } else {

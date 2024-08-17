@@ -7,7 +7,7 @@ import { helpers } from '@utils/helpers';
 import { ApiUtils } from '@utils/apiUtils';
 import { payloads } from '@utils/payloads';
 
-const { CI, CUSTOMER_ID, PRODUCT_ID } = process.env;
+const { CUSTOMER_ID, PRODUCT_ID } = process.env;
 
 test.describe.skip('Settings test', () => {
     let admin: SettingPage;

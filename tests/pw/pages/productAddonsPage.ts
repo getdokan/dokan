@@ -2,7 +2,7 @@ import { Page } from '@playwright/test';
 import { VendorPage } from '@pages/vendorPage';
 import { selector } from '@pages/selectors';
 import { data } from '@utils/testData';
-import { vendor } from '@utils/interfaces';
+import { addon } from '@utils/interfaces';
 
 // selectors
 const addonsVendor = selector.vendor.vAddonSettings;
@@ -40,7 +40,7 @@ export class ProductAddonsPage extends VendorPage {
     }
 
     // update addon fields
-    async updateAddonFields(addon: vendor['addon'], add = true) {
+    async updateAddonFields(addon: addon, add = true) {
         await this.clearAndType(addonsVendor.addon.name, addon.name);
         await this.clearAndType(addonsVendor.addon.priority, addon.priority);
 
@@ -72,14 +72,14 @@ export class ProductAddonsPage extends VendorPage {
     }
 
     // add addon
-    async addAddon(addon: vendor['addon']) {
+    async addAddon(addon: addon) {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsAddon);
         await this.clickAndWaitForLoadState(addonsVendor.createNewAddon);
         await this.updateAddonFields(addon);
     }
 
     // edit addon
-    async editAddon(addon: vendor['addon']): Promise<void> {
+    async editAddon(addon: addon): Promise<void> {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsAddon);
         await this.hover(addonsVendor.addonRow(addon.name));
         await this.clickAndWaitForLoadState(addonsVendor.editAddon(addon.name));
@@ -87,7 +87,7 @@ export class ProductAddonsPage extends VendorPage {
     }
 
     // delete addon
-    async deleteAddon(addon: vendor['addon']): Promise<void> {
+    async deleteAddon(addon: addon): Promise<void> {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsAddon);
         await this.hover(addonsVendor.addonRow(addon.name));
         await this.clickAndWaitForLoadState(addonsVendor.deleteAddon(addon.name));

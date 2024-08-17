@@ -133,6 +133,7 @@ export class CustomerPage extends BasePage {
         await this.clearAndType(customerAccountDetails.email, customer.username + customer.customerInfo.emailDomain);
         // await this.updatePassword(customer.customerInfo.password, customer.customerInfo.password1);
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.editAccountCustomer, customerAccountDetails.saveChanges, 302);
+        await this.toBeVisible(selector.customer.cWooSelector.wooCommerceSuccessMessage);
         await this.toContainText(selector.customer.cWooSelector.wooCommerceSuccessMessage, data.customer.account.updateSuccessMessage);
 
         // cleanup: reset password
@@ -146,6 +147,7 @@ export class CustomerPage extends BasePage {
         await this.clearAndType(customerAccountDetails.confirmNewPassword, newPassword);
         if (saveChanges) {
             await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.editAccountCustomer, customerAccountDetails.saveChanges);
+            await this.toBeVisible(selector.customer.cWooSelector.wooCommerceSuccessMessage);
             await this.toContainText(selector.customer.cWooSelector.wooCommerceSuccessMessage, data.customer.account.updateSuccessMessage);
         }
     }
@@ -228,6 +230,7 @@ export class CustomerPage extends BasePage {
         if (addonIsVisible) this.selectByNumber(selector.customer.cSingleProduct.productAddon.addOnSelect, 1);
         if (quantity) await this.clearAndType(selector.customer.cSingleProduct.productDetails.quantity, String(quantity));
         await this.clickAndWaitForResponse(data.subUrls.frontend.productCustomerPage, selector.customer.cSingleProduct.productDetails.addToCart);
+        await this.toBeVisible(selector.customer.cWooSelector.wooCommerceSuccessMessage);
         if (!quantity) {
             await this.toContainText(selector.customer.cWooSelector.wooCommerceSuccessMessage, `“${productName}” has been added to your cart.`);
         } else {

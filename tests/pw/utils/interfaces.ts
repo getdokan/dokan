@@ -986,23 +986,25 @@ export interface vendor {
     };
 
     // addon
-    addon: {
-        name: string;
-        priority: string;
-        category: string;
-        type: string;
-        displayAs: string;
-        title: string;
-        formatTitle: string;
-        addDescription: string;
-        enterAnOption: string;
-        optionPriceType: string;
-        optionPriceInput: string;
-        saveSuccessMessage: string;
-        deleteSuccessMessage: string;
-    };
-
+    addon: () => addon;
     registrationErrorMessage: string;
+}
+
+// addon
+export interface addon {
+    name: string;
+    priority: string;
+    category: string;
+    type: string;
+    displayAs: string;
+    title: string;
+    formatTitle: string;
+    addDescription: string;
+    enterAnOption: string;
+    optionPriceType: string;
+    optionPriceInput: string;
+    saveSuccessMessage: string;
+    deleteSuccessMessage: string;
 }
 
 // staff

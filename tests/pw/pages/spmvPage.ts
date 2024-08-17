@@ -186,6 +186,7 @@ export class SpmvPage extends VendorPage {
         await this.clickIfVisible(spmvCustomer.otherVendorAvailableTab);
 
         await this.clickAndWaitForLoadState(spmvCustomer.availableVendorDetails.actions.addToCartByVendor(storeName));
+        await this.toBeVisible(selector.customer.cWooSelector.wooCommerceSuccessMessage);
         await this.toContainText(selector.customer.cWooSelector.wooCommerceSuccessMessage, `“${productName}” has been added to your cart.`);
     }
 }

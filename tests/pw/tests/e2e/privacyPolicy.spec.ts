@@ -1,6 +1,6 @@
 import { test, request, Page } from '@playwright/test';
 import { PrivacyPolicyPage } from '@pages/privacyPolicyPage';
-import { CustomerPage } from '@pages/customerPage';
+// import { CustomerPage } from '@pages/customerPage';
 import { ApiUtils } from '@utils/apiUtils';
 import { dbUtils } from '@utils/dbUtils';
 import { data } from '@utils/testData';
@@ -8,14 +8,14 @@ import { dbData } from '@utils/dbData';
 
 test.describe.skip('Privacy Policy & Store Contact form test', () => {
     let customer: PrivacyPolicyPage;
-    let customerPage: CustomerPage;
+    // let customerPage: CustomerPage;
     let cPage: Page;
     let apiUtils: ApiUtils;
 
     test.beforeAll(async ({ browser }) => {
         const customerContext = await browser.newContext(data.auth.customerAuth);
         cPage = await customerContext.newPage();
-        customerPage = new CustomerPage(cPage);
+        // customerPage = new CustomerPage(cPage);
         customer = new PrivacyPolicyPage(cPage);
         apiUtils = new ApiUtils(await request.newContext());
     });

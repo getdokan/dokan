@@ -82,6 +82,7 @@ export class MyOrdersPage extends CustomerPage {
     async orderAgain(orderId: string, paymentMethod = 'bank') {
         await this.goIfNotThere(data.subUrls.frontend.orderDetails(orderId));
         await this.clickAndAcceptAndWaitForResponse(data.subUrls.frontend.orderAgain, selector.customer.cOrderDetails.orderAgain, 302);
+        await this.toBeVisible(selector.customer.cWooSelector.wooCommerceSuccessMessage);
         await this.toContainText(selector.customer.cWooSelector.wooCommerceSuccessMessage, 'The cart has been filled with the items from your previous order.');
         await this.goToCheckoutFromCart();
         await this.paymentOrder(paymentMethod);

@@ -17,6 +17,7 @@
         "test:e2e:pro": "DOKAN_PRO=true npx playwright test --project=e2e_tests --config=e2e.config.ts ",
         "test:e2e:coverage": "npx playwright test --project=coverage_report --config=e2e.config.ts --reporter=null",
         "test:e2e:headed": "npx playwright test --project=e2e_tests --config=e2e.config.ts --headed",
+        "test:e2e:ui": "npx playwright test --project=e2e_tests --config=e2e.config.ts --ui",
         "test:e2e:debug": "npx playwright test --project=e2e_tests --config=e2e.config.ts --debug",
         "test:codegen": "playwright codegen",
         "test:report": "npx playwright show-report",
@@ -31,13 +32,18 @@
         "reset:env": "wp-env destroy && wp-env start",
         "wp-env": "wp-env",
         "docker:testDbPort": "docker ps -f ancestor='mariadb' -f name='tests-mysql' --format='{{.Ports}}'",
+        "type": "npx tsc --noEmit",
         "lint": "eslint .",
         "lint:fix": "eslint . --fix",
         "prettier": "prettier . --check",
         "prettier:fix": "prettier . --write"
     },
     "keywords": [],
-    "author": "",
+    "author": {
+        "name": "Rajkumar shashwata halder",
+        "email": "shashwatahalder01@gmail.com",
+        "url": "https://github.com/shashwatahalder01"
+    },
     "license": "ISC",
     "devDependencies": {
         "@types/js-yaml": "^4.0.9",

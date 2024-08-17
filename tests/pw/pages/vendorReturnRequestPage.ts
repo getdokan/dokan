@@ -61,6 +61,7 @@ export class VendorReturnRequestPage extends VendorPage {
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.returnRequest, vendorReturnRequest.view(orderNumber));
         await this.clearAndType(vendorReturnRequest.returnRequestDetails.conversations.message, message);
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.returnRequest, vendorReturnRequest.returnRequestDetails.conversations.sendMessage, 302);
+        await this.toBeVisible(selector.customer.cWooSelector.wooCommerceSuccessMessage);
         await this.toContainText(selector.customer.cWooSelector.wooCommerceSuccessMessage, data.customer.rma.sendMessage);
     }
 
@@ -99,6 +100,7 @@ export class VendorReturnRequestPage extends VendorPage {
         await this.goto(data.subUrls.frontend.vDashboard.returnRequest);
         await this.hover(vendorReturnRequest.returnRequestCell(orderNumber));
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.returnRequest, vendorReturnRequest.delete(orderNumber));
+        await this.toBeVisible(selector.customer.cWooSelector.wooCommerceSuccessMessage);
         await this.toContainText(selector.customer.cWooSelector.wooCommerceSuccessMessage, 'Return Request has been deleted successfully');
     }
 
@@ -137,6 +139,7 @@ export class VendorReturnRequestPage extends VendorPage {
         }
         await this.clearAndType(selector.customer.cOrders.requestWarranty.warrantyRequestDetails, refund.refundRequestDetails);
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.requestWarranty, selector.customer.cOrders.requestWarranty.warrantySubmitRequest, 302);
+        await this.toBeVisible(selector.customer.cWooSelector.wooCommerceSuccessMessage);
         await this.toContainText(selector.customer.cWooSelector.wooCommerceSuccessMessage, refund.refundSubmitSuccessMessage);
     }
 
@@ -146,6 +149,7 @@ export class VendorReturnRequestPage extends VendorPage {
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.viewRmaRequests, selector.customer.cRma.view(orderNumber));
         await this.clearAndType(selector.customer.cRma.message, message);
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.viewRmaRequests, selector.customer.cRma.sendMessage);
+        await this.toBeVisible(selector.customer.cWooSelector.wooCommerceSuccessMessage);
         await this.toContainText(selector.customer.cWooSelector.wooCommerceSuccessMessage, data.customer.rma.sendMessage);
     }
 }

@@ -218,11 +218,8 @@ export class VendorPage extends BasePage {
         await this.clearAndType(selector.vendor.vAccountDetails.email, vendor.username + vendor.vendorInfo.emailDomain);
         // await this.updatePassword(vendor.vendorInfo.password, vendor.vendorInfo.password1);
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.editAccountVendor, selector.vendor.vAccountDetails.saveChanges, 302);
-        await expect(this.page.getByText(selector.vendor.vAccountDetails.saveSuccessMessage)).toBeVisible();
+        await this.toBeVisible(selector.customer.cWooSelector.wooCommerceSuccessMessage);
         await this.toContainText(selector.customer.cWooSelector.wooCommerceSuccessMessage, data.vendor.vendorInfo.account.updateSuccessMessage);
-
-        // cleanup: reset password
-        // await this.updatePassword(vendor.vendorInfo.password1, vendor.vendorInfo.password, true);
     }
 
     // vendor update password
