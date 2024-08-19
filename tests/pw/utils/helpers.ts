@@ -15,6 +15,9 @@ export const helpers = {
     // replace '_' to space & capitalize first letter of each word
     replaceAndCapitalizeEachWord: (str: string) => str.replace('_', ' ').replace(/(^\w{1})|(\s+\w{1})/g, (letter: string) => letter.toUpperCase()),
 
+    // replace '_' to space & lowercase first letter of each word
+    replaceAndLowercaseEachWord: (str: string) => str.replace('_', ' ').replace(/(^\w{1})|(\s+\w{1})/g, (letter: string) => letter.toLowerCase()),
+
     // capitalize
     capitalize: (word: string) => word[0]?.toUpperCase() + word.substring(1).toLowerCase(),
 
@@ -43,8 +46,19 @@ export const helpers = {
 
     // check if object is empty
     isObjEmpty: (obj: object) => Object.keys(obj).length === 0,
+
     // snakecase to camelcase
     toCamelCase: (str: string): string => str.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase()),
+
+    // convert string to snake case
+    toSnakeCase: (str: string): string => {
+        return str
+            .replace(/\s+/g, '_') // Replace spaces with underscores
+            .replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`) // Add underscores before capital letters and convert them to lowercase
+            .replace(/__+/g, '_') // Replace multiple underscores with a single one
+            .replace(/^_+|_+$/g, '') // Remove leading and trailing underscores
+            .toLowerCase(); // Ensure the entire string is lowercase
+    },
 
     // string between two tags
     stringBetweenTags: (str: string): string => {

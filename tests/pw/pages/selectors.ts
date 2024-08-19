@@ -1074,6 +1074,7 @@ export const selector = {
                 },
 
                 numberOfRowsFound: '.tablenav.top .displaying-num',
+                numberOfRows: 'table.wp-list-table tbody tr',
                 noRowsFound: '//td[normalize-space()="No badges found."]',
                 sellerBadgeRow: (name: string) => `//a[contains(text(),'${name}')]/../../..`,
                 sellerBadgeCell: (name: string) => `//a[contains(text(),'${name}')]/../..`,
@@ -4593,7 +4594,8 @@ export const selector = {
 
             sellerBadgeCell: (name: string) => `//strong[contains(text(),'${name}')]/../..`,
             numberOfBadgesFound: '.tablenav.top .displaying-num',
-
+            numberOfRows: '#dokan-seller-badge table tbody tr',
+            noRowsFound: '//td[contains(text(), "No badges found")]',
             congratsModal: {
                 closeModal: '.modal-close.modal-close-link',
                 sellerBadgeModal: '.seller-badge-modal .seller-badge-modal-content',

@@ -1257,7 +1257,8 @@ export class ApiUtils {
     // get seller badgeId
     async getSellerBadgeId(eventType: string, auth?: auth): Promise<string> {
         const allBadges = await this.getAllSellerBadges(auth);
-        const badgeId = allBadges.find((o: { event_type: string }) => o.event_type.toLowerCase() === eventType.toLowerCase())?.id;
+        eventType = helpers.toSnakeCase(eventType);
+        const badgeId = allBadges.find((o: { event_type: string }) => o.event_type === eventType)?.id;
         return badgeId;
     }
 
