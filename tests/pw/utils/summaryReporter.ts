@@ -60,13 +60,13 @@ export default class summaryReport implements Reporter {
     onStepEnd(test: TestCase, result: TestResult, step: TestStep): void {}
 
     onStdOut(chunk: string | Buffer, test: void | TestCase, result: void | TestResult): void {
-        console.log(chunk);
+        // console.log(chunk);
     }
 
     onStdErr(chunk: string | Buffer, test: void | TestCase, result: void | TestResult): void {}
 
     onError?(error: TestError): void {
-        console.log(error);
+        // console.log(error);
     }
 
     onTestEnd(test: TestCase, result: TestResult): void {
