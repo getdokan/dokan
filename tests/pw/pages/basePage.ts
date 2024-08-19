@@ -1379,6 +1379,29 @@ export class BasePage {
         expect(value).toBe(backgroundColor);
     }
 
+    // assert element to contain text
+    async toContainTextFrameLocator(frame: string, frameSelector: string, text: string | RegExp): Promise<void> {
+        const locator = this.page.frameLocator(frame).locator(frameSelector);
+        await expect(locator).toContainText(text);
+    }
+
+    // todo: test below two methods
+    // assert async function (test step) to pass
+    async toPass(asyncFn: () => Promise<void>, options: { timeout?: number; intervals?: number[] } | undefined) {
+        await expect(async () => {
+            await asyncFn();
+        }).toPass(options);
+    }
+
+    // assert async function (api request) to poll
+    async toPoll(asyncFn: () => Promise<number>, options?: { message?: string; timeout?: number }) {
+        await expect
+            .poll(async () => {
+                return await asyncFn();
+            }, options)
+            .toBe(200);
+    }
+
     // assert element not to be visible
     async notToBeVisible(selector: string) {
         await expect(this.page.locator(selector)).toBeHidden();
@@ -1407,12 +1430,6 @@ export class BasePage {
     // assert element not to have class
     async notToHaveClass(selector: string, className: string) {
         await expect(this.page.locator(selector)).not.toHaveClass(className);
-    }
-
-    // assert element to contain text
-    async toContainTextFrameLocator(frame: string, frameSelector: string, text: string | RegExp): Promise<void> {
-        const locator = this.page.frameLocator(frame).locator(frameSelector);
-        await expect(locator).toContainText(text);
     }
 
     /**
