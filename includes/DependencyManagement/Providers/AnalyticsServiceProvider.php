@@ -25,6 +25,8 @@ class AnalyticsServiceProvider extends BaseServiceProvider {
         \WeDevs\Dokan\Analytics\Reports\Taxes\Stats\QueryFilter::class,
         \WeDevs\Dokan\Analytics\Reports\Coupons\QueryFilter::class,
         \WeDevs\Dokan\Analytics\Reports\Coupons\Stats\QueryFilter::class,
+        \WeDevs\Dokan\Analytics\Reports\Customers\QueryFilter::class,
+        \WeDevs\Dokan\Analytics\Reports\Customers\Stats\QueryFilter::class,
     ];
 
     /**

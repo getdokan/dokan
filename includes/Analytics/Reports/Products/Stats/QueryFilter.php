@@ -5,7 +5,7 @@ namespace WeDevs\Dokan\Analytics\Reports\Products\Stats;
 use WeDevs\Dokan\Analytics\Reports\Products\QueryFilter as ProductsQueryFilter;
 
 class QueryFilter extends ProductsQueryFilter {
-	protected $context = 'product_stats';
+	protected $context = 'products_stats';
 
 	/**
      * Register hooks for filtering WooCommerce analytics queries.
