@@ -75,6 +75,7 @@ test.describe('Product Advertising test', () => {
         const [, , productName] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendorAuth);
         const orderId = await vendor.buyProductAdvertising(productName);
         await apiUtils.updateOrderStatus(orderId, 'wc-completed', payloads.adminAuth);
+        // todo: add assertion that product is advertised
     });
 
     test.skip('vendor can buy booking product advertising', { tag: ['@pro', '@vendor'] }, async () => {

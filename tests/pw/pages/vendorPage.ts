@@ -344,7 +344,7 @@ export class VendorPage extends BasePage {
         const advertisementStatus = await this.hasColor(productsVendor.advertisementStatus(productName), 'rgb(255, 99, 71)');
         if (advertisementStatus) {
             console.log('Product advertisement is currently ongoing.');
-            test.skip();
+            test.skip(); //todo: remove skip it marks the test as skipped
             // throw new Error('Product advertisement is currently ongoing.');
         }
         await this.clickAndWaitForResponse(data.subUrls.ajax, productsVendor.buyAdvertisement(productName));

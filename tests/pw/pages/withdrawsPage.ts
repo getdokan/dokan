@@ -199,7 +199,7 @@ export class WithdrawsPage extends AdminPage {
             // await expect(this.page.getByText(withdrawsVendor.manualWithdrawRequest.withdrawRequestSaveSuccessMessage)).toBeVisible(); // todo:
         } else {
             console.log('Vendor balance is less than minimum withdraw amount');
-            test.skip();
+            test.skip(); //todo: remove skip it marks the test as skipped
             // throw new Error('Vendor balance is less than minimum withdraw amount');
         }
     }
