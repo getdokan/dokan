@@ -174,4 +174,20 @@ class OrderType {
             self::DOKAN_SINGLE_ORDER_REFUND,
         ];
     }
+
+    /**
+     * Gets the list of refund types relevant to admin users.
+     *
+     * @return array List of admin refund type constants.
+     */
+    public function get_all_order_types(): array {
+        return [
+            self::DOKAN_PARENT_ORDER,
+            self::DOKAN_SINGLE_ORDER,
+            self::DOKAN_SUBORDER,
+            self::DOKAN_PARENT_ORDER_REFUND,
+            self::DOKAN_SUBORDER_REFUND,
+            self::DOKAN_SINGLE_ORDER_REFUND,
+        ];
+    }
 }

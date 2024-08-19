@@ -3,6 +3,7 @@
 namespace WeDevs\Dokan\Analytics\Reports\Coupons\Stats;
 
 use WeDevs\Dokan\Analytics\Reports\Coupons\QueryFilter as OrdersQueryFilter;
+use WeDevs\Dokan\Analytics\Reports\OrderType;
 
 /**
  * Class QueryFilter
@@ -29,16 +30,11 @@ class QueryFilter extends OrdersQueryFilter {
         add_filter( 'woocommerce_analytics_clauses_join_coupons_stats_total', [ $this, 'add_join_subquery' ] );
         add_filter( 'woocommerce_analytics_clauses_join_coupons_stats_interval', [ $this, 'add_join_subquery' ] );
 
-        add_filter( 'woocommerce_analytics_clauses_where_coupons_stats_total', [ $this, 'add_where_subquery' ], 30 );
-        add_filter( 'woocommerce_analytics_clauses_where_coupons_stats_interval', [ $this, 'add_where_subquery' ], 30 );
-	}
+        // Todo: Enable WHERE clause filters after completing coupon amount sub-order distributions.
+        // add_filter( 'woocommerce_analytics_clauses_where_coupons_stats_total', [ $this, 'add_where_subquery' ], 30 );
+        // add_filter( 'woocommerce_analytics_clauses_where_coupons_stats_interval', [ $this, 'add_where_subquery' ], 30 );
 
-    /**
-     * Since coupon amount is not split among the sub-orders, so we have to consider only the parent order.
-     *
-     * @return boolean
-     */
-    public function should_filter_by_seller_id(): bool {
-        return false;
+        // Todo: We may remove the "woocommerce_admin_report_columns" filter after completing coupon amount sub-order distributions.
+        add_filter( 'woocommerce_admin_report_columns', [ $this, 'modify_admin_report_columns' ], 20, 3 );
     }
 }
