@@ -54,6 +54,7 @@ env:
     DB_USER_PASSWORD: password
     DATABASE: tests-wordpress
     DB_PREFIX: wp
+    DB_PORT: 9998
     PR_NUMBER: ${{ github.event.number }}
     SHA: ${{ github.event.pull_request.head.sha }}
     SYSTEM_INFO: ./tests/pw/playwright/systemInfo.json
@@ -111,19 +112,6 @@ jobs:
                   command: |
                       cd tests/pw
                       npm run start:env
-
-            # Grab test db port
-            - name: Get Test DB PORT
-              id: db-port
-              working-directory: tests/pw
-              run: |
-                  echo "DB_PORT=$(docker ps -f ancestor='mariadb:lts' -f name='tests-mysql' --format='{{.Ports}}' | sed -E 's/.*:(.*)->.*/\1/')" >> $GITHUB_ENV
-
-            # db port
-            - name: DB PORT
-              working-directory: tests/pw
-              run: |
-                  echo "The value of test DB_PORT is ${{ env.DB_PORT }}"
 
             # Set permalink structure
             - name: Set Permalink structure
