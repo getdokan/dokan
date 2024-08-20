@@ -1,4 +1,4 @@
-import { Page, expect, test } from '@playwright/test';
+import { Page, expect } from '@playwright/test';
 import { BasePage } from '@pages/basePage';
 import { LoginPage } from '@pages/loginPage';
 import { CustomerPage } from '@pages/customerPage';
@@ -339,19 +339,51 @@ export class VendorPage extends BasePage {
         await this.toHaveCount(ordersVendor.numberOfRowsFound, 1);
     }
 
-    async buyProductAdvertising(productName: string) {
-        await this.searchProduct(productName);
-        const advertisementStatus = await this.hasColor(productsVendor.advertisementStatus(productName), 'rgb(255, 99, 71)');
-        if (advertisementStatus) {
-            console.log('Product advertisement is currently ongoing.');
-            test.skip(); //todo: remove skip it marks the test as skipped
-            // throw new Error('Product advertisement is currently ongoing.');
+    // buy product advertisement
+    async buyProductAdvertising(productName: string, productType: string, testPage?: any) {
+        if (!testPage) {
+            await this.searchProduct(productName);
+        } else {
+            const page = new testPage(this.page);
+            if (productType === 'booking') {
+                await page.searchBookingProduct(productName);
+            } else {
+                await page.searchAuctionProduct(productName);
+            }
         }
         await this.clickAndWaitForResponse(data.subUrls.ajax, productsVendor.buyAdvertisement(productName));
         await this.clickAndWaitForResponse(data.subUrls.ajax, productsVendor.confirmAction);
         await this.click(productsVendor.successMessage);
         const orderId = await this.customer.paymentOrder();
         return orderId;
+    }
+
+    // assert product advertisement is bought
+    async assertProductAdvertisementIsBought(productName: string, productType: string, testPage?: any) {
+        let page;
+        if (!testPage) {
+            await this.searchProduct(productName);
+        } else {
+            page = new testPage(this.page);
+            if (productType === 'booking') {
+                await page.searchBookingProduct(productName);
+            } else {
+                await page.searchAuctionProduct(productName);
+            }
+        }
+        await this.toHaveColor(productsVendor.advertisementStatus(productName), 'rgb(240, 80, 37)');
+        if (!testPage) {
+            await this.goToProductEdit(productName);
+        } else {
+            page = new testPage(this.page);
+            if (productType === 'booking') {
+                await page.goToBookingProductEdit(productName);
+            } else {
+                await page.goToAuctionProductEdit(productName);
+            }
+        }
+        await this.toBeChecked(productsVendor.advertisement.advertiseThisProduct);
+        await this.toBeVisible(productsVendor.advertisement.advertisementIsBought);
     }
 
     // vendor set banner and profile picture settings

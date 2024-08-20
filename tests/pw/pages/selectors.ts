@@ -3935,10 +3935,11 @@ export const selector = {
 
             // Advertise Product
             advertisement: {
-                advertiseThisProduct: '#dokan_advertise_single_product',
+                advertiseThisProduct: 'input#dokan_advertise_single_product',
                 confirmAdvertiseThisProduct: '.swal2-confirm',
                 okSuccessAlertAdvertiseThisProduct: '.swal2-confirm',
                 cancelAdvertiseThisProduct: '.swal2-cancel',
+                advertisementIsBought: '//label[contains(., "Product advertisement is currently ongoing.")]',
             },
 
             // catalog mode
