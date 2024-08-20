@@ -66,8 +66,8 @@ final class WeDevs_Dokan {
     private function __construct() {
         $this->define_constants();
 
-        register_activation_hook( __FILE__, [ $this, 'activate' ] );
-        register_deactivation_hook( __FILE__, [ $this, 'deactivate' ] );
+        register_activation_hook( DOKAN_FILE, [ $this, 'activate' ] );
+        register_deactivation_hook( DOKAN_FILE, [ $this, 'deactivate' ] );
 
         add_action( 'before_woocommerce_init', [ $this, 'declare_woocommerce_feature_compatibility' ] );
         add_action( 'woocommerce_loaded', [ $this, 'init_plugin' ] );
