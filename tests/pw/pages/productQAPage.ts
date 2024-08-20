@@ -97,6 +97,7 @@ export class ProductQAPage extends BasePage {
     async editQuestion(questionId: string, questionsAnswers: questionsAnswers): Promise<void> {
         await this.goIfNotThere(data.subUrls.backend.dokan.questionDetails(questionId));
         await this.click(productQAAdmin.questionDetails.questionDetails.editQuestion);
+        await this.wait(1); // todo: need to resolve in future [click opens textarea but not clear the previous text by fill]
         await this.clearAndType(productQAAdmin.questionDetails.questionDetails.questionInput, questionsAnswers.editQuestion);
         await this.clickAndWaitForResponse(data.subUrls.api.dokan.productQuestions, productQAAdmin.questionDetails.questionDetails.saveQuestion);
         await this.toBeVisible(productQAAdmin.questionDetails.questionSaveSuccessMessage);
@@ -105,7 +106,7 @@ export class ProductQAPage extends BasePage {
 
     // answer question
     async answerQuestion(questionId: string, questionsAnswers: questionsAnswers): Promise<void> {
-        await this.goIfNotThere(data.subUrls.backend.dokan.questionDetails(questionId));
+        await this.goto(data.subUrls.backend.dokan.questionDetails(questionId));
         await this.typeFrameSelector(productQAAdmin.questionDetails.answer.questionAnswerIframe, productQAAdmin.questionDetails.answer.questionAnswerHtmlBody, questionsAnswers.answer);
         await this.clickAndWaitForResponse(data.subUrls.api.dokan.productAnswers, productQAAdmin.questionDetails.answer.saveAnswer, 201);
         await this.toBeVisible(productQAAdmin.questionDetails.answerSaveSuccessMessage);
@@ -115,7 +116,7 @@ export class ProductQAPage extends BasePage {
 
     // edit answer
     async editAnswer(questionId: string, questionsAnswers: questionsAnswers): Promise<void> {
-        await this.goIfNotThere(data.subUrls.backend.dokan.questionDetails(questionId));
+        await this.goto(data.subUrls.backend.dokan.questionDetails(questionId));
         await this.click(productQAAdmin.questionDetails.answer.editAnswer);
         await this.typeFrameSelector(productQAAdmin.questionDetails.answer.questionAnswerIframe, productQAAdmin.questionDetails.answer.questionAnswerHtmlBody, questionsAnswers.editAnswer);
         await this.clickAndWaitForResponse(data.subUrls.api.dokan.productAnswers, productQAAdmin.questionDetails.answer.saveAnswer);

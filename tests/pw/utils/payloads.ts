@@ -2948,8 +2948,8 @@ export const payloads = {
 
     // store category
 
-    createStoreCategory: () => ({ name: `Test_Store_Category_${faker.string.nanoid(10)}` }),
-    updateStoreCategory: () => ({ name: `Update_Test_Store_Category_${faker.string.nanoid(10)}` }),
+    createStoreCategory: () => ({ name: `Store_Category_${faker.string.nanoid(5)}` }),
+    updateStoreCategory: () => ({ name: `Update_Store_Category_${faker.string.nanoid(5)}` }),
 
     // dummy data
 

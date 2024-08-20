@@ -85,9 +85,8 @@ export default defineConfig({
         /* Whether to ignore HTTPS errors during navigation. */
         ignoreHTTPSErrors: true,
         /* Record trace only when retrying a test for the first time. */
-        // trace: 'on-first-retry',
         trace: {
-            mode: 'on-first-retry',
+            mode: 'retain-on-failure',
             snapshots: true,
             screenshots: true,
             sources: true,

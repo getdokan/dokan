@@ -78,7 +78,7 @@ const productSchema = z.object({
     date_on_sale_to_gmt: z.null(),
     on_sale: z.boolean(),
     purchasable: z.boolean(),
-    total_sales: z.number(),
+    total_sales: z.string().or(z.number()),
     virtual: z.boolean(),
     downloadable: z.boolean(),
     downloads: z.array(z.unknown()),

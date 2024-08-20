@@ -708,6 +708,7 @@ export const selector = {
                     storeCategoryEdit: (title: string) => `//td//a[contains(text(), '${title}')]/../..//span[@class='edit']//a`,
                     storeCategoryDelete: (title: string) => `//td//a[contains(text(), '${title}')]/../..//span[@class='delete']//a`,
                     storeCategorySetDefault: (title: string) => `//td//a[contains(text(), '${title}')]/../..//span[@class='set_as_default']//a`,
+                    defaultCategory: (title: string) => `//td//a[contains(text(), '${title}')]/../..//span[@class="default-category"]`,
                 },
             },
 
