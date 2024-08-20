@@ -4,9 +4,9 @@
 ## Introduction
 To handle **Dokan Orders**, we followed the [WooCommerce Admin Reports Extension Guidelines](https://github.com/woocommerce/woocommerce/blob/trunk/docs/reporting/extending-woocommerce-admin-reports.md#handle-currency-parameters-on-the-server).
 
-## Custom Products Stats Datastore
+## Custom Stats Datastore
 
-To customize the default WooCommerce Products Stats datastore, we replaced the [WC Products Stats DataStore](https://github.com/woocommerce/woocommerce/blob/9297409c5a705d1cd0ae65ec9b058271bd90851e/plugins/woocommerce/src/Admin/API/Reports/Products/Stats/DataStore.php#L170) with the [Dokan Product Stats Store](./../../includes/Analytics/Reports/Products/Stats/WcDataStore.php). This modification involves overriding the `$total_query` and `$interval_query` properties by substituting the `Automattic\WooCommerce\Admin\API\Reports\SqlQuery` class with `WeDevs\Dokan\Analytics\Reports\WcSqlQuery`.
+We need to customize the default *WooCommerce Analytics Datastore* for some reports. For example, we replaced the [WC Products Stats DataStore](https://github.com/woocommerce/woocommerce/blob/9297409c5a705d1cd0ae65ec9b058271bd90851e/plugins/woocommerce/src/Admin/API/Reports/Products/Stats/DataStore.php#L170) with the [Dokan Product Stats Store](./../../includes/Analytics/Reports/Products/Stats/WcDataStore.php). This modification involves overriding the `$total_query` and `$interval_query` properties by substituting the `Automattic\WooCommerce\Admin\API\Reports\SqlQuery` class with `WeDevs\Dokan\Analytics\Reports\WcSqlQuery`.
 
 The primary change was to update the `get_sql_clause( $type, $handling = 'unfiltered' )` method to `get_sql_clause( $type, $handling = '' )`, allowing us to apply necessary filters for adding JOIN and WHERE clauses to the `dokan_order_stats` table.
 
