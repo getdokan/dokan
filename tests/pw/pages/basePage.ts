@@ -1273,6 +1273,12 @@ export class BasePage {
         return this.page.context().pages();
     }
 
+    // add locator handler [userful for randomly popups] [call before the start of the test]
+    async addLocatorHandler(selector: string, asyncFn: () => Promise<void>, options?: { noWaitAfter?: boolean; times?: number } | undefined): Promise<void> {
+        const locator = this.page.locator(selector);
+        await this.page.addLocatorHandler(locator, asyncFn, options);
+    }
+
     /**
      * Extra methods
      */
@@ -1387,7 +1393,7 @@ export class BasePage {
 
     // todo: test below two methods
     // assert async function (test step) to pass
-    async toPass(asyncFn: () => Promise<void>, options: { timeout?: number; intervals?: number[] } | undefined) {
+    async toPass(asyncFn: () => Promise<void>, options?: { timeout?: number; intervals?: number[] } | undefined) {
         await expect(async () => {
             await asyncFn();
         }).toPass(options);

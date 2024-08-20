@@ -52,9 +52,10 @@ env:
     DB_HOST_NAME: localhost
     DB_USER_NAME: root
     DB_USER_PASSWORD: password
+    DB_PORT: 9998
     DATABASE: tests-wordpress
     DB_PREFIX: wp
-    DB_PORT: 9998
+
     PR_NUMBER: ${{ github.event.number }}
     SHA: ${{ github.event.pull_request.head.sha }}
     SYSTEM_INFO: ./tests/pw/playwright/systemInfo.json
