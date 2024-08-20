@@ -1316,7 +1316,7 @@ const shipmentSchema = z.object({
     order_id: z.number().or(z.string()),
     shipping_provider: z.string(),
     shipping_provider_label: z.string(),
-    shipping_status: z.string(),
+    shipped_status: z.string(),
     shipping_status_label: z.string(),
     shipment_description: z.array(
         z.object({
