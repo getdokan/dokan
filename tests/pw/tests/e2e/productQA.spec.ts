@@ -143,7 +143,7 @@ test.describe('Product QA functionality test', () => {
 
     // guest
 
-    test('guest customer need to signIn/signUp post question', { tag: ['@pro', '@guest'] }, async ({ page }) => {
+    test('guest customer need to signIn/signUp to post question', { tag: ['@pro', '@guest'] }, async ({ page }) => {
         const guest = new ProductQAPage(page);
         await guest.postQuestion(data.predefined.simpleProduct.product1.name, data.questionAnswers, true);
     });

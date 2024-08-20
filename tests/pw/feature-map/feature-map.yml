@@ -782,7 +782,7 @@
           customer can search question: true
           customer can post question: true
       guest:
-          guest customer need to signIn/signUp post question: true
+          guest customer need to signIn/signUp to post question: true
 
 - page: 'Product Subscription'
   features:
