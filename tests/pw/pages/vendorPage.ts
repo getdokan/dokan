@@ -371,7 +371,7 @@ export class VendorPage extends BasePage {
                 await page.searchAuctionProduct(productName);
             }
         }
-        await this.toHaveColor(productsVendor.advertisementStatus(productName), 'rgb(240, 80, 37)');
+        await this.toHaveColor(productsVendor.advertisementStatus(productName), 'rgb(240, 80, 37)'); //todo: grab it from test data, it could be any color
         if (!testPage) {
             await this.goToProductEdit(productName);
         } else {
