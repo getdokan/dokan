@@ -94,7 +94,7 @@ test.describe.skip('Marketplace Coupon calculation test', () => {
         taxRate = await apiUtils.setUpTaxRate(payloads.enableTax, payloads.createTaxRate);
         // taxRate = await apiUtils.updateSingleWcSettingOptions('general', 'woocommerce_calc_discounts_sequentially', { value: 'no' });
         sequentialCoupon = await apiUtils.getSingleWcSettingOptions('general', 'woocommerce_calc_discounts_sequentially');
-        // @ts-ignore
+        // @ts-expect-error skip error for now
         sequentialCoupon = sequentialCoupon?.value === 'yes' ? true : false;
         // console.log('applySequentially:', sequentialCoupon);
         [commission, feeRecipient] = await dbUtils.getSellingInfo();
@@ -183,7 +183,7 @@ test.describe.skip('commission test', () => {
     test('percentage commission (global) test', { tag: ['@lite'] }, async () => {
         // await dbUtils.setOptionValue(dbData.dokan.optionName.selling, { ...dbData.dokan.sellingSettings, commission_type: 'percentage' });
         // const [commission, feeRecipient] = await dbUtils.getSellingInfo();
-        const [, res,] = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder);
+        const [, res] = await apiUtils.createOrder(payloads.createProduct(), payloads.createOrder);
         console.log(res);
     });
 

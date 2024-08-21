@@ -107,7 +107,7 @@ export class ApiUtils {
             console.log('End-point: ', response.url());
             console.log('Status Code: ', response.status());
             console.log('Response text: ', await response.text());
-            console.log('Error: ', err.message); // todo: showing playwright error message instead of api error message
+            console.log('Error: ', err.message);
             // console.log('header:', response.headers());
             // console.log('header:', response.headersArray());
         }
@@ -624,6 +624,7 @@ export class ApiUtils {
 
             // get withdraw id if already exists
             withdrawId = await this.getWithdrawId(auth);
+            await this.updateWithdraw(withdrawId, payload, auth);
         } else {
             expect(response.ok()).toBeTruthy();
             withdrawId = String(responseBody?.id);
@@ -1257,7 +1258,8 @@ export class ApiUtils {
     // get seller badgeId
     async getSellerBadgeId(eventType: string, auth?: auth): Promise<string> {
         const allBadges = await this.getAllSellerBadges(auth);
-        const badgeId = allBadges.find((o: { event_type: string }) => o.event_type.toLowerCase() === eventType.toLowerCase())?.id;
+        eventType = helpers.toSnakeCase(eventType);
+        const badgeId = allBadges.find((o: { event_type: string }) => o.event_type === eventType)?.id;
         return badgeId;
     }
 

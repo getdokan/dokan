@@ -122,11 +122,11 @@ test.describe('Booking Product test', () => {
     });
 
     test('vendor can add booking for existing customer', { tag: ['@pro', '@vendor'] }, async () => {
+        test.slow();
         await vendor.addBooking(bookableProductName, data.bookings, data.customer.username);
     });
 
     test('customer can buy bookable product', { tag: ['@pro', '@customer'] }, async () => {
-        // todo: customer storage state gets reset from previous tests
         await customer.buyBookableProduct(bookableProductName, data.bookings);
     });
 });

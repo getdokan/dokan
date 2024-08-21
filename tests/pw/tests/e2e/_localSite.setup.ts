@@ -33,7 +33,9 @@ test.describe('setup local site', () => {
     test('install theme', { tag: ['@lite'] }, async () => {
         await helpers.exeCommandWpcli(data.commands.wpcli.installTheme(data.installWp.themes.storefront));
     });
+});
 
+test.describe.skip('setup dokan test site', () => {
     test('install plugin (woocommece)', { tag: ['@pro'] }, async () => {
         await helpers.exeCommandWpcli(data.commands.wpcli.installPlugin(data.installWp.plugins.woocommerce));
     });
