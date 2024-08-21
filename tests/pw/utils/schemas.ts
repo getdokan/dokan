@@ -78,7 +78,7 @@ const productSchema = z.object({
     date_on_sale_to_gmt: z.null(),
     on_sale: z.boolean(),
     purchasable: z.boolean(),
-    total_sales: z.number(),
+    total_sales: z.string().or(z.number()),
     virtual: z.boolean(),
     downloadable: z.boolean(),
     downloads: z.array(z.unknown()),
@@ -1316,7 +1316,7 @@ const shipmentSchema = z.object({
     order_id: z.number().or(z.string()),
     shipping_provider: z.string(),
     shipping_provider_label: z.string(),
-    shipping_status: z.string(),
+    shipped_status: z.string(),
     shipping_status_label: z.string(),
     shipment_description: z.array(
         z.object({
