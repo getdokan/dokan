@@ -24,7 +24,7 @@
     "phpunit/phpunit": "^9.6",
     "wp-phpunit/wp-phpunit": "dev-master",
     "yoast/phpunit-polyfills": "^1.0@dev",
-    "brain/monkey": "^2.0"
+    "brain/monkey": "^2.0@dev"
   },
   "config": {
     "platform": {
