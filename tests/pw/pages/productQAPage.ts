@@ -121,7 +121,7 @@ export class ProductQAPage extends BasePage {
         await this.typeFrameSelector(productQAAdmin.questionDetails.answer.questionAnswerIframe, productQAAdmin.questionDetails.answer.questionAnswerHtmlBody, questionsAnswers.editAnswer);
         await this.clickAndWaitForResponse(data.subUrls.api.dokan.productAnswers, productQAAdmin.questionDetails.answer.saveAnswer);
         await this.toBeVisible(productQAAdmin.questionDetails.answerUpdateSuccessMessage);
-        await this.toContainText(productQAAdmin.questionDetails.answer.answerText, questionsAnswers.answer);
+        await this.toContainText(productQAAdmin.questionDetails.answer.answerText, questionsAnswers.editAnswer);
     }
 
     // edit question visibility
@@ -239,7 +239,7 @@ export class ProductQAPage extends BasePage {
         await this.typeFrameSelector(productQAVendor.questionDetails.answer.questionAnswerIframe, productQAVendor.questionDetails.answer.questionAnswerHtmlBody, questionsAnswers.editAnswer);
         await this.clickAndWaitForResponse(data.subUrls.ajax, productQAVendor.questionDetails.answer.saveAnswer);
         await this.toBeVisible(productQAVendor.questionDetails.answerSaveSuccessMessage);
-        await this.toContainText(productQAVendor.questionDetails.answerDetails, questionsAnswers.answer);
+        await this.toContainText(productQAVendor.questionDetails.answerDetails, questionsAnswers.editAnswer);
     }
 
     // delete answer
@@ -252,8 +252,7 @@ export class ProductQAPage extends BasePage {
 
     // delete question
     async vendorDeleteQuestion(questionId: string): Promise<void> {
-        // todo: flaky --> Error: page.goto: net::ERR_ABORTED at ... (need to resolve race condition another goto url is envocked from the previous action)
-        await this.goIfNotThere(data.subUrls.frontend.vDashboard.questionDetails(questionId));
+        await this.goto(data.subUrls.frontend.vDashboard.questionDetails(questionId));
         await this.click(productQAVendor.questionDetails.status.deleteQuestion);
         await this.clickAndWaitForResponse(data.subUrls.ajax, productQAVendor.questionDetails.confirmAction);
         await this.toBeVisible(productQAVendor.questionDetails.questionDeleteSuccessMessage);

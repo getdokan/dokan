@@ -86,7 +86,7 @@ export default defineConfig({
         ignoreHTTPSErrors: true,
         /* Record trace only when retrying a test for the first time. */
         trace: {
-            mode: 'retain-on-failure',
+            mode: 'on-first-retry',
             snapshots: true,
             screenshots: true,
             sources: true,
