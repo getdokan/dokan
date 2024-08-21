@@ -1308,6 +1308,7 @@ export const payloads = {
         amount: '50',
         notes: 'Withdraw notes',
         method: 'paypal',
+        status: 'pending',
     },
 
     updateWithdraw: {

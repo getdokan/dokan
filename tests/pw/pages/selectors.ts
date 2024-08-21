@@ -348,6 +348,7 @@ export const selector = {
                 statusColumnValue: (status: string) => `td.column.status .${status}`, // pending, approved, rejected, cancelled
 
                 numberOfRowsFound: '.tablenav.top .displaying-num',
+                numberOfRows: 'table.wp-list-table tbody tr',
                 currentNoOfRows: 'table tbody tr',
                 noRowsFound: '//td[normalize-space()="No requests found."]',
                 withdrawCell: (storeName: string) => `//td//a[contains(text(), '${storeName}')]/../..`,
@@ -4550,7 +4551,8 @@ export const selector = {
                 withdrawAmount: '#withdraw-amount',
                 withdrawMethod: '#withdraw-method',
                 submitRequest: '#dokan-withdraw-request-submit',
-                withdrawRequestSaveSuccessMessage: 'Withdraw request successful.',
+                withdrawRequestSaveSuccessMessage: '//div[@id="swal2-html-container" and normalize-space()="Withdraw request successful."]',
+                pendingRequestDiv: '//strong[normalize-space(text())="Pending Requests"]/..',
                 cancelWithdrawRequestSuccess: '.dokan-alert.dokan-alert-success',
                 cancelWithdrawRequestSaveSuccessMessage: 'Your request has been cancelled successfully!',
                 cancelRequest: '//strong[normalize-space()="Pending Requests"]/..//a[normalize-space()="Cancel"]',

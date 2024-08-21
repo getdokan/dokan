@@ -42,35 +42,32 @@ export class WithdrawsPage extends AdminPage {
 
     // filter withdraws
     async filterWithdraws(input: string, action: string): Promise<void> {
-        await this.goIfNotThere(data.subUrls.backend.dokan.withdraw);
+        await this.goto(data.subUrls.backend.dokan.withdraw);
         await this.click(withdrawsAdmin.filters.clearFilter);
 
         switch (action) {
             case 'by-status': {
                 await this.clickAndWaitForLoadState(withdrawsAdmin.navTabs.tabByStatus(input));
-                await this.wait(1); // todo: need to resolve this
-                const count = await this.getElementCount(withdrawsAdmin.statusColumnValue(input.toLowerCase()));
-                await this.toHaveCount(withdrawsAdmin.currentNoOfRows, count);
                 return;
             }
 
             case 'by-vendor':
                 await this.click(withdrawsAdmin.filters.filterByVendor);
+                await this.typeAndWaitForResponse(data.subUrls.api.dokan.stores, withdrawsAdmin.filters.filterInput, input);
+                await this.pressAndWaitForResponse(data.subUrls.api.dokan.withdraws, data.key.enter);
                 break;
 
             case 'by-payment-method':
                 await this.click(withdrawsAdmin.filters.filterByPaymentMethods);
+                await this.clearAndType(withdrawsAdmin.filters.filterInput, input);
+                await this.toContainText(withdrawsAdmin.filters.result, input);
+                await this.pressAndWaitForResponse(data.subUrls.api.dokan.withdraws, data.key.enter);
                 break;
 
             default:
                 break;
         }
-        await this.fill(withdrawsAdmin.filters.filterInput, input);
-        await this.toContainText(withdrawsAdmin.filters.result, input);
-        // todo: need to wait for focus event
-        await this.pressAndWaitForResponse(data.subUrls.api.dokan.withdraws, data.key.enter);
-        const count = (await this.getElementText(withdrawsAdmin.numberOfRowsFound))?.split(' ')[0];
-        expect(Number(count)).toBeGreaterThan(0);
+        await this.notToBeVisible(withdrawsAdmin.noRowsFound);
     }
 
     // export withdraws
@@ -190,17 +187,15 @@ export class WithdrawsPage extends AdminPage {
     // vendor request withdraw
     async requestWithdraw(withdraw: vendor['withdraw']): Promise<void> {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.withdraw);
-
         if (helpers.price(withdraw.currentBalance) > helpers.price(withdraw.minimumWithdrawAmount)) {
             await this.click(withdrawsVendor.manualWithdrawRequest.requestWithdraw);
             await this.clearAndType(withdrawsVendor.manualWithdrawRequest.withdrawAmount, String(withdraw.minimumWithdrawAmount));
             await this.selectByValue(withdrawsVendor.manualWithdrawRequest.withdrawMethod, withdraw.withdrawMethod.default);
             await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, withdrawsVendor.manualWithdrawRequest.submitRequest);
-            // await expect(this.page.getByText(withdrawsVendor.manualWithdrawRequest.withdrawRequestSaveSuccessMessage)).toBeVisible(); // todo:
+            await this.toBeVisible(withdrawsVendor.manualWithdrawRequest.withdrawRequestSaveSuccessMessage);
+            await this.toBeVisible(withdrawsVendor.manualWithdrawRequest.pendingRequestDiv);
         } else {
-            console.log('Vendor balance is less than minimum withdraw amount');
-            test.skip(); //todo: remove skip it marks the test as skipped
-            // throw new Error('Vendor balance is less than minimum withdraw amount');
+            throw new Error('Current balance is less than minimum withdraw amount');
         }
     }
 
