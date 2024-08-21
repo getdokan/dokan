@@ -641,16 +641,16 @@
   features:
       admin:
           #   admin can set Dokan geolocation settings [duplicate]: false
-          #   admin can set map location position: false
-          #   admin can set where to display store map: false
-          #   admin can enable filters before location map: false
-          #   admin can enable product location tab on single product page: false
-          #   admin can set map radius search unit and distance: false
-          #   admin can set map zoom level: false
-          #   admin can set map default location: false
-          #   admin can add geolocation widget (product location) widget: false
-          #   admin can add geolocation widget (store location) widget: false
-          #   admin can add geolocation widget (geolocation filter form) widget: false
+          admin can set map location position: false
+          admin can set where to display store map: false
+          admin can enable filters before location map: false
+          admin can enable product location tab on single product page: false
+          admin can set map radius search unit and distance: false
+          admin can set map zoom level: false
+          admin can set map default location: false
+          admin can add geolocation widget (product location) widget: false
+          admin can add geolocation widget (store location) widget: false
+          admin can add geolocation widget (geolocation filter form) widget: false
           #   admin can add geolocation filters shortcode [duplicate]: false
       #   vendor:
       #   vendor can add location to store [duplicate]: false
@@ -709,7 +709,7 @@
           vendor can add global product addon: true
           vendor can edit global product addon: true
           vendor can delete product addon: true
-          #   vendor can add individual product addon [duplicate]: false
+        #   vendor can add individual product addon [duplicate]: false
           vendor can edit individual product product addon: false
           vendor can delete individual productproduct addon: false
       customer:
