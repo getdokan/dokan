@@ -20,8 +20,7 @@ test.describe('Request for quotation Rules test', () => {
     });
 
     test.afterAll(async () => {
-        await apiUtils.deleteAllQuoteRules(payloads.adminAuth);
-        await apiUtils.deleteAllQuoteRulesTrashed(payloads.adminAuth);
+        await apiUtils.deleteAllQuoteRules(payloads.adminAuth); //todo: remove in future
         await aPage.close();
         await apiUtils.dispose();
     });
@@ -57,8 +56,7 @@ test.describe('Request for quotation Rules test', () => {
         await admin.updateQuoteRule(quoteRuleTitle, 'permanently-delete');
     });
 
-    test.skip('admin can perform quote rule bulk actions', { tag: ['@pro', '@admin'] }, async () => {
-        // todo: might cause other tests to fail in parallel
+    test('admin can perform bulk action on quote rules', { tag: ['@pro', '@admin', '@serial'] }, async () => {
         await admin.quoteRulesBulkAction('trash');
     });
 });

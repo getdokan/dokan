@@ -1,24 +1,24 @@
-=== Dokan - Best WooCommerce Multivendor Marketplace Solution - Build Your Own Amazon, eBay, Etsy ===
+=== Dokan - Powerful WooCommerce Multivendor Marketplace Solution - Build Your Own Amazon, eBay, Etsy ===
 Contributors: tareq1988, wedevs, nizamuddinbabu
 Donate Link: http://tareq.co/donate/
 Tags: WooCommerce multivendor marketplace, multivendor marketplace, multivendor, multi seller, multi vendor, WooCommerce marketplace, WooCommerce product vendors
 Requires at least: 6.4
-Tested up to: 6.5.3
+Tested up to: 6.6.1
 WC requires at least: 8.0.0
-WC tested up to: 8.8.3
+WC tested up to: 9.1.4
 Requires PHP: 7.4
-Stable tag: 3.11.0
+Stable tag: 3.11.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Transform your WooCommerce site into a robust multivendor marketplace with Dokan - the #1 WooCommerce multivendor marketplace solution!
+Transform your WooCommerce site into a multivendor marketplace with Dokan - a powerful and advanced WooCommerce multivendor marketplace solution
 
 == Description ==
 
-= THE BEST MULTIVENDOR MARKETPLACE PLUGIN FOR WORDPRESS – POWERED BY WOOCOMMERCE =
+= POWERFUL MULTIVENDOR MARKETPLACE PLUGIN FOR WORDPRESS – POWERED BY WOOCOMMERCE =
 
 
-[Dokan](https://dokan.co/wordpress/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) is the best frontend multivendor marketplace plugin for WordPress, powered by WooCommerce. It helps you build your own multivendor marketplace similar to Amazon, Shopify, eBay, and Magento in under 30 minutes.
+[Dokan](https://dokan.co/wordpress/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) is the ultimate frontend multivendor marketplace plugin for WordPress, powered by WooCommerce. It helps you build your own multivendor marketplace similar to Amazon, Shopify, eBay, and Magento in under 30 minutes.
 
 Moreover, Plus, with Dokan, you don't need any coding skills to create a thriving WooCommerce multivendor marketplace. Trusted by over 60,000 entrepreneurs globally for more than a decade, Dokan makes multivendor marketplace setup effortless and accessible to all.
 Dokan is the fastest way to launch an eCommerce business and earn through commissions for products ranging from digital and physical to variable products.
@@ -69,7 +69,7 @@ Here is how you can build your multivendor marketplace with Dokan.
 
 👏 “Best investment we made last year.”
 
-👏 [“Excellent product. Ease of use. Saved hundreds of work hours with lots of additional benefits.”] (https://www.capterra.com/p/168004/Dokan-Multivendor-Marketplace/reviews/543139/)
+👏 “[Excellent product. Ease of use. Saved hundreds of work hours with lots of additional benefits] (https://www.capterra.com/p/168004/Dokan-Multivendor-Marketplace/reviews/543139/)”
 
 = SUCCESS STORIES WE ARE PROUD TO BE A PART OF =
 
@@ -81,7 +81,7 @@ Here is how you can build your multivendor marketplace with Dokan.
 [youtube https://www.youtube.com/watch?v=4id-EwbfUko]
 
 
-= THE BEST FRONTEND USER INTERFACE =
+= HIGHLY USER-FRIENDLY FRONTEND INTERFACE =
 
 To provide a comprehensive frontend experience, every vendor has a [personalized customizable dashboard](https://dokan.co/wordpress/features/?utm_campaign=dokan-wordpress-org-visitor&utm_medium=learn_more_about_dokan&utm_source=WordPress.org) on the store frontend. They can easily navigate and control every aspect of their marketplace from there. Backend access is restricted to only the admin, which sets Dokan apart from other marketplace plugins. However, all Dokan [modules](https://dokan.co/wordpress/modules/) are frontend compatible so that both the admin and vendors can enjoy the benefits and advanced features of Dokan.
 
@@ -308,7 +308,7 @@ A. Not for the moment. We have plans to integrate with BuddyPress via an add-on 
 A. Yes, Dokan is fully responsive. We take mobile first approach and it displays very well in mobile and tablet devices. We are using Twitter Bootstrap as a framework and it just works.
 
 = Q. Does it supports variable products? =
-A. The **Pro** version does! You can seller normal products, downloadable products and variable products with your own attributes.
+A. The **Pro** version does! You can sell normal products, downloadable products, and variable products with your own attributes.
 
 = Q. Can each vendor customize his store? =
 A. Right now we have options for only changing the store banner page. We are working on a better customizable seller store page.
@@ -346,6 +346,31 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 == Changelog ==
+
+= v3.11.5 ( Aug 7, 2024 ) =
+
+- **fix:** Fixed data updating issue on Admin color picker settings.
+- **fix:** Fixed extra slashes issue on store url when translated via WPML.
+
+= v3.11.4 ( Jul 10, 2024 ) =
+
+- **update:** Direct links to the relevant settings from vendor progress bar added.
+- **fix:** Some deprecation warning resolved.
+- **fix:** Shop URL rendered double slash when using WPML on vendor registration.
+- **fix:** Fatal error in block editor on adding and editing page with customer-migration shortcode.
+
+= v3.11.3 ( Jun 10, 2024 ) =
+
+- **fix:** Responsive issue on vendor dashboard tabs preview.
+
+= v3.11.2 ( May 27, 2024 ) =
+
+- **update:** WooCommerce 8.9.1 Compatibility added.
+
+= v3.11.1 ( May 16, 2024 ) =
+
+- **new:** Action hook `dokan_dashboard_sidebar_start` added.
+- **new:** Action hook `dokan_dashboard_sidebar_end` added.
 
 = v3.11.0 ( May 10, 2024 ) =
 

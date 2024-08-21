@@ -80,7 +80,7 @@ export class ProductQAPage extends BasePage {
 
             case 'by-product':
                 await this.click(productQAAdmin.filters.filterByProducts);
-                await this.typeAndWaitForResponse(data.subUrls.api.wc.wcProducts, productQAAdmin.filters.filterInput, input);
+                await this.typeAndWaitForResponse(data.subUrls.api.wc.products, productQAAdmin.filters.filterInput, input);
                 await this.toContainText(productQAAdmin.filters.result, input);
                 await this.pressAndWaitForResponse(data.subUrls.api.dokan.productQuestions, data.key.enter);
                 break;
@@ -126,11 +126,19 @@ export class ProductQAPage extends BasePage {
     // edit question visibility
     async editQuestionVisibility(questionId: string, action: string): Promise<void> {
         await this.goIfNotThere(data.subUrls.backend.dokan.questionDetails(questionId));
-        action == 'hide' ? await this.click(productQAAdmin.questionDetails.status.hideFromProductPage) : await this.click(productQAAdmin.questionDetails.status.showInProductPage);
-        await this.clickAndWaitForResponse(data.subUrls.api.dokan.productQuestions, productQAAdmin.questionDetails.confirmAction);
-        await this.toBeVisible(productQAAdmin.questionDetails.visibilityStatusSaveSuccessMessage);
-        action == 'hide' ? await this.toBeVisible(productQAAdmin.questionDetails.status.hiddenStatus) : await this.toBeVisible(productQAAdmin.questionDetails.status.visibleStatus);
-        action == 'hide' ? await this.toBeVisible(productQAAdmin.questionDetails.status.showInProductPage) : await this.toBeVisible(productQAAdmin.questionDetails.status.hideFromProductPage);
+        if (action == 'hide') {
+            await this.click(productQAAdmin.questionDetails.status.hideFromProductPage);
+            await this.clickAndWaitForResponse(data.subUrls.api.dokan.productQuestions, productQAAdmin.questionDetails.confirmAction);
+            await this.toBeVisible(productQAAdmin.questionDetails.visibilityStatusSaveSuccessMessage);
+            await this.toBeVisible(productQAAdmin.questionDetails.status.hiddenStatus);
+            await this.toBeVisible(productQAAdmin.questionDetails.status.showInProductPage);
+        } else {
+            await this.click(productQAAdmin.questionDetails.status.showInProductPage);
+            await this.clickAndWaitForResponse(data.subUrls.api.dokan.productQuestions, productQAAdmin.questionDetails.confirmAction);
+            await this.toBeVisible(productQAAdmin.questionDetails.visibilityStatusSaveSuccessMessage);
+            await this.toBeVisible(productQAAdmin.questionDetails.status.visibleStatus);
+            await this.toBeVisible(productQAAdmin.questionDetails.status.hideFromProductPage);
+        }
     }
 
     // delete answer
@@ -146,7 +154,6 @@ export class ProductQAPage extends BasePage {
         await this.goIfNotThere(data.subUrls.backend.dokan.questionDetails(questionId));
         await this.click(productQAAdmin.questionDetails.status.deleteQuestion);
         await this.clickAndWaitForResponse(data.subUrls.api.dokan.productQuestions, productQAAdmin.questionDetails.confirmAction, 204);
-        // await this.toBeVisible(productQAAdmin.questionDetails.questionDeleteSuccessMessage); //todo: needed or not
     }
 
     // product questions bulk action
@@ -244,7 +251,7 @@ export class ProductQAPage extends BasePage {
 
     // delete question
     async vendorDeleteQuestion(questionId: string): Promise<void> {
-        //todo: flaky --> Error: page.goto: net::ERR_ABORTED at ...
+        // todo: flaky --> Error: page.goto: net::ERR_ABORTED at ... (need to resolve race condition another goto url is envocked from the previous action)
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.questionDetails(questionId));
         await this.click(productQAVendor.questionDetails.status.deleteQuestion);
         await this.clickAndWaitForResponse(data.subUrls.ajax, productQAVendor.questionDetails.confirmAction);
@@ -266,6 +273,7 @@ export class ProductQAPage extends BasePage {
     async postQuestion(productName: string, questionsAnswers: questionsAnswers, guest = false): Promise<void> {
         await this.goToProductDetails(productName);
         await this.click(selector.customer.cSingleProduct.menus.questionsAnswers);
+        await this.focus(productQACustomer.searchInput);
         await this.clearAndType(productQACustomer.searchInput, '....');
         if (guest) {
             await this.click(productQACustomer.loginPostQuestion);

@@ -1,4 +1,4 @@
-- page: 'plugin'
+- page: 'plugins'
   features:
       admin:
           admin can install Dokan plugin [lite]: false
@@ -15,17 +15,20 @@
 - page: 'Tax'
   features:
       admin:
-          admin can add standard tax rate [lite]: false
+          admin can enable tax [lite]: true
+          admin can add standard tax rate [lite]: true
 
 - page: 'Shipping'
   features:
       admin:
-          admin can add flat rate shipping [lite]: false
-          admin can add free shipping [lite]: false
-          admin can add local pickup shipping [lite]: false
-          admin can add table rate shipping: false
-          admin can add distance rate shipping: false
-          admin can add vendor shipping: false
+          admin can enable shipping method [lite]: true
+          admin can add flat rate shipping method [lite]: true
+          admin can add free shipping method [lite]: true
+          admin can add vendor table rate shipping method: true
+          admin can add vendor distance rate shipping method: true
+          admin can add vendor shipping method: true
+          admin can delete shipping method [lite]: true
+          admin can delete shipping zone  [lite]: true
       vendor:
           vendor can view shipping settings menu page: true
           vendor can add shipping policy: true
@@ -42,8 +45,20 @@
       admin:
           admin can login [lite]: true
           admin can logout [lite]: true
-#
-- page: 'customer'
+
+- page: 'Vendor'
+  features:
+      vendor:
+          vendor can register [lite]: true
+          vendor can register (address fields are enabled) [lite]: true
+          vendor can login [lite]: true
+          vendor can logout [lite]: true
+          vendor can setup setup-wizard [lite]: true
+          vendor can view account details menu page [lite]: true
+          vendor update account details [lite]: true
+          vendor can visit own Store [lite]: true
+
+- page: 'Customer'
   features:
       customer:
           customer can register [lite]: true
@@ -56,14 +71,16 @@
           customer can add product to cart [lite]: true
           customer can buy product [lite]: true
           customer can buy multi-vendor products [lite]: true
-#
-- page: 'Admin Dashboard'
+
+- page: 'Dashboard'
   features:
       admin:
           admin can view Dokan dashboard [lite]: true
           admin can evaluate dashboard at a glance values [lite]: true
           admin can add Dokan news subscriber [lite]: true
-#
+      vendor:
+          vendor can view vendor dashboard [lite]: true
+
 - page: 'Products'
   features:
       admin:
@@ -96,15 +113,15 @@
           vendor can edit product [lite]: true
           vendor can quick edit product: true
           vendor can add product description [lite]: true
+          #   vendor can add product addon options [duplicate]: false
           vendor can add product quantity discount: false
           vendor can add product rma options: false
           vendor can add product wholesale options: true
           vendor can add product min-max options: false
           vendor can add product other options [lite]: true
-          vendor can add catalog mode [lite]: false
           vendor can duplicate product: true
           vendor can permanently delete product [lite]: true
-          #
+
 - page: 'MyOrders'
   features:
       customer:
@@ -113,8 +130,8 @@
           customer can view order note [lite]: true
           customer can pay pending payment order [lite]: true
           customer can cancel order [lite]: true
-          customer can order again [lite]: false
-#
+          customer can order again [lite]: true
+
 - page: 'Orders'
   features:
       vendor:
@@ -133,16 +150,12 @@
           vendor can add shipment to order: true
           vendor can add downloadable product permission to order [lite]: false
           vendor can perform bulk action on orders [lite]: true
-#
+
 - page: 'Payments'
   features:
       admin:
-          admin can add basic payment methods [lite]: false
-          admin can add stripe payment method: false
-          admin can add Paypal Marketplace payment method: false
-          admin can add Mangopay payment method: false
-          admin can add Razorpay payment method: false
-          admin can add Strip Express payment method: false
+          admin can change currency [lite]: true
+          admin can add basic payment methods [lite]: true
       vendor:
           vendor can view payment settings menu page [lite]: true
           vendor can add paypal payment method [lite]: true
@@ -153,7 +166,7 @@
           vendor can disconnect bank payment method: true
           vendor can disconnect Skrill payment method: true
           vendor can disconnect custom payment method: true
-#
+
 - page: 'Shop'
   features:
       customer:
@@ -164,7 +177,7 @@
           customer can filter products by location: true
           customer can view products list on map: true
           customer can go to product details from shop [lite]: true
-#
+
 - page: 'Single Product'
   features:
       customer:
@@ -176,7 +189,7 @@
           customer can view more products [lite]: true
           customer can view related products [lite]: true
           customer can review product [lite]: true
-#
+
 - page: 'Single Store'
   features:
       customer:
@@ -186,14 +199,14 @@
           customer can sort products on single store [lite]: true
           customer can view store terms and conditions [lite]: false
           customer can share store: true
-#
+
 - page: 'Store Appearance'
   features:
       customer:
           store map is disabled on store sidebar [lite]: true
           store open-close time is disabled store sidebar [lite]: true
           vendor info is disabled on single store page [lite]: false
-#
+
 - page: 'Store List'
   features:
       customer:
@@ -208,22 +221,24 @@
           customer can filter open now stores: false
           customer can view stores on map: true
           customer can go to single store from store list [lite]: true
-#
+
 - page: 'Stores'
   features:
       admin:
           admin can view vendors menu page [lite]: true
-          admin can view vendor details: true
-          admin can email vendor: true
-          admin can add vendor [lite]: true
+          admin can filter vendors by pending status: false
+          admin can filter vendors by approved status: false
           admin can search vendors [lite]: true
+          admin can view vendor details: true
           admin can disable vendor's selling capability [lite]: true
           admin can enable vendor's selling capability [lite]: true
+          admin can email vendor: true
+          admin can add vendor [lite]: true
           admin can edit vendor info [lite]: true
           admin can view vendor products [lite]: true
           admin can view vendor orders [lite]: true
-          admin can perform vendor bulk actions [lite]: true
-#
+          admin can perform bulk action on vendors [lite]: true
+
 - page: 'Withdraw'
   features:
       admin:
@@ -234,7 +249,7 @@
           admin can filter withdrawal requests by vendor [lite]: true
           admin can filter withdrawal requests by payment methods [lite]: true
           admin can filter withdrawal requests by date: false
-          admin can clear filters: false
+          admin can clear withdrawal request filters: false
           admin can export withdrawal requests [lite]: true
           admin can add note to withdrawal request [lite]: true
           admin can approve withdrawal request [lite]: true
@@ -249,43 +264,36 @@
           vendor can cancel withdrawal request [lite]: true
           vendor can add auto withdraw disbursement schedule: true
           vendor can add default withdraw payment methods [lite]: true
-#
+
 - page: 'Reverse Withdrawal'
   features:
       admin:
           admin can view reverse withdrawal menu page [lite]: true
-          admin can filter reverse withdraws by store [lite]: false
-          admin can crete reverse withdraws [lite]: true
+          admin can filter reverse withdrawal by store [lite]: true
+          admin can filter reverse withdrawal by date [lite]: false
+          admin can clear reverse withdrawal filters: true
+          admin can add reverse withdrawal [lite]: true
       vendor:
           vendor can view reverse withdrawal menu page [lite]: true
-          vendor can view reverse withdrawal notice [lite]: true
+          vendor can view reverse withdrawal notice (In grace period) [lite]: true
+          vendor can view reverse withdrawal notice (after grace period) [lite]: true
           vendor can view reverse withdrawal announcement [lite]: true
           vendor can filter reverse withdrawals by date [lite]: true
           vendor can pay reverse withdrawal balance [lite]: true
-#
-- page: 'Vendor'
+
+- page: 'Catalog Mode'
   features:
+      admin:
+          admin can set catalog settings [lite]: true
+          admin can disable hide product price in catalog mode [lite]: true
       vendor:
-          vendor can register [lite]: true
-          vendor can register (address fields are enabled) [lite]: true
-          vendor can login [lite]: true
-          vendor can logout [lite]: true
-          vendor can setup setup-wizard [lite]: true
-          vendor can view account details menu page [lite]: true
-          vendor update account details [lite]: true
-          vendor can visit own Store [lite]: true
-#
-- page: 'Vendor Dashboard'
-  features:
-      vendor:
-          vendor can view vendor dashboard [lite]: true
-#
-- page: 'Vendor Reports'
-  features:
-      vendor:
-          vendor can view reports menu page: true
-          vendor can export statement: true
-#
+          vendor can set catalog mode (storewide) [lite]: true
+          vendor can set catalog mode (single product) [lite]: true
+          vendor can disable hide product price in catalog mode [lite]: true
+          vendor can enable RFQ in catalog mode: false
+      customer:
+          customer can view product in catalog mode [lite]: true
+
 - page: 'Privacy Policy'
   features:
       admin:
@@ -294,20 +302,38 @@
       customer:
           customer can contact vendor [lite]: true
           customer can navigate to Dokan privacy policy [lite]: true
-#
+
 - page: 'Notice And Promotion'
   features:
       admin:
           admin can view Dokan notice [lite]: true
           admin can view Dokan promotion [lite]: true
           admin can view Dokan premium features promotions [lite]: true
-#
+
 - page: 'Help'
   features:
       admin:
           admin can view help menu page [lite]: true
           admin can view get help dropdown [lite]: true
-#
+
+- page: 'Shortcode'
+  features:
+      admin:
+          admin can create page with dokan shortcode: false
+      vendor:
+          vendor can view dokan dashboard (shortcode): true
+          vendor can view dokan subscription packs (shortcode): true
+          guest user can view vendor registration form (shortcode): true
+      customer:
+          customer can view best selling products (shortcode): true
+          customer can view top rated products (shortcode): true
+          customer can view customer migration form (shortcode): true
+          customer can view geolocation filter form (shortcode): true
+          customer can view advertised products (shortcode): false
+          customer can view stores (shortcode): true
+          customer can view my orders (shortcode): true
+          customer can view request for quote (shortcode): true
+
 - page: 'Vendor Settings'
   features:
       vendor:
@@ -323,16 +349,16 @@
           vendor can set terms and conditions settings [lite]: true
           vendor can set open-close settings [lite]: true
           vendor can set vacation settings: true
-          vendor can set catalog settings [lite]: true
           vendor can set discount settings: true
           vendor can set biography settings: true
+          vendor can set live chat settings: false
           vendor can set store support settings: true
           vendor can set min-max settings: true
           vendor can set shipStation settings: true
           vendor can set social profile settings: true
           vendor can set rma settings: true
           vendor can set store seo settings: true
-#
+
 - page: 'Setting'
   features:
       admin:
@@ -347,7 +373,7 @@
           admin can enable more products tab (general settings) [lite]: true
           admin can enable vendor selling (selling settings) [lite]: true
           admin can set order status change capability (selling settings) [lite]: true
-#
+
 - page: 'settings'
   features:
       admin:
@@ -389,7 +415,7 @@
           admin can import dummy data: false
           admin can clear dummy data: true
           admin can test distance matrix API: true
-#
+
 - page: 'coupons'
   features:
       admin:
@@ -404,7 +430,7 @@
           customer can view coupon on single store: true
           customer can apply coupon: true
           customer can buy product with coupon: true
-#
+
 - page: 'Refunds'
   features:
       admin:
@@ -413,11 +439,11 @@
           admin can search refund requests by vendor: true
           admin can approve refund request: true
           admin can cancel refund requests: true
-          admin can perform refund requests bulk actions: false
+          admin can perform bulk action on refund requests: true
       vendor:
           vendor can full refund: true
           vendor can partial refund: true
-#
+
 - page: 'Reports'
   features:
       admin:
@@ -427,6 +453,10 @@
           admin can export all logs: true
           admin can filter all logs by store name: true
           admin can filter all logs by order status: true
+          #   admin can filter all logs by calander: true
+      vendor:
+          vendor can view reports menu page: true
+          vendor can export statement: true
 
 - page: 'Store Categories'
   features:
@@ -439,7 +469,7 @@
           admin can delete store category: true
       vendor:
           vendor can update own store category: true
-#
+
 - page: 'Announcements'
   features:
       admin:
@@ -455,13 +485,13 @@
           vendor can view announcements menu page: true
           vendor can view announcement details: true
           vendor can delete announcement: true
-#
+
 - page: 'Email Verification'
   features:
       customer:
           user can see registration notice (2-step auth) while registering as customer: true
           user can see registration notice (2-step auth) while loggingIn: true
-#
+
 - page: 'Product Reviews'
   features:
       vendor:
@@ -474,7 +504,7 @@
           vendor can restore trashed product review: true
           vendor can permanently-delete product review: true
           vendor can perform bulk action on product reviews: false
-#
+
 - page: 'MenuManager'
   features:
       admin:
@@ -486,7 +516,7 @@
           admin can reorder menu: true
           admin can't reorder or toggle status of dashboard & store menu: true
           admin can reset menu manager settings: true
-#
+
 - page: 'License'
   features:
       admin:
@@ -506,7 +536,7 @@
           admin can activate module: true
           admin can perform bulk action on modules: true
           admin can change module view layout: true
-#
+
 - page: 'Auction Integration'
   features:
       admin:
@@ -525,20 +555,25 @@
       customer:
           customer can bid auction product: true
           customer can buy auction product with buy it now price: false
-#
+
 - page: 'Color Scheme Customizer'
   features:
       admin:
-          admin can change predefine color scheme: false
-#
+          admin can switch predefined color palette: true
+          admin can add custom color palette: true
+          admin can update custom color palette: true
+
 - page: 'Delivery Time'
   features:
+      admin:
+          admin can update delivery time on order details: false
       vendor:
           vendor can view delivery time menu page: true
           vendor can view delivery time settings menu page: true
           vendor can set delivery time settings: true
           vendor can filter delivery time: true
-          vendor can change view style of delivery time calender: true
+          vendor can change view style of delivery time calendar: true
+          vendor can update delivery time on order details: false
       customer:
           customer can buy product with delivery time: false
           customer can buy product with store pickup: false
@@ -546,13 +581,49 @@
 - page: 'Elementor'
   features:
       admin:
-          no test is written for this feature: false
+          no test is written for elementor module (out of scope): false
 
 - page: 'EU Compliance Fields'
   features:
       admin:
-          no test is written for this feature: false
-#
+          admin can enable EU compliance fields for vendors: true
+          admin can enable EU compliance fields on vendor registration: true
+          admin can enable EU compliance fields for customers: true
+          admin can enable germanized support for vendors: true
+          admin can enable override invoice number permission for vendors: true
+          admin can add EU compliance data while adding a vendor: true
+          admin can add EU compliance data on user profile (customer) edit: true
+          admin can update EU compliance data on user profile (customer) edit: true
+          admin can add EU compliance data on user profile (vendor) edit: true
+          admin can update EU compliance data on user profile (vendor) edit: true
+          admin can update update EU compliance data on vendor profile edit: true
+          admin can hide vendors EU compliance data from single store page: true
+          admin can view customer EU compliance data on order details: false
+          admin can view vendor EU compliance data on order details: false
+          admin can disable EU compliance fields for vendors: false
+          admin can disable EU compliance fields on vendor registration: false
+          admin can disable EU compliance fields for customers: false
+          admin can disable germanized support for vendors: false
+          admin can disable override invoice number permission for vendors: false
+      vendor:
+          vendor can add EU compliance data on store settings: true
+          vendor can add EU compliance data on registration: true
+          vendor can add EU compliance data on registration page (shortcode generated): false
+          vendor can update EU compliance data: true
+          vendor can add product EU compliance data: true
+          vendor can update product EU compliance data: true
+          vendor can view customer EU compliance data on order details: false
+          vendor can override invoice number: false
+      customer:
+          customer can add EU compliance data on billing address: true
+          customer can add EU compliance data while checkout: false
+          customer can update EU compliance data: true
+          customer can add EU compliance data (vendor) while become a vendor: true
+          customer can view vendor EU compliance data on single store page: true
+          customer can view product EU compliance data on single product page: true
+      guest:
+          guest customer can add EU compliance data while checkout: false
+
 - page: 'Follow Store'
   features:
       vendor:
@@ -560,62 +631,122 @@
           vendor can view followers: true
       customer:
           customer can view followed vendors menu page: true
-          customer can follow store on store listing: true
+          customer can view followed vendors: false
+          customer can follow store on store list page: true
           customer can follow store on single store: true
-#
+          customer can unfollow store on store list page: true
+          customer can unfollow store on single store: true
+
 - page: 'Geolocation'
   features:
       admin:
-          no test is written for this feature: false
-#
+          #   admin can set Dokan geolocation settings [duplicate]: false
+          admin can set map location position: false
+          admin can set where to display store map: false
+          admin can enable filters before location map: false
+          admin can enable product location tab on single product page: false
+          admin can set map radius search unit and distance: false
+          admin can set map zoom level: false
+          admin can set map default location: false
+          admin can add geolocation widget (product location) widget: false
+          admin can add geolocation widget (store location) widget: false
+          admin can add geolocation widget (geolocation filter form) widget: false
+          #   admin can add geolocation filters shortcode [duplicate]: false
+      #   vendor:
+      #   vendor can add location to store [duplicate]: false
+      #   vendor can add location to product [duplicate]: false
+      #   customer:
+      #   customer can view map on shop page [duplicate]: false
+      #   customer can view map on store list page [duplicate]: false
+      #   customer can view map on single product page [duplicate]: false
+      #   customer can view product location on map [duplicate]: false
+      #   customer can view store location on map [duplicate]: false
+      #   customer can use filters on shop page [duplicate]: false
+      #   customer can use filters on store list page [duplicate]: false
+
 - page: 'Live Chat'
   features:
       admin:
-          no test is written for this feature: false
-#
+          admin can set chat provider: false
+          admin can enable chat button on vendor page: false
+          admin can enable chat button on product page: false
+      vendor:
+          #  vendor can set live chat settings [duplicate]: false
+          vendor can set inbox menu page: false
+          vendor can view inbox menu page: false
+          vendor can chat with customer: false
+      customer:
+          customer can chat with vendor: false
+
 - page: 'Live Search'
   features:
       admin:
-          no test is written for this feature: false
-#
+          admin can set live search options: false
+          admin can add live search widget: false
+      customer:
+          customer can search product using live search - suggestion box: false
+          customer can search product using live search - autoload content: false
+
 - page: 'MangoPay'
   features:
       admin:
-          no test is written for this feature: false
-#
+          admin can add Mangopay payment method: false
+
 - page: 'Min Max Quantities'
   features:
       admin:
-          no test is written for this feature: false
-#
+          no test is written for min-max module: false
+
 - page: 'PayPal Marketplace'
   features:
       admin:
-          no test is written for this feature: false
-#
+          admin can add Paypal Marketplace payment method: false
+
 - page: 'Product Addon'
   features:
       vendor:
           vendor can view product addons menu page: true
-          vendor can add addons: true
-          vendor can edit addon: true
-          vendor can delete addon: true
-#
+          vendor can add global product addon: true
+          vendor can edit global product addon: true
+          vendor can delete product addon: true
+          vendor can add individual product addon [duplicate]: false
+          vendor can edit individual product product addon: false
+          vendor can delete individual productproduct addon: false
+      customer:
+          customer can view product addons on single product page: false
+          customer can buy product with addons: false
+
 - page: 'Product Advertising'
   features:
       admin:
+          #   admin can set Dokan product advertising settings [duplicate]: true
+          admin can set product advertising slot: false
+          admin can set product advertising expiry days: false
+          admin can enable vendor product advertising purchase permission: false
+          admin can set product advertisement cost: false
+          admin can enable product advertising on dokan subscription: false
+          admin can set advertised product as featured: false
+          admin can set advertised product display pefeference: false
+          admin can hide out of stock advertised product: false
+          admin can add product advertising widget: false
+          #    admin can add product advertising shortcode [duplicate]: false
           admin can view product advertising menu page: true
           admin can add product advertisement: true
-          admin can search advertised product: true
+          admin can search advertised product by product: true
+          admin can search advertised product by order: false
           admin can filter advertised product by stores: true
           admin can filter advertised product by creation process: true
+          #   admin can filter advertised product by calander: false
           admin can expire advertised product: true
           admin can delete advertised product: true
           admin can perform bulk action on product advertisements: false
       vendor:
-          vendor can buy product advertising: false
+          vendor can buy product advertising (product list page): false
+          vendor can buy product advertising (product edit page): false
           vendor can buy booking product advertising: false
           vendor can buy auction product advertising: false
+      customer:
+          customer can view advertised product on shop page: false
 
 - page: 'Product Enquiry'
   features:
@@ -623,7 +754,7 @@
           customer can enquire product: true
       guest:
           guest customer can enquire product: true
-#
+
 - page: 'Product Q&A'
   features:
       admin:
@@ -651,8 +782,8 @@
           customer can search question: true
           customer can post question: true
       guest:
-          guest customer need to signin/signup post question: true
-#
+          guest customer need to signIn/signUp post question: true
+
 - page: 'Product Subscription'
   features:
       vendor:
@@ -669,17 +800,17 @@
           customer can change payment of subscription: false
           customer can renew subscription: false
           customer can buy product subscription: false
-#
+
 - page: 'Rank Math SEO'
   features:
       admin:
-          no test is written for this feature: false
-#
+          no test is written for rank math seo module: false
+
 - page: 'Razorpay'
   features:
       admin:
-          no test is written for this feature: false
-#
+          admin can add Razorpay payment method: false
+
 - page: 'Report Abuse'
   features:
       admin:
@@ -694,7 +825,7 @@
       guest:
           guest customer can report product: true
           guest customer need to log-in to report product: true
-#
+
 - page: 'Request for Quotation'
   features:
       quote rules:
@@ -705,7 +836,7 @@
               admin can trash quote rule: true
               admin can restore quote rule: true
               admin can permanently delete quote rule: true
-              admin can perform quote rule bulk actions: false
+              admin can perform bulk action on quote rules: true
       quotes:
           admin:
               admin can view quotes menu page: true
@@ -746,7 +877,7 @@
           customer can view return request menu page: true
           customer can request warranty: true
           customer can send rma message: true
-#
+
 - page: 'Seller Badge'
   features:
       admin:
@@ -767,17 +898,12 @@
           vendor can view badge acquired congratulation popup message action: true
           vendor can search seller badge: true
           vendor can filter seller badges: true
-#
-- page: 'Seller Vacation'
-  features:
-      admin:
-          no test is written for this feature: false
-#
+
 - page: 'ShipStation Integration'
   features:
       admin:
-          no test is written for this feature: false
-#
+          no test is written for shipstation integration: false
+
 - page: 'Single Product Multiple Vendor (SPMV)'
   features:
       admin:
@@ -815,7 +941,7 @@
           customer can review store: true
           customer can edit store review: true
           customer can view own review: true
-#
+
 - page: 'Store Support'
   features:
       admin:
@@ -826,6 +952,7 @@
           admin can search support ticket by ticket title: true
           admin can filter support tickets by vendor: true
           admin can filter support tickets by customer: true
+          #   admin can filter support tickets by calander: false
           admin can reply to support ticket as admin: true
           admin can reply to support ticket as vendor: true
           admin can disable support ticket email notification: true
@@ -858,22 +985,22 @@
           customer can't send message to closed support ticket: true
       guest:
           guest customer need to login before asking for store support: true
-#
+
 - page: 'Stripe Connect'
   features:
       admin:
-          no test is written for this feature: false
-#
+          admin can add stripe payment method: false
+
 - page: 'Stripe Express'
   features:
       admin:
-          no test is written for this feature: false
-#
+          admin can add Strip Express payment method: false
+
 - page: 'Table Rate Shipping'
   features:
       admin:
-          no test is written for this feature: false
-#
+          no test is written for table rate shipping: false
+
 - page: 'Vendor Analytics'
   features:
       vendor:
@@ -887,7 +1014,7 @@
           vendor can export product as csv: true
           vendor can import product as xml: true
           vendor can import product as csv: true
-#
+
 - page: 'Vendor Staff Manager'
   features:
       vendor:
@@ -896,24 +1023,76 @@
           vendor can edit staff: true
           vendor can manage staff permission: true
           vendor can delete staff: true
-#
+      vendorStaff:
+          vendorStaff can view allowed menus: false
+
 - page: 'Vendor Subscription'
   features:
       admin:
-          no test is written for this feature: false
-#
+          admin can view subscriptions menu page: true
+          admin can filter subscribed vendors by vendor: true
+          admin can filter subscribed vendors by subscription pack: true
+          admin can cancel subscription (immediately): true
+          admin can cancel subscription (end of the current period): true
+          admin can reactive recurring subscription (has active period ): false
+          admin can perform bulk action on subscribed vendors: true
+          admin can assign non recurring subscription pack to vendor: true
+      vendor:
+          vendor can view subscriptions menu page: true
+          vendor can buy non recurring subscription pack (on registration): true
+          vendor can buy non recurring subscription pack (on subscription page): true
+          vendor can buy recurring subscription pack (on registration): false
+          vendor can buy recurring subscription pack (on subscription page): false
+          vendor can switch subscription: true
+          vendor can cancel subscription: true
+
 - page: 'Vendor Verification'
   features:
       admin:
+          admin can change verified icon: true
+          admin can add vendor verification method: true
+          admin can edit vendor verification method: true
+          admin can delete vendor verification method: true
+          admin can update verification method status: true
           admin can view verifications menu page: true
+          admin can filter verification requests by pending status: true
+          admin can filter verification requests by approved status: true
+          admin can filter verification requests by rejected status: true
+          admin can filter verification requests by cancelled status: true
+          admin can filter verification requests by vendor: true
+          admin can filter verification requests by verification methods: true
+          admin can reset filter: true
+          admin can add note to verification request: true
+          admin can view verification request documents: true
+          admin can approve verification request: true
+          admin can reject verification request: true
+          admin can perform bulk action on verification requests: true
+          admin receive notification for verification request: false
       vendor:
           vendor can view verifications settings menu page: true
-          vendor can send id verification request: true
-          vendor can send address verification request: true
-          vendor can send company verification request: true
+          vendor can submit verification request: true
+          vendor can re-submit verification request: true
+          vendor can cancel verification request: true
+          vendor can view verification request documents: true
+          vendor can view verification request notes: true
+          vendor can view only required verification method on setup wizard: true
+          vendor can submit verification request on setup wizard: true
+          vendor can re-submit verification request on setup wizard: true
+          vendor can cancel verification request on setup wizard: true
+          vendor can view verification request documents on setup wizard: true
+          vendor need all required method to be verified to get verification badge: false
+          vendor need to be verified only one method when no required method is exists: false
+          vendor address verification gets reset when he update address: false
+      customer:
+          customer can view verified badge: true
+
 - page: 'Wholesale'
   features:
       admin:
+          #   admin can set Dokan wholesale settings [duplicate]: true
+          admin can set wholesale price viewer: false
+          admin can set show wholsesale price on shop archive: false
+          admin can set need approval for becoming wholesale customer: false
           admin can view wholesale customers menu page: true
           admin can search wholesale customer: true
           admin can disable customer's wholesale capability: true
@@ -922,11 +1101,14 @@
           admin can view wholesale customer orders: true
           admin can delete wholesale customer: true
           admin can perform bulk action on wholesale customers: true
+      vendor:
+          vendor can create wholesale product: false
       customer:
           customer can become a wholesale customer: true
           customer can request for become a wholesale customer: true
           customer can see wholesale price on shop archive: true
           customer can buy wholesale product: true
+
 - page: 'WooCommerce Booking Integration'
   features:
       admin:

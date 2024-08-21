@@ -43,7 +43,7 @@ test.describe('Product Advertising test', () => {
         await admin.addNewProductAdvertisement({ ...data.productAdvertisement, advertisedProduct: productName });
     });
 
-    test('admin can search advertised product', { tag: ['@pro', '@admin'] }, async () => {
+    test('admin can search advertised product by product', { tag: ['@pro', '@admin'] }, async () => {
         await admin.searchAdvertisedProduct(advertisedProduct);
     });
 
@@ -64,15 +64,14 @@ test.describe('Product Advertising test', () => {
         await admin.updateAdvertisedProduct(advertisedProduct, 'delete');
     });
 
-    test.skip('admin can perform bulk action on product advertisements', { tag: ['@pro', '@admin'] }, async () => {
-        // todo: might cause other tests to fail in parallel
+    test('admin can perform bulk action on product advertisements', { tag: ['@pro', '@admin', '@serial'] }, async () => {
         await admin.productAdvertisingBulkAction('delete');
     });
 
     // vendor
 
-    test.skip('vendor can buy product advertising', { tag: ['@pro', '@vendor'] }, async () => {
-        //todo: p1_v1 status gets pending review; need to resolve
+    test.skip('vendor can buy product advertising (product list page)', { tag: ['@pro', '@vendor'] }, async () => {
+        // todo: p1_v1 status gets pending review; need to resolve
         const [, , productName] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendorAuth);
         const orderId = await vendor.buyProductAdvertising(productName);
         await apiUtils.updateOrderStatus(orderId, 'wc-completed', payloads.adminAuth);

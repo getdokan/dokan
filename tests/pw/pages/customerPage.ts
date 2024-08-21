@@ -8,6 +8,14 @@ import { customer, paymentDetails } from '@utils/interfaces';
 
 const { DOKAN_PRO } = process.env;
 
+// selectors
+const customerRegistration = selector.customer.cRegistration;
+const customerDashboard = selector.customer.cDashboard;
+const customerAccountDetails = selector.customer.cAccountDetails;
+const customerAddress = selector.customer.cAddress;
+const customerCart = selector.customer.cCart;
+const customerCheckout = selector.customer.cCheckout;
+
 export class CustomerPage extends BasePage {
     constructor(page: Page) {
         super(page);
@@ -57,7 +65,7 @@ export class CustomerPage extends BasePage {
 
     // got to checkout from cart
     async goToCheckoutFromCart(): Promise<void> {
-        await this.clickAndWaitForUrl(helpers.stringToRegex(data.subUrls.frontend.checkout), selector.customer.cCart.proceedToCheckout);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.checkout, customerCart.proceedToCheckout);
     }
 
     // customer details
@@ -66,12 +74,12 @@ export class CustomerPage extends BasePage {
     async customerRegister(customerInfo: customer['customerInfo']): Promise<void> {
         const username = (customerInfo.firstName() + customerInfo.lastName()).replace("'", '');
         await this.goToMyAccount();
-        const regIsVisible = await this.isVisible(selector.customer.cRegistration.regEmail);
-        !regIsVisible && (await this.loginPage.logout());
-        await this.clearAndType(selector.customer.cRegistration.regEmail, username + data.customer.customerInfo.emailDomain);
-        await this.clearAndType(selector.customer.cRegistration.regPassword, customerInfo.password);
-        await this.click(selector.customer.cRegistration.regAsCustomer);
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.myAccount, selector.customer.cRegistration.register, 302);
+        const regIsVisible = await this.isVisible(customerRegistration.regEmail);
+        if (!regIsVisible) await this.loginPage.logout();
+        await this.clearAndType(customerRegistration.regEmail, username + data.customer.customerInfo.emailDomain);
+        await this.clearAndType(customerRegistration.regPassword, customerInfo.password);
+        await this.click(customerRegistration.regAsCustomer);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.myAccount, customerRegistration.register, 302);
         const registrationErrorIsVisible = await this.isVisible(selector.customer.cWooSelector.wooCommerceError);
         if (registrationErrorIsVisible) {
             const hasError = await this.hasText(selector.customer.cWooSelector.wooCommerceError, data.customer.registration.registrationErrorMessage);
@@ -89,27 +97,27 @@ export class CustomerPage extends BasePage {
         const firstName = customerInfo.firstName();
 
         await this.goIfNotThere(data.subUrls.frontend.myAccount);
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.accountMigration, selector.customer.cDashboard.becomeVendor);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.accountMigration, customerDashboard.becomeVendor);
         // vendor registration form
-        await this.clearAndType(selector.customer.cDashboard.firstName, firstName);
-        await this.clearAndType(selector.customer.cDashboard.lastName, customerInfo.lastName());
-        await this.clearAndType(selector.customer.cDashboard.shopName, customerInfo.shopName());
-        await this.click(selector.customer.cDashboard.shopUrl);
-        await this.clearAndType(selector.customer.cDashboard.phone, customerInfo.phone);
+        await this.clearAndType(customerDashboard.firstName, firstName);
+        await this.clearAndType(customerDashboard.lastName, customerInfo.lastName());
+        await this.clearAndType(customerDashboard.shopName, customerInfo.shopName());
+        await this.click(customerDashboard.shopUrl);
+        await this.clearAndType(customerDashboard.phone, customerInfo.phone);
 
         if (DOKAN_PRO) {
-            await this.clearAndType(selector.customer.cDashboard.companyName, customerInfo.companyName);
-            await this.clearAndType(selector.customer.cDashboard.companyId, customerInfo.companyId);
-            await this.clearAndType(selector.customer.cDashboard.vatNumber, customerInfo.vatNumber);
-            await this.clearAndType(selector.customer.cDashboard.bankName, customerInfo.bankName);
-            await this.clearAndType(selector.customer.cDashboard.bankIban, customerInfo.bankIban);
+            await this.clearAndType(customerDashboard.companyName, customerInfo.companyName);
+            await this.clearAndType(customerDashboard.companyId, customerInfo.companyId);
+            await this.clearAndType(customerDashboard.vatNumber, customerInfo.vatNumber);
+            await this.clearAndType(customerDashboard.bankName, customerInfo.bankName);
+            await this.clearAndType(customerDashboard.bankIban, customerInfo.bankIban);
         }
 
-        await this.clickIfVisible(selector.customer.cDashboard.termsAndConditions);
-        const subscriptionPackIsVisible = await this.isVisible(selector.customer.cDashboard.subscriptionPack);
-        subscriptionPackIsVisible && (await this.selectByLabel(selector.vendor.vRegistration.subscriptionPack, data.predefined.vendorSubscription.nonRecurring));
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.becomeVendor, selector.customer.cDashboard.becomeAVendor, 302);
-        subscriptionPackIsVisible && (await this.placeOrder('bank', false, true, false));
+        await this.clickIfVisible(customerDashboard.termsAndConditions);
+        const subscriptionPackIsVisible = await this.isVisible(customerDashboard.subscriptionPack);
+        if (subscriptionPackIsVisible) await this.selectByLabel(selector.vendor.vRegistration.subscriptionPack, data.predefined.vendorSubscription.nonRecurring);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.becomeVendor, customerDashboard.becomeAVendor, 302);
+        if (subscriptionPackIsVisible) await this.placeOrder('bank', false, true, false);
 
         // skip vendor setup wizard
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.dashboard, selector.vendor.vSetup.notRightNow);
@@ -119,12 +127,13 @@ export class CustomerPage extends BasePage {
     // customer add customer details
     async addCustomerDetails(customer: customer): Promise<void> {
         await this.goIfNotThere(data.subUrls.frontend.editAccountCustomer);
-        await this.clearAndType(selector.customer.cAccountDetails.firstName, customer.username);
-        await this.clearAndType(selector.customer.cAccountDetails.lastName, customer.lastname);
-        await this.clearAndType(selector.customer.cAccountDetails.displayName, customer.username);
-        await this.clearAndType(selector.customer.cAccountDetails.email, customer.username + customer.customerInfo.emailDomain);
+        await this.clearAndType(customerAccountDetails.firstName, customer.username);
+        await this.clearAndType(customerAccountDetails.lastName, customer.lastname);
+        await this.clearAndType(customerAccountDetails.displayName, customer.username);
+        await this.clearAndType(customerAccountDetails.email, customer.username + customer.customerInfo.emailDomain);
         // await this.updatePassword(customer.customerInfo.password, customer.customerInfo.password1);
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.editAccountCustomer, selector.customer.cAccountDetails.saveChanges, 302);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.editAccountCustomer, customerAccountDetails.saveChanges, 302);
+        await this.toBeVisible(selector.customer.cWooSelector.wooCommerceSuccessMessage);
         await this.toContainText(selector.customer.cWooSelector.wooCommerceSuccessMessage, data.customer.account.updateSuccessMessage);
 
         // cleanup: reset password
@@ -133,64 +142,66 @@ export class CustomerPage extends BasePage {
 
     // customer update password
     async updatePassword(currentPassword: string, newPassword: string, saveChanges = false): Promise<void> {
-        await this.clearAndType(selector.customer.cAccountDetails.currentPassword, currentPassword);
-        await this.clearAndType(selector.customer.cAccountDetails.NewPassword, newPassword);
-        await this.clearAndType(selector.customer.cAccountDetails.confirmNewPassword, newPassword);
+        await this.clearAndType(customerAccountDetails.currentPassword, currentPassword);
+        await this.clearAndType(customerAccountDetails.NewPassword, newPassword);
+        await this.clearAndType(customerAccountDetails.confirmNewPassword, newPassword);
         if (saveChanges) {
-            await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.editAccountCustomer, selector.customer.cAccountDetails.saveChanges);
+            await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.editAccountCustomer, customerAccountDetails.saveChanges);
+            await this.toBeVisible(selector.customer.cWooSelector.wooCommerceSuccessMessage);
             await this.toContainText(selector.customer.cWooSelector.wooCommerceSuccessMessage, data.customer.account.updateSuccessMessage);
         }
     }
 
     // update billing fields
     async updateBillingFields(billingInfo: customer['customerInfo']['billing']) {
-        await this.clearAndType(selector.customer.cAddress.billing.billingFirstName, billingInfo.firstName);
-        await this.clearAndType(selector.customer.cAddress.billing.billingLastName, billingInfo.lastName);
-        await this.clearAndType(selector.customer.cAddress.billing.billingCompanyName, billingInfo.companyName);
+        await this.clearAndType(customerAddress.billing.firstName, billingInfo.firstName);
+        await this.clearAndType(customerAddress.billing.lastName, billingInfo.lastName);
+        await this.clearAndType(customerAddress.billing.companyName, billingInfo.companyName);
         if (DOKAN_PRO) {
-            await this.clearAndType(selector.customer.cAddress.billing.billingCompanyID, billingInfo.companyId);
-            await this.clearAndType(selector.customer.cAddress.billing.billingVatOrTaxNumber, billingInfo.vatNumber);
-            await this.clearAndType(selector.customer.cAddress.billing.billingNameOfBank, billingInfo.bankName);
-            await this.clearAndType(selector.customer.cAddress.billing.billingBankIban, billingInfo.bankIban);
+            await this.clearAndType(customerAddress.billing.companyID, billingInfo.companyId);
+            await this.clearAndType(customerAddress.billing.vatOrTaxNumber, billingInfo.vatNumber);
+            await this.clearAndType(customerAddress.billing.nameOfBank, billingInfo.bankName);
+            await this.clearAndType(customerAddress.billing.bankIban, billingInfo.bankIban);
         }
-        await this.click(selector.customer.cAddress.billing.billingCountryOrRegion);
-        await this.clearAndType(selector.customer.cAddress.billing.billingCountryOrRegionInput, billingInfo.country);
+        await this.click(customerAddress.billing.countryOrRegion);
+        await this.clearAndType(customerAddress.billing.countryOrRegionInput, billingInfo.country);
         await this.press(data.key.enter);
-        await this.clearAndType(selector.customer.cAddress.billing.billingStreetAddress, billingInfo.street1);
-        await this.clearAndType(selector.customer.cAddress.billing.billingStreetAddress2, billingInfo.street2);
-        await this.clearAndType(selector.customer.cAddress.billing.billingTownCity, billingInfo.city);
-        await this.focus(selector.customer.cAddress.billing.billingZipCode);
-        await this.click(selector.customer.cAddress.billing.billingState);
-        await this.clearAndType(selector.customer.cAddress.billing.billingStateInput, billingInfo.state);
+        await this.clearAndType(customerAddress.billing.streetAddress, billingInfo.street1);
+        await this.clearAndType(customerAddress.billing.streetAddress2, billingInfo.street2);
+        await this.clearAndType(customerAddress.billing.city, billingInfo.city);
+        await this.focus(customerAddress.billing.zipCode);
+        await this.click(customerAddress.billing.state);
+        await this.clearAndType(customerAddress.billing.stateInput, billingInfo.state);
         await this.press(data.key.enter);
-        await this.clearAndType(selector.customer.cAddress.billing.billingZipCode, billingInfo.zipCode);
-        await this.clearAndType(selector.customer.cAddress.billing.billingPhone, billingInfo.phone);
-        await this.clearAndType(selector.customer.cAddress.billing.billingEmailAddress, billingInfo.email);
+        await this.clearAndType(customerAddress.billing.zipCode, billingInfo.zipCode);
+        await this.clearAndType(customerAddress.billing.phone, billingInfo.phone);
+        await this.clearAndType(customerAddress.billing.email, billingInfo.email);
     }
 
     // update shipping fields
     async updateShippingFields(shippingInfo: customer['customerInfo']['shipping']): Promise<void> {
-        await this.clearAndType(selector.customer.cAddress.shipping.shippingFirstName, shippingInfo.firstName);
-        await this.clearAndType(selector.customer.cAddress.shipping.shippingLastName, shippingInfo.lastName);
-        await this.clearAndType(selector.customer.cAddress.shipping.shippingCompanyName, shippingInfo.companyName);
-        await this.click(selector.customer.cAddress.shipping.shippingCountryOrRegion);
-        await this.clearAndType(selector.customer.cAddress.shipping.shippingCountryOrRegionInput, shippingInfo.country);
+        await this.clearAndType(customerAddress.shipping.firstName, shippingInfo.firstName);
+        await this.clearAndType(customerAddress.shipping.lastName, shippingInfo.lastName);
+        await this.clearAndType(customerAddress.shipping.companyName, shippingInfo.companyName);
+        await this.click(customerAddress.shipping.countryOrRegion);
+        await this.clearAndType(customerAddress.shipping.countryOrRegionInput, shippingInfo.country);
         await this.press(data.key.enter);
-        await this.clearAndType(selector.customer.cAddress.shipping.shippingStreetAddress, shippingInfo.street1);
-        await this.clearAndType(selector.customer.cAddress.shipping.shippingStreetAddress2, shippingInfo.street2);
-        await this.clearAndType(selector.customer.cAddress.shipping.shippingTownCity, shippingInfo.city);
-        await this.focus(selector.customer.cAddress.shipping.shippingZipCode);
-        await this.click(selector.customer.cAddress.shipping.shippingState);
-        await this.clearAndType(selector.customer.cAddress.shipping.shippingStateInput, shippingInfo.state);
+        await this.clearAndType(customerAddress.shipping.streetAddress, shippingInfo.street1);
+        await this.clearAndType(customerAddress.shipping.streetAddress2, shippingInfo.street2);
+        await this.clearAndType(customerAddress.shipping.city, shippingInfo.city);
+        await this.focus(customerAddress.shipping.zipCode);
+        await this.click(customerAddress.shipping.state);
+        await this.clearAndType(customerAddress.shipping.stateInput, shippingInfo.state);
         await this.press(data.key.enter);
-        await this.clearAndType(selector.customer.cAddress.shipping.shippingZipCode, shippingInfo.zipCode);
+        await this.clearAndType(customerAddress.shipping.zipCode, shippingInfo.zipCode);
     }
 
     // customer add billing address
     async addBillingAddress(billingInfo: customer['customerInfo']['billing']): Promise<void> {
         await this.goIfNotThere(data.subUrls.frontend.billingAddress);
         await this.updateBillingFields(billingInfo);
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.billingAddress, selector.customer.cAddress.billing.billingSaveAddress, 302);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.billingAddress, customerAddress.billing.saveAddress, 302);
+        await this.toBeVisible(selector.customer.cWooSelector.wooCommerceSuccessMessage);
         await this.toContainText(selector.customer.cWooSelector.wooCommerceSuccessMessage, data.customer.address.addressChangeSuccessMessage);
     }
 
@@ -198,7 +209,8 @@ export class CustomerPage extends BasePage {
     async addShippingAddress(shippingInfo: customer['customerInfo']['shipping']): Promise<void> {
         await this.goIfNotThere(data.subUrls.frontend.shippingAddress);
         await this.updateShippingFields(shippingInfo);
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.shippingAddress, selector.customer.cAddress.shipping.shippingSaveAddress, 302);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.shippingAddress, customerAddress.shipping.saveAddress, 302);
+        await this.toBeVisible(selector.customer.cWooSelector.wooCommerceSuccessMessage);
         await this.toContainText(selector.customer.cWooSelector.wooCommerceSuccessMessage, data.customer.address.addressChangeSuccessMessage);
     }
 
@@ -215,9 +227,10 @@ export class CustomerPage extends BasePage {
     async addProductToCartFromSingleProductPage(productName: string, quantity?: string): Promise<void> {
         await this.goToProductDetails(productName);
         const addonIsVisible = await this.isVisible(selector.customer.cSingleProduct.productAddon.addOnSelect);
-        addonIsVisible && this.selectByNumber(selector.customer.cSingleProduct.productAddon.addOnSelect, 1);
-        quantity && (await this.clearAndType(selector.customer.cSingleProduct.productDetails.quantity, String(quantity)));
+        if (addonIsVisible) this.selectByNumber(selector.customer.cSingleProduct.productAddon.addOnSelect, 1);
+        if (quantity) await this.clearAndType(selector.customer.cSingleProduct.productDetails.quantity, String(quantity));
         await this.clickAndWaitForResponse(data.subUrls.frontend.productCustomerPage, selector.customer.cSingleProduct.productDetails.addToCart);
+        await this.toBeVisible(selector.customer.cWooSelector.wooCommerceSuccessMessage);
         if (!quantity) {
             await this.toContainText(selector.customer.cWooSelector.wooCommerceSuccessMessage, `“${productName}” has been added to your cart.`);
         } else {
@@ -228,7 +241,7 @@ export class CustomerPage extends BasePage {
     // add product to cart
     async addProductToCart(productName: string, from: string, clearCart = true, quantity?: string) {
         // clear cart
-        clearCart && (await this.clearCart());
+        if (clearCart) await this.clearCart();
         switch (from) {
             case 'shop':
                 await this.addProductToCartFromShop(productName);
@@ -244,15 +257,15 @@ export class CustomerPage extends BasePage {
     // check whether product is on cart
     async productIsOnCart(productName: string): Promise<void> {
         await this.goToCart();
-        await this.toBeVisible(selector.customer.cCart.cartItem(productName));
+        await this.toBeVisible(customerCart.cartItem(productName));
     }
 
     // clear cart
     async clearCart(): Promise<void> {
         await this.goToCart();
-        const emptyCart = await this.isVisible(selector.customer.cCart.cartEmptyMessage);
+        const emptyCart = await this.isVisible(customerCart.cartEmptyMessage);
         if (!emptyCart) {
-            await this.clickAndWaitForResponseAndLoadState(data.subUrls.api.wc.store, selector.customer.cCart.removeFirstItem, 207);
+            await this.clickAndWaitForResponseAndLoadState(data.subUrls.api.wc.store, customerCart.removeFirstItem, 207);
             await this.clearCart();
         }
     }
@@ -260,52 +273,81 @@ export class CustomerPage extends BasePage {
     // Update product quantity from cart
     async updateProductQuantityOnCart(productName: string, quantity: string): Promise<void> {
         await this.goToCart();
-        await this.typeAndWaitForResponse(data.subUrls.api.wc.store, selector.customer.cCart.quantity(productName), quantity, 207);
-        await this.toHaveValue(selector.customer.cCart.quantity(productName), quantity);
+        await this.typeAndWaitForResponse(data.subUrls.api.wc.store, customerCart.quantity(productName), quantity, 207);
+        await this.toHaveValue(customerCart.quantity(productName), quantity);
     }
 
     // apply coupon
     async applyCoupon(couponCode: string): Promise<void> {
         await this.goToCart();
-        const couponIsApplied = await this.isVisible(selector.customer.cCart.removeCoupon(couponCode));
+        const couponIsApplied = await this.isVisible(customerCart.removeCoupon(couponCode));
         if (couponIsApplied) {
-            await this.clickAndWaitForResponse(data.subUrls.api.wc.store, selector.customer.cCart.removeCoupon(couponCode), 207);
+            await this.clickAndWaitForResponse(data.subUrls.api.wc.store, customerCart.removeCoupon(couponCode), 207);
             await this.toContainText(selector.customer.cWooSelector.wooCommerceNoticeBannerContent, `Coupon code "${couponCode}" has been removed from your cart.`);
         }
-        await this.click(selector.customer.cCart.addCoupon);
-        await this.clearAndType(selector.customer.cCart.couponCode, couponCode);
-        await this.clickAndWaitForResponse(data.subUrls.api.wc.store, selector.customer.cCart.applyCoupon, 207);
+        await this.click(customerCart.addCoupon);
+        await this.clearAndType(customerCart.couponCode, couponCode);
+        await this.clickAndWaitForResponse(data.subUrls.api.wc.store, customerCart.applyCoupon, 207);
         await this.toContainText(selector.customer.cWooSelector.wooCommerceNoticeBannerContent, `Coupon code "${couponCode}" has been applied to your cart.`);
     }
 
     // add billing address in checkout
     async addBillingAddressInCheckout(billingInfo: customer['customerInfo']['billing']): Promise<void> {
-        await this.updateBillingFields(billingInfo);
+        await this.clearAndType(customerCheckout.billing.email, billingInfo.email);
+        await this.click(customerCheckout.billing.country);
+        await this.clearAndType(customerCheckout.billing.country, billingInfo.country);
+        await this.press(data.key.enter);
+        await this.clearAndType(customerCheckout.billing.firstName, billingInfo.firstName);
+        await this.clearAndType(customerCheckout.billing.lastName, billingInfo.lastName);
+        await this.clearAndType(customerCheckout.billing.address, billingInfo.street1);
+        await this.clickIfVisible(customerCheckout.billing.address2toggle);
+        await this.clearAndType(customerCheckout.billing.address2, billingInfo.street2);
+        await this.clearAndType(customerCheckout.billing.city, billingInfo.city);
+        await this.click(customerCheckout.billing.stateInput);
+        await this.clearAndType(customerCheckout.billing.stateInput, billingInfo.state);
+        await this.press(data.key.enter);
+        await this.clearAndType(customerCheckout.billing.zipCode, billingInfo.zipCode);
+        // await this.clearAndType(customerCheckout.billing.phone, billingInfo.phone);
+        await this.typeAndWaitForResponse(data.subUrls.api.wc.store, customerCheckout.billing.phone, billingInfo.phone, 207);
     }
 
     // add shipping address in checkout
     async addShippingAddressInCheckout(shippingInfo: customer['customerInfo']['shipping']): Promise<void> {
-        await this.clickAndWaitForResponse(data.subUrls.frontend.shippingAddressCheckout, selector.customer.cCheckout.shippingAddress.shipToADifferentAddress);
-        await this.updateShippingFields(shippingInfo);
+        await this.clearAndType(customerCheckout.shipping.email, shippingInfo.email);
+        await this.click(customerCheckout.shipping.country);
+        await this.clearAndType(customerCheckout.shipping.country, shippingInfo.country);
+        await this.press(data.key.enter);
+        await this.clearAndType(customerCheckout.shipping.firstName, shippingInfo.firstName);
+        await this.clearAndType(customerCheckout.shipping.lastName, shippingInfo.lastName);
+        await this.clearAndType(customerCheckout.shipping.address, shippingInfo.street1);
+        await this.clickIfVisible(customerCheckout.shipping.address2toggle);
+        await this.clearAndType(customerCheckout.shipping.address2, shippingInfo.street2);
+        await this.clearAndType(customerCheckout.shipping.city, shippingInfo.city);
+        await this.click(customerCheckout.shipping.stateInput);
+        await this.clearAndType(customerCheckout.shipping.stateInput, shippingInfo.state);
+        await this.press(data.key.enter);
+        await this.clearAndType(customerCheckout.shipping.zipCode, shippingInfo.zipCode);
+        // await this.clearAndType(customerCheckout.shipping.phone, shippingInfo.phone);
+        await this.typeAndWaitForResponse(data.subUrls.api.wc.store, customerCheckout.shipping.phone, shippingInfo.phone, 207);
     }
 
     // place order
     async placeOrder(paymentMethod = 'bank', getOrderDetails = false, billingAddress = false, shippingAddress = false): Promise<string | object> {
         await this.goToCheckout();
-        billingAddress && (await this.addBillingAddressInCheckout(data.customer.customerInfo.billing));
-        shippingAddress && (await this.addShippingAddressInCheckout(data.customer.customerInfo.shipping));
+        if (billingAddress) await this.addBillingAddressInCheckout(data.customer.customerInfo.billing);
+        if (shippingAddress) await this.addShippingAddressInCheckout(data.customer.customerInfo.shipping);
 
         switch (paymentMethod) {
             case 'bank':
-                await this.click(selector.customer.cCheckout.directBankTransfer);
+                await this.click(customerCheckout.directBankTransfer);
                 break;
 
             case 'check':
-                await this.click(selector.customer.cCheckout.checkPayments);
+                await this.click(customerCheckout.checkPayments);
                 break;
 
             case 'cod':
-                await this.click(selector.customer.cCheckout.cashOnDelivery);
+                await this.click(customerCheckout.cashOnDelivery);
                 break;
 
             case 'stripe':
@@ -319,8 +361,9 @@ export class CustomerPage extends BasePage {
             default:
                 break;
         }
-        await this.focusOnLocator(selector.customer.cCheckout.placeOrder);
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.orderReceived, selector.customer.cCheckout.placeOrder);
+
+        await this.focusOnLocator(customerCheckout.placeOrder);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.orderReceived, customerCheckout.placeOrder);
         await this.toBeVisible(selector.customer.cOrderReceived.orderReceivedSuccessMessage);
 
         const ifMultiVendorOrder = await this.isVisible(selector.customer.cOrderReceived.orderDetails.subOrders.subOrders);
@@ -337,17 +380,18 @@ export class CustomerPage extends BasePage {
 
     // place order
     async paymentOrder(paymentMethod = 'bank'): Promise<string> {
+        // todo: refactor like place order after vendor subscription tests are merged
         switch (paymentMethod) {
             case 'bank':
-                await this.click(selector.customer.cCheckout.directBankTransfer);
+                await this.click(customerCheckout.directBankTransfer);
                 break;
 
             case 'check':
-                await this.click(selector.customer.cCheckout.checkPayments);
+                await this.click(customerCheckout.checkPayments);
                 break;
 
             case 'cod':
-                await this.click(selector.customer.cCheckout.cashOnDelivery);
+                await this.click(customerCheckout.cashOnDelivery);
                 break;
 
             case 'stripe':
@@ -362,7 +406,8 @@ export class CustomerPage extends BasePage {
                 break;
         }
 
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.orderReceived, selector.customer.cCheckout.placeOrder);
+        await this.focusOnLocator(customerCheckout.placeOrder);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.orderReceived, customerCheckout.placeOrder);
         await this.toBeVisible(selector.customer.cOrderReceived.orderReceivedSuccessMessage);
         return (await this.getElementText(selector.customer.cOrderReceived.orderDetails.orderNumber)) as string; // remove after solving api issue in -> return request before all
     }
@@ -370,13 +415,13 @@ export class CustomerPage extends BasePage {
     // buy product
     async buyProduct(productName: string, couponCode: string, applyCoupon = false, getOrderDetails = false, paymentMethod = 'bank'): Promise<string | object> {
         await this.addProductToCart(productName, 'single-product');
-        applyCoupon && (await this.applyCoupon(couponCode));
+        if (applyCoupon) await this.applyCoupon(couponCode);
         return await this.placeOrder(paymentMethod, getOrderDetails);
     }
 
     // pay with stripe connect
     async payWithStripe(cardInfo: paymentDetails['strip']): Promise<void> {
-        await this.click(selector.customer.cCheckout.stripeConnect);
+        await this.click(customerCheckout.stripeConnect);
         const savedTestCardIsVisible = await this.isVisible(selector.customer.cPayWithStripe.savedTestCard4242);
         if (!savedTestCardIsVisible) {
             await this.typeFrameSelector(selector.customer.cPayWithStripe.stripeConnectIframe, selector.customer.cPayWithStripe.cardNumber, cardInfo.cardNumber);
@@ -392,7 +437,7 @@ export class CustomerPage extends BasePage {
     async payWithStripeExpress(paymentDetails: paymentDetails['stripExpress']): Promise<void> {
         const paymentMethod = paymentDetails.paymentMethod;
         const cardInfo = paymentDetails.cardInfo;
-        await this.click(selector.customer.cCheckout.stripeExpress);
+        await this.click(customerCheckout.stripeExpress);
         const savedTestCardIsVisible = await this.isVisible(selector.customer.cPayWithStripeExpress.savedTestCard4242);
         if (!savedTestCardIsVisible) {
             switch (paymentMethod) {
@@ -504,7 +549,7 @@ export class CustomerPage extends BasePage {
         orderDetails.paymentMethod = (await this.getElementText(selector.customer.cOrders.orderDetails.paymentMethod)) as string;
         orderDetails.orderTotal = helpers.price((await this.getElementText(selector.customer.cOrders.orderDetails.orderTotal)) as string);
 
-        console.log(orderDetails);
+        // console.log(orderDetails);
         return orderDetails;
     }
 

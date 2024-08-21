@@ -4,6 +4,88 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.11.5',
+        'released' => '2024-08-07',
+        'changes'  => [
+            'Fix'         => [
+                [
+                    'title'       => 'Fixed data updating issue on Admin color picker settings.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed extra slashes issue on store url when translated via WPML.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.11.4',
+        'released' => '2024-07-10',
+        'changes'  => [
+            'Improvement' => [
+                [
+                    'title'       => 'Direct links to the relevant settings from vendor progress bar added.',
+                    'description' => '',
+                ],
+            ],
+            'Fix'         => [
+                [
+                    'title'       => 'Some deprecation warning resolved.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Shop URL rendered double slash when using WPML on vendor registration.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fatal error in block editor on adding and editing page with customer-migration shortcode.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.11.3',
+        'released' => '2024-06-10',
+        'changes'  => [
+            'Fix'         => [
+                [
+                    'title'       => 'Responsive issue on vendor dashboard tabs preview.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.11.2',
+        'released' => '2024-05-27',
+        'changes'  => [
+            'Improvement'         => [
+                [
+                    'title'       => 'WooCommerce 8.9.1 Compatibility added.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.11.1',
+        'released' => '2024-05-16',
+        'changes'  => [
+            'New'         => [
+                [
+                    'title'       => 'Action hook `dokan_dashboard_sidebar_start` added.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Action hook `dokan_dashboard_sidebar_end` added.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.11.0',
         'released' => '2024-05-10',
         'changes'  => [

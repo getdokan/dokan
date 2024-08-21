@@ -75,28 +75,15 @@ export class RequestForQuotationsPage extends AdminPage {
     // add quote rule
     async addQuoteRule(rule: requestForQuotation['quoteRule']) {
         await this.goIfNotThere(data.subUrls.backend.dokan.requestForQuoteRules);
-        //todo : move to base page
-        await Promise.all([
-            this.page.waitForResponse(resp => resp.url().includes(data.subUrls.api.dokan.quotes) && resp.status() === 200),
-            this.page.waitForResponse(resp => resp.url().includes(data.subUrls.api.dokan.products) && resp.status() === 200),
-            this.page.locator(requestForQuotationAdmin.quoteRules.newQuoteRule).click(),
-        ]);
-
+        await this.clickAndWaitForResponses([data.subUrls.api.dokan.quotes, data.subUrls.api.dokan.products], requestForQuotationAdmin.quoteRules.newQuoteRule);
         await this.updateQuoteRuleFields(rule);
     }
 
     // edit quote rule
     async editQuoteRule(rule: requestForQuotation['quoteRule']) {
         await this.goIfNotThere(data.subUrls.backend.dokan.requestForQuoteRules);
-
         await this.hover(requestForQuotationAdmin.quoteRules.quoteRulesCell(rule.title));
-
-        await Promise.all([
-            this.page.waitForResponse(resp => resp.url().includes(data.subUrls.api.dokan.quotes) && resp.status() === 200),
-            this.page.waitForResponse(resp => resp.url().includes(data.subUrls.api.dokan.products) && resp.status() === 200),
-            this.page.locator(requestForQuotationAdmin.quoteRules.quoteRulesEdit(rule.title)).click(),
-        ]);
-
+        await this.clickAndWaitForResponses([data.subUrls.api.dokan.quotes, data.subUrls.api.dokan.products], requestForQuotationAdmin.quoteRules.quoteRulesEdit(rule.title));
         await this.updateQuoteRuleFields(rule);
     }
 
@@ -136,13 +123,6 @@ export class RequestForQuotationsPage extends AdminPage {
         await this.notToBeVisible(requestForQuotationAdmin.quoteRules.noRowsFound);
 
         await this.check(requestForQuotationAdmin.quoteRules.bulkActions.selectAll);
-
-        // only to remove flakiness // todo: need diff soln and make generic , don't work need custom soln
-        // const isDisabled = await this.hasAttribute(requestForQuotationAdmin.quoteRules.bulkActions.applyAction, 'disabled');
-        // if(isDisabled){
-        // 	await this.uncheck(requestForQuotationAdmin.quoteRules.bulkActions.selectAll);
-        // 	await this.check(requestForQuotationAdmin.quoteRules.bulkActions.selectAll);
-        // }
 
         await this.selectByValue(requestForQuotationAdmin.quoteRules.bulkActions.selectAction, action);
         await this.clickAndWaitForResponse(data.subUrls.api.dokan.quoteRules, requestForQuotationAdmin.quoteRules.bulkActions.applyAction);
@@ -337,7 +317,9 @@ export class RequestForQuotationsPage extends AdminPage {
     async vendorConvertQuoteToOrder(quoteId: string) {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.quoteDetails(quoteId));
         const needApproval = await this.isVisible(requestForQuotationVendor.quoteDetails.approveThisQuote);
-        needApproval && (await this.vendorApproveQuoteRequest(quoteId));
+        if (needApproval) {
+            await this.vendorApproveQuoteRequest(quoteId);
+        }
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.quoteDetails(quoteId), requestForQuotationVendor.quoteDetails.convertToOrder);
         await this.toContainText(requestForQuotationVendor.quoteDetails.message, `Your Quote# ${quoteId} has been converted to Order#`);
     }
@@ -345,10 +327,14 @@ export class RequestForQuotationsPage extends AdminPage {
     // customer
 
     // customer request for quote render properly
-    async requestForQuoteRenderProperly() {
-        await this.goIfNotThere(data.subUrls.frontend.requestForQuote);
-
-        await this.toBeVisible(requestForQuotationCustomer.requestForQuote.requestForQuoteText);
+    async requestForQuoteRenderProperly(link?: string) {
+        if (link) {
+            await this.goto(link);
+        } else {
+            await this.goIfNotThere(data.subUrls.frontend.requestForQuote);
+            // request for text is visible
+            await this.toBeVisible(requestForQuotationCustomer.requestForQuote.requestForQuoteText);
+        }
 
         const noQuote = await this.isVisible(requestForQuotationCustomer.requestForQuote.noQuotesFound);
 

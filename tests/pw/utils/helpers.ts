@@ -1,7 +1,8 @@
 import fs from 'fs';
 import { execSync } from 'child_process';
 import { Browser, BrowserContextOptions, Page } from '@playwright/test';
-import open from 'open';
+
+const { LOCAL, SITE_PATH } = process.env;
 
 export const helpers = {
     // replace '_' to space & capitalize first letter of string
@@ -42,12 +43,8 @@ export const helpers = {
 
     // check if object is empty
     isObjEmpty: (obj: object) => Object.keys(obj).length === 0,
-
-    // opens the url in the default browser
-    openUrl: (url: string) => open(url),
-
-    // opens test report in the default browser
-    openReport: () => open('playwright-report/html-report/index.html'),
+    // snakecase to camelcase
+    toCamelCase: (str: string): string => str.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase()),
 
     // string between two tags
     stringBetweenTags: (str: string): string => {
@@ -84,6 +81,13 @@ export const helpers = {
 
     // current year
     currentYear: new Date().getFullYear(),
+
+    // current day [2023-06-02]
+    previousDate: (): string => {
+        const result = new Date();
+        result.setDate(result.getDate() - 1);
+        return result.toLocaleDateString('en-CA');
+    },
 
     // current day [2023-06-02]
     currentDate: new Date().toLocaleDateString('en-CA'),
@@ -130,18 +134,11 @@ export const helpers = {
 
     // calculate percentage
     percentage(number: number, percentage: number) {
-        // return this.roundToTwo(number * (percentage / 100));
         return number * (percentage / 100);
     },
 
     percentageWithRound(number: number, percentage: number) {
         return this.roundToTwo(number * (percentage / 100));
-        // return number * (percentage / 100);
-    },
-
-    // calculate percentage
-    percentage1(number: number, percentage: number) {
-        return (number * (percentage / 100)).toFixed(2);
     },
 
     // subtotal
@@ -150,11 +147,14 @@ export const helpers = {
         return subtotal.reduce((a, b) => a + b, 0);
     },
 
-    lineItemsToSubtotal(lineItems: object[]) {
-        const arrOfPriceQuantity = lineItems.map(({ price, quantity }) => [price, quantity]);
-        // const arrOfSubtotals = res.map(([price, quantity]) => price * quantity)
-        const subtotal = arrOfPriceQuantity.reduce((sum, [price, quantity]) => sum + price * quantity, 0);
-        return subtotal;
+    lineItemsToSubtotal(lineItems: { price: number; quantity: number }[]) {
+        const subtotal = lineItems.reduce((sum: number, { price, quantity }) => sum + price * quantity, 0);
+        return this.roundToTwo(subtotal);
+    },
+
+    lineItemsToSubtotalWithoutDiscount(lineItems: { subtotal: number }[]) {
+        const subtotalWithoutDiscount = lineItems.reduce((sum: number, { subtotal }) => sum + subtotal, 0);
+        return this.roundToTwo(subtotalWithoutDiscount);
     },
 
     // discount
@@ -359,20 +359,99 @@ export const helpers = {
         this.writeFile(filePath, JSON.stringify(envData, null, 2));
     },
 
-    // execute command
-    async exeCommand(command: string) {
-        const output = execSync(command, { encoding: 'utf-8' });
-        console.log(output);
+    async createFolder(folderName: string) {
+        try {
+            fs.mkdirSync(folderName);
+            console.log(`Folder '${folderName}' created successfully.`);
+        } catch (error: any) {
+            if (error.code === 'EEXIST') {
+                console.log(`Folder '${folderName}' already exists.`);
+                return;
+            } else {
+                console.error(`Error creating folder '${folderName}':`, error);
+            }
+        }
     },
 
+    // execute command
+    async exeCommand(command: string, directoryPath = process.cwd()) {
+        process.chdir(directoryPath);
+        try {
+            const output = execSync(command, { encoding: 'utf-8' });
+            console.log(output);
+            return output;
+        } catch (error: any) {
+            console.log(error);
+            return error;
+        }
+    },
+
+    // execute wp cli command
+    async exeCommandWpcli(command: string, directoryPath = process.cwd()) {
+        process.chdir(directoryPath);
+        command = LOCAL ? `cd ${SITE_PATH} && ${command}` : `npm run wp-env run tests-cli  ${command}`;
+        // console.log(`Executing command: ${command}`);
+        await this.exeCommand(command);
+    },
+
+    // create a new page
     async createPage(browser: Browser, options?: BrowserContextOptions | undefined) {
         const browserContext = await browser.newContext(options);
         return browserContext.newPage();
     },
 
+    // close pages
     async closePages(pages: Page[]): Promise<void> {
         for (const page of pages) {
             await page.close();
         }
+    },
+
+    // rgb (rgb(r, g, b)) to hex (#rrggbb) color
+    rgbToHex(rgb: string): string {
+        const [r, g, b]: number[] = rgb.match(/\d+/g)!.map(Number);
+        return `#${((1 << 24) + (r! << 16) + (g! << 8) + b!).toString(16).slice(1).toUpperCase()}`;
+    },
+
+    // hex (#rrggbb) to rgb (rgb(r, g, b)) color
+    hexToRgb(hex: string): string {
+        const r = parseInt(hex.substring(1, 3), 16);
+        const g = parseInt(hex.substring(3, 5), 16);
+        const b = parseInt(hex.substring(5, 7), 16);
+        return `rgb(${r}, ${g}, ${b})`;
+    },
+
+    // deep merge arrays
+    deepMergeArrays(targetArray: any[], sourceArray: any[]) {
+        if (targetArray.every((item: any) => item instanceof Object && !Array.isArray(item)) && sourceArray.every(item => item instanceof Object && !Array.isArray(item))) {
+            const mergedArray = [...targetArray];
+            sourceArray.forEach((item: { [key: string]: any }, index: number) => {
+                if (index < mergedArray.length && item instanceof Object && !Array.isArray(item)) {
+                    mergedArray[index] = this.deepMergeObjects(mergedArray[index], item);
+                } else {
+                    mergedArray.push(item);
+                }
+            });
+            return mergedArray;
+        } else {
+            return [...sourceArray];
+        }
+    },
+
+    // deep merge objects
+    deepMergeObjects(target: { [key: string]: any }, source: { [key: string]: any }) {
+        const result = { ...target };
+
+        for (const key of Object.keys(source)) {
+            if (source[key] instanceof Object && target[key] instanceof Object) {
+                result[key] = this.deepMergeObjects(target[key], source[key]);
+            } else if (Array.isArray(source[key]) && Array.isArray(target[key])) {
+                result[key] = this.deepMergeArrays(target[key], source[key]);
+            } else {
+                result[key] = source[key];
+            }
+        }
+
+        return result;
     },
 };

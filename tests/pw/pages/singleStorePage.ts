@@ -22,7 +22,8 @@ export class SingleStorePage extends CustomerPage {
         await this.goIfNotThere(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)));
 
         // store profile elements are visible
-        await this.multipleElementVisible(singleStoreCustomer.storeProfile);
+        const { verifiedIcon, verifiedIconByIcon, euComplianceData, ...storeProfile } = singleStoreCustomer.storeProfile;
+        await this.multipleElementVisible(storeProfile);
 
         // store tab elements are visible
         if (!DOKAN_PRO) {
@@ -31,6 +32,9 @@ export class SingleStorePage extends CustomerPage {
         } else {
             const { toc, ...storeTabs } = singleStoreCustomer.storeTabs;
             await this.multipleElementVisible(storeTabs);
+
+            // eu compliance data is visible
+            await this.multipleElementVisible(singleStoreCustomer.storeProfile.euComplianceData);
         }
 
         // search elements are visible
@@ -92,7 +96,7 @@ export class SingleStorePage extends CustomerPage {
         await this.click(singleStoreCustomer.storeTabs.share);
         // ensure page suppose to open on new tab
         await this.toHaveAttribute(singleStoreCustomer.sharePlatForms[site as keyof typeof singleStoreCustomer.sharePlatForms], 'target', '_blank');
-        // force page to open on same tab
+        // force page to open on the same tab
         await this.setAttributeValue(singleStoreCustomer.sharePlatForms[site as keyof typeof singleStoreCustomer.sharePlatForms], 'target', '_self');
         await this.clickAndWaitForUrl(new RegExp('.*' + site + '.*'), singleStoreCustomer.sharePlatForms[site as keyof typeof singleStoreCustomer.sharePlatForms]);
     }

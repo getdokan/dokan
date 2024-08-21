@@ -22,11 +22,12 @@ export class WithdrawsPage extends AdminPage {
     async adminWithdrawsRenderProperly(): Promise<void> {
         await this.goIfNotThere(data.subUrls.backend.dokan.withdraw);
 
-        // withdraw  text is visible
+        // withdraw text is visible
         await this.toBeVisible(withdrawsAdmin.withdrawText);
 
-        // nav tabs elements are visible
-        await this.multipleElementVisible(withdrawsAdmin.navTabs);
+        // navTab elements are visible
+        const { tabByStatus, ...navTabs } = withdrawsAdmin.navTabs;
+        await this.multipleElementVisible(navTabs);
 
         // bulk action elements are visible
         await this.multipleElementVisible(withdrawsAdmin.bulkActions);
@@ -41,11 +42,18 @@ export class WithdrawsPage extends AdminPage {
 
     // filter withdraws
     async filterWithdraws(input: string, action: string): Promise<void> {
-        await this.goto(data.subUrls.backend.dokan.withdraw);
-        // await this.goIfNotThere(data.subUrls.backend.dokan.withdraw);
+        await this.goIfNotThere(data.subUrls.backend.dokan.withdraw);
         await this.click(withdrawsAdmin.filters.clearFilter);
 
         switch (action) {
+            case 'by-status': {
+                await this.clickAndWaitForLoadState(withdrawsAdmin.navTabs.tabByStatus(input));
+                await this.wait(1); // todo: need to resolve this
+                const count = await this.getElementCount(withdrawsAdmin.statusColumnValue(input.toLowerCase()));
+                await this.toHaveCount(withdrawsAdmin.currentNoOfRows, count);
+                return;
+            }
+
             case 'by-vendor':
                 await this.click(withdrawsAdmin.filters.filterByVendor);
                 break;
@@ -80,7 +88,7 @@ export class WithdrawsPage extends AdminPage {
         await this.clickAndWaitForResponse(data.subUrls.api.dokan.withdraws, withdrawsAdmin.updateNote);
     }
 
-    // add note to withdraw request
+    // update withdraw request
     async updateWithdrawRequest(vendorName: string, action: string): Promise<void> {
         await this.filterWithdraws(vendorName, 'by-vendor');
 
@@ -128,7 +136,11 @@ export class WithdrawsPage extends AdminPage {
         // balance elements are visible
         const { balanceLite, balancePro, ...balance } = withdrawsVendor.balance;
         await this.multipleElementVisible(balance);
-        DOKAN_PRO ? await this.toBeVisible(balancePro) : await this.toBeVisible(balanceLite);
+        if (DOKAN_PRO) {
+            await this.toBeVisible(balancePro);
+        } else {
+            await this.toBeVisible(balanceLite);
+        }
 
         // request withdraw is visible
         await this.toBeVisible(withdrawsVendor.manualWithdrawRequest.requestWithdraw);

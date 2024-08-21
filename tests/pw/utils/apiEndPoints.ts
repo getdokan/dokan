@@ -282,6 +282,15 @@ export const endPoints = {
     getVendorStaffCapabilities: (staffId: string) => `${SERVER_URL}/dokan/v1/vendor-staff/${staffId}/capabilities`,
     updateVendorStaffCapabilities: (staffId: string) => `${SERVER_URL}/dokan/v1/vendor-staff/${staffId}/capabilities`,
 
+    // vendor subscriptions
+    getAllVendorSubscriptions: `${SERVER_URL}/dokan/v1/subscription`,
+    getAllVendorSubscriptionPackages: `${SERVER_URL}/dokan/v1/subscription/packages`,
+    getAllVendorSubscriptionNonRecurringPackages: `${SERVER_URL}/dokan/v1/subscription/nonrecurring-packages`,
+    getVendorActiveSubscriptionPackage: (sellerId: string) => `${SERVER_URL}/dokan/v1/subscription/vendor/${sellerId}`,
+    updateVendorSubscription: (sellerId: string) => `${SERVER_URL}/dokan/v1/subscription/${sellerId}`,
+    updateBatchVendorSubscriptions: `${SERVER_URL}/dokan/v1/subscription/batch`, // method: active, cancel
+    saveVendorSubscriptionProductCommission: `${SERVER_URL}/dokan/v1/subscription/save-commission`,
+
     // v2
 
     // rank math
@@ -339,6 +348,29 @@ export const endPoints = {
     createProductQuestionAnswer: `${SERVER_URL}/dokan/v1/product-answers`,
     updateProductQuestionAnswer: (answerId: string) => `${SERVER_URL}/dokan/v1/product-answers/${answerId}`,
     deleteProductQuestionAnswer: (answerId: string) => `${SERVER_URL}/dokan/v1/product-answers/${answerId}`,
+
+    // vendor verification
+    getAllVerificationMethods: `${SERVER_URL}/dokan/v1/verification-methods`,
+    getSingleVerificationMethod: (methodId: string) => `${SERVER_URL}/dokan/v1/verification-methods/${methodId}`,
+    createVerificationMethod: `${SERVER_URL}/dokan/v1/verification-methods`,
+    updateVerificationMethod: (methodId: string) => `${SERVER_URL}/dokan/v1/verification-methods/${methodId}`,
+    deleteVerificationMethod: (methodId: string) => `${SERVER_URL}/dokan/v1/verification-methods/${methodId}`,
+
+    getAllVerificationRequests: `${SERVER_URL}/dokan/v1/verification-requests`,
+    getSingleVerificationRequest: (requestId: string) => `${SERVER_URL}/dokan/v1/verification-requests/${requestId}`,
+    createVerificationRequest: `${SERVER_URL}/dokan/v1/verification-requests`,
+    updateVerificationRequest: (requestId: string) => `${SERVER_URL}/dokan/v1/verification-requests/${requestId}`,
+    deleteVerificationRequest: (requestId: string) => `${SERVER_URL}/dokan/v1/verification-requests/${requestId}`,
+
+    //commission
+    getCommission: `${SERVER_URL}/dokan/v1/commission`,
+
+    // shipping status
+    getShippingStatus: `${SERVER_URL}/dokan/v1/shipping-status`,
+    getAllShipments: (orderId: string) => `${SERVER_URL}/dokan/v1/shipping-status/orders/${orderId}`,
+    createShipment: (orderId: string) => `${SERVER_URL}/dokan/v1/shipping-status/orders/${orderId}`,
+    getSingleShipment: (orderId: string, shipmentId: string) => `${SERVER_URL}/dokan/v1/shipping-status/orders/${orderId}/shipment/${shipmentId}`,
+    updateShipment: (orderId: string, shipmentId: string) => `${SERVER_URL}/dokan/v1/shipping-status/orders/${orderId}/shipment/${shipmentId}`,
 
     wc: {
         // coupons
@@ -432,7 +464,7 @@ export const endPoints = {
         createTag: `${SERVER_URL}/wc/v3/products/tags`,
         updateTag: (tagId: string) => `${SERVER_URL}/wc/v3/products/tags/${tagId}`,
         deleteTag: (tagId: string) => `${SERVER_URL}/wc/v3/products/tags/${tagId}`,
-        updateBatchTag: `${SERVER_URL}/wc/v3/products/tags/batch`,
+        updateBatchTags: `${SERVER_URL}/wc/v3/products/tags/batch`,
 
         // product reviews
         getAllReviews: `${SERVER_URL}/wc/v3/products/reviews`,

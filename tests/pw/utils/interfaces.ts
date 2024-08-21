@@ -1,5 +1,4 @@
 import fs from 'fs';
-
 export interface admin {
     username: string;
     password: string;
@@ -303,6 +302,20 @@ export interface product {
             description: string;
         };
 
+        euCompliance: {
+            saleLabel: string;
+            saleRegularLabel: string;
+            unit: string;
+            minimumAge: string;
+            productUnits: string;
+            basePriceUnits: string;
+            deliveryTime: string;
+            freeShipping: boolean;
+            regularUnitPrice: string;
+            saleUnitPrice: string;
+            optionalMiniDescription: string;
+        };
+
         amountDiscount: {
             minimumOrderAmount: string;
             discountPercentage: string;
@@ -447,70 +460,20 @@ export interface wpSettings {
 
 export interface tax {
     taxRate: string;
+    priority: string;
     enableTax: boolean;
     saveSuccessMessage: string;
 }
 
 export interface shipping {
-    enableShipping: string;
-    disableShipping: string;
-    shippingZone: string;
-
-    shippingMethods: {
-        methods: string;
-
-        flatRate: {
-            shippingZone: string;
-            shippingCountry: string;
-            selectShippingMethod: string;
-            shippingMethod: string;
-            taxStatus: string;
-            shippingCost: string;
-        };
-
-        freeShipping: {
-            shippingZone: string;
-            shippingCountry: string;
-            selectShippingMethod: string;
-            shippingMethod: string;
-            freeShippingRequires: string;
-            freeShippingMinimumOrderAmount: string;
-        };
-
-        localPickup: {
-            shippingZone: string;
-            shippingCountry: string;
-            selectShippingMethod: string;
-            shippingMethod: string;
-            taxStatus: string;
-            shippingCost: string;
-        };
-
-        tableRateShipping: {
-            shippingZone: string;
-            shippingCountry: string;
-            selectShippingMethod: string;
-            shippingMethod: string;
-        };
-
-        distanceRateShipping: {
-            shippingZone: string;
-            shippingCountry: string;
-            selectShippingMethod: string;
-            shippingMethod: string;
-        };
-
-        vendorShipping: {
-            shippingZone: string;
-            shippingCountry: string;
-            selectShippingMethod: string;
-            shippingMethod: string;
-            taxStatus: string;
-        };
-    };
-
-    shippingTaxStatus: string;
-    saveSuccessMessage: string;
+    zoneName: string;
+    zoneRegion: string;
+    selectMethodName: string;
+    methodName: string;
+    taxStatus?: string;
+    shippingCost?: string;
+    freeShippingRequires?: string;
+    freeShippingMinimumOrderAmount?: string;
 }
 
 export interface deliveryTime {
@@ -535,7 +498,7 @@ export interface payment {
     };
 
     basicPayment: {
-        toggleEanbledClass: string;
+        toggleEnabledClass: string;
         toggleDisabledClass: string;
     };
 
@@ -543,7 +506,6 @@ export interface payment {
         title: string;
         description: string;
         displayNoticeInterval: string;
-        stripeCheckoutLocale: string;
         testPublishableKey: string;
         testSecretKey: string;
         testClientId: string;
@@ -644,6 +606,7 @@ export interface vendorSetupWizard {
     bankSwiftCode: string;
     customPayment: string;
     skrill: string;
+    file: string;
 }
 
 // user
@@ -675,7 +638,6 @@ export interface vendor {
 
     vendorInfo: {
         email: () => string;
-        // emailDomain: string;
         emailDomain: string;
         password: string;
         password1: string;
@@ -700,6 +662,7 @@ export interface vendor {
         state: string;
         accountName: string;
         accountNumber: string;
+        accountType: string;
         bankName: string;
         bankAddress: string;
         routingNumber: string;
@@ -719,6 +682,8 @@ export interface vendor {
         supportButtonText: string;
 
         addressFieldsEnabled: boolean;
+
+        vendorSubscriptionPack: string;
 
         openingClosingTime: {
             days: string[];
@@ -947,19 +912,8 @@ export interface vendor {
     };
 
     verification: {
+        method: string;
         file: string;
-        street1: string;
-        street2: string;
-        city: string;
-        zipCode: string;
-        country: string;
-        state: string;
-        idRequestSubmitSuccessMessage: string;
-        idRequestSubmitCancel: string;
-        addressRequestSubmitSuccessMessage: string;
-        addressRequestSubmitCancel: string;
-        companyRequestSubmitSuccessMessage: string;
-        companyRequestSubmitCancel: string;
     };
 
     deliveryTime: {
@@ -1032,39 +986,34 @@ export interface vendor {
     };
 
     // addon
-    addon: {
-        name: string;
-        priority: string;
-        category: string;
-        type: string;
-        displayAs: string;
-        title: string;
-        formatTitle: string;
-        addDescription: string;
-        enterAnOption: string;
-        optionPriceType: string;
-        optionPriceInput: string;
-        saveSuccessMessage: string;
-        deleteSuccessMessage: string;
-    };
-
+    addon: () => addon;
     registrationErrorMessage: string;
+}
+
+// addon
+export interface addon {
+    name: string;
+    priority: string;
+    category: string;
+    type: string;
+    displayAs: string;
+    title: string;
+    formatTitle: string;
+    addDescription: string;
+    enterAnOption: string;
+    optionPriceType: string;
+    optionPriceInput: string;
+    saveSuccessMessage: string;
+    deleteSuccessMessage: string;
 }
 
 // staff
 export interface staff {
     firstName: string;
     lastName: string;
-    // fullName: string;
     email: string;
     phone: string;
     password: string;
-    // firstName: () => string;
-    // lastName: () => string;
-    // fullName: () => string;
-    // email: () => string;
-    // phone: () => string;
-    // password: string;
 }
 
 // customer
@@ -1123,6 +1072,7 @@ export interface customer {
         };
 
         shipping: {
+            email: string;
             firstName: string;
             lastName: string;
             companyName: string;
@@ -1134,6 +1084,8 @@ export interface customer {
             state: string;
             phone: string;
         };
+
+        vendorSubscriptionPack: string;
     };
 
     getSupport: {
@@ -1395,12 +1347,12 @@ export interface modules {
     };
 
     modulesName: {
-        AuctionIntegration: string;
-        ColorSchemeCustomize: string;
-        DeliveryTime: string;
-        Elementor: string;
-        EUComplianceFields: string;
-        FollowStore: string;
+        auctionIntegration: string;
+        colorSchemeCustomize: string;
+        deliveryTime: string;
+        elementor: string;
+        eUComplianceFields: string;
+        followStore: string;
     };
 
     moduleCategory: {
@@ -1563,6 +1515,44 @@ export interface dokanSettings {
     storeSupport: {
         displayOnSingleProductPage: string;
         supportButtonLabel: string;
+        saveSuccessMessage: string;
+    };
+
+    // Vendor Verification
+    vendorVerification: {
+        verifiedIcons: {
+            circleSolid: string;
+            circleRegular: string;
+            solid: string;
+            doubleSolid: string;
+            squireRegular: string;
+            userCheckSolid: string;
+            certificateSolid: string;
+
+            byIcon: {
+                circleSolid: string;
+                circleRegular: string;
+                solid: string;
+                doubleSolid: string;
+                squireRegular: string;
+                userCheckSolid: string;
+                certificateSolid: string;
+            };
+        };
+
+        verificationMethods: {
+            nationalId: string;
+            drivingLicense: string;
+            address: string;
+            company: string;
+        };
+
+        verificationMethodDetails: {
+            title: string;
+            help_text: string;
+            required: boolean;
+        };
+
         saveSuccessMessage: string;
     };
 
@@ -1738,17 +1728,23 @@ export interface storeShare {
 // install wordpress
 export interface installWp {
     // db info
-    dbHost: string;
-    dbUserName: string;
-    dbPassword: string;
-    dbName: string;
-    dbTablePrefix: string;
+    dbInfo: {
+        dbHost: string;
+        dbName: string;
+        dbUserName: string;
+        dbPassword: string;
+        dbTablePrefix: string;
+    };
 
     // site info
-    siteTitle: string;
-    adminUserName: string;
-    adminPassword: string;
-    adminEmail: string;
+    siteInfo: {
+        language: string;
+        url: string;
+        title: string;
+        admin: string;
+        password: string;
+        email: string;
+    };
 }
 
 // api interfaces
@@ -1881,4 +1877,27 @@ export interface dashboardMenu {
     url: string;
     pos: string;
     permission: string;
+}
+
+export interface paletteValues {
+    buttonText: string;
+    buttonBackground: string;
+    buttonBorder: string;
+
+    buttonHoverText: string;
+    buttonHoverBackground: string;
+    buttonHoverBorder: string;
+
+    dashboardSidebarMenuText: string;
+    dashboardSidebarBackground: string;
+    dashboardSidebarActiveMenuText: string;
+    dashboardSidebarActiveMenuBackground: string;
+}
+
+export interface eUComplianceData {
+    companyName?: string;
+    companyId: string;
+    vatNumber: string;
+    bankName: string;
+    bankIban: string;
 }

@@ -8,7 +8,7 @@ import { vendor } from '@utils/interfaces';
 const { DOKAN_PRO } = process.env;
 
 // selectors
-const vendorSettings = selector.vendor.vStoreSettings;
+const settingsVendor = selector.vendor.vStoreSettings;
 
 export class VendorSettingsPage extends VendorPage {
     constructor(page: Page) {
@@ -22,40 +22,48 @@ export class VendorSettingsPage extends VendorPage {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsStore);
 
         // settings text is visible
-        await this.toBeVisible(vendorSettings.settingsText);
+        await this.toBeVisible(settingsVendor.settingsText);
 
         // todo: update for lite
 
         // visit store link is visible
-        await this.toBeVisible(vendorSettings.banner);
-        await this.toBeVisible(vendorSettings.profilePicture);
-        await this.toBeVisible(vendorSettings.storeName);
-        await this.toBeVisible(vendorSettings.phoneNo);
-        DOKAN_PRO && (await this.toBeVisible(vendorSettings.multipleLocation));
+        await this.toBeVisible(settingsVendor.banner);
+        await this.toBeVisible(settingsVendor.profilePicture);
+        await this.toBeVisible(settingsVendor.storeName);
+        await this.toBeVisible(settingsVendor.phoneNo);
+        if (DOKAN_PRO) {
+            await this.toBeVisible(settingsVendor.multipleLocation);
+        }
 
         // store address location elements are visible
-        const { saveLocation, cancelSaveLocation, deleteSaveLocation, ...address } = vendorSettings.address;
+        const { saveLocation, cancelSaveLocation, deleteSaveLocation, ...address } = settingsVendor.address;
         await this.multipleElementVisible(address);
-        DOKAN_PRO && (await this.toBeVisible(saveLocation));
+        if (DOKAN_PRO) {
+            await this.toBeVisible(saveLocation);
+        }
 
         // company info elements are visible
-        DOKAN_PRO && (await this.multipleElementVisible(vendorSettings.companyInfo));
+        if (DOKAN_PRO) {
+            await this.multipleElementVisible(settingsVendor.companyInfo);
+        }
 
-        await this.toBeVisible(vendorSettings.email);
+        await this.toBeVisible(settingsVendor.email);
 
         // map is visible
-        // await this.toBeVisible(vendorSettings.map); //TODO: g_map value not found
+        // await this.toBeVisible(settingsVendor.map); // TODO: g_map value not found
 
         // todo: catalog, discount, vacation, open close, store category
 
         // biography is visible
-        DOKAN_PRO && (await this.toBeVisible(vendorSettings.biographyIframe));
+        if (DOKAN_PRO) {
+            await this.toBeVisible(settingsVendor.biographyIframe);
+        }
 
         // todo: min-max, store-support
 
         // update settings are visible
-        await this.toBeVisible(vendorSettings.updateSettingsTop);
-        await this.toBeVisible(vendorSettings.updateSettings);
+        await this.toBeVisible(settingsVendor.updateSettingsTop);
+        await this.toBeVisible(settingsVendor.updateSettings);
     }
 
     // vendor shipstation render properly
@@ -155,8 +163,8 @@ export class VendorSettingsPage extends VendorPage {
     // update store map via settings save
     async updateStoreMapViaSettingsSave() {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsStore);
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, vendorSettings.updateSettings);
-        await this.toContainText(vendorSettings.updateSettingsSuccessMessage, 'Your information has been saved successfully');
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsVendor.updateSettings);
+        await this.toContainText(settingsVendor.updateSettingsSuccessMessage, 'Your information has been saved successfully');
     }
 
     // vendor set store settings
@@ -176,7 +184,7 @@ export class VendorSettingsPage extends VendorPage {
                 await this.setStoreAddress(vendorInfo);
                 break;
 
-            case 'company-info':
+            case 'euCompliance':
                 await this.setCompanyInfo(vendorInfo);
                 break;
 
@@ -221,43 +229,43 @@ export class VendorSettingsPage extends VendorPage {
         }
 
         // update settings
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, vendorSettings.updateSettings);
-        await this.toContainText(vendorSettings.updateSettingsSuccessMessage, data.vendor.vendorInfo.storeSettingsSaveSuccessMessage);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsVendor.updateSettings);
+        await this.toContainText(settingsVendor.updateSettingsSuccessMessage, data.vendor.vendorInfo.storeSettingsSaveSuccessMessage);
     }
 
     // vendor set basic info settings
     async basicInfoSettings(vendorInfo: vendor['vendorInfo']): Promise<void> {
         // store basic info
-        await this.clearAndType(vendorSettings.storeName, vendorInfo.storeName);
-        await this.clearAndType(vendorSettings.phoneNo, vendorInfo.phoneNumber);
+        await this.clearAndType(settingsVendor.storeName, vendorInfo.storeName);
+        await this.clearAndType(settingsVendor.phoneNo, vendorInfo.phoneNumber);
         // email
-        await this.check(vendorSettings.email);
+        await this.check(settingsVendor.email);
     }
 
     // vendor set store address
     async setStoreAddress(vendorInfo: vendor['vendorInfo']): Promise<void> {
-        await this.clearAndType(vendorSettings.address.street, vendorInfo.street1);
-        await this.clearAndType(vendorSettings.address.street2, vendorInfo.street2);
-        await this.clearAndType(vendorSettings.address.city, vendorInfo.city);
-        await this.clearAndType(vendorSettings.address.postOrZipCode, vendorInfo.zipCode);
-        await this.selectByValue(vendorSettings.address.country, vendorInfo.countrySelectValue);
-        await this.selectByValue(vendorSettings.address.state, vendorInfo.stateSelectValue);
+        await this.clearAndType(settingsVendor.address.street, vendorInfo.street1);
+        await this.clearAndType(settingsVendor.address.street2, vendorInfo.street2);
+        await this.clearAndType(settingsVendor.address.city, vendorInfo.city);
+        await this.clearAndType(settingsVendor.address.postOrZipCode, vendorInfo.zipCode);
+        await this.selectByValue(settingsVendor.address.country, vendorInfo.countrySelectValue);
+        await this.selectByValue(settingsVendor.address.state, vendorInfo.stateSelectValue);
     }
 
     // vendor set company info
     async setCompanyInfo(vendorInfo: vendor['vendorInfo']): Promise<void> {
-        await this.clearAndType(vendorSettings.companyInfo.companyName, vendorInfo.companyName);
-        await this.clearAndType(vendorSettings.companyInfo.companyId, vendorInfo.companyId);
-        await this.clearAndType(vendorSettings.companyInfo.vatOrTaxNumber, vendorInfo.vatNumber);
-        await this.clearAndType(vendorSettings.companyInfo.nameOfBank, vendorInfo.bankName);
-        await this.clearAndType(vendorSettings.companyInfo.bankIban, vendorInfo.bankIban);
+        await this.clearAndType(settingsVendor.companyInfo.companyName, vendorInfo.companyName);
+        await this.clearAndType(settingsVendor.companyInfo.companyId, vendorInfo.companyId);
+        await this.clearAndType(settingsVendor.companyInfo.vatOrTaxNumber, vendorInfo.vatNumber);
+        await this.clearAndType(settingsVendor.companyInfo.nameOfBank, vendorInfo.bankName);
+        await this.clearAndType(settingsVendor.companyInfo.bankIban, vendorInfo.bankIban);
     }
 
     // vendor set map settings
     async mapSettings(mapLocation: string): Promise<void> {
-        const geoLocationEnabled = await this.isVisible(vendorSettings.map);
+        const geoLocationEnabled = await this.isVisible(settingsVendor.map);
         if (geoLocationEnabled) {
-            await this.typeAndWaitForResponse(data.subUrls.gmap, vendorSettings.map, mapLocation);
+            await this.typeAndWaitForResponse(data.subUrls.gmap, settingsVendor.map, mapLocation);
             await this.press(data.key.arrowDown);
             await this.press(data.key.enter);
         }
@@ -265,59 +273,59 @@ export class VendorSettingsPage extends VendorPage {
 
     // vendor set terms and conditions settings
     async termsAndConditionsSettings(termsAndConditions: string): Promise<void> {
-        const tocEnabled = await this.isVisible(vendorSettings.termsAndConditions);
+        const tocEnabled = await this.isVisible(settingsVendor.termsAndConditions);
         if (tocEnabled) {
-            await this.check(vendorSettings.termsAndConditions);
-            await this.typeFrameSelector(vendorSettings.termsAndConditionsIframe, vendorSettings.termsAndConditionsHtmlBody, termsAndConditions);
+            await this.check(settingsVendor.termsAndConditions);
+            await this.typeFrameSelector(settingsVendor.termsAndConditionsIframe, settingsVendor.termsAndConditionsHtmlBody, termsAndConditions);
         }
     }
 
     // vendor set opening closing time settings
     async openingClosingTimeSettings(openingClosingTime: vendor['vendorInfo']['openingClosingTime']): Promise<void> {
-        const openCloseTimeEnabled = await this.isVisible(vendorSettings.storeOpeningClosingTime);
+        const openCloseTimeEnabled = await this.isVisible(settingsVendor.storeOpeningClosingTime);
         if (openCloseTimeEnabled) {
-            await this.check(vendorSettings.storeOpeningClosingTime);
+            await this.check(settingsVendor.storeOpeningClosingTime);
             for (const day of openingClosingTime.days) {
                 if (DOKAN_PRO) {
-                    await this.enableSwitcherDeliveryTime(vendorSettings.openingClosingTimeSwitch(day));
-                    await this.setAttributeValue(vendorSettings.openingTime(day), 'value', openingClosingTime.openingTime);
-                    await this.setAttributeValue(vendorSettings.openingTimeHiddenInput(day), 'value', openingClosingTime.openingTime);
-                    await this.setAttributeValue(vendorSettings.closingTime(day), 'value', openingClosingTime.closingTime);
-                    await this.setAttributeValue(vendorSettings.closingTimeHiddenInput(day), 'value', openingClosingTime.closingTime);
+                    await this.enableSwitcherDeliveryTime(settingsVendor.openingClosingTimeSwitch(day));
+                    await this.setAttributeValue(settingsVendor.openingTime(day), 'value', openingClosingTime.openingTime);
+                    await this.setAttributeValue(settingsVendor.openingTimeHiddenInput(day), 'value', openingClosingTime.openingTime);
+                    await this.setAttributeValue(settingsVendor.closingTime(day), 'value', openingClosingTime.closingTime);
+                    await this.setAttributeValue(settingsVendor.closingTimeHiddenInput(day), 'value', openingClosingTime.closingTime);
                 } else {
                     // lite
-                    await this.selectByValue(vendorSettings.lite.openingClosingTimeEnable(day), openingClosingTime.statusLite);
-                    await this.clearAndType(vendorSettings.lite.openingTimeInput(day), openingClosingTime.openingTime);
-                    await this.clearAndType(vendorSettings.lite.closingTimeInput(day), openingClosingTime.closingTime);
+                    await this.selectByValue(settingsVendor.lite.openingClosingTimeEnable(day), openingClosingTime.statusLite);
+                    await this.clearAndType(settingsVendor.lite.openingTimeInput(day), openingClosingTime.openingTime);
+                    await this.clearAndType(settingsVendor.lite.closingTimeInput(day), openingClosingTime.closingTime);
                 }
             }
-            await this.clearAndType(vendorSettings.storeOpenNotice, openingClosingTime.storeOpenNotice);
-            await this.clearAndType(vendorSettings.storeCloseNotice, openingClosingTime.storeCloseNotice);
+            await this.clearAndType(settingsVendor.storeOpenNotice, openingClosingTime.storeOpenNotice);
+            await this.clearAndType(settingsVendor.storeCloseNotice, openingClosingTime.storeCloseNotice);
         }
     }
 
     // vendor set vacation settings
     async vacationSettings(vacation: vendor['vendorInfo']['vacation']): Promise<void> {
-        const vacationModeEnabled = await this.isVisible(vendorSettings.goToVacation);
+        const vacationModeEnabled = await this.isVisible(settingsVendor.goToVacation);
         if (vacationModeEnabled) {
-            await this.check(vendorSettings.goToVacation);
-            await this.selectByValue(vendorSettings.closingStyle, vacation.closingStyle);
+            await this.check(settingsVendor.goToVacation);
+            await this.selectByValue(settingsVendor.closingStyle, vacation.closingStyle);
 
             switch (vacation.closingStyle) {
                 // instantly close
                 case 'instantly':
-                    await this.clearAndType(vendorSettings.setVacationMessageInstantly, vacation.instantly.vacationMessage);
+                    await this.clearAndType(settingsVendor.setVacationMessageInstantly, vacation.instantly.vacationMessage);
                     break;
 
                 // datewise close
                 case 'datewise': {
                     const vacationDayFrom = vacation.datewise.vacationDayFrom();
                     const vacationDayTo = vacation.datewise.vacationDayTo(vacationDayFrom);
-                    await this.setAttributeValue(vendorSettings.vacationDateRange, 'value', helpers.dateFormatFYJ(vacationDayFrom) + ' - ' + helpers.dateFormatFYJ(vacationDayTo));
-                    await this.setAttributeValue(vendorSettings.vacationDateRangeFrom, 'value', vacationDayFrom);
-                    await this.setAttributeValue(vendorSettings.vacationDateRangeTo, 'value', vacationDayTo);
-                    await this.clearAndType(vendorSettings.setVacationMessageDatewise, vacation.datewise.vacationMessage);
-                    await this.clickAndWaitForResponse(data.subUrls.ajax, vendorSettings.saveVacationEdit);
+                    await this.setAttributeValue(settingsVendor.vacationDateRange, 'value', `${helpers.dateFormatFYJ(vacationDayFrom)} - ${helpers.dateFormatFYJ(vacationDayTo)}`);
+                    await this.setAttributeValue(settingsVendor.vacationDateRangeFrom, 'value', vacationDayFrom);
+                    await this.setAttributeValue(settingsVendor.vacationDateRangeTo, 'value', vacationDayTo);
+                    await this.clearAndType(settingsVendor.setVacationMessageDatewise, vacation.datewise.vacationMessage);
+                    await this.clickAndWaitForResponse(data.subUrls.ajax, settingsVendor.saveVacationEdit);
                     break;
                 }
 
@@ -330,81 +338,81 @@ export class VendorSettingsPage extends VendorPage {
     // vendor delete pervious datewise vacation settings if any
     async deletePreviousDatewiseVacation() {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsStore);
-        const noVacationIsSetIsVisible = await this.isVisible(vendorSettings.noVacationIsSet);
+        const noVacationIsSetIsVisible = await this.isVisible(settingsVendor.noVacationIsSet);
         if (!noVacationIsSetIsVisible) {
-            await this.hover(vendorSettings.vacationRow);
-            await this.click(vendorSettings.deleteSavedVacationSchedule);
-            await this.clickAndWaitForResponse(data.subUrls.ajax, vendorSettings.confirmDeleteSavedVacationSchedule);
+            await this.hover(settingsVendor.vacationRow);
+            await this.click(settingsVendor.deleteSavedVacationSchedule);
+            await this.clickAndWaitForResponse(data.subUrls.ajax, settingsVendor.confirmDeleteSavedVacationSchedule);
         }
 
         // update settings
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, vendorSettings.updateSettings);
-        await this.toContainText(vendorSettings.updateSettingsSuccessMessage, data.vendor.vendorInfo.storeSettingsSaveSuccessMessage);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsVendor.updateSettings);
+        await this.toContainText(settingsVendor.updateSettingsSuccessMessage, data.vendor.vendorInfo.storeSettingsSaveSuccessMessage);
     }
 
     // vendor set catalog mode settings
     async catalogModeSettings(): Promise<void> {
-        const catalogModeEnabled = await this.isVisible(vendorSettings.removeAddToCartButton);
+        const catalogModeEnabled = await this.isVisible(settingsVendor.removeAddToCartButton);
         if (catalogModeEnabled) {
-            await this.check(vendorSettings.removeAddToCartButton);
-            await this.check(vendorSettings.hideProductPrice);
-            await this.checkIfVisible(vendorSettings.enableRequestQuoteSupport);
+            await this.check(settingsVendor.removeAddToCartButton);
+            await this.checkIfVisible(settingsVendor.hideProductPrice);
+            await this.checkIfVisible(settingsVendor.enableRequestQuoteSupport);
         }
     }
 
     // reset catalog
     async resetCatalog(): Promise<void> {
-        await this.uncheck(vendorSettings.removeAddToCartButton);
+        await this.uncheck(settingsVendor.removeAddToCartButton);
         // update settings
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, vendorSettings.updateSettings);
-        await this.toContainText(vendorSettings.updateSettingsSuccessMessage, data.vendor.vendorInfo.storeSettingsSaveSuccessMessage);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsVendor.updateSettings);
+        await this.toContainText(settingsVendor.updateSettingsSuccessMessage, data.vendor.vendorInfo.storeSettingsSaveSuccessMessage);
     }
 
     // vendor set discount settings
     async discountSettings(amountDiscount: vendor['vendorInfo']['amountDiscount']): Promise<void> {
-        const discountEnabled = await this.isVisible(vendorSettings.enableStoreWideDiscount);
+        const discountEnabled = await this.isVisible(settingsVendor.enableStoreWideDiscount);
         if (discountEnabled) {
-            await this.check(vendorSettings.enableStoreWideDiscount);
-            await this.clearAndType(vendorSettings.minimumOrderAmount, amountDiscount.minimumOrderAmount);
-            await this.clearAndType(vendorSettings.percentage, amountDiscount.discountPercentage);
+            await this.check(settingsVendor.enableStoreWideDiscount);
+            await this.clearAndType(settingsVendor.minimumOrderAmount, amountDiscount.minimumOrderAmount);
+            await this.clearAndType(settingsVendor.percentage, amountDiscount.discountPercentage);
         }
     }
 
     // vendor set biography settings
     async biographySettings(biography: string): Promise<void> {
-        await this.typeFrameSelector(vendorSettings.biographyIframe, vendorSettings.biographyHtmlBody, biography);
+        await this.typeFrameSelector(settingsVendor.biographyIframe, settingsVendor.biographyHtmlBody, biography);
     }
 
     // vendor set store support settings
     async storeSupportSettings(supportButtonText: string): Promise<void> {
-        const storeSupportEnabled = await this.isVisible(vendorSettings.removeAddToCartButton);
+        const storeSupportEnabled = await this.isVisible(settingsVendor.removeAddToCartButton);
         if (storeSupportEnabled) {
-            await this.check(vendorSettings.showSupportButtonInStore);
-            await this.check(vendorSettings.showSupportButtonInSingleProduct);
-            await this.clearAndType(vendorSettings.supportButtonText, supportButtonText);
+            await this.check(settingsVendor.showSupportButtonInStore);
+            await this.check(settingsVendor.showSupportButtonInSingleProduct);
+            await this.clearAndType(settingsVendor.supportButtonText, supportButtonText);
         }
     }
 
     // vendor set minmax settings
     async minMaxSettings(minMax: vendor['vendorInfo']['minMax']): Promise<void> {
-        const minMaxEnabled = await this.isVisible(vendorSettings.enableMinMaxQuantities);
+        const minMaxEnabled = await this.isVisible(settingsVendor.enableMinMaxQuantities);
         if (minMaxEnabled) {
             // min max quantities
-            await this.check(vendorSettings.enableMinMaxQuantities);
-            await this.clearAndType(vendorSettings.minimumProductQuantityToPlaceAnOrder, minMax.minimumProductQuantity);
-            await this.clearAndType(vendorSettings.maximumProductQuantityToPlaceAnOrder, minMax.maximumProductQuantity);
+            await this.check(settingsVendor.enableMinMaxQuantities);
+            await this.clearAndType(settingsVendor.minimumProductQuantityToPlaceAnOrder, minMax.minimumProductQuantity);
+            await this.clearAndType(settingsVendor.maximumProductQuantityToPlaceAnOrder, minMax.maximumProductQuantity);
 
             // min max amount
-            await this.check(vendorSettings.enableMinMaxAmount);
-            await this.clearAndType(vendorSettings.minimumAmountToPlaceAnOrder, minMax.minimumAmount);
-            await this.clearAndType(vendorSettings.maximumAmountToPlaceAnOrder, minMax.maximumAmount);
-            await this.click(vendorSettings.clear);
-            await this.click(vendorSettings.selectAll);
-            const multipleCategory = await this.isVisible(vendorSettings.selectCategorySearch);
+            await this.check(settingsVendor.enableMinMaxAmount);
+            await this.clearAndType(settingsVendor.minimumAmountToPlaceAnOrder, minMax.minimumAmount);
+            await this.clearAndType(settingsVendor.maximumAmountToPlaceAnOrder, minMax.maximumAmount);
+            await this.click(settingsVendor.clear);
+            await this.click(settingsVendor.selectAll);
+            const multipleCategory = await this.isVisible(settingsVendor.selectCategorySearch);
             if (multipleCategory) {
-                await this.select2ByTextMultiSelector(vendorSettings.selectCategorySearch, vendorSettings.selectCategorySearchedResult, minMax.category);
+                await this.select2ByTextMultiSelector(settingsVendor.selectCategorySearch, settingsVendor.selectCategorySearchedResult, minMax.category);
             } else {
-                await this.selectByLabel(vendorSettings.selectCategory, minMax.category);
+                await this.selectByLabel(settingsVendor.selectCategory, minMax.category);
             }
         }
     }
