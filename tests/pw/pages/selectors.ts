@@ -6823,10 +6823,13 @@ export const selector = {
                 searchInput: 'input[placeholder="Search Questions & Answers"]',
                 loginPostQuestion: '//button[text()="Login to post your Question"]',
                 postQuestion: '//button[text()="Post your Question"]',
+
+                questionModal: '//h3[normalize-space(text())="Post your question"]/../../..',
                 questionInput: 'textarea#comment.block',
                 cancelButton: '//span[text()="Close"]//..',
                 cancelPost: '//button[text()="Cancel"]',
                 post: '//button[text()="Post"]',
+                questionPosted: (question: string) => `//p[normalize-space(text())='${question}' and @class="text-base"]`,
                 clearResult: '//button[text()="Clear Result"]',
                 matchingResult: 'h3.text-black.text-base',
             },

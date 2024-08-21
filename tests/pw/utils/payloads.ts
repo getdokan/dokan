@@ -3880,6 +3880,7 @@ export const payloads = {
     createProductQuestion: () => ({
         question: `test question_${faker.string.nanoid(10)}`,
         product_id: '',
+        status: 'visible',
     }),
 
     updateProductQuestion: () => ({

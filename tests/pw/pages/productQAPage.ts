@@ -126,16 +126,16 @@ export class ProductQAPage extends BasePage {
 
     // edit question visibility
     async editQuestionVisibility(questionId: string, action: string): Promise<void> {
-        await this.goIfNotThere(data.subUrls.backend.dokan.questionDetails(questionId));
+        await this.gotoUntilNetworkidle(data.subUrls.backend.dokan.questionDetails(questionId));
         if (action == 'hide') {
             await this.click(productQAAdmin.questionDetails.status.hideFromProductPage);
-            await this.clickAndWaitForResponse(data.subUrls.api.dokan.productQuestions, productQAAdmin.questionDetails.confirmAction);
+            await this.clickAndWaitForResponseWithType(data.subUrls.api.dokan.productQuestions, productQAAdmin.questionDetails.confirmAction, 'GET');
             await this.toBeVisible(productQAAdmin.questionDetails.visibilityStatusSaveSuccessMessage);
             await this.toBeVisible(productQAAdmin.questionDetails.status.hiddenStatus);
             await this.toBeVisible(productQAAdmin.questionDetails.status.showInProductPage);
         } else {
             await this.click(productQAAdmin.questionDetails.status.showInProductPage);
-            await this.clickAndWaitForResponse(data.subUrls.api.dokan.productQuestions, productQAAdmin.questionDetails.confirmAction);
+            await this.clickAndWaitForResponseWithType(data.subUrls.api.dokan.productQuestions, productQAAdmin.questionDetails.confirmAction, 'GET');
             await this.toBeVisible(productQAAdmin.questionDetails.visibilityStatusSaveSuccessMessage);
             await this.toBeVisible(productQAAdmin.questionDetails.status.visibleStatus);
             await this.toBeVisible(productQAAdmin.questionDetails.status.hideFromProductPage);
@@ -274,20 +274,20 @@ export class ProductQAPage extends BasePage {
     async postQuestion(productName: string, questionsAnswers: questionsAnswers, guest = false): Promise<void> {
         await this.goToProductDetails(productName);
         await this.click(selector.customer.cSingleProduct.menus.questionsAnswers);
-        await this.focus(productQACustomer.searchInput);
         await this.clearAndType(productQACustomer.searchInput, '....');
         if (guest) {
             await this.click(productQACustomer.loginPostQuestion);
-            await this.clearAndType(selector.frontend.username, questionsAnswers.user.username);
-            await this.clearAndType(selector.frontend.userPassword, questionsAnswers.user.password);
+            await this.clearAndType(selector.frontend.username, questionsAnswers.guest.username);
+            await this.clearAndType(selector.frontend.userPassword, questionsAnswers.guest.password);
             await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.myAccountToProductQA, selector.frontend.logIn, 302);
 
             await this.click(selector.customer.cSingleProduct.menus.questionsAnswers);
             await this.clearAndType(productQACustomer.searchInput, '....');
         }
-        await this.click(productQACustomer.postQuestion);
+        await this.clickAndWaitForLocatorTobeVisible(productQACustomer.postQuestion, productQACustomer.questionModal);
         await this.clearAndType(productQACustomer.questionInput, questionsAnswers.question);
         await this.removeAttribute(productQACustomer.post, 'disabled');
         await this.clickAndWaitForResponse(data.subUrls.api.dokan.productQuestions, productQACustomer.post);
+        await this.toBeVisible(productQACustomer.questionPosted(questionsAnswers.question));
     }
 }

@@ -306,8 +306,7 @@ export class BookingPage extends VendorPage {
     // customer
 
     async buyBookableProduct(productName: string, bookings: bookings) {
-        await this.goIfNotThere(data.subUrls.frontend.productDetails(helpers.slugify(productName)));
-
+        await this.goto(data.subUrls.frontend.productDetails(helpers.slugify(productName)));
         await this.clickAndWaitForResponse(data.subUrls.ajax, selector.customer.cBookings.selectCalendarDay(bookings.startDate.getMonth(), bookings.startDate.getDate()));
         await this.clickAndWaitForResponse(data.subUrls.ajax, selector.customer.cBookings.selectCalendarDay(bookings.endDate.getMonth(), bookings.endDate.getDate()));
         await this.clickAndWaitForResponse(data.subUrls.frontend.productDetails(helpers.slugify(productName)), selector.customer.cBookings.bookNow);

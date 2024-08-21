@@ -19,13 +19,13 @@ export default defineConfig({
     /* Maximum time in milliseconds the whole test suite can run */
     globalTimeout: CI ? 40 * (60 * 1000) : 40 * (60 * 1000),
     /* The maximum number of test failures for the whole test suite run. After reaching this number, testing will stop and exit with an error. */
-    maxFailures: CI ? 40 : 40,
+    maxFailures: CI ? 50 : 50,
     /* Maximum time one test can run for. */
-    timeout: CI ? 40 * 1000 : 40 * 1000,
+    timeout: CI ? 35 * 1000 : 40 * 1000,
     /* Configuration for the expect assertion library */
     expect: {
         /* Maximum time expect() should wait for the condition to be met.  For example in `await expect(locator).toHaveText();`*/
-        timeout: 15 * 1000,
+        timeout: 10 * 1000,
         toHaveScreenshot: {
             maxDiffPixelRatio: 0.2,
             maxDiffPixels: 500,
@@ -67,9 +67,9 @@ export default defineConfig({
         /* Whether to automatically download all the attachments. */
         acceptDownloads: true,
         /* Maximum time each action such as `click()` can take. Defaults to 0 (no limit). */
-        actionTimeout: 30 * 1000,
+        actionTimeout: 15 * 1000,
         /* Maximum time each navigation such as 'goto()' can take. */
-        navigationTimeout: 30 * 1000,
+        navigationTimeout: 20 * 1000,
         /* Base URL */
         baseURL: BASE_URL ?? 'http://localhost:9999',
         /* Name of the browser that runs tests. */

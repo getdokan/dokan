@@ -43,8 +43,13 @@ export class BasePage {
     }
 
     // goto subUrl
-    async goto(subPath: string, waitUntil: 'load' | 'domcontentloaded' | 'networkidle' | 'commit' = 'domcontentloaded'): Promise<void> {
-        await this.page.goto(subPath, { waitUntil: waitUntil });
+    async goto(subPath: string, options: { referer?: string; timeout?: number; waitUntil?: 'load' | 'domcontentloaded' | 'networkidle' | 'commit' } | undefined = { waitUntil: 'domcontentloaded' }): Promise<void> {
+        await this.page.goto(subPath, options);
+    }
+
+    // goto subUrl until networkidle
+    async gotoUntilNetworkidle(subPath: string, options: { referer?: string; timeout?: number; waitUntil?: 'load' | 'domcontentloaded' | 'networkidle' | 'commit' } | undefined = { waitUntil: 'networkidle' }): Promise<void> {
+        await this.goto(subPath, options);
     }
 
     // go forward
@@ -73,7 +78,7 @@ export class BasePage {
     // returns whether the current URL is expected
     isCurrentUrl(subPath: string): boolean {
         const url = new URL(this.getCurrentUrl());
-        const currentURL = url.href.replace(/[/]$/, ''); // added to remove last '/',
+        const currentURL = url.href.replace(/[/]$/, ''); // remove last '/' from the url
         return currentURL === this.createUrl(subPath);
     }
 
@@ -86,11 +91,11 @@ export class BasePage {
     }
 
     // goto subPath if not already there
-    async goIfNotThere(subPath: string): Promise<void> {
+    async goIfNotThere(subPath: string, waitUntil: 'load' | 'domcontentloaded' | 'networkidle' | 'commit' = 'domcontentloaded'): Promise<void> {
         if (!this.isCurrentUrl(subPath)) {
             const url = this.createUrl(subPath);
             // console.log('url: ', url);
-            await this.page.goto(url, { waitUntil: 'domcontentloaded' });
+            await this.goto(url, { waitUntil: waitUntil });
             const currentUrl = this.getCurrentUrl();
             expect(currentUrl).toMatch(subPath);
         }
@@ -190,6 +195,11 @@ export class BasePage {
         await this.page.dblclick(selector);
     }
 
+    // click & wait for another locator to be visible [userful for modals]
+    async clickAndWaitForLocatorTobeVisible(selector: string, selector2: string): Promise<void> {
+        await Promise.all([this.toBeVisible(selector2), this.page.locator(selector).click()]);
+    }
+
     // click & wait for load state to complete
     async clickAndWaitForLoadState(selector: string): Promise<void> {
         await Promise.all([this.waitForLoadState(), this.page.locator(selector).click()]);
@@ -214,6 +224,17 @@ export class BasePage {
     // click & wait for response
     async clickAndWaitForResponse(subUrl: string, selector: string, code = 200): Promise<Response> {
         const [response] = await Promise.all([this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code), this.page.locator(selector).click()]);
+        return response;
+    }
+
+    // click & wait for response with response type
+    async clickAndWaitForResponseWithType(subUrl: string, selector: string, requestType: string, code = 200): Promise<Response> {
+        const [response] = await Promise.all([
+            this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.request().method().toLowerCase() == requestType.toLowerCase() && resp.status() === code),
+            this.page.locator(selector).click(),
+        ]);
+        const requestTyped = response.request().method();
+        console.log(`Request type: ${requestTyped}`);
         return response;
     }
 

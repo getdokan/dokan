@@ -28,7 +28,7 @@ export class ShortcodePage extends AdminPage {
 
     // create a page with shortcode
     async createPageWithShortcode(pageTitle: string, shortcode: string) {
-        await this.goto(data.subUrls.backend.addNewPage, 'domcontentloaded');
+        await this.goto(data.subUrls.backend.addNewPage);
         const isModalVisible = await this.isVisible(selector.admin.pages.closeModal);
         if (isModalVisible) {
             await this.click(selector.admin.pages.closeModal);

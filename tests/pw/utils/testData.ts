@@ -1729,13 +1729,13 @@ export const data = {
     },
 
     //  question answers
-    questionAnswers: {
-        question: 'test question',
-        editQuestion: 'edited test question',
-        answer: 'test answer',
-        editAnswer: 'edited test answer',
-        user: {
-            username: CUSTOMER,
+    questionAnswers: () => ({
+        question: `test question_${faker.string.nanoid(5)}`,
+        editQuestion: `edited test question_${faker.string.nanoid(5)}`,
+        answer: `test answer_${faker.string.nanoid(5)}`,
+        editAnswer: `edited test answer_${faker.string.nanoid(5)}`,
+        guest: {
+            username: CUSTOMER2,
             password: USER_PASSWORD,
         },
 
@@ -1743,7 +1743,7 @@ export const data = {
             byVendor: `${VENDOR}store`,
             byProduct: 'p1_v1 (simple)',
         },
-    },
+    }),
 
     // announcement
     announcement: {

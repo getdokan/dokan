@@ -1854,7 +1854,7 @@ export interface questionsAnswers {
     editQuestion: string;
     answer: string;
     editAnswer: string;
-    user: {
+    guest: {
         username: string;
         password: string;
     };
