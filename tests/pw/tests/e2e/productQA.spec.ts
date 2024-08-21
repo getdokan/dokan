@@ -67,7 +67,7 @@ test.describe('Product QA functionality test', () => {
         await admin.answerQuestion(questionId, data.questionAnswers());
     });
 
-    test.only('admin can edit answer', { tag: ['@pro', '@admin'] }, async () => {
+    test('admin can edit answer', { tag: ['@pro', '@admin'] }, async () => {
         await admin.editAnswer(questionId, data.questionAnswers());
     });
 

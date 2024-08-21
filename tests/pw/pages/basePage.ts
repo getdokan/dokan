@@ -170,7 +170,6 @@ export class BasePage {
     // click on element
     async click(selector: string): Promise<void> {
         await this.clickLocator(selector);
-        // await this.clickByPage(selector);
     }
 
     // click on element
