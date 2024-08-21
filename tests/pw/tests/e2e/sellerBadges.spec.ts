@@ -48,6 +48,8 @@ test.describe('Seller badge test', () => {
     });
 
     test('admin can create seller badge', { tag: ['@pro', '@admin'] }, async () => {
+        const badgeId = await apiUtils.getSellerBadgeId(data.sellerBadge.eventName.numberOfItemsSold, payloads.adminAuth);
+        if (badgeId) await apiUtils.deleteSellerBadge(badgeId, payloads.adminAuth);
         await admin.createSellerBadge({ ...data.sellerBadge, badgeName: data.sellerBadge.eventName.numberOfItemsSold });
     });
 

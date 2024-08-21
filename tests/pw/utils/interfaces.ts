@@ -1831,8 +1831,7 @@ export interface storageState {
     }[];
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type responseBody = any;
+export type responseBody<T = any> = T;
 
 export interface commission {
     commissionType: string;
@@ -1861,7 +1860,7 @@ export interface questionsAnswers {
     editQuestion: string;
     answer: string;
     editAnswer: string;
-    user: {
+    guest: {
         username: string;
         password: string;
     };

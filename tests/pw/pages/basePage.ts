@@ -1,7 +1,6 @@
 /* eslint-disable playwright/no-element-handle */
 /* eslint-disable playwright/no-wait-for-timeout */
 /* eslint-disable playwright/no-page-pause */
-/* eslint-disable playwright/no-networkidle */
 /* eslint-disable playwright/no-force-option */
 
 import { expect, Page, BrowserContext, Cookie, Request, Response, Locator, Frame, FrameLocator, JSHandle, ElementHandle } from '@playwright/test';
@@ -23,11 +22,6 @@ export class BasePage {
      * Page navigation methods
      */
 
-    // wait for navigation to complete
-    async waitForNavigation(): Promise<void> {
-        await this.page.waitForNavigation({ waitUntil: 'networkidle' });
-    }
-
     // wait for request
     async waitForRequest(url: string): Promise<Request> {
         return await this.page.waitForRequest(url);
@@ -40,24 +34,22 @@ export class BasePage {
 
     // wait for load state
     async waitForLoadState(): Promise<void> {
-        await this.page.waitForLoadState('networkidle');
-        // await this.page.waitForLoadState( 'domcontentloaded');
-    }
-
-    // wait for load state
-    async waitForLoadState1(): Promise<void> {
         await this.page.waitForLoadState('domcontentloaded');
     }
 
     // wait for url to be loaded
-    async waitForUrl(url: string, options?: { timeout?: number | undefined; waitUntil?: 'networkidle' | 'load' | 'domcontentloaded' | 'commit' | undefined } | undefined): Promise<void> {
+    async waitForUrl(url: string, options: { timeout?: number | undefined; waitUntil?: 'networkidle' | 'load' | 'domcontentloaded' | 'commit' | undefined } | undefined): Promise<void> {
         await this.page.waitForURL(url, options);
-        // await this.page.waitForURL(url,{ waitUntil: 'networkidle' });
     }
 
     // goto subUrl
-    async goto(subPath: string, waitUntil: 'load' | 'domcontentloaded' | 'networkidle' | 'commit' = 'domcontentloaded'): Promise<void> {
-        await this.page.goto(subPath, { waitUntil: waitUntil });
+    async goto(subPath: string, options: { referer?: string; timeout?: number; waitUntil?: 'load' | 'domcontentloaded' | 'networkidle' | 'commit' } | undefined = { waitUntil: 'domcontentloaded' }): Promise<void> {
+        await this.page.goto(subPath, options);
+    }
+
+    // goto subUrl until networkidle
+    async gotoUntilNetworkidle(subPath: string, options: { referer?: string; timeout?: number; waitUntil?: 'load' | 'domcontentloaded' | 'networkidle' | 'commit' } | undefined = { waitUntil: 'networkidle' }): Promise<void> {
+        await this.goto(subPath, options);
     }
 
     // go forward
@@ -86,7 +78,7 @@ export class BasePage {
     // returns whether the current URL is expected
     isCurrentUrl(subPath: string): boolean {
         const url = new URL(this.getCurrentUrl());
-        const currentURL = url.href.replace(/[/]$/, ''); // added to remove last '/',
+        const currentURL = url.href.replace(/[/]$/, ''); // remove last '/' from the url
         return currentURL === this.createUrl(subPath);
     }
 
@@ -99,12 +91,11 @@ export class BasePage {
     }
 
     // goto subPath if not already there
-    async goIfNotThere(subPath: string): Promise<void> {
+    async goIfNotThere(subPath: string, waitUntil: 'load' | 'domcontentloaded' | 'networkidle' | 'commit' = 'domcontentloaded'): Promise<void> {
         if (!this.isCurrentUrl(subPath)) {
             const url = this.createUrl(subPath);
             // console.log('url: ', url);
-            // await this.page.goto(url, { waitUntil: 'networkidle' });
-            await this.page.goto(url, { waitUntil: 'domcontentloaded' });
+            await this.goto(url, { waitUntil: waitUntil });
             const currentUrl = this.getCurrentUrl();
             expect(currentUrl).toMatch(subPath);
         }
@@ -179,7 +170,6 @@ export class BasePage {
     // click on element
     async click(selector: string): Promise<void> {
         await this.clickLocator(selector);
-        // await this.clickByPage(selector);
     }
 
     // click on element
@@ -204,19 +194,19 @@ export class BasePage {
         await this.page.dblclick(selector);
     }
 
-    // click & wait for navigation to complete
-    async clickAndWaitForNavigation(selector: string): Promise<void> {
-        await Promise.all([this.page.waitForNavigation({ waitUntil: 'networkidle' }), this.page.locator(selector).click()]);
+    // click & wait for another locator to be visible [userful for modals]
+    async clickAndWaitForLocatorTobeVisible(selector: string, selector2: string): Promise<void> {
+        await Promise.all([this.toBeVisible(selector2), this.page.locator(selector).click()]);
     }
 
     // click & wait for load state to complete
     async clickAndWaitForLoadState(selector: string): Promise<void> {
-        await Promise.all([this.page.waitForLoadState('networkidle'), this.page.locator(selector).click()]);
+        await Promise.all([this.waitForLoadState(), this.page.locator(selector).click()]);
     }
 
     // click & wait for navigation to complete
     async clickAndWaitForUrl(url: string | RegExp, selector: string): Promise<void> {
-        await Promise.all([this.page.waitForURL(url, { waitUntil: 'networkidle' }), this.page.locator(selector).click()]);
+        await Promise.all([this.page.waitForURL(url, { waitUntil: 'domcontentloaded' }), this.page.locator(selector).click()]);
     }
 
     // click & wait for request
@@ -236,9 +226,20 @@ export class BasePage {
         return response;
     }
 
+    // click & wait for response with response type
+    async clickAndWaitForResponseWithType(subUrl: string, selector: string, requestType: string, code = 200): Promise<Response> {
+        const [response] = await Promise.all([
+            this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.request().method().toLowerCase() == requestType.toLowerCase() && resp.status() === code),
+            this.page.locator(selector).click(),
+        ]);
+        const requestTyped = response.request().method();
+        console.log(`Request type: ${requestTyped}`);
+        return response;
+    }
+
     // click & wait for response
     async clickAndWaitForResponseAndLoadState(subUrl: string, selector: string, code = 200): Promise<Response> {
-        const [, response] = await Promise.all([this.page.waitForLoadState('networkidle'), this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code), this.page.locator(selector).click()]);
+        const [, response] = await Promise.all([this.waitForLoadState(), this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code), this.page.locator(selector).click()]);
         expect(response.status()).toBe(code);
         return response;
     }
@@ -266,7 +267,7 @@ export class BasePage {
     async clickAndWaitForResponsesAndLoadState(subUrls: string[], selector: string, codes: number[] = [200]): Promise<Response[]> {
         const responsePromises = subUrls.map((subUrl, index) => this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === codes[index % codes.length]));
         await this.page.locator(selector).click();
-        const [, ...responses] = await Promise.all([this.page.waitForLoadState('networkidle'), ...responsePromises]);
+        const [, ...responses] = await Promise.all([this.waitForLoadState(), ...responsePromises]);
         return responses;
     }
 
@@ -283,7 +284,7 @@ export class BasePage {
 
     // click & wait for response
     async clickAndAcceptAndWaitForResponseAndLoadState(subUrl: string, selector: string, code = 200): Promise<Response> {
-        const [response] = await Promise.all([this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code), this.acceptAlert(), this.page.waitForLoadState('networkidle'), this.page.locator(selector).click()]);
+        const [response] = await Promise.all([this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code), this.acceptAlert(), this.waitForLoadState(), this.page.locator(selector).click()]);
         return response;
     }
 
@@ -301,13 +302,13 @@ export class BasePage {
 
     // type & wait for response and LoadState
     async typeAndWaitForResponseAndLoadState(subUrl: string, selector: string, text: string, code = 200): Promise<Response> {
-        const [response] = await Promise.all([this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code), this.page.waitForLoadState('networkidle'), this.clearAndFill(selector, text)]);
+        const [response] = await Promise.all([this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code), this.waitForLoadState(), this.clearAndFill(selector, text)]);
         return response;
     }
 
     // type & wait for response and LoadState
     async pressOnLocatorAndWaitForResponseAndLoadState(subUrl: string, selector: string, key: string, code = 200): Promise<Response> {
-        const [response] = await Promise.all([this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code), this.page.waitForLoadState('networkidle'), this.keyPressOnLocator(selector, key)]);
+        const [response] = await Promise.all([this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code), this.waitForLoadState(), this.keyPressOnLocator(selector, key)]);
         return response;
     }
 
@@ -935,9 +936,9 @@ export class BasePage {
     }
 
     // dispatches event('click', 'dragstart',...) on the element
-    dispatchEvent(selector: string, event: string): void {
+    async dispatchEvent(selector: string, event: string): Promise<void> {
         const locator = this.page.locator(selector);
-        locator.dispatchEvent(event);
+        await locator.dispatchEvent(event);
     }
 
     // drag locator to target locator
@@ -1197,54 +1198,27 @@ export class BasePage {
 
     // accept alert
     acceptAlert(): void {
+        // page.once is used avoid future alerts to be accepted
         this.page.once('dialog', dialog => {
-            // page.once is used avoid future alerts to be accepted
-            dialog.accept();
+            void dialog.accept();
         });
     }
 
     // dismiss alert
     dismissAlert(): void {
+        // page.once is used avoid future alerts to be dismissed
         this.page.once('dialog', dialog => {
-            // page.once is used avoid future alerts to be dismissed
-            dialog.dismiss();
+            void dialog.dismiss();
         });
     }
 
     // type on prompt box/alert
     fillAlert(value: string): void {
+        // page.once is used avoid future prompts to be filled
         this.page.once('dialog', dialog => {
-            // page.once is used avoid future prompts to be filled
-            dialog.accept(value);
+            void dialog.accept(value);
         });
     }
-
-    // get default prompt value. Otherwise, returns empty string.
-    // getDefaultPromptValue(): string {
-    // 	let value: string;
-    // 	this.page.on('dialog', (dialog) => {
-    // 		value = dialog.defaultValue();
-    // 	});
-    // 	return value;
-    // }
-
-    // get dialog's type [alert, beforeunload, confirm or prompt]
-    // async getDialogType(): Promise<string> {
-    // 	let type: string;
-    // 	this.page.on('dialog', (dialog) => {
-    // 		type = dialog.type();
-    // 	});
-    // 	return type;
-    // }
-
-    // get dialog's message
-    // async getDialogMessage(): Promise<string> {
-    // 	let message: string;
-    // 	this.page.on('dialog', (dialog) => {
-    // 		message = dialog.message();
-    // 	});
-    // 	return message;
-    // }
 
     /**
      * Cookies methods
@@ -1323,6 +1297,12 @@ export class BasePage {
     // get all pages
     getAllPages(): Page[] {
         return this.page.context().pages();
+    }
+
+    // add locator handler [userful for randomly popups] [call before the start of the test]
+    async addLocatorHandler(selector: string, asyncFn: () => Promise<void>, options?: { noWaitAfter?: boolean; times?: number } | undefined): Promise<void> {
+        const locator = this.page.locator(selector);
+        await this.page.addLocatorHandler(locator, asyncFn, options);
     }
 
     /**
@@ -1431,6 +1411,29 @@ export class BasePage {
         expect(value).toBe(backgroundColor);
     }
 
+    // assert element to contain text
+    async toContainTextFrameLocator(frame: string, frameSelector: string, text: string | RegExp): Promise<void> {
+        const locator = this.page.frameLocator(frame).locator(frameSelector);
+        await expect(locator).toContainText(text);
+    }
+
+    // todo: test below two methods
+    // assert async function (test step) to pass
+    async toPass(asyncFn: () => Promise<void>, options?: { timeout?: number; intervals?: number[] } | undefined) {
+        await expect(async () => {
+            await asyncFn();
+        }).toPass(options);
+    }
+
+    // assert async function (api request) to poll
+    async toPoll(asyncFn: () => Promise<number>, options?: { message?: string; timeout?: number }) {
+        await expect
+            .poll(async () => {
+                return await asyncFn();
+            }, options)
+            .toBe(200);
+    }
+
     // assert element not to be visible
     async notToBeVisible(selector: string) {
         await expect(this.page.locator(selector)).toBeHidden();
@@ -1459,12 +1462,6 @@ export class BasePage {
     // assert element not to have class
     async notToHaveClass(selector: string, className: string) {
         await expect(this.page.locator(selector)).not.toHaveClass(className);
-    }
-
-    // assert element to contain text
-    async toContainTextFrameLocator(frame: string, frameSelector: string, text: string | RegExp): Promise<void> {
-        const locator = this.page.frameLocator(frame).locator(frameSelector);
-        await expect(locator).toContainText(text);
     }
 
     /**

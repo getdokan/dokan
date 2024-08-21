@@ -177,9 +177,8 @@ export class VendorShippingPage extends VendorPage {
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, vendorShipping.editShippingZone(shipping.shippingZone));
 
         const noOfMethods = await this.countLocator(vendorShipping.shippingMethodCell(shipping.shippingMethod));
-
         if (noOfMethods > 1) {
-            this.lastLocator(vendorShipping.shippingMethodCell(shipping.shippingMethod)).hover();
+            await this.lastLocator(vendorShipping.shippingMethodCell(shipping.shippingMethod)).hover();
             const deleteMethod = this.lastLocator(vendorShipping.deleteShippingMethod(shipping.shippingMethod));
             await this.clickLocatorAndWaitForResponse(data.subUrls.ajax, deleteMethod);
             await this.toHaveCount(vendorShipping.shippingMethodCell(shipping.shippingMethod), noOfMethods - 1);

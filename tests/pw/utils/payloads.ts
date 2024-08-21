@@ -116,7 +116,7 @@ export const payloads = {
     // product
 
     createProduct: () => ({
-        name: `${faker.commerce.productName()} (Simple)`,
+        name: `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Simple)`,
         type: 'simple',
         regular_price: faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([0, 2]) }),
         // regular_price: faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([0, 2]) }),
@@ -231,7 +231,7 @@ export const payloads = {
     }),
 
     createProductInteger: () => ({
-        name: `${faker.commerce.productName()} (Simple)`,
+        name: `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Simple)`,
         type: 'simple',
         regular_price: faker.finance.amount({ min: 100, max: 200, dec: 0 }),
         // regular_price: faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([0, 2]) }),
@@ -334,7 +334,7 @@ export const payloads = {
     }),
 
     createProductEuCompliance: () => ({
-        name: `${faker.commerce.productName()} (Simple)`,
+        name: `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Simple)`,
         type: 'simple',
         regular_price: '100',
         status: 'publish',
@@ -433,7 +433,7 @@ export const payloads = {
 
     // wholesale product
     createWholesaleProduct: () => ({
-        name: `${faker.commerce.productName()} (wholesale)`,
+        name: `${faker.commerce.productName()}_${faker.string.nanoid(5)} (wholesale)`,
         type: 'simple',
         regular_price: faker.finance.amount({ min: 100, max: 110, dec: faker.helpers.arrayElement([0, 2]) }),
         // regular_price: '100',
@@ -456,7 +456,7 @@ export const payloads = {
     }),
 
     createVariableProduct: () => ({
-        name: `${faker.commerce.productName()} (Variable)`,
+        name: `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Variable)`,
         type: 'variable',
         regular_price: faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([0, 2]) }),
         status: 'publish',
@@ -496,7 +496,7 @@ export const payloads = {
     },
 
     createDownloadableProduct: () => ({
-        name: `${faker.commerce.productName()} (Downloadable)`,
+        name: `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Downloadable)`,
         type: 'simple',
         downloadable: true,
         regular_price: faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([0, 2]) }),
@@ -507,7 +507,7 @@ export const payloads = {
     }),
 
     createSimpleSubscriptionProduct: () => ({
-        name: `${faker.commerce.productName()} (Subscription)`,
+        name: `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Subscription)`,
         type: 'subscription',
         status: 'publish',
         featured: true,
@@ -557,7 +557,7 @@ export const payloads = {
     }),
 
     createBookableProduct: () => ({
-        name: `${faker.commerce.productName()} (Bookable)`,
+        name: `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Bookable)`,
         status: 'publish',
         featured: true,
         description: '<p>test description</p>',
@@ -609,7 +609,7 @@ export const payloads = {
     }),
 
     createAuctionProduct: () => ({
-        name: `${faker.commerce.productName()} (Auction)`,
+        name: `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Auction)`,
         type: 'auction',
         status: 'publish',
         featured: true,
@@ -1320,6 +1320,7 @@ export const payloads = {
         amount: '50',
         notes: 'Withdraw notes',
         method: 'paypal',
+        status: 'pending',
     },
 
     updateWithdraw: {
@@ -2960,8 +2961,8 @@ export const payloads = {
 
     // store category
 
-    createStoreCategory: () => ({ name: `Test_Store_Category_${faker.string.nanoid(10)}` }),
-    updateStoreCategory: () => ({ name: `Update_Test_Store_Category_${faker.string.nanoid(10)}` }),
+    createStoreCategory: () => ({ name: `Store_Category_${faker.string.nanoid(5)}` }),
+    updateStoreCategory: () => ({ name: `Update_Store_Category_${faker.string.nanoid(5)}` }),
 
     // dummy data
 
@@ -3946,6 +3947,7 @@ export const payloads = {
     createProductQuestion: () => ({
         question: `test question_${faker.string.nanoid(10)}`,
         product_id: '',
+        status: 'visible',
     }),
 
     updateProductQuestion: () => ({

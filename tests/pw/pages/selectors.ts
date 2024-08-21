@@ -348,6 +348,7 @@ export const selector = {
                 statusColumnValue: (status: string) => `td.column.status .${status}`, // pending, approved, rejected, cancelled
 
                 numberOfRowsFound: '.tablenav.top .displaying-num',
+                numberOfRows: 'table.wp-list-table tbody tr',
                 currentNoOfRows: 'table tbody tr',
                 noRowsFound: '//td[normalize-space()="No requests found."]',
                 withdrawCell: (storeName: string) => `//td//a[contains(text(), '${storeName}')]/../..`,
@@ -719,6 +720,7 @@ export const selector = {
                     storeCategoryEdit: (title: string) => `//td//a[contains(text(), '${title}')]/../..//span[@class='edit']//a`,
                     storeCategoryDelete: (title: string) => `//td//a[contains(text(), '${title}')]/../..//span[@class='delete']//a`,
                     storeCategorySetDefault: (title: string) => `//td//a[contains(text(), '${title}')]/../..//span[@class='set_as_default']//a`,
+                    defaultCategory: (title: string) => `//td//a[contains(text(), '${title}')]/../..//span[@class="default-category"]`,
                 },
             },
 
@@ -1085,6 +1087,7 @@ export const selector = {
                 },
 
                 numberOfRowsFound: '.tablenav.top .displaying-num',
+                numberOfRows: 'table.wp-list-table tbody tr',
                 noRowsFound: '//td[normalize-space()="No badges found."]',
                 sellerBadgeRow: (name: string) => `//a[contains(text(),'${name}')]/../../..`,
                 sellerBadgeCell: (name: string) => `//a[contains(text(),'${name}')]/../..`,
@@ -3980,10 +3983,11 @@ export const selector = {
 
             // Advertise Product
             advertisement: {
-                advertiseThisProduct: '#dokan_advertise_single_product',
+                advertiseThisProduct: 'input#dokan_advertise_single_product',
                 confirmAdvertiseThisProduct: '.swal2-confirm',
                 okSuccessAlertAdvertiseThisProduct: '.swal2-confirm',
                 cancelAdvertiseThisProduct: '.swal2-cancel',
+                advertisementIsBought: '//label[contains(., "Product advertisement is currently ongoing.")]',
             },
 
             // catalog mode
@@ -4593,7 +4597,8 @@ export const selector = {
                 withdrawAmount: '#withdraw-amount',
                 withdrawMethod: '#withdraw-method',
                 submitRequest: '#dokan-withdraw-request-submit',
-                withdrawRequestSaveSuccessMessage: 'Withdraw request successful.',
+                withdrawRequestSaveSuccessMessage: '//div[@id="swal2-html-container" and normalize-space()="Withdraw request successful."]',
+                pendingRequestDiv: '//strong[normalize-space(text())="Pending Requests"]/..',
                 cancelWithdrawRequestSuccess: '.dokan-alert.dokan-alert-success',
                 cancelWithdrawRequestSaveSuccessMessage: 'Your request has been cancelled successfully!',
                 cancelRequest: '//strong[normalize-space()="Pending Requests"]/..//a[normalize-space()="Cancel"]',
@@ -4639,7 +4644,8 @@ export const selector = {
 
             sellerBadgeCell: (name: string) => `//strong[contains(text(),'${name}')]/../..`,
             numberOfBadgesFound: '.tablenav.top .displaying-num',
-
+            numberOfRows: '#dokan-seller-badge table tbody tr',
+            noRowsFound: '//td[contains(text(), "No badges found")]',
             congratsModal: {
                 closeModal: '.modal-close.modal-close-link',
                 sellerBadgeModal: '.seller-badge-modal .seller-badge-modal-content',
@@ -6865,10 +6871,13 @@ export const selector = {
                 searchInput: 'input[placeholder="Search Questions & Answers"]',
                 loginPostQuestion: '//button[text()="Login to post your Question"]',
                 postQuestion: '//button[text()="Post your Question"]',
+
+                questionModal: '//h3[normalize-space(text())="Post your question"]/../../..',
                 questionInput: 'textarea#comment.block',
                 cancelButton: '//span[text()="Close"]//..',
                 cancelPost: '//button[text()="Cancel"]',
                 post: '//button[text()="Post"]',
+                questionPosted: (question: string) => `//p[normalize-space(text())='${question}' and @class="text-base"]`,
                 clearResult: '//button[text()="Clear Result"]',
                 matchingResult: 'h3.text-black.text-base',
             },

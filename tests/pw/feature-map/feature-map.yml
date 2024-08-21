@@ -260,9 +260,9 @@
   features:
       admin:
           admin can view withdraw menu page [lite]: true
-          admin can filter withdrawal requests by pending status: false
-          admin can filter withdrawal requests by approved status: false
-          admin can filter withdrawal requests by cancelled status: false
+          admin can filter withdrawal requests by pending status: true
+          admin can filter withdrawal requests by approved status: true
+          admin can filter withdrawal requests by cancelled status: true
           admin can filter withdrawal requests by vendor [lite]: true
           admin can filter withdrawal requests by payment methods [lite]: true
           admin can filter withdrawal requests by date: false
@@ -726,7 +726,7 @@
           vendor can add global product addon: true
           vendor can edit global product addon: true
           vendor can delete product addon: true
-          vendor can add individual product addon [duplicate]: false
+        #   vendor can add individual product addon [duplicate]: false
           vendor can edit individual product product addon: false
           vendor can delete individual productproduct addon: false
       customer:
@@ -758,10 +758,10 @@
           admin can delete advertised product: true
           admin can perform bulk action on product advertisements: false
       vendor:
-          vendor can buy product advertising (product list page): false
+          vendor can buy product advertising (product list page): true
           vendor can buy product advertising (product edit page): false
-          vendor can buy booking product advertising: false
-          vendor can buy auction product advertising: false
+          vendor can buy booking product advertising: true
+          vendor can buy auction product advertising: true
       customer:
           customer can view advertised product on shop page: false
 
@@ -794,12 +794,12 @@
           vendor can answer to question: true
           vendor can edit answer: true
           vendor can delete a answer: true
-          vendor can delete a question: false
+          vendor can delete a question: true
       customer:
           customer can search question: true
           customer can post question: true
       guest:
-          guest customer need to signIn/signUp post question: true
+          guest customer need to signIn/signUp to post question: true
 
 - page: 'Product Subscription'
   features:

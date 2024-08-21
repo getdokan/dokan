@@ -79,7 +79,7 @@ export class PaymentsPage extends AdminPage {
         await this.setDropdownOptionSpan(paymentSettingsAdmin.paypalMarketPlace.disbursementModeValues, payment.paypalMarketPlace.disbursementMode);
         await this.click(paymentSettingsAdmin.paypalMarketPlace.paymentButtonType);
         await this.setDropdownOptionSpan(paymentSettingsAdmin.paypalMarketPlace.paymentButtonTypeValues, payment.paypalMarketPlace.paymentButtonType);
-        await this.clearAndType(paymentSettingsAdmin.paypalMarketPlace.marketplaceLogo, (await this.getBaseUrl()) + payment.paypalMarketPlace.marketplaceLogoPath);
+        await this.clearAndType(paymentSettingsAdmin.paypalMarketPlace.marketplaceLogo, this.getBaseUrl() + payment.paypalMarketPlace.marketplaceLogoPath);
         await this.check(paymentSettingsAdmin.paypalMarketPlace.displayNoticeToConnectSeller);
         await this.check(paymentSettingsAdmin.paypalMarketPlace.sendAnnouncementToConnectSeller);
         await this.clearAndType(paymentSettingsAdmin.paypalMarketPlace.sendAnnouncementInterval, payment.paypalMarketPlace.announcementInterval);

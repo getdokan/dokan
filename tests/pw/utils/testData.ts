@@ -133,15 +133,15 @@ export const data = {
         },
 
         name: {
-            simple: () => `${faker.commerce.productName()} (Simple)`,
-            variable: () => `${faker.commerce.productName()} (Variable)`,
-            external: () => `${faker.commerce.productName()} (External)`,
-            grouped: () => `${faker.commerce.productName()} (Grouped)`,
-            simpleSubscription: () => `${faker.commerce.productName()} (Simple Subscription)`,
-            variableSubscription: () => `${faker.commerce.productName()} (Variable Subscription)`,
+            simple: () => `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Simple)`,
+            variable: () => `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Variable)`,
+            external: () => `${faker.commerce.productName()}_${faker.string.nanoid(5)} (External)`,
+            grouped: () => `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Grouped)`,
+            simpleSubscription: () => `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Simple Subscription)`,
+            variableSubscription: () => `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Variable Subscription)`,
             dokanSubscription: { nonRecurring: () => `Dokan Subscription_${faker.string.alpha({ length: 5, casing: 'upper' })} (Product Pack)` },
-            booking: () => `${faker.commerce.productName()} (Booking)`,
-            auction: () => `${faker.commerce.productName()} (Auction)`,
+            booking: () => `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Booking)`,
+            auction: () => `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Auction)`,
         },
 
         price: {
@@ -188,7 +188,7 @@ export const data = {
 
         simple: {
             productType: 'simple',
-            productName: () => `${faker.commerce.productName()} (Simple)`,
+            productName: () => `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Simple)`,
             category: 'Uncategorized',
             regularPrice: () => faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([1, 2]) }).replace('.', ','),
             storeName: `${VENDOR}store`,
@@ -200,7 +200,7 @@ export const data = {
 
         downloadable: {
             productType: 'simple',
-            productName: () => `${faker.commerce.productName()} (Downloadable)`,
+            productName: () => `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Downloadable)`,
             category: 'Uncategorized',
             regularPrice: () => faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([1, 2]) }).replace('.', ','),
             storeName: `${VENDOR}store`,
@@ -219,7 +219,7 @@ export const data = {
 
         virtual: {
             productType: 'simple',
-            productName: () => `${faker.commerce.productName()} (Virtual)`,
+            productName: () => `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Virtual)`,
             category: 'Uncategorized',
             regularPrice: () => faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([1, 2]) }).replace('.', ','),
             storeName: `${VENDOR}store`,
@@ -231,7 +231,7 @@ export const data = {
 
         variable: {
             productType: 'variable',
-            productName: () => `${faker.commerce.productName()} (Variable)`,
+            productName: () => `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Variable)`,
             category: 'Uncategorized',
             regularPrice: () => faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([1, 2]) }).replace('.', ','),
             storeName: `${VENDOR}store`,
@@ -248,7 +248,7 @@ export const data = {
 
         external: {
             productType: 'external',
-            productName: () => `${faker.commerce.productName()} (External)`,
+            productName: () => `${faker.commerce.productName()}_${faker.string.nanoid(5)} (External)`,
             productUrl: '/product/p1_v1-simple/',
             buttonText: 'Buy product',
             category: 'Uncategorized',
@@ -260,7 +260,7 @@ export const data = {
 
         simpleSubscription: {
             productType: 'subscription',
-            productName: () => `${faker.commerce.productName()} (Simple Subscription)`,
+            productName: () => `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Simple Subscription)`,
             category: 'Uncategorized',
             regularPrice: () => faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([1, 2]) }).replace('.', ','),
             subscriptionPrice: () => faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([1, 2]) }).replace('.', ','),
@@ -276,7 +276,7 @@ export const data = {
 
         variableSubscription: {
             productType: 'variable-subscription',
-            productName: () => `${faker.commerce.productName()} (Variable Subscription)`,
+            productName: () => `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Variable Subscription)`,
             category: 'Uncategorized',
             regularPrice: () => faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([1, 2]) }).replace('.', ','),
             subscriptionPrice: () => faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([1, 2]) }).replace('.', ','),
@@ -310,7 +310,7 @@ export const data = {
         },
 
         booking: {
-            productName: () => `${faker.commerce.productName()} (Booking)`,
+            productName: () => `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Booking)`,
             name: '',
             productType: 'booking',
             category: 'Uncategorized',
@@ -339,7 +339,7 @@ export const data = {
 
         // Auction
         auction: {
-            productName: () => `${faker.commerce.productName()} (Auction)`,
+            productName: () => `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Auction)`,
             name: '',
             productType: 'auction',
             category: 'Uncategorized',
@@ -1770,13 +1770,13 @@ export const data = {
     },
 
     //  question answers
-    questionAnswers: {
-        question: 'test question',
-        editQuestion: 'edited test question',
-        answer: 'test answer',
-        editAnswer: 'edited test answer',
-        user: {
-            username: CUSTOMER,
+    questionAnswers: () => ({
+        question: `test question_${faker.string.nanoid(5)}`,
+        editQuestion: `edited test question_${faker.string.nanoid(5)}`,
+        answer: `test answer_${faker.string.nanoid(5)}`,
+        editAnswer: `edited test answer_${faker.string.nanoid(5)}`,
+        guest: {
+            username: CUSTOMER2,
             password: USER_PASSWORD,
         },
 
@@ -1784,7 +1784,7 @@ export const data = {
             byVendor: `${VENDOR}store`,
             byProduct: 'p1_v1 (simple)',
         },
-    },
+    }),
 
     // announcement
     announcement: {
