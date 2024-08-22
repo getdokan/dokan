@@ -41,10 +41,11 @@ class OrderFactory extends WP_UnitTest_Factory_For_Thing {
             $order->set_customer_id( $args['customer_id'] );
         }
 
-        $metadatas = isset( $args['meta_data'] ) ? $args['meta_data'] : array();
+        $metadatas = $args['meta_data'] ?? array();
         foreach ( $metadatas as $meta ) {
-            if( ia_array( $meta ) ) {
-                $order->add_meta_data( $meta['key'], $meta['value'], $meta['is_persistant'] );
+            if ( is_array( $meta ) ) {
+                $is_unique = $meta['unique'] ?? false;
+                $order->add_meta_data( $meta['key'], $meta['value'], $is_unique );
             }
         }
 
