@@ -36,7 +36,8 @@
   },
   "autoload": {
     "psr-4": {
-      "WeDevs\\Dokan\\": "includes/"
+      "WeDevs\\Dokan\\": "includes/",
+			"WeDevs\\Dokan\\ThirdParty\\Packages\\": "lib/packages/"
     },
     "files": [
       "includes/functions-rest-api.php",
