@@ -6,6 +6,7 @@ use WC_Coupon;
 use WC_Order;
 use WC_Order_Item_Fee;
 use WC_Order_Item_Shipping;
+use WC_Product;
 use WeDevs\Dokan\Test\Helpers\WC_Helper_Order;
 use WP_UnitTest_Factory_For_Thing;
 use WC_Order_Item;
@@ -22,9 +23,14 @@ class OrderFactory extends WP_UnitTest_Factory_For_Thing {
     protected $coupon_items = [];
 
     /**
+     * @var int
+     */
+    protected $seller_id = null;
+
+    /**
      * Factory Instance.
      *
-     * @param DokanFactory $factory
+     * @param DokanFactory $factory The factory instance.
      */
     public function __construct( $factory = null ) {
         parent::__construct( $factory );
@@ -34,6 +40,27 @@ class OrderFactory extends WP_UnitTest_Factory_For_Thing {
         );
     }
 
+    /**
+     * Set the seller ID for the order.
+     *
+     * @param int $seller_id The seller ID.
+     *
+     * @return self
+     */
+    public function set_seller_id( int $seller_id ): self {
+        $this->seller_id = $seller_id;
+
+        return $this;
+    }
+
+    /**
+     * Create an order.
+     *
+     * @param array $args The arguments.
+     *
+     * @return int
+     * @throws \WC_Data_Exception When unable to create the order.
+     */
     public function create_object( $args ) {
         $order = wc_create_order();
 
@@ -81,6 +108,15 @@ class OrderFactory extends WP_UnitTest_Factory_For_Thing {
         return $order->get_id();
     }
 
+    /**
+     * Update an order.
+     *
+     * @param int   $order_id The order ID.
+     * @param array $fields The fields to update.
+     *
+     * @return int
+     * @throws \WC_Data_Exception When unable to update the order.
+     */
     public function update_object( $order_id, $fields ) {
         $order = wc_get_order( $order_id );
 
@@ -105,24 +141,57 @@ class OrderFactory extends WP_UnitTest_Factory_For_Thing {
         return $order_id;
     }
 
+    /**
+     * Get an order by ID.
+     *
+     * @param int $order_id The order ID.
+     *
+     * @return WC_Order
+     */
     public function get_object_by_id( $order_id ) {
         return wc_get_order( $order_id );
     }
 
+    /**
+     * Remove all items from an order.
+     *
+     * @param WC_Abstract_Order $order The order.
+     * @return void
+     * @throws \WC_Data_Exception When unable to delete the order item.
+     * @throws \Exception When unable to delete the order item.
+     */
     public function remove_all_items( WC_Abstract_Order $order ) {
         foreach ( $order->get_items() as $item ) {
             wc_delete_order_item( $item->get_id() );
         }
     }
 
+    /**
+     * Get the default line items for the order.
+     *
+     * @return array
+     */
     protected function get_default_line_items(): array {
+        if ( $this->seller_id ) {
+            return array(
+                array(
+                    'product_id' => $this->factory->product->set_seller_id( $this->seller_id )->create( array( 'name' => 'Test Product 1' ) ),
+                    'quantity'   => 2,
+                ),
+                array(
+                    'product_id' => $this->factory->product->set_seller_id( $this->seller_id )->create( array( 'name' => 'Test Product 2' ) ),
+                    'quantity'   => 1,
+                ),
+            );
+        }
+
         return array(
             array(
                 'product_id' => $this->factory->product->create( array( 'name' => 'Test Product 1' ) ),
                 'quantity'   => 2,
             ),
             array(
-                'product_id' => $this->factory->product->create( array( 'name' => 'Test Product 2' ) ),
+                'product_id' => $this->factory->produc->create( array( 'name' => 'Test Product 2' ) ),
                 'quantity'   => 1,
             ),
         );
@@ -148,12 +217,24 @@ class OrderFactory extends WP_UnitTest_Factory_For_Thing {
         return $order;
     }
 
+    /**
+     * Add a fee line item to the Order.
+     *
+     * @param WC_Coupon $coupon
+     * @return OrderFactory
+     */
     public function set_item_coupon( WC_Coupon $coupon ) {
         $this->coupon_items[] = $coupon;
 
         return $this;
     }
 
+    /*
+     * Add a fee line item to the Order.
+     *
+     * @param array $args
+     * @return OrderFactory
+     */
     public function set_item_fee( array $args = [
 		'name' => 'Extra Fee',
 		'amount' => 100,
@@ -203,7 +284,7 @@ class OrderFactory extends WP_UnitTest_Factory_For_Thing {
      * @param int $order_id ID of the order to delete.
      */
     public static function delete_order( $order_id ) {
-        return WC_Helper_Order::delete_order( $order_id );
+        WC_Helper_Order::delete_order( $order_id );
     }
 
     /**
