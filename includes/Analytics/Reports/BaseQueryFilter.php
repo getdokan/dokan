@@ -54,6 +54,7 @@ abstract class BaseQueryFilter implements Hookable {
 		$clauses[] = "AND {$dokan_order_state_table}.order_type in ( $order_types ) ";
 
 		$clauses = $this->add_where_subquery_for_refund( $clauses );
+		$clauses = $this->add_where_subquery_for_seller_filter( $clauses );
 
 		return array_unique( $clauses );
 	}
@@ -134,5 +135,45 @@ abstract class BaseQueryFilter implements Hookable {
 		}
 
 		return implode( ',', $order_type->get_admin_non_refund_order_types() );
+	}
+
+	/**
+     * Add where clause for seller query filter in WooCommerce analytics queries.
+     *
+     * @param array $clauses The existing where clauses.
+     *
+     * @return array The modified where clauses.
+     */
+	protected function add_where_subquery_for_seller_filter( array $clauses ): array {
+		$seller_id = $this->get_seller_id();
+
+		if ( ! $seller_id ) {
+			return $clauses;
+		}
+
+		$dokan_order_state_table = $this->get_dokan_table();
+
+		global $wpdb;
+
+		$clauses[] = $wpdb->prepare( "AND {$dokan_order_state_table}.seller_id = %s", $seller_id ); //phpcs:ignore
+
+		return $clauses;
+	}
+
+	/**
+	 * Get seller id from Query param for Admin and currently logged in user as Vendor
+	 *
+	 * @return int
+	 */
+	protected function get_seller_id() {
+		if ( ! is_user_logged_in() ) {
+			return 0;
+		}
+
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return dokan_get_current_user_id();
+		}
+
+		return (int) ( wp_unslash( $_GET['seller']  ?? 0 ) ); // phpcs:ignore
 	}
 }

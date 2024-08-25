@@ -262,4 +262,49 @@ class QueryFilterTest extends ReportTestCase {
 
         $this->assertEquals( $refund->get_id(), $report_data['order_id'] );
 	}
+
+    public function test_orders_analytics_for_seller_filter_as_a_admin() {
+        $order_id = $this->create_single_vendor_order( $this->seller_id1 );
+        $order_id2 = $this->create_single_vendor_order( $this->seller_id2 );
+
+		$this->run_all_pending();
+
+        $_GET['seller'] = $this->seller_id1;
+
+        wp_set_current_user( $this->admin_id );
+
+		$wc_stats_query = new \Automattic\WooCommerce\Admin\API\Reports\Orders\Query();
+
+		$data = $wc_stats_query->get_data();
+
+        $sub_ids = dokan_get_suborder_ids_by( $order_id );
+
+        $report_data = $data->data;
+
+        $this->assertEquals( 1, count( $report_data ) );
+        $this->assertEquals( $order_id, $report_data[0]['order_id'] );
+	}
+
+    public function test_orders_analytics_for_seller_filter_as_a_vendor() {
+        $order_id = $this->create_single_vendor_order( $this->seller_id1 );
+        $order_id2 = $this->create_single_vendor_order( $this->seller_id2 );
+
+		$this->run_all_pending();
+
+        // Ignore seller filter if a seller pass another seller ID as filter .
+        $_GET['seller'] = $this->seller_id1;
+
+        wp_set_current_user( $this->seller_id2 );
+
+		$wc_stats_query = new \Automattic\WooCommerce\Admin\API\Reports\Orders\Query();
+
+		$data = $wc_stats_query->get_data();
+
+        $sub_ids = dokan_get_suborder_ids_by( $order_id );
+
+        $report_data = $data->data;
+
+        $this->assertEquals( 1, count( $report_data ) );
+        $this->assertEquals( $order_id2, $report_data[0]['order_id'] );
+	}
 }
