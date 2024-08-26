@@ -28,6 +28,7 @@ export class ShippingPage extends AdminPage {
         } else {
             await this.setDropdownOptionSpan(generalSettings.enableShippingValues, data.shipping.disableShipping);
         }
+        await this.removeAttribute(generalSettings.generalSaveChanges, 'disabled');
         await this.click(generalSettings.generalSaveChanges);
         await this.toContainText(woocommerceSettings.updatedSuccessMessage, data.shipping.saveSuccessMessage);
     }

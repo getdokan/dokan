@@ -21,7 +21,7 @@ export class PaymentsPage extends AdminPage {
     }
 
     // admin setup basic payment methods
-    async setupBasicPaymentMethods() {
+    async setupBasicPaymentMethods(payment: payment) {
         await this.goToPaymentSettings();
 
         // bank transfer
@@ -30,6 +30,10 @@ export class PaymentsPage extends AdminPage {
         await this.enablePaymentMethod(paymentSettingsAdmin.enableCheckPayments);
         // cash on delivery
         await this.enablePaymentMethod(paymentSettingsAdmin.enableCashOnDelivery);
+
+        await this.removeAttribute(paymentSettingsAdmin.paymentMethodsSaveChanges, 'disabled');
+        await this.clickAndWaitForResponse(data.subUrls.api.wc.paymentGayways, paymentSettingsAdmin.paymentMethodsSaveChanges);
+        await this.toContainText(woocommerceSettings.updatedSuccessMessage, payment.saveSuccessMessage);
     }
 
     // admin setup stripe sonnect
