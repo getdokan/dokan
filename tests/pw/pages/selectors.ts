@@ -2645,7 +2645,10 @@ export const selector = {
                     editShippingZone: (shippingZone: string) => `//td[@class='wc-shipping-zone-name' and normalize-space(text())='${shippingZone}']/..//div//a[contains(text(), 'Edit')]`,
                     deleteShippingZone: (shippingZone: string) => `//td[@class='wc-shipping-zone-name' and normalize-space(text())='${shippingZone}']/..//div//a[contains(text(), 'Delete')]`,
 
+                    saveShippingZone: '//button[@value="Save changes"]',
+
                     // Shipping Methods
+                    shippingMethodModal: 'div.wc-backbone-modal-add-shipping-method div.wc-backbone-modal-content',
                     addShippingMethods: '.wc-shipping-zone-add-method',
                     shippingMethod: (shippingMethodName: string) => `//label[@for='${shippingMethodName}']`,
                     continue: 'button#btn-next',

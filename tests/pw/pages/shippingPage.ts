@@ -2,8 +2,7 @@ import { Page } from '@playwright/test';
 import { AdminPage } from '@pages/adminPage';
 import { selector } from '@pages/selectors';
 import { data } from '@utils/testData';
-import { helpers } from '@utils/helpers';
-import { shipping } from '@utils/interfaces';
+import { shipping, shippingZone } from '@utils/interfaces';
 
 // selectors
 const woocommerceSettings = selector.admin.wooCommerce.settings;
@@ -33,32 +32,31 @@ export class ShippingPage extends AdminPage {
         await this.toContainText(woocommerceSettings.updatedSuccessMessage, data.shipping.saveSuccessMessage);
     }
 
-    // admin add shipping method
-    async addShippingMethod(shipping: shipping) {
+    // admin add shipping zone
+    async addShippingZone(shippingZone: shippingZone) {
         await this.goToShippingSettings();
 
-        // shipping zone
-        const zoneIsVisible = await this.isVisible(shippingSettings.shippingZoneRow(shipping.zoneName));
-        if (!zoneIsVisible) {
-            // add shipping zone
-            await this.clickAndWaitForLoadState(shippingSettings.addShippingZone);
-            // zone
-            await this.clearAndType(shippingSettings.zoneName, shipping.zoneName);
-            // zone regions
-            await this.click(shippingSettings.zoneRegionsInput);
-            await this.clearAndType(shippingSettings.zoneRegionsInput, shipping.zoneRegion);
-            await this.click(shippingSettings.zoneRegionsSearchedResult(shipping.zoneRegion));
-            await this.press(data.key.escape);
-        } else {
-            // edit shipping zone
-            await this.clickAndWaitForLoadState(shippingSettings.editShippingZone(shipping.zoneName));
-        }
+        // add shipping zone
+        await this.clickAndWaitForLoadState(shippingSettings.addShippingZone);
+        // zone
+        await this.clearAndType(shippingSettings.zoneName, shippingZone.zoneName);
+        // zone regions
+        await this.click(shippingSettings.zoneRegionsInput);
+        await this.clearAndType(shippingSettings.zoneRegionsInput, shippingZone.zoneRegion);
+        await this.click(shippingSettings.zoneRegionsSearchedResult(shippingZone.zoneRegion));
+        await this.press(data.key.escape);
 
-        // shipping method
-        const methodIsVisible = await this.isVisible(shippingSettings.shippingMethodRow(helpers.replaceAndCapitalize(shipping.methodName)));
-        if (!methodIsVisible) {
+        await this.clickAndWaitForResponse(data.subUrls.ajax, shippingSettings.saveShippingZone);
+    }
+
+    // admin add shipping method
+    async addShippingMethod(zoneId: string, shipping: shipping, edit: boolean = false) {
+        await this.goIfNotThere(data.subUrls.backend.wc.shippingZone(zoneId));
+
+        if (!edit) {
             // add shipping method
             await this.click(shippingSettings.addShippingMethods);
+            await this.toBeVisible(shippingSettings.shippingMethodModal);
             await this.click(shippingSettings.shippingMethod(shipping.selectMethodName));
             await this.clickAndWaitForResponse(data.subUrls.ajax, shippingSettings.continue);
         } else {

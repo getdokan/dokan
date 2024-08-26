@@ -709,7 +709,7 @@
           vendor can add global product addon: true
           vendor can edit global product addon: true
           vendor can delete product addon: true
-        #   vendor can add individual product addon [duplicate]: false
+          #   vendor can add individual product addon [duplicate]: false
           vendor can edit individual product product addon: false
           vendor can delete individual productproduct addon: false
       customer:

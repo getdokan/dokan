@@ -402,8 +402,8 @@ export class BasePage {
     }
 
     // returns whether the element is visible
-    async isVisible(selector: string): Promise<boolean> {
-        await this.wait(1); // to add a buffer time for the element to be visible if exists // todo: need to resolve in future
+    async isVisible(selector: string, waitUntil: number = 1.5): Promise<boolean> {
+        await this.wait(waitUntil);
         return await this.isVisibleLocator(selector);
     }
 
@@ -1576,7 +1576,7 @@ export class BasePage {
         if (value) {
             await this.clickAndWaitForResponse(data.subUrls.ajax, selector);
         }
-        await this.toHaveClass(selector, 'woocommerce-input-toggle--enabled');
+        await this.toHaveClass(selector, '/woocommerce-input-toggle--enabled/');
         await this.toHaveBackgroundColor(selector, 'rgb(0, 124, 186)');
     }
 

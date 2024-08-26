@@ -2000,6 +2000,12 @@ export class ApiUtils {
         return responseBody;
     }
 
+    // shipping method exist or not
+    async shippingMethodExistOrNot(zoneId: string, methodName: string, auth?: auth): Promise<responseBody> {
+        const allShippingMethods = (await this.getAllShippingZoneMethods(zoneId, auth)).map((a: { method_id: string }) => a.method_id);
+        return allShippingMethods.includes(methodName);
+    }
+
     // add shipping zone method
     async addShippingZoneMethod(zoneId: string, zoneMethod: object, auth?: auth): Promise<responseBody> {
         const [, responseBody] = await this.post(endPoints.wc.addShippingZoneMethod(zoneId), { data: zoneMethod, headers: auth });
