@@ -1037,6 +1037,7 @@ export const data = {
                 orders: 'wc/v3/orders',
                 customers: 'wc/v3/customers',
                 store: 'wc/store',
+                paymentGayways: 'wc/v3/payment_gateways', 
             },
         },
     },
