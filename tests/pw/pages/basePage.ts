@@ -1576,7 +1576,7 @@ export class BasePage {
         if (value) {
             await this.clickAndWaitForResponse(data.subUrls.ajax, selector);
         }
-        await this.toHaveClass(selector, '/woocommerce-input-toggle--enabled/');
+        await this.toHaveClass(selector, /woocommerce-input-toggle--enabled/);
         await this.toHaveBackgroundColor(selector, 'rgb(0, 124, 186)');
     }
 
