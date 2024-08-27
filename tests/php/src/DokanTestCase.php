@@ -204,11 +204,15 @@ abstract class DokanTestCase extends WP_UnitTestCase {
      *
      * @param string $route The REST API route.
      * @param array $params Optional query parameters.
+     * @param array $headers Optional headers.
+     * @param array $header_override Optional heaader override status.
+     *
      * @return WP_REST_Response The response object.
      */
-    protected function get_request( string $route, array $params = [] ): WP_REST_Response {
+    protected function get_request( string $route, array $params = [], array $headers = [], bool $header_override = true ): WP_REST_Response {
         $request = new WP_REST_Request( 'GET', $this->get_route( $route ) );
         $request->set_query_params( $params );
+        $request->set_headers( $headers, $header_override );
 
         return $this->server->dispatch( $request );
     }
