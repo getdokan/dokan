@@ -917,6 +917,7 @@ export const data = {
             placeOrder: '?wc-ajax=checkout',
             billingAddress: 'my-account/edit-address/billing',
             shippingAddress: 'my-account/edit-address/shipping',
+            editAddress: 'my-account/edit-address',
             shippingAddressCheckout: 'wc-ajax=update_order_review',
             editAccountCustomer: 'my-account/edit-account',
             becomeVendor: 'my-account/account-migration',
