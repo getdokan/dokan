@@ -1,12 +1,14 @@
-import { Page } from '@playwright/test';
+import { Page, expect } from '@playwright/test';
 import { AdminPage } from '@pages/adminPage';
 import { selector } from '@pages/selectors';
 import { data } from '@utils/testData';
 import { storeCategory } from '@utils/interfaces';
+import { helpers } from '@utils/helpers';
 
 // selectors
 const storeCategoryAdmin = selector.admin.dokan.vendors.storeCategory;
 const storeCategoryVendor = selector.vendor.vStoreSettings.storeCategories;
+const vendors = selector.admin.dokan.vendors;
 
 export class StoreCategoriesPage extends AdminPage {
     constructor(page: Page) {
@@ -78,6 +80,28 @@ export class StoreCategoriesPage extends AdminPage {
             default:
                 break;
         }
+    }
+
+    // assign store category
+    async assignStoreCategoryToVendor(sellerId: string, categories: string[]) {
+        await this.goto(data.subUrls.backend.dokan.vendorDetails(sellerId));
+        await this.click(vendors.editVendor.editVendorIcon);
+
+        await this.click(vendors.editVendor.storeCategoryDropdown);
+        for (const category of categories) {
+            await this.clearAndType(vendors.editVendor.storeCategoryInput, category);
+            await this.toContainText(vendors.editVendor.searchedStoreCategory, category);
+            await this.press(data.key.enter);
+            // for multiple categories
+            if (categories.length > 1) await this.toBeVisible(vendors.editVendor.selectedStoreCategory(category));
+        }
+
+        await this.clickAndWaitForResponse(data.subUrls.api.dokan.stores, vendors.editVendor.saveChanges);
+        await this.click(vendors.editVendor.closeUpdateSuccessModal);
+        const storeCategories = (await this.getElementText(vendors.vendorDetails.profileInfo.storeCategory))!.split(', ');
+        console.log(storeCategories);
+        console.log(categories);
+        expect(helpers.isSubArray(storeCategories, categories)).toBeTruthy();
     }
 
     // vendor

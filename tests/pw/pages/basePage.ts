@@ -278,6 +278,7 @@ export class BasePage {
 
     // click & wait for response
     async clickAndAcceptAndWaitForResponse(subUrl: string, selector: string, code = 200): Promise<Response> {
+        // todo: need error message for all click & wait for response methods
         const [response] = await Promise.all([this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code), this.acceptAlert(), this.page.locator(selector).click()]);
         return response;
     }
@@ -1356,7 +1357,7 @@ export class BasePage {
     }
 
     // assert element to be visible
-    async toBeVisible(selector: string, options?: { timeout?: number; visible?: boolean; } | undefined) {
+    async toBeVisible(selector: string, options?: { timeout?: number; visible?: boolean } | undefined) {
         await expect(this.page.locator(selector)).toBeVisible(options);
     }
 
