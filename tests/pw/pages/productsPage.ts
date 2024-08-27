@@ -33,7 +33,7 @@ export class ProductsPage extends AdminPage {
         await this.fill(productsAdmin.attribute.slug, attribute.attributeName);
         await this.clickAndWaitForResponse(data.subUrls.backend.wc.addNewAttributes, productsAdmin.attribute.addAttribute);
         await this.toBeVisible(productsAdmin.attribute.attributeCell(attribute.attributeName));
-        await this.clickAndWaitForResponse(data.subUrls.backend.wc.taxonomy, productsAdmin.attribute.configureTerms(attribute.attributeName));
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.backend.wc.taxonomy, productsAdmin.attribute.configureTerms(attribute.attributeName));
 
         // add new term
         for (const attributeTerm of attribute.attributeTerms) {

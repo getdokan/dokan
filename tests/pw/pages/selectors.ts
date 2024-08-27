@@ -3076,7 +3076,7 @@ export const selector = {
                 attributeTerm: '#tag-name',
                 attributeTermSlug: '#tag-slug',
                 description: '#tag-description',
-                addAttributeTerm: '#submit',
+                addAttributeTerm: 'input#submit',
                 attributeTermCell: (attributeTerm: string) => `//td[contains(text(), '${attributeTerm.toLowerCase()}')]/..`,
             },
         },
