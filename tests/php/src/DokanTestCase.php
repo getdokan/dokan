@@ -228,6 +228,40 @@ abstract class DokanTestCase extends WP_UnitTestCase {
     }
 
     /**
+     * Perform a DELETE request on the given route with parameters.
+     *
+     * @param string $route The REST API route.
+     * @param array $params Optional body parameters.
+     * @param array $headers Optional headers.
+     * @param bool $header_override Optional header override status.
+     * @return WP_REST_Response The response object.
+     */
+    protected function delete_request( string $route, array $params = [], array $headers = [], bool $header_override = true ): WP_REST_Response {
+        $request = new WP_REST_Request( 'DELETE', $this->get_route( $route ) );
+        $request->set_body_params( $params );
+        $request->set_headers( $headers, $header_override );
+
+        return $this->server->dispatch( $request );
+    }
+
+    /**
+     * Perform a PUT request on the given route with parameters.
+     *
+     * @param string $route The REST API route.
+     * @param array $params Optional body parameters.
+     * @param array $headers Optional headers.
+     * @param bool $header_override Optional header override status.
+     * @return WP_REST_Response The response object.
+     */
+    protected function put_request( string $route, array $params = [], array $headers = [], bool $header_override = true ): WP_REST_Response {
+        $request = new WP_REST_Request( 'PUT', $this->get_route( $route ) );
+        $request->set_body_params( $params );
+        $request->set_headers( $headers, $header_override );
+
+        return $this->server->dispatch( $request );
+    }
+
+    /**
      * Data provider for multi-vendor order.
      *
      * @see https://docs.phpunit.de/en/9.6/writing-tests-for-phpunit.html#writing-tests-for-phpunit-data-providers
