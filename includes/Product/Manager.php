@@ -440,11 +440,12 @@ class Manager {
      */
     public function delete( $product_id, $force = false ) {
         $product = $this->get( $product_id );
-        if ( $product ) {
-            $product->delete( [ 'force_delete' => $force ] );
+
+        if ( ! $product ) {
+            return false;
         }
 
-        return $product;
+        return $product->delete( [ 'force_delete' => $force ] );
     }
 
     /**

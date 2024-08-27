@@ -13,7 +13,6 @@ defined( 'ABSPATH' ) || exit;
  * @since DOKAN_SINCE
  */
 class Factory {
-    use Singleton;
 
     /**
      * Store form sections.

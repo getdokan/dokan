@@ -29,7 +29,7 @@ class Products {
         // render catalog mode section under single product edit page
         add_action( 'dokan_product_edit_after_options', [ $this, 'render_product_section' ], 99, 1 );
         // save catalog mode section data
-        add_filter( 'dokan_product_edit_meta_data', [ $this, 'save_catalog_mode_data' ], 13, 1 );
+        add_filter( 'dokan_product_edit_meta_data', [ $this, 'add_catalog_mode_data' ], 13, 1 );
     }
 
     /**
@@ -79,7 +79,7 @@ class Products {
      *
      * @return array
      */
-    public function save_catalog_mode_data( array $meta_data ) {
+    public function add_catalog_mode_data( array $meta_data ) {
         if ( ! isset( $_POST['_dokan_catalog_mode_frontend_nonce'] ) || ! wp_verify_nonce( sanitize_key( $_POST['_dokan_catalog_mode_frontend_nonce'] ), 'dokan_catalog_mode_frontend' ) ) {
             return $meta_data;
         }

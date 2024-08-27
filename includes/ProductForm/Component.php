@@ -4,6 +4,15 @@ namespace WeDevs\Dokan\ProductForm;
 
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * Product Form Component
+ *
+ * @since DOKAN_SINCE
+ *
+ * This class has the following child classes:
+ *  - Section: Managing product section.
+ *  - Field:   Managing product field.
+ */
 abstract class Component {
 
     /**
@@ -33,7 +42,7 @@ abstract class Component {
         'visibility'             => true, // field visibility, if the field is visible under frontend
         'required'               => false, // by default, all fields are not required
         'dependency_condition'   => [], // dependency condition for the field
-        'order'                  => 30,
+        'order'                  => 30, // sorting sequence order for the field
         'error_message'          => '',
         'show_in_admin_settings' => true,
     ];
@@ -244,7 +253,7 @@ abstract class Component {
     }
 
     /**
-     * Get field options
+     * Get Field Sorting Sequence Order.
      *
      * @since DOKAN_SINCE
      *
@@ -255,7 +264,7 @@ abstract class Component {
     }
 
     /**
-     * Set field order
+     * Set Field Sorting Sequence Order.
      *
      * @since DOKAN_SINCE
      *
