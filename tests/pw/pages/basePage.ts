@@ -1356,8 +1356,8 @@ export class BasePage {
     }
 
     // assert element to be visible
-    async toBeVisible(selector: string) {
-        await expect(this.page.locator(selector)).toBeVisible();
+    async toBeVisible(selector: string, options?: { timeout?: number; visible?: boolean; } | undefined) {
+        await expect(this.page.locator(selector)).toBeVisible(options);
     }
 
     // assert checkbox to be checked
