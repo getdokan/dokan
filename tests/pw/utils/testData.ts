@@ -609,10 +609,14 @@ export const data = {
         enableShipping: 'Ship to all countries you sell to',
         disableShipping: 'Disable shipping & shipping calculations',
 
+        zone: () => ({
+            zoneName: faker.string.alpha(3).toUpperCase(),
+            zoneRegion: 'United States (US)',
+            saveSuccessMessage: 'Your settings have been saved.',
+        }),
+
         methods: {
             flatRate: {
-                zoneName: 'USA',
-                zoneRegion: 'United States (US)',
                 selectMethodName: 'flat_rate',
                 methodName: 'Flat rate',
                 taxStatus: 'taxable', // 'none', 'taxable'
@@ -620,8 +624,6 @@ export const data = {
             },
 
             freeShipping: {
-                zoneName: 'USA',
-                zoneRegion: 'United States (US)',
                 selectMethodName: 'free_shipping',
                 methodName: 'Free shipping',
                 freeShippingRequires: 'both', // 'coupon', 'min_amount', 'either', 'both'
@@ -629,22 +631,16 @@ export const data = {
             },
 
             tableRateShipping: {
-                zoneName: 'USA',
-                zoneRegion: 'United States (US)',
                 selectMethodName: 'dokan_table_rate_shipping',
                 methodName: 'Vendor Table Rate',
             },
 
             distanceRateShipping: {
-                zoneName: 'USA',
-                zoneRegion: 'United States (US)',
                 selectMethodName: 'dokan_distance_rate_shipping',
                 methodName: 'Vendor Distance Rate',
             },
 
             vendorShipping: {
-                zoneName: 'USA',
-                zoneRegion: 'United States (US)',
                 selectMethodName: 'dokan_vendor_shipping',
                 methodName: 'Vendor Shipping',
                 taxStatus: 'taxable', // 'none
@@ -909,6 +905,7 @@ export const data = {
                 settings: 'wp-admin/admin.php?page=wc-settings',
                 taxSettings: 'wp-admin/admin.php?page=wc-settings&tab=tax',
                 shippingSettings: 'wp-admin/admin.php?page=wc-settings&tab=shipping',
+                shippingZone: (zoneId: string) => `wp-admin/admin.php?page=wc-settings&tab=shipping&zone_id=${zoneId}`,
                 paymentSettings: 'wp-admin/admin.php?page=wc-settings&tab=checkout',
                 accountSettings: 'wp-admin/admin.php?page=wc-settings&tab=account',
             },
@@ -1067,6 +1064,7 @@ export const data = {
                 orders: 'wc/v3/orders',
                 customers: 'wc/v3/customers',
                 store: 'wc/store',
+                paymentGateways: 'wc/v3/payment_gateways',
             },
         },
     },

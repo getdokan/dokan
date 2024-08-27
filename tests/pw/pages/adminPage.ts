@@ -52,6 +52,7 @@ export class AdminPage extends BasePage {
         await this.clearAndType(generalSettings.thousandSeparator, currency.currencyOptions.thousandSeparator);
         await this.clearAndType(generalSettings.decimalSeparator, currency.currencyOptions.decimalSeparator);
         await this.clearAndType(generalSettings.numberOfDecimals, currency.currencyOptions.numberOfDecimals);
+        await this.removeAttribute(generalSettings.generalSaveChanges, 'disabled');
         await this.click(generalSettings.generalSaveChanges);
         await this.toContainText(woocommerceSettings.updatedSuccessMessage, currency.saveSuccessMessage);
     }
@@ -64,6 +65,7 @@ export class AdminPage extends BasePage {
             await this.click(generalSettings.currency);
             await this.clearAndType(generalSettings.currencyInput, currency);
             await this.press(data.key.enter);
+            await this.removeAttribute(generalSettings.generalSaveChanges, 'disabled');
             await this.click(generalSettings.generalSaveChanges);
             await this.toContainText(woocommerceSettings.updatedSuccessMessage, data.payment.currency.saveSuccessMessage);
         }

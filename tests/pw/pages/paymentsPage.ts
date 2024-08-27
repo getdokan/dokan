@@ -31,7 +31,8 @@ export class PaymentsPage extends AdminPage {
         // cash on delivery
         await this.enablePaymentMethod(paymentSettingsAdmin.enableCashOnDelivery);
 
-        await this.click(paymentSettingsAdmin.paymentMethodsSaveChanges);
+        await this.removeAttribute(paymentSettingsAdmin.paymentMethodsSaveChanges, 'disabled');
+        await this.clickAndWaitForResponse(data.subUrls.api.wc.paymentGayways, paymentSettingsAdmin.paymentMethodsSaveChanges);
         await this.toContainText(woocommerceSettings.updatedSuccessMessage, payment.saveSuccessMessage);
     }
 

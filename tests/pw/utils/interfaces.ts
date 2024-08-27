@@ -467,9 +467,12 @@ export interface tax {
     saveSuccessMessage: string;
 }
 
-export interface shipping {
+export interface shippingZone {
     zoneName: string;
     zoneRegion: string;
+    saveSuccessMessage: string;
+}
+export interface shipping {
     selectMethodName: string;
     methodName: string;
     taxStatus?: string;
