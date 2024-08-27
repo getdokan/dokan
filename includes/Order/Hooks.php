@@ -329,22 +329,16 @@ class Hooks {
                 $available_products[] = $product_id;
             }
         } else {
-            foreach ( $discount->get_items() as $item_id => $item ) {
-                if ( ! isset( $item->object ) ) {
+            foreach ( $discount->get_items() as $item ) {
+                if ( ! isset( $item->product ) ) {
                     continue;
                 }
 
-                if ( is_a( $item->object, 'WC_Order_Item_Product' ) ) {
-                    $item_id = $item->object->get_product_id();
-                }
-
-                if ( is_array( $item->object ) && ( isset( $item['product_id'] ) || isset( $item['variation_id'] ) ) ) {
-                    $item_id = $item['variation_id'] ?? $item['product_id'];
-                }
-
-                if ( ! $item_id ) {
+                if ( ! $item->product instanceof \WC_Product ) {
                     continue;
                 }
+
+                $item_id = $item->product->get_id();
 
                 $available_vendors[]  = (int) dokan_get_vendor_by_product( $item_id, true );
                 $available_products[] = $item_id;
