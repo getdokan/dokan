@@ -628,6 +628,12 @@ export const selector = {
                     nameOfBank: '#dokan-bank-name',
                     bankIban: '#dokan-bank-iban',
 
+                    // store category
+                    storeCategoryDropdown: '//div[contains(@class,"dokan-store-category")]/..//div[@class="multiselect__select"]',
+                    storeCategoryInput: 'input#store-category',
+                    searchedStoreCategory: 'ul#listbox-store-category span.multiselect__option.multiselect__option--highlight',
+                    selectedStoreCategory: (category: string) => `//span[@class="multiselect__tag"]//span[contains(text(), "${category}")]`,
+
                     // Address
                     street1: '#street-1',
                     street2: '#street-2',
