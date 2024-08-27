@@ -467,6 +467,8 @@
           admin can edit store category: true
           admin can set default store category: true
           admin can delete store category: true
+          admin can assign store category to vendor (single): true
+          admin can assign store category to vendor (multiple): true
       vendor:
           vendor can update own store category: true
 

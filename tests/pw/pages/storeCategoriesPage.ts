@@ -99,9 +99,7 @@ export class StoreCategoriesPage extends AdminPage {
         await this.clickAndWaitForResponse(data.subUrls.api.dokan.stores, vendors.editVendor.saveChanges);
         await this.click(vendors.editVendor.closeUpdateSuccessModal);
         const storeCategories = (await this.getElementText(vendors.vendorDetails.profileInfo.storeCategory))!.split(', ');
-        console.log(storeCategories);
-        console.log(categories);
-        expect(helpers.isSubArray(storeCategories, categories)).toBeTruthy();
+        expect(storeCategories).toEqual(expect.arrayContaining(categories));
     }
 
     // vendor

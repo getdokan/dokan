@@ -68,7 +68,6 @@ test.describe('Store categories test', () => {
     });
 
     test('admin can assign store category to vendor (single)', { tag: ['@pro', '@admin'] }, async () => {
-        await dbUtils.setOptionValue(dbData.dokan.optionName.general, { store_category_type: 'single' });
         await admin.assignStoreCategoryToVendor(VENDOR_ID, [categoryName]);
     });
 

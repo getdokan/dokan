@@ -403,9 +403,30 @@ export class BasePage {
     }
 
     // returns whether the element is visible
-    async isVisible(selector: string, waitUntil: number = 1.5): Promise<boolean> {
-        await this.wait(waitUntil);
-        return await this.isVisibleLocator(selector);
+    async isVisible(selector: string, timeout: number = 2): Promise<boolean> {
+        const start = Date.now();
+        let interval = 20;
+        while (Date.now() - start < timeout * 1000) {
+            try {
+                const isVisible = await this.page.locator(selector).isVisible();
+                if (isVisible) return true;
+            } catch (error) {
+                /* empty */
+            }
+            // console.log(`- waiting ${interval}ms\n- waiting for element to be visible`);
+
+            // wait for the current interval before the next attempt
+            await this.page.waitForTimeout(interval);
+
+            // Adjust the interval sequence: 20ms, 100ms, 100ms, then 500ms
+            if (interval === 20) {
+                interval = 100;
+            } else if (interval === 100) {
+                // If it’s already 100ms, switch to 500ms
+                interval = 500;
+            }
+        }
+        return false;
     }
 
     // returns whether the element is visible
