@@ -191,7 +191,7 @@ class OrderFactory extends WP_UnitTest_Factory_For_Thing {
                 'quantity'   => 2,
             ),
             array(
-                'product_id' => $this->factory->produc->create( array( 'name' => 'Test Product 2' ) ),
+                'product_id' => $this->factory->product->create( array( 'name' => 'Test Product 2' ) ),
                 'quantity'   => 1,
             ),
         );
