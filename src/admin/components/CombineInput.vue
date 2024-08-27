@@ -93,7 +93,7 @@ export default {
         };
 
       this.$emit("change", data);
-    }, 1600)
+    }, 500)
   },
   computed: {
     getCurrencySymbol() {
