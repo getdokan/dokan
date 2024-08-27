@@ -60,6 +60,7 @@ export class WithdrawsPage extends AdminPage {
             case 'by-payment-method':
                 // add toPass to remove flakyness
                 await this.toPass(async () => {
+                    await this.reload();
                     await this.click(withdrawsAdmin.filters.filterByPaymentMethods);
                     await this.clearAndType(withdrawsAdmin.filters.filterInput, input);
                     await this.toContainText(withdrawsAdmin.filters.result, input);
