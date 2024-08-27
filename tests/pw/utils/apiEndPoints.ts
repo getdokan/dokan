@@ -286,9 +286,10 @@ export const endPoints = {
     getAllVendorSubscriptions: `${SERVER_URL}/dokan/v1/subscription`,
     getAllVendorSubscriptionPackages: `${SERVER_URL}/dokan/v1/subscription/packages`,
     getAllVendorSubscriptionNonRecurringPackages: `${SERVER_URL}/dokan/v1/subscription/nonrecurring-packages`,
-    getVendorActiveSubscriptionPack: (vendorId: string) => `${SERVER_URL}/dokan/v1/subscription/vendor/${vendorId}`,
-    updateVendorSubscription: (packId: string) => `${SERVER_URL}/wp-json/dokan/v1/subscription/${packId}`,
-    updateBatchVendorSubscriptions: `${SERVER_URL}/dokan/v1/subscription/batch`, // method: delete, read, unread
+    getVendorActiveSubscriptionPackage: (sellerId: string) => `${SERVER_URL}/dokan/v1/subscription/vendor/${sellerId}`,
+    updateVendorSubscription: (sellerId: string) => `${SERVER_URL}/dokan/v1/subscription/${sellerId}`,
+    updateBatchVendorSubscriptions: `${SERVER_URL}/dokan/v1/subscription/batch`, // method: active, cancel
+    saveVendorSubscriptionProductCommission: `${SERVER_URL}/dokan/v1/subscription/save-commission`,
 
     // v2
 
@@ -360,6 +361,16 @@ export const endPoints = {
     createVerificationRequest: `${SERVER_URL}/dokan/v1/verification-requests`,
     updateVerificationRequest: (requestId: string) => `${SERVER_URL}/dokan/v1/verification-requests/${requestId}`,
     deleteVerificationRequest: (requestId: string) => `${SERVER_URL}/dokan/v1/verification-requests/${requestId}`,
+
+    //commission
+    getCommission: `${SERVER_URL}/dokan/v1/commission`,
+
+    // shipping status
+    getShippingStatus: `${SERVER_URL}/dokan/v1/shipping-status`,
+    getAllShipments: (orderId: string) => `${SERVER_URL}/dokan/v1/shipping-status/orders/${orderId}`,
+    createShipment: (orderId: string) => `${SERVER_URL}/dokan/v1/shipping-status/orders/${orderId}`,
+    getSingleShipment: (orderId: string, shipmentId: string) => `${SERVER_URL}/dokan/v1/shipping-status/orders/${orderId}/shipment/${shipmentId}`,
+    updateShipment: (orderId: string, shipmentId: string) => `${SERVER_URL}/dokan/v1/shipping-status/orders/${orderId}/shipment/${shipmentId}`,
 
     wc: {
         // coupons
@@ -453,7 +464,7 @@ export const endPoints = {
         createTag: `${SERVER_URL}/wc/v3/products/tags`,
         updateTag: (tagId: string) => `${SERVER_URL}/wc/v3/products/tags/${tagId}`,
         deleteTag: (tagId: string) => `${SERVER_URL}/wc/v3/products/tags/${tagId}`,
-        updateBatchTag: `${SERVER_URL}/wc/v3/products/tags/batch`,
+        updateBatchTags: `${SERVER_URL}/wc/v3/products/tags/batch`,
 
         // product reviews
         getAllReviews: `${SERVER_URL}/wc/v3/products/reviews`,

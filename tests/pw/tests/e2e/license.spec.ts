@@ -1,6 +1,8 @@
 import { test, Page } from '@playwright/test';
 import { LicensePage } from '@pages/licensePage';
+import { dbUtils } from '@utils/dbUtils';
 import { data } from '@utils/testData';
+import { dbData } from '@utils/dbData';
 
 test.describe('License test', () => {
     let admin: LicensePage;
@@ -13,7 +15,7 @@ test.describe('License test', () => {
     });
 
     test.afterAll(async () => {
-        // await admin.activateLicense(data.dokanLicense.correctKey);
+        await dbUtils.setOptionValue(dbData.dokan.optionName.dokanProLicense, dbData.dokan.dokanProLicense);
         await aPage.close();
     });
 
@@ -23,20 +25,23 @@ test.describe('License test', () => {
         await admin.adminLicenseRenderProperly();
     });
 
-    test.skip("admin can't activate license with incorrect key", { tag: ['@pro', '@negative', '@admin'] }, async () => {
+    test("admin can't activate license with incorrect key", { tag: ['@pro', '@admin', '@serial'] }, async () => {
+        await dbUtils.setOptionValue(dbData.dokan.optionName.dokanProLicense, '', false);
         await admin.activateLicense(data.dokanLicense.incorrectKey, 'incorrect');
     });
 
-    test.skip('admin can activate license', { tag: ['@pro', '@admin'] }, async () => {
+    test('admin can activate license', { tag: ['@pro', '@admin', '@serial'] }, async () => {
+        await dbUtils.setOptionValue(dbData.dokan.optionName.dokanProLicense, '', false);
         await admin.activateLicense(data.dokanLicense.correctKey);
     });
 
     test('admin can refresh license', { tag: ['@pro', '@admin'] }, async () => {
+        await dbUtils.setOptionValue(dbData.dokan.optionName.dokanProLicense, dbData.dokan.dokanProLicense);
         await admin.refreshLicense();
     });
 
-    test.skip('admin can deactivate license', { tag: ['@pro', '@admin'] }, async () => {
-        await admin.activateLicense(data.dokanLicense.correctKey);
+    test('admin can deactivate license', { tag: ['@pro', '@admin', '@serial'] }, async () => {
+        await dbUtils.setOptionValue(dbData.dokan.optionName.dokanProLicense, dbData.dokan.dokanProLicense);
         await admin.deactivateLicense();
     });
 });

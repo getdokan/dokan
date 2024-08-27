@@ -129,7 +129,7 @@ class SetupWizardNoWC extends DokanSetupWizard {
         delete_transient( '_wc_activation_redirect' );
 
         if ( is_wp_error( $installed ) ) {
-            wp_die( $installed->get_error_message(), __( 'Error installing WooCommerce plugin', 'dokan-lite' ) );
+            wp_die( esc_html( $installed->get_error_message() ), esc_html__( 'Error installing WooCommerce plugin', 'dokan-lite' ) );
         }
 
         set_transient( 'dokan_setup_wizard_no_wc', true, 15 * MINUTE_IN_SECONDS );

@@ -7,6 +7,7 @@ import { test, expect, request } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
+import { schemas } from '@utils/schemas';
 
 test.describe('report api test', () => {
     let apiUtils: ApiUtils;
@@ -24,23 +25,27 @@ test.describe('report api test', () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getSalesOverviewReport);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.reportsSchema.salesOverviewSchema);
     });
 
     test('get summary report', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getSummaryReport);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.reportsSchema.summaryReportSchema);
     });
 
     test('get top earners report', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getTopEarnersReport);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.reportsSchema.topEarnersSchema);
     });
 
     test('get top selling products report', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getTopSellingProductsReport);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.reportsSchema.topSellingProductsSchema);
     });
 });

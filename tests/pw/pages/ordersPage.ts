@@ -42,7 +42,7 @@ export class OrdersPage extends VendorPage {
         // table elements are visible
         const { shipmentColumn, ...table } = ordersVendor.table;
         await this.multipleElementVisible(table);
-        DOKAN_PRO && (await this.toBeVisible(shipmentColumn));
+        if (DOKAN_PRO) await this.toBeVisible(shipmentColumn);
     }
 
     // export orders
@@ -116,7 +116,11 @@ export class OrdersPage extends VendorPage {
         // order details elements are visible
         await this.toBeVisible(ordersVendor.orderDetails.orderNumber);
         await this.toBeVisible(ordersVendor.orderDetails.orderDate);
-        DOKAN_PRO ? await this.toBeVisible(ordersVendor.orderDetails.orderTotal) : await this.toBeVisible(ordersVendor.orderDetails.total);
+        if (DOKAN_PRO) {
+            await this.toBeVisible(ordersVendor.orderDetails.orderTotal);
+        } else {
+            await this.toBeVisible(ordersVendor.orderDetails.total);
+        }
         // todo:  add more fields to assert
 
         // general details elements are visible
@@ -232,7 +236,11 @@ export class OrdersPage extends VendorPage {
 
     // order bulk action
     async orderBulkAction(action: string, orderNumber?: string): Promise<void> {
-        orderNumber ? await this.searchOrder(orderNumber) : await this.goIfNotThere(data.subUrls.frontend.vDashboard.orders);
+        if (orderNumber) {
+            await this.searchOrder(orderNumber);
+        } else {
+            await this.goIfNotThere(data.subUrls.frontend.vDashboard.orders);
+        }
 
         await this.click(ordersVendor.bulkActions.selectAll);
         switch (action) {

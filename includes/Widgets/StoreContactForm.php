@@ -29,8 +29,8 @@ class StoreContactForm extends WP_Widget {
     /**
      * Outputs the HTML for this widget.
      *
-     * @param array  An array of standard parameters for widgets in this theme
-     * @param array  An array of settings for this widget instance
+     * @param array $args       An array of standard parameters for widgets in this theme
+     * @param array $instance   An array of settings for this widget instance
      *
      * @return void Echoes it's output
      **/
@@ -59,10 +59,10 @@ class StoreContactForm extends WP_Widget {
 
             $store_info = dokan_get_store_info( $seller_id );
 
-            echo $args['before_widget']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
+            echo wp_kses_post( $args['before_widget'] );
 
             if ( ! empty( $title ) ) {
-                echo $args['before_title'] . $title . $args['after_title']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
+                echo wp_kses_post( $args['before_title'] . $title . $args['after_title'] );
             }
 
             $username = '';
@@ -83,7 +83,7 @@ class StoreContactForm extends WP_Widget {
                 )
             );
 
-            echo $args['after_widget']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
+            echo wp_kses_post( $args['after_widget'] );
         }
 
         do_action( 'dokan_widget_store_contact_form_render', $args, $instance, $this );
@@ -93,13 +93,12 @@ class StoreContactForm extends WP_Widget {
      * Deals with the settings when they are saved by the admin. Here is
      * where any validation should be dealt with.
      *
-     * @param array  An array of new settings as submitted by the admin
-     * @param array  An array of the previous settings
+     * @param array $new_instance   An array of new settings as submitted by the admin
+     * @param array $old_instance   An array of the previous settings
      *
      * @return array The validated and (if necessary) amended settings
      */
     public function update( $new_instance, $old_instance ) {
-
         // update logic goes here
         $updated_instance = $new_instance;
         return $updated_instance;
@@ -108,7 +107,7 @@ class StoreContactForm extends WP_Widget {
     /**
      * Displays the form for this widget on the Widgets page of the WP Admin area.
      *
-     * @param array  An array of the current settings for this widget
+     * @param array $instance An array of the current settings for this widget
      *
      * @return void Echoes it's output
      */

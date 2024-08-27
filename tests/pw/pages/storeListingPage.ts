@@ -17,11 +17,14 @@ export class StoreListingPage extends CustomerPage {
     // store list
 
     // store list render properly
-    async storeListRenderProperly() {
-        await this.goIfNotThere(data.subUrls.frontend.storeListing);
-
-        // store list text is visible
-        await this.toBeVisible(storeList.storeListText);
+    async storeListRenderProperly(link?: string) {
+        if (link) {
+            await this.goto(link);
+        } else {
+            await this.goIfNotThere(data.subUrls.frontend.storeListing);
+            // store list text is visible
+            await this.toBeVisible(storeList.storeListText);
+        }
 
         // map elements are visible
         if (DOKAN_PRO) {
@@ -60,7 +63,9 @@ export class StoreListingPage extends CustomerPage {
         await this.notToHaveCount(storeList.storeCard.storeCardFooter, 0);
         await this.notToHaveCount(storeList.storeCard.storeAvatar, 0);
         await this.notToHaveCount(storeList.storeCard.visitStore, 0);
-        DOKAN_PRO && (await this.notToHaveCount(storeList.storeCard.followUnFollowButton, 0));
+        if (DOKAN_PRO) {
+            await this.notToHaveCount(storeList.storeCard.followUnFollowButton, 0);
+        }
     }
 
     // sort store
@@ -147,7 +152,9 @@ export class StoreListingPage extends CustomerPage {
             await this.toBeVisible(storeList.map.storeOnMap.storeListPopup);
             await this.click(storeList.map.storeOnMap.closePopup);
         }
-        storeName && (await this.toBeVisible(storeList.map.storeOnMap.storeOnList(storeName)));
+        if (storeName) {
+            await this.toBeVisible(storeList.map.storeOnMap.storeOnList(storeName));
+        }
     }
 
     // go to single store from store listing

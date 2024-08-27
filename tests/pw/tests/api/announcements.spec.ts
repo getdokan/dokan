@@ -86,14 +86,14 @@ test.describe('announcements api test', () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getSingleAnnouncementNotice(announcementNoticeId), { headers: payloads.vendorAuth });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
-        expect(responseBody).toMatchSchema(schemas.announcementsSchema.announcementNoticeSchema);
+        expect(responseBody).toMatchSchema(schemas.announcementsSchema.announcementSchema);
     });
 
     test('update an announcement notice', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.post(endPoints.updateAnnouncementNotice(announcementNoticeId), { data: payloads.updateAnnouncementNotice, headers: payloads.vendorAuth });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
-        expect(responseBody).toMatchSchema(schemas.announcementsSchema.announcementNoticeSchema);
+        expect(responseBody).toMatchSchema(schemas.announcementsSchema.announcementSchema);
     });
 
     test('delete an announcement notice', { tag: ['@pro'] }, async () => {

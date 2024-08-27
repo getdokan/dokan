@@ -28,8 +28,8 @@ class StoreOpenClose extends WP_Widget {
     /**
      * Outputs the HTML for this widget.
      *
-     * @param array  An array of standard parameters for widgets in this theme
-     * @param array  An array of settings for this widget instance
+     * @param array $args       array of standard parameters for widgets in this theme
+     * @param array $instance   An array of settings for this widget instance
      *
      * @return void Echoes it's output
      **/
@@ -61,10 +61,10 @@ class StoreOpenClose extends WP_Widget {
                 return;
             }
 
-            echo $args['before_widget']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
+            echo wp_kses_post( $args['before_widget'] );
 
             if ( ! empty( $title ) ) {
-                echo $args['before_title'] . $title . $args['after_title']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
+                echo wp_kses_post( $args['before_title'] . $title . $args['after_title'] );
             }
 
             dokan_get_template_part(
@@ -75,7 +75,7 @@ class StoreOpenClose extends WP_Widget {
                 ]
             );
 
-            echo $args['after_widget']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
+            echo wp_kses_post( $args['after_widget'] );
         }
 
         do_action( 'dokan_widget_store_open_close_render', $args, $instance, $this );
@@ -85,8 +85,8 @@ class StoreOpenClose extends WP_Widget {
      * Deals with the settings when they are saved by the admin. Here is
      * where any validation should be dealt with.
      *
-     * @param array  An array of new settings as submitted by the admin
-     * @param array  An array of the previous settings
+     * @param array $new_instance array of new settings as submitted by the admin
+     * @param array $old_instance array of the previous settings
      *
      * @return array The validated and (if necessary) amended settings
      */
@@ -100,7 +100,7 @@ class StoreOpenClose extends WP_Widget {
     /**
      * Displays the form for this widget on the Widgets page of the WP Admin area.
      *
-     * @param array  An array of the current settings for this widget
+     * @param array $instance array of the current settings for this widget
      *
      * @return void Echoes it's output
      */

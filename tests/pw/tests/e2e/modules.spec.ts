@@ -29,7 +29,7 @@ test.describe('Modules test', () => {
     });
 
     test('admin can search module', { tag: ['@pro', '@admin'] }, async () => {
-        await admin.searchModule(data.modules.modulesName.AuctionIntegration);
+        await admin.searchModule(data.modules.modulesName.auctionIntegration);
     });
 
     test('admin can filter modules by category', { tag: ['@pro', '@admin'] }, async () => {
@@ -37,12 +37,12 @@ test.describe('Modules test', () => {
     });
 
     test('admin can deactivate module', { tag: ['@pro', '@admin'] }, async () => {
-        await admin.activateDeactivateModule(data.modules.modulesName.AuctionIntegration);
+        await admin.activateDeactivateModule(data.modules.modulesName.auctionIntegration);
     });
 
     test('admin can activate module', { tag: ['@pro', '@admin'] }, async () => {
         await apiUtils.deactivateModules([payloads.moduleIds.auction], payloads.adminAuth);
-        await admin.activateDeactivateModule(data.modules.modulesName.AuctionIntegration);
+        await admin.activateDeactivateModule(data.modules.modulesName.auctionIntegration);
     });
 
     test('admin can perform bulk action on modules', { tag: ['@pro', '@admin'] }, async () => {

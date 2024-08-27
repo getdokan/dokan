@@ -4,6 +4,7 @@ import { test, expect, request } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
+import { schemas } from '@utils/schemas';
 
 test.describe('product duplicate api test', () => {
     let apiUtils: ApiUtils;
@@ -22,5 +23,6 @@ test.describe('product duplicate api test', () => {
         const [response, responseBody] = await apiUtils.post(endPoints.createDuplicateProduct(productId));
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.productsSchema.productSchema);
     });
 });

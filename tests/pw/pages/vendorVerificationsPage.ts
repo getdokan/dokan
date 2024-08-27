@@ -48,22 +48,26 @@ export class VendorVerificationsPage extends AdminPage {
             status === 'enable'
                 ? await this.enableSwitcherAndWaitForResponse(data.subUrls.api.dokan.verificationMethods, settingsAdmin.vendorVerification.enableVerificationMethod(methodName))
                 : await this.disableSwitcherAndWaitForResponse(data.subUrls.api.dokan.verificationMethods, settingsAdmin.vendorVerification.enableVerificationMethod(methodName));
-        response && (await this.toBeVisible(settingsAdmin.vendorVerification.methodUpdateSuccessMessage));
+        if (response) {
+            await this.toBeVisible(settingsAdmin.vendorVerification.methodUpdateSuccessMessage);
+        }
 
         // save settings
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.vendorVerification.saveChanges);
         await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, data.dokanSettings.vendorVerification.saveSuccessMessage);
     }
 
-    // updte verification method fields
+    // update verification method fields
     async updateVerificationMethod(verificationMethod: dokanSettings['vendorVerification']['verificationMethodDetails']) {
         await this.clearAndType(settingsAdmin.vendorVerification.addNewVerification.label, verificationMethod.title);
         await this.clearAndType(settingsAdmin.vendorVerification.addNewVerification.helpText, verificationMethod.help_text);
-        verificationMethod.required && (await this.check(settingsAdmin.vendorVerification.addNewVerification.required));
+        if (verificationMethod.required) {
+            await this.check(settingsAdmin.vendorVerification.addNewVerification.required);
+        }
     }
 
-    // add Verificaton Method
-    async addVendoVerificationMethod(verificationMethod: dokanSettings['vendorVerification']['verificationMethodDetails']) {
+    // add Verification Method
+    async addVendorVerificationMethod(verificationMethod: dokanSettings['vendorVerification']['verificationMethodDetails']) {
         await this.goToDokanSettings();
         await this.reload();
         await this.click(settingsAdmin.menus.vendorVerification);
@@ -78,8 +82,8 @@ export class VendorVerificationsPage extends AdminPage {
         await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, data.dokanSettings.vendorVerification.saveSuccessMessage);
     }
 
-    // edit Verificaton Method
-    async editVendoVerificationMethod(methodName: string, verificationMethod: dokanSettings['vendorVerification']['verificationMethodDetails']) {
+    // edit Verification Method
+    async editVendorVerificationMethod(methodName: string, verificationMethod: dokanSettings['vendorVerification']['verificationMethodDetails']) {
         await this.goToDokanSettings();
         await this.reload();
         await this.click(settingsAdmin.menus.vendorVerification);
@@ -95,8 +99,8 @@ export class VendorVerificationsPage extends AdminPage {
         await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, data.dokanSettings.vendorVerification.saveSuccessMessage);
     }
 
-    // delete Verificaton Method
-    async deleteVendoVerificationMethod(methodName: string) {
+    // delete Verification Method
+    async deleteVendorVerificationMethod(methodName: string) {
         await this.goToDokanSettings();
         await this.reload();
         await this.click(settingsAdmin.menus.vendorVerification);
@@ -116,8 +120,6 @@ export class VendorVerificationsPage extends AdminPage {
     // verification requests render properly
     async adminVerificationsRenderProperly() {
         await this.goIfNotThere(data.subUrls.backend.dokan.verifications);
-        await this.wait(1); //TODO: added to goto else clause need to resolve this
-
         const noVerificationRequests = await this.isVisible(verificationsAdmin.noRowsFound);
 
         if (noVerificationRequests) {
@@ -172,7 +174,7 @@ export class VendorVerificationsPage extends AdminPage {
         await this.toContainText(verificationsAdmin.filters.result, input);
         await this.pressAndWaitForResponse(data.subUrls.api.dokan.verifications, data.key.enter);
         // todo: need to wait for focus event
-        //todo: need to update assertions
+        // todo: need to update assertions
         const count = (await this.getElementText(verificationsAdmin.numberOfRowsFound))?.split(' ')[0];
         expect(Number(count)).toBeGreaterThan(0);
     }
@@ -210,7 +212,7 @@ export class VendorVerificationsPage extends AdminPage {
 
     // update verification request
     async updateVerificationRequest(requestId: string, action: string): Promise<void> {
-        await this.goIfNotThere(data.subUrls.backend.dokan.verifications);
+        await this.goto(data.subUrls.backend.dokan.verifications);
         await this.reload();
         await this.reloadIfVisible(verificationsAdmin.filters.reset);
 
@@ -269,7 +271,7 @@ export class VendorVerificationsPage extends AdminPage {
     async submitVerificationRequest(verification: vendor['verification'], setupWizard = false): Promise<void> {
         if (!setupWizard) {
             await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsVerification);
-            await this.reload(); //todo: need to resolve this
+            await this.reload(); // todo: need to resolve this
         } else {
             await this.goIfNotThere(data.subUrls.frontend.vDashboard.setupWizard);
             await this.click(setupWizardVendor.letsGo);
@@ -291,7 +293,7 @@ export class VendorVerificationsPage extends AdminPage {
     async cancelVerificationRequest(verificationMethod: string, setupWizard = false): Promise<void> {
         if (!setupWizard) {
             await this.goIfNotThere(data.subUrls.frontend.vDashboard.settingsVerification);
-            await this.reload(); //todo: need to resolve this
+            await this.reload(); // todo: need to resolve this
         } else {
             await this.goIfNotThere(data.subUrls.frontend.vDashboard.setupWizard);
             await this.click(setupWizardVendor.letsGo);

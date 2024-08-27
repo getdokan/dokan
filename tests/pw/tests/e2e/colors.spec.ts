@@ -1,6 +1,8 @@
 import { test, Page } from '@playwright/test';
 import { ColorsPage } from '@pages/colorsPage';
+import { dbUtils } from '@utils/dbUtils';
 import { data } from '@utils/testData';
+import { dbData } from '@utils/dbData';
 
 test.describe('Color scheme customizer test', () => {
     let admin: ColorsPage;
@@ -13,6 +15,7 @@ test.describe('Color scheme customizer test', () => {
     });
 
     test.afterAll(async () => {
+        await dbUtils.setOptionValue(dbData.dokan.optionName.colors, dbData.dokan.colorsSettings);
         await aPage.close();
     });
 

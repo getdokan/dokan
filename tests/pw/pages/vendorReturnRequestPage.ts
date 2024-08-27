@@ -61,6 +61,7 @@ export class VendorReturnRequestPage extends VendorPage {
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.returnRequest, vendorReturnRequest.view(orderNumber));
         await this.clearAndType(vendorReturnRequest.returnRequestDetails.conversations.message, message);
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.returnRequest, vendorReturnRequest.returnRequestDetails.conversations.sendMessage, 302);
+        await this.toBeVisible(selector.customer.cWooSelector.wooCommerceSuccessMessage);
         await this.toContainText(selector.customer.cWooSelector.wooCommerceSuccessMessage, data.customer.rma.sendMessage);
     }
 
@@ -78,7 +79,9 @@ export class VendorReturnRequestPage extends VendorPage {
         await this.goto(data.subUrls.frontend.vDashboard.returnRequest);
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.returnRequest, vendorReturnRequest.view(orderNumber));
         const sendRefundIsVisible = await this.isVisible(vendorReturnRequest.returnRequestDetails.status.sendRefund);
-        !sendRefundIsVisible && (await this.vendorUpdateRmaStatus(orderNumber, status));
+        if (!sendRefundIsVisible) {
+            await this.vendorUpdateRmaStatus(orderNumber, status);
+        }
         await this.clickAndWaitForResponse(data.subUrls.ajax, vendorReturnRequest.returnRequestDetails.status.sendRefund);
         const taxIsVisible = await this.isVisible(vendorReturnRequest.returnRequestDetails.modal.taxRefundColumn);
         if (taxIsVisible) {
@@ -97,6 +100,7 @@ export class VendorReturnRequestPage extends VendorPage {
         await this.goto(data.subUrls.frontend.vDashboard.returnRequest);
         await this.hover(vendorReturnRequest.returnRequestCell(orderNumber));
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.returnRequest, vendorReturnRequest.delete(orderNumber));
+        await this.toBeVisible(selector.customer.cWooSelector.wooCommerceSuccessMessage);
         await this.toContainText(selector.customer.cWooSelector.wooCommerceSuccessMessage, 'Return Request has been deleted successfully');
     }
 
@@ -130,9 +134,12 @@ export class VendorReturnRequestPage extends VendorPage {
         await this.selectByValue(selector.customer.cOrders.requestWarranty.warrantyRequestItemQuantity(productName), refund.itemQuantity);
         await this.selectByValue(selector.customer.cOrders.requestWarranty.warrantyRequestType, refund.refundRequestType);
         const refundReasonIsVisible = await this.isVisible(selector.customer.cOrders.requestWarranty.warrantyRequestReason);
-        refundReasonIsVisible && (await this.selectByValue(selector.customer.cOrders.requestWarranty.warrantyRequestReason, refund.refundRequestReasons));
+        if (refundReasonIsVisible) {
+            await this.selectByValue(selector.customer.cOrders.requestWarranty.warrantyRequestReason, refund.refundRequestReasons);
+        }
         await this.clearAndType(selector.customer.cOrders.requestWarranty.warrantyRequestDetails, refund.refundRequestDetails);
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.requestWarranty, selector.customer.cOrders.requestWarranty.warrantySubmitRequest, 302);
+        await this.toBeVisible(selector.customer.cWooSelector.wooCommerceSuccessMessage);
         await this.toContainText(selector.customer.cWooSelector.wooCommerceSuccessMessage, refund.refundSubmitSuccessMessage);
     }
 
@@ -142,6 +149,7 @@ export class VendorReturnRequestPage extends VendorPage {
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.viewRmaRequests, selector.customer.cRma.view(orderNumber));
         await this.clearAndType(selector.customer.cRma.message, message);
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.viewRmaRequests, selector.customer.cRma.sendMessage);
+        await this.toBeVisible(selector.customer.cWooSelector.wooCommerceSuccessMessage);
         await this.toContainText(selector.customer.cWooSelector.wooCommerceSuccessMessage, data.customer.rma.sendMessage);
     }
 }

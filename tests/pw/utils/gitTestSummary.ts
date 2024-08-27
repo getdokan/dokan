@@ -1,3 +1,6 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const fs = require('fs');
 const { SHA, PR_NUMBER, SYSTEM_INFO, API_TEST_RESULT, E2E_TEST_RESULT, API_COVERAGE, E2E_COVERAGE } = process.env;
 
@@ -62,7 +65,7 @@ module.exports = async ({ github, context, core }) => {
     const plugins = addList(core);
     await core.summary.clear();
     addSummaryHeadingAndTable(core);
-    plugins && addSummaryFooter(core, plugins);
+    if (plugins) addSummaryFooter(core, plugins);
     const summary = core.summary.stringify();
     await core.summary.write();
     return summary;

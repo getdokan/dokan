@@ -53,6 +53,7 @@ const entryPoint = {
   'reverse-withdrawal-style': '/assets/src/less/reverse-withdrawal.less',
   'dokan-product-category-ui': '/assets/src/less/dokan-product-category-ui.less',
   'dokan-admin-product-style': '/assets/src/less/dokan-admin-product.less',
+  'page-views': './assets/src/js/page-views.js',
 };
 
 const updatedConfig = {

@@ -1,8 +1,11 @@
 <?php
+namespace WeDevs\Dokan\Test\Withdrawal;
 
+use WeDevs\Dokan\Test\DokanTestCase;
 use WeDevs\Dokan\Withdraw\Withdraw;
+use WP_UnitTestCase;
 
-class WithdrawChargeTest extends WP_UnitTestCase {
+class WithdrawChargeTest extends DokanTestCase {
 
     /**
      * Set up
@@ -87,7 +90,7 @@ class WithdrawChargeTest extends WP_UnitTestCase {
                     'charge_data' => [
                         'fixed' => 10,
                         'percentage' => 10,
-                    ]
+                    ],
                 ],
                 20,
             ],
@@ -98,7 +101,7 @@ class WithdrawChargeTest extends WP_UnitTestCase {
                     'charge_data' => [
                         'fixed' => '',
                         'percentage' => 20,
-                    ]
+                    ],
                 ],
                 40,
             ],
@@ -109,7 +112,7 @@ class WithdrawChargeTest extends WP_UnitTestCase {
                     'charge_data' => [
                         'fixed' => 5,
                         'percentage' => 32,
-                    ]
+                    ],
                 ],
                 405,
             ],
@@ -120,7 +123,7 @@ class WithdrawChargeTest extends WP_UnitTestCase {
                     'charge_data' => [
                         'fixed' => 50,
                         'percentage' => '',
-                    ]
+                    ],
                 ],
                 50,
             ],

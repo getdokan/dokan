@@ -43,35 +43,20 @@ export class FollowStorePage extends CustomerPage {
     }
 
     // follow vendor
-    async followStore(storeName: string, followLocation: string): Promise<void> {
-        let currentFollowStatus: boolean;
-
-        switch (followLocation) {
+    async followUnfollowStore(storeName: string, status: string, location: string): Promise<void> {
+        switch (location) {
             // store listing page
             case 'storeListing':
                 await this.searchStore(storeName);
-                currentFollowStatus = await this.hasText(selector.customer.cStoreList.currentFollowStatus(storeName), 'Following');
-                // unfollow if not already
-                if (currentFollowStatus) {
-                    await this.clickAndWaitForResponse(data.subUrls.ajax, selector.customer.cStoreList.followUnFollowStore(storeName));
-                    await this.toContainText(selector.customer.cStoreList.currentFollowStatus(storeName), 'Follow');
-                }
                 await this.clickAndWaitForResponse(data.subUrls.ajax, selector.customer.cStoreList.followUnFollowStore(storeName));
-                await this.toContainText(selector.customer.cStoreList.currentFollowStatus(storeName), 'Following');
+                await this.toContainText(selector.customer.cStoreList.currentFollowStatus(storeName), status);
                 break;
 
             // single store page
             case 'singleStore':
                 await this.goIfNotThere(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)));
-                currentFollowStatus = await this.hasText(selector.customer.cStoreList.currentFollowStatusSingleStore, 'Following');
-
-                // unfollow if not already
-                if (currentFollowStatus) {
-                    await this.clickAndWaitForResponse(data.subUrls.ajax, selector.customer.cStoreList.followUnFollowStoreSingleStore);
-                    await this.toContainText(selector.customer.cStoreList.currentFollowStatusSingleStore, 'Follow');
-                }
                 await this.clickAndWaitForResponse(data.subUrls.ajax, selector.customer.cStoreList.followUnFollowStoreSingleStore);
-                await this.toContainText(selector.customer.cStoreList.currentFollowStatusSingleStore, 'Following');
+                await this.toContainText(selector.customer.cStoreList.currentFollowStatusSingleStore, status);
                 break;
 
             default:

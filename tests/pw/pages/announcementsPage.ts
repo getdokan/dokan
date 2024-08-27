@@ -80,7 +80,6 @@ export class AnnouncementsPage extends AdminPage {
 
     // update announcement
     async updateAnnouncement(announcementTitle: string, action: string) {
-        // await this.goto(data.subUrls.backend.dokan.announcements);
         await this.goIfNotThere(data.subUrls.backend.dokan.announcements);
 
         switch (action) {

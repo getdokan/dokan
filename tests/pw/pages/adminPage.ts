@@ -11,6 +11,8 @@ const { DOKAN_PRO } = process.env;
 const setupWizardAdmin = selector.admin.dokan.setupWizard;
 const reportsAdmin = selector.admin.dokan.reports;
 const woocommerceSettings = selector.admin.wooCommerce.settings;
+const generalSettings = selector.admin.wooCommerce.settings.general;
+const accountSettings = selector.admin.wooCommerce.settings.accounts;
 
 export class AdminPage extends BasePage {
     constructor(page: Page) {
@@ -35,10 +37,10 @@ export class AdminPage extends BasePage {
 
     // Enable Password Field
     async enablePasswordInputField(woocommerce: woocommerce) {
-        await this.goToWooCommerceSettings();
-        await this.click(woocommerceSettings.accounts);
-        await this.uncheck(woocommerceSettings.automaticPasswordGeneration);
-        await this.click(woocommerceSettings.accountSaveChanges);
+        await this.goIfNotThere(data.subUrls.backend.wc.accountSettings);
+
+        await this.uncheck(accountSettings.automaticPasswordGeneration);
+        await this.click(accountSettings.accountSaveChanges);
         await this.toContainText(woocommerceSettings.updatedSuccessMessage, woocommerce.saveSuccessMessage);
     }
 
@@ -47,22 +49,24 @@ export class AdminPage extends BasePage {
         await this.goToWooCommerceSettings();
 
         // Set Currency Options
-        await this.clearAndType(woocommerceSettings.thousandSeparator, currency.currencyOptions.thousandSeparator);
-        await this.clearAndType(woocommerceSettings.decimalSeparator, currency.currencyOptions.decimalSeparator);
-        await this.clearAndType(woocommerceSettings.numberOfDecimals, currency.currencyOptions.numberOfDecimals);
-        await this.click(woocommerceSettings.generalSaveChanges);
+        await this.clearAndType(generalSettings.thousandSeparator, currency.currencyOptions.thousandSeparator);
+        await this.clearAndType(generalSettings.decimalSeparator, currency.currencyOptions.decimalSeparator);
+        await this.clearAndType(generalSettings.numberOfDecimals, currency.currencyOptions.numberOfDecimals);
+        await this.removeAttribute(generalSettings.generalSaveChanges, 'disabled');
+        await this.click(generalSettings.generalSaveChanges);
         await this.toContainText(woocommerceSettings.updatedSuccessMessage, currency.saveSuccessMessage);
     }
 
     // Admin Set Currency
     async setCurrency(currency: string) {
         await this.goToWooCommerceSettings();
-        const currentCurrency = await this.getElementText(woocommerceSettings.currency);
+        const currentCurrency = await this.getElementText(generalSettings.currency);
         if (currentCurrency !== currency) {
-            await this.click(woocommerceSettings.currency);
-            await this.clearAndType(woocommerceSettings.currency, currency);
+            await this.click(generalSettings.currency);
+            await this.clearAndType(generalSettings.currencyInput, currency);
             await this.press(data.key.enter);
-            await this.click(woocommerceSettings.generalSaveChanges);
+            await this.removeAttribute(generalSettings.generalSaveChanges, 'disabled');
+            await this.click(generalSettings.generalSaveChanges);
             await this.toContainText(woocommerceSettings.updatedSuccessMessage, data.payment.currency.saveSuccessMessage);
         }
     }
@@ -110,7 +114,9 @@ export class AdminPage extends BasePage {
         await this.selectByValue(setupWizardAdmin.mapApiSource, dokanSetupWizard.mapApiSource);
         await this.clearAndType(setupWizardAdmin.googleMapApiKey, dokanSetupWizard.googleMapApiKey);
         await this.enableSwitcherSetupWizard(setupWizardAdmin.shareEssentialsOff);
-        DOKAN_PRO && (await this.selectByValue(setupWizardAdmin.sellingProductTypes, dokanSetupWizard.sellingProductTypes));
+        if (DOKAN_PRO) {
+            await this.selectByValue(setupWizardAdmin.sellingProductTypes, dokanSetupWizard.sellingProductTypes);
+        }
         await this.click(setupWizardAdmin.continue);
         // await this.click(setupWizardAdmin.skipThisStep)
 
@@ -125,10 +131,12 @@ export class AdminPage extends BasePage {
         // Withdraw
         await this.enableSwitcherSetupWizard(setupWizardAdmin.payPal);
         await this.enableSwitcherSetupWizard(setupWizardAdmin.bankTransfer);
-        // await this.enableSwitcherSetupWizard(setupWizardAdmin.wirecard)
-        // await this.enableSwitcherSetupWizard(setupWizardAdmin.stripe)
-        DOKAN_PRO && (await this.enableSwitcherSetupWizard(setupWizardAdmin.custom));
-        DOKAN_PRO && (await this.enableSwitcherSetupWizard(setupWizardAdmin.skrill));
+        if (DOKAN_PRO) {
+            // await this.enableSwitcherSetupWizard(setupWizardAdmin.wirecard)
+            // await this.enableSwitcherSetupWizard(setupWizardAdmin.stripe)
+            await this.enableSwitcherSetupWizard(setupWizardAdmin.custom);
+            await this.enableSwitcherSetupWizard(setupWizardAdmin.skrill);
+        }
         await this.clearAndType(setupWizardAdmin.minimumWithdrawLimit, dokanSetupWizard.minimumWithdrawLimit);
         await this.enableSwitcherSetupWizard(setupWizardAdmin.orderStatusForWithdrawCompleted);
         await this.enableSwitcherSetupWizard(setupWizardAdmin.orderStatusForWithdrawProcessing);

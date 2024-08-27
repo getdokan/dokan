@@ -5,11 +5,10 @@ import { test, expect, request } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
+import { schemas } from '@utils/schemas';
 
 test.describe('product block api test', () => {
     let apiUtils: ApiUtils;
-    let productId: string;
-    let variationId: string;
 
     test.beforeAll(async () => {
         apiUtils = new ApiUtils(await request.newContext());
@@ -20,16 +19,18 @@ test.describe('product block api test', () => {
     });
 
     test('get product block details', { tag: ['@lite'] }, async () => {
-        [, productId] = await apiUtils.createProduct(payloads.createDownloadableProduct());
+        const [, productId] = await apiUtils.createProduct(payloads.createProduct());
         const [response, responseBody] = await apiUtils.get(endPoints.getProductBlockDetails(productId));
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.productBlocksSchema.productBlockSchema);
     });
 
     test('get variable product block details', { tag: ['@pro'] }, async () => {
-        [, variationId] = await apiUtils.createVariableProductWithVariation(payloads.createAttribute(), payloads.createAttributeTerm(), payloads.createVariableProduct());
-        const [response, responseBody] = await apiUtils.get(endPoints.getProductBlockDetails(variationId));
+        const [productId] = await apiUtils.createVariableProductWithVariation(payloads.createAttribute(), payloads.createAttributeTerm(), payloads.createVariableProduct(), payloads.createProductVariation());
+        const [response, responseBody] = await apiUtils.get(endPoints.getProductBlockDetails(productId));
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.productBlocksSchema.productBlockSchema);
     });
 });

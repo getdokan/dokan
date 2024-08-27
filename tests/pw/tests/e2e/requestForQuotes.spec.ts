@@ -69,8 +69,7 @@ test.describe('Request for quotation test admin', () => {
         await admin.convertQuoteToOrder(quoteTitle);
     });
 
-    test.skip('admin can perform quote bulk actions', { tag: ['@pro', '@admin'] }, async () => {
-        // todo: might cause other tests to fail in parallel
+    test('admin can perform quote bulk actions', { tag: ['@pro', '@admin', '@serial'] }, async () => {
         await admin.quotesBulkAction('trash');
     });
 });

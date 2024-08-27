@@ -58,7 +58,7 @@ test.describe('Customer functionality test', () => {
     });
 
     test('customer can add product to cart', { tag: ['@lite', '@customer'] }, async ({ page }) => {
-        const customer = new CustomerPage(page); // Used guest customer to avoid conlict with other tests
+        const customer = new CustomerPage(page); // Used guest customer to avoid conflict with other tests
         const productName = data.predefined.simpleProduct.product1.name;
         await customer.addProductToCart(productName, 'single-product');
         await customer.productIsOnCart(productName);

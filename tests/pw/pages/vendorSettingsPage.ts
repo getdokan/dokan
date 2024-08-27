@@ -31,25 +31,33 @@ export class VendorSettingsPage extends VendorPage {
         await this.toBeVisible(settingsVendor.profilePicture);
         await this.toBeVisible(settingsVendor.storeName);
         await this.toBeVisible(settingsVendor.phoneNo);
-        DOKAN_PRO && (await this.toBeVisible(settingsVendor.multipleLocation));
+        if (DOKAN_PRO) {
+            await this.toBeVisible(settingsVendor.multipleLocation);
+        }
 
         // store address location elements are visible
         const { saveLocation, cancelSaveLocation, deleteSaveLocation, ...address } = settingsVendor.address;
         await this.multipleElementVisible(address);
-        DOKAN_PRO && (await this.toBeVisible(saveLocation));
+        if (DOKAN_PRO) {
+            await this.toBeVisible(saveLocation);
+        }
 
         // company info elements are visible
-        DOKAN_PRO && (await this.multipleElementVisible(settingsVendor.companyInfo));
+        if (DOKAN_PRO) {
+            await this.multipleElementVisible(settingsVendor.companyInfo);
+        }
 
         await this.toBeVisible(settingsVendor.email);
 
         // map is visible
-        // await this.toBeVisible(settingsVendor.map); //TODO: g_map value not found
+        // await this.toBeVisible(settingsVendor.map); // TODO: g_map value not found
 
         // todo: catalog, discount, vacation, open close, store category
 
         // biography is visible
-        DOKAN_PRO && (await this.toBeVisible(settingsVendor.biographyIframe));
+        if (DOKAN_PRO) {
+            await this.toBeVisible(settingsVendor.biographyIframe);
+        }
 
         // todo: min-max, store-support
 
@@ -176,7 +184,7 @@ export class VendorSettingsPage extends VendorPage {
                 await this.setStoreAddress(vendorInfo);
                 break;
 
-            case 'euComplicance':
+            case 'euCompliance':
                 await this.setCompanyInfo(vendorInfo);
                 break;
 
@@ -347,7 +355,7 @@ export class VendorSettingsPage extends VendorPage {
         const catalogModeEnabled = await this.isVisible(settingsVendor.removeAddToCartButton);
         if (catalogModeEnabled) {
             await this.check(settingsVendor.removeAddToCartButton);
-            await this.check(settingsVendor.hideProductPrice);
+            await this.checkIfVisible(settingsVendor.hideProductPrice);
             await this.checkIfVisible(settingsVendor.enableRequestQuoteSupport);
         }
     }

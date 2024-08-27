@@ -8,7 +8,7 @@ import { storeContactData } from '@utils/interfaces';
 // selectors
 const singleStoreCustomer = selector.customer.cSingleStore;
 
-export class PrivacyPolicy extends BasePage {
+export class PrivacyPolicyPage extends BasePage {
     constructor(page: Page) {
         super(page);
     }

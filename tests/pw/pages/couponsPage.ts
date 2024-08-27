@@ -57,7 +57,7 @@ export class CouponsPage extends AdminPage {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.coupons);
         await this.click(couponsVendor.menus.marketplaceCoupons);
         await this.toBeVisible(couponsVendor.marketPlaceCoupon.marketPlaceCoupon);
-        marketplaceCoupon && (await this.toBeVisible(couponsVendor.marketPlaceCoupon.couponCell(marketplaceCoupon)));
+        if (marketplaceCoupon) await this.toBeVisible(couponsVendor.marketPlaceCoupon.couponCell(marketplaceCoupon));
     }
 
     // update coupon fields

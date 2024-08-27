@@ -6,6 +6,7 @@ import { test, expect, request } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
+import { schemas } from '@utils/schemas';
 
 test.describe('product review api test', () => {
     let apiUtils: ApiUtils;
@@ -24,17 +25,20 @@ test.describe('product review api test', () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getAllProductReviews);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.productReviewsSchema.productReviewsSchema);
     });
 
     test('get product reviews summary', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.get(endPoints.getProductReviewSummary);
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.productReviewsSchema.productReviewsSummarySchema);
     });
 
     test('update a product review', { tag: ['@pro'] }, async () => {
         const [response, responseBody] = await apiUtils.put(endPoints.updateStoreReview(reviewId), { data: payloads.updateProductReview });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
+        expect(responseBody).toMatchSchema(schemas.productReviewsSchema.updateProductReviewSchema);
     });
 });

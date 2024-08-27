@@ -57,7 +57,7 @@ test.describe('Settings test', () => {
     });
 
     test('admin can set Dokan privacy policy settings', { tag: ['@lite', '@admin'] }, async () => {
-        const privacyPolicySettings = await dbUtils.getDokanSettings(dbData.dokan.optionName.privacyPolicy);
+        const privacyPolicySettings = await dbUtils.getOptionValue(dbData.dokan.optionName.privacyPolicy);
         await admin.setDokanPrivacyPolicySettings({ ...data.dokanSettings.privacyPolicy, privacyPage: privacyPolicySettings.privacyPage });
     });
 
@@ -80,7 +80,7 @@ test.describe('Settings test', () => {
     test('admin can set Dokan email verification settings', { tag: ['@pro', '@admin'] }, async () => {
         await admin.setDokanEmailVerificationSettings(data.dokanSettings.emailVerification);
         // reset  settings
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.emailVerification, dbData.dokan.emailVerificationSettings);
+        await dbUtils.setOptionValue(dbData.dokan.optionName.emailVerification, dbData.dokan.emailVerificationSettings);
     });
 
     test('admin can set Dokan shipping status settings', { tag: ['@pro', '@admin'] }, async () => {
@@ -125,6 +125,6 @@ test.describe('Settings test', () => {
 
     test('admin can set Dokan vendor subscription settings', { tag: ['@pro', '@admin'] }, async () => {
         await admin.setDokanVendorSubscriptionSettings(data.dokanSettings.vendorSubscription);
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.vendorSubscription, dbData.dokan.vendorSubscriptionSettings);
+        await dbUtils.setOptionValue(dbData.dokan.optionName.vendorSubscription, dbData.dokan.vendorSubscriptionSettings);
     });
 });

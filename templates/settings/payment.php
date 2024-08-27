@@ -12,7 +12,7 @@ do_action( 'dokan_payment_settings_before_form', $current_user, $profile_info );
 
 <div class="dokan-payment-settings-summary">
     <h2 id="vendor-dashboard-payment-settings-error"></h2>
-    <div class="payment-methods-listing-header">
+    <div id="dokan-payment-methods-listing-wrapper" class="payment-methods-listing-header">
         <h2> <?php esc_html_e( 'Payment Methods', 'dokan-lite' ); ?></h2>
         <div>
             <div id="vendor-dashboard-payment-settings-toggle-dropdown">
@@ -28,8 +28,11 @@ do_action( 'dokan_payment_settings_before_form', $current_user, $profile_info );
                                                 <img src="<?php echo esc_url( dokan_withdraw_get_method_icon( $method_key ) ); ?>" alt="<?php echo esc_attr( $method_key ); ?>"/>
                                                 <span>
                                                 <?php
-                                                // translators: %s: payment method title
-                                                printf( esc_html__( 'Direct to %s', 'dokan-lite' ), apply_filters( 'dokan_payment_method_title', $method['title'], $method ) );
+                                                printf(
+                                                    // translators: %s: payment method title
+                                                    esc_html__( 'Direct to %s', 'dokan-lite' ),
+                                                    esc_html( apply_filters( 'dokan_payment_method_title', $method['title'], $method ) )
+                                                );
                                                 ?>
                                             </span>
                                             </div>
@@ -60,7 +63,7 @@ do_action( 'dokan_payment_settings_before_form', $current_user, $profile_info );
 
                             if ( isset( $profile_info['payment'][ $method_key ] ) && ! empty( dokan_withdraw_get_method_additional_info( $method_key ) ) ) {
                                 ?>
-                                <small><?php echo dokan_withdraw_get_method_additional_info( $method_key ); ?></small>
+                                <small><?php echo esc_html( dokan_withdraw_get_method_additional_info( $method_key ) ); ?></small>
                                 <?php
                             }
                             ?>

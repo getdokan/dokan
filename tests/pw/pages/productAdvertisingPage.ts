@@ -146,7 +146,11 @@ export class ProductAdvertisingPage extends AdminPage {
 
     // product advertising bulk action
     async productAdvertisingBulkAction(action: string, productName?: string) {
-        productName ? await this.searchAdvertisedProduct(productName) : await this.goIfNotThere(data.subUrls.backend.dokan.productAdvertising);
+        if (productName) {
+            await this.searchAdvertisedProduct(productName);
+        } else {
+            await this.goIfNotThere(data.subUrls.backend.dokan.productAdvertising);
+        }
 
         // ensure row exists
         await this.notToBeVisible(productAdvertisingAdmin.noRowsFound);
