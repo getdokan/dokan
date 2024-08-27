@@ -50,6 +50,8 @@ export class SettingsPage extends AdminPage {
         await this.goto(data.subUrls.backend.dokan.settings);
         await this.scrollToBottom();
         await this.toBeVisible(settingsAdmin.backToTop);
+        await this.click(settingsAdmin.backToTop);
+        await this.toBeVisible(settingsAdmin.search.searchBox);
     }
 
     // dokan settings

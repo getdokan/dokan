@@ -402,8 +402,8 @@ export class BasePage {
     }
 
     // returns whether the element is visible
-    async isVisible(selector: string): Promise<boolean> {
-        await this.wait(1); // to add a buffer time for the element to be visible if exists // todo: need to resolve in future
+    async isVisible(selector: string, waitUntil: number = 1.5): Promise<boolean> {
+        await this.wait(waitUntil);
         return await this.isVisibleLocator(selector);
     }
 
@@ -518,9 +518,12 @@ export class BasePage {
 
     // get element has class or not
     async hasClass(selector: string, className: string): Promise<boolean> {
-        const element = this.getElement(selector);
-        const hasClass = await element.evaluate((element, className) => element.classList.contains(className), className);
-        return hasClass;
+        const elementClass = await this.getClassValue(selector);
+        const result = elementClass!.includes(className);
+        return result;
+        // const element = this.getElement(selector);
+        // const result = await element.evaluate((element, className) => element.classList.contains(className), className);
+        // return result;
     }
 
     // get attribute value
@@ -1353,8 +1356,8 @@ export class BasePage {
     }
 
     // assert element to be visible
-    async toBeVisible(selector: string) {
-        await expect(this.page.locator(selector)).toBeVisible();
+    async toBeVisible(selector: string, options?: { timeout?: number; visible?: boolean; } | undefined) {
+        await expect(this.page.locator(selector)).toBeVisible(options);
     }
 
     // assert checkbox to be checked
@@ -1373,7 +1376,7 @@ export class BasePage {
     }
 
     // assert element to have value
-    async toHaveValue(selector: string, value: string) {
+    async toHaveValue(selector: string, value: string | RegExp) {
         await expect(this.page.locator(selector)).toHaveValue(value);
     }
 
@@ -1383,35 +1386,34 @@ export class BasePage {
     }
 
     // assert element to have class
-    async toHaveClass(selector: string, className: string) {
+    async toHaveClass(selector: string, className: string | RegExp | readonly (string | RegExp)[]) {
         await expect(this.page.locator(selector)).toHaveClass(className);
     }
 
-    // assert element to contain class
-    async toContainClass(selector: string, className: string) {
-        const elementClass = await this.getClassValue(selector);
-        expect(elementClass).toContain(className);
-    }
-
     // assert element to have background color
-    async toHaveBackgroundColor(selector: string, backgroundColor: string) {
-        const value = await this.getElementBackgroundColor(selector);
-        expect(value).toBe(backgroundColor);
+    async toHaveBackgroundColor(selector: string, backgroundColor: string, options?: { timeout?: number; intervals?: number[] }) {
+        await this.toPass(async () => {
+            const value = await this.getElementBackgroundColor(selector);
+            expect(value).toBe(backgroundColor);
+        }, options);
     }
 
     // assert element to have color
-    async toHaveColor(selector: string, backgroundColor: string) {
-        const value = await this.getElementColor(selector);
-        expect(value).toBe(backgroundColor);
+    async toHaveColor(selector: string, backgroundColor: string, options?: { timeout?: number; intervals?: number[] }) {
+        await this.toPass(async () => {
+            const value = await this.getElementColor(selector);
+            expect(value).toBe(backgroundColor);
+        }, options);
     }
 
     // assert element to contain text
-    async toContainTextFrameLocator(frame: string, frameSelector: string, text: string | RegExp): Promise<void> {
-        const locator = this.page.frameLocator(frame).locator(frameSelector);
-        await expect(locator).toContainText(text);
+    async toContainTextFrameLocator(frame: string, frameSelector: string, text: string | RegExp, options?: { timeout?: number; intervals?: number[] }): Promise<void> {
+        await this.toPass(async () => {
+            const locator = this.page.frameLocator(frame).locator(frameSelector);
+            await expect(locator).toContainText(text);
+        }, options);
     }
 
-    // todo: test below two methods
     // assert async function (test step) to pass
     async toPass(asyncFn: () => Promise<void>, options?: { timeout?: number; intervals?: number[] } | undefined) {
         await expect(async () => {
@@ -1444,7 +1446,7 @@ export class BasePage {
     }
 
     // assert element not to have value
-    async notToHaveValue(selector: string, value: string) {
+    async notToHaveValue(selector: string, value: string | RegExp) {
         await expect(this.page.locator(selector)).not.toHaveValue(value);
     }
 
@@ -1454,7 +1456,7 @@ export class BasePage {
     }
 
     // assert element not to have class
-    async notToHaveClass(selector: string, className: string) {
+    async notToHaveClass(selector: string, className: string | RegExp | readonly (string | RegExp)[]) {
         await expect(this.page.locator(selector)).not.toHaveClass(className);
     }
 
@@ -1570,12 +1572,12 @@ export class BasePage {
 
     // admin enable payment methods via slider
     async enablePaymentMethod(selector: string): Promise<void> {
-        const classValueBefore = await this.getClassValue(selector);
-        if (classValueBefore?.includes('woocommerce-input-toggle--disabled')) {
-            await this.click(selector);
+        const value = await this.hasClass(selector, 'woocommerce-input-toggle--disabled');
+        if (value) {
+            await this.clickAndWaitForResponse(data.subUrls.ajax, selector);
         }
-        const classValueAfter = await this.getClassValue(selector);
-        expect(classValueAfter).toContain('woocommerce-input-toggle--enabled');
+        await this.toHaveClass(selector, /woocommerce-input-toggle--enabled/);
+        await this.toHaveBackgroundColor(selector, 'rgb(0, 124, 186)');
     }
 
     // check multiple elements with same selector/class/xpath

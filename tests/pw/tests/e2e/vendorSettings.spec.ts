@@ -49,8 +49,6 @@ test.describe('Vendor settings test', () => {
 
     // store settings
 
-    // todo: ensure which settings need to reset, and test data should be what
-
     test('vendor can set store basic settings', { tag: ['@lite', '@vendor'] }, async () => {
         await vendor.setStoreSettings(data.vendor.vendorInfo, 'basic');
     });

@@ -1543,7 +1543,7 @@ export const payloads = {
 
     createRandomShippingZone: () => ({
         name: faker.string.alpha(3).toUpperCase(),
-        order: 0,
+        // order: 0,
     }),
 
     addShippingZoneLocation: [

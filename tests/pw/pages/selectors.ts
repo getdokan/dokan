@@ -154,6 +154,7 @@ export const selector = {
             allPages: '//li[@id="menu-pages"]//a[contains(text(),"All Pages")]',
             addNew: '//li[@id="menu-pages"]//a[contains(text(),"Add New")]',
 
+            blockEditorModal: '//div[@aria-label="Welcome to the block editor"]',
             closeModal: 'div.components-modal__content button[aria-label="Close"]',
 
             addTitle: '//h1[@aria-label="Add title"]',
@@ -2645,7 +2646,10 @@ export const selector = {
                     editShippingZone: (shippingZone: string) => `//td[@class='wc-shipping-zone-name' and normalize-space(text())='${shippingZone}']/..//div//a[contains(text(), 'Edit')]`,
                     deleteShippingZone: (shippingZone: string) => `//td[@class='wc-shipping-zone-name' and normalize-space(text())='${shippingZone}']/..//div//a[contains(text(), 'Delete')]`,
 
+                    saveShippingZone: '//button[@value="Save changes"]',
+
                     // Shipping Methods
+                    shippingMethodModal: 'div.wc-backbone-modal-add-shipping-method div.wc-backbone-modal-content',
                     addShippingMethods: '.wc-shipping-zone-add-method',
                     shippingMethod: (shippingMethodName: string) => `//label[@for='${shippingMethodName}']`,
                     continue: 'button#btn-next',
