@@ -7687,9 +7687,9 @@ export const selector = {
         },
 
         cWooSelector: {
-            wooCommerceSuccessMessage: '.woocommerce-message',
-            wooCommerceError: '.woocommerce-error',
-            wooCommerceInfo: '.woocommerce-info',
+            wooCommerceSuccessMessage: 'div.woocommerce-message',
+            wooCommerceError: 'div.woocommerce-error',
+            wooCommerceInfo: 'div.woocommerce-info',
             wooCommerceNoticeBanner: 'div.wc-block-components-notice-banner',
             wooCommerceNoticeBannerContent: 'div.wc-block-components-notice-banner__content',
         },

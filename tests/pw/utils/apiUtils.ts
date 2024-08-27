@@ -2129,6 +2129,7 @@ export class ApiUtils {
         activePlugins.sort();
         const compactInfo = {
             os: 'OS: ' + (await this.getOsInfo()),
+            browser: 'Browser: ' + 'Chromium',
             wpVersion: 'WordPress Version: ' + responseBody?.environment.wp_version,
             phpVersion: 'PHP Version: ' + responseBody?.environment.php_version,
             mysqlVersion: 'MySql Version: ' + responseBody?.environment.mysql_version,
