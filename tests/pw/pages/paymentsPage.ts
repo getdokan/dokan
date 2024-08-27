@@ -6,6 +6,7 @@ import { payment, vendor } from '@utils/interfaces';
 
 // selectors
 const woocommerceSettings = selector.admin.wooCommerce.settings;
+const paymentSettingsAdmin = selector.admin.wooCommerce.settings.payments;
 const paymentSettingsVendor = selector.vendor.vPaymentSettings;
 
 export class PaymentsPage extends AdminPage {
@@ -13,200 +14,191 @@ export class PaymentsPage extends AdminPage {
         super(page);
     }
 
-    // Payment Methods
+    // payment methods
 
-    // Admin Setup Basic Payment Methods
+    async goToPaymentSettings() {
+        await this.goIfNotThere(data.subUrls.backend.wc.paymentSettings);
+    }
+
+    // admin setup basic payment methods
     async setupBasicPaymentMethods(payment: payment) {
-        await this.goToWooCommerceSettings();
+        await this.goToPaymentSettings();
 
-        await this.click(woocommerceSettings.payments);
-        // Bank Transfer
-        await this.enablePaymentMethod(woocommerceSettings.enableDirectBankTransfer);
-        // Payments
-        await this.enablePaymentMethod(woocommerceSettings.enableCheckPayments);
-        // Cash on Delivery
-        await this.enablePaymentMethod(woocommerceSettings.enableCashOnDelivery);
+        // bank transfer
+        await this.enablePaymentMethod(paymentSettingsAdmin.enableDirectBankTransfer);
+        // payments
+        await this.enablePaymentMethod(paymentSettingsAdmin.enableCheckPayments);
+        // cash on delivery
+        await this.enablePaymentMethod(paymentSettingsAdmin.enableCashOnDelivery);
 
-        await this.click(woocommerceSettings.paymentMethodsSaveChanges);
+        await this.removeAttribute(paymentSettingsAdmin.paymentMethodsSaveChanges, 'disabled');
+        await this.clickAndWaitForResponse(data.subUrls.api.wc.paymentGayways, paymentSettingsAdmin.paymentMethodsSaveChanges);
         await this.toContainText(woocommerceSettings.updatedSuccessMessage, payment.saveSuccessMessage);
     }
 
-    // Admin Setup Stripe
+    // admin setup stripe sonnect
     async setupStripeConnect(payment: payment) {
-        await this.goToWooCommerceSettings();
+        await this.goToPaymentSettings();
 
-        await this.setCurrency(payment.currency.dollar);
-
-        await this.click(woocommerceSettings.payments);
-        await this.click(woocommerceSettings.setupDokanStripeConnect);
-        // Setup Strip Connect
-        await this.check(woocommerceSettings.stripe.enableDisableStripe);
-        await this.clearAndType(woocommerceSettings.stripe.title, payment.stripeConnect.title);
-        await this.clearAndType(woocommerceSettings.stripe.description, payment.stripeConnect.description);
-        await this.check(woocommerceSettings.stripe.nonConnectedSellers);
-        await this.check(woocommerceSettings.stripe.displayNoticeToConnectSeller);
-        await this.clearAndType(woocommerceSettings.stripe.displayNoticeInterval, payment.stripeConnect.displayNoticeInterval);
-        await this.check(woocommerceSettings.stripe.threeDSecureAndSca);
-        await this.check(woocommerceSettings.stripe.sellerPaysTheProcessingFeeIn3DsMode);
-        await this.check(woocommerceSettings.stripe.testMode);
-        await this.check(woocommerceSettings.stripe.stripeCheckout);
-        await this.click(woocommerceSettings.stripe.stripeCheckoutLocale);
-        await this.type(woocommerceSettings.stripe.stripeCheckoutLocale, payment.stripeConnect.stripeCheckoutLocale);
-        await this.press(data.key.enter);
-        await this.check(woocommerceSettings.stripe.savedCards);
-        // Test Credentials
-        await this.clearAndType(woocommerceSettings.stripe.testPublishableKey, payment.stripeConnect.testPublishableKey);
-        await this.clearAndType(woocommerceSettings.stripe.testSecretKey, payment.stripeConnect.testSecretKey);
-        await this.clearAndType(woocommerceSettings.stripe.testClientId, payment.stripeConnect.testClientId);
-        await this.click(woocommerceSettings.stripe.stripeSaveChanges);
+        await this.click(paymentSettingsAdmin.setupDokanStripeConnect);
+        // setup strip connect
+        await this.check(paymentSettingsAdmin.stripe.enableDisableStripe);
+        await this.clearAndType(paymentSettingsAdmin.stripe.title, payment.stripeConnect.title);
+        await this.clearAndType(paymentSettingsAdmin.stripe.description, payment.stripeConnect.description);
+        await this.check(paymentSettingsAdmin.stripe.nonConnectedSellers);
+        await this.check(paymentSettingsAdmin.stripe.displayNoticeToConnectSeller);
+        await this.clearAndType(paymentSettingsAdmin.stripe.displayNoticeInterval, payment.stripeConnect.displayNoticeInterval);
+        await this.check(paymentSettingsAdmin.stripe.threeDSecureAndSca);
+        await this.check(paymentSettingsAdmin.stripe.sellerPaysTheProcessingFeeIn3DsMode);
+        await this.check(paymentSettingsAdmin.stripe.testMode);
+        await this.check(paymentSettingsAdmin.stripe.savedCards);
+        // test credentials
+        await this.clearAndType(paymentSettingsAdmin.stripe.testPublishableKey, payment.stripeConnect.testPublishableKey);
+        await this.clearAndType(paymentSettingsAdmin.stripe.testSecretKey, payment.stripeConnect.testSecretKey);
+        await this.clearAndType(paymentSettingsAdmin.stripe.testClientId, payment.stripeConnect.testClientId);
+        await this.click(paymentSettingsAdmin.stripe.stripeSaveChanges);
 
         await this.toContainText(woocommerceSettings.updatedSuccessMessage, payment.saveSuccessMessage);
     }
 
-    // Admin Setup Dokan Paypal Marketplace
+    // admin setup dokan paypal marketplace
     async setupPaypalMarketPlace(payment: payment) {
-        await this.goToWooCommerceSettings();
+        await this.goToPaymentSettings();
 
-        await this.setCurrency(payment.currency.dollar);
-
-        await this.click(woocommerceSettings.payments);
-        await this.click(woocommerceSettings.setupDokanPayPalMarketplace);
-        // Setup Paypal Marketplace
-        await this.check(woocommerceSettings.paypalMarketPlace.enableDisablePayPalMarketplace);
-        await this.clearAndType(woocommerceSettings.paypalMarketPlace.title, payment.paypalMarketPlace.title);
-        await this.clearAndType(woocommerceSettings.paypalMarketPlace.description, payment.paypalMarketPlace.description);
-        await this.clearAndType(woocommerceSettings.paypalMarketPlace.payPalMerchantId, payment.paypalMarketPlace.payPalMerchantId);
-        // API Credentials
-        await this.check(woocommerceSettings.paypalMarketPlace.payPalSandbox);
-        await this.clearAndType(woocommerceSettings.paypalMarketPlace.sandboxClientId, payment.paypalMarketPlace.sandboxClientId);
-        await this.clearAndType(woocommerceSettings.paypalMarketPlace.sandBoxClientSecret, payment.paypalMarketPlace.sandBoxClientSecret);
-        await this.clearAndType(woocommerceSettings.paypalMarketPlace.payPalPartnerAttributionId, payment.paypalMarketPlace.payPalPartnerAttributionId);
-        await this.click(woocommerceSettings.paypalMarketPlace.disbursementMode);
-        await this.setDropdownOptionSpan(woocommerceSettings.paypalMarketPlace.disbursementModeValues, payment.paypalMarketPlace.disbursementMode);
-        await this.click(woocommerceSettings.paypalMarketPlace.paymentButtonType);
-        await this.setDropdownOptionSpan(woocommerceSettings.paypalMarketPlace.paymentButtonTypeValues, payment.paypalMarketPlace.paymentButtonType);
-        await this.clearAndType(woocommerceSettings.paypalMarketPlace.marketplaceLogo, (await this.getBaseUrl()) + payment.paypalMarketPlace.marketplaceLogoPath);
-        await this.check(woocommerceSettings.paypalMarketPlace.displayNoticeToConnectSeller);
-        await this.check(woocommerceSettings.paypalMarketPlace.sendAnnouncementToConnectSeller);
-        await this.clearAndType(woocommerceSettings.paypalMarketPlace.sendAnnouncementInterval, payment.paypalMarketPlace.announcementInterval);
-        await this.click(woocommerceSettings.paypalMarketPlace.paypalMarketPlaceSaveChanges);
+        await this.click(paymentSettingsAdmin.setupDokanPayPalMarketplace);
+        // setup paypal marketplace
+        await this.check(paymentSettingsAdmin.paypalMarketPlace.enableDisablePayPalMarketplace);
+        await this.clearAndType(paymentSettingsAdmin.paypalMarketPlace.title, payment.paypalMarketPlace.title);
+        await this.clearAndType(paymentSettingsAdmin.paypalMarketPlace.description, payment.paypalMarketPlace.description);
+        await this.clearAndType(paymentSettingsAdmin.paypalMarketPlace.payPalMerchantId, payment.paypalMarketPlace.payPalMerchantId);
+        // api credentials
+        await this.check(paymentSettingsAdmin.paypalMarketPlace.payPalSandbox);
+        await this.clearAndType(paymentSettingsAdmin.paypalMarketPlace.sandboxClientId, payment.paypalMarketPlace.sandboxClientId);
+        await this.clearAndType(paymentSettingsAdmin.paypalMarketPlace.sandBoxClientSecret, payment.paypalMarketPlace.sandBoxClientSecret);
+        await this.clearAndType(paymentSettingsAdmin.paypalMarketPlace.payPalPartnerAttributionId, payment.paypalMarketPlace.payPalPartnerAttributionId);
+        await this.click(paymentSettingsAdmin.paypalMarketPlace.disbursementMode);
+        await this.setDropdownOptionSpan(paymentSettingsAdmin.paypalMarketPlace.disbursementModeValues, payment.paypalMarketPlace.disbursementMode);
+        await this.click(paymentSettingsAdmin.paypalMarketPlace.paymentButtonType);
+        await this.setDropdownOptionSpan(paymentSettingsAdmin.paypalMarketPlace.paymentButtonTypeValues, payment.paypalMarketPlace.paymentButtonType);
+        await this.clearAndType(paymentSettingsAdmin.paypalMarketPlace.marketplaceLogo, this.getBaseUrl() + payment.paypalMarketPlace.marketplaceLogoPath);
+        await this.check(paymentSettingsAdmin.paypalMarketPlace.displayNoticeToConnectSeller);
+        await this.check(paymentSettingsAdmin.paypalMarketPlace.sendAnnouncementToConnectSeller);
+        await this.clearAndType(paymentSettingsAdmin.paypalMarketPlace.sendAnnouncementInterval, payment.paypalMarketPlace.announcementInterval);
+        await this.click(paymentSettingsAdmin.paypalMarketPlace.paypalMarketPlaceSaveChanges);
 
         await this.toContainText(woocommerceSettings.updatedSuccessMessage, payment.saveSuccessMessage);
     }
 
-    // Admin Setup Mangopay
+    // admin setup mangopay
     async setupMangoPay(payment: payment) {
-        await this.goToWooCommerceSettings();
+        await this.goToPaymentSettings();
 
-        await this.setCurrency(payment.currency.euro);
-
-        await this.click(woocommerceSettings.payments);
-        await this.click(woocommerceSettings.setupDokanMangoPay);
-        // Setup Mangopay
-        await this.check(woocommerceSettings.dokanMangoPay.enableDisableMangoPayPayment);
-        await this.clearAndType(woocommerceSettings.dokanMangoPay.title, payment.mangoPay.title);
-        await this.clearAndType(woocommerceSettings.dokanMangoPay.description, payment.mangoPay.description);
-        // API Credentials
-        await this.check(woocommerceSettings.dokanMangoPay.mangoPaySandbox);
-        await this.clearAndType(woocommerceSettings.dokanMangoPay.sandboxClientId, payment.mangoPay.sandboxClientId);
-        await this.clearAndType(woocommerceSettings.dokanMangoPay.sandBoxApiKey, payment.mangoPay.sandBoxApiKey);
-        // Payment Options
-        await this.click(woocommerceSettings.dokanMangoPay.chooseAvailableCreditCards);
-        await this.type(woocommerceSettings.dokanMangoPay.chooseAvailableCreditCards, 'CB/Visa/Mastercard');
-        await this.press(data.key.enter);
-        await this.setDropdownOptionSpan(woocommerceSettings.dokanMangoPay.chooseAvailableCreditCardsValues, payment.mangoPay.availableCreditCards);
-        await this.click(woocommerceSettings.dokanMangoPay.chooseAvailableDirectPaymentServices);
-        await this.type(woocommerceSettings.dokanMangoPay.chooseAvailableDirectPaymentServices, 'Sofort*');
-        await this.press(data.key.enter);
-        await this.setDropdownOptionSpan(woocommerceSettings.dokanMangoPay.chooseAvailableDirectPaymentServicesValues, payment.mangoPay.availableDirectPaymentServices);
-        await this.check(woocommerceSettings.dokanMangoPay.savedCards);
+        await this.click(paymentSettingsAdmin.setupDokanMangoPay);
+        // setup mangopay
+        await this.check(paymentSettingsAdmin.dokanMangoPay.enableDisableMangoPayPayment);
+        await this.clearAndType(paymentSettingsAdmin.dokanMangoPay.title, payment.mangoPay.title);
+        await this.clearAndType(paymentSettingsAdmin.dokanMangoPay.description, payment.mangoPay.description);
+        // api credentials
+        await this.check(paymentSettingsAdmin.dokanMangoPay.mangoPaySandbox);
+        await this.clearAndType(paymentSettingsAdmin.dokanMangoPay.sandboxClientId, payment.mangoPay.sandboxClientId);
+        await this.clearAndType(paymentSettingsAdmin.dokanMangoPay.sandBoxApiKey, payment.mangoPay.sandBoxApiKey);
+        // payment options
+        const isCardExists = await this.isLocatorExists(paymentSettingsAdmin.dokanMangoPay.currentAvailableCreditCards(payment.mangoPay.availableCreditCards));
+        if (!isCardExists) {
+            await this.click(paymentSettingsAdmin.dokanMangoPay.chooseAvailableCreditCards);
+            await this.type(paymentSettingsAdmin.dokanMangoPay.chooseAvailableCreditCards, payment.mangoPay.availableCreditCards);
+            await this.click(paymentSettingsAdmin.dokanMangoPay.searchedResult);
+        }
+        // await this.setDropdownOptionSpan(paymentSettingsAdmin.dokanMangoPay.chooseAvailableCreditCardsValues, payment.mangoPay.availableCreditCards);
+        const isServiceExists = await this.isLocatorExists(paymentSettingsAdmin.dokanMangoPay.currentPaymentServices(payment.mangoPay.availableCreditCards));
+        if (!isServiceExists) {
+            await this.click(paymentSettingsAdmin.dokanMangoPay.chooseAvailableDirectPaymentServices);
+            await this.type(paymentSettingsAdmin.dokanMangoPay.chooseAvailableDirectPaymentServices, payment.mangoPay.availableDirectPaymentServices);
+            await this.click(paymentSettingsAdmin.dokanMangoPay.searchedResult);
+        }
+        // await this.setDropdownOptionSpan(paymentSettingsAdmin.dokanMangoPay.chooseAvailableDirectPaymentServicesValues, payment.mangoPay.availableDirectPaymentServices);
+        await this.check(paymentSettingsAdmin.dokanMangoPay.savedCards);
         // Fund Transfers and Payouts
-        await this.click(woocommerceSettings.dokanMangoPay.transferFunds);
-        await this.setDropdownOptionSpan(woocommerceSettings.dokanMangoPay.transferFundsValues, payment.mangoPay.transferFunds);
-        await this.check(woocommerceSettings.dokanMangoPay.payoutMode);
+        await this.click(paymentSettingsAdmin.dokanMangoPay.transferFunds);
+        await this.setDropdownOptionSpan(paymentSettingsAdmin.dokanMangoPay.transferFundsValues, payment.mangoPay.transferFunds);
+        await this.check(paymentSettingsAdmin.dokanMangoPay.payoutMode);
         // Types and Requirements of Vendors
-        await this.click(woocommerceSettings.dokanMangoPay.typeOfVendors);
-        await this.setDropdownOptionSpan(woocommerceSettings.dokanMangoPay.typeOfVendorsValues, payment.mangoPay.typeOfVendors);
-        await this.click(woocommerceSettings.dokanMangoPay.businessRequirement);
-        await this.setDropdownOptionSpan(woocommerceSettings.dokanMangoPay.businessRequirementValues, payment.mangoPay.businessRequirement);
-        // Advanced Settings
-        await this.check(woocommerceSettings.dokanMangoPay.displayNoticeToNonConnectedSellers);
-        await this.check(woocommerceSettings.dokanMangoPay.sendAnnouncementToNonConnectedSellers);
-        await this.clearAndType(woocommerceSettings.dokanMangoPay.announcementInterval, payment.mangoPay.announcementInterval);
-        await this.click(woocommerceSettings.dokanMangoPay.dokanMangopaySaveChanges);
+        await this.click(paymentSettingsAdmin.dokanMangoPay.typeOfVendors);
+        await this.setDropdownOptionSpan(paymentSettingsAdmin.dokanMangoPay.typeOfVendorsValues, payment.mangoPay.typeOfVendors);
+        await this.click(paymentSettingsAdmin.dokanMangoPay.businessRequirement);
+        await this.setDropdownOptionSpan(paymentSettingsAdmin.dokanMangoPay.businessRequirementValues, payment.mangoPay.businessRequirement);
+        // advanced settings
+        await this.check(paymentSettingsAdmin.dokanMangoPay.displayNoticeToNonConnectedSellers);
+        await this.check(paymentSettingsAdmin.dokanMangoPay.sendAnnouncementToNonConnectedSellers);
+        await this.clearAndType(paymentSettingsAdmin.dokanMangoPay.announcementInterval, payment.mangoPay.announcementInterval);
+        await this.click(paymentSettingsAdmin.dokanMangoPay.dokanMangopaySaveChanges);
 
         await this.toContainText(woocommerceSettings.updatedSuccessMessage, payment.saveSuccessMessage);
     }
 
-    // Admin Setup Razorpay
+    // admin setup razorpay
     async setupRazorpay(payment: payment) {
-        await this.goToWooCommerceSettings();
+        await this.goToPaymentSettings();
 
-        await this.setCurrency(payment.currency.rupee);
-
-        await this.click(woocommerceSettings.payments);
-        await this.click(woocommerceSettings.setupDokanRazorpay);
-        // Setup Razorpay
-        await this.check(woocommerceSettings.dokanRazorpay.enableDisableDokanRazorpay);
-        await this.clearAndType(woocommerceSettings.dokanRazorpay.title, payment.razorPay.title);
-        await this.clearAndType(woocommerceSettings.dokanRazorpay.description, payment.razorPay.description);
-        // API Credentials
-        await this.check(woocommerceSettings.dokanRazorpay.razorpaySandbox);
-        await this.clearAndType(woocommerceSettings.dokanRazorpay.testKeyId, payment.razorPay.testKeyId);
-        await this.clearAndType(woocommerceSettings.dokanRazorpay.testKeySecret, payment.razorPay.testKeySecret);
-        await this.click(woocommerceSettings.dokanRazorpay.disbursementMode);
-        await this.setDropdownOptionSpan(woocommerceSettings.dokanRazorpay.disbursementModeValues, payment.razorPay.disbursementMode);
-        await this.check(woocommerceSettings.dokanRazorpay.sellerPaysTheProcessingFee);
-        await this.check(woocommerceSettings.dokanRazorpay.displayNoticeToConnectSeller);
-        await this.check(woocommerceSettings.dokanRazorpay.sendAnnouncementToConnectSeller);
-        await this.clearAndType(woocommerceSettings.dokanRazorpay.sendAnnouncementInterval, payment.razorPay.announcementInterval);
-        await this.click(woocommerceSettings.dokanRazorpay.dokanRazorpaySaveChanges);
+        await this.click(paymentSettingsAdmin.setupDokanRazorpay);
+        // setup razorpay
+        await this.check(paymentSettingsAdmin.dokanRazorpay.enableDisableDokanRazorpay);
+        await this.clearAndType(paymentSettingsAdmin.dokanRazorpay.title, payment.razorPay.title);
+        await this.clearAndType(paymentSettingsAdmin.dokanRazorpay.description, payment.razorPay.description);
+        // api credentials
+        await this.check(paymentSettingsAdmin.dokanRazorpay.razorpaySandbox);
+        await this.clearAndType(paymentSettingsAdmin.dokanRazorpay.testKeyId, payment.razorPay.testKeyId);
+        await this.clearAndType(paymentSettingsAdmin.dokanRazorpay.testKeySecret, payment.razorPay.testKeySecret);
+        await this.click(paymentSettingsAdmin.dokanRazorpay.disbursementMode);
+        await this.setDropdownOptionSpan(paymentSettingsAdmin.dokanRazorpay.disbursementModeValues, payment.razorPay.disbursementMode);
+        await this.check(paymentSettingsAdmin.dokanRazorpay.sellerPaysTheProcessingFee);
+        await this.check(paymentSettingsAdmin.dokanRazorpay.displayNoticeToConnectSeller);
+        await this.check(paymentSettingsAdmin.dokanRazorpay.sendAnnouncementToConnectSeller);
+        await this.clearAndType(paymentSettingsAdmin.dokanRazorpay.sendAnnouncementInterval, payment.razorPay.announcementInterval);
+        await this.click(paymentSettingsAdmin.dokanRazorpay.dokanRazorpaySaveChanges);
 
         await this.toContainText(woocommerceSettings.updatedSuccessMessage, payment.saveSuccessMessage);
     }
 
-    // Admin Setup Stripe Express
+    // admin setup stripe express
     async setupStripeExpress(payment: payment) {
-        await this.goToWooCommerceSettings();
+        await this.goToPaymentSettings();
 
-        await this.setCurrency(payment.currency.dollar);
+        await this.click(paymentSettingsAdmin.setupDokanStripeExpress);
 
-        await this.click(woocommerceSettings.payments);
-        await this.click(woocommerceSettings.setupDokanStripeExpress);
-
-        // Stripe Express
-        await this.check(woocommerceSettings.stripeExpress.enableOrDisableStripeExpress);
-        await this.clearAndType(woocommerceSettings.stripeExpress.title, payment.stripeExpress.title);
-        await this.clearAndType(woocommerceSettings.stripeExpress.description, payment.stripeExpress.description);
-        // API Credentials
-        await this.check(woocommerceSettings.stripeExpress.testMode);
-        await this.clearAndType(woocommerceSettings.stripeExpress.testPublishableKey, payment.stripeExpress.testPublishableKey);
-        await this.clearAndType(woocommerceSettings.stripeExpress.testSecretKey, payment.stripeExpress.testSecretKey);
-        await this.clearAndType(woocommerceSettings.stripeExpress.testWebhookSecret, payment.stripeExpress.testWebhookSecret);
-        // Payment and Disbursement
-        await this.click(woocommerceSettings.stripeExpress.choosePaymentMethods);
-        await this.setDropdownOptionSpan(woocommerceSettings.stripeExpress.choosePaymentMethodsValues, payment.stripeExpress.paymentMethods.card);
-        await this.click(woocommerceSettings.stripeExpress.choosePaymentMethods);
-        await this.setDropdownOptionSpan(woocommerceSettings.stripeExpress.choosePaymentMethodsValues, payment.stripeExpress.paymentMethods.ideal);
-        await this.check(woocommerceSettings.stripeExpress.takeProcessingFeesFromSellers);
-        await this.check(woocommerceSettings.stripeExpress.savedCards);
-        await this.check(woocommerceSettings.stripeExpress.capturePaymentsManually);
-        await this.click(woocommerceSettings.stripeExpress.disburseFunds);
-        await this.setDropdownOptionSpan(woocommerceSettings.stripeExpress.disbursementModeValues, payment.stripeExpress.disbursementMode);
-        await this.clearAndType(woocommerceSettings.stripeExpress.customerBankStatement, payment.stripeExpress.customerBankStatement);
-        // Payment Request Options (Apple Pay/Google Pay)
-        await this.check(woocommerceSettings.stripeExpress.paymentRequestButtons);
-        await this.selectByValue(woocommerceSettings.stripeExpress.buttonType, payment.stripeExpress.paymentRequestButtonType);
-        await this.selectByValue(woocommerceSettings.stripeExpress.buttonTheme, payment.stripeExpress.paymentRequestButtonTheme);
-        await this.click(woocommerceSettings.stripeExpress.buttonLocations);
-        await this.setDropdownOptionSpan(woocommerceSettings.stripeExpress.buttonLocationsValues, payment.stripeExpress.paymentRequestButtonLocation.product);
-        await this.click(woocommerceSettings.stripeExpress.buttonLocations);
-        await this.setDropdownOptionSpan(woocommerceSettings.stripeExpress.buttonLocationsValues, payment.stripeExpress.paymentRequestButtonLocation.cart);
-        // Advanced Settings
-        await this.check(woocommerceSettings.stripeExpress.displayNoticeToNonConnectedSellers);
-        await this.check(woocommerceSettings.stripeExpress.sendAnnouncementToNonConnectedSellers);
-        await this.clearAndType(woocommerceSettings.stripeExpress.announcementInterval, payment.stripeExpress.announcementInterval);
-        await this.click(woocommerceSettings.stripeExpress.stripeExpressSaveChanges);
+        // stripe express
+        await this.check(paymentSettingsAdmin.stripeExpress.enableOrDisableStripeExpress);
+        await this.clearAndType(paymentSettingsAdmin.stripeExpress.title, payment.stripeExpress.title);
+        await this.clearAndType(paymentSettingsAdmin.stripeExpress.description, payment.stripeExpress.description);
+        // api credentials
+        await this.check(paymentSettingsAdmin.stripeExpress.testMode);
+        await this.clearAndType(paymentSettingsAdmin.stripeExpress.testPublishableKey, payment.stripeExpress.testPublishableKey);
+        await this.clearAndType(paymentSettingsAdmin.stripeExpress.testSecretKey, payment.stripeExpress.testSecretKey);
+        await this.clearAndType(paymentSettingsAdmin.stripeExpress.testWebhookSecret, payment.stripeExpress.testWebhookSecret);
+        // payment and disbursement
+        await this.click(paymentSettingsAdmin.stripeExpress.choosePaymentMethods);
+        await this.setDropdownOptionSpan(paymentSettingsAdmin.stripeExpress.choosePaymentMethodsValues, payment.stripeExpress.paymentMethods.card);
+        await this.click(paymentSettingsAdmin.stripeExpress.choosePaymentMethods);
+        await this.setDropdownOptionSpan(paymentSettingsAdmin.stripeExpress.choosePaymentMethodsValues, payment.stripeExpress.paymentMethods.ideal);
+        await this.check(paymentSettingsAdmin.stripeExpress.takeProcessingFeesFromSellers);
+        await this.check(paymentSettingsAdmin.stripeExpress.savedCards);
+        await this.check(paymentSettingsAdmin.stripeExpress.capturePaymentsManually);
+        await this.click(paymentSettingsAdmin.stripeExpress.disburseFunds);
+        await this.setDropdownOptionSpan(paymentSettingsAdmin.stripeExpress.disbursementModeValues, payment.stripeExpress.disbursementMode);
+        await this.clearAndType(paymentSettingsAdmin.stripeExpress.customerBankStatement, payment.stripeExpress.customerBankStatement);
+        // payment request options (Apple Pay/Google Pay)
+        await this.check(paymentSettingsAdmin.stripeExpress.paymentRequestButtons);
+        await this.selectByValue(paymentSettingsAdmin.stripeExpress.buttonType, payment.stripeExpress.paymentRequestButtonType);
+        await this.selectByValue(paymentSettingsAdmin.stripeExpress.buttonTheme, payment.stripeExpress.paymentRequestButtonTheme);
+        await this.click(paymentSettingsAdmin.stripeExpress.buttonLocations);
+        await this.setDropdownOptionSpan(paymentSettingsAdmin.stripeExpress.buttonLocationsValues, payment.stripeExpress.paymentRequestButtonLocation.product);
+        await this.click(paymentSettingsAdmin.stripeExpress.buttonLocations);
+        await this.setDropdownOptionSpan(paymentSettingsAdmin.stripeExpress.buttonLocationsValues, payment.stripeExpress.paymentRequestButtonLocation.cart);
+        // advanced settings
+        await this.check(paymentSettingsAdmin.stripeExpress.displayNoticeToNonConnectedSellers);
+        await this.check(paymentSettingsAdmin.stripeExpress.sendAnnouncementToNonConnectedSellers);
+        await this.clearAndType(paymentSettingsAdmin.stripeExpress.announcementInterval, payment.stripeExpress.announcementInterval);
+        await this.click(paymentSettingsAdmin.stripeExpress.stripeExpressSaveChanges);
 
         await this.toContainText(woocommerceSettings.updatedSuccessMessage, payment.saveSuccessMessage);
     }

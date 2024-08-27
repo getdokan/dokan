@@ -36,7 +36,7 @@ export class LicensePage extends AdminPage {
 
     // activate license
     async activateLicense(key: string, type = 'correct') {
-        await this.goIfNotThere(data.subUrls.backend.dokan.license);
+        await this.goto(data.subUrls.backend.dokan.license);
         const alreadyActivated = await this.isVisible(licenseAdmin.deactivateLicense);
         if (!alreadyActivated) {
             await this.clearAndType(licenseAdmin.activateSection.licenseKeyInput, key);
@@ -55,13 +55,13 @@ export class LicensePage extends AdminPage {
 
     // refresh license
     async refreshLicense() {
-        await this.goIfNotThere(data.subUrls.backend.dokan.license);
+        await this.goto(data.subUrls.backend.dokan.license);
         await this.clickAndWaitForResponse(data.subUrls.backend.dokan.license, licenseAdmin.refreshLicense);
         await this.toContainText(licenseAdmin.successNotice, 'License refreshed successfully.');
     }
     // deactivate license
     async deactivateLicense() {
-        await this.goIfNotThere(data.subUrls.backend.dokan.license);
+        await this.goto(data.subUrls.backend.dokan.license);
         await this.clickAndWaitForResponse(data.subUrls.backend.dokan.license, licenseAdmin.deactivateLicense);
         await this.toContainText(licenseAdmin.successNotice, 'License deactivated successfully.');
         await this.notToBeVisible(licenseAdmin.refreshLicense);

@@ -4,6 +4,8 @@ import { dbData } from '@utils/dbData';
 
 const basicAuth = (username: string, password: string) => 'Basic ' + Buffer.from(username + ':' + password).toString('base64');
 
+const { ADMIN, VENDOR, VENDOR2, VENDOR3, CUSTOMER, CUSTOMER2, ADMIN_PASSWORD, USER_PASSWORD, CUSTOMER_ID, PRODUCT_ID } = process.env;
+
 export const payloads = {
     // wp
     createPost: {
@@ -20,7 +22,7 @@ export const payloads = {
     },
 
     createPage: () => ({
-        title: 'test-page_' + faker.string.nanoid(10),
+        title: `test-page_${faker.string.nanoid(10)}`,
         status: 'publish',
     }),
 
@@ -53,37 +55,35 @@ export const payloads = {
         zip: 'application/zip',
     },
 
+    // headers
+    authHeader: (username: string, password: string = USER_PASSWORD) => {
+        return { extraHTTPHeaders: { Authorization: basicAuth(username, password) } };
+    },
+
     // user auth
 
-    adminAuth: {
-        Authorization: basicAuth(process.env.ADMIN, process.env.ADMIN_PASSWORD),
+    userAuth: (username: string, password: string = USER_PASSWORD) => {
+        return { Authorization: basicAuth(username, password) };
     },
 
-    vendorAuth: {
-        Authorization: basicAuth(process.env.VENDOR, process.env.USER_PASSWORD),
-    },
-
-    vendor2Auth: {
-        Authorization: basicAuth(process.env.VENDOR2, process.env.USER_PASSWORD),
-    },
-
-    customerAuth: {
-        Authorization: basicAuth(process.env.CUSTOMER, process.env.USER_PASSWORD),
-    },
+    adminAuth: { Authorization: basicAuth(ADMIN, ADMIN_PASSWORD) },
+    vendorAuth: { Authorization: basicAuth(VENDOR, USER_PASSWORD) },
+    vendor2Auth: { Authorization: basicAuth(VENDOR2, USER_PASSWORD) },
+    customerAuth: { Authorization: basicAuth(CUSTOMER, USER_PASSWORD) },
 
     admin: {
-        username: process.env.ADMIN,
-        password: process.env.ADMIN_PASSWORD,
+        username: ADMIN,
+        password: ADMIN_PASSWORD,
     },
 
     vendor: {
-        username: process.env.VENDOR,
-        password: process.env.USER_PASSWORD,
+        username: VENDOR,
+        password: USER_PASSWORD,
     },
 
     customer: {
-        username: process.env.CUSTOMER,
-        password: process.env.USER_PASSWORD,
+        username: CUSTOMER,
+        password: USER_PASSWORD,
     },
 
     setupStore: {
@@ -98,22 +98,31 @@ export const payloads = {
         },
     },
 
+    // product meta data
+
+    // catalog mode
+    catalogMode: {
+        meta_data: [
+            {
+                key: '_dokan_catalog_mode',
+                value: {
+                    hide_add_to_cart_button: 'on',
+                    hide_product_price: 'on',
+                },
+            },
+        ],
+    },
+
     // product
 
     createProduct: () => ({
-        name: faker.commerce.productName() + ' (Simple)',
+        name: `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Simple)`,
         type: 'simple',
         regular_price: faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([0, 2]) }),
         // regular_price: faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([0, 2]) }),
         // regular_price: '114.15' , // failed for this price & 5% tax & 10% commission dokan .1 issue
         status: 'publish',
-        categories: [
-            {
-                // id: 48
-                name: 'Uncategorized',
-                slug: 'uncategorized',
-            },
-        ],
+        categories: [{}],
         featured: true,
         description: '<p>test description</p>',
         short_description: '<p>test short description</p>',
@@ -209,20 +218,14 @@ export const payloads = {
         ],
     }),
 
-    createProductInterger: () => ({
-        name: faker.commerce.productName() + ' (Simple)',
+    createProductInteger: () => ({
+        name: `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Simple)`,
         type: 'simple',
         regular_price: faker.finance.amount({ min: 100, max: 200, dec: 0 }),
         // regular_price: faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([0, 2]) }),
         // regular_price: '114.15' , // failed for this price & 5% tax & 10% commission dokan .1 issue
         status: 'publish',
-        categories: [
-            {
-                // id: 48
-                name: 'Uncategorized',
-                slug: 'uncategorized',
-            },
-        ],
+        categories: [{}],
         featured: true,
         description: '<p>test description</p>',
         short_description: '<p>test short description</p>',
@@ -319,17 +322,11 @@ export const payloads = {
     }),
 
     createProductEuCompliance: () => ({
-        name: faker.commerce.productName() + ' (Simple)',
+        name: `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Simple)`,
         type: 'simple',
         regular_price: '100',
         status: 'publish',
-        categories: [
-            {
-                // id: 48
-                name: 'Uncategorized',
-                slug: 'uncategorized',
-            },
-        ],
+        categories: [{}],
         featured: true,
         description: '<p>test description</p>',
         short_description: '<p>test short description</p>',
@@ -424,18 +421,12 @@ export const payloads = {
 
     // wholesale product
     createWholesaleProduct: () => ({
-        name: faker.commerce.productName() + ' (wholesale)',
+        name: `${faker.commerce.productName()}_${faker.string.nanoid(5)} (wholesale)`,
         type: 'simple',
-        regular_price: { min: 100, max: 110, dec: faker.helpers.arrayElement([0, 2]) },
-        // regular_price: '114.15' , // failed for this price & 5% tax & 10% commission dokan .1 issue
+        regular_price: faker.finance.amount({ min: 100, max: 110, dec: faker.helpers.arrayElement([0, 2]) }),
+        // regular_price: '100',
         status: 'publish',
-        categories: [
-            {
-                // id: 48
-                name: 'Uncategorized',
-                slug: 'uncategorized',
-            },
-        ],
+        categories: [{}],
         featured: true,
         description: '<p>test description</p>',
         short_description: '<p>test short description</p>',
@@ -444,8 +435,8 @@ export const payloads = {
                 key: '_dokan_wholesale_meta',
                 value: {
                     enable_wholesale: 'yes',
-                    regular_price: { min: 90, max: 99, dec: faker.helpers.arrayElement([0, 2]) },
-                    // price: '100',
+                    price: faker.finance.amount({ min: 90, max: 99, dec: faker.helpers.arrayElement([0, 2]) }),
+                    // price: '90',
                     quantity: '10',
                 },
             },
@@ -453,17 +444,11 @@ export const payloads = {
     }),
 
     createVariableProduct: () => ({
-        name: faker.commerce.productName() + ' (Variable)',
+        name: `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Variable)`,
         type: 'variable',
         regular_price: faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([0, 2]) }),
         status: 'publish',
-        categories: [
-            {
-                // id: 48
-                name: 'Uncategorized',
-                slug: 'uncategorized',
-            },
-        ],
+        categories: [{}],
         // attributes: [
         // 	{
         // 		'id'       : 28,
@@ -478,25 +463,20 @@ export const payloads = {
         // ],
     }),
 
-    createProductVariation: {
-        // id: '47',
+    createProductVariation: () => ({
         regular_price: faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([0, 2]) }),
-        status: 'publish',
         categories: [
             {
                 //  id: 48
-                name: 'Uncategorized',
-                slug: 'uncategorized',
             },
         ],
         attributes: [
             {
-                id: 18,
-                // name: 'size',
+                // id: 18,
                 option: 'l',
             },
         ],
-    },
+    }),
 
     batchProductVariation: {
         id: '',
@@ -504,22 +484,18 @@ export const payloads = {
     },
 
     createDownloadableProduct: () => ({
-        name: faker.commerce.productName() + ' (Downloadable)',
+        name: `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Downloadable)`,
         type: 'simple',
         downloadable: true,
         regular_price: faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([0, 2]) }),
         downloads: [],
         // download_limit: 100,
         // download_expiry: 100,
-        categories: [
-            {
-                // id: 48
-            },
-        ],
+        categories: [{}],
     }),
 
     createSimpleSubscriptionProduct: () => ({
-        name: faker.commerce.productName() + ' (Subscription)',
+        name: `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Subscription)`,
         type: 'subscription',
         status: 'publish',
         featured: true,
@@ -569,7 +545,7 @@ export const payloads = {
     }),
 
     createBookableProduct: () => ({
-        name: faker.commerce.productName() + ' (Bookable)',
+        name: `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Bookable)`,
         status: 'publish',
         featured: true,
         description: '<p>test description</p>',
@@ -597,7 +573,7 @@ export const payloads = {
     }),
 
     createBookingResource: () => ({
-        name: 'resource_' + faker.string.nanoid(10),
+        name: `resource_${faker.string.nanoid(10)}`,
         qty: '1',
         availability: [
             {
@@ -614,14 +590,14 @@ export const payloads = {
 
     createBookingResourceByDb: () => ({
         author: 1,
-        title: 'resource_' + faker.string.nanoid(10),
+        title: `resource_${faker.string.nanoid(10)}`,
         status: 'publish',
         comment_status: 'closed',
         ping_status: 'closed',
     }),
 
     createAuctionProduct: () => ({
-        name: faker.commerce.productName() + ' (Auction)',
+        name: `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Auction)`,
         type: 'auction',
         status: 'publish',
         featured: true,
@@ -708,12 +684,12 @@ export const payloads = {
     }),
 
     createProductAddons: () => ({
-        name: 'Test Addons Group_' + faker.string.nanoid(10),
+        name: `Test Addons Group_${faker.string.nanoid(10)}`,
         priority: 10,
         restrict_to_categories: [],
         fields: [
             {
-                name: 'Test Add-on Title_' + faker.string.nanoid(10),
+                name: `Test Add-on Title_${faker.string.nanoid(10)}`,
                 title_format: 'label',
                 description_enable: 1,
                 description: 'Test Add-on description',
@@ -742,6 +718,296 @@ export const payloads = {
                         price_type: 'flat_fee',
                     },
                 ],
+            },
+        ],
+    }),
+
+    createDokanSubscriptionProduct: () => ({
+        name: `dokan_sub_${faker.string.nanoid(5)}`,
+        post_author: '1',
+        // type: 'product_pack',
+        type: 'simple',
+        status: 'publish',
+        featured: false,
+        catalog_visibility: 'hidden',
+        description: 'dokan subscription',
+        short_description: 'dokan subscription',
+        regular_price: '100',
+        purchasable: false,
+        virtual: true,
+        tax_status: 'taxable',
+        tax_class: '',
+        sold_individually: true,
+        shipping_required: false,
+        shipping_taxable: false,
+        categories: [
+            {
+                name: 'Uncategorized',
+            },
+        ],
+        meta_data: [
+            // number of products
+            {
+                key: '_no_of_product',
+                value: '-1',
+            },
+
+            // pack validity
+            {
+                key: '_pack_validity',
+                value: '1000',
+            },
+
+            //product advertisement
+            {
+                key: '_dokan_advertisement_slot_count',
+                value: '',
+            },
+            {
+                key: '_dokan_advertisement_validity',
+                value: '',
+            },
+
+            // Allowed product types
+            {
+                key: 'dokan_subscription_allowed_product_types',
+                value: [], // 'simple', 'variable'
+            },
+
+            // Allowed product categories
+            {
+                key: '_vendor_allowed_categories',
+                value: [], // category ids
+            },
+
+            // Restrict gallery image upload
+            {
+                key: '_enable_gallery_restriction',
+                value: 'no',
+            },
+            // if above is yes then below will be used
+            // {
+            //     key: '_gallery_image_restriction_count',
+            //     value: '-1',
+            // },
+
+            // recurring subscription
+
+            {
+                key: '_enable_recurring_payment',
+                value: 'no',
+            },
+            {
+                key: '_dokan_subscription_period_interval',
+                value: '1',
+            },
+            {
+                key: '_dokan_subscription_period',
+                value: 'day',
+            },
+            {
+                key: '_dokan_subscription_length',
+                value: '0',
+            },
+
+            // Trial period
+            {
+                key: 'dokan_subscription_enable_trial',
+                value: 'no',
+            },
+            {
+                key: 'dokan_subscription_trail_range',
+                value: '1',
+            },
+            {
+                key: 'dokan_subscription_trial_period_types',
+                value: 'day',
+            },
+
+            {
+                key: '_dokan_min_max_meta',
+                value: [],
+            },
+            {
+                key: 'chosen_product_cat',
+                value: [],
+            },
+            {
+                key: '_product_addons',
+                value: [],
+            },
+            {
+                key: '_product_addons_exclude_global',
+                value: '0',
+            },
+            {
+                key: 'dokan_geo_latitude',
+                value: '',
+            },
+            {
+                key: 'dokan_geo_longitude',
+                value: '',
+            },
+            {
+                key: 'dokan_geo_address',
+                value: '',
+            },
+            {
+                key: 'dokan_geo_public',
+                value: '',
+            },
+            {
+                key: '_dokan_wholesale_meta',
+                value: {
+                    enable_wholesale: 'no',
+                    price: '',
+                    quantity: '',
+                },
+            },
+        ],
+    }),
+
+    createDokanSubscriptionProductRecurring: () => ({
+        name: `dokan_sub_${faker.string.nanoid(5)}`,
+        post_author: '1',
+        // type: 'product_pack',
+        type: 'simple',
+        status: 'publish',
+        featured: false,
+        catalog_visibility: 'hidden',
+        description: 'dokan subscription',
+        short_description: 'dokan subscription',
+        regular_price: '100',
+        purchasable: false,
+        virtual: true,
+        tax_status: 'taxable',
+        tax_class: '',
+        sold_individually: true,
+        shipping_required: false,
+        shipping_taxable: false,
+        categories: [
+            {
+                name: 'Uncategorized',
+            },
+        ],
+        meta_data: [
+            // number of products
+            {
+                key: '_no_of_product',
+                value: '-1',
+            },
+
+            // pack validity
+            {
+                key: '_pack_validity',
+                value: '1000',
+            },
+
+            //product advertisement
+            {
+                key: '_dokan_advertisement_slot_count',
+                value: '',
+            },
+            {
+                key: '_dokan_advertisement_validity',
+                value: '',
+            },
+
+            // Allowed product types
+            {
+                key: 'dokan_subscription_allowed_product_types',
+                value: [], // 'simple', 'variable'
+            },
+
+            // Allowed product categories
+            {
+                key: '_vendor_allowed_categories',
+                value: [], // category ids
+            },
+
+            // Restrict gallery image upload
+            {
+                key: '_enable_gallery_restriction',
+                value: 'no',
+            },
+            // if above is yes then below will be used
+            // {
+            //     key: '_gallery_image_restriction_count',
+            //     value: '-1',
+            // },
+
+            // recurring subscription
+
+            {
+                key: '_enable_recurring_payment',
+                value: 'yes',
+            },
+            {
+                key: '_dokan_subscription_period_interval',
+                value: '1',
+            },
+            {
+                key: '_dokan_subscription_period',
+                value: 'day',
+            },
+            {
+                key: '_dokan_subscription_length',
+                value: '1000',
+            },
+
+            // Trial period
+            {
+                key: 'dokan_subscription_enable_trial',
+                value: 'no',
+            },
+            {
+                key: 'dokan_subscription_trail_range',
+                value: '1',
+            },
+            {
+                key: 'dokan_subscription_trial_period_types',
+                value: 'day',
+            },
+
+            {
+                key: '_dokan_min_max_meta',
+                value: [],
+            },
+            {
+                key: 'chosen_product_cat',
+                value: [],
+            },
+            {
+                key: '_product_addons',
+                value: [],
+            },
+            {
+                key: '_product_addons_exclude_global',
+                value: '0',
+            },
+            {
+                key: 'dokan_geo_latitude',
+                value: '',
+            },
+            {
+                key: 'dokan_geo_longitude',
+                value: '',
+            },
+            {
+                key: 'dokan_geo_address',
+                value: '',
+            },
+            {
+                key: 'dokan_geo_public',
+                value: '',
+            },
+            {
+                key: '_dokan_wholesale_meta',
+                value: {
+                    enable_wholesale: 'no',
+                    price: '',
+                    quantity: '',
+                },
             },
         ],
     }),
@@ -793,8 +1059,8 @@ export const payloads = {
 
     createProductReview: () => ({
         product_id: '',
-        // review        : 'Test_review' + faker.string.nanoid(10),
-        review: 'Test_review_' + faker.string.nanoid(10),
+        // review        : `Test_review${faker.string.nanoid(10)}`,
+        review: `Test_review_${faker.string.nanoid(10)}`,
         reviewer: faker.person.fullName(),
         reviewer_email: faker.internet.email(),
         rating: faker.number.int({ min: 1, max: 5 }),
@@ -804,7 +1070,7 @@ export const payloads = {
     // product review
 
     updateReview: {
-        review: () => 'review_message_' + faker.string.nanoid(10),
+        review: () => `review_message_${faker.string.nanoid(10)}`,
         rating: faker.number.int({ min: 1, max: 5 }),
         name: 'customer1',
         email: 'customer1@g.com',
@@ -837,10 +1103,16 @@ export const payloads = {
         order_by: 'menu_order',
     }),
 
+    // tags
+
+    createTagsRandom: () => ({
+        name: faker.string.nanoid(5),
+    }),
+
     // coupon
 
     createCoupon: () => ({
-        code: 'VC_' + faker.string.nanoid(10),
+        code: `VC_${faker.string.nanoid(10)}`,
         discount_type: faker.helpers.arrayElement(['percent', 'fixed_product']),
         amount: faker.number.int({ min: 1, max: 10 }).toString(),
         product_ids: [15],
@@ -884,8 +1156,9 @@ export const payloads = {
     },
 
     createMarketPlaceCoupon: () => ({
-        code: 'AC_' + faker.string.nanoid(10),
-        discount_type: faker.helpers.arrayElement(['percent', 'fixed_product', 'fixed_cart']),
+        code: `AC_${faker.string.nanoid(10)}`,
+        // discount_type: faker.helpers.arrayElement(['percent', 'fixed_product', 'fixed_cart']),
+        discount_type: 'percent',
         amount: faker.number.int({ min: 1, max: 10 }).toString(),
         individual_use: false,
         meta_data: [
@@ -920,7 +1193,7 @@ export const payloads = {
         payment_method: 'bacs',
         payment_method_title: 'Direct Bank Transfer',
         set_paid: true,
-        customer_id: 0,
+        customer_id: CUSTOMER_ID ?? 0,
         billing: {
             first_name: 'customer1',
             last_name: 'c1',
@@ -947,7 +1220,7 @@ export const payloads = {
 
         line_items: [
             {
-                product_id: '',
+                product_id: PRODUCT_ID ?? '',
                 quantity: 1,
             },
             // {
@@ -1016,7 +1289,7 @@ export const payloads = {
 
     createOrderNoteForCustomer: {
         status: 'processing',
-        note: 'test order note' + faker.string.nanoid(10),
+        note: `test order note${faker.string.nanoid(10)}`,
         customer_note: 'true',
     },
 
@@ -1035,6 +1308,7 @@ export const payloads = {
         amount: '50',
         notes: 'Withdraw notes',
         method: 'paypal',
+        status: 'pending',
     },
 
     updateWithdraw: {
@@ -1145,6 +1419,11 @@ export const payloads = {
         setting_minimum_order_amount: '',
         setting_order_percentage: '',
         find_address: 'Dhaka',
+        catalog_mode: {
+            hide_add_to_cart_button: 'off',
+            hide_product_price: 'off',
+            request_a_quote_enabled: 'off',
+        },
         product_sections: {
             advertised: 'no',
             featured: 'no',
@@ -1177,21 +1456,28 @@ export const payloads = {
         store_locations: [],
     },
 
+    // catalog mode settings
+    catalogModeSetting: {
+        hide_add_to_cart_button: 'on',
+        hide_product_price: 'on',
+        request_a_quote_enabled: 'on',
+    },
+
     // attribute
 
     createAttribute: () => ({
-        name: 'Test_attribute_' + faker.string.alpha(8),
+        name: `Test_attribute_${faker.string.alpha(8)}`,
         // slug        : `pa_${payloads.createAttribute.name}`,
         // type        : 'select',
         // order_by    : 'menu_order',
         // has_archives: false
     }),
 
-    updateAttribute: () => ({ name: 'Updated_Test_attribute_' + faker.string.alpha(5) }),
+    updateAttribute: () => ({ name: `Updated_Test_attribute_${faker.string.alpha(5)}` }),
 
-    createAttributeTerm: () => ({ name: 'Test_attributeTerm_' + faker.string.alpha(8) }),
+    createAttributeTerm: () => ({ name: `Test_attributeTerm_${faker.string.alpha(5)}` }),
 
-    updateAttributeTerm: () => ({ name: 'Updated_Test_attributeTerm_' + faker.string.alpha(5) }),
+    updateAttributeTerm: () => ({ name: `Updated_Test_attributeTerm_${faker.string.alpha(5)}` }),
 
     // user
 
@@ -1201,7 +1487,7 @@ export const payloads = {
         last_name: faker.person.lastName(),
         email: faker.internet.email(),
         roles: 'customer',
-        password: process.env.USER_PASSWORD,
+        password: USER_PASSWORD,
     }),
 
     // vendor
@@ -1255,6 +1541,11 @@ export const payloads = {
         order: 0,
     },
 
+    createRandomShippingZone: () => ({
+        name: faker.string.alpha(3).toUpperCase(),
+        // order: 0,
+    }),
+
     addShippingZoneLocation: [
         {
             code: 'US',
@@ -1268,10 +1559,6 @@ export const payloads = {
 
     addShippingMethodFreeShipping: {
         method_id: 'free_shipping',
-    },
-
-    addShippingMethodLocalPickup: {
-        method_id: 'local_pickup',
     },
 
     addShippingMethodDokanTableRateShipping: {
@@ -1380,8 +1667,19 @@ export const payloads = {
         ],
     },
 
-    // enable tax rate
-    enableTaxRate: {
+    // currency
+    currency: {
+        update: [
+            {
+                id: 'woocommerce_currency',
+                // label: 'Currency',
+                value: 'USD', // 'USD', 'EUR', 'INR'
+            },
+        ],
+    },
+
+    // enable tax
+    enableTax: {
         update: [
             {
                 id: 'woocommerce_calc_taxes',
@@ -1453,6 +1751,58 @@ export const payloads = {
                 // value: 'yes',
             },
         ],
+    },
+
+    tax: {
+        exclusive: {
+            update: [
+                {
+                    id: 'woocommerce_prices_include_tax',
+                    // label: 'Prices entered with tax',
+                    value: 'no', // 'no', 'yes'
+                },
+                {
+                    id: 'woocommerce_tax_round_at_subtotal',
+                    label: 'Rounding',
+                    value: 'no', // 'no', 'yes'
+                },
+                {
+                    id: 'woocommerce_tax_display_shop',
+                    // label: 'Display prices in the shop',
+                    value: 'excl', // 'excl', 'incl
+                },
+                {
+                    id: 'woocommerce_tax_display_cart',
+                    // label: 'Display prices during cart and checkout',
+                    value: 'excl', // 'excl', 'incl
+                },
+            ],
+        },
+
+        inclusive: {
+            update: [
+                {
+                    id: 'woocommerce_prices_include_tax',
+                    // label: 'Prices entered with tax',
+                    value: 'yes', // 'no', 'yes'
+                },
+                {
+                    id: 'woocommerce_tax_round_at_subtotal',
+                    label: 'Rounding',
+                    value: 'no', // 'no', 'yes'
+                },
+                {
+                    id: 'woocommerce_tax_display_shop',
+                    // label: 'Display prices in the shop',
+                    value: 'incl', // 'excl', 'incl'
+                },
+                {
+                    id: 'woocommerce_tax_display_cart',
+                    // label: 'Display prices during cart and checkout',
+                    value: 'incl', // 'excl', 'incl
+                },
+            ],
+        },
     },
 
     // enable HPOS
@@ -1595,45 +1945,7 @@ export const payloads = {
                 // description: "Place the payment gateway in test mode using test API keys.",
                 value: 'yes',
             },
-            {
-                id: 'stripe_checkout',
-                // label: "Enable Stripe Checkout",
-                // description: "(This only works when 3D Secure and SCA is disabled) If enabled, this option shows a \"pay\" button and modal credit card form on the checkout, instead of credit card fields directly on the page.",
-                value: 'yes',
-            },
-            {
-                id: 'stripe_checkout_locale',
-                // label: "Stripe Checkout locale",
-                // description: "Language to display in Stripe Checkout modal. Specify Auto to display Checkout in the user's preferred language, if available. English will be used by default.",
-                value: 'en',
-                // 'options': {
-                //     'auto': 'Auto',
-                //     'zh': 'Simplified Chinese',
-                //     'da': 'Danish',
-                //     'nl': 'Dutch',
-                //     'en': 'English',
-                //     'fi': 'Finnish',
-                //     'fr': 'French',
-                //     'de': 'German',
-                //     'it': 'Italian',
-                //     'ja': 'Japanese',
-                //     'no': 'Norwegian',
-                //     'es': 'Spanish',
-                //     'sv': 'Swedish'
-                // }
-            },
-            {
-                id: 'stripe_checkout_image',
-                // label: "Checkout Image",
-                // description: "Optionally enter the URL to a 128x128px image of your brand or product. e.g. <code>https://yoursite.com/wp-content/uploads/2013/09/yourimage.jpg</code>",
-                value: '',
-            },
-            {
-                id: 'stripe_checkout_label',
-                // label: "Checkout Button Label",
-                // description: "Optionally enter a Label for PAY button",
-                value: '',
-            },
+
             {
                 id: 'saved_cards',
                 // label: "Enable saved cards",
@@ -2361,8 +2673,8 @@ export const payloads = {
         first_name: faker.person.firstName(),
         last_name: faker.person.lastName(),
         role: 'customer',
-        username: faker.person.firstName() + faker.string.nanoid(5),
-        password: String(process.env.USER_PASSWORD),
+        username: `${faker.person.firstName()}_${faker.string.nanoid(5)}`,
+        password: String(USER_PASSWORD),
         billing: {
             first_name: 'customer1',
             last_name: 'c1',
@@ -2395,7 +2707,7 @@ export const payloads = {
         first_name: faker.person.firstName(),
         last_name: faker.person.lastName(),
         role: 'customer',
-        password: String(process.env.USER_PASSWORD),
+        password: String(USER_PASSWORD),
         billing: {
             first_name: 'customer1',
             last_name: 'c1',
@@ -2469,25 +2781,25 @@ export const payloads = {
         last_name: 's1',
         email: 'staff1@email.c',
         phone: '0123456789',
-        password: String(process.env.USER_PASSWORD),
+        password: String(USER_PASSWORD),
     },
 
     createStaff: () => ({
-        username: faker.person.firstName('male') + faker.string.nanoid(10),
+        username: `${faker.person.firstName('male')}_${faker.string.nanoid(10)}`,
         first_name: faker.person.firstName('male'),
         last_name: faker.person.lastName('male'),
         phone: '0123456789',
-        email: faker.person.firstName('male') + '@email.com',
-        password: String(process.env.USER_PASSWORD),
+        email: `${faker.person.firstName('male')}_${faker.string.nanoid(5)}@email.com`,
+        password: String(USER_PASSWORD),
     }),
 
     updateStaff: () => ({
-        // username: faker.person.firstName('male') + faker.string.nanoid(10),
+        // username: `${faker.person.firstName('male')}_${faker.string.nanoid(10)}`,
         first_name: faker.person.firstName('male'),
         last_name: faker.person.lastName('male'),
         phone: '0123456789',
-        email: faker.person.firstName('male') + '@email.com',
-        // password: String(process.env.USER_PASSWORD), // todo: fatal error exists dokan issue, for updating password
+        email: `${faker.person.firstName('male')}_${faker.string.nanoid(5)}@email.com`,
+        password: String(USER_PASSWORD),
     }),
 
     updateCapabilities: {
@@ -2604,7 +2916,7 @@ export const payloads = {
 
     createAnnouncement: () => ({
         // title: 'test announcement title',
-        title: 'test announcement_' + faker.string.nanoid(10),
+        title: `test announcement_${faker.string.nanoid(10)}`,
         content: '<p>This is announcement content</p>',
         status: 'publish',
         sender_type: 'all_seller',
@@ -2637,8 +2949,8 @@ export const payloads = {
 
     // store category
 
-    createStoreCategory: () => ({ name: 'Test_Store_Category' + faker.string.nanoid(10) }),
-    updateStoreCategory: () => ({ name: 'Update_Test_Store_Category' + faker.string.nanoid(10) }),
+    createStoreCategory: () => ({ name: `Store_Category_${faker.string.nanoid(5)}` }),
+    updateStoreCategory: () => ({ name: `Update_Store_Category_${faker.string.nanoid(5)}` }),
 
     // dummy data
 
@@ -2659,7 +2971,7 @@ export const payloads = {
         ],
         vendor_data: {
             email: 'dummystore1@yopmail.com',
-            password: String(process.env.USER_PASSWORD),
+            password: String(USER_PASSWORD),
             store_name: 'dummyStore1',
             social: [],
             payment: [],
@@ -2683,11 +2995,11 @@ export const payloads = {
     // store
 
     createStore: () => ({
-        user_login: faker.person.firstName() + faker.string.nanoid(5),
-        user_pass: String(process.env.USER_PASSWORD),
+        user_login: `${faker.person.firstName()}_${faker.string.nanoid(5)}`,
+        user_pass: String(USER_PASSWORD),
         role: 'seller',
         email: faker.internet.email(),
-        store_name: faker.person.firstName() + '_store',
+        store_name: `${faker.person.firstName()}_store`,
         first_name: faker.person.firstName(),
         last_name: faker.person.lastName(),
         social: {
@@ -2746,16 +3058,16 @@ export const payloads = {
             open_notice: 'Store is open',
             close_notice: 'Store is closed',
         },
-        company_name: '',
-        vat_number: '',
-        company_id_number: '',
-        bank_name: '',
-        bank_iban: '',
+        company_name: faker.company.name(),
+        company_id_number: faker.string.alphanumeric(5),
+        vat_number: faker.string.alphanumeric(10),
+        bank_name: faker.string.alphanumeric(7),
+        bank_iban: faker.finance.iban(),
         categories: [
             {
                 // id: 74,
-                // name: 'Uncategorized',
-                // slug: 'uncategorized',
+                name: 'Uncategorized',
+                slug: 'uncategorized',
             },
         ],
         admin_commission: '',
@@ -2933,13 +3245,13 @@ export const payloads = {
     },
 
     createStore1: {
-        user_login: process.env.VENDOR,
-        user_pass: process.env.USER_PASSWORD,
-        user_nicename: process.env.VENDOR + 'store',
+        user_login: VENDOR,
+        user_pass: USER_PASSWORD,
+        user_nicename: `${VENDOR}store`,
         role: 'seller',
-        email: process.env.VENDOR + '@yopmail.com',
-        store_name: process.env.VENDOR + 'store',
-        first_name: process.env.VENDOR,
+        email: `${VENDOR}@yopmail.com`,
+        store_name: `${VENDOR}store`,
+        first_name: VENDOR,
         last_name: 'v',
         social: {
             fb: 'https://www.facebook.com/',
@@ -3040,7 +3352,7 @@ export const payloads = {
         //     open_notice: 'Store is open',
         //     close_notice: 'Store is closed',
         // },
-        company_name: faker.company.name(), // todo: eu compliance doesn't save on post request works on update endpoint
+        company_name: faker.company.name(),
         company_id_number: faker.string.alphanumeric(5),
         vat_number: faker.string.alphanumeric(10),
         bank_name: faker.string.alphanumeric(7),
@@ -3048,8 +3360,8 @@ export const payloads = {
         categories: [
             {
                 // id: 74,
-                // name: 'Uncategorized',
-                // slug: 'uncategorized'
+                name: 'Uncategorized',
+                slug: 'uncategorized',
             },
         ],
         admin_commission: '',
@@ -3058,13 +3370,13 @@ export const payloads = {
     },
 
     createStore2: {
-        user_login: process.env.VENDOR2,
-        user_pass: process.env.USER_PASSWORD,
-        user_nicename: process.env.VENDOR2 + 'store',
+        user_login: VENDOR2,
+        user_pass: USER_PASSWORD,
+        user_nicename: `${VENDOR2}store`,
         role: 'seller',
-        email: process.env.VENDOR2 + '@yopmail.com',
-        store_name: process.env.VENDOR2 + 'store',
-        first_name: process.env.VENDOR2,
+        email: `${VENDOR2}@yopmail.com`,
+        store_name: `${VENDOR2}store`,
+        first_name: VENDOR2,
         last_name: 'v',
         social: {
             fb: 'https://www.facebook.com/',
@@ -3167,16 +3479,16 @@ export const payloads = {
             open_notice: 'Store is open',
             close_notice: 'Store is closed',
         },
-        company_name: '',
-        vat_number: '',
-        company_id_number: '',
-        bank_name: '',
-        bank_iban: '',
+        company_name: faker.company.name(),
+        company_id_number: faker.string.alphanumeric(5),
+        vat_number: faker.string.alphanumeric(10),
+        bank_name: faker.string.alphanumeric(7),
+        bank_iban: faker.finance.iban(),
         categories: [
             {
                 // id: 74,
-                // name: 'Uncategorized',
-                // slug: 'uncategorized'
+                name: 'Uncategorized',
+                slug: 'uncategorized',
             },
         ],
         admin_commission: '',
@@ -3185,13 +3497,13 @@ export const payloads = {
     },
 
     createStore3: {
-        user_login: process.env.VENDOR3,
-        user_pass: process.env.USER_PASSWORD,
-        user_nicename: process.env.VENDOR3 + 'store',
+        user_login: VENDOR3,
+        user_pass: USER_PASSWORD,
+        user_nicename: `${VENDOR3}store`,
         role: 'seller',
-        email: process.env.VENDOR3 + '@yopmail.com',
-        store_name: process.env.VENDOR3 + 'store',
-        first_name: process.env.VENDOR3,
+        email: `${VENDOR3}@yopmail.com`,
+        store_name: `${VENDOR3}store`,
+        first_name: VENDOR3,
         last_name: 'v',
         social: {
             fb: 'https://www.facebook.com/',
@@ -3294,7 +3606,7 @@ export const payloads = {
             open_notice: 'Store is open',
             close_notice: 'Store is closed',
         },
-        company_name: faker.company.name(), // todo: eu compliance doesn't save on post request works on update endpoint
+        company_name: faker.company.name(),
         company_id_number: faker.string.alphanumeric(5),
         vat_number: faker.string.alphanumeric(10),
         bank_name: faker.string.alphanumeric(7),
@@ -3312,14 +3624,14 @@ export const payloads = {
     },
 
     createCustomer1: {
-        email: process.env.CUSTOMER + '@yopmail.com',
-        first_name: process.env.CUSTOMER,
+        email: `${CUSTOMER}@yopmail.com`,
+        first_name: CUSTOMER,
         last_name: 'c1',
         role: 'customer',
-        username: process.env.CUSTOMER,
-        password: process.env.USER_PASSWORD,
+        username: CUSTOMER,
+        password: USER_PASSWORD,
         billing: {
-            first_name: process.env.CUSTOMER,
+            first_name: CUSTOMER,
             last_name: 'c1',
             company: '',
             address_1: 'abc street',
@@ -3328,11 +3640,11 @@ export const payloads = {
             postcode: '10003',
             country: 'US',
             state: 'NY',
-            email: process.env.CUSTOMER + '@yopmail.com',
+            email: `${CUSTOMER}@yopmail.com`,
             phone: '0123456789',
         },
         shipping: {
-            first_name: process.env.CUSTOMER,
+            first_name: CUSTOMER,
             last_name: 'c1',
             company: '',
             address_1: 'abc street',
@@ -3346,14 +3658,14 @@ export const payloads = {
     },
 
     createCustomer2: {
-        email: process.env.CUSTOMER2 + '@yopmail.com',
-        first_name: process.env.CUSTOMER2,
+        email: `${CUSTOMER2}@yopmail.com`,
+        first_name: CUSTOMER2,
         last_name: 'c2',
         role: 'customer',
-        username: process.env.CUSTOMER2,
-        password: process.env.USER_PASSWORD,
+        username: CUSTOMER2,
+        password: USER_PASSWORD,
         billing: {
-            first_name: process.env.CUSTOMER2,
+            first_name: CUSTOMER2,
             last_name: 'c2',
             company: '',
             address_1: 'abc street',
@@ -3362,11 +3674,11 @@ export const payloads = {
             postcode: '10003',
             country: 'US',
             state: 'NY',
-            email: process.env.CUSTOMER2 + '@yopmail.com',
+            email: `${CUSTOMER2}@yopmail.com`,
             phone: '0123456789',
         },
         shipping: {
-            first_name: process.env.CUSTOMER2,
+            first_name: CUSTOMER2,
             last_name: 'c2',
             company: '',
             address_1: 'abc street',
@@ -3390,7 +3702,7 @@ export const payloads = {
             postcode: '10003',
             country: 'US',
             state: 'NY',
-            email: faker.person.firstName() + '@yopmail.com',
+            email: `${faker.person.firstName()}@yopmail.com`,
             phone: '0123456789',
         },
         shipping: {
@@ -3409,13 +3721,13 @@ export const payloads = {
 
     // update password
     updatePassword: {
-        password: String(process.env.USER_PASSWORD),
+        password: String(USER_PASSWORD),
     },
 
     // quote rule
 
     createQuoteRule: () => ({
-        rule_name: 'QR_' + faker.string.nanoid(10),
+        rule_name: `QR_${faker.string.nanoid(10)}`,
         selected_user_role: ['customer', 'guest'],
         category_ids: [],
         product_ids: [],
@@ -3423,13 +3735,13 @@ export const payloads = {
         hide_price_text: 'Price is hidden',
         hide_cart_button: 'replace',
         button_text: 'Add to quote',
-        apply_on_all_product: '1',
+        apply_on_all_product: '0',
         rule_priority: '0',
         status: 'publish',
     }),
 
     updateQuoteRule: {
-        rule_name: 'updated_QR_' + faker.string.nanoid(10),
+        rule_name: `updated_QR_${faker.string.nanoid(10)}`,
         selected_user_role: ['customer'],
         hide_price: '0',
         hide_price_text: 'Price is covered',
@@ -3441,7 +3753,7 @@ export const payloads = {
     // quote request
 
     createQuoteRequest: () => ({
-        quote_title: 'QT_' + faker.string.nanoid(10),
+        quote_title: `QT_${faker.string.nanoid(10)}`,
         // user_id: '',
         customer_info: {
             name_field: 'customer1',
@@ -3456,7 +3768,7 @@ export const payloads = {
     }),
 
     updateRequestQuote: {
-        quote_title: 'updated_QT_' + faker.string.nanoid(10),
+        quote_title: `updated_QT_${faker.string.nanoid(10)}`,
         // user_id: '',
         customer_info: {
             name_field: 'customer1',
@@ -3567,28 +3879,29 @@ export const payloads = {
     // product questions answers
 
     createProductQuestion: () => ({
-        question: 'test question_' + faker.string.nanoid(10),
+        question: `test question_${faker.string.nanoid(10)}`,
         product_id: '',
+        status: 'visible',
     }),
 
     updateProductQuestion: () => ({
-        question: 'test question updated_' + faker.string.nanoid(10),
+        question: `test question updated_${faker.string.nanoid(10)}`,
         status: 'hidden',
     }),
 
     createProductQuestionAnswer: () => ({
-        answer: '<p>test answer_' + faker.string.nanoid(10) + '</p>',
+        answer: `<p>test answer_${faker.string.nanoid(10)}</p>`,
         question_id: '',
     }),
 
     updateProductQuestionAnswer: () => ({
-        answer: 'test answer updated_' + faker.string.nanoid(10),
+        answer: `test answer updated_${faker.string.nanoid(10)}`,
     }),
 
     // vendor verification
 
     createVerificationMethod: () => ({
-        title: 'test verification method_' + faker.string.nanoid(10),
+        title: `test verification method_${faker.string.nanoid(10)}`,
         help_text: 'test help-text',
         status: true,
         required: true,
@@ -3596,7 +3909,7 @@ export const payloads = {
     }),
 
     updateVerificationMethod: () => ({
-        title: 'test verification method updated_' + faker.string.nanoid(10),
+        title: `test verification method updated_${faker.string.nanoid(10)}`,
         help_text: 'test help-text updated',
         status: false,
         required: false,
@@ -3635,6 +3948,8 @@ export const payloads = {
         product_id: '',
     },
 
+    randormNumber: faker.number.int({ min: 2, max: 100 }),
+
     paramsReverseWithdrawalTransactions: {
         'trn_date[from]': `${helpers.currentYear}-01-01 00:00:00`,
         'trn_date[to]': `${helpers.currentYear}-12-31 00:00:00`,
@@ -3661,5 +3976,150 @@ export const payloads = {
     paramsGetProductsWithPagination: {
         per_page: '10',
         page: '1',
+    },
+
+    paramsStoreSlug: {
+        store_slug: faker.string.nanoid(10),
+    },
+
+    //commission
+    commission: {
+        product_id: 0,
+        amount: 0,
+        vendor_id: 0,
+        category_ids: 0,
+        context: 'admin',
+    },
+    // subscription
+
+    updateVendorSubscription: {
+        action: 'cancel', // 'activate', 'cancel'
+        immediately: false,
+    },
+
+    batchUpdateVendorSubscription: {
+        action: 'cancel', // 'activate', 'cancel'
+        user_ids: [],
+    },
+
+    saveVendorSubscriptionProductCommission: {
+        product_id: '',
+        commission_type: 'fixed',
+        commission: {
+            fixed: {
+                percentage: '5',
+                flat: '5',
+            },
+            category_based: {
+                all: {
+                    percentage: '5',
+                    flat: '5',
+                },
+                // items: {
+                //     'category-id1': {  // replace with actual category id
+                //         percentage: '5',
+                //         flat: '5',
+                //     },
+                //     'category-id2': {
+                //         percentage: '5',
+                //         flat: '5',
+                //     },
+                // },
+            },
+        },
+    },
+
+    // shipping status
+
+    createShipment: {
+        shipped_status: 'ss_proceccing',
+        shipping_provider: 'sp-dhl',
+        shipped_date: new Date().toISOString(),
+        shipping_number: '#001',
+        shipment_comments: 'test shipment comment',
+        is_notify: 'on',
+        item_id: ['lineitemid'], // replace with actual line item id
+        item_qty: {
+            lineitemid: 1, // replace with actual line item id
+        },
+    },
+
+    updateShipment: {
+        shipping_provider: 'sp-fedex', // sp-dhl, sp-dpd, sp-fedex, sp-ups, sp-usps (has more options)
+        shipping_number: '#002',
+        shipped_status: 'ss_pickedup', // ss_delivered, ss_cancelled, ss_proceccing, ss_ready_for_pickup, ss_pickedup (has more options)
+        shipped_date: new Date(new Date().setDate(new Date().getDate() + 2)).toISOString(),
+    },
+
+    // shortcodes
+
+    // dokan dashboard shortcode
+    dashboardShortcode: {
+        title: 'Dashboard-shortcode',
+        content: '[dokan-dashboard]',
+        status: 'publish',
+    },
+
+    // dokan subscription pack shortcode
+    dokanSubscriptionPackShortcode: {
+        title: 'Dokan_subscription_pack',
+        content: '[dps_product_pack]',
+        status: 'publish',
+    },
+
+    // vendor registration  shortcode
+    vendorRegistrationShortcode: {
+        title: 'Vendor-registration',
+        content: '[dokan-vendor-registration]',
+        status: 'publish',
+    },
+
+    // best selling product shortcode
+    bestSellingProductShortcode: {
+        title: 'Best-selling-product',
+        content: '[dokan-best-selling-product]',
+        status: 'publish',
+    },
+
+    // top rated product shortcode
+    topRatedProductShortcode: {
+        title: 'Top-rated-product',
+        content: '[dokan-top-rated-product]',
+        status: 'publish',
+    },
+
+    // customer migration shortcode
+    customerMigrationShortcode: {
+        title: 'Customer-migration',
+        content: '[dokan-customer-migration]',
+        status: 'publish',
+    },
+
+    // geolocation filter form shortcode
+    geolocationFilterFormShortcode: {
+        title: 'geolocation-filter-form',
+        content: '[dokan-geolocation-filter-form]',
+        status: 'publish',
+    },
+
+    // stores shortcode
+    storesShortcode: {
+        title: 'Stores-shortcode',
+        content: '[dokan-stores]',
+        status: 'publish',
+    },
+
+    // my orders shortcode
+    myOrdersShortcode: {
+        title: 'My-orders-shortcode',
+        content: '[dokan-my-orders]',
+        status: 'publish',
+    },
+
+    // request quote shortcode
+    requestQuoteShortcode: {
+        title: 'Request-quote',
+        content: '[dokan-request-quote]',
+        status: 'publish',
     },
 };

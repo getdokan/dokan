@@ -10,11 +10,11 @@ export class LoginPage extends BasePage {
 
     // user login
     async login(user: user, storageState?: string): Promise<void> {
-        await this.loginFronted(user, storageState);
+        await this.loginFrontend(user, storageState);
     }
 
-    // user loginFronted
-    async loginFronted(user: user, storageState?: string): Promise<void> {
+    // user login frontend
+    async loginFrontend(user: user, storageState?: string): Promise<void> {
         await this.goIfNotThere(data.subUrls.frontend.myAccount);
         const currentUser = await this.getCurrentUser();
 
@@ -24,8 +24,8 @@ export class LoginPage extends BasePage {
         }
 
         // logout if other user is already logged in
-        else if (user.username !== currentUser && currentUser !== undefined) {
-            // TODO : got undefined for using storage.json
+        if (user.username !== currentUser && currentUser !== undefined) {
+            // todo : got undefined for using storage.json
             // else if ((user.username !== currentUser) || (currentUser === undefined)) {
             await this.logoutFrontend();
         }
@@ -41,7 +41,7 @@ export class LoginPage extends BasePage {
         expect(loggedInUser).toBe(user.username);
     }
 
-    // user loginBackend
+    // user login backend
     async loginBackend(user: user, url: string = data.subUrls.backend.login, storageState?: string): Promise<void> {
         await this.goIfNotThere(url);
         const emailField = await this.isVisible(selector.backend.email);
@@ -62,7 +62,7 @@ export class LoginPage extends BasePage {
         await this.logoutFrontend();
     }
 
-    // user logoutFrontend
+    // user logout frontend
     async logoutFrontend(): Promise<void> {
         await this.goIfNotThere(data.subUrls.frontend.myAccount);
         await this.clickAndWaitForLoadState(selector.frontend.customerLogout);
@@ -78,8 +78,7 @@ export class LoginPage extends BasePage {
     // admin logout
     async logoutBackend(): Promise<void> {
         await this.goIfNotThere(data.subUrls.backend.adminLogin);
-        await this.hover(selector.backend.userMenu);
-        await this.page.hover(selector.backend.logout);
+        await this.addAttributeValue(selector.backend.userMenu, 'class', 'hover'); // force hover on user menu
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.backend.adminLogout, selector.backend.logout, 302);
         await this.toContainText(selector.backend.logoutSuccessMessage, 'You are now logged out.');
         const loggedInUser = await this.getCurrentUser();

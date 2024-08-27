@@ -13,25 +13,26 @@ test.describe('Wholesale customers test (admin)', () => {
     let customerPage: CustomerPage;
     let aPage: Page, cPage: Page;
     let apiUtils: ApiUtils;
+    let customerId: string;
+    let customerName: string;
 
     test.beforeAll(async ({ browser }) => {
         const adminContext = await browser.newContext(data.auth.adminAuth);
         aPage = await adminContext.newPage();
         admin = new WholesaleCustomersPage(aPage);
 
-        const customerContext = await browser.newContext(data.auth.noAuth);
+        const customerContext = await browser.newContext();
         cPage = await customerContext.newPage();
         customerPage = new CustomerPage(cPage);
         customer = new WholesaleCustomersPage(cPage);
 
         apiUtils = new ApiUtils(await request.newContext());
 
-        await apiUtils.createWholesaleCustomer(payloads.createCustomer(), payloads.adminAuth);
-        await apiUtils.createWholesaleCustomer(payloads.createCustomer1, payloads.adminAuth);
-        //  [,, productName] = await apiUtils.createProduct(payloads.createWholesaleProduct(), payloads. vendorAuth);
+        [, customerId, customerName] = await apiUtils.createWholesaleCustomer(payloads.createCustomer(), payloads.adminAuth);
     });
 
     test.afterAll(async () => {
+        await dbUtils.setOptionValue(dbData.dokan.optionName.wholesale, dbData.dokan.wholesaleSettings);
         await aPage.close();
         await cPage.close();
         await apiUtils.dispose();
@@ -44,27 +45,29 @@ test.describe('Wholesale customers test (admin)', () => {
     });
 
     test('admin can search wholesale customer', { tag: ['@pro', '@admin'] }, async () => {
-        await admin.searchWholesaleCustomer(data.predefined.customerInfo.username1);
+        await admin.searchWholesaleCustomer(customerName);
     });
 
     test("admin can disable customer's wholesale capability", { tag: ['@pro', '@admin'] }, async () => {
-        await admin.updateWholesaleCustomer(data.predefined.customerInfo.username1, 'disable');
+        await admin.updateWholesaleCustomer(customerName, 'disable');
     });
 
     test("admin can enable customer's wholesale capability", { tag: ['@pro', '@admin'] }, async () => {
-        await admin.updateWholesaleCustomer(data.predefined.customerInfo.username1, 'enable');
+        await admin.updateWholesaleCustomer(customerName, 'enable');
     });
 
     test('admin can edit wholesale customer', { tag: ['@pro', '@admin'] }, async () => {
-        await admin.editWholesaleCustomer(data.customer);
+        await admin.editWholesaleCustomer({ ...data.customer, username: customerName });
     });
 
     test('admin can view wholesale customer orders', { tag: ['@pro', '@admin'] }, async () => {
-        await admin.viewWholesaleCustomerOrders(data.predefined.customerInfo.username1);
+        await apiUtils.createOrder(payloads.createProduct(), { ...payloads.createOrder, customer_id: customerId }, payloads.vendorAuth);
+        await admin.viewWholesaleCustomerOrders(customerName);
     });
 
     test('admin can delete wholesale customer', { tag: ['@pro', '@admin'] }, async () => {
-        await admin.updateWholesaleCustomer(data.predefined.customerInfo.username1, 'delete');
+        const [, , customerName] = await apiUtils.createWholesaleCustomer(payloads.createCustomer(), payloads.adminAuth);
+        await admin.updateWholesaleCustomer(customerName, 'delete');
     });
 
     test('admin can perform bulk action on wholesale customers', { tag: ['@pro', '@admin'] }, async () => {
@@ -79,13 +82,13 @@ test.describe('Wholesale customers test (admin)', () => {
     });
 
     test('customer can request for become a wholesale customer', { tag: ['@pro', '@customer'] }, async () => {
-        await dbUtils.setDokanSettings(dbData.dokan.optionName.wholesale, { ...dbData.dokan.wholesaleSettings, need_approval_for_wholesale_customer: 'on' });
+        await dbUtils.setOptionValue(dbData.dokan.optionName.wholesale, { ...dbData.dokan.wholesaleSettings, need_approval_for_wholesale_customer: 'on' });
         await customerPage.customerRegister(data.customer.customerInfo);
         await customer.customerRequestForBecomeWholesaleCustomer();
     });
 });
 
-test.describe.skip('Wholesale customers test customer', () => {
+test.describe('Wholesale customers test customer', () => {
     let customer: WholesaleCustomersPage;
     let customerPage: CustomerPage;
     let cPage: Page;
@@ -95,13 +98,14 @@ test.describe.skip('Wholesale customers test customer', () => {
     let minimumWholesaleQuantity: string;
 
     test.beforeAll(async ({ browser }) => {
-        const customerContext = await browser.newContext(data.auth.customerAuth);
+        apiUtils = new ApiUtils(await request.newContext());
+
+        const [, , customerName] = await apiUtils.createWholesaleCustomer(payloads.createCustomer(), payloads.adminAuth);
+
+        const customerContext = await browser.newContext(data.header.userAuth(customerName));
         cPage = await customerContext.newPage();
         customerPage = new CustomerPage(cPage);
         customer = new WholesaleCustomersPage(cPage);
-
-        apiUtils = new ApiUtils(await request.newContext());
-        await apiUtils.createWholesaleCustomer(payloads.createCustomer1, payloads.adminAuth); // todo: need to update customer auth if created wholesale or move to env setup
 
         const [responseBody, ,] = await apiUtils.createProduct(payloads.createWholesaleProduct(), payloads.vendorAuth);
         productName = responseBody.name;
@@ -119,8 +123,9 @@ test.describe.skip('Wholesale customers test customer', () => {
 
     test('customer can buy wholesale product', { tag: ['@pro', '@customer'] }, async () => {
         await customerPage.addProductToCart(productName, 'single-product', true, minimumWholesaleQuantity);
+        await customerPage.goToCart();
         await customer.assertWholesalePrice(wholesalePrice, minimumWholesaleQuantity);
+        await customerPage.goToCheckout();
         await customerPage.paymentOrder();
-        await customerPage.loginPage.login(data.customer);
     });
 });
