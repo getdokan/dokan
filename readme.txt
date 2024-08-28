@@ -3,11 +3,11 @@ Contributors: tareq1988, wedevs, nizamuddinbabu
 Donate Link: http://tareq.co/donate/
 Tags: WooCommerce multivendor marketplace, multivendor marketplace, multivendor, multi seller, multi vendor, WooCommerce marketplace, WooCommerce product vendors
 Requires at least: 6.4
-Tested up to: 6.5.5
+Tested up to: 6.6.1
 WC requires at least: 8.0.0
-WC tested up to: 9.0.2
+WC tested up to: 9.1.4
 Requires PHP: 7.4
-Stable tag: 3.11.4
+Stable tag: 3.11.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -346,6 +346,11 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 == Changelog ==
+
+= v3.11.5 ( Aug 7, 2024 ) =
+
+- **fix:** Fixed data updating issue on Admin color picker settings.
+- **fix:** Fixed extra slashes issue on store url when translated via WPML.
 
 = v3.11.4 ( Jul 10, 2024 ) =
 

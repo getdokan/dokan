@@ -48,7 +48,9 @@ export class VendorVerificationsPage extends AdminPage {
             status === 'enable'
                 ? await this.enableSwitcherAndWaitForResponse(data.subUrls.api.dokan.verificationMethods, settingsAdmin.vendorVerification.enableVerificationMethod(methodName))
                 : await this.disableSwitcherAndWaitForResponse(data.subUrls.api.dokan.verificationMethods, settingsAdmin.vendorVerification.enableVerificationMethod(methodName));
-        response && (await this.toBeVisible(settingsAdmin.vendorVerification.methodUpdateSuccessMessage));
+        if (response) {
+            await this.toBeVisible(settingsAdmin.vendorVerification.methodUpdateSuccessMessage);
+        }
 
         // save settings
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.vendorVerification.saveChanges);
@@ -59,7 +61,9 @@ export class VendorVerificationsPage extends AdminPage {
     async updateVerificationMethod(verificationMethod: dokanSettings['vendorVerification']['verificationMethodDetails']) {
         await this.clearAndType(settingsAdmin.vendorVerification.addNewVerification.label, verificationMethod.title);
         await this.clearAndType(settingsAdmin.vendorVerification.addNewVerification.helpText, verificationMethod.help_text);
-        verificationMethod.required && (await this.check(settingsAdmin.vendorVerification.addNewVerification.required));
+        if (verificationMethod.required) {
+            await this.check(settingsAdmin.vendorVerification.addNewVerification.required);
+        }
     }
 
     // add Verification Method
@@ -208,7 +212,7 @@ export class VendorVerificationsPage extends AdminPage {
 
     // update verification request
     async updateVerificationRequest(requestId: string, action: string): Promise<void> {
-        await this.goIfNotThere(data.subUrls.backend.dokan.verifications);
+        await this.goto(data.subUrls.backend.dokan.verifications);
         await this.reload();
         await this.reloadIfVisible(verificationsAdmin.filters.reset);
 

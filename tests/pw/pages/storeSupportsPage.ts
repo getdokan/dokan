@@ -68,7 +68,9 @@ export class StoreSupportsPage extends AdminPage {
     // search support ticket
     async searchSupportTicket(idOrTitle: string, closed?: boolean) {
         await this.goIfNotThere(data.subUrls.backend.dokan.storeSupport);
-        closed && (await this.clickAndWaitForLoadState(storeSupportsAdmin.navTabs.closed)); // go to closed tab
+        if (closed) {
+            await this.clickAndWaitForLoadState(storeSupportsAdmin.navTabs.closed); // go to closed tab
+        }
 
         await this.clearInputField(storeSupportsAdmin.searchTicket);
         await this.typeAndWaitForResponseAndLoadState(data.subUrls.api.dokan.storeSupport, storeSupportsAdmin.searchTicket, idOrTitle);
@@ -168,7 +170,7 @@ export class StoreSupportsPage extends AdminPage {
     // store support bulk action
     async storeSupportBulkAction(action: string, supportTicketId?: string) {
         await this.goto(data.subUrls.backend.dokan.storeSupport); // not used ternary -> page need to reload before reflecting api update
-        supportTicketId && (await this.searchSupportTicket(supportTicketId));
+        if (supportTicketId) await this.searchSupportTicket(supportTicketId);
 
         // ensure row exists
         await this.notToBeVisible(storeSupportsAdmin.noRowsFound);
@@ -220,8 +222,11 @@ export class StoreSupportsPage extends AdminPage {
         // chat reply box elements are visible
         const ticketIsOpen = await this.isVisible(storeSupportsVendor.supportTicketDetails.chatStatus.open);
         const { addReplyText, closeTicketText, ...replyBox } = storeSupportsVendor.supportTicketDetails.replyBox;
-        ticketIsOpen && (await this.toBeVisible(addReplyText));
-        !ticketIsOpen && (await this.multipleElementVisible(closeTicketText));
+        if (ticketIsOpen) {
+            await this.toBeVisible(addReplyText);
+        } else {
+            await this.multipleElementVisible(closeTicketText);
+        }
         await this.multipleElementVisible(replyBox);
     }
 
@@ -362,9 +367,12 @@ export class StoreSupportsPage extends AdminPage {
 
         // chat reply box elements are visible is ticket is open
         const ticketIsOpen = await this.isVisible(supportsTicketsCustomer.supportTicketDetails.chatStatus.open);
-        ticketIsOpen && (await this.multipleElementVisible(supportsTicketsCustomer.supportTicketDetails.replyBox));
-        // closed ticket elements are visible is ticket is close
-        !ticketIsOpen && (await this.multipleElementVisible(supportsTicketsCustomer.supportTicketDetails.closedTicket));
+        if (ticketIsOpen) {
+            await this.multipleElementVisible(supportsTicketsCustomer.supportTicketDetails.replyBox);
+        } else {
+            // closed ticket elements are visible is ticket is close
+            await this.multipleElementVisible(supportsTicketsCustomer.supportTicketDetails.closedTicket);
+        }
     }
 
     // customer ask for store support
@@ -400,7 +408,9 @@ export class StoreSupportsPage extends AdminPage {
             await this.clickAndWaitForResponse(data.subUrls.ajax, storeSupportsCustomer.login);
         }
         await this.clearAndType(storeSupportsCustomer.subject, getSupport.subject);
-        getSupport.orderId && (await this.selectByValue(storeSupportsCustomer.orderId, getSupport.orderId));
+        if (getSupport.orderId) {
+            await this.selectByValue(storeSupportsCustomer.orderId, getSupport.orderId);
+        }
         await this.clearAndType(storeSupportsCustomer.message, getSupport.message);
         await this.clickAndWaitForResponse(data.subUrls.ajax, storeSupportsCustomer.submit);
         await this.toContainText(selector.customer.cDokanSelector.dokanAlertSuccessMessage, getSupport.supportSubmitSuccessMessage);

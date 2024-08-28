@@ -90,7 +90,7 @@ $price_kses = apply_filters(
             /**
              * Fire an action to add extra content after product image column in product listing table
              *
-             * @since DOKAN_SINCE
+             * @since 3.11.5
              *
              * @param \WC_Product $product Current product.
              */
@@ -112,7 +112,7 @@ $price_kses = apply_filters(
             /**
              * Fire an action to add extra content after product name column in product listing table
              *
-             * @since DOKAN_SINCE
+             * @since 3.11.5
              *
              * @param \WC_Product $product Current product.
              */
@@ -130,7 +130,7 @@ $price_kses = apply_filters(
             /**
              * Fire an action to add extra content after product name column in product listing table
              *
-             * @since DOKAN_SINCE
+             * @since 3.11.5
              *
              * @param \WC_Product $product Current product.
              */
@@ -144,7 +144,7 @@ $price_kses = apply_filters(
             /**
              * Fire an action to add extra content after product status column in product listing table
              *
-             * @since DOKAN_SINCE
+             * @since 3.11.5
              *
              * @param \WC_Product $product Current product.
              *
@@ -179,7 +179,7 @@ $price_kses = apply_filters(
         /**
          * Fire an action to add extra content after product sku column in product listing table
          *
-         * @since DOKAN_SINCE
+         * @since 3.11.5
          *
          * @param \WC_Product $product Current product.
          */
@@ -197,7 +197,7 @@ $price_kses = apply_filters(
         /**
          * Fire an action to add extra content after product stock column in product listing table
          *
-         * @since DOKAN_SINCE
+         * @since 3.11.5
          *
          * @param \WC_Product $product Current product.
          */
@@ -215,7 +215,7 @@ $price_kses = apply_filters(
         /**
          * Fire an action to add extra content after product price column in product listing table
          *
-         * @since DOKAN_SINCE
+         * @since 3.11.5
          *
          * @param \WC_Product $product Current product.
          */
@@ -246,7 +246,7 @@ $price_kses = apply_filters(
         /**
          * Render product listing product type symbol.
          *
-         * @since DOKAN_SINCE
+         * @since 3.11.5
          *
          * @param string $product_type
          */
@@ -260,7 +260,7 @@ $price_kses = apply_filters(
             /**
              * Fire an action to add extra content after product views column in product listing table
              *
-             * @since DOKAN_SINCE
+             * @since 3.11.5
              *
              * @param \WC_Product $product Current product.
              */
@@ -315,7 +315,7 @@ $price_kses = apply_filters(
         /**
          * Fire an action to add extra content after product date column in product listing table
          *
-         * @since DOKAN_SINCE
+         * @since 3.11.5
          *
          * @param \WC_Product $product Current product.
          */

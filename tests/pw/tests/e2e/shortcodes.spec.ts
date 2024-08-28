@@ -59,18 +59,17 @@ test.describe('Shortcodes test', () => {
 
     test('customer can view best selling products (shortcode)', { tag: ['@lite', '@admin'] }, async () => {
         const [responseBody, pageId] = await apiUtils.createPage(payloads.bestSellingProductShortcode, payloads.adminAuth);
-        await customer.viewBestSellingProducts(responseBody.link);
+        await customer.viewProducts(responseBody.link);
         await apiUtils.deletePage(pageId, payloads.adminAuth);
     });
 
     test('customer can view top rated products (shortcode)', { tag: ['@lite', '@admin'] }, async () => {
         const [responseBody, pageId] = await apiUtils.createPage(payloads.topRatedProductShortcode, payloads.adminAuth);
-        await customer.topRatedProducts(responseBody.link);
+        await customer.viewProducts(responseBody.link);
         await apiUtils.deletePage(pageId, payloads.adminAuth);
     });
 
-    test('customer can view customer migration form (shortcode)', { tag: ['@lite', '@admin'] }, async () => {
-        test.skip(true, 'Fatal error exists');
+    test('customer can view customer migration form (shortcode)', { tag: ['@pro', '@admin'] }, async () => {
         const [responseBody, pageId] = await apiUtils.createPage(payloads.customerMigrationShortcode, payloads.adminAuth);
         await customer.viewMigrationForm(responseBody.link);
         await apiUtils.deletePage(pageId, payloads.adminAuth);

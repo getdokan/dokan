@@ -43,10 +43,6 @@ export class StoreCategoriesPage extends AdminPage {
     // search store category
     async searchStoreCategory(categoryName: string) {
         await this.goIfNotThere(data.subUrls.backend.dokan.storeCategories);
-        // await this.click(selector.admin.dokan.vendors.storeCategories);
-
-        await this.clearInputField(storeCategoryAdmin.search);
-
         await this.typeAndWaitForResponse(data.subUrls.api.dokan.storeCategories, storeCategoryAdmin.search, categoryName);
         await this.toBeVisible(storeCategoryAdmin.storeCategoryCell(categoryName));
     }
@@ -71,10 +67,12 @@ export class StoreCategoriesPage extends AdminPage {
         switch (action) {
             case 'set-default':
                 await this.clickAndWaitForResponse(data.subUrls.api.dokan.storeCategories, storeCategoryAdmin.storeCategorySetDefault(categoryName));
+                await this.toBeVisible(storeCategoryAdmin.defaultCategory(categoryName));
                 break;
 
             case 'delete':
                 await this.clickAndAcceptAndWaitForResponse(data.subUrls.api.dokan.storeCategories, storeCategoryAdmin.storeCategoryDelete(categoryName));
+                await this.notToBeVisible(storeCategoryAdmin.storeCategoryCell(categoryName));
                 break;
 
             default:

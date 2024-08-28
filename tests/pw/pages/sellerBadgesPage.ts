@@ -1,4 +1,4 @@
-import { Page, expect, test } from '@playwright/test';
+import { Page, expect } from '@playwright/test';
 import { AdminPage } from '@pages/adminPage';
 import { StoresPage } from '@pages/storesPage';
 import { selector } from '@pages/selectors';
@@ -43,11 +43,12 @@ export class SellerBadgesPage extends AdminPage {
 
     // search seller badge
     async searchSellerBadge(badgeName: string) {
-        await this.goIfNotThere(data.subUrls.backend.dokan.sellerBadge);
+        await this.goto(data.subUrls.backend.dokan.sellerBadge);
 
         await this.clearInputField(sellerBadgeAdmin.search);
         await this.typeAndWaitForResponseAndLoadState(data.subUrls.api.dokan.sellerBadge, sellerBadgeAdmin.search, badgeName);
         await this.toBeVisible(sellerBadgeAdmin.sellerBadgeCell(badgeName));
+        await this.toHaveCount(sellerBadgeAdmin.numberOfRows, 1);
     }
 
     // view seller badge
@@ -74,16 +75,9 @@ export class SellerBadgesPage extends AdminPage {
 
     // create seller badge
     async createSellerBadge(badge: sellerBadge) {
-        await this.goIfNotThere(data.subUrls.backend.dokan.sellerBadge);
-
+        await this.goto(data.subUrls.backend.dokan.sellerBadge);
         await this.clickAndWaitForResponse(data.subUrls.api.dokan.sellerBadgeEvent, sellerBadgeAdmin.createBadge);
         await this.click(sellerBadgeAdmin.badgeDetails.badgeEvents.badgeEventDropdown);
-        const isPublished = await this.isVisible(sellerBadgeAdmin.badgeDetails.badgeEvents.badgePublishedStatus(badge.badgeName));
-        if (isPublished) {
-            console.log('Badge is already published');
-            test.skip();
-            // throw new Error('Badge is already published');
-        }
         await this.click(sellerBadgeAdmin.badgeDetails.badgeEvents.badgeEvent(badge.badgeName));
         await this.clearAndType(sellerBadgeAdmin.badgeDetails.badgeEvents.badgeName, badge.badgeName);
 
@@ -217,7 +211,6 @@ export class SellerBadgesPage extends AdminPage {
 
         await this.clickAndWaitForResponse(data.subUrls.api.dokan.sellerBadge, selector.admin.dokan.vendors.vendorViewDetails(vendorName));
         await this.toBeVisible(selector.admin.dokan.vendors.vendorDetails.vendorSummary.badgesAcquired.badgesAcquired);
-        // todo: add assertions for achieved badges
     }
 
     // update seller badge
@@ -249,7 +242,11 @@ export class SellerBadgesPage extends AdminPage {
 
     // seller badge bulk action
     async sellerBadgeBulkAction(action: string, badgeName?: string) {
-        badgeName ? await this.searchSellerBadge(badgeName) : await this.goIfNotThere(data.subUrls.backend.dokan.sellerBadge);
+        if (badgeName) {
+            await this.searchSellerBadge(badgeName);
+        } else {
+            await this.goto(data.subUrls.backend.dokan.sellerBadge);
+        }
 
         // ensure row exists
         await this.notToBeVisible(sellerBadgeAdmin.noRowsFound);
@@ -308,8 +305,9 @@ export class SellerBadgesPage extends AdminPage {
     async filterSellerBadges(option: string) {
         await this.clickIfVisible(sellerBadgeVendor.congratsModal.closeModal);
 
-        await this.goIfNotThere(data.subUrls.frontend.vDashboard.badges);
+        await this.goto(data.subUrls.frontend.vDashboard.badges);
         await this.selectByValue(sellerBadgeVendor.filterBadges, option);
+        await this.notToBeVisible(sellerBadgeVendor.noRowsFound);
         const count = (await this.getElementText(sellerBadgeVendor.numberOfBadgesFound))?.split(' ')[0];
         expect(Number(count)).toBeGreaterThan(0);
     }

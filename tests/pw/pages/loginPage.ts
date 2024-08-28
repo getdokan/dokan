@@ -25,7 +25,7 @@ export class LoginPage extends BasePage {
 
         // logout if other user is already logged in
         if (user.username !== currentUser && currentUser !== undefined) {
-            // TODO : got undefined for using storage.json
+            // todo : got undefined for using storage.json
             // else if ((user.username !== currentUser) || (currentUser === undefined)) {
             await this.logoutFrontend();
         }
@@ -78,8 +78,7 @@ export class LoginPage extends BasePage {
     // admin logout
     async logoutBackend(): Promise<void> {
         await this.goIfNotThere(data.subUrls.backend.adminLogin);
-        await this.hover(selector.backend.userMenu);
-        await this.page.hover(selector.backend.logout);
+        await this.addAttributeValue(selector.backend.userMenu, 'class', 'hover'); // force hover on user menu
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.backend.adminLogout, selector.backend.logout, 302);
         await this.toContainText(selector.backend.logoutSuccessMessage, 'You are now logged out.');
         const loggedInUser = await this.getCurrentUser();

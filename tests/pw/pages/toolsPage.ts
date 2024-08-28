@@ -22,10 +22,12 @@ export class ToolsPage extends AdminPage {
         await this.toBeVisible(toolsAdmin.toolsText);
 
         // Page Installation elements are visible
-        await this.multipleElementVisible(toolsAdmin.pageInstallation);
+        const { installDokanPages, pageCreatedSuccessMessage, ...pageInstallation } = toolsAdmin.pageInstallation;
+        await this.multipleElementVisible(pageInstallation);
 
         // Check For Regenerate Order commission are visible
-        await this.multipleElementVisible(toolsAdmin.regenerateOrderCommission);
+        const { regenerateOrderCommissionSuccessMessage, ...regenerateOrderCommission } = toolsAdmin.regenerateOrderCommission;
+        await this.multipleElementVisible(regenerateOrderCommission);
 
         // Check For Duplicate Orders are visible
         await this.multipleElementVisible(toolsAdmin.checkForDuplicateOrders);
@@ -46,19 +48,18 @@ export class ToolsPage extends AdminPage {
 
     // dokan page installation
     async dokanPageInstallation() {
-        await this.goIfNotThere(data.subUrls.backend.dokan.tools);
-
-        // all page created button should be disabled
-        await this.hasClass(toolsAdmin.pageInstallation.allPagesCreated, 'button-disabled');
-        // todo:  enable the button then install pages again
-        // await this.setAttributeValue(toolsAdmin.pageInstallation.allPagesCreated, 'class',  'button button-primary');
-        // await this.clickAndWaitForResponse(data.subUrls.ajax, toolsAdmin.pageInstallation.allPagesCreated);
+        await this.goto(data.subUrls.backend.dokan.tools);
+        await this.reload(); // todo: fix this
+        await this.clickAndWaitForResponse(data.subUrls.ajax, toolsAdmin.pageInstallation.installDokanPages, 201);
+        await this.toBeVisible(toolsAdmin.pageInstallation.pageCreatedSuccessMessage);
+        await this.toBeVisible(toolsAdmin.pageInstallation.allPagesCreated);
     }
 
     // regenerate variable product variations author IDs
     async regenerateOrderCommission() {
         await this.goIfNotThere(data.subUrls.backend.dokan.tools);
         await this.clickAndWaitForResponse(data.subUrls.ajax, toolsAdmin.regenerateOrderCommission.regenerate);
+        await this.toBeVisible(toolsAdmin.regenerateOrderCommission.regenerateOrderCommissionSuccessMessage);
     }
 
     // check for duplicate order
@@ -84,12 +85,10 @@ export class ToolsPage extends AdminPage {
     // import dummy data
     async importDummyData() {
         await this.goIfNotThere(data.subUrls.backend.dokan.tools);
-        await this.clickAndWaitForResponse(data.subUrls.api.dokan.dummyData, toolsAdmin.importDummyData.import);
-        // await this.clickAndWaitForResponse(data.subUrls.api.dokan.dummyData, selector.admin.dokan.dummyData.runTheImporter);
-        // todo:  wait for multiple request one after another
-        // const subUrls = [[data.subUrls.api.dokan.dummyData], [data.subUrls.api.dokan.dummyData], [data.subUrls.api.dokan.dummyData], [data.subUrls.api.dokan.dummyData], [data.subUrls.api.dokan.dummyData]];
-        // await this.clickAndWaitForResponses(subUrls, selector.admin.dokan.dummyData.runTheImporter);
-        // await this.toBeVisible(selector.admin.dokan.dummyData.importComplete);
+        await this.clickAndWaitForLoadState(toolsAdmin.importDummyData.import);
+        const urls = [data.subUrls.api.dokan.dummyDataImport, data.subUrls.api.dokan.dummyDataImport, data.subUrls.api.dokan.dummyDataImport, data.subUrls.api.dokan.dummyDataImport, data.subUrls.api.dokan.dummyDataImport];
+        await this.clickAndWaitForResponsesSequentially(urls, selector.admin.dokan.dummyData.runTheImporter);
+        await this.toBeVisible(selector.admin.dokan.dummyData.importComplete);
     }
 
     // test distance matrix API
