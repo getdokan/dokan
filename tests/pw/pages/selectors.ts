@@ -223,8 +223,7 @@ export const selector = {
 
             // dokan notice
             notice: {
-                noticeDiv: '.dokan-admin-notices',
-                noticeDivPromotionExists: '.dokan-admin-notice.dokan-alert',
+                noticeDiv: '.dokan-admin-notice.dokan-info, .dokan-admin-notice.dokan-alert',
                 closeNotice: '.close-notice',
                 slider: '.slide-notice',
                 sliderPrev: '.slide-notice .prev',
