@@ -113,8 +113,6 @@ export class SettingsPage extends AdminPage {
             await this.enableSwitcher(settingsAdmin.selling.vendorProductReviewStatusChange);
             await this.enableSwitcher(settingsAdmin.selling.guestProductEnquiry);
             await this.enableSwitcher(settingsAdmin.selling.newVendorEnableAuction); // todo: add condition for simple auction plugin enabled
-            await this.enableSwitcher(settingsAdmin.selling.enableMinMaxQuantities);
-            await this.enableSwitcher(settingsAdmin.selling.enableMinMaxAmount);
         }
 
         // catalog mode

@@ -251,16 +251,16 @@ const paymentSchema = z
     .or(z.array(z.any()));
 
 const storeOpenClose = z.object({
-    enabled: z.boolean(),
+    enabled: z.boolean().or(z.string()),
     time: z
         .object({
-            enabled: z.boolean().optional(),
+            enabled: z.boolean().or(z.string()).optional(),
             time: z.any().optional(),
             status: z.string().optional(),
             opening_time: z.array(z.string()).optional(),
             closing_time: z.array(z.string()).optional(),
         })
-        .or(z.array(z.any())),
+        .or(z.any()).optional(),
     open_notice: z.string(),
     close_notice: z.string(),
 });
@@ -1823,13 +1823,8 @@ export const schemas = {
                 .optional(),
             order_min_max: z
                 .object({
-                    product_wise_activation: z.string(),
                     min_quantity: z.string().or(z.number()),
                     max_quantity: z.string().or(z.number()),
-                    min_amount: z.string().or(z.number()),
-                    max_amount: z.string().or(z.number()),
-                    _donot_count: z.string().or(z.number()),
-                    ignore_from_cat: z.string().or(z.number()),
                 })
                 .optional(),
             linked: z

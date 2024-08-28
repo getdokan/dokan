@@ -2026,8 +2026,6 @@ export const selector = {
                     vendorProductReviewStatusChange: '.seller_review_manage .switch',
                     guestProductEnquiry: '.enable_guest_user_enquiry .switch',
                     newVendorEnableAuction: '.new_seller_enable_auction .switch',
-                    enableMinMaxQuantities: '.enable_min_max_quantity .switch',
-                    enableMinMaxAmount: '.enable_min_max_amount .switch',
 
                     removeAddToCartButton: '.catalog_mode_hide_add_to_cart_button .switch',
                     hideProductPrice: '.catalog_mode_hide_product_price .switch',
@@ -3670,7 +3668,7 @@ export const selector = {
             advertisementStatus: (productName: string) => `//a[contains(text(),'${productName}')]/../../..//td[@class="product-advertisement-td"]//i[contains(@class,'fa fa-circle')]`,
             permanentlyDelete: (productName: string) => `//a[contains(text(),'${productName}')]/../..//span[@class="delete"]//a`,
             view: (productName: string) => `//a[contains(text(),'${productName}')]/../..//span[@class="view"]//a`,
-            quickEdit: (productName: string) => `//a[contains(text(),'${productName}')]/../..//span[@class="item-inline-edit"]//a`,
+            quickEdit: (productName: string) => `//a[contains(text(),'${productName}')]/../..//span[@class="item-inline-edit editline"]//a`,
             duplicate: (productName: string) => `//a[contains(text(),'${productName}')]/../..//span[@class="duplicate"]//a`,
 
             // Create Product
