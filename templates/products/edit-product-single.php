@@ -183,6 +183,17 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                     <?php if ( $_visibility === 'hidden' ) : ?>
                         <span class="dokan-right dokan-label dokan-label-default dokan-product-hidden-label"><i class="far fa-eye-slash"></i> <?php esc_html_e( 'Hidden', 'dokan-lite' ); ?></span>
                     <?php endif; ?>
+
+                    <?php
+                    /**
+                     * Render the contents after view product button.
+                     *
+                     * @since DOKAN_SINCE
+                     *
+                     * @param \WC_Product $product
+                     */
+                    do_action( 'dokan_edit_product_after_view_product_button', $product );
+                    ?>
                 </h1>
             </header><!-- .entry-header -->
 
