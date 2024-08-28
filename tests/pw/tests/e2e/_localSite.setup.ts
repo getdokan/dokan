@@ -107,4 +107,8 @@ test.describe.skip('setup dokan test site', () => {
         const pluginPath = `${SITE_PATH}/wp-content/plugins/dokan-pro/tests/plugins/woocommerce-bookings.zip`;
         await helpers.exeCommandWpcli(data.commands.wpcli.installPlugin(pluginPath));
     });
+
+    test('checkout dokan pro to develop branch', { tag: ['@pro'] }, async () => {
+        await helpers.exeCommandWpcli(data.commands.checkoutToDevelop(`${SITE_PATH}/wp-content/plugins/dokan-pro`));
+    });
 });
