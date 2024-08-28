@@ -164,7 +164,7 @@ class Hooks {
             'wc-on-hold'    => [ 'wc-pending', 'wc-on-hold', 'wc-processing', 'wc-completed', 'wc-failed' ],
             'wc-processing' => [ 'wc-completed', 'wc-failed', 'wc-cancelled', 'wc-refunded' ],
             'wc-completed'  => [ 'wc-refunded' ],
-            'wc-failed'     => [ 'wc-pending', 'wc-on-hold', 'wc-processing', 'wc-failed', 'wc-cancelled', 'wc-refunded' ],
+            'wc-failed'     => [ 'wc-pending', 'wc-on-hold', 'wc-processing', 'wc-failed', 'wc-cancelled' ],
             'wc-cancelled'  => [],
             'wc-refunded'   => [],
         ];
