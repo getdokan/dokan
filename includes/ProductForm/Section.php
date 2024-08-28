@@ -105,7 +105,7 @@ class Section extends Component {
      */
     private function init_fields() {
         $this->data['fields'] = [];
-        foreach ( Factory::instance()->get_fields() as $field ) {
+        foreach ( Factory::get_fields() as $field ) {
             if ( $field->get_section() === $this->get_id() ) {
                 $this->data['fields'][ $field->get_id() ] = $field;
             }
