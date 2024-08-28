@@ -2,7 +2,6 @@ import { expect, Request, APIRequestContext, APIResponse } from '@playwright/tes
 import { endPoints } from '@utils/apiEndPoints';
 import { payloads } from '@utils/payloads';
 import { helpers } from '@utils/helpers';
-import fs from 'fs';
 import { auth, user_api, taxRate, coupon_api, marketPlaceCoupon, reqOptions, headers, storageState, responseBody } from '@utils/interfaces';
 
 const { VENDOR_ID, CUSTOMER_ID } = process.env;
@@ -1630,6 +1629,7 @@ export class ApiUtils {
 
     // upload media
     async uploadMedia(filePath: string, mimeType: string, auth: auth): Promise<[responseBody, string]> {
+        const fs = await import('fs');
         const payload = {
             headers: {
                 Accept: '*/*',
@@ -1651,6 +1651,7 @@ export class ApiUtils {
 
     // upload file
     async uploadFile(filePath: string, auth: auth): Promise<[responseBody, string]> {
+        const fs = await import('fs');
         const payload = fs.readFileSync(filePath);
         const headers = {
             'content-disposition': `attachment; filename=${String(filePath.split('/').pop())}`,
@@ -2044,20 +2045,42 @@ export class ApiUtils {
         return [responseBody, productId, productName];
     }
 
-    // get system status
-    async getSystemStatus(auth?: auth): Promise<[responseBody, object]> {
-        const [, responseBody] = await this.get(endPoints.wc.getAllSystemStatus, { headers: auth });
-        const activePlugins = responseBody.active_plugins.map((a: { plugin: string; version: string }) => a.plugin.split('/')[0] + ' v' + a.version);
-        activePlugins.sort();
-        const compactInfo = {
-            wpVersion: 'WordPress Version: ' + responseBody?.environment.wp_version,
-            phpVersion: 'PHP Version: ' + responseBody?.environment.php_version,
-            mysqlVersion: 'MySql Version: ' + responseBody?.environment.mysql_version,
-            theme: 'Theme: ' + responseBody?.theme.name + ' v' + responseBody?.theme.version,
-            wpDebugMode: 'Debug Mode: ' + responseBody?.environment.wp_debug_mode,
-            activePlugins: activePlugins,
-        };
-        return [responseBody, compactInfo];
+    /**
+     * woocommerce product addon api methods
+     */
+
+    // get all product addons
+    async getAllProductAddons(auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.get(endPoints.wc.productAddons.getAllProductAddons, { headers: auth });
+        return responseBody;
+    }
+
+    // create product addon
+    async createProductAddon(payload: object, auth?: auth): Promise<[responseBody, string, string, string]> {
+        const [, responseBody] = await this.post(endPoints.wc.productAddons.createProductAddon, { data: payload, headers: auth });
+        const productAddonId = String(responseBody?.id);
+        const addonName = responseBody.name;
+        const addonFieldTitle = responseBody.fields[0].name;
+        return [responseBody, productAddonId, addonName, addonFieldTitle];
+    }
+
+    // delete product addon
+    async deleteProductAddon(productAddonId: string, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.delete(endPoints.wc.productAddons.deleteProductAddon(productAddonId), { headers: auth });
+        return responseBody;
+    }
+
+    // delete all product addons
+    async deleteAllProductAddons(auth?: auth): Promise<responseBody> {
+        const allProductAddons = await this.getAllProductAddons(auth);
+        if (!allProductAddons?.length) {
+            console.log('No product addon exists');
+            return;
+        }
+        const allProductAddonIds = allProductAddons.map((o: { id: unknown }) => o.id);
+        for (const productAddonId of allProductAddonIds) {
+            await this.deleteProductAddon(productAddonId, auth);
+        }
     }
 
     // get order details
@@ -2099,41 +2122,53 @@ export class ApiUtils {
         return orderDetails;
     }
 
-    /**
-     * woocommerce product addon api methods
-     */
-
-    // get all product addons
-    async getAllProductAddons(auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.get(endPoints.wc.productAddons.getAllProductAddons, { headers: auth });
-        return responseBody;
+    // get system status
+    async getSystemStatus(auth?: auth): Promise<[responseBody, object]> {
+        const [, responseBody] = await this.get(endPoints.wc.getAllSystemStatus, { headers: auth });
+        const activePlugins = responseBody.active_plugins.map((a: { plugin: string; version: string }) => a.plugin.split('/')[0] + ' v' + a.version);
+        activePlugins.sort();
+        const compactInfo = {
+            os: 'OS: ' + (await this.getOsInfo()),
+            browser: 'Browser: ' + 'Chromium',
+            wpVersion: 'WordPress Version: ' + responseBody?.environment.wp_version,
+            phpVersion: 'PHP Version: ' + responseBody?.environment.php_version,
+            mysqlVersion: 'MySql Version: ' + responseBody?.environment.mysql_version,
+            theme: 'Theme: ' + responseBody?.theme.name + ' v' + responseBody?.theme.version,
+            wpDebugMode: 'Debug Mode: ' + responseBody?.environment.wp_debug_mode,
+            activePlugins: activePlugins,
+        };
+        return [responseBody, compactInfo];
     }
 
-    // create product addon
-    async createProductAddon(payload: object, auth?: auth): Promise<[responseBody, string, string, string]> {
-        const [, responseBody] = await this.post(endPoints.wc.productAddons.createProductAddon, { data: payload, headers: auth });
-        const productAddonId = String(responseBody?.id);
-        const addonName = responseBody.name;
-        const addonFieldTitle = responseBody.fields[0].name;
-        return [responseBody, productAddonId, addonName, addonFieldTitle];
-    }
+    // get os info
+    async getOsInfo() {
+        const os = await import('os');
+        const { execSync } = await import('child_process');
 
-    // delete product addon
-    async deleteProductAddon(productAddonId: string, auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.delete(endPoints.wc.productAddons.deleteProductAddon(productAddonId), { headers: auth });
-        return responseBody;
-    }
-
-    // delete all product addons
-    async deleteAllProductAddons(auth?: auth): Promise<responseBody> {
-        const allProductAddons = await this.getAllProductAddons(auth);
-        if (!allProductAddons?.length) {
-            console.log('No product addon exists');
-            return;
+        const osPlatform = os.platform();
+        const release = os.release();
+        let osInfo = `${osPlatform} ${release}`;
+        if (osPlatform === 'darwin') {
+            const [major] = release.split('.');
+            const versionMap: { [key: string]: string } = {
+                '23': 'macOS Sonoma 14',
+                '22': 'macOS Ventura 13',
+                '21': 'macOS Monterey 12',
+                '20': 'macOS Big Sur 11',
+                '19': 'macOS Catalina 10.15',
+                '18': 'macOS Mojave 10.14',
+                '17': 'macOS High Sierra 10.13',
+                '16': 'macOS Sierra 10.12',
+            };
+            osInfo = versionMap[major as keyof typeof versionMap] || 'macOS';
+        } else if (osPlatform === 'win32') {
+            osInfo = execSync('ver').toString().trim() || 'Windows';
+        } else if (osPlatform === 'linux') {
+            const linuxVersion = execSync('cat /etc/os-release').toString();
+            const distro = linuxVersion.match(/^NAME="(.+)"$/m)?.[1] || 'Linux';
+            const version = linuxVersion.match(/^VERSION="(.+)"$/m)?.[1] || release;
+            osInfo = `${distro} ${version}`;
         }
-        const allProductAddonIds = allProductAddons.map((o: { id: unknown }) => o.id);
-        for (const productAddonId of allProductAddonIds) {
-            await this.deleteProductAddon(productAddonId, auth);
-        }
+        return osInfo;
     }
 }
