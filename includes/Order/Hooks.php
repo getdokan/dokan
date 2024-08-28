@@ -330,11 +330,7 @@ class Hooks {
             }
         } else {
             foreach ( $discount->get_items() as $item ) {
-                if ( ! isset( $item->product ) ) {
-                    continue;
-                }
-
-                if ( ! $item->product instanceof \WC_Product ) {
+                if ( ! isset( $item->product ) || ! $item->product instanceof \WC_Product ) {
                     continue;
                 }
 
