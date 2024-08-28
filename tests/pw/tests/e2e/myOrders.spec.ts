@@ -50,8 +50,8 @@ test.describe('My orders functionality test', () => {
     });
 
     test('customer can cancel order', { tag: ['@lite', '@customer'] }, async () => {
-        const [, , orderId] = await apiUtils.createOrderWithStatus(PRODUCT_ID, { ...payloads.createOrder, customer_id: CUSTOMER_ID }, data.order.orderStatus.pending, payloads.vendorAuth);
-        await customer.cancelPendingOrder(orderId);
+        const [, , orderId] = await apiUtils.createOrderWithStatus(PRODUCT_ID, { ...payloads.createOrder, customer_id: CUSTOMER2_ID }, data.order.orderStatus.pending, payloads.vendorAuth);
+        await customer2.cancelPendingOrder(orderId);
     });
 
     test('customer can order again', { tag: ['@lite', '@customer'] }, async () => {
