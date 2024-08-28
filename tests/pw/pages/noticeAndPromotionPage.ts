@@ -17,7 +17,7 @@ export class NoticeAndPromotionPage extends AdminPage {
         // dokan notice elements are visible
         const isPromotionVisible = await this.isVisible(selector.admin.dokan.promotion.promotion);
         if (isPromotionVisible) {
-            await this.notToHaveCount(selector.admin.dokan.notice.noticeDiv1, 0);
+            await this.notToHaveCount(selector.admin.dokan.notice.noticeDivPromotionExists, 0);
         } else {
             await this.notToHaveCount(selector.admin.dokan.notice.noticeDiv, 0);
         }

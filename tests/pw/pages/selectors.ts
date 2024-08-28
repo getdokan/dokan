@@ -224,7 +224,7 @@ export const selector = {
             // dokan notice
             notice: {
                 noticeDiv: '.dokan-admin-notices',
-                noticeDiv1: '.dokan-admin-notice.dokan-alert',
+                noticeDivPromotionExists: '.dokan-admin-notice.dokan-alert',
                 closeNotice: '.close-notice',
                 slider: '.slide-notice',
                 sliderPrev: '.slide-notice .prev',
@@ -2009,7 +2009,6 @@ export const selector = {
 
                     // Vendor Capability
                     enableSelling: '.new_seller_enable_selling .switch',
-                    onePageProductCreate: '.one_step_product_create .switch',
                     disableProductPopup: '.disable_product_popup .switch',
                     orderStatusChange: '.order_status_change .switch',
                     selectAnyCategory: '.dokan_any_category_selection .switch',
@@ -3939,7 +3938,7 @@ export const selector = {
 
             // Other Options
             otherOptions: {
-                productStatus: '#post_status',
+                productStatus: '#status',
                 visibility: '#\\_visibility',
                 purchaseNote: '#\\_purchase_note',
                 enableProductReviews: '#\\_enable_reviews',
