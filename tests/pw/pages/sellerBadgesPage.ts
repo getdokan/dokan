@@ -297,6 +297,7 @@ export class SellerBadgesPage extends AdminPage {
         await this.clickIfVisible(sellerBadgeVendor.congratsModal.closeModal);
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.badges);
         await this.clearAndType(sellerBadgeVendor.search, badgeName);
+        await this.toHaveCount(sellerBadgeVendor.numberOfRows, 1);
         await this.toBeVisible(sellerBadgeVendor.sellerBadgeCell(badgeName));
     }
 

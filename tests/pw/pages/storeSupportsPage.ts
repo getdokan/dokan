@@ -263,26 +263,22 @@ export class StoreSupportsPage extends AdminPage {
     }
 
     // vendor search support ticket
-    async vendorSearchSupportTicket(searchBy: string, input: string, closed?: boolean) {
+    async vendorSearchSupportTicket(searchBy: string, searchKey: string, closed?: boolean) {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.storeSupport);
         if (closed) {
+            // go to closed tab
             await this.clickAndWaitForLoadState(storeSupportsVendor.menus.closedTickets);
         }
 
-        await this.clearAndType(storeSupportsVendor.filters.tickedIdOrKeyword, input);
+        await this.clearAndType(storeSupportsVendor.filters.tickedIdOrKeyword, searchKey);
         await this.clickAndWaitForLoadState(storeSupportsVendor.filters.search);
-
-        switch (searchBy) {
-            case 'id':
-                await this.toBeVisible(storeSupportsVendor.storeSupportCellById(input));
-                break;
-
-            case 'title':
-                await this.notToHaveCount(storeSupportsVendor.storeSupportCellByTitle(input), 0);
-                break;
-
-            default:
-                break;
+        if (!isNaN(Number(searchKey))) {
+            // searched by id
+            await this.toHaveCount(storeSupportsVendor.numberOfRows, 1);
+            await this.toBeVisible(storeSupportsVendor.storeSupportCellById(searchKey));
+        } else {
+            // searched by title
+            await this.notToHaveCount(storeSupportsVendor.numberOfRows, 0);
         }
     }
 

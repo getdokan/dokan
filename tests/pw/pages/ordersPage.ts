@@ -71,8 +71,8 @@ export class OrdersPage extends VendorPage {
 
         await this.clearAndType(ordersVendor.search.searchInput, orderNumber);
         await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.orders, ordersVendor.search.searchBtn);
-        await this.toBeVisible(ordersVendor.orderLink(orderNumber));
         await this.toHaveCount(ordersVendor.numberOfRowsFound, 1);
+        await this.toBeVisible(ordersVendor.orderLink(orderNumber));
     }
 
     // filter orders

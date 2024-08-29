@@ -5651,6 +5651,7 @@ export const selector = {
             },
 
             numOfRowsFound: 'table.dokan-support-table tbody tr',
+            numberOfRows: 'table.dokan-support-table tbody tr',
             noSupportTicketFound: '//div[@class="dokan-error" and contains(text(), "No tickets found!")]',
             storeSupportLink: (id: string) => `//strong[normalize-space()="#${id}"]/..`,
             storeSupportCellById: (id: string) => `//strong[normalize-space()="#${id}"]/../..`,
