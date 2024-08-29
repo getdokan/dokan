@@ -36,18 +36,19 @@ export class RefundsPage extends AdminPage {
     }
 
     // search refund request
-    async searchRefundRequests(orderOrStore: string) {
+    async searchRefundRequests(searchKey: string) {
         await this.goIfNotThere(data.subUrls.backend.dokan.refunds);
 
         await this.clearInputField(refundsAdmin.search);
 
-        await this.typeAndWaitForResponse(data.subUrls.api.dokan.refunds, refundsAdmin.search, String(orderOrStore));
-        const count = (await this.getElementText(refundsAdmin.numberOfRowsFound))?.split(' ')[0];
-        if (!isNaN(Number(orderOrStore))) {
-            await this.toBeVisible(refundsAdmin.refundCell(orderOrStore));
-            expect(Number(count)).toBe(1);
+        await this.typeAndWaitForResponse(data.subUrls.api.dokan.refunds, refundsAdmin.search, String(searchKey));
+        if (!isNaN(Number(searchKey))) {
+            // serched by orderid
+            await this.toHaveCount(refundsAdmin.numberOfRows, 1);
+            await this.toBeVisible(refundsAdmin.refundCell(searchKey));
         } else {
-            expect(Number(count)).toBeGreaterThan(0);
+            // serched by store
+            await this.notToHaveCount(refundsAdmin.numberOfRows, 0);
         }
     }
 

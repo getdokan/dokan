@@ -79,16 +79,19 @@ export class ProductAdvertisingPage extends AdminPage {
     }
 
     // search advertised product
-    async searchAdvertisedProduct(productOrOrder: string | number) {
+    async searchAdvertisedProduct(searchKey: string | number) {
         await this.goIfNotThere(data.subUrls.backend.dokan.productAdvertising);
 
         await this.clearInputField(productAdvertisingAdmin.search);
 
-        await this.typeAndWaitForResponseAndLoadState(data.subUrls.api.dokan.productAdvertising, productAdvertisingAdmin.search, String(productOrOrder));
-        if (typeof productOrOrder != 'number') {
-            await this.toBeVisible(productAdvertisingAdmin.advertisedProductCell(productOrOrder));
+        await this.typeAndWaitForResponseAndLoadState(data.subUrls.api.dokan.productAdvertising, productAdvertisingAdmin.search, String(searchKey));
+        await this.toHaveCount(productAdvertisingAdmin.numberOfRows, 1);
+        if (typeof searchKey != 'number') {
+            // serched by product
+            await this.toBeVisible(productAdvertisingAdmin.advertisedProductCell(searchKey));
         } else {
-            await this.toBeVisible(productAdvertisingAdmin.advertisedProductOrderIdCell(productOrOrder));
+            // serched by orderid
+            await this.toBeVisible(productAdvertisingAdmin.advertisedProductOrderIdCell(searchKey));
         }
     }
 

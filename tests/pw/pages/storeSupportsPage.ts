@@ -66,19 +66,22 @@ export class StoreSupportsPage extends AdminPage {
     }
 
     // search support ticket
-    async searchSupportTicket(idOrTitle: string, closed?: boolean) {
+    async searchSupportTicket(searchKey: string, closed?: boolean) {
         await this.goIfNotThere(data.subUrls.backend.dokan.storeSupport);
         if (closed) {
-            await this.clickAndWaitForLoadState(storeSupportsAdmin.navTabs.closed); // go to closed tab
+            // go to closed tab
+            await this.clickAndWaitForLoadState(storeSupportsAdmin.navTabs.closed);
         }
 
         await this.clearInputField(storeSupportsAdmin.searchTicket);
-        await this.typeAndWaitForResponseAndLoadState(data.subUrls.api.dokan.storeSupport, storeSupportsAdmin.searchTicket, idOrTitle);
-        const count = (await this.getElementText(storeSupportsAdmin.numberOfRowsFound))?.split(' ')[0];
-        if (!isNaN(Number(idOrTitle))) {
-            await this.toBeVisible(storeSupportsAdmin.supportTicketCell(idOrTitle));
+        await this.typeAndWaitForResponseAndLoadState(data.subUrls.api.dokan.storeSupport, storeSupportsAdmin.searchTicket, searchKey);
+        if (!isNaN(Number(searchKey))) {
+            // searched by id
+            await this.toHaveCount(storeSupportsAdmin.numberOfRows, 1);
+            await this.toBeVisible(storeSupportsAdmin.supportTicketCell(searchKey));
         } else {
-            expect(Number(count)).toBeGreaterThan(0);
+            // searched by title
+            await this.notToHaveCount(storeSupportsAdmin.numberOfRows, 0);
         }
     }
 

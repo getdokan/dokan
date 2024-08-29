@@ -44,10 +44,9 @@ export class WholesaleCustomersPage extends AdminPage {
     // search wholesale customer
     async searchWholesaleCustomer(wholesaleCustomer: string) {
         await this.goIfNotThere(data.subUrls.backend.dokan.wholeSaleCustomer);
-
         await this.clearInputField(wholesaleCustomersAdmin.search);
-
         await this.typeAndWaitForResponse(data.subUrls.api.dokan.wholesaleCustomers, wholesaleCustomersAdmin.search, wholesaleCustomer);
+        await this.toHaveCount(wholesaleCustomersAdmin.numberOfRows, 1);
         await this.toBeVisible(wholesaleCustomersAdmin.wholesaleCustomerCell(wholesaleCustomer));
     }
 

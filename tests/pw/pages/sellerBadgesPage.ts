@@ -44,11 +44,10 @@ export class SellerBadgesPage extends AdminPage {
     // search seller badge
     async searchSellerBadge(badgeName: string) {
         await this.goto(data.subUrls.backend.dokan.sellerBadge);
-
         await this.clearInputField(sellerBadgeAdmin.search);
         await this.typeAndWaitForResponseAndLoadState(data.subUrls.api.dokan.sellerBadge, sellerBadgeAdmin.search, badgeName);
-        await this.toBeVisible(sellerBadgeAdmin.sellerBadgeCell(badgeName));
         await this.toHaveCount(sellerBadgeAdmin.numberOfRows, 1);
+        await this.toBeVisible(sellerBadgeAdmin.sellerBadgeCell(badgeName));
     }
 
     // view seller badge

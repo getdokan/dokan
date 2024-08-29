@@ -349,7 +349,7 @@ export const selector = {
                 statusColumnValue: (status: string) => `td.column.status .${status}`, // pending, approved, rejected, cancelled
 
                 numberOfRowsFound: '.tablenav.top .displaying-num',
-                numberOfRows: 'table.wp-list-table tbody tr',
+                numberOfRows: 'div.withdraw-requests table tbody tr',
                 currentNoOfRows: 'table tbody tr',
                 noRowsFound: '//td[normalize-space()="No requests found."]',
                 withdrawCell: (storeName: string) => `//td//a[contains(text(), '${storeName}')]/../..`,
@@ -713,6 +713,7 @@ export const selector = {
                     },
 
                     numberOfRowsFound: '.tablenav.top .displaying-num',
+                    numberOfRows: 'div#dokan-store-categories table tbody tr',
                     noRowsFound: '//td[normalize-space()="No category found"]',
                     storeCategoryCell: (title: string) => `//td//a[contains(text(), '${title}')]/../..`,
                     storeCategoryEdit: (title: string) => `//td//a[contains(text(), '${title}')]/../..//span[@class='edit']//a`,
@@ -868,6 +869,7 @@ export const selector = {
                 },
 
                 numberOfRowsFound: '.tablenav.top .displaying-num',
+                numberOfRows: 'div.admin-store-support-tickets table tbody tr',
                 noRowsFound: '//td[normalize-space()="No tickets found."]',
                 supportTicketCell: (ticketId: string) => `//strong[contains(text(), '#${ticketId}')]/../..`,
                 supportTicketFirstCell: '(//td[@class="column ID"]//a)[1]',
@@ -1085,7 +1087,7 @@ export const selector = {
                 },
 
                 numberOfRowsFound: '.tablenav.top .displaying-num',
-                numberOfRows: 'table.wp-list-table tbody tr',
+                numberOfRows: 'div#seller_badge_list_table table tbody tr',
                 noRowsFound: '//td[normalize-space()="No badges found."]',
                 sellerBadgeRow: (name: string) => `//a[contains(text(),'${name}')]/../../..`,
                 sellerBadgeCell: (name: string) => `//a[contains(text(),'${name}')]/../..`,
@@ -1257,6 +1259,7 @@ export const selector = {
                 },
 
                 numberOfRowsFound: '.tablenav.top .displaying-num',
+                numberOfRows: 'div.dokan-refund-wrapper table tbody tr',
                 noRowsFound: '//td[normalize-space()="No request found."]',
                 refundCell: (orderNumber: string) => `//strong[contains(text(),'#${orderNumber}')]/../..`,
                 approveRefund: (orderNumber: string) => `//strong[contains(text(),'#${orderNumber}')]/../..//span[@class='completed']`,
@@ -1798,6 +1801,7 @@ export const selector = {
                 },
 
                 numberOfRowsFound: '.tablenav.top .displaying-num',
+                numberOfRows: 'div#product_advertisement_list_table table tbody tr',
                 noRowsFound: '//td[normalize-space()="No advertisement found."]',
                 advertisedProductCell: (productName: string) => `//a[normalize-space()="${productName}"]/../..`,
                 advertisedProductOrderIdCell: (orderNumber: number) => `//a[normalize-space()="${orderNumber}"]/../..`,
@@ -1852,6 +1856,7 @@ export const selector = {
                 },
 
                 numberOfRowsFound: '.tablenav.top .displaying-num',
+                numberOfRows: 'div.wholesale-customer-list table tbody tr',
                 noRowsFound: '//td[normalize-space()="No customers found."]',
                 wholesaleCustomerCell: (username: string) => `//td[contains(text(), '${username}')]/..//td[@class='column full_name']`,
                 wholesaleCustomerEdit: (username: string) => `//td[contains(text(), '${username}')]/..//td[@class='column full_name']//span[@class='edit']//a`,
