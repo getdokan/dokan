@@ -153,14 +153,12 @@ export class BasePage {
     async scrollToTop(): Promise<void> {
         await this.page.keyboard.down(data.key.home);
         // await this.page.evaluate(() => window.scroll(0, 0));
-        await this.wait(1);
     }
 
     // scroll to bottom
     async scrollToBottom(): Promise<void> {
         await this.page.keyboard.down(data.key.end);
         // await this.page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-        // await this.wait(0.5);
     }
 
     /**
