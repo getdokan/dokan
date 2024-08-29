@@ -23,18 +23,18 @@ export class LocalSetupPage extends WpPage {
 
         if (letsGoIsVisible) {
             await this.clickAndWaitForLoadState(selector.backend.letsGo);
-            await this.fill(selector.backend.dbName, siteData.dbName);
-            await this.fill(selector.backend.dbUserName, siteData.dbUserName);
-            await this.fill(selector.backend.dbPassword, siteData.dbPassword);
-            await this.fill(selector.backend.dbHost, siteData.dbHost);
-            await this.fill(selector.backend.dbTablePrefix, siteData.dbTablePrefix);
+            await this.fill(selector.backend.dbName, siteData.dbInfo.dbName);
+            await this.fill(selector.backend.dbUserName, siteData.dbInfo.dbUserName);
+            await this.fill(selector.backend.dbPassword, siteData.dbInfo.dbPassword);
+            await this.fill(selector.backend.dbHost, siteData.dbInfo.dbHost);
+            await this.fill(selector.backend.dbTablePrefix, siteData.dbInfo.dbTablePrefix);
             await this.clickAndWaitForLoadState(selector.backend.submit);
             await this.clickAndWaitForLoadState(selector.backend.runTheInstallation);
         } else {
-            await this.fill(selector.backend.siteTitle, siteData.siteTitle);
-            await this.fill(selector.backend.adminUserName, siteData.adminUserName);
-            await this.fill(selector.backend.adminPassword, siteData.adminPassword);
-            await this.fill(selector.backend.adminEmail, siteData.adminEmail);
+            await this.fill(selector.backend.siteTitle, siteData.siteInfo.title);
+            await this.fill(selector.backend.adminUserName, siteData.siteInfo.admin);
+            await this.fill(selector.backend.adminPassword, siteData.siteInfo.password);
+            await this.fill(selector.backend.adminEmail, siteData.siteInfo.email);
             await this.clickAndWaitForLoadState(selector.backend.installWp);
             await this.clickAndWaitForLoadState(selector.backend.successLoginIn);
         }

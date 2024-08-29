@@ -1,15 +1,19 @@
 import { defineConfig, expect } from '@playwright/test';
 import { customExpect } from '@utils/pwMatchers';
 import 'dotenv/config';
-const { CI, BASE_URL, NO_SETUP, ADMIN, ADMIN_PASSWORD } = process.env;
+const { CI, BASE_URL, NO_SETUP, ADMIN, ADMIN_PASSWORD, DOKAN_PRO } = process.env;
 
 export default defineConfig({
     /* test directory */
     testDir: './tests/api',
+    /* Include tests based on the pattern */
+    grep: [/@lite/, /@pro/],
+    /* Exclude tests based on the pattern */
+    grepInvert: DOKAN_PRO ? [] : [/@pro/],
     /* Folder for test artifacts such as screenshots, videos, traces, etc. */
     outputDir: 'playwright/api/test-artifacts/',
     /* Path to the global setup file. This file will be required and run before all the tests. */
-    globalSetup: './global-setup',
+    // globalSetup: './global-setup',
     /* Path to the global teardown file. This file will be required and run after all the tests. */
     // globalTeardown: './global-teardown',
     /* Maximum time in milliseconds the whole test suite can run */
@@ -17,7 +21,7 @@ export default defineConfig({
     /* The maximum number of test failures for the whole test suite run. After reaching this number, testing will stop and exit with an error. */
     maxFailures: CI ? 30 : 30,
     /* Maximum time one test can run for. */
-    timeout: CI ? 15 * 1000 : 30 * 1000,
+    timeout: CI ? 15 * 1000 : 20 * 1000,
     /* Configuration for the expect assertion library */
     expect: {
         /* Maximum time expect() should wait for the condition to be met.  For example in `await expect(locator).toHaveText();`*/
@@ -30,7 +34,7 @@ export default defineConfig({
     /* Fail the build on CI if you accidentally left test.only in the source code. */
     // forbidOnly     : !!CI,
     /* The number of times to repeat each test, useful for debugging flaky tests. */
-    repeatEach: CI ? 1 : 0,
+    repeatEach: CI ? 0 : 0,
     /* The maximum number of retry attempts given to failed tests.  */
     retries: CI ? 1 : 0,
     /* Opt out of parallel tests on CI. */
@@ -55,7 +59,7 @@ export default defineConfig({
 
     use: {
         /* Base URL */
-        baseURL: BASE_URL ? BASE_URL : 'http://localhost:9999',
+        baseURL: BASE_URL ?? 'http://localhost:9999',
         /* Whether to ignore HTTPS errors during navigation. */
         ignoreHTTPSErrors: true,
         /* api request headers */
@@ -68,17 +72,28 @@ export default defineConfig({
     projects: [
         // Api project
 
-        // global_setup
-        // {
-        //     name: 'global_setup',
-        //     testMatch: /global\.setup\.ts/,
-        // },
+        // site_setup
+        {
+            name: 'site_setup',
+            testMatch: ['_site.setup.ts'],
+        },
+
+        // auth_setup
+        {
+            name: 'auth_setup',
+            testMatch: ['_auth.setup.ts'],
+            dependencies: NO_SETUP ? [] : ['site_setup'],
+            // fullyParallel: true,
+            retries: 1,
+        },
 
         // api_setup
         {
             name: 'api_setup',
-            testMatch: /.*\.setup\.ts/,
-            // testMatch: /.*\.setup\.spec\.ts/,
+            testMatch: ['_env.setup.ts'],
+            dependencies: NO_SETUP ? [] : ['auth_setup'],
+            fullyParallel: true,
+            retries: 1,
         },
 
         // api_tests
@@ -95,14 +110,14 @@ export default defineConfig({
         // coverage_report
         {
             name: 'coverage_report',
-            testMatch: '_coverage.teardown.ts',
+            testMatch: ['_coverage.teardown.ts'],
         },
 
         // global_teardown
-        // {
-        //     name: 'global_teardown',
-        //     testMatch: /global\.teardown\.ts/,
-        // },
+        {
+            name: 'global_teardown',
+            testMatch: ['global-teardown.ts'],
+        },
     ],
 });
 

@@ -18,17 +18,21 @@ declare global {
             CUSTOMER2_ID: string;
             PRODUCT_ID: string;
             PRODUCT_ID_V2: string;
-            LOCAL: boolean
+            CATEGORY_ID: string;
+            LOCAL: boolean;
             CI: boolean;
             GMAP: string;
             MAPBOX: string;
             LICENSE_KEY: string;
             DOKAN_PRO: boolean;
+            SITE_LANGUAGE: string;
+            SITE_TITLE: string;
             SITE_PATH: string;
             BASE_URL: string;
+            ADMIN_EMAIL: string;
             QUERY: string;
-            HEADLESS: string;
-            SLOWMO: string;
+            NON_HEADLESS: string;
+            SLOWMO: number;
             DEVTOOLS: string;
             RETRY_TIMES: string;
             TIME_OUT: string;

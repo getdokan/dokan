@@ -73,7 +73,9 @@ export class ReportsPage extends AdminPage {
 
     // export all logs
     async exportAllLogs(orderId?: string) {
-        orderId && (await this.searchAllLogs(orderId));
+        if (orderId) {
+            await this.searchAllLogs(orderId);
+        }
         await this.clickAndWaitForDownload(reportsAdmin.allLogs.exportLogs);
     }
 

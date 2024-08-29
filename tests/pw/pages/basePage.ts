@@ -1,7 +1,6 @@
 /* eslint-disable playwright/no-element-handle */
 /* eslint-disable playwright/no-wait-for-timeout */
 /* eslint-disable playwright/no-page-pause */
-/* eslint-disable playwright/no-networkidle */
 /* eslint-disable playwright/no-force-option */
 
 import { expect, Page, BrowserContext, Cookie, Request, Response, Locator, Frame, FrameLocator, JSHandle, ElementHandle } from '@playwright/test';
@@ -23,11 +22,6 @@ export class BasePage {
      * Page navigation methods
      */
 
-    // wait for navigation to complete
-    async waitForNavigation(): Promise<void> {
-        await this.page.waitForNavigation({ waitUntil: 'networkidle' });
-    }
-
     // wait for request
     async waitForRequest(url: string): Promise<Request> {
         return await this.page.waitForRequest(url);
@@ -40,24 +34,22 @@ export class BasePage {
 
     // wait for load state
     async waitForLoadState(): Promise<void> {
-        await this.page.waitForLoadState('networkidle');
-        // await this.page.waitForLoadState( 'domcontentloaded');
-    }
-
-    // wait for load state
-    async waitForLoadState1(): Promise<void> {
         await this.page.waitForLoadState('domcontentloaded');
     }
 
     // wait for url to be loaded
-    async waitForUrl(url: string, options?: { timeout?: number | undefined; waitUntil?: 'networkidle' | 'load' | 'domcontentloaded' | 'commit' | undefined } | undefined): Promise<void> {
+    async waitForUrl(url: string, options: { timeout?: number | undefined; waitUntil?: 'networkidle' | 'load' | 'domcontentloaded' | 'commit' | undefined } | undefined): Promise<void> {
         await this.page.waitForURL(url, options);
-        // await this.page.waitForURL(url,{ waitUntil: 'networkidle' });
     }
 
     // goto subUrl
-    async goto(subPath: string, waitUntil: 'load' | 'domcontentloaded' | 'networkidle' | 'commit' = 'networkidle'): Promise<void> {
-        await this.page.goto(subPath, { waitUntil: waitUntil });
+    async goto(subPath: string, options: { referer?: string; timeout?: number; waitUntil?: 'load' | 'domcontentloaded' | 'networkidle' | 'commit' } | undefined = { waitUntil: 'domcontentloaded' }): Promise<void> {
+        await this.page.goto(subPath, options);
+    }
+
+    // goto subUrl until networkidle
+    async gotoUntilNetworkidle(subPath: string, options: { referer?: string; timeout?: number; waitUntil?: 'load' | 'domcontentloaded' | 'networkidle' | 'commit' } | undefined = { waitUntil: 'networkidle' }): Promise<void> {
+        await this.goto(subPath, options);
     }
 
     // go forward
@@ -86,7 +78,7 @@ export class BasePage {
     // returns whether the current URL is expected
     isCurrentUrl(subPath: string): boolean {
         const url = new URL(this.getCurrentUrl());
-        const currentURL = url.href.replace(/[/]$/, ''); // added to remove last '/',
+        const currentURL = url.href.replace(/[/]$/, ''); // remove last '/' from the url
         return currentURL === this.createUrl(subPath);
     }
 
@@ -99,13 +91,11 @@ export class BasePage {
     }
 
     // goto subPath if not already there
-    async goIfNotThere(subPath: string): Promise<void> {
+    async goIfNotThere(subPath: string, waitUntil: 'load' | 'domcontentloaded' | 'networkidle' | 'commit' = 'domcontentloaded'): Promise<void> {
         if (!this.isCurrentUrl(subPath)) {
             const url = this.createUrl(subPath);
-            await this.page.goto(url, { waitUntil: 'networkidle' });
-            // await this.page.goto(url, { waitUntil: 'domcontentloaded' }); //doesn't work for backend
-            // this.page.waitForURL(url + '/**', { waitUntil: 'networkidle' });
-            // this.page.waitForURL(url + '/**', { waitUntil: 'domcontentloaded' });
+            // console.log('url: ', url);
+            await this.goto(url, { waitUntil: waitUntil });
             const currentUrl = this.getCurrentUrl();
             expect(currentUrl).toMatch(subPath);
         }
@@ -180,7 +170,6 @@ export class BasePage {
     // click on element
     async click(selector: string): Promise<void> {
         await this.clickLocator(selector);
-        // await this.clickByPage(selector);
     }
 
     // click on element
@@ -205,19 +194,19 @@ export class BasePage {
         await this.page.dblclick(selector);
     }
 
-    // click & wait for navigation to complete
-    async clickAndWaitForNavigation(selector: string): Promise<void> {
-        await Promise.all([this.page.waitForNavigation({ waitUntil: 'networkidle' }), this.page.locator(selector).click()]);
+    // click & wait for another locator to be visible [userful for modals]
+    async clickAndWaitForLocatorTobeVisible(selector: string, selector2: string): Promise<void> {
+        await Promise.all([this.toBeVisible(selector2), this.page.locator(selector).click()]);
     }
 
     // click & wait for load state to complete
     async clickAndWaitForLoadState(selector: string): Promise<void> {
-        await Promise.all([this.page.waitForLoadState('networkidle'), this.page.locator(selector).click()]);
+        await Promise.all([this.waitForLoadState(), this.page.locator(selector).click()]);
     }
 
     // click & wait for navigation to complete
     async clickAndWaitForUrl(url: string | RegExp, selector: string): Promise<void> {
-        await Promise.all([this.page.waitForURL(url, { waitUntil: 'networkidle' }), this.page.locator(selector).click()]);
+        await Promise.all([this.page.waitForURL(url, { waitUntil: 'domcontentloaded' }), this.page.locator(selector).click()]);
     }
 
     // click & wait for request
@@ -237,11 +226,33 @@ export class BasePage {
         return response;
     }
 
+    // click & wait for response with response type
+    async clickAndWaitForResponseWithType(subUrl: string, selector: string, requestType: string, code = 200): Promise<Response> {
+        const [response] = await Promise.all([
+            this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.request().method().toLowerCase() == requestType.toLowerCase() && resp.status() === code),
+            this.page.locator(selector).click(),
+        ]);
+        const requestTyped = response.request().method();
+        console.log(`Request type: ${requestTyped}`);
+        return response;
+    }
+
     // click & wait for response
     async clickAndWaitForResponseAndLoadState(subUrl: string, selector: string, code = 200): Promise<Response> {
-        const [, response] = await Promise.all([this.page.waitForLoadState('networkidle'), this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code), this.page.locator(selector).click()]);
+        const [, response] = await Promise.all([this.waitForLoadState(), this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code), this.page.locator(selector).click()]);
         expect(response.status()).toBe(code);
         return response;
+    }
+
+    // click & wait for responses sequentially (requests are made one after the other)
+    async clickAndWaitForResponsesSequentially(subUrls: string[], selector: string, codes: number[] = [200]): Promise<Response[]> {
+        await this.page.locator(selector).click();
+        const responses: Response[] = [];
+        for (const [i, subUrl] of subUrls.entries()) {
+            const response = await this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === (codes[i] || 200));
+            responses.push(response);
+        }
+        return responses;
     }
 
     // click & wait for responses
@@ -256,22 +267,8 @@ export class BasePage {
     async clickAndWaitForResponsesAndLoadState(subUrls: string[], selector: string, codes: number[] = [200]): Promise<Response[]> {
         const responsePromises = subUrls.map((subUrl, index) => this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === codes[index % codes.length]));
         await this.page.locator(selector).click();
-        const [, ...responses] = await Promise.all([this.page.waitForLoadState('networkidle'), ...responsePromises]);
+        const [, ...responses] = await Promise.all([this.waitForLoadState(), ...responsePromises]);
         return responses;
-    }
-
-    // click & wait for multiple responses
-    async clickAndWaitForMultipleResponses(subUrls: string[][], selector: string, code = 200): Promise<void[] | Response[]> {
-        // todo: fix this; also update for same and different subUrls
-        const promises = [];
-        subUrls.forEach(subUrl => {
-            console.log('subUls: ', subUrl[0], ' code: ', subUrl[1]);
-            const promise = this.page.waitForResponse(resp => resp.url().includes(subUrl[0] as string) && resp.status() === (subUrl[1] ?? code));
-            promises.push(promise);
-        });
-        promises.push(this.page.locator(selector).click());
-        const response = await Promise.all([...promises, this.page.locator(selector).click()]);
-        return response;
     }
 
     // click & accept
@@ -281,13 +278,14 @@ export class BasePage {
 
     // click & wait for response
     async clickAndAcceptAndWaitForResponse(subUrl: string, selector: string, code = 200): Promise<Response> {
+        // todo: need error message for all click & wait for response methods
         const [response] = await Promise.all([this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code), this.acceptAlert(), this.page.locator(selector).click()]);
         return response;
     }
 
     // click & wait for response
     async clickAndAcceptAndWaitForResponseAndLoadState(subUrl: string, selector: string, code = 200): Promise<Response> {
-        const [response] = await Promise.all([this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code), this.acceptAlert(), this.page.waitForLoadState('networkidle'), this.page.locator(selector).click()]);
+        const [response] = await Promise.all([this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code), this.acceptAlert(), this.waitForLoadState(), this.page.locator(selector).click()]);
         return response;
     }
 
@@ -305,13 +303,13 @@ export class BasePage {
 
     // type & wait for response and LoadState
     async typeAndWaitForResponseAndLoadState(subUrl: string, selector: string, text: string, code = 200): Promise<Response> {
-        const [response] = await Promise.all([this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code), this.page.waitForLoadState('networkidle'), this.clearAndFill(selector, text)]);
+        const [response] = await Promise.all([this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code), this.waitForLoadState(), this.clearAndFill(selector, text)]);
         return response;
     }
 
     // type & wait for response and LoadState
     async pressOnLocatorAndWaitForResponseAndLoadState(subUrl: string, selector: string, key: string, code = 200): Promise<Response> {
-        const [response] = await Promise.all([this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code), this.page.waitForLoadState('networkidle'), this.keyPressOnLocator(selector, key)]);
+        const [response] = await Promise.all([this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code), this.waitForLoadState(), this.keyPressOnLocator(selector, key)]);
         return response;
     }
 
@@ -390,8 +388,8 @@ export class BasePage {
      */
 
     // wait for selector
-    async waitForSelector(selector: string): Promise<void> {
-        await this.page.locator(selector).waitFor();
+    async waitForSelector(selector: string, options?: any): Promise<void> {
+        await this.page.locator(selector).waitFor(options);
     }
 
     // get locator
@@ -402,15 +400,33 @@ export class BasePage {
     // get locators
     async getLocators(selector: string): Promise<Locator[]> {
         return await this.page.locator(selector).all();
-        // return this.page.locator(selector).elementHandles();
-        // return this.page.$$(selector);
     }
 
     // returns whether the element is visible
-    async isVisible(selector: string): Promise<boolean> {
-        await this.wait(1); // to add a buffer time for the element to be visible // todo: need to resolve in future
-        return await this.isVisibleLocator(selector);
-        // return await this.isVisibleByPage(selector);
+    async isVisible(selector: string, timeout: number = 2): Promise<boolean> {
+        const start = Date.now();
+        let interval = 20;
+        while (Date.now() - start < timeout * 1000) {
+            try {
+                const isVisible = await this.page.locator(selector).isVisible();
+                if (isVisible) return true;
+            } catch (error) {
+                /* empty */
+            }
+            // console.log(`- waiting ${interval}ms\n- waiting for element to be visible`);
+
+            // wait for the current interval before the next attempt
+            await this.page.waitForTimeout(interval);
+
+            // Adjust the interval sequence: 20ms, 100ms, 100ms, then 500ms
+            if (interval === 20) {
+                interval = 100;
+            } else if (interval === 100) {
+                // If it’s already 100ms, switch to 500ms
+                interval = 500;
+            }
+        }
+        return false;
     }
 
     // returns whether the element is visible
@@ -524,9 +540,12 @@ export class BasePage {
 
     // get element has class or not
     async hasClass(selector: string, className: string): Promise<boolean> {
-        const element = this.getElement(selector);
-        const hasClass = await element.evaluate((element, className) => element.classList.contains(className), className);
-        return hasClass;
+        const elementClass = await this.getClassValue(selector);
+        const result = elementClass!.includes(className);
+        return result;
+        // const element = this.getElement(selector);
+        // const result = await element.evaluate((element, className) => element.classList.contains(className), className);
+        // return result;
     }
 
     // get attribute value
@@ -545,6 +564,14 @@ export class BasePage {
     async setAttributeValue(selector: string, attribute: string, value: string): Promise<void> {
         const element = this.getElement(selector);
         await element.evaluate((element, [attribute, value]) => element.setAttribute(attribute as string, value as string), [attribute, value]);
+    }
+
+    // add attribute/class value
+    async addAttributeValue(selector: string, attribute: string, value: string): Promise<void> {
+        const previousAttribute = await this.getAttributeValue(selector, attribute);
+        const newValue = `${previousAttribute} ${value}`;
+        const element = this.getElement(selector);
+        await element.evaluate((element, [attribute, value]) => element.setAttribute(attribute as string, value as string), [attribute, newValue]);
     }
 
     // remove element attribute
@@ -649,13 +676,6 @@ export class BasePage {
         const element = this.getElement(selector);
         await element.click({ clickCount: 3 });
         await this.press('Backspace');
-    }
-
-    // Or
-
-    async clearInputFieldByEvaluate(selector: string): Promise<void> {
-        const element = this.getElement(selector);
-        await this.page.evaluate(element => (element.value = ''), element); // todo: fix
     }
 
     // clear input field and type
@@ -793,9 +813,8 @@ export class BasePage {
 
     // upload file
     async uploadFile(selector: string, files: string | string[]): Promise<void> {
-        // await this.page.setInputFiles(selector, files, { noWaitAfter: true });
         await this.page.setInputFiles(selector, files);
-        await this.wait(1.5); // todo: resolve this
+        await this.wait(1); // todo: resolve this
     }
 
     // upload file
@@ -936,9 +955,9 @@ export class BasePage {
     }
 
     // dispatches event('click', 'dragstart',...) on the element
-    dispatchEvent(selector: string, event: string): void {
+    async dispatchEvent(selector: string, event: string): Promise<void> {
         const locator = this.page.locator(selector);
-        locator.dispatchEvent(event);
+        await locator.dispatchEvent(event);
     }
 
     // drag locator to target locator
@@ -973,7 +992,6 @@ export class BasePage {
     }
 
     // returns the return value of pageFunction as a JSHandle
-    // eslint-disable-next-line @typescript-eslint/ban-types
     async evaluateHandle(selector: string, pageFunction: any): Promise<JSHandle> {
         const locator = this.page.locator(selector);
         return await locator.evaluateHandle(pageFunction);
@@ -1199,54 +1217,27 @@ export class BasePage {
 
     // accept alert
     acceptAlert(): void {
+        // page.once is used avoid future alerts to be accepted
         this.page.once('dialog', dialog => {
-            // page.once is used avoid future alerts to be accepted
-            dialog.accept();
+            void dialog.accept();
         });
     }
 
     // dismiss alert
     dismissAlert(): void {
+        // page.once is used avoid future alerts to be dismissed
         this.page.once('dialog', dialog => {
-            // page.once is used avoid future alerts to be dismissed
-            dialog.dismiss();
+            void dialog.dismiss();
         });
     }
 
     // type on prompt box/alert
     fillAlert(value: string): void {
+        // page.once is used avoid future prompts to be filled
         this.page.once('dialog', dialog => {
-            // page.once is used avoid future prompts to be filled
-            dialog.accept(value);
+            void dialog.accept(value);
         });
     }
-
-    // get default prompt value. Otherwise, returns empty string.
-    // getDefaultPromptValue(): string {
-    // 	let value: string;
-    // 	this.page.on('dialog', (dialog) => {
-    // 		value = dialog.defaultValue();
-    // 	});
-    // 	return value;
-    // }
-
-    // get dialog's type [alert, beforeunload, confirm or prompt]
-    // async getDialogType(): Promise<string> {
-    // 	let type: string;
-    // 	this.page.on('dialog', (dialog) => {
-    // 		type = dialog.type();
-    // 	});
-    // 	return type;
-    // }
-
-    // get dialog's message
-    // async getDialogMessage(): Promise<string> {
-    // 	let message: string;
-    // 	this.page.on('dialog', (dialog) => {
-    // 		message = dialog.message();
-    // 	});
-    // 	return message;
-    // }
 
     /**
      * Cookies methods
@@ -1327,6 +1318,12 @@ export class BasePage {
         return this.page.context().pages();
     }
 
+    // add locator handler [userful for randomly popups] [call before the start of the test]
+    async addLocatorHandler(selector: string, asyncFn: () => Promise<void>, options?: { noWaitAfter?: boolean; times?: number } | undefined): Promise<void> {
+        const locator = this.page.locator(selector);
+        await this.page.addLocatorHandler(locator, asyncFn, options);
+    }
+
     /**
      * Extra methods
      */
@@ -1352,6 +1349,7 @@ export class BasePage {
         }
     }
 
+    // screenshot to be similar
     async toHaveScreenshot(page: Page, locators?: Locator[]) {
         await expect(page).toHaveScreenshot({ fullPage: true, mask: locators, maskColor: 'black', animations: 'disabled' });
     }
@@ -1362,23 +1360,26 @@ export class BasePage {
 
     // assert any element to be visible
     async toBeVisibleAnyOfThem(selectors: string[]) {
-        // todo: extend and improve this method
-        const res = [];
-        for (const selector of selectors) {
-            res.push(await this.isVisible(selector));
-        }
-        const result = res.includes(true);
-        expect(result).toBeTruthy();
-        // todo:  return which elements are true for further operation
+        const visibilityResults = await Promise.all(
+            selectors.map(async selector => {
+                const isVisible = await this.isVisible(selector);
+                return isVisible ? selector : null;
+            }),
+        );
+
+        const visibleSelectors = visibilityResults.filter(selector => selector !== null);
+        expect(visibleSelectors.length).toBeGreaterThan(0);
+        return visibleSelectors;
     }
 
     // assert value to be equal
     toBeEqual(received: any, expected: any) {
         expect(received).toEqual(expected);
     }
+
     // assert element to be visible
-    async toBeVisible(selector: string) {
-        await expect(this.page.locator(selector)).toBeVisible();
+    async toBeVisible(selector: string, options?: { timeout?: number; visible?: boolean } | undefined) {
+        await expect(this.page.locator(selector)).toBeVisible(options);
     }
 
     // assert checkbox to be checked
@@ -1397,7 +1398,7 @@ export class BasePage {
     }
 
     // assert element to have value
-    async toHaveValue(selector: string, value: string) {
+    async toHaveValue(selector: string, value: string | RegExp) {
         await expect(this.page.locator(selector)).toHaveValue(value);
     }
 
@@ -1407,26 +1408,48 @@ export class BasePage {
     }
 
     // assert element to have class
-    async toHaveClass(selector: string, className: string) {
+    async toHaveClass(selector: string, className: string | RegExp | readonly (string | RegExp)[]) {
         await expect(this.page.locator(selector)).toHaveClass(className);
     }
 
-    // assert element to contain class
-    async toContainClass(selector: string, className: string) {
-        const elementClass = await this.getClassValue(selector);
-        expect(elementClass).toContain(className);
-    }
-
     // assert element to have background color
-    async toHaveBackgroundColor(selector: string, backgroundColor: string) {
-        const value = await this.getElementBackgroundColor(selector);
-        expect(value).toBe(backgroundColor);
+    async toHaveBackgroundColor(selector: string, backgroundColor: string, options?: { timeout?: number; intervals?: number[] }) {
+        await this.toPass(async () => {
+            const value = await this.getElementBackgroundColor(selector);
+            expect(value).toBe(backgroundColor);
+        }, options);
     }
 
-    // assert element to have  color
-    async toHaveColor(selector: string, backgroundColor: string) {
-        const value = await this.getElementColor(selector);
-        expect(value).toBe(backgroundColor);
+    // assert element to have color
+    async toHaveColor(selector: string, backgroundColor: string, options?: { timeout?: number; intervals?: number[] }) {
+        await this.toPass(async () => {
+            const value = await this.getElementColor(selector);
+            expect(value).toBe(backgroundColor);
+        }, options);
+    }
+
+    // assert element to contain text
+    async toContainTextFrameLocator(frame: string, frameSelector: string, text: string | RegExp, options?: { timeout?: number; intervals?: number[] }): Promise<void> {
+        await this.toPass(async () => {
+            const locator = this.page.frameLocator(frame).locator(frameSelector);
+            await expect(locator).toContainText(text);
+        }, options);
+    }
+
+    // assert async function (test step) to pass
+    async toPass(asyncFn: () => Promise<void>, options?: { timeout?: number; intervals?: number[] } | undefined) {
+        await expect(async () => {
+            await asyncFn();
+        }).toPass(options);
+    }
+
+    // assert async function (api request) to poll
+    async toPoll(asyncFn: () => Promise<number>, options?: { message?: string; timeout?: number }) {
+        await expect
+            .poll(async () => {
+                return await asyncFn();
+            }, options)
+            .toBe(200);
     }
 
     // assert element not to be visible
@@ -1445,7 +1468,7 @@ export class BasePage {
     }
 
     // assert element not to have value
-    async notToHaveValue(selector: string, value: string) {
+    async notToHaveValue(selector: string, value: string | RegExp) {
         await expect(this.page.locator(selector)).not.toHaveValue(value);
     }
 
@@ -1455,21 +1478,15 @@ export class BasePage {
     }
 
     // assert element not to have class
-    async notToHaveClass(selector: string, className: string) {
+    async notToHaveClass(selector: string, className: string | RegExp | readonly (string | RegExp)[]) {
         await expect(this.page.locator(selector)).not.toHaveClass(className);
-    }
-
-    // assert element to contain text
-    async toContainTextFrameLocator(frame: string, frameSelector: string, text: string | RegExp): Promise<void> {
-        const locator = this.page.frameLocator(frame).locator(frameSelector);
-        await expect(locator).toContainText(text);
     }
 
     /**
      * Custom assertion methods
      */
 
-    // admin enable switcher , if enabled then Skip : admin settings switcher
+    // admin enable switcher, if enabled then Skip : admin settings switcher
     async switcherHasColor(selector: string, color: string): Promise<void> {
         selector = /^(\/\/|\(\/\/)/.test(selector) ? `${selector}//span` : `${selector} span`;
         await this.toHaveBackgroundColor(selector, color);
@@ -1498,7 +1515,7 @@ export class BasePage {
         }
     }
 
-    // admin enable switcher , if enabled then Skip : admin settings switcher
+    // admin enable switcher, if enabled then Skip : admin settings switcher
     async enableSwitcher(selector: string): Promise<void> {
         selector = /^(\/\/|\(\/\/)/.test(selector) ? `${selector}//span` : `${selector} span`;
         const value = await this.getElementBackgroundColor(selector);
@@ -1507,7 +1524,7 @@ export class BasePage {
         }
     }
 
-    // admin disable switcher , if disabled then skip : admin settings switcher
+    // admin disable switcher, if disabled then skip : admin settings switcher
     async disableSwitcher(selector: string): Promise<void> {
         selector = /^(\/\/|\(\/\/)/.test(selector) ? `${selector}//span` : `${selector} span`;
         const value = await this.getElementBackgroundColor(selector);
@@ -1516,7 +1533,7 @@ export class BasePage {
         }
     }
 
-    // admin enable switcher , if enabled then Skip : admin settings switcher
+    // admin enable switcher, if enabled then Skip : admin settings switcher
     async enableSwitcherAndWaitForResponse(subUrl: string, selector: string, code = 200): Promise<Response | string> {
         selector = /^(\/\/|\(\/\/)/.test(selector) ? `${selector}//span` : `${selector} span`;
         const value = await this.getElementBackgroundColor(selector);
@@ -1527,7 +1544,7 @@ export class BasePage {
         return '';
     }
 
-    // admin disable switcher , if disabled then skip : admin settings switcher
+    // admin disable switcher, if disabled then skip : admin settings switcher
     async disableSwitcherAndWaitForResponse(subUrl: string, selector: string, code = 200): Promise<Response | string> {
         selector = /^(\/\/|\(\/\/)/.test(selector) ? `${selector}//span` : `${selector} span`;
         const value = await this.getElementBackgroundColor(selector);
@@ -1575,17 +1592,17 @@ export class BasePage {
         }
     }
 
-    // admin Enable payment methods via Slider
+    // admin enable payment methods via slider
     async enablePaymentMethod(selector: string): Promise<void> {
-        const classValueBefore = await this.getClassValue(selector);
-        if (classValueBefore?.includes('woocommerce-input-toggle--disabled')) {
-            await this.click(selector);
+        const value = await this.hasClass(selector, 'woocommerce-input-toggle--disabled');
+        if (value) {
+            await this.clickAndWaitForResponse(data.subUrls.ajax, selector);
         }
-        const classValueAfter = await this.getClassValue(selector);
-        expect(classValueAfter).toContain('woocommerce-input-toggle--enabled');
+        await this.toHaveClass(selector, /woocommerce-input-toggle--enabled/);
+        await this.toHaveBackgroundColor(selector, 'rgb(0, 124, 186)');
     }
 
-    // Check Multiple Elements with Same Selector/Class/Xpath
+    // check multiple elements with same selector/class/xpath
     async checkMultiple(selector: string): Promise<void> {
         for (const element of await this.page.locator(selector).all()) {
             const isCheckBoxChecked = await element.isChecked();
@@ -1595,15 +1612,7 @@ export class BasePage {
         }
     }
 
-    // delete element if exist (only first will delete) : dokan rma,report abuse, company verifications // todo: delete all
-    async deleteIfExists(selector: string): Promise<void> {
-        const elementExists = await this.isVisible(selector);
-        if (elementExists) {
-            const element = this.getElement(selector);
-            await element.click();
-        }
-    }
-
+    // upload media
     async uploadMedia(file: string) {
         await this.wait(0.5);
         await this.click(selector.wpMedia.mediaLibrary);
@@ -1625,7 +1634,7 @@ export class BasePage {
                 console.log('Media Selected');
                 break;
             }
-            isSelectDisabled && (await this.click(selector.wpMedia.selectUploadedMedia));
+            if (isSelectDisabled) await this.click(selector.wpMedia.selectUploadedMedia);
         }
 
         await this.click(selector.wpMedia.select);
@@ -1649,7 +1658,7 @@ export class BasePage {
         }
     }
 
-    // Remove Previous Uploaded media If Exists
+    // remove previous uploaded media if exists
     async removePreviouslyUploadedImage(previousUploadedImageSelector: string, removePreviousUploadedImageSelector: string) {
         const previousUploadedImageIsVisible = await this.isVisible(previousUploadedImageSelector);
         if (previousUploadedImageIsVisible) {

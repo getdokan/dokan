@@ -1,5 +1,5 @@
 <phpunit
-	bootstrap="tests/bootstrap.php"
+	bootstrap="tests/php/bootstrap.php"
 	backupGlobals="false"
 	colors="true"
 	convertErrorsToExceptions="true"
@@ -7,12 +7,12 @@
 	convertWarningsToExceptions="true"
 	>
     <php>
-        <env name="WP_PHPUNIT__TESTS_CONFIG" value="tests/phpunit-wp-config.php" />
+        <env name="WP_PHPUNIT__TESTS_CONFIG" value="tests/php/phpunit-wp-config.php" />
     </php>
 	<testsuites>
 		<testsuite name="Dokan Test Suite">
-			<directory prefix="" suffix=".php">./tests/</directory>
-            <exclude>./tests/phpunit-wp-config.php</exclude>
+			<directory prefix="" suffix=".php">./tests/php</directory>
+            <exclude>./tests/php/phpunit-wp-config.php</exclude>
 		</testsuite>
 	</testsuites>
 </phpunit>

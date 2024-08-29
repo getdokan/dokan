@@ -1,5 +1,7 @@
 <?php
 
+namespace WeDevs\Dokan\Test\Helpers;
+
 /**
  * Testing helpers
  */

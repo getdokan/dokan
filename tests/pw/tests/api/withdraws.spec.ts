@@ -91,8 +91,9 @@ test.describe('withdraw api test', () => {
     test('create a withdraw', { tag: ['@lite'] }, async () => {
         // cancel any pending withdraw
         const pendingRequest = await apiUtils.getAllWithdrawsByStatus('pending');
-        helpers.isObjEmpty(pendingRequest) === false && (await apiUtils.cancelWithdraw(withdrawId));
-
+        if (helpers.isObjEmpty(pendingRequest) === false) {
+            await apiUtils.cancelWithdraw(withdrawId);
+        }
         const [response, responseBody] = await apiUtils.post(endPoints.createWithdraw, { data: { ...payloads.createWithdraw, amount: minimumWithdrawLimit } });
         expect(response.status()).toBe(201);
         expect(response.ok()).toBeTruthy();

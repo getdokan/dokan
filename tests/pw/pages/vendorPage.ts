@@ -1,4 +1,4 @@
-import { Page, expect, test } from '@playwright/test';
+import { Page, expect } from '@playwright/test';
 import { BasePage } from '@pages/basePage';
 import { LoginPage } from '@pages/loginPage';
 import { CustomerPage } from '@pages/customerPage';
@@ -57,7 +57,9 @@ export class VendorPage extends BasePage {
     async openVendorRegistrationForm() {
         await this.goto(data.subUrls.frontend.myAccount);
         const regIsVisible = await this.isVisible(selector.customer.cRegistration.regEmail);
-        !regIsVisible && (await this.loginPage.logout());
+        if (!regIsVisible) {
+            await this.loginPage.logout();
+        }
         await this.focusAndClick(registrationVendor.regVendor);
         await this.waitForVisibleLocator(registrationVendor.firstName);
     }
@@ -68,7 +70,9 @@ export class VendorPage extends BasePage {
 
         await this.goToMyAccount();
         const regIsVisible = await this.isVisible(selector.customer.cRegistration.regEmail);
-        !regIsVisible && (await this.loginPage.logout());
+        if (!regIsVisible) {
+            await this.loginPage.logout();
+        }
         await this.clearAndType(registrationVendor.regEmail, username + data.vendor.vendorInfo.emailDomain);
         await this.clearAndType(registrationVendor.regPassword, vendorInfo.password);
         await this.focusAndClick(registrationVendor.regVendor);
@@ -97,12 +101,22 @@ export class VendorPage extends BasePage {
         }
         await this.clearAndType(registrationVendor.phone, vendorInfo.phoneNumber);
         await this.checkIfVisible(selector.customer.cDashboard.termsAndConditions);
+
+        // add subscription pack if enabled
         const subscriptionPackIsVisible = await this.isVisible(registrationVendor.subscriptionPack);
-        subscriptionPackIsVisible && (await this.selectByLabel(registrationVendor.subscriptionPack, data.predefined.vendorSubscription.nonRecurring));
-        setupWizardData.setupWizardEnabled
-            ? await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.setupWizard, registrationVendor.register)
-            : await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.dashboard, registrationVendor.register);
+        if (subscriptionPackIsVisible) {
+            await this.selectByLabel(registrationVendor.subscriptionPack, data.predefined.vendorSubscription.nonRecurring);
+        }
+
+        // complete setup wizard if enabled
+        if (setupWizardData.setupWizardEnabled) {
+            await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.setupWizard, registrationVendor.register);
+        } else {
+            await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.dashboard, registrationVendor.register);
+        }
+
         const registrationErrorIsVisible = await this.isVisible(selector.customer.cWooSelector.wooCommerceError);
+
         if (registrationErrorIsVisible) {
             const hasError = await this.hasText(selector.customer.cWooSelector.wooCommerceError, data.customer.registration.registrationErrorMessage);
             if (hasError) {
@@ -110,8 +124,8 @@ export class VendorPage extends BasePage {
                 return;
             }
         }
-        subscriptionPackIsVisible && (await this.customer.placeOrder('bank', false, true, false));
-        setupWizardData.setupWizardEnabled && (await this.vendorSetupWizard(setupWizardData));
+        if (subscriptionPackIsVisible) await this.customer.placeOrder('bank', false, true, false);
+        if (setupWizardData.setupWizardEnabled) await this.vendorSetupWizard(setupWizardData);
     }
 
     // vendor setup wizard
@@ -214,11 +228,8 @@ export class VendorPage extends BasePage {
         await this.clearAndType(selector.vendor.vAccountDetails.email, vendor.username + vendor.vendorInfo.emailDomain);
         // await this.updatePassword(vendor.vendorInfo.password, vendor.vendorInfo.password1);
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.editAccountVendor, selector.vendor.vAccountDetails.saveChanges, 302);
-        await expect(this.page.getByText(selector.vendor.vAccountDetails.saveSuccessMessage)).toBeVisible();
+        await this.toBeVisible(selector.customer.cWooSelector.wooCommerceSuccessMessage);
         await this.toContainText(selector.customer.cWooSelector.wooCommerceSuccessMessage, data.vendor.vendorInfo.account.updateSuccessMessage);
-
-        // cleanup: reset password
-        // await this.updatePassword(vendor.vendorInfo.password1, vendor.vendorInfo.password, true);
     }
 
     // vendor update password
@@ -294,7 +305,7 @@ export class VendorPage extends BasePage {
             orderDetails.refunded = helpers.price((await this.getElementText(ordersVendor.orderDetails.refunded)) as string);
         }
 
-        console.log(orderDetails);
+        // console.log(orderDetails);
         return orderDetails;
     }
 
@@ -328,19 +339,51 @@ export class VendorPage extends BasePage {
         await this.toHaveCount(ordersVendor.numberOfRowsFound, 1);
     }
 
-    async buyProductAdvertising(productName: string) {
-        await this.searchProduct(productName);
-        const advertisementStatus = await this.hasColor(productsVendor.advertisementStatus(productName), 'rgb(255, 99, 71)');
-        if (advertisementStatus) {
-            console.log('Product advertisement is currently ongoing.');
-            test.skip();
-            // throw new Error('Product advertisement is currently ongoing.');
+    // buy product advertisement
+    async buyProductAdvertising(productName: string, productType: string, testPage?: any) {
+        if (!testPage) {
+            await this.searchProduct(productName);
+        } else {
+            const page = new testPage(this.page);
+            if (productType === 'booking') {
+                await page.searchBookingProduct(productName);
+            } else {
+                await page.searchAuctionProduct(productName);
+            }
         }
         await this.clickAndWaitForResponse(data.subUrls.ajax, productsVendor.buyAdvertisement(productName));
         await this.clickAndWaitForResponse(data.subUrls.ajax, productsVendor.confirmAction);
         await this.click(productsVendor.successMessage);
         const orderId = await this.customer.paymentOrder();
         return orderId;
+    }
+
+    // assert product advertisement is bought
+    async assertProductAdvertisementIsBought(productName: string, productType: string, testPage?: any) {
+        let page;
+        if (!testPage) {
+            await this.searchProduct(productName);
+        } else {
+            page = new testPage(this.page);
+            if (productType === 'booking') {
+                await page.searchBookingProduct(productName);
+            } else {
+                await page.searchAuctionProduct(productName);
+            }
+        }
+        await this.toHaveColor(productsVendor.advertisementStatus(productName), 'rgb(240, 80, 37)'); //todo: grab it from test data, it could be any color
+        if (!testPage) {
+            await this.goToProductEdit(productName);
+        } else {
+            page = new testPage(this.page);
+            if (productType === 'booking') {
+                await page.goToBookingProductEdit(productName);
+            } else {
+                await page.goToAuctionProductEdit(productName);
+            }
+        }
+        await this.toBeChecked(productsVendor.advertisement.advertiseThisProduct);
+        await this.toBeVisible(productsVendor.advertisement.advertisementIsBought);
     }
 
     // vendor set banner and profile picture settings
