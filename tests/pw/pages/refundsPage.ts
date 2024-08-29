@@ -42,7 +42,7 @@ export class RefundsPage extends AdminPage {
         await this.clearInputField(refundsAdmin.search);
 
         await this.typeAndWaitForResponse(data.subUrls.api.dokan.refunds, refundsAdmin.search, String(searchKey));
-        if (!isNaN(Number(searchKey))) {
+        if (!Number.isNaN(Number(searchKey))) {
             // serched by orderid
             await this.toHaveCount(refundsAdmin.numberOfRows, 1);
             await this.toBeVisible(refundsAdmin.refundCell(searchKey));

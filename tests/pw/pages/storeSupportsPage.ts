@@ -75,7 +75,7 @@ export class StoreSupportsPage extends AdminPage {
 
         await this.clearInputField(storeSupportsAdmin.searchTicket);
         await this.typeAndWaitForResponseAndLoadState(data.subUrls.api.dokan.storeSupport, storeSupportsAdmin.searchTicket, searchKey);
-        if (!isNaN(Number(searchKey))) {
+        if (!Number.isNaN(Number(searchKey))) {
             // searched by id
             await this.toHaveCount(storeSupportsAdmin.numberOfRows, 1);
             await this.toBeVisible(storeSupportsAdmin.supportTicketCell(searchKey));
@@ -272,7 +272,7 @@ export class StoreSupportsPage extends AdminPage {
 
         await this.clearAndType(storeSupportsVendor.filters.tickedIdOrKeyword, searchKey);
         await this.clickAndWaitForLoadState(storeSupportsVendor.filters.search);
-        if (!isNaN(Number(searchKey))) {
+        if (!Number.isNaN(Number(searchKey))) {
             // searched by id
             await this.toHaveCount(storeSupportsVendor.numberOfRows, 1);
             await this.toBeVisible(storeSupportsVendor.storeSupportCellById(searchKey));
