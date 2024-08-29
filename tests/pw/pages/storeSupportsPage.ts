@@ -208,7 +208,7 @@ export class StoreSupportsPage extends AdminPage {
 
     // vendor view support ticket details
     async vendorViewSupportTicketDetails(supportTicketId: string) {
-        await this.vendorSearchSupportTicket('id', supportTicketId);
+        await this.vendorSearchSupportTicket(supportTicketId);
         await this.clickAndWaitForLoadState(storeSupportsVendor.storeSupportLink(supportTicketId));
 
         await this.toBeVisible(storeSupportsVendor.supportTicketDetails.backToTickets);
@@ -263,7 +263,7 @@ export class StoreSupportsPage extends AdminPage {
     }
 
     // vendor search support ticket
-    async vendorSearchSupportTicket(searchBy: string, searchKey: string, closed?: boolean) {
+    async vendorSearchSupportTicket(searchKey: string, closed?: boolean) {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.storeSupport);
         if (closed) {
             // go to closed tab
@@ -284,7 +284,7 @@ export class StoreSupportsPage extends AdminPage {
 
     // vendor reply to support ticket
     async vendorReplySupportTicket(supportTicketId: string, replyMessage: string) {
-        await this.vendorSearchSupportTicket('id', supportTicketId);
+        await this.vendorSearchSupportTicket(supportTicketId);
         await this.clickAndWaitForLoadState(storeSupportsVendor.storeSupportLink(supportTicketId));
         await this.clearAndType(storeSupportsVendor.chatReply, replyMessage);
         await this.clickAndWaitForResponse('wp-comments-post.php', storeSupportsVendor.submitReply, 302);
@@ -292,21 +292,21 @@ export class StoreSupportsPage extends AdminPage {
 
     // vendor close support ticket
     async vendorCloseSupportTicket(supportTicketId: string) {
-        await this.vendorSearchSupportTicket('id', supportTicketId);
+        await this.vendorSearchSupportTicket(supportTicketId);
         await this.click(storeSupportsVendor.closeTicket);
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.storeSupport, storeSupportsVendor.confirmCloseTicket);
     }
 
     // vendor reopen support ticket
     async vendorReopenSupportTicket(supportTicketId: string) {
-        await this.vendorSearchSupportTicket('id', supportTicketId, true);
+        await this.vendorSearchSupportTicket(supportTicketId, true);
         await this.click(storeSupportsVendor.reOpenTicket);
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.storeSupport, storeSupportsVendor.confirmCloseTicket);
     }
 
     // vendor close support ticket with a reply
     async vendorCloseSupportTicketWithReply(supportTicketId: string, replyMessage: string) {
-        await this.vendorSearchSupportTicket('id', supportTicketId);
+        await this.vendorSearchSupportTicket(supportTicketId);
         await this.clickAndWaitForLoadState(storeSupportsVendor.storeSupportLink(supportTicketId));
         await this.toContainText(storeSupportsVendor.ticketStatus, 'Open');
         await this.selectByValue(storeSupportsVendor.changeStatus, '1');
@@ -317,7 +317,7 @@ export class StoreSupportsPage extends AdminPage {
 
     // vendor reopen support ticket with a reply
     async vendorReopenSupportTicketWithReply(supportTicketId: string, replyMessage: string) {
-        await this.vendorSearchSupportTicket('id', supportTicketId, true);
+        await this.vendorSearchSupportTicket(supportTicketId, true);
         await this.clickAndWaitForLoadState(storeSupportsVendor.storeSupportLink(supportTicketId));
         await this.toContainText(storeSupportsVendor.ticketStatus, 'Closed');
         await this.clearAndType(storeSupportsVendor.chatReply, replyMessage);

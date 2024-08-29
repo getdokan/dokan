@@ -260,7 +260,8 @@ const storeOpenClose = z.object({
             opening_time: z.array(z.string()).optional(),
             closing_time: z.array(z.string()).optional(),
         })
-        .or(z.any()).optional(),
+        .or(z.any())
+        .optional(),
     open_notice: z.string(),
     close_notice: z.string(),
 });

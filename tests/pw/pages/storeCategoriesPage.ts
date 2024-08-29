@@ -3,7 +3,6 @@ import { AdminPage } from '@pages/adminPage';
 import { selector } from '@pages/selectors';
 import { data } from '@utils/testData';
 import { storeCategory } from '@utils/interfaces';
-import { helpers } from '@utils/helpers';
 
 // selectors
 const storeCategoryAdmin = selector.admin.dokan.vendors.storeCategory;
