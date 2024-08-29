@@ -47,8 +47,7 @@ test.describe.skip('Settings test', () => {
 
     // general settings
 
-    test.skip('admin can set vendor store url (general settings)', { tag: ['@lite', '@admin'] }, async () => {
-        // todo: need to run on serial mode, will fail other tests
+    test('admin can set vendor store url (general settings)', { tag: ['@lite', '@admin', '@serial'] }, async () => {
         await dbUtils.updateOptionValue(dbData.dokan.optionName.general, { custom_store_url: 'stores' });
         await helpers.exeCommandWpcli(data.commands.wpcli.rewritePermalink);
         await admin.vendorStoreUrlSetting(data.predefined.vendorStores.vendor1, 'stores');
