@@ -5,9 +5,9 @@ Tags: WooCommerce multivendor marketplace, multivendor marketplace, multivendor,
 Requires at least: 6.4
 Tested up to: 6.6.1
 WC requires at least: 8.0.0
-WC tested up to: 9.1.4
+WC tested up to: 9.2.3
 Requires PHP: 7.4
-Stable tag: 3.11.5
+Stable tag: 3.12.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -346,6 +346,12 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 == Changelog ==
+
+= v3.12.0 ( Aug 29, 2024 ) =
+
+- **fix:** Displaying incorrect withdrawal amount when using decimal separator as thousand.
+- **fix:** Removed multiple invoice button for dokan sub-orders.
+- **fix:** Ensure accurate stock updates when vendors edit products while sales occur. Thanks @brunomendespereira
 
 = v3.11.5 ( Aug 7, 2024 ) =
 
