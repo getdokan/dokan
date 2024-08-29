@@ -715,6 +715,7 @@ export const selector = {
                     numberOfRowsFound: '.tablenav.top .displaying-num',
                     numberOfRows: 'div#dokan-store-categories table tbody tr',
                     noRowsFound: '//td[normalize-space()="No category found"]',
+                    storeCategoryRowActions: (title: string) => `//td//a[contains(text(), '${title}')]/../..//div[@class="row-actions"]`,
                     storeCategoryCell: (title: string) => `//td//a[contains(text(), '${title}')]/../..`,
                     storeCategoryEdit: (title: string) => `//td//a[contains(text(), '${title}')]/../..//span[@class='edit']//a`,
                     storeCategoryDelete: (title: string) => `//td//a[contains(text(), '${title}')]/../..//span[@class='delete']//a`,

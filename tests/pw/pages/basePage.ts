@@ -232,8 +232,6 @@ export class BasePage {
             this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.request().method().toLowerCase() == requestType.toLowerCase() && resp.status() === code),
             this.page.locator(selector).click(),
         ]);
-        const requestTyped = response.request().method();
-        console.log(`Request type: ${requestTyped}`);
         return response;
     }
 

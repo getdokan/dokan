@@ -64,6 +64,7 @@ export class StoreCategoriesPage extends AdminPage {
     async updateStoreCategory(categoryName: string, action: string) {
         await this.searchStoreCategory(categoryName);
 
+        await this.removeAttribute(storeCategoryAdmin.storeCategoryRowActions(categoryName), 'class'); // forcing the row actions to be visible, to avoid flakiness
         await this.hover(storeCategoryAdmin.storeCategoryCell(categoryName));
 
         switch (action) {
