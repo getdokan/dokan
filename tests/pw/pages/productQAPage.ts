@@ -88,9 +88,8 @@ export class ProductQAPage extends BasePage {
             default:
                 break;
         }
-
-        const count = (await this.getElementText(productQAAdmin.numberOfRowsFound))?.split(' ')[0];
-        expect(Number(count)).toBeGreaterThan(0);
+        await this.notToHaveText(productQAAdmin.numberOfRowsFound, '0 items');
+        await this.notToBeVisible(productQAAdmin.noRowsFound);
     }
 
     // edit question

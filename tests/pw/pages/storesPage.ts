@@ -355,18 +355,19 @@ export class StoresPage extends AdminPage {
         switch (action) {
             case 'products':
                 await this.clickAndWaitForLoadState(vendors.vendorProducts(vendorName));
+                await this.notToHaveText(selector.admin.products.numberOfRowsFound, '0 items');
+                await this.notToBeVisible(selector.admin.products.noRowsFound);
                 break;
 
             case 'orders':
                 await this.clickAndWaitForLoadState(vendors.vendorOrders(vendorName));
+                await this.notToHaveText(selector.admin.wooCommerce.orders.numberOfRowsFound, '0 items');
+                await this.notToBeVisible(selector.admin.wooCommerce.orders.noRowsFound);
                 break;
 
             default:
                 break;
         }
-
-        const count = (await this.getElementText(vendors.numberOfRowsFound))?.split(' ')[0];
-        expect(Number(count)).toBeGreaterThan(0);
     }
 
     // vendor bulk action

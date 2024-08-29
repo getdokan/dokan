@@ -1196,7 +1196,7 @@ export class BasePage {
     }
 
     // wait for locator
-    async waitForLocator(selector: string, option: { state?: 'visible' | 'attached' | 'detached' | 'hidden' | undefined; timeout?: number | undefined } | undefined): Promise<void> {
+    async waitForLocator(selector: string, option?: { state?: 'visible' | 'attached' | 'detached' | 'hidden' | undefined; timeout?: number | undefined } | undefined): Promise<void> {
         const locator = this.page.locator(selector);
         await locator.waitFor(option);
     }
@@ -1383,6 +1383,11 @@ export class BasePage {
         await expect(this.page.locator(selector)).toBeChecked();
     }
 
+    // assert element to have text
+    async toHaveText(selector: string, text: string | RegExp | readonly (string | RegExp)[], option?: { ignoreCase?: boolean; timeout?: number; useInnerText?: boolean } | undefined) {
+        await expect(this.page.locator(selector)).toHaveText(text, option);
+    }
+
     // assert element to contain text
     async toContainText(selector: string, text: string | RegExp) {
         await expect(this.page.locator(selector)).toContainText(text);
@@ -1453,9 +1458,14 @@ export class BasePage {
         await expect(this.page.locator(selector)).toBeHidden();
     }
 
+    // assert element not to have text
+    async notToHaveText(selector: string, text: string | RegExp | readonly (string | RegExp)[], option?: { ignoreCase?: boolean; timeout?: number; useInnerText?: boolean } | undefined) {
+        await expect(this.page.locator(selector)).not.toHaveText(text, option);
+    }
+
     // assert element not to contain text
-    async notToContainText(selector: string, text: string) {
-        await expect(this.page.locator(selector)).not.toContainText(text);
+    async notToContainText(selector: string, text: string | RegExp | readonly (string | RegExp)[], options?: { ignoreCase?: boolean; timeout?: number; useInnerText?: boolean } | undefined) {
+        await expect(this.page.locator(selector)).not.toContainText(text, options);
     }
 
     // assert element not to have count

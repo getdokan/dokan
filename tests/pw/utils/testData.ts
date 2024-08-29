@@ -848,7 +848,7 @@ export const data = {
                 productQA: 'wp-admin/admin.php?page=dokan#/product-qa',
                 questionDetails: (questionId: string) => `wp-admin/admin.php?page=dokan#/product-qa/${questionId}`,
                 subscriptions: 'wp-admin/admin.php?page=dokan#/subscriptions',
-                verifications: 'wp-admin/admin.php?page=dokan#/verifications?status=pending',
+                verifications: 'wp-admin/admin.php?page=dokan#/verifications',
                 productAdvertising: 'wp-admin/admin.php?page=dokan#/product-advertising',
                 wholeSaleCustomer: 'wp-admin/admin.php?page=dokan#/wholesale-customer',
                 help: 'wp-admin/admin.php?page=dokan#/help',

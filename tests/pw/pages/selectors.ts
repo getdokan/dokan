@@ -134,6 +134,7 @@ export const selector = {
             home: '//li[@id="menu-dashboard"]//a[contains(text(),"Home")]',
             updates: '//li[@id="menu-dashboard"]//a[contains(text(),"Updates ")]',
         },
+
         // Posts
         posts: {
             // Menus
@@ -142,12 +143,14 @@ export const selector = {
             categories: '//li[@id="menu-posts"]//a[contains(text(),"Categories")]',
             tags: '//li[@id="menu-posts"]//a[contains(text(),"Tags")]',
         },
+
         // Media
         media: {
             // Menus
             library: '//li[@id="menu-media"]//a[contains(text(),"Library")]',
             addNew: '//li[@id="menu-media"]//a[contains(text(),"Add New")]',
         },
+
         // Pages
         pages: {
             // Menus
@@ -166,6 +169,7 @@ export const selector = {
 
             publishMessage: '//div[@class="components-snackbar__content" and text()="Page published."]',
         },
+
         // Comments
         comments: {
             // Nav Tabs
@@ -191,6 +195,7 @@ export const selector = {
             addOns: '//li[@id="toplevel_page_email-log"]//a[contains(text(),"Add-ons")]',
             systemInfo: '//li[@id="toplevel_page_email-log"]//a[contains(text(),"System Info")]',
         },
+
         // Dokan
         dokan: {
             // Dokan Menus
@@ -350,7 +355,6 @@ export const selector = {
 
                 numberOfRowsFound: '.tablenav.top .displaying-num',
                 numberOfRows: 'div.withdraw-requests table tbody tr',
-                currentNoOfRows: 'table tbody tr',
                 noRowsFound: '//td[normalize-space()="No requests found."]',
                 withdrawCell: (storeName: string) => `//td//a[contains(text(), '${storeName}')]/../..`,
                 withdrawDelete: (storeName: string) => `//td//a[contains(text(), '${storeName}')]/../..//span[@class="trash"]//a`,
@@ -754,6 +758,7 @@ export const selector = {
                 },
 
                 numberOfRowsFound: '.tablenav.top .displaying-num',
+                numberOfRows: 'table tbody tr',
                 noRowsFound: '//td[normalize-space()="No items found."]',
                 abuseReportCell: (input: string) => `//a[contains(text(), '${input}')]/../..`, // abuse-reason, product-name, vendor-name
                 abuseReportFirstCell: '(//a[@href="#view-report"])[1]',
@@ -1359,6 +1364,7 @@ export const selector = {
                     // Order Details
                     numberOfRowsFound: '.tablenav.top .displaying-num',
                     numberOfRows: 'div.logs-area table tbody tr',
+                    noRowsFound: '//td[normalize-space()="No logs found."]',
                     orderIdRow: (orderNumber: string) => `//a[normalize-space()='#${orderNumber}']/..//..`,
                     orderIdCell: (orderNumber: string) => `//a[normalize-space()='#${orderNumber}']/..`,
                     orderIdOrderTotal: (orderNumber: string) => `//a[normalize-space()='#${orderNumber}']/..//..//td[@class="column order_total"]//div`,
@@ -1603,6 +1609,7 @@ export const selector = {
                 },
 
                 numberOfRowsFound: '.tablenav.top .displaying-num',
+                numberOfRows: 'div.product-questions-answers table tbody tr',
                 noRowsFound: '//td[normalize-space()="No question found."]',
                 productQuestionCell: (input: string) => `//strong[contains(text(), '${input}')]/..`,
                 productQuestionFirstCell: '(//tbody//tr//td//a)[1]',
@@ -1681,8 +1688,8 @@ export const selector = {
                 },
 
                 numberOfRowsFound: '.tablenav.top .displaying-num',
+                numberOfRows: 'div.subscription-list table tbody tr',
                 noRowsFound: '//td[normalize-space()="No subscribed vendors found."]',
-                currentNoOfRows: 'table tbody tr',
 
                 vendorSubscriptionsRow: (storeName: string) => `//td[@class="column store_name"]//a[contains(text(),'${storeName}')]/../../..`,
                 vendorSubscriptionsCell: (storeName: string) => `//td[@class="column store_name"]//a[contains(text(),'${storeName}')]`,
@@ -1743,8 +1750,8 @@ export const selector = {
                 statusColumnValue: (status: string) => `td.column.status .${status}`, // pending, approved, rejected, cancelled
 
                 numberOfRowsFound: '.tablenav.top .displaying-num',
+                numberOfRows: 'table tbody tr',
                 noRowsFound: '//td[normalize-space()="No requests found."]',
-                currentNoOfRows: 'table tbody tr',
                 vendorRequestFirstCell: '(//tbody//tr//td//strong)[1]',
                 verificationRequestCell: (requestId: string) => `//td//strong[contains(text(), '#${requestId}')]/..`,
                 verificationRequestDocument: (requestId: string) => `(//td//strong[contains(text(), '#${requestId}')]/../..//a[@target])[1]`,
@@ -2868,6 +2875,13 @@ export const selector = {
                 // Update Success Message
                 updatedSuccessMessage: '#message.updated.inline p',
             },
+
+            // orders
+            orders: {
+                //table
+                numberOfRowsFound: '(//div[@class="tablenav-pages"]//span[@class="displaying-num"])[1]',
+                noRowsFound: '//td[normalize-space(text())="No items found."]',
+            },
         },
 
         // Products
@@ -2879,6 +2893,10 @@ export const selector = {
             tagsMenu: '//li[@id="menu-posts-product"]//a[text()="Tags"]',
             addOnsMenu: '//li[@id="menu-posts-product"]//a[text()="Add-ons"]',
             attributesMenu: '//li[@id="menu-posts-product"]//a[text()="Attributes"]',
+
+            // table
+            numberOfRowsFound: '(//div[@class="tablenav-pages"]//span[@class="displaying-num"])[1]',
+            noRowsFound: '//td[normalize-space(text())="No products found"]',
 
             // Product
             product: {

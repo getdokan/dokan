@@ -113,8 +113,8 @@ export class WholesaleCustomersPage extends AdminPage {
         await this.searchWholesaleCustomer(wholesaleCustomer);
         await this.hover(wholesaleCustomersAdmin.wholesaleCustomerCell(wholesaleCustomer));
         await this.clickAndWaitForLoadState(wholesaleCustomersAdmin.wholesaleCustomerOrders(wholesaleCustomer));
-        const count = (await this.getElementText(wholesaleCustomersAdmin.numberOfRowsFound))?.split(' ')[0];
-        expect(Number(count)).toBeGreaterThan(0);
+        await this.notToBeVisible(selector.admin.wooCommerce.orders.noRowsFound);
+        
     }
 
     // update wholesale customer

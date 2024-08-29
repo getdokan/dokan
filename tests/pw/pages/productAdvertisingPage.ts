@@ -114,9 +114,8 @@ export class ProductAdvertisingPage extends AdminPage {
             default:
                 break;
         }
-
-        const count = (await this.getElementText(productAdvertisingAdmin.numberOfRowsFound))?.split(' ')[0];
-        expect(Number(count)).toBeGreaterThan(0);
+        await this.notToHaveText(productAdvertisingAdmin.numberOfRowsFound, '0 items');
+        await this.notToBeVisible(productAdvertisingAdmin.noRowsFound);
 
         // clear filter
         await this.clickAndWaitForResponse(data.subUrls.api.dokan.productAdvertising, productAdvertisingAdmin.filters.clearFilter);

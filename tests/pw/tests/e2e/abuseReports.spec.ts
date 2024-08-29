@@ -4,9 +4,8 @@ import { ApiUtils } from '@utils/apiUtils';
 import { dbUtils } from '@utils/dbUtils';
 import { data } from '@utils/testData';
 import { dbData } from '@utils/dbData';
-import { payloads } from '@utils/payloads';
 
-const { VENDOR_ID, CUSTOMER_ID } = process.env;
+const { PRODUCT_ID, VENDOR_ID, CUSTOMER_ID } = process.env;
 
 test.describe('Abuse report test', () => {
     let admin: AbuseReportsPage;
@@ -24,8 +23,7 @@ test.describe('Abuse report test', () => {
         customer = new AbuseReportsPage(cPage);
 
         apiUtils = new ApiUtils(await request.newContext());
-        const productId = await apiUtils.getProductId(data.predefined.simpleProduct.product1.name, payloads.vendorAuth);
-        await dbUtils.createAbuseReport(dbData.dokan.createAbuseReport, productId, VENDOR_ID, CUSTOMER_ID);
+        await dbUtils.createAbuseReport(dbData.dokan.createAbuseReport, PRODUCT_ID, VENDOR_ID, CUSTOMER_ID);
     });
 
     test.afterAll(async () => {

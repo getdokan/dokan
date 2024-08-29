@@ -1,4 +1,4 @@
-import { Page, expect } from '@playwright/test';
+import { Page } from '@playwright/test';
 import { AdminPage } from '@pages/adminPage';
 import { selector } from '@pages/selectors';
 import { data } from '@utils/testData';
@@ -77,31 +77,28 @@ export class ReportsPage extends AdminPage {
         await this.clickAndWaitForDownload(reportsAdmin.allLogs.exportLogs);
     }
 
-    // filter all logs by store
-    async filterAllLogsByStore(storeName: string) {
+    // filter all logs
+    async filterAllLogs(input: string, action: string) {
         await this.goIfNotThere(data.subUrls.backend.dokan.allLogs);
 
-        await this.click(reportsAdmin.allLogs.filters.filterByStore);
-        await this.typeAndWaitForResponse(data.subUrls.api.dokan.stores, reportsAdmin.allLogs.filters.filterByStoreInput, storeName);
-        await this.press(data.key.arrowDown);
-        // await this.toContainText(reportsAdmin.allLogs.filters.searchedResult, (storeName));
-        await this.pressAndWaitForResponse(data.subUrls.api.dokan.logs, data.key.enter);
+        switch (action) {
+            case 'by-store':
+                await this.click(reportsAdmin.allLogs.filters.filterByStore);
+                await this.typeAndWaitForResponse(data.subUrls.api.dokan.stores, reportsAdmin.allLogs.filters.filterByStoreInput, input);
+                await this.press(data.key.arrowDown);
+                await this.pressAndWaitForResponse(data.subUrls.api.dokan.logs, data.key.enter);
+                break;
 
-        const count = (await this.getElementText(reportsAdmin.allLogs.numberOfRowsFound))?.split(' ')[0];
-        expect(Number(count)).toBeGreaterThan(0);
-        // await this.clickAndWaitForResponseAndLoadState(data.subUrls.api.dokan.logs, reportsAdmin.allLogs.filters.clear);
-    }
+            case 'by-status':
+                await this.click(reportsAdmin.allLogs.filters.filterByStatus); // todo:  add multiselect option
+                await this.type(reportsAdmin.allLogs.filters.filterByStatusInput, input);
+                await this.clickAndAcceptAndWaitForResponse(data.subUrls.api.dokan.logs, reportsAdmin.allLogs.filters.searchedResult);
+                break;
 
-    // filter all logs by status
-    async filterAllLogsByStatus(orderStatus: string) {
-        await this.goIfNotThere(data.subUrls.backend.dokan.allLogs);
-
-        await this.click(reportsAdmin.allLogs.filters.filterByStatus); // todo:  add multiselect option
-        await this.type(reportsAdmin.allLogs.filters.filterByStatusInput, orderStatus);
-        // await this.toContainText(reportsAdmin.allLogs.filters.searchedResult, (orderStatus));
-        await this.clickAndAcceptAndWaitForResponse(data.subUrls.api.dokan.logs, reportsAdmin.allLogs.filters.searchedResult);
-        const count = (await this.getElementText(reportsAdmin.allLogs.numberOfRowsFound))?.split(' ')[0];
-        expect(Number(count)).toBeGreaterThan(0);
-        // await this.clickAndWaitForResponseAndLoadState(data.subUrls.api.dokan.logs, reportsAdmin.allLogs.filters.clear);
+            default:
+                break;
+        }
+        await this.notToHaveText(reportsAdmin.allLogs.numberOfRowsFound, '0 items');
+        await this.notToBeVisible(reportsAdmin.allLogs.noRowsFound);
     }
 }

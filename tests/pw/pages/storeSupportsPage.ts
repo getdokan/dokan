@@ -119,9 +119,8 @@ export class StoreSupportsPage extends AdminPage {
             default:
                 break;
         }
-
-        const count = (await this.getElementText(storeSupportsAdmin.numberOfRowsFound))?.split(' ')[0];
-        expect(Number(count)).toBeGreaterThan(0);
+        await this.notToHaveText(storeSupportsAdmin.numberOfRowsFound, '0 items');
+        await this.notToBeVisible(storeSupportsAdmin.noRowsFound);
     }
 
     // reply to support ticket
