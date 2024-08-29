@@ -315,9 +315,9 @@ export class StoresPage extends AdminPage {
     // search vendor
     async searchVendor(vendorName: string, neg: boolean = false) {
         await this.goIfNotThere(data.subUrls.backend.dokan.vendors);
-
         await this.clearInputField(vendors.search);
         await this.typeAndWaitForResponseAndLoadState(data.subUrls.api.dokan.stores, vendors.search, vendorName);
+        await this.toHaveCount(vendors.numberOfRows, 1);
         await this.toBeVisible(vendors.vendorCell(vendorName));
 
         // negative scenario
@@ -349,6 +349,7 @@ export class StoresPage extends AdminPage {
     async viewVendor(vendorName: string, action: string) {
         await this.searchVendor(vendorName);
 
+        await this.removeAttribute(vendors.vendorRowActions(vendorName), 'class'); // forcing the row actions to be visible, to avoid flakiness
         await this.hover(vendors.vendorRow(vendorName));
 
         switch (action) {

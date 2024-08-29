@@ -459,10 +459,12 @@ export const selector = {
                 },
 
                 numberOfRowsFound: '.tablenav.top .displaying-num',
+                numberOfRows: 'div.vendor-list table tbody tr',
                 noRowsFound: '//td[normalize-space()="No vendors found."]',
                 vendorViewDetails: (username: string) => `//td//a[contains(text(), '${username}')]`,
                 vendorRow: (username: string) => `//td//a[contains(text(), '${username}')]/../../..`,
                 vendorCell: (username: string) => `//td//a[contains(text(), '${username}')]/../..`,
+                vendorRowActions: (username: string) => `//td//a[contains(text(), '${username}')]/../..//div[@class="row-actions"]`,
                 vendorEdit: (username: string) => `//td//a[contains(text(), '${username}')]/../..//span[@class="edit"]//a`,
                 vendorProducts: (username: string) => `//td//a[contains(text(), '${username}')]/../..//span[@class="products"]//a`,
                 vendorOrders: (username: string) => `//td//a[contains(text(), '${username}')]/../..//span[@class="orders"]//a`,
@@ -1087,13 +1089,14 @@ export const selector = {
                 noRowsFound: '//td[normalize-space()="No badges found."]',
                 sellerBadgeRow: (name: string) => `//a[contains(text(),'${name}')]/../../..`,
                 sellerBadgeCell: (name: string) => `//a[contains(text(),'${name}')]/../..`,
+                sellerBadgeRowActions: (name: string) => `//a[contains(text(),'${name}')]/../../..//div[@class="row-actions"]`,
                 sellerBadgeLevel: (name: string) => `//a[contains(text(),'${name}')]/../../..//span[@class="level_count"]//strong`,
-                sellerBadgeEdit: (name: string) => `//a[contains(text(),'${name}')]/../..//div[@class="row-actions"]//span[@class="edit"]//a`,
-                sellerBadgePreview: (name: string) => `//a[contains(text(),'${name}')]/../..//div[@class="row-actions"]//span[@class="view"]//a`,
-                sellerBadgeVendors: (name: string) => `//a[contains(text(),'${name}')]/../..//div[@class="row-actions"]//span[@class="show_vendors"]//a`,
-                sellerBadgePublish: (name: string) => `//a[contains(text(),'${name}')]/../..//div[@class="row-actions"]//span[@class="publish"]//a`,
-                sellerBadgeDraft: (name: string) => `//a[contains(text(),'${name}')]/../..//div[@class="row-actions"]//span[@class="draft"]//a`,
-                sellerBadgeDelete: (name: string) => `//a[contains(text(),'${name}')]/../..//div[@class="row-actions"]//span[@class="delete"]//a`,
+                sellerBadgeEdit: (name: string) => `//a[contains(text(),'${name}')]/../..//span[@class="edit"]//a`,
+                sellerBadgePreview: (name: string) => `//a[contains(text(),'${name}')]/../..//span[@class="view"]//a`,
+                sellerBadgeVendors: (name: string) => `//a[contains(text(),'${name}')]/../..//span[@class="show_vendors"]//a`,
+                sellerBadgePublish: (name: string) => `//a[contains(text(),'${name}')]/../..//span[@class="publish"]//a`,
+                sellerBadgeDraft: (name: string) => `//a[contains(text(),'${name}')]/../..//span[@class="draft"]//a`,
+                sellerBadgeDelete: (name: string) => `//a[contains(text(),'${name}')]/../..//span[@class="delete"]//a`,
 
                 confirmAction: '.swal2-actions .swal2-confirm',
                 cancelAction: '.swal2-actions .swal2-cancel',
@@ -1351,6 +1354,7 @@ export const selector = {
 
                     // Order Details
                     numberOfRowsFound: '.tablenav.top .displaying-num',
+                    numberOfRows: 'div.logs-area table tbody tr',
                     orderIdRow: (orderNumber: string) => `//a[normalize-space()='#${orderNumber}']/..//..`,
                     orderIdCell: (orderNumber: string) => `//a[normalize-space()='#${orderNumber}']/..`,
                     orderIdOrderTotal: (orderNumber: string) => `//a[normalize-space()='#${orderNumber}']/..//..//td[@class="column order_total"]//div`,
@@ -4313,8 +4317,8 @@ export const selector = {
             couponRow: (couponCode: string) => `//span[normalize-space()="${couponCode}"]/../../../../..`,
             couponCell: (couponCode: string) => `//span[normalize-space()="${couponCode}"]/../../../..`,
             couponLink: (couponCode: string) => `//span[normalize-space()="${couponCode}"]/..`,
-            couponEdit: (couponCode: string) => `//span[normalize-space()="${couponCode}"]/../../../..//div[@class="row-actions"]//span[@class="edit"]`,
-            couponDelete: (couponCode: string) => `//span[normalize-space()="${couponCode}"]/../../../..//div[@class="row-actions"]//span[@class="delete"]`,
+            couponEdit: (couponCode: string) => `//span[normalize-space()="${couponCode}"]/../../../..//span[@class="edit"]`,
+            couponDelete: (couponCode: string) => `//span[normalize-space()="${couponCode}"]/../../../..//span[@class="delete"]`,
 
             // Create Coupon
             addNewCoupon: '.dokan-btn',

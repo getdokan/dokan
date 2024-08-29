@@ -118,6 +118,7 @@ export class ProductQAPage extends BasePage {
     async editAnswer(questionId: string, questionsAnswers: questionsAnswers): Promise<void> {
         await this.goto(data.subUrls.backend.dokan.questionDetails(questionId));
         await this.click(productQAAdmin.questionDetails.answer.editAnswer);
+        await this.wait(1); // todo: need to resolve in future [click opens textarea but not clear the previous text by fill]
         await this.typeFrameSelector(productQAAdmin.questionDetails.answer.questionAnswerIframe, productQAAdmin.questionDetails.answer.questionAnswerHtmlBody, questionsAnswers.editAnswer);
         await this.clickAndWaitForResponse(data.subUrls.api.dokan.productAnswers, productQAAdmin.questionDetails.answer.saveAnswer);
         await this.toBeVisible(productQAAdmin.questionDetails.answerUpdateSuccessMessage);
@@ -236,6 +237,7 @@ export class ProductQAPage extends BasePage {
     async vendorEditAnswer(questionId: string, questionsAnswers: questionsAnswers): Promise<void> {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.questionDetails(questionId));
         await this.click(productQAVendor.questionDetails.editAnswer);
+        await this.wait(1); // todo: need to resolve in future [click opens textarea but not clear the previous text by fill]
         await this.typeFrameSelector(productQAVendor.questionDetails.answer.questionAnswerIframe, productQAVendor.questionDetails.answer.questionAnswerHtmlBody, questionsAnswers.editAnswer);
         await this.clickAndWaitForResponse(data.subUrls.ajax, productQAVendor.questionDetails.answer.saveAnswer);
         await this.toBeVisible(productQAVendor.questionDetails.answerSaveSuccessMessage);

@@ -33,8 +33,8 @@ export class BasePage {
     }
 
     // wait for load state
-    async waitForLoadState(): Promise<void> {
-        await this.page.waitForLoadState('domcontentloaded');
+    async waitForLoadState(state: 'load' | 'domcontentloaded' | 'networkidle' = 'domcontentloaded', options?: { timeout?: number } | undefined): Promise<void> {
+        await this.page.waitForLoadState(state, options);
     }
 
     // wait for url to be loaded

@@ -65,10 +65,8 @@ export class ReportsPage extends AdminPage {
 
         await this.clearInputField(reportsAdmin.allLogs.search);
         await this.typeByPageAndWaitForResponse(data.subUrls.api.dokan.logs, reportsAdmin.allLogs.search, orderId);
-        await this.notToBeVisible(selector.admin.dokan.loader);
+        await this.toHaveCount(reportsAdmin.allLogs.numberOfRows, 1);
         await this.toBeVisible(reportsAdmin.allLogs.orderIdCell(orderId));
-        const count = (await this.getElementText(reportsAdmin.allLogs.numberOfRowsFound))?.split(' ')[0];
-        expect(Number(count)).toBe(1);
     }
 
     // export all logs
