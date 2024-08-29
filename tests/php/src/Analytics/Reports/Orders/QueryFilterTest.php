@@ -269,7 +269,7 @@ class QueryFilterTest extends ReportTestCase {
 
 		$this->run_all_pending();
 
-        $_GET['seller'] = $this->seller_id1;
+        $_GET['sellers'] = $this->seller_id1;
 
         wp_set_current_user( $this->admin_id );
 
