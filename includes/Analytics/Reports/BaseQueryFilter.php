@@ -165,7 +165,7 @@ abstract class BaseQueryFilter implements Hookable {
 	 *
 	 * @return int
 	 */
-	protected function get_seller_id() {
+	public function get_seller_id() {
 		if ( ! is_user_logged_in() ) {
 			return 0;
 		}
