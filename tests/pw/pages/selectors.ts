@@ -1733,6 +1733,7 @@ export const selector = {
                     reset: '//button[text()="×"]',
                     filterInput: '.select2-search.select2-search--dropdown .select2-search__field',
                     result: 'li.select2-results__option.select2-results__option--highlighted',
+                    filteredResult: (input: string) => `//li[normalize-space()="${input}"]`,
                 },
 
                 // Table
@@ -2879,7 +2880,7 @@ export const selector = {
             // orders
             orders: {
                 //table
-                numberOfRowsFound: '(//div[@class="tablenav-pages"]//span[@class="displaying-num"])[1]',
+                numberOfRowsFound: '(//span[@class="displaying-num"])[1]',
                 noRowsFound: '//td[normalize-space(text())="No items found."]',
             },
         },
@@ -2895,7 +2896,7 @@ export const selector = {
             attributesMenu: '//li[@id="menu-posts-product"]//a[text()="Attributes"]',
 
             // table
-            numberOfRowsFound: '(//div[@class="tablenav-pages"]//span[@class="displaying-num"])[1]',
+            numberOfRowsFound: '(//span[@class="displaying-num"])[1]',
             noRowsFound: '//td[normalize-space(text())="No products found"]',
 
             // Product

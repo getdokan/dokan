@@ -137,8 +137,8 @@ export class VendorVerificationsPage extends AdminPage {
             await this.multipleElementVisible(verificationsAdmin.bulkActions);
 
             // filter elements are visible
-            const { filterInput, resetFilterByVendors, resetFilterByMethods, reset, result, ...filters } = verificationsAdmin.filters;
-            await this.multipleElementVisible(filters);
+            await this.toBeVisible(verificationsAdmin.filters.filterByVendors);
+            await this.toBeVisible(verificationsAdmin.filters.filterByMethods);
 
             // verification table elements are visible
             await this.multipleElementVisible(verificationsAdmin.table);
@@ -158,15 +158,15 @@ export class VendorVerificationsPage extends AdminPage {
             case 'by-vendor':
                 await this.click(verificationsAdmin.filters.filterByVendors);
                 await this.typeAndWaitForResponse(data.subUrls.api.dokan.stores, verificationsAdmin.filters.filterInput, input);
-                await this.pressAndWaitForResponse(data.subUrls.api.dokan.verifications, data.key.enter);
                 await this.toContainText(verificationsAdmin.filters.result, input);
+                await this.clickAndWaitForResponse(data.subUrls.api.dokan.verifications, verificationsAdmin.filters.filteredResult(input));
                 break;
 
             case 'by-verification-method':
                 await this.click(verificationsAdmin.filters.filterByMethods);
                 await this.typeAndWaitForResponse(data.subUrls.api.dokan.verificationMethods, verificationsAdmin.filters.filterInput, input);
-                await this.pressAndWaitForResponse(data.subUrls.api.dokan.verifications, data.key.enter);
                 await this.toContainText(verificationsAdmin.filters.result, input);
+                await this.clickAndWaitForResponse(data.subUrls.api.dokan.verifications, verificationsAdmin.filters.filteredResult(input));
                 break;
 
             default:
@@ -178,7 +178,8 @@ export class VendorVerificationsPage extends AdminPage {
 
     // reset filter
     async resetFilter() {
-        await this.goIfNotThere(data.subUrls.backend.dokan.verifications);
+        // await this.goIfNotThere(data.subUrls.backend.dokan.verifications);
+        await this.toBeVisible(verificationsAdmin.filters.reset);
         await this.clickAndAcceptAndWaitForResponse(data.subUrls.api.dokan.verifications, verificationsAdmin.filters.reset);
         await this.notToBeVisible(verificationsAdmin.filters.reset);
     }
