@@ -2,10 +2,10 @@
 
 namespace WeDevs\Dokan\Analytics\Reports\Products\Stats;
 
-use Automattic\WooCommerce\Admin\API\Reports\Products\Stats\DataStore as ProductStateDataStore;
+use Automattic\WooCommerce\Admin\API\Reports\Products\Stats\DataStore as ProductStatsDataStore;
 use WeDevs\Dokan\Analytics\Reports\WcSqlQuery;
 
-class WcDataStore extends ProductStateDataStore {
+class WcDataStore extends ProductStatsDataStore {
 	/**
 	 * Override the $total_query and $interval_query properties to customize query behavior.
 	 * This modification replaces the Automattic\WooCommerce\Admin\API\Reports\SqlQuery class with
