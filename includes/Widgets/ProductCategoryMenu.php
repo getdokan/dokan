@@ -23,8 +23,8 @@ class ProductCategoryMenu extends WP_Widget {
     /**
      * Outputs the HTML for this widget.
      *
-     * @param array  An array of standard parameters for widgets in this theme
-     * @param array  An array of settings for this widget instance
+     * @param array $args       An array of standard parameters for widgets in this theme
+     * @param array $instance   An array of settings for this widget instance
      * @return void Echoes it's output
      **/
     public function widget( $args, $instance ) {
@@ -33,41 +33,42 @@ class ProductCategoryMenu extends WP_Widget {
 
         $title = isset( $instance['title'] ) ? apply_filters( 'widget_title', $instance['title'] ) : '';
 
-        echo $args['before_widget']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
+        echo wp_kses_post( $args['before_widget'] );
 
         if ( ! empty( $title ) ) {
-            echo $args['before_title'] . $title . $args['after_title']; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
+            echo wp_kses_post( $args['before_title'] . $title . $args['after_title'] );
         }
         ?>
             <div class="product-cat-stack-dokan cat-drop-stack">
                 <?php
                 $term_args = apply_filters(
                     'dokan_category_widget', array(
+						'taxonomy' => 'product_cat',
 						'hide_empty' => false,
 						'orderby' => 'name',
 						'depth' => 3,
                     )
                 );
 
-                $categories = get_terms( 'product_cat', $term_args );
+                $categories = get_terms( $term_args );
 
                 $walker = new CategoryWalker();
                 echo '<ul>';
-                echo call_user_func_array( array( &$walker, 'walk' ), array( $categories, 0, array() ) ); // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
+                echo wp_kses_post( call_user_func_array( array( &$walker, 'walk' ), array( $categories, 0, array() ) ) );
                 echo '</ul>';
                 ?>
             </div>
         <?php
 
-        echo isset( $args['after_widget'] ) ? $args['after_widget'] : ''; // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
+        echo wp_kses_post( ! empty( $args['after_widget'] ) ? $args['after_widget'] : '' );
     }
 
     /**
      * Deals with the settings when they are saved by the admin. Here is
      * where any validation should be dealt with.
      *
-     * @param array  An array of new settings as submitted by the admin
-     * @param array  An array of the previous settings
+     * @param array $new_instance   An array of new settings as submitted by the admin
+     * @param array $old_instance   An array of the previous settings
      * @return array The validated and (if necessary) amended settings
      **/
     public function update( $new_instance, $old_instance ) {
@@ -79,7 +80,7 @@ class ProductCategoryMenu extends WP_Widget {
     /**
      * Displays the form for this widget on the Widgets page of the WP Admin area.
      *
-     * @param array  An array of the current settings for this widget
+     * @param array $instance  array of the current settings for this widget
      * @return void Echoes it's output
      **/
     public function form( $instance ) {

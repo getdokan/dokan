@@ -79,16 +79,19 @@ export class ProductAdvertisingPage extends AdminPage {
     }
 
     // search advertised product
-    async searchAdvertisedProduct(productOrOrder: string | number) {
+    async searchAdvertisedProduct(searchKey: string | number) {
         await this.goIfNotThere(data.subUrls.backend.dokan.productAdvertising);
 
         await this.clearInputField(productAdvertisingAdmin.search);
 
-        await this.typeAndWaitForResponseAndLoadState(data.subUrls.api.dokan.productAdvertising, productAdvertisingAdmin.search, String(productOrOrder));
-        if (typeof productOrOrder != 'number') {
-            await this.toBeVisible(productAdvertisingAdmin.advertisedProductCell(productOrOrder));
+        await this.typeAndWaitForResponseAndLoadState(data.subUrls.api.dokan.productAdvertising, productAdvertisingAdmin.search, String(searchKey));
+        await this.toHaveCount(productAdvertisingAdmin.numberOfRows, 1);
+        if (typeof searchKey != 'number') {
+            // serched by product
+            await this.toBeVisible(productAdvertisingAdmin.advertisedProductCell(searchKey));
         } else {
-            await this.toBeVisible(productAdvertisingAdmin.advertisedProductOrderIdCell(productOrOrder));
+            // serched by orderid
+            await this.toBeVisible(productAdvertisingAdmin.advertisedProductOrderIdCell(searchKey));
         }
     }
 
@@ -111,9 +114,8 @@ export class ProductAdvertisingPage extends AdminPage {
             default:
                 break;
         }
-
-        const count = (await this.getElementText(productAdvertisingAdmin.numberOfRowsFound))?.split(' ')[0];
-        expect(Number(count)).toBeGreaterThan(0);
+        await this.notToHaveText(productAdvertisingAdmin.numberOfRowsFound, '0 items');
+        await this.notToBeVisible(productAdvertisingAdmin.noRowsFound);
 
         // clear filter
         await this.clickAndWaitForResponse(data.subUrls.api.dokan.productAdvertising, productAdvertisingAdmin.filters.clearFilter);
@@ -146,7 +148,11 @@ export class ProductAdvertisingPage extends AdminPage {
 
     // product advertising bulk action
     async productAdvertisingBulkAction(action: string, productName?: string) {
-        productName ? await this.searchAdvertisedProduct(productName) : await this.goIfNotThere(data.subUrls.backend.dokan.productAdvertising);
+        if (productName) {
+            await this.searchAdvertisedProduct(productName);
+        } else {
+            await this.goIfNotThere(data.subUrls.backend.dokan.productAdvertising);
+        }
 
         // ensure row exists
         await this.notToBeVisible(productAdvertisingAdmin.noRowsFound);

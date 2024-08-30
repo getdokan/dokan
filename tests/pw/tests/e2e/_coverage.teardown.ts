@@ -5,6 +5,7 @@ import path from 'path';
 import { helpers } from '@utils/helpers';
 
 const { DOKAN_PRO } = process.env;
+
 let executed_tests: string[] = [];
 
 let totalProductFeatures = 0;
@@ -42,7 +43,7 @@ function getCoverage(filePath: string, outputFile?: string) {
     pages.forEach((page: any) => {
         iterateThroughFeature(page.features);
         const pageCoverage = Math.round((coveredPageFeatures / totalPageFeatures) * 100 * 100) / 100;
-        if (!isNaN(pageCoverage)) {
+        if (!Number.isNaN(pageCoverage)) {
             coverageReport.page_coverage[page.page] = pageCoverage;
         }
 

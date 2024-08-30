@@ -19,12 +19,11 @@ test.describe('attribute api test', () => {
     let attributeId: string;
     let attribute: any;
     let attributeTerm: any;
-    let attributeTermId: string; //todo: why attributeTermId is needed here
 
     test.beforeAll(async () => {
         apiUtils = new ApiUtils(await request.newContext());
         [, productId] = await apiUtils.createProduct(payloads.createProduct());
-        [attributeTerm, attributeId, attributeTermId] = await apiUtils.createAttributeTerm(payloads.createAttribute(), payloads.createAttributeTerm());
+        [attributeTerm, attributeId] = await apiUtils.createAttributeTerm(payloads.createAttribute(), payloads.createAttributeTerm());
         attribute = await apiUtils.getSingleAttribute(attributeId);
     });
 

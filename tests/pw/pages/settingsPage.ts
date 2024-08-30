@@ -1,4 +1,4 @@
-import { Page } from '@playwright/test';
+import { expect, Page } from '@playwright/test';
 import { AdminPage } from '@pages/adminPage';
 import { selector } from '@pages/selectors';
 import { data } from '@utils/testData';
@@ -32,7 +32,7 @@ export class SettingsPage extends AdminPage {
         // settings field is visible
         await this.toBeVisible(settingsAdmin.fields);
 
-        // settings save Changes is visible
+        // settings save changes is visible
         await this.toBeVisible(settingsAdmin.saveChanges);
     }
 
@@ -48,8 +48,19 @@ export class SettingsPage extends AdminPage {
     // scroll to top settings
     async scrollToTopSettings() {
         await this.goto(data.subUrls.backend.dokan.settings);
-        await this.scrollToBottom();
-        await this.toBeVisible(settingsAdmin.backToTop);
+        // topass is used to avoid flakyness
+        await this.toPass(async () => {
+            await this.scrollToBottom();
+            const isBackToTopVisible = await this.isVisible(settingsAdmin.backToTop, 1);
+            if (!isBackToTopVisible) {
+                await this.scrollToTop();
+            }
+            // eslint-disable-next-line playwright/prefer-web-first-assertions
+            expect(isBackToTopVisible).toBeTruthy();
+        });
+
+        await this.click(settingsAdmin.backToTop);
+        await this.toBeVisible(settingsAdmin.search.searchBox);
     }
 
     // dokan settings
@@ -63,7 +74,9 @@ export class SettingsPage extends AdminPage {
         await this.enableSwitcher(settingsAdmin.general.adminAreaAccess);
         await this.clearAndType(settingsAdmin.general.vendorStoreUrl, general.vendorStoreUrl);
         await this.typeFrameSelector(settingsAdmin.general.setupWizardMessageIframe, settingsAdmin.general.setupWizardMessageHtmlBody, general.setupWizardMessage);
-        DOKAN_PRO && (await this.click(settingsAdmin.general.sellingProductTypes(general.sellingProductTypes)));
+        if (DOKAN_PRO) {
+            await this.click(settingsAdmin.general.sellingProductTypes(general.sellingProductTypes));
+        }
 
         // vendor store options
         await this.enableSwitcher(settingsAdmin.general.storeTermsAndConditions);
@@ -109,9 +122,11 @@ export class SettingsPage extends AdminPage {
             await this.enableSwitcher(settingsAdmin.selling.vendorProductReviewStatusChange);
             await this.enableSwitcher(settingsAdmin.selling.guestProductEnquiry);
             await this.enableSwitcher(settingsAdmin.selling.newVendorEnableAuction); // todo: add condition for simple auction plugin enabled
-            await this.enableSwitcher(settingsAdmin.selling.enableMinMaxQuantities);
-            await this.enableSwitcher(settingsAdmin.selling.enableMinMaxAmount);
         }
+
+        // catalog mode
+        await this.enableSwitcher(settingsAdmin.selling.removeAddToCartButton);
+        await this.enableSwitcher(settingsAdmin.selling.hideProductPrice);
 
         // save settings
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.selling.sellingOptionsSaveChanges);
@@ -196,7 +211,9 @@ export class SettingsPage extends AdminPage {
         await this.enableSwitcher(settingsAdmin.reverseWithdraw.MakeVendorStatusInactive);
 
         await this.enableSwitcher(settingsAdmin.reverseWithdraw.displayNoticeDuringGracePeriod);
-        DOKAN_PRO && (await this.enableSwitcher(settingsAdmin.reverseWithdraw.sendAnnouncement));
+        if (DOKAN_PRO) {
+            await this.enableSwitcher(settingsAdmin.reverseWithdraw.sendAnnouncement);
+        }
 
         // save settings
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.reverseWithdraw.reverseWithdrawSaveChanges);
@@ -298,14 +315,16 @@ export class SettingsPage extends AdminPage {
         await this.toContainText(settingsAdmin.dokanUpdateSuccessMessage, storeSupport.saveSuccessMessage);
     }
 
-    // Admin Set Dokan Vendor Verificaton Settings
+    // Admin Set Dokan Vendor Verification Settings
     async setDokanVendorVerificationSettings(vendorVerification: Pick<dokanSettings['vendorVerification'], 'verifiedIcons' | 'verificationMethods' | 'saveSuccessMessage'>) {
         await this.goToDokanSettings();
         await this.click(settingsAdmin.menus.vendorVerification);
 
         await this.click(settingsAdmin.vendorVerification.verifiedIcon(vendorVerification.verifiedIcons.userCheckSolid));
         const response = await this.enableSwitcherAndWaitForResponse(data.subUrls.api.dokan.verificationMethods, settingsAdmin.vendorVerification.enableVerificationMethod(vendorVerification.verificationMethods.nationalId));
-        response && (await this.toBeVisible(settingsAdmin.vendorVerification.methodUpdateSuccessMessage));
+        if (response) {
+            await this.toBeVisible(settingsAdmin.vendorVerification.methodUpdateSuccessMessage);
+        }
 
         // save settings
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.vendorVerification.saveChanges);
@@ -378,7 +397,7 @@ export class SettingsPage extends AdminPage {
         await this.enableSwitcher(settingsAdmin.rma.enableCouponRequests);
 
         for (const rmaReason of rma.rmaReasons) {
-            await this.deleteIfExists(settingsAdmin.rma.reasonsForRmaSingle(rmaReason));
+            await this.clickIfVisible(settingsAdmin.rma.reasonsForRmaSingle(rmaReason));
             await this.clearAndType(settingsAdmin.rma.reasonsForRmaInput, rmaReason);
             await this.click(settingsAdmin.rma.reasonsForRmaAdd);
         }
@@ -512,7 +531,7 @@ export class SettingsPage extends AdminPage {
         await this.click(settingsAdmin.menus.productReportAbuse);
 
         // Product Report Abuse Settings
-        await this.deleteIfExists(settingsAdmin.productReportAbuse.reasonsForAbuseReportSingle(productReportAbuse.reasonsForAbuseReport));
+        await this.clickIfVisible(settingsAdmin.productReportAbuse.reasonsForAbuseReportSingle(productReportAbuse.reasonsForAbuseReport));
         await this.clearAndType(settingsAdmin.productReportAbuse.reasonsForAbuseReportInput, productReportAbuse.reasonsForAbuseReport);
         await this.click(settingsAdmin.productReportAbuse.reasonsForAbuseReportAdd);
 

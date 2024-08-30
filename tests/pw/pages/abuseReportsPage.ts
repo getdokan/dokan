@@ -55,7 +55,7 @@ export class AbuseReportsPage extends AdminPage {
 
             case 'by-product':
                 await this.click(abuseReportAdmin.filters.filterByProduct);
-                await this.typeAndWaitForResponse(data.subUrls.api.wc.wcProducts, abuseReportAdmin.filters.filterInput, input);
+                await this.typeAndWaitForResponse(data.subUrls.api.wc.products, abuseReportAdmin.filters.filterInput, input);
                 await this.pressAndWaitForResponse(data.subUrls.api.dokan.abuseReports, data.key.enter);
                 break;
 
@@ -68,9 +68,8 @@ export class AbuseReportsPage extends AdminPage {
             default:
                 break;
         }
-
-        const count = (await this.getElementText(abuseReportAdmin.numberOfRowsFound))?.split(' ')[0];
-        expect(Number(count)).toBeGreaterThan(0);
+        await this.notToHaveText(abuseReportAdmin.numberOfRowsFound, '0 items');
+        await this.notToBeVisible(abuseReportAdmin.noRowsFound);
     }
 
     // abuse report bulk action

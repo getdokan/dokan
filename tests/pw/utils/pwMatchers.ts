@@ -9,6 +9,7 @@ export const customMatchers = {
                 pass: true,
             };
         } else {
+            console.log('responseBody:', responseBody);
             return {
                 message: () => '\x1b[91m ' + ' Result does not match schema: ' + result.error.issues.map(issue => issue.message).join('\n') + '\n' + 'Details: ' + JSON.stringify(result.error, null, 2) + '\x1b[0m',
                 pass: false,
@@ -55,8 +56,8 @@ export const customMatchers = {
 
 export const customExpect = {
     toMatchSchema: customMatchers.toMatchSchema,
-    // toBeSecureHeader: customMatchers.toBeSecureHeader,
+    toBeSecureHeader: customMatchers.toBeSecureHeader,
     toBeWithinRange: customMatchers.toBeWithinRange,
 };
 
-//todo: add more custom matchers
+// todo: add basepase assertions to custom matchers
