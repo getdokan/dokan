@@ -526,7 +526,6 @@ export class ProductsPage extends AdminPage {
     // search product vendor dashboard
     async searchProduct(productName: string): Promise<void> {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.products);
-
         await this.clearAndType(productsVendor.search.searchInput, productName);
         await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.products, productsVendor.search.searchBtn);
         await this.toBeVisible(productsVendor.productLink(productName));

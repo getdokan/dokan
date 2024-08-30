@@ -68,9 +68,8 @@ export class VendorSubscriptionsPage extends VendorPage {
         }
 
         await this.clickAndWaitForResponse(data.subUrls.api.dokan.subscriptions, adminSubscriptions.filters.filteredResult(input));
-
-        const count = (await this.getElementText(adminSubscriptions.numberOfRowsFound))?.split(' ')[0];
-        expect(Number(count)).toBeGreaterThan(0);
+        await this.notToHaveText(adminSubscriptions.numberOfRowsFound, '0 items');
+        await this.notToBeVisible(adminSubscriptions.noRowsFound);
     }
 
     // cancel subscriptions

@@ -5,22 +5,16 @@ import { data } from '@utils/testData';
 
 test.describe('Customer functionality test', () => {
     let customer: CustomerPage;
-    let customer2: CustomerPage;
-    let cPage: Page, c2Page: Page;
+    let cPage: Page;
 
     test.beforeAll(async ({ browser }) => {
         const customerContext = await browser.newContext(data.auth.customerAuth);
         cPage = await customerContext.newPage();
         customer = new CustomerPage(cPage);
-
-        const customer2Context = await browser.newContext(data.auth.customer2Auth);
-        c2Page = await customer2Context.newPage();
-        customer2 = new CustomerPage(c2Page);
     });
 
     test.afterAll(async () => {
         await cPage.close();
-        await c2Page.close();
     });
 
     test('customer can register', { tag: ['@lite', '@customer'] }, async ({ page }) => {
@@ -70,9 +64,9 @@ test.describe('Customer functionality test', () => {
     });
 
     test('customer can buy multi-vendor products', { tag: ['@lite', '@customer'] }, async () => {
-        await customer2.addProductToCart(data.predefined.simpleProduct.product1.name, 'single-product');
-        await customer2.addProductToCart(data.predefined.vendor2.simpleProduct.product1.name, 'single-product', false);
-        await customer2.placeOrder();
+        await customer.addProductToCart(data.predefined.simpleProduct.product1.name, 'single-product');
+        await customer.addProductToCart(data.predefined.vendor2.simpleProduct.product1.name, 'single-product', false);
+        await customer.placeOrder();
     });
 
     // todo: customer can download downloadable product

@@ -44,10 +44,9 @@ export class WholesaleCustomersPage extends AdminPage {
     // search wholesale customer
     async searchWholesaleCustomer(wholesaleCustomer: string) {
         await this.goIfNotThere(data.subUrls.backend.dokan.wholeSaleCustomer);
-
         await this.clearInputField(wholesaleCustomersAdmin.search);
-
         await this.typeAndWaitForResponse(data.subUrls.api.dokan.wholesaleCustomers, wholesaleCustomersAdmin.search, wholesaleCustomer);
+        await this.toHaveCount(wholesaleCustomersAdmin.numberOfRows, 1);
         await this.toBeVisible(wholesaleCustomersAdmin.wholesaleCustomerCell(wholesaleCustomer));
     }
 
@@ -114,8 +113,8 @@ export class WholesaleCustomersPage extends AdminPage {
         await this.searchWholesaleCustomer(wholesaleCustomer);
         await this.hover(wholesaleCustomersAdmin.wholesaleCustomerCell(wholesaleCustomer));
         await this.clickAndWaitForLoadState(wholesaleCustomersAdmin.wholesaleCustomerOrders(wholesaleCustomer));
-        const count = (await this.getElementText(wholesaleCustomersAdmin.numberOfRowsFound))?.split(' ')[0];
-        expect(Number(count)).toBeGreaterThan(0);
+        await this.notToBeVisible(selector.admin.wooCommerce.orders.noRowsFound);
+        
     }
 
     // update wholesale customer

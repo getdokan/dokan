@@ -2238,7 +2238,7 @@ export const data = {
 
     bookings: {
         startDate: new Date(),
-        endDate: helpers.futureDate(new Date(), 5), // future date must be less than maximum duration
+        endDate: helpers.futureDate(new Date(), 1), // future date must be less than maximum duration
     },
 
     uniqueId: {
