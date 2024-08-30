@@ -68,9 +68,8 @@ export class AbuseReportsPage extends AdminPage {
             default:
                 break;
         }
-
-        const count = (await this.getElementText(abuseReportAdmin.numberOfRowsFound))?.split(' ')[0];
-        expect(Number(count)).toBeGreaterThan(0);
+        await this.notToHaveText(abuseReportAdmin.numberOfRowsFound, '0 items');
+        await this.notToBeVisible(abuseReportAdmin.noRowsFound);
     }
 
     // abuse report bulk action

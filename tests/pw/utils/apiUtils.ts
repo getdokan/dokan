@@ -1863,7 +1863,7 @@ export class ApiUtils {
 
         if (typeof product === 'object') {
             [, productId] = await this.createProduct(product, auth);
-        } else if (!isNaN(Number(product))) {
+        } else if (!Number.isNaN(Number(product))) {
             const responseBody = await this.getSingleProduct(product, payloads.adminAuth); // check if product exists
             productId = responseBody.code === 'dokan_rest_invalid_product_id' ? (await this.createProduct(payloads.createProduct(), auth))[1] : product;
         } else {
