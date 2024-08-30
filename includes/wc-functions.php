@@ -288,16 +288,12 @@ function dokan_process_product_meta( int $post_id, array $data = [] ) {
     if ( 'yes' === get_option( 'woocommerce_manage_stock' ) ) {
         $manage_stock = 'no';
         $backorders   = 'no';
-        $stock        = '';
         $stock_status = wc_clean( $data['_stock_status'] );
-
         if ( 'external' === $product_type ) {
             $stock_status = 'instock';
         } elseif ( 'variable' === $product_type ) {
-
             // Stock status is always determined by children so sync later
             $stock_status = '';
-
             if ( ! empty( $data['_manage_stock'] ) && $data['_manage_stock'] === 'yes' ) {
                 $manage_stock = 'yes';
                 $backorders   = wc_clean( $data['_backorders'] );
@@ -306,10 +302,9 @@ function dokan_process_product_meta( int $post_id, array $data = [] ) {
             $manage_stock = $data['_manage_stock'];
             $backorders   = wc_clean( $data['_backorders'] );
         }
-
+    
         update_post_meta( $post_id, '_manage_stock', $manage_stock );
         update_post_meta( $post_id, '_backorders', $backorders );
-
         if ( $stock_status ) {
             try {
                 wc_update_product_stock_status( $post_id, $stock_status );
@@ -317,19 +312,25 @@ function dokan_process_product_meta( int $post_id, array $data = [] ) {
                 dokan_log( 'product stock update exception' );
             }
         }
-
-        if ( ! empty( $data['_manage_stock'] ) ) {
+    
+        // Retrieve original stock value from the hidden field
+        $original_stock = isset( $data['_original_stock'] ) ? wc_stock_amount( wc_clean( $data['_original_stock'] ) ) : '';
+        // Clean the current stock value
+        $stock_amount = isset( $data['_stock'] ) ? wc_clean( $data['_stock'] ) : '';
+        $stock_amount = 'yes' === $manage_stock ? wc_stock_amount( wp_unslash( $stock_amount ) ) : '';
+        // Only update the stock amount if it has changed
+        if ( $original_stock != $stock_amount ) {
             if ( 'variable' === $product_type ) {
                 update_post_meta( $post_id, '_stock', $stock_amount );
             } else {
                 wc_update_product_stock( $post_id, $stock_amount );
             }
-
-            update_post_meta( $post_id, '_low_stock_amount', $_low_stock_amount );
-        } else {
-            update_post_meta( $post_id, '_stock', '' );
-            update_post_meta( $post_id, '_low_stock_amount', '' );
         }
+    
+        // Update low stock amount regardless of stock changes
+        $_low_stock_amount = isset( $data['_low_stock_amount'] ) ? wc_clean( $data['_low_stock_amount'] ) : '';
+        $_low_stock_amount = 'yes' === $manage_stock ? wc_stock_amount( wp_unslash( $_low_stock_amount ) ) : '';
+        update_post_meta( $post_id, '_low_stock_amount', $_low_stock_amount );
     } else {
         wc_update_product_stock_status( $post_id, wc_clean( $data['_stock_status'] ) );
     }

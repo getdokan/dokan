@@ -913,9 +913,11 @@ export const data = {
             addToCart: '?wc-ajax=add_to_cart',
             applyCoupon: '?wc-ajax=apply_coupon',
             removeCoupon: '?wc-ajax=remove_coupon',
+            refreshedFragment: '?wc-ajax=get_refreshed_fragments',
             placeOrder: '?wc-ajax=checkout',
             billingAddress: 'my-account/edit-address/billing',
             shippingAddress: 'my-account/edit-address/shipping',
+            editAddress: 'my-account/edit-address',
             shippingAddressCheckout: 'wc-ajax=update_order_review',
             editAccountCustomer: 'my-account/edit-account',
             becomeVendor: 'my-account/account-migration',
@@ -2365,7 +2367,7 @@ export const data = {
             WP_DEBUG: true,
             SCRIPT_DEBUG: true,
             WP_DEBUG_LOG: true,
-            WP_DEBUG_DISPLAY: false,
+            WP_DEBUG_DISPLAY: true,
         },
 
         // site info
@@ -2421,6 +2423,7 @@ export const data = {
         cloneBasicAuth: (path: string) => `cd ${path} && git clone https://github.com/WP-API/Basic-Auth.git`,
         cloneDokanLite: (path: string) => `cd ${path} && git clone -b develop https://github.com/getdokan/dokan.git`,
         cloneDokanPro: (path: string) => `cd ${path} && git clone -b test_utils https://github.com/getdokan/dokan-pro.git`,
+        checkoutToDevelop: (path: string) => `cd ${path} && git checkout develop`,
         buildPlugin: (path: string) => `cd ${path} && composer i --no-dev && composer du -o && npm i && npm run build`,
     },
 

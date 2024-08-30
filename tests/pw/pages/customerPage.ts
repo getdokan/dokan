@@ -200,8 +200,7 @@ export class CustomerPage extends BasePage {
     async addBillingAddress(billingInfo: customer['customerInfo']['billing']): Promise<void> {
         await this.goIfNotThere(data.subUrls.frontend.billingAddress);
         await this.updateBillingFields(billingInfo);
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.billingAddress, customerAddress.billing.saveAddress, 302);
-        await this.toBeVisible(selector.customer.cWooSelector.wooCommerceSuccessMessage);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.editAddress, customerAddress.billing.saveAddress);
         await this.toContainText(selector.customer.cWooSelector.wooCommerceSuccessMessage, data.customer.address.addressChangeSuccessMessage);
     }
 
@@ -209,8 +208,7 @@ export class CustomerPage extends BasePage {
     async addShippingAddress(shippingInfo: customer['customerInfo']['shipping']): Promise<void> {
         await this.goIfNotThere(data.subUrls.frontend.shippingAddress);
         await this.updateShippingFields(shippingInfo);
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.shippingAddress, customerAddress.shipping.saveAddress, 302);
-        await this.toBeVisible(selector.customer.cWooSelector.wooCommerceSuccessMessage);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.editAddress, customerAddress.shipping.saveAddress);
         await this.toContainText(selector.customer.cWooSelector.wooCommerceSuccessMessage, data.customer.address.addressChangeSuccessMessage);
     }
 

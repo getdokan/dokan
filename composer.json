@@ -14,7 +14,7 @@
     "php": ">=7.4",
     "appsero/client": "^v2.0.2",
     "jakeasmith/http_build_url": "^1",
-    "appsero/updater": "^v2.0.0"
+    "appsero/updater": "^v2.2.0"
   },
   "require-dev": {
     "wp-coding-standards/wpcs": "dev-develop",

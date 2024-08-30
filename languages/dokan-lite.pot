@@ -1,14 +1,14 @@
 # Copyright (c) 2024 weDevs Pte. Ltd. All Rights Reserved.
 msgid ""
 msgstr ""
-"Project-Id-Version: Dokan 3.11.5\n"
+"Project-Id-Version: Dokan 3.12.0\n"
 "Report-Msgid-Bugs-To: https://dokan.co/contact/\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2024-08-07T04:00:14+00:00\n"
+"POT-Creation-Date: 2024-08-29T04:01:51+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.9.0\n"
 "X-Domain: dokan-lite\n"
@@ -2392,7 +2392,7 @@ msgid "Out of Stock"
 msgstr ""
 
 #: includes/Blocks/ProductBlock.php:34
-#: templates/products/inventory.php:67
+#: templates/products/inventory.php:69
 msgid "Do not allow"
 msgstr ""
 
@@ -2401,7 +2401,7 @@ msgid "Allow, but notify customer"
 msgstr ""
 
 #: includes/Blocks/ProductBlock.php:36
-#: templates/products/inventory.php:69
+#: templates/products/inventory.php:71
 msgid "Allow"
 msgstr ""
 
@@ -4046,24 +4046,24 @@ msgstr ""
 msgid "Customer Note"
 msgstr ""
 
-#: includes/Order/Hooks.php:272
+#: includes/Order/Hooks.php:269
 msgid "Marked as completed because it contains digital products only."
 msgstr ""
 
-#: includes/Order/Hooks.php:286
+#: includes/Order/Hooks.php:283
 msgid "Mark parent order completed when all child orders are completed."
 msgstr ""
 
-#: includes/Order/Hooks.php:341
+#: includes/Order/Hooks.php:338
 msgid "This coupon is invalid for multiple vendors."
 msgstr ""
 
-#: includes/Order/Hooks.php:355
+#: includes/Order/Hooks.php:352
 msgid "A coupon must be restricted with a vendor product."
 msgstr ""
 
 #. translators: %s item name.
-#: includes/Order/Hooks.php:401
+#: includes/Order/Hooks.php:398
 msgid "Unable to restore stock for item %s."
 msgstr ""
 
@@ -7283,11 +7283,11 @@ msgstr ""
 msgid "Store is closed"
 msgstr ""
 
-#: includes/wc-functions.php:401
+#: includes/wc-functions.php:402
 msgid "Product SKU must be unique"
 msgstr ""
 
-#: includes/wc-functions.php:820
+#: includes/wc-functions.php:821
 #: templates/account/update-customer-to-vendor.php:26
 #: templates/account/vendor-registration.php:18
 #: templates/global/seller-registration-form.php:16
@@ -7296,7 +7296,7 @@ msgstr ""
 msgid "First Name"
 msgstr ""
 
-#: includes/wc-functions.php:821
+#: includes/wc-functions.php:822
 #: templates/account/update-customer-to-vendor.php:30
 #: templates/account/vendor-registration.php:23
 #: templates/global/seller-registration-form.php:21
@@ -7305,57 +7305,57 @@ msgstr ""
 msgid "Last Name"
 msgstr ""
 
-#: includes/wc-functions.php:822
+#: includes/wc-functions.php:823
 #: templates/account/vendor-registration.php:36
 #: templates/dashboard/edit-account.php:65
 msgid "Email address"
 msgstr ""
 
-#: includes/wc-functions.php:828
+#: includes/wc-functions.php:829
 msgid "is a required field."
 msgstr ""
 
-#: includes/wc-functions.php:834
+#: includes/wc-functions.php:835
 msgid "Please provide a valid email address."
 msgstr ""
 
-#: includes/wc-functions.php:836
+#: includes/wc-functions.php:837
 msgid "This email address is already registered."
 msgstr ""
 
-#: includes/wc-functions.php:842
+#: includes/wc-functions.php:843
 msgid "Your current password is incorrect."
 msgstr ""
 
-#: includes/wc-functions.php:847
+#: includes/wc-functions.php:848
 msgid "Please fill out all password fields."
 msgstr ""
 
-#: includes/wc-functions.php:850
+#: includes/wc-functions.php:851
 msgid "Please enter your current password."
 msgstr ""
 
-#: includes/wc-functions.php:853
+#: includes/wc-functions.php:854
 msgid "Please re-enter your password."
 msgstr ""
 
-#: includes/wc-functions.php:856
+#: includes/wc-functions.php:857
 msgid "New passwords do not match."
 msgstr ""
 
-#: includes/wc-functions.php:876
+#: includes/wc-functions.php:877
 msgid "Account details changed successfully."
 msgstr ""
 
-#: includes/wc-functions.php:922
+#: includes/wc-functions.php:923
 msgid "More Products"
 msgstr ""
 
-#: includes/wc-functions.php:975
+#: includes/wc-functions.php:976
 msgid "No product has been found!"
 msgstr ""
 
-#: includes/wc-functions.php:1048
+#: includes/wc-functions.php:1049
 msgid "Reviews cannot be posted for products that you own."
 msgstr ""
 
@@ -9111,23 +9111,23 @@ msgid "Stock quantity"
 msgstr ""
 
 #: templates/products/inventory.php:48
-#: templates/products/inventory.php:54
+#: templates/products/inventory.php:56
 msgid "1"
 msgstr ""
 
-#: templates/products/inventory.php:53
+#: templates/products/inventory.php:55
 msgid "Low stock threshold"
 msgstr ""
 
-#: templates/products/inventory.php:59
+#: templates/products/inventory.php:61
 msgid "Allow Backorders"
 msgstr ""
 
-#: templates/products/inventory.php:68
+#: templates/products/inventory.php:70
 msgid "Allow but notify customer"
 msgstr ""
 
-#: templates/products/inventory.php:83
+#: templates/products/inventory.php:85
 msgid "Allow only one quantity of this product to be bought in a single order"
 msgstr ""
 
