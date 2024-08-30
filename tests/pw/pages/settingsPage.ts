@@ -1,4 +1,4 @@
-import { Page } from '@playwright/test';
+import { expect, Page } from '@playwright/test';
 import { AdminPage } from '@pages/adminPage';
 import { selector } from '@pages/selectors';
 import { data } from '@utils/testData';
@@ -48,8 +48,17 @@ export class SettingsPage extends AdminPage {
     // scroll to top settings
     async scrollToTopSettings() {
         await this.goto(data.subUrls.backend.dokan.settings);
-        await this.scrollToBottom();
-        await this.toBeVisible(settingsAdmin.backToTop);
+        // topass is used to avoid flakyness
+        await this.toPass(async () => {
+            await this.scrollToBottom();
+            const isBackToTopVisible = await this.isVisible(settingsAdmin.backToTop, 1);
+            if (!isBackToTopVisible) {
+                await this.scrollToTop();
+            }
+            // eslint-disable-next-line playwright/prefer-web-first-assertions
+            expect(isBackToTopVisible).toBeTruthy();
+        });
+
         await this.click(settingsAdmin.backToTop);
         await this.toBeVisible(settingsAdmin.search.searchBox);
     }
@@ -113,8 +122,6 @@ export class SettingsPage extends AdminPage {
             await this.enableSwitcher(settingsAdmin.selling.vendorProductReviewStatusChange);
             await this.enableSwitcher(settingsAdmin.selling.guestProductEnquiry);
             await this.enableSwitcher(settingsAdmin.selling.newVendorEnableAuction); // todo: add condition for simple auction plugin enabled
-            await this.enableSwitcher(settingsAdmin.selling.enableMinMaxQuantities);
-            await this.enableSwitcher(settingsAdmin.selling.enableMinMaxAmount);
         }
 
         // catalog mode

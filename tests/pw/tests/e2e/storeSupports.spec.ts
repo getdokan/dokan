@@ -202,11 +202,11 @@ test.describe('Store Support test (vendor)', () => {
     });
 
     test('vendor can search support ticket by ticket id', { tag: ['@pro', '@vendor'] }, async () => {
-        await vendor.vendorSearchSupportTicket('id', supportTicketId);
+        await vendor.vendorSearchSupportTicket(supportTicketId);
     });
 
     test('vendor can search support ticket by ticket title', { tag: ['@pro', '@vendor'] }, async () => {
-        await vendor.vendorSearchSupportTicket('title', data.storeSupport.title);
+        await vendor.vendorSearchSupportTicket(data.storeSupport.title);
     });
 
     test('vendor can reply to support ticket', { tag: ['@pro', '@vendor'] }, async () => {
