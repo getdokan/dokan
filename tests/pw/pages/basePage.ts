@@ -758,6 +758,14 @@ export class BasePage {
         }
     }
 
+    // check if not checked
+    async checkIfNotChecked(selector: string): Promise<void> {
+        const isChecked = await this.isCheckedLocator(selector);
+        if (isChecked) {
+            await this.check(selector);
+        }
+    }
+
     /**
      * Input field methods
      */
@@ -1371,6 +1379,11 @@ export class BasePage {
     // assert value to be equal
     toBeEqual(received: any, expected: any) {
         expect(received).toEqual(expected);
+    }
+
+    // assert element to be enabled
+    async toBeEnabled(selector: string, options?: { timeout?: number; visible?: boolean } | undefined) {
+        await expect(this.page.locator(selector)).toBeEnabled(options);
     }
 
     // assert element to be visible

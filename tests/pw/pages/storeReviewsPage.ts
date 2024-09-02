@@ -103,7 +103,13 @@ export class StoreReviewsPage extends AdminPage {
         // ensure row exists
         await this.notToBeVisible(storeReviewsAdmin.noRowsFound);
 
-        await this.click(storeReviewsAdmin.bulkActions.selectAll);
+        await this.toPass(async () => {
+            await this.check(storeReviewsAdmin.bulkActions.selectAll);
+            const isChecked = await this.isChecked(storeReviewsAdmin.bulkActions.firstRowCheckbox);
+            if (!isChecked) await this.check(storeReviewsAdmin.bulkActions.selectAll);
+            await this.toBeEnabled(storeReviewsAdmin.bulkActions.applyAction);
+        });
+
         await this.selectByValue(storeReviewsAdmin.bulkActions.selectAction, action);
         await this.clickAndWaitForResponse(data.subUrls.api.dokan.storeReviews, storeReviewsAdmin.bulkActions.applyAction);
     }

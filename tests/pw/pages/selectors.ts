@@ -788,6 +788,7 @@ export const selector = {
                 // Bulk Actions
                 bulkActions: {
                     selectAll: 'thead .manage-column input',
+                    firstRowCheckbox: '(//input[@name="item[]"])[1]',
                     selectAction: '.tablenav.top #bulk-action-selector-top', // trash
                     applyAction: '.tablenav.top .button.action',
                 },
@@ -1730,7 +1731,7 @@ export const selector = {
                     filterByMethods: '(//select[@id="filter-methods"]/..//span[@class="select2-selection__arrow"])[2]',
                     resetFilterByVendors: '(//select[@id="filter-vendors"]/..//button[@class="button"])[1]',
                     resetFilterByMethods: '(//select[@id="filter-methods"]/..//button[@class="button"])[1]',
-                    reset: '//button[text()="×"]',
+                    reset: '(//button[text()="×"])[1]',
                     filterInput: '.select2-search.select2-search--dropdown .select2-search__field',
                     result: 'li.select2-results__option.select2-results__option--highlighted',
                     filteredResult: (input: string) => `//li[normalize-space()="${input}"]`,
@@ -5256,7 +5257,7 @@ export const selector = {
                 assignThisBookingToAnExistingOrderWithThisId: '//input[@name="booking_order" and @value="existing"]',
                 bookingOrderId: '.text',
                 dontCreateAnOrderForThisBooking: '//label[normalize-space()="Don"t create an order for this booking."]/..//input',
-                next: '.button-primary',
+                next: 'input[name="create_booking"]',
                 selectCalendarDay: (month: number, day: number) => `//td[@title="This date is available" and @ data-month="${month}"]//a[@data-date="${day}"]`,
 
                 addBooking: 'input[value="Add Booking"][type="submit"]',
@@ -6726,6 +6727,7 @@ export const selector = {
 
         // Customer Bookings
         cBookings: {
+            calanderLoader: '//div[@class="blockUI blockOverlay"]',
             selectCalendarDay: (month: number, day: number) => `//td[@title="This date is available" and @ data-month="${month}"]//a[@data-date="${day}"]`,
             view: (orderNumber: string) => `//a[contains(text(),'Order #${orderNumber}')]/../..//a[@class="woocommerce-button button view"]`,
             bookNow: 'button.wc-bookings-booking-form-button',

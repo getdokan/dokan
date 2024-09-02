@@ -296,7 +296,7 @@ export class BookingPage extends VendorPage {
         await this.click(bookingProductsVendor.addBooking.selectABookableProduct(productName));
 
         await this.click(bookingProductsVendor.addBooking.createANewCorrespondingOrderForThisNewBooking);
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.addBooking, bookingProductsVendor.addBooking.next);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.bookedDayBlockes, bookingProductsVendor.addBooking.next);
         await this.clickAndWaitForResponse(data.subUrls.ajax, selector.customer.cBookings.selectCalendarDay(bookings.startDate.getMonth(), bookings.startDate.getDate()));
         await this.clickAndWaitForResponse(data.subUrls.ajax, selector.customer.cBookings.selectCalendarDay(bookings.endDate.getMonth(), bookings.endDate.getDate()));
         await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.addBooking, bookingProductsVendor.addBooking.addBooking);
@@ -306,7 +306,8 @@ export class BookingPage extends VendorPage {
     // customer
 
     async buyBookableProduct(productName: string, bookings: bookings) {
-        await this.goto(data.subUrls.frontend.productDetails(helpers.slugify(productName)));
+        await this.gotoUntilNetworkidle(data.subUrls.frontend.productDetails(helpers.slugify(productName)));
+        await this.notToBeVisible(selector.customer.cBookings.calanderLoader);
         await this.clickAndWaitForResponse(data.subUrls.ajax, selector.customer.cBookings.selectCalendarDay(bookings.startDate.getMonth(), bookings.startDate.getDate()));
         await this.clickAndWaitForResponse(data.subUrls.ajax, selector.customer.cBookings.selectCalendarDay(bookings.endDate.getMonth(), bookings.endDate.getDate()));
         await this.clickAndWaitForResponse(data.subUrls.frontend.productDetails(helpers.slugify(productName)), selector.customer.cBookings.bookNow);

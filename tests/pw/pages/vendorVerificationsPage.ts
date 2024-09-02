@@ -149,6 +149,9 @@ export class VendorVerificationsPage extends AdminPage {
     async filterVerificationRequests(input: string, action: string): Promise<void> {
         await this.goto(data.subUrls.backend.dokan.verifications);
 
+        // reset pervious filter if visible
+        await this.clickIfVisible(verificationsAdmin.filters.reset);
+
         switch (action) {
             case 'by-status': {
                 await this.clickAndWaitForLoadState(verificationsAdmin.navTabs.tabByStatus(input));
