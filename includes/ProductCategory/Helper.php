@@ -293,7 +293,9 @@ class Helper {
 			return [];
 		}
 
-		return (array) $product->get_meta( 'chosen_product_cat', true );
+		$chosen_product_cat = $product->get_meta( 'chosen_product_cat', true );
+
+        return empty( $chosen_product_cat ) ? [] : $chosen_product_cat;
     }
 
     /**
