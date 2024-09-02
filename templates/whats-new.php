@@ -4,6 +4,18 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.12.1',
+        'released' => '2024-08-30',
+        'changes'  => [
+            'Fix'         => [
+                [
+                    'title'       => 'Resolve fatal error when updating Dokan Lite to 3.12.0 with Dokan Pro 3.9.7.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.12.0',
         'released' => '2024-08-29',
         'changes'  => [
