@@ -27,10 +27,9 @@ export class ShortcodePage extends AdminPage {
     requestForQuotationsPage = new RequestForQuotationsPage(this.page);
 
     async closeBlockEditorModal() {
-        // todo: refine it
         try {
             await this.toBeVisible(selector.admin.pages.blockEditorModal, { timeout: 5000 });
-            const isModalVisible = await this.isVisible(selector.admin.pages.closeModal, 0);
+            const isModalVisible = await this.isVisible(selector.admin.pages.closeModal);
             if (isModalVisible) {
                 await this.click(selector.admin.pages.closeModal);
                 console.log('Modal is visible');

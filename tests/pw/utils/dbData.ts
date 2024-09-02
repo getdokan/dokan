@@ -58,7 +58,7 @@ export const dbData = {
             enabled_address_on_reg: 'off',
             enable_tc_on_reg: 'on',
             enable_single_seller_mode: 'off',
-            store_category_type: 'multiple', // none, multiple
+            store_category_type: 'single', // none, single, multiple
 
             // product page settings
             product_page_options: '',
@@ -77,7 +77,6 @@ export const dbData = {
 
             // vendor capabilities
             new_seller_enable_selling: 'on',
-            one_step_product_create: 'on',
             disable_product_popup: 'off',
             order_status_change: 'on',
             dokan_any_category_selection: 'off',

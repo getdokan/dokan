@@ -61,15 +61,15 @@
         },
         data() {
             return {
-                fixed: this.value.fixed ?? 0,
-                percentage: this.value.percentage ?? 0,
+                fixed: this.formatPositiveValue( this.value.fixed ) ?? 0,
+                percentage: this.formatPositiveValue( this.value.percentage ) ?? 0
             };
         },
         watch: {
             value: {
                 handler(newVal, oldVal) {
-                    this.fixed = newVal.fixed;
-                    this.percentage = newVal.percentage
+                    this.fixed = this.formatPositiveValue( newVal.fixed );
+                    this.percentage = this.formatPositiveValue( newVal.percentage );
                 },
                 deep: true
             }
@@ -84,6 +84,9 @@
 
                 this.$emit('change', data);
             }, 1600 ),
+            formatPositiveValue: ( value ) => {
+                return accounting.formatNumber( value, dokan.currency.precision, dokan.currency.thousand, dokan.currency.decimal );
+            },
         },
         computed:{
             getCurrencySymbol() {

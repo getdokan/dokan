@@ -223,8 +223,7 @@ export const selector = {
 
             // dokan notice
             notice: {
-                noticeDiv: '.dokan-admin-notices',
-                noticeDiv1: '.dokan-admin-notice.dokan-alert',
+                noticeDiv: '.dokan-admin-notice.dokan-info, .dokan-admin-notice.dokan-alert',
                 closeNotice: '.close-notice',
                 slider: '.slide-notice',
                 sliderPrev: '.slide-notice .prev',
@@ -627,6 +626,12 @@ export const selector = {
                     vatOrTaxNumber: '#vat-tax-number',
                     nameOfBank: '#dokan-bank-name',
                     bankIban: '#dokan-bank-iban',
+
+                    // store category
+                    storeCategoryDropdown: '//div[contains(@class,"dokan-store-category")]/..//div[@class="multiselect__select"]',
+                    storeCategoryInput: 'input#store-category',
+                    searchedStoreCategory: 'ul#listbox-store-category span.multiselect__option.multiselect__option--highlight',
+                    selectedStoreCategory: (category: string) => `//span[@class="multiselect__tag"]//span[contains(text(), "${category}")]`,
 
                     // Address
                     street1: '#street-1',
@@ -2003,7 +2008,6 @@ export const selector = {
 
                     // Vendor Capability
                     enableSelling: '.new_seller_enable_selling .switch',
-                    onePageProductCreate: '.one_step_product_create .switch',
                     disableProductPopup: '.disable_product_popup .switch',
                     orderStatusChange: '.order_status_change .switch',
                     selectAnyCategory: '.dokan_any_category_selection .switch',
@@ -3070,7 +3074,7 @@ export const selector = {
                 attributeTerm: '#tag-name',
                 attributeTermSlug: '#tag-slug',
                 description: '#tag-description',
-                addAttributeTerm: '#submit',
+                addAttributeTerm: 'input#submit',
                 attributeTermCell: (attributeTerm: string) => `//td[contains(text(), '${attributeTerm.toLowerCase()}')]/..`,
             },
         },
@@ -3933,7 +3937,7 @@ export const selector = {
 
             // Other Options
             otherOptions: {
-                productStatus: '#post_status',
+                productStatus: '#status',
                 visibility: '#\\_visibility',
                 purchaseNote: '#\\_purchase_note',
                 enableProductReviews: '#\\_enable_reviews',
@@ -7687,9 +7691,9 @@ export const selector = {
         },
 
         cWooSelector: {
-            wooCommerceSuccessMessage: '.woocommerce-message',
-            wooCommerceError: '.woocommerce-error',
-            wooCommerceInfo: '.woocommerce-info',
+            wooCommerceSuccessMessage: 'div.woocommerce-message',
+            wooCommerceError: 'div.woocommerce-error',
+            wooCommerceInfo: 'div.woocommerce-info',
             wooCommerceNoticeBanner: 'div.wc-block-components-notice-banner',
             wooCommerceNoticeBannerContent: 'div.wc-block-components-notice-banner__content',
         },

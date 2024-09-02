@@ -33,7 +33,7 @@ export class ProductsPage extends AdminPage {
         await this.fill(productsAdmin.attribute.slug, attribute.attributeName);
         await this.clickAndWaitForResponse(data.subUrls.backend.wc.addNewAttributes, productsAdmin.attribute.addAttribute);
         await this.toBeVisible(productsAdmin.attribute.attributeCell(attribute.attributeName));
-        await this.clickAndWaitForResponse(data.subUrls.backend.wc.taxonomy, productsAdmin.attribute.configureTerms(attribute.attributeName));
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.backend.wc.taxonomy, productsAdmin.attribute.configureTerms(attribute.attributeName));
 
         // add new term
         for (const attributeTerm of attribute.attributeTerms) {
@@ -318,6 +318,7 @@ export class ProductsPage extends AdminPage {
             await this.clearAndType(productsVendor.edit.title, productName);
             await this.clearAndType(productsVendor.edit.price, productPrice);
             // await this.addProductCategory(product.category);
+            await this.typeFrameSelector(productsVendor.description.descriptionIframe, productsVendor.description.descriptionHtmlBody, product.description);
 
             await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.products, productsVendor.saveProduct, 302);
             await this.toContainText(productsVendor.dokanMessage, 'The product has been saved successfully. ');
@@ -338,6 +339,7 @@ export class ProductsPage extends AdminPage {
         await this.clearAndType(productsVendor.create.productPrice, productPrice);
         await this.check(productsVendor.edit.downloadable);
         // await this.addProductCategory(product.category);
+        await this.typeFrameSelector(productsVendor.description.descriptionIframe, productsVendor.description.descriptionHtmlBody, product.description);
 
         await this.click(productsVendor.downloadableOptions.addFile);
         await this.clearAndType(productsVendor.downloadableOptions.fileName, product.downloadableOptions.fileName);
@@ -368,6 +370,7 @@ export class ProductsPage extends AdminPage {
         await this.clearAndType(productsVendor.create.productPrice, productPrice);
         await this.check(productsVendor.edit.virtual);
         // await this.addProductCategory(product.category);
+        await this.typeFrameSelector(productsVendor.description.descriptionIframe, productsVendor.description.descriptionHtmlBody, product.description);
 
         await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.products, productsVendor.saveProduct, 302);
         await this.toContainText(productsVendor.updatedSuccessMessage, product.saveSuccessMessage);
