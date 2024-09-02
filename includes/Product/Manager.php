@@ -436,7 +436,7 @@ class Manager {
      *
      * @since 3.0.0
      *
-     * @return WC_Product|null|false
+     * @return bool
      */
     public function delete( $product_id, $force = false ) {
         $product = $this->get( $product_id );
