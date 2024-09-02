@@ -68,6 +68,7 @@ test.describe('Store categories test', () => {
     });
 
     test('admin can assign store category to vendor (single)', { tag: ['@pro', '@admin'] }, async () => {
+        const [, , categoryName] = await apiUtils.createStoreCategory(payloads.createStoreCategory(), payloads.adminAuth);
         await admin.assignStoreCategoryToVendor(VENDOR_ID, [categoryName]);
     });
 

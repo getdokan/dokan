@@ -98,11 +98,6 @@ export const dbData = {
                 'product-discount': 'product-discount',
             },
 
-            // min max settings
-            min_max_sub_section: '',
-            enable_min_max_quantity: 'on',
-            enable_min_max_amount: 'on',
-
             // catalog mode
             catalog_mode_settings: '',
             catalog_mode_hide_add_to_cart_button: 'on',
