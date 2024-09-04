@@ -11,6 +11,8 @@
         "pw:deps-only": "playwright install-deps chromium",
         "test": "npx playwright test",
         "test:site:setup": "npx playwright test --project=local_site_setup --config=e2e.config.ts",
+        "test:env:setup": "npx playwright test --project=e2e_setup --config=e2e.config.ts",
+        "test:site:reset": "NO_SETUP=false npm run test:site:setup && npm run test:env:setup",
         "test:api": "npx playwright test --project=api_tests --config=api.config.ts",
         "test:e2e": "npx playwright test --project=e2e_tests --config=e2e.config.ts",
         "test:api:pro": "DOKAN_PRO=true npx playwright test --project=api_tests --config=api.config.ts",

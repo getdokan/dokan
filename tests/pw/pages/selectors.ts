@@ -745,6 +745,7 @@ export const selector = {
                     filterByProduct: '(//span[@class="select2-selection__arrow"])[1]',
                     filterByVendors: '(//span[@class="select2-selection__arrow"])[2]',
                     filterInput: '.select2-search.select2-search--dropdown .select2-search__field',
+                    reset: '(//button[text()="×"])[1]',
                 },
 
                 // Table

@@ -1,4 +1,4 @@
-import { Page, expect } from '@playwright/test';
+import { Page } from '@playwright/test';
 import { AdminPage } from '@pages/adminPage';
 import { selector } from '@pages/selectors';
 import { helpers } from '@utils/helpers';
@@ -46,7 +46,7 @@ export class AbuseReportsPage extends AdminPage {
 
     // filter abuse reports
     async filterAbuseReports(input: string, action: string) {
-        await this.goIfNotThere(data.subUrls.backend.dokan.abuseReports);
+        await this.goto(data.subUrls.backend.dokan.abuseReports);
 
         switch (action) {
             case 'by-reason':
@@ -70,6 +70,9 @@ export class AbuseReportsPage extends AdminPage {
         }
         await this.notToHaveText(abuseReportAdmin.numberOfRowsFound, '0 items');
         await this.notToBeVisible(abuseReportAdmin.noRowsFound);
+
+        //clear filter
+        await this.clickAndWaitForResponse(data.subUrls.api.dokan.abuseReports, abuseReportAdmin.filters.reset);
     }
 
     // abuse report bulk action

@@ -1362,10 +1362,11 @@ export class ApiUtils {
     }
 
     // create product question
-    async createProductQuestion(payload: object, auth?: auth): Promise<[responseBody, string]> {
+    async createProductQuestion(payload: object, auth?: auth): Promise<[responseBody, string, string]> {
         const [, responseBody] = await this.post(endPoints.createProductQuestion, { data: payload, headers: auth });
         const questionId = String(responseBody?.id);
-        return [responseBody, questionId];
+        const question = String(responseBody?.question);
+        return [responseBody, questionId, question];
     }
 
     // update product question
@@ -1388,10 +1389,11 @@ export class ApiUtils {
     }
 
     // create product question answer
-    async createProductQuestionAnswer(payload: object, auth?: auth): Promise<[responseBody, string]> {
+    async createProductQuestionAnswer(payload: object, auth?: auth): Promise<[responseBody, string, string]> {
         const [, responseBody] = await this.post(endPoints.createProductQuestionAnswer, { data: payload, headers: auth });
         const answerId = String(responseBody?.id);
-        return [responseBody, answerId];
+        const answer = helpers.stringBetweenTags(String(responseBody?.answer));
+        return [responseBody, answerId, answer];
     }
 
     /**
