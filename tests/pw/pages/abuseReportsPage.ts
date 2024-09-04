@@ -27,7 +27,7 @@ export class AbuseReportsPage extends AdminPage {
         await this.multipleElementVisible(abuseReportAdmin.bulkActions);
 
         // filter elements are visible
-        const { filterInput, reset, ...filters } = abuseReportAdmin.filters;
+        const { filterInput, reset, filteredResult, ...filters } = abuseReportAdmin.filters;
         await this.multipleElementVisible(filters);
 
         // abuse report table elements are visible
