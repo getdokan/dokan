@@ -623,6 +623,8 @@ export class ApiUtils {
 
             // get withdraw id if already exists
             withdrawId = await this.getWithdrawId(auth);
+            expect(withdrawId).toBeTruthy();
+
             await this.updateWithdraw(withdrawId, payload, auth);
         } else {
             expect(response.ok()).toBeTruthy();

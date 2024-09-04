@@ -137,16 +137,20 @@ export class ProductQAPage extends BasePage {
     async editQuestionVisibility(questionId: string, action: string): Promise<void> {
         await this.goToQuestionDetails(questionId);
         if (action == 'hide') {
-            await this.click(productQAAdmin.questionDetails.status.hideFromProductPage);
-            await this.clickAndWaitForResponseWithType(data.subUrls.api.dokan.productQuestions, productQAAdmin.questionDetails.confirmAction, 'GET');
-            await this.toBeVisible(productQAAdmin.questionDetails.visibilityStatusSaveSuccessMessage);
-            await this.toBeVisible(productQAAdmin.questionDetails.status.hiddenStatus);
+            await this.toPass(async () => {
+                await this.click(productQAAdmin.questionDetails.status.hideFromProductPage);
+                await this.clickAndWaitForResponseWithType(data.subUrls.api.dokan.productQuestions, productQAAdmin.questionDetails.confirmAction, 'GET');
+                await this.toBeVisible(productQAAdmin.questionDetails.visibilityStatusSaveSuccessMessage);
+                await this.toBeVisible(productQAAdmin.questionDetails.status.hiddenStatus, { timeout: 5000 });
+            });
             await this.toBeVisible(productQAAdmin.questionDetails.status.showInProductPage);
         } else {
-            await this.click(productQAAdmin.questionDetails.status.showInProductPage);
-            await this.clickAndWaitForResponseWithType(data.subUrls.api.dokan.productQuestions, productQAAdmin.questionDetails.confirmAction, 'GET');
-            await this.toBeVisible(productQAAdmin.questionDetails.visibilityStatusSaveSuccessMessage);
-            await this.toBeVisible(productQAAdmin.questionDetails.status.visibleStatus);
+            await this.toPass(async () => {
+                await this.click(productQAAdmin.questionDetails.status.showInProductPage);
+                await this.clickAndWaitForResponseWithType(data.subUrls.api.dokan.productQuestions, productQAAdmin.questionDetails.confirmAction, 'GET');
+                await this.toBeVisible(productQAAdmin.questionDetails.visibilityStatusSaveSuccessMessage);
+                await this.toBeVisible(productQAAdmin.questionDetails.status.visibleStatus, { timeout: 5000 });
+            });
             await this.toBeVisible(productQAAdmin.questionDetails.status.hideFromProductPage);
         }
     }

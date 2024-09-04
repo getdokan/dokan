@@ -746,6 +746,7 @@ export const selector = {
                     filterByVendors: '(//span[@class="select2-selection__arrow"])[2]',
                     filterInput: '.select2-search.select2-search--dropdown .select2-search__field',
                     reset: '(//button[text()="×"])[1]',
+                    filteredResult: (input: string) => `//li[normalize-space()="${input}"]`,
                 },
 
                 // Table
@@ -6822,6 +6823,9 @@ export const selector = {
                     productUnit: 'div.summary p.wc-gzd-additional-info.product-units',
                     deliveryTime: 'div.summary p.wc-gzd-additional-info.delivery-time-info',
                 },
+
+                productAddedSuccessMessage: (productName: string) => `//div[@class="woocommerce-message" and contains(.,"“${productName}” has been added to your cart.")]`,
+                productWithQuantityAddedSuccessMessage: (productName: string, quantity: string) => `//div[@class="woocommerce-message" and contains(.," ${quantity} × “${productName}” have been added to your cart.")]`,
             },
 
             // Sub menus

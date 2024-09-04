@@ -56,13 +56,13 @@ export class AbuseReportsPage extends AdminPage {
             case 'by-product':
                 await this.click(abuseReportAdmin.filters.filterByProduct);
                 await this.typeAndWaitForResponse(data.subUrls.api.wc.products, abuseReportAdmin.filters.filterInput, input);
-                await this.pressAndWaitForResponse(data.subUrls.api.dokan.abuseReports, data.key.enter);
+                await this.clickAndWaitForResponse(data.subUrls.api.dokan.abuseReports, abuseReportAdmin.filters.filteredResult(input));
                 break;
 
             case 'by-vendor':
                 await this.click(abuseReportAdmin.filters.filterByVendors);
                 await this.typeAndWaitForResponse(data.subUrls.api.dokan.stores, abuseReportAdmin.filters.filterInput, input);
-                await this.pressAndWaitForResponse(data.subUrls.api.dokan.abuseReports, data.key.enter);
+                await this.clickAndWaitForResponse(data.subUrls.api.dokan.abuseReports, abuseReportAdmin.filters.filteredResult(input));
                 break;
 
             default:
