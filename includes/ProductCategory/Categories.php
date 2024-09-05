@@ -134,28 +134,28 @@ class Categories {
      * @return void
      */
     private function get_categories() {
-        global $wpdb;
-
-        // get all categories
-        $table  = $wpdb->prefix . 'terms';
-        $fields = 'terms.term_id, terms.name, tax.parent AS parent_id';
-        $join   = "INNER JOIN `{$wpdb->prefix}term_taxonomy` AS tax ON terms.term_id = tax.term_id";
-        $where  = " AND tax.taxonomy = 'product_cat'";
-
-        // If wpml plugin exists then get categories as language set.
-        if ( function_exists( 'wpml_get_current_language' ) && ! empty( wpml_get_current_language() ) ) {
-            $current_language = wpml_get_current_language();
-
-            $join .= " INNER JOIN `{$wpdb->prefix}icl_translations` AS tr ON terms.term_id = tr.element_id";
-            $where .= " AND tr.language_code = '{$current_language}' AND tr.element_type = 'tax_product_cat'";
-        }
-
-        // @codingStandardsIgnoreStart
-        $categories = $wpdb->get_results(
-            $wpdb->prepare( "SELECT $fields FROM $table AS terms $join WHERE %d=%d $where", 1, 1 ),
-            OBJECT_K
+        // Query all product categories
+        $product_categories = get_terms(
+            [
+                'taxonomy'   => 'product_cat',
+                'hide_empty' => false,
+            ]
         );
-        // @codingStandardsIgnoreEnd
+
+        // Transform the categories
+        $transformed_categories = array_map(
+            function ( $category ) {
+                return (object) [
+                    'term_id'   => $category->term_id,
+                    'name'      => $category->name,
+                    'parent_id' => $category->parent,
+                ];
+            },
+            $product_categories
+        );
+
+        // Index the array by term_id.
+        $categories = array_column( $transformed_categories, null, 'term_id' );
 
         if ( empty( $categories ) ) {
             $this->categories = [];
