@@ -56,7 +56,7 @@ test.describe('Settings test', () => {
         await admin.setDokanAppearanceSettings(data.dokanSettings.appearance);
     });
 
-    test('admin can set Dokan menu manager settings', { tag: ['@lite', '@admin'] }, async () => {
+    test('admin can set Dokan menu manager settings', { tag: ['@pro', '@admin'] }, async () => {
         await admin.setDokanMenuManagerSettings(data.dokanSettings.menuManager);
     });
 
