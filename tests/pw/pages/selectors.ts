@@ -1988,6 +1988,8 @@ export const selector = {
                     vendorAnalytics: '//div[@class="nav-title" and contains(text(),"Vendor Analytics")]',
                 },
 
+                settingTitle: 'div.settings-content h2.settings-title',
+
                 // General
                 general: {
                     // Site settings

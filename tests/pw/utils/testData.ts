@@ -1881,8 +1881,9 @@ export const data = {
 
     // dokan settings
     dokanSettings: {
-        // General Settings
+        // general settings
         general: {
+            settingTitle: 'General Settings',
             vendorStoreUrl: 'store',
             setupWizardMessage: "Thank you for choosing The Marketplace to power your online store! This quick setup wizard will help you configure the basic settings. It's completely optional and shouldn't take longer than two minutes.",
             sellingProductTypes: 'both', // 'both', 'physical', 'digital'
@@ -1891,8 +1892,9 @@ export const data = {
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
 
-        // Selling Options Settings
+        // selling options settings
         selling: {
+            settingTitle: 'Selling Option Settingss',
             commissionType: 'percentage', // 'flat', 'percentage', 'combine'
             adminCommission: '10',
             shippingFeeRecipient: 'seller', // 'seller', 'admin'
@@ -1903,8 +1905,9 @@ export const data = {
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
 
-        // Withdraw
+        // withdraw
         withdraw: {
+            settingTitle: 'Withdraw Settings',
             customMethodName: 'Bksh',
             customMethodType: 'Phone',
             charge: {
@@ -1926,16 +1929,18 @@ export const data = {
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
 
-        // Reverse withdraw
+        // reverse withdraw
         reverseWithdraw: {
+            settingTitle: 'Reverse Withdrawal Settings',
             billingType: 'by_amount', // 'by_month'
             reverseBalanceThreshold: '21',
             gracePeriod: '7',
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
 
-        // Pages
+        // pages
         page: {
+            settingTitle: 'Site and Store Page Settings',
             dashboard: 'Dashboard',
             myOrders: 'My Orders',
             storeListing: 'Store List',
@@ -1943,8 +1948,9 @@ export const data = {
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
 
-        // Appearance
+        // appearance
         appearance: {
+            settingTitle: 'Appearance Settings',
             mapApiSource: 'google_maps', // 'google_maps', 'mapbox'
             googleMapApiKey: GMAP,
             mapBoxApiKey: MAPBOX,
@@ -1953,8 +1959,15 @@ export const data = {
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
 
+        // menuManager
+        menuManager: {
+            settingTitle: 'Menu Manager Settings',
+            saveSuccessMessage: 'Setting has been saved successfully.',
+        },
+
         // privacy policy
         privacyPolicy: {
+            settingTitle: 'Privacy Settings',
             privacyPage: '2', // '2', '3', '4', '5', '6', '7', '8', '9', '10'
             privacyPolicyContent: 'Your personal data will be used to support your experience throughout this website, to manage access to your account, and for other purposes described in our [dokan_privacy_policy]',
             saveSuccessMessage: 'Setting has been saved successfully.',
@@ -1962,6 +1975,7 @@ export const data = {
 
         // colors
         colors: {
+            settingTitle: 'Colors Settings',
             paletteChoice: 'pre-defined',
             colorPalette: 'default',
             predefinedPalette: {
@@ -2029,24 +2043,28 @@ export const data = {
 
         // shipping status
         shippingStatus: {
+            settingTitle: 'Shipping Status Settings',
             customShippingStatus: 'Test shipping status',
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
 
         // quote
         quote: {
+            settingTitle: 'Quote Settings',
             decreaseOfferedPrice: '0',
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
 
         // live search
         liveSearch: {
+            settingTitle: 'Live Search Settings',
             liveSearchOption: 'suggestion_box', // suggestion_box, old_live_search
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
 
         // Store support
         storeSupport: {
+            settingTitle: 'Store Support Settings',
             displayOnSingleProductPage: 'above_tab', // 'above_tab', 'inside_tab', 'dont_show'
             supportButtonLabel: 'Get Support',
             saveSuccessMessage: 'Setting has been saved successfully.',
@@ -2054,6 +2072,7 @@ export const data = {
 
         // Vendor Verification
         vendorVerification: {
+            settingTitle: 'Vendor Verification Settings',
             verifiedIcons: {
                 circleSolid: 'check_circle_solid',
                 circleRegular: 'check_circle_regular',
@@ -2105,6 +2124,7 @@ export const data = {
 
         // Email verification
         emailVerification: {
+            settingTitle: 'Email Verification Settings',
             registrationNotice: 'Please check your email and complete email verification to login.',
             loginNotice: 'Please check your email and complete email verification to login.',
             saveSuccessMessage: 'Setting has been saved successfully.',
@@ -2112,6 +2132,7 @@ export const data = {
 
         // Rma Settings
         rma: {
+            settingTitle: 'RMA Settings',
             orderStatus: 'wc-processing', // 'wc-pending', 'wc-processing', 'wc-on-hold', 'wc-completed', 'wc-cancelled', 'wc-refunded', 'wc-failed'
             rmaReasons: ['Defective', 'Wrong Product', 'Other'],
             refundPolicyHtmlBody: 'Refund Policy',
@@ -2120,17 +2141,20 @@ export const data = {
 
         // Wholesale
         wholesale: {
+            settingTitle: 'Wholesale Settings',
             whoCanSeeWholesalePrice: 'all', // 'all', 'wholesale_customer'
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
 
         // EuCompliance
         euCompliance: {
+            settingTitle: 'EU Compliance Settings',
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
 
         // delivery time
         deliveryTime: {
+            settingTitle: 'Delivery Time Settings',
             deliveryDateLabel: 'Delivery Date',
             deliveryBlockedBuffer: '0',
             deliveryBoxInfo: 'This store needs %DAY% day(s) to process your delivery request',
@@ -2145,6 +2169,7 @@ export const data = {
 
         // Product advertising
         productAdvertising: {
+            settingTitle: 'Product Advertisement Settings',
             noOfAvailableSlot: '100',
             expireAfterDays: '10',
             advertisementCost: '15',
@@ -2153,6 +2178,7 @@ export const data = {
 
         // Geolocation Settings
         geolocation: {
+            settingTitle: 'Geolocation Settings',
             locationMapPosition: 'top', // 'top', 'left', 'right'
             showMap: 'all', // 'all', 'store_listing', 'shop'
             radiusSearchUnit: 'km', // 'km', 'miles'
@@ -2165,12 +2191,14 @@ export const data = {
 
         // Product report abuse
         productReportAbuse: {
+            settingTitle: 'Product Report Abuse Settings',
             reasonsForAbuseReport: 'This product is fake',
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
 
         // Spmv Settings
         spmv: {
+            settingTitle: 'SPMV Settings',
             sellItemButtonText: 'Sell This Item',
             availableVendorDisplayAreaTitle: 'Other Available Vendor',
             availableVendorSectionDisplayPosition: 'below_tabs', // 'below_tabs', 'inside_tabs', 'after_tabs'
@@ -2180,6 +2208,7 @@ export const data = {
 
         // Vendor Subscription Settings
         vendorSubscription: {
+            settingTitle: 'Vendor Subscription Settings',
             displayPage: 'Sample Page', // '2', '4', '5', '6', '8', '9', '10', '11', '15', '-1'
             noOfDays: '2',
             productStatus: 'draft', // 'publish', 'pending', 'draft'
