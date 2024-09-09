@@ -1894,7 +1894,7 @@ export const data = {
 
         // selling options settings
         selling: {
-            settingTitle: 'Selling Option Settingss',
+            settingTitle: 'Selling Option Settings',
             commissionType: 'percentage', // 'flat', 'percentage', 'combine'
             adminCommission: '10',
             shippingFeeRecipient: 'seller', // 'seller', 'admin'

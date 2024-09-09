@@ -288,8 +288,7 @@ export class BookingPage extends VendorPage {
             await this.click(bookingProductsVendor.addBooking.selectCustomerDropdown);
             await this.typeAndWaitForResponse(data.subUrls.ajax, bookingProductsVendor.addBooking.selectCustomerInput, customerName);
             await this.toContainText(bookingProductsVendor.addBooking.searchedResult, customerName);
-            await this.press(data.key.arrowDown);
-            await this.press(data.key.enter);
+            await this.click(bookingProductsVendor.addBooking.searchedResultByName(customerName));
         }
 
         await this.click(bookingProductsVendor.addBooking.selectABookableProductDropdown);

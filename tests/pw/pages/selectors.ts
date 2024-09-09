@@ -5254,6 +5254,7 @@ export const selector = {
                 selectCustomerDropdown: '//span[@id="select2-customer_id-container"]/..//span[@class="select2-selection__arrow"]',
                 selectCustomerInput: '.select2-search__field',
                 searchedResult: '.select2-results__option.select2-results__option--highlighted',
+                searchedResultByName: (customerName: string) => `//li[contains(text(), "${customerName}")]`,
                 selectABookableProductDropdown: '//span[@id="select2-bookable_product_id-container"]/..//span[@class="select2-selection__arrow"]',
                 selectABookableProduct: (productName: string) => `//li[contains(@class,"select2-results__option") and contains(text(), '${productName}')]`,
 

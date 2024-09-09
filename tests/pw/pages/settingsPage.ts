@@ -18,8 +18,8 @@ export class SettingsPage extends AdminPage {
 
     async goToSingleDokanSettings(settingMenu: string, settingTitle: string) {
         await this.toPass(async () => {
-            await this.page.goto(data.subUrls.backend.dokan.settings);
-            await this.reload(); //todo: need to fix
+            await this.goto(data.subUrls.backend.dokan.settings);
+            await this.reload(); //todo: need to resolve: page doesn't reload for having # (fragment identifier) in the url
             await this.click(settingMenu);
             await this.toContainText(settingsAdmin.settingTitle, settingTitle, { timeout: 3000 });
         });
