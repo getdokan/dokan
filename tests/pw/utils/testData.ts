@@ -1438,7 +1438,9 @@ export const data = {
     customer: {
         username: CUSTOMER,
         password: USER_PASSWORD,
-        lastname: `${CUSTOMER} ln`,
+        lastname: 'ln',
+        fullname: `${CUSTOMER} c1`,
+        email: `${CUSTOMER}@email.com`,
 
         customer2: {
             username: CUSTOMER2,

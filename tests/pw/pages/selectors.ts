@@ -3701,6 +3701,7 @@ export const selector = {
             buyAdvertisement: (productName: string) => `//a[contains(text(),'${productName}')]/../../..//td[@class="product-advertisement-td"]//span`,
             advertisementStatus: (productName: string) => `//a[contains(text(),'${productName}')]/../../..//td[@class="product-advertisement-td"]//i[contains(@class,'fa fa-circle')]`,
             permanentlyDelete: (productName: string) => `//a[contains(text(),'${productName}')]/../..//span[@class="delete"]//a`,
+            rowActions: (productName: string) => `//a[contains(text(), '${productName}')]/../..//div[@class="row-actions"]`,
             view: (productName: string) => `//a[contains(text(),'${productName}')]/../..//span[@class="view"]//a`,
             quickEdit: (productName: string) => `//a[contains(text(),'${productName}')]/../..//span[@class="item-inline-edit editline"]//a`,
             duplicate: (productName: string) => `//a[contains(text(),'${productName}')]/../..//span[@class="duplicate"]//a`,
@@ -5254,7 +5255,7 @@ export const selector = {
                 selectCustomerDropdown: '//span[@id="select2-customer_id-container"]/..//span[@class="select2-selection__arrow"]',
                 selectCustomerInput: '.select2-search__field',
                 searchedResult: '.select2-results__option.select2-results__option--highlighted',
-                searchedResultByName: (customerName: string) => `//li[contains(text(), "${customerName}")]`,
+                searchedResultByName: (customerName: string) => `//li[contains(text(), "${customerName}") and @class="select2-results__option select2-results__option--highlighted"]`,
                 selectABookableProductDropdown: '//span[@id="select2-bookable_product_id-container"]/..//span[@class="select2-selection__arrow"]',
                 selectABookableProduct: (productName: string) => `//li[contains(@class,"select2-results__option") and contains(text(), '${productName}')]`,
 
