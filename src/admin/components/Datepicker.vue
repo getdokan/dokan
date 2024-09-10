@@ -2,8 +2,8 @@
     <input
         type="text"
         :value="value"
+        ref="datepicker"
         :placeholder="placeholder"
-        @input="updateValue($event.target.value)"
     >
 </template>
 
@@ -15,19 +15,16 @@
                 required: true,
                 default: ''
             },
-
             format: {
                 type: String,
                 required: false,
-                default: ''
+                default: 'YYYY-MM-DD'
             },
-
             placeholder: {
                 type: String,
                 required: false,
                 default: ''
             },
-
             changeMonthYear: {
                 type: Boolean,
                 required: false,
@@ -35,32 +32,55 @@
             },
         },
 
-        mounted() {
-            const vm = this;
-
-            jQuery(vm.$el).datepicker({
-                dateFormat:  vm.format,
-                changeMonth: vm.changeMonthYear,
-                changeYear:  vm.changeMonthYear,
-
-                beforeShow() {
-                    jQuery(this).datepicker('widget').addClass('dokan-datepicker');
+        computed: {
+            computedValue: {
+                get() {
+                    return this.value;
                 },
-
-                onSelect(date) {
-                    vm.updateValue(date);
+                set(newValue) {
+                    this.$emit('input', newValue);
                 }
-            });
+            }
+        },
+
+        mounted() {
+            this.initDatepicker();
         },
 
         methods: {
-            updateValue(value) {
-                if ( ! value) {
-                    value = moment().format('YYYY-MM-DD');
-                }
+            initDatepicker() {
+                const vm = this;
+                jQuery(this.$refs.datepicker).datepicker({
+                    dateFormat: vm.format,
+                    changeMonth: vm.changeMonthYear,
+                    changeYear: vm.changeMonthYear,
+                    beforeShow() {
+                        jQuery(this).datepicker('widget').addClass('dokan-datepicker');
+                    },
+                    onSelect(date) {
+                        vm.$nextTick(() => {
+                            vm.updateValue(date);
+                        });
+                    }
+                });
+            },
 
-                this.$emit('input', value);
+            updateValue(value) {
+                if (!value) {
+                    value = moment().format(this.format);
+                }
+                this.computedValue = value;
             }
+        },
+
+        watch: {
+            value(newVal) {
+                jQuery(this.$refs.datepicker).datepicker('setDate', newVal);
+            }
+        },
+
+        beforeDestroy() {
+            jQuery(this.$refs.datepicker).datepicker('destroy');
         }
     };
 </script>
