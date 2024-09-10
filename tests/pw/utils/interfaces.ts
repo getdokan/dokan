@@ -1415,6 +1415,7 @@ export interface wholesale {
 export interface dokanSettings {
     // General Settings
     general: {
+        settingTitle: string;
         vendorStoreUrl: string;
         setupWizardMessage: string;
         sellingProductTypes: string;
@@ -1425,6 +1426,7 @@ export interface dokanSettings {
 
     // Selling Options Settings
     selling: {
+        settingTitle: string;
         commission: commission;
         shippingFeeRecipient: string;
         productTaxFeeRecipient: string;

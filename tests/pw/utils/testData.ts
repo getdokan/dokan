@@ -1931,6 +1931,7 @@ export const data = {
 
         // Selling Options Settings
         selling: {
+            settingTitle: 'Selling Option Settings',
             commission: {
                 commissionType: 'fixed', // 'fixed','category_based'
                 commissionPercentage: '10',
@@ -2413,7 +2414,7 @@ export const data = {
             WP_DEBUG: true,
             SCRIPT_DEBUG: true,
             WP_DEBUG_LOG: true,
-            WP_DEBUG_DISPLAY: false,
+            WP_DEBUG_DISPLAY: true,
         },
 
         // site info
