@@ -674,8 +674,15 @@ export class ProductsPage extends AdminPage {
     // add product Wholesale options
     async addProductWholesaleOptions(productName: string, wholesaleOption: product['productInfo']['wholesaleOption']): Promise<void> {
         await this.goToProductEdit(productName);
-        await this.check(productsVendor.wholesale.enableWholeSaleForThisProduct);
-        await this.toBeVisible(productsVendor.wholesale.wholeSaleOptionsDiv);
+        await this.toPass(async () => {
+            await this.check(productsVendor.wholesale.enableWholeSaleForThisProduct);
+            const optionIsVisible = await this.isVisible(productsVendor.wholesale.wholesalePrice, 2);
+            if (!optionIsVisible) {
+                await this.click(productsVendor.wholesale.enableWholeSaleForThisProduct);
+            }
+            // eslint-disable-next-line playwright/prefer-web-first-assertions
+            expect(optionIsVisible).toBe(true);
+        });
         await this.clearAndType(productsVendor.wholesale.wholesalePrice, wholesaleOption.wholesalePrice);
         await this.clearAndType(productsVendor.wholesale.minimumQuantityForWholesale, wholesaleOption.minimumWholesaleQuantity);
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, productsVendor.saveProduct, 302);

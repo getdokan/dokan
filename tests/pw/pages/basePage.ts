@@ -584,6 +584,12 @@ export class BasePage {
         return value;
     }
 
+    // set element css style property
+    async setElementCssStyle(selector: string, property: string, value: string): Promise<void> {
+        const element = this.getElement(selector);
+        await element.evaluate((element, [property, value]) => ((element.style as any)[property as string] = value), [property, value]);
+    }
+
     // get element property value
     async getElementPropertyValue(selector: string, property: string): Promise<string> {
         const element = this.getElement(selector);
@@ -736,8 +742,11 @@ export class BasePage {
 
     // check input fields [checkbox/radio]
     async check(selector: string): Promise<void> {
-        await this.checkLocator(selector);
-        // await this.checkByPage(selector);
+        await this.toPass(async () => {
+            await this.checkLocator(selector);
+            await this.toBeChecked(selector, { timeout: 200 });
+            // await this.checkByPage(selector);
+        });
     }
 
     // check input fields [checkbox/radio]
@@ -1413,8 +1422,8 @@ export class BasePage {
     }
 
     // assert checkbox to be checked
-    async toBeChecked(selector: string) {
-        await expect(this.page.locator(selector)).toBeChecked();
+    async toBeChecked(selector: string, options?: { checked?: boolean; timeout?: number } | undefined) {
+        await expect(this.page.locator(selector)).toBeChecked(options);
     }
 
     // assert element to have text

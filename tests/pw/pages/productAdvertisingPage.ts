@@ -57,7 +57,7 @@ export class ProductAdvertisingPage extends AdminPage {
 
     // add new product advertisement
     async addNewProductAdvertisement(advertising: productAdvertisement) {
-        await this.goIfNotThere(data.subUrls.backend.dokan.productAdvertising);
+        await this.goto(data.subUrls.backend.dokan.productAdvertising);
 
         await this.click(productAdvertisingAdmin.addNewProductAdvertising);
 
@@ -80,7 +80,7 @@ export class ProductAdvertisingPage extends AdminPage {
 
     // search advertised product
     async searchAdvertisedProduct(searchKey: string | number) {
-        await this.goIfNotThere(data.subUrls.backend.dokan.productAdvertising);
+        await this.goto(data.subUrls.backend.dokan.productAdvertising);
 
         await this.clearInputField(productAdvertisingAdmin.search);
 
