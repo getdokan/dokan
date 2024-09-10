@@ -333,6 +333,7 @@ export const selector = {
                     filterInput: '.select2-search.select2-search--dropdown .select2-search__field',
                     clearFilter: 'a#clear-all-filtering',
                     result: 'li.select2-results__option.select2-results__option--highlighted',
+                    filteredResult: (storeName: string) => `//li[contains(text(), "${storeName}") and @class="select2-results__option select2-results__option--highlighted"]`,
                 },
 
                 // Logs
@@ -800,6 +801,7 @@ export const selector = {
                     filterByVendor: '.select2-selection__arrow',
                     filterInput: '.select2-search.select2-search--dropdown .select2-search__field',
                     filterClear: '.select2-selection__clear',
+                    filteredResult: (storeName: string) => `//li[contains(text(), "${storeName}") and @class="select2-results__option select2-results__option--highlighted"]`,
                 },
 
                 // Table
@@ -3955,6 +3957,7 @@ export const selector = {
             // Wholesale Options
             wholesale: {
                 enableWholeSaleForThisProduct: '#wholesale\\[enable_wholesale\\]',
+                wholeSaleOptionsDiv: 'div.show_if_wholesale.dokan-hide',
                 wholesalePrice: '#dokan-wholesale-price',
                 minimumQuantityForWholesale: '#dokan-wholesale-qty',
             },

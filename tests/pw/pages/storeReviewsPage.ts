@@ -30,7 +30,7 @@ export class StoreReviewsPage extends AdminPage {
         await this.multipleElementVisible(storeReviewsAdmin.bulkActions);
 
         // filter elements are visible
-        const { filterInput, filterClear, ...filters } = storeReviewsAdmin.filters;
+        const { filterInput, filterClear, filteredResult, ...filters } = storeReviewsAdmin.filters;
         await this.multipleElementVisible(filters);
 
         // store reviews table elements are visible
@@ -44,7 +44,7 @@ export class StoreReviewsPage extends AdminPage {
         // filter by vendor
         await this.click(storeReviewsAdmin.filters.filterByVendor);
         await this.typeAndWaitForResponse(data.subUrls.api.dokan.stores, storeReviewsAdmin.filters.filterInput, vendorName);
-        await this.pressAndWaitForResponse(data.subUrls.api.dokan.storeReviews, data.key.enter);
+        await this.clickAndWaitForResponse(data.subUrls.api.dokan.storeReviews, storeReviewsAdmin.filters.filteredResult(vendorName));
     }
 
     // view  store review

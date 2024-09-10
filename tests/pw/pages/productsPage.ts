@@ -675,6 +675,7 @@ export class ProductsPage extends AdminPage {
     async addProductWholesaleOptions(productName: string, wholesaleOption: product['productInfo']['wholesaleOption']): Promise<void> {
         await this.goToProductEdit(productName);
         await this.check(productsVendor.wholesale.enableWholeSaleForThisProduct);
+        await this.toBeVisible(productsVendor.wholesale.wholeSaleOptionsDiv);
         await this.clearAndType(productsVendor.wholesale.wholesalePrice, wholesaleOption.wholesalePrice);
         await this.clearAndType(productsVendor.wholesale.minimumQuantityForWholesale, wholesaleOption.minimumWholesaleQuantity);
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, productsVendor.saveProduct, 302);
