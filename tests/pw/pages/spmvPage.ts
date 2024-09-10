@@ -114,7 +114,7 @@ export class SpmvPage extends VendorPage {
     // clone product
     async cloneProduct(productName: string): Promise<void> {
         await this.searchSimilarProduct(productName, 'spmv');
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, spmvVendor.addToStore);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, spmvVendor.addToStore);
         await this.toHaveValue(selector.vendor.product.edit.title, productName);
     }
 

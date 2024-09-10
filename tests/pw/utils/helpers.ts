@@ -62,8 +62,8 @@ export const helpers = {
 
     // string between two tags
     stringBetweenTags: (str: string): string => {
-        const res = str.split(/<p>(.*?)<\/p>/g);
-        return res[1] as string;
+        const match = str.match(/<([^>]+)>(.*?)<\/\1>/);
+        return match ? match[2]! : '';
     },
 
     // escape regex

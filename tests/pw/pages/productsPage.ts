@@ -481,6 +481,7 @@ export class ProductsPage extends AdminPage {
     // go to product edit
     async goToProductEdit(productName: string): Promise<void> {
         await this.searchProduct(productName);
+        await this.removeAttribute(productsVendor.rowActions(productName), 'class'); // forcing the row actions to be visible, to avoid flakiness
         await this.hover(productsVendor.productCell(productName));
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, productsVendor.editProduct(productName));
         await this.toHaveValue(productsVendor.edit.title, productName);
@@ -566,7 +567,7 @@ export class ProductsPage extends AdminPage {
         await this.hover(productsVendor.productCell(productName));
         await this.clickAndWaitForLoadState(productsVendor.view(productName));
         await expect(this.page).toHaveURL(data.subUrls.frontend.productDetails(helpers.slugify(productName)) + '/');
-        const { quantity, addToCart, viewCart, euComplianceData, ...productDetails } = selector.customer.cSingleProduct.productDetails;
+        const { quantity, addToCart, viewCart, euComplianceData, productAddedSuccessMessage, productWithQuantityAddedSuccessMessage, ...productDetails } = selector.customer.cSingleProduct.productDetails;
         await this.multipleElementVisible(productDetails);
     }
 
@@ -673,7 +674,15 @@ export class ProductsPage extends AdminPage {
     // add product Wholesale options
     async addProductWholesaleOptions(productName: string, wholesaleOption: product['productInfo']['wholesaleOption']): Promise<void> {
         await this.goToProductEdit(productName);
-        await this.check(productsVendor.wholesale.enableWholeSaleForThisProduct);
+        await this.toPass(async () => {
+            await this.check(productsVendor.wholesale.enableWholeSaleForThisProduct);
+            const optionIsVisible = await this.isVisible(productsVendor.wholesale.wholesalePrice, 2);
+            if (!optionIsVisible) {
+                await this.click(productsVendor.wholesale.enableWholeSaleForThisProduct);
+            }
+            // eslint-disable-next-line playwright/prefer-web-first-assertions
+            expect(optionIsVisible).toBe(true);
+        });
         await this.clearAndType(productsVendor.wholesale.wholesalePrice, wholesaleOption.wholesalePrice);
         await this.clearAndType(productsVendor.wholesale.minimumQuantityForWholesale, wholesaleOption.minimumWholesaleQuantity);
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, productsVendor.saveProduct, 302);
