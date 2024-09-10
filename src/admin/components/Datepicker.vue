@@ -30,6 +30,11 @@
                 required: false,
                 default: false
             },
+            startFromCurrentDate: {
+                type: Boolean,
+                required: false,
+                default: false
+            }
         },
 
         computed: {
@@ -50,19 +55,25 @@
         methods: {
             initDatepicker() {
                 const vm = this;
-                jQuery(this.$refs.datepicker).datepicker({
+
+                const options = {
                     dateFormat: vm.format,
                     changeMonth: vm.changeMonthYear,
                     changeYear: vm.changeMonthYear,
+                    minDate: vm.startFromCurrentDate ? new Date() : null,
+
                     beforeShow() {
                         jQuery(this).datepicker('widget').addClass('dokan-datepicker');
                     },
+
                     onSelect(date) {
                         vm.$nextTick(() => {
                             vm.updateValue(date);
                         });
                     }
-                });
+                };
+
+                jQuery(this.$refs.datepicker).datepicker(options);
             },
 
             updateValue(value) {
