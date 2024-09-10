@@ -22,7 +22,7 @@
     "release:dev": "npm install && npm run build && npm run clean-files && npm run makepot && npm run zip"
   },
   "devDependencies": {
-    "@wordpress/scripts": "^27.9.0",
+    "@wordpress/scripts": "^29.0.0",
     "chartjs-adapter-moment": "^1.0.1",
     "debounce": "^1.2.1",
     "fs-extra": "^10.1.0",
