@@ -2,7 +2,28 @@ import { faker } from '@faker-js/faker';
 import { helpers } from '@utils/helpers';
 import 'dotenv/config';
 
-const { ADMIN, ADMIN_PASSWORD, VENDOR, VENDOR2, CUSTOMER, CUSTOMER2, USER_PASSWORD, CATEGORY_ID, SITE_PATH, BASE_URL, SITE_LANGUAGE, SITE_TITLE, ADMIN_EMAIL, DB_HOST_NAME, DATABASE, DB_USER_NAME, DB_USER_PASSWORD, DB_PREFIX, GMAP, MAPBOX, LICENSE_KEY } = process.env;
+const {
+    ADMIN,
+    ADMIN_PASSWORD,
+    VENDOR,
+    VENDOR2,
+    CUSTOMER,
+    CUSTOMER2,
+    USER_PASSWORD,
+    SITE_PATH,
+    BASE_URL,
+    SITE_LANGUAGE,
+    SITE_TITLE,
+    ADMIN_EMAIL,
+    DB_HOST_NAME,
+    DATABASE,
+    DB_USER_NAME,
+    DB_USER_PASSWORD,
+    DB_PREFIX,
+    GMAP,
+    MAPBOX,
+    LICENSE_KEY,
+} = process.env;
 
 const basicAuth = (username: string, password: string) => 'Basic ' + Buffer.from(username + ':' + password).toString('base64');
 
@@ -942,10 +963,13 @@ export const data = {
             addToCart: '?wc-ajax=add_to_cart',
             applyCoupon: '?wc-ajax=apply_coupon',
             removeCoupon: '?wc-ajax=remove_coupon',
+            refreshedFragment: '?wc-ajax=get_refreshed_fragments',
             placeOrder: '?wc-ajax=checkout',
             billingAddress: 'my-account/edit-address/billing',
             shippingAddress: 'my-account/edit-address/shipping',
+            editAddress: 'my-account/edit-address',
             shippingAddressCheckout: 'wc-ajax=update_order_review',
+            bookedDayBlockes: '?wc-ajax=wc_bookings_find_booked_day_blocks',
             editAccountCustomer: 'my-account/edit-account',
             becomeVendor: 'my-account/account-migration',
             productDetails: (productName: string) => `product/${productName}`,
@@ -1476,7 +1500,9 @@ export const data = {
     customer: {
         username: CUSTOMER,
         password: USER_PASSWORD,
-        lastname: `${CUSTOMER} ln`,
+        lastname: 'ln',
+        fullname: `${CUSTOMER} c1`,
+        email: `${CUSTOMER}@email.com`,
 
         customer2: {
             username: CUSTOMER2,
@@ -1919,8 +1945,9 @@ export const data = {
 
     // dokan settings
     dokanSettings: {
-        // General Settings
+        // general settings
         general: {
+            settingTitle: 'General Settings',
             vendorStoreUrl: 'store',
             setupWizardMessage: "Thank you for choosing The Marketplace to power your online store! This quick setup wizard will help you configure the basic settings. It's completely optional and shouldn't take longer than two minutes.",
             sellingProductTypes: 'both', // 'both', 'physical', 'digital'
@@ -1929,7 +1956,7 @@ export const data = {
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
 
-        // Selling Options Settings
+        // selling options settings
         selling: {
             settingTitle: 'Selling Option Settings',
             commission: {
@@ -1949,8 +1976,9 @@ export const data = {
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
 
-        // Withdraw
+        // withdraw
         withdraw: {
+            settingTitle: 'Withdraw Settings',
             customMethodName: 'Bksh',
             customMethodType: 'Phone',
             charge: {
@@ -1972,16 +2000,18 @@ export const data = {
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
 
-        // Reverse withdraw
+        // reverse withdraw
         reverseWithdraw: {
+            settingTitle: 'Reverse Withdrawal Settings',
             billingType: 'by_amount', // 'by_month'
             reverseBalanceThreshold: '21',
             gracePeriod: '7',
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
 
-        // Pages
+        // pages
         page: {
+            settingTitle: 'Site and Store Page Settings',
             dashboard: 'Dashboard',
             myOrders: 'My Orders',
             storeListing: 'Store List',
@@ -1989,8 +2019,9 @@ export const data = {
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
 
-        // Appearance
+        // appearance
         appearance: {
+            settingTitle: 'Appearance Settings',
             mapApiSource: 'google_maps', // 'google_maps', 'mapbox'
             googleMapApiKey: GMAP,
             mapBoxApiKey: MAPBOX,
@@ -1999,8 +2030,15 @@ export const data = {
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
 
+        // menuManager
+        menuManager: {
+            settingTitle: 'Menu Manager Settings',
+            saveSuccessMessage: 'Setting has been saved successfully.',
+        },
+
         // privacy policy
         privacyPolicy: {
+            settingTitle: 'Privacy Settings',
             privacyPage: '2', // '2', '3', '4', '5', '6', '7', '8', '9', '10'
             privacyPolicyContent: 'Your personal data will be used to support your experience throughout this website, to manage access to your account, and for other purposes described in our [dokan_privacy_policy]',
             saveSuccessMessage: 'Setting has been saved successfully.',
@@ -2008,6 +2046,7 @@ export const data = {
 
         // colors
         colors: {
+            settingTitle: 'Colors Settings',
             paletteChoice: 'pre-defined',
             colorPalette: 'default',
             predefinedPalette: {
@@ -2075,24 +2114,28 @@ export const data = {
 
         // shipping status
         shippingStatus: {
+            settingTitle: 'Shipping Status Settings',
             customShippingStatus: 'Test shipping status',
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
 
         // quote
         quote: {
+            settingTitle: 'Quote Settings',
             decreaseOfferedPrice: '0',
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
 
         // live search
         liveSearch: {
+            settingTitle: 'Live Search Settings',
             liveSearchOption: 'suggestion_box', // suggestion_box, old_live_search
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
 
         // Store support
         storeSupport: {
+            settingTitle: 'Store Support Settings',
             displayOnSingleProductPage: 'above_tab', // 'above_tab', 'inside_tab', 'dont_show'
             supportButtonLabel: 'Get Support',
             saveSuccessMessage: 'Setting has been saved successfully.',
@@ -2100,6 +2143,7 @@ export const data = {
 
         // Vendor Verification
         vendorVerification: {
+            settingTitle: 'Vendor Verification Settings',
             verifiedIcons: {
                 circleSolid: 'check_circle_solid',
                 circleRegular: 'check_circle_regular',
@@ -2151,6 +2195,7 @@ export const data = {
 
         // Email verification
         emailVerification: {
+            settingTitle: 'Email Verification Settings',
             registrationNotice: 'Please check your email and complete email verification to login.',
             loginNotice: 'Please check your email and complete email verification to login.',
             saveSuccessMessage: 'Setting has been saved successfully.',
@@ -2158,6 +2203,7 @@ export const data = {
 
         // Rma Settings
         rma: {
+            settingTitle: 'RMA Settings',
             orderStatus: 'wc-processing', // 'wc-pending', 'wc-processing', 'wc-on-hold', 'wc-completed', 'wc-cancelled', 'wc-refunded', 'wc-failed'
             rmaReasons: ['Defective', 'Wrong Product', 'Other'],
             refundPolicyHtmlBody: 'Refund Policy',
@@ -2166,17 +2212,20 @@ export const data = {
 
         // Wholesale
         wholesale: {
+            settingTitle: 'Wholesale Settings',
             whoCanSeeWholesalePrice: 'all', // 'all', 'wholesale_customer'
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
 
         // EuCompliance
         euCompliance: {
+            settingTitle: 'EU Compliance Settings',
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
 
         // delivery time
         deliveryTime: {
+            settingTitle: 'Delivery Time Settings',
             deliveryDateLabel: 'Delivery Date',
             deliveryBlockedBuffer: '0',
             deliveryBoxInfo: 'This store needs %DAY% day(s) to process your delivery request',
@@ -2191,6 +2240,7 @@ export const data = {
 
         // Product advertising
         productAdvertising: {
+            settingTitle: 'Product Advertisement Settings',
             noOfAvailableSlot: '100',
             expireAfterDays: '10',
             advertisementCost: '15',
@@ -2199,6 +2249,7 @@ export const data = {
 
         // Geolocation Settings
         geolocation: {
+            settingTitle: 'Geolocation Settings',
             locationMapPosition: 'top', // 'top', 'left', 'right'
             showMap: 'all', // 'all', 'store_listing', 'shop'
             radiusSearchUnit: 'km', // 'km', 'miles'
@@ -2211,12 +2262,14 @@ export const data = {
 
         // Product report abuse
         productReportAbuse: {
+            settingTitle: 'Product Report Abuse Settings',
             reasonsForAbuseReport: 'This product is fake',
             saveSuccessMessage: 'Setting has been saved successfully.',
         },
 
         // Spmv Settings
         spmv: {
+            settingTitle: 'SPMV Settings',
             sellItemButtonText: 'Sell This Item',
             availableVendorDisplayAreaTitle: 'Other Available Vendor',
             availableVendorSectionDisplayPosition: 'below_tabs', // 'below_tabs', 'inside_tabs', 'after_tabs'
@@ -2226,6 +2279,7 @@ export const data = {
 
         // Vendor Subscription Settings
         vendorSubscription: {
+            settingTitle: 'Vendor Subscription Settings',
             displayPage: 'Sample Page', // '2', '4', '5', '6', '8', '9', '10', '11', '15', '-1'
             noOfDays: '2',
             productStatus: 'draft', // 'publish', 'pending', 'draft'
@@ -2285,7 +2339,7 @@ export const data = {
 
     bookings: {
         startDate: new Date(),
-        endDate: helpers.futureDate(new Date(), 5), // future date must be less than maximum duration
+        endDate: helpers.futureDate(new Date(), 1), // future date must be less than maximum duration
     },
 
     uniqueId: {
@@ -2470,6 +2524,7 @@ export const data = {
         cloneBasicAuth: (path: string) => `cd ${path} && git clone https://github.com/WP-API/Basic-Auth.git`,
         cloneDokanLite: (path: string) => `cd ${path} && git clone -b develop https://github.com/getdokan/dokan.git`,
         cloneDokanPro: (path: string) => `cd ${path} && git clone -b test_utils https://github.com/getdokan/dokan-pro.git`,
+        checkoutToDevelop: (path: string) => `cd ${path} && git checkout develop`,
         buildPlugin: (path: string) => `cd ${path} && composer i --no-dev && composer du -o && npm i && npm run build`,
     },
 
