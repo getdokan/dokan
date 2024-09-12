@@ -1,11 +1,6 @@
 import { BasePage } from '@pages/basePage';
-import { Page } from '@playwright/test';
 
 export default class DokanModulesPage extends BasePage {
-    constructor(page: Page) {
-        super(page);
-    }
-
     searchInputField() {
         return this.page.locator('//div[@class="search-box"]/input');
     }

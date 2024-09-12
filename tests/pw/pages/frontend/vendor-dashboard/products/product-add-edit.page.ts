@@ -1,11 +1,6 @@
 import { BasePage } from '@pages/basePage';
-import { Page } from '@playwright/test';
 
 export default class VendorProductAddEditPage extends BasePage {
-    constructor(page: Page) {
-        super(page);
-    }
-
     simpleProductMinQtyInputField() {
         return this.page.locator('#dokan_simple_product_min_quantity');
     }

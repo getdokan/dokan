@@ -1,11 +1,6 @@
 import { BasePage } from '@pages/basePage';
-import { Page } from '@playwright/test';
 
 export default class MyAccountAuthPage extends BasePage {
-    constructor(page: Page) {
-        super(page);
-    }
-
     usernameInputField() {
         return this.page.locator('#username');
     }

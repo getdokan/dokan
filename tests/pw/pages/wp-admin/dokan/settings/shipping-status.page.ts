@@ -1,11 +1,6 @@
 import { BasePage } from '@pages/basePage';
-import { Page } from '@playwright/test';
 
 export default class DokanShippingStatusPage extends BasePage {
-    constructor(page: Page) {
-        super(page);
-    }
-
     shippingStatusTab() {
         return this.page.locator('//div[@class="nav-title"][text()="Shipping Status"]');
     }

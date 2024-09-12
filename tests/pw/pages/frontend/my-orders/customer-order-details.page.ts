@@ -1,11 +1,6 @@
 import { BasePage } from '@pages/basePage';
-import { Page } from '@playwright/test';
 
 export default class CustomerOrderDetailsPage extends BasePage {
-    constructor(page: Page) {
-        super(page);
-    }
-
     orderReceivedButtonByShipmentNumber(shipmentNumber: string) {
         return this.page.locator(`//h4[@class="shippments-tracking-title"]/strong[text()="Shipment ${shipmentNumber} "]/../../div[1]/strong[@class="customer-status"]`);
     }

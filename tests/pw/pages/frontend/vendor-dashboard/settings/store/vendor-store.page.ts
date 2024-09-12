@@ -1,11 +1,6 @@
 import { BasePage } from '@pages/basePage';
-import { Page } from '@playwright/test';
 
 export default class VendorStoreSettingsPage extends BasePage {
-    constructor(page: Page) {
-        super(page);
-    }
-
     minimumOrderAmountInputField() {
         return this.page.locator('#min_amount_to_order');
     }

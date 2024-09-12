@@ -1,11 +1,6 @@
 import { BasePage } from '@pages/basePage';
-import { Page } from '@playwright/test';
 
 export default class VendorEditOrderPage extends BasePage {
-    constructor(page: Page) {
-        super(page);
-    }
-
     createNewShipmentButton() {
         return this.page.locator('#create-tracking-status-action');
     }
