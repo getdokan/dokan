@@ -1,4 +1,4 @@
-import { Page, expect } from '@playwright/test';
+import { Page } from '@playwright/test';
 import { AdminPage } from '@pages/adminPage';
 import { selector } from '@pages/selectors';
 import { data } from '@utils/testData';
@@ -223,9 +223,9 @@ export class StoresPage extends AdminPage {
     // search vendor
     async searchVendor(vendorName: string, neg: boolean = false) {
         await this.goIfNotThere(data.subUrls.backend.dokan.vendors);
-
         await this.clearInputField(vendors.search);
         await this.typeAndWaitForResponseAndLoadState(data.subUrls.api.dokan.stores, vendors.search, vendorName);
+        await this.toHaveCount(vendors.numberOfRows, 1);
         await this.toBeVisible(vendors.vendorCell(vendorName));
 
         // negative scenario
@@ -257,23 +257,25 @@ export class StoresPage extends AdminPage {
     async viewVendor(vendorName: string, action: string) {
         await this.searchVendor(vendorName);
 
+        await this.removeAttribute(vendors.vendorRowActions(vendorName), 'class'); // forcing the row actions to be visible, to avoid flakiness
         await this.hover(vendors.vendorRow(vendorName));
 
         switch (action) {
             case 'products':
                 await this.clickAndWaitForLoadState(vendors.vendorProducts(vendorName));
+                await this.notToHaveText(selector.admin.products.numberOfRowsFound, '0 items');
+                await this.notToBeVisible(selector.admin.products.noRowsFound);
                 break;
 
             case 'orders':
                 await this.clickAndWaitForLoadState(vendors.vendorOrders(vendorName));
+                await this.notToHaveText(selector.admin.wooCommerce.orders.numberOfRowsFound, '0 items');
+                await this.notToBeVisible(selector.admin.wooCommerce.orders.noRowsFound);
                 break;
 
             default:
                 break;
         }
-
-        const count = (await this.getElementText(vendors.numberOfRowsFound))?.split(' ')[0];
-        expect(Number(count)).toBeGreaterThan(0);
     }
 
     // vendor bulk action

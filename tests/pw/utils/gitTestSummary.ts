@@ -54,7 +54,7 @@ const addList = core => {
     core.summary.clear();
     const pluginDetails = core.summary.addDetails('Plugins: ', pluginList).stringify();
     core.summary.clear();
-    return core.summary.addList([envInfo.wpVersion, envInfo.phpVersion, envInfo.mysqlVersion, String(envInfo.wpDebugMode), envInfo.theme, pluginDetails]).stringify();
+    return core.summary.addList([envInfo.os, envInfo.browser, envInfo.wpVersion, envInfo.phpVersion, envInfo.mysqlVersion, String(envInfo.wpDebugMode), envInfo.theme, pluginDetails]).stringify();
 };
 
 const addSummaryFooter = (core, list) => {

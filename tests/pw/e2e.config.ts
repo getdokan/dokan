@@ -98,11 +98,14 @@ export default defineConfig({
             fullPage: true,
         },
         /* Record video only when retrying a test for the first time. */
-        video: 'on-first-retry',
+        video: DOKAN_PRO ? 'off' : 'on-first-retry', // to reduce artifacts size in CI for dokan-pro
         /* Size of viewport */
         // viewport: { width: 1420, height: 900 }, // default 1280x720
         /* whether to slow down test execution by provided seconds */
-        launchOptions: { slowMo: (SLOWMO ?? 0) * 1000 },
+        launchOptions: {
+            slowMo: (SLOWMO ?? 0) * 1000,
+            // devtools: true,
+        },
     },
 
     projects: [

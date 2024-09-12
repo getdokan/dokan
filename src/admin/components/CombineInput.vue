@@ -42,65 +42,72 @@
 <script>
 import Debounce from "debounce";
 
-export default {
-  name: "CombineInput",
-  props: {
-    fixedId: {
-      type: String,
-      default: "fixed-val-id"
-    },
-    percentageId: {
-      type: String,
-      default: "percentage-val-id"
-    },
-    fixexName: {
-      type: String,
-      default: "fixed-val-name"
-    },
-    percentageName: {
-      type: String,
-      default: "percentage-val-name"
-    },
-    value: {
-      type: Object,
-      default: {
-        fixed: '',
-        percentage: ''
-      }
-    }
-  },
-  data() {
-    return {
-      fixed: this.value.fixed ?? '',
-      percentage: this.value.percentage ?? ''
-    };
-  },
-  watch: {
-    value: {
-      handler(newVal, oldVal) {
-        this.fixed = newVal.fixed;
-        this.percentage = newVal.percentage;
-      },
-      deep: true
-    }
-  },
-  methods: {
-    onInput: Debounce(function() {
-      let self = this,
-        data = {
-          fixed: self.fixed,
-          percentage: self.percentage
-        };
+    export default {
+        name: 'CombineInput',
+        props: {
+            fixedId: {
+                type: String,
+                default: 'fixed-val-id'
+            },
+            percentageId: {
+                type: String,
+                default: 'percentage-val-id'
+            },
+            fixexName: {
+                type: String,
+                default: 'fixed-val-name'
+            },
+            percentageName: {
+                type: String,
+                default: 'percentage-val-name'
+            },
+            value: {
+                type: Object,
+                default: {
+                    fixed: '',
+                    percentage: ''
+                }
+            },
+        },
+        data() {
+            return {
+                fixed: this.formatPositiveValue( this.value.fixed ) ?? '',
+                percentage: this.formatPositiveValue( this.value.percentage ) ?? ''
+            };
+        },
+        watch: {
+            value: {
+                handler(newVal, oldVal) {
+                    this.fixed = this.formatPositiveValue( newVal.fixed );
+                    this.percentage = this.formatPositiveValue( newVal.percentage );
+                },
+                deep: true
+            }
+        },
+        methods: {
+            onInput: Debounce( function() {
+                let self = this,
+                    data = {
+                        fixed: self.fixed,
+                        percentage: self.percentage
+                    };
 
-      this.$emit("change", data);
-    }, 500)
-  },
-  computed: {
-    getCurrencySymbol() {
-      return window.dokan.currency.symbol;
-    }
-  }
-};
+                this.$emit('change', data);
+            }, 500 ),
+            formatPositiveValue: ( value ) => {
+                if ( isNaN( value ) ) {
+                    return '';
+                }
+
+                return accounting.formatNumber( value, dokan.currency.precision, dokan.currency.thousand, dokan.currency.decimal );
+            },
+        },
+        computed:{
+            getCurrencySymbol() {
+                return window.dokan.currency.symbol;
+            }
+        }
+    };
 </script>
 
 <style scoped lang="less">

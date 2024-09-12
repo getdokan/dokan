@@ -57,7 +57,7 @@ export const dbData = {
             enabled_address_on_reg: 'off',
             enable_tc_on_reg: 'on',
             enable_single_seller_mode: 'off',
-            store_category_type: 'multiple', // none, multiple
+            store_category_type: 'single', // none, single, multiple
 
             // product page settings
             product_page_options: '',
@@ -118,11 +118,6 @@ export const dbData = {
                 'order-discount': 'order-discount',
                 'product-discount': 'product-discount',
             },
-
-            // min max settings
-            min_max_sub_section: '',
-            enable_min_max_quantity: 'on',
-            enable_min_max_amount: 'on',
 
             // catalog mode
             catalog_mode_settings: '',

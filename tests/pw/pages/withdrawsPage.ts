@@ -33,7 +33,7 @@ export class WithdrawsPage extends AdminPage {
         await this.multipleElementVisible(withdrawsAdmin.bulkActions);
 
         // filter elements are visible
-        const { filterInput, clearFilter, result, ...filters } = withdrawsAdmin.filters;
+        const { filterInput, clearFilter, result, filteredResult, ...filters } = withdrawsAdmin.filters;
         await this.multipleElementVisible(filters);
 
         // withdraw table elements are visible
@@ -43,7 +43,6 @@ export class WithdrawsPage extends AdminPage {
     // filter withdraws
     async filterWithdraws(input: string, action: string): Promise<void> {
         await this.goto(data.subUrls.backend.dokan.withdraw);
-        await this.click(withdrawsAdmin.filters.clearFilter);
 
         switch (action) {
             case 'by-status': {
@@ -54,12 +53,13 @@ export class WithdrawsPage extends AdminPage {
             case 'by-vendor':
                 await this.click(withdrawsAdmin.filters.filterByVendor);
                 await this.typeAndWaitForResponse(data.subUrls.api.dokan.stores, withdrawsAdmin.filters.filterInput, input);
-                await this.pressAndWaitForResponse(data.subUrls.api.dokan.withdraws, data.key.enter);
+                await this.clickAndWaitForResponse(data.subUrls.api.dokan.withdraws, withdrawsAdmin.filters.filteredResult(input));
                 break;
 
             case 'by-payment-method':
                 // add toPass to remove flakyness
                 await this.toPass(async () => {
+                    await this.reload(); // todo: need to resolve this
                     await this.click(withdrawsAdmin.filters.filterByPaymentMethods);
                     await this.clearAndType(withdrawsAdmin.filters.filterInput, input);
                     await this.toContainText(withdrawsAdmin.filters.result, input);
@@ -70,7 +70,11 @@ export class WithdrawsPage extends AdminPage {
             default:
                 break;
         }
+        await this.notToHaveText(withdrawsAdmin.numberOfRowsFound, '0 items'); // todo: add assertions to all filter tests like
         await this.notToBeVisible(withdrawsAdmin.noRowsFound);
+
+        // clear filter
+        await this.click(withdrawsAdmin.filters.clearFilter); // todo: add clear filter in bottom of every filter tests
     }
 
     // export withdraws

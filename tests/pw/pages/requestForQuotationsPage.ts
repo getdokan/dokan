@@ -207,18 +207,21 @@ export class RequestForQuotationsPage extends AdminPage {
         switch (action) {
             case 'trash':
                 await this.clickAndWaitForResponse(data.subUrls.api.dokan.quotes, requestForQuotationAdmin.quotesList.navTabs.pending);
+                await this.toBeVisible(requestForQuotationAdmin.quotesList.quoteCell(quoteTitle));
                 await this.hover(requestForQuotationAdmin.quotesList.quoteCell(quoteTitle));
                 await this.clickAndWaitForResponse(data.subUrls.api.dokan.quotes, requestForQuotationAdmin.quotesList.quoteTrash(quoteTitle));
                 break;
 
             case 'permanently-delete':
                 await this.clickAndWaitForResponse(data.subUrls.api.dokan.quotes, requestForQuotationAdmin.quotesList.navTabs.trash);
+                await this.toBeVisible(requestForQuotationAdmin.quotesList.quoteCell(quoteTitle));
                 await this.hover(requestForQuotationAdmin.quotesList.quoteCell(quoteTitle));
                 await this.clickAndWaitForResponse(data.subUrls.api.dokan.quotes, requestForQuotationAdmin.quotesList.quotePermanentlyDelete(quoteTitle));
                 break;
 
             case 'restore':
                 await this.clickAndWaitForResponse(data.subUrls.api.dokan.quotes, requestForQuotationAdmin.quotesList.navTabs.trash);
+                await this.toBeVisible(requestForQuotationAdmin.quotesList.quoteCell(quoteTitle));
                 await this.hover(requestForQuotationAdmin.quotesList.quoteCell(quoteTitle));
                 await this.clickAndWaitForResponse(data.subUrls.api.dokan.quotes, requestForQuotationAdmin.quotesList.quoteRestore(quoteTitle));
                 break;

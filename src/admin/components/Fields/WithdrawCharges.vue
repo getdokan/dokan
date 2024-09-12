@@ -91,12 +91,12 @@ export default {
                 data.percentage = fixedCommission.percentage ?? '';
             }
 
-            let positiveValue = this.unFormatValue(data);
-            let formatedData = this.formatPositiveValue( positiveValue );
+            // let positiveValue = this.unFormatValue(data);
+            // let formatedData = this.formatPositiveValue( positiveValue );
 
             this.fieldValue[ this.fieldData.name ][ field ] = dokan.hooks.applyFilters(
               'dokanFieldComponentInputValue',
-              formatedData,
+              this.unFormatValue(data),
               this.fieldValue[ this.fieldData.name ][ field ],
               this.fieldData.name,
               this.fieldData.is_lite ?? false

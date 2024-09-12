@@ -1,4 +1,4 @@
-import { Page } from '@playwright/test';
+import { expect, Page } from '@playwright/test';
 import { AdminPage } from '@pages/adminPage';
 import { selector } from '@pages/selectors';
 import { data } from '@utils/testData';
@@ -12,6 +12,17 @@ const settingsAdmin = selector.admin.dokan.settings;
 export class SettingsPage extends AdminPage {
     constructor(page: Page) {
         super(page);
+    }
+
+    // navigation
+
+    async goToSingleDokanSettings(settingMenu: string, settingTitle: string) {
+        await this.toPass(async () => {
+            await this.goto(data.subUrls.backend.dokan.settings);
+            await this.reload(); //todo: need to resolve: page doesn't reload for having # (fragment identifier) in the url
+            await this.click(settingMenu);
+            await this.toContainText(settingsAdmin.settingTitle, settingTitle, { timeout: 3000 });
+        });
     }
 
     // settings
@@ -48,8 +59,17 @@ export class SettingsPage extends AdminPage {
     // scroll to top settings
     async scrollToTopSettings() {
         await this.goto(data.subUrls.backend.dokan.settings);
-        await this.scrollToBottom();
-        await this.toBeVisible(settingsAdmin.backToTop);
+        // topass is used to avoid flakyness
+        await this.toPass(async () => {
+            await this.scrollToBottom();
+            const isBackToTopVisible = await this.isVisible(settingsAdmin.backToTop, 1);
+            if (!isBackToTopVisible) {
+                await this.scrollToTop();
+            }
+            // eslint-disable-next-line playwright/prefer-web-first-assertions
+            expect(isBackToTopVisible).toBeTruthy();
+        });
+
         await this.click(settingsAdmin.backToTop);
         await this.toBeVisible(settingsAdmin.search.searchBox);
     }
@@ -88,8 +108,7 @@ export class SettingsPage extends AdminPage {
 
     // admin set dokan selling settings
     async setDokanSellingSettings(selling: dokanSettings['selling']) {
-        await this.goToDokanSettings();
-        await this.click(settingsAdmin.menus.sellingOptions);
+        await this.goToSingleDokanSettings(settingsAdmin.menus.sellingOptions, selling.settingTitle);
 
         // commission settings
         await this.selectByValue(settingsAdmin.selling.commissionType, selling.commission.commissionType);
@@ -114,8 +133,6 @@ export class SettingsPage extends AdminPage {
             await this.enableSwitcher(settingsAdmin.selling.vendorProductReviewStatusChange);
             await this.enableSwitcher(settingsAdmin.selling.guestProductEnquiry);
             await this.enableSwitcher(settingsAdmin.selling.newVendorEnableAuction); // todo: add condition for simple auction plugin enabled
-            await this.enableSwitcher(settingsAdmin.selling.enableMinMaxQuantities);
-            await this.enableSwitcher(settingsAdmin.selling.enableMinMaxAmount);
         }
 
         // catalog mode
@@ -251,6 +268,48 @@ export class SettingsPage extends AdminPage {
         // save settings
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.appearance.appearanceSaveChanges);
         await this.toHaveValue(settingsAdmin.appearance.googleMapApiKey, appearance.googleMapApiKey);
+    }
+
+    // Admin Set Dokan MenuManager Settings
+    async setDokanMenuManagerSettings(menuManager: dokanSettings['menuManager']) {
+        await this.goToDokanSettings();
+        await this.click(settingsAdmin.menus.menuManager);
+
+        const menus = [
+            'Products',
+            'Orders',
+            'Request Quotes',
+            'Coupons',
+            'Reports',
+            'Delivery Time',
+            'Reviews',
+            'Withdraw',
+            'Reverse Withdrawal',
+            'Badge',
+            'Product Q&A',
+            'Return Request',
+            'Staff',
+            'Followers',
+            // 'Subscription',
+            'Booking',
+            'Announcements',
+            'Analytics',
+            'Tools',
+            'Auction',
+            'Support',
+        ];
+
+        // menumanager Settings
+        for (const menu of menus) {
+            await this.enableSwitcher(settingsAdmin.menuManager.menuSwitcher(menu));
+        }
+
+        // save settings
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.menuManager.menuManagerSaveChanges);
+
+        for (const menu of menus) {
+            await this.toHaveBackgroundColor(settingsAdmin.menuManager.menuSwitcher(menu) + '//span', 'rgb(0, 144, 255)');
+        }
     }
 
     // Admin Set Dokan Privacy Policy Settings
