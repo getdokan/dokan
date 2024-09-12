@@ -103,11 +103,6 @@ test.describe.only('Order Min-Max - Single Product Page', () => {
     });
 
     test('Adding more product than max quantity limit displays error in single product page', { tag: ['@lite', '@admin'] }, async () => {
-        // await vendorPage.goto(baseUrl + '/dashboard/');
-        // await vendorMyAccountAuthPage.enterUsername(vendorEmail);
-        // await vendorMyAccountAuthPage.enterPassword(process.env.USER_PASSWORD);
-        // await vendorMyAccountAuthPage.clickOnLoginButton();
-
         await vendorDashboardSidebarPage.clickOnProductsTab();
         await vendorProductListPage.clickOnProductWithTitle(productName);
 
@@ -116,11 +111,6 @@ test.describe.only('Order Min-Max - Single Product Page', () => {
         await vendorProductAddEditPage.enterSimpleProductMaxQty(maxQuantity);
         await vendorProductAddEditPage.selectProductStatus('publish');
         await vendorProductAddEditPage.clickOnSaveProduct();
-
-        // await customerPage.goto(baseUrl + '/my-account/');
-        // await customerMyAccountAuthPage.enterUsername(customerEmail);
-        // await customerMyAccountAuthPage.enterPassword(process.env.USER_PASSWORD);
-        // await customerMyAccountAuthPage.clickOnLoginButton();
 
         await customerPage.goto(baseUrl + '/shop/');
         await shopPage.clickOnProductWithTitle(productName);
@@ -135,11 +125,6 @@ test.describe.only('Order Min-Max - Single Product Page', () => {
     });
 
     test('Error displayed in single product page if added product exceeds maximum allowed amount', { tag: ['@lite', '@admin'] }, async () => {
-        // await vendorPage.goto(baseUrl + '/dashboard/');
-        // await vendorMyAccountAuthPage.enterUsername(vendorEmail);
-        // await vendorMyAccountAuthPage.enterPassword(process.env.USER_PASSWORD);
-        // await vendorMyAccountAuthPage.clickOnLoginButton();
-
         await vendorDashboardSidebarPage.clickOnProductsTab();
         await vendorProductListPage.clickOnProductWithTitle(productName);
 
@@ -151,11 +136,6 @@ test.describe.only('Order Min-Max - Single Product Page', () => {
         await vendorDashboardSidebarPage.clickOnSettingsTab();
         await storeSettingsPage.enterMaximumOrderAmount(maxAmount);
         await storeSettingsPage.clickOnUpdateSettingsButton();
-
-        // await customerPage.goto(baseUrl + '/my-account/');
-        // await customerMyAccountAuthPage.enterUsername(customerEmail);
-        // await customerMyAccountAuthPage.enterPassword(process.env.USER_PASSWORD);
-        // await customerMyAccountAuthPage.clickOnLoginButton();
 
         await customerPage.goto(baseUrl + '/shop/');
         await shopPage.clickOnProductWithTitle(productName);
