@@ -11,6 +11,8 @@ import VendorProductAddEditPage from '@pages/frontend/vendor-dashboard/products/
 import ShopPage from '@pages/frontend/shop/shop.page';
 import SingleProductPage from '@pages/frontend/shop/single-product.page';
 import VendorStoreSettingsPage from '@pages/frontend/vendor-dashboard/settings/store/vendor-store.page';
+import CartPage from '@pages/frontend/cart.page';
+import StorefrontMainMenu from '@pages/frontend/navigation/main-menu.page';
 
 let baseUrl: string;
 let api: ApiUtils;
@@ -31,11 +33,13 @@ let customerPage: Page;
 let customerMyAccountAuthPage: MyAccountAuthPage;
 let shopPage: ShopPage;
 let singleProductPage: SingleProductPage;
+let cartPage: CartPage;
+let storefrontMainMenu: StorefrontMainMenu;
 
 let vendorBrowser: Browser;
 let customerBrowser: Browser;
 
-test.describe('Order Min-Max - Single Product Page', () => {
+test.describe.only('Order Min-Max - Cart Page', () => {
     test.beforeEach(async ({ page, request }, testInfo) => {
         baseUrl = testInfo.project.use.baseURL as string;
         await page.goto(baseUrl);
@@ -52,10 +56,10 @@ test.describe('Order Min-Max - Single Product Page', () => {
         storeName = vendor[0]['store_name'];
 
         // // create product
-        const productTitle = `Automation Simple Product ${vendorId}${randomstring.generate(5)}`;
+        const title = `Automation Simple Product ${vendorId}${randomstring.generate(5)}`;
         const product = await api.createProduct(
             {
-                name: productTitle,
+                name: title,
                 type: 'simple',
                 regular_price: '10',
                 status: 'publish',
@@ -83,6 +87,8 @@ test.describe('Order Min-Max - Single Product Page', () => {
         customerMyAccountAuthPage = new MyAccountAuthPage(customerPage);
         shopPage = new ShopPage(customerPage);
         singleProductPage = new SingleProductPage(customerPage);
+        cartPage = new CartPage(customerPage);
+        storefrontMainMenu = new StorefrontMainMenu(customerPage);
 
         // vendor login
         await vendorPage.goto(baseUrl + '/dashboard/');
@@ -102,50 +108,97 @@ test.describe('Order Min-Max - Single Product Page', () => {
         await customerBrowser.close();
     });
 
-    test('Adding more product than max quantity limit displays error in single product page', { tag: ['@lite', '@admin'] }, async () => {
+    test('Product quantity should not be more than maximum limit', { tag: ['@lite', '@admin'] }, async () => {
+        // vendor
         await vendorDashboardSidebarPage.clickOnProductsTab();
         await vendorProductListPage.clickOnProductWithTitle(productName);
-
-        const maxQuantity = '2';
-
-        await vendorProductAddEditPage.enterSimpleProductMaxQty(maxQuantity);
+        await vendorProductAddEditPage.enterSimpleProductMaxQty('4');
         await vendorProductAddEditPage.selectProductStatus('publish');
         await vendorProductAddEditPage.clickOnSaveProduct();
 
+        // customer
         await customerPage.goto(baseUrl + '/shop/');
         await shopPage.clickOnProductWithTitle(productName);
         await singleProductPage.clickOnAddToCartButton();
-        await singleProductPage.clickOnAddToCartButton();
-        await singleProductPage.clickOnAddToCartButton();
+        await customerPage.goto(baseUrl + '/cart/');
+        await cartPage.enterQuantityValue(productName, '5');
+        await cartPage.clickOnUpdateCartButton();
 
-        const errorMessage = await singleProductPage.errorMessageElement().allInnerTexts();
-        const expectedErrorMessage = `Maximum allowed quantity for ${productName} is ${maxQuantity}.`;
+        const quantityErrorMessage = await cartPage.quantityErrorElement().textContent();
+        const woocommerceError = await cartPage.woocommerceErrorMessage().textContent();
 
-        expect(errorMessage[0]).toEqual(expectedErrorMessage);
+        expect(quantityErrorMessage?.includes(`Maximum 4 allowed`)).toBeTruthy();
+        expect(woocommerceError?.includes(`Maximum allowed quantity for ${productName} is 4.`)).toBeTruthy();
     });
 
-    test('Error displayed in single product page if added product exceeds maximum allowed amount', { tag: ['@lite', '@admin'] }, async () => {
+    test('Product quantity should not be less than minimum limit', { tag: ['@lite', '@admin'] }, async () => {
+        // vendor
         await vendorDashboardSidebarPage.clickOnProductsTab();
         await vendorProductListPage.clickOnProductWithTitle(productName);
-
+        await vendorProductAddEditPage.enterSimpleProductMinQty('3');
         await vendorProductAddEditPage.selectProductStatus('publish');
         await vendorProductAddEditPage.clickOnSaveProduct();
 
-        const maxAmount = '20';
-
-        await vendorDashboardSidebarPage.clickOnSettingsTab();
-        await storeSettingsPage.enterMaximumOrderAmount(maxAmount);
-        await storeSettingsPage.clickOnUpdateSettingsButton();
-
+        // customer
         await customerPage.goto(baseUrl + '/shop/');
         await shopPage.clickOnProductWithTitle(productName);
         await singleProductPage.clickOnAddToCartButton();
-        await singleProductPage.clickOnAddToCartButton();
-        await singleProductPage.clickOnAddToCartButton();
+        await customerPage.goto(baseUrl + '/cart/');
+        await cartPage.enterQuantityValue(productName, '2');
+        await cartPage.clickOnUpdateCartButton();
 
-        const errorMessage = await singleProductPage.errorMessageElement().allInnerTexts();
-        const expectedErrorMessage = `Maximum allowed cart amount for ${storeName} is $${maxAmount}.00. You currently have $20.00 in cart.`;
+        const quantityErrorMessage = await cartPage.quantityErrorElement().textContent();
+        const woocommerceError = await cartPage.woocommerceErrorMessage().textContent();
 
-        expect(errorMessage[0]).toEqual(expectedErrorMessage);
+        expect(quantityErrorMessage?.includes(`Minimum 3 required`)).toBeTruthy();
+        expect(woocommerceError?.includes(`Minimum required quantity for ${productName} is 3.`)).toBeTruthy();
+    });
+
+    test('Cart total should not be more than maximum amount limit', { tag: ['@lite', '@admin'] }, async () => {
+        // vendor
+        await vendorDashboardSidebarPage.clickOnProductsTab();
+        await vendorProductListPage.clickOnProductWithTitle(productName);
+        await vendorProductAddEditPage.selectProductStatus('publish');
+        await vendorProductAddEditPage.clickOnSaveProduct();
+
+        await vendorDashboardSidebarPage.clickOnSettingsTab();
+        await storeSettingsPage.enterMaximumOrderAmount('30');
+        await storeSettingsPage.clickOnUpdateSettingsButton();
+
+        // customer
+        await customerPage.goto(baseUrl + '/shop/');
+        await shopPage.clickOnProductWithTitle(productName);
+        await singleProductPage.clickOnAddToCartButton();
+        await customerPage.goto(baseUrl + '/cart/');
+        await cartPage.enterQuantityValue(productName, '4');
+        await cartPage.clickOnUpdateCartButton();
+
+        const woocommerceError = await cartPage.woocommerceErrorMessage().textContent();
+
+        expect(woocommerceError?.trim()).toEqual(`Maximum allowed cart amount for ${storeName} is $30.00. You currently have $40.00 in cart.`);
+    });
+
+    test.only('Cart total should not be less than minimum amount limit', { tag: ['@lite', '@admin'] }, async () => {
+        // vendor
+        await vendorDashboardSidebarPage.clickOnProductsTab();
+        await vendorProductListPage.clickOnProductWithTitle(productName);
+        await vendorProductAddEditPage.selectProductStatus('publish');
+        await vendorProductAddEditPage.clickOnSaveProduct();
+
+        await vendorDashboardSidebarPage.clickOnSettingsTab();
+        await storeSettingsPage.enterMinimumOrderAmount('30');
+        await storeSettingsPage.clickOnUpdateSettingsButton();
+
+        // customer
+        await customerPage.goto(baseUrl + '/shop/');
+        await shopPage.clickOnProductWithTitle(productName);
+        await singleProductPage.enterQuantityValue(productName, '2');
+        await singleProductPage.clickOnAddToCartButton();
+        await customerPage.goto(baseUrl + '/cart/');
+        await storefrontMainMenu.clickOnCartContentLink();
+
+        const woocommerceError = await cartPage.woocommerceErrorMessage().textContent();
+
+        expect(woocommerceError?.trim()).toEqual(`Minimum required cart amount for ${storeName} is $30.00. You currently have $20.00 in cart.`);
     });
 });
