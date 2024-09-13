@@ -13,6 +13,10 @@ export default class VendorStoreSettingsPage extends BasePage {
         return this.page.locator(`//input[@name="dokan_update_store_settings"]`);
     }
 
+    async enterMinimumOrderAmount(amount: string) {
+        await this.minimumOrderAmountInputField().fill(amount);
+    }
+
     async enterMaximumOrderAmount(amount: string) {
         await this.maximumOrderAmountInputField().fill(amount);
     }
