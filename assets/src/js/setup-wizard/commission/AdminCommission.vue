@@ -70,12 +70,13 @@
             },
 
             fixedCOmmissionhandler(data) {
-                if (isNaN( data.fixed )) {
-                    data.fixed = this.fixedCommission.fixed ?? '';
+                if (data.fixed === '') {
+                    data.fixed = this.fixedCommission.fixed ?? 0;
                 }
-                if (isNaN( data.percentage )) {
-                    data.percentage = this.fixedCommission.percentage ?? '';
+                if (data.percentage === '') {
+                    data.percentage = this.fixedCommission.percentage ?? 0;
                 }
+
                 this.fixedCommission = data;
             },
         }

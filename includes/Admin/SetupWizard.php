@@ -109,7 +109,7 @@ class SetupWizard {
         wp_enqueue_script(
             'dokan-setup-wizard-commission',
             DOKAN_PLUGIN_ASSEST . '/js/dokan-setup-wizard-commission.js',
-            array( 'jquery', 'dokan-vue-bootstrap' ),
+            array( 'jquery', 'dokan-vue-bootstrap', 'dokan-accounting' ),
             DOKAN_PLUGIN_VERSION,
             [ 'in_footer' => true ]
         );

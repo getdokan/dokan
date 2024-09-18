@@ -94,9 +94,10 @@ import Debounce from "debounce";
 
                 this.$emit('change', data);
             }, 500 ),
+
             formatPositiveValue: ( value ) => {
-                if ( isNaN( value ) ) {
-                    return '';
+                if ( value === '' ) {
+                    return value;
                 }
 
                 return accounting.formatNumber( value, dokan.currency.precision, dokan.currency.thousand, dokan.currency.decimal );

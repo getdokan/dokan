@@ -263,11 +263,14 @@
                     data[commission_type] = value;
 
                     this.$set(this.commission.items, term_id, data);
+                    this.updateChildCommissionValues( term_id, data );
                     this.deleteDuplicateCategories( this.commission.items );
                 } else {
                     data[commission_type] = value;
 
                     this.$set(this.commission.items, term_id, data);
+                    this.updateChildCommissionValues( term_id, data );
+                    this.deleteDuplicateCategories( this.commission.items );
                 }
 
                 this.emitComponentChange( JSON.parse( JSON.stringify( this.commission ) ) )
@@ -278,15 +281,15 @@
                     value = oldValue
                 }
                 this.$set( this.commission.all, commission_type, value );
-
-                this.deleteDuplicateCategories( JSON.parse( JSON.stringify( this.commission.items ) ) );
+                this.$set(this.commission, 'items', {});
 
                 this.emitComponentChange( JSON.parse( JSON.stringify( this.commission ) ) )
             },
 
             deleteDuplicateCategories( items ) {
+                let self = this;
                 Object.keys( items ).forEach( key => {
-                    if ( window._.isEqual( items[key], this.commission.all ) ) {
+                    if ( self.isEqual( items[key], this.commission.all ) ) {
                         this.$delete(this.commission.items, key);
                     }
                 } );
@@ -294,6 +297,61 @@
 
             emitComponentChange( data ) {
                 this.$emit( 'change', data );
+            },
+
+            isEqual(value1, value2) {
+                let self = this;
+                // Check if the values are strictly equal
+                if (value1 === value2) return true;
+
+                // Check if either value is null or undefined
+                if (value1 == null || value2 == null) return false;
+
+                // Check if the types are different
+                if (typeof value1 !== typeof value2) return false;
+
+                // Handle Date objects
+                if (value1 instanceof Date && value2 instanceof Date) {
+                    return value1.getTime() === value2.getTime();
+                }
+
+                // Handle Array objects
+                if (Array.isArray(value1) && Array.isArray(value2)) {
+                    if (value1.length !== value2.length) return false;
+                    for (let i = 0; i < value1.length; i++) {
+                        if (!self.isEqual(value1[i], value2[i])) return false;
+                    }
+                    return true;
+                }
+
+                // Handle plain objects
+                if (typeof value1 === 'object' && typeof value2 === 'object') {
+                    const keys1 = Object.keys(value1);
+                    const keys2 = Object.keys(value2);
+
+                    if (keys1.length !== keys2.length) return false;
+
+                    for (let key of keys1) {
+                        if (!keys2.includes(key)) return false;
+                        if (!self.isEqual(value1[key], value2[key])) return false;
+                    }
+
+                    return true;
+                }
+
+                // For all other types, return false
+                return false;
+            },
+
+            updateChildCommissionValues(parent_cat_id, commission_data) {
+                let all_nested_children_ids = this.getChildren( parent_cat_id );
+                let children = JSON.parse( JSON.stringify( this.commission.items ) );
+
+                all_nested_children_ids.map( id => {
+                    children[id] = commission_data;
+                } );
+
+                this.$set( this.commission, 'items', children );
             }
         }
     }
