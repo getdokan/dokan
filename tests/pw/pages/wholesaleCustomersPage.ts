@@ -44,10 +44,9 @@ export class WholesaleCustomersPage extends AdminPage {
     // search wholesale customer
     async searchWholesaleCustomer(wholesaleCustomer: string) {
         await this.goIfNotThere(data.subUrls.backend.dokan.wholeSaleCustomer);
-
         await this.clearInputField(wholesaleCustomersAdmin.search);
-
         await this.typeAndWaitForResponse(data.subUrls.api.dokan.wholesaleCustomers, wholesaleCustomersAdmin.search, wholesaleCustomer);
+        await this.toHaveCount(wholesaleCustomersAdmin.numberOfRows, 1);
         await this.toBeVisible(wholesaleCustomersAdmin.wholesaleCustomerCell(wholesaleCustomer));
     }
 
@@ -114,8 +113,7 @@ export class WholesaleCustomersPage extends AdminPage {
         await this.searchWholesaleCustomer(wholesaleCustomer);
         await this.hover(wholesaleCustomersAdmin.wholesaleCustomerCell(wholesaleCustomer));
         await this.clickAndWaitForLoadState(wholesaleCustomersAdmin.wholesaleCustomerOrders(wholesaleCustomer));
-        const count = (await this.getElementText(wholesaleCustomersAdmin.numberOfRowsFound))?.split(' ')[0];
-        expect(Number(count)).toBeGreaterThan(0);
+        await this.notToBeVisible(selector.admin.wooCommerce.orders.noRowsFound);
     }
 
     // update wholesale customer
@@ -143,7 +141,11 @@ export class WholesaleCustomersPage extends AdminPage {
 
     //  wholesale customers bulk action
     async wholesaleCustomerBulkAction(action: string, wholesaleCustomer?: string) {
-        wholesaleCustomer ? await this.searchWholesaleCustomer(wholesaleCustomer) : await this.goIfNotThere(data.subUrls.backend.dokan.wholeSaleCustomer);
+        if (wholesaleCustomer) {
+            await this.searchWholesaleCustomer(wholesaleCustomer);
+        } else {
+            await this.goIfNotThere(data.subUrls.backend.dokan.wholeSaleCustomer);
+        }
 
         // ensure row exists
         await this.notToBeVisible(wholesaleCustomersAdmin.noRowsFound);
@@ -166,6 +168,7 @@ export class WholesaleCustomersPage extends AdminPage {
         const currentUser = await this.getCurrentUser();
         await this.clickAndWaitForResponse(data.subUrls.api.dokan.wholesaleRegister, selector.customer.cDashboard.becomeWholesaleCustomer);
         const neeApproval = await this.isVisible(selector.customer.cDashboard.wholesaleRequestReturnMessage);
+        await this.toBeVisible(selector.customer.cWooSelector.wooCommerceSuccessMessage);
         if (!neeApproval) {
             await this.toContainText(selector.customer.cWooSelector.wooCommerceSuccessMessage, data.wholesale.becomeWholesaleCustomerSuccessMessage);
         } else {
@@ -187,8 +190,7 @@ export class WholesaleCustomersPage extends AdminPage {
 
     // assert wholesale price
     async assertWholesalePrice(wholesalePrice: string, minimumWholesaleQuantity: string) {
-        await this.customerPage.goToCheckout();
-        const subtotal = Number(helpers.price((await this.getElementText(selector.customer.cCheckout.orderDetails.cartTotal)) as string));
+        const subtotal = Number(helpers.price((await this.getElementText(selector.customer.cCart.cartDetails.cartTotal)) as string));
         const calcSubTotal = helpers.roundToTwo(helpers.subtotal([Number(wholesalePrice)], [Number(minimumWholesaleQuantity)]));
         expect(subtotal).toEqual(calcSubTotal);
     }

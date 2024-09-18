@@ -1,4 +1,4 @@
-import { Page, expect } from '@playwright/test';
+import { Page } from '@playwright/test';
 import { selector } from '@pages/selectors';
 import { data } from '@utils/testData';
 import { helpers } from '@utils/helpers';
@@ -19,11 +19,19 @@ export class ProductQAPage extends BasePage {
         await this.goIfNotThere(data.subUrls.frontend.productDetails(helpers.slugify(productName)));
     }
 
+    async goToProductQA(): Promise<void> {
+        await this.gotoUntilNetworkidle(data.subUrls.backend.dokan.productQA);
+    }
+
+    async goToQuestionDetails(questionId: string): Promise<void> {
+        await this.gotoUntilNetworkidle(data.subUrls.backend.dokan.questionDetails(questionId));
+    }
+
     // admin
 
     // product question answers render properly
     async adminProductQARenderProperly() {
-        await this.goIfNotThere(data.subUrls.backend.dokan.productQA);
+        await this.goToProductQA();
 
         // product question answers text is visible
         await this.toBeVisible(productQAAdmin.productQuestionAnswersText);
@@ -45,7 +53,7 @@ export class ProductQAPage extends BasePage {
 
     // admin view question details
     async viewQuestionDetails(questionId: string): Promise<void> {
-        await this.goIfNotThere(data.subUrls.backend.dokan.questionDetails(questionId));
+        await this.goToQuestionDetails(questionId);
 
         // product question answers text is visible
         await this.toBeVisible(productQAAdmin.questionDetails.productQuestionAnswersText);
@@ -68,7 +76,7 @@ export class ProductQAPage extends BasePage {
 
     // filter questions
     async filterQuestions(input: string, filterBy: string) {
-        await this.goto(data.subUrls.backend.dokan.productQA);
+        await this.goToProductQA();
 
         switch (filterBy) {
             case 'by-vendor':
@@ -88,24 +96,25 @@ export class ProductQAPage extends BasePage {
             default:
                 break;
         }
-
-        const count = (await this.getElementText(productQAAdmin.numberOfRowsFound))?.split(' ')[0];
-        expect(Number(count)).toBeGreaterThan(0);
+        await this.notToHaveText(productQAAdmin.numberOfRowsFound, '0 items');
+        await this.notToBeVisible(productQAAdmin.noRowsFound);
     }
 
     // edit question
     async editQuestion(questionId: string, questionsAnswers: questionsAnswers): Promise<void> {
-        await this.goIfNotThere(data.subUrls.backend.dokan.questionDetails(questionId));
+        await this.goToQuestionDetails(questionId);
         await this.click(productQAAdmin.questionDetails.questionDetails.editQuestion);
-        await this.clearAndType(productQAAdmin.questionDetails.questionDetails.questionInput, questionsAnswers.editQuestion);
-        await this.clickAndWaitForResponse(data.subUrls.api.dokan.productQuestions, productQAAdmin.questionDetails.questionDetails.saveQuestion);
-        await this.toBeVisible(productQAAdmin.questionDetails.questionSaveSuccessMessage);
+        await this.toPass(async () => {
+            await this.clearAndType(productQAAdmin.questionDetails.questionDetails.questionInput, questionsAnswers.editQuestion);
+            await this.clickAndWaitForResponse(data.subUrls.api.dokan.productQuestions, productQAAdmin.questionDetails.questionDetails.saveQuestion);
+            await this.toBeVisible(productQAAdmin.questionDetails.questionSaveSuccessMessage, { timeout: 5000 });
+        });
         await this.toContainText(productQAAdmin.questionDetails.questionDetails.questionText, questionsAnswers.editQuestion);
     }
 
     // answer question
     async answerQuestion(questionId: string, questionsAnswers: questionsAnswers): Promise<void> {
-        await this.goIfNotThere(data.subUrls.backend.dokan.questionDetails(questionId));
+        await this.goToQuestionDetails(questionId);
         await this.typeFrameSelector(productQAAdmin.questionDetails.answer.questionAnswerIframe, productQAAdmin.questionDetails.answer.questionAnswerHtmlBody, questionsAnswers.answer);
         await this.clickAndWaitForResponse(data.subUrls.api.dokan.productAnswers, productQAAdmin.questionDetails.answer.saveAnswer, 201);
         await this.toBeVisible(productQAAdmin.questionDetails.answerSaveSuccessMessage);
@@ -115,27 +124,41 @@ export class ProductQAPage extends BasePage {
 
     // edit answer
     async editAnswer(questionId: string, questionsAnswers: questionsAnswers): Promise<void> {
-        await this.goIfNotThere(data.subUrls.backend.dokan.questionDetails(questionId));
+        await this.goToQuestionDetails(questionId);
         await this.click(productQAAdmin.questionDetails.answer.editAnswer);
+        await this.toBeVisible(productQAAdmin.questionDetails.answer.questionAnswerIframe);
         await this.typeFrameSelector(productQAAdmin.questionDetails.answer.questionAnswerIframe, productQAAdmin.questionDetails.answer.questionAnswerHtmlBody, questionsAnswers.editAnswer);
         await this.clickAndWaitForResponse(data.subUrls.api.dokan.productAnswers, productQAAdmin.questionDetails.answer.saveAnswer);
         await this.toBeVisible(productQAAdmin.questionDetails.answerUpdateSuccessMessage);
-        await this.toContainText(productQAAdmin.questionDetails.answer.answerText, questionsAnswers.answer);
+        await this.toContainText(productQAAdmin.questionDetails.answer.answerText, questionsAnswers.editAnswer);
     }
 
     // edit question visibility
     async editQuestionVisibility(questionId: string, action: string): Promise<void> {
-        await this.goIfNotThere(data.subUrls.backend.dokan.questionDetails(questionId));
-        action == 'hide' ? await this.click(productQAAdmin.questionDetails.status.hideFromProductPage) : await this.click(productQAAdmin.questionDetails.status.showInProductPage);
-        await this.clickAndWaitForResponse(data.subUrls.api.dokan.productQuestions, productQAAdmin.questionDetails.confirmAction);
-        await this.toBeVisible(productQAAdmin.questionDetails.visibilityStatusSaveSuccessMessage);
-        action == 'hide' ? await this.toBeVisible(productQAAdmin.questionDetails.status.hiddenStatus) : await this.toBeVisible(productQAAdmin.questionDetails.status.visibleStatus);
-        action == 'hide' ? await this.toBeVisible(productQAAdmin.questionDetails.status.showInProductPage) : await this.toBeVisible(productQAAdmin.questionDetails.status.hideFromProductPage);
+        await this.goToQuestionDetails(questionId);
+        if (action == 'hide') {
+            await this.toPass(async () => {
+                await this.click(productQAAdmin.questionDetails.status.hideFromProductPage);
+                await this.clickAndWaitForResponseWithType(data.subUrls.api.dokan.productQuestions, productQAAdmin.questionDetails.confirmAction, 'GET');
+                await this.toBeVisible(productQAAdmin.questionDetails.visibilityStatusSaveSuccessMessage);
+                await this.toBeVisible(productQAAdmin.questionDetails.status.hiddenStatus, { timeout: 5000 });
+            });
+            await this.toBeVisible(productQAAdmin.questionDetails.status.showInProductPage);
+        } else {
+            await this.toPass(async () => {
+                await this.click(productQAAdmin.questionDetails.status.showInProductPage);
+                await this.clickAndWaitForResponseWithType(data.subUrls.api.dokan.productQuestions, productQAAdmin.questionDetails.confirmAction, 'GET');
+                await this.toBeVisible(productQAAdmin.questionDetails.visibilityStatusSaveSuccessMessage);
+                await this.toBeVisible(productQAAdmin.questionDetails.status.visibleStatus, { timeout: 5000 });
+            });
+            await this.toBeVisible(productQAAdmin.questionDetails.status.hideFromProductPage);
+        }
     }
 
     // delete answer
-    async deleteAnswer(questionId: string): Promise<void> {
-        await this.goto(data.subUrls.backend.dokan.questionDetails(questionId));
+    async deleteAnswer(questionId: string, answer: string): Promise<void> {
+        await this.goToQuestionDetails(questionId);
+        await this.toContainText(productQAAdmin.questionDetails.answer.answerText, answer); // only to remove flakiness
         await this.click(productQAAdmin.questionDetails.answer.deleteAnswer);
         await this.clickAndWaitForResponse(data.subUrls.api.dokan.productAnswers, productQAAdmin.questionDetails.confirmAction, 204);
         await this.toBeVisible(productQAAdmin.questionDetails.answerDeleteSuccessMessage);
@@ -143,14 +166,14 @@ export class ProductQAPage extends BasePage {
 
     // delete question
     async deleteQuestion(questionId: string): Promise<void> {
-        await this.goIfNotThere(data.subUrls.backend.dokan.questionDetails(questionId));
+        await this.goToQuestionDetails(questionId);
         await this.click(productQAAdmin.questionDetails.status.deleteQuestion);
         await this.clickAndWaitForResponse(data.subUrls.api.dokan.productQuestions, productQAAdmin.questionDetails.confirmAction, 204);
     }
 
     // product questions bulk action
     async productQuestionsBulkAction(action: string) {
-        await this.goto(data.subUrls.backend.dokan.productQA);
+        await this.goToProductQA();
 
         // ensure row exists
         await this.notToBeVisible(productQAAdmin.noRowsFound);
@@ -160,8 +183,7 @@ export class ProductQAPage extends BasePage {
         if (action == 'delete') {
             await this.click(productQAAdmin.bulkActions.applyAction);
             await this.clickAndWaitForResponseAndLoadState(data.subUrls.api.dokan.productQuestionsBulkActions, productQAAdmin.bulkActions.confirmAction);
-        }
-        {
+        } else {
             await this.clickAndWaitForResponseAndLoadState(data.subUrls.api.dokan.productQuestionsBulkActions, productQAAdmin.bulkActions.applyAction);
         }
         await this.toBeVisible(productQAAdmin.bulkActions.bulkActionSuccessMessage);
@@ -215,7 +237,7 @@ export class ProductQAPage extends BasePage {
 
     // answer question
     async vendorAnswerQuestion(questionId: string, questionsAnswers: questionsAnswers): Promise<void> {
-        await this.goIfNotThere(data.subUrls.frontend.vDashboard.questionDetails(questionId));
+        await this.goto(data.subUrls.frontend.vDashboard.questionDetails(questionId));
         await this.typeFrameSelector(productQAVendor.questionDetails.answer.questionAnswerIframe, productQAVendor.questionDetails.answer.questionAnswerHtmlBody, questionsAnswers.answer);
         await this.clickAndWaitForResponse(data.subUrls.ajax, productQAVendor.questionDetails.answer.saveAnswer);
         await this.toBeVisible(productQAVendor.questionDetails.answerSaveSuccessMessage);
@@ -225,12 +247,12 @@ export class ProductQAPage extends BasePage {
 
     // edit answer
     async vendorEditAnswer(questionId: string, questionsAnswers: questionsAnswers): Promise<void> {
-        await this.goIfNotThere(data.subUrls.frontend.vDashboard.questionDetails(questionId));
+        await this.goto(data.subUrls.frontend.vDashboard.questionDetails(questionId));
         await this.click(productQAVendor.questionDetails.editAnswer);
         await this.typeFrameSelector(productQAVendor.questionDetails.answer.questionAnswerIframe, productQAVendor.questionDetails.answer.questionAnswerHtmlBody, questionsAnswers.editAnswer);
         await this.clickAndWaitForResponse(data.subUrls.ajax, productQAVendor.questionDetails.answer.saveAnswer);
         await this.toBeVisible(productQAVendor.questionDetails.answerSaveSuccessMessage);
-        await this.toContainText(productQAVendor.questionDetails.answerDetails, questionsAnswers.answer);
+        await this.toContainText(productQAVendor.questionDetails.answerDetails, questionsAnswers.editAnswer);
     }
 
     // delete answer
@@ -243,8 +265,7 @@ export class ProductQAPage extends BasePage {
 
     // delete question
     async vendorDeleteQuestion(questionId: string): Promise<void> {
-        // todo: flaky --> Error: page.goto: net::ERR_ABORTED at ...
-        await this.goIfNotThere(data.subUrls.frontend.vDashboard.questionDetails(questionId));
+        await this.goto(data.subUrls.frontend.vDashboard.questionDetails(questionId));
         await this.click(productQAVendor.questionDetails.status.deleteQuestion);
         await this.clickAndWaitForResponse(data.subUrls.ajax, productQAVendor.questionDetails.confirmAction);
         await this.toBeVisible(productQAVendor.questionDetails.questionDeleteSuccessMessage);
@@ -265,20 +286,20 @@ export class ProductQAPage extends BasePage {
     async postQuestion(productName: string, questionsAnswers: questionsAnswers, guest = false): Promise<void> {
         await this.goToProductDetails(productName);
         await this.click(selector.customer.cSingleProduct.menus.questionsAnswers);
-        await this.focus(productQACustomer.searchInput);
         await this.clearAndType(productQACustomer.searchInput, '....');
         if (guest) {
             await this.click(productQACustomer.loginPostQuestion);
-            await this.clearAndType(selector.frontend.username, questionsAnswers.user.username);
-            await this.clearAndType(selector.frontend.userPassword, questionsAnswers.user.password);
+            await this.clearAndType(selector.frontend.username, questionsAnswers.guest.username);
+            await this.clearAndType(selector.frontend.userPassword, questionsAnswers.guest.password);
             await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.myAccountToProductQA, selector.frontend.logIn, 302);
 
             await this.click(selector.customer.cSingleProduct.menus.questionsAnswers);
             await this.clearAndType(productQACustomer.searchInput, '....');
         }
-        await this.click(productQACustomer.postQuestion);
+        await this.clickAndWaitForLocatorTobeVisible(productQACustomer.postQuestion, productQACustomer.questionModal);
         await this.clearAndType(productQACustomer.questionInput, questionsAnswers.question);
         await this.removeAttribute(productQACustomer.post, 'disabled');
         await this.clickAndWaitForResponse(data.subUrls.api.dokan.productQuestions, productQACustomer.post);
+        await this.toBeVisible(productQACustomer.questionPosted(questionsAnswers.question));
     }
 }

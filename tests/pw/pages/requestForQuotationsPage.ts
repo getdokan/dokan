@@ -124,13 +124,6 @@ export class RequestForQuotationsPage extends AdminPage {
 
         await this.check(requestForQuotationAdmin.quoteRules.bulkActions.selectAll);
 
-        // only to remove flakiness // todo: need diff soln and make generic , don't work need custom soln
-        // const isDisabled = await this.hasAttribute(requestForQuotationAdmin.quoteRules.bulkActions.applyAction, 'disabled');
-        // if(isDisabled){
-        // 	await this.uncheck(requestForQuotationAdmin.quoteRules.bulkActions.selectAll);
-        // 	await this.check(requestForQuotationAdmin.quoteRules.bulkActions.selectAll);
-        // }
-
         await this.selectByValue(requestForQuotationAdmin.quoteRules.bulkActions.selectAction, action);
         await this.clickAndWaitForResponse(data.subUrls.api.dokan.quoteRules, requestForQuotationAdmin.quoteRules.bulkActions.applyAction);
     }
@@ -214,18 +207,21 @@ export class RequestForQuotationsPage extends AdminPage {
         switch (action) {
             case 'trash':
                 await this.clickAndWaitForResponse(data.subUrls.api.dokan.quotes, requestForQuotationAdmin.quotesList.navTabs.pending);
+                await this.toBeVisible(requestForQuotationAdmin.quotesList.quoteCell(quoteTitle));
                 await this.hover(requestForQuotationAdmin.quotesList.quoteCell(quoteTitle));
                 await this.clickAndWaitForResponse(data.subUrls.api.dokan.quotes, requestForQuotationAdmin.quotesList.quoteTrash(quoteTitle));
                 break;
 
             case 'permanently-delete':
                 await this.clickAndWaitForResponse(data.subUrls.api.dokan.quotes, requestForQuotationAdmin.quotesList.navTabs.trash);
+                await this.toBeVisible(requestForQuotationAdmin.quotesList.quoteCell(quoteTitle));
                 await this.hover(requestForQuotationAdmin.quotesList.quoteCell(quoteTitle));
                 await this.clickAndWaitForResponse(data.subUrls.api.dokan.quotes, requestForQuotationAdmin.quotesList.quotePermanentlyDelete(quoteTitle));
                 break;
 
             case 'restore':
                 await this.clickAndWaitForResponse(data.subUrls.api.dokan.quotes, requestForQuotationAdmin.quotesList.navTabs.trash);
+                await this.toBeVisible(requestForQuotationAdmin.quotesList.quoteCell(quoteTitle));
                 await this.hover(requestForQuotationAdmin.quotesList.quoteCell(quoteTitle));
                 await this.clickAndWaitForResponse(data.subUrls.api.dokan.quotes, requestForQuotationAdmin.quotesList.quoteRestore(quoteTitle));
                 break;
@@ -324,7 +320,9 @@ export class RequestForQuotationsPage extends AdminPage {
     async vendorConvertQuoteToOrder(quoteId: string) {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.quoteDetails(quoteId));
         const needApproval = await this.isVisible(requestForQuotationVendor.quoteDetails.approveThisQuote);
-        needApproval && (await this.vendorApproveQuoteRequest(quoteId));
+        if (needApproval) {
+            await this.vendorApproveQuoteRequest(quoteId);
+        }
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.quoteDetails(quoteId), requestForQuotationVendor.quoteDetails.convertToOrder);
         await this.toContainText(requestForQuotationVendor.quoteDetails.message, `Your Quote# ${quoteId} has been converted to Order#`);
     }
@@ -332,10 +330,14 @@ export class RequestForQuotationsPage extends AdminPage {
     // customer
 
     // customer request for quote render properly
-    async requestForQuoteRenderProperly() {
-        await this.goIfNotThere(data.subUrls.frontend.requestForQuote);
-
-        await this.toBeVisible(requestForQuotationCustomer.requestForQuote.requestForQuoteText);
+    async requestForQuoteRenderProperly(link?: string) {
+        if (link) {
+            await this.goto(link);
+        } else {
+            await this.goIfNotThere(data.subUrls.frontend.requestForQuote);
+            // request for text is visible
+            await this.toBeVisible(requestForQuotationCustomer.requestForQuote.requestForQuoteText);
+        }
 
         const noQuote = await this.isVisible(requestForQuotationCustomer.requestForQuote.noQuotesFound);
 

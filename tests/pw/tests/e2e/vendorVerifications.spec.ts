@@ -50,7 +50,7 @@ test.describe('Verifications test', () => {
     // verification methods
 
     test('admin can change verified icon', { tag: ['@pro', '@admin'] }, async () => {
-        await dbUtils.createUserMeta(VENDOR2_ID, 'dokan_verification_status', 'approved');
+        await dbUtils.setUserMeta(VENDOR2_ID, 'dokan_verification_status', 'approved');
         await admin.changeVerifiedIcon(data.dokanSettings.vendorVerification.verifiedIcons.byIcon.certificateSolid, data.predefined.vendorStores.vendor2);
     });
 
@@ -129,7 +129,7 @@ test.describe('Verifications test', () => {
 
     test('admin can reject verification request', { tag: ['@pro', '@admin'] }, async () => {
         const [, requestId] = await apiUtils.createVerificationRequest({ ...payloads.createVerificationRequest(), vendor_id: VENDOR_ID, method_id: methodId, documents: [mediaId] }, payloads.adminAuth);
-        // todo: need to force goto or reload page, page is not reloading because of previous test are on the same page, and created data via api is not loading
+        // todo: need to force goto url contains # which avoid page reload
         await admin.updateVerificationRequest(requestId, 'reject');
     });
 
@@ -200,7 +200,7 @@ test.describe('Verifications test', () => {
     // customer
 
     test('customer can view verified badge', { tag: ['@pro', '@customer'] }, async () => {
-        await dbUtils.createUserMeta(VENDOR2_ID, 'dokan_verification_status', 'approved');
+        await dbUtils.setUserMeta(VENDOR2_ID, 'dokan_verification_status', 'approved');
         await customer.viewVerifiedBadge(data.predefined.vendorStores.vendor2);
     });
 

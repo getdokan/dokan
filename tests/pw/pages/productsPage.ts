@@ -33,7 +33,7 @@ export class ProductsPage extends AdminPage {
         await this.fill(productsAdmin.attribute.slug, attribute.attributeName);
         await this.clickAndWaitForResponse(data.subUrls.backend.wc.addNewAttributes, productsAdmin.attribute.addAttribute);
         await this.toBeVisible(productsAdmin.attribute.attributeCell(attribute.attributeName));
-        await this.clickAndWaitForResponse(data.subUrls.backend.wc.taxonomy, productsAdmin.attribute.configureTerms(attribute.attributeName));
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.backend.wc.taxonomy, productsAdmin.attribute.configureTerms(attribute.attributeName));
 
         // add new term
         for (const attributeTerm of attribute.attributeTerms) {
@@ -268,13 +268,15 @@ export class ProductsPage extends AdminPage {
         await this.toBeVisible(productsVendor.create.addNewProduct);
 
         // import export is visible
-        DOKAN_PRO && (await this.multipleElementVisible(productsVendor.importExport));
+        if (DOKAN_PRO) await this.multipleElementVisible(productsVendor.importExport);
 
         // product filters elements are visible
         const { filterByType, filterByOther, ...filters } = productsVendor.filters;
         await this.multipleElementVisible(filters);
-        DOKAN_PRO && (await this.toBeVisible(filterByType));
-        DOKAN_PRO && (await this.toBeVisible(filterByOther));
+        if (DOKAN_PRO) {
+            await this.toBeVisible(filterByType);
+            await this.toBeVisible(filterByOther);
+        }
 
         // product search elements are visible
         await this.multipleElementVisible(productsVendor.search);
@@ -328,7 +330,11 @@ export class ProductsPage extends AdminPage {
     async vendorAddDownloadableProduct(product: product['downloadable'], productPopup = false): Promise<void> {
         const productName = product.productName();
         const productPrice = product.regularPrice();
-        productPopup ? await this.vendorAddSimpleProduct(product, productPopup) : await this.addProduct(productName);
+        if (productPopup) {
+            await this.vendorAddSimpleProduct(product, productPopup);
+        } else {
+            await this.addProduct(productName);
+        }
         await this.clearAndType(productsVendor.create.productPrice, productPrice);
         await this.check(productsVendor.edit.downloadable);
         // await this.addProductCategory(product.category);
@@ -354,7 +360,11 @@ export class ProductsPage extends AdminPage {
     async vendorAddVirtualProduct(product: product['simple'], productPopup = false): Promise<void> {
         const productName = product.productName();
         const productPrice = product.regularPrice();
-        productPopup ? await this.vendorAddSimpleProduct(product, productPopup) : await this.addProduct(productName);
+        if (productPopup) {
+            await this.vendorAddSimpleProduct(product, productPopup);
+        } else {
+            await this.addProduct(productName);
+        }
         await this.clearAndType(productsVendor.create.productPrice, productPrice);
         await this.check(productsVendor.edit.virtual);
         // await this.addProductCategory(product.category);
@@ -370,7 +380,11 @@ export class ProductsPage extends AdminPage {
     // vendor add variable product
     async vendorAddVariableProduct(product: product['variable'], productPopup = false): Promise<void> {
         const productName = product.productName();
-        productPopup ? await this.vendorAddSimpleProduct(product, productPopup) : await this.addProduct(productName);
+        if (productPopup) {
+            await this.vendorAddSimpleProduct(product, productPopup);
+        } else {
+            await this.addProduct(productName);
+        }
 
         // edit product
         await this.selectByValue(productsVendor.edit.productType, product.productType);
@@ -396,7 +410,11 @@ export class ProductsPage extends AdminPage {
     // vendor add simple subscription product
     async vendorAddSimpleSubscription(product: product['simpleSubscription'], productPopup = false): Promise<void> {
         const productName = product.productName();
-        productPopup ? await this.vendorAddSimpleProduct(product, productPopup) : await this.addProduct(productName);
+        if (productPopup) {
+            await this.vendorAddSimpleProduct(product, productPopup);
+        } else {
+            await this.addProduct(productName);
+        }
         // edit product
         await this.selectByValue(productsVendor.edit.productType, product.productType);
         await this.type(productsVendor.edit.subscriptionPrice, product.subscriptionPrice());
@@ -414,7 +432,11 @@ export class ProductsPage extends AdminPage {
     // vendor add variable subscription product
     async vendorAddVariableSubscription(product: product['variableSubscription'], productPopup = false): Promise<void> {
         const productName = product.productName();
-        productPopup ? await this.vendorAddSimpleProduct(product, productPopup) : await this.addProduct(productName);
+        if (productPopup) {
+            await this.vendorAddSimpleProduct(product, productPopup);
+        } else {
+            await this.addProduct(productName);
+        }
         // edit product
         await this.selectByValue(productsVendor.edit.productType, product.productType);
         // add variation
@@ -440,7 +462,11 @@ export class ProductsPage extends AdminPage {
     // vendor add external product
     async vendorAddExternalProduct(product: product['external'], productPopup = false): Promise<void> {
         const productName = product.productName();
-        productPopup ? await this.vendorAddSimpleProduct(product, productPopup) : await this.addProduct(productName);
+        if (productPopup) {
+            await this.vendorAddSimpleProduct(product, productPopup);
+        } else {
+            await this.addProduct(productName);
+        }
         // edit product
         await this.selectByValue(productsVendor.edit.productType, product.productType);
         await this.type(productsVendor.edit.productUrl, this.getBaseUrl() + product.productUrl);
@@ -455,6 +481,7 @@ export class ProductsPage extends AdminPage {
     // go to product edit
     async goToProductEdit(productName: string): Promise<void> {
         await this.searchProduct(productName);
+        await this.removeAttribute(productsVendor.rowActions(productName), 'class'); // forcing the row actions to be visible, to avoid flakiness
         await this.hover(productsVendor.productCell(productName));
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, productsVendor.editProduct(productName));
         await this.toHaveValue(productsVendor.edit.title, productName);
@@ -463,7 +490,11 @@ export class ProductsPage extends AdminPage {
     // vendor add product category
     async addProductCategory(category: string): Promise<void> {
         const productPopup = await this.isVisible(productsVendor.create.productPopup);
-        productPopup ? await this.click(productsVendor.category.productCategoryModalOnProductPopup) : await this.click(productsVendor.category.productCategoryModal);
+        if (productPopup) {
+            await this.click(productsVendor.category.productCategoryModalOnProductPopup);
+        } else {
+            await this.click(productsVendor.category.productCategoryModal);
+        }
         await this.waitForVisibleLocator(productsVendor.category.productCategorySearchInput);
         await this.type(productsVendor.category.productCategorySearchInput, category);
         await this.toContainText(productsVendor.category.searchedResultText, category);
@@ -496,7 +527,6 @@ export class ProductsPage extends AdminPage {
     // search product vendor dashboard
     async searchProduct(productName: string): Promise<void> {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.products);
-
         await this.clearAndType(productsVendor.search.searchInput, productName);
         await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.products, productsVendor.search.searchBtn);
         await this.toBeVisible(productsVendor.productLink(productName));
@@ -537,7 +567,7 @@ export class ProductsPage extends AdminPage {
         await this.hover(productsVendor.productCell(productName));
         await this.clickAndWaitForLoadState(productsVendor.view(productName));
         await expect(this.page).toHaveURL(data.subUrls.frontend.productDetails(helpers.slugify(productName)) + '/');
-        const { quantity, addToCart, viewCart, euComplianceData, ...productDetails } = selector.customer.cSingleProduct.productDetails;
+        const { quantity, addToCart, viewCart, euComplianceData, productAddedSuccessMessage, productWithQuantityAddedSuccessMessage, ...productDetails } = selector.customer.cSingleProduct.productDetails;
         await this.multipleElementVisible(productDetails);
     }
 
@@ -584,7 +614,9 @@ export class ProductsPage extends AdminPage {
         await this.selectByValue(productsVendor.euComplianceFields.minimumAge, euCompliance.minimumAge);
         await this.clearAndType(productsVendor.euComplianceFields.productUnits, euCompliance.productUnits);
         await this.clearAndType(productsVendor.euComplianceFields.basePriceUnits, euCompliance.basePriceUnits);
-        euCompliance.freeShipping && (await this.check(productsVendor.euComplianceFields.freeShipping));
+        if (euCompliance.freeShipping) {
+            await this.check(productsVendor.euComplianceFields.freeShipping);
+        }
         await this.clearAndType(productsVendor.euComplianceFields.regularUnitPrice, euCompliance.regularUnitPrice);
         await this.clearAndType(productsVendor.euComplianceFields.saleUnitPrice, euCompliance.saleUnitPrice);
         await this.typeFrameSelector(productsVendor.euComplianceFields.optionalMiniDescription.descriptionIframe, productsVendor.euComplianceFields.optionalMiniDescription.descriptionHtmlBody, euCompliance.optionalMiniDescription);
@@ -642,7 +674,15 @@ export class ProductsPage extends AdminPage {
     // add product Wholesale options
     async addProductWholesaleOptions(productName: string, wholesaleOption: product['productInfo']['wholesaleOption']): Promise<void> {
         await this.goToProductEdit(productName);
-        await this.check(productsVendor.wholesale.enableWholeSaleForThisProduct);
+        await this.toPass(async () => {
+            await this.check(productsVendor.wholesale.enableWholeSaleForThisProduct);
+            const optionIsVisible = await this.isVisible(productsVendor.wholesale.wholesalePrice, 2);
+            if (!optionIsVisible) {
+                await this.click(productsVendor.wholesale.enableWholeSaleForThisProduct);
+            }
+            // eslint-disable-next-line playwright/prefer-web-first-assertions
+            expect(optionIsVisible).toBe(true);
+        });
         await this.clearAndType(productsVendor.wholesale.wholesalePrice, wholesaleOption.wholesalePrice);
         await this.clearAndType(productsVendor.wholesale.minimumQuantityForWholesale, wholesaleOption.minimumWholesaleQuantity);
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, productsVendor.saveProduct, 302);
@@ -732,7 +772,11 @@ export class ProductsPage extends AdminPage {
 
     // product bulk action
     async productBulkAction(action: string, productName?: string): Promise<void> {
-        productName ? await this.searchProduct(productName) : await this.goIfNotThere(data.subUrls.frontend.vDashboard.products);
+        if (productName) {
+            await this.searchProduct(productName);
+        } else {
+            await this.goIfNotThere(data.subUrls.frontend.vDashboard.products);
+        }
 
         await this.click(productsVendor.bulkActions.selectAll);
         switch (action) {

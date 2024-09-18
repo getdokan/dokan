@@ -50,6 +50,14 @@ export class BookingPage extends VendorPage {
 
     // vendor
 
+    // go to booking product edit
+    async goToBookingProductEdit(productName: string): Promise<void> {
+        await this.searchBookingProduct(productName);
+        await this.hover(bookingProductsVendor.productCell(productName));
+        await this.clickAndWaitForLoadState(bookingProductsVendor.edit(productName));
+        await this.toHaveValue(bookingProductsVendor.booking.productName, productName);
+    }
+
     // vendor booking render properly
     async vendorBookingRenderProperly() {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.booking);
@@ -170,9 +178,7 @@ export class BookingPage extends VendorPage {
 
     // edit booking product
     async editBookingProduct(product: product['booking']) {
-        await this.searchBookingProduct(product.name);
-        await this.hover(bookingProductsVendor.productCell(product.name));
-        await this.clickAndWaitForLoadState(bookingProductsVendor.edit(product.name));
+        await this.goToBookingProductEdit(product.name);
         await this.updateBookingProductFields(product);
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.booking, bookingProductsVendor.booking.saveProduct, 302);
         await this.toContainText(selector.vendor.product.updatedSuccessMessage, product.saveSuccessMessage);
@@ -282,15 +288,14 @@ export class BookingPage extends VendorPage {
             await this.click(bookingProductsVendor.addBooking.selectCustomerDropdown);
             await this.typeAndWaitForResponse(data.subUrls.ajax, bookingProductsVendor.addBooking.selectCustomerInput, customerName);
             await this.toContainText(bookingProductsVendor.addBooking.searchedResult, customerName);
-            await this.press(data.key.arrowDown);
-            await this.press(data.key.enter);
+            await this.click(bookingProductsVendor.addBooking.searchedResultByName(customerName));
         }
 
         await this.click(bookingProductsVendor.addBooking.selectABookableProductDropdown);
         await this.click(bookingProductsVendor.addBooking.selectABookableProduct(productName));
 
         await this.click(bookingProductsVendor.addBooking.createANewCorrespondingOrderForThisNewBooking);
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.addBooking, bookingProductsVendor.addBooking.next);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.bookedDayBlockes, bookingProductsVendor.addBooking.next);
         await this.clickAndWaitForResponse(data.subUrls.ajax, selector.customer.cBookings.selectCalendarDay(bookings.startDate.getMonth(), bookings.startDate.getDate()));
         await this.clickAndWaitForResponse(data.subUrls.ajax, selector.customer.cBookings.selectCalendarDay(bookings.endDate.getMonth(), bookings.endDate.getDate()));
         await this.clickAndWaitForResponse(data.subUrls.frontend.vDashboard.addBooking, bookingProductsVendor.addBooking.addBooking);
@@ -300,8 +305,8 @@ export class BookingPage extends VendorPage {
     // customer
 
     async buyBookableProduct(productName: string, bookings: bookings) {
-        await this.goIfNotThere(data.subUrls.frontend.productDetails(helpers.slugify(productName)));
-
+        await this.gotoUntilNetworkidle(data.subUrls.frontend.productDetails(helpers.slugify(productName)));
+        await this.notToBeVisible(selector.customer.cBookings.calanderLoader);
         await this.clickAndWaitForResponse(data.subUrls.ajax, selector.customer.cBookings.selectCalendarDay(bookings.startDate.getMonth(), bookings.startDate.getDate()));
         await this.clickAndWaitForResponse(data.subUrls.ajax, selector.customer.cBookings.selectCalendarDay(bookings.endDate.getMonth(), bookings.endDate.getDate()));
         await this.clickAndWaitForResponse(data.subUrls.frontend.productDetails(helpers.slugify(productName)), selector.customer.cBookings.bookNow);

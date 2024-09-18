@@ -23,6 +23,7 @@ test.describe('Payments test', () => {
     });
 
     test.afterAll(async () => {
+        await apiUtils.updateBatchWcSettingsOptions('general', payloads.currency, payloads.adminAuth);
         await aPage.close();
         await vPage.close();
         await apiUtils.dispose();
@@ -30,23 +31,32 @@ test.describe('Payments test', () => {
 
     //admin
 
-    test.skip('admin can add basic payment methods', { tag: ['@lite', '@admin'] }, async () => {
+    test('admin can change currency', { tag: ['@lite', '@admin'] }, async () => {
+        await apiUtils.updateBatchWcSettingsOptions('general', { update: [{ id: 'woocommerce_currency', value: 'INR' }] }, payloads.adminAuth);
+        await admin.setCurrency(data.payment.currency.dollar);
+    });
+
+    test('admin can add basic payment methods', { tag: ['@lite', '@admin'] }, async () => {
         await admin.setupBasicPaymentMethods(data.payment);
     });
 
     test.skip('admin can add stripe payment method', { tag: ['@pro', '@admin'] }, async () => {
+        await apiUtils.updateBatchWcSettingsOptions('general', payloads.currency, payloads.adminAuth);
         await admin.setupStripeConnect(data.payment);
     });
 
     test.skip('admin can add Paypal Marketplace payment method', { tag: ['@pro', '@admin'] }, async () => {
+        await apiUtils.updateBatchWcSettingsOptions('general', payloads.currency, payloads.adminAuth);
         await admin.setupPaypalMarketPlace(data.payment);
     });
 
     test.skip('admin can add Mangopay payment method', { tag: ['@pro', '@admin'] }, async () => {
+        await apiUtils.updateBatchWcSettingsOptions('general', payloads.currency, payloads.adminAuth);
         await admin.setupMangoPay(data.payment);
     });
 
     test.skip('admin can add Razorpay payment method', { tag: ['@pro', '@admin'] }, async () => {
+        await apiUtils.updateBatchWcSettingsOptions('general', { update: [{ id: 'woocommerce_currency', value: 'INR' }] }, payloads.adminAuth);
         await admin.setupRazorpay(data.payment);
     });
 

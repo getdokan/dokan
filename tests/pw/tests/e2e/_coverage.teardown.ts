@@ -5,6 +5,7 @@ import path from 'path';
 import { helpers } from '@utils/helpers';
 
 const { DOKAN_PRO } = process.env;
+
 let executed_tests: string[] = [];
 
 let totalProductFeatures = 0;

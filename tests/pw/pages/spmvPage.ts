@@ -22,7 +22,9 @@ export class SpmvPage extends VendorPage {
         await this.focus(spmvAdmin.searchVendor);
 
         const alreadyAssigned = await this.isVisible(spmvAdmin.unassignVendor(storeName));
-        alreadyAssigned && (await this.clickAndAcceptAndWaitForResponseAndLoadState(data.subUrls.ajax, spmvAdmin.unassignVendor(storeName)));
+        if (alreadyAssigned) {
+            await this.clickAndAcceptAndWaitForResponseAndLoadState(data.subUrls.ajax, spmvAdmin.unassignVendor(storeName));
+        }
 
         await this.typeByPageAndWaitForResponse(data.subUrls.ajax, spmvAdmin.searchVendor, storeName);
         await this.toContainText(spmvAdmin.highlightedResult, storeName);
@@ -112,7 +114,7 @@ export class SpmvPage extends VendorPage {
     // clone product
     async cloneProduct(productName: string): Promise<void> {
         await this.searchSimilarProduct(productName, 'spmv');
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, spmvVendor.addToStore);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, spmvVendor.addToStore);
         await this.toHaveValue(selector.vendor.product.edit.title, productName);
     }
 
@@ -184,6 +186,7 @@ export class SpmvPage extends VendorPage {
         await this.clickIfVisible(spmvCustomer.otherVendorAvailableTab);
 
         await this.clickAndWaitForLoadState(spmvCustomer.availableVendorDetails.actions.addToCartByVendor(storeName));
+        await this.toBeVisible(selector.customer.cWooSelector.wooCommerceSuccessMessage);
         await this.toContainText(selector.customer.cWooSelector.wooCommerceSuccessMessage, `“${productName}” has been added to your cart.`);
     }
 }
