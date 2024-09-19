@@ -418,14 +418,20 @@ class Hooks {
         $available_vendors  = [];
         $available_products = [];
 
-        if ( WC()->cart ) {
+        if ( WC()->cart && ! WC()->cart->is_empty() ) {
             foreach ( WC()->cart->get_cart() as $item ) {
                 $product_id           = $item['data']->get_id();
                 $available_vendors[]  = (int) dokan_get_vendor_by_product( $product_id, true );
                 $available_products[] = $product_id;
             }
         } else {
-            foreach ( $discount->get_items() as $item_id => $item ) {
+            foreach ( $discount->get_items() as $item ) {
+                if ( ! isset( $item->product ) || ! $item->product instanceof \WC_Product ) {
+                    continue;
+                }
+
+                $item_id = $item->product->get_id();
+
                 $available_vendors[]  = (int) dokan_get_vendor_by_product( $item_id, true );
                 $available_products[] = $item_id;
             }
