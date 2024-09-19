@@ -98,12 +98,17 @@ class Hooks {
             [ '%d' ]
         );
 
-        // if any child orders found, change the orders as well
+        // Update sub-order statuses
         $sub_orders = dokan()->order->get_child_orders( $order_id );
         if ( $sub_orders ) {
             foreach ( $sub_orders as $sub_order ) {
                 if ( is_callable( [ $sub_order, 'update_status' ] ) ) {
-                    $sub_order->update_status( $new_status );
+                    $current_status = $sub_order->get_status();
+                    if ( $this->is_status_change_allowed( $current_status, $new_status ) ) {
+                        $sub_order->update_status( $new_status );
+                    } else {
+                        $this->log_skipped_status_update( $sub_order->get_id(), $current_status, $new_status );
+                    }
                 }
             }
         }
@@ -130,6 +135,98 @@ class Hooks {
             [ '%s' ],
             [ '%d', '%s' ]
         );
+    }
+
+    /**
+     * Check if a status change is allowed for a sub-order.
+     *
+     * This method determines whether a sub-order can transition from its current status
+     * to a new status, based on a configurable whitelist of allowed transitions.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $current_status The current status of the sub-order (should include 'wc-' prefix).
+     * @param string $new_status     The new status to check (should include 'wc-' prefix).
+     *
+     * @return bool True if the status change is allowed, false otherwise.
+     */
+    private function is_status_change_allowed( string $current_status, string $new_status ): bool {
+        // Ensure both statuses have 'wc-' prefix
+        $current_status = $this->maybe_add_wc_prefix( $current_status );
+        $new_status     = $this->maybe_add_wc_prefix( $new_status );
+
+        // Define the default whitelist of allowed status transitions
+        $default_whitelist = [
+            'wc-pending'    => [ 'any' ],
+            'wc-on-hold'    => [ 'wc-pending', 'wc-on-hold', 'wc-processing', 'wc-completed', 'wc-failed' ],
+            'wc-processing' => [ 'wc-completed', 'wc-failed', 'wc-cancelled', 'wc-refunded' ],
+            'wc-completed'  => [ 'wc-refunded' ],
+            'wc-failed'     => [ 'wc-pending', 'wc-on-hold', 'wc-processing', 'wc-failed', 'wc-cancelled' ],
+            'wc-cancelled'  => [],
+            'wc-refunded'   => [],
+        ];
+
+        /**
+         * Filter the whitelist of allowed status transitions for sub-orders.
+         *
+         * This filter allows developers to customize the whitelist that determines
+         * which status transitions are allowed for sub-orders when the main order
+         * status is updated. By modifying this whitelist, you can control how
+         * sub-order statuses are updated in relation to the main order.
+         *
+         * @since DOKAN_SINCE
+         *
+         * @param array $whitelist An associative array where keys are current statuses
+         *                         and values are arrays of allowed new statuses.
+         *                         The special value 'any' allows transition to any status.
+         *
+         * @return array Modified whitelist of allowed status transitions.
+         */
+        $whitelist = apply_filters( 'dokan_sub_order_status_update_whitelist', $default_whitelist );
+
+        // If the current status is not in the whitelist, status change is not allowed
+        if ( ! isset( $whitelist[ $current_status ] ) ) {
+            return false;
+        }
+
+        // If 'any' is allowed for the current status, all transitions are allowed
+        if ( in_array( 'any', $whitelist[ $current_status ], true ) ) {
+            return true;
+        }
+
+        // Check if the new status is in the list of allowed transitions
+        return in_array( $new_status, $whitelist[ $current_status ], true );
+    }
+
+    /**
+     * Ensure a status string has the 'wc-' prefix.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param string $status The status string to check.
+     *
+     * @return string The status string with 'wc-' prefix added if it was missing.
+     */
+    private function maybe_add_wc_prefix( string $status ): string {
+        return strpos( $status, 'wc-' ) === 0 ? $status : 'wc-' . $status;
+    }
+
+    /**
+     * Log a skipped status update for a sub-order.
+     *
+     * This method logs a message to the error log when a status update for a sub-order
+     * is skipped because the status change is not allowed.
+     *
+     * @since DOKAN_SINCE
+     *
+     * @param int    $order_id      The ID of the sub-order.
+     * @param string $current_status The current status of the sub-order.
+     * @param string $new_status     The new status that was not allowed.
+     *
+     * @return void
+     */
+    private function log_skipped_status_update( int $order_id, string $current_status, string $new_status ) {
+        dokan_log( sprintf( 'Dokan: Skipped status update for sub-order %d from %s to %s', $order_id, $current_status, $new_status ) );
     }
 
     /**
