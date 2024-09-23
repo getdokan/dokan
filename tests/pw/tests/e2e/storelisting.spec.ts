@@ -25,7 +25,7 @@ test.describe('Store list functionality test', () => {
     test('customer can sort stores', { tag: ['@lite', '@customer'] }, async () => {
         await customer.sortStores(data.storeList.sort);
     });
-     
+
     test('customer can change store view layout', { tag: ['@lite', '@customer'] }, async () => {
         await customer.storeViewLayout(data.storeList.layout.list);
     });

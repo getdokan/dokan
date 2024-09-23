@@ -1,5 +1,5 @@
 import { Page } from '@playwright/test';
-import { BasePage } from '@pages/basePage';
+import { CustomerPage } from './customerPage';
 import { selector } from '@pages/selectors';
 import { helpers } from '@utils/helpers';
 import { data } from '@utils/testData';
@@ -8,14 +8,14 @@ import { storeContactData } from '@utils/interfaces';
 // selectors
 const singleStoreCustomer = selector.customer.cSingleStore;
 
-export class PrivacyPolicyPage extends BasePage {
+export class PrivacyPolicyPage extends CustomerPage {
     constructor(page: Page) {
         super(page);
     }
 
     // contact vendor
     async contactVendor(storeName: string, storeContactData: storeContactData) {
-        await this.goIfNotThere(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)));
+        await this.gotoSingleStore(storeName);
         await this.clearAndType(singleStoreCustomer.storeContactForm.name, storeContactData.name);
         await this.clearAndType(singleStoreCustomer.storeContactForm.email, storeContactData.email);
         await this.clearAndType(singleStoreCustomer.storeContactForm.message, storeContactData.message);
@@ -25,7 +25,7 @@ export class PrivacyPolicyPage extends BasePage {
 
     // go to privacy policy
     async goToPrivacyPolicy(storeName: string) {
-        await this.goIfNotThere(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)));
+        await this.gotoSingleStore(storeName);
         // ensure link suppose to open on new tab
         await this.toHaveAttribute(singleStoreCustomer.storeContactForm.privacyPolicyLink, 'target', '_blank');
         // force link to open on the same tab
@@ -34,12 +34,12 @@ export class PrivacyPolicyPage extends BasePage {
     }
 
     async disablePrivacyPolicy(storeName: string) {
-        await this.goIfNotThere(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)));
+        await this.gotoUntilNetworkidle(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)));
         await this.notToBeVisible(singleStoreCustomer.storeContactForm.privacyPolicy);
     }
 
     async disableStoreContactForm(storeName: string) {
-        await this.goto(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)));
+        await this.gotoUntilNetworkidle(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)));
         await this.notToBeVisible(singleStoreCustomer.storeContactForm.storeContactForm);
     }
 }
