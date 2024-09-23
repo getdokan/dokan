@@ -79,7 +79,6 @@ test.describe('Coupons test', () => {
     });
 
     test('customer can buy product with coupon', { tag: ['@pro', '@customer'] }, async () => {
-        test.slow();
         await customer.buyProductWithCoupon(data.predefined.simpleProduct.product1.name, data.predefined.coupon.couponCode);
     });
 });

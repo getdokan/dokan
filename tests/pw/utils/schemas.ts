@@ -1602,7 +1602,18 @@ export const schemas = {
             delete: z.array(attributeSchema).optional(),
         }),
         setDefaultAttributeSchema: z.boolean(),
-        updateProductAttributeSchema: z.boolean(),
+        updateProductAttributeSchema: z.array(
+            z.object({
+                id: z.number(),
+                name: z.string(),
+                slug: z.string(),
+                visible: z.boolean(),
+                variation: z.boolean(),
+                taxonomy: z.boolean(),
+                all_terms: z.array(categorySchema),
+                options: z.array(categorySchema),
+            }),
+        ),
     },
 
     // attribute terms schema

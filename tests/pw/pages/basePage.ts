@@ -584,6 +584,12 @@ export class BasePage {
         return value;
     }
 
+    // set element css style property
+    async setElementCssStyle(selector: string, property: string, value: string): Promise<void> {
+        const element = this.getElement(selector);
+        await element.evaluate((element, [property, value]) => ((element.style as any)[property as string] = value), [property, value]);
+    }
+
     // get element property value
     async getElementPropertyValue(selector: string, property: string): Promise<string> {
         const element = this.getElement(selector);
@@ -736,8 +742,11 @@ export class BasePage {
 
     // check input fields [checkbox/radio]
     async check(selector: string): Promise<void> {
-        await this.checkLocator(selector);
-        // await this.checkByPage(selector);
+        await this.toPass(async () => {
+            await this.checkLocator(selector);
+            await this.toBeChecked(selector, { timeout: 200 });
+            // await this.checkByPage(selector);
+        });
     }
 
     // check input fields [checkbox/radio]
@@ -754,6 +763,14 @@ export class BasePage {
     async checkIfVisible(selector: string): Promise<void> {
         const IsVisible = await this.isVisible(selector);
         if (IsVisible) {
+            await this.check(selector);
+        }
+    }
+
+    // check if not checked
+    async checkIfNotChecked(selector: string): Promise<void> {
+        const isChecked = await this.isCheckedLocator(selector);
+        if (isChecked) {
             await this.check(selector);
         }
     }
@@ -791,7 +808,7 @@ export class BasePage {
         return await this.page.selectOption(selector, { index: Number(value) });
     }
 
-    // select by valid and wait for response
+    // select by value and wait for response
     async selectByValueAndWaitForResponse(subUrl: string, selector: string, value: string, code = 200): Promise<Response> {
         const [response] = await Promise.all([this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code), this.page.selectOption(selector, { value })]);
         return response;
@@ -801,6 +818,27 @@ export class BasePage {
     async selectByLabelAndWaitForResponse(subUrl: string, selector: string, value: string, code = 200): Promise<Response> {
         const [response] = await Promise.all([this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code), this.page.selectOption(selector, { label: value })]);
         return response;
+    }
+
+    // get select value
+    async getSelectedValue(selector: string): Promise<string> {
+        const locator = this.page.locator(selector);
+        const selectValue = await locator.evaluate((select: HTMLSelectElement) => select.value);
+        return selectValue;
+    }
+
+    // get select text
+    async getSelectedText(selector: string): Promise<string | undefined> {
+        const locator = this.page.locator(selector);
+        const selectedText = await locator.evaluate((select: HTMLSelectElement) => select.options[select.selectedIndex]?.text);
+        return selectedText;
+    }
+
+    // get select value and test
+    async getSelectedValueAndText(selector: string): Promise<(string | undefined)[]> {
+        const locator = this.page.locator(selector);
+        const [selectValue, selectedText] = await locator.evaluate((select: HTMLSelectElement) => [select.value, select.options[select.selectedIndex]?.text]);
+        return [selectValue, selectedText];
     }
 
     /**
@@ -1373,14 +1411,19 @@ export class BasePage {
         expect(received).toEqual(expected);
     }
 
+    // assert element to be enabled
+    async toBeEnabled(selector: string, options?: { timeout?: number; visible?: boolean } | undefined) {
+        await expect(this.page.locator(selector)).toBeEnabled(options);
+    }
+
     // assert element to be visible
     async toBeVisible(selector: string, options?: { timeout?: number; visible?: boolean } | undefined) {
         await expect(this.page.locator(selector)).toBeVisible(options);
     }
 
     // assert checkbox to be checked
-    async toBeChecked(selector: string) {
-        await expect(this.page.locator(selector)).toBeChecked();
+    async toBeChecked(selector: string, options?: { checked?: boolean; timeout?: number } | undefined) {
+        await expect(this.page.locator(selector)).toBeChecked(options);
     }
 
     // assert element to have text
@@ -1389,8 +1432,8 @@ export class BasePage {
     }
 
     // assert element to contain text
-    async toContainText(selector: string, text: string | RegExp) {
-        await expect(this.page.locator(selector)).toContainText(text);
+    async toContainText(selector: string, text: string | RegExp, options?: { ignoreCase?: boolean; timeout?: number; useInnerText?: boolean } | undefined) {
+        await expect(this.page.locator(selector)).toContainText(text, options);
     }
 
     // assert element to have count
@@ -1411,6 +1454,14 @@ export class BasePage {
     // assert element to have class
     async toHaveClass(selector: string, className: string | RegExp | readonly (string | RegExp)[]) {
         await expect(this.page.locator(selector)).toHaveClass(className);
+    }
+
+    // assert select element to have value
+    async toHaveSelectedValue(selector: string, value: string, options?: { timeout?: number; intervals?: number[] }) {
+        await this.toPass(async () => {
+            const selectedValue = await this.getSelectedValue(selector);
+            expect(selectedValue).toBe(value);
+        }, options);
     }
 
     // assert element to have background color

@@ -122,7 +122,6 @@ test.describe('Booking Product test', () => {
     });
 
     test('vendor can add booking for existing customer', { tag: ['@pro', '@vendor'] }, async () => {
-        test.slow();
         await vendor.addBooking(bookableProductName, data.bookings, data.customer.username);
     });
 

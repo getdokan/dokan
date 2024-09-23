@@ -333,6 +333,7 @@ export const selector = {
                     filterInput: '.select2-search.select2-search--dropdown .select2-search__field',
                     clearFilter: 'a#clear-all-filtering',
                     result: 'li.select2-results__option.select2-results__option--highlighted',
+                    filteredResult: (storeName: string) => `//li[contains(text(), "${storeName}") and @class="select2-results__option select2-results__option--highlighted"]`,
                 },
 
                 // Logs
@@ -745,6 +746,8 @@ export const selector = {
                     filterByProduct: '(//span[@class="select2-selection__arrow"])[1]',
                     filterByVendors: '(//span[@class="select2-selection__arrow"])[2]',
                     filterInput: '.select2-search.select2-search--dropdown .select2-search__field',
+                    reset: '(//button[text()="×"])[1]',
+                    filteredResult: (input: string) => `//li[normalize-space()="${input}"]`,
                 },
 
                 // Table
@@ -788,6 +791,7 @@ export const selector = {
                 // Bulk Actions
                 bulkActions: {
                     selectAll: 'thead .manage-column input',
+                    firstRowCheckbox: '(//input[@name="item[]"])[1]',
                     selectAction: '.tablenav.top #bulk-action-selector-top', // trash
                     applyAction: '.tablenav.top .button.action',
                 },
@@ -797,6 +801,7 @@ export const selector = {
                     filterByVendor: '.select2-selection__arrow',
                     filterInput: '.select2-search.select2-search--dropdown .select2-search__field',
                     filterClear: '.select2-selection__clear',
+                    filteredResult: (storeName: string) => `//li[contains(text(), "${storeName}") and @class="select2-results__option select2-results__option--highlighted"]`,
                 },
 
                 // Table
@@ -1730,7 +1735,7 @@ export const selector = {
                     filterByMethods: '(//select[@id="filter-methods"]/..//span[@class="select2-selection__arrow"])[2]',
                     resetFilterByVendors: '(//select[@id="filter-vendors"]/..//button[@class="button"])[1]',
                     resetFilterByMethods: '(//select[@id="filter-methods"]/..//button[@class="button"])[1]',
-                    reset: '//button[text()="×"]',
+                    reset: '(//button[text()="×"])[1]',
                     filterInput: '.select2-search.select2-search--dropdown .select2-search__field',
                     result: 'li.select2-results__option.select2-results__option--highlighted',
                     filteredResult: (input: string) => `//li[normalize-space()="${input}"]`,
@@ -1984,6 +1989,8 @@ export const selector = {
                     vendorSubscription: '//div[@class="nav-title" and contains(text(),"Vendor Subscription")]',
                     vendorAnalytics: '//div[@class="nav-title" and contains(text(),"Vendor Analytics")]',
                 },
+
+                settingTitle: 'div.settings-content h2.settings-title',
 
                 // General
                 general: {
@@ -3696,6 +3703,7 @@ export const selector = {
             buyAdvertisement: (productName: string) => `//a[contains(text(),'${productName}')]/../../..//td[@class="product-advertisement-td"]//span`,
             advertisementStatus: (productName: string) => `//a[contains(text(),'${productName}')]/../../..//td[@class="product-advertisement-td"]//i[contains(@class,'fa fa-circle')]`,
             permanentlyDelete: (productName: string) => `//a[contains(text(),'${productName}')]/../..//span[@class="delete"]//a`,
+            rowActions: (productName: string) => `//a[contains(text(), '${productName}')]/../..//div[@class="row-actions"]`,
             view: (productName: string) => `//a[contains(text(),'${productName}')]/../..//span[@class="view"]//a`,
             quickEdit: (productName: string) => `//a[contains(text(),'${productName}')]/../..//span[@class="item-inline-edit editline"]//a`,
             duplicate: (productName: string) => `//a[contains(text(),'${productName}')]/../..//span[@class="duplicate"]//a`,
@@ -3949,6 +3957,7 @@ export const selector = {
             // Wholesale Options
             wholesale: {
                 enableWholeSaleForThisProduct: '#wholesale\\[enable_wholesale\\]',
+                wholeSaleOptionsDiv: 'div.show_if_wholesale.dokan-hide',
                 wholesalePrice: '#dokan-wholesale-price',
                 minimumQuantityForWholesale: '#dokan-wholesale-qty',
             },
@@ -4505,12 +4514,13 @@ export const selector = {
             // Review Actions
             reviewRow: (reviewMessage: string) => `//div[contains(text(),'${reviewMessage}')]/../..`,
             reviewMessageCell: (reviewMessage: string) => `//div[contains(text(),'${reviewMessage}')]/..`,
-            unApproveReview: (reviewMessage: string) => `//div[contains(text(),'${reviewMessage}')]/..//ul[@class='dokan-cmt-row-actions']//a[contains(text(),'Unapprove')]`,
-            approveReview: (reviewMessage: string) => `//div[contains(text(),'${reviewMessage}')]/..//ul[@class='dokan-cmt-row-actions']//a[contains(text(),'Approve')]`,
-            spamReview: (reviewMessage: string) => `//div[contains(text(),'${reviewMessage}')]/..//ul[@class='dokan-cmt-row-actions']//a[contains(text(),'Spam')]`,
-            trashReview: (reviewMessage: string) => `//div[contains(text(),'${reviewMessage}')]/..//ul[@class='dokan-cmt-row-actions']//a[contains(text(),'Trash')]`,
-            restoreReview: (reviewMessage: string) => `//div[contains(text(),'${reviewMessage}')]/..//ul[@class='dokan-cmt-row-actions']//a[contains(text(),'Restore')]`,
-            permanentlyDeleteReview: (reviewMessage: string) => `//div[contains(text(),'${reviewMessage}')]/..//ul[@class='dokan-cmt-row-actions']//a[contains(text(),'Delete Permanently')]`,
+            rowActions: (reviewMessage: string) => `//div[contains(text(),'${reviewMessage}')]/..//ul[@class='dokan-cmt-row-actions']`,
+            unApproveReview: (reviewMessage: string) => `//div[contains(text(),'${reviewMessage}')]/..//a[contains(text(),'Unapprove')]`,
+            approveReview: (reviewMessage: string) => `//div[contains(text(),'${reviewMessage}')]/..//a[contains(text(),'Approve')]`,
+            spamReview: (reviewMessage: string) => `//div[contains(text(),'${reviewMessage}')]/..//a[contains(text(),'Spam')]`,
+            trashReview: (reviewMessage: string) => `//div[contains(text(),'${reviewMessage}')]/..//a[contains(text(),'Trash')]`,
+            restoreReview: (reviewMessage: string) => `//div[contains(text(),'${reviewMessage}')]/..//a[contains(text(),'Restore')]`,
+            permanentlyDeleteReview: (reviewMessage: string) => `//div[contains(text(),'${reviewMessage}')]/..//a[contains(text(),'Delete Permanently')]`,
             reviewLink: (reviewMessage: string) => `//div[contains(text(),'${reviewMessage}')]/../..//td[@class="col-link"]//a`,
             viewReview: '//a[contains(text(),"View Comment")]',
 
@@ -5249,6 +5259,7 @@ export const selector = {
                 selectCustomerDropdown: '//span[@id="select2-customer_id-container"]/..//span[@class="select2-selection__arrow"]',
                 selectCustomerInput: '.select2-search__field',
                 searchedResult: '.select2-results__option.select2-results__option--highlighted',
+                searchedResultByName: (customerName: string) => `//li[contains(text(), "${customerName}") and @class="select2-results__option select2-results__option--highlighted"]`,
                 selectABookableProductDropdown: '//span[@id="select2-bookable_product_id-container"]/..//span[@class="select2-selection__arrow"]',
                 selectABookableProduct: (productName: string) => `//li[contains(@class,"select2-results__option") and contains(text(), '${productName}')]`,
 
@@ -5256,7 +5267,7 @@ export const selector = {
                 assignThisBookingToAnExistingOrderWithThisId: '//input[@name="booking_order" and @value="existing"]',
                 bookingOrderId: '.text',
                 dontCreateAnOrderForThisBooking: '//label[normalize-space()="Don"t create an order for this booking."]/..//input',
-                next: '.button-primary',
+                next: 'input[name="create_booking"]',
                 selectCalendarDay: (month: number, day: number) => `//td[@title="This date is available" and @ data-month="${month}"]//a[@data-date="${day}"]`,
 
                 addBooking: 'input[value="Add Booking"][type="submit"]',
@@ -6726,7 +6737,8 @@ export const selector = {
 
         // Customer Bookings
         cBookings: {
-            selectCalendarDay: (month: number, day: number) => `//td[@title="This date is available" and @ data-month="${month}"]//a[@data-date="${day}"]`,
+            calanderLoader: '//div[@class="blockUI blockOverlay"]',
+            selectCalendarDay: (month: number, day: number) => `//td[not(contains(@class,"not-bookable")) and @data-month="${month}"]//a[@data-date="${day}"]`,
             view: (orderNumber: string) => `//a[contains(text(),'Order #${orderNumber}')]/../..//a[@class="woocommerce-button button view"]`,
             bookNow: 'button.wc-bookings-booking-form-button',
         },
@@ -6819,6 +6831,9 @@ export const selector = {
                     productUnit: 'div.summary p.wc-gzd-additional-info.product-units',
                     deliveryTime: 'div.summary p.wc-gzd-additional-info.delivery-time-info',
                 },
+
+                productAddedSuccessMessage: (productName: string) => `//div[@class="woocommerce-message" and contains(.,"“${productName}” has been added to your cart.")]`,
+                productWithQuantityAddedSuccessMessage: (productName: string, quantity: string) => `//div[@class="woocommerce-message" and contains(.,"${quantity} × “${productName}” have been added to your cart.")]`,
             },
 
             // Sub menus

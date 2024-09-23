@@ -33,7 +33,7 @@ export class WithdrawsPage extends AdminPage {
         await this.multipleElementVisible(withdrawsAdmin.bulkActions);
 
         // filter elements are visible
-        const { filterInput, clearFilter, result, ...filters } = withdrawsAdmin.filters;
+        const { filterInput, clearFilter, result, filteredResult, ...filters } = withdrawsAdmin.filters;
         await this.multipleElementVisible(filters);
 
         // withdraw table elements are visible
@@ -53,7 +53,7 @@ export class WithdrawsPage extends AdminPage {
             case 'by-vendor':
                 await this.click(withdrawsAdmin.filters.filterByVendor);
                 await this.typeAndWaitForResponse(data.subUrls.api.dokan.stores, withdrawsAdmin.filters.filterInput, input);
-                await this.pressAndWaitForResponse(data.subUrls.api.dokan.withdraws, data.key.enter);
+                await this.clickAndWaitForResponse(data.subUrls.api.dokan.withdraws, withdrawsAdmin.filters.filteredResult(input));
                 break;
 
             case 'by-payment-method':
