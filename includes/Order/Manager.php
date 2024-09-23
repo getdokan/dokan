@@ -646,7 +646,7 @@ class Manager {
             dokan_log( 'Created sub order : #' . $order->get_id() );
 
             do_action( 'dokan_checkout_update_order_meta', $order->get_id(), $seller_id );
-        } catch ( Exception $e ) {
+        } catch ( \Throwable $e ) {
             dokan_log( 'Error in create_sub_order: ' . $e->getMessage() );
             dokan_log( 'Stack trace: ' . $e->getTraceAsString() );
             dokan_log( 'Backtrace at error: ' . wp_debug_backtrace_summary() );
