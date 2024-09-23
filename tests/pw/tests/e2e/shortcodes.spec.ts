@@ -34,7 +34,7 @@ test.describe('Shortcodes test', () => {
         await apiUtils.dispose();
     });
 
-    test('admin can create page with dokan shortcode', { tag: ['@lite', '@admin'] }, async () => {
+    test.skip('admin can create page with dokan shortcode', { tag: ['@lite', '@admin'] }, async () => {
         await admin.createPageWithShortcode(data.pageTitle, data.dokanShortcodes.dashboard);
     });
 

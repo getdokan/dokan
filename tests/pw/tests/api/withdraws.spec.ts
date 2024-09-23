@@ -1,3 +1,4 @@
+//COVERAGE_TAG: GET /dokan/v1/withdraw/payment_methods
 //COVERAGE_TAG: GET /dokan/v1/withdraw/balance
 //COVERAGE_TAG: GET /dokan/v1/withdraw
 //COVERAGE_TAG: GET /dokan/v1/withdraw/(?P<id>[\d]+)
@@ -5,6 +6,8 @@
 //COVERAGE_TAG: DELETE /dokan/v1/withdraw/(?P<id>[\d]+)
 //COVERAGE_TAG: PUT /dokan/v1/withdraw/batch
 //COVERAGE_TAG: POST /dokan/v1/withdraw
+//COVERAGE_TAG: GET /dokan/v1/withdraw/charges
+//COVERAGE_TAG: GET /dokan/v1/withdraw/charge
 
 import { test, expect, request } from '@playwright/test';
 import { ApiUtils } from '@utils/apiUtils';

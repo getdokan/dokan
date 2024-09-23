@@ -67,7 +67,7 @@ $custom_store_url = dokan_get_option( 'custom_store_url', 'dokan_general', 'stor
                 <?php
                 printf(
                 /* translators: %1$s: opening anchor tag with link, %2$s: an ampersand %3$s: closing anchor tag */
-                    __( 'I have read and agree to the %1$sTerms %2$s Conditions%3$s.', 'dokan-lite' ),
+                    esc_html__( 'I have read and agree to the %1$sTerms %2$s Conditions%3$s.', 'dokan-lite' ),
                     sprintf( '<a target="_blank" href="%s">', esc_url( $terms_condition_url ) ),
                     '&amp;',
                     '</a>'

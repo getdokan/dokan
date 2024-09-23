@@ -3,11 +3,11 @@ Contributors: tareq1988, wedevs, nizamuddinbabu
 Donate Link: http://tareq.co/donate/
 Tags: WooCommerce multivendor marketplace, multivendor marketplace, multivendor, multi seller, multi vendor, WooCommerce marketplace, WooCommerce product vendors
 Requires at least: 6.4
-Tested up to: 6.6.1
+Tested up to: 6.6.2
 WC requires at least: 8.0.0
-WC tested up to: 9.2.3
+WC tested up to: 9.3.2
 Requires PHP: 7.4
-Stable tag: 3.12.1
+Stable tag: 3.12.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -346,6 +346,13 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 == Changelog ==
+
+= v3.12.2 ( Sep 23, 2024 ) =
+
+- **fix:** Product gallery image uploader close button style fix.
+- **fix:** Fix incorrect sub-order status updates when the main order status changed specifically for cancelled sub-orders.
+- **fix:** Fixed vendor coupon validation for various discount item types.
+
 = v3.12.1 ( Aug 30, 2024 ) =
 - **fix:** Resolve fatal error when updating Dokan Lite to 3.12.0 with Dokan Pro 3.9.7.
 

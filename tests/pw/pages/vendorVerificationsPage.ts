@@ -1,4 +1,4 @@
-import { Page, expect } from '@playwright/test';
+import { Page } from '@playwright/test';
 import { AdminPage } from '@pages/adminPage';
 import { CustomerPage } from '@pages/customerPage';
 import { selector } from '@pages/selectors';
@@ -148,6 +148,9 @@ export class VendorVerificationsPage extends AdminPage {
     // verification requests
     async filterVerificationRequests(input: string, action: string): Promise<void> {
         await this.goto(data.subUrls.backend.dokan.verifications);
+
+        // reset pervious filter if visible
+        await this.clickIfVisible(verificationsAdmin.filters.reset);
 
         switch (action) {
             case 'by-status': {
