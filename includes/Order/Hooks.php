@@ -143,7 +143,7 @@ class Hooks {
      * This method determines whether a sub-order can transition from its current status
      * to a new status, based on a configurable whitelist of allowed transitions.
      *
-     * @since DOKAN_SINCE
+     * @since 3.12.2
      *
      * @param string $current_status The current status of the sub-order (should include 'wc-' prefix).
      * @param string $new_status     The new status to check (should include 'wc-' prefix).
@@ -174,7 +174,7 @@ class Hooks {
          * status is updated. By modifying this whitelist, you can control how
          * sub-order statuses are updated in relation to the main order.
          *
-         * @since DOKAN_SINCE
+         * @since 3.12.2
          *
          * @param array $whitelist An associative array where keys are current statuses
          *                         and values are arrays of allowed new statuses.
@@ -201,7 +201,7 @@ class Hooks {
     /**
      * Ensure a status string has the 'wc-' prefix.
      *
-     * @since DOKAN_SINCE
+     * @since 3.12.2
      *
      * @param string $status The status string to check.
      *
@@ -217,7 +217,7 @@ class Hooks {
      * This method logs a message to the error log when a status update for a sub-order
      * is skipped because the status change is not allowed.
      *
-     * @since DOKAN_SINCE
+     * @since 3.12.2
      *
      * @param int    $order_id      The ID of the sub-order.
      * @param string $current_status The current status of the sub-order.
