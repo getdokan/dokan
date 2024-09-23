@@ -3948,7 +3948,14 @@ export const payloads = {
         product_id: '',
     },
 
-    randormNumber: faker.number.int({ min: 2, max: 100 }),
+    randomNumber: faker.number.int({ min: 2, max: 100 }),
+
+    createReverseWithdrawal: {
+        trn_type: 'other', // "opening_balance", "order_commission", "failed_transfer_reversal", "product_advertisement", "manual_order_commission", "vendor_payment", "order_refund", "manual_product", "manual_order", "other"
+        vendor_id: '',
+        note: 'test reverse withdrawal note',
+        credit: '100',
+    },
 
     paramsReverseWithdrawalTransactions: {
         'trn_date[from]': `${helpers.currentYear}-01-01 00:00:00`,
