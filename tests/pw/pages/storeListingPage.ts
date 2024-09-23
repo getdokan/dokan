@@ -71,7 +71,8 @@ export class StoreListingPage extends CustomerPage {
     // sort store
     async sortStores(sortBy: string) {
         await this.goIfNotThere(data.subUrls.frontend.storeListing);
-        await this.selectByValueAndWaitForResponse(data.subUrls.frontend.storeListing, storeList.filters.sortBy, sortBy);
+        await this.selectByValueAndWaitForResponseAndLoadState(data.subUrls.frontend.storeListing, storeList.filters.sortBy, sortBy);
+        await this.notToHaveCount(storeList.storeCard.storeCardDiv, 0);
     }
 
     // store view layout
