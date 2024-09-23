@@ -5,7 +5,7 @@ import { dbUtils } from '@utils/dbUtils';
 import { data } from '@utils/testData';
 import { dbData } from '@utils/dbData';
 
-test.describe.only('Privacy Policy & Store Contact form test', () => {
+test.describe('Privacy Policy & Store Contact form test', () => {
     let customer: PrivacyPolicyPage;
     let cPage: Page;
     let apiUtils: ApiUtils;
