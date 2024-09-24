@@ -204,7 +204,6 @@ test.describe('Verifications test', () => {
         await customer.viewVerifiedBadge(data.predefined.vendorStores.vendor2);
     });
 
-    test.skip('admin receive notification for verification request', { tag: ['@pro', '@admin'] }, async () => {});
     test.skip('vendor need all required method to be verified to get verification badge', { tag: ['@pro', '@vendor'] }, async () => {});
     test.skip('vendor need to be verified only one method when no required method is exists', { tag: ['@pro', '@vendor'] }, async () => {});
     test.skip('vendor address verification gets reset when he update address', { tag: ['@pro', '@vendor'] }, async () => {

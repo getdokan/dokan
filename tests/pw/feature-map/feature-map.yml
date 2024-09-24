@@ -24,8 +24,6 @@
           admin can enable shipping method [lite]: true
           admin can add flat rate shipping method [lite]: true
           admin can add free shipping method [lite]: true
-          admin can add vendor table rate shipping method: true
-          admin can add vendor distance rate shipping method: true
           admin can add vendor shipping method: true
           admin can delete shipping method [lite]: true
           admin can delete shipping zone  [lite]: true
@@ -35,8 +33,6 @@
           vendor can add flat rate shipping: true
           vendor can add free shipping: true
           vendor can add local pickup shipping: true
-          vendor can add table rate shipping: true
-          vendor can add distance rate shipping: true
           vendor can edit shipping method: true
           vendor can delete shipping method: true
 
@@ -1001,7 +997,11 @@
 - page: 'Table Rate Shipping'
   features:
       admin:
-          no test is written for table rate shipping: false
+          admin can add vendor table rate shipping method: true
+          admin can add vendor distance rate shipping method: true
+      vendor:
+          vendor can add table rate shipping: true
+          vendor can add distance rate shipping: true
 
 - page: 'Vendor Analytics'
   features:
@@ -1069,7 +1069,6 @@
           admin can approve verification request: true
           admin can reject verification request: true
           admin can perform bulk action on verification requests: true
-          admin receive notification for verification request: false
       vendor:
           vendor can view verifications settings menu page: true
           vendor can submit verification request: true
@@ -1091,8 +1090,6 @@
 - page: 'Wholesale'
   features:
       admin:
-          admin can set wholesale price viewer: false
-          admin can set show wholesale price on shop archive: false
           admin can view wholesale customers menu page: true
           admin can search wholesale customer: true
           admin can disable customer's wholesale capability: true
