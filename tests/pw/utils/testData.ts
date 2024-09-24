@@ -1881,6 +1881,30 @@ export const data = {
         wholesaleCapabilityActivate: 'Wholesale capability activate',
     },
 
+    // vendor staff
+    vendorStaff: {
+        basicMenu: ['dokan_view_product_menu', 'dokan_view_order_menu', 'dokan_view_coupon_menu'],
+        basicMenuNames: ['products', 'orders', 'coupons'],
+        menus: [
+            'dokan_view_overview_menu',
+            'dokan_view_product_menu',
+            'dokan_view_order_menu',
+            'dokan_view_coupon_menu',
+            'dokan_view_report_menu',
+            'dokan_view_review_menu',
+            'dokan_view_withdraw_menu',
+            'dokan_view_store_settings_menu',
+            'dokan_view_store_payment_menu',
+            'dokan_view_store_shipping_menu',
+            'dokan_view_store_social_menu',
+            'dokan_view_store_seo_menu',
+            'dokan_view_booking_menu',
+            'dokan_view_tools_menu',
+            'dokan_view_auction_menu',
+            'dokan_view_store_verification_menu',
+        ],
+    },
+
     // dokan settings
     dokanSettings: {
         // general settings

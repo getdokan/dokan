@@ -76,6 +76,7 @@
           admin can add Dokan news subscriber [lite]: true
       vendor:
           vendor can view vendor dashboard [lite]: true
+          vendor can view vendor dashboard menus [lite]: true
 
 - page: 'Products'
   features:
@@ -1025,8 +1026,8 @@
           vendor can edit staff: true
           vendor can manage staff permission: true
           vendor can delete staff: true
-      vendorStaff:
-          vendorStaff can view allowed menus: false
+      staff:
+          vendorStaff can view allowed menus: true
 
 - page: 'Vendor Subscription'
   features:
