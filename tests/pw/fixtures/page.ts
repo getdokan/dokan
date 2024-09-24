@@ -64,7 +64,7 @@ import { VendorStaffPage } from '@pages/vendorStaffPage';
 import { VendorToolsPage } from '@pages/vendorToolsPage';
 import { VendorVerificationsPage } from '@pages/vendorVerificationsPage';
 import { VisualPage } from '@pages/visualPage';
-import { WholesaleCustomersPage } from '@pages/wholesaleCustomersPage';
+import { WholesalePage } from '@pages/wholesalePage';
 import { WithdrawsPage } from '@pages/withdrawsPage';
 
 // types of pages
@@ -134,7 +134,7 @@ type pages = {
     vendorToolsPage: VendorToolsPage;
     vendorVerificationsPage: VendorVerificationsPage;
     visualPage: VisualPage;
-    wholesaleCustomersPage: WholesaleCustomersPage;
+    WholesalePage: WholesalePage;
     withdrawsPage: WithdrawsPage;
 };
 
@@ -399,8 +399,8 @@ export const test = base.extend<pages>({
         await use(new VisualPage(page));
     },
 
-    wholesaleCustomersPage: async ({ page }, use) => {
-        await use(new WholesaleCustomersPage(page));
+    WholesalePage: async ({ page }, use) => {
+        await use(new WholesalePage(page));
     },
 
     withdrawsPage: async ({ page }, use) => {

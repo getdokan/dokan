@@ -453,7 +453,7 @@
           admin can export all logs: true
           admin can filter all logs by store name: true
           admin can filter all logs by order status: true
-          #   admin can filter all logs by calander: true
+          #   admin can filter all logs by calendar: true
       vendor:
           vendor can view reports menu page: true
           vendor can export statement: true
@@ -713,7 +713,7 @@
           vendor can delete product addon: true
           #   vendor can add individual product addon [duplicate]: false
           vendor can edit individual product product addon: false
-          vendor can delete individual productproduct addon: false
+          vendor can delete individual product addon: false
       customer:
           customer can view product addons on single product page: false
           customer can buy product with addons: false
@@ -728,7 +728,7 @@
           admin can set product advertisement cost: false
           admin can enable product advertising on dokan subscription: false
           admin can set advertised product as featured: false
-          admin can set advertised product display pefeference: false
+          admin can set advertised product display preference: false
           admin can hide out of stock advertised product: false
           admin can add product advertising widget: false
           #    admin can add product advertising shortcode [duplicate]: false
@@ -738,7 +738,7 @@
           admin can search advertised product by order: false
           admin can filter advertised product by stores: true
           admin can filter advertised product by creation process: true
-          #   admin can filter advertised product by calander: false
+          #   admin can filter advertised product by calendar: false
           admin can expire advertised product: true
           admin can delete advertised product: true
           admin can perform bulk action on product advertisements: false
@@ -954,7 +954,7 @@
           admin can search support ticket by ticket title: true
           admin can filter support tickets by vendor: true
           admin can filter support tickets by customer: true
-          #   admin can filter support tickets by calander: false
+          #   admin can filter support tickets by calendar: false
           admin can reply to support ticket as admin: true
           admin can reply to support ticket as vendor: true
           admin can disable support ticket email notification: true
@@ -1091,10 +1091,8 @@
 - page: 'Wholesale'
   features:
       admin:
-          #   admin can set Dokan wholesale settings [duplicate]: true
           admin can set wholesale price viewer: false
-          admin can set show wholsesale price on shop archive: false
-          admin can set need approval for becoming wholesale customer: false
+          admin can set show wholesale price on shop archive: false
           admin can view wholesale customers menu page: true
           admin can search wholesale customer: true
           admin can disable customer's wholesale capability: true
@@ -1103,13 +1101,16 @@
           admin can view wholesale customer orders: true
           admin can delete wholesale customer: true
           admin can perform bulk action on wholesale customers: true
+          All users can see wholesale price: true
       vendor:
-          vendor can create wholesale product: false
+          vendor can create wholesale product: true
       customer:
           customer can become a wholesale customer: true
           customer can request for become a wholesale customer: true
           customer can see wholesale price on shop archive: true
-          customer can buy wholesale product: true
+          customer can't see wholesale price on shop archive: true
+          customer (wholesale) can only see wholesale price: true
+          customer (wholesale) can buy wholesale product: true
 
 - page: 'WooCommerce Booking Integration'
   features:
@@ -1133,7 +1134,7 @@
           vendor can add booking resource: true
           vendor can edit booking resource: true
           vendor can delete booking resource: true
-          vendor can add booking for guest customer: false
-          vendor can add booking for existing customer: false
+          vendor can add booking for guest customer: true
+          vendor can add booking for existing customer: true
       customer:
           customer can buy bookable product: true
