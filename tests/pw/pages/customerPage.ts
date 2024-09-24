@@ -228,11 +228,10 @@ export class CustomerPage extends BasePage {
         if (addonIsVisible) await this.selectByNumber(selector.customer.cSingleProduct.productAddon.addOnSelect, 1);
         if (quantity) await this.clearAndType(selector.customer.cSingleProduct.productDetails.quantity, String(quantity));
         await this.clickAndWaitForResponse(data.subUrls.frontend.productCustomerPage, selector.customer.cSingleProduct.productDetails.addToCart);
-        await this.toBeVisible(selector.customer.cWooSelector.wooCommerceSuccessMessage);
         if (!quantity) {
-            await this.toContainText(selector.customer.cWooSelector.wooCommerceSuccessMessage, `“${productName}” has been added to your cart.`);
+            await this.toBeVisible(selector.customer.cSingleProduct.productDetails.productAddedSuccessMessage(productName));
         } else {
-            await this.toContainText(selector.customer.cWooSelector.wooCommerceSuccessMessage, `${quantity} × “${productName}” have been added to your cart.`);
+            await this.toBeVisible(selector.customer.cSingleProduct.productDetails.productWithQuantityAddedSuccessMessage(productName, quantity));
         }
     }
 

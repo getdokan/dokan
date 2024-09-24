@@ -94,9 +94,9 @@ export class SingleStorePage extends CustomerPage {
     async storeShare(storeName: string, site: string): Promise<void> {
         await this.goIfNotThere(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)));
         await this.click(singleStoreCustomer.storeTabs.share);
-        // ensure page suppose to open on new tab
+        // ensure link suppose to open on new tab
         await this.toHaveAttribute(singleStoreCustomer.sharePlatForms[site as keyof typeof singleStoreCustomer.sharePlatForms], 'target', '_blank');
-        // force page to open on the same tab
+        // force link to open on the same tab
         await this.setAttributeValue(singleStoreCustomer.sharePlatForms[site as keyof typeof singleStoreCustomer.sharePlatForms], 'target', '_self');
         await this.clickAndWaitForUrl(new RegExp('.*' + site + '.*'), singleStoreCustomer.sharePlatForms[site as keyof typeof singleStoreCustomer.sharePlatForms]);
     }

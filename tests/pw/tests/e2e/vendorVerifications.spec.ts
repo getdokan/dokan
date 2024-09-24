@@ -129,7 +129,7 @@ test.describe('Verifications test', () => {
 
     test('admin can reject verification request', { tag: ['@pro', '@admin'] }, async () => {
         const [, requestId] = await apiUtils.createVerificationRequest({ ...payloads.createVerificationRequest(), vendor_id: VENDOR_ID, method_id: methodId, documents: [mediaId] }, payloads.adminAuth);
-        // todo: need to force goto or reload page, page is not reloading because of previous test are on the same page, and created data via api is not loading
+        // todo: need to force goto url contains # which avoid page reload
         await admin.updateVerificationRequest(requestId, 'reject');
     });
 

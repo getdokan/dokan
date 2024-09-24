@@ -5,20 +5,20 @@
  *
  * @since 3.0.0
  *
- * @param string $function Function used.
+ * @param string $function_name Function used.
  * @param string $message Message to log.
  * @param string $version Version the message was added in.
  *
  * @return void
  */
-function dokan_doing_it_wrong( $function, $message, $version ) {
+function dokan_doing_it_wrong( $function_name, $message, $version ) {
     $message .= ' Backtrace: ' . wp_debug_backtrace_summary();
 
     if ( wp_doing_ajax() || WC()->is_rest_api_request() ) {
-        do_action( 'doing_it_wrong_run', $function, $message, $version );
-        error_log( "{$function} was called incorrectly. {$message}. This message was added in version {$version}." );
+        do_action( 'doing_it_wrong_run', $function_name, $message, $version );
+        error_log( "{$function_name} was called incorrectly. {$message}. This message was added in version {$version}." );
     } else {
-        _doing_it_wrong( $function, $message, $version );
+        _doing_it_wrong( $function_name, $message, $version ); // phpcs:ignore
     }
 }
 

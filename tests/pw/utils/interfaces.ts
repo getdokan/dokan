@@ -1412,6 +1412,7 @@ export interface wholesale {
 export interface dokanSettings {
     // General Settings
     general: {
+        settingTitle: string;
         vendorStoreUrl: string;
         setupWizardMessage: string;
         sellingProductTypes: string;
@@ -1422,6 +1423,7 @@ export interface dokanSettings {
 
     // Selling Options Settings
     selling: {
+        settingTitle: string;
         commissionType: string;
         adminCommission: string;
         shippingFeeRecipient: string;
@@ -1434,6 +1436,7 @@ export interface dokanSettings {
 
     // Withdraw
     withdraw: {
+        settingTitle: string;
         customMethodName: string;
         customMethodType: string;
         charge: {
@@ -1457,6 +1460,7 @@ export interface dokanSettings {
 
     // Reverse withdraw
     reverseWithdraw: {
+        settingTitle: string;
         billingType: string;
         reverseBalanceThreshold: string;
         gracePeriod: string;
@@ -1465,6 +1469,7 @@ export interface dokanSettings {
 
     // Pages
     page: {
+        settingTitle: string;
         dashboard: string;
         myOrders: string;
         storeListing: string;
@@ -1474,6 +1479,7 @@ export interface dokanSettings {
 
     // Appearance
     appearance: {
+        settingTitle: string;
         mapApiSource: string;
         googleMapApiKey: string;
         mapBoxApiKey: string;
@@ -1482,8 +1488,15 @@ export interface dokanSettings {
         saveSuccessMessage: string;
     };
 
+    // MenuManager
+    menuManager: {
+        settingTitle: string;
+        saveSuccessMessage: string;
+    };
+
     // privacy policy
     privacyPolicy: {
+        settingTitle: string;
         privacyPage: string;
         privacyPolicyContent: string;
         saveSuccessMessage: string;
@@ -1491,6 +1504,7 @@ export interface dokanSettings {
 
     // colors
     colors: {
+        settingTitle: string;
         paletteChoice: string;
         colorPalette: string;
         saveSuccessMessage: string;
@@ -1498,24 +1512,28 @@ export interface dokanSettings {
 
     // shipping status
     shippingStatus: {
+        settingTitle: string;
         customShippingStatus: string;
         saveSuccessMessage: string;
     };
 
     // quote
     quote: {
+        settingTitle: string;
         decreaseOfferedPrice: string;
         saveSuccessMessage: string;
     };
 
     // live search
     liveSearch: {
+        settingTitle: string;
         liveSearchOption: string;
         saveSuccessMessage: string;
     };
 
     // Store support
     storeSupport: {
+        settingTitle: string;
         displayOnSingleProductPage: string;
         supportButtonLabel: string;
         saveSuccessMessage: string;
@@ -1523,6 +1541,7 @@ export interface dokanSettings {
 
     // Vendor Verification
     vendorVerification: {
+        settingTitle: string;
         verifiedIcons: {
             circleSolid: string;
             circleRegular: string;
@@ -1561,6 +1580,7 @@ export interface dokanSettings {
 
     // Email verification
     emailVerification: {
+        settingTitle: string;
         registrationNotice: string;
         loginNotice: string;
         saveSuccessMessage: string;
@@ -1568,6 +1588,7 @@ export interface dokanSettings {
 
     // Rma Settings
     rma: {
+        settingTitle: string;
         orderStatus: string;
         rmaReasons: string[];
         refundPolicyHtmlBody: string;
@@ -1576,17 +1597,20 @@ export interface dokanSettings {
 
     // Wholesale
     wholesale: {
+        settingTitle: string;
         whoCanSeeWholesalePrice: string;
         saveSuccessMessage: string;
     };
 
     // EuCompliance
     euCompliance: {
+        settingTitle: string;
         saveSuccessMessage: string;
     };
 
     // delivery time
     deliveryTime: {
+        settingTitle: string;
         deliveryDateLabel: string;
         deliveryBlockedBuffer: string;
         deliveryBoxInfo: string;
@@ -1601,6 +1625,7 @@ export interface dokanSettings {
 
     // Product advertising
     productAdvertising: {
+        settingTitle: string;
         noOfAvailableSlot: string;
         expireAfterDays: string;
         advertisementCost: string;
@@ -1609,6 +1634,7 @@ export interface dokanSettings {
 
     // Geolocation Settings
     geolocation: {
+        settingTitle: string;
         locationMapPosition: string;
         showMap: string;
         radiusSearchUnit: string;
@@ -1621,12 +1647,14 @@ export interface dokanSettings {
 
     // Product report abuse
     productReportAbuse: {
+        settingTitle: string;
         reasonsForAbuseReport: string;
         saveSuccessMessage: string;
     };
 
     // Spmv Settings
     spmv: {
+        settingTitle: string;
         sellItemButtonText: string;
         availableVendorDisplayAreaTitle: string;
         availableVendorSectionDisplayPosition: string;
@@ -1636,6 +1664,7 @@ export interface dokanSettings {
 
     // Vendor Subscription Settings
     vendorSubscription: {
+        settingTitle: string;
         displayPage: string;
         noOfDays: string;
         productStatus: string;

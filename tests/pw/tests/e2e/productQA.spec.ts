@@ -73,8 +73,8 @@ test.describe('Product QA functionality test', () => {
 
     test('admin can delete answer', { tag: ['@pro', '@admin'] }, async () => {
         const [, questionId] = await apiUtils.createProductQuestion({ ...payloads.createProductQuestion(), product_id: PRODUCT_ID }, payloads.customerAuth);
-        await apiUtils.createProductQuestionAnswer({ ...payloads.createProductQuestionAnswer(), question_id: questionId }, payloads.adminAuth);
-        await admin.deleteAnswer(questionId);
+        const [, , answer] = await apiUtils.createProductQuestionAnswer({ ...payloads.createProductQuestionAnswer(), question_id: questionId }, payloads.adminAuth);
+        await admin.deleteAnswer(questionId, answer);
     });
 
     test('admin can edit(hide) question visibility', { tag: ['@pro', '@admin'] }, async () => {

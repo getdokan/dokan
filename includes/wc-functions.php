@@ -440,7 +440,8 @@ function dokan_process_product_file_download_paths( int $product_id, int $variat
 
     if ( ! empty( $new_download_ids ) || ! empty( $removed_download_ids ) ) {
         // determine whether downloadable file access has been granted via the typical order completion, or via the admin ajax method
-        $existing_permissions = $wpdb->get_results( $wpdb->prepare( "SELECT * from {$wpdb->prefix}woocommerce_downloadable_product_permissions WHERE product_id = %d GROUP BY order_id", $product_id ) );
+        $permission_query = $wpdb->prepare( "SELECT * from {$wpdb->prefix}woocommerce_downloadable_product_permissions WHERE product_id = %d GROUP BY order_id", $product_id );
+        $existing_permissions = $wpdb->get_results( $permission_query ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
         foreach ( $existing_permissions as $existing_permission ) {
             $order = wc_get_order( $existing_permission->order_id );
@@ -450,6 +451,7 @@ function dokan_process_product_file_download_paths( int $product_id, int $variat
                 if ( ! empty( $removed_download_ids ) ) {
                     foreach ( $removed_download_ids as $download_id ) {
                         if ( apply_filters( 'woocommerce_process_product_file_download_paths_remove_access_to_old_file', true, $download_id, $product_id, $order ) ) {
+                            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
                             $wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}woocommerce_downloadable_product_permissions WHERE order_id = %d AND product_id = %d AND download_id = %s", dokan_get_prop( $order, 'id' ), $product_id, $download_id ) );
                         }
                     }
@@ -459,6 +461,7 @@ function dokan_process_product_file_download_paths( int $product_id, int $variat
                     foreach ( $new_download_ids as $download_id ) {
                         if ( apply_filters( 'woocommerce_process_product_file_download_paths_grant_access_to_new_file', true, $download_id, $product_id, $order ) ) {
                             // grant permission if it doesn't already exist
+                            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
                             if ( ! $wpdb->get_var( $wpdb->prepare( "SELECT 1=1 FROM {$wpdb->prefix}woocommerce_downloadable_product_permissions WHERE order_id = %d AND product_id = %d AND download_id = %s", dokan_get_prop( $order, 'id' ), $product_id, $download_id ) ) ) {
                                 wc_downloadable_file_permission( $download_id, $product_id, $order );
                             }
@@ -479,10 +482,11 @@ function dokan_process_product_file_download_paths( int $product_id, int $variat
  *
  * @return int
  */
-function dokan_sub_order_get_total_coupon( int $order_id ) : int {
+function dokan_sub_order_get_total_coupon( int $order_id ): int {
     wc_deprecated_function( 'dokan_sub_order_get_total_coupon', '3.8.0' );
     global $wpdb;
 
+    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
     $result = $wpdb->get_var(
         $wpdb->prepare(
             "SELECT SUM(oim.meta_value) FROM {$wpdb->prefix}woocommerce_order_itemmeta oim
@@ -663,7 +667,7 @@ function dokan_get_top_rated_products( $per_page = 8, $seller_id = '', $page = 1
  *
  * @return WP_Query
  */
-function dokan_get_on_sale_products( int $per_page = 10, int $paged = 1, int $seller_id = 0 ) : WP_Query {
+function dokan_get_on_sale_products( int $per_page = 10, int $paged = 1, int $seller_id = 0 ): WP_Query {
     // Get products on sale
     $product_ids_on_sale = wc_get_product_ids_on_sale();
 
