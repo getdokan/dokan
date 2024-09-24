@@ -269,33 +269,9 @@ export class SettingsPage extends AdminPage {
     }
 
     // Admin Set Dokan MenuManager Settings
-    async setDokanMenuManagerSettings() {
+    async setDokanMenuManagerSettings(menus: string[]) {
         await this.goToDokanSettings();
         await this.click(settingsAdmin.menus.menuManager);
-
-        const menus = [
-            'Products',
-            'Orders',
-            'Request Quotes',
-            'Coupons',
-            'Reports',
-            'Delivery Time',
-            'Reviews',
-            'Withdraw',
-            'Reverse Withdrawal',
-            'Badge',
-            'Product Q&A',
-            'Return Request',
-            'Staff',
-            'Followers',
-            // 'Subscription',
-            'Booking',
-            'Announcements',
-            'Analytics',
-            'Tools',
-            'Auction',
-            'Support',
-        ];
 
         // menuManager Settings
         for (const menu of menus) {

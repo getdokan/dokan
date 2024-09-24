@@ -15,7 +15,7 @@ export class PrivacyPolicyPage extends CustomerPage {
 
     // contact vendor
     async contactVendor(storeName: string, storeContactData: storeContactData) {
-        await this.gotoSingleStore(storeName);
+        await this.gotoUntilNetworkidle(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)));
         await this.clearAndType(singleStoreCustomer.storeContactForm.name, storeContactData.name);
         await this.clearAndType(singleStoreCustomer.storeContactForm.email, storeContactData.email);
         await this.clearAndType(singleStoreCustomer.storeContactForm.message, storeContactData.message);
