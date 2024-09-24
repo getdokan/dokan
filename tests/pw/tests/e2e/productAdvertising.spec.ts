@@ -86,6 +86,7 @@ test.describe('Product Advertising test (vendor)', () => {
     // vendor
 
     test('vendor can buy product advertising (product list page)', { tag: ['@pro', '@vendor'] }, async () => {
+        test.slow();
         const [, , productName] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendorAuth);
         const orderId = await vendor.buyProductAdvertising(productName, 'simple');
         await apiUtils.updateOrderStatus(orderId, 'wc-completed', payloads.adminAuth);
@@ -93,6 +94,7 @@ test.describe('Product Advertising test (vendor)', () => {
     });
 
     test('vendor can buy booking product advertising', { tag: ['@pro', '@vendor'] }, async () => {
+        test.slow();
         const [, , productName] = await apiUtils.createBookableProduct(payloads.createBookableProduct(), payloads.vendorAuth);
         const orderId = await vendor.buyProductAdvertising(productName, 'booking', BookingPage);
         await apiUtils.updateOrderStatus(orderId, 'wc-completed', payloads.adminAuth);
@@ -100,6 +102,7 @@ test.describe('Product Advertising test (vendor)', () => {
     });
 
     test('vendor can buy auction product advertising', { tag: ['@pro', '@vendor'] }, async () => {
+        test.slow();
         const [, , productName] = await apiUtils.createProduct(payloads.createAuctionProduct(), payloads.vendorAuth);
         const orderId = await vendor.buyProductAdvertising(productName, 'auction', AuctionsPage);
         await apiUtils.updateOrderStatus(orderId, 'wc-completed', payloads.adminAuth);

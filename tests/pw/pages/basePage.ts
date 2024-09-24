@@ -814,6 +814,12 @@ export class BasePage {
         return response;
     }
 
+    // select by value and wait for response and load state
+    async selectByValueAndWaitForResponseAndLoadState(subUrl: string, selector: string, value: string, code = 200): Promise<Response> {
+        const [response] = await Promise.all([this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code), this.waitForLoadState(), this.page.selectOption(selector, { value })]);
+        return response;
+    }
+
     // select by label and wait for response
     async selectByLabelAndWaitForResponse(subUrl: string, selector: string, value: string, code = 200): Promise<Response> {
         const [response] = await Promise.all([this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code), this.page.selectOption(selector, { label: value })]);

@@ -7268,10 +7268,10 @@ export const selector = {
             },
 
             storeContactForm: {
-                storeContactForm: '#dokan-form-contact-seller',
-                name: '//form[@id="dokan-form-contact-seller"]//input[@placeholder="Your Name"]',
-                email: '//form[@id="dokan-form-contact-seller"]//input[@placeholder="you@example.com"]',
-                message: '//form[@id="dokan-form-contact-seller"]//textarea[@name="message"]',
+                storeContactForm: 'form#dokan-form-contact-seller',
+                name: 'form#dokan-form-contact-seller input[placeholder="Your Name"]',
+                email: 'form#dokan-form-contact-seller input[placeholder="you@example.com"]',
+                message: 'form#dokan-form-contact-seller textarea[name="message"]',
                 sendMessage: 'input[name="store_message_send"]',
                 successMessage: 'div.alert.alert-success',
                 privacyPolicy: 'div.dokan-privacy-policy-text p',

@@ -114,6 +114,7 @@ export class WithdrawsPage extends AdminPage {
             default:
                 break;
         }
+        await this.notToBeVisible(withdrawsAdmin.withdrawCell(vendorName));
     }
 
     // withdraw bulk action

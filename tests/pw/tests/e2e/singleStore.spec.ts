@@ -35,8 +35,7 @@ test.describe('Single store functionality test', () => {
         await customer.singleStoreSortProducts(data.predefined.vendorStores.vendor1, 'price');
     });
 
-    test.skip('customer can view store terms and conditions', { tag: ['@lite', '@customer'] }, async () => {
-        // todo: pre need toc on store and admin settings
+    test('customer can view store terms and conditions', { tag: ['@lite', '@customer'] }, async () => {
         await customer.storeTermsAndCondition(data.predefined.vendorStores.vendor1, data.vendor.toc);
     });
 

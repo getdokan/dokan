@@ -45,6 +45,10 @@ export class CustomerPage extends BasePage {
         await this.goIfNotThere(data.subUrls.frontend.storeListing);
     }
 
+    async gotoSingleStore(storeName: string): Promise<void> {
+        await this.goIfNotThere(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)), 'networkidle');
+    }
+
     async goToProductDetails(productName: string): Promise<void> {
         await this.goIfNotThere(data.subUrls.frontend.productDetails(helpers.slugify(productName)));
     }
