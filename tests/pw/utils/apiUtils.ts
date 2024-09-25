@@ -1315,26 +1315,36 @@ export class ApiUtils {
     }
 
     // create vendor staff
-    async createVendorStaff(payload: any, auth?: auth): Promise<[responseBody, string]> {
+    async createVendorStaff(payload: any, auth?: auth): Promise<[responseBody, string, string]> {
         const [response, responseBody] = await this.post(endPoints.createVendorStaff, { data: payload, headers: auth }, false);
         let staffId: string;
+        let staffName: string;
         if (responseBody.code) {
             expect(response.status()).toBe(500);
             // get staff id if already exists
             staffId = await this.getStaffId(payload.username, auth);
+            staffName = payload.username;
 
             // update staff if already exists
             await this.updateStaff(staffId, payload, auth);
         } else {
             expect(response.ok()).toBeTruthy();
             staffId = String(responseBody?.ID);
+            staffName = responseBody?.user_login;
         }
-        return [responseBody, staffId];
+
+        return [responseBody, staffId, staffName];
     }
 
     // update staff
     async updateStaff(staffId: string, payload: object, auth?: auth): Promise<responseBody> {
         const [, responseBody] = await this.put(endPoints.updateVendorStaff(staffId), { data: payload, headers: auth });
+        return responseBody;
+    }
+
+    // update staff capabilities
+    async updateStaffCapabilities(staffId: string, payload: object, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.put(endPoints.updateVendorStaffCapabilities(staffId), { data: payload, headers: auth });
         return responseBody;
     }
 

@@ -126,6 +126,6 @@ test.describe('Booking Product test', () => {
     });
 
     test('customer can buy bookable product', { tag: ['@pro', '@customer'] }, async () => {
-        await customer.buyBookableProduct(bookableProductName, data.bookings);
+        await customer.buyBookableProduct(bookableProductName, data.bookings); //todo: failed on git action if ran after 12 am local time
     });
 });
