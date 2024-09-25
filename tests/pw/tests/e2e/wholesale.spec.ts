@@ -125,8 +125,8 @@ test.describe('Wholesale test (customer)', () => {
     let minimumWholesaleQuantity: string;
 
     test.beforeAll(async ({ browser }) => {
-        const guestContext = await browser.newContext(data.auth.adminAuth);
-        aPage = await guestContext.newPage();
+        const adminContext = await browser.newContext(data.auth.adminAuth);
+        aPage = await adminContext.newPage();
         admin = new WholesalePage(aPage);
 
         apiUtils = new ApiUtils(await request.newContext());
