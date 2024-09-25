@@ -375,10 +375,11 @@ class Assets {
                 'src'  => WC()->plugin_url() . '/assets/js/jquery-tiptip/jquery.tipTip' . $suffix . '.js',
                 'deps' => [ 'jquery' ],
             ],
-			//            'dokan-i18n-jed'            => [
-			//                'src'  => $asset_url . '/vendors/i18n/jed.js',
-			//                'deps' => [ 'jquery' ],
-			//            ],
+            // Remove `dokan-i18n-jed` in next release.
+			'dokan-i18n-jed'            => [
+				'src'  => $asset_url . '/vendors/i18n/jed.js',
+				'deps' => [ 'jquery', 'wp-i18n' ],
+			],
             'dokan-accounting'          => [
                 'src'  => WC()->plugin_url() . '/assets/js/accounting/accounting.min.js',
                 'deps' => [ 'jquery' ],
@@ -635,7 +636,10 @@ class Assets {
 
         $localize_data = array_merge( $localize_script, $vue_localize_script );
 
-		        wp_localize_script( 'dokan-vue-bootstrap', 'dokan', $localize_data );
+        // Remove `dokan-i18n-jed` in next release.
+        wp_localize_script( 'dokan-i18n-jed', 'dokan', $localize_data );
+        wp_localize_script( 'dokan-vue-bootstrap', 'dokan', $localize_data );
+        wp_localize_script( 'dokan-script', 'dokan', $localize_data );
 
         // localized vendor-registration script
         wp_localize_script(
