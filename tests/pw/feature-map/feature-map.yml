@@ -114,7 +114,6 @@
           vendor can add product quantity discount: false
           vendor can add product rma options: false
           vendor can add product wholesale options: true
-          vendor can add product min-max options: false
           vendor can add product other options [lite]: true
           vendor can duplicate product: true
           vendor can permanently delete product [lite]: true
@@ -350,8 +349,6 @@
           vendor can set biography settings: true
           vendor can set live chat settings: false
           vendor can set store support settings: true
-          vendor can set min-max settings: true
-          vendor can set shipStation settings: true
           vendor can set social profile settings: true
           vendor can set rma settings: true
           vendor can set store seo settings: true
@@ -689,12 +686,13 @@
 - page: 'MangoPay'
   features:
       admin:
-          admin can add Mangopay payment method: false
+          admin can add Mangopay payment method: true
 
 - page: 'Min Max Quantities'
   features:
-      admin:
-          no test is written for min-max module: false
+      vendor:
+          vendor can add product min-max options: true
+          vendor can set min-max settings: true
 
 - page: 'PayPal Marketplace'
   features:
@@ -808,7 +806,7 @@
 - page: 'Razorpay'
   features:
       admin:
-          admin can add Razorpay payment method: false
+          admin can add Razorpay payment method: true
 
 - page: 'Report Abuse'
   features:
@@ -818,7 +816,7 @@
           admin can filter abuse reports by abuse reason: true
           admin can filter abuse reports by product: true
           admin can filter abuse reports by vendor: true
-          admin can perform bulk action on abuse reports: false
+          admin can perform bulk action on abuse reports: true
       customer:
           customer can report product: true
       guest:
@@ -846,7 +844,7 @@
               admin can permanently delete quote: true
               admin can approve quote: true
               admin can convert quote to order: true
-              admin can perform quote bulk actions: false
+              admin can perform quote bulk actions: true
           vendor:
               vendor can view request quotes menu page: true
               vendor can view request quote details: true
@@ -900,8 +898,8 @@
 
 - page: 'ShipStation Integration'
   features:
-      admin:
-          no test is written for shipstation integration: false
+      vendor:
+          vendor can set shipStation settings: true
 
 - page: 'Single Product Multiple Vendor (SPMV)'
   features:
@@ -988,12 +986,12 @@
 - page: 'Stripe Connect'
   features:
       admin:
-          admin can add stripe payment method: false
+          admin can add stripe payment method: true
 
 - page: 'Stripe Express'
   features:
       admin:
-          admin can add Strip Express payment method: false
+          admin can add Strip Express payment method: true
 
 - page: 'Table Rate Shipping'
   features:
