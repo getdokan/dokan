@@ -192,8 +192,8 @@ export class BasePage {
         await this.page.dblclick(selector);
     }
 
-    // click & wait for another locator to be visible [userful for modals]
-    async clickAndWaitForLocatorTobeVisible(selector: string, selector2: string): Promise<void> {
+    // click & wait for another locator to be visible [useful for modals]
+    async clickAndWaitForLocatorToBeVisible(selector: string, selector2: string): Promise<void> {
         await Promise.all([this.toBeVisible(selector2), this.page.locator(selector).click()]);
     }
 
@@ -1358,7 +1358,7 @@ export class BasePage {
         return this.page.context().pages();
     }
 
-    // add locator handler [userful for randomly popups] [call before the start of the test]
+    // add locator handler [useful for randomly popups] [call before the start of the test]
     async addLocatorHandler(selector: string, asyncFn: () => Promise<void>, options?: { noWaitAfter?: boolean; times?: number } | undefined): Promise<void> {
         const locator = this.page.locator(selector);
         await this.page.addLocatorHandler(locator, asyncFn, options);

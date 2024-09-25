@@ -47,7 +47,7 @@ export const helpers = {
     // check if object is empty
     isObjEmpty: (obj: object) => Object.keys(obj).length === 0,
 
-    // snakecase to camelcase
+    // snake-case to camelcase
     toCamelCase: (str: string): string => str.replace(/_([a-z])/g, (_, letter) => letter.toUpperCase()),
 
     // convert string to snake case

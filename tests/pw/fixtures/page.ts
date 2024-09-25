@@ -410,5 +410,5 @@ export const test = base.extend<pages>({
 
 export { expect, request, Page } from '@playwright/test';
 
-// export const test = testpage;
-// export const expect = testpage.expect;
+// export const test = page;
+// export const expect = page.expect;

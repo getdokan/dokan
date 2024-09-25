@@ -6742,7 +6742,7 @@ export const selector = {
 
         // Customer Bookings
         cBookings: {
-            calanderLoader: '//div[@class="blockUI blockOverlay"]',
+            calendarLoader: '//div[@class="blockUI blockOverlay"]',
             selectCalendarDay: (month: number, day: number) => `//td[not(contains(@class,"not-bookable")) and @data-month="${month}"]//a[@data-date="${day}"]`,
             view: (orderNumber: string) => `//a[contains(text(),'Order #${orderNumber}')]/../..//a[@class="woocommerce-button button view"]`,
             bookNow: 'button.wc-bookings-booking-form-button',

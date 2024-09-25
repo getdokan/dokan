@@ -919,7 +919,7 @@ export const data = {
             shippingAddress: 'my-account/edit-address/shipping',
             editAddress: 'my-account/edit-address',
             shippingAddressCheckout: 'wc-ajax=update_order_review',
-            bookedDayBlockes: '?wc-ajax=wc_bookings_find_booked_day_blocks',
+            bookedDayBlocks: '?wc-ajax=wc_bookings_find_booked_day_blocks',
             editAccountCustomer: 'my-account/edit-account',
             becomeVendor: 'my-account/account-migration',
             productDetails: (productName: string) => `product/${productName}`,
@@ -1439,7 +1439,7 @@ export const data = {
         username: CUSTOMER,
         password: USER_PASSWORD,
         lastname: 'ln',
-        fullname: `${CUSTOMER} c1`,
+        fullName: `${CUSTOMER} c1`,
         email: `${CUSTOMER}@email.com`,
 
         customer2: {
