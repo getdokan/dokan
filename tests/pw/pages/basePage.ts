@@ -1601,7 +1601,7 @@ export class BasePage {
         selector = /^(\/\/|\(\/\/)/.test(selector) ? `${selector}//span` : `${selector} span`;
         const value = await this.getElementBackgroundColor(selector);
         if (!value.includes('rgb(0, 144, 255)')) {
-            const [response] = await Promise.all([this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code), this.page.locator(selector).click()]);
+            const response = await this.clickAndWaitForResponse(subUrl, selector, code);
             return response;
         }
         return '';
@@ -1612,7 +1612,7 @@ export class BasePage {
         selector = /^(\/\/|\(\/\/)/.test(selector) ? `${selector}//span` : `${selector} span`;
         const value = await this.getElementBackgroundColor(selector);
         if (value.includes('rgb(0, 144, 255)')) {
-            const [response] = await Promise.all([this.page.waitForResponse(resp => resp.url().includes(subUrl) && resp.status() === code), this.page.locator(selector).click()]);
+            const response = await this.clickAndWaitForResponse(subUrl, selector, code);
             return response;
         }
         return '';

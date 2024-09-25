@@ -59,7 +59,7 @@ export class SettingsPage extends AdminPage {
     // scroll to top settings
     async scrollToTopSettings() {
         await this.goto(data.subUrls.backend.dokan.settings);
-        // topass is used to avoid flakyness
+        // toPass is used to avoid flakiness
         await this.toPass(async () => {
             await this.scrollToBottom();
             const isBackToTopVisible = await this.isVisible(settingsAdmin.backToTop, 1);
