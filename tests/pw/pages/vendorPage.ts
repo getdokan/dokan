@@ -386,17 +386,4 @@ export class VendorPage extends BasePage {
         await this.toBeChecked(productsVendor.advertisement.advertiseThisProduct);
         await this.toBeVisible(productsVendor.advertisement.advertisementIsBought);
     }
-
-    // vendor set banner and profile picture settings
-    async bannerAndProfilePictureSettings(banner: string, profilePicture: string): Promise<void> {
-        // todo:  fix banner and profile update
-        // upload banner and profile picture
-        await this.removePreviouslyUploadedImage(selector.vendor.vStoreSettings.bannerImage, selector.vendor.vStoreSettings.removeBannerImage);
-        await this.click(selector.vendor.vStoreSettings.banner);
-        await this.wpUploadFile(banner);
-
-        await this.removePreviouslyUploadedImage(selector.vendor.vStoreSettings.profilePictureImage, selector.vendor.vStoreSettings.removeProfilePictureImage);
-        await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vStoreSettings.profilePicture);
-        await this.wpUploadFile(profilePicture);
-    }
 }

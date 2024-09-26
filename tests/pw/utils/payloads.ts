@@ -114,7 +114,7 @@ export const payloads = {
     },
 
     // product
-   
+
     createProductRequiredFields: () => ({
         name: `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Simple)`,
         type: 'simple',
@@ -122,7 +122,6 @@ export const payloads = {
         categories: [{}],
         description: '<p>test description</p>',
     }),
-    
 
     createProduct: () => ({
         name: `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Simple)`,
