@@ -1,4 +1,4 @@
-- page: 'plugins'
+- page: 'Plugins'
   features:
       admin:
           admin can install Dokan plugin [lite]: false
@@ -21,12 +21,12 @@
 - page: 'Shipping'
   features:
       admin:
-          admin can enable shipping method [lite]: true
+          admin can enable shipping [lite]: true
           admin can add flat rate shipping method [lite]: true
           admin can add free shipping method [lite]: true
           admin can add vendor shipping method: true
           admin can delete shipping method [lite]: true
-          admin can delete shipping zone  [lite]: true
+          admin can delete shipping zone [lite]: true
       vendor:
           vendor can view shipping settings menu page: true
           vendor can add shipping policy: true
@@ -273,14 +273,14 @@
           vendor can view reverse withdrawal menu page [lite]: true
           vendor can view reverse withdrawal notice (In grace period) [lite]: true
           vendor can view reverse withdrawal notice (after grace period) [lite]: true
-          vendor can view reverse withdrawal announcement [lite]: true
+          vendor can view reverse withdrawal announcement: true
           vendor can filter reverse withdrawals by date [lite]: true
           vendor can pay reverse withdrawal balance [lite]: true
 
 - page: 'Catalog Mode'
   features:
       admin:
-          admin can set catalog settings [lite]: true
+          admin can set catalog mode [lite]: true
           admin can disable hide product price in catalog mode [lite]: true
       vendor:
           vendor can set catalog mode (storewide) [lite]: true
@@ -315,10 +315,10 @@
 - page: 'Shortcode'
   features:
       admin:
-          admin can create page with dokan shortcode: false
+          admin can create page with Dokan shortcode: false
       vendor:
-          vendor can view dokan dashboard (shortcode): true
-          vendor can view dokan subscription packs (shortcode): true
+          vendor can view Dokan dashboard (shortcode): true
+          vendor can view Dokan subscription packs (shortcode): true
           guest user can view vendor registration form (shortcode): true
       customer:
           customer can view best selling products (shortcode): true
@@ -368,7 +368,7 @@
           admin can enable vendor selling (selling settings) [lite]: true
           admin can set order status change capability (selling settings) [lite]: true
 
-- page: 'settings'
+- page: 'Settings'
   features:
       admin:
           admin can view settings menu page [lite]: true
@@ -721,7 +721,7 @@
           admin can set product advertising expiry days: false
           admin can enable vendor product advertising purchase permission: false
           admin can set product advertisement cost: false
-          admin can enable product advertising on dokan subscription: false
+          admin can enable product advertising on Dokan subscription: false
           admin can set advertised product as featured: false
           admin can set advertised product display preference: false
           admin can hide out of stock advertised product: false
