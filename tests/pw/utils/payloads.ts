@@ -4,7 +4,7 @@ import { dbData } from '@utils/dbData';
 
 const basicAuth = (username: string, password: string) => 'Basic ' + Buffer.from(username + ':' + password).toString('base64');
 
-const { ADMIN, VENDOR, VENDOR2, VENDOR3, CUSTOMER, CUSTOMER2, ADMIN_PASSWORD, USER_PASSWORD, CUSTOMER_ID, PRODUCT_ID } = process.env;
+const { ADMIN, VENDOR, VENDOR2, VENDOR3, CUSTOMER, CUSTOMER2, ADMIN_PASSWORD, USER_PASSWORD, CUSTOMER_ID, PRODUCT_ID, PRODUCT_ID_V2, CATEGORY_ID, TAG_ID, ATTRIBUTE_ID } = process.env;
 
 export const payloads = {
     // wp
@@ -114,15 +114,26 @@ export const payloads = {
     },
 
     // product
+   
+    createProductRequiredFields: () => ({
+        name: `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Simple)`,
+        type: 'simple',
+        status: 'publish',
+        categories: [{}],
+        description: '<p>test description</p>',
+    }),
+    
 
     createProduct: () => ({
         name: `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Simple)`,
         type: 'simple',
         regular_price: faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([0, 2]) }),
-        // regular_price: faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([0, 2]) }),
-        // regular_price: '114.15' , // failed for this price & 5% tax & 10% commission dokan .1 issue
+        // sale_price: faker.finance.amount({ min: 50, max: 100, dec: faker.helpers.arrayElement([0, 2]) }),
+        // date_on_sale_from: helpers.currentDateTime,
+        // date_on_sale_to: helpers.addDays(helpers.currentDateTime, 10),
         status: 'publish',
         categories: [{}],
+        tags: [{}],
         featured: true,
         description: '<p>test description</p>',
         short_description: '<p>test short description</p>',
@@ -223,7 +234,7 @@ export const payloads = {
         type: 'simple',
         regular_price: faker.finance.amount({ min: 100, max: 200, dec: 0 }),
         // regular_price: faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([0, 2]) }),
-        // regular_price: '114.15' , // failed for this price & 5% tax & 10% commission dokan .1 issue
+
         status: 'publish',
         categories: [{}],
         featured: true,
@@ -268,16 +279,11 @@ export const payloads = {
                 },
             },
             // {
-            // 	key  : '_dokan_min_max_meta',
-            // 	value: {
-            // 		product_wise_activation: 'yes',
-            // 		min_quantity           : 0,
-            // 		max_quantity           : 0,
-            // 		min_amount             : 0,
-            // 		max_amount             : 0,
-            // 		_donot_count           : 'no',
-            // 		ignore_from_cat        : 'no'
-            // 	}
+            // key: '_dokan_min_max_meta',
+            // value: {
+            //     min_quantity: 4,
+            //     max_quantity: 5,
+            // },
             // },
             // {
             // 	key  : '_product_addons',
@@ -436,7 +442,6 @@ export const payloads = {
                 value: {
                     enable_wholesale: 'yes',
                     price: faker.finance.amount({ min: 90, max: 99, dec: faker.helpers.arrayElement([0, 2]) }),
-                    // price: '90',
                     quantity: '10',
                 },
             },
@@ -1084,12 +1089,18 @@ export const payloads = {
     }),
 
     createCategory: {
-        name: 'Clothing',
+        name: 'clothings',
+    },
+
+    createCategoryElectronics: {
+        name: 'electronics',
     },
 
     updateCategory: {
-        name: 'Clothing',
+        name: 'clothings',
     },
+
+    createMultiStepCategory: ['gadgets', 'wearables', 'smartwatches', 'fitness-trackers'],
 
     // attribute
 
@@ -1104,6 +1115,10 @@ export const payloads = {
     }),
 
     // tags
+
+    createTag: {
+        name: 'accessories',
+    },
 
     createTagsRandom: () => ({
         name: faker.string.nanoid(5),
@@ -1573,7 +1588,17 @@ export const payloads = {
         method_id: 'dokan_vendor_shipping',
     },
 
-    // woocommerce settings: general , products, tax, shipping, checkout, account
+    createShippingClass: {
+        name: 'heavy',
+        description: 'Shipping class for heavy products',
+    },
+
+    createRandomShippingClass: () => ({
+        name: faker.string.alpha(5).toUpperCase(),
+        description: 'Shipping class description',
+    }),
+
+    // wooCommerce settings: general , products, tax, shipping, checkout, account
 
     // general
 
@@ -1705,6 +1730,12 @@ export const payloads = {
         class: 'standard',
         postcodes: [],
         cities: [],
+    },
+
+    // create tax class
+    createTaxClass: {
+        slug: 'zero-rate',
+        name: 'Zero Rate',
     },
 
     // account
