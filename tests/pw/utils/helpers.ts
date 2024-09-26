@@ -60,6 +60,14 @@ export const helpers = {
             .toLowerCase(); // Ensure the entire string is lowercase
     },
 
+    // convert string to kebab case
+    kebabCase: (str: string): string => {
+        return str
+            .replace(/([a-z])([A-Z])/g, '$1-$2') // Insert hyphen between lowercase and uppercase letters
+            .replace(/[\s_]+/g, '-') // Replace spaces and underscores with hyphens
+            .toLowerCase(); // Convert the entire string to lowercase
+    },
+
     // string between two tags
     stringBetweenTags: (str: string): string => {
         const match = str.match(/<([^>]+)>(.*?)<\/\1>/);
@@ -103,7 +111,7 @@ export const helpers = {
         return result.toLocaleDateString('en-CA');
     },
 
-    // current day [2023-06-02]
+    // current day [2023-06-02] [YY-MM-DD]
     currentDate: new Date().toLocaleDateString('en-CA'),
 
     // current day [August 22, 2023]
@@ -118,7 +126,7 @@ export const helpers = {
     currentDateTime2: () => new Date().toLocaleString('en-CA', { year: 'numeric', month: 'numeric', day: 'numeric', hourCycle: 'h23', hour: 'numeric', minute: 'numeric', second: 'numeric' }).replace(',', ''),
 
     // add two input days
-    addDays(date: string | number | Date | null, days: number, format: string): string {
+    addDays(date: string | number | Date | null, days: number, format: string = 'default'): string {
         const result = date ? new Date(date) : new Date();
         result.setDate(result.getDate() + days);
 
@@ -303,6 +311,9 @@ export const helpers = {
     readJson(filePath: string) {
         if (fs.existsSync(filePath)) {
             return JSON.parse(this.readFile(filePath));
+        } else {
+            console.log(`File not found: ${filePath}`);
+            return null;
         }
     },
 
@@ -419,6 +430,26 @@ export const helpers = {
         for (const page of pages) {
             await page.close();
         }
+    },
+
+    // check if cookie is expired
+    isCookieValid(filePath: string) {
+        const cookies = helpers.readJson(filePath);
+        if (!cookies?.cookies) {
+            console.log('No cookies found in the file');
+            return false;
+        }
+        const loginCookie = cookies?.cookies.find((cookie: { name: string }) => cookie.name.startsWith('wordpress_logged_in'));
+        if (!loginCookie) {
+            console.log('No valid login cookie found.');
+            return false;
+        }
+        // console.log(loginCookie);
+        const cookieExpiryDate = new Date(loginCookie.expires * 1000);
+        console.log('expiry:', cookieExpiryDate.toLocaleDateString('en-CA'));
+        const result = cookieExpiryDate > new Date();
+        console.log(result);
+        return result;
     },
 
     // rgb (rgb(r, g, b)) to hex (#rrggbb) color
