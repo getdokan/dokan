@@ -95,6 +95,7 @@ export const selector = {
         selectFilesInput: '//div[@class="supports-drag-drop" and @style="position: relative;"]//input[@type="file"]',
         selectUploadedMedia: '(//h2[contains(text(),"Media list")]/..//ul//li)[1]',
         select: '//div[@class="supports-drag-drop" and @style="position: relative;"]//button[contains(@class, "media-button-select")]',
+        crop: '//div[@class="supports-drag-drop" and @style="position: relative;"]//button[contains(@class, "media-button-insert")]',
     },
 
     // Admin

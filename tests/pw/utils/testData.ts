@@ -179,10 +179,10 @@ export const data = {
 
         category: {
             unCategorized: 'Uncategorized',
-            clothings: 'Clothings',
-            randomCategory1: () => faker.commerce.productAdjective(),
+            clothings: 'clothings',
             randomCategory: () => `category_${faker.string.alpha(5)}`,
-            categories: faker.helpers.arrayElement(['Electronic Devices', 'Electronic Accessories', 'Men"s Fashion', 'Clothings', 'Women"s Fashion']),
+            categories: ['clothings', 'electronics'],
+            multistepCategories: ['gadgets', 'Wearables', 'smartwatches', 'fitness-trackers'],
         },
 
         store: {
@@ -1115,8 +1115,8 @@ export const data = {
             nanoid: faker.string.nanoid(10),
 
             // shop details
-            banner: 'tests/e2e/utils/sampleData/banner.png',
-            profilePicture: 'tests/e2e/utils/sampleData/avatar.png',
+            banner: 'utils/sampleData/banner.png',
+            profilePicture: 'utils/sampleData/avatar.png',
             storeName: `${VENDOR}store`,
             productsPerPage: '12',
             mapLocation: 'New York',

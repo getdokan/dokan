@@ -97,9 +97,8 @@ export interface product {
     category: {
         unCategorized: string;
         clothings: string;
-        randomCategory1: () => string;
         randomCategory: () => string;
-        categories: string;
+        categories: string[];
     };
 
     store: {
