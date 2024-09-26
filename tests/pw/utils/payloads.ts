@@ -715,12 +715,6 @@ export const payloads = {
                         image: '',
                         price_type: 'flat_fee',
                     },
-                    {
-                        label: 'Option 2',
-                        price: '20',
-                        image: '',
-                        price_type: 'flat_fee',
-                    },
                 ],
             },
         ],
