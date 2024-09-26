@@ -101,8 +101,7 @@ test.describe('Wholesale test (vendor)', () => {
         vendor = new ProductsPage(vPage);
 
         apiUtils = new ApiUtils(await request.newContext());
-        // [, , productName] = await apiUtils.createProduct(payloads.createProductRequiredFields(), payloads.vendorAuth);
-        [, , productName] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendorAuth); // todo: replace with the above line when product edit pr is merged
+        [, , productName] = await apiUtils.createProduct(payloads.createProductRequiredFields(), payloads.vendorAuth);
     });
 
     test.afterAll(async () => {

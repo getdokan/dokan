@@ -33,6 +33,7 @@ export class LoginPage extends BasePage {
         // login user
         await this.clearAndType(selector.frontend.username, user.username);
         await this.clearAndType(selector.frontend.userPassword, user.password);
+        await this.check(selector.frontend.rememberMe);
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.myAccount, selector.frontend.logIn, 302);
         if (storageState) {
             await this.page.context().storageState({ path: storageState });
