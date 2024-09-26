@@ -500,7 +500,8 @@ export class ApiUtils {
 
         const [, responseBody] = await this.post(endPoints.createAttributeTerm(attributeId), { data: attributeTerm, headers: auth });
         const attributeTermId = String(responseBody?.id);
-        return [responseBody, attributeId, attributeTermId, attributeName, attributeName];
+        const attributeTermName = responseBody?.name;
+        return [responseBody, attributeId, attributeTermId, attributeName, attributeTermName];
     }
 
     /**
@@ -1872,7 +1873,7 @@ export class ApiUtils {
 
     // get single tag
     async getSingleTag(tagId: string, auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.get(endPoints.getSingleProduct(tagId), { headers: auth });
+        const [, responseBody] = await this.get(endPoints.wc.getSingleTag(tagId), { headers: auth });
         return responseBody;
     }
 
@@ -2218,7 +2219,7 @@ export class ApiUtils {
      * miscellaneous methods
      */
 
-    getMetaDataValue(metaDataArray: any[], key: string): Promise<any> {
+    getMetaDataValue(metaDataArray: any[], key: string): any {
         const metaData = metaDataArray.find(item => item.key === key);
         // console.log(metaData.value);
         return metaData.value ?? null;
