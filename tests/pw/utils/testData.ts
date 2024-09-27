@@ -216,6 +216,7 @@ export const data = {
             status: 'publish',
             stockStatus: false,
             editProduct: '',
+            description: 'test description',
             saveSuccessMessage: 'Success! The product has been saved successfully. View Product →',
         },
 
@@ -228,6 +229,7 @@ export const data = {
             status: 'publish',
             stockStatus: false,
             editProduct: '',
+            description: 'test description',
             saveSuccessMessage: 'Success! The product has been saved successfully. View Product →',
 
             downloadableOptions: {
@@ -247,6 +249,7 @@ export const data = {
             status: 'publish',
             stockStatus: false,
             editProduct: '',
+            description: 'test description',
             saveSuccessMessage: 'Success! The product has been saved successfully. View Product →',
         },
 
@@ -264,6 +267,7 @@ export const data = {
                 linkAllVariation: 'link_all_variations',
                 variableRegularPrice: 'variable_regular_price',
             },
+            description: 'test description',
             saveSuccessMessage: 'Success! The product has been saved successfully. View Product →',
         },
 
@@ -276,6 +280,18 @@ export const data = {
             regularPrice: () => faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([1, 2]) }).replace('.', ','),
             storeName: `${VENDOR}store`,
             status: 'publish',
+            description: 'test description',
+            saveSuccessMessage: 'Success! The product has been saved successfully. View Product →',
+        },
+
+        grouped: {
+            productType: 'grouped',
+            productName: () => `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Grouped)`,
+            groupedProducts: ['p1_v1 (simple)'],
+            category: 'Uncategorized',
+            storeName: `${VENDOR}store`,
+            status: 'publish',
+            description: 'test description',
             saveSuccessMessage: 'Success! The product has been saved successfully. View Product →',
         },
 
@@ -292,6 +308,7 @@ export const data = {
             subscriptionTrialPeriod: 'day', // 'day', 'week', 'month', 'year'
             storeName: `${VENDOR}store`,
             status: 'publish',
+            description: 'test description',
             saveSuccessMessage: 'Success! The product has been saved successfully. View Product →',
         },
 
@@ -314,6 +331,7 @@ export const data = {
                 linkAllVariation: 'link_all_variations',
                 variableRegularPrice: 'variable_regular_price',
             },
+            description: 'test description',
             saveSuccessMessage: 'Success! The product has been saved successfully. View Product →',
         },
 
@@ -328,6 +346,7 @@ export const data = {
             expireAfterDays: '-1',
             storeName: `${VENDOR}store`,
             status: 'publish',
+            description: 'test description',
         },
 
         booking: {
@@ -418,9 +437,82 @@ export const data = {
         },
 
         productInfo: {
+            title: `${faker.commerce.productName()}_${faker.string.nanoid(5)}`,
+
+            permalink: `_${faker.string.nanoid(10)}`,
+
+            price: () => faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([1, 2]) }).replace('.', ','),
+
+            discount: {
+                regularPrice: faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([1, 2]) }),
+                discountPrice: '10',
+                startDate: helpers.currentDate,
+                endDate: helpers.addDays(helpers.currentDateTime, 2),
+            },
+
+            tags: {
+                tags: ['accessories'],
+                randomTags: [faker.string.nanoid(5)],
+            },
+
+            images: {
+                cover: 'utils/sampleData/avatar.png',
+                gallery: ['utils/sampleData/avatar.png'],
+            },
+
             description: {
                 shortDescription: 'test short description',
                 description: 'test long description',
+            },
+
+            downloadableOptions: {
+                fileName: 'avatar',
+                fileUrl: 'utils/sampleData/avatar.png',
+                downloadLimit: '100',
+                downloadExpiry: '365',
+            },
+
+            otherOptions: {
+                status: 'draft', // publish,
+                visibility: 'hidden', // visible, catalog, search, hidden
+                purchaseNote: 'test purchase note',
+                enableReview: true,
+            },
+
+            inventory: () => ({
+                sku: faker.string.nanoid(10),
+                stockStatus: 'outofstock', // instock, outofstock, onbackorder
+                stockManagement: true,
+                stockQuantity: '100',
+                lowStockThreshold: '10',
+                backorders: 'notify', // no, notify, yes
+                oneQuantity: true,
+            }),
+
+            geolocation: 'NYC, NY, USA',
+
+            shipping: {
+                weight: '10',
+                length: '20',
+                width: '30',
+                height: '40',
+                shippingClass: 'heavy',
+            },
+
+            tax: {
+                status: 'taxable', // taxable, shipping, none
+                class: 'zero-rate', // reduced-rate, zero-rate
+            },
+
+            linkedProducts: {
+                upSells: ['p1_v1 (simple)'],
+                crossSells: ['p1_v1 (simple)'],
+            },
+
+            attribute: {
+                attributeName: 'sizes',
+                randomAttributeName: faker.string.nanoid(7),
+                attributeTerm: faker.string.nanoid(5),
             },
 
             euCompliance: {
@@ -437,33 +529,35 @@ export const data = {
                 optionalMiniDescription: 'test mini description',
             },
 
+            addon: {
+                type: 'multiple_choice', // 'multiple_choice', 'checkbox', 'custom_text', 'custom_textarea', 'file_upload', 'custom_price', 'input_multiplier', 'heading'
+                displayAs: 'select', // 'select', 'radiobutton', 'images'
+                title: `Test Add-on Title_${faker.string.nanoid(10)}`,
+                formatTitle: 'label', // 'label', 'heading', 'hide'
+                addDescription: 'Add-on description',
+                enterAnOption: 'Option 1',
+                optionPriceType: 'flat_fee', // 'flat_fee', 'quantity_based', 'percentage_based'
+                optionPriceInput: '30',
+            },
+
             amountDiscount: {
                 minimumOrderAmount: '200',
                 discountPercentage: '10',
             },
 
             quantityDiscount: {
-                minimumQuantity: '10',
-                discountPercentage: '10',
+                minimumQuantity: '100',
+                discountPercentage: '10,00', // todo: handle in test assertion pass number and convert to string with 2 decimal with woo decimal separator
             },
 
             wholesaleOption: {
                 wholesalePrice: '90',
-                minimumWholesaleQuantity: '10',
+                minimumQuantity: '10',
             },
 
             minMax: {
                 minimumProductQuantity: '1',
                 maximumProductQuantity: '20',
-                minimumAmount: '10',
-                maximumAmount: '1000000',
-                category: 'Uncategorized',
-            },
-
-            otherOptions: {
-                productStatus: 'draft', // publish,
-                visibility: 'hidden', // visible, catalog, search, hidden
-                purchaseNote: 'test purchase note',
             },
         },
     },
@@ -978,6 +1072,7 @@ export const data = {
                 // sub menus
                 settingsStore: 'dashboard/settings/store',
                 settingsAddon: 'dashboard/settings/product-addon',
+                settingsAddonEdit: (addonId: string) => `dashboard/settings/product-addon/?edit=${addonId}`,
                 settingsPayment: 'dashboard/settings/payment',
                 // payment settings
                 paypal: 'dashboard/settings/payment-manage-paypal',
@@ -1359,6 +1454,7 @@ export const data = {
             youtube: 'https://www.youtube.com/',
             instagram: 'https://www.instagram.com/',
             flickr: 'https://www.flickr.com/',
+            threads: 'https://www.threads.net/',
             saveSuccessMessage: 'Your information has been saved successfully',
         },
 
@@ -1366,10 +1462,15 @@ export const data = {
         rma: {
             label: 'Warranty',
             type: 'included_warranty', // 'no_warranty', 'included_warranty', 'addon_warranty'
-            rmaLength: 'lifetime', // 'limited', 'lifetime'
+            length: 'limited', // 'limited', 'lifetime'
             lengthValue: '1',
             lengthDuration: 'weeks', // 'days', 'weeks', 'months', 'years'
-            refundPolicyHtmlBody: 'Refund Policy Vendor',
+            addon: {
+                cost: '10',
+                durationLength: '1',
+                durationType: 'months', // 'days','weeks', 'months', 'years'
+            },
+            refundPolicy: 'Refund Policy Vendor',
             saveSuccessMessage: 'Settings saved successfully',
         },
 
@@ -1379,8 +1480,10 @@ export const data = {
             metaKeywords: 'test meta keywords',
             facebookTitle: 'test facebook title',
             facebookDescription: 'test facebook description',
+            facebookImage: 'utils/sampleData/avatar.png',
             twitterTitle: 'test twitter title',
             twitterDescription: 'test twitter description',
+            twitterImage: 'utils/sampleData/avatar.png',
         },
 
         withdraw: {

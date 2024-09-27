@@ -175,16 +175,43 @@ export const payloads = {
                 },
             },
             // {
-            // 	key  : '_dokan_min_max_meta',
-            // 	value: {
-            // 		product_wise_activation: 'yes',
-            // 		min_quantity           : 0,
-            // 		max_quantity           : 0,
-            // 		min_amount             : 0,
-            // 		max_amount             : 0,
-            // 		_donot_count           : 'no',
-            // 		ignore_from_cat        : 'no'
-            // 	}
+            //     key: '_product_addons',
+            //     value: [
+            //         {
+            //             name: 'Test Add-on Title_YwqzyffaKI',
+            //             title_format: 'label',
+            //             description_enable: 1,
+            //             description: 'Add-on description',
+            //             type: 'multiple_choice',
+            //             display: 'select',
+            //             position: 0,
+            //             required: 1,
+            //             restrictions: 0,
+            //             restrictions_type: 'any_text',
+            //             adjust_price: 0,
+            //             price_type: 'flat_fee',
+            //             price: '',
+            //             min: 0,
+            //             max: 0,
+            //             options: [
+            //                 {
+            //                     label: 'Option 1',
+            //                     price: '30',
+            //                     image: '',
+            //                     price_type: 'flat_fee',
+            //                 },
+            //             ],
+            //             wc_booking_person_qty_multiplier: 0,
+            //             wc_booking_block_qty_multiplier: 0,
+            //         },
+            //     ],
+            // },
+            // {
+            //     key: '_dokan_min_max_meta',
+            //     value: {
+            //         min_quantity: 5,
+            //         max_quantity: 10,
+            //     },
             // },
             // {
             // 	key  : '_product_addons',
@@ -399,7 +426,7 @@ export const payloads = {
             },
             {
                 key: '_default_delivery_time',
-                value: -1,
+                value: 1,
             },
             {
                 key: '_delivery_time_countries',
@@ -687,7 +714,7 @@ export const payloads = {
         ],
     }),
 
-    createProductAddons: () => ({
+    createGlobalProductAddons: () => ({
         name: `Test Addons Group_${faker.string.nanoid(10)}`,
         priority: 10,
         restrict_to_categories: [],
@@ -710,7 +737,7 @@ export const payloads = {
                 max: 0,
                 options: [
                     {
-                        label: 'Option 1',
+                        label: 'option 1',
                         price: '10',
                         image: '',
                         price_type: 'flat_fee',
@@ -1054,6 +1081,36 @@ export const payloads = {
     updateProduct: () => ({ regular_price: faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([0, 2]) }) }),
 
     updateProductVariation: () => ({ regular_price: faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([0, 2]) }) }),
+
+    // product metadata
+
+    createProductAddon: () => ({
+        name: `Add-on Title_${faker.string.nanoid(5)}`,
+        title_format: 'label',
+        description_enable: 1,
+        description: 'Add-on description',
+        type: 'multiple_choice',
+        display: 'select',
+        position: 0,
+        required: 1,
+        restrictions: 0,
+        restrictions_type: 'any_text',
+        adjust_price: 0,
+        price_type: 'flat_fee',
+        price: '',
+        min: 0,
+        max: 0,
+        options: [
+            {
+                label: 'option 1',
+                price: '30',
+                image: '',
+                price_type: 'flat_fee',
+            },
+        ],
+        wc_booking_person_qty_multiplier: 0,
+        wc_booking_block_qty_multiplier: 0,
+    }),
 
     createProductReview: () => ({
         product_id: '',

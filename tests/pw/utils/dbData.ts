@@ -1408,6 +1408,18 @@ export const dbData = {
                 hide_withdraw_menu: 'hide_withdraw_menu',
                 status_inactive: 'status_inactive',
             },
+
+            // vendor rma settings
+            rmaSettings: {
+                label: 'Warranty',
+                type: 'no_warranty',
+                policy: 'Refund Policy',
+                reasons: [],
+                length: '',
+                length_value: '',
+                length_duration: '',
+                addon_settings: [],
+            },
         },
     },
 };
