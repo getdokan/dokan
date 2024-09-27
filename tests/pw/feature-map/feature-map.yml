@@ -96,27 +96,24 @@
           vendor can add simple subscription product: true
           vendor can add variable subscription product: true
           vendor can add external product: true
+          vendor can add group product: true
           vendor can add downloadable product [lite]: true
           vendor can add virtual product [lite]: true
-          vendor can add product category [lite]: true
-          vendor can export products: true
           vendor can search product [lite]: true
           vendor can filter products by date [lite]: true
           vendor can filter products by category [lite]: true
           vendor can filter products by type: true
           vendor can filter products by other: true
-          vendor can view product [lite]: true
-          vendor can't buy own product: true
-          vendor can edit product [lite]: true
-          vendor can quick edit product: true
-          vendor can add product description [lite]: true
-          #   vendor can add product addon options [duplicate]: false
-          vendor can add product quantity discount: false
-          vendor can add product rma options: false
-          vendor can add product wholesale options: true
-          vendor can add product other options [lite]: true
+          vendor can reset filter [lite]: true
+          vendor can import products: true
+          vendor can export products: true
           vendor can duplicate product: true
           vendor can permanently delete product [lite]: true
+          vendor can view product [lite]: true
+          vendor can't buy own product [lite]: true
+          vendor can edit product [lite]: true
+          vendor can quick edit product: true
+
 
 - page: 'MyOrders'
   features:
@@ -705,13 +702,12 @@
           vendor can view product addons menu page: true
           vendor can add global product addon: true
           vendor can edit global product addon: true
-          vendor can delete product addon: true
-          #   vendor can add individual product addon [duplicate]: false
-          vendor can edit individual product product addon: false
-          vendor can delete individual product addon: false
+          vendor can import global product addon field: true
+          vendor can export global product addon field: true
+          vendor can remove product addon field: true
       customer:
           customer can view product addons on single product page: false
-          customer can buy product with addons: false
+          customer can buy product with addon: false
 
 - page: 'Product Advertising'
   features:
