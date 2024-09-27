@@ -75,5 +75,4 @@ test.describe('Product addon functionality test', () => {
         const [, , addonName] = await createVendorProductAddon();
         await vendor.removeAddon({ ...data.vendor.addon(), name: addonName });
     });
-
 });

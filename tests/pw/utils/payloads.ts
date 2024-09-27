@@ -255,7 +255,6 @@ export const payloads = {
         ],
     }),
 
-
     createProductInteger: () => ({
         name: `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Simple)`,
         type: 'simple',

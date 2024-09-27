@@ -550,7 +550,6 @@ export class ProductsPage extends AdminPage {
         await this.clickAndWaitForDownload(selector.vendor.vTools.export.csv.generateCsv);
     }
 
-
     // view product
     async viewProduct(productName: string): Promise<void> {
         await this.searchProduct(productName);
@@ -634,15 +633,15 @@ export class ProductsPage extends AdminPage {
 
         await this.clickAndWaitForResponse(data.subUrls.ajax, productsVendor.quickEditProduct.update);
     }
-        // add product catalog mode
-        async addProductCatalogMode(productName: string, hidePrice: boolean = false): Promise<void> {
-            await this.goToProductEdit(productName);
-            await this.check(productsVendor.catalogMode.removeAddToCart);
-            if (hidePrice) await this.check(productsVendor.catalogMode.hideProductPrice);
-            await this.saveProduct();
-            await this.toBeChecked(productsVendor.catalogMode.removeAddToCart);
-            if (hidePrice) await this.toBeChecked(productsVendor.catalogMode.hideProductPrice);
-        }
+    // add product catalog mode
+    async addProductCatalogMode(productName: string, hidePrice: boolean = false): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.check(productsVendor.catalogMode.removeAddToCart);
+        if (hidePrice) await this.check(productsVendor.catalogMode.hideProductPrice);
+        await this.saveProduct();
+        await this.toBeChecked(productsVendor.catalogMode.removeAddToCart);
+        if (hidePrice) await this.toBeChecked(productsVendor.catalogMode.hideProductPrice);
+    }
     // add product EU compliance
     async addProductEuCompliance(productName: string, euCompliance: product['productInfo']['euCompliance']): Promise<void> {
         await this.goToProductEdit(productName);
@@ -677,7 +676,7 @@ export class ProductsPage extends AdminPage {
         await this.toHaveValue(productsVendor.euComplianceFields.regularUnitPrice, euCompliance.regularUnitPrice);
         await this.toHaveValue(productsVendor.euComplianceFields.saleUnitPrice, euCompliance.saleUnitPrice);
         await this.toContainTextFrameLocator(productsVendor.euComplianceFields.optionalMiniDescription.descriptionIframe, productsVendor.euComplianceFields.optionalMiniDescription.descriptionHtmlBody, euCompliance.optionalMiniDescription);
-    }  
+    }
     // add product wholesale options
     async addProductWholesaleOptions(productName: string, wholesaleOption: product['productInfo']['wholesaleOption']): Promise<void> {
         await this.goToProductEdit(productName);
