@@ -36,7 +36,7 @@ test.describe('product review api test', () => {
     });
 
     test('update a product review', { tag: ['@pro'] }, async () => {
-        const [response, responseBody] = await apiUtils.put(endPoints.updateStoreReview(reviewId), { data: payloads.updateProductReview });
+        const [response, responseBody] = await apiUtils.put(endPoints.updateProductReview(reviewId), { data: payloads.updateProductReview });
         expect(response.ok()).toBeTruthy();
         expect(responseBody).toBeTruthy();
         expect(responseBody).toMatchSchema(schemas.productReviewsSchema.updateProductReviewSchema);
