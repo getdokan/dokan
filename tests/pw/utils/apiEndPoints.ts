@@ -123,7 +123,7 @@ export const endPoints = {
     // product reviews
     getAllProductReviews: `${SERVER_URL}/dokan/v1/reviews`,
     getProductReviewSummary: `${SERVER_URL}/dokan/v1/reviews/summary`,
-    updateReview: (reviewId: string) => `${SERVER_URL}/dokan/v1/reviews/${reviewId}`,
+    updateProductReview: (reviewId: string) => `${SERVER_URL}/dokan/v1/reviews/${reviewId}`,
 
     // store reviews
     getStoreReviews: (sellerId: string) => `${SERVER_URL}/dokan/v1/stores/${sellerId}/reviews`,
