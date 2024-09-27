@@ -72,7 +72,7 @@ test.describe('Catalog mode test', () => {
     test('vendor can set catalog mode (single product)', { tag: ['@lite', '@vendor'] }, async () => {
         const [, , productName] = await apiUtils.createProduct(payloads.createProduct(), payloads.userAuth(vendorName));
         const vendor = new ProductsPage(vPage);
-        await vendor.addCatalogMode(productName);
+        await vendor.addProductCatalogMode(productName, true);
     });
 
     test('vendor can disable hide product price in catalog mode', { tag: ['@lite', '@admin'] }, async () => {

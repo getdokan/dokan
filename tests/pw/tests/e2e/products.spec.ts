@@ -66,50 +66,45 @@ test.describe('Product functionality test', () => {
 
     // vendors
 
-    // todo: move create product in separate files, or product functionality to another page
     test('vendor can view product menu page', { tag: ['@lite', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorProductsRenderProperly();
     });
 
+    // add products
+
     test('vendor can add simple product', { tag: ['@lite', '@vendor'] }, async () => {
-        await vendor.vendorAddSimpleProduct(data.product.simple, false);
+        await vendor.vendorAddSimpleProduct(data.product.simple);
     });
 
     test('vendor can add variable product', { tag: ['@pro', '@vendor'] }, async () => {
-        await vendor.vendorAddVariableProduct(data.product.variable, false);
+        await vendor.vendorAddVariableProduct(data.product.variable);
     });
 
     test('vendor can add simple subscription product', { tag: ['@pro', '@vendor'] }, async () => {
-        await vendor.vendorAddSimpleSubscription(data.product.simpleSubscription, false);
+        await vendor.vendorAddSimpleSubscription(data.product.simpleSubscription);
     });
 
     test('vendor can add variable subscription product', { tag: ['@pro', '@vendor'] }, async () => {
-        await vendor.vendorAddVariableSubscription(data.product.variableSubscription, false);
+        await vendor.vendorAddVariableSubscription(data.product.variableSubscription);
     });
 
     test('vendor can add external product', { tag: ['@pro', '@vendor'] }, async () => {
-        await vendor.vendorAddExternalProduct(data.product.external, false);
+        await vendor.vendorAddExternalProduct(data.product.external);
+    });
+
+    test('vendor can add group product', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.vendorAddGroupProduct(data.product.grouped);
     });
 
     test('vendor can add downloadable product', { tag: ['@lite', '@vendor'] }, async () => {
-        await vendor.vendorAddDownloadableProduct(data.product.downloadable, false);
+        await vendor.vendorAddDownloadableProduct(data.product.downloadable);
     });
 
     test('vendor can add virtual product', { tag: ['@lite', '@vendor'] }, async () => {
-        await vendor.vendorAddVirtualProduct(data.product.virtual, false);
+        await vendor.vendorAddVirtualProduct(data.product.virtual);
     });
 
-    test('vendor can add product category', { tag: ['@lite', '@vendor'] }, async () => {
-        await vendor.vendorAddProductCategory(data.predefined.simpleProduct.product1.name, data.product.category.unCategorized);
-    });
-
-    // todo: move to other files: product categories
-    // todo: add multi-step product categories test
-    // todo: add product categories settings test
-
-    test('vendor can export products', { tag: ['@pro', '@vendor'] }, async () => {
-        await vendor.exportProducts();
-    });
+    // product page options
 
     test('vendor can search product', { tag: ['@lite', '@vendor'] }, async () => {
         await vendor.searchProduct(data.predefined.simpleProduct.product1.name);
@@ -131,11 +126,34 @@ test.describe('Product functionality test', () => {
         await vendor.filterProducts('by-other', 'featured');
     });
 
+    test('vendor can reset filter', { tag: ['@lite', '@vendor'] }, async () => {
+        await vendor.resetFilter();
+    });
+
+    test('vendor can import products', { tag: ['@pro', '@vendor'] }, async () => {
+        await apiUtils.deleteAllProducts('p0_v1', payloads.vendorAuth);
+        await vendor.importProducts('utils/sampleData/products.csv');
+    });
+
+    test('vendor can export products', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.exportProducts();
+    });
+
+    test('vendor can duplicate product', { tag: ['@pro', '@vendor'] }, async () => {
+        const [, , productName] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendorAuth);
+        await vendor.duplicateProduct(productName);
+    });
+
+    test('vendor can permanently delete product', { tag: ['@lite', '@vendor'] }, async () => {
+        const [, , productName] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendorAuth);
+        await vendor.permanentlyDeleteProduct(productName);
+    });
+
     test('vendor can view product', { tag: ['@lite', '@vendor'] }, async () => {
         await vendor.viewProduct(productName);
     });
 
-    test("vendor can't buy own product", { tag: ['@pro', '@vendor'] }, async () => {
+    test("vendor can't buy own product", { tag: ['@lite', '@vendor'] }, async () => {
         await vendor.cantBuyOwnProduct(productName);
     });
 
@@ -145,44 +163,5 @@ test.describe('Product functionality test', () => {
 
     test('vendor can quick edit product', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.quickEditProduct({ ...data.product.simple, editProduct: productName });
-    });
-
-    test('vendor can add product description', { tag: ['@lite', '@vendor'] }, async () => {
-        await vendor.addProductDescription(productName, data.product.productInfo.description);
-    });
-
-    test.skip('vendor can add product quantity discount', { tag: ['@pro', '@vendor'] }, async () => {
-        await vendor.addProductQuantityDiscount(productName, data.product.productInfo.quantityDiscount);
-    });
-
-    test.skip('vendor can add product rma options', { tag: ['@pro', '@vendor'] }, async () => {
-        await vendor.addProductRmaOptions(productName, data.vendor.rma);
-    });
-
-    test('vendor can add product wholesale options', { tag: ['@pro', '@vendor'] }, async () => {
-        await vendor.addProductWholesaleOptions(productName, data.product.productInfo.wholesaleOption);
-    });
-
-    test.skip('vendor can add product min-max options', { tag: ['@pro', '@vendor'] }, async () => {
-        await vendor.addProductMinMaxOptions(productName, data.product.productInfo.minMax);
-    });
-
-    test('vendor can add product other options', { tag: ['@lite', '@vendor'] }, async () => {
-        await vendor.addProductOtherOptions(productName, data.product.productInfo.otherOptions);
-    });
-
-    test.skip('vendor can add catalog mode', { tag: ['@lite', '@vendor'] }, async () => {
-        await vendor.addCatalogMode(productName);
-    });
-
-    // todo: add more product edit tests -> discount, wholesale, advertising
-
-    test('vendor can duplicate product', { tag: ['@pro', '@vendor'] }, async () => {
-        await vendor.duplicateProduct(productName);
-    });
-
-    test('vendor can permanently delete product', { tag: ['@lite', '@vendor'] }, async () => {
-        const [, , productName] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendorAuth);
-        await vendor.permanentlyDeleteProduct(productName);
     });
 });
