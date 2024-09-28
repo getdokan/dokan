@@ -110,11 +110,6 @@
           vendor can export products: true
           vendor can duplicate product: true
           vendor can permanently delete product [lite]: true
-          vendor can reset filter [lite]: true
-          vendor can import products: true
-          vendor can export products: true
-          vendor can duplicate product: true
-          vendor can permanently delete product [lite]: true
           vendor can view product [lite]: true
           vendor can't add product without required fields [lite]: true
           vendor can't buy own product [lite]: true
