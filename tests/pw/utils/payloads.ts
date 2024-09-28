@@ -123,6 +123,282 @@ export const payloads = {
         description: '<p>test description</p>',
     }),
 
+    createProductAllFields: () => ({
+        name: `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Simple)`,
+        type: 'simple', // simple, variable, grouped, external
+        featured: true,
+        virtual: false,
+        regular_price: faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([0, 2]) }),
+        // discount
+        sale_price: faker.finance.amount({ min: 50, max: 100, dec: faker.helpers.arrayElement([0, 2]) }),
+        date_on_sale_from: helpers.currentDateTime,
+        date_on_sale_to: helpers.addDays(helpers.currentDateTime, 10),
+        // categories
+        categories: [
+            {},
+            // {
+            //     id: CATEGORY_ID,
+            // },
+        ],
+        // tags
+        tags: [{ id: TAG_ID }],
+        attributes: [
+            {
+                id: ATTRIBUTE_ID,
+                name: 'sizes',
+                position: 0,
+                visible: true,
+                variation: true,
+                options: ['s', 'l', 'm'],
+            },
+        ],
+        // images
+        // images: [
+        //     // cover
+        //     {
+        //         // id: 78,
+        //         name: 'coverImage',
+        //         alt: 'coverImage',
+        //         src: '',
+        //     },
+        //     // gallery
+        //     {
+        //         // id: 78,
+        //         name: 'galleryImage',
+        //         alt: 'galleryImage',
+        //         src: '',
+        //     },
+        // ],
+
+        short_description: '<p>test short product description.</p>',
+        description: '<p>test product description</p>',
+        // downloadable
+        downloadable: true,
+        // downloads: [
+        //     {
+        //         name: 'File 1',
+        //         file: '',
+        //     },
+        // ],
+        download_limit: 50,
+        download_expiry: 100,
+        // inventory
+        sku: faker.string.nanoid(10),
+        stock_status: 'instock', // instock, outofstock, onbackorder
+        manage_stock: true,
+        stock_quantity: 50,
+        low_stock_amount: 5,
+        backorders: 'yes', // no, notify, yes
+        sold_individually: true,
+        // shipping
+        weight: '15',
+        dimensions: {
+            length: '25',
+            width: '35',
+            height: '45',
+        },
+        shipping_taxable: true,
+        shipping_class: 'heavy',
+        //tax
+        tax_status: 'taxable', // taxable, shipping, none
+        tax_class: 'reduced-rate', // standard, reduced-rate, zero-rate
+        // linked products
+        upsell_ids: [PRODUCT_ID],
+        cross_sell_ids: [PRODUCT_ID],
+        grouped_products: [PRODUCT_ID, PRODUCT_ID_V2],
+        // other options
+        status: 'publish', // publish, draft, pending, private
+        catalog_visibility: 'visible', // visible, catalog, search, hidden
+        purchase_note: 'test purchase note',
+        reviews_allowed: true,
+        meta_data: [
+            {
+                key: '_dokan_geolocation_use_store_settings',
+                value: 'no',
+            },
+            {
+                key: 'dokan_geo_latitude',
+                value: '23.8041',
+            },
+            {
+                key: 'dokan_geo_longitude',
+                value: '90.4152',
+            },
+            {
+                key: 'dokan_geo_public',
+                value: '1',
+            },
+            {
+                key: 'dokan_geo_address',
+                value: 'Dhaka, Bangladesh',
+            },
+            {
+                key: '_dokan_rma_override_product',
+                value: 'yes',
+            },
+            {
+                key: '_dokan_rma_settings',
+                value: {
+                    label: 'Warranty',
+                    type: 'included_warranty',
+                    policy: 'test refund policy',
+                    reasons: ['defective'],
+                    length: 'lifetime',
+                    length_value: '',
+                    length_duration: '',
+                    addon_settings: [],
+                },
+            },
+            {
+                key: '_product_addons',
+                value: [
+                    {
+                        name: `Add-on Title_${faker.string.nanoid(5)}`,
+                        title_format: 'label',
+                        description_enable: 1,
+                        description: 'Add-on description',
+                        type: 'multiple_choice',
+                        display: 'select',
+                        position: 0,
+                        required: 1,
+                        restrictions: 0,
+                        restrictions_type: 'any_text',
+                        adjust_price: 0,
+                        price_type: 'flat_fee',
+                        price: '',
+                        min: 0,
+                        max: 0,
+                        options: [
+                            {
+                                label: 'Option 1',
+                                price: '30',
+                                image: '',
+                                price_type: 'flat_fee',
+                            },
+                        ],
+                        wc_booking_person_qty_multiplier: 0,
+                        wc_booking_block_qty_multiplier: 0,
+                    },
+                ],
+            },
+            {
+                key: '_product_addons_exclude_global',
+                value: '1',
+            },
+            {
+                key: '_dokan_wholesale_meta',
+                value: {
+                    enable_wholesale: 'yes',
+                    price: '80',
+                    quantity: '100',
+                },
+            },
+            {
+                key: '_dokan_min_max_meta',
+                value: {
+                    min_quantity: '5',
+                    max_quantity: '100',
+                },
+            },
+            {
+                key: '_dokan_catalog_mode',
+                value: {
+                    hide_add_to_cart_button: 'on',
+                    hide_product_price: 'on',
+                },
+            },
+
+            // bulk discount
+            {
+                key: '_is_lot_discount',
+                value: 'yes',
+            },
+            {
+                key: '_lot_discount_quantity',
+                value: '50',
+            },
+            {
+                key: '_lot_discount_amount',
+                value: '5.00',
+            },
+            // commission
+            {
+                key: '_per_product_admin_commission_type',
+                value: 'flat',
+            },
+            {
+                key: '_per_product_admin_commission',
+                value: '',
+            },
+            {
+                key: '_per_product_admin_additional_fee',
+                value: '',
+            },
+            {
+                key: '_has_multi_vendor',
+                value: '18',
+            },
+            {
+                key: '_disable_shipping',
+                value: 'no',
+            },
+            {
+                key: '_overwrite_shipping',
+                value: 'no',
+            },
+
+            // eu compliance
+            {
+                key: '_sale_price_label',
+                value: 'old-price',
+            },
+            {
+                key: '_sale_price_regular_label',
+                value: 'new-price',
+            },
+            {
+                key: '_unit',
+                value: 'kg',
+            },
+            {
+                key: '_min_age',
+                value: 18,
+            },
+            {
+                key: '_unit_product',
+                value: '1',
+            },
+            {
+                key: '_unit_base',
+                value: '80',
+            },
+            {
+                key: '_default_delivery_time',
+                value: 1,
+            },
+            {
+                key: '_delivery_time_countries',
+                value: [],
+            },
+            {
+                key: '_free_shipping',
+                value: 'yes',
+            },
+            {
+                key: '_unit_price_regular',
+                value: '50',
+            },
+            {
+                key: '_unit_price_sale',
+                value: '20',
+            },
+            {
+                key: '_mini_desc',
+                value: 'test mini description',
+            },
+        ],
+    }),
+
     createProduct: () => ({
         name: `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Simple)`,
         type: 'simple',
@@ -212,6 +488,105 @@ export const payloads = {
             //         min_quantity: 5,
             //         max_quantity: 10,
             //     },
+            // },
+            // {
+            // 	key  : '_product_addons',
+            // 	value: []
+            // },
+            // {
+            // 	key  : '_product_addons_exclude_global',
+            // 	value: '0'
+            // },
+            // {
+            // 	key  : '_per_product_admin_commission_type',
+            // 	value: 'flat'
+            // },
+            // {
+            // 	key  : '_per_product_admin_commission',
+            // 	value: ''
+            // },
+            // {
+            // 	key  : '_per_product_admin_additional_fee',
+            // 	value: ''
+            // },
+            // {
+            // 	key  : '_has_multi_vendor',
+            // 	value: '18'
+            // },
+            // {
+            // 	key  : '_dokan_catalog_mode',
+            // 	value: {
+            // 		hide_add_to_cart_button: 'off',
+            // 		hide_product_price     : 'off'
+            // 	}
+            // },
+            // {
+            // 	key  : '_disable_shipping',
+            // 	value: 'no'
+            // },
+            // {
+            // 	key  : '_overwrite_shipping',
+            // 	value: 'no'
+            // },
+        ],
+    }),
+
+    createDiscountProduct: () => ({
+        name: `${faker.commerce.productName()}_${faker.string.nanoid(5)} (Simple)`,
+        type: 'simple',
+        regular_price: faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([0, 2]) }),
+        sale_price: faker.finance.amount({ min: 50, max: 100, dec: faker.helpers.arrayElement([0, 2]) }),
+        date_on_sale_from: helpers.currentDateTime,
+        date_on_sale_to: helpers.addDays(helpers.currentDateTime, 10),
+        status: 'publish',
+        categories: [{}],
+        featured: true,
+        description: '<p>test description</p>',
+        short_description: '<p>test short description</p>',
+        meta_data: [
+            {
+                key: '_dokan_geolocation_use_store_settings',
+                value: 'yes',
+            },
+            {
+                key: 'dokan_geo_latitude',
+                value: '40.7127753',
+            },
+            {
+                key: 'dokan_geo_longitude',
+                value: '-74.0059728',
+            },
+            {
+                key: 'dokan_geo_public',
+                value: '1',
+            },
+            {
+                key: 'dokan_geo_address',
+                value: 'New York, NY, USA',
+            },
+            {
+                key: '_dokan_rma_override_product',
+                value: 'yes',
+            },
+            {
+                key: '_dokan_rma_settings',
+                value: {
+                    label: 'Warranty',
+                    type: 'included_warranty',
+                    policy: 'test refund policy',
+                    reasons: ['defective'],
+                    length: 'lifetime',
+                    length_value: '',
+                    length_duration: '',
+                    addon_settings: [],
+                },
+            },
+            // {
+            // key: '_dokan_min_max_meta',
+            // value: {
+            //     min_quantity: 4,
+            //     max_quantity: 5,
+            // },
             // },
             // {
             // 	key  : '_product_addons',

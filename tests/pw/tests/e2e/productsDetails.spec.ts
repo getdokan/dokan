@@ -1,0 +1,112 @@
+import { test, request, Page } from '@playwright/test';
+import { ProductsPage } from '@pages/productsPage';
+import { ApiUtils } from '@utils/apiUtils';
+import { dbUtils } from '@utils/dbUtils';
+import { data } from '@utils/testData';
+import { dbData } from '@utils/dbData';
+import { payloads } from '@utils/payloads';
+import { responseBody } from '@utils/interfaces';
+import { serialize } from 'php-serialize';
+
+const { CATEGORY_ID } = process.env;
+
+test.describe('Product details functionality test', () => {
+    let vendor: ProductsPage;
+    let vPage: Page;
+    let apiUtils: ApiUtils;
+    let productResponseBody: responseBody;
+    let productId: string;
+    let productName: string; // has all fields
+    let productName1: string; // has only required fields
+
+    test.beforeAll(async ({ browser }) => {
+        const vendorContext = await browser.newContext(data.auth.vendorAuth);
+        vPage = await vendorContext.newPage();
+        vendor = new ProductsPage(vPage);
+
+        apiUtils = new ApiUtils(await request.newContext());
+        // product with only required fields
+        [, , productName1] = await apiUtils.createProduct(payloads.createProductRequiredFields(), payloads.vendorAuth);
+        // product with all fields
+        // const [, , mediaUrl] = await apiUtils.uploadMedia(data.image.avatar, payloads.mimeTypes.png, payloads.vendorAuth);
+        // [productResponseBody, productId, productName] = await apiUtils.createProductWc({ ...payloads.createProductAllFields(), images: [{ src: mediaUrl }, { src: mediaUrl }] }, payloads.vendorAuth); // todo: mediaUrl is not working on git action
+        [productResponseBody, productId, productName] = await apiUtils.createProductWc(payloads.createProductAllFields(), payloads.vendorAuth);
+        await apiUtils.updateProduct(
+            productId,
+            {
+                meta_data: [
+                    { key: '_product_addons', value: [payloads.createProductAddon()] },
+                    { key: '_product_addons_exclude_global', value: '1' },
+                ],
+            },
+            payloads.vendorAuth,
+        );
+    });
+
+    test.afterAll(async () => {
+        // await apiUtils.deleteAllProducts(payloads.vendorAuth);
+        await vPage.close();
+        await apiUtils.dispose();
+    });
+
+    // vendor
+
+    // product title
+
+    test('vendor can update product title', { tag: ['@lite', '@vendor'] }, async () => {
+        const [, , productName] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendorAuth);
+        await vendor.addProductTitle(productName, data.product.productInfo.title);
+    });
+
+    // product permalink
+
+    test('vendor can update product permalink', { tag: ['@lite', '@vendor'] }, async () => {
+        await vendor.addProductPermalink(productName, data.product.productInfo.permalink);
+    });
+
+    // product price
+
+    test('vendor can add product price', { tag: ['@lite', '@vendor'] }, async () => {
+        await vendor.addPrice(productName1, data.product.productInfo.price());
+    });
+
+    test('vendor can update product price', { tag: ['@lite', '@vendor'] }, async () => {
+        await vendor.addPrice(productName, data.product.productInfo.price());
+    });
+
+    test('vendor can remove product price', { tag: ['@lite', '@vendor'] }, async () => {
+        await vendor.removePrice(productName);
+    });
+
+    // product discount price
+
+    test('vendor can add product discount price', { tag: ['@lite', '@vendor'] }, async () => {
+        await vendor.addDiscount(productName1, data.product.productInfo.discount);
+    });
+
+    test('vendor can add product discount price (with schedule)', { tag: ['@lite', '@vendor'] }, async () => {
+        await vendor.addDiscount(productName1, data.product.productInfo.discount, true);
+    });
+
+    test('vendor can update product discount price', { tag: ['@lite', '@vendor'] }, async () => {
+        await vendor.addDiscount(productName, { ...data.product.productInfo.discount, regularPrice: productResponseBody.price });
+    });
+
+    test('vendor can update product discount price (with schedule)', { tag: ['@lite', '@vendor'] }, async () => {
+        await vendor.addDiscount(productName, { ...data.product.productInfo.discount, regularPrice: productResponseBody.price }, true, true);
+    });
+
+    test("vendor can't add product discount price higher than price", { tag: ['@lite', '@vendor'] }, async () => {
+        await vendor.cantAddGreaterDiscount(productName, { ...data.product.productInfo.discount, regularPrice: productResponseBody.price });
+    });
+
+    test('vendor can remove product discount price', { tag: ['@lite', '@vendor'] }, async () => {
+        const [, , productName] = await apiUtils.createProduct({ ...payloads.createDiscountProduct(), date_on_sale_from: '', date_on_sale_to: '' }, payloads.vendorAuth);
+        await vendor.removeDiscount(productName);
+    });
+
+    test('vendor can remove product discount schedule', { tag: ['@lite', '@vendor'] }, async () => {
+        const [, , productName] = await apiUtils.createProduct(payloads.createDiscountProduct(), payloads.vendorAuth);
+        await vendor.removeDiscount(productName, true);
+    });
+});

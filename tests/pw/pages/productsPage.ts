@@ -284,6 +284,113 @@ export class ProductsPage extends AdminPage {
         await this.multipleElementVisible(table);
     }
 
+    // add new product render properly
+    async vendorAddNewProductRenderProperly(): Promise<void> {
+        await this.goToAddNewProduct();
+
+        // title
+        await this.toBeVisible(productsVendor.title);
+
+        // product type
+        if (DOKAN_PRO) await this.toBeVisible(productsVendor.productType);
+
+        // downloadable
+        await this.toBeVisible(productsVendor.downloadable);
+
+        // virtual
+        await this.toBeVisible(productsVendor.virtual);
+
+        // price
+        await this.toBeVisible(productsVendor.price);
+
+        // discount price & Schedule
+        await this.click(productsVendor.discount.schedule);
+        const { schedule, greaterDiscountError, ...discount } = productsVendor.discount;
+        await this.multipleElementVisible(discount);
+
+        // category
+        await this.toBeVisible(productsVendor.category.openCategoryModal);
+
+        // tags
+        await this.toBeVisible(productsVendor.tags.tagInput);
+
+        // cover image
+        await this.toBeVisible(productsVendor.image.cover);
+
+        // gallery image
+        await this.toBeVisible(productsVendor.image.gallery);
+
+        // short description
+        await this.toBeVisible(productsVendor.shortDescription.shortDescriptionIframe);
+
+        // description
+        await this.toBeVisible(productsVendor.description.descriptionIframe);
+
+        // inventory
+        await this.toBeVisible(productsVendor.inventory.stockStatus);
+        await this.check(productsVendor.inventory.enableStockManagement);
+        const { stockStatus, ...inventory } = productsVendor.inventory;
+        await this.multipleElementVisible(inventory);
+
+        // other options
+        await this.multipleElementVisible(productsVendor.otherOptions);
+
+        // catalog mode
+        await this.check(productsVendor.catalogMode.removeAddToCart);
+        await this.multipleElementVisible(productsVendor.catalogMode);
+
+        if (DOKAN_PRO) {
+            // shipping
+            await this.multipleElementVisible(productsVendor.shipping);
+
+            // tax
+            await this.multipleElementVisible(productsVendor.tax);
+
+            // geolocation
+            await this.uncheck(productsVendor.geolocation.sameAsStore);
+            await this.multipleElementVisible(productsVendor.geolocation);
+
+            // linked products
+            await this.toBeVisible(productsVendor.linkedProducts.upSells);
+            await this.toBeVisible(productsVendor.linkedProducts.crossSells);
+
+            // attribute
+            await this.toBeVisible(productsVendor.attribute.customAttribute);
+            await this.toBeVisible(productsVendor.attribute.addAttribute);
+            await this.toBeVisible(productsVendor.attribute.saveAttribute);
+
+            // discount options
+            await this.check(productsVendor.bulkDiscount.enableBulkDiscount);
+            await this.multipleElementVisible(productsVendor.bulkDiscount);
+
+            // addon
+            await this.toBeVisible(productsVendor.addon.addField);
+            await this.toBeVisible(productsVendor.addon.import);
+            await this.toBeVisible(productsVendor.addon.export);
+            await this.toBeVisible(productsVendor.addon.excludeAddons);
+
+            // rma
+            await this.check(productsVendor.rma.overrideDefaultRmaSettings);
+            const { length, lengthValue, lengthDuration, addonCost, addonDurationLength, addonDurationType, rmaPolicyHtmlBody, refundReasons, ...rma } = productsVendor.rma;
+            await this.multipleElementVisible(rma);
+
+            // wholesale
+            await this.check(productsVendor.wholesale.enableWholesale);
+            await this.multipleElementVisible(productsVendor.wholesale);
+
+            // min-max
+            await this.multipleElementVisible(productsVendor.minMax);
+
+            // advertisement
+            await this.toBeVisible(productsVendor.advertisement.needsPublishNotice);
+
+            // eu compliance
+            // todo: need a check for germanized plugin
+            // const { deliveryTime, optionalMiniDescription, ...euComplianceFields } = productsVendor.euComplianceFields;
+            // await this.multipleElementVisible(euComplianceFields);
+        }
+    }
+
     // products
 
     // vendor add product
@@ -550,6 +657,23 @@ export class ProductsPage extends AdminPage {
         await this.clickAndWaitForDownload(selector.vendor.vTools.export.csv.generateCsv);
     }
 
+    async addProductWithoutRequiredFields(product: product['simple']): Promise<void> {
+        const productName = product.productName();
+        const productPrice = product.regularPrice();
+        await this.goToAddNewProduct();
+        await this.click(productsVendor.saveProduct);
+        await this.toContainText(productsVendor.NoTitleError, 'This field is required');
+        await this.clearAndType(productsVendor.title, productName);
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, productsVendor.saveProduct);
+        await this.toContainText(productsVendor.dokanErrorMessage, 'Error! Description is a required field..');
+        await this.typeFrameSelector(productsVendor.description.descriptionIframe, productsVendor.description.descriptionHtmlBody, product.description);
+        await this.clearAndType(productsVendor.price, productPrice);
+        await this.saveProduct();
+        await this.toHaveValue(productsVendor.title, productName);
+        await this.toHaveValue(productsVendor.price, productPrice);
+        await this.toContainTextFrameLocator(productsVendor.description.descriptionIframe, productsVendor.description.descriptionHtmlBody, product.description);
+    }
+
     // view product
     async viewProduct(productName: string): Promise<void> {
         await this.searchProduct(productName);
@@ -633,6 +757,91 @@ export class ProductsPage extends AdminPage {
 
         await this.clickAndWaitForResponse(data.subUrls.ajax, productsVendor.quickEditProduct.update);
     }
+
+    // product options
+
+    // add product title
+    async addProductTitle(productName: string, title: string): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.clearAndType(productsVendor.title, title);
+        await this.saveProduct();
+        await this.toHaveValue(productsVendor.title, title);
+    }
+
+    // add product permalink
+    async addProductPermalink(productName: string, permalink: string): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.click(productsVendor.permalink.permalinkEdit);
+        await this.clearAndType(productsVendor.permalink.permalinkInput, permalink);
+        await this.clickAndWaitForResponse(data.subUrls.ajax, productsVendor.permalink.confirmPermalinkEdit);
+        await this.saveProduct();
+        await this.toContainText(productsVendor.permalink.permalink, helpers.slugify(permalink));
+        // todo: add more assertions to all product edit test, customer pov
+    }
+
+    // add product price
+    async addPrice(productName: string, price: string): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.clearAndType(productsVendor.price, price);
+        await this.saveProduct();
+        await this.toHaveValue(productsVendor.price, price);
+    }
+
+    // remove product price
+    async removePrice(productName: string): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.clearAndType(productsVendor.price, '');
+        await this.saveProduct();
+        await this.toHaveValue(productsVendor.price, '');
+    }
+
+    // can't add product discount greater than regular price
+    async cantAddGreaterDiscount(productName: string, discount: product['discount']): Promise<void> {
+        const regularPrice = discount.regularPrice.replace('.', ',');
+        const discountPrice = String(Number(discount.regularPrice) + Number(discount.discountPrice)).replace('.', ',');
+        await this.goToProductEdit(productName);
+        await this.clearAndType(productsVendor.price, regularPrice);
+        await this.type(productsVendor.discount.discountedPrice, discountPrice);
+        await this.toBeVisible(productsVendor.discount.greaterDiscountError);
+    }
+
+    // add product discount
+    async addDiscount(productName: string, discount: product['discount'], schedule = false, hasSchedule = false): Promise<void> {
+        const regularPrice = discount.regularPrice.replace('.', ',');
+        const discountPrice = String(Number(discount.regularPrice) - Number(discount.discountPrice)).replace('.', ',');
+        await this.goToProductEdit(productName);
+        await this.clearAndType(productsVendor.price, regularPrice);
+        await this.clearAndType(productsVendor.discount.discountedPrice, discountPrice);
+        if (schedule) {
+            if (!hasSchedule) await this.click(productsVendor.discount.schedule);
+            await this.clearAndType(productsVendor.discount.scheduleFrom, discount.startDate!);
+            await this.clearAndType(productsVendor.discount.scheduleTo, discount.endDate!);
+        }
+        await this.saveProduct();
+        await this.toHaveValue(productsVendor.discount.discountedPrice, discountPrice);
+        if (schedule) {
+            await this.toBeVisible(productsVendor.discount.scheduleCancel);
+            await this.toHaveValue(productsVendor.discount.scheduleFrom, discount.startDate!);
+            await this.toHaveValue(productsVendor.discount.scheduleTo, discount.endDate!);
+        }
+    }
+
+    // add remove discount
+    async removeDiscount(productName: string, schedule: boolean = false): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.clearAndType(productsVendor.discount.discountedPrice, '');
+        if (schedule) {
+            await this.click(productsVendor.discount.scheduleCancel);
+        }
+        await this.saveProduct();
+        await this.toHaveValue(productsVendor.discount.discountedPrice, '');
+        if (schedule) {
+            await this.toBeVisible(productsVendor.discount.schedule);
+            await this.notToBeVisible(productsVendor.discount.scheduleFrom);
+            await this.notToBeVisible(productsVendor.discount.scheduleTo);
+        }
+    }
+
     // add product catalog mode
     async addProductCatalogMode(productName: string, hidePrice: boolean = false): Promise<void> {
         await this.goToProductEdit(productName);
