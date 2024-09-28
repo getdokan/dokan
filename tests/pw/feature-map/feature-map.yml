@@ -98,7 +98,6 @@
           vendor can add variable subscription product: true
           vendor can add external product: true
           vendor can add group product: true
-          vendor can add group product: true
           vendor can add downloadable product [lite]: true
           vendor can add virtual product [lite]: true
           vendor can search product [lite]: true
