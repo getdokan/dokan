@@ -4,6 +4,18 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.12.3',
+        'released' => '2024-09-30',
+        'changes'  => [
+            'Improvement'  => [
+                [
+                    'title'       => 'Added compatibility with RFQ state field ui.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.12.2',
         'released' => '2024-09-23',
         'changes'  => [
