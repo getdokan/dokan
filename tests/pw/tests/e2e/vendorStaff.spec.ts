@@ -44,3 +44,38 @@ test.describe('Vendor staff test', () => {
         await vendor.deleteStaff(staff.firstName + ' ' + staff.lastName);
     });
 });
+
+test.describe('Wholesale test (customer)', () => {
+    let staff: VendorStaffPage;
+    let sPage: Page;
+    let apiUtils: ApiUtils;
+
+    test.beforeAll(async ({ browser }) => {
+        apiUtils = new ApiUtils(await request.newContext());
+
+        const [, staffId, staffName] = await apiUtils.createVendorStaff(payloads.createStaff(), payloads.vendorAuth);
+        const staffContext = await browser.newContext(data.header.userAuth(staffName));
+        sPage = await staffContext.newPage();
+        staff = new VendorStaffPage(sPage);
+
+        const payload = createPayload(data.vendorStaff.basicMenu);
+        await apiUtils.updateStaffCapabilities(staffId, payload, payloads.vendorAuth);
+    });
+
+    test.afterAll(async () => {
+        await sPage.close();
+    });
+
+    test('VendorStaff can view allowed menus', { tag: ['@pro', '@staff'] }, async () => {
+        await staff.viewPermittedMenus(data.vendorStaff.basicMenuNames);
+    });
+});
+
+function createPayload(capabilitiesArray: string[], access = true) {
+    return {
+        capabilities: capabilitiesArray.map(capability => ({
+            capability: capability,
+            access: access,
+        })),
+    };
+}

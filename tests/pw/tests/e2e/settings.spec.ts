@@ -57,7 +57,7 @@ test.describe('Settings test', () => {
     });
 
     test('admin can set Dokan menu manager settings', { tag: ['@pro', '@admin'] }, async () => {
-        await admin.setDokanMenuManagerSettings(data.dokanSettings.menuManager);
+        await admin.setDokanMenuManagerSettings(data.dokanSettings.menuManager.menus);
     });
 
     test('admin can set Dokan privacy policy settings', { tag: ['@lite', '@admin'] }, async () => {

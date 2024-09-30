@@ -15,6 +15,7 @@ const setupWizardVendor = selector.vendor.vSetup;
 const productsVendor = selector.vendor.product;
 const ordersVendor = selector.vendor.orders;
 const verificationsVendor = selector.vendor.vVerificationSettings;
+const vendorDashboard = selector.vendor.vDashboard;
 
 export class VendorPage extends BasePage {
     constructor(page: Page) {
@@ -50,7 +51,7 @@ export class VendorPage extends BasePage {
         await this.searchProduct(productName);
         await this.hover(productsVendor.productCell(productName));
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.products, productsVendor.editProduct(productName));
-        await this.toHaveValue(productsVendor.edit.title, productName);
+        await this.toHaveValue(productsVendor.title, productName);
     }
 
     // open vendor registration form
@@ -209,7 +210,7 @@ export class VendorPage extends BasePage {
         } else {
             await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.dashboard, setupWizardVendor.notRightNow);
         }
-        await this.toBeVisible(selector.vendor.vDashboard.menus.dashboard);
+        await this.toBeVisible(vendorDashboard.menus.primary.dashboard);
     }
 
     // vendor account details render properly
@@ -246,7 +247,7 @@ export class VendorPage extends BasePage {
     // get total vendor earnings
     async getTotalVendorEarning(): Promise<number> {
         await this.goToVendorDashboard();
-        return helpers.price((await this.getElementText(selector.vendor.vDashboard.atAGlance.earningValue)) as string);
+        return helpers.price((await this.getElementText(vendorDashboard.atAGlance.earningValue)) as string);
     }
 
     // get order details vendor
@@ -313,10 +314,10 @@ export class VendorPage extends BasePage {
     async visitStore(storeName: string) {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.dashboard);
         // ensure link suppose to open on new tab
-        await this.toHaveAttribute(selector.vendor.vDashboard.menus.visitStore, 'target', '_blank');
+        await this.toHaveAttribute(vendorDashboard.menus.primary.visitStore, 'target', '_blank');
         // force link to open on the same tab
-        await this.setAttributeValue(selector.vendor.vDashboard.menus.visitStore, 'target', '_self');
-        await this.click(selector.vendor.vDashboard.menus.visitStore);
+        await this.setAttributeValue(vendorDashboard.menus.primary.visitStore, 'target', '_self');
+        await this.click(vendorDashboard.menus.primary.visitStore);
         await expect(this.page).toHaveURL(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)) + '/');
     }
 
@@ -384,18 +385,5 @@ export class VendorPage extends BasePage {
         }
         await this.toBeChecked(productsVendor.advertisement.advertiseThisProduct);
         await this.toBeVisible(productsVendor.advertisement.advertisementIsBought);
-    }
-
-    // vendor set banner and profile picture settings
-    async bannerAndProfilePictureSettings(banner: string, profilePicture: string): Promise<void> {
-        // todo:  fix banner and profile update
-        // upload banner and profile picture
-        await this.removePreviouslyUploadedImage(selector.vendor.vStoreSettings.bannerImage, selector.vendor.vStoreSettings.removeBannerImage);
-        await this.click(selector.vendor.vStoreSettings.banner);
-        await this.wpUploadFile(banner);
-
-        await this.removePreviouslyUploadedImage(selector.vendor.vStoreSettings.profilePictureImage, selector.vendor.vStoreSettings.removeProfilePictureImage);
-        await this.clickAndWaitForResponse(data.subUrls.ajax, selector.vendor.vStoreSettings.profilePicture);
-        await this.wpUploadFile(profilePicture);
     }
 }

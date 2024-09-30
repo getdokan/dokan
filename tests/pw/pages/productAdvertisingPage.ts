@@ -87,10 +87,10 @@ export class ProductAdvertisingPage extends AdminPage {
         await this.typeAndWaitForResponseAndLoadState(data.subUrls.api.dokan.productAdvertising, productAdvertisingAdmin.search, String(searchKey));
         await this.toHaveCount(productAdvertisingAdmin.numberOfRows, 1);
         if (typeof searchKey != 'number') {
-            // serched by product
+            // searched by product
             await this.toBeVisible(productAdvertisingAdmin.advertisedProductCell(searchKey));
         } else {
-            // serched by orderid
+            // searched by orderId
             await this.toBeVisible(productAdvertisingAdmin.advertisedProductOrderIdCell(searchKey));
         }
     }

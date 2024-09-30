@@ -49,6 +49,13 @@ export interface product {
         pending: string;
     };
 
+    discount: {
+        regularPrice: string;
+        discountPrice: string;
+        startDate?: string;
+        endDate?: string;
+    };
+
     stockStatus: {
         outOfStock: string;
     };
@@ -97,9 +104,8 @@ export interface product {
     category: {
         unCategorized: string;
         clothings: string;
-        randomCategory1: () => string;
         randomCategory: () => string;
-        categories: string;
+        categories: string[];
     };
 
     store: {
@@ -121,6 +127,7 @@ export interface product {
         status: string;
         stockStatus: boolean;
         editProduct: string;
+        description: string;
         saveSuccessMessage: string;
     };
 
@@ -133,6 +140,7 @@ export interface product {
         status: string;
         stockStatus: boolean;
         editProduct: string;
+        description: string;
         saveSuccessMessage: string;
 
         downloadableOptions: {
@@ -157,6 +165,7 @@ export interface product {
             linkAllVariation: string;
             variableRegularPrice: string;
         };
+        description: string;
         saveSuccessMessage: string;
     };
 
@@ -169,6 +178,18 @@ export interface product {
         regularPrice: () => string;
         storeName: string;
         status: string;
+        description: string;
+        saveSuccessMessage: string;
+    };
+
+    grouped: {
+        productType: string;
+        productName: () => string;
+        category: string;
+        groupedProducts: string[];
+        storeName: string;
+        status: string;
+        description: string;
         saveSuccessMessage: string;
     };
 
@@ -185,6 +206,7 @@ export interface product {
         subscriptionTrialPeriod: string;
         storeName: string;
         status: string;
+        description: string;
         saveSuccessMessage: string;
     };
 
@@ -207,6 +229,7 @@ export interface product {
             linkAllVariation: string;
             variableRegularPrice: string;
         };
+        description: string;
         saveSuccessMessage: string;
     };
 
@@ -220,6 +243,7 @@ export interface product {
         advertisementSlot: string;
         expireAfterDays: string;
         storeName: string;
+        description: string;
         status: string;
     };
 
@@ -297,9 +321,44 @@ export interface product {
     };
 
     productInfo: {
-        description: {
-            shortDescription: string;
-            description: string;
+        downloadableOptions: {
+            fileName: string;
+            fileUrl: string;
+            downloadLimit: string;
+            downloadExpiry: string;
+        };
+
+        inventory: {
+            sku: string;
+            stockStatus: string;
+            stockManagement: boolean;
+            stockQuantity: string;
+            lowStockThreshold: string;
+            backorders: string;
+            oneQuantity: boolean;
+        };
+
+        shipping: {
+            weight: string;
+            length: string;
+            width: string;
+            height: string;
+            shippingClass: string;
+        };
+
+        tax: {
+            status: string;
+            class: string;
+        };
+
+        linkedProducts: {
+            upSells: string[];
+            crossSells: string[];
+        };
+
+        attribute: {
+            attributeName: string;
+            attributeTerm: string;
         };
 
         euCompliance: {
@@ -316,6 +375,17 @@ export interface product {
             optionalMiniDescription: string;
         };
 
+        addon: {
+            type: string;
+            displayAs: string;
+            title: string;
+            formatTitle: string;
+            addDescription: string;
+            enterAnOption: string;
+            optionPriceType: string;
+            optionPriceInput: string;
+        };
+
         amountDiscount: {
             minimumOrderAmount: string;
             discountPercentage: string;
@@ -328,21 +398,19 @@ export interface product {
 
         wholesaleOption: {
             wholesalePrice: string;
-            minimumWholesaleQuantity: string;
+            minimumQuantity: string;
         };
 
         minMax: {
             minimumProductQuantity: string;
             maximumProductQuantity: string;
-            minimumAmount: string;
-            maximumAmount: string;
-            category: string;
         };
 
         otherOptions: {
-            productStatus: string;
+            status: string;
             visibility: string;
             purchaseNote: string;
+            enableReview: boolean;
         };
     };
 }
@@ -950,10 +1018,15 @@ export interface vendor {
     rma: {
         label: string;
         type: string;
-        rmaLength: string;
+        length: string;
         lengthValue: string;
         lengthDuration: string;
-        refundPolicyHtmlBody: string;
+        addon: {
+            cost: string;
+            durationLength: string;
+            durationType: string;
+        };
+        refundPolicy: string;
         saveSuccessMessage: string;
     };
 
@@ -963,8 +1036,10 @@ export interface vendor {
         metaKeywords: string;
         facebookTitle: string;
         facebookDescription: string;
+        facebookImage: string;
         twitterTitle: string;
         twitterDescription: string;
+        twitterImage: string;
     };
 
     withdraw: {

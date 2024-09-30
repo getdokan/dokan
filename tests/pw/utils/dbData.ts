@@ -753,7 +753,7 @@ export const dbData = {
         },
         privacyPolicySettings: {
             enable_privacy: 'on',
-            privacy_page: '2',
+            privacy_page: '',
             privacy_policy: '<p>Your personal data will be used to support your experience throughout this website, to manage access to your account, and for other purposes described in our [dokan_privacy_policy]</p>',
         },
 
@@ -1327,9 +1327,11 @@ export const dbData = {
             },
             _multiwidget: 1,
         },
+
+        // 'dokan-store-contact-widget-2', 'dokan-best-selling-widget-2', 'dokan-category-menu-2', 'dokan-filter-product-2', 'dokan-store-location-2', 'dokan-store-menu-2', 'dokan-store-open-close-widget-2', 'dokan-top-rated-2',
         sideBarsWidgets: {
-            wp_inactive_widgets: ['block-8', 'block-2', 'block-3', 'block-4', 'block-5', 'block-6'],
-            'sidebar-store': ['dokan-category-menu-2', 'dokan-store-location-2', 'dokan-store-contact-widget-2'],
+            wp_inactive_widgets: [],
+            'sidebar-store': ['dokan-store-contact-widget-2'],
             'sidebar-1': [],
             'header-1': [],
             'footer-1': [],
@@ -1338,7 +1340,8 @@ export const dbData = {
             'footer-4': [],
             array_version: 3,
         },
-        multiwidget: { _multiwidget: 1 },
+
+        emptySideBarsWidgets: { wp_inactive_widgets: [] },
     },
 
     // test db data
@@ -1404,6 +1407,18 @@ export const dbData = {
                 enable_catalog_mode: 'enable_catalog_mode',
                 hide_withdraw_menu: 'hide_withdraw_menu',
                 status_inactive: 'status_inactive',
+            },
+
+            // vendor rma settings
+            rmaSettings: {
+                label: 'Warranty',
+                type: 'no_warranty',
+                policy: 'Refund Policy',
+                reasons: [],
+                length: '',
+                length_value: '',
+                length_duration: '',
+                addon_settings: [],
             },
         },
     },

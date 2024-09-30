@@ -38,13 +38,13 @@ test.describe('Shortcodes test', () => {
         await admin.createPageWithShortcode(data.pageTitle, data.dokanShortcodes.dashboard);
     });
 
-    test('vendor can view dokan dashboard (shortcode)', { tag: ['@lite', '@admin'] }, async () => {
+    test('vendor can view Dokan dashboard (shortcode)', { tag: ['@lite', '@admin'] }, async () => {
         const [responseBody, pageId] = await apiUtils.createPage(payloads.dashboardShortcode, payloads.adminAuth);
         await vendor.viewDashboard(responseBody.link);
         await apiUtils.deletePage(pageId, payloads.adminAuth);
     });
 
-    test('vendor can view dokan subscription packs (shortcode)', { tag: ['@pro', '@admin'] }, async () => {
+    test('vendor can view Dokan subscription packs (shortcode)', { tag: ['@pro', '@admin'] }, async () => {
         const [responseBody, pageId] = await apiUtils.createPage(payloads.dokanSubscriptionPackShortcode, payloads.adminAuth);
         await vendor.viewDokanSubscriptionPacks(responseBody.link);
         await apiUtils.deletePage(pageId, payloads.adminAuth);
