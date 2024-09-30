@@ -25,6 +25,7 @@ test.describe('Product functionality test', () => {
     });
 
     test.afterAll(async () => {
+        // await apiUtils.deleteAllProducts(payloads.vendorAuth);
         await aPage.close();
         await vPage.close();
         await apiUtils.dispose();
@@ -68,6 +69,10 @@ test.describe('Product functionality test', () => {
 
     test('vendor can view product menu page', { tag: ['@lite', '@exploratory', '@vendor'] }, async () => {
         await vendor.vendorProductsRenderProperly();
+    });
+
+    test('vendor can view add new product page', { tag: ['@lite', '@vendor'] }, async () => {
+        await vendor.vendorAddNewProductRenderProperly();
     });
 
     // add products
@@ -151,6 +156,10 @@ test.describe('Product functionality test', () => {
 
     test('vendor can view product', { tag: ['@lite', '@vendor'] }, async () => {
         await vendor.viewProduct(productName);
+    });
+
+    test.skip("vendor can't add product without required fields", { tag: ['@lite', '@vendor'] }, async () => {
+        await vendor.addProductWithoutRequiredFields(data.product.simple);
     });
 
     test("vendor can't buy own product", { tag: ['@lite', '@vendor'] }, async () => {

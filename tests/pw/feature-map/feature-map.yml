@@ -91,6 +91,7 @@
           admin can add vendor subscription: false
       vendor:
           vendor can view product menu page [lite]: true
+          vendor can view add new product page [lite]: true
           vendor can add simple product [lite]: true
           vendor can add variable product: true
           vendor can add simple subscription product: true
@@ -110,9 +111,22 @@
           vendor can duplicate product: true
           vendor can permanently delete product [lite]: true
           vendor can view product [lite]: true
+          vendor can't add product without required fields [lite]: true
           vendor can't buy own product [lite]: true
           vendor can edit product [lite]: true
           vendor can quick edit product: true
+          vendor can update product title [lite]: true
+          vendor can update product permalink [lite]: true
+          vendor can add product price [lite]: true
+          vendor can update product price [lite]: true
+          vendor can remove product price [lite]: true
+          vendor can add product discount price [lite]: true
+          vendor can add product discount price (with schedule) [lite]: true
+          vendor can update product discount price [lite]: true
+          vendor can update product discount price (with schedule) [lite]: true
+          vendor can't add product discount price higher than price [lite]: true
+          vendor can remove product discount price [lite]: true
+          vendor can remove product discount schedule [lite]: true
 
 
 - page: 'MyOrders'
