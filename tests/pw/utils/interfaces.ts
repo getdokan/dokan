@@ -1279,11 +1279,20 @@ export interface requestForQuotation {
     quoteRule: {
         title: string;
         userRole: string;
-        product: string;
-        category: string;
-        hidePrice: string;
+        applyOnAllProducts: boolean;
+        specificProducts?: boolean;
+        includeProducts?: string;
+        excludeProducts?: string;
+        specificCategories?: boolean;
+        categories: string[];
+        specificVendors?: boolean;
+        includeVendors?: string;
+        excludeVendors?: string;
+        expireLimit?: string;
+        hidePrice: boolean;
         hidePriceText: string;
-        hideAddToCartButton: string;
+        hideAddToCartButton?: boolean;
+        keepBothCartQuoteButton?: boolean;
         customButtonLabel: string;
         order: string;
     };

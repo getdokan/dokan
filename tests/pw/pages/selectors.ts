@@ -1049,13 +1049,27 @@ export const selector = {
                         // rule settings
                         applyQuoteFor: (role: string) => `#${role}`,
                         applyQuoteFor1: (role: string) => `//label[normalize-space()="${role}"]/..//input`,
-                        applyOnAllProducts: '#apply_on_all_product',
-                        selectProductsDropDown: '.multiselect__select',
-                        selectProductsInput: '.multiselect__input',
+                        applyOnAllProducts: '#row-apply-all-product label.switch',
+                        specificProducts: '//th[normalize-space(text())="Specific Products"]/..//label[@class="switch tips"]',
+                        includeProducts: '//th[normalize-space(text())="Include Products"]/..//div[@class="multiselect__select"]',
+                        includeProductsInput: '//th[normalize-space(text())="Include Products"]/..//input[@class="multiselect__input"]',
+                        excludeProducts: '//th[normalize-space(text())="Exclude Products"]/..//div[@class="multiselect__select"]',
+                        excludeProductsInput: '//th[normalize-space(text())="Exclude Products"]/..//input[@class="multiselect__input"]',
+                        selectedInput: (input: string) => `//span[@class="multiselect__option multiselect__option--highlight"]//span[normalize-space(text())="${input}"]`,
+                        selectedResult: (input: string) => `//span[@class="multiselect__tag"]//span[normalize-space(text())="${input}"]`,
+                        specificCategories: '//label[normalize-space(text())="Specific Categories"]/../..//label[@class="switch tips"]',
                         selectCategories: (category: string) => `//span[normalize-space()="${category}"]/..//input`,
-                        hidePrice: '#announcement_sender_type', // 1, 0
+                        specificVendors: '//th[normalize-space(text())="Specific Vendors"]/..//label[@class="switch tips"]',
+                        includeVendors: '//th[normalize-space(text())="Include Vendors"]/..//div[@class="multiselect__select"]',
+                        includeVendorsInput: '//th[normalize-space(text())="Include Vendors"]/..//input[@class="multiselect__input"]',
+                        excludeVendors: '//th[normalize-space(text())="Exclude Vendors"]/..//div[@class="multiselect__select"]',
+                        excludeVendorsInput: '//th[normalize-space(text())="Exclude Vendors"]/..//input[@class="multiselect__input"]',
+                        expireLimit: '//th[normalize-space(text())="Expire Limit"]/..//label[@class="switch tips"]',
+                        expireLimitInput: 'input.expire-limit',
+                        hidePrice: 'label#announcement_sender_type.switch',
                         hidePriceText: '//th[normalize-space()="Hide Price Text"]/..//input',
-                        hideAddToCartButton: 'select[name="hide_cart_button"]', // replace, keep_and_add_new
+                        hideAddToCartButton: '//input[@value="replace" and @name="dokan-group-radio-input"]',
+                        keepBothAddToCartAndQuoteButton: '//input[@value="keep_and_add_new" and @name="dokan-group-radio-input"]',
                         customButtonLabel: '//th[normalize-space()="Custom Button Label"]/..//input',
 
                         // rule priority

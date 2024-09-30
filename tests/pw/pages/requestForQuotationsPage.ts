@@ -52,17 +52,74 @@ export class RequestForQuotationsPage extends AdminPage {
         await this.check(requestForQuotationAdmin.quoteRules.addNewQuoteRule.applyQuoteFor(rule.userRole));
 
         // products
-        await this.click(requestForQuotationAdmin.quoteRules.addNewQuoteRule.applyOnAllProducts);
-        // await this.click(requestForQuotationAdmin.quoteRules.addNewQuoteRule.selectProductsDropDown);
-        // await this.typeAndWaitForResponse(data.subUrls.api.dokan.quoteRules, requestForQuotationAdmin.quoteRules.addNewQuoteRule.selectProductsInput, rule.product);
-        // await this.press(data.key.enter);
+        if (rule.applyOnAllProducts) {
+            await this.enableSwitcher(requestForQuotationAdmin.quoteRules.addNewQuoteRule.applyOnAllProducts);
+        } else {
+            await this.disableSwitcher(requestForQuotationAdmin.quoteRules.addNewQuoteRule.applyOnAllProducts);
 
-        // category
-        // await this.check(requestForQuotationAdmin.quoteRules.addNewQuoteRule.selectCategories(rule.category));
+            // specific products
+            if (rule.specificProducts) {
+                await this.enableSwitcher(requestForQuotationAdmin.quoteRules.addNewQuoteRule.specificProducts);
+                if (rule.includeProducts) {
+                    await this.click(requestForQuotationAdmin.quoteRules.addNewQuoteRule.includeProducts);
+                    await this.typeAndWaitForResponse(data.subUrls.api.dokan.products, requestForQuotationAdmin.quoteRules.addNewQuoteRule.includeProductsInput, rule.includeProducts);
+                    await this.click(requestForQuotationAdmin.quoteRules.addNewQuoteRule.selectedInput(rule.includeProducts));
+                    await this.toBeVisible(requestForQuotationAdmin.quoteRules.addNewQuoteRule.selectedResult(rule.includeProducts));
+                    await this.press('Escape'); // to shift focus
+                }
 
-        await this.selectByValue(requestForQuotationAdmin.quoteRules.addNewQuoteRule.hidePrice, rule.hidePrice);
-        await this.clearAndType(requestForQuotationAdmin.quoteRules.addNewQuoteRule.hidePriceText, rule.hidePriceText);
-        await this.selectByValue(requestForQuotationAdmin.quoteRules.addNewQuoteRule.hideAddToCartButton, rule.hideAddToCartButton);
+                if (rule.excludeProducts) {
+                    await this.click(requestForQuotationAdmin.quoteRules.addNewQuoteRule.excludeProducts);
+                    await this.typeAndWaitForResponse(data.subUrls.api.dokan.products, requestForQuotationAdmin.quoteRules.addNewQuoteRule.excludeProductsInput, rule.excludeProducts);
+                    await this.click(requestForQuotationAdmin.quoteRules.addNewQuoteRule.selectedInput(rule.excludeProducts));
+                    await this.toBeVisible(requestForQuotationAdmin.quoteRules.addNewQuoteRule.selectedResult(rule.excludeProducts));
+                    await this.press('Escape'); // to shift focus
+                }
+            }
+
+            // specific categories
+            if (rule.specificCategories) {
+                await this.enableSwitcher(requestForQuotationAdmin.quoteRules.addNewQuoteRule.specificCategories);
+                for (const category of rule.categories) {
+                    await this.check(requestForQuotationAdmin.quoteRules.addNewQuoteRule.selectCategories(category));
+                    await this.toBeChecked(requestForQuotationAdmin.quoteRules.addNewQuoteRule.selectCategories(category));
+                }
+            }
+
+            // specific vendors
+            if (rule.specificVendors) {
+                await this.enableSwitcher(requestForQuotationAdmin.quoteRules.addNewQuoteRule.specificVendors);
+
+                if (rule.includeVendors) {
+                    await this.click(requestForQuotationAdmin.quoteRules.addNewQuoteRule.includeVendors);
+                    await this.typeAndWaitForResponse(data.subUrls.api.dokan.stores, requestForQuotationAdmin.quoteRules.addNewQuoteRule.includeVendorsInput, rule.includeVendors);
+                    await this.click(requestForQuotationAdmin.quoteRules.addNewQuoteRule.selectedInput(rule.includeVendors));
+                    await this.toBeVisible(requestForQuotationAdmin.quoteRules.addNewQuoteRule.selectedResult(rule.includeVendors));
+                    await this.press('Escape'); // to shift focus
+                }
+
+                if (rule.excludeVendors) {
+                    await this.click(requestForQuotationAdmin.quoteRules.addNewQuoteRule.excludeVendors);
+                    await this.typeAndWaitForResponse(data.subUrls.api.dokan.stores, requestForQuotationAdmin.quoteRules.addNewQuoteRule.excludeVendorsInput, rule.excludeVendors);
+                    await this.click(requestForQuotationAdmin.quoteRules.addNewQuoteRule.selectedInput(rule.excludeVendors));
+                    await this.toBeVisible(requestForQuotationAdmin.quoteRules.addNewQuoteRule.selectedResult(rule.excludeVendors));
+                    await this.press('Escape'); // to shift focus
+                }
+            }
+        }
+
+        if (rule.expireLimit) {
+            await this.enableSwitcher(requestForQuotationAdmin.quoteRules.addNewQuoteRule.expireLimit);
+            await this.clearAndType(requestForQuotationAdmin.quoteRules.addNewQuoteRule.expireLimitInput, rule.expireLimit);
+        }
+
+        if (rule.hidePrice) {
+            await this.enableSwitcher(requestForQuotationAdmin.quoteRules.addNewQuoteRule.hidePrice);
+            await this.clearAndType(requestForQuotationAdmin.quoteRules.addNewQuoteRule.hidePriceText, rule.hidePriceText);
+        } else {
+            if (rule.hideAddToCartButton) await this.click(requestForQuotationAdmin.quoteRules.addNewQuoteRule.hideAddToCartButton);
+            if (rule.hideAddToCartButton) await this.click(requestForQuotationAdmin.quoteRules.addNewQuoteRule.keepBothAddToCartAndQuoteButton);
+        }
         await this.clearAndType(requestForQuotationAdmin.quoteRules.addNewQuoteRule.customButtonLabel, rule.customButtonLabel);
 
         // priority
