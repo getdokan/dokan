@@ -895,8 +895,8 @@ export const payloads = {
         downloadable: true,
         regular_price: faker.finance.amount({ min: 100, max: 200, dec: faker.helpers.arrayElement([0, 2]) }),
         downloads: [],
-        // download_limit: 100,
-        // download_expiry: 100,
+        download_limit: 100,
+        download_expiry: 365,
         categories: [{}],
     }),
 

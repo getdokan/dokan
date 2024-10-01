@@ -3,7 +3,7 @@ import { AdminPage } from '@pages/adminPage';
 import { selector } from '@pages/selectors';
 import { data } from '@utils/testData';
 import { helpers } from '@utils/helpers';
-import { product } from '@utils/interfaces';
+import { product, vendor } from '@utils/interfaces';
 
 const { DOKAN_PRO } = process.env;
 
@@ -839,6 +839,92 @@ export class ProductsPage extends AdminPage {
             await this.toBeVisible(productsVendor.discount.schedule);
             await this.notToBeVisible(productsVendor.discount.scheduleFrom);
             await this.notToBeVisible(productsVendor.discount.scheduleTo);
+        }
+    }
+
+    // vendor add product category
+    async vendorAddProductCategory(category: string, multiple: boolean, neg?: boolean): Promise<void> {
+        if (!multiple) {
+            await this.click(productsVendor.category.openCategoryModal);
+        } else {
+            await this.click(productsVendor.category.addNewCategory);
+            await this.click(productsVendor.category.selectACategory);
+        }
+        await this.toBeVisible(productsVendor.category.categoryModal);
+        await this.type(productsVendor.category.searchInput, category);
+        await this.toContainText(productsVendor.category.searchedResultText, category);
+        await this.click(productsVendor.category.searchedResult);
+        await this.click(productsVendor.category.categoryOnList(category));
+        if (neg) {
+            await this.toBeDisabled(productsVendor.category.done);
+            return;
+        }
+        await this.click(productsVendor.category.done);
+
+        const categoryAlreadySelectedPopup = await this.isVisible(productsVendor.category.categoryAlreadySelectedPopup);
+        if (categoryAlreadySelectedPopup) {
+            await this.click(productsVendor.category.categoryAlreadySelectedPopup);
+            await this.click(productsVendor.category.categoryModalClose);
+        }
+        await this.toBeVisible(productsVendor.category.selectedCategory(category));
+    }
+
+    // add product category
+    async addProductCategory(productName: string, categories: string[], multiple: boolean = false): Promise<void> {
+        await this.goToProductEdit(productName);
+        for (const category of categories) {
+            await this.vendorAddProductCategory(category, multiple);
+        }
+        await this.saveProduct();
+        for (const category of categories) {
+            await this.toBeVisible(productsVendor.category.selectedCategory(category));
+        }
+    }
+
+    // remove product category
+    async removeProductCategory(productName: string, categories: string[]): Promise<void> {
+        await this.goToProductEdit(productName);
+        for (const category of categories) {
+            await this.click(productsVendor.category.removeSelectedCategory(category));
+            await this.notToBeVisible(productsVendor.category.selectedCategory(category));
+        }
+        await this.saveProduct();
+        for (const category of categories) {
+            await this.notToBeVisible(productsVendor.category.selectedCategory(category));
+        }
+    }
+
+    // can't add product category
+    async cantAddCategory(productName: string, category: string): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.vendorAddProductCategory(category, false, true);
+    }
+
+    // add product tags
+    async addProductTags(productName: string, tags: string[]): Promise<void> {
+        await this.goToProductEdit(productName);
+        for (const tag of tags) {
+            await this.typeAndWaitForResponse(data.subUrls.ajax, productsVendor.tags.tagInput, tag);
+            await this.click(productsVendor.tags.searchedTag(tag));
+            await this.toBeVisible(productsVendor.tags.selectedTags(tag));
+        }
+        await this.saveProduct();
+        for (const tag of tags) {
+            await this.toBeVisible(productsVendor.tags.selectedTags(tag));
+        }
+    }
+
+    // remove product tags
+    async removeProductTags(productName: string, tags: string[]): Promise<void> {
+        await this.goToProductEdit(productName);
+        for (const tag of tags) {
+            await this.click(productsVendor.tags.removeSelectedTags(tag));
+            await this.press('Tab'); // to shift focus from the previous input
+        }
+        await this.saveProduct();
+
+        for (const tag of tags) {
+            await this.notToBeVisible(productsVendor.tags.selectedTags(tag));
         }
     }
 

@@ -89,20 +89,22 @@ test.describe('Payments test', () => {
     test('vendor can disconnect paypal payment method', { tag: ['@lite', '@vendor'] }, async () => {
         await vendor.disconnectBasicPayment({ ...data.vendor.payment, methodName: 'paypal' });
         //reset
-        await apiUtils.setStoreSettings(payloads.defaultStoreSettings, payloads.vendorAuth);
+        await apiUtils.setStoreSettings(payloads.defaultStoreSettings, payloads.vendorAuth); // todo: need to reset only payment method
     });
 
     test('vendor can disconnect bank payment method', { tag: ['@lite', '@vendor'] }, async () => {
         await vendor.disconnectBasicPayment({ ...data.vendor.payment, methodName: 'bank' });
         // reset
-        await apiUtils.setStoreSettings(payloads.defaultStoreSettings, payloads.vendorAuth);
+        await apiUtils.setStoreSettings(payloads.defaultStoreSettings, payloads.vendorAuth); // todo: need to reset only payment method
     });
 
     test('vendor can disconnect Skrill payment method', { tag: ['@pro', '@vendor'] }, async () => {
+        // todo: need to add skrill connect via db
         await vendor.disconnectBasicPayment({ ...data.vendor.payment, methodName: 'skrill' });
     });
 
     test('vendor can disconnect custom payment method', { tag: ['@pro', '@vendor'] }, async () => {
+        // todo: need to add skrill connect via db
         await vendor.disconnectBasicPayment({ ...data.vendor.payment, methodName: 'custom' });
     });
 });
