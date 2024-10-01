@@ -919,7 +919,7 @@ export class ProductsPage extends AdminPage {
         await this.goToProductEdit(productName);
         for (const tag of tags) {
             await this.click(productsVendor.tags.removeSelectedTags(tag));
-            await this.press('Tab'); // to shift focus from the previous input
+            await this.press('Escape');  // shift focus from element
         }
         await this.saveProduct();
 
