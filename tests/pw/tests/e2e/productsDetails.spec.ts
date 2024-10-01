@@ -156,4 +156,60 @@ test.describe('Product details functionality test', () => {
         await vendor.addProductTags(productName, data.product.productInfo.tags.randomTags);
     });
 
+    // product cover image
+
+    test('vendor can add product cover image', { tag: ['@lite', '@vendor'] }, async () => {
+        await vendor.addProductCoverImage(productName1, data.product.productInfo.images.cover);
+    });
+
+    test('vendor can update product cover image', { tag: ['@lite', '@vendor'] }, async () => {
+        // todo: need a product with cover image
+        await vendor.addProductCoverImage(productName, data.product.productInfo.images.cover);
+        await vendor.addProductCoverImage(productName, data.product.productInfo.images.cover, true);
+    });
+
+    test('vendor can remove product cover image', { tag: ['@lite', '@vendor'] }, async () => {
+        // todo: need a product with cover image
+        await vendor.addProductCoverImage(productName, data.product.productInfo.images.cover, true);
+        await vendor.removeProductCoverImage(productName);
+    });
+
+    // product gallery image
+
+    test('vendor can add product gallery image', { tag: ['@lite', '@vendor'] }, async () => {
+        await vendor.addProductGalleryImages(productName1, data.product.productInfo.images.gallery);
+    });
+
+    test('vendor can update product gallery image', { tag: ['@lite', '@vendor'] }, async () => {
+        // todo: need a product with gallery images
+        await vendor.addProductGalleryImages(productName, data.product.productInfo.images.gallery);
+        await vendor.addProductGalleryImages(productName, data.product.productInfo.images.gallery, true);
+    });
+
+    test('vendor can remove product gallery image', { tag: ['@lite', '@vendor'] }, async () => {
+        // todo: need a product with gallery images
+        await vendor.addProductGalleryImages(productName, data.product.productInfo.images.gallery, true);
+        await vendor.removeProductGalleryImages(productName);
+    });
+
+    // product short description
+
+    test('vendor can add product short description', { tag: ['@lite', '@vendor'] }, async () => {
+        await vendor.addProductShortDescription(productName1, data.product.productInfo.description.shortDescription);
+    });
+
+    test('vendor can update product short description', { tag: ['@lite', '@vendor'] }, async () => {
+        await vendor.addProductShortDescription(productName, data.product.productInfo.description.shortDescription);
+    });
+
+    test('vendor can remove product short description', { tag: ['@lite', '@vendor'] }, async () => {
+        await vendor.addProductShortDescription(productName, '');
+    });
+
+    // product description
+
+    test('vendor can update product description', { tag: ['@lite', '@vendor'] }, async () => {
+        await vendor.addProductDescription(productName, data.product.productInfo.description.description);
+    });
+
 });
