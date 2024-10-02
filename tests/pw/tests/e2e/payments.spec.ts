@@ -3,6 +3,11 @@ import { PaymentsPage } from '@pages/paymentsPage';
 import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
 import { payloads } from '@utils/payloads';
+import { dbUtils } from '@utils/dbUtils';
+import { dbData } from '@utils/dbData';
+import { helpers } from '@utils/helpers';
+
+const { VENDOR_ID } = process.env;
 
 test.describe('Payments test', () => {
     let admin: PaymentsPage;
@@ -20,10 +25,13 @@ test.describe('Payments test', () => {
         vendor = new PaymentsPage(vPage);
 
         apiUtils = new ApiUtils(await request.newContext());
+        // await dbUtils.updateUserMeta(VENDOR_ID, 'dokan_profile_settings', { payment: [] });
     });
 
     test.afterAll(async () => {
         await apiUtils.updateBatchWcSettingsOptions('general', payloads.currency, payloads.adminAuth);
+        await dbUtils.updateUserMeta(VENDOR_ID, 'dokan_profile_settings', dbData.testData.dokan.paymentSettings);
+        // await apiUtils.setStoreSettings(payloads.defaultStoreSettings, payloads.vendorAuth);
         await aPage.close();
         await vPage.close();
         await apiUtils.dispose();
@@ -71,38 +79,63 @@ test.describe('Payments test', () => {
     });
 
     test('vendor can add paypal payment method', { tag: ['@lite', '@vendor'] }, async () => {
+        // await apiUtils.setStoreSettings({ payment: { paypal: { email: '' } } }, payloads.vendorAuth);
+        await dbUtils.updateUserMeta(VENDOR_ID, 'dokan_profile_settings', { payment: { paypal: { email: '' } } });
         await vendor.setBasicPayment({ ...data.vendor.payment, methodName: 'paypal' });
     });
 
-    test('vendor can add bank payment method', { tag: ['@lite', '@vendor'] }, async () => {
-        await vendor.setBankTransfer(data.vendor.payment);
-    });
-
-    test('vendor can add Skrill payment method', { tag: ['@pro', '@vendor'] }, async () => {
-        await vendor.setBasicPayment({ ...data.vendor.payment, methodName: 'skrill' });
-    });
-
-    test('vendor can add custom payment method', { tag: ['@pro', '@vendor'] }, async () => {
-        await vendor.setBasicPayment({ ...data.vendor.payment, methodName: 'custom' });
+    test('vendor can update paypal payment method', { tag: ['@lite', '@vendor'] }, async () => {
+        await dbUtils.updateUserMeta(VENDOR_ID, 'dokan_profile_settings', { payment: { paypal: { email: 'paypal@g.c' } } });
+        await vendor.setBasicPayment({ ...data.vendor.payment, methodName: 'paypal' });
     });
 
     test('vendor can disconnect paypal payment method', { tag: ['@lite', '@vendor'] }, async () => {
+        await dbUtils.updateUserMeta(VENDOR_ID, 'dokan_profile_settings', { payment: { paypal: { email: 'paypal@g.c' } } });
         await vendor.disconnectBasicPayment({ ...data.vendor.payment, methodName: 'paypal' });
-        //reset
-        await apiUtils.setStoreSettings(payloads.defaultStoreSettings, payloads.vendorAuth);
+    });
+
+    test('vendor can add bank payment method', { tag: ['@lite', '@vendor'] }, async () => {
+        await dbUtils.updateUserMeta(VENDOR_ID, 'dokan_profile_settings', helpers.emptyObjectValues(dbData.testData.dokan.paymentSettings.bank));
+        await vendor.setBankTransfer(data.vendor.payment);
+    });
+
+    test('vendor can update bank payment method', { tag: ['@lite', '@vendor'] }, async () => {
+        await dbUtils.updateUserMeta(VENDOR_ID, 'dokan_profile_settings', dbData.testData.dokan.paymentSettings.bank);
+        await vendor.setBankTransfer(data.vendor.payment);
     });
 
     test('vendor can disconnect bank payment method', { tag: ['@lite', '@vendor'] }, async () => {
+        await dbUtils.updateUserMeta(VENDOR_ID, 'dokan_profile_settings', dbData.testData.dokan.paymentSettings.bank);
         await vendor.disconnectBasicPayment({ ...data.vendor.payment, methodName: 'bank' });
-        // reset
-        await apiUtils.setStoreSettings(payloads.defaultStoreSettings, payloads.vendorAuth);
     });
 
-    test('vendor can disconnect Skrill payment method', { tag: ['@pro', '@vendor'] }, async () => {
+    test('vendor can add skrill payment method', { tag: ['@pro', '@vendor'] }, async () => {
+        await dbUtils.updateUserMeta(VENDOR_ID, 'dokan_profile_settings', { payment: { skrill: { email: '' } } });
+        await vendor.setBasicPayment({ ...data.vendor.payment, methodName: 'skrill' });
+    });
+
+    test('vendor can update skrill payment method', { tag: ['@pro', '@vendor'] }, async () => {
+        await dbUtils.updateUserMeta(VENDOR_ID, 'dokan_profile_settings', { payment: { skrill: { email: 'skrill@g.c' } } });
+        await vendor.setBasicPayment({ ...data.vendor.payment, methodName: 'skrill' });
+    });
+
+    test('vendor can disconnect skrill payment method', { tag: ['@pro', '@vendor'] }, async () => {
+        await dbUtils.updateUserMeta(VENDOR_ID, 'dokan_profile_settings', { payment: { skrill: { email: 'skrill@g.c' } } });
         await vendor.disconnectBasicPayment({ ...data.vendor.payment, methodName: 'skrill' });
     });
 
+    test('vendor can add custom payment method', { tag: ['@pro', '@vendor'] }, async () => {
+        await dbUtils.updateUserMeta(VENDOR_ID, 'dokan_profile_settings', { payment: { dokan_custom: { value: '' } } });
+        await vendor.setBasicPayment({ ...data.vendor.payment, methodName: 'custom' });
+    });
+
+    test('vendor can update custom payment method', { tag: ['@pro', '@vendor'] }, async () => {
+        await dbUtils.updateUserMeta(VENDOR_ID, 'dokan_profile_settings', { payment: { dokan_custom: { value: '0123456789' } } });
+        await vendor.setBasicPayment({ ...data.vendor.payment, methodName: 'custom' });
+    });
+
     test('vendor can disconnect custom payment method', { tag: ['@pro', '@vendor'] }, async () => {
+        await dbUtils.updateUserMeta(VENDOR_ID, 'dokan_profile_settings', { payment: { dokan_custom: { value: '0123456789' } } });
         await vendor.disconnectBasicPayment({ ...data.vendor.payment, methodName: 'custom' });
     });
 });
