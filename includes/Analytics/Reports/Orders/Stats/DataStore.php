@@ -98,6 +98,15 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 			return -1;
 		}
 
+		$vendor_earning = (float) dokan()->commission->get_earning_by_order( $order );
+		$admin_earning = (float) dokan()->commission->get_earning_by_order( $order, 'admin' );
+
+		$gateway_fee = $order->get_meta( 'dokan_gateway_fee' );
+		$gateway_fee_provider = $order->get_meta( 'dokan_gateway_fee_paid_by' );
+
+		$shipping_fee = $order->get_shipping_total();
+		$shipping_fee_recipient = $order->get_meta( 'shipping_fee_recipient' );
+
 		/**
 		 * Filters order stats data.
 		 *
@@ -109,16 +118,20 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 		$data = apply_filters(
 			'dokan_analytics_update_order_stats_data',
 			array(
-				'order_id'           => $order->get_id(),
-				'seller_id'          => (int) $order->get_meta( '_dokan_vendor_id' ),
-				'order_type'        => (int) ( ( new OrderType() )->get_type( $order ) ),
-				'seller_earning'     => $order->get_meta( '_seller_earning' ),
-				'seller_gateway_fee' => $order->get_meta( '_seller_gateway_fee' ),
-				'seller_discount'    => $order->get_meta( '_seller_discount' ),
-				'admin_commission'   => $order->get_meta( '_admin_commission' ),
-				'admin_gateway_fee'  => $order->get_meta( '_admin_gateway_fee' ),
-				'admin_discount'     => $order->get_meta( '_admin_discount' ),
-				'admin_subsidy'      => $order->get_meta( '_admin_subsidy' ),
+				'order_id'              => $order->get_id(),
+				'seller_id'             => (int) $order->get_meta( '_dokan_vendor_id' ),
+				'order_type'            => (int) ( ( new OrderType() )->get_type( $order ) ),
+				// Seller Data
+				'seller_earning'        => $vendor_earning,
+				'seller_gateway_fee'    => $gateway_fee_provider === 'seller' ? $gateway_fee : '0',
+				'seller_shipping_fee'   => $shipping_fee_recipient === 'seller' ? $shipping_fee : '0',
+				'seller_discount'       => $order->get_meta( '_seller_discount' ),
+				// Admin Data
+				'admin_commission'      => $admin_earning,
+				'admin_gateway_fee'     => $gateway_fee_provider !== 'seller' ? $gateway_fee : '0',
+				'admin_shipping_fee'    => $shipping_fee_recipient !== 'seller' ? $shipping_fee : '0',
+				'admin_discount'        => $order->get_meta( '_admin_discount' ),
+				'admin_subsidy'         => $order->get_meta( '_admin_subsidy' ),
 			),
             $order,
         );
@@ -127,8 +140,12 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 				'%d',
 				'%d',
 				'%d',
+				// Seller data
 				'%f',
 				'%f',
+				'%f',
+				'%f',
+				// Admin data
 				'%f',
 				'%f',
 				'%f',
