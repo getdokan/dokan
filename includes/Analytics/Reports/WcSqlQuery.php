@@ -13,7 +13,7 @@ class WcSqlQuery extends SqlQuery {
      * @param string $handling Optional. The handling mode for the clause. Defaults to an empty string.
      * @return string The SQL clause.
      */
-    protected function get_sql_clause( $type, $handling = '' ) {
+    protected function get_sql_clause( $type, $handling = 'filtered' ) {
         return parent::get_sql_clause( $type, $handling );
     }
 }
