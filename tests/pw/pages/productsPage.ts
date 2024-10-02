@@ -928,6 +928,82 @@ export class ProductsPage extends AdminPage {
         }
     }
 
+    // add product cover image
+    async addProductCoverImage(productName: string, coverImage: string, removePrevious: boolean = false): Promise<void> {
+        await this.goToProductEdit(productName);
+        // remove previous cover image
+        if (removePrevious) {
+            await this.hover(productsVendor.image.coverImageDiv);
+            await this.click(productsVendor.image.removeFeatureImage);
+            await this.toBeVisible(productsVendor.image.uploadImageText);
+        }
+        await this.click(productsVendor.image.cover);
+        await this.uploadMedia(coverImage);
+        await this.saveProduct();
+        await this.toHaveAttribute(productsVendor.image.uploadedFeatureImage, 'src', /.+/); // Ensures 'src' has any non-falsy value
+        await this.notToBeVisible(productsVendor.image.uploadImageText);
+    }
+
+    // remove product cover image
+    async removeProductCoverImage(productName: string): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.hover(productsVendor.image.coverImageDiv);
+        await this.click(productsVendor.image.removeFeatureImage);
+        await this.saveProduct();
+        await this.toHaveAttribute(productsVendor.image.uploadedFeatureImage, 'src', /^$/);
+        await this.toBeVisible(productsVendor.image.uploadImageText);
+    }
+
+    // add product gallery images
+    async addProductGalleryImages(productName: string, galleryImages: string[], removePrevious: boolean = false): Promise<void> {
+        await this.goToProductEdit(productName);
+        // remove previous gallery images
+        if (removePrevious) {
+            const imageCount = await this.getElementCount(productsVendor.image.uploadedGalleryImage);
+            for (let i = 0; i < imageCount; i++) {
+                await this.hover(productsVendor.image.galleryImageDiv);
+                await this.click(productsVendor.image.removeGalleryImage);
+            }
+            await this.toHaveCount(productsVendor.image.uploadedGalleryImage, 0);
+        }
+
+        for (const galleryImage of galleryImages) {
+            await this.click(productsVendor.image.gallery);
+            await this.uploadMedia(galleryImage);
+        }
+        await this.saveProduct();
+        await this.toHaveCount(productsVendor.image.uploadedGalleryImage, galleryImages.length);
+    }
+
+    // remove product gallery images
+    async removeProductGalleryImages(productName: string): Promise<void> {
+        await this.goToProductEdit(productName);
+        const imageCount = await this.getElementCount(productsVendor.image.uploadedGalleryImage);
+        for (let i = 0; i < imageCount; i++) {
+            await this.hover(productsVendor.image.galleryImageDiv);
+            await this.click(productsVendor.image.removeGalleryImage);
+        }
+        await this.saveProduct();
+        await this.toHaveCount(productsVendor.image.uploadedGalleryImage, 0);
+    }
+
+    // add product short description
+    async addProductShortDescription(productName: string, shortDescription: string): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.typeFrameSelector(productsVendor.shortDescription.shortDescriptionIframe, productsVendor.shortDescription.shortDescriptionHtmlBody, shortDescription);
+        await this.saveProduct();
+        await this.toContainTextFrameLocator(productsVendor.shortDescription.shortDescriptionIframe, productsVendor.shortDescription.shortDescriptionHtmlBody, shortDescription);
+    }
+
+    // add product description
+    async addProductDescription(productName: string, description: string): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.typeFrameSelector(productsVendor.description.descriptionIframe, productsVendor.description.descriptionHtmlBody, description);
+        await this.saveProduct();
+        await this.toContainTextFrameLocator(productsVendor.description.descriptionIframe, productsVendor.description.descriptionHtmlBody, description);
+    }
+
+
     // add product catalog mode
     async addProductCatalogMode(productName: string, hidePrice: boolean = false): Promise<void> {
         await this.goToProductEdit(productName);
