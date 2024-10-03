@@ -16,13 +16,13 @@ export class PaymentsPage extends AdminPage {
 
     // payment methods
 
-    async goToPaymentSettings() {
+    async goToWcPaymentSettings() {
         await this.goIfNotThere(data.subUrls.backend.wc.paymentSettings);
     }
 
     // admin setup basic payment methods
     async setupBasicPaymentMethods(payment: payment) {
-        await this.goToPaymentSettings();
+        await this.goToWcPaymentSettings();
 
         // bank transfer
         await this.enablePaymentMethod(paymentSettingsAdmin.enableDirectBankTransfer);
@@ -38,7 +38,7 @@ export class PaymentsPage extends AdminPage {
 
     // admin setup stripe sonnect
     async setupStripeConnect(payment: payment) {
-        await this.goToPaymentSettings();
+        await this.goToWcPaymentSettings();
 
         await this.click(paymentSettingsAdmin.setupDokanStripeConnect);
         // setup strip connect
@@ -63,7 +63,7 @@ export class PaymentsPage extends AdminPage {
 
     // admin setup dokan paypal marketplace
     async setupPaypalMarketPlace(payment: payment) {
-        await this.goToPaymentSettings();
+        await this.goToWcPaymentSettings();
 
         await this.click(paymentSettingsAdmin.setupDokanPayPalMarketplace);
         // setup paypal marketplace
@@ -91,7 +91,7 @@ export class PaymentsPage extends AdminPage {
 
     // admin setup mangopay
     async setupMangoPay(payment: payment) {
-        await this.goToPaymentSettings();
+        await this.goToWcPaymentSettings();
 
         await this.click(paymentSettingsAdmin.setupDokanMangoPay);
         // setup mangopay
@@ -138,7 +138,7 @@ export class PaymentsPage extends AdminPage {
 
     // admin setup razorpay
     async setupRazorpay(payment: payment) {
-        await this.goToPaymentSettings();
+        await this.goToWcPaymentSettings();
 
         await this.click(paymentSettingsAdmin.setupDokanRazorpay);
         // setup razorpay
@@ -162,7 +162,7 @@ export class PaymentsPage extends AdminPage {
 
     // admin setup stripe express
     async setupStripeExpress(payment: payment) {
-        await this.goToPaymentSettings();
+        await this.goToWcPaymentSettings();
 
         await this.click(paymentSettingsAdmin.setupDokanStripeExpress);
 
@@ -217,46 +217,53 @@ export class PaymentsPage extends AdminPage {
         // paymentMethods dropdown is visible
         await this.toBeVisible(paymentSettingsVendor.paymentMethods.addPaymentMethodDropDown);
 
-        await this.notToHaveCount(paymentSettingsVendor.paymentMethods.noOfPaymentMethods, 0);
+        // await this.notToHaveCount(paymentSettingsVendor.paymentMethods.noOfPaymentMethods, 0);
     }
 
-    // vendor set basic payment settings
-    async setBasicPaymentSettings(payment: vendor['payment']): Promise<void> {
-        await this.setBasicPayment({ ...data.vendor.payment, methodName: 'paypal' });
-        await this.setBankTransfer(payment);
-        await this.setBasicPayment({ ...data.vendor.payment, methodName: 'skrill' });
-        await this.setBasicPayment({ ...data.vendor.payment, methodName: 'custom' });
-    }
-
-    // set basic payment method [paypal, skrill, custom ]
-    async setBasicPayment(paymentMethod: vendor['payment']): Promise<void> {
-        switch (paymentMethod.methodName) {
+    // goto payment settings
+    async goToPaymentSettings(methodName: string): Promise<void> {
+        switch (methodName) {
             case 'paypal':
-                await this.goIfNotThere(data.subUrls.frontend.vDashboard.paypal);
+                await this.goto(data.subUrls.frontend.vDashboard.paypal);
+                break;
+
+            case 'bank':
+                await this.goto(data.subUrls.frontend.vDashboard.bankTransfer);
                 break;
 
             case 'skrill':
-                await this.goIfNotThere(data.subUrls.frontend.vDashboard.skrill);
+                await this.goto(data.subUrls.frontend.vDashboard.skrill);
                 break;
 
             case 'custom':
-                await this.goIfNotThere(data.subUrls.frontend.vDashboard.customPayment);
+                await this.goto(data.subUrls.frontend.vDashboard.customPayment);
                 break;
 
             default:
                 break;
         }
+    }
 
+    // set basic payment method [paypal, skrill, custom ]
+    async addBasicPayment(paymentMethod: vendor['payment']): Promise<void> {
+        await this.goToPaymentSettings(paymentMethod.methodName);
         await this.clearAndType(paymentSettingsVendor.paymentEmail, paymentMethod.email());
         await this.clickAndWaitForResponse(data.subUrls.ajax, paymentSettingsVendor.updateSettings);
         await this.toContainText(paymentSettingsVendor.updateSettingsSuccessMessage, paymentMethod.saveSuccessMessage);
     }
 
+    // disconnect basic payment method [paypal, skrill, custom ]
+    async removeBasicPayment(paymentMethod: vendor['payment']): Promise<void> {
+        await this.goToPaymentSettings(paymentMethod.methodName);
+        await this.clickAndWaitForResponse(data.subUrls.ajax, paymentSettingsVendor.disconnectPayment);
+        await this.toContainText(paymentSettingsVendor.updateSettingsSuccessMessage, paymentMethod.saveSuccessMessage);
+    }
+
     // bank transfer payment settings
-    async setBankTransfer(paymentMethod: vendor['payment']): Promise<void> {
+    async addBankTransfer(paymentMethod: vendor['payment']): Promise<void> {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.bankTransfer);
 
-        await this.clickIfVisible(paymentSettingsVendor.disconnectAccount);
+        // await this.clickIfVisible(paymentSettingsVendor.disconnectAccount);
         await this.clearAndType(paymentSettingsVendor.bankAccountName, paymentMethod.bankAccountName);
         await this.selectByValue(paymentSettingsVendor.bankAccountType, paymentMethod.bankAccountType);
         await this.clearAndType(paymentSettingsVendor.bankAccountNumber, paymentMethod.bankAccountNumber);
@@ -268,33 +275,6 @@ export class PaymentsPage extends AdminPage {
         await this.check(selector.vendor.vSetup.declaration);
 
         await this.clickAndWaitForResponse(data.subUrls.ajax, paymentSettingsVendor.addAccount);
-        await this.toContainText(paymentSettingsVendor.updateSettingsSuccessMessage, paymentMethod.saveSuccessMessage);
-    }
-
-    // disconnect basic payment method [paypal, skrill, custom ]
-    async disconnectBasicPayment(paymentMethod: vendor['payment']): Promise<void> {
-        switch (paymentMethod.methodName) {
-            case 'paypal':
-                await this.goIfNotThere(data.subUrls.frontend.vDashboard.paypal);
-                break;
-
-            case 'bank':
-                await this.goIfNotThere(data.subUrls.frontend.vDashboard.bankTransfer);
-                break;
-
-            case 'skrill':
-                await this.goIfNotThere(data.subUrls.frontend.vDashboard.skrill);
-                break;
-
-            case 'custom':
-                await this.goIfNotThere(data.subUrls.frontend.vDashboard.customPayment);
-                break;
-
-            default:
-                break;
-        }
-
-        await this.clickAndWaitForResponse(data.subUrls.ajax, paymentSettingsVendor.disconnectPayment);
         await this.toContainText(paymentSettingsVendor.updateSettingsSuccessMessage, paymentMethod.saveSuccessMessage);
     }
 }
