@@ -1420,6 +1420,30 @@ export const dbData = {
                 length_duration: '',
                 addon_settings: [],
             },
+
+            // vendor payment settings
+            paymentSettings: {
+                paypal: {
+                    email: 'paypal@g.com',
+                },
+                bank: {
+                    ac_name: 'accountName',
+                    ac_number: '0123456789',
+                    bank_name: 'bankName',
+                    ac_type: 'personal',
+                    bank_addr: 'bankAddress',
+                    routing_number: '9876543210',
+                    iban: 'QWERTY12345',
+                    swift: 'AZERTY98765',
+                    declaration: 'on',
+                },
+                dokan_custom: {
+                    value: '0123456789QWERTY',
+                },
+                skrill: {
+                    email: 'skrill@g.com',
+                },
+            },
         },
     },
 };
