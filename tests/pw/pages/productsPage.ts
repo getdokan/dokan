@@ -1003,60 +1003,100 @@ export class ProductsPage extends AdminPage {
         await this.toContainTextFrameLocator(productsVendor.description.descriptionIframe, productsVendor.description.descriptionHtmlBody, description);
     }
 
-
-    // add product catalog mode
-    async addProductCatalogMode(productName: string, hidePrice: boolean = false): Promise<void> {
+    // add product downloadable options
+    async addProductDownloadableOptions(productName: string, downloadableOption: product['productInfo']['downloadableOptions']): Promise<void> {
         await this.goToProductEdit(productName);
-        await this.check(productsVendor.catalogMode.removeAddToCart);
-        if (hidePrice) await this.check(productsVendor.catalogMode.hideProductPrice);
+        await this.check(productsVendor.downloadable);
+        await this.click(productsVendor.downloadableOptions.addFile);
+        await this.clearAndType(productsVendor.downloadableOptions.fileName, downloadableOption.fileName);
+        await this.click(productsVendor.downloadableOptions.chooseFile);
+        await this.uploadMedia(downloadableOption.fileUrl);
+        await this.clearAndType(productsVendor.downloadableOptions.downloadLimit, downloadableOption.downloadLimit);
+        await this.clearAndType(productsVendor.downloadableOptions.downloadExpiry, downloadableOption.downloadExpiry);
         await this.saveProduct();
-        await this.toBeChecked(productsVendor.catalogMode.removeAddToCart);
-        if (hidePrice) await this.toBeChecked(productsVendor.catalogMode.hideProductPrice);
+        await this.toBeChecked(productsVendor.downloadable);
+        await this.toHaveValue(productsVendor.downloadableOptions.fileName, downloadableOption.fileName);
+        await this.toHaveValue(productsVendor.downloadableOptions.downloadLimit, downloadableOption.downloadLimit);
+        await this.toHaveValue(productsVendor.downloadableOptions.downloadExpiry, downloadableOption.downloadExpiry);
     }
-    // add product EU compliance
-    async addProductEuCompliance(productName: string, euCompliance: product['productInfo']['euCompliance']): Promise<void> {
+
+    // remove product downloadable files
+    async removeDownloadableFile(productName: string, downloadableOption: product['productInfo']['downloadableOptions']): Promise<void> {
         await this.goToProductEdit(productName);
-        await this.selectByValue(productsVendor.euComplianceFields.saleLabel, euCompliance.saleLabel);
-        await this.selectByValue(productsVendor.euComplianceFields.saleRegularLabel, euCompliance.saleRegularLabel);
-        await this.selectByValue(productsVendor.euComplianceFields.unit, euCompliance.unit);
-        await this.selectByValue(productsVendor.euComplianceFields.minimumAge, euCompliance.minimumAge);
-        await this.clearAndType(productsVendor.euComplianceFields.productUnits, euCompliance.productUnits);
-        await this.clearAndType(productsVendor.euComplianceFields.basePriceUnits, euCompliance.basePriceUnits);
-        if (euCompliance.freeShipping) {
-            await this.check(productsVendor.euComplianceFields.freeShipping);
-        } else {
-            await this.uncheck(productsVendor.euComplianceFields.freeShipping);
+        const fileCount = await this.getElementCount(productsVendor.downloadableOptions.deleteFile);
+        for (let i = 0; i < fileCount; i++) {
+            await this.clickFirstLocator(productsVendor.downloadableOptions.deleteFile);
         }
-        await this.clearAndType(productsVendor.euComplianceFields.regularUnitPrice, euCompliance.regularUnitPrice);
-        await this.clearAndType(productsVendor.euComplianceFields.saleUnitPrice, euCompliance.saleUnitPrice);
-        await this.typeFrameSelector(productsVendor.euComplianceFields.optionalMiniDescription.descriptionIframe, productsVendor.euComplianceFields.optionalMiniDescription.descriptionHtmlBody, euCompliance.optionalMiniDescription);
-
+        await this.clearAndType(productsVendor.downloadableOptions.downloadLimit, downloadableOption.downloadLimit);
+        await this.clearAndType(productsVendor.downloadableOptions.downloadExpiry, downloadableOption.downloadExpiry);
         await this.saveProduct();
-
-        await this.toHaveValue(productsVendor.euComplianceFields.saleLabel, euCompliance.saleLabel);
-        await this.toHaveValue(productsVendor.euComplianceFields.saleRegularLabel, euCompliance.saleRegularLabel);
-        await this.toHaveValue(productsVendor.euComplianceFields.unit, euCompliance.unit);
-        await this.toHaveValue(productsVendor.euComplianceFields.minimumAge, euCompliance.minimumAge);
-        await this.toHaveValue(productsVendor.euComplianceFields.productUnits, euCompliance.productUnits);
-        await this.toHaveValue(productsVendor.euComplianceFields.basePriceUnits, euCompliance.basePriceUnits);
-        if (euCompliance.freeShipping) {
-            await this.toBeChecked(productsVendor.euComplianceFields.freeShipping);
-        } else {
-            await this.notToBeChecked(productsVendor.euComplianceFields.freeShipping);
-        }
-        await this.toHaveValue(productsVendor.euComplianceFields.regularUnitPrice, euCompliance.regularUnitPrice);
-        await this.toHaveValue(productsVendor.euComplianceFields.saleUnitPrice, euCompliance.saleUnitPrice);
-        await this.toContainTextFrameLocator(productsVendor.euComplianceFields.optionalMiniDescription.descriptionIframe, productsVendor.euComplianceFields.optionalMiniDescription.descriptionHtmlBody, euCompliance.optionalMiniDescription);
+        await this.notToBeVisible(productsVendor.downloadableOptions.deleteFile);
+        await this.toHaveValue(productsVendor.downloadableOptions.downloadLimit, downloadableOption.downloadLimit);
+        await this.toHaveValue(productsVendor.downloadableOptions.downloadExpiry, downloadableOption.downloadExpiry);
     }
-    // add product wholesale options
-    async addProductWholesaleOptions(productName: string, wholesaleOption: product['productInfo']['wholesaleOption']): Promise<void> {
+
+    // add product inventory
+    async addProductInventory(productName: string, inventory: product['productInfo']['inventory'], choice: string): Promise<void> {
         await this.goToProductEdit(productName);
-        await this.check(productsVendor.wholesale.enableWholesale);
-        await this.clearAndType(productsVendor.wholesale.wholesalePrice, wholesaleOption.wholesalePrice);
-        await this.clearAndType(productsVendor.wholesale.minimumQuantity, wholesaleOption.minimumQuantity);
+
+        switch (choice) {
+            case 'sku':
+                await this.clearAndType(productsVendor.inventory.sku, inventory.sku);
+                break;
+            case 'stock-status':
+                await this.selectByValue(productsVendor.inventory.stockStatus, inventory.stockStatus);
+                break;
+            case 'stock-management':
+                await this.check(productsVendor.inventory.enableStockManagement);
+                await this.clearAndType(productsVendor.inventory.stockQuantity, inventory.stockQuantity);
+                await this.clearAndType(productsVendor.inventory.lowStockThreshold, inventory.lowStockThreshold);
+                await this.selectByValue(productsVendor.inventory.allowBackorders, inventory.backorders);
+                break;
+            case 'one-quantity':
+                if (inventory.oneQuantity) {
+                    await this.check(productsVendor.inventory.allowOnlyOneQuantity);
+                } else {
+                    await this.uncheck(productsVendor.inventory.allowOnlyOneQuantity);
+                }
+                break;
+            default:
+                break;
+        }
+
         await this.saveProduct();
-        await this.toBeChecked(productsVendor.wholesale.enableWholesale);
-        await this.toHaveValue(productsVendor.wholesale.wholesalePrice, wholesaleOption.wholesalePrice);
-        await this.toHaveValue(productsVendor.wholesale.minimumQuantity, wholesaleOption.minimumQuantity);
+
+        // todo: replace switch with all method action and assertion as object member and loop through to call them
+
+        switch (choice) {
+            case 'sku':
+                await this.toHaveValue(productsVendor.inventory.sku, inventory.sku);
+                break;
+            case 'stock-status':
+                await this.toHaveSelectedValue(productsVendor.inventory.stockStatus, inventory.stockStatus);
+                break;
+            case 'stockManagement':
+                await this.toBeChecked(productsVendor.inventory.enableStockManagement);
+                await this.toHaveValue(productsVendor.inventory.stockQuantity, inventory.stockQuantity);
+                await this.toHaveValue(productsVendor.inventory.lowStockThreshold, inventory.lowStockThreshold);
+                await this.toHaveSelectedValue(productsVendor.inventory.allowBackorders, inventory.backorders);
+                await this.notToBeVisible(productsVendor.inventory.stockStatus);
+                break;
+            case 'one-quantity':
+                if (inventory.oneQuantity) {
+                    await this.toBeChecked(productsVendor.inventory.allowOnlyOneQuantity);
+                } else {
+                    await this.notToBeChecked(productsVendor.inventory.allowOnlyOneQuantity);
+                }
+                break;
+            default:
+                break;
+        }
+    }
+    // remove product inventory [stock management]
+    async removeProductInventory(productName: string): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.uncheck(productsVendor.inventory.enableStockManagement);
+        await this.saveProduct();
+        await this.notToBeChecked(productsVendor.inventory.enableStockManagement);
     }
 }
