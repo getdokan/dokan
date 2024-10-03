@@ -1087,7 +1087,7 @@ class Assets {
             $version   = isset( $script['version'] ) ? $script['version'] : DOKAN_PLUGIN_VERSION;
 
             wp_register_script( $handle, $script['src'], $deps, $version, $in_footer );
-            wp_set_script_translations( $handle, 'dokan-lite' );
+            wp_set_script_translations( $handle, 'dokan-lite', plugin_dir_path( DOKAN_FILE ) . 'languages' );
         }
     }
 
