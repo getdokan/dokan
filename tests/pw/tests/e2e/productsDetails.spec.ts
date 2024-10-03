@@ -109,4 +109,107 @@ test.describe('Product details functionality test', () => {
         const [, , productName] = await apiUtils.createProduct(payloads.createDiscountProduct(), payloads.vendorAuth);
         await vendor.removeDiscount(productName, true);
     });
+
+    // product category
+
+    test('vendor can update product category (single)', { tag: ['@lite', '@vendor'] }, async () => {
+        await vendor.addProductCategory(productName, [data.product.category.clothings]);
+    });
+
+    test('vendor can add product category (multiple)', { tag: ['@pro', '@vendor'] }, async () => {
+        await dbUtils.updateOptionValue(dbData.dokan.optionName.selling, { product_category_style: 'multiple' });
+        await vendor.addProductCategory(productName1, data.product.category.categories, true);
+    });
+
+    test('vendor can remove product category (multiple)', { tag: ['@pro', '@vendor'] }, async () => {
+        await dbUtils.updateOptionValue(dbData.dokan.optionName.selling, { product_category_style: 'multiple' });
+        const uncategorizedId = await apiUtils.getCategoryId('Uncategorized', payloads.adminAuth);
+        const [, , productName] = await apiUtils.createProduct({ ...payloads.createProduct(), categories: [{ id: uncategorizedId }, { id: CATEGORY_ID }] }, payloads.vendorAuth); // need multiple categories
+        await vendor.removeProductCategory(productName, [data.product.category.clothings]);
+    });
+
+    test('vendor can add multi-step product category (last category)', { tag: ['@lite', '@vendor'] }, async () => {
+        await vendor.addProductCategory(productName1, [data.product.category.multistepCategories.at(-1)!]);
+    });
+
+    test('vendor can add multi-step product category (any category)', { tag: ['@lite', '@vendor'] }, async () => {
+        await dbUtils.updateOptionValue(dbData.dokan.optionName.selling, { dokan_any_category_selection: 'on' });
+        await vendor.addProductCategory(productName, [data.product.category.multistepCategories.at(-2)!]);
+    });
+
+    test("vendor can't add multi-step product category (any category)", { tag: ['@lite', '@vendor'] }, async () => {
+        await dbUtils.updateOptionValue(dbData.dokan.optionName.selling, { dokan_any_category_selection: 'off' });
+        await vendor.cantAddCategory(productName, data.product.category.multistepCategories.at(-2)!);
+    });
+
+    // product tags
+
+    test('vendor can add product tags', { tag: ['@lite', '@vendor'] }, async () => {
+        await vendor.addProductTags(productName1, data.product.productInfo.tags.tags);
+    });
+
+    test('vendor can remove product tags', { tag: ['@lite', '@vendor'] }, async () => {
+        await vendor.removeProductTags(productName, data.product.productInfo.tags.tags);
+    });
+
+    test('vendor can create product tags', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.addProductTags(productName, data.product.productInfo.tags.randomTags);
+    });
+
+    // product cover image
+
+    test('vendor can add product cover image', { tag: ['@lite', '@vendor'] }, async () => {
+        await vendor.addProductCoverImage(productName1, data.product.productInfo.images.cover);
+    });
+
+    test('vendor can update product cover image', { tag: ['@lite', '@vendor'] }, async () => {
+        // todo: need a product with cover image
+        await vendor.addProductCoverImage(productName, data.product.productInfo.images.cover);
+        await vendor.addProductCoverImage(productName, data.product.productInfo.images.cover, true);
+    });
+
+    test('vendor can remove product cover image', { tag: ['@lite', '@vendor'] }, async () => {
+        // todo: need a product with cover image
+        await vendor.addProductCoverImage(productName, data.product.productInfo.images.cover, true);
+        await vendor.removeProductCoverImage(productName);
+    });
+
+    // product gallery image
+
+    test('vendor can add product gallery image', { tag: ['@lite', '@vendor'] }, async () => {
+        await vendor.addProductGalleryImages(productName1, data.product.productInfo.images.gallery);
+    });
+
+    test('vendor can update product gallery image', { tag: ['@lite', '@vendor'] }, async () => {
+        // todo: need a product with gallery images
+        await vendor.addProductGalleryImages(productName, data.product.productInfo.images.gallery);
+        await vendor.addProductGalleryImages(productName, data.product.productInfo.images.gallery, true);
+    });
+
+    test('vendor can remove product gallery image', { tag: ['@lite', '@vendor'] }, async () => {
+        // todo: need a product with gallery images
+        await vendor.addProductGalleryImages(productName, data.product.productInfo.images.gallery, true);
+        await vendor.removeProductGalleryImages(productName);
+    });
+
+    // product short description
+
+    test('vendor can add product short description', { tag: ['@lite', '@vendor'] }, async () => {
+        await vendor.addProductShortDescription(productName1, data.product.productInfo.description.shortDescription);
+    });
+
+    test('vendor can update product short description', { tag: ['@lite', '@vendor'] }, async () => {
+        await vendor.addProductShortDescription(productName, data.product.productInfo.description.shortDescription);
+    });
+
+    test('vendor can remove product short description', { tag: ['@lite', '@vendor'] }, async () => {
+        await vendor.addProductShortDescription(productName, '');
+    });
+
+    // product description
+
+    test('vendor can update product description', { tag: ['@lite', '@vendor'] }, async () => {
+        await vendor.addProductDescription(productName, data.product.productInfo.description.description);
+    });
+
 });

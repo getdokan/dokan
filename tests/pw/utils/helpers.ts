@@ -466,6 +466,12 @@ export const helpers = {
         return `rgb(${r}, ${g}, ${b})`;
     },
 
+    // empty object values
+    emptyObjectValues: (obj: { [key: string]: any }) => (Object.keys(obj).forEach(key => (obj[key] = '')), obj),
+
+    // is object
+    isPlainObject: (value: any) => value !== null && typeof value === 'object' && !Array.isArray(value),
+
     // deep merge arrays
     deepMergeArrays(targetArray: any[], sourceArray: any[]) {
         if (targetArray.every((item: any) => item instanceof Object && !Array.isArray(item)) && sourceArray.every(item => item instanceof Object && !Array.isArray(item))) {
@@ -488,7 +494,7 @@ export const helpers = {
         const result = { ...target };
 
         for (const key of Object.keys(source)) {
-            if (source[key] instanceof Object && target[key] instanceof Object) {
+            if (this.isPlainObject(source[key]) && this.isPlainObject(target[key])) {
                 result[key] = this.deepMergeObjects(target[key], source[key]);
             } else if (Array.isArray(source[key]) && Array.isArray(target[key])) {
                 result[key] = this.deepMergeArrays(target[key], source[key]);

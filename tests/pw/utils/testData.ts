@@ -1410,7 +1410,6 @@ export const data = {
 
         payment: {
             methodName: '',
-            // email: () => faker.internet.email(),
             email: () => `${faker.person.firstName('male')}@email.com`,
             bankAccountName: 'accountName',
             bankAccountType: faker.helpers.arrayElement(['personal', 'business']),
