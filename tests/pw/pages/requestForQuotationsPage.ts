@@ -108,6 +108,7 @@ export class RequestForQuotationsPage extends AdminPage {
             }
         }
 
+        // todo: skipped until api is fixed
         if (rule.expireLimit) {
             await this.enableSwitcher(requestForQuotationAdmin.quoteRules.addNewQuoteRule.expireLimit);
             await this.clearAndType(requestForQuotationAdmin.quoteRules.addNewQuoteRule.expireLimitInput, rule.expireLimit);
@@ -138,7 +139,7 @@ export class RequestForQuotationsPage extends AdminPage {
 
     // edit quote rule
     async editQuoteRule(rule: requestForQuotation['quoteRule']) {
-        await this.goIfNotThere(data.subUrls.backend.dokan.requestForQuoteRules);
+        await this.goIfNotThere(data.subUrls.backend.dokan.requestForQuoteRules, 'networkidle', true);
         await this.hover(requestForQuotationAdmin.quoteRules.quoteRulesCell(rule.title));
         await this.clickAndWaitForResponses([data.subUrls.api.dokan.quotes, data.subUrls.api.dokan.products], requestForQuotationAdmin.quoteRules.quoteRulesEdit(rule.title));
         await this.updateQuoteRuleFields(rule);
@@ -146,7 +147,7 @@ export class RequestForQuotationsPage extends AdminPage {
 
     // update quote rule
     async updateQuoteRule(quoteTitle: string, action: string) {
-        await this.goIfNotThere(data.subUrls.backend.dokan.requestForQuoteRules);
+        await this.goIfNotThere(data.subUrls.backend.dokan.requestForQuoteRules, 'networkidle', true);
 
         switch (action) {
             case 'trash':
@@ -174,7 +175,7 @@ export class RequestForQuotationsPage extends AdminPage {
 
     // quote rules bulk action
     async quoteRulesBulkAction(action: string) {
-        await this.goto(data.subUrls.backend.dokan.requestForQuoteRules);
+        await this.goIfNotThere(data.subUrls.backend.dokan.requestForQuoteRules, 'networkidle', true);
 
         // ensure row exists
         await this.notToBeVisible(requestForQuotationAdmin.quoteRules.noRowsFound);

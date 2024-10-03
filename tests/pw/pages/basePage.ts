@@ -91,8 +91,9 @@ export class BasePage {
     }
 
     // goto subPath if not already there
-    async goIfNotThere(subPath: string, waitUntil: 'load' | 'domcontentloaded' | 'networkidle' | 'commit' = 'domcontentloaded'): Promise<void> {
-        if (!this.isCurrentUrl(subPath)) {
+    async goIfNotThere(subPath: string, waitUntil: 'load' | 'domcontentloaded' | 'networkidle' | 'commit' = 'domcontentloaded', force = false): Promise<void> {
+        const alreadyThere = this.isCurrentUrl(subPath);
+        if (!alreadyThere) {
             const url = this.createUrl(subPath);
             // console.log('url: ', url);
             await this.toPass(async () => {
@@ -101,6 +102,10 @@ export class BasePage {
                 expect(currentUrl).toMatch(subPath);
             });
         }
+        if (force) {
+            await this.reload();
+        }
+
     }
 
     // goto subPath if about:blank is loaded

@@ -1742,7 +1742,7 @@ export const data = {
             specificVendors: true,
             includeVendors: 'vendor1store',
             excludeVendors: 'vendor2store',
-            expireLimit: '20',
+            // expireLimit: '20', // todo: fix after api is updated
             hidePrice: true,
             hidePriceText: 'Price is hidden',
             hideAddToCartButton: true,

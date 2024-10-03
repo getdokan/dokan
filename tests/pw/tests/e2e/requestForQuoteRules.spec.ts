@@ -15,19 +15,14 @@ test.describe('Request for quotation Rules test', () => {
         aPage = await adminContext.newPage();
         admin = new RequestForQuotationsPage(aPage);
 
-        // apiUtils = new ApiUtils(await request.newContext());
-        // [, , quoteRuleTitle] = await apiUtils.createQuoteRule(payloads.createQuoteRule(), payloads.adminAuth); // todo: fix after api is updated
-
-        const quoteRule = data.requestForQuotation.quoteRule()
-        await admin.addQuoteRule(quoteRule);
-        quoteRuleTitle = quoteRule.title;
-        
+        apiUtils = new ApiUtils(await request.newContext());
+        [, , quoteRuleTitle] = await apiUtils.createQuoteRule(payloads.createQuoteRule(), payloads.adminAuth); // todo: fix after api is updated
     });
 
     test.afterAll(async () => {
-        // await apiUtils.deleteAllQuoteRules(payloads.adminAuth); //todo: remove in future
+        await apiUtils.deleteAllQuoteRules(payloads.adminAuth); //todo: remove in future
         await aPage.close();
-        // await apiUtils.dispose();
+        await apiUtils.dispose();
     });
 
     // quote rules

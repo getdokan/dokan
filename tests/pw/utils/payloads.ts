@@ -4187,9 +4187,10 @@ export const payloads = {
         selected_user_role: ['customer', 'guest'],
         category_ids: [],
         product_ids: [],
+        expire_limit: '20',
         hide_price: '1',
         hide_price_text: 'Price is hidden',
-        hide_cart_button: 'replace',
+        hide_cart_button: 'replace', // keep_and_add_new
         button_text: 'Add to quote',
         apply_on_all_product: '0',
         rule_priority: '0',

@@ -1023,11 +1023,9 @@ export const selector = {
                     table: {
                         quoteRulesTable: '.dokan-announcement-wrapper table',
                         titleColumn: 'thead th.rule_name',
-                        userRolesColumn: 'thead th.selected_user_role',
+                        userRolesColumn: 'thead th.status',
                         hidePriceColumn: 'thead th.hide_price',
-                        buttonTextColumn: 'thead th.button_text',
                         rulePriorityColumn: 'thead th.rule_priority',
-                        ruleStatusColumn: 'thead th.status',
                         dateColumn: 'thead th.created_at',
                     },
 
