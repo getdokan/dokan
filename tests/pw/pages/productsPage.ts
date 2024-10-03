@@ -3,7 +3,7 @@ import { AdminPage } from '@pages/adminPage';
 import { selector } from '@pages/selectors';
 import { data } from '@utils/testData';
 import { helpers } from '@utils/helpers';
-import { product } from '@utils/interfaces';
+import { product, vendor } from '@utils/interfaces';
 
 const { DOKAN_PRO } = process.env;
 
@@ -841,6 +841,168 @@ export class ProductsPage extends AdminPage {
             await this.notToBeVisible(productsVendor.discount.scheduleTo);
         }
     }
+
+    // vendor add product category
+    async vendorAddProductCategory(category: string, multiple: boolean, neg?: boolean): Promise<void> {
+        if (!multiple) {
+            await this.click(productsVendor.category.openCategoryModal);
+        } else {
+            await this.click(productsVendor.category.addNewCategory);
+            await this.click(productsVendor.category.selectACategory);
+        }
+        await this.toBeVisible(productsVendor.category.categoryModal);
+        await this.type(productsVendor.category.searchInput, category);
+        await this.toContainText(productsVendor.category.searchedResultText, category);
+        await this.click(productsVendor.category.searchedResult);
+        await this.click(productsVendor.category.categoryOnList(category));
+        if (neg) {
+            await this.toBeDisabled(productsVendor.category.done);
+            return;
+        }
+        await this.click(productsVendor.category.done);
+
+        const categoryAlreadySelectedPopup = await this.isVisible(productsVendor.category.categoryAlreadySelectedPopup);
+        if (categoryAlreadySelectedPopup) {
+            await this.click(productsVendor.category.categoryAlreadySelectedPopup);
+            await this.click(productsVendor.category.categoryModalClose);
+        }
+        await this.toBeVisible(productsVendor.category.selectedCategory(category));
+    }
+
+    // add product category
+    async addProductCategory(productName: string, categories: string[], multiple: boolean = false): Promise<void> {
+        await this.goToProductEdit(productName);
+        for (const category of categories) {
+            await this.vendorAddProductCategory(category, multiple);
+        }
+        await this.saveProduct();
+        for (const category of categories) {
+            await this.toBeVisible(productsVendor.category.selectedCategory(category));
+        }
+    }
+
+    // remove product category
+    async removeProductCategory(productName: string, categories: string[]): Promise<void> {
+        await this.goToProductEdit(productName);
+        for (const category of categories) {
+            await this.click(productsVendor.category.removeSelectedCategory(category));
+            await this.notToBeVisible(productsVendor.category.selectedCategory(category));
+        }
+        await this.saveProduct();
+        for (const category of categories) {
+            await this.notToBeVisible(productsVendor.category.selectedCategory(category));
+        }
+    }
+
+    // can't add product category
+    async cantAddCategory(productName: string, category: string): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.vendorAddProductCategory(category, false, true);
+    }
+
+    // add product tags
+    async addProductTags(productName: string, tags: string[]): Promise<void> {
+        await this.goToProductEdit(productName);
+        for (const tag of tags) {
+            await this.typeAndWaitForResponse(data.subUrls.ajax, productsVendor.tags.tagInput, tag);
+            await this.click(productsVendor.tags.searchedTag(tag));
+            await this.toBeVisible(productsVendor.tags.selectedTags(tag));
+        }
+        await this.saveProduct();
+        for (const tag of tags) {
+            await this.toBeVisible(productsVendor.tags.selectedTags(tag));
+        }
+    }
+
+    // remove product tags
+    async removeProductTags(productName: string, tags: string[]): Promise<void> {
+        await this.goToProductEdit(productName);
+        for (const tag of tags) {
+            await this.click(productsVendor.tags.removeSelectedTags(tag));
+            await this.press('Escape');  // shift focus from element
+        }
+        await this.saveProduct();
+
+        for (const tag of tags) {
+            await this.notToBeVisible(productsVendor.tags.selectedTags(tag));
+        }
+    }
+
+    // add product cover image
+    async addProductCoverImage(productName: string, coverImage: string, removePrevious: boolean = false): Promise<void> {
+        await this.goToProductEdit(productName);
+        // remove previous cover image
+        if (removePrevious) {
+            await this.hover(productsVendor.image.coverImageDiv);
+            await this.click(productsVendor.image.removeFeatureImage);
+            await this.toBeVisible(productsVendor.image.uploadImageText);
+        }
+        await this.click(productsVendor.image.cover);
+        await this.uploadMedia(coverImage);
+        await this.saveProduct();
+        await this.toHaveAttribute(productsVendor.image.uploadedFeatureImage, 'src', /.+/); // Ensures 'src' has any non-falsy value
+        await this.notToBeVisible(productsVendor.image.uploadImageText);
+    }
+
+    // remove product cover image
+    async removeProductCoverImage(productName: string): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.hover(productsVendor.image.coverImageDiv);
+        await this.click(productsVendor.image.removeFeatureImage);
+        await this.saveProduct();
+        await this.toHaveAttribute(productsVendor.image.uploadedFeatureImage, 'src', /^$/);
+        await this.toBeVisible(productsVendor.image.uploadImageText);
+    }
+
+    // add product gallery images
+    async addProductGalleryImages(productName: string, galleryImages: string[], removePrevious: boolean = false): Promise<void> {
+        await this.goToProductEdit(productName);
+        // remove previous gallery images
+        if (removePrevious) {
+            const imageCount = await this.getElementCount(productsVendor.image.uploadedGalleryImage);
+            for (let i = 0; i < imageCount; i++) {
+                await this.hover(productsVendor.image.galleryImageDiv);
+                await this.click(productsVendor.image.removeGalleryImage);
+            }
+            await this.toHaveCount(productsVendor.image.uploadedGalleryImage, 0);
+        }
+
+        for (const galleryImage of galleryImages) {
+            await this.click(productsVendor.image.gallery);
+            await this.uploadMedia(galleryImage);
+        }
+        await this.saveProduct();
+        await this.toHaveCount(productsVendor.image.uploadedGalleryImage, galleryImages.length);
+    }
+
+    // remove product gallery images
+    async removeProductGalleryImages(productName: string): Promise<void> {
+        await this.goToProductEdit(productName);
+        const imageCount = await this.getElementCount(productsVendor.image.uploadedGalleryImage);
+        for (let i = 0; i < imageCount; i++) {
+            await this.hover(productsVendor.image.galleryImageDiv);
+            await this.click(productsVendor.image.removeGalleryImage);
+        }
+        await this.saveProduct();
+        await this.toHaveCount(productsVendor.image.uploadedGalleryImage, 0);
+    }
+
+    // add product short description
+    async addProductShortDescription(productName: string, shortDescription: string): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.typeFrameSelector(productsVendor.shortDescription.shortDescriptionIframe, productsVendor.shortDescription.shortDescriptionHtmlBody, shortDescription);
+        await this.saveProduct();
+        await this.toContainTextFrameLocator(productsVendor.shortDescription.shortDescriptionIframe, productsVendor.shortDescription.shortDescriptionHtmlBody, shortDescription);
+    }
+
+    // add product description
+    async addProductDescription(productName: string, description: string): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.typeFrameSelector(productsVendor.description.descriptionIframe, productsVendor.description.descriptionHtmlBody, description);
+        await this.saveProduct();
+        await this.toContainTextFrameLocator(productsVendor.description.descriptionIframe, productsVendor.description.descriptionHtmlBody, description);
+    }
+
 
     // add product catalog mode
     async addProductCatalogMode(productName: string, hidePrice: boolean = false): Promise<void> {

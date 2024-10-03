@@ -7,7 +7,7 @@ Tested up to: 6.6.2
 WC requires at least: 8.0.0
 WC tested up to: 9.3.3
 Requires PHP: 7.4
-Stable tag: 3.12.3
+Stable tag: 3.12.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -346,6 +346,10 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 == Changelog ==
+
+= v3.12.4 ( Oct 03, 2024 ) =
+
+- **update:** Added `$data` parameter to `dokan_update_vendor` hook.
 
 = v3.12.3 ( Sep 30, 2024 ) =
 
