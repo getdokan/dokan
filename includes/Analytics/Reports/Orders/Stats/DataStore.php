@@ -19,6 +19,17 @@ use WeDevs\Dokan\Analytics\Reports\OrderType;
  * API\Reports\Orders\Stats\DataStore.
  */
 class DataStore extends ReportsDataStore implements DataStoreInterface {
+	/**
+	 * Max allowed Attemption to create table.
+	 */
+	const MAX_ATTEMPT = 2;
+
+	/**
+	 * Attemption count to create order table if DB throws error.
+	 *
+	 * @var integer
+	 */
+	protected static $attempt_count = 0;
 
 	/**
 	 * Table used to get the data.
@@ -136,37 +147,41 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
             $order,
         );
 
-			$format = array(
-				'%d',
-				'%d',
-				'%d',
-				// Seller data
-				'%f',
-				'%f',
-				'%f',
-				'%f',
-				// Admin data
-				'%f',
-				'%f',
-				'%f',
-				'%f',
-				'%f',
-			);
+		$format = array(
+			'%d',
+			'%d',
+			'%d',
+			// Seller data
+			'%f',
+			'%f',
+			'%f',
+			'%f',
+			// Admin data
+			'%f',
+			'%f',
+			'%f',
+			'%f',
+			'%f',
+		);
 
-			// Update or add the information to the DB.
-			$result = $wpdb->replace( $table_name, $data, $format );
+		// Update or add the information to the DB.
+		$result = $wpdb->replace( $table_name, $data, $format );
 
-			/**
-			 * Fires when Dokan order's stats reports are updated.
-			 *
-			 * @param int $order_id Order ID.
-			 *
-			 * @since DOKAN_SINCE
-			 */
-			do_action( 'dokan_analytics_update_order_stats', $order->get_id() );
+		if ( self::attemptToCreateDokanStatsTable() ) {
+			return self::update( $order );
+		}
 
-			// Check the rows affected for success. Using REPLACE can affect 2 rows if the row already exists.
-			return ( 1 === $result || 2 === $result );
+		/**
+		 * Fires when Dokan order's stats reports are updated.
+		 *
+		 * @param int $order_id Order ID.
+		 *
+		 * @since DOKAN_SINCE
+		 */
+		do_action( 'dokan_analytics_update_order_stats', $order->get_id() );
+
+		// Check the rows affected for success. Using REPLACE can affect 2 rows if the row already exists.
+		return ( 1 === $result || 2 === $result );
 	}
 
 	/**
@@ -188,6 +203,11 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 
 		// Delete the order.
 		$wpdb->delete( self::get_db_table_name(), array( 'order_id' => $order_id ) );
+
+		if ( self::attemptToCreateDokanStatsTable() ) {
+			self::delete_order( $post_id );
+		}
+
 		/**
 		 * Fires when orders stats are deleted.
 		 *
@@ -199,5 +219,28 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 		do_action( 'dokan_analytics_delete_order_stats', $order_id, $customer_id );
 
 		ReportsCache::invalidate();
+	}
+
+	/**
+	 * Attempt to create table If dokan_order_stats does not exist but try to sync the order stats.
+	 *
+	 * @return boolean
+	 */
+	protected static function attemptToCreateDokanStatsTable(): bool {
+		global $wpdb;
+
+		$table_name = self::$table_name;
+
+		if ( $wpdb->last_error
+			&& str_contains( (string) $wpdb->last_error, "{$table_name}' doesn't exist" )
+			&& self::MAX_ATTEMPT > self::$attempt_count
+		) {
+			++self::$attempt_count;
+			( new \WeDevs\Dokan\Install\Installer() )->create_dokan_order_stats_table();
+
+			return true;
+		}
+
+		return false;
 	}
 }

@@ -539,6 +539,9 @@ class Installer {
     }
 
     public function create_dokan_order_stats_table() {
+        // Following imported here because this method could be called from the others file.
+        include_once ABSPATH . 'wp-admin/includes/upgrade.php';
+
         global $wpdb;
 
         $sql = "CREATE TABLE IF NOT EXISTS `{$wpdb->prefix}dokan_order_stats` (
