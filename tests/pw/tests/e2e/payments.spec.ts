@@ -104,7 +104,7 @@ test.describe('Payments test', () => {
         await vendor.addBankTransfer(data.vendor.payment);
     });
 
-    test.only('vendor can remove bank payment method', { tag: ['@lite', '@vendor'] }, async () => {
+    test('vendor can remove bank payment method', { tag: ['@lite', '@vendor'] }, async () => {
         await dbUtils.updateUserMeta(VENDOR_ID, 'dokan_profile_settings', dbData.testData.dokan.paymentSettings.bank);
         await vendor.removeBasicPayment({ ...data.vendor.payment, methodName: 'bank' });
     });
