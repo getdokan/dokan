@@ -127,7 +127,25 @@
           vendor can't add product discount price higher than price [lite]: true
           vendor can remove product discount price [lite]: true
           vendor can remove product discount schedule [lite]: true
-
+          vendor can update product category (single) [lite]: true
+          vendor can add product category (multiple): true
+          vendor can remove product category (multiple): true
+          vendor can add multi-step product category (last category) [lite]: true
+          vendor can add multi-step product category (any category) [lite]: true
+          vendor can't add multi-step product category (any category) [lite]: true
+          vendor can add product tags [lite]: true
+          vendor can remove product tags [lite]: true
+          vendor can create product tags: true
+          vendor can add product cover image [lite]: true
+          vendor can update product cover image [lite]: true
+          vendor can remove product cover image [lite]: true
+          vendor can add product gallery image [lite]: true
+          vendor can update product gallery image [lite]: true
+          vendor can remove product gallery image [lite]: true
+          vendor can add product short description [lite]: true
+          vendor can update product short description [lite]: true
+          vendor can remove product short description [lite]: true
+          vendor can update product description [lite]: true
 
 - page: 'MyOrders'
   features:
