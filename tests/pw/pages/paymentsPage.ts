@@ -245,7 +245,7 @@ export class PaymentsPage extends AdminPage {
     }
 
     // set basic payment method [paypal, skrill, custom ]
-    async setBasicPayment(paymentMethod: vendor['payment']): Promise<void> {
+    async addBasicPayment(paymentMethod: vendor['payment']): Promise<void> {
         await this.goToPaymentSettings(paymentMethod.methodName);
         await this.clearAndType(paymentSettingsVendor.paymentEmail, paymentMethod.email());
         await this.clickAndWaitForResponse(data.subUrls.ajax, paymentSettingsVendor.updateSettings);
@@ -253,14 +253,14 @@ export class PaymentsPage extends AdminPage {
     }
 
     // disconnect basic payment method [paypal, skrill, custom ]
-    async disconnectBasicPayment(paymentMethod: vendor['payment']): Promise<void> {
+    async removeBasicPayment(paymentMethod: vendor['payment']): Promise<void> {
         await this.goToPaymentSettings(paymentMethod.methodName);
         await this.clickAndWaitForResponse(data.subUrls.ajax, paymentSettingsVendor.disconnectPayment);
         await this.toContainText(paymentSettingsVendor.updateSettingsSuccessMessage, paymentMethod.saveSuccessMessage);
     }
 
     // bank transfer payment settings
-    async setBankTransfer(paymentMethod: vendor['payment']): Promise<void> {
+    async addBankTransfer(paymentMethod: vendor['payment']): Promise<void> {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.bankTransfer);
 
         // await this.clickIfVisible(paymentSettingsVendor.disconnectAccount);

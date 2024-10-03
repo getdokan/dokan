@@ -184,13 +184,17 @@
       vendor:
           vendor can view payment settings menu page [lite]: true
           vendor can add paypal payment method [lite]: true
+          vendor can update paypal payment method [lite]: true
+          vendor can remove paypal payment method [lite]: true
           vendor can add bank payment method [lite]: true
-          vendor can add Skrill payment method: true
+          vendor can update bank payment method [lite]: true
+          vendor can remove bank payment method [lite]: true
+          vendor can add skrill payment method: true
+          vendor can update skrill payment method: true
+          vendor can remove skrill payment method: true
           vendor can add custom payment method: true
-          vendor can disconnect paypal payment method: true
-          vendor can disconnect bank payment method: true
-          vendor can disconnect Skrill payment method: true
-          vendor can disconnect custom payment method: true
+          vendor can update custom payment method: true
+          vendor can remove custom payment method: true
 
 - page: 'Shop'
   features:
