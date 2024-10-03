@@ -266,5 +266,4 @@ test.describe('Product details functionality test', () => {
     test('vendor can remove product inventory options (allow single quantity)', { tag: ['@lite', '@vendor'] }, async () => {
         await vendor.addProductInventory(productName, { ...data.product.productInfo.inventory(), oneQuantity: false }, 'one-quantity');
     });
-
 });

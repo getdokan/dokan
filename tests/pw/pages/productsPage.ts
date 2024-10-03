@@ -919,7 +919,7 @@ export class ProductsPage extends AdminPage {
         await this.goToProductEdit(productName);
         for (const tag of tags) {
             await this.click(productsVendor.tags.removeSelectedTags(tag));
-            await this.press('Escape');  // shift focus from element
+            await this.press('Escape'); // shift focus from element
         }
         await this.saveProduct();
 
@@ -1074,7 +1074,7 @@ export class ProductsPage extends AdminPage {
             case 'stock-status':
                 await this.toHaveSelectedValue(productsVendor.inventory.stockStatus, inventory.stockStatus);
                 break;
-            case 'stockManagement':
+            case 'stock-management':
                 await this.toBeChecked(productsVendor.inventory.enableStockManagement);
                 await this.toHaveValue(productsVendor.inventory.stockQuantity, inventory.stockQuantity);
                 await this.toHaveValue(productsVendor.inventory.lowStockThreshold, inventory.lowStockThreshold);
@@ -1098,5 +1098,61 @@ export class ProductsPage extends AdminPage {
         await this.uncheck(productsVendor.inventory.enableStockManagement);
         await this.saveProduct();
         await this.notToBeChecked(productsVendor.inventory.enableStockManagement);
+    }
+
+    // add product catalog mode
+    async addProductCatalogMode(productName: string, hidePrice: boolean = false): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.check(productsVendor.catalogMode.removeAddToCart);
+        if (hidePrice) await this.check(productsVendor.catalogMode.hideProductPrice);
+        await this.saveProduct();
+        await this.toBeChecked(productsVendor.catalogMode.removeAddToCart);
+        if (hidePrice) await this.toBeChecked(productsVendor.catalogMode.hideProductPrice);
+    }
+    // add product EU compliance
+    async addProductEuCompliance(productName: string, euCompliance: product['productInfo']['euCompliance']): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.selectByValue(productsVendor.euComplianceFields.saleLabel, euCompliance.saleLabel);
+        await this.selectByValue(productsVendor.euComplianceFields.saleRegularLabel, euCompliance.saleRegularLabel);
+        await this.selectByValue(productsVendor.euComplianceFields.unit, euCompliance.unit);
+        await this.selectByValue(productsVendor.euComplianceFields.minimumAge, euCompliance.minimumAge);
+        await this.clearAndType(productsVendor.euComplianceFields.productUnits, euCompliance.productUnits);
+        await this.clearAndType(productsVendor.euComplianceFields.basePriceUnits, euCompliance.basePriceUnits);
+        if (euCompliance.freeShipping) {
+            await this.check(productsVendor.euComplianceFields.freeShipping);
+        } else {
+            await this.uncheck(productsVendor.euComplianceFields.freeShipping);
+        }
+        await this.clearAndType(productsVendor.euComplianceFields.regularUnitPrice, euCompliance.regularUnitPrice);
+        await this.clearAndType(productsVendor.euComplianceFields.saleUnitPrice, euCompliance.saleUnitPrice);
+        await this.typeFrameSelector(productsVendor.euComplianceFields.optionalMiniDescription.descriptionIframe, productsVendor.euComplianceFields.optionalMiniDescription.descriptionHtmlBody, euCompliance.optionalMiniDescription);
+
+        await this.saveProduct();
+
+        await this.toHaveValue(productsVendor.euComplianceFields.saleLabel, euCompliance.saleLabel);
+        await this.toHaveValue(productsVendor.euComplianceFields.saleRegularLabel, euCompliance.saleRegularLabel);
+        await this.toHaveValue(productsVendor.euComplianceFields.unit, euCompliance.unit);
+        await this.toHaveValue(productsVendor.euComplianceFields.minimumAge, euCompliance.minimumAge);
+        await this.toHaveValue(productsVendor.euComplianceFields.productUnits, euCompliance.productUnits);
+        await this.toHaveValue(productsVendor.euComplianceFields.basePriceUnits, euCompliance.basePriceUnits);
+        if (euCompliance.freeShipping) {
+            await this.toBeChecked(productsVendor.euComplianceFields.freeShipping);
+        } else {
+            await this.notToBeChecked(productsVendor.euComplianceFields.freeShipping);
+        }
+        await this.toHaveValue(productsVendor.euComplianceFields.regularUnitPrice, euCompliance.regularUnitPrice);
+        await this.toHaveValue(productsVendor.euComplianceFields.saleUnitPrice, euCompliance.saleUnitPrice);
+        await this.toContainTextFrameLocator(productsVendor.euComplianceFields.optionalMiniDescription.descriptionIframe, productsVendor.euComplianceFields.optionalMiniDescription.descriptionHtmlBody, euCompliance.optionalMiniDescription);
+    }
+    // add product wholesale options
+    async addProductWholesaleOptions(productName: string, wholesaleOption: product['productInfo']['wholesaleOption']): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.check(productsVendor.wholesale.enableWholesale);
+        await this.clearAndType(productsVendor.wholesale.wholesalePrice, wholesaleOption.wholesalePrice);
+        await this.clearAndType(productsVendor.wholesale.minimumQuantity, wholesaleOption.minimumQuantity);
+        await this.saveProduct();
+        await this.toBeChecked(productsVendor.wholesale.enableWholesale);
+        await this.toHaveValue(productsVendor.wholesale.wholesalePrice, wholesaleOption.wholesalePrice);
+        await this.toHaveValue(productsVendor.wholesale.minimumQuantity, wholesaleOption.minimumQuantity);
     }
 }
