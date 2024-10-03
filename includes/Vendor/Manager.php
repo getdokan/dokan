@@ -432,6 +432,8 @@ class Manager {
         /**
          * Fires before a vendor is updated.
          *
+         * @since 2.9.10
+         *
          * @param int   $vendor_id The ID of the vendor being updated.
          * @param array $data      The array of vendor data being updated.
          */
@@ -441,6 +443,9 @@ class Manager {
 
         /**
          * Fires after a vendor has been updated.
+         *
+         * @since 2.9.10
+         * @since DOKAN_SINCE added $data parameter
          *
          * @param int   $vendor_id The ID of the vendor that was updated.
          * @param array $data      The array of vendor data that was updated.
