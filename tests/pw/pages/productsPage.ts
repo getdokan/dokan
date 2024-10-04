@@ -919,7 +919,7 @@ export class ProductsPage extends AdminPage {
         await this.goToProductEdit(productName);
         for (const tag of tags) {
             await this.click(productsVendor.tags.removeSelectedTags(tag));
-            await this.press('Escape');  // shift focus from element
+            await this.press('Escape'); // shift focus from element
         }
         await this.saveProduct();
 
@@ -1002,7 +1002,6 @@ export class ProductsPage extends AdminPage {
         await this.saveProduct();
         await this.toContainTextFrameLocator(productsVendor.description.descriptionIframe, productsVendor.description.descriptionHtmlBody, description);
     }
-
 
     // add product catalog mode
     async addProductCatalogMode(productName: string, hidePrice: boolean = false): Promise<void> {

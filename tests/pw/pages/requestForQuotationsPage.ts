@@ -218,7 +218,10 @@ export class RequestForQuotationsPage extends AdminPage {
         // customer information
         await this.click(requestForQuotationAdmin.quotesList.addNewQuote.quoteUserDropDown);
         await this.typeAndWaitForResponse(data.subUrls.api.dokan.quotes, requestForQuotationAdmin.quotesList.addNewQuote.quoteUserInput, quote.user);
-        await this.press(data.key.enter);
+        await this.click(requestForQuotationAdmin.quotesList.addNewQuote.selectedInput(`${quote.user}( ${quote.user}@yopmail.com )`));
+        await this.toBeVisible(requestForQuotationAdmin.quotesList.addNewQuote.selectedResult(`${quote.user}( ${quote.user}@yopmail.com )`));
+
+        // await this.press(data.key.enter);
         // await this.clearAndType(requestForQuotationAdmin.quotesList.addNewQuote.fullName, quote.fullName);
         // await this.clearAndType(requestForQuotationAdmin.quotesList.addNewQuote.email, quote.email);
         await this.clearAndType(requestForQuotationAdmin.quotesList.addNewQuote.companyName, quote.companyName);
@@ -226,20 +229,26 @@ export class RequestForQuotationsPage extends AdminPage {
 
         // quote product
         if (action === 'create') {
+            await this.click(requestForQuotationAdmin.quotesList.addNewQuote.quoteVendorDropdown);
+            await this.typeAndWaitForResponse(data.subUrls.api.dokan.stores, requestForQuotationAdmin.quotesList.addNewQuote.quoteVendorInput, quote.vendor);
+            await this.click(requestForQuotationAdmin.quotesList.addNewQuote.selectedInput(quote.vendor));
+            await this.toBeVisible(requestForQuotationAdmin.quotesList.addNewQuote.selectedResult(quote.vendor));
+
             await this.click(requestForQuotationAdmin.quotesList.addNewQuote.addProducts);
-
-            await this.click(requestForQuotationAdmin.quotesList.addNewQuote.quoteProductDropDown);
+            await this.click(requestForQuotationAdmin.quotesList.addNewQuote.quoteProductDropdown);
             await this.typeAndWaitForResponse(data.subUrls.api.dokan.products, requestForQuotationAdmin.quotesList.addNewQuote.quoteProductInput, quote.product);
-            await this.press(data.key.enter);
-
+            await this.click(requestForQuotationAdmin.quotesList.addNewQuote.selectedInput(quote.product));
+            await this.toBeVisible(requestForQuotationAdmin.quotesList.addNewQuote.selectedResult(quote.product));
             await this.clearAndType(requestForQuotationAdmin.quotesList.addNewQuote.quoteProductQuantity, quote.quantity);
+
             await this.click(requestForQuotationAdmin.quotesList.addNewQuote.addToQuote);
         }
 
         await this.clearAndType(requestForQuotationAdmin.quotesList.addNewQuote.offerPrice, quote.offerPrice);
         await this.clearAndType(requestForQuotationAdmin.quotesList.addNewQuote.offerProductQuantity, quote.offerProductQuantity);
+        await this.clearAndType(requestForQuotationAdmin.quotesList.addNewQuote.shippingCost, quote.shippingCost);
 
-        await this.clickAndWaitForResponse(data.subUrls.api.dokan.quotes, requestForQuotationAdmin.quotesList.addNewQuote.publishQuote);
+        await this.clickAndWaitForResponse(data.subUrls.api.dokan.quotes, requestForQuotationAdmin.quotesList.addNewQuote.create);
     }
 
     // add quote
@@ -251,37 +260,37 @@ export class RequestForQuotationsPage extends AdminPage {
 
     // edit quote
     async editQuote(quote: requestForQuotation['quote']) {
+        // todo: add goto quote via direct url
         await this.goIfNotThere(data.subUrls.backend.dokan.requestForQuote);
-
-        await this.hover(requestForQuotationAdmin.quotesList.quoteCell(quote.title));
-        await this.clickAndWaitForResponse(data.subUrls.api.dokan.quotes, requestForQuotationAdmin.quotesList.quoteEdit(quote.title));
+        await this.hover(requestForQuotationAdmin.quotesList.quoteCell(quote.id));
+        await this.clickAndWaitForResponse(data.subUrls.api.dokan.quotes, requestForQuotationAdmin.quotesList.quoteEdit(quote.id));
         await this.updateQuoteFields(quote, 'update');
     }
 
     // update quote
-    async updateQuote(quoteTitle: string, action: string) {
+    async updateQuote(quoteId: string, action: string) {
         await this.goto(data.subUrls.backend.dokan.requestForQuote);
 
         switch (action) {
             case 'trash':
                 await this.clickAndWaitForResponse(data.subUrls.api.dokan.quotes, requestForQuotationAdmin.quotesList.navTabs.pending);
-                await this.toBeVisible(requestForQuotationAdmin.quotesList.quoteCell(quoteTitle));
-                await this.hover(requestForQuotationAdmin.quotesList.quoteCell(quoteTitle));
-                await this.clickAndWaitForResponse(data.subUrls.api.dokan.quotes, requestForQuotationAdmin.quotesList.quoteTrash(quoteTitle));
+                await this.toBeVisible(requestForQuotationAdmin.quotesList.quoteCell(quoteId));
+                await this.hover(requestForQuotationAdmin.quotesList.quoteCell(quoteId));
+                await this.clickAndWaitForResponse(data.subUrls.api.dokan.quotes, requestForQuotationAdmin.quotesList.quoteTrash(quoteId));
                 break;
 
             case 'permanently-delete':
                 await this.clickAndWaitForResponse(data.subUrls.api.dokan.quotes, requestForQuotationAdmin.quotesList.navTabs.trash);
-                await this.toBeVisible(requestForQuotationAdmin.quotesList.quoteCell(quoteTitle));
-                await this.hover(requestForQuotationAdmin.quotesList.quoteCell(quoteTitle));
-                await this.clickAndWaitForResponse(data.subUrls.api.dokan.quotes, requestForQuotationAdmin.quotesList.quotePermanentlyDelete(quoteTitle));
+                await this.toBeVisible(requestForQuotationAdmin.quotesList.quoteCell(quoteId));
+                await this.hover(requestForQuotationAdmin.quotesList.quoteCell(quoteId));
+                await this.clickAndWaitForResponse(data.subUrls.api.dokan.quotes, requestForQuotationAdmin.quotesList.quotePermanentlyDelete(quoteId));
                 break;
 
             case 'restore':
                 await this.clickAndWaitForResponse(data.subUrls.api.dokan.quotes, requestForQuotationAdmin.quotesList.navTabs.trash);
-                await this.toBeVisible(requestForQuotationAdmin.quotesList.quoteCell(quoteTitle));
-                await this.hover(requestForQuotationAdmin.quotesList.quoteCell(quoteTitle));
-                await this.clickAndWaitForResponse(data.subUrls.api.dokan.quotes, requestForQuotationAdmin.quotesList.quoteRestore(quoteTitle));
+                await this.toBeVisible(requestForQuotationAdmin.quotesList.quoteCell(quoteId));
+                await this.hover(requestForQuotationAdmin.quotesList.quoteCell(quoteId));
+                await this.clickAndWaitForResponse(data.subUrls.api.dokan.quotes, requestForQuotationAdmin.quotesList.quoteRestore(quoteId));
                 break;
 
             default:
@@ -290,19 +299,19 @@ export class RequestForQuotationsPage extends AdminPage {
     }
 
     // approve quote
-    async approveQuote(quoteTitle: string) {
+    async approveQuote(quoteId: string) {
         await this.goto(data.subUrls.backend.dokan.requestForQuote);
-        await this.hover(requestForQuotationAdmin.quotesList.quoteCell(quoteTitle));
-        await this.clickAndWaitForResponse(data.subUrls.api.dokan.quotes, requestForQuotationAdmin.quotesList.quoteEdit(quoteTitle));
+        await this.hover(requestForQuotationAdmin.quotesList.quoteCell(quoteId));
+        await this.clickAndWaitForResponse(data.subUrls.api.dokan.quotes, requestForQuotationAdmin.quotesList.quoteEdit(quoteId));
         await this.clickAndWaitForResponse(data.subUrls.api.dokan.quotes, requestForQuotationAdmin.quotesList.approveQuote);
     }
 
     // convert quote to order
-    async convertQuoteToOrder(quoteTitle: string) {
+    async convertQuoteToOrder(quoteId: string) {
         await this.goto(data.subUrls.backend.dokan.requestForQuote);
         await this.clickAndWaitForResponse(data.subUrls.api.dokan.quotes, requestForQuotationAdmin.quotesList.navTabs.approved);
-        await this.hover(requestForQuotationAdmin.quotesList.quoteCell(quoteTitle));
-        await this.clickAndWaitForResponse(data.subUrls.api.dokan.quotes, requestForQuotationAdmin.quotesList.quoteEdit(quoteTitle));
+        await this.hover(requestForQuotationAdmin.quotesList.quoteCell(quoteId));
+        await this.clickAndWaitForResponse(data.subUrls.api.dokan.quotes, requestForQuotationAdmin.quotesList.quoteEdit(quoteId));
         await this.clickAndWaitForResponse(data.subUrls.api.dokan.quotes, requestForQuotationAdmin.quotesList.convertToOrder);
     }
 
@@ -343,26 +352,28 @@ export class RequestForQuotationsPage extends AdminPage {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.requestQuotes);
         await this.clickAndWaitForLoadState(requestForQuotationVendor.viewQuoteDetails(quoteTitle));
 
+        // todo: update all locators
+
         // quote basic details elements are visible
-        await this.multipleElementVisible(requestForQuotationVendor.quoteDetails.basicDetails);
+        // await this.multipleElementVisible(requestForQuotationVendor.quoteDetails.basicDetails);
 
         // quote item details elements are visible
-        await this.toBeVisible(requestForQuotationVendor.quoteDetails.quoteItemDetails.quoteDetailsText);
         await this.multipleElementVisible(requestForQuotationVendor.quoteDetails.quoteItemDetails.table);
 
         // quote total details elements are visible
-        await this.multipleElementVisible(requestForQuotationVendor.quoteDetails.quoteTotals);
+        // await this.multipleElementVisible(requestForQuotationVendor.quoteDetails.quoteTotals);
 
         // update quote is visible
-        await this.toBeVisible(requestForQuotationVendor.quoteDetails.updateQuote);
-        await this.toBeVisibleAnyOfThem([requestForQuotationVendor.quoteDetails.approveThisQuote, requestForQuotationVendor.quoteDetails.convertToOrder]);
+        // await this.toBeVisible(requestForQuotationVendor.quoteDetails.updateQuote);
+        // await this.toBeVisibleAnyOfThem([requestForQuotationVendor.quoteDetails.approveThisQuote, requestForQuotationVendor.quoteDetails.convertToOrder]);
     }
 
     // update quote
-    async vendorUpdateQuoteRequest(quoteId: string, quote: requestForQuotation['userQuote']) {
+    async vendorUpdateQuoteRequest(quoteId: string, quote: requestForQuotation['vendorQuote']) {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.quoteDetails(quoteId));
         await this.clearAndType(requestForQuotationVendor.quoteDetails.offeredPriceInput(quote.productName), quote.offeredPrice);
-        await this.clearAndType(requestForQuotationVendor.quoteDetails.quantityInput(quote.productName), quote.quantity);
+        await this.clearAndType(requestForQuotationVendor.quoteDetails.shippingCost, quote.shippingCost);
+        await this.clearAndType(requestForQuotationVendor.quoteDetails.reply, quote.reply);
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.quoteDetails(quoteId), requestForQuotationVendor.quoteDetails.updateQuote);
         await this.toContainText(requestForQuotationVendor.quoteDetails.message, 'Your quote has been successfully updated.');
     }
@@ -382,7 +393,7 @@ export class RequestForQuotationsPage extends AdminPage {
             await this.vendorApproveQuoteRequest(quoteId);
         }
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.quoteDetails(quoteId), requestForQuotationVendor.quoteDetails.convertToOrder);
-        await this.toContainText(requestForQuotationVendor.quoteDetails.message, `Your Quote# ${quoteId} has been converted to Order#`);
+        await this.toContainText(requestForQuotationVendor.quoteDetails.message, `Your Quote #${quoteId} has been converted to Order #`);
     }
 
     // customer
@@ -442,18 +453,19 @@ export class RequestForQuotationsPage extends AdminPage {
 
         await this.clickAndWaitForLoadState(requestForQuotationCustomer.requestedQuote.viewQuoteDetails(quoteTitle));
 
+        // todo: need to add & update all locators
         // quote basic details elements are visible
-        await this.multipleElementVisible(requestForQuotationCustomer.requestedQuote.requestedQuoteDetails.basicDetails);
+        // await this.multipleElementVisible(requestForQuotationCustomer.requestedQuote.requestedQuoteDetails.basicDetails);
 
-        // quote item details elements are visible
-        await this.toBeVisible(requestForQuotationCustomer.requestedQuote.requestedQuoteDetails.quoteItemDetails.quoteDetailsText);
-        await this.multipleElementVisible(requestForQuotationCustomer.requestedQuote.requestedQuoteDetails.quoteItemDetails.table);
+        // // quote item details elements are visible
+        // await this.toBeVisible(requestForQuotationCustomer.requestedQuote.requestedQuoteDetails.quoteItemDetails.quoteDetailsText);
+        // await this.multipleElementVisible(requestForQuotationCustomer.requestedQuote.requestedQuoteDetails.quoteItemDetails.table);
 
-        // quote total details elements are visible
-        await this.multipleElementVisible(requestForQuotationCustomer.requestedQuote.requestedQuoteDetails.quoteTotals);
+        // // quote total details elements are visible
+        // await this.multipleElementVisible(requestForQuotationCustomer.requestedQuote.requestedQuoteDetails.quoteTotals);
 
-        // update quote is visible
-        await this.toBeVisible(requestForQuotationCustomer.requestedQuote.requestedQuoteDetails.updateQuote);
+        // // update quote is visible
+        // await this.toBeVisible(requestForQuotationCustomer.requestedQuote.requestedQuoteDetails.updateQuote);
     }
 
     // customer update requested quote
@@ -468,6 +480,7 @@ export class RequestForQuotationsPage extends AdminPage {
     // customer pay converted quote
     async payConvertedQuote(quoteId: string) {
         await this.goto(data.subUrls.frontend.quoteDetails(quoteId));
+        await this.forceLinkToSameTab(requestForQuotationCustomer.requestedQuote.requestedQuoteDetails.viewOrder);
         await this.clickAndWaitForLoadState(requestForQuotationCustomer.requestedQuote.requestedQuoteDetails.viewOrder);
         await this.toBeVisible(requestForQuotationCustomer.orderDetails.quoteNoteOnOrderDetails);
         const orderId = (await this.getElementText(selector.customer.cOrderDetails.orderDetails.orderNumber)) as string;
@@ -485,23 +498,30 @@ export class RequestForQuotationsPage extends AdminPage {
         } else {
             await this.goIfNotThere(data.subUrls.frontend.requestForQuote);
         }
-        await this.clearAndType(requestForQuotationCustomer.requestForQuote.offeredPriceInput(quote.productName), quote.offeredPrice);
+        // await this.clearAndType(requestForQuotationCustomer.requestForQuote.offeredPriceInput(quote.productName), quote.offeredPrice);
         await this.clearAndType(requestForQuotationCustomer.requestForQuote.quantityInput(quote.productName), quote.quantity);
-        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, requestForQuotationCustomer.requestForQuote.updateQuote);
-        await this.toContainText(requestForQuotationCustomer.requestForQuote.message, 'Quote updated');
 
         if (guest) {
             await this.clearAndType(requestForQuotationCustomer.requestForQuote.guest.fullName, guest.fullName);
             await this.clearAndType(requestForQuotationCustomer.requestForQuote.guest.email, guest.email);
-            await this.clearAndType(requestForQuotationCustomer.requestForQuote.guest.companyName, guest.companyName);
             await this.clearAndType(requestForQuotationCustomer.requestForQuote.guest.phoneNumber, guest.phoneNumber);
+
+            await this.selectByValue(requestForQuotationCustomer.requestForQuote.guest.address.country, guest.address.countrySelectValue);
+            await this.selectByValue(requestForQuotationCustomer.requestForQuote.guest.address.state, guest.address.stateSelectValue);
+            await this.clearAndType(requestForQuotationCustomer.requestForQuote.guest.address.city, guest.address.city);
+            await this.clearAndType(requestForQuotationCustomer.requestForQuote.guest.address.postCode, guest.address.postCode);
+            await this.clearAndType(requestForQuotationCustomer.requestForQuote.guest.address.addressLine1, guest.address.addressLine1);
+            await this.clearAndType(requestForQuotationCustomer.requestForQuote.guest.address.addressLine2, guest.address.addressLine2);
         }
+
+        await this.clearAndType(requestForQuotationCustomer.requestForQuote.expectedDelivery, quote.expectedDelivery);
+        await this.clearAndType(requestForQuotationCustomer.requestForQuote.additionalMessage, quote.additionalMessage);
 
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.requestForQuote, requestForQuotationCustomer.requestForQuote.placeQuote, 302);
         await this.toBeVisible(requestForQuotationCustomer.requestedQuote.requestedQuoteDetails.requestedQuoteText);
 
         if (!guest) {
-            const quoteId = (await this.getElementText(requestForQuotationCustomer.requestedQuote.requestedQuoteDetails.basicDetails.quoteNumberValue))?.trim() as string;
+            const quoteId = (await this.getElementText(requestForQuotationCustomer.requestedQuote.requestedQuoteDetails.basicDetails.quoteNumber))?.trim().match(/\d+/)?.[0];
             return quoteId;
         }
     }

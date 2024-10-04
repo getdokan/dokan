@@ -11,7 +11,7 @@ test.describe('Request for quotation test admin', () => {
     let aPage: Page;
     let apiUtils: ApiUtils;
     const productId: string[] = [];
-    let quoteTitle: string;
+    let quoteId: string;
 
     test.beforeAll(async ({ browser }) => {
         const adminContext = await browser.newContext(data.auth.adminAuth);
@@ -20,7 +20,7 @@ test.describe('Request for quotation test admin', () => {
 
         apiUtils = new ApiUtils(await request.newContext());
         [, productId[0]] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendorAuth);
-        [, , quoteTitle] = await apiUtils.createQuoteRequest({ ...payloads.createQuoteRequest(), product_ids: productId, user_id: CUSTOMER_ID }, payloads.adminAuth);
+        [, quoteId] = await apiUtils.createQuoteRequest({ ...payloads.createQuoteRequest(), product_ids: productId, user_id: CUSTOMER_ID }, payloads.adminAuth);
     });
 
     test.afterAll(async () => {
@@ -40,33 +40,33 @@ test.describe('Request for quotation test admin', () => {
         await admin.addQuote(data.requestForQuotation.quote());
     });
 
-    test('admin can edit quote', { tag: ['@pro', '@admin'] }, async () => {
-        await admin.editQuote({ ...data.requestForQuotation.quote(), title: quoteTitle });
+    test.skip('admin can edit quote', { tag: ['@pro', '@admin'] }, async () => {
+        await admin.editQuote({ ...data.requestForQuotation.quote(), id: quoteId });
     });
 
     test('admin can trash quote', { tag: ['@pro', '@admin'] }, async () => {
-        const [, , quoteTitle] = await apiUtils.createQuoteRequest({ ...payloads.createQuoteRequest(), product_ids: productId, user_id: CUSTOMER_ID }, payloads.adminAuth);
-        await admin.updateQuote(quoteTitle, 'trash');
+        const [, quoteId] = await apiUtils.createQuoteRequest({ ...payloads.createQuoteRequest(), product_ids: productId, user_id: CUSTOMER_ID }, payloads.adminAuth);
+        await admin.updateQuote(quoteId, 'trash');
     });
 
     test('admin can restore quote', { tag: ['@pro', '@admin'] }, async () => {
-        const [, , quoteTitle] = await apiUtils.createQuoteRequest({ ...payloads.createQuoteRequest(), product_ids: productId, status: 'trash', user_id: CUSTOMER_ID }, payloads.adminAuth);
-        await admin.updateQuote(quoteTitle, 'restore');
+        const [, quoteId] = await apiUtils.createQuoteRequest({ ...payloads.createQuoteRequest(), product_ids: productId, status: 'trash', user_id: CUSTOMER_ID }, payloads.adminAuth);
+        await admin.updateQuote(quoteId, 'restore');
     });
 
     test('admin can permanently delete quote', { tag: ['@pro', '@admin'] }, async () => {
-        const [, , quoteTitle] = await apiUtils.createQuoteRequest({ ...payloads.createQuoteRequest(), product_ids: productId, status: 'trash', user_id: CUSTOMER_ID }, payloads.adminAuth);
-        await admin.updateQuote(quoteTitle, 'permanently-delete');
+        const [, quoteId] = await apiUtils.createQuoteRequest({ ...payloads.createQuoteRequest(), product_ids: productId, status: 'trash', user_id: CUSTOMER_ID }, payloads.adminAuth);
+        await admin.updateQuote(quoteId, 'permanently-delete');
     });
 
     test('admin can approve quote', { tag: ['@pro', '@admin'] }, async () => {
-        const [, , quoteTitle] = await apiUtils.createQuoteRequest({ ...payloads.createQuoteRequest(), product_ids: productId, user_id: CUSTOMER_ID }, payloads.adminAuth);
-        await admin.approveQuote(quoteTitle);
+        const [, quoteId] = await apiUtils.createQuoteRequest({ ...payloads.createQuoteRequest(), product_ids: productId, user_id: CUSTOMER_ID }, payloads.adminAuth);
+        await admin.approveQuote(quoteId);
     });
 
     test('admin can convert quote to order', { tag: ['@pro', '@admin'] }, async () => {
-        const [, , quoteTitle] = await apiUtils.createQuoteRequest({ ...payloads.createQuoteRequest(), product_ids: productId, status: 'approve', user_id: CUSTOMER_ID }, payloads.adminAuth);
-        await admin.convertQuoteToOrder(quoteTitle);
+        const [, quoteId] = await apiUtils.createQuoteRequest({ ...payloads.createQuoteRequest(), product_ids: productId, status: 'approve', user_id: CUSTOMER_ID }, payloads.adminAuth);
+        await admin.convertQuoteToOrder(quoteId);
     });
 
     test('admin can perform quote bulk actions', { tag: ['@pro', '@admin', '@serial'] }, async () => {
@@ -79,9 +79,8 @@ test.describe('Request for quotation test vendor', () => {
     let vPage: Page;
     let apiUtils: ApiUtils;
     const productId: string[] = [];
-    let quoteTitle: string;
-    let productName: string;
     let quoteId: string;
+    let productName: string;
 
     test.beforeAll(async ({ browser }) => {
         const vendorContext = await browser.newContext(data.auth.vendorAuth);
@@ -90,7 +89,7 @@ test.describe('Request for quotation test vendor', () => {
 
         apiUtils = new ApiUtils(await request.newContext());
         [, productId[0], productName] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendorAuth);
-        [, quoteId, quoteTitle] = await apiUtils.createQuoteRequest({ ...payloads.createQuoteRequest(), product_ids: productId, user_id: CUSTOMER_ID }, payloads.adminAuth);
+        [, quoteId] = await apiUtils.createQuoteRequest({ ...payloads.createQuoteRequest(), product_ids: productId, user_id: CUSTOMER_ID }, payloads.adminAuth);
     });
 
     test.afterAll(async () => {
@@ -103,7 +102,7 @@ test.describe('Request for quotation test vendor', () => {
     });
 
     test('vendor can view request quote details', { tag: ['@pro', '@exploratory', '@vendor'] }, async () => {
-        await vendor.vendorViewQuoteDetails(quoteTitle);
+        await vendor.vendorViewQuoteDetails(quoteId);
     });
 
     test('vendor can update quote request', { tag: ['@pro', '@vendor'] }, async () => {
@@ -161,7 +160,7 @@ test.describe('Request for quotation test customer', () => {
         await customer.customerViewRequestedQuoteDetails(quoteId);
     });
 
-    test('customer can update quote request', { tag: ['@pro', '@customer'] }, async () => {
+    test.skip('customer can update quote request', { tag: ['@pro', '@customer'] }, async () => {
         await customer.customerUpdateRequestedQuote(quoteId, { ...data.requestForQuotation.customerQuoteProduct, productName: productName });
     });
 

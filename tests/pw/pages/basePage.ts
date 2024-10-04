@@ -105,7 +105,6 @@ export class BasePage {
         if (force) {
             await this.reload();
         }
-
     }
 
     // goto subPath if about:blank is loaded
@@ -1617,6 +1616,13 @@ export class BasePage {
     async switcherHasColor(selector: string, color: string): Promise<void> {
         selector = /^(\/\/|\(\/\/)/.test(selector) ? `${selector}//span` : `${selector} span`;
         await this.toHaveBackgroundColor(selector, color);
+    }
+
+    async forceLinkToSameTab(selector: string): Promise<void> {
+        // ensure link suppose to open on new tab
+        await this.toHaveAttribute(selector, 'target', '_blank');
+        // force link to open on the same tab
+        await this.setAttributeValue(selector, 'target', '_self');
     }
 
     /**

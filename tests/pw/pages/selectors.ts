@@ -948,19 +948,19 @@ export const selector = {
                     table: {
                         quotesTable: '.dokan-quote-wrapper table',
                         quoteColumn: 'thead th.sl',
-                        quoteTitleColumn: 'thead th.title',
-                        customerEmailColumn: 'thead th.customer_email',
-                        quoteStatusColumn: 'thead th.status',
+                        customerColumn: 'thead th.customer_name',
+                        statusColumn: 'thead th.status',
+                        storeColumn: 'thead th.store_name',
                         dateColumn: 'thead th.created_at',
                     },
 
                     numberOfRowsFound: '.tablenav.top .displaying-num',
                     noRowsFound: '//td[normalize-space()="No quote found."]',
-                    quoteCell: (title: string) => `//strong[contains(text(),'${title}')]/../..//td[@class='column sl']`,
-                    quoteEdit: (title: string) => `//strong[contains(text(),'${title}')]/../..//td[@class='column sl']//span[@class="edit"]`,
-                    quoteTrash: (title: string) => `//strong[contains(text(),'${title}')]/../..//td[@class='column sl']//span[@class="trash"]`,
-                    quotePermanentlyDelete: (title: string) => `//strong[contains(text(),'${title}')]/../..//span[@class="delete"]`,
-                    quoteRestore: (title: string) => `//strong[contains(text(),'${title}')]/../..//span[@class="restore"]`,
+                    quoteCell: (title: string) => `//strong[normalize-space()="Quote ${title}"]/../..`,
+                    quoteEdit: (title: string) => `//a[normalize-space()="Quote ${title}"]/../..//span[@class="edit"]`,
+                    quoteTrash: (title: string) => `//a[normalize-space()="Quote ${title}"]/../..//span[@class="trash"]`,
+                    quotePermanentlyDelete: (title: string) => `//strong[normalize-space()="Quote ${title}"]/../..//span[@class="delete"]`,
+                    quoteRestore: (title: string) => `//strong[normalize-space()="Quote ${title}"]/../..//span[@class="restore"]`,
 
                     approveQuote: 'input[value="Approve Quote"]',
                     convertToOrder: 'input[value="Convert to Order"]',
@@ -972,22 +972,38 @@ export const selector = {
                         quoteTitle: '#title',
 
                         // customer information
-                        quoteUserDropDown: '.multiselect__select',
-                        quoteUserInput: '.multiselect__input',
+                        quoteUserDropDown: '//th[normalize-space()="Quote user"]/..//div[@class="multiselect__select"]',
+                        quoteUserInput: '//th[normalize-space()="Quote user"]/..//input[@class="multiselect__input"]',
+                        selectedInput: (input: string) => `//span[@class="multiselect__option multiselect__option--highlight"]//span[normalize-space(text())="${input}"]`,
+                        selectedResult: (input: string) => `//span[@class="multiselect__single" and normalize-space(text())="${input}"]`,
+                        result: '//span[@class="multiselect__single"]//',
                         fullName: 'input[name="name_field"]',
                         email: 'input[name="email_field"]',
                         companyName: 'input[placeholder="Company Name"]',
                         phoneNumber: 'input[name="phone_field"]',
 
+                        // shipping details
+                        countryDropDown: '//th[normalize-space()="Country"]/..//div[@class="multiselect__select"]',
+                        countryInput: '//th[normalize-space()="Country"]/..//input[@class="multiselect__input"]',
+                        stateDropDown: '//th[normalize-space()="State"]/..//div[@class="multiselect__select"]',
+                        stateInput: '//th[normalize-space()="State"]/..//input[@class="multiselect__input"]',
+                        postCode: 'input[name="post_code"]',
+                        address1: 'input[name="addr_line_1"]',
+                        address2: 'input[name="addr_line_2"]',
+                        expectedDelivery: 'input[name="expected_delivery_date"]',
+
                         // quote details
                         addProducts: 'input[value="Add product(s)"]',
-                        quoteProductDropDown: '.dokan-modal .multiselect__select',
+                        quoteVendorDropdown: '#select-vendor-store .multiselect__select',
+                        quoteVendorInput: '#select-vendor-store .multiselect__input',
+                        quoteProductDropdown: '.dokan-modal .multiselect__select',
                         quoteProductInput: '.dokan-modal .multiselect__input',
                         quoteProductQuantity: '#quantity',
-                        addToQuote: 'input[value="Add to quote"]',
+                        addToQuote: '//button[normalize-space()="Add to quote"]',
                         offerPrice: '#offer_price',
-                        offerProductQuantity: '#offer_product_quantity',
+                        offerProductQuantity: 'input[name="offer_product_quantity"]',
                         deleteQuoteProduct: '.dashicons.dashicons-no',
+                        shippingCost: 'input[name="shipping_cost"]',
 
                         offerPriceByProductName: (product: string) => `//a[normalize-space()="${product}"]/../../..//input[@id="offer_price"]`,
                         offerProductQuantityByProductName: (product: string) => `//a[normalize-space()="${product}"]/../../..//input[@id="offer_product_quantity"]`,
@@ -995,7 +1011,7 @@ export const selector = {
 
                         // publish
                         saveQuoteAsDraft: 'input[value="Save as Draft"]',
-                        publishQuote: 'input[value="Publish"]',
+                        create: 'input[value="Create"]',
                     },
                 },
 
@@ -4318,7 +4334,7 @@ export const selector = {
         },
 
         vRequestQuotes: {
-            requestQuotesText: '//h3[normalize-space()="Request Quotes"]',
+            requestQuotesText: '//h1[normalize-space()="Request for Quotation"]',
             noQuoteMessage: '//div[contains(@class, "woocommerce-message woocommerce-message--info")]',
             goToShop: '//a[normalize-space()="Go to shop"]',
 
@@ -4326,13 +4342,12 @@ export const selector = {
             table: {
                 quoteTable: 'table.my_account_quotes',
                 quoteColumn: '//th[normalize-space()="Quote #"]',
-                quoteNameColumn: '//th[normalize-space()="Quote Name"]',
                 statusColumn: '//th[normalize-space()="Status"]',
+                customerColumn: '//th[normalize-space()="Customer"]',
                 dateColumn: '//th[normalize-space()="Date"]',
-                actionColumn: '//th[normalize-space()="Action"]',
             },
 
-            viewQuoteDetails: (quoteTitle: string) => `//td[normalize-space()="${quoteTitle}"]/..//a[@class="woocommerce-button button view"]`,
+            viewQuoteDetails: (quoteId: string) => `//a[normalize-space()="Quote ${quoteId}"]`,
 
             quoteDetails: {
                 basicDetails: {
@@ -4353,16 +4368,13 @@ export const selector = {
                 },
 
                 quoteItemDetails: {
-                    quoteDetailsText: '//h2[normalize-space()="Quote Details"]',
-
                     table: {
                         quoteDetailsTable: '//table[contains(@class,"quote_details") and contains(@class,"cart")]',
-                        productColumn: '//th[@class="product-name"]',
-                        priceColumn: '//th[normalize-space()="Price"]',
-                        offeredPriceColumn: '//th[normalize-space()="Offered Price"]',
+                        productNameColumn: '//th[@class="product-name"]',
+                        originalPriceColumn: '//th[normalize-space()="Original Price"]',
+                        offeredPriceColumn: '//th[normalize-space()="My Offer"]',
                         quantityColumn: '//th[@class="product-quantity"]',
-                        subtotalColumn: '//th[normalize-space()="Subtotal"]',
-                        offeredSubtotalColumn: '//th[normalize-space()="Offered Subtotal"]',
+                        subtotalColumn: '//th[@class="product-subtotal"]',
                     },
                 },
 
@@ -4378,10 +4390,11 @@ export const selector = {
                     offeredPriceSubtotalValue: '//td[@data-title="Offered Price Subtotal"]',
                 },
 
-                offeredPriceInput: (productName: string) => `//a[normalize-space()="${productName}"]/../..//input[@class="input-text offered-price-input text"]`,
-                quantityInput: (productName: string) => `//a[normalize-space()="${productName}"]/../..//div[@class="quantity"]//input`,
+                offeredPriceInput: (productName: string) => `//a[normalize-space()="${productName}"]/../..//input[@class="input-text my-offer offered-price-input text"]`,
+                shippingCost: 'input#shipping-cost',
+                reply: 'textarea#additional-msg',
 
-                updateQuote: 'button[name="dokan_update_quote"]',
+                updateQuote: '//button[normalize-space()="Update"]',
                 approveThisQuote: 'button[name="approved_by_vendor_button"]',
                 convertToOrder: 'button[name="dokan_convert_to_order_customer"]',
 
@@ -7430,6 +7443,9 @@ export const selector = {
                 offeredPriceInput: (productName: string) => `//a[normalize-space()="${productName}"]/../..//input[@class="input-text offered-price-input text"]`,
                 quantityInput: (productName: string) => `//a[normalize-space()="${productName}"]/../..//div[@class="quantity"]//input`,
 
+                expectedDelivery: 'input[name="expected_delivery_date"]',
+                additionalMessage: 'textarea[name="customer_additional_msg"]',
+
                 updateQuote: 'button#dokan_update_quote_btn',
                 placeQuote: 'button[name="dokan_checkout_place_quote"]',
 
@@ -7438,6 +7454,15 @@ export const selector = {
                     email: 'input[name="email_field"]',
                     companyName: 'input[name="company_field"]',
                     phoneNumber: 'input[name="phone_field"]',
+
+                    address: {
+                        country: 'select[name="country"]',
+                        state: 'select[name="state_address"]',
+                        city: 'input[name="city"]',
+                        postCode: 'input[name="post_code"]',
+                        addressLine1: 'input[name="addr_line_1"]',
+                        addressLine2: 'input[name="addr_line_2"]',
+                    },
                 },
 
                 message: '.woocommerce-message',
@@ -7454,21 +7479,22 @@ export const selector = {
                 table: {
                     quoteTable: 'table.my_account_quotes',
                     quoteColumn: '//th[normalize-space()="Quote #"]',
-                    quoteNameColumn: '//th[normalize-space()="Quote Name"]',
                     statusColumn: '//th[normalize-space()="Status"]',
+                    vendorColumn: '//th[normalize-space()="Vendor"]',
                     dateColumn: '//th[normalize-space()="Date"]',
-                    actionColumn: '//th[normalize-space()="Action"]',
                 },
 
                 pagination: 'ul.pagination',
 
-                viewQuoteDetails: (quoteId: string) => `//td[normalize-space()="Quote ${quoteId}"]/..//a[@class="woocommerce-button button view"]`,
+                viewQuoteDetails: (quoteId: string) => `//a[normalize-space()="Quote ${quoteId}"]`,
 
                 // requested quote details
                 requestedQuoteDetails: {
                     requestedQuoteText: '//h1[normalize-space()="Requested Quotes"]',
 
                     basicDetails: {
+                        quoteNumber: 'h3.quote-no',
+
                         basicDetailsTable: '(//table[@class="shop_table shop_table_responsive table_quote_totals dokan-table order-items"])[1]',
                         quoteNumberText: '//th[normalize-space()="Quote #"]',
                         quoteDateText: '//th[normalize-space()="Quote Date"]',

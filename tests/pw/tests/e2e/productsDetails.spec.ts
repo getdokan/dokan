@@ -211,5 +211,4 @@ test.describe('Product details functionality test', () => {
     test('vendor can update product description', { tag: ['@lite', '@vendor'] }, async () => {
         await vendor.addProductDescription(productName, data.product.productInfo.description.description);
     });
-
 });

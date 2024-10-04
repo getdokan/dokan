@@ -1757,16 +1757,19 @@ export const data = {
         },
 
         quote: () => ({
+            id: '',
             title: `test quote_${faker.string.nanoid(10)}`,
             user: CUSTOMER,
             fullName: 'Jhon Doe',
             email: `${CUSTOMER}@yopmail.com`,
             companyName: 'abc',
             phoneNumber: '0123456789',
-            product: 'p1_v1 (simple)',
+            vendor: `${VENDOR2}store`,
+            product: 'p1_v2 (simple)',
             quantity: '5',
             offerPrice: '80',
             offerProductQuantity: '10',
+            shippingCost: '20',
         }),
 
         trashedQuote: {
@@ -1781,20 +1784,33 @@ export const data = {
         vendorUpdateQuote: {
             productName: '',
             offeredPrice: '80',
-            quantity: '20',
+            shippingCost: '20',
+            reply: 'test reply',
         },
 
         customerQuoteProduct: {
             productName: '',
             offeredPrice: '30',
             quantity: '20',
+            shippingCost: '',
+            expectedDelivery: helpers.addDays(helpers.currentDateTime, 2),
+            additionalMessage: 'test quote message',
         },
 
         guest: () => ({
             fullName: faker.person.fullName({ sex: 'male' }),
             email: `${faker.person.firstName('male')}@email.com`,
-            companyName: faker.company.name(),
             phoneNumber: faker.phone.number(),
+
+            address: {
+                country: 'United States (US)',
+                countrySelectValue: 'US',
+                stateSelectValue: 'NY',
+                city: 'New York',
+                postCode: '10006',
+                addressLine1: 'abc street',
+                addressLine2: 'xyz street',
+            },
         }),
     },
 
