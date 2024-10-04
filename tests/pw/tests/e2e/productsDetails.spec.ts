@@ -212,4 +212,58 @@ test.describe('Product details functionality test', () => {
         await vendor.addProductDescription(productName, data.product.productInfo.description.description);
     });
 
+    // product downloadable options
+
+    test('vendor can add product downloadable options', { tag: ['@lite', '@vendor'] }, async () => {
+        await vendor.addProductDownloadableOptions(productName1, data.product.productInfo.downloadableOptions);
+    });
+
+    test('vendor can update product downloadable options', { tag: ['@lite', '@vendor'] }, async () => {
+        // todo: need a product with downloadable file
+        await vendor.addProductDownloadableOptions(productName, data.product.productInfo.downloadableOptions);
+    });
+
+    test('vendor can remove product downloadable file', { tag: ['@lite', '@vendor'] }, async () => {
+        // todo: need a product with downloadable file
+        await vendor.addProductDownloadableOptions(productName, data.product.productInfo.downloadableOptions);
+        await vendor.removeDownloadableFile(productName, { ...data.product.productInfo.downloadableOptions, downloadLimit: '', downloadExpiry: '' });
+    });
+
+    // product inventory options
+
+    test('vendor can add product inventory options (SKU)', { tag: ['@lite', '@vendor'] }, async () => {
+        await vendor.addProductInventory(productName1, data.product.productInfo.inventory(), 'sku');
+    });
+
+    test('vendor can update product inventory options (SKU)', { tag: ['@lite', '@vendor'] }, async () => {
+        await vendor.addProductInventory(productName, data.product.productInfo.inventory(), 'sku');
+    });
+
+    test('vendor can remove product inventory options (SKU)', { tag: ['@lite', '@vendor'] }, async () => {
+        await vendor.addProductInventory(productName, { ...data.product.productInfo.inventory(), sku: '' }, 'sku');
+    });
+
+    test('vendor can add product inventory options (stock status)', { tag: ['@lite', '@vendor'] }, async () => {
+        await vendor.addProductInventory(productName1, data.product.productInfo.inventory(), 'stock-status');
+    });
+
+    test('vendor can add product inventory options (stock management)', { tag: ['@lite', '@vendor'] }, async () => {
+        await vendor.addProductInventory(productName1, data.product.productInfo.inventory(), 'stock-management');
+    });
+
+    test('vendor can update product inventory options (stock management)', { tag: ['@lite', '@vendor'] }, async () => {
+        await vendor.addProductInventory(productName1, data.product.productInfo.inventory(), 'stock-management');
+    });
+
+    test('vendor can remove product inventory options (stock management)', { tag: ['@lite', '@vendor'] }, async () => {
+        await vendor.removeProductInventory(productName);
+    });
+
+    test('vendor can add product inventory options (allow single quantity)', { tag: ['@lite', '@vendor'] }, async () => {
+        await vendor.addProductInventory(productName1, data.product.productInfo.inventory(), 'one-quantity');
+    });
+
+    test('vendor can remove product inventory options (allow single quantity)', { tag: ['@lite', '@vendor'] }, async () => {
+        await vendor.addProductInventory(productName, { ...data.product.productInfo.inventory(), oneQuantity: false }, 'one-quantity');
+    });
 });

@@ -919,7 +919,7 @@ export class ProductsPage extends AdminPage {
         await this.goToProductEdit(productName);
         for (const tag of tags) {
             await this.click(productsVendor.tags.removeSelectedTags(tag));
-            await this.press('Escape');  // shift focus from element
+            await this.press('Escape'); // shift focus from element
         }
         await this.saveProduct();
 
@@ -1003,6 +1003,102 @@ export class ProductsPage extends AdminPage {
         await this.toContainTextFrameLocator(productsVendor.description.descriptionIframe, productsVendor.description.descriptionHtmlBody, description);
     }
 
+    // add product downloadable options
+    async addProductDownloadableOptions(productName: string, downloadableOption: product['productInfo']['downloadableOptions']): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.check(productsVendor.downloadable);
+        await this.click(productsVendor.downloadableOptions.addFile);
+        await this.clearAndType(productsVendor.downloadableOptions.fileName, downloadableOption.fileName);
+        await this.click(productsVendor.downloadableOptions.chooseFile);
+        await this.uploadMedia(downloadableOption.fileUrl);
+        await this.clearAndType(productsVendor.downloadableOptions.downloadLimit, downloadableOption.downloadLimit);
+        await this.clearAndType(productsVendor.downloadableOptions.downloadExpiry, downloadableOption.downloadExpiry);
+        await this.saveProduct();
+        await this.toBeChecked(productsVendor.downloadable);
+        await this.toHaveValue(productsVendor.downloadableOptions.fileName, downloadableOption.fileName);
+        await this.toHaveValue(productsVendor.downloadableOptions.downloadLimit, downloadableOption.downloadLimit);
+        await this.toHaveValue(productsVendor.downloadableOptions.downloadExpiry, downloadableOption.downloadExpiry);
+    }
+
+    // remove product downloadable files
+    async removeDownloadableFile(productName: string, downloadableOption: product['productInfo']['downloadableOptions']): Promise<void> {
+        await this.goToProductEdit(productName);
+        const fileCount = await this.getElementCount(productsVendor.downloadableOptions.deleteFile);
+        for (let i = 0; i < fileCount; i++) {
+            await this.clickFirstLocator(productsVendor.downloadableOptions.deleteFile);
+        }
+        await this.clearAndType(productsVendor.downloadableOptions.downloadLimit, downloadableOption.downloadLimit);
+        await this.clearAndType(productsVendor.downloadableOptions.downloadExpiry, downloadableOption.downloadExpiry);
+        await this.saveProduct();
+        await this.notToBeVisible(productsVendor.downloadableOptions.deleteFile);
+        await this.toHaveValue(productsVendor.downloadableOptions.downloadLimit, downloadableOption.downloadLimit);
+        await this.toHaveValue(productsVendor.downloadableOptions.downloadExpiry, downloadableOption.downloadExpiry);
+    }
+
+    // add product inventory
+    async addProductInventory(productName: string, inventory: product['productInfo']['inventory'], choice: string): Promise<void> {
+        await this.goToProductEdit(productName);
+
+        switch (choice) {
+            case 'sku':
+                await this.clearAndType(productsVendor.inventory.sku, inventory.sku);
+                break;
+            case 'stock-status':
+                await this.selectByValue(productsVendor.inventory.stockStatus, inventory.stockStatus);
+                break;
+            case 'stock-management':
+                await this.check(productsVendor.inventory.enableStockManagement);
+                await this.clearAndType(productsVendor.inventory.stockQuantity, inventory.stockQuantity);
+                await this.clearAndType(productsVendor.inventory.lowStockThreshold, inventory.lowStockThreshold);
+                await this.selectByValue(productsVendor.inventory.allowBackorders, inventory.backorders);
+                break;
+            case 'one-quantity':
+                if (inventory.oneQuantity) {
+                    await this.check(productsVendor.inventory.allowOnlyOneQuantity);
+                } else {
+                    await this.uncheck(productsVendor.inventory.allowOnlyOneQuantity);
+                }
+                break;
+            default:
+                break;
+        }
+
+        await this.saveProduct();
+
+        // todo: replace switch with all method action and assertion as object member and loop through to call them
+
+        switch (choice) {
+            case 'sku':
+                await this.toHaveValue(productsVendor.inventory.sku, inventory.sku);
+                break;
+            case 'stock-status':
+                await this.toHaveSelectedValue(productsVendor.inventory.stockStatus, inventory.stockStatus);
+                break;
+            case 'stock-management':
+                await this.toBeChecked(productsVendor.inventory.enableStockManagement);
+                await this.toHaveValue(productsVendor.inventory.stockQuantity, inventory.stockQuantity);
+                await this.toHaveValue(productsVendor.inventory.lowStockThreshold, inventory.lowStockThreshold);
+                await this.toHaveSelectedValue(productsVendor.inventory.allowBackorders, inventory.backorders);
+                await this.notToBeVisible(productsVendor.inventory.stockStatus);
+                break;
+            case 'one-quantity':
+                if (inventory.oneQuantity) {
+                    await this.toBeChecked(productsVendor.inventory.allowOnlyOneQuantity);
+                } else {
+                    await this.notToBeChecked(productsVendor.inventory.allowOnlyOneQuantity);
+                }
+                break;
+            default:
+                break;
+        }
+    }
+    // remove product inventory [stock management]
+    async removeProductInventory(productName: string): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.uncheck(productsVendor.inventory.enableStockManagement);
+        await this.saveProduct();
+        await this.notToBeChecked(productsVendor.inventory.enableStockManagement);
+    }
 
     // add product catalog mode
     async addProductCatalogMode(productName: string, hidePrice: boolean = false): Promise<void> {
