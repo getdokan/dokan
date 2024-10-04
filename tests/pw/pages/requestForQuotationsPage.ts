@@ -218,10 +218,9 @@ export class RequestForQuotationsPage extends AdminPage {
         // customer information
         await this.click(requestForQuotationAdmin.quotesList.addNewQuote.quoteUserDropDown);
         await this.typeAndWaitForResponse(data.subUrls.api.dokan.quotes, requestForQuotationAdmin.quotesList.addNewQuote.quoteUserInput, quote.user);
-        await this.click(requestForQuotationAdmin.quotesList.addNewQuote.selectedInput(`${quote.user}( ${quote.user}@yopmail.com )`));
-        await this.toBeVisible(requestForQuotationAdmin.quotesList.addNewQuote.selectedResult(`${quote.user}( ${quote.user}@yopmail.com )`));
+        await this.click(requestForQuotationAdmin.quotesList.addNewQuote.selectedInput(`${quote.user}( ${quote.email} )`));
+        await this.toBeVisible(requestForQuotationAdmin.quotesList.addNewQuote.selectedResult(`${quote.user}( ${quote.email} )`));
 
-        // await this.press(data.key.enter);
         // await this.clearAndType(requestForQuotationAdmin.quotesList.addNewQuote.fullName, quote.fullName);
         // await this.clearAndType(requestForQuotationAdmin.quotesList.addNewQuote.email, quote.email);
         await this.clearAndType(requestForQuotationAdmin.quotesList.addNewQuote.companyName, quote.companyName);

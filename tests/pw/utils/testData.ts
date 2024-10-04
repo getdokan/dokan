@@ -1594,11 +1594,11 @@ export const data = {
                 zipCode: '10003',
                 country: 'United States (US)',
                 state: 'New York',
-                email: `${CUSTOMER}@yopmail.com`,
+                email: `${CUSTOMER}@email.com`,
                 phone: '0123456789',
             },
             shipping: {
-                email: `${CUSTOMER}@yopmail.com`,
+                email: `${CUSTOMER}@email.com`,
                 firstName: CUSTOMER,
                 lastName: 'c1',
                 companyName: faker.company.name(),
@@ -1761,7 +1761,7 @@ export const data = {
             title: `test quote_${faker.string.nanoid(10)}`,
             user: CUSTOMER,
             fullName: 'Jhon Doe',
-            email: `${CUSTOMER}@yopmail.com`,
+            email: `${CUSTOMER}@email.com`,
             companyName: 'abc',
             phoneNumber: '0123456789',
             vendor: `${VENDOR2}store`,
@@ -2398,7 +2398,7 @@ export const data = {
 
     storeContactData: {
         name: CUSTOMER,
-        email: `${CUSTOMER}@yopmail.com`,
+        email: `${CUSTOMER}@email.com`,
         message: 'Test Message',
     },
 

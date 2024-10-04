@@ -20,7 +20,7 @@ test.describe('Request for quotation Rules test', () => {
     });
 
     test.afterAll(async () => {
-        await apiUtils.deleteAllQuoteRules(payloads.adminAuth); //todo: remove in future
+        // await apiUtils.deleteAllQuoteRules(payloads.adminAuth); //todo: remove in future
         await aPage.close();
         await apiUtils.dispose();
     });
