@@ -146,6 +146,18 @@
           vendor can update product short description [lite]: true
           vendor can remove product short description [lite]: true
           vendor can update product description [lite]: true
+          vendor can add product downloadable options [lite]: true
+          vendor can update product downloadable options [lite]: true
+          vendor can remove product downloadable file [lite]: true
+          vendor can add product inventory options (SKU) [lite]: true
+          vendor can update product inventory options (SKU) [lite]: true
+          vendor can remove product inventory options (SKU) [lite]: true
+          vendor can add product inventory options (stock status) [lite]: true
+          vendor can add product inventory options (stock management) [lite]: true
+          vendor can update product inventory options (stock management) [lite]: true
+          vendor can remove product inventory options (stock management) [lite]: true
+          vendor can add product inventory options (allow single quantity) [lite]: true
+          vendor can remove product inventory options (allow single quantity) [lite]: true
 
 - page: 'MyOrders'
   features:

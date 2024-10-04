@@ -4,6 +4,18 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.12.4',
+        'released' => '2024-10-03',
+        'changes'  => [
+            'Improvement'  => [
+                [
+                    'title'       => 'Added `$data` parameter to `dokan_update_vendor` hook.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.12.3',
         'released' => '2024-09-30',
         'changes'  => [
