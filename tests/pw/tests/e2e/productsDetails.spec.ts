@@ -357,4 +357,62 @@ test.describe('Product details functionality test', () => {
         await vendor.removeProductLinkedProducts(productName, data.product.productInfo.linkedProducts, 'cross-sells');
     });
 
+    // attribute
+
+    test('vendor can add product attribute', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.addProductAttribute(productName1, data.product.productInfo.attribute);
+    });
+
+    // todo: refactor below tests
+    test('vendor can create product attribute term', { tag: ['@pro', '@vendor'] }, async () => {
+        const [, , , attributeName] = await apiUtils.createAttributeTerm(payloads.createAttribute(), payloads.createAttributeTerm(), payloads.adminAuth);
+        const [, , productName] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendorAuth);
+        await vendor.addProductAttribute(productName, { ...data.product.productInfo.attribute, attributeName: attributeName }, true);
+    });
+
+    test('vendor can remove product attribute', { tag: ['@pro', '@vendor'] }, async () => {
+        const [, attributeId, , attributeName, attributeTerm] = await apiUtils.createAttributeTerm(payloads.createAttribute(), payloads.createAttributeTerm(), payloads.adminAuth);
+        const attributes = { id: attributeId, name: attributeName, options: [attributeTerm] };
+        const [, , productName] = await apiUtils.createProduct({ ...payloads.createProduct(), attributes: [attributes] }, payloads.vendorAuth);
+        await vendor.removeProductAttribute(productName, attributeName);
+    });
+
+    test('vendor can remove product attribute term', { tag: ['@pro', '@vendor'] }, async () => {
+        const [, attributeId, , attributeName, attributeTerm] = await apiUtils.createAttributeTerm(payloads.createAttribute(), payloads.createAttributeTerm(), payloads.adminAuth);
+        const [, , , , attributeTerm2] = await apiUtils.createAttributeTerm(payloads.createAttribute(), payloads.createAttributeTerm(), payloads.adminAuth);
+        const attributes = { id: attributeId, name: attributeName, options: [attributeTerm, attributeTerm2] };
+        const [, , productName] = await apiUtils.createProduct({ ...payloads.createProduct(), attributes: [attributes] }, payloads.vendorAuth);
+        await vendor.removeProductAttributeTerm(productName, attributeName, attributeTerm2);
+    });
+
+    // todo: vendor cant add already added attribute
+
+    // discount options
+
+    test('vendor can add product bulk discount options', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.addProductBulkDiscountOptions(productName1, data.product.productInfo.quantityDiscount);
+    });
+
+    test('vendor can update product bulk discount options', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.addProductBulkDiscountOptions(productName, data.product.productInfo.quantityDiscount);
+    });
+
+    test('vendor can remove product bulk discount options', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.removeProductBulkDiscountOptions(productName);
+    });
+
+    // geolocation
+
+    test('vendor can add product geolocation (individual)', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.addProductGeolocation(productName1, data.product.productInfo.geolocation);
+    });
+
+    test('vendor can update product geolocation (individual)', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.addProductGeolocation(productName, data.product.productInfo.geolocation);
+    });
+
+    test('vendor can remove product geolocation (individual)', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.removeProductGeolocation(productName);
+    });
+
 });

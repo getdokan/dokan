@@ -177,6 +177,16 @@
           vendor can add product linked products (cross-sells): true
           vendor can remove product linked products (up-sells): true
           vendor can remove product linked products (cross-sells): true
+          vendor can add product attribute: true
+          vendor can create product attribute term: true
+          vendor can remove product attribute: true
+          vendor can remove product attribute term: true
+          vendor can add product bulk discount options: true
+          vendor can update product bulk discount options: true
+          vendor can remove product bulk discount options: true
+          vendor can add product geolocation (individual): true
+          vendor can update product geolocation (individual): true
+          vendor can remove product geolocation (individual): true
 
 - page: 'MyOrders'
   features:
