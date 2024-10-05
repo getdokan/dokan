@@ -199,6 +199,13 @@
           vendor can add product rma options (warranty included lifetime): true
           vendor can add product rma options (warranty as addon): true
           vendor can remove product rma options: true
+          vendor can add product wholesale options: true
+          vendor can update product wholesale options: true
+          vendor can remove product wholesale options: true
+          vendor can add product min-max options: true
+          vendor can update product min-max options: true
+          vendor can't add product min limit grater than max limit: true
+          vendor can remove product min-max options: true
 
 - page: 'MyOrders'
   features:
