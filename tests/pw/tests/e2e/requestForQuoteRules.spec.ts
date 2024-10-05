@@ -38,7 +38,7 @@ test.describe('Request for quotation Rules test', () => {
     });
 
     test('admin can edit quote rule', { tag: ['@pro', '@admin'] }, async () => {
-        await admin.editQuoteRule({ ...data.requestForQuotation.quoteRule(), title: quoteRuleTitle });
+        await admin.editQuoteRule({ ...data.requestForQuotation.quoteRule(), title: quoteRuleTitle, specificProducts: false, });
     });
 
     test('admin can trash quote rule', { tag: ['@pro', '@admin'] }, async () => {
