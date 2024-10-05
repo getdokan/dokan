@@ -489,7 +489,6 @@ export class RequestForQuotationsPage extends AdminPage {
     // customer quote product
     async customerQuoteProduct(quote: requestForQuotation['userQuote'], guest?: requestForQuotation['guest']): Promise<string | void> {
         await this.customerPage.goToProductDetails(quote.productName);
-
         await this.clickAndWaitForResponse(data.subUrls.ajax, requestForQuotationCustomer.singleProductDetails.addToQuote);
         const viewQuoteIsVisible = await this.isVisible(requestForQuotationCustomer.singleProductDetails.viewQuote);
         if (viewQuoteIsVisible) {

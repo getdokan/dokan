@@ -3,6 +3,7 @@ import { RequestForQuotationsPage } from '@pages/requestForQuotationsPage';
 import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
 import { payloads } from '@utils/payloads';
+import { dbUtils } from '@utils/dbUtils';
 
 const { CUSTOMER_ID } = process.env;
 
@@ -137,7 +138,8 @@ test.describe('Request for quotation test customer', () => {
         apiUtils = new ApiUtils(await request.newContext());
 
         [, productId[0], productName] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendorAuth);
-        await apiUtils.createQuoteRule({ ...payloads.createQuoteRule(), product_ids: productId, apply_on_all_product: '0' }, payloads.adminAuth);
+        const [, quoteRuleId] = await apiUtils.createQuoteRule({ ...payloads.createQuoteRule(), product_ids: productId }, payloads.adminAuth);
+        await dbUtils.updateQuoteRuleContent(quoteRuleId, { switches: { product_switch: 'true' } }); // todo: remove after api fix
         [, quoteId] = await apiUtils.createQuoteRequest({ ...payloads.createQuoteRequest(), product_ids: productId, user_id: CUSTOMER_ID }, payloads.adminAuth);
     });
 
