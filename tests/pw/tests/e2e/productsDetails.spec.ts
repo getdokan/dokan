@@ -316,4 +316,45 @@ test.describe('Product details functionality test', () => {
         await dbUtils.updateOptionValue(dbData.dokan.optionName.selling, { catalog_mode_hide_add_to_cart_button: 'on', catalog_mode_hide_product_price: 'on' });
         await vendor.removeProductCatalogMode(productName, true);
     });
+
+    // shipping and tax
+
+    test('vendor can add product shipping', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.addProductShipping(productName1, data.product.productInfo.shipping);
+    });
+
+    test('vendor can update product shipping', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.addProductShipping(productName, data.product.productInfo.shipping);
+    });
+
+    test('vendor can remove product shipping', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.removeProductShipping(productName);
+    });
+
+    test('vendor can add product tax', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.addProductTax(productName1, data.product.productInfo.tax);
+    });
+
+    test('vendor can add product tax (with tax class)', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.addProductTax(productName1, data.product.productInfo.tax, true);
+    });
+
+    // linked products
+
+    test('vendor can add product linked products (up-sells)', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.addProductLinkedProducts(productName1, data.product.productInfo.linkedProducts, 'up-sells');
+    });
+
+    test('vendor can add product linked products (cross-sells)', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.addProductLinkedProducts(productName1, data.product.productInfo.linkedProducts, 'cross-sells');
+    });
+
+    test('vendor can remove product linked products (up-sells)', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.removeProductLinkedProducts(productName, data.product.productInfo.linkedProducts, 'up-sells');
+    });
+
+    test('vendor can remove product linked products (cross-sells)', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.removeProductLinkedProducts(productName, data.product.productInfo.linkedProducts, 'cross-sells');
+    });
+
 });
