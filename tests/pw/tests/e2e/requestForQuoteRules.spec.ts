@@ -9,6 +9,7 @@ test.describe('Request for quotation Rules test', () => {
     let aPage: Page;
     let apiUtils: ApiUtils;
     let quoteRuleTitle: string;
+    let productName: string;
 
     test.beforeAll(async ({ browser }) => {
         const adminContext = await browser.newContext(data.auth.adminAuth);
@@ -16,6 +17,7 @@ test.describe('Request for quotation Rules test', () => {
         admin = new RequestForQuotationsPage(aPage);
 
         apiUtils = new ApiUtils(await request.newContext());
+        [, , productName] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendorAuth);
         [, , quoteRuleTitle] = await apiUtils.createQuoteRule(payloads.createQuoteRule(), payloads.adminAuth); // todo: fix after api is updated
     });
 
@@ -34,7 +36,7 @@ test.describe('Request for quotation Rules test', () => {
     });
 
     test('admin can add quote rule', { tag: ['@pro', '@admin'] }, async () => {
-        await admin.addQuoteRule(data.requestForQuotation.quoteRule());
+        await admin.addQuoteRule({ ...data.requestForQuotation.quoteRule(), includeProducts: productName });
     });
 
     test('admin can edit quote rule', { tag: ['@pro', '@admin'] }, async () => {

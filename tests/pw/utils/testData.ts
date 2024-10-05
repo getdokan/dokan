@@ -1733,13 +1733,13 @@ export const data = {
         quoteRule: () => ({
             title: `test rule_${faker.string.nanoid(10)}`,
             userRole: 'customer',
-            applyOnAllProducts: true,
+            applyOnAllProducts: false,
             specificProducts: true,
             includeProducts: 'p1_v1 (simple)',
-            excludeProducts: 'p1_v2 (simple)',
-            specificCategories: true,
+            // excludeProducts: 'p1_v2 (simple)',
+            specificCategories: false,
             categories: ['Uncategorized'],
-            specificVendors: true,
+            specificVendors: false,
             includeVendors: 'vendor1store',
             excludeVendors: 'vendor2store',
             // expireLimit: '20', // todo: fix after api is updated
