@@ -1412,6 +1412,128 @@ export class ProductsPage extends AdminPage {
         await this.toHaveValue(productsVendor.euComplianceFields.saleUnitPrice, euCompliance.saleUnitPrice);
         await this.toContainTextFrameLocator(productsVendor.euComplianceFields.optionalMiniDescription.descriptionIframe, productsVendor.euComplianceFields.optionalMiniDescription.descriptionHtmlBody, euCompliance.optionalMiniDescription);
     }
+
+    // add product addons
+    async addProductAddon(productName: string, addon: product['productInfo']['addon']): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.toPass(async () => {
+            await this.clickAndWaitForResponse(data.subUrls.ajax, productsVendor.addon.addField);
+            await this.toBeVisible(productsVendor.addon.addonForm);
+        });
+
+        await this.selectByValue(productsVendor.addon.type, addon.type);
+        await this.selectByValue(productsVendor.addon.displayAs, addon.displayAs);
+        await this.clearAndType(productsVendor.addon.titleRequired, addon.title);
+        await this.selectByValue(productsVendor.addon.formatTitle, addon.formatTitle);
+        await this.check(productsVendor.addon.addDescription);
+        await this.clearAndType(productsVendor.addon.descriptionInput, addon.addDescription);
+        await this.click(productsVendor.addon.requiredField);
+        // option
+        await this.clearAndType(productsVendor.addon.option.enterAnOption, addon.enterAnOption);
+        await this.selectByValue(productsVendor.addon.option.optionPriceType, addon.optionPriceType);
+        await this.clearAndType(productsVendor.addon.option.optionPriceInput, addon.optionPriceInput);
+        await this.check(productsVendor.addon.excludeAddons);
+
+        await this.saveProduct();
+
+        await this.toBeVisible(productsVendor.addon.addonRow(addon.title));
+        await this.click(productsVendor.addon.addonRow(addon.title));
+
+        await this.toHaveSelectedValue(productsVendor.addon.type, addon.type);
+        await this.toHaveSelectedValue(productsVendor.addon.displayAs, addon.displayAs);
+        await this.toHaveValue(productsVendor.addon.titleRequired, addon.title);
+        await this.toHaveSelectedValue(productsVendor.addon.formatTitle, addon.formatTitle);
+        await this.toBeChecked(productsVendor.addon.addDescription);
+        await this.toHaveValue(productsVendor.addon.descriptionInput, addon.addDescription);
+        await this.toBeChecked(productsVendor.addon.requiredField);
+        // option
+        await this.toHaveValue(productsVendor.addon.option.enterAnOption, addon.enterAnOption);
+        await this.toHaveSelectedValue(productsVendor.addon.option.optionPriceType, addon.optionPriceType);
+        await this.toHaveValue(productsVendor.addon.option.optionPriceInput, addon.optionPriceInput);
+        await this.toBeChecked(productsVendor.addon.excludeAddons);
+    }
+
+    // export addon
+    async importAddon(productName: string, addon: string, addonTitle: string): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.click(productsVendor.addon.import);
+        await this.clearAndType(productsVendor.addon.importInput, addon);
+        await this.saveProduct();
+        await this.toBeVisible(productsVendor.addon.addonRow(addonTitle));
+    }
+
+    // export addon
+    async exportAddon(productName: string, addon: string): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.click(productsVendor.addon.export);
+        await this.toContainText(productsVendor.addon.exportInput, addon);
+    }
+
+    // delete addon
+    async removeAddon(productName: string, addonName: string): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.click(productsVendor.addon.removeAddon(addonName));
+        await this.click(productsVendor.addon.confirmRemove);
+        await this.notToBeVisible(productsVendor.addon.addonRow(addonName));
+        await this.saveProduct();
+        await this.notToBeVisible(productsVendor.addon.addonRow(addonName));
+    }
+
+    // add product rma options
+    async addProductRmaOptions(productName: string, rma: vendor['rma']): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.check(productsVendor.rma.overrideDefaultRmaSettings);
+        await this.clearAndType(productsVendor.rma.label, rma.label);
+        await this.selectByValue(productsVendor.rma.type, rma.type);
+
+        if (rma.type === 'included_warranty') {
+            await this.selectByValue(productsVendor.rma.length, rma.length);
+            if (rma.length === 'limited') {
+                await this.clearAndType(productsVendor.rma.lengthValue, rma.lengthValue);
+                await this.selectByValue(productsVendor.rma.lengthDuration, rma.lengthDuration);
+            }
+        } else if (rma.type === 'addon_warranty') {
+            await this.clearAndType(productsVendor.rma.addonCost, rma.addon.cost);
+            await this.clearAndType(productsVendor.rma.addonDurationLength, rma.addon.durationLength);
+            await this.selectByValue(productsVendor.rma.addonDurationType, rma.addon.durationType);
+        }
+        const refundReasonIsVisible = await this.isVisible(productsVendor.rma.refundReasonsFirst);
+        if (refundReasonIsVisible) {
+            await this.checkMultiple(productsVendor.rma.refundReasons);
+        }
+        await this.typeFrameSelector(productsVendor.rma.rmaPolicyIframe, productsVendor.rma.rmaPolicyHtmlBody, rma.refundPolicy);
+
+        await this.saveProduct();
+
+        await this.toBeChecked(productsVendor.rma.overrideDefaultRmaSettings);
+        await this.toHaveValue(productsVendor.rma.label, rma.label);
+        await this.toHaveSelectedValue(productsVendor.rma.type, rma.type);
+        if (rma.type === 'included_warranty') {
+            await this.toHaveSelectedValue(productsVendor.rma.length, rma.length);
+            if (rma.length === 'limited') {
+                await this.toHaveValue(productsVendor.rma.lengthValue, rma.lengthValue);
+                await this.toHaveSelectedValue(productsVendor.rma.lengthDuration, rma.lengthDuration);
+            }
+        } else if (rma.type === 'addon_warranty') {
+            await this.toHaveValue(productsVendor.rma.addonCost, rma.addon.cost);
+            await this.toHaveValue(productsVendor.rma.addonDurationLength, rma.addon.durationLength);
+            await this.toHaveSelectedValue(productsVendor.rma.addonDurationType, rma.addon.durationType);
+        }
+
+        if (refundReasonIsVisible) {
+            await this.toBeCheckedMultiple(productsVendor.rma.refundReasons);
+        }
+        await this.toContainTextFrameLocator(productsVendor.rma.rmaPolicyIframe, productsVendor.rma.rmaPolicyHtmlBody, rma.refundPolicy);
+    }
+
+    // remove product rma options
+    async removeProductRmaOptions(productName: string): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.uncheck(productsVendor.rma.overrideDefaultRmaSettings);
+        await this.saveProduct();
+        await this.notToBeChecked(productsVendor.rma.overrideDefaultRmaSettings);
+    }
+
     // add product wholesale options
     async addProductWholesaleOptions(productName: string, wholesaleOption: product['productInfo']['wholesaleOption']): Promise<void> {
         await this.goToProductEdit(productName);

@@ -187,6 +187,18 @@
           vendor can add product geolocation (individual): true
           vendor can update product geolocation (individual): true
           vendor can remove product geolocation (individual): true
+          vendor can add product EU compliance data: true
+          vendor can update product EU compliance data: true
+          vendor can remove product EU compliance data: true
+          vendor can add product addon: true
+          vendor can import product addon: true
+          vendor can export product addon: true
+          vendor can remove product addon: true
+          vendor can add product rma options (no warranty): true
+          vendor can add product rma options (warranty included limited): true
+          vendor can add product rma options (warranty included lifetime): true
+          vendor can add product rma options (warranty as addon): true
+          vendor can remove product rma options: true
 
 - page: 'MyOrders'
   features:
@@ -424,7 +436,10 @@
           vendor can set live chat settings: false
           vendor can set store support settings: true
           vendor can set social profile settings: true
-          vendor can set rma settings: true
+          vendor can set rma settings (no warranty): true
+          vendor can set rma settings (warranty included limited): true
+          vendor can set rma settings (warranty included lifetime): true
+          vendor can set rma settings (warranty as addon): true
           vendor can set store seo settings: true
 
 - page: 'Setting'
@@ -782,6 +797,10 @@
           vendor can import global product addon field: true
           vendor can export global product addon field: true
           vendor can remove product addon field: true
+          vendor can add product addon: true
+          vendor can import product addon: true
+          vendor can export product addon: true
+          vendor can remove product addon: true
       customer:
           customer can view product addons on single product page: false
           customer can buy product with addon: false
