@@ -1100,6 +1100,55 @@ export class ProductsPage extends AdminPage {
         await this.notToBeChecked(productsVendor.inventory.enableStockManagement);
     }
 
+    // add product other options (product status, visibility, purchase note, reviews)
+    async addProductOtherOptions(productName: string, otherOption: product['productInfo']['otherOptions'], choice: string): Promise<void> {
+        await this.goToProductEdit(productName);
+
+        switch (choice) {
+            case 'status':
+                await this.selectByValue(productsVendor.otherOptions.productStatus, otherOption.status);
+                break;
+            case 'visibility':
+                await this.selectByValue(productsVendor.otherOptions.visibility, otherOption.visibility);
+                break;
+            case 'purchaseNote':
+                await this.clearAndType(productsVendor.otherOptions.purchaseNote, otherOption.purchaseNote);
+                break;
+            case 'reviews':
+                if (otherOption.enableReview) {
+                    await this.check(productsVendor.otherOptions.enableProductReviews);
+                } else {
+                    await this.uncheck(productsVendor.otherOptions.enableProductReviews);
+                }
+                break;
+            default:
+                break;
+        }
+
+        await this.saveProduct();
+
+        switch (choice) {
+            case 'status':
+                await this.toHaveSelectedValue(productsVendor.otherOptions.productStatus, otherOption.status);
+                break;
+            case 'visibility':
+                await this.toHaveSelectedValue(productsVendor.otherOptions.visibility, otherOption.visibility);
+                break;
+            case 'purchaseNote':
+                await this.toHaveValue(productsVendor.otherOptions.purchaseNote, otherOption.purchaseNote);
+                break;
+            case 'reviews':
+                if (otherOption.enableReview) {
+                    await this.toBeChecked(productsVendor.otherOptions.enableProductReviews);
+                } else {
+                    await this.notToBeChecked(productsVendor.otherOptions.enableProductReviews);
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
     // add product catalog mode
     async addProductCatalogMode(productName: string, hidePrice: boolean = false): Promise<void> {
         await this.goToProductEdit(productName);
@@ -1109,6 +1158,26 @@ export class ProductsPage extends AdminPage {
         await this.toBeChecked(productsVendor.catalogMode.removeAddToCart);
         if (hidePrice) await this.toBeChecked(productsVendor.catalogMode.hideProductPrice);
     }
+
+    // remove product catalog mode
+    async removeProductCatalogMode(productName: string, onlyPrice: boolean = false): Promise<void> {
+        await this.goToProductEdit(productName);
+
+        if (onlyPrice) {
+            await this.uncheck(productsVendor.catalogMode.hideProductPrice);
+        } else {
+            await this.uncheck(productsVendor.catalogMode.removeAddToCart);
+        }
+
+        await this.saveProduct();
+
+        if (onlyPrice) {
+            await this.notToBeChecked(productsVendor.catalogMode.hideProductPrice);
+        } else {
+            await this.notToBeChecked(productsVendor.catalogMode.removeAddToCart);
+        }
+    }
+
     // add product EU compliance
     async addProductEuCompliance(productName: string, euCompliance: product['productInfo']['euCompliance']): Promise<void> {
         await this.goToProductEdit(productName);
