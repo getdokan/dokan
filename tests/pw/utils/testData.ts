@@ -1594,11 +1594,11 @@ export const data = {
                 zipCode: '10003',
                 country: 'United States (US)',
                 state: 'New York',
-                email: `${CUSTOMER}@yopmail.com`,
+                email: `${CUSTOMER}@email.com`,
                 phone: '0123456789',
             },
             shipping: {
-                email: `${CUSTOMER}@yopmail.com`,
+                email: `${CUSTOMER}@email.com`,
                 firstName: CUSTOMER,
                 lastName: 'c1',
                 companyName: faker.company.name(),
@@ -1733,11 +1733,20 @@ export const data = {
         quoteRule: () => ({
             title: `test rule_${faker.string.nanoid(10)}`,
             userRole: 'customer',
-            product: 'p1_v1 (simple)',
-            category: 'Uncategorized',
-            hidePrice: '1',
+            applyOnAllProducts: false,
+            specificProducts: true,
+            includeProducts: 'p1_v1 (simple)',
+            // excludeProducts: 'p1_v2 (simple)',
+            specificCategories: false,
+            categories: ['Uncategorized'],
+            specificVendors: false,
+            includeVendors: 'vendor1store',
+            excludeVendors: 'vendor2store',
+            // expireLimit: '20', // todo: fix after api is updated
+            hidePrice: true,
             hidePriceText: 'Price is hidden',
-            hideAddToCartButton: 'keep_and_add_new', // replace, keep_and_add_new
+            hideAddToCartButton: true,
+            keepBothCartQuoteButton: true,
             customButtonLabel: 'Add to quote',
             order: '0',
         }),
@@ -1748,16 +1757,19 @@ export const data = {
         },
 
         quote: () => ({
+            id: '',
             title: `test quote_${faker.string.nanoid(10)}`,
             user: CUSTOMER,
             fullName: 'Jhon Doe',
-            email: `${CUSTOMER}@yopmail.com`,
+            email: `${CUSTOMER}@email.com`,
             companyName: 'abc',
             phoneNumber: '0123456789',
-            product: 'p1_v1 (simple)',
+            vendor: `${VENDOR2}store`,
+            product: 'p1_v2 (simple)',
             quantity: '5',
             offerPrice: '80',
             offerProductQuantity: '10',
+            shippingCost: '20',
         }),
 
         trashedQuote: {
@@ -1772,20 +1784,33 @@ export const data = {
         vendorUpdateQuote: {
             productName: '',
             offeredPrice: '80',
-            quantity: '20',
+            shippingCost: '20',
+            reply: 'test reply',
         },
 
         customerQuoteProduct: {
             productName: '',
             offeredPrice: '30',
             quantity: '20',
+            shippingCost: '',
+            expectedDelivery: helpers.addDays(helpers.currentDateTime, 2),
+            additionalMessage: 'test quote message',
         },
 
         guest: () => ({
             fullName: faker.person.fullName({ sex: 'male' }),
             email: `${faker.person.firstName('male')}@email.com`,
-            companyName: faker.company.name(),
             phoneNumber: faker.phone.number(),
+
+            address: {
+                country: 'United States (US)',
+                countrySelectValue: 'US',
+                stateSelectValue: 'NY',
+                city: 'New York',
+                postCode: '10006',
+                addressLine1: 'abc street',
+                addressLine2: 'xyz street',
+            },
         }),
     },
 
@@ -2373,7 +2398,7 @@ export const data = {
 
     storeContactData: {
         name: CUSTOMER,
-        email: `${CUSTOMER}@yopmail.com`,
+        email: `${CUSTOMER}@email.com`,
         message: 'Test Message',
     },
 
