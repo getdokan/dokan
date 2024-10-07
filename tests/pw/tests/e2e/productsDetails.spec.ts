@@ -266,4 +266,94 @@ test.describe('Product details functionality test', () => {
     test('vendor can remove product inventory options (allow single quantity)', { tag: ['@lite', '@vendor'] }, async () => {
         await vendor.addProductInventory(productName, { ...data.product.productInfo.inventory(), oneQuantity: false }, 'one-quantity');
     });
+
+    // product other options
+
+    test('vendor can add product other options (product status)', { tag: ['@lite', '@vendor'] }, async () => {
+        await vendor.addProductOtherOptions(productName1, data.product.productInfo.otherOptions, 'status');
+    });
+
+    test('vendor can add product other options (visibility)', { tag: ['@lite', '@vendor'] }, async () => {
+        await vendor.addProductOtherOptions(productName1, data.product.productInfo.otherOptions, 'visibility');
+    });
+
+    test('vendor can add product other options (purchase note)', { tag: ['@lite', '@vendor'] }, async () => {
+        await vendor.addProductOtherOptions(productName1, data.product.productInfo.otherOptions, 'purchaseNote');
+    });
+
+    test('vendor can remove product other options (purchase note)', { tag: ['@lite', '@vendor'] }, async () => {
+        await vendor.addProductOtherOptions(productName, { ...data.product.productInfo.otherOptions, purchaseNote: '' }, 'purchaseNote');
+    });
+
+    test('vendor can add product other options (product review)', { tag: ['@lite', '@vendor'] }, async () => {
+        await vendor.addProductOtherOptions(productName1, data.product.productInfo.otherOptions, 'reviews');
+    });
+
+    test('vendor can remove product other options (product review)', { tag: ['@lite', '@vendor'] }, async () => {
+        await vendor.addProductOtherOptions(productName, { ...data.product.productInfo.otherOptions, enableReview: false }, 'reviews');
+    });
+
+    // catalog mode
+
+    // todo: move to catalog page
+
+    test('vendor can add product catalog mode', { tag: ['@lite', '@vendor'] }, async () => {
+        await dbUtils.updateOptionValue(dbData.dokan.optionName.selling, { catalog_mode_hide_add_to_cart_button: 'on' });
+        await vendor.addProductCatalogMode(productName1);
+    });
+
+    test('vendor can add product catalog mode (with price hidden)', { tag: ['@lite', '@vendor'] }, async () => {
+        await dbUtils.updateOptionValue(dbData.dokan.optionName.selling, { catalog_mode_hide_add_to_cart_button: 'on', catalog_mode_hide_product_price: 'on' });
+        await vendor.addProductCatalogMode(productName1, true);
+    });
+
+    test('vendor can remove product catalog mode', { tag: ['@lite', '@vendor'] }, async () => {
+        await dbUtils.updateOptionValue(dbData.dokan.optionName.selling, { catalog_mode_hide_add_to_cart_button: 'on', catalog_mode_hide_product_price: 'on' });
+        await vendor.removeProductCatalogMode(productName);
+    });
+
+    test('vendor can remove product catalog mode (price hidden option)', { tag: ['@lite', '@vendor'] }, async () => {
+        await dbUtils.updateOptionValue(dbData.dokan.optionName.selling, { catalog_mode_hide_add_to_cart_button: 'on', catalog_mode_hide_product_price: 'on' });
+        await vendor.removeProductCatalogMode(productName, true);
+    });
+
+    // shipping and tax
+
+    test('vendor can add product shipping', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.addProductShipping(productName1, data.product.productInfo.shipping);
+    });
+
+    test('vendor can update product shipping', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.addProductShipping(productName, data.product.productInfo.shipping);
+    });
+
+    test('vendor can remove product shipping', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.removeProductShipping(productName);
+    });
+
+    test('vendor can add product tax', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.addProductTax(productName1, data.product.productInfo.tax);
+    });
+
+    test('vendor can add product tax (with tax class)', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.addProductTax(productName1, data.product.productInfo.tax, true);
+    });
+
+    // linked products
+
+    test('vendor can add product linked products (up-sells)', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.addProductLinkedProducts(productName1, data.product.productInfo.linkedProducts, 'up-sells');
+    });
+
+    test('vendor can add product linked products (cross-sells)', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.addProductLinkedProducts(productName1, data.product.productInfo.linkedProducts, 'cross-sells');
+    });
+
+    test('vendor can remove product linked products (up-sells)', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.removeProductLinkedProducts(productName, data.product.productInfo.linkedProducts, 'up-sells');
+    });
+
+    test('vendor can remove product linked products (cross-sells)', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.removeProductLinkedProducts(productName, data.product.productInfo.linkedProducts, 'cross-sells');
+    });
 });
