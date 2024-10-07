@@ -356,5 +356,4 @@ test.describe('Product details functionality test', () => {
     test('vendor can remove product linked products (cross-sells)', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.removeProductLinkedProducts(productName, data.product.productInfo.linkedProducts, 'cross-sells');
     });
-
 });
