@@ -25,10 +25,15 @@ class OrderEventListener {
             return;
         }
 
+        $status = $order->get_status( 'edit' );
+        if ( strpos( $status, 'wc-' ) === false ) {
+            $status = 'wc-' . $status;
+        }
+
         // Update Dokan tables
         $wpdb->update(
             $wpdb->prefix . 'dokan_orders',
-            array( 'order_status' => 'wc-trashed' ),
+            array( 'order_status' => $status ),
             array( 'order_id' => $order_id ),
             array( '%s' ),
             array( '%d' )
@@ -36,7 +41,7 @@ class OrderEventListener {
 
         $wpdb->update(
             $wpdb->prefix . 'dokan_vendor_balance',
-            array( 'status' => 'wc-trashed' ),
+            array( 'status' => $status ),
             array(
 				'trn_id' => $order_id,
 				'trn_type' => 'dokan_orders',
@@ -62,11 +67,7 @@ class OrderEventListener {
             return;
         }
 
-        $previous_status = $order->get_meta( '_wp_trash_meta_status' );
-        if ( empty( $previous_status ) ) {
-            $previous_status = 'wc-pending';
-        }
-
+        $previous_status = $order->get_status( 'edit' );
         if ( strpos( $previous_status, 'wc-' ) === false ) {
             $previous_status = 'wc-' . $previous_status;
         }
