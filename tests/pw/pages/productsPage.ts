@@ -1149,55 +1149,6 @@ export class ProductsPage extends AdminPage {
         }
     }
 
-    // add product other options (product status, visibility, purchase note, reviews)
-    async addProductOtherOptions(productName: string, otherOption: product['productInfo']['otherOptions'], choice: string): Promise<void> {
-        await this.goToProductEdit(productName);
-
-        switch (choice) {
-            case 'status':
-                await this.selectByValue(productsVendor.otherOptions.productStatus, otherOption.status);
-                break;
-            case 'visibility':
-                await this.selectByValue(productsVendor.otherOptions.visibility, otherOption.visibility);
-                break;
-            case 'purchaseNote':
-                await this.clearAndType(productsVendor.otherOptions.purchaseNote, otherOption.purchaseNote);
-                break;
-            case 'reviews':
-                if (otherOption.enableReview) {
-                    await this.check(productsVendor.otherOptions.enableProductReviews);
-                } else {
-                    await this.uncheck(productsVendor.otherOptions.enableProductReviews);
-                }
-                break;
-            default:
-                break;
-        }
-
-        await this.saveProduct();
-
-        switch (choice) {
-            case 'status':
-                await this.toHaveSelectedValue(productsVendor.otherOptions.productStatus, otherOption.status);
-                break;
-            case 'visibility':
-                await this.toHaveSelectedValue(productsVendor.otherOptions.visibility, otherOption.visibility);
-                break;
-            case 'purchaseNote':
-                await this.toHaveValue(productsVendor.otherOptions.purchaseNote, otherOption.purchaseNote);
-                break;
-            case 'reviews':
-                if (otherOption.enableReview) {
-                    await this.toBeChecked(productsVendor.otherOptions.enableProductReviews);
-                } else {
-                    await this.notToBeChecked(productsVendor.otherOptions.enableProductReviews);
-                }
-                break;
-            default:
-                break;
-        }
-    }
-
     // add product catalog mode
     async addProductCatalogMode(productName: string, hidePrice: boolean = false): Promise<void> {
         await this.goToProductEdit(productName);

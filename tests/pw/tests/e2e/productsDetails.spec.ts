@@ -414,5 +414,4 @@ test.describe('Product details functionality test', () => {
     test('vendor can remove product geolocation (individual)', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.removeProductGeolocation(productName);
     });
-
 });
