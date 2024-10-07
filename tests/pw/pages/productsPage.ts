@@ -1209,10 +1209,10 @@ export class ProductsPage extends AdminPage {
     }
 
     // remove product catalog mode
-    async removeProductCatalogMode(productName: string, onlyPrice: boolean = false): Promise<void> {
+    async removeProductCatalogMode(productName: string, hidePriceOnly: boolean = false): Promise<void> {
         await this.goToProductEdit(productName);
 
-        if (onlyPrice) {
+        if (hidePriceOnly) {
             await this.uncheck(productsVendor.catalogMode.hideProductPrice);
         } else {
             await this.uncheck(productsVendor.catalogMode.removeAddToCart);
@@ -1220,7 +1220,7 @@ export class ProductsPage extends AdminPage {
 
         await this.saveProduct();
 
-        if (onlyPrice) {
+        if (hidePriceOnly) {
             await this.notToBeChecked(productsVendor.catalogMode.hideProductPrice);
         } else {
             await this.notToBeChecked(productsVendor.catalogMode.removeAddToCart);
@@ -1333,7 +1333,7 @@ export class ProductsPage extends AdminPage {
                 }
                 break;
             case 'cross-sells':
-                for (const product of linkedProducts.upSells) {
+                for (const product of linkedProducts.crossSells) {
                     await this.notToBeVisible(productsVendor.linkedProducts.selectedCrossSellProduct(product));
                 }
                 break;
