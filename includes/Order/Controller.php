@@ -37,11 +37,11 @@ class Controller {
         $this->container['email_hooks']    = new EmailHooks();
         $this->container['cache']          = new OrderCache();
         $this->container['frontend_hooks'] = new Frontend\Hooks();
+        $this->container['event_listener'] = new OrderEventListener();
 
         if ( is_admin() ) {
-            $this->container['permission']     = new Admin\Permissions();
-            $this->container['admin_hooks']    = new Admin\Hooks();
-            $this->container['event_listener'] = new OrderEventListener();
+            $this->container['permission']  = new Admin\Permissions();
+            $this->container['admin_hooks'] = new Admin\Hooks();
         }
 
         if ( wp_doing_ajax() ) {
