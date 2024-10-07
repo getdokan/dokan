@@ -1041,11 +1041,11 @@ const quoteRuleSchema = z.object({
 
 const quoteRequestSchema = z.object({
     id: z.string().or(z.number()).optional(),
-    title: z.string(),
-    customer_name: z.string(),
-    customer_email: z.string(),
     status: z.string(),
     created_at: z.string(),
+    order_url: z.any(),
+    store_name: z.string(),
+    customer_name: z.string(),
     _links: linksSchema,
 });
 
