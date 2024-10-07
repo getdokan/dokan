@@ -29,8 +29,6 @@ class OrderEventListenerTest extends DokanTestCase {
         $processing_order = wc_get_order( $order_id );
         $processing_order->delete();
 
-        $this->order_event_listener->after_order_trash( $order_id );
-
         $trash_order = wc_get_order( $order_id );
         $this->assertEquals( 'trash', $trash_order->get_status() );
 
@@ -45,8 +43,6 @@ class OrderEventListenerTest extends DokanTestCase {
 
         $completed_order = wc_get_order( $order_id );
         $completed_order->delete();
-
-        $this->order_event_listener->after_order_trash( $order_id );
 
         $trash_order = wc_get_order( $order_id );
         $this->assertEquals( 'trash', $trash_order->get_status() );
@@ -64,13 +60,9 @@ class OrderEventListenerTest extends DokanTestCase {
         $processing_order = wc_get_order( $order_id );
         $processing_order->delete();
 
-        $this->order_event_listener->after_order_trash( $order_id );
-
         $trash_order = wc_get_order( $order_id );
         $trash_order->set_status( 'processing' );
         $trash_order->save();
-
-        $this->order_event_listener->after_order_untrash( $order_id );
 
         $untrash_order = wc_get_order( $order_id );
         $this->assertEquals( 'processing', $untrash_order->get_status() );
@@ -87,13 +79,9 @@ class OrderEventListenerTest extends DokanTestCase {
         $completed_order = wc_get_order( $order_id );
         $completed_order->delete();
 
-        $this->order_event_listener->after_order_trash( $order_id );
-
         $trash_order = wc_get_order( $order_id );
         $trash_order->set_status( 'completed' );
         $trash_order->save();
-
-        $this->order_event_listener->after_order_untrash( $order_id );
 
         $untrash_order = wc_get_order( $order_id );
         $this->assertEquals( 'completed', $untrash_order->get_status() );
