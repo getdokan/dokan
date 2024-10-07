@@ -1293,6 +1293,90 @@ export class ProductsPage extends AdminPage {
         }
     }
 
+    // add product attribute
+    async addProductAttribute(productName: string, attribute: product['productInfo']['attribute'], addTerm: boolean = false): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.selectByLabel(productsVendor.attribute.customAttribute, attribute.attributeName);
+        await this.clickAndWaitForResponse(data.subUrls.ajax, productsVendor.attribute.addAttribute);
+        await this.check(productsVendor.attribute.visibleOnTheProductPage);
+        await this.click(productsVendor.attribute.selectAll);
+        await this.notToHaveCount(productsVendor.attribute.attributeTerms, 0);
+        if (addTerm) {
+            await this.click(productsVendor.attribute.addNew);
+            await this.clearAndType(productsVendor.attribute.attributeTermInput, attribute.attributeTerm);
+            await this.clickAndWaitForResponse(data.subUrls.ajax, productsVendor.attribute.confirmAddAttributeTerm);
+            await this.toBeVisible(productsVendor.attribute.selectedAttributeTerm(attribute.attributeTerm));
+        }
+        await this.clickAndWaitForResponse(data.subUrls.ajax, productsVendor.attribute.saveAttribute);
+        await this.saveProduct();
+        await this.toBeVisible(productsVendor.attribute.savedAttribute(attribute.attributeName));
+    }
+
+    // remove product attribute
+    async removeProductAttribute(productName: string, attribute: string): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.click(productsVendor.attribute.removeAttribute(attribute));
+        await this.click(productsVendor.attribute.confirmRemoveAttribute);
+        await this.notToBeVisible(productsVendor.attribute.savedAttribute(attribute));
+        await this.saveProduct();
+        await this.notToBeVisible(productsVendor.attribute.savedAttribute(attribute));
+    }
+
+    // remove product attribute term
+    async removeProductAttributeTerm(productName: string, attribute: string, attributeTerm: string): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.click(productsVendor.attribute.savedAttribute(attribute));
+        await this.click(productsVendor.attribute.removeSelectedAttributeTerm(attributeTerm));
+        await this.press('Escape'); // shift focus from element
+        await this.notToBeVisible(productsVendor.attribute.selectedAttributeTerm(attributeTerm));
+        await this.clickAndWaitForResponse(data.subUrls.ajax, productsVendor.attribute.saveAttribute);
+        await this.saveProduct();
+        await this.click(productsVendor.attribute.savedAttribute(attribute));
+        await this.notToBeVisible(productsVendor.attribute.selectedAttributeTerm(attributeTerm));
+    }
+
+    // add product discount options
+    async addProductBulkDiscountOptions(productName: string, quantityDiscount: product['productInfo']['quantityDiscount']): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.check(productsVendor.bulkDiscount.enableBulkDiscount);
+        await this.clearAndType(productsVendor.bulkDiscount.lotMinimumQuantity, quantityDiscount.minimumQuantity);
+        await this.clearAndType(productsVendor.bulkDiscount.lotDiscountInPercentage, quantityDiscount.discountPercentage);
+        await this.saveProduct();
+        await this.toBeChecked(productsVendor.bulkDiscount.enableBulkDiscount);
+        await this.toHaveValue(productsVendor.bulkDiscount.lotMinimumQuantity, quantityDiscount.minimumQuantity);
+        await this.toHaveValue(productsVendor.bulkDiscount.lotDiscountInPercentage, quantityDiscount.discountPercentage);
+    }
+
+    // add product discount options
+    async removeProductBulkDiscountOptions(productName: string): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.uncheck(productsVendor.bulkDiscount.enableBulkDiscount);
+        await this.saveProduct();
+        await this.notToBeChecked(productsVendor.bulkDiscount.enableBulkDiscount);
+    }
+
+    // dokan pro modules
+
+    // add product geolocation
+    async addProductGeolocation(productName: string, location: string): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.uncheck(productsVendor.geolocation.sameAsStore);
+        await this.typeAndWaitForResponse(data.subUrls.gmap, productsVendor.geolocation.productLocation, location);
+        await this.press(data.key.arrowDown);
+        await this.press(data.key.enter);
+        await this.saveProduct();
+        await this.notToBeChecked(productsVendor.geolocation.sameAsStore);
+        await this.toHaveValue(productsVendor.geolocation.productLocation, location);
+    }
+
+    // remove product geolocation
+    async removeProductGeolocation(productName: string): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.check(productsVendor.geolocation.sameAsStore);
+        await this.saveProduct();
+        await this.toBeChecked(productsVendor.geolocation.sameAsStore);
+    }
+
     // add product EU compliance
     async addProductEuCompliance(productName: string, euCompliance: product['productInfo']['euCompliance']): Promise<void> {
         await this.goToProductEdit(productName);
