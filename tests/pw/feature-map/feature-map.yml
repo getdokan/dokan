@@ -158,6 +158,16 @@
           vendor can remove product inventory options (stock management) [lite]: true
           vendor can add product inventory options (allow single quantity) [lite]: true
           vendor can remove product inventory options (allow single quantity) [lite]: true
+          vendor can add product other options (product status) [lite]: true
+          vendor can add product other options (visibility) [lite]: true
+          vendor can add product other options (purchase note) [lite]: true
+          vendor can remove product other options (purchase note) [lite]: true
+          vendor can add product other options (product review) [lite]: true
+          vendor can remove product other options (product review) [lite]: true
+          vendor can add product catalog mode [lite]: true
+          vendor can add product catalog mode (with price hidden) [lite]: true
+          vendor can remove product catalog mode [lite]: true
+          vendor can remove product catalog mode (price hidden option) [lite]: true
 
 - page: 'MyOrders'
   features:

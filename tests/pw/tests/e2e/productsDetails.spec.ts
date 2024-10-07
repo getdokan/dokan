@@ -266,4 +266,54 @@ test.describe('Product details functionality test', () => {
     test('vendor can remove product inventory options (allow single quantity)', { tag: ['@lite', '@vendor'] }, async () => {
         await vendor.addProductInventory(productName, { ...data.product.productInfo.inventory(), oneQuantity: false }, 'one-quantity');
     });
+
+    // product other options
+
+    test('vendor can add product other options (product status)', { tag: ['@lite', '@vendor'] }, async () => {
+        await vendor.addProductOtherOptions(productName1, data.product.productInfo.otherOptions, 'status');
+    });
+
+    test('vendor can add product other options (visibility)', { tag: ['@lite', '@vendor'] }, async () => {
+        await vendor.addProductOtherOptions(productName1, data.product.productInfo.otherOptions, 'visibility');
+    });
+
+    test('vendor can add product other options (purchase note)', { tag: ['@lite', '@vendor'] }, async () => {
+        await vendor.addProductOtherOptions(productName1, data.product.productInfo.otherOptions, 'purchaseNote');
+    });
+
+    test('vendor can remove product other options (purchase note)', { tag: ['@lite', '@vendor'] }, async () => {
+        await vendor.addProductOtherOptions(productName, { ...data.product.productInfo.otherOptions, purchaseNote: '' }, 'purchaseNote');
+    });
+
+    test('vendor can add product other options (product review)', { tag: ['@lite', '@vendor'] }, async () => {
+        await vendor.addProductOtherOptions(productName1, data.product.productInfo.otherOptions, 'reviews');
+    });
+
+    test('vendor can remove product other options (product review)', { tag: ['@lite', '@vendor'] }, async () => {
+        await vendor.addProductOtherOptions(productName, { ...data.product.productInfo.otherOptions, enableReview: false }, 'reviews');
+    });
+
+    // catalog mode
+
+    // todo: move to catalog page
+
+    test('vendor can add product catalog mode', { tag: ['@lite', '@vendor'] }, async () => {
+        await dbUtils.updateOptionValue(dbData.dokan.optionName.selling, { catalog_mode_hide_add_to_cart_button: 'on' });
+        await vendor.addProductCatalogMode(productName1);
+    });
+
+    test('vendor can add product catalog mode (with price hidden)', { tag: ['@lite', '@vendor'] }, async () => {
+        await dbUtils.updateOptionValue(dbData.dokan.optionName.selling, { catalog_mode_hide_add_to_cart_button: 'on', catalog_mode_hide_product_price: 'on' });
+        await vendor.addProductCatalogMode(productName1, true);
+    });
+
+    test('vendor can remove product catalog mode', { tag: ['@lite', '@vendor'] }, async () => {
+        await dbUtils.updateOptionValue(dbData.dokan.optionName.selling, { catalog_mode_hide_add_to_cart_button: 'on', catalog_mode_hide_product_price: 'on' });
+        await vendor.removeProductCatalogMode(productName);
+    });
+
+    test('vendor can remove product catalog mode (price hidden option)', { tag: ['@lite', '@vendor'] }, async () => {
+        await dbUtils.updateOptionValue(dbData.dokan.optionName.selling, { catalog_mode_hide_add_to_cart_button: 'on', catalog_mode_hide_product_price: 'on' });
+        await vendor.removeProductCatalogMode(productName, true);
+    });
 });
