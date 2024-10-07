@@ -1295,7 +1295,7 @@ export class ProductsPage extends AdminPage {
                 }
                 break;
             case 'cross-sells':
-                for (const product of linkedProducts.upSells) {
+                for (const product of linkedProducts.crossSells) {
                     await this.toBeVisible(productsVendor.linkedProducts.selectedCrossSellProduct(product));
                 }
                 break;
