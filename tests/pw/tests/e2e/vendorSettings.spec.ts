@@ -120,7 +120,7 @@ test.describe('Vendor settings test', () => {
         await vendor.setSocialProfile(data.vendor.socialProfileUrls);
     });
 
-    test('vendor can set rma settings (no warranty):', { tag: ['@pro', '@vendor'] }, async () => {
+    test('vendor can set rma settings (no warranty)', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.setRmaSettings({ ...data.vendor.rma, type: 'no_warranty' });
     });
 

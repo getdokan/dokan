@@ -1178,6 +1178,121 @@ export class ProductsPage extends AdminPage {
         }
     }
 
+    // dokan pro features
+
+    // add product shipping
+    async addProductShipping(productName: string, shipping: product['productInfo']['shipping']): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.check(productsVendor.shipping.requiresShipping);
+        await this.clearAndType(productsVendor.shipping.weight, shipping.weight);
+        await this.clearAndType(productsVendor.shipping.length, shipping.length);
+        await this.clearAndType(productsVendor.shipping.width, shipping.width);
+        await this.clearAndType(productsVendor.shipping.height, shipping.height);
+        await this.selectByLabel(productsVendor.shipping.shippingClass, shipping.shippingClass);
+        await this.saveProduct();
+        await this.toBeChecked(productsVendor.shipping.requiresShipping);
+        await this.toHaveValue(productsVendor.shipping.weight, shipping.weight);
+        await this.toHaveValue(productsVendor.shipping.length, shipping.length);
+        await this.toHaveValue(productsVendor.shipping.width, shipping.width);
+        await this.toHaveValue(productsVendor.shipping.height, shipping.height);
+        await this.toHaveSelectedLabel(productsVendor.shipping.shippingClass, shipping.shippingClass);
+    }
+    // add product shipping
+    async removeProductShipping(productName: string): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.uncheck(productsVendor.shipping.requiresShipping);
+        await this.saveProduct();
+        await this.notToBeChecked(productsVendor.shipping.requiresShipping);
+    }
+
+    // add product tax
+    async addProductTax(productName: string, tax: product['productInfo']['tax'], hasClass: boolean = false): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.selectByValue(productsVendor.tax.status, tax.status);
+        if (hasClass) await this.selectByValue(productsVendor.tax.class, tax.class);
+        await this.saveProduct();
+        await this.toHaveSelectedValue(productsVendor.tax.status, tax.status);
+        if (hasClass) await this.toHaveSelectedValue(productsVendor.tax.class, tax.class);
+    }
+
+    // add product linked products
+    async addProductLinkedProducts(productName: string, linkedProducts: product['productInfo']['linkedProducts'], choice: string): Promise<void> {
+        await this.goToProductEdit(productName);
+        switch (choice) {
+            case 'up-sells':
+                for (const linkedProduct of linkedProducts.upSells) {
+                    await this.typeAndWaitForResponse(data.subUrls.ajax, productsVendor.linkedProducts.upSells, linkedProduct);
+                    await this.click(productsVendor.linkedProducts.searchedResult(linkedProduct));
+                    await this.toBeVisible(productsVendor.linkedProducts.selectedUpSellProduct(linkedProduct));
+                }
+                break;
+            case 'cross-sells':
+                for (const linkedProduct of linkedProducts.crossSells) {
+                    await this.typeAndWaitForResponse(data.subUrls.ajax, productsVendor.linkedProducts.crossSells, linkedProduct);
+                    await this.click(productsVendor.linkedProducts.searchedResult(linkedProduct));
+                    await this.toBeVisible(productsVendor.linkedProducts.selectedCrossSellProduct(linkedProduct));
+                }
+                break;
+            default:
+                break;
+        }
+
+        await this.saveProduct();
+
+        switch (choice) {
+            case 'up-sells':
+                for (const linkedProduct of linkedProducts.upSells) {
+                    await this.toBeVisible(productsVendor.linkedProducts.selectedUpSellProduct(linkedProduct));
+                }
+                break;
+            case 'cross-sells':
+                for (const linkedProduct of linkedProducts.crossSells) {
+                    await this.toBeVisible(productsVendor.linkedProducts.selectedCrossSellProduct(linkedProduct));
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    // add product linked products
+    async removeProductLinkedProducts(productName: string, linkedProducts: product['productInfo']['linkedProducts'], choice: string): Promise<void> {
+        await this.goToProductEdit(productName);
+        switch (choice) {
+            case 'up-sells':
+                for (const linkedProduct of linkedProducts.upSells) {
+                    await this.click(productsVendor.linkedProducts.removeSelectedUpSellProduct(linkedProduct));
+                    await this.press('Escape'); // shift focus from element
+                }
+                break;
+            case 'cross-sells':
+                for (const linkedProduct of linkedProducts.crossSells) {
+                    await this.click(productsVendor.linkedProducts.removeSelectedCrossSellProduct(linkedProduct));
+                    await this.press('Escape'); // shift focus from element
+                }
+                break;
+            default:
+                break;
+        }
+
+        await this.saveProduct();
+
+        switch (choice) {
+            case 'up-sells':
+                for (const linkedProduct of linkedProducts.upSells) {
+                    await this.notToBeVisible(productsVendor.linkedProducts.selectedUpSellProduct(linkedProduct));
+                }
+                break;
+            case 'cross-sells':
+                for (const linkedProduct of linkedProducts.crossSells) {
+                    await this.notToBeVisible(productsVendor.linkedProducts.selectedCrossSellProduct(linkedProduct));
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
     // add product EU compliance
     async addProductEuCompliance(productName: string, euCompliance: product['productInfo']['euCompliance']): Promise<void> {
         await this.goToProductEdit(productName);

@@ -168,6 +168,15 @@
           vendor can add product catalog mode (with price hidden) [lite]: true
           vendor can remove product catalog mode [lite]: true
           vendor can remove product catalog mode (price hidden option) [lite]: true
+          vendor can add product shipping: true
+          vendor can update product shipping: true
+          vendor can remove product shipping: true
+          vendor can add product tax: true
+          vendor can add product tax (with tax class): true
+          vendor can add product linked products (up-sells): true
+          vendor can add product linked products (cross-sells): true
+          vendor can remove product linked products (up-sells): true
+          vendor can remove product linked products (cross-sells): true
 
 - page: 'MyOrders'
   features:
