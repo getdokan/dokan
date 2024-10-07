@@ -21,6 +21,7 @@ class OrderEventListener {
 
         $order = wc_get_order( $order_id );
         if ( ! $order instanceof WC_Order ) {
+            dokan_log( "Failed to fetch order {$order_id} during trash operation." );
             return;
         }
 
