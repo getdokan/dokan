@@ -4,7 +4,7 @@ import { dbData } from '@utils/dbData';
 
 const basicAuth = (username: string, password: string) => 'Basic ' + Buffer.from(username + ':' + password).toString('base64');
 
-const { ADMIN, VENDOR, VENDOR2, VENDOR3, CUSTOMER, CUSTOMER2, ADMIN_PASSWORD, USER_PASSWORD, CUSTOMER_ID, PRODUCT_ID, PRODUCT_ID_V2, CATEGORY_ID, TAG_ID, ATTRIBUTE_ID } = process.env;
+const { ADMIN, VENDOR, VENDOR2, VENDOR3, CUSTOMER, CUSTOMER2, ADMIN_PASSWORD, USER_PASSWORD, CUSTOMER_ID, VENDOR_ID, PRODUCT_ID, PRODUCT_ID_V2, CATEGORY_ID, TAG_ID, ATTRIBUTE_ID } = process.env;
 
 export const payloads = {
     // wp
@@ -1643,7 +1643,7 @@ export const payloads = {
             state: 'NY',
             postcode: '10003',
             country: 'US',
-            email: 'customer1@yopmail.com',
+            email: 'customer1@email.com',
             phone: '(555) 555-5555',
         },
 
@@ -1693,7 +1693,7 @@ export const payloads = {
             state: 'NY',
             postcode: '10003',
             country: 'US',
-            email: 'customer1@yopmail.com',
+            email: 'customer1@email.com',
             phone: '(555) 555-5555',
         },
 
@@ -1936,7 +1936,7 @@ export const payloads = {
         username: 'vendor2',
         first_name: 'vendor2',
         last_name: 'v2',
-        email: 'vendor2@yopmail.com',
+        email: 'vendor2@email.com',
         roles: 'seller',
         password: 'password',
     },
@@ -3141,7 +3141,7 @@ export const payloads = {
             postcode: '10003',
             country: 'US',
             state: 'NY',
-            email: 'customer1@yopmail.com',
+            email: 'customer1@email.com',
             phone: '0123456789',
         },
         shipping: {
@@ -3174,7 +3174,7 @@ export const payloads = {
             postcode: '10003',
             country: 'US',
             state: 'NY',
-            email: 'customer1@yopmail.com',
+            email: 'customer1@email.com',
             phone: '0123456789',
         },
         shipping: {
@@ -3426,7 +3426,7 @@ export const payloads = {
             },
         ],
         vendor_data: {
-            email: 'dummystore1@yopmail.com',
+            email: 'dummystore1@email.com',
             password: String(USER_PASSWORD),
             store_name: 'dummyStore1',
             social: [],
@@ -3705,7 +3705,7 @@ export const payloads = {
         user_pass: USER_PASSWORD,
         user_nicename: `${VENDOR}store`,
         role: 'seller',
-        email: `${VENDOR}@yopmail.com`,
+        email: `${VENDOR}@email.com`,
         store_name: `${VENDOR}store`,
         first_name: VENDOR,
         last_name: 'v',
@@ -3830,7 +3830,7 @@ export const payloads = {
         user_pass: USER_PASSWORD,
         user_nicename: `${VENDOR2}store`,
         role: 'seller',
-        email: `${VENDOR2}@yopmail.com`,
+        email: `${VENDOR2}@email.com`,
         store_name: `${VENDOR2}store`,
         first_name: VENDOR2,
         last_name: 'v',
@@ -3957,7 +3957,7 @@ export const payloads = {
         user_pass: USER_PASSWORD,
         user_nicename: `${VENDOR3}store`,
         role: 'seller',
-        email: `${VENDOR3}@yopmail.com`,
+        email: `${VENDOR3}@email.com`,
         store_name: `${VENDOR3}store`,
         first_name: VENDOR3,
         last_name: 'v',
@@ -4080,7 +4080,7 @@ export const payloads = {
     },
 
     createCustomer1: {
-        email: `${CUSTOMER}@yopmail.com`,
+        email: `${CUSTOMER}@email.com`,
         first_name: CUSTOMER,
         last_name: 'c1',
         role: 'customer',
@@ -4096,7 +4096,7 @@ export const payloads = {
             postcode: '10003',
             country: 'US',
             state: 'NY',
-            email: `${CUSTOMER}@yopmail.com`,
+            email: `${CUSTOMER}@email.com`,
             phone: '0123456789',
         },
         shipping: {
@@ -4114,7 +4114,7 @@ export const payloads = {
     },
 
     createCustomer2: {
-        email: `${CUSTOMER2}@yopmail.com`,
+        email: `${CUSTOMER2}@email.com`,
         first_name: CUSTOMER2,
         last_name: 'c2',
         role: 'customer',
@@ -4130,7 +4130,7 @@ export const payloads = {
             postcode: '10003',
             country: 'US',
             state: 'NY',
-            email: `${CUSTOMER2}@yopmail.com`,
+            email: `${CUSTOMER2}@email.com`,
             phone: '0123456789',
         },
         shipping: {
@@ -4158,7 +4158,7 @@ export const payloads = {
             postcode: '10003',
             country: 'US',
             state: 'NY',
-            email: `${faker.person.firstName()}@yopmail.com`,
+            email: `${faker.person.firstName()}@email.com`,
             phone: '0123456789',
         },
         shipping: {
@@ -4187,9 +4187,10 @@ export const payloads = {
         selected_user_role: ['customer', 'guest'],
         category_ids: [],
         product_ids: [],
+        expire_limit: '20',
         hide_price: '1',
         hide_price_text: 'Price is hidden',
-        hide_cart_button: 'replace',
+        hide_cart_button: 'replace', // keep_and_add_new
         button_text: 'Add to quote',
         apply_on_all_product: '0',
         rule_priority: '0',
@@ -4213,9 +4214,12 @@ export const payloads = {
         // user_id: '',
         customer_info: {
             name_field: 'customer1',
-            email_field: 'customer1@yopmail.com',
+            email_field: 'customer1@email.com',
             company_field: 'c1',
             phone_field: '0987654321',
+        },
+        store_info: {
+            store_id: VENDOR_ID,
         },
         product_ids: [''],
         offer_price: ['50'],
@@ -4228,7 +4232,7 @@ export const payloads = {
         // user_id: '',
         customer_info: {
             name_field: 'customer1',
-            email_field: 'customer1@yopmail.com',
+            email_field: 'customer1@email.com',
             company_field: 'c1',
             phone_field: '0987654321',
         },

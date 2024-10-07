@@ -16,11 +16,10 @@ test.describe('Request for quotation Rules test', () => {
         admin = new RequestForQuotationsPage(aPage);
 
         apiUtils = new ApiUtils(await request.newContext());
-        [, , quoteRuleTitle] = await apiUtils.createQuoteRule(payloads.createQuoteRule(), payloads.adminAuth);
+        [, , quoteRuleTitle] = await apiUtils.createQuoteRule(payloads.createQuoteRule(), payloads.adminAuth); // todo: fix after api is updated
     });
 
     test.afterAll(async () => {
-        await apiUtils.deleteAllQuoteRules(payloads.adminAuth); //todo: remove in future
         await aPage.close();
         await apiUtils.dispose();
     });
@@ -34,11 +33,12 @@ test.describe('Request for quotation Rules test', () => {
     });
 
     test('admin can add quote rule', { tag: ['@pro', '@admin'] }, async () => {
-        await admin.addQuoteRule(data.requestForQuotation.quoteRule());
+        const [, , productName] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendorAuth);
+        await admin.addQuoteRule({ ...data.requestForQuotation.quoteRule(), includeProducts: productName });
     });
 
     test('admin can edit quote rule', { tag: ['@pro', '@admin'] }, async () => {
-        await admin.editQuoteRule({ ...data.requestForQuotation.quoteRule(), title: quoteRuleTitle });
+        await admin.editQuoteRule({ ...data.requestForQuotation.quoteRule(), title: quoteRuleTitle, specificProducts: false, });
     });
 
     test('admin can trash quote rule', { tag: ['@pro', '@admin'] }, async () => {
