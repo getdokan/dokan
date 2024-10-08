@@ -414,4 +414,65 @@ test.describe('Product details functionality test', () => {
     test('vendor can remove product geolocation (individual)', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.removeProductGeolocation(productName);
     });
+
+    // EU compliance options
+    // todo: duplicate test from euCompliance
+
+    test.skip('vendor can add product EU compliance data', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.addProductEuCompliance(productName1, data.product.productInfo.euCompliance);
+    });
+
+    test.skip('vendor can update product EU compliance data', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.addProductEuCompliance(productName, data.product.productInfo.euCompliance);
+    });
+
+    test.skip('vendor can remove product EU compliance data', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.addProductEuCompliance(productName, { ...data.product.productInfo.euCompliance, productUnits: '', basePriceUnits: '', freeShipping: false, regularUnitPrice: '', saleUnitPrice: '', optionalMiniDescription: '' });
+    });
+
+    // addon
+    // todo: duplicate test from product addons also has new tests
+
+    test('vendor can add product addon', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.addProductAddon(productName1, data.product.productInfo.addon);
+    });
+
+    test('vendor can import product addon', { tag: ['@pro', '@vendor'] }, async () => {
+        const addon = payloads.createProductAddon();
+        await vendor.importAddon(productName1, serialize([addon]), addon.name);
+    });
+
+    test('vendor can export product addon', { tag: ['@pro', '@vendor'] }, async () => {
+        const [responseBody, , productName] = await apiUtils.createProductWithAddon(payloads.createProduct(), [payloads.createProductAddon()], payloads.vendorAuth);
+        await vendor.exportAddon(productName, serialize(apiUtils.getMetaDataValue(responseBody.meta_data, '_product_addons')));
+    });
+
+    test('vendor can remove product addon', { tag: ['@pro', '@vendor'] }, async () => {
+        const [, , productName, addonNames] = await apiUtils.createProductWithAddon(payloads.createProduct(), [payloads.createProductAddon()], payloads.vendorAuth);
+        await vendor.removeAddon(productName, addonNames[0] as string);
+    });
+
+    // rma options
+
+    test('vendor can add product rma options (no warranty)', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.addProductRmaOptions(productName1, { ...data.vendor.rma, type: 'no_warranty' });
+    });
+
+    test('vendor can add product rma options (warranty included limited)', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.addProductRmaOptions(productName1, data.vendor.rma);
+    });
+
+    test('vendor can add product rma options (warranty included lifetime)', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.addProductRmaOptions(productName1, { ...data.vendor.rma, length: 'lifetime' });
+    });
+
+    test('vendor can add product rma options (warranty as addon)', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.addProductRmaOptions(productName1, { ...data.vendor.rma, type: 'addon_warranty' });
+    });
+
+    //todo: add update rma options tests
+
+    test('vendor can remove product rma options', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.removeProductRmaOptions(productName);
+    });
 });
