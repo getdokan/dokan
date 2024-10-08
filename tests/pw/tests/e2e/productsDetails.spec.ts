@@ -448,8 +448,8 @@ test.describe('Product details functionality test', () => {
     });
 
     test('vendor can remove product addon', { tag: ['@pro', '@vendor'] }, async () => {
-        const [, , productName, addonName] = await apiUtils.createProductWithAddon(payloads.createProduct(), [payloads.createProductAddon()], payloads.vendorAuth);
-        await vendor.removeAddon(productName, addonName[0] as string);
+        const [, , productName, addonNames] = await apiUtils.createProductWithAddon(payloads.createProduct(), [payloads.createProductAddon()], payloads.vendorAuth);
+        await vendor.removeAddon(productName, addonNames[0] as string);
     });
 
     // rma options

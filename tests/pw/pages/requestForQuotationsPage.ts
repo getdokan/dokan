@@ -119,7 +119,7 @@ export class RequestForQuotationsPage extends AdminPage {
             await this.clearAndType(requestForQuotationAdmin.quoteRules.addNewQuoteRule.hidePriceText, rule.hidePriceText);
         } else {
             if (rule.hideAddToCartButton) await this.click(requestForQuotationAdmin.quoteRules.addNewQuoteRule.hideAddToCartButton);
-            if (rule.hideAddToCartButton) await this.click(requestForQuotationAdmin.quoteRules.addNewQuoteRule.keepBothAddToCartAndQuoteButton);
+            if (rule.keepBothCartQuoteButton) await this.click(requestForQuotationAdmin.quoteRules.addNewQuoteRule.keepBothAddToCartAndQuoteButton);
         }
         await this.clearAndType(requestForQuotationAdmin.quoteRules.addNewQuoteRule.customButtonLabel, rule.customButtonLabel);
 

@@ -1427,7 +1427,7 @@ export class ProductsPage extends AdminPage {
         await this.selectByValue(productsVendor.addon.formatTitle, addon.formatTitle);
         await this.check(productsVendor.addon.addDescription);
         await this.clearAndType(productsVendor.addon.descriptionInput, addon.addDescription);
-        await this.click(productsVendor.addon.requiredField);
+        await this.check(productsVendor.addon.requiredField);
         // option
         await this.clearAndType(productsVendor.addon.option.enterAnOption, addon.enterAnOption);
         await this.selectByValue(productsVendor.addon.option.optionPriceType, addon.optionPriceType);
@@ -1453,7 +1453,7 @@ export class ProductsPage extends AdminPage {
         await this.toBeChecked(productsVendor.addon.excludeAddons);
     }
 
-    // export addon
+    // import addon
     async importAddon(productName: string, addon: string, addonTitle: string): Promise<void> {
         await this.goToProductEdit(productName);
         await this.click(productsVendor.addon.import);
