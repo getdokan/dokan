@@ -1545,4 +1545,44 @@ export class ProductsPage extends AdminPage {
         await this.toHaveValue(productsVendor.wholesale.wholesalePrice, wholesaleOption.wholesalePrice);
         await this.toHaveValue(productsVendor.wholesale.minimumQuantity, wholesaleOption.minimumQuantity);
     }
+
+    // remove product wholesale options
+    async removeProductWholesaleOptions(productName: string): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.uncheck(productsVendor.wholesale.enableWholesale);
+        await this.saveProduct();
+        await this.notToBeChecked(productsVendor.wholesale.enableWholesale);
+    }
+
+    // add product min-max options
+    async addProductMinMaxOptions(productName: string, minMaxOption: product['productInfo']['minMax']): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.clearAndType(productsVendor.minMax.minimumQuantity, minMaxOption.minimumProductQuantity);
+        await this.clearAndType(productsVendor.minMax.maximumQuantity, minMaxOption.maximumProductQuantity);
+        await this.saveProduct();
+        await this.toHaveValue(productsVendor.minMax.minimumQuantity, minMaxOption.minimumProductQuantity);
+        await this.toHaveValue(productsVendor.minMax.maximumQuantity, minMaxOption.maximumProductQuantity);
+    }
+
+    // can't add product min greater than max
+    async cantAddGreaterMin(productName: string, minMaxOption: product['productInfo']['minMax']): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.clearAndType(productsVendor.minMax.minimumQuantity, minMaxOption.minimumProductQuantity);
+        await this.clearAndType(productsVendor.minMax.maximumQuantity, minMaxOption.maximumProductQuantity);
+        await this.press('Escape'); // to trigger validation
+        await this.toHaveValue(productsVendor.minMax.maximumQuantity, minMaxOption.minimumProductQuantity);
+        await this.saveProduct();
+        await this.toHaveValue(productsVendor.minMax.minimumQuantity, minMaxOption.minimumProductQuantity);
+        await this.toHaveValue(productsVendor.minMax.maximumQuantity, minMaxOption.minimumProductQuantity);
+    }
+
+    // remove product min-max options
+    async removeProductMinMaxOptions(productName: string, minMaxOption: product['productInfo']['minMax']): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.clearAndType(productsVendor.minMax.minimumQuantity, minMaxOption.minimumProductQuantity);
+        await this.clearAndType(productsVendor.minMax.maximumQuantity, minMaxOption.maximumProductQuantity);
+        await this.saveProduct();
+        await this.toHaveValue(productsVendor.minMax.minimumQuantity, '0');
+        await this.toHaveValue(productsVendor.minMax.maximumQuantity, '0');
+    }
 }

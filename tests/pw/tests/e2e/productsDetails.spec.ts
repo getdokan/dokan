@@ -475,4 +475,40 @@ test.describe('Product details functionality test', () => {
     test('vendor can remove product rma options', { tag: ['@pro', '@vendor'] }, async () => {
         await vendor.removeProductRmaOptions(productName);
     });
+
+    // wholesale options
+
+    test('vendor can add product wholesale options', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.addProductWholesaleOptions(productName1, data.product.productInfo.wholesaleOption);
+    });
+
+    test('vendor can update product wholesale options', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.addProductWholesaleOptions(productName, data.product.productInfo.wholesaleOption);
+    });
+
+    test('vendor can remove product wholesale options', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.removeProductWholesaleOptions(productName);
+    });
+
+    // mix-max options
+
+    test('vendor can add product min-max options', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.addProductMinMaxOptions(productName1, data.product.productInfo.minMax);
+    });
+
+    test('vendor can update product min-max options', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.addProductMinMaxOptions(productName, data.product.productInfo.minMax);
+    });
+
+    test("vendor can't add product min limit grater than max limit", { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.cantAddGreaterMin(productName, { minimumProductQuantity: '100', maximumProductQuantity: '50' });
+    });
+
+    test('vendor can remove product min-max options', { tag: ['@pro', '@vendor'] }, async () => {
+        await vendor.removeProductMinMaxOptions(productName, { minimumProductQuantity: '', maximumProductQuantity: '' });
+    });
+
+    // todo: advertising
+    // todo: rank math seo
+    // todo: variation options
 });
