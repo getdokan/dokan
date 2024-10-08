@@ -1279,11 +1279,20 @@ export interface requestForQuotation {
     quoteRule: {
         title: string;
         userRole: string;
-        product: string;
-        category: string;
-        hidePrice: string;
+        applyOnAllProducts: boolean;
+        specificProducts?: boolean;
+        includeProducts?: string;
+        excludeProducts?: string;
+        specificCategories?: boolean;
+        categories: string[];
+        specificVendors?: boolean;
+        includeVendors?: string;
+        excludeVendors?: string;
+        expireLimit?: string;
+        hidePrice: boolean;
         hidePriceText: string;
-        hideAddToCartButton: string;
+        hideAddToCartButton?: boolean;
+        keepBothCartQuoteButton?: boolean;
         customButtonLabel: string;
         order: string;
     };
@@ -1306,16 +1315,19 @@ export interface requestForQuotation {
     };
 
     quote: {
+        id: string;
         title: string;
         user: string;
         fullName: string;
         email: string;
         companyName: string;
         phoneNumber: string;
+        vendor: string;
         product: string;
         quantity: string;
         offerPrice: string;
         offerProductQuantity: string;
+        shippingCost: string;
     };
 
     updateQuote: {
@@ -1339,17 +1351,36 @@ export interface requestForQuotation {
         title: string;
     };
 
+    vendorQuote: {
+        productName: string;
+        offeredPrice: string;
+        shippingCost: string;
+        reply: string;
+    };
+
     userQuote: {
         productName: string;
         offeredPrice: string;
+        shippingCost: string;
         quantity: string;
+        expectedDelivery: string;
+        additionalMessage: string;
     };
 
     guest: {
         fullName: string;
         email: string;
-        companyName: string;
         phoneNumber: string;
+
+        address: {
+            country: string;
+            countrySelectValue: string;
+            stateSelectValue: string;
+            city: string;
+            postCode: string;
+            addressLine1: string;
+            addressLine2: string;
+        };
     };
 }
 

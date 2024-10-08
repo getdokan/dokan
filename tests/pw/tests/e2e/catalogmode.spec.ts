@@ -86,8 +86,9 @@ test.describe('Catalog mode test', () => {
 
     test('vendor can enable RFQ in catalog mode', { tag: ['@pro', '@admin'] }, async () => {
         const [previousMeta] = await dbUtils.updateUserMeta(sellerId, 'dokan_profile_settings', { catalog_mode: { ...payloads.catalogModeSetting, request_a_quote_enabled: 'on' } });
-        const [, productId, productName] = await apiUtils.createProduct(helpers.deepMergeObjects(payloads.createProduct(), payloads.catalogMode), payloads.userAuth(vendorName));
-        await apiUtils.createQuoteRule({ ...payloads.createQuoteRule(), apply_on_all_product: '', product_ids: [productId] }, payloads.adminAuth);
+        const [, productId, productName] = await apiUtils.createProduct(payloads.createProduct(), payloads.userAuth(vendorName));
+        const [, quoteRuleId] = await apiUtils.createQuoteRule({ ...payloads.createQuoteRule(), product_ids: [productId] }, payloads.adminAuth);
+        await dbUtils.updateQuoteRuleContent(quoteRuleId, { switches: { product_switch: 'true' } }); // todo: remove after api fix
         await customer.viewRfqInCatalogMode(productName, vendorName, ShopPage, SingleStorePage);
 
         // reset
