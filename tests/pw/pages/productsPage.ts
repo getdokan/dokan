@@ -1149,55 +1149,6 @@ export class ProductsPage extends AdminPage {
         }
     }
 
-    // add product other options (product status, visibility, purchase note, reviews)
-    async addProductOtherOptions(productName: string, otherOption: product['productInfo']['otherOptions'], choice: string): Promise<void> {
-        await this.goToProductEdit(productName);
-
-        switch (choice) {
-            case 'status':
-                await this.selectByValue(productsVendor.otherOptions.productStatus, otherOption.status);
-                break;
-            case 'visibility':
-                await this.selectByValue(productsVendor.otherOptions.visibility, otherOption.visibility);
-                break;
-            case 'purchaseNote':
-                await this.clearAndType(productsVendor.otherOptions.purchaseNote, otherOption.purchaseNote);
-                break;
-            case 'reviews':
-                if (otherOption.enableReview) {
-                    await this.check(productsVendor.otherOptions.enableProductReviews);
-                } else {
-                    await this.uncheck(productsVendor.otherOptions.enableProductReviews);
-                }
-                break;
-            default:
-                break;
-        }
-
-        await this.saveProduct();
-
-        switch (choice) {
-            case 'status':
-                await this.toHaveSelectedValue(productsVendor.otherOptions.productStatus, otherOption.status);
-                break;
-            case 'visibility':
-                await this.toHaveSelectedValue(productsVendor.otherOptions.visibility, otherOption.visibility);
-                break;
-            case 'purchaseNote':
-                await this.toHaveValue(productsVendor.otherOptions.purchaseNote, otherOption.purchaseNote);
-                break;
-            case 'reviews':
-                if (otherOption.enableReview) {
-                    await this.toBeChecked(productsVendor.otherOptions.enableProductReviews);
-                } else {
-                    await this.notToBeChecked(productsVendor.otherOptions.enableProductReviews);
-                }
-                break;
-            default:
-                break;
-        }
-    }
-
     // add product catalog mode
     async addProductCatalogMode(productName: string, hidePrice: boolean = false): Promise<void> {
         await this.goToProductEdit(productName);
@@ -1269,17 +1220,17 @@ export class ProductsPage extends AdminPage {
         await this.goToProductEdit(productName);
         switch (choice) {
             case 'up-sells':
-                for (const product of linkedProducts.upSells) {
-                    await this.typeAndWaitForResponse(data.subUrls.ajax, productsVendor.linkedProducts.upSells, product);
-                    await this.click(productsVendor.linkedProducts.searchedResult(product));
-                    await this.toBeVisible(productsVendor.linkedProducts.selectedUpSellProduct(product));
+                for (const linkedProduct of linkedProducts.upSells) {
+                    await this.typeAndWaitForResponse(data.subUrls.ajax, productsVendor.linkedProducts.upSells, linkedProduct);
+                    await this.click(productsVendor.linkedProducts.searchedResult(linkedProduct));
+                    await this.toBeVisible(productsVendor.linkedProducts.selectedUpSellProduct(linkedProduct));
                 }
                 break;
             case 'cross-sells':
-                for (const product of linkedProducts.crossSells) {
-                    await this.typeAndWaitForResponse(data.subUrls.ajax, productsVendor.linkedProducts.crossSells, product);
-                    await this.click(productsVendor.linkedProducts.searchedResult(product));
-                    await this.toBeVisible(productsVendor.linkedProducts.selectedCrossSellProduct(product));
+                for (const linkedProduct of linkedProducts.crossSells) {
+                    await this.typeAndWaitForResponse(data.subUrls.ajax, productsVendor.linkedProducts.crossSells, linkedProduct);
+                    await this.click(productsVendor.linkedProducts.searchedResult(linkedProduct));
+                    await this.toBeVisible(productsVendor.linkedProducts.selectedCrossSellProduct(linkedProduct));
                 }
                 break;
             default:
@@ -1290,13 +1241,13 @@ export class ProductsPage extends AdminPage {
 
         switch (choice) {
             case 'up-sells':
-                for (const product of linkedProducts.upSells) {
-                    await this.toBeVisible(productsVendor.linkedProducts.selectedUpSellProduct(product));
+                for (const linkedProduct of linkedProducts.upSells) {
+                    await this.toBeVisible(productsVendor.linkedProducts.selectedUpSellProduct(linkedProduct));
                 }
                 break;
             case 'cross-sells':
-                for (const product of linkedProducts.upSells) {
-                    await this.toBeVisible(productsVendor.linkedProducts.selectedCrossSellProduct(product));
+                for (const linkedProduct of linkedProducts.crossSells) {
+                    await this.toBeVisible(productsVendor.linkedProducts.selectedCrossSellProduct(linkedProduct));
                 }
                 break;
             default:
@@ -1309,14 +1260,14 @@ export class ProductsPage extends AdminPage {
         await this.goToProductEdit(productName);
         switch (choice) {
             case 'up-sells':
-                for (const product of linkedProducts.upSells) {
-                    await this.click(productsVendor.linkedProducts.removeSelectedUpSellProduct(product));
+                for (const linkedProduct of linkedProducts.upSells) {
+                    await this.click(productsVendor.linkedProducts.removeSelectedUpSellProduct(linkedProduct));
                     await this.press('Escape'); // shift focus from element
                 }
                 break;
             case 'cross-sells':
-                for (const product of linkedProducts.crossSells) {
-                    await this.click(productsVendor.linkedProducts.removeSelectedCrossSellProduct(product));
+                for (const linkedProduct of linkedProducts.crossSells) {
+                    await this.click(productsVendor.linkedProducts.removeSelectedCrossSellProduct(linkedProduct));
                     await this.press('Escape'); // shift focus from element
                 }
                 break;
@@ -1328,13 +1279,13 @@ export class ProductsPage extends AdminPage {
 
         switch (choice) {
             case 'up-sells':
-                for (const product of linkedProducts.upSells) {
-                    await this.notToBeVisible(productsVendor.linkedProducts.selectedUpSellProduct(product));
+                for (const linkedProduct of linkedProducts.upSells) {
+                    await this.notToBeVisible(productsVendor.linkedProducts.selectedUpSellProduct(linkedProduct));
                 }
                 break;
             case 'cross-sells':
-                for (const product of linkedProducts.upSells) {
-                    await this.notToBeVisible(productsVendor.linkedProducts.selectedCrossSellProduct(product));
+                for (const linkedProduct of linkedProducts.crossSells) {
+                    await this.notToBeVisible(productsVendor.linkedProducts.selectedCrossSellProduct(linkedProduct));
                 }
                 break;
             default:
@@ -1476,7 +1427,7 @@ export class ProductsPage extends AdminPage {
         await this.selectByValue(productsVendor.addon.formatTitle, addon.formatTitle);
         await this.check(productsVendor.addon.addDescription);
         await this.clearAndType(productsVendor.addon.descriptionInput, addon.addDescription);
-        await this.click(productsVendor.addon.requiredField);
+        await this.check(productsVendor.addon.requiredField);
         // option
         await this.clearAndType(productsVendor.addon.option.enterAnOption, addon.enterAnOption);
         await this.selectByValue(productsVendor.addon.option.optionPriceType, addon.optionPriceType);
@@ -1502,7 +1453,7 @@ export class ProductsPage extends AdminPage {
         await this.toBeChecked(productsVendor.addon.excludeAddons);
     }
 
-    // export addon
+    // import addon
     async importAddon(productName: string, addon: string, addonTitle: string): Promise<void> {
         await this.goToProductEdit(productName);
         await this.click(productsVendor.addon.import);
