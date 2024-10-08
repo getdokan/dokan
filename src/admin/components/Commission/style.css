@@ -1,0 +1,4 @@
+@config './tailwind-category-commission.config.js';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

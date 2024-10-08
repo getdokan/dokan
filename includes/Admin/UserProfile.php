@@ -65,8 +65,6 @@ class UserProfile {
         $publishing            = get_user_meta( $user->ID, 'dokan_publishing', true );
         $store_settings        = dokan_get_store_info( $user->ID );
         $banner                = ! empty( $store_settings['banner'] ) ? absint( $store_settings['banner'] ) : 0;
-        $admin_commission      = get_user_meta( $user->ID, 'dokan_admin_percentage', true );
-        $admin_commission_type = get_user_meta( $user->ID, 'dokan_admin_percentage_type', true );
         $feature_seller        = get_user_meta( $user->ID, 'dokan_feature_seller', true );
 
         $social_fields = dokan_get_social_profile_fields();
@@ -80,7 +78,6 @@ class UserProfile {
         $address_state     = isset( $store_settings['address']['state'] ) ? $store_settings['address']['state'] : '';
         $banner_width      = dokan_get_vendor_store_banner_width();
         $banner_height     = dokan_get_vendor_store_banner_height();
-        $admin_commission  = ( 'flat' === $admin_commission_type ) ? wc_format_localized_price( $admin_commission ) : wc_format_localized_decimal( $admin_commission );
 
         $country_state = array(
             'country' => array(
@@ -320,26 +317,6 @@ class UserProfile {
                         </label>
 
                         <p class="description"><?php esc_html_e( 'Bypass pending, publish products directly', 'dokan-lite' ); ?></p>
-                    </td>
-                </tr>
-
-                <tr>
-                    <th><?php esc_html_e( 'Admin Commission Type ', 'dokan-lite' ); ?></th>
-                    <td>
-                        <select id="dokan_admin_percentage_type" name="dokan_admin_percentage_type">
-                            <?php foreach ( dokan_commission_types() as $key => $value ) : ?>
-                                <option value="<?php echo esc_attr( $key ); ?>" <?php selected( $admin_commission_type, $key ); ?>><?php echo esc_attr( $value ); ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                        <p class="description"><?php esc_html_e( 'Set the commmission type admin gets from this seller', 'dokan-lite' ); ?></p>
-                    </td>
-                </tr>
-                <tr>
-                    <th><?php esc_html_e( 'Admin Commission ', 'dokan-lite' ); ?></th>
-                    <td>
-                        <input type="text" class="wc_input_price small-text" id="admin-commission" name="dokan_admin_percentage" value="<?php echo esc_attr( $admin_commission ); ?>">
-                        <?php do_action( 'dokan_seller_meta_fields_after_admin_commission', $user ); ?>
-                        <p class="combine-commission-description"><?php esc_html_e( 'It will override the default commission admin gets from each sales', 'dokan-lite' ); ?></p>
                     </td>
                 </tr>
 

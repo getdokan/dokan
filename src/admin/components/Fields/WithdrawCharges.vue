@@ -58,6 +58,12 @@ export default {
                 percentage: Math.abs( data.percentage ) ? Math.abs( data.percentage ) : 0
             };
         },
+        formatPositiveValue( data ) {
+            return {
+                fixed: accounting.formatNumber( data.fixed, dokan.currency.precision, dokan.currency.thousand, dokan.currency.decimal ),
+                percentage: accounting.formatNumber( data.percentage, dokan.currency.precision, dokan.currency.thousand, dokan.currency.decimal )
+            };
+        },
         unFormatValue( data ) {
             return {
                 fixed: Math.abs( accounting.unformat( data.fixed , dokan.currency.decimal ) ),
@@ -77,6 +83,17 @@ export default {
                 : '';
         },
         chargeChangeHandler( data, field ) {
+            let fixedCommission = this.fieldValue[ this.fieldData.name ][ field ];
+            if (isNaN( data.fixed )) {
+                data.fixed = fixedCommission.fixed ?? '';
+            }
+            if (isNaN( data.percentage )) {
+                data.percentage = fixedCommission.percentage ?? '';
+            }
+
+            // let positiveValue = this.unFormatValue(data);
+            // let formatedData = this.formatPositiveValue( positiveValue );
+
             this.fieldValue[ this.fieldData.name ][ field ] = dokan.hooks.applyFilters(
               'dokanFieldComponentInputValue',
               this.unFormatValue(data),
