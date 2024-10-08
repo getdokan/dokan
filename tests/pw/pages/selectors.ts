@@ -3842,8 +3842,7 @@ export const selector = {
                 categoryModalClose: 'span#dokan-category-close-modal',
                 categoryValues: '.select2-results ul li',
                 selectedCategory: (categoryName: string) => `//div[@id="dokan-category-open-modal"]//span[contains(@class,'dokan-selected-category-product') and normalize-space()="${categoryName}"]`,
-                removeSelectedCategory: (categoryName: string) =>
-                    `//div[@id="dokan-category-open-modal"]//span[contains(@class,'dokan-selected-category-product') and normalize-space()="${categoryName}"]/../../..//span[@class="dokan-select-product-category-remove"]`,
+                removeSelectedCategory: (categoryName: string) => `//div[@id="dokan-category-open-modal"]//span[contains(@class,'dokan-selected-category-product') and normalize-space()="${categoryName}"]/../../..//span[@class="dokan-select-product-category-remove"]`,
             },
 
             // tags

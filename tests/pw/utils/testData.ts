@@ -2,28 +2,7 @@ import { faker } from '@faker-js/faker';
 import { helpers } from '@utils/helpers';
 import 'dotenv/config';
 
-const {
-    ADMIN,
-    ADMIN_PASSWORD,
-    VENDOR,
-    VENDOR2,
-    CUSTOMER,
-    CUSTOMER2,
-    USER_PASSWORD,
-    SITE_PATH,
-    BASE_URL,
-    SITE_LANGUAGE,
-    SITE_TITLE,
-    ADMIN_EMAIL,
-    DB_HOST_NAME,
-    DATABASE,
-    DB_USER_NAME,
-    DB_USER_PASSWORD,
-    DB_PREFIX,
-    GMAP,
-    MAPBOX,
-    LICENSE_KEY,
-} = process.env;
+const { ADMIN, ADMIN_PASSWORD, VENDOR, VENDOR2, CUSTOMER, CUSTOMER2, USER_PASSWORD, CATEGORY_ID, SITE_PATH, BASE_URL, SITE_LANGUAGE, SITE_TITLE, ADMIN_EMAIL, DB_HOST_NAME, DATABASE, DB_USER_NAME, DB_USER_PASSWORD, DB_PREFIX, GMAP, MAPBOX, LICENSE_KEY } = process.env;
 
 const basicAuth = (username: string, password: string) => 'Basic ' + Buffer.from(username + ':' + password).toString('base64');
 

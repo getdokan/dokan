@@ -519,7 +519,7 @@ test.describe.serial('product quantity calculation test', () => {
     test('product quantity: multiple', { tag: ['@lite'] }, async () => {
         // set order condition
         const [, productId] = await apiUtils.createProduct(payloads.createProduct(), payloads.vendorAuth);
-        const lineItems = [{ product_id: productId, quantity: payloads.randormNumber }];
+        const lineItems = [{ product_id: productId, quantity: payloads.randomNumber }];
 
         // place order and assert order calculation
         const order = await apiUtils.createOrderWc({ ...payloads.createOrder, line_items: lineItems });
