@@ -212,4 +212,15 @@ export const dbUtils = {
         const ids = res.map((row: { id: number }) => row.id);
         return ids;
     },
+
+    async updateQuoteRuleContent(quoted: string, updatedRuleContent: object) {
+        const querySelect = `SELECT rule_contents FROM ${dbPrefix}_dokan_request_quote_rules WHERE id = ?`;
+        const res = await dbUtils.dbQuery(querySelect, [quoted]);
+
+        const currentRuleContent = unserialize(res[0].rule_contents);
+        const newRuleContent = helpers.deepMergeObjects(currentRuleContent, updatedRuleContent);
+
+        const queryUpdate = `UPDATE ${dbPrefix}_dokan_request_quote_rules SET rule_contents = ? WHERE id = ?`;
+        await dbUtils.dbQuery(queryUpdate, [serialize(newRuleContent), quoted]);
+    },
 };

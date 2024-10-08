@@ -4,6 +4,50 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.12.4',
+        'released' => '2024-10-03',
+        'changes'  => [
+            'Improvement'  => [
+                [
+                    'title'       => 'Added `$data` parameter to `dokan_update_vendor` hook.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.12.3',
+        'released' => '2024-09-30',
+        'changes'  => [
+            'Improvement'  => [
+                [
+                    'title'       => 'Added compatibility with RFQ state field ui.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
+        'version'  => 'Version 3.12.2',
+        'released' => '2024-09-23',
+        'changes'  => [
+            'Fix'         => [
+                [
+                    'title'       => 'Product gallery image uploader close button style fix.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fix incorrect sub-order status updates when the main order status changed specifically for cancelled sub-orders.',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Fixed vendor coupon validation for various discount item types.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.12.1',
         'released' => '2024-08-30',
         'changes'  => [

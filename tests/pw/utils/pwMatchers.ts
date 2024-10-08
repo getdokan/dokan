@@ -92,4 +92,4 @@ export const customExpect = {
     toBeApproximately: customMatchers.toBeApproximately,
 };
 
-// todo: add basepase assertions to custom matchers
+// todo: add base-page assertions to custom matchers

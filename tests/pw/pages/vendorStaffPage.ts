@@ -6,6 +6,7 @@ import { staff } from '@utils/interfaces';
 
 // selectors
 const vendorStaff = selector.vendor.vStaff;
+const vendorDashboard = selector.vendor.vDashboard;
 
 export class VendorStaffPage extends VendorPage {
     constructor(page: Page) {
@@ -118,5 +119,15 @@ export class VendorStaffPage extends VendorPage {
 
         // manage auction permission
         // await this.multipleElementCheck(vendorStaff.managePermission.auction); // todo:  add auction module + plugin check
+    }
+
+    // staff
+
+    // view permitted menus
+    async viewPermittedMenus(menus: string[]) {
+        await this.goToVendorDashboard();
+        for (const menu of menus) {
+            await this.toBeVisible((vendorDashboard.menus.primary as any)[menu]);
+        }
     }
 }
