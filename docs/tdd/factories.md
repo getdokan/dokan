@@ -160,6 +160,17 @@ $order_id = $this->factory()
     ->create([
         'status'      => 'pending',
         'customer_id' => $this->factory()->customer->create([]),
+        'meta_data'   => [
+            [
+                'key'     => '_custom_meta_key',
+                'value'   => 'custom_meta_value',
+                'unique'  => true
+            ],
+            [
+                'key'     => '_another_meta_key',
+                'value'   => 'another_meta_value'
+            ]
+        ],
         'line_items'  => array(
             array(
                 'product_id' => $this->factory()->product
@@ -193,6 +204,32 @@ The assertion `$this->assertDatabaseCount('posts', 3, [ 'post_type' => 'shop_ord
 > The methods `set_item_fee`, `set_item_shipping`, and `set_item_coupon` are optional. Use any of them as needed.
 
 You can pass [meta](./../../tests/php/src/Helpers/WC_Helper_Coupon.php#L33) as per your requirements.
+
+### Adding Meta Data to Orders
+
+To add meta data to an order, you can include a `meta_data` array in the order creation parameters. Each meta data item should be an array with `key` and `value` elements. Optionally, you can set `unique` to `true` if you want the meta to be unique.
+
+Example:
+
+```php
+$order_id = $this->factory()->order->create([
+    // ... other order parameters ...
+    'meta_data' => [
+        [
+            'key'     => '_custom_meta_key',
+            'value'   => 'custom_meta_value',
+            'unique'  => true
+        ],
+        [
+            'key'     => '_another_meta_key',
+            'value'   => 'another_meta_value'
+        ]
+    ],
+    // ... more order parameters ...
+]);
+```
+
+This will add two meta fields to the order: `_custom_meta_key` (set as unique) and `_another_meta_key`.
 
 ## Example of Factories
 
