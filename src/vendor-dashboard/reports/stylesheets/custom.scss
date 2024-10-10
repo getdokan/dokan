@@ -1,0 +1,52 @@
+/******** Filters *********/
+ul.woocommerce-filters-filter__content-list {
+  padding: 0;
+  li {
+    list-style: none;
+  }
+}
+
+/******** Chart *********/
+.woocommerce-chart .woocommerce-chart__header .woocommerce-chart__title {
+  font-size: 1.3rem;
+}
+
+ul.woocommerce-table__summary li.woocommerce-table__summary-item {
+  display: inline-block;
+  margin-bottom: 0;
+  margin-left: 8px;
+  margin-right: 8px;
+}
+
+.woocommerce-segmented-selection__container
+  .woocommerce-segmented-selection__item
+  label {
+  font-size: 13px;
+}
+
+.woocommerce-segmented-selection {
+  border: none;
+  padding: 0;
+}
+.woocommerce-summary {
+  padding-left: 0;
+}
+
+.woocommerce-calendar__input .woocommerce-calendar__input-text {
+  border-width: 0px;
+}
+.woocommerce-view-more-list__popover
+  .woocommerce-view-more-list__popover__item
+  a {
+  font-size: 13px;
+}
+
+.woocommerce-chart__interval-select .components-select-control__input {
+  border: none;
+}
+
+.woocommerce-chart__interval-select
+  .components-select-control__input
+  .components-input-control__backdrop {
+  display: none;
+}
