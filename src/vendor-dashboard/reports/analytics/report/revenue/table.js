@@ -56,7 +56,7 @@ class RevenueReportTable extends Component {
     getHeadersContent() {
         return [
             {
-                label: __( 'Date', 'woocommerce' ),
+                label: __( 'Date', 'dokan-lite' ),
                 key: 'date',
                 required: true,
                 defaultSort: true,
@@ -64,56 +64,56 @@ class RevenueReportTable extends Component {
                 isSortable: true,
             },
             {
-                label: __( 'Orders', 'woocommerce' ),
+                label: __( 'Orders', 'dokan-lite' ),
                 key: 'orders_count',
                 required: false,
                 isSortable: true,
                 isNumeric: true,
             },
             {
-                label: __( 'Gross sales', 'woocommerce' ),
+                label: __( 'Gross sales', 'dokan-lite' ),
                 key: 'gross_sales',
                 required: false,
                 isSortable: true,
                 isNumeric: true,
             },
             {
-                label: __( 'Returns', 'woocommerce' ),
+                label: __( 'Returns', 'dokan-lite' ),
                 key: 'refunds',
                 required: false,
                 isSortable: true,
                 isNumeric: true,
             },
             {
-                label: __( 'Coupons', 'woocommerce' ),
+                label: __( 'Coupons', 'dokan-lite' ),
                 key: 'coupons',
                 required: false,
                 isSortable: true,
                 isNumeric: true,
             },
             {
-                label: __( 'Net sales', 'woocommerce' ),
+                label: __( 'Net sales', 'dokan-lite' ),
                 key: 'net_revenue',
                 required: false,
                 isSortable: true,
                 isNumeric: true,
             },
             {
-                label: __( 'Taxes', 'woocommerce' ),
+                label: __( 'Taxes', 'dokan-lite' ),
                 key: 'taxes',
                 required: false,
                 isSortable: true,
                 isNumeric: true,
             },
             {
-                label: __( 'Shipping', 'woocommerce' ),
+                label: __( 'Shipping', 'dokan-lite' ),
                 key: 'shipping',
                 required: false,
                 isSortable: true,
                 isNumeric: true,
             },
             {
-                label: __( 'Total sales', 'woocommerce' ),
+                label: __( 'Total sales', 'dokan-lite' ),
                 key: 'total_sales',
                 required: false,
                 isSortable: true,
@@ -227,39 +227,39 @@ class RevenueReportTable extends Component {
         const currency = getCurrencyConfig();
         return [
             {
-                label: _n( 'day', 'days', totalResults, 'woocommerce' ),
+                label: _n( 'day', 'days', totalResults, 'dokan-lite' ),
                 value: formatValue( currency, 'number', totalResults ),
             },
             {
-                label: _n( 'order', 'orders', ordersCount, 'woocommerce' ),
+                label: _n( 'order', 'orders', ordersCount, 'dokan-lite' ),
                 value: formatValue( currency, 'number', ordersCount ),
             },
             {
-                label: __( 'Gross sales', 'woocommerce' ),
+                label: __( 'Gross sales', 'dokan-lite' ),
                 value: formatAmount( grossSales ),
             },
             {
-                label: __( 'Returns', 'woocommerce' ),
+                label: __( 'Returns', 'dokan-lite' ),
                 value: formatAmount( refunds ),
             },
             {
-                label: __( 'Coupons', 'woocommerce' ),
+                label: __( 'Coupons', 'dokan-lite' ),
                 value: formatAmount( coupons ),
             },
             {
-                label: __( 'Net sales', 'woocommerce' ),
+                label: __( 'Net sales', 'dokan-lite' ),
                 value: formatAmount( netRevenue ),
             },
             {
-                label: __( 'Taxes', 'woocommerce' ),
+                label: __( 'Taxes', 'dokan-lite' ),
                 value: formatAmount( taxes ),
             },
             {
-                label: __( 'Shipping', 'woocommerce' ),
+                label: __( 'Shipping', 'dokan-lite' ),
                 value: formatAmount( shipping ),
             },
             {
-                label: __( 'Total sales', 'woocommerce' ),
+                label: __( 'Total sales', 'dokan-lite' ),
                 value: formatAmount( totalSales ),
             },
         ];
@@ -277,7 +277,7 @@ class RevenueReportTable extends Component {
                 summaryFields={ summaryFields }
                 query={ query }
                 tableData={ tableData }
-                title={ __( 'Revenue', 'woocommerce' ) }
+                title={ __( 'Revenue', 'dokan-lite' ) }
                 columnPrefsKey="revenue_report_columns"
                 filters={ filters }
                 advancedFilters={ advancedFilters }

@@ -17,177 +17,177 @@ import { ONBOARDING_STORE_NAME } from '@woocommerce/data';
  * returning the URL.
  */
 export class Connect extends Component {
-	constructor( props ) {
-		super( props );
-		this.state = {
-			isAwaitingRedirect: false,
-			isRedirecting: false,
-		};
+    constructor( props ) {
+        super( props );
+        this.state = {
+            isAwaitingRedirect: false,
+            isRedirecting: false,
+        };
 
-		this.connectJetpack = this.connectJetpack.bind( this );
-		props.setIsPending( false );
-	}
+        this.connectJetpack = this.connectJetpack.bind( this );
+        props.setIsPending( false );
+    }
 
-	componentDidUpdate( prevProps ) {
-		const { createNotice, error, onError, isRequesting } = this.props;
+    componentDidUpdate( prevProps ) {
+        const { createNotice, error, onError, isRequesting } = this.props;
 
-		if ( error && error !== prevProps.error ) {
-			if ( onError ) {
-				onError();
-			}
-			createNotice( 'error', error );
-		}
+        if ( error && error !== prevProps.error ) {
+            if ( onError ) {
+                onError();
+            }
+            createNotice( 'error', error );
+        }
 
-		if (
-			this.state.isAwaitingRedirect &&
-			! this.state.isRedirecting &&
-			! isRequesting &&
-			! error
-		) {
-			this.setState( { isRedirecting: true }, () => {
-				window.location = this.props.jetpackAuthUrl;
-			} );
-		}
-	}
+        if (
+            this.state.isAwaitingRedirect &&
+            ! this.state.isRedirecting &&
+            ! isRequesting &&
+            ! error
+        ) {
+            this.setState( { isRedirecting: true }, () => {
+                window.location = this.props.jetpackAuthUrl;
+            } );
+        }
+    }
 
-	connectJetpack() {
-		const { onConnect } = this.props;
+    connectJetpack() {
+        const { onConnect } = this.props;
 
-		if ( onConnect ) {
-			onConnect();
-		}
+        if ( onConnect ) {
+            onConnect();
+        }
 
-		this.setState( { isAwaitingRedirect: true } );
-	}
+        this.setState( { isAwaitingRedirect: true } );
+    }
 
-	render() {
-		const { error, onSkip, skipText, onAbort, abortText } = this.props;
+    render() {
+        const { error, onSkip, skipText, onAbort, abortText } = this.props;
 
-		return (
-			<Fragment>
-				{ error ? (
-					<Button
-						isPrimary
-						onClick={ () => window.location.reload() }
-					>
-						{ __( 'Retry', 'woocommerce' ) }
-					</Button>
-				) : (
-					<Button
-						isBusy={ this.state.isAwaitingRedirect }
-						isPrimary
-						onClick={ this.connectJetpack }
-					>
-						{ __( 'Connect', 'woocommerce' ) }
-					</Button>
-				) }
-				{ onSkip && (
-					<Button onClick={ onSkip }>
-						{ skipText || __( 'No thanks', 'woocommerce' ) }
-					</Button>
-				) }
-				{ onAbort && (
-					<Button onClick={ onAbort }>
-						{ abortText || __( 'Abort', 'woocommerce' ) }
-					</Button>
-				) }
-			</Fragment>
-		);
-	}
+        return (
+            <Fragment>
+                { error ? (
+                    <Button
+                        isPrimary
+                        onClick={ () => window.location.reload() }
+                    >
+                        { __( 'Retry', 'dokan-lite' ) }
+                    </Button>
+                ) : (
+                    <Button
+                        isBusy={ this.state.isAwaitingRedirect }
+                        isPrimary
+                        onClick={ this.connectJetpack }
+                    >
+                        { __( 'Connect', 'dokan-lite' ) }
+                    </Button>
+                ) }
+                { onSkip && (
+                    <Button onClick={ onSkip }>
+                        { skipText || __( 'No thanks', 'dokan-lite' ) }
+                    </Button>
+                ) }
+                { onAbort && (
+                    <Button onClick={ onAbort }>
+                        { abortText || __( 'Abort', 'dokan-lite' ) }
+                    </Button>
+                ) }
+            </Fragment>
+        );
+    }
 }
 
 Connect.propTypes = {
-	/**
-	 * Method to create a displayed notice.
-	 */
-	createNotice: PropTypes.func.isRequired,
-	/**
-	 * Human readable error message.
-	 *
-	 * Also used to determine if the "Retry" button should be displayed.
-	 */
-	error: PropTypes.string,
-	/**
-	 * Bool to check if the connection URL is still being requested.
-	 */
-	isRequesting: PropTypes.bool,
-	/**
-	 * Generated Jetpack authentication URL.
-	 */
-	jetpackAuthUrl: PropTypes.string,
-	/**
-	 * Called before the redirect to Jetpack.
-	 */
-	onConnect: PropTypes.func,
-	/**
-	 * Called when the plugin has an error retrieving the jetpackAuthUrl.
-	 */
-	onError: PropTypes.func,
-	/**
-	 * Called when the plugin connection is skipped.
-	 */
-	onSkip: PropTypes.func,
-	/**
-	 * Redirect URL to encode as a URL param for the connection path.
-	 */
-	redirectUrl: PropTypes.string,
-	/**
-	 * Text used for the skip connection button.
-	 */
-	skipText: PropTypes.string,
-	/**
-	 * Control the `isPending` logic of the parent containing the Stepper.
-	 */
-	setIsPending: PropTypes.func,
-	/**
-	 * Called when the plugin connection is aborted.
-	 */
-	onAbort: PropTypes.func,
-	/**
-	 * Text used for the abort connection button.
-	 */
-	abortText: PropTypes.string,
+    /**
+     * Method to create a displayed notice.
+     */
+    createNotice: PropTypes.func.isRequired,
+    /**
+     * Human readable error message.
+     *
+     * Also used to determine if the "Retry" button should be displayed.
+     */
+    error: PropTypes.string,
+    /**
+     * Bool to check if the connection URL is still being requested.
+     */
+    isRequesting: PropTypes.bool,
+    /**
+     * Generated Jetpack authentication URL.
+     */
+    jetpackAuthUrl: PropTypes.string,
+    /**
+     * Called before the redirect to Jetpack.
+     */
+    onConnect: PropTypes.func,
+    /**
+     * Called when the plugin has an error retrieving the jetpackAuthUrl.
+     */
+    onError: PropTypes.func,
+    /**
+     * Called when the plugin connection is skipped.
+     */
+    onSkip: PropTypes.func,
+    /**
+     * Redirect URL to encode as a URL param for the connection path.
+     */
+    redirectUrl: PropTypes.string,
+    /**
+     * Text used for the skip connection button.
+     */
+    skipText: PropTypes.string,
+    /**
+     * Control the `isPending` logic of the parent containing the Stepper.
+     */
+    setIsPending: PropTypes.func,
+    /**
+     * Called when the plugin connection is aborted.
+     */
+    onAbort: PropTypes.func,
+    /**
+     * Text used for the abort connection button.
+     */
+    abortText: PropTypes.string,
 };
 
 Connect.defaultProps = {
-	setIsPending: () => {},
+    setIsPending: () => {},
 };
 
 export default compose(
-	withSelect( ( select, props ) => {
-		const { getJetpackAuthUrl, isResolving } = select(
-			ONBOARDING_STORE_NAME
-		);
+    withSelect( ( select, props ) => {
+        const { getJetpackAuthUrl, isResolving } = select(
+            ONBOARDING_STORE_NAME
+        );
 
-		const queryArgs = {
-			redirectUrl: props.redirectUrl || window.location.href,
-			from: 'woocommerce-services',
-		};
+        const queryArgs = {
+            redirectUrl: props.redirectUrl || window.location.href,
+            from: 'woocommerce-services',
+        };
 
-		const jetpackAuthUrlResponse = getJetpackAuthUrl( queryArgs );
-		const isRequesting = isResolving( 'getJetpackAuthUrl', [ queryArgs ] );
+        const jetpackAuthUrlResponse = getJetpackAuthUrl( queryArgs );
+        const isRequesting = isResolving( 'getJetpackAuthUrl', [ queryArgs ] );
 
-		let error;
+        let error;
 
-		if ( ! isResolving && ! jetpackAuthUrlResponse ) {
-			error = __( 'Error requesting connection URL.', 'woocommerce' );
-		}
+        if ( ! isResolving && ! jetpackAuthUrlResponse ) {
+            error = __( 'Error requesting connection URL.', 'dokan-lite' );
+        }
 
-		if ( jetpackAuthUrlResponse?.errors?.length ) {
-			error = jetpackAuthUrlResponse?.errors[ 0 ];
-		}
+        if ( jetpackAuthUrlResponse?.errors?.length ) {
+            error = jetpackAuthUrlResponse?.errors[ 0 ];
+        }
 
-		return {
-			error,
-			isRequesting,
-			jetpackAuthUrl: jetpackAuthUrlResponse.url,
-		};
-	} ),
-	withDispatch( ( dispatch ) => {
-		const { createNotice } = dispatch( 'core/notices' );
+        return {
+            error,
+            isRequesting,
+            jetpackAuthUrl: jetpackAuthUrlResponse.url,
+        };
+    } ),
+    withDispatch( ( dispatch ) => {
+        const { createNotice } = dispatch( 'core/notices' );
 
-		return {
-			createNotice,
-		};
-	} )
+        return {
+            createNotice,
+        };
+    } )
 )( Connect );
