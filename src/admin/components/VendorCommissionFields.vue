@@ -12,7 +12,7 @@
                     <select v-model="selectedCommission" @change="commissionUpdated" id="_subscription_product_admin_commission_type" name="_subscription_product_admin_commission_type" class="select short">
                         <option v-for="(commissionData, key) in commissionTypes" :value="key">{{commissionData}}</option>
                     </select>
-                    <span class="description !mt-[6px] block">{{__( 'Set the commission type admin will get under this subscription', 'dokan-lite' )}}</span>
+                    <span class="description !mt-[6px] block">{{__( 'Set the commission type that admin will get', 'dokan-lite' )}}</span>
                 </div>
             </div>
             <div v-if="'category_based' === selectedCommission">

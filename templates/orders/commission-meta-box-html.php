@@ -167,12 +167,30 @@ foreach ( $order->get_refunds() as $refund ) {
                                 }
 
                                 ?>
-                                    <bdi><?php echo wc_price( $original_commission, array( 'currency' => $order->get_currency() ) ); ?></bdi>
+                                    <bdi>
+                                    <?php
+                                    echo wc_price(
+                                        $original_commission, array(
+											'currency' => $order->get_currency(),
+											'decimals' => wc_get_price_decimals() + 2,
+                                        )
+                                    );
+									?>
+                                            </bdi>
                                 <?php
 
                                 if ( $order->get_total_refunded_for_item( $item_id ) ) :
                                     ?>
-                                        <small class="refunded"><?php echo wc_price( $commission_refunded, array( 'currency' => $order->get_currency() ) ); ?></small>
+                                        <small class="refunded">
+                                        <?php
+                                        echo wc_price(
+                                            $commission_refunded, array(
+												'currency' => $order->get_currency(),
+												'decimals' => wc_get_price_decimals() + 2,
+                                            )
+                                        );
+										?>
+                                                                </small>
                                     <?php
                                 endif;
                                 ?>
@@ -190,14 +208,28 @@ foreach ( $order->get_refunds() as $refund ) {
                     <td class="label"><?php esc_html_e( 'Net total:', 'dokan-lite' ); ?></td>
                     <td width="1%"></td>
                     <td class="total">
-                        <?php echo wc_price( $order_total, array( 'currency' => $order->get_currency() ) ); ?>
+                        <?php
+                        echo wc_price(
+                            $order_total, array(
+								'currency' => $order->get_currency(),
+								'decimals' => wc_get_price_decimals() + 2,
+                            )
+                        );
+						?>
                     </td>
                 </tr>
                 <tr>
                     <td class="label"><?php esc_html_e( 'Vendor earning:', 'dokan-lite' ); ?></td>
                     <td width="1%"></td>
                     <td class="total">
-                        <?php echo wc_price( $net_amount, array( 'currency' => $order->get_currency() ) ); ?>
+                        <?php
+                        echo wc_price(
+                            $net_amount, array(
+								'currency' => $order->get_currency(),
+								'decimals' => wc_get_price_decimals() + 2,
+                            )
+                        );
+						?>
                     </td>
                 </tr>
                 <?php if ( $shipping_fee_recipient === $admin ) : ?>
@@ -205,11 +237,27 @@ foreach ( $order->get_refunds() as $refund ) {
                     <td class="label"><?php esc_html_e( 'Shipping Fee:', 'dokan-lite' ); ?></td>
                     <td width="1%"></td>
                     <td class="total">
-                        <?php echo wc_price( $shipping_fee, array( 'currency' => $order->get_currency() ) ); ?>
+                        <?php
+                        echo wc_price(
+                            $shipping_fee, array(
+								'currency' => $order->get_currency(),
+								'decimals' => wc_get_price_decimals() + 2,
+                            )
+                        );
+						?>
                         <?php
                         if ( $shipping_fee_refunded ) :
                             ?>
-                            <small class="refunded refunded-recipient"><?php echo wc_price( $shipping_fee_refunded, array( 'currency' => $order->get_currency() ) ); ?></small>
+                            <small class="refunded refunded-recipient">
+                            <?php
+                            echo wc_price(
+                                $shipping_fee_refunded, array(
+									'currency' => $order->get_currency(),
+									'decimals' => wc_get_price_decimals() + 2,
+                                )
+                            );
+							?>
+                                                                        </small>
 							<?php
                         endif;
                         ?>
@@ -221,11 +269,27 @@ foreach ( $order->get_refunds() as $refund ) {
                         <td class="label"><?php esc_html_e( 'Product Tax Fee:', 'dokan-lite' ); ?></td>
                         <td width="1%"></td>
                         <td class="total">
-                            <?php echo wc_price( $product_tax_fee, array( 'currency' => $order->get_currency() ) ); ?>
+                            <?php
+                            echo wc_price(
+                                $product_tax_fee, array(
+									'currency' => $order->get_currency(),
+									'decimals' => wc_get_price_decimals() + 2,
+                                )
+                            );
+							?>
                             <?php
                             if ( $product_tax_fee_refunded ) :
                                 ?>
-                                <small class="refunded refunded-recipient"><?php echo wc_price( $product_tax_fee_refunded, array( 'currency' => $order->get_currency() ) ); ?></small>
+                                <small class="refunded refunded-recipient">
+                                <?php
+                                echo wc_price(
+                                    $product_tax_fee_refunded, array(
+										'currency' => $order->get_currency(),
+										'decimals' => wc_get_price_decimals() + 2,
+                                    )
+                                );
+								?>
+                                                                            </small>
 								<?php
                             endif;
                             ?>
@@ -237,11 +301,27 @@ foreach ( $order->get_refunds() as $refund ) {
                         <td class="label"><?php esc_html_e( 'Shipping Tax Fee:', 'dokan-lite' ); ?></td>
                         <td width="1%"></td>
                         <td class="total">
-                            <?php echo wc_price( $shipping_tax_fee, array( 'currency' => $order->get_currency() ) ); ?>
+                            <?php
+                            echo wc_price(
+                                $shipping_tax_fee, array(
+									'currency' => $order->get_currency(),
+									'decimals' => wc_get_price_decimals() + 2,
+                                )
+                            );
+							?>
                             <?php
                             if ( $shipping_tax_fee_refunded ) :
                                 ?>
-                                <small class="refunded refunded-recipient"><?php echo wc_price( $shipping_tax_fee_refunded, array( 'currency' => $order->get_currency() ) ); ?></small>
+                                <small class="refunded refunded-recipient">
+                                <?php
+                                echo wc_price(
+                                    $shipping_tax_fee_refunded, array(
+										'currency' => $order->get_currency(),
+										'decimals' => wc_get_price_decimals() + 2,
+                                    )
+                                );
+								?>
+                                                                            </small>
 								<?php
                             endif;
                             ?>
@@ -260,7 +340,14 @@ foreach ( $order->get_refunds() as $refund ) {
                     <td class="label label-highlight"><?php esc_html_e( 'Total commission:', 'dokan-lite' ); ?></td>
                     <td width="1%"></td>
                     <td class="total">
-                        <?php echo wc_price( $total_commission, array( 'currency' => $order->get_currency() ) ); ?>
+                        <?php
+                        echo wc_price(
+                            $total_commission, array(
+								'currency' => $order->get_currency(),
+								'decimals' => wc_get_price_decimals() + 2,
+                            )
+                        );
+						?>
                     </td>
                 </tr>
                 </tbody>

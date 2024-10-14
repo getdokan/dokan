@@ -1,11 +1,11 @@
 <template>
   <div
-    class="d-xs:text-[8px] sm:text-[14px] d-xs:w-[100px] sm:w-[235px] md:w-auto h-[32px] flex d-xs:shadow-md md:shadow-none rounded-[5px]">
+    class="d-xs:text-[8px] sm:text-[14px] d-xs:w-fit sm:w-fit md:w-auto h-[32px] flex d-xs:shadow-md md:shadow-none rounded-[5px]">
     <div
       class="md:shadow-md  border-[0.957434px] border-[#E9E9E9] d-xs:!border-r-0 md:!border-r-[0.957434px] rounded-[5px] d-xs:!rounded-r-none md:!rounded-r-[5px] !p-0 !m-0 w-[110px] flex justify-start items-center box-border">
       <input
         type="text"
-        class="wc_input_decimal !border-none focus:!shadow-none !border-0 !w-[100%] !min-h-full !pl-2 !pr-0 !pt-0 !pb-0"
+        class="wc_input_decimal !border-none focus:!shadow-none !border-0 !w-[100%] !min-h-full !pl-2 !pr-0 !pt-0 !pb-0 min-w-[75px]"
         ref="percentage"
         :id="percentageId"
         :name="percentageName"
@@ -27,7 +27,7 @@
         <span class="d-xs:pl-1 d-xs:pr-1 md:pl-2 md:pr-2">{{ getCurrencySymbol }}</span></div>
       <input
         type="text"
-        class="wc_input_price focus:!shadow-none !border-0 !w-[100%] !min-h-full !pl-2 !pr-0 !pt-0 !pb-0"
+        class="wc_input_price focus:!shadow-none !border-0 !w-[100%] !min-h-full !pl-2 !pr-0 !pt-0 !pb-0 min-w-[75px]"
         ref="fixed"
         :id="fixedId"
         :name="fixexName"

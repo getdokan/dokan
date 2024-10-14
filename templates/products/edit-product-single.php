@@ -262,7 +262,17 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                                                         data-product-id="<?php echo esc_attr( $post_id ); ?>">
                                                             ( <?php esc_html_e( ' You Earn : ', 'dokan-lite' ); ?><?php echo esc_html( get_woocommerce_currency_symbol() ); ?>
                                                                 <span class="vendor-price">
-                                                                    <?php echo esc_html( wc_format_localized_price( esc_attr( dokan()->commission->get_earning_by_product( $post_id ) ) ) ); ?>
+                                                                    <?php
+                                                                    echo wp_kses_post(
+                                                                        wc_price(
+                                                                            dokan()->commission->get_earning_by_product( $post_id ),
+                                                                            [
+                                                                                'currency' => get_woocommerce_currency_symbol(),
+                                                                                'decimals' => wc_get_price_decimals() + 2,
+                                                                            ]
+                                                                        )
+                                                                    );
+                                                                    ?>
                                                                 </span>
                                                             )
                                                     </span>
