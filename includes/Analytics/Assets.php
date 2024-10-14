@@ -4,7 +4,6 @@ namespace WeDevs\Dokan\Analytics;
 
 use Automattic\WooCommerce\Internal\Admin\WCAdminAssets;
 use WeDevs\Dokan\Contracts\Hookable;
-use WP_REST_Request;
 
 class Assets implements Hookable {
 	public function register_hooks(): void {
@@ -13,25 +12,9 @@ class Assets implements Hookable {
 		if ( ! is_admin() ) {
 			add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_front_scripts' ] );
 		}
-
-		add_filter(
-            'woocommerce_rest_check_permissions', function ( $permission, $context, $int_val, $object ) {
-				if ( ! $permission && in_array( $object, [ 'reports', 'settings' ] ) && $context === 'read' ) {
-					$current_user_id = dokan_get_current_user_id();
-					$permission = dokan_is_user_seller( $current_user_id );
-				}
-
-				return $permission;
-			}, 20, 4
-		);
-		add_filter( 'dokan_dashboard_nav_submenu', [ $this, 'add_report_submenu' ], 10, 2 );
-
-		// Dummy hook for testing.
-		add_action( 'dokan_dashboard_content_inside_before', [ $this, 'add_dashboard_content' ] );
-
-		add_filter( 'woocommerce_rest_product_object_query', [ $this, 'product_query_args' ], 10, 2 );
-
 		add_filter( 'woocommerce_admin_shared_settings', [ $this, 'localize_wc_admin_settings' ] );
+
+		( new VendorDashboardManager() )->register_hooks();
 	}
 
 	/**
@@ -65,106 +48,6 @@ class Assets implements Hookable {
 		}
 
 		return $settings;
-	}
-
-	/**
-	 * Filter product query by the Vendor.
-	 *
-	 * @param array $args
-	 * @return array
-	 */
-	public function product_query_args( array $args, WP_REST_Request $request ) {
-		if (
-			! is_user_logged_in()
-			|| ! is_admin()
-			|| current_user_can( 'manage_woocommerce' )
-			|| '/wc-analytics/products' !== $request->get_route()
-		) {
-			return $args;
-		}
-
-		$args['author'] = get_current_user_id();
-
-		return $args;
-	}
-
-	// This is dummy function for testing.
-	public function add_dashboard_content() {
-		echo '<div id="dokan-analytics-test">hello</div>';
-	}
-
-	/**
-	 * Adds a new order menu item to the Dokan dashboard navigation.
-	 *
-	 * @param array  $submenu_items Existing submenu items.
-	 * @param string $nav_key       Navigation key.
-	 *
-	 * @return array Modified submenu items.
-	 * @since DOKAN_PRO_SINCE
-	 */
-	public function add_report_submenu( array $submenu_items, string $nav_key ): array {
-		$parent_menu = 'dashboard';
-
-		if ( $parent_menu === $nav_key && dokan_is_seller_enabled( dokan_get_current_user_id() ) ) {
-			$submenu_items['report_overview'] = [
-				'title'      => __( 'Overview', 'dokan-lite' ),
-				// 'icon'       => '<i class="far fa-credit-card"></i>',
-				'url'        => dokan_get_navigation_url( $parent_menu ) . '?path=%2Fanalytics%2FOverview',
-				'pos'        => 50,
-				'permission' => 'dokan_view_store_payment_menu',
-
-			];
-			$submenu_items['report_products'] = [
-				'title'      => __( 'Products', 'dokan-lite' ),
-				// 'icon'       => '<i class="far fa-credit-card"></i>',
-				'url'        => dokan_get_navigation_url( $parent_menu ) . '?path=%2Fanalytics%2Fproducts',
-				'pos'        => 50,
-				'permission' => 'dokan_view_store_payment_menu',
-
-			];
-			$submenu_items['report_revenue'] = [
-				'title'      => __( 'Revenue', 'dokan-lite' ),
-				// 'icon'       => '<i class="far fa-credit-card"></i>',
-				'url'        => dokan_get_navigation_url( $parent_menu ) . '?path=%2Fanalytics%2Frevenue',
-				'pos'        => 50,
-				'permission' => 'dokan_view_store_payment_menu',
-
-			];
-
-			$submenu_items['report_orders'] = [
-				'title'      => __( 'Orders', 'dokan-lite' ),
-				// 'icon'       => '<i class="far fa-credit-card"></i>',
-				'url'        => dokan_get_navigation_url( $parent_menu ) . '?path=%2Fanalytics%2Forders',
-				'pos'        => 50,
-				'permission' => 'dokan_view_store_payment_menu',
-			];
-
-			$submenu_items['report_variations'] = [
-				'title'      => __( 'Variations', 'dokan-lite' ),
-				// 'icon'       => '<i class="far fa-credit-card"></i>',
-				'url'        => dokan_get_navigation_url( $parent_menu ) . '?path=%2Fanalytics%2Fvariations',
-				'pos'        => 50,
-				'permission' => 'dokan_view_store_payment_menu',
-			];
-
-			$submenu_items['report_categories'] = [
-				'title'      => __( 'Categories', 'dokan-lite' ),
-				// 'icon'       => '<i class="far fa-credit-card"></i>',
-				'url'        => dokan_get_navigation_url( $parent_menu ) . '?path=%2Fanalytics%2Fcategories',
-				'pos'        => 50,
-				'permission' => 'dokan_view_store_payment_menu',
-			];
-
-			$submenu_items['report_stock'] = [
-				'title'      => __( 'Stock', 'dokan-lite' ),
-				// 'icon'       => '<i class="far fa-credit-card"></i>',
-				'url'        => dokan_get_navigation_url( $parent_menu ) . '?path=%2Fanalytics%2Fstock',
-				'pos'        => 50,
-				'permission' => 'dokan_view_store_payment_menu',
-			];
-		}
-
-		return $submenu_items;
 	}
 
     /**

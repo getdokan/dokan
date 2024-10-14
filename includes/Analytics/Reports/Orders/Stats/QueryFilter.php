@@ -40,6 +40,20 @@ class QueryFilter extends OrdersQueryFilter {
 
         // Apply Dokan condition for SELECT fields.
         add_filter( 'woocommerce_admin_report_columns', [ $this, 'modify_admin_report_columns' ], 20, 3 );
+
+        // Define Additional Schema Items
+        add_filter( 'woocommerce_rest_report_revenue_stats_schema', [ $this, 'add_additional_fields_schema' ] );
+    }
+
+    public function add_additional_fields_schema( $schema ) {
+		$schema['properties']['totals']['properties']['products'] = array(
+			'description' => __( 'Total Earnings', 'dokan-lite' ),
+			'type'        => 'integer',
+			'context'     => array( 'view', 'edit' ),
+			'readonly'    => true,
+		);
+
+        return $schema;
     }
 
     /**
