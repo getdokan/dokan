@@ -1,5 +1,11 @@
+import { dokanConfig } from "./dokan-config";
+
 export const mapToDashboardRoute = (url: string): string => {
     const mappers = [
+        {
+            search: 'wp-admin/admin.php',
+            replace: dokanConfig.dashboardReportUrl,
+        },
         {
             search: 'admin.php',
             replace: '',

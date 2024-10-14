@@ -1,6 +1,7 @@
-export const dokanConfig =
-    typeof vendorAnalyticsDokanConfig !== 'undefined'
+export const dokanConfig = {
+    ...( typeof vendorAnalyticsDokanConfig !== 'undefined'
         ? vendorAnalyticsDokanConfig
-        : {
-              seller_id: '0',
-          };
+        : {} ),
+    seller_id: '0',
+    dashboardReportUrl: 'dashboard',
+};

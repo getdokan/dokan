@@ -17,6 +17,7 @@ import { CurrencyContext } from '@woocommerce/currency';
  */
 import CategoryBreacrumbs from './breadcrumbs';
 import ReportTable from '../../components/report-table';
+import { mapToDashboardRoute } from '../../../helper';
 
 class CategoriesReportTable extends Component {
     constructor( props ) {
@@ -86,6 +87,14 @@ class CategoriesReportTable extends Component {
             } = categoryStat;
             const category = categories.get( categoryId );
             const persistedQuery = getPersistedQuery( query );
+            const href = mapToDashboardRoute(
+                getNewPath( persistedQuery, '/analytics/categories', {
+                    filter: 'single_category',
+                    categories: category.id,
+                } )
+            );
+
+            console.log( 'Category HREF ->', href );
 
             return [
                 {
@@ -96,7 +105,7 @@ class CategoriesReportTable extends Component {
                             categories={ categories }
                         />
                     ),
-                    value: category && category.name,
+                    value: category && mapToDashboardRoute( category.name ),
                 },
                 {
                     display: formatValue( currency, 'number', itemsSold ),
@@ -108,17 +117,7 @@ class CategoriesReportTable extends Component {
                 },
                 {
                     display: category && (
-                        <Link
-                            href={ getNewPath(
-                                persistedQuery,
-                                '/analytics/categories',
-                                {
-                                    filter: 'single_category',
-                                    categories: category.id,
-                                }
-                            ) }
-                            type="wc-admin"
-                        >
+                        <Link href={ href } type="custom">
                             { formatValue( currency, 'number', productsCount ) }
                         </Link>
                     ),
