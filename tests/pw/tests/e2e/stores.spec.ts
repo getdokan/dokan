@@ -59,7 +59,7 @@ test.describe('Stores test', () => {
 
     test('admin can edit vendor info', { tag: ['@lite', '@admin'] }, async () => {
         // todo: implement option to edit particular chunk of data: social profile, address, etc
-        await admin.editVendor(data.vendor);
+        await admin.editVendor(VENDOR_ID, data.vendor);
     });
 
     test('admin can view vendor products', { tag: ['@lite', '@admin'] }, async () => {

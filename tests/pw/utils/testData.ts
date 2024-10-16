@@ -2,28 +2,7 @@ import { faker } from '@faker-js/faker';
 import { helpers } from '@utils/helpers';
 import 'dotenv/config';
 
-const {
-    ADMIN,
-    ADMIN_PASSWORD,
-    VENDOR,
-    VENDOR2,
-    CUSTOMER,
-    CUSTOMER2,
-    USER_PASSWORD,
-    SITE_PATH,
-    BASE_URL,
-    SITE_LANGUAGE,
-    SITE_TITLE,
-    ADMIN_EMAIL,
-    DB_HOST_NAME,
-    DATABASE,
-    DB_USER_NAME,
-    DB_USER_PASSWORD,
-    DB_PREFIX,
-    GMAP,
-    MAPBOX,
-    LICENSE_KEY,
-} = process.env;
+const { ADMIN, ADMIN_PASSWORD, VENDOR, VENDOR2, CUSTOMER, CUSTOMER2, USER_PASSWORD, CATEGORY_ID, SITE_PATH, BASE_URL, SITE_LANGUAGE, SITE_TITLE, ADMIN_EMAIL, DB_HOST_NAME, DATABASE, DB_USER_NAME, DB_USER_PASSWORD, DB_PREFIX, GMAP, MAPBOX, LICENSE_KEY } = process.env;
 
 const basicAuth = (username: string, password: string) => 'Basic ' + Buffer.from(username + ':' + password).toString('base64');
 
@@ -559,6 +538,16 @@ export const data = {
                 minimumProductQuantity: '1',
                 maximumProductQuantity: '20',
             },
+
+            commission: {
+                commissionType: 'fixed', // 'fixed','category_based'  [category commission will only be applicable to dokan subscription product]
+                commissionPercentage: '2',
+                commissionFixed: '2',
+                commissionCategory: {
+                    allCategory: true, // true for all category, false for specific category
+                    category: 'All Categories',
+                },
+            },
         },
     },
 
@@ -842,6 +831,39 @@ export const data = {
         },
     },
 
+    // commission [for all dokan setup wizard, dokan selling settings, dokan subscription product]
+    commission: {
+        fixed: {
+            commissionType: 'fixed', // 'fixed','category_based'
+            commissionPercentage: '10',
+            commissionFixed: '10',
+            commissionCategory: {
+                allCategory: true, // true for all category, false for specific category
+                category: 'All Categories',
+            },
+        },
+
+        allCategory: {
+            commissionType: 'category_based', // 'fixed','category_based'
+            commissionPercentage: '5',
+            commissionFixed: '5',
+            commissionCategory: {
+                allCategory: true, // true for all category, false for specific category
+                category: 'All Categories',
+            },
+        },
+
+        specficCategory: {
+            commissionType: 'category_based', // 'fixed','category_based'
+            commissionPercentage: '2',
+            commissionFixed: '2',
+            commissionCategory: {
+                allCategory: false, // true for all category, false for specific category
+                category: CATEGORY_ID,
+            },
+        },
+    },
+
     // Dokan Setup Wizard
     dokanSetupWizard: {
         vendorStoreURL: 'store',
@@ -850,8 +872,15 @@ export const data = {
         mapApiSource: 'google_maps', // 'google_maps', 'mapbox'
         googleMapApiKey: GMAP,
         sellingProductTypes: 'sell_both', // 'physical', 'digital', 'sell_both',
-        commissionType: 'percentage', // 'flat','percentage' 'combine',
-        adminCommission: '10',
+        commission: {
+            commissionType: 'fixed', // 'fixed','category_based'
+            commissionPercentage: '10',
+            commissionFixed: '0',
+            commissionCategory: {
+                allCategory: true, // true for all category, false for specific category
+                category: 'All Categories',
+            },
+        },
         minimumWithdrawLimit: '5',
     },
 
@@ -1110,6 +1139,7 @@ export const data = {
                 dummyDataImport: 'dokan/v1/dummy-data/import',
                 refunds: 'dokan/v1/refunds',
                 modules: 'dokan/v1/admin/modules',
+                multistepCategories: 'dokan/v1/products/multistep-categories',
                 storeReviews: 'dokan/v1/store-reviews',
                 productAdvertising: 'dokan/v1/product_adv',
                 wholesaleRegister: 'dokan/v1/wholesale/register',
@@ -1221,6 +1251,17 @@ export const data = {
 
             // address fields enable flag (on vendor registration)
             addressFieldsEnabled: false,
+
+            // commission
+            commission: {
+                commissionType: 'fixed', // 'fixed','category_based'
+                commissionPercentage: '5',
+                commissionFixed: '5',
+                commissionCategory: {
+                    allCategory: true, // true for all category, false for specific category
+                    category: 'All Categories',
+                },
+            },
 
             // subscription pack
             vendorSubscriptionPack: 'Dokan_Subscription_Non_recurring',
@@ -2048,8 +2089,15 @@ export const data = {
         // selling options settings
         selling: {
             settingTitle: 'Selling Option Settings',
-            commissionType: 'percentage', // 'flat', 'percentage', 'combine'
-            adminCommission: '10',
+            commission: {
+                commissionType: 'fixed', // 'fixed','category_based'
+                commissionPercentage: '10',
+                commissionFixed: '10',
+                commissionCategory: {
+                    allCategory: true, // true for all category, false for specific category
+                    category: 'All Categories',
+                },
+            },
             shippingFeeRecipient: 'seller', // 'seller', 'admin'
             productTaxFeeRecipient: 'seller', // 'seller', 'admin'
             shippingTaxFeeRecipient: 'seller', // 'seller', 'admin'
