@@ -4,6 +4,22 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.12.5',
+        'released' => '2024-10-16',
+        'changes'  => [
+            'Fix'  => [
+                [
+                    'title'       => 'Implement order trash and untrash handling for Dokan',
+                    'description' => '',
+                ],
+                [
+                    'title'       => 'Added wordpress native i18n support',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.12.4',
         'released' => '2024-10-03',
         'changes'  => [
