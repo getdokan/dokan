@@ -4,7 +4,7 @@ import { ApiUtils } from '@utils/apiUtils';
 import { data } from '@utils/testData';
 import { payloads } from '@utils/payloads';
 
-test.describe('Vendor staff test', () => {
+test.describe('Vendor staff test (vendor)', () => {
     let vendor: VendorStaffPage;
     let vPage: Page;
     let apiUtils: ApiUtils;
@@ -45,7 +45,7 @@ test.describe('Vendor staff test', () => {
     });
 });
 
-test.describe('Wholesale test (customer)', () => {
+test.describe('Vendor staff test (vendorStaff)', () => {
     let staff: VendorStaffPage;
     let sPage: Page;
     let apiUtils: ApiUtils;

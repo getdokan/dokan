@@ -146,6 +146,66 @@
           vendor can update product short description [lite]: true
           vendor can remove product short description [lite]: true
           vendor can update product description [lite]: true
+          vendor can add product downloadable options [lite]: true
+          vendor can update product downloadable options [lite]: true
+          vendor can remove product downloadable file [lite]: true
+          vendor can add product inventory options (SKU) [lite]: true
+          vendor can update product inventory options (SKU) [lite]: true
+          vendor can remove product inventory options (SKU) [lite]: true
+          vendor can add product inventory options (stock status) [lite]: true
+          vendor can add product inventory options (stock management) [lite]: true
+          vendor can update product inventory options (stock management) [lite]: true
+          vendor can remove product inventory options (stock management) [lite]: true
+          vendor can add product inventory options (allow single quantity) [lite]: true
+          vendor can remove product inventory options (allow single quantity) [lite]: true
+          vendor can add product other options (product status) [lite]: true
+          vendor can add product other options (visibility) [lite]: true
+          vendor can add product other options (purchase note) [lite]: true
+          vendor can remove product other options (purchase note) [lite]: true
+          vendor can add product other options (product review) [lite]: true
+          vendor can remove product other options (product review) [lite]: true
+          vendor can add product catalog mode [lite]: true
+          vendor can add product catalog mode (with price hidden) [lite]: true
+          vendor can remove product catalog mode [lite]: true
+          vendor can remove product catalog mode (price hidden option) [lite]: true
+          vendor can add product shipping: true
+          vendor can update product shipping: true
+          vendor can remove product shipping: true
+          vendor can add product tax: true
+          vendor can add product tax (with tax class): true
+          vendor can add product linked products (up-sells): true
+          vendor can add product linked products (cross-sells): true
+          vendor can remove product linked products (up-sells): true
+          vendor can remove product linked products (cross-sells): true
+          vendor can add product attribute: true
+          vendor can create product attribute term: true
+          vendor can remove product attribute: true
+          vendor can remove product attribute term: true
+          vendor can add product bulk discount options: true
+          vendor can update product bulk discount options: true
+          vendor can remove product bulk discount options: true
+          vendor can add product geolocation (individual): true
+          vendor can update product geolocation (individual): true
+          vendor can remove product geolocation (individual): true
+          vendor can add product EU compliance data: true
+          vendor can update product EU compliance data: true
+          vendor can remove product EU compliance data: true
+          vendor can add product addon: true
+          vendor can import product addon: true
+          vendor can export product addon: true
+          vendor can remove product addon: true
+          vendor can add product rma options (no warranty): true
+          vendor can add product rma options (warranty included limited): true
+          vendor can add product rma options (warranty included lifetime): true
+          vendor can add product rma options (warranty as addon): true
+          vendor can remove product rma options: true
+          vendor can add product wholesale options: true
+          vendor can update product wholesale options: true
+          vendor can remove product wholesale options: true
+          vendor can add product min-max options: true
+          vendor can update product min-max options: true
+          vendor can't add product min limit grater than max limit: true
+          vendor can remove product min-max options: true
 
 - page: 'MyOrders'
   features:
@@ -383,7 +443,10 @@
           vendor can set live chat settings: false
           vendor can set store support settings: true
           vendor can set social profile settings: true
-          vendor can set rma settings: true
+          vendor can set rma settings (no warranty): true
+          vendor can set rma settings (warranty included limited): true
+          vendor can set rma settings (warranty included lifetime): true
+          vendor can set rma settings (warranty as addon): true
           vendor can set store seo settings: true
 
 - page: 'Setting'
@@ -741,6 +804,10 @@
           vendor can import global product addon field: true
           vendor can export global product addon field: true
           vendor can remove product addon field: true
+          vendor can add product addon: true
+          vendor can import product addon: true
+          vendor can export product addon: true
+          vendor can remove product addon: true
       customer:
           customer can view product addons on single product page: false
           customer can buy product with addon: false

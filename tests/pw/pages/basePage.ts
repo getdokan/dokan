@@ -91,8 +91,9 @@ export class BasePage {
     }
 
     // goto subPath if not already there
-    async goIfNotThere(subPath: string, waitUntil: 'load' | 'domcontentloaded' | 'networkidle' | 'commit' = 'domcontentloaded'): Promise<void> {
-        if (!this.isCurrentUrl(subPath)) {
+    async goIfNotThere(subPath: string, waitUntil: 'load' | 'domcontentloaded' | 'networkidle' | 'commit' = 'domcontentloaded', force = false): Promise<void> {
+        const alreadyThere = this.isCurrentUrl(subPath);
+        if (!alreadyThere) {
             const url = this.createUrl(subPath);
             // console.log('url: ', url);
             await this.toPass(async () => {
@@ -100,6 +101,9 @@ export class BasePage {
                 const currentUrl = this.getCurrentUrl();
                 expect(currentUrl).toMatch(subPath);
             });
+        }
+        if (force) {
+            await this.reload();
         }
     }
 
@@ -1612,6 +1616,13 @@ export class BasePage {
     async switcherHasColor(selector: string, color: string): Promise<void> {
         selector = /^(\/\/|\(\/\/)/.test(selector) ? `${selector}//span` : `${selector} span`;
         await this.toHaveBackgroundColor(selector, color);
+    }
+
+    async forceLinkToSameTab(selector: string): Promise<void> {
+        // ensure link suppose to open on new tab
+        await this.toHaveAttribute(selector, 'target', '_blank');
+        // force link to open on the same tab
+        await this.setAttributeValue(selector, 'target', '_self');
     }
 
     /**

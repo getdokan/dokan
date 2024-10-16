@@ -919,7 +919,7 @@ export class ProductsPage extends AdminPage {
         await this.goToProductEdit(productName);
         for (const tag of tags) {
             await this.click(productsVendor.tags.removeSelectedTags(tag));
-            await this.press('Escape');  // shift focus from element
+            await this.press('Escape'); // shift focus from element
         }
         await this.saveProduct();
 
@@ -1003,6 +1003,151 @@ export class ProductsPage extends AdminPage {
         await this.toContainTextFrameLocator(productsVendor.description.descriptionIframe, productsVendor.description.descriptionHtmlBody, description);
     }
 
+    // add product downloadable options
+    async addProductDownloadableOptions(productName: string, downloadableOption: product['productInfo']['downloadableOptions']): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.check(productsVendor.downloadable);
+        await this.click(productsVendor.downloadableOptions.addFile);
+        await this.clearAndType(productsVendor.downloadableOptions.fileName, downloadableOption.fileName);
+        await this.click(productsVendor.downloadableOptions.chooseFile);
+        await this.uploadMedia(downloadableOption.fileUrl);
+        await this.clearAndType(productsVendor.downloadableOptions.downloadLimit, downloadableOption.downloadLimit);
+        await this.clearAndType(productsVendor.downloadableOptions.downloadExpiry, downloadableOption.downloadExpiry);
+        await this.saveProduct();
+        await this.toBeChecked(productsVendor.downloadable);
+        await this.toHaveValue(productsVendor.downloadableOptions.fileName, downloadableOption.fileName);
+        await this.toHaveValue(productsVendor.downloadableOptions.downloadLimit, downloadableOption.downloadLimit);
+        await this.toHaveValue(productsVendor.downloadableOptions.downloadExpiry, downloadableOption.downloadExpiry);
+    }
+
+    // remove product downloadable files
+    async removeDownloadableFile(productName: string, downloadableOption: product['productInfo']['downloadableOptions']): Promise<void> {
+        await this.goToProductEdit(productName);
+        const fileCount = await this.getElementCount(productsVendor.downloadableOptions.deleteFile);
+        for (let i = 0; i < fileCount; i++) {
+            await this.clickFirstLocator(productsVendor.downloadableOptions.deleteFile);
+        }
+        await this.clearAndType(productsVendor.downloadableOptions.downloadLimit, downloadableOption.downloadLimit);
+        await this.clearAndType(productsVendor.downloadableOptions.downloadExpiry, downloadableOption.downloadExpiry);
+        await this.saveProduct();
+        await this.notToBeVisible(productsVendor.downloadableOptions.deleteFile);
+        await this.toHaveValue(productsVendor.downloadableOptions.downloadLimit, downloadableOption.downloadLimit);
+        await this.toHaveValue(productsVendor.downloadableOptions.downloadExpiry, downloadableOption.downloadExpiry);
+    }
+
+    // add product inventory
+    async addProductInventory(productName: string, inventory: product['productInfo']['inventory'], choice: string): Promise<void> {
+        await this.goToProductEdit(productName);
+
+        switch (choice) {
+            case 'sku':
+                await this.clearAndType(productsVendor.inventory.sku, inventory.sku);
+                break;
+            case 'stock-status':
+                await this.selectByValue(productsVendor.inventory.stockStatus, inventory.stockStatus);
+                break;
+            case 'stock-management':
+                await this.check(productsVendor.inventory.enableStockManagement);
+                await this.clearAndType(productsVendor.inventory.stockQuantity, inventory.stockQuantity);
+                await this.clearAndType(productsVendor.inventory.lowStockThreshold, inventory.lowStockThreshold);
+                await this.selectByValue(productsVendor.inventory.allowBackorders, inventory.backorders);
+                break;
+            case 'one-quantity':
+                if (inventory.oneQuantity) {
+                    await this.check(productsVendor.inventory.allowOnlyOneQuantity);
+                } else {
+                    await this.uncheck(productsVendor.inventory.allowOnlyOneQuantity);
+                }
+                break;
+            default:
+                break;
+        }
+
+        await this.saveProduct();
+
+        // todo: replace switch with all method action and assertion as object member and loop through to call them
+
+        switch (choice) {
+            case 'sku':
+                await this.toHaveValue(productsVendor.inventory.sku, inventory.sku);
+                break;
+            case 'stock-status':
+                await this.toHaveSelectedValue(productsVendor.inventory.stockStatus, inventory.stockStatus);
+                break;
+            case 'stock-management':
+                await this.toBeChecked(productsVendor.inventory.enableStockManagement);
+                await this.toHaveValue(productsVendor.inventory.stockQuantity, inventory.stockQuantity);
+                await this.toHaveValue(productsVendor.inventory.lowStockThreshold, inventory.lowStockThreshold);
+                await this.toHaveSelectedValue(productsVendor.inventory.allowBackorders, inventory.backorders);
+                await this.notToBeVisible(productsVendor.inventory.stockStatus);
+                break;
+            case 'one-quantity':
+                if (inventory.oneQuantity) {
+                    await this.toBeChecked(productsVendor.inventory.allowOnlyOneQuantity);
+                } else {
+                    await this.notToBeChecked(productsVendor.inventory.allowOnlyOneQuantity);
+                }
+                break;
+            default:
+                break;
+        }
+    }
+    // remove product inventory [stock management]
+    async removeProductInventory(productName: string): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.uncheck(productsVendor.inventory.enableStockManagement);
+        await this.saveProduct();
+        await this.notToBeChecked(productsVendor.inventory.enableStockManagement);
+    }
+
+    // add product other options (product status, visibility, purchase note, reviews)
+    async addProductOtherOptions(productName: string, otherOption: product['productInfo']['otherOptions'], choice: string): Promise<void> {
+        await this.goToProductEdit(productName);
+
+        switch (choice) {
+            case 'status':
+                await this.selectByValue(productsVendor.otherOptions.productStatus, otherOption.status);
+                break;
+            case 'visibility':
+                await this.selectByValue(productsVendor.otherOptions.visibility, otherOption.visibility);
+                break;
+            case 'purchaseNote':
+                await this.clearAndType(productsVendor.otherOptions.purchaseNote, otherOption.purchaseNote);
+                break;
+            case 'reviews':
+                if (otherOption.enableReview) {
+                    await this.check(productsVendor.otherOptions.enableProductReviews);
+                } else {
+                    await this.uncheck(productsVendor.otherOptions.enableProductReviews);
+                }
+                break;
+            default:
+                break;
+        }
+
+        await this.saveProduct();
+
+        switch (choice) {
+            case 'status':
+                await this.toHaveSelectedValue(productsVendor.otherOptions.productStatus, otherOption.status);
+                break;
+            case 'visibility':
+                await this.toHaveSelectedValue(productsVendor.otherOptions.visibility, otherOption.visibility);
+                break;
+            case 'purchaseNote':
+                await this.toHaveValue(productsVendor.otherOptions.purchaseNote, otherOption.purchaseNote);
+                break;
+            case 'reviews':
+                if (otherOption.enableReview) {
+                    await this.toBeChecked(productsVendor.otherOptions.enableProductReviews);
+                } else {
+                    await this.notToBeChecked(productsVendor.otherOptions.enableProductReviews);
+                }
+                break;
+            default:
+                break;
+        }
+    }
 
     // add product catalog mode
     async addProductCatalogMode(productName: string, hidePrice: boolean = false): Promise<void> {
@@ -1013,6 +1158,225 @@ export class ProductsPage extends AdminPage {
         await this.toBeChecked(productsVendor.catalogMode.removeAddToCart);
         if (hidePrice) await this.toBeChecked(productsVendor.catalogMode.hideProductPrice);
     }
+
+    // remove product catalog mode
+    async removeProductCatalogMode(productName: string, onlyPrice: boolean = false): Promise<void> {
+        await this.goToProductEdit(productName);
+
+        if (onlyPrice) {
+            await this.uncheck(productsVendor.catalogMode.hideProductPrice);
+        } else {
+            await this.uncheck(productsVendor.catalogMode.removeAddToCart);
+        }
+
+        await this.saveProduct();
+
+        if (onlyPrice) {
+            await this.notToBeChecked(productsVendor.catalogMode.hideProductPrice);
+        } else {
+            await this.notToBeChecked(productsVendor.catalogMode.removeAddToCart);
+        }
+    }
+
+    // dokan pro features
+
+    // add product shipping
+    async addProductShipping(productName: string, shipping: product['productInfo']['shipping']): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.check(productsVendor.shipping.requiresShipping);
+        await this.clearAndType(productsVendor.shipping.weight, shipping.weight);
+        await this.clearAndType(productsVendor.shipping.length, shipping.length);
+        await this.clearAndType(productsVendor.shipping.width, shipping.width);
+        await this.clearAndType(productsVendor.shipping.height, shipping.height);
+        await this.selectByLabel(productsVendor.shipping.shippingClass, shipping.shippingClass);
+        await this.saveProduct();
+        await this.toBeChecked(productsVendor.shipping.requiresShipping);
+        await this.toHaveValue(productsVendor.shipping.weight, shipping.weight);
+        await this.toHaveValue(productsVendor.shipping.length, shipping.length);
+        await this.toHaveValue(productsVendor.shipping.width, shipping.width);
+        await this.toHaveValue(productsVendor.shipping.height, shipping.height);
+        await this.toHaveSelectedLabel(productsVendor.shipping.shippingClass, shipping.shippingClass);
+    }
+    // add product shipping
+    async removeProductShipping(productName: string): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.uncheck(productsVendor.shipping.requiresShipping);
+        await this.saveProduct();
+        await this.notToBeChecked(productsVendor.shipping.requiresShipping);
+    }
+
+    // add product tax
+    async addProductTax(productName: string, tax: product['productInfo']['tax'], hasClass: boolean = false): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.selectByValue(productsVendor.tax.status, tax.status);
+        if (hasClass) await this.selectByValue(productsVendor.tax.class, tax.class);
+        await this.saveProduct();
+        await this.toHaveSelectedValue(productsVendor.tax.status, tax.status);
+        if (hasClass) await this.toHaveSelectedValue(productsVendor.tax.class, tax.class);
+    }
+
+    // add product linked products
+    async addProductLinkedProducts(productName: string, linkedProducts: product['productInfo']['linkedProducts'], choice: string): Promise<void> {
+        await this.goToProductEdit(productName);
+        switch (choice) {
+            case 'up-sells':
+                for (const linkedProduct of linkedProducts.upSells) {
+                    await this.typeAndWaitForResponse(data.subUrls.ajax, productsVendor.linkedProducts.upSells, linkedProduct);
+                    await this.click(productsVendor.linkedProducts.searchedResult(linkedProduct));
+                    await this.toBeVisible(productsVendor.linkedProducts.selectedUpSellProduct(linkedProduct));
+                }
+                break;
+            case 'cross-sells':
+                for (const linkedProduct of linkedProducts.crossSells) {
+                    await this.typeAndWaitForResponse(data.subUrls.ajax, productsVendor.linkedProducts.crossSells, linkedProduct);
+                    await this.click(productsVendor.linkedProducts.searchedResult(linkedProduct));
+                    await this.toBeVisible(productsVendor.linkedProducts.selectedCrossSellProduct(linkedProduct));
+                }
+                break;
+            default:
+                break;
+        }
+
+        await this.saveProduct();
+
+        switch (choice) {
+            case 'up-sells':
+                for (const linkedProduct of linkedProducts.upSells) {
+                    await this.toBeVisible(productsVendor.linkedProducts.selectedUpSellProduct(linkedProduct));
+                }
+                break;
+            case 'cross-sells':
+                for (const linkedProduct of linkedProducts.crossSells) {
+                    await this.toBeVisible(productsVendor.linkedProducts.selectedCrossSellProduct(linkedProduct));
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    // add product linked products
+    async removeProductLinkedProducts(productName: string, linkedProducts: product['productInfo']['linkedProducts'], choice: string): Promise<void> {
+        await this.goToProductEdit(productName);
+        switch (choice) {
+            case 'up-sells':
+                for (const linkedProduct of linkedProducts.upSells) {
+                    await this.click(productsVendor.linkedProducts.removeSelectedUpSellProduct(linkedProduct));
+                    await this.press('Escape'); // shift focus from element
+                }
+                break;
+            case 'cross-sells':
+                for (const linkedProduct of linkedProducts.crossSells) {
+                    await this.click(productsVendor.linkedProducts.removeSelectedCrossSellProduct(linkedProduct));
+                    await this.press('Escape'); // shift focus from element
+                }
+                break;
+            default:
+                break;
+        }
+
+        await this.saveProduct();
+
+        switch (choice) {
+            case 'up-sells':
+                for (const linkedProduct of linkedProducts.upSells) {
+                    await this.notToBeVisible(productsVendor.linkedProducts.selectedUpSellProduct(linkedProduct));
+                }
+                break;
+            case 'cross-sells':
+                for (const linkedProduct of linkedProducts.crossSells) {
+                    await this.notToBeVisible(productsVendor.linkedProducts.selectedCrossSellProduct(linkedProduct));
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    // add product attribute
+    async addProductAttribute(productName: string, attribute: product['productInfo']['attribute'], addTerm: boolean = false): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.selectByLabel(productsVendor.attribute.customAttribute, attribute.attributeName);
+        await this.clickAndWaitForResponse(data.subUrls.ajax, productsVendor.attribute.addAttribute);
+        await this.check(productsVendor.attribute.visibleOnTheProductPage);
+        await this.click(productsVendor.attribute.selectAll);
+        await this.notToHaveCount(productsVendor.attribute.attributeTerms, 0);
+        if (addTerm) {
+            await this.click(productsVendor.attribute.addNew);
+            await this.clearAndType(productsVendor.attribute.attributeTermInput, attribute.attributeTerm);
+            await this.clickAndWaitForResponse(data.subUrls.ajax, productsVendor.attribute.confirmAddAttributeTerm);
+            await this.toBeVisible(productsVendor.attribute.selectedAttributeTerm(attribute.attributeTerm));
+        }
+        await this.clickAndWaitForResponse(data.subUrls.ajax, productsVendor.attribute.saveAttribute);
+        await this.saveProduct();
+        await this.toBeVisible(productsVendor.attribute.savedAttribute(attribute.attributeName));
+    }
+
+    // remove product attribute
+    async removeProductAttribute(productName: string, attribute: string): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.click(productsVendor.attribute.removeAttribute(attribute));
+        await this.click(productsVendor.attribute.confirmRemoveAttribute);
+        await this.notToBeVisible(productsVendor.attribute.savedAttribute(attribute));
+        await this.saveProduct();
+        await this.notToBeVisible(productsVendor.attribute.savedAttribute(attribute));
+    }
+
+    // remove product attribute term
+    async removeProductAttributeTerm(productName: string, attribute: string, attributeTerm: string): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.click(productsVendor.attribute.savedAttribute(attribute));
+        await this.click(productsVendor.attribute.removeSelectedAttributeTerm(attributeTerm));
+        await this.press('Escape'); // shift focus from element
+        await this.notToBeVisible(productsVendor.attribute.selectedAttributeTerm(attributeTerm));
+        await this.clickAndWaitForResponse(data.subUrls.ajax, productsVendor.attribute.saveAttribute);
+        await this.saveProduct();
+        await this.click(productsVendor.attribute.savedAttribute(attribute));
+        await this.notToBeVisible(productsVendor.attribute.selectedAttributeTerm(attributeTerm));
+    }
+
+    // add product discount options
+    async addProductBulkDiscountOptions(productName: string, quantityDiscount: product['productInfo']['quantityDiscount']): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.check(productsVendor.bulkDiscount.enableBulkDiscount);
+        await this.clearAndType(productsVendor.bulkDiscount.lotMinimumQuantity, quantityDiscount.minimumQuantity);
+        await this.clearAndType(productsVendor.bulkDiscount.lotDiscountInPercentage, quantityDiscount.discountPercentage);
+        await this.saveProduct();
+        await this.toBeChecked(productsVendor.bulkDiscount.enableBulkDiscount);
+        await this.toHaveValue(productsVendor.bulkDiscount.lotMinimumQuantity, quantityDiscount.minimumQuantity);
+        await this.toHaveValue(productsVendor.bulkDiscount.lotDiscountInPercentage, quantityDiscount.discountPercentage);
+    }
+
+    // add product discount options
+    async removeProductBulkDiscountOptions(productName: string): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.uncheck(productsVendor.bulkDiscount.enableBulkDiscount);
+        await this.saveProduct();
+        await this.notToBeChecked(productsVendor.bulkDiscount.enableBulkDiscount);
+    }
+
+    // dokan pro modules
+
+    // add product geolocation
+    async addProductGeolocation(productName: string, location: string): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.uncheck(productsVendor.geolocation.sameAsStore);
+        await this.typeAndWaitForResponse(data.subUrls.gmap, productsVendor.geolocation.productLocation, location);
+        await this.press(data.key.arrowDown);
+        await this.press(data.key.enter);
+        await this.saveProduct();
+        await this.notToBeChecked(productsVendor.geolocation.sameAsStore);
+        await this.toHaveValue(productsVendor.geolocation.productLocation, location);
+    }
+
+    // remove product geolocation
+    async removeProductGeolocation(productName: string): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.check(productsVendor.geolocation.sameAsStore);
+        await this.saveProduct();
+        await this.toBeChecked(productsVendor.geolocation.sameAsStore);
+    }
+
     // add product EU compliance
     async addProductEuCompliance(productName: string, euCompliance: product['productInfo']['euCompliance']): Promise<void> {
         await this.goToProductEdit(productName);
@@ -1048,6 +1412,128 @@ export class ProductsPage extends AdminPage {
         await this.toHaveValue(productsVendor.euComplianceFields.saleUnitPrice, euCompliance.saleUnitPrice);
         await this.toContainTextFrameLocator(productsVendor.euComplianceFields.optionalMiniDescription.descriptionIframe, productsVendor.euComplianceFields.optionalMiniDescription.descriptionHtmlBody, euCompliance.optionalMiniDescription);
     }
+
+    // add product addons
+    async addProductAddon(productName: string, addon: product['productInfo']['addon']): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.toPass(async () => {
+            await this.clickAndWaitForResponse(data.subUrls.ajax, productsVendor.addon.addField);
+            await this.toBeVisible(productsVendor.addon.addonForm);
+        });
+
+        await this.selectByValue(productsVendor.addon.type, addon.type);
+        await this.selectByValue(productsVendor.addon.displayAs, addon.displayAs);
+        await this.clearAndType(productsVendor.addon.titleRequired, addon.title);
+        await this.selectByValue(productsVendor.addon.formatTitle, addon.formatTitle);
+        await this.check(productsVendor.addon.addDescription);
+        await this.clearAndType(productsVendor.addon.descriptionInput, addon.addDescription);
+        await this.check(productsVendor.addon.requiredField);
+        // option
+        await this.clearAndType(productsVendor.addon.option.enterAnOption, addon.enterAnOption);
+        await this.selectByValue(productsVendor.addon.option.optionPriceType, addon.optionPriceType);
+        await this.clearAndType(productsVendor.addon.option.optionPriceInput, addon.optionPriceInput);
+        await this.check(productsVendor.addon.excludeAddons);
+
+        await this.saveProduct();
+
+        await this.toBeVisible(productsVendor.addon.addonRow(addon.title));
+        await this.click(productsVendor.addon.addonRow(addon.title));
+
+        await this.toHaveSelectedValue(productsVendor.addon.type, addon.type);
+        await this.toHaveSelectedValue(productsVendor.addon.displayAs, addon.displayAs);
+        await this.toHaveValue(productsVendor.addon.titleRequired, addon.title);
+        await this.toHaveSelectedValue(productsVendor.addon.formatTitle, addon.formatTitle);
+        await this.toBeChecked(productsVendor.addon.addDescription);
+        await this.toHaveValue(productsVendor.addon.descriptionInput, addon.addDescription);
+        await this.toBeChecked(productsVendor.addon.requiredField);
+        // option
+        await this.toHaveValue(productsVendor.addon.option.enterAnOption, addon.enterAnOption);
+        await this.toHaveSelectedValue(productsVendor.addon.option.optionPriceType, addon.optionPriceType);
+        await this.toHaveValue(productsVendor.addon.option.optionPriceInput, addon.optionPriceInput);
+        await this.toBeChecked(productsVendor.addon.excludeAddons);
+    }
+
+    // import addon
+    async importAddon(productName: string, addon: string, addonTitle: string): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.click(productsVendor.addon.import);
+        await this.clearAndType(productsVendor.addon.importInput, addon);
+        await this.saveProduct();
+        await this.toBeVisible(productsVendor.addon.addonRow(addonTitle));
+    }
+
+    // export addon
+    async exportAddon(productName: string, addon: string): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.click(productsVendor.addon.export);
+        await this.toContainText(productsVendor.addon.exportInput, addon);
+    }
+
+    // delete addon
+    async removeAddon(productName: string, addonName: string): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.click(productsVendor.addon.removeAddon(addonName));
+        await this.click(productsVendor.addon.confirmRemove);
+        await this.notToBeVisible(productsVendor.addon.addonRow(addonName));
+        await this.saveProduct();
+        await this.notToBeVisible(productsVendor.addon.addonRow(addonName));
+    }
+
+    // add product rma options
+    async addProductRmaOptions(productName: string, rma: vendor['rma']): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.check(productsVendor.rma.overrideDefaultRmaSettings);
+        await this.clearAndType(productsVendor.rma.label, rma.label);
+        await this.selectByValue(productsVendor.rma.type, rma.type);
+
+        if (rma.type === 'included_warranty') {
+            await this.selectByValue(productsVendor.rma.length, rma.length);
+            if (rma.length === 'limited') {
+                await this.clearAndType(productsVendor.rma.lengthValue, rma.lengthValue);
+                await this.selectByValue(productsVendor.rma.lengthDuration, rma.lengthDuration);
+            }
+        } else if (rma.type === 'addon_warranty') {
+            await this.clearAndType(productsVendor.rma.addonCost, rma.addon.cost);
+            await this.clearAndType(productsVendor.rma.addonDurationLength, rma.addon.durationLength);
+            await this.selectByValue(productsVendor.rma.addonDurationType, rma.addon.durationType);
+        }
+        const refundReasonIsVisible = await this.isVisible(productsVendor.rma.refundReasonsFirst);
+        if (refundReasonIsVisible) {
+            await this.checkMultiple(productsVendor.rma.refundReasons);
+        }
+        await this.typeFrameSelector(productsVendor.rma.rmaPolicyIframe, productsVendor.rma.rmaPolicyHtmlBody, rma.refundPolicy);
+
+        await this.saveProduct();
+
+        await this.toBeChecked(productsVendor.rma.overrideDefaultRmaSettings);
+        await this.toHaveValue(productsVendor.rma.label, rma.label);
+        await this.toHaveSelectedValue(productsVendor.rma.type, rma.type);
+        if (rma.type === 'included_warranty') {
+            await this.toHaveSelectedValue(productsVendor.rma.length, rma.length);
+            if (rma.length === 'limited') {
+                await this.toHaveValue(productsVendor.rma.lengthValue, rma.lengthValue);
+                await this.toHaveSelectedValue(productsVendor.rma.lengthDuration, rma.lengthDuration);
+            }
+        } else if (rma.type === 'addon_warranty') {
+            await this.toHaveValue(productsVendor.rma.addonCost, rma.addon.cost);
+            await this.toHaveValue(productsVendor.rma.addonDurationLength, rma.addon.durationLength);
+            await this.toHaveSelectedValue(productsVendor.rma.addonDurationType, rma.addon.durationType);
+        }
+
+        if (refundReasonIsVisible) {
+            await this.toBeCheckedMultiple(productsVendor.rma.refundReasons);
+        }
+        await this.toContainTextFrameLocator(productsVendor.rma.rmaPolicyIframe, productsVendor.rma.rmaPolicyHtmlBody, rma.refundPolicy);
+    }
+
+    // remove product rma options
+    async removeProductRmaOptions(productName: string): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.uncheck(productsVendor.rma.overrideDefaultRmaSettings);
+        await this.saveProduct();
+        await this.notToBeChecked(productsVendor.rma.overrideDefaultRmaSettings);
+    }
+
     // add product wholesale options
     async addProductWholesaleOptions(productName: string, wholesaleOption: product['productInfo']['wholesaleOption']): Promise<void> {
         await this.goToProductEdit(productName);
@@ -1058,5 +1544,45 @@ export class ProductsPage extends AdminPage {
         await this.toBeChecked(productsVendor.wholesale.enableWholesale);
         await this.toHaveValue(productsVendor.wholesale.wholesalePrice, wholesaleOption.wholesalePrice);
         await this.toHaveValue(productsVendor.wholesale.minimumQuantity, wholesaleOption.minimumQuantity);
+    }
+
+    // remove product wholesale options
+    async removeProductWholesaleOptions(productName: string): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.uncheck(productsVendor.wholesale.enableWholesale);
+        await this.saveProduct();
+        await this.notToBeChecked(productsVendor.wholesale.enableWholesale);
+    }
+
+    // add product min-max options
+    async addProductMinMaxOptions(productName: string, minMaxOption: product['productInfo']['minMax']): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.clearAndType(productsVendor.minMax.minimumQuantity, minMaxOption.minimumProductQuantity);
+        await this.clearAndType(productsVendor.minMax.maximumQuantity, minMaxOption.maximumProductQuantity);
+        await this.saveProduct();
+        await this.toHaveValue(productsVendor.minMax.minimumQuantity, minMaxOption.minimumProductQuantity);
+        await this.toHaveValue(productsVendor.minMax.maximumQuantity, minMaxOption.maximumProductQuantity);
+    }
+
+    // can't add product min greater than max
+    async cantAddGreaterMin(productName: string, minMaxOption: product['productInfo']['minMax']): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.clearAndType(productsVendor.minMax.minimumQuantity, minMaxOption.minimumProductQuantity);
+        await this.clearAndType(productsVendor.minMax.maximumQuantity, minMaxOption.maximumProductQuantity);
+        await this.press('Escape'); // to trigger validation
+        await this.toHaveValue(productsVendor.minMax.maximumQuantity, minMaxOption.minimumProductQuantity);
+        await this.saveProduct();
+        await this.toHaveValue(productsVendor.minMax.minimumQuantity, minMaxOption.minimumProductQuantity);
+        await this.toHaveValue(productsVendor.minMax.maximumQuantity, minMaxOption.minimumProductQuantity);
+    }
+
+    // remove product min-max options
+    async removeProductMinMaxOptions(productName: string, minMaxOption: product['productInfo']['minMax']): Promise<void> {
+        await this.goToProductEdit(productName);
+        await this.clearAndType(productsVendor.minMax.minimumQuantity, minMaxOption.minimumProductQuantity);
+        await this.clearAndType(productsVendor.minMax.maximumQuantity, minMaxOption.maximumProductQuantity);
+        await this.saveProduct();
+        await this.toHaveValue(productsVendor.minMax.minimumQuantity, '0');
+        await this.toHaveValue(productsVendor.minMax.maximumQuantity, '0');
     }
 }

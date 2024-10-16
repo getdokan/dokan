@@ -29,10 +29,7 @@ export class PrivacyPolicyPage extends CustomerPage {
     // go to privacy policy
     async goToPrivacyPolicy(storeName: string) {
         await this.gotoSingleStore(storeName);
-        // ensure link suppose to open on new tab
-        await this.toHaveAttribute(singleStoreCustomer.storeContactForm.privacyPolicyLink, 'target', '_blank');
-        // force link to open on the same tab
-        await this.setAttributeValue(singleStoreCustomer.storeContactForm.privacyPolicyLink, 'target', '_self');
+        await this.forceLinkToSameTab(singleStoreCustomer.storeContactForm.privacyPolicyLink);
         await this.clickAndWaitForUrl(helpers.stringToRegex('privacy-policy'), singleStoreCustomer.storeContactForm.privacyPolicyLink);
     }
 

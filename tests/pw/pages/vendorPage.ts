@@ -313,10 +313,7 @@ export class VendorPage extends BasePage {
     // visit store
     async visitStore(storeName: string) {
         await this.goIfNotThere(data.subUrls.frontend.vDashboard.dashboard);
-        // ensure link suppose to open on new tab
-        await this.toHaveAttribute(vendorDashboard.menus.primary.visitStore, 'target', '_blank');
-        // force link to open on the same tab
-        await this.setAttributeValue(vendorDashboard.menus.primary.visitStore, 'target', '_self');
+        await this.forceLinkToSameTab(vendorDashboard.menus.primary.visitStore);
         await this.click(vendorDashboard.menus.primary.visitStore);
         await expect(this.page).toHaveURL(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)) + '/');
     }
