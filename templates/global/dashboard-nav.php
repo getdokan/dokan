@@ -15,6 +15,20 @@ $active_class = ' class="active"'
             'type'    => [],
             'checked' => [],
         ];
+        $allowedposttags['svg'] = [ // phpcs:ignore
+            'fill'        => [],
+            'role'        => [],
+            'xmlns'       => [],
+            'width'       => [],
+            'height'      => [],
+            'viewbox'     => [],
+            'focusable'   => [],
+            'aria-hidden' => [],
+        ];
+        $allowedposttags['path'] = [ // phpcs:ignore
+            'd'    => [],
+            'fill' => [],
+        ];
     }
 
     echo wp_kses( dokan_dashboard_nav( $active_menu ), $allowedposttags );

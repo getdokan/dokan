@@ -99,7 +99,11 @@ $price_kses = apply_filters(
     </td>
     <td data-title="<?php esc_attr_e( 'Name', 'dokan-lite' ); ?>" class="column-primary">
         <?php if ( current_user_can( 'dokan_edit_product' ) ) { ?>
-            <strong><a href="<?php echo esc_url( dokan_edit_product_url( $post->ID ) ); ?>"><?php echo esc_html( $product->get_title() ); ?></a></strong>
+            <strong>
+                <a href="<?php echo esc_url( dokan_edit_product_url( $post->ID ) ); ?>">
+                    <?php echo esc_html( $product->get_title() ); ?>
+                </a>
+            </strong>
         <?php } else { ?>
             <strong><a href=""><?php echo esc_html( $product->get_title() ); ?></a></strong>
         <?php } ?>
@@ -221,32 +225,40 @@ $price_kses = apply_filters(
     <td data-title="<?php esc_attr_e( 'Type', 'dokan-lite' ); ?>">
         <?php
         if ( dokan_get_prop( $product, 'product_type', 'get_type' ) === 'grouped' ) {
-            echo '<span class="product-type tips grouped" title="' . esc_html__( 'Grouped', 'dokan-lite' ) . '"></span>';
+            $product_type = '<span class="product-type tips grouped" title="' . esc_html__( 'Grouped', 'dokan-lite' ) . '"></span>';
         } elseif ( dokan_get_prop( $product, 'product_type', 'get_type' ) === 'external' ) {
-            echo '<span class="product-type tips external" title="' . esc_html__( 'External/Affiliate', 'dokan-lite' ) . '"></span>';
+            $product_type = '<span class="product-type tips external" title="' . esc_html__( 'External/Affiliate', 'dokan-lite' ) . '"></span>';
         } elseif ( dokan_get_prop( $product, 'product_type', 'get_type' ) === 'simple' ) {
             if ( $product->is_virtual() ) {
-                echo '<span class="product-type tips virtual" title="' . esc_html__( 'Virtual', 'dokan-lite' ) . '"></span>';
+                $product_type = '<span class="product-type tips virtual" title="' . esc_html__( 'Virtual', 'dokan-lite' ) . '"></span>';
             } elseif ( $product->is_downloadable() ) {
-                echo '<span class="product-type tips downloadable" title="' . esc_html__( 'Downloadable', 'dokan-lite' ) . '"></span>';
+                $product_type = '<span class="product-type tips downloadable" title="' . esc_html__( 'Downloadable', 'dokan-lite' ) . '"></span>';
             } else {
-                echo '<span class="product-type tips simple" title="' . esc_html__( 'Simple', 'dokan-lite' ) . '"></span>';
+                $product_type = '<span class="product-type tips simple" title="' . esc_html__( 'Simple', 'dokan-lite' ) . '"></span>';
             }
         } elseif ( dokan_get_prop( $product, 'product_type', 'get_type' ) === 'variable' ) {
-            echo '<span class="product-type tips variable" title="' . esc_html__( 'Variable', 'dokan-lite' ) . '"></span>';
+            $product_type = '<span class="product-type tips variable" title="' . esc_html__( 'Variable', 'dokan-lite' ) . '"></span>';
         } else {
             // Assuming that we have other types in future
-            echo '<span class="product-type tips ' . esc_attr( dokan_get_prop( $product, 'product_type', 'get_type' ) ) . '" title="' . esc_attr( ucfirst( dokan_get_prop( $product, 'product_type', 'get_type' ) ) ) . '"></span>';
+            $product_type = '<span class="product-type tips ' . esc_attr( dokan_get_prop( $product, 'product_type', 'get_type' ) ) . '" title="' . esc_attr( ucfirst( dokan_get_prop( $product, 'product_type', 'get_type' ) ) ) . '"></span>';
         }
+
+        /**
+         * Render product listing product type symbol.
+         *
+         * @since DOKAN_PRO_SINCE
+         *
+         * @param string     $product_type
+         * @param WC_Product $product
+         */
+        echo apply_filters( 'dokan_product_listing_product_type', $product_type, $product );
 
         /**
          * Fire an action to add extra content after product type column in product listing table
          *
          * @since 3.11.5
          *
-         * @param \WC_Product $product Current product.
-         *
-         * @return void
+         * @param WC_Product $product
          */
         do_action( 'dokan_product_list_table_after_column_content_type', $product );
         ?>
