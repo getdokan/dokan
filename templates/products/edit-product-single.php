@@ -435,7 +435,7 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                                         [
                                             'editor_height' => 50,
                                             'quicktags'     => true,
-                                            'media_buttons' => false,
+                                            'media_buttons' => true,
                                             'teeny'         => false,
                                             'editor_class'  => 'post_excerpt',
                                         ]
@@ -455,7 +455,7 @@ do_action( 'dokan_dashboard_wrap_before', $post, $post_id );
                                         [
                                             'editor_height' => 50,
                                             'quicktags'     => true,
-                                            'media_buttons' => false,
+                                            'media_buttons' => true,
                                             'teeny'         => false,
                                             'editor_class'  => 'post_content',
                                         ]
