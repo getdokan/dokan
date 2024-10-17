@@ -605,6 +605,7 @@ class StoreController extends WP_REST_Controller {
     public function get_total_review_count( $id, $post_type, $status ) {
         global $wpdb;
 
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $total = $wpdb->get_var(
             $wpdb->prepare(
                 "SELECT COUNT(*)
@@ -616,6 +617,7 @@ class StoreController extends WP_REST_Controller {
             $wpdb->posts.post_type=%s", $id, $status, $post_type
             )
         );
+        // phpcs:enable
 
         return intval( $total );
     }
