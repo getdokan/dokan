@@ -246,11 +246,21 @@ $price_kses = apply_filters(
         /**
          * Render product listing product type symbol.
          *
-         * @since 3.11.5
+         * @since DOKAN_PRO_SINCE
          *
-         * @param string $product_type
+         * @param string     $product_type
+         * @param WC_Product $product
          */
         echo apply_filters( 'dokan_product_listing_product_type', $product_type, $product );
+
+        /**
+         * Fire an action to add extra content after product type column in product listing table
+         *
+         * @since 3.11.5
+         *
+         * @param WC_Product $product
+         */
+        do_action( 'dokan_product_list_table_after_column_content_type', $product );
         ?>
     </td>
     <td data-title="<?php esc_attr_e( 'Views', 'dokan-lite' ); ?>">
