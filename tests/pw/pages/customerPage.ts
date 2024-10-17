@@ -45,6 +45,10 @@ export class CustomerPage extends BasePage {
         await this.goIfNotThere(data.subUrls.frontend.storeListing);
     }
 
+    async gotoSingleStore(storeName: string): Promise<void> {
+        await this.goIfNotThere(data.subUrls.frontend.vendorDetails(helpers.slugify(storeName)), 'networkidle');
+    }
+
     async goToProductDetails(productName: string): Promise<void> {
         await this.goIfNotThere(data.subUrls.frontend.productDetails(helpers.slugify(productName)));
     }
@@ -121,7 +125,7 @@ export class CustomerPage extends BasePage {
 
         // skip vendor setup wizard
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.frontend.vDashboard.dashboard, selector.vendor.vSetup.notRightNow);
-        await this.toBeVisible(selector.vendor.vDashboard.menus.dashboard);
+        await this.toBeVisible(selector.vendor.vDashboard.menus.primary.dashboard);
     }
 
     // customer add customer details

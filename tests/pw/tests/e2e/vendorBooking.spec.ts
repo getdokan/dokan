@@ -3,6 +3,10 @@ import { BookingPage } from '@pages/vendorBookingPage';
 import { ApiUtils } from '@utils/apiUtils';
 import { payloads } from '@utils/payloads';
 import { data } from '@utils/testData';
+import { dbUtils } from '@utils/dbUtils';
+import { dbData } from '@utils/dbData';
+
+const { VENDOR_ID } = process.env;
 
 test.describe('Booking Product test', () => {
     let admin: BookingPage;
@@ -27,6 +31,8 @@ test.describe('Booking Product test', () => {
 
         apiUtils = new ApiUtils(await request.newContext());
         [, , bookableProductName] = await apiUtils.createBookableProduct(payloads.createBookableProduct(), payloads.vendorAuth);
+        // disable vendor global rma settings
+        await dbUtils.setUserMeta(VENDOR_ID, '_dokan_rma_settings', dbData.testData.dokan.rmaSettings, true);
     });
 
     test.afterAll(async () => {
@@ -126,6 +132,6 @@ test.describe('Booking Product test', () => {
     });
 
     test('customer can buy bookable product', { tag: ['@pro', '@customer'] }, async () => {
-        await customer.buyBookableProduct(bookableProductName, data.bookings);
+        await customer.buyBookableProduct(bookableProductName, data.bookings); //todo: failed on git action if ran after 12 am local time
     });
 });

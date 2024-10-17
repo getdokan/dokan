@@ -1,4 +1,4 @@
-- page: 'plugins'
+- page: 'Plugins'
   features:
       admin:
           admin can install Dokan plugin [lite]: false
@@ -21,22 +21,18 @@
 - page: 'Shipping'
   features:
       admin:
-          admin can enable shipping method [lite]: true
+          admin can enable shipping [lite]: true
           admin can add flat rate shipping method [lite]: true
           admin can add free shipping method [lite]: true
-          admin can add vendor table rate shipping method: true
-          admin can add vendor distance rate shipping method: true
           admin can add vendor shipping method: true
           admin can delete shipping method [lite]: true
-          admin can delete shipping zone  [lite]: true
+          admin can delete shipping zone [lite]: true
       vendor:
           vendor can view shipping settings menu page: true
           vendor can add shipping policy: true
           vendor can add flat rate shipping: true
           vendor can add free shipping: true
           vendor can add local pickup shipping: true
-          vendor can add table rate shipping: true
-          vendor can add distance rate shipping: true
           vendor can edit shipping method: true
           vendor can delete shipping method: true
 
@@ -80,6 +76,7 @@
           admin can add Dokan news subscriber [lite]: true
       vendor:
           vendor can view vendor dashboard [lite]: true
+          vendor can view vendor dashboard menus [lite]: true
 
 - page: 'Products'
   features:
@@ -94,33 +91,121 @@
           admin can add vendor subscription: false
       vendor:
           vendor can view product menu page [lite]: true
+          vendor can view add new product page [lite]: true
           vendor can add simple product [lite]: true
           vendor can add variable product: true
           vendor can add simple subscription product: true
           vendor can add variable subscription product: true
           vendor can add external product: true
+          vendor can add group product: true
           vendor can add downloadable product [lite]: true
           vendor can add virtual product [lite]: true
-          vendor can add product category [lite]: true
-          vendor can export products: true
           vendor can search product [lite]: true
           vendor can filter products by date [lite]: true
           vendor can filter products by category [lite]: true
           vendor can filter products by type: true
           vendor can filter products by other: true
-          vendor can view product [lite]: true
-          vendor can't buy own product: true
-          vendor can edit product [lite]: true
-          vendor can quick edit product: true
-          vendor can add product description [lite]: true
-          #   vendor can add product addon options [duplicate]: false
-          vendor can add product quantity discount: false
-          vendor can add product rma options: false
-          vendor can add product wholesale options: true
-          vendor can add product min-max options: false
-          vendor can add product other options [lite]: true
+          vendor can reset filter [lite]: true
+          vendor can import products: true
+          vendor can export products: true
           vendor can duplicate product: true
           vendor can permanently delete product [lite]: true
+          vendor can view product [lite]: true
+          vendor can't add product without required fields [lite]: true
+          vendor can't buy own product [lite]: true
+          vendor can edit product [lite]: true
+          vendor can quick edit product: true
+          vendor can update product title [lite]: true
+          vendor can update product permalink [lite]: true
+          vendor can add product price [lite]: true
+          vendor can update product price [lite]: true
+          vendor can remove product price [lite]: true
+          vendor can add product discount price [lite]: true
+          vendor can add product discount price (with schedule) [lite]: true
+          vendor can update product discount price [lite]: true
+          vendor can update product discount price (with schedule) [lite]: true
+          vendor can't add product discount price higher than price [lite]: true
+          vendor can remove product discount price [lite]: true
+          vendor can remove product discount schedule [lite]: true
+          vendor can update product category (single) [lite]: true
+          vendor can add product category (multiple): true
+          vendor can remove product category (multiple): true
+          vendor can add multi-step product category (last category) [lite]: true
+          vendor can add multi-step product category (any category) [lite]: true
+          vendor can't add multi-step product category (any category) [lite]: true
+          vendor can add product tags [lite]: true
+          vendor can remove product tags [lite]: true
+          vendor can create product tags: true
+          vendor can add product cover image [lite]: true
+          vendor can update product cover image [lite]: true
+          vendor can remove product cover image [lite]: true
+          vendor can add product gallery image [lite]: true
+          vendor can update product gallery image [lite]: true
+          vendor can remove product gallery image [lite]: true
+          vendor can add product short description [lite]: true
+          vendor can update product short description [lite]: true
+          vendor can remove product short description [lite]: true
+          vendor can update product description [lite]: true
+          vendor can add product downloadable options [lite]: true
+          vendor can update product downloadable options [lite]: true
+          vendor can remove product downloadable file [lite]: true
+          vendor can add product inventory options (SKU) [lite]: true
+          vendor can update product inventory options (SKU) [lite]: true
+          vendor can remove product inventory options (SKU) [lite]: true
+          vendor can add product inventory options (stock status) [lite]: true
+          vendor can add product inventory options (stock management) [lite]: true
+          vendor can update product inventory options (stock management) [lite]: true
+          vendor can remove product inventory options (stock management) [lite]: true
+          vendor can add product inventory options (allow single quantity) [lite]: true
+          vendor can remove product inventory options (allow single quantity) [lite]: true
+          vendor can add product other options (product status) [lite]: true
+          vendor can add product other options (visibility) [lite]: true
+          vendor can add product other options (purchase note) [lite]: true
+          vendor can remove product other options (purchase note) [lite]: true
+          vendor can add product other options (product review) [lite]: true
+          vendor can remove product other options (product review) [lite]: true
+          vendor can add product catalog mode [lite]: true
+          vendor can add product catalog mode (with price hidden) [lite]: true
+          vendor can remove product catalog mode [lite]: true
+          vendor can remove product catalog mode (price hidden option) [lite]: true
+          vendor can add product shipping: true
+          vendor can update product shipping: true
+          vendor can remove product shipping: true
+          vendor can add product tax: true
+          vendor can add product tax (with tax class): true
+          vendor can add product linked products (up-sells): true
+          vendor can add product linked products (cross-sells): true
+          vendor can remove product linked products (up-sells): true
+          vendor can remove product linked products (cross-sells): true
+          vendor can add product attribute: true
+          vendor can create product attribute term: true
+          vendor can remove product attribute: true
+          vendor can remove product attribute term: true
+          vendor can add product bulk discount options: true
+          vendor can update product bulk discount options: true
+          vendor can remove product bulk discount options: true
+          vendor can add product geolocation (individual): true
+          vendor can update product geolocation (individual): true
+          vendor can remove product geolocation (individual): true
+          vendor can add product EU compliance data: true
+          vendor can update product EU compliance data: true
+          vendor can remove product EU compliance data: true
+          vendor can add product addon: true
+          vendor can import product addon: true
+          vendor can export product addon: true
+          vendor can remove product addon: true
+          vendor can add product rma options (no warranty): true
+          vendor can add product rma options (warranty included limited): true
+          vendor can add product rma options (warranty included lifetime): true
+          vendor can add product rma options (warranty as addon): true
+          vendor can remove product rma options: true
+          vendor can add product wholesale options: true
+          vendor can update product wholesale options: true
+          vendor can remove product wholesale options: true
+          vendor can add product min-max options: true
+          vendor can update product min-max options: true
+          vendor can't add product min limit grater than max limit: true
+          vendor can remove product min-max options: true
 
 - page: 'MyOrders'
   features:
@@ -159,13 +244,17 @@
       vendor:
           vendor can view payment settings menu page [lite]: true
           vendor can add paypal payment method [lite]: true
+          vendor can update paypal payment method [lite]: true
+          vendor can remove paypal payment method [lite]: true
           vendor can add bank payment method [lite]: true
-          vendor can add Skrill payment method: true
+          vendor can update bank payment method [lite]: true
+          vendor can remove bank payment method [lite]: true
+          vendor can add skrill payment method: true
+          vendor can update skrill payment method: true
+          vendor can remove skrill payment method: true
           vendor can add custom payment method: true
-          vendor can disconnect paypal payment method: true
-          vendor can disconnect bank payment method: true
-          vendor can disconnect Skrill payment method: true
-          vendor can disconnect custom payment method: true
+          vendor can update custom payment method: true
+          vendor can remove custom payment method: true
 
 - page: 'Shop'
   features:
@@ -277,14 +366,14 @@
           vendor can view reverse withdrawal menu page [lite]: true
           vendor can view reverse withdrawal notice (In grace period) [lite]: true
           vendor can view reverse withdrawal notice (after grace period) [lite]: true
-          vendor can view reverse withdrawal announcement [lite]: true
+          vendor can view reverse withdrawal announcement: true
           vendor can filter reverse withdrawals by date [lite]: true
           vendor can pay reverse withdrawal balance [lite]: true
 
 - page: 'Catalog Mode'
   features:
       admin:
-          admin can set catalog settings [lite]: true
+          admin can set catalog mode [lite]: true
           admin can disable hide product price in catalog mode [lite]: true
       vendor:
           vendor can set catalog mode (storewide) [lite]: true
@@ -319,10 +408,10 @@
 - page: 'Shortcode'
   features:
       admin:
-          admin can create page with dokan shortcode: false
+          admin can create page with Dokan shortcode: false
       vendor:
-          vendor can view dokan dashboard (shortcode): true
-          vendor can view dokan subscription packs (shortcode): true
+          vendor can view Dokan dashboard (shortcode): true
+          vendor can view Dokan subscription packs (shortcode): true
           guest user can view vendor registration form (shortcode): true
       customer:
           customer can view best selling products (shortcode): true
@@ -353,10 +442,11 @@
           vendor can set biography settings: true
           vendor can set live chat settings: false
           vendor can set store support settings: true
-          vendor can set min-max settings: true
-          vendor can set shipStation settings: true
           vendor can set social profile settings: true
-          vendor can set rma settings: true
+          vendor can set rma settings (no warranty): true
+          vendor can set rma settings (warranty included limited): true
+          vendor can set rma settings (warranty included lifetime): true
+          vendor can set rma settings (warranty as addon): true
           vendor can set store seo settings: true
 
 - page: 'Setting'
@@ -374,7 +464,7 @@
           admin can enable vendor selling (selling settings) [lite]: true
           admin can set order status change capability (selling settings) [lite]: true
 
-- page: 'settings'
+- page: 'Settings'
   features:
       admin:
           admin can view settings menu page [lite]: true
@@ -453,7 +543,7 @@
           admin can export all logs: true
           admin can filter all logs by store name: true
           admin can filter all logs by order status: true
-          #   admin can filter all logs by calander: true
+          #   admin can filter all logs by calendar: true
       vendor:
           vendor can view reports menu page: true
           vendor can export statement: true
@@ -692,12 +782,13 @@
 - page: 'MangoPay'
   features:
       admin:
-          admin can add Mangopay payment method: false
+          admin can add Mangopay payment method: true
 
 - page: 'Min Max Quantities'
   features:
-      admin:
-          no test is written for min-max module: false
+      vendor:
+          vendor can add product min-max options: true
+          vendor can set min-max settings: true
 
 - page: 'PayPal Marketplace'
   features:
@@ -710,13 +801,16 @@
           vendor can view product addons menu page: true
           vendor can add global product addon: true
           vendor can edit global product addon: true
-          vendor can delete product addon: true
-          #   vendor can add individual product addon [duplicate]: false
-          vendor can edit individual product product addon: false
-          vendor can delete individual productproduct addon: false
+          vendor can import global product addon field: true
+          vendor can export global product addon field: true
+          vendor can remove product addon field: true
+          vendor can add product addon: true
+          vendor can import product addon: true
+          vendor can export product addon: true
+          vendor can remove product addon: true
       customer:
           customer can view product addons on single product page: false
-          customer can buy product with addons: false
+          customer can buy product with addon: false
 
 - page: 'Product Advertising'
   features:
@@ -726,9 +820,9 @@
           admin can set product advertising expiry days: false
           admin can enable vendor product advertising purchase permission: false
           admin can set product advertisement cost: false
-          admin can enable product advertising on dokan subscription: false
+          admin can enable product advertising on Dokan subscription: false
           admin can set advertised product as featured: false
-          admin can set advertised product display pefeference: false
+          admin can set advertised product display preference: false
           admin can hide out of stock advertised product: false
           admin can add product advertising widget: false
           #    admin can add product advertising shortcode [duplicate]: false
@@ -738,7 +832,7 @@
           admin can search advertised product by order: false
           admin can filter advertised product by stores: true
           admin can filter advertised product by creation process: true
-          #   admin can filter advertised product by calander: false
+          #   admin can filter advertised product by calendar: false
           admin can expire advertised product: true
           admin can delete advertised product: true
           admin can perform bulk action on product advertisements: false
@@ -811,7 +905,7 @@
 - page: 'Razorpay'
   features:
       admin:
-          admin can add Razorpay payment method: false
+          admin can add Razorpay payment method: true
 
 - page: 'Report Abuse'
   features:
@@ -821,7 +915,7 @@
           admin can filter abuse reports by abuse reason: true
           admin can filter abuse reports by product: true
           admin can filter abuse reports by vendor: true
-          admin can perform bulk action on abuse reports: false
+          admin can perform bulk action on abuse reports: true
       customer:
           customer can report product: true
       guest:
@@ -849,7 +943,7 @@
               admin can permanently delete quote: true
               admin can approve quote: true
               admin can convert quote to order: true
-              admin can perform quote bulk actions: false
+              admin can perform quote bulk actions: true
           vendor:
               vendor can view request quotes menu page: true
               vendor can view request quote details: true
@@ -903,8 +997,8 @@
 
 - page: 'ShipStation Integration'
   features:
-      admin:
-          no test is written for shipstation integration: false
+      vendor:
+          vendor can set shipStation settings: true
 
 - page: 'Single Product Multiple Vendor (SPMV)'
   features:
@@ -954,7 +1048,7 @@
           admin can search support ticket by ticket title: true
           admin can filter support tickets by vendor: true
           admin can filter support tickets by customer: true
-          #   admin can filter support tickets by calander: false
+          #   admin can filter support tickets by calendar: false
           admin can reply to support ticket as admin: true
           admin can reply to support ticket as vendor: true
           admin can disable support ticket email notification: true
@@ -991,17 +1085,21 @@
 - page: 'Stripe Connect'
   features:
       admin:
-          admin can add stripe payment method: false
+          admin can add stripe payment method: true
 
 - page: 'Stripe Express'
   features:
       admin:
-          admin can add Strip Express payment method: false
+          admin can add Strip Express payment method: true
 
 - page: 'Table Rate Shipping'
   features:
       admin:
-          no test is written for table rate shipping: false
+          admin can add vendor table rate shipping method: true
+          admin can add vendor distance rate shipping method: true
+      vendor:
+          vendor can add table rate shipping: true
+          vendor can add distance rate shipping: true
 
 - page: 'Vendor Analytics'
   features:
@@ -1025,8 +1123,8 @@
           vendor can edit staff: true
           vendor can manage staff permission: true
           vendor can delete staff: true
-      vendorStaff:
-          vendorStaff can view allowed menus: false
+      staff:
+          vendorStaff can view allowed menus: true
 
 - page: 'Vendor Subscription'
   features:
@@ -1069,7 +1167,6 @@
           admin can approve verification request: true
           admin can reject verification request: true
           admin can perform bulk action on verification requests: true
-          admin receive notification for verification request: false
       vendor:
           vendor can view verifications settings menu page: true
           vendor can submit verification request: true
@@ -1091,10 +1188,6 @@
 - page: 'Wholesale'
   features:
       admin:
-          #   admin can set Dokan wholesale settings [duplicate]: true
-          admin can set wholesale price viewer: false
-          admin can set show wholsesale price on shop archive: false
-          admin can set need approval for becoming wholesale customer: false
           admin can view wholesale customers menu page: true
           admin can search wholesale customer: true
           admin can disable customer's wholesale capability: true
@@ -1103,13 +1196,16 @@
           admin can view wholesale customer orders: true
           admin can delete wholesale customer: true
           admin can perform bulk action on wholesale customers: true
+          All users can see wholesale price: true
       vendor:
-          vendor can create wholesale product: false
+          vendor can create wholesale product: true
       customer:
           customer can become a wholesale customer: true
           customer can request for become a wholesale customer: true
           customer can see wholesale price on shop archive: true
-          customer can buy wholesale product: true
+          customer can't see wholesale price on shop archive: true
+          customer (wholesale) can only see wholesale price: true
+          customer (wholesale) can buy wholesale product: true
 
 - page: 'WooCommerce Booking Integration'
   features:
@@ -1133,7 +1229,7 @@
           vendor can add booking resource: true
           vendor can edit booking resource: true
           vendor can delete booking resource: true
-          vendor can add booking for guest customer: false
-          vendor can add booking for existing customer: false
+          vendor can add booking for guest customer: true
+          vendor can add booking for existing customer: true
       customer:
           customer can buy bookable product: true

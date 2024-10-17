@@ -5,9 +5,9 @@ Tags: WooCommerce multivendor marketplace, multivendor marketplace, multivendor,
 Requires at least: 6.4
 Tested up to: 6.6.2
 WC requires at least: 8.0.0
-WC tested up to: 9.3.2
+WC tested up to: 9.3.3
 Requires PHP: 7.4
-Stable tag: 3.12.2
+Stable tag: 3.12.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -346,6 +346,19 @@ A. Just install and activate the PRO version without deleting the free plugin. A
 
 
 == Changelog ==
+
+= v3.12.5 ( Oct 16, 2024 ) =
+
+- **fix:** Implement order trash and untrash handling for Dokan
+- **fix:** Added wordpress native i18n support
+
+= v3.12.4 ( Oct 03, 2024 ) =
+
+- **update:** Added `$data` parameter to `dokan_update_vendor` hook.
+
+= v3.12.3 ( Sep 30, 2024 ) =
+
+- **update:** Added compatibility with RFQ state field ui.
 
 = v3.12.2 ( Sep 23, 2024 ) =
 

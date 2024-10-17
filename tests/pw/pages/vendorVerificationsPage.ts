@@ -201,11 +201,7 @@ export class VendorVerificationsPage extends AdminPage {
     async viewVerificationRequestDocument(requestId: string): Promise<void> {
         await this.goIfNotThere(data.subUrls.backend.dokan.verifications);
         await this.reloadIfVisible(verificationsAdmin.filters.reset);
-
-        // ensure link suppose to open on new tab
-        await this.toHaveAttribute(verificationsAdmin.verificationRequestDocument(requestId), 'target', '_blank');
-        // force link to open on the same tab
-        await this.setAttributeValue(verificationsAdmin.verificationRequestDocument(requestId), 'target', '_self');
+        await this.forceLinkToSameTab(verificationsAdmin.verificationRequestDocument(requestId));
         const documentLink = (await this.getAttributeValue(verificationsAdmin.verificationRequestDocument(requestId), 'href')) as string;
         await this.clickAndWaitForUrl(documentLink, verificationsAdmin.verificationRequestDocument(requestId));
         await this.toHaveAttribute('body img', 'src', documentLink);
@@ -322,11 +318,7 @@ export class VendorVerificationsPage extends AdminPage {
             // await this.click(setupWizardVendor.skipTheStepStoreSetup);
             await this.click(setupWizardVendor.skipTheStepPaymentSetup);
         }
-
-        // ensure link suppose to open on new tab
-        await this.toHaveAttribute(verificationsVendor.verificationRequestDocument(methodName), 'target', '_blank');
-        // force link to open on the same tab
-        await this.setAttributeValue(verificationsVendor.verificationRequestDocument(methodName), 'target', '_self');
+        await this.forceLinkToSameTab(verificationsVendor.verificationRequestDocument(methodName));
         const documentLink = (await this.getAttributeValue(verificationsVendor.verificationRequestDocument(methodName), 'href')) as string;
         await this.clickAndWaitForUrl(documentLink, verificationsVendor.verificationRequestDocument(methodName));
         await this.toHaveAttribute('body img', 'src', documentLink);

@@ -296,7 +296,7 @@ export class ProductQAPage extends BasePage {
             await this.click(selector.customer.cSingleProduct.menus.questionsAnswers);
             await this.clearAndType(productQACustomer.searchInput, '....');
         }
-        await this.clickAndWaitForLocatorTobeVisible(productQACustomer.postQuestion, productQACustomer.questionModal);
+        await this.clickAndWaitForLocatorToBeVisible(productQACustomer.postQuestion, productQACustomer.questionModal);
         await this.clearAndType(productQACustomer.questionInput, questionsAnswers.question);
         await this.removeAttribute(productQACustomer.post, 'disabled');
         await this.clickAndWaitForResponse(data.subUrls.api.dokan.productQuestions, productQACustomer.post);
