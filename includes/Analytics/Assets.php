@@ -15,6 +15,7 @@ class Assets implements Hookable {
 		add_filter( 'woocommerce_admin_shared_settings', [ $this, 'localize_wc_admin_settings' ] );
 
 		( new VendorDashboardManager() )->register_hooks();
+        ( new Reports\DataStoreCacheModifier() )->register_hooks();
 	}
 
 	/**
@@ -100,10 +101,11 @@ class Assets implements Hookable {
 		wp_enqueue_script( 'vendor_analytics_script' );
 		wp_localize_script(
             'vendor_analytics_script', 'vendorAnalyticsDokanConfig', [
-				'seller_id' => dokan_get_current_user_id(),
+				'seller_id'        => dokan_get_current_user_id(),
 				'orderListPageUlr' => dokan_get_navigation_url( 'orders' ),
 			]
 		);
-		wp_enqueue_style( 'vendor_analytics_style' );
+        wp_enqueue_style( 'vendor_analytics_style' );
+        wp_enqueue_style( 'wc-chunks-9966-style', plugins_url( 'woocommerce/assets/client/admin/chunks/9966.style.css' ), array(), filemtime( WP_PLUGIN_DIR . '/woocommerce/' . 'assets/client/admin/chunks/9966.style.css' ) );
 	}
 }

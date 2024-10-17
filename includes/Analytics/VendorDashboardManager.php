@@ -23,7 +23,7 @@ class VendorDashboardManager implements Hookable {
 
 	// This is dummy function for testing.
 	public function add_dashboard_content() {
-		echo '<div id="dokan-analytics-test">hello</div>';
+		echo '<div id="dokan-analytics-test"></div>';
 	}
 
 	public function woocommerce_rest_check_permissions( $permission, $context, $int_val, $object ) {
