@@ -26,6 +26,8 @@ export type DokanRoute = {
     title?: string;
     icon?: JSX.Element | React.ReactNode;
     element: JSX.Element | React.ReactNode;
+    header?: JSX.Element | React.ReactNode;
+    footer?: JSX.Element | React.ReactNode;
     path: string;
     exact?: boolean;
     order?: number;
@@ -36,8 +38,8 @@ interface LayoutProps {
     children: React.ReactNode;
     route: DokanRoute;
     title?: string;
-    headerComponent?: JSX.Element;
-    footerComponent?: JSX.Element;
+    headerComponent?: JSX.Element|React.ReactNode;
+    footerComponent?: JSX.Element|React.ReactNode;
 }
 
 // Create a Layout component that uses the ThemeProvider

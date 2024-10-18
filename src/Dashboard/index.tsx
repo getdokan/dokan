@@ -12,13 +12,9 @@ const App = () => {
     const routes = getRoutes();
 
     const mapedRoutes = routes.map((route) => {
-
-
-        // TODO add Parent route support.
-
         return {
             path: route.path,
-            element: <Layout route={route} title={route.title}>{route.element}</Layout>,
+            element: <Layout headerComponent={route?.header} footerComponent={route?.footer} route={route} title={route?.title}>{route.element}</Layout>,
         }
     });
 
