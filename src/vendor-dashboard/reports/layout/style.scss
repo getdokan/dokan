@@ -358,6 +358,12 @@
     .woocommerce-layout {
         padding-right: 1px;
 
+        a {
+            &:focus {
+                outline: none;
+            }
+        }
+
         .woocommerce-chart {
             .woocommerce-chart__header {
                 h2 {

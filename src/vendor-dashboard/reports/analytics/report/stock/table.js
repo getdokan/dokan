@@ -16,10 +16,14 @@ import { CurrencyContext } from "@woocommerce/currency";
 import ReportTable from "../../components/report-table";
 import { isLowStock } from "./utils";
 import { getAdminSetting } from "reports/utils/admin-settings";
+import { mapToDashboardRoute } from "../../../helper";
 
-const stockStatuses = getAdminSetting("stockStatuses", {});
+const stockStatuses = getAdminSetting( 'stockStatuses', {
+    'instock'     : __( 'In stock', 'dokan' ),
+    'outofstock'  : __( 'Out of stock', 'dokan' ),
+    'onbackorder' : __( 'On backorder', 'dokan' )
+});
 
-console.log("Stock Statuses-->", stockStatuses);
 class StockReportTable extends Component {
   constructor() {
     super();
@@ -74,13 +78,11 @@ class StockReportTable extends Component {
 
       const name = decodeEntities(product.name);
 
-      const productDetailLink = getNewPath(
-        persistedQuery,
-        "/analytics/products",
-        {
-          filter: "single_product",
+      const productDetailLink = mapToDashboardRoute(
+        getNewPath( persistedQuery, '/analytics/products', {
+          filter: 'single_product',
           products: parentId || id,
-        }
+        } )
       );
 
       const nameLink = (

@@ -11,7 +11,7 @@ class VendorDashboardManager implements Hookable {
 		add_filter( 'dokan_dashboard_nav_submenu', [ $this, 'add_report_submenu' ], 10, 2 );
 
 		// Dummy hook for testing.
-		add_action( 'dokan_dashboard_content_inside_before', [ $this, 'add_dashboard_content' ] );
+		add_action( 'dokan_report_content_inside_before', [ $this, 'add_dashboard_content' ] );
 
 		add_filter( 'woocommerce_rest_product_object_query', [ $this, 'product_query_args' ], 10, 2 );
 
@@ -29,7 +29,7 @@ class VendorDashboardManager implements Hookable {
 	public function woocommerce_rest_check_permissions( $permission, $context, $int_val, $object ) {
 		if ( ! $permission && in_array( $object, [ 'reports', 'settings' ] ) && $context === 'read' ) {
 			$current_user_id = dokan_get_current_user_id();
-			$permission = dokan_is_user_seller( $current_user_id );
+			$permission      = dokan_is_user_seller( $current_user_id );
 		}
 
 		return $permission;
@@ -66,7 +66,7 @@ class VendorDashboardManager implements Hookable {
 	 * @since DOKAN_PRO_SINCE
 	 */
 	public function add_report_submenu( array $submenu_items, string $nav_key ): array {
-		$parent_menu = 'dashboard';
+		$parent_menu = 'reports';
 
 		if ( $parent_menu === $nav_key && dokan_is_seller_enabled( dokan_get_current_user_id() ) ) {
 			$submenu_items['report_overview'] = [

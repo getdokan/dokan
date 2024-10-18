@@ -18,8 +18,15 @@ class DataStoreCacheModifier implements Hookable {
      * @return void
      */
     public function register_hooks(): void {
+        add_filter( 'woocommerce_analytics_orders_stats_query_args', [ $this, 'add_query_param' ] );
         add_filter( 'woocommerce_analytics_products_stats_query_args', [ $this, 'add_query_param' ] );
+        add_filter( 'woocommerce_analytics_coupons_stats_query_args', [ $this, 'add_query_param' ] );
+        add_filter( 'woocommerce_analytics_taxes_stats_query_args', [ $this, 'add_query_param' ] );
+        add_filter( 'woocommerce_analytics_variations_stats_query_args', [ $this, 'add_query_param' ] );
+
         add_filter( 'woocommerce_analytics_products_query_args', [ $this, 'add_query_param' ] );
+        add_filter( 'woocommerce_analytics_revenue_query_args', [ $this, 'add_query_param' ] );
+        add_filter( 'woocommerce_analytics_variations_query_args', [ $this, 'add_query_param' ] );
     }
 
     /**
