@@ -582,6 +582,7 @@ class Assets {
         $default_script = [
             'ajaxurl'                      => admin_url( 'admin-ajax.php' ),
             'nonce'                        => wp_create_nonce( 'dokan_reviews' ),
+            'order_nonce'                  => wp_create_nonce( 'dokan_view_order' ),
             'ajax_loader'                  => DOKAN_PLUGIN_ASSEST . '/images/ajax-loader.gif',
             'seller'                       => [
                 'available'    => __( 'Available', 'dokan-lite' ),

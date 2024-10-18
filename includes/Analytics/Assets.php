@@ -15,6 +15,7 @@ class Assets implements Hookable {
 		add_filter( 'woocommerce_admin_shared_settings', [ $this, 'localize_wc_admin_settings' ] );
 
 		( new VendorDashboardManager() )->register_hooks();
+        ( new Reports\DataStoreCacheModifier() )->register_hooks();
 	}
 
 	/**
@@ -24,10 +25,12 @@ class Assets implements Hookable {
 	 * @return array
 	 */
 	public function localize_wc_admin_settings( $settings ) {
-		$preload_data_endpoints = apply_filters( 'woocommerce_component_settings_preload_endpoints', array() );
-		$preload_data = [];
+        $settings['stockStatuses'] = wc_get_product_stock_status_options();
 
-		if ( ! empty( $preload_data_endpoints ) ) {
+        $preload_data           = [];
+        $preload_data_endpoints = apply_filters( 'woocommerce_component_settings_preload_endpoints', array() );
+
+        if ( ! empty( $preload_data_endpoints ) ) {
 			// @see https://github.com/woocommerce/woocommerce/blob/f469bba6f28edd8616b5423755c6559912d47a4a/plugins/woocommerce/src/Internal/Admin/Settings.php#L140-L146
 			$preload_data = array_reduce(
 				array_values( $preload_data_endpoints ),
@@ -100,10 +103,11 @@ class Assets implements Hookable {
 		wp_enqueue_script( 'vendor_analytics_script' );
 		wp_localize_script(
             'vendor_analytics_script', 'vendorAnalyticsDokanConfig', [
-				'seller_id' => dokan_get_current_user_id(),
+				'seller_id'        => dokan_get_current_user_id(),
 				'orderListPageUlr' => dokan_get_navigation_url( 'orders' ),
 			]
 		);
-		wp_enqueue_style( 'vendor_analytics_style' );
+        wp_enqueue_style( 'vendor_analytics_style' );
+		wp_enqueue_style( 'wc-chunks-9966-style', plugins_url( 'woocommerce/assets/client/admin/chunks/9966.style.css' ), array(), filemtime( WP_PLUGIN_DIR . '/woocommerce/assets/client/admin/chunks/9966.style.css' ) );
 	}
 }
