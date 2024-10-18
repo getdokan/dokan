@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\Analytics\Reports;
 
+use WeDevs\Dokan\Analytics\Reports\Orders\QueryFilter;
 use WeDevs\Dokan\Contracts\Hookable;
 
 /**
@@ -18,6 +19,7 @@ class DataStoreCacheModifier implements Hookable {
      * @return void
      */
     public function register_hooks(): void {
+        add_filter( 'woocommerce_analytics_orders_query_args', [ $this, 'add_query_param' ] );
         add_filter( 'woocommerce_analytics_orders_stats_query_args', [ $this, 'add_query_param' ] );
         add_filter( 'woocommerce_analytics_products_stats_query_args', [ $this, 'add_query_param' ] );
         add_filter( 'woocommerce_analytics_coupons_stats_query_args', [ $this, 'add_query_param' ] );
@@ -25,6 +27,7 @@ class DataStoreCacheModifier implements Hookable {
         add_filter( 'woocommerce_analytics_variations_stats_query_args', [ $this, 'add_query_param' ] );
 
         add_filter( 'woocommerce_analytics_products_query_args', [ $this, 'add_query_param' ] );
+        add_filter( 'woocommerce_analytics_revenue_stats_query_args', [ $this, 'add_query_param' ] );
         add_filter( 'woocommerce_analytics_revenue_query_args', [ $this, 'add_query_param' ] );
         add_filter( 'woocommerce_analytics_variations_query_args', [ $this, 'add_query_param' ] );
     }
@@ -37,7 +40,7 @@ class DataStoreCacheModifier implements Hookable {
      * @return array
      */
     public function add_query_param( array $params ): array {
-        $params['seller_id'] = $_GET['seller_id'] ?? 0; // phpcs:ignore
+        $params['seller_id'] = dokan()->get_container()->get( QueryFilter::class )->get_seller_id();
         return $params;
     }
 }
