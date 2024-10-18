@@ -9,6 +9,7 @@ const entryPoint = {
   // Dokan tailwind css
   'dokan-tailwind': './src/tailwind.css',
 
+  'frontend': './src/Dashboard/index.tsx',
   'vue-frontend': './src/frontend/main.js',
   'vue-admin': './src/admin/main.js',
   'vue-bootstrap': './src/utils/Bootstrap.js',
@@ -66,6 +67,7 @@ const updatedConfig = {
   },
 
   resolve: {
+    ...defaultConfig.resolve,
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
       '@': path.resolve('./src/'),
