@@ -1,9 +1,9 @@
 import {createRoot} from "@wordpress/element";
 import domReady from "@wordpress/dom-ready";
 import Layout from "../Layout";
-import getRoutes from "../Routing";
+import getRoutes, { withRouter } from "../Routing";
 import {
-    createBrowserRouter, createHashRouter,
+    createHashRouter,
     RouterProvider,
 } from "react-router-dom";
 import './tailwind.scss';
@@ -12,9 +12,18 @@ const App = () => {
     const routes = getRoutes();
 
     const mapedRoutes = routes.map((route) => {
+        const WithRouterComponent = withRouter( route.element );
+
         return {
             path: route.path,
-            element: <Layout headerComponent={route?.header} footerComponent={route?.footer} route={route} title={route?.title}>{route.element}</Layout>,
+            element: <Layout
+                headerComponent={route?.header}
+                footerComponent={route?.footer}
+                route={route}
+                title={route?.title}
+            >
+                <WithRouterComponent/>
+            </Layout>,
         }
     });
 
