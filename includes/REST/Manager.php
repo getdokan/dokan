@@ -234,6 +234,7 @@ class Manager {
                 DOKAN_DIR . '/includes/REST/StoreSettingControllerV2.php'        => '\WeDevs\Dokan\REST\StoreSettingControllerV2',
                 DOKAN_DIR . '/includes/REST/VendorDashboardController.php'       => '\WeDevs\Dokan\REST\VendorDashboardController',
                 DOKAN_DIR . '/includes/REST/ProductBlockController.php'          => '\WeDevs\Dokan\REST\ProductBlockController',
+                DOKAN_DIR . '/includes/REST/CustomersController.php'              => '\WeDevs\Dokan\REST\CustomersController',
             )
         );
     }
