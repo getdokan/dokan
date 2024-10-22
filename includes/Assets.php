@@ -638,6 +638,7 @@ class Assets {
 
         // Remove `dokan-i18n-jed` in next release.
         wp_localize_script( 'dokan-i18n-jed', 'dokan', $localize_data );
+        wp_localize_script( 'dokan-util-helper', 'dokan', $localize_data );
         wp_localize_script( 'dokan-vue-bootstrap', 'dokan', $localize_data );
         wp_localize_script( 'dokan-script', 'dokan', $localize_data );
 
