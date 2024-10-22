@@ -16,14 +16,26 @@
                 </div>
             </div>
             <div v-if="'category_based' === selectedCommission">
-                <label class="!p-0 m-0 !mb-[6px] block" for="_subscription_product_admin_commission_type">{{__( 'Admin Commission', 'dokan-lite' )}}</label>
+                <label class="!p-0 m-0 !mb-[6px] block" for="_subscription_product_admin_commission_type">
+                    {{__( 'Admin Commission', 'dokan-lite' )}}
+
+                    <span class="dokan-tooltips-help tips" v-tooltip :title="__( 'When the value is 0, no commissions will be deducted from this vendor.', 'dokan-lite' )">
+                        <i class="fas fa-question-circle"></i>
+                    </span>
+                </label>
                 <category-based-commission
                     :value="categoryCommission"
                     @change="onCategoryUpdate"
                 />
             </div>
             <div v-else-if="'fixed' === selectedCommission">
-                <label class="!p-0 m-0 !mb-[6px] block" for="_subscription_product_admin_commission_type">{{__( 'Admin Commission', 'dokan-lite' )}}</label>
+                <label class="!p-0 m-0 !mb-[6px] block" for="_subscription_product_admin_commission_type">
+                    {{__( 'Admin Commission', 'dokan-lite' )}}
+
+                    <span class="dokan-tooltips-help tips" v-tooltip :title="__( 'When the value is 0, no commissions will be deducted from this vendor.', 'dokan-lite' )">
+                        <i class="fas fa-question-circle"></i>
+                    </span>
+                </label>
                 <combine-input
                     :value="fixedCommission"
                     v-on:change="fixedCOmmissionhandler"
