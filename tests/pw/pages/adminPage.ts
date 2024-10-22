@@ -2,8 +2,8 @@ import { Page } from '@playwright/test';
 import { BasePage } from '@pages/basePage';
 import { selector } from '@pages/selectors';
 import { data } from '@utils/testData';
-import { payment, dokanSetupWizard, woocommerce } from '@utils/interfaces';
 import { helpers } from '@utils/helpers';
+import { payment, dokanSetupWizard, woocommerce } from '@utils/interfaces';
 
 const { DOKAN_PRO } = process.env;
 
@@ -122,11 +122,15 @@ export class AdminPage extends BasePage {
 
         // Selling
         await this.enableSwitcherSetupWizard(setupWizardAdmin.newVendorEnableSelling);
-        await this.selectByValue(setupWizardAdmin.commissionType, dokanSetupWizard.commissionType);
-        await this.clearAndType(setupWizardAdmin.adminCommission, dokanSetupWizard.adminCommission);
         await this.enableSwitcherSetupWizard(setupWizardAdmin.orderStatusChange);
         await this.click(setupWizardAdmin.continue);
         // await this.click(setupWizardAdmin.skipThisStep)
+
+        // Commission
+        await this.selectByValue(setupWizardAdmin.commissionType, dokanSetupWizard.commission.commissionType);
+        await this.clearAndType(setupWizardAdmin.percentage, dokanSetupWizard.commission.commissionPercentage);
+        await this.clearAndType(setupWizardAdmin.fixed, dokanSetupWizard.commission.commissionFixed);
+        await this.click(setupWizardAdmin.continue);
 
         // Withdraw
         await this.enableSwitcherSetupWizard(setupWizardAdmin.payPal);

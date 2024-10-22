@@ -73,6 +73,20 @@
             this.setCorrectProductId();
 
             $( 'body' ).trigger( 'dokan-product-editor-loaded', this );
+
+            $( "input.dokan-product-regular-price, input.dokan-product-sales-price" ).on( 'keyup', _.debounce( () => {
+                Dokan_Editor.dokan_show_earning_suggestion( Dokan_Editor.earning_suggestion_callbak );
+            }, 750 ) );
+
+            if ( wp && wp.hooks && wp.hooks.addAction ) {
+                wp.hooks.addAction( 'dokan_selected_multistep_category', 'dokan-get-product-earning-suggestion', function() {
+                    Dokan_Editor.dokan_show_earning_suggestion( Dokan_Editor.earning_suggestion_callbak );
+                } );
+
+                wp.hooks.addAction( 'dokan_removed_multistep_category', 'dokan-get-product-earning-suggestion', function() {
+                    Dokan_Editor.dokan_show_earning_suggestion( Dokan_Editor.earning_suggestion_callbak );
+                } );
+            }
         },
 
         setCorrectProductId : function () {
@@ -923,6 +937,55 @@
             });
 
             downloadable_frame.open();
+        },
+
+        dokan_show_earning_suggestion: function( callback ) {
+            let commission = $('span.vendor-earning').attr( 'data-commission' );
+            let product_id = $( 'span.vendor-earning' ).attr( 'data-product-id' );
+            let product_price = $( 'input.dokan-product-regular-price' ).val();
+            let sale_price = $( 'input.dokan-product-sales-price' ).val();
+            let earning_suggestion = $('.simple-product span.vendor-price');
+            let category_ids = $('input[name="chosen_product_cat[]"]').map(function() {
+                return $(this).val();
+            }).get();
+
+            jQuery.ajax({
+                url: window.dokan.rest.root + `dokan/v1/commission`,
+                beforeSend: function ( xhr ) {
+                    xhr.setRequestHeader( 'X-WP-Nonce', window.dokan.rest.nonce );
+                },
+                type: 'GET',
+                data: {
+                    product_id: product_id,
+                    amount: sale_price ? sale_price : product_price,
+                    // vendor_id
+                    category_ids,
+                    context: 'seller'
+                }
+            }).done( ( response ) => {
+                if ( ! isNaN( response ) ) {
+                    earning_suggestion.html( response );
+                }
+
+                if ( typeof callback === 'function' ) {
+                    callback();
+                }
+            } );
+        },
+
+        earning_suggestion_callbak: function() {
+
+            if ( $( '#product_type' ).val() == 'simple' || $( '#product_type' ).text() == '' ) {
+                if ( Number( $('.simple-product span.vendor-price').text() ) < 0  ) {
+                    $( $('.dokan-product-less-price-alert').removeClass('dokan-hide') );
+                    $( 'input[type=submit]' ).attr( 'disabled', 'disabled' );
+                    $( 'button[type=submit]' ).attr( 'disabled', 'disabled' );
+                } else {
+                    $( $('.dokan-product-less-price-alert').addClass('dokan-hide') );
+                    $( 'input[type=submit]' ).removeAttr( 'disabled');
+                    $( 'button[type=submit]' ).removeAttr( 'disabled');
+                }
+            }
         }
     };
 

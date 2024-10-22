@@ -493,20 +493,74 @@ class Settings {
                     'desc'    => __( 'Select a commission type for vendor', 'dokan-lite' ),
                     'type'    => 'select',
                     'options' => $commission_types,
-                    'default' => 'percentage',
+                    'default' => 'fixed',
                     'tooltip' => __( 'Select a commission type', 'dokan-lite' ),
                 ],
-                'admin_percentage'       => [
-                    'name'              => 'admin_percentage',
-                    'label'             => __( 'Admin Commission', 'dokan-lite' ),
-                    'desc'              => __( 'Amount you get from each sale', 'dokan-lite' ),
-                    'default'           => '10',
-                    'type'              => 'price',
-                    'sanitize_callback' => 'wc_format_decimal',
+                'commission_fixed_values' => [
+                    'name'    => 'commission_fixed_values',
+                    'label'   => __( 'Admin Commission', 'dokan-lite' ),
+                    'type'    => 'commission_fixed',
+                    'fields'  => [
+                        'percent_fee' => [
+                            'name'                       => 'admin_percentage',
+                            'label'                      => __( 'Percent Fee', 'dokan-lite' ),
+                            'default'                    => '10',
+                            'type'                       => 'text',
+                            'desc'                       => __( 'Amount you will get from sales in percentage (10%)', 'dokan-lite' ),
+                            'required'                   => 'yes',
+                            'sanitize_callback'          => 'wc_format_decimal',
+                            'response_sanitize_callback' => 'wc_format_decimal',
+                        ],
+                        'fixed_fee' => [
+                            'name'                       => 'additional_fee',
+                            'label'                      => __( 'Fixed Fee', 'dokan-lite' ),
+                            'default'                    => '10',
+                            'type'                       => 'text',
+                            'desc'                       => __( 'Amount you will get from sales in flat rate(+5)', 'dokan-lite' ),
+                            'required'                   => 'yes',
+                            'sanitize_callback'          => 'wc_format_decimal',
+                            'response_sanitize_callback' => 'wc_format_localized_price',
+                        ],
+                    ],
+                    'default' => 'fixed',
+                    'min'     => '0',
+                    'step'    => 'any',
+                    'desc'    => __( 'Amount you will get from sales in both percentage and fixed fee', 'dokan-lite' ),
+                    'sanitize_callback'          => 'wc_format_decimal',
+                    'response_sanitize_callback' => 'wc_format_localized_price',
+                    'show_if' => [
+                        'commission_type' => [
+                            'equal' => 'fixed',
+                        ],
+                    ],
+                ],
+                'commission_category_based_values' => [
+                    'name'    => 'commission_category_based_values',
+                    'type'    => 'category_based_commission',
+                    'dokan_pro_commission' => 'yes',
+                    'label'   => __( 'Admin Commission', 'dokan-lite' ),
+                    'desc'    => __( 'Amount you will get from each sale', 'dokan-lite' ),
+                    'show_if' => [
+                        'commission_type' => [
+                            'equal' => 'category_based',
+                        ],
+                    ],
+                ],
+            ]
+        );
+
+        $selling_option_fees = apply_filters(
+            'dokan_settings_selling_option_fees', [
+                'fee-recipients' => [
+                    'name'        => 'fee-recipients',
+                    'label'       => __( 'Fee Recipients', 'dokan-lite' ),
+                    'type'        => 'sub_section',
+                    'description' => __( 'Define the fees that admin or vendor will recive', 'dokan-lite' ),
+                    'content_class' => 'sub-section-styles',
                 ],
                 'shipping_fee_recipient' => [
                     'name'    => 'shipping_fee_recipient',
-                    'label'   => __( 'Shipping Fee Recipient', 'dokan-lite' ),
+                    'label'   => __( 'Shipping Fee', 'dokan-lite' ),
                     'desc'    => __( 'Who will be receiving the shipping fees? Note that, tax fees for corresponding shipping method will not be included with shipping fees.', 'dokan-lite' ),
                     'type'    => 'radio',
                     'options' => [
@@ -517,7 +571,7 @@ class Settings {
                 ],
                 'tax_fee_recipient'      => [
                     'name'    => 'tax_fee_recipient',
-                    'label'   => __( 'Product Tax Fee Recipient', 'dokan-lite' ),
+                    'label'   => __( 'Product Tax Fee', 'dokan-lite' ),
                     'desc'    => __( 'Who will be receiving the tax fees for products? Note that, shipping tax fees will not be included with product tax.', 'dokan-lite' ),
                     'type'    => 'radio',
                     'options' => [
@@ -528,7 +582,7 @@ class Settings {
                 ],
                 'shipping_tax_fee_recipient'      => [
                     'name'    => 'shipping_tax_fee_recipient',
-                    'label'   => __( 'Shipping Tax Fee Recipient', 'dokan-lite' ),
+                    'label'   => __( 'Shipping Tax Fee', 'dokan-lite' ),
                     'desc'    => __( 'Who will be receiving the tax fees for shipping?', 'dokan-lite' ),
                     'type'    => 'radio',
                     'options' => [
@@ -604,6 +658,7 @@ class Settings {
                 'dokan_settings_selling_options',
                 array_merge(
                     $selling_option_commission,
+                    $selling_option_fees,
                     $selling_option_vendor_capability
                 )
             ),
