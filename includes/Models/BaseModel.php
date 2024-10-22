@@ -1,6 +1,6 @@
 <?php
 
-namespace WeDevs\Dokan\DataStore;
+namespace WeDevs\Dokan\Models;
 
 use WC_Data;
 

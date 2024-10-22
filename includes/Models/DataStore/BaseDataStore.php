@@ -1,11 +1,14 @@
 <?php
 
-namespace WeDevs\Dokan\DataStore;
+namespace WeDevs\Dokan\Models\DataStore;
 
 use Automattic\WooCommerce\Admin\API\Reports\SqlQuery;
 use Exception;
+use WeDevs\Dokan\Models\BaseModel;
 
-abstract class AbstractDataStore extends SqlQuery {
+abstract class BaseDataStore extends SqlQuery {
+    protected $selected_columns = [ '*' ];
+
 	abstract protected function get_fields_with_format(): array;
 	abstract public function get_table_name(): string;
 
@@ -25,6 +28,55 @@ abstract class AbstractDataStore extends SqlQuery {
 		}
 
 		do_action( $this->get_hook_prefix() . 'created', $inserted_id, $data );
+	}
+
+	/**
+     * Method to read a download permission from the database.
+     *
+     * @param BaseModel $model BaseModel object.
+     *
+     * @phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+     *
+     * @throws Exception Throw exception if invalid entity is passed.
+     */
+	public function read( BaseModel &$model ) {
+		global $wpdb;
+
+		if ( ! $model->get_id() ) {
+            $message = $this->get_hook_prefix() . ' : ' . __( 'Invalid entity item.', 'dokan-lite' );
+
+			throw new Exception( esc_html( $message ) );
+		}
+
+		$model->set_defaults();
+
+        $id_field_name = $this->get_id_field_name();
+        $format = $this->get_fields_with_format()[ $id_field_name ] ?? '%d';
+
+        $this->clear_all_clauses();
+        $this->add_sql_clause( 'select', $this->get_selected_columns() );
+        $this->add_sql_clause( 'from', $this->get_table_name_with_prefix() );
+
+        $this->add_sql_clause(
+            'where',
+            $wpdb->prepare(
+                "{$id_field_name} = $format",
+                $model->get_id()
+            )
+		);
+
+		$raw_item = $wpdb->get_row(
+            $this->get_query_statement()
+		);
+
+		if ( ! $raw_item ) {
+            $message = $this->get_hook_prefix() . ' : ' . __( 'Invalid entity item.', 'dokan-lite' );
+
+			throw new Exception( esc_html( $message ) );
+		}
+
+		$model->set_props( $this->format_raw_data( $raw_item ) );
+		$model->set_object_read( true );
 	}
 
     /**
@@ -57,50 +109,9 @@ abstract class AbstractDataStore extends SqlQuery {
 	}
 
     /**
-	 * Method to read a download permission from the database.
-	 *
-	 * @param BaseModel $model BaseModel object.
-     *
-     * @phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
-	 *
-	 * @throws Exception Throw exception if invalid entity is passed.
-	 */
-	public function read( BaseModel &$model ) {
-		global $wpdb;
-
-		if ( ! $model->get_id() ) {
-            $message = $this->get_hook_prefix() . ' : ' . __( 'Invalid entity item.', 'dokan-lite' );
-
-			throw new Exception( esc_html( $message ) );
-		}
-
-		$model->set_defaults();
-        $table_name = $this->get_table_name_with_prefix();
-
-        $id_field_name = $this->get_id_field_name();
-        $format = $this->get_fields_with_format()[ $id_field_name ] ?? '%d';
-
-		$raw_item = $wpdb->get_row(
-			$wpdb->prepare(
-				"SELECT * FROM {$table_name} WHERE {$id_field_name} = $format",
-				$model->get_id()
-			)
-		);
-
-		if ( ! $raw_item ) {
-            $message = $this->get_hook_prefix() . ' : ' . __( 'Invalid entity item.', 'dokan-lite' );
-
-			throw new Exception( esc_html( $message ) );
-		}
-
-		$model->set_props( $this->format_raw_data( $raw_item ) );
-		$model->set_object_read( true );
-	}
-
-    /**
 	 * Method to delete a download permission from the database.
 	 *
-	 * @param WC_Customer_Download $model WC_Customer_Download object.
+	 * @param BaseModel $model BaseModel object.
 	 * @param array                $args Array of args to pass to the delete method.
 	 */
 	public function delete( BaseModel &$model, $args = array() ) {
@@ -109,7 +120,6 @@ abstract class AbstractDataStore extends SqlQuery {
 
 		$model->set_id( 0 );
 	}
-
 
     /**
 	 * Method to delete a download permission from the database by ID.
@@ -163,6 +173,20 @@ abstract class AbstractDataStore extends SqlQuery {
 		return $result ? $wpdb->insert_id : false;
 	}
 
+    /**
+	 * Returns a list of columns selected by the query_args formatted as a comma separated string.
+	 *
+	 * @return string
+	 */
+	protected function get_selected_columns(): string {
+		$selections = apply_filters( $this->get_hook_prefix() . 'selected_columns', $this->selected_columns );
+
+		$selections = implode( ', ', $selections );
+
+		return $selections;
+	}
+
+
     protected function format_raw_data( $raw_data ): array {
         $data = array();
 
@@ -182,7 +206,6 @@ abstract class AbstractDataStore extends SqlQuery {
 
         return "dokan_{$hook_prefix}_";
     }
-
 
     protected function get_table_name_with_prefix(): string {
         global $wpdb;

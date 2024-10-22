@@ -54,7 +54,7 @@ interface DataStoreInterface {
      * @return void
      * @throw \Exception
      */
-    public function get( Model &$model );
+    // public function get( Model &$model );
 
     /**
      * Query data.
@@ -65,7 +65,7 @@ interface DataStoreInterface {
      *
      * @return array
      */
-    public function query( array $args = [] ): array;
+    // public function query( array $args = [] ): array;
 
     /**
      * Count data.
@@ -76,5 +76,5 @@ interface DataStoreInterface {
      *
      * @return int
      */
-    public function count( array $args = [] ): int;
+    // public function count( array $args = [] ): int;
 }
