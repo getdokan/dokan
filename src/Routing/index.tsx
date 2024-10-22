@@ -13,15 +13,13 @@ export function withRouter(Component) {
         const navigation = useNavigation();
 
         const routerProps = {
-            router: {
-                navigate,
-                params,
-                location,
-                redirect,
-                replace,
-                matches,
-                navigation
-            }
+            navigate,
+            params,
+            location,
+            redirect,
+            replace,
+            matches,
+            navigation
         };
 
         // Check if Component is a valid element
