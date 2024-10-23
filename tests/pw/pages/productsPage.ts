@@ -749,6 +749,7 @@ export class ProductsPage extends AdminPage {
     // quick edit product
     async quickEditProduct(product: product['simple']): Promise<void> {
         await this.searchProduct(product.editProduct);
+        await this.removeAttribute(productsVendor.rowActions(product.editProduct), 'class'); // forcing the row actions to be visible, to avoid flakiness
         await this.hover(productsVendor.productCell(product.editProduct));
         await this.click(productsVendor.quickEdit(product.editProduct));
 

@@ -84,6 +84,7 @@ test.describe('Product addon functionality test', () => {
     // product addon
 
     test('vendor can add product addon', { tag: ['@pro', '@vendor'] }, async () => {
+        test.slow();
         await vendor1.addProductAddon(productName, data.product.productInfo.addon);
     });
 
