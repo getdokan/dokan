@@ -3,22 +3,19 @@
 namespace WeDevs\Dokan\Models\DataStore;
 
 use Automattic\WooCommerce\Admin\API\Reports\SqlQuery;
+use Automattic\WooCommerce\Pinterest\API\Base;
 use Exception;
 use WeDevs\Dokan\Models\BaseModel;
 
-abstract class BaseDataStore extends SqlQuery {
+abstract class BaseDataStore extends SqlQuery implements DataStoreInterface {
     protected $selected_columns = [ '*' ];
 
 	abstract protected function get_fields_with_format(): array;
 	abstract public function get_table_name(): string;
 
-	public function create( BaseModel &$model ) {
-		$data = array();
 
-		foreach ( $this->get_fields() as $db_field_name ) {
-			$value                  = call_user_func( array( $model, 'get_' . $db_field_name ), 'edit' );
-			$data[ $db_field_name ] = $value;
-		}
+	public function create( BaseModel &$model ) {
+		$data = $this->get_fields_data( $model );
 
 		$inserted_id = $this->insert( $data );
 
@@ -29,6 +26,7 @@ abstract class BaseDataStore extends SqlQuery {
 
 		do_action( $this->get_hook_prefix() . 'created', $inserted_id, $data );
 	}
+
 
 	/**
      * Method to read a download permission from the database.
@@ -87,16 +85,13 @@ abstract class BaseDataStore extends SqlQuery {
 	public function update( BaseModel &$model ) {
 		global $wpdb;
 
-		$data = [];
+		$data = $this->get_fields_data( $model );
 
-        foreach ( $this->get_fields() as $db_field_name ) {
-			$value                  = call_user_func( array( $model, 'get_' . $db_field_name ), 'edit' );
-			$data[ $db_field_name ] = $value;
-		}
+		var_dump( 'Update balance', $data );
 
 		$format = $this->get_fields_format();
 
-		$wpdb->update(
+		$result = $wpdb->update(
 			$this->get_table_name_with_prefix(),
 			$data,
 			array(
@@ -106,6 +101,8 @@ abstract class BaseDataStore extends SqlQuery {
 		);
 
 		$model->apply_changes();
+
+		return $result;
 	}
 
     /**
@@ -173,6 +170,23 @@ abstract class BaseDataStore extends SqlQuery {
 		return $result ? $wpdb->insert_id : false;
 	}
 
+	protected function get_fields_data( BaseModel &$model ): array {
+		$data = array();
+
+		foreach ( $this->get_fields() as $db_field_name ) {
+			if ( method_exists( $this, 'get_' . $db_field_name ) ) {
+				$data[ $db_field_name ] = call_user_func( array( $this, 'get_' . $db_field_name ), $model, 'edit' );
+			} else {
+				$value = call_user_func( array( $model, 'get_' . $db_field_name ), 'edit' );
+			}
+
+			$data[ $db_field_name ] = $value;
+		}
+		var_dump( 'get_fields_data', $data );
+
+		return $data;
+	}
+
     /**
 	 * Returns a list of columns selected by the query_args formatted as a comma separated string.
 	 *
@@ -229,7 +243,13 @@ abstract class BaseDataStore extends SqlQuery {
 	 * @return array The filtered array of fields.
 	 */
     protected function get_fields(): array {
-        return apply_filters( $this->get_hook_prefix() . 'fields', array_keys( $this->get_fields_with_format() ), $this->get_fields_with_format() );
+		$fields = array_keys( $this->get_fields_with_format() );
+
+        return apply_filters(
+            $this->get_hook_prefix() . 'fields',
+            $fields,
+            $this->get_fields_with_format()
+		);
     }
 
     /**
@@ -238,6 +258,12 @@ abstract class BaseDataStore extends SqlQuery {
      * @return array The filtered array of format of the fields.
      */
 	protected function get_fields_format(): array {
-        return apply_filters( $this->get_hook_prefix() . 'fields_format', array_values( $this->get_fields_with_format() ), $this->get_fields_with_format() );
+		$format = array_values( $this->get_fields_with_format() );
+
+        return apply_filters(
+			$this->get_hook_prefix() . 'fields_format',
+			$format,
+            $this->get_fields_with_format()
+        );
     }
 }
