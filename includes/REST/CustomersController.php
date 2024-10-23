@@ -64,6 +64,8 @@ class CustomersController extends WC_REST_Customers_Controller {
                 'create' => __( 'Sorry, you are not allowed to create resources.', 'dokan-lite' ),
                 'edit'   => __( 'Sorry, you are not allowed to edit this resource.', 'dokan-lite' ),
                 'delete' => __( 'Sorry, you are not allowed to delete this resource.', 'dokan-lite' ),
+                'batch'  => __( 'Sorry, you are not allowed to batch update resources.', 'dokan-lite' ),
+                'search' => __( 'Sorry, you are not allowed to search customers.', 'dokan-lite' ),
             ];
             return new WP_Error( "dokan_rest_cannot_$action", $messages[ $action ], [ 'status' => rest_authorization_required_code() ] );
         }
@@ -103,6 +105,56 @@ class CustomersController extends WC_REST_Customers_Controller {
         return $this->perform_vendor_action(
             function () use ( $request ) {
                 return parent::get_item( $request );
+            }
+        );
+    }
+
+    /**
+     * Create a customer.
+     *
+     * @param WP_REST_Request $request Full details about the request.
+     * @return WP_Error|WP_REST_Response
+     */
+    public function create_item( $request ) {
+        return $this->perform_vendor_action(
+            function () use ( $request ) {
+                return parent::create_item( $request );
+            }
+        );
+    }
+
+    /**
+     * Update a customer.
+     *
+     * @param WP_REST_Request $request Full details about the request.
+     * @return WP_Error|WP_REST_Response
+     */
+    public function update_item( $request ) {
+        return $this->perform_vendor_action(
+            function () use ( $request ) {
+                return parent::update_item( $request );
+            }
+        );
+    }
+
+    /**
+     * Delete a customer.
+     *
+     * @param WP_REST_Request $request Full details about the request.
+     * @return WP_Error|WP_REST_Response
+     */
+    public function delete_item( $request ) {
+        return $this->perform_vendor_action(
+            function () use ( $request ) {
+                return parent::delete_item( $request );
+            }
+        );
+    }
+
+    public function batch_items( $request ) {
+        return $this->perform_vendor_action(
+            function () use ( $request ) {
+                return parent::batch_items( $request );
             }
         );
     }
@@ -255,12 +307,57 @@ class CustomersController extends WC_REST_Customers_Controller {
     }
 
     /**
+     * Check if a given request has access to create a customer.
+     *
+     * @param WP_REST_Request $request Full details about the request.
+     *
+     * @return WP_Error|boolean
+     */
+    public function create_item_permissions_check( $request ) {
+        return $this->check_permission( $request, 'create' );
+    }
+
+    /**
+     * Check if a given request has access to update a customer.
+     *
+     * @param WP_REST_Request $request Full details about the request.
+     *
+     * @return WP_Error|boolean
+     */
+    public function update_item_permissions_check( $request ) {
+        return $this->check_permission( $request, 'edit' );
+    }
+
+    /**
+     * Check if a given request has access to delete a customer.
+     *
+     * @param WP_REST_Request $request Full details about the request.
+     *
+     * @return WP_Error|boolean
+     */
+    public function delete_item_permissions_check( $request ) {
+        return $this->check_permission( $request, 'delete' );
+    }
+
+    /**
+     * Check if a given request has access to batch items.
+     *
+     * @param WP_REST_Request $request Full details about the request.
+     *
+     * @return WP_Error|boolean
+     */
+    public function batch_items_permissions_check( $request ) {
+        return $this->check_permission( $request, 'batch' );
+    }
+
+    /**
      * Check if a given request has access to search customers.
      *
      * @param WP_REST_Request $request Full details about the request.
+     *
      * @return WP_Error|boolean
      */
     public function search_customers_permissions_check( $request ) {
-        return $this->check_permission( $request, 'view' );
+        return $this->check_permission( $request, 'search' );
     }
 }
