@@ -2,7 +2,7 @@
  * External dependencies
  */
 import { __, sprintf } from '@wordpress/i18n';
-import { useMemo } from '@wordpress/element';
+import { useEffect, useMemo } from '@wordpress/element';
 import { compose } from '@wordpress/compose';
 import { partial } from 'lodash';
 import { Dropdown, Button } from '@wordpress/components';
@@ -83,7 +83,6 @@ const mergeSectionsWithDefaults = ( prefSections ) => {
 
 const CustomizableDashboard = ( { defaultDateRange, path, query } ) => {
     const { updateUserPreferences, ...userPrefs } = useUserPreferences();
-    console.log( 'User pref sections-->', userPrefs.dashboard_sections );
 
     const sections = useMemo(
         () => mergeSectionsWithDefaults( userPrefs.dashboard_sections ),
@@ -314,11 +313,48 @@ const CustomizableDashboard = ( { defaultDateRange, path, query } ) => {
         );
     };
 
+    // Filter name for anchor handler
+    const ANCHOR_HANDLER_FILTER = 'dokan_should_convert_anchors',
+        shouldConvert = applyFilters( ANCHOR_HANDLER_FILTER, true );
+
+    if ( shouldConvert ) {  // Check if conversion should proceed.
+        useEffect( () => {
+            const container = document.querySelector( '.customizable-dashboard' );
+            if ( ! container ) return;
+
+            // Convert anchors to spans
+            const convertAnchorsToSpans = () => {
+                const anchors = container.getElementsByTagName( 'a' );
+                Array.from( anchors ).forEach( anchor => {
+                    const span = document.createElement( 'span' );
+                    span.innerHTML = anchor.innerHTML;
+                    span.className = `${ anchor.className } converted`;
+                    span.style.cursor = 'pointer';
+
+                    // Custom click handler with filter
+                    span.onclick = ( event) => event.preventDefault();
+                    anchor.parentNode.replaceChild( span, anchor );
+                });
+            };
+
+            // Initial conversion
+            convertAnchorsToSpans();
+
+            // Handle dynamic content
+            const observer = new MutationObserver( convertAnchorsToSpans );
+            observer.observe( container, { childList: true, subtree: true } );
+
+            return () => observer.disconnect();
+        }, [] );
+    }
+
     return (
         <CurrencyContext.Provider
             value={ getFilteredCurrencyInstance( getQuery() ) }
         >
-            { renderDashboardReports() }
+            <div className='customizable-dashboard'>
+                { renderDashboardReports() }
+            </div>
         </CurrencyContext.Provider>
     );
 };
