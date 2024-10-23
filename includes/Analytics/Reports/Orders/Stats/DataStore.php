@@ -112,21 +112,28 @@ class DataStore extends ReportsDataStore implements DataStoreInterface {
 		$admin_earning = 0;
 
 		$gateway_fee = 0;
-		$gateway_fee_provider = 0;
+		$gateway_fee_provider = '';
 
-		$shipping_fee = 0;
-		$shipping_fee_recipient = 0;
+		$shipping_fee = $order->get_shipping_total();
+		$shipping_fee_recipient = '';
 
 		// Override the values if order is a shop order.
-		if ( OrderUtil::is_order( $order->get_id(), array( 'shop_order' ) ) ) {
-			$vendor_earning = (float) dokan()->commission->get_earning_by_order( $order );
-			$admin_earning = (float) dokan()->commission->get_earning_by_order( $order, 'admin' );
+		switch ( $order->get_type() ) {
+			case 'shop_order':
+				$vendor_earning = (float) dokan()->commission->get_earning_by_order( $order );
+				$admin_earning = (float) dokan()->commission->get_earning_by_order( $order, 'admin' );
 
-			$gateway_fee = $order->get_meta( 'dokan_gateway_fee' );
-			$gateway_fee_provider = $order->get_meta( 'dokan_gateway_fee_paid_by' );
+				$gateway_fee = $order->get_meta( 'dokan_gateway_fee' );
+				$gateway_fee_provider = $order->get_meta( 'dokan_gateway_fee_paid_by' );
+				$shipping_fee_recipient = $order->get_meta( 'shipping_fee_recipient' );
+				break;
 
-			$shipping_fee = $order->get_shipping_total();
-			$shipping_fee_recipient = $order->get_meta( 'shipping_fee_recipient' );
+			case 'shop_order_refund':
+				$parent_order = wc_get_order( $order->get_parent_id() );
+				$shipping_fee_recipient = $parent_order->get_meta( 'shipping_fee_recipient' );
+				break;
+			default:
+				break;
 		}
 
 		/**
