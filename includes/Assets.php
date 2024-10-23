@@ -1204,4 +1204,3 @@ class Assets {
         );
     }
 }
-
