@@ -3,19 +3,12 @@ import router from './router';
 import menuFix from './utils/admin-menu-fix';
 
 /* eslint-disable no-new */
-let Vue = dokan_get_lib( 'Vue' );
+const Vue = dokan_get_lib( 'Vue' );
 
 new Vue( {
     el: '#dokan-vue-admin',
     router,
     render: ( h ) => h( App ),
-
-    created() {
-        if ( dokan.dokan_pro_i18n ) {
-            this.setLocaleData( dokan.dokan_pro_i18n[ 'dokan' ] );
-        }
-    },
-
     methods: {
         listTableTexts() {
             return {
