@@ -4,10 +4,12 @@ namespace WeDevs\Dokan\REST;
 
 use WC_Data;
 use WC_Customer;
+use WC_Data_Store;
 use WC_REST_Customers_Controller;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
+use WP_REST_Server;
 
 class CustomersController extends WC_REST_Customers_Controller {
 
@@ -25,24 +27,26 @@ class CustomersController extends WC_REST_Customers_Controller {
         parent::register_routes();
 
         // Add new route for searching customers
-        register_rest_route( $this->namespace, '/' . $this->rest_base . '/search', array(
-            array(
-                'methods'             => WP_REST_Server::READABLE,
-                'callback'            => array( $this, 'search_customers' ),
-                'permission_callback' => array( $this, 'search_customers_permissions_check' ),
-                'args'                => array(
-                    'search' => array(
-                        'description' => __( 'Search string.', 'dokan-lite' ),
-                        'type'        => 'string',
-                        'required'    => true,
-                    ),
-                    'exclude' => array(
-                        'description' => __( 'Comma-separated list of customer IDs to exclude.', 'dokan-lite' ),
-                        'type'        => 'string',
-                    ),
-                ),
-            ),
-        ) );
+        register_rest_route(
+            $this->namespace, '/' . $this->rest_base . '/search', array(
+				array(
+					'methods'             => WP_REST_Server::READABLE,
+					'callback'            => array( $this, 'search_customers' ),
+					'permission_callback' => array( $this, 'search_customers_permissions_check' ),
+					'args'                => array(
+						'search' => array(
+							'description' => __( 'Search string.', 'dokan-lite' ),
+							'type'        => 'string',
+							'required'    => true,
+						),
+						'exclude' => array(
+							'description' => __( 'Comma-separated list of customer IDs to exclude.', 'dokan-lite' ),
+							'type'        => 'string',
+						),
+					),
+				),
+            )
+        );
     }
 
     /**
@@ -107,7 +111,9 @@ class CustomersController extends WC_REST_Customers_Controller {
      * Search customers for the current vendor.
      *
      * @param WP_REST_Request $request Full details about the request.
+     *
      * @return WP_Error|WP_REST_Response
+     * @throws \Exception
      */
     public function search_customers( $request ) {
         if ( ! current_user_can( 'edit_shop_orders' ) ) {
