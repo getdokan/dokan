@@ -38,10 +38,11 @@ class VendorBalanceModelTest extends DokanTestCase {
 
         $this->assertEmpty( $vendor_balance->get_particulars() );
 
+        // Change the particulars
         $vendor_balance->set_particulars( 'test123' );
-        var_dump( $vendor_balance->get_changes(), $vendor_balance->get_particulars( 'edit' ) );
         $vendor_balance->save();
 
+        // Assert changes are applied to the database.
         $this->assertDatabaseHas(
             'dokan_vendor_balance', [
 				'perticulars' => 'test123',

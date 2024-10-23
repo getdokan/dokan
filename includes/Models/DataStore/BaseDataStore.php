@@ -10,10 +10,25 @@ use WeDevs\Dokan\Models\BaseModel;
 abstract class BaseDataStore extends SqlQuery implements DataStoreInterface {
     protected $selected_columns = [ '*' ];
 
+	/**
+	 * Get the fields with format as an array where key is the db field name and value is the format.
+	 *
+	 * @return array
+	 */
 	abstract protected function get_fields_with_format(): array;
+
+	/**
+	 * Get the table name with or without prefix
+	 *
+	 * @return string
+	 */
 	abstract public function get_table_name(): string;
 
-
+	/**
+	 * Create a new record in the database using the provided model data.
+	 *
+	 * @param BaseModel $model The model object containing the data to be inserted.
+	 */
 	public function create( BaseModel &$model ) {
 		$data = $this->get_fields_data( $model );
 
@@ -25,6 +40,8 @@ abstract class BaseDataStore extends SqlQuery implements DataStoreInterface {
 		}
 
 		do_action( $this->get_hook_prefix() . 'created', $inserted_id, $data );
+
+		return $inserted_id;
 	}
 
 
@@ -49,7 +66,7 @@ abstract class BaseDataStore extends SqlQuery implements DataStoreInterface {
 		$model->set_defaults();
 
         $id_field_name = $this->get_id_field_name();
-        $format = $this->get_fields_with_format()[ $id_field_name ] ?? '%d';
+        $format = $this->get_id_field_format();
 
         $this->clear_all_clauses();
         $this->add_sql_clause( 'select', $this->get_selected_columns() );
@@ -75,6 +92,8 @@ abstract class BaseDataStore extends SqlQuery implements DataStoreInterface {
 
 		$model->set_props( $this->format_raw_data( $raw_item ) );
 		$model->set_object_read( true );
+
+		return $raw_item;
 	}
 
     /**
@@ -86,8 +105,6 @@ abstract class BaseDataStore extends SqlQuery implements DataStoreInterface {
 		global $wpdb;
 
 		$data = $this->get_fields_data( $model );
-
-		var_dump( 'Update balance', $data );
 
 		$format = $this->get_fields_format();
 
@@ -130,7 +147,7 @@ abstract class BaseDataStore extends SqlQuery implements DataStoreInterface {
 
         $table_name = $this->get_table_name_with_prefix();
         $id_field_name = $this->get_id_field_name();
-        $format = $this->get_fields_format()[ $id_field_name ] ?? '%d';
+        $format = $this->get_id_field_format();
 
 		$result = $wpdb->query(
 			$wpdb->prepare(
@@ -141,6 +158,8 @@ abstract class BaseDataStore extends SqlQuery implements DataStoreInterface {
 		);
 
         do_action( $this->get_hook_prefix() . 'deleted', $id, $result );
+
+		return $result;
 	}
 
     /**
@@ -167,7 +186,7 @@ abstract class BaseDataStore extends SqlQuery implements DataStoreInterface {
 
         do_action( $hook_prefix . 'after_insert', $result, $data );
 
-		return $result ? $wpdb->insert_id : false;
+		return $result ? $wpdb->insert_id : 0;
 	}
 
 	protected function get_fields_data( BaseModel &$model ): array {
@@ -177,12 +196,9 @@ abstract class BaseDataStore extends SqlQuery implements DataStoreInterface {
 			if ( method_exists( $this, 'get_' . $db_field_name ) ) {
 				$data[ $db_field_name ] = call_user_func( array( $this, 'get_' . $db_field_name ), $model, 'edit' );
 			} else {
-				$value = call_user_func( array( $model, 'get_' . $db_field_name ), 'edit' );
+				$data[ $db_field_name ] = call_user_func( array( $model, 'get_' . $db_field_name ), 'edit' );
 			}
-
-			$data[ $db_field_name ] = $value;
 		}
-		var_dump( 'get_fields_data', $data );
 
 		return $data;
 	}
@@ -235,6 +251,11 @@ abstract class BaseDataStore extends SqlQuery implements DataStoreInterface {
 
     protected function get_id_field_name(): string {
         return apply_filters( $this->get_hook_prefix() . 'id_field_name', 'id' ); // 'id';
+    }
+
+
+    protected function get_id_field_format(): string {
+        return apply_filters( $this->get_hook_prefix() . 'id_field_format', '%d' ); // 'id';
     }
 
 	/**

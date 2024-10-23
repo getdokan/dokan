@@ -11,7 +11,7 @@ class VendorBalanceStore extends BaseDataStore {
         return [
 			'vendor_id' => '%d',
 			'trn_id' => '%d',
-			'trn_type' => '%d',
+			'trn_type' => '%s',
 			'perticulars' => '%s',
 			'debit' => '%f',
 			'credit' => '%f',
