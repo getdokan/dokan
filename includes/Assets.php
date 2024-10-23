@@ -1204,3 +1204,4 @@ class Assets {
         );
     }
 }
+
