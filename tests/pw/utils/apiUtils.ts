@@ -2094,16 +2094,35 @@ export class ApiUtils {
         return responseBody;
     }
 
+    // get single shipping zone method
+    async getSingleShippingZoneMethod(zoneId: string, methodId: string, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.get(endPoints.wc.getSingleShippingZoneMethod(zoneId, methodId), { headers: auth });
+        return responseBody;
+    }
+
+    // add shipping zone method
+    async addShippingZoneMethod(zoneId: string, zoneMethod: object, auth?: auth): Promise<[responseBody, string]> {
+        const [, responseBody] = await this.post(endPoints.wc.addShippingZoneMethod(zoneId), { data: zoneMethod, headers: auth });
+        const methodId = String(responseBody?.id);
+        return [responseBody, methodId];
+    }
+
+    // update shipping zone method
+    async updateShippingZoneMethod(zoneId: string, methodId: string, zoneMethod: object, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.post(endPoints.wc.updateShippingZoneMethod(zoneId, methodId), { data: zoneMethod, headers: auth });
+        return responseBody;
+    }
+
+    // delete shipping zone method
+    async deleteShippingZoneMethod(zoneId: string, methodId: string, auth?: auth): Promise<responseBody> {
+        const [, responseBody] = await this.post(endPoints.wc.deleteShippingZoneMethod(zoneId, methodId), { params: payloads.paramsForceDelete, headers: auth });
+        return responseBody;
+    }
+
     // shipping method exist or not
     async shippingMethodExistOrNot(zoneId: string, methodName: string, auth?: auth): Promise<responseBody> {
         const allShippingMethods = (await this.getAllShippingZoneMethods(zoneId, auth)).map((a: { method_id: string }) => a.method_id);
         return allShippingMethods.includes(methodName);
-    }
-
-    // add shipping zone method
-    async addShippingZoneMethod(zoneId: string, zoneMethod: object, auth?: auth): Promise<responseBody> {
-        const [, responseBody] = await this.post(endPoints.wc.addShippingZoneMethod(zoneId), { data: zoneMethod, headers: auth });
-        return responseBody;
     }
 
     // get all shipping classes
