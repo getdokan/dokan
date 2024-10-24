@@ -155,8 +155,37 @@ class Hooks {
         $current_status = $this->maybe_add_wc_prefix( $current_status );
         $new_status     = $this->maybe_add_wc_prefix( $new_status );
 
-        // Define the default whitelist of allowed status transitions
-        $default_whitelist = [
+        // Get the current allowlist of status transitions
+        $allowlist = $this->get_order_status_allowlist();
+
+        // If 'any' is allowed for the current status, all transitions are allowed
+        if ( in_array( 'any', $allowlist[ $current_status ], true ) ) {
+            return true;
+        }
+
+        // Check if the new status is in the list of allowed transitions
+        return in_array( $new_status, $allowlist[ $current_status ], true );
+    }
+
+    /**
+     * Get the list of allowed order status transitions.
+     *
+     * This method returns an array of allowed order status transitions.
+     * It combines default transitions with custom WooCommerce order statuses
+     * and allows for extensibility through filters.
+     *
+     * @since 3.12.2
+     *
+     * @return array An associative array where keys are current statuses
+     *               and values are arrays of allowed new statuses.
+     */
+    private function get_order_status_allowlist(): array {
+        // Define the default transition rules
+        $default_transitions = [
+            // Allow checkout-draft to transition to any status
+            'checkout-draft' => [ 'any' ],
+
+            // Basic order flow
             'wc-pending'    => [ 'any' ],
             'wc-on-hold'    => [ 'wc-pending', 'wc-on-hold', 'wc-processing', 'wc-completed', 'wc-failed' ],
             'wc-processing' => [ 'wc-completed', 'wc-failed', 'wc-cancelled', 'wc-refunded' ],
@@ -166,36 +195,36 @@ class Hooks {
             'wc-refunded'   => [],
         ];
 
+        // Get all registered WooCommerce order statuses
+        $wc_statuses = wc_get_order_statuses();
+
+        // Create allowlist from WooCommerce statuses
+        $allowlist = [];
+        foreach ( $wc_statuses as $status_key => $status_label ) {
+            if ( ! isset( $default_transitions[ $status_key ] ) ) {
+                // For custom statuses, allow transitions to default processing statuses
+                $allowlist[ $status_key ] = [ 'any' ];
+            } else {
+                // Use default transitions for standard statuses
+                $allowlist[ $status_key ] = $default_transitions[ $status_key ];
+            }
+        }
+
         /**
-         * Filter the whitelist of allowed status transitions for sub-orders.
+         * Filter the allowlist of permitted order status transitions.
          *
-         * This filter allows developers to customize the whitelist that determines
-         * which status transitions are allowed for sub-orders when the main order
-         * status is updated. By modifying this whitelist, you can control how
-         * sub-order statuses are updated in relation to the main order.
+         * Allows customization of which status transitions are permitted for sub-orders
+         * when the main order status is updated.
          *
          * @since 3.12.2
          *
-         * @param array $whitelist An associative array where keys are current statuses
-         *                         and values are arrays of allowed new statuses.
-         *                         The special value 'any' allows transition to any status.
+         * @param array $allowlist An associative array where keys are current statuses
+         *                        and values are arrays of allowed new statuses.
+         *                        Use 'any' to allow transition to any status.
          *
-         * @return array Modified whitelist of allowed status transitions.
+         * @return array Modified allowlist of allowed status transitions.
          */
-        $whitelist = apply_filters( 'dokan_sub_order_status_update_whitelist', $default_whitelist );
-
-        // If the current status is not in the whitelist, status change is not allowed
-        if ( ! isset( $whitelist[ $current_status ] ) ) {
-            return false;
-        }
-
-        // If 'any' is allowed for the current status, all transitions are allowed
-        if ( in_array( 'any', $whitelist[ $current_status ], true ) ) {
-            return true;
-        }
-
-        // Check if the new status is in the list of allowed transitions
-        return in_array( $new_status, $whitelist[ $current_status ], true );
+        return apply_filters( 'dokan_sub_order_status_update_allowlist', $allowlist );
     }
 
     /**
