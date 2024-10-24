@@ -207,7 +207,7 @@ const ReportTable = (props) => {
             "success",
             sprintf(
               /* translators: %s = type of report */
-              __("Your %s Report will be emailed to you.", "woocommerce"),
+              __("Your %s Report will be emailed to you.", 'dokan-lite'),
               title
             )
           )
@@ -220,7 +220,7 @@ const ReportTable = (props) => {
                 /* translators: %s = type of report */
                 __(
                   "There was a problem exporting your %s Report. Please try again.",
-                  "woocommerce"
+                  'dokan-lite'
                 ),
                 title
               )
@@ -305,7 +305,7 @@ const ReportTable = (props) => {
       label: (
         <CheckboxControl
           onChange={selectAllRows}
-          aria-label={__("Select All", "woocommerce")}
+          aria-label={__("Select All", 'dokan-lite')}
           checked={isAllChecked}
           disabled={!hasData}
         />
@@ -383,12 +383,12 @@ const ReportTable = (props) => {
               count={selectedRows.length}
               helpText={
                 labels.helpText ||
-                __("Check at least two items below to compare", "woocommerce")
+                __("Check at least two items below to compare", 'dokan-lite')
               }
               onClick={onCompare}
               disabled={!downloadable}
             >
-              {labels.compareButton || __("Compare", "woocommerce")}
+              {labels.compareButton || __("Compare", 'dokan-lite')}
             </CompareButton>
           ),
           searchBy && (
@@ -398,7 +398,7 @@ const ReportTable = (props) => {
               key="search"
               onChange={onSearchChange}
               placeholder={
-                labels.placeholder || __("Search by item name", "woocommerce")
+                labels.placeholder || __("Search by item name", 'dokan-lite')
               }
               selected={searchedLabels}
               showClearButton={true}
@@ -415,7 +415,7 @@ const ReportTable = (props) => {
             >
               <DownloadIcon />
               <span className="woocommerce-table__download-button__label">
-                {labels.downloadButton || __("Download", "woocommerce")}
+                {labels.downloadButton || __("Download", 'dokan-lite')}
               </span>
             </Button>
           ),

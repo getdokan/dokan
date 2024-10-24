@@ -27,67 +27,67 @@ const charts = {
 
 const defaultCharts = [
   {
-    label: __("Total sales", "woocommerce"),
+    label: __("Total sales", 'dokan-lite'),
     report: "revenue",
     key: "total_sales",
   },
   {
-    label: __("Net sales", "woocommerce"),
+    label: __("Net sales", 'dokan-lite'),
     report: "revenue",
     key: "net_revenue",
   },
   {
-    label: __("Orders", "woocommerce"),
+    label: __("Orders", 'dokan-lite'),
     report: "orders",
     key: "orders_count",
   },
   {
-    label: __("Average order value", "woocommerce"),
+    label: __("Average order value", 'dokan-lite'),
     report: "orders",
     key: "avg_order_value",
   },
   {
-    label: __("Items sold", "woocommerce"),
+    label: __("Items sold", 'dokan-lite'),
     report: "products",
     key: "items_sold",
   },
   {
-    label: __("Returns", "woocommerce"),
+    label: __("Returns", 'dokan-lite'),
     report: "revenue",
     key: "refunds",
   },
   {
-    label: __("Discounted orders", "woocommerce"),
+    label: __("Discounted orders", 'dokan-lite'),
     report: "coupons",
     key: "orders_count",
   },
   {
-    label: __("Gross discounted", "woocommerce"),
+    label: __("Gross discounted", 'dokan-lite'),
     report: "coupons",
     key: "amount",
   },
   {
-    label: __("Total tax", "woocommerce"),
+    label: __("Total tax", 'dokan-lite'),
     report: "taxes",
     key: "total_tax",
   },
   {
-    label: __("Order tax", "woocommerce"),
+    label: __("Order tax", 'dokan-lite'),
     report: "taxes",
     key: "order_tax",
   },
   {
-    label: __("Shipping tax", "woocommerce"),
+    label: __("Shipping tax", 'dokan-lite'),
     report: "taxes",
     key: "shipping_tax",
   },
   {
-    label: __("Shipping", "woocommerce"),
+    label: __("Shipping", 'dokan-lite'),
     report: "revenue",
     key: "shipping",
   },
   {
-    label: __("Downloads", "woocommerce"),
+    label: __("Downloads", 'dokan-lite'),
     report: "downloads",
     key: "download_count",
   },

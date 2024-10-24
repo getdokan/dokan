@@ -28,14 +28,14 @@ class CouponsReportTable extends Component {
   getHeadersContent() {
     return [
       {
-        label: __("Coupon code", "woocommerce"),
+        label: __("Coupon code", 'dokan-lite'),
         key: "code",
         required: true,
         isLeftAligned: true,
         isSortable: true,
       },
       {
-        label: __("Orders", "woocommerce"),
+        label: __("Orders", 'dokan-lite'),
         key: "orders_count",
         required: true,
         defaultSort: true,
@@ -43,21 +43,21 @@ class CouponsReportTable extends Component {
         isNumeric: true,
       },
       {
-        label: __("Amount discounted", "woocommerce"),
+        label: __("Amount discounted", 'dokan-lite'),
         key: "amount",
         isSortable: true,
         isNumeric: true,
       },
       {
-        label: __("Created", "woocommerce"),
+        label: __("Created", 'dokan-lite'),
         key: "created",
       },
       {
-        label: __("Expires", "woocommerce"),
+        label: __("Expires", 'dokan-lite'),
         key: "expires",
       },
       {
-        label: __("Type", "woocommerce"),
+        label: __("Type", 'dokan-lite'),
         key: "type",
       },
     ];
@@ -133,7 +133,7 @@ class CouponsReportTable extends Component {
           display: dateCreated ? (
             <Date date={dateCreated} visibleFormat={dateFormat} />
           ) : (
-            __("N/A", "woocommerce")
+            __("N/A", 'dokan-lite')
           ),
           value: dateCreated,
         },
@@ -141,7 +141,7 @@ class CouponsReportTable extends Component {
           display: dateExpires ? (
             <Date date={dateExpires} visibleFormat={dateFormat} />
           ) : (
-            __("N/A", "woocommerce")
+            __("N/A", 'dokan-lite')
           ),
           value: dateExpires,
         },
@@ -163,15 +163,15 @@ class CouponsReportTable extends Component {
     const currency = getCurrencyConfig();
     return [
       {
-        label: _n("Coupon", "Coupons", couponsCount, "woocommerce"),
+        label: _n("Coupon", "Coupons", couponsCount, 'dokan-lite'),
         value: formatValue(currency, "number", couponsCount),
       },
       {
-        label: _n("Order", "Orders", ordersCount, "woocommerce"),
+        label: _n("Order", "Orders", ordersCount, 'dokan-lite'),
         value: formatValue(currency, "number", ordersCount),
       },
       {
-        label: __("Amount discounted", "woocommerce"),
+        label: __("Amount discounted", 'dokan-lite'),
         value: formatAmount(amount),
       },
     ];
@@ -179,11 +179,11 @@ class CouponsReportTable extends Component {
 
   getCouponType(discountType) {
     const couponTypes = {
-      percent: __("Percentage", "woocommerce"),
-      fixed_cart: __("Fixed cart", "woocommerce"),
-      fixed_product: __("Fixed product", "woocommerce"),
+      percent: __("Percentage", 'dokan-lite'),
+      fixed_cart: __("Fixed cart", 'dokan-lite'),
+      fixed_product: __("Fixed product", 'dokan-lite'),
     };
-    return couponTypes[discountType] || __("N/A", "woocommerce");
+    return couponTypes[discountType] || __("N/A", 'dokan-lite');
   }
 
   render() {
@@ -206,7 +206,7 @@ class CouponsReportTable extends Component {
           order: query.order || "desc",
           extended_info: true,
         }}
-        title={__("Coupons", "woocommerce")}
+        title={__("Coupons", 'dokan-lite')}
         columnPrefsKey="coupons_report_columns"
         filters={filters}
         advancedFilters={advancedFilters}

@@ -37,7 +37,7 @@ const ADMIN_SETTINGS_SOURCE = Object.keys(adminSettings).reduce(
 export function getAdminSetting(name, fallback = false, filter = (val) => val) {
   if (mutableSources.includes(name)) {
     throw new Error(
-      __("Mutable settings should be accessed via data store.", "woocommerce")
+      __("Mutable settings should be accessed via data store.", 'dokan-lite')
     );
   }
   const value = ADMIN_SETTINGS_SOURCE.hasOwnProperty(name)
@@ -72,7 +72,7 @@ export const ORDER_STATUSES = getAdminSetting("orderStatuses");
 export function setAdminSetting(name, value, filter = (val) => val) {
   if (mutableSources.includes(name)) {
     throw new Error(
-      __("Mutable settings should be mutated via data store.", "woocommerce")
+      __("Mutable settings should be mutated via data store.", 'dokan-lite')
     );
   }
   ADMIN_SETTINGS_SOURCE[name] = filter(value);

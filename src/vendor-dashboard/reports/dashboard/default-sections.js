@@ -63,7 +63,7 @@ export default applyFilters(DEFAULT_SECTIONS_FILTER, [
   {
     key: "store-performance",
     component: StorePerformance,
-    title: __("Performance", "woocommerce"),
+    title: __("Performance", 'dokan-lite'),
     isVisible: true,
     icon: arrowRight,
     hiddenBlocks: [
@@ -82,7 +82,7 @@ export default applyFilters(DEFAULT_SECTIONS_FILTER, [
   {
     key: "charts",
     component: DashboardCharts,
-    title: __("Charts", "woocommerce"),
+    title: __("Charts", 'dokan-lite'),
     isVisible: true,
     icon: chartBar,
     hiddenBlocks: [
@@ -103,7 +103,7 @@ export default applyFilters(DEFAULT_SECTIONS_FILTER, [
   {
     key: "leaderboards",
     component: Leaderboards,
-    title: __("Leaderboards", "woocommerce"),
+    title: __("Leaderboards", 'dokan-lite'),
     isVisible: true,
     icon: <ListOrdered />,
     hiddenBlocks: ["coupons", "customers"],

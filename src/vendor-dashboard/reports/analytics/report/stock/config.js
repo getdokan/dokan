@@ -25,7 +25,7 @@ export const advancedFilters = applyFilters(
     title: _x(
       "Products Match <select/> Filters",
       "A sentence describing filters for Products. See screen shot for context: https://cloudup.com/cSsUY9VeCVJ",
-      "woocommerce"
+        'dokan-lite'
     ),
   }
 );
@@ -42,36 +42,36 @@ export const advancedFilters = applyFilters(
  */
 export const filters = applyFilters(STOCK_REPORT_FILTERS_FILTER, [
   {
-    label: __("Show", "woocommerce"),
+    label: __("Show", 'dokan-lite'),
     staticParams: ["paged", "per_page"],
     param: "type",
     showFilters: () => true,
     filters: [
-      { label: __("All products", "woocommerce"), value: "all" },
+      { label: __("All products", 'dokan-lite'), value: "all" },
       {
-        label: __("Out of stock", "woocommerce"),
+        label: __("Out of stock", 'dokan-lite'),
         value: "outofstock",
       },
       {
-        label: __("Low stock", "woocommerce"),
+        label: __("Low stock", 'dokan-lite'),
         value: "lowstock",
       },
-      { label: __("In stock", "woocommerce"), value: "instock" },
+      { label: __("In stock", 'dokan-lite'), value: "instock" },
       {
-        label: __("On backorder", "woocommerce"),
+        label: __("On backorder", 'dokan-lite'),
         value: "onbackorder",
       },
     ],
   },
   {
-    label: __("Filter by", "woocommerce"),
+    label: __("Filter by", 'dokan-lite'),
     staticParams: ["paged", "per_page"],
     param: "filter",
     showFilters: () => Object.keys(advancedFilters.filters).length,
     filters: [
-      { label: __("All Products", "woocommerce"), value: "all" },
+      { label: __("All Products", 'dokan-lite'), value: "all" },
       {
-        label: __("Advanced Filters", "woocommerce"),
+        label: __("Advanced Filters", 'dokan-lite'),
         value: "advanced",
       },
     ],

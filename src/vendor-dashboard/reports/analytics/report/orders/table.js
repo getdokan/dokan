@@ -31,7 +31,7 @@ class OrdersReportTable extends Component {
   getHeadersContent() {
     return [
       {
-        label: __("Date", "woocommerce"),
+        label: __("Date", 'dokan-lite'),
         key: "date",
         required: true,
         defaultSort: true,
@@ -39,61 +39,61 @@ class OrdersReportTable extends Component {
         isSortable: true,
       },
       {
-        label: __("Order #", "woocommerce"),
-        screenReaderLabel: __("Order Number", "woocommerce"),
+        label: __("Order #", 'dokan-lite'),
+        screenReaderLabel: __("Order Number", 'dokan-lite'),
         key: "order_number",
         required: true,
       },
       {
-        label: __("Status", "woocommerce"),
+        label: __("Status", 'dokan-lite'),
         key: "status",
         required: false,
         isSortable: false,
       },
       {
-        label: __("Customer", "woocommerce"),
+        label: __("Customer", 'dokan-lite'),
         key: "customer_id",
         required: false,
         isSortable: false,
       },
       {
-        label: __("Customer type", "woocommerce"),
+        label: __("Customer type", 'dokan-lite'),
         key: "customer_type",
         required: false,
         isSortable: false,
       },
       {
-        label: __("Product(s)", "woocommerce"),
-        screenReaderLabel: __("Products", "woocommerce"),
+        label: __("Product(s)", 'dokan-lite'),
+        screenReaderLabel: __("Products", 'dokan-lite'),
         key: "products",
         required: false,
         isSortable: false,
       },
       {
-        label: __("Items sold", "woocommerce"),
+        label: __("Items sold", 'dokan-lite'),
         key: "num_items_sold",
         required: false,
         isSortable: true,
         isNumeric: true,
       },
       {
-        label: __("Coupon(s)", "woocommerce"),
-        screenReaderLabel: __("Coupons", "woocommerce"),
+        label: __("Coupon(s)", 'dokan-lite'),
+        screenReaderLabel: __("Coupons", 'dokan-lite'),
         key: "coupons",
         required: false,
         isSortable: false,
       },
       {
-        label: __("Net sales", "woocommerce"),
-        screenReaderLabel: __("Net sales", "woocommerce"),
+        label: __("Net sales", 'dokan-lite'),
+        screenReaderLabel: __("Net sales", 'dokan-lite'),
         key: "net_total",
         required: true,
         isSortable: true,
         isNumeric: true,
       },
       {
-        label: __("Attribution", "woocommerce"),
-        screenReaderLabel: __("Attribution", "woocommerce"),
+        label: __("Attribution", 'dokan-lite'),
+        screenReaderLabel: __("Attribution", 'dokan-lite'),
         key: "attribution",
         required: false,
         isSortable: false,
@@ -197,7 +197,7 @@ class OrdersReportTable extends Component {
             formattedProducts.map((product) => ({
               label: sprintf(
                 /* translators: 1: quantity, 2: product name */
-                __("%1$s× %2$s", "woocommerce"),
+                __("%1$s× %2$s", 'dokan-lite'),
                 product.quantity,
                 product.label
               ),
@@ -208,7 +208,7 @@ class OrdersReportTable extends Component {
             .map(({ quantity, label }) =>
               sprintf(
                 /* translators: %1$s: quantity, %2$s: product name */
-                __("%1$s× %2$s", "woocommerce"),
+                __("%1$s× %2$s", 'dokan-lite'),
                 quantity,
                 label
               )
@@ -251,27 +251,27 @@ class OrdersReportTable extends Component {
     const currency = getCurrencyConfig();
     return [
       {
-        label: _n("Order", "Orders", ordersCount, "woocommerce"),
+        label: _n("Order", "Orders", ordersCount, 'dokan-lite'),
         value: formatValue(currency, "number", ordersCount),
       },
       {
-        label: _n(" Customer", " Customers", totalCustomers, "woocommerce"),
+        label: _n(" Customer", " Customers", totalCustomers, 'dokan-lite'),
         value: formatValue(currency, "number", totalCustomers),
       },
       {
-        label: _n("Product", "Products", products, "woocommerce"),
+        label: _n("Product", "Products", products, 'dokan-lite'),
         value: formatValue(currency, "number", products),
       },
       {
-        label: _n("Item sold", "Items sold", numItemsSold, "woocommerce"),
+        label: _n("Item sold", "Items sold", numItemsSold, 'dokan-lite'),
         value: formatValue(currency, "number", numItemsSold),
       },
       {
-        label: _n("Coupon", "Coupons", couponsCount, "woocommerce"),
+        label: _n("Coupon", "Coupons", couponsCount, 'dokan-lite'),
         value: formatValue(currency, "number", couponsCount),
       },
       {
-        label: __("net sales", "woocommerce"),
+        label: __("net sales", 'dokan-lite'),
         value: formatAmount(netRevenue),
       },
     ];
@@ -317,7 +317,7 @@ class OrdersReportTable extends Component {
         tableQuery={{
           extended_info: true,
         }}
-        title={__("Orders", "woocommerce")}
+        title={__("Orders", 'dokan-lite')}
         columnPrefsKey="orders_report_columns"
         filters={filters}
         advancedFilters={advancedFilters}

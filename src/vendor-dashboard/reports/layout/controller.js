@@ -1,6 +1,7 @@
 /**
  * External dependencies
  */
+import { doAction } from '@wordpress/hooks';
 import { Suspense, lazy } from "@wordpress/element";
 import { useRef, useEffect, useState } from "react";
 import { parse, stringify } from "qs";
@@ -52,7 +53,7 @@ export const getPages = () => {
   //   pages.push({
   //     container: Homescreen,
   //     path: "/",
-  //     breadcrumbs: [...initialBreadcrumbs, __("Home", "woocommerce")],
+  //     breadcrumbs: [...initialBreadcrumbs, __("Home", 'dokan-lite')],
   //     wpOpenMenu: "toplevel_page_woocommerce",
   //     navArgs: {
   //       id: "woocommerce-home",
@@ -66,8 +67,8 @@ export const getPages = () => {
       path: "/analytics/overview",
       breadcrumbs: [
         ...initialBreadcrumbs,
-        ["/analytics/overview", __("Analytics", "woocommerce")],
-        __("Overview", "woocommerce"),
+        ["/analytics/overview", __("Analytics", 'dokan-lite')],
+        __("Overview", 'dokan-lite'),
       ],
       wpOpenMenu: "toplevel_page_wc-admin-path--analytics-overview",
       navArgs: {
@@ -80,8 +81,8 @@ export const getPages = () => {
     //   path: "/analytics/settings",
     //   breadcrumbs: [
     //     ...initialBreadcrumbs,
-    //     ["/analytics/revenue", __("Analytics", "woocommerce")],
-    //     __("Settings", "woocommerce"),
+    //     ["/analytics/revenue", __("Analytics", 'dokan-lite')],
+    //     __("Settings", 'dokan-lite'),
     //   ],
     //   wpOpenMenu: "toplevel_page_wc-admin-path--analytics-overview",
     //   navArgs: {
@@ -89,35 +90,37 @@ export const getPages = () => {
     //   },
     //   capability: "dokandar",
     // });
-    pages.push({
-      container: AnalyticsReport,
-      path: "/customers",
-      breadcrumbs: [...initialBreadcrumbs, __("Customers", "woocommerce")],
-      wpOpenMenu: "toplevel_page_woocommerce",
-      navArgs: {
-        id: "woocommerce-analytics-customers",
-      },
-      capability: "dokandar",
-    });
-    pages.push({
-      container: AnalyticsReport,
-      path: "/analytics/:report",
-      breadcrumbs: ({ match }) => {
-        const report = find(getReports(), {
-          report: match.params.report,
-        });
-        if (!report) {
-          return [];
-        }
-        return [
-          ...initialBreadcrumbs,
-          ["/analytics/revenue", __("Analytics", "woocommerce")],
-          report.title,
-        ];
-      },
-      wpOpenMenu: "toplevel_page_wc-admin-path--analytics-overview",
-      capability: "dokandar",
-    });
+
+
+    // pages.push({
+    //   container: AnalyticsReport,
+    //   path: "/customers",
+    //   breadcrumbs: [...initialBreadcrumbs, __("Customers", 'dokan-lite')],
+    //   wpOpenMenu: "toplevel_page_woocommerce",
+    //   navArgs: {
+    //     id: "woocommerce-analytics-customers",
+    //   },
+    //   capability: "dokandar",
+    // });
+    // pages.push({
+    //   container: AnalyticsReport,
+    //   path: "/analytics/:report",
+    //   breadcrumbs: ({ match }) => {
+    //     const report = find(getReports(), {
+    //       report: match.params.report,
+    //     });
+    //     if (!report) {
+    //       return [];
+    //     }
+    //     return [
+    //       ...initialBreadcrumbs,
+    //       ["/analytics/revenue", __("Analytics", 'dokan-lite')],
+    //       report.title,
+    //     ];
+    //   },
+    //   wpOpenMenu: "toplevel_page_wc-admin-path--analytics-overview",
+    //   capability: "dokandar",
+    // });
   }
 
   /**
@@ -131,7 +134,7 @@ export const getPages = () => {
   filteredPages.push({
     container: NoMatch,
     path: "*",
-    breadcrumbs: [...initialBreadcrumbs, __("Not allowed", "woocommerce")],
+    breadcrumbs: [...initialBreadcrumbs, __("Not allowed", 'dokan-lite')],
     wpOpenMenu: "toplevel_page_woocommerce",
   });
 
@@ -195,6 +198,7 @@ export const Controller = ({ ...props }) => {
       }
 
       if (prevProps.match.url !== props.match.url) {
+        doAction( 'dokan_analytics_route_handler', props.match.url );
         window.document.documentElement.scrollTop = 0;
       }
     }

@@ -62,12 +62,12 @@ const renderIntervalSelector = ({
   }
 
   const intervalLabels = {
-    hour: __("By hour", "woocommerce"),
-    day: __("By day", "woocommerce"),
-    week: __("By week", "woocommerce"),
-    month: __("By month", "woocommerce"),
-    quarter: __("By quarter", "woocommerce"),
-    year: __("By year", "woocommerce"),
+    hour: __("By hour", 'dokan-lite'),
+    day: __("By day", 'dokan-lite'),
+    week: __("By week", 'dokan-lite'),
+    month: __("By month", 'dokan-lite'),
+    quarter: __("By quarter", 'dokan-lite'),
+    year: __("By year", 'dokan-lite'),
   };
 
   return (
@@ -156,10 +156,10 @@ const DashboardCharts = (props) => {
 
   const renderMenu = () => (
     <EllipsisMenu
-      label={__("Choose which charts to display", "woocommerce")}
+      label={__("Choose which charts to display", 'dokan-lite')}
       renderContent={({ onToggle }) => (
         <Fragment>
-          <MenuTitle>{__("Charts", "woocommerce")}</MenuTitle>
+          <MenuTitle>{__("Charts", 'dokan-lite')}</MenuTitle>
           {renderChartToggles({
             hiddenBlocks,
             onToggleHiddenBlock,
@@ -191,7 +191,7 @@ const DashboardCharts = (props) => {
   return (
     <div className="woocommerce-dashboard__dashboard-charts">
       <SectionHeader
-        title={title || __("Charts", "woocommerce")}
+        title={title || __("Charts", 'dokan-lite')}
         menu={renderMenu()}
         className={"has-interval-select"}
       >
@@ -211,7 +211,7 @@ const DashboardCharts = (props) => {
               "woocommerce-chart__type-button-selected":
                 !query.chartType || query.chartType === "line",
             })}
-            title={__("Line chart", "woocommerce")}
+            title={__("Line chart", 'dokan-lite')}
             aria-checked={query.chartType === "line"}
             role="menuitemradio"
             tabIndex={query.chartType === "line" ? 0 : -1}
@@ -224,7 +224,7 @@ const DashboardCharts = (props) => {
               "woocommerce-chart__type-button-selected":
                 query.chartType === "bar",
             })}
-            title={__("Bar chart", "woocommerce")}
+            title={__("Bar chart", 'dokan-lite')}
             aria-checked={query.chartType === "bar"}
             role="menuitemradio"
             tabIndex={query.chartType === "bar" ? 0 : -1}

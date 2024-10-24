@@ -145,7 +145,7 @@ class CategoriesReportTable extends Component {
                     'Category',
                     'Categories',
                     totalResults,
-                    'woocommerce'
+                    'dokan-lite'
                 ),
                 value: formatValue( currency, 'number', totalResults ),
             },
@@ -154,7 +154,7 @@ class CategoriesReportTable extends Component {
                     'Item sold',
                     'Items sold',
                     itemsSold,
-                    'woocommerce'
+                    'dokan-lite'
                 ),
                 value: formatValue( currency, 'number', itemsSold ),
             },
@@ -175,7 +175,7 @@ class CategoriesReportTable extends Component {
         const labels = {
             helpText: __(
                 'Check at least two categories below to compare',
-                'woocommerce'
+                'dokan-lite'
             ),
             placeholder: __( 'Search by category name', 'dokan-lite' ),
         };

@@ -50,24 +50,24 @@ export class ErrorBoundary extends Component<
       return (
         <div className="woocommerce-global-error-boundary">
           <h1 className="woocommerce-global-error-boundary__heading">
-            {__("Oops, something went wrong", "woocommerce")}
+            {__("Oops, something went wrong", 'dokan-lite')}
           </h1>
           <p className="woocommerce-global-error-boundary__subheading">
             {__(
               "We're sorry for the inconvenience. Please try reloading the page, or you can get support from the community forums.",
-              "woocommerce"
+              'dokan-lite'
             )}
           </p>
           <div className="woocommerce-global-error-boundary__actions">
             <Button variant="secondary" onClick={this.handleOpenSupport}>
-              {__("Get Support", "woocommerce")}
+              {__("Get Support", 'dokan-lite')}
             </Button>
             <Button variant="primary" onClick={this.handleRefresh}>
-              {__("Reload Page", "woocommerce")}
+              {__("Reload Page", 'dokan-lite')}
             </Button>
           </div>
           <details className="woocommerce-global-error-boundary__details">
-            <summary>{__("Click for error details", "woocommerce")}</summary>
+            <summary>{__("Click for error details", 'dokan-lite')}</summary>
             <div className="woocommerce-global-error-boundary__details-content">
               <strong className="woocommerce-global-error-boundary__error">
                 {this.state.error && this.state.error.toString()}

@@ -133,7 +133,7 @@ export const StoreAlerts = () => {
                 "error",
                 __(
                   `Something went wrong while triggering this note's action.`,
-                  "woocommerce"
+                  'dokan-lite'
                 )
               );
               throw e;
@@ -149,7 +149,7 @@ export const StoreAlerts = () => {
     const snoozeOptions = [
       {
         value: moment().add(4, "hours").unix().toString(),
-        label: __("Later Today", "woocommerce"),
+        label: __("Later Today", 'dokan-lite'),
       },
       {
         value: moment()
@@ -160,7 +160,7 @@ export const StoreAlerts = () => {
           .millisecond(0)
           .unix()
           .toString(),
-        label: __("Tomorrow", "woocommerce"),
+        label: __("Tomorrow", 'dokan-lite'),
       },
       {
         value: moment()
@@ -171,7 +171,7 @@ export const StoreAlerts = () => {
           .millisecond(0)
           .unix()
           .toString(),
-        label: __("Next Week", "woocommerce"),
+        label: __("Next Week", 'dokan-lite'),
       },
       {
         value: moment()
@@ -182,7 +182,7 @@ export const StoreAlerts = () => {
           .millisecond(0)
           .unix()
           .toString(),
-        label: __("Next Month", "woocommerce"),
+        label: __("Next Month", 'dokan-lite'),
       },
     ];
 
@@ -206,7 +206,7 @@ export const StoreAlerts = () => {
         className="woocommerce-store-alerts__snooze"
         options={[
           {
-            label: __("Remind Me Later", "woocommerce"),
+            label: __("Remind Me Later", 'dokan-lite'),
             value: "0",
           },
           ...snoozeOptions,
@@ -297,7 +297,7 @@ export const StoreAlerts = () => {
 
     try {
       await removeNote(noteId);
-      createNotice("success", __("Message dismissed", "woocommerce"));
+      createNotice("success", __("Message dismissed", 'dokan-lite'));
     } catch (e) {
       createNotice(
         "error",
@@ -305,7 +305,7 @@ export const StoreAlerts = () => {
           "Message could not be dismissed",
           "Messages could not be dismissed",
           1,
-          "woocommerce"
+          'dokan-lite'
         )
       );
     }
@@ -328,7 +328,7 @@ export const StoreAlerts = () => {
             <Button
               onClick={previousAlert}
               disabled={currentIndex === 0}
-              label={__("Previous Alert", "woocommerce")}
+              label={__("Previous Alert", 'dokan-lite')}
             >
               <Icon icon={chevronLeft} className="arrow-left-icon" />
             </Button>
@@ -338,7 +338,7 @@ export const StoreAlerts = () => {
               aria-live="polite"
             >
               {interpolateComponents({
-                mixedString: __("{{current /}} of {{total /}}", "woocommerce"),
+                mixedString: __("{{current /}} of {{total /}}", 'dokan-lite'),
                 components: {
                   current: <Fragment>{currentIndex + 1}</Fragment>,
                   total: <Fragment>{numberOfAlerts}</Fragment>,
@@ -348,7 +348,7 @@ export const StoreAlerts = () => {
             <Button
               onClick={nextAlert}
               disabled={numberOfAlerts - 1 === currentIndex}
-              label={__("Next Alert", "woocommerce")}
+              label={__("Next Alert", 'dokan-lite')}
             >
               <Icon icon={chevronRight} className="arrow-right-icon" />
             </Button>

@@ -193,7 +193,7 @@ const CustomizableDashboard = ( { defaultDateRange, path, query } ) => {
                 renderToggle={ ( { onToggle, isOpen } ) => (
                     <Button
                         onClick={ onToggle }
-                        title={ __( 'Add more sections', 'woocommerce' ) }
+                        title={ __( 'Add more sections', 'dokan-lite' ) }
                         aria-expanded={ isOpen }
                     >
                         <Icon icon={ plusCircleFilled } />
@@ -201,7 +201,7 @@ const CustomizableDashboard = ( { defaultDateRange, path, query } ) => {
                 ) }
                 renderContent={ ( { onToggle } ) => (
                     <>
-                        <H>{ __( 'Dashboard Sections', 'woocommerce' ) }</H>
+                        <H>{ __( 'Dashboard Sections', 'dokan-lite' ) }</H>
                         <div className="woocommerce-dashboard-section__add-more-choices">
                             { hiddenSections.map( ( section ) => {
                                 return (
@@ -216,7 +216,7 @@ const CustomizableDashboard = ( { defaultDateRange, path, query } ) => {
                                             /* translators: %s: dashboard section titles which are hidden, this button allows unhiding them */
                                             __(
                                                 'Add %s section',
-                                                'woocommerce'
+                                                'dokan-lite'
                                             ),
                                             section.title
                                         ) }
