@@ -1,21 +1,18 @@
 import { test, request, Page } from '@playwright/test';
 import { PrivacyPolicyPage } from '@pages/privacyPolicyPage';
-// import { CustomerPage } from '@pages/customerPage';
 import { ApiUtils } from '@utils/apiUtils';
 import { dbUtils } from '@utils/dbUtils';
 import { data } from '@utils/testData';
 import { dbData } from '@utils/dbData';
 
-test.describe.skip('Privacy Policy & Store Contact form test', () => {
+test.describe('Privacy Policy & Store Contact form test', () => {
     let customer: PrivacyPolicyPage;
-    // let customerPage: CustomerPage;
     let cPage: Page;
     let apiUtils: ApiUtils;
 
     test.beforeAll(async ({ browser }) => {
         const customerContext = await browser.newContext(data.auth.customerAuth);
         cPage = await customerContext.newPage();
-        // customerPage = new CustomerPage(cPage);
         customer = new PrivacyPolicyPage(cPage);
         apiUtils = new ApiUtils(await request.newContext());
     });
@@ -23,12 +20,12 @@ test.describe.skip('Privacy Policy & Store Contact form test', () => {
     test.afterAll(async () => {
         await dbUtils.updateOptionValue(dbData.dokan.optionName.privacyPolicy, { enable_privacy: 'on' });
         await dbUtils.updateOptionValue(dbData.dokan.optionName.appearance, { contact_seller: 'on' });
+        await dbUtils.setOptionValue('sidebars_widgets', dbData.widget.emptySideBarsWidgets);
         await cPage.close();
         await apiUtils.dispose();
     });
 
     test('customer can contact vendor', { tag: ['@lite', '@customer'] }, async () => {
-        await dbUtils.updateOptionValue('sidebars_widgets', { sidebars_widgets: [] });
         await customer.contactVendor(data.predefined.vendorStores.vendor1, data.storeContactData);
     });
 

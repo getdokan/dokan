@@ -14,6 +14,17 @@ export class SettingsPage extends AdminPage {
         super(page);
     }
 
+    // navigation
+
+    async goToSingleDokanSettings(settingMenu: string, settingTitle: string) {
+        await this.toPass(async () => {
+            await this.goto(data.subUrls.backend.dokan.settings);
+            await this.reload(); //todo: need to resolve: page doesn't reload for having # (fragment identifier) in the url
+            await this.click(settingMenu);
+            await this.toContainText(settingsAdmin.settingTitle, settingTitle, { timeout: 3000 });
+        });
+    }
+
     // settings
 
     // dokan settings render properly
@@ -48,7 +59,7 @@ export class SettingsPage extends AdminPage {
     // scroll to top settings
     async scrollToTopSettings() {
         await this.goto(data.subUrls.backend.dokan.settings);
-        // topass is used to avoid flakyness
+        // toPass is used to avoid flakiness
         await this.toPass(async () => {
             await this.scrollToBottom();
             const isBackToTopVisible = await this.isVisible(settingsAdmin.backToTop, 1);
@@ -97,8 +108,7 @@ export class SettingsPage extends AdminPage {
 
     // admin set dokan selling settings
     async setDokanSellingSettings(selling: dokanSettings['selling']) {
-        await this.goToDokanSettings();
-        await this.click(settingsAdmin.menus.sellingOptions);
+        await this.goToSingleDokanSettings(settingsAdmin.menus.sellingOptions, selling.settingTitle);
 
         // commission settings
         await this.selectByValue(settingsAdmin.selling.commissionType, selling.commissionType);
@@ -256,6 +266,24 @@ export class SettingsPage extends AdminPage {
         // save settings
         await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.appearance.appearanceSaveChanges);
         await this.toHaveValue(settingsAdmin.appearance.googleMapApiKey, appearance.googleMapApiKey);
+    }
+
+    // Admin Set Dokan MenuManager Settings
+    async setDokanMenuManagerSettings(menus: string[]) {
+        await this.goToDokanSettings();
+        await this.click(settingsAdmin.menus.menuManager);
+
+        // menuManager Settings
+        for (const menu of menus) {
+            await this.enableSwitcher(settingsAdmin.menuManager.menuSwitcher(menu));
+        }
+
+        // save settings
+        await this.clickAndWaitForResponseAndLoadState(data.subUrls.ajax, settingsAdmin.menuManager.menuManagerSaveChanges);
+
+        for (const menu of menus) {
+            await this.toHaveBackgroundColor(settingsAdmin.menuManager.menuSwitcher(menu) + '//span', 'rgb(0, 144, 255)');
+        }
     }
 
     // Admin Set Dokan Privacy Policy Settings

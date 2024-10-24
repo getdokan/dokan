@@ -1,4 +1,4 @@
-import { setLocaleData, __, _x, __n, _nx, sprintf } from '@/utils/i18n'
+import { setLocaleData, __, _x, __n, _nx, sprintf } from '@wordpress/i18n'
 
 export default {
     methods: {

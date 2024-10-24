@@ -56,6 +56,10 @@ test.describe('Settings test', () => {
         await admin.setDokanAppearanceSettings(data.dokanSettings.appearance);
     });
 
+    test('admin can set Dokan menu manager settings', { tag: ['@pro', '@admin'] }, async () => {
+        await admin.setDokanMenuManagerSettings(data.dokanSettings.menuManager.menus);
+    });
+
     test('admin can set Dokan privacy policy settings', { tag: ['@lite', '@admin'] }, async () => {
         const privacyPolicySettings = await dbUtils.getOptionValue(dbData.dokan.optionName.privacyPolicy);
         await admin.setDokanPrivacyPolicySettings({ ...data.dokanSettings.privacyPolicy, privacyPage: privacyPolicySettings.privacyPage });

@@ -49,6 +49,13 @@ export interface product {
         pending: string;
     };
 
+    discount: {
+        regularPrice: string;
+        discountPrice: string;
+        startDate?: string;
+        endDate?: string;
+    };
+
     stockStatus: {
         outOfStock: string;
     };
@@ -97,9 +104,8 @@ export interface product {
     category: {
         unCategorized: string;
         clothings: string;
-        randomCategory1: () => string;
         randomCategory: () => string;
-        categories: string;
+        categories: string[];
     };
 
     store: {
@@ -121,6 +127,7 @@ export interface product {
         status: string;
         stockStatus: boolean;
         editProduct: string;
+        description: string;
         saveSuccessMessage: string;
     };
 
@@ -133,6 +140,7 @@ export interface product {
         status: string;
         stockStatus: boolean;
         editProduct: string;
+        description: string;
         saveSuccessMessage: string;
 
         downloadableOptions: {
@@ -157,6 +165,7 @@ export interface product {
             linkAllVariation: string;
             variableRegularPrice: string;
         };
+        description: string;
         saveSuccessMessage: string;
     };
 
@@ -169,6 +178,18 @@ export interface product {
         regularPrice: () => string;
         storeName: string;
         status: string;
+        description: string;
+        saveSuccessMessage: string;
+    };
+
+    grouped: {
+        productType: string;
+        productName: () => string;
+        category: string;
+        groupedProducts: string[];
+        storeName: string;
+        status: string;
+        description: string;
         saveSuccessMessage: string;
     };
 
@@ -185,6 +206,7 @@ export interface product {
         subscriptionTrialPeriod: string;
         storeName: string;
         status: string;
+        description: string;
         saveSuccessMessage: string;
     };
 
@@ -207,6 +229,7 @@ export interface product {
             linkAllVariation: string;
             variableRegularPrice: string;
         };
+        description: string;
         saveSuccessMessage: string;
     };
 
@@ -220,6 +243,7 @@ export interface product {
         advertisementSlot: string;
         expireAfterDays: string;
         storeName: string;
+        description: string;
         status: string;
     };
 
@@ -297,9 +321,44 @@ export interface product {
     };
 
     productInfo: {
-        description: {
-            shortDescription: string;
-            description: string;
+        downloadableOptions: {
+            fileName: string;
+            fileUrl: string;
+            downloadLimit: string;
+            downloadExpiry: string;
+        };
+
+        inventory: {
+            sku: string;
+            stockStatus: string;
+            stockManagement: boolean;
+            stockQuantity: string;
+            lowStockThreshold: string;
+            backorders: string;
+            oneQuantity: boolean;
+        };
+
+        shipping: {
+            weight: string;
+            length: string;
+            width: string;
+            height: string;
+            shippingClass: string;
+        };
+
+        tax: {
+            status: string;
+            class: string;
+        };
+
+        linkedProducts: {
+            upSells: string[];
+            crossSells: string[];
+        };
+
+        attribute: {
+            attributeName: string;
+            attributeTerm: string;
         };
 
         euCompliance: {
@@ -316,6 +375,17 @@ export interface product {
             optionalMiniDescription: string;
         };
 
+        addon: {
+            type: string;
+            displayAs: string;
+            title: string;
+            formatTitle: string;
+            addDescription: string;
+            enterAnOption: string;
+            optionPriceType: string;
+            optionPriceInput: string;
+        };
+
         amountDiscount: {
             minimumOrderAmount: string;
             discountPercentage: string;
@@ -328,21 +398,19 @@ export interface product {
 
         wholesaleOption: {
             wholesalePrice: string;
-            minimumWholesaleQuantity: string;
+            minimumQuantity: string;
         };
 
         minMax: {
             minimumProductQuantity: string;
             maximumProductQuantity: string;
-            minimumAmount: string;
-            maximumAmount: string;
-            category: string;
         };
 
         otherOptions: {
-            productStatus: string;
+            status: string;
             visibility: string;
             purchaseNote: string;
+            enableReview: boolean;
         };
     };
 }
@@ -950,10 +1018,15 @@ export interface vendor {
     rma: {
         label: string;
         type: string;
-        rmaLength: string;
+        length: string;
         lengthValue: string;
         lengthDuration: string;
-        refundPolicyHtmlBody: string;
+        addon: {
+            cost: string;
+            durationLength: string;
+            durationType: string;
+        };
+        refundPolicy: string;
         saveSuccessMessage: string;
     };
 
@@ -963,8 +1036,10 @@ export interface vendor {
         metaKeywords: string;
         facebookTitle: string;
         facebookDescription: string;
+        facebookImage: string;
         twitterTitle: string;
         twitterDescription: string;
+        twitterImage: string;
     };
 
     withdraw: {
@@ -1204,11 +1279,20 @@ export interface requestForQuotation {
     quoteRule: {
         title: string;
         userRole: string;
-        product: string;
-        category: string;
-        hidePrice: string;
+        applyOnAllProducts: boolean;
+        specificProducts?: boolean;
+        includeProducts?: string;
+        excludeProducts?: string;
+        specificCategories?: boolean;
+        categories: string[];
+        specificVendors?: boolean;
+        includeVendors?: string;
+        excludeVendors?: string;
+        expireLimit?: string;
+        hidePrice: boolean;
         hidePriceText: string;
-        hideAddToCartButton: string;
+        hideAddToCartButton?: boolean;
+        keepBothCartQuoteButton?: boolean;
         customButtonLabel: string;
         order: string;
     };
@@ -1231,16 +1315,19 @@ export interface requestForQuotation {
     };
 
     quote: {
+        id: string;
         title: string;
         user: string;
         fullName: string;
         email: string;
         companyName: string;
         phoneNumber: string;
+        vendor: string;
         product: string;
         quantity: string;
         offerPrice: string;
         offerProductQuantity: string;
+        shippingCost: string;
     };
 
     updateQuote: {
@@ -1264,17 +1351,36 @@ export interface requestForQuotation {
         title: string;
     };
 
+    vendorQuote: {
+        productName: string;
+        offeredPrice: string;
+        shippingCost: string;
+        reply: string;
+    };
+
     userQuote: {
         productName: string;
         offeredPrice: string;
+        shippingCost: string;
         quantity: string;
+        expectedDelivery: string;
+        additionalMessage: string;
     };
 
     guest: {
         fullName: string;
         email: string;
-        companyName: string;
         phoneNumber: string;
+
+        address: {
+            country: string;
+            countrySelectValue: string;
+            stateSelectValue: string;
+            city: string;
+            postCode: string;
+            addressLine1: string;
+            addressLine2: string;
+        };
     };
 }
 
@@ -1412,6 +1518,7 @@ export interface wholesale {
 export interface dokanSettings {
     // General Settings
     general: {
+        settingTitle: string;
         vendorStoreUrl: string;
         setupWizardMessage: string;
         sellingProductTypes: string;
@@ -1422,6 +1529,7 @@ export interface dokanSettings {
 
     // Selling Options Settings
     selling: {
+        settingTitle: string;
         commissionType: string;
         adminCommission: string;
         shippingFeeRecipient: string;
@@ -1434,6 +1542,7 @@ export interface dokanSettings {
 
     // Withdraw
     withdraw: {
+        settingTitle: string;
         customMethodName: string;
         customMethodType: string;
         charge: {
@@ -1457,6 +1566,7 @@ export interface dokanSettings {
 
     // Reverse withdraw
     reverseWithdraw: {
+        settingTitle: string;
         billingType: string;
         reverseBalanceThreshold: string;
         gracePeriod: string;
@@ -1465,6 +1575,7 @@ export interface dokanSettings {
 
     // Pages
     page: {
+        settingTitle: string;
         dashboard: string;
         myOrders: string;
         storeListing: string;
@@ -1474,6 +1585,7 @@ export interface dokanSettings {
 
     // Appearance
     appearance: {
+        settingTitle: string;
         mapApiSource: string;
         googleMapApiKey: string;
         mapBoxApiKey: string;
@@ -1482,8 +1594,15 @@ export interface dokanSettings {
         saveSuccessMessage: string;
     };
 
+    // MenuManager
+    menuManager: {
+        settingTitle: string;
+        saveSuccessMessage: string;
+    };
+
     // privacy policy
     privacyPolicy: {
+        settingTitle: string;
         privacyPage: string;
         privacyPolicyContent: string;
         saveSuccessMessage: string;
@@ -1491,6 +1610,7 @@ export interface dokanSettings {
 
     // colors
     colors: {
+        settingTitle: string;
         paletteChoice: string;
         colorPalette: string;
         saveSuccessMessage: string;
@@ -1498,24 +1618,28 @@ export interface dokanSettings {
 
     // shipping status
     shippingStatus: {
+        settingTitle: string;
         customShippingStatus: string;
         saveSuccessMessage: string;
     };
 
     // quote
     quote: {
+        settingTitle: string;
         decreaseOfferedPrice: string;
         saveSuccessMessage: string;
     };
 
     // live search
     liveSearch: {
+        settingTitle: string;
         liveSearchOption: string;
         saveSuccessMessage: string;
     };
 
     // Store support
     storeSupport: {
+        settingTitle: string;
         displayOnSingleProductPage: string;
         supportButtonLabel: string;
         saveSuccessMessage: string;
@@ -1523,6 +1647,7 @@ export interface dokanSettings {
 
     // Vendor Verification
     vendorVerification: {
+        settingTitle: string;
         verifiedIcons: {
             circleSolid: string;
             circleRegular: string;
@@ -1561,6 +1686,7 @@ export interface dokanSettings {
 
     // Email verification
     emailVerification: {
+        settingTitle: string;
         registrationNotice: string;
         loginNotice: string;
         saveSuccessMessage: string;
@@ -1568,6 +1694,7 @@ export interface dokanSettings {
 
     // Rma Settings
     rma: {
+        settingTitle: string;
         orderStatus: string;
         rmaReasons: string[];
         refundPolicyHtmlBody: string;
@@ -1576,17 +1703,20 @@ export interface dokanSettings {
 
     // Wholesale
     wholesale: {
+        settingTitle: string;
         whoCanSeeWholesalePrice: string;
         saveSuccessMessage: string;
     };
 
     // EuCompliance
     euCompliance: {
+        settingTitle: string;
         saveSuccessMessage: string;
     };
 
     // delivery time
     deliveryTime: {
+        settingTitle: string;
         deliveryDateLabel: string;
         deliveryBlockedBuffer: string;
         deliveryBoxInfo: string;
@@ -1601,6 +1731,7 @@ export interface dokanSettings {
 
     // Product advertising
     productAdvertising: {
+        settingTitle: string;
         noOfAvailableSlot: string;
         expireAfterDays: string;
         advertisementCost: string;
@@ -1609,6 +1740,7 @@ export interface dokanSettings {
 
     // Geolocation Settings
     geolocation: {
+        settingTitle: string;
         locationMapPosition: string;
         showMap: string;
         radiusSearchUnit: string;
@@ -1621,12 +1753,14 @@ export interface dokanSettings {
 
     // Product report abuse
     productReportAbuse: {
+        settingTitle: string;
         reasonsForAbuseReport: string;
         saveSuccessMessage: string;
     };
 
     // Spmv Settings
     spmv: {
+        settingTitle: string;
         sellItemButtonText: string;
         availableVendorDisplayAreaTitle: string;
         availableVendorSectionDisplayPosition: string;
@@ -1636,6 +1770,7 @@ export interface dokanSettings {
 
     // Vendor Subscription Settings
     vendorSubscription: {
+        settingTitle: string;
         displayPage: string;
         noOfDays: string;
         productStatus: string;

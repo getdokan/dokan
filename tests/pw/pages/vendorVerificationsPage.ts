@@ -1,4 +1,4 @@
-import { Page, expect } from '@playwright/test';
+import { Page } from '@playwright/test';
 import { AdminPage } from '@pages/adminPage';
 import { CustomerPage } from '@pages/customerPage';
 import { selector } from '@pages/selectors';
@@ -149,6 +149,9 @@ export class VendorVerificationsPage extends AdminPage {
     async filterVerificationRequests(input: string, action: string): Promise<void> {
         await this.goto(data.subUrls.backend.dokan.verifications);
 
+        // reset pervious filter if visible
+        await this.clickIfVisible(verificationsAdmin.filters.reset);
+
         switch (action) {
             case 'by-status': {
                 await this.clickAndWaitForLoadState(verificationsAdmin.navTabs.tabByStatus(input));
@@ -198,11 +201,7 @@ export class VendorVerificationsPage extends AdminPage {
     async viewVerificationRequestDocument(requestId: string): Promise<void> {
         await this.goIfNotThere(data.subUrls.backend.dokan.verifications);
         await this.reloadIfVisible(verificationsAdmin.filters.reset);
-
-        // ensure link suppose to open on new tab
-        await this.toHaveAttribute(verificationsAdmin.verificationRequestDocument(requestId), 'target', '_blank');
-        // force link to open on the same tab
-        await this.setAttributeValue(verificationsAdmin.verificationRequestDocument(requestId), 'target', '_self');
+        await this.forceLinkToSameTab(verificationsAdmin.verificationRequestDocument(requestId));
         const documentLink = (await this.getAttributeValue(verificationsAdmin.verificationRequestDocument(requestId), 'href')) as string;
         await this.clickAndWaitForUrl(documentLink, verificationsAdmin.verificationRequestDocument(requestId));
         await this.toHaveAttribute('body img', 'src', documentLink);
@@ -319,11 +318,7 @@ export class VendorVerificationsPage extends AdminPage {
             // await this.click(setupWizardVendor.skipTheStepStoreSetup);
             await this.click(setupWizardVendor.skipTheStepPaymentSetup);
         }
-
-        // ensure link suppose to open on new tab
-        await this.toHaveAttribute(verificationsVendor.verificationRequestDocument(methodName), 'target', '_blank');
-        // force link to open on the same tab
-        await this.setAttributeValue(verificationsVendor.verificationRequestDocument(methodName), 'target', '_self');
+        await this.forceLinkToSameTab(verificationsVendor.verificationRequestDocument(methodName));
         const documentLink = (await this.getAttributeValue(verificationsVendor.verificationRequestDocument(methodName), 'href')) as string;
         await this.clickAndWaitForUrl(documentLink, verificationsVendor.verificationRequestDocument(methodName));
         await this.toHaveAttribute('body img', 'src', documentLink);
