@@ -5604,10 +5604,11 @@ export const selector = {
             },
 
             noAuctionsFound: '//td[normalize-space()="No product found"]',
-            productCell: (name: string) => `//a[normalize-space()="${name}"]/../..`,
-            edit: (name: string) => `//a[normalize-space()="${name}"]/../..//span[@class="edit"]`,
-            permanentlyDelete: (name: string) => `//a[normalize-space()="${name}"]/../..//span[@class="delete"]`,
-            view: (name: string) => `//a[normalize-space()="${name}"]/../..//span[@class="view"]`,
+            productCell: (productName: string) => `//a[normalize-space()="${productName}"]/../..`,
+            rowActions: (productName: string) => `//a[normalize-space()="${productName}"]/../..//div[@class='row-actions']`,
+            edit: (productName: string) => `//a[normalize-space()="${productName}"]/../..//span[@class="edit"]`,
+            permanentlyDelete: (productName: string) => `//a[normalize-space()="${productName}"]/../..//span[@class="delete"]`,
+            view: (productName: string) => `//a[normalize-space()="${productName}"]/../..//span[@class="view"]`,
 
             confirmDelete: '.swal2-confirm',
             cancelDelete: '.swal2-cancel',

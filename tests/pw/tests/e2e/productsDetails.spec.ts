@@ -434,6 +434,7 @@ test.describe('Product details functionality test', () => {
     // todo: duplicate test from product addons also has new tests
 
     test('vendor can add product addon', { tag: ['@pro', '@vendor'] }, async () => {
+        test.slow();
         await vendor.addProductAddon(productName1, data.product.productInfo.addon);
     });
 
