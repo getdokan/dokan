@@ -104,7 +104,7 @@ class CartModal extends Component {
         listItems.push({
           title: sprintf(
             /* translators: 1: theme title, 2: theme price */
-            __("%1$s — %2$s per year", "woocommerce"),
+            __("%1$s — %2$s per year", 'dokan-lite'),
             themeInfo.title,
             decodeEntities(themeInfo.price)
           ),
@@ -124,7 +124,7 @@ class CartModal extends Component {
       <Modal
         title={__(
           "Would you like to add the following paid features to your store now?",
-          "woocommerce"
+          'dokan-lite'
         )}
         onRequestClose={() => this.onClose()}
         className="woocommerce-cart-modal"
@@ -134,7 +134,7 @@ class CartModal extends Component {
         <p className="woocommerce-cart-modal__help-text">
           {__(
             "You won't have access to this functionality until the extensions have been purchased and installed.",
-            "woocommerce"
+            'dokan-lite'
           )}
         </p>
 
@@ -144,7 +144,7 @@ class CartModal extends Component {
             isBusy={purchaseLaterButtonBusy}
             onClick={() => this.onClickPurchaseLater()}
           >
-            {__("I'll do it later", "woocommerce")}
+            {__("I'll do it later", 'dokan-lite')}
           </Button>
 
           <Button
@@ -152,7 +152,7 @@ class CartModal extends Component {
             isBusy={purchaseNowButtonBusy}
             onClick={() => this.onClickPurchaseNow()}
           >
-            {__("Buy now", "woocommerce")}
+            {__("Buy now", 'dokan-lite')}
           </Button>
         </div>
       </Modal>

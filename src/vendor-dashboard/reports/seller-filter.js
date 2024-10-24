@@ -38,7 +38,7 @@ for ( let i = 0; i < reportsToFilterBySeller.length; i++ ) {
     );
     addFilter(
         `dokan_analytics_${ reportsToFilterBySeller[ i ] }_report_filters`,
-        'dokan',
+        'dokan-lite',
         addSellerFilters
     );
 }

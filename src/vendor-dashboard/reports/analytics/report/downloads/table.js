@@ -32,7 +32,7 @@ class DownloadsReportTable extends Component {
   getHeadersContent() {
     return [
       {
-        label: __("Date", "woocommerce"),
+        label: __("Date", 'dokan-lite'),
         key: "date",
         defaultSort: true,
         required: true,
@@ -40,26 +40,26 @@ class DownloadsReportTable extends Component {
         isSortable: true,
       },
       {
-        label: __("Product title", "woocommerce"),
+        label: __("Product title", 'dokan-lite'),
         key: "product",
         isSortable: true,
         required: true,
       },
       {
-        label: __("File name", "woocommerce"),
+        label: __("File name", 'dokan-lite'),
         key: "file_name",
       },
       {
-        label: __("Order #", "woocommerce"),
-        screenReaderLabel: __("Order Number", "woocommerce"),
+        label: __("Order #", 'dokan-lite'),
+        screenReaderLabel: __("Order Number", 'dokan-lite'),
         key: "order_number",
       },
       {
-        label: __("Username", "woocommerce"),
+        label: __("Username", 'dokan-lite'),
         key: "user_id",
       },
       {
-        label: __("IP", "woocommerce"),
+        label: __("IP", 'dokan-lite'),
         key: "ip_address",
       },
     ];
@@ -88,8 +88,8 @@ class DownloadsReportTable extends Component {
 
       // Handle deleted products.
       if (errorCode === "woocommerce_rest_product_invalid_id") {
-        productDisplay = __("(Deleted)", "woocommerce");
-        productValue = __("(Deleted)", "woocommerce");
+        productDisplay = __("(Deleted)", 'dokan-lite');
+        productValue = __("(Deleted)", 'dokan-lite');
       } else {
         const productURL = getNewPath(persistedQuery, "/analytics/products", {
           filter: "single_product",
@@ -155,11 +155,11 @@ class DownloadsReportTable extends Component {
 
     return [
       {
-        label: _n("day", "days", days, "woocommerce"),
+        label: _n("day", "days", days, 'dokan-lite'),
         value: formatValue(currency, "number", days),
       },
       {
-        label: _n("Download", "Downloads", downloadCount, "woocommerce"),
+        label: _n("Download", "Downloads", downloadCount, 'dokan-lite'),
         value: formatValue(currency, "number", downloadCount),
       },
     ];
@@ -179,7 +179,7 @@ class DownloadsReportTable extends Component {
         tableQuery={{
           _embed: true,
         }}
-        title={__("Downloads", "woocommerce")}
+        title={__("Downloads", 'dokan-lite')}
         columnPrefsKey="downloads_report_columns"
         filters={filters}
         advancedFilters={advancedFilters}

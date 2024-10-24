@@ -2,6 +2,7 @@
  * External dependencies
  */
 import { Component } from "@wordpress/element";
+import { applyFilters } from "@wordpress/hooks";
 import PropTypes from "prop-types";
 import { __, sprintf } from "@wordpress/i18n";
 import { Card, CardBody, CardHeader } from "@wordpress/components";
@@ -42,11 +43,22 @@ class ChartBlock extends Component {
       return null;
     }
 
+    const LEGEND_HANDLER_FILTER = 'dokan_handle_chart_legends_availability',
+      CHART_REDIRECTION_HANDLER_FILTER = 'dokan_handle_chart_redirection';
+
+    const clickHandler = applyFilters(
+        CHART_REDIRECTION_HANDLER_FILTER,
+        () => {}, // default handler
+        selectedChart,
+        this.getChartPath.bind( this ) // Bind this context
+    );
+
     return (
       <div
         role="presentation"
         className="woocommerce-dashboard__chart-block-wrapper"
-        onClick={this.handleChartClick}
+        onClick={ clickHandler }
+        // onClick={this.handleChartClick}
       >
         <Card className="woocommerce-dashboard__chart-block">
           <CardHeader>
@@ -61,7 +73,7 @@ class ChartBlock extends Component {
             >
               {sprintf(
                 /* translators: %s is the chart type */
-                __("%s Report", "woocommerce"),
+                __("%s Report", 'dokan-lite'),
                 selectedChart.label
               )}
             </a>
@@ -69,7 +81,7 @@ class ChartBlock extends Component {
               charts={charts}
               endpoint={endpoint}
               query={query}
-              interactiveLegend={true}
+              interactiveLegend={applyFilters(LEGEND_HANDLER_FILTER, false)}
               legendPosition="bottom"
               path={path}
               selectedChart={selectedChart}

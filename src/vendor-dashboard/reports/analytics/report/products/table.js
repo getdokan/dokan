@@ -42,20 +42,20 @@ class ProductsReportTable extends Component {
     getHeadersContent() {
         return [
             {
-                label: __( 'Product title', 'woocommerce' ),
+                label: __( 'Product title', 'dokan-lite' ),
                 key: 'product_name',
                 required: true,
                 isLeftAligned: true,
                 isSortable: true,
             },
             {
-                label: __( 'SKU', 'woocommerce' ),
+                label: __( 'SKU', 'dokan-lite' ),
                 key: 'sku',
                 hiddenByDefault: true,
                 isSortable: true,
             },
             {
-                label: __( 'Items sold', 'woocommerce' ),
+                label: __( 'Items sold', 'dokan-lite' ),
                 key: 'items_sold',
                 required: true,
                 defaultSort: true,
@@ -63,37 +63,37 @@ class ProductsReportTable extends Component {
                 isNumeric: true,
             },
             {
-                label: __( 'Net sales', 'woocommerce' ),
-                screenReaderLabel: __( 'Net sales', 'woocommerce' ),
+                label: __( 'Net sales', 'dokan-lite' ),
+                screenReaderLabel: __( 'Net sales', 'dokan-lite' ),
                 key: 'net_revenue',
                 required: true,
                 isSortable: true,
                 isNumeric: true,
             },
             {
-                label: __( 'Orders', 'woocommerce' ),
+                label: __( 'Orders', 'dokan-lite' ),
                 key: 'orders_count',
                 isSortable: true,
                 isNumeric: true,
             },
             {
-                label: __( 'Category', 'woocommerce' ),
+                label: __( 'Category', 'dokan-lite' ),
                 key: 'product_cat',
             },
             {
-                label: __( 'Variations', 'woocommerce' ),
+                label: __( 'Variations', 'dokan-lite' ),
                 key: 'variations',
                 isSortable: true,
             },
             manageStock === 'yes'
                 ? {
-                      label: __( 'Status', 'woocommerce' ),
+                      label: __( 'Status', 'dokan-lite' ),
                       key: 'stock_status',
                   }
                 : null,
             manageStock === 'yes'
                 ? {
-                      label: __( 'Stock', 'woocommerce' ),
+                      label: __( 'Stock', 'dokan-lite' ),
                       key: 'stock',
                       isNumeric: true,
                   }
@@ -167,7 +167,7 @@ class ProductsReportTable extends Component {
                     { _x(
                         'Low',
                         'Indication of a low quantity',
-                        'woocommerce'
+                        'dokan-lite'
                     ) }
                 </Link>
             ) : (
@@ -219,7 +219,7 @@ class ProductsReportTable extends Component {
                                         _x(
                                             '+%d more',
                                             'categories',
-                                            'woocommerce'
+                                            'dokan-lite'
                                         ),
                                         productCategories.length - 1
                                     ) }
@@ -253,7 +253,7 @@ class ProductsReportTable extends Component {
                     ? {
                           display: extendedInfoManageStock
                               ? stockStatus
-                              : __( 'N/A', 'woocommerce' ),
+                              : __( 'N/A', 'dokan-lite' ),
                           value: extendedInfoManageStock
                               ? stockStatuses[ extendedInfoStockStatus ]
                               : null,
@@ -263,7 +263,7 @@ class ProductsReportTable extends Component {
                     ? {
                           display: extendedInfoManageStock
                               ? formatValue( currency, 'number', stockQuantity )
-                              : __( 'N/A', 'woocommerce' ),
+                              : __( 'N/A', 'dokan-lite' ),
                           value: stockQuantity,
                       }
                     : null,
@@ -286,7 +286,7 @@ class ProductsReportTable extends Component {
                     'Product',
                     'Products',
                     productsCount,
-                    'woocommerce'
+                    'dokan-lite'
                 ),
                 value: formatValue( currency, 'number', productsCount ),
             },
@@ -295,16 +295,16 @@ class ProductsReportTable extends Component {
                     'Item sold',
                     'Items sold',
                     itemsSold,
-                    'woocommerce'
+                    'dokan-lite'
                 ),
                 value: formatValue( currency, 'number', itemsSold ),
             },
             {
-                label: __( 'Net sales', 'woocommerce' ),
+                label: __( 'Net sales', 'dokan-lite' ),
                 value: formatAmount( netRevenue ),
             },
             {
-                label: _n( 'Order', 'Orders', ordersCount, 'woocommerce' ),
+                label: _n( 'Order', 'Orders', ordersCount, 'dokan-lite' ),
                 value: formatValue( currency, 'number', ordersCount ),
             },
         ];
@@ -323,9 +323,9 @@ class ProductsReportTable extends Component {
         const labels = {
             helpText: __(
                 'Check at least two products below to compare',
-                'woocommerce'
+                'dokan-lite'
             ),
-            placeholder: __( 'Search by product name or SKU', 'woocommerce' ),
+            placeholder: __( 'Search by product name or SKU', 'dokan-lite' ),
         };
 
         return (
@@ -353,7 +353,7 @@ class ProductsReportTable extends Component {
                     extended_info: true,
                     segmentby: query.segmentby,
                 } }
-                title={ __( 'Products', 'woocommerce' ) }
+                title={ __( 'Products', 'dokan-lite' ) }
                 columnPrefsKey="products_report_columns"
                 filters={ filters }
                 advancedFilters={ advancedFilters }

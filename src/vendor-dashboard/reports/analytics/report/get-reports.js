@@ -47,7 +47,7 @@ export default () => {
   const reports = [
     {
       report: "revenue",
-      title: __("Revenue", "woocommerce"),
+      title: __("Revenue", 'dokan-lite'),
       component: RevenueReport,
       navArgs: {
         id: "woocommerce-analytics-revenue",
@@ -55,7 +55,7 @@ export default () => {
     },
     {
       report: "products",
-      title: __("Products", "woocommerce"),
+      title: __("Products", 'dokan-lite'),
       component: ProductsReport,
       navArgs: {
         id: "woocommerce-analytics-products",
@@ -63,7 +63,7 @@ export default () => {
     },
     {
       report: "variations",
-      title: __("Variations", "woocommerce"),
+      title: __("Variations", 'dokan-lite'),
       component: VariationsReport,
       navArgs: {
         id: "woocommerce-analytics-variations",
@@ -71,7 +71,7 @@ export default () => {
     },
     {
       report: "orders",
-      title: __("Orders", "woocommerce"),
+      title: __("Orders", 'dokan-lite'),
       component: OrdersReport,
       navArgs: {
         id: "woocommerce-analytics-orders",
@@ -79,7 +79,7 @@ export default () => {
     },
     {
       report: "categories",
-      title: __("Categories", "woocommerce"),
+      title: __("Categories", 'dokan-lite'),
       component: CategoriesReport,
       navArgs: {
         id: "woocommerce-analytics-categories",
@@ -87,7 +87,7 @@ export default () => {
     },
     {
       report: "coupons",
-      title: __("Coupons", "woocommerce"),
+      title: __("Coupons", 'dokan-lite'),
       component: CouponsReport,
       navArgs: {
         id: "woocommerce-analytics-coupons",
@@ -95,7 +95,7 @@ export default () => {
     },
     {
       report: "taxes",
-      title: __("Taxes", "woocommerce"),
+      title: __("Taxes", 'dokan-lite'),
       component: TaxesReport,
       navArgs: {
         id: "woocommerce-analytics-taxes",
@@ -104,7 +104,7 @@ export default () => {
     manageStock === "yes" || true
       ? {
           report: "stock",
-          title: __("Stock", "woocommerce"),
+          title: __("Stock", 'dokan-lite'),
           component: StockReport,
           navArgs: {
             id: "woocommerce-analytics-stock",
@@ -113,12 +113,12 @@ export default () => {
       : null,
     {
       report: "customers",
-      title: __("Customers", "woocommerce"),
+      title: __("Customers", 'dokan-lite'),
       component: CustomersReport,
     },
     {
       report: "downloads",
-      title: __("Downloads", "woocommerce"),
+      title: __("Downloads", 'dokan-lite'),
       component: DownloadsReport,
       navArgs: {
         id: "woocommerce-analytics-downloads",

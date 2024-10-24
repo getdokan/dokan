@@ -110,12 +110,12 @@ const Leaderboards = ( props ) => {
         <EllipsisMenu
             label={ __(
                 'Choose which leaderboards to display and other settings',
-                'woocommerce'
+                'dokan-lite'
             ) }
             renderContent={ ( { onToggle } ) => (
                 <Fragment>
                     <MenuTitle>
-                        { __( 'Leaderboards', 'woocommerce' ) }
+                        { __( 'Leaderboards', 'dokan-lite' ) }
                     </MenuTitle>
                     { renderLeaderboardToggles( {
                         allLeaderboards,
@@ -125,7 +125,7 @@ const Leaderboards = ( props ) => {
                     <MenuItem>
                         <SelectControl
                             className="woocommerce-dashboard__dashboard-leaderboards__select"
-                            label={ __( 'Rows per table', 'woocommerce' ) }
+                            label={ __( 'Rows per table', 'dokan-lite' ) }
                             value={ rowsPerTable }
                             options={ Array.from(
                                 { length: 20 },
@@ -156,7 +156,7 @@ const Leaderboards = ( props ) => {
         <Fragment>
             <div className="woocommerce-dashboard__dashboard-leaderboards">
                 <SectionHeader
-                    title={ title || __( 'Leaderboards', 'woocommerce' ) }
+                    title={ title || __( 'Leaderboards', 'dokan-lite' ) }
                     menu={ renderMenu() }
                 />
                 <div className="woocommerce-dashboard__columns">

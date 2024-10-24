@@ -55,7 +55,7 @@ function HistoricalDataActions( {
         );
         const errorMessage = __(
             'There was a problem rebuilding your report data.',
-            'woocommerce'
+            'dokan-lite'
         );
 
         const importStarted = true;
@@ -68,7 +68,7 @@ function HistoricalDataActions( {
         const path = '/wc-analytics/reports/import/cancel';
         const errorMessage = __(
             'There was a problem stopping your current import.',
-            'woocommerce'
+            'dokan-lite'
         );
         makeQuery( path, errorMessage );
     };
@@ -77,7 +77,7 @@ function HistoricalDataActions( {
         const path = '/wc-analytics/reports/import/delete';
         const errorMessage = __(
             'There was a problem deleting your previous data.',
-            'woocommerce'
+            'dokan-lite'
         );
         makeQuery( path, errorMessage );
 
@@ -111,12 +111,12 @@ function HistoricalDataActions( {
                     <div className="woocommerce-setting__help woocommerce-settings-historical-data__action-help">
                         { __(
                             'Imported data will not be lost if the import is stopped.',
-                            'woocommerce'
+                            'dokan-lite'
                         ) }
                         <br />
                         { __(
                             'Navigating away from this page will not affect the import.',
-                            'woocommerce'
+                            'dokan-lite'
                         ) }
                     </div>
                 </Fragment>
@@ -137,7 +137,7 @@ function HistoricalDataActions( {
                         <Button isSecondary onClick={ deletePreviousData }>
                             { __(
                                 'Delete Previously Imported Data',
-                                'woocommerce'
+                                'dokan-lite'
                             ) }
                         </Button>
                     </Fragment>
@@ -162,7 +162,7 @@ function HistoricalDataActions( {
                 'error',
                 __(
                     'Something went wrong with the importation process.',
-                    'woocommerce'
+                    'dokan-lite'
                 )
             );
         }

@@ -11,6 +11,7 @@ class VendorDashboardManager implements Hookable {
 		add_filter( 'dokan_dashboard_nav_submenu', [ $this, 'add_report_submenu' ], 10, 2 );
 
 		// Dummy hook for testing.
+		add_action( 'dokan_dashboard_content_inside_before', [ $this, 'add_dashboard_content' ] );
 		add_action( 'dokan_report_content_inside_before', [ $this, 'add_dashboard_content' ] );
 
 		add_filter( 'woocommerce_rest_product_object_query', [ $this, 'product_query_args' ], 10, 2 );
@@ -69,14 +70,14 @@ class VendorDashboardManager implements Hookable {
 		$parent_menu = 'reports';
 
 		if ( $parent_menu === $nav_key && dokan_is_seller_enabled( dokan_get_current_user_id() ) ) {
-			$submenu_items['report_overview'] = [
-				'title'      => __( 'Overview', 'dokan-lite' ),
-				// 'icon'       => '<i class="far fa-credit-card"></i>',
-				'url'        => dokan_get_navigation_url( $parent_menu ) . '?path=%2Fanalytics%2FOverview',
-				'pos'        => 50,
-				'permission' => 'dokan_view_store_payment_menu',
-
-			];
+//			$submenu_items['report_overview'] = [
+//				'title'      => __( 'Overview', 'dokan-lite' ),
+//				// 'icon'       => '<i class="far fa-credit-card"></i>',
+//				'url'        => dokan_get_navigation_url( $parent_menu ) . '?path=%2Fanalytics%2FOverview',
+//				'pos'        => 50,
+//				'permission' => 'dokan_view_store_payment_menu',
+//
+//			];
 			$submenu_items['report_products'] = [
 				'title'      => __( 'Products', 'dokan-lite' ),
 				// 'icon'       => '<i class="far fa-credit-card"></i>',

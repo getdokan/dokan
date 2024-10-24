@@ -137,8 +137,8 @@ export class ReportChart extends Component {
       { type: "php" }
     );
     const emptyMessage = emptySearchResults
-      ? __("No data for the current search", "woocommerce")
-      : __("No data for the selected date range", "woocommerce");
+      ? __("No data for the current search", 'dokan-lite')
+      : __("No data for the selected date range", 'dokan-lite');
     const { formatAmount, getCurrencyConfig } = this.context;
     return (
       <Chart
