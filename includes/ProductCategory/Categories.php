@@ -20,16 +20,7 @@ class Categories {
      * @return void|array
      */
     public function get_all_categories( $ret = false ) {
-        $transient_key = function_exists( 'wpml_get_current_language' ) && ! empty( wpml_get_current_language() ) ? 'multistep_categories_' . wpml_get_current_language() : 'multistep_categories';
-
-        $this->categories = Cache::get_transient( $transient_key );
-
-        if ( false === $this->categories ) {
-            //calculate category data
-            $this->get_categories();
-            // set category data to cache
-            Cache::set_transient( $transient_key, $this->categories, '', MONTH_IN_SECONDS );
-        }
+        $this->get_categories();
 
         if ( $ret ) {
             return $this->categories;
@@ -134,36 +125,37 @@ class Categories {
      * @return void
      */
     private function get_categories() {
-        global $wpdb;
-
-        // get all categories
-        $table  = $wpdb->prefix . 'terms';
-        $fields = 'terms.term_id, terms.name, tax.parent AS parent_id';
-        $join   = "INNER JOIN `{$wpdb->prefix}term_taxonomy` AS tax ON terms.term_id = tax.term_id";
-        $where  = " AND tax.taxonomy = 'product_cat'";
-
-        // If wpml plugin exists then get categories as language set.
-        if ( function_exists( 'wpml_get_current_language' ) && ! empty( wpml_get_current_language() ) ) {
-            $current_language = wpml_get_current_language();
-
-            $join .= " INNER JOIN `{$wpdb->prefix}icl_translations` AS tr ON terms.term_id = tr.element_id";
-            $where .= " AND tr.language_code = '{$current_language}' AND tr.element_type = 'tax_product_cat'";
-        }
-
-        // @codingStandardsIgnoreStart
-        $categories = $wpdb->get_results(
-            $wpdb->prepare( "SELECT $fields FROM $table AS terms $join WHERE %d=%d $where", 1, 1 ),
-            OBJECT_K
+        // Get all product categories.
+        $product_categories = get_terms(
+            [
+                'taxonomy'   => 'product_cat',
+                'hide_empty' => false,
+            ]
         );
-        // @codingStandardsIgnoreEnd
+
+        // Transform the categories with required data.
+        $transformed_categories = array_map(
+            function ( $category ) {
+                return [
+                    'term_id'   => $category->term_id,
+                    'name'      => $category->name,
+                    'parent_id' => $category->parent,
+                ];
+            },
+            $product_categories
+        );
+
+        // Set categories index as term_id.
+        $categories = array_column( $transformed_categories, null, 'term_id' );
 
         if ( empty( $categories ) ) {
             $this->categories = [];
             return;
         }
 
-        // convert category data to array
-        $this->categories = json_decode( wp_json_encode( $categories ), true );
+        // Set categories data.
+        $this->categories = $categories;
+
         // we don't need old categories variable
         unset( $categories );
 
@@ -193,16 +185,16 @@ class Categories {
      * @return void
      */
     private function recursively_get_parent_categories( $current_item ) {
-        $parent_id = intval( $this->categories[ $current_item ]['parent_id'] );
+        $parent_id = intval( $this->categories[ $current_item ]['parent_id'] ?? 0 );
 
         // setting base condition to exit recursion
         if ( 0 === $parent_id ) {
             $this->categories[ $current_item ]['parents'] = [];
-            $this->categories[ $current_item ]['breadcumb'][] = $this->categories[ $current_item ]['name'];
+            $this->categories[ $current_item ]['breadcumb'][] = $this->categories[ $current_item ]['name'] ?? '';
             // if parent category parents value is empty, no more recursion is needed
         } elseif ( isset( $this->categories[ $parent_id ]['parents'] ) && empty( $this->categories[ $parent_id ]['parents'] ) ) {
             $this->categories[ $current_item ]['parents'][] = $parent_id;
-            $this->categories[ $current_item ]['breadcumb'][] = $this->categories[ $parent_id ]['name'];
+            $this->categories[ $current_item ]['breadcumb'][] = $this->categories[ $parent_id ]['name'] ?? '';
             // if parent category parents value is not empty, set that value as current category parents
         } elseif ( ! empty( $this->categories[ $parent_id ]['parents'] ) ) {
             $this->categories[ $current_item ]['parents'] = array_merge( $this->categories[ $parent_id ]['parents'], [ $parent_id ] );
