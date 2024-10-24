@@ -276,7 +276,8 @@ class OrderActionControllerV3 extends DokanRESTController {
                 break;
 
             default:
-                if ( did_action( 'woocommerce_order_action_' . sanitize_title( $action ) ) ) {
+                $action = sanitize_title( $action );
+                if ( has_action( 'woocommerce_order_action_' . $action ) ) {
                     /**
                      * Fires when a custom order action is being processed.
                      *
@@ -289,7 +290,7 @@ class OrderActionControllerV3 extends DokanRESTController {
                      *
                      * @hook woocommerce_order_action_{$action}
                      */
-                    do_action( 'woocommerce_order_action_' . sanitize_title( $action ), $order );
+                    do_action( 'woocommerce_order_action_' . $action, $order );
                 } else {
                     return new WP_Error( 'dokan_rest_invalid_order_action', esc_html__( 'Invalid order action.', 'dokan-lite' ), array( 'status' => 400 ) );
                 }

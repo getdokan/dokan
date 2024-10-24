@@ -33,6 +33,11 @@ class OrderNoteControllerV3 extends WC_REST_Order_Notes_Controller {
      * @return bool|WP_Error True if authorized, WP_Error if not.
      */
     protected function check_order_authorization( int $order_id ) {
+        $order = wc_get_order( $order_id );
+        if ( ! $order ) {
+            return new WP_Error( 'dokan_rest_invalid_order', __( 'Invalid order ID.', 'dokan-lite' ), array( 'status' => 404 ) );
+        }
+
         $vendor_id = dokan_get_seller_id_by_order( $order_id );
         if ( $vendor_id !== dokan_get_current_user_id() ) {
             return new WP_Error( 'dokan_rest_unauthorized_order', __( 'You do not have permission to access this order', 'dokan-lite' ), array( 'status' => 403 ) );
@@ -112,6 +117,10 @@ class OrderNoteControllerV3 extends WC_REST_Order_Notes_Controller {
      * @return WP_Error|WP_REST_Response
      */
     public function create_item( $request ) {
+        if ( empty( $request['note'] ) ) {
+            return new WP_Error( 'dokan_rest_missing_note', __( 'Missing note parameter.', 'dokan-lite' ), array( 'status' => 400 ) );
+        }
+
         $response = parent::create_item( $request );
 
         if ( is_wp_error( $response ) ) {
