@@ -53,6 +53,7 @@
     "wp-readme-to-markdown": "^1.0.1"
   },
   "dependencies": {
+    "@getdokan/dokan-ui": "^1.0.14",
     "@wordpress/components": "^28.9.0",
     "@wordpress/data": "^10.9.0",
     "@wordpress/dom-ready": "^4.9.0",

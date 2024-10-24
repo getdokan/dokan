@@ -6,6 +6,7 @@ import {
     SlotFillProvider
 } from '@wordpress/components';
 import { PluginArea } from '@wordpress/plugins';
+import { DokanToaster } from "@getdokan/dokan-ui";
 
 // Create a ThemeContext
 const ThemeContext = createContext( null );
@@ -63,6 +64,7 @@ const Layout = ( {
                 { footerComponent ? footerComponent : <Footer /> }
             </div>
             <PluginArea scope={route.id} />
+            <DokanToaster />
             </SlotFillProvider>
         </ThemeProvider>
     );
