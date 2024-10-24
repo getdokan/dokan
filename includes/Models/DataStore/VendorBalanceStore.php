@@ -35,32 +35,4 @@ class VendorBalanceStore extends BaseDataStore {
 	protected function get_perticulars( VendorBalance $model, string $context = 'edit' ): string {
 		return $model->get_particulars( $context );
 	}
-
-	/**
-	 * Get the balance to insert into the database.
-	 *
-	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
-	 * @return string
-	 */
-    protected function get_balance_date( VendorBalance $model, string $context = 'edit' ) {
-		if ( $model->get_balance_date( $context ) ) {
-			return $model->get_balance_date( $context )->date( 'Y-m-d H:i:s' );
-		}
-
-		return '';
-	}
-
-	/**
-	 * Get the transaction date to insert into the database.
-	 *
-	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
-	 * @return string
-	 */
-    protected function get_trn_date( VendorBalance $model, string $context = 'edit' ) {
-		if ( $model->get_trn_date( $context ) ) {
-			return $model->get_trn_date( $context )->date( 'Y-m-d H:i:s' );
-		}
-
-		return '';
-	}
 }

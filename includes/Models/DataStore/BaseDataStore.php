@@ -194,13 +194,29 @@ abstract class BaseDataStore extends SqlQuery implements DataStoreInterface {
 
 		foreach ( $this->get_fields() as $db_field_name ) {
 			if ( method_exists( $this, 'get_' . $db_field_name ) ) {
-				$data[ $db_field_name ] = call_user_func( array( $this, 'get_' . $db_field_name ), $model, 'edit' );
+				$val = call_user_func( array( $this, 'get_' . $db_field_name ), $model, 'edit' );
 			} else {
-				$data[ $db_field_name ] = call_user_func( array( $model, 'get_' . $db_field_name ), 'edit' );
+				$val = call_user_func( array( $model, 'get_' . $db_field_name ), 'edit' );
 			}
+
+			if ( is_a( $val, 'WC_DateTime' ) ) {
+				$val = $val->date( $this->get_date_format_for_field( $db_field_name ) );
+			}
+
+			$data[ $db_field_name ] = $val;
 		}
 
 		return $data;
+	}
+
+	/**
+	 * Get the date format for a specific database field.
+	 *
+	 * @param string $db_field_name The name of the database field.
+	 * @return string The format in which the date is returned.
+	 */
+	protected function get_date_format_for_field( string $db_field_name ): string {
+		return 'Y-m-d H:i:s';
 	}
 
     /**
