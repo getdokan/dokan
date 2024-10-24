@@ -1,3 +1,6 @@
+/*!**********************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/@wordpress/scripts/node_modules/css-loader/dist/cjs.js??clonedRuleSet-3.use[1]!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-3.use[2]!./src/tailwind.css ***!
+  \**********************************************************************************************************************************************************************************************/
 *, ::before, ::after {
     --tw-border-spacing-x: 0;
     --tw-border-spacing-y: 0;
@@ -152,6 +155,10 @@
 }
 .m-\[1em\] {
     margin: 1em;
+}
+.my-4 {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
 }
 .\!mt-\[13px\] {
     margin-top: 13px !important;
@@ -336,6 +343,18 @@
 }
 .leading-\[1\.5em\] {
     line-height: 1.5em;
+}
+.text-white {
+    --tw-text-opacity: 1;
+    color: rgb(255 255 255 / var(--tw-text-opacity));
+}
+.text-red-50 {
+    --tw-text-opacity: 1;
+    color: rgb(254 242 242 / var(--tw-text-opacity));
+}
+.text-red-500 {
+    --tw-text-opacity: 1;
+    color: rgb(239 68 68 / var(--tw-text-opacity));
 }
 .underline {
     text-decoration-line: underline;

@@ -1,8 +1,11 @@
+/*!***********************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!./node_modules/less-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./assets/src/less/setup.less ***!
+  \***********************************************************************************************************************************************************************/
 .dokan-spinner {
   position: absolute;
   width: 20px;
   height: 20px;
-  background: url(../js/../images/spinner-2x.gif) center center no-repeat;
+  background: url(../images/spinner-2x.gif) center center no-repeat;
   z-index: 99;
   background-size: 20px;
 }

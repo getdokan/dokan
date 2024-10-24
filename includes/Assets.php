@@ -15,6 +15,7 @@ class Assets {
     public function __construct() {
         add_action( 'init', [ $this, 'register_all_scripts' ], 10 );
         add_filter( 'dokan_localized_args', [ $this, 'conditional_localized_args' ] );
+        add_action( 'init', [$this,'create_dokan_blocks'] );
 
         if ( is_admin() ) {
             add_action( 'admin_enqueue_scripts', [ $this, 'enqueue_admin_scripts' ], 10 );
@@ -56,6 +57,8 @@ class Assets {
      */
     public function enqueue_admin_scripts( $hook ) {
         global $post, $wp_version, $typenow;
+        wp_enqueue_script('dokan-blocks-editor');
+        wp_enqueue_style('dokan-blocks-editor');
 
         // load vue app inside the parent menu only
         if ( 'toplevel_page_dokan' === $hook ) {
@@ -566,7 +569,7 @@ class Assets {
         if ( ! function_exists( 'WC' ) ) {
             return;
         }
-
+       wp_enqueue_style('dokan-blocks');
         // load dokan style on every pages. requires for shortcodes in other pages
         if ( DOKAN_LOAD_STYLE ) {
             wp_enqueue_style( 'dokan-style' );
@@ -1202,4 +1205,53 @@ class Assets {
             ]
         );
     }
+
+    public function create_dokan_blocks() {
+        $asset_file = include(DOKAN_DIR . '/assets/js/blocks/dokan-blocks.asset.php');
+
+        wp_register_script(
+            'dokan-blocks-editor',
+            DOKAN_PLUGIN_ASSEST . '/js/blocks/dokan-blocks.js',
+            $asset_file['dependencies'],
+            $asset_file['version']
+        );
+
+        wp_register_style(
+            'dokan-blocks-editor',
+            DOKAN_PLUGIN_ASSEST . '/css/blocks/dokan-blocks.css',
+            [],
+            $asset_file['version']
+        );
+        wp_register_style(
+            'dokan-blocks',
+            DOKAN_PLUGIN_ASSEST . '/js/blocks/dokan-blocks.css',
+            [],
+            $asset_file['version']
+        );
+
+        $block_json_dir = DOKAN_DIR . '/assets/js/blocks/';
+
+        $blocks = [
+            'dokan/store-name' => $block_json_dir . 'store-name/block.json',
+            'dokan/store-address'     => $block_json_dir . 'store-address/block.json',
+
+        ];
+$store_args = [
+    'store_info'=>dokan_get_store_info( get_current_user_id() ),
+];
+        foreach ($blocks as $block_name => $block_json) {
+            register_block_type_from_metadata($block_json, [
+                'editor_script' => 'dokan-blocks-editor',
+                'editor_style'  => 'dokan-blocks-editor',
+                'style'         => 'dokan-blocks',
+            ],[
+                'store_info'=>$store_args['store_info']
+
+            ]);
+        }
+
+        // Register block category
+
+    }
+
 }

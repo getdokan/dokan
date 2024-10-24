@@ -1,3 +1,6 @@
+/*!***********************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!./node_modules/less-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./assets/src/less/style.less ***!
+  \***********************************************************************************************************************************************************************/
 /**
  * Dokan Plugin main Style less file
  *
@@ -9,7 +12,7 @@
   position: absolute;
   width: 20px;
   height: 20px;
-  background: url(../js/../images/spinner-2x.gif) center center no-repeat;
+  background: url(../images/spinner-2x.gif) center center no-repeat;
   z-index: 99;
   background-size: 20px;
 }
@@ -1843,7 +1846,7 @@ table.dokan-table .is-expanded .toggle-row::before {
   }
 }
 span.dokan-loading {
-  background: url(../js/../images/wpspin_light.gif) no-repeat;
+  background: url(../images/wpspin_light.gif) no-repeat;
   float: left;
   height: 16px;
   margin: 5px 5px 0;
@@ -1858,7 +1861,7 @@ span.error {
   border: 2px solid #ccc !important;
   border-radius: 4px !important;
   background-color: white !important;
-  background-image: url(../js/../images/searchicon.png) !important;
+  background-image: url(../images/searchicon.png) !important;
   background-position: 8px 8px !important;
   background-repeat: no-repeat !important;
   padding: 5px 36px 5px 0 !important;
@@ -4611,7 +4614,7 @@ div.media-sidebar a.edit-attachment {
   margin-right: 8px;
 }
 .dokan-store-products-filter-area .dokan-ajax-search-loader {
-  background-image: url(../js/../images/spinner-2x.gif);
+  background-image: url(../images/spinner-2x.gif);
   background-position: left center;
   background-repeat: no-repeat;
   background-size: 25px 25px;
@@ -4640,7 +4643,7 @@ div.media-sidebar a.edit-attachment {
   height: auto;
 }
 .dokan-single-store .profile-frame .profile-info-box .profile-info-img.dummy-image {
-  background-image: url(../js/../images/default-store-banner.png);
+  background-image: url(../images/default-store-banner.png);
   background-size: 100% 100%;
   background-repeat: no-repeat;
 }

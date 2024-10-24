@@ -1,0 +1,55 @@
+/*!********************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/@wordpress/scripts/node_modules/css-loader/dist/cjs.js??clonedRuleSet-5.use[1]!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-5.use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-5.use[3]!./src/blocks/store-address/style.scss ***!
+  \********************************************************************************************************************************************************************************************************************************************************************************/
+/**
+ * The following styles get applied both on the front of your site
+ * and in the editor.
+ *
+ * Replace them with your own styles or remove the file completely.
+ */
+.wp-block-dokan-address-front-end-blocks {
+  background-color: #000;
+  color: white;
+  padding: 2px;
+}
+/*!*********************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/@wordpress/scripts/node_modules/css-loader/dist/cjs.js??clonedRuleSet-5.use[1]!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-5.use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-5.use[3]!./src/blocks/store-address/editor.scss ***!
+  \*********************************************************************************************************************************************************************************************************************************************************************************/
+/**
+ * The following styles get applied inside the editor only.
+ *
+ * Replace them with your own styles or remove the file completely.
+ */
+.wp-block-dokan-dokan-store-address {
+  border: 1px dotted #f00;
+  background: #000;
+}
+.wp-block-dokan-dokan-store-address .text-red-500 {
+  color: red;
+}
+/*!*****************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/@wordpress/scripts/node_modules/css-loader/dist/cjs.js??clonedRuleSet-5.use[1]!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-5.use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-5.use[3]!./src/blocks/store-name/style.scss ***!
+  \*****************************************************************************************************************************************************************************************************************************************************************************/
+/**
+ * The following styles get applied both on the front of your site
+ * and in the editor.
+ *
+ * Replace them with your own styles or remove the file completely.
+ */
+.wp-block-dokan-dokan-blocks {
+  background-color: #000;
+  color: white;
+  padding: 2px;
+}
+/*!******************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/@wordpress/scripts/node_modules/css-loader/dist/cjs.js??clonedRuleSet-5.use[1]!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-5.use[2]!./node_modules/sass-loader/dist/cjs.js??clonedRuleSet-5.use[3]!./src/blocks/store-name/editor.scss ***!
+  \******************************************************************************************************************************************************************************************************************************************************************************/
+/**
+ * The following styles get applied inside the editor only.
+ *
+ * Replace them with your own styles or remove the file completely.
+ */
+.wp-block-dokan-dokan-blocks {
+  border: 1px dotted #f00;
+  background: #000;
+}

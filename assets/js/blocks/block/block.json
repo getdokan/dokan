@@ -1,0 +1,20 @@
+{
+    "$schema": "https://schemas.wp.org/trunk/block.json",
+    "apiVersion": 3,
+    "name": "dokan/dokan-store-address",
+    "version": "0.1.0",
+    "title": "Dokan store address",
+    "category": "widgets",
+    "icon": "smiley",
+    "description": "Example block scaffolded with Create Block tool.",
+    "example": {},
+    "supports": {
+        "html": false
+    },
+    "textdomain": "dokan-lite",
+    "editorScript": "file:../dokan-blocks.js",
+    "editorStyle": "file:../../../css/dokan-blocks.css",
+    "style": "file:../dokan-blocks.css",
+    "render": "file:./render.php",
+    "viewScript": "file:./view.js"
+}

@@ -1,3 +1,6 @@
+/*!*****************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/less-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./src/admin/components/UpgradeBanner.vue?vue&type=style&index=0&id=75a73b30&lang=less& ***!
+  \*****************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 .dokan-promo-banner {
   display: flex;
   column-gap: 2rem;
@@ -278,6 +281,9 @@
 }
 }
 
+/*!********************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/less-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./src/admin/pages/Dashboard.vue?vue&type=style&index=0&id=219ffca0&lang=less& ***!
+  \********************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 .dokan-dashboard .widgets-wrapper {
   display: block;
   overflow: hidden;
@@ -377,6 +383,9 @@
 }
 }
 
+/*!*******************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/less-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./src/admin/pages/Withdraw.vue?vue&type=style&index=0&id=62373ea4&lang=less& ***!
+  \*******************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 .withdraw-requests .dokan-modal .modal-body {
   min-height: 130px;
 }
@@ -476,6 +485,9 @@
 }
 }
 
+/*!**********************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/less-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./src/admin/components/ProCta.vue?vue&type=style&index=0&id=1ccc06d3&lang=less& ***!
+  \**********************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 .cta-section {
   background-image: -moz-linear-gradient(-15deg, #ff7d90 0%, #ffad6f 100%);
   background-image: -webkit-linear-gradient(-15deg, #ff7d90 0%, #ffad6f 100%);
@@ -530,6 +542,9 @@
   margin-right: 6px;
 }
 
+/*!*************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/@wordpress/scripts/node_modules/css-loader/dist/cjs.js??clonedRuleSet-3.use[1]!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-3.use[2]!./node_modules/slick-carousel/slick/slick.css ***!
+  \*************************************************************************************************************************************************************************************************************************/
 /* Slider */
 .slick-slider
 {
@@ -644,6 +659,9 @@
     display: none;
 }
 
+/*!******************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/less-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./src/admin/pages/Premium.vue?vue&type=style&index=0&id=b38fd83a&lang=less& ***!
+  \******************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 .dokan-pro-features {
   font-family: 'Open Sans', sans-serif;
   margin: -10px -22px 0 -20px;
@@ -1280,6 +1298,9 @@
   margin-right: 6px;
 }
 
+/*!***************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/less-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./src/admin/pages/Help.vue?vue&type=style&index=0&id=c289d136&lang=less& ***!
+  \***************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 .dokan-help-page .section-wrapper {
   margin-top: 15px;
 }
@@ -1307,52 +1328,55 @@
   margin-top: 100px;
 }
 
-.fade-enter-active[data-v-525b077c],
-.fade-leave-active[data-v-525b077c] {
+/*!********************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/less-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./src/admin/pages/ChangeLog.vue?vue&type=style&index=0&id=254fdb80&lang=less&scoped=true& ***!
+  \********************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+.fade-enter-active[data-v-254fdb80],
+.fade-leave-active[data-v-254fdb80] {
   transition: opacity 0.3s ease;
 }
-.fade-enter[data-v-525b077c],
-.fade-leave-to[data-v-525b077c] {
+.fade-enter[data-v-254fdb80],
+.fade-leave-to[data-v-254fdb80] {
   opacity: 0;
 }
-.slide-enter-active[data-v-525b077c],
-.slide-leave-active[data-v-525b077c] {
+.slide-enter-active[data-v-254fdb80],
+.slide-leave-active[data-v-254fdb80] {
   transition-duration: 0.1s;
   transition-timing-function: linear;
 }
-.slide-enter-to[data-v-525b077c],
-.slide-leave[data-v-525b077c] {
+.slide-enter-to[data-v-254fdb80],
+.slide-leave[data-v-254fdb80] {
   max-height: 100px;
   overflow: hidden;
 }
-.slide-enter[data-v-525b077c],
-.slide-leave-to[data-v-525b077c] {
+.slide-enter[data-v-254fdb80],
+.slide-leave-to[data-v-254fdb80] {
   overflow: hidden;
   max-height: 0;
 }
-ul[data-v-525b077c] {
+ul[data-v-254fdb80] {
   cursor: pointer;
 }
-.dokan-help-page .section-wrapper h2[data-v-525b077c] {
+.dokan-help-page .section-wrapper h2[data-v-254fdb80] {
   margin: 0;
   color: transparent;
 }
-.dokan-help-page .section-wrapper .dokan-notice[data-v-525b077c] {
+.dokan-help-page .section-wrapper .dokan-notice[data-v-254fdb80] {
   background: rgba(223, 0, 0, 0.05);
   margin: -15px -20px 0;
   padding: 15px 15px 0;
 }
-.dokan-help-page .section-wrapper .change-log[data-v-525b077c] {
+.dokan-help-page .section-wrapper .change-log[data-v-254fdb80] {
   background: rgba(223, 0, 0, 0.05);
   margin: -15px -20px 0;
 }
-.dokan-help-page .section-wrapper .change-log.lite-change-log[data-v-525b077c] {
+.dokan-help-page .section-wrapper .change-log.lite-change-log[data-v-254fdb80] {
   height: 340px;
 }
-.dokan-help-page .section-wrapper .change-log.pro-change-log[data-v-525b077c] {
+.dokan-help-page .section-wrapper .change-log.pro-change-log[data-v-254fdb80] {
   height: 400px;
 }
-.dokan-help-page .section-wrapper .change-log h3[data-v-525b077c] {
+.dokan-help-page .section-wrapper .change-log h3[data-v-254fdb80] {
   color: #000000;
   font-size: 30px;
   text-align: center;
@@ -1361,7 +1385,7 @@ ul[data-v-525b077c] {
   font-family: "SF Pro Text", sans-serif;
   margin: 0 0 28px;
 }
-.dokan-help-page .section-wrapper .change-log .switch-button-wrap[data-v-525b077c] {
+.dokan-help-page .section-wrapper .change-log .switch-button-wrap[data-v-254fdb80] {
   width: 147px;
   height: 33px;
   text-align: center;
@@ -1373,7 +1397,7 @@ ul[data-v-525b077c] {
   position: relative;
   border: 1px solid #e2e2e2;
 }
-.dokan-help-page .section-wrapper .change-log .switch-button-wrap .switch-button[data-v-525b077c] {
+.dokan-help-page .section-wrapper .change-log .switch-button-wrap .switch-button[data-v-254fdb80] {
   width: 48%;
   height: 100%;
   background: none;
@@ -1388,7 +1412,7 @@ ul[data-v-525b077c] {
   font-weight: 500;
   font-family: "SF Pro Text", sans-serif;
 }
-.dokan-help-page .section-wrapper .change-log .switch-button-wrap .active[data-v-525b077c] {
+.dokan-help-page .section-wrapper .change-log .switch-button-wrap .active[data-v-254fdb80] {
   background: #FF5722;
   border-radius: 30px;
   position: absolute;
@@ -1397,21 +1421,21 @@ ul[data-v-525b077c] {
   height: 100%;
   transition: all 0.2s ease-out;
 }
-.dokan-help-page .section-wrapper .change-log .switch-button-wrap .lite[data-v-525b077c] {
+.dokan-help-page .section-wrapper .change-log .switch-button-wrap .lite[data-v-254fdb80] {
   text-transform: capitalize;
 }
-.dokan-help-page .section-wrapper .change-log .switch-button-wrap .pro[data-v-525b077c] {
+.dokan-help-page .section-wrapper .change-log .switch-button-wrap .pro[data-v-254fdb80] {
   text-transform: uppercase;
 }
-.dokan-help-page .section-wrapper .change-log .switch-button-wrap .active-case[data-v-525b077c] {
+.dokan-help-page .section-wrapper .change-log .switch-button-wrap .active-case[data-v-254fdb80] {
   color: #ffffff;
 }
-.dokan-help-page .section-wrapper .change-log .jump-version[data-v-525b077c] {
+.dokan-help-page .section-wrapper .change-log .jump-version[data-v-254fdb80] {
   width: 178px;
   margin: 24px auto 0;
   position: relative;
 }
-.dokan-help-page .section-wrapper .change-log .jump-version p[data-v-525b077c] {
+.dokan-help-page .section-wrapper .change-log .jump-version p[data-v-254fdb80] {
   color: #000;
   font-size: 13px;
   text-align: center;
@@ -1419,15 +1443,15 @@ ul[data-v-525b077c] {
   font-weight: 500;
   font-family: "SF Pro Text", sans-serif;
 }
-.dokan-help-page .section-wrapper .change-log .jump-version .dashicons[data-v-525b077c] {
+.dokan-help-page .section-wrapper .change-log .jump-version .dashicons[data-v-254fdb80] {
   font-size: 16px;
   line-height: 1.4;
   transition: all 0.2s ease;
 }
-.dokan-help-page .section-wrapper .change-log .jump-version:hover .dashicons[data-v-525b077c] {
+.dokan-help-page .section-wrapper .change-log .jump-version:hover .dashicons[data-v-254fdb80] {
   transform: rotate(180deg);
 }
-.dokan-help-page .section-wrapper .change-log .jump-version .version-menu[data-v-525b077c] {
+.dokan-help-page .section-wrapper .change-log .jump-version .version-menu[data-v-254fdb80] {
   position: absolute;
   top: 50px;
   right: 0;
@@ -1442,7 +1466,7 @@ ul[data-v-525b077c] {
   transition: all 0.2s ease;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.09);
 }
-.dokan-help-page .section-wrapper .change-log .jump-version .version-menu[data-v-525b077c]:before {
+.dokan-help-page .section-wrapper .change-log .jump-version .version-menu[data-v-254fdb80]:before {
   content: "";
   position: absolute;
   border: 11px solid transparent;
@@ -1452,16 +1476,16 @@ ul[data-v-525b077c] {
   left: 27px;
   z-index: 1;
 }
-.dokan-help-page .section-wrapper .change-log .jump-version .version-menu .version-dropdown[data-v-525b077c] {
+.dokan-help-page .section-wrapper .change-log .jump-version .version-menu .version-dropdown[data-v-254fdb80] {
   max-height: 300px;
   text-align: right;
   background: #ffffff;
   overflow-y: auto;
 }
-.dokan-help-page .section-wrapper .change-log .jump-version .version-menu .version-dropdown ul[data-v-525b077c] {
+.dokan-help-page .section-wrapper .change-log .jump-version .version-menu .version-dropdown ul[data-v-254fdb80] {
   cursor: context-menu;
 }
-.dokan-help-page .section-wrapper .change-log .jump-version .version-menu .version-dropdown ul li[data-v-525b077c] {
+.dokan-help-page .section-wrapper .change-log .jump-version .version-menu .version-dropdown ul li[data-v-254fdb80] {
   margin-bottom: 25px;
   color: #000000;
   font-size: 14px;
@@ -1470,58 +1494,58 @@ ul[data-v-525b077c] {
   transition: all 0.2s linear;
   cursor: pointer;
 }
-.dokan-help-page .section-wrapper .change-log .jump-version .version-menu .version-dropdown ul li[data-v-525b077c]:hover {
+.dokan-help-page .section-wrapper .change-log .jump-version .version-menu .version-dropdown ul li[data-v-254fdb80]:hover {
   color: #f2624d;
 }
-.dokan-help-page .section-wrapper .change-log .jump-version .version-menu .version-dropdown ul li[data-v-525b077c]:last-child {
+.dokan-help-page .section-wrapper .change-log .jump-version .version-menu .version-dropdown ul li[data-v-254fdb80]:last-child {
   margin-bottom: 0;
 }
-.dokan-help-page .section-wrapper .change-log .jump-version .version-menu .version-dropdown ul li.current[data-v-525b077c] {
+.dokan-help-page .section-wrapper .change-log .jump-version .version-menu .version-dropdown ul li.current[data-v-254fdb80] {
   color: #f2624d;
   font-weight: bold;
   font-family: "SF Pro Text", sans-serif;
 }
-.dokan-help-page .section-wrapper .change-log .jump-version .version-menu .version-dropdown ul li span[data-v-525b077c] {
+.dokan-help-page .section-wrapper .change-log .jump-version .version-menu .version-dropdown ul li span[data-v-254fdb80] {
   display: block;
   font-size: 12px;
   color: #758598;
   font-weight: 400;
   font-family: "SF Pro Text", sans-serif;
 }
-.dokan-help-page .section-wrapper .change-log .jump-version .version-menu .version-dropdown[data-v-525b077c]::-webkit-scrollbar {
+.dokan-help-page .section-wrapper .change-log .jump-version .version-menu .version-dropdown[data-v-254fdb80]::-webkit-scrollbar {
   width: 4px;
 }
-.dokan-help-page .section-wrapper .change-log .jump-version .version-menu .version-dropdown[data-v-525b077c]::-webkit-scrollbar-track {
+.dokan-help-page .section-wrapper .change-log .jump-version .version-menu .version-dropdown[data-v-254fdb80]::-webkit-scrollbar-track {
   background: #f5f5f5;
 }
-.dokan-help-page .section-wrapper .change-log .jump-version .version-menu .version-dropdown[data-v-525b077c]::-webkit-scrollbar-thumb {
+.dokan-help-page .section-wrapper .change-log .jump-version .version-menu .version-dropdown[data-v-254fdb80]::-webkit-scrollbar-thumb {
   background: #878787;
 }
-.dokan-help-page .section-wrapper .change-log .jump-version .version-menu .version-dropdown[data-v-525b077c]::-webkit-scrollbar-thumb:hover {
+.dokan-help-page .section-wrapper .change-log .jump-version .version-menu .version-dropdown[data-v-254fdb80]::-webkit-scrollbar-thumb:hover {
   background: #575757;
 }
-.dokan-help-page .section-wrapper .change-log .jump-version:hover .version-menu[data-v-525b077c] {
+.dokan-help-page .section-wrapper .change-log .jump-version:hover .version-menu[data-v-254fdb80] {
   top: 30px;
   opacity: 1;
   visibility: visible;
 }
-.dokan-help-page .section-wrapper .version-list .version .card-version[data-v-525b077c] {
+.dokan-help-page .section-wrapper .version-list .version .card-version[data-v-254fdb80] {
   background: #ffffff;
   border: 1px solid #e2e2e2;
   border-radius: 3px;
   padding: 25px;
   box-sizing: border-box;
 }
-.dokan-help-page .section-wrapper .version-list .version .card-version div[data-v-525b077c] {
+.dokan-help-page .section-wrapper .version-list .version .card-version div[data-v-254fdb80] {
   overflow: hidden;
 }
-.dokan-help-page .section-wrapper .version-list .version .card-version div .feature-list[data-v-525b077c] {
+.dokan-help-page .section-wrapper .version-list .version .card-version div .feature-list[data-v-254fdb80] {
   margin-bottom: 40px;
 }
-.dokan-help-page .section-wrapper .version-list .version .card-version div .feature-list[data-v-525b077c]:last-child {
+.dokan-help-page .section-wrapper .version-list .version .card-version div .feature-list[data-v-254fdb80]:last-child {
   margin-bottom: 0;
 }
-.dokan-help-page .section-wrapper .version-list .version .card-version div .feature-list .feature-badge[data-v-525b077c] {
+.dokan-help-page .section-wrapper .version-list .version .card-version div .feature-list .feature-badge[data-v-254fdb80] {
   color: #ffffff;
   font-size: 15px;
   font-weight: 600;
@@ -1530,54 +1554,54 @@ ul[data-v-525b077c] {
   display: inline-block;
   font-family: "SF Pro Text", sans-serif;
 }
-.dokan-help-page .section-wrapper .version-list .version .card-version div .feature-list .badge-green[data-v-525b077c] {
+.dokan-help-page .section-wrapper .version-list .version .card-version div .feature-list .badge-green[data-v-254fdb80] {
   background: #00B728;
 }
-.dokan-help-page .section-wrapper .version-list .version .card-version div .feature-list .badge-blue[data-v-525b077c] {
+.dokan-help-page .section-wrapper .version-list .version .card-version div .feature-list .badge-blue[data-v-254fdb80] {
   background: #028AFB;
 }
-.dokan-help-page .section-wrapper .version-list .version .card-version div .feature-list .badge-red[data-v-525b077c] {
+.dokan-help-page .section-wrapper .version-list .version .card-version div .feature-list .badge-red[data-v-254fdb80] {
   background: #F83838;
 }
-.dokan-help-page .section-wrapper .version-list .version .card-version div .feature-list .feature[data-v-525b077c] {
+.dokan-help-page .section-wrapper .version-list .version .card-version div .feature-list .feature[data-v-254fdb80] {
   margin: 11px 0;
 }
-.dokan-help-page .section-wrapper .version-list .version .card-version div .feature-list .feature[data-v-525b077c]:last-child {
+.dokan-help-page .section-wrapper .version-list .version .card-version div .feature-list .feature[data-v-254fdb80]:last-child {
   margin-bottom: 0;
 }
-.dokan-help-page .section-wrapper .version-list .version .card-version div .feature-list .feature h5[data-v-525b077c] {
+.dokan-help-page .section-wrapper .version-list .version .card-version div .feature-list .feature h5[data-v-254fdb80] {
   color: #000000;
   margin: 0;
   font-size: 14px;
   font-weight: bold;
   font-family: "SF Pro Text", sans-serif;
 }
-.dokan-help-page .section-wrapper .version-list .version .card-version div .feature-list .feature div[data-v-525b077c] {
+.dokan-help-page .section-wrapper .version-list .version .card-version div .feature-list .feature div[data-v-254fdb80] {
   color: #000000;
   font-size: 14px;
   font-weight: 400;
   opacity: 0.8;
   font-family: "SF Pro Text", sans-serif;
 }
-.dokan-help-page .section-wrapper .version-list .version .card-version div .feature-list .feature img[data-v-525b077c] {
+.dokan-help-page .section-wrapper .version-list .version .card-version div .feature-list .feature img[data-v-254fdb80] {
   width: 100%;
   height: auto;
   margin-top: 10px;
 }
-.dokan-help-page .section-wrapper .version-list .version .card-version div .feature-list .feature ul[data-v-525b077c] {
+.dokan-help-page .section-wrapper .version-list .version .card-version div .feature-list .feature ul[data-v-254fdb80] {
   list-style: disc outside;
   opacity: 0.7;
   font-size: 14px;
   font-weight: 400;
   margin-right: 18px;
 }
-.dokan-help-page .section-wrapper .version-list .version .card-version .continue-reading[data-v-525b077c] {
+.dokan-help-page .section-wrapper .version-list .version .card-version .continue-reading[data-v-254fdb80] {
   display: flex;
   align-items: center;
   justify-content: center;
   margin-top: 30px;
 }
-.dokan-help-page .section-wrapper .version-list .version .card-version .continue-reading a[data-v-525b077c] {
+.dokan-help-page .section-wrapper .version-list .version .card-version .continue-reading a[data-v-254fdb80] {
   font-size: 13px;
   font-weight: normal;
   text-decoration: none;
@@ -1589,23 +1613,23 @@ ul[data-v-525b077c] {
   border: 1px solid #E2E2E2;
   font-family: "SF Pro Text", sans-serif;
 }
-.dokan-help-page .section-wrapper .version-list .version .card-version .continue-reading a[data-v-525b077c]:focus {
+.dokan-help-page .section-wrapper .version-list .version .card-version .continue-reading a[data-v-254fdb80]:focus {
   box-shadow: none;
 }
-.dokan-help-page .section-wrapper .version-list .version .version-number h4[data-v-525b077c] {
+.dokan-help-page .section-wrapper .version-list .version .version-number h4[data-v-254fdb80] {
   font-weight: 700;
   font-size: 23px;
   color: #000000;
   margin-bottom: 7px;
   font-family: "SF Pro Text", sans-serif;
 }
-.dokan-help-page .section-wrapper .version-list .version .version-number p[data-v-525b077c] {
+.dokan-help-page .section-wrapper .version-list .version .version-number p[data-v-254fdb80] {
   font-weight: 400;
   font-size: 13px;
   color: #5C626A;
   font-family: "SF Pro Text", sans-serif;
 }
-.dokan-help-page .section-wrapper .version-list .version .version-number label[data-v-525b077c] {
+.dokan-help-page .section-wrapper .version-list .version .version-number label[data-v-254fdb80] {
   font-size: 12px;
   color: #fff;
   background: #8e44ad;
@@ -1616,88 +1640,88 @@ ul[data-v-525b077c] {
   font-family: "SF Pro Text", sans-serif;
 }
 @media only screen and (min-width: 1200px) {
-.dokan-help-page .section-wrapper .version-list .version[data-v-525b077c] {
+.dokan-help-page .section-wrapper .version-list .version[data-v-254fdb80] {
     display: flex;
     width: 900px;
     margin: 0 auto;
     justify-content: space-between;
 }
-.dokan-help-page .section-wrapper .version-list .version .card-version[data-v-525b077c] {
+.dokan-help-page .section-wrapper .version-list .version .card-version[data-v-254fdb80] {
     width: 700px;
 }
-.dokan-help-page .section-wrapper .version-list .latest-version[data-v-525b077c] {
+.dokan-help-page .section-wrapper .version-list .latest-version[data-v-254fdb80] {
     margin-top: -200px;
 }
-.dokan-help-page .section-wrapper .version-list .old-version[data-v-525b077c] {
+.dokan-help-page .section-wrapper .version-list .old-version[data-v-254fdb80] {
     margin-top: 25px;
 }
 }
 @media screen and (min-width: 992px) and (max-width: 1199px) {
-.dokan-help-page .section-wrapper .version-list .version[data-v-525b077c] {
+.dokan-help-page .section-wrapper .version-list .version[data-v-254fdb80] {
     display: flex;
     width: 720px;
     margin: 0 auto;
     justify-content: space-between;
 }
-.dokan-help-page .section-wrapper .version-list .version .card-version[data-v-525b077c] {
+.dokan-help-page .section-wrapper .version-list .version .card-version[data-v-254fdb80] {
     width: 520px;
 }
-.dokan-help-page .section-wrapper .version-list .latest-version[data-v-525b077c] {
+.dokan-help-page .section-wrapper .version-list .latest-version[data-v-254fdb80] {
     margin-top: -200px;
 }
-.dokan-help-page .section-wrapper .version-list .old-version[data-v-525b077c] {
+.dokan-help-page .section-wrapper .version-list .old-version[data-v-254fdb80] {
     margin-top: 20px;
 }
 }
 @media only screen and (max-width: 991px) {
-.dokan-help-page .section-wrapper .dokan-notice[data-v-525b077c] {
+.dokan-help-page .section-wrapper .dokan-notice[data-v-254fdb80] {
     background: #f7f8fa;
     margin: -15px -10px 0;
     padding: 15px 15px 0;
 }
-.dokan-help-page .section-wrapper .change-log[data-v-525b077c] {
+.dokan-help-page .section-wrapper .change-log[data-v-254fdb80] {
     background: #f7f8fa;
     margin: -15px -10px 0;
 }
-.dokan-help-page .section-wrapper .change-log.lite-change-log[data-v-525b077c] {
+.dokan-help-page .section-wrapper .change-log.lite-change-log[data-v-254fdb80] {
     height: 220px;
 }
-.dokan-help-page .section-wrapper .change-log.pro-change-log[data-v-525b077c] {
+.dokan-help-page .section-wrapper .change-log.pro-change-log[data-v-254fdb80] {
     height: 280px;
 }
-.dokan-help-page .section-wrapper .version-list .version .card-version[data-v-525b077c] {
+.dokan-help-page .section-wrapper .version-list .version .card-version[data-v-254fdb80] {
     margin: 0 -10px;
     border: 0;
     box-shadow: none;
     border-radius: 0;
 }
-.dokan-help-page .section-wrapper .version-list .version .card-version .continue-reading[data-v-525b077c] {
+.dokan-help-page .section-wrapper .version-list .version .card-version .continue-reading[data-v-254fdb80] {
     justify-content: start;
 }
-.dokan-help-page .section-wrapper .version-list .latest-version[data-v-525b077c] {
+.dokan-help-page .section-wrapper .version-list .latest-version[data-v-254fdb80] {
     margin-top: -112px;
 }
-.dokan-help-page .section-wrapper .version-list .latest-version .version-number[data-v-525b077c] {
+.dokan-help-page .section-wrapper .version-list .latest-version .version-number[data-v-254fdb80] {
     padding-bottom: 15px;
     text-align: center;
 }
-.dokan-help-page .section-wrapper .version-list .old-version[data-v-525b077c] {
+.dokan-help-page .section-wrapper .version-list .old-version[data-v-254fdb80] {
     margin-top: 15px;
 }
-.dokan-help-page .section-wrapper .version-list .old-version .version-number[data-v-525b077c] {
+.dokan-help-page .section-wrapper .version-list .old-version .version-number[data-v-254fdb80] {
     background: #fff;
     padding: 25px 25px 0 25px;
     margin: 0 -10px;
     box-sizing: border-box;
 }
-.dokan-help-page .section-wrapper .version-list .old-version h4[data-v-525b077c] {
+.dokan-help-page .section-wrapper .version-list .old-version h4[data-v-254fdb80] {
     margin-top: 0;
 }
-.dokan-help-page .section-wrapper .version-list .old-version p[data-v-525b077c] {
+.dokan-help-page .section-wrapper .version-list .old-version p[data-v-254fdb80] {
     margin-bottom: 0;
 }
 }
-.dokan-help-page .scroll-to-top[data-v-525b077c] {
+.dokan-help-page .scroll-to-top[data-v-254fdb80] {
   width: 40px;
   height: 40px;
   color: #ffffff;
@@ -1713,12 +1737,15 @@ ul[data-v-525b077c] {
   visibility: hidden;
   transition: all 0.2s ease;
 }
-.dokan-help-page .loading[data-v-525b077c] {
+.dokan-help-page .loading[data-v-254fdb80] {
   width: 100%;
   text-align: center;
   margin-top: 100px;
 }
 
+/*!*************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/@wordpress/scripts/node_modules/css-loader/dist/cjs.js??clonedRuleSet-3.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-3.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./node_modules/vue-color/src/components/common/EditableInput.vue?vue&type=style&index=0&id=6a3fe6f4&lang=css& ***!
+  \*************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 
 .vc-editable-input {
   position: relative;
@@ -1732,6 +1759,9 @@ ul[data-v-525b077c] {
   text-transform: capitalize;
 }
 
+/*!**********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/@wordpress/scripts/node_modules/css-loader/dist/cjs.js??clonedRuleSet-3.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-3.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./node_modules/vue-color/src/components/common/Saturation.vue?vue&type=style&index=0&id=c6d01d7c&lang=css& ***!
+  \**********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 
 .vc-saturation,
 .vc-saturation--white,
@@ -1762,6 +1792,9 @@ ul[data-v-525b077c] {
   transform: translate(2px, -2px);
 }
 
+/*!***************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/@wordpress/scripts/node_modules/css-loader/dist/cjs.js??clonedRuleSet-3.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-3.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./node_modules/vue-color/src/components/common/Hue.vue?vue&type=style&index=0&id=61a5b2b8&lang=css& ***!
+  \***************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 
 .vc-hue {
   position: absolute;
@@ -1798,6 +1831,9 @@ ul[data-v-525b077c] {
   transform: translateX(2px) ;
 }
 
+/*!**********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/@wordpress/scripts/node_modules/css-loader/dist/cjs.js??clonedRuleSet-3.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-3.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./node_modules/vue-color/src/components/common/Checkboard.vue?vue&type=style&index=0&id=550f7e4e&lang=css& ***!
+  \**********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 
 .vc-checkerboard {
   position: absolute;
@@ -1808,6 +1844,9 @@ ul[data-v-525b077c] {
   background-size: contain;
 }
 
+/*!*****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/@wordpress/scripts/node_modules/css-loader/dist/cjs.js??clonedRuleSet-3.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-3.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./node_modules/vue-color/src/components/common/Alpha.vue?vue&type=style&index=0&id=fc5ffbc4&lang=css& ***!
+  \*****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 
 .vc-alpha {
   position: absolute;
@@ -1853,6 +1892,9 @@ ul[data-v-525b077c] {
   transform: translateX(2px);
 }
 
+/*!***********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/@wordpress/scripts/node_modules/css-loader/dist/cjs.js??clonedRuleSet-3.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-3.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./node_modules/vue-color/src/components/Sketch.vue?vue&type=style&index=0&id=511efdd0&lang=css& ***!
+  \***********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 
 .vc-sketch {
   position: relative;
@@ -1965,10 +2007,13 @@ ul[data-v-525b077c] {
   height: 10px;
 }
 
-.color-picker-container[data-v-5506900a] {
+/*!***************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/less-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./src/admin/components/ColorPicker.vue?vue&type=style&index=0&id=01dc0d51&lang=less&scoped=true& ***!
+  \***************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+.color-picker-container[data-v-01dc0d51] {
   position: relative;
 }
-.color-picker-container .color-picker-button[data-v-5506900a] {
+.color-picker-container .color-picker-button[data-v-01dc0d51] {
   border: 1px solid #E2E2E2;
   padding: 3px 10px;
   display: flex;
@@ -1978,7 +2023,7 @@ ul[data-v-525b077c] {
   margin-right: auto;
   border-radius: 3px;
 }
-.color-picker-container .color-picker-button .color[data-v-5506900a] {
+.color-picker-container .color-picker-button .color[data-v-01dc0d51] {
   width: 23px;
   height: 23px;
   border: 0.3px solid rgba(149, 165, 166, 0.5);
@@ -1986,7 +2031,7 @@ ul[data-v-525b077c] {
   margin-left: 3px;
   border-radius: 23px;
 }
-.color-picker-container .color-picker-button span[data-v-5506900a] {
+.color-picker-container .color-picker-button span[data-v-01dc0d51] {
   color: #95A5A6;
   display: block;
   padding: 0;
@@ -1995,13 +2040,13 @@ ul[data-v-525b077c] {
   line-height: 22px;
   margin-left: -5px;
 }
-.color-picker-container .button-group[data-v-5506900a] {
+.color-picker-container .button-group[data-v-01dc0d51] {
   top: 260px;
   left: 11px;
   z-index: 1;
   position: absolute;
 }
-.color-picker-container .button-group .button-small[data-v-5506900a] {
+.color-picker-container .button-group .button-small[data-v-01dc0d51] {
   color: #fff;
   border: 0;
   padding: 15px;
@@ -2010,14 +2055,14 @@ ul[data-v-525b077c] {
   border-radius: 0 5px 5px 0;
   background-color: #1A9ED4;
 }
-.color-picker-container .button-group .button-small[data-v-5506900a]:before {
+.color-picker-container .button-group .button-small[data-v-01dc0d51]:before {
   position: absolute;
   transform: translate(50%, -50%);
 }
-.color-picker-container .button-group .button-small[data-v-5506900a]:last-child {
+.color-picker-container .button-group .button-small[data-v-01dc0d51]:last-child {
   border-radius: 5px 0 0 5px;
 }
-.color-picker-container .button-group .button-small[data-v-5506900a]:last-child:after {
+.color-picker-container .button-group .button-small[data-v-01dc0d51]:last-child:after {
   top: 20%;
   right: 50%;
   width: 1px;
@@ -2027,17 +2072,17 @@ ul[data-v-525b077c] {
   transform: translateX(-50%);
   background: #fff;
 }
-.color-picker-container .button-group .button-small[data-v-5506900a]:hover {
+.color-picker-container .button-group .button-small[data-v-01dc0d51]:hover {
   background-color: #1A9ED4;
 }
-.color-picker-container .vc-sketch[data-v-5506900a] {
+.color-picker-container .vc-sketch[data-v-01dc0d51] {
   top: 120%;
   left: 0;
   z-index: 1;
   position: absolute;
   padding-bottom: 40px;
 }
-.color-picker-container .hex-input[data-v-5506900a] {
+.color-picker-container .hex-input[data-v-01dc0d51] {
   top: 260px;
   width: 75px;
   left: 132px;
@@ -2052,6 +2097,9 @@ ul[data-v-525b077c] {
   vertical-align: top;
 }
 
+/*!************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/less-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./src/admin/components/Switches.vue?vue&type=style&index=0&id=aa8ad7dc&lang=less& ***!
+  \************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 .switch {
   position: relative;
   display: inline-block;
@@ -2098,16 +2146,19 @@ ul[data-v-525b077c] {
   border-radius: 50%;
 }
 
-.secret-box-wraper[data-v-2a9a6c5c] {
+/*!***************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/less-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./src/admin/components/SecretInput.vue?vue&type=style&index=0&id=5e2149fa&lang=less&scoped=true& ***!
+  \***************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+.secret-box-wraper[data-v-5e2149fa] {
   display: flex;
   flex-direction: row-reverse;
 }
-.secret-box-wraper .secret-input-box[data-v-2a9a6c5c] {
+.secret-box-wraper .secret-input-box[data-v-5e2149fa] {
   position: relative;
   display: flex;
   width: 25em;
 }
-.secret-box-wraper .secret-input-box div button[data-v-2a9a6c5c] {
+.secret-box-wraper .secret-input-box div button[data-v-5e2149fa] {
   cursor: pointer;
   height: 20px;
   min-height: 32px;
@@ -2118,14 +2169,14 @@ ul[data-v-525b077c] {
   background: white;
   color: #686666;
 }
-.secret-box-wraper .secret-input-box .secret-input[data-v-2a9a6c5c] {
+.secret-box-wraper .secret-input-box .secret-input[data-v-5e2149fa] {
   width: 100%;
 }
-.secret-box-wraper .secret-input-box .secret-input.blurry-input[data-v-2a9a6c5c] {
+.secret-box-wraper .secret-input-box .secret-input.blurry-input[data-v-5e2149fa] {
   color: transparent;
   text-shadow: 0 0 7px #333;
 }
-.secret-box-wraper .secret-input-box .secret-input-placeholder[data-v-2a9a6c5c] {
+.secret-box-wraper .secret-input-box .secret-input-placeholder[data-v-5e2149fa] {
   position: absolute;
   top: 50%;
   right: 50%;
@@ -2133,50 +2184,56 @@ ul[data-v-525b077c] {
   color: #686666;
 }
 @media only screen and (max-width: 768px) {
-.secret-box-wraper .secret-input-box[data-v-2a9a6c5c] {
+.secret-box-wraper .secret-input-box[data-v-5e2149fa] {
     max-width: 125px !important;
 }
 }
 
-.combine_fields[data-v-63d1027e] {
+/*!****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/less-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./src/admin/components/CombineInput.vue?vue&type=style&index=0&id=5a9d030a&scoped=true&lang=less& ***!
+  \****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+.combine_fields[data-v-5a9d030a] {
   display: flex;
   justify-content: right;
   align-items: center;
 }
-.combine_fields .percent_fee[data-v-63d1027e] {
+.combine_fields .percent_fee[data-v-5a9d030a] {
   padding-left: 10px;
 }
-.combine_fields .fixed_fee input[data-v-63d1027e],
-.combine_fields .percent_fee input[data-v-63d1027e] {
+.combine_fields .fixed_fee input[data-v-5a9d030a],
+.combine_fields .percent_fee input[data-v-5a9d030a] {
   width: 100px;
 }
 
-.wm-box-container[data-v-914aa92a] {
+/*!**************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/less-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./src/admin/components/Fields/WithdrawCharges.vue?vue&type=style&index=0&id=9d11c1e2&scoped=true&lang=less& ***!
+  \**************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+.wm-box-container[data-v-9d11c1e2] {
   display: flex;
   flex-direction: column;
 }
-.wm-box-container .wm-methods-box-container[data-v-914aa92a] {
+.wm-box-container .wm-methods-box-container[data-v-9d11c1e2] {
   margin-top: 15px;
 }
-.wm-box-container .wm-methods-box-container .wm-methods-box[data-v-914aa92a] {
+.wm-box-container .wm-methods-box-container .wm-methods-box[data-v-9d11c1e2] {
   border-bottom: 1px solid #f3f4f6;
   padding: 0 30px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-.wm-box-container .wm-methods-box-container .wm-methods-box[data-v-914aa92a]:last-child {
+.wm-box-container .wm-methods-box-container .wm-methods-box[data-v-9d11c1e2]:last-child {
   border-bottom: 0;
 }
-.wm-box-container .wm-methods-box-container .wm-methods-box .wm-method[data-v-914aa92a] {
+.wm-box-container .wm-methods-box-container .wm-methods-box .wm-method[data-v-9d11c1e2] {
   display: flex;
   align-items: center;
 }
-.wm-box-container .wm-methods-box-container .wm-methods-box .wm-charges[data-v-914aa92a] {
+.wm-box-container .wm-methods-box-container .wm-methods-box .wm-charges[data-v-9d11c1e2] {
   display: flex;
   align-items: center;
 }
-.wm-box-container .wm-methods-box-container .wm-methods-box .wm-charges .wm-automated[data-v-914aa92a] {
+.wm-box-container .wm-methods-box-container .wm-methods-box .wm-charges .wm-automated[data-v-9d11c1e2] {
   border: 1px solid #dbdbdb;
   color: #838181;
   padding: 5px 8px;
@@ -2184,23 +2241,26 @@ ul[data-v-525b077c] {
   background: #f5f5f6;
 }
 @media only screen and (max-width: 782px) {
-.wm-box-container .wm-methods-box-container .wm-methods-box[data-v-914aa92a] {
+.wm-box-container .wm-methods-box-container .wm-methods-box[data-v-9d11c1e2] {
     flex-direction: column;
     justify-content: start;
     align-items: start;
 }
-.wm-box-container .wm-methods-box-container .wm-methods-box .wm-charges[data-v-914aa92a] {
+.wm-box-container .wm-methods-box-container .wm-methods-box .wm-charges[data-v-9d11c1e2] {
     margin-right: -20px;
     margin-bottom: 20px;
 }
 }
 
-.dokan-radio-fields[data-v-49a35897] {
+/*!*******************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/less-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./src/admin/components/DokanRadioGroup.vue?vue&type=style&index=0&id=263d1c11&scoped=true&lang=less& ***!
+  \*******************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+.dokan-radio-fields[data-v-263d1c11] {
   display: flex;
   flex: 2;
   align-self: center;
 }
-.dokan-radio-fields label[data-v-49a35897] {
+.dokan-radio-fields label[data-v-263d1c11] {
   border: 1px solid #b0a7a7;
   padding: 10px 15px;
   display: inline-block;
@@ -2211,7 +2271,7 @@ ul[data-v-525b077c] {
   line-height: 14px;
   border-left: 0;
 }
-.dokan-radio-fields label .dashicons-yes[data-v-49a35897] {
+.dokan-radio-fields label .dashicons-yes[data-v-263d1c11] {
   color: #fff;
   width: 15px;
   height: 15px;
@@ -2223,34 +2283,37 @@ ul[data-v-525b077c] {
   padding-top: 0;
   border-radius: 50%;
 }
-.dokan-radio-fields label input[type=radio][data-v-49a35897] {
+.dokan-radio-fields label input[type=radio][data-v-263d1c11] {
   display: none;
 }
-.dokan-radio-fields label[data-v-49a35897]:hover {
+.dokan-radio-fields label[data-v-263d1c11]:hover {
   color: rgba(3, 58, 163, 0.85);
   background: rgba(182, 206, 254, 0.38);
   box-sizing: border-box;
   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
 }
-.dokan-radio-fields label.checked[data-v-49a35897] {
+.dokan-radio-fields label.checked[data-v-263d1c11] {
   color: rgba(3, 58, 163, 0.85);
   border: 1px solid rgba(3, 58, 163, 0.81) !important;
   background: rgba(182, 206, 254, 0.38);
   box-sizing: border-box;
 }
-.dokan-radio-fields label.checked .dashicons-yes[data-v-49a35897] {
+.dokan-radio-fields label.checked .dashicons-yes[data-v-263d1c11] {
   display: inline-block;
 }
-.dokan-radio-fields label[data-v-49a35897]:first-child {
+.dokan-radio-fields label[data-v-263d1c11]:first-child {
   border-top-right-radius: 5px;
   border-bottom-right-radius: 5px;
 }
-.dokan-radio-fields label[data-v-49a35897]:last-child {
+.dokan-radio-fields label[data-v-263d1c11]:last-child {
   border-left: 1px solid #b0a7a7;
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
 }
 
+/*!**********************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/less-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./src/admin/components/Fields.vue?vue&type=style&index=0&id=a96ce32e&lang=less& ***!
+  \**********************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 span.repeatable-item-description {
   color: #999;
   font-size: 11px;
@@ -2837,6 +2900,9 @@ ul.dokan-settings-repeatable-list li span.remove-item {
 }
 }
 
+/*!******************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/less-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./src/admin/components/SettingsBanner.vue?vue&type=style&index=0&id=b725e442&lang=less& ***!
+  \******************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 #dokan-settings-banner {
   margin: 20px 0px;
   padding: 40px;
@@ -2879,6 +2945,9 @@ ul.dokan-settings-repeatable-list li span.remove-item {
   background: #f2f2f2;
 }
 
+/*!*******************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/less-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./src/admin/pages/Settings.vue?vue&type=style&index=0&id=e4dc4572&lang=less& ***!
+  \*******************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 .dokan-settings-wrap {
   border: 1px solid #c8d7e1;
   display: flex;
@@ -3284,6 +3353,9 @@ tr.data_clear_on_uninstall td fieldset label {
 }
 }
 
+/*!***************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/less-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./src/admin/components/UploadImage.vue?vue&type=style&index=0&id=40b3524c&lang=less& ***!
+  \***************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 .dokan-upload-image {
   width: 100%;
 }
@@ -3291,6 +3363,9 @@ tr.data_clear_on_uninstall td fieldset label {
   cursor: pointer;
 }
 
+/*!*************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/@wordpress/scripts/node_modules/css-loader/dist/cjs.js??clonedRuleSet-3.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-3.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./src/admin/components/StoreCategory.vue?vue&type=style&index=0&id=5d47e77f&lang=css& ***!
+  \*************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 
 .dokan-form-input.dokan-store-category{
     width: 103% !important;
@@ -3301,10 +3376,16 @@ tr.data_clear_on_uninstall td fieldset label {
     border: 0;
 }
 
+/*!******************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/less-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./src/admin/pages/VendorAddressFields.vue?vue&type=style&index=0&id=9504c01e&lang=less& ***!
+  \******************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 .address-multiselect input.multiselect__input {
   border: none;
 }
 
+/*!******************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/less-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./src/admin/pages/VendorPaymentFields.vue?vue&type=style&index=0&id=2ed34783&lang=less& ***!
+  \******************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 .checkbox-group {
   margin-top: 20px;
   padding: 0 10px;
@@ -3328,6 +3409,9 @@ tr.data_clear_on_uninstall td fieldset label {
   width: 40%;
 }
 
+/*!********************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/less-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./src/admin/pages/AddVendor.vue?vue&type=style&index=0&id=75e0fcd5&lang=less& ***!
+  \********************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 .swal2-container {
   z-index: 9999999 !important;
 }
@@ -3697,6 +3781,9 @@ tr.data_clear_on_uninstall td fieldset label {
 }
 }
 
+/*!******************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/less-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./src/admin/pages/Vendors.vue?vue&type=style&index=0&id=f81b8092&lang=less& ***!
+  \******************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 .vendor-list .dokan-btn {
   padding: 5px 10px;
   font-size: 15px;
@@ -3749,30 +3836,33 @@ tr.data_clear_on_uninstall td fieldset label {
 }
 }
 
-.dokan-importer-wrapper[data-v-c15c744e] {
+/*!********************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/less-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./src/admin/pages/DummyData.vue?vue&type=style&index=0&id=33b27104&lang=less&scoped=true& ***!
+  \********************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
+.dokan-importer-wrapper[data-v-33b27104] {
   text-align: center;
   max-width: 700px;
   margin: 40px auto;
 }
-.dokan-importer-wrapper .skeleton-loader[data-v-c15c744e] {
+.dokan-importer-wrapper .skeleton-loader[data-v-33b27104] {
   width: 100%;
   display: block;
   background: linear-gradient(to left, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.5) 50%, rgba(255, 255, 255, 0) 80%), lightgray;
   background-repeat: repeat-y;
   background-size: 50px 500px;
   background-position: 100% 0;
-  animation: shine-c15c744e 1s infinite;
+  animation: shine-33b27104 1s infinite;
   border-radius: 5px;
 }
-@keyframes shine-c15c744e {
+@keyframes shine-33b27104 {
 to {
     background-position: 0% 0, /* move highlight to right */ 100% 0;
 }
 }
-.dokan-importer-wrapper .error[data-v-c15c744e] {
+.dokan-importer-wrapper .error[data-v-33b27104] {
   border-radius: 5px;
 }
-.dokan-importer-wrapper .dokan-importer-progress-steps[data-v-c15c744e] {
+.dokan-importer-wrapper .dokan-importer-progress-steps[data-v-33b27104] {
   padding: 0 0 24px;
   margin: 0;
   list-style: none outside;
@@ -3781,7 +3871,7 @@ to {
   width: 100%;
   display: inline-flex;
 }
-.dokan-importer-wrapper .dokan-importer-progress-steps li[data-v-c15c744e] {
+.dokan-importer-wrapper .dokan-importer-progress-steps li[data-v-33b27104] {
   width: 50%;
   float: right;
   padding: 0 0 0.8em;
@@ -3791,7 +3881,7 @@ to {
   border-bottom: 4px solid #ccc;
   line-height: 1.4em;
 }
-.dokan-importer-wrapper .dokan-importer-progress-steps li[data-v-c15c744e]::before {
+.dokan-importer-wrapper .dokan-importer-progress-steps li[data-v-33b27104]::before {
   content: "";
   border: 4px solid #ccc;
   border-radius: 100%;
@@ -3804,14 +3894,14 @@ to {
   margin-bottom: -8px;
   background: #fff;
 }
-.dokan-importer-wrapper .dokan-importer-progress-steps li.active[data-v-c15c744e] {
+.dokan-importer-wrapper .dokan-importer-progress-steps li.active[data-v-33b27104] {
   border-color: #1BAC9E;
   color: #1BAC9E;
 }
-.dokan-importer-wrapper .dokan-importer-progress-steps li.active[data-v-c15c744e]::before {
+.dokan-importer-wrapper .dokan-importer-progress-steps li.active[data-v-33b27104]::before {
   border-color: #1BAC9E;
 }
-.dokan-importer-wrapper .dokan-importer[data-v-c15c744e] {
+.dokan-importer-wrapper .dokan-importer[data-v-33b27104] {
   background: #fff;
   overflow: hidden;
   padding: 0;
@@ -3819,23 +3909,23 @@ to {
   color: #555;
   text-align: right;
 }
-.dokan-importer-wrapper .dokan-importer header[data-v-c15c744e] {
+.dokan-importer-wrapper .dokan-importer header[data-v-33b27104] {
   margin: 0;
   padding: 24px 24px 0;
 }
-.dokan-importer-wrapper .dokan-importer header .loader-title[data-v-c15c744e] {
+.dokan-importer-wrapper .dokan-importer header .loader-title[data-v-33b27104] {
   width: 50%;
   height: 20px;
   margin-bottom: 24px;
 }
-.dokan-importer-wrapper .dokan-importer header .loader-description[data-v-c15c744e] {
+.dokan-importer-wrapper .dokan-importer header .loader-description[data-v-33b27104] {
   height: 10px;
   margin-bottom: 10px;
 }
-.dokan-importer-wrapper .dokan-importer section[data-v-c15c744e] {
+.dokan-importer-wrapper .dokan-importer section[data-v-33b27104] {
   padding: 10px 24px 0;
 }
-.dokan-importer-wrapper .dokan-importer section div[data-v-c15c744e] {
+.dokan-importer-wrapper .dokan-importer section div[data-v-33b27104] {
   margin: 0;
   position: relative;
   table-layout: fixed;
@@ -3843,50 +3933,50 @@ to {
   width: 100%;
   clear: both;
 }
-.dokan-importer-wrapper .dokan-importer section div .dokan-dummy-data-progress-bar[data-v-c15c744e] {
+.dokan-importer-wrapper .dokan-importer section div .dokan-dummy-data-progress-bar[data-v-33b27104] {
   width: 100%;
   height: 35px;
   -webkit-appearance: none;
 }
-.dokan-importer-wrapper .dokan-importer section div .dokan-dummy-data-progress-bar[value][data-v-c15c744e]::-webkit-progress-bar {
+.dokan-importer-wrapper .dokan-importer section div .dokan-dummy-data-progress-bar[value][data-v-33b27104]::-webkit-progress-bar {
   background-color: #EEEEEE;
   border: 1px solid #BCBCBC;
   border-radius: 5px;
 }
-.dokan-importer-wrapper .dokan-importer section div .dokan-dummy-data-progress-bar[value][data-v-c15c744e]::-webkit-progress-value {
+.dokan-importer-wrapper .dokan-importer section div .dokan-dummy-data-progress-bar[value][data-v-33b27104]::-webkit-progress-value {
   background-color: #1BAC9E;
   border-radius: 5px;
   transition: width 0.5s;
 }
-.dokan-importer-wrapper .dokan-importer section div .loader-loader[data-v-c15c744e] {
+.dokan-importer-wrapper .dokan-importer section div .loader-loader[data-v-33b27104] {
   height: 35px;
 }
-.dokan-importer-wrapper .dokan-importer .import-done[data-v-c15c744e] {
+.dokan-importer-wrapper .dokan-importer .import-done[data-v-33b27104] {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   padding: 24px 24px 0 24px;
 }
-.dokan-importer-wrapper .dokan-importer .import-done p[data-v-c15c744e] {
+.dokan-importer-wrapper .dokan-importer .import-done p[data-v-33b27104] {
   font-size: 1.2rem;
   color: #1BAC9E;
 }
-.dokan-importer-wrapper .dokan-importer .import-done .links[data-v-c15c744e] {
+.dokan-importer-wrapper .dokan-importer .import-done .links[data-v-33b27104] {
   text-align: center;
 }
-.dokan-importer-wrapper .dokan-importer .dokan-importer-action[data-v-c15c744e] {
+.dokan-importer-wrapper .dokan-importer .dokan-importer-action[data-v-33b27104] {
   overflow: hidden;
   margin: 0;
   padding: 24px;
   line-height: 3em;
 }
-.dokan-importer-wrapper .dokan-importer .dokan-importer-action .loader-btn[data-v-c15c744e] {
+.dokan-importer-wrapper .dokan-importer .dokan-importer-action .loader-btn[data-v-33b27104] {
   height: 35px;
   width: 150px;
   float: left;
 }
-.dokan-importer-wrapper .dokan-importer .dokan-importer-action .dokan-import-continue-btn[data-v-c15c744e] {
+.dokan-importer-wrapper .dokan-importer .dokan-importer-action .dokan-import-continue-btn[data-v-33b27104] {
   float: left;
   font-size: 1.25em;
   padding: 6px 12px;
@@ -3901,18 +3991,18 @@ to {
   color: #FFF;
   cursor: pointer;
 }
-.dokan-importer-wrapper .dokan-importer .dokan-importer-action .dokan-import-continue-btn.is-loading[data-v-c15c744e] {
+.dokan-importer-wrapper .dokan-importer .dokan-importer-action .dokan-import-continue-btn.is-loading[data-v-33b27104] {
   background-color: rgba(27, 172, 158, 0.5);
   border-color: rgba(27, 172, 158, 0.5);
 }
-.dokan-importer-wrapper .dokan-importer .dokan-importer-action .dokan-import-continue-btn.is-busy[data-v-c15c744e] {
+.dokan-importer-wrapper .dokan-importer .dokan-importer-action .dokan-import-continue-btn.is-busy[data-v-33b27104] {
   animation: components-button__busy-animation 2500ms infinite linear;
   opacity: 1;
   background-size: 100px 100%;
   background-image: linear-gradient(45deg, #f7f6f6 33%, #e0e0e0 33%, #e0e0e0 70%, #f7f6f6 70%);
   color: #848484;
 }
-.dokan-importer-wrapper .dokan-importer .dokan-importer-action .cancel-btn[data-v-c15c744e] {
+.dokan-importer-wrapper .dokan-importer .dokan-importer-action .cancel-btn[data-v-33b27104] {
   background-color: #FFFFFF;
   border-color: #E2E2E2;
   color: #72777C;
@@ -3920,6 +4010,9 @@ to {
   margin-top: 15px;
 }
 
+/*!*****************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/less-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./src/admin/pages/VendorCapabilities.vue?vue&type=style&index=0&id=276be9c2&lang=less& ***!
+  \*****************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 #dokan-vendor-capabilities {
   padding: 20px 70px;
 }
@@ -4024,6 +4117,9 @@ to {
   color: #FF0000;
 }
 
+/*!**********************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/less-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./src/admin/components/ModuleUpgradePopup.vue?vue&type=style&index=0&id=5ae162ac&lang=less& ***!
+  \**********************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 #dokan-upgrade-to-pro-wrapper #dokan-upgrade-popup {
   position: fixed;
   top: 0;
@@ -4129,6 +4225,9 @@ to {
   text-decoration: none;
 }
 
+/*!*********************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/less-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./src/admin/pages/ProModules.vue?vue&type=style&index=0&id=ca20ca84&lang=less& ***!
+  \*********************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 .dokan-modules-wrap .module-content {
   position: relative;
   margin-top: 15px;
@@ -4188,6 +4287,9 @@ to {
 }
 }
 
+/*!**********************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/less-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./src/admin/components/AddReverseWithdraw.vue?vue&type=style&index=0&id=493c6bdb&lang=less& ***!
+  \**********************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 .dokan-rw-footer {
   display: flex;
   flex-direction: row-reverse;
@@ -4289,6 +4391,9 @@ to {
   overflow-y: hidden !important;
 }
 
+/*!****************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/less-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./src/admin/pages/ReverseWithdrawal.vue?vue&type=style&index=0&id=36e64dc3&lang=less& ***!
+  \****************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 .animate-enter-active {
   animation: animate 150ms;
 }
@@ -4396,6 +4501,9 @@ to {
   display: inline;
 }
 
+/*!****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??clonedRuleSet-10.use[1]!./node_modules/vue-loader/lib/loaders/stylePostLoader.js!./node_modules/less-loader/dist/cjs.js??clonedRuleSet-10.use[2]!./node_modules/vue-loader/lib/index.js??vue-loader-options!./src/admin/pages/ReverseWithdrawalTransactions.vue?vue&type=style&index=0&id=6b51ff90&lang=less& ***!
+  \****************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 .swal2-actions button {
   margin-left: 10px !important;
 }
