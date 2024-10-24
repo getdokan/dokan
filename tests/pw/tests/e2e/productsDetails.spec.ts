@@ -281,6 +281,10 @@ test.describe('Product details functionality test', () => {
         await vendor.addProductOtherOptions(productName1, data.product.productInfo.otherOptions, 'purchaseNote');
     });
 
+    test('vendor can update product other options (purchase note)', { tag: ['@lite', '@vendor'] }, async () => {
+        await vendor.addProductOtherOptions(productName, data.product.productInfo.otherOptions, 'purchaseNote');
+    });
+
     test('vendor can remove product other options (purchase note)', { tag: ['@lite', '@vendor'] }, async () => {
         await vendor.addProductOtherOptions(productName, { ...data.product.productInfo.otherOptions, purchaseNote: '' }, 'purchaseNote');
     });

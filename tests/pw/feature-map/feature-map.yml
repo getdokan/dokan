@@ -161,6 +161,7 @@
           vendor can add product other options (product status) [lite]: true
           vendor can add product other options (visibility) [lite]: true
           vendor can add product other options (purchase note) [lite]: true
+          vendor can update product other options (purchase note) [lite]: true
           vendor can remove product other options (purchase note) [lite]: true
           vendor can add product other options (product review) [lite]: true
           vendor can remove product other options (product review) [lite]: true
