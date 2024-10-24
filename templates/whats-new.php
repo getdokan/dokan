@@ -4,6 +4,18 @@
  */
 $changelog = [
     [
+        'version'  => 'Version 3.12.6',
+        'released' => '2024-10-24',
+        'changes'  => [
+            'Fix'  => [
+                [
+                    'title'       => 'Fixed js error on frontend pages.',
+                    'description' => '',
+                ],
+            ],
+        ],
+    ],
+    [
         'version'  => 'Version 3.12.5',
         'released' => '2024-10-16',
         'changes'  => [
