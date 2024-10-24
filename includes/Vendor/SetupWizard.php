@@ -123,6 +123,7 @@ class SetupWizard extends DokanSetupWizard {
      */
     public function frontend_enqueue_scripts() {
         wp_enqueue_style( 'jquery-ui' );
+        wp_enqueue_emoji_styles();
         wp_enqueue_script( 'jquery' );
         wp_enqueue_script( 'jquery-tiptip' );
         wp_enqueue_script( 'jquery-blockui' );
