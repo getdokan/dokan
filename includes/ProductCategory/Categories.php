@@ -125,7 +125,7 @@ class Categories {
      * @return void
      */
     private function get_categories() {
-        // Query all product categories
+        // Get all product categories.
         $product_categories = get_terms(
             [
                 'taxonomy'   => 'product_cat',
@@ -133,10 +133,10 @@ class Categories {
             ]
         );
 
-        // Transform the categories
+        // Transform the categories with required data.
         $transformed_categories = array_map(
             function ( $category ) {
-                return (object) [
+                return [
                     'term_id'   => $category->term_id,
                     'name'      => $category->name,
                     'parent_id' => $category->parent,
@@ -145,7 +145,7 @@ class Categories {
             $product_categories
         );
 
-        // Index the array by term_id.
+        // Set categories index as term_id.
         $categories = array_column( $transformed_categories, null, 'term_id' );
 
         if ( empty( $categories ) ) {
@@ -153,8 +153,9 @@ class Categories {
             return;
         }
 
-        // convert category data to array
-        $this->categories = json_decode( wp_json_encode( $categories ), true );
+        // Set categories data.
+        $this->categories = $categories;
+
         // we don't need old categories variable
         unset( $categories );
 
@@ -184,16 +185,16 @@ class Categories {
      * @return void
      */
     private function recursively_get_parent_categories( $current_item ) {
-        $parent_id = intval( $this->categories[ $current_item ]['parent_id'] );
+        $parent_id = intval( $this->categories[ $current_item ]['parent_id'] ?? 0 );
 
         // setting base condition to exit recursion
         if ( 0 === $parent_id ) {
             $this->categories[ $current_item ]['parents'] = [];
-            $this->categories[ $current_item ]['breadcumb'][] = $this->categories[ $current_item ]['name'];
+            $this->categories[ $current_item ]['breadcumb'][] = $this->categories[ $current_item ]['name'] ?? '';
             // if parent category parents value is empty, no more recursion is needed
         } elseif ( isset( $this->categories[ $parent_id ]['parents'] ) && empty( $this->categories[ $parent_id ]['parents'] ) ) {
             $this->categories[ $current_item ]['parents'][] = $parent_id;
-            $this->categories[ $current_item ]['breadcumb'][] = $this->categories[ $parent_id ]['name'];
+            $this->categories[ $current_item ]['breadcumb'][] = $this->categories[ $parent_id ]['name'] ?? '';
             // if parent category parents value is not empty, set that value as current category parents
         } elseif ( ! empty( $this->categories[ $parent_id ]['parents'] ) ) {
             $this->categories[ $current_item ]['parents'] = array_merge( $this->categories[ $parent_id ]['parents'], [ $parent_id ] );
