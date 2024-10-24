@@ -40,10 +40,19 @@ class VendorBalance extends BaseModel {
 		'balance_date' => '',
 	];
 
+	/**
+	 * Initializes the vendor balance model.
+	 *
+	 * @param int $id The ID of the vendor balance to initialize. Default is 0.
+	 */
 	public function __construct( int $id = 0 ) {
 		parent::__construct( $id );
+		$this->set_id( $id );
+		$this->data_store = apply_filters( $this->get_hook_prefix() . 'data_store', new VendorBalanceStore() );
 
-		$this->data_store = new VendorBalanceStore();
+		if ( $this->get_id() > 0 ) {
+			$this->data_store->read( $this );
+		}
 	}
 
     /**
@@ -129,6 +138,16 @@ class VendorBalance extends BaseModel {
 	}
 
     /**
+	 * Set the perticulars (note) for the transaction.
+	 *
+	 * @param string $note The note to be stored.
+	 * @return void
+	 */
+    protected function set_perticulars( string $note ) {
+		return $this->set_particulars( $note );
+	}
+
+    /**
 	 * Get the debit amount.
 	 *
 	 * @param string $context The context in which to get the debit amount.
@@ -192,7 +211,7 @@ class VendorBalance extends BaseModel {
 	 * Get the transaction date.
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
-	 * @return WC_DateTime The transaction date.
+	 * @return \WC_DateTime The transaction date.
 	 */
     public function get_trn_date( string $context = 'view' ) {
 		return $this->get_prop( 'trn_date', $context );
@@ -212,7 +231,7 @@ class VendorBalance extends BaseModel {
 	 * Get the balance date.
 	 *
 	 * @param string $context What the value is for. Valid values are 'view' and 'edit'.
-	 * @return WC_DateTime The balance date.
+	 * @return \WC_DateTime The balance date.
 	 */
     public function get_balance_date( string $context = 'view' ) {
 		return $this->get_prop( 'balance_date', $context );

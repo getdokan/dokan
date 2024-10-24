@@ -60,4 +60,31 @@ class VendorBalanceModelTest extends DokanTestCase {
 
         $this->assertDatabaseCount( 'dokan_vendor_balance', 0, [ 'id' => $id ] );
     }
+
+    public function test_read_method() {
+        $vendor_balance = new VendorBalance();
+        $vendor_balance->set_particulars( 'test' );
+        $vendor_balance->set_debit( 100 );
+        $vendor_balance->set_trn_id( 1 );
+        $vendor_balance->set_trn_type( VendorBalance::TRN_TYPE_DOKAN_ORDERS );
+        $vendor_balance->set_vendor_id( 1 );
+        $vendor_balance->set_trn_date( '2020-01-01' );
+        $vendor_balance->set_status( 'wc-pending' );
+        $vendor_balance->set_balance_date( '2020-01-01' );
+
+        $vendor_balance->save();
+
+        $this->assertNotEmpty( $vendor_balance->get_id() );
+
+        $existing_vendor_balance = new VendorBalance( $vendor_balance->get_id() );
+
+        $this->assertEquals( $vendor_balance->get_particulars(), $existing_vendor_balance->get_particulars() );
+        $this->assertEquals( $vendor_balance->get_debit(), $existing_vendor_balance->get_debit() );
+        $this->assertEquals( $vendor_balance->get_trn_id(), $existing_vendor_balance->get_trn_id() );
+        $this->assertEquals( $vendor_balance->get_trn_type(), $existing_vendor_balance->get_trn_type() );
+        $this->assertEquals( $vendor_balance->get_vendor_id(), $existing_vendor_balance->get_vendor_id() );
+        $this->assertEquals( $vendor_balance->get_trn_date()->date_i18n(), $existing_vendor_balance->get_trn_date()->date_i18n() );
+        $this->assertEquals( $vendor_balance->get_status(), $existing_vendor_balance->get_status() );
+        $this->assertEquals( $vendor_balance->get_balance_date()->date_i18n(), $existing_vendor_balance->get_balance_date()->date_i18n() );
+    }
 }

@@ -75,7 +75,7 @@ abstract class BaseDataStore extends SqlQuery implements DataStoreInterface {
         $this->add_sql_clause(
             'where',
             $wpdb->prepare(
-                "{$id_field_name} = $format",
+                " AND {$id_field_name} = $format",
                 $model->get_id()
             )
 		);

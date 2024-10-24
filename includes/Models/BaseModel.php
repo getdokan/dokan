@@ -80,4 +80,14 @@ abstract class BaseModel extends WC_Data {
 	protected function get_hook_prefix() {
 		return 'dokan_' . $this->object_type . '_get_';
 	}
+
+	/**
+	 * Get All Meta Data.
+	 *
+	 * @since 2.6.0
+	 * @return array of objects.
+	 */
+	public function get_meta_data() {
+		return apply_filters( $this->get_hook_prefix() . 'meta_data', array() );
+	}
 }
