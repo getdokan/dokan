@@ -1,5 +1,6 @@
 import { dokanConfig } from "./dokan-config";
 import { getHistory } from "@woocommerce/navigation";
+import {applyFilters} from "@wordpress/hooks";
 
 export const mapToDashboardRoute = (url: string): string => {
     const mappers = [
@@ -25,12 +26,39 @@ export const mapToDashboardRoute = (url: string): string => {
     return url;
 }
 
+/**
+ * Determines if navigation should be blocked and handles redirects.
+ *
+ * @since DOKAN_LITE_SINCE
+ *
+ * @return {boolean} Whether navigation should be blocked.
+ */
 export const shouldBlockNavigation = () => {
-    const decodedPath = decodeURIComponent( document.location.search || document.location.href ),
-        match = decodedPath.match( /path=([^&]*)/ ),
-        pathName = match ? match[1] : '';
+    const REDIRECT_RULES_FILTER = 'dokan_analytics_redirect_rules',
+        BLOCK_NAVIGATION_FILTER = 'dokan_analytics_block_navigation';
 
-    return ( ! pathName.toLowerCase().includes( 'analytics' ) ); // Check if 'analytics' is in the path
+    const redirectRules = applyFilters(
+        REDIRECT_RULES_FILTER,
+        [
+            {
+                path     : '/dashboard/',
+                redirect : '/dashboard/?path=%2Fanalytics%2FOverview'
+            }
+        ]
+    );
+
+    const decodedURL = decodeURIComponent( document.location.search || document.location.href ),
+        pathMatch = decodedURL.match( /path=([^&]*)/ ),
+        currentPathName = pathMatch ? pathMatch[1] : '',
+        currentURLPath = document.location.pathname,
+        isAnalyticsExcluded = ! currentPathName.toLowerCase().includes( 'analytics' ),
+        matchingRedirectRule = redirectRules.find( rule => rule.path === currentURLPath );
+
+    if ( isAnalyticsExcluded && matchingRedirectRule ) {
+        document.location.href = matchingRedirectRule.redirect;
+    }
+
+    return applyFilters( BLOCK_NAVIGATION_FILTER, isAnalyticsExcluded );
 }
 
 export const handleAnalyticsLinkPrevention = () => {

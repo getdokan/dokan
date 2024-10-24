@@ -152,7 +152,7 @@ class AdminBar {
                 'parent' => 'site-name',
                 'id'     => 'view-dashboard',
                 'title'  => __( 'Visit Vendor Dashboard', 'dokan-lite' ),
-                'href'   => get_permalink( $vendor_dashboard ),
+                'href'   => get_permalink( $vendor_dashboard ) . '?path=%2Fanalytics%2FOverview',
             ];
         }
 
