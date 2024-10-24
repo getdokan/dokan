@@ -2,6 +2,7 @@
 
 namespace WeDevs\Dokan\Order;
 
+use WC_Geolocation;
 use WC_Order;
 
 class OrderEventListener {
@@ -50,7 +51,30 @@ class OrderEventListener {
             array( '%d', '%s' )
         );
 
-        dokan_log( "Order {$order_id} has been trashed in Dokan order and vendor balance tables." );
+		$user_id = doka_get_current_user_id();
+		if ( $user_id ) {
+			$user = get_user_by( 'id', $user_id );
+			$user_name = sprintf( '%s %s', $user->first_name, $user->last_name );
+			$user_role = implode( ', ', $user->roles );
+			$user_ip = WC_Geolocation::get_ip_address();
+
+			dokan_log(
+                sprintf(
+                    'Order %d has been trashed in Dokan order and vendor balance tables by %s (%s) from IP: %s.',
+                    $order_id,
+                    $user_name,
+                    $user_role,
+                    $user_ip
+                )
+			);
+		} else {
+			dokan_log(
+                sprintf(
+                    'Order %d has been trashed in Dokan order and vendor balance tables by System (system).',
+                    $order_id
+                )
+			);
+		}
     }
 
     /**
@@ -92,6 +116,29 @@ class OrderEventListener {
             array( '%d', '%s' )
         );
 
-        dokan_log( "Order {$order_id} has been restored in Dokan order and vendor balance tables with status: {$previous_status}" );
+        $user_id = dokan_get_current_user_id();
+        if ( $user_id ) {
+            $user = get_user_by( 'id', $user_id );
+            $user_name = sprintf( '%s %s', $user->first_name, $user->last_name );
+            $user_role = implode( ', ', $user->roles );
+            $user_ip = WC_Geolocation::get_ip_address();
+
+            dokan_log(
+                sprintf(
+                    'Order %d has been restored in Dokan order and vendor balance tables by %s (%s) from IP: %s.',
+                    $order_id,
+                    $user_name,
+                    $user_role,
+                    $user_ip
+                )
+            );
+        } else {
+            dokan_log(
+                sprintf(
+                    'Order %d has been restored in Dokan order and vendor balance tables by System (system).',
+                    $order_id
+                )
+            );
+        }
     }
 }
