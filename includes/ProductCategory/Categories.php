@@ -20,16 +20,7 @@ class Categories {
      * @return void|array
      */
     public function get_all_categories( $ret = false ) {
-        $transient_key = function_exists( 'wpml_get_current_language' ) && ! empty( wpml_get_current_language() ) ? 'multistep_categories_' . wpml_get_current_language() : 'multistep_categories';
-
-        $this->categories = Cache::get_transient( $transient_key );
-
-        if ( false === $this->categories ) {
-            //calculate category data
-            $this->get_categories();
-            // set category data to cache
-            Cache::set_transient( $transient_key, $this->categories, '', MONTH_IN_SECONDS );
-        }
+        $this->get_categories();
 
         if ( $ret ) {
             return $this->categories;
