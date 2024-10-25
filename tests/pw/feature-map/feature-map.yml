@@ -149,6 +149,8 @@
           vendor can add product downloadable options [lite]: true
           vendor can update product downloadable options [lite]: true
           vendor can remove product downloadable file [lite]: true
+          vendor can add product virtual option [lite]: true
+          vendor can remove product virtual option [lite]: true
           vendor can add product inventory options (SKU) [lite]: true
           vendor can update product inventory options (SKU) [lite]: true
           vendor can remove product inventory options (SKU) [lite]: true
@@ -287,7 +289,7 @@
           customer can view store open-close time on single store [lite]: false
           customer can search product on single store [lite]: true
           customer can sort products on single store [lite]: true
-          customer can view store terms and conditions [lite]: false
+          customer can view store terms and conditions [lite]: true
           customer can share store: true
 
 - page: 'Store Appearance'
@@ -503,7 +505,7 @@
           admin can check for duplicate orders: true
           admin can set Dokan setup wizard [lite]: true
           admin can regenerate variable product variations author IDs: true
-          admin can import dummy data: false
+          admin can import dummy data: true
           admin can clear dummy data: true
           admin can test distance matrix API: true
 
@@ -724,7 +726,7 @@
           vendor can view followers: true
       customer:
           customer can view followed vendors menu page: true
-          customer can view followed vendors: false
+          customer can view followed vendors: true
           customer can follow store on store list page: true
           customer can follow store on single store: true
           customer can unfollow store on store list page: true
